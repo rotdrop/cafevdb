@@ -27,6 +27,9 @@ use OCP\IGroupManager;
 use OCP\IUserSession;
 use OCP\IUser;
 use OCP\IConfig;
+use OCP\Share\IShare;
+use OCP\Files\IRootFolder;
+use \OCP\Files\FileInfo;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\DatabaseFactory;
@@ -40,12 +43,22 @@ class ConfigCheckService
   /** @var DatabaseFactory */
   private $databaseFactory;
 
+  /** @var IRootFolder  */
+  private $rootFolder;
+
+  /** @var \OCP\Share\IManager */
+  private $shareManager;
+
   public function __construct(
     ConfigService $configService,
-    DatabaseFactory $databaseFactory
+    DatabaseFactory $databaseFactory,
+    IRootFolder $rootFolder,
+    \OCP\Share\IManager $shareManager
   ) {
     $this->configService = $configService;
     $this->databaseFactory = $databaseFactory;
+    $this->rootFolder = $rootFolder;
+    $this->shareManager = $shareManager;
   }
 
   /**Return an array with necessary configuration items, being either
@@ -78,7 +91,7 @@ class ConfigCheckService
     try {
       $result[$key]['status'] = $result['orchestra']['status'] &&$this->encryptionKeyValid();
     } catch (\Exception $e) {
-        $result[$key]['message'] = $e->getMessage();
+      $result[$key]['message'] = $e->getMessage();
     }
 
     $key = 'database';
@@ -176,26 +189,31 @@ class ConfigCheckService
    *
    * @return @c true for success, @c false on error.
    */
-  public function groupSharedExists($id, $group, $type)
+  public function groupSharedExists($id, $group, $type, $shareOwner = null)
   {
     // First check whether the object is already shared.
-    $shareType  = \OCP\Share::SHARE_TYPE_GROUP;
-    $groupPerms = (\OCP\PERMISSION_CREATE|
-                   \OCP\PERMISSION_READ|
-                   \OCP\PERMISSION_UPDATE|
-                   \OCP\PERMISSION_DELETE);
+    $shareType  = IShare::TYPE_GROUP;
+    $groupPerms = (\OCP\Constants::PERMISSION_CREATE|
+                   \OCP\Constants::PERMISSION_READ|
+                   \OCP\Constants::PERMISSION_UPDATE|
+                   \OCP\Constants::PERMISSION_DELETE);
 
-    $token =\OCP\Share::getItemShared($type, $id, \OCP\Share::FORMAT_NONE);
-
-    // Note: getItemShared() returns an array with one element, strip
-    // the outer array!
-    if (is_array($token) && count($token) == 1) {
-      $token = array_shift($token);
-      return isset($token['permissions']) &&
-        ($token['permissions'] & $groupPerms) == $groupPerms;
-    } else {
+    if ($type != 'folder' && $type != 'file') {
+      trigger_error('only folder and file for now');
       return false;
     }
+
+    if (empty($shareOwner)) {
+      $shareOwner = $this->userId();
+    }
+
+    // retrieve all shared items for $shareOwner
+    foreach($this->shareManager->getSharesBy($shareOwner, $shareType) as $share) {
+      if ($share->getNodeId() === $id) {
+        return $share->getPermissions() === $groupPerms;
+      }
+    }
+    return false;
   }
 
   /**Share an object between the members of the specified group. Note:
@@ -204,30 +222,53 @@ class ConfigCheckService
    *
    * @param[in] $id The @b numeric id of the object (not the name).
    *
-   * @param[in] $group The group to share the item with.
+   * @param[in] $groupId The group to share the item with.
    *
    * @param[in] $type The type of the item, for exmaple calendar,
    * event, folder, file etc.
    *
+   * @param[in] $shareOwner The user sharing the object.
+   *
    * @return @c true for success, @c false on error.
    */
-  public function groupShareObject($id, $group, $type = 'calendar')
+  public function groupShareObject($id, $groupId, $type = 'calendar', $shareOwner = null)
   {
-    $groupPerms = (\OCP\PERMISSION_CREATE|
-                   \OCP\PERMISSION_READ|
-                   \OCP\PERMISSION_UPDATE|
-                   \OCP\PERMISSION_DELETE);
+    $shareType = IShare::TYPE_GROUP;
+    $groupPerms = (\OCP\Constants::PERMISSION_CREATE|
+                   \OCP\Constants::PERMISSION_READ|
+                   \OCP\Constants::PERMISSION_UPDATE|
+                   \OCP\Constants::PERMISSION_DELETE);
 
-    // First check whether the object is already shared.
-    $shareType   = \OCP\Share::SHARE_TYPE_GROUP;
-    $token = \OCP\Share::getItemShared($type, $id);
-    if ($token !== false && (!is_array($token) || count($token) > 0)) {
-      return \OCP\Share::setPermissions($type, $id, $shareType, $group, $groupPerms);
+    if ($type != 'folder' && $type != 'file') {
+      trigger_error('only folder and file for now');
+      return false;
     }
-    // Otherwise it should be legal to attempt a new share ...
 
-    // try it ...
-    return \OCP\Share::shareItem($type, $id, $shareType, $group, $groupPerms);
+    if (empty($shareOwner)) {
+      $shareOwner = $this->userId();
+    }
+
+    // retrieve all shared items for $shareOwner
+    foreach($this->shareManager->getSharesBy($shareOwner, $shareType) as $share) {
+      if ($share->getNodeId() === $id) {
+        // check permissions
+        if ($share->getPermissions() !== $groupPerms) {
+          $share->setPermissions($groupPerms);
+          $this->shareManager->updateShare($share);
+        }
+      }
+    }
+
+    // Otherwise it should be legal to attempt a new share ...
+    $share = $this->shareManager->newShare();
+    $share->setNodeId($id);
+    $share->setSharedWith($groupId);
+    $share->setPermissions($groupPerms);
+    $share->setShareType($shareType);
+    $share->setShareOwner($shareOwner);
+    $share->setSharedBy(empty($shareOwner) ? $this->getUserId() : $shareOwner);
+
+    return $this->shareManager->createShare($share);
   }
 
   /**Fake execution with other user-id. Note that this function will
@@ -244,18 +285,19 @@ class ConfigCheckService
    */
   public function sudo($uid, $callback)
   {
-    \OC_Util::setupFS(); // This must come before trying to sudo
+    //\OC_Util::setupFS(); // This must come before trying to sudo
 
-    $olduser = \OC_User::getUserId();
-    \OC_User::setUserId($uid);
+    $oldUserId = $this->userId();
+    if (!$this->setUserId($uid)) {
+      return false;
+    }
     try {
-      $result = call_user_func($callback);
+      $result = $callback();
     } catch (\Exception $exception) {
-      \OC_User::setUserId($olduser);
-
+      $this->setUserId($oldUserId);
       throw $exception;
     }
-    \OC_User::setUserId($olduser);
+    $this->setUserId($oldUserId);
 
     return $result;
   }
@@ -271,21 +313,21 @@ class ConfigCheckService
   /**Return @c true if the share-owner exists and belongs to the
    * orchestra user group (and only to this group).
    *
-   * @param[in] $shareowner Optional. If unset, then the uid is
+   * @param[in] $shareOwner Optional. If unset, then the uid is
    * fetched from the application configuration options.
    *
    * @return bool, @c true on success.
    */
-  public function shareOwnerExists($shareowner = '')
+  public function shareOwnerExists($shareOwner = '')
   {
-    $sharegroup = $this->getAppValue('usergroup');
-    $shareowner === '' && $shareowner = $this->getConfigValue('shareowner');
+    $shareGroup = $this->getAppValue('usergroup');
+    $shareOwner === '' && $shareOwner = $this->getConfigValue('shareowner');
 
-    if (empty($shareowner)) {
+    if (empty($shareOwner)) {
       return false;
     }
 
-    $shareUser = $this->user($shareowner); // get the user object
+    $shareUser = $this->user($shareOwner); // get the user object
 
     if (!$shareUser->isEnabled()) {
       return false;
@@ -299,7 +341,7 @@ class ConfigCheckService
     $groups = $this->groupManager()->getUserGroups($shareUser);
 
     // The one and only group should be our's.
-    if (!isset($groups[$sharegroup])) {
+    if (!isset($groups[$shareGroup])) {
       return false;
     }
 
@@ -310,77 +352,73 @@ class ConfigCheckService
   /**Make sure the "sharing" user exists, create it when necessary.
    * May throw an exception.
    *
-   * @param[in] $shareowner The account holding the shared resources.
+   * @param[in] $shareOwner The account holding the shared resources.
    *
    * @return bool, @c true on success.
    */
-  public function checkShareOwner($shareowner)
+  public function checkShareOwner($shareOwner)
   {
-    if (!($sharegroup = $this->getAppValue('usergroup', false))) {
+    if (!($shareGroup = $this->getAppValue('usergroup', false))) {
       return false; // need at least this group!
     }
 
     // Create the user if necessary
-    if (!$this->userManager()->userExists($shareowner) &&
-        !$this->userManager()->createUser($shareowner, $this->generateRandomBytes(30))) {
+    if (!$this->userManager()->userExists($shareOwner) &&
+        !$this->userManager()->createUser($shareOwner, $this->generateRandomBytes(30))) {
       return false;
     }
 
     // Sutff the user in its appropriate group
-    if (!$this->inGroup($shareowner, $sharegroup) &&
-        !$this->group($sharegroup)->addUser($this->user($shareowner))) {
+    if (!$this->inGroup($shareOwner, $shareGroup) &&
+        !$this->group($shareGroup)->addUser($this->user($shareOwner))) {
       return false;
     }
 
-    return $this->shareOwnerExists($shareowner);
+    return $this->shareOwnerExists($shareOwner);
   }
 
   /**We require that the share-owner owns a directory shared with the
    * orchestra group. Check whether this folder exists.
    *
-   * @param[in] $sharedfolder Optional. If unset, the name is fetched
+   * @param[in] $sharedFolder Optional. If unset, the name is fetched
    * from the application configuration options.
    *
    * @return bool, @c true on success.
    */
-  public function sharedFolderExists($sharedfolder = '')
+  public function sharedFolderExists($sharedFolder = '')
   {
     if (!$this->shareOwnerExists()) {
       return false;
     }
 
-    $sharegroup   = $this->getAppValue('usergroup');
-    $shareowner   = $this->getConfigValue('shareowner');
-    $groupadmin   = $this->userId;
+    $shareGroup   = $this->getAppValue('usergroup');
+    $shareOwner   = $this->getConfigValue('shareowner');
+    $groupadmin   = $this->userId();
 
-    $sharedfolder == '' && $sharedfolder = $this->getConfigValue('sharedfolder', '');
+    $sharedFolder == '' && $sharedFolder = $this->getConfigValue('sharedfolder', '');
 
-    if ($sharedfolder == '') {
+    if ($sharedFolder == '') {
+      trigger_error('no folder');
       // not configured
       return false;
     }
 
-    //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
-    $result = $this->sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
-      $user         = $this->userId;
-      $vfsroot = '/'.$user.'/files';
+    //$id = \OC\Files\Cache\Cache::getId($sharedFolder, $vfsroot);
+    $result = $this->sudo($shareOwner, function() use ($sharedFolder, $shareGroup, $shareOwner) {
 
-      if ($sharedfolder[0] != '/') {
-        $sharedfolder = '/'.$sharedfolder;
+      if ($sharedFolder[0] != '/') {
+        $sharedFolder = '/'.$sharedFolder;
       }
 
-      \OC\Files\Filesystem::initMountPoints($user);
-
-      $rootView = new \OC\Files\View($vfsroot);
-      $info = $rootView->getFileInfo($sharedfolder);
-
-      if ($info) {
-        $id = $info['fileid'];
-        return ConfigCheck::groupSharedExists($id, $sharegroup, 'folder');
-      } else {
-        \OCP\Util::write('CAFEVDB', 'No file info for  ' . $sharedfolder, \OCP\Util::ERROR);
+      try {
+        $id = $this->rootFolder->getUserFolder($shareOwner)->get($sharedFolder)->getId();
+        $this->logError('Shared folder id: ' . $id);
+        return $this->groupSharedExists($id, $shareGroup, 'folder', $shareOwner);
+      } catch(\Exception $e) {
+        $this->logError('No file id for  ' . $sharedFolder . ' ' . $e->getMessage());
         return false;
       }
+
     });
 
     return $result;
@@ -389,92 +427,78 @@ class ConfigCheckService
   /**Check for existence of the shared folder and create it when not
    * found.
    *
-   * @param[in] $sharedfolder The name of the folder.
+   * @param[in] $sharedFolder The name of the folder.
    *
    * @return bool, @c true on success.
    */
-  public function checkSharedFolder($sharedfolder)
+  public function checkSharedFolder($sharedFolder)
   {
-    if ($sharedfolder == '') {
+    if ($sharedFolder == '') {
       return false;
     }
 
-    if ($sharedfolder[0] != '/') {
-      $sharedfolder = '/'.$sharedfolder;
+    if ($sharedFolder[0] != '/') {
+      $sharedFolder = '/'.$sharedFolder;
     }
 
-    if ($this->sharedFolderExists($sharedfolder)) {
+    if ($this->sharedFolderExists($sharedFolder)) {
       // no need to create
       return true;
     }
 
-    $sharegroup = $this->getAppValue('usergroup');
-    $groupadmin = $this->userId;
+    $shareGroup = $this->getAppValue('usergroup');
+    $groupAdmin = $this->userId();
+    $shareOwner = $this->getConfigValue('shareowner');
 
-    if (!\OC_SubAdmin::isSubAdminofGroup($groupadmin, $sharegroup)) {
-      \OCP\Util::write($this->appName(),
-                       "Permission denied: ".$groupadmin." is not a group admin of ".$sharegroup.".",
-                       \OCP\Util::ERROR);
+    if (!$this->isSubAdminOfGroup()) {
+      $this->logError("Permission denied: ".$groupAdmin." is not a group admin of ".$shareGroup.".");
       return false;
     }
 
     // try to create the folder and share it with the group
-    $result = $this->sudo($shareowner, function() use ($sharedfolder, $sharegroup, $user) {
-      $user    = $this->userId;
-      $vfsroot = '/'.$user.'/files';
+    $result = $this->sudo($shareOwner, function() use ($sharedFolder, $shareGroup, $groupAdmin, $shareOwner) {
+      $userId    = $this->userId();
+      $user      = $this->user();
 
-      // Create the user data-directory, if necessary
-      $user_root = \OC_User::getHome($user);
-      $userdirectory = $user_root . '/files';
-      if( !is_dir( $userdirectory )) {
-        mkdir( $userdirectory, 0770, true );
-      }
-      if( !is_dir( $userdirectory )) {
+      $rootView = $this->rootFolder->getUserFolder($shareOwner);
+
+      if ($rootView->nodeExists($sharedFolder)
+          && (($node = $rootView->get($sharedFolder))->getType() != FileInfo::TYPE_FOLDER
+              || !$node->isSharable())
+          && !$node->delete()) {
         return false;
       }
 
-      \OC\Files\Filesystem::initMountPoints($user);
 
-      $rootView = new \OC\Files\View($vfsroot);
-
-      if ($rootView->file_exists($sharedfolder) &&
-          (!$rootView->is_dir($sharedfolder) ||
-           !$rootView->isSharable($sharedfolder)) &&
-          !$rootView->unlink($sharedfolder)) {
+      //->get($sharedFolder)->getId();
+      if (!$rootView->nodeExists($sharedFolder) && !$rootView->newFolder($sharedFolder)) {
         return false;
       }
 
-      if (!$rootView->file_exists($sharedfolder) &&
-          !$rootView->mkdir($sharedfolder)) {
+      if (!$rootView->nodeExists($sharedFolder)
+          || ($node = $rootView->get($sharedFolder))->getType() != FileInfo::TYPE_FOLDER) {
+        throw new \Exception($this->l->t('Folder \`%s\' could not be created', [$sharedFolder]));
         return false;
       }
 
-      if (!$rootView->file_exists($sharedfolder) ||
-          !$rootView->is_dir($sharedfolder)) {
-        throw new \Exception('Still does not exist.');
-      }
+      // Now it should exist as directory and $node should contain its file-info
 
-      // Now it should exist as directory. Share it
-      // Nice ass-hole stuff. We need the id.
-
-      //\OC\Files\Cache\Cache::scanFile($sharedfolder, $vfsroot);
-      //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
-      $info = $rootView->getFileInfo($sharedfolder);
-      if ($info) {
-        $id = $info['fileid'];
-        if (!ConfigCheck::groupShareObject($id, $sharegroup, 'folder') ||
-            !ConfigCheck::groupSharedExists($id, $sharegroup, 'folder')) {
+      if ($node) {
+        $id = $node->getId();
+        trigger_error('shared folder id ' . $id);
+        if (!$this->groupShareObject($id, $shareGroup, 'folder', $userId)
+            || !$this->groupSharedExists($id, $shareGroup, 'folder', $userId)) {
           return false;
         }
       } else {
-        \OCP\Util::write('CAFEVDB', 'No file info for ' . $sharedfolder, \OCP\Util::ERROR);
+        trigger_error('No file info for ' . $sharedFolder, \OCP\Util::ERROR);
         return false;
       }
 
       return true; // seems to be ok ...
     });
 
-    return $this->sharedFolderExists($sharedfolder);
+    return $this->sharedFolderExists($sharedFolder);
   }
 
   /**Check for existence of the project folder and create it when not
@@ -493,20 +517,18 @@ class ConfigCheckService
       return false;
     }
 
-    $sharegroup = $this->getAppValue('usergroup');
-    $shareowner = $this->getConfigValue('shareowner');
-    $user       = $this->userId;
+    $shareGroup = $this->getAppValue('usergroup');
+    $shareOwner = $this->getConfigValue('shareowner');
+    $groupAdmin = $this->userId();
 
-    if (!\OC_SubAdmin::isSubAdminofGroup($user, $sharegroup)) {
-      \OCP\Util::write($this->appName(),
-                       "Permission denied: ".$user." is not a group admin of ".$sharegroup.".",
-                       \OCP\Util::ERROR);
+    if (!$this->isSubAdminOfGroup()) {
+      $this->logError("Permission denied: ".$groupAdmin." is not a group admin of ".$shareGroup.".");
       return false;
     }
 
     /* Ok, then there should be a folder /$sharedFolder */
 
-    $fileView = \OC\Files\Filesystem::getView();
+    $fileView = $this->rootFolder->getUserFolder($groupAdmin);
 
     $projectsFolder = trim(preg_replace('|[/]+|', '/', $projectsFolder), "/");
     $projectsFolder = Util::explode('/', $projectsFolder);
@@ -518,12 +540,12 @@ class ConfigCheckService
     foreach ($projectsFolder as $pathComponent) {
       $path .= '/'.$pathComponent;
       //trigger_error("Path: ".$path, E_USER_NOTICE);
-      if (!$fileView->is_dir($path)) {
-        if ($fileView->file_exists($path)) {
-          $fileView->unlink($path);
+      if (($node = $fileView->get($path))->getType() != FileInfo::TYPE_FOLDER
+          || $node->isSharable()) {
+        if (!$node->delete || !($node = $rootView->newFolder($path))) {
+          return false;
         }
-        $fileView->mkdir($path);
-        if (!$fileView->is_dir($path)) {
+        if (!$node->getType() != FileInfo::TYPE_FOLDER) {
           return false;
         }
       }
