@@ -33,6 +33,7 @@ use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 use OCP\IDateTimeZone;
 use OCP\Security\ISecureRandom;
+use \OCP\ILogger;
 
 class ConfigService {
   use \OCA\CAFEVDB\Traits\SessionTrait;
@@ -190,6 +191,9 @@ class ConfigService {
   /** @var ISecureRandom */
   private $secureRandom;
 
+  /** @var ILogger */
+  private $logger;
+
   public function __construct(
     $appName,
     IConfig $containerConfig,
@@ -202,6 +206,7 @@ class ConfigService {
     IURLGenerator $urlGenerator,
     IFactory $iFactory,
     IDateTimeZone $dateTimeZone,
+    ILogger $logger,
     IL10N $l
   ) {
 
@@ -216,6 +221,7 @@ class ConfigService {
     $this->urlGenerator = $urlGenerator;
     $this->iFactory = $iFactory;
     $this->dateTimeZone = $dateTimeZone;
+    $this->logger = $logger;
     $this->l = $l;
 
     $this->user = $this->userSession->getUser();
@@ -235,6 +241,10 @@ class ConfigService {
   public function getIcon() {
     // @@TODO make it configurable
     return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
+  }
+
+  public function getUserSession() {
+    return $this->userSession;
   }
 
   public function getUserManager() {
@@ -258,6 +268,14 @@ class ConfigService {
 
   public function getUserId() {
     return $this->userId;
+  }
+
+  public function setUserId($userId) {
+    $oldId = $this->userId;
+    $this->userId = $userId;
+    $this->user = $this->getUser($userId);
+    $this->userSession->setUser($this->user);
+    return $oldId;
   }
 
   public function getL10N() {
@@ -378,6 +396,37 @@ class ConfigService {
   public function generateRandomBytes($length = 30)
   {
     return $this->secureRandom->generate($length);
+  }
+
+  /*
+   ****************************************************************************
+   *
+   * logging
+   *
+   */
+
+  public function log(int $level, string $message, array $context = []) {
+    return $this->logger->log($level, $message, $context);
+  }
+
+  public function error(string $message, array $context = []) {
+    return $this->log(ILogger::ERROR, $message, $context);
+  }
+
+  public function debug(string $message, array $context = []) {
+    return $this->log(ILogger::DEBUG, $message, $context);
+  }
+
+  public function info(string $message, array $context = []) {
+    return $this->log(ILogger::INFO, $message, $context);
+  }
+
+  public function warn(string $message, array $context = []) {
+    return $this->log(ILogger::WARN, $message, $context);
+  }
+
+  public function fatal(string $message, array $context = []) {
+    return $this->log(ILogger::FATAL, $message, $context);
   }
 
   /*

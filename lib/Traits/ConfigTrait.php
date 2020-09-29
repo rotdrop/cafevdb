@@ -38,6 +38,11 @@ trait ConfigTrait {
     return $this->configService->getAppName();
   }
 
+  protected function userSession()
+  {
+    return $this->configService->getUserSession();
+  }
+
   protected function userManager()
   {
     return $this->configService->getUserManager();
@@ -118,6 +123,11 @@ trait ConfigTrait {
     return $this->configService->getUserId();
   }
 
+  protected function setUserId($userId)
+  {
+    return $this->configService->setUserId($userId);
+  }
+
   protected function groupId()
   {
     return $this->configService->getGroupId();
@@ -177,11 +187,32 @@ trait ConfigTrait {
    * short-cuts
    *
    */
-  public function databaseConfigured() {
+
+  protected function databaseConfigured() {
     return !(empty($this->getConfigValue('dbname'))
              || empty($this->getConfigValue('dbuser'))
              || empty($this->getConfigValue('dbpassword'))
              || empty($this->getConfigValue('dbserver')));
+  }
+
+  protected function logError(string $message, array $context = []) {
+    $this->configService->error($message, $context);
+  }
+
+  protected function logDebug(string $message, array $context = []) {
+    $this->configService->debug($message, $context);
+  }
+
+  protected function logInfo(string $message, array $context = []) {
+    $this->configService->info($message, $context);
+  }
+
+  protected function logWarn(string $message, array $context = []) {
+    $this->configService->warn($message, $context);
+  }
+
+  protected function logFatal(string $message, array $context = []) {
+    $this->configService->fatal($message, $context);
   }
 
 }
