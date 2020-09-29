@@ -103,6 +103,7 @@ var CAFEVDB = CAFEVDB || {};
     const simpleSetValueHandler = function(element, eventType, msgElement, callback, getValue) {
       element.on(eventType, function(event) {
         msgElement.hide();
+        $('.statusmessage').hide();
         const self = $(this);
         var name;
         var value;
@@ -446,6 +447,7 @@ var CAFEVDB = CAFEVDB || {};
         });
 
       container.find('#generate').on('click', function(event) {
+        $('.statusmessage').hide();
         msg.hide();
 
         // show the visible password input
@@ -471,8 +473,8 @@ var CAFEVDB = CAFEVDB || {};
     }
 
     { // shared objects
-      const container = $('#eventsettings');
-      const msg = container.children('.statusmessage');
+      const container = $('#sharing-settings');
+      const msg = container.find('.statusmessage.sharing-settings');
 
       ///////////////////////////////////////////////////////////////////////////
       //
@@ -484,14 +486,17 @@ var CAFEVDB = CAFEVDB || {};
 
       ///////////////////////////////////////////
 
-      const sharedFolder = function(cssBase, callback) {
+      const sharedFolder =
+      function(cssBase, callback) {
         const form = container.find('#' + cssBase + '-form');
         const css = cssBase;
         const cssSaved = cssBase + '-saved';
         const cssForce = cssBase + '-force';
+        const cssCheck = cssBase + '-check';
         const sharedObject = container.find('#' + css);
         const sharedObjectSaved = container.find('#' + cssSaved);
         const sharedObjectForce = container.find('#' + cssForce);
+        const sharedObjectCheck = container.find('#' + cssCheck);
 
         form.submit(function () { return false; }); // @@TODO ???
 
@@ -499,37 +504,37 @@ var CAFEVDB = CAFEVDB || {};
           return false;
         });
 
-      sharedObjectForce.click(function(event) {
-        msg.hide();
-        if (!sharedObjectForce.is(':checked') && sharedObjectSaved.val() != '') {
-	  sharedObject.val(sharedObjectSaved.val());
-	  sharedObject.prop('disabled', true);
-        } else {
-	  sharedObject.prop('disabled', false);
-        }
-      });
-
-      simpleSetValueHandler(
-        $('#sharedfoldercheck'), 'click', msg,
-        function(element, data, value, msg) { // done
-	  sharedObject.val(value);
-	  sharedObjectSaved.val(value);
-          if (value != '') {
+        sharedObjectForce.click(function(event) {
+          msg.hide();
+          if (!sharedObjectForce.is(':checked') && sharedObjectSaved.val() != '') {
+	    sharedObject.val(sharedObjectSaved.val());
 	    sharedObject.prop('disabled', true);
-            sharedObjectForce.prop('checked', false);
+          } else {
+	    sharedObject.prop('disabled', false);
           }
-          if (callback !== undefined) {
-            callback(element, data, value, msg);
-          }
-        },
-        function(element, msg) { // getValue
-          return { 'name': css,
-                   'value': { css: sharedObject.val(),
-                              cssSaved: sharedObjectSaved.val(),
-                              cssForce: sharedObjectForce.is(':checked') ? true : false }
-                 };
         });
 
+        simpleSetValueHandler(
+          sharedObjectCheck, 'click', msg,
+          function(element, data, value, msg) { // done
+            // value is just the thing submitted to the AJAX call
+	    sharedObject.val(data.value);
+	    sharedObjectSaved.val(data.value);
+            if (value != '') {
+	      sharedObject.prop('disabled', true);
+              sharedObjectForce.prop('checked', false);
+            }
+            if (callback !== undefined) {
+              callback(element, data, value, msg);
+            }
+          },
+          function(element, msg) { // getValue
+            return { 'name': css,
+                     'value': { [css]: sharedObject.val(),
+                                [cssSaved]: sharedObjectSaved.val(),
+                                [cssForce]: sharedObjectForce.is(':checked') ? true : false }
+                   };
+          });
       };
 
       ///////////////////////////////////////////////////////////////////////////
