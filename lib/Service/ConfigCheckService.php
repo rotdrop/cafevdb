@@ -372,7 +372,7 @@ class ConfigCheckService
    *
    * @return bool, @c true on success.
    */
-  public function checkShareOwner($shareOwnerId)
+  public function checkShareOwner($shareOwnerId, $shareOwnerPassword = null)
   {
     if (!($shareGroupId = $this->getAppValue('usergroup', false))) {
       return false; // need at least this group!
@@ -384,7 +384,10 @@ class ConfigCheckService
     // Create the user if necessary
     if (!$this->userManager()->userExists($shareOwnerId)) {
       $this->logError("User does not exist");
-      $shareOwner = $this->userManager()->createUser($shareOwnerId, $this->generateRandomBytes(30));
+      if (empty($shareOwnerPassword)) {
+        $shareOwnerPassword = $this->generateRandomBytes(30);
+      }
+      $shareOwner = $this->userManager()->createUser($shareOwnerId, $shareOwnerPassword);
       if (!empty($shareOwner)) {
         $this->logError("User created");
         $created = true;
@@ -398,6 +401,7 @@ class ConfigCheckService
 
     if (empty($shareOwner)) {
       $this->logError("Share-owner " . $shareOwnerId . " could not be found or created.");
+      return false;
     }
 
     // Sutff the user in its appropriate group

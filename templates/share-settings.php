@@ -39,10 +39,10 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <input name="shareownercheck" id="check" type="button" value="<?php echo $l->t('Check');?>" <?php echo $off; ?> />
       </fieldset>
 <!-- CHANGE ITS PASSWORD -->
-      <fieldset class="sharingpassword" <?php echo $off; ?> >
-        <input type="password" id="sharingpassword" class="randompassword" name="sharingpassword" placeholder="<?php echo $l->t('Share-Password');?>" data-typetoggle="#sharingpassword-show" />
-        <input class="cafevdb-password-show" type="checkbox" id="sharingpassword-show" name="sharingpassword-show" />
-        <label class="cafevdb-password-show" for="sharingpassword-show"><?php echo $l->t('show');?></label>
+      <fieldset class="shareownerpassword" <?php echo $off; ?> >
+        <input type="password" id="shareownerpassword" class="randompassword" name="shareownerpassword" placeholder="<?php echo $l->t('Share-Password');?>" data-typetoggle="#shareownerpassword-show" />
+        <input class="cafevdb-password-show" type="checkbox" id="shareownerpassword-show" name="shareownerpassword-show" />
+        <label class="cafevdb-password-show" for="shareownerpassword-show"><?php echo $l->t('show');?></label>
         <input name="passwordgenerate" id="generate" type="button" value="<?php echo $l->t('Generate');?>" />
         <input name="passwordchange" id="change" type="button" value="<?php echo $l->t('Change');?>" />
       </fieldset>

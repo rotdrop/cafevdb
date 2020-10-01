@@ -227,7 +227,7 @@ class PersonalSettingsController extends Controller {
 
       return self::response($this->l->t('Share-owner user `%s\' ok.', [$uid]));
 
-    case 'sharingpassword':
+    case 'shareownerpassword':
       $shareOwnerUid = $this->getConfigValue('shareowner');
       if (empty($shareOwnerUid)) {
         return self::grumble($this->l->t('Please create the share-owner user first.'));
@@ -246,6 +246,7 @@ class PersonalSettingsController extends Controller {
       if (!$shareOwner->setPassword($realValue)) {
         return self::grumble($this->l->t('Unable to set password for `%s\'.', [$shareOwnerUid]));
       }
+      $this->setConfigValue($parameter, $realValue); // remember for remote API perhaps
       return self::response($this->l->t('Successfully changed passsword for `%s\'.', [$shareOwnerUid]));
 
     case 'sharedfolder':

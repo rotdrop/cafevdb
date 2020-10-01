@@ -426,8 +426,8 @@ var CAFEVDB = CAFEVDB || {};
 
     // Share-owner´s password
     {
-      let container = $('fieldset.sharingpassword');
-      const password = container.find('#sharingpassword');
+      let container = $('fieldset.shareownerpassword');
+      const password = container.find('#shareownerpassword');
       const change = container.find('#change');
       const msg = $('#shareownerform .statusmessage');
 
@@ -455,7 +455,7 @@ var CAFEVDB = CAFEVDB || {};
 
         // show the visible password input
         if (password.is(':visible')) {
-	  $('#sharingpassword-show').click();
+	  $('#shareownerpassword-show').click();
         }
 
         $.post(

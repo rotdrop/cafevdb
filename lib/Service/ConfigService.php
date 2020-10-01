@@ -66,6 +66,7 @@ class ConfigService {
     'dbpassword',
     'dbname',
     'shareowner',
+    'shareownerpassword',
     'sharedfolder',
     'concertscalendar',
     'concertscalendarid',
