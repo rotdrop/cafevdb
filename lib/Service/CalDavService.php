@@ -30,6 +30,7 @@ namespace OCA\CAFEVDB\Service;
 // missing: move/delete calendar
 
 use OCA\DAV\CalDAV\CalDavBackend;
+use OCA\DAV\CalDAV\Calendar;
 
 class CalDavService
 {
@@ -41,17 +42,26 @@ class CalDavService
   /** @var VCalendarService */
   private $vCalendarService;
 
+  /** @var \OCP\Calendar\IManager */
+  private $calendarManager;
+
   public function __construct(
     ConfigService $configService,
     VCalendarService $vCalendarService,
+    \OCP\Calendar\IManager $calendarManager,
     CalDavBackend $calDavBackend
   )
   {
     $this->configService = $configService;
-    $this->calDavBackend = $calDavBackend;
     $this->vCalendarService = $vCalendarService;
+    $this->calendarManager = $calendarManager;
+    $this->calDavBackend = $calDavBackend;
   }
 
+  /**Get or create a calendar with display-name $name
+   *
+   * @return int Calendar id.
+   */
   public function createCalendar($name, $userId = null) {
     empty($userId) && ($userId = $this->userId());
     $principal = "principals/users/$userId";
@@ -59,28 +69,83 @@ class CalDavService
     if (!empty($calendar))  {
       return $calendar['id'];
     } else {
-      return $this->calDavBackend->createCalendar($principal, $name, []);
+      try {
+        return $this->calDavBackend->createCalendar($principal, $name, []);
+      } catch(\Exception $e) {
+        $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
+      }
     }
+    return -1;
   }
 
-  public function shareCalendar($calendarId, $groupId) {
+  /**Delete the calendar with the given id */
+  public function deleteCalendar($id) {
+    $this->calDavBackend->deleteCalendar($id);
+  }
+
+  public function groupShareCalendar($calendarId, $groupId, $readOnly = false) {
     $share = [
       'href' => 'principal:principals/groups/'.$groupId,
       'commonName' => '',
       'summary' => '',
-      'readOnly' => false
+      'readOnly' => $readOnly,
     ];
-    $calendar = $this->calDavBackend->getCalendarById($calendarId);
-    if (empty($calendar)) {
+    $calendarInfo = $this->calDavBackend->getCalendarById($calendarId);
+    //$calendarInfo = $this->calendarById($calendarId);
+    if (empty($calendarInfo)) {
       return false;
     }
-    $this->calDavBackend->updateShares($calendar, $share, []);
+    //$this->logError("Calendar: " . print_r($calendarInfo, true));
+    // convert to ISharable
+    $calendar = new Calendar($this->calDavBackend, $calendarInfo, $this->l10n(), $this->appConfig());
+    $this->calDavBackend->updateShares($calendar, [$share], []);
+    $shares = $this->calDavBackend->getShares($calendarId);
+    foreach($shares as $share) {
+      if ($share['href'] === $share['href'] && $share['readOnly'] == $readOnly) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public function displayName($calendarId, $displayName)
+  {
+    try {
+      $this->calDavBackend->updateCalendar($calendarId, new \Sabre\DAV\PropPatch([['{DAV:}displayname' => $displayName]]));
+    } catch(\Exception $e) {
+      $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
+      return false;
+    }
     return true;
+  }
+
+  /** Get a calendar with the given display name. */
+  public function calendarByName($displayName)
+  {
+    foreach($this->calendarManager->getCalendars() as $calendar) {
+      if ($displayName === $calendar->getDisplayName()) {
+        return $calendar;
+      }
+    }
+    return null;
+  }
+
+  /** Get a calendar with the given its id. */
+  public function calendarById($id)
+  {
+    foreach($this->calendarManager->getCalendars() as $calendar) {
+      if ($id === $calendar->getKey()) {
+        return $calendar;
+      }
+    }
+    return null;
   }
 
   public function playground() {
     $this->vCalendarService->playground();
   }
+
+
 }
 
 // Local Variables: ***

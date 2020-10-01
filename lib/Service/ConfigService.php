@@ -235,6 +235,11 @@ class ConfigService {
     $this->encryptionCache = [];
   }
 
+  public function getAppConfig()
+  {
+    return $this->containerConfig;
+  }
+
   public function getAppName() {
     return $this->appName;
   }

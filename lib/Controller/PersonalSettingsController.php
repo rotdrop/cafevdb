@@ -359,9 +359,12 @@ class PersonalSettingsController extends Controller {
       $actual = $this->getConfigValue($parameter);
       $actualId = $this->getConfigValue($parameter.'id');
       try {
-        if (($newId = $this->configCheckService->checkSharedCalendar($real))) {
+        if (($newId = $this->configCheckService->checkSharedCalendar($real, $actualId))) {
           $this->setConfigValue($parameter, $real);
           $this->setConfigValue($parameter.'id', $newId);
+          return self::valueResponse(
+            ['name' => $real, 'id' => $newId],
+            $this->l->t('Created and shared new folder `%s\'.', [$real]));
         } else {
           return self::grumble($this->l->t('Failed to create new shared calendar `%s\'.', [$real]));
         }

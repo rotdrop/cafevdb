@@ -38,6 +38,11 @@ trait ConfigTrait {
     return $this->configService->getAppName();
   }
 
+  protected function appConfig()
+  {
+    return $this->configService->getAppConfig();
+  }
+
   protected function userSession()
   {
     return $this->configService->getUserSession();
@@ -126,6 +131,20 @@ trait ConfigTrait {
   protected function setUserId($userId)
   {
     return $this->configService->setUserId($userId);
+  }
+
+  protected function shareOwnerId()
+  {
+    return $this->getConfigValue('shareowner');
+  }
+
+  protected function shareOwner()
+  {
+    $shareOwnerUid = $this->getConfigValue('shareowner');
+    if (empty($shareOwnerUid)) {
+      return null;
+    }
+    return $this->user($shareOwnerUid);
   }
 
   protected function groupId()

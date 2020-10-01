@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -885,71 +885,6 @@ __EOT__;
         }
       }
       return $result;
-    }
-
-    /**Make sure there is a suitable shared calendar with the given
-     * name and/or id. Create one if necesary.
-     *
-     * @param[in] $dpyName The display name. Mandatory.
-     *
-     * @param[in] $calId The calendar id. If set, the corresponding
-     * calender will be renamed to $dpyName. If unset, search for a
-     * calendar with $dpyName as display name or create one.
-     *
-     * @return The (real) calendar id or false in case of error.
-     */
-    public static function checkSharedCalendar($dpyName, $calId = false)
-    {
-      $sharegroup = Config::getAppValue('usergroup');
-      $shareowner = Config::getValue('shareowner');
-
-      // Make sure the dummy user owning all shared stuff is "alive"
-      if (!ConfigCheck::checkShareOwner($shareowner)) {
-        return false;
-      }
-
-      if ($calId === false) {
-        // try to find one ...
-        $shareCal = self::calendarByName($dpyName, $shareowner);
-      } else {
-        // otherwise there should be one, in principle ...
-        $shareCal = \OC_Calendar_Calendar::find($calId);
-        // the user interface primarily exhibits the name, so maybe we
-        // have an orphan id, recheck with the display name
-        if (!$shareCal) {
-          $shareCal = self::calendarByName($dpyName, $shareowner);
-        }
-      }
-
-      if (!$shareCal) {
-        // Well, then we create one ...
-        $calId = \OC_Calendar_Calendar::addCalendar($shareowner, $dpyName);
-        $shareCal = \OC_Calendar_Calendar::find($calId);
-      } else {
-        $calId = $shareCal['id'];
-      }
-
-      // Now there should be a calendar, if not, bail out.
-      if (!$shareCal) {
-        return false;
-      }
-
-      // Check that we can edit, simply set the item as shared
-      ConfigCheck::sudo($shareowner, function() use ($calId, $sharegroup) {
-          $result = ConfigCheck::groupShareObject($calId, $sharegroup);
-          return $result;
-        });
-
-      // Finally check, that the display-name matches. Otherwise rename
-      // the calendar.
-      if ($shareCal['displayname'] != $dpyName) {
-        ConfigCheck::sudo($shareowner, function() use ($calId, $dpyName) {
-            $result = \OC_Calendar_Calendar::editCalendar($calId, $dpyName);
-            return $result;
-          });
-      }
-
-      return $calId;
     }
 
     /**Return the IDs of the default calendars.

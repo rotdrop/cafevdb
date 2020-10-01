@@ -70,13 +70,6 @@ class ConfigCheckService
     $this->shareManager = $shareManager;
     $this->calendarManager = $calendarManager;
     $this->calDavService = $calDavService;
-
-    $this->logError('Hello');
-    foreach($this->calendarManager->getCalendars() as $calendar) {
-      $this->logError("cal entry: " . $calendar->getKey() . ' / ' . $calendar->getDisplayName());
-      // $this->logError(print_r($calendar, true));
-    }
-    $this->calDavService->playground();
   }
 
   /**Return an array with necessary configuration items, being either
@@ -620,19 +613,80 @@ class ConfigCheckService
     return true;
   }
 
-  /**Check for existence of the shared folder and create it when not
-   * found.
+  /**Check for existence of the given calendar. Create one if it could
+   * not be found. Make sure it is shared between the orchestra group.
    *
-   * @param[in] $sharedFolder The name of the folder.
+   * @param[in] $sharedCalendarName The display-name of the calendar.
    *
-   * @return bool, @c true on success.
+   * @param[in] $sharedCalendarId The id of the calendar.
+   *
+   * @return int -1 on error, calendar id on success.
    */
-  public function checkSharedCalendar($sharedCalendarName)
+  public function checkSharedCalendar($sharedCalendarName, $sharedCalendarId = null)
   {
     if (empty($sharedCalendarName)) {
-      return false;
+      return -1;
     }
-    return false;
+
+    $shareOwnerId = $this->shareOwnerId();
+    $userGroupId = $this->groupId();
+
+    if (empty($shareOwnerId) || empty($userGroupId)) {
+      return -1;
+    }
+
+    //$this->calDavService->playground();
+
+    return $this->sudo($shareOwnerId, function()
+      use ($sharedCalendarName, $sharedCalendarId, $shareOwnerId, $userGroupId)
+      {
+        $this->logError("Sudo to " . $this->userId());
+
+        // get or create the calendar
+        if (!empty($sharedCalendarId) && $sharedCalendarId > 0) {
+          $calendar = $this->calDavService->calendarById($sharedCalendarId);
+        } else {
+          $calendar = $this->calDavService->calendarByName($sharedCalendarName);
+        }
+
+        if (empty($calendar)) {
+          $this->logError("Calendar " . $sharedCalendarName . " does not seem to exist.");
+          $sharedCalendarId = $this->calDavService->createCalendar($sharedCalendarName);
+          if ($sharedCalendarId < 0) {
+            $this->logError("Unabled to create calendar " . $sharedCalendarName);
+            return -1;
+          }
+          $calendar = $this->calDavService->calendarById($sharedCalendarId);
+          if (empty($calendar)) {
+            $this->logError("Failed to create calendar " . $sharedCalendarName);
+            $this->calDavService->deleteCalendar($sharedCalendarId);
+            return -1;
+          }
+          $created = true;
+        } else {
+          $sharedCalendarId = $calendar->getKey();
+          $created = false;
+        }
+
+        // make sure it is shared with the group
+        if (!$this->calDavService->groupShareCalendar($sharedCalendarId, $userGroupId)) {
+          $this->logError("Unable to shared " . $sharedCalendarName . " with " . $userGroupId);
+          if ($created) {
+            $this->calDavService->deleteCalendar($sharedCalendarId);
+          }
+          return -1;
+        }
+
+        // check the display name
+        if ($calendar->getDisplayName() != $sharedCalendarName) {
+          $this->logError("Changing name of " . $sharedCalendarId . " from " . $calendar->getDisplayName() . " to " . $sharedCalendarName);
+          $this->calDavService->displayName($sharedCalendarId, $sharedCalendarName);
+        }
+
+        return $sharedCalendarId;
+      });
+
+    return -1;
   }
 
   /**Check whether we have data-base access by connecting to the
