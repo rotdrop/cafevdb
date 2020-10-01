@@ -88,7 +88,7 @@ class PersonalSettingsController extends Controller {
     case 'expertmode':
       $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
       if ($realValue === null) {
-        return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean', [$value, $parameter]));
+        return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean.', [$value, $parameter]));
       }
       $stringValue = $realValue ? 'on' : 'off';
       $this->setUserValue($parameter, $stringValue);
@@ -96,7 +96,7 @@ class PersonalSettingsController extends Controller {
     case 'pagerows':
       $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => -1]);
       if ($realValue === false) {
-        return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range', [$value, $parameter]));
+        return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]));
       }
       $this->setUserValue($parameter, $realValue);
       return self::response($this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]));
@@ -127,14 +127,14 @@ class PersonalSettingsController extends Controller {
     case 'encryptionkey':
       // Get data
       if (!is_array($value) || !isset($value['encryptionkey']) || !isset($value['loginpassword'])) {
-        return self::grumble($this->l->t('Invalid request data: `%s\'',[print_r($value, true)]));
+        return self::grumble($this->l->t('Invalid request data: `%s\'.',[print_r($value, true)]));
       }
       $password = $value['loginpassword'];
       $encryptionkey = $value['encryptionkey'];
 
       // Re-validate the user
       if ($this->userManager()->checkPassword($this->userId(), $password) === false) {
-        return self::grumble($this->l->t('Invalid password for `%s\'', [$this->userId()]));
+        return self::grumble($this->l->t('Invalid password for `%s\'.', [$this->userId()]));
       }
 
       // Then check whether the key is correct
@@ -170,7 +170,7 @@ class PersonalSettingsController extends Controller {
     case 'dbuser':
       $realValue = trim($value);
       $this->setConfigValue($parameter, $realValue);
-      return self::valueResponse($realValue, $this->l->t('`%s\' set to `%s\'', [$parameter,$realValue]));
+      return self::valueResponse($realValue, $this->l->t('`%s\' set to `%s\'.', [$parameter,$realValue]));
     case 'dbpassword':
       try {
         if (!empty($value)) {
@@ -189,7 +189,7 @@ class PersonalSettingsController extends Controller {
           }
         }
       } catch(\Exception $e) {
-        return self::grumble($this->l->t('DB-test failed with exception `%s\'', [$e->getMessage()]));
+        return self::grumble($this->l->t('DB-test failed with exception `%s\'.', [$e->getMessage()]));
       }
     case 'shareowner':
       if (!isset($value['shareowner'])
@@ -213,16 +213,16 @@ class PersonalSettingsController extends Controller {
       if (empty($savedUid) || $force) {
         if ($this->configCheckService->checkShareOwner($uid)) {
           $this->setConfigValue($parameter, $uid);
-          return self::valueResponse($uid, $this->l->t('New share-owner `%s\'', [$uid]));
+          return self::valueResponse($uid, $this->l->t('New share-owner `%s\'.', [$uid]));
         } else {
-          return self::grumble($this->l->t('Failure creating account for user-id `%s\'', [$uid]));
+          return self::grumble($this->l->t('Failure creating account for user-id `%s\'.', [$uid]));
         }
       } else if ($savedUid != $uid) {
         return self::grumble($savedUid . ' != ' . $uid);
       }
 
       if (!$this->configCheckService->checkShareOwner($uid)) {
-        return self::grumble($this->l->t('Failure checking account for user-id `%s\'', [$uid]));
+        return self::grumble($this->l->t('Failure checking account for user-id `%s\'.', [$uid]));
       }
 
       return self::response($this->l->t('Share-owner user `%s\' ok.', [$uid]));
@@ -280,9 +280,9 @@ class PersonalSettingsController extends Controller {
 
           if ($this->configCheckService->checkSharedFolder($real)) {
             $this->setConfigValue($parameter, $real);
-            return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'', [$real]));
+            return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'.', [$real]));
           } else {
-            return self::grumble($this->l->t('Failed to create new shared folder`%s\'', [$real]));
+            return self::grumble($this->l->t('Failed to create new shared folder`%s\'.', [$real]));
           }
         } else if ($real != $saved) {
           return self::grumble($saved . ' != ' . $real);
@@ -293,7 +293,7 @@ class PersonalSettingsController extends Controller {
         }
       } catch(\Exception $e) {
         return self::grumble(
-          $this->l->t('Failure checking folder `%s\', caught an exception `%s\'',
+          $this->l->t('Failure checking folder `%s\', caught an exception `%s\'.',
                       [$real, $e->getMessage()]));
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
@@ -345,7 +345,7 @@ class PersonalSettingsController extends Controller {
       } catch(\Exception $e) {
         $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
         return self::grumble(
-          $this->l->t('Failure checking folder `%s\', caught an exception `%s\'',
+          $this->l->t('Failure checking folder `%s\', caught an exception `%s\'.',
                       [$real, $e->getMessage()]));
       }
     case 'concertscalendar':
@@ -372,7 +372,7 @@ class PersonalSettingsController extends Controller {
       } catch(\Exception $e) {
         $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
         return self::grumble(
-          $this->l->t('Failure checking calendar `%s\', caught an exception `%s\'',
+          $this->l->t('Failure checking calendar `%s\', caught an exception `%s\'.',
                       [$real, $e->getMessage()]));
       }
     case 'sharedaddressbook':
@@ -395,9 +395,16 @@ class PersonalSettingsController extends Controller {
       } catch(\Exception $e) {
         $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
         return self::grumble(
-          $this->l->t('Failure checking address book `%s\', caught an exception `%s\'',
+          $this->l->t('Failure checking address book `%s\', caught an exception `%s\'.',
                       [$real, $e->getMessage()]));
       }
+    case 'eventduration':
+      $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
+      if ($realValue === false) {
+        return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]));
+      }
+      $this->setUserValue($parameter, $realValue);
+      return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));

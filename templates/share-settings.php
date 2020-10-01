@@ -69,7 +69,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <label for="finance"><?php echo $l->t('Finance-Calendar');?></label>
         <br/>
 <!-- DEFAULT DURATION FOR EVENTS -->
-        <input type="text" id="duration" name="eventduration" placeholder="<?php echo $l->t('#Minutes');?>" value="<?php echo $_['eventduration']; ?>" />
+        <input type="number" min="0" id="duration" name="eventduration" placeholder="<?php echo $l->t('#Minutes');?>" value="<?php echo $_['eventduration']; ?>" />
         <label for="duration"><?php echo $l->t('Default Duration for Events');?></label>
       </fieldset>
     </form>
