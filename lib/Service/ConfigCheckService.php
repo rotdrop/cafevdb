@@ -31,8 +31,6 @@ use OCP\Share\IShare;
 use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\DatabaseFactory;
 use OCA\CAFEVDB\Common\Util; // some static helpers
 
 /**Check for a usable configuration.
@@ -782,6 +780,8 @@ class ConfigCheckService
    * 'password', 'host' or null for default options.
    *
    * @return bool, @c true on success.
+   *
+   * @todo Initial database structure and migrations
    */
   public function databaseAccessible($connectionParams = null)
   {
@@ -803,10 +803,6 @@ class ConfigCheckService
       trigger_error('db cannot ping');
       return false;
     }
-    // if (Events::configureDatabase($handle) === false) {
-    //   mySQL::close($handle);
-    //   return false;
-    // }
 
     $connection->close();
 
