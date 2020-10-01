@@ -29,45 +29,6 @@ namespace CAFEVDB
    */
   class Events
   {
-    /**Make sure the data-base provides the necessary table(s).
-     * This function may through an exception.
-     */
-    public static function configureDatabase($_handle = false)
-    {
-      try {
-        if ($_handle === false) {
-          Config::init();
-          $handle = mySQL::connect(Config::$dbopts);
-        } else {
-          $handle = $_handle;
-        }
-
-        $query = 'CREATE TABLE IF NOT EXISTS `ProjectEvents` (
- `Id` int(11) NOT NULL AUTO_INCREMENT,
- `ProjectId` int(11) DEFAULT NULL,
- `CalendarId` int(11) NOT NULL,
- `EventId` int(11) NOT NULL,
- PRIMARY KEY (`Id`),
- UNIQUE KEY `ProjectId` (`ProjectId`,`EventId`)
-) DEFAULT CHARSET=utf8';
-
-        $result = mySQL::query($query, $handle);
-
-        if ($_handle === false) {
-          mySQL::close($handle);
-        }
-      } catch (\Exception $e) {
-
-        if ($_handle === false) {
-          mySQL::close($handle);
-        }
-
-        throw $e;
-      }
-
-      return $result;
-    }
-
     /**Link the event (or whatever) into the ProjectEvents table. This
      * function is invoked on every event-creation. The link between
      * projects and events is triggered by the Projekte::Name field
@@ -853,40 +814,6 @@ __EOT__;
       return $result;
     }
 
-    /**Find a matching calendar by its displayname.
-     *
-     * @param[in] $dpyName The display name.
-     *
-     * @param[in] $owner The owner of the calendar object.
-     *
-     * @param[in] $includeShared Include also shared calendars.
-     *
-     * @return The OC-calendar object (row of the database, i.e. an array).
-     */
-    public static function calendarByName($dpyName, $owner = false, $includeShared = false)
-    {
-      if ($owner === false) {
-        $owner = \OC_User::getUser();
-      }
-
-      $result = false;
-      $calendars = \OC_Calendar_Calendar::allCalendars($owner);
-
-      foreach ($calendars as $calendar) {
-        if (!$includeShared &&
-            ($share = \OCP\Share::getItemSharedWithBySource('calendar', $calendar['id'])) != false &&
-            ($share['uid_owner'] != $owner)) {
-          // Exclude shared items.
-          continue;
-        }
-        if ($calendar['displayname'] == $dpyName) {
-          $result = $calendar;
-          break;
-        }
-      }
-      return $result;
-    }
-
     /**Return the IDs of the default calendars.
      */
     public static function defaultCalendars($public = false)
@@ -1266,6 +1193,8 @@ __EOT__;
 
     /**Export the given events in ICAL format. The events need not
      * belong to the same calendar.
+     *
+     * @@TODO: this should be Sabre -> serializ?
      *
      * @param[in] $events An array with event Ids.
      *
