@@ -31,6 +31,8 @@ class DatabaseService extends \Doctrine\DBAL\Connection
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  const CHARSET = 'utf8mb4';
+
   protected $connection;
 
   public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null) {
