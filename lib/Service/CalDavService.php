@@ -58,14 +58,24 @@ class CalDavService
     $this->calDavBackend = $calDavBackend;
   }
 
-  /**Get or create a calendar with display-name $name
+  /**Get or create a calendar.
+   *
+   * @param[in] $uri Relative URI
+   *
+   * @param[in] $userId part of the principal name.
+   *
+   * @param[in] $displayName Display-name of the calendar.
    *
    * @return int Calendar id.
    */
-  public function createCalendar($name, $userId = null) {
+  public function createCalendar($uri, $displayName = null, $userId = null) {
     empty($userId) && ($userId = $this->userId());
+    empty($displayName) && ($displayName = ucfirst($uri));
     $principal = "principals/users/$userId";
-    $calendar = $this->calDavBackend->getCalendarByUri($principal, $name);
+
+    $calendar = $this->calDavBackend->getCalendarByUri($principal, $name, [
+      '{DAV:}displayname' => $displayName,
+    ]);
     if (!empty($calendar))  {
       return $calendar['id'];
     } else {
@@ -111,7 +121,7 @@ class CalDavService
   public function displayName($calendarId, $displayName)
   {
     try {
-      $this->calDavBackend->updateCalendar($calendarId, new \Sabre\DAV\PropPatch([['{DAV:}displayname' => $displayName]]));
+      $this->calDavBackend->updateCalendar($calendarId, new \Sabre\DAV\PropPatch(['{DAV:}displayname' => $displayName]));
     } catch(\Exception $e) {
       $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       return false;
