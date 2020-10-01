@@ -53,23 +53,28 @@ class ConfigCheckService
   /** @var CalDavService */
   private $calDavService;
 
-  /** @var \OCP\Calendar\IManager */
-  private $calendarManager;
+  /** @var CardDavService */
+  private $cardDavService;
+
+  /** @var \OCP\Contacts\IManager */
+  private $contactsManager;
 
   public function __construct(
     ConfigService $configService,
     DatabaseFactory $databaseFactory,
     IRootFolder $rootFolder,
     \OCP\Share\IManager $shareManager,
-    \OCP\Calendar\IManager $calendarManager,
-    CalDavService $calDavService
+    \OCP\Contacts\IManager $contactsManager,
+    CalDavService $calDavService,
+    CardDavService $cardDavService
   ) {
     $this->configService = $configService;
     $this->databaseFactory = $databaseFactory;
     $this->rootFolder = $rootFolder;
     $this->shareManager = $shareManager;
-    $this->calendarManager = $calendarManager;
+    $this->contactsManager = $contactsManager;
     $this->calDavService = $calDavService;
+    $this->cardDavService = $cardDavService;
   }
 
   /**Return an array with necessary configuration items, being either
@@ -383,6 +388,8 @@ class ConfigCheckService
       $shareOwner = $this->userManager()->createUser($shareOwnerId, $shareOwnerPassword);
       if (!empty($shareOwner)) {
         $this->logError("User created");
+        // trigger address book creation and things
+        $this->eventDispatcher->dispatch(\OCP\IUser::class . '::firstLogin', new GenericEvent($shareOwner));
         $created = true;
       } else {
         $this->logError("User could not be created");
@@ -407,9 +414,7 @@ class ConfigCheckService
         $shareGroup->addUser($shareOwner);
       }
       // check again, addUser() has no return value
-      if ($this->inGroup($shareOwnerId, $shareGroupId)) {
-        $this->logError("added to group");
-      } else {
+      if (!$this->inGroup($shareOwnerId, $shareGroupId)) {
         $this->logError("Could not add " . $shareOwnerId . " to group " . $shareGroupId . ".");
         if ($created) {
           $this->logError("Deleting just created user " . $shareOwnerId  . ".");
@@ -417,6 +422,7 @@ class ConfigCheckService
         }
         return false;
       }
+      $this->logError("added to group");
     }
 
     return $this->shareOwnerExists($shareOwnerId);
@@ -616,17 +622,21 @@ class ConfigCheckService
   /**Check for existence of the given calendar. Create one if it could
    * not be found. Make sure it is shared between the orchestra group.
    *
-   * @param[in] $sharedCalendarName The display-name of the calendar.
+   * @param[in] $uri The local URI of the calendar.
    *
-   * @param[in] $sharedCalendarId The id of the calendar.
+   * @param[in] $displayName The display-name of the calendar.
+   *
+   * @param[in] $idd The id of the calendar.
    *
    * @return int -1 on error, calendar id on success.
    */
-  public function checkSharedCalendar($sharedCalendarName, $sharedCalendarId = null)
+  public function checkSharedCalendar($uri, $displayName = null, $id = null)
   {
-    if (empty($sharedCalendarName)) {
+    if (empty($uri)) {
       return -1;
     }
+
+    empty($displayName) && ($displayName = ucfirst($uri));
 
     $shareOwnerId = $this->shareOwnerId();
     $userGroupId = $this->groupId();
@@ -635,55 +645,131 @@ class ConfigCheckService
       return -1;
     }
 
-    //$this->calDavService->playground();
-
     return $this->sudo($shareOwnerId, function()
-      use ($sharedCalendarName, $sharedCalendarId, $shareOwnerId, $userGroupId)
+      use ($uri, $id, $shareOwnerId, $userGroupId)
       {
         $this->logError("Sudo to " . $this->userId());
 
         // get or create the calendar
-        if (!empty($sharedCalendarId) && $sharedCalendarId > 0) {
-          $calendar = $this->calDavService->calendarById($sharedCalendarId);
+        if (!empty($id) && $id > 0) {
+          $calendar = $this->calDavService->calendarById($id);
         } else {
-          $calendar = $this->calDavService->calendarByName($sharedCalendarName);
+          $calendar = $this->calDavService->calendarByName($displayName);
         }
 
         if (empty($calendar)) {
-          $this->logError("Calendar " . $sharedCalendarName . " does not seem to exist.");
-          $sharedCalendarId = $this->calDavService->createCalendar($sharedCalendarName);
-          if ($sharedCalendarId < 0) {
-            $this->logError("Unabled to create calendar " . $sharedCalendarName);
+          $this->logError("Calendar " . $displayName . " does not seem to exist.");
+          $id = $this->calDavService->createCalendar($uri, $displayName, $shareOwnerId);
+          if ($id < 0) {
+            $this->logError("Unabled to create calendar " . $displayName);
             return -1;
           }
-          $calendar = $this->calDavService->calendarById($sharedCalendarId);
+          $calendar = $this->calDavService->calendarById($id);
           if (empty($calendar)) {
-            $this->logError("Failed to create calendar " . $sharedCalendarName);
-            $this->calDavService->deleteCalendar($sharedCalendarId);
+            $this->logError("Failed to create calendar " . $displayName);
+            $this->calDavService->deleteCalendar($id);
             return -1;
           }
           $created = true;
         } else {
-          $sharedCalendarId = $calendar->getKey();
+          $id = $calendar->getKey();
           $created = false;
         }
 
         // make sure it is shared with the group
-        if (!$this->calDavService->groupShareCalendar($sharedCalendarId, $userGroupId)) {
-          $this->logError("Unable to shared " . $sharedCalendarName . " with " . $userGroupId);
+        if (!$this->calDavService->groupShareCalendar($id, $userGroupId)) {
+          $this->logError("Unable to shared " . $uri . " with " . $userGroupId);
           if ($created) {
-            $this->calDavService->deleteCalendar($sharedCalendarId);
+            $this->calDavService->deleteCalendar($id);
           }
           return -1;
         }
 
         // check the display name
-        if ($calendar->getDisplayName() != $sharedCalendarName) {
-          $this->logError("Changing name of " . $sharedCalendarId . " from " . $calendar->getDisplayName() . " to " . $sharedCalendarName);
-          $this->calDavService->displayName($sharedCalendarId, $sharedCalendarName);
+        if ($calendar->getDisplayName() != $displayName) {
+          $this->logError("Changing name of " . $id . " from " . $calendar->getDisplayName() . " to " . $displayName);
+          $this->calDavService->displayName($id, $displayName);
         }
 
-        return $sharedCalendarId;
+        return $id;
+      });
+
+    return -1;
+  }
+
+  /**Check for existence of the given addressBook. Create one if it could
+   * not be found. Make sure it is shared between the orchestra group.
+   *
+   * @param[in] $uri The local URI of the addressBook.
+   *
+   * @param[in] $displayName The display-name of the addressBook.
+   *
+   * @param[in] $idd The id of the addressBook.
+   *
+   * @return int -1 on error, addressBook id on success.
+   */
+  public function checkSharedAddressBook($uri, $displayName = null, $id = null)
+  {
+    if (empty($uri)) {
+      return -1;
+    }
+
+    empty($displayName) && ($displayName = ucfirst($uri));
+
+    $shareOwnerId = $this->shareOwnerId();
+    $userGroupId = $this->groupId();
+
+    if (empty($shareOwnerId) || empty($userGroupId)) {
+      return -1;
+    }
+
+    return $this->sudo($shareOwnerId, function()
+      use ($uri, $id, $shareOwnerId, $userGroupId)
+      {
+        $this->logError("Sudo to " . $this->userId());
+
+        // get or create the addressBook
+        if (!empty($id) && $id > 0) {
+          $addressBook = $this->cardDavService->addressBookById($id);
+        } else {
+          $addressBook = $this->cardDavService->addressBookByName($displayName);
+        }
+
+        if (empty($addressBook)) {
+          $this->logError("AddressBook " . $displayName . " does not seem to exist.");
+          $id = $this->cardDavService->createAddressBook($uri, $displayName, $shareOwnerId);
+          if ($id < 0) {
+            $this->logError("Unabled to create addressBook " . $displayName);
+            return -1;
+          }
+          $addressBook = $this->cardDavService->addressBookById($id);
+          if (empty($addressBook)) {
+            $this->logError("Failed to create addressBook " . $displayName);
+            $this->cardDavService->deleteAddressBook($id);
+            return -1;
+          }
+          $created = true;
+        } else {
+          $id = $addressBook->getKey();
+          $created = false;
+        }
+
+        // make sure it is shared with the group
+        if (!$this->cardDavService->groupShareAddressBook($id, $userGroupId)) {
+          $this->logError("Unable to shared " . $uri . " with " . $userGroupId);
+          if ($created) {
+            $this->cardDavService->deleteAddressBook($id);
+          }
+          return -1;
+        }
+
+        // check the display name
+        if ($addressBook->getDisplayName() != $displayName) {
+          $this->logError("Changing name of " . $id . " from " . $addressBook->getDisplayName() . " to " . $displayName);
+          $this->cardDavService->displayName($id, $displayName);
+        }
+
+        return $id;
       });
 
     return -1;

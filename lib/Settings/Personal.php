@@ -143,14 +143,14 @@ class Personal implements ISettings {
             'encryptionkey' => $this->getConfigValue('encryptionkey'),
 
             'shareowner' => $this->getConfigValue('shareowner', ''),
-            'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('concerts')),
-            'rehearsalscalendar' => $this->getConfigValue('rehearsalscalendar', $this->l->t('rehearsals')),
-            'othercalendar' => $this->getConfigValue('othercalendar', $this->l->t('other')),
-            'managementcalendar' => $this->getConfigValue('managementcalendar', $this->l->t('management')),
-            'financecalendar' => $this->getConfigValue('financecalendar', $this->l->t('finance')),
+            'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('Concerts')),
+            'rehearsalscalendar' => $this->getConfigValue('rehearsalscalendar', $this->l->t('Rehearsals')),
+            'othercalendar' => $this->getConfigValue('othercalendar', $this->l->t('Other')),
+            'managementcalendar' => $this->getConfigValue('managementcalendar', $this->l->t('Management')),
+            'financecalendar' => $this->getConfigValue('financecalendar', $this->l->t('Finance')),
             'eventduration' => $this->getConfigValue('eventduration', '180'),
 
-            'sharedaddressbook' => $this->getConfigValue('sharedaddressbook', $this->l->t('contacts')),
+            'sharedaddressbook' => $this->getConfigValue('sharedaddressbook', $this->l->t('Contacts')),
 
             'sharedfolder' => $this->getConfigValue('sharedfolder',''),
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),

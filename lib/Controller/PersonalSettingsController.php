@@ -354,17 +354,18 @@ class PersonalSettingsController extends Controller {
     case 'managementcalendar':
     case 'financecalendar':
       $real = trim($value);
+      $uri = substr($parameter, 0, -strlen('calendar'));
       //$saved = $value[$parameter.'-saved'];
       //$force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
       $actual = $this->getConfigValue($parameter);
       $actualId = $this->getConfigValue($parameter.'id');
       try {
-        if (($newId = $this->configCheckService->checkSharedCalendar($real, $actualId))) {
+        if (($newId = $this->configCheckService->checkSharedCalendar($uri, $real, $actualId))) {
           $this->setConfigValue($parameter, $real);
           $this->setConfigValue($parameter.'id', $newId);
           return self::valueResponse(
             ['name' => $real, 'id' => $newId],
-            $this->l->t('Created and shared new folder `%s\'.', [$real]));
+            $this->l->t('Created and shared new calendar `%s\'.', [$real]));
         } else {
           return self::grumble($this->l->t('Failed to create new shared calendar `%s\'.', [$real]));
         }
@@ -374,7 +375,29 @@ class PersonalSettingsController extends Controller {
           $this->l->t('Failure checking calendar `%s\', caught an exception `%s\'',
                       [$real, $e->getMessage()]));
       }
-
+    case 'sharedaddressbook':
+      $real = trim($value);
+      //$saved = $value[$parameter.'-saved'];
+      //$force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      $actual = $this->getConfigValue($parameter);
+      $actualId = $this->getConfigValue($parameter.'id');
+      $uri = 'contacts';
+      try {
+        if (($newId = $this->configCheckService->checkSharedAddressBook($uri, $real, $actualId))) {
+          $this->setConfigValue($parameter, $real);
+          $this->setConfigValue($parameter.'id', $newId);
+          return self::valueResponse(
+            ['name' => $real, 'id' => $newId],
+            $this->l->t('Created and shared new address book `%s\'.', [$real]));
+        } else {
+          return self::grumble($this->l->t('Failed to create new shared address book `%s\'.', [$real]));
+        }
+      } catch(\Exception $e) {
+        $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
+        return self::grumble(
+          $this->l->t('Failure checking address book `%s\', caught an exception `%s\'',
+                      [$real, $e->getMessage()]));
+      }
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));
