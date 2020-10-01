@@ -616,6 +616,21 @@ class ConfigCheckService
     return true;
   }
 
+  /**Check for existence of the shared folder and create it when not
+   * found.
+   *
+   * @param[in] $sharedFolder The name of the folder.
+   *
+   * @return bool, @c true on success.
+   */
+  public function checkSharedCalendar($sharedCalendarName)
+  {
+    if (empty($sharedCalendarName)) {
+      return false;
+    }
+    return false;
+  }
+
   /**Check whether we have data-base access by connecting to the
    * data-base server and selecting the configured data-base.
    *

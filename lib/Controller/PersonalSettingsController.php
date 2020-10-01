@@ -264,7 +264,7 @@ class PersonalSettingsController extends Controller {
           || !isset($value[$parameter.'-force'])) {
         return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
       }
-      $real = $value[$parameter];
+      $real = trim($value[$parameter]);
       $saved = $value[$parameter.'-saved'];
       $force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
       $actual = $this->getConfigValue($parameter);
@@ -315,7 +315,7 @@ class PersonalSettingsController extends Controller {
           || !isset($value[$parameter.'-force'])) {
         return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
       }
-      $real = $value[$parameter];
+      $real = trim($value[$parameter]);
       $saved = $value[$parameter.'-saved'];
       $force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
       $actual = $this->getConfigValue($parameter);
@@ -332,7 +332,7 @@ class PersonalSettingsController extends Controller {
             $this->setConfigValue($parameter, $real);
             return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'.', [$real]));
           } else {
-            return self::grumble($this->l->t('Failed to create new shared folder`%s\'.', [$real]));
+            return self::grumble($this->l->t('Failed to create new shared folder `%s\'.', [$real]));
           }
         } else if ($real != $saved) {
           return self::grumble($saved . ' != ' . $real);
@@ -347,6 +347,30 @@ class PersonalSettingsController extends Controller {
           $this->l->t('Failure checking folder `%s\', caught an exception `%s\'',
                       [$real, $e->getMessage()]));
       }
+    case 'concertscalendar':
+    case 'rehearsalscalendar':
+    case 'othercalendar':
+    case 'managementcalendar':
+    case 'financecalendar':
+      $real = trim($value);
+      //$saved = $value[$parameter.'-saved'];
+      //$force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      $actual = $this->getConfigValue($parameter);
+      $actualId = $this->getConfigValue($parameter.'id');
+      try {
+        if (($newId = $this->configCheckService->checkSharedCalendar($real))) {
+          $this->setConfigValue($parameter, $real);
+          $this->setConfigValue($parameter.'id', $newId);
+        } else {
+          return self::grumble($this->l->t('Failed to create new shared calendar `%s\'.', [$real]));
+        }
+      } catch(\Exception $e) {
+        $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
+        return self::grumble(
+          $this->l->t('Failure checking calendar `%s\', caught an exception `%s\'',
+                      [$real, $e->getMessage()]));
+      }
+
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));
