@@ -40,6 +40,14 @@ class VCalendarService
     $this->legacyCalendarObject = $legacyCalendarObject;
   }
 
+  public function validateRequest($eventData) {
+    return $this->legacyCalendarObject->validateRequest($eventData);
+  }
+
+  public function createVCalendarFromRequest($eventData) {
+    return $this->legacyCalendarObject->createVCalendarFromRequest($eventData);
+  }
+
   public function playground() {
 
     $eventData = [
