@@ -29,8 +29,10 @@ class ProjectService
   /** @var DatabaseService */
   protected $databaseService;
 
-  public function __construct(ConfigService $configService, DatabaseService $databaseService)
-  {
+  public function __construct(
+    ConfigService $configService,
+    DatabaseService $databaseService
+  ) {
     $this->configService = $configService;
     $this->databaseService = $databaseService;
   }
