@@ -29,7 +29,7 @@ use OCP\IUser;
 use OCP\IConfig;
 use OCP\Share\IShare;
 use OCP\Files\IRootFolder;
-use \OCP\Files\FileInfo;
+use OCP\Files\FileInfo;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\DatabaseFactory;
@@ -53,18 +53,30 @@ class ConfigCheckService
   /** @var CalDavService */
   private $calDavService;
 
+  /** @var \OCP\Calendar\IManager */
+  private $calendarManager;
+
   public function __construct(
     ConfigService $configService,
     DatabaseFactory $databaseFactory,
     IRootFolder $rootFolder,
     \OCP\Share\IManager $shareManager,
+    \OCP\Calendar\IManager $calendarManager,
     CalDavService $calDavService
   ) {
     $this->configService = $configService;
     $this->databaseFactory = $databaseFactory;
     $this->rootFolder = $rootFolder;
     $this->shareManager = $shareManager;
+    $this->calendarManager = $calendarManager;
     $this->calDavService = $calDavService;
+
+    $this->logError('Hello');
+    foreach($this->calendarManager->getCalendars() as $calendar) {
+      $this->logError("cal entry: " . $calendar->getKey() . ' / ' . $calendar->getDisplayName());
+      // $this->logError(print_r($calendar, true));
+    }
+    $this->calDavService->playground();
   }
 
   /**Return an array with necessary configuration items, being either

@@ -22,6 +22,13 @@
 
 namespace OCA\CAFEVDB\Service;
 
+// @@TODO: replace the stuff below by more persistent APIs. As it
+// shows (Sep. 2020) the only option would be http calls to the dav
+// service. Even the perhaps-forthcoming writable calendar API does
+// not allow the creation of calendars or altering shring options.
+
+// missing: move/delete calendar
+
 use OCA\DAV\CalDAV\CalDavBackend;
 
 class CalDavService
@@ -29,12 +36,20 @@ class CalDavService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /** @var CalDavBackend */
-  protected $calDavBackend;
+  private $calDavBackend;
 
-  public function __construct(ConfigService $configService, CalDavBackend $calDavBackend)
+  /** @var VCalendarService */
+  private $vCalendarService;
+
+  public function __construct(
+    ConfigService $configService,
+    VCalendarService $vCalendarService,
+    CalDavBackend $calDavBackend
+  )
   {
     $this->configService = $configService;
     $this->calDavBackend = $calDavBackend;
+    $this->vCalendarService = $vCalendarService;
   }
 
   public function createCalendar($name, $userId = null) {
@@ -61,6 +76,10 @@ class CalDavService
     }
     $this->calDavBackend->updateShares($calendar, $share, []);
     return true;
+  }
+
+  public function playground() {
+    $this->vCalendarService->playground();
   }
 }
 
