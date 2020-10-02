@@ -25,6 +25,10 @@ namespace OCA\CAFEVDB\Service;
 use OCA\DAV\Events\CalendarUpdatedEvent;
 use OCA\DAV\Events\CalendarDeletedEvent;
 
+use OCA\DAV\Events\CalendarObjectCreatedEvent;
+use OCA\DAV\Events\CalendarObjectDeletedEvent;
+use OCA\DAV\Events\CalendarObjectUpdatedEvent;
+
 /**Events and tasks handling. */
 class EventsService
 {
@@ -46,6 +50,45 @@ class EventsService
     $this->configService = $configService;
     $this->databaseService = $databaseService;
     $this->calDavService = $calDavService;
+  }
+
+  public function onCalendarObjectCreated(CalendarObjectCreatedEvent $event)
+  {
+    $objectData = $event->getObjectData();
+    $calendarIds = $this->defaultCalendars();
+    $calendarId = $objectData['calendarid'];
+    if (!in_array($calendarId, $calendarIds)) {
+      // not for us
+      return;
+    }
+    $this->logError(__METHOD__);
+    $this->syncCalendarObject($objectData);
+  }
+
+  public function onCalendarObjectUpdated(CalendarObjectUpdatedEvent $event)
+  {
+    $objectData = $event->getObjectData();
+    $calendarIds = $this->defaultCalendars();
+    $calendarId = $objectData['calendarid'];
+    if (!in_array($calendarId, $calendarIds)) {
+      // not for us
+      return;
+    }
+    $this->logError(__METHOD__);
+    $this->syncCalendarObject($objectData);
+  }
+
+  public function onCalendarObjectDeleted(CalendarObjectDeletedEvent $event)
+  {
+    $objectData = $event->getObjectData();
+    $calendarIds = $this->defaultCalendars();
+    $calendarId = $objectData['calendarid'];
+    if (!in_array($calendarId, $calendarIds)) {
+      // not for us
+      return;
+    }
+    $this->logError(__METHOD__);
+    $this->deleteCalendarObject($objectData);
   }
 
   public function onCalendarDeleted(CalendarDeletedEvent $event)
@@ -154,6 +197,11 @@ class EventsService
     return $this->setConfigValue($uri.'calendar', $displayName);
   }
 
+  private function syncCalendarObject($objectData)
+  {}
+
+  private function deleteCalendarObject($objectData)
+  {}
 }
 
 // Local Variables: ***

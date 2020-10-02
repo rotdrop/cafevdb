@@ -14,6 +14,7 @@ namespace OCA\CAFEVDB\AppInfo;
 use OCP\AppFramework\App;
 use OCP\IL10N;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\EventDispatcher\Event;
 
 use OCP\User\Events\UserLoggedInEvent;
 use OCP\User\Events\UserLoggedOutEvent;
@@ -21,6 +22,10 @@ use OCP\User\Events\PasswordUpdatedEvent;
 
 use OCA\DAV\Events\CalendarUpdatedEvent;
 use OCA\DAV\Events\CalendarDeletedEvent;
+
+use OCA\DAV\Events\CalendarObjectCreatedEvent;
+use OCA\DAV\Events\CalendarObjectDeletedEvent;
+use OCA\DAV\Events\CalendarObjectUpdatedEvent;
 
 use OCA\CAFEVDB\Listener\UserLoggedInEventListener;
 use OCA\CAFEVDB\Listener\UserLoggedOutEventListener;
@@ -37,6 +42,8 @@ class Application extends App {
 
     public function __construct (array $urlParams=array()) {
         parent::__construct('cafevdb', $urlParams);
+
+        //trigger_error("cafevdb app");
 
         $container = $this->getContainer();
 
@@ -56,8 +63,20 @@ class Application extends App {
                 $container->query(EventsService::class)->onCalendarUpdated($event);
             });
         $dispatcher->addListener(
-            CalendarUpdatedEvent::class, function(CalendarDeletedEvent $event) use ($container) {
+            CalendarDeletedEvent::class, function(CalendarDeletedEvent $event) use ($container) {
                 $container->query(EventsService::class)->onCalendarDeleted($event);
+            });
+        $dispatcher->addListener(
+            CalendarObjectCreatedEvent::class, function(CalendarObjectCreatedEvent $event) use ($container) {
+                $container->query(EventsService::class)->onCalendarObjectCreated($event);
+            });
+        $dispatcher->addListener(
+            CalendarObjectUpdatedEvent::class, function(CalendarObjectUpdatedEvent $event) use ($container) {
+                $container->query(EventsService::class)->onCalendarObjectUpdated($event);
+            });
+        $dispatcher->addListener(
+            CalendarObjectDeletedEvent::class, function(CalendarObjectDeletedEvent $event) use ($container) {
+                $container->query(EventsService::class)->onCalendarObjectDeleted($event);
             });
 
         /* Doctrine DBAL needs a factory to be constructed. */
