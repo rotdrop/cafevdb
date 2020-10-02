@@ -38,8 +38,16 @@ class EventsService
     $this->databaseService = $databaseService;
   }
 
+  private function eventProjects($eventId)
+  {
+    $projects = [];
 
+    $query = "SELECT ProjectId
+  FROM ProjectEvents WHERE EventId = ?
+  ORDER BY ProjectId ASC";
 
+    return $this->databaseService->fetchArray($query, [$eventId]);
+  }
 }
 
 // Local Variables: ***
