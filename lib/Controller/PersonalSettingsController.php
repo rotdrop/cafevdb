@@ -360,7 +360,7 @@ class PersonalSettingsController extends Controller {
       $actual = $this->getConfigValue($parameter);
       $actualId = $this->getConfigValue($parameter.'id');
       try {
-        if (($newId = $this->configCheckService->checkSharedCalendar($uri, $real, $actualId))) {
+        if (($newId = $this->configCheckService->checkSharedCalendar($uri, $real, $actualId)) > 0) {
           $this->setConfigValue($parameter, $real);
           $this->setConfigValue($parameter.'id', $newId);
           return self::valueResponse(
@@ -383,7 +383,7 @@ class PersonalSettingsController extends Controller {
       $actualId = $this->getConfigValue($parameter.'id');
       $uri = 'contacts';
       try {
-        if (($newId = $this->configCheckService->checkSharedAddressBook($uri, $real, $actualId))) {
+        if (($newId = $this->configCheckService->checkSharedAddressBook($uri, $real, $actualId)) > 0) {
           $this->setConfigValue($parameter, $real);
           $this->setConfigValue($parameter.'id', $newId);
           return self::valueResponse(
