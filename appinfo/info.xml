@@ -9,9 +9,13 @@
     <version>6.0.0</version>
     <licence>AGPL</licence>
     <author mail="himself@claus-justus-heine.de" homepage="https://github.com/rotdrop/cafevdb.git">Claus-Justus Heine</author>
+    <types>
+      <filesystem/><!-- required for catching dav events, otherwise app is not loaded -->
+      <dav/>
+    </types>
     <dependencies>
         <php min-version="7.4" max-version="7.4" />
-        <nextcloud min-version="19" max-version="19" />
+        <nextcloud min-version="19" max-version="20" />
     </dependencies>
     <navigations>
         <navigation>
