@@ -45,27 +45,27 @@ class EventsService
     $this->calDavService = $calDavService;
   }
 
-   public function onCalendarUpdate(CalendarUpdatedEvent $event)
-   {
-     if (!$this->inGroup()) {
-       return;
-     }
-     foreach(ConfigService::CALENDARS as $cal) {
-       $uri = $cal['uri'];
-       $calendarId = $this->getCalendarId($uri);
-       if ($event->getCalendarId() == $calendarId) {
-         $displayName = $this->getCalendarDisplayName($uri);
-         $calendarData = $event->getCalendarData();
-         if (empty($displayName)) {
-           $this->setCalendarDisplayName($uri, $calendarData['displayname']);
-         } else if ($displayName != $calendarData['displayname']) {
-           // revert the change
-           $this->calDavService->displayName($calendarId, $displayName);
-         }
-         break;
-       }
-     }
-   }
+  public function onCalendarUpdate(CalendarUpdatedEvent $event)
+  {
+    if (!$this->inGroup()) {
+      return;
+    }
+    foreach(ConfigService::CALENDARS as $cal) {
+      $uri = $cal['uri'];
+      $calendarId = $this->getCalendarId($uri);
+      if ($event->getCalendarId() == $calendarId) {
+        $displayName = $this->getCalendarDisplayName($uri);
+        $calendarData = $event->getCalendarData();
+        if (empty($displayName)) {
+          $this->setCalendarDisplayName($uri, $calendarData['displayname']);
+        } else if ($displayName != $calendarData['displayname']) {
+          // revert the change
+          $this->calDavService->displayName($calendarId, $displayName);
+        }
+        break;
+      }
+    }
+  }
 
   private function eventProjects($eventId)
   {
