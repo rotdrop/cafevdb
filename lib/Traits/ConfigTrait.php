@@ -118,6 +118,16 @@ trait ConfigTrait {
     return $this->configService->generateRandomBytes($length);
   }
 
+  protected function loginUser()
+  {
+    return $this->configService->loginUser;
+  }
+
+  protected function loginUserId()
+  {
+    return $this->configService->loginUserId;
+  }
+
   protected function user($userId = null)
   {
     return $this->configService->getUser($userId);
@@ -131,6 +141,16 @@ trait ConfigTrait {
   protected function setUserId($userId)
   {
     return $this->configService->setUserId($userId);
+  }
+
+  protected function setUser($user)
+  {
+    return $this->configService->setUser($user);
+  }
+
+  protected function sudo($uid, $callback)
+  {
+    return $this->configService->sudo($uid, $callback);
   }
 
   protected function shareOwnerId()

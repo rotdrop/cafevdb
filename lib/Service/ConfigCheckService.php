@@ -54,6 +54,9 @@ class ConfigCheckService
   /** @var CardDavService */
   private $cardDavService;
 
+  /** @var \OCP\Calendar\IManager */
+  private $calendarManager;
+
   /** @var \OCP\Contacts\IManager */
   private $contactsManager;
 
@@ -62,14 +65,17 @@ class ConfigCheckService
     DatabaseFactory $databaseFactory,
     IRootFolder $rootFolder,
     \OCP\Share\IManager $shareManager,
+    \OCP\Calendar\IManager $calendarManager,
     \OCP\Contacts\IManager $contactsManager,
     CalDavService $calDavService,
     CardDavService $cardDavService
+    //EventsService $eventsService
   ) {
     $this->configService = $configService;
     $this->databaseFactory = $databaseFactory;
     $this->rootFolder = $rootFolder;
     $this->shareManager = $shareManager;
+    $this->calendarManager = $calendarManager;
     $this->contactsManager = $contactsManager;
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
@@ -192,7 +198,7 @@ class ConfigCheckService
 
   /**Check whether the shared object exists. Note: this function has
    * to be executed under the uid of the user the object belongs
-   * to. See ConfigCheck::sudo().
+   * to. See ConfigService::sudo().
    *
    * @param[in] $id The @b numeric id of the object (not the name).
    *
@@ -232,7 +238,7 @@ class ConfigCheckService
 
   /**Share an object between the members of the specified group. Note:
    * this function has to be executed under the uid of the user the
-   * object belongs to. See ConfigCheck::sudo().
+   * object belongs to. See ConfigService::sudo().
    *
    * @param[in] $id The @b numeric id of the object (not the name).
    *
@@ -283,35 +289,6 @@ class ConfigCheckService
     $share->setSharedBy(empty($shareOwner) ? $this->getUserId() : $shareOwner);
 
     return $this->shareManager->createShare($share);
-  }
-
-  /**Fake execution with other user-id. Note that this function will
-   * catch any exception thrown while executing the callback-function
-   * and in case an exeption has been called will re-throw the
-   * exception.
-   *
-   * @param[in] $uid The "fake" uid.
-   *
-   * @param[in] $callback function.
-   *
-   * @return Whatever the callback-functoni returns.
-   *
-   */
-  public function sudo($uid, $callback)
-  {
-    $oldUserId = $this->userId();
-    if (!$this->setUserId($uid)) {
-      return false;
-    }
-    try {
-      $result = $callback();
-    } catch (\Exception $exception) {
-      $this->setUserId($oldUserId);
-      throw $exception;
-    }
-    $this->setUserId($oldUserId);
-
-    return $result;
   }
 
   /**Return @c true if the share-group is set as application
@@ -643,8 +620,8 @@ class ConfigCheckService
       return -1;
     }
 
-    return $this->sudo($shareOwnerId, function()
-      use ($uri, $id, $shareOwnerId, $userGroupId)
+    $result = $this->sudo($shareOwnerId, function()
+      use ($uri, $id, $displayName, $shareOwnerId, $userGroupId)
       {
         $this->logError("Sudo to " . $this->userId());
 
@@ -662,6 +639,7 @@ class ConfigCheckService
             $this->logError("Unabled to create calendar " . $displayName);
             return -1;
           }
+          $this->logError("Created calendar " . $displayName . " with id " . $id);
           $calendar = $this->calDavService->calendarById($id);
           if (empty($calendar)) {
             $this->logError("Failed to create calendar " . $displayName);
@@ -692,7 +670,9 @@ class ConfigCheckService
         return $id;
       });
 
-    return -1;
+    $this->logError("returning " . $result);
+
+    return $result;
   }
 
   /**Check for existence of the given addressBook. Create one if it could
@@ -722,7 +702,7 @@ class ConfigCheckService
     }
 
     return $this->sudo($shareOwnerId, function()
-      use ($uri, $id, $shareOwnerId, $userGroupId)
+      use ($uri, $displayName, $id, $shareOwnerId, $userGroupId)
       {
         $this->logError("Sudo to " . $this->userId());
 

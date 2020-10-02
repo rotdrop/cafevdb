@@ -168,11 +168,29 @@ class ConfigService {
   /** @var ISubAdmin */
   private $groupSubAdmin;
 
-  /** @var IUser */
+  /** @var IUser
+   *
+   * Will be overridden by sudo().
+   */
   private $user;
 
-  /** @var string */
+  /** @var string
+   *
+   * Will be overridden by sudo().
+   */
   private $userId;
+
+  /** @var IUser
+   *
+   * Unaffected by sudo().
+   */
+  private $loginUser;
+
+  /** @var string
+   *
+   * Unaffected by sudo().
+   */
+  private $loginUserId;
 
   /** @var IL10N */
   private $l;
@@ -225,9 +243,9 @@ class ConfigService {
     $this->logger = $logger;
     $this->l = $l;
 
-    $this->user = $this->userSession->getUser();
+    $this->loginUser = $this->user = $this->userSession->getUser();
     //trigger_error('user: ' . (empty($this->user) ? 'empty' : 'defined'));
-    $this->userId = $this->user->getUID();
+    $this->loginUid = $this->userId = $this->user->getUID();
 
     // Initialize the encryption service.
     $this->encryptionService->initAppEncryptionKey($this->userId);
@@ -276,12 +294,31 @@ class ConfigService {
     return $this->userId;
   }
 
+  /**Install a new user id.
+   *
+   * @parm int $user
+   *
+   * @return IUser old user.
+   */
   public function setUserId($userId) {
-    $oldId = $this->userId;
-    $this->userId = $userId;
-    $this->user = $this->getUser($userId);
+    return $this->setUser($this->getUser($userId));
+  }
+
+  /**Install a new user.
+   *
+   * @parm IUser $user
+   *
+   * @return IUser old user.
+   */
+  public function setUser($user) {
+    if (empty($user)) {
+      return null;
+    }
+    $oldUser = $this->user;
+    $this->user = $user;
+    $this->userId = $user->getUID();
     $this->userSession->setUser($this->user);
-    return $oldId;
+    return $oldUser;
   }
 
   public function getL10N() {
@@ -402,6 +439,42 @@ class ConfigService {
   public function generateRandomBytes($length = 30)
   {
     return $this->secureRandom->generate($length);
+  }
+
+  /*
+   ****************************************************************************
+   *
+   * logging
+   *
+   */
+
+  /**Fake execution with other user-id. Note that this function will
+   * catch any exception thrown while executing the callback-function
+   * and in case an exeption has been called will re-throw the
+   * exception.
+   *
+   * @param[in] $uid The "fake" uid.
+   *
+   * @param[in] $callback function.
+   *
+   * @return Whatever the callback-functoni returns.
+   *
+   */
+  public function sudo($uid, $callback)
+  {
+    $oldUser = $this->setUserId($uid);
+    if (empty($oldUser)) {
+      return false;
+    }
+    try {
+      $result = $callback();
+    } catch (\Exception $exception) {
+      $this->setUserId($oldUserId);
+      throw $exception;
+    }
+    $this->setUser($oldUser);
+
+    return $result;
   }
 
   /*
