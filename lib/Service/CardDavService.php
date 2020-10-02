@@ -166,8 +166,9 @@ class CardDavService
   private function refreshAddressBookManager()
   {
     $this->addressBookManager->clear();
-    \OC::$server->query(\OCA\DAV\AppInfo\Application::class)->setupContactsProvider(
-      $this->addressBookManager, $this->userId());
+    $urlGenerator = \OC::$server->getURLGenerator();
+    \OC::$server->query(\OCA\DAV\CardDAV\ContactsManager::class)->setupContactsProvider(
+      $this->addressBookManager, $this->userId(), $urlGenerator);
     $this->contactsUserId = $this->userId();
   }
 

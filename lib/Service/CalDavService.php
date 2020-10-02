@@ -173,7 +173,7 @@ class CalDavService
   private function refreshCalendarManager()
   {
     $this->calendarManager->clear();
-    \OC::$server->query(\OCA\DAV\AppInfo\Application::class)->setupCalendarProvider(
+    \OC::$server->query(\OCA\DAV\CalDAV\CalendarManager::class)->setupCalendarProvider(
       $this->calendarManager, $this->userId());
     $this->calendarUserId = $this->userId();
   }
