@@ -38,16 +38,34 @@ class EventsService
     $this->databaseService = $databaseService;
   }
 
+
+
+
   private function eventProjects($eventId)
   {
-    $projects = [];
-
     $query = "SELECT ProjectId
   FROM ProjectEvents WHERE EventId = ?
-  ORDER BY ProjectId ASC";
+  ORDER BY Id ASC";
 
     return $this->databaseService->fetchArray($query, [$eventId]);
   }
+
+  /**Fetch the related rows from the pivot-table (without calendar
+   * data).
+   *
+   * @return A flat array with the associated event-ids. Note that
+   * even in case of an error an (empty) array is returned.
+   */
+  private function projectEvents($projectId)
+  {
+    $query = "SELECT EventId
+  FROM ProjectEvents
+  WHERE ProjectId = ? AND Type = 'VEVENT'
+  ORDER BY Id ASC";
+
+    return $this->databaseService->fetchArray($query, [$projectId]);
+  }
+
 }
 
 // Local Variables: ***

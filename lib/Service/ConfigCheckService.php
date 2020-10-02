@@ -68,8 +68,8 @@ class ConfigCheckService
     \OCP\Calendar\IManager $calendarManager,
     \OCP\Contacts\IManager $contactsManager,
     CalDavService $calDavService,
-    CardDavService $cardDavService
-    //EventsService $eventsService
+    CardDavService $cardDavService,
+    EventsService $eventsService
   ) {
     $this->configService = $configService;
     $this->databaseFactory = $databaseFactory;
