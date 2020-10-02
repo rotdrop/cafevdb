@@ -138,6 +138,21 @@ class CalDavService
     return true;
   }
 
+	/**
+	 * @param string $pattern which should match within the $searchProperties
+	 * @param array $searchProperties defines the properties within the query pattern should match
+	 * @param array $options - optional parameters:
+	 * 	['timerange' => ['start' => new DateTime(...), 'end' => new DateTime(...)]]
+	 * @param integer|null $limit - limit number of search results
+	 * @param integer|null $offset - offset for paging of search results
+	 * @return array an array of events/journals/todos which are arrays of key-value-pairs
+	 * @since 13.0.0
+	 */
+  public function search($pattern, array $searchProperties=[], array $options=[], $limit=null, $offset=null)
+  {
+    return $this->calendarManager->search($pattern, $searchProperties, $options, $limit, $offset);
+  }
+
   /** Get a calendar with the given display name. */
   public function calendarByName($displayName)
   {
