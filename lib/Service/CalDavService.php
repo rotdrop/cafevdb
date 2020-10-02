@@ -39,23 +39,22 @@ class CalDavService
   /** @var CalDavBackend */
   private $calDavBackend;
 
-  /** @var VCalendarService */
-  private $vCalendarService;
-
   /** @var \OCP\Calendar\IManager */
   private $calendarManager;
 
+  /** @var int */
+  private $calendarUserId;
+
   public function __construct(
     ConfigService $configService,
-    VCalendarService $vCalendarService,
     \OCP\Calendar\IManager $calendarManager,
     CalDavBackend $calDavBackend
   )
   {
     $this->configService = $configService;
-    $this->vCalendarService = $vCalendarService;
     $this->calendarManager = $calendarManager;
     $this->calDavBackend = $calDavBackend;
+    $this->calendarUserId = $this->userId();
   }
 
   /**Get or create a calendar.
@@ -67,20 +66,24 @@ class CalDavService
    * @param[in] $displayName Display-name of the calendar.
    *
    * @return int Calendar id.
+   *
+   * @bug This function uses internal APIs.
    */
   public function createCalendar($uri, $displayName = null, $userId = null) {
     empty($userId) && ($userId = $this->userId());
-    empty($displayName) && ($displayName = ucfirst($uri));
+    empty($displayName)&& ($displayName = ucfirst($uri));
     $principal = "principals/users/$userId";
 
-    $calendar = $this->calDavBackend->getCalendarByUri($principal, $name, [
-      '{DAV:}displayname' => $displayName,
-    ]);
+    $calendar = $this->calDavBackend->getCalendarByUri($principal, $uri);
     if (!empty($calendar))  {
       return $calendar['id'];
     } else {
       try {
-        return $this->calDavBackend->createCalendar($principal, $name, []);
+        $calendarId = $this->calDavBackend->createCalendar($principal, $uri, [
+          '{DAV:}displayname' => $displayName,
+        ]);
+        $this->refreshCalendarManager();
+        return $calendarId;
       } catch(\Exception $e) {
         $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       }
@@ -88,11 +91,18 @@ class CalDavService
     return -1;
   }
 
-  /**Delete the calendar with the given id */
+  /**Delete the calendar with the given id.
+   *
+   * @bug This function uses internal APIs.
+   */
   public function deleteCalendar($id) {
     $this->calDavBackend->deleteCalendar($id);
   }
 
+  /**Share the given calendar with a group.
+   *
+   * @bug This function uses internal APIs.
+   */
   public function groupShareCalendar($calendarId, $groupId, $readOnly = false) {
     $share = [
       'href' => 'principal:principals/groups/'.$groupId,
@@ -101,11 +111,9 @@ class CalDavService
       'readOnly' => $readOnly,
     ];
     $calendarInfo = $this->calDavBackend->getCalendarById($calendarId);
-    //$calendarInfo = $this->calendarById($calendarId);
     if (empty($calendarInfo)) {
       return false;
     }
-    //$this->logError("Calendar: " . print_r($calendarInfo, true));
     // convert to ISharable
     $calendar = new Calendar($this->calDavBackend, $calendarInfo, $this->l10n(), $this->appConfig());
     $this->calDavBackend->updateShares($calendar, [$share], []);
@@ -126,12 +134,16 @@ class CalDavService
       $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       return false;
     }
+    $this->refreshCalendarManager();
     return true;
   }
 
   /** Get a calendar with the given display name. */
   public function calendarByName($displayName)
   {
+    if ($this->calendarUserId != $this->userId()) {
+      $this->refreshCalendarManager();
+    }
     foreach($this->calendarManager->getCalendars() as $calendar) {
       if ($displayName === $calendar->getDisplayName()) {
         return $calendar;
@@ -143,18 +155,28 @@ class CalDavService
   /** Get a calendar with the given its id. */
   public function calendarById($id)
   {
+    if ($this->calendarUserId != $this->userId()) {
+      $this->refreshCalendarManager();
+    }
     foreach($this->calendarManager->getCalendars() as $calendar) {
-      if ($id === $calendar->getKey()) {
+      if ((int)$id === (int)$calendar->getKey()) {
         return $calendar;
       }
     }
     return null;
   }
 
-  public function playground() {
-    $this->vCalendarService->playground();
+  /**Force OCP\Calendar\IManager to be refreshed.
+   *
+   * @bug This function uses internal APIs.
+   */
+  private function refreshCalendarManager()
+  {
+    $this->calendarManager->clear();
+    \OC::$server->query(\OCA\DAV\AppInfo\Application::class)->setupCalendarProvider(
+      $this->calendarManager, $this->userId());
+    $this->calendarUserId = $this->userId();
   }
-
 
 }
 

@@ -42,6 +42,9 @@ class CardDavService
   /** @var \OCP\AddressBook\IManager */
   private $addressBookManager;
 
+  /** @var int */
+  private $contactsUserId;
+
   public function __construct(
     ConfigService $configService,
     \OCP\Contacts\IManager $addressBookManager,
@@ -51,6 +54,7 @@ class CardDavService
     $this->configService = $configService;
     $this->addressBookManager = $addressBookManager;
     $this->cardDavBackend = $cardDavBackend;
+    $this->contactsUserId = $this->userId();
   }
 
   /**Get or create a addressBook.
@@ -73,9 +77,11 @@ class CardDavService
       return $addressBook['id'];
     } else {
       try {
-        return $this->cardDavBackend->createAddressBook($principal, $name, [
+        $addressBookId = $this->cardDavBackend->createAddressBook($principal, $uri, [
           '{DAV:}displayname' => $displayName,
         ]);
+        $this->refreshAddressBookManager();
+        return $addressBookId;
       } catch(\Exception $e) {
         $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       }
@@ -86,6 +92,7 @@ class CardDavService
   /**Delete the addressBook with the given id */
   public function deleteAddressBook($id) {
     $this->cardDavBackend->deleteAddressBook($id);
+    $this->refreshAddressBookManager();
   }
 
   public function groupShareAddressBook($addressBookId, $groupId, $readOnly = false) {
@@ -127,6 +134,9 @@ class CardDavService
   /** Get a addressBook with the given display name. */
   public function addressBookByName($displayName)
   {
+    if ($this->contactsUserId != $this->userId()) {
+      $this->refreshAddressBookManager();
+    }
     foreach($this->addressBookManager->getUserAddressBooks() as $addressBook) {
       if ($displayName === $addressBook->getDisplayName()) {
         return $addressBook;
@@ -138,6 +148,9 @@ class CardDavService
   /** Get a addressBook with the given its id. */
   public function addressBookById($id)
   {
+    if ($this->contactsUserId != $this->userId()) {
+      $this->refreshAddressBookManager();
+    }
     foreach($this->addressBookManager->getUserAddressBooks() as $addressBook) {
       if ($id === $addressBook->getKey()) {
         return $addressBook;
@@ -145,6 +158,19 @@ class CardDavService
     }
     return null;
   }
+
+  /**Force OCP\Contacts\IManager to be refreshed.
+   *
+   * @bug This function uses internal APIs.
+   */
+  private function refreshAddressBookManager()
+  {
+    $this->addressBookManager->clear();
+    \OC::$server->query(\OCA\DAV\AppInfo\Application::class)->setupContactsProvider(
+      $this->addressBookManager, $this->userId());
+    $this->contactsUserId = $this->userId();
+  }
+
 }
 
 // Local Variables: ***
