@@ -139,6 +139,13 @@ class ConfigService {
     // ckeditor still uses excessive inline js-code. So what?
     'ckeditor' => [ 'name' => 'CKEditor', 'enabled' => true],
   ];
+  const CALENDARS = [
+    [ 'uri' => 'concerts', 'public' => true ],
+    [ 'uri' => 'rehearsals', 'public' => true ],
+    [ 'uri' => 'other', 'public' => true ],
+    [ 'uri' => 'management', 'public' => false ],
+    [ 'uri' => 'finance', 'public' => false ],
+  ];
 
   /** @var array */
   protected $encryptionCache;

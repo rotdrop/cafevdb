@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCA\DAV\Events\CalendarUpdatedEvent;
+
 /**Events and tasks handling. */
 class EventsService
 {
@@ -30,16 +32,40 @@ class EventsService
   /** @var DatabaseService */
   private $databaseService;
 
+  /** @var CalDavService */
+  private $calDavService;
+
   public function __construct(
     ConfigService $configService,
-    DatabaseService $databaseService
+    DatabaseService $databaseService,
+    CalDavService $calDavService
   ) {
     $this->configService = $configService;
     $this->databaseService = $databaseService;
+    $this->calDavService = $calDavService;
   }
 
-
-
+   public function onCalendarUpdate(CalendarUpdatedEvent $event)
+   {
+     if (!$this->inGroup()) {
+       return;
+     }
+     foreach(ConfigService::CALENDARS as $cal) {
+       $uri = $cal['uri'];
+       $calendarId = $this->getCalendarId($uri);
+       if ($event->getCalendarId() == $calendarId) {
+         $displayName = $this->getCalendarDisplayName($uri);
+         $calendarData = $event->getCalendarData();
+         if (empty($displayName)) {
+           $this->setCalendarDisplayName($uri, $calendarData['displayname']);
+         } else if ($displayName != $calendarData['displayname']) {
+           // revert the change
+           $this->calDavService->displayName($calendarId, $displayName);
+         }
+         break;
+       }
+     }
+   }
 
   private function eventProjects($eventId)
   {
@@ -64,6 +90,38 @@ class EventsService
   ORDER BY Id ASC";
 
     return $this->databaseService->fetchArray($query, [$projectId]);
+  }
+
+  /**Return the IDs of the default calendars.
+   */
+  public function defaultCalendars($public = false)
+  {
+    $result = [];
+    foreach (ConfigService::CALENDARS as $cal) {
+      if ($public && !$cal['public']) {
+        continue;
+      }
+      $result[] = $this->getConfigValue($cal['uri'].'calendar'.'id');
+    }
+    return $result;
+  }
+
+  /**Return the configured calendar id. */
+  private function getCalendarId($uri)
+  {
+    return $this->getConfigValue($uri.'calendar'.'id');
+  }
+
+  /**Return the configured calendar display name. */
+  private function getCalendarDisplayName($uri)
+  {
+    return $this->getConfigValue($uri.'calendar');
+  }
+
+  /**Return the configured calendar display name. */
+  private function setCalendarDisplayName($uri, $displayName)
+  {
+    return $this->setConfigValue($uri.'calendar', $displayName);
   }
 
 }

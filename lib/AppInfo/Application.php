@@ -19,12 +19,16 @@ use OCP\User\Events\UserLoggedInEvent;
 use OCP\User\Events\UserLoggedOutEvent;
 use OCP\User\Events\PasswordUpdatedEvent;
 
+use OCA\DAV\Events\CalendarUpdatedEvent;
+
 use OCA\CAFEVDB\Listener\UserLoggedInEventListener;
 use OCA\CAFEVDB\Listener\UserLoggedOutEventListener;
 use OCA\CAFEVDB\Listener\PasswordUpdatedEventListener;
 
 use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Service\DatabaseFactory;
+
+use OCA\CAFEVDB\Service\EventsService;
 
 use OCA\CAFEVDB\Middleware\SubadminMiddleware;
 
@@ -45,9 +49,15 @@ class Application extends App {
         $dispatcher->addServiceListener(UserLoggedOutEvent::class, UserLoggedOutEventListener::class);
         $dispatcher->addServiceListener(PasswordUpdatedEvent::class, PasswordUpdatedEventListener::class);
 
+        /* EventsServices listener */
+        $dispatcher->addListener(
+            CalendarUpdatedEvent::class, function(CalendarUpdatedEvent $event) use ($container) {
+                $container->query(EventsService::class)->onCalendarUpdate($event);
+            });
+
+        /* Doctrine DBAL needs a factory to be constructed. */
         $container->registerService(DatabaseService::class, function($c) {
-            $factory = $c->query('\OCA\CAFEVDB\Service\DatabaseFactory');
-            return $factory->getService();
+            return $c->query(DatabaseFactory::class)->getService();
         });
     }
 

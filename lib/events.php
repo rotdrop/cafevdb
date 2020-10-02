@@ -105,31 +105,6 @@ namespace CAFEVDB
       }
     }
 
-    public static function editCalendarListener($calendarId)
-    {
-      if (!Config::inGroup()) {
-        return;
-      }
-
-      // We simply should update our idea of the name of the calender if
-      // it is one of our four calendars, rename the calendar back to
-      // what we want it to be
-      foreach (Util::explode(',',Config::DFLT_CALS) as $key) {
-        $id = Config::getValue($key.'calendar'.'id');
-        if ($id === $calendarId) {
-          $name    = Config::getValue($key.'calendar');
-          $cal     = \OC_Calendar_Calendar::find($calendarId);
-          $dpyName = $cal['displayname'];
-          if (!$name || $name == '') {
-            Config::setValue($key.'calendar', $dpyName);
-          } else if ($cal['displayname'] != $name) {
-            // revert it
-            \OC_Calendar_Calendar::editCalendar($calendarId, $name);
-          }
-        }
-      }
-    }
-
     /**Parse the respective event and make sure the ProjectEvents
      * table is uptodate.
      *
@@ -811,21 +786,6 @@ __EOT__;
         mySQL::close($handle);
       }
 
-      return $result;
-    }
-
-    /**Return the IDs of the default calendars.
-     */
-    public static function defaultCalendars($public = false)
-    {
-      $cals = Util::explode(',',Config::DFLT_CALS);
-      $result = array();
-      foreach ($cals as $cal) {
-        if ($public && ($cal == 'management' || $cal == 'finance')) {
-          continue;
-        }
-        $result[] = Config::getValue($cal.'calendar'.'id');
-      }
       return $result;
     }
 
