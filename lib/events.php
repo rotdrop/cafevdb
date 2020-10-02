@@ -78,33 +78,6 @@ namespace CAFEVDB
       }
     }
 
-    public static function killCalendarListener($calendarId)
-    {
-      if (!Config::inGroup()) {
-        return;
-      }
-
-      Config::init();
-      $handle = mySQL::connect(Config::$dbopts);
-
-      // Execute the show-stopper
-
-      $query = "DELETE FROM `ProjectEvents` WHERE `CalendarId` = $calendarId";
-
-      mySQL::query($query, $handle);
-
-      mySQL::close($handle);
-
-      // And remove the calendar from our config space.
-      foreach (Util::explode(',',Config::DFLT_CALS) as $key) {
-        $id = Config::getValue($key.'calendars'.'id');
-        if ($id === $calendarId) {
-          $id = Config::setValue($key.'calendars'.'id','');
-          // ... but we keep the name nevertheless.-
-        }
-      }
-    }
-
     /**Parse the respective event and make sure the ProjectEvents
      * table is uptodate.
      *

@@ -20,6 +20,7 @@ use OCP\User\Events\UserLoggedOutEvent;
 use OCP\User\Events\PasswordUpdatedEvent;
 
 use OCA\DAV\Events\CalendarUpdatedEvent;
+use OCA\DAV\Events\CalendarDeletedEvent;
 
 use OCA\CAFEVDB\Listener\UserLoggedInEventListener;
 use OCA\CAFEVDB\Listener\UserLoggedOutEventListener;
@@ -52,7 +53,11 @@ class Application extends App {
         /* EventsServices listener */
         $dispatcher->addListener(
             CalendarUpdatedEvent::class, function(CalendarUpdatedEvent $event) use ($container) {
-                $container->query(EventsService::class)->onCalendarUpdate($event);
+                $container->query(EventsService::class)->onCalendarUpdated($event);
+            });
+        $dispatcher->addListener(
+            CalendarUpdatedEvent::class, function(CalendarDeletedEvent $event) use ($container) {
+                $container->query(EventsService::class)->onCalendarDeleted($event);
             });
 
         /* Doctrine DBAL needs a factory to be constructed. */

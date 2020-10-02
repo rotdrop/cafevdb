@@ -23,11 +23,14 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCA\DAV\Events\CalendarUpdatedEvent;
+use OCA\DAV\Events\CalendarDeletedEvent;
 
 /**Events and tasks handling. */
 class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  const DBTABLE = 'ProjectEvents';
 
   /** @var DatabaseService */
   private $databaseService;
@@ -45,7 +48,28 @@ class EventsService
     $this->calDavService = $calDavService;
   }
 
-  public function onCalendarUpdate(CalendarUpdatedEvent $event)
+  public function onCalendarDeleted(CalendarDeletedEvent $event)
+  {
+    if (!$this->inGroup()) {
+      return;
+    }
+
+    // unconditionally remove the project-links
+    $query = "DELETE FROM ".self::DBTABLE." WHERE CalendarId = ?";
+    $this->databaseService->executeQuery($query, [$event->getCalendarId()]);
+
+    // remove from config-space if found
+    foreach(ConfigService::CALENDARS as $cal) {
+      $uri = $cal['uri'];
+      $calendarId = $this->getCalendarId($uri);
+      if ($event->getCalendarId() == $calendarId) {
+        $this->deleteCalendarId($uri);
+        break;
+      }
+    }
+  }
+
+  public function onCalendarUpdated(CalendarUpdatedEvent $event)
   {
     if (!$this->inGroup()) {
       return;
@@ -110,6 +134,12 @@ class EventsService
   private function getCalendarId($uri)
   {
     return $this->getConfigValue($uri.'calendar'.'id');
+  }
+
+  /**Delete the configured calendar id. */
+  private function deleteCalendarId($uri)
+  {
+    return $this->deleteConfigValue($uri.'calendar'.'id');
   }
 
   /**Return the configured calendar display name. */
