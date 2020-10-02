@@ -395,6 +395,11 @@ class ConfigService {
     return $this->containerConfig->setAppValue($this->appName, $key, $value);
   }
 
+  public function deleteAppValue($key)
+  {
+    return $this->containerConfig->deleteAppValue($this->appName, $key);
+  }
+
   /*
    ****************************************************************************
    *
@@ -441,6 +446,11 @@ class ConfigService {
       return true;
     }
     return false;
+  }
+
+  public function deleteValue($key)
+  {
+    return $this->deleteAppValue($key);
   }
 
   public function generateRandomBytes($length = 30)

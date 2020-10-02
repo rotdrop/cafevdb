@@ -82,6 +82,11 @@ trait ConfigTrait {
     return $this->configService->setAppValue($key, $value);
   }
 
+  protected function deleteAppValue($key)
+  {
+    return $this->configService->deleteAppValue($key);
+  }
+
   protected function getAppEncryptionKey()
   {
     return $this->configService->getAppEncryptionKey();
@@ -111,6 +116,11 @@ trait ConfigTrait {
   public function setConfigValue($key, $value)
   {
     return $this->configService->setValue($key, $value);
+  }
+
+  public function deleteConfigValue($key)
+  {
+    return $this->configService->deleteValue($key);
   }
 
   public function generateRandomBytes($length = 30)
