@@ -95,7 +95,7 @@ return [
         [
             'name' => 'events#new_event_form',
             'url' => '/events/forms/new',
-            'verb' => 'GET',
+            'verb' => 'POST',
         ],
     ]
 ];

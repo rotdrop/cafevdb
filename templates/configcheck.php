@@ -26,6 +26,7 @@ $css_pfx = 'cafevdb-page'; //@@TODO ???
 $css_class = 'config-check';
 
 style($appName, 'config-check');
+script($appName, 'events-test');
 
 $nav = '';
 

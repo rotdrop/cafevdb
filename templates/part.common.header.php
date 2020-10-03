@@ -57,6 +57,7 @@ style($appName, 'navsnapper');
 script($appName, 'cafevdb');
 script($appName, 'notification');
 script($appName, 'page');
+script($appName, 'calendar');
 script($appName, 'events');
 script($appName, 'pme');
 script($appName, 'personal-settings');
