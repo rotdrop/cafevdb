@@ -21,7 +21,6 @@ use OCP\ISession;
 use OCP\IL10N;
 use OCP\IInitialStateService;
 
-use OCA\CAFEVDB\Common\Config;
 use OCA\CAFEVDB\Common\Util;
 
 use OCA\CAFEVDB\Service\HistoryService;
@@ -186,15 +185,19 @@ class PageController extends Controller {
       'appName' => $this->appName,
 
       'configcheck' => $config,
-      'orchestra' => Config::getValue('orchestra'),
-      'groupadmin' => $this->isSubAdminOfGroup(),
+      'orchestra' => $this->getConfigValue('orchestra'),
       'usergroup' => $this->groupId(),
+      'shareowner' => $this->getConfigValue('shareowner'),
+      'sharedfolder' => $this->getConfigValue('sharedfolder'),
+      'database' => $this->getConfigValue('database'),
+      'groupadmin' => $this->isSubAdminOfGroup(),
       'user' => $this->userId(),
       'expertmode' => $expertMode,
       'showToolTips' => $showToolTips,
       'toolTips' => $this->toolTipsService,
       'debugMode' => $debugMode,
       'encryptionkey' => $encrkey,
+      'configkey' => $this->getConfigValue('encryptionkey'),
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
       'projectName' => $projectName,

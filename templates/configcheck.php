@@ -22,8 +22,6 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Common\Config;
-
 $css_pfx = 'cafevdb-page'; //@@TODO ???
 $css_class = 'config-check';
 
@@ -54,10 +52,10 @@ echo $this->inc('part.common.header',
 
 <div id="<?php echo $css_pfx; ?>-body-config-check">
   <form id="configrecheckform" action="?app=cafevdb" method="get">
-    <input type="hidden" name="app" value="<?php echo Config::APP_NAME; ?>" />
+    <input type="hidden" name="app" value="<?php echo $appName; ?>" /><!-- @@TODO should not be needed -->
     <input
       type="submit"
-      title="<?php echo Config::toolTips('configrecheck');?>"
+      title="<?php echo $toolTips['configrecheck'];?>"
       value="<?php echo $l->t('Test again'); ?>"
       id="configrecheck"
     />
@@ -146,15 +144,15 @@ foreach (['orchestra',
 
   echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
-      <span class="'.$css_pfx.'-config-check value"> '.Config::getValue($key).'</span>
+      <span class="'.$css_pfx.'-config-check value"> '.$_[$key].'</span>
       <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
 }
 
 $key = 'encryptionkey';
-$encrkey = Config::getEncryptionKey();
-$cfgkey  = Config::getAppValue('encryptionkey');
+$encrkey = $encryptionkey;
+$cfgkey  = $configkey;
 $error   = $cfgchk[$key]['message'];
 if ($error != '') {
   $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
