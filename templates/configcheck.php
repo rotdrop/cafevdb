@@ -59,6 +59,7 @@ echo $this->inc('part.common.header',
       value="<?php echo $l->t('Test again'); ?>"
       id="configrecheck"
     />
+    <a href="#" class="new-event button">EventDialog</a>
   </form>
 
   <ul>

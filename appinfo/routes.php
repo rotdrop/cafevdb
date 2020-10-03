@@ -91,6 +91,12 @@ return [
             'url' => '/expertmode/action/{operation}',
             'verb' => 'POST',
         ],
+        // events
+        [
+            'name' => 'events#new_event_form',
+            'url' => '/events/forms/new',
+            'verb' => 'GET',
+        ],
     ]
 ];
 
