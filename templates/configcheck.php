@@ -60,7 +60,8 @@ echo $this->inc('part.common.header',
       value="<?php echo $l->t('Test again'); ?>"
       id="configrecheck"
     />
-    <a href="#" class="new-event button">EventDialog</a>
+    <a href="#" class="new-event button">NewEventDialog</a>
+    <a href="#" class="edit-event button" data-uri="E59CC606-AB43-443F-ACC8-3EA742ADD672.ics">EditEventDialog</a>
   </form>
 
   <ul>
