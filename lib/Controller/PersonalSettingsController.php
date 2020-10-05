@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Service\CalDavService;
 
 class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\ResponseTrait;
 
   /** @var IL10N */
   private $l;
@@ -423,21 +424,6 @@ class PersonalSettingsController extends Controller {
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));
-  }
-
-  static private function valueResponse($value, $message = '', $status = Http::STATUS_OK)
-  {
-    return new DataResponse(['message' => $message, 'value' => $value], $status);
-  }
-
-  static private function response($message, $status = Http::STATUS_OK)
-  {
-    return new DataResponse(['message' => $message], $status);
-  }
-
-  static private function grumble($message)
-  {
-    return self::response($message, Http::STATUS_BAD_REQUEST);
   }
 }
 

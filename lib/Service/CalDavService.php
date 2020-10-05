@@ -22,6 +22,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCP\Calendar\ICalendar;
+use OCP\Constants;
+
 // @@TODO: replace the stuff below by more persistent APIs. As it
 // shows (Sep. 2020) the only option would be http calls to the dav
 // service. Even the perhaps-forthcoming writable calendar API does
@@ -35,6 +38,8 @@ use OCA\DAV\CalDAV\Calendar;
 class CalDavService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  const WRITE_PERMISSIONS = (Constants::PERMISSION_CREATE|Constants::PERMISSION_UPDATE);
 
   /** @var CalDavBackend */
   private $calDavBackend;
@@ -138,16 +143,16 @@ class CalDavService
     return true;
   }
 
-	/**
-	 * @param string $pattern which should match within the $searchProperties
-	 * @param array $searchProperties defines the properties within the query pattern should match
-	 * @param array $options - optional parameters:
-	 * 	['timerange' => ['start' => new DateTime(...), 'end' => new DateTime(...)]]
-	 * @param integer|null $limit - limit number of search results
-	 * @param integer|null $offset - offset for paging of search results
-	 * @return array an array of events/journals/todos which are arrays of key-value-pairs
-	 * @since 13.0.0
-	 */
+  /**
+   * @param string $pattern which should match within the $searchProperties
+   * @param array $searchProperties defines the properties within the query pattern should match
+   * @param array $options - optional parameters:
+   * 	['timerange' => ['start' => new DateTime(...), 'end' => new DateTime(...)]]
+   * @param integer|null $limit - limit number of search results
+   * @param integer|null $offset - offset for paging of search results
+   * @return array an array of events/journals/todos which are arrays of key-value-pairs
+   * @since 13.0.0
+   */
   public function search($pattern, array $searchProperties=[], array $options=[], $limit=null, $offset=null)
   {
     return $this->calendarManager->search($pattern, $searchProperties, $options, $limit, $offset);
@@ -179,6 +184,27 @@ class CalDavService
       }
     }
     return null;
+  }
+
+  private function calendarWritable(ICalendar $calendar)
+  {
+    $perms = $calendar->getPermissions();
+    return ($perms & self::WRITE_PERMISSIONS) == self::WRITE_PERMISSIONS;
+  }
+
+  /** Get the list of all calendars */
+  public function getCalendars(bool $writable = false)
+  {
+    $calendars = $this->calendarManager->getCalendars();
+    if (!$writable) {
+      foreach($calendars as $idx => $calendar) {
+        if ($this->calendarWritable($calendar)) {
+          unset($calendars[idx]);
+        }
+      }
+      $calendars = array_values($calendars);
+    }
+    return $calendars;
   }
 
   /**Force OCP\Calendar\IManager to be refreshed.

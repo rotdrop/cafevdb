@@ -57,7 +57,6 @@ style($appName, 'navsnapper');
 script($appName, 'cafevdb');
 script($appName, 'notification');
 script($appName, 'page');
-script($appName, 'calendar');
 script($appName, 'events');
 script($appName, 'pme');
 script($appName, 'personal-settings');
@@ -70,6 +69,14 @@ script($appName, 'ready');
 
 script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
 style($appName, '../3rdparty/chosen/css/chosen.min');
+
+script($appName, 'legacy/calendar/calendar');
+script($appName, 'legacy/calendar/on-event');
+script($appName, 'legacy/calendar/jquery.ui.timepicker');
+style($appName, 'legacy/calendar/jquery.ui.timepicker');
+script($appName, 'legacy/calendar/jquery.multiselect');
+style($appName, 'legacy/calendar/jquery.multiselect');
+script($appName, 'legacy/calendar/jquery.multi-autocomplete');
 
 echo Common\Util::emitExternalScripts(); // @@TODO rework
 

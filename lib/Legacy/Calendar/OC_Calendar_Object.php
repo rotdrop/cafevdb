@@ -60,9 +60,13 @@ class OC_Calendar_Object{
      */
     use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+    /** @vsar IL10N */
+    private $l;
+
     public function __construct(ConfigService $configService)
     {
         $this->configService = $configService;
+        $this->l = $this->l10n();
     }
 
     /*
@@ -155,7 +159,7 @@ class OC_Calendar_Object{
 	// 		$sharedCalendar = OCP\Share::getItemSharedWithBySource('calendar', $id);
 	// 		if (!$sharedCalendar || !($sharedCalendar['permissions'] & OCP\PERMISSION_CREATE)) {
 	// 			throw new Exception(
-	// 				OC_Calendar_App::$l10n->t(
+	// 				OC_Calendar_App::$this->l->t(
 	// 					'You do not have the permissions to add events to this calendar.'
 	// 				)
 	// 			);
@@ -197,7 +201,7 @@ class OC_Calendar_Object{
 	// 		$sharedCalendar = OCP\Share::getItemSharedWithBySource('calendar', $id);
 	// 		if (!$sharedCalendar || !($sharedCalendar['permissions'] & OCP\PERMISSION_CREATE)) {
 	// 			throw new \Sabre\DAV\Exception\Forbidden(
-	// 				OC_Calendar_App::$l10n->t(
+	// 				OC_Calendar_App::$this->l->t(
 	// 					'You do not have the permissions to add events to this calendar.'
 	// 				)
 	// 			);
@@ -209,7 +213,7 @@ class OC_Calendar_Object{
 
 	// 	if($shared && isset($vevent->CLASS) && (string)$vevent->CLASS !== 'PUBLIC') {
 	// 		throw new \Sabre\DAV\Exception\PreconditionFailed(
-	// 				OC_Calendar_App::$l10n->t(
+	// 				OC_Calendar_App::$this->l->t(
 	// 					'You cannot add non-public events to a shared calendar.'
 	// 				)
 	// 		);
@@ -253,7 +257,7 @@ class OC_Calendar_Object{
 
 	// 		if (!$isActionAllowed) {
 	// 			throw new Exception(
-	// 				OC_Calendar_App::$l10n->t(
+	// 				OC_Calendar_App::$this->l->t(
 	// 					'You do not have the permissions to edit this event.'
 	// 				)
 	// 			);
@@ -289,7 +293,7 @@ class OC_Calendar_Object{
 	// 		$sharedAccessClassPermissions = OC_Calendar_Object::getAccessClassPermissions($oldvobject);
 	// 		if (!$sharedCalendar || !($sharedCalendar['permissions'] & OCP\PERMISSION_UPDATE) || !($sharedAccessClassPermissions & OCP\PERMISSION_UPDATE)) {
 	// 			throw new \Sabre\DAV\Exception\Forbidden(
-	// 				OC_Calendar_App::$l10n->t(
+	// 				OC_Calendar_App::$this->l->t(
 	// 					'You do not have the permissions to edit this event.'
 	// 				)
 	// 			);
@@ -323,7 +327,7 @@ class OC_Calendar_Object{
 	// 		$sharedAccessClassPermissions = OC_Calendar_Object::getAccessClassPermissions($oldvobject);
 	// 		if (!$sharedCalendar || !($sharedCalendar['permissions'] & OCP\PERMISSION_DELETE) || !($sharedAccessClassPermissions & OCP\PERMISSION_DELETE)) {
 	// 			throw new Exception(
-	// 				OC_Calendar_App::$l10n->t(
+	// 				OC_Calendar_App::$this->l->t(
 	// 					'You do not have the permissions to delete this event.'
 	// 				)
 	// 			);
@@ -353,7 +357,7 @@ class OC_Calendar_Object{
 	// 		$sharedCalendar = OCP\Share::getItemSharedWithBySource('calendar', $cid);
 	// 		if (!$sharedCalendar || !($sharedCalendar['permissions'] & OCP\PERMISSION_DELETE)) {
 	// 			throw new \Sabre\DAV\Exception\Forbidden(
-	// 				OC_Calendar_App::$l10n->t(
+	// 				OC_Calendar_App::$this->l->t(
 	// 					'You do not have the permissions to delete this event.'
 	// 				)
 	// 			);
@@ -373,7 +377,7 @@ class OC_Calendar_Object{
 	// 		$sharedCalendar = OCP\Share::getItemSharedWithBySource('calendar', $calendarid);
 	// 		if (!$sharedCalendar || !($sharedCalendar['permissions'] & OCP\PERMISSION_DELETE)) {
 	// 			throw new Exception(
-	// 				OC_Calendar_App::$l10n->t(
+	// 				OC_Calendar_App::$this->l->t(
 	// 					'You do not have the permissions to add events to this calendar.'
 	// 				)
 	// 			);
@@ -552,7 +556,7 @@ class OC_Calendar_Object{
 	// 				case 'UID':
 	// 					break;
 	// 				case 'SUMMARY':
-	// 					$property->setValue(OC_Calendar_App::$l10n->t('Busy'));
+	// 					$property->setValue(OC_Calendar_App::$this->l->t('Busy'));
 	// 					break;
 	// 				default:
 	// 					$velement->__unset($property->name);
@@ -596,155 +600,155 @@ class OC_Calendar_Object{
 	// 	return OC_Calendar_App::getAccessClassPermissions($accessclass);
 	// }
 
-	// /**
-	//  * @brief returns the options for the access class of an event
-	//  * @return array - valid inputs for the access class of an event
-	//  */
-	// public function getAccessClassOptions($l10n) {
-	// 	return array(
-	// 		'PUBLIC'       => (string)$l10n->t('Show full event'),
-	// 		'CONFIDENTIAL' => (string)$l10n->t('Show only busy'),
-	// 		'PRIVATE'      => (string)$l10n->t('Hide event')
-	// 	);
-	// }
+	/**
+	 * @brief returns the options for the access class of an event
+	 * @return array - valid inputs for the access class of an event
+	 */
+	public function getAccessClassOptions() {
+		return array(
+			'PUBLIC'       => (string)$this->l->t('Show full event'),
+			'CONFIDENTIAL' => (string)$this->l->t('Show only busy'),
+			'PRIVATE'      => (string)$this->l->t('Hide event')
+		);
+	}
 
-	// /**
-	//  * @brief returns the options for the repeat rule of an repeating event
-	//  * @return array - valid inputs for the repeat rule of an repeating event
-	//  */
-	// public function getRepeatOptions($l10n) {
-	// 	return array(
-	// 		'doesnotrepeat' => (string)$l10n->t('Does not repeat'),
-	// 		'daily'         => (string)$l10n->t('Daily'),
-	// 		'weekly'        => (string)$l10n->t('Weekly'),
-	// 		'weekday'       => (string)$l10n->t('Every Weekday'),
-	// 		'biweekly'      => (string)$l10n->t('Bi-Weekly'),
-	// 		'monthly'       => (string)$l10n->t('Monthly'),
-	// 		'yearly'        => (string)$l10n->t('Yearly')
-	// 	);
-	// }
+	/**
+	 * @brief returns the options for the repeat rule of an repeating event
+	 * @return array - valid inputs for the repeat rule of an repeating event
+	 */
+	public function getRepeatOptions() {
+		return array(
+			'doesnotrepeat' => (string)$this->l->t('Does not repeat'),
+			'daily'         => (string)$this->l->t('Daily'),
+			'weekly'        => (string)$this->l->t('Weekly'),
+			'weekday'       => (string)$this->l->t('Every Weekday'),
+			'biweekly'      => (string)$this->l->t('Bi-Weekly'),
+			'monthly'       => (string)$this->l->t('Monthly'),
+			'yearly'        => (string)$this->l->t('Yearly')
+		);
+	}
 
 	/**
 	 * @brief returns the options for the end of an repeating event
 	 * @return array - valid inputs for the end of an repeating events
 	 */
-	public function getEndOptions($l10n) {
+	public function getEndOptions() {
         $l10n = $this->l;
 		return array(
-			'never' => (string)$l10n->t('never'),
-			'count' => (string)$l10n->t('by occurrences'),
-			'date'  => (string)$l10n->t('by date')
+			'never' => (string)$this->l->t('never'),
+			'count' => (string)$this->l->t('by occurrences'),
+			'date'  => (string)$this->l->t('by date')
 		);
 	}
 
-	// /**
-	//  * @brief returns the options for an monthly repeating event
-	//  * @return array - valid inputs for monthly repeating events
-	//  */
-	// public function getMonthOptions($l10n) {
-	// 	return array(
-	// 		'monthday' => (string)$l10n->t('by monthday'),
-	// 		'weekday'  => (string)$l10n->t('by weekday')
-	// 	);
-	// }
+	/**
+	 * @brief returns the options for an monthly repeating event
+	 * @return array - valid inputs for monthly repeating events
+	 */
+	public function getMonthOptions() {
+		return array(
+			'monthday' => (string)$this->l->t('by monthday'),
+			'weekday'  => (string)$this->l->t('by weekday')
+		);
+	}
 
-	// /**
-	//  * @brief returns the options for an weekly repeating event
-	//  * @return array - valid inputs for weekly repeating events
-	//  */
-	// public function getWeeklyOptions($l10n) {
-	// 	return array(
-	// 		'MO' => (string)$l10n->t('Monday'),
-	// 		'TU' => (string)$l10n->t('Tuesday'),
-	// 		'WE' => (string)$l10n->t('Wednesday'),
-	// 		'TH' => (string)$l10n->t('Thursday'),
-	// 		'FR' => (string)$l10n->t('Friday'),
-	// 		'SA' => (string)$l10n->t('Saturday'),
-	// 		'SU' => (string)$l10n->t('Sunday')
-	// 	);
-	// }
+	/**
+	 * @brief returns the options for an weekly repeating event
+	 * @return array - valid inputs for weekly repeating events
+	 */
+	public function getWeeklyOptions() {
+		return array(
+			'MO' => (string)$this->l->t('Monday'),
+			'TU' => (string)$this->l->t('Tuesday'),
+			'WE' => (string)$this->l->t('Wednesday'),
+			'TH' => (string)$this->l->t('Thursday'),
+			'FR' => (string)$this->l->t('Friday'),
+			'SA' => (string)$this->l->t('Saturday'),
+			'SU' => (string)$this->l->t('Sunday')
+		);
+	}
 
-	// /**
-	//  * @brief returns the options for an monthly repeating event which occurs on specific weeks of the month
-	//  * @return array - valid inputs for monthly repeating events
-	//  */
-	// public function getWeekofMonth($l10n) {
-	// 	return array(
-	// 		'auto' => (string)$l10n->t('events week of month'),
-	// 		'1' => (string)$l10n->t('first'),
-	// 		'2' => (string)$l10n->t('second'),
-	// 		'3' => (string)$l10n->t('third'),
-	// 		'4' => (string)$l10n->t('fourth'),
-	// 		'5' => (string)$l10n->t('fifth'),
-	// 		'-1' => (string)$l10n->t('last')
-	// 	);
-	// }
+	/**
+	 * @brief returns the options for an monthly repeating event which occurs on specific weeks of the month
+	 * @return array - valid inputs for monthly repeating events
+	 */
+	public function getWeekofMonth() {
+		return array(
+			'auto' => (string)$this->l->t('events week of month'),
+			'1' => (string)$this->l->t('first'),
+			'2' => (string)$this->l->t('second'),
+			'3' => (string)$this->l->t('third'),
+			'4' => (string)$this->l->t('fourth'),
+			'5' => (string)$this->l->t('fifth'),
+			'-1' => (string)$this->l->t('last')
+		);
+	}
 
-	// /**
-	//  * @brief returns the options for an yearly repeating event which occurs on specific days of the year
-	//  * @return array - valid inputs for yearly repeating events
-	//  */
-	// public function getByYearDayOptions() {
-	// 	$return = array();
-	// 	foreach(range(1,366) as $num) {
-	// 		$return[(string) $num] = (string) $num;
-	// 	}
-	// 	return $return;
-	// }
+	/**
+	 * @brief returns the options for an yearly repeating event which occurs on specific days of the year
+	 * @return array - valid inputs for yearly repeating events
+	 */
+	public function getByYearDayOptions() {
+		$return = array();
+		foreach(range(1,366) as $num) {
+			$return[(string) $num] = (string) $num;
+		}
+		return $return;
+	}
 
-	// /**
-	//  * @brief returns the options for an yearly or monthly repeating event which occurs on specific days of the month
-	//  * @return array - valid inputs for yearly or monthly repeating events
-	//  */
-	// public function getByMonthDayOptions() {
-	// 	$return = array();
-	// 	foreach(range(1,31) as $num) {
-	// 		$return[(string) $num] = (string) $num;
-	// 	}
-	// 	return $return;
-	// }
+	/**
+	 * @brief returns the options for an yearly or monthly repeating event which occurs on specific days of the month
+	 * @return array - valid inputs for yearly or monthly repeating events
+	 */
+	public function getByMonthDayOptions() {
+		$return = array();
+		foreach(range(1,31) as $num) {
+			$return[(string) $num] = (string) $num;
+		}
+		return $return;
+	}
 
-	// /**
-	//  * @brief returns the options for an yearly repeating event which occurs on specific month of the year
-	//  * @return array - valid inputs for yearly repeating events
-	//  */
-	// public function getByMonthOptions($l10n) {
-	// 	return array(
-	// 		'1'  => (string)$l10n->t('January'),
-	// 		'2'  => (string)$l10n->t('February'),
-	// 		'3'  => (string)$l10n->t('March'),
-	// 		'4'  => (string)$l10n->t('April'),
-	// 		'5'  => (string)$l10n->t('May'),
-	// 		'6'  => (string)$l10n->t('June'),
-	// 		'7'  => (string)$l10n->t('July'),
-	// 		'8'  => (string)$l10n->t('August'),
-	// 		'9'  => (string)$l10n->t('September'),
-	// 		'10' => (string)$l10n->t('October'),
-	// 		'11' => (string)$l10n->t('November'),
-	// 		'12' => (string)$l10n->t('December')
-	// 	);
-	// }
+	/**
+	 * @brief returns the options for an yearly repeating event which occurs on specific month of the year
+	 * @return array - valid inputs for yearly repeating events
+	 */
+	public function getByMonthOptions() {
+		return array(
+			'1'  => (string)$this->l->t('January'),
+			'2'  => (string)$this->l->t('February'),
+			'3'  => (string)$this->l->t('March'),
+			'4'  => (string)$this->l->t('April'),
+			'5'  => (string)$this->l->t('May'),
+			'6'  => (string)$this->l->t('June'),
+			'7'  => (string)$this->l->t('July'),
+			'8'  => (string)$this->l->t('August'),
+			'9'  => (string)$this->l->t('September'),
+			'10' => (string)$this->l->t('October'),
+			'11' => (string)$this->l->t('November'),
+			'12' => (string)$this->l->t('December')
+		);
+	}
 
-	// /**
-	//  * @brief returns the options for an yearly repeating event
-	//  * @return array - valid inputs for yearly repeating events
-	//  */
-	// public function getYearOptions($l10n) {
-	// 	return array(
-	// 		'bydate' => (string)$l10n->t('by events date'),
-	// 		'byyearday' => (string)$l10n->t('by yearday(s)'),
-	// 		'byweekno'  => (string)$l10n->t('by weeknumber(s)'),
-	// 		'bydaymonth'  => (string)$l10n->t('by day and month')
-	// 	);
-	// }
+	/**
+	 * @brief returns the options for an yearly repeating event
+	 * @return array - valid inputs for yearly repeating events
+	 */
+	public function getYearOptions() {
+		return array(
+			'bydate' => (string)$this->l->t('by events date'),
+			'byyearday' => (string)$this->l->t('by yearday(s)'),
+			'byweekno'  => (string)$this->l->t('by weeknumber(s)'),
+			'bydaymonth'  => (string)$this->l->t('by day and month')
+		);
+	}
 
-	// /**
-	//  * @brief returns the options for an yearly repeating event which occurs on specific week numbers of the year
-	//  * @return array - valid inputs for yearly repeating events
-	//  */
-	// public function getByWeekNoOptions() {
-	// 	return range(1, 52);
-	// }
+	/**
+	 * @brief returns the options for an yearly repeating event which occurs on specific week numbers of the year
+	 * @return array - valid inputs for yearly repeating events
+	 */
+	public function getByWeekNoOptions() {
+		return range(1, 52);
+	}
 
 	// /**
 	//  * @brief validates a request
@@ -784,24 +788,24 @@ class OC_Calendar_Object{
 				$errarr['interval'] = 'true';
 				$errnum++;
 			}
-			if(array_key_exists('repeat', $request) && !array_key_exists($request['repeat'], $this->getRepeatOptions(OC_Calendar_App::$l10n))) {
+			if(array_key_exists('repeat', $request) && !array_key_exists($request['repeat'], $this->getRepeatOptions())) {
 				$errarr['repeat'] = 'true';
 				$errnum++;
 			}
-			if(array_key_exists('advanced_month_select', $request) && !array_key_exists($request['advanced_month_select'], $this->getMonthOptions(OC_Calendar_App::$l10n))) {
+			if(array_key_exists('advanced_month_select', $request) && !array_key_exists($request['advanced_month_select'], $this->getMonthOptions())) {
 				$errarr['advanced_month_select'] = 'true';
 				$errnum++;
 			}
-			if(array_key_exists('advanced_year_select', $request) && !array_key_exists($request['advanced_year_select'], $this->getYearOptions(OC_Calendar_App::$l10n))) {
+			if(array_key_exists('advanced_year_select', $request) && !array_key_exists($request['advanced_year_select'], $this->getYearOptions())) {
 				$errarr['advanced_year_select'] = 'true';
 				$errnum++;
 			}
-			if(array_key_exists('weekofmonthoptions', $request) && !array_key_exists($request['weekofmonthoptions'], $this->getWeekofMonth(OC_Calendar_App::$l10n))) {
+			if(array_key_exists('weekofmonthoptions', $request) && !array_key_exists($request['weekofmonthoptions'], $this->getWeekofMonth())) {
 				$errarr['weekofmonthoptions'] = 'true';
 				$errnum++;
 			}
 			if($request['end'] != 'never') {
-				if(!array_key_exists($request['end'], $this->getEndOptions(OC_Calendar_App::$l10n))) {
+				if(!array_key_exists($request['end'], $this->getEndOptions())) {
 					$errarr['end'] = 'true';
 					$errnum++;
 				}
@@ -819,7 +823,7 @@ class OC_Calendar_Object{
 			}
 			if(array_key_exists('weeklyoptions', $request)) {
 				foreach($request['weeklyoptions'] as $option) {
-					if(!in_array($option, $this->getWeeklyOptions(OC_Calendar_App::$l10n))) {
+					if(!in_array($option, $this->getWeeklyOptions())) {
 						$errarr['weeklyoptions'] = 'true';
 						$errnum++;
 					}
@@ -841,7 +845,7 @@ class OC_Calendar_Object{
 			}
 			if(array_key_exists('bymonth', $request)) {
 				foreach($request['bymonth'] as $option) {
-					if(!in_array($option, $this->getByMonthOptions(OC_Calendar_App::$l10n))) {
+					if(!in_array($option, $this->getByMonthOptions())) {
 						$errarr['bymonth'] = 'true';
 						$errnum++;
 					}
@@ -970,7 +974,7 @@ class OC_Calendar_Object{
 					$rrule .= 'FREQ=WEEKLY';
 					if(array_key_exists('weeklyoptions', $request)) {
 						$byday = '';
-						$daystrings = array_flip($this->getWeeklyOptions(OC_Calendar_App::$l10n));
+						$daystrings = array_flip($this->getWeeklyOptions());
 						foreach($request['weeklyoptions'] as $days) {
 							if($byday == '') {
 								$byday .= $daystrings[$days];
@@ -1000,7 +1004,7 @@ class OC_Calendar_Object{
 						}else{
 							$weekofmonth = $request['weekofmonthoptions'];
 						}
-						$days = array_flip($this->getWeeklyOptions(OC_Calendar_App::$l10n));
+						$days = array_flip($this->getWeeklyOptions());
 						$byday = '';
 						foreach($request['weeklyoptions'] as $day) {
 							if($byday == '') {
@@ -1045,7 +1049,7 @@ class OC_Calendar_Object{
 						$rrule .= ';BYWEEKNO=' . $byweekno;
 					}elseif($request['advanced_year_select'] == 'bydaymonth') {
 						if(array_key_exists('weeklyoptions', $request)) {
-							$days = array_flip($this->getWeeklyOptions(OC_Calendar_App::$l10n));
+							$days = array_flip($this->getWeeklyOptions());
 							$byday = '';
 							foreach($request['weeklyoptions'] as $day) {
 								if($byday == '') {
@@ -1057,7 +1061,7 @@ class OC_Calendar_Object{
 							$rrule .= ';BYDAY=' . $byday;
 						}
 						if(array_key_exists('bymonth', $request)) {
-							$monthes = array_flip($this->getByMonthOptions(OC_Calendar_App::$l10n));
+							$monthes = array_flip($this->getByMonthOptions());
 							$bymonth = '';
 							foreach($request['bymonth'] as $month) {
 								if($bymonth == '') {

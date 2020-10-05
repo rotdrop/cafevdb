@@ -91,10 +91,20 @@ return [
             'url' => '/expertmode/action/{operation}',
             'verb' => 'POST',
         ],
-        // events
+        // legacy events
         [
-            'name' => 'events#new_event_form',
-            'url' => '/events/forms/new',
+            'name' => 'legacy_events#new_event_form',
+            'url' => '/legacy/events/forms/new',
+            'verb' => 'POST',
+        ],
+        [
+            'name' => 'legacy_events#new_event',
+            'url' => '/legacy/events/actions/new',
+            'verb' => 'POST',
+        ],
+        [
+            'name' => 'legacy_events#export_event',
+            'url' => '/legacy/events/actions/export',
             'verb' => 'POST',
         ],
     ]

@@ -26,4 +26,3 @@ PHPMYEDIT.initialState = OCP.InitialState.loadState('cafevdb', 'PHPMYEDIT');
 
 console.log("CAFEVDB INITIAL STATE", CAFEVDB.initialState);
 console.log("PHPMYEDIT INITIAL STATE", PHPMYEDIT.initialState);
-

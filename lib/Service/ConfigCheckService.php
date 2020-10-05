@@ -601,7 +601,7 @@ class ConfigCheckService
    *
    * @param[in] $displayName The display-name of the calendar.
    *
-   * @param[in] $idd The id of the calendar.
+   * @param[in] $id The id of the calendar.
    *
    * @return int -1 on error, calendar id on success.
    */

@@ -18,3 +18,6 @@
 [submodule "3rdparty/Snap.js"]
 	path = 3rdparty/Snap.js
 	url = https://github.com/jakiestfu/Snap.js.git
+[submodule "3rdparty/timepicker"]
+	path = 3rdparty/timepicker
+	url = https://github.com/fgelinas/timepicker.git

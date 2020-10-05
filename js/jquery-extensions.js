@@ -56,9 +56,11 @@ var CAFEVDB = CAFEVDB || {};
         argument.dialogClass = 'cafev';
       }
       CAFEVDB.snapperClose();
+      console.log("will open dialog");
       $.fn.dialog.call(this, argument);
       if (this.dialog('option', 'draggable')) {
-        $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#content');
+        console.log("Try to set containment");
+        $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#app-content');
       }
     } else {
       return $.fn.dialog.apply(this, arguments);

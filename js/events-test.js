@@ -1,8 +1,19 @@
 $(document).ready(function() {
-    $('.new-event.button').on('click', function(event) {
-	console.log($('#dialog_holder'));
-	$('#dialog_holder').load(
-	    OC.generateUrl('/apps/cafevdb/events/forms/new'),
-            {}, Calendar.UI.startEventDialog);
-    });
+  $('.new-event.button').on('click', function(event) {
+    console.log($('#dialog_holder'));
+    $.post(
+      OC.generateUrl('/apps/cafevdb/legacy/events/forms/new'),
+      { 'ProjectId': '99999',
+        'ProjectName': 'Test',
+        'EventKind': 'other'
+      })
+     .done(function(data) {
+       $('#dialog_holder').html(data);
+       CAFEVDB.Legacy.Calendar.UI.startEventDialog();
+     })
+     .fail(function(xhr, status, errorThrown) {
+       const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+      OC.dialogs.alert(msg, t('cafevdb', 'Event-testing caught an error'));
+     });
+  });
 });

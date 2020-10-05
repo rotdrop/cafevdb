@@ -72,6 +72,7 @@ trait InitialStateTrait {
           'historyPosition' => $this->historyService->position(),
         ]
       ]);
+
     $this->initialStateService->provideInitialState(
       $this->appName,
       'PHPMYEDIT',
@@ -90,6 +91,15 @@ trait InitialStateTrait {
                                           "The pull-down can be closed by clicking ".
                                           "anywhere outside the menu."),
       ]);
+
+    $calendarApp = \OC::$server->query(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_App::class);
+    $this->initialStateService->provideInitialState(
+      $this->appName,
+      'Calendar',
+      [
+        'categories' => $calendarApp->getCategoryOptions()
+      ]
+    );
   }
 }
 
