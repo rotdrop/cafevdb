@@ -35,6 +35,8 @@ use OCP\Constants;
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\Calendar;
 
+use Ramsey\Uuid\Uuid;
+
 class CalDavService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -158,7 +160,10 @@ class CalDavService
     return $this->calendarManager->search($pattern, $searchProperties, $options, $limit, $offset);
   }
 
-  /** Get a calendar with the given display name. */
+  /** Get a calendar with the given display name.
+   *
+   * @return ICalendar[]
+   */
   public function calendarByName($displayName)
   {
     if ($this->calendarUserId != $this->userId()) {
@@ -172,7 +177,10 @@ class CalDavService
     return null;
   }
 
-  /** Get a calendar with the given its id. */
+  /** Get a calendar with the given its id.
+   *
+   * @return ICalendar[]
+   */
   public function calendarById($id)
   {
     if ($this->calendarUserId != $this->userId()) {
@@ -186,13 +194,34 @@ class CalDavService
     return null;
   }
 
+  /** Get a calendar with the given its uri.
+   *
+   * @return ICalendar[]
+   *
+   * @bug This function uses internal APIs.
+   */
+  public function calendarByUri($uri, $userId = null)
+  {
+    empty($userId) && $userId = $this->userId();
+    $principal = "principals/users/$userId";
+
+    $calendar = $this->calDavBackend->getCalendarByUri($principal, $uri);
+    if (!empty($calendar) && isset($calendar['id']))  {
+      return $this->calendarById($calendar['id']);
+    }
+    return null;
+  }
+
   private function calendarWritable(ICalendar $calendar)
   {
     $perms = $calendar->getPermissions();
     return ($perms & self::WRITE_PERMISSIONS) == self::WRITE_PERMISSIONS;
   }
 
-  /** Get the list of all calendars */
+  /** Get the list of all calendars
+   *
+   * @return ICalendar[]
+   */
   public function getCalendars(bool $writable = false)
   {
     $calendars = $this->calendarManager->getCalendars();
@@ -205,6 +234,20 @@ class CalDavService
       $calendars = array_values($calendars);
     }
     return $calendars;
+  }
+
+  /** Create an entry in the given calendar
+   *
+   * @bug This function uses internal APIs.
+   */
+  public function createCalendarObject($calendarId, $object)
+  {
+    if (!is_string($object)) {
+      $object = $object->serialize();
+    }
+    $localUri = strtoupper(Uuid::uuid4()->toString()).'.ics';
+    $this->calDavBackend->createCalendarObject($calendarId, $localUri, $object);
+    return $localUri;
   }
 
   /**Force OCP\Calendar\IManager to be refreshed.
