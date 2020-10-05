@@ -110,7 +110,7 @@ class LegacyEventsController extends Controller {
 
     $categories   = $projectName.','.$this->l->t($eventKind);
     $calendarUri  = $eventKind.'calendar';
-    $calendarName = $this->getConfigValue($calendarUri, $this->l->t($eventKind));
+    $calendarName = $this->getConfigValue($calendarUri, ucfirst($this->l->t($eventKind)));
     $calendarId   = $this->getConfigValue($calendarUri.'id', -1);
     $shareOwner   = $this->getConfigValue('shareowner');
 
@@ -227,7 +227,64 @@ class LegacyEventsController extends Controller {
    */
   public function newEvent()
   {
-    return self::grumble($this->l->t("Not yet implemented"));
+    $errarr = $this->ocCalendarObject->validateRequest($this->parameterService);
+    if ($errarr) {
+      //show validate errors
+      return self::grumble($this->l->t("Failed to validate event creating request."), $errarr);
+    }
+    $cal = $this->parameterService['calendar'];
+    $vCalendar = $this->ocCalendarObject->createVCalendarFromRequest($this->parameterService);
+//         try {
+//                 OC_Calendar_Object::add($cal, $vcalendar->serialize());
+//         } catch(Exception $e) {
+//                 OCP\JSON::error(array('message'=>$e->getMessage()));
+//                 exit;
+//         }
+//         OCP\JSON::success();
+//}
+    $this->logError($vCalendar->serialize());
+    try {
+      $localUri = $this->calDavService->createCalendarObject($cal, $vCalendar);
+      $this->logError(__METHOD__ . ": created object with uri " . $localUri);
+    } catch(\Exception $e) {
+      $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
+      return self::grumble(
+        $this->l->t('Failure creating calendar object, caught an exception `%s\'.',
+                    [$e->getMessage()]));
+    }
+    return self::valueResponse($localUri, $this->l->t("Calendar object successfully created."));
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function editEventForm()
+  {
+    return self::notImplemented();
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function editEvent()
+  {
+    return $this->notImplemented();
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function deleteEventForm()
+  {
+    return $this->notImplemented();
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function deleteEvent()
+  {
+    return $this->notImplemented();
   }
 
   /**
@@ -235,7 +292,12 @@ class LegacyEventsController extends Controller {
    */
   public function exportEvent()
   {
-    return self::grumble($this->l->t("Not yet implemented"));
+    return $this->notImplemented();
+  }
+
+  private function notImplemented($method)
+  {
+    return self::grumble($this->l->t("Method %s is not yet implemented.", [$method]));
   }
 
 }

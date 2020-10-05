@@ -32,6 +32,12 @@
 return [
     'routes' => [
         [
+            'name' => 'page#not_found',
+            'url' => '/ajax/{a}/{b}/{c}/{d}/{e}',
+            'verb' => 'POST',
+            'defaults' => [ 'a' => '', 'b' => '', 'c' => '', 'd' => '', 'e' => '', ],
+        ],
+        [
             'name' => 'page#index',
             'url' => '/',
             'verb' => 'GET',
@@ -91,15 +97,35 @@ return [
             'url' => '/expertmode/action/{operation}',
             'verb' => 'POST',
         ],
-        // legacy events
+        // legacy calendar events
         [
             'name' => 'legacy_events#new_event_form',
             'url' => '/legacy/events/forms/new',
             'verb' => 'POST',
         ],
         [
+            'name' => 'legacy_events#edit_event_form',
+            'url' => '/legacy/events/forms/edit',
+            'verb' => 'POST',
+        ],
+        [
+            'name' => 'legacy_events#delete_event_form',
+            'url' => '/legacy/events/forms/delete',
+            'verb' => 'POST',
+        ],
+        [
             'name' => 'legacy_events#new_event',
             'url' => '/legacy/events/actions/new',
+            'verb' => 'POST',
+        ],
+        [
+            'name' => 'legacy_events#edit_event',
+            'url' => '/legacy/events/actions/edit',
+            'verb' => 'POST',
+        ],
+        [
+            'name' => 'legacy_events#delete_event',
+            'url' => '/legacy/events/actions/delete',
             'verb' => 'POST',
         ],
         [
