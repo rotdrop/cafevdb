@@ -223,19 +223,19 @@ var CAFEVDB = CAFEVDB || {};
         var val = $('#event-title').val();
         $('#event-title').focus().val('').val(val);
       },
-      newEvent:function(start, end, allday){
-        start = Math.round(start.getTime()/1000);
-        if (end){
-          end = Math.round(end.getTime()/1000);
-        }
-        if($('#event').dialog('isOpen') == true){
-          // TODO: save event
-          $('#event').dialog('destroy').remove();
-        }else{
-          Calendar.UI.loading(true);
-          $('#dialog_holder').load(OC.filePath('calendar', 'ajax/event', 'new.form.php'), {start:start, end:end, allday:allday?1:0}, Calendar.UI.startEventDialog);
-        }
-      },
+      // newEvent:function(start, end, allday){
+      //   start = Math.round(start.getTime()/1000);
+      //   if (end){
+      //     end = Math.round(end.getTime()/1000);
+      //   }
+      //   if($('#event').dialog('isOpen') == true){
+      //     // TODO: save event
+      //     $('#event').dialog('destroy').remove();
+      //   }else{
+      //     Calendar.UI.loading(true);
+      //     $('#dialog_holder').load(OC.filePath('calendar', 'ajax/event', 'new.form.php'), {start:start, end:end, allday:allday?1:0}, Calendar.UI.startEventDialog);
+      //   }
+      // },
       editEvent:function(calEvent, jsEvent, view){
         if (calEvent.editable == false || calEvent.source.editable == false) {
           return;
@@ -256,7 +256,7 @@ var CAFEVDB = CAFEVDB || {};
         $.post(url, {id:id}, function(data){
           Calendar.UI.loading(false);
           if(data.status == 'success'){
-            //                                              $('#fullcalendar').fullCalendar('removeEvents', $('#event_form input[name=id]').val());
+            // $('#fullcalendar').fullCalendar('removeEvents', $('#event_form input[name=id]').val());
             $('#event').dialog('destroy').remove();
             CAFEVDB.Events.UI.redisplay();
           } else {
@@ -269,46 +269,47 @@ var CAFEVDB = CAFEVDB || {};
         var post = $( "#event_form" ).serialize();
         $("#errorbox").empty();
         Calendar.UI.loading(true);
-        $.post(url, post,
-               function(data){
-                 Calendar.UI.loading(false);
-                 if(data.status == "error"){
-                   var output = missing_field + ": <br />";
-                   if(data.title == "true"){
-                     output = output + missing_field_title + "<br />";
-                   }
-                   if(data.cal == "true"){
-                     output = output + missing_field_calendar + "<br />";
-                   }
-                   if(data.from == "true"){
-                     output = output + missing_field_fromdate + "<br />";
-                   }
-                   if(data.fromtime == "true"){
-                     output = output + missing_field_fromtime + "<br />";
-                   }
-                   if(data.interval == "true"){
-                     output = output + missing_field_interval + "<br />";
-                   }
-                   if(data.to == "true"){
-                     output = output + missing_field_todate + "<br />";
-                   }
-                   if(data.totime == "true"){
-                     output = output + missing_field_totime + "<br />";
-                   }
-                   if(data.endbeforestart == "true"){
-                     output = output + missing_field_startsbeforeends + "!<br/>";
-                   }
-                   if(data.dberror == "true"){
-                     output = "There was a database fail!";
-                   }
-                   $("#errorbox").html(output);
-                 } else
-                   if(data.status == 'success'){
-                     $('#event').dialog('destroy').remove();
-                     //$('#fullcalendar').fullCalendar('refetchEvents');
-                     CAFEVDB.Events.UI.redisplay();
-                   }
-               },"json");
+        $.post(url, post)
+        .done(function(data) {
+          Calendar.UI.loading(false);
+          $('#event').dialog('destroy').remove();
+          //$('#fullcalendar').fullCalendar('refetchEvents');
+          CAFEVDB.Events.UI.redisplay();
+        })
+	.fail(function(xhr, status, errorThrown) {
+          Calendar.UI.loading(false);
+          const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+          const data = CAFEVDB.ajaxFailData(xhr, status, errorThrown);
+          var output = missing_field + ": <br />";
+          if(data.title == "true"){
+            output = output + missing_field_title + "<br />";
+          }
+          if(data.cal == "true"){
+            output = output + missing_field_calendar + "<br />";
+          }
+          if(data.from == "true"){
+            output = output + missing_field_fromdate + "<br />";
+          }
+          if(data.fromtime == "true"){
+            output = output + missing_field_fromtime + "<br />";
+          }
+          if(data.interval == "true"){
+            output = output + missing_field_interval + "<br />";
+          }
+          if(data.to == "true"){
+            output = output + missing_field_todate + "<br />";
+          }
+          if(data.totime == "true"){
+            output = output + missing_field_totime + "<br />";
+          }
+          if(data.endbeforestart == "true"){
+            output = output + missing_field_startsbeforeends + "!<br/>";
+          }
+          if(data.dberror == "true"){
+            output = "There was a database fail!";
+          }
+          $("#errorbox").html(output);
+        });
       },
       moveEvent:function(event, dayDelta, minuteDelta, allDay, revertFunc){
         $.fn.cafevTooltip.remove();

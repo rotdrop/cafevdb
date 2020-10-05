@@ -40,9 +40,9 @@ $(document).on('click', '#submitNewEvent', function () {
 $(document).on('click', '#chooseCalendar', function () {
 	CAFEVDB.Legacy.Calendar.UI.Calendar.newCalendar(this);
 });
-$(document).on('change', '.activeCalendar', function () {
-	CAFEVDB.Legacy.Calendar.UI.Calendar.activation(this,$(this).data('id'));
-});
+// $(document).on('change', '.activeCalendar', function () {
+// 	CAFEVDB.Legacy.Calendar.UI.Calendar.activation(this,$(this).data('id'));
+// });
 $(document).on('change', '#active_shared_events', function () {
 	CAFEVDB.Legacy.Calendar.UI.Calendar.sharedEventsActivation(this);
 });
@@ -83,13 +83,13 @@ $(document).on('focus', "#event-location:not(.ui-autocomplete-input)", function 
 		minLength: 2
 	});
 });
-$(document).on('keydown', '#newcalendar_dialog #displayname_new', function(event){
-	if (event.which == 13){
-		$('#newcalendar_dialog #editCalendar-submit').click();
-	}
-});
-$(document).on('keydown', '#editcalendar_dialog > span > input:text', function(event){
-	if (event.which == 13){
-		$('#editcalendar_dialog #editCalendar-submit').click();
-	}
-});
+// $(document).on('keydown', '#newcalendar_dialog #displayname_new', function(event){
+// 	if (event.which == 13){
+// 		$('#newcalendar_dialog #editCalendar-submit').click();
+// 	}
+// });
+// $(document).on('keydown', '#editcalendar_dialog > span > input:text', function(event){
+// 	if (event.which == 13){
+// 		$('#editcalendar_dialog #editCalendar-submit').click();
+// 	}
+// });
