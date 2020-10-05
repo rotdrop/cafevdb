@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Service\DatabaseFactory;
 use OCA\CAFEVDB\Service\EventsService;
 
 use OCA\CAFEVDB\Middleware\SubadminMiddleware;
+use OCA\CAFEVDB\Middleware\GroupMemberMiddleware;
 
 class Application extends App {
 
@@ -50,6 +51,8 @@ class Application extends App {
         // Register Middleware
         $container->registerAlias('SubadminMiddleware', SubadminMiddleware::class);
         $container->registerMiddleWare('SubadminMiddleware');
+        $container->registerAlias('GroupMemberMiddleware', GroupMemberMiddleware::class);
+        $container->registerMiddleWare('GroupMemberMiddleware');
 
         /* @var IEventDispatcher $eventDispatcher */
         $dispatcher = $container->query(IEventDispatcher::class);
