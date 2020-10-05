@@ -39,9 +39,9 @@ trait ResponseTrait {
     return new DataResponse(['message' => $message], $status);
   }
 
-  static private function grumble($message)
+  static private function grumble($message, $value = null)
   {
-    return self::response($message, Http::STATUS_BAD_REQUEST);
+    return self::dataResponse($value, $message, Http::STATUS_BAD_REQUEST);
   }
 }
 
