@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 
 class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
+  use \OCA\CAFEVDB\Traits\ResponseTrait;
 
   /** @var IL10N */
   private $l;
@@ -76,6 +77,7 @@ class PageController extends Controller {
    * Load the main page of the App.
    *
    * @NoAdminRequired
+   * @NoGroupMemberRequired
    * @NoCSRFRequired
    */
   public function index() {
@@ -228,6 +230,21 @@ class PageController extends Controller {
     return $response;
   }
 
+  /**
+   * @NoAdminRequired
+   */
+  public function notFound($a, $b, $c, $d, $e)
+  {
+    $parts = [ $a, $b, $c, $d, $e ];
+    $route = '/ajax';
+    foreach($parts as $part) {
+      if (empty($part)) {
+        break;
+      }
+      $route .= '/'.$part;
+    }
+    return self::response($this->l->t("Page `%s\' not found.", [$route]), Http::STATUS_NOT_FOUND);
+  }
 
 }
 
