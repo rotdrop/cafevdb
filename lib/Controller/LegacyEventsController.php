@@ -260,6 +260,8 @@ class LegacyEventsController extends Controller {
    */
   public function editEventForm()
   {
+    $id = $this->parameterService['id'];
+    $uri = $this->parameterService['uri'];
     return self::notImplemented();
   }
 
