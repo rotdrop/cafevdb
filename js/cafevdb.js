@@ -1266,6 +1266,34 @@ var CAFEVDB = CAFEVDB || {};
     return message;
   };
 
+  /**Extract the value from an jQuery ajax failure message.
+   *
+   * @param xhr jqXHR, see fail() method of jQuery ajax.
+   *
+   * @param status from jQuery, see fail() method of jQuery ajax.
+   *
+   * @param errorThrown, see fail() method of jQuery ajax.
+   *
+   * @param required List of required fields in data.data.
+   *
+   */
+  CAFEVDB.ajaxFailData = function(xhr, status, errorThrown) {
+    const ct = xhr.getResponseHeader("content-type") || "";
+    var data = {};
+    if (ct.indexOf('html') > -1) {
+      // nothing
+    } else if (ct.indexOf('json') > -1) {
+      console.log('json response');
+      const response = JSON.parse(xhr.responseText);
+      if (response.value) {
+        value = response.value;
+      }
+    } else {
+      // nothing
+    }
+    return value;
+  };
+
   CAFEVDB.attachToolTip = function(selector, options) {
     var defaultOptions = {
         container:'body',
