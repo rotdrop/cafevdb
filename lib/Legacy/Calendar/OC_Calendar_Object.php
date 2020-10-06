@@ -521,52 +521,52 @@ class OC_Calendar_Object{
 	// 	return $dtend;
 	// }
 
-	// /**
-	//  * @brief Remove all properties which should not be exported for the AccessClass Confidential
-	//  * @param string $id Event ID
-	//  * @param Sabre_VObject $vobject Sabre VObject
-	//  * @return object
-	//  */
-	// public function cleanByAccessClass($id, $vobject) {
+	/**
+	 * @brief Remove all properties which should not be exported for the AccessClass Confidential
+	 * @param string $owner The UID of the owner of the object.
+	 * @param Sabre_VObject $vobject Sabre VObject
+	 * @return object
+	 */
+	public function cleanByAccessClass($ownerId, $vobject) {
 
-	// 	// Do not clean your own calendar
-	// 	if(OC_Calendar_Object::getowner($id) === OCP\USER::getUser()) {
-	// 		return $vobject;
-	// 	}
+		// Do not clean your own calendar
+		if($ownerId === $this->userId()) {
+			return $vobject;
+		}
 
-	// 	if(isset($vobject->VEVENT)) {
-	// 		$velement = $vobject->VEVENT;
-	// 	}
-	// 	elseif(isset($vobject->VJOURNAL)) {
-	// 		$velement = $vobject->VJOURNAL;
-	// 	}
-	// 	elseif(isset($vobject->VTODO)) {
-	// 		$velement = $vobject->VTODO;
-	// 	}
+		if(isset($vobject->VEVENT)) {
+			$velement = $vobject->VEVENT;
+		}
+		elseif(isset($vobject->VJOURNAL)) {
+			$velement = $vobject->VJOURNAL;
+		}
+		elseif(isset($vobject->VTODO)) {
+			$velement = $vobject->VTODO;
+		}
 
-	// 	if(isset($velement->CLASS) && $velement->CLASS->getValue() == 'CONFIDENTIAL') {
-	// 		foreach ($velement->children as &$property) {
-	// 			switch($property->name) {
-	// 				case 'CREATED':
-	// 				case 'DTSTART':
-	// 				case 'RRULE':
-	// 				case 'DURATION':
-	// 				case 'DTEND':
-	// 				case 'CLASS':
-	// 				case 'UID':
-	// 					break;
-	// 				case 'SUMMARY':
-	// 					$property->setValue(OC_Calendar_App::$this->l->t('Busy'));
-	// 					break;
-	// 				default:
-	// 					$velement->__unset($property->name);
-	// 					unset($property);
-	// 					break;
-	// 			}
-	// 		}
-	// 	}
-	// 	return $vobject;
-	// }
+		if(isset($velement->CLASS) && $velement->CLASS->getValue() == 'CONFIDENTIAL') {
+			foreach ($velement->children as &$property) {
+				switch($property->name) {
+					case 'CREATED':
+					case 'DTSTART':
+					case 'RRULE':
+					case 'DURATION':
+					case 'DTEND':
+					case 'CLASS':
+					case 'UID':
+						break;
+					case 'SUMMARY':
+						$property->setValue($this->l->t('Busy'));
+						break;
+					default:
+						$velement->__unset($property->name);
+						unset($property);
+						break;
+				}
+			}
+		}
+		return $vobject;
+	}
 
 	// /**
 	//  * Get the contained element VEVENT, VJOURNAL, VTODO

@@ -23,6 +23,7 @@ $(document).ready(function() {
       { 'ProjectId': '99999',
         'ProjectName': 'Test',
         'EventKind': 'other',
+	'calendarId': 30,
         'uri': $(this).data('uri')
       })
      .done(function(data) {

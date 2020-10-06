@@ -234,14 +234,6 @@ class LegacyEventsController extends Controller {
     }
     $cal = $this->parameterService['calendar'];
     $vCalendar = $this->ocCalendarObject->createVCalendarFromRequest($this->parameterService);
-//         try {
-//                 OC_Calendar_Object::add($cal, $vcalendar->serialize());
-//         } catch(Exception $e) {
-//                 OCP\JSON::error(array('message'=>$e->getMessage()));
-//                 exit;
-//         }
-//         OCP\JSON::success();
-//}
     $this->logError($vCalendar->serialize());
     try {
       $localUri = $this->calDavService->createCalendarObject($cal, $vCalendar);
@@ -260,8 +252,34 @@ class LegacyEventsController extends Controller {
    */
   public function editEventForm()
   {
-    $id = $this->parameterService['id'];
     $uri = $this->parameterService['uri'];
+    $calendarId = $this->parameterService['calendarId'];
+    $data = $this->calDavService->getCalendarObject($calendarId, $uri);
+    if (empty($data)) {
+      return self::grumble($this->l->t("Could not fetch object `%s' from calendar `%s'.", [$uri, $calendarId]));
+    }
+    $this->logError(print_r($data, true));
+    if ($data['calendarid'] != $calendarId) {
+      return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
+    }
+    $eventId = $data['id'];
+    $object = \Sabre\VObject\Reader::read($data['calendardata']);
+    $vevent = $object->VEVENT;
+    $calendar = $this->calDavService->calendarById($calendarId);
+    if (empty($calendar)) {
+      return self::grumble($this->l->t("Unable to access calendar with id `%s'.", [$calendarId]));
+    }
+    [,,$ownerId] = explode('/', $this->calDavService->calendarPrincipalUri($calendarId));
+    $this->logError("Permissions: " . $calendar->getPermissions());
+    $this->logError("principaluri: " . $ownerId);
+    $object = $this->ocCalendarObject->cleanByAccessClass($ownerId, $object);
+    if ($vevent->CLASS) {
+      $accessclass = $vevent->CLASS->getValue();
+    } else {
+      $accessclass = 'PUBLIC';
+    }
+    // $permissions = OC_Calendar_App::getPermissions($id, OC_Calendar_App::EVENT, $accessclass);
+
     return self::notImplemented(__METHOD__);
   }
 

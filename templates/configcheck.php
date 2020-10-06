@@ -61,7 +61,10 @@ echo $this->inc('part.common.header',
       id="configrecheck"
     />
     <a href="#" class="new-event button">NewEventDialog</a>
-    <a href="#" class="edit-event button" data-uri="E59CC606-AB43-443F-ACC8-3EA742ADD672.ics">EditEventDialog</a>
+    <a href="#"
+       class="edit-event button"
+       data-uri="E59CC606-AB43-443F-ACC8-3EA742ADD672.ics"
+       data-calendar-id="30">EditEventDialog</a>
   </form>
 
   <ul>

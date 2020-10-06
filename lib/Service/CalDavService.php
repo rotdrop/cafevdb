@@ -194,6 +194,16 @@ class CalDavService
     return null;
   }
 
+  /** Get the uri of the original calendar */
+  public function calendarPrincipalUri($id)
+  {
+    $calendarInfo = $this->calDavBackend->getCalendarById($id);
+    if (!empty($calendarInfo)) {
+      return $calendarInfo['principaluri'];
+    }
+    return null;
+  }
+
   /** Get a calendar with the given its uri.
    *
    * @return ICalendar[]
@@ -220,14 +230,16 @@ class CalDavService
 
   /** Get the list of all calendars
    *
+   * @param bool $writable If true return only calendars with write access.
+   *
    * @return ICalendar[]
    */
   public function getCalendars(bool $writable = false)
   {
     $calendars = $this->calendarManager->getCalendars();
-    if (!$writable) {
+    if ($writable) {
       foreach($calendars as $idx => $calendar) {
-        if ($this->calendarWritable($calendar)) {
+        if (!$this->calendarWritable($calendar)) {
           unset($calendars[idx]);
         }
       }
