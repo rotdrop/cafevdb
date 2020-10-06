@@ -64,7 +64,9 @@ echo $this->inc('part.common.header',
     <a href="#"
        class="edit-event button"
        data-uri="E59CC606-AB43-443F-ACC8-3EA742ADD672.ics"
-       data-calendar-id="30">EditEventDialog</a>
+            data-calendar-id="30">EditEventDialog</a>
+    <input id="edit-event-test-uri" type="text" name="uri" placeholder="uri"/>
+    <input id="edit-event-test-calendar-id" type="number" name="calendar-id" placeholder="calendar-id"/>
   </form>
 
   <ul>

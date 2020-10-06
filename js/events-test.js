@@ -23,8 +23,8 @@ $(document).ready(function() {
       { 'ProjectId': '99999',
         'ProjectName': 'Test',
         'EventKind': 'other',
-	'calendarId': 30,
-        'uri': $(this).data('uri')
+	'calendarId': $('#edit-event-test-calendar-id').val(),
+        'uri': $('#edit-event-test-uri').val()
       })
      .done(function(data) {
        $('#dialog_holder').html(data);

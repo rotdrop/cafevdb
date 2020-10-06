@@ -491,35 +491,35 @@ class OC_Calendar_Object{
 	// 	return date('Y-m-d H:i', $datetime->format('U'));
 	// }
 
-	// /**
-	//  * @brief returns the DTEND of an $vevent object
-	//  * @param object $vevent vevent object
-	//  * @return object
-	//  */
-	// public function getDTEndFromVEvent($vevent) {
-	// 	if ($vevent->DTEND) {
-	// 		$dtend = $vevent->DTEND;
-	// 	}else{
-	// 		$dtend = clone $vevent->DTSTART;
-	// 		// clone creates a shallow copy, also clone DateTime
-	// 		$dtend->setDateTime(clone $dtend->getDateTime());
-	// 		if ($vevent->DURATION) {
-	// 			$duration = strval($vevent->DURATION);
-	// 			$invert = 0;
-	// 			if ($duration[0] == '-') {
-	// 				$duration = substr($duration, 1);
-	// 				$invert = 1;
-	// 			}
-	// 			if ($duration[0] == '+') {
-	// 				$duration = substr($duration, 1);
-	// 			}
-	// 			$interval = new DateInterval($duration);
-	// 			$interval->invert = $invert;
-	// 			$dtend->getDateTime()->add($interval);
-	// 		}
-	// 	}
-	// 	return $dtend;
-	// }
+	/**
+	 * @brief returns the DTEND of an $vevent object
+	 * @param object $vevent vevent object
+	 * @return object
+	 */
+	public function getDTEndFromVEvent($vevent) {
+		if ($vevent->DTEND) {
+			$dtend = $vevent->DTEND;
+		}else{
+			$dtend = clone $vevent->DTSTART;
+			// clone creates a shallow copy, also clone DateTime
+			$dtend->setDateTime(clone $dtend->getDateTime());
+			if ($vevent->DURATION) {
+				$duration = strval($vevent->DURATION);
+				$invert = 0;
+				if ($duration[0] == '-') {
+					$duration = substr($duration, 1);
+					$invert = 1;
+				}
+				if ($duration[0] == '+') {
+					$duration = substr($duration, 1);
+				}
+				$interval = new DateInterval($duration);
+				$interval->invert = $invert;
+				$dtend->getDateTime()->add($interval);
+			}
+		}
+		return $dtend;
+	}
 
 	/**
 	 * @brief Remove all properties which should not be exported for the AccessClass Confidential
