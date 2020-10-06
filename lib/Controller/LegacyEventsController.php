@@ -199,7 +199,7 @@ class LegacyEventsController extends Controller {
         'repeat_bymonthday_options' => $repeat_bymonthday_options,
         'repeat_weekofmonth_options' => $repeat_weekofmonth_options,
 
-        'eventid' => 'new',
+        'eventuri' => 'new',
         'startdate' => $start->format('d-m-Y'),
         'starttime' => $start->format('H:i'),
         'enddate' => $end->format('d-m-Y'),
@@ -262,7 +262,7 @@ class LegacyEventsController extends Controller {
   {
     $id = $this->parameterService['id'];
     $uri = $this->parameterService['uri'];
-    return self::notImplemented();
+    return self::notImplemented(__METHOD__);
   }
 
   /**
@@ -270,7 +270,7 @@ class LegacyEventsController extends Controller {
    */
   public function editEvent()
   {
-    return $this->notImplemented();
+    return $this->notImplemented(__METHOD__);
   }
 
   /**
@@ -278,7 +278,7 @@ class LegacyEventsController extends Controller {
    */
   public function deleteEventForm()
   {
-    return $this->notImplemented();
+    return $this->notImplemented(__METHOD__);
   }
 
   /**
@@ -286,7 +286,7 @@ class LegacyEventsController extends Controller {
    */
   public function deleteEvent()
   {
-    return $this->notImplemented();
+    return $this->notImplemented(__METHOD__);
   }
 
   /**
@@ -294,7 +294,7 @@ class LegacyEventsController extends Controller {
    */
   public function exportEvent()
   {
-    return $this->notImplemented();
+    return $this->notImplemented(__METHOD__);
   }
 
   private function notImplemented($method)
