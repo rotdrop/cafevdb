@@ -17,12 +17,12 @@ var CAFEVDB = CAFEVDB || {};
   const Calendar={
     categories: [],
     Util:{
-      sendmail: function(eventId, location, description, dtstart, dtend){
+      sendmail: function(eventURI, location, description, dtstart, dtend){
         Calendar.UI.loading(true);
         $.post(
           OC.filePath('calendar','ajax/event','sendmail.php'),
           {
-            eventId:eventId,
+            eventURI:eventURI,
             location:location,
             description:description,
             dtstart:dtstart,
@@ -217,7 +217,7 @@ var CAFEVDB = CAFEVDB || {};
         });
         // Calendar.UI.Share.init();
         $('#sendemailbutton').click(function() {
-          Calendar.Util.sendmail($(this).attr('data-eventid'), $(this).attr('data-location'), $(this).attr('data-description'), $(this).attr('data-dtstart'), $(this).attr('data-dtend'));
+          Calendar.Util.sendmail($(this).attr('data-eventuri'), $(this).attr('data-location'), $(this).attr('data-description'), $(this).attr('data-dtstart'), $(this).attr('data-dtend'));
         });
         // Focus the title, and reset the text value so that it isn't selected.
         var val = $('#event-title').val();

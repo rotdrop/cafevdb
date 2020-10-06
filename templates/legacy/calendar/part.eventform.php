@@ -3,7 +3,7 @@
 	<li><a href="#tabs-2"><?php p($l->t('Repeating')); ?></a></li>
 	<!--<li><a href="#tabs-3"><?php p($l->t('Alarm')); ?></a></li>
 	<li><a href="#tabs-4"><?php p($l->t('Attendees')); ?></a></li>-->
-	<?php if(false && $_['eventid'] != 'new' && $_['permissions'] & OCP\PERMISSION_SHARE) { ?>
+	<?php if(false && $_['eventuri'] != 'new' && $_['permissions'] & OCP\PERMISSION_SHARE) { ?>
 	<li><a href="#tabs-5"><?php p($l->t('Share')); ?></a></li>
 	<?php } ?>
 </ul>
@@ -71,8 +71,8 @@
 
 		<textarea id="event-description" placeholder="<?php p($l->t('Description'));?>" name="description"><?php p(isset($_['description']) ? $_['description'] : '') ?></textarea>
 
-		<?php if($_['eventid'] != 'new'){ ?>
-		<input type="button" class="submit" id="editEvent-export"  name="export" value="<?php p($l->t('Export event'));?>" data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.export_event')); ?>?eventid=<?php p($_['eventid']) ?>">
+		<?php if($_['eventuri'] != 'new'){ ?>
+		<input type="button" class="submit" id="editEvent-export"  name="export" value="<?php p($l->t('Export event'));?>" data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.export_event')); ?>?eventuri=<?php p($_['eventuri']) ?>">
 		<?php }?>
 	</div>
 </div>
@@ -227,9 +227,9 @@
 </div>
 <!--<div id="tabs-3">//Alarm</div>
 <div id="tabs-4">//Attendees</div>-->
-<?php if(false && $_['eventid'] != 'new' && $_['permissions'] & OCP\PERMISSION_SHARE) { ?>
+<?php if(false && $_['eventuri'] != 'new' && $_['permissions'] & OCP\PERMISSION_SHARE) { ?>
 <div id="tabs-5">
-	<?php if($_['eventid'] != 'new') { print_unescaped($this->inc('part.share')); } ?>
+	<?php if($_['eventuri'] != 'new') { print_unescaped($this->inc('part.share')); } ?>
 
 	<br>
 	<?php p($l->t('Visibility to people shared with'));?>

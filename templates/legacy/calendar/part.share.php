@@ -1,6 +1,6 @@
 <?php
 $calid = isset($_['calendar']) ? $_['calendar'] : null;
-$eventid = isset($_['eventid']) ? $_['eventid'] : null;
+$eventuri = isset($_['eventuri']) ? $_['eventuri'] : null;
 $location = isset($_['location']) ? $_['location'] : null;
 $description = isset($_['description']) ? $_['description'] : null;
 $dtstart = isset($_['dtstart']) ? $_['dtstart'] : null;
@@ -10,7 +10,7 @@ $calsharees = array();
 $eventsharees = array();
 
 $sharedwithByCalendar = OCP\Share::getItemShared('calendar', $calid);
-$sharedwithByEvent = OCP\Share::getItemShared('event', $eventid);
+$sharedwithByEvent = OCP\Share::getItemShared('event', $eventuri);
 
 if(is_array($sharedwithByCalendar)) {
 	foreach($sharedwithByCalendar as $share) {
@@ -30,12 +30,12 @@ if(is_array($sharedwithByEvent)) {
 
 <input type="text" id="sharewith"
 	placeholder="<?php p($l->t('Share with user or group')); ?>"
-	data-item-source="<?php p($eventid); ?>" />
+	data-item-source="<?php p($eventuri); ?>" />
 
 <ul class="sharedby eventlist">
 <?php foreach($eventsharees as $sharee): ?>
 	<li data-share-with="<?php p($sharee['share_with']); ?>"
-		data-item="<?php p($eventid); ?>"
+		data-item="<?php p($eventuri); ?>"
 		data-item-type="event"
 		data-permissions="<?php p($sharee['permissions']); ?>"
 		data-share-type="<?php p($sharee['share_type']); ?>">
@@ -58,7 +58,7 @@ if(is_array($sharedwithByEvent)) {
 	print_unescaped('<div id="sharedWithNobody">' . OC_Util::sanitizeHTML($nobody) . '</div>');
 } ?>
 <br />
-<input type="button" id="sendemailbutton" style="float:right;" class="submit" value="<?php p($l->t("Send Email")); ?>" data-eventid="<?php p($eventid);?>" data-location="<?php p($location);?>" data-description="<?php p($description);?>" data-dtstart="<?php p($dtstart);?>" data-dtend="<?php p($dtend);?>">
+<input type="button" id="sendemailbutton" style="float:right;" class="submit" value="<?php p($l->t("Send Email")); ?>" data-eventuri="<?php p($eventuri);?>" data-location="<?php p($location);?>" data-description="<?php p($description);?>" data-dtstart="<?php p($dtstart);?>" data-dtend="<?php p($dtend);?>">
 <br />
 
 <br />

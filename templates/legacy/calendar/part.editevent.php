@@ -1,6 +1,6 @@
 <div id="event" title="<?php p($l->t("Edit event"));?>">
 	<form id="event_form">
-		<input type="hidden" name="id" value="<?php p($_['eventid']) ?>">
+		<input type="hidden" name="id" value="<?php p($_['eventuri']) ?>">
 		<input type="hidden" name="lastmodified" value="<?php p($_['lastmodified']) ?>">
 <?php print_unescaped($this->inc("part.eventform")); ?>
 	<div style="width: 100%;text-align: center;color: #FF1D1D;" id="errorbox"></div>

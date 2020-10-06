@@ -41,7 +41,7 @@ trait ResponseTrait {
 
   static private function grumble($message, $value = null)
   {
-    return self::dataResponse($value, $message, Http::STATUS_BAD_REQUEST);
+    return self::valueResponse($value, $message, Http::STATUS_BAD_REQUEST);
   }
 }
 
