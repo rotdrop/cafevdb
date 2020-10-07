@@ -306,7 +306,7 @@ td.eventdata-brief {
 	float: right;
 }
 #from, #to {
-	width: 80px;
+	width: 12ex;
 	margin: 0;
 }
 #fromtime, #totime {
