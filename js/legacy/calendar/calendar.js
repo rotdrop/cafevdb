@@ -15,6 +15,18 @@ var CAFEVDB = CAFEVDB || {};
   'use strict';
 
   const Calendar={
+    missing: {
+      'caption': t('cafevdb', 'Missing or invalid fields'),
+      'title': t('cafevdb', 'Title'),
+      'calendar': t('cafevdb', 'Calendar'),
+      'fromdate': t('cafevdb', 'From Date'),
+      'fromtime': t('cafevdb', 'From Time'),
+      'todate': t('cafevdb', 'To Date'),
+      'totime': t('cafevdb', 'To Time'),
+      'startsbeforeends': t('cafevdb', 'The event ends before it starts'),
+      'dberror': t('cafevdb', 'There was a database fail'),
+      'interval': t('cafevdb', 'Interval is not valid. It must be a positive integer!')
+    },
     categories: [],
     Util:{
       sendmail: function(eventURI, location, description, dtstart, dtend){
@@ -236,19 +248,19 @@ var CAFEVDB = CAFEVDB || {};
       //     $('#dialog_holder').load(OC.filePath('calendar', 'ajax/event', 'new.form.php'), {start:start, end:end, allday:allday?1:0}, Calendar.UI.startEventDialog);
       //   }
       // },
-      editEvent:function(calEvent, jsEvent, view){
-        if (calEvent.editable == false || calEvent.source.editable == false) {
-          return;
-        }
-        var id = calEvent.id;
-        if($('#event').dialog('isOpen') == true){
-          // TODO: save event
-          $('#event').dialog('destroy').remove();
-        }else{
-          Calendar.UI.loading(true);
-          $('#dialog_holder').load(OC.filePath('calendar', 'ajax/event', 'edit.form.php'), {id: id}, Calendar.UI.startEventDialog);
-        }
-      },
+      // editEvent:function(calEvent, jsEvent, view){
+      //   if (calEvent.editable == false || calEvent.source.editable == false) {
+      //     return;
+      //   }
+      //   var id = calEvent.id;
+      //   if($('#event').dialog('isOpen') == true){
+      //     // TODO: save event
+      //     $('#event').dialog('destroy').remove();
+      //   }else{
+      //     Calendar.UI.loading(true);
+      //     $('#dialog_holder').load(OC.filePath('calendar', 'ajax/event', 'edit.form.php'), {id: id}, Calendar.UI.startEventDialog);
+      //   }
+      // },
       submitDeleteEventForm:function(url){
         var id = $('input[name="id"]').val();
         $('#errorbox').empty();
@@ -280,35 +292,40 @@ var CAFEVDB = CAFEVDB || {};
           Calendar.UI.loading(false);
           const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
           const data = CAFEVDB.ajaxFailData(xhr, status, errorThrown);
-          var output = missing_field + ": <br />";
+          var output = t('cafevdb', "Error") + ": <br />";
+          output = output + msg + ": <br />";
+          output = output + Calendar.missing.caption + ": <br />";
           if(data.title == "true"){
-            output = output + missing_field_title + "<br />";
+            output = output + Calendar.missing.title + "<br />";
           }
           if(data.cal == "true"){
-            output = output + missing_field_calendar + "<br />";
+            output = output + Calendar.missing.calendar + "<br />";
           }
           if(data.from == "true"){
-            output = output + missing_field_fromdate + "<br />";
+            output = output + Calendar.missing.fromdate + "<br />";
           }
           if(data.fromtime == "true"){
-            output = output + missing_field_fromtime + "<br />";
+            output = output + Calendar.missing.fromtime + "<br />";
           }
           if(data.interval == "true"){
-            output = output + missing_field_interval + "<br />";
+            output = output + Calendar.missing.interval + "<br />";
           }
           if(data.to == "true"){
-            output = output + missing_field_todate + "<br />";
+            output = output + Calendar.missing.todate + "<br />";
           }
           if(data.totime == "true"){
-            output = output + missing_field_totime + "<br />";
+            output = output + Calendar.missing.totime + "<br />";
           }
           if(data.endbeforestart == "true"){
-            output = output + missing_field_startsbeforeends + "!<br/>";
+            output = output + Calendar.missing.startsbeforeends + "!<br/>";
           }
           if(data.dberror == "true"){
             output = "There was a database fail!";
           }
-          $("#errorbox").html(output);
+          CAFEVDB.dialogs.alert(
+            output,
+            t('cafevdb', 'Calendar event validation caught an error'),
+            null, false, true);
         });
       },
       moveEvent:function(event, dayDelta, minuteDelta, allDay, revertFunc){
@@ -422,7 +439,7 @@ var CAFEVDB = CAFEVDB || {};
             } else {
               alerttext = t('calendar', 'No location specified.');
             }
-            OC.dialogs.alert(alerttext, t('calendar','Unknown location'));
+            CAFEVDB.dialogs.alert(alerttext, t('calendar','Unknown location'), null, false, true );
             if (navigator.geolocation) {
               navigator.geolocation.getCurrentPosition(function(position) {
                 var latlng = new google.maps.LatLng(position.coords.latitude,

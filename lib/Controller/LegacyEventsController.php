@@ -110,6 +110,7 @@ class LegacyEventsController extends Controller {
     $allday = $this->parameterService['allday'];
 
     $categories   = $projectName.','.$this->l->t($eventKind);
+    $protectCategories = $this->parameterService['protectCategories'];
     $calendarUri  = $eventKind.'calendar';
     $calendarName = $this->getConfigValue($calendarUri, ucfirst($this->l->t($eventKind)));
     $calendarId   = $this->getConfigValue($calendarUri.'id', -1);
@@ -217,6 +218,7 @@ class LegacyEventsController extends Controller {
 
         // cafevdb defaults
         'categories' => $categories,
+        'protectCategories' => $protectCategories,
         'title' => $title,
       ],
       'blank');
@@ -236,7 +238,7 @@ class LegacyEventsController extends Controller {
     $vCalendar = $this->ocCalendarObject->createVCalendarFromRequest($this->parameterService);
     $this->logError($vCalendar->serialize());
     try {
-      $localUri = $this->calDavService->createCalendarObject($cal, $vCalendar);
+      $localUri = $this->calDavService->createCalendarObject($cal, null, $vCalendar);
       $this->logError(__METHOD__ . ": created object with uri " . $localUri);
     } catch(\Exception $e) {
       $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
@@ -327,6 +329,7 @@ class LegacyEventsController extends Controller {
       $allday = true;
     }
 
+    $protectCategories = $this->parameterService['protectCategories'];
     $categories = $vEvent->CATEGORIES;
     //$this->logError(print_r($categories, true));
     $last_modified = $vEvent->__get('LAST-MODIFIED');
@@ -511,11 +514,14 @@ class LegacyEventsController extends Controller {
 
     $templateParameters = [
       'urlGenerator' => $this->urlGenerator,
+      'categories' => $categories,
+      'protectCategories' => $protectCategories,
 
       'eventuri' => $uri,
+      'calendarid' => $calendarId,
+      'calendar_options' => $calendarOptions,
       'permissions' => $permissions,
       'lastmodified' => $lastmodified,
-      'calendar_options' => $calendarOptions,
       'access_class_options' => $access_class_options,
       'repeat_options' => $repeat_options,
       'repeat_month_options' => $repeat_month_options,
@@ -531,7 +537,6 @@ class LegacyEventsController extends Controller {
       'title' => $summary,
       'accessClass' => $accessClass,
       'location' => $location,
-      'categories' => $categories,
       'calendar' => $data['calendarid'],
       'allday' => $allday,
       'startdate' => $startdate,
@@ -604,7 +609,34 @@ class LegacyEventsController extends Controller {
    */
   public function editEvent()
   {
-    return $this->notImplemented(__METHOD__);
+    $errarr = $this->ocCalendarObject->validateRequest($this->parameterService);
+    if($errarr) {
+      //show validate errors
+      return self::grumble($this->l->t("Failed to validate event updating request."), $errarr);
+    }
+    $uri = $this->parameterService['uri'];
+    $calendarId = $this->parameterService['calendarid'];
+    $data = $this->calDavService->getCalendarObject($calendarId, $uri);
+    if(empty($data)) {
+      return self::grumble($this->l->t("Could not fetch object `%s' from calendar `%s'.", [$uri, $calendarId]));
+    }
+    $this->logError(print_r($data, true));
+    $vCalendar = \Sabre\VObject\Reader::read($data['calendardata']);
+    $lastModifiedSubmitted = $this->parameterService['lastmodified'];
+    $lastModified = $vCalendar->VEVENT->__get('LAST-MODIFIED');
+    if ($lastModified && $lastModifiedSubmitted != $lastModified->getDateTime()->format('U')) {
+      return self::grumble($this->l->t('Race-condition, event was modified in between.'));
+    }
+
+    $vCalendar = $this->ocCalendarObject->updateVCalendarFromRequest($this->parameterService, $vCalendar);
+
+    if($data['calendarid'] != $calendarId) {
+      $this->calDavService->deleteCalendarObject($data['calendarid'], $uri);
+      $this->calDavService->createCalendarObject($data['calendarid'], $uri,  $vCalendar);
+    } else {
+      $this->calDavService->updateCalendarObject($data['calendarid'], $uri, $vCalendar);
+    }
+    return self::response($this->l->t("Successfully updated `%s'.", [$uri]));
   }
 
   /**

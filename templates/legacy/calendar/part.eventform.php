@@ -63,10 +63,18 @@
 		<a class="action" id="viewOnMap" title="<?php p($l->t('View on map')); ?>">
 		<img alt="<?php p($l->t('View on map')); ?>" src="<?php print_unescaped($urlGenerator->imagePath('core','actions/public.svg'))?>" class="svg action" style="width: 16px; height: 16px;"></a>
 
-		<input id="category" name="categories" type="text"
-			placeholder="<?php p($l->t('Categories (separate by comma)')); ?>"
-			value="<?php p(isset($_['categories']) ? $_['categories'] : '') ?>">
-		<a class="action edit" id="editCategories" title="<?php p($l->t('Edit categories')); ?>">
+		<input id="category"
+                       <?php if ($protectCategories & 2) { p('class="reallyhidden"'); } ?>
+                       name="categories"
+                       type="text"
+                       <?php if ($protectCategories & 1) { p('disabled="disabled"'); } ?>
+		       placeholder="<?php p($l->t('Categories (separate by comma)')); ?>"
+		       value="<?php p(isset($_['categories']) ? $_['categories'] : '') ?>"
+                       >
+		<a class="action edit <?php if ($protectCategories) { p('reallyhidden'); } ?>"
+                   id="editCategories"
+                   title="<?php p($l->t('Edit categories')); ?>"
+                   >
 		<img alt="<?php p($l->t('Edit categories')); ?>" src="<?php print_unescaped($urlGenerator->imagePath('core','actions/rename.svg'))?>" class="svg action" style="width: 16px; height: 16px;"></a>
 
 		<textarea id="event-description" placeholder="<?php p($l->t('Description'));?>" name="description"><?php p(isset($_['description']) ? $_['description'] : '') ?></textarea>

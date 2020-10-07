@@ -253,12 +253,14 @@ class CalDavService
    *
    * @bug This function uses internal APIs.
    */
-  public function createCalendarObject($calendarId, $object)
+  public function createCalendarObject($calendarId, $localUri, $object)
   {
     if (!is_string($object)) {
       $object = $object->serialize();
     }
-    $localUri = strtoupper(Uuid::uuid4()->toString()).'.ics';
+    if (empty($localUri)) {
+      $localUri = strtoupper(Uuid::uuid4()->toString()).'.ics';
+    }
     $this->calDavBackend->createCalendarObject($calendarId, $localUri, $object);
     return $localUri;
   }
@@ -273,7 +275,18 @@ class CalDavService
     if (!is_string($object)) {
       $object = $object->serialize();
     }
+    $this->logError("calId: " . $calendarId . " uri " . $localUri);
     $this->calDavBackend->updateCalendarObject($calendarId, $localUri, $object);
+  }
+
+  /** Update an entry in the given calendar from either a VCalendar
+   ** blob or a Sabre VCalendar object.
+   *
+   * @bug This function uses internal APIs.
+   */
+  public function deleteCalendarObject($calendarId, $localUri)
+  {
+    $this->calDavBackend->deleteCalendarObject($calendarId, $localUri);
   }
 
   /** Fetch an event object by its local URI.

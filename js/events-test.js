@@ -5,7 +5,8 @@ $(document).ready(function() {
       OC.generateUrl('/apps/cafevdb/legacy/events/forms/new'),
       { 'ProjectId': '99999',
         'ProjectName': 'Test',
-        'EventKind': 'other'
+        'EventKind': 'other',
+        'protectCategories': 1
       })
      .done(function(data) {
        $('#dialog_holder').html(data);
@@ -24,7 +25,8 @@ $(document).ready(function() {
         'ProjectName': 'Test',
         'EventKind': 'other',
 	'calendarId': $('#edit-event-test-calendar-id').val(),
-        'uri': $('#edit-event-test-uri').val()
+        'uri': $('#edit-event-test-uri').val(),
+        'protectCategories': 1
       })
      .done(function(data) {
        $('#dialog_holder').html(data);
