@@ -37,6 +37,21 @@ var CAFEVDB = CAFEVDB || {};
   // overrides from PHP, see config.js
   $.extend(CAFEVDB, CAFEVDB.initialState);
 
+  // export allowHtml
+  CAFEVDB.dialogs = {
+    alert: function(text, title, callback, modal, allowHtml) {
+      return OC.dialogs.message(
+        text,
+        title,
+        'alert',
+        OC.dialogs.OK_BUTTON,
+        callback,
+        modal,
+        allowHtml
+      );
+    }
+  };
+
   /**Register callbacks which are run after partial page reload in
    * order to "fake" document-ready. An alternate possibility would
    * have been to attach handlers to a custom signal and trigger that
@@ -1280,7 +1295,9 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.ajaxFailData = function(xhr, status, errorThrown) {
     const ct = xhr.getResponseHeader("content-type") || "";
     var data = {};
+    var value = '';
     if (ct.indexOf('html') > -1) {
+      console.log('html error');
       // nothing
     } else if (ct.indexOf('json') > -1) {
       console.log('json response');
@@ -1289,6 +1306,7 @@ var CAFEVDB = CAFEVDB || {};
         value = response.value;
       }
     } else {
+      console.log('unknownx response');
       // nothing
     }
     return value;
