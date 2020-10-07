@@ -24,22 +24,24 @@ $(document).ready(function() {
       { 'ProjectId': '99999',
         'ProjectName': 'Test',
         'EventKind': 'other',
-	'calendarId': $('#edit-event-test-calendar-id').val(),
+	'calendarid': $('#edit-event-test-calendar-id').val(),
         'uri': $('#edit-event-test-uri').val(),
         'protectCategories': 1
       })
      .done(function(data) {
        $('#dialog_holder').html(data);
+       console.log("calling start event");
        CAFEVDB.Legacy.Calendar.UI.startEventDialog();
      })
      .fail(function(xhr, status, errorThrown) {
+       console.log("failed starting event");
        const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
-      OC.dialogs.alert(msg, t('cafevdb', 'Event-testing caught an error'));
+       OC.dialogs.alert(msg, t('cafevdb', 'Event-testing caught an error'));
      });
   });
 });
 
-// LocalVariables: ***
+// Local Variables: ***
 // indent-tabs-node: nil ***
 // js-indent-level: 2 ***
 // End: ***

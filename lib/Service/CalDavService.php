@@ -240,7 +240,7 @@ class CalDavService
     if ($writable) {
       foreach($calendars as $idx => $calendar) {
         if (!$this->calendarWritable($calendar)) {
-          unset($calendars[idx]);
+          unset($calendars[$idx]);
         }
       }
       $calendars = array_values($calendars);

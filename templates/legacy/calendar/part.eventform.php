@@ -16,7 +16,7 @@
 	<?php if(count($_['calendar_options']) > 1) { ?>
 	<?php p($l->t("Calendar"));?>
 	<select style="width:140px;" name="calendar">
-		<?php if (!isset($_['calendar'])) {$_['calendar'] = false;}
+		<?php if (!isset($_['calendarid'])) {$_['calendarid'] = false;}
 		$enabledCalendars = array();
 		$disabledCalendars = array();
 		foreach($_['calendar_options'] as $calendar) {
@@ -27,7 +27,7 @@
 			}
 		}
 		$sortedCalendars = array_merge($enabledCalendars, $disabledCalendars);
-		print_unescaped(OCP\Template::html_select_options($sortedCalendars, $_['calendar'], array('value'=>'id', 'label'=>'displayname'))); ?>
+		print_unescaped(OCP\Template::html_select_options($sortedCalendars, $_['calendarid'], array('value'=>'id', 'label'=>'displayname'))); ?>
 	</select>
 	<?php } elseif ($_['calendar_options'][0]['userid'] === $_['userid']) { ?>
 	<input style="display:none;" type="hidden" name="calendar" value="<?php p($_['calendar_options'][0]['id']); ?>">
@@ -80,7 +80,7 @@
 		<textarea id="event-description" placeholder="<?php p($l->t('Description'));?>" name="description"><?php p(isset($_['description']) ? $_['description'] : '') ?></textarea>
 
 		<?php if($_['eventuri'] != 'new'){ ?>
-		<input type="button" class="submit" id="editEvent-export"  name="export" value="<?php p($l->t('Export event'));?>" data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.export_event')); ?>?eventuri=<?php p($_['eventuri']) ?>">
+		<input type="button" class="submit" id="editEvent-export"  name="export" value="<?php p($l->t('Export event'));?>" data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?requesttoken=<?php echo urlencode($csrfToken); ?>&eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>">
 		<?php }?>
 	</div>
 </div>
@@ -242,7 +242,7 @@
 	<br>
 	<?php p($l->t('Visibility to people shared with'));?>
 	<select style="width:140px;" name="accessclass">
-		<?php if (!isset($_['calendar'])) {$_['calendar'] = false;}
+		<?php if (!isset($_['calendarid'])) {$_['calendarid'] = false;}
 		print_unescaped(OCP\Template::html_select_options($_['access_class_options'], $_['accessclass'])); ?>
 	</select>
 </div>

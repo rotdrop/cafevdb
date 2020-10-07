@@ -46,6 +46,7 @@ script($appName, 'config');
 //script($appName, '../vendor/components/jquery-migrate/jquery-migrate.min');
 
 style($appName, 'cafevdb');
+style($appName, 'oc-fixes');
 style($appName, 'settings');
 style($appName, 'about');
 style($appName, 'events');

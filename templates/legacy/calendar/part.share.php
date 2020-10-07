@@ -1,5 +1,5 @@
 <?php
-$calid = isset($_['calendar']) ? $_['calendar'] : null;
+$calid = isset($_['calendarid']) ? $_['calendarid'] : null;
 $eventuri = isset($_['eventuri']) ? $_['eventuri'] : null;
 $location = isset($_['location']) ? $_['location'] : null;
 $description = isset($_['description']) ? $_['description'] : null;
@@ -55,7 +55,7 @@ if(is_array($sharedwithByEvent)) {
 </ul>
 <?php if(!$eventsharees) {
 	$nobody = $l->t('Not shared with anyone');
-	print_unescaped('<div id="sharedWithNobody">' . OC_Util::sanitizeHTML($nobody) . '</div>');
+	print_unescaped('<div id="sharedWithNobody">' . OCP\Util::sanitizeHTML($nobody) . '</div>');
 } ?>
 <br />
 <input type="button" id="sendemailbutton" style="float:right;" class="submit" value="<?php p($l->t("Send Email")); ?>" data-eventuri="<?php p($eventuri);?>" data-location="<?php p($location);?>" data-description="<?php p($description);?>" data-dtstart="<?php p($dtstart);?>" data-dtend="<?php p($dtend);?>">
@@ -86,5 +86,5 @@ if(is_array($sharedwithByEvent)) {
 </ul>
 <?php if(!$calsharees) {
 	$nobody = $l->t('Not shared with anyone via calendar');
-	print_unescaped('<div>' . OC_Util::sanitizeHTML($nobody) . '</div>');
+	print_unescaped('<div>' . OCP\Util::sanitizeHTML($nobody) . '</div>');
 } ?>

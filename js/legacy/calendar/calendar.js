@@ -157,6 +157,7 @@ var CAFEVDB = CAFEVDB || {};
         }
       },
       startEventDialog:function(){
+        console.log('hello');
         Calendar.UI.loading(false);
         $.fn.cafevTooltip.remove();
         //                      $('#fullcalendar').fullCalendar('unselect');
@@ -196,6 +197,7 @@ var CAFEVDB = CAFEVDB || {};
         });
         $( "#event" ).tabs({ selected: 0});
         var eventForm = $('#event_form');
+        console.log(eventForm);
         var calSelect = eventForm.find('select[name="calendar"]');
         // Search for the selected option, if none is
         // selected, take the first (new event)
@@ -262,19 +264,27 @@ var CAFEVDB = CAFEVDB || {};
       //   }
       // },
       submitDeleteEventForm:function(url){
-        var id = $('input[name="id"]').val();
+        const post = {
+          'calendarid': $('input[name="calendarid"]').val(),
+          'uri': $('input[name="uri"]').val()
+        };
         $('#errorbox').empty();
         Calendar.UI.loading(true);
-        $.post(url, {id:id}, function(data){
+        $.post(url, post)
+        .done(function(data){
           Calendar.UI.loading(false);
-          if(data.status == 'success'){
-            // $('#fullcalendar').fullCalendar('removeEvents', $('#event_form input[name=id]').val());
-            $('#event').dialog('destroy').remove();
-            CAFEVDB.Events.UI.redisplay();
-          } else {
-            $('#errorbox').html(t('calendar', 'Deletion failed'));
-          }
-
+          // $('#fullcalendar').fullCalendar('removeEvents', $('#event_form input[name=id]').val());
+          $('#event').dialog('destroy').remove();
+          CAFEVDB.Events.UI.redisplay();
+        })
+	.fail(function(xhr, status, errorThrown) {
+          Calendar.UI.loading(false);
+          const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+          CAFEVDB.dialogs.alert(
+            msg,
+            t('cafevdb', 'Calendar event deletion failed.'),
+            null, false, true);
+          $('#errorbox').html(t('calendar', 'Deletion failed'));
         }, "json");
       },
       validateEventForm:function(url){
@@ -324,8 +334,9 @@ var CAFEVDB = CAFEVDB || {};
           }
           CAFEVDB.dialogs.alert(
             output,
-            t('cafevdb', 'Calendar event validation caught an error'),
+            t('cafevdb', 'Calendar event validation caught an error.'),
             null, false, true);
+          $('#errorbox').html(output);
         });
       },
       moveEvent:function(event, dayDelta, minuteDelta, allDay, revertFunc){

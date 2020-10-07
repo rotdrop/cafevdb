@@ -26,6 +26,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\IRequest;
 use OCP\IL10N;
 use OCP\Constants;
@@ -38,6 +39,7 @@ use OCA\CAFEVDB\Service\CalDavService;
 
 use OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object;
 
+/**Serves the requests issued by the old OC v8 event popups.*/
 class LegacyEventsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -92,13 +94,46 @@ class LegacyEventsController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function newEventForm()
+  public function serviceSwitch($topic, $subTopic)
+  {
+    switch ($topic) {
+    case 'forms':
+      switch ($subTopic) {
+      case 'new':
+        return $this->newEventForm();
+      case 'edit':
+        return $this->editEventForm();
+      default:
+        breal;
+      }
+      break;
+    case 'actions':
+      switch ($subTopic) {
+      case 'new':
+        return $this->newEvent();
+      case 'edit':
+        return $this->editEvent();
+      case 'delete':
+        return $this->deleteEvent();
+      case 'export':
+        return $this->exportEvent();
+      default:
+        break;
+      }
+      break;
+    default:
+      break;
+    }
+    return self::grumble($this->l->t("unknown service requested: `%s/%s'.", [$topic, $subTopic]));
+  }
+
+  private function newEventForm()
   {
     $projectId = $this->parameterService['ProjectId'];
     $projectName = $this->parameterService['ProjectName'];
     $eventKind = $this->parameterService['EventKind'];
 
-    if($projectId < 0 ||
+    if ($projectId < 0 ||
         (empty($projectName) &&
          empty($projectName = $this->projectService->fetchName($projectId)))) {
       return self::grumble($this->l->t('Project-id and/or name not set'));
@@ -122,19 +157,19 @@ class LegacyEventsController extends Controller {
     // make sure that the calendar exists and is writable
     $newId = $this->configCheckService->checkSharedCalendar($calendarUri, $calendarName, $calendarId);
 
-    if($newId == false) {
+    if ($newId == false) {
       return self::grumble($this->l->t('Cannot access calendar: `%s\'', [$calendarUri]));
-    } else if($newId != $calendarId) {
+    } else if ($newId != $calendarId) {
       $this->setConfigValue($calendarUri, $newId);
       $calendarId = $newId;
     }
 
-    if(!$start) {
+    if (!$start) {
       $start = new \DateTime('now');
       $start = $start->getTimeStamp();
     }
 
-    if(!$end) {
+    if (!$end) {
       $duration = $this->getConfigValue('eventduration', 180);
       $end = $start + ($duration * 60);
     }
@@ -147,25 +182,26 @@ class LegacyEventsController extends Controller {
 
     // compute the list of all writable calendars of the user
     $calendars = $this->calDavService->getCalendars(true);
-    usort($calendars, function($a, $b) use ($calendarId) {
-      if($a->getKey() == $b->getKey()) {
-        return 0;
-      } else if($a->getKey() == $calendarId) {
-        return -1;
-      } else if($b->getKey() == $calendarId) {
-        return 1;
-      }
-      return strcmp($a->getDisplayName(), $b->getDisplayName());
-    });
     $calendarOptions = [];
     foreach ($calendars as $calendar) {
+      [,,$userId] = explode('/', $this->calDavService->calendarPrincipalUri($calendar->getKey()));
       $calendarOptions[] = [
         'active' => 1,
         'id' => $calendar->getKey(),
         'displayname' => $calendar->getDisplayName(),
-        'userid' => ''
+        'userid' => $userId,
       ];
     }
+    usort($calendarOptions, function($a, $b) use ($calendarId) {
+      if ($a['id'] == $b['id']) {
+        return 0;
+      } else if ($a['id'] == $calendarId) {
+        return -1;
+      } else if ($b['id'] == $calendarId) {
+        return 1;
+      }
+      return strcmp($a['displayname'], $b['displayname']);
+    });
 
     $access_class_options = $this->ocCalendarObject->getAccessClassOptions();
     $repeat_options = $this->ocCalendarObject->getRepeatOptions();
@@ -183,11 +219,16 @@ class LegacyEventsController extends Controller {
       $this->appName(),
       'legacy/calendar/part.newevent',
       [
+        'csrfToken' => \OCP\Util::callRegister(),
         'urlGenerator' => $this->urlGenerator,
+
+        'calendarid' => $calendarId,
+        'calendarOwnerId' => $calendarOptions[0]['userid'],
+        'calendarDisplayName' => $calendarOptions[0]['displayname'],
         'calendar_options' => $calendarOptions,
 
         'access' => 'owner',
-        'accessClass' => 'PUBLIC',
+        'accessclass' => 'PUBLIC',
         'access_class_options' => $access_class_options,
         'repeat_options' => $repeat_options,
         'repeat_month_options' => $repeat_month_options,
@@ -224,88 +265,56 @@ class LegacyEventsController extends Controller {
       'blank');
   }
 
-  /**
-   * @NoAdminRequired
-   */
-  public function newEvent()
-  {
-    $errarr = $this->ocCalendarObject->validateRequest($this->parameterService);
-    if($errarr) {
-      //show validate errors
-      return self::grumble($this->l->t("Failed to validate event creating request."), $errarr);
-    }
-    $cal = $this->parameterService['calendar'];
-    $vCalendar = $this->ocCalendarObject->createVCalendarFromRequest($this->parameterService);
-    $this->logError($vCalendar->serialize());
-    try {
-      $localUri = $this->calDavService->createCalendarObject($cal, null, $vCalendar);
-      $this->logError(__METHOD__ . ": created object with uri " . $localUri);
-    } catch(\Exception $e) {
-      $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
-      return self::grumble(
-        $this->l->t('Failure creating calendar object, caught an exception `%s\'.',
-                    [$e->getMessage()]));
-    }
-    return self::valueResponse($localUri, $this->l->t("Calendar object successfully created."));
-  }
-
-  /**
-   * @NoAdminRequired
-   */
-  public function editEventForm()
+  private function editEventForm()
   {
     // all this mess ...
     $uri = $this->parameterService['uri'];
-    $calendarId = $this->parameterService['calendarId'];
+    $calendarId = $this->parameterService['calendarid'];
     $data = $this->calDavService->getCalendarObject($calendarId, $uri);
-    if(empty($data)) {
+    if (empty($data)) {
       return self::grumble($this->l->t("Could not fetch object `%s' from calendar `%s'.", [$uri, $calendarId]));
     }
-    $this->logError(print_r($data, true));
-    if($data['calendarid'] != $calendarId) {
+    //$this->logError(print_r($data, true));
+    if ($data['calendarid'] != $calendarId) {
       return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
     }
     $eventId = $data['id'];
     $object = \Sabre\VObject\Reader::read($data['calendardata']);
-    $vEvent = $object->VEVENT;
     $calendar = $this->calDavService->calendarById($calendarId);
-    if(empty($calendar)) {
+    if (empty($calendar)) {
       return self::grumble($this->l->t("Unable to access calendar with id `%s'.", [$calendarId]));
     }
     [,,$ownerId] = explode('/', $this->calDavService->calendarPrincipalUri($calendarId));
     $this->logError("ownerId: " . $ownerId);
     $object = $this->ocCalendarObject->cleanByAccessClass($ownerId, $object);
-    if($vEvent->CLASS) {
-      $accessClass = $vEvent->CLASS->getValue();
-    } else {
-      $accessClass = 'PUBLIC';
-    }
+    $accessclass = $this->accessClass($object);
     // $permissions = OC_Calendar_App::getPermissions($id, OC_Calendar_App::EVENT, $accessClass);
     $permissions = $calendar->getPermissions();
     switch ($accessClass) {
     case 'PUBLIC':
       break;
     case 'CONFIDENTIAL':
-      $permissions &= Constants::PERMISSION_READ;
+      $permissions &= ~Constants::PERMISSION_READ;
       break;
     case 'PRIVATE':
-      $permissions &= Constants::PERMISSION_UPDATE;
+      $permissions &= ~Constants::PERMISSION_UPDATE;
       break;
     }
+    //$permissions &= ~Constants::PERMISSION_UPDATE;
     $this->logError("Permissions: " . $calendar->getPermissions());
 
     $dtstart = $vEvent->DTSTART;
     $dtend = $this->ocCalendarObject->getDTEndFromVEvent($vEvent);
 
-    $summary = $vEvent->SUMMARY;
-    $location = $vEvent->LOCATION;
-    $description = $vEvent->DESCRIPTION;
+    $summary = (string)$vEvent->SUMMARY;
+    $location = (string)$vEvent->LOCATION;
+    $description = (string)$vEvent->DESCRIPTION;
 
     // DATE
-    if($dtstart->hasTime()) {
+    if ($dtstart->hasTime()) {
       // UTC ?
-      if(!$dtstart->isFloating()) {
-		$timezone = new DateTimeZone($this->getTimezone());
+      if (!$dtstart->isFloating()) {
+		$timezone = new \DateTimeZone($this->getTimezone());
 		$newDT = $dtstart->getDateTime();
 		$newDT->setTimezone($timezone);
 		$dtstart->setDateTime($newDT);
@@ -333,13 +342,13 @@ class LegacyEventsController extends Controller {
     $categories = $vEvent->CATEGORIES;
     //$this->logError(print_r($categories, true));
     $last_modified = $vEvent->__get('LAST-MODIFIED');
-    if($last_modified) {
+    if ($last_modified) {
       $lastmodified = $last_modified->getDateTime()->format('U');
     }else{
       $lastmodified = 0;
     }
 
-    // if($data['repeating'] == 1) {
+    // if ($data['repeating'] == 1) {
     if (isset($vEvent->RRULE)) {
       $rrule = explode(';', $vEvent->RRULE);
       $rrulearr = [];
@@ -483,13 +492,17 @@ class LegacyEventsController extends Controller {
     $calendars = $this->calDavService->getCalendars(true);
     $calendarOptions = [];
     foreach ($calendars as $calendar) {
+      [,,$userId] = explode('/', $this->calDavService->calendarPrincipalUri($calendar->getKey()));
       $calendarOptions[] = [
         'active' => 1,
         'id' => $calendar->getKey(),
         'displayname' => $calendar->getDisplayName(),
-        'userid' => ''
+        'userid' => $userId,
       ];
     }
+    usort($calendarOptions, function($a, $b) use ($calendarId) {
+      return strcmp($a['displayname'], $b['displayname']);
+    });
 
     $access_class_options = $this->ocCalendarObject->getAccessClassOptions();
     $repeat_options = $this->ocCalendarObject->getRepeatOptions();
@@ -513,12 +526,15 @@ class LegacyEventsController extends Controller {
     }
 
     $templateParameters = [
+      'csrfToken' => \OCP\Util::callRegister(),
       'urlGenerator' => $this->urlGenerator,
       'categories' => $categories,
       'protectCategories' => $protectCategories,
 
       'eventuri' => $uri,
       'calendarid' => $calendarId,
+      'calendarOwnerId' => $ownerId,
+      'calendarDisplayName' => $calendar->getDisplayName(),
       'calendar_options' => $calendarOptions,
       'permissions' => $permissions,
       'lastmodified' => $lastmodified,
@@ -535,9 +551,8 @@ class LegacyEventsController extends Controller {
       'repeat_weekofmonth_options' => $repeat_weekofmonth_options,
 
       'title' => $summary,
-      'accessClass' => $accessClass,
+      'accessclass' => $accessClass,
       'location' => $location,
-      'calendar' => $data['calendarid'],
       'allday' => $allday,
       'startdate' => $startdate,
       'starttime' => $starttime,
@@ -547,8 +562,8 @@ class LegacyEventsController extends Controller {
 
       'repeat' => $repeat['repeat']
     ];
-    if($repeat['repeat'] != 'doesnotrepeat') {
-      if(array_key_exists('weekofmonth', $repeat) === false) {
+    if ($repeat['repeat'] != 'doesnotrepeat') {
+      if (array_key_exists('weekofmonth', $repeat) === false) {
 		$repeat['weekofmonth'] = 1;
       }
       $repeatParameters = [
@@ -570,22 +585,23 @@ class LegacyEventsController extends Controller {
       //init
       $start = $dtstart->getDateTime();
       $tWeekDay = $start->format('l');
+      $shortWeekDay = strtoupper(substr($tWeekDay, 0, 2));
       $transWeekDay = $this->l->t((string)$tWeekDay);
       $tDayOfMonth = $start->format('j');
+      $numMonth = $start->format('n');
       $tMonth = $start->format('F');
       $transMonth = $this->l->t((string)$tMonth);
       $transByWeekNo = $start->format('W');
       $transByYearDay = $start->format('z');
 
       $repeatParameters = [
-        'repeat_weekdays' => $transWeekDay,
+        'repeat_weekdays' => $shortWeekDay, //$transWeekDay,
         'repeat_bymonthday' => $tDayOfMonth,
-        'repeat_bymonth' => $transMonth,
+        'repeat_bymonth' => $numMonth, // $transMonth,
         'repeat_byweekno' => $transByWeekNo,
         'repeat_byyearday' => $transByYearDay,
 
         'repeat_month' => 'monthday',
-        //'repeat_weekdays' => [],
         'repeat_interval' => 1,
         'repeat_end' => 'never',
         'repeat_count' => '10',
@@ -597,6 +613,7 @@ class LegacyEventsController extends Controller {
     }
     $templateParameters = array_merge($templateParameters, $repeatParameters);
 
+    $this->logError("returning template " . $template);
     return new TemplateResponse(
       $this->appName(),
       $template,
@@ -604,20 +621,39 @@ class LegacyEventsController extends Controller {
     'blank');
   }
 
-  /**
-   * @NoAdminRequired
-   */
-  public function editEvent()
+  private function newEvent()
   {
     $errarr = $this->ocCalendarObject->validateRequest($this->parameterService);
-    if($errarr) {
+    if ($errarr) {
+      //show validate errors
+      return self::grumble($this->l->t("Failed to validate event creating request."), $errarr);
+    }
+    $cal = $this->parameterService['calendar'];
+    $vCalendar = $this->ocCalendarObject->createVCalendarFromRequest($this->parameterService);
+    $this->logError($vCalendar->serialize());
+    try {
+      $localUri = $this->calDavService->createCalendarObject($cal, null, $vCalendar);
+      $this->logError(__METHOD__ . ": created object with uri " . $localUri);
+    } catch(\Exception $e) {
+      $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
+      return self::grumble(
+        $this->l->t('Failure creating calendar object, caught an exception `%s\'.',
+                    [$e->getMessage()]));
+    }
+    return self::valueResponse($localUri, $this->l->t("Calendar object successfully created."));
+  }
+
+  private function editEvent()
+  {
+    $errarr = $this->ocCalendarObject->validateRequest($this->parameterService);
+    if ($errarr) {
       //show validate errors
       return self::grumble($this->l->t("Failed to validate event updating request."), $errarr);
     }
     $uri = $this->parameterService['uri'];
     $calendarId = $this->parameterService['calendarid'];
     $data = $this->calDavService->getCalendarObject($calendarId, $uri);
-    if(empty($data)) {
+    if (empty($data)) {
       return self::grumble($this->l->t("Could not fetch object `%s' from calendar `%s'.", [$uri, $calendarId]));
     }
     $this->logError(print_r($data, true));
@@ -630,7 +666,7 @@ class LegacyEventsController extends Controller {
 
     $vCalendar = $this->ocCalendarObject->updateVCalendarFromRequest($this->parameterService, $vCalendar);
 
-    if($data['calendarid'] != $calendarId) {
+    if ($data['calendarid'] != $calendarId) {
       $this->calDavService->deleteCalendarObject($data['calendarid'], $uri);
       $this->calDavService->createCalendarObject($data['calendarid'], $uri,  $vCalendar);
     } else {
@@ -639,20 +675,12 @@ class LegacyEventsController extends Controller {
     return self::response($this->l->t("Successfully updated `%s'.", [$uri]));
   }
 
-  /**
-   * @NoAdminRequired
-   */
-  public function deleteEventForm()
+  private function deleteEvent()
   {
-    return $this->notImplemented(__METHOD__);
-  }
-
-  /**
-   * @NoAdminRequired
-   */
-  public function deleteEvent()
-  {
-    return $this->notImplemented(__METHOD__);
+    $uri = $this->parameterService['uri'];
+    $calendarId = $this->parameterService['calendarid'];
+    $this->calDavService->deleteCalendarObject($calendarId, $uri);
+    return self::response($this->l->t("Successfully deleted `%s'.", [$uri]));
   }
 
   /**
@@ -660,7 +688,46 @@ class LegacyEventsController extends Controller {
    */
   public function exportEvent()
   {
-    return $this->notImplemented(__METHOD__);
+    $calendarId = $this->parameterService['calendarid'];
+    $uri = $this->parameterService['eventuri'];
+    $data = $this->calDavService->getCalendarObject($calendarId, $uri);
+    if (empty($data)) {
+      return self::grumble(
+        $this->l->t("Could not fetch object `%s' from calendar `%s'.", [$uri, $calendarId]),
+        null, Http::STATUS_FORBIDDEN);
+    }
+    if ($data['calendarid'] != $calendarId) {
+      return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
+    }
+    $eventId = $data['id'];
+    $object = \Sabre\VObject\Reader::read($data['calendardata']);
+    $calendar = $this->calDavService->calendarById($calendarId);
+    if (empty($calendar)) {
+      return self::grumble(
+        $this->l->t("Unable to access calendar with id `%s'.", [$calendarId]),
+        null, Http::STATUS_FORBIDDEN);
+    }
+    [,,$ownerId] = explode('/', $this->calDavService->calendarPrincipalUri($calendarId));
+    $object = $this->ocCalendarObject->cleanByAccessClass($ownerId, $object);
+    $accessClass = $this->accessClass($object);
+    $permissions = $calendar->getPermissions();
+    switch ($accessClass) {
+    case 'PUBLIC':
+      break;
+    case 'CONFIDENTIAL':
+      $permissions &= ~Constants::PERMISSION_READ;
+      break;
+    case 'PRIVATE':
+      $permissions &= ~Constants::PERMISSION_UPDATE;
+      break;
+    }
+
+    $this->logError("Permissions: " . $permissions);
+
+    return new DataDownloadResponse(
+      $this->generateEvent($uri, $object, $ownerId, $permissions),
+      $uri,
+      'text/calendar');
   }
 
   private function notImplemented($method)
@@ -668,6 +735,70 @@ class LegacyEventsController extends Controller {
     return self::grumble($this->l->t("Method %s is not yet implemented.", [$method]));
   }
 
+  /**
+   * @brief exports an event and convert all times to UTC
+   * @param integer $id id of the event
+   * @return string
+   */
+  private function generateEvent($uri, $vObject, $ownerId, $permissions)
+  {
+    $return = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:Nextloud cafevdb " . \OCP\App::getAppVersion($this->appName()) . "\nX-WR-CALNAME:" . $uri . "\n";
+    $return .= $this->generateEventData($vObject, $ownerId, $permissions);
+    $return .= "END:VCALENDAR";
+    return $this->fixLineBreaks($return);
+  }
+
+  /**
+   * @brief generates the VEVENT/VTODO/VJOURNAL with UTC dates
+   * @param array $event
+   * @return string
+   */
+  private function generateEventData($vObject, $ownerId, $permissions)
+  {
+    if(!$vObject){
+      return false;
+    }
+    if ($ownerId != $this->userId() && !($permissions & Constants::PERMISSION_READ)) {
+        return '';
+    }
+    if($vObject->VEVENT){
+      return $vObject->VEVENT->serialize();
+    }
+    if($vObject->VTODO){
+      return $vObject->VTODO->serialize();
+    }
+    if($vObject->VJOURNAL){
+      return $vObject->VJOURNAL->serialize();
+    }
+    return '';
+  }
+
+  private function accessClass($vObject)
+  {
+    if($vObject->VEVENT && $vObject->VEVENT->CLASS) {
+      return $vObject->VEVENT->CLASS->getValue();
+    }
+    if($vObject->VTODO && $vObject->VTODO->CLASS) {
+      return $vObject->VTODO->CLASS->getValue();
+    }
+    if($vObject->VJOURNAL && $vObject->VJOURNAL->CLASS) {
+      return $vObject->VJOURNAL->CLASS->getValue();
+    }
+    return 'PUBLIC';
+  }
+
+  /**
+   * @brief fixes new line breaks
+   * (fixes problems with Apple iCal)
+   * @param string $string to fix
+   * @return string
+   */
+  private function fixLineBreaks($string) {
+    $string = str_replace("\r\n", "\n", $string);
+    $string = str_replace("\r", "\n", $string);
+    $string = str_replace("\n", "\r\n", $string);
+    return $string;
+  }
 }
 
 // Local Variables: ***

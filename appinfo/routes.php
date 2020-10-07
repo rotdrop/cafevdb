@@ -99,41 +99,16 @@ return [
         ],
         // legacy calendar events
         [
-            'name' => 'legacy_events#new_event_form',
-            'url' => '/legacy/events/forms/new',
-            'verb' => 'POST',
-        ],
-        [
-            'name' => 'legacy_events#edit_event_form',
-            'url' => '/legacy/events/forms/edit',
-            'verb' => 'POST',
-        ],
-        [
-            'name' => 'legacy_events#delete_event_form',
-            'url' => '/legacy/events/forms/delete',
-            'verb' => 'POST',
-        ],
-        [
-            'name' => 'legacy_events#new_event',
-            'url' => '/legacy/events/actions/new',
-            'verb' => 'POST',
-        ],
-        [
-            'name' => 'legacy_events#edit_event',
-            'url' => '/legacy/events/actions/edit',
-            'verb' => 'POST',
-        ],
-        [
-            'name' => 'legacy_events#delete_event',
-            'url' => '/legacy/events/actions/delete',
+            'name' => 'legacy_events#service_switch',
+            'url' => '/legacy/events/{topic}/{subTopic}', // topic = forms|actions
             'verb' => 'POST',
         ],
         [
             'name' => 'legacy_events#export_event',
             'url' => '/legacy/events/actions/export',
-            'verb' => 'POST',
+            'verb' => 'GET',
         ],
-    ]
+   ]
 ];
 
 return;

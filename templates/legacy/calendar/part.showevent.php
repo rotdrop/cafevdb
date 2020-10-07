@@ -25,10 +25,10 @@
 					print_unescaped('<ul>');
 					if(is_array($_['categories'])){
 						foreach($_['categories'] as $categorie) {
-							print_unescaped('<li>' . OC_Util::sanitizeHTML($categorie) . '</li>');
+							print_unescaped('<li>' . OCP\Util::sanitizeHTML($categorie) . '</li>');
 						}
 					}else{
-						print_unescaped('<li>' . OC_Util::sanitizeHTML($_['categories']) . '</li>');
+						print_unescaped('<li>' . OCP\Util::sanitizeHTML($_['categories']) . '</li>');
 					}
 					print_unescaped('</ul>');
 				}
@@ -37,13 +37,12 @@
 			<th width="75px">&nbsp;&nbsp;&nbsp;<?php p($l->t("Calendar"));?>:</th>
 			<td>
 			<?php
-			$calendar = OC_Calendar_App::getCalendar($_['calendar'], false, false);
-			p($l->t('%s of %s', array($calendar['displayname'], $calendar['userid'])));
+			p($calendarDisplayName, $calendarOwnerId);
 			?>
 			</td>
 			<th width="75px">&nbsp;</th>
 			<td>
-				<input type="hidden" name="calendar" value="<?php p($_['calendar_options'][0]['id']) ?>">
+				<input type="hidden" name="calendarid" value="<?php p($_['calendarid']) ?>">
 			</td>
 		</tr>
 		<tr>
@@ -88,6 +87,18 @@
 				<td>
 					<?php p(isset($_['location']) ? $_['location'] : '') ?>
 				</td>
+				<?php if (empty($_['location'])) { print_unescaped('<!--'); } ?>
+				<td>
+					<a class="action permanent google" id="google-location" title="<?php echo $l->t("View the current location with Google-Maps"); ?>" style="width:2em;height:2em;padding:0em 0.3em 0.3em 0em;vertical-align:middle;">
+						<img alt="<?php echo $l->t("Location@Google"); ?>" src="<?php echo $urlGenerator->imagePath('cafevdb', 'googlemaps.png'); ?>"/>
+					</a>
+				</td>
+				<td>
+					<a class="action permanent" id="viewOnMap" title="<?php p($l->t('View on map')); ?>">
+						<img alt="<?php p($l->t('View on map')); ?>" src="<?php print_unescaped($urlGenerator->imagePath('core','actions/public.svg'))?>" class="svg action permanent" style="width: 16px; height: 16px;">
+					</a>
+				</td>
+				<?php if (empty($_['location'])) { print_unescaped('-->'); } ?>
 			</tr>
 		</table>
 		<table>
@@ -106,7 +117,7 @@
 				<td>
 				<select id="repeat" name="repeat">
 					<?php
-					print_unescaped(OCP\html_select_options(array($_['repeat_options'][$_['repeat']]), $_['repeat']));
+					print_unescaped(OCP\Template::html_select_options(array($_['repeat_options'][$_['repeat']]), $_['repeat']));
 					?>
 				</select></td>
 				<td><input type="button" style="float:right;" class="submit" value="<?php p($l->t("Advanced")); ?>" id="advanced_options_button_repeat"></td>
@@ -119,7 +130,7 @@
 					<td>
 						<select id="advanced_month_select" name="advanced_month_select">
 							<?php
-							print_unescaped(OCP\html_select_options(array($_['repeat_month_options'][$_['repeat_month']]), $_['repeat_month']));
+							print_unescaped(OCP\Template::html_select_options(array($_['repeat_month_options'][$_['repeat_month']]), $_['repeat_month']));
 							?>
 						</select>
 					</td>
@@ -131,7 +142,7 @@
 					<td>
 						<select id="advanced_year_select" name="advanced_year_select">
 							<?php
-							print_unescaped(OCP\html_select_options(array($_['repeat_year_options'][$_['repeat_year']]), $_['repeat_year']));
+							print_unescaped(OCP\Template::html_select_options(array($_['repeat_year_options'][$_['repeat_year']]), $_['repeat_year']));
 							?>
 						</select>
 					</td>
@@ -143,7 +154,7 @@
 					<td id="weekofmonthcheckbox">
 						<select id="weekofmonthoptions" name="weekofmonthoptions">
 							<?php
-							print_unescaped(OCP\html_select_options(array($_['repeat_weekofmonth_options'][$_['repeat_weekofmonth']]), $_['repeat_weekofmonth']));
+							print_unescaped(OCP\Template::html_select_options(array($_['repeat_weekofmonth_options'][$_['repeat_weekofmonth']]), $_['repeat_weekofmonth']));
 							?>
 						</select>
 					</td>
@@ -156,7 +167,7 @@
 						<select id="weeklyoptions" name="weeklyoptions[]" multiple="multiple" style="width: 150px;" title="<?php p($l->t("Select weekdays")) ?>">
 							<?php
 							if (!isset($_['weekdays'])) {$_['weekdays'] = array();}
-							print_unescaped(OCP\html_select_options(array($_['repeat_weekly_options'][$_['repeat_weekdays']]), $_['repeat_weekdays'], array('combine'=>true)));
+							print_unescaped(OCP\Template::html_select_options(array($_['repeat_weekly_options'][$_['repeat_weekdays']]), $_['repeat_weekdays'], array('combine'=>true)));
 							?>
 						</select>
 					</td>
@@ -169,7 +180,7 @@
 						<select id="byyearday" name="byyearday[]" multiple="multiple" title="<?php p($l->t("Select days")) ?>">
 							<?php
 							if (!isset($_['repeat_byyearday'])) {$_['repeat_byyearday'] = array();}
-							print_unescaped(OCP\html_select_options(array($_['repeat_byyearday_options'][$_['repeat_byyearday']]), $_['repeat_byyearday'], array('combine'=>true)));
+							print_unescaped(OCP\Template::html_select_options(array($_['repeat_byyearday_options'][$_['repeat_byyearday']]), $_['repeat_byyearday'], array('combine'=>true)));
 							?>
 						</select><?php p($l->t('and the events day of year.')); ?>
 					</td>
@@ -182,7 +193,7 @@
 						<select id="bymonthday" name="bymonthday[]" multiple="multiple" title="<?php p($l->t("Select days")) ?>">
 							<?php
 							if (!isset($_['repeat_bymonthday'])) {$_['repeat_bymonthday'] = array();}
-							print_unescaped(OCP\html_select_options(array($_['repeat_bymonthday_options'][$_['repeat_bymonthday']]), $_['repeat_bymonthday'], array('combine'=>true)));
+							print_unescaped(OCP\Template::html_select_options(array($_['repeat_bymonthday_options'][$_['repeat_bymonthday']]), $_['repeat_bymonthday'], array('combine'=>true)));
 							?>
 						</select><?php p($l->t('and the events day of month.')); ?>
 					</td>
@@ -195,7 +206,7 @@
 						<select id="bymonth" name="bymonth[]" multiple="multiple" title="<?php p($l->t("Select months")) ?>">
 							<?php
 							if (!isset($_['repeat_bymonth'])) {$_['repeat_bymonth'] = array();}
-							print_unescaped(OCP\html_select_options(array($_['repeat_bymonth_options'][$_['repeat_bymonth']]), $_['repeat_bymonth'], array('combine'=>true)));
+							print_unescaped(OCP\Template::html_select_options(array($_['repeat_bymonth_options'][$_['repeat_bymonth']]), $_['repeat_bymonth'], array('combine'=>true)));
 							?>
 						</select>
 					</td>
@@ -208,7 +219,7 @@
 						<select id="byweekno" name="byweekno[]" multiple="multiple" title="<?php p($l->t("Select weeks")) ?>">
 							<?php
 							if (!isset($_['repeat_byweekno'])) {$_['repeat_byweekno'] = array();}
-							print_unescaped(OCP\html_select_options(array($_['repeat_byweekno_options'][$_['repeat_byweekno']]), $_['repeat_byweekno'], array('combine'=>true)));
+							print_unescaped(OCP\Template::html_select_options(array($_['repeat_byweekno_options'][$_['repeat_byweekno']]), $_['repeat_byweekno'], array('combine'=>true)));
 							?>
 						</select><?php p($l->t('and the events week of year.')); ?>
 					</td>
@@ -227,7 +238,7 @@
 						<select id="end" name="end">
 							<?php
 							if($_['repeat_end'] == '') $_['repeat_end'] = 'never';
-							print_unescaped(OCP\html_select_options(array($_['repeat_end_options'][$_['repeat_end']]), $_['repeat_end']));
+							print_unescaped(OCP\Template::html_select_options(array($_['repeat_end_options'][$_['repeat_end']]), $_['repeat_end']));
 							?>
 						</select>
 					</td>

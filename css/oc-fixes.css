@@ -1,5 +1,4 @@
-<?php
-/* Orchestra member, musician and project management application.
+/**Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -20,35 +19,24 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//WIP
-namespace OCA\CAFEVDB\Traits;
+/*****************************************************************************
+ *
+ * Fix some css stuff which just does not come out right
+ *
+ */
 
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataResponse;
-
-use OCA\CAFEVDB\Service\SessionService;
-
-trait ResponseTrait
-{
-
-  static private function valueResponse($value, $message = '', $status = Http::STATUS_OK)
-  {
-    return new DataResponse(['message' => $message, 'value' => $value], $status);
-  }
-
-  static private function response($message, $status = Http::STATUS_OK)
-  {
-    return new DataResponse(['message' => $message], $status);
-  }
-
-  static private function grumble($message, $value = null, $status = Http::STATUS_BAD_REQUEST)
-  {
-    return self::valueResponse($value, $message, $status);
-  }
-
+/* Need space for the close button. Unfortunatelly, this will also
+ * apply to dialogs without close button.
+ */
+.oc-dialog .oc-dialog-title {
+    padding-right: 3ex;
 }
 
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+/* Safer, but needs modification of the Nextcloud code */
+.oc-dialog.oc-dialog-has-close .oc-dialog-title {
+    padding-right: 3ex;
+}
+
+.oc-dialog:not(.oc-dialog-has-close) .oc-dialog-title {
+    padding-right: 0 !important;
+}
