@@ -287,7 +287,7 @@ class LegacyEventsController extends Controller {
     [,,$ownerId] = explode('/', $this->calDavService->calendarPrincipalUri($calendarId));
     $this->logError("ownerId: " . $ownerId);
     $object = $this->ocCalendarObject->cleanByAccessClass($ownerId, $object);
-    $accessclass = $this->accessClass($object);
+    $accessClass = $this->accessClass($object);
     // $permissions = OC_Calendar_App::getPermissions($id, OC_Calendar_App::EVENT, $accessClass);
     $permissions = $calendar->getPermissions();
     switch ($accessClass) {

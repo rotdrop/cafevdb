@@ -29,25 +29,25 @@ var CAFEVDB = CAFEVDB || {};
     },
     categories: [],
     Util:{
-      sendmail: function(eventURI, location, description, dtstart, dtend){
-        Calendar.UI.loading(true);
-        $.post(
-          OC.filePath('calendar','ajax/event','sendmail.php'),
-          {
-            eventURI:eventURI,
-            location:location,
-            description:description,
-            dtstart:dtstart,
-            dtend:dtend
-          },
-          function(result){
-            if(result.status !== 'success'){
-              OC.dialogs.alert(result.data.message, 'Error sending mail');
-            }
-            Calendar.UI.loading(false);
-          }
-        );
-      },
+      // sendmail: function(eventURI, location, description, dtstart, dtend){
+      //   Calendar.UI.loading(true);
+      //   $.post(
+      //     OC.filePath('calendar','ajax/event','sendmail.php'),
+      //     {
+      //       eventURI:eventURI,
+      //       location:location,
+      //       description:description,
+      //       dtstart:dtstart,
+      //       dtend:dtend
+      //     },
+      //     function(result){
+      //       if(result.status !== 'success'){
+      //         OC.dialogs.alert(result.data.message, 'Error sending mail');
+      //       }
+      //       Calendar.UI.loading(false);
+      //     }
+      //   );
+      // },
       dateTimeToTimestamp:function(dateString, timeString){
         dateTuple = dateString.split('-');
         timeTuple = timeString.split(':');
@@ -339,42 +339,42 @@ var CAFEVDB = CAFEVDB || {};
           $('#errorbox').html(output);
         });
       },
-      moveEvent:function(event, dayDelta, minuteDelta, allDay, revertFunc){
-        $.fn.cafevTooltip.remove();
-        if ($('#event').length != 0) {
-          revertFunc();
-          return;
-        }
-        Calendar.UI.loading(true);
-        $.post(OC.filePath('calendar', 'ajax/event', 'move.php'), { id: event.id, dayDelta: dayDelta, minuteDelta: minuteDelta, allDay: allDay?1:0, lastmodified: event.lastmodified},
-               function(data) {
-                 Calendar.UI.loading(false);
-                 if (data.status == 'success'){
-                   event.lastmodified = data.lastmodified;
-                   console.log("Event moved successfully");
-                 }else{
-                   revertFunc();
-                   //$('#fullcalendar').fullCalendar('refetchEvents');
-                   CAFEVDB.Events.UI.redisplay();
-                 }
-               });
-      },
-      resizeEvent:function(event, dayDelta, minuteDelta, revertFunc){
-        $.fn.cafevTooltip.remove();
-        Calendar.UI.loading(true);
-        $.post(OC.filePath('calendar', 'ajax/event', 'resize.php'), { id: event.id, dayDelta: dayDelta, minuteDelta: minuteDelta, lastmodified: event.lastmodified},
-               function(data) {
-                 Calendar.UI.loading(false);
-                 if (data.status == 'success'){
-                   event.lastmodified = data.lastmodified;
-                   console.log("Event resized successfully");
-                 }else{
-                   revertFunc();
-                   //$('#fullcalendar').fullCalendar('refetchEvents');
-                   CAFEVDB.Events.UI.redisplay();
-                 }
-               });
-      },
+      // moveEvent:function(event, dayDelta, minuteDelta, allDay, revertFunc){
+      //   $.fn.cafevTooltip.remove();
+      //   if ($('#event').length != 0) {
+      //     revertFunc();
+      //     return;
+      //   }
+      //   Calendar.UI.loading(true);
+      //   $.post(OC.filePath('calendar', 'ajax/event', 'move.php'), { id: event.id, dayDelta: dayDelta, minuteDelta: minuteDelta, allDay: allDay?1:0, lastmodified: event.lastmodified},
+      //          function(data) {
+      //            Calendar.UI.loading(false);
+      //            if (data.status == 'success'){
+      //              event.lastmodified = data.lastmodified;
+      //              console.log("Event moved successfully");
+      //            }else{
+      //              revertFunc();
+      //              //$('#fullcalendar').fullCalendar('refetchEvents');
+      //              CAFEVDB.Events.UI.redisplay();
+      //            }
+      //          });
+      // },
+      // resizeEvent:function(event, dayDelta, minuteDelta, revertFunc){
+      //   $.fn.cafevTooltip.remove();
+      //   Calendar.UI.loading(true);
+      //   $.post(OC.filePath('calendar', 'ajax/event', 'resize.php'), { id: event.id, dayDelta: dayDelta, minuteDelta: minuteDelta, lastmodified: event.lastmodified},
+      //          function(data) {
+      //            Calendar.UI.loading(false);
+      //            if (data.status == 'success'){
+      //              event.lastmodified = data.lastmodified;
+      //              console.log("Event resized successfully");
+      //            }else{
+      //              revertFunc();
+      //              //$('#fullcalendar').fullCalendar('refetchEvents');
+      //              CAFEVDB.Events.UI.redisplay();
+      //            }
+      //          });
+      // },
       googlepopup:function(latlng, location) {
         if ($('#event_googlemap').dialog('isOpen') == true){
           $('#event_googlemap').dialog('close').remove();
@@ -606,11 +606,11 @@ var CAFEVDB = CAFEVDB || {};
         }
 
       },
-      categoriesChanged:function(newcategories){
-        categories = $.map(newcategories, function(v) {return v.name;});
-        console.log('Calendar categories changed to: ' + categories);
-        $('#category').multiple_autocomplete('option', 'source', categories);
-      },
+      // categoriesChanged:function(newcategories){
+      //   categories = $.map(newcategories, function(v) {return v.name;});
+      //   console.log('Calendar categories changed to: ' + categories);
+      //   $('#category').multiple_autocomplete('option', 'source', categories);
+      // },
     },
     Settings:{
       //
