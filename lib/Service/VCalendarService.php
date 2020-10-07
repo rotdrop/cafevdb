@@ -48,6 +48,10 @@ class VCalendarService
     return $this->legacyCalendarObject->createVCalendarFromRequest($eventData);
   }
 
+  public function updateVCalendarFromRequest($eventData) {
+    return $this->legacyCalendarObject->updateVCalendarFromRequest($eventData);
+  }
+
   public function legacyEventObject()
   {
     return $this->legacyCalendarObject;

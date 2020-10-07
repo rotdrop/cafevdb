@@ -627,13 +627,13 @@ class LegacyEventsController extends Controller {
 
   private function newEvent()
   {
-    $errarr = $this->ocCalendarObject->validateRequest($this->parameterService);
+    $errarr = $this->vCalendarService->validateRequest($this->parameterService);
     if ($errarr) {
       //show validate errors
       return self::grumble($this->l->t("Failed to validate event creating request."), $errarr);
     }
     $cal = $this->parameterService['calendar'];
-    $vCalendar = $this->ocCalendarObject->createVCalendarFromRequest($this->parameterService);
+    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($this->parameterService);
     $this->logError($vCalendar->serialize());
     try {
       $localUri = $this->calDavService->createCalendarObject($cal, null, $vCalendar);
@@ -649,7 +649,7 @@ class LegacyEventsController extends Controller {
 
   private function editEvent()
   {
-    $errarr = $this->ocCalendarObject->validateRequest($this->parameterService);
+    $errarr = $this->vCalendarService->validateRequest($this->parameterService);
     if ($errarr) {
       //show validate errors
       return self::grumble($this->l->t("Failed to validate event updating request."), $errarr);
@@ -668,7 +668,7 @@ class LegacyEventsController extends Controller {
       return self::grumble($this->l->t('Race-condition, event was modified in between.'));
     }
 
-    $vCalendar = $this->ocCalendarObject->updateVCalendarFromRequest($this->parameterService, $vCalendar);
+    $vCalendar = $this->vCalendarService->updateVCalendarFromRequest($this->parameterService, $vCalendar);
 
     if ($data['calendarid'] != $calendarId) {
       $this->calDavService->deleteCalendarObject($data['calendarid'], $uri);
