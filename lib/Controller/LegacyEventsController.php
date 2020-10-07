@@ -36,8 +36,7 @@ use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\CalDavService;
-
-use OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object;
+use OCA\CAFEVDB\Service\VCalendarService;
 
 /**Serves the requests issued by the old OC v8 event popups.*/
 class LegacyEventsController extends Controller {
@@ -58,11 +57,14 @@ class LegacyEventsController extends Controller {
   /** @var ProjectService */
   private $projectService;
 
-  /** @var configCheckService */
+  /** @var ConfigCheckService */
   private $configCheckService;
 
-  /** @var calDavService */
+  /** @var CalDavService */
   private $calDavService;
+
+  /** @var VCalendarService */
+  private $vCalendarService;
 
   /** @var OC_Calendar_Object */
   private $ocCalendarObject;
@@ -75,7 +77,7 @@ class LegacyEventsController extends Controller {
     RequestParameterService $parameterService,
     ProjectService $projectService,
     CalDavService $calDavService,
-    OC_Calendar_Object $ocCalendarObject,
+    VCalendarService $vCalendarService,
     \OCP\IURLGenerator $urlGenerator
   ) {
     parent::__construct($appName, $request);
@@ -85,7 +87,8 @@ class LegacyEventsController extends Controller {
     $this->parameterService = $parameterService;
     $this->projectService = $projectService;
     $this->calDavService = $calDavService;
-    $this->ocCalendarObject = $ocCalendarObject;
+    $this->vCalendarService = $vCalendarService;
+    $this->ocCalendarObject = $vCalendarService->legacyEventObject();
     $this->urlGenerator = $urlGenerator;
 
     $this->l = $this->l10N();
