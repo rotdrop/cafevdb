@@ -40,3 +40,7 @@
 .oc-dialog:not(.oc-dialog-has-close) .oc-dialog-title {
     padding-right: 0 !important;
 }
+
+.cafevdb .ui-dialog-titlebar-close, .cafevdb .toBackButton.ui-button {
+  min-height: unset!important;
+}

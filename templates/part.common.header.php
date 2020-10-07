@@ -79,6 +79,8 @@ script($appName, 'legacy/calendar/jquery.multiselect');
 style($appName, 'legacy/calendar/jquery.multiselect');
 script($appName, 'legacy/calendar/jquery.multi-autocomplete');
 
+style($appName, '../3rdparty/jquery-ui/jquery-ui');
+
 echo Common\Util::emitExternalScripts(); // @@TODO rework
 
 /*
