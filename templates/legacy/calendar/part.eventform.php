@@ -235,6 +235,8 @@
 </div>
 <!--<div id="tabs-3">//Alarm</div>
 <div id="tabs-4">//Attendees</div>-->
+<input type="button" id="sendemailbutton" style="float:right;" class="submit" value="<?php p($l->t("Send Email")); ?>" data-eventuri="<?php p($eventuri);?>" data-location="<?php p($location);?>" data-description="<?php p($description);?>" data-dtstart="<?php p($dtstart);?>" data-dtend="<?php p($dtend);?>">
+<br />
 <?php if(false && $_['eventuri'] != 'new' && $_['permissions'] & OCP\PERMISSION_SHARE) { ?>
 <div id="tabs-5">
 	<?php if($_['eventuri'] != 'new') { print_unescaped($this->inc('part.share')); } ?>

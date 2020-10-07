@@ -303,6 +303,7 @@ class LegacyEventsController extends Controller {
     //$permissions &= ~Constants::PERMISSION_UPDATE;
     $this->logError("Permissions: " . $calendar->getPermissions());
 
+    $vEvent = $object->VEVENT;
     $dtstart = $vEvent->DTSTART;
     $dtend = $this->ocCalendarObject->getDTEndFromVEvent($vEvent);
 
