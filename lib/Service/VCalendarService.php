@@ -40,15 +40,15 @@ class VCalendarService
     $this->legacyCalendarObject = $legacyCalendarObject;
   }
 
-  public function validateRequest($eventData) {
+  public function validateRequest($eventData, $kind = 'VEVENT') {
     return $this->legacyCalendarObject->validateRequest($eventData);
   }
 
-  public function createVCalendarFromRequest($eventData) {
+  public function createVCalendarFromRequest($eventData, $kind = 'VEVENT') {
     return $this->legacyCalendarObject->createVCalendarFromRequest($eventData);
   }
 
-  public function updateVCalendarFromRequest($eventData) {
+  public function updateVCalendarFromRequest($eventData, $kind = 'VEVENT') {
     return $this->legacyCalendarObject->updateVCalendarFromRequest($eventData);
   }
 
@@ -78,6 +78,34 @@ class VCalendarService
     $vCalendar = $this->legacyCalendarObject->createVCalendarFromRequest($eventData);
     $this->logError('VCalendar entry' . print_r($vCalendar, true));
   }
+
+  /*
+    $taskData = array('title' => $title,
+                      'due' => date('d-m-Y', $timeStamp),
+                      'start' => date('d-m-Y'),
+                      'location' => 'Cyber-Space',
+                      'categories' => $categories,
+                      'description' => $description,
+                      'calendar' => $calendarId,
+                      'priority' => 99, // will get a star if != 0
+                      'alarm' => $alarm);
+
+    return Events::newTask($taskData);
+   */
+  private function createVTodoFromRequest($eventData)
+  {
+    $vCalendar = new \Sabre\VObject\Component\VCalendar();
+    $vCalendar->PRODID = "Nextloud cafevdb " . \OCP\App::getAppVersion($this->appName());
+    $vCalendar->VERSION = '2.0';
+
+    $vtodo = $vCalendar->createComponent('VTODO');
+    $vCalendar->add($vtodo);
+
+    $vtodo->CREATED = new \DateTime('now', new \DateTimeZone('UTC'));
+
+    $vtodo->UID = \Sabre\VObject\UUIDUtil::getUUID();
+  }
+
 }
 
 // Local Variables: ***
