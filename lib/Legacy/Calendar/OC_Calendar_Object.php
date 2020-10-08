@@ -757,9 +757,9 @@ class OC_Calendar_Object{
 	//  */
 	public function validateRequest($request) {
 		$errnum = 0;
-		$errarr = array('title'=>'false', 'cal'=>'false', 'from'=>'false', 'fromtime'=>'false', 'to'=>'false', 'totime'=>'false', 'endbeforestart'=>'false');
-		if($request['title'] == '') {
-			$errarr['title'] = 'true';
+		$errarr = array('summary'=>'false', 'cal'=>'false', 'from'=>'false', 'fromtime'=>'false', 'to'=>'false', 'totime'=>'false', 'endbeforestart'=>'false');
+		if($request['summary'] == '') {
+			$errarr['summary'] = 'true';
 			$errnum++;
 		}
 
@@ -948,7 +948,7 @@ class OC_Calendar_Object{
 	 */
 	public function updateVCalendarFromRequest($request, $vcalendar) {
 		$accessclass = isset($request["accessclass"]) ? $request["accessclass"] : null;
-		$title = $request["title"];
+		$summary = $request["summary"];
 		$location = $request["location"];
 		$categories = explode(',', $request["categories"]);
 		$allday = isset($request["allday"]);
@@ -1115,7 +1115,7 @@ class OC_Calendar_Object{
 		$lastModified->setValue($now);
 		$vevent->DTSTAMP = $now;
 
-		$vevent->SUMMARY = $title;
+		$vevent->SUMMARY = $summary;
 
 		if($allday) {
 			$start = new \DateTime($from);

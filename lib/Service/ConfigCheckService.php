@@ -79,6 +79,8 @@ class ConfigCheckService
     $this->contactsManager = $contactsManager;
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
+
+    $eventsService->playground();
   }
 
   /**Return an array with necessary configuration items, being either

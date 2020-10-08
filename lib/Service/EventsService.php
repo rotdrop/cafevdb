@@ -42,14 +42,19 @@ class EventsService
   /** @var CalDavService */
   private $calDavService;
 
+  /** @var VCalendarService */
+  private $vCalendarService;
+
   public function __construct(
     ConfigService $configService,
     DatabaseService $databaseService,
-    CalDavService $calDavService
+    CalDavService $calDavService,
+    VCalendarService $vCalendarService
   ) {
     $this->configService = $configService;
     $this->databaseService = $databaseService;
     $this->calDavService = $calDavService;
+    $this->vCalendarService = $vCalendarService;
   }
 
   public function onCalendarObjectCreated(CalendarObjectCreatedEvent $event)
@@ -202,6 +207,119 @@ class EventsService
 
   private function deleteCalendarObject($objectData)
   {}
+
+  /**Inject a new task into the given calendar. This function calls
+   * $request is a post-array. One example, in order to create a
+   * simple task:
+   *
+   * @code
+   * [
+   *   'description' => $title, // required
+   *   'related' => other VObject's UID // optional
+   *   'due' => date('d-m-Y', $timeStamp), // required
+   *   'start' => date('d-m-Y'), // optional
+   *   'location' => 'Cyber-Space', // optional
+   *   'categories' => $categories, // optional
+   *   'description' => $description, // optional
+   *   'calendar' => $calendarId, // required
+   *   'starred' => true, // optional
+   *   'alarm' => $alarm, // optional
+   * ]
+   * @end code
+   *
+   * We also support adding a reminder: 'alarm' => unset or interval
+   * in seconds (i.e. time-stamp diff). The function may throw
+   * errors.
+   *
+   * @return task-uri on success, null on error.
+   */
+  public function newTask($taskData)
+  {
+    if (empty($taskData['calendar'])) {
+      return null;
+    }
+    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($taskData, VCalendarService::VTODO);
+    if (empty($vCalendar)) {
+      return null;
+    }
+    return $this->calDavService->createCalendarObject($taskData['calendar'], $vCalendar);
+  }
+
+  /**Inject a new event into the given calendar.
+   *
+   * One example, in order to create a simple non-repeating event:
+   *
+   * @code
+   * [
+   *   'summary' => TITLE,
+   *   'from' => dd-mm-yyyy,
+   *   'to' => dd-mm-yyyy,
+   *   'allday' => on (or unset),
+   *   'location' => WHERE (may be empty),
+   *   'categories' => <list, comma separated>,
+   *   'description' => TEXT,
+   *   'repeat' => 'doesnotrepeat',
+   *   'calendar' => CALID
+   * ]
+   * @end code
+   *
+   * We also support adding a reminder: 'alarm' => unset or interval
+   * in seconds (i.e. time-stamp diff). The function may throw
+   * errors.
+   *
+   * @return string|null event-uri or null on error.
+   */
+  public function newEvent($eventData)
+  {
+    if (empty($eventData['calendar'])) {
+      return null;
+    }
+    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($eventData, VCalendarService::VEVENT);
+    if (empty($vCalendar)) {
+      return null;
+    }
+    return $this->calDavService->createCalendarObject($eventData['calendar'], $vCalendar);
+  }
+
+  public function playground() {
+
+    $eventData = [
+      'summary' => 'Title',
+      'description' => 'Text',
+      'location' => 'Where',
+      'categories' => 'Cat1,Cat2',
+      'priority' => 10,
+      'from' => '01-11-2020',
+      'fromtime' => '10:20:22',
+      'to' => '30-11-2020',
+      'totime' => '00:00:00',
+      'calendar' => 'calendarId',
+      'repeat' => 'doesnotrepeat',
+    ];
+
+    $errors = $this->vCalendarService->validateRequest($eventData, VCalendarService::VEVENT);
+    $this->logError('EventError' . print_r($errors, true));
+    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($eventData, VCalendarService::VEVENT);
+    $this->logError('VEVENT VCalendar entry' . print_r($vCalendar, true));
+
+    $taskData = [
+      'summary' => 'Title',
+      'description' => 'Text',
+      'location' => 'Where',
+      'categories' => 'Cat1,Cat2',
+      'priority' => 10,
+      'due' => '01-11-2020',
+      'start' => '01-11-2020',
+      'calendar' => 'calendarId',
+      'alarm' => 10
+    ];
+
+    $errors = $this->vCalendarService->validateRequest($taskData, VCalendarService::VTODO);
+    $this->logError('TodoError' . print_r($errors, true));
+    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($taskData, VCalendarService::VTODO);
+    $this->logError('VTODO VCalendar entry' . print_r($vCalendar, true));
+  }
+
 }
 
 // Local Variables: ***

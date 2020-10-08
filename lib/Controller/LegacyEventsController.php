@@ -155,7 +155,7 @@ class LegacyEventsController extends Controller {
     $shareOwner   = $this->getConfigValue('shareowner');
 
     // Default title for the event
-    $title        = $this->l->t($eventKind).', '.$projectName;
+    $summary        = $this->l->t($eventKind).', '.$projectName;
 
     // make sure that the calendar exists and is writable
     $newId = $this->configCheckService->checkSharedCalendar($calendarUri, $calendarName, $calendarId);
@@ -263,7 +263,7 @@ class LegacyEventsController extends Controller {
         // cafevdb defaults
         'categories' => $categories,
         'protectCategories' => $protectCategories,
-        'title' => $title,
+        'summary' => $summary,
       ],
       'blank');
   }
@@ -554,7 +554,7 @@ class LegacyEventsController extends Controller {
       'repeat_bymonthday_options' => $repeat_bymonthday_options,
       'repeat_weekofmonth_options' => $repeat_weekofmonth_options,
 
-      'title' => $summary,
+      'summary' => $summary,
       'accessclass' => $accessClass,
       'location' => $location,
       'allday' => $allday,

@@ -11,7 +11,7 @@
 	<input id="event-title" type="text" size="100"
 		placeholder="<?php p($l->t('Title of the Event'));?>"
 		value="<?php p(isset($_['title']) ? $_['title'] : '') ?>"
-		maxlength="100" name="title" autofocus="autofocus"/>
+		maxlength="100" name="summary" autofocus="autofocus"/>
 
 	<?php if(count($_['calendar_options']) > 1) { ?>
 	<?php p($l->t("Calendar"));?>
