@@ -291,6 +291,26 @@ class CalDavService
 
   /** Fetch an event object by its local URI.
    *
+   * The return value is an array with the following keys:
+   *   * calendardata - The iCalendar-compatible calendar data
+   *   * uri - a unique key which will be used to construct the uri. This can
+   *     be any arbitrary string, but making sure it ends with '.ics' is a
+   *     good idea. This is only the basename, or filename, not the full
+   *     path.
+   *   * lastmodified - a timestamp of the last modification time
+   *   * etag - An arbitrary string, surrounded by double-quotes. (e.g.:
+   *   '"abcdef"')
+   *   * size - The size of the calendar objects, in bytes.
+   *   * component - optional, a string containing the type of object, such
+   *     as 'vevent' or 'vtodo'. If specified, this will be used to populate
+   *     the Content-Type header.
+   *
+   * @param mixed $calendarId
+   * @param int $calendarType
+   * @return array
++   *
+   * @return array|null
+   *
    * @bug This function uses internal APIs.
    */
   public function getCalendarObject($calendarId, $localUri)
