@@ -1,43 +1,43 @@
 {
-    "name": "rotdrop/cafevdb-nextcloud",
-    "description": "Orchestra Management App",
-    "type": "project",
-    "license": "AGPL",
-    "authors": [
-        {
-            "name": "Claus-Justus Heine"
-        }
-    ],
-    "require": {
-        "rotdrop/bav": "dev-master",
-        "globalcitizen/php-iban": "^4.0",
-        "phpmailer/phpmailer": "dev-master",
-        "ioncube/php-openssl-cryptor": "dev-master",
-        "components/jquery": "^2.2.0",
-        "components/jquery-migrate": "^3.0.0",
-        "doctrine/orm": "*"
+  "name": "rotdrop/cafevdb-nextcloud",
+  "description": "Orchestra Management App",
+  "type": "project",
+  "license": "AGPL",
+  "authors": [
+    {
+      "name": "Claus-Justus Heine"
+    }
+  ],
+  "require": {
+    "rotdrop/bav": "dev-master",
+    "globalcitizen/php-iban": "^4.0",
+    "phpmailer/phpmailer": "dev-master",
+    "ioncube/php-openssl-cryptor": "dev-master",
+    "components/jquery": "^2.2.0",
+    "components/jquery-migrate": "^3.0.0",
+    "doctrine/orm": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.4"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "3rdparty/bav"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^5.4"
+    {
+      "type": "path",
+      "url": "3rdparty/php-index"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "3rdparty/bav"
-        },
-        {
-            "type": "path",
-            "url": "3rdparty/php-index"
-        },
-        {
-            "type": "path",
-            "url": "3rdparty/PHPMailer"
-        },
-        {
-            "type": "path",
-            "url": "3rdparty/php-openssl-cryptor"
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    {
+      "type": "path",
+      "url": "3rdparty/PHPMailer"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/php-openssl-cryptor"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
