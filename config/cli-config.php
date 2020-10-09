@@ -151,13 +151,18 @@ function getPassword($prompt = null, $stars = false)
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
 
+$appDir = __DIR__ . '/..';
+
 if (isset($_ENV['CAFEVDB_USER'])) {
     $cafevDbUser = $_ENV['CAFEVDB_USER'];
 } else {
     $cafevDbUser = $user['name'];#
 }
 $GLOBALS['cafevdb-user'] = $cafevDbUser;
-$cafevDbPassword = getPassword("Password for " . $cafevDbUser . ": ", true);
+$cafevDbPassword = file_get_contents($appDir . '/.clipassword');
+if (empty($cafevDbPassword)) {
+    $cafevDbPassword = getPassword("Password for " . $cafevDbUser . ": ", true);
+}
 
 $encryptionService = \OC::$server->query(EncryptionService::class);
 $encryptionService->initUserPrivateKey($cafevDbUser, $cafevDbPassword);
@@ -178,7 +183,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 
 $paths = [
-    __DIR__ . "/../lib/Entities"
+    $appDir . "/lib/Entities"
 ];
 $isDevMode = false;
 
