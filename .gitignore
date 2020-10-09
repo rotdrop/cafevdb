@@ -8,5 +8,6 @@ composer.lock
 composer.json
 stamp*
 ajax
+build
 
 
