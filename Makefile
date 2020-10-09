@@ -43,16 +43,18 @@
 #    },
 
 app_name=$(notdir $(CURDIR))
-build_tools_directory=$(CURDIR)/build/tools
-source_build_directory=$(CURDIR)/build/artifacts/source
+BUILDDIR=$(CURDIR)/build
+build_tools_directory=$(BUILDDIR)/tools
+source_build_directory=$(BUILDDIR)/artifacts/source
 source_package_name=$(source_build_directory)/$(app_name)
-appstore_build_directory=$(CURDIR)/build/artifacts/appstore
+appstore_build_directory=$(BUILDDIR)/artifacts/appstore
 appstore_package_name=$(appstore_build_directory)/$(app_name)
 npm=$(shell which npm 2> /dev/null)
 COMPOSER=$(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER))
 COMPOSER=php $(build_tools_directory)/composer.phar
 endif
+COMPOSER_OPTIONS=--prefer-dist
 
 all: build
 
@@ -65,10 +67,10 @@ stamp.composer-core-versions: composer.lock
 composer.lock: DRY:=
 composer.lock: composer.json
 	rm -f composer.lock
-	$(COMPOSER) install --prefer-dist
+	$(COMPOSER) install $(COMPOSER_OPTINS)
 	env DRY=$(DRY) dev-scripts/tweak-composer-jons.sh || {\
  rm -f composer.lock;\
- $(COMPOSER) install --prefer-dist;\
+ $(COMPOSER) install $(COMPOSER_OPTIONS);\
 }
 
 # Fetches the PHP and JS dependencies and compiles the JS. If no composer.json
@@ -97,7 +99,7 @@ endif
 # a copy is fetched from the web
 .PHONY: composer
 composer: provide-composer stamp.composer-core-versions
-	$(COMPOSER) install --prefer-dist
+	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
 # Installs npm dependencies
 .PHONY: npm
@@ -134,6 +136,10 @@ dist:
 	make source
 	make appstore
 
+$(BUILDDIR)/core-exclude:
+	echo $(BUILDDIR)
+	( cd ../../3rdparty ; find . -mindepth 2 -maxdepth 2  -type d )|sed -e 's|^[.]/|../$(app_name)/vendor/|g' -e 's|$|/*|f' > $@
+
 # Builds the source package
 .PHONY: source
 source:
@@ -146,36 +152,39 @@ source:
 	--exclude="../$(app_name)/node_modules" \
 	--exclude="../$(app_name)/*.log" \
 	--exclude="../$(app_name)/js/*.log" \
-        ../$(app_name) \
+        ../$(app_name)
 
 # Builds the source package for the app store, ignores php and js tests
 .PHONY: appstore
-appstore:
+appstore: $(BUILDDIR)/core-exclude
+	$(COMPOSER) update --no-dev $(COMPOSER_OPTIONS)
+	ls -l vendor
 	rm -rf $(appstore_build_directory)
 	mkdir -p $(appstore_build_directory)
 	tar cvzf $(appstore_package_name).tar.gz \
-	--exclude-vcs \
-	--exclude="../$(app_name)/build" \
-	--exclude="../$(app_name)/tests" \
-	--exclude="../$(app_name)/Makefile" \
-	--exclude="../$(app_name)/*.log" \
-	--exclude="../$(app_name)/phpunit*xml" \
-	--exclude="../$(app_name)/composer.*" \
-	--exclude="../$(app_name)/js/node_modules" \
-	--exclude="../$(app_name)/js/tests" \
-	--exclude="../$(app_name)/js/test" \
-	--exclude="../$(app_name)/js/*.log" \
-	--exclude="../$(app_name)/js/package.json" \
-	--exclude="../$(app_name)/js/bower.json" \
-	--exclude="../$(app_name)/js/karma.*" \
-	--exclude="../$(app_name)/js/protractor.*" \
-	--exclude="../$(app_name)/package.json" \
-	--exclude="../$(app_name)/bower.json" \
-	--exclude="../$(app_name)/karma.*" \
-	--exclude="../$(app_name)/protractor\.*" \
-	--exclude="../$(app_name)/.*" \
-	--exclude="../$(app_name)/js/.*" \
-        ../$(app_name) \
+ --exclude-vcs \
+ --exclude="../$(app_name)/build" \
+ --exclude="../$(app_name)/tests" \
+ --exclude="../$(app_name)/Makefile" \
+ --exclude="../$(app_name)/*.log" \
+ --exclude="../$(app_name)/phpunit*xml" \
+ --exclude="../$(app_name)/composer.*" \
+ --exclude="../$(app_name)/js/node_modules" \
+ --exclude="../$(app_name)/js/tests" \
+ --exclude="../$(app_name)/js/test" \
+ --exclude="../$(app_name)/js/package.json" \
+ --exclude="../$(app_name)/js/bower.json" \
+ --exclude="../$(app_name)/js/karma.*" \
+ --exclude="../$(app_name)/js/protractor.*" \
+ --exclude="../$(app_name)/package.json" \
+ --exclude="../$(app_name)/bower.json" \
+ --exclude="../$(app_name)/karma.*" \
+ --exclude="../$(app_name)/protractor\.*" \
+ --exclude="../$(app_name)/.*" \
+ --exclude="../$(app_name)/js/.*" \
+ --exclude-from="$(BUILDDIR)/core-exclude" \
+ ../$(app_name)
+	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
 .PHONY: test
 test: composer
