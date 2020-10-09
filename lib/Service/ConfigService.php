@@ -250,9 +250,15 @@ class ConfigService {
     $this->logger = $logger;
     $this->l = $l;
 
-    $this->loginUser = $this->user = $this->userSession->getUser();
-    //trigger_error('user: ' . (empty($this->user) ? 'empty' : 'defined'));
-    $this->loginUid = $this->userId = $this->user->getUID();
+    if (defined('OC_CONSOLE') && empty($userSession->getUser())) {
+      $this->loginUid = $this->userId = $GLOBALS['cafevdb-user'];
+      $this->loginUser = $this->userManager->get($this->loginUid);
+      $this->user = $this->userManager->get($this->userId);
+    } else {
+      $this->loginUser = $this->user = $this->userSession->getUser();
+      //trigger_error('user: ' . (empty($this->user) ? 'empty' : 'defined'));
+      $this->loginUid = $this->userId = $this->user->getUID();
+    }
 
     // Initialize the encryption service.
     $this->encryptionService->initAppEncryptionKey($this->userId);
