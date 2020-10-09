@@ -218,9 +218,11 @@ foreach ($enumTypes as $enum) {
     $typeName = $type->getName();
     Type::addType($type->getName(), $enum);
     //    var_dump(Type::getType((new $enum)->getName()));
+    echo $type->getSQLType();
+    $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($type->getSQLType(), $type->getName());
 }
 
 // somehow the above just does not work. So.
-$entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+// $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
 
 return ConsoleRunner::createHelperSet($entityManager);
