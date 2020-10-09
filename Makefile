@@ -49,18 +49,34 @@ source_package_name=$(source_build_directory)/$(app_name)
 appstore_build_directory=$(CURDIR)/build/artifacts/appstore
 appstore_package_name=$(appstore_build_directory)/$(app_name)
 npm=$(shell which npm 2> /dev/null)
-composer=$(shell which composer 2> /dev/null)
+COMPOSER=$(shell which composer 2> /dev/null)
+ifeq (, $(COMPOSER))
+COMPOSER=php $(build_tools_directory)/composer.phar
+endif
 
 all: build
+
+composer.json: # no dependency, cleared only by "make realclean"
+	cp composer.json.in composer.json
+
+stamp.composer-core-versions: composer.lock
+	date > stamp.composer-core-versions
+
+composer.lock: DRY:=
+composer.lock: composer.json
+	rm -f composer.lock
+	$(COMPOSER) install --prefer-dist
+	env DRY=$(DRY) dev-scripts/tweak-composer-jons.sh || {\
+ rm -f composer.lock;\
+ $(COMPOSER) install --prefer-dist;\
+}
 
 # Fetches the PHP and JS dependencies and compiles the JS. If no composer.json
 # is present, the composer step is skipped, if no package.json or js/package.json
 # is present, the npm step is skipped
 .PHONY: build
-build:
-ifneq (,$(wildcard $(CURDIR)/composer.json))
-	make composer
-endif
+build: composer.json
+	[ -n "$(wildcard $(CURDIR)/composer.json)" ] && make composer
 ifneq (,$(wildcard $(CURDIR)/package.json))
 	make npm
 endif
@@ -68,26 +84,20 @@ ifneq (,$(wildcard $(CURDIR)/js/package.json))
 	make npm
 endif
 
-# Installs and updates the composer dependencies. If composer is not installed
-# a copy is fetched from the web
-.PHONY: composer
-composer: check-composer-core-versions
-	[ -f composer.json ] || cp composer.json.in composer.json
-ifeq (, $(composer))
+.PHONY: provide-composer
+provide-composer:
+ifeq (, $(shell which composer 2> /dev/null))
 	@echo "No composer command available, downloading a copy from the web"
 	mkdir -p $(build_tools_directory)
 	curl -sS https://getcomposer.org/installer | php
 	mv composer.phar $(build_tools_directory)
-	php $(build_tools_directory)/composer.phar install --prefer-dist
-else
-	composer install --prefer-dist
 endif
 
-#.PHONY: check-composer-core-versions
-#check-composer-core-versions: DRY:=echo
-check-composer-core-versions: DRY:=
-check-composer-core-versions:
-	env DRY=$(DRY) dev-scripts/tweak-composer-jons.sh || rm -f composer.lock
+# Installs and updates the composer dependencies. If composer is not installed
+# a copy is fetched from the web
+.PHONY: composer
+composer: provide-composer stamp.composer-core-versions
+	$(COMPOSER) install --prefer-dist
 
 # Installs npm dependencies
 .PHONY: npm
@@ -116,6 +126,7 @@ distclean: clean
 realclean: distclean
 	rm -f composer.lock
 	rm -f composer.json
+	rm -f stamp.composer-core-versions
 
 # Builds the source and appstore package
 .PHONY: dist
