@@ -9,11 +9,18 @@ abstract class EnumType extends Type
     protected $name;
     protected $values = array();
 
+    public function getSQLType()
+    {
+        $values = array_map(function($val) { return "'".$val."'"; }, $this->values);
+
+        return "enum(".implode(",", $values).")";
+    }
+
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         $values = array_map(function($val) { return "'".$val."'"; }, $this->values);
 
-        return "enum(".implode(", ", $values).")";
+        return "enum(".implode(",", $values).")";
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
