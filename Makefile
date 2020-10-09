@@ -1,7 +1,10 @@
 # This file is licensed under the Affero General Public License version 3 or
 # later. See the COPYING file.
+#
 # @author Bernhard Posselt <dev@bernhard-posselt.com>
 # @copyright Bernhard Posselt 2016
+# @author Claus-Justus Heine <himself@claus-justus-heine.de>
+# @copyright Claus-Justus Heine 2020
 
 # Generic Makefile for building and packaging a Nextcloud app which uses npm and
 # Composer.
@@ -68,7 +71,8 @@ endif
 # Installs and updates the composer dependencies. If composer is not installed
 # a copy is fetched from the web
 .PHONY: composer
-composer:
+composer: check-composer-core-versions
+	[ -f composer.json ] || cp composer.json.in composer.json
 ifeq (, $(composer))
 	@echo "No composer command available, downloading a copy from the web"
 	mkdir -p $(build_tools_directory)
@@ -78,6 +82,12 @@ ifeq (, $(composer))
 else
 	composer install --prefer-dist
 endif
+
+#.PHONY: check-composer-core-versions
+#check-composer-core-versions: DRY:=echo
+check-composer-core-versions: DRY:=
+check-composer-core-versions:
+	env DRY=$(DRY) dev-scripts/tweak-composer-jons.sh || rm -f composer.lock
 
 # Installs npm dependencies
 .PHONY: npm
@@ -101,6 +111,11 @@ distclean: clean
 	rm -rf node_modules
 	rm -rf js/vendor
 	rm -rf js/node_modules
+
+.PHONY: realclean
+realclean: distclean
+	rm -f composer.lock
+	rm -f composer.json
 
 # Builds the source and appstore package
 .PHONY: dist
