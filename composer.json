@@ -15,8 +15,6 @@
         "ioncube/php-openssl-cryptor": "dev-master",
         "components/jquery": "^2.2.0",
         "components/jquery-migrate": "^3.0.0",
-	"ramsey/uuid": "^4.1.0",
-        "doctrine/dbal": "2.9.2",
         "doctrine/orm": "*"
     },
     "require-dev": {
