@@ -181,6 +181,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\DBAL\Types\Type;
 
 $paths = [
     $appDir . "/lib/Entities"
@@ -198,5 +199,28 @@ $dbParams = [
 
 $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
 $entityManager = EntityManager::create($dbParams, $config);
+
+use OCA\CAFEVDB\DBAL\Types\EnumExtraFieldKind;
+use OCA\CAFEVDB\DBAL\Types\EnumExtraFieldMultiplicity;
+use OCA\CAFEVDB\DBAL\Types\EnumMemberStatus;
+use OCA\CAFEVDB\DBAL\Types\EnumProjectTemporalType;
+use OCA\CAFEVDB\DBAL\Types\EnumVCalendarType;
+
+$enumTypes = [
+    EnumExtraFieldKind::class,
+    EnumExtraFieldMultiplicity::class,
+    EnumMemberStatus::class,
+    EnumProjectTemporalType::class,
+    EnumVCalendarType::class
+];
+foreach ($enumTypes as $enum) {
+    $type = new $enum;
+    $typeName = $type->getName();
+    Type::addType($type->getName(), $enum);
+    //    var_dump(Type::getType((new $enum)->getName()));
+}
+
+// somehow the above just does not work. So.
+$entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
 
 return ConsoleRunner::createHelperSet($entityManager);
