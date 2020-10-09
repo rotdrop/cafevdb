@@ -328,15 +328,15 @@ CREATE TABLE `ProjectExtraFields` (
   `ProjectId` int(11) NOT NULL,
   `FieldIndex` int(11) NOT NULL COMMENT 'Extra-field index into Besetzungen table.',
   `DisplayOrder` int(11) DEFAULT NULL,
-  `Name` varchar(128) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `Type` int(11) NOT NULL DEFAULT 1,
-  `AllowedValues` varchar(1024) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Set of allowed values for set and enumerations.',
-  `DefaultValue` varchar(1024) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Default value.',
-  `ToolTip` varchar(4096) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Tab` varchar(256) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tab to display the field in. If empty, then teh projects tab is used.',
+  `AllowedValues` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Set of allowed values for set and enumerations.',
+  `DefaultValue` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Default value.',
+  `ToolTip` varchar(4096) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Tab` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tab to display the field in. If empty, then teh projects tab is used.',
   `Encrypted` tinyint(1) DEFAULT 0,
-  `Readers` varchar(1024) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'If non-empty restrict the visbility to this comma separated list of user-groups.',
-  `Writers` varchar(1024) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Empty or comma separated list of groups allowed to change the field.',
+  `Readers` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'If non-empty restrict the visbility to this comma separated list of user-groups.',
+  `Writers` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Empty or comma separated list of groups allowed to change the field.',
   `Disabled` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -350,7 +350,7 @@ CREATE TABLE `ProjectExtraFieldsData` (
   `Id` int(11) NOT NULL,
   `BesetzungenId` int(11) NOT NULL,
   `FieldId` int(11) NOT NULL,
-  `FieldValue` mediumtext CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL
+  `FieldValue` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -361,7 +361,7 @@ CREATE TABLE `ProjectExtraFieldsData` (
 
 CREATE TABLE `ProjectExtraFieldTypes` (
   `Id` int(11) NOT NULL,
-  `Name` varchar(256) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `Multiplicity` enum('simple','single','multiple','parallel','groupofpeople','groupsofpeople') NOT NULL,
   `Kind` enum('choices','surcharge','general','special') NOT NULL DEFAULT 'general'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -406,10 +406,10 @@ CREATE TABLE `ProjectPayments` (
   `InstrumentationId` int(11) NOT NULL COMMENT 'Link to Besetzungen.Id',
   `Amount` decimal(7,2) NOT NULL DEFAULT 0.00,
   `DateOfReceipt` date DEFAULT NULL,
-  `Subject` varchar(1024) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Subject` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `DebitNoteId` int(11) DEFAULT NULL COMMENT 'Link to the ProjectDirectDebit table.',
   `MandateReference` varchar(35) CHARACTER SET ascii DEFAULT NULL COMMENT 'Link into the SepaDebitMandates table, this is not the ID but the mandate Id.',
-  `DebitMessageId` varchar(1024) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL
+  `DebitMessageId` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
