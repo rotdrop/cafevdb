@@ -1,5 +1,5 @@
 <?php
-namespace OCA\CAFEVDB\DBAL\Types;
+namespace OCA\CAFEVDB\Database\DBAL\Types;
 
 class EnumMemberStatus extends EnumType
 {
