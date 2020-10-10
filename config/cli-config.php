@@ -184,7 +184,7 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\DBAL\Types\Type;
 
 $paths = [
-    $appDir . "/lib/Entities"
+    $appDir . "/lib/DBAL/Entities"
 ];
 $isDevMode = false;
 
@@ -197,7 +197,8 @@ $dbParams = [
     'host' => $configService->getValue('dbserver'),
 ];
 
-$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, null, false);
+//$config = Setup::createXMLMetadataConfiguration($paths, $isDevMode);
 $entityManager = EntityManager::create($dbParams, $config);
 
 use OCA\CAFEVDB\DBAL\Types\EnumExtraFieldKind;
@@ -213,6 +214,7 @@ $enumTypes = [
     EnumProjectTemporalType::class,
     EnumVCalendarType::class
 ];
+
 foreach ($enumTypes as $enum) {
     $type = new $enum;
     $typeName = $type->getName();
@@ -224,5 +226,44 @@ foreach ($enumTypes as $enum) {
 
 // somehow the above just does not work. So.
 // $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+
+// use OCA\CAFEVDB\DBAL\Entities\Besetzungen;
+// use OCA\CAFEVDB\DBAL\Entities\Changelog;
+// use OCA\CAFEVDB\DBAL\Entities\Debitnotedata;
+// use OCA\CAFEVDB\DBAL\Entities\Debitnotes;
+// use OCA\CAFEVDB\DBAL\Entities\Emailattachments;
+// use OCA\CAFEVDB\DBAL\Entities\Emaildrafts;
+// use OCA\CAFEVDB\DBAL\Entities\Emailtemplates;
+// use OCA\CAFEVDB\DBAL\Entities\Geocontinents;
+// use OCA\CAFEVDB\DBAL\Entities\Geocountries;
+// use OCA\CAFEVDB\DBAL\Entities\Geopostalcodes;
+// use OCA\CAFEVDB\DBAL\Entities\Imagedata;
+// use OCA\CAFEVDB\DBAL\Entities\Instrumente;
+// use OCA\CAFEVDB\DBAL\Entities\Instrumentinsurance;
+// use OCA\CAFEVDB\DBAL\Entities\Insurancebrokers;
+// use OCA\CAFEVDB\DBAL\Entities\Insurancerates;
+// use OCA\CAFEVDB\DBAL\Entities\Musicianinstruments;
+// use OCA\CAFEVDB\DBAL\Entities\Musiker;
+// use OCA\CAFEVDB\DBAL\Entities\Numbers;
+// use OCA\CAFEVDB\DBAL\Entities\Projectevents;
+// use OCA\CAFEVDB\DBAL\Entities\Projectextrafieldsdata;
+// use OCA\CAFEVDB\DBAL\Entities\Projectextrafields;
+// use OCA\CAFEVDB\DBAL\Entities\Projectextrafieldtypes;
+// use OCA\CAFEVDB\DBAL\Entities\Projectinstrumentation;
+// use OCA\CAFEVDB\DBAL\Entities\Projectinstruments;
+// use OCA\CAFEVDB\DBAL\Entities\Projectpayments;
+// use OCA\CAFEVDB\DBAL\Entities\Projectwebpages;
+// use OCA\CAFEVDB\DBAL\Entities\Projekte;
+// use OCA\CAFEVDB\DBAL\Entities\Sentemail;
+// use OCA\CAFEVDB\DBAL\Entities\Sepadebitmandates;
+
+use Doctrine\Common\Proxy\Autoloader;
+
+$entityDir = $appDir . "/lib/DBAL/Entities";
+$entityNamespace = "OCA\CAFEVDB\DBAL\Entities";
+
+Autoloader::register($entityDir, $entityNamespace);
+
+//$blah = new Besetzungen();
 
 return ConsoleRunner::createHelperSet($entityManager);
