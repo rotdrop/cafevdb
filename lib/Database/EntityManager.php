@@ -96,10 +96,15 @@ class EntityManager extends EntityManagerDecorator
       __DIR__ . "/Doctrine/ORM/Entities",
     ];
     $isDevMode = true;
-    $proxyDir = null;
+    $proxyDir = __DIR__ . "/Doctrine/ORM/Proxies";
     $cache = null;
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, $proxyDir, $cache, $useSimpleAnnotationReader);
+    if ($isDevMode) {
+      $config->setAutoGenerateProxyClasses(true);
+    } else {
+      $config->setAutoGenerateProxyClasses(false);
+    }
 
     // obtaining the entity manager
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config);
