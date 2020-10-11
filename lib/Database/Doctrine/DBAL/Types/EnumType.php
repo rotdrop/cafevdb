@@ -1,5 +1,5 @@
 <?php
-namespace OCA\CAFEVDB\Database\DBAL\Types;
+namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;

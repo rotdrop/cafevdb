@@ -1,6 +1,6 @@
 <?php
 
-namespace OCA\CAFEVDB\Database\DBAL\Entities;
+namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 
 use Doctrine\ORM\Mapping as ORM;
