@@ -167,9 +167,6 @@ if (empty($cafevDbPassword)) {
 $encryptionService = \OC::$server->query(EncryptionService::class);
 $encryptionService->initUserPrivateKey($cafevDbUser, $cafevDbPassword);
 
-$configService = \OC::$server->query(ConfigService::class);
-
-
 /*
  *
  *
@@ -178,92 +175,9 @@ $configService = \OC::$server->query(ConfigService::class);
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Database\EntityManager;
 
-$paths = [
-    $appDir . "/lib/Database/DBAL/Entities"
-];
-$isDevMode = false;
-
-// the connection configuration
-$dbParams = [
-    'driver'   => 'pdo_mysql',
-    'dbname' => $configService->getValue('dbname'),
-    'user' => $configService->getValue('dbuser'),
-    'password' => $configService->getValue('dbpassword'),
-    'host' => $configService->getValue('dbserver'),
-];
-
-$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, null, false);
-//$config = Setup::createXMLMetadataConfiguration($paths, $isDevMode);
-$entityManager = EntityManager::create($dbParams, $config);
-
-use OCA\CAFEVDB\Database\DBAL\Types\EnumExtraFieldKind;
-use OCA\CAFEVDB\Database\DBAL\Types\EnumExtraFieldMultiplicity;
-use OCA\CAFEVDB\Database\DBAL\Types\EnumMemberStatus;
-use OCA\CAFEVDB\Database\DBAL\Types\EnumProjectTemporalType;
-use OCA\CAFEVDB\Database\DBAL\Types\EnumVCalendarType;
-
-$enumTypes = [
-    EnumExtraFieldKind::class,
-    EnumExtraFieldMultiplicity::class,
-    EnumMemberStatus::class,
-    EnumProjectTemporalType::class,
-    EnumVCalendarType::class
-];
-
-foreach ($enumTypes as $enum) {
-    $type = new $enum;
-    $typeName = $type->getName();
-    Type::addType($type->getName(), $enum);
-    //    var_dump(Type::getType((new $enum)->getName()));
-    echo $type->getSQLType();
-    $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($type->getSQLType(), $type->getName());
-}
-
-// somehow the above just does not work. So.
-// $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-
-// use OCA\CAFEVDB\Database\DBAL\Entities\Besetzungen;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Changelog;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Debitnotedata;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Debitnotes;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Emailattachments;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Emaildrafts;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Emailtemplates;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Geocontinents;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Geocountries;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Geopostalcodes;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Imagedata;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Instrumente;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Instrumentinsurance;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Insurancebrokers;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Insurancerates;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Musicianinstruments;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Musiker;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Numbers;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Projectevents;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Projectextrafieldsdata;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Projectextrafields;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Projectextrafieldtypes;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Projectinstrumentation;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Projectinstruments;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Projectpayments;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Projectwebpages;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Projekte;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Sentemail;
-// use OCA\CAFEVDB\Database\DBAL\Entities\Sepadebitmandates;
-
-use Doctrine\Common\Proxy\Autoloader;
-
-$entityDir = $appDir . "/lib/DBAL/Entities";
-$entityNamespace = "OCA\CAFEVDB\Database\DBAL\Entities";
-
-Autoloader::register($entityDir, $entityNamespace);
-
-//$blah = new Besetzungen();
+$entityManager = \OC::$server->query(EntityManager::class);
 
 return ConsoleRunner::createHelperSet($entityManager);

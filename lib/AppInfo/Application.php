@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Listener\UserLoggedOutEventListener;
 use OCA\CAFEVDB\Listener\PasswordUpdatedEventListener;
 
 use OCA\CAFEVDB\Service\DatabaseService;
-use OCA\CAFEVDB\Service\DatabaseFactory;
+use OCA\CAFEVDB\Database\EntityManager;
 
 use OCA\CAFEVDB\Service\EventsService;
 
@@ -84,7 +84,7 @@ class Application extends App {
 
         /* Doctrine DBAL needs a factory to be constructed. */
         $container->registerService(DatabaseService::class, function($c) {
-            return $c->query(DatabaseFactory::class)->getService();
+            return $c->query(EntityManager::class)->getConnection();
         });
     }
 

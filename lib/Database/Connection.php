@@ -20,39 +20,24 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Service;
+namespace OCA\CAFEVDB\Database;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Driver;
 
-class DatabaseFactory
+class Connection extends \Doctrine\DBAL\Connection
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  public function __construct(ConfigService $configService)
-  {
-    $this->configService = $configService;
-  }
+  const CHARSET = 'utf8mb4';
 
-  public function getService($params = null) {
-    $connectionParams = [
-      'dbname' => $this->getConfigValue('dbname'),
-      'user' => $this->getConfigValue('dbuser'),
-      'password' => $this->getConfigValue('dbpassword'),
-      'host' => $this->getConfigValue('dbserver'),
-    ];
-    $driverParams = [
-      'driver' => 'pdo_mysql',
-      'wrapperClass' => DatabaseService::class,
-      'configService' => $this->configService,
-    ];
-    if (!empty($params)) {
-      $connectionParams = array_merge($connectionParams, $params);
-    }
-    //trigger_error(print_r($connectionParams, true));
-    return DriverManager::getConnection(array_merge($driverParams, $connectionParams));
+  protected $connection;
+
+  public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null) {
+    parent::__construct($params, $driver, $config, $eventManager);
+    $this->configService = $params['configService'];
   }
 }
 
