@@ -22,19 +22,26 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Projekte;
+
 class ProjectService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  /** @var DatabaseService */
-  protected $databaseService;
+  const DBTABLE = 'Projekte';
+
+  /** @var EntityManager */
+  protected $entityManager;
 
   public function __construct(
     ConfigService $configService,
-    DatabaseService $databaseService
+    EntityManager $entityManager
   ) {
     $this->configService = $configService;
-    $this->databaseService = $databaseService;
+    $this->entityManager = $entityManager;
+    $this->setDatabaseRepository(Projekte::class);
   }
 
   /**Generate an option table with all participants, suitable to be
@@ -61,7 +68,7 @@ class ProjectService
 
     // simply fetch all participants
     $query = "SELECT Name,Vorname,MusikerId FROM ".$table." WHERE 1";
-    $stmt = $this->databaseService->query($query);
+    $stmt = $this->entityManager->getConnction()->query($query);
     while($row = $stmt->fetch()) {
       $key = $row['MusikerId'];
       $name = $row['Vorname'].' '.$row['Name'];
@@ -78,17 +85,16 @@ class ProjectService
    */
   public function fetchName($projectId)
   {
-    $result = $this->databaseService->fetchAll(
-      'SELECT Name FROM Projekte WHERE Id = ?',
-      [$projectId]);
-
-    if (count($result) == 1 && !empty($result[0]['Name'])) {
-      return $result[0]['Name'];
+    $project = $this->find($projectid);
+    if ($project == null) {
+      return null;
     }
-
-    return null;
+    return $project->getName();
   }
 
+  public function fetchAll() {
+    return $this->findAll();
+  }
 }
 
 // Local Variables: ***

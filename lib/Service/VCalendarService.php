@@ -142,6 +142,77 @@ class VCalendarService
     return $this->legacyCalendarObject;
   }
 
+  public static function getVCalendar($stuff)
+  {
+    if (is_array($stuff) && isset($stuff['calendardata'])) {
+      $data = $stuff['calendardata'];
+    } else if (is_string($stuff)) {
+      $data = $stuff;
+    } else if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
+      return $stuff;
+    }
+    return \Sabre\VObject\Reader::read($stuff['calendardata']);
+  }
+
+  /**Return a reference to the object contained in a Sabre VCALENDAR
+   * object. This is a reference to allow for modification of the
+   * $vCalendar object.
+   *
+   * @param[in] $vCalendar VCalendar object.
+   *
+   * @return A reference to the inner object.
+   */
+  public static function &getVObect(&$vCalendar)
+  {
+    if (isset($vCalendar->VEVENT)) {
+      $vobject = &$vCalendar->VEVENT;
+    } else if (isset($vCalendar->VTODO)) {
+      $vobject = &$vCalendar->VTODO;
+    } else if (isset($vCalendar->VJOURNAL)) {
+      $vobject = &$vCalendar->VJOURNAL;
+    } else if (isset($vCalendar->VCARD)) {
+      $vobject = &$vCalendar->VCARD;
+    } else {
+      throw new \Exception('Called with empty or no VObject');
+    }
+    return $vobject;
+  }
+
+  /**Return the type of the respective calendar object.
+   *
+   * @param[in] $vCalendar
+   *
+   * @return string Either VEVENT, VTODO, VJOURNAL or VCARD.
+   */
+  public static function getVObjectType($vCalendar)
+  {
+    if (isset($vCalendar->VEVENT)) {
+      return 'VEVENT';
+    } else if (isset($vCalendar->VTODO)) {
+      return 'VTODO';
+    } else if (isset($vCalendar->VJOURNAL)) {
+      return 'JVOURNAL';
+    } else if (isset($vCalendar->VCARD)) {
+      return 'VCARD';
+    } else {
+      throw new \InvalidArgumentException('Called with empty of no VObject');
+    }
+    return null;
+  }
+
+  /**Return the category list for the given object
+   *
+   * @param[in] $vCalendar Sabe vCalendar object
+   *
+   * @return An array with the categories for the object. */
+  public static function getVCategories($vCalendar)
+  {
+    // get the inner object
+    $vCalendar = self::getVObject($vCalendar);
+
+    return isset($vObject->CATEGORIES) ? $vObject->CATEGORIES->getParts() : [];
+  }
+
   private function validateVTodoRequest($todoData)
   {
     $requiredKeys = [

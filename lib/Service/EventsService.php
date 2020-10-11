@@ -29,15 +29,22 @@ use OCA\DAV\Events\CalendarObjectCreatedEvent;
 use OCA\DAV\Events\CalendarObjectDeletedEvent;
 use OCA\DAV\Events\CalendarObjectUpdatedEvent;
 
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents;
+
 /**Events and tasks handling. */
 class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const DBTABLE = 'ProjectEvents';
 
-  /** @var DatabaseService */
-  private $databaseService;
+  /** @var EntityManager */
+  private $entityManager;
+
+  /** @var ProjectsService */
+  private $projectsService;
 
   /** @var CalDavService */
   private $calDavService;
@@ -47,16 +54,35 @@ class EventsService
 
   public function __construct(
     ConfigService $configService,
-    DatabaseService $databaseService,
+    EntityManager $entityManager,
+    ProjectsService $projectsService,
     CalDavService $calDavService,
     VCalendarService $vCalendarService
   ) {
     $this->configService = $configService;
-    $this->databaseService = $databaseService;
+    $this->entityManager = $entityManager;
+    $this->projectsService = $projectsService;
     $this->calDavService = $calDavService;
     $this->vCalendarService = $vCalendarService;
+    $this->setDatabaseRepository(ProjectEvents::class);
   }
 
+  /**
+   * event->getObjectData() returns
+   *
+   * @code
+   * [
+   *   'id'            => $row['id'],
+   *   'uri'           => $row['uri'],
+   *   'lastmodified'  => $row['lastmodified'],
+   *   'etag'          => '"' . $row['etag'] . '"',
+   *   'calendarid'    => $row['calendarid'],
+   *   'size'          => (int)$row['size'],
+   *   'calendardata'  => $this->readBlob($row['calendardata']),
+   *   'component'     => strtolower($row['componenttype']),
+   *   'classification'=> (int)$row['classification']
+   * ];
+   */
   public function onCalendarObjectCreated(CalendarObjectCreatedEvent $event)
   {
     $objectData = $event->getObjectData();
@@ -102,9 +128,12 @@ class EventsService
       return;
     }
 
-    // unconditionally remove the project-links
-    $query = "DELETE FROM ".self::DBTABLE." WHERE CalendarId = ?";
-    $this->databaseService->executeQuery($query, [$event->getCalendarId()]);
+    $this->queryBuilder()
+         ->delete(self::DBTABLE, 'e')
+         ->where('e.CalendarId = :calendarId')
+         ->setParameter('calendarId', $event->getCalendarId())
+         ->getQuery()
+         ->execute();
 
     // remove from config-space if found
     foreach(ConfigService::CALENDARS as $cal) {
@@ -139,29 +168,16 @@ class EventsService
     }
   }
 
-  private function eventProjects($eventId)
+  /** @return ProjectEvents[] */
+  private function eventProjects($eventURI)
   {
-    $query = "SELECT ProjectId
-  FROM ProjectEvents WHERE EventId = ?
-  ORDER BY Id ASC";
-
-    return $this->databaseService->fetchArray($query, [$eventId]);
+    return $this->findBy(['EventURI' => $eventURI]);
   }
 
-  /**Fetch the related rows from the pivot-table (without calendar
-   * data).
-   *
-   * @return A flat array with the associated event-ids. Note that
-   * even in case of an error an (empty) array is returned.
-   */
+  /** @return ProjectEvents[] */
   private function projectEvents($projectId)
   {
-    $query = "SELECT EventId
-  FROM ProjectEvents
-  WHERE ProjectId = ? AND Type = 'VEVENT'
-  ORDER BY Id ASC";
-
-    return $this->databaseService->fetchArray($query, [$projectId]);
+    return $this->findBy(['ProjectId' => $projectid]);
   }
 
   /**Return the IDs of the default calendars.
@@ -202,11 +218,98 @@ class EventsService
     return $this->setConfigValue($uri.'calendar', $displayName);
   }
 
-  private function syncCalendarObject($objectData)
-  {}
+  /**Parse the respective event and make sure the ProjectEvents
+   * table is uptodate.
+   *
+   * @param[in] $eventId The OwnCloud-Id of the event.
+   *
+   * @param[in] $handle Optional. MySQL handle.
+   **
+   * @return bool, @c true if the event has been added.
+   */
+  private function syncCalendarObject($objectData, $unregister = true)
+  {
+    $eventURI   = $objectData['uri'];
+    $calId      = $objectData['calendarid'];
+    $vCalendar  = CalendarService::getVCalendar($objectData);
+    $categories = calendarService::getVCategories($vCalendar);
+
+    // Now fetch all projects and their names ...
+    $projects = $this->projectsService->fetchAll();
+
+    $result = false;
+    // Do the sync. The categories stored in the event are
+    // the criterion for this.
+    foreach ($projects as $project) {
+      $prKey = $project->getId();
+      $registered = $this->isRegistered($prKey, $eventURI);
+      if (in_array($project->getName(), $categories)) {
+        // register or update the event
+        $type = VCalendarService::getVObjectType($vCalendar);
+        $this->register($prKey, $calId, $eventURI, $type);
+        $result = !$registered;
+      } else if ($registered) {
+        // unregister the event
+        $this->unregister($prKey, $eventURI);
+      }
+    }
+    return $result;
+  }
 
   private function deleteCalendarObject($objectData)
-  {}
+  {
+    $eventURI   = $objectData['uri'];
+
+    foreach ($this->eventProjects($uri) as $project) {
+      $this->unregister($project->getId(), $eventURI);
+    }
+  }
+
+  /**Unconditionally register the given event with the given project.
+   *
+   * @param[in] $projectId The project key.
+   * @param[in] $eventURI The event key (external key).
+   * @param[in] $calendarId The id of the calender the vent belongs to.
+   * @param[in] $type The event type (VEVENT, VTODO, VJOURNAL, VCARD).
+   *
+   * @return Undefined.
+   */
+  private function register($projectId,
+                            $eventURI,
+                            $calendarId,
+                            $type)
+  {
+    return $this->persist(new ProjectEvents()
+                          ->setProjectId($projectId)
+                          ->setEventURI($eventURI)
+                          ->setCalendarId($calendarId)
+                          ->setType($type));
+  }
+
+  /**Unconditionally unregister the given event with the given project.
+   *
+   * @param[in] $projectId The project key.
+   * @param[in] $eventURI The event key (external key).
+   *
+   * @return Undefined.
+   */
+  private function unregister($projectId, $eventURI)
+  {
+    return $this->remove(['ProjectId' => $projectId, 'EventURI' => $eventURI]);
+  }
+
+  /**Test if the given event is linked to the given project.
+   *
+   * @param[in] $projectId The project key.
+   * @param[in] $eventURI The event key (external key).
+   *
+   * @return @c true if the event is registered, otherwise false.
+   */
+  private function isRegistered($projectId, $eventURI)
+  {
+    //return !empty($this->find(['ProjectId' => $projectId, 'EventURI' => $eventURI]));
+    return $this->count(['ProjectId' => $projectId, 'EventURI' => $eventURI]) > 0;
+  }
 
   /**Inject a new task into the given calendar. This function calls
    * $request is a post-array. One example, in order to create a

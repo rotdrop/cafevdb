@@ -306,16 +306,19 @@ class CalDavService
    *     the Content-Type header.
    *
    * @param mixed $calendarId
-   * @param int $calendarType
    * @return array
-+   *
+   *
    * @return array|null
    *
    * @bug This function uses internal APIs.
    */
   public function getCalendarObject($calendarId, $localUri)
   {
-    return $this->calDavBackend->getCalendarObject($calendarId, $localUri);
+    $result = $this->calDavBackend->getCalendarObject($calendarId, $localUri);
+    if (!empty($result)) {
+      $result['calendarid'] = $calendarId;
+    }
+    return $result;
   }
 
   /**Force OCP\Calendar\IManager to be refreshed.
