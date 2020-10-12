@@ -31,7 +31,6 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
-use OCA\CAFEVDB\Service\DatabaseFactory;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Service\CalDavService;
 
@@ -52,7 +51,6 @@ class PersonalSettingsController extends Controller {
     IRequest $request,
     ConfigService $configService,
     Personal $personalSettings,
-    DatabaseFactory $databaseFactory,
     ConfigCheckService $configCheckService,
     CalDavService $calDavService
   ) {
@@ -376,13 +374,14 @@ class PersonalSettingsController extends Controller {
           $this->l->t('Failure checking calendar `%s\', caught an exception `%s\'.',
                       [$real, $e->getMessage()]));
       }
-    case 'sharedaddressbook':
+    case 'generaladdressbook':
+    case 'musiciansaddressbook':
       $real = trim($value);
+      $uri = substr($parameter, 0, -strlen('addressbook'));
       //$saved = $value[$parameter.'-saved'];
       //$force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
       $actual = $this->getConfigValue($parameter);
       $actualId = $this->getConfigValue($parameter.'id');
-      $uri = 'contacts';
       try {
         if (($newId = $this->configCheckService->checkSharedAddressBook($uri, $real, $actualId)) > 0) {
           $this->setConfigValue($parameter, $real);

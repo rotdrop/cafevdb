@@ -717,7 +717,7 @@ class ConfigCheckService
         }
 
         if (empty($addressBook)) {
-          $this->logError("AddressBook " . $displayName . " does not seem to exist.");
+          $this->logError("AddressBook " . $uri . " / " . $displayName . " does not seem to exist.");
           $id = $this->cardDavService->createAddressBook($uri, $displayName, $shareOwnerId);
           if ($id < 0) {
             $this->logError("Unabled to create addressBook " . $displayName);

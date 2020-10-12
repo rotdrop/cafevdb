@@ -67,19 +67,21 @@ class CardDavService
    *
    * @return int AddressBook id.
    */
-  public function createAddressBook($uri, $userId = null, $displayName = null) {
+  public function createAddressBook($uri, $displayName = null, $userId = null) {
     empty($userId) && ($userId = $this->userId());
     empty($displayName) && ($displayName = $uri);
     $principal = "principals/users/$userId";
 
     $addressBook = $this->cardDavBackend->getAddressBooksByUri($principal, $uri);
     if (!empty($addressBook))  {
+      $this->logError("Got addressbook " . print_r($addressBook, true));
       return $addressBook['id'];
     } else {
       try {
         $addressBookId = $this->cardDavBackend->createAddressBook($principal, $uri, [
           '{DAV:}displayname' => $displayName,
         ]);
+        $this->logError("Created addressbook with id " . $addressBookId);
         $this->refreshAddressBookManager();
         return $addressBookId;
       } catch(\Exception $e) {
@@ -152,7 +154,7 @@ class CardDavService
       $this->refreshAddressBookManager();
     }
     foreach($this->addressBookManager->getUserAddressBooks() as $addressBook) {
-      if ($id === $addressBook->getKey()) {
+      if ((int)$id === (int)$addressBook->getKey()) {
         return $addressBook;
       }
     }
