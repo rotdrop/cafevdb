@@ -29,6 +29,9 @@ use OCA\DAV\Events\CalendarObjectCreatedEvent;
 use OCA\DAV\Events\CalendarObjectDeletedEvent;
 use OCA\DAV\Events\CalendarObjectUpdatedEvent;
 
+use OCA\CAFEVDB\Events\ProjectDeletedEvent;
+use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents;
 
@@ -93,7 +96,7 @@ class EventsService
       return;
     }
     $this->logError(__METHOD__);
-    $this->syncCalendarObject($objectData);
+    $this->syncCalendarObject($objectData, false);
   }
 
   public function onCalendarObjectUpdated(CalendarObjectUpdatedEvent $event)
@@ -165,6 +168,42 @@ class EventsService
         }
         break;
       }
+    }
+  }
+
+  public function onProjectDeleted(ProjectDeletedEvent $event)
+  {
+    $events = $this->projectEvents($event->getProjectId());
+    foreach ($events as $event) {
+      $this->remove($event);
+      $uri = $event->getEventURI();
+      $calId = $event->getCalendarId();
+      $this->calDavService->deleteCalendarObject($calId, $uri);
+    }
+  }
+
+  public function onProjectUpdated(ProjectUpdatedEvent $event)
+  {
+    $events = $this->projectEvents($event->getProjectId());
+    $oldName = $event->getOldData()['name'];
+    $newName = $event->getNewData()['name'];
+    foreach ($events as $projectEvent) {
+      $calendarId = $projectEvent->getCalendarId();
+      $eventURI = $projectEvent->getEventURI();
+      $event = $this->calDavService->getCalendarObject($calendarId, $eventURI);
+      $vCalendar  = CalendarService::getVCalendar($event);
+      $categories = calendarService::getVCategories($vCalendar);
+
+      $key = array_search($oldName, $categories);
+      $categories[$key] = $newName;
+      VCalendarService::setVCategories($vCalendar, $categories);
+
+      $summary = VCalendarService::getSummary($vCalendar);
+      if (!empty($summary)) {
+        $summary = str_replace($oldName, $newName, $summary);
+        VCalendarService->setSummary($vCalendar, $summary);
+      }
+      $this->calDavService->updateCalendarObject($calendarId, $eventURI, $vCalendar);
     }
   }
 
@@ -296,6 +335,33 @@ class EventsService
   private function unregister($projectId, $eventURI)
   {
     return $this->remove(['ProjectId' => $projectId, 'EventURI' => $eventURI]);
+  }
+
+  /**Unconditionally unregister the given event with the given
+   * project, and remove the project-name from the event's categories
+   * list.
+   *
+   * @param[in] $projectId The project key.
+   * @param[in] $eventURI The event uri.
+   *
+   * @return Undefined.
+   */
+  public function unchain($projectId, $eventURI)
+  {
+    $this->unregister($projectId, $eventURI);
+
+    $projectName = $this->projectService->fetchName($projectId);
+    $projectEvent = $this->find(['ProjectId' => $projectId, 'EventURI' => $eventURI]);
+    $calendarId = $projectEvent->getCalendaId();
+    $event = $this->calDavService->getCalendarObject($calendarId, $eventURI);
+    $vCalendar  = VCalendarService::getVCalendar($event);
+    $categories = VCalendarService::getVCategories($vCalendar);
+
+    $key = array_search($projectName, $categories);
+    unset($categories[$key]);
+    VCalendarService::setVCategories($vCalendar, $categories);
+
+    return $this->calDavService->updateCalendarObject($calendarId, $eventURI, $vCalendar);
   }
 
   /**Test if the given event is linked to the given project.

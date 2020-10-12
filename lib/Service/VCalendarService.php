@@ -205,12 +205,52 @@ class VCalendarService
    * @param[in] $vCalendar Sabe vCalendar object
    *
    * @return An array with the categories for the object. */
-  public static function getVCategories($vCalendar)
+  public static function getCategories($vCalendar)
   {
     // get the inner object
-    $vCalendar = self::getVObject($vCalendar);
+    $vObject = self::getVObject($vCalendar);
 
     return isset($vObject->CATEGORIES) ? $vObject->CATEGORIES->getParts() : [];
+  }
+
+  public static function setCategories(&$vCalendar, $categories)
+  {
+    // get the inner object
+    $vObject = self::getVObject($vCalendar);
+    $vObject->CATEGORIES = $categories;
+    return $vCalendar;
+  }
+
+  public static function getSummary($vCalendar)
+  {
+    // get the inner object
+    $vObject = self::getVObject($vCalendar);
+
+    return isset($vObject->SUMMARY) ? $vObject->SUMMARY : null;
+  }
+
+  public static function setSummary(&$vCalendar, $summary)
+  {
+    // get the inner object
+    $vObject = self::getVObject($vCalendar);
+    $vObject->SUMMARY = $summary;
+    return $vCalendar;
+  }
+
+  public static function getDescription($vCalendar)
+  {
+    // get the inner object
+    $vObject = self::getVObject($vCalendar);
+
+    return isset($vObject->DESCRIPTION) ? $vObject->DESCRIPTION : null;
+  }
+
+  public static function setDescription(&$vCalendar, $description)
+  {
+    // get the inner object
+    $vObject = self::getVObject($vCalendar);
+    $vObject->DESCRIPTION = $description;
+    return $vCalendar;
   }
 
   private function validateVTodoRequest($todoData)
