@@ -93,7 +93,7 @@ class Application extends App {
             });
 
         /* Doctrine DBAL needs a factory to be constructed. */
-        $container->registerService(DatabaseService::class, function($c) {
+        $container->registerService(\OCA\CAFEVDB\Database\Connection::class, function($c) {
             return $c->query(EntityManager::class)->getConnection();
         });
     }

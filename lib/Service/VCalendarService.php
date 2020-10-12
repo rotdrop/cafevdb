@@ -144,12 +144,16 @@ class VCalendarService
 
   public static function getVCalendar($stuff)
   {
+    $data = null;
     if (is_array($stuff) && isset($stuff['calendardata'])) {
       $data = $stuff['calendardata'];
     } else if (is_string($stuff)) {
       $data = $stuff;
     } else if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
       return $stuff;
+    }
+    if (empty($data)) {
+      return null;
     }
     return \Sabre\VObject\Reader::read($stuff['calendardata']);
   }
@@ -251,6 +255,32 @@ class VCalendarService
     $vObject = self::getVObject($vCalendar);
     $vObject->DESCRIPTION = $description;
     return $vCalendar;
+  }
+
+  public static function getDTEnd($vCalendar)
+  {
+    $vObject = self::getVObject($vCalendar);
+    if ($vObject->DTEND) {
+      return $vObject->DTEND;
+    }
+    $dtEnd = clone $vObject->DTSTART;
+    // clone creates a shallow copy, also clone DateTime
+    $dtEnd->setDateTime(clone $dtEnd->getDateTime());
+    if ($vObject->DURATION) {
+      $duration = strval($vObject->DURATION);
+      $invert = 0;
+      if ($duration[0] == '-') {
+        $duration = substr($duration, 1);
+        $invert = 1;
+      }
+      if ($duration[0] == '+') {
+        $duration = substr($duration, 1);
+      }
+      $interval = new DateInterval($duration);
+      $interval->invert = $invert;
+      $dtEnd->getDateTime()->add($interval);
+    }
+    return $dtEnd;
   }
 
   private function validateVTodoRequest($todoData)

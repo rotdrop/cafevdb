@@ -310,7 +310,10 @@ class CalDavService
    *
    * @return array|null
    *
-   * @bug This function uses internal APIs.
+   * @bug This function uses internal APIs. This could be changed to a
+   * CalDav call which would then only return the serialized data,
+   * respectively an arry/proxy object with calendarId, uri and the
+   * calendar data.
    */
   public function getCalendarObject($calendarId, $localUri)
   {

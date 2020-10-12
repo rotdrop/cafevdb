@@ -46,8 +46,8 @@ class EventsService
   /** @var EntityManager */
   private $entityManager;
 
-  /** @var ProjectsService */
-  private $projectsService;
+  /** @var ProjectService */
+  private $projectService;
 
   /** @var CalDavService */
   private $calDavService;
@@ -58,13 +58,13 @@ class EventsService
   public function __construct(
     ConfigService $configService,
     EntityManager $entityManager,
-    ProjectsService $projectsService,
+    ProjectService $projectService,
     CalDavService $calDavService,
     VCalendarService $vCalendarService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
-    $this->projectsService = $projectsService;
+    $this->projectService = $projectService;
     $this->calDavService = $calDavService;
     $this->vCalendarService = $vCalendarService;
     $this->setDatabaseRepository(ProjectEvents::class);
@@ -75,7 +75,6 @@ class EventsService
    *
    * @code
    * [
-   *   'id'            => $row['id'],
    *   'uri'           => $row['uri'],
    *   'lastmodified'  => $row['lastmodified'],
    *   'etag'          => '"' . $row['etag'] . '"',
@@ -201,7 +200,7 @@ class EventsService
       $summary = VCalendarService::getSummary($vCalendar);
       if (!empty($summary)) {
         $summary = str_replace($oldName, $newName, $summary);
-        VCalendarService->setSummary($vCalendar, $summary);
+        VCalendarService::setSummary($vCalendar, $summary);
       }
       $this->calDavService->updateCalendarObject($calendarId, $eventURI, $vCalendar);
     }
@@ -216,7 +215,323 @@ class EventsService
   /** @return ProjectEvents[] */
   private function projectEvents($projectId)
   {
-    return $this->findBy(['ProjectId' => $projectid]);
+    return $this->findBy(['ProjectId' => $projectid, 'Type' => 'VEVENT']);
+  }
+
+  /**Augment database entity by calendar data. */
+  private function makeEvent($projectEvent)
+  {
+    $event = [];
+    $event['projectid'] = $projectId;
+    $event['uri'] = $projectEvent->getEventURI();
+    $event['calendarid'] = $projectEvent->getCalendarId();
+    $calendarObject = $this->calDavService->getCalendarObject($event['CalendarId'], $event['URI']);
+    $vCalendar = VCalendarService::getVCalendar($calendarObject);
+    $vObject = VCalendarService::getVObject($vCalendar);
+    $dtStart = $vObject->DTSTART;
+    $dtEnd   = VCalendarService::getDTEnd($vCalendar);
+
+    $start = $dtStart->getDateTime();
+    $end = $dtEnd->getDateTime();
+    $allDay = !$dtStart->hasTime();
+
+    if (!$allDay) {
+      if ($dtStart->isFloating()) {
+        $timeZone = $this->getDateTimezone();
+        $start->setTimezone($timezone);
+      }
+      if ($dtEnd->isFloating()) {
+          $timeZone = $this->getDateTimezone();
+          $end->setTimezone($timezone);
+      }
+    } else {
+      $start->setTimezone($timezone);
+      $end->setTimezone($timezone);
+    }
+
+    $event['start'] = $start;
+    $event['end'] = $end;
+    $event['allday'] = $allDay;
+
+    // description + summary?
+    $event['summary'] = (string)$vObject->SUMMARY;
+    $event['description'] = (string)$vObject->DESCRIPTION;
+    $event['location'] = (string)$vObject->LOCATION;
+
+    return $event;
+  }
+
+  /**Fetch one specific event and convert start and end to DateTime,
+   * also determine allDay.
+   */
+  public function fetchEvent($projectId, $eventURI)
+  {
+    $projectEvent = $this->find(['ProjectId' => $projectId, 'EventURI' => $eventURI]);
+    if (empty($projectEvent)) {
+      return null;
+    }
+    return $this->makeEvent($projectEvent);
+  }
+
+  /**Fetch the list of events associated with $projectId. This
+   * functions fetches all the data, not only the pivot-table. Time
+   * stamps from the data-base are converted to PHP DateTime()-objects
+   * with UTC time-zone.
+   *
+   * @param[in] $projectId The numeric id of the project.
+   *
+   * @return Full event data for this project.
+   */
+  public function events($projectId)
+  {
+    // fetch the relevant data from the pivot-table
+    $events = $this->projectEvents($projectId);
+
+    $utc = new \DateTimeZone("UTC");
+
+    $events = [];
+    foreach ($events as $projectEvent) {
+      $events[] = $this->makeEvent($projectEvent);
+    }
+
+    usort($events, function($a, $b) {
+      return (($a['start'] == $b['start'])
+              ? 0
+              : (($a['start'] < $b['start']) ? -1 : 1));
+    });
+
+    return $events;
+  }
+
+  /**Form start and end date and time in given timezone and locale,
+   * return is an array
+   *
+   * array('start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ...)
+   *
+   * @param $eventObject The corresponding event object from fetchEvent() or events().
+   *
+   * @param $timezone Explicit time zone to use, otherwise fetched
+   * from user-settings.
+   *
+   * @param $locale Explicit language setting to use, otherwise
+   * fetched from user-settings.
+   *
+   */
+  private function eventTimes($eventObject, $timezone = null, $locale = null)
+  {
+    if ($timezone === null) {
+      $timezone = $this->getTimezone();
+    }
+    if ($locale === null) {
+      $locale = $this->getLocale();
+    }
+
+    $start = $eventObject['start'];
+    $end   = $eventObject['end'];
+    $allDay = $eventObject['allday'];
+
+    $startStamp = $start->getTimestamp();
+
+    /* Event end is inclusive the last second of "end" to generate
+     * non-confusing dates and times for whole-day events.
+     */
+    $endStamp = $end->getTimestamp() - 1;
+
+    $startdate = Util::strftime("%x", $startStamp, $timezone, $locale);
+    $starttime = Util::strftime("%H:%M", $startStamp, $timezone, $locale);
+    $enddate = Util::strftime("%x", $endStamp, $timezone, $locale);
+    $endtime = Util::strftime("%H:%M", $endStamp, $timezone, $locale);
+
+    return [
+      'timezone' => $timezone,
+      'locale' => $locale,
+      'allday' => $allDay,
+      'start' => array('stamp' => $startStamp,
+                       'date' => $startdate,
+                       'time' => $starttime),
+      'end' => array('stamp' => $endStamp,
+                     'date' => $enddate,
+                     'time' => $endtime)
+    ];
+  }
+
+  /**Form a brief event date in the given locale. */
+  public function briefEventDate($eventObject, $timezone = null, $locale = null)
+  {
+    $times = $this->eventTimes($eventObject, $timezone, $locale);
+
+    if ($times['start']['date'] == $times['end']['date']) {
+      $datestring = $times['start']['date'].($times['start']['allday'] ? '' : ', '.$times['start']['time']);
+      $datestring = $times['start']['date'].' - '.$times['end']['date'];
+    }
+    return $datestring;
+  }
+
+  /**Form a "brief long" event date in the given locale. */
+  public function longEventDate($eventObject, $timezone = null, $locale = null)
+  {
+    $times = $this->eventTimes($eventObject, $timezone, $locale);
+
+    if ($times['start']['date'] == $times['end']['date']) {
+      $datestring = $times['start']['date'];
+      if (!$times['start']['allday']) {
+        $datestring .= ', '.$times['start']['time'].' - '.$times['end']['time'];
+      }
+    } else {
+      $datestring = $times['start']['date'];
+      if (!$times['start']['allday']) {
+        $datestring .= ', '.$times['start']['time'];
+      }
+      $datestring .= '  -  '.$times['end']['date'];
+      if (!$times['start']['allday']) {
+        $datestring .= ', '.$times['end']['time'];
+      }
+    }
+    return $datestring;
+  }
+
+  /**Convert the given flat event-list (as returned by self::events())
+   * into a matrix grouped as specified by the array $calendarIds in
+   * the given order. The result is an associative array where the
+   * keys are the displaynames of the calenders; the last row will
+   * contain events which do not belong to any id mentioned in
+   * $calendarIds and be tagged by the key '__other__'.
+   *
+   * @param[in] $projectEvents List returned by self::events().
+   *
+   * @param[in] $calendarIds Array with calendar sorting order, giving
+   * the ids of the wanted calendars in the wanted order.
+   *
+   * @return Associative array with calendarnames as keys.
+   */
+  public static function eventMatrix($projectEvents, $calendarIds)
+  {
+    $calendarNames = [];
+
+    $result = [];
+
+    foreach ($calendarIds as $calendarId) {
+      $cal = $this->calDavService->calendarById($calendarId);
+      $displayName = !empty($cal)
+                   ? $cal->getDisplayName()
+                   : strval($this->l-t('Unknown Calendar').' '.$calendarId);
+
+      $result[$calendarId] = [
+        'name' => $displayName,
+        'events' => [],
+      ];
+    }
+    $result[-1] = [
+      'name' => strval(L::t('Miscellaneous Calendars')),
+      'events' => []
+    ];
+
+    foreach ($projectEvents as $event) {
+      $calId = array_search($event['calendarid'], $calendarIds);
+      if ($calId === false) {
+        $result[-1]['events'][] = $event;
+      } else {
+        $calId = $calendarIds[$calId];
+        $result[$calId]['events'][] = $event;
+      }
+    }
+
+    return $result;
+  }
+
+  /**Form an array with the most relevant event data. */
+  private function eventData($eventObject, $timezone = null, $locale = null)
+  {
+    $vcalendar = self::getVCalendar($eventObject);
+    $vobject = self::getVObject($vcalendar);
+
+    $times = $this->eventTimes($eventObject, $timezone, $locale);
+
+    $quoted = array('\,' => ',', '\;' => ';');
+    $summary = strtr($eventObject['summary'], $quoted);
+    $location = strtr($eventObject['location'], $quoted);
+    $description = strtr($eventObject['description'], $quoted);
+
+    return [
+      'times' => $times,
+      'summary' => $summary,
+      'location' => $location,
+      'description' => $description
+    ];
+  }
+
+  /**Return event data for given project id and calendar id. Used in
+   * an API call from Redaxo.
+   */
+  public function projectEventData($projectId, $calendarIds = null, $timezone = null, $locale = null)
+  {
+    $events = $this->events($projectId);
+
+    if ($calendarIds === null || $calendarIds === false) {
+      $calendarIds = $this->defaultCalendars(true);
+    } else if (!is_array($calendarIds)) {
+      $calendarIds = [ $calendarIds ];
+    }
+
+    $result = [];
+
+    foreach ($calendarIds as $calendarId) {
+      $cal = $this->calDavService->calendarById($calendarId);
+      $displayName = !empty($cal)
+                   ? $cal->getDisplayName()
+                   : strval($this->l->t('Unknown Calendar').' '.$calendarId);
+
+      $result[$calendarId] = [
+        'name' => $displayName,
+        'events' => [],
+      ];
+    }
+    foreach ($events as $event) {
+      $calId = array_search($event['calendarid'], $calendarIds);
+      if ($calId !== false) {
+        $calId = $calendarIds[$calId];
+        $result[$calId]['events'][] = $this->eventData($event, $timezone, $locale);
+      }
+    }
+
+    return array_values($result);
+  }
+
+  /**Export the given events in ICAL format. The events need not
+   * belong to the same calendar.
+   *
+   * @param[in] $events An array with 'calendarid' => 'eventuri'
+   *
+   * @param[in] $projectName Short project tag, will form part of the
+   * name of the calendar.
+   *
+   * @return A string with the ICAL data.
+   *
+   * @todo Include local timezone.
+   */
+  static public function exportEvents($events, $projectName)
+  {
+    $result = '';
+
+    $eol = "\r\n";
+
+    $result .= ""
+            ."BEGIN:VCALENDAR".$eol
+            ."VERSION:2.0".$eol
+            ."PRODID:Nextloud cafevdb " . \OCP\App::getAppVersion($this->appName()) . $eol
+            ."X-WR-CALNAME:" . $projectName . ' (' . $this->getConfigValue('orchestra') . ')' . $eol;
+
+    foreach ($events as $calendarId => $eventURI) {
+      $event = $this->calDavService->getCalendarObject($calendarId, $eventURI);
+      $vObject = VCalendarService::getVObject(CalendarObject::getVCalendar($event));
+      if (empty($vObject)) {
+        continue;
+      }
+      $result .= $vObject->serialize();
+    }
+    $result .= "END:VCALENDAR".$eol;
+
+    return $result;
   }
 
   /**Return the IDs of the default calendars.
@@ -274,7 +589,7 @@ class EventsService
     $categories = calendarService::getVCategories($vCalendar);
 
     // Now fetch all projects and their names ...
-    $projects = $this->projectsService->fetchAll();
+    $projects = $this->projectService->fetchAll();
 
     $result = false;
     // Do the sync. The categories stored in the event are
@@ -318,7 +633,7 @@ class EventsService
                             $calendarId,
                             $type)
   {
-    return $this->persist(new ProjectEvents()
+    return $this->persist((new ProjectEvents())
                           ->setProjectId($projectId)
                           ->setEventURI($eventURI)
                           ->setCalendarId($calendarId)

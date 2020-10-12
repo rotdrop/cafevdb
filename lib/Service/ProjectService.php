@@ -32,8 +32,11 @@ class ProjectService
 
   const DBTABLE = 'Projekte';
 
+  /** @var ConfigService */
+  private $configService;
+
   /** @var EntityManager */
-  protected $entityManager;
+  private $entityManager;
 
   public function __construct(
     ConfigService $configService,

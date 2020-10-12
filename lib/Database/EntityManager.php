@@ -44,6 +44,8 @@ class EntityManager extends EntityManagerDecorator
   /** @var \Doctrine\ORM\EntityManager */
   private $entityManager;
 
+  // @@TODO catch failures, allow construction without database for
+  // initial setup.
   public function __construct(ConfigService $configService)
   {
     $this->configService = $configService;

@@ -31,7 +31,8 @@ use OCP\Share\IShare;
 use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
 
-use OCA\CAFEVDB\Common\Util; // some static helpers
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
 
 /**Check for a usable configuration.
  */
@@ -39,8 +40,8 @@ class ConfigCheckService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var DatabaseFactory */
-  private $databaseFactory;
+  /** @var EntityManager */
+  private $entityManager;
 
   /** @var IRootFolder  */
   private $rootFolder;
@@ -62,7 +63,7 @@ class ConfigCheckService
 
   public function __construct(
     ConfigService $configService,
-    DatabaseFactory $databaseFactory,
+    EntityManager $entityManager,
     IRootFolder $rootFolder,
     \OCP\Share\IManager $shareManager,
     \OCP\Calendar\IManager $calendarManager,
@@ -72,7 +73,7 @@ class ConfigCheckService
     EventsService $eventsService
   ) {
     $this->configService = $configService;
-    $this->databaseFactory = $databaseFactory;
+    $this->entityManager = $entityManager;
     $this->rootFolder = $rootFolder;
     $this->shareManager = $shareManager;
     $this->calendarManager = $calendarManager;
@@ -80,7 +81,7 @@ class ConfigCheckService
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
 
-    $eventsService->playground();
+    //$eventsService->playground();
   }
 
   /**Return an array with necessary configuration items, being either
@@ -765,11 +766,11 @@ class ConfigCheckService
    *
    * @todo Initial database structure and migrations
    */
-  public function databaseAccessible($connectionParams = null)
+  public function databaseAccessible()
   {
     $connection = null;
 
-    $connection = $this->databaseFactory->getService($connectionParams);
+    $connection = $this->entityManager->getConnection();
 
     if (empty($connection)) {
       trigger_error('db connection empty');
