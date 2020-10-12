@@ -31,6 +31,8 @@ use OCA\CAFEVDB\Listener\UserLoggedInEventListener;
 use OCA\CAFEVDB\Listener\UserLoggedOutEventListener;
 use OCA\CAFEVDB\Listener\PasswordUpdatedEventListener;
 
+use OCA\CAFEVDB\Events\ProjectDeletedEvent;
+
 use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Database\EntityManager;
 
@@ -80,6 +82,14 @@ class Application extends App {
         $dispatcher->addListener(
             CalendarObjectDeletedEvent::class, function(CalendarObjectDeletedEvent $event) use ($container) {
                 $container->query(EventsService::class)->onCalendarObjectDeleted($event);
+            });
+        $dispatcher->addListener(
+            ProjectDeletedEvent::class, function(ProjectDeletedEvent $event) use ($container) {
+                $container->query(EventsService::class)->onProjectDeleted($event);
+            });
+        $dispatcher->addListener(
+            ProjectUpdateEvent::class, function(ProjectUpdateEvent $event) use ($container) {
+                $container->query(EventsService::class)->onProjectUpdated($event);
             });
 
         /* Doctrine DBAL needs a factory to be constructed. */
