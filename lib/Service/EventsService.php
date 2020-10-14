@@ -518,7 +518,7 @@ class EventsService
     $result .= ""
             ."BEGIN:VCALENDAR".$eol
             ."VERSION:2.0".$eol
-            ."PRODID:Nextloud cafevdb " . \OCP\App::getAppVersion($this->appName()) . $eol
+            ."PRODID:Nextloud cafevdb " . $this->appVersion() . $eol
             ."X-WR-CALNAME:" . $projectName . ' (' . $this->getConfigValue('orchestra') . ')' . $eol;
 
     foreach ($events as $calendarId => $eventURI) {

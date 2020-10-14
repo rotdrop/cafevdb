@@ -320,7 +320,7 @@ class VCalendarService
     }
 
     $vCalendar = new \Sabre\VObject\Component\VCalendar();
-    $vCalendar->PRODID = "Nextloud cafevdb " . \OCP\App::getAppVersion($this->appName());
+    $vCalendar->PRODID = "Nextloud cafevdb " . $this->appVersion();
     $vCalendar->VERSION = '2.0';
 
     $vTodo = $vCalendar->createComponent('VTODO');

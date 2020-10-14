@@ -746,7 +746,7 @@ class LegacyEventsController extends Controller {
    */
   private function generateEvent($uri, $vObject, $ownerId, $permissions)
   {
-    $return = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:Nextloud cafevdb " . \OCP\App::getAppVersion($this->appName()) . "\nX-WR-CALNAME:" . $uri . "\n";
+    $return = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:Nextloud cafevdb " . $this->appVersion() . "\nX-WR-CALNAME:" . $uri . "\n";
     $return .= $this->generateEventData($vObject, $ownerId, $permissions);
     $return .= "END:VCALENDAR";
     return $this->fixLineBreaks($return);

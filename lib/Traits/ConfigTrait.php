@@ -38,6 +38,11 @@ trait ConfigTrait {
     return $this->configService->getAppName();
   }
 
+  protected function appVersion()
+  {
+    return \OCP\App::getAppVersion($this->appName());
+  }
+
   protected function appConfig()
   {
     return $this->configService->getAppConfig();
