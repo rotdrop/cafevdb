@@ -11,8 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Musiker")
  * @ORM\Entity
  */
-class Musiker
+class Musiker implements ArrayAccess
 {
+    use ArrayTrait;
+
     /**
      * @var int
      *
