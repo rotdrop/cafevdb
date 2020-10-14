@@ -30,6 +30,18 @@ class Util
 
   private static $externalScripts = [];
 
+  /**Normalize spaces and commas after and before spaces. */
+  public static function normalizeSpaces($name)
+  {
+    /* Normalize name and translation */
+    $name = str_replace("\xc2\xa0", "\x20", $name);
+    $name = trim($name);
+    $name = preg_replace('/\s*,([^\s])/', ', $1', $name);
+    $name = preg_replace('/\s+/', ' ', $name);
+
+    return $name;
+  }
+
   /**Wrapper around htmlspecialchars(); avoid double encoding, standard
    * options, UTF-8 for stone-age PHP versions.
    */
