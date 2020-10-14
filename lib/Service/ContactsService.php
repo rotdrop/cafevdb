@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Sabre\VObject\Component\VCard;
+
 use OCA\DAV\Events\AddressBookUpdatedEvent;
 use OCA\DAV\Events\AddressBookDeletedEvent;
 
@@ -43,12 +45,37 @@ class ContactsService
 
   const VCARD_VERSION = '3.0';
 
-  __construct(
+  /** @var GeoCodingService */
+  private $geoCodingService;
+
+  public function __construct(
     ConfigService $configService,
-    EntityManager $entityManager
+    EntityManager $entityManager,
+    GeoCodingService $geoCodingService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
+    $this->geoCodingService = $geoCodingService;
+  }
+
+  public function playground() {
+    $cardData = <<<EOTEOT
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Sabre//Sabre VObject 4.3.0//EN
+UID:567e32b8-a10f-103a-8921-93d3d3897fe6
+FN:Heine\, Claus-Justus
+N:Claus-Justus;Heine\,;;;
+UID:567e32b8-a10f-103a-8921-93d3d3897fe6
+CLOUD:567e32b8-a10f-103a-8921-93d3d3897fe6@localhost/nextcloud-git
+END:VCARD
+EOTEOT;
+
+    trigger_error($cardData);
+    $musician = $this->import($cardData);
+    trigger_error(print_r($musician, true));
+    $vCalendar = $this->export($musician);
+    trigger_error($vCalendar->serialize());
   }
 
   /**Import the given vCard into the musician data-base. This is
@@ -217,9 +244,9 @@ class ContactsService
               $entity[$fields[$idx]] = $value;
             }
           }
-          $languages = GeoCoding::languages(true);
+          $languages = $this->geoCodingService->languages(true);
           foreach($languages as $language) {
-            $countries = GeoCoding::countryNames($language);
+            $countries = $this->geoCodingService->countryNames($language);
             $iso = array_search($entity['Land'], $countries);
             if ($iso !== false) {
               $entity['Land'] = $iso;
@@ -264,7 +291,7 @@ class ContactsService
       }
 
     } catch (\Exception $e) {
-      echo __METHOD__.": ". "Error parsing card-data.";
+      $this->logError(__METHOD__.": ". "Error parsing card-data " . $e->getMessage() . " " . $e->getTraceAsString());
     }
 
     return $entity;
@@ -282,7 +309,7 @@ class ContactsService
   public function export($musician, $version = self::VCARD_VERSION)
   {
     $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
-    $uuid = isset($musician['UUID']) ? $musician['UUID'] : Util::generateUUID();
+    $uuid = isset($musician['UUID']) ? $musician['UUID'] : $this->generateUUID();
     $categories = array('cafevdb');
     if (isset($musician['Instruments'])) {
       $categories =  array_merge($categories, explode(',', $musician['Instruments']));
@@ -293,7 +320,7 @@ class ContactsService
     $categories = array_map('trim', $categories);
     $prodid = '-//CAF e.V.//NONSGML ' . $this->appName() . ' ' . $this->appVersion() . '//EN';
 
-    $vcard = new \OCA\Contacts\VObject\VCard(
+    $vcard = new VCard(
       [
         'VERSION' => self::VCARD_VERSION,
         'PRODID' => $prodid,
@@ -319,7 +346,7 @@ class ContactsService
     if ($musician['Aktualisiert'] != 0) {
       $vcard->add('REV', (new \DateTime($musician['Aktualisiert']))->format(\DateTime::W3C));
     }
-    $countryNames = GeoCoding::countryNames('en');
+    $countryNames = $this->geoCodingService->countryNames('en');
     if (!isset($countryNames[$musician['Land']])) {
       $country = null;
     } else {
@@ -351,7 +378,7 @@ class ContactsService
       }
     } else {
       $musicianId = isset($musician['MusikerId']) ? $musician['MusikerId'] : $musician['Id'];
-      $inlineImage = new InlineImage('Musiker');
+      $inlineImage = new InlineImageService($this->configService /* 'Musiker' */);
       $photo = $inlineImage->fetch($musicianId);
     }
     if (isset($photo['Data']) && $photo['Data']) {

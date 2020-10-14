@@ -236,6 +236,10 @@ trait ConfigTrait {
     return $this->configService->localeCountryNames($locale);
   }
 
+  protected function generateUUID() {
+    \Sabre\VObject\UUIDUtil::getUUID();
+  }
+
   /****************************************************************************
    *
    * short-cuts

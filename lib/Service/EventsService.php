@@ -802,6 +802,7 @@ class EventsService
     $this->logError('TodoError' . print_r($errors, true));
     $vCalendar = $this->vCalendarService->createVCalendarFromRequest($taskData, VCalendarService::VTODO);
     $this->logError('VTODO VCalendar entry' . print_r($vCalendar, true));
+
   }
 
 }

@@ -71,6 +71,7 @@ class ConfigCheckService
     CalDavService $calDavService,
     CardDavService $cardDavService,
     EventsService $eventsService
+    , GeoCodingService $geoCodingService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -81,7 +82,8 @@ class ConfigCheckService
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
 
-    //$eventsService->playground();
+    $contactsService = new ContactsService($configService, $entityManager, $geoCodingService);
+    $contactsService->playground();
   }
 
   /**Return an array with necessary configuration items, being either
