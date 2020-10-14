@@ -41,8 +41,6 @@ class EventsService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const DBTABLE = 'ProjectEvents';
-
   /** @var EntityManager */
   private $entityManager;
 
@@ -131,7 +129,7 @@ class EventsService
     }
 
     $this->queryBuilder()
-         ->delete(self::DBTABLE, 'e')
+         ->delete(ProjectEvents::class, 'e')
          ->where('e.CalendarId = :calendarId')
          ->setParameter('calendarId', $event->getCalendarId())
          ->getQuery()
