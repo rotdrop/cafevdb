@@ -6,9 +6,8 @@ trait ArrayTrait {
     private $keys;
 
     public function __construct() {
-        echo "hallo";
-        $this->keys = (new ReflectionClass(get_class($this)))
-                    ->getProperties(ReflectionProperty::IS_PRIVATE);
+        $this->keys = (new \ReflectionClass(get_class($this)))
+                    ->getProperties(\ReflectionProperty::IS_PRIVATE);
 
         $this->keys = array_map(function($property) {
             $doc = $property->getDocComment();
@@ -24,8 +23,9 @@ trait ArrayTrait {
     }
 
     public function offsetExists($offset):bool {
+        $offset = strtolower($offset);
         $method = self::methodName('get', $offset);
-        return in_array($offset, $this->keys) && $this->$method() !== null;
+        return in_array($offset, $this->keys);
     }
 
     public function offsetGet($offset) {
@@ -42,7 +42,7 @@ trait ArrayTrait {
             $method = self::methodName('set', $offset);
             $this->$method($value);
         } else {
-            throw new Exception("$offset does not exist");
+            throw new \Exception("$offset does not exist");
         }
     }
 
@@ -52,6 +52,6 @@ trait ArrayTrait {
     }
 
     private static function methodName($prefix, $offset) {
-        return $prefix . ucfirst(strtolower($prefix));
+        return $prefix . ucfirst(strtolower($offset));
     }
 }

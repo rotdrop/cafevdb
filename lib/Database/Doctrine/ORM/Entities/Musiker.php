@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Musiker")
  * @ORM\Entity
  */
-class Musiker implements ArrayAccess
+class Musiker implements \ArrayAccess
 {
     use ArrayTrait;
 
