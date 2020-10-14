@@ -4,6 +4,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * GeoPostalCodes
@@ -11,8 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="GeoPostalCodes", uniqueConstraints={@ORM\UniqueConstraint(name="Country", columns={"Country", "PostalCode", "Name"})})
  * @ORM\Entity
  */
-class GeoPostalCodes
+class GeoPostalCodes implements \ArrayAccess
 {
+    use ArrayTrait;
+    use FactoryTrait;
+
     /**
      * @var int
      *
@@ -39,42 +43,21 @@ class GeoPostalCodes
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=180, nullable=false)
+     * @ORM\Column(name="Name", type="string", length=650, nullable=false)
      */
     private $name;
 
     /**
-     * @var string|null
+     * @var double
      *
-     * @ORM\Column(name="en", type="string", length=180, nullable=true)
-     */
-    private $en;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="fr", type="string", length=180, nullable=true)
-     */
-    private $fr;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="de", type="string", length=180, nullable=true)
-     */
-    private $de;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="Latitude", type="integer", nullable=false)
+     * @ORM\Column(name="Latitude", type="float", nullable=false)
      */
     private $latitude;
 
     /**
-     * @var int
+     * @var double
      *
-     * @ORM\Column(name="Longitude", type="integer", nullable=false)
+     * @ORM\Column(name="Longitude", type="float", nullable=false)
      */
     private $longitude;
 
@@ -85,7 +68,15 @@ class GeoPostalCodes
      */
     private $updated = 'CURRENT_TIMESTAMP';
 
+    /**
+     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslations", mappedBy="postalcode")
+     */
+    private $translations;
 
+    public function __construct() {
+        $this->arrayCTOR();
+        $this->translations = new ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -170,78 +161,6 @@ class GeoPostalCodes
     }
 
     /**
-     * Set en.
-     *
-     * @param string|null $en
-     *
-     * @return GeoPostalCodes
-     */
-    public function setEn($en = null)
-    {
-        $this->en = $en;
-
-        return $this;
-    }
-
-    /**
-     * Get en.
-     *
-     * @return string|null
-     */
-    public function getEn()
-    {
-        return $this->en;
-    }
-
-    /**
-     * Set fr.
-     *
-     * @param string|null $fr
-     *
-     * @return GeoPostalCodes
-     */
-    public function setFr($fr = null)
-    {
-        $this->fr = $fr;
-
-        return $this;
-    }
-
-    /**
-     * Get fr.
-     *
-     * @return string|null
-     */
-    public function getFr()
-    {
-        return $this->fr;
-    }
-
-    /**
-     * Set de.
-     *
-     * @param string|null $de
-     *
-     * @return GeoPostalCodes
-     */
-    public function setDe($de = null)
-    {
-        $this->de = $de;
-
-        return $this;
-    }
-
-    /**
-     * Get de.
-     *
-     * @return string|null
-     */
-    public function getDe()
-    {
-        return $this->de;
-    }
-
-    /**
      * Set latitude.
      *
      * @param int $latitude
@@ -311,5 +230,15 @@ class GeoPostalCodes
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * Get linked GeoPostalCodeTranslations entity.
+     *
+     * @return ArrayCollection[]
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
     }
 }

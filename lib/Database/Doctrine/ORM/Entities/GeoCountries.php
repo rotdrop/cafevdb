@@ -11,8 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="GeoCountries")
  * @ORM\Entity
  */
-class GeoCountries
+class GeoCountries implements \ArrayAccess
 {
+    use ArrayTrait;
+    use FactoryTrait;
+
     /**
      * @var string
      *
@@ -23,41 +26,36 @@ class GeoCountries
 
     /**
      * @var string
+     * @ORM\Id
      *
-     * @ORM\Column(name="Continent", type="string", length=4, nullable=false)
+     * @ORM\Column(name="Target", type="string", length=2, nullable=false)
      */
-    private $continent;
+    private $target;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NativeName", type="string", length=180, nullable=false)
+     * @ORM\Column(name="Data", type="string", length=1024, nullable=false)
      */
-    private $nativename;
+    private $data;
+
+    public function __construct() {
+        $this->arrayCTOR();
+    }
 
     /**
-     * @var string
+     * Set iso.
      *
-     * @ORM\Column(name="en", type="string", length=180, nullable=false)
-     */
-    private $en;
-
-    /**
-     * @var string|null
+     * @param string $iso
      *
-     * @ORM\Column(name="de", type="string", length=180, nullable=true)
+     * @return GeoCountries
      */
-    private $de;
+    public function setIso($iso)
+    {
+        $this->iso = $iso;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="fr", type="string", length=180, nullable=true)
-     */
-    private $fr;
-
-
-
+        return $this;
+    }
     /**
      * Get iso.
      *
@@ -71,120 +69,48 @@ class GeoCountries
     /**
      * Set continent.
      *
-     * @param string $continent
+     * @param string $target
      *
      * @return GeoCountries
      */
-    public function setContinent($continent)
+    public function setTarget($target)
     {
-        $this->continent = $continent;
+        $this->target = $target;
 
         return $this;
     }
 
     /**
-     * Get continent.
+     * Get target.
      *
      * @return string
      */
-    public function getContinent()
+    public function getTarget()
     {
-        return $this->continent;
+        return $this->target;
     }
 
     /**
-     * Set nativename.
+     * Set data.
      *
-     * @param string $nativename
+     * @param string $data
      *
      * @return GeoCountries
      */
-    public function setNativename($nativename)
+    public function setData($data)
     {
-        $this->nativename = $nativename;
+        $this->data = $data;
 
         return $this;
     }
 
     /**
-     * Get nativename.
+     * Get data.
      *
      * @return string
      */
-    public function getNativename()
+    public function getData()
     {
-        return $this->nativename;
-    }
-
-    /**
-     * Set en.
-     *
-     * @param string $en
-     *
-     * @return GeoCountries
-     */
-    public function setEn($en)
-    {
-        $this->en = $en;
-
-        return $this;
-    }
-
-    /**
-     * Get en.
-     *
-     * @return string
-     */
-    public function getEn()
-    {
-        return $this->en;
-    }
-
-    /**
-     * Set de.
-     *
-     * @param string|null $de
-     *
-     * @return GeoCountries
-     */
-    public function setDe($de = null)
-    {
-        $this->de = $de;
-
-        return $this;
-    }
-
-    /**
-     * Get de.
-     *
-     * @return string|null
-     */
-    public function getDe()
-    {
-        return $this->de;
-    }
-
-    /**
-     * Set fr.
-     *
-     * @param string|null $fr
-     *
-     * @return GeoCountries
-     */
-    public function setFr($fr = null)
-    {
-        $this->fr = $fr;
-
-        return $this;
-    }
-
-    /**
-     * Get fr.
-     *
-     * @return string|null
-     */
-    public function getFr()
-    {
-        return $this->fr;
+        return $this->data;
     }
 }

@@ -5,7 +5,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 trait ArrayTrait {
     private $keys;
 
-    public function __construct() {
+    /**Has to be called explicitly by the using class. */
+    private function arrayCTOR() {
         $this->keys = (new \ReflectionClass(get_class($this)))
                     ->getProperties(\ReflectionProperty::IS_PRIVATE);
 

@@ -6,23 +6,23 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GeoContinents
+ * GeoPostalCodes
  *
- * @ORM\Table(name="GeoContinents")
+ * @ORM\Table(name="GeoPostalCodeTranslations")
  * @ORM\Entity
  */
-class GeoContinents implements \ArrayAccess
+class GeoPostalCodeTranslations implements \ArrayAccess
 {
     use ArrayTrait;
     use FactoryTrait;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="Code", type="string", length=2, nullable=false)
+     * @ORM\Column(name="PostalCodeId", type="integer", nullable=false)
      * @ORM\Id
      */
-    private $code;
+    private $postalcodeid;
 
     /**
      * @var string
@@ -39,28 +39,38 @@ class GeoContinents implements \ArrayAccess
      */
     private $translation;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="GeoPostalCodes", inversedBy="translations")
+     * @ORM\JoinColumn(name="PostalCodeId", referencedColumnName="Id")
+     */
+    private $postalcode;
+
     public function __construct() {
         $this->arrayCTOR();
     }
 
     /**
-     * Get code.
+     * Set postalcodeid.
      *
-     * @return string
+     * @param int $postalCodeId
+     *
+     * @return GeoPostalCodeTranslations
      */
-    public function setCode()
+    public function setPostalcodeid($postalcodeid)
     {
-        return $this->code;
+        $this->postalcodeid = $postalcodeid;
+
+        return $this;
     }
 
     /**
-     * Get code.
+     * Get postalcodeid.
      *
-     * @return string
+     * @return int
      */
-    public function getCode()
+    public function getPostalcodeid()
     {
-        return $this->code;
+        return $this->postalcodeid;
     }
 
     /**
@@ -68,7 +78,7 @@ class GeoContinents implements \ArrayAccess
      *
      * @param string $target
      *
-     * @return GeoContinents
+     * @return GeoPostalCodeTranslations
      */
     public function setTarget($target)
     {
@@ -90,9 +100,9 @@ class GeoContinents implements \ArrayAccess
     /**
      * Set translation.
      *
-     * @param string $translatoin
+     * @param string $translation
      *
-     * @return GeoContinents
+     * @return GeoPostalCodeTranslations
      */
     public function setTranslation($translation)
     {
@@ -109,5 +119,15 @@ class GeoContinents implements \ArrayAccess
     public function getTranslation()
     {
         return $this->translation;
+    }
+
+    /**
+     * Get linked GeoPostalCodes entity.
+     *
+     * @return string
+     */
+    public function getPostalcode()
+    {
+        return $this->postalcode;
     }
 }
