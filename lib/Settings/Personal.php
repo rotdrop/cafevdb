@@ -150,7 +150,8 @@ class Personal implements ISettings {
             'financecalendar' => $this->getConfigValue('financecalendar', $this->l->t('Finance')),
             'eventduration' => $this->getConfigValue('eventduration', '180'),
 
-            'sharedaddressbook' => $this->getConfigValue('sharedaddressbook', $this->l->t('Contacts')),
+            'generaladdressbook' => $this->getConfigValue('generaladdressbook', $this->l->t('Miscellaneous')),
+            'musiciansaddressbook' => $this->getConfigValue('musisiciansaddressbook', $this->l->t('Musicians')),
 
             'sharedfolder' => $this->getConfigValue('sharedfolder',''),
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),
