@@ -22,6 +22,7 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+use Doctrine\Common\Collections\Criteria;
 use OCA\CAFEVDB\Database\EntityManager;
 
 /**Database EntityManager short-cuts.
@@ -42,6 +43,25 @@ trait EntityManagerTrait {
   {
     $this->entityClassName = $entityClassName;
     $this->databaseRepository = null;
+  }
+
+  private function getDatabaseRepository($entityClassName = null)
+  {
+    if ($entityClassName !== $this->entityClassName) {
+      $this->setDatabaseRepository($entityClassName);
+    }
+    if (empty($this->databaseRepository)) {
+      $this->databaseRepository = $this->entityManager->getRepository($this->entityClassName);
+    }
+    return $this->databaseRepository;
+  }
+
+  private function createNamedQuery($name) {
+    return $this->entityManager->createNamedQuery($name);
+  }
+
+  private function createQuery($dql) {
+    return $this->entityManager->createQuery($dql);
   }
 
   private function queryBuilder() {
@@ -69,43 +89,69 @@ trait EntityManagerTrait {
     return $this->entityManager->flush($entity);
   }
 
-  private function findAll()
+  private function findAll($entityClassName = null)
   {
-    if (empty($this->databaseRepository)) {
-      $this->databaseRepository = $this->entityManager->getRepository($this->entityClassName);
-    }
-    return $this->databaseRepository->findAll();
+    return $this->getDatabaseRepository($entityClassName)->findAll();
   }
 
   private function find($id, $lockMode = null, $lockVersion = null) {
-    if (empty($this->databaseRepository)) {
-      $this->databaseRepository = $this->entityManager->getRepository($this->entityClassName);
-    }
-    return $this->databaseRepository->find($id, $lockMode, $lockVersion);
+    $this->getDatabaseRepository()->find($id, $lockMode, $lockVersion);
   }
 
   private function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
   {
-    if (empty($this->databaseRepository)) {
-      $this->databaseRepository = $this->entityManager->getRepository($this->entityClassName);
-    }
-    return $this->databaseRepository->findBy($criteria, $orderBy, $limit, $offset);
+    $this->getDatabaseRepository()->findBy($criteria, $orderBy, $limit, $offset);
   }
 
   private function findOneBy(array $criteria, array $orderBy = null)
   {
-    if (empty($this->databaseRepository)) {
-      $this->databaseRepository = $this->entityManager->getRepository($this->entityClassName);
-    }
-    return $this->databaseRepository->findOneBy($criteria, $orderBy);
+    $this->getDatabaseRepository()->findOneBy($criteria, $orderBy);
   }
 
-  private function count(array $criteria)
+  /**
+   * Select all elements from a selectable that match the expression and
+   * return a new collection containing these elements.
+   *
+   * @param \Doctrine\Common\Collections\Criteria $criteria
+   *
+   * @return \Doctrine\Common\Collections\Collection
+   */
+  private function matching(Criteria $criteria, $entityClassName = null)
   {
-    if (empty($this->databaseRepository)) {
-      $this->databaseRepository = $this->entityManager->getRepository($this->entityClassName);
+    $this->getDatabaseRepository($entityClassName)->matching($criteria);
+  }
+
+  private static function criteria() {
+    return new Criteria();
+  }
+
+  private function count(array $criteria, $entityClassName = null)
+  {
+    $this->getDatabaseRepository($entityClassName)->count($criteria);
+  }
+
+  /**
+   * Merges the state of a detached entity into the persistence context
+   * of this EntityManager and returns the managed copy of the entity.
+   * The entity passed to merge will not become associated/managed with this EntityManager.
+   *
+   * @param object $entity The detached entity to merge into the persistence context.
+   *
+   * @return object The managed copy of the entity.
+   *
+   * @throws ORMInvalidArgumentException
+   * @throws ORMException
+   */
+  private function merge($entity) {
+    $this->entityManager->merge($entity);
+  }
+
+  private function columnNames($entityClassName = null) {
+    empty($entityClassName) && ($entityClassName = $this->entityClassName);
+    if (empty($entityClassName)) {
+      return [];
     }
-    return $this->databaseRepository->count($criteria);
+    return $this->entityManager->getClassMetadata($entityClassName)->getColumnNames();
   }
 }
 
