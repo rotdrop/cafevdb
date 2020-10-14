@@ -253,6 +253,11 @@ trait ConfigTrait {
              || empty($this->getConfigValue('dbserver')));
   }
 
+  protected function log(int $level, string $message, array $context = [])
+  {
+    return $this->configService->log($level, $message, $context);
+  }
+
   protected function logError(string $message, array $context = []) {
     $this->configService->error($message, $context);
   }
