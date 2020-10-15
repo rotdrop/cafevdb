@@ -53,11 +53,13 @@ appstore_package_name=$(appstore_build_directory)/$(app_name)
 BASH=$(shell which bash 2> /dev/null)
 SHELL:=$(BASH)
 npm=$(shell which npm 2> /dev/null)
-COMPOSER=$(shell which composer 2> /dev/null)
-ifeq (, $(COMPOSER))
+COMPOSER_SYSTEM=$(shell which composer 2> /dev/null)
+ifeq (, $(COMPOSER_SYSTEM))
 COMPOSER=php $(build_tools_directory)/composer.phar
+else
+COMPOSER=$(COMPOSER_SYSTEM)
 endif
-COMPOSER_OPTIONS=--prefer-dist
+COMPOSER_OPTIONS=-vvvvvv --prefer-dist
 
 all: build
 
@@ -70,7 +72,7 @@ stamp.composer-core-versions: composer.lock
 composer.lock: DRY:=
 composer.lock: composer.json
 	rm -f composer.lock
-	$(COMPOSER) install $(COMPOSER_OPTINS)
+	$(COMPOSER) install $(COMPOSER_OPTIONS)
 	env DRY=$(DRY) dev-scripts/tweak-composer-jons.sh || {\
  rm -f composer.lock;\
  $(COMPOSER) install $(COMPOSER_OPTIONS);\
@@ -91,11 +93,10 @@ endif
 
 .PHONY: provide-composer
 provide-composer:
-ifeq (, $(shell which composer 2> /dev/null))
+ifeq (, $(COMPOSER_SYSTEM))
 	@echo "No composer command available, downloading a copy from the web"
 	mkdir -p $(build_tools_directory)
-	curl -sS https://getcomposer.org/installer | php
-	mv composer.phar $(build_tools_directory)
+	cd $(build_tools_directory) && curl -sS https://getcomposer.org/installer | php
 endif
 
 # Installs and updates the composer dependencies. If composer is not installed
