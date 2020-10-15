@@ -6,8 +6,8 @@
  * @author Claus-Justus Heine
  * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * This library is free software; you can redistribute it and/or1
+ * modify it under th52 terms of the GNU GENERAL PUBLIC LICENSE
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or any later version.
  *
@@ -143,11 +143,14 @@ class GeoCodingService
         'Name' => $location->getName(),
       ];
 
-
-
-      $orExpr[] = $expr->like($language, $name);
-      //$query .= " OR `Name` LIKE '%".$name."%'";
-      //$query .= " OR `".$language."` LIKE '%".$name."%'";
+      // and now it comes: if I understand this correctly the
+      // associations of ORM will seemlessly provide the array of all
+      // translations.
+      foreach ($locations->getTranslations() as $translation) {
+        // so $translation is now an instance of
+        // GeoPostalCodeTranslations ?
+        $location[$translation->getTarget()] = $translation->getTranslation();
+      }
     }
 
   }
