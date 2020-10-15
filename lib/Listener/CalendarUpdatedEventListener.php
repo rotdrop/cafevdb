@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,37 +22,28 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\User\Events\PasswordUpdatedEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IGroupManager;
+use OCA\DAV\Events\CalendarUpdatedEvent as HandledEvent;
 
-use OCA\CAFEVDB\Common\Config;
+use OCA\CAFEVDB\Service\EventsService;
 
-class PasswordUpdatedEventListener implements IEventListener
+class CalendarUpdatedEventListener implements IEventListener
 {
   const EVENT = HandledEvent::class;
 
-  /** @var ISubAdmin */
-  private $groupManager;
+  /** @var EventsService */
+  private $eventsService;
 
-  public function __construct(IGroupManager $groupManager) {
-    $this->groupManager = $groupManager;
+  public function __construct(EventsService $eventsService) {
+    $this->eventsService = $eventsService;
   }
 
   public function handle(Event $event): void {
     if (!($event instanceOf HandledEvent)) {
       return;
     }
-    $groupIdf = Config::getAppValue('usergroup', '');
-    $user = $event->getUser();
-    $userId = $user->getUID();
-    $password = $event->getPassword();
-    $recoveryPassword = $event->getRecoveryPassword();
-
-    if (!empty($groupId) && $this->groupManager->isInGroup($userId, $groupId)) {
-      Config::recryptEncryptionKey($userId, $password);
-    }
+    $this->eventsService->onCalendarUpdated($event);
   }
 }
 

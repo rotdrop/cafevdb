@@ -22,8 +22,8 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\User\Events\UserLoggedInEvent;
-use OCP\User\Events\UserLoggedInWithCookieEvent;
+use OCP\User\Events\UserLoggedInEvent as Event1;
+use OCP\User\Events\UserLoggedInWithCookieEvent as Event2;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IGroupManager;
@@ -33,6 +33,8 @@ use OCA\CAFEVDB\Service\EncryptionService;
 
 class UserLoggedInEventListener implements IEventListener
 {
+  const EVENT = [ Event1::class, Event2::class ];
+
   /** @var string */
   private $appName;
 
@@ -54,7 +56,7 @@ class UserLoggedInEventListener implements IEventListener
   }
 
   public function handle(Event $event): void {
-    if (!($event instanceOf UserLoggedInEvent) && !($event instanceOf UserLoggedInWithCookieEvent)) {
+    if (!($event instanceOf Event1 && !($event instanceOf Event2))) {
       return;
     }
     $groupId = $this->encryptionService->getAppValue('usergroup');

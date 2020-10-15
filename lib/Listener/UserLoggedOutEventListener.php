@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\User\Events\UserLoggedOutEvent;
+use OCP\User\Events\UserLoggedOutEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IGroupManager;
@@ -31,6 +31,8 @@ use OCA\CAFEVDB\Common\Config;
 
 class UserLoggedOutEventListener implements IEventListener
 {
+  const EVENT = HandledEvent::class;
+
   /** @var ISubAdmin */
   private $groupManager;
 
@@ -39,7 +41,7 @@ class UserLoggedOutEventListener implements IEventListener
   }
 
   public function handle(Event $event): void {
-    if (!($event instanceOf UserLoggedOutEvent)) {
+    if (!($event instanceOf HandledEvent)) {
       return;
     }
     // @@TODO check if we want this.

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,15 +20,34 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if ((@include_once __DIR__ . '/../vendor/autoload.php')===false) {
-        throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
+namespace OCA\CAFEVDB\Listener;
+
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
+use OCA\CAFEVDB\Events\PojectDeletedEvent as HandledEvent;
+
+use OCA\CAFEVDB\Service\EventsService;
+
+class ProjectDeletedEventListener implements IEventListener
+{
+  const EVENT = HandledEvent::class;
+
+  /** @var EventsService */
+  private $eventsService;
+
+  public function __construct(EventsService $eventsService) {
+    $this->eventsService = $eventsService;
+  }
+
+  public function handle(Event $event): void {
+    if (!($event instanceOf HandledEvent)) {
+      return;
+    }
+    $this->eventsService->onProjectDeleted($event);
+  }
 }
 
-$dispatcher = \OC::$server->getEventDispatcher();
-
-$dispatcher->addListener(
-    OCP\AppFramework\Http\TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN,
-    function() {
-        OCA\CAFEVDB\Common\Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
-    }
-);
+// Local Variables: ***
+// c-basic-offset: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***

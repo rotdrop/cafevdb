@@ -11,27 +11,35 @@
 
 namespace OCA\CAFEVDB\AppInfo;
 
+/**********************************************************
+ *
+ * Bootstrap
+ *
+ */
+
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\Bootstrap\IBootContext;
+
 use OCP\AppFramework\App;
 use OCP\IL10N;
+
+/*
+ *
+ **********************************************************
+ *
+ * Events and listeners
+ *
+ */
+
+use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\EventDispatcher\Event;
 
-use OCP\User\Events\UserLoggedInEvent;
-use OCP\User\Events\UserLoggedOutEvent;
-use OCP\User\Events\PasswordUpdatedEvent;
-
-use OCA\DAV\Events\CalendarUpdatedEvent;
-use OCA\DAV\Events\CalendarDeletedEvent;
-
-use OCA\DAV\Events\CalendarObjectCreatedEvent;
-use OCA\DAV\Events\CalendarObjectDeletedEvent;
-use OCA\DAV\Events\CalendarObjectUpdatedEvent;
-
-use OCA\CAFEVDB\Listener\UserLoggedInEventListener;
-use OCA\CAFEVDB\Listener\UserLoggedOutEventListener;
-use OCA\CAFEVDB\Listener\PasswordUpdatedEventListener;
-
-use OCA\CAFEVDB\Events\ProjectDeletedEvent;
+/*
+ *
+ **********************************************************
+ *
+ */
 
 use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -41,61 +49,52 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Middleware\SubadminMiddleware;
 use OCA\CAFEVDB\Middleware\GroupMemberMiddleware;
 
-class Application extends App {
+class Application extends App implements IBootstrap {
 
     public function __construct (array $urlParams=array()) {
         parent::__construct('cafevdb', $urlParams);
+    }
 
+    // Called later than "register".
+    public function boot(IBootContext $context): void
+    {
         //trigger_error("cafevdb app");
 
-        $container = $this->getContainer();
-
-        // Register Middleware
-        $container->registerAlias('SubadminMiddleware', SubadminMiddleware::class);
-        $container->registerMiddleWare('SubadminMiddleware');
-        $container->registerAlias('GroupMemberMiddleware', GroupMemberMiddleware::class);
-        $container->registerMiddleWare('GroupMemberMiddleware');
+        $container = $context->getAppContainer();
 
         /* @var IEventDispatcher $eventDispatcher */
         $dispatcher = $container->query(IEventDispatcher::class);
-        $dispatcher->addServiceListener(UserLoggedInEvent::class, UserLoggedInEventListener::class);
-        $dispatcher->addServiceListener(UserLoggedOutEvent::class, UserLoggedOutEventListener::class);
-        $dispatcher->addServiceListener(PasswordUpdatedEvent::class, PasswordUpdatedEventListener::class);
 
-        /* EventsServices listener */
+        // @@TODO remove
         $dispatcher->addListener(
-            CalendarUpdatedEvent::class, function(CalendarUpdatedEvent $event) use ($container) {
-                $container->query(EventsService::class)->onCalendarUpdated($event);
-            });
-        $dispatcher->addListener(
-            CalendarDeletedEvent::class, function(CalendarDeletedEvent $event) use ($container) {
-                $container->query(EventsService::class)->onCalendarDeleted($event);
-            });
-        $dispatcher->addListener(
-            CalendarObjectCreatedEvent::class, function(CalendarObjectCreatedEvent $event) use ($container) {
-                $container->query(EventsService::class)->onCalendarObjectCreated($event);
-            });
-        $dispatcher->addListener(
-            CalendarObjectUpdatedEvent::class, function(CalendarObjectUpdatedEvent $event) use ($container) {
-                $container->query(EventsService::class)->onCalendarObjectUpdated($event);
-            });
-        $dispatcher->addListener(
-            CalendarObjectDeletedEvent::class, function(CalendarObjectDeletedEvent $event) use ($container) {
-                $container->query(EventsService::class)->onCalendarObjectDeleted($event);
-            });
-        $dispatcher->addListener(
-            ProjectDeletedEvent::class, function(ProjectDeletedEvent $event) use ($container) {
-                $container->query(EventsService::class)->onProjectDeleted($event);
-            });
-        $dispatcher->addListener(
-            ProjectUpdateEvent::class, function(ProjectUpdateEvent $event) use ($container) {
-                $container->query(EventsService::class)->onProjectUpdated($event);
-            });
+            \OCP\AppFramework\Http\TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN,
+            function() {
+                OCA\CAFEVDB\Common\Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
+            }
+        );
+    }
+
+    // Called earlier than boot, so anything initialized in the
+    // "boot()" method must not be used here.
+    public function register(IRegistrationContext $context): void
+    {
+        if ((@include_once __DIR__ . '/../../vendor/autoload.php')===false) {
+            throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
+        }
 
         /* Doctrine DBAL needs a factory to be constructed. */
-        $container->registerService(\OCA\CAFEVDB\Database\Connection::class, function($c) {
+        $context->registerService(\OCA\CAFEVDB\Database\Connection::class, function($c) {
             return $c->query(EntityManager::class)->getConnection();
         });
+
+        // Register Middleware
+        $context->registerServiceAlias('SubadminMiddleware', SubadminMiddleware::class);
+        $context->registerMiddleWare('SubadminMiddleware');
+        $context->registerServiceAlias('GroupMemberMiddleware', GroupMemberMiddleware::class);
+        $context->registerMiddleWare('GroupMemberMiddleware');
+
+        // Register listeners
+        ListenerRegistration::register($context);
     }
 
 }
