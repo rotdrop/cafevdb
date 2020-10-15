@@ -22,7 +22,7 @@ class GeoPostalCodeTranslations implements \ArrayAccess
      * @ORM\Column(name="PostalCodeId", type="integer", nullable=false)
      * @ORM\Id
      */
-    private $postalcodeid;
+    private $postalCodeId;
 
     /**
      * @var string
@@ -43,34 +43,34 @@ class GeoPostalCodeTranslations implements \ArrayAccess
      * @ORM\ManyToOne(targetEntity="GeoPostalCodes", inversedBy="translations")
      * @ORM\JoinColumn(name="PostalCodeId", referencedColumnName="Id")
      */
-    private $postalcode;
+    private $postalCode;
 
     public function __construct() {
         $this->arrayCTOR();
     }
 
     /**
-     * Set postalcodeid.
+     * Set postalCodeId.
      *
      * @param int $postalCodeId
      *
      * @return GeoPostalCodeTranslations
      */
-    public function setPostalcodeid($postalcodeid)
+    public function setPostalCodeId($postalCodeId)
     {
-        $this->postalcodeid = $postalcodeid;
+        $this->postalCodeId = $postalCodeId;
 
         return $this;
     }
 
     /**
-     * Get postalcodeid.
+     * Get postalCodeId.
      *
      * @return int
      */
-    public function getPostalcodeid()
+    public function getPostalCodeId()
     {
-        return $this->postalcodeid;
+        return $this->postalCodeId;
     }
 
     /**
@@ -128,6 +128,6 @@ class GeoPostalCodeTranslations implements \ArrayAccess
      */
     public function getPostalcode()
     {
-        return $this->postalcode;
+        return $this->postalCode;
     }
 }

@@ -38,7 +38,7 @@ class GeoPostalCodes implements \ArrayAccess
      *
      * @ORM\Column(name="PostalCode", type="string", length=32, nullable=false)
      */
-    private $postalcode;
+    private $postalCode;
 
     /**
      * @var string
@@ -69,7 +69,7 @@ class GeoPostalCodes implements \ArrayAccess
     private $updated = 'CURRENT_TIMESTAMP';
 
     /**
-     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslations", mappedBy="postalcode")
+     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslations", mappedBy="postalCode")
      */
     private $translations;
 
@@ -113,27 +113,27 @@ class GeoPostalCodes implements \ArrayAccess
     }
 
     /**
-     * Set postalcode.
+     * Set postalCode.
      *
-     * @param string $postalcode
+     * @param string $postalCode
      *
      * @return GeoPostalCodes
      */
-    public function setPostalcode($postalcode)
+    public function setPostalCode($postalCode)
     {
-        $this->postalcode = $postalcode;
+        $this->postalCode = $postalCode;
 
         return $this;
     }
 
     /**
-     * Get postalcode.
+     * Get postalCode.
      *
      * @return string
      */
-    public function getPostalcode()
+    public function getPostalCode()
     {
-        return $this->postalcode;
+        return $this->postalCode;
     }
 
     /**
