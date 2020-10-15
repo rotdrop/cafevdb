@@ -43,6 +43,8 @@
 #    },
 
 app_name=$(notdir $(CURDIR))
+SRCDIR=.
+ABSSRCDIR=$(CURDIR)
 BUILDDIR=./build
 BUILDABSDIR=$(CURDIR)/build
 build_tools_directory=$(BUILDDIR)/tools
@@ -60,6 +62,7 @@ else
 COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=-vvvvvv --prefer-dist
+PHPDOC=/opt/phpDocumentor/bin/phpdoc
 
 all: build
 
@@ -147,6 +150,16 @@ $(BUILDDIR)/core-exclude:
 .PHONY: cleanup
 cleanup: $(BUILDDIR)/core-exclude
 	while read LINE; do rm -rf $$(dirname $$LINE); done< <(cat $<)
+
+.PHONY: doc
+doc: $(PHPDOC)
+	$(PHPDOC) run \
+ --parseprivate \
+ --sourcecode \
+ --defaultpackagename $(app_name) \
+ -d $(ABSSRCDIR)/lib -d $(ABSSRCDIR)/appinfo \
+ --setting graphs.enabled=true \
+ -t $(ABSSRCDIR)/doc/db-app/phpdoc
 
 # Builds the source package
 .PHONY: source
