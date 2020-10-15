@@ -786,11 +786,18 @@ var CAFEVDB = CAFEVDB || {};
       const msg = $('#develsettings #msg');
 
       simpleSetValueHandler($('input.devlink'), 'blur', msg);
-      simpleSetValueHandler(
-        $('input.devlinktest'), 'click', msg,
-        function (element, data, value, msg) {
-	  window.open(data.value.target, data.value.link);
+      $('input.devlinktest').on('click', function(event) {
+        const target = $(this).attr('name');
+        $.post(
+	  OC.generateUrl('/apps/cafevdb/settings/get/' + target))
+        .fail(function(xhr, status, errorThrown) {
+          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+        })
+        .done(function(data) {
+          console.log(data);
+	  window.open(data.value.link, data.value.target);
         });
+      });
     }
 
     ///////////////////////////////////////////////////////////////////////////

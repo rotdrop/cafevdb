@@ -405,6 +405,24 @@ class PersonalSettingsController extends Controller {
       }
       $this->setUserValue($parameter, $realValue);
       return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
+    case 'ownclouddev':
+    case 'sourcedocs':
+    case 'sourcecode':
+    case 'phpmyadmincloud':
+    case 'phpmyadmin':
+      if (!empty($value)) {
+        $realValue = filter_var($value, FILTER_VALIDATE_URL);
+        if ($realValue == null) {
+          return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not a valid URL.', [$value, $parameter]));
+        }
+        $components = parse_url($realValue);
+        if ($components['scheme'] != 'http' && $components['scheme'] != 'https') {
+          return self::grumble($this->l->t('"%1$s" must be a http(s) URL, scheme "%2$s" not supported.', [$value, $components['scheme']]));
+        }
+      }
+      $this->setConfigValue($parameter, $realValue);
+      $key = $parameter; trigger_error($key . ' => ' . $this->getConfigValue($key));
+      return self::valueResponse($realValue, $this->l->t(' `%s\' set to `%s\'.', [$parameter, $realValue]));
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));
@@ -420,6 +438,14 @@ class PersonalSettingsController extends Controller {
     case 'passwordgenerate':
     case 'generatepassword':
       return self::valueResponse($this->generateRandomBytes(32));
+    case 'testownclouddev':
+    case 'testsourcedocs':
+    case 'testsourcecode':
+    case 'testphpmyadmincloud':
+    case 'testphpmyadmin':
+      $key = substr($parameter, 4);
+      trigger_error($key . ' => ' . $this->getConfigValue($key));
+      return self::valueResponse([ 'link' => $this->getConfigValue($key), 'target' => $key]);
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));
