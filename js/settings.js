@@ -100,7 +100,19 @@ var CAFEVDB = CAFEVDB || {};
     };
 
     // AJAX call with a simple value
-    const simpleSetValueHandler = function(element, eventType, msgElement, callback, getValue) {
+    const simpleSetValueHandler = function(element, eventType, msgElement, userCallbacks, getValue) {
+      const defaultCallbacks = {
+        setup: function() {},
+        success: function() {},
+        fail: function() {},
+        cleanup: function() {}
+      };
+      var callbacks = $.extend({}, defaultCallbacks);
+      if (typeof userCallbacks === 'function') {
+        callbacks.success = userCallbacks;
+      } else if (typeof userCallbacks === 'object') {
+        $.extend(callbacks, userCallbacks);
+      }
       element.on(eventType, function(event) {
         msgElement.hide();
         $('.statusmessage').hide();
@@ -118,18 +130,22 @@ var CAFEVDB = CAFEVDB || {};
           value = element.is(':checkbox') ? element.is(':checked') : self.val();
         }
         console.log('value', value);
-        if (value !== undefined) {
+        if (value === undefined) {
+          callbacks.cleanup();
+        } else {
+          callbacks.setup();
           $.post(
 	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
             { 'value': value })
 	  .fail(function(xhr, status, errorThrown) {
             msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+            callbacks.fail(xhr, status,  errorThrown);
+            callbacks.cleanup();
           })
           .done(function(data) {
-            if (callback !== undefined) {
-              callback(element, data, value, msgElement);
-            }
             msgElement.html(data.message).show();
+            callbacks.success(element, data, value, msgElement);
+            callbacks.cleanup();
           });
         }
         return false;
@@ -784,9 +800,14 @@ var CAFEVDB = CAFEVDB || {};
 
     {
       const msg = $('#develsettings #msg');
+      const devLinkTests = $('input.devlinktest');
 
-      simpleSetValueHandler($('input.devlink'), 'blur', msg);
-      $('input.devlinktest').on('click', function(event) {
+      simpleSetValueHandler($('input.devlink'), 'blur', msg, {
+        setup: function() { devLinkTests.prop('disabled', true); },
+        cleanup: function() { devLinkTests.prop('disabled', false); }
+      });
+
+      devLinkTests.on('click', function(event) {
         const target = $(this).attr('name');
         $.post(
 	  OC.generateUrl('/apps/cafevdb/settings/get/' + target))
