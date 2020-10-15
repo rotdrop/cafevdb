@@ -10,5 +10,6 @@ stamp*
 ajax
 build
 .clipassword
-
+doc/db-app/phpdoc/[!.]*
+.phpdoc
 
