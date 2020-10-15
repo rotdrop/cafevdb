@@ -1,10 +1,10 @@
 # This file is licensed under the Affero General Public License version 3 or
 # later. See the COPYING file.
 #
-# @author Bernhard Posselt <dev@bernhard-posselt.com>
-# @copyright Bernhard Posselt 2016
 # @author Claus-Justus Heine <himself@claus-justus-heine.de>
 # @copyright Claus-Justus Heine 2020
+# @author Bernhard Posselt <dev@bernhard-posselt.com>
+# @copyright Bernhard Posselt 2016
 
 # Generic Makefile for building and packaging a Nextcloud app which uses npm and
 # Composer.
@@ -43,12 +43,15 @@
 #    },
 
 app_name=$(notdir $(CURDIR))
-BUILDDIR=$(CURDIR)/build
+BUILDDIR=./build
+BUILDABSDIR=$(CURDIR)/build
 build_tools_directory=$(BUILDDIR)/tools
 source_build_directory=$(BUILDDIR)/artifacts/source
 source_package_name=$(source_build_directory)/$(app_name)
 appstore_build_directory=$(BUILDDIR)/artifacts/appstore
 appstore_package_name=$(appstore_build_directory)/$(app_name)
+BASH=$(shell which bash 2> /dev/null)
+SHELL:=$(BASH)
 npm=$(shell which npm 2> /dev/null)
 COMPOSER=$(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER))
@@ -137,8 +140,12 @@ dist:
 	make appstore
 
 $(BUILDDIR)/core-exclude:
-	echo $(BUILDDIR)
-	( cd ../../3rdparty ; find . -mindepth 2 -maxdepth 2  -type d )|sed -e 's|^[.]/|../$(app_name)/vendor/|g' -e 's|$|/*|f' > $@
+	@mkdir -p $(BUILDDIR)
+	( cd ../../3rdparty ; find . -mindepth 2 -maxdepth 2  -type d )|sed -e 's|^[.]/|../$(app_name)/vendor/|g' -e 's|$$|/*|g' > $@
+
+.PHONY: cleanup
+cleanup: $(BUILDDIR)/core-exclude
+	while read LINE; do rm -rf $$(dirname $$LINE); done< <(cat $<)
 
 # Builds the source package
 .PHONY: source
