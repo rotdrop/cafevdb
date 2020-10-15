@@ -35,7 +35,8 @@ use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents;
 
-/**Events and tasks handling. */
+/**Events and tasks handling.
+ */
 class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -82,6 +83,7 @@ class EventsService
    *   'component'     => strtolower($row['componenttype']),
    *   'classification'=> (int)$row['classification']
    * ];
+   * @endcode
    */
   public function onCalendarObjectCreated(CalendarObjectCreatedEvent $event)
   {
@@ -707,7 +709,7 @@ class EventsService
    *   'starred' => true, // optional
    *   'alarm' => $alarm, // optional
    * ]
-   * @end code
+   * @endcode
    *
    * We also support adding a reminder: 'alarm' => unset or interval
    * in seconds (i.e. time-stamp diff). The function may throw
@@ -743,7 +745,7 @@ class EventsService
    *   'repeat' => 'doesnotrepeat',
    *   'calendar' => CALID
    * ]
-   * @end code
+   * @endcode
    *
    * We also support adding a reminder: 'alarm' => unset or interval
    * in seconds (i.e. time-stamp diff). The function may throw

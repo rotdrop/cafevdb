@@ -347,7 +347,7 @@ class VCalendarService
    *                   'starred' => true, // optional
    *                   'alarm' => $alarm); // optional
    *
-   * @return  \Sabre\VObject\Component\VCalendar|null
+   * @return Sabre\VObject\Component\VCalendar|null
    */
   private function updateVTodoFromRequest($vCalendar, $request)
   {

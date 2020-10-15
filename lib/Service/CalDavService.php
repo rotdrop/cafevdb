@@ -324,7 +324,7 @@ class CalDavService
     return $result;
   }
 
-  /**Force OCP\Calendar\IManager to be refreshed.
+  /**Force @class OCP\Calendar\IManager to be refreshed.
    *
    * @bug This function uses internal APIs.
    */
