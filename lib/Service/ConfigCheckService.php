@@ -779,9 +779,13 @@ class ConfigCheckService
       return false;
     }
 
-    if (!$connection->connect()) {
-      trigger_error('db cannot connect');
-      return false;
+    $selfOpened = false;
+    if (!$connection->ping()) {
+      if (!$connection->connect()) {
+        trigger_error('db cannot connect');
+        return false;
+      }
+      $selfOpened = true;
     }
 
     if (!$connection->ping()) {
@@ -789,7 +793,9 @@ class ConfigCheckService
       return false;
     }
 
-    $connection->close();
+    if ($selfOpened) {
+      $connection->close();
+    }
 
     return true;
   }
