@@ -23,7 +23,7 @@ class ProjectEvents
     /**
      * @var string|null
      *
-     * @ORM\Column(name="EventURI", type="string", length=1024, nullable=false)
+     * @ORM\Column(name="EventURI", type="string", length=764, nullable=false)
      * @ORM\Id
      */
     private $eventuri;
