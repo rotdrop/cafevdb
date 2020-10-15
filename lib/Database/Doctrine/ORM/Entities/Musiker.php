@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Musiker implements \ArrayAccess
 {
     use ArrayTrait;
+    use FactoryTrait;
 
     /**
      * @var int
@@ -136,7 +137,9 @@ class Musiker implements \ArrayAccess
      */
     private $aktualisiert;
 
-
+    public function __construct() {
+        $this->arrayCTOR();
+    }
 
     /**
      * Get id.
