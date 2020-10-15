@@ -347,9 +347,9 @@ class Instruments
    *
    * @param $oldValues Self-explanatory.
    *
-   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   * @param &$changed Set of changed fields, may be modified by the callback.
    *
-   * @param[in,out] &$newValues Set of new values, which may also be modified.
+   * @param &$newValues Set of new values, which may also be modified.
    *
    * @return boolean. If returning @c false the operation will be terminated
    *

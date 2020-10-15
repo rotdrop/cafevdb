@@ -35,7 +35,7 @@ class ProjectUpdatedEvent extends Event {
   /** @var array */
   private $newData;
 
-  public function __construct($projectId, $oldData $newData) {
+  public function __construct($projectId, $oldDat, $newData) {
     parent::__construct();
     $this->projectId = $projectId;
     $this->oldData = $oldData;

@@ -1882,7 +1882,7 @@ DebitNotePurpose
      * course. We store the generated temporaries in the user
      * config-space in order to (latest) remove them on logout/login.
      *
-     * @param[in,out] $fileRecord Typically $_FILES['fileAttach'], but maybe
+     * @param $fileRecord Typically $_FILES['fileAttach'], but maybe
      * any file record.
      *
      * @param $local If @c true the underlying file will be renamed,

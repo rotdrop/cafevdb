@@ -790,7 +790,7 @@ namespace CAFEVDB
     /**Given an array of multiple choices make its keys unique with
      * respect to itself. Used keys remain fixed (unique or not).
      *
-     * @param[in,out] array &$allowed Array of admissible options.
+     * @param array &$allowed Array of admissible options.
      *
      * @param integer $recordId The record Id for the field.
      */
@@ -828,9 +828,9 @@ namespace CAFEVDB
      *
      * @param $oldvals Self-explanatory.
      *
-     * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+     * @param &$changed Set of changed fields, may be modified by the callback.
      *
-     * @param[in,out] &$newvals Set of new values, which may also be modified.
+     * @param &$newvals Set of new values, which may also be modified.
      *
      * @return boolean. If returning @c false the operation will be terminated
      */
@@ -867,9 +867,9 @@ namespace CAFEVDB
      *
      * @param $oldvals Self-explanatory.
      *
-     * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+     * @param &$changed Set of changed fields, may be modified by the callback.
      *
-     * @param[in,out] &$newvals Set of new values, which may also be modified.
+     * @param &$newvals Set of new values, which may also be modified.
      *
      * @return boolean. If returning @c false the operation will be terminated
      */
@@ -897,9 +897,9 @@ namespace CAFEVDB
      *
      * @param $oldvals Self-explanatory.
      *
-     * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+     * @param &$changed Set of changed fields, may be modified by the callback.
      *
-     * @param[in,out] &$newvals Set of new values, which may also be modified.
+     * @param &$newvals Set of new values, which may also be modified.
      *
      * @return boolean. If returning @c false the operation will be terminated
      */
@@ -943,9 +943,9 @@ namespace CAFEVDB
      *
      * @param $oldvals Self-explanatory.
      *
-     * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+     * @param &$changed Set of changed fields, may be modified by the callback.
      *
-     * @param[in,out] &$newvals Set of new values, which may also be modified.
+     * @param &$newvals Set of new values, which may also be modified.
      *
      * @return boolean. If returning @c false the operation will be terminated
      */
