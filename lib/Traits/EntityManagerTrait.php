@@ -73,7 +73,7 @@ trait EntityManagerTrait {
     if (is_array($entity)) {
       $entity = $this->entityManager->getReference($this->entityClassName, $entity);
     }
-    $this->entityManager->remove($entity);
+    return $this->entityManager->remove($entity);
   }
 
   private function persist($entity)
@@ -95,17 +95,17 @@ trait EntityManagerTrait {
   }
 
   private function find($id, $lockMode = null, $lockVersion = null) {
-    $this->getDatabaseRepository()->find($id, $lockMode, $lockVersion);
+    return $this->getDatabaseRepository()->find($id, $lockMode, $lockVersion);
   }
 
   private function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
   {
-    $this->getDatabaseRepository()->findBy($criteria, $orderBy, $limit, $offset);
+    return $this->getDatabaseRepository()->findBy($criteria, $orderBy, $limit, $offset);
   }
 
   private function findOneBy(array $criteria, array $orderBy = null)
   {
-    $this->getDatabaseRepository()->findOneBy($criteria, $orderBy);
+    return $this->getDatabaseRepository()->findOneBy($criteria, $orderBy);
   }
 
   /**
@@ -118,16 +118,20 @@ trait EntityManagerTrait {
    */
   private function matching(Criteria $criteria, $entityClassName = null)
   {
-    $this->getDatabaseRepository($entityClassName)->matching($criteria);
+    return $this->getDatabaseRepository($entityClassName)->matching($criteria);
   }
 
   private static function criteria() {
     return new Criteria();
   }
 
+  private static function expr() {
+    return Criteria::expr();
+  }
+
   private function count(array $criteria, $entityClassName = null)
   {
-    $this->getDatabaseRepository($entityClassName)->count($criteria);
+    return $this->getDatabaseRepository($entityClassName)->count($criteria);
   }
 
   /**
@@ -143,7 +147,7 @@ trait EntityManagerTrait {
    * @throws ORMException
    */
   private function merge($entity) {
-    $this->entityManager->merge($entity);
+    return $this->entityManager->merge($entity);
   }
 
   private function columnNames($entityClassName = null) {
