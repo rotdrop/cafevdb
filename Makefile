@@ -46,8 +46,9 @@ app_name=$(notdir $(CURDIR))
 SRCDIR=.
 ABSSRCDIR=$(CURDIR)
 BUILDDIR=./build
-BUILDABSDIR=$(CURDIR)/build
+ABSBUILDDIR=$(CURDIR)/build
 build_tools_directory=$(BUILDDIR)/tools
+DOC_BUILD_DIR=$(ABSBUILDDIR)/artifacts/doc
 source_build_directory=$(BUILDDIR)/artifacts/source
 source_package_name=$(source_build_directory)/$(app_name)
 appstore_build_directory=$(BUILDDIR)/artifacts/appstore
@@ -159,7 +160,8 @@ doc: $(PHPDOC)
  --defaultpackagename $(app_name) \
  -d $(ABSSRCDIR)/lib -d $(ABSSRCDIR)/appinfo \
  --setting graphs.enabled=true \
- -t $(ABSSRCDIR)/doc/db-app/phpdoc
+ --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
+ -t $(DOC_BUILD_DIR)/phpdoc
 
 # Builds the source package
 .PHONY: source
@@ -207,6 +209,14 @@ appstore: $(BUILDDIR)/core-exclude
  --exclude-from="$(BUILDDIR)/core-exclude" \
  ../$(app_name)
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
+
+.PHONY: verifydb
+verifydb:
+	$(SRCDIR)/vendor/bin/doctrine orm:validate-schema
+
+.PHONY: updatesql
+updatesql:
+	$(SRCDIR)/vendor/bin/doctrine orm:schema-tool:update --dump-sql
 
 .PHONY: test
 test: composer
