@@ -27,9 +27,9 @@ class Blog
   /**Delete the given Note and the entire thread referring to
    * it. There is intentionally no security.
    *
-   * @param[in] $blogId The unique Id of the note to delete.
+   * @param $blogId The unique Id of the note to delete.
    *
-   * @param[in] $drop If @c true then really delete the message,
+   * @param $drop If @c true then really delete the message,
    * otherwise just mark them as deleted.
    *
    * @return bool, @c true on success.
@@ -57,19 +57,19 @@ class Blog
 
   /**Create a new note.
    *
-   * @param[in] $author The author of this mess.
+   * @param $author The author of this mess.
    *
-   * @param[in] $inReply The id of a previous note this one refers
+   * @param $inReply The id of a previous note this one refers
    * to. If $blogId >= 0 then this parameter is ignored; only the
    * message text is affected.
    *
-   * @param[in] $text The message text.
+   * @param $text The message text.
    *
-   * @param[in] $priority The priority, should be between 0 and
+   * @param $priority The priority, should be between 0 and
    * 255. Only top-level notes may carry a priority (so if $inReplay
    * >= 0, then $priority is ignored).
    *
-   * @param[in] $popup if @c true then the note will appear as one-time popup.
+   * @param $popup if @c true then the note will appear as one-time popup.
    *            We remeber the user-id of the reader in the db, after the user
    *            has clicked away the alert box.
    *            as a one-time popup.
@@ -89,18 +89,18 @@ class Blog
 
   /**Modify a note. 
    *
-   * @param[in] $author The author of this mess.
+   * @param $author The author of this mess.
    *
-   * @param[in] $blogId The blog-Id of an existing entry.
+   * @param $blogId The blog-Id of an existing entry.
    *
-   * @param[in] $text The message text. Ignored if empty.
+   * @param $text The message text. Ignored if empty.
    *
-   * @param[in] $priority The priority in the range 0...255. Ignored if @c false.
+   * @param $priority The priority in the range 0...255. Ignored if @c false.
    *
-   * @param[in] $popup false: do not change. +1: Mark this as a one-time popup-note.
+   * @param $popup false: do not change. +1: Mark this as a one-time popup-note.
    *                   -1: unmark as popup note. false: ignore
    *
-   * @param[in] $reader Comma separated list of users for which the note is marked
+   * @param $reader Comma separated list of users for which the note is marked
    *            as read. If false, nothing changes. If < 0 remove all readers.
    *
    * @return bool, @c true on success.

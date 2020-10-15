@@ -679,11 +679,11 @@ namespace CAFEVDB
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after' or 'pre'
+     * @param $step 'before' or 'after' or 'pre'
      *
      * @return boolean. If returning @c false the operation will be terminated
      */
@@ -764,9 +764,9 @@ namespace CAFEVDB
 
     /**Make keys unique for multi-choice fields.
      *
-     * @param[in] string $key Input key.
+     * @param string $key Input key.
      *
-     * @param[in] array $keys Existing keys.
+     * @param array $keys Existing keys.
      *
      * @return Something "close" to $key, but not contained in $keys.
      *
@@ -792,7 +792,7 @@ namespace CAFEVDB
      *
      * @param[in,out] array &$allowed Array of admissible options.
      *
-     * @param[in] integer $recordId The record Id for the field.
+     * @param integer $recordId The record Id for the field.
      */
     private static function allowedValuesUniqueKeys(&$allowed, $recordId)
     {
@@ -820,13 +820,13 @@ namespace CAFEVDB
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *
@@ -859,13 +859,13 @@ namespace CAFEVDB
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *
@@ -889,13 +889,13 @@ namespace CAFEVDB
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *
@@ -935,13 +935,13 @@ namespace CAFEVDB
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *
@@ -1144,9 +1144,9 @@ namespace CAFEVDB
     /**Fetch the field definitions in order to generate SQL code to do
      * all the joining and linking.
      *
-     * @param[in] int $projectId The project Id.
+     * @param int $projectId The project Id.
      *
-     * @param[in] bool $full If false, only Id, ProjectId, FieldIndex
+     * @param bool $full If false, only Id, ProjectId, FieldIndex
      * and DisplayOrder are returned.
      *
      * @return Flat array with the data-base rows. The function will
@@ -1199,10 +1199,10 @@ namespace CAFEVDB
      * field-info. Also, the function resolves links into the type
      * info table and explodes the allowed value field.
      *
-     * @param[in] mixed $idOrFields $projectId or pre-fetched extra-fields
+     * @param mixed $idOrFields $projectId or pre-fetched extra-fields
      * array.
      *
-     * @param[in] mixed $typeInfoOrHandle If $idOrFields is an array
+     * @param mixed $typeInfoOrHandle If $idOrFields is an array
      * (i.e. the field descriptions, then $typeInfoOrHandle must be
      * the type-info array as obtained by
      * self::fieldTypes(). Otherwise it may be an existing data-base
@@ -1249,17 +1249,17 @@ argument must be an array of type descriptions.');
 
     /**Delete the given extra field and associated data.
      *
-     * @param[in] int $fieldId The field-id to remove.
+     * @param int $fieldId The field-id to remove.
      *
-     * @param[in] int $projectId The project the field is associated
+     * @param int $projectId The project the field is associated
      * to. For security reasons both, $fieldId and $projectId have to
      * be specified.
      *
-     * @param[in] bool $force If @c false, only remove the field if it
+     * @param bool $force If @c false, only remove the field if it
      * has no data attached. If @c true, just remove it and all
      * associated data.
      *
-     * @param[in] $handle Data-base handle.
+     * @param $handle Data-base handle.
      *
      * @return @c true if the field has been removed (and all data),
      * false otherwise. @c false may mean SQL error, or with $force
@@ -1360,12 +1360,12 @@ argument must be an array of type descriptions.');
     /**Generate a row given values and index for the "change" view
      * corresponding to the multi-choice fields.
      *
-     * @param[in] array $value One row of the form as returned form
+     * @param array $value One row of the form as returned form
      * self::explodeAllowedValues()
      *
-     * @param[in] integer $index A unique row number.
+     * @param integer $index A unique row number.
      *
-     * @param[in] boolean $used Whether the DB already contains data
+     * @param boolean $used Whether the DB already contains data
      * records referring to this item.
      *
      * @return sting HTML data for one row.

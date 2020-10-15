@@ -140,7 +140,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
   /**Genereate the default selector.
    *
-   * @param[in] selector The selector to construct the final selector
+   * @param selector The selector to construct the final selector
    * from. Maybe a jQuery object.
    */
   PHPMYEDIT.selector = function(selector) {
@@ -388,11 +388,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * display the single data-set display, edit, add and copy form in a
    * popup.
    *
-   * @param[in] options Object with additional params to the
+   * @param options Object with additional params to the
    * pme-table.php AJAX callback. Must at least contain the
    * DisplayClass component.
    *
-   * @param[in] callback Additional form validation callback. If
+   * @param callback Additional form validation callback. If
    * callback also attaches handlers to the save, change etc. buttons
    * then these should be attached as delegate event handlers to the
    * pme-form. The event handlers installed by this functions are
@@ -873,15 +873,15 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
   /**Quasi-submit the pme-form.
    *
-   * @param[in] form The jQuery object corresponding to the pme-form.
+   * @param form The jQuery object corresponding to the pme-form.
    *
-   * @param[in] element The jQuery object corresponding to the element
+   * @param element The jQuery object corresponding to the element
    * causing the submit.
    *
-   * @param[in] selector The CSS selector corresponding to the
+   * @param selector The CSS selector corresponding to the
    * surrounding container (div element)
    *
-   * @param[in] resetFilter Bool, post a sw=Clear sting in addition, causing
+   * @param resetFilter Bool, post a sw=Clear sting in addition, causing
    * phpMyEdit to reset the filter.
    */
   PHPMYEDIT.pseudoSubmit = function(form, element, selector, resetFilter) {

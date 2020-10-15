@@ -278,7 +278,7 @@ class EventsService
    * stamps from the data-base are converted to PHP DateTime()-objects
    * with UTC time-zone.
    *
-   * @param[in] $projectId The numeric id of the project.
+   * @param $projectId The numeric id of the project.
    *
    * @return Full event data for this project.
    */
@@ -397,9 +397,9 @@ class EventsService
    * contain events which do not belong to any id mentioned in
    * $calendarIds and be tagged by the key '__other__'.
    *
-   * @param[in] $projectEvents List returned by self::events().
+   * @param $projectEvents List returned by self::events().
    *
-   * @param[in] $calendarIds Array with calendar sorting order, giving
+   * @param $calendarIds Array with calendar sorting order, giving
    * the ids of the wanted calendars in the wanted order.
    *
    * @return Associative array with calendarnames as keys.
@@ -500,9 +500,9 @@ class EventsService
   /**Export the given events in ICAL format. The events need not
    * belong to the same calendar.
    *
-   * @param[in] $events An array with 'calendarid' => 'eventuri'
+   * @param $events An array with 'calendarid' => 'eventuri'
    *
-   * @param[in] $projectName Short project tag, will form part of the
+   * @param $projectName Short project tag, will form part of the
    * name of the calendar.
    *
    * @return A string with the ICAL data.
@@ -575,9 +575,9 @@ class EventsService
   /**Parse the respective event and make sure the ProjectEvents
    * table is uptodate.
    *
-   * @param[in] $eventId The OwnCloud-Id of the event.
+   * @param $eventId The OwnCloud-Id of the event.
    *
-   * @param[in] $handle Optional. MySQL handle.
+   * @param $handle Optional. MySQL handle.
    **
    * @return bool, @c true if the event has been added.
    */
@@ -621,10 +621,10 @@ class EventsService
 
   /**Unconditionally register the given event with the given project.
    *
-   * @param[in] $projectId The project key.
-   * @param[in] $eventURI The event key (external key).
-   * @param[in] $calendarId The id of the calender the vent belongs to.
-   * @param[in] $type The event type (VEVENT, VTODO, VJOURNAL, VCARD).
+   * @param $projectId The project key.
+   * @param $eventURI The event key (external key).
+   * @param $calendarId The id of the calender the vent belongs to.
+   * @param $type The event type (VEVENT, VTODO, VJOURNAL, VCARD).
    *
    * @return Undefined.
    */
@@ -642,8 +642,8 @@ class EventsService
 
   /**Unconditionally unregister the given event with the given project.
    *
-   * @param[in] $projectId The project key.
-   * @param[in] $eventURI The event key (external key).
+   * @param $projectId The project key.
+   * @param $eventURI The event key (external key).
    *
    * @return Undefined.
    */
@@ -656,8 +656,8 @@ class EventsService
    * project, and remove the project-name from the event's categories
    * list.
    *
-   * @param[in] $projectId The project key.
-   * @param[in] $eventURI The event uri.
+   * @param $projectId The project key.
+   * @param $eventURI The event uri.
    *
    * @return Undefined.
    */
@@ -681,8 +681,8 @@ class EventsService
 
   /**Test if the given event is linked to the given project.
    *
-   * @param[in] $projectId The project key.
-   * @param[in] $eventURI The event key (external key).
+   * @param $projectId The project key.
+   * @param $eventURI The event key (external key).
    *
    * @return @c true if the event is registered, otherwise false.
    */

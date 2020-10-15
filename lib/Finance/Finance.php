@@ -479,7 +479,7 @@ GROUP BY m.mandateReference";
   /**Determine if the given mandate is expired, in which case we
    * would need a new mandate.
    *
-   * @param[in] mixed $usageInfo Either a mandate-reference or a
+   * @param mixed $usageInfo Either a mandate-reference or a
    * previously fetched result from self::mandateReferenceUsage()
    *
    * @return @c true iff the mandate is expired, @c false otherwise.
@@ -516,9 +516,9 @@ GROUP BY m.mandateReference";
    * etc.). This flags the mandate as deleted, but we have to keep
    * the data for the book-keeping.
    *
-   * @param[in] string $mandateReference The mandate reference string.
+   * @param string $mandateReference The mandate reference string.
    *
-   * @param[in] mixed $handle Optional data-base handle.
+   * @param mixed $handle Optional data-base handle.
    *
    */
   public static function deactivateSepaMandate($mandateReference, $handle = false)
@@ -552,9 +552,9 @@ GROUP BY m.mandateReference";
   /**Erase a SEPA-mandate. This is important data, so we require the
    * project and musician as well as the mandate reference.
    *
-   * @param[in] string $mandateReference The mandate reference string.
+   * @param string $mandateReference The mandate reference string.
    *
-   * @param[in] mixed $handle Optional data-base handle.
+   * @param mixed $handle Optional data-base handle.
    *
    */
   public static function deleteSepaMandate($mandateReference, $handle = false)

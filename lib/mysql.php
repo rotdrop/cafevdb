@@ -38,14 +38,14 @@ namespace CAFEVDB
 
     /**Connect to the server specified by @a $opts.
      *
-     * @param[in] $opts Associative array with keys 'hn', 'un', 'pw' and
+     * @param $opts Associative array with keys 'hn', 'un', 'pw' and
      * 'db' for "hostname", "username", "password" and
      * "database",repectively.
      *
-     * @param[in] $die Bail out on error. Default is @c true. If @c
+     * @param $die Bail out on error. Default is @c true. If @c
      * false then go on and return @c false in case of an error.
      *
-     * @param[in] $silent If exception-based error handling is not in
+     * @param $silent If exception-based error handling is not in
      * effect, then control whehter something is printed to the standard
      * output channel.
      *
@@ -72,7 +72,7 @@ namespace CAFEVDB
     /**Close the mySQL data-base connection previously opened by
      * self::connect().
      *
-     * @param[in] $handle Database handle.
+     * @param $handle Database handle.
      *
      * @return @c true, always.
      */
@@ -349,16 +349,16 @@ namespace CAFEVDB
 
     /**Insert a couple of values into a table.
      *
-     * @param[in] $table The affected SQL table.
+     * @param $table The affected SQL table.
      *
-     * @param[in] $newValues An associative array where the keys are
+     * @param $newValues An associative array where the keys are
      * the column names and the values are the respective values to be
      * inserted.
      *
-     * @param[in] $handle Data-base connection, as returned by
+     * @param $handle Data-base connection, as returned by
      * self::open(). If null, then a new connection is opened.
      *
-     * @param[in] $modifier One of self::REGULAR, self::UPDATE, self::IGNORE
+     * @param $modifier One of self::REGULAR, self::UPDATE, self::IGNORE
      *
      * @return The result returned by the SQL query statement.
      */
@@ -425,16 +425,16 @@ namespace CAFEVDB
 
     /**Update a couple of values into a table.
      *
-     * @param[in] string $table The data-base table to modify
+     * @param string $table The data-base table to modify
      *
-     * @param[in] sting $where Condition (e.g. id field etc.), "WHERE"
+     * @param sting $where Condition (e.g. id field etc.), "WHERE"
      * is added by the funcion.
      *
-     * @param[in] array $newValues Associative array where keys are
+     * @param array $newValues Associative array where keys are
      * the field names and the values are the values to inject into
      * the table.
      *
-     * @param[in] resource $handle Database handle.
+     * @param resource $handle Database handle.
      */
     public static function update($table, $where, $newValues, $handle)
     {
@@ -469,16 +469,16 @@ namespace CAFEVDB
 
     /**Convenience function: fetch some rows of a table.
      *
-     * @param[in] $table The table to fetch data from.
+     * @param $table The table to fetch data from.
      *
-     * @param[in] $where The conditions (excluding the WHERE keyword)
+     * @param $where The conditions (excluding the WHERE keyword)
      *
-     * @param[in] $handle Data-base connection, as returned by
+     * @param $handle Data-base connection, as returned by
      * self::open(). If null, then a new connection is opened.
      *
-     * @param[in] $die Die or not on error.
+     * @param $die Die or not on error.
      *
-     * @param[in] $silent Suppress some diagnostic messages on error.
+     * @param $silent Suppress some diagnostic messages on error.
      *
      * @return An array with all matching rows. Return false in case
      * of error.
@@ -519,18 +519,18 @@ namespace CAFEVDB
 
     /**Convenience function: fetch one column of a table.
      *
-     * @param[in] $table The table to fetch data from.
+     * @param $table The table to fetch data from.
      *
-     * @param[in] $col The column name.
+     * @param $col The column name.
      *
-     * @param[in] $where The conditions (excluding the WHERE keyword)
+     * @param $where The conditions (excluding the WHERE keyword)
      *
-     * @param[in] $handle Data-base connection, as returned by
+     * @param $handle Data-base connection, as returned by
      * self::open(). If null, then a new connection is opened.
      *
-     * @param[in] $die Die or not on error.
+     * @param $die Die or not on error.
      *
-     * @param[in] $silent Suppress some diagnostic messages on error.
+     * @param $silent Suppress some diagnostic messages on error.
      *
      * @return An array with all matching rows. Return false in case
      * of error.
@@ -654,16 +654,16 @@ namespace CAFEVDB
 
     /**Convenience function, select something from a table.
      *
-     * @param[in] string $select Some select statement,
+     * @param string $select Some select statement,
      * e.g. "MAX(`column`)" for the case that @a $table contains a
      * field "column".
      *
-     * @param[in] string $table The name of the table.
+     * @param string $table The name of the table.
      *
-     * @param[in] string $cond "WHERE" conditions, or sort modifyers,
+     * @param string $cond "WHERE" conditions, or sort modifyers,
      * if applicable. Defaults to "WHERE 1".
      *
-     * @param[in] mixed $handle Database handle or false.
+     * @param mixed $handle Database handle or false.
      *
      * @return It is assumed that the function applied yields a single
      * result value. In case of success, this value is the result,
@@ -719,14 +719,14 @@ namespace CAFEVDB
 
     /**Convenience function, select the next free hole from an integral column.
      *
-     * @param[in] string $table The name of the table.
+     * @param string $table The name of the table.
      *
-     * @param[in] string $col The name of the integer column.
+     * @param string $col The name of the integer column.
      *
-     * @param[in] string $cond "WHERE" conditions, or sort modifyers,
+     * @param string $cond "WHERE" conditions, or sort modifyers,
      * if applicable. Defaults to "WHERE 1".
      *
-     * @param[in] mixed $handle Database handle or false.
+     * @param mixed $handle Database handle or false.
      *
      * @return It is assumed that the function applied yields a single
      * result value. In case of success, this value is the result,
@@ -792,18 +792,18 @@ namespace CAFEVDB
      * will log the inserted data, the user name and the remote IP
      * address.
      *
-     * @param[in] $table The affected SQL table.
+     * @param $table The affected SQL table.
      *
-     * @param[in] $recId The row-key.
+     * @param $recId The row-key.
      *
-     * @param[in] $newValues An associative array where the keys are
+     * @param $newValues An associative array where the keys are
      * the column names and the values are the respective values to be
      * inserted.
      *
-     * @param[in] $handle Data-base connection, as returned by
+     * @param $handle Data-base connection, as returned by
      * self::open(). If null, then a new connection is opened.
      *
-     * @param[in] $changeLog The name of the change-log table.
+     * @param $changeLog The name of the change-log table.
      *
      * @return true
      *
@@ -841,19 +841,19 @@ namespace CAFEVDB
      * will log the inserted data, the user name and the remote IP
      * address.
      *
-     * @param[in] $table The affected SQL table.
+     * @param $table The affected SQL table.
      *
-     * @param[in] $recIdColumn The column name of the row-key.
+     * @param $recIdColumn The column name of the row-key.
      *
-     * @param[in] $oldValues An associative array where the keys are
+     * @param $oldValues An associative array where the keys are
      * the column names and the values are the respective old values
      * which will be removed. $oldValues[$recIdColumn] should be the
      * respective row-key which has been removed.
      *
-     * @param[in] $handle Data-base connection, as returned by
+     * @param $handle Data-base connection, as returned by
      * self::open(). If null, then a new connection is opened.
      *
-     * @param[in] $changeLog The name of the change-log table.
+     * @param $changeLog The name of the change-log table.
      *
      * @return true
      *
@@ -894,24 +894,24 @@ namespace CAFEVDB
      * will log the inserted data, the user name and the remote IP
      * address.
      *
-     * @param[in] $table The affected SQL table.
+     * @param $table The affected SQL table.
      *
-     * @param[in] $recIdColumn The column name of the row-key.
+     * @param $recIdColumn The column name of the row-key.
      *
-     * @param[in] $oldValues An associative array where the keys are
+     * @param $oldValues An associative array where the keys are
      * the column names and the values are the respective old values
      * which will be removed. $oldValues[$recIdColumn] should be the
      * respective row-key for the affected row.
      *
-     * @param[in] $newValues An associative array where the keys are
+     * @param $newValues An associative array where the keys are
      * the column names and the values are the respective new values
      * which were injected into the table. The change-log entry will
      * only record changed values.
      *
-     * @param[in] $handle Data-base connection, as returned by
+     * @param $handle Data-base connection, as returned by
      * self::open(). If null, then a new connection is opened.
      *
-     * @param[in] $changeLog The name of the change-log table.
+     * @param $changeLog The name of the change-log table.
      *
      * @return true
      *

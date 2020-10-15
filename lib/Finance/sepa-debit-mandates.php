@@ -686,13 +686,13 @@ received so far'),
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *

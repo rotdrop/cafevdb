@@ -35,9 +35,9 @@ namespace CAFEVDB
 
     /**Print the translated text.
      *
-     * @param[in] $text Text to print, is finally passed to vsprintf().
+     * @param $text Text to print, is finally passed to vsprintf().
      *
-     * @param[in] $parameters Defaults to an empty array. @a $parameters
+     * @param $parameters Defaults to an empty array. @a $parameters
      * are passed on to vsprintf().
      *
      * @return The possibly translated message.
@@ -102,7 +102,7 @@ namespace CAFEVDB
     /**Switch error-handling via exceptions on and off by installing an
      * error-handler via set_error_handler().
      *
-     * @param[in] $on Mixed. If @c true then errors will trigger
+     * @param $on Mixed. If @c true then errors will trigger
      * exceptions, if @c false then erros will not trigger exceptions,
      * if unspecified then report whether or not errors trigger
      * exceptions.
@@ -282,12 +282,12 @@ namespace CAFEVDB
 
     /**Split and sanitize a quasi-CSV string.
      *
-     * @param[in] string $values The string to split
+     * @param string $values The string to split
      *
-     * @param[in] string $delimiters The set of delimiters. Must not
+     * @param string $delimiters The set of delimiters. Must not
      * contain a backslash and no quotes, s.v.p..
      *
-     * @param[in] bool $omitEmptyFields Whether to exclude empty
+     * @param bool $omitEmptyFields Whether to exclude empty
      * fields from the output.
      *
      * @return array An array of the fields. Note: empty fields are
@@ -328,9 +328,9 @@ namespace CAFEVDB
     /**Take an array of strings and join it into some sort of CSV like
      * string.
      *
-     * @param[in] array $values The string values.
+     * @param array $values The string values.
      *
-     * @param[in] string $delimiters The set of delimiters. Must not
+     * @param string $delimiters The set of delimiters. Must not
      * contain a backslash and no quotes, s.v.p..
      *
      * @return string A string, where the first character of
@@ -514,12 +514,12 @@ namespace CAFEVDB
      * is terminated by die(). Execution continues if $die = false. No
      * messages are printed, if @c $silent = @c true.
      *
-     * @param[in] $msg String to print or to pass as exception message.
+     * @param $msg String to print or to pass as exception message.
      *
-     * @param[in] $die Terminate execution, either calling die() or by
+     * @param $die Terminate execution, either calling die() or by
      * throwing an exception.
      *
-     * @param[in] $silent Do not print an error message. No effect if
+     * @param $silent Do not print an error message. No effect if
      * exceptions are used for error handling.
      *
      * @return @c false (if the functin returns).
@@ -618,11 +618,11 @@ namespace CAFEVDB
     /**Get the post- or get-value from the request, or from the config
      * space if a default value exists.
      *
-     * @param[in] $key The key (i.e. name) for the value.
+     * @param $key The key (i.e. name) for the value.
      *
-     * @param[in] $default Default value
+     * @param $default Default value
      *
-     * @param[in] $allowEmpty If true, an empty string is not an allowed
+     * @param $allowEmpty If true, an empty string is not an allowed
      *                value and null is returned, unless the default has
      *                been explicitly set to the empty string.
      */
@@ -666,7 +666,7 @@ namespace CAFEVDB
     /** Compose an arry from all CGI data starting with PME_data_, or
      * more precisely: with Config::$pmeopts['cgi']['prefix']['data'];
      *
-     * @param[in] $prefix If set the parameter overrides the default
+     * @param $prefix If set the parameter overrides the default
      *                    prefix.
      */
     public static function getPrefixCGIData($prefix = null)
@@ -702,7 +702,7 @@ namespace CAFEVDB
 
     /**Try to verify a given location up to some respect ...
      *
-     * @param[in] $location Either an "absolute" path relative to the
+     * @param $location Either an "absolute" path relative to the
      * server root, starting with '/', or a valid HTML URL.
      */
     public static function URLIsValid($location)
@@ -749,13 +749,13 @@ namespace CAFEVDB
 
     /** phpMyEdit calls the triggers (callbacks) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *
@@ -781,13 +781,13 @@ namespace CAFEVDB
 
     /** phpMyEdit calls the triggers (callbacks) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *
@@ -838,14 +838,14 @@ namespace CAFEVDB
 
     /**Post to an Owncloud route.
      *
-     * @param[in] $route Route name (i.e.: not the URL)
+     * @param $route Route name (i.e.: not the URL)
      *
-     * @param[in] $routeParams Parameters built in to the URL (despite
+     * @param $routeParams Parameters built in to the URL (despite
      * the fact that we use POST)
      *
-     * @param[in] $postData Stuff passed by the POST method.
+     * @param $postData Stuff passed by the POST method.
      *
-     * @param[in] $type How $postData is encoded. Can be 'json' or
+     * @param $type How $postData is encoded. Can be 'json' or
      * 'urlencoded'. Default is 'json'.
      */
     public static function postToRoute($route,
@@ -1090,11 +1090,11 @@ namespace CAFEVDB
      * phpMyEdit buttons. This is a dirty hack. But so what. Only the
      * L and F (list and filter) views are augmented.
      *
-     * @param[in] $button The new buttons.
+     * @param $button The new buttons.
      *
-     * @param[in] $misc Whether or not to include the extra misc-button.
+     * @param $misc Whether or not to include the extra misc-button.
      *
-     * @param[in] $all Whether to add the button to non-list views.
+     * @param $all Whether to add the button to non-list views.
      *
      * @return Array suitable to be plugged in $opts['buttons'].
      */
@@ -1107,11 +1107,11 @@ namespace CAFEVDB
      * phpMyEdit buttons. This is a dirty hack. But so what. Only the
      * L and F (list and filter) views are augmented.
      *
-     * @param[in] $buttons The new buttons.
+     * @param $buttons The new buttons.
      *
-     * @param[in] $misc Whether or not to include the extra misc-button.
+     * @param $misc Whether or not to include the extra misc-button.
      *
-     * @param[in] $all Whether to add the button to non-list views.
+     * @param $all Whether to add the button to non-list views.
      *
      * @return Array suitable to be plugged in $opts['buttons'].
      */
@@ -1335,7 +1335,7 @@ namespace CAFEVDB
 
     /**Generate a couple of standard buttons, identified by Ids.
      *
-     * @param[in] string $id One of
+     * @param string $id One of
      *   - an array; in this case buttonsFromArray() is called with the supplied data.
      *   - projects Project Overview.
      *   - all Overview of all musicians.
@@ -1354,9 +1354,9 @@ namespace CAFEVDB
      *   - insurancerates Page with knwon insurance rates.
      *   - insurancebrokers Page with knwon brokers, including (maybe) their address.
      *
-     * @param[in] bool $asListItem Generate a list item instead of a
-     * @param[in] string $projectName name of the project if needed.
-     * @param[in] int $projectId Id of the project if needed.
+     * @param bool $asListItem Generate a list item instead of a
+     * @param string $projectName name of the project if needed.
+     * @param int $projectId Id of the project if needed.
      * form with submit button.
      *
      * @return string The HTML form control requested.

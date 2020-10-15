@@ -162,7 +162,7 @@ class VCalendarService
    * object. This is a reference to allow for modification of the
    * $vCalendar object.
    *
-   * @param[in] $vCalendar VCalendar object.
+   * @param $vCalendar VCalendar object.
    *
    * @return A reference to the inner object.
    */
@@ -184,7 +184,7 @@ class VCalendarService
 
   /**Return the type of the respective calendar object.
    *
-   * @param[in] $vCalendar
+   * @param $vCalendar
    *
    * @return string Either VEVENT, VTODO, VJOURNAL or VCARD.
    */
@@ -206,7 +206,7 @@ class VCalendarService
 
   /**Return the category list for the given object
    *
-   * @param[in] $vCalendar Sabe vCalendar object
+   * @param $vCalendar Sabe vCalendar object
    *
    * @return An array with the categories for the object. */
   public static function getCategories($vCalendar)

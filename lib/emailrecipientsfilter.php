@@ -401,19 +401,19 @@ namespace CAFEVDB
      * 'Instrumente' or 'Instrument' (normally). Also, fetch all data
      * needed to do any per-recipient substitution later.
      *
-     * @param[in] $dbh Data-base handle.
+     * @param $dbh Data-base handle.
      *
-     * @param[in] $table The table to use, either 'Musiker' or a project view.
+     * @param $table The table to use, either 'Musiker' or a project view.
      *
-     * @param[in] $id The name of the column holding the musicians
+     * @param $id The name of the column holding the musicians
      *                global id, this is either 'Id' (Musiker-table) or
      *                'MusikerId' (project view).
      *
-     * @param[in] $restrict The filter restriction, either 'Instrument'
+     * @param $restrict The filter restriction, either 'Instrument'
      *                (German singular) or 'Instrumente' (German
      *                plural).
      *
-     * @param[in] $projectId Either a valid project-id, or -1 if not in
+     * @param $projectId Either a valid project-id, or -1 if not in
      *                "project-mode".
      *
      * @return Associative array with the keys

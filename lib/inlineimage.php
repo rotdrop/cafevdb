@@ -98,15 +98,15 @@ namespace CAFEVDB {
 
     /**Take a BASE64 encoded photo and store it in the DB.
      *
-     * @param[in] integer $itemId Unique Id in respective DB-table.
+     * @param integer $itemId Unique Id in respective DB-table.
      *
-     * @param[in] string $imageData Raw image data or a data-uri (only
+     * @param string $imageData Raw image data or a data-uri (only
      * base64 is supported, and only image URIs).
      *
-     * @param[in] string $mimeType The mime-type. Will be determined
+     * @param string $mimeType The mime-type. Will be determined
      * from @a $imageData if not given.
      *
-     * @param[in] resource $handle Data-base handle. A new connection
+     * @param resource $handle Data-base handle. A new connection
      * will be opened (and closed) if unset.
      *
      * @return boolean @c true in case of success.

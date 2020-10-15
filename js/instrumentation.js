@@ -173,7 +173,7 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Pseudo-submit an underlying PME-form with tweaked form data.
    *
-   * @param[in] form A form with additional input data which is
+   * @param form A form with additional input data which is
    * submitted as well. Submit buttons are omitted.
    *
    * @param formData Data for hidden input elements which replace the
@@ -188,7 +188,7 @@ var CAFEVDB = CAFEVDB || {};
    *
    * The form is submitted with an empty pseudo-submit button.
    *
-   * @param[in] afterLoadCallback Optional. A function called after the
+   * @param afterLoadCallback Optional. A function called after the
    * table-view has been loaded.
    */
   Instrumentation.loadPMETable = function(form, formData, afterLoadCallback) {
@@ -221,11 +221,11 @@ var CAFEVDB = CAFEVDB || {};
    *
    * The form is submitted with an empty pseudo-submit button.
    *
-   * @param[in] ids An array containing the ids that will be
+   * @param ids An array containing the ids that will be
    * displayed. If ids is empty or contains an entry @c -1 then no filtering will
    * take place.
    *
-   * @param[in] afterLoadCallback Optional. A function called after the
+   * @param afterLoadCallback Optional. A function called after the
    * table-view has been loaded.
    */
   Instrumentation.loadPMETableFiltered = function(form, formData, ids, afterLoadCallback) {
@@ -255,16 +255,16 @@ var CAFEVDB = CAFEVDB || {};
    *
    * @param form The current PME form.
    *
-   * @param[in] ids An array containing the ids that will be
+   * @param ids An array containing the ids that will be
    * displayed. If ids is empty or contains an entry -1 then no filtering will
    * take place.
    *
-   * @param[in] projectMode @c true, @c false, @c null or omitted.
+   * @param projectMode @c true, @c false, @c null or omitted.
    * If @c null or not present, then @a form will be searched for an input element with
    * name @c ProjectId, if present and its value is positive, the main musisians table is
    * loaded in project mode, allowing for adding new participants to the respective project.
    *
-   * @param[in] afterLoadCallback Optional. A function called after the
+   * @param afterLoadCallback Optional. A function called after the
    * table-view has been loaded.
    */
   Instrumentation.loadMusicians = function(form, ids, projectMode, afterLoadCallback) {
@@ -290,9 +290,9 @@ var CAFEVDB = CAFEVDB || {};
    * constructing a suitable filter restricting the initial view to
    * all musicians @b not yet registered for the project.
    *
-   * @param[in] form The current PME form.
+   * @param form The current PME form.
    *
-   * @param[in] afterLoadCallback An optional callback executed after
+   * @param afterLoadCallback An optional callback executed after
    * the PME table has been loaded.
    */
   Instrumentation.loadAddMusicians = function(form, afterLoadCallback) {
@@ -301,13 +301,13 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Load the detailed instrumentation view.
    *
-   * @param[in] form The current PME form.
+   * @param form The current PME form.
    *
-   * @param[in] musicians Optional. An array of musician ids. The
+   * @param musicians Optional. An array of musician ids. The
    * table view will be restricted to these ids by constructing a
    * suitable filter expression.
    *
-   * @param[in] afterLoadCallback An optional callback executed after
+   * @param afterLoadCallback An optional callback executed after
    * the PME table has been loaded.
    */
   Instrumentation.loadDetailedInstrumentation = function(form, musicians, afterLoadCallback) {

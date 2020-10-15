@@ -66,11 +66,11 @@ class CalDavService
 
   /**Get or create a calendar.
    *
-   * @param[in] $uri Relative URI
+   * @param $uri Relative URI
    *
-   * @param[in] $userId part of the principal name.
+   * @param $userId part of the principal name.
    *
-   * @param[in] $displayName Display-name of the calendar.
+   * @param $displayName Display-name of the calendar.
    *
    * @return int Calendar id.
    *

@@ -45,10 +45,10 @@ class LegacyEventsController extends Controller {
 
   const ERROR_TEMPLATE = "errorpage";
 
-  /** @var IL10N. */
+  /** @var \OCP\IL10N. */
   private $l;
 
-  /** @var IURLGenerator. */
+  /** @var \OCP\IURLGenerator. */
   private $urlGenerator;
 
   /** @var RequestParameterService */

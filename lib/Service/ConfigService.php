@@ -478,9 +478,9 @@ class ConfigService {
    * and in case an exeption has been called will re-throw the
    * exception.
    *
-   * @param[in] $uid The "fake" uid.
+   * @param $uid The "fake" uid.
    *
-   * @param[in] $callback function.
+   * @param $callback function.
    *
    * @return Whatever the callback-functoni returns.
    *

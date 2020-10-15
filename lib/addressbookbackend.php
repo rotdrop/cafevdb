@@ -582,10 +582,10 @@ namespace CAFEVDB
      *
      * This beast fetches one row from the Musiker table.
      *
-     * @param[in] string $uuid Actually, the UUID of the contact, used
+     * @param string $uuid Actually, the UUID of the contact, used
      * as id for the contacts app.
      *
-     * @param[in] array $options Optional (backend specific options).
+     * @param array $options Optional (backend specific options).
      *
      * @return The respective row from the Musiker table, or null on
      * error.

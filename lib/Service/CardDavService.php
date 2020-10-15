@@ -59,11 +59,11 @@ class CardDavService
 
   /**Get or create a addressBook.
    *
-   * @param[in] $uri Relative URI
+   * @param $uri Relative URI
    *
-   * @param[in] $userId part of the principal name.
+   * @param $userId part of the principal name.
    *
-   * @param[in] $displayName Display-name of the addressBook.
+   * @param $displayName Display-name of the addressBook.
    *
    * @return int AddressBook id.
    */

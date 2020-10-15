@@ -37,7 +37,7 @@ var CAFEVDB = CAFEVDB || {};
   /**Initialize the mess with contents. The "mess" is a dialog window
    *with the input form element for the bank account data.
    *
-   * @param[in] data JSON response with the fields data.status,
+   * @param data JSON response with the fields data.status,
    *                 data.data.contents,
    *                 data.data.message is place in an error-popup if status != 'success'
    *                 data.data.debug. data.data.debug is placed

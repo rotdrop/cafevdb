@@ -535,14 +535,14 @@ DebitNotePurpose
      * message is not sent out. A duplicate is something with the same
      * message text and the same recipient list.
      *
-     * @param[in] $strMessage The message to send.
+     * @param $strMessage The message to send.
      *
-     * @param[in] $EMails The recipient list
+     * @param $EMails The recipient list
      *
-     * @param[in] $addCC If @c false, then additional CC and BCC recipients will
+     * @param $addCC If @c false, then additional CC and BCC recipients will
      *                   not be added.
      *
-     * @param[in] $allowDuplicates Whether n ot to check for
+     * @param $allowDuplicates Whether n ot to check for
      * duplicates. This is currently only set to true when
      * sending a copy of a form-email with per-recipient substitutions
      * to the orchestra account.
@@ -853,9 +853,9 @@ DebitNotePurpose
      * to be executed after successful sending of the message in cas
      * of success.
      *
-     * @param[in] $logMessage The email-message to record in the DB.
+     * @param $logMessage The email-message to record in the DB.
      *
-     * @param[in] $allowDuplicates Whether n ot to check for
+     * @param $allowDuplicates Whether n ot to check for
      * duplicates. This is currently only set to true when
      * sending a copy of a form-email with per-recipient substitutions
      * to the orchestra account.
@@ -990,11 +990,11 @@ DebitNotePurpose
 
     /**Compose and export one message to HTML.
      *
-     * @param[in] $strMessage The message to send.
+     * @param $strMessage The message to send.
      *
-     * @param[in] $EMails The recipient list
+     * @param $EMails The recipient list
      *
-     * @param[in] $addCC If @c false, then additional CC and BCC recipients will
+     * @param $addCC If @c false, then additional CC and BCC recipients will
      *                   not be added.
      *
      * @return true or false.
@@ -1795,7 +1795,7 @@ DebitNotePurpose
      * is successfully removed, then it is also removed from the
      * config-space.
      *
-     * @param[in] $fileAttach List of files @b not to be removed.
+     * @param $fileAttach List of files @b not to be removed.
      *
      * @return Undefined.
      */

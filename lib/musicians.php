@@ -38,10 +38,10 @@ class Musicians
 
   /**Constructor.
    *
-   * @param[in] boolean $mode Start in "project-mode" which will mask
+   * @param boolean $mode Start in "project-mode" which will mask
    * out all musicians for the project passed as CGI-Variable ProjectId.
    *
-   * @param[in] boolean $execute If @c true, emit HTML code, with
+   * @param boolean $execute If @c true, emit HTML code, with
    * data-base-query side-effect. Otherwise self::execute() has to be
    * called explicitly.
    */
@@ -669,13 +669,13 @@ make sure that the musicians are also automatically added to the
 
   /** phpMyEdit calls the trigger (callback) with the following arguments:
    *
-   * @param[in] $pme The phpMyEdit instance
+   * @param $pme The phpMyEdit instance
    *
-   * @param[in] $op The operation, 'insert', 'update' etc.
+   * @param $op The operation, 'insert', 'update' etc.
    *
-   * @param[in] $step 'before' or 'after'
+   * @param $step 'before' or 'after'
    *
-   * @param[in] $oldvals Self-explanatory.
+   * @param $oldvals Self-explanatory.
    *
    * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
    *
@@ -729,13 +729,13 @@ make sure that the musicians are also automatically added to the
 
   /** phpMyEdit calls the trigger (callback) with the following arguments:
    *
-   * @param[in] $pme The phpMyEdit instance
+   * @param $pme The phpMyEdit instance
    *
-   * @param[in] $op The operation, 'insert', 'update' etc.
+   * @param $op The operation, 'insert', 'update' etc.
    *
-   * @param[in] $step 'before' or 'after'
+   * @param $step 'before' or 'after'
    *
-   * @param[in] $oldvals Self-explanatory.
+   * @param $oldvals Self-explanatory.
    *
    * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
    *
@@ -1066,12 +1066,12 @@ GROUP BY m.`Id`
 
   /** Check for duplicate records by Id, UUID, firstName, surName.
    *
-   * @param[in] array $records Associate array with records to check
+   * @param array $records Associate array with records to check
    * for. Supported fields are Id, UUID, Name and Vorname. Name and
    * Vorname will be combined with an AND junctor, Id and UUID, if
    * present, are added with an OR junctor.
    *
-   * @param[in] mixed $handle Data-base handle or false.
+   * @param mixed $handle Data-base handle or false.
    *
    * @return @c true if duplicates are found, @c false otherwise.
    */

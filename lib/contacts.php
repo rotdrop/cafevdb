@@ -35,11 +35,11 @@ namespace CAFEVDB
 
     /**Find a matching addressbook by its displayname.
      *
-     * @param[in] $displayName The display name.
+     * @param $displayName The display name.
      *
-     * @param[in] $owner The owner of the address-book object.
+     * @param $owner The owner of the address-book object.
      *
-     * @param[in] $includeShared Include also shared addressbooks.
+     * @param $includeShared Include also shared addressbooks.
      *
      * @return The address-book object (row of the database, i.e. an array).
      */
@@ -69,9 +69,9 @@ namespace CAFEVDB
     /**Make sure there is a suitable shared addressbook with the given
      * name and/or id. Create one if necesary.
      *
-     * @param[in] $displayName The display name. Mandatory.
+     * @param $displayName The display name. Mandatory.
      *
-     * @param[in] $addressBookId The addressbook id. If set, the
+     * @param $addressBookId The addressbook id. If set, the
      * corresponding address-book will be renamed to $displayName. If
      * unset, search for an address-book with $displayName as display
      * name or create one.

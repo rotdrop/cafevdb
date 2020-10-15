@@ -3422,11 +3422,11 @@ class phpMyEdit
 	 * This is just like list_table(), i.e. only the chosen range of
 	 * data is displayed and in html-display order.
 	 *
-	 * @param[in] $cellFilter $line[] = Callback($i, $j, $celldata)
+	 * @param $cellFilter $line[] = Callback($i, $j, $celldata)
 	 *
-	 * @param[in] $lineCallback($i, $line)
+	 * @param $lineCallback($i, $line)
 	 *
-	 * @param[in] $css CSS-class to pass to cellDisplay().
+	 * @param $css CSS-class to pass to cellDisplay().
 	 */
 	function export($cellFilter = false, $lineCallback = false, $css = 'noescape')
 	{

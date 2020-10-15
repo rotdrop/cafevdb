@@ -306,11 +306,11 @@ class GeoCodingService
    * remote queries fail in order to prevent starvation of the
    * dynamic update procedure.
    *
-   * @param[in] $postalCode Postal code to time-stamp.
+   * @param $postalCode Postal code to time-stamp.
    *
-   * @param[in] $country The country the postal code belongs to.
+   * @param $country The country the postal code belongs to.
    *
-   * @param[in] $handle Database handle or false.
+   * @param $handle Database handle or false.
    */
   private function stampPostalCode($postalCode, $country)
   {
@@ -337,11 +337,11 @@ class GeoCodingService
    * rather should be passed as pure data to the "calling" piece of
    * code.
    *
-   * @param[in] $string The message to write to the log.
+   * @param $string The message to write to the log.
    *
-   * @param[in] $level The message level, defaults to debug.
+   * @param $level The message level, defaults to debug.
    *
-   * @param[in] $echo Whether or not to output HTML-data.
+   * @param $echo Whether or not to output HTML-data.
    */
   private function log($string, $level = \OCP\ILogger::DEBUG, $context = [])
   {
@@ -460,7 +460,7 @@ class GeoCodingService
   /**Return an array of PHP-supported country-codes and localized
    * names; this uses the PHP-internal locale support.
    *
-   * @param[in] $language The desired language for the returned country names.
+   * @param $language The desired language for the returned country names.
    *
    * @return An array in the form array(CODE => NAME) where CODE is
    * the two-letter ISO-code for the country and NAME the name of

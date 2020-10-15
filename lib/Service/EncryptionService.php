@@ -307,8 +307,8 @@ class EncryptionService
   /**Encrypt the given value and store it in the application settings
    * table of OwnCloud.
    *
-   * @param[in] $key Configuration key.
-   * @param[in] $value Configuration value.
+   * @param $key Configuration key.
+   * @param $value Configuration value.
    */
   public function setValue($key, $value, bool $strict = false)
   {
@@ -332,9 +332,9 @@ class EncryptionService
    * data. Everyting is encrypted, and a BASE64 encoded representation
    * of the encoded data is stored int the data-base.
    *
-   * @param[in] $value The data to encrypt
+   * @param $value The data to encrypt
    *
-   * @param[in] $enckey The encrypt key.
+   * @param $enckey The encrypt key.
    *
    * @return The encrypted and encoded data.
    */
@@ -356,9 +356,9 @@ class EncryptionService
    * $enckey is empty or unset, no decryption is attempted. This
    * function also checks against the internally stored MD5 sum.
    *
-   * @param[in] $value The encrypted and BASE64 encoded data.
+   * @param $value The encrypted and BASE64 encoded data.
    *
-   * @param[in] $enckey The encryption key or an empty string or
+   * @param $enckey The encryption key or an empty string or
    * nothing.
    *
    * @return The decrypted data in case of success, or false

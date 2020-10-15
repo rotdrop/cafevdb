@@ -550,9 +550,9 @@ __EOT__;
     /**Validate the name, no spaces, camel case, last four characters
      * are either digits of the form 20XX.
      *
-     * @param[in] string $projectName The name to validate.
+     * @param string $projectName The name to validate.
      *
-     * @param[in] boolean $requireYear Year in last four characters is
+     * @param boolean $requireYear Year in last four characters is
      * mandatory.
      */
     public static function sanitizeName($projectName, $requireYear = false)
@@ -627,13 +627,13 @@ __EOT__;
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *
@@ -654,13 +654,13 @@ __EOT__;
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *
@@ -688,13 +688,13 @@ __EOT__;
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
-     * @param[in] $pme The phpMyEdit instance
+     * @param $pme The phpMyEdit instance
      *
-     * @param[in] $op The operation, 'insert', 'update' etc.
+     * @param $op The operation, 'insert', 'update' etc.
      *
-     * @param[in] $step 'before' or 'after'
+     * @param $step 'before' or 'after'
      *
-     * @param[in] $oldvals Self-explanatory.
+     * @param $oldvals Self-explanatory.
      *
      * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
      *
@@ -1385,11 +1385,11 @@ __EOT__;
     /**Fetch the list of projects from the data base as a short id=>name
      * field.
      *
-     * @param[in] mixed $handle Database handle, maybe false
+     * @param mixed $handle Database handle, maybe false
      *
-     * @param[in] bool $year Whether to include the year.
+     * @param bool $year Whether to include the year.
      *
-     * @param[in] bool $newestFirst Whether to sort for most recent
+     * @param bool $newestFirst Whether to sort for most recent
      * years first.
      *
      * @return array('Id', 'Name', 'Jahr');

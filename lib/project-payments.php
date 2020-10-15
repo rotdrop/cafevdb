@@ -382,14 +382,14 @@ namespace CAFEVDB
     /**Fetch the debit-note payments for the given time interval and
      * sum them up, grouped by instrumentation id.
      *
-     * @param[in] string $debitJob One out of membership-fee,
+     * @param string $debitJob One out of membership-fee,
      * insurance, amount, deposit, remaining.
      *
-     * @param[in] string $startDate Start-date in a format understood by mySql
+     * @param string $startDate Start-date in a format understood by mySql
      *
-     * @param[in] string $endDate End-date in a format understood by mySql
+     * @param string $endDate End-date in a format understood by mySql
      *
-     * @param[in] resource Data-base handle.
+     * @param resource Data-base handle.
      *
      * @return array(array('InstrumentationId' => ID,
      *                     'TotalAmountPaid' => AMOUNT));

@@ -34,9 +34,9 @@ class L
 
   /**Print the translated text.
    *
-   * @param[in] $text Text to print, is finally passed to vsprintf().
+   * @param $text Text to print, is finally passed to vsprintf().
    *
-   * @param[in] $parameters Defaults to an empty array. @a $parameters
+   * @param $parameters Defaults to an empty array. @a $parameters
    * are passed on to vsprintf().
    *
    * @return The possibly translated message.

@@ -44,9 +44,9 @@ namespace CAFEVDB {
      *
      * CATEGORIES are used to code instruments. PHOTO
      *
-     * @param[in] string $vCard Serialized vCard data.
+     * @param string $vCard Serialized vCard data.
      *
-     * @param[in] boolean $preferWork Set to @c true in order to
+     * @param boolean $preferWork Set to @c true in order to
      * favour work over home data.
      *
      * @return associative data suitable for insertion into the
@@ -254,9 +254,9 @@ namespace CAFEVDB {
 
     /**Export the stored data for one musician as vCard.
      *
-     * @param[in] $musician One row from the musician table.
+     * @param $musician One row from the musician table.
      *
-     * @param[in] $version vCard version -- which must be one
+     * @param $version vCard version -- which must be one
      * supported by \\Sabre\\VObject. Defaults to 3.0 for compatibility
      * reasons. Note that many (mobile) devices still only use the
      * stone-age v2.1 format.

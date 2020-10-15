@@ -172,11 +172,11 @@ class Navigation
      * phpMyEdit buttons. This is a dirty hack. But so what. Only the
      * L and F (list and filter) views are augmented.
      *
-     * @param[in] $button The new buttons.
+     * @param $button The new buttons.
      *
-     * @param[in] $misc Whether or not to include the extra misc-button.
+     * @param $misc Whether or not to include the extra misc-button.
      *
-     * @param[in] $all Whether to add the button to non-list views.
+     * @param $all Whether to add the button to non-list views.
      *
      * @return Array suitable to be plugged in $opts['buttons'].
      */
@@ -189,11 +189,11 @@ class Navigation
      * phpMyEdit buttons. This is a dirty hack. But so what. Only the
      * L and F (list and filter) views are augmented.
      *
-     * @param[in] $buttons The new buttons.
+     * @param $buttons The new buttons.
      *
-     * @param[in] $misc Whether or not to include the extra misc-button.
+     * @param $misc Whether or not to include the extra misc-button.
      *
-     * @param[in] $all Whether to add the button to non-list views.
+     * @param $all Whether to add the button to non-list views.
      *
      * @return Array suitable to be plugged in $opts['buttons'].
      */
@@ -417,7 +417,7 @@ class Navigation
 
     /**Generate a couple of standard buttons, identified by Ids.
      *
-     * @param[in] string $id One of
+     * @param string $id One of
      *   - an array; in this case buttonsFromArray() is called with the supplied data.
      *   - projects Project Overview.
      *   - all Overview of all musicians.
@@ -436,9 +436,9 @@ class Navigation
      *   - insurancerates Page with knwon insurance rates.
      *   - insurancebrokers Page with knwon brokers, including (maybe) their address.
      *
-     * @param[in] bool $asListItem Generate a list item instead of a
-     * @param[in] string $projectName name of the project if needed.
-     * @param[in] int $projectId Id of the project if needed.
+     * @param bool $asListItem Generate a list item instead of a
+     * @param string $projectName name of the project if needed.
+     * @param int $projectId Id of the project if needed.
      * form with submit button.
      *
      * @return string The HTML form control requested.

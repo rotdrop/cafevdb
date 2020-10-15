@@ -205,11 +205,11 @@ class ConfigCheckService
    * to be executed under the uid of the user the object belongs
    * to. See ConfigService::sudo().
    *
-   * @param[in] $id The @b numeric id of the object (not the name).
+   * @param $id The @b numeric id of the object (not the name).
    *
-   * @param[in] $group The group to share the item with.
+   * @param $group The group to share the item with.
    *
-   * @param[in] $type The type of the item, for exmaple calendar,
+   * @param $type The type of the item, for exmaple calendar,
    * event, folder, file etc.
    *
    * @return @c true for success, @c false on error.
@@ -245,14 +245,14 @@ class ConfigCheckService
    * this function has to be executed under the uid of the user the
    * object belongs to. See ConfigService::sudo().
    *
-   * @param[in] $id The @b numeric id of the object (not the name).
+   * @param $id The @b numeric id of the object (not the name).
    *
-   * @param[in] $groupId The group to share the item with.
+   * @param $groupId The group to share the item with.
    *
-   * @param[in] $type The type of the item, for exmaple calendar,
+   * @param $type The type of the item, for exmaple calendar,
    * event, folder, file etc.
    *
-   * @param[in] $shareOwner The user sharing the object.
+   * @param $shareOwner The user sharing the object.
    *
    * @return @c true for success, @c false on error.
    */
@@ -307,7 +307,7 @@ class ConfigCheckService
   /**Return @c true if the share-owner exists and belongs to the
    * orchestra user group (and only to this group).
    *
-   * @param[in] $shareOwnerId Optional. If unset, then the uid is
+   * @param $shareOwnerId Optional. If unset, then the uid is
    * fetched from the application configuration options.
    *
    * @return bool, @c true on success.
@@ -346,7 +346,7 @@ class ConfigCheckService
   /**Make sure the "sharing" user exists, create it when necessary.
    * May throw an exception.
    *
-   * @param[in] $shareOwnerId The account id holding the shared resources.
+   * @param $shareOwnerId The account id holding the shared resources.
    *
    * @return bool, @c true on success.
    */
@@ -411,7 +411,7 @@ class ConfigCheckService
   /**We require that the share-owner owns a directory shared with the
    * orchestra group. Check whether this folder exists.
    *
-   * @param[in] $sharedFolder Optional. If unset, the name is fetched
+   * @param $sharedFolder Optional. If unset, the name is fetched
    * from the application configuration options.
    *
    * @return bool, @c true on success.
@@ -458,7 +458,7 @@ class ConfigCheckService
   /**Check for existence of the shared folder and create it when not
    * found.
    *
-   * @param[in] $sharedFolder The name of the folder.
+   * @param $sharedFolder The name of the folder.
    *
    * @return bool, @c true on success.
    */
@@ -535,7 +535,7 @@ class ConfigCheckService
   /**Check for existence of the project folder and create it when not
    * found.
    *
-   * @param[in] $projectsFolder The name of the folder. The name may
+   * @param $projectsFolder The name of the folder. The name may
    * be composed of several path components.
    *
    * @return bool, @c true on success.
@@ -602,11 +602,11 @@ class ConfigCheckService
   /**Check for existence of the given calendar. Create one if it could
    * not be found. Make sure it is shared between the orchestra group.
    *
-   * @param[in] $uri The local URI of the calendar.
+   * @param $uri The local URI of the calendar.
    *
-   * @param[in] $displayName The display-name of the calendar.
+   * @param $displayName The display-name of the calendar.
    *
-   * @param[in] $id The id of the calendar.
+   * @param $id The id of the calendar.
    *
    * @return int -1 on error, calendar id on success.
    */
@@ -683,11 +683,11 @@ class ConfigCheckService
   /**Check for existence of the given addressBook. Create one if it could
    * not be found. Make sure it is shared between the orchestra group.
    *
-   * @param[in] $uri The local URI of the addressBook.
+   * @param $uri The local URI of the addressBook.
    *
-   * @param[in] $displayName The display-name of the addressBook.
+   * @param $displayName The display-name of the addressBook.
    *
-   * @param[in] $idd The id of the addressBook.
+   * @param $idd The id of the addressBook.
    *
    * @return int -1 on error, addressBook id on success.
    */

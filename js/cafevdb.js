@@ -688,11 +688,11 @@ var CAFEVDB = CAFEVDB || {};
   /**Create and submit a form with a POST request and given
    * parameters.
    *
-   * @param[in] url Location to post to.
+   * @param url Location to post to.
    *
-   * @param[in] values Query string in GET notation.
+   * @param values Query string in GET notation.
    *
-   * @param[in] method Either 'get' or 'post', default is 'post'.
+   * @param method Either 'get' or 'post', default is 'post'.
    */
   CAFEVDB.formSubmit = function(url, values, method) {
 
@@ -1330,11 +1330,11 @@ var CAFEVDB = CAFEVDB || {};
    * unset data('tipsy') by setting it to null, then call the
    * tipsy-constructor with the new values.
    *
-   * @param[in] selector jQuery element selector
+   * @param selector jQuery element selector
    *
-   * @param[in] options Tool-tip options
+   * @param options Tool-tip options
    *
-   * @param[in] container Optional container containing selected
+   * @param container Optional container containing selected
    * elements, i.e. tool-tip stuff will be applied to all elements
    * inside @a container matching @a selector.
    */
@@ -1485,10 +1485,10 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Get or set the option value(s) of a select box.
    *
-   * @param[in] select The select element. If it is an ordinary input
+   * @param select The select element. If it is an ordinary input
    * element, then in "set" mode its value is set to optionValues.
    *
-   * @param[in] optionValues Single option value or array of option
+   * @param optionValues Single option value or array of option
    * values to set.
    */
   CAFEVDB.selectValues = function(select, optionValues) {
