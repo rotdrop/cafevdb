@@ -25,9 +25,9 @@ namespace OCA\CAFEVDB\Service;
 use OCA\CAFEVBD\Common\Util;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrin\ORM\Entities\GeoContinents;
-use OCA\CAFEVDB\Database\Doctrin\ORM\Entities\GeoCountries;
-use OCA\CAFEVDB\Database\Doctrin\ORM\Entities\GeoPostalCodes;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoContinents;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoCountries;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCodes;
 
 class GeoCodingService
 {
@@ -38,7 +38,7 @@ class GeoCodingService
   const XML = 2;
   const RDF = 3;
   const GEONAMES_TAG = "geonames";
-  const POSTALCODESLOOKUP_TAG = "postalcodes";
+  const POSTALCODESLOOKUP_TAG = "postalCodes";
   const POSTALCODESSEARCH_TAG = "postalCodes";
   const PROVIDER_URL = 'http://api.geonames.org';
   private $userName = null;
@@ -105,11 +105,11 @@ class GeoCodingService
     }
 
     $this->countryNames();
-    $myContinent = $this->$countryContinents[$this->localeRegion()];
+    $myContinent = $this->countryContinents[$this->localeRegion()];
 
     $countries = [];
     if (!$country) {
-      foreach ($this->$countryContinents as $cntry => $continent) {
+      foreach ($this->countryContinents as $cntry => $continent) {
         if ($continent !== $myContinent) {
           continue;
         }
@@ -122,11 +122,11 @@ class GeoCodingService
     $criteria = self::criteria();
     $expr = $criteria->expr();
     $criteria = (count($countries) == 1)
-              ? $criteria->where($expr->like('Country', $countries[0]))
-              : $criteria->where($expr->in('Country', $countries));
+              ? $criteria->where($expr->like('country', $countries[0]))
+              : $criteria->where($expr->in('country', $countries));
     $orExpr = [];
     if ($postalCode) {
-      $orExpr{} = $expr->like('PostalCode', $postalCode);
+      $orExpr[] = $expr->like('postalCode', $postalCode);
     }
     if ($name) {
       $orExpr[] = $expr->like('Name', $name);
@@ -139,7 +139,7 @@ class GeoCodingService
         'Latitude' => $location->getLatitude(),
         'Longitude' => $location->getLongitude(),
         'Country' => $location->getCountry(),
-        'PostalCode' => $location->getPostalcode(),
+        'PostalCode' => $location->getPostalCode(),
         'Name' => $location->getName(),
       ];
 
@@ -175,12 +175,12 @@ class GeoCodingService
     }
 
     $this->countryNames(null);
-    $myContinent = $this->$countryContinents[$this->localeRegion()];
+    $myContinent = $this->countryContinents[$this->localeRegion()];
 
     $parameters = [];
     $countries = [];
     if (!$country) {
-      foreach ($this->$countryContinents as $cntry => $continent) {
+      foreach ($this->countryContinents as $cntry => $continent) {
         if ($continent !== $myContinent) {
           continue;
         }
@@ -198,7 +198,7 @@ class GeoCodingService
     if ($postalCode) {
       $zipResults = $this->request(
         'postalCodeSearch',
-        array_merge(array('postalcode' => $postalCode), $parameters)
+        array_merge(array('postalCode' => $postalCode), $parameters)
       );
       if (isset($zipResults[self::POSTALCODESSEARCH_TAG]) &&
           is_array($zipResults[self::POSTALCODESSEARCH_TAG])) {
@@ -253,13 +253,13 @@ class GeoCodingService
               ->setLatitude($lat)
               ->setLongitude($lng)
               ->setCountry($cntry)
-              ->setPostalcode($postalCode)
+              ->setPostalCode($postalCode)
               ->setName($name);
       $postalCode = $this->merge($entity);
 
       foreach ($translations as $language => $translation) {
         $entity = GeoPostalCodeTranslations::create()
-                ->setPostalcodeid($postalCode->getId())
+                ->setPostalCodeid($postalCode->getId())
                 ->setTarget($language)
                 ->setTranslation($translation);
         $this->merge($entity);
@@ -388,7 +388,7 @@ class GeoCodingService
     foreach ($zipCodes as $postalCode => $country) {
       $zipCodeInfo = $this->request('postalCodeLookup',
                                    array('country' => $country,
-                                         'postalcode' => $postalCode));
+                                         'postalCode' => $postalCode));
 
       if (!isset($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
           !is_array($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
@@ -607,7 +607,7 @@ class GeoCodingService
     $countryInfo = $this->request('countryInfo', array('lang' => $lang));
     if (!isset($countryInfo[self::GEONAMES_TAG]) ||
         !is_array($countryInfo[self::GEONAMES_TAG])) {
-      continue; // give up
+      return false; // give up
     }
 
     // Process each entry in turn
@@ -651,12 +651,12 @@ class GeoCodingService
   /**Get the number of languages supported in the database tables. */
   public function languages($force = false)
   {
-    if (!$force && count($this->$languages) > 0) {
-      return $this->$languages;
+    if (!$force && count($this->languages) > 0) {
+      return $this->languages;
     }
 
     // get all languages
-    $this->$languages = [];
+    $this->languages = [];
     foreach ($this->columnNames(GeoContinents::class) as $column) {
       if ($column == 'Code') {
         continue;
@@ -664,7 +664,7 @@ class GeoCodingService
       $this->languages[] = $column;
     }
 
-    return $this->$languages;
+    return $this->languages;
   }
 
   /**Export the table of known countries w.r.t. to the current
@@ -683,8 +683,8 @@ class GeoCodingService
 
     $countries = $this->countryNames($language);
     $countryGroups = [];
-    foreach($this->$countryContinents as $country => $continent) {
-      $countryGroups[$country] = $this->$continentNames[$language][$continent];
+    foreach($this->countryContinents as $country => $continent) {
+      $countryGroups[$country] = $this->continentNames[$language][$continent];
     }
 
     // Sort it according to continents
@@ -702,8 +702,8 @@ class GeoCodingService
       $language = locale_get_primary_language($locale);
     }
 
-    if (isset($this->$continentNames[$language])) {
-      return $this->$continentNames[$language];
+    if (isset($this->continentNames[$language])) {
+      return $this->continentNames[$language];
     }
 
     $continents = [];
@@ -711,13 +711,14 @@ class GeoCodingService
     // sort s.t. the fallback-language comes first and is overwritten
     // later by the correct translation.
     $criteria = self::criteria()
-              ->where($expr->in('Target', ['en', $language]))
-              ->orderBy(['Target' => ('en' < $language ? 'ASC' : 'DESC')]);
+              ->where(self::expr()->in('target', ['en', $language]))
+              ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
+
     foreach ($this->matching($criteria, GeoContinents::class) as $translation) {
       $continents[$translation->getCode()] = $translation->getTranslation();
     }
 
-    $this->$continentNames[$language] = $continents;
+    $this->continentNames[$language] = $continents;
 
     return $continents;
   }
@@ -732,10 +733,10 @@ class GeoCodingService
       $language = locale_get_primary_language($locale);
     }
 
-    if (isset($this->$countryNames[$language]) &&
-        isset($this->$continentNames[$language]) &&
-        count($this->$countryContinents) > 0) {
-      return $this->$countryNames[$language];
+    if (isset($this->countryNames[$language]) &&
+        isset($this->continentNames[$language]) &&
+        count($this->countryContinents) > 0) {
+      return $this->countryNames[$language];
     }
 
     // Fetch also the continent names for requested language
@@ -746,8 +747,8 @@ class GeoCodingService
     $continents = [];
 
     $criteria = self::criteria()
-              ->where($expr->in('Target', ['en', $language]))
-              ->orderBy(['Target' => ('en' < $language ? 'ASC' : 'DESC')]);
+              ->where(self::expr()->in('target', ['en', $language]))
+              ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
     foreach ($this->matching($criteria, GeoCountries::class) as $country) {
       $iso = $country->getIso();
       $target = $country->getTarget();
@@ -764,8 +765,8 @@ class GeoCodingService
       }
     }
 
-    $this->$countryContinents = $continents;
-    $this->$countryNames[$language] = $countries;
+    $this->countryContinents = $continents;
+    $this->countryNames[$language] = $countries;
 
     return $countries;
   }
