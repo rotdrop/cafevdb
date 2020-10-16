@@ -38,7 +38,7 @@ class UpdateGeoCoding extends TimedJob
    */
   protected function run($arguments) {
     $this->geoCodingService->updateCountries();
-    //    $this->geoCodingService->updatePostalCodes(null, false, 1);
+    $this->geoCodingService->updatePostalCodes(null, false, 1);
   }
 
 }
