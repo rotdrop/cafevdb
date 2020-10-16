@@ -39,6 +39,19 @@ $(document).ready(function() {
        OC.dialogs.alert(msg, t('cafevdb', 'Event-testing caught an error'));
      });
   });
+  $('.geo-coding.button').on('click', function(event) {
+    $.post(
+      OC.generateUrl('/apps/cafevdb/expertmode/action/geodata'),
+      {	'limit': 10 })
+     .done(function(data) {
+       console.log("triggered geo-data retrieval");
+     })
+     .fail(function(xhr, status, errorThrown) {
+       console.log("failed triggering geo-data retrieval");
+       const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+       OC.dialogs.alert(msg, t('cafevdb', 'Geo-Data testing caught an error'));
+     });
+  });
 });
 
 // Local Variables: ***

@@ -32,6 +32,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\GeoCodingService;
 
 class ExpertModeController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -45,16 +46,21 @@ class ExpertModeController extends Controller {
   /** @var ToolTipsService */
   private $toolTipsService;
 
+  /** @var GeoCodingService */
+  private $geoCodingService;
+
   public function __construct(
     $appName,
     IRequest $request,
     ConfigService $configService,
-    ToolTipsService $toolTipsService
+    ToolTipsService $toolTipsService,
+    GeoCodingService $geoCodingService
   ) {
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
     $this->toolTipsService = $toolTipsService;
+    $this->geoCodingService = $geoCodingService;
     $this->l = $this->l10N();
   }
 
@@ -114,6 +120,9 @@ class ExpertModeController extends Controller {
     case 'attachwebpages':
     case 'sanitizephones':
     case 'geodata':
+      $this->geoCodingService->updateCountries();
+      $this->geoCodingService->updatePostalCodes(null, false, 1);
+      break;
     case 'uuid':
     case 'imagemeta':
       return self::grumble($this->l->t('TO BE IMPLEMENTED'));
