@@ -309,8 +309,6 @@ class GeoCodingService
    * @param $postalCode Postal code to time-stamp.
    *
    * @param $country The country the postal code belongs to.
-   *
-   * @param $handle Database handle or false.
    */
   private function stampPostalCode($postalCode, $country)
   {
@@ -360,7 +358,7 @@ class GeoCodingService
    * in order to reduce the amount queries, updating one every 3
    * months should be sufficient.
    */
-  public function updatePostalCodes($language = null, $handle = false, $limit = 100, $echo = false)
+  public function updatePostalCodes($language = null, $limit = 100, $echo = false)
   {
     if (!$language) {
       $locale = $this->locale();
@@ -518,93 +516,38 @@ class GeoCodingService
 
   /**Synchronize the countries- and continents table with the
    * underlying backend. This function tries to update all stored
-   * languages and the language from the current lcoale, and at the
+   * languages and the language from the current locale, and at the
    * very least the English version of the name is obtained (as well
    * a the native one for the countries). It also tries to add the
    * primary language of the current locale to the tables.
    */
-  public function updateCountries($handle = false)
+  public function updateCountries()
   {
-    $languages = $this->languages(false);
-
     // add language of current locale
     $locale = $this->locale();
     $currentLang = locale_get_primary_language($locale);
 
-    foreach(array($currentLang, 'en') as $lang) {
-      if (!array_search($lang, $languages)) {
-        $this->log('Added language '.$lang);
-      }
-    }
     $languages = $this->languages();
-
-    $localeNames = $this->localeCountryNames('native');
-
-    // first obtain english names
-    $countryInfo = $this->request('countryInfo', array('lang' => 'en'));
-    if (!isset($countryInfo[self::GEONAMES_TAG]) ||
-        !is_array($countryInfo[self::GEONAMES_TAG])) {
-      return false;
-    }
-
-    $numCountry = 0;
-    $numContinent = 0;
-    foreach ($countryInfo[self::GEONAMES_TAG] as $country) {
-      $code = $country['countryCode'];
-      $continent = $country['continent'];
-      $native = isset($localeNames[$code]) ? $localeNames[$code] : '';
-      $name = $country['countryName'];
-      $continentName = $country['continentName'];
-
-      // Update country table
-      $query = "INSERT INTO `".self::COUNTRY_TABLE."`
-  (ISO,Continent,NativeName,en) VALUES ('".$code."','".$continent."','".$native."','".$name."')
-  ON DUPLICATE KEY UPDATE Continent = '".$continent."', NativeName = '".$native."', en = '".$name."'";
-      //echo $query."<BR/>";
-      mySQL::query($query);
-      $numCountry += mySQL::changedRows($handle);
-
-      // Update continent table
-      $query = "INSERT INTO `".self::CONTINENT_TABLE."`
-  (Code,en) VALUES ('".$continent."','".$continentName."')
-  ON DUPLICATE KEY UPDATE en = '".$continentName."'";
-      //echo $query."<BR/>";
-      mySQL::query($query);
-      $numContinent += mySQL::changedRows($handle);
-    }
-    self::log('Affected Rows for country setup: '.$numCountry);
-    $this->log('Affected Rows for contient setup: '.$numContinent);
+    $languagss = array_merge(['en', '@.', $currentLang], $languages);
 
     foreach ($languages as $lang) {
-      if ($lang === 'en') {
-        continue;
-      }
-
-      // per force update all
-      $numRows = $this->updateCountriesForLanguage($lang, true);
-
+      $numRows = $this->updateCountriesForLanguage($lang);
       $this->log('Affected rows for language '.$lang.': '.$numRows);
     }
 
     return true;
   }
 
-  /**Update the locale cache for one specific language. If $force
-   * === true recurse to the backend, otherwise update only if the
-   * language is not yet present.
-   */
-  public function updateCountriesForLanguage($lang, $force = false)
+  /**Update the locale cache for one specific language.*/
+  public function updateCountriesForLanguage($lang)
   {
-    if (!$force) {
-      // get list of desired languages
-      $countryFields = mySQL::columns(self::COUNTRY_TABLE);
-      if (array_search($lang, $countryFields) !== false) {
-        return true;
-      }
-    }
-
     // obtain localized info from server
-    $countryInfo = $this->request('countryInfo', array('lang' => $lang));
+    if ($lang === '@.') {
+      $queryLang = 'en';
+    } else {
+      $queryLang = $lang;
+    }
+    $countryInfo = $this->request('countryInfo', array('lang' => $queryLang));
     if (!isset($countryInfo[self::GEONAMES_TAG]) ||
         !is_array($countryInfo[self::GEONAMES_TAG])) {
       return false; // give up
@@ -618,32 +561,39 @@ class GeoCodingService
       $name = $country['countryName'];
       $continentName = $country['continentName'];
 
-      $this->setDatabaseRepository(GeoCountries::class);
-      $entity = $this->find([$code, $lang]);
-      if (empty($entity)) {
-        $entity = GeoCountries::create()
-                ->setIso($code)
-                ->setTarget($lang);
-      } else {
-        $numRows += (int)($entity->getData() != $name);
+      if ($lang === '@.') {
+        $name = isset($localeNames[$code]) ? $localeNames[$code] : '';
       }
-      $entity->setData($name);
-      $this->persist($entity);
 
-      // Update continent table
-      $this->setDatabaseRepository(GeoContinents::class);
-      $entity = $this->find([$continent, $lang]);
-      if (empty($entity)) {
-        $entity = GeoContinents::create()
-                ->setCode($continent)
-                ->setTarget($lang);
-      } else {
-        $numRows += (int)($entity->getTranslation() != $continentName);
+      if (!empty($name)) {
+        $this->setDatabaseRepository(GeoCountries::class);
+        $entity = $this->find([$code, $lang]);
+        if (empty($entity)) {
+          $entity = GeoCountries::create()
+                  ->setIso($code)
+                  ->setTarget($lang);
+        } else {
+          $numRows += (int)($entity->getData() != $name);
+        }
+        $entity->setData($name);
+        $this->merge($entity);
       }
-      $entity->setTranslation($continentName);
-      $this->persist($entity);
+
+      if (!empty($continentName)) {
+        // Update continent table
+        $this->setDatabaseRepository(GeoContinents::class);
+        $entity = $this->find([$continent, $lang]);
+        if (empty($entity)) {
+          $entity = GeoContinents::create()
+                  ->setCode($continent)
+                  ->setTarget($lang);
+        } else {
+          $numRows += (int)($entity->getTranslation() != $continentName);
+        }
+        $entity->setTranslation($continentName);
+        $this->merge($entity);
+      }
     }
-    $this->flush();
 
     return $numRows;
   }
@@ -655,14 +605,13 @@ class GeoCodingService
       return $this->languages;
     }
 
-    // get all languages
-    $this->languages = [];
-    foreach ($this->columnNames(GeoContinents::class) as $column) {
-      if ($column == 'Code') {
-        continue;
-      }
-      $this->languages[] = $column;
-    }
+    // get all languages @@TODO select distinct
+    $languages = $this->queryBuilder()
+                      ->select('target')
+                      ->distinct(true)
+                      ->getQuery()
+                      ->getResult();
+    $this->languages = array_filter($languages, function($value) { return $value !== '=>'; });
 
     return $this->languages;
   }
