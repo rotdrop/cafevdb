@@ -22,12 +22,16 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use \Doctrine\ORM\Query\Expr\Join;
+
 use OCA\CAFEVBD\Common\Util;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoContinents;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoCountries;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCodes;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCodeTranslations;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musiker;
 
 class GeoCodingService
 {
@@ -100,7 +104,7 @@ class GeoCodingService
     }
 
     if (!$language) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
     }
 
@@ -119,22 +123,25 @@ class GeoCodingService
       $countries[] = $country;
     }
 
-    $criteria = self::criteria();
-    $expr = self::expr();
-    $criteria = (count($countries) == 1)
-              ? $criteria->where($expr->like('country', $countries[0]))
-              : $criteria->where($expr->in('country', $countries));
+    $expr = $this->expr();
+    $qb = $this->queryBuilder()
+               ->select('qpc')
+               ->from(GeoPostalCodes::class, 'qpc')
+               ->where($expr->in('country', ':countries'))
+               ->setParameter('countries', $countries);
     $orExpr = [];
     if ($postalCode) {
-      $orExpr[] = $expr->like('postalCode', $postalCode);
+      $orExpr[] = $expr->eq('postalCode', $postalCode);
     }
     if ($name) {
-      $orExpr[] = $expr->like('Name', $name);
+      $orExpr[] = $expr->eq('Name', $name);
     }
-    $criteria = $criteria->andWhere(call_user_func_array([$expr, 'orX'], $orExpr));
-    $translations = $this->findAll(GeoPostCodeTranslations::class);
+    if (!empty($orExpr)) {
+      $qb = $qb->andWhere(call_user_func_array([$expr, 'orX'], $orExpr));
+    }
+    $this->info(__METHOD__ . ': ' . $qb->getDql());
     $locations = [];
-    foreach ($this->matching($criteria, GeoPostalCodes::class) as $location) {
+    foreach ($qb->getQuery()->execute() as $location) {
       $location = [
         'Latitude' => $location->getLatitude(),
         'Longitude' => $location->getLongitude(),
@@ -146,13 +153,12 @@ class GeoCodingService
       // and now it comes: if I understand this correctly the
       // associations of ORM will seemlessly provide the array of all
       // translations.
-      foreach ($locations->getTranslations() as $translation) {
+      foreach ($location->getTranslations() as $translation) {
         // so $translation is now an instance of
         // GeoPostalCodeTranslations ?
         $location[$translation->getTarget()] = $translation->getTranslation();
       }
     }
-
   }
 
   /**Fetch infornmation from the underlying geo-coding backend;
@@ -170,7 +176,7 @@ class GeoCodingService
     }
 
     if (!$language) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
     }
 
@@ -277,7 +283,7 @@ class GeoCodingService
   public function translatePlaceName($name, $country, $language = null)
   {
     if (!$language) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
     }
 
@@ -322,40 +328,29 @@ class GeoCodingService
     $qb = $this->queryBuilder();
     $expr = $qb->expr();
     $qb->update(GeoPostalCodes::class, 'gpc')
-       ->set('Updated', 'CURRENT_TIMESTAMP()')
+       ->set('updated', 'CURRENT_TIMESTAMP()')
        ->where(
          $expr->andX(
-           $expr->eq('gpc.Country', $country),
-           $expr->eq('gpc.PostalCode', $postalCode)
+           $expr->eq('gpc.country', $country),
+           $expr->eq('gpc.postalCode', $postalCode)
          ))
        ->getQuery()
        ->execute();
   }
 
-  /**Log to the "system"-log (OwnCloud) and optionally also
-   * HTML-code. The latter is a bug. Needed feed-back information
-   * rather should be passed as pure data to the "calling" piece of
-   * code.
-   *
-   * @param $string The message to write to the log.
-   *
-   * @param $level The message level, defaults to debug.
-   *
-   * @param $echo Whether or not to output HTML-data.
-   */
-  private function log($string, $level = \OCP\ILogger::DEBUG, $context = [])
+  private function debug($string, $context = [])
   {
-    $this->log($level, __CLASS__ . ': ' . $string, $context);
+    $this->log(\OCP\ILogger::DEBUG, $string, $context);
   }
 
   private function error($string, $context = [])
   {
-    $this->log($string, \OCP\ILogger::Error, $context);
+    $this->log(\OCP\ILogger::ERROR, $string, $context);
   }
 
   private function info($string, $context = [])
   {
-    $this->log($string, \OCP\ILogger::Info $context);
+    $this->log(\OCP\ILogger::INFO, $string, $context);
   }
 
   /**Update the list of known zip-code - location relations, but
@@ -368,19 +363,41 @@ class GeoCodingService
   public function updatePostalCodes($language = null, $limit = 100, $echo = false)
   {
     if (!$language) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
     }
 
     $zipCodes = [];
 
-    // only fetch postal codes for registered musicians.
-    $criteria = self::criteria()
-              ->where(self::expr()->isNotNull('musicians'))
-              ->andWhere(self::expr()->gt('TIMESTAMPDIFF(MONTH, updated, CURRENT_TIMESTAMP())', 1))
-              ->orderBy(['updated' => 'ASC'])
-              ->setMaxResults($limit);
-    foreach ($this->matching($criteria, GeoPostalCodes::class) as $postalCode) {
+    // $qb = $this->entityManager->createQueryBuilder();
+    // $qb
+    //     ->select('a', 'u')
+    //     ->from('Credit\Entity\UserCreditHistory', 'a')
+    //     ->leftJoin(
+    //         'User\Entity\User',
+    //         'u',
+    //         \Doctrine\ORM\Query\Expr\Join::WITH,
+    //         'a.user = u.id'
+    //     )
+    //     ->where('u = :user')
+    //     ->setParameter('user', $users)
+    //     ->orderBy('a.created_at', 'DESC');
+
+    // only fetch "old" postal codes for registered musicians.
+    $qb = $this->queryBuilder();
+    $qb->select('gpc')
+       ->from(GeoPostalCodes::class, 'gpc')
+       ->leftJoin(
+         Musiker::class, 'm',
+         Join::WITH,
+         'gpc.country = m.land AND gpc.postalCode = m.postleitzahl'
+       )
+       ->where('TIMESTAMPDIFF(MONTH, gpc.updated, CURRENT_TIMESTAMP()) > 1')
+       ->orderBy('gpc.updated', 'ASC')
+       ->setMaxResults($limit);
+    $this->info(__METHOD__ . ': ' . $qb->getDql());
+
+    foreach ($qb->getQuery()->getResult() as $postalCode) {
       $zipCodes[$postalCode->getPostalCode()] = $postalCode->getCountry();
     }
 
@@ -495,7 +512,7 @@ class GeoCodingService
   public function localeCountryNames($language = null)
   {
     if (!$language) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
     }
     $locales = resourcebundle_locales('');
@@ -515,7 +532,7 @@ class GeoCodingService
   public function localeCountryName($locale = null)
   {
     if (!$locale) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
     }
     $language = locale_get_primary_language($locale);
     return locale_get_display_region($locale, $language);
@@ -525,7 +542,7 @@ class GeoCodingService
   public function localeRegion($locale = null)
   {
     if (!$locale) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
     }
     return locale_get_region($locale);
   }
@@ -535,7 +552,7 @@ class GeoCodingService
   public function localeLanguage($locale = null)
   {
     if (!$locale) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
     }
     return locale_get_primary_language($locale);
   }
@@ -550,7 +567,7 @@ class GeoCodingService
   public function updateCountries()
   {
     // add language of current locale
-    $locale = $this->locale();
+    $locale = $this->getLocale();
     $currentLang = locale_get_primary_language($locale);
 
     $languages = $this->languages();
@@ -558,7 +575,7 @@ class GeoCodingService
 
     foreach ($languages as $lang) {
       $numRows = $this->updateCountriesForLanguage($lang);
-      $this->log('Affected rows for language '.$lang.': '.$numRows);
+      $this->info('Affected rows for language '.$lang.': '.$numRows);
     }
 
     return true;
@@ -631,12 +648,20 @@ class GeoCodingService
       return $this->languages;
     }
 
-    // get all languages @@TODO select distinct
+    // get all languages
     $languages = $this->queryBuilder()
-                      ->select('target')
+                      ->select('gpct.target')
+                      ->from(GeoPostalCodeTranslations::class, 'gpct')
                       ->distinct(true)
                       ->getQuery()
-                      ->getResult();
+                      ->execute();
+
+    $this->info(print_r($languages, true));
+
+    return [];
+    //
+    //                      ->getQuery()
+                          //                      ->getResult();
     $this->languages = array_filter($languages, function($value) { return $value !== '=>'; });
 
     return $this->languages;
@@ -652,7 +677,7 @@ class GeoCodingService
   public function countryContinents($language = null)
   {
     if (!$language) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
     }
 
@@ -673,7 +698,7 @@ class GeoCodingService
   public function continentNames($language = null)
   {
     if (!$language) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
     }
 
@@ -686,7 +711,7 @@ class GeoCodingService
     // sort s.t. the fallback-language comes first and is overwritten
     // later by the correct translation.
     $criteria = self::criteria()
-              ->where(self::expr()->in('target', ['en', $language]))
+              ->where($criteria->expr()->in('target', ['en', $language]))
               ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
 
     foreach ($this->matching($criteria, GeoContinents::class) as $translation) {
@@ -704,7 +729,7 @@ class GeoCodingService
   public function countryNames($language = null)
   {
     if (!$language) {
-      $locale = $this->locale();
+      $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
     }
 
@@ -722,7 +747,7 @@ class GeoCodingService
     $continents = [];
 
     $criteria = self::criteria()
-              ->where(self::expr()->in('target', ['en', $language]))
+              ->where($criteria->expr()->in('target', ['en', $language]))
               ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
     foreach ($this->matching($criteria, GeoCountries::class) as $country) {
       $iso = $country->getIso();

@@ -6,19 +6,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
-  //   $query = "SELECT DISTINCT t1.PostalCode, t1.Country, t1.Updated FROM
-  // `".self::POSTAL_CODES_TABLE."` as t1
-  //   LEFT JOIN `Musiker` as t2
-  //     ON t1.PostalCode = t2.Postleitzahl AND t1.Country = t2.Land
-  // WHERE TIMESTAMPDIFF(MONTH,Updated,NOW()) > 1
-  // ORDER BY `Updated` ASC
-  // LIMIT ".$limit;
-  //   $result = mySQL::query($query);
-  //   while ($line = mySQL::fetch($result)) {
-  //     $zipCodes[$line['PostalCode']] = $line['Country'];
-  //   }
-
 /**
  * GeoPostalCodes
  *
@@ -88,15 +75,6 @@ class GeoPostalCodes implements \ArrayAccess
      * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslations", mappedBy="PostalCodeId")
      */
     private $translations;
-
-    //   $query = "SELECT DISTINCT t1.PostalCode, t1.Country, t1.Updated FROM
-    // `".self::POSTAL_CODES_TABLE."` as t1
-    //   LEFT JOIN `Musiker` as t2
-    //     ON t1.PostalCode = t2.Postleitzahl AND t1.Country = t2.Land
-    /**
-     * @ORM\OneToMany(targetEntity="Musiker", mappedBy="PostalCode,Country")
-     */
-    private $musicians;
 
     public function __construct() {
         $this->arrayCTOR();

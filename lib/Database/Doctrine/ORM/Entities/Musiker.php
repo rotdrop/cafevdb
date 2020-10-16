@@ -137,15 +137,6 @@ class Musiker implements \ArrayAccess
      */
     private $aktualisiert;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="GeoPostalCodes", inversedBy="musicians")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Land", referencedColumnName="Country"),
-     *   @ORM\JoinColumn(name="Postleitzahl", referencedColumnName="PostalCode")
-     * })
-     */
-    private $postalCode;
-
     public function __construct() {
         $this->arrayCTOR();
     }

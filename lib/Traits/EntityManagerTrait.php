@@ -125,8 +125,8 @@ trait EntityManagerTrait {
     return new Criteria();
   }
 
-  private static function expr() {
-    return Criteria::expr();
+  private function expr() {
+    return $this->queryBuilder()->expr();
   }
 
   private function count(array $criteria, $entityClassName = null)
