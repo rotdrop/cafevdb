@@ -120,7 +120,7 @@ class GeoCodingService
     }
 
     $criteria = self::criteria();
-    $expr = $criteria->expr();
+    $expr = self::expr();
     $criteria = (count($countries) == 1)
               ? $criteria->where($expr->like('country', $countries[0]))
               : $criteria->where($expr->in('country', $countries));
@@ -306,6 +306,8 @@ class GeoCodingService
    * remote queries fail in order to prevent starvation of the
    * dynamic update procedure.
    *
+   * Note that this may affect more than one entry.
+   *
    * @param $postalCode Postal code to time-stamp.
    *
    * @param $country The country the postal code belongs to.
@@ -351,11 +353,16 @@ class GeoCodingService
     $this->log($string, \OCP\ILogger::Error, $context);
   }
 
+  private function info($string, $context = [])
+  {
+    $this->log($string, \OCP\ILogger::Info $context);
+  }
+
   /**Update the list of known zip-code - location relations, but
    * only for the registerted musicians.
    *
    * TODO: extend to all, but then have a look at the Updated field
-   * in order to reduce the amount queries, updating one every 3
+   * in order to reduce the amount queries, updating once every 3
    * months should be sufficient.
    */
   public function updatePostalCodes($language = null, $limit = 100, $echo = false)
@@ -367,26 +374,23 @@ class GeoCodingService
 
     $zipCodes = [];
 
-    $query = "SELECT DISTINCT t1.PostalCode, t1.Country, t1.Updated FROM
-  `".self::POSTAL_CODES_TABLE."` as t1
-    LEFT JOIN `Musiker` as t2
-      ON t1.PostalCode = t2.Postleitzahl AND t1.Country = t2.Land
-  WHERE TIMESTAMPDIFF(MONTH,Updated,NOW()) > 1
-  ORDER BY `Updated` ASC
-  LIMIT ".$limit;
-    $result = mySQL::query($query);
-    while ($line = mySQL::fetch($result)) {
-      $zipCodes[$line['PostalCode']] = $line['Country'];
+    // only fetch postal codes for registered musicians.
+    $criteria = self::criteria()
+              ->where(self::expr()->isNotNull('musicians'))
+              ->andWhere(self::expr()->gt('TIMESTAMPDIFF(MONTH, updated, CURRENT_TIMESTAMP())', 1))
+              ->orderBy(['updated' => 'ASC'])
+              ->setMaxResults($limit);
+    foreach ($this->matching($criteria, GeoPostalCodes::class) as $postalCode) {
+      $zipCodes[$postalCode->getPostalCode()] = $postalCode->getCountry();
     }
-    //echo $query.'<BR/>';
-    //throw new \Exception($query);
 
     $numChanged = 0;
     $numTotal = 0;
     foreach ($zipCodes as $postalCode => $country) {
-      $zipCodeInfo = $this->request('postalCodeLookup',
-                                   array('country' => $country,
-                                         'postalCode' => $postalCode));
+      $zipCodeInfo = $this->request('postalCodeLookup', [
+        'country' => $country,
+        'postalCode' => $postalCode
+      ]);
 
       if (!isset($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
           !is_array($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
@@ -399,8 +403,8 @@ class GeoCodingService
       foreach ($zipCodeInfo[$this->POSTALCODESLOOKUP_TAG] as $zipCodePlace) {
         ++$numTotal;
 
-        $lat  = (int)($zipCodePlace['lat'] * 10000);
-        $lng  = (int)($zipCodePlace['lng'] * 10000);
+        $lat  = (double)($zipCodePlace['lat']);
+        $lng  = (double)($zipCodePlace['lng']);
         $name = $zipCodePlace['placeName'];
 
         $translations = [];
@@ -418,39 +422,61 @@ class GeoCodingService
         /* Normalize name and translation */
         $name = Util::normalizeSpaces($name);
 
-        $query = "INSERT INTO `".self::POSTAL_CODES_TABLE."`
-  (Latitude,Longitude,Country,PostalCode,Name,".implode(',',$languages).")
-  VALUES
-  (".$lat.",".$lng.",'".$country."','".$postalCode."','".$name."',".implode(',',$translations).")
-  ON DUPLICATE KEY UPDATE
-    Latitude = ".$lat.", Longitude = ".$lng.",
-    Country = '".$country."',
-    PostalCode = '".$postalCode."',
-    Name = '".$name."'";
+        $hasChanged = false;
+        $this->setDatabaseRepository(GeoPostalCodes::class);
+        $postalCode = $this->findBy([
+          'country' => $country,
+          'postalCode' => $postalCode,
+          'name' => $name,
+        ]);
+        if (empty($postalCode)) {
+          $postalCode = GeoPostalCodes::create()
+                      ->setCountry($country)
+                      ->setPostalCode($postalCode)
+                      ->setName($name);
+          $hasChanged = true;
+        } else if (($lat != $PostalCode->getLatitude()) || ($lng != $postalCode->getLongitude)) {
+          $hasChanged = true;
+        }
+        if ($hasChanged) {
+          $postalCode->setLongitude($lng);
+          $postalCode->setLatitude($lat);
+          $postalCode = $this->merge($postalCode);
+          $numChanged++;
+        }
 
+        $postalCodeId = $postalCode->getId();
         foreach ($translations as $lang => $translation) {
-          $query .= ",
-    ".$lang." = ".$translation;
+          $hasChanged = false;
+          $this->setDatabaseRepository(GeoPostalCodeTranslations::class);
+          $entity = $this->findBy([
+            'postalCodeId' => $postalCodeId,
+            'target' => $target,
+          ]);
+          if (empty($entity)) {
+            $entity = GeoPostalCodeTranslations::create()
+                    ->setPostalCodeId($postalCodeId)
+                    ->setTarget($lang);
+            $hasChanged = true;
+          } else if ($translation != $entity->getTranslation()) {
+            $hasChanged = true;
+          }
+          if ($hasChanged) {
+            $entity->setTranslation($translation);
+            $this->merge($entity);
+          }
         }
 
-        //throw new \Exception($query);
-        //echo '<H4>Query: '.$query.'</H4><BR/>';
-        mySQL::query($query);
-        $hasChanged = mySQL::changedRows($handle);
-        if ($hasChanged > 0) {
-          $numChanged += $hasChanged;
-        } else {
-          // Still set the time-stamp in order to prevent starvation
-          // of dynamic update procedures.
-          $this->stampPostalCode($postalCode, $country);
-        }
         if ($limit == 1) {
-          $this->error($postalCode.'@'.$country.': '.$name);
+          $this->info($postalCode.'@'.$country.': '.$name);
         }
       }
 
+      // Still set the time-stamp in order to prevent starvation
+      // of dynamic update procedures.
+      $this->stampPostalCode($postalCode, $country);
     }
-    $this->error('Affected Postal Code records: '.$numChanged.' of '.$numTotal);
+    $this->info('Affected Postal Code records: '.$numChanged.' of '.$numTotal);
 
     return true;
   }

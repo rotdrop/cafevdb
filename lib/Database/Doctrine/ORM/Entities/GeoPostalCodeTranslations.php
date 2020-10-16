@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GeoPostalCodes
  *
- * @ORM\Table(name="GeoPostalCodeTranslations")
+ * @ORM\Table(name="GeoPostalCodeTranslations", uniqueConstraints={@ORM\UniqueConstraint(name="PostalCodeId_Target", columns={"PostalCodeId", "Target"})})
  * @ORM\Entity
  */
 class GeoPostalCodeTranslations implements \ArrayAccess
@@ -19,8 +19,16 @@ class GeoPostalCodeTranslations implements \ArrayAccess
     /**
      * @var int
      *
-     * @ORM\Column(name="PostalCodeId", type="integer", nullable=false)
+     * @ORM\Column(name="Id", type="integer", nullable=false)
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="PostalCodeId", type="integer", nullable=false)
      */
     private $postalCodeId;
 
@@ -28,7 +36,6 @@ class GeoPostalCodeTranslations implements \ArrayAccess
      * @var string
      *
      * @ORM\Column(name="Target", type="string", length=2, nullable=false)
-     * @ORM\Id
      */
     private $target;
 
@@ -43,10 +50,34 @@ class GeoPostalCodeTranslations implements \ArrayAccess
      * @ORM\ManyToOne(targetEntity="GeoPostalCodes", inversedBy="translations")
      * @ORM\JoinColumn(name="PostalCodeId", referencedColumnName="Id")
      */
-    private $postalCode;
+    private $geoPostalCode;
 
     public function __construct() {
         $this->arrayCTOR();
+    }
+
+    /**
+     * Set id.
+     *
+     * @param int $id
+     *
+     * @return GeoPostalCodeTranslations
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

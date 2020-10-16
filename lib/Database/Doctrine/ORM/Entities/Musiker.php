@@ -54,18 +54,18 @@ class Musiker implements \ArrayAccess
     private $strasse;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="Postleitzahl", type="integer", nullable=true)
-     */
-    private $postleitzahl;
-
-    /**
      * @var string
      *
-     * @ORM\Column(name="Land", type="string", length=128, nullable=false, options={"default"="DE"})
+     * @ORM\Column(name="Land", type="string", length=2, nullable=false)
      */
     private $land = 'DE';
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="Postleitzahl", type="string", length=32, nullable=false)
+     */
+    private $postleitzahl;
 
     /**
      * @var string
@@ -137,8 +137,31 @@ class Musiker implements \ArrayAccess
      */
     private $aktualisiert;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="GeoPostalCodes", inversedBy="musicians")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Land", referencedColumnName="Country"),
+     *   @ORM\JoinColumn(name="Postleitzahl", referencedColumnName="PostalCode")
+     * })
+     */
+    private $postalCode;
+
     public function __construct() {
         $this->arrayCTOR();
+    }
+
+    /**
+     * Set id.
+     *
+     * @param int $id
+     *
+     * @return GeoPostalCodeTranslations
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
