@@ -67,17 +67,17 @@ PHPDOC=/opt/phpDocumentor/bin/phpdoc
 
 all: build
 
-composer.json: # no dependency, cleared only by "make realclean"
+composer.json: composer.json.in
 	cp composer.json.in composer.json
 
 stamp.composer-core-versions: composer.lock
 	date > stamp.composer-core-versions
 
 composer.lock: DRY:=
-composer.lock: composer.json
+composer.lock: composer.json composer.json.in
 	rm -f composer.lock
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
-	env DRY=$(DRY) dev-scripts/tweak-composer-jons.sh || {\
+	env DRY=$(DRY) dev-scripts/tweak-composer-json.sh || {\
  rm -f composer.lock;\
  $(COMPOSER) install $(COMPOSER_OPTIONS);\
 }
