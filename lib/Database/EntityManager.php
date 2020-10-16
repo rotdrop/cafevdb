@@ -108,6 +108,8 @@ class EntityManager extends EntityManagerDecorator
       $config->setAutoGenerateProxyClasses(false);
     }
 
+    $config->addCustomStringFunction('timestampdiff', 'Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff');
+
     // obtaining the entity manager
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config);
 

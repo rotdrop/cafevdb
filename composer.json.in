@@ -15,7 +15,8 @@
     "ioncube/php-openssl-cryptor": "dev-master",
     "components/jquery": "^2.2.0",
     "components/jquery-migrate": "^3.0.0",
-    "doctrine/orm": "~v2.6.0"
+    "doctrine/orm": "~v2.6.0",
+    "oro/doctrine-extensions": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.4"
