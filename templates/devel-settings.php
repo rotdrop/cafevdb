@@ -29,7 +29,7 @@
       <br/>
       <input type="button" class="devlinktest" id="testphpmyadmincloud" name="testphpmyadmincloud" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
       <input type="text" class="devlink" id="phpmyadmincloud" name="phpmyadmincloud" placeholder="Owncloud@phpMyAdmin" value="<?php echo $_['phpmyadmincloud']; ?>" title="<?php echo $toolTips['phpmyadmincloud-link']; ?>" />
-      <label for="phpmyadmincloud"><?php echo $l->t('Link to Owncloud@%s', array('phpMyAdmin')); ?></label>
+      <label for="phpmyadmincloud"><?php echo $l->t('Link to Cloud@%s', array('phpMyAdmin')); ?></label>
       <br/>
       <input type="button" class="devlinktest" id="testsourcecode" name="testsourcecode" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
   <input type="text" class="devlink" id="sourcecode" name="sourcecode" placeholder="<?php echo $l->t('Link to the source-code'); ?>" value="<?php echo $_['sourcecode']; ?>" title="<?php echo $toolTips['sourcecode-link']; ?>" />
@@ -42,10 +42,10 @@
       <input type="button" class="devlinktest" id="testownclouddev" name="testownclouddev" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
       <input type="text" class="devlink" id="ownclouddev"
          name="ownclouddev"
-         placeholder="<?php echo $l->t('Link to Owncloud Developer Information'); ?>"
+         placeholder="<?php echo $l->t('Link to cloud Developer Information'); ?>"
          value="<?php echo $_['ownclouddev']; ?>"
          title="<?php echo $toolTips['ownclouddev-link']; ?>"/>
-      <label for="phpmyadmin"><?php echo $l->t('Owncloud developer documentation'); ?></label>
+      <label for="phpmyadmin"><?php echo $l->t('Ambient cloud provider developer documentation'); ?></label>
     </fieldset>
     <span class="statusmessage" id="msg"></span>
   </form>
