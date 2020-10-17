@@ -121,7 +121,10 @@ class ExpertModeController extends Controller {
     case 'sanitizephones':
     case 'geodata':
       $this->geoCodingService->updateCountries();
-      $this->geoCodingService->updatePostalCodes(null, false, 1);
+      $this->geoCodingService->updatePostalCodes(null, 1, [
+        [ 'country' => 'de', 'postalCode' => '71229' ]
+      ]);
+      return self::response($this->l->t('Triggered GeoCoding update.'));
       break;
     case 'uuid':
     case 'imagemeta':

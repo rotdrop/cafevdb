@@ -47,7 +47,7 @@ trait EntityManagerTrait {
 
   private function getDatabaseRepository($entityClassName = null)
   {
-    if ($entityClassName !== $this->entityClassName) {
+    if (!empty($entityClassName) && $entityClassName !== $this->entityClassName) {
       $this->setDatabaseRepository($entityClassName);
     }
     if (empty($this->databaseRepository)) {
@@ -123,6 +123,10 @@ trait EntityManagerTrait {
 
   private static function criteria() {
     return new Criteria();
+  }
+
+  private static function cExpr() {
+    return Criteria::expr();
   }
 
   private function expr() {

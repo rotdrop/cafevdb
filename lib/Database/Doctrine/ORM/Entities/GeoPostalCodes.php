@@ -79,7 +79,6 @@ class GeoPostalCodes implements \ArrayAccess
     public function __construct() {
         $this->arrayCTOR();
         $this->translations = new ArrayCollection();
-        $this->musicians = new ArrayColletction();
     }
 
     /**
