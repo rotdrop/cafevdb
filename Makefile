@@ -151,6 +151,7 @@ $(BUILDDIR)/core-exclude:
 .PHONY: cleanup
 cleanup: $(BUILDDIR)/core-exclude
 	while read LINE; do rm -rf $$(dirname $$LINE); done< <(cat $<)
+	$(COMPOSER) dump-autoload
 
 .PHONY: doc
 doc: $(PHPDOC)
