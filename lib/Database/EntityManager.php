@@ -86,8 +86,13 @@ class EntityManager extends EntityManagerDecorator
       'wrapperClass' => Connection::class,
       'configService' => $this->configService,
     ];
+    $charSetParams = [
+      'collate' => 'utf8mb4_bin',
+      'charset' => 'utf8mb4',
+      'row_format' => 'compressed',
+    ];
     !is_array($params) && ($params = []);
-    $connectionParams = array_merge($connectionParams, $params, $driverParams);
+    $connectionParams = array_merge($connectionParams, $params, $driverParams, $charSetParams);
     return $connectionParams;
   }
 
