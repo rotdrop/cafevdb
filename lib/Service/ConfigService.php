@@ -30,7 +30,7 @@ use OCP\IUserManager;
 use OCP\IGroupManager;
 use OCP\Group\ISubAdmin;
 use OCP\IURLGenerator;
-use OCP\L10N\IFactory;
+use OCP\L10N\IFactory as IL10NFactory;
 use OCP\IDateTimeZone;
 use OCP\Security\ISecureRandom;
 use \OCP\ILogger;
@@ -204,8 +204,8 @@ class ConfigService {
   /** @var IL10N */
   private $l;
 
-  /** @var IFactory */
-  private $iFactory;
+  /** @var IL10NFactory */
+  private $iL10NFactory;
 
   /** @var IURLGenerator */
   private $urlGenerator;
@@ -232,7 +232,7 @@ class ConfigService {
     EncryptionService $encryptionService,
     ISecureRandom $secureRandom,
     IURLGenerator $urlGenerator,
-    IFactory $iFactory,
+    IL10NFactory $iL10NFactory,
     IDateTimeZone $dateTimeZone,
     ILogger $logger,
     IL10N $l
@@ -247,7 +247,7 @@ class ConfigService {
     $this->encryptionService = $encryptionService;
     $this->secureRandom = $secureRandom;
     $this->urlGenerator = $urlGenerator;
-    $this->iFactory = $iFactory;
+    $this->iL10NFactory = $iL10NFactory;
     $this->dateTimeZone = $dateTimeZone;
     $this->logger = $logger;
     $this->l = $l;
@@ -555,7 +555,7 @@ class ConfigService {
   {
     // @@TODO base this on l10n?
     if (empty($lang)) {
-      $lang = $this->iFactory->findLanguage($this->appName);
+      $lang = $this->iL10NFactory->findLanguage($this->appName);
       $this->logInfo('Language seems to be ' . $lang);
     }
     $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
