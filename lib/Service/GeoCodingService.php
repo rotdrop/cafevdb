@@ -229,8 +229,8 @@ class GeoCodingService
 
     $locations = [];
     foreach ($remoteLocations as $zipCodePlace) {
-      $lat = (int)($zipCodePlace['lat'] * 10000);
-      $lng = (int)($zipCodePlace['lng'] * 10000);
+      $lat = (double)($zipCodePlace['lat']);
+      $lng = (double)($zipCodePlace['lng']);
       $name = $zipCodePlace['placeName'];
       $cntry = $zipCodePlace['countryCode'];
       $postalCode = $zipCodePlace['postalCode'];
@@ -264,11 +264,11 @@ class GeoCodingService
               ->setCountry($cntry)
               ->setPostalCode($postalCode)
               ->setName($name);
-      $postalCode = $this->merge($entity);
+      $geoPostalCode = $this->merge($entity);
 
       foreach ($translations as $language => $translation) {
         $entity = GeoPostalCodeTranslations::create()
-                ->setPostalCodeid($postalCode->getId())
+                ->setPostalCodeid($geoPostalCode->getId())
                 ->setTarget($language)
                 ->setTranslation($translation);
         $this->merge($entity);
@@ -331,7 +331,7 @@ class GeoCodingService
     $expr = $this->expr();
     $qb = $this->queryBuilder()
                ->update(GeoPostalCodes::class, 'gpc')
-               ->set('gpc.updated', 'CURRENT_TIMESTAMP()')
+               ->set('gpc.updated', "'".(new \DateTime)->format('Y-m-d H:i:s')."'")
                ->where(
                  $expr->andX(
                    $expr->eq('gpc.country', ':country'),
@@ -369,10 +369,12 @@ class GeoCodingService
    */
   public function updatePostalCodes($language = null, $limit = 100, $forcedZipCodes = [])
   {
-    if (!$language) {
+    if (empty($language)) {
       $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
     }
+
+    $this->info(__METHOD__ . ': ' . "Updateing postal codes for language " . $language);
 
     // only fetch "old" postal codes for registered musicians.
     $qb = $this->queryBuilder()
@@ -421,7 +423,7 @@ class GeoCodingService
         $name = $zipCodePlace['placeName'];
 
         $translations = [];
-        foreach ($this->languages() as $lang) {
+        foreach ($this->languages($language) as $lang) {
           $translation = $this->translatePlaceName($name, $country, $lang);
           if (!$translation) {
             $translation = 'NULL';
@@ -429,6 +431,9 @@ class GeoCodingService
             $translation = Util::normalizeSpaces($translation);
             $translation = "'".$translation."'";
           }
+          $this->info(__METHOD__.' '.print_r($translations, true));
+          $this->info(__METHOD__.' '.print_r($lang, true));
+          $this->info(__METHOD__.' '.print_r($translation, true));
           $translations[$lang] = $translation;
         }
 
@@ -437,7 +442,7 @@ class GeoCodingService
 
         $hasChanged = false;
         $this->setDatabaseRepository(GeoPostalCodes::class);
-        $geoPostalCode = $this->findBy([
+        $geoPostalCode = $this->findOneBy([
           'country' => $country,
           'postalCode' => $postalCode,
           'name' => $name,
@@ -448,8 +453,10 @@ class GeoCodingService
                       ->setPostalCode($postalCode)
                       ->setName($name);
           $hasChanged = true;
-        } else if (($lat != $PostalCode->getLatitude()) || ($lng != $geoPostalCode->getLongitude)) {
-          $hasChanged = true;
+        } else {
+          if (($lat != $geoPostalCode->getLatitude()) || ($lng != $geoPostalCode->getLongitude())) {
+            $hasChanged = true;
+          }
         }
         if ($hasChanged) {
           $geoPostalCode->setLongitude($lng);
@@ -459,24 +466,32 @@ class GeoCodingService
         }
 
         $postalCodeId = $geoPostalCode->getId();
+        $this->info(__METHOD__.': '.'postal code id: '. $postalCodeId);
         foreach ($translations as $lang => $translation) {
           $hasChanged = false;
           $this->setDatabaseRepository(GeoPostalCodeTranslations::class);
-          $entity = $this->findBy([
+          $entity = $this->findOneBy([
             'postalCodeId' => $postalCodeId,
-            'target' => $target,
+            'target' => $lang,
           ]);
           if (empty($entity)) {
             $entity = GeoPostalCodeTranslations::create()
                     ->setPostalCodeId($postalCodeId)
                     ->setTarget($lang);
             $hasChanged = true;
-          } else if ($translation != $entity->getTranslation()) {
-            $hasChanged = true;
+          } else {
+            $entity = $entity[0];
+            if ($translation != $entity->getTranslation()) {
+              $hasChanged = true;
+            }
           }
           if ($hasChanged) {
             $entity->setTranslation($translation);
-            $this->merge($entity);
+            $entity->setGeoPostalCode($geoPostalCode);
+            trigger_error('assoc: ' . empty($entity->getGeoPostalCode()) ? 'empty' : 'set');
+            $entity = $this->merge($entity);
+            trigger_error('assoc: ' . empty($entity->getGeoPostalCode()) ? 'empty' : 'set');
+            $this->flush($entity);
           }
         }
 
@@ -546,7 +561,7 @@ class GeoCodingService
   }
 
 
-  /**Return the language for the requested of current locale. */
+  /**Return the language for the requested or current locale. */
   public function localeLanguage($locale = null)
   {
     if (!$locale) {
@@ -569,11 +584,13 @@ class GeoCodingService
     $currentLang = locale_get_primary_language($locale);
 
     $languages = $this->languages();
-    $languagss = array_merge(['en', '@.', $currentLang], $languages);
+    $languages = array_merge(['en', '@.', $currentLang], $languages);
+
+    $this->info(__METHOD__ . ': ' . print_r($languages, true));
 
     foreach ($languages as $lang) {
       $numRows = $this->updateCountriesForLanguage($lang);
-      $this->info('Affected rows for language '.$lang.': '.$numRows);
+      $this->info('Affected rows for language '.$lang.': '.print_r($numRows, true));
     }
 
     return true;
@@ -604,11 +621,12 @@ class GeoCodingService
 
       if ($lang === '@.') {
         $name = isset($localeNames[$code]) ? $localeNames[$code] : '';
+        $code = '@.';
       }
 
       if (!empty($name)) {
         $this->setDatabaseRepository(GeoCountries::class);
-        $entity = $this->find([$code, $lang]);
+        $entity = $this->find(['iso' => $code, 'target' => $lang]);
         if (empty($entity)) {
           $entity = GeoCountries::create()
                   ->setIso($code)
@@ -620,10 +638,10 @@ class GeoCodingService
         $this->merge($entity);
       }
 
-      if (!empty($continentName)) {
+      if ($code != '@.' && !empty($continentName)) {
         // Update continent table
         $this->setDatabaseRepository(GeoContinents::class);
-        $entity = $this->find([$continent, $lang]);
+        $entity = $this->find(['code' => $continent, 'target' => $lang]);
         if (empty($entity)) {
           $entity = GeoContinents::create()
                   ->setCode($continent)
@@ -640,27 +658,23 @@ class GeoCodingService
   }
 
   /**Get the number of languages supported in the database tables. */
-  public function languages($force = false)
+  public function languages($language = null)
   {
-    if (!$force && count($this->languages) > 0) {
-      return $this->languages;
+    if (count($this->languages) == 0) {
+      // get all languages
+      $languages = $this->queryBuilder()
+                        ->select('gpct.target')
+                        ->from(GeoPostalCodeTranslations::class, 'gpct')
+                        ->distinct(true)
+                        ->getQuery()
+                        ->execute();
+      $languages = array_map(function($value) { return $value['target'];}, $languages);
+      $this->languages = array_filter($languages, function($value) { return $value !== '=>'; });
     }
-
-    // get all languages
-    $languages = $this->queryBuilder()
-                      ->select('gpct.target')
-                      ->from(GeoPostalCodeTranslations::class, 'gpct')
-                      ->distinct(true)
-                      ->getQuery()
-                      ->execute();
-
-    $this->info(print_r($languages, true));
-
-    return [];
-    //
-    //                      ->getQuery()
-                          //                      ->getResult();
-    $this->languages = array_filter($languages, function($value) { return $value !== '=>'; });
+    if (!empty($language)) {
+      $this->languages = array_merge($this->languages, [$language]);
+    }
+    $this->info(__METHOD__ . ': ' . print_r($this->languages, true));
 
     return $this->languages;
   }
@@ -750,7 +764,7 @@ class GeoCodingService
     foreach ($this->matching($criteria, GeoCountries::class) as $country) {
       $iso = $country->getIso();
       $target = $country->getTarget();
-      $data = $county->getData();
+      $data = $country->getData();
       switch ($target) {
       case '->': // continent
         $continents[$iso] = $data;
