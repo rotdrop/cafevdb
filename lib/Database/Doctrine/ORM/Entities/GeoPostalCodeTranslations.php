@@ -157,8 +157,22 @@ class GeoPostalCodeTranslations implements \ArrayAccess
      *
      * @return string
      */
-    public function getPostalcode()
+    public function getGeoPostalcode()
     {
-        return $this->postalCode;
+        return $this->geoPostalCode;
+    }
+
+    /**
+     * Set geoPostalCode
+     *
+     * @param GeoPostalCodes postalCode
+     *
+     * @return GeoPostalCodeTranslations
+     */
+    public function setGeoPostalCode($geoPostalCode)
+    {
+        $this->geoPostalCode = $geoPostalCode;
+
+        return $this;
     }
 }

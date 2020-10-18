@@ -67,9 +67,9 @@ class GeoPostalCodes implements \ArrayAccess
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Updated", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="Updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslations", mappedBy="PostalCodeId")
@@ -190,7 +190,7 @@ class GeoPostalCodes implements \ArrayAccess
     /**
      * Set longitude.
      *
-     * @param int $longitude
+     * @param double $longitude
      *
      * @return GeoPostalCodes
      */
@@ -204,7 +204,7 @@ class GeoPostalCodes implements \ArrayAccess
     /**
      * Get longitude.
      *
-     * @return int
+     * @return double
      */
     public function getLongitude()
     {

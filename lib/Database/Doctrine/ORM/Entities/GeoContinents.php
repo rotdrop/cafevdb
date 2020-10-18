@@ -48,9 +48,11 @@ class GeoContinents implements \ArrayAccess
      *
      * @return string
      */
-    public function setCode()
+    public function setCode($code)
     {
-        return $this->code;
+        $this->code = $code;
+
+        return $this;
     }
 
     /**
