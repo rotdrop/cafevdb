@@ -85,7 +85,7 @@ class GeoCodingService
       $response = file_get_contents($url);
       if ($response !== false) {
         $json = json_decode($response, true, 512, JSON_BIGINT_AS_STRING);
-        $this->info(__METHOD__ . ': ' . print_r($json, true));
+        //$this->info(__METHOD__ . ': ' . print_r($json, true));
         return $json;
       }
     }
@@ -281,7 +281,7 @@ class GeoCodingService
     return $locations;
   }
 
-  /**Try to find a native translation by ping the remote provider
+  /**Try to find a native translation by pinging the remote provider
    */
   public function translatePlaceName($name, $country, $language = null)
   {
@@ -480,7 +480,6 @@ class GeoCodingService
                     ->setTarget($lang);
             $hasChanged = true;
           } else {
-            $entity = $entity[0];
             if ($translation != $entity->getTranslation()) {
               $hasChanged = true;
             }
@@ -533,7 +532,7 @@ class GeoCodingService
     foreach ($locales as $locale) {
       $country = locale_get_region($locale);
       if ($country) {
-        $lang = $language === 'native' ? $locale : $language;
+        $lang = $language === '@.' ? $locale : $language;
         $countryCodes[$country] = locale_get_display_region($locale, $lang);
       }
     }
@@ -584,7 +583,7 @@ class GeoCodingService
     $currentLang = locale_get_primary_language($locale);
 
     $languages = $this->languages();
-    $languages = array_merge(['en', '@.', $currentLang], $languages);
+    $languages = array_unique(array_merge(['en', '@.', $currentLang], $languages));
 
     $this->info(__METHOD__ . ': ' . print_r($languages, true));
 
@@ -602,6 +601,7 @@ class GeoCodingService
     // obtain localized info from server
     if ($lang === '@.') {
       $queryLang = 'en';
+      $localeCountryNames = $this->localeCountryNames($lang);
     } else {
       $queryLang = $lang;
     }
@@ -620,8 +620,8 @@ class GeoCodingService
       $continentName = $country['continentName'];
 
       if ($lang === '@.') {
-        $name = isset($localeNames[$code]) ? $localeNames[$code] : '';
-        $code = '@.';
+        $name = isset($localeCountryNames[$code]) ? $localeCountryNames[$code] : '';
+        $this->info(__METHOD__.': got native name ' . $name . ' for ' . $code);
       }
 
       if (!empty($name)) {
