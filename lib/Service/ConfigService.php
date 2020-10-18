@@ -513,23 +513,28 @@ class ConfigService {
     return $this->logger->log($level, $message, $context);
   }
 
-  public function error(string $message, array $context = []) {
+  public function logException($exception, $message = null) {
+    empty($message) && ($message = $this->l->t("Caught an Exception"));
+    $this->logger->logException($exception, [ 'message' => $message ]);
+  }
+
+  public function logError(string $message, array $context = []) {
     return $this->log(ILogger::ERROR, $message, $context);
   }
 
-  public function debug(string $message, array $context = []) {
+  public function logDebug(string $message, array $context = []) {
     return $this->log(ILogger::DEBUG, $message, $context);
   }
 
-  public function info(string $message, array $context = []) {
+  public function logInfo(string $message, array $context = []) {
     return $this->log(ILogger::INFO, $message, $context);
   }
 
-  public function warn(string $message, array $context = []) {
+  public function logWarn(string $message, array $context = []) {
     return $this->log(ILogger::WARN, $message, $context);
   }
 
-  public function fatal(string $message, array $context = []) {
+  public function logFatal(string $message, array $context = []) {
     return $this->log(ILogger::FATAL, $message, $context);
   }
 
@@ -544,12 +549,14 @@ class ConfigService {
     return $this->dateTimeZone;
   }
 
-  /**Return the locale. */
+  /**Return the locale as string, e.g. de_DE.UTF-8.
+   */
   public function getLocale($lang = null)
   {
     // @@TODO base this on l10n?
     if (empty($lang)) {
       $lang = $this->iFactory->findLanguage($this->appName);
+      $this->logInfo('Language seems to be ' . $lang);
     }
     $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
     return $locale;

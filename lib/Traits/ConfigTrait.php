@@ -258,24 +258,29 @@ trait ConfigTrait {
     return $this->configService->log($level, $message, $context);
   }
 
+  protected function logException($exception, $message = null)
+  {
+    return $this->configService->logException($exception, $message);
+  }
+
   protected function logError(string $message, array $context = []) {
-    $this->configService->error($message, $context);
+    $this->configService->logError($message, $context);
   }
 
   protected function logDebug(string $message, array $context = []) {
-    $this->configService->debug($message, $context);
+    $this->configService->logDebug($message, $context);
   }
 
   protected function logInfo(string $message, array $context = []) {
-    $this->configService->info($message, $context);
+    $this->configService->logInfo($message, $context);
   }
 
   protected function logWarn(string $message, array $context = []) {
-    $this->configService->warn($message, $context);
+    $this->configService->logWarn($message, $context);
   }
 
   protected function logFatal(string $message, array $context = []) {
-    $this->configService->fatal($message, $context);
+    $this->configService->logFatal($message, $context);
   }
 
 }
