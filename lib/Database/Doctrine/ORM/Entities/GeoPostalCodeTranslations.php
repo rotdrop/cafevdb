@@ -2,19 +2,20 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * GeoPostalCodes
  *
  * @ORM\Table(name="GeoPostalCodeTranslations", uniqueConstraints={@ORM\UniqueConstraint(name="PostalCodeId_Target", columns={"PostalCodeId", "Target"})})
- * @ORM\Entity
+ * @ORM\Entity @ORM\EntityListeners({"ArrayConstructor"})
  */
-class GeoPostalCodeTranslations implements \ArrayAccess
+class GeoPostalCodeTranslations
+    extends ArrayConstructor
+    implements \ArrayAccess
 {
-    use ArrayTrait;
     use FactoryTrait;
+    use LogTrait;
 
     /**
      * @var int
@@ -53,6 +54,7 @@ class GeoPostalCodeTranslations implements \ArrayAccess
     private $geoPostalCode;
 
     public function __construct() {
+        self::log(__METHOD__);
         $this->arrayCTOR();
     }
 

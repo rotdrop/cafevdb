@@ -10,10 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="Musiker")
  * @ORM\Entity
+ * @ORM\Entity @ORM\EntityListeners({"ArrayConstructor"})
  */
-class Musiker implements \ArrayAccess
+class Musiker
+    extends ArrayConstructor
+    implements \ArrayAccess
 {
-    use ArrayTrait;
     use FactoryTrait;
 
     /**

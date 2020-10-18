@@ -14,10 +14,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  *      @ORM\UniqueConstraint(name="Country_PostalCode_Name", columns={"Country", "PostalCode", "Name"})
  *    })
  * @ORM\Entity
+ * @ORM\Entity @ORM\EntityListeners({"ArrayConstructor"})
  */
-class GeoPostalCodes implements \ArrayAccess
+class GeoPostalCodes
+    extends ArrayConstructor
+    implements \ArrayAccess
 {
-    use ArrayTrait;
     use FactoryTrait;
 
     /**

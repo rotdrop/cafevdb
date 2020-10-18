@@ -2,11 +2,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-trait ArrayTrait {
+trait ArrayTrait
+{
     private $keys;
 
     /**Has to be called explicitly by the using class. */
-    private function arrayCTOR() {
+    protected function arrayCTOR() {
         $this->keys = (new \ReflectionClass(get_class($this)))
                     ->getProperties(\ReflectionProperty::IS_PRIVATE);
 
@@ -24,9 +25,8 @@ trait ArrayTrait {
     }
 
     public function offsetExists($offset):bool {
-        $offset = strtolower($offset);
-        $method = self::methodName('get', $offset);
-        return in_array($offset, $this->keys);
+        $offset = strtolower((string)$offset);
+        return is_array($this->keys) && in_array($offset, $this->keys);
     }
 
     public function offsetGet($offset) {
