@@ -56,6 +56,7 @@ style($appName, 'inlineimage');
 style($appName, 'navsnapper');
 
 script($appName, 'cafevdb');
+script($appName, 'backgroundjobs');
 script($appName, 'notification');
 script($appName, 'page');
 script($appName, 'events');

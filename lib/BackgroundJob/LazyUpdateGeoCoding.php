@@ -25,8 +25,8 @@ namespace OCA\CAFEVDB\BackgroundJob;
 use OCP\BackgroundJob\TimedJob;
 use OCP\AppFramework\Utility\ITimeFactory;
 
-use OCA\CAFEVDB\Services\ConfigService;
-use OCA\CAFEVDB\Services\GeoCodingService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\GeoCodingService;
 
 class LazyUpdateGeoCoding extends TimedJob
 {
@@ -47,7 +47,7 @@ class LazyUpdateGeoCoding extends TimedJob
   /**
    * @param array $arguments
    */
-  protected function run($arguments) {
+  public function run($arguments = []) {
     foreach ($this->geoCodingService->languages() as $lang) {
       $this->geoCodingService->updateCountriesForLanguage($lang);
       $this->geoCodingService->updatePostalCodes($lang, 1);

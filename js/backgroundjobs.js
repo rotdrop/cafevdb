@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,31 +28,36 @@ CAFEVDB.BackgroundJobs = CAFEVDB.BackgroundJobs || {};
   BackgroundJobs.timer = false;
   BackgroundJobs.interval = 600; // every 10 minutes while logged in
 
-  var url = OC.generateUrl('apps/cafevdb/backgroundjobs');
+  var url = OC.generateUrl('/apps/cafevdb/backgroundjob/trigger');
 
   BackgroundJobs.runner = function(){
     self = BackgroundJobs;
     if (OC.currentUser) {
-      $.post(url, {}).always(function() {
+      console.info('Triggered background jobs.');
+      $.get(url).always(function() {
         self.timer = setTimeout(self.runner, self.interval*1000);
       });
     } else if (self.timer !== false) {
       clearTimeout(self.timer);
       self.timer = false;
+      console.info('Stopped background jobs.');
     }
   };
 
   BackgroundJobs.ready = function() {
     if (OC.currentUser) {
       this.timer = setTimeout(this.runner, this.interval*1000);
+      console.info('Started background jobs.');
+      this.runner();
     } else if (this.timer !== false) {
       clearTimeout(this.timer);
       this.timer = false;
+      console.info('Stopped background jobs.');
     }
   };
 
 })(window, jQuery, CAFEVDB.BackgroundJobs);
 
-$(document).ready(function() {
+$(function() {
   CAFEVDB.BackgroundJobs.ready();
 });

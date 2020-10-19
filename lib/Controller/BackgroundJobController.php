@@ -20,36 +20,55 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\BackgroundJob;
+namespace OCA\CAFEVDB\Controller;
 
-use OCP\BackgroundJob\TimedJob;
-use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\IRequest;
+use OCP\IL10N;
 
+use OCA\CAFEVDB\BackgroundJob\LazyUpdateGeoCoding;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\GeoCodingService;
 
-class BulkUpdateGeoCoding extends LazyUpdateGeoCoding
+class BackgroundJobController extends Controller
 {
-  /** @var GeoCodignService */
-  private $geoCodingService;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\ResponseTrait;
+
+  /** @var IL10N */
+  private $l;
+
+  /** @var LazyUpdateGeoCoding */
+  private $lazyUpdateGeoCoding;
 
   public function __construct(
-    ITimeFactory $time,
+    $appName,
+    IRequest $request,
     ConfigService $configService,
-    GeoCodingService $geoCodingService
+    LazyUpdateGeoCoding $lazyUpdateGeoCoding
   ) {
-    parent::__construct($time, $configService, $geoCodingService);
+    parent::__construct($appName, $request);
 
-    $this->setInterval($configService->getValue('geocoding.refresh.bulk', 24*3600));
+    $this->configService = $configService;
+    $this->lazyUpdateGeoCoding = $lazyUpdateGeoCoding;
+    $this->l = $this->l10N();
   }
 
   /**
-   * @param array $arguments
+   * @NoAdminRequired
    */
-  protected function run($arguments = []) {
-    foreach ($this->geoCodingService->languages() as $lang) {
-      $this->geoCodingService->updateCountriesForLanguage($lang, true);
-      $this->geoCodingService->updatePostalCodes($lang, 100);
+  public function trigger()
+  {
+    try {
+      $this->lazyUpdateGeoCoding->run();
+      return self::response('Ran background jobs');
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return self::grumble(
+        $this->l->t('Caught exception \`%s\' at %s:%s',
+                    [$t->getMessage(), $t->getFile(), $t->getLine()])
+      );
     }
   }
 }

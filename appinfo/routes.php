@@ -108,6 +108,12 @@ return [
             'url' => '/legacy/events/actions/export',
             'verb' => 'GET',
         ],
+        // while-logged-in background job
+        [
+            'name' => 'background_job#trigger',
+            'url' => '/backgroundjob/trigger',
+            'verb' => 'get',
+        ],
    ]
 ];
 
