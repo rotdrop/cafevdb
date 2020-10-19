@@ -6,7 +6,7 @@
  * phpMyEdit.class.php - main table editor class definition file
  * ____________________________________________________________
  *
- * Copyright (c) 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * C opyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
  * C opyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
@@ -70,24 +70,6 @@ class phpMyEdit_timer /* {{{ */
 		} else {
 			return 'phpMyEdit_timer ERROR: timer not started';
 		}
-	}
-} /* }}} */
-
-if (! function_exists('array_search')) { /* {{{ */
-	function array_search($needle, $haystack)
-	{
-		foreach ($haystack as $key => $value) {
-			if ($needle == $value)
-				return $key;
-		}
-		return false;
-	}
-} /* }}} */
-
-if (! function_exists('realpath')) { /* {{{ */
-	function realpath($path)
-	{
-		return $path;
 	}
 } /* }}} */
 
@@ -292,7 +274,7 @@ class phpMyEdit
 		return $this->dbh instanceof mysqli;
 	}
 
-	static function resultValid(&$res)
+	function resultValid(&$res)
 	{
 		return $res instanceof mysqli_result;
 	}
@@ -2803,7 +2785,7 @@ class phpMyEdit
 				$var = @$_POST[$cookedName];
 			}
 		}
-		
+
 		if (isset($var)) {
 			if ($magic_quotes_gpc) {
 				if (is_array($var)) {

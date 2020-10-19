@@ -32,6 +32,8 @@ use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\PHPMyEdit;
+
 use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
 
 /**Check for a usable configuration.
@@ -72,6 +74,7 @@ class ConfigCheckService
     CardDavService $cardDavService,
     EventsService $eventsService
     , GeoCodingService $geoCodingService
+    //    , PHPMyEdit $phpMyEdit
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -82,8 +85,17 @@ class ConfigCheckService
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
 
+    //new MySQLiShim($this->entityManager->getConnection());
+
     $contactsService = new ContactsService($configService, $entityManager, $geoCodingService);
     $contactsService->playground();
+
+    new PHPMyEdit($this->entityManager->getConnection(), $configService);
+
+    // $result = $mySQLiShim->query('SELECT * FROM Musiker');
+    // while ($row = $mySQLiShim->fetch_array($result)) {
+    //   $this->logInfo(__METHOD__." ".print_r($row, true));
+    // }
   }
 
   /**Return an array with necessary configuration items, being either

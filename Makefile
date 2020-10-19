@@ -62,7 +62,7 @@ COMPOSER=php $(build_tools_directory)/composer.phar
 else
 COMPOSER=$(COMPOSER_SYSTEM)
 endif
-COMPOSER_OPTIONS=-vvvvvv --prefer-dist
+COMPOSER_OPTIONS=--no-dev --prefer-dist
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
 
 all: build
