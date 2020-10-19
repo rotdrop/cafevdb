@@ -55,7 +55,6 @@ class AdminSettingsController extends Controller {
         Http::STATUS_BAD_REQUEST
       );
     }
-    return true;
   }
 }
 
