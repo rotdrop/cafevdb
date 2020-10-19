@@ -29,6 +29,10 @@
       <personal>OCA\CAFEVDB\Settings\Personal</personal>
       <personal-section>OCA\CAFEVDB\Settings\PersonalSection</personal-section>
     </settings>
+    <background-jobs>
+              <job>OCA\CAFEVDB\BackgroundJob\LazyUpdateGeoCoding</job>
+              <job>OCA\CAFEVDB\BackgroundJob\BulkUpdateGeoCoding</job>
+    </background-jobs>
     <credits>
       <item>
         <title>The PHP Project</title>

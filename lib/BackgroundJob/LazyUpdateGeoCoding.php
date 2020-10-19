@@ -25,22 +25,34 @@ namespace OCA\CAFEVDB\BackgroundJob;
 use OCP\BackgroundJob\TimedJob;
 use OCP\AppFramework\Utility\ITimeFactory;
 
+use OCA\CAFEVDB\Services\ConfigService;
 use OCA\CAFEVDB\Services\GeoCodingService;
 
-class UpdateGeoCoding extends TimedJob
+class LazyUpdateGeoCoding extends TimedJob
 {
-  public function __construct(ITimeFactory $time, GeoCodingService $geoCodingService) {
+  /** @var GeoCodignService */
+  private $geoCodingService;
+
+  public function __construct(
+    ITimeFactory $time,
+    ConfigService $configService,
+    GeoCodingService $geoCodingService
+  ) {
+    parent::__construct($time);
     $this->geoCodingService = $geoCodingService;
+
+    $this->setInterval($configService->getValue('geocoding.refresh.lazy', 600));
   }
 
   /**
    * @param array $arguments
    */
   protected function run($arguments) {
-    $this->geoCodingService->updateCountries();
-    $this->geoCodingService->updatePostalCodes(null, false, 1);
+    foreach ($this->geoCodingService->languages() as $lang) {
+      $this->geoCodingService->updateCountriesForLanguage($lang);
+      $this->geoCodingService->updatePostalCodes($lang, 1);
+    }
   }
-
 }
 
 // Local Variables: ***

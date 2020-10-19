@@ -45,6 +45,7 @@ class GeoCodingService
   const POSTALCODESLOOKUP_TAG = "postalcodes";
   const POSTALCODESSEARCH_TAG = "postalCodes";
   const PROVIDER_URL = 'http://api.geonames.org';
+  const CONTINENT_TARGET = '->';
   private $userName = null;
   private $countryNames = [];
   private $continentNames = [];
@@ -268,7 +269,8 @@ class GeoCodingService
 
       foreach ($translations as $language => $translation) {
         $entity = GeoPostalCodeTranslations::create()
-                ->setPostalCodeid($geoPostalCode->getId())
+                ->setPostalCodeId($geoPostalCode->getId())
+                ->setPostalCode($geoPostalCode)
                 ->setTarget($language)
                 ->setTranslation($translation);
         $this->merge($entity);
@@ -374,7 +376,7 @@ class GeoCodingService
       $language = locale_get_primary_language($locale);
     }
 
-    $this->info(__METHOD__ . ': ' . "Updateing postal codes for language " . $language);
+    $this->info(__METHOD__ . ': ' . "Updating postal codes for language " . $language);
 
     // only fetch "old" postal codes for registered musicians.
     $qb = $this->queryBuilder()
@@ -487,10 +489,7 @@ class GeoCodingService
           if ($hasChanged) {
             $entity->setTranslation($translation);
             $entity->setGeoPostalCode($geoPostalCode);
-            trigger_error('assoc: ' . empty($entity->getGeoPostalCode()) ? 'empty' : 'set');
             $entity = $this->merge($entity);
-            trigger_error('assoc: ' . empty($entity->getGeoPostalCode()) ? 'empty' : 'set');
-            $this->flush($entity);
           }
         }
 
@@ -523,17 +522,15 @@ class GeoCodingService
    */
   public function localeCountryNames($language = null)
   {
-    if (!$language) {
-      $locale = $this->getLocale();
-      $language = locale_get_primary_language($locale);
+    if (empty($language)) {
+      $language = locale_get_primary_language($this->getLocale());
     }
     $locales = resourcebundle_locales('');
     $countryCodes = [];
     foreach ($locales as $locale) {
       $country = locale_get_region($locale);
       if ($country) {
-        $lang = $language === '@.' ? $locale : $language;
-        $countryCodes[$country] = locale_get_display_region($locale, $lang);
+        $countryCodes[$country] = locale_get_display_region($locale, $language);
       }
     }
     asort($countryCodes);
@@ -576,19 +573,12 @@ class GeoCodingService
    * a the native one for the countries). It also tries to add the
    * primary language of the current locale to the tables.
    */
-  public function updateCountries()
+  public function updateCountries($force = false)
   {
-    // add language of current locale
-    $locale = $this->getLocale();
-    $currentLang = locale_get_primary_language($locale);
-
     $languages = $this->languages();
-    $languages = array_unique(array_merge(['en', '@.', $currentLang], $languages));
-
-    $this->info(__METHOD__ . ': ' . print_r($languages, true));
 
     foreach ($languages as $lang) {
-      $numRows = $this->updateCountriesForLanguage($lang);
+      $numRows = $this->updateCountriesForLanguage($lang, $force);
       $this->info('Affected rows for language '.$lang.': '.print_r($numRows, true));
     }
 
@@ -596,20 +586,21 @@ class GeoCodingService
   }
 
   /**Update the locale cache for one specific language.*/
-  public function updateCountriesForLanguage($lang)
+  public function updateCountriesForLanguage($lang, $force = false)
   {
-    // obtain localized info from server
-    if ($lang === '@.') {
-      $queryLang = 'en';
-      $localeCountryNames = $this->localeCountryNames($lang);
-    } else {
-      $queryLang = $lang;
+    if (!$force && $this->count(['target' => $lang], GeoCountries::class) > 0) {
+      $this->info(__METHOD__.': language '.$lang.' already retrieved and update not forced, skipping update.');
+      return 0;
     }
-    $countryInfo = $this->request('countryInfo', array('lang' => $queryLang));
+
+    // obtain localized info from server
+    $countryInfo = $this->request('countryInfo', array('lang' => $lang));
     if (!isset($countryInfo[self::GEONAMES_TAG]) ||
         !is_array($countryInfo[self::GEONAMES_TAG])) {
       return false; // give up
     }
+
+    $localeCountyNames = $this->localeCountryNames($lang);
 
     // Process each entry in turn
     $numRows = 0;
@@ -618,27 +609,35 @@ class GeoCodingService
       $continent = $country['continent'];
       $name = $country['countryName'];
       $continentName = $country['continentName'];
+      $languages = $country['languages'];
 
-      if ($lang === '@.') {
-        $name = isset($localeCountryNames[$code]) ? $localeCountryNames[$code] : '';
-        $this->info(__METHOD__.': got native name ' . $name . ' for ' . $code);
+      $localeName = $localeCountryNames[$code];
+      if ($localeName != $name) {
+        $this->info(__METHOD__.': '.$lang.'_'.$code.': '.$localeName.' / '.$name.' (php/remote)');
       }
 
-      if (!empty($name)) {
-        $this->setDatabaseRepository(GeoCountries::class);
-        $entity = $this->find(['iso' => $code, 'target' => $lang]);
-        if (empty($entity)) {
-          $entity = GeoCountries::create()
-                  ->setIso($code)
-                  ->setTarget($lang);
-        } else {
-          $numRows += (int)($entity->getData() != $name);
+      $targets = [
+        $lang => $name,
+        self::CONTINENT_TARGET => $continent,
+      ];
+
+      $this->setDatabaseRepository(GeoCountries::class);
+      foreach ($targets as $target => $data) {
+        if (!empty($data)) {
+          $entity = $this->find(['iso' => $code, 'target' => $target]);
+          if (empty($entity)) {
+            $entity = GeoCountries::create()
+                    ->setIso($code)
+                    ->setTarget($target);
+          } else {
+            $numRows += (int)($entity->getData() != $data);
+          }
+          $entity->setData($data);
+          $this->merge($entity);
         }
-        $entity->setData($name);
-        $this->merge($entity);
       }
 
-      if ($code != '@.' && !empty($continentName)) {
+      if (!empty($continentName)) {
         // Update continent table
         $this->setDatabaseRepository(GeoContinents::class);
         $entity = $this->find(['code' => $continent, 'target' => $lang]);
@@ -658,9 +657,10 @@ class GeoCodingService
   }
 
   /**Get the number of languages supported in the database tables. */
-  public function languages($language = null)
+  public function languages($extraLange = null)
   {
-    if (count($this->languages) == 0) {
+    $languages = $this->languages;
+    if (empty($languages) == 0) {
       // get all languages
       $languages = $this->queryBuilder()
                         ->select('gpct.target')
@@ -669,11 +669,15 @@ class GeoCodingService
                         ->getQuery()
                         ->execute();
       $languages = array_map(function($value) { return $value['target'];}, $languages);
-      $this->languages = array_filter($languages, function($value) { return $value !== '=>'; });
+      $languages = array_filter($languages, function($value) { return $value !== '=>'; });
     }
-    if (!empty($language)) {
-      $this->languages = array_merge($this->languages, [$language]);
-    }
+    // add language of current locale
+    $locale = $this->getLocale();
+    $currentLang = locale_get_primary_language($locale);
+
+    $languages = array_unique(array_merge(['en', $currentLang], $languages));
+    $this->languages = array_filter(array_unique(array_merge(['en', $currentLang, $extraLang], $languages)));
+
     $this->info(__METHOD__ . ': ' . print_r($this->languages, true));
 
     return $this->languages;
@@ -759,20 +763,22 @@ class GeoCodingService
     $continents = [];
 
     $criteria = self::criteria()
-              ->where(self::cExpr()->in('target', ['en', $language]))
+              ->where(self::cExpr()->in('target', [self::CONTINENT_TARGET, 'en', $language]))
               ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
     foreach ($this->matching($criteria, GeoCountries::class) as $country) {
       $iso = $country->getIso();
       $target = $country->getTarget();
       $data = $country->getData();
       switch ($target) {
-      case '->': // continent
+      case self::CONTINENT_TARGET:
         $continents[$iso] = $data;
         break;
-      case '@.': // native name, unused as of now
-        break;
-      default: // translation target, en will come first and set the default
+      case 'en':
+      case $language:
         $countries[$iso] = $data;
+        break;
+      default:
+        $this->error('Unexpected translation target ' . $target);
         break;
       }
     }
