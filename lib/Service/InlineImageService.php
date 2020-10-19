@@ -33,7 +33,7 @@ class InlineImageService
   }
 
   public function fetch($id) {
-    trigger_error("Unimplemented");
+    $this->logInfo(__METHOD__.' unimplemented');
     return null;
   }
 }
