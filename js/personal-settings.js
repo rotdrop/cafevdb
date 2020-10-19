@@ -273,7 +273,7 @@ $(document).ready(function() {
 
   CAFEVDB.creditsTimer = setInterval(function() {
                            if ($('div.cafevdb.about div.product.credits.list:visible').length > 0) {
-                             console.log("Updating credits.");
+                             console.info("Updating credits.");
                              updateCredits()
                            } else {
                              console.log("Clearing credits timer.");
