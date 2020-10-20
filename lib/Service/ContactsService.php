@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Events\ProjectDeletedEvent;
 use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musiker;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
 
 /**Contacts handling. */
 class ContactsService
@@ -71,11 +71,11 @@ CLOUD:567e32b8-a10f-103a-8921-93d3d3897fe6@localhost/nextcloud-git
 END:VCARD
 EOTEOT;
 
-    trigger_error($cardData);
+    $this->logInfo($cardData);
     $musician = $this->import($cardData);
-    trigger_error(print_r($musician, true));
+    $this->logInfo(print_r($musician, true));
     $vCalendar = $this->export($musician);
-    trigger_error($vCalendar->serialize());
+    $this->logInfo($vCalendar->serialize());
   }
 
   /**Import the given vCard into the musician data-base. This is
@@ -101,7 +101,7 @@ EOTEOT;
    */
   public function import($vCard, $preferWork = false)
   {
-    $entity = new Musiker();
+    $entity = new Musician();
     // first step: parse the vCard into a Sabre\VObject
     try {
       $obj = \Sabre\VObject\Reader::read(
@@ -306,7 +306,7 @@ EOTEOT;
    * reasons. Note that many (mobile) devices still only use the
    * stone-age v2.1 format.
    */
-  public function export($musician, $version = self::VCARD_VERSION)
+  public function export(Musician $musician, $version = self::VCARD_VERSION)
   {
     $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
     $uuid = isset($musician['UUID']) ? $musician['UUID'] : $this->generateUUID();

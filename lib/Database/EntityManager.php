@@ -26,6 +26,8 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\DBAL\Types\Type;
 
+use Ramsey\Uuid\Doctrine as Ramsey;
+
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldKind;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity;
@@ -56,29 +58,25 @@ class EntityManager extends EntityManagerDecorator
 
   private function registerTypes()
   {
-    $enumTypes = [
-      EnumExtraFieldKind::class,
-      EnumExtraFieldMultiplicity::class,
-      EnumMemberStatus::class,
-      EnumProjectTemporalType::class,
-      EnumVCalendarType::class
+    $types = [
+      EnumExtraFieldKind::class => 'enum',
+      EnumExtraFieldMultiplicity::class => 'enum',
+      EnumMemberStatus::class => 'enum',
+      EnumProjectTemporalType::class => 'enum',
+      EnumVCalendarType::class => 'enum',
+      Ramsey\UuidType::class => null,
+      Ramsey\UuidBinaryType::class => 'binary',
+      Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
     ];
 
-    foreach ($enumTypes as $enum) {
-      $type = new $enum;
-      $typeName = $type->getName();
-      Type::addType($type->getName(), $enum);
-      //    var_dump(Type::getType((new $enum)->getName()));
-      //echo $type->getSQLType();
-      $this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($type->getSQLType(), $type->getName());
+    foreach ($types as $type => $sqlType) {
+      $instance = new $type;
+      $typeName = $instance->getName();
+      Type::addType($typeName, $type);
+      if (!empty($sqlType)) {
+        $this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($sqlType, $typeName);
+      }
     }
-
-    // UUID stuff
-    Type::addType('uuid', 'Ramsey\Uuid\Doctrine\UuidType');
-    Type::addType('uuid_binary', 'Ramsey\Uuid\Doctrine\UuidBinaryType');
-    $this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('binary', 'uuid_binary');
-    Type::addType('uuid_binary_ordered_time', 'Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType');
-    $this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('binary', 'uuid_binary_ordered_time');
   }
 
   private function connectionParameters($params = null) {

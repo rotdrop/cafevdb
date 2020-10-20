@@ -25,13 +25,13 @@ trait UuidTrait
      */
     public function setUuid($uuid)
     {
-        if ($uuid instanceof string) {
-            if (count($uuid) == 36) {
+        if (is_string($uuid)) {
+            if (strlen($uuid) == 36) {
                 $uuid = Uuid::fromString($uuid);
             } else if (strlen($uuid) == 16) {
                 $uuid = Uuid::fromBytes($uuid);
             } else {
-                // @Todo through exception
+                // @Todo throw exception
                 return null;
             }
         }

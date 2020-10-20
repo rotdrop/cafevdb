@@ -27,10 +27,10 @@ use \Doctrine\ORM\Query\Expr\Join;
 use OCA\CAFEVDB\Common\Util;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoContinents;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoCountries;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCodes;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCodeTranslations;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoContinent;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoCountry;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCode;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCodeTranslation;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musiker;
 
 class GeoCodingService
@@ -130,7 +130,7 @@ class GeoCodingService
     $expr = $this->expr();
     $qb = $this->queryBuilder()
                ->select('qpc')
-               ->from(GeoPostalCodes::class, 'qpc')
+               ->from(GeoPostalCode::class, 'qpc')
                ->where($expr->in('country', ':countries'))
                ->setParameter('countries', $countries);
     $orExpr = [];
@@ -332,7 +332,7 @@ class GeoCodingService
     // the name.
     $expr = $this->expr();
     $qb = $this->queryBuilder()
-               ->update(GeoPostalCodes::class, 'gpc')
+               ->update(GeoPostalCode::class, 'gpc')
                ->set('gpc.updated', "'".(new \DateTime)->format('Y-m-d H:i:s')."'")
                ->where(
                  $expr->andX(
@@ -381,7 +381,7 @@ class GeoCodingService
     // only fetch "old" postal codes for registered musicians.
     $qb = $this->queryBuilder()
                ->select('gpc')
-               ->from(GeoPostalCodes::class, 'gpc')
+               ->from(GeoPostalCode::class, 'gpc')
                ->leftJoin(
                  Musiker::class, 'm',
                  Join::WITH,
@@ -443,7 +443,7 @@ class GeoCodingService
         $name = Util::normalizeSpaces($name);
 
         $hasChanged = false;
-        $this->setDatabaseRepository(GeoPostalCodes::class);
+        $this->setDatabaseRepository(GeoPostalCode::class);
         $geoPostalCode = $this->findOneBy([
           'country' => $country,
           'postalCode' => $postalCode,
@@ -471,7 +471,7 @@ class GeoCodingService
         $this->info(__METHOD__.': '.'postal code id: '. $postalCodeId);
         foreach ($translations as $lang => $translation) {
           $hasChanged = false;
-          $this->setDatabaseRepository(GeoPostalCodeTranslations::class);
+          $this->setDatabaseRepository(GeoPostalCodeTranslation::class);
           $entity = $this->findOneBy([
             'postalCodeId' => $postalCodeId,
             'target' => $lang,
@@ -588,7 +588,7 @@ class GeoCodingService
   /**Update the locale cache for one specific language.*/
   public function updateCountriesForLanguage($lang, $force = false)
   {
-    if (!$force && $this->count(['target' => $lang], GeoCountries::class) > 0) {
+    if (!$force && $this->count(['target' => $lang], GeoCountry::class) > 0) {
       $this->info(__METHOD__.': language '.$lang.' already retrieved and update not forced, skipping update.');
       return 0;
     }
@@ -621,12 +621,12 @@ class GeoCodingService
         self::CONTINENT_TARGET => $continent,
       ];
 
-      $this->setDatabaseRepository(GeoCountries::class);
+      $this->setDatabaseRepository(GeoCountry::class);
       foreach ($targets as $target => $data) {
         if (!empty($data)) {
           $entity = $this->find(['iso' => $code, 'target' => $target]);
           if (empty($entity)) {
-            $entity = GeoCountries::create()
+            $entity = GeoCountrys::create()
                     ->setIso($code)
                     ->setTarget($target);
           } else {
@@ -639,7 +639,7 @@ class GeoCodingService
 
       if (!empty($continentName)) {
         // Update continent table
-        $this->setDatabaseRepository(GeoContinents::class);
+        $this->setDatabaseRepository(GeoContinent::class);
         $entity = $this->find(['code' => $continent, 'target' => $lang]);
         if (empty($entity)) {
           $entity = GeoContinents::create()
@@ -664,7 +664,7 @@ class GeoCodingService
       // get all languages
       $languages = $this->queryBuilder()
                         ->select('gpct.target')
-                        ->from(GeoPostalCodeTranslations::class, 'gpct')
+                        ->from(GeoPostalCodeTranslation::class, 'gpct')
                         ->distinct(true)
                         ->getQuery()
                         ->execute();
@@ -730,7 +730,7 @@ class GeoCodingService
               ->where(self::cExpr()->in('target', ['en', $language]))
               ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
 
-    foreach ($this->matching($criteria, GeoContinents::class) as $translation) {
+    foreach ($this->matching($criteria, GeoContinent::class) as $translation) {
       $continents[$translation->getCode()] = $translation->getTranslation();
     }
 
@@ -765,7 +765,7 @@ class GeoCodingService
     $criteria = self::criteria()
               ->where(self::cExpr()->in('target', [self::CONTINENT_TARGET, 'en', $language]))
               ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
-    foreach ($this->matching($criteria, GeoCountries::class) as $country) {
+    foreach ($this->matching($criteria, GeoCountry::class) as $country) {
       $iso = $country->getIso();
       $target = $country->getTarget();
       $data = $country->getData();
