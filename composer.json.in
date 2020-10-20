@@ -16,7 +16,8 @@
     "components/jquery": "^2.2.0",
     "components/jquery-migrate": "^3.0.0",
     "doctrine/orm": "~v2.6.0",
-    "oro/doctrine-extensions": "dev-master"
+    "oro/doctrine-extensions": "dev-master",
+    "ramsey/uuid-doctrine": "^1.6"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.4"
