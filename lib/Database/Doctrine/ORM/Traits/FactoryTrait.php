@@ -1,6 +1,6 @@
 <?php
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 trait FactoryTrait {
 

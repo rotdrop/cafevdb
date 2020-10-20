@@ -51,10 +51,10 @@ class EntityManager extends EntityManagerDecorator
     $this->configService = $configService;
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
-    $this->registerEnumTypes();
+    $this->registerTypes();
   }
 
-  private function registerEnumTypes()
+  private function registerTypes()
   {
     $enumTypes = [
       EnumExtraFieldKind::class,
@@ -72,6 +72,13 @@ class EntityManager extends EntityManagerDecorator
       //echo $type->getSQLType();
       $this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($type->getSQLType(), $type->getName());
     }
+
+    // UUID stuff
+    Type::addType('uuid', 'Ramsey\Uuid\Doctrine\UuidType');
+    Type::addType('uuid_binary', 'Ramsey\Uuid\Doctrine\UuidBinaryType');
+    $this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('binary', 'uuid_binary');
+    Type::addType('uuid_binary_ordered_time', 'Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType');
+    $this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('binary', 'uuid_binary_ordered_time');
   }
 
   private function connectionParameters($params = null) {

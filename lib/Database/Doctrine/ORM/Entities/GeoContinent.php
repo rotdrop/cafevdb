@@ -2,6 +2,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,13 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="GeoContinents")
  * @ORM\Entity
- * @ORM\Entity @ORM\EntityListeners({"ArrayConstructor"})
  */
-class GeoContinents
-    extends ArrayConstructor
-    implements \ArrayAccess
+class GeoContinent implements \ArrayAccess
 {
-    use FactoryTrait;
+    use CAFEVDB\Traits\ArrayTrait;
+    use CAFEVDB\Traits\FactoryTrait;
 
     /**
      * @var string

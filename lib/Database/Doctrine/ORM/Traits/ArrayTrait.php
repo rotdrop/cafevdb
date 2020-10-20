@@ -1,12 +1,19 @@
 <?php
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
+
+use Doctrine\ORM\Mapping as ORM;
 
 trait ArrayTrait
 {
     private $keys;
 
-    /**Has to be called explicitly by the using class. */
+    /**
+     * Use reflection inspection to expost all of the private keys;
+     * automatically called on post-load.
+     *
+     * @ORM\PostLoad
+     */
     protected function arrayCTOR() {
         $this->keys = (new \ReflectionClass(get_class($this)))
                     ->getProperties(\ReflectionProperty::IS_PRIVATE);

@@ -2,20 +2,20 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GeoPostalCodes
+ * GeoPostalCodeTranslation
  *
  * @ORM\Table(name="GeoPostalCodeTranslations", uniqueConstraints={@ORM\UniqueConstraint(name="PostalCodeId_Target", columns={"PostalCodeId", "Target"})})
- * @ORM\Entity @ORM\EntityListeners({"ArrayConstructor"})
+ * @ORM\Entity
  */
-class GeoPostalCodeTranslations
-    extends ArrayConstructor
-    implements \ArrayAccess
+class GeoPostalCodeTranslation implements \ArrayAccess
 {
-    use FactoryTrait;
-    use LogTrait;
+    use CAFEVDB\Traits\ArrayTrait;
+    use CAFEVDB\Traits\FactoryTrait;
 
     /**
      * @var int
@@ -48,13 +48,12 @@ class GeoPostalCodeTranslations
     private $translation;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GeoPostalCodes", inversedBy="translations")
-     * @ORM\JoinColumn(name="PostalCodeId", referencedColumnName="Id")
+     * @ORM\ManyToOne(targetEntity="GeoPostalCode", inversedBy="translations")
+     * @ORM\JoinColumn(name="PostalCodeId", referencedColumnName="Id", onDelete="CASCADE")
      */
     private $geoPostalCode;
 
     public function __construct() {
-        self::log(__METHOD__);
         $this->arrayCTOR();
     }
 
@@ -63,7 +62,7 @@ class GeoPostalCodeTranslations
      *
      * @param int $id
      *
-     * @return GeoPostalCodeTranslations
+     * @return GeoPostalCodeTranslation
      */
     public function setId($id)
     {
@@ -87,7 +86,7 @@ class GeoPostalCodeTranslations
      *
      * @param int $postalCodeId
      *
-     * @return GeoPostalCodeTranslations
+     * @return GeoPostalCodeTranslation
      */
     public function setPostalCodeId($postalCodeId)
     {
@@ -111,7 +110,7 @@ class GeoPostalCodeTranslations
      *
      * @param string $target
      *
-     * @return GeoPostalCodeTranslations
+     * @return GeoPostalCodeTranslation
      */
     public function setTarget($target)
     {
@@ -135,7 +134,7 @@ class GeoPostalCodeTranslations
      *
      * @param string $translation
      *
-     * @return GeoPostalCodeTranslations
+     * @return GeoPostalCodeTranslation
      */
     public function setTranslation($translation)
     {
@@ -155,7 +154,7 @@ class GeoPostalCodeTranslations
     }
 
     /**
-     * Get linked GeoPostalCodes entity.
+     * Get linked GeoPostalCode entity.
      *
      * @return string
      */
@@ -167,9 +166,9 @@ class GeoPostalCodeTranslations
     /**
      * Set geoPostalCode
      *
-     * @param GeoPostalCodes postalCode
+     * @param GeoPostalCode postalCode
      *
-     * @return GeoPostalCodeTranslations
+     * @return GeoPostalCodeTranslation
      */
     public function setGeoPostalCode($geoPostalCode)
     {

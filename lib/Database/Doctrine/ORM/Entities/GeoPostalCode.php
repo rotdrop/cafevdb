@@ -2,25 +2,24 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * GeoPostalCodes
+ * GeoPostalCode
  *
  * @ORM\Table(name="GeoPostalCodes",
  *    uniqueConstraints={
  *      @ORM\UniqueConstraint(name="Country_PostalCode_Name", columns={"Country", "PostalCode", "Name"})
  *    })
  * @ORM\Entity
- * @ORM\Entity @ORM\EntityListeners({"ArrayConstructor"})
  */
-class GeoPostalCodes
-    extends ArrayConstructor
-    implements \ArrayAccess
+class GeoPostalCode implements \ArrayAccess
 {
-    use FactoryTrait;
+    use CAFEVDB\Traits\ArrayTrait;
+    use CAFEVDB\Traits\FactoryTrait;
 
     /**
      * @var int
@@ -74,8 +73,7 @@ class GeoPostalCodes
     private $updated;
 
     /**
-     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslations", mappedBy="geoPostalCode")
-     */
+     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslation", mappedBy="geoPostalCode", cascade={"all"})     */
     private $translations;
 
     public function __construct() {
@@ -98,7 +96,7 @@ class GeoPostalCodes
      *
      * @param string $country
      *
-     * @return GeoPostalCodes
+     * @return GeoPostalCode
      */
     public function setCountry($country)
     {
@@ -122,7 +120,7 @@ class GeoPostalCodes
      *
      * @param string $postalCode
      *
-     * @return GeoPostalCodes
+     * @return GeoPostalCode
      */
     public function setPostalCode($postalCode)
     {
@@ -146,7 +144,7 @@ class GeoPostalCodes
      *
      * @param string $name
      *
-     * @return GeoPostalCodes
+     * @return GeoPostalCode
      */
     public function setName($name)
     {
@@ -170,7 +168,7 @@ class GeoPostalCodes
      *
      * @param int $latitude
      *
-     * @return GeoPostalCodes
+     * @return GeoPostalCode
      */
     public function setLatitude($latitude)
     {
@@ -194,7 +192,7 @@ class GeoPostalCodes
      *
      * @param double $longitude
      *
-     * @return GeoPostalCodes
+     * @return GeoPostalCode
      */
     public function setLongitude($longitude)
     {
@@ -218,7 +216,7 @@ class GeoPostalCodes
      *
      * @param \DateTime $updated
      *
-     * @return GeoPostalCodes
+     * @return GeoPostalCode
      */
     public function setUpdated($updated)
     {
@@ -238,7 +236,7 @@ class GeoPostalCodes
     }
 
     /**
-     * Get linked GeoPostalCodeTranslations entity.
+     * Get linked GeoPostalCodeTranslation entities.
      *
      * @return ArrayCollection[]
      */

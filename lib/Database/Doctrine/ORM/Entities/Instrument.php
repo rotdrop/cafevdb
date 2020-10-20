@@ -2,17 +2,21 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Instrumente
  *
- * @ORM\Table(name="Instrumente", uniqueConstraints={@ORM\UniqueConstraint(name="Instrument", columns={"Instrument"})})
+ * @ORM\Table(name="Instruments")
  * @ORM\Entity
  */
-class Instrumente
+class Instrument
 {
+    use CAFEVDB\Traits\ArrayTrait;
+    use CAFEVDB\Traits\FactoryTrait;
+
     /**
      * @var int
      *
@@ -25,7 +29,7 @@ class Instrumente
     /**
      * @var string
      *
-     * @ORM\Column(name="Instrument", type="string", length=64, nullable=false)
+     * @ORM\Column(name="Instrument", type="string", length=64, nullable=false, unique=true)
      */
     private $instrument;
 
@@ -50,7 +54,15 @@ class Instrumente
      */
     private $disabled = '0';
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Musician", mappedBy="instruments", orphanRemoval=true)
+     */
+    private $musicians;
 
+    public function __construct() {
+        $this->arrayCTOR();
+        $this->musicians = new ArrayCollection();
+    }
 
     /**
      * Get id.

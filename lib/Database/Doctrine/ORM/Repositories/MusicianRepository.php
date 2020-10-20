@@ -6,7 +6,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\EntityRepository;
 
-class MusikerRepository extends EntityRepository
+class MusicianRepository extends EntityRepository
 {
   public function __construct
 

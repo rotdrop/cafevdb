@@ -3,20 +3,20 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Musiker
+ * Musician
  *
- * @ORM\Table(name="Musiker")
- * @ORM\Entity(repositoryClass="CAFEVDB\Repositories\MusikerRepository")
- * @ORM\Entity @ORM\EntityListeners({"ArrayConstructor"})
+ * @ORM\Table(name="Musicians")
+ * @ORM\Entity(repositoryClass="CAFEVDB\Repositories\MusicianRepository")
  */
-class Musiker
-    extends ArrayConstructor
-    implements \ArrayAccess
+class Musician implements \ArrayAccess
 {
-    use FactoryTrait;
+    use CAFEVDB\Traits\ArrayTrait;
+    use CAFEVDB\Traits\FactoryTrait;
+    use CAFEVDB\Traits\UuidTrait;
 
     /**
      * @var int
@@ -119,13 +119,6 @@ class Musiker
     private $remarks;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="UUID", type="string", length=36, nullable=true, options={"fixed"=true})
-     */
-    private $uuid;
-
-    /**
      * @var bool
      *
      * @ORM\Column(name="Disabled", type="boolean", nullable=false, options={"default"="0"})
@@ -139,8 +132,19 @@ class Musiker
      */
     private $aktualisiert;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Instrument", inversedBy="musicians")
+     * @ORM\JoinTable(
+     *   name="musician_instrument",
+     *   joinColumns={@ORM\JoinColumn(name="musician_id", referencedColumnName="Id", onDelete="CASCADE")},
+     *   inverseJoinColumns={@ORM\JoinColumn(name="instrument_id", referencedColumnName="Id", onDelete="CASCADE")}
+     * )
+     */
+    private $instruments;
+
     public function __construct() {
         $this->arrayCTOR();
+        $this->instruments = new ArrayCollection();
     }
 
     /**
@@ -148,7 +152,7 @@ class Musiker
      *
      * @param int $id
      *
-     * @return GeoPostalCodeTranslations
+     * @return Musician
      */
     public function setId($id)
     {
@@ -172,7 +176,7 @@ class Musiker
      *
      * @param string $name
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setName($name)
     {
@@ -196,7 +200,7 @@ class Musiker
      *
      * @param string $vorname
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setVorname($vorname)
     {
@@ -220,7 +224,7 @@ class Musiker
      *
      * @param string $stadt
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setStadt($stadt)
     {
@@ -244,7 +248,7 @@ class Musiker
      *
      * @param string $strasse
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setStrasse($strasse)
     {
@@ -268,7 +272,7 @@ class Musiker
      *
      * @param int|null $postleitzahl
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setPostleitzahl($postleitzahl = null)
     {
@@ -292,7 +296,7 @@ class Musiker
      *
      * @param string $land
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setLand($land)
     {
@@ -316,7 +320,7 @@ class Musiker
      *
      * @param string $sprachpräferenz
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setSprachpräferenz($sprachpräferenz)
     {
@@ -340,7 +344,7 @@ class Musiker
      *
      * @param string $mobilephone
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setMobilephone($mobilephone)
     {
@@ -364,7 +368,7 @@ class Musiker
      *
      * @param string $fixedlinephone
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setFixedlinephone($fixedlinephone)
     {
@@ -388,7 +392,7 @@ class Musiker
      *
      * @param \DateTime|null $geburtstag
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setGeburtstag($geburtstag = null)
     {
@@ -412,7 +416,7 @@ class Musiker
      *
      * @param string $email
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setEmail($email)
     {
@@ -436,7 +440,7 @@ class Musiker
      *
      * @param enummemberstatus|null $memberstatus
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setMemberstatus($memberstatus = null)
     {
@@ -460,7 +464,7 @@ class Musiker
      *
      * @param string|null $remarks
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setRemarks($remarks = null)
     {
@@ -480,35 +484,11 @@ class Musiker
     }
 
     /**
-     * Set uuid.
-     *
-     * @param string|null $uuid
-     *
-     * @return Musiker
-     */
-    public function setUuid($uuid = null)
-    {
-        $this->uuid = $uuid;
-
-        return $this;
-    }
-
-    /**
-     * Get uuid.
-     *
-     * @return string|null
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    /**
      * Set disabled.
      *
      * @param bool $disabled
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setDisabled($disabled)
     {
@@ -532,7 +512,7 @@ class Musiker
      *
      * @param \DateTime|null $aktualisiert
      *
-     * @return Musiker
+     * @return Musician
      */
     public function setAktualisiert($aktualisiert = null)
     {
