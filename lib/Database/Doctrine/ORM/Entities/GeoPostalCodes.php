@@ -74,7 +74,7 @@ class GeoPostalCodes
     private $updated;
 
     /**
-     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslations", mappedBy="PostalCodeId")
+     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslations", mappedBy="geoPostalCode")
      */
     private $translations;
 
