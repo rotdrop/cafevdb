@@ -8,10 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Projekte
  *
- * @ORM\Table(name="Projekte", uniqueConstraints={@ORM\UniqueConstraint(name="Name", columns={"Name"})})
+ * @ORM\Table(name="Projects", uniqueConstraints={@ORM\UniqueConstraint(name="Name", columns={"Name"})})
  * @ORM\Entity
  */
-class Projekte
+class Project
 {
     /**
      * @var int
