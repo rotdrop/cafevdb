@@ -205,7 +205,7 @@ class ConfigService {
   private $l;
 
   /** @var IL10NFactory */
-  private $iL10NFactory;
+  private $l10NFactory;
 
   /** @var IURLGenerator */
   private $urlGenerator;
@@ -232,7 +232,7 @@ class ConfigService {
     EncryptionService $encryptionService,
     ISecureRandom $secureRandom,
     IURLGenerator $urlGenerator,
-    IL10NFactory $iL10NFactory,
+    IL10NFactory $l10NFactory,
     IDateTimeZone $dateTimeZone,
     ILogger $logger,
     IL10N $l
@@ -247,7 +247,7 @@ class ConfigService {
     $this->encryptionService = $encryptionService;
     $this->secureRandom = $secureRandom;
     $this->urlGenerator = $urlGenerator;
-    $this->iL10NFactory = $iL10NFactory;
+    $this->l10NFactory = $l10NFactory;
     $this->dateTimeZone = $dateTimeZone;
     $this->logger = $logger;
     $this->l = $l;
@@ -553,12 +553,23 @@ class ConfigService {
    */
   public function getLocale($lang = null)
   {
-    // @@TODO base this on l10n?
     if (empty($lang)) {
-      $lang = $this->iL10NFactory->findLanguage($this->appName);
+      $locale = $this->l10NFactory->findLocale($this->appName);
+      $lang = $this->l10NFactory->findLanguageFromLocale($this->appName, $locale);
+      $this->logInfo('Locale seems to be ' . $locale);
       $this->logInfo('Language seems to be ' . $lang);
+    } else {
+      $primary = locale_get_primary_language($lang);
+      if ($primary == $lang) {
+        $locale = $lang.'_'.strtoupper($lang);
+      } else {
+        $locale = $lang;
+      }
     }
-    $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
+    if (strpos($locale, '.') === false) {
+      $locale .= '.UTF-8';
+    }
+    $this->logInfo('Generated locale string: ' . $locale);
     return $locale;
   }
 
