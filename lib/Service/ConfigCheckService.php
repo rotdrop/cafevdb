@@ -32,7 +32,6 @@ use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\PHPMyEdit;
 
 use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
 
@@ -73,8 +72,12 @@ class ConfigCheckService
     CalDavService $calDavService,
     CardDavService $cardDavService,
     EventsService $eventsService
-    , GeoCodingService $geoCodingService
-    //    , PHPMyEdit $phpMyEdit
+    //, \OCA\CAFEVDB\TableView\PME\Config $pmeConfig
+    //, \OCA\CAFEVDB\Database\Connection $connection
+    //, GeoCodingService $geoCodingService
+    , \OCA\CAFEVDB\Legacy\PME\PHPMyEdit $phpMyEdit
+    //, \OCA\CAFEVDB\Legacy\PME\IOptions $pmeOptions
+    //, \OCA\CAFEVDB\TableView\Musicians $musiciansView
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -85,17 +88,19 @@ class ConfigCheckService
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
 
-    //new MySQLiShim($this->entityManager->getConnection());
+    //$contactsService = new ContactsService($configService, $entityManager, $geoCodingService);
+    //$contactsService->playground();
 
-    $contactsService = new ContactsService($configService, $entityManager, $geoCodingService);
-    $contactsService->playground();
-
-    new PHPMyEdit($this->entityManager->getConnection(), $configService);
+    //new PMEConfig($configService, $toolTipsService, $urlGenerator);
+    //new PMEOptions();
+    //new PHPMyEdit($this->entityManager->getConnection(), $pmeConfig);
 
     // $result = $mySQLiShim->query('SELECT * FROM Musiker');
     // while ($row = $mySQLiShim->fetch_array($result)) {
     //   $this->logInfo(__METHOD__." ".print_r($row, true));
     // }
+    //new \OCA\CAFEVDB\Legacy\PME\PHPMyEdit($connection, $pmeConfig);
+    new \OCA\CAFEVDB\TableView\Musicians($configService, $phpMyEdit);
   }
 
   /**Return an array with necessary configuration items, being either
