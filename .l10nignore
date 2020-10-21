@@ -1,0 +1,4 @@
+3rdparty/
+vendor/
+build/
+doc/db-app/phpdoc/
