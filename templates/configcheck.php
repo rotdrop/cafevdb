@@ -69,7 +69,11 @@ echo $this->inc('part.common.header',
     <input id="edit-event-test-calendar-id" type="number" name="calendar-id" placeholder="calendar-id"/>
      <a href="#" class="geo-coding button">TestGeoCodingCache</a>
   </form>
-
+  <br/>
+  <pre><?php echo $_SERVER['PHP_SELF']; ?></pre>
+  <pre>Image: <?php echo $urlGenerator->imagePath('cafevdb', ''); ?></pre>
+  <pre>File: <?php echo $urlGenerator->linkTo('cafevdb', ''); ?></pre>
+  <pre>Route: <?php echo $urlGenerator->linkToRoute('cafevdb.page.index'); ?></pre>
   <ul>
 <?php
 
