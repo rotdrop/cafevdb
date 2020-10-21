@@ -156,6 +156,7 @@ cleanup: $(BUILDDIR)/core-exclude
 .PHONY: doc
 doc: $(PHPDOC)
 	$(PHPDOC) run \
+ --template default \
  --parseprivate \
  --sourcecode \
  --defaultpackagename $(app_name) \
