@@ -34,7 +34,7 @@ interface ITableView
     public function render();
 
     /** Set table-navigation enable/disable. */
-    public function navigation();
+    public function navigation($enable);
 
     /** Run underlying table-manager (phpMyEdit for now). */
     public function execute();

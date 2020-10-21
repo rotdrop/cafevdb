@@ -22,23 +22,47 @@
 
 namespace OCA\CAFEVDB\TableView;
 
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Database\PHPMyEdit;
+
 /**Base for phpMyEdit based table-views. */
 abstract PMETableViewBase
 {
-    // /** Short title for heading. */
-    // public function shortTitle();
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-    // /** Header text informations. */
-    // public function headerText();
+  protected $configService;
 
-    // /** Show the underlying table. */
-    // public function render();
+  protected $phpMyEdit;
 
-    // /** Set table-navigation enable/disable. */
-    // public function navigation();
+  protected $pmeBare;
 
-    // /** Run underlying table-manager (phpMyEdit for now). */
-    // public function execute();
+  protected function __construct(
+    ConfigService $configService,
+    PHPMyEdit $phpMyEdit
+  ) {
+    $this->configService = $configService;
+    $this->phpMyEdit = $phpMyEdit;
+    $this->pmeBare = false;
+  }
+
+  /** Short title for heading. */
+  // public function shortTitle();
+
+  /** Header text informations. */
+  // public function headerText();
+
+  /** Show the underlying table. */
+  // public function render();
+
+  /** Set table-navigation enable/disable. */
+  public function navigation($enable) {
+    $this->pmeBare = !$enable;
+  }
+
+  // /** Run underlying table-manager (phpMyEdit for now). */
+  public function execute() {
+    $this->pme->execute();
+  }
 }
 
 // Local Variables: ***
