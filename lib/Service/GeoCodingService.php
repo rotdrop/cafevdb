@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoContinent;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoCountry;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCode;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCodeTranslation;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musiker;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
 
 class GeoCodingService
 {
@@ -383,7 +383,7 @@ class GeoCodingService
                ->select('gpc')
                ->from(GeoPostalCode::class, 'gpc')
                ->leftJoin(
-                 Musiker::class, 'm',
+                 Musician::class, 'm',
                  Join::WITH,
                  'gpc.country = m.land AND gpc.postalCode = m.postleitzahl'
                )
@@ -626,7 +626,7 @@ class GeoCodingService
         if (!empty($data)) {
           $entity = $this->find(['iso' => $code, 'target' => $target]);
           if (empty($entity)) {
-            $entity = GeoCountrys::create()
+            $entity = GeoCountry::create()
                     ->setIso($code)
                     ->setTarget($target);
           } else {
@@ -642,7 +642,7 @@ class GeoCodingService
         $this->setDatabaseRepository(GeoContinent::class);
         $entity = $this->find(['code' => $continent, 'target' => $lang]);
         if (empty($entity)) {
-          $entity = GeoContinents::create()
+          $entity = GeoContinent::create()
                   ->setCode($continent)
                   ->setTarget($lang);
         } else {
