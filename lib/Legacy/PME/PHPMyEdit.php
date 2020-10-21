@@ -20,13 +20,16 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database;
-
-use OCA\CAFEVDB\Service\ConfigService;
+namespace OCA\CAFEVDB\Legacy\PME;
 
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\DBALException;
 
+use OCA\CAFEVDB\Database\Connection;
+
+/**
+ * Override phpMyEdit to use Doctrine DBAL.
+ */
 class PHPMyEdit extends \phpMyEdit
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -34,29 +37,56 @@ class PHPMyEdit extends \phpMyEdit
   /** @var Connection */
   private $connection;
 
-  /** @var ConfigService */
-  private $configService;
+  private $defaultOptions;
 
   private $affectedRows = 0;
   private $errorCode = 0;
   private $errorInfo = null;
-  private $connectionOptions;
+  private $overrideOptions;
 
-  public function __construct(
-    Connection $connection,
-    ConfigService $configService
-  ) {
+  /**Override constructor, delay most of the actual work to the
+   **execute() method.
+   *
+   * @param \OCA\CAFEVDB\Database\Connection $connection
+   *
+   * @param \OCA\CAFEVDB\Legacy\PME\IOptions $options
+   *
+   * We do also some construction thing s.t. add_operation() and
+   * friends does something useful.
+   */
+  public function __construct(Connection $connection, IOptions $options)
+  {
     $this->dbh = $connection;
-    $this->configService = $configService;
-    $this->connectionOptions = [
+    $this->l = l10n;
+
+    $this->overrideOptions = [
       'dbh' => $this->connection,
       'dbp' => '',
+      'execute' => false,
     ];
+    $this->defaultOptions = $options->getArrayCopy();
+    if (isset($options['cgi']['prefix']['sys'])) {
+      $this->cgi = $option['cgi'];
+      $this->operation = $this->get_sys_cgi_var('operation');
+    }
+    if (isset($options['options'])) {
+      $this->options = $options['options'];
+    }
+    $this->labels = $this->make_language_labels($options['language']?:null);
   }
 
+  /**
+   * Call phpMyEdit::execute() with the given options. This function
+   * actually calls the constructor of the base-class and overrides
+   * its options with the given argument.
+   *
+   * @param array $opts
+   *
+   * @bug Calling a CTOR elsewhere is really bad programming style.
+   */
   public function execute($opts)
   {
-    $opts = array_merge($opts, $this->connectionOptions, [ 'execute' -> false ]);
+    $opts = array_merge($this->defaultOptions, $opts, $this->overrideOptions);
     parent::__construct($opts); // oh oh
     parent::execute();
   }
@@ -129,6 +159,15 @@ class PHPMyEdit extends \phpMyEdit
       return false;
     }
     return $stmt;
+  }
+
+  public function make_language_labels($lang)
+  {
+    if ($this->labels && (isset($this->currentLanguage) || $this->currentLanguage == $lang)) {
+      return $this->labels;
+    }
+    $this->currentLanguage = $lang?:$this->get_server_var('HTTP_ACCEPT_LANGUAGE');
+    return parent::make_language_labels($this->currentLanguage);
   }
 }
 
