@@ -33,6 +33,8 @@ use OCP\IL10N;
  */
 
 use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
+use OCA\CAFEVDB\TableView\Registration as TableViewRegistration;
+
 use OCP\EventDispatcher\IEventDispatcher;
 
 /*
@@ -95,6 +97,9 @@ class Application extends App implements IBootstrap {
 
         // Register listeners
         ListenerRegistration::register($context);
+
+        // Register TableView stuff
+        TableViewRegistration::register($context);
     }
 
 }
