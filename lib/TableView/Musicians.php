@@ -22,22 +22,37 @@
 
 namespace OCA\CAFEVDB\TableView;
 
-interface ITableView
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
+
+/**Table generator for Musicians table. */
+class Musicians extends PMETableViewBase
 {
-    /** Short title for heading. */
-    public function shortTitle();
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-    /** Header text informations. */
-    public function headerText();
+  public function __construct(
+    ConfigService $configService,
+    PHPMyEdit $phpMyEdit
+  ) {
+    parent::__construct($configService, $phpMyEdit);
+    $this->logInfo(__METHOD__.": Hello World!");
+  }
 
-    /** Show the underlying table. */
-    public function render();
+  /** Short title for heading. */
+  public function shortTitle() {
+    return "Unimplemented";
+  }
 
-    /** Set table-navigation enable/disable. */
-    public function navigation($enable);
 
-    /** Run underlying table-manager (phpMyEdit for now). */
-    public function execute($options);
+  /** Header text informations. */
+  public function headerText() {
+    return "Unimplemented";
+  }
+
+  /** Show the underlying table. */
+  public function render(){
+    return "Unimplemented";
+  }
 }
 
 // Local Variables: ***

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -23,26 +23,38 @@
 namespace OCA\CAFEVDB\TableView;
 
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Database\PHPMyEdit;
+use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
 
-/**Base for phpMyEdit based table-views. */
-abstract PMETableViewBase
+/** Base for phpMyEdit based table-views. */
+abstract class PMETableViewBase implements ITableView
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  protected $configService;
-
-  protected $phpMyEdit;
+  protected $pme;
 
   protected $pmeBare;
+
+  protected $pmeOptions;
 
   protected function __construct(
     ConfigService $configService,
     PHPMyEdit $phpMyEdit
   ) {
     $this->configService = $configService;
-    $this->phpMyEdit = $phpMyEdit;
+    $this->pme = $phpMyEdit;
     $this->pmeBare = false;
+  }
+
+  /** Set table-navigation enable/disable. */
+  public function navigation($enable)
+  {
+    $this->pmeBare = !$enable;
+  }
+
+  /** Run underlying table-manager (phpMyEdit for now). */
+  public function execute($opts)
+  {
+    $this->pme->execute($opts);
   }
 
   /** Short title for heading. */
@@ -54,15 +66,41 @@ abstract PMETableViewBase
   /** Show the underlying table. */
   // public function render();
 
-  /** Set table-navigation enable/disable. */
-  public function navigation($enable) {
-    $this->pmeBare = !$enable;
+  /**Are we in add mode? */
+  public function addOperation()
+  {
+    return $this->pme->add_operation();
   }
 
-  // /** Run underlying table-manager (phpMyEdit for now). */
-  public function execute() {
-    $this->pme->execute();
+  /**Are we in change mode? */
+  public function changeOperation()
+  {
+    return $this->pme->change_operation();
   }
+
+  /**Are we in copy mode? */
+  public function copyOperation()
+  {
+    return $this->pme->copy_operation();
+  }
+
+  /**Are we in view mode? */
+  public function viewOperation()
+  {
+    return $this->pme->view_operation();
+  }
+
+  /**Are we in delete mode?*/
+  public function deleteOperation()
+  {
+    return $this->pme->delete_operation();
+  }
+
+  public function listOperation()
+  {
+    return $this->pme->list_operation();
+  }
+
 }
 
 // Local Variables: ***
