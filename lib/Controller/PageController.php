@@ -45,11 +45,11 @@ class PageController extends Controller {
   /** @var ToolTipsService */
   private $toolTipsService;
 
-  /** @var ConfigService */
-  private $configService;
-
   /** @var ConfigCheckService */
   private $configCheckService;
+
+  /** @var \OCP\IURLGenerator */
+  private $urlGenerator;
 
   public function __construct(
     $appName,
@@ -59,7 +59,8 @@ class PageController extends Controller {
     RequestParameterService $parameterService,
     ToolTipsService $toolTipsService,
     IInitialStateService $initialStateService,
-    ConfigCheckService $configCheckService
+    ConfigCheckService $configCheckService,
+    \OCP\IURLGenerator $urlGenerator
   ) {
 
     parent::__construct($appName, $request);
@@ -70,6 +71,7 @@ class PageController extends Controller {
     $this->toolTipsService = $toolTipsService;
     $this->initialStateService = $initialStateService;
     $this->configCheckService = $configCheckService;
+    $this->urlGenerator = $urlGenerator;
     $this->l = $this->l10N();
   }
 
@@ -197,6 +199,7 @@ class PageController extends Controller {
       'expertmode' => $expertMode,
       'showToolTips' => $showToolTips,
       'toolTips' => $this->toolTipsService,
+      'urlGenerator' => $this->urlGenerator,
       'debugMode' => $debugMode,
       'encryptionkey' => $encrkey,
       'configkey' => $this->getConfigValue('encryptionkey'),

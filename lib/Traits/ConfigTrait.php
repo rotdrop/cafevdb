@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 trait ConfigTrait {
 
   /** @var ConfigService */
-  private $configService;
+  protected $configService;
 
   protected function appName()
   {
