@@ -49,16 +49,16 @@ class MusicianRepository extends EntityRepository
   public static function findStreetAddress($musicianId)
   {
     $qb = $this->createQueryBuilder('m');
-    ($address) = $qb->select(['m.Name AS surName',
-                              'm.Vorname AS firstName',
-                              'm.Strasse AS street',
-                              'm.Stadt AS city',
-                              'm.Postleitzahl AS ZIP',
-                              'm.FixedLinePhone AS phone',
-                              'm.MobilePhone AS cellphone'])
-                    ->where('m.Id = :id')
-                    ->setParameter('id', $musicianId)
-                    ->getQuery()->execute();
+    $address = $qb->select(['m.Name AS surName',
+                            'm.Vorname AS firstName',
+                            'm.Strasse AS street',
+                            'm.Stadt AS city',
+                            'm.Postleitzahl AS ZIP',
+                            'm.FixedLinePhone AS phone',
+                            'm.MobilePhone AS cellphone'])
+      ->where('m.Id = :id')
+      ->setParameter('id', $musicianId)
+      ->getQuery()->execute()[0];
     return $address;
   }
 
@@ -76,12 +76,12 @@ class MusicianRepository extends EntityRepository
   public static function findName($musicianId)
   {
     $qb = $this->createQueryBuilder('m');
-    ($name) = $qb->select(['m.Name AS lastName',
-                           'm.Vorname AS firstName',
-                           'm.Email AS email'])
-                 ->where('m.Id = :id')
-                 ->setParameter('id', $musicianId)
-                 ->getQuery()->execute();
+    $name = $qb->select(['m.Name AS lastName',
+                         'm.Vorname AS firstName',
+                         'm.Email AS email'])
+      ->where('m.Id = :id')
+      ->setParameter('id', $musicianId)
+      ->getQuery()->execute()[0];
     return $name;
   }
 }
