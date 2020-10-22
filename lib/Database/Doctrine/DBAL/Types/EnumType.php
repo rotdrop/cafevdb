@@ -45,4 +45,9 @@ abstract class EnumType extends Type
     {
         return true;
     }
+
+    public function getValues()
+    {
+        return $this->values;
+    }
 }
