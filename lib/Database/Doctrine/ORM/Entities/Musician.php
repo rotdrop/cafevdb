@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Musician
  *
  * @ORM\Table(name="Musicians")
- * @ORM\Entity(repositoryClass="CAFEVDB\Repositories\MusicianRepository")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Datanase\Doctrine\ORM\Repositories\MusiciansRepository")
  */
 class Musician implements \ArrayAccess
 {
@@ -134,7 +134,7 @@ class Musician implements \ArrayAccess
     private $aktualisiert;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Instrument", inversedBy="musicians")
+     * @ORM\ManyToMany(targetEntity="Instrument", inversedBy="musicians", orphanRemoval=true)
      * @ORM\JoinTable(
      *   name="musician_instrument",
      *   joinColumns={@ORM\JoinColumn(name="musician_id", referencedColumnName="Id", onDelete="CASCADE")},
