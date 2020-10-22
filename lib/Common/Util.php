@@ -30,6 +30,34 @@ class Util
 
   private static $externalScripts = [];
 
+  public static function arrayMergeRecursive(...$arrays)
+  {
+    if (count($arrays) == 0) {
+      return [];
+    }
+    $result = $arrays[0];
+    unset($arrays[0]);
+    foreach ($arrays as $array) {
+      $result = self::arrayMergeTwoRecursive($result, $array);
+    }
+    return $result;
+  }
+
+  /** Inner work-horse for arrayMergeRecursive. */
+  private static function arrayMergeTwoRecursive($dest, $override)
+  {
+    foreach ($override as $key => $value) {
+      if (is_integer($key)) {
+        $dest[] = $value;
+      } elseif (isset($dest[$key]) && is_array($dest[$key]) && is_array($value)) {
+        $dest[$key] = self::arrayMergeTwoRecursive($dest[$key], $value);
+      } else {
+        $dest[$key] = $value;
+      }
+    }
+    return $dest;
+  }
+
   /**Normalize spaces and commas after and before spaces. */
   public static function normalizeSpaces($name)
   {
@@ -56,17 +84,6 @@ class Util
     return htmlspecialchars($string, $ent, 'UTF-8', $double_encode);
   }
 
-  /**Return the timezone, from the calendar app.
-   * @@TODO: this does not work anymore
-   */
-  public static function getTimezone()
-  {
-    $zone = \OC::$server->getDateTimeZone()->getTimeZone()->getName();
-    if ($zone == '') {
-      $zone = 'UTC';
-    }
-  }
-
   /**Explode, but omit empty array members, i.e. return empty array
    * for empty string.
    */
@@ -77,63 +94,6 @@ class Util
     } else {
       return explode($delim, $string);
     }
-  }
-
-  /**Return the locale. */
-  public static function getLocale($lang = null)
-  {
-    if (empty($lang)) {
-      $lang = \OC::$server->getL10NFactory()->findLanguage(Config::APP_NAME);
-    }
-    $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
-    return $locale;
-  }
-
-  /**Return the currency symbol for the locale. */
-  public static function currencySymbol($locale = null)
-  {
-    if (empty($locale)) {
-      $locale = self::getLocale();
-    }
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
-    return $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
-  }
-
-  //!Just display the given value
-  public static function moneyValue($value, $locale = null)
-  {
-    $oldlocale = setlocale(LC_MONETARY, '0');
-    empty($locale) && $locale = self::getLocale();
-    setlocale(LC_MONETARY, $locale);
-    $result = money_format('%n', (float)$value);
-    setlocale(LC_MONETARY, $oldlocale);
-    return $result;
-  }
-
-  /**Decode the record idea from the CGI data, return -1 if none
-   * found.
-   *
-   * @param getParam callable(key, default = null)
-   *
-   * @@TODO This is totally ugly. Is it really needed?
-   */
-  public static function getCGIRecordId($getParam, $prefix = null)
-  {
-    if (!isset($prefix)) {
-      Config::init();
-      $prefix = Config::$pmeopts['cgi']['prefix']['sys'];
-    }
-    $recordKey = $prefix.'rec';
-    $recordId  = $getParam($recordKey, -1);
-    $opreq     = $getParam($prefix.'operation');
-    $op        = parse_url($opreq, PHP_URL_PATH);
-    $opargs    = array();
-    parse_str(parse_url($opreq, PHP_URL_QUERY), $opargs);
-    if ($recordId < 0 && isset($opargs[$recordKey]) && $opargs[$recordKey] > 0) {
-      $recordId = $opargs[$recordKey];
-    }
-
-    return $recordId > 0 ? $recordId : -1;
   }
 
   /**Return the maximum upload file size.*/
