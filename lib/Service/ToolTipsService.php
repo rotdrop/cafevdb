@@ -24,7 +24,10 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\IL10N;
 
-/** Tool-tips management with translations. */
+/** Tool-tips management with translations.
+ *
+ * @TODO Perhaps base on \ArrayObject
+ */
 class ToolTipsService implements \ArrayAccess, \Countable
 {
   /** @var IL10N */
