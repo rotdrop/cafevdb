@@ -72,12 +72,9 @@ class ConfigCheckService
     CalDavService $calDavService,
     CardDavService $cardDavService,
     EventsService $eventsService
-    //, \OCA\CAFEVDB\TableView\PME\Config $pmeConfig
-    //, \OCA\CAFEVDB\Database\Connection $connection
-    //, GeoCodingService $geoCodingService
-    , \OCA\CAFEVDB\Legacy\PME\PHPMyEdit $phpMyEdit
-    //, \OCA\CAFEVDB\Legacy\PME\IOptions $pmeOptions
-    //, \OCA\CAFEVDB\TableView\Musicians $musiciansView
+    //, \OCA\CAFEVDB\Legacy\PME\PHPMyEdit $phpMyEdit
+    //, \OCA\CAFEVDB\Service\RequestParameterService $requestParameters
+    , \OCA\CAFEVDB\TableView\Musicians $musiciansView
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -100,7 +97,7 @@ class ConfigCheckService
     //   $this->logInfo(__METHOD__." ".print_r($row, true));
     // }
     //new \OCA\CAFEVDB\Legacy\PME\PHPMyEdit($connection, $pmeConfig);
-    new \OCA\CAFEVDB\TableView\Musicians($configService, $phpMyEdit);
+    //new \OCA\CAFEVDB\TableView\Musicians($configService, $requestParameters, $entityManager, $phpMyEdit);
   }
 
   /**Return an array with necessary configuration items, being either
