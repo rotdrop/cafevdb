@@ -6,7 +6,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\EntityRepository;
 
-class MusicianRepository extends EntityRepository
+class MusiciansRepository extends EntityRepository
 {
   /**
    * @param string $firstName
@@ -62,16 +62,13 @@ class MusicianRepository extends EntityRepository
     return $address;
   }
 
-  /**Fetch the street address of the respected musician. Needed in
-   * order to generate automated snail-mails.
+  /**Fetch the name and email of the respective musician.
    *
    * Return value is a flat array:
    *
    * array('firstName' => ...,
-   *       'surName' => ...,
-   *       'street' => ...,
-   *       'city' => ...,
-   *       'ZIP' => ...);
+   *       'lastName' => ...,
+   *       'email' => ...);
    */
   public static function findName($musicianId)
   {
