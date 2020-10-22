@@ -556,8 +556,8 @@ class ConfigService {
     if (empty($lang)) {
       $locale = $this->l10NFactory->findLocale($this->appName);
       $lang = $this->l10NFactory->findLanguageFromLocale($this->appName, $locale);
-      $this->logInfo('Locale seems to be ' . $locale);
-      $this->logInfo('Language seems to be ' . $lang);
+      $this->logDebug('Locale seems to be ' . $locale);
+      $this->logDebug('Language seems to be ' . $lang);
     } else {
       $locale = $lang;
     }
@@ -568,7 +568,7 @@ class ConfigService {
     if (strpos($locale, '.') === false) {
       $locale .= '.UTF-8';
     }
-    $this->logInfo('Generated locale string: ' . $locale);
+    $this->logDebug('Generated locale string: ' . $locale);
     return $locale;
   }
 
@@ -589,6 +589,10 @@ class ConfigService {
     }
     asort($countryCodes);
     return $countryCodes;
+  }
+
+  public function findAvailableLanguages($app = 'core') {
+    $this->l10NFactory->findAvailableLanguages($app);
   }
 
   /**Return the currency symbol for the locale. */

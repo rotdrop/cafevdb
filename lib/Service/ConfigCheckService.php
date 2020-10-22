@@ -73,8 +73,9 @@ class ConfigCheckService
     CardDavService $cardDavService,
     EventsService $eventsService
     //, \OCA\CAFEVDB\Legacy\PME\PHPMyEdit $phpMyEdit
+    //, \OCA\CAFEVDB\Database\Connection $dbConnection
     //, \OCA\CAFEVDB\Service\RequestParameterService $requestParameters
-    , \OCA\CAFEVDB\TableView\Musicians $musiciansView
+    //, \OCA\CAFEVDB\TableView\Musicians $musiciansView
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -98,6 +99,44 @@ class ConfigCheckService
     // }
     //new \OCA\CAFEVDB\Legacy\PME\PHPMyEdit($connection, $pmeConfig);
     //new \OCA\CAFEVDB\TableView\Musicians($configService, $requestParameters, $entityManager, $phpMyEdit);
+    // try {
+    //   $musiciansView->disableProjectMode();
+    //   ob_start();
+    //   $musiciansView->render();
+    //   $table = ob_get_contents();
+    //   ob_end_clean();
+    //   $this->logInfo($table);
+    // } catch (\Throwable $t) {
+    //   $this->logException($t);
+    //   $table = ob_get_contents();
+    //   ob_end_clean();
+    //   $this->logInfo($table);
+    // }
+    // try {
+    //   $query = "SELECT * FROM Musicians";
+    //   $this->logInfo("Query: ".$query);
+    //   $result = $phpMyEdit->myquery($query);
+    //   if (empty($result)) {
+    //     if ($phpMyEdit->exception) {
+    //       $this->logException($phpMyEdit->exception);
+    //     }
+    //   }
+    //   while (($row = $phpMyEdit->sql_fetch($result))) {
+    //     $this->logInfo(print_r($row, true));
+    //   }
+    // } catch (\Throwable $t) {
+    //   $this->logException($t);
+    // }
+    // try {
+    //   $query = "SELECT * FROM Musicians";
+    //   $this->logInfo("Query: ".$query);
+    //   $result = $dbConnection->executeQuery($query);
+    //   while (($row = $result->fetch())) {
+    //     $this->logInfo(print_r($row, true));
+    //   }
+    // } catch (\Throwable $t) {
+    //   $this->logException($t);
+    // }
   }
 
   /**Return an array with necessary configuration items, being either
@@ -238,7 +277,7 @@ class ConfigCheckService
                    \OCP\Constants::PERMISSION_DELETE);
 
     if ($type != 'folder' && $type != 'file') {
-      trigger_error('only folder and file for now');
+      $this->logError('only folder and file for now');
       return false;
     }
 
@@ -279,7 +318,7 @@ class ConfigCheckService
                    \OCP\Constants::PERMISSION_DELETE);
 
     if ($type != 'folder' && $type != 'file') {
-      trigger_error('only folder and file for now');
+      $this->logError('only folder and file for now');
       return false;
     }
 
@@ -443,7 +482,7 @@ class ConfigCheckService
     $sharedFolder == '' && $sharedFolder = $this->getConfigValue('sharedfolder', '');
 
     if ($sharedFolder == '') {
-      trigger_error('no folder');
+      $this->logError('no folder');
       // not configured
       return false;
     }
@@ -457,7 +496,7 @@ class ConfigCheckService
 
       try {
         $id = $this->rootFolder->getUserFolder($shareOwner)->get($sharedFolder)->getId();
-        $this->logError('Shared folder id: ' . $id);
+        $this->logDebug('Shared folder id: ' . $id);
         return $this->groupSharedExists($id, $shareGroup, 'folder', $shareOwner);
       } catch(\Exception $e) {
         $this->logError('No file id for  ' . $sharedFolder . ' ' . $e->getMessage());
@@ -530,7 +569,7 @@ class ConfigCheckService
 
       if ($node) {
         $id = $node->getId();
-        trigger_error('shared folder id ' . $id);
+        $this->logDebug('shared folder id ' . $id);
         if (!$this->groupShareObject($id, $shareGroup, 'folder', $userId)
             || !$this->groupSharedExists($id, $shareGroup, 'folder', $userId)) {
           return false;
@@ -789,21 +828,21 @@ class ConfigCheckService
     $connection = $this->entityManager->getConnection();
 
     if (empty($connection)) {
-      trigger_error('db connection empty');
+      $this->logError('db connection empty');
       return false;
     }
 
     $selfOpened = false;
     if (!$connection->ping()) {
       if (!$connection->connect()) {
-        trigger_error('db cannot connect');
+        $this->logError('db cannot connect');
         return false;
       }
       $selfOpened = true;
     }
 
     if (!$connection->ping()) {
-      trigger_error('db cannot ping');
+      $this->logError('db cannot ping');
       return false;
     }
 

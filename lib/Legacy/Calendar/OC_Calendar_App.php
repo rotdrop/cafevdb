@@ -51,7 +51,7 @@ class OC_Calendar_App
     };
     $categories = $this->getVCategories()->getTags();
     $categories = array_map($getNames, $categories);
-    $this->logError(print_r($categories, true));
+    $this->logDebug(__METHOD__.": ".print_r($categories, true));
     return $categories;
   }
 
@@ -95,15 +95,15 @@ class OC_Calendar_App
       $tags = array_map($getName, $vcategories->getTags());
       $vcategories->delete($tags);
       foreach($events as $event) {
-        $this->logError("event loop");
+        $this->logDebug(__METHOD__.": event loop");
         foreach($event['objects'] as $object) {
           foreach($object as $key => $categories) {
             if ($key != 'CATEGORIES') {
               continue;
             }
-            $this->logError($key . " => " . is_array($categories[0][0]));
+            $this->logDebug(__METHOD__.": ".$key . " => " . is_array($categories[0][0]));
             while(is_array($categories)) {
-              $this->logError(print_r($categories, true));
+              $this->logDebug(__METHOD__.": ".print_r($categories, true));
               $categories = $categories[0];
             }
             if (!empty($categories)) {
