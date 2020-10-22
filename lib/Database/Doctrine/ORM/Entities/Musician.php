@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Musician
  *
  * @ORM\Table(name="Musicians")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Datanase\Doctrine\ORM\Repositories\MusiciansRepository")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository")
  */
 class Musician implements \ArrayAccess
 {

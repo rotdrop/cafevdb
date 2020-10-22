@@ -2,314 +2,332 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Projekte
  *
  * @ORM\Table(name="Projects", uniqueConstraints={@ORM\UniqueConstraint(name="Name", columns={"Name"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository")
  */
 class Project
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="Id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="Jahr", type="integer", nullable=false, options={"unsigned"=true})
-     */
-    private $jahr;
+  /**
+   * @var int
+   *
+   * @ORM\Column(name="Id", type="integer", nullable=false)
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+  private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Name", type="string", length=64, nullable=false)
-     */
-    private $name;
+  /**
+   * @var int
+   *
+   * @ORM\Column(name="Jahr", type="integer", nullable=false, options={"unsigned"=true})
+   */
+  private $year;
 
-    /**
-     * @var enumprojecttemporaltype
-     *
-     * @ORM\Column(name="Art", type="enumprojecttemporaltype", nullable=false, options={"default"="temporary"})
-     */
-    private $art = 'temporary';
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="Name", type="string", length=64, nullable=false)
+   */
+  private $name;
 
-    /**
-     * @var array|null
-     *
-     * @ORM\Column(name="Besetzung", type="simple_array", length=0, nullable=true, options={"comment"="Benötigte Instrumente"})
-     */
-    private $besetzung;
+  /**
+   * @var enumprojecttemporaltype
+   *
+   * @ORM\Column(name="Art", type="enumprojecttemporaltype", nullable=false, options={"default"="temporary"})
+   */
+  private $art = 'temporary';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Unkostenbeitrag", type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
-     */
-    private $unkostenbeitrag = '0.00';
+  /**
+   * @var array|null
+   *
+   * @ORM\Column(name="Besetzung", type="simple_array", length=0, nullable=true, options={"comment"="obsolete"})
+   */
+  private $besetzung;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Anzahlung", type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
-     */
-    private $anzahlung = '0.00';
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="Unkostenbeitrag", type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
+   */
+  private $unkostenbeitrag = '0.00';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="ExtraFelder", type="text", length=65535, nullable=false, options={"comment"="Extra-Datenfelder"})
-     */
-    private $extrafelder;
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="Anzahlung", type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
+   */
+  private $anzahlung = '0.00';
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="Disabled", type="boolean", nullable=false, options={"default"="0"})
-     */
-    private $disabled = '0';
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="ExtraFelder", type="text", length=65535, nullable=false, options={"comment"="Extra-Datenfelder"})
+   */
+  private $extrafelder;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="Aktualisiert", type="datetime", nullable=true)
-     */
-    private $aktualisiert;
+  /**
+   * @var bool
+   *
+   * @ORM\Column(name="Disabled", type="boolean", nullable=false, options={"default"="0"})
+   */
+  private $disabled = '0';
 
+  /**
+   * @var \DateTime|null
+   *
+   * @ORM\Column(name="Aktualisiert", type="datetime", nullable=true)
+   */
+  private $aktualisiert;
 
+  /**
+   * @ORM\ManyToMany(targetEntity="Instrument", inversedBy="projects", orphanRemoval=true)
+   * @ORM\JoinTable(
+   *   name="project_instrument",
+   *   joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="Id", onDelete="CASCADE")},
+   *   inverseJoinColumns={@ORM\JoinColumn(name="instrument_id", referencedColumnName="Id", onDelete="CASCADE")}
+   * )
+   */
+  private $instrumentation;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->instrumentation = new ArrayCollection();
+  }
 
-    /**
-     * Set jahr.
-     *
-     * @param int $jahr
-     *
-     * @return Projekte
-     */
-    public function setJahr($jahr)
-    {
-        $this->jahr = $jahr;
+  /**
+   * Get id.
+   *
+   * @return int
+   */
+  public function getId()
+  {
+    return $this->id;
+  }
 
-        return $this;
-    }
+  /**
+   * Set jahr.
+   *
+   * @param int $jahr
+   *
+   * @return Projekte
+   */
+  public function setJahr($jahr)
+  {
+    $this->jahr = $jahr;
 
-    /**
-     * Get jahr.
-     *
-     * @return int
-     */
-    public function getJahr()
-    {
-        return $this->jahr;
-    }
+    return $this;
+  }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Projekte
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
+  /**
+   * Get jahr.
+   *
+   * @return int
+   */
+  public function getJahr()
+  {
+    return $this->jahr;
+  }
 
-        return $this;
-    }
+  /**
+   * Set name.
+   *
+   * @param string $name
+   *
+   * @return Projekte
+   */
+  public function setName($name)
+  {
+    $this->name = $name;
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+    return $this;
+  }
 
-    /**
-     * Set art.
-     *
-     * @param enumprojecttemporaltype $art
-     *
-     * @return Projekte
-     */
-    public function setArt($art)
-    {
-        $this->art = $art;
+  /**
+   * Get name.
+   *
+   * @return string
+   */
+  public function getName()
+  {
+    return $this->name;
+  }
 
-        return $this;
-    }
+  /**
+   * Set art.
+   *
+   * @param enumprojecttemporaltype $art
+   *
+   * @return Projekte
+   */
+  public function setArt($art)
+  {
+    $this->art = $art;
 
-    /**
-     * Get art.
-     *
-     * @return enumprojecttemporaltype
-     */
-    public function getArt()
-    {
-        return $this->art;
-    }
+    return $this;
+  }
 
-    /**
-     * Set besetzung.
-     *
-     * @param array|null $besetzung
-     *
-     * @return Projekte
-     */
-    public function setBesetzung($besetzung = null)
-    {
-        $this->besetzung = $besetzung;
+  /**
+   * Get art.
+   *
+   * @return enumprojecttemporaltype
+   */
+  public function getArt()
+  {
+    return $this->art;
+  }
 
-        return $this;
-    }
+  /**
+   * Set besetzung.
+   *
+   * @param array|null $besetzung
+   *
+   * @return Projekte
+   */
+  public function setBesetzung($besetzung = null)
+  {
+    $this->besetzung = $besetzung;
 
-    /**
-     * Get besetzung.
-     *
-     * @return array|null
-     */
-    public function getBesetzung()
-    {
-        return $this->besetzung;
-    }
+    return $this;
+  }
 
-    /**
-     * Set unkostenbeitrag.
-     *
-     * @param string $unkostenbeitrag
-     *
-     * @return Projekte
-     */
-    public function setUnkostenbeitrag($unkostenbeitrag)
-    {
-        $this->unkostenbeitrag = $unkostenbeitrag;
+  /**
+   * Get besetzung.
+   *
+   * @return array|null
+   */
+  public function getBesetzung()
+  {
+    return $this->besetzung;
+  }
 
-        return $this;
-    }
+  /**
+   * Set unkostenbeitrag.
+   *
+   * @param string $unkostenbeitrag
+   *
+   * @return Projekte
+   */
+  public function setUnkostenbeitrag($unkostenbeitrag)
+  {
+    $this->unkostenbeitrag = $unkostenbeitrag;
 
-    /**
-     * Get unkostenbeitrag.
-     *
-     * @return string
-     */
-    public function getUnkostenbeitrag()
-    {
-        return $this->unkostenbeitrag;
-    }
+    return $this;
+  }
 
-    /**
-     * Set anzahlung.
-     *
-     * @param string $anzahlung
-     *
-     * @return Projekte
-     */
-    public function setAnzahlung($anzahlung)
-    {
-        $this->anzahlung = $anzahlung;
+  /**
+   * Get unkostenbeitrag.
+   *
+   * @return string
+   */
+  public function getUnkostenbeitrag()
+  {
+    return $this->unkostenbeitrag;
+  }
 
-        return $this;
-    }
+  /**
+   * Set anzahlung.
+   *
+   * @param string $anzahlung
+   *
+   * @return Projekte
+   */
+  public function setAnzahlung($anzahlung)
+  {
+    $this->anzahlung = $anzahlung;
 
-    /**
-     * Get anzahlung.
-     *
-     * @return string
-     */
-    public function getAnzahlung()
-    {
-        return $this->anzahlung;
-    }
+    return $this;
+  }
 
-    /**
-     * Set extrafelder.
-     *
-     * @param string $extrafelder
-     *
-     * @return Projekte
-     */
-    public function setExtrafelder($extrafelder)
-    {
-        $this->extrafelder = $extrafelder;
+  /**
+   * Get anzahlung.
+   *
+   * @return string
+   */
+  public function getAnzahlung()
+  {
+    return $this->anzahlung;
+  }
 
-        return $this;
-    }
+  /**
+   * Set extrafelder.
+   *
+   * @param string $extrafelder
+   *
+   * @return Projekte
+   */
+  public function setExtrafelder($extrafelder)
+  {
+    $this->extrafelder = $extrafelder;
 
-    /**
-     * Get extrafelder.
-     *
-     * @return string
-     */
-    public function getExtrafelder()
-    {
-        return $this->extrafelder;
-    }
+    return $this;
+  }
 
-    /**
-     * Set disabled.
-     *
-     * @param bool $disabled
-     *
-     * @return Projekte
-     */
-    public function setDisabled($disabled)
-    {
-        $this->disabled = $disabled;
+  /**
+   * Get extrafelder.
+   *
+   * @return string
+   */
+  public function getExtrafelder()
+  {
+    return $this->extrafelder;
+  }
 
-        return $this;
-    }
+  /**
+   * Set disabled.
+   *
+   * @param bool $disabled
+   *
+   * @return Projekte
+   */
+  public function setDisabled($disabled)
+  {
+    $this->disabled = $disabled;
 
-    /**
-     * Get disabled.
-     *
-     * @return bool
-     */
-    public function getDisabled()
-    {
-        return $this->disabled;
-    }
+    return $this;
+  }
 
-    /**
-     * Set aktualisiert.
-     *
-     * @param \DateTime|null $aktualisiert
-     *
-     * @return Projekte
-     */
-    public function setAktualisiert($aktualisiert = null)
-    {
-        $this->aktualisiert = $aktualisiert;
+  /**
+   * Get disabled.
+   *
+   * @return bool
+   */
+  public function getDisabled()
+  {
+    return $this->disabled;
+  }
 
-        return $this;
-    }
+  /**
+   * Set aktualisiert.
+   *
+   * @param \DateTime|null $aktualisiert
+   *
+   * @return Projekte
+   */
+  public function setAktualisiert($aktualisiert = null)
+  {
+    $this->aktualisiert = $aktualisiert;
 
-    /**
-     * Get aktualisiert.
-     *
-     * @return \DateTime|null
-     */
-    public function getAktualisiert()
-    {
-        return $this->aktualisiert;
-    }
+    return $this;
+  }
+
+  /**
+   * Get aktualisiert.
+   *
+   * @return \DateTime|null
+   */
+  public function getAktualisiert()
+  {
+    return $this->aktualisiert;
+  }
 }

@@ -5,6 +5,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Instrumente
@@ -53,6 +54,11 @@ class Instrument
     private $musicians;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Project", mappedBy="instrumentation")
+     */
+    private $projects;
+
+    /**
      * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments")
      * @ORM\JoinTable(
      *   name="instrument_family",
@@ -65,6 +71,7 @@ class Instrument
     public function __construct() {
         $this->arrayCTOR();
         $this->musicians = new ArrayCollection();
+        $this->projects = new ArrayCollection();
         $this->families = new ArrayCollection();
     }
 
