@@ -559,12 +559,11 @@ class ConfigService {
       $this->logInfo('Locale seems to be ' . $locale);
       $this->logInfo('Language seems to be ' . $lang);
     } else {
-      $primary = locale_get_primary_language($lang);
-      if ($primary == $lang) {
-        $locale = $lang.'_'.strtoupper($lang);
-      } else {
-        $locale = $lang;
-      }
+      $locale = $lang;
+    }
+    $primary = locale_get_primary_language($locale);
+    if ($primary == $locale) {
+      $locale = $lang.'_'.strtoupper($lang);
     }
     if (strpos($locale, '.') === false) {
       $locale .= '.UTF-8';
