@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011 - 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,34 +20,32 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB {
+namespace OCA\CAFEVDB\Templates;
 
-  $table = new Musicians();
-  $css_pfx = Musicians::CSS_PREFIX;
-  $css_class = Musicians::CSS_CLASS;
+use OCA\CAFEVDB\Common\Navigation;
 
-  $nav = '';
-  $nav .= Navigation::pageControlElement('all');
-  $nav .= Navigation::pageControlElement('projects');
-  $nav .= Navigation::pageControlElement('instruments');
-  if (Config::isTreasurer()) {
-    $nav .= Navigation::pageControlElement('insurances');
-    $nav .= Navigation::pageControlElement('debit-mandates');
-  }
+$table = $renderer;
+$css_pfx = $renderer->CSS_PREFIX;
+$css_class = $renderer->CSS_CLASS;
 
-  echo $this->inc('part.common.header',
-                  array('css-prefix' => $css_pfx,
-                        'css-class' => $css_class,
-                        'navigationcontrols' => $nav,
-                        'header' => $table->headerText()));
+$nav = '';
+$nav .= Navigation::pageControlElement('all');
+$nav .= Navigation::pageControlElement('projects');
+$nav .= Navigation::pageControlElement('instruments');
+if (/*Config::isTreasurer()*/true) {
+  $nav .= Navigation::pageControlElement('insurances');
+  $nav .= Navigation::pageControlElement('debit-mandates');
+}
+
+echo $this->inc('part.common.header',
+                [ 'css-prefix' => $css_pfx,
+                  'css-class' => $css_class,
+                  'navigationcontrols' => $nav,
+                  'header' => $table->headerText() ]);
 
 
-  // Issue the main part. The method will echo itself
-  $table->display();
+// Issue the main part. The method will echo itself
+$table->render();
 
-  // Close some still opened divs
-  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
-
-} // CAFEVDB
-
-?>
+// Close some still opened divs
+echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));

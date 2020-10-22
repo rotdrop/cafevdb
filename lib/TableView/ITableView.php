@@ -30,14 +30,21 @@ interface ITableView
     /** Header text informations. */
     public function headerText();
 
-    /** Show the underlying table. */
-    public function render();
+    /** Show the underlying table.
+     *
+     * @param bool $execute Kind of dry-run if set to false.
+     */
+    public function render(bool $execute = true);
 
     /** Set table-navigation enable/disable. */
     public function navigation($enable);
 
-    /** Run underlying table-manager (phpMyEdit for now). */
-    public function execute($options);
+    /** Run underlying table-manager (phpMyEdit for now).
+     *
+     * @param array $options Overrider options. Otherwise the state
+     * set by render(false) are used.
+     */
+    public function execute($options = []);
 }
 
 // Local Variables: ***

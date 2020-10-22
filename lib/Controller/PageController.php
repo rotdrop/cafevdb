@@ -20,6 +20,7 @@ use OCP\AppFramework\Controller;
 use OCP\ISession;
 use OCP\IL10N;
 use OCP\IInitialStateService;
+use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -55,9 +56,13 @@ class PageController extends Controller {
   /** @var PHPMyEdit */
   private $phpMyEdit;
 
+  /** @var IAppContainer */
+  private $appContainer;
+
   public function __construct(
     $appName
     , IRequest $request
+    , IAppContainer $appContainer
     , ConfigService $configService
     , HistoryService $historyService
     , RequestParameterService $parameterService
@@ -70,6 +75,7 @@ class PageController extends Controller {
 
     parent::__construct($appName, $request);
 
+    $this->appContainer = $appContainer;
     $this->configService = $configService;
     $this->historyService = $historyService;
     $this->parameterService = $parameterService;
@@ -187,14 +193,23 @@ class PageController extends Controller {
     // See if we are configured
     $config = $this->configCheckService->configured();
 
-    if (true || ($template != 'debug' && !$config['summary'])) {
+    if (($template != 'debug' && !$config['summary'])) {
       $tmplname = 'configcheck';
+      $renderer = null;
     } else {
+      $template = "all-musicians";
       $tmplname = $template;
+      //$renderer = \OC::$server->query(\OCA\CAFEVDB\TableView\Musicians::class);
+      //\OC::$server->registerAlias($template, \OCA\CAFEVDB\TableView\Musicians::class);
+      $renderer = $this->appContainer->query($template);
+      if (empty($renderer)) {
+        $this->logError("Template-renderer for template ".$template." is empty.");
+      }
     }
 
     $templateParameters = [
       'template' => $tmplname,
+      'renderer' => $renderer,
 
       'l' => $this->l,
       'appName' => $this->appName,

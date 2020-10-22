@@ -54,6 +54,7 @@ style($appName, 'tooltips');
 style($appName, 'dialogs');
 style($appName, 'inlineimage');
 style($appName, 'navsnapper');
+style($appName, 'pme-table');
 
 script($appName, 'cafevdb');
 script($appName, 'backgroundjobs');

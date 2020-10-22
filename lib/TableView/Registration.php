@@ -33,6 +33,7 @@ class Registration
     $context->registerService(IPMEOptions::class, function($c) {
       return $c->query(PME\Config::class);
     });
+    $context->registerServiceAlias('all-musicians', Musicians::class);
   }
 }
 

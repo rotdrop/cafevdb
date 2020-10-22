@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\TableView;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
@@ -37,6 +38,8 @@ abstract class PMETableViewBase implements ITableView
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   protected $requestParameters;
+
+  protected $toolTipsService;
 
   protected $l;
 
@@ -58,20 +61,26 @@ abstract class PMETableViewBase implements ITableView
 
   protected $recordsPerPage;
 
+  protected $defaultFDD;
+
   protected function __construct(
     ConfigService $configService,
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
-    PHPMyEdit $phpMyEdit
+    PHPMyEdit $phpMyEdit,
+    ToolTipsService $toolTipsService
   ) {
     $this->configService = $configService;
     $this->requestParameters = $requestParameters;
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
+    $this->toolTipsService = $toolTipsService;
     $this->l = $this->l10n();
 
     $this->pmeBare = false;
     $this->showDisabled = $this->getUserValue('showdisabled', false) === 'on';
+
+    $this->defaultFDD = $this->createDefaultFDD();
 
     $cgiDefault = [
       'Template' => 'blog',
@@ -88,7 +97,9 @@ abstract class PMETableViewBase implements ITableView
         $this->requestParameters->getParam($key, $default);
     }
 
-    // @TODO: the following should be done only on demand
+    // @TODO: the following should be done only on demand and is
+    // somewhat chaotic.
+
     // List of instruments
     $this->instrumentInfo =
       $this->getDatabaseRepository(ORM\Entities\Instrument::class)->describeALL();
@@ -126,7 +137,7 @@ abstract class PMETableViewBase implements ITableView
   }
 
   /** Run underlying table-manager (phpMyEdit for now). */
-  public function execute($opts)
+  public function execute($opts = [])
   {
     $this->pme->execute($opts);
   }
@@ -175,6 +186,50 @@ abstract class PMETableViewBase implements ITableView
     return $this->pme->list_operation();
   }
 
+  private function createDefaultFDD()
+  {
+    $fdd = [
+      'email' => [
+        'name' => $this->l->t('Em@il'),
+        'css'      => [ 'postfix' => ' email' ],
+        'URL'      => 'mailto:$link?recordId=$key',
+        'URLdisp'  => '$value',
+        'select'   => 'T',
+        'maxlen'   => 768,
+        'sort'     => true,
+        'nowrap'   => true,
+        'escape'   => true,
+      ],
+      'money' => [
+        'name' => $this->l->t('Fees').'<BR/>('.$this->l->t('expenses negative').')',
+        'mask'  => '%02.02f'.' &euro;',
+        'css'   => ['postfix' => ' money'],
+        //'align' => 'right',
+        'select' => 'N',
+        'maxlen' => '8', // NB: +NNNN.NN = 8
+        'escape' => false,
+        'sort' => true,
+      ],
+      'datetime' => [
+        'select'   => 'T',
+        'maxlen'   => 19,
+        'sort'     => true,
+        'datemask' => 'd.m.Y H:i:s',
+        'css'      => ['postfix' => ' datetime'],
+      ],
+      'date' => [
+        'name' => strval($this->l->t('birthday')),
+        'select'   => 'T',
+        'maxlen'   => 10,
+        'sort'     => true,
+        'css'      => ['postfix' => ' birthday date'],
+        'datemask' => 'd.m.Y',
+      ]
+    ];
+    $fdd['birthday'] = $fdd['date'];
+
+    return $fdd;
+  }
 }
 
 // Local Variables: ***
