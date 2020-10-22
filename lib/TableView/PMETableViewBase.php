@@ -24,25 +24,99 @@ namespace OCA\CAFEVDB\TableView;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Service\RequestParameterService;
+
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 
 /** Base for phpMyEdit based table-views. */
 abstract class PMETableViewBase implements ITableView
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  protected $requestParameters;
+
+  protected $l;
 
   protected $pme;
 
   protected $pmeBare;
 
+  protected $showDisabled;
+
   protected $pmeOptions;
+
+  protected $musicianId;
+
+  protected $projectId;
+
+  protected $projectName;
+
+  protected $template;
+
+  protected $recordsPerPage;
 
   protected function __construct(
     ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
     PHPMyEdit $phpMyEdit
   ) {
     $this->configService = $configService;
+    $this->requestParameters = $requestParameters;
+    $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
+    $this->l = $this->l10n();
+
     $this->pmeBare = false;
+    $this->showDisabled = $this->getUserValue('showdisabled', false) === 'on';
+
+    $cgiDefault = [
+      'Template' => 'blog',
+      'MusicianId' => -1,
+      'ProjectId' => -1,
+      'ProjectName' => false,
+      'RecordsPerPage' => $this->getUserValue('pagerows', 20),
+    ];
+
+    $this->pmeOptions = [ 'cgi' => [ 'persist' => [] ] ];
+    foreach ($cgiDefault as $key => $default) {
+      $this->pmeOptions['cgi']['persist'][$key] =
+        $this->{lcFirst($key)} =
+        $this->requestParameters->getParam($key, $default);
+    }
+
+    // @TODO: the following should be done only on demand
+    // List of instruments
+    $this->instrumentInfo =
+      $this->getDatabaseRepository(ORM\Entities\Instrument::class)->describeALL();
+    $this->instruments = $this->instrumentInfo['byId'];
+    $this->groupedInstruments = $this->instrumentInfo['nameGroups'];
+    $this->instrumentFamilies =
+      $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->values();
+    $this->memberStatus = (new DBTypes\EnumMemberStatus)->getValues();
+    $this->memberStatusNames = [
+      'regular' => strval($this->l->t('regular musician')),
+      'passive' => strval($this->l->t('passive member')),
+      'soloist' => strval($this->l->t('soloist')),
+      'conductor' => strval($this->l->t('conductor')),
+      'temporary' => strval($this->l->t('temporary musician'))
+      ];
+    foreach ($this->memberStatus as $tag) {
+      if (!isset($this->memberStatusNames[$tag])) {
+        $this->memberStatusNames[$tag] = strval($this->l->t(tag));
+      }
+    }
+    if (false) {
+      // Dummies to keep the translation right.
+      $this->l->t('regular');
+      $this->l->t('passive');
+      $this->l->t('soloist');
+      $this->l->t('conductor');
+      $this->l->t('temporary');
+    }
   }
 
   /** Set table-navigation enable/disable. */

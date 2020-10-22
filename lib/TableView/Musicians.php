@@ -24,6 +24,8 @@ namespace OCA\CAFEVDB\TableView;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Database\EntityManager;
 
 /**Table generator for Musicians table. */
 class Musicians extends PMETableViewBase
@@ -32,21 +34,43 @@ class Musicians extends PMETableViewBase
 
   public function __construct(
     ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
     PHPMyEdit $phpMyEdit
   ) {
-    parent::__construct($configService, $phpMyEdit);
-    $this->logInfo(__METHOD__.": Hello World!");
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit);
   }
 
   /** Short title for heading. */
   public function shortTitle() {
-    return "Unimplemented";
+    if ($this->deleteOperation()) {
+      return $this->l->t('Remove all data of the displayed musician?');
+    } else if ($this->copyOperation()) {
+      return $this->l->t('Copy the displayed musician?');
+    } else if ($this->viewOperation()) {
+      return $this->l->t('Display of all stored personal data for the shown musician.');
+    } else if ($this->changeOperation()) {
+      return $this->l->t('Edit the personal data of the displayed musician.');
+    } else if ($this->addOperation()) {
+      return $this->l->t('Add a new musician to the data-base.');
+    } else if (!$this->projectMode) {
+      return $this->l->t('Overview over all registered musicians');
+    } else {
+      return $this->l->t("Add musicians to the project `%s'", array($this->projectName));
+    }
   }
-
 
   /** Header text informations. */
   public function headerText() {
-    return "Unimplemented";
+    $header = $this->shortTitle();
+    if ($this->projectMode) {
+      $header .= "
+<p>".$this->l-t("This page is the only way to add musicians to projects in order to
+make sure that the musicians are also automatically added to the
+`global' musicians data-base (and not only to the project).");
+    }
+
+    return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
   }
 
   /** Show the underlying table. */
