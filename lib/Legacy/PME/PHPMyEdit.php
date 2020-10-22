@@ -57,23 +57,36 @@ class PHPMyEdit extends \phpMyEdit
    */
   public function __construct(Connection $connection, IOptions $options)
   {
+    $this->connection = $connection;
+    if (empty($this->connection)) {
+      throw new \Exception("empty");
+    }
     $this->dbh = $connection;
-    $this->l = l10n;
 
     $this->overrideOptions = [
       'dbh' => $this->connection,
       'dbp' => '',
       'execute' => false,
     ];
-    $this->defaultOptions = $options->getArrayCopy();
+    $this->setOptions($options->getArrayCopy());
+  }
+
+  public function setOptions(array $options)
+  {
+    $this->defaultOptions = $options;
     if (isset($options['cgi']['prefix']['sys'])) {
-      $this->cgi = $option['cgi'];
+      $this->cgi = $options['cgi'];
       $this->operation = $this->get_sys_cgi_var('operation');
     }
     if (isset($options['options'])) {
       $this->options = $options['options'];
     }
     $this->labels = $this->make_language_labels($options['language']?:null);
+  }
+
+  public function getOptions()
+  {
+    return $this->defaultOptions;
   }
 
   /**
@@ -85,7 +98,7 @@ class PHPMyEdit extends \phpMyEdit
    *
    * @bug Calling a CTOR elsewhere is really bad programming style.
    */
-  public function execute($opts)
+  public function execute($opts = [])
   {
     $opts = Util::arrayMergeRecursive($this->defaultOptions, $opts, $this->overrideOptions);
     parent::__construct($opts); // oh oh
@@ -115,7 +128,7 @@ class PHPMyEdit extends \phpMyEdit
       return false;
     }
     $type = $type === 'n' ? FetchMode::NUMERIC : FetchMode::ASSOCIATIVE;
-    return $stmt->fetch(type);
+    return $stmt->fetch($type);
   }
 
   function sql_free_result(&$stmt)
@@ -150,16 +163,26 @@ class PHPMyEdit extends \phpMyEdit
   function myquery($query, $line = 0, $debug = false)
   {
     try {
-      $stmt = $this->dbh->executeQuery($queryString);
+      $stmt = $this->dbh->executeQuery($query);
       $this->affectedRows = $stmt->rowCount();
       $this->errorCode = $stmt->errorCode();
       $this->errorInfo = $stmt->errorInfo();
-    } catch (DBALException $e) {
+    } catch (DBALException $t) {
+      $this->exception = $t;
       $this->errorCode = $t->getCode();
       $this->errorInfo = $t->getMessage();
       return false;
     }
     return $stmt;
+  }
+
+  function error($message, $additional_info = '')
+  {
+    $message .= !empty($additional_info) ? ' ('.$additional_info.')' : '';
+    if (!empty($this->errorInfo)) {
+      $message .= ': '.$this->errorInfo.' ('.$this->errorCode.')';
+    }
+    throw new \Exception($message, $this->errorCode?:-1, $this->exception);
   }
 
   public function make_language_labels($lang)
