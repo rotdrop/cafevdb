@@ -26,6 +26,7 @@ use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\DBALException;
 
 use OCA\CAFEVDB\Database\Connection;
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * Override phpMyEdit to use Doctrine DBAL.
@@ -86,7 +87,7 @@ class PHPMyEdit extends \phpMyEdit
    */
   public function execute($opts)
   {
-    $opts = array_merge($this->defaultOptions, $opts, $this->overrideOptions);
+    $opts = Util::arrayMergeRecursive($this->defaultOptions, $opts, $this->overrideOptions);
     parent::__construct($opts); // oh oh
     parent::execute();
   }
@@ -169,6 +170,26 @@ class PHPMyEdit extends \phpMyEdit
     $this->currentLanguage = $lang?:$this->get_server_var('HTTP_ACCEPT_LANGUAGE');
     return parent::make_language_labels($this->currentLanguage);
   }
+
+  /**Decode the record idea from the CGI data, return -1 if none
+   * found.
+   */
+  public function getCGIRecordId()
+  {
+    $key = 'rec';
+    $recordId = $this->get_sys_cgi_var($key, -1);
+    if ($recorId > 0) {
+      return $recordId;
+    }
+    $opRecord = $this->get_sys_cgi_var('operation');
+    $operation = parse_url($opRecord, PHP_URL_PATH);
+    $opArgs    = [];
+    parse_str(parse_url($opRecord, PHP_URL_QUERY), $opArgs);
+    $recordKey = $this->cgi['prefix']['sys'].$key;
+    $recordId = $opArgs[$recordKey]?: -1;
+    return $recordId > 0 ? $recordId : -1;
+  }
+
 }
 
 // Local Variables: ***
