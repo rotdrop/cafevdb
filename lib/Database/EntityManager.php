@@ -35,6 +35,8 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
+
 /**Use this as the actual EntityManager in order to be able to
  * construct it without a Factory and to define an extension point for
  * later.
@@ -119,6 +121,8 @@ class EntityManager extends EntityManagerDecorator
     }
 
     $config->addCustomStringFunction('timestampdiff', 'Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff');
+
+    $config->addCustomHydrationMode('COLUMN_HYDRATOR', ColumnHydrator::class);
 
     // obtaining the entity manager
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config);
