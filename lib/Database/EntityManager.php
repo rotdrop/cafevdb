@@ -71,12 +71,14 @@ class EntityManager extends EntityManagerDecorator
       Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
     ];
 
+    $connection = $this->entityManager->getConnection();
+    $platform = $connection->getDatabasePlatform();
     foreach ($types as $type => $sqlType) {
       $instance = new $type;
       $typeName = $instance->getName();
       Type::addType($typeName, $type);
       if (!empty($sqlType)) {
-        $this->entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($sqlType, $typeName);
+        $platform->registerDoctrineTypeMapping($sqlType, $typeName);
       }
     }
   }
