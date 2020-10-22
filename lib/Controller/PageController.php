@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
 
 class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
@@ -51,16 +52,20 @@ class PageController extends Controller {
   /** @var \OCP\IURLGenerator */
   private $urlGenerator;
 
+  /** @var PHPMyEdit */
+  private $phpMyEdit;
+
   public function __construct(
-    $appName,
-    IRequest $request,
-    ConfigService $configService,
-    HistoryService $historyService,
-    RequestParameterService $parameterService,
-    ToolTipsService $toolTipsService,
-    IInitialStateService $initialStateService,
-    ConfigCheckService $configCheckService,
-    \OCP\IURLGenerator $urlGenerator
+    $appName
+    , IRequest $request
+    , ConfigService $configService
+    , HistoryService $historyService
+    , RequestParameterService $parameterService
+    , ToolTipsService $toolTipsService
+    , IInitialStateService $initialStateService
+    , ConfigCheckService $configCheckService
+    , \OCP\IURLGenerator $urlGenerator
+    , PHPMyEdit $phpMyEdit
   ) {
 
     parent::__construct($appName, $request);
@@ -72,6 +77,7 @@ class PageController extends Controller {
     $this->initialStateService = $initialStateService;
     $this->configCheckService = $configCheckService;
     $this->urlGenerator = $urlGenerator;
+    $this->phpMyEdit = $phpMyEdit;
     $this->l = $this->l10N();
   }
 
@@ -166,12 +172,17 @@ class PageController extends Controller {
     $pageRows     = $this->getUserValue('pagerows', 20);
     $debugMode    = $this->getUserValue('debug', 0);
 
+    // @@TODO this should not go here, I think. Rather into PMETableBase.
+    //
     // Filter visibility is stored here:
     //$pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
     //Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
 
-    // @@TODO this should not go here, I think
-    $recordId = Util::getCGIRecordId([$this->request, 'getParam']);
+    // @@TODO this should not go here, I think. Rather into PMETableBase.
+    //
+    // Also @@TODO: perhaps find a way to inject the RequestParameters
+    // without tweaking _POST
+    $recordId = $this->phpMyEdit->getCGIRecordId();
 
     // See if we are configured
     $config = $this->configCheckService->configured();
