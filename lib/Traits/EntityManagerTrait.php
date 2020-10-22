@@ -32,20 +32,20 @@ use OCA\CAFEVDB\Database\EntityManager;
 trait EntityManagerTrait {
 
   /** @var EntityManager */
-  private $entityManager;
+  protected $entityManager;
 
   /** @var string */
-  private $entityClassName;
+  protected $entityClassName;
 
   /** @var EntityRepository */
-  private $databaseRepository;
+  protected $databaseRepository;
 
   /**
    * Set the given name as the current database target entity.
    *
    * @param string $entityClassName
    */
-  private function setDatabaseRepository(string $entityClassName):void
+  protected function setDatabaseRepository(string $entityClassName):void
   {
     $this->entityClassName = $entityClassName;
     $this->databaseRepository = null;
@@ -59,7 +59,7 @@ trait EntityManagerTrait {
    * @return EntityRepository The repository for the current target
    * database entity.
    */
-  private function getDatabaseRepository($entityClassName = null):EntityRepository
+  protected function getDatabaseRepository($entityClassName = null):EntityRepository
   {
     if (!empty($entityClassName) && $entityClassName !== $this->entityClassName) {
       $this->setDatabaseRepository($entityClassName);
@@ -77,7 +77,7 @@ trait EntityManagerTrait {
    *
    * @return Query
    */
-  private function createNamedQuery($name) {
+  protected function createNamedQuery($name) {
     return $this->entityManager->createNamedQuery($name);
   }
 
@@ -88,7 +88,7 @@ trait EntityManagerTrait {
    *
    * @return Query
    */
-  private function createQuery($dql) {
+  protected function createQuery($dql) {
     return $this->entityManager->createQuery($dql);
   }
 
@@ -97,7 +97,7 @@ trait EntityManagerTrait {
    *
    * @return QueryBuilder
    */
-  private function queryBuilder() {
+  protected function queryBuilder() {
     return $this->entityManager->createQueryBuilder();
   }
 
@@ -114,7 +114,7 @@ trait EntityManagerTrait {
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  private function remove($entity)
+  protected function remove($entity)
   {
     if (is_array($entity)) {
       $entity = $this->entityManager->getReference($this->entityClassName, $entity);
@@ -138,7 +138,7 @@ trait EntityManagerTrait {
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  private function persist($entity)
+  protected function persist($entity)
   {
     return $this->entityManager->persist($entity);
   }
@@ -159,7 +159,7 @@ trait EntityManagerTrait {
    *         makes use of optimistic locking fails.
    * @throws ORMException
    */
-  private function flush($entity = null)
+  protected function flush($entity = null)
   {
     if (!empty($entity)) {
       $this->persist($entity);
@@ -174,7 +174,7 @@ trait EntityManagerTrait {
    *
    * @return array The entities.
    */
-  private function findAll($entityClassName = null)
+  protected function findAll($entityClassName = null)
   {
     return $this->getDatabaseRepository($entityClassName)->findAll();
   }
@@ -190,7 +190,7 @@ trait EntityManagerTrait {
    *
    * @return object|null The entity instance or NULL if the entity can not be found.
    */
-  private function find($id, $lockMode = null, $lockVersion = null) {
+  protected function find($id, $lockMode = null, $lockVersion = null) {
     return $this->getDatabaseRepository()->find($id, $lockMode, $lockVersion);
   }
 
@@ -204,7 +204,7 @@ trait EntityManagerTrait {
    *
    * @return array The objects.
    */
-  private function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+  protected function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
   {
     return $this->getDatabaseRepository()->findBy($criteria, $orderBy, $limit, $offset);
   }
@@ -217,7 +217,7 @@ trait EntityManagerTrait {
    *
    * @return object|null The entity instance or NULL if the entity can not be found.
    */
-  private function findOneBy(array $criteria, array $orderBy = null)
+  protected function findOneBy(array $criteria, array $orderBy = null)
   {
     return $this->getDatabaseRepository()->findOneBy($criteria, $orderBy);
   }
@@ -232,20 +232,20 @@ trait EntityManagerTrait {
    *
    * @return \Doctrine\Common\Collections\Collection
    */
-  private function matching(Criteria $criteria, $entityClassName = null)
+  protected function matching(Criteria $criteria, $entityClassName = null)
   {
     return $this->getDatabaseRepository($entityClassName)->matching($criteria);
   }
 
-  private static function criteria() {
+  protected static function criteria() {
     return new Criteria();
   }
 
-  private static function cExpr() {
+  protected static function cExpr() {
     return Criteria::expr();
   }
 
-  private function expr() {
+  protected function expr() {
     return $this->queryBuilder()->expr();
   }
 
@@ -260,7 +260,7 @@ trait EntityManagerTrait {
    *
    * @return int The cardinality of the objects that match the given criteria.
    */
-  private function count(array $criteria, string $entityClassName = null):int
+  protected function count(array $criteria, string $entityClassName = null):int
   {
     return $this->getDatabaseRepository($entityClassName)->count($criteria);
   }
@@ -277,7 +277,7 @@ trait EntityManagerTrait {
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  private function merge($entity) {
+  protected function merge($entity) {
     $entity = $this->entityManager->merge($entity);
     $this->flush($entity);
     return $entity;
@@ -290,7 +290,7 @@ trait EntityManagerTrait {
    *
    * @return array The column names.
    */
-  private function columnNames($entityClassName = null) {
+  protected function columnNames($entityClassName = null) {
     empty($entityClassName) && ($entityClassName = $this->entityClassName);
     if (empty($entityClassName)) {
       return [];

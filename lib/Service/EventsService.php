@@ -43,7 +43,7 @@ class EventsService
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var EntityManager */
-  private $entityManager;
+  protected $entityManager;
 
   /** @var ProjectService */
   private $projectService;
