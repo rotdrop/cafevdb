@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Instrumente
  *
  * @ORM\Table(name="Instruments")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository")
  */
 class Instrument
 {
@@ -34,13 +34,6 @@ class Instrument
     private $instrument;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="Familie", type="simple_array", length=0, nullable=false, options={"default"="Sonstiges"})
-     */
-    private $familie = 'Sonstiges';
-
-    /**
      * @var int
      *
      * @ORM\Column(name="Sortierung", type="smallint", nullable=false, options={"comment"="Orchestersortierung"})
@@ -55,13 +48,24 @@ class Instrument
     private $disabled = '0';
 
     /**
-     * @ORM\ManyToMany(targetEntity="Musician", mappedBy="instruments", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="Musician", mappedBy="instruments")
      */
     private $musicians;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments")
+     * @ORM\JoinTable(
+     *   name="instrument_family",
+     *   joinColumns={@ORM\JoinColumn(name="instrument_id", referencedColumnName="Id", onDelete="CASCADE")},
+     *   inverseJoinColumns={@ORM\JoinColumn(name="family_id", referencedColumnName="id", onDelete="CASCADE")}
+     * )
+     */
+    private $families;
 
     public function __construct() {
         $this->arrayCTOR();
         $this->musicians = new ArrayCollection();
+        $this->families = new ArrayCollection();
     }
 
     /**
