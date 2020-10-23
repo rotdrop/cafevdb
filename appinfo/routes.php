@@ -112,9 +112,20 @@ return [
         [
             'name' => 'background_job#trigger',
             'url' => '/backgroundjob/trigger',
-            'verb' => 'get',
+            'verb' => 'GET',
         ],
-   ]
+        // progress status for ongoing long-runners
+        [
+          'name' => 'progress_status#get',
+          'url' => '/foregroundjob/progress/{id}',
+          'verb' => 'GET',
+        ],
+        [
+          'name' => 'progress_status#action',
+          'url' => '/foregroundjob/progress/{action}',
+          'verb' => 'POST',
+        ],
+    ],
 ];
 
 return;

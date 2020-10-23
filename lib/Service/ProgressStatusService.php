@@ -20,35 +20,46 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//WIP
-namespace OCA\CAFEVDB\Traits;
+namespace OCA\CAFEVDB\Service;
 
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\IUser;
+use OCP\IDBConnection;
+use OCP\ILogger;
 
-use OCA\CAFEVDB\Service\SessionService;
+use OCA\CAFEVDB\Database\Cloud\Synchronized\SynchronizedProgressStatus as ProgressStatus;
 
-trait ResponseTrait
+class ProgressStatusService
 {
+  /** @var IDBConnection */
+  private $db;
 
-  static private function dataResponse($data, $status = Http::STATUS_OK)
-  {
-    return new DataResponse($data, $status);
+  /** @var string */
+  private $userId;
+
+  /** @var string */
+  private $appName;
+
+  public function __construct(IDBConnection $db, $appName, $userId) {
+    $this->db = $db;
+    $this->appName = $appName;
+    $this->userId = $userId;
   }
 
-  static private function valueResponse($value, $message = '', $status = Http::STATUS_OK)
+  public function create($start, $stop, $id = null)
   {
-    return self::dataResponse(['message' => $message, 'value' => $value], $status);
+    $progressStatus = new ProgressStatus($this->db, $this->appName, $this->userId, $id);
+    $progressStatus->merge([ 'userId' => $this->userId, 'current' => $start, 'target' => $stop ]);
+    return $progressStatus;
   }
 
-  static private function response($message, $status = Http::STATUS_OK)
+  /**
+   * @param string uuid
+   *
+   */
+  public function get(int $id)
   {
-    return self::dataResponse(['message' => $message], $status);
-  }
-
-  static private function grumble($message, $value = null, $status = Http::STATUS_BAD_REQUEST)
-  {
-    return self::valueResponse($value, $message, $status);
+    $progressStatus = new ProgressStatus($this->db, $this->appName, $this->userId, $id);
+    return $progressStatus;
   }
 
 }

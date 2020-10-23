@@ -1527,6 +1527,43 @@ var CAFEVDB = CAFEVDB || {};
     return true;
   };
 
+  var progressTimer;
+  CAFEVDB.pollProgressStatus = function(id, callbacks, interval) {
+    const defaultCallbacks = {
+      'update': function(data) {},
+      'fail': function(data) {}
+    };
+    callbacks = { ...defaultCallbacks, ...callbacks };
+    interval = interval || 800;
+
+    const poll = function() {
+      $.get(OC.generateUrl('/apps/cafevdb/foregroundjob/progress/'+id))
+      .done(function(data) {
+        if (!callbacks.update(data)) {
+	  console.info("Finish polling");
+          clearTimeout(progressTimer);
+          progressTimer = false;
+          return;
+        }
+	console.info("Restart timer.");
+        progressTimer = setTimeout(poll, interval);
+      })
+      .fail(function(xhr, status, errorThrown) {
+        clearTimeout(progressTimer);
+        progressTimer = false;
+        callbacks.fail(xhr, status, errorThrown);
+      });
+    };
+    poll();
+  };
+  CAFEVDB.pollProgressStatus.stop = function() {
+    clearTimeout(progressTimer);
+    progressTimer = false;
+  };
+  CAFEVDB.pollProgressStatus.active = function() {
+    return !!progressTimer;
+  };
+
 })(window, jQuery, CAFEVDB);
 
 $(document).ready(function(){

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Migration;
 
+use Doctrine\DBAL\Types\Types;
 use Closure;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
@@ -30,14 +31,35 @@ class Version060000Date20201022230000 extends SimpleMigrationStep
     $schema = $schemaClosure();
     $table = $schema->getTable('cafevdb_progress_status');
     $table->dropColumn('tag');
-    $table->addColumn('uuid', 'binary', [
+    $table->dropIndex('id_user');
+    $table->dropColumn('user');
+    $table->addColumn('user_id', Types::STRING, [
       'notnull' => true,
-      'length' => 16,
-      'fixed' => true,
+      'length' => 64,
     ]);
-    //$table->dropIndex('id_user');
-    //$table->setPrimaryKey(['id']);
-    $table->addUniqueIndex(['uuid'], 'uuid');
+    $table->dropColumn('id');
+    $table->addColumn('id', Types::BIGINT, [
+      'autoincrement' => true,
+      'notnull' => true,
+      'length' => 11,
+      'unsigned' => true,
+    ]);
+    $table->setPrimaryKey(['id']);
+    $table->addColumn('last_modified', Types::BIGINT, [
+      'notnull' => true,
+      'length' => 11,
+      'unsigned' => true,
+    ]);
+    $table->changeColumn('current', [
+      'notnull' => false,
+      'length' => 11,
+      'unsigned' => true,
+    ]);
+    $table->changeColumn('target', [
+      'notnull' => false,
+      'length' => 11,
+      'unsigned' => true,
+    ]);
     return $schema;
   }
 
