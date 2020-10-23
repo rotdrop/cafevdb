@@ -4,6 +4,7 @@ namespace OCA\CAFEVDB\Database\Cloud;
 
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db;
 use OCP\ILogger;
 
@@ -12,33 +13,24 @@ use OCP\ILogger;
  */
 abstract class Synchronized extends Db\QBMapper
 {
+  use \OCA\CAFEVDB\Database\Cloud\Traits\EntityTableNameTrait;
+
   /** @var bool */
   protected $attached;
 
   /** @var Entity */
   protected $entity;
 
-  public function __construct(IDBConnection $db, string $tableName, int $id = null, string $entityClass = null)
+  public function __construct(IDBConnection $db, string $appName, int $id = null, string $entityClass = null, string $tableName = null)
   {
     if ($entityClass === null) {
-      $backSlashPos = strrpos(__CLASS__, '\\');
-      $myName = substr(__CLASS__, $backSlashPos + 1);
-
-      $instanceClass = \get_class($this);
-      $nameSpaces = explode('\\', $instanceClass);
-      $nameSpaceIdx = count($nameSpaces) - 2;
-      $classNameIdx = count($nameSpaces) - 1;
-
-      $nameSpaces[$nameSpaceIdx] = 'Entities';
-      $nameSpaces[$classNameIdx] = str_replace($myName, '', $nameSpaces[$classNameIdx]);
-
-      $this->entityClass = implode('\\', $nameSpaces);
-
-    } else {
-      $this->entityClass = $entityClass;
+      $entityClass = $this->makeEntityClass();
+    }
+    if ($tableName === null) {
+      $tableName = $this->makeTableName($appName, $entityClass);
     }
 
-    parent::__construct($db, $tableName, $this->entityClass);
+    parent::__construct($db, $tableName, $entityClass);
 
     $this->entity = new $this->entityClass();
     $this->entity->setId($id);
@@ -60,7 +52,7 @@ abstract class Synchronized extends Db\QBMapper
       try {
         $this->find($this->entity->getId()); // will throw if not found
         $this->entity = $this->update($this->entity);
-      } catch (\DoesNotExistException $e) {
+      } catch (DoesNotExistException $e) {
         $this->entity = $this->insert($this->entity);
       }
     } else {

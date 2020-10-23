@@ -15,7 +15,7 @@ class SynchronizedProgressStatus extends Synchronized
 
   public function __construct(IDBConnection $db, $appName, $userId, $id = null) {
     $this->userId = $userId;
-    parent::__construct($db, $appName.'_progress_status', $id);
+    parent::__construct($db, $appName, $id);
   }
 
   public function insert(Entity $entity): Entity
