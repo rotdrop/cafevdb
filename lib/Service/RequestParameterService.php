@@ -13,6 +13,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\IRequest;
 
+/**@TODO Base on \ArrayObject */
 class RequestParameterService implements \ArrayAccess, \Countable
 {
   /** @var IRequest */
