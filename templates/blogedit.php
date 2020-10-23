@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,8 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
+namespace OCA\CAFEVDB;
+
 ?>
 <div id="blogedit">
   <div id="blogeditscrollframe">
@@ -30,20 +30,20 @@ use CAFEVDB\Config;
       <br/>
       <input
       type="button"
-      title="<?php echo Config::toolTips('blog-acceptentry'); ?>"
+      title="<?php echo $toolTips['blog-acceptentry']; ?>"
       value="<?php echo $l->t('Submit'); ?>"
       id="blogsubmit"
       />
       <input
       type="button"
-      title="<?php echo Config::toolTips('blog-cancelentry'); ?>"
+      title="<?php echo $toolTips['blog-cancelentry']; ?>"
       value="<?php echo $l->t('Cancel'); ?>"
       id="blogcancel"
       />
       <?php if ($_['priority'] !== false) { ?>
         <input
         type="text"
-        title="<?php echo Config::toolTips('blog-priority'); ?>"
+        title="<?php echo $toolTips['blog-priority']; ?>"
         value="<?php echo $_['priority']; ?>"
         name="priority"
         id="blogpriority"
@@ -51,28 +51,28 @@ use CAFEVDB\Config;
       <?php } ?>
       <?php if ($_['popup'] === false) { ?>
         <label for="blogpopupset"
-               title="<?php echo Config::toolTips('blog-popup-set'); ?>">
+               title="<?php echo $toolTips['blog-popup-set']; ?>">
           <input type="checkbox"
                  name="popupset"
-                 title="<?php echo Config::toolTips('blog-popup-set'); ?>"
+                 title="<?php echo $toolTips['blog-popup-set']; ?>"
                  id="blogpopupset"/>
           <?php echo $l->t('Set Blog Popup') ?>
         </label>
       <?php } else { ?>
         <label for="blogpopupclear"
-               title="<?php echo Config::toolTips('blog-popup-clear'); ?>">
+               title="<?php echo $toolTips['blog-popup-clear']; ?>">
           <input type="checkbox"
                  name="popupclear"
-                 title="<?php echo Config::toolTips('blog-popup-clear'); ?>"
+                 title="<?php echo $toolTips['blog-popup-clear']; ?>"
                  id="blogpopupclear"/>
           <?php echo $l->t('Clear Blog Popup') ?>
         </label>
       <?php } ?>
       <label for="blogreaderclear"
-             title="<?php echo Config::toolTips('blog-reader-clear'); ?>">
+             title="<?php echo $toolTips['blog-reader-clear']; ?>">
         <input type="checkbox"
                name="readerclear"
-               title="<?php echo Config::toolTips('blog-reader-clear'); ?>"
+               title="<?php echo $toolTips['blog-reader-clear']; ?>"
                id="blogreaderclear"/>
         <?php echo $l->t('Clear Reader List') ?>
       </label>
