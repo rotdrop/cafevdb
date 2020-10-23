@@ -193,14 +193,12 @@ class PageController extends Controller {
     // See if we are configured
     $config = $this->configCheckService->configured();
 
-    if (($template != 'debug' && !$config['summary'])) {
+    if (true || ($template != 'debug' && !$config['summary'])) {
       $tmplname = 'configcheck';
       $renderer = null;
     } else {
       $template = "all-musicians";
       $tmplname = $template;
-      //$renderer = \OC::$server->query(\OCA\CAFEVDB\TableView\Musicians::class);
-      //\OC::$server->registerAlias($template, \OCA\CAFEVDB\TableView\Musicians::class);
       $renderer = $this->appContainer->query($template);
       if (empty($renderer)) {
         $this->logError("Template-renderer for template ".$template." is empty.");

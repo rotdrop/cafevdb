@@ -52,6 +52,37 @@ $(document).ready(function() {
        OC.dialogs.alert(msg, t('cafevdb', 'Geo-Data testing caught an error'));
      });
   });
+  $('.progress-status.button').on('click', function(event) {
+    if (CAFEVDB.pollProgressStatus.active()) {
+      CAFEVDB.pollProgressStatus.stop();
+      return;
+    }
+    const id = 1;
+    $.post(OC.generateUrl('/apps/cafevdb/foregroundjob/progress/create'),
+	   { 'id': id, 'target': 100, 'current': 0 })
+    .fail(function(xhr, status, errorThrown) {
+      $('#progress-status-info').html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+    })
+    .done(function(data) {
+      $.post(OC.generateUrl('/apps/cafevdb/foregroundjob/progress/test'), { 'id': id })
+	.fail(function(xhr, status, errorThrown) {
+          $('#progress-status-info').html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+	});
+      CAFEVDB.pollProgressStatus(
+	id,
+	{
+          'update': function(data) {
+            $('#progress-status-info').html(data.current + ' of ' + data.target);
+	    console.info(data.current, data.target);
+            return parseInt(data.current) < parseInt(data.target);
+          },
+          'fail': function(xhr, status, errorThrown) {
+            $('#progress-status-info').html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+          }
+	});
+    });
+  });
+
 });
 
 // Local Variables: ***

@@ -67,7 +67,10 @@ echo $this->inc('part.common.header',
             data-calendar-id="30">EditEventDialog</a>
     <input id="edit-event-test-uri" type="text" name="uri" placeholder="uri"/>
     <input id="edit-event-test-calendar-id" type="number" name="calendar-id" placeholder="calendar-id"/>
-     <a href="#" class="geo-coding button">TestGeoCodingCache</a>
+    <a href="#" class="geo-coding button">TestGeoCodingCache</a>
+    <br/>
+    <a href="#" class="progress-status button">TestProgressStatus</a>
+    <span id="progress-status-info"></span>
   </form>
   <br/>
   <pre><?php echo $_SERVER['PHP_SELF']; ?></pre>
