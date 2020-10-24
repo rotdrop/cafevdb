@@ -55,7 +55,7 @@ class BlogController extends Controller {
   public function __construct(
     $appName
     , IRequest $request
-    , RequestParameterService $parameterService,
+    , RequestParameterService $parameterService
     , BlogMapper $blogMapper
     , $userId
     , ILogger $logger
@@ -100,43 +100,46 @@ class BlogController extends Controller {
       }
       if (!$entry) {
         return self::grumble('Blog entry with id `%s\' could not be retrieved.', [$blogId]);
-
       }
-  //   $text     = $entry['message'];
-  //   if ($entry['inreplyto'] < 0) {
-  //     $priority = $entry['priority'];
-  //   } else {
-  //     $priority = false;
-  //   }
-  //   $popup   = $entry['popup'] != 0;
-  //   $reader  = $entry['reader'];
-  // } else if ($inReply >= 0) {
-  //   $priority = false;
-  //   $popup    = false;
-  //   $reader   = '';
-  // }
+
+      $Text     = $entry->getMessage();
+      if ($entry->getInreplyto() < 0) {
+        $priority = $entry->getPriority();
+      } else {
+        $priority = false;
+      }
+      $popup   = $entry->getPopup() != 0;
+      $reader  = $entry->getReader();
+    } else if ($inReply >= 0) {
+      $priority = false;
+      $popup    = false;
+      $reader   = '';
+    }
 
   // $tmpl = new OCP\Template(Config::APP_NAME, 'blogedit');
 
-  // $tmpl->assign('priority', $priority, false);
-  // $tmpl->assign('popup', $popup, false);
+    $template = 'blogedit';
+    $templateParameters = [
+      'priority' => $priority,
+      'popup' => $popup,
+    ];
+    $renderAs = 'blank';
+    $tmpl = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
+    $html = $tmpl->render();
 
-  // $html = $tmpl->fetchPage();
+    $responseData = [
+      'content' => $html,
+      'author' => $author,
+      'blogId' => $blogId,
+      'inReply' => $inReply,
+      'text' => $text,
+      'priority' => $priority,
+      'popup' => $popup,
+      'reader' => $reader,
+      'message' => $text.' '.$blogId.' '.$inReply
+    ];
 
-  // OCP\JSON::success(
-  //   array('data' => array('content' => $html,
-  //                         'author' => $author,
-  //                         'blogId' => $blogId,
-  //                         'inReply' => $inReply,
-  //                         'text' => $text,
-  //                         'priority' => $priority,
-  //                         'popup' => $popup,
-  //                         'reader' => $reader,
-  //                         'message' => $text.' '.$blogId.' '.$inReply)));
-
-
-
-    return self::grumble($this->l->t('Unknown Request'));
+    return self::dataResponse($responseData);
   }
 
   public function action($operation)

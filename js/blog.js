@@ -39,23 +39,16 @@ CAFEVDB = CAFEVDB || {};
   Blog.editWindow = function(data) {
     var blog = Blog;
 
-    if (data.status == "success") {
-      $('#dialog_holder').html(data.data.content);
-      Blog.author   = data.data.author;
-      Blog.blogId   = data.data.blogId;
-      Blog.inReply  = data.data.inReply;
-      Blog.text     = data.data.text;
-      Blog.priority = data.data.priority;
-      Blog.popup    = data.data.popup;
-      Blog.reader   = data.data.reader;
-    } else {
-      OC.dialogs.alert(data.data.message, t('cafevdb', 'Error'));
-      if ($('#blogedit').dialog('isOpen')) {
-        $('#blogedit').dialog('close');
-      }
-      return false;
-    }
-    $('div.debug').html(data.data.debug);
+    $('#dialog_holder').html(data.content);
+    Blog.author   = data.author;
+    Blog.blogId   = data.blogId;
+    Blog.inReply  = data.inReply;
+    Blog.text     = data.text;
+    Blog.priority = data.priority;
+    Blog.popup    = data.popup;
+    Blog.reader   = data.reader;
+
+    $('div.debug').html(data.debug);
     $('div.debug').show();
 
     var popup = $('#blogedit').cafevDialog({

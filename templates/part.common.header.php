@@ -83,6 +83,14 @@ script($appName, 'legacy/calendar/jquery.multiselect');
 style($appName, 'legacy/calendar/jquery.multiselect');
 script($appName, 'legacy/calendar/jquery.multi-autocomplete');
 
+// TinyMCE stuff
+script($appName, '../3rdparty/js/tinymce/tinymce.min');
+script($appName, '../3rdparty/js/tinymce/jquery.tinymce.min');
+script($appName, '../3rdparty/js/tinymceinit');
+// CKEditor stuff
+script($appName, '../3rdparty/js/ckeditor/ckeditor.min');
+script($appName, '../3rdparty/js/ckeditor/adapters/jquery');
+
 //style($appName, '../3rdparty/jquery-ui/jquery-ui');
 
 echo Common\Util::emitExternalScripts(); // @@TODO rework
@@ -125,7 +133,7 @@ $navigationControls = Navigation::buttonsFromArray(
         'undo' => array(
             'name' => $l->t('Back'),
             'title' => $l->t('Navigate back to the previous view in the recorded history.'),
-            'image' => image_path('cafevdb', 'undo-solid.svg'),
+            'image' => image_path($appName, 'undo-solid.svg'),
             'class' => 'undo navigation history tooltip-auto',
             'id' => 'undobutton',
             'disabled' => $undoDisabled,
@@ -133,7 +141,7 @@ $navigationControls = Navigation::buttonsFromArray(
         'reload' => array(
             'name' => $l->t('Reload'),
             'title' => $l->t('Reload the current view.'),
-            'image' => array(image_path('cafevdb', 'reload-solid.svg'),
+            'image' => array(image_path($appName, 'reload-solid.svg'),
                              image_path('core', 'loading.gif')),
             'class' => 'reload navigation history tooltip-auto',
             'id' => 'reloadbutton',
@@ -141,7 +149,7 @@ $navigationControls = Navigation::buttonsFromArray(
         'redo' => array(
             'name' => $l->t('Next'),
             'title' => $l->t('Navigate to the next view in the recorded history.'),
-            'image' => image_path('cafevdb', 'redo-solid.svg'),
+            'image' => image_path($appName, 'redo-solid.svg'),
             'class' => 'redo navigation history tooltip-auto',
             'id' => 'redobutton',
             'disabled' => $redoDisabled,
@@ -149,7 +157,7 @@ $navigationControls = Navigation::buttonsFromArray(
         'home' => array(
             'name' => $l->t('Startpage'),
             'title' => $l->t('Navigate back to the start-page.'),
-            'image' => image_path('cafevdb', 'home-solid.svg'),
+            'image' => image_path($appName, 'home-solid.svg'),
             'class' => 'settings navigation home tooltip-auto',
             'id' => 'homebutton',
             'type' => 'submitbutton')));
@@ -165,7 +173,7 @@ $settingsControls = '
            for="tooltipbutton-checkbox"
            title="'.$l->t('Toggle Tooltips').'"
            class="table-cell centered tooltip-auto">
-    <img src="'.image_path('cafevdb', 'info-solid.svg').'" class="svg">
+    <img src="'.image_path($appName, 'info-solid.svg').'" class="svg">
   </div>
 </label>';
 
