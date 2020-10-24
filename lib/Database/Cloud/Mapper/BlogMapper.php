@@ -3,6 +3,8 @@
 namespace OCA\CAFEVDB\Database\Cloud\Mapper;
 
 use OCP\IDBConnection;
+use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\ILogger;
 
 class BlogMapper extends Mapper
 {
@@ -12,7 +14,7 @@ class BlogMapper extends Mapper
   public function __construct(
     IDBConnection $db
     , $appName
-    , \ILogger $logger
+    , ILogger $logger
   ) {
     parent::__construct($db, $appName);
     $this->logger = $logger;
@@ -42,11 +44,11 @@ class BlogMapper extends Mapper
     $qb = $this->db->getQueryBuilder();
     $qb->select('*')
        ->from($this->tableName)
-       ->where($qb->expr()->eq('in_reply_to', -1))
+       ->where($qb->expr()->eq('in_reply_to', $qb->createNamedParameter(-1, IQueryBuilder::PARAM_INT)))
        ->orderBy('priority', 'DESC')
        ->orderBy('created', 'DESC');
 
-    return $this->findEntities($qp);
+    return $this->findEntities($qb);
   }
 
  /**Generate a complex tree structure reflecting the message
@@ -87,7 +89,7 @@ class BlogMapper extends Mapper
    * @return Tree-like nested array structure modelling the message
    * threads.
    */
-  public function fetchThreadDisplay()
+  public function findThreadDisplay()
   {
     $data   = [];
     try {

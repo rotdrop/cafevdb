@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\TableView;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
 use OCA\CAFEVDB\Legacy\PME\IOptions as IPMEOptions;
+use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 
 class Registration
 {
@@ -33,7 +34,8 @@ class Registration
     $context->registerService(IPMEOptions::class, function($c) {
       return $c->query(PME\Config::class);
     });
-    $context->registerServiceAlias('all-musicians', Musicians::class);
+    $context->registerServiceAlias('template:'.'all-musicians', Musicians::class);
+    $context->registerServiceAlias('template:'.'blog', BlogMapper::class);
   }
 }
 

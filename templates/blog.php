@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB;
 
-use Common\Navigation;
+use OCA\CAFEVDB\Common\Navigation;
 
 $css_pfx = 'cafevdb-page';
 $css_class = 'blog-page';
@@ -54,7 +54,7 @@ echo $this->inc('part.common.header',
 
 <div id="blogframe">
   <form id="blogform" method="post">
-    <input type="hidden" name="app" value="<?php echo Config::APP_NAME; ?>" />
+    <input type="hidden" name="app" value="<?php echo $appName; ?>" />
     <input
       type="submit"
       title="<?php echo $toolTips['blog-newentry'];?>"

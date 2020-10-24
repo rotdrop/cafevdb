@@ -24,6 +24,8 @@ namespace OCA\CAFEVDB;
 
 use Common\Util;
 
+$blog = $_['renderer']->findThreadDisplay();
+
 echo '<ul id="bloglist" class="bloglist">'."\n";
 $level = 0;
 $savedblog = [];

@@ -30,102 +30,113 @@
  */
 
 return [
-    'routes' => [
-        [
-            'name' => 'page#not_found',
-            'url' => '/ajax/{a}/{b}/{c}/{d}/{e}',
-            'verb' => 'POST',
-            'defaults' => [ 'a' => '', 'b' => '', 'c' => '', 'd' => '', 'e' => '', ],
-        ],
-        [
-            'name' => 'page#index',
-            'url' => '/',
-            'verb' => 'GET',
-        ],
-        [
-            'name' => 'page#loader',
-            'url' => '/page/loader/{renderAs}',
-            'verb' => 'POST',
-            'defaults' => [ 'renderAs' => 'user' ],
-        ],
-        [
-            'name' => 'page#history',
-            'url' => '/page/history/{level}',
-            'verb' => 'POST',
-            'defaults' => [ 'level' => 0 ]
-        ],
-        [
-            'name' => 'page#debug',
-            'url' => '/page/debug',
-            'verb' => 'GET',
-        ],
-        // internal "ajax" routes
-        [
-            'name' => 'admin_settings#set',
-            'url' => '/settings/admin/set',
-            'verb' => 'POST',
-        ],
-        // personal settings
-        [
-            'name' => 'personal_settings#set',
-            'url' => '/settings/personal/set/{parameter}',
-            'verb' => 'POST',
-        ],
-        [
-            'name' => 'personal_settings#form',
-            'url' => '/settings/personal/form',
-            'verb' => 'GET',
-        ],
-        [
-            'name' => 'personal_settings#set_app',
-            'url' => '/settings/app/set/{parameter}',
-            'verb' => 'POST',
-        ],
-        [
-            'name' => 'personal_settings#get',
-            'url' => '/settings/get/{parameter}',
-            'verb' => 'POST',
-        ],
-        // expert mode operations
-        [
-            'name' => 'expert_mode#form',
-            'url' => '/expertmode/form',
-            'verb' => 'GET',
-        ],
-        [
-            'name' => 'expert_mode#action',
-            'url' => '/expertmode/action/{operation}',
-            'verb' => 'POST',
-        ],
-        // legacy calendar events
-        [
-            'name' => 'legacy_events#service_switch',
-            'url' => '/legacy/events/{topic}/{subTopic}', // topic = forms|actions
-            'verb' => 'POST',
-        ],
-        [
-            'name' => 'legacy_events#export_event',
-            'url' => '/legacy/events/actions/export',
-            'verb' => 'GET',
-        ],
-        // while-logged-in background job
-        [
-            'name' => 'background_job#trigger',
-            'url' => '/backgroundjob/trigger',
-            'verb' => 'GET',
-        ],
-        // progress status for ongoing long-runners
-        [
-          'name' => 'progress_status#get',
-          'url' => '/foregroundjob/progress/{id}',
-          'verb' => 'GET',
-        ],
-        [
-          'name' => 'progress_status#action',
-          'url' => '/foregroundjob/progress/{action}',
-          'verb' => 'POST',
-        ],
+  'routes' => [
+    [
+      'name' => 'page#not_found',
+      'url' => '/ajax/{a}/{b}/{c}/{d}/{e}',
+      'verb' => 'POST',
+      'defaults' => [ 'a' => '', 'b' => '', 'c' => '', 'd' => '', 'e' => '', ],
     ],
+    [
+      'name' => 'page#index',
+      'url' => '/',
+      'verb' => 'GET',
+    ],
+    [
+      'name' => 'page#loader',
+      'url' => '/page/loader/{renderAs}',
+      'verb' => 'POST',
+      'defaults' => [ 'renderAs' => 'user' ],
+    ],
+    [
+      'name' => 'page#history',
+      'url' => '/page/history/{level}',
+      'verb' => 'POST',
+      'defaults' => [ 'level' => 0 ]
+    ],
+    [
+      'name' => 'page#debug',
+      'url' => '/page/debug',
+      'verb' => 'GET',
+    ],
+    // internal "ajax" routes
+    [
+      'name' => 'admin_settings#set',
+      'url' => '/settings/admin/set',
+      'verb' => 'POST',
+    ],
+    // personal settings
+    [
+      'name' => 'personal_settings#set',
+      'url' => '/settings/personal/set/{parameter}',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'personal_settings#form',
+      'url' => '/settings/personal/form',
+      'verb' => 'GET',
+    ],
+    [
+      'name' => 'personal_settings#set_app',
+      'url' => '/settings/app/set/{parameter}',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'personal_settings#get',
+      'url' => '/settings/get/{parameter}',
+      'verb' => 'POST',
+    ],
+    // expert mode operations
+    [
+      'name' => 'expert_mode#form',
+      'url' => '/expertmode/form',
+      'verb' => 'GET',
+    ],
+    [
+      'name' => 'expert_mode#action',
+      'url' => '/expertmode/action/{operation}',
+      'verb' => 'POST',
+    ],
+    // legacy calendar events
+    [
+      'name' => 'legacy_events#service_switch',
+      'url' => '/legacy/events/{topic}/{subTopic}', // topic = forms|actions
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'legacy_events#export_event',
+      'url' => '/legacy/events/actions/export',
+      'verb' => 'GET',
+    ],
+    // blog
+    [ // generate template for editor popup
+      'name' =>  'blog#edit_entry',
+      'url' => '/blog/editentry',
+      'verb' => 'POST',
+    ],
+    [ // create, modify, markread, delete
+      'name' =>  'blog#action',
+      'url' => '/blog/action/{operation}',
+      'verb' => 'POST',
+    ],
+    // while-logged-in background job
+    [
+      'name' => 'background_job#trigger',
+      'url' => '/backgroundjob/trigger',
+      'verb' => 'GET',
+    ],
+    // progress status for ongoing long-runners
+    [
+      'name' => 'progress_status#get',
+      'url' => '/foregroundjob/progress/{id}',
+      'verb' => 'GET',
+    ],
+    [
+      'name' => 'progress_status#action',
+      'url' => '/foregroundjob/progress/{action}',
+      'verb' => 'POST',
+    ],
+  ],
 ];
 
 return;
@@ -143,17 +154,17 @@ use \CAFEVDB\Util;
 
 // Internal config link
 $this->create('cafevdb_config', 'js/config.js')
-  ->actionInclude('cafevdb/js/config.php');
+     ->actionInclude('cafevdb/js/config.php');
 
 $this->create('cafevdb_root', '/')
-  ->actionInclude('cafevdb/index.php');
+     ->actionInclude('cafevdb/index.php');
 
 $this->create('cafevdb_index', 'index.php')
-  ->actionInclude('cafevdb/index.php');
+     ->actionInclude('cafevdb/index.php');
 
 // Regular tasks
 $this->create('cafevdb_backgroundjobs', '/backgroundjobs')
-  ->post()->action('CAFEVDB\Cron', 'run');
+     ->post()->action('CAFEVDB\Cron', 'run');
 
 // include automatically generated routes
 include 'autoroutes.php';
@@ -186,7 +197,7 @@ include 'autoroutes.php';
         'locale' => false),
   // requirements
   array('projectId')
-  );
+);
 
 /*Return an array of project-events, given the respective web-article
  * id. 'calendar' can be any of 'all', 'concerts', 'rehearsals',
@@ -205,18 +216,18 @@ include 'autoroutes.php';
     $locale = $params['locale'];
 
     switch ($calendar) {
-    case 'all':
-      $calendar = null;
-      break;
-    case 'concerts':
-    case 'rehearsals':
-    case 'other':
-      $calendar = Config::getValue($calendar.'calendar'.'id');
-      break;
-    default:
-      return new \OC_OCS_Result(null,
-                                \OCP\API::RESPOND_NOT_FOUND,
-                                "Invalid calendar type: ".$calendar);
+      case 'all':
+        $calendar = null;
+        break;
+      case 'concerts':
+      case 'rehearsals':
+      case 'other':
+        $calendar = Config::getValue($calendar.'calendar'.'id');
+        break;
+      default:
+        return new \OC_OCS_Result(null,
+                                  \OCP\API::RESPOND_NOT_FOUND,
+                                  "Invalid calendar type: ".$calendar);
     }
 
     // OC uses symphony which rawurldecodes the request URL. This
@@ -256,6 +267,6 @@ include 'autoroutes.php';
         'locale' => false),
   // requirements
   array('articleId')
-  );
+);
 
 ?>

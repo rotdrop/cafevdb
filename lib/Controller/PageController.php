@@ -193,13 +193,13 @@ class PageController extends Controller {
     // See if we are configured
     $config = $this->configCheckService->configured();
 
-    if (true || ($template != 'debug' && !$config['summary'])) {
+    if (($template != 'debug' && !$config['summary'])) {
       $tmplname = 'configcheck';
       $renderer = null;
     } else {
-      $template = "all-musicians";
+      // $template = "all-musicians";
       $tmplname = $template;
-      $renderer = $this->appContainer->query($template);
+      $renderer = $this->appContainer->query('template:'.$template);
       if (empty($renderer)) {
         $this->logError("Template-renderer for template ".$template." is empty.");
       }
@@ -209,7 +209,7 @@ class PageController extends Controller {
       'template' => $tmplname,
       'renderer' => $renderer,
 
-      'l' => $this->l,
+      //'l' => $this->l,
       'appName' => $this->appName,
 
       'configcheck' => $config,
