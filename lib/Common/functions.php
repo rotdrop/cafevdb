@@ -400,25 +400,6 @@ namespace CAFEVDB
     }
 
 
-    /**Format the right way (tm). */
-    public static function strftime($format, $timestamp = null, $tz = null, $locale = null)
-    {
-      $oldtz = date_default_timezone_get();
-      if ($tz) {
-        date_default_timezone_set($tz);
-      }
-
-      $oldlocale = setlocale(LC_TIME, '0');
-      if ($locale) {
-        setlocale(LC_TIME, $locale);
-      }
-      $result = strftime($format, $timestamp);
-
-      setlocale(LC_TIME, $oldlocale);
-      date_default_timezone_set($oldtz);
-
-      return $result;
-    }
 
     /**Return the locale. */
     public static function getLocale($lang = null)
