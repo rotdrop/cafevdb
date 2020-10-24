@@ -125,10 +125,11 @@ class Util
    */
   public static function emitExternalScripts()
   {
+    $nonce = \OC::$server->getContentSecurityPolicyNonceManager()->getNonce();
     $scripts = '';
     foreach(self::$externalScripts as $script) {
       $scripts .=<<<__EOT__
-<script type="text/javascript" src="$script"></script>
+<script nonce="$nonce" type="text/javascript" src="$script" defer></script>
 
 __EOT__;
     }
