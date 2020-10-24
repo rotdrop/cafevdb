@@ -12,7 +12,7 @@ var myTinyMCE = myTinyMCE || {};
     //auto_focus: 'mce_0',
     //theme_advanced_resizing: true,
     //theme_advanced_resizing_use_cookie : false,
-    theme: "modern",
+    theme: "silver",
     language: 'en',
     //    width: 300,
     //    height: 100,
@@ -72,10 +72,10 @@ var myTinyMCE = myTinyMCE || {};
     plugins: [
       "advlist autolink link image lists charmap print preview hr anchor pagebreak",  // spellchecker
       "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-      "save table directionality template paste textcolor smileys" // emoticons smileys contextmenu
+      "save table directionality template paste textcolor emoticons" // emoticons smileys contextmenu
     ],
     //content_css: "css/content.css",
-    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullscreen | forecolor backcolor smileys | code", // emoticons
+    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullscreen | forecolor backcolor emoticons | code", // emoticons
     style_formats_merge: true,
     style_formats: [
     {
@@ -153,16 +153,22 @@ var myTinyMCE = myTinyMCE || {};
     if (typeof plusConfig === 'undefined') {
       plusConfig = {};
     }
+    const nonceConfig = {
+      nonce: btoa(OC.requestToken)
+    };
     var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     if (width <= 768) { // perhaps mobile
       return $.extend({}, myTinyMCE.config, myTinyMCE.smallConfig, plusConfig, { width: width });
     } else {
-      return $.extend({}, myTinyMCE.config, plusConfig);
+      return $.extend(nonceConfig, myTinyMCE.config, plusConfig);
     }
   };
   myTinyMCE.init = function(lang) {
     myTinyMCE.config.language = lang;
-    var allconfig = myTinyMCE.getConfig({ selector: "textarea.wysiwygeditor" });
+    var allconfig = myTinyMCE.getConfig({
+      selector: "textarea.wysiwygeditor",
+      nonce: btoa(OC.requestToken)
+    });
     tinyMCE.init(allconfig);
   }
 })(window, jQuery, myTinyMCE);
