@@ -164,7 +164,7 @@ $toolTipClass = "tooltip-right";
           <?php
           foreach ($wysiwygOptions as $key => $value) {
             $disabled = $value['enabled'] ? '' : ' disabled="disabled" ';
-            echo '<option value="'.$key.'" '.$disabled.($_['editor'] == $key ? 'selected="selected"' : '').'>'.$value['name'].'</option>'."\n";
+            echo '<option value="'.$key.'" '.$disabled.($_['wysiwyg'] == $key ? 'selected="selected"' : '').'>'.$value['name'].'</option>'."\n";
           }
           ?>
         </select>
@@ -195,10 +195,10 @@ $toolTipClass = "tooltip-right";
           ?>
         </select>
       </div>
-      <br />
+      <span class="statusmessage" id="msg"></span><span>&nbsp;</span>
       <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo $l->t('Dummy'); ?>" />
-      <span class="statusmessage" id="msg"></span>
     </form>
+    <br />
     <form id="userkey">
       <input class="cafevdb-password" type="password" required="required" id="password" name="password" placeholder="<?php echo $l->t('Own Password');?>" data-typetoggle="#password-show" />
       <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />

@@ -22,18 +22,19 @@
 $(document).ready(function() {
 
   const container = $('.personal-settings');
+  const msgElement = container.find('.statusmessage');
 
   const chosenInit = function(container) {
     container.find('select.pagerows').each(function(index) {
       const self = $(this);
       //console.log("chosen pagerows", self);
       if (CAFEVDB.chosenActive(self)) {
-	self.chosen('destroy');
+        self.chosen('destroy');
       }
       self.chosen({
-	disable_search:true,
-	inherit_select_classes:true,
-	width:'10ex'
+        disable_search:true,
+        inherit_select_classes:true,
+        width:'10ex'
       });
     });
 
@@ -41,11 +42,11 @@ $(document).ready(function() {
       const self = $(this);
       //console.log("chosen wysiwyg", self);
       if (CAFEVDB.chosenActive(self)) {
-	self.chosen('destroy');
+        self.chosen('destroy');
       }
       self.chosen({
-	inherit_select_classes:true,
-	disable_search:true
+        inherit_select_classes:true,
+        disable_search:true
       });
     });
 
@@ -53,12 +54,12 @@ $(document).ready(function() {
       const self = $(this);
       //console.log("chosen debugmode", self);
       if (CAFEVDB.chosenActive(self)) {
-	self.chosen('destroy');
+        self.chosen('destroy');
       }
       self.chosen({
-	inherit_select_classes:true,
-	disable_search:true,
-	width:'100%'
+        inherit_select_classes:true,
+        disable_search:true,
+        width:'100%'
       });
     });
   };
@@ -81,10 +82,12 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/tooltips'),
            { 'value': CAFEVDB.toolTipsEnabled })
       .done(function(data) {
-	console.log(data);
+        msgElement.html(data.message).show();
+        console.log(data);
       })
-      .fail(function(data) {
-	console.log(data);
+      .fail(function(xhr, status, errorThrown) {
+        msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+        console.error(data);
       });
     $('.personal-settings input[type="checkbox"].tooltips').prop('checked', CAFEVDB.toolTipsEnabled);
     if (CAFEVDB.toolTipsEnabled) {
@@ -101,10 +104,12 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/filtervisibility'),
            { 'value': checked })
     .done(function(data) {
+      msgElement.html(data.message).show();
       console.log(data);
     })
-    .fail(function(data) {
-      console.log(data);
+    .fail(function(xhr, status, errorThrown) {
+      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      console.error(data);
     });
     if (checked) {
       $('input.pme-search').trigger('click');
@@ -121,10 +126,12 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/directchange'),
            { 'value': checked })
     .done(function(data) {
+      msgElement.html(data.message).show();
       console.log(data);
     })
-    .fail(function(data) {
-      console.log(data);
+    .fail(function(xhr, status, errorThrown) {
+      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      console.error(data);
     });
     if (window.PHPMYEDIT !== undefined) {
       PHPMYEDIT.directChange = checked;
@@ -139,6 +146,7 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/showdisabled'),
            { 'value': checked })
     .done(function(data) {
+      msgElement.html(data.message).show();
       console.log(data);
       if (window.PHPMYEDIT !== undefined) {
         var pme = PHPMYEDIT;
@@ -157,8 +165,9 @@ $(document).ready(function() {
       }
       return false;
     })
-    .fail(function(data) {
-      console.log(data);
+    .fail(function(xhr, status, errorThrown) {
+      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      console.error(data);
     });
     if (window.PHPMYEDIT !== undefined) {
       PHPMYEDIT.showdisabled = checked;
@@ -173,6 +182,7 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/expertmode'),
            { 'value': checked })
     .done(function(data) {
+      msgElement.html(data.message).show();
       console.log(data);
       if (window.PHPMYEDIT !== undefined) {
         const pme = PHPMYEDIT;
@@ -183,8 +193,9 @@ $(document).ready(function() {
         });
       }
     })
-    .fail(function(data) {
-      console.log(data);
+    .fail(function(xhr, status, errorThrown) {
+      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      console.error(data);
     });
     if (checked) {
       $('.expertmode-container').removeClass('hidden');
@@ -203,10 +214,12 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/pagerows'),
            { 'value': value })
     .done(function(data) {
+      msgElement.html(data.message).show();
       console.log(data);
     })
-    .fail(function(data) {
-      console.log(data);
+    .fail(function(xhr, status, errorThrown) {
+      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      console.error(data);
     });
     $('.personal-settings select.pagerows').val(value);
     return false;
@@ -219,11 +232,13 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/debugmode'),
            { 'value': post })
     .done(function(data) {
+      msgElement.html(data.message).show();
       console.log(data);
       CAFEVDB.debugModes = data.value;
     })
-    .fail(function(data) {
-      console.log(data);
+    .fail(function(xhr, status, errorThrown) {
+      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      console.error(data);
     });
     // TODO cross update options.
     return false;
@@ -235,10 +250,12 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/wysiwyg'),
            { 'value': value })
     .done(function(data) {
+      msgElement.html(data.message).show();
       console.log(data);
     })
-    .fail(function(data) {
-      console.log(data);
+    .fail(function(xhr, status, errorThrown) {
+      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      console.error(data);
     });
     $('.personal-settings select.wysiwyg').val(value);
     return false;
