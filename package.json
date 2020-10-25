@@ -1,0 +1,27 @@
+{
+  "name": "cafevdb",
+  "version": "1.0.0",
+  "description": "BE WARNED: THIS BEAST -- unfortunately -- IS NOT YET IN A SHAPE THAT IT COULD BE INSTALLED EASILY BY MERE MORTALS.",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rotdrop/cafevdb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rotdrop/cafevdb/issues"
+  },
+  "homepage": "https://github.com/rotdrop/cafevdb#readme",
+  "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^23.0.0"
+  }
+}
