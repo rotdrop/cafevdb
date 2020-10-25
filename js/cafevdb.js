@@ -88,11 +88,20 @@ var CAFEVDB = CAFEVDB || {};
       return;
     }
     switch (this.wysiwygEditor) {
+    default:
     case 'ckeditor':
       if (typeof initCallback != 'function') {
         initCallback = function() {};
       }
-      editorElement.ckeditor(initCallback, {/*enterMode:CKEDITOR.ENTER_P*/});
+      ClassicEditor.create(editorElement.get(0))
+      .then(editor => {
+        editorElement.data('ckeditor', editor);
+        initCallback();
+      })
+      .catch( error => {
+        console.error( 'There was a problem initializing the editor.', error );
+        initCallback();
+      });
       break;
     case 'tinymce':
       $(document).on('focusin', function(e) {
@@ -110,23 +119,12 @@ var CAFEVDB = CAFEVDB || {};
         plusConfig.height = initialHeight;
       }
       var mceConfig = myTinyMCE.getConfig(plusConfig);
-        // {
-        //   setup: function(editor) {
-        //     myTinyMCE.config.setup(editor);
-        //   },
-        // });
       editorElement.tinymce(mceConfig);
       // post-render callback? This is really quere. There is
       // something really broken with the tinyMCE setup.
       if (typeof initCallback == 'function') {
         setTimeout(initCallback, 500);
       }
-      break;
-    default:
-      if (typeof initCallback != 'function') {
-        initCallback = function() {};
-      }
-      editorElement.ckeditor(initCallback, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
     };
   };

@@ -88,8 +88,10 @@ script($appName, '../3rdparty/js/tinymce/tinymce.min');
 script($appName, '../3rdparty/js/tinymce/jquery.tinymce.min');
 script($appName, '../3rdparty/js/tinymceinit');
 // CKEditor stuff
-script($appName, '../3rdparty/js/ckeditor/ckeditor.min');
-script($appName, '../3rdparty/js/ckeditor/adapters/jquery');
+script($appName, '../node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor');
+
+//script($appName, '../3rdparty/js/ckeditor/ckeditor.min');
+//script($appName, '../3rdparty/js/ckeditor/adapters/jquery');
 
 //style($appName, '../3rdparty/jquery-ui/jquery-ui');
 

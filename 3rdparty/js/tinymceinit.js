@@ -28,12 +28,19 @@ var myTinyMCE = myTinyMCE || {};
     //document_base_url: 'https://fritz.claus-justus-heine.info:8888/owncloud8/index.php/apps/cafevdb/',
 
     setup: function(editor) {
+      console.info('tinyMCE::setup()');
       editor.on('PostProcess', myTinyMCE.postProcessCallback);
+      editor.on('PostRender', function(e) { console.info('Event tinyMCE::PostRender()'); });
+      editor.on('init', function(e) { console.info('Event tinyMCE::init()'); });
+      editor.on('LoadContent', function(e) { console.info('Event tinyMCE::LoadContent()'); });
+      editor.on('PreInit', function(e) { console.info('Event tinyMCE::PreInit()'); });
       // editor.on('init', function(event) {
       //   alert('editor is shown');
       // });
     },
     init_instance_callback: function(inst) {
+
+      console.info('tinyMCE::init_instance_callback()');
 
       // Propagate the resize event to the enclosing div in order to
       // be able to resize dialog windows. As this potentially yields
@@ -43,6 +50,7 @@ var myTinyMCE = myTinyMCE || {};
       // actually has changed.
       var mceWindow = inst.getWin();
       var mceContainer = inst.getContainer();
+      console.info(mceContainer);
       var ambientContainer = $(mceContainer).closest('.resize-target, .ui-dialog-content');
       mceWindow.oldWidth = [ -1, -1 ];
       mceWindow.oldHeight = [ -1, -1 ];
@@ -104,32 +112,6 @@ var myTinyMCE = myTinyMCE || {};
     //   {title: 'Table styles'},
     //   {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
     // ],
-    smileys: [
-      [
-        { shortcut: 'B-)', url: tinyMCESmileyUrl + 'smiley-cool.gif', title: 'cool' },
-        { shortcut: ':,(', url: tinyMCESmileyUrl + 'smiley-cry.gif', title: 'cry' },
-        { shortcut: ':-[', url: tinyMCESmileyUrl + 'smiley-embarassed.gif', title: 'embarassed' },
-        { shortcut: ':-!', url: tinyMCESmileyUrl + 'smiley-foot-in-mouth.gif', title: 'foot-in-mouth' },
-      ],
-      [
-        { shortcut: ':-(', url: tinyMCESmileyUrl + 'smiley-frown.gif', title: 'frown' },
-        { shortcut: '0:)', url: tinyMCESmileyUrl + 'smiley-innocent.gif', title: 'innocent' },
-        { shortcut: ':-*', url: tinyMCESmileyUrl + 'smiley-kiss.gif', title: 'kiss' },
-        { shortcut: ':-D', url: tinyMCESmileyUrl + 'smiley-laughing.gif', title: 'laughing' },
-      ],
-      [
-        { shortcut: ':-$', url: tinyMCESmileyUrl + 'smiley-money-mouth.gif', title: 'money' },
-        { shortcut: ':-#', url: tinyMCESmileyUrl + 'smiley-sealed.gif', title: 'sealed' },
-        { shortcut: ':-)', url: tinyMCESmileyUrl + 'smiley-smile.gif', title: 'smile' },
-        { shortcut: ':-O', url: tinyMCESmileyUrl + 'smiley-surprised.gif', title: 'surprised' },
-      ],
-      [
-        { shortcut: ':-P', url: tinyMCESmileyUrl + 'smiley-tongue-out.gif', title: 'tongue' },
-        { shortcut: ':-\\', url: tinyMCESmileyUrl + 'smiley-undecided.gif', title: 'undecided' },
-        { shortcut: ';-)', url: tinyMCESmileyUrl + 'smiley-wink.gif', title: 'wink' },
-        { shortcut: '>:O', url: tinyMCESmileyUrl + 'smiley-yell.gif', title: 'yell' },
-      ]
-    ]
   };
   myTinyMCE.smallConfig = {
     toolbar: "fullscreen | undo redo | bold italic | bullist indent outdent",
