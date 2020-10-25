@@ -119,12 +119,13 @@ var CAFEVDB = CAFEVDB || {};
         plusConfig.height = initialHeight;
       }
       var mceConfig = myTinyMCE.getConfig(plusConfig);
+      editorElement.on('cafevdb:tinemce-done', function(event) {
+	console.info('tinyMCE init done callback');
+	if (typeof initCallback == 'function') {
+	  initCallback();
+	}
+      });
       editorElement.tinymce(mceConfig);
-      // post-render callback? This is really quere. There is
-      // something really broken with the tinyMCE setup.
-      if (typeof initCallback == 'function') {
-        setTimeout(initCallback, 500);
-      }
       break;
     };
   };

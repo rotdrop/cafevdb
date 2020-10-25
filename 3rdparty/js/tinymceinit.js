@@ -29,18 +29,18 @@ var myTinyMCE = myTinyMCE || {};
 
     setup: function(editor) {
       console.info('tinyMCE::setup()');
-      editor.on('PostProcess', myTinyMCE.postProcessCallback);
-      editor.on('PostRender', function(e) { console.info('Event tinyMCE::PostRender()'); });
-      editor.on('init', function(e) { console.info('Event tinyMCE::init()'); });
-      editor.on('LoadContent', function(e) { console.info('Event tinyMCE::LoadContent()'); });
-      editor.on('PreInit', function(e) { console.info('Event tinyMCE::PreInit()'); });
+      //editor.on('PostProcess', myTinyMCE.postProcessCallback);
+      //editor.on('PostRender', function(e) { console.info('Event tinyMCE::PostRender()'); });
+      //editor.on('init', function(e) { console.info('Event tinyMCE::init()'); });
+      //editor.on('LoadContent', function(e) { console.info('Event tinyMCE::LoadContent()'); });
+      //editor.on('PreInit', function(e) { console.info('Event tinyMCE::PreInit()'); });
       // editor.on('init', function(event) {
       //   alert('editor is shown');
       // });
     },
     init_instance_callback: function(inst) {
 
-      console.info('tinyMCE::init_instance_callback()');
+      console.info('tinyMCE::init_instance_callback(), id is ' + inst.id);
 
       // Propagate the resize event to the enclosing div in order to
       // be able to resize dialog windows. As this potentially yields
@@ -74,6 +74,7 @@ var myTinyMCE = myTinyMCE || {};
           }
         }
       };
+      $('#' + inst.id).trigger('cafevdb:tinemce-done');
     },
 
 //    spellchecker_rpc_url: OC.filePath('cafevdb', '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
