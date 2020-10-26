@@ -37,7 +37,7 @@ class RequestParameterService implements \ArrayAccess, \Countable
   }
 
   public function getParam($key, $default = null) {
-    if (array_key_exists($key, $parameters)) {
+    if (array_key_exists($key, $this->parameters)) {
       return $this->parameters[$key];
     } else {
       return $default;
