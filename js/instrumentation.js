@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -86,17 +86,17 @@ var CAFEVDB = CAFEVDB || {};
 
     if (tableOptions.Table == 'Musiker') {
       var projectMode = options.ProjectId > 0;
-      tableOptions.Template =  projectMode ? 'add-musicians' : 'all-musicians';
-      tableOptions.DisplayClass = 'Musicians';
+      tableOptions.template =  projectMode ? 'add-musicians' : 'all-musicians';
+      tableOptions.displayClass = 'Musicians';
       tableOptions["ClassArguments[0]"] = projectMode ? "1" : "0";
     } else if (options.ProjectId > 0) {
-      tableOptions.Table = options.projectName+'View';
-      tableOptions.Template = 'detailed-instrumenation'
-      tableOptions.DisplayClass = 'DetailedInstrumentation';
+      tableOptions.table = options.projectName+'View';
+      tableOptions.template = 'detailed-instrumenation'
+      tableOptions.tisplayClass = 'DetailedInstrumentation';
     } else {
-      tableOptions.Table = 'Musiker';
-      tableOptions.Template = 'all-musicians';
-      tableOptions.DisplayClass = 'Musicians';
+      tableOptions.table = 'Musiker';
+      tableOptions.template = 'all-musicians';
+      tableOptions.displayClass = 'Musicians';
     }
 
     //alert('options: '+CAFEVDB.print_r(tableOptions, true));
@@ -180,10 +180,10 @@ var CAFEVDB = CAFEVDB || {};
    * form's "native" data. Example:
    *
    * formData = {
-   *   Template: "detailed-instrumentation",
-   *   Table: "Musiker",
-   *   DisplayClass: "Musicians",
-   *   'ClassArguments[0]': "1"
+   *   template: "detailed-instrumentation",
+   *   table: "Musiker",
+   *   displayClass: "Musicians",
+   *   'classArguments[0]': "1"
    * };
    *
    * The form is submitted with an empty pseudo-submit button.
@@ -213,10 +213,10 @@ var CAFEVDB = CAFEVDB || {};
    * form's "native" data. Example:
    *
    * formData = {
-   *   Template: "detailed-instrumentation",
-   *   Table: "Musiker",
-   *   DisplayClass: "Musicians",
-   *   'ClassArguments[0]': "1"
+   *   template: "detailed-instrumentation",
+   *   table: "Musiker",
+   *   displayClass: "Musicians",
+   *   'classArguments[0]': "1"
    * };
    *
    * The form is submitted with an empty pseudo-submit button.
@@ -276,10 +276,10 @@ var CAFEVDB = CAFEVDB || {};
       projectMode = projectId > 0;
     }
     var inputTweak = {
-      Template: projectMode ? "add-musicians" : "all-musicians",
-      Table: "Musiker",
-      DisplayClass: "Musicians",
-      "ClassArguments[0]": projectMode ? "1" : "0"
+      template: projectMode ? "add-musicians" : "all-musicians",
+      table: "Musiker",
+      displayClass: "Musicians",
+      "classArguments[0]": projectMode ? "1" : "0"
     };
 
     Instrumentation.loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
@@ -315,9 +315,9 @@ var CAFEVDB = CAFEVDB || {};
     var table = projectName+'View';
 
     var inputTweak = {
-      Template: "detailed-instrumentation",
-      Table: table,
-      DisplayClass: "DetailedInstrumentation"
+      template: "detailed-instrumentation",
+      table: table,
+      displayClass: "DetailedInstrumentation"
     };
 
     var ids = [ -1 ];

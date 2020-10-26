@@ -36,6 +36,7 @@ if (/*Config::isTreasurer()*/true) {
   $nav .= Navigation::pageControlElement('insurances');
   $nav .= Navigation::pageControlElement('debit-mandates');
 }
+$nav .= Navigation::pageControlElement('blog');
 
 echo $this->inc('part.common.header',
                 [ 'css-prefix' => $css_pfx,

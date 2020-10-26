@@ -25,13 +25,13 @@ CAFEVDB = CAFEVDB || {};
   'use strict';
   var Blog = function() {};
 
-  Blog.author   = 'unknown';
-  Blog.blogId   = -1;
-  Blog.inReply  = -1;
-  Blog.text     = '';
-  Blog.priority = false;
-  Blog.popup    = false;
-  Blog.reader   = '';
+  Blog.author    = 'unknown';
+  Blog.blogId    = -1;
+  Blog.inReplyTo = -1;
+  Blog.content   = '';
+  Blog.priority  = false;
+  Blog.popup     = false;
+  Blog.reader    = '';
   Blog.popupPosition = { my: "middle top+5%",
                          at: "middle bottom",
                          of: '#controls',
@@ -40,13 +40,13 @@ CAFEVDB = CAFEVDB || {};
     var blog = Blog;
 
     $('#dialog_holder').html(data.content);
-    Blog.author   = data.author;
-    Blog.blogId   = data.blogId;
-    Blog.inReply  = data.inReply;
-    Blog.text     = data.text;
-    Blog.priority = data.priority;
-    Blog.popup    = data.popup;
-    Blog.reader   = data.reader;
+    Blog.author    = data.author;
+    Blog.blogId    = data.blogId;
+    Blog.inReplyTo = data.inReplyTo;
+    Blog.text      = data.text;
+    Blog.priority  = data.priority;
+    Blog.popup     = data.popup;
+    Blog.reader    = data.reader;
 
     $('div.debug').html(data.debug);
     $('div.debug').show();
@@ -155,17 +155,17 @@ CAFEVDB = CAFEVDB || {};
     }
 
     const action = Blog.blogId >= 0 ? 'modify' : 'create';
-    $.post(OC.generateurl('/apps/cafevdb/blog/action/' + action),
+    $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
            {
              blogId: Blog.blogId,
-             inReply: Blog.inReply,
-             text: $('#blogtextarea').val(),
+             inReplyTo: Blog.inReplyTo,
+             content: $('#blogtextarea').val(),
              priority: $('#blogpriority').val(),
              popup: popupValue,
              clearReader: clearReaderValue
            })
     .fail(function(xhr, status, errorThrown) {
-            const messsage = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+            const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
             OC.dialogs.alert(message, t('cafevdb', 'Error'));
     })
     .done(function (data) {
@@ -198,7 +198,7 @@ CAFEVDB = CAFEVDB || {};
         thisBlogId = -1;
       }
       $(this).cafevDialog({
-        dialogClass: 'no-close',
+        dialogClass: 'no-close blog-popup-dialog',
         title: t('cafevdb', 'One-time Blog Popup'),
         modal: true,
         closeOnEscape: false,
@@ -246,7 +246,7 @@ CAFEVDB = CAFEVDB || {};
 
   Blog.updateThreads = function(data) {
     var blogThreads = $('#blogthreads');
-    blogThreads.html(data.contents);
+    blogThreads.html(data.content);
     Blog.popupMessages();
     Blog.avatar();
     return true;
@@ -288,7 +288,7 @@ $(function() {
         event.preventDefault();
         $.post(OC.generateUrl('/apps/cafevdb/blog/editentry'),
                { blogId: -1,
-                 inReply: $(this).val() })
+                 inReplyTo: $(this).val() })
         .fail(function(xhr, status, errorThrown) {
           const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
           OC.dialogs.alert(message, t('cafevdb', 'Error'));
@@ -304,7 +304,7 @@ $(function() {
         event.preventDefault();
         $.post(OC.generateUrl('/apps/cafevdb/blog/editentry'),
                { blogId: $(this).val() ,
-                 inReply: -1
+                 inReplyTo: -1
                })
         .fail(function(xhr, status, errorThrown) {
           const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
@@ -327,7 +327,7 @@ $(function() {
           function (decision) {
             if (decision) {
               const action = 'delete';
-              $.post(OC.generateurl('/apps/cafevdb/blog/action/' + action),
+              $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
                      { blogId: blogId })
 	      .fail(function(xhr, status, errorThrown) {
                 const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
@@ -348,12 +348,12 @@ $(function() {
         var id = $(this).val();
         var prio = $('#blogpriority'+id).val();
         const action = 'modify';
-        $.post(OC.generateurl('/apps/cafevdb/blog/action/' + action),
-               { text: '',
+        $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
+               { content: '',
                  blogId: id,
                  priority: +prio+1,
                  popup: false,
-                 inReply: -1
+                 inReplyTo: -1
                })
 	.fail(function(xhr, status, errorThrown) {
           const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
@@ -371,12 +371,12 @@ $(function() {
         var id = $(this).val();
         var prio = $('#blogpriority'+id).val();
         const action = 'modify';
-        $.post(OC.generateurl('/apps/cafevdb/blog/action/' + action),
-               { text: '',
+        $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
+               { content: '',
                  blogId: id,
                  priority: +prio-1,
                  popup: false,
-                 inReply: -1
+                 inReplyTo: -1
                })
 	.fail(function(xhr, status, errorThrown) {
           const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)

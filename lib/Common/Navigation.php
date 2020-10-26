@@ -461,8 +461,8 @@ class Navigation
             $value = L::t("View all Projects");
             $title = L::t("Overview over all known projects (start-page).");
             $year = date("Y") - 1;
-            $post = array('Projects' => $value,
-                          'Template' => 'projects',
+            $post = array('projects' => $value,
+                          'template' => 'projects',
                           'PME_sys_qf1_comp' => '>=',
                           'PME_sys_qf1' => $year);
             break;
@@ -470,53 +470,61 @@ class Navigation
         case 'project-extra':
             $value = L::t("Project Extra-Fields");
             $title = L::t("Add additional data-fields to the instrumenation table for the project.");
-            $post = array('ProjectExtraFields' => $value,
-                          'Template' => 'project-extra',
-                          'ShowDisabledFields' => false,
-                          'ProjectName' => $projectName,
-                          'ProjectId' => $projectId);
+            $post = array('projectExtraFields' => $value,
+                          'template' => 'project-extra',
+                          'showDisabledFields' => false,
+                          'projectName' => $projectName,
+                          'projectId' => $projectId);
             break;
 
         case 'project-payments':
             $value = L::t("Received Payments");
             $title = L::t("A table holding the various payments of participants.");
             $controlclass = 'finance';
-            $post = array('ProjectPayments' => $value,
-                          'Template' => 'project-payments',
-                          'ProjectName' => $projectName,
-                          'ProjectId' => $projectId);
+            $post = array('projectPayments' => $value,
+                          'template' => 'project-payments',
+                          'projectName' => $projectName,
+                          'projectId' => $projectId);
             break;
 
         case 'debit-notes':
             $value = L::t("Debit Notes");
             $title = L::t("A table holding all debit notes issued from the orchestra-software.");
             $controlclass = 'finance';
-            $post = array('DebitNotes' => $value,
-                          'Template' => 'debit-notes',
-                          'ProjectName' => $projectName,
-                          'ProjectId' => $projectId);
+            $post = array('debitNotes' => $value,
+                          'template' => 'debit-notes',
+                          'projectName' => $projectName,
+                          'projectId' => $projectId);
             break;
 
         case 'all':
             $value = L::t("Display all Musicians");
             $title = L::t("Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.");
-            $post = array('AllMusicians' => $value,
-                          'Template' => 'all-musicians');
+            $post = array('allMusicians' => $value,
+                          'template' => 'all-musicians');
+            break;
+
+        case 'blog':
+            $value = L::t("Frontpage Blog");
+            $title = L::t("Simplistic blog page with follow apps, used primarily to display hints
+if something has changed in the orchestra app.");
+            $post = array('blog' => $value,
+                          'template' => 'blog');
             break;
 
         case 'email':
             $title = L::t("Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other.");
-            $post = array('Template' => 'email',
-                          'ProjectName' => $projectName,
-                          'ProjectId' => $projectId);
+            $post = array('template' => 'email',
+                          'projectName' => $projectName,
+                          'projectId' => $projectId);
             break;
 
         case 'emailhistory':
             $value = L::t("Email History");
             $title = L::t("Display all emails sent by our mass-email form.");
-            $post = array('Template' => 'email-history',
-                          'ProjectName' => $projectName,
-                          'ProjectId' > $projectId);
+            $post = array('template' => 'email-history',
+                          'projectName' => $projectName,
+                          'projectId' > $projectId);
             break;
 
         case 'projectlabel':
@@ -529,62 +537,62 @@ class Navigation
 The overview-page gives the possibility to add events, change the instrumentation
 and even edit the public web-pages for the project and other things.");
             $value = $projectName;
-            $json = array('ProjectName' => $projectName,
-                          'ProjectId' => $projectId);
+            $json = array('projectName' => $projectName,
+                          'projectId' => $projectId);
             break;
 
         case 'detailed':
             $value = L::t("Instrumentation");
             $title = L::t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
-            $post = array('Template' => 'detailed-instrumentation',
-                          'ProjectName' => $projectName,
-                          'ProjectId' => $projectId);
+            $post = array('template' => 'detailed-instrumentation',
+                          'projectName' => $projectName,
+                          'projectId' => $projectId);
             break;
 
         case 'instruments':
             $value = L::t("Add Instruments");
             $title = L::t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
-            $post = array('Template' => 'instruments',
-                          'ProjectName' => $projectName,
-                          'ProjectId' => $projectId);
+            $post = array('template' => 'instruments',
+                          'projectName' => $projectName,
+                          'projectId' => $projectId);
             break;
 
         case 'projectinstruments':
             $value = L::t('Instrumentation Numbers');
             $title = L::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');
-            $json = array('Template' => 'project-instruments',
-                          'ProjectName' => $projectName,
-                          'ProjectId' => $projectId);
+            $json = array('template' => 'project-instruments',
+                          'projectName' => $projectName,
+                          'projectId' => $projectId);
             break;
 
         case 'debit-mandates':
             $value = L::t('Debit Mandates');
             $title = L::t('Display a table with the SEPA debit mandates related to the project.');
             $controlclass = 'finance';
-            $post = array('Template' => 'sepa-debit-mandates',
-                          'ProjectName' => $projectName,
-                          'ProjectId' => $projectId);
+            $post = array('template' => 'sepa-debit-mandates',
+                          'projectName' => $projectName,
+                          'projectId' => $projectId);
             break;
 
         case 'insurances':
             $value = L::t("Insurances");
             $title = L::t("Display a table with an overview about the current state of the member's instrument insurances.");
             $controlclass = 'finance';
-            $post = array('Template' => 'instrument-insurance');
+            $post = array('template' => 'instrument-insurance');
             break;
 
         case 'insurancerates':
             $value = L::t("Insurance Rates");
             $title = L::t("Display a table with the insurance rates for the individual instrument insurances.");
             $controlclass = 'finance';
-            $post = array('Template' => 'insurance-rates');
+            $post = array('template' => 'insurance-rates');
             break;
 
         case 'insurancebrokers':
             $value = L::t("Insurance Brokers");
             $title = L::t("Display a table with the insurance brokers.");
             $controlclass = 'finance';
-            $post = array('Template' => 'insurance-brokers');
+            $post = array('template' => 'insurance-brokers');
             break;
         }
 

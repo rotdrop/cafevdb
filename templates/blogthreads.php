@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB;
 
-use Common\Util;
+use OCA\CAFEVDB\Common\Util;
 
 $blog = $_['renderer']->findThreadDisplay();
 
