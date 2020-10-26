@@ -34,6 +34,12 @@ class Registration
     $context->registerService(IPMEOptions::class, function($c) {
       return $c->query(PME\Config::class);
     });
+    $context->registerService('template:'.'configcheck', function($c) {
+      return new class extends Renderer {}; // do nothing
+    });
+    $context->registerService('template:'.'debug', function($c) {
+      return new class extends Renderer {}; // do nothing
+    });
     $context->registerServiceAlias('template:'.'all-musicians', Musicians::class);
     $context->registerServiceAlias('template:'.'blog', BlogMapper::class);
   }

@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 
 /** Base for phpMyEdit based table-views. */
-abstract class PMETableViewBase implements ITableView
+abstract class PMETableViewBase extends Renderer implements ITableView
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -46,6 +46,8 @@ abstract class PMETableViewBase implements ITableView
   protected $pme;
 
   protected $pmeBare;
+
+  protected $pmeRecordId;
 
   protected $showDisabled;
 
@@ -78,6 +80,7 @@ abstract class PMETableViewBase implements ITableView
     $this->l = $this->l10n();
 
     $this->pmeBare = false;
+    $this->pmeRecordId = $this->pme->getCGIRecordId();
     $this->showDisabled = $this->getUserValue('showdisabled', false) === 'on';
 
     $this->defaultFDD = $this->createDefaultFDD();

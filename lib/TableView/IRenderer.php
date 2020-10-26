@@ -22,23 +22,14 @@
 
 namespace OCA\CAFEVDB\TableView;
 
-interface ITableView extends IRenderer
+interface IRenderer
 {
-    /** Short title for heading. */
-    public function shortTitle();
-
-    /** Header text informations. */
-    public function headerText();
-
-    /** Set table-navigation enable/disable. */
-    public function navigation($enable);
-
-    /** Run underlying table-manager (phpMyEdit for now).
-     *
-     * @param array $options Overrider options. Otherwise the state
-     * set by render(false) are used.
-     */
-    public function execute($options = []);
+  /**Show the underlying template page. This is supposed to echo
+   * html code to stdout.
+   *
+   * @param bool $execute Kind of dry-run if set to false.
+   */
+  public function render(bool $execute = true);
 }
 
 // Local Variables: ***

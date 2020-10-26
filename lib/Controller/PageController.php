@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 
 class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
@@ -53,9 +53,6 @@ class PageController extends Controller {
   /** @var \OCP\IURLGenerator */
   private $urlGenerator;
 
-  /** @var PHPMyEdit */
-  private $phpMyEdit;
-
   /** @var IAppContainer */
   private $appContainer;
 
@@ -70,7 +67,6 @@ class PageController extends Controller {
     , IInitialStateService $initialStateService
     , ConfigCheckService $configCheckService
     , \OCP\IURLGenerator $urlGenerator
-    , PHPMyEdit $phpMyEdit
   ) {
 
     parent::__construct($appName, $request);
@@ -83,7 +79,6 @@ class PageController extends Controller {
     $this->initialStateService = $initialStateService;
     $this->configCheckService = $configCheckService;
     $this->urlGenerator = $urlGenerator;
-    $this->phpMyEdit = $phpMyEdit;
     $this->l = $this->l10N();
   }
 
@@ -152,14 +147,10 @@ class PageController extends Controller {
    */
   public function loader(
     $renderAs = 'user',
-    $template = 'blog',
+    $template = null,
     $projectName = '',
     $projectId = -1,
     $musicianId = -1) {
-
-    if (empty($template)) {
-      $template = 'blog';
-    }
 
     // Initial state injecton for JS
     $this->publishInitialStateForUser($this->user());
@@ -184,29 +175,15 @@ class PageController extends Controller {
     //$pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
     //Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
 
-    // @@TODO this should not go here, I think. Rather into PMETableBase.
-    //
-    // Also @@TODO: perhaps find a way to inject the RequestParameters
-    // without tweaking _POST
-    $recordId = $this->phpMyEdit->getCGIRecordId();
-
-    // See if we are configured
-    $config = $this->configCheckService->configured();
-
-    if (($template != 'debug' && !$config['summary'])) {
-      $tmplname = 'configcheck';
-      $renderer = null;
-    } else {
-      // $template = "all-musicians";
-      $tmplname = $template;
-      $renderer = $this->appContainer->query('template:'.$template);
-      if (empty($renderer)) {
-        $this->logError("Template-renderer for template ".$template." is empty.");
-      }
+    $template = $this->getTemplate($template);
+    $this->logInfo(__METHOD__.': '.$template);
+    $renderer = $this->appContainer->query('template:'.$template);
+    if (empty($renderer)) {
+      $this->logError("Template-renderer for template ".$template." is empty.");
     }
 
     $templateParameters = [
-      'template' => $tmplname,
+      'template' => $template,
       'renderer' => $renderer,
 
       //'l' => $this->l,
@@ -246,7 +223,7 @@ class PageController extends Controller {
 
     // renderAs = admin, user, blank
     // $renderAs = 'user';
-    $response = new TemplateResponse($this->appName, $tmplname, $templateParameters, $renderAs);
+    $response = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
     if($renderAs == 'blank') {
       $response = new JSONResponse([
         'contents' => $response->render(),
@@ -255,6 +232,31 @@ class PageController extends Controller {
       ]);
     }
     return $response;
+  }
+
+  private function getTemplate($template)
+  {
+    // See if we are configured
+    $config = $this->configCheckService->configured();
+
+    if ($template != 'debug' && !$config['summary']) {
+      return 'configcheck';
+    }
+    if (empty($template)) {
+      $blogMapper = \OC::$server->query(BlogMapper::class);
+      if ($blogMapper->notificationPending($this->userId())) {
+        return 'blog';
+      }
+      // This would need tracing the last-logged in status of the
+      // user.
+      //
+      // $latestBlog = $blogMapper->lastModifiedTimestamp();
+
+      // should return 'project' when it is available again, or
+      // perhaps a configurable starting page.
+      return 'all-musicians';
+    }
+    return $template;
   }
 
   /**
