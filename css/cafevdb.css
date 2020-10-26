@@ -679,6 +679,10 @@ a.ui-tabs-anchor.compact span.ui-icon {
   display: none;
 }
 
+.ui-dialog.no-close .ui-dialog-buttonpane {
+  padding: .3em .4em .5em .4em; // t r b l
+}
+
 .ui-dialog.zero-size {
   width:0px !important;
   height:0px !important;
