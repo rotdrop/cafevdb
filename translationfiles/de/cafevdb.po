@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
 "POT-Creation-Date: 2020-10-22 16:22+0200\n"
-"PO-Revision-Date: 2020-10-22 16:44+0200\n"
+"PO-Revision-Date: 2020-10-25 22:56+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -76,7 +76,7 @@ msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/ajax/blog/modifyentry.php:71
 msgid "Refusing to create empty blog entry."
-msgstr "Leere Notize werden nicht abgespeichert."
+msgstr "Leere Notizen werden nicht abgespeichert."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/ajax/blog/modifyentry.php:83
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/ajax/blog/modifyentry.php:95
