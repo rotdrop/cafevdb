@@ -46,12 +46,6 @@ class UserLoggedOutEventListener implements IEventListener
     }
     // @@TODO check if we want this.
     return;
-    Config::init();
-
-    // OC does not destroy the session on logout, additionally, there
-    // is not alway a logout event. But if there is one, we destroy
-    // our session data.
-    Config::$session->clearValues();
   }
 }
 
