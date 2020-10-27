@@ -17,7 +17,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller;
-use OCP\ISession;
 use OCP\IL10N;
 use OCP\IInitialStateService;
 use OCP\AppFramework\IAppContainer;
@@ -88,37 +87,52 @@ class PageController extends Controller {
    * @NoAdminRequired
    * @NoGroupMemberRequired
    * @NoCSRFRequired
+   * @UseSession
    */
   public function index() {
-    if (empty($this->request->getParam('template')) && !$this->historyService->empty()) {
-      return $this->history(1);
-    } else {
-      return $this->history(0);
-    }
+    return $this->remember('user');
   }
 
   /**
-   * Go back in the history.
+   * Load a page at the specified offset from the history. Returns an
+   * error if the entry cannot be found in the history.
    *
    * @NoAdminRequired
+   * @UseSession
    */
   public function history($level = 0)
   {
-    if ($level > 0) {
-      try {
-        $originalParams = $this->parameterService->getParams();
-        $this->parameterService->setParams($this->historyService->fetch($level-1));
-        $this->parameterService['originalRequestParameters'] = $originalParams;
-        $_POST = $this->parameterService->getParams(); // oh oh
-      } catch(\OutOfBoundsException $e) {
-        return new DataResponse(['msg' => $e->getMessage()], Http::STATUS_NOT_FOUND);
-      }
-    } else {
-      trigger_error('try push history');
-      $this->historyService->push($this->parameterService->getParams());
+    try {
+      $originalParams = $this->parameterService->getParams();
+      $this->parameterService->setParams($this->historyService->fetch($level));
+      $this->parameterService['originalRequestParameters'] = $originalParams;
+      $_POST = $this->parameterService->getParams(); // oh oh
+    } catch(\OutOfBoundsException $e) {
+      return new DataResponse(['message' => $e->getMessage(),
+                               'history' => ['size' => $this->historyService->size(),
+                                             'position' => $this->historyService->position()] ],
+                              Http::STATUS_NOT_FOUND);
     }
     return $this->loader(
-      $this->parameterService['renderAs'],
+      'blank', // history loading is always injected into the DOM
+      $this->parameterService['template'],
+      $this->parameterService['projectName'],
+      $this->parameterService['projectId'],
+      $this->parameterService['musicianId']
+    );
+  }
+
+  /**
+   * Load a page and remembers the request parameters in the history.
+   *
+   * @NoAdminRequired
+   * @UseSession
+   */
+  public function remember($renderAs = 'user')
+  {
+    $this->historyService->push($this->parameterService->getParams());
+    return $this->loader(
+      $this->parameterService->getParam('renderAs', 'user'),
       $this->parameterService['template'],
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
@@ -129,6 +143,7 @@ class PageController extends Controller {
   /**
    * @NoAdminRequired
    * @NoCSRFRequired
+   * @UseSession
    */
   public function debug() {
     return $this->loader(
@@ -144,10 +159,11 @@ class PageController extends Controller {
    * Load a specific page, also used to dynamically replace html content.
    *
    * @NoAdminRequired
+   * @UseSession
    */
   public function loader(
-    $renderAs = 'user',
-    $template = null,
+    $renderAs,
+    $template,
     $projectName = '',
     $projectId = -1,
     $musicianId = -1) {
@@ -176,10 +192,11 @@ class PageController extends Controller {
     //Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
 
     $template = $this->getTemplate($template);
-    $this->logInfo(__METHOD__.': '.$template);
     $renderer = $this->appContainer->query('template:'.$template);
     if (empty($renderer)) {
-      $this->logError("Template-renderer for template ".$template." is empty.");
+      return self::response(
+        $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
+        Http::INTERNAL_SERVER_ERROR);
     }
 
     $templateParameters = [
@@ -231,6 +248,16 @@ class PageController extends Controller {
                       'position' => $this->historyService->position()]
       ]);
     }
+
+    // ok no exception, so flush the history to the session, when we
+    // got so far.
+    try {
+      $this->historyService->store();
+    } catch (\Throwable $t) {
+      // log, but ignore otherwise
+      $this->logException($t);
+    }
+
     return $response;
   }
 

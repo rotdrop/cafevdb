@@ -1305,7 +1305,7 @@ var CAFEVDB = CAFEVDB || {};
         value = response.value;
       }
     } else {
-      console.log('unknownx response');
+      console.log('unknown response');
       // nothing
     }
     return value;

@@ -49,15 +49,20 @@ return [
       'defaults' => [ 'renderAs' => 'user' ],
     ],
     [
+      'name' => 'page#remember',
+      'url' => '/page/remember/{renderAs}',
+      'verb' => 'POST',
+      'defaults' => [ 'renderAs' => 'user' ],
+    ],
+    [
       'name' => 'page#history',
-      'url' => '/page/history/{level}',
+      'url' => '/page/recall/{level}',
       'verb' => 'POST',
       'defaults' => [ 'level' => 0 ]
     ],
     [
       'name' => 'page#debug',
       'url' => '/page/debug',
-      'verb' => 'GET',
     ],
     // internal "ajax" routes
     [

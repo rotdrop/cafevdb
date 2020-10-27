@@ -44,16 +44,42 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Load a page through the history-aware AJAX page loader. */
   Page.loadPage = function(post, afterLoadCallback) {
-    var container = $('div#content');
+    const container = $('div#content');
     $('body').removeClass('dialog-titlebar-clicked');
     CAFEVDB.modalizer(true),
     Page.busyIcon(true);
-    $.post(OC.generateUrl('/apps/cafevdb/page/loader/blank'), post)
-      .fail(function(xhr, status, errorThrown) {
-	$('#cafevdb-admin-settings .msg')
-	  .html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown))
-	  .show();
-      })
+    var action;
+    var parameter;
+    if (post.historyOffset !== undefined) {
+      action = 'recall';
+      parameter = post.historyOffset;
+    } else {
+      action = 'remember';
+      parameter = 'blank'
+    }
+    $.post(OC.generateUrl('/apps/cafevdb/page/' + action + '/' + parameter), post)
+    .fail(function(xhr, status, errorThrown) {
+      const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
+      OC.dialogs.alert(message, t('cafevdb', 'Error'));
+      CAFEVDB.modalizer(false),
+      Page.busyIcon(false);
+      const errorData = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+      console.info(errorData);
+      // If the error response contains history data, use it. Othewise
+      // reset the history
+      if (action == 'recall') {
+        if (errorData.history !== undefined) {
+          CAFEVDB.Page.historyPosition = errorData.history.position;
+          CAFEVDB.Page.historySize = errorData.history.size;
+        } else {
+          CAFEVDB.Page.historyPosition = 0;
+          CAFEVDB.Page.historySize = 0;
+        }
+        CAFEVDB.Page.updateHistoryControls();
+      }
+      CAFEVDB.modalizer(false),
+      Page.busyIcon(false);
+    })
     .done(function(data) {
       console.log(data);
       if (!CAFEVDB.ajaxErrorHandler(
@@ -115,6 +141,8 @@ var CAFEVDB = CAFEVDB || {};
     var redo = $('#personalsettings .navigation.redo');
     var undo = $('#personalsettings .navigation.undo');
 
+    console.info(undo);
+
     //alert('history: '+CAFEVDB.Page.historyPosition+' size '+CAFEVDB.Page.historySize);
     redo.prop('disabled', CAFEVDB.Page.historyPosition == 0);
     undo.prop('disabled', CAFEVDB.Page.historySize - CAFEVDB.Page.historyPosition <= 1);
@@ -150,7 +178,7 @@ $(document).ready(function(){
                  $('body').removeClass('dialog-titlebar-clicked');
                } else {
                  CAFEVDB.Page.loadPage({
-                   'HistoryOffset': 0
+                   'historyOffset': 0
                  });
                }
                return false;
@@ -161,7 +189,7 @@ $(document).ready(function(){
              function(event) {
                event.stopImmediatePropagation();
                CAFEVDB.Page.loadPage({
-                 'HistoryOffset': 1
+                 'historyOffset': 1
                });
                return false;
              });
@@ -171,7 +199,7 @@ $(document).ready(function(){
              function(event) {
                event.stopImmediatePropagation();
                CAFEVDB.Page.loadPage({
-                 'HistoryOffset': -1
+                 'historyOffset': -1
                });
                return false;
              });
