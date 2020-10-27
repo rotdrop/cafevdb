@@ -19,7 +19,8 @@ class HistoryService
   const SESSION_HISTORY_KEY = 'PageHistory';
   const PME_ERROR_READONLY = 1;
 
-  private $l;
+  /** @var IL10N */
+  protected $l;
 
   /**The data-contents. A "cooked" array structure with the
    * following components:
@@ -36,9 +37,12 @@ class HistoryService
   /**Fetch any existing history from the session or initialize an
    * empty history if no history record is found.
    */
-  public function __construct(SessionService $session, IL10N $l) {
+  public function __construct(
+    SessionService $session
+    , IL10N $l10n
+  ) {
     $this->session = $session;
-    $this->l = $l;
+    $this->l = $l10n;
     $this->load();
   }
 
@@ -47,8 +51,8 @@ class HistoryService
   {
     $this->historySize = 1;
     $this->historyPosition = 0;
-    $this->historyRecords = array(array('md5' => md5(serialize(array())),
-                                        'data' => array()));
+    $this->historyRecords = [ [ 'md5' => md5(serialize([])),
+                                'data' => [] ] ];
   }
 
   /**Add a history snapshot. */
@@ -60,8 +64,8 @@ class HistoryService
     if ($historyData['md5'] != $md5) {
       // add the new record if it appears to be new
       array_splice($this->historyRecords, 0, $this->historyPosition);
-      array_unshift($this->historyRecords, array('md5' => $md5,
-                                                 'data' => $data));
+      array_unshift($this->historyRecords, [ 'md5' => $md5,
+                                             'data' => $data ]);
       $this->historyPosition = 0;
       $this->historySize = count($this->historyRecords);
       while ($this->historySize > self::MAX_HISTORY_SIZE) {
@@ -79,8 +83,8 @@ class HistoryService
     $newPosition = $this->historyPosition + $offset;
     if ($newPosition >= $this->historySize || $newPosition < 0) {
       throw new \OutOfBoundsException(
-        $this->l->t('Invalid history position %d request, history size is %d',
-                    array($newPosition, $this->historySize)));
+        $this->l->t('Invalid history position %d requested, history size is %d, current position is %d',
+                    [ $newPosition, $this->historySize, $this->historyPosition ]));
     }
 
     $this->historyPosition = $newPosition;
@@ -113,9 +117,9 @@ class HistoryService
    */
   public function store()
   {
-    $storageValue = array('size' => $this->historySize,
-                          'position' => $this->historyPosition,
-                          'records' => $this->historyRecords);
+    $storageValue = [ 'size' => $this->historySize,
+                      'position' => $this->historyPosition,
+                      'records' => $this->historyRecords ];
     $this->session->storeValue(self::SESSION_HISTORY_KEY, $storageValue);
   }
 
