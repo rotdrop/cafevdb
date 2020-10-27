@@ -253,7 +253,7 @@ $(document).ready(function(){
     });
 
     CAFEVDB.addReadyCallback(function() {
-        var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="DisplayClass"]');
+        var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="displayClass"]');
         if (dpyClass.length > 0 &&
             (dpyClass.val() == 'InstrumentInsurance' || dpyClass.val() == 'InsurancRates')) {
           CAFEVDB.Insurances.pmeFormInit(PHPMYEDIT.defaultSelector);

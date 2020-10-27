@@ -30,6 +30,10 @@ interface IRenderer
    * @param bool $execute Kind of dry-run if set to false.
    */
   public function render(bool $execute = true);
+
+  public function cssPrefix();
+
+  public function cssClass();
 }
 
 // Local Variables: ***

@@ -41,6 +41,7 @@ class Registration
       return new class extends Renderer {}; // do nothing
     });
     $context->registerServiceAlias('template:'.'all-musicians', Musicians::class);
+    $context->registerServiceAlias('template:'.'instruments', Instruments::class);
     $context->registerServiceAlias('template:'.'blog', BlogMapper::class);
   }
 }

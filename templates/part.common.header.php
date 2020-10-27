@@ -72,7 +72,7 @@ script($appName, 'jquery-extensions');
 script($appName, 'before-ready');
 script($appName, 'ready');
 
-script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
+script($appName, '../3rdparty/chosen/js/chosen.jquery');
 style($appName, '../3rdparty/chosen/css/chosen.min');
 
 script($appName, 'legacy/calendar/calendar');

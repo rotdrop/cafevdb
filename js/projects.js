@@ -147,7 +147,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             AmbientContainerSelector: containerSel,
             DialogHolderCSSId: 'project-instruments-dialog',
             Template: 'project-instruments',
-            DisplayClass: 'ProjectInstruments',
+            displayClass: 'ProjectInstruments',
             Table: 'BesetzungsZahlen',
             Transpose: 'transposed',
             InhibitTranspose: 'true',
@@ -185,7 +185,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             AmbientContainerSelector: containerSel,
             DialogHolderCSSId: 'project-overview',
             Template: 'projects',
-            DisplayClass: 'Projects',
+            displayClass: 'Projects',
             // Now special options for the dialog popup
             InitialViewOperation: true,
             InitialName: 'PME_sys_operation',

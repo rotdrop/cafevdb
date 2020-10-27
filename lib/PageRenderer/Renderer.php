@@ -35,6 +35,16 @@ abstract class Renderer implements IRenderer
   {
     return '';
   }
+
+  public function cssPrefix()
+  {
+    return 'cafevdb-page';
+  }
+
+  public function cssClass()
+  {
+    return '';
+  }
 }
 
 // Local Variables: ***

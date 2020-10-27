@@ -24,15 +24,14 @@ namespace OCA\CAFEVDB\Templates;
 
 use OCA\CAFEVDB\Common\Navigation;
 
-$table = $renderer;
-$css_pfx = $renderer->CSS_PREFIX;
-$css_class = $renderer->CSS_CLASS;
+$css_pfx = $renderer->cssPrefix();
+$css_class = $renderer->cssClass();
 
 $nav = '';
 $nav .= Navigation::pageControlElement('all');
 $nav .= Navigation::pageControlElement('projects');
 $nav .= Navigation::pageControlElement('instruments');
-if (/*Config::isTreasurer()*/true) {
+if (/*Config::isTreasurer()*/true) { // @@TODO
   $nav .= Navigation::pageControlElement('insurances');
   $nav .= Navigation::pageControlElement('debit-mandates');
 }
@@ -42,11 +41,11 @@ echo $this->inc('part.common.header',
                 [ 'css-prefix' => $css_pfx,
                   'css-class' => $css_class,
                   'navigationcontrols' => $nav,
-                  'header' => $table->headerText() ]);
+                  'header' => $renderer->headerText() ]);
 
 
-// Issue the main part. The method will echo itself
-$table->render();
+// Issue the main part
+$renderer->render();
 
 // Close some still opened divs
 echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));

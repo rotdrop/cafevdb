@@ -35,9 +35,8 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
 
 /**Table generator for Musicians table. */
-class Musicians extends PMEPageRendererBase
+class Musicians extends PMETableViewBase
 {
-  const CSS_PREFIX = 'cafevdb-page';
   const CSS_CLASS = 'musicians';
   const TABLE = 'Musicians';
 
@@ -58,6 +57,8 @@ class Musicians extends PMEPageRendererBase
     $this->geoCodingService = $geoCodingService;
     $this->projectMode = false;
   }
+
+  public function cssClass() { return self::CSS_CLASS; }
 
   public function enableProjectMode()
   {
@@ -98,7 +99,7 @@ make sure that the musicians are also automatically added to the
 `global' musicians data-base (and not only to the project).");
     }
 
-    return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
+    return '<div class="'.$this->cssPrefix().'-header-text">'.$header.'</div>';
   }
 
   /** Show the underlying table. */
@@ -122,10 +123,10 @@ make sure that the musicians are also automatically added to the
     // is just the request parameter, while Template below will define
     // the value of $this->template after form submit.
     $opts['cgi']['persist'] = [
-      'Template' => $this->projectMode ? 'add-musicians' : 'all-musicians',
-      'Table' => $opts['tb'],
-      'DisplayClass' => 'Musicians',
-      'ClassArguments' => array($this->projectMode)
+      'template' => $this->projectMode ? 'add-musicians' : 'all-musicians',
+      'table' => $opts['tb'],
+      'displayClass' => 'Musicians',
+      'classArguments' => [ $this->projectMode ],
     ];
 
     // Name of field which is the unique key
@@ -617,7 +618,7 @@ make sure that the musicians are also automatically added to the
 
     if ($execute) {
       $this->execute($opts);
-    }else {
+    } else {
       $this->pme->setOptions($opts);
     }
   }

@@ -61,6 +61,11 @@ return [
       'defaults' => [ 'level' => 0 ]
     ],
     [
+      'name' => 'pme_table#load'
+      'url' => '/page/pme',
+      'verb' => 'POST',
+    ],
+    [
       'name' => 'page#debug',
       'url' => '/page/debug',
     ],
