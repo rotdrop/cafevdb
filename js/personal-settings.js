@@ -19,10 +19,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).ready(function() {
+$(function() {
 
   const container = $('.personal-settings');
-  const msgElement = container.find('.statusmessage');
+  var msgElement = $('form.personal-settings .statusmessage');
 
   const chosenInit = function(container) {
     container.find('select.pagerows').each(function(index) {
@@ -67,6 +67,7 @@ $(document).ready(function() {
   container.on('cafevdb:content-update', function(event) {
     if (event.target == this) {
       chosenInit($(this));
+      msgElement = $('form.personal-settings .statusmessage');
     }
   });
 
