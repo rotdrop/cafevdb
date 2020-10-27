@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\TableView;
+namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 

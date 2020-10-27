@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\TableView;
+namespace OCA\CAFEVDB\PageRenderer;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 
 /** Base for phpMyEdit based table-views. */
-abstract class PMETableViewBase extends Renderer implements ITableView
+abstract class PMEPageRendererBase extends Renderer implements IPageRenderer
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;

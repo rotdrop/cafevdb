@@ -75,7 +75,7 @@ class ConfigCheckService
     //, \OCA\CAFEVDB\Legacy\PME\PHPMyEdit $phpMyEdit
     //, \OCA\CAFEVDB\Database\Connection $dbConnection
     //, \OCA\CAFEVDB\Service\RequestParameterService $requestParameters
-    //, \OCA\CAFEVDB\TableView\Musicians $musiciansView
+    //, \OCA\CAFEVDB\PageRenderer\Musicians $musiciansView
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -98,7 +98,7 @@ class ConfigCheckService
     //   $this->logInfo(__METHOD__." ".print_r($row, true));
     // }
     //new \OCA\CAFEVDB\Legacy\PME\PHPMyEdit($connection, $pmeConfig);
-    //new \OCA\CAFEVDB\TableView\Musicians($configService, $requestParameters, $entityManager, $phpMyEdit);
+    //new \OCA\CAFEVDB\PageRenderer\Musicians($configService, $requestParameters, $entityManager, $phpMyEdit);
     // try {
     //   $musiciansView->disableProjectMode();
     //   ob_start();

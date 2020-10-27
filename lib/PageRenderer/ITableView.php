@@ -20,9 +20,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\TableView;
+namespace OCA\CAFEVDB\PageRenderer;
 
-interface ITableView extends IRenderer
+interface IPageRenderer extends IRenderer
 {
     /** Short title for heading. */
     public function shortTitle();

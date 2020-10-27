@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\TableView;
+namespace OCA\CAFEVDB\PageRenderer;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
 
 /**Table generator for Musicians table. */
-class Musicians extends PMETableViewBase
+class Musicians extends PMEPageRendererBase
 {
   const CSS_PREFIX = 'cafevdb-page';
   const CSS_CLASS = 'musicians';
