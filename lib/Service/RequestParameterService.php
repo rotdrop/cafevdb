@@ -56,11 +56,10 @@ class RequestParameterService implements \ArrayAccess, \Countable
   public function setParams($parameters): array {
     $old = $this->parameters;
     $this->parameters = array_merge([ 'renderAs' => 'user',
-                                      'template' => 'blog',
                                       'projectName' => '',
                                       'projectId' => -1,
                                       'musicianId' => -1 ],
-                                    $paramers);
+                                    $parameters);
     return $old;
   }
 
