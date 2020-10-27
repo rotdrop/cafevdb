@@ -7,13 +7,15 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use OCP\ILogger;
+
 /**
  * Instrumente
  *
  * @ORM\Table(name="Instruments")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository")
  */
-class Instrument
+class Instrument implements \ArrayAccess
 {
     use CAFEVDB\Traits\ArrayTrait;
     use CAFEVDB\Traits\FactoryTrait;
@@ -30,7 +32,7 @@ class Instrument
     /**
      * @var string
      *
-     * @ORM\Column(name="Instrument", type="string", length=64, nullable=false, unique=true)
+     * @ORM\Column(name="Instrument", type="string", length=64, nullable=false)
      */
     private $instrument;
 
@@ -59,7 +61,7 @@ class Instrument
     private $projects;
 
     /**
-     * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments")
+     * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EAGER")
      * @ORM\JoinTable(
      *   name="instrument_family",
      *   joinColumns={@ORM\JoinColumn(name="instrument_id", referencedColumnName="Id", onDelete="CASCADE")},
@@ -69,6 +71,7 @@ class Instrument
     private $families;
 
     public function __construct() {
+        \OCP\Util::writeLog('cafevdb', __METHOD__, ILogger::INFO);
         $this->arrayCTOR();
         $this->musicians = new ArrayCollection();
         $this->projects = new ArrayCollection();
@@ -116,9 +119,9 @@ class Instrument
      *
      * @return Instrumente
      */
-    public function setFamilie($familie)
+    public function setFamilies($families)
     {
-        $this->familie = $familie;
+        $this->families = $families;
 
         return $this;
     }
@@ -128,9 +131,9 @@ class Instrument
      *
      * @return array
      */
-    public function getFamilie()
+    public function getFamilies()
     {
-        return $this->familie;
+        return $this->families;
     }
 
     /**

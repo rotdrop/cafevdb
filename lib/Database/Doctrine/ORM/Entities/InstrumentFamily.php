@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="InstrumentFamilies")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentFamiliesRepository")
  */
-class InstrumentFamily
+class InstrumentFamily implements \ArrayAccess
 {
     use CAFEVDB\Traits\ArrayTrait;
     use CAFEVDB\Traits\FactoryTrait;

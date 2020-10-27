@@ -21,7 +21,7 @@ trait ArrayTrait
         $this->keys = array_map(function($property) {
             $doc = $property->getDocComment();
             $name = $property->getName();
-            if (strpos($doc, '@ORM\Column') !== false) {
+            if (preg_match('/@ORM\\\\(Column|(Many|One)To(Many|One))/', $doc)) {
                 return $name;
             }
             return false;
@@ -32,6 +32,9 @@ trait ArrayTrait
     }
 
     public function offsetExists($offset):bool {
+        if (empty($this->keys)) {
+            $this->arrayCTOR();
+        }
         $offset = strtolower((string)$offset);
         return is_array($this->keys) && in_array($offset, $this->keys);
     }

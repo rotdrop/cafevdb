@@ -45,6 +45,9 @@ class EntityManager extends EntityManagerDecorator
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  /** @var \Doctrine\DBAL\Logging\DebugStack */
+  private $logger;
+
   /** @var \Doctrine\ORM\EntityManager */
   private $entityManager;
 
@@ -130,6 +133,11 @@ class EntityManager extends EntityManagerDecorator
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config);
 
     return $entityManager;
+  }
+
+  public function getLogger()
+  {
+    return $this->logger;
   }
 }
 
