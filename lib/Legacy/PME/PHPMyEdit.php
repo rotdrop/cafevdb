@@ -45,6 +45,8 @@ class PHPMyEdit extends \phpMyEdit
   private $errorInfo = null;
   private $overrideOptions;
 
+  private $debug;
+
   /**Override constructor, delay most of the actual work to the
    **execute() method.
    *
@@ -62,6 +64,7 @@ class PHPMyEdit extends \phpMyEdit
       throw new \Exception("empty");
     }
     $this->dbh = $connection;
+    $this->debug = false;
 
     $this->overrideOptions = [
       'dbh' => $this->connection,
@@ -82,6 +85,7 @@ class PHPMyEdit extends \phpMyEdit
       $this->options = $options['options'];
     }
     $this->labels = $this->make_language_labels($options['language']?:null);
+    $this->debug = isset($options['debug']) && $options['debug'];
   }
 
   public function getOptions()
@@ -101,6 +105,7 @@ class PHPMyEdit extends \phpMyEdit
   public function execute($opts = [])
   {
     $opts = Util::arrayMergeRecursive($this->defaultOptions, $opts, $this->overrideOptions);
+    $this->debug = isset($opts['debug']) && $opts['debug'];
     parent::__construct($opts); // oh oh
     parent::execute();
   }
@@ -162,6 +167,10 @@ class PHPMyEdit extends \phpMyEdit
 
   function myquery($query, $line = 0, $debug = false)
   {
+    if ($debug || $this->debug) {
+      $line = intval($line);
+      echo '<h4>MySQL query at line ',$line,'</h4>',htmlspecialchars($query),'<hr size="1" />',"\n";
+    }
     try {
       $stmt = $this->dbh->executeQuery($query);
       $this->affectedRows = $stmt->rowCount();
