@@ -31,6 +31,8 @@ use OCP\IRequest;
 use OCP\ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 
 class PmeTableController extends Controller {
@@ -51,9 +53,6 @@ class PmeTableController extends Controller {
 
   /** @var ILogger */
   protected $logger;
-
-  /** @var HistoryService */
-  private $historyService;
 
   public function __construct(
     $appName
