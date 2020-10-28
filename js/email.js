@@ -180,7 +180,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                var requiredResponse = historySnapshot
                                     ? [ 'filterHistory' ]
                                     : [ 'recipientsOptions', 'missingEmailAddresses', 'filterHistory' ];
-               if (!CAFEVDB.ajaxErrorHandler(data, requiredResponse)) {
+               if (!CAFEVDB.validateAjaxResponse(data, requiredResponse)) {
                  return false;
                }
                if (historySnapshot) {
@@ -424,7 +424,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                success: function(data) {
                var postponeEnable = false;
                $.fn.cafevTooltip.remove();
-               if (!CAFEVDB.ajaxErrorHandler(
+               if (!CAFEVDB.validateAjaxResponse(
                  data,
                  [ 'projectId', 'projectName', 'request', 'requestData' ],
                  validateUnlock)) {
@@ -778,7 +778,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       $.post(OC.filePath('cafevdb', 'ajax/email', 'preview.php'),
              formPost,
              function(data) {
-               if (!CAFEVDB.ajaxErrorHandler(
+               if (!CAFEVDB.validateAjaxResponse(
                  data, [ 'contents' ], function() {
                                          CAFEVDB.Page.busyIcon(false);
                                        })) {
@@ -1192,7 +1192,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       $.post(OC.filePath('cafevdb', 'ajax/email', 'addressbook.php'),
              post,
              function(data) {
-               if (!CAFEVDB.ajaxErrorHandler(data, [
+               if (!CAFEVDB.validateAjaxResponse(data, [
                  'contents'
                ])) {
                  return false;
@@ -1221,13 +1221,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                        $.post(OC.filePath('cafevdb', 'ajax/email', 'savecontacts.php'),
                               innerPost,
                               function(data) {
-                                if (!CAFEVDB.ajaxErrorHandler(data, [])) {
+                                if (!CAFEVDB.validateAjaxResponse(data, [])) {
                                   return false;
                                 }
                                 $.post(OC.filePath('cafevdb', 'ajax/email', 'addressbook.php'),
                                        post,
                                        function(data) {
-                                         if (!CAFEVDB.ajaxErrorHandler(data, ['contents'])) {
+                                         if (!CAFEVDB.validateAjaxResponse(data, ['contents'])) {
                                            return false;
                                          }
                                          var newOptions = $(data.data.contents).html();
@@ -1326,7 +1326,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
              var containerId = 'emailformdialog';
              var dialogHolder;
 
-             if (!CAFEVDB.ajaxErrorHandler(
+             if (!CAFEVDB.validateAjaxResponse(
                data, ['contents'], function() {
                                      self.active = false;
                                      afterInit(false);
@@ -1450,7 +1450,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                      $.post(OC.filePath('cafevdb', 'ajax/email', 'composer.php'),
                             post,
                             function(data) {
-                              if (!CAFEVDB.ajaxErrorHandler(data, [
+                              if (!CAFEVDB.validateAjaxResponse(data, [
                                 'projectId', 'projectName', 'request', 'requestData'
                               ])) {
                                 return false;

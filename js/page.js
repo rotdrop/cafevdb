@@ -82,7 +82,7 @@ var CAFEVDB = CAFEVDB || {};
     })
     .done(function(data) {
       //console.log(data);
-      if (!CAFEVDB.ajaxErrorHandler(
+      if (!CAFEVDB.validateAjaxResponse(
         { 'data': data,
           'status': 'success'
         }, [ 'contents',

@@ -44,7 +44,7 @@ var CAFEVDB = CAFEVDB || {};
         $.post(OC.filePath('cafevdb', 'ajax/instruments', 'adjustInstrumentation.php'),
                post,
                function (data) {
-                 if (!CAFEVDB.ajaxErrorHandler(data, [])) {
+                 if (!CAFEVDB.validateAjaxResponse(data, [])) {
                    // do nothing
                  } else if (data.data.message != '') {
                    CAFEVDB.Notification.show(data.data.message);

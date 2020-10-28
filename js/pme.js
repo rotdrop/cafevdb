@@ -369,24 +369,21 @@ var PHPMYEDIT = PHPMYEDIT || {};
         container.find(pme.navigationSelector('reload')).removeClass('loading');
       };
       $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
-	.fail(function(xhr, status, errorThrown) {
-	  const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
-
-	  // @@TODO display notifications
+      .fail(function(xhr, status, errorThrown) {
+        if (!CAFEVDB.handleAjaxError(xhr, status, errorThrown)) {
 	  cleanUp();
-	})
-	.done(function (data) {
-	  if (!CAFEVDB.ajaxErrorHandler({ 'data': data,
-					  'status': 'success' },
-					[ 'contents' ])) {
-	    cleanup();
-	    return;
-          }
+        }
+      })
+      .done(function (data) {
+	if (!CAFEVDB.validateAjaxResponse(data, [ 'contents' ])) {
+	  cleanup();
+	  return;
+        }
 
-          pme.notifySqlError(data.data);
+        pme.notifySqlError(data.data);
 
-          pme.tableDialogReplace(container, data.data.contents, options, callback);
-        });
+        pme.tableDialogReplace(container, data.data.contents, options, callback);
+      });
     });
     return false;
   };
@@ -582,57 +579,56 @@ var PHPMYEDIT = PHPMYEDIT || {};
             dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
 
 	    const cleanup = function() {
-              dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+                              dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+                              container.find(pme.navigationSelector('reload')).removeClass('loading');
+                              CAFEVDB.Page.busyIcon(false);
+	                    };
+	    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
+	    .fail(function(xhr, status, errorThrown) {
+              if (!CAFEVDB.handleAjaxError(xhr, status, errorThrown)) {
+	        cleanUp();
+              }
+	    })
+	    .done(function (data) {
+	      if (!CAFEVDB.validateAjaxResponse({ 'data': data,
+						  'status': 'success' },
+					        [ 'contents' ])) {
+		cleanup();
+		return;
+	      }
+              pme.notifySqlError(data.data);
+
+              var op = $(data.data.contents).find(pme.pmeSysNameSelector('input', 'op_name'));
+              if (op.length > 0 &&
+                  (op.val() === 'add' || op.val() === 'delete')) {
+                // Some error occured. Stay in the given mode.
+
+                $('#notification').text('An error occurred.'
+                                       + ' The data has not been saved.'
+                                       + ' Unfortunately, no further information is available.'
+                                       + ' Sorry for that.');
+                $('#notification').fadeIn();
+                //hide notification after 5 sec
+                setTimeout(function() {
+                  $('#notification').fadeOut();
+                }, 10000);
+                pme.tableDialogReplace(container, data.data.contents, options, callback);
+                return;
+              }
+
+              if (options.InitialViewOperation && deleteButton.length <= 0) {
+                // return to initial view, but not after deletion
+                dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+                options.ReloadName = options.InitialName;
+                options.ReloadValue = options.InitialValue;
+                pme.tableDialogReload(options, callback);
+              } else {
+                console.log('trigger close dialog');
+                container.dialog('close');
+              }
               container.find(pme.navigationSelector('reload')).removeClass('loading');
               CAFEVDB.Page.busyIcon(false);
-	    };
-	    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
-	      .fail(function(xhr, status, errorThrown) {
-		const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
-
-		// @@TODO display notifications
-		cleanUp();
-	      })
-	      .done(function (data) {
-		if (!CAFEVDB.ajaxErrorHandler({ 'data': data,
-						'status': 'success' },
-					      [ 'contents' ])) {
-		  cleanup();
-		  return;
-		}
-                pme.notifySqlError(data.data);
-
-                var op = $(data.data.contents).find(pme.pmeSysNameSelector('input', 'op_name'));
-                if (op.length > 0 &&
-                    (op.val() === 'add' || op.val() === 'delete')) {
-                  // Some error occured. Stay in the given mode.
-
-                  $('#notification').text('An error occurred.'
-                                          + ' The data has not been saved.'
-                                          + ' Unfortunately, no further information is available.'
-                                          + ' Sorry for that.');
-                  $('#notification').fadeIn();
-                  //hide notification after 5 sec
-                  setTimeout(function() {
-                    $('#notification').fadeOut();
-                  }, 10000);
-                  pme.tableDialogReplace(container, data.data.contents, options, callback);
-                  return false;
-                }
-
-                if (options.InitialViewOperation && deleteButton.length <= 0) {
-                  // return to initial view, but not after deletion
-                  dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
-                  options.ReloadName = options.InitialName;
-                  options.ReloadValue = options.InitialValue;
-                  pme.tableDialogReload(options, callback);
-                } else {
-                  console.log('trigger close dialog');
-                  container.dialog('close');
-                }
-                container.find(pme.navigationSelector('reload')).removeClass('loading');
-                CAFEVDB.Page.busyIcon(false);
-              });
+            });
           });
         });
       return false;
@@ -743,145 +739,152 @@ var PHPMYEDIT = PHPMYEDIT || {};
     } else {
       post += '&' + $.param(tableOptions);
     }
-    $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
-           post,
-           function (data) {
-             if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
-               CAFEVDB.Page.busyIcon(false);
-               pme.dialogOpen[containerCSSId] = false;
-               return false;
-             }
+    const cleanup = function() {
+      CAFEVDB.Page.busyIcon(false);
+      pme.dialogOpen[containerCSSId] = false;
+    };
+    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
+    .fail(function(xhr, status, errorThrown) {
+      if (!CAFEVDB.handleAjaxError(xhr, status, errorThrown)) {
+	cleanUp();
+      }
+    })
+    .done(function (data) {
+      if (!CAFEVDB.validateAjaxResponse(data, [ 'contents' ])) {
+        cleanup();
+        return;
+      }
 
-             pme.notifySqlError(data.data);
+      pme.notifySqlError(data.data);
 
-             var containerSel = '#'+containerCSSId;
-             var dialogHolder;
-             dialogHolder = $('<div id="'+containerCSSId+'" class="resize-target"></div>');
-             dialogHolder.html(data.data.contents);
-             dialogHolder.data('AmbientContainer', tableOptions.AmbientContainerSelector);
+      var containerSel = '#'+containerCSSId;
+      var dialogHolder;
+      dialogHolder = $('<div id="'+containerCSSId+'" class="resize-target"></div>');
+      dialogHolder.html(data.data.contents);
+      dialogHolder.data('AmbientContainer', tableOptions.AmbientContainerSelector);
 
-             dialogHolder.find(pme.navigationSelector('reload')).addClass('loading');
-             if (tableOptions.ModalDialog) {
-               CAFEVDB.modalizer(true);
-             }
+      dialogHolder.find(pme.navigationSelector('reload')).addClass('loading');
+      if (tableOptions.ModalDialog) {
+        CAFEVDB.modalizer(true);
+      }
 
-             var popup = dialogHolder.cafevDialog({
-               title: dialogHolder.find(pme.pmeClassSelector('span', 'short-title')).html(),
-               position: pme.popupPosition,
-               width: 'auto',
-               height: 'auto',
-               modal: false, //tableOptions.ModalDialog,
-               closeOnEscape: false,
-               dialogClass: pme.pmeToken('table-dialog')+' custom-close resize-target',
-               resizable: false,
-               dragStart: function(event) {
-                 var self = $(this);
-                 var widget = self.dialog('widget');
-                 var cssWidth = widget.prop('style').width;
-                 if (cssWidth === 'auto') {
-                   self.data('drag-width-tweak', true);
-                   widget.width(widget.width()+1); // copy with jquery-ui + ff drag bug
-                 }
-                },
-               resize_: function() {
-                 console.log('jq resize');
-               },
-               open: function() {
+      const popup = dialogHolder.cafevDialog({
+        title: dialogHolder.find(pme.pmeClassSelector('span', 'short-title')).html(),
+        position: pme.popupPosition,
+        width: 'auto',
+        height: 'auto',
+        modal: false, //tableOptions.ModalDialog,
+        closeOnEscape: false,
+        dialogClass: pme.pmeToken('table-dialog')+' custom-close resize-target',
+        resizable: false,
+        dragStart: function(event) {
+          var self = $(this);
+          var widget = self.dialog('widget');
+          var cssWidth = widget.prop('style').width;
+          if (cssWidth === 'auto') {
+            self.data('drag-width-tweak', true);
+            widget.width(widget.width()+1); // copy with jquery-ui + ff drag bug
+          }
+        },
+        resize_: function() {
+          console.log('jq resize');
+        },
+        open: function() {
 
-                 //var tmp = CAFEVDB.modalWaitNotification("BlahBlah");
-                 //tmp.dialog('close');
-                 var dialogHolder = $(this);
-                 var dialogWidget = dialogHolder.dialog('widget');
+          //var tmp = CAFEVDB.modalWaitNotification("BlahBlah");
+          //tmp.dialog('close');
+          var dialogHolder = $(this);
+          var dialogWidget = dialogHolder.dialog('widget');
 
-                 //dialogWidget.draggable('option', 'containment', '#content');
+          //dialogWidget.draggable('option', 'containment', '#content');
 
-                 CAFEVDB.dialogToBackButton(dialogHolder);
-                 CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
-                   event.preventDefault();
-                   var cancelButton = container.find(pme.pmeClassSelector('input', 'cancel')).first();
-                   if (cancelButton.length > 0) {
-                     event.stopImmediatePropagation();
-                     cancelButton.trigger('click');
-                   } else {
-                     dialogHolder.dialog('close');
-                   }
-                   return false;
-                 });
+          CAFEVDB.dialogToBackButton(dialogHolder);
+          CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
+            event.preventDefault();
+            var cancelButton = container.find(pme.pmeClassSelector('input', 'cancel')).first();
+            if (cancelButton.length > 0) {
+              event.stopImmediatePropagation();
+              cancelButton.trigger('click');
+            } else {
+              dialogHolder.dialog('close');
+            }
+            return false;
+          });
 
-                 dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
+          dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
 
-                 // general styling
-                 pme.init(containerSel);
-                 console.log(containerSel);
+          // general styling
+          pme.init(containerSel);
+          console.log(containerSel);
 
-                 var resizeHandler = function(parameters) {
-                   dialogHolder.dialog('option', 'height', 'auto');
-                   dialogHolder.dialog('option', 'width', 'auto');
-                   var newHeight = dialogWidget.height()
-                                 - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
-                   newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
-                   //alert("Setting height to " + newHeight);
-                   dialogHolder.height(newHeight);
-                   console.log('pme-resize');
-                 };
+          var resizeHandler = function(parameters) {
+              dialogHolder.dialog('option', 'height', 'auto');
+                dialogHolder.dialog('option', 'width', 'auto');
+                var newHeight = dialogWidget.height()
+                            - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
+                newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
+                //alert("Setting height to " + newHeight);
+                dialogHolder.height(newHeight);
+                console.log('pme-resize');
+              };
 
-                 pme.tableDialogHandlers(tableOptions, function(parameters) {
-                   dialogHolder.css('height', 'auto');
-                   CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
-                     pme.transposeReady(containerSel);
-                     pme.tableLoadCallback(tableOptions.displayClass, containerSel, parameters, function() {
-                       resizeHandler(parameters);
-                       dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
-                       dialogHolder.dialog('moveToTop');
-                       CAFEVDB.toolTipsInit(containerSel);
-                       CAFEVDB.Page.busyIcon(false);
-                       dialogHolder.find(pme.navigationSelector('reload')).removeClass('loading');
-                     });
-                     CAFEVDB.pmeTweaks(dialogHolder);
-                     $.fn.cafevTooltip.remove();
-                   });
-                 });
+          pme.tableDialogHandlers(tableOptions, function(parameters) {
+            dialogHolder.css('height', 'auto');
+            CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
+              pme.transposeReady(containerSel);
+              pme.tableLoadCallback(tableOptions.displayClass, containerSel, parameters, function() {
+                resizeHandler(parameters);
+                dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+                dialogHolder.dialog('moveToTop');
+                CAFEVDB.toolTipsInit(containerSel);
+                CAFEVDB.Page.busyIcon(false);
+                dialogHolder.find(pme.navigationSelector('reload')).removeClass('loading');
+              });
+              CAFEVDB.pmeTweaks(dialogHolder);
+              $.fn.cafevTooltip.remove();
+            });
+          });
 
-                 // install delegate handlers on the widget s.t. we
-                 // can call .off() on the container
-                 dialogWidget.on('resize', containerSel, resizeHandler);
-                 dialogWidget.on('pmedialog:changed', containerSel, function(event) {
-                   tableOptions.modified = true;
-                   return true; // let it bubble upwards ... actually: only the widget and body ;)
-                 });
-               },
-               close: function(event) {
-                 $.fn.cafevTooltip.remove();
-                 var dialogHolder = $(this);
+          // install delegate handlers on the widget s.t. we
+          // can call .off() on the container
+          dialogWidget.on('resize', containerSel, resizeHandler);
+          dialogWidget.on('pmedialog:changed', containerSel, function(event) {
+            tableOptions.modified = true;
+            return true; // let it bubble upwards ... actually: only the widget and body ;)
+          });
+        },
+        close: function(event) {
+           $.fn.cafevTooltip.remove();
+           var dialogHolder = $(this);
 
-                 dialogHolder.find('iframe').removeAttr('src');
+          dialogHolder.find('iframe').removeAttr('src');
 
-                 //alert($.param(tableOptions));
-                 if (tableOptions.modified === true) {
-                   //alert("Changed, triggerring on "+tableOptions.AmbientContainerSelector);
-                   $(tableOptions.AmbientContainerSelector).trigger('pmedialog:changed');
-                   pme.submitOuterForm(tableOptions.AmbientContainerSelector);
-                 }
+          //alert($.param(tableOptions));
+          if (tableOptions.modified === true) {
+            //alert("Changed, triggerring on "+tableOptions.AmbientContainerSelector);
+            $(tableOptions.AmbientContainerSelector).trigger('pmedialog:changed');
+            pme.submitOuterForm(tableOptions.AmbientContainerSelector);
+          }
 
-                 dialogHolder.dialog('destroy');
+          dialogHolder.dialog('destroy');
 
-                 // At least konq. has the bug that removing a form
-                 // with submit inputs will submit the form. Very strange.
-                 dialogHolder.find('form input[type="submit"]').remove();
-                 dialogHolder.remove();
+          // At least konq. has the bug that removing a form
+          // with submit inputs will submit the form. Very strange.
+          dialogHolder.find('form input[type="submit"]').remove();
+          dialogHolder.remove();
 
-                 // Remove modal plane if appropriate
-                 CAFEVDB.modalizer(false);
+          // Remove modal plane if appropriate
+          CAFEVDB.modalizer(false);
 
-                 pme.dialogOpen[containerCSSId] = false;
+          pme.dialogOpen[containerCSSId] = false;
 
-                 CAFEVDB.unfocus();
+          CAFEVDB.unfocus();
 
-                 return false;
-               }
-             });
-             return false;
-           });
+          return false;
+        }
+      });
+      return;
+    });
     return true;
   };
 
@@ -939,20 +942,21 @@ var PHPMYEDIT = PHPMYEDIT || {};
       post += '&' + $.param(obj);
     }
 
-    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
-    .fail(function(xhr, status, errorThrown) {
-      const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
-      // @@TODO display notifications
+    const cleanup = function() {
       CAFEVDB.Page.busyIcon(false);
       CAFEVDB.modalizer(false);
+    };
+    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
+    .fail(function(xhr, status, errorThrown) {
+      if (!CAFEVDB.handleAjaxError(xhr, status, errorThrown)) {
+	cleanUp();
+      }
     })
     .done(function (data) {
-      if (!CAFEVDB.ajaxErrorHandler({ 'data': data,
-                                      'status': 'success' },
-                                    [ 'contents', 'history' ])) {
-        // re-enable on error
-        CAFEVDB.Page.busyIcon(false);
-        CAFEVDB.modalizer(false);
+      if (!CAFEVDB.validateAjaxResponse({ 'data': data,
+                                          'status': 'success' },
+                                        [ 'contents', 'history' ])) {
+        cleanup();
 	return;
       }
 

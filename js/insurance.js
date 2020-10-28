@@ -100,7 +100,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                            post,
                            function(data) {
                                var key;
-                               if (!CAFEVDB.ajaxErrorHandler(data,
+                               if (!CAFEVDB.validateAjaxResponse(data,
                                                              Object.keys(textInputs),
                                                              validateUnlock)) {
                                    for (key in textInputs) {

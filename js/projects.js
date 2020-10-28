@@ -365,7 +365,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                     $.post(OC.filePath('cafevdb', 'ajax/projects', 'verifyName.php'),
                            post,
                            function (data) {
-                               if (!CAFEVDB.ajaxErrorHandler(data, [
+                               if (!CAFEVDB.validateAjaxResponse(data, [
                                    'projectName', 'projectYear'
                                    ], function() {})) {
                                    if (name.val() == '') {
@@ -479,7 +479,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             $.post(OC.filePath('cafevdb', 'ajax/projects', 'web-articles.php'),
                 post,
                 function (data) {
-                    if (!CAFEVDB.ajaxErrorHandler(data, [])) {
+                    if (!CAFEVDB.validateAjaxResponse(data, [])) {
                         // do nothing
                     } else if (data.data.message != '') {
                         CAFEVDB.Notification.showHtml(data.data.message);

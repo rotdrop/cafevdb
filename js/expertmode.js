@@ -67,7 +67,7 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/expertmode/action/setupdb'), { 'data': {} })
       .done(function(data) {
 	console.log(data);
-             if (!CAFEVDB.ajaxErrorHandler(
+             if (!CAFEVDB.validateAjaxResponse(
 	       { 'data': data,
 		 'status': 'success'
 	       }, ['success', 'error'])) {
