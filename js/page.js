@@ -59,12 +59,7 @@ var CAFEVDB = CAFEVDB || {};
     }
     $.post(OC.generateUrl('/apps/cafevdb/page/' + action + '/' + parameter), post)
     .fail(function(xhr, status, errorThrown) {
-      const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
-      OC.dialogs.alert(message, t('cafevdb', 'Error'));
-      CAFEVDB.modalizer(false),
-      Page.busyIcon(false);
-      const errorData = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
-      console.info(errorData);
+      const errorData = CAFEVDB.handleAjaxError(xhr, status, errorThrown);
       // If the error response contains history data, use it. Othewise
       // reset the history
       if (action == 'recall') {
@@ -82,12 +77,7 @@ var CAFEVDB = CAFEVDB || {};
     })
     .done(function(data) {
       //console.log(data);
-      if (!CAFEVDB.validateAjaxResponse(
-        { 'data': data,
-          'status': 'success'
-        }, [ 'contents',
-             'history' ])
-         ) {
+      if (!CAFEVDB.validateAjaxResponse(data, [ 'contents', 'history' ])) {
         // re-enable inputs on error
         if (false) {
           container.find('input').prop('disabled', false);
@@ -146,6 +136,19 @@ var CAFEVDB = CAFEVDB || {};
     //alert('history: '+CAFEVDB.Page.historyPosition+' size '+CAFEVDB.Page.historySize);
     redo.prop('disabled', CAFEVDB.Page.historyPosition == 0);
     undo.prop('disabled', CAFEVDB.Page.historySize - CAFEVDB.Page.historyPosition <= 1);
+  };
+
+  /**
+   * Optain the service-key for querying the app-container for the
+   * renderer class for the given template.
+   */
+  Page.renderTag = 'template:';
+  Page.templateRenderer = function(template) {
+    return Page.renderTag + template;
+  }
+
+  Page.templateFromRenderer = function(templateRenderer) {
+    return templateRenderer.replace(Page.renderTag, '');
   };
 
   CAFEVDB.Page = Page;

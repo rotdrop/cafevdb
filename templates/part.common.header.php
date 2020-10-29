@@ -64,6 +64,7 @@ script($appName, 'page');
 script($appName, 'blog');
 script($appName, 'events');
 script($appName, 'pme');
+script($appName, 'musicians');
 script($appName, 'personal-settings');
 script($appName, 'settings');
 script($appName, 'expertmode');
@@ -89,6 +90,8 @@ script($appName, '../3rdparty/js/tinymce/jquery.tinymce.min');
 script($appName, '../3rdparty/js/tinymceinit');
 // CKEditor stuff
 script($appName, '../node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor');
+
+script($appName, '../3rdparty/js/imagesloaded/imagesloaded.pkgd.min');
 
 //script($appName, '../3rdparty/js/ckeditor/ckeditor.min');
 //script($appName, '../3rdparty/js/ckeditor/adapters/jquery');

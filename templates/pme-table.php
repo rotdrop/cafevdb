@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,40 +22,18 @@
 
 /**@file
  * Load a PME table without outer controls, intended usage are
- * jQuery dialogs. It is assumed that $_['DisplayClass'] can be
+ * jQuery dialogs. It is assumed that $_['displayClass'] can be
  * constructed from $_['ClassArguments'] and provides a method
  * display() which actually echos the HTML code to show.
  */
 
-namespace CAFEVDB {
+namespace OCA\CAFEVDB;
 
-  Error::exceptions(true);
+$css   = $class.' '.$template;
 
-  try {
-    $class = $_['DisplayClass'];
-    $args  = $_['ClassArguments'];
-    $css   = $class.' '.$_['template'];
+echo '<div id="pme-table-container" class="pme-table-container '.$css.'" style="height:auto;">';
+$renderer->render();
+echo '</div>';
 
-    if (isset($args['_'])) {
-      foreach($args['_'] as $key) {
-        $args[$key] = $_[$key];
-      }
-      unset($args['_']);
-    }
-
-    $reflect = new \ReflectionClass('\\CAFEVDB\\'.$class);
-    $instance = $reflect->newInstanceArgs($args);
-
-    echo '<div id="pme-table-container" class="pme-table-container '.$css.'" style="height:auto;">';
-    $instance->display();
-    echo '</div>';
-
-    // add a hidden "short title" span
-    echo '<span id="pme-short-title" class="pme-short-title" style="display:none;">'.$instance->shortTitle().'</span>';
-  } catch (\Exception $e) {
-    throw $e;
-  }
-
-} // namespace
-
-?>
+// add a hidden "short title" span
+echo '<span id="pme-short-title" class="pme-short-title" style="display:none;">'.$renderer->shortTitle().'</span>';

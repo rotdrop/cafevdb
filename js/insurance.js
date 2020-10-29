@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -210,7 +210,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
 
 $(document).ready(function(){
 
-    PHPMYEDIT.addTableLoadCallback('InsuranceRates', {
+    PHPMYEDIT.addTableLoadCallback('insurance-rates', {
         callback: function(selector, parameters, resizeCB) {
             CAFEVDB.Insurances.pmeFormInit(selector);
             resizeCB();
@@ -219,7 +219,7 @@ $(document).ready(function(){
         parameters: []
     });
 
-    PHPMYEDIT.addTableLoadCallback('InsuranceBrokers', {
+    PHPMYEDIT.addTableLoadCallback('insurance-brokers', {
         callback: function(selector, parameters, resizeCB) {
             CAFEVDB.Insurances.pmeFormInit(selector);
             resizeCB();
@@ -228,7 +228,7 @@ $(document).ready(function(){
         parameters: []
     });
 
-    PHPMYEDIT.addTableLoadCallback('InstrumentInsurance', {
+    PHPMYEDIT.addTableLoadCallback('instrument-insurance', {
         callback: function(selector, parameters, resizeCB) {
             CAFEVDB.exportMenu(selector);
 
@@ -253,9 +253,9 @@ $(document).ready(function(){
     });
 
     CAFEVDB.addReadyCallback(function() {
-        var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="displayClass"]');
-        if (dpyClass.length > 0 &&
-            (dpyClass.val() == 'InstrumentInsurance' || dpyClass.val() == 'InsurancRates')) {
+        const renderer = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="renderTemplate"]').val();
+        if (renderer == CAFEVDB.Page.templateRenderer('instrument-insurance')
+            || renderer == CAFEVDB.Page.templateRenderer('insuranc-rates')) {
           CAFEVDB.Insurances.pmeFormInit(PHPMYEDIT.defaultSelector);
         }
     });

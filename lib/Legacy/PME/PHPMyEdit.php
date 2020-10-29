@@ -222,6 +222,10 @@ class PHPMyEdit extends \phpMyEdit
     return $recordId > 0 ? $recordId : -1;
   }
 
+  public function cgiSysName($suffix)
+  {
+    return $this->cgi['prefix']['sys'].$suffix;
+  }
 }
 
 // Local Variables: ***

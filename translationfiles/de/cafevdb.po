@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
 "POT-Creation-Date: 2020-10-28 19:12+0100\n"
-"PO-Revision-Date: 2020-10-28 19:11+0100\n"
+"PO-Revision-Date: 2020-10-28 20:04+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1918,10 +1918,8 @@ msgid "Permanent Redirect (experimental)"
 msgstr ""
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/js/cafevdb.js:1127
-#, fuzzy
-#| msgid "HTTP Request"
 msgid "Bad Request"
-msgstr "HTTP Anfragen"
+msgstr "Ungültige Anfrage"
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/js/cafevdb.js:1128
 msgid "Unauthorized"

@@ -96,10 +96,11 @@ class Instruments extends PMETableViewBase
 
     //$opts['debug'] = true;
 
+    $template = 'instruments';
     $opts['cgi']['persist'] = array(
-      'template' => 'instruments',
+      'template' => $template,
       'table' => $opts['tb'],
-      'displayClass' => 'Instruments',
+      'templateRenderer' => 'template:'.$template,
       'recordsPerPage' => $recordsPerPage,
       );
 

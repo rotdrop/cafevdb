@@ -37,6 +37,7 @@ use \OCP\ILogger;
 
 class ConfigService {
   use \OCA\CAFEVDB\Traits\SessionTrait;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /****************************************************************************
    *
@@ -202,7 +203,7 @@ class ConfigService {
   private $loginUserId;
 
   /** @var IL10N */
-  private $l;
+  protected $l;
 
   /** @var IL10NFactory */
   private $l10NFactory;
@@ -220,7 +221,7 @@ class ConfigService {
   private $secureRandom;
 
   /** @var ILogger */
-  private $logger;
+  protected $logger;
 
   public function __construct(
     $appName,
@@ -500,42 +501,6 @@ class ConfigService {
     $this->setUser($oldUser);
 
     return $result;
-  }
-
-  /*
-   ****************************************************************************
-   *
-   * logging
-   *
-   */
-
-  public function log(int $level, string $message, array $context = []) {
-    return $this->logger->log($level, $message, $context);
-  }
-
-  public function logException($exception, $message = null) {
-    empty($message) && ($message = $this->l->t("Caught an Exception"));
-    $this->logger->logException($exception, [ 'message' => $message ]);
-  }
-
-  public function logError(string $message, array $context = []) {
-    return $this->log(ILogger::ERROR, $message, $context);
-  }
-
-  public function logDebug(string $message, array $context = []) {
-    return $this->log(ILogger::DEBUG, $message, $context);
-  }
-
-  public function logInfo(string $message, array $context = []) {
-    return $this->log(ILogger::INFO, $message, $context);
-  }
-
-  public function logWarn(string $message, array $context = []) {
-    return $this->log(ILogger::WARN, $message, $context);
-  }
-
-  public function logFatal(string $message, array $context = []) {
-    return $this->log(ILogger::FATAL, $message, $context);
   }
 
   /*

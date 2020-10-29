@@ -192,11 +192,20 @@ class PageController extends Controller {
     //Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
 
     $template = $this->getTemplate($template);
-    $renderer = $this->appContainer->query('template:'.$template);
-    if (empty($renderer)) {
-      return self::response(
-        $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
-        Http::INTERNAL_SERVER_ERROR);
+    try {
+      $renderer = $this->appContainer->query('template:'.$template);
+      if (empty($renderer)) {
+        return self::response(
+          $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
+          Http::INTERNAL_SERVER_ERROR);
+      }
+    } catch (\Throwable $t) {
+      $this->logException($t, __METHOD__);
+      return self::grumble([
+        'message' => $this->l->t('Error, caught an exception'),
+        'exception' => $t->getFile().':'.$t->getLine().' '.$t->getMessage(),
+        'trace' => $t->getTraceAsString(),
+      ]);
     }
 
     $templateParameters = [

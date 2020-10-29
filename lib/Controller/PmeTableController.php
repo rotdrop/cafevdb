@@ -26,6 +26,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\IAppContainer;
 use OCP\IUserSession;
 use OCP\IRequest;
 use OCP\ILogger;
@@ -34,6 +35,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
 
 class PmeTableController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -45,6 +47,9 @@ class PmeTableController extends Controller {
   /** @var ParameterService */
   private $parameterService;
 
+  /** @var \OCA\CAFEVDB\Legacy\PME\PHPMyEdit */
+  protected $pme;
+
   /** @var string */
   private $userId;
 
@@ -54,19 +59,27 @@ class PmeTableController extends Controller {
   /** @var ILogger */
   protected $logger;
 
+  /** @var \OCP\AppFramework\IAppContainer */
+  private $appContainer;
+
   public function __construct(
     $appName
     , IRequest $request
+    , IAppContainer $appContainer
     , ConfigService $configService
     , HistoryService $historyService
     , RequestParameterService $parameterService
+    , PHPMyEdit $phpMyEdit
     , $userId
     , IL10N $l10n
     , ILogger $logger
   ) {
     parent::__construct($appName, $request);
 
+    $this->appContainer = $appContainer;
     $this->parameterService = $parameterService;
+    $this->historyService = $historyService;
+    $this->pme = $phpMyEdit;
     $this->logger = $logger;
     $this->userId = $userId;
     $this->l = $l10n;
@@ -80,69 +93,81 @@ class PmeTableController extends Controller {
    */
   public function load()
   {
-    return self::grumble(__METHOD__." unimplemented");
+    try {
+      $templateRenderer = $this->parameterService->getParam('templateRenderer');
+      $template = $this->parameterService->getParam('template');
+      $dialogMode = !empty($this->parameterService->getParam('ambientContainerSelector'));
+      $reloadAction = false;
+      $reloadAction = $this->parameterService->getParam(
+        $this->pme->cgiSysName('_reloadfilter'),
+        $this->parameterService->getParam($this->pme->cgiSysName('_reloadlist'))
+      ) !== null;
 
-    // $author   = $this->parameterService->getParam('author', $this->userId);
+      $historySize = -1;
+      $historyPosition = -1;
+      if (!$dialogMode && !$reloadAction) {
+        $this->historyService->push($this->parameterService->getParams());
+        $historySize = $this->historyService->size();
+        $historyPosition = $this->historyService->position();
+      }
 
-    // $blogId   = $this->parameterService->getParam('blogId', -1);
-    // $inReplyTo  = $this->parameterService->getParam('inReplyTo', -1);
-    // $content  = $this->parameterService->getParam('content', '');
-    // $priority = $this->parameterService->getParam('priority', false);
-    // $popup    = $this->parameterService->getParam('popup', false);
-    // $reader   = $this->parameterService->getParam('reader', '');
+      if (empty($templateRenderer)) {
+        return self::grumble(['error' => $this->l->t("missing arguments"),
+                              'message' => $this->l->t("No template-renderer submitted."), ]);
+      }
 
-    // if (empty(author)) {
-    //   return self::grumble($this->l->t('Refusing to create blog entry without author identity.'));
-    // }
+      $renderer = $this->appContainer->query($templateRenderer);
+      if (empty($renderer)) {
+        return self::response(
+          $this->l->t("Template-renderer `%s' cannot be found.", [$templateRenderer]),
+          Http::INTERNAL_SERVER_ERROR);
+      }
+      $renderer->navigation(false);
 
-    // if ($blogId >= 0 && $inReplyTo == -1 && $content == '') {
-    //   // This is an edit attempt.
-    //   try {
-    //     $entry = $this->blogMapper->find($blogId);
-    //   } catch (\Throwable $t) {
-    //     $this->logger->logException($t);
-    //     return self::grumble($this->l->t('Error, caught an exception `%s\'.', [$e->getMessage()]));
-    //   }
-    //   if (!$entry) {
-    //     return self::grumble('Blog entry with id `%s\' could not be retrieved.', [$blogId]);
-    //   }
+      $template = 'pme-table';
+      $templateParameters = [
+        'renderer' => $renderer,
+        'templateRenderer' => $templateRenderer,
+        'template' => $template,
+        'recordId' => $this->pme->getCGIRecordId(),
+      ];
 
-    //   $content = $entry->getMessage();
-    //   if ($entry->getInReplyTo() < 0) {
-    //     $priority = $entry->getPriority();
-    //   } else {
-    //     $priority = false;
-    //   }
-    //   $popup   = $entry->getPopup() != 0;
-    //   $reader  = $entry->getReader();
-    // } else if ($inReplyTo >= 0) {
-    //   $priority = false;
-    //   $popup    = false;
-    //   $reader   = '';
-    // }
+      $tmpl = new TemplateResponse($this->appName, $template, $templateParameters, 'blank');
+      $html =$tmpl->render();
 
-    // $template = 'blogedit';
-    // $templateParameters = [
-    //   'priority' => $priority,
-    //   'popup' => $popup,
-    // ];
-    // $renderAs = 'blank';
-    // $tmpl = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
-    // $html = $tmpl->render();
+      // Search for MySQL error messages echoes by phpMyEdit, sometimes
+      // the contents of the template will be discarded, but we still want
+      //
+      // to get the error messages.
+      //
+      // <h4>MySQL error 1288</h4>The target table Spielwiese2013View of the DELETE is not updatable<hr size="1">
 
-    // $responseData = [
-    //   'content' => $html,
-    //   'author' => $author,
-    //   'blogId' => $blogId,
-    //   'inReplyTo' => $inReplyTo,
-    //   'text' => $content,
-    //   'priority' => $priority,
-    //   'popup' => $popup,
-    //   'reader' => $reader,
-    //   'message' => $content.' '.$blogId.' '.$inReplyTo
-    // ];
+      if (preg_match('|<h4>MySQL error (\d+)</h4>\s*([^<]+)|', $html, $matches)) {
+        $mySQLError = [
+          'error' => $matches[1],
+          'message' => $matches[2],
+        ];
+      }
 
-    // return self::dataResponse($responseData);
+      $response = self::dataResponse([
+        'content' => $html,
+        'sqlerror' => $mySQLError,
+        'history' => [ 'size' => $historySize,
+                       'position' => $historyPosition, ],
+      ]);
+
+      $this->historyService->store();
+
+      return $response;
+
+    } catch (\Throwable $t) {
+      $this->logException($t, __METHOD__);
+      return self::grumble([
+        'message' => $this->l->t('Error, caught an exception'),
+        'exception' => $t->getFile().':'.$t->getLine().' '.$t->getMessage(),
+        'trace' => $t->getTraceAsString(),
+      ]);
+    }
   }
 
 }

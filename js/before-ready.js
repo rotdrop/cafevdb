@@ -97,7 +97,7 @@ $(document).ready(function() {
 	const target = $(event.target);
 	if (target.is('.nav-heading a')) {
 	    // don't recurse on nav-heading which just should close the sidebar.
-	    return;
+	    return true;
 	}
         var post = $(this).data('post');
         CAFEVDB.Page.loadPage(post);
@@ -105,7 +105,8 @@ $(document).ready(function() {
         return false;
     });
 
-    PHPMYEDIT.addTableLoadCallback('Musicians', {
+
+    const musiciansCallback = {
         callback: function(selector, parameters, resizeCB) {
 
             if (parameters.reason == 'tabChange') {
@@ -148,9 +149,12 @@ $(document).ready(function() {
         },
         context: CAFEVDB,
         parameters: []
-    });
+    };
 
-    PHPMYEDIT.addTableLoadCallback('ProjectExtra', {
+    PHPMYEDIT.addTableLoadCallback('all-musicians', musiciansCallback);
+    PHPMYEDIT.addTableLoadCallback('add-musicians', musiciansCallback);
+
+    PHPMYEDIT.addTableLoadCallback('project-extra', {
         callback: function(selector, parameters, resizeCB) {
 
             if (parameters.reason != 'dialogOpen') {
@@ -165,7 +169,7 @@ $(document).ready(function() {
     });
 
 
-    PHPMYEDIT.addTableLoadCallback('Instruments', {
+    PHPMYEDIT.addTableLoadCallback('instruments', {
         callback: function(selector, parameters, resizeCB) {
             resizeCB();
         },
@@ -173,7 +177,7 @@ $(document).ready(function() {
         parameters: []
     });
 
-    PHPMYEDIT.addTableLoadCallback('ProjectPayments', {
+    PHPMYEDIT.addTableLoadCallback('project-payments', {
         callback: function(selector, parameters, resizeCB) {
             resizeCB();
         },
@@ -181,7 +185,7 @@ $(document).ready(function() {
         parameters: []
     });
 
-    PHPMYEDIT.addTableLoadCallback('DebitNotes', {
+    PHPMYEDIT.addTableLoadCallback('debit-notes', {
         callback: function(selector, parameters, resizeCB) {
 
             if (parameters.reason != 'dialogOpen') {

@@ -87,8 +87,7 @@ var CAFEVDB = CAFEVDB || {};
     if (tableOptions.Table == 'Musiker') {
       var projectMode = options.ProjectId > 0;
       tableOptions.template =  projectMode ? 'add-musicians' : 'all-musicians';
-      tableOptions.displayClass = 'Musicians';
-      tableOptions["ClassArguments[0]"] = projectMode ? "1" : "0";
+      tableOptions.renderTemplate = CAFEVDB.Page.renderTemplate(tableOptions.template);
     } else if (options.ProjectId > 0) {
       tableOptions.table = options.projectName+'View';
       tableOptions.template = 'detailed-instrumenation'
@@ -96,7 +95,7 @@ var CAFEVDB = CAFEVDB || {};
     } else {
       tableOptions.table = 'Musiker';
       tableOptions.template = 'all-musicians';
-      tableOptions.displayClass = 'Musicians';
+      tableOptions.renderTemplate = CAFEVDB.Page.renderTemplate(tableOptions.template);
     }
 
     //alert('options: '+CAFEVDB.print_r(tableOptions, true));
@@ -182,8 +181,7 @@ var CAFEVDB = CAFEVDB || {};
    * formData = {
    *   template: "detailed-instrumentation",
    *   table: "Musiker",
-   *   displayClass: "Musicians",
-   *   'classArguments[0]': "1"
+   *   renderTemplate: "template:detailed-instrumentation"
    * };
    *
    * The form is submitted with an empty pseudo-submit button.
@@ -215,8 +213,7 @@ var CAFEVDB = CAFEVDB || {};
    * formData = {
    *   template: "detailed-instrumentation",
    *   table: "Musiker",
-   *   displayClass: "Musicians",
-   *   'classArguments[0]': "1"
+   *   renderTemplate: "template:detailed-instrumentation"
    * };
    *
    * The form is submitted with an empty pseudo-submit button.
@@ -275,11 +272,11 @@ var CAFEVDB = CAFEVDB || {};
       var projectId = form.find('input[name="ProjectId"]').val();
       projectMode = projectId > 0;
     }
-    var inputTweak = {
-      template: projectMode ? "add-musicians" : "all-musicians",
+    const template = projectMode ? "add-musicians" : "all-musicians";
+    const inputTweak = {
+      template: template,
       table: "Musiker",
-      displayClass: "Musicians",
-      "classArguments[0]": projectMode ? "1" : "0"
+      renderTemplate: CAFEVDB.Page.renderTemplate(template)
     };
 
     Instrumentation.loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
@@ -311,13 +308,14 @@ var CAFEVDB = CAFEVDB || {};
    * the PME table has been loaded.
    */
   Instrumentation.loadDetailedInstrumentation = function(form, musicians, afterLoadCallback) {
-    var projectName = form.find('input[name="ProjectName"]').val();
-    var table = projectName+'View';
+    const projectName = form.find('input[name="ProjectName"]').val();
+    const table = projectName+'View';
 
-    var inputTweak = {
-      template: "detailed-instrumentation",
+    const template = 'detailed-instrumentation';
+    const inputTweak = {
+      template: template,
       table: table,
-      displayClass: "DetailedInstrumentation"
+      renderTemplate: CAFEVDB.Page.renderTemplate(template)
     };
 
     var ids = [ -1 ];
@@ -666,7 +664,7 @@ console.log('deselect', option.val());
 
 $(document).ready(function(){
 
-  PHPMYEDIT.addTableLoadCallback('DetailedInstrumentation', {
+  PHPMYEDIT.addTableLoadCallback('detailed-instrumentation', {
     callback: function(selector, parameters, resizeCB) {
 
       if (parameters.reason == 'tabChange') {

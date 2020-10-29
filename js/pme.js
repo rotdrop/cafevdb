@@ -183,8 +183,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
   /**Notify the spectator about SQL errors.*/
   PHPMYEDIT.notifySqlError = function(data) {
     // phpMyEdit echos mySQL-errors back.
-    if (typeof data.sqlerror != 'undefined' &&
-        data.sqlerror.error != 0) {
+    //console.info(data);
+    if (data.sqlerror && data.sqlerror.error != 0) {
       $('#notification').text('MySQL Error: '+
                               data.sqlerror.error+
                               ': '+
@@ -197,7 +197,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
   };
 
-  PHPMYEDIT.addTableLoadCallback = function(dpyClass, cbObject) {
+  PHPMYEDIT.addTableLoadCallback = function(template, cbObject) {
     if (typeof cbObject.context === 'undefined') {
       cbObject.context = this;
     }
@@ -207,16 +207,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
     if (typeof cbObject.parameters !== 'object') {
       cbObject.parameters = [ cbObject.parameters ];
     }
-    this.tableLoadCallbacks[dpyClass] = cbObject;
+    this.tableLoadCallbacks[template] = cbObject;
   };
 
-  PHPMYEDIT.tableLoadCallback = function(dpyClass, selector, parameters, resizeReadyCB) {
+  PHPMYEDIT.tableLoadCallback = function(template, selector, parameters, resizeReadyCB) {
     var cbHandle;
 
-    if (typeof this.tableLoadCallbacks[dpyClass] !== 'undefined') {
-      cbHandle = this.tableLoadCallbacks[dpyClass];
+    if (typeof this.tableLoadCallbacks[template] !== 'undefined') {
+      cbHandle = this.tableLoadCallbacks[template];
     } else {
-//      alert("No Callback for "+dpyClass);
+//      alert("No Callback for "+template);
       return false;
     }
 
@@ -294,8 +294,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     return $.when(container.data(deferKey));
   };
 
-  /**Replace the contents of the already opened dialog with the given HTML-data.*/
-  PHPMYEDIT.tableDialogReplace = function(container, contents, options, callback) {
+  /**Replace the content of the already opened dialog with the given HTML-data.*/
+  PHPMYEDIT.tableDialogReplace = function(container, content, options, callback) {
     var pme = this;
 
     var containerSel = '#'+options.DialogHolderCSSId;
@@ -306,7 +306,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     container.css('height', 'auto');
     $.fn.cafevTooltip.remove();
     container.off(); // remove ALL delegate handlers
-    container.html(contents);
+    container.html(content);
     container.find(pme.navigationSelector('reload')).addClass('loading');
 
     // general styling
@@ -342,7 +342,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     var containerSel = '#'+options.DialogHolderCSSId;
     var container = $(containerSel);
-    var contentsChanged = false;
+    var contentChanged = false;
 
     container.dialog('widget').addClass(pme.pmeToken('table-dialog-blocked'));
     container.find(pme.navigationSelector('reload')).addClass('loading');
@@ -370,19 +370,18 @@ var PHPMYEDIT = PHPMYEDIT || {};
       };
       $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
       .fail(function(xhr, status, errorThrown) {
-        if (!CAFEVDB.handleAjaxError(xhr, status, errorThrown)) {
-	  cleanUp();
-        }
+        CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+	cleanUp();
       })
       .done(function (data) {
-	if (!CAFEVDB.validateAjaxResponse(data, [ 'contents' ])) {
+	if (!CAFEVDB.validateAjaxResponse(data, [ 'content' ])) {
 	  cleanup();
 	  return;
         }
 
-        pme.notifySqlError(data.data);
+        pme.notifySqlError(data);
 
-        pme.tableDialogReplace(container, data.data.contents, options, callback);
+        pme.tableDialogReplace(container, data.content, options, callback);
       });
     });
     return false;
@@ -394,7 +393,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
    *
    * @param options Object with additional params to the
    * pme-table.php AJAX callback. Must at least contain the
-   * displayClass component.
+   * templateRenderer component.
    *
    * @param callback Additional form validation callback. If
    * callback also attaches handlers to the save, change etc. buttons
@@ -419,7 +418,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     var containerSel = '#'+options.DialogHolderCSSId;
     var container = $(containerSel);
-    var contentsChanged = false;
+    var contentChanged = false;
 
     pme.cancelDeferredReload(container);
 
@@ -456,7 +455,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       callback( { reason: 'tabChange' } );
     });
 
-    // The easy one, but for changed contents
+    // The easy one, but for changed content
     var cancelButton = $(container).find(pme.pmeClassSelector('input', 'cancel'));
     cancelButton.off('click');
     cancelButton.on('click', function(event) {
@@ -585,20 +584,17 @@ var PHPMYEDIT = PHPMYEDIT || {};
 	                    };
 	    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
 	    .fail(function(xhr, status, errorThrown) {
-              if (!CAFEVDB.handleAjaxError(xhr, status, errorThrown)) {
-	        cleanUp();
-              }
+              CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+	      cleanUp();
 	    })
 	    .done(function (data) {
-	      if (!CAFEVDB.validateAjaxResponse({ 'data': data,
-						  'status': 'success' },
-					        [ 'contents' ])) {
+	      if (!CAFEVDB.validateAjaxResponse(data, [ 'content' ])) {
 		cleanup();
 		return;
 	      }
-              pme.notifySqlError(data.data);
+              pme.notifySqlError(data);
 
-              var op = $(data.data.contents).find(pme.pmeSysNameSelector('input', 'op_name'));
+              var op = $(data.content).find(pme.pmeSysNameSelector('input', 'op_name'));
               if (op.length > 0 &&
                   (op.val() === 'add' || op.val() === 'delete')) {
                 // Some error occured. Stay in the given mode.
@@ -612,7 +608,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                 setTimeout(function() {
                   $('#notification').fadeOut();
                 }, 10000);
-                pme.tableDialogReplace(container, data.data.contents, options, callback);
+                pme.tableDialogReplace(container, data.content, options, callback);
                 return;
               }
 
@@ -638,7 +634,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     callback( { reason: 'dialogOpen' } );
   };
 
-  /**Post the contents of a pme-form via AJAX into a dialog
+  /**Post the content of a pme-form via AJAX into a dialog
    * widget. Useful for editing, viewing etc. because this avoids the
    * need to reload the base table (when only viewing single
    * data-sets).
@@ -654,14 +650,14 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var pme  = this;
 
     var post = form.serialize();
-    var dpyClass = form.find('input[name="displayClass"]');
+    var templateRenderer = form.find('input[name="templateRenderer"]');
 
-    if (dpyClass.length == 0) {
-      console.log('no display class');
+    if (templateRenderer.length == 0) {
+      console.log('no template renderer');
       // This just does not work.
       return false;
     }
-    dpyClass = dpyClass.val();
+    templateRenderer = templateRenderer.val();
 
     var viewOperation = false;
     var initialName;
@@ -691,7 +687,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var tableOptions = {
       AmbientContainerSelector: pme.selector(containerSel),
       DialogHolderCSSId: dialogCSSId,
-      displayClass: dpyClass,
+      templateRenderer: templateRenderer,
       InitialViewOperation: viewOperation,
       InitialName: initialName,
       InitialValue: initialValue,
@@ -719,9 +715,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
    *
    */
   PHPMYEDIT.tableDialogOpen = function(tableOptions, post) {
-    var pme = this;
+    const pme = this;
 
-    var containerCSSId = tableOptions.DialogHolderCSSId;
+    const containerCSSId = tableOptions.DialogHolderCSSId;
+
+    const template = CAFEVDB.Page.templateFromRenderer(
+      tableOptions.templateRenderer);
 
     console.log(containerCSSId, pme.dialogOpen);
     if (pme.dialogOpen[containerCSSId]) {
@@ -745,22 +744,21 @@ var PHPMYEDIT = PHPMYEDIT || {};
     };
     $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
     .fail(function(xhr, status, errorThrown) {
-      if (!CAFEVDB.handleAjaxError(xhr, status, errorThrown)) {
-	cleanUp();
-      }
+      CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+      cleanUp();
     })
     .done(function (data) {
-      if (!CAFEVDB.validateAjaxResponse(data, [ 'contents' ])) {
+      if (!CAFEVDB.validateAjaxResponse(data, [ 'content' ])) {
         cleanup();
         return;
       }
 
-      pme.notifySqlError(data.data);
+      pme.notifySqlError(data);
 
       var containerSel = '#'+containerCSSId;
       var dialogHolder;
       dialogHolder = $('<div id="'+containerCSSId+'" class="resize-target"></div>');
-      dialogHolder.html(data.data.contents);
+      dialogHolder.html(data.content);
       dialogHolder.data('AmbientContainer', tableOptions.AmbientContainerSelector);
 
       dialogHolder.find(pme.navigationSelector('reload')).addClass('loading');
@@ -831,8 +829,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
           pme.tableDialogHandlers(tableOptions, function(parameters) {
             dialogHolder.css('height', 'auto');
             CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
+              console.info('add editor callback');
               pme.transposeReady(containerSel);
-              pme.tableLoadCallback(tableOptions.displayClass, containerSel, parameters, function() {
+              pme.tableLoadCallback(template, containerSel, parameters, function() {
+                console.info('table load callback');
                 resizeHandler(parameters);
                 dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
                 dialogHolder.dialog('moveToTop');
@@ -913,8 +913,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     selector = this.selector(selector);
     var container = this.container(selector);
 
-    var dpyClass = form.find('input[name="displayClass"]');
-    if (dpyClass.length <= 0 || element.hasClass('formsubmit')) {
+    var templateRenderer = form.find('input[name="templateRenderer"]');
+    if (templateRenderer.length <= 0 || element.hasClass('formsubmit')) {
       form.off('submit');
       if (element.attr('name')) { // undefined == false
         form.append('<input type="hidden" '+
@@ -929,10 +929,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
     CAFEVDB.Page.busyIcon(true);
     CAFEVDB.modalizer(true);
 
-    dpyClass = dpyClass.val();
+    templateRenderer = templateRenderer.val();
+    const template = CAFEVDB.Page.templateFromRenderer(templateRenderer);
+
     // TODO: arguments
     var post = form.serialize();
-    post += '&displayClass='+dpyClass;
+    post += '&templateRenderer='+templateRenderer;
     if (element.attr('name') &&
         (!element.is(':checkbox') || element.is(':checked'))) {
       var name  = element.attr('name');
@@ -948,14 +950,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
     };
     $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
     .fail(function(xhr, status, errorThrown) {
-      if (!CAFEVDB.handleAjaxError(xhr, status, errorThrown)) {
-	cleanUp();
-      }
+      CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+      cleanup();
     })
     .done(function (data) {
-      if (!CAFEVDB.validateAjaxResponse({ 'data': data,
-                                          'status': 'success' },
-                                        [ 'contents', 'history' ])) {
+      if (!CAFEVDB.validateAjaxResponse(data, [ 'content', 'history' ])) {
         cleanup();
 	return;
       }
@@ -970,12 +969,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
       $.fn.cafevTooltip.remove();
 
       CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
-      pme.inner(container).html(data.contents);
+      pme.inner(container).html(data.content);
       pme.init(selector);
       CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
         pme.transposeReady(selector);
         //alert('pseudo submit');
-        pme.tableLoadCallback(dpyClass, selector, { reason: 'formSubmit' }, function() {});
+        pme.tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
         CAFEVDB.pmeTweaks(container);
         CAFEVDB.toolTipsInit(selector);
 
@@ -1408,7 +1407,7 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
     });
 
     // view/change/copy/delete buttons lead to a a popup
-    if (form.find('input[name="displayClass"]').length > 0) {
+    if (form.find('input[name="templateRenderer"]').length > 0) {
       var submitSel = formSel+' input[class$="navigation"]:submit'+','+
         formSel+' input.'+pme.pmeToken('add')+':submit';
       container.off('click', submitSel).

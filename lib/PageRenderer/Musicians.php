@@ -122,11 +122,11 @@ make sure that the musicians are also automatically added to the
     // Install values for after form-submit, e.g. $this->template ATM
     // is just the request parameter, while Template below will define
     // the value of $this->template after form submit.
+    $template = $this->projectMode ? 'add-musicians' : 'all-musicians';
     $opts['cgi']['persist'] = [
-      'template' => $this->projectMode ? 'add-musicians' : 'all-musicians',
+      'template' => $template,
       'table' => $opts['tb'],
-      'displayClass' => 'Musicians',
-      'classArguments' => [ $this->projectMode ],
+      'templateRenderer' => 'template:'.$template,
     ];
 
     // Name of field which is the unique key

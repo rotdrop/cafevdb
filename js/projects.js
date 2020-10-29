@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -143,11 +143,12 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         // instrumentation numbers are somewhat nasty and require too
         // many options.
 
-        var tableOptions = {
+        const template = 'project-instruments';
+        const tableOptions = {
             AmbientContainerSelector: containerSel,
-            DialogHolderCSSId: 'project-instruments-dialog',
-            Template: 'project-instruments',
-            displayClass: 'ProjectInstruments',
+            DialogHolderCSSId: template + '-dialog',
+            emplate: template,
+            renderTemplate: CAFEVDB.Page.renderTemplate(template),
             Table: 'BesetzungsZahlen',
             Transpose: 'transposed',
             InhibitTranspose: 'true',
@@ -181,11 +182,12 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         // instrumentation numbers are somewhat nasty and require too
         // many options.
 
-        var tableOptions = {
+        const template = 'projects';
+        const tableOptions = {
             AmbientContainerSelector: containerSel,
             DialogHolderCSSId: 'project-overview',
-            Template: 'projects',
-            displayClass: 'Projects',
+            template: template,
+            renderTemplate: CAFEVDB.Page.renderTemplate(template),
             // Now special options for the dialog popup
             InitialViewOperation: true,
             InitialName: 'PME_sys_operation',
@@ -582,7 +584,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
 $(document).ready(function(){
 
-    PHPMYEDIT.addTableLoadCallback('Projects', {
+    PHPMYEDIT.addTableLoadCallback('projects', {
         callback: function(selector, parameters, resizeCB) {
             var Projects = this;
             var container = PHPMYEDIT.container(selector);

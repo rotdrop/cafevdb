@@ -835,9 +835,9 @@ var CAFEVDB = CAFEVDB || {};
     }
 
     if (exportscript == '') {
-      OC.dialogs.alert(t('cafevdb', 'Export to the following format is not yet supported:')
-                       +' "'+selected+'"',
-                       t('cafevdb', 'Unimplemented'));
+      CAFEVDB.dialogs.alert(t('cafevdb', 'Export to the following format is not yet supported:')
+			    +' "'+selected+'"',
+			    t('cafevdb', 'Unimplemented'));
     } else {
 
       // this will be the alternate form-action
@@ -1098,9 +1098,9 @@ var CAFEVDB = CAFEVDB || {};
       if (typeof callback != 'function') {
         callback = undefined;
       }
-      OC.dialogs.info('<div class="debug error contents">'+data.debug+'</div>',
-                      t('cafevdb', 'Debug Information'),
-                      callback, true, true);
+      CAFEVDB.dialogs.info('<div class="debug error contents">'+data.debug+'</div>',
+			   t('cafevdb', 'Debug Information'),
+			   callback, true, true);
     }
   };
 
@@ -1182,6 +1182,7 @@ var CAFEVDB = CAFEVDB || {};
     if (typeof errorCB == 'undefined') {
       errorCB = function () {}
     }
+
     // Seemingly Nextcloud always ever only returns one of these:
     const HTTP_STATUS_OK = 200;
     const HTTP_STATUS_BAD_REQUEST = 400;
@@ -1191,6 +1192,8 @@ var CAFEVDB = CAFEVDB || {};
     const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
     const failData = CAFEVDB.ajaxFailData(xhr, textStatus, errorThrown);
+    console.info("AJAX failure data", failData);
+
     switch (textStatus) {
     case 'notmodified':
     case 'nocontent':
@@ -1203,20 +1206,51 @@ var CAFEVDB = CAFEVDB || {};
     }
 
     const caption = t('cafevdb', 'Error');
-    var info = CAFEVDB.httpStatus[xhr.status];
+    var info = '<span class="http-status error">' + CAFEVDB.httpStatus[xhr.status] + '</span>';
     console.info(xhr.status, info, errorThrown, textStatus);
+
+    var autoReport = '<a href="mailto:'
+          + CAFEVDB.adminEmail
+          + '?subject=' + '[CAFEVDB Error] Error Feedback'
+          + '&body=' + encodeURIComponent(
+	    'JavaScript User Agent:'
+              + "\n"
+              + navigator.userAgent
+              + "\n"
+              + "\n"
+              + 'PHP User Agent:'
+              + "\n"
+              + CAFEVDB.phpUserAgent
+              + "\n"
+              + "\n"
+              + 'Error Code: ' +  CAFEVDB.httpStatus[xhr.status]
+              + "\n"
+              + "\n"
+	      + 'Error Data: ' + CAFEVDB.print_r(failData, true)
+              + "\n")
+          + '">'
+          + CAFEVDB.adminName
+          + '</a>';
+
     switch (xhr.status) {
     case HTTP_STATUS_OK:
     case HTTP_STATUS_BAD_REQUEST:
     case HTTP_STATUS_NOT_FOUND:
     case HTTP_STATUS_CONFLICT:
     case HTTP_STATUS_INTERNAL_SERVER_ERROR:
-      if (failData.message) {
-        info += failData.message;
+      if (failData.error) {
+	info += ': ' + '<span class=""error name">' + failData.error + '</span>';
       }
+      if (failData.message) {
+        info += '<br/>' + failData.message;
+      }
+      info += '<div class="error toastify feedback-link">'
+            + t('cafevdb', 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
+            + '</div>';
+      autoReport = '';
       if (failData.exception) {
-        info += '<div class="exception error name"><pre>'+data.data.exception+'</pre></div>'
-	      + '<div class="exception error trace"><pre>'+data.data.trace+'</pre></div>';
+        info += '<div class="exception error name"><pre>'+failData.exception+'</pre></div>'
+	      + '<div class="exception error trace"><pre>'+failData.trace+'</pre></div>';
       }
       break;
     case HTTP_STATUS_UNAUTHORIZED:
@@ -1228,24 +1262,6 @@ var CAFEVDB = CAFEVDB || {};
           window.location.replace('/');
         }
       };
-      const autoReport = '<a href="mailto:'
-                     + CAFEVDB.adminEmail
-                     + '?subject=' + '[CAFEVDB Error] Error Feedback'
-                     + '&body=' + encodeURIComponent('JavaScript User Agent:'
-                                                    + "\n"
-                                                    + navigator.userAgent
-                                                    + "\n"
-                                                    + "\n"
-                                                    + 'PHP User Agent:'
-                                                    + "\n"
-                                                    + CAFEVDB.phpUserAgent
-                                                    + "\n"
-                                                    + "\n"
-                                                    + 'Error Code: ' + data.data.error
-                                                    + "\n")
-                     + '">'
-                     + CAFEVDB.adminName
-                     + '</a>';
 
       var generalHint = t('cafevdb', 'Something went wrong.');
       generalHint += '<br/>'
@@ -1257,14 +1273,17 @@ var CAFEVDB = CAFEVDB || {};
                    + t('cafevdb', 'I any case it may help to logoff and logon again, as a '
                                 + 'temporary work-around. You will be redirected to the '
                                 + 'log-in page when you close this window.');
-      generalHint += '<br/>'
-                   + t('cafevdb', 'Feedback email: {AutoReport}',
-                       { AutoReport: autoReport });
       info += '<div class="error general">'+generalHint+'</div>';
+      // info += '<div class="error toastify feedback-link">'
+      //       + t('cafevdb', 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
+      //       + '</div>';
       break;
     }
-    OC.dialogs.alert(info, caption, errorCB, true, true);
-    return false;
+
+    console.info(info);
+    CAFEVDB.dialogs.alert(
+      info, caption, function() { errorCB(failData); }, true, true);
+    return failData;
   };
 
   /**Generate some diagnostic output, mostly needed during
@@ -1291,19 +1310,16 @@ var CAFEVDB = CAFEVDB || {};
       errorCB = function() {};
     }
     // error handling
-    if (typeof data == 'undefined' ||
-        !data ||
-        typeof data.status == 'undefined' ||
-        typeof data.data == 'undefined') {
-      OC.dialogs.alert(t('cafevdb', 'Unrecoverable unknown internal error, '+
-                         'no further information available, sorry.'),
-                       t('cafevdb', 'Internal Error'), errorCB, true);
+    if (typeof data == 'undefined' || !data) {
+      CAFEVDB.dialogs.alert(t('cafevdb', 'Unrecoverable unknown internal error, '+
+                              'no further information available, sorry.'),
+			    t('cafevdb', 'Internal Error'), errorCB, true);
       return false;
     }
     var missing = '';
     var idx;
     for (idx = 0; idx < required.length; ++idx) {
-      if (typeof data.data[required[idx]] == 'undefined') {
+      if (typeof data[required[idx]] == 'undefined') {
         missing += t('cafevdb', 'Field {RequiredField} not present in AJAX response.',
                      { RequiredField: required[idx] })+"<br>";
       }
@@ -1329,7 +1345,7 @@ var CAFEVDB = CAFEVDB || {};
         caption = t('cafevdb', 'Error');
         data.caption = caption;
       }
-      OC.dialogs.alert(info, caption, errorCB, true, true);
+      CAFEVDB.dialogs.alert(info, caption, errorCB, true, true);
       return false;
     }
     return true;
@@ -1356,12 +1372,14 @@ var CAFEVDB = CAFEVDB || {};
       data.message = t('cafevdb', 'HTTP error response to AJAX call: {code} / {error}',
                        {'code': xhr.status, 'error': errorThrown});
     } else if (ct.indexOf('json') > -1) {
-      console.log('json response');
       const response = JSON.parse(xhr.responseText);
+      console.info('XHR response text', xhr.responseText);
+      console.log('JSON response', response);
       data = {...data, ...response };
     } else {
       console.log('unknown response');
     }
+    console.info(data);
     return data;
   };
 
@@ -1376,37 +1394,6 @@ var CAFEVDB = CAFEVDB || {};
    */
   CAFEVDB.ajaxFailMessage = function(xhr, status, errorThrown) {
     return CAFEVDB.ajaxFailData(xhr, status, errorThrown).message;
-  };
-
-  /**Extract the value from an jQuery ajax failure message.
-   *
-   * @param xhr jqXHR, see fail() method of jQuery ajax.
-   *
-   * @param status from jQuery, see fail() method of jQuery ajax.
-   *
-   * @param errorThrown, see fail() method of jQuery ajax.
-   *
-   * @param required List of required fields in data.data.
-   *
-   */
-  CAFEVDB.ajaxFailData = function(xhr, status, errorThrown) {
-    const ct = xhr.getResponseHeader("content-type") || "";
-    var data = {};
-    var value = '';
-    if (ct.indexOf('html') > -1) {
-      console.log('html error');
-      // nothing
-    } else if (ct.indexOf('json') > -1) {
-      console.log('json response');
-      const response = JSON.parse(xhr.responseText);
-      if (response.value) {
-        value = response.value;
-      }
-    } else {
-      console.log('unknown response');
-      // nothing
-    }
-    return value;
   };
 
   CAFEVDB.attachToolTip = function(selector, options) {
@@ -1739,7 +1726,7 @@ $(document).ready(function(){
     $('input.alertdata.cafevdb-page').each(function(index) {
       var title = $(this).attr('name');
       var text  = $(this).attr('value');
-      OC.dialogs.alert(text, title, undefined, true, true);
+      CAFEVDB.dialogs.alert(text, title, undefined, true, true);
     });
 
   });

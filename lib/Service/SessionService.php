@@ -37,16 +37,16 @@ class SessionService
   private $sessionKey;
   private $data;
 
-  public function __construct($appName, ISession $session, IUserSession $userSession) {
+  public function __construct($appName, $userId, ISession $session, IUserSession $userSession) {
 
     // Keep a reference to the underlying session handler
     $this->session = $session;
 
     // Fetch the current user
-    if (defined('OC_CONSOLE') && empty($userSession->getUser())) {
+    if (defined('OC_CONSOLE') && empty($userId)) {
       $this->userId = $GLOBALS['cafevdb-user'];
     } else {
-      $this->userId  = $userSession->getUser()->getUID();
+      $this->userId  = $userId;
     }
 
     // Fetch our data

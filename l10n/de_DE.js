@@ -326,7 +326,7 @@ OC.L10N.register(
     "Moved Permanently" : "permanent",
     "See Other" : "Sonstiges",
     "Temporary Redirect" : "Aushilfe",
-    "Bad Request" : "HTTP Anfragen",
+    "Bad Request" : "Ungültige Anfrage",
     "Payment Required" : "Benötigt",
     "Method Not Allowed" : "Lastschrift zulässig",
     "Not Acceptable" : "Übernehmen",
