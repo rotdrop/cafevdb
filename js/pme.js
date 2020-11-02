@@ -685,7 +685,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
 
     var tableOptions = {
-      AmbientContainerSelector: pme.selector(containerSel),
+      ambientContainerSelector: pme.selector(containerSel),
       DialogHolderCSSId: dialogCSSId,
       templateRenderer: templateRenderer,
       InitialViewOperation: viewOperation,
@@ -760,7 +760,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       var dialogHolder;
       dialogHolder = $('<div id="'+containerCSSId+'" class="resize-target"></div>');
       dialogHolder.html(data.content);
-      dialogHolder.data('AmbientContainer', tableOptions.AmbientContainerSelector);
+      dialogHolder.data('AmbientContainer', tableOptions.ambientContainerSelector);
 
       dialogHolder.find(pme.navigationSelector('reload')).addClass('loading');
       if (tableOptions.ModalDialog) {
@@ -862,9 +862,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
           //alert($.param(tableOptions));
           if (tableOptions.modified === true) {
-            //alert("Changed, triggerring on "+tableOptions.AmbientContainerSelector);
-            $(tableOptions.AmbientContainerSelector).trigger('pmedialog:changed');
-            pme.submitOuterForm(tableOptions.AmbientContainerSelector);
+            //alert("Changed, triggerring on "+tableOptions.ambientContainerSelector);
+            $(tableOptions.ambientContainerSelector).trigger('pmedialog:changed');
+            pme.submitOuterForm(tableOptions.ambientContainerSelector);
           }
 
           dialogHolder.dialog('destroy');
