@@ -434,9 +434,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
       var resize = function(reason) {
         callback( { reason: reason } );
         var reloadSel = pme.pmeClassSelector('input', 'reload');
-        container.find(reloadSel).
-          off('click').
-          on('click', function(event) {
+        container.find(reloadSel)
+        .off('click')
+        .on('click', function(event) {
           pme.tableDialogReload(options, callback);
           return false;
         });
@@ -491,8 +491,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
     // install a delegate handler on the outer-most container which
     // finally will run after possible inner data-validation handlers
     // have been executed.
-    container.off('click', ReloadButtonSel);
-    container.on(
+    container
+    .off('click', ReloadButtonSel)
+    .on(
       'click',
       ReloadButtonSel,
       function(event) {
@@ -534,11 +535,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     container
     .off('click', saveButtonSel)
-    .on(
-      'click',
-      saveButtonSel,
-      function(event) {
-
+    .on('click', saveButtonSel, function(event) {
         event.preventDefault();
 
         container.find(pme.navigationSelector('reload')).addClass('loading');
@@ -829,10 +826,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
           pme.tableDialogHandlers(tableOptions, function(parameters) {
             dialogHolder.css('height', 'auto');
             CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
-              console.info('add editor callback');
               pme.transposeReady(containerSel);
               pme.tableLoadCallback(template, containerSel, parameters, function() {
-                console.info('table load callback');
                 resizeHandler(parameters);
                 dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
                 dialogHolder.dialog('moveToTop');
@@ -1260,9 +1255,10 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
 
     var tabsSelector = pme.pmeClassSelector('li', 'navigation')+'.table-tabs';
 
-    container.
-      off('click', tabsSelector).
-      on('click', tabsSelector, function(event) {
+    container
+    .off('click', tabsSelector)
+    .on('click', tabsSelector, function(event) {
+
       var form  = container.find(pme.formSelector());
       var table = form.find(pme.tableSelector());
 
@@ -1410,8 +1406,9 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
     if (form.find('input[name="templateRenderer"]').length > 0) {
       var submitSel = formSel+' input[class$="navigation"]:submit'+','+
         formSel+' input.'+pme.pmeToken('add')+':submit';
-      container.off('click', submitSel).
-        on('click', submitSel, function(event) {
+      container
+      .off('click', submitSel)
+      .on('click', submitSel, function(event) {
         var self = $(this);
         if (!self.hasClass(pme.pmeToken('custom'))) {
           event.preventDefault();
@@ -1429,8 +1426,9 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
       var rowSelector = formSel+' td.'+pme.pmeToken('cell')+':not(.control)'
                       + ','
                       + formSel+' td.'+pme.pmeToken('navigation');
-      container.off('click', rowSelector).
-        on('click', rowSelector, function(event) {
+      container
+      .off('click', rowSelector)
+      .on('click', rowSelector, function(event) {
 
         if (event.target != this) {
           var target = $(event.target);
@@ -1482,8 +1480,10 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
 
     // All remaining submit event result in a reload
     var submitSel = formSel+' :submit';
-    container.off('click', submitSel).
-      on('click', submitSel, function(event) {
+    container
+    .off('click', submitSel)
+    .on('click', submitSel, function(event) {
+
       event.preventDefault();
 
       //alert("Button: "+$(this).attr('name'));
