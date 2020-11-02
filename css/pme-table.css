@@ -25,7 +25,7 @@ html:not(.ie8) input[type="checkbox"].pme-input + span.pme-label::before {
 	height: 20px;
 	width: 20px;
 	vertical-align: middle;
-	background: url('../../../core/img/actions/checkbox.svg') left top no-repeat;
+	background: url('../img/actions/checkbox.svg') left top no-repeat;
 	opacity: 0.7;
 }
 
@@ -40,7 +40,7 @@ html:not(.ie8) input[type="checkbox"].pme-input {
 }
 
 html:not(.ie8) input[type="checkbox"].pme-input:checked + span.pme-label::before {
-  background-image: url('../../../core/img/actions/checkbox-checked.svg');
+  background-image: url('../img/actions/checkbox-checked.svg');
 }
 
 /*******************************************************************************
