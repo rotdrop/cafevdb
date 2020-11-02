@@ -156,18 +156,29 @@ class PmeTableController extends Controller {
                        'position' => $historyPosition, ],
       ]);
 
-      $this->historyService->store();
+      if (!$dialogMode && !$reloadAction) {
+        $this->historyService->store();
+      }
 
       return $response;
 
     } catch (\Throwable $t) {
       $this->logException($t, __METHOD__);
-      return self::grumble([
-        'message' => $this->l->t('Error, caught an exception'),
-        'exception' => $t->getFile().':'.$t->getLine().' '.$t->getMessage(),
-        'trace' => $t->getTraceAsString(),
-      ]);
+      return self::grumble($this->exceptionChainData($t));
     }
+  }
+
+  private function exceptionChainData(\Throwable $t, bool $top = true)
+  {
+    $previous = $t->getPrevious();
+    return [
+      'message' => ($top
+                    ? $this->l->t('Error, caught an exception')
+                    : $this->l->t('Caused by previous exception')),
+      'exception' => $t->getFile().':'.$t->getLine().' '.$t->getMessage(),
+      'trace' => $t->getTraceAsString(),
+      'previous' => empty($previous) ? null : $this->exceptionChainData($previous, false),
+    ];
   }
 
 }
