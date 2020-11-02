@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Legacy\PME;
 
+use \OCP\ILogger;
+
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\DBALException;
 
@@ -33,7 +35,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class PHPMyEdit extends \phpMyEdit
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var Connection */
   private $connection;
@@ -57,13 +59,18 @@ class PHPMyEdit extends \phpMyEdit
    * We do also some construction thing s.t. add_operation() and
    * friends does something useful.
    */
-  public function __construct(Connection $connection, IOptions $options)
+  public function __construct(
+    Connection $connection
+    , IOptions $options
+    , ILogger $logger
+  )
   {
     $this->connection = $connection;
     if (empty($this->connection)) {
       throw new \Exception("empty");
     }
     $this->dbh = $connection;
+    $this->logger = $logger;
     $this->debug = false;
 
     $this->overrideOptions = [
@@ -170,6 +177,9 @@ class PHPMyEdit extends \phpMyEdit
     if ($debug || $this->debug) {
       $line = intval($line);
       echo '<h4>MySQL query at line ',$line,'</h4>',htmlspecialchars($query),'<hr size="1" />',"\n";
+    }
+    if (true || $debug || $this->debug) {
+      $this->logInfo(__METHOD__.': query@'.$line.' '.htmlspecialchars($query));
     }
     try {
       $stmt = $this->dbh->executeQuery($query);
