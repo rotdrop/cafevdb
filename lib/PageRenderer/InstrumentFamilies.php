@@ -86,6 +86,8 @@ class InstrumentFamilies extends PMETableViewBase
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->pmeOptions;
 
+    $expertMode = $this->getUserValue('expertmode');
+
     $opts['css']['postfix'] = 'direct-change show-hide-disabled';
 
     // Number of records to display on the screen
@@ -154,6 +156,9 @@ class InstrumentFamilies extends PMETableViewBase
       'select'   => 'T',
       'maxlen'   => 64,
       'sort'     => true,
+      'php'   =>  function($value) {
+        return $this->l->t($value);
+      },
     ];
 
     $instFamIdx = count($opts['fdd']);
@@ -200,60 +205,22 @@ class InstrumentFamilies extends PMETableViewBase
     if ($this->showDisabled) {
       $opts['fdd']['Disabled'] = [
         'name'     => $this->l->t('Disabled'),
-        'css'      => ['postfix' => ' instrument-disabled' ],
-        'values2|CAP' => [ 1 => '' ],
-        'values2|LVFD' => [ 1 => $this->l->t('true'),
-                            0 => $this->l->t('false') ],
-        'default'  => '',
-        'select'   => 'O',
+        'options' => $expertmode ? 'LAVCPDF' : 'LAVCPDF',
+        'input'    => $expertmode ? '' : 'R',
+        'select'   => 'C',
+        'maxlen'   => 1,
         'sort'     => true,
-        'tooltip'  => $this->toolTipsService['instruments-disabled']
-        ];
+        'escape'   => false,
+        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
+        'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+        'tooltip'  => $this->toolTipsService['instrument-family-disabled'],
+        'css'      => [ 'postfix' => ' instrument-family-disabled' ],
+      ];
     }
-
-    // Provide joins with MusicianInstruments, ProjectInstruments,
-    // ProjectInstrumentation in order to flag used instruments as
-    // undeletable, while allowing deletion for unused ones (more
-    // practical after adding new instruments)
-    $instrumentTables = [
-      'musician_instrument' => [ 'musician_id', 'instrument_id' ],
-      'project_instrument' => [ 'project_id', 'instrument_id' ],
-      'ProjectInstrumentation' => [ 'ProjectId', 'InstrumentId' ],
-    ];
-    $usageIdx = count($opts['fdd']);
-    foreach ($instrumentTables as $table => $indexes) {
-      $opts['fdd'][$table] = [
-        'input' => 'VRH',
-        'sql' => 'PMEtable0.Id',
-        'values' => [
-          'table' => $table,
-          'column' => $table[1],
-          'description' => $indexes[1],
-          'join' => '$main_table.Id = $join_table.'.$indexes[1],
-          ],
-        ];
-    }
-    $usageSQL = []; $i = 0;
-    foreach ($instrumentTables as $table => $indexes) {
-      $usageSQL[] = 'COUNT(DISTINCT PMEjoin'.($usageIdx+$i).'.'.($indexes[0]).')';
-      $i++;
-    }
-    $usageSQL = implode('+', $usageSQL);
-    $usageIdx = count($opts['fdd']);
-    $opts['fdd']['Usage'] = [
-      'name'    => $this->l->t('Usage'),
-      'input'   => 'VR',
-      'input|D' => 'VR',
-      'sql'     => '('.$usageSQL.')',
-      'sort'    => false,
-      'size'    => 5,
-      'select'  => 'N',
-      'align'   => 'right',
-    ];
 
     $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
 
-    $opts['groupby_fields'] = [ 'Id' ];
+    $opts['groupby_fields'] = [ 'id' ];
 
     //$opts['triggers']['update']['before']  = 'CAFEVDB\Instruments::beforeUpdateTrigger';
     //$opts['triggers']['insert']['before']  = 'CAFEVDB\Instruments::beforeInsertTrigger';
@@ -264,7 +231,7 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts['triggers']['select']['data'][] =
       function(&$pme, $op, $step, &$row) use ($opts, $usageIdx)  {
-        if (!$this->getUserValue('expertmode') && !empty($row['qf'.$usageIdx])) {
+        if (!$expertmode && !empty($row['qf'.$usageIdx])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;
@@ -298,12 +265,13 @@ class InstrumentFamilies extends PMETableViewBase
    */
   private function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
-    // $count = self::usage($pme->rec, $pme->dbh);
+    $entity = $this->getDatabaseRepository(ORM\Entities\Instrument::class)->find($pme->rec);
 
-    // if ($count > 0) {
-    //   $result = mySQL::update('Instrumente', "Id = {$pme->rec}", [ 'Disabled' => 1 ], $pme->dbh);
-    //   return false;
-    // }
+    if ($entity->usage() > 0) {
+      $entity->setDisabled(true);
+      $this->flush();
+      return false;
+    }
 
     // return true;
     return false;
