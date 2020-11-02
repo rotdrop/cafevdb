@@ -35,6 +35,12 @@ var CAFEVDB = CAFEVDB || {};
       $row = undefined
     }
     if (!$row) {
+      if (this.rows.length == 0) {
+        if (callback) {
+          callback.call();
+        }
+        return;
+      }
       this.rows.forEach(function(item, index) {
         OC.Notification.hide(item, callback);
       });
