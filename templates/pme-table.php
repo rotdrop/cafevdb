@@ -31,8 +31,21 @@ namespace OCA\CAFEVDB;
 
 $css   = $class.' '.$template;
 
+// This is here because otherwise PHP leaks content to stdout (and
+// thus to the client) on fatal errors.
+try {
+  ob_start(function() { return''; });
+  $renderer->render();
+  $pmeTable = ob_get_contents();
+  ob_end_clean();
+} catch (\Throwable $t) {
+  ob_end_clean();
+  throw new \Exception("Renderer failed", $t->getCode(), $t);
+}
+
 echo '<div id="pme-table-container" class="pme-table-container '.$css.'" style="height:auto;">';
-$renderer->render();
+//$renderer->render();
+echo $pmeTable;
 echo '</div>';
 
 // add a hidden "short title" span
