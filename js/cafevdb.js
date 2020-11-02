@@ -486,7 +486,10 @@ var CAFEVDB = CAFEVDB || {};
     return result;
   };
 
-  CAFEVDB.print_r = function(array, return_val) {
+  CAFEVDB.print_r = function(array, return_val, max_depth) {
+    if (max_depth == undefined) {
+      max_depth = 5;
+    }
     // discuss at: http://phpjs.org/functions/print_r/
     // original by: Michael White (http://getsprink.com)
     // improved by: Ben Bryan
@@ -515,7 +518,7 @@ var CAFEVDB = CAFEVDB || {};
       }
       return str;
     };
-    var formatArray = function (obj, cur_depth, pad_val, pad_char) {
+    var formatArray = function (obj, cur_depth, pad_val, pad_char, max_depth) {
       if (cur_depth > 0) {
         cur_depth++;
       }
@@ -524,10 +527,21 @@ var CAFEVDB = CAFEVDB || {};
       var str = '';
       if (typeof obj === 'object' && obj !== null && obj.constructor && getFuncName(obj.constructor) !==
           'PHPJS_Resource') {
-        str += 'Array\n' + base_pad + '(\n';
+	const type = Object.prototype.toString.call(obj);
+	if (type === '[object Array]') {
+          str += 'Array\n';
+	} else /* if (type == '[object Object]') */ {
+          str += 'Object\n';
+	}
+        str += base_pad + '(\n';
         for (var key in obj) {
-          if (Object.prototype.toString.call(obj[key]) === '[object Array]') {
-            str += thick_pad + '[' + key + '] => ' + formatArray(obj[key], cur_depth + 1, pad_val, pad_char);
+	  const fieldType = Object.prototype.toString.call(obj[key]);
+	  if (cur_depth > max_depth) {
+            str += thick_pad + '[' + key + '] => ' + obj[key] + '\n';
+	  } else if (fieldType === '[object Array]') {
+            str += thick_pad + '[' + key + '] => ' + formatArray(obj[key], cur_depth + 1, pad_val, pad_char, max_depth);
+	  } else if (fieldType === '[object Object]') {
+            str += thick_pad + '[' + key + '] => ' + formatArray(obj[key], cur_depth + 1, pad_val, pad_char, max_depth);
           } else {
             str += thick_pad + '[' + key + '] => ' + obj[key] + '\n';
           }
@@ -1240,18 +1254,25 @@ var CAFEVDB = CAFEVDB || {};
     case HTTP_STATUS_CONFLICT:
     case HTTP_STATUS_INTERNAL_SERVER_ERROR:
       if (failData.error) {
-	info += ': ' + '<span class=""error name">' + failData.error + '</span>';
+	info += ': ' + '<span class="error toastify name">' + failData.error + '</span>';
       }
       if (failData.message) {
-        info += '<br/>' + failData.message;
+        info += '<div class="error toastify">' + failData.message + '</div>';
       }
       info += '<div class="error toastify feedback-link">'
             + t('cafevdb', 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
             + '</div>';
       autoReport = '';
-      if (failData.exception) {
-        info += '<div class="exception error name"><pre>'+failData.exception+'</pre></div>'
-	      + '<div class="exception error trace"><pre>'+failData.trace+'</pre></div>';
+      var exceptionData = failData;
+      if (exceptionData != null) {
+	console.info("hello");
+        info += '<div class="exception error name"><pre>'+exceptionData.exception+'</pre></div>'
+	  + '<div class="exception error trace"><pre>'+exceptionData.trace+'</pre></div>';
+	while ((exceptionData = exceptionData.previous) != null) {
+	  info += '<div class="error toastify">' + exceptionData.message + '</div>';
+          info += '<div class="exception error name"><pre>'+exceptionData.exception+'</pre></div>'
+	  + '<div class="exception error trace"><pre>'+exceptionData.trace+'</pre></div>';
+	}
       }
       break;
     case HTTP_STATUS_UNAUTHORIZED:
