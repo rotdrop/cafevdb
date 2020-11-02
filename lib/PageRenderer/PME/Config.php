@@ -38,6 +38,7 @@ class Config extends DefaultOptions
     IURLGenerator $urlGenerator
   ) {
     $this->configService = $configService;
+
     $options = [
       'language' => $this->l10n()->getLanguageCode(),
       'url' => [
@@ -45,7 +46,8 @@ class Config extends DefaultOptions
       ],
       'page_name' => $urlGenerator->linkToRoute($this->appName().'.page.index'),
       'tooltips' => $toolTipsService,
-      'inc' => $this->getUserValue('pagerows', 20)
+      'inc' => $this->getUserValue('pagerows', 20),
+      'debug' => 0 != ($this->getUserValue('debug') & ConfigService::DEBUG_QUERY),
     ];
     parent::__construct($options);
   }
