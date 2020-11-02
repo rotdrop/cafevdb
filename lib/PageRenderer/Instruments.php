@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 
 use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
@@ -85,6 +85,8 @@ class Instruments extends PMETableViewBase
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->pmeOptions;
+
+    $expertMode = $this->getUserValue('expertmode');
 
     $opts['css']['postfix'] = 'direct-change show-hide-disabled';
 
@@ -205,17 +207,17 @@ class Instruments extends PMETableViewBase
     if ($this->showDisabled) {
       $opts['fdd']['Disabled'] = [
         'name'     => $this->l->t('Disabled'),
-        'css'      => ['postfix' => ' instrument-disabled' ],
-        'values2|CAP' => [ 1 => '' ],
-        'values2|LVFD' => [ 1 => $this->l->t('true'),
-                            0 => $this->l->t('false') ],
-        // 'values2' => [ 1 => $this->l->t('true'),
-        //                0 => $this->l->t('false') ],
-        'default'  => '',
-        'select'   => 'O',
+        'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
+        'input'    => $expertMode ? '' : 'R',
+        'select'   => 'C',
+        'maxlen'   => 1,
         'sort'     => true,
-        'tooltip'  => $this->toolTipsService['instruments-disabled']
-        ];
+        'escape'   => false,
+        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
+        'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+        'tooltip'  => $this->toolTipsService['instrument-disabled'],
+        'css'      => [ 'postfix' => ' instrument-disabled' ],
+      ];
     }
 
     // Provide joins with MusicianInstruments, ProjectInstruments,
@@ -288,11 +290,15 @@ class Instruments extends PMETableViewBase
 
     //$opts['triggers']['delete']['before']  = 'CAFEVDB\Instruments::beforeDeleteTrigger';
 
+    $opts['triggers']['update']['before'][]  = [ $this, 'updateFamilies' ];
+    $opts['triggers']['insert']['after'][]  = [ $this, 'updateFamilies' ];
+
     $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
+
 
     $opts['triggers']['select']['data'][] =
       function(&$pme, $op, $step, &$row) use ($opts, $usageIdx)  {
-        if (!$this->getUserValue('expertmode') && !empty($row['qf'.$usageIdx])) {
+        if (!$expertMode && !empty($row['qf'.$usageIdx])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;
@@ -316,7 +322,7 @@ class Instruments extends PMETableViewBase
     return $result;
   }
 
-  /**This is the phpMyEdit before-delete trigger.
+  /**This is a phpMyEdit before-SOMETHING trigger.
    *
    * phpMyEdit calls the trigger (callback) with
    * the following arguments:
@@ -337,15 +343,69 @@ class Instruments extends PMETableViewBase
    */
   private function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
-    // $count = self::usage($pme->rec, $pme->dbh);
+    $entity = $this->getDatabaseRepository(ORM\Entities\Instrument::class)->find($pme->rec);
 
-    // if ($count > 0) {
-    //   $result = mySQL::update('Instrumente', "Id = {$pme->rec}", [ 'Disabled' => 1 ], $pme->dbh);
-    //   return false;
-    // }
+    if ($entity->usage() > 0) {
+      $entity->setDisabled(true);
+      $this->flush();
+      return false;
+    }
 
     // return true;
     return false;
+  }
+
+  /**
+   * Instrument families are store in a separated pivot-table, hence
+   * we have to use a view or a separate update statement.
+   *
+   * @copydoc beforeDeleteTrigger
+   */
+  public function updateFamilies($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $this->logInfo(__METHOD__);
+
+    $field = 'Families';
+    $key = array_search($field, $changed);
+    if ($key !== false) {
+
+      $oldIds  = Util::explode(',', $oldValues[$field]);
+      $newIds  = Util::explode(',', $newValues[$field]);
+
+      $removed = array_diff($oldIds, $newIds);
+      $added   = array_diff($newIds, $oldIds);
+
+      $this->logInfo(__METHOD__.': oldIds: '.print_r($oldIds, true));
+      $this->logInfo(__METHOD__.': newIds: '.print_r($newIds, true));
+
+      $entity = $this->getDatabaseRepository(ORM\Entities\Instrument::class)->find($pme->rec);
+
+      $families = $entity->getFamilies();
+
+      $this->logInfo(__METHOD__.': families '.$families->count());
+
+      foreach ($families->getIterator() as $i => $family) {
+        if (in_array($family->getid(), $removed)) {
+          $families->remove($i);
+        }
+      }
+
+      $familyRepository = $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class);
+      foreach ($added as $id) {
+        $family = $familyRepository->find($id);
+        $families->add($family);
+      }
+
+      $entity->setFamilies($families);
+
+      $this->flush();
+    }
+
+    unset($changed[$key]);
+    unset($newValues[$field]);
+
+    return false;
+    return true;
   }
 
 }
