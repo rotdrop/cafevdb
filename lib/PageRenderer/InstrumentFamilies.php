@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 
 use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
@@ -152,11 +152,11 @@ class InstrumentFamilies extends PMETableViewBase
       ];
 
     $opts['fdd']['Family'] = [
-      'name'     => $this->l->t('Family'),
-      'select'   => 'T',
-      'maxlen'   => 64,
-      'sort'     => true,
-      'php'   =>  function($value) {
+      'name'   => $this->l->t('Family'),
+      'select' => 'T',
+      'maxlen' => 64,
+      'sort'   => true,
+      'php|LVDF'    => function($value) {
         return $this->l->t($value);
       },
     ];
@@ -205,13 +205,14 @@ class InstrumentFamilies extends PMETableViewBase
     if ($this->showDisabled) {
       $opts['fdd']['Disabled'] = [
         'name'     => $this->l->t('Disabled'),
-        'options' => $expertmode ? 'LAVCPDF' : 'LAVCPDF',
-        'input'    => $expertmode ? '' : 'R',
+        'options' => $expertMode ? 'LAVCPDF' : 'LAVCPDF',
+        'input'    => $expertMode ? '' : 'R',
         'select'   => 'C',
         'maxlen'   => 1,
         'sort'     => true,
         'escape'   => false,
-        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
+        'sqlw'     => '',
+        'values2|CAP' => [ '0' => '&nbsp;&nbsp;&nbsp;&nbsp;', '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' ],
         'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
         'tooltip'  => $this->toolTipsService['instrument-family-disabled'],
         'css'      => [ 'postfix' => ' instrument-family-disabled' ],
@@ -222,16 +223,11 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts['groupby_fields'] = [ 'id' ];
 
-    //$opts['triggers']['update']['before']  = 'CAFEVDB\Instruments::beforeUpdateTrigger';
-    //$opts['triggers']['insert']['before']  = 'CAFEVDB\Instruments::beforeInsertTrigger';
-
-    //$opts['triggers']['delete']['before']  = 'CAFEVDB\Instruments::beforeDeleteTrigger';
-
     $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
 
     $opts['triggers']['select']['data'][] =
       function(&$pme, $op, $step, &$row) use ($opts, $usageIdx)  {
-        if (!$expertmode && !empty($row['qf'.$usageIdx])) {
+        if (!$expertMode && !empty($row['qf'.$usageIdx])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;
@@ -273,7 +269,6 @@ class InstrumentFamilies extends PMETableViewBase
       return false;
     }
 
-    // return true;
-    return false;
+    return true;
   }
 }
