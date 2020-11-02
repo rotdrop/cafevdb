@@ -62,6 +62,6 @@ echo $this->inc('part.common.header',
 $renderer->render();
 
 // Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);
 
 ?>
