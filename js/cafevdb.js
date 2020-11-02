@@ -1193,7 +1193,7 @@ var CAFEVDB = CAFEVDB || {};
     const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
     const failData = CAFEVDB.ajaxFailData(xhr, textStatus, errorThrown);
-    console.info("AJAX failure data", failData);
+    //console.info("AJAX failure data", failData);
 
     switch (textStatus) {
     case 'notmodified':
@@ -1208,7 +1208,7 @@ var CAFEVDB = CAFEVDB || {};
 
     const caption = t('cafevdb', 'Error');
     var info = '<span class="http-status error">' + CAFEVDB.httpStatus[xhr.status] + '</span>';
-    console.info(xhr.status, info, errorThrown, textStatus);
+    //console.info(xhr.status, info, errorThrown, textStatus);
 
     var autoReport = '<a href="mailto:'
           + CAFEVDB.adminEmail
@@ -1281,7 +1281,7 @@ var CAFEVDB = CAFEVDB || {};
       break;
     }
 
-    console.info(info);
+    //console.info(info);
     CAFEVDB.dialogs.alert(
       info, caption, function() { errorCB(failData); }, true, true);
     return failData;
@@ -1374,13 +1374,13 @@ var CAFEVDB = CAFEVDB || {};
                        {'code': xhr.status, 'error': errorThrown});
     } else if (ct.indexOf('json') > -1) {
       const response = JSON.parse(xhr.responseText);
-      console.info('XHR response text', xhr.responseText);
-      console.log('JSON response', response);
+      //console.info('XHR response text', xhr.responseText);
+      //console.log('JSON response', response);
       data = {...data, ...response };
     } else {
       console.log('unknown response');
     }
-    console.info(data);
+    //console.info(data);
     return data;
   };
 
