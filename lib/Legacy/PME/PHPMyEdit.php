@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Legacy\PME;
 
 use \OCP\ILogger;
+use \OCP\IL10N;
 
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\DBALException;
@@ -63,6 +64,7 @@ class PHPMyEdit extends \phpMyEdit
     Connection $connection
     , IOptions $options
     , ILogger $logger
+    , IL10N $l10n
   )
   {
     $this->connection = $connection;
@@ -71,6 +73,7 @@ class PHPMyEdit extends \phpMyEdit
     }
     $this->dbh = $connection;
     $this->logger = $logger;
+    $this->l = $l10n;
     $this->debug = false;
 
     $this->overrideOptions = [
@@ -187,6 +190,8 @@ class PHPMyEdit extends \phpMyEdit
       $this->errorCode = $stmt->errorCode();
       $this->errorInfo = $stmt->errorInfo();
     } catch (DBALException $t) {
+      $this->logException($t);
+      throw $t;
       $this->exception = $t;
       $this->errorCode = $t->getCode();
       $this->errorInfo = $t->getMessage();
