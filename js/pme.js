@@ -373,7 +373,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
       .fail(function(xhr, status, errorThrown) {
         CAFEVDB.handleAjaxError(xhr, status, errorThrown);
-	cleanUp();
+	cleanup();
       })
       .done(function (data) {
 	if (!CAFEVDB.validateAjaxResponse(data, [ 'content' ])) {
@@ -585,7 +585,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 	    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
 	    .fail(function(xhr, status, errorThrown) {
               CAFEVDB.handleAjaxError(xhr, status, errorThrown);
-	      cleanUp();
+	      cleanup();
 	    })
 	    .done(function (data) {
 	      if (!CAFEVDB.validateAjaxResponse(data, [ 'content' ])) {
@@ -746,7 +746,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
     .fail(function(xhr, status, errorThrown) {
       CAFEVDB.handleAjaxError(xhr, status, errorThrown);
-      cleanUp();
+      cleanup();
     })
     .done(function (data) {
       if (!CAFEVDB.validateAjaxResponse(data, [ 'content' ])) {
