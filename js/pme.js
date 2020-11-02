@@ -217,6 +217,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       cbHandle = this.tableLoadCallbacks[template];
     } else {
 //      alert("No Callback for "+template);
+      console.info('no table load callback for ' + template);
       return false;
     }
 
@@ -263,10 +264,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     var button = $(outerForm).find(pme.pmeSysNameSelectors('input', submitNames)).first();
     if (button.length > 0) {
-      console.log('submit outer form by trigger click');
+      console.info('submit outer form by trigger click');
       button.trigger('click');
     } else {
-      console.log('submit outer form "hard"');
+      console.info('submit outer form "hard"');
       // submit the outer form
       //outerForm.submit();
       this.pseudoSubmit(outerForm, $(), outerSel, 'pme');
@@ -362,6 +363,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
       //alert("Post: "+post);
       const cleanup = function() {
+        console.info('cleanup');
         const dialogWidget = container.dialog('widget');
 
         CAFEVDB.Page.busyIcon(false);
@@ -443,7 +445,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       };
       resize('dialogOpen');
       container.on('pmetable:layoutchange', function(event) {
-        console.log('layout change');
+        console.info('layout change');
         resize(null);
       });
       return;
@@ -575,10 +577,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
             dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
 
 	    const cleanup = function() {
-                              dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
-                              container.find(pme.navigationSelector('reload')).removeClass('loading');
-                              CAFEVDB.Page.busyIcon(false);
-	                    };
+              console.info('cleanup');
+              dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+              container.find(pme.navigationSelector('reload')).removeClass('loading');
+              CAFEVDB.Page.busyIcon(false);
+	    };
 	    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
 	    .fail(function(xhr, status, errorThrown) {
               CAFEVDB.handleAjaxError(xhr, status, errorThrown);
@@ -616,7 +619,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                 options.ReloadValue = options.InitialValue;
                 pme.tableDialogReload(options, callback);
               } else {
-                console.log('trigger close dialog');
+                console.info('trigger close dialog');
                 container.dialog('close');
               }
               container.find(pme.navigationSelector('reload')).removeClass('loading');
@@ -650,7 +653,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var templateRenderer = form.find('input[name="templateRenderer"]');
 
     if (templateRenderer.length == 0) {
-      console.log('no template renderer');
+      console.info('no template renderer');
       // This just does not work.
       return false;
     }
@@ -678,7 +681,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var dialogCSSId = pme.dialogCSSId;
     if (containerSel !== pme.defaultSelector) {
       dialogCSSId = containerSel.substring(1)+'-'+dialogCSSId;
-      console.log('parent selector', containerSel, 'dialog selector', dialogCSSId);
+      console.info('parent selector', containerSel, 'dialog selector', dialogCSSId);
     }
 
     var tableOptions = {
@@ -719,7 +722,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     const template = CAFEVDB.Page.templateFromRenderer(
       tableOptions.templateRenderer);
 
-    console.log(containerCSSId, pme.dialogOpen);
+    console.info(containerCSSId, pme.dialogOpen);
     if (pme.dialogOpen[containerCSSId]) {
       return false;
     }
@@ -736,6 +739,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       post += '&' + $.param(tableOptions);
     }
     const cleanup = function() {
+      console.info('cleanup');
       CAFEVDB.Page.busyIcon(false);
       pme.dialogOpen[containerCSSId] = false;
     };
@@ -782,7 +786,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
           }
         },
         resize_: function() {
-          console.log('jq resize');
+          console.info('jq resize');
         },
         open: function() {
 
@@ -810,24 +814,26 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
           // general styling
           pme.init(containerSel);
-          console.log(containerSel);
+          console.info(containerSel);
 
           var resizeHandler = function(parameters) {
-              dialogHolder.dialog('option', 'height', 'auto');
-                dialogHolder.dialog('option', 'width', 'auto');
-                var newHeight = dialogWidget.height()
-                            - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
-                newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
-                //alert("Setting height to " + newHeight);
-                dialogHolder.height(newHeight);
-                console.log('pme-resize');
-              };
+            dialogHolder.dialog('option', 'height', 'auto');
+            dialogHolder.dialog('option', 'width', 'auto');
+            var newHeight = dialogWidget.height()
+                                   - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
+            newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
+            //alert("Setting height to " + newHeight);
+            dialogHolder.height(newHeight);
+            console.info('pme-resize');
+          };
 
           pme.tableDialogHandlers(tableOptions, function(parameters) {
             dialogHolder.css('height', 'auto');
             CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
+              console.info('pme.addEditor');
               pme.transposeReady(containerSel);
               pme.tableLoadCallback(template, containerSel, parameters, function() {
+                console.info('tableLoadCallback');
                 resizeHandler(parameters);
                 dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
                 dialogHolder.dialog('moveToTop');
@@ -916,7 +922,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                     'name="'+element.attr('name')+'" '+
                     'value="'+element.val()+'"/>');
       }
-      console.log('hard pseudo submit');
+      console.info('hard pseudo submit');
       form.submit();
       return false;
     }
@@ -940,6 +946,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
 
     const cleanup = function() {
+      console.info('cleanup');
       CAFEVDB.Page.busyIcon(false);
       CAFEVDB.modalizer(false);
     };
@@ -1225,7 +1232,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       };
       if (self.hasClass('allow-empty')) {
         chosenOptions.width = (this.offsetWidth + pme.singleDeselectOffset) + 'px';
-console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true));
+console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true));
       }
       if (self.hasClass('chosen-width-auto')) {
         chosenOptions.width = 'auto';
@@ -1265,7 +1272,7 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
       var oldTabClass = form.find('li.table-tabs.selected a').attr('href').substring(1);
       var tabClass = $(this).find('a').attr('href').substring(1);
 
-      console.log('old tab: ' + oldTabClass + ' new tab: ' + tabClass);
+      console.info('old tab: ' + oldTabClass + ' new tab: ' + tabClass);
 
       //alert('old tab: ' + oldTabClass + ' new tab: ' + tabClass);
 
@@ -1292,7 +1299,7 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
         }
       });
       if (reattachChosen) {
-        console.log('reattach chosen');
+        console.info('reattach chosen');
         pme.installFilterChosen(container);
         pme.installInputChosen(container);
       }
@@ -1310,8 +1317,8 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
 
     containerSel = pme.selector(containerSel);
     var container = pme.container(containerSel);
-    console.log('PME.init(): container selector: ', containerSel);
-    console.log('PME.init(): container found: ', container.length);
+    console.info('PME.init(): container selector: ', containerSel);
+    console.info('PME.init(): container found: ', container.length);
 
     var tableSel = 'table.'+pme.pmeToken('main');
     var formSel = 'form.'+pme.pmeToken('form');
@@ -1356,7 +1363,7 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
     // Show search fields
     container.on('click', tableSel+' input.'+pmeSearch, function(event) {
       event.stopImmediatePropagation(); // don't submit, not necessary
-      console.log('show search');
+      console.info('show search');
 
       var table = container.find(tableSel);
       var form = container.find(formSel);
@@ -1472,7 +1479,7 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
                    +' name="'+pme.pmeSys('operation')+'" />';
         }
 
-        console.log('about to open dialog');
+        console.info('about to open dialog');
         PHPMYEDIT.tableDialog(form, $(recordEl), containerSel);
         return false;
       });
@@ -1487,7 +1494,7 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
       event.preventDefault();
 
       //alert("Button: "+$(this).attr('name'));
-      console.log('submit');
+      console.info('submit');
       return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel);
     });
 
@@ -1564,7 +1571,7 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
     // });
 
     // container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
-    //   console.log('chosen:showing_dropdown');
+    //   console.info('chosen:showing_dropdown');
     //   return true;
     // });
 

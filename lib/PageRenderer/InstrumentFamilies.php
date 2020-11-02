@@ -35,10 +35,10 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
 
 /**Table generator for Instruments table. */
-class Instruments extends PMETableViewBase
+class InstrumentFamilies extends PMETableViewBase
 {
-  const CSS_CLASS = 'instruments';
-  const TABLE = 'Instruments';
+  const CSS_CLASS = 'instrument-families';
+  const TABLE = 'InstrumentFamilies';
 
   public function __construct(
     ConfigService $configService
@@ -56,17 +56,17 @@ class Instruments extends PMETableViewBase
   public function shortTitle()
   {
     if ($this->deleteOperation()) {
-      return $this->l->t('Delete Instrument');
+      return $this->l->t('Delete Instrument-Family');
     } else if ($this->viewOperation()) {
-      return $this->l->t('View Instrument');
+      return $this->l->t('View Instrument-Family');
     } else if ($this->changeOperation()) {
-      return $this->l->t('Change Instrument');
+      return $this->l->t('Change Instrument-Family');
     } else if ($this->addOperation()) {
-      return $this->l->t('Add Instrument');
+      return $this->l->t('Add Instrument-Family');
     } else if ($this->copyOperation()) {
-      return $this->l->t('Copy Instrument');
+      return $this->l->t('Copy Instrument-Family');
     }
-    return $this->l->t("Instruments and Instrument Sort-Order");
+    return $this->l->t("Instrument-Families");
   }
 
   public function headerText()
@@ -96,7 +96,7 @@ class Instruments extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'instruments';
+    $template = 'instrument-families';
     $opts['cgi']['persist'] = array(
       'template' => $template,
       'table' => $opts['tb'],
@@ -111,7 +111,7 @@ class Instruments extends PMETableViewBase
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'Sortierung' ];
+    $opts['sort_field'] = [ 'Family' ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -149,58 +149,53 @@ class Instruments extends PMETableViewBase
       'sort'      => true,
       ];
 
-    $opts['fdd']['Instrument'] = [
-      'name'     => $this->l->t('Instrument'),
+    $opts['fdd']['Family'] = [
+      'name'     => $this->l->t('Family'),
       'select'   => 'T',
       'maxlen'   => 64,
       'sort'     => true,
     ];
 
-    $opts['fdd']['Sortierung'] = [
-      'name'     => $this->l->t('sort order'),
-      'select'   => 'N',
-      'maxlen'   => 9,
-      'size'     => 6,
-      'sort'     => true,
-      'align'    => 'right',
-      ];
-
     $instFamIdx = count($opts['fdd']);
-    $opts['fdd']['InstrumentFamilyJoin'] = [
-      'name'   => $this->l->t('Family Join Pseudo Field'),
-      'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.family_id
+    $opts['fdd']['InstrumentJoin'] = [
+      'name' => 'InstrumentDummyJoin',
+      'input'    => 'VRH',
+      'sql'      => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.family_id
   ORDER BY PMEjoin'.$instFamIdx.'.family_id ASC)',
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => array(
         'table'       => 'instrument_family',
-        'column'      => 'family_id',
-        'description' => [ 'columns' => 'family_id' ],
-        'join'        => '$join_table.instrument_id = $main_table.Id',
+        'column'      => 'instrument_id',
+        'description' => [ 'columns' => 'instrument_id' ],
+        'join'        => '$join_table.family_id = $main_table.Id',
       )
     ];
 
-    $famIdx = count($opts['fdd']);
-    $opts['fdd']['Families'] = [
-      'name'        => $this->l->t('Families'),
-      'css'         => [ 'postfix' => ' instrument-families' ],
-      'display|LVF' => [ 'popup' => 'data' ],
-      'input'       => 'S', // skip, handled by triggers
+    $instIdx = count($opts['fdd']);
+    $opts['fdd']['Instruments'] = [
+      'name'        => $this->l->t('Instruments'),
+      'input'       => 'VR',
       'sort'        => true,
-      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$famIdx.'.id ORDER BY PMEjoin'.$famIdx.'.id ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.Id ORDER BY PMEjoin'.$instIdx.'.instrument ASC)',
       'filter'      => 'having',
       'select'      => 'M',
+      'maxlen'      => 11,
+      'php'   =>  function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+        $parts = explode(',', $value);
+        foreach ($parts as &$part) {
+          $part = $this->l->t($part);
+        }
+        return implode(',', $parts);
+      },
       'values' => [
-        'table'       => 'InstrumentFamilies',
+        'table'       => 'Instruments',
         'column'      => 'id',
-        'description' => 'family',
-        'orderby'     => 'family',
-        'join'        => '$join_table.id = PMEjoin'.$instFamIdx.'.family_id'
+        'description' => 'instrument',
+        'orderby'     => 'instrument',
+        'join'        => '$join_table.id = PMEjoin'.$instFamIdx.'.instrument_id'
       ],
     ];
-    $opts['fdd']['Families']['values|ACP'] = array_merge(
-      $opts['fdd']['Families']['values'],
-      [ 'filters' => '$table.disabled = 0' ]);
 
     if ($this->showDisabled) {
       $opts['fdd']['Disabled'] = [
@@ -209,8 +204,6 @@ class Instruments extends PMETableViewBase
         'values2|CAP' => [ 1 => '' ],
         'values2|LVFD' => [ 1 => $this->l->t('true'),
                             0 => $this->l->t('false') ],
-        // 'values2' => [ 1 => $this->l->t('true'),
-        //                0 => $this->l->t('false') ],
         'default'  => '',
         'select'   => 'O',
         'sort'     => true,
@@ -258,27 +251,6 @@ class Instruments extends PMETableViewBase
       'align'   => 'right',
     ];
 
-    $lang = locale_get_primary_language($this->l->getLanguageCode());
-
-    // Provide a link to Wikipedia for fun ...
-    $opts['fdd']['Lexikon'] = [
-      'name'    => 'Wikipedia',
-      'select'  => 'T',
-      'input'   => 'VR',
-      'options' => 'LF',
-      'sql'     => '`PMEtable0`.`Id`',
-      'php'   =>  function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($lang) {
-        $inst = $this->l->t($row['qf1']);
-        return '<a '
-          .'href="http://'.$lang.'.wikipedia.org/wiki/'.$inst.'" '
-          .'target="Wikipedia.'.$lang.'" '
-          .'>'
-          .$inst.'@Wikipedia.'.$lang.'</a>';
-      },
-      'escape' => false,
-      'nowrap' => true,
-    ];
-
     $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
 
     $opts['groupby_fields'] = [ 'Id' ];
@@ -303,17 +275,6 @@ class Instruments extends PMETableViewBase
     } else {
       $this->pme->setOptions($opts);
     }
-  }
-
-  /**Convert an array of ids to an array of names.*/
-  public function instrumentNames($instrumentIds)
-  {
-    $byId = $this->instrumentInfo['byId'];
-    $result = array();
-    foreach($instrumentIds as $id) {
-      $result[$id] = empty($byId[$id]) ? $this->l->t('unknown') : $byId[$id];
-    }
-    return $result;
   }
 
   /**This is the phpMyEdit before-delete trigger.
@@ -347,5 +308,4 @@ class Instruments extends PMETableViewBase
     // return true;
     return false;
   }
-
 }

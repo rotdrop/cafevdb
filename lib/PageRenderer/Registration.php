@@ -47,6 +47,7 @@ class Registration
       return $musicians;
     });
     $context->registerServiceAlias('template:'.'instruments', Instruments::class);
+    $context->registerServiceAlias('template:'.'instrument-families', InstrumentFamilies::class);
     $context->registerServiceAlias('template:'.'blog', BlogMapper::class);
   }
 }

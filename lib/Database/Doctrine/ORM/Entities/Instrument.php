@@ -48,20 +48,20 @@ class Instrument implements \ArrayAccess
      *
      * @ORM\Column(name="Disabled", type="boolean", nullable=false, options={"default"="0"})
      */
-    private $disabled = '0';
+    private $disabled = false;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Musician", mappedBy="instruments")
+     * @ORM\ManyToMany(targetEntity="Musician", mappedBy="instruments", fetch="EXTRA_LAZY")
      */
     private $musicians;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Project", mappedBy="instrumentation")
+     * @ORM\ManyToMany(targetEntity="Project", mappedBy="instrumentation", fetch="EXTRA_LAZY")
      */
     private $projects;
 
     /**
-     * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(
      *   name="instrument_family",
      *   joinColumns={@ORM\JoinColumn(name="instrument_id", referencedColumnName="Id", onDelete="CASCADE")},
@@ -182,5 +182,12 @@ class Instrument implements \ArrayAccess
     public function getDisabled()
     {
         return $this->disabled;
+    }
+
+    public function usage()
+    {
+        return $this->musicians->count()
+            + $this->projcts->count()
+            + $this->families->count();
     }
 }

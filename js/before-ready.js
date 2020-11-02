@@ -177,6 +177,14 @@ $(document).ready(function() {
         parameters: []
     });
 
+    PHPMYEDIT.addTableLoadCallback('instrument-families', {
+        callback: function(selector, parameters, resizeCB) {
+            resizeCB();
+        },
+        context: CAFEVDB,
+        parameters: []
+    });
+
     PHPMYEDIT.addTableLoadCallback('project-payments', {
         callback: function(selector, parameters, resizeCB) {
             resizeCB();

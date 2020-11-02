@@ -303,7 +303,7 @@ make sure that the musicians are also automatically added to the
         'column'      => 'Id',
         'description' => 'Instrument',
         'orderby'     => 'Sortierung',
-        'groups'      => 'Familie',
+        //        'groups'      => 'Familie',
         'join'        => '$join_table.Id = PMEjoin'.$musInstIdx.'.instrument_id'
         ],
       ];

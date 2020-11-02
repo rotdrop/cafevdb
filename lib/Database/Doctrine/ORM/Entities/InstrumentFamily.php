@@ -34,7 +34,14 @@ class InstrumentFamily implements \ArrayAccess
     private $family;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Instrument", mappedBy="families", orphanRemoval=true)
+     * @var bool
+     *
+     * @ORM\Column(name="disabled", type="boolean", nullable=false, options={"default"="0"})
+     */
+    private $disabled = false;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Instrument", mappedBy="families", orphanRemoval=true, fetch="EXTRA_LAZY")
      */
     private $instruments;
 
@@ -75,6 +82,35 @@ class InstrumentFamily implements \ArrayAccess
     public function getFamily()
     {
         return $this->family;
+    }
+
+    /**
+     * Set family.
+     *
+     * @param bool $disabled
+     *
+     * @return InstrumentFamily
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+
+        return $this;
+    }
+
+    /**
+     * Get disabled.
+     *
+     * @return bool
+     */
+    public function getDisabled():bool
+    {
+        return $this->disabled;
+    }
+
+    public function getUsage()
+    {
+        return $this->instruments->count();
     }
 
 }

@@ -75,6 +75,7 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Add a WYSIWYG editor to the element specified by @a selector. */
   CAFEVDB.addEditor = function(selector, initCallback, initialHeight) {
+    console.info('CAFEVDB.addEditor');
     var editorElement;
     if (selector instanceof jQuery) {
       editorElement = selector;

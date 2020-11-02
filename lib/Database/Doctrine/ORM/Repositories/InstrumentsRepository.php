@@ -9,6 +9,12 @@ use Doctrine\DBAL\Logging\DebugStack;
 
 class InstrumentsRepository extends EntityRepository
 {
+  /**Find an instrument by its name.*/
+  public function findByName(string $name)
+  {
+    return $this->findOneBy([ 'instrument' => $name ], ['sortierung' => 'ASC' ]);
+  }
+
   /**Sort by configured sorting column and omit disabled entries.
    */
   public function findAll()
@@ -56,8 +62,6 @@ class InstrumentsRepository extends EntityRepository
       'nameGroups' => $nameGroups
     ];
   }
-
-
 }
 
 // Local Variables: ***

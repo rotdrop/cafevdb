@@ -557,6 +557,14 @@ and even edit the public web-pages for the project and other things.");
                           'projectId' => $projectId);
             break;
 
+        case 'instrument-families':
+            $value = L::t("Instrument Families");
+            $title = L::t("Display the list of instrument families and add or change them as needed.");
+            $post = array('template' => 'instrument-families',
+                          'projectName' => $projectName,
+                          'projectId' => $projectId);
+            break;
+
         case 'projectinstruments':
             $value = L::t('Instrumentation Numbers');
             $title = L::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');
