@@ -41,6 +41,13 @@
     padding-right: 0 !important;
 }
 
-.cafevdb .ui-dialog-titlebar-close, .cafevdb .toBackButton.ui-button {
+.cafevdb .ui-dialog-titlebar-close.ui-button,
+.cafevdb .toBackButton.ui-button,
+.cafevdb .customCloseButton.ui-button {
   min-height: unset!important;
+}
+
+/* NC min-width = XXpx breaks the tinyMCE status bar. */
+.tox button {
+  min-height:unset!important;
 }

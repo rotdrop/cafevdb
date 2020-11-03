@@ -670,7 +670,7 @@ a.ui-tabs-anchor.compact span.ui-icon {
   float:none;
 }
 
-.ui-dialog-titlebar span {
+.ui-dialog-titlebar .ui-dialog-title {
   cursor: move;
 }
 
