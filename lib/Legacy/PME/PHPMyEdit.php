@@ -177,11 +177,11 @@ class PHPMyEdit extends \phpMyEdit
 
   function myquery($query, $line = 0, $debug = false)
   {
-    if ($debug || $this->debug) {
+    if (false && ($debug || $this->debug)) {
       $line = intval($line);
       echo '<h4>MySQL query at line ',$line,'</h4>',htmlspecialchars($query),'<hr size="1" />',"\n";
     }
-    if (true || $debug || $this->debug) {
+    if ($debug || $this->debug) {
       $this->logInfo(__METHOD__.': query@'.$line.' '.htmlspecialchars($query));
     }
     try {
