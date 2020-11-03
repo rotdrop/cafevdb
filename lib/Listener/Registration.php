@@ -38,6 +38,7 @@ class Registration
     self::registerListener($context, ProjectUpdatedEventListener::class);
     self::registerListener($context, UserLoggedInEventListener::class);
     self::registerListener($context, UserLoggedOutEventListener::class);
+    self::registerListener($context, TranslationNotFoundListener::class);
   }
 
   private static function registerListener(IRegistrationContext $context, $class) {

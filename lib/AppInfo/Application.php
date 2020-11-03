@@ -24,6 +24,9 @@ use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\App;
 use OCP\IL10N;
 
+use OC\L10N\Events\TranslationNotFound;
+use OCA\CAFEVDB\Listener\TranslationNotFoundListener;
+
 /*
  *
  **********************************************************
@@ -73,6 +76,11 @@ class Application extends App implements IBootstrap {
             function() {
                 \OCA\CAFEVDB\Common\Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
             }
+        );
+
+        $dispatcher->addServiceListener(
+            TranslationNotFound::class,
+            TranslationNotFoundListener::class
         );
     }
 
