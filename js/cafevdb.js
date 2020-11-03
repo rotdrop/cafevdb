@@ -265,7 +265,7 @@ var CAFEVDB = CAFEVDB || {};
       height: 'auto',
       modal: true,
       closeOnEscape: false,
-      dialogClass: 'transparent no-close wait-notification',
+      dialogClass: 'transparent no-close wait-notification cafevdb',
       resizable: false,
       open: function() {
       },
