@@ -247,8 +247,8 @@ class phpMyEdit
 	function nav_text_links()	 { return !empty($this->navigation) && stristr($this->navigation, 'T'); }
 	function nav_graphic_links() { return !empty($this->navigation) && stristr($this->navigation, 'G'); }
 	function nav_custom_multi()	 { return !empty($this->navigation) && stristr($this->navigation, 'M') && $this->misc_enabled(); }
-	function nav_up()			 { return !empty($this->navigation) && !empty($this->buttons[$this->page_type]['up']) && (stristr($this->navigation, 'U') && !($this->buttons[$this->page_type]['up'] === false)); }
-	function nav_down()			 { return !empty($this->navigation) && !empty($this->buttons[$this->page_type]['down']) && (stristr($this->navigation, 'D') && !($this->buttons[$this->page_type]['down'] === false)); }
+	function nav_up()			 { return !empty($this->navigation) && stristr($this->navigation, 'U') && (!isset($this->buttons[$this->page_type]['up']) || !($this->buttons[$this->page_type]['up'] === false)); }
+	function nav_down()			 { return !empty($this->navigation) && stristr($this->navigation, 'D') && (!isset($this->buttons[$this->page_type]['down']) || !($this->buttons[$this->page_type]['down'] === false)); }
 
 	/*
 	 * helper functions.
@@ -613,7 +613,6 @@ class phpMyEdit
 		/* print_r($langar); */
 		/* echo '</PRE>'; */
 
-		$this->logInfo(__METHOD__.' '.print_r($langar, true));
 		foreach ($langar as $lang => $qual) {
 			// try the full language w/ variant, but prefer UTF8
 			$language = strtoupper($lang).'-UTF8';
@@ -633,7 +632,6 @@ class phpMyEdit
 				break;
 			}
 		}
-		$this->logInfo(__METHOD__.' '.$file);
 		if (!file_exists($file)) {
 			// old algo, strip variants from the end of the language string
 			foreach ($langar as $lang => $qual) {
@@ -659,7 +657,6 @@ class phpMyEdit
 		if (!file_exists($file)) {
 			$file = $this->dir['lang'].'PME.lang.EN.inc';
 		}
-		$this->logInfo(__METHOD__.' include '.$file);
 		$ret = @include($file);
 		if (! is_array($ret)) {
 			return $ret;
@@ -3007,8 +3004,10 @@ class phpMyEdit
 	{
 		$ret = '';
 		$nav_fnc = 'nav_'.$position;
-		if(! $this->$nav_fnc())
+		if(! $this->$nav_fnc()) {
+			$this->logInfo(__METHOD__.' '.isset($this->buttons[$this->page_type]['up']));
 			return;
+		}
 		if ($this->nav_buttons()) {
 			$buttons = (is_array($this->buttons[$this->page_type][$position]))
 				? $this->buttons[$this->page_type][$position]
@@ -3314,7 +3313,7 @@ class phpMyEdit
 			} elseif (($this->fdd[$fd]['select'] == 'N' ||
 					   $this->fdd[$fd]['select'] == 'T')) {
 				$len_props = '';
-				$maxlen = intval($this->fdd[$k]['maxlen']);
+				$maxlen = !empty($this->fdd[$k]['maxlen']) ? intval($this->fdd[$k]['maxlen']) : 0;
 				//$maxlen > 0 || $maxlen = intval($this->sql_field_len($res, $fields["qf$k"]));
 				$maxlen > 0 || $maxlen = 500;
 				$size = isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size']
@@ -3651,7 +3650,7 @@ class phpMyEdit
 			$css_nosort_class = $this->getCSSclass('nosort');
 			$fdn = $this->fdd[$fd]['name'];
 			if (!empty($this->fdd[$fd]['encryption']) ||
-				! $this->fdd[$fd]['sort'] ||
+				empty($this->fdd[$fd]['sort']) ||
 				$this->password($fd)) {
 				echo '<th class="',$css_class_name,' ',$css_nosort_class,'">',$fdn,'</th>',"\n";
 			} else {
