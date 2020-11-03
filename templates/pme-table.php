@@ -29,7 +29,10 @@
 
 namespace OCA\CAFEVDB;
 
-$css   = $class.' '.$template;
+$css   = $template;
+if (!empty($class)) {
+  $css .= ' '.$class;
+}
 
 // This is here because otherwise PHP leaks content to stdout (and
 // thus to the client) on fatal errors.

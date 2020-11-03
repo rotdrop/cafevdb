@@ -122,7 +122,7 @@ class PmeTableController extends Controller {
           $this->l->t("Template-renderer `%s' cannot be found.", [$templateRenderer]),
           Http::INTERNAL_SERVER_ERROR);
       }
-      $renderer->navigation(false);
+      // $renderer->navigation(false); NOPE, navigation is needed, number of query records may change.
 
       $template = 'pme-table';
       $templateParameters = [
@@ -147,6 +147,8 @@ class PmeTableController extends Controller {
           'error' => $matches[1],
           'message' => $matches[2],
         ];
+      } else {
+        $mySQLError = null;
       }
 
       $response = self::dataResponse([

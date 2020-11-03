@@ -40,7 +40,7 @@ class Config extends DefaultOptions
     $this->configService = $configService;
 
     $options = [
-      'language' => $this->l10n()->getLanguageCode(),
+      'language' => locale_get_primary_language($this->l10n()->getLanguageCode()),
       'url' => [
         'images' => $urlGenerator->imagePath($this->appName(), ''),
       ],

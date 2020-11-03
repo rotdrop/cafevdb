@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-echo '<div class="cafevdb cfgerror error">';
+echo '<div class="cafevdb cfgerror error toastify">';
 switch ($error) {
 case 'notamember':
   echo $l->t('CamerataDB Error: You are not a member of the dedicated orchestra
@@ -36,10 +36,11 @@ administrator.',
   break;
 case 'exception':
   $message = $exception;
-  $trace   = $trace;
+  $trace   = is_array($trace) ? print_r($trace, true) : $trace;
   $debug   = $debug;
   echo $l->t("CamerataDB Error: got the error message `%s'!", [$message]);
   echo '<br/>';
+  $admin = '<a href="mailto:'.$admin.'?subject=cafevdb%20exception&body='.$message.' '.$trace.'">'.$admin.'</a>';
   echo $l->t("Please save the output and send it to the system administrator: `%s'. Many thanks for that!",
             [$admin]);
   echo '<br/>';

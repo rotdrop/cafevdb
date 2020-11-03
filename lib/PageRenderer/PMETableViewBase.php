@@ -93,7 +93,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       'recordsPerPage' => $this->getUserValue('pagerows', 20),
     ];
 
-    $this->pmeOptions = [ 'cgi' => [ 'persist' => [] ] ];
+    $this->pmeOptions = [
+      'cgi' => [ 'persist' => [] ],
+      'display' => [],
+    ];
     foreach ($cgiDefault as $key => $default) {
       $this->pmeOptions['cgi']['persist'][$key] =
         $this->{lcFirst($key)} =

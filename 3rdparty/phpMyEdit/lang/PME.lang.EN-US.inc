@@ -34,6 +34,7 @@ return Array(
 		'Apply'         	=>'Apply',
 		'Reload'         	=>'Reload',
 		'Cancel'        	=>'Cancel',
+                'Not'                   =>'Not',
 		'Search'			=>'Search',
 		'Hide'				=>'Hide',
 		'Clear'				=>'Clear',

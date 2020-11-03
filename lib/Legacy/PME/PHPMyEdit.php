@@ -81,12 +81,16 @@ class PHPMyEdit extends \phpMyEdit
       'dbp' => '',
       'execute' => false,
     ];
+    $this->defaultOptions = [
+      'language' => locale_get_primary_language($this->l->getLanguageCode()),
+    ];
     $this->setOptions($options->getArrayCopy());
   }
 
   public function setOptions(array $options)
   {
-    $this->defaultOptions = $options;
+    $options = $this->defaultOptions = Util::arrayMergeRecursive($this->defaultOptions, $options);
+
     if (isset($options['cgi']['prefix']['sys'])) {
       $this->cgi = $options['cgi'];
       $this->operation = $this->get_sys_cgi_var('operation');
@@ -94,6 +98,15 @@ class PHPMyEdit extends \phpMyEdit
     if (isset($options['options'])) {
       $this->options = $options['options'];
     }
+
+    $file = (new \ReflectionClass(parent::class))->getFileName();
+
+    // Creating directory variables
+    $this->dir['root'] = dirname(realpath($file))
+                       . (strlen(dirname(realpath($file))) > 0 ? '/' : '');
+    $this->dir['lang'] = $this->dir['root'].'lang/';
+
+    // Needs lang path
     $this->labels = $this->make_language_labels($options['language']?:null);
     $this->debug = isset($options['debug']) && $options['debug'];
   }
@@ -128,7 +141,7 @@ class PHPMyEdit extends \phpMyEdit
     // do nothing, we only work with already open connections.
   }
 
-  function resultValid($stmt)
+  function resultValid(&$stmt)
   {
     return is_object($stmt);
   }
@@ -214,7 +227,7 @@ class PHPMyEdit extends \phpMyEdit
     if ($this->labels && (isset($this->currentLanguage) || $this->currentLanguage == $lang)) {
       return $this->labels;
     }
-    $this->currentLanguage = $lang?:$this->get_server_var('HTTP_ACCEPT_LANGUAGE');
+    $this->currentLanguage = $lang ?: $this->get_server_var('HTTP_ACCEPT_LANGUAGE');
     return parent::make_language_labels($this->currentLanguage);
   }
 
@@ -225,7 +238,7 @@ class PHPMyEdit extends \phpMyEdit
   {
     $key = 'rec';
     $recordId = $this->get_sys_cgi_var($key, -1);
-    if ($recorId > 0) {
+    if ($recordId > 0) {
       return $recordId;
     }
     $opRecord = $this->get_sys_cgi_var('operation');
@@ -233,7 +246,7 @@ class PHPMyEdit extends \phpMyEdit
     $opArgs    = [];
     parse_str(parse_url($opRecord, PHP_URL_QUERY), $opArgs);
     $recordKey = $this->cgi['prefix']['sys'].$key;
-    $recordId = $opArgs[$recordKey]?: -1;
+    $recordId = !empty($opArgs[$recordKey]) ? $opArgs[$recordKey] : -1;
     return $recordId > 0 ? $recordId : -1;
   }
 

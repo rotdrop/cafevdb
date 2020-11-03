@@ -48,7 +48,8 @@ class InstrumentsRepository extends EntityRepository
       $families   = $entity['families']->map(function($entity) {
         return $entity['family'];
       })->toArray();
-      $family = implode(',', sort($families));
+      sort($families);
+      $family = implode(',', $families);
       $byName[$instrument] = $byId[$id] = $instrument;
       $nameGroups[$instrument] = $idGroups[$id] = $family;
       $familiesCollector[] = $family;

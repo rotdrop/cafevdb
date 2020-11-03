@@ -25,7 +25,6 @@ class RequestParameterService implements \ArrayAccess, \Countable
   public function __construct(IRequest $request) {
     $this->request = $request;
     $this->parameters = array_merge([ 'renderAs' => 'user',
-                                      'template' => 'blog',
                                       'projectName' => '',
                                       'projectId' => -1,
                                       'musicianId' => -1 ],

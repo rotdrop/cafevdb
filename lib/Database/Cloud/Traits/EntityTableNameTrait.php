@@ -31,7 +31,7 @@ trait EntityTableNameTrait
     $entityName = substr($entityClass, $backSlashPos + 1);
 
     // Convert camel-case to underscores
-    $words = array_map(lcfirst, preg_split('/(?=[A-Z])/', $entityName));
+    $words = array_map('lcfirst', preg_split('/(?=[A-Z])/', $entityName));
     $tableName = $appName.implode('_', $words);
 
     return $tableName;

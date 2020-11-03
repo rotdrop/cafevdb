@@ -33,6 +33,7 @@ $nav .= Navigation::pageControlElement('projects');
 $nav .= Navigation::pageControlElement('all');
 //$nav .= Navigation::pageControlElement('projectinstruments');
 $nav .= Navigation::pageControlElement('instruments');
+$nav .= Navigation::pageControlElement('instrument-families');
 
 $header = ''
         .'<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">

@@ -55,6 +55,12 @@ class PageController extends Controller {
   /** @var IAppContainer */
   private $appContainer;
 
+  /** @var array
+   *
+   * Result of ConfigCheckService.
+   */
+  private $configCheck;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -79,6 +85,9 @@ class PageController extends Controller {
     $this->configCheckService = $configCheckService;
     $this->urlGenerator = $urlGenerator;
     $this->l = $this->l10N();
+
+    // See if we are configured
+    $this->configCheck = $this->configCheckService->configured();
   }
 
   /**
@@ -200,12 +209,7 @@ class PageController extends Controller {
           Http::INTERNAL_SERVER_ERROR);
       }
     } catch (\Throwable $t) {
-      $this->logException($t, __METHOD__);
-      return self::grumble([
-        'message' => $this->l->t('Error, caught an exception'),
-        'exception' => $t->getFile().':'.$t->getLine().' '.$t->getMessage(),
-        'trace' => $t->getTraceAsString(),
-      ]);
+      return $this->exceptionResponse($t, $renderAs, __METHOD__);
     }
 
     $templateParameters = [
@@ -215,7 +219,7 @@ class PageController extends Controller {
       //'l' => $this->l,
       'appName' => $this->appName,
 
-      'configcheck' => $config,
+      'configcheck' => $this->configCheck,
       'orchestra' => $this->getConfigValue('orchestra'),
       'usergroup' => $this->groupId(),
       'shareowner' => $this->getConfigValue('shareowner'),
@@ -235,7 +239,6 @@ class PageController extends Controller {
       'projectName' => $projectName,
       'projectId' => $projectId,
       'musicianId' => $musicianId,
-      'recordId' => $recordId,
       'locale' => $this->getLocale(),
       'timezone' => $this->getTimezone(),
       'historySize' => $this->historyService->size(),
@@ -250,7 +253,7 @@ class PageController extends Controller {
     // renderAs = admin, user, blank
     // $renderAs = 'user';
     $response = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
-    if($renderAs == 'blank') {
+    if ($renderAs == 'blank') {
       try {
         $response = new JSONResponse([
           'contents' => $response->render(),
@@ -258,8 +261,7 @@ class PageController extends Controller {
                         'position' => $this->historyService->position()]
         ]);
       } catch (\Throwable $t) {
-        $this->logException($t, __METHOD__);
-        return self::grumble($this->exceptionChainData($t));
+        return $this->exceptionResponse($t, $renderAs, __METHOD__);
       }
     }
 
@@ -277,10 +279,7 @@ class PageController extends Controller {
 
   private function getTemplate($template)
   {
-    // See if we are configured
-    $config = $this->configCheckService->configured();
-
-    if ($template != 'debug' && !$config['summary']) {
+    if ($template != 'debug' && !$this->configCheck['summary']) {
       return 'configcheck';
     }
     if (empty($template)) {
@@ -314,6 +313,27 @@ class PageController extends Controller {
       $route .= '/'.$part;
     }
     return self::response($this->l->t("Page `%s\' not found.", [$route]), Http::STATUS_NOT_FOUND);
+  }
+
+  public function exceptionResponse(\Throwable $t, string $renderAs, string $method = null)
+  {
+    if (empty($method)) {
+      $method = __METHOD__;
+    }
+    $this->logException($t, $method);
+    if ($renderAs == 'blank') {
+      return self::grumble($this->exceptionChainData($t));
+    }
+
+    $templateParameters = [
+      'error' => 'exception',
+      'exception' => $t->getMessage(),
+      'trace' => $this->exceptionChainData($t),
+      'debug' => true,
+      'admin' => 'bofh@nowhere.com',
+    ];
+
+    return new TemplateResponse($this->appName, 'errorpage', $templateParameters, $renderAs);
   }
 
 }

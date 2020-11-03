@@ -243,12 +243,12 @@ class phpMyEdit
 	 * functions for indicating whether navigation style is enabled
 	 */
 
-	function nav_buttons()		 { return stristr($this->navigation, 'B'); }
-	function nav_text_links()	 { return stristr($this->navigation, 'T'); }
-	function nav_graphic_links() { return stristr($this->navigation, 'G'); }
-	function nav_custom_multi()	 { return stristr($this->navigation, 'M') && $this->misc_enabled(); }
-	function nav_up()			 { return (stristr($this->navigation, 'U') && !($this->buttons[$this->page_type]['up'] === false)); }
-	function nav_down()			 { return (stristr($this->navigation, 'D') && !($this->buttons[$this->page_type]['down'] === false)); }
+	function nav_buttons()		 { return !empty($this->navigation) && stristr($this->navigation, 'B'); }
+	function nav_text_links()	 { return !empty($this->navigation) && stristr($this->navigation, 'T'); }
+	function nav_graphic_links() { return !empty($this->navigation) && stristr($this->navigation, 'G'); }
+	function nav_custom_multi()	 { return !empty($this->navigation) && stristr($this->navigation, 'M') && $this->misc_enabled(); }
+	function nav_up()			 { return !empty($this->navigation) && !empty($this->buttons[$this->page_type]['up']) && (stristr($this->navigation, 'U') && !($this->buttons[$this->page_type]['up'] === false)); }
+	function nav_down()			 { return !empty($this->navigation) && !empty($this->buttons[$this->page_type]['down']) && (stristr($this->navigation, 'D') && !($this->buttons[$this->page_type]['down'] === false)); }
 
 	/*
 	 * helper functions.
@@ -425,7 +425,7 @@ class phpMyEdit
 		if (is_numeric($k)) {
 			$k = $this->fds[$k];
 		}
-		if (isset($this->fdd[$k]['encryption'])) {
+		if (!empty($this->fdd[$k]['encryption'])) {
 			return false;
 		}
 		$options = @$this->fdd[$k]['options'];
@@ -613,6 +613,7 @@ class phpMyEdit
 		/* print_r($langar); */
 		/* echo '</PRE>'; */
 
+		$this->logInfo(__METHOD__.' '.print_r($langar, true));
 		foreach ($langar as $lang => $qual) {
 			// try the full language w/ variant, but prefer UTF8
 			$language = strtoupper($lang).'-UTF8';
@@ -632,6 +633,7 @@ class phpMyEdit
 				break;
 			}
 		}
+		$this->logInfo(__METHOD__.' '.$file);
 		if (!file_exists($file)) {
 			// old algo, strip variants from the end of the language string
 			foreach ($langar as $lang => $qual) {
@@ -657,23 +659,24 @@ class phpMyEdit
 		if (!file_exists($file)) {
 			$file = $this->dir['lang'].'PME.lang.EN.inc';
 		}
+		$this->logInfo(__METHOD__.' include '.$file);
 		$ret = @include($file);
 		if (! is_array($ret)) {
 			return $ret;
 		}
 		$this->translations = $file;
-		$small = array(
-			'Search' => 'v',
-			'Hide'	 => '^',
-			'Clear'	 => 'X',
-			'Query'	 => htmlspecialchars('>'));
-		if ((!$this->nav_text_links() && !$this->nav_graphic_links())
-			|| !isset($ret['Search']) || !isset($ret['Query'])
-			|| !isset($ret['Hide'])	  || !isset($ret['Clear'])) {
-			foreach ($small as $key => $val) {
-				$ret[$key] = $val;
-			}
-		}
+		// $small = array(
+		// 	'Search' => 'v',
+		// 	'Hide'	 => '^',
+		// 	'Clear'	 => 'X',
+		// 	'Query'	 => htmlspecialchars('>'));
+		// if ((!$this->nav_text_links() && !$this->nav_graphic_links())
+		// 	|| !isset($ret['Search']) || !isset($ret['Query'])
+		// 	|| !isset($ret['Hide'])	  || !isset($ret['Clear'])) {
+		// 	foreach ($small as $key => $val) {
+		// 		$ret[$key] = $val;
+		// 	}
+		// }
 		return $ret;
 	} /* }}} */
 
@@ -716,7 +719,13 @@ class phpMyEdit
 			$value_group_data = $this->set_values_from_table($field_num, $strict);
 			$groups = (array)$groups + (array)$value_group_data['groups'];
 			$data = (array)$data + (array)$value_group_data['data'];
-			$values = (array)$this->fdd[$field_num]['values2'] + (array)$value_group_data['values'];
+			$values = [];
+			if (!empty($this->fdd[$field_num]['values2'])) {
+				$values += $this->fdd[$field_num]['values2'];
+			}
+			if (!empty($value_group_data['values'])) {
+				$values += $value_group_data['values'];
+			}
 		} else {
 			$values = (array)$this->fdd[$field_num]['values2'];
 		}
@@ -1560,7 +1569,7 @@ class phpMyEdit
 		}
 
 		if ($this->display['form']) {
-			echo '<form class="'.$this->getCSSclass('form').$tab_class.' '.$css_class.'" method="post"';
+			echo '<form class="'.$this->getCSSclass('form').' '.$css_class.'" method="post"';
 			echo ' action="',$page_name,'" name="'.$this->cgi['prefix']['sys'].'form">',"\n";
 			echo '  <input type="hidden" autofocus="autofocus" />'; // jquery hack.
 		}
@@ -1760,7 +1769,7 @@ class phpMyEdit
 			} else if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
 				$helptip = $this->fdd[$k]['tooltip'];
 			}
-			if (isset($this->fdd[$k]['encryption'])) {
+			if (!empty($this->fdd[$k]['encryption'])) {
 				if (!isset($row["qf$k"."encrypted"])) {
 					$row["qf$k"."encrypted"] = $row["qf$k"];
 				}
@@ -2206,7 +2215,7 @@ class phpMyEdit
 		if ($css == 'noescape') {
 			$escape = false;
 		}
-		if (isset($this->fdd[$k]['encryption'])) {
+		if (!empty($this->fdd[$k]['encryption'])) {
 			if (!isset($row["qf$k"."encrypted"])) {
 				$row["qf$k"."encrypted"] = $row["qf$k"];
 			}
@@ -2458,6 +2467,7 @@ class phpMyEdit
 		if (! is_array($selected)) {
 			$selected = $selected === null ? array() : array((string)$selected);
 		} else {
+			$selected2 = [];
 			foreach($selected as $val) $selected2[]=(string)$val;
 			$selected = $selected2;
 		}
@@ -2762,14 +2772,10 @@ class phpMyEdit
 			return $this->cgi['overwrite'][$name];
 		}
 
-		static $magic_quotes_gpc = null;
-		if ($magic_quotes_gpc === null) {
-			$magic_quotes_gpc = get_magic_quotes_gpc();
-		}
-
-		$var = @$_GET[$name];
-		if (! isset($var)) {
-			$var = @$_POST[$name];
+		if (isset($_GET[$name])) {
+			$var = $_GET[$name];
+		} else if (isset($_POST[$name])) {
+			$var = $_POST[$name];
 		}
 		if (! isset($var)) {
 			/* Due to compatiblity "crap" inside PHP spaces, dots, open
@@ -2780,25 +2786,17 @@ class phpMyEdit
 			 */
 
 			$cookedName = preg_replace('/[[:space:].[\x80-\x9f]/', '_', $name);
-			$var = @$_GET[$cookedName];
-			if (! isset($var)) {
-				$var = @$_POST[$cookedName];
+			if (isset($_GET[$cookedName])) {
+				$var = $_GET[$cookedName];
+			} else if (isset($_POST[$cookedName])) {
+				$var = $_POST[$cookedName];
 			}
 		}
 
-		if (isset($var)) {
-			if ($magic_quotes_gpc) {
-				if (is_array($var)) {
-					foreach (array_keys($var) as $key) {
-						$var[$key] = stripslashes($var[$key]);
-					}
-				} else {
-					$var = stripslashes($var);
-				}
-			}
-		} else {
-			$var = @$default_value;
+		if (!isset($var)) {
+			$var = $default_value;
 		}
+
 		if (isset($this) && $var === null && isset($this->cgi['append'][$name])) {
 			return $this->cgi['append'][$name];
 		}
@@ -3161,7 +3159,7 @@ class phpMyEdit
 			if (!isset($selected) && $this->inc >= 0 && $nummax < $this->total_recs) {
 				$kv_array[$this->inc] = $this->inc;
 				$selected = (string)$this->inc;
-			} else if ($this->inc < 0) {
+			} else /* if ($this->inc < 0) */ {
 				$selected = '-1';
 			}
 			$disabled = $this->total_recs <= 1;
@@ -3246,9 +3244,9 @@ class phpMyEdit
 		   Variable $fields is used to get index of particular field in
 		   result. That index can be passed in example to $this->sql_field_len()
 		   function. Use field names as indexes to $fields array. */
-		if (is_array($filter_row)) {
-			$fields = array_flip(array_keys($filter_row));
-		}
+		// if (is_array($filter_row)) {
+		// 	$fields = array_flip(array_keys($filter_row));
+		// }
 		//if ($fields != false) {
 		$css_class_name = $this->getCSSclass('filter');
 		$css_sys = $this->getCSSclass('sys');
@@ -3272,11 +3270,11 @@ class phpMyEdit
 			if ($this->clear_operation()) {
 				$m	= null;
 				$mc = null;
-				$mi = null;
+				$mi = [];
 			} else {
 				$m	= $this->get_sys_cgi_var($l);
 				$mc = $this->get_sys_cgi_var($lc);
-				$mi = $this->get_sys_cgi_var($li);
+				$mi = $this->get_sys_cgi_var($li)?:[];
 			}
 			echo '<td class="',$css_class_name,'">';
 			if ($this->password($k) || !$this->filtered($k)) {
@@ -3301,6 +3299,7 @@ class phpMyEdit
 				$readonly	= false;
 				$strip_tags = true;
 				//$escape	  = true;
+				$escape	  = false;
 				echo '<div class="'.$negate_css_class_name.'">';
 				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp',
 										   $negate_css_class_name,
@@ -3331,8 +3330,9 @@ class phpMyEdit
 										   $this->comp_ops, null, null, null,
 										   $mc);
 				}
+				$name = $this->cgi['prefix']['sys'].'qf'.$k;
 				echo '<input class="',$css_class_name,'" value="',htmlspecialchars(@$m);
-				echo '" type="text" name="'.$this->cgi['prefix']['sys'].'qf'.$k.'"',$len_props;
+				echo '" type="text" name="'.$name.'"',$len_props;
 				echo ' '.$this->fetchToolTip($css_class_name, $name, $css_class_name.'text');
 				echo ' />';
 			} else {
@@ -3650,7 +3650,7 @@ class phpMyEdit
 			$css_sort_class = $this->getCSSclass('sortfield');
 			$css_nosort_class = $this->getCSSclass('nosort');
 			$fdn = $this->fdd[$fd]['name'];
-			if ($this->fdd[$fd]['encryption'] ||
+			if (!empty($this->fdd[$fd]['encryption']) ||
 				! $this->fdd[$fd]['sort'] ||
 				$this->password($fd)) {
 				echo '<th class="',$css_class_name,' ',$css_nosort_class,'">',$fdn,'</th>',"\n";
@@ -3686,6 +3686,17 @@ class phpMyEdit
 		}
 		echo '</tr></thead><tbody>',"\n";
 
+		/*
+		 * Main list_table() query
+		 *
+		 * Each row of the HTML table is one record from the SQL query. We must
+		 * perform this query before filter printing, because we want to use
+		 * $this->sql_field_len() function. We will also fetch the first row to get
+		 * the field names.
+		 */
+		$qparts = $this->get_SQL_main_list_query_parts();
+		$query = $this->get_SQL_main_list_query($qparts);
+
 		// filter
 		if ($this->filter_operation() || $this->display['query'] === 'always') $this->filter_heading();
 		// Display sorting sequence
@@ -3718,16 +3729,7 @@ class phpMyEdit
 			$qpdeleteStr = htmlspecialchars($this->page_name.'?'.join('&',$qpdelete).$this->qfn);
 		}
 
-		/*
-		 * Main list_table() query
-		 *
-		 * Each row of the HTML table is one record from the SQL query. We must
-		 * perform this query before filter printing, because we want to use
-		 * $this->sql_field_len() function. We will also fetch the first row to get
-		 * the field names.
-		 */
-		$qparts = $this->get_SQL_main_list_query_parts();
-		$query = $this->get_SQL_main_list_query($qparts);
+		/* Execute query constructed above */
 		$res   = $this->myquery($query, __LINE__);
 		if ($res == false) {
 			$this->error('invalid SQL query', $query);
@@ -4175,7 +4177,7 @@ class phpMyEdit
 				$query = &$query_groups[$query_group];
 			}
 
-			if (isset($fdd['encryption'])) {
+			if (!empty($fdd['encryption'])) {
 				// encrypt the value
 				$val = call_user_func($this->fdd[$this->fdn[$fd]]['encryption']['encrypt'], $val);
 			}
@@ -4405,7 +4407,7 @@ class phpMyEdit
 				$column = $fd;
 			}
 			$query_real = &$query_groups[$tablename];
-			if (isset($fdd['encryption'])) {
+			if (!empty($fdd['encryption'])) {
 				// encrypt the value
 				$val = call_user_func($fdd['encryption']['encrypt'], $val);
 			}
@@ -4742,7 +4744,9 @@ class phpMyEdit
 					continue;
 				}
 				// Make field backups
-				$this->fdd[$column][$col_ar[0] .'~'] = $this->fdd[$column][$col_ar[0]];
+				if (isset($this->fdd[$column][$col_ar[0]])) {
+					$this->fdd[$column][$col_ar[0] .'~'] = $this->fdd[$column][$col_ar[0]];
+				}
 				$this->fdd[$column][$col_option.'~'] = $this->fdd[$column][$col_option];
 				// Set particular field
 				$this->fdd[$column][$col_ar[0]] = $this->fdd[$column][$col_option];
@@ -4886,6 +4890,9 @@ class phpMyEdit
 			// move 'HWR0' flags from ['options'] into ['input']
 			if (isset($this->fdd[$column]['options'])) {
 				$this->fdd[$column]['options'] = strtoupper($this->fdd[$column]['options']);
+				if (!isset($this->fdd[$column]['input'])) {
+					$this->fdd[$column]['input'] = '';
+				}
 				strstr($this->fdd[$column]['options'], 'H') !== false && $this->fdd[$column]['input'] .= 'H';
 				strstr($this->fdd[$column]['options'], 'W') !== false && $this->fdd[$column]['input'] .= 'W';
 				strstr($this->fdd[$column]['options'], 'R') !== false && $this->fdd[$column]['input'] .= 'R';
@@ -4958,12 +4965,6 @@ class phpMyEdit
 		*/
 
 		$error_reporting = error_reporting(E_ALL & ~E_NOTICE);
-
-		// Let's do explicit quoting - it's safer
-		// (but 5.3 does not have this at all)
-		if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-			set_magic_quotes_runtime(0);
-		}
 
 		// Checking if language file inclusion was successful
 		if (! is_array($this->labels)) {
@@ -5380,7 +5381,9 @@ class phpMyEdit
 			echo '</PRE>';
 		}
 		$opquery = array();
-		parse_str($opreq['query'], $opquery);
+		if (isset($opreq['query'])) {
+			parse_str($opreq['query'], $opquery);
+		}
 		/* May be more complicated in the future, but for now
 		 * we only expect the record here, so only check for
 		 * that.

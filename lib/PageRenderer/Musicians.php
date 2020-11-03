@@ -173,16 +173,16 @@ make sure that the musicians are also automatically added to the
         'tabs'  => [
           [ 'id' => 'orchestra',
             'default' => true,
-            'tooltip' => $toolTipsService['musician-orchestra-tab'],
+            'tooltip' => $this->toolTipsService['musician-orchestra-tab'],
             'name' => $this->l->t('Instruments and Status') ],
           [ 'id' => 'contact',
-            'tooltip' => $toolTipsService['musican-contact-tab'],
+            'tooltip' => $this->toolTipsService['musican-contact-tab'],
             'name' => $this->l->t('Contact Information') ],
           [ 'id' => 'miscinfo',
-            'tooltip' => $toolTipsService['musician-miscinfo-tab'],
+            'tooltip' => $this->toolTipsService['musician-miscinfo-tab'],
             'name' => $this->l->t('Miscellaneous Data') ],
           [ 'id' => 'tab-all',
-            'tooltip' => $toolTipsService['pme-showall-tab'],
+            'tooltip' => $this->toolTipsService['pme-showall-tab'],
             'name' => $this->l->t('Display all columns')
           ],
         ],
@@ -205,7 +205,7 @@ make sure that the musicians are also automatically added to the
     ];
 
     $bval = strval($this->l->t('Add to %s', array($projectName)));
-    $tip  = strval($toolTipsService['register-musician']);
+    $tip  = strval($this->toolTipsService['register-musician']);
     if ($this->projectMode) {
       $opts['fdd']['AddMusicians'] = [
         'tab' => [ 'id' => 'orchestra' ],
@@ -266,7 +266,7 @@ make sure that the musicians are also automatically added to the
         'sqlw'     => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ 1 => '' ],
         'values2|LVFD' => [ $this->l->t('false'), $this->l->t('true') ],
-        'tooltip'  => $toolTipsService['musician-disabled'],
+        'tooltip'  => $this->toolTipsService['musician-disabled'],
         'css'      => [ 'postfix' => ' musician-disabled' ],
       ];
     }
@@ -328,7 +328,7 @@ make sure that the musicians are also automatically added to the
       'sort'    => true,
       'css'     => ['postfix' => ' memberstatus tooltip-wide'],
       'values2' => $this->memberStatusNames,
-      'tooltip' => $toolTipsService['member-status'],
+      'tooltip' => $this->toolTipsService['member-status'],
     ];
 
     // fetch the list of all projects in order to provide a somewhat
@@ -574,7 +574,7 @@ make sure that the musicians are also automatically added to the
         [
           'tab' => ['id' => 'miscinfo'],
           "name" => $this->l->t("Last Updated"),
-          "default" => date($this->defdaultFDD['datetime']['datemask']),
+          "default" => date($this->defaultFDD['datetime']['datemask']),
           "nowrap" => true,
           "options" => 'LFAVCPDR' // Set by update trigger.
         ]
@@ -603,7 +603,7 @@ make sure that the musicians are also automatically added to the
 
 //     $opts['triggers']['delete']['before'][]  = 'CAFEVDB\Musicians::beforeDeleteTrigger';
 
-    if ($this->pme_bare) {
+    if ($this->pmeBare) {
       // disable all navigation buttons, probably for html export
       $opts['navigation'] = 'N'; // no navigation
       $opts['options'] = '';
