@@ -31,6 +31,19 @@ use OCA\CAFEVDB\Service\SessionService;
 trait ResponseTrait
 {
 
+  private function exceptionChainData(\Throwable $t, bool $top = true)
+  {
+    $previous = $t->getPrevious();
+    return [
+      'message' => ($top
+                    ? $this->l->t('Error, caught an exception')
+                    : $this->l->t('Caused by previous exception')),
+      'exception' => $t->getFile().':'.$t->getLine().' '.$t->getMessage(),
+      'trace' => $t->getTraceAsString(),
+      'previous' => empty($previous) ? null : $this->exceptionChainData($previous, false),
+    ];
+  }
+
   static private function dataResponse($data, $status = Http::STATUS_OK)
   {
     return new DataResponse($data, $status);

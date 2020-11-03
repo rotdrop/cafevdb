@@ -251,11 +251,16 @@ class PageController extends Controller {
     // $renderAs = 'user';
     $response = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
     if($renderAs == 'blank') {
-      $response = new JSONResponse([
-        'contents' => $response->render(),
-        'history' => ['size' => $this->historyService->size(),
-                      'position' => $this->historyService->position()]
-      ]);
+      try {
+        $response = new JSONResponse([
+          'contents' => $response->render(),
+          'history' => ['size' => $this->historyService->size(),
+                        'position' => $this->historyService->position()]
+        ]);
+      } catch (\Throwable $t) {
+        $this->logException($t, __METHOD__);
+        return self::grumble($this->exceptionChainData($t));
+      }
     }
 
     // ok no exception, so flush the history to the session, when we
