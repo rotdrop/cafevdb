@@ -51,9 +51,9 @@ var CAFEVDB = CAFEVDB || {};
       };
       argument = $.extend({}, options, argument);
       if (argument.dialogClass) {
-        argument.dialogClass += ' cafev';
+        argument.dialogClass += ' cafev cafevdb';
       } else {
-        argument.dialogClass = 'cafev';
+        argument.dialogClass = 'cafev cafevdb';
       }
       CAFEVDB.snapperClose();
       console.log("will open dialog");
