@@ -23,5 +23,8 @@
   "homepage": "https://github.com/rotdrop/cafevdb#readme",
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^23.0.0"
+  },
+  "scripts": {
+    "build": "/bin/true"
   }
 }
