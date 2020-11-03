@@ -47,7 +47,7 @@ class Registration
       $events = [ $events ];
     }
     foreach ($events as $event) {
-      $context->registerEventListener($class, $event);
+      $context->registerEventListener($event, $class);
     }
   }
 }
