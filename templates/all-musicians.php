@@ -36,6 +36,8 @@ if (/*Config::isTreasurer()*/true) { // @@TODO
   $nav .= Navigation::pageControlElement('debit-mandates');
 }
 $nav .= Navigation::pageControlElement('blog');
+$nav .= Navigation::pageControlElement('instruments');
+$nav .= Navigation::pageControlElement('instrument-families');
 
 echo $this->inc('part.common.header',
                 [ 'css-prefix' => $css_pfx,

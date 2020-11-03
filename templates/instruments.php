@@ -44,11 +44,13 @@ if ($projectId >= 0) {
   }
   $nav .= Navigation::pageControlElement('projects');
   $nav .= Navigation::pageControlElement('all');
+  $nav .= Navigation::pageControlElement('blog');
   $nav .= Navigation::pageControlElement('instruments', $project, $projectId);
   $nav .= Navigation::pageControlElement('instrument-families', $project, $projectId);
 } else {
   $nav .= Navigation::pageControlElement('projects');
   $nav .= Navigation::pageControlElement('all');
+  $nav .= Navigation::pageControlElement('blog');
   $nav .= Navigation::pageControlElement('instruments');
   $nav .= Navigation::pageControlElement('instrument-families');
 }
