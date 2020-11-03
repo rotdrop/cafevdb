@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -46,8 +48,9 @@ class Instruments extends PMETableViewBase
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
+    , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService);
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
   }
 
@@ -298,7 +301,7 @@ class Instruments extends PMETableViewBase
 
 
     $opts['triggers']['select']['data'][] =
-      function(&$pme, $op, $step, &$row) use ($opts, $usageIdx)  {
+      function(&$pme, $op, $step, &$row) use ($opts, $usageIdx, $expertMode)  {
         if (!$expertMode && !empty($row['qf'.$usageIdx])) {
           $pme->options = str_replace('D', '', $pme->options);
         }

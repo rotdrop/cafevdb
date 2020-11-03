@@ -65,18 +65,22 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   protected $defaultFDD;
 
+  protected $pageNavigation;
+
   protected function __construct(
-    ConfigService $configService,
-    RequestParameterService $requestParameters,
-    EntityManager $entityManager,
-    PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService
+    ConfigService $configService
+    , RequestParameterService $requestParameters
+    , EntityManager $entityManager
+    , PHPMyEdit $phpMyEdit
+    , ToolTipsService $toolTipsService
+    , Util\Navigation $pageNavigation
   ) {
     $this->configService = $configService;
     $this->requestParameters = $requestParameters;
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
     $this->toolTipsService = $toolTipsService;
+    $this->pageNavigation = $pageNavigation;
     $this->l = $this->l10n();
 
     $this->pmeBare = false;

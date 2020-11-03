@@ -29,6 +29,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
@@ -55,6 +56,9 @@ class PageController extends Controller {
   /** @var IAppContainer */
   private $appContainer;
 
+  /** @var OCA\CAFEVDB\PageRenderer\Util\Navigation */
+  private $pageNavigation;
+
   /** @var array
    *
    * Result of ConfigCheckService.
@@ -69,6 +73,7 @@ class PageController extends Controller {
     , HistoryService $historyService
     , RequestParameterService $parameterService
     , ToolTipsService $toolTipsService
+    , PageNavigation $pageNavigation
     , IInitialStateService $initialStateService
     , ConfigCheckService $configCheckService
     , \OCP\IURLGenerator $urlGenerator
@@ -81,6 +86,7 @@ class PageController extends Controller {
     $this->historyService = $historyService;
     $this->parameterService = $parameterService;
     $this->toolTipsService = $toolTipsService;
+    $this->pageNavigation = $pageNavigation;
     $this->initialStateService = $initialStateService;
     $this->configCheckService = $configCheckService;
     $this->urlGenerator = $urlGenerator;
@@ -215,6 +221,7 @@ class PageController extends Controller {
     $templateParameters = [
       'template' => $template,
       'renderer' => $renderer,
+      'navigation' => $this->pageNavigation,
 
       //'l' => $this->l,
       'appName' => $this->appName,

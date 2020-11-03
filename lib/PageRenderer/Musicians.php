@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -32,7 +34,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Navigation;
 
 /**Table generator for Musicians table. */
 class Musicians extends PMETableViewBase
@@ -46,14 +47,15 @@ class Musicians extends PMETableViewBase
   private $projectMode;
 
   public function __construct(
-    ConfigService $configService,
-    RequestParameterService $requestParameters,
-    EntityManager $entityManager,
-    PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
-    GeoCodingService $geoCodingService
+    ConfigService $configService
+    , RequestParameterService $requestParameters
+    , EntityManager $entityManager
+    , PHPMyEdit $phpMyEdit
+    , ToolTipsService $toolTipsService
+    , PageNavigation $pageNavigation
+    , GeoCodingService $geoCodingService
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService);
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->projectMode = false;
   }
@@ -158,8 +160,8 @@ make sure that the musicians are also automatically added to the
     //$opts['navigation'] = 'DB';
 
     if (!$this->projectMode) {
-      $export = Navigation::tableExportButton();
-      $opts['buttons'] = Navigation::prependTableButton($export, true);
+      $export = $this->pageNavigation->tableExportButton();
+      $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
     }
 
     // Display special page elements

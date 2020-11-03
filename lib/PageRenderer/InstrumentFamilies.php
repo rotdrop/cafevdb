@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -32,7 +34,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Navigation;
 
 /**Table generator for Instruments table. */
 class InstrumentFamilies extends PMETableViewBase
@@ -46,8 +47,9 @@ class InstrumentFamilies extends PMETableViewBase
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
+    , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService);
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
   }
 
@@ -226,8 +228,8 @@ class InstrumentFamilies extends PMETableViewBase
     $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
 
     $opts['triggers']['select']['data'][] =
-      function(&$pme, $op, $step, &$row) use ($opts, $usageIdx)  {
-        if (!$expertMode && !empty($row['qf'.$usageIdx])) {
+      function(&$pme, $op, $step, &$row) use ($opts, $instIdx, $expertMode)  {
+        if (!$expertMode && !empty($row['qf'.$instIdx])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;

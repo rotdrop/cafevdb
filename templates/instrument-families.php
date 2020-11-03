@@ -22,33 +22,31 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Common\Navigation;
-
 $css_pfx = $renderer->cssPrefix();
 $project = $renderer->getProjectName();
 $projectId = $renderer->getProjectId();
 
 $nav = '';
 if ($projectId >= 0) {
-  $nav .= Navigation::pageControlElement('projectlabel', $project, $projectId);
-  $nav .= Navigation::pageControlElement('detailed', $project, $projectId);
-  $nav .= Navigation::pageControlElement('project-extra', $project, $projectId);
-  $nav .= Navigation::pageControlElement('projectinstruments', $project, $projectId);
+  $nav .= $navigation->pageControlElement('projectlabel', $project, $projectId);
+  $nav .= $navigation->pageControlElement('detailed', $project, $projectId);
+  $nav .= $navigation->pageControlElement('project-extra', $project, $projectId);
+  $nav .= $navigation->pageControlElement('projectinstruments', $project, $projectId);
   if (/*Config::isTreasurer()*/true) { // @@TODO
-    $nav .= Navigation::pageControlElement('project-payments', $project, $projectId);
-    $nav .= Navigation::pageControlElement('debit-mandates', $project, $projectId);
-    $nav .= Navigation::pageControlElement('debit-notes', $project, $projectId);
+    $nav .= $navigation->pageControlElement('project-payments', $project, $projectId);
+    $nav .= $navigation->pageControlElement('debit-mandates', $project, $projectId);
+    $nav .= $navigation->pageControlElement('debit-notes', $project, $projectId);
     if ($project === Config::getValue('memberTable', false)) {
-      $nav .= Navigation::pageControlElement('insurances');
+      $nav .= $navigation->pageControlElement('insurances');
     }
   }
-  $nav .= Navigation::pageControlElement('projects');
-  $nav .= Navigation::pageControlElement('all');
-  $nav .= Navigation::pageControlElement('instruments', $project, $projectId);
+  $nav .= $navigation->pageControlElement('projects');
+  $nav .= $navigation->pageControlElement('all');
+  $nav .= $navigation->pageControlElement('instruments', $project, $projectId);
 } else {
-  $nav .= Navigation::pageControlElement('projects');
-  $nav .= Navigation::pageControlElement('all');
-  $nav .= Navigation::pageControlElement('instruments');
+  $nav .= $navigation->pageControlElement('projects');
+  $nav .= $navigation->pageControlElement('all');
+  $nav .= $navigation->pageControlElement('instruments');
 }
 
 echo $this->inc('part.common.header',

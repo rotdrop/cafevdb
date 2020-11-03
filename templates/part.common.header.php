@@ -22,7 +22,6 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Common\Navigation;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /******************************************************************************
@@ -127,13 +126,13 @@ if ($pageRows > $maxRows) {
     $pageRows = 0;
 }
 
-$debugModes = array(ConfigService::DEBUG_GENERAL => $l->t('General Information'),
-                    ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
-                    ConfigService::DEBUG_REQUEST => $l->t('HTTP Request'),
-                    ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
-                    ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form'));
+$debugModes = [ ConfigService::DEBUG_GENERAL => $l->t('General Information'),
+                ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
+                ConfigService::DEBUG_REQUEST => $l->t('HTTP Request'),
+                ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
+                ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form') ];
 
-$navigationControls = Navigation::buttonsFromArray(
+$navigationControls = $navigation->buttonsFromArray(
     array(
         'undo' => array(
             'name' => $l->t('Back'),

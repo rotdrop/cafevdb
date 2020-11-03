@@ -22,28 +22,27 @@
 
 namespace OCA\CAFEVDB\Templates;
 
-use OCA\CAFEVDB\Common\Navigation;
-
 $css_pfx = $renderer->cssPrefix();
 $css_class = $renderer->cssClass();
 
 $nav = '';
-$nav .= Navigation::pageControlElement('all');
-$nav .= Navigation::pageControlElement('projects');
-$nav .= Navigation::pageControlElement('instruments');
+$nav .= $navigation->pageControlElement('all');
+$nav .= $navigation->pageControlElement('projects');
+$nav .= $navigation->pageControlElement('instruments');
 if (/*Config::isTreasurer()*/true) { // @@TODO
-  $nav .= Navigation::pageControlElement('insurances');
-  $nav .= Navigation::pageControlElement('debit-mandates');
+  $nav .= $navigation->pageControlElement('insurances');
+  $nav .= $navigation->pageControlElement('debit-mandates');
 }
-$nav .= Navigation::pageControlElement('blog');
-$nav .= Navigation::pageControlElement('instruments');
-$nav .= Navigation::pageControlElement('instrument-families');
+$nav .= $navigation->pageControlElement('blog');
+$nav .= $navigation->pageControlElement('instruments');
+$nav .= $navigation->pageControlElement('instrument-families');
 
 echo $this->inc('part.common.header',
-                [ 'css-prefix' => $css_pfx,
+                [ //'navigation' => $navigation,
+                  'css-prefix' => $css_pfx,
                   'css-class' => $css_class,
                   'navigationcontrols' => $nav,
-                  'header' => $renderer->headerText() ]);
+                  'header' => $renderer->headerText(), ]);
 
 
 // Issue the main part
