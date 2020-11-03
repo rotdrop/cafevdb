@@ -111,6 +111,8 @@ make sure that the musicians are also automatically added to the
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->pmeOptions;
 
+    $expertMode = $this->getUserValue('expertmode');
+
     $opts['tb'] = self::TABLE;
 
     $opts['css']['postfix'] = ' show-hide-disabled';
@@ -255,13 +257,17 @@ make sure that the musicians are also automatically added to the
     if ($this->showDisabled) {
       $opts['fdd']['Disabled'] = [
         'name'     => $this->l->t('Disabled'),
-        'css'      => [ 'postfix' => ' musician-disabled' ],
+        'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
+        'input'    => $expertMode ? '' : 'R',
+        'select'   => 'C',
+        'maxlen'   => 1,
+        'sort'     => true,
+        'escape'   => false,
+        'sqlw'     => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ 1 => '' ],
         'values2|LVFD' => [ $this->l->t('false'), $this->l->t('true') ],
-        'default'  => '',
-        'select'   => 'O',
-        'sort'     => true,
         'tooltip'  => $toolTipsService['musician-disabled'],
+        'css'      => [ 'postfix' => ' musician-disabled' ],
       ];
     }
 
@@ -276,15 +282,15 @@ make sure that the musicians are also automatically added to the
         'column'      => 'instrument_id',
         'description' => ['columns' => 'instrument_id'],
         'join'        => '$join_table.musician_id = $main_table.Id',
-        ]
-      ];
+      ]
+    ];
 
     $opts['fdd']['InstrumentKey'] = [
       'name'  => $this->l->t('Instrument Key'),
       'sql'   => 'GROUP_CONCAT(DISTINCT PMEjoin'.$musInstIdx.'.instrument_id ORDER BY PMEjoin'.$musInstIdx.'.instrument_id ASC)',
       'input' => 'SRH',
       'filter' => 'having', // need "HAVING" for group by stuff
-      ];
+    ];
 
     $instIdx = count($opts['fdd']);
     $opts['fdd']['Instruments'] = [
@@ -305,8 +311,9 @@ make sure that the musicians are also automatically added to the
         'orderby'     => 'Sortierung',
         //        'groups'      => 'Familie',
         'join'        => '$join_table.Id = PMEjoin'.$musInstIdx.'.instrument_id'
-        ],
-      ];
+      ],
+    ];
+
     $opts['fdd']['Instruments']['values|ACP'] = array_merge(
       $opts['fdd']['Instruments']['values'],
       [ 'filters' => '$table.Disabled = 0' ]);
@@ -322,7 +329,7 @@ make sure that the musicians are also automatically added to the
       'css'     => ['postfix' => ' memberstatus tooltip-wide'],
       'values2' => $this->memberStatusNames,
       'tooltip' => $toolTipsService['member-status'],
-      ];
+    ];
 
     // fetch the list of all projects in order to provide a somewhat
     // cooked filter list

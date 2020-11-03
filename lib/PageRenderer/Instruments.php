@@ -213,6 +213,7 @@ class Instruments extends PMETableViewBase
         'maxlen'   => 1,
         'sort'     => true,
         'escape'   => false,
+        'sqlw'     => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
         'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
         'tooltip'  => $this->toolTipsService['instrument-disabled'],
@@ -351,8 +352,7 @@ class Instruments extends PMETableViewBase
       return false;
     }
 
-    // return true;
-    return false;
+    return true;
   }
 
   /**
