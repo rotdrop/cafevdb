@@ -48,7 +48,7 @@ class TranslationNotFoundListener implements IEventListener
     if (!($event instanceOf HandledEvent)) {
       return;
     }
-    $this->logInfo(__METHOD__.": ".$event->getAppName().' '.print_r($event->getCallerFrame(), true));
+    $this->logDebug(__METHOD__.": ".$event->getAppName().' '.print_r($event->getCallerFrame(), true));
   }
 }
 
