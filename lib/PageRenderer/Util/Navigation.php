@@ -66,6 +66,7 @@ class Navigation
    * label => optional label
    * group => optional option group
    * groupClass => optional css, only taken into account on group-change
+   * data => optional data for option data attributes
    *
    * Optional fields need not be present.
    *
@@ -73,7 +74,7 @@ class Navigation
    * given values. $selectedValues may be a single value of an array of
    * values.
    */
-  public function selectOptions($options, $selectedValues = [])
+  static public function selectOptions($options, $selectedValues = [])
   {
     $result = '';
     $indent = '';
@@ -99,9 +100,21 @@ class Navigation
       } else {
         $selected = '';
       }
-      $label    = isset($option['label']) ? ' label="'.Util::htmlEscape($option['label']).'"' : '';
-      $title    = isset($option['title']) ? ' title="'.Util::htmlEscape($option['title']).'"' : '';
+      $label = isset($option['label']) ? ' label="'.Util::htmlEscape($option['label']).'"' : '';
+      $title = isset($option['title']) ? ' title="'.Util::htmlEscape($option['title']).'"' : '';
       $group = isset($option['group']) ? Util::htmlEscape($option['group']) : false;
+      $data = '';
+      if (isset($option['data'])) {
+        $optionData = $option['data'];
+        if (!is_array($optionData)) {
+          $optionData = [ $optionData ];
+        }
+        foreach ($optionData as $key => $dataValue) {
+          $data .= ' data-'.Util::htmlEscape($key)."='";
+          $data .= json_encode($dataValue, JSON_FORCE_OBJECT);
+          $data .= "'";
+        }
+      }
       if ($group != $oldGroup) {
         $result .= '</optgroup>
 ';
@@ -114,8 +127,8 @@ class Navigation
           $indent = '  ';
         }
       }
-      $result .= $indent.'<option value="'.Util::htmlEscape($value).'"'.
-              $disabled.$selected.$label.$title.
+      $result .= $indent.'<option value="'.Util::htmlEscape((string)$value).'"'.
+              $disabled.$selected.$label.$title.$data.
               '>'.
               Util::htmlEscape($option['name']).
               '</option>
@@ -125,7 +138,7 @@ class Navigation
   }
 
   /**Simple select option array from flat value array. */
-  public function simpleSelectOptions($options, $selected = null)
+  static public function simpleSelectOptions($options, $selected = null)
   {
     $optionDescription = array();
     foreach ($options as $option) {
@@ -139,7 +152,7 @@ class Navigation
   /**Recursively emit hidden input elements to represent the given
    * data. $value may be a nested array.
    */
-  public function persistentCGI($key, $value = false)
+  static public function persistentCGI($key, $value = false)
   {
     if (is_array($key)) {
       $result = '';

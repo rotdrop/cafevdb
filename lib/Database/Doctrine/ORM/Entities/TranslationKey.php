@@ -35,12 +35,28 @@ class TranslationKey implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(name="phrase", type="string", length=1024, nullable=false,
+   * @ORM\Column(name="phrase", type="string", length=768, nullable=false,
    *   options={
    *     "comment":"Keyword to be translated. Normally en_US, but could be any unique tag"
    *   })
    */
   private $phrase;
+
+  /**
+   * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationKey", cascade={"all"})
+   */
+  private $translations;
+
+  /**
+   * @ORM\OneToMany(targetEntity="TranslationLocation", mappedBy="translationKey", cascade={"all"})
+   */
+  private $locations;
+
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->translations = new ArrayCollection();
+    $this->locations = new ArrayCollection();
+  }
 
   /**
    * Get id.
@@ -74,5 +90,25 @@ class TranslationKey implements \ArrayAccess
   public function getPhrase()
   {
     return $this->phrase;
+  }
+
+  /**
+   * Get linked Translation entities.
+   *
+   * @return ArrayCollection[]
+   */
+  public function getTranslations()
+  {
+    return $this->translations;
+  }
+
+  /**
+   * Get linked TranslationLocation entities.
+   *
+   * @return ArrayCollection[]
+   */
+  public function getLocations()
+  {
+    return $this->locations;
   }
 }

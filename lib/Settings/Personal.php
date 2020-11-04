@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ErrorService;
+use OCA\CAFEVDB\Service\TranslationService;
 
 class Personal implements ISettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -48,16 +49,21 @@ class Personal implements ISettings {
   /** @var ErrorService */
   private $errorService;
 
+  /** @var OCA\CAFEVDB\Service\TranslationService */
+  private $translationService;
+
   public function __construct(
-    ConfigService $configService,
-    ProjectService $projectService,
-    ToolTipsService $toolTipsService,
-    ErrorService $errorService
+    ConfigService $configService
+    , ProjectService $projectService
+    , ToolTipsService $toolTipsService
+    , ErrorService $errorService
+    , TranslationService $translationService
   ) {
     $this->configService = $configService;
     $this->projectService = $projectService;
     $this->toolTipsService = $toolTipsService;
     $this->errorService = $errorService;
+    $this->translationService = $translationService;
     $this->l = $this->l10N();
   }
 
@@ -79,6 +85,9 @@ class Personal implements ISettings {
         'appName' => $this->appName(),
         'userId' => $this->userId(),
         'locale' => $this->getLocale(),
+        'language' => $this->l->getLanguageCode(),
+        'locales' => $this->findAvailableLocales(),
+        'languages' => $this->findAvailableLanguages(),
         'localeCountryNames' => $this->localeCountryNames(),
         'timezone' => $this->getTimezone(),
         'adminsettings' => $isGroupAdmin,
@@ -156,6 +165,8 @@ class Personal implements ISettings {
             'sharedfolder' => $this->getConfigValue('sharedfolder',''),
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),
             'projectsbalancefolder' => $this->getConfigValue('projectsbalancefolder',''),
+
+            'translations' => $this->translationService->getTranslations(),
           ]);
 
         // musician ids of the officials

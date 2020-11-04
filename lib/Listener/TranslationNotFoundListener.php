@@ -22,7 +22,6 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\IL10N;
 use OCP\ILogger;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -34,6 +33,7 @@ class TranslationNotFoundListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const APP_NAME = 'cafevdb';
   const EVENT = HandledEvent::class;
 
   /** @var EventsService */
@@ -46,9 +46,8 @@ class TranslationNotFoundListener implements IEventListener
   protected $translationService;
 
   public function __construct(
-    string $appName
+    $appName
     , ILogger $logger
-    , IL10N $l10n
     , TranslationService $translationService
   ) {
     $this->appName = $appName;
@@ -70,7 +69,7 @@ class TranslationNotFoundListener implements IEventListener
     $language = $event->getLanguage();
     $file = $event->getFile();
     $line = $event->getLine();
-    $this->logInfo(__METHOD__.": ".$appName.'; '.$phrase.'; '.$locale.'; '.$language.'; '.$file.'; '.$line);
+    $this->logDebug(__METHOD__.": ".$appName.'; '.$phrase.'; '.$locale.'; '.$language.'; '.$file.'; '.$line);
     $this->translationService->recordUntranslated($phrase, $locale, $file, $line);
   }
 }

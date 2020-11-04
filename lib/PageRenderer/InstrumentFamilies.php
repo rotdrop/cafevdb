@@ -189,6 +189,9 @@ class InstrumentFamilies extends PMETableViewBase
       'select'      => 'M',
       'maxlen'      => 11,
       'php'   =>  function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+        if (empty($value)) {
+          return $value;
+        }
         $parts = explode(',', $value);
         foreach ($parts as &$part) {
           $part = $this->l->t($part);

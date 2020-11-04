@@ -29,6 +29,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Translation;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationKey;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationLocation;
 
 class TranslationService
 {
@@ -50,12 +51,117 @@ class TranslationService
     if (empty($translationKey)) {
       $translationKey = TranslationKey::create()->setPhrase($phrase);
       try {
-        $this->merge($translationKey);
+        $translationKey = $this->merge($translationKey);
       } catch (\Throwable $t) {
-        $this->logException($exception);
+        $this->logException($t);
       }
       //$this->flush();
+      $this->logInfo(__METHOD__.' translation key for '.$phrase.' was empty, new id '.$translationKey->getId());
+    } else {
+      $this->logInfo(__METHOD__.' existing translation key for '.$phrase.' has id '.$translationKey->getId());
     }
+
+    $this->setDataBaseRepository(TranslationLocation::class);
+    $keyId= $translationKey->getId();
+    $location = $this->findOneBy([
+      'keyId' => $keyId,
+      'file' => $file,
+      'line' => $line ]);
+    if (empty($location)) {
+      $this->logInfo(__METHOD__.' empty location for key '.$keyId);
+      $location = TranslationLocation::create()
+                ->setKeyId($keyId)
+                ->setTranslationKey($translationKey)
+                ->setFile($file)
+                ->setLine($line);
+      try {
+        $this->merge($location);
+      } catch (\Throwable $t) {
+        $this->logException($t);
+      }
+    }
+  }
+
+  /**
+   * Record a translation for a phrase
+   *
+   * @param string $phrase The phrase to translate
+   *
+   * @param string $translation The translation for $phrase
+   *
+   * @parma string $locale The locale for the translation
+   *
+   * @return boolean
+   */
+  public function recordTranslation(string $phrase, string $translatedPhrase, string $locale)
+  {
+    $this->setDataBaseRepository(TranslationKey::class);
+    $translationKey = $this->findOneBy([ 'phrase' => $phrase ]);
+    if (empty($translationKey)) {
+      $translationKey = TranslationKey::create()->setPhrase($phrase);
+      try {
+        $translationKey = $this->merge($translationKey);
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        return false;
+      }
+    }
+
+    $this->setDataBaseRepository(Translation::class);
+    $keyId= $translationKey->getId();
+    $changed = false;
+    $translation = $this->findOneBy([
+      'keyId' => $keyId,
+      'locale' => $locale ]);
+    if (empty($translation)) {
+      $translation = Translation::create()
+                ->setKeyId($keyId)
+                ->setTranslationKey($translationKey)
+                ->setTranslation($translatedPhrase)
+                ->setLocale($locale);
+      $changed = true;
+    } else if ($translation->getTranslation() != $translatedPhrase) {
+      $translation->setTranslation($translatedPhrase);
+      $changed = true;
+    }
+    if ($changed) {
+      try {
+        $this->merge($translation);
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Return an associative array with all translation informations.
+   *
+   * [
+   *   ID => [
+   *     'key' => KEY,
+   *     'translations' => [
+   *        LOCALE => 'translation'
+   *     ]
+   *   ];
+   */
+  public function getTranslations()
+  {
+    $translations = [];
+    $this->setDataBaseRepository(TranslationKey::class);
+    $translationKeys = $this->findAll();
+    foreach ($translationKeys as $key) {
+      $keyId = $key->getId();
+      $translations[$keyId] = [
+        'key' => $key->getPhrase(),
+        'translations' => [],
+      ];
+      foreach ($key->getTranslations()->getIterator() as $i => $translation) {
+        $translations[$keyId]['translations'][$translation->getLocale()] = $translation->getTranslation();
+      }
+    }
+    return $translations;
   }
 }
 

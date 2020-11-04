@@ -43,10 +43,12 @@ if ($projectId >= 0) {
   $nav .= $navigation->pageControlElement('projects');
   $nav .= $navigation->pageControlElement('all');
   $nav .= $navigation->pageControlElement('instruments', $project, $projectId);
+  $nav .= $navigation->pageControlElement('instrument-families');
 } else {
   $nav .= $navigation->pageControlElement('projects');
   $nav .= $navigation->pageControlElement('all');
   $nav .= $navigation->pageControlElement('instruments');
+  $nav .= $navigation->pageControlElement('instrument-families');
 }
 
 echo $this->inc('part.common.header',

@@ -563,6 +563,10 @@ class ConfigService {
     return $this->l10NFactory->findAvailableLanguages($app);
   }
 
+  public function findAvailableLocales() {
+    return $this->l10NFactory->findAvailableLocales();
+  }
+
   /**Return the currency symbol for the locale. */
   public function currencySymbol($locale = null)
   {

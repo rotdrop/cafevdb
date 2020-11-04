@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB;
 
-use \OCA\CAFEVDB\Common\Navigation;
+use \OCA\CAFEVDB\PageRenderer\Util\Navigation;
 
 $off = $orchestra == '' ? 'disabled="disabled"' : '';
 $countries = [];

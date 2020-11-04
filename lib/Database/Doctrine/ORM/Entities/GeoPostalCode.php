@@ -73,7 +73,8 @@ class GeoPostalCode implements \ArrayAccess
     private $updated;
 
     /**
-     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslation", mappedBy="geoPostalCode", cascade={"all"})     */
+     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslation", mappedBy="geoPostalCode", cascade={"all"})
+     */
     private $translations;
 
     public function __construct() {

@@ -792,6 +792,117 @@ var CAFEVDB = CAFEVDB || {};
         });
     }
 
+    {
+      ///////////////////////////////////////////////////////////////////////////
+      //
+      // translations via extra tables in DB
+      //
+      ///////////////////////////////////////////////////////////////////////////
+
+      const translationKeys = $('select.translation-phrases');
+      const locales = $('select.translation-locales');
+      const translationKey = $('.translation-key');
+      const translationText = $('textarea.translation-translation');
+      const hideTranslated = $('#cafevdb-hide-translated');
+      const msg = $('.translation.msg');
+
+      var key;
+      var language;
+      var translations;
+      var translation;
+
+      const updateControls = function() {
+        key = translationKeys.find('option:selected');
+        language = locales.val();
+        translation = '';
+        translations = {};
+
+        translationKey.html(key.text());
+
+        if (language && key.length == 1) {
+          translations = key.data('translations');
+          translation = translations[language] || '';
+        }
+        translationText.val(translation);
+      };
+
+      const showHideTranslated = function() {
+        const hide = hideTranslated.prop('checked');
+        translationKeys.find('option').each(function(idx, option) {
+          const $option = $(this);
+          if (!hide || !language) {
+            $option.show();
+          } else {
+            const translations = $option.data('translations');
+            if (translations[language]) {
+              $option.hide();
+              if ($option.prop('selected')) {
+                $option.prop('selected', false);
+              }
+            } else {
+              $option.show();
+            }
+          }
+        });
+        translationKeys.trigger('chosen:updated');
+        translationKeys.trigger('change');
+        console.info("update options");
+      };
+
+      translationKeys.chosen({
+        disable_search_threshold: 10,
+        allow_single_deselect: true,
+        width: '30%'
+      });
+
+      locales.chosen({
+	disable_search_threshold: 10,
+	allow_single_deselect: true,
+	width: '10%'
+      });
+
+      translationKeys.on('change', function(event) {
+        updateControls();
+        return false;
+      });
+
+      locales.on('change', function(event) {
+        updateControls();
+        showHideTranslated();
+        return false;
+      });
+
+      hideTranslated.on('change', function(event) {
+        showHideTranslated();
+        return false;
+      });
+
+      simpleSetValueHandler(
+        translationText, 'blur', msg,
+        function(element, data, value, msg) { // done
+          // no need to do any extra stuff?
+        },
+        function(element, msg) { // getValue
+          var val = undefined;
+          if (language && key.length == 1) {
+            // save it in order to restore, maybe we want to have an
+            // "OK" button in order not to accidentally damage
+            // existing translations.
+            translation = translationText.val();
+            translations[language] = translation;
+            key.data('translations', translations);
+            val = { 'name': 'translation',
+                    'value': { 'key': key.text(),
+                               'language': language,
+                               'translation': translationText.val() } };
+          }
+          return val;
+        });
+
+      updateControls();
+
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     //
     // development settings, mostly link stuff

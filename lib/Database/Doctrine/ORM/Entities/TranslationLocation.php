@@ -10,15 +10,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use OCP\ILogger;
 
 /**
- * Translations
+ * TranslationLocations
  *
- * @ORM\Table(name="Translations",
+ * @ORM\Table(name="TranslationLocations",
  *   uniqueConstraints={
- *     @ORM\UniqueConstraint(name="keyId_locale", columns={"key_id", "locale"})
+ *     @ORM\UniqueConstraint(name="key_file_line", columns={"key_id", "file", "line"})
  *   })
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationsRepository")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationLocationsRepository")
  */
-class Translation implements \ArrayAccess
+class TranslationLocation implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -42,22 +42,19 @@ class Translation implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(name="locale", type="string", length=5, nullable=false, options={
-   *   "fixed":true,
-   *   "comment":"Locale for translation, .e.g. en_US"
-   * })
+   * @ORM\Column(name="file", type="string", length=766, nullable=false)
    */
-  private $locale;
+  private $file;
 
   /**
-   * @var string
+   * @var int
    *
-   * @ORM\Column(name="translation", type="string", length=1024, nullable=false)
+   * @ORM\Column(name="line", type="integer", length=11, nullable=false)
    */
-  private $translation;
+  private $line;
 
   /**
-   * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="translations")
+   * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="locations")
    * @ORM\JoinColumn(name="key_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $translationKey;
@@ -71,33 +68,34 @@ class Translation implements \ArrayAccess
    *
    * @return int
    */
-  public function getId()
+  public
+  function getId()
   {
     return $this->id;
   }
 
   /**
-   * Set key.
+   * Set translation key id.
    *
-   * @param string $key
+   * @param int $keyId
    *
-   * @return Key
+   * @return TanslationLocation
    */
-  public function setKeyId($key)
+  public function setKeyId($keyId)
   {
-    $this->key = $key;
+    $this->keyId = $keyId;
 
     return $this;
   }
 
   /**
-   * Get key.
+   * Get linked translation key id.
    *
-   * @return string
+   * @return int
    */
   public function getKeyId()
   {
-    return $this->key;
+    return $this->keyId;
   }
 
   /**
@@ -125,51 +123,51 @@ class Translation implements \ArrayAccess
   }
 
   /**
-   * Set locale.
+   * Set file.
    *
-   * @param string $locale
+   * @param string $file
    *
-   * @return Translation
+   * @return TranslationLocation
    */
-  public function setLocale($locale)
+  public function setFile($file)
   {
-    $this->locale = $locale;
+    $this->file = $file;
 
     return $this;
   }
 
   /**
-   * Get locale.
+   * Get file.
    *
    * @return string
    */
-  public function getLocale()
+  public function getFile()
   {
-    return $this->locale;
+    return $this->file;
   }
 
   /**
-   * Set translation.
+   * Set line.
    *
-   * @param string $translation
+   * @param int $line
    *
-   * @return Translation
+   * @return TranslationLocation
    */
-  public function setTranslation($translation)
+  public function setLine($line)
   {
-    $this->translation = $translation;
+    $this->line = $line;
 
     return $this;
   }
 
   /**
-   * Get translation.
+   * Get line.
    *
-   * @return string
+   * @return int
    */
-  public function getTranslation()
+  public function getLine()
   {
-    return $this->translation;
+    return $this->line;
   }
 
 }

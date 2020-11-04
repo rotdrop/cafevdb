@@ -8,7 +8,7 @@ trait FactoryTrait {
 
     public static function create()
     {
-        self::log(__METHOD__);
+        //self::log(__METHOD__);
         $name = __CLASS__;
         return new $name();
     }

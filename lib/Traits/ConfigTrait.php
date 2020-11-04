@@ -239,6 +239,10 @@ trait ConfigTrait {
     return $this->configService->findAvailableLanguages($app);
   }
 
+  public function findAvailableLocales() {
+    return $this->configService->findAvailableLocales();
+  }
+
   protected function generateUUID() {
     \Sabre\VObject\UUIDUtil::getUUID();
   }

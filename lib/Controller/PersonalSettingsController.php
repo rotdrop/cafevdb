@@ -33,6 +33,8 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Service\CalDavService;
+use OCA\CAFEVDB\Service\TranslationService;
+use OCA\CAFEVDB\Common\Util;
 
 class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -46,13 +48,17 @@ class PersonalSettingsController extends Controller {
 
   private $calDavService;
 
+  /** @var OCA\CAFEVDB\Service\TranslationService */
+  private $translationService;
+
   public function __construct(
-    $appName,
-    IRequest $request,
-    ConfigService $configService,
-    Personal $personalSettings,
-    ConfigCheckService $configCheckService,
-    CalDavService $calDavService
+    $appName
+    , IRequest $request
+    , ConfigService $configService
+    , Personal $personalSettings
+    , ConfigCheckService $configCheckService
+    , CalDavService $calDavService
+    , TranslationService $translationService
   ) {
 
     parent::__construct($appName, $request);
@@ -61,6 +67,7 @@ class PersonalSettingsController extends Controller {
     $this->configCheckService = $configCheckService;
     $this->personalSettings = $personalSettings;
     $this->calDavService = $calDavService;
+    $this->translationService = $translationService;
     $this->l = $this->l10N();
   }
 
@@ -405,6 +412,23 @@ class PersonalSettingsController extends Controller {
       }
       $this->setUserValue($parameter, $realValue);
       return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
+    case 'translation':
+      if (empty($value['key']) || empty($value['language'])) {
+        return self::grumble($this->l->t('Empty translation phrase or language'));
+      }
+      if (!isset($value['translation'])) {
+        return self::grumble($this->l->t('Missing translation'));
+      }
+      $translation = Util::htmlEscape(trim($value['translation']));
+      $language = $value['language'];
+      if (strlen($language) < 2 || strlen($language) > 5) {
+        return self::grumble($this->l->t('Language specifier must between 2 and 5 chars (e.g. de or en_US), got %s', $language));
+      }
+      $key = $value['key'];
+      if (!$this->translationService->recordTranslation($key, $translation, $language)) {
+        return self::grumble($this->l->t('Recording the translation failed'));
+      }
+      return self::response($this->l->t("Successfully recorded the given translation for the language `%s'", $language));
     case 'ownclouddev':
     case 'sourcedocs':
     case 'sourcecode':
