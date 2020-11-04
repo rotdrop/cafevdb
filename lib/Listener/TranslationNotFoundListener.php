@@ -52,7 +52,6 @@ class TranslationNotFoundListener implements IEventListener
   ) {
     $this->appName = $appName;
     $this->logger = $logger;
-    $this->l = $l10n;
     $this->translationService = $translationService;
   }
 
