@@ -10,10 +10,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use OCP\ILogger;
 
 /**
- * Instrumente
+ * Translations
  *
  * @ORM\Table(name="Translations")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationssRepository")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationsRepository")
  */
 class Translation implements \ArrayAccess
 {
@@ -30,23 +30,21 @@ class Translation implements \ArrayAccess
   private $id;
 
   /**
-   * @var string
+   * @var int
    *
-   * @ORM\Column(name="key", type="string", length=1024, nullable=false, options={
-   *   "comment":"Keyword to be translated. Normally en_US, but could be any unique tag"
-   * })
+   * @ORM\Column(name="key_id", type="integer", nullable=false)
    */
-  private $key;
+  private $keyId;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="target", type="string", length=5, nullable=false, options={
+   * @ORM\Column(name="locale", type="string", length=5, nullable=false, options={
    *   "fixed":true,
    *   "comment":"Locale for translation, .e.g. en_US"
    * })
    */
-  private $target;
+  private $locale;
 
   /**
    * @var string
@@ -72,7 +70,7 @@ class Translation implements \ArrayAccess
    *
    * @return Key
    */
-  public function setKey($key)
+  public function setKeyId($key)
   {
     $this->key = $key;
 
@@ -84,33 +82,33 @@ class Translation implements \ArrayAccess
    *
    * @return string
    */
-  public function getKey()
+  public function getKeyId()
   {
     return $this->key;
   }
 
   /**
-   * Set target language.
+   * Set locale.
    *
-   * @param string $target
+   * @param string $locale
    *
    * @return Translation
    */
-  public function setTarget($target)
+  public function setLocale($locale)
   {
-    $this->target = $target;
+    $this->locale = $locale;
 
     return $this;
   }
 
   /**
-   * Get target.
+   * Get locale.
    *
    * @return string
    */
-  public function getTarget()
+  public function getLocale()
   {
-    return $this->target;
+    return $this->locale;
   }
 
   /**

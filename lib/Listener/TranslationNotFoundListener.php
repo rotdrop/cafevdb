@@ -28,7 +28,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OC\L10N\Events\TranslationNotFound as HandledEvent;
 
-use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\TranslationService;
 
 class TranslationNotFoundListener implements IEventListener
 {
@@ -39,16 +39,39 @@ class TranslationNotFoundListener implements IEventListener
   /** @var EventsService */
   private $eventsService;
 
-  public function __construct(ILogger $logger, IL10N $l10n) {
+  /** @var string */
+  protected $appName;
+
+  /** @var OCA\CAFEVDB\Service\TranslationService */
+  protected $translationService;
+
+  public function __construct(
+    string $appName
+    , ILogger $logger
+    , IL10N $l10n
+    , TranslationService $translationService
+  ) {
+    $this->appName = $appName;
     $this->logger = $logger;
     $this->l = $l10n;
+    $this->translationService = $translationService;
   }
 
   public function handle(Event $event): void {
     if (!($event instanceOf HandledEvent)) {
       return;
     }
-    $this->logDebug(__METHOD__.": ".$event->getAppName().' '.print_r($event->getCallerFrame(), true));
+    $appName = $event->getAppName();
+    if ($appName != $this->appName) {
+      return;
+    }
+    $phrase = $event->getPhrase();
+    $locale = $event->getLocale();
+    $language = $event->getLanguage();
+    $file = $event->getFile();
+    $line = $event->getLine();
+    $this->logInfo(__METHOD__.": ".$appName.'; '.$phrase.'; '.$locale.'; '.$language.'; '.$file.'; '.$line);
+    $this->translationService->recordUntranslated($phrase, $locale, $file, $line);
   }
 }
 
