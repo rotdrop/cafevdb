@@ -3009,13 +3009,15 @@ class phpMyEdit
 			return;
 		}
 		if ($this->nav_buttons()) {
-			$buttons = (is_array($this->buttons[$this->page_type][$position]))
+			$buttons = (isset($this->buttons[$this->page_type][$position]) &&
+						is_array($this->buttons[$this->page_type][$position]))
 				? $this->buttons[$this->page_type][$position]
 				: ($this->nav_custom_multi()
 				   ? $this->default_multi_buttons[$this->page_type]
 				   : $this->default_buttons[$this->page_type]);
 		} else {
-			$buttons = (is_array($this->buttons[$this->page_type][$position]))
+			$buttons = (isset($this->buttons[$this->page_type][$position])
+						&& is_array($this->buttons[$this->page_type][$position]))
 				? $this->buttons[$this->page_type][$position]
 				: ($this->nav_custom_multi()
 				   ? $this->default_multi_buttons_no_B[$this->page_type]
