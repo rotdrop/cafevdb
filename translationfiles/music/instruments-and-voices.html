@@ -1,0 +1,1028 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" version="XHTML+RDFa 1.0" dir="ltr" class="js"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><script type="text/javascript" src="https://bam.nr-data.net/1/87a75cd2b9?a=183602106&amp;v=1184.ab39b52&amp;to=Z1xVNkdZDRZYWhZZCV4WdgFBUQwLFkkQWQhEZlQNW0wRClVVB0I5WE1aDg%3D%3D&amp;rst=1532&amp;ck=1&amp;ref=https://web.library.yale.edu/print/book/export/html/3376&amp;ap=331&amp;be=301&amp;fe=1189&amp;dc=1062&amp;perf=%7B%22timing%22:%7B%22of%22:1604528001711,%22n%22:0,%22u%22:206,%22ue%22:211,%22f%22:68,%22dn%22:68,%22dne%22:68,%22c%22:68,%22s%22:68,%22ce%22:68,%22rq%22:174,%22rp%22:195,%22rpe%22:195,%22dl%22:205,%22di%22:1061,%22ds%22:1061,%22de%22:1087,%22dc%22:1188,%22l%22:1188,%22le%22:1191%7D,%22navigation%22:%7B%7D%7D&amp;at=SxtWQA9DHhg%3D&amp;jsonp=NREUM.setToken"></script><script src="https://js-agent.newrelic.com/nr-1184.min.js"></script><script type="text/javascript" async="" src="//siteimproveanalytics.com/js/siteanalyze_66356571.js"></script><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={licenseKey:"87a75cd2b9",applicationID:"183602106"};window.NREUM||(NREUM={}),__nr_require=function(e,t,n){function r(n){if(!t[n]){var i=t[n]={exports:{}};e[n][0].call(i.exports,function(t){var i=e[n][1][t];return r(i||t)},i,i.exports)}return t[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var i=0;i<n.length;i++)r(n[i]);return r}({1:[function(e,t,n){function r(){}function i(e,t,n){return function(){return o(e,[u.now()].concat(c(arguments)),t?null:this,n),t?void 0:this}}var o=e("handle"),a=e(6),c=e(7),f=e("ee").get("tracer"),u=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],p="api-",l=p+"ixn-";a(d,function(e,t){s[t]=i(p+t,!0,"api")}),s.addPageAction=i(p+"addPageAction",!0),s.setCurrentRouteName=i(p+"routeName",!0),t.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,t){var n={},r=this,i="function"==typeof t;return o(l+"tracer",[u.now(),e,n],r),function(){if(f.emit((i?"":"no-")+"fn-start",[u.now(),r,i],n),i)try{return t.apply(this,arguments)}catch(e){throw f.emit("fn-err",[arguments,this,e],n),e}finally{f.emit("fn-end",[u.now()],n)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,t){m[t]=i(l+t)}),newrelic.noticeError=function(e,t){"string"==typeof e&&(e=new Error(e)),o("err",[e,u.now(),!1,t])}},{}],2:[function(e,t,n){function r(){return c.exists&&performance.now?Math.round(performance.now()):(o=Math.max((new Date).getTime(),o))-a}function i(){return o}var o=(new Date).getTime(),a=o,c=e(8);t.exports=r,t.exports.offset=a,t.exports.getLastTimestamp=i},{}],3:[function(e,t,n){function r(e,t){var n=e.getEntries();n.forEach(function(e){"first-paint"===e.name?d("timing",["fp",Math.floor(e.startTime)]):"first-contentful-paint"===e.name&&d("timing",["fcp",Math.floor(e.startTime)])})}function i(e,t){var n=e.getEntries();n.length>0&&d("lcp",[n[n.length-1]])}function o(e){e.getEntries().forEach(function(e){e.hadRecentInput||d("cls",[e])})}function a(e){if(e instanceof m&&!g){var t=Math.round(e.timeStamp),n={type:e.type};t<=p.now()?n.fid=p.now()-t:t>p.offset&&t<=Date.now()?(t-=p.offset,n.fid=p.now()-t):t=p.now(),g=!0,d("timing",["fi",t,n])}}function c(e){d("pageHide",[p.now(),e])}if(!("init"in NREUM&&"page_view_timing"in NREUM.init&&"enabled"in NREUM.init.page_view_timing&&NREUM.init.page_view_timing.enabled===!1)){var f,u,s,d=e("handle"),p=e("loader"),l=e(5),m=NREUM.o.EV;if("PerformanceObserver"in window&&"function"==typeof window.PerformanceObserver){f=new PerformanceObserver(r);try{f.observe({entryTypes:["paint"]})}catch(v){}u=new PerformanceObserver(i);try{u.observe({entryTypes:["largest-contentful-paint"]})}catch(v){}s=new PerformanceObserver(o);try{s.observe({type:"layout-shift",buffered:!0})}catch(v){}}if("addEventListener"in document){var g=!1,y=["click","keydown","mousedown","pointerdown","touchstart"];y.forEach(function(e){document.addEventListener(e,a,!1)})}l(c)}},{}],4:[function(e,t,n){function r(e,t){if(!i)return!1;if(e!==i)return!1;if(!t)return!0;if(!o)return!1;for(var n=o.split("."),r=t.split("."),a=0;a<r.length;a++)if(r[a]!==n[a])return!1;return!0}var i=null,o=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var c=navigator.userAgent,f=c.match(a);f&&c.indexOf("Chrome")===-1&&c.indexOf("Chromium")===-1&&(i="Safari",o=f[1])}t.exports={agent:i,version:o,match:r}},{}],5:[function(e,t,n){function r(e){function t(){e(a&&document[a]?document[a]:document[i]?"hidden":"visible")}"addEventListener"in document&&o&&document.addEventListener(o,t,!1)}t.exports=r;var i,o,a;"undefined"!=typeof document.hidden?(i="hidden",o="visibilitychange",a="visibilityState"):"undefined"!=typeof document.msHidden?(i="msHidden",o="msvisibilitychange"):"undefined"!=typeof document.webkitHidden&&(i="webkitHidden",o="webkitvisibilitychange",a="webkitVisibilityState")},{}],6:[function(e,t,n){function r(e,t){var n=[],r="",o=0;for(r in e)i.call(e,r)&&(n[o]=t(r,e[r]),o+=1);return n}var i=Object.prototype.hasOwnProperty;t.exports=r},{}],7:[function(e,t,n){function r(e,t,n){t||(t=0),"undefined"==typeof n&&(n=e?e.length:0);for(var r=-1,i=n-t||0,o=Array(i<0?0:i);++r<i;)o[r]=e[t+r];return o}t.exports=r},{}],8:[function(e,t,n){t.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,t,n){function r(){}function i(e){function t(e){return e&&e instanceof r?e:e?f(e,c,o):o()}function n(n,r,i,o){if(!p.aborted||o){e&&e(n,r,i);for(var a=t(i),c=v(n),f=c.length,u=0;u<f;u++)c[u].apply(a,r);var d=s[w[n]];return d&&d.push([b,n,r,a]),a}}function l(e,t){h[e]=v(e).concat(t)}function m(e,t){var n=h[e];if(n)for(var r=0;r<n.length;r++)n[r]===t&&n.splice(r,1)}function v(e){return h[e]||[]}function g(e){return d[e]=d[e]||i(n)}function y(e,t){u(e,function(e,n){t=t||"feature",w[n]=t,t in s||(s[t]=[])})}var h={},w={},b={on:l,addEventListener:l,removeEventListener:m,emit:n,get:g,listeners:v,context:t,buffer:y,abort:a,aborted:!1};return b}function o(){return new r}function a(){(s.api||s.feature)&&(p.aborted=!0,s=p.backlog={})}var c="nr@context",f=e("gos"),u=e(6),s={},d={},p=t.exports=i();p.backlog=s},{}],gos:[function(e,t,n){function r(e,t,n){if(i.call(e,t))return e[t];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,t,{value:r,writable:!0,enumerable:!1}),r}catch(o){}return e[t]=r,r}var i=Object.prototype.hasOwnProperty;t.exports=r},{}],handle:[function(e,t,n){function r(e,t,n,r){i.buffer([e],r),i.emit(e,t,n)}var i=e("ee").get("handle");t.exports=r,r.ee=i},{}],id:[function(e,t,n){function r(e){var t=typeof e;return!e||"object"!==t&&"function"!==t?-1:e===window?0:a(e,o,function(){return i++})}var i=1,o="nr@id",a=e("gos");t.exports=r},{}],loader:[function(e,t,n){function r(){if(!E++){var e=b.info=NREUM.info,t=p.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&t))return u.abort();f(h,function(t,n){e[t]||(e[t]=n)});var n=a();c("mark",["onload",n+b.offset],null,"api"),c("timing",["load",n]);var r=p.createElement("script");r.src="https://"+e.agent,t.parentNode.insertBefore(r,t)}}function i(){"complete"===p.readyState&&o()}function o(){c("mark",["domContent",a()+b.offset],null,"api")}var a=e(2),c=e("handle"),f=e(6),u=e("ee"),s=e(4),d=window,p=d.document,l="addEventListener",m="attachEvent",v=d.XMLHttpRequest,g=v&&v.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:v,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var y=""+location,h={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1184.min.js"},w=v&&g&&g[l]&&!/CriOS/.test(navigator.userAgent),b=t.exports={offset:a.getLastTimestamp(),now:a,origin:y,features:{},xhrWrappable:w,userAgent:s};e(1),e(3),p[l]?(p[l]("DOMContentLoaded",o,!1),d[l]("load",r,!1)):(p[m]("onreadystatechange",i),d[m]("onload",r)),c("mark",["firstbyte",a.getLastTimestamp()],null,"api");var E=0},{}],"wrap-function":[function(e,t,n){function r(e){return!(e&&e instanceof Function&&e.apply&&!e[a])}var i=e("ee"),o=e(7),a="nr@original",c=Object.prototype.hasOwnProperty,f=!1;t.exports=function(e,t){function n(e,t,n,i){function nrWrapper(){var r,a,c,f;try{a=this,r=o(arguments),c="function"==typeof n?n(r,a):n||{}}catch(u){p([u,"",[r,a,i],c])}s(t+"start",[r,a,i],c);try{return f=e.apply(a,r)}catch(d){throw s(t+"err",[r,a,d],c),d}finally{s(t+"end",[r,a,f],c)}}return r(e)?e:(t||(t=""),nrWrapper[a]=e,d(e,nrWrapper),nrWrapper)}function u(e,t,i,o){i||(i="");var a,c,f,u="-"===i.charAt(0);for(f=0;f<t.length;f++)c=t[f],a=e[c],r(a)||(e[c]=n(a,u?c+i:i,o,c))}function s(n,r,i){if(!f||t){var o=f;f=!0;try{e.emit(n,r,i,t)}catch(a){p([a,n,r,i])}f=o}}function d(e,t){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(e);return n.forEach(function(n){Object.defineProperty(t,n,{get:function(){return e[n]},set:function(t){return e[n]=t,t}})}),t}catch(r){p([r])}for(var i in e)c.call(e,i)&&(t[i]=e[i]);return t}function p(t){try{e.emit("internal-error",t)}catch(n){}}return e||(e=i),n.inPlace=u,n.flag=a,n}},{}]},{},["loader"]);</script>
+    <base href="https://web.library.yale.edu/cataloging/music/instname">
+    <title>The names of instruments and voices in English, French, German, Italian, Russian, and Spanish</title>
+    <script type="text/javascript">
+<!--//--><![CDATA[//><!--
+document.cookie = 'adaptive_image=' + Math.max(screen.width, screen.height) + '; path=/';
+//--><!]]>
+</script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+window.jQuery || document.write("<script src='/sites/all/modules/contrib/jquery_update/replace/jquery/1.8/jquery.min.js'>\x3C/script>")
+//--><!]]>
+</script>
+<script type="text/javascript" src="https://web.library.yale.edu/sites/default/files/js/js_uJR3Qfgc-bGacxkh36HU9Xm2Q98e_V5UWlFISwie5ro.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+window.jQuery.ui || document.write("<script src='/sites/all/modules/contrib/jquery_update/replace/ui/ui/minified/jquery-ui.min.js'>\x3C/script>")
+//--><!]]>
+</script>
+<script type="text/javascript" src="https://web.library.yale.edu/sites/default/files/js/js_H7q2xORKmR9AN8Qx5spKEIBp7R_wG2apAswJoCUZY7I.js"></script>
+<script type="text/javascript" src="https://web.library.yale.edu/sites/default/files/js/js_f_6-OzlFXjayKlsU5sJKLwjz7LFQvdIZDm-Mt6jKwyM.js"></script>
+<script type="text/javascript" src="https://web.library.yale.edu/sites/default/files/js/js_0MSuof0o8BQDgyoMgNAYGSXXKJHrywe6cYPRYs6m_jA.js"></script>
+<script type="text/javascript" src="https://web.library.yale.edu/sites/default/files/js/js_KxtfxSQOYe_6OY8zM_hMxYxBrxsgzr-RO746hzQ9S6c.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","ajaxPageState":{"theme":"yul","theme_token":"0zcWbloCe-4RClM5dFT1Tp1cTJ_EILF3zWu1GTDzPZo","js":{"1":1,"\/\/ajax.googleapis.com\/ajax\/libs\/jquery\/1.8.3\/jquery.min.js":1,"0":1,"misc\/jquery-extend-3.4.0.js":1,"misc\/jquery-html-prefilter-3.5.0-backport.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"\/\/ajax.googleapis.com\/ajax\/libs\/jqueryui\/1.10.2\/jquery-ui.min.js":1,"2":1,"sites\/all\/modules\/contrib\/jquery_update\/replace\/ui\/external\/jquery.cookie.js":1,"sites\/all\/modules\/contrib\/google_cse\/google_cse.js":1,"sites\/all\/modules\/contrib\/jscrollpane\/js\/jquery.jscrollpane.min.js":1,"sites\/all\/modules\/contrib\/jscrollpane\/js\/jquery.mousewheel.js":1,"sites\/all\/modules\/contrib\/jscrollpane\/js\/script.js":1,"sites\/all\/modules\/contrib\/custom_search\/js\/custom_search.js":1,"sites\/all\/themes\/yul\/js\/blocks.js":1,"sites\/all\/themes\/yul\/js\/randombillboard.js":1,"sites\/all\/themes\/yul\/js\/html5.js":1,"sites\/all\/themes\/yul\/js\/quicksearch_home.js":1}},"collapsiblock":{"blocks":{"block-block-101":"3","block-block-106":"3","block-block-111":"3","block-menu-block-36":"1","block-block-77":"1","block-block-82":"1","block-menu-block-101":"1","block-block-72":"1","block-views-yul-staff-block-4":"1","block-block-121":"1","block-block-126":"1","block-block-116":"1","block-views-random-billboard-block-15":"1","block-menu-block-105":"1","block-menu-block-109":"1","block-menu-block-104":"1","block-block-52":"2","block-views-1a8310daa3416a51053586aa3c5bb2fb":"1","block-delta-blocks-page-title":"1","block-views-36d53baa88a9f88c63070fe6bc321a99":"1","block-views--exp-subject-taxonomy-page-7":"1","block-views-yul-staff-block-1":"1","block-views--exp-yc-pl-program-pl-search":"1","block-views-building-view-block":"1","block-block-131":"1","block-views-users-block-2":"1","block-views-496bf32a74c2ac8378d4f58249f2739f":"1","block-views-personal-librarian-pl-divinity":"1","block-block-11":"1","block-block-15":"1","block-block-13":"1","block-block-136":"1","block-views-random-billboard-block-16":"1","block-block-141":"1","block-menu-block-106":"1","block-block-96":"1","block-custom-search-blocks-1":"1","block-block-27":"1","block-block-7":"1","block-block-20":"1","block-menu-block-110":"3","block-block-146":"1","block-views-random-billboard-auxr-billboard":"1","block-views-news-by-term-auxr-news-list":"1","block-views-news-by-term-auxr-project-list":"1","block-views-in-focus-auxr-news":"1","block-block-151":"1","block-block-24":"1","block-block-2":"1","block-system-main":"1","block-block-156":"1","block-block-161":"1","block-block-166":"1","block-menu-block-25":"2","block-block-176":"1","block-menu-block-71":"1","block-menu-block-113":"1","block-block-171":"1","block-block-181":"1","block-menu-block-117":"1","block-views-random-billboard-block-17":"1","block-block-206":"1","block-block-14":"1","block-block-10":"1","block-menu-block-120":"1","block-views-sub-section-header-block":"1","block-menu-block-124":"1","block-block-216":"2","block-menu-menu-archives-at-yale-top-menu":"1","block-block-35":"1","block-block-226":"1","block-block-231":"1","block-menu-block-30":"1","block-menu-block-130":"1","block-block-241":"1","block-block-246":"1","block-block-251":"1","block-block-256":"1","block-book-navigation":"1","block-menu-block-131":"1","block-block-261":"3","block-block-266":"1","block-block-211":"1","block-menu-block-132":"1","block-views-create-block-from-node-block-1":"1","block-views-create-block-from-node-block-2":"1","block-block-269":"1","block-views-create-block-from-node-block-3":"1","block-menu-block-134":"1","block-views-service-catalog-terms-block-1":"1","block-views-service-catalog-terms-block-2":"1","block-views-e7d1ab4216ae4c582aac5839e8cfe250":"1","block-views-profile-block-2":"1","block-block-270":"1","block-block-29":"1","block-views-profile-block":"1","block-block-271":"1","block-block-272":"1","block-menu-block-38":"1","block-menu-block-16":"1","block-block-33":"1"},"default_state":1,"slide_type":1,"slide_speed":200,"block_title":":header:first","block":"section.block","block_content":"div.content"},"googleCSE":{"cx":"009508866768542770811:l-w3i3ifxls","language":"","resultsWidth":600,"domain":"www.google.com","showWaterMark":true},"jScrollPane":{"class":".scroll-pane"},"custom_search":{"form_target":"_self","solr":0}});
+//--><!]]>
+</script>
+        <meta name="robots" content="noindex, nofollow">          <link rel="shortcut icon" href="https://web.library.yale.edu/sites/all/themes/yale_omega_base/images/favicon.ico" type="image/x-icon">
+        <link type="text/css" rel="stylesheet" href="https://web.library.yale.edu/sites/default/files/css/css_xE-rWrJf-fncB6ztZfd2huxqgxu4WO-qwma6Xer30m4.css" media="all">
+<link type="text/css" rel="stylesheet" href="https://web.library.yale.edu/sites/default/files/css/css_hTLrwzbU9bZhjvzx-j5entbJFEHkjJyd6RgHEla8FhA.css" media="all">
+<link type="text/css" rel="stylesheet" href="https://web.library.yale.edu/sites/default/files/css/css_KgmCeYS6Z6mLMYGLtJ2Avb1t500iMME0tZBUvzVIC2Y.css" media="all">
+<link type="text/css" rel="stylesheet" href="https://web.library.yale.edu/sites/default/files/css/css_IDsR8FozgkSiqMfNlmyANlYivV0PvKQ23vr2x2Po7Vc.css" media="all">
+  </head>
+  <body>
+            <div class="print-site_name">Published on <em class="placeholder">Yale University Library</em> (<a href="https://web.library.yale.edu">https://web.library.yale.edu</a>)</div>
+    <p>
+    </p><div class="print-breadcrumb"><a href="/">Home</a> &gt; Printer-friendly &gt; The names of instruments and voices in English, French, German, Italian, Russian, and Spanish</div>
+    <hr class="print-hr">
+        <div class="print-content"><div id="node-3376" class="section-3">
+  <h1 class="book-heading">The names of instruments and voices in English, French, German, Italian, Russian, and Spanish</h1>
+  <div class="field field-name-body field-type-text-with-summary field-label-hidden"><div class="field-items"><div class="field-item even"><p class="rtecenter"><strong><a href="http://web.library.yale.edu/cataloging/music">Music Cataloging at Yale</a> <span class="print-footnote">[1]</span> ♪ <a href="http://web.library.yale.edu/cataloging/music/language-tools">Language tools</a> <span class="print-footnote">[2]</span></strong></p>
+<p>Russian diacritics and ligatures are not displayed.</p>
+<p>The source used for some of these names is <em>Terminorum musicae index septem linguis redactus (Polyglot dictionary of musical terms)</em>. Budapest: Akadémaia Kiadó ; Kassel: Bärenreiter, 1978. ISBN 9630512769, 3761805535 and <a href="http://www.dolmetsch.com/musictheory29.htm#translatednames">Instrument names in other languages</a> <span class="print-footnote">[3]</span> from <a href="http://www.dolmetsch.com/index.htm">Dolmetsch online</a> <span class="print-footnote">[4]</span></p>
+<p>Thanks to Marco Adorna for assistance with the Italian terminology and Jean-Baptiste Mazon for help with the French terminology</p>
+<p><a href="/print/book/export/html/3376#wind">Wind instruments:</a> <a href="/print/book/export/html/3376#woodwind">Woodwind instruments</a> | <a href="/print/book/export/html/3376#brass">Brass instruments</a> <strong>|</strong> <a href="/print/book/export/html/3376#string">Stringed instruments</a> <strong>|</strong> <a href="/print/book/export/html/3376#pluck">Plucked instruments</a> <strong>|</strong> <a href="/print/book/export/html/3376#keyboard">Keyboard instruments</a> <strong>|</strong> <a href="/print/book/export/html/3376#percussion">Percussion instruments</a> <strong>|</strong> <a href="/print/book/export/html/3376#electronic">Electronic instruments</a> <strong>|</strong> <a href="/print/book/export/html/3376#other">Other instruments</a> <strong>|</strong> <a href="/print/book/export/html/3376#instrumentalensembles">Instrumental ensembles</a> <strong>|</strong> <a href="/print/book/export/html/3376#voices">Voices</a> <strong>|</strong> <a href="/print/book/export/html/3376#vocalensembles">Vocal ensembles</a></p>
+<hr>
+<table width="100%" border="1" bgcolor="#FFDEAD">
+<tbody>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="wind" id="wind"></a>Wind instruments</strong></td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="woodwind" id="woodwind"></a>Woodwind instruments</strong></td>
+</tr>
+<tr bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" width="16%" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" width="16.8%" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" width="16.8%" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" width="16.8%" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" width="16.8%" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" width="16.8%" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">wind instruments</td>
+<td style="background-color:#FFDEAD" valign="Top">instruments à vent</td>
+<td style="background-color:#FFDEAD" valign="Top">Blasinstrumenten</td>
+<td style="background-color:#FFDEAD" valign="Top">strumenti a fiato</td>
+<td style="background-color:#FFDEAD" valign="Top">dukhovye instrumenty</td>
+<td style="background-color:#FFDEAD" valign="Top">instrumentos de viento</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">woodwind instruments</td>
+<td style="background-color:#FFDEAD" valign="Top">les bois; instruments à vent en bois</td>
+<td style="background-color:#FFDEAD" valign="Top">Holzblasinstrumente</td>
+<td style="background-color:#FFDEAD" valign="Top">legno</td>
+<td style="background-color:#FFDEAD" valign="Top">dereviannye dukhovye instrumenty</td>
+<td style="background-color:#FFDEAD" valign="Top">instrumentos de madera</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">reeds</td>
+<td style="background-color:#FFDEAD" valign="Top">anches</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">trosti</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">double reeds</td>
+<td style="background-color:#FFDEAD" valign="Top">anches doubles</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">double reeds</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">flute <em>see also</em><br>
+<a href="http://web.library.yale.edu/cataloging/music/When-is-a-flute-not-a-flute">When is a flute not a flute</a> <span class="print-footnote">[5]</span></td>
+<td style="background-color:#FFDEAD" valign="Top">flûte;<br>
+grande flûte;<br>
+flûte traversière</td>
+<td style="background-color:#FFDEAD" valign="Top">Flöte; Querflöte</td>
+<td style="background-color:#FFDEAD" valign="Top">flauto</td>
+<td style="background-color:#FFDEAD" valign="Top">fleita</td>
+<td style="background-color:#FFDEAD" valign="Top">flauta</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">oboe</td>
+<td style="background-color:#FFDEAD" valign="Top">hautbois</td>
+<td style="background-color:#FFDEAD" valign="Top">Oboe</td>
+<td style="background-color:#FFDEAD" valign="Top">oboe</td>
+<td style="background-color:#FFDEAD" valign="Top">goboi</td>
+<td style="background-color:#FFDEAD" valign="Top">oboe</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">clarinet</td>
+<td style="background-color:#FFDEAD" valign="Top">clarinette</td>
+<td style="background-color:#FFDEAD" valign="Top">Klarinette</td>
+<td style="background-color:#FFDEAD" valign="Top">clarinetto</td>
+<td style="background-color:#FFDEAD" valign="Top">klarnet</td>
+<td style="background-color:#FFDEAD" valign="Top">clarinete</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">bass clarinet</td>
+<td style="background-color:#FFDEAD" valign="Top">clarinette basse</td>
+<td style="background-color:#FFDEAD" valign="Top">Bassklarinette</td>
+<td style="background-color:#FFDEAD" valign="Top">clarinetto basso</td>
+<td style="background-color:#FFDEAD" valign="Top">bass-klarnet</td>
+<td style="background-color:#FFDEAD" valign="Top">clarinete bajo</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">bassoon</td>
+<td style="background-color:#FFDEAD" valign="Top">basson</td>
+<td style="background-color:#FFDEAD" valign="Top">Fagott</td>
+<td style="background-color:#FFDEAD" valign="Top">fagotto</td>
+<td style="background-color:#FFDEAD" valign="Top">fagot</td>
+<td style="background-color:#FFDEAD" valign="Top">fagot(e)</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">English horn</td>
+<td style="background-color:#FFDEAD" valign="Top">cor anglais</td>
+<td style="background-color:#FFDEAD" valign="Top">Englischhorn</td>
+<td style="background-color:#FFDEAD" valign="Top">corno inglese</td>
+<td style="background-color:#FFDEAD" valign="Top">angliiskii rozhok</td>
+<td style="background-color:#FFDEAD" valign="Top">corno/cuerno inglés</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">recorder <em>see also</em><br>
+<a href="http://web.library.yale.edu/cataloging/music/When-is-a-flute-not-a-flute">When is a flute not a flute</a> <span class="print-footnote">[5]</span></td>
+<td style="background-color:#FFDEAD" valign="Top">flûte à bec;<br>
+flûte douce/droite</td>
+<td style="background-color:#FFDEAD" valign="Top">Blockflöte</td>
+<td style="background-color:#FFDEAD" valign="Top">flauto dolce/<br>
+dritto/a becco</td>
+<td style="background-color:#FFDEAD" valign="Top">blokfleita</td>
+<td style="background-color:#FFDEAD" valign="Top">flauta recta/<br>
+dulce/de pico</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">saxophone</td>
+<td style="background-color:#FFDEAD" valign="Top">saxophone</td>
+<td style="background-color:#FFDEAD" valign="Top">Saxophon</td>
+<td style="background-color:#FFDEAD" valign="Top">sassofono; saxofono</td>
+<td style="background-color:#FFDEAD" valign="Top">saksofon</td>
+<td style="background-color:#FFDEAD" valign="Top">saxofón; saxofóno</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">piccolo</td>
+<td style="background-color:#FFDEAD" valign="Top">piccolo; flûte piccolo;<br>
+petite flûte</td>
+<td style="background-color:#FFDEAD" valign="Top">Pikkoloflöte; Piccolo;<br>
+kleine Flöte</td>
+<td style="background-color:#FFDEAD" valign="Top">ottavino;<br>
+flauto piccolo</td>
+<td style="background-color:#FFDEAD" valign="Top">pikkolo; malaia fleita;<br>
+fleita pikkolo</td>
+<td style="background-color:#FFDEAD" valign="Top">flautín; ottavino</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">oboe d'amore</td>
+<td style="background-color:#FFDEAD" valign="Top">hautbois d'amore;<br>
+hautbois d'amour</td>
+<td style="background-color:#FFDEAD" valign="Top">Liebesoboe</td>
+<td style="background-color:#FFDEAD" valign="Top">oboe d'amore</td>
+<td style="background-color:#FFDEAD" valign="Top">goboi d'amur</td>
+<td style="background-color:#FFDEAD" valign="Top">oboe de amor</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="brass" id="brass"></a>Brass instruments</strong></td>
+</tr>
+<tr bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">brass instruments</td>
+<td style="background-color:#FFDEAD" valign="Top">instruments à vent de cuivre; cuivres</td>
+<td style="background-color:#FFDEAD" valign="Top">Blechblasinstrumente</td>
+<td style="background-color:#FFDEAD" valign="Top">ottone</td>
+<td style="background-color:#FFDEAD" valign="Top">mednye dukhovye instrumenty</td>
+<td style="background-color:#FFDEAD" valign="Top">instrumentos de metal/<br>
+cobre; instrumentos de viento-metal; metales</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">horn</td>
+<td style="background-color:#FFDEAD" valign="Top">cor</td>
+<td style="background-color:#FFDEAD" valign="Top">Horn</td>
+<td style="background-color:#FFDEAD" valign="Top">corno</td>
+<td style="background-color:#FFDEAD" valign="Top">Gorn; rog; rozhok<br>
+Also valtorna, which is natural or hunting horn, also used for "French" horn</td>
+<td style="background-color:#FFDEAD" valign="Top">corno; corno francés;<br>
+trompa (da pistones); cuerno</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">natural horn</td>
+<td style="background-color:#FFDEAD" valign="Top">cor simple</td>
+<td style="background-color:#FFDEAD" valign="Top">Waldhorn</td>
+<td style="background-color:#FFDEAD" valign="Top">corno naturale</td>
+<td style="background-color:#FFDEAD" valign="Top">valtorna</td>
+<td style="background-color:#FFDEAD" valign="Top">trompa natural</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">trumpet</td>
+<td style="background-color:#FFDEAD" valign="Top">trompette</td>
+<td style="background-color:#FFDEAD" valign="Top">Trompete</td>
+<td style="background-color:#FFDEAD" valign="Top">tromba; clarino</td>
+<td style="background-color:#FFDEAD" valign="Top">truba</td>
+<td style="background-color:#FFDEAD" valign="Top">trompeta</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">cornet</td>
+<td style="background-color:#FFDEAD" valign="Top">cornet (à pistons)</td>
+<td style="background-color:#FFDEAD" valign="Top">Kornett</td>
+<td style="background-color:#FFDEAD" valign="Top">cornetta</td>
+<td style="background-color:#FFDEAD" valign="Top">kornet</td>
+<td style="background-color:#FFDEAD" valign="Top">corneta</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">flugelhorn</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">Flügelhorn</td>
+<td style="background-color:#FFDEAD" valign="Top">flicorno</td>
+<td style="background-color:#FFDEAD" valign="Top">fliugel'gorn</td>
+<td style="background-color:#FFDEAD" valign="Top">fliscorno</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">trombone</td>
+<td style="background-color:#FFDEAD" valign="Top">trombone</td>
+<td style="background-color:#FFDEAD" valign="Top">Posaune</td>
+<td style="background-color:#FFDEAD" valign="Top">trombone</td>
+<td style="background-color:#FFDEAD" valign="Top">trombon</td>
+<td style="background-color:#FFDEAD" valign="Top">trombón</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">bass trombone</td>
+<td style="background-color:#FFDEAD" valign="Top">basse-trombone;<br>
+trombone basse</td>
+<td style="background-color:#FFDEAD" valign="Top">Bass Posaune</td>
+<td style="background-color:#FFDEAD" valign="Top">trombono basso</td>
+<td style="background-color:#FFDEAD" valign="Top">bas trombon</td>
+<td style="background-color:#FFDEAD" valign="Top">trombón bajo</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">tuba</td>
+<td style="background-color:#FFDEAD" valign="Top">tuba</td>
+<td style="background-color:#FFDEAD" valign="Top">Tuba</td>
+<td style="background-color:#FFDEAD" valign="Top">tuba</td>
+<td style="background-color:#FFDEAD" valign="Top">tuba</td>
+<td style="background-color:#FFDEAD" valign="Top">tuba</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">baritone</td>
+<td style="background-color:#FFDEAD" valign="Top">baryton; bariton</td>
+<td style="background-color:#FFDEAD" valign="Top">Bariton</td>
+<td style="background-color:#FFDEAD" valign="Top">baritono</td>
+<td style="background-color:#FFDEAD" valign="Top">bariton</td>
+<td style="background-color:#FFDEAD" valign="Top">barítono</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">euphonium</td>
+<td style="background-color:#FFDEAD" valign="Top">euphonium</td>
+<td style="background-color:#FFDEAD" valign="Top">Euphonium</td>
+<td style="background-color:#FFDEAD" valign="Top">eufonio</td>
+<td style="background-color:#FFDEAD" valign="Top">evfonium</td>
+<td style="background-color:#FFDEAD" valign="Top">euphonium</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="string" id="string"></a>Stringed instruments</strong></td>
+</tr>
+<tr bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">string instruments</td>
+<td style="background-color:#FFDEAD" valign="Top">instrument à cordes;<br>
+instrument à cordes frottées</td>
+<td style="background-color:#FFDEAD" valign="Top">Saiteninstrumente</td>
+<td style="background-color:#FFDEAD" valign="Top">strumenti a corda;<br>
+strumenti archi</td>
+<td style="background-color:#FFDEAD" valign="Top">strunnye instrumenty</td>
+<td style="background-color:#FFDEAD" valign="Top">instrumentos de cuerdas</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">strings</td>
+<td style="background-color:#FFDEAD" valign="Top">cordes</td>
+<td style="background-color:#FFDEAD" valign="Top">Streicher</td>
+<td style="background-color:#FFDEAD" valign="Top">archi</td>
+<td style="background-color:#FFDEAD" valign="Top">struny</td>
+<td style="background-color:#FFDEAD" valign="Top">cuerdas</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">violin</td>
+<td style="background-color:#FFDEAD" valign="Top">violon</td>
+<td style="background-color:#FFDEAD" valign="Top">Violine; Geige</td>
+<td style="background-color:#FFDEAD" valign="Top">violino</td>
+<td style="background-color:#FFDEAD" valign="Top">skripka</td>
+<td style="background-color:#FFDEAD" valign="Top">violín</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">viola</td>
+<td style="background-color:#FFDEAD" valign="Top">alto</td>
+<td style="background-color:#FFDEAD" valign="Top">Viola; Viole; Bratsche</td>
+<td style="background-color:#FFDEAD" valign="Top">viola</td>
+<td style="background-color:#FFDEAD" valign="Top">viola</td>
+<td style="background-color:#FFDEAD" valign="Top">viola</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">violoncello</td>
+<td style="background-color:#FFDEAD" valign="Top">violoncelle</td>
+<td style="background-color:#FFDEAD" valign="Top">Violoncello; Cello</td>
+<td style="background-color:#FFDEAD" valign="Top">violoncello</td>
+<td style="background-color:#FFDEAD" valign="Top">violonchel'</td>
+<td style="background-color:#FFDEAD" valign="Top">violoncelo; cello;<br>
+violonchelo</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">double bass; string bass</td>
+<td style="background-color:#FFDEAD" valign="Top">contrebasse</td>
+<td style="background-color:#FFDEAD" valign="Top">Kontrabass</td>
+<td style="background-color:#FFDEAD" valign="Top">contrabasso</td>
+<td style="background-color:#FFDEAD" valign="Top">kontrabas</td>
+<td style="background-color:#FFDEAD" valign="Top">contrabajo</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">viola da gamba</td>
+<td style="background-color:#FFDEAD" valign="Top">viole de gambe;<br>
+viola da gamba</td>
+<td style="background-color:#FFDEAD" valign="Top">Viola da gamba;<br>
+Gambe</td>
+<td style="background-color:#FFDEAD" valign="Top">viola da gamba</td>
+<td style="background-color:#FFDEAD" valign="Top">viola da gamba;<br>
+gamba</td>
+<td style="background-color:#FFDEAD" valign="Top">viola de gamba;<br>
+viola da gamba</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">viola d'amore</td>
+<td style="background-color:#FFDEAD" valign="Top">viole d'amour</td>
+<td style="background-color:#FFDEAD" valign="Top">Viola d'amore;<br>
+Liebesgeige</td>
+<td style="background-color:#FFDEAD" valign="Top">viola d'amore</td>
+<td style="background-color:#FFDEAD" valign="Top">viola d'amur</td>
+<td style="background-color:#FFDEAD" valign="Top">viola d'amore</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="pluck" id="pluck"></a>Plucked instruments</strong></td>
+</tr>
+<tr bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">plucked instruments</td>
+<td style="background-color:#FFDEAD" valign="Top">instruments à cordes pincées</td>
+<td style="background-color:#FFDEAD" valign="Top">Zupfinstrumente</td>
+<td style="background-color:#FFDEAD" valign="Top">strumenti a pizzico</td>
+<td style="background-color:#FFDEAD" valign="Top">shchipkovye instrumenty</td>
+<td style="background-color:#FFDEAD" valign="Top">instrumentos punteados</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">cimbalom</td>
+<td style="background-color:#FFDEAD" valign="Top">cymbalum</td>
+<td style="background-color:#FFDEAD" valign="Top">Zymbal</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">guitar</td>
+<td style="background-color:#FFDEAD" valign="Top">guitare</td>
+<td style="background-color:#FFDEAD" valign="Top">Gitarre</td>
+<td style="background-color:#FFDEAD" valign="Top">chitarra</td>
+<td style="background-color:#FFDEAD" valign="Top">gitara</td>
+<td style="background-color:#FFDEAD" valign="Top">guitarra</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">harp</td>
+<td style="background-color:#FFDEAD" valign="Top">harpe</td>
+<td style="background-color:#FFDEAD" valign="Top">Harfe</td>
+<td style="background-color:#FFDEAD" valign="Top">arpa</td>
+<td style="background-color:#FFDEAD" valign="Top">arfa</td>
+<td style="background-color:#FFDEAD" valign="Top">arpa</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">lute</td>
+<td style="background-color:#FFDEAD" valign="Top">luth</td>
+<td style="background-color:#FFDEAD" valign="Top">Laute</td>
+<td style="background-color:#FFDEAD" valign="Top">liuto</td>
+<td style="background-color:#FFDEAD" valign="Top">liutnia</td>
+<td style="background-color:#FFDEAD" valign="Top">laúd</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">mandolin</td>
+<td style="background-color:#FFDEAD" valign="Top">mandoline</td>
+<td style="background-color:#FFDEAD" valign="Top">Mandoline</td>
+<td style="background-color:#FFDEAD" valign="Top">mandolino</td>
+<td style="background-color:#FFDEAD" valign="Top">mandolina</td>
+<td style="background-color:#FFDEAD" valign="Top">mandolina</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">zither</td>
+<td style="background-color:#FFDEAD" valign="Top">cithare</td>
+<td style="background-color:#FFDEAD" valign="Top">Zither</td>
+<td style="background-color:#FFDEAD" valign="Top">cetra da tavolo</td>
+<td style="background-color:#FFDEAD" valign="Top">tsitra</td>
+<td style="background-color:#FFDEAD" valign="Top">cítara</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="keyboard" id="keyboard"></a>Keyboard instruments</strong></td>
+</tr>
+<tr valign="Top" bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">keyboard instrument</td>
+<td style="background-color:#FFDEAD" valign="Top">instrument à clavier</td>
+<td style="background-color:#FFDEAD" valign="Top">Tasteninstrumente</td>
+<td style="background-color:#FFDEAD" valign="Top">strumenti a tastiera</td>
+<td style="background-color:#FFDEAD" valign="Top">klavishnyi instrument</td>
+<td style="background-color:#FFDEAD" valign="Top">instrumentos de tecla</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">accordion</td>
+<td style="background-color:#FFDEAD" valign="Top">accordéon</td>
+<td style="background-color:#FFDEAD" valign="Top">Akkordeon</td>
+<td style="background-color:#FFDEAD" valign="Top">fisarmonica</td>
+<td style="background-color:#FFDEAD" valign="Top">akkordeon</td>
+<td style="background-color:#FFDEAD" valign="Top">acordeón</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">bayan</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">Bajan</td>
+<td style="background-color:#FFDEAD" valign="Top">bayan, fisarmonica bayan</td>
+<td style="background-color:#FFDEAD" valign="Top">baian</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">celesta</td>
+<td style="background-color:#FFDEAD" valign="Top">célesta</td>
+<td style="background-color:#FFDEAD" valign="Top">Celesta</td>
+<td style="background-color:#FFDEAD" valign="Top">celesta</td>
+<td style="background-color:#FFDEAD" valign="Top">chelesta</td>
+<td style="background-color:#FFDEAD" valign="Top">celesta</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">clavichord</td>
+<td style="background-color:#FFDEAD" valign="Top">clavicorde</td>
+<td style="background-color:#FFDEAD" valign="Top">Clavichord; Klavichord</td>
+<td style="background-color:#FFDEAD" valign="Top">clavicordo</td>
+<td style="background-color:#FFDEAD" valign="Top">klavikord</td>
+<td style="background-color:#FFDEAD" valign="Top">clavicordio</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">continuo;<br>
+thorough-bass</td>
+<td style="background-color:#FFDEAD" valign="Top">basse continue</td>
+<td style="background-color:#FFDEAD" valign="Top">Generalbass;<br>
+Basso continuo</td>
+<td style="background-color:#FFDEAD" valign="Top">basso continuo</td>
+<td style="background-color:#FFDEAD" valign="Top">basso kontinuo;<br>
+general-bas</td>
+<td style="background-color:#FFDEAD" valign="Top">bajo continuo</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">harpsichord</td>
+<td style="background-color:#FFDEAD" valign="Top">clavecin</td>
+<td style="background-color:#FFDEAD" valign="Top">Cembalo; Clavicembalo</td>
+<td style="background-color:#FFDEAD" valign="Top">clavicembalo</td>
+<td style="background-color:#FFDEAD" valign="Top">klavesin; chembalo</td>
+<td style="background-color:#FFDEAD" valign="Top">clavecémbalo; clavecín;<br>
+clavicímbalo</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">organ</td>
+<td style="background-color:#FFDEAD" valign="Top">orgue</td>
+<td style="background-color:#FFDEAD" valign="Top">Orgel</td>
+<td style="background-color:#FFDEAD" valign="Top">organo</td>
+<td style="background-color:#FFDEAD" valign="Top">organ</td>
+<td style="background-color:#FFDEAD" valign="Top">órgano</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">piano</td>
+<td style="background-color:#FFDEAD" valign="Top">piano</td>
+<td style="background-color:#FFDEAD" valign="Top">Piano; Klavier</td>
+<td style="background-color:#FFDEAD" valign="Top">piano</td>
+<td style="background-color:#FFDEAD" valign="Top">fortep'iano</td>
+<td style="background-color:#FFDEAD" valign="Top">piano</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="percussion" id="percussion"></a>Percussion instruments</strong></td>
+</tr>
+<tr valign="Top" bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">percussion instruments</td>
+<td style="background-color:#FFDEAD" valign="Top">instruments à percussion</td>
+<td style="background-color:#FFDEAD" valign="Top">Schlaginstrumente;<br>
+Perkussionsinstrumente</td>
+<td style="background-color:#FFDEAD" valign="Top">strumenti a percussione</td>
+<td style="background-color:#FFDEAD" valign="Top">udarnye instrumenty</td>
+<td style="background-color:#FFDEAD" valign="Top">instrumentos de percusión</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">bass drum</td>
+<td style="background-color:#FFDEAD" valign="Top">grosse caisse</td>
+<td style="background-color:#FFDEAD" valign="Top">Grosse Trommel</td>
+<td style="background-color:#FFDEAD" valign="Top">cassa; grancassa;<br>
+gran cassa</td>
+<td style="background-color:#FFDEAD" valign="Top">bol'shoi baraban</td>
+<td style="background-color:#FFDEAD" valign="Top">bombo</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">castenets</td>
+<td style="background-color:#FFDEAD" valign="Top">castagnettes</td>
+<td style="background-color:#FFDEAD" valign="Top">Kastagnetten</td>
+<td style="background-color:#FFDEAD" valign="Top">castagnette</td>
+<td style="background-color:#FFDEAD" valign="Top">kastan'ety</td>
+<td style="background-color:#FFDEAD" valign="Top">castañuelas</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">cowbells</td>
+<td style="background-color:#FFDEAD" valign="Top">cloches à vache</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">caubel</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">cymbals</td>
+<td style="background-color:#FFDEAD" valign="Top">cymbales</td>
+<td style="background-color:#FFDEAD" valign="Top">Becken</td>
+<td style="background-color:#FFDEAD" valign="Top">piatti</td>
+<td style="background-color:#FFDEAD" valign="Top">tarelki</td>
+<td style="background-color:#FFDEAD" valign="Top">cimbalos</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">drum</td>
+<td style="background-color:#FFDEAD" valign="Top">tambour</td>
+<td style="background-color:#FFDEAD" valign="Top">Trommel</td>
+<td style="background-color:#FFDEAD" valign="Top">tamburo</td>
+<td style="background-color:#FFDEAD" valign="Top">baraban</td>
+<td style="background-color:#FFDEAD" valign="Top">tambor</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">glockenspiel</td>
+<td style="background-color:#FFDEAD" valign="Top">glockenspiel; jeu de timbres</td>
+<td style="background-color:#FFDEAD" valign="Top">Glockenspiel</td>
+<td style="background-color:#FFDEAD" valign="Top">glockenspiel;<br>
+metallofono; campanelli</td>
+<td style="background-color:#FFDEAD" valign="Top">kolokol'chiki</td>
+<td style="background-color:#FFDEAD" valign="Top">campanólogo; juego<br>
+de timbres/órgano de<br>
+campanas</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">marimba</td>
+<td style="background-color:#FFDEAD" valign="Top">marimba</td>
+<td style="background-color:#FFDEAD" valign="Top">Marimbaphon</td>
+<td style="background-color:#FFDEAD" valign="Top">marimba</td>
+<td style="background-color:#FFDEAD" valign="Top">marimba</td>
+<td style="background-color:#FFDEAD" valign="Top">marimba</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">rattle</td>
+<td style="background-color:#FFDEAD" valign="Top">crécelle</td>
+<td style="background-color:#FFDEAD" valign="Top">Ratsche, Knarre, Schnarre</td>
+<td style="background-color:#FFDEAD" valign="Top">raganella</td>
+<td style="background-color:#FFDEAD" valign="Top">treshchotka</td>
+<td style="background-color:#FFDEAD" valign="Top">carraca, matraca</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">snare drum</td>
+<td style="background-color:#FFDEAD" valign="Top">caisse claire</td>
+<td style="background-color:#FFDEAD" valign="Top">Leinentrommel</td>
+<td style="background-color:#FFDEAD" valign="Top">tamburo rullante;<br>
+tamburo militare;<br>
+rullante</td>
+<td style="background-color:#FFDEAD" valign="Top">frantsuzskii baraban</td>
+<td style="background-color:#FFDEAD" valign="Top">tambor afinable/con tensores</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">tenor drum</td>
+<td style="background-color:#FFDEAD" valign="Top">caisse roulante</td>
+<td style="background-color:#FFDEAD" valign="Top">Rührtrommel;<br>
+Wirbeltrommel;<br>
+Tenortrommel</td>
+<td style="background-color:#FFDEAD" valign="Top">cassa rullante;<br>
+tamburino</td>
+<td style="background-color:#FFDEAD" valign="Top">tsilindricheskii baraban</td>
+<td style="background-color:#FFDEAD" valign="Top">redoblante</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">tambourine</td>
+<td style="background-color:#FFDEAD" valign="Top">tambourin</td>
+<td style="background-color:#FFDEAD" valign="Top">Tamburin</td>
+<td style="background-color:#FFDEAD" valign="Top">tamburello</td>
+<td style="background-color:#FFDEAD" valign="Top">buben</td>
+<td style="background-color:#FFDEAD" valign="Top">pandereta</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">timpani</td>
+<td style="background-color:#FFDEAD" valign="Top">timbales</td>
+<td style="background-color:#FFDEAD" valign="Top">Pauken</td>
+<td style="background-color:#FFDEAD" valign="Top">timpano</td>
+<td style="background-color:#FFDEAD" valign="Top">litavra</td>
+<td style="background-color:#FFDEAD" valign="Top">timbal</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">tubular bells</td>
+<td style="background-color:#FFDEAD" valign="Top">cloches tubulaires</td>
+<td style="background-color:#FFDEAD" valign="Top">Rohrenglocke</td>
+<td style="background-color:#FFDEAD" valign="Top">campane tubolari</td>
+<td style="background-color:#FFDEAD" valign="Top">trubchatye kolokola</td>
+<td style="background-color:#FFDEAD" valign="Top">campanas tubulares</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">xylophone</td>
+<td style="background-color:#FFDEAD" valign="Top">xylophone</td>
+<td style="background-color:#FFDEAD" valign="Top">Xylophon</td>
+<td style="background-color:#FFDEAD" valign="Top">xilofono</td>
+<td style="background-color:#FFDEAD" valign="Top">ksilofon</td>
+<td style="background-color:#FFDEAD" valign="Top">xilofón; xilofóno</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="electronic" id="electronic"></a>Electronic instruments</strong></td>
+</tr>
+<tr bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top">German</td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">electronic instruments</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">electronnye instrumenty</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">computer</td>
+<td style="background-color:#FFDEAD" valign="Top">ordinateur</td>
+<td style="background-color:#FFDEAD" valign="Top">Computerklänge</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">kompiuter</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">ondes martenot</td>
+<td style="background-color:#FFDEAD" valign="Top">ondes martenot</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">synthesizer</td>
+<td style="background-color:#FFDEAD" valign="Top">synthétiseur</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">sintetizzatore</td>
+<td style="background-color:#FFDEAD" valign="Top">sintezator</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">tape</td>
+<td style="background-color:#FFDEAD" valign="Top">bande</td>
+<td style="background-color:#FFDEAD" valign="Top">Tonbande; Zuspielband</td>
+<td style="background-color:#FFDEAD" valign="Top">nastro</td>
+<td style="background-color:#FFDEAD" valign="Top">magnitofonnaia lenta</td>
+<td style="background-color:#FFDEAD" valign="Top">banda</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="other" id="other"></a>Other instruments</strong></td>
+</tr>
+<tr bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">dulcimer (hammered)</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">Hackbrett</td>
+<td style="background-color:#FFDEAD" valign="Top">salterio</td>
+<td style="background-color:#FFDEAD" valign="Top">tsimbaly</td>
+<td style="background-color:#FFDEAD" valign="Top">dulcema</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">harmonica</td>
+<td style="background-color:#FFDEAD" valign="Top">harmonica</td>
+<td style="background-color:#FFDEAD" valign="Top">Mundharmonika</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">gubnaia garmoshika</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="instrumentalensembles" id="instrumentalensembles"></a>Instrumental ensembles</strong></td>
+</tr>
+<tr bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">instrumental ensembles</td>
+<td style="background-color:#FFDEAD" valign="Top">ensembles instrumentaux</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">band</td>
+<td style="background-color:#FFDEAD" valign="Top">orchestre d'instruments à vent; orchestre à vent;<br>
+harmonie de concert; harmonie; orchestre d'harmonie</td>
+<td style="background-color:#FFDEAD" valign="Top">Blasorchester</td>
+<td style="background-color:#FFDEAD" valign="Top">orchestra di strumenti a fiato</td>
+<td style="background-color:#FFDEAD" valign="Top">dukhovoi orkestr</td>
+<td style="background-color:#FFDEAD" valign="Top">orquesta de vientos</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">brass band</td>
+<td style="background-color:#FFDEAD" valign="Top">fanfare</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">chamber orchestra</td>
+<td style="background-color:#FFDEAD" valign="Top">orchestre de chambre</td>
+<td style="background-color:#FFDEAD" valign="Top">Kammerorchester</td>
+<td style="background-color:#FFDEAD" valign="Top">orchestra da camera</td>
+<td style="background-color:#FFDEAD" valign="Top">kamernyi orkestr</td>
+<td style="background-color:#FFDEAD" valign="Top">orquesta de cámara</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">string orchestra</td>
+<td style="background-color:#FFDEAD" valign="Top">orchestre à cordes</td>
+<td style="background-color:#FFDEAD" valign="Top">Streichorchester</td>
+<td style="background-color:#FFDEAD" valign="Top">orchestra d'archi</td>
+<td style="background-color:#FFDEAD" valign="Top">strunnyi orkestr</td>
+<td style="background-color:#FFDEAD" valign="Top">orquesta de cuerdas</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">orchestra</td>
+<td style="background-color:#FFDEAD" valign="Top">orchestre</td>
+<td style="background-color:#FFDEAD" valign="Top">Orchester</td>
+<td style="background-color:#FFDEAD" valign="Top">orchestra</td>
+<td style="background-color:#FFDEAD" valign="Top">orkestr</td>
+<td style="background-color:#FFDEAD" valign="Top">orquesta</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="voices" id="voices"></a>Voices</strong></td>
+</tr>
+<tr bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">voice</td>
+<td style="background-color:#FFDEAD" valign="Top">voix</td>
+<td style="background-color:#FFDEAD" valign="Top">Stimme</td>
+<td style="background-color:#FFDEAD" valign="Top">voce</td>
+<td style="background-color:#FFDEAD" valign="Top">golos</td>
+<td style="background-color:#FFDEAD" valign="Top">voz</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">soprano</td>
+<td style="background-color:#FFDEAD" valign="Top">soprano, dessus</td>
+<td style="background-color:#FFDEAD" valign="Top">Sopran</td>
+<td style="background-color:#FFDEAD" valign="Top">soprano</td>
+<td style="background-color:#FFDEAD" valign="Top">soprano</td>
+<td style="background-color:#FFDEAD" valign="Top">soprano</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">male alto/low<br>
+soprano</td>
+<td style="background-color:#FFDEAD" valign="Top">bas-dessus</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">mezzo soprano</td>
+<td style="background-color:#FFDEAD" valign="Top">mezzo-soprano</td>
+<td style="background-color:#FFDEAD" valign="Top">Mezzosopran</td>
+<td style="background-color:#FFDEAD" valign="Top">mezzosoprano</td>
+<td style="background-color:#FFDEAD" valign="Top">metstsosoprano/<br>
+metso-soprano</td>
+<td style="background-color:#FFDEAD" valign="Top">mezzo-soprano</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">alto; contralto</td>
+<td style="background-color:#FFDEAD" valign="Top">alto; contralto</td>
+<td style="background-color:#FFDEAD" valign="Top">Alt</td>
+<td style="background-color:#FFDEAD" valign="Top">contralto</td>
+<td style="background-color:#FFDEAD" valign="Top">al't; kontral'to</td>
+<td style="background-color:#FFDEAD" valign="Top">contralto</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">tenor</td>
+<td style="background-color:#FFDEAD" valign="Top">ténor, taille</td>
+<td style="background-color:#FFDEAD" valign="Top">Tenor</td>
+<td style="background-color:#FFDEAD" valign="Top">tenore</td>
+<td style="background-color:#FFDEAD" valign="Top">tenor</td>
+<td style="background-color:#FFDEAD" valign="Top">tenor</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">baritone</td>
+<td style="background-color:#FFDEAD" valign="Top">baryton; bariton</td>
+<td style="background-color:#FFDEAD" valign="Top">Bariton</td>
+<td style="background-color:#FFDEAD" valign="Top">baritono</td>
+<td style="background-color:#FFDEAD" valign="Top">bariton</td>
+<td style="background-color:#FFDEAD" valign="Top">barítono</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">bass baritone</td>
+<td style="background-color:#FFDEAD" valign="Top">basse taille</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">bass</td>
+<td style="background-color:#FFDEAD" valign="Top">basse</td>
+<td style="background-color:#FFDEAD" valign="Top">Bass</td>
+<td style="background-color:#FFDEAD" valign="Top">basso</td>
+<td style="background-color:#FFDEAD" valign="Top">bas</td>
+<td style="background-color:#FFDEAD" valign="Top">bajo</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">counter tenor</td>
+<td style="background-color:#FFDEAD" valign="Top">contre-ténor;<br>
+haute-contre</td>
+<td style="background-color:#FFDEAD" valign="Top">Contratenor</td>
+<td style="background-color:#FFDEAD" valign="Top">controtenore</td>
+<td style="background-color:#FFDEAD" valign="Top">kontratenor</td>
+<td style="background-color:#FFDEAD" valign="Top">contratenor</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">high voice</td>
+<td style="background-color:#FFDEAD" valign="Top">haut</td>
+<td style="background-color:#FFDEAD" valign="Top">hohe</td>
+<td style="background-color:#FFDEAD" valign="Top">acuto</td>
+<td style="background-color:#FFDEAD" valign="Top">vysokaia</td>
+<td style="background-color:#FFDEAD" valign="Top">agudo</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">medium voice</td>
+<td style="background-color:#FFDEAD" valign="Top">médium; moyen</td>
+<td style="background-color:#FFDEAD" valign="Top">mittlere</td>
+<td style="background-color:#FFDEAD" valign="Top">medio</td>
+<td style="background-color:#FFDEAD" valign="Top">sredniaia</td>
+<td style="background-color:#FFDEAD" valign="Top">medio</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">low voice</td>
+<td style="background-color:#FFDEAD" valign="Top">grave</td>
+<td style="background-color:#FFDEAD" valign="Top">tiefe</td>
+<td style="background-color:#FFDEAD" valign="Top">grave</td>
+<td style="background-color:#FFDEAD" valign="Top">nizkaia</td>
+<td style="background-color:#FFDEAD" valign="Top">grave</td>
+</tr>
+<tr bgcolor="#20B2AA">
+<td class="rtecenter" colspan="6" style="background-color:#20B2AA"><strong><a name="vocalensembles" id="vocalensembles"></a>Vocal ensembles</strong></td>
+</tr>
+<tr bgcolor="#CD5C5C">
+<td style="background-color:#CD5C5C" valign="Top"><strong>English</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>French</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>German</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Italian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Russian</strong></td>
+<td style="background-color:#CD5C5C" valign="Top"><strong>Spanish</strong></td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">vocal ensembles</td>
+<td style="background-color:#FFDEAD" valign="Top">ensembles vocaux</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+<td style="background-color:#FFDEAD" valign="Top">&nbsp;</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">chorus</td>
+<td style="background-color:#FFDEAD" valign="Top">chœur</td>
+<td style="background-color:#FFDEAD" valign="Top">Chor</td>
+<td style="background-color:#FFDEAD" valign="Top">coro</td>
+<td style="background-color:#FFDEAD" valign="Top">khor</td>
+<td style="background-color:#FFDEAD" valign="Top">coro</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">mixed voices</td>
+<td style="background-color:#FFDEAD" valign="Top">voix mixtes</td>
+<td style="background-color:#FFDEAD" valign="Top">Stimmen gemischte</td>
+<td style="background-color:#FFDEAD" valign="Top">voci miste</td>
+<td style="background-color:#FFDEAD" valign="Top">smeshannye golosa</td>
+<td style="background-color:#FFDEAD" valign="Top">voces mixtas</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">women's voices</td>
+<td style="background-color:#FFDEAD" valign="Top">chœur de femmes</td>
+<td style="background-color:#FFDEAD" valign="Top">Frauenchor;<br>
+Frauenstimme</td>
+<td style="background-color:#FFDEAD" valign="Top">coro femminile</td>
+<td style="background-color:#FFDEAD" valign="Top">zhenskii khor</td>
+<td style="background-color:#FFDEAD" valign="Top">coro femenino</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">men's voices</td>
+<td style="background-color:#FFDEAD" valign="Top">chœur d'hommes</td>
+<td style="background-color:#FFDEAD" valign="Top">Männerchor;<br>
+Männerstimme</td>
+<td style="background-color:#FFDEAD" valign="Top">coro maschile</td>
+<td style="background-color:#FFDEAD" valign="Top">muzhskoi khor</td>
+<td style="background-color:#FFDEAD" valign="Top">coro masculino;<br>
+choro de hombres</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">children's voices</td>
+<td style="background-color:#FFDEAD" valign="Top">chœur d'enfants</td>
+<td style="background-color:#FFDEAD" valign="Top">Kinderchor</td>
+<td style="background-color:#FFDEAD" valign="Top">voci bianche</td>
+<td style="background-color:#FFDEAD" valign="Top">detskii khor</td>
+<td style="background-color:#FFDEAD" valign="Top">coro infantil;<br>
+coro de niños</td>
+</tr>
+<tr>
+<td style="background-color:#FFDEAD" valign="Top">equal voices</td>
+<td style="background-color:#FFDEAD" valign="Top">voix égales</td>
+<td style="background-color:#FFDEAD" valign="Top">Stimmen gleiche</td>
+<td style="background-color:#FFDEAD" valign="Top">voci pari</td>
+<td style="background-color:#FFDEAD" valign="Top">odnorodnye golosa</td>
+<td style="background-color:#FFDEAD" valign="Top">voces iguales</td>
+</tr>
+</tbody>
+</table>
+</div></div></div>  </div>
+</div>
+    <div class="print-footer">
+</div>
+    <hr class="print-hr">
+          <div class="print-source_url">
+        <strong>Source URL:</strong> https://web.library.yale.edu/cataloging/music/instname      </div>
+        <div class="print-links"><p><strong>Links</strong><br>[1] http://web.library.yale.edu/cataloging/music<br>
+[2] http://web.library.yale.edu/cataloging/music/language-tools<br>
+[3] http://www.dolmetsch.com/musictheory29.htm#translatednames<br>
+[4] http://www.dolmetsch.com/index.htm<br>
+[5] http://web.library.yale.edu/cataloging/music/When-is-a-flute-not-a-flute<br>
+</p></div>
+    <script type="text/javascript">
+<!--//--><![CDATA[//><!--
+
+      (function() {
+      var sz = document.createElement('script'); sz.type = 'text/javascript'; sz.async = true;
+      sz.src = '//siteimproveanalytics.com/js/siteanalyze_66356571.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sz, s);
+      })();
+
+//--><!]]>
+</script>
+<script type="text/javascript" src="https://web.library.yale.edu/sites/default/files/js_injector/js_injector_1.js?qjak06"></script>
+  <script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"87a75cd2b9","applicationID":"183602106","transactionName":"Z1xVNkdZDRZYWhZZCV4WdgFBUQwLFkkQWQhEZlQNW0wRClVVB0I5WE1aDg==","queueTime":0,"applicationTime":331,"atts":"SxtWQA9DHhg=","errorBeacon":"bam.nr-data.net","agent":""}</script>
+
+</body></html>
