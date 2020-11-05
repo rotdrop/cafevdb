@@ -32,7 +32,14 @@ class InlineImageService
     $this->configService = $configService;
   }
 
-  public function fetch($id) {
+  /**
+   * Fetch an inline image from the data-base.
+   *
+   * @param int $id Id of the image in the data-base table.
+   *
+   * @return string Inline image suitable for an HTML image tag.
+   */
+  public function fetch(int $id): string {
     $this->logInfo(__METHOD__.' unimplemented');
     return null;
   }
