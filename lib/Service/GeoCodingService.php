@@ -657,7 +657,7 @@ class GeoCodingService
   }
 
   /**Get the number of languages supported in the database tables. */
-  public function languages($extraLange = null)
+  public function languages($extraLang = null)
   {
     $languages = $this->languages;
     if (empty($languages) == 0) {
