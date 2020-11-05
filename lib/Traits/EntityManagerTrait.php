@@ -252,8 +252,6 @@ trait EntityManagerTrait {
   /**
    * Counts entities by a set of criteria.
    *
-   * @todo Add this method to `ObjectRepository` interface in the next major release
-   *
    * @param array $criteria
    *
    * @param string $entityClassName The database entity to use.
