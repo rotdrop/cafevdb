@@ -53,8 +53,8 @@ class GeoCodingService
   private $languages = [];
 
   public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager
+    ConfigService $configService
+    , EntityManager $entityManager
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
