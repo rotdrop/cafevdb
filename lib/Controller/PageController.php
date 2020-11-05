@@ -235,6 +235,7 @@ class PageController extends Controller {
       'groupadmin' => $this->isSubAdminOfGroup(),
       'user' => $this->userId(),
       'expertmode' => $expertMode,
+      'expertMode' => $expertMode,
       'showToolTips' => $showToolTips,
       'toolTips' => $this->toolTipsService,
       'urlGenerator' => $this->urlGenerator,
