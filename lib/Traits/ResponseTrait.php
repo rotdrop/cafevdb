@@ -31,15 +31,36 @@ use OCA\CAFEVDB\Service\SessionService;
 trait ResponseTrait
 {
 
-  private function exceptionChainData(\Throwable $t, bool $top = true)
+  private function exceptionResponse(\Throwable $thowable, string $renderAs, string $method = null)
   {
-    $previous = $t->getPrevious();
+    if (empty($method)) {
+      $method = __METHOD__;
+    }
+    $this->logException($t, $method);
+    if ($renderAs == 'blank') {
+      return self::grumble($this->exceptionChainData($t));
+    }
+
+    $templateParameters = [
+      'error' => 'exception',
+      'exception' => $thowable->getMessage(),
+      'trace' => $this->exceptionChainData($t),
+      'debug' => true,
+      'admin' => 'bofh@nowhere.com',
+    ];
+
+    return new TemplateResponse($this->appName, 'errorpage', $templateParameters, $renderAs);
+  }
+
+  private function exceptionChainData(\Throwable $throwable, bool $top = true)
+  {
+    $previous = $thowable->getPrevious();
     return [
       'message' => ($top
                     ? $this->l->t('Error, caught an exception')
                     : $this->l->t('Caused by previous exception')),
-      'exception' => $t->getFile().':'.$t->getLine().' '.$t->getMessage(),
-      'trace' => $t->getTraceAsString(),
+      'exception' => $thowable->getFile().':'.$thowable->getLine().' '.$thowable->getMessage(),
+      'trace' => $thowable->getTraceAsString(),
       'previous' => empty($previous) ? null : $this->exceptionChainData($previous, false),
     ];
   }

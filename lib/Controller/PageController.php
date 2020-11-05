@@ -323,27 +323,6 @@ class PageController extends Controller {
     return self::response($this->l->t("Page `%s\' not found.", [$route]), Http::STATUS_NOT_FOUND);
   }
 
-  public function exceptionResponse(\Throwable $t, string $renderAs, string $method = null)
-  {
-    if (empty($method)) {
-      $method = __METHOD__;
-    }
-    $this->logException($t, $method);
-    if ($renderAs == 'blank') {
-      return self::grumble($this->exceptionChainData($t));
-    }
-
-    $templateParameters = [
-      'error' => 'exception',
-      'exception' => $t->getMessage(),
-      'trace' => $this->exceptionChainData($t),
-      'debug' => true,
-      'admin' => 'bofh@nowhere.com',
-    ];
-
-    return new TemplateResponse($this->appName, 'errorpage', $templateParameters, $renderAs);
-  }
-
 }
 
 // Local Variables: ***
