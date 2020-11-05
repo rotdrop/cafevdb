@@ -49,12 +49,12 @@ class ImageData
   private $musicians;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Musician", mappedBy="poster", fetch="EXTRA_LAZY")
+   * @ORM\ManyToMany(targetEntity="Project", mappedBy="posters", fetch="EXTRA_LAZY")
    */
   private $posterProjects;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Musician", mappedBy="flyer", fetch="EXTRA_LAZY")
+   * @ORM\ManyToMany(targetEntity="Project", mappedBy="flyers", fetch="EXTRA_LAZY")
    */
   private $flyerProjects;
 

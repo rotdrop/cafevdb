@@ -46,7 +46,7 @@ class MusiciansRepository extends EntityRepository
    *       'city' => ...,
    *       'ZIP' => ...);
    */
-  public static function findStreetAddress($musicianId)
+  public function findStreetAddress($musicianId)
   {
     $qb = $this->createQueryBuilder('m');
     $address = $qb->select(['m.Name AS surName',
@@ -70,7 +70,7 @@ class MusiciansRepository extends EntityRepository
    *       'lastName' => ...,
    *       'email' => ...);
    */
-  public static function findName($musicianId)
+  public function findName($musicianId)
   {
     $qb = $this->createQueryBuilder('m');
     $name = $qb->select(['m.Name AS lastName',
@@ -80,6 +80,11 @@ class MusiciansRepository extends EntityRepository
       ->setParameter('id', $musicianId)
       ->getQuery()->execute()[0];
     return $name;
+  }
+
+  public function findPhoto($musicianId)
+  {
+
   }
 }
 

@@ -108,7 +108,7 @@ class Project
    *   inverseJoinColumns={@ORM\JoinColumn(name="poster_id", referencedColumnName="id", onDelete="CASCADE")}
    * )
    */
-  private $poster;
+  private $posters;
 
   /**
    * @ORM\ManyToMany(targetEntity="ImageData", inversedBy="flyerProjects", orphanRemoval=true, fetch="EXTRA_LAZY")
@@ -118,13 +118,13 @@ class Project
    *   inverseJoinColumns={@ORM\JoinColumn(name="flyer_id", referencedColumnName="id", onDelete="CASCADE")}
    * )
    */
-  private $flyer;
+  private $flyers;
 
   public function __construct() {
     $this->arrayCTOR();
     $this->instrumentation = new ArrayCollection();
-    $this->poster = new ArrayCollection();
-    $this->flyer = new ArrayCollection();
+    $this->posters = new ArrayCollection();
+    $this->flyers = new ArrayCollection();
   }
 
   /**
