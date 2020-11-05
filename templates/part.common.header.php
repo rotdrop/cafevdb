@@ -45,6 +45,7 @@ script($appName, 'config');
 //script($appName, '../vendor/components/jquery-migrate/jquery-migrate.min');
 
 style($appName, 'cafevdb');
+style($appName, 'config-check');
 style($appName, 'oc-fixes');
 style($appName, 'settings');
 style($appName, 'about');
@@ -57,6 +58,7 @@ style($appName, 'navsnapper');
 style($appName, 'pme-table');
 
 script($appName, 'cafevdb');
+script($appName, 'events-test'); /**< @TODO remove */
 script($appName, 'backgroundjobs');
 script($appName, 'notification');
 script($appName, 'page');

@@ -604,6 +604,12 @@ and even edit the public web-pages for the project and other things.");
                       'projectId' => $projectId);
         break;
 
+      case 'config-check':
+        $value = $this->l->t("Test Configuration");
+        $title = $this->l->t("Run brief sanity checks on the configuration options.");
+        $post = [ 'template' => 'configcheck' ];
+        break;
+
       case 'projectinstruments':
         $value = $this->l->t('Instrumentation Numbers');
         $title = $this->l->t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');

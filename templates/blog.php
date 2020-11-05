@@ -22,18 +22,19 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Common\Navigation;
-
 $css_pfx = 'cafevdb-page';
 $css_class = 'blog-page';
 unset($this->vars['css-class']);
 
 $nav = '';
-$nav .= Navigation::pageControlElement('projects');
-$nav .= Navigation::pageControlElement('all');
-//$nav .= Navigation::pageControlElement('projectinstruments');
-$nav .= Navigation::pageControlElement('instruments');
-$nav .= Navigation::pageControlElement('instrument-families');
+$nav .= $navigation->pageControlElement('projects');
+$nav .= $navigation->pageControlElement('all');
+//$nav .= $navigation->pageControlElement('projectinstruments');
+$nav .= $navigation->pageControlElement('instruments');
+$nav .= $navigation->pageControlElement('instrument-families');
+if ($expertMode) {
+  $nav .= $navigation->pageControlElement('config-check');
+}
 
 $header = ''
         .'<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">
