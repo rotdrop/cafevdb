@@ -38,6 +38,12 @@ return [
       'defaults' => [ 'a' => '', 'b' => '', 'c' => '', 'd' => '', 'e' => '', ],
     ],
     [
+      'name' => 'page#not_found',
+      'url' => '/ajax/{a}/{b}/{c}/{d}/{e}',
+      'verb' => 'GET',
+      'defaults' => [ 'a' => '', 'b' => '', 'c' => '', 'd' => '', 'e' => '', ],
+    ],
+    [
       'name' => 'page#index',
       'url' => '/',
       'verb' => 'GET',
@@ -151,39 +157,17 @@ return [
       'name' => 'downloads#fetch',
       'url' => '/download/{section}/{object}',
       'verb' => 'GET',
-    ]
+    ],
+    // internal image stuff
+    [
+      'name' => 'images#get',
+      'url' => '/image/{action}/{section}/{object}',
+      'verb' => 'GET',
+    ],
   ],
 ];
 
 return;
-
-OC::$CLASSPATH['CAFEVDB\Config'] = OC_App::getAppPath('cafevdb').'/lib/config.php';
-OC::$CLASSPATH['CAFEVDB\Projects'] = OC_App::getAppPath('cafevdb').'/lib/projects.php';
-OC::$CLASSPATH['CAFEVDB\Events'] = OC_App::getAppPath('cafevdb').'/lib/events.php';
-OC::$CLASSPATH['CAFEVDB\Util'] = OC_App::getAppPath('cafevdb').'/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Cron'] = OC_App::getAppPath("cafevdb") . '/lib/cron.php';
-
-use \CAFEVDB\Config;
-use \CAFEVDB\Events;
-use \CAFEVDB\Projects;
-use \CAFEVDB\Util;
-
-// Internal config link
-$this->create('cafevdb_config', 'js/config.js')
-     ->actionInclude('cafevdb/js/config.php');
-
-$this->create('cafevdb_root', '/')
-     ->actionInclude('cafevdb/index.php');
-
-$this->create('cafevdb_index', 'index.php')
-     ->actionInclude('cafevdb/index.php');
-
-// Regular tasks
-$this->create('cafevdb_backgroundjobs', '/backgroundjobs')
-     ->post()->action('CAFEVDB\Cron', 'run');
-
-// include automatically generated routes
-include 'autoroutes.php';
 
 /*Return an array of project-events, given the respective project id. */
 \OCP\API::register(

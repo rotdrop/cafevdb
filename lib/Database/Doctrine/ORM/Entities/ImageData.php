@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ImageData
  *
- * @ORM\Table(name="ImageData", uniqueConstraints={@ORM\UniqueConstraint(name="itemId_itemTable", columns={"item_id", "item_table"})})
+ * @ORM\Table(name="ImageData")
  * @ORM\Entity
  */
 class ImageData
@@ -23,20 +23,6 @@ class ImageData
   private $id;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(name="item_id", type="integer", nullable=false)
-   */
-  private $itemId;
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="item_table", type="string", length=128, nullable=false)
-   */
-  private $itemTable;
-
-  /**
    * @var string|null
    *
    * @ORM\Column(name="mime_type", type="string", length=128, nullable=true)
@@ -46,16 +32,38 @@ class ImageData
   /**
    * @var string|null
    *
-   * @ORM\Column(name="MD5", type="string", length=32, nullable=true, options={"fixed"=true})
+   * @ORM\Column(name="md5", type="string", length=32, nullable=true, options={"fixed"=true})
    */
   private $md5;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="Data", type="text", length=0, nullable=true)
+   * @ORM\Column(name="data", type="text", length=0, nullable=true)
    */
   private $data;
+
+  /**
+   * @ORM\ManyToMany(targetEntity="Musician", mappedBy="photo", fetch="EXTRA_LAZY")
+   */
+  private $musicians;
+
+  /**
+   * @ORM\ManyToMany(targetEntity="Musician", mappedBy="poster", fetch="EXTRA_LAZY")
+   */
+  private $posterProjects;
+
+  /**
+   * @ORM\ManyToMany(targetEntity="Musician", mappedBy="flyer", fetch="EXTRA_LAZY")
+   */
+  private $flyerProjects;
+
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->musicians = new ArrayCollection();
+    $this->flyerProjects = new ArrayCollection();
+    $this->posterProjects = new ArrayCollection();
+  }
 
   /**
    * Get id.
@@ -65,54 +73,6 @@ class ImageData
   public function getId()
   {
     return $this->id;
-  }
-
-  /**
-   * Set itemid.
-   *
-   * @param int $itemid
-   *
-   * @return ImageData
-   */
-  public function setItemId($itemid)
-  {
-    $this->itemid = $itemId;
-
-    return $this;
-  }
-
-  /**
-   * Get itemId.
-   *
-   * @return int
-   */
-  public function getItemId()
-  {
-    return $this->itemId;
-  }
-
-  /**
-   * Set itemtable.
-   *
-   * @param string $itemTable
-   *
-   * @return ImageData
-   */
-  public function setItemtable($itemTable)
-  {
-    $this->itemtable = $itemTable;
-
-    return $this;
-  }
-
-  /**
-   * Get itemtable.
-   *
-   * @return string
-   */
-  public function getItemTable()
-  {
-    return $this->itemTable;
   }
 
   /**

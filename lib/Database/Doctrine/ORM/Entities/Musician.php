@@ -143,6 +143,16 @@ class Musician implements \ArrayAccess
    */
   private $instruments;
 
+  /**
+   * @ORM\ManyToMany(targetEntity="ImageData", inversedBy="musicians", orphanRemoval=true)
+   * @ORM\JoinTable(
+   *   name="musician_photo",
+   *   joinColumns={@ORM\JoinColumn(name="musician_id", referencedColumnName="Id", unique=true, onDelete="CASCADE")},
+   *   inverseJoinColumns={@ORM\JoinColumn(name="image_data_id", referencedColumnName="id", onDelete="CASCADE")}
+   * )
+   */
+  private $photo;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
@@ -530,5 +540,29 @@ class Musician implements \ArrayAccess
   public function getAktualisiert()
   {
     return $this->aktualisiert;
+  }
+
+  /**
+   * Set photo.
+   *
+   * @param ImageData $photo|null
+   *
+   * @return Musician
+   */
+  public function setPhoto($photo = null)
+  {
+    $this->photo = $photo;
+
+    return $this;
+  }
+
+  /**
+   * Get photo.
+   *
+   * @return ImageData|null
+   */
+  public function getPhoto()
+  {
+    return $this->photo;
   }
 }

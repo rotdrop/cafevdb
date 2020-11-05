@@ -91,7 +91,7 @@ class Project
   private $aktualisiert;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Instrument", inversedBy="projects", orphanRemoval=true)
+   * @ORM\ManyToMany(targetEntity="Instrument", inversedBy="projects", orphanRemoval=true, fetch="EXTRA_LAZY")
    * @ORM\JoinTable(
    *   name="project_instrument",
    *   joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="Id", onDelete="CASCADE")},
@@ -100,9 +100,31 @@ class Project
    */
   private $instrumentation;
 
+  /**
+   * @ORM\ManyToMany(targetEntity="ImageData", inversedBy="posterProjects", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\JoinTable(
+   *   name="project_poster",
+   *   joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="Id", onDelete="CASCADE")},
+   *   inverseJoinColumns={@ORM\JoinColumn(name="poster_id", referencedColumnName="id", onDelete="CASCADE")}
+   * )
+   */
+  private $poster;
+
+  /**
+   * @ORM\ManyToMany(targetEntity="ImageData", inversedBy="flyerProjects", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\JoinTable(
+   *   name="project_flyer",
+   *   joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="Id", onDelete="CASCADE")},
+   *   inverseJoinColumns={@ORM\JoinColumn(name="flyer_id", referencedColumnName="id", onDelete="CASCADE")}
+   * )
+   */
+  private $flyer;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instrumentation = new ArrayCollection();
+    $this->poster = new ArrayCollection();
+    $this->flyer = new ArrayCollection();
   }
 
   /**

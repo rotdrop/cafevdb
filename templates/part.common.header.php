@@ -63,6 +63,7 @@ script($appName, 'backgroundjobs');
 script($appName, 'notification');
 script($appName, 'page');
 script($appName, 'blog');
+script($appName, 'inlineimage');
 script($appName, 'events');
 script($appName, 'pme');
 script($appName, 'musicians');

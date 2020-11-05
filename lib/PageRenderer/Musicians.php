@@ -1,4 +1,4 @@
-<?php
+<?php // Hey, Emacs, we are -*- php -*- mode!
 /* Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
@@ -502,21 +502,22 @@ make sure that the musicians are also automatically added to the
 //       }
 //       );
 
-//     $opts['fdd']['Portrait'] = [
-//       'tab'      => ['id' => 'miscinfo'],
-//       'input' => 'V',
-//       'name' => $this->l->t('Photo'),
-//       'select' => 'T',
-//       'options' => 'ACPDV',
-//       'sql' => '`PMEtable0`.`Id`',
-//       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
-//         $stampIdx = array_search('Aktualisiert', $fds);
-//         $stamp = strtotime($row['qf'.$stampIdx]);
-//         return self::portraitImageLink($musicianId, $action, $stamp);
-//       },
-//       'css' => ['postfix' => ' photo'],
-//       'default' => '',
-//       'sort' => false);
+    $opts['fdd']['Portrait'] = [
+      'tab'      => ['id' => 'miscinfo'],
+      'input' => 'V',
+      'name' => $this->l->t('Photo'),
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => '`PMEtable0`.`Id`',
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        $stampIdx = array_search('Aktualisiert', $fds);
+        $stamp = strtotime($row['qf'.$stampIdx]);
+        return self::portraitImageLink($musicianId, $action, $stamp);
+      },
+      'css' => ['postfix' => ' photo'],
+      'default' => '',
+      'sort' => false
+    ];
 
 //     ///////////////////// Test
 
@@ -631,6 +632,41 @@ make sure that the musicians are also automatically added to the
       $this->pme->setOptions($opts);
     }
   }
+
+  public function portraitImageLink($musicianId, $action = 'display', $timeStamp = '')
+  {
+    switch ($action) {
+    case 'add':
+      return $this->l->t("Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
+    case 'display':
+      $div = ''
+        .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tooltip-top" src="'
+        .($this->urlGenerator->linkToRoute('cafevdb.image.get.'.self::TABLE.'.'.$musicianId)).'?image_size=1200&time_stamp='.$timeStamp
+        .'" '
+        .'title="'.$this->l->t("Photo, if available").'" /></div>';
+      return $div;
+    case 'change':
+      $photoarea = ''
+        .'<div id="contact_photo_upload">
+  <div class="tip portrait propertycontainer tooltip-top" id="cafevdb_inline_image_wrapper" title="'
+      .$this->l->t("Drop photo to upload (max %s)", [ \OCP\Util::humanFileSize(Util::maxUploadSize()) ]).'"'
+        .' data-element="PHOTO">
+    <ul id="phototools" class="transparent hidden contacts_property">
+      <li><a class="svg delete" title="'.$this->l->t("Delete current photo").'"></a></li>
+      <li><a class="svg edit" title="'.$this->l->t("Edit current photo").'"></a></li>
+      <li><a class="svg upload" title="'.$this->l->t("Upload new photo").'"></a></li>
+      <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select photo from ownCloud").'"></a></li>
+    </ul>
+  </div>
+</div> <!-- contact_photo -->
+';
+
+      return $photoarea;
+    default:
+      return $this->l->t("Internal error, don't know what to do concerning portrait images in the given context.");
+    }
+  }
+
 }
 
 // Local Variables: ***
