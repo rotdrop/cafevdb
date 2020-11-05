@@ -64,6 +64,7 @@ COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--no-dev --prefer-dist
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
+PHPDOC_TEMPLATE=--template clean
 
 all: build
 
@@ -155,8 +156,9 @@ cleanup: $(BUILDDIR)/core-exclude
 
 .PHONY: doc
 doc: $(PHPDOC)
+	rm -rf $(DOC_BUILD_DIR)/phpdoc/*
 	$(PHPDOC) run \
- --template default \
+ $(PHPDOC_TEMPLATE) \
  --parseprivate \
  --sourcecode \
  --defaultpackagename $(app_name) \
