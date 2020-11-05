@@ -468,7 +468,7 @@ class PersonalSettingsController extends Controller {
     case 'testphpmyadmincloud':
     case 'testphpmyadmin':
       $key = substr($parameter, 4);
-      trigger_error($key . ' => ' . $this->getConfigValue($key));
+      //trigger_error($key . ' => ' . $this->getConfigValue($key));
       return self::valueResponse([ 'link' => $this->getConfigValue($key), 'target' => $key]);
     default:
     }
