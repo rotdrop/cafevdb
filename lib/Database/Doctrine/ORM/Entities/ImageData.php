@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ImageData
  *
- * @ORM\Table(name="ImageData", uniqueConstraints={@ORM\UniqueConstraint(name="ItemId", columns={"ItemId", "ItemTable"})})
+ * @ORM\Table(name="ImageData", uniqueConstraints={@ORM\UniqueConstraint(name="itemId_itemTable", columns={"item_id", "item_table"})})
  * @ORM\Entity
  */
 class ImageData
@@ -16,7 +16,7 @@ class ImageData
     /**
      * @var int
      *
-     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -25,23 +25,23 @@ class ImageData
     /**
      * @var int
      *
-     * @ORM\Column(name="ItemId", type="integer", nullable=false)
+     * @ORM\Column(name="item_id", type="integer", nullable=false)
      */
-    private $itemid;
+    private $itemId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ItemTable", type="string", length=128, nullable=false)
+     * @ORM\Column(name="item_table", type="string", length=128, nullable=false)
      */
-    private $itemtable;
+    private $itemTable;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="MimeType", type="string", length=128, nullable=true)
+     * @ORM\Column(name="mime_type", type="string", length=128, nullable=true)
      */
-    private $mimetype;
+    private $mimeType;
 
     /**
      * @var string|null
@@ -56,8 +56,6 @@ class ImageData
      * @ORM\Column(name="Data", type="text", length=0, nullable=true)
      */
     private $data;
-
-
 
     /**
      * Get id.
@@ -76,33 +74,33 @@ class ImageData
      *
      * @return ImageData
      */
-    public function setItemid($itemid)
+    public function setItemId($itemid)
     {
-        $this->itemid = $itemid;
+        $this->itemid = $itemId;
 
         return $this;
     }
 
     /**
-     * Get itemid.
+     * Get itemId.
      *
      * @return int
      */
-    public function getItemid()
+    public function getItemId()
     {
-        return $this->itemid;
+        return $this->itemId;
     }
 
     /**
      * Set itemtable.
      *
-     * @param string $itemtable
+     * @param string $itemTable
      *
      * @return ImageData
      */
-    public function setItemtable($itemtable)
+    public function setItemtable($itemTable)
     {
-        $this->itemtable = $itemtable;
+        $this->itemtable = $itemTable;
 
         return $this;
     }
@@ -112,9 +110,9 @@ class ImageData
      *
      * @return string
      */
-    public function getItemtable()
+    public function getItemTable()
     {
-        return $this->itemtable;
+        return $this->itemTable;
     }
 
     /**
@@ -124,9 +122,9 @@ class ImageData
      *
      * @return ImageData
      */
-    public function setMimetype($mimetype = null)
+    public function setMimetype($mimeType = null)
     {
-        $this->mimetype = $mimetype;
+        $this->mimetype = $mimeType;
 
         return $this;
     }
@@ -138,7 +136,7 @@ class ImageData
      */
     public function getMimetype()
     {
-        return $this->mimetype;
+        return $this->mimeType;
     }
 
     /**
