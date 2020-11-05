@@ -25,11 +25,14 @@ class InstrumentsRepository extends EntityRepository
   /**
    * Prepare ofor grouping select options by instrument family.
    *
-   * @return array('families' => array(FAMILIES),
-   *               'byId' => array(ID => NAME),
-   *               'byName' => array(NAME => NAME),
-   *               'nameGroups' => array(NAME => FAMILY),
-   *               'idGroups' => array(ID => FAMILY))
+   * @return array like
+   * @code
+   * array('families' => array(FAMILIES),
+   *       'byId' => array(ID => NAME),
+   *       'byName' => array(NAME => NAME),
+   *       'nameGroups' => array(NAME => FAMILY),
+   *       'idGroups' => array(ID => FAMILY))
+   * @end code
    *
    * @todo Does such a function belong into the entity repository? OTOH ...
    */

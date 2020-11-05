@@ -20,11 +20,15 @@ class ProjectsRepository extends EntityRepository
   /**
    * Fetch a short description for all projects.
    *
-   * @return [
+   * @return []
+   *
+   * @code
+   * [
    *   'projects' => [ ID => [ 'name' => NAME, 'year' => YEAR ], ... ],
    *   'nameByName' => [ NAME => NAME, ... ],
    *   'yearByName' => [ NAME => YEAR, ... ],
    * ]
+   * @end code
    *
    * nameByName is used by PME in order to construct select options etc.
    *
