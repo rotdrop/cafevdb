@@ -31,19 +31,19 @@ use OCA\CAFEVDB\Service\SessionService;
 trait ResponseTrait
 {
 
-  private function exceptionResponse(\Throwable $thowable, string $renderAs, string $method = null)
+  private function exceptionResponse(\Throwable $throwable, string $renderAs, string $method = null)
   {
     if (empty($method)) {
       $method = __METHOD__;
     }
-    $this->logException($t, $method);
+    $this->logException($throwable, $method);
     if ($renderAs == 'blank') {
       return self::grumble($this->exceptionChainData($t));
     }
 
     $templateParameters = [
       'error' => 'exception',
-      'exception' => $thowable->getMessage(),
+      'exception' => $throwable->getMessage(),
       'trace' => $this->exceptionChainData($t),
       'debug' => true,
       'admin' => 'bofh@nowhere.com',
@@ -54,13 +54,13 @@ trait ResponseTrait
 
   private function exceptionChainData(\Throwable $throwable, bool $top = true)
   {
-    $previous = $thowable->getPrevious();
+    $previous = $throwable->getPrevious();
     return [
       'message' => ($top
                     ? $this->l->t('Error, caught an exception')
                     : $this->l->t('Caused by previous exception')),
-      'exception' => $thowable->getFile().':'.$thowable->getLine().' '.$thowable->getMessage(),
-      'trace' => $thowable->getTraceAsString(),
+      'exception' => $throwable->getFile().':'.$throwable->getLine().' '.$throwable->getMessage(),
+      'trace' => $throwable->getTraceAsString(),
       'previous' => empty($previous) ? null : $this->exceptionChainData($previous, false),
     ];
   }
