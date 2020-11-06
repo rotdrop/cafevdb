@@ -84,40 +84,17 @@ class Image implements \ArrayAccess
   private $imageDataId;
 
   /**
-   * @var ImageData
+   * @var ImageData This is "toMany" only for the sake of lazy loading.
    *
-   * @ORM\OneToOne(targetEntity="ImageData", mappedBy="image", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="image_data_id", referencedColumnName="id")
+   * owning side
+   *
+   * @ORM\OneToOne(targetEntity="ImageData", inversedBy="image", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(name="image_data_id", unique=true, referencedColumnName="id")
    */
   private $imageData;
 
-  /**
-   * @var Musician[]
-   *
-   * @ORM\ManyToMany(targetEntity="Musician", mappedBy="photo", fetch="EXTRA_LAZY")
-   */
-  private $musicians;
-
-  /**
-   * @var Project[]
-   *
-   * @ORM\ManyToMany(targetEntity="Project", mappedBy="posters", fetch="EXTRA_LAZY")
-   */
-  private $posterProjects;
-
-  /**
-   * @var Project[]
-   *
-   * @ORM\ManyToMany(targetEntity="Project", mappedBy="flyers", fetch="EXTRA_LAZY")
-   */
-  private $flyerProjects;
-
   public function __construct() {
     $this->arrayCTOR();
-    $this->musicians = new ArrayCollection();
-    $this->flyerProjects = new ArrayCollection();
-    $this->posterProjects = new ArrayCollection();
-    $this->imageData = null;
   }
 
   /**

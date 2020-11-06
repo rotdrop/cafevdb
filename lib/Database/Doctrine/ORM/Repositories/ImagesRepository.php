@@ -31,14 +31,29 @@ class ImagesRepository extends EntityRepository
   /**
    * Find images for the given "using" entity class.
    *
-   * @param string $entityClass Full featured or partial class name of
-   * the entity we are searching images for.
+   * @param string $joinTableEntity Full featured or partial class name of
+   * the join table linking to the image table.
    *
-   * @param int $entityId Entity id of the "using" table/entity.
+   * @param int $ownerId Entity id of the "using" table/entity.
    *
    * @return Entities\Image[]
    */
-  public function findForEntity(string $entityClass, int $entityId): array {
+  public function findForEntity(string $joinTableEntity, int $ownerId): array
+  {
+    $joinTableEntity = $this->completeJoinTableEntity($joinTableEntity);
+    $qb = $this->getEntityManager()->createQueryBuilder();
+    $imageIds = $qb->select('jt.image_Id')
+                   ->from($joinTableEntity, 'jt')
+                   ->where('owner_id = :ownerId')
+                   ->setParameter('ownerId', $ownerId)
+                   ->getQuery()
+                   ->getResult('COLUMN_HYDRATOR');
+
+    $qb = $this->createQueryBuilder('im');
+    $qb->select('im')
+       ->where($qb->expr()->in('image_id', $imageIds))
+       ->getQuery()
+       ->getResult();
   }
 
   /**
@@ -48,7 +63,20 @@ class ImagesRepository extends EntityRepository
    *
    * @return Entities\Image
    */
-  public function findOneForEntity(string $entityClass, int $entityId):Image {
+  public function findOneForEntity(string $entityClass, int $ownerId):Image {
+  }
+
+
+  private function completeJoinTableEntity($joinTableEntity)
+  {
+    $backSlashPos = strrpos($joinTableEntity, '\\');
+    if ($backSlachPos === false) {
+      // compute class prefix
+      $imageEntityClass = $this->getEntityName();
+      $backSlashPos = strrpos($imageEntityClass, '\\');
+      $joinTableEntity = substr_replace($imageEntityClass, $backSlashPos+1, $joinTableEntity);
+    }
+    return $joinTableEntity;
   }
 
 }

@@ -121,22 +121,12 @@ class Project
   private $instrumentation;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Image", inversedBy="posterProjects", orphanRemoval=true, fetch="EXTRA_LAZY")
-   * @ORM\JoinTable(
-   *   name="project_poster",
-   *   joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="Id", onDelete="CASCADE")},
-   *   inverseJoinColumns={@ORM\JoinColumn(name="poster_id", referencedColumnName="id", onDelete="CASCADE")}
-   * )
+   * @ORM\OneToMany(targetEntity="ProjectPoster", mappedBy="project")
    */
   private $posters;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Image", inversedBy="flyerProjects", orphanRemoval=true, fetch="EXTRA_LAZY")
-   * @ORM\JoinTable(
-   *   name="project_flyer",
-   *   joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="Id", onDelete="CASCADE")},
-   *   inverseJoinColumns={@ORM\JoinColumn(name="flyer_id", referencedColumnName="id", onDelete="CASCADE")}
-   * )
+   * @ORM\OneToMany(targetEntity="ProjectFlyer", mappedBy="project")
    */
   private $flyers;
 

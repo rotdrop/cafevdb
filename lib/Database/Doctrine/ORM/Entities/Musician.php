@@ -164,18 +164,17 @@ class Musician implements \ArrayAccess
   private $instruments;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Image", inversedBy="musicians", orphanRemoval=true)
-   * @ORM\JoinTable(
-   *   name="musician_photo",
-   *   joinColumns={@ORM\JoinColumn(name="musician_id", referencedColumnName="Id", unique=true, onDelete="CASCADE")},
-   *   inverseJoinColumns={@ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE")}
-   * )
+   * Inverse side.
+   *
+   * @ORM\OneToMany(targetEntity="MusicianPhoto", mappedBy="musician")
+   *
    */
-  private $photo;
+  private $photos;
 
   public function __construct() {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
+    $this->photos = new ArrayCollection();
   }
 
   /**

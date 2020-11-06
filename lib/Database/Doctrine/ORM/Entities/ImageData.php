@@ -63,14 +63,17 @@ class ImageData implements \ArrayAccess
   private $data;
 
   /**
-   * @ORM\OneToOne(targetEntity="Image", inversedBy="imageData")
-   * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+   * @var Image
+   *
+   * Inverse side.
+   *
+   * @ORM\OneToOne(targetEntity="Image", mappedBy="imageData")
+   * @ORM\JoinColumn(name="image_id", unique=true, referencedColumnName="id")
    */
   private $image;
 
   public function __construct() {
     $this->arrayCTOR();
-    $this->image = null;
   }
 
   /**
