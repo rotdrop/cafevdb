@@ -77,7 +77,7 @@ class InlineImageService
     $this->imageData = null;
     $this->itemId = -1;
 
-    if (!($fieldSelector & self:IMAGE_DATA_MASK)) {
+    if (!($fieldSelector & self::IMAGE_DATA_MASK)) {
       return null;
     }
 
