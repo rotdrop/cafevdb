@@ -35,6 +35,13 @@ use OCP\IDateTimeZone;
 use OCP\Security\ISecureRandom;
 use \OCP\ILogger;
 
+/**Configuration do-it-all class.
+ *
+ * @todo This is called on boot without user, determine why.
+ *
+ * @bug This class is too big.
+ *
+ */
 class ConfigService {
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -262,8 +269,16 @@ class ConfigService {
       $this->user = $this->userManager->get($this->userId);
     } else {
       $this->loginUser = $this->user = $this->userSession->getUser();
-      //trigger_error('user: ' . (empty($this->user) ? 'empty' : 'defined'));
-      $this->loginUid = $this->userId = $this->user->getUID();
+      if (empty($this->user)) {
+        try {
+          throw new \Exception("User undefined");
+        } catch (\Throwable $t) {
+          $this->logException($t);
+        }
+        $this->loginUid = $this->userId = null;
+      } else {
+        $this->loginUid = $this->userId = $this->user->getUID();
+      }
     }
 
     // Initialize the encryption service.
