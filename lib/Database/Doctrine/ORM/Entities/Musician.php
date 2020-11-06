@@ -144,11 +144,11 @@ class Musician implements \ArrayAccess
   private $instruments;
 
   /**
-   * @ORM\ManyToMany(targetEntity="ImageData", inversedBy="musicians", orphanRemoval=true)
+   * @ORM\ManyToMany(targetEntity="Image", inversedBy="musicians", orphanRemoval=true)
    * @ORM\JoinTable(
    *   name="musician_photo",
    *   joinColumns={@ORM\JoinColumn(name="musician_id", referencedColumnName="Id", unique=true, onDelete="CASCADE")},
-   *   inverseJoinColumns={@ORM\JoinColumn(name="image_data_id", referencedColumnName="id", onDelete="CASCADE")}
+   *   inverseJoinColumns={@ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE")}
    * )
    */
   private $photo;
@@ -545,7 +545,7 @@ class Musician implements \ArrayAccess
   /**
    * Set photo.
    *
-   * @param ImageData $photo|null
+   * @param Image $photo|null
    *
    * @return Musician
    */
@@ -559,7 +559,7 @@ class Musician implements \ArrayAccess
   /**
    * Get photo.
    *
-   * @return ImageData|null
+   * @return Image|null
    */
   public function getPhoto()
   {

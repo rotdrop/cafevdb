@@ -101,7 +101,7 @@ class Project
   private $instrumentation;
 
   /**
-   * @ORM\ManyToMany(targetEntity="ImageData", inversedBy="posterProjects", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\ManyToMany(targetEntity="Image", inversedBy="posterProjects", orphanRemoval=true, fetch="EXTRA_LAZY")
    * @ORM\JoinTable(
    *   name="project_poster",
    *   joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="Id", onDelete="CASCADE")},
@@ -111,7 +111,7 @@ class Project
   private $posters;
 
   /**
-   * @ORM\ManyToMany(targetEntity="ImageData", inversedBy="flyerProjects", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\ManyToMany(targetEntity="Image", inversedBy="flyerProjects", orphanRemoval=true, fetch="EXTRA_LAZY")
    * @ORM\JoinTable(
    *   name="project_flyer",
    *   joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="Id", onDelete="CASCADE")},
