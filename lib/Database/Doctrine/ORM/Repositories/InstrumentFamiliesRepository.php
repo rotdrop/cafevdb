@@ -28,21 +28,31 @@ use Doctrine\ORM\EntityRepository;
 
 class InstrumentFamiliesRepository extends EntityRepository
 {
-  /**Find an instrument-family by its name.*/
+  /**
+   * Find an instrument-family by its name.
+   *
+   * @return Entities\InstrumentFamily
+   */
   public function findByName(string $name)
   {
     return $this->findOneBy([ 'family' => $name ]);
   }
 
-  /**Sort by configured sorting column and omit disabled entries.
+  /**
+   * Sort by configured sorting column and omit disabled entries.
+   *
+   * @return array<int, Entities\InstrumentFamily>
    */
   public function findAll()
   {
     return $this->findBy(['disabled' => false]);
   }
 
-  /**This is essentially a single value table, just return the values as plain
-   * array.
+  /**
+   * This is essentially a single value table, just return the values
+   * as plain array.
+   *
+   * @return array<int, string>
    */
   public function values()
   {

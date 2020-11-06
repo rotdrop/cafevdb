@@ -28,6 +28,28 @@ use Doctrine\ORM\EntityRepository;
 
 class ImagesRepository extends EntityRepository
 {
+  /**
+   * Find images for the given "using" entity class.
+   *
+   * @param string $entityClass Full featured or partial class name of
+   * the entity we are searching images for.
+   *
+   * @param int $entityId Entity id of the "using" table/entity.
+   *
+   * @return Entities\Image[]
+   */
+  public function findForEntity(string $entityClass, int $entityId): array {
+  }
+
+  /**
+   * Find the first or only image for the given using entity.
+   *
+   * @copydoc findForEntity
+   *
+   * @return Entities\Image
+   */
+  public function findOneForEntity(string $entityClass, int $entityId):Image {
+  }
 
 }
 

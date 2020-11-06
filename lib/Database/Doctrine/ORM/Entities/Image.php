@@ -84,22 +84,30 @@ class Image implements \ArrayAccess
   private $imageDataId;
 
   /**
+   * @var ImageData
+   *
    * @ORM\OneToOne(targetEntity="ImageData", mappedBy="image", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(name="image_data_id", referencedColumnName="id")
    */
   private $imageData;
 
   /**
+   * @var Musician[]
+   *
    * @ORM\ManyToMany(targetEntity="Musician", mappedBy="photo", fetch="EXTRA_LAZY")
    */
   private $musicians;
 
   /**
+   * @var Project[]
+   *
    * @ORM\ManyToMany(targetEntity="Project", mappedBy="posters", fetch="EXTRA_LAZY")
    */
   private $posterProjects;
 
   /**
+   * @var Project[]
+   *
    * @ORM\ManyToMany(targetEntity="Project", mappedBy="flyers", fetch="EXTRA_LAZY")
    */
   private $flyerProjects;
@@ -127,7 +135,7 @@ class Image implements \ArrayAccess
    *
    * @param string|null $mimetype
    *
-   * @return ImageData
+   * @return Image
    */
   public function setMimetype($mimeType = null)
   {
@@ -151,7 +159,7 @@ class Image implements \ArrayAccess
    *
    * @param string|null $md5
    *
-   * @return ImageData
+   * @return Image
    */
   public function setMd5($md5 = null)
   {

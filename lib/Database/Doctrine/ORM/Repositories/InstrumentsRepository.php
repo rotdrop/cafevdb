@@ -29,13 +29,20 @@ use Doctrine\DBAL\Logging\DebugStack;
 
 class InstrumentsRepository extends EntityRepository
 {
-  /**Find an instrument by its name.*/
+  /**
+   * Find an instrument by its name.
+   *
+   * @return Entities\Instrument
+   */
   public function findByName(string $name)
   {
     return $this->findOneBy([ 'instrument' => $name ], ['sortierung' => 'ASC' ]);
   }
 
-  /**Sort by configured sorting column and omit disabled entries.
+  /**
+   * Sort by configured sorting column and omit disabled entries.
+   *
+   * @return array<int, Entities\Instrument>
    */
   public function findAll()
   {
@@ -45,14 +52,17 @@ class InstrumentsRepository extends EntityRepository
   /**
    * Prepare ofor grouping select options by instrument family.
    *
-   * @return array like
-   * @code
-   * array('families' => array(FAMILIES),
-   *       'byId' => array(ID => NAME),
-   *       'byName' => array(NAME => NAME),
-   *       'nameGroups' => array(NAME => FAMILY),
-   *       'idGroups' => array(ID => FAMILY))
-   * @end code
+   * @return array<string, array<string|int, string>>
+   *
+   * ```php
+   * [
+   *   'families' => array(FAMILIES),
+   *   'byId' => array(ID => NAME),
+   *   'byName' => array(NAME => NAME),
+   *   'nameGroups' => array(NAME => FAMILY),
+   *   'idGroups' => array(ID => FAMILY)
+   * ]
+   * ```
    *
    * @todo Does such a function belong into the entity repository? OTOH ...
    */

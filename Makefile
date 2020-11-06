@@ -64,7 +64,10 @@ COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--no-dev --prefer-dist
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
-PHPDOC_TEMPLATE=--template clean
+PHPDOC_TEMPLATE=--template=default
+#--template=clean --template=xml
+
+#--template=responsive-twig
 
 all: build
 
@@ -159,13 +162,18 @@ doc: $(PHPDOC)
 	rm -rf $(DOC_BUILD_DIR)/phpdoc/*
 	$(PHPDOC) run \
  $(PHPDOC_TEMPLATE) \
+ --force \
  --parseprivate \
+ --visibility api,public,protected,private,internal \
  --sourcecode \
  --defaultpackagename $(app_name) \
  -d $(ABSSRCDIR)/lib -d $(ABSSRCDIR)/appinfo \
  --setting graphs.enabled=true \
  --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
  -t $(DOC_BUILD_DIR)/phpdoc
+
+#--setting guides.enabled=true \
+#
 
 # Builds the source package
 .PHONY: source
