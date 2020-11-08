@@ -68,7 +68,6 @@ class ImageData implements \ArrayAccess
    * Inverse side.
    *
    * @ORM\OneToOne(targetEntity="Image", mappedBy="imageData")
-   * @ORM\JoinColumn(name="image_id", unique=true, referencedColumnName="id")
    */
   private $image;
 

@@ -29,6 +29,12 @@ class MusicianPhoto
   private $imageId;
 
   /**
+   * @ORM\OneToOne(targetEntity="Image", inversedBy="musicianPhoto")
+   * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+   */
+  private $image;
+
+  /**
    * Inverse  side.
    *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="photos")
