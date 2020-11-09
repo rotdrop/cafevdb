@@ -36,24 +36,31 @@ class ImagesRepository extends EntityRepository
    *
    * @param int $ownerId Entity id of the "using" table/entity.
    *
+   * @param int $limit Limit number of results (default: no limit)
+   *
    * @return Entities\Image[]
    */
-  public function findForEntity(string $joinTableEntity, int $ownerId): array
+  public function findForEntity(string $joinTableEntity, int $ownerId, int $limit = -1): array
   {
-    $joinTableEntity = $this->completeJoinTableEntity($joinTableEntity);
+    $joinTableEntity = $this->getJoinTableCompletionEntity($joinTableEntity);
     $qb = $this->getEntityManager()->createQueryBuilder();
-    $imageIds = $qb->select('jt.image_Id')
+    $qb = $qb->select('jt.image_Id')
                    ->from($joinTableEntity, 'jt')
                    ->where('owner_id = :ownerId')
-                   ->setParameter('ownerId', $ownerId)
-                   ->getQuery()
-                   ->getResult('COLUMN_HYDRATOR');
+                   ->setParameter('ownerId', $ownerId);
+
+    if ($limit > 0) {
+      $qb = $qb->setMaxResults($limit);
+    }
+
+    $imageIds = qb->getQuery()
+                  ->getResult('COLUMN_HYDRATOR');
 
     $qb = $this->createQueryBuilder('im');
-    $qb->select('im')
-       ->where($qb->expr()->in('image_id', $imageIds))
-       ->getQuery()
-       ->getResult();
+    $images = $qb->select('im')
+                 ->where($qb->expr()->in('image_id', $imageIds))
+                 ->getQuery()
+                 ->getResult();
   }
 
   /**
@@ -64,10 +71,11 @@ class ImagesRepository extends EntityRepository
    * @return Entities\Image
    */
   public function findOneForEntity(string $entityClass, int $ownerId):Image {
+    return $this->findForEntity($entityClass, $onwerId, 1)[0];
   }
 
 
-  private function completeJoinTableEntity($joinTableEntity)
+  private function getJoinTableCompletionEntity($joinTableEntity)
   {
     $backSlashPos = strrpos($joinTableEntity, '\\');
     if ($backSlachPos === false) {
