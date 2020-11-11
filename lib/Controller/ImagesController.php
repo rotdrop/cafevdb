@@ -28,6 +28,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
+use OCP\ICache;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CalDavService;
@@ -47,43 +48,52 @@ class ImagesController extends Controller {
   /** @var CalDavService */
   private $calDavService;
 
+  /** @var \OCP\ICache */
+  private $fileCache;
+
   public function __construct(
     $appName
     , IRequest $request
     , RequestParameterService $parameterService
     , ConfigService $configService
     , CalDavService $calDavService
+    , ICache $fileCache
   ) {
 
     parent::__construct($appName, $request);
 
     $this->parameterService = $parameterService;
     $this->configService = $configService;
-    $this->calDavService = $calDavService;
+    $this->calDavService = $calDavService; // ? why
+    $this->fileCache = $fileCache;
     $this->l = $this->l10N();
   }
 
   /**
-   * Fetch something and return it as download.
-   *
-   * @param string $section Cosmetics, for grouping purposes
-   *
-   * @param sting $object Something identifying the object in the
-   * context of $section.
-   *
-   * @return mixed \OCP\Response Something derived from \OCP\Response
-   *
    * @NoAdminRequired
    */
-  public function get($action, $section, $object)
+  public function get($joinTable, $ownerId)
   {
-    $this->logInfo(__METHOD__.': '.'action / section / object / parameters: '
-                   .$action.' / '
-                   .$section.' / '
-                   .$object.' / '
-                   .print_r($this->parameterService->getParams(), true));
+    if ($joinTable == 'cache') {
+
+    case 'cache':
+      $cacheKey = $ownerId;
+      $imageData = $this->fileCache->get($cacheKey);
+      return new DataDownloadResponse();
+    default:
+
+    }
     return self::grumble($this->l->t('Unknown Request'));
   }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function post($joinTable, $ownerId)
+  {
+    return self::grumble($this->l->t('Unknown Request'));
+  }
+
 }
 
 // Local Variables: ***

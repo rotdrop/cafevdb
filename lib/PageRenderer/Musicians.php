@@ -40,6 +40,7 @@ class Musicians extends PMETableViewBase
 {
   const CSS_CLASS = 'musicians';
   const TABLE = 'Musicians';
+  const PHOTO_JOIN = 'MusicianPhoto';
 
   /** @var GeoCodingService */
   private $geoCodingService;
@@ -641,7 +642,7 @@ make sure that the musicians are also automatically added to the
     case 'display':
       $div = ''
         .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tooltip-top" src="'
-        .($this->urlGenerator->linkToRoute('cafevdb.image.get.'.self::TABLE.'.'.$musicianId)).'?image_size=1200&time_stamp='.$timeStamp
+        .($this->urlGenerator->linkToRoute('cafevdb.image.get.'.self::PHOTO_JOIN.'.'.$musicianId)).'?image_size=1200&time_stamp='.$timeStamp
         .'" '
         .'title="'.$this->l->t("Photo, if available").'" /></div>';
       return $div;

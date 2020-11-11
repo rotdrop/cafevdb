@@ -20,6 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace OCA\CAFEVDB;
+
 /**
  * @file
  * Create your routes in here. The name is the lowercase name of the controller
@@ -28,8 +30,18 @@
  *
  * The controller class has to be registered in the application.php file since
  * it's instantiated in there
+ *
+ * @todo How to docme?
  */
-return [
+
+/**
+ * @global array $routes
+ *
+ * Cloud-routes registered with the app.
+ *
+ * @todo docme.
+ */
+$routes = [
   'routes' => [
     [
       'name' => 'page#not_found',
@@ -155,19 +167,49 @@ return [
     // various download stuff
     [
       'name' => 'downloads#fetch',
-      'url' => '/download/{section}/{object}',
+      'url' => '/download/{path}',
       'verb' => 'GET',
     ],
-    // internal image stuff
+    /**
+     * Image service out of database or OC file-space
+     *
+     * FROM OLD VERSION
+     *
+     * GET: stored photo from data base
+     * POST: upload / select cloud / save crop
+     * POST: delete image by id
+     *
+     * Commands:
+     * - section as OBJECT_IMAGE
+     *     - musician_photo
+     *     - project_poster
+     *     - project_flyer
+     *     - cloud
+     * - object:
+     */
     [
       'name' => 'images#get',
-      'url' => '/image/{action}/{section}/{object}',
+      'url' => '/image/{joinTable}/{ownerId}',
       'verb' => 'GET',
+    ],
+    /**
+     * actions:
+     *   - upload, upload from client machine
+     *     Respond with temporary image path
+     *   - cloud, select from cloud storage
+     *     Respond with temporary image path
+     *   - save, save image data, possibly from crop-editor
+     *   - delete, delete given image
+     */
+    [
+      'name' => 'images#post',
+      'url' => '/image/{action}',
+      'verb' => 'POST',
     ],
   ],
 ];
 
-return;
+return $routes;
 
 /*Return an array of project-events, given the respective project id. */
 \OCP\API::register(
