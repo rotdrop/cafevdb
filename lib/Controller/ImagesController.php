@@ -24,7 +24,6 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -89,30 +88,51 @@ class ImagesController extends Controller {
     if ($joinTable == 'cache') {
       $cacheKey = $ownerId;
       $imageData = $this->fileCache->get($cacheKey);
-      // @TODO: maxSize?
-      // @TODO: just for the mime-type?
       $image = new \OCP\Image();
       $image->loadFromData();
-      $imageMimeType = $image->mimeType();
     } else {
-      // ownername_imagename
-      $joinTable = Util::dashesToCamelCase($joinTable, true);
-      $this->logInfo("cooked table: ".$joinTable);
 
-      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+      if ($ownerId <= 0) {
+        return self::grumble($this->l->t("Owner-ID is missing"));
+      }
 
-      $dbImage = $imagesRepository->findOneForEntity($joinTable, $ownerId);
-      $imageMimeType = $dbImage->getMimeType();
-      $imageData = $dbImage->getImageData()->getData();
+      try {
 
-      $this->logInfo("Image data: ".strlen($imageData)." mime ".$imageMimeType);
+        // ownername_imagename
+        $joinTable = Util::dashesToCamelCase($joinTable, true);
+        $this->logInfo("cooked table: ".$joinTable);
 
-      $image = new \OCP\Image();
-      $image->loadFromBase64($imageData);
-      $imageData = $image->data();
-   }
+        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
 
-    return new DataDownloadResponse($imageData, $imageFileName, $imageMimeType);
+        $dbImage = $imagesRepository->findOneForEntity($joinTable, $ownerId);
+        if (empty($dbImage)) {
+          // @TODO: maybe better throw and catch
+          return $this->getPlaceHolder($joinTable);
+        }
+
+        $imageMimeType = $dbImage->getMimeType();
+        $imageData = $dbImage->getImageData()->getData();
+
+        $image = new \OCP\Image();
+        $image->loadFromBase64($imageData);
+
+        $this->logInfo("Image data: ".strlen($imageData)." mime ".$imageMimeType);
+        if ($image->mimeType() !== $imageMimeType) {
+          $this->logError("Mime-types stored / computed: ".$imageMimeType." / ".$image->mimeType());
+        }
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        $message = $this->l->t("Unable to load image data for %s@%s", [$ownerId, $joinTable]);
+        $this->logError($message);
+        return self::grumble($message);
+      }
+
+    }
+
+    $imageData = $image->data();
+    $imageMimeType = $image->mimeType();
+
+    return new Http\DataDownloadResponse($imageData, $imageFileName, $imageMimeType);
   }
 
   /**
@@ -123,6 +143,24 @@ class ImagesController extends Controller {
     return self::grumble($this->l->t('Unknown Request'));
   }
 
+  /**
+   * Redirect to a place-holder image.
+   */
+  private function getPlaceHolder($joinTable)
+  {
+    $placeHolderName = 'placeholder/'.Util::camelCaseToDashes($joinTable);
+    try {
+      $placeHolderUrl = $this->urlGenerator()->imagePath($this->appName(), $placeHolderName);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      try {
+        $placeHolderUrl = $this->urlGenerator()->imagePath($this->appName(), 'placeholder/default.svg');
+      } catch (\Throwable $t) {
+
+      }
+    }
+    return new Http\RedirectResponse($placeHolderUrl);
+  }
 }
 
 // Local Variables: ***

@@ -163,7 +163,7 @@ var CAFEVDB = CAFEVDB || {};
     const requestParams =
       '?ImageSize='+self.imageSize +
       '&refresh='+Math.random() + // this disables browser-caching via URL change.
-      '&requesttoken='+OC.requestToken;
+      '&requesttoken='+encodeURIComponent(OC.requestToken);
     $(this.photo)
     .on('load', function () {
       $('img.cafevdb_inline_image').remove();
@@ -440,7 +440,7 @@ var CAFEVDB = CAFEVDB || {};
           //}
         }
       };
-      xhr.open('POST', OC.generateUrl('/apps/cafevdb/image/upload'+'?owner_id='+CAFEVDB.Photo.itemId+'&image_size='+CAFEVDB.Photo.imageSize+'&requesttoken='+OC.requestToken+'&image_file='+encodeURIComponent(file.name)), true);
+      xhr.open('POST', OC.generateUrl('/apps/cafevdb/image/upload'+'?owner_id='+CAFEVDB.Photo.itemId+'&image_size='+CAFEVDB.Photo.imageSize+'&requesttoken='+encodeURIComponent(OC.requestToken)+'&image_file='+encodeURIComponent(file.name)), true);
       xhr.setRequestHeader('Cache-Control', 'no-cache');
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       xhr.setRequestHeader('X-File-Name', encodeURIComponent(file.name));
@@ -493,7 +493,7 @@ var CAFEVDB = CAFEVDB || {};
       height: 'auto',
       modal: true,
       closeOnEscape: false,
-      dialogClass: 'photo-zoom no-close transparent-titlebar no-border',
+      dialogClass: 'photo-zoom no-close transparent-titlebar no-border content-box',
       resizable: false,
       open: function() {
         var dialogHolder = $(this);
@@ -558,9 +558,9 @@ var CAFEVDB = CAFEVDB || {};
           imageHeight = imgClone.height();
           if (imageHeight < imageMaxHeight) {
             console.log('shift image down by', (imageMaxHeight - imageHeight) / 2);
-            imgClone.css('margin-top', "+="+((imageMaxHeight - imageHeight) / 2));
+            //imgClone.css('margin-top', "+="+((imageMaxHeight - imageHeight) / 2));
           }
-          dialogWidget.css('width', imgClone.width() + imgHOffset + hOffset);
+          //dialogWidget.css('width', imgClone.width() + imgHOffset + hOffset);
           //dialogWidget.css('width', 'auto');
         });
       },

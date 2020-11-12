@@ -38,7 +38,8 @@ trait LoggerTrait
   }
 
   public function logException($exception, $message = null) {
-    empty($message) && ($message = $this->l->t("Caught an Exception"));
+    //empty($message) && ($message = $this->l->t("Caught an Exception"));
+    empty($message) && ($message = "Caught an Exception");
     $this->logger->logException($exception, [ 'message' => $message ]);
   }
 

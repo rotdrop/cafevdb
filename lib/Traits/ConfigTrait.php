@@ -52,6 +52,11 @@ trait ConfigTrait {
     return $this->configService->getUserSession();
   }
 
+  protected function urlGenerator()
+  {
+    return $this->configService->getUrlGenerator();
+  }
+
   protected function userManager()
   {
     return $this->configService->getUserManager();

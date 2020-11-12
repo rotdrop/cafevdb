@@ -270,11 +270,7 @@ class ConfigService {
     } else {
       $this->loginUser = $this->user = $this->userSession->getUser();
       if (empty($this->user)) {
-        try {
-          throw new \Exception("User undefined");
-        } catch (\Throwable $t) {
-          $this->logException($t);
-        }
+        // can happen at login
         $this->loginUid = $this->userId = null;
       } else {
         $this->loginUid = $this->userId = $this->user->getUID();

@@ -729,8 +729,12 @@ a.ui-tabs-anchor.compact span.ui-icon {
 
 .ui-dialog.transparent,
 .ui-dialog.transparent-titlebar {
-  border:0px;
-  background: transparent;
+  border:0px!important;
+  background: transparent!important;
+}
+
+.content-box {
+  box-sizing: content-box!important;
 }
 
 .ui-dialog.transparent .ui-widget-header,

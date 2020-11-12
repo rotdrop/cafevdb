@@ -62,6 +62,11 @@ class ImagesRepository extends EntityRepository
     $imageIds = $qb->getQuery()
                    ->getResult('COLUMN_HYDRATOR');
 
+    if (empty($imageIds)) {
+      // no image found is just ok.
+      return [];
+    }
+
     $qb = $this->createQueryBuilder('im');
     $images = $qb->select('im')
                  ->where($qb->expr()->in('im.id', $imageIds))
@@ -78,12 +83,12 @@ class ImagesRepository extends EntityRepository
    *
    * @copydoc findForEntity
    *
-   * @return Entities\Image
+   * @return null|Entities\Image
    */
-  public function findOneForEntity(string $entityClass, int $ownerId):Entities\Image {
-    return $this->findForEntity($entityClass, $ownerId, 1)[0];
+  public function findOneForEntity(string $entityClass, int $ownerId) {
+    $images = $this->findForEntity($entityClass, $ownerId, 1);
+    return empty($images) ? null : $images[0];
   }
-
 
   private function getJoinTableCompletionEntity($joinTableEntity)
   {
