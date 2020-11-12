@@ -160,9 +160,10 @@ var CAFEVDB = CAFEVDB || {};
     this.photo = new Image();
     console.log('image tag', this.photo);
 
-    const sizeParam = '?ImageSize='+self.imageSize;
-    const refreshParam = '&refresh='+Math.random(); // this disables browser-caching via URL change.
-
+    const requestParams =
+      '?ImageSize='+self.imageSize +
+      '&refresh='+Math.random() + // this disables browser-caching via URL change.
+      '&requesttoken='+OC.requestToken;
     $(this.photo)
     .on('load', function () {
       $('img.cafevdb_inline_image').remove();
@@ -189,7 +190,7 @@ var CAFEVDB = CAFEVDB || {};
         });
       //self.notify({message:t('cafevdb', 'Error loading image.')});
     })
-    .attr('src', OC.generateUrl('/apps/cafevdb/image/'+self.imageItemTable+'/'+self.itemId+sizeParam+refreshParam));
+    .attr('src', OC.generateUrl('/apps/cafevdb/image/'+self.imageItemTable+'/'+self.itemId+requestParams));
     this.loadPhotoHandlers();
   };
   Photo.editCurrentPhoto = function() {
@@ -439,7 +440,7 @@ var CAFEVDB = CAFEVDB || {};
           //}
         }
       };
-      xhr.open('POST', OC.generateUrl('/apps/cafevdb/image/upload'+'?owner_id='+CAFEVDB.Photo.itemId+'&image_size='+CAFEVDB.Photo.imageSize+'&requesttoken='+oc_requesttoken+'&image_file='+encodeURIComponent(file.name)), true);
+      xhr.open('POST', OC.generateUrl('/apps/cafevdb/image/upload'+'?owner_id='+CAFEVDB.Photo.itemId+'&image_size='+CAFEVDB.Photo.imageSize+'&requesttoken='+OC.requestToken+'&image_file='+encodeURIComponent(file.name)), true);
       xhr.setRequestHeader('Cache-Control', 'no-cache');
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       xhr.setRequestHeader('X-File-Name', encodeURIComponent(file.name));

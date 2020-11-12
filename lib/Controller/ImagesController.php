@@ -24,7 +24,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -104,6 +104,12 @@ class ImagesController extends Controller {
       $dbImage = $imagesRepository->findOneForEntity($joinTable, $ownerId);
       $imageMimeType = $dbImage->getMimeType();
       $imageData = $dbImage->getImageData()->getData();
+
+      $this->logInfo("Image data: ".strlen($imageData)." mime ".$imageMimeType);
+
+      $image = new \OCP\Image();
+      $image->loadFromBase64($imageData);
+      $imageData = $image->data();
    }
 
     return new DataDownloadResponse($imageData, $imageFileName, $imageMimeType);

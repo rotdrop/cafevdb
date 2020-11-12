@@ -64,7 +64,7 @@ class ImagesRepository extends EntityRepository
 
     $qb = $this->createQueryBuilder('im');
     $images = $qb->select('im')
-                 ->where($qb->expr()->in('im.imageId', $imageIds))
+                 ->where($qb->expr()->in('im.id', $imageIds))
                  ->getQuery()
                  ->getResult();
 
@@ -80,7 +80,7 @@ class ImagesRepository extends EntityRepository
    *
    * @return Entities\Image
    */
-  public function findOneForEntity(string $entityClass, int $ownerId):Image {
+  public function findOneForEntity(string $entityClass, int $ownerId):Entities\Image {
     return $this->findForEntity($entityClass, $ownerId, 1)[0];
   }
 
