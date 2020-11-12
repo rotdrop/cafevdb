@@ -439,7 +439,7 @@ var CAFEVDB = CAFEVDB || {};
           //}
         }
       };
-      xhr.open('POST', OC.generateUrl('/apps/cafevdb/image/upload'+'?owner_id='+CAFEVDB.Photo.itemId+'&image_size='+CAFEVDB.Photo.imageSize+'&requesttoken='+oc_requesttoken+'&image_file='+encodeURIComponent(file.name), true);
+      xhr.open('POST', OC.generateUrl('/apps/cafevdb/image/upload'+'?owner_id='+CAFEVDB.Photo.itemId+'&image_size='+CAFEVDB.Photo.imageSize+'&requesttoken='+oc_requesttoken+'&image_file='+encodeURIComponent(file.name)), true);
       xhr.setRequestHeader('Cache-Control', 'no-cache');
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       xhr.setRequestHeader('X-File-Name', encodeURIComponent(file.name));

@@ -32,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  * The actual image data is stored in ImageData for performance reasons.
  *
  * @ORM\Table(name="Images")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ImagessRepository")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ImagesRepository")
  */
 class Image implements \ArrayAccess
 {

@@ -25,9 +25,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\DBAL\Logging\DebugStack;
 
 class ImagesRepository extends EntityRepository
 {
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
+
   /**
    * Find images for the given "using" entity class.
    *
@@ -42,25 +45,32 @@ class ImagesRepository extends EntityRepository
    */
   public function findForEntity(string $joinTableEntity, int $ownerId, int $limit = -1): array
   {
+    $logger = new DebugStack();
+    $this->getEntityManager()->getConfiguration()->setSQLLogger($logger);
+
     $joinTableEntity = $this->getJoinTableCompletionEntity($joinTableEntity);
     $qb = $this->getEntityManager()->createQueryBuilder();
-    $qb = $qb->select('jt.image_Id')
-                   ->from($joinTableEntity, 'jt')
-                   ->where('owner_id = :ownerId')
-                   ->setParameter('ownerId', $ownerId);
+    $qb = $qb->select('jt.imageId')
+             ->from($joinTableEntity, 'jt')
+             ->where('jt.ownerId = :ownerId')
+             ->setParameter('ownerId', $ownerId);
 
     if ($limit > 0) {
       $qb = $qb->setMaxResults($limit);
     }
 
-    $imageIds = qb->getQuery()
-                  ->getResult('COLUMN_HYDRATOR');
+    $imageIds = $qb->getQuery()
+                   ->getResult('COLUMN_HYDRATOR');
 
     $qb = $this->createQueryBuilder('im');
     $images = $qb->select('im')
-                 ->where($qb->expr()->in('image_id', $imageIds))
+                 ->where($qb->expr()->in('im.imageId', $imageIds))
                  ->getQuery()
                  ->getResult();
+
+    $this->log(print_r($logger->queries, true));
+
+    return $images;
   }
 
   /**
@@ -71,19 +81,20 @@ class ImagesRepository extends EntityRepository
    * @return Entities\Image
    */
   public function findOneForEntity(string $entityClass, int $ownerId):Image {
-    return $this->findForEntity($entityClass, $onwerId, 1)[0];
+    return $this->findForEntity($entityClass, $ownerId, 1)[0];
   }
 
 
   private function getJoinTableCompletionEntity($joinTableEntity)
   {
     $backSlashPos = strrpos($joinTableEntity, '\\');
-    if ($backSlachPos === false) {
+    if ($backSlashPos === false) {
       // compute class prefix
       $imageEntityClass = $this->getEntityName();
       $backSlashPos = strrpos($imageEntityClass, '\\');
-      $joinTableEntity = substr_replace($imageEntityClass, $backSlashPos+1, $joinTableEntity);
+      $joinTableEntity = substr_replace($imageEntityClass, $joinTableEntity, $backSlashPos+1);
     }
+    $this->log("entity: ".$joinTableEntity);
     return $joinTableEntity;
   }
 

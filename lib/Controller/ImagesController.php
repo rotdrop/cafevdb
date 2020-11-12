@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ImagesRepository;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 class ImagesController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -82,6 +82,7 @@ class ImagesController extends Controller {
    */
   public function get($joinTable, $ownerId)
   {
+    $this->logInfo("table: ".$joinTable.", owner: ".$ownerId);
     $imageFileName = "image";
     $imageMimeType = "image/unknown";
     $imageData = '';
@@ -96,8 +97,9 @@ class ImagesController extends Controller {
     } else {
       // ownername_imagename
       $joinTable = Util::dashesToCamelCase($joinTable, true);
+      $this->logInfo("cooked table: ".$joinTable);
 
-      $imagesRepository = $this->getDatabaseRepository(Image::class);
+      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
 
       $dbImage = $imagesRepository->findOneForEntity($joinTable, $ownerId);
       $imageMimeType = $dbImage->getMimeType();
