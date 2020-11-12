@@ -157,6 +157,41 @@ __EOT__;
 
     return $result;
   }
+
+  /**
+   * Take any dashed or "underscored" lower-case string and convert to
+   * camel-acse.
+   *
+   * @param string $string the string to convert.
+   *
+   * @param bool $capitalizeFirstCharacter self explaining.
+   *
+   * @param string $dashes Characters to replace.
+   */
+  public static function dashesToCamelCase($string, $capitalizeFirstCharacter = false, $dashes = '_-')
+  {
+    $str = str_replace(' ', '', ucwords(preg_replace('/[_-]/', ' ', $string)));
+
+    if (!$capitalizeFirstCharacter) {
+      $str[0] = strtolower($str[0]);
+    }
+
+    return $str;
+  }
+
+  /**
+   * Take an camel-case string and convert to lower-case with dashes
+   * or underscores between the words. First letter may or may not
+   * be upper case.
+   *
+   * @param string $string String to work on.
+   *
+   * @param string $separator Separator to use, defaults to '-'.
+   */
+  public static function camelCaseToDashes($string, $separator = '-')
+  {
+    return strtolower(preg_replace('/([A-Z])/', $separator.'$1', lcfirst($string)));
+  }
 }
 
 // Local Variables: ***

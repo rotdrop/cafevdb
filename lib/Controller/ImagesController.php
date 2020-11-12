@@ -33,11 +33,14 @@ use OCP\ICache;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ImagesRepository;
 
 class ImagesController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var RequestParameterService */
   private $parameterService;
@@ -48,6 +51,9 @@ class ImagesController extends Controller {
   /** @var CalDavService */
   private $calDavService;
 
+  /** @var EntityManager */
+  protected $entityManager;
+
   /** @var \OCP\ICache */
   private $fileCache;
 
@@ -56,6 +62,7 @@ class ImagesController extends Controller {
     , IRequest $request
     , RequestParameterService $parameterService
     , ConfigService $configService
+    , EntityManager $entityManager
     , CalDavService $calDavService
     , ICache $fileCache
   ) {
@@ -64,6 +71,7 @@ class ImagesController extends Controller {
 
     $this->parameterService = $parameterService;
     $this->configService = $configService;
+    $this->entityManager = $entityManager;
     $this->calDavService = $calDavService; // ? why
     $this->fileCache = $fileCache;
     $this->l = $this->l10N();
@@ -74,16 +82,29 @@ class ImagesController extends Controller {
    */
   public function get($joinTable, $ownerId)
   {
+    $imageFileName = "image";
+    $imageMimeType = "image/unknown";
+    $imageData = '';
     if ($joinTable == 'cache') {
-
-    case 'cache':
       $cacheKey = $ownerId;
       $imageData = $this->fileCache->get($cacheKey);
-      return new DataDownloadResponse();
-    default:
+      // @TODO: maxSize?
+      // @TODO: just for the mime-type?
+      $image = new \OCP\Image();
+      $image->loadFromData();
+      $imageMimeType = $image->mimeType();
+    } else {
+      // ownername_imagename
+      $joinTable = Util::dashesToCamelCase($joinTable, true);
 
-    }
-    return self::grumble($this->l->t('Unknown Request'));
+      $imagesRepository = $this->getDatabaseRepository(Image::class);
+
+      $dbImage = $imagesRepository->findOneForEntity($joinTable, $ownerId);
+      $imageMimeType = $dbImage->getMimeType();
+      $imageData = $dbImage->getImageData()->getData();
+   }
+
+    return new DataDownloadResponse($imageData, $imageFileName, $imageMimeType);
   }
 
   /**
