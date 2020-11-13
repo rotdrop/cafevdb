@@ -111,8 +111,8 @@ var CAFEVDB = CAFEVDB || {};
 
       console.info('submit form');
       //document.getElementById('file_upload_form').submit();
-      //form.submit();
-      $.post(form.attr('target'), form.serialize());
+      form.submit();
+      //$.post(form.attr('target'), form.serialize());
     }
   };
   Photo.loadPhotoHandlers = function() {

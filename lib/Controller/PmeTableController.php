@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
 use OCP\IUserSession;
@@ -133,6 +134,7 @@ class PmeTableController extends Controller {
       ];
 
       $tmpl = new TemplateResponse($this->appName, $template, $templateParameters, 'blank');
+
       $html =$tmpl->render();
 
       // Search for MySQL error messages echoes by phpMyEdit, sometimes
@@ -157,6 +159,12 @@ class PmeTableController extends Controller {
         'history' => [ 'size' => $historySize,
                        'position' => $historyPosition, ],
       ]);
+
+      $policy = new ContentSecurityPolicy();
+      //$policy->addAllowedWorkerSrcDomain("'self'");
+      //$policy->addAllowedScriptDomain("'self'");
+      //$policy->addAllowedConnectDomain("'self'");
+      $response->setContentSecurityPolicy($policy);
 
       if (!$dialogMode && !$reloadAction) {
         $this->historyService->store();
