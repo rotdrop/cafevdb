@@ -140,6 +140,7 @@ class ImagesController extends Controller {
    */
   public function post($joinTable, $ownerId)
   {
+    $this->logInfo(__METHOD__);
     return self::grumble($this->l->t('Unknown Request'));
   }
 
@@ -148,19 +149,48 @@ class ImagesController extends Controller {
    */
   private function getPlaceHolder($joinTable)
   {
-    $placeHolderName = 'placeholder/'.Util::camelCaseToDashes($joinTable);
+    $placeHolderName = 'placeholder/'.Util::camelCaseToDashes($joinTable).'.svg';
     try {
       $placeHolderUrl = $this->urlGenerator()->imagePath($this->appName(), $placeHolderName);
     } catch (\Throwable $t) {
       $this->logException($t);
-      try {
-        $placeHolderUrl = $this->urlGenerator()->imagePath($this->appName(), 'placeholder/default.svg');
-      } catch (\Throwable $t) {
-
-      }
+      $imageData = $this->fallbackPlaceholder();
+      $imageFileName = 'placeholder.svg';
+      $imageMimeType = 'image/svg+xml';
+      return new Http\DataDownloadResponse($imageData, $imageFileName, $imageMimeType);
     }
     return new Http\RedirectResponse($placeHolderUrl);
   }
+
+  private function fallbackPlaceholder()
+  {
+    $data =<<<'EOT'
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns="http://www.w3.org/2000/svg"
+    width="180pt"
+    height="180pt"
+    viewBox="0 0 120 120">
+  <rect
+      x="0" y="0" width="120" height="120"
+      style="fill:#BEBEBE;stroke:black;stroke-width:1;fill-opacity:1;stroke-apacity:0.5"
+      />
+  <svg x="50%" y="50%" width="100%" height="100%" style="overflow:visible">
+    <text
+        x="0%" y="0%" dominant-baseline="middle" text-anchor="middle"
+        font-family="Arial" font-size="12pt" fill="red"
+        transform="rotate(45)">
+EOT;
+    $data .= $this->l->t('Placeholder Image');
+    $data .=<<<'EOT'
+    </text>
+  </svg>
+</svg>
+EOT;
+    return $data;
+  }
+
 }
 
 // Local Variables: ***

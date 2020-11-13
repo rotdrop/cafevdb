@@ -75,7 +75,7 @@ var CAFEVDB = CAFEVDB || {};
   'use strict';
   var Photo = function() {};
   Photo.itemId   = -1;
-  Photo.imageItemTable = '';
+  Photo.imageItmTable = '';
   Photo.imageSize  = 400;
   Photo.data = {PHOTO:false};
   Photo.uploadPhoto = function(filelist) {
@@ -89,11 +89,14 @@ var CAFEVDB = CAFEVDB || {};
     var form = $('#file_upload_form');
     var totalSize=0;
     if (file.size > $('#max_upload').val()) {
-      CAFEVDB.dialogs.alert(t('cafevdb', 'The file you are trying to upload exceed the maximum size for file uploads on this server.'), t('cafevdb', 'Error'));
+      CAFEVDB.dialogs.alert(t('cafevdb', 'The file you are trying to upload exceed the maximum size of {max} for file uploads on this server.', { max: $('#max_upload_human').val()}), t('cafevdb', 'Error'));
       return;
     } else {
-      target.unbind('load');
-      target.load(function() {
+      target.off('load');
+      target.off('error');
+      target
+      .on('load', function() {
+        console.info('load', arguments);
         var response= jQuery.parseJSON(target.contents().text());
         if (response != undefined && response.status == 'success') {
           self.editPhoto(response.data.itemId, response.data.tmp);
@@ -101,8 +104,15 @@ var CAFEVDB = CAFEVDB || {};
         } else {
           CAFEVDB.dialogs.alert(response.data.message, t('cafevdb', 'Error'));
         }
+      })
+      .on('error', function() {
+        console.info('error', arguments);
       });
-      form.submit();
+
+      console.info('submit form');
+      //document.getElementById('file_upload_form').submit();
+      //form.submit();
+      $.post(form.attr('target'), form.serialize());
     }
   };
   Photo.loadPhotoHandlers = function() {
@@ -178,8 +188,13 @@ var CAFEVDB = CAFEVDB || {};
         }
       });
     })
-    .on('error', function () {
-      // notify the user that the image could not be loaded
+    .on('error', function (event) {
+
+      // BIG FAT NOTE: the "event" data passed to this error handler
+      // just does not contain any information about the error-data
+      // returned by the server. So only information is "there was an
+      // error".
+
       CAFEVDB.dialogs.alert(
 	t('cafevdb', 'Could not open image.'), t('cafevdb', 'Error'),
         function () {
