@@ -27,13 +27,13 @@ $css_class = 'blog-page';
 unset($this->vars['css-class']);
 
 $nav = '';
-$nav .= $navigation->pageControlElement('projects');
-$nav .= $navigation->pageControlElement('all');
-//$nav .= $navigation->pageControlElement('projectinstruments');
-$nav .= $navigation->pageControlElement('instruments');
-$nav .= $navigation->pageControlElement('instrument-families');
+$nav .= $pageNavigation->pageControlElement('projects');
+$nav .= $pageNavigation->pageControlElement('all');
+//$nav .= $pageNavigation->pageControlElement('projectinstruments');
+$nav .= $pageNavigation->pageControlElement('instruments');
+$nav .= $pageNavigation->pageControlElement('instrument-families');
 if ($expertMode) {
-  $nav .= $navigation->pageControlElement('config-check');
+  $nav .= $pageNavigation->pageControlElement('config-check');
 }
 
 $header = ''

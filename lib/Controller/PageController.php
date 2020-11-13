@@ -206,6 +206,17 @@ class PageController extends Controller {
     //$pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
     //Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
 
+    if (!$this->inGroup()) {
+      return new TemplateResponse(
+        $this->appName(),
+        'errorpage',
+        [
+          'error' => 'notamember',
+          'userId' => $this->userId(),
+        ],
+      'user');
+    };
+
     $template = $this->getTemplate($template);
     try {
       $renderer = $this->appContainer->query('template:'.$template);
@@ -221,7 +232,7 @@ class PageController extends Controller {
     $templateParameters = [
       'template' => $template,
       'renderer' => $renderer,
-      'navigation' => $this->pageNavigation,
+      'pageNavigation' => $this->pageNavigation,
 
       //'l' => $this->l,
       'appName' => $this->appName,
@@ -252,6 +263,7 @@ class PageController extends Controller {
       'historySize' => $this->historyService->size(),
       'historyPosition' => $this->historyService->position(),
       'requesttoken' => \OCP\Util::callRegister(), // @TODO: check
+      'csrfToken' => \OCP\Util::callRegister(), // @TODO: check
       'filtervisibility' => $usrFiltVis,
       'directchange' => $directChg,
       'showdisabled' => $showDisabled,

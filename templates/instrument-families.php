@@ -28,27 +28,27 @@ $projectId = $renderer->getProjectId();
 
 $nav = '';
 if ($projectId >= 0) {
-  $nav .= $navigation->pageControlElement('projectlabel', $project, $projectId);
-  $nav .= $navigation->pageControlElement('detailed', $project, $projectId);
-  $nav .= $navigation->pageControlElement('project-extra', $project, $projectId);
-  $nav .= $navigation->pageControlElement('projectinstruments', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('projectlabel', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('detailed', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-extra', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('projectinstruments', $project, $projectId);
   if (/*Config::isTreasurer()*/true) { // @@TODO
-    $nav .= $navigation->pageControlElement('project-payments', $project, $projectId);
-    $nav .= $navigation->pageControlElement('debit-mandates', $project, $projectId);
-    $nav .= $navigation->pageControlElement('debit-notes', $project, $projectId);
+    $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
+    $nav .= $pageNavigation->pageControlElement('debit-mandates', $project, $projectId);
+    $nav .= $pageNavigation->pageControlElement('debit-notes', $project, $projectId);
     if ($project === Config::getValue('memberTable', false)) {
-      $nav .= $navigation->pageControlElement('insurances');
+      $nav .= $pageNavigation->pageControlElement('insurances');
     }
   }
-  $nav .= $navigation->pageControlElement('projects');
-  $nav .= $navigation->pageControlElement('all');
-  $nav .= $navigation->pageControlElement('instruments', $project, $projectId);
-  $nav .= $navigation->pageControlElement('instrument-families');
+  $nav .= $pageNavigation->pageControlElement('projects');
+  $nav .= $pageNavigation->pageControlElement('all');
+  $nav .= $pageNavigation->pageControlElement('instruments', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('instrument-families');
 } else {
-  $nav .= $navigation->pageControlElement('projects');
-  $nav .= $navigation->pageControlElement('all');
-  $nav .= $navigation->pageControlElement('instruments');
-  $nav .= $navigation->pageControlElement('instrument-families');
+  $nav .= $pageNavigation->pageControlElement('projects');
+  $nav .= $pageNavigation->pageControlElement('all');
+  $nav .= $pageNavigation->pageControlElement('instruments');
+  $nav .= $pageNavigation->pageControlElement('instrument-families');
 }
 
 echo $this->inc('part.common.header',

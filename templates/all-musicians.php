@@ -26,20 +26,19 @@ $css_pfx = $renderer->cssPrefix();
 $css_class = $renderer->cssClass();
 
 $nav = '';
-$nav .= $navigation->pageControlElement('all');
-$nav .= $navigation->pageControlElement('projects');
-$nav .= $navigation->pageControlElement('instruments');
+$nav .= $pageNavigation->pageControlElement('all');
+$nav .= $pageNavigation->pageControlElement('projects');
+$nav .= $pageNavigation->pageControlElement('instruments');
 if (/*Config::isTreasurer()*/true) { // @@TODO
-  $nav .= $navigation->pageControlElement('insurances');
-  $nav .= $navigation->pageControlElement('debit-mandates');
+  $nav .= $pageNavigation->pageControlElement('insurances');
+  $nav .= $pageNavigation->pageControlElement('debit-mandates');
 }
-$nav .= $navigation->pageControlElement('blog');
-$nav .= $navigation->pageControlElement('instruments');
-$nav .= $navigation->pageControlElement('instrument-families');
+$nav .= $pageNavigation->pageControlElement('blog');
+$nav .= $pageNavigation->pageControlElement('instruments');
+$nav .= $pageNavigation->pageControlElement('instrument-families');
 
 echo $this->inc('part.common.header',
-                [ //'navigation' => $navigation,
-                  'css-prefix' => $css_pfx,
+                [ 'css-prefix' => $css_pfx,
                   'css-class' => $css_class,
                   'navigationcontrols' => $nav,
                   'header' => $renderer->headerText(), ]);

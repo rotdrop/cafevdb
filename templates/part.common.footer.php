@@ -56,16 +56,17 @@ $css_pfx = $_['css-prefix'];
 <!-- image file upload support with drag'n drop -->
 <form class="float"
       id="file_upload_form"
-      action="<?php echo \OCP\Util::linkToAbsolute('cafevdb', 'ajax/inlineimage/uploadimage.php'); ?>"
+      action="<?php echo $urlGenerator->linkToRoute($appName.'.images.post', ['action' => 'upload']); ?>"
       method="post"
       enctype="multipart/form-data"
       target="file_upload_target">
+  <input type="submit" id="blahblah"/>
   <input type="hidden" name="ItemId" value="-1"/>
   <input type="hidden" name="ImageItemTable" value=""/>
-  <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>"/>
+  <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>
   <input type="hidden" name="ImageSize" value="1200"/>
   <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize']; ?>" id="max_upload"/>
-  <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>"/>
+  <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>" id="max_upload_human"/>
   <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
 </form>
 
@@ -82,7 +83,7 @@ $css_pfx = $_['css-prefix'];
 		method="post"
 		enctype="multipart/form-data"
 		target="crop_target"
-		action="<?php print_unescaped(\OCP\Util::linkToAbsolute('cafevdb', 'ajax/inlineimage/savecrop.php')); ?>">
+		action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.images.post', ['action' => 'save'])); ?>">
 		<input type="hidden" id="ItemId" name="ItemId" value="{ItemId}" />
 		<input type="hidden" id="ImageItemTable" name="ImageItemTable" value="{ImageItemTable}" />
 		<input type="hidden" id="ImageSize" name="ImageSize" value="{ImageSize}" />

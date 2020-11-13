@@ -135,7 +135,7 @@ $debugModes = [ ConfigService::DEBUG_GENERAL => $l->t('General Information'),
                 ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
                 ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form') ];
 
-$navigationControls = $navigation->buttonsFromArray(
+$navigationControls = $pageNavigation->buttonsFromArray(
     array(
         'undo' => array(
             'name' => $l->t('Back'),
