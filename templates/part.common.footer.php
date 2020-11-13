@@ -57,13 +57,13 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
 
 <!-- image file upload support with drag'n drop -->
 <form class="float" id="file_upload_form" enctype="multipart/form-data">
-  <input type="hidden" name="ownerId" value="-1"/>
-  <input type="hidden" name="joinTable" value=""/>
-  <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>
-  <input type="hidden" name="imageSize" value="1200"/>
-  <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize']; ?>" id="max_upload"/>
-  <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>" id="max_upload_human"/>
-  <input id="file_upload_start" type="file" accept="image/*" name="<?php echo $uploadName; ?>" />
+    <input type="hidden" name="ownerId" value="-1"/>
+    <input type="hidden" name="joinTable" value=""/>
+    <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>
+    <input type="hidden" name="imageSize" value="1200"/>
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize']; ?>" id="max_upload"/>
+    <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>" id="max_upload_human"/>
+    <input id="file_upload_start" type="file" accept="image/*" name="<?php echo $uploadName; ?>" />
 </form>
 
 <!-- image crop form template -->
@@ -74,10 +74,10 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
         enctype="multipart/form-data"
         target="crop_target"
         action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.images.post', ['action' => 'save'])); ?>">
-    <input type="hidden" id="ItemId" name="ItemId" value="{ItemId}" />
-    <input type="hidden" id="ImageItemTable" name="ImageItemTable" value="{ImageItemTable}" />
-    <input type="hidden" id="ImageSize" name="ImageSize" value="{ImageSize}" />
-    <input type="hidden" id="tmpkey" name="tmpkey" value="{tmpkey}" />
+    <input type="hidden" id="<?php p($appName); ?>-owner-id" name="ownerId" value="{ownerId}" />
+    <input type="hidden" id="<?php p($appName); ?>-join-table" name="joinTable" value="{joinTable}" />
+    <input type="hidden" id="<?php p($appName); ?>-image-size" name="imageSize" value="{imageSize}" />
+    <input type="hidden" id="<?php p($appName); ?>-tmp-key" name="tmpKey" value="{tmpKey}" />
     <fieldset id="coords">
       <input type="hidden" id="x1" name="x1" value="" />
       <input type="hidden" id="y1" name="y1" value="" />

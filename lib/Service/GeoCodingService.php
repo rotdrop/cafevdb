@@ -451,9 +451,9 @@ class GeoCodingService
         ]);
         if (empty($geoPostalCode)) {
           $geoPostalCode = GeoPostalCodes::create()
-                      ->setCountry($country)
-                      ->setPostalCode($postalCode)
-                      ->setName($name);
+                         ->setCountry($country)
+                         ->setPostalCode($postalCode)
+                         ->setName($name);
           $hasChanged = true;
         } else {
           if (($lat != $geoPostalCode->getLatitude()) || ($lng != $geoPostalCode->getLongitude())) {

@@ -90,8 +90,11 @@ class ImagesController extends Controller {
     if ($joinTable == 'cache') {
       $cacheKey = $ownerId;
       $imageData = $this->fileCache->get($cacheKey);
+
+      $this->logInfo("Requested cache file with key ".$cacheKey);
+
       $image = new \OCP\Image();
-      $image->loadFromData();
+      $image->loadFromData($imageData);
     } else {
 
       if ($ownerId <= 0) {
@@ -142,9 +145,17 @@ class ImagesController extends Controller {
    */
   public function post($action, $joinTable, $ownerId, $imageSize = 400)
   {
+    if (empty($joinTable)) {
+      return self::grumble($this->l->t("Relation between image and object missing"));
+    }
+
+    if (!is_numeric($ownerId) || $ownerId <= 0) {
+      return self::grumble($this->l->t("Image owner not given"));
+    }
+
     switch ($action) {
     case 'upload':
-      $this->logInfo(print_r($this->parameterService->getParams(), true));
+        $this->logInfo(print_r($this->parameterService->getParams(), true));
       $this->logInfo(print_r($this->parameterService->files, true));
 
       // @TODO handle drag'n drop
@@ -153,14 +164,6 @@ class ImagesController extends Controller {
       $upload = $this->parameterService->getUpload(self::UPLOAD_NAME);
       if (empty($upload)) {
         return self::grumble($this->l->t("Image has not been uploaded"));
-      }
-
-      if (empty($joinTable)) {
-        return self::grumble($this->l->t("Relation between image and object missing"));
-      }
-
-      if (!is_numeric($ownerId) || $ownerId <= 0) {
-        return self::grumble($this->l->t("Image owner not given"));
       }
 
       $tmpName = $upload['tmp_name'];
@@ -182,8 +185,12 @@ class ImagesController extends Controller {
       }
 
       if (!$this->fileCache->set($tmpKey, $image->data(), 600)) {
-        return self::grumble($this->l->t("Unable to cache image data"));
+        return self::grumble($this->l->t(
+          "Unable to save image data of size %s to temporary storage with key %s",
+          [ strlen($image->data()), $tmpKey ]));
       }
+
+      $this->logInfo("Stored cache file as ".$tmpKey);
 
       // that's it, return the result data to the caller
       return self::dataResponse([
@@ -194,6 +201,126 @@ class ImagesController extends Controller {
         'joinTable' => $joinTable,
         'tmpKey' => $tmpKey,
       ]);
+      break;
+    case 'save':
+      $this->logInfo('crop data: '.print_r($this->parameterService->getParams(), true));
+      /*
+        Array (
+        [renderAs] => user
+        [projectName] =>
+        [projectId] => -1
+        [musicianId] => -1
+        [ownerId] => 2
+        [joinTable] => MusicianPhoto
+        [imageSize] => 400
+        [tmpKey] => cafevdb-inline-image-033d31253582819aa5eb7b7fbcee03f2
+        [x1] => 384
+        [y1] => 168
+        [x2] => 897
+        [y2] => 684
+        [w] => 513
+        [h] => 516
+        [action] => save
+        [_route] => cafevdb.images.post )
+      */
+
+      $tmpKey = $this->parameterService['tmpKey'];
+      if (empty($tmpKey)) {
+        return self::grumble($this->l->t('Missing cache-key for temporay image file'));
+      }
+
+      $imageData = $this->fileCache->get($tmpKey);
+      if (empty($imageData)) {
+        return self::grumble($this->l->t('Unable to load image with cache key %s', [$tmpKey]));
+      }
+      $this->fileCache->remove($tmpKey);
+
+      $image = new \OCP\Image();
+      if (!$image->loadFromData($imageData)) {
+        return self::grumble($this->l->t('Unable to generate image from temporary storage (%s)', [$tmpKey]));
+      }
+
+      $x1 = $this->parameterService['x1'];
+      $y1 = $this->parameterService['y1'];
+      $w  = $this->parameterService['w'];
+      $h  = $this->parameterService['h'];
+
+      $w = ($w != -1 ? $w : $image->width());
+      $h = ($h != -1 ? $h : $image->height());
+      $this->logDebug('savecrop.php, x: '.$x1.' y: '.$y1.' w: '.$w.' h: '.$h);
+      if (!$image->crop($x1, $y1, $w, $h)) {
+        return self::grumble(
+          $this->l->t('Unable to crop temporary image %s to [%s, %s, %s, %s]',
+                      [ $tmpKey, $x1, $y1, $x1 + $w - 1, $y1 + $h -1 ]));
+      }
+
+      if ($image->width() > $imageSize || $image->height() > $imageHeight) {
+        if (!$image->resize($imageSize)) {
+          return self::grumble($this->l->t('Unable to resize temporary image %s to size %s', [$tmpKey, $imageSize]));
+        }
+      }
+
+      try {
+        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+
+        /*
+          $ownerId has only one image (ATM)
+
+          - create new image entity
+          - create new join to ownerId
+          - fetch all old images
+          - delete all old images
+        */
+
+        // fetch old images, remember to delete later, may be empty array
+        $oldImages = $imagesRepository->findForEntity($joinTable, $ownerId);
+
+        // @TODO wrap into as function in the ImagesRepository
+        $imageData = $image->data();
+        $dbImageData = Entities\ImageData::create()
+                     ->setData($imageData);
+
+        $dbImage = Entities\Image::create()
+                 ->setWidth($image->width())
+                 ->setHeight($image->height())
+                 ->setMimeType($image->mimeType())
+                 ->setMd5($imageData)
+                 ->setData($dbImageData);
+        $dbImage = $this->persist($dbImage);
+
+        foreach ($oldImages as $oldImage) {
+          // @TODO: correct cascade?
+          $this->remove($oldImage);
+        }
+
+        return self::dataResponse([
+          'ownerId' => $ownerId,
+          'joinTable' => $joinTable,
+          'imageId' => $dbImage->getId(),
+        ]);
+
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+
+      break;
+    case 'delete':
+      // need to delete image and join table entry
+      try {
+
+        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+        $oldImages = $imagesRepository->findForEntity($joinTable, $ownerId);
+        foreach ($oldImages as $oldImage) {
+          // @TODO: correct cascade?
+          $this->remove($oldImage);
+        }
+
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+
       break;
     default:
       break;

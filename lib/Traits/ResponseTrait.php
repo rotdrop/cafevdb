@@ -82,7 +82,8 @@ trait ResponseTrait
 
   static private function grumble($message, $value = null, $status = Http::STATUS_BAD_REQUEST)
   {
-    $caller = array_shift(debug_backtrace());
+    $trace = debug_backtrace();
+    $caller = array_shift($trace);
     $data = [
       'class' => __CLASS__,
       'file' => $caller['file'],
