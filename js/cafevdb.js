@@ -1207,7 +1207,7 @@ var CAFEVDB = CAFEVDB || {};
     const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
     const failData = CAFEVDB.ajaxFailData(xhr, textStatus, errorThrown);
-    //console.info("AJAX failure data", failData);
+    console.info("AJAX failure data", failData);
 
     switch (textStatus) {
     case 'notmodified':
@@ -1264,7 +1264,7 @@ var CAFEVDB = CAFEVDB || {};
             + '</div>';
       autoReport = '';
       var exceptionData = failData;
-      if (exceptionData != null) {
+      if (exceptionData.exception  !== undefined) {
 	console.info("hello");
         info += '<div class="exception error name"><pre>'+exceptionData.exception+'</pre></div>'
 	  + '<div class="exception error trace"><pre>'+exceptionData.trace+'</pre></div>';

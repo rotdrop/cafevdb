@@ -41,6 +41,8 @@ class ImagesController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  const UPLOAD_NAME = 'imagefile';
+
   /** @var RequestParameterService */
   private $parameterService;
 
@@ -138,9 +140,64 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function post($joinTable, $ownerId)
+  public function post($action, $joinTable, $ownerId, $imageSize = 400)
   {
-    $this->logInfo(__METHOD__);
+    switch ($action) {
+    case 'upload':
+      $this->logInfo(print_r($this->parameterService->getParams(), true));
+      $this->logInfo(print_r($this->parameterService->files, true));
+
+      // @TODO handle drag'n drop
+      // we only upload one image at a time, and its called
+
+      $upload = $this->parameterService->getUpload(self::UPLOAD_NAME);
+      if (empty($upload)) {
+        return self::grumble($this->l->t("Image has not been uploaded"));
+      }
+
+      if (empty($joinTable)) {
+        return self::grumble($this->l->t("Relation between image and object missing"));
+      }
+
+      if (!is_numeric($ownerId) || $ownerId <= 0) {
+        return self::grumble($this->l->t("Image owner not given"));
+      }
+
+      $tmpName = $upload['tmp_name'];
+      if (!file_exists($tmpName)) {
+        return self::grumble($this->l->t("Uploaded file seems to have vanished on server"));
+      }
+
+      $tmpKey = $this->appName().'-inline-image-'.md5(basename($tmpName));
+      $image = new \OCP\Image();
+      if (!$image->loadFromFile($tmpName)) {
+        return self::grumble($this->l->t("Unable to validate uploaded image data"));
+      }
+
+      if($image->width() > $imageSize || $image->height() > $imageSize) {
+        $image->resize($imageSize); // Prettier resizing than with browser and saves bandwidth.
+      }
+      if(!$image->fixOrientation()) { // No fatal error so we don't bail out.
+        $this->logDebug("Unable to fix orientation of uploaded image");
+      }
+
+      if (!$this->fileCache->set($tmpKey, $image->data(), 600)) {
+        return self::grumble($this->l->t("Unable to cache image data"));
+      }
+
+      // that's it, return the result data to the caller
+      return self::dataResponse([
+        'mime' => $image->mimeType(),
+        'size' => strlen($image->data()),
+        'name' => $upload['name'],
+        'ownerId' => $ownerId,
+        'joinTable' => $joinTable,
+        'tmpKey' => $tmpKey,
+      ]);
+      break;
+    default:
+      break;
+    }
     return self::grumble($this->l->t('Unknown Request'));
   }
 

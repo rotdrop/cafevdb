@@ -13,9 +13,24 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\IRequest;
 
+use OCA\CAFEVDB\Common\Util;
+
 /**@TODO Base on \ArrayObject */
 class RequestParameterService implements \ArrayAccess, \Countable
 {
+  const MAGIC_KEYS = [
+    'get',
+    'post',
+    'files',
+    'server',
+    'env',
+    'cookies',
+    'urlParams',
+    'parameters',
+    'method',
+    'requesttoken',
+  ];
+
   /** @var IRequest */
   private $request;
 
@@ -29,6 +44,10 @@ class RequestParameterService implements \ArrayAccess, \Countable
                                       'projectId' => -1,
                                       'musicianId' => -1 ],
                                     $this->request->getParams());
+  }
+
+  public function getRequest() {
+    return $this->request;
   }
 
   public function reset() {
@@ -54,11 +73,15 @@ class RequestParameterService implements \ArrayAccess, \Countable
 
   public function setParams($parameters): array {
     $old = $this->parameters;
-    $this->parameters = array_merge([ 'renderAs' => 'user',
-                                      'projectName' => '',
-                                      'projectId' => -1,
-                                      'musicianId' => -1 ],
-                                    $parameters);
+
+    $this->parameters = Util::arrayMergerRecursive(
+      [ 'renderAs' => 'user',
+        'projectName' => '',
+        'projectId' => -1,
+        'musicianId' => -1 ],
+      $this->request->getParams(),
+      $parameters);
+
     return $old;
   }
 
@@ -118,7 +141,10 @@ class RequestParameterService implements \ArrayAccess, \Countable
   }
 
   public function __get($name) {
-    return isset($this[$name]) ? $this[$name] : null;
+    if (isset($this[$name])) {
+      return $this[$name];
+    }
+    return $this->request->__get($name);
   }
 
   /**
@@ -126,7 +152,7 @@ class RequestParameterService implements \ArrayAccess, \Countable
    * @return bool
    */
   public function __isset($name) {
-    return isset($this->parameters[$name]);
+    return isset($this[$name]) || $this->request->_isset($name);
   }
 
   /**
@@ -136,6 +162,11 @@ class RequestParameterService implements \ArrayAccess, \Countable
     if (isset($this->parameters[$name])) {
       unset($this->parameters[$name]);
     }
+  }
+
+  public function getUpload($name)
+  {
+    return $this->request->getUploadedFile($name);
   }
 }
 

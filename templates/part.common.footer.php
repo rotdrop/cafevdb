@@ -24,6 +24,8 @@ namespace OCA\CAFEVDB;
 
 $css_pfx = $_['css-prefix'];
 
+$uploadName = Controller\ImagesController::UPLOAD_NAME;
+
 ?>
 
           </div> <!-- page-body-inner -->
@@ -54,47 +56,35 @@ $css_pfx = $_['css-prefix'];
         src="about:blank"></iframe>
 
 <!-- image file upload support with drag'n drop -->
-<form class="float"
-      id="file_upload_form"
-      action="<?php echo $urlGenerator->linkToRoute($appName.'.images.post', ['action' => 'upload']); ?>"
-      method="post"
-      enctype="multipart/form-data"
-      target="file_upload_target">
-  <input type="submit" id="blahblah"/>
-  <input type="hidden" name="ItemId" value="-1"/>
-  <input type="hidden" name="ImageItemTable" value=""/>
+<form class="float" id="file_upload_form" enctype="multipart/form-data">
+  <input type="hidden" name="ownerId" value="-1"/>
+  <input type="hidden" name="joinTable" value=""/>
   <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>
-  <input type="hidden" name="ImageSize" value="1200"/>
+  <input type="hidden" name="imageSize" value="1200"/>
   <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize']; ?>" id="max_upload"/>
   <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>" id="max_upload_human"/>
-  <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
+  <input id="file_upload_start" type="file" accept="image/*" name="<?php echo $uploadName; ?>" />
 </form>
-
-<!-- image upload form submit target frame -->
-<iframe name="file_upload_target"
-        id="file_upload_target"
-        style="display:none;"
-        src=""></iframe>
 
 <!-- image crop form template -->
 <script id="cropBoxTemplate" type="text/template">
-	<form id="cropform"
-		class="coords"
-		method="post"
-		enctype="multipart/form-data"
-		target="crop_target"
-		action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.images.post', ['action' => 'save'])); ?>">
-		<input type="hidden" id="ItemId" name="ItemId" value="{ItemId}" />
-		<input type="hidden" id="ImageItemTable" name="ImageItemTable" value="{ImageItemTable}" />
-		<input type="hidden" id="ImageSize" name="ImageSize" value="{ImageSize}" />
-		<input type="hidden" id="tmpkey" name="tmpkey" value="{tmpkey}" />
-		<fieldset id="coords">
-		<input type="hidden" id="x1" name="x1" value="" />
-		<input type="hidden" id="y1" name="y1" value="" />
-		<input type="hidden" id="x2" name="x2" value="" />
-		<input type="hidden" id="y2" name="y2" value="" />
-		<input type="hidden" id="w" name="w" value="" />
-		<input type="hidden" id="h" name="h" value="" />
-		</fieldset>
-	</form>
+  <form id="cropform"
+	class="coords"
+        method="post"
+        enctype="multipart/form-data"
+        target="crop_target"
+        action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.images.post', ['action' => 'save'])); ?>">
+    <input type="hidden" id="ItemId" name="ItemId" value="{ItemId}" />
+    <input type="hidden" id="ImageItemTable" name="ImageItemTable" value="{ImageItemTable}" />
+    <input type="hidden" id="ImageSize" name="ImageSize" value="{ImageSize}" />
+    <input type="hidden" id="tmpkey" name="tmpkey" value="{tmpkey}" />
+    <fieldset id="coords">
+      <input type="hidden" id="x1" name="x1" value="" />
+      <input type="hidden" id="y1" name="y1" value="" />
+      <input type="hidden" id="x2" name="x2" value="" />
+      <input type="hidden" id="y2" name="y2" value="" />
+      <input type="hidden" id="w" name="w" value="" />
+      <input type="hidden" id="h" name="h" value="" />
+    </fieldset>
+  </form>
 </script>

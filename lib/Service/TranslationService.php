@@ -56,9 +56,9 @@ class TranslationService
         $this->logException($t);
       }
       //$this->flush();
-      $this->logInfo(__METHOD__.' translation key for '.$phrase.' was empty, new id '.$translationKey->getId());
+      $this->logDebug(__METHOD__.' translation key for '.$phrase.' was empty, new id '.$translationKey->getId());
     } else {
-      $this->logInfo(__METHOD__.' existing translation key for '.$phrase.' has id '.$translationKey->getId());
+      $this->logDebug(__METHOD__.' existing translation key for '.$phrase.' has id '.$translationKey->getId());
     }
 
     $this->setDataBaseRepository(TranslationLocation::class);
@@ -68,7 +68,7 @@ class TranslationService
       'file' => $file,
       'line' => $line ]);
     if (empty($location)) {
-      $this->logInfo(__METHOD__.' empty location for key '.$keyId);
+      $this->logDebug(__METHOD__.' empty location for key '.$keyId);
       $location = TranslationLocation::create()
                 ->setKeyId($keyId)
                 ->setTranslationKey($translationKey)

@@ -82,11 +82,19 @@ trait ResponseTrait
 
   static private function grumble($message, $value = null, $status = Http::STATUS_BAD_REQUEST)
   {
-    if (isset($message['message']) && empty($value)) {
-      return self::dataResponse($message, $status);
+    $caller = array_shift(debug_backtrace());
+    $data = [
+      'class' => __CLASS__,
+      'file' => $caller['file'],
+      'line' => $caller['line'],
+      'value' => $value,
+    ];
+    if (is_array($message)) {
+      $data = array_merge($data, $message);
     } else {
-      return self::valueResponse($value, $message, $status);
+      $data['message'] = $message;
     }
+    return self::dataResponse($data, $status);
   }
 
 }
