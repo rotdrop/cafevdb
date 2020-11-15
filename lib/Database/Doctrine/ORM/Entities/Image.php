@@ -88,8 +88,8 @@ class Image implements \ArrayAccess
    *
    * owning side
    *
-   * @ORM\OneToOne(targetEntity="ImageData", inversedBy="image", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="image_data_id", unique=true, referencedColumnName="id")
+   * @ORM\OneToOne(targetEntity="ImageData", inversedBy="image", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(name="image_data_id", referencedColumnName="id", unique=true, onDelete="CASCADE")
    */
   private $imageData;
 
@@ -116,7 +116,7 @@ class Image implements \ArrayAccess
    */
   public function setMimetype($mimeType = null)
   {
-    $this->mimetype = $mimeType;
+    $this->mimeType = $mimeType;
 
     return $this;
   }
@@ -162,7 +162,7 @@ class Image implements \ArrayAccess
    *
    * @return Image
    */
-  public function setWidth(int $imageData = -1)
+  public function setWidth(int $width = -1)
   {
     $this->width = $width;
 
@@ -186,7 +186,7 @@ class Image implements \ArrayAccess
    *
    * @return Image
    */
-  public function setHeight(int $imageData = -1)
+  public function setHeight(int $height= -1)
   {
     $this->height = $height;
 

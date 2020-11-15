@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Doctrine\ORM\Mapping as ORM;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IConfig;
@@ -116,10 +118,10 @@ class ImagesController extends Controller {
         }
 
         $imageMimeType = $dbImage->getMimeType();
-        $imageData = $dbImage->getImageData()->getData();
+        $imageData = $dbImage->getImageData()->getData('binary');
 
         $image = new \OCP\Image();
-        $image->loadFromBase64($imageData);
+        $image->loadFromData($imageData);
 
         $this->logInfo("Image data: ".strlen($imageData)." mime ".$imageMimeType);
         if ($image->mimeType() !== $imageMimeType) {
@@ -234,19 +236,20 @@ class ImagesController extends Controller {
         return self::grumble($this->l->t('Unable to load image with cache key %s', [$tmpKey]));
       }
       $this->fileCache->remove($tmpKey);
+      $this->logInfo("Image data for key ".$tmpKey." of size ".strlen($imageData));
 
       $image = new \OCP\Image();
       if (!$image->loadFromData($imageData)) {
         return self::grumble($this->l->t('Unable to generate image from temporary storage (%s)', [$tmpKey]));
       }
 
-      $x1 = $this->parameterService['x1'];
-      $y1 = $this->parameterService['y1'];
-      $w  = $this->parameterService['w'];
-      $h  = $this->parameterService['h'];
+      $x1 = (int)$this->parameterService['x1'];
+      $y1 = (int)$this->parameterService['y1'];
+      $w  = (int)$this->parameterService['w'];
+      $h  = (int)$this->parameterService['h'];
 
-      $w = ($w != -1 ? $w : $image->width());
-      $h = ($h != -1 ? $h : $image->height());
+      $w = ($w > 0 ? $w : $image->width());
+      $h = ($h > 0 ? $h : $image->height());
       $this->logDebug('savecrop.php, x: '.$x1.' y: '.$y1.' w: '.$w.' h: '.$h);
       if (!$image->crop($x1, $y1, $w, $h)) {
         return self::grumble(
@@ -261,37 +264,52 @@ class ImagesController extends Controller {
       }
 
       try {
-        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-
-        /*
-          $ownerId has only one image (ATM)
-
-          - create new image entity
-          - create new join to ownerId
-          - fetch all old images
-          - delete all old images
-        */
-
-        // fetch old images, remember to delete later, may be empty array
-        $oldImages = $imagesRepository->findForEntity($joinTable, $ownerId);
-
         // @TODO wrap into as function in the ImagesRepository
+
+        // complete entity class name
+        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+        $joinTable = $imagesRepository->joinTableClass($joinTable);
+
+        // Get meta-data of owner mapping
+        $mapping = $this->entityManager->getClassMetadata($joinTable)->getAssociationMapping('owner');
+        if (empty($mapping)) {
+          return $this->grumble($this->l->t("Unable to read owner mapping meta-data"));
+        }
+
+        $ownerClass = $mapping['targetEntity'];
+        $uniqueImage = $mapping['type'] == ORM\ClassMetadataInfo::ONE_TO_ONE;
+
+        // owner reference with just the id
+        $owner = $this->entityManager->getReference($ownerClass, [ 'id' => $ownerId ]);
+
+        // data entity
         $imageData = $image->data();
         $dbImageData = Entities\ImageData::create()
-                     ->setData($imageData);
+                     ->setData($imageData, 'binary');
 
+        // image entity
         $dbImage = Entities\Image::create()
                  ->setWidth($image->width())
                  ->setHeight($image->height())
                  ->setMimeType($image->mimeType())
-                 ->setMd5($imageData)
-                 ->setData($dbImageData);
-        $dbImage = $this->persist($dbImage);
+                 ->setMd5(md5($imageData))
+                 ->setImageData($dbImageData);
+        $dbImageData->setImage($dbImage);
 
-        foreach ($oldImages as $oldImage) {
-          // @TODO: correct cascade?
-          $this->remove($oldImage);
+        if ($uniqueImage) {
+          $this->setDataBaseRepository($joinTable);
+          $joinTableEntity = $this->findOneBy(['ownerId' => $ownerId]);
+        } else {
+          $joinTableEntity = $joinTable::create()->setOwner($owner);
         }
+        $joinTableEntity->setImage($dbImage);
+        $joinTableEntity = $this->merge($joinTableEntity);
+        $this->flush();
+
+        $dbImage = $joinTableEntity->getImage();
+        $imageId = $dbImage->getId();
+
+        $this->logInfo("Stored image with id ".$imageId." mime ".$image->mimeType());
 
         return self::dataResponse([
           'ownerId' => $ownerId,

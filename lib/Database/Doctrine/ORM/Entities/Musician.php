@@ -166,15 +166,14 @@ class Musician implements \ArrayAccess
   /**
    * Inverse side.
    *
-   * @ORM\OneToMany(targetEntity="MusicianPhoto", mappedBy="musician")
-   *
+   * @ORM\OneToOne(targetEntity="MusicianPhoto", mappedBy="owner")
    */
-  private $photos;
+  private $photo;
 
   public function __construct() {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
-    $this->photos = new ArrayCollection();
+    //$this->photos = new ArrayCollection();
   }
 
   /**

@@ -49,16 +49,9 @@ class ImageData implements \ArrayAccess
   private $id;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(name="image_id", type="integer", nullable=false)
-   */
-  private $imageId;
-
-  /**
    * @var string|null
    *
-   * @ORM\Column(name="data", type="text", length=0, nullable=false)
+   * @ORM\Column(name="data", type="blob", nullable=false)
    */
   private $data;
 
@@ -67,7 +60,7 @@ class ImageData implements \ArrayAccess
    *
    * Inverse side.
    *
-   * @ORM\OneToOne(targetEntity="Image", mappedBy="imageData")
+   * @ORM\OneToOne(targetEntity="Image", mappedBy="imageData", cascade="all")
    */
   private $image;
 
@@ -92,9 +85,17 @@ class ImageData implements \ArrayAccess
    *
    * @return ImageData
    */
-  public function setData($data = null)
+  public function setData($data = null, string $format = 'binary')
   {
-    $this->data = $data;
+    switch ($format) {
+      case 'base64':
+        $this->data = base64_decode($data);
+      default:
+      case 'resource':
+      case 'binary':
+        $this->data = $data;
+        break;
+    }
 
     return $this;
   }
@@ -104,8 +105,41 @@ class ImageData implements \ArrayAccess
    *
    * @return string|null
    */
-  public function getData()
+  public function getData(string $format = 'binary')
   {
-    return $this->data;
+    switch ($format) {
+      case 'base64':
+        return base64_encode(stream_get_contents($this->data));
+      case 'resource':
+        return $this->data;
+      case 'binary':
+        return stream_get_contents($this->data);
+      default:
+        return $this->data;
+    }
+  }
+
+  /**
+   * Set image.
+   *
+   * @param $image
+   *
+   * @return ImageData
+   */
+  public function setImage($image):self
+  {
+    $this->image = $image;
+
+    return $this;
+  }
+
+  /**
+   * Get image.
+   *
+   * @return Image
+   */
+  public function getImage():Image
+  {
+    return $this->image;
   }
 }

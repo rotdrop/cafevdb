@@ -103,6 +103,10 @@ class ImagesRepository extends EntityRepository
     return $joinTableEntity;
   }
 
+  public function joinTableClass(string $joinTableEntity)
+  {
+    return $this->getJoinTableCompletionEntity($joinTableEntity);
+  }
 }
 
 // Local Variables: ***

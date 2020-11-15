@@ -29,8 +29,6 @@ class ProjectFlyer
   private $imageId;
 
   /**
-   * Inverse  side.
-   *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="flyers")
    * @ORM\JoinColumn(name="owner_id", referencedColumnName="Id")
    *

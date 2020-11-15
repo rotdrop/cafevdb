@@ -119,6 +119,7 @@ trait EntityManagerTrait {
     if (is_array($entity)) {
       $entity = $this->entityManager->getReference($this->entityClassName, $entity);
     }
+    $this->logInfo("Call EM remove");
     return $this->entityManager->remove($entity);
   }
 
