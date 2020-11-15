@@ -6,12 +6,13 @@ use OCP\ILogger;
 
 trait LogTrait {
 
-  public static function log($message, int $level = ILogger::INFO)
+  public static function log($message, int $level = ILogger::INFO, $shift = 1)
   {
     $trace = debug_backtrace();
-    $caller = array_shift($trace);
+    $caller = $trace[$shift];
     $file = $caller['file'];
     $line = $caller['line'];
+    $caller = $trace[$shift+1];
     $class = $caller['class'];
     $method = $caller['function'];
 

@@ -33,11 +33,12 @@ trait LoggerTrait
   /** @var IL10N */
   protected $l;
 
-  public function log(int $level, string $message, array $context = []) {
+  public function log(int $level, string $message, array $context = [], $shift = 0) {
     $trace = debug_backtrace();
-    $caller = array_shift($trace);
+    $caller = $trace[$shift];
     $file = $caller['file'];
     $line = $caller['line'];
+    $caller = $trace[$shift+1];
     $class = $caller['class'];
     $method = $caller['function'];
 
@@ -45,30 +46,39 @@ trait LoggerTrait
     return $this->logger->log($level, $prefix.$message, $context);
   }
 
-  public function logException($exception, $message = null) {
-    //empty($message) && ($message = $this->l->t("Caught an Exception"));
+  public function logException($exception, $message = null, $shift = 0) {
+    $trace = debug_backtrace();
+    $caller = $trace[$shift];
+    $file = $caller['file'];
+    $line = $caller['line'];
+    $caller = $trace[$shift+1];
+    $class = $caller['class'];
+    $method = $caller['function'];
+
+    $prefix = $file.':'.$line.': '.$class.'::'.$method.': ';
+
     empty($message) && ($message = "Caught an Exception");
-    $this->logger->logException($exception, [ 'message' => $message ]);
+    $this->logger->logException($exception, [ 'message' => $prefix.$message ]);
   }
 
-  public function logError(string $message, array $context = []) {
-    return $this->log(ILogger::ERROR, $message, $context);
+  public function logError(string $message, array $context = [], $shift = 1) {
+    return $this->log(ILogger::ERROR, $message, $context, $shift);
   }
 
-  public function logDebug(string $message, array $context = []) {
-    return $this->log(ILogger::DEBUG, $message, $context);
+  public function logDebug(string $message, array $context = [], $shift = 1) {
+    return $this->log(ILogger::DEBUG, $message, $context, $shift);
   }
 
-  public function logInfo(string $message, array $context = []) {
-    return $this->log(ILogger::INFO, $message, $context);
+  public function logInfo(string $message, array $context = [], $shift = 1) {
+    return $this->log(ILogger::INFO, $message, $context, $shift);
   }
 
-  public function logWarn(string $message, array $context = []) {
-    return $this->log(ILogger::WARN, $message, $context);
+  public function logWarn(string $message, array $context = [], $shift = 1) {
+    return $this->log(ILogger::WARN, $message, $context, $shift);
   }
 
-  public function logFatal(string $message, array $context = []) {
-    return $this->log(ILogger::FATAL, $message, $context);
+  public function logFatal(string $message, array $context = [], $shift = 1) {
+    return $this->log(ILogger::FATAL, $message, $context, $shift);
   }
 
 }

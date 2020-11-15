@@ -265,34 +265,34 @@ trait ConfigTrait {
              || empty($this->getConfigValue('dbserver')));
   }
 
-  protected function log(int $level, string $message, array $context = [])
+  protected function log(int $level, string $message, array $context = [], $shift = 2)
   {
-    return $this->configService->log($level, $message, $context);
+    return $this->configService->log($level, $message, $context, $shift);
   }
 
-  protected function logException($exception, $message = null)
+  protected function logException($exception, $message = null, $shift = 2)
   {
-    return $this->configService->logException($exception, $message);
+    return $this->configService->logException($exception, $message, $shift);
   }
 
-  protected function logError(string $message, array $context = []) {
-    $this->configService->logError($message, $context);
+  protected function logError(string $message, array $context = [], $shift = 2) {
+    $this->configService->logError($message, $context, $shift);
   }
 
-  protected function logDebug(string $message, array $context = []) {
-    $this->configService->logDebug($message, $context);
+  protected function logDebug(string $message, array $context = [], $shift = 2) {
+    $this->configService->logDebug($message, $context, $shift);
   }
 
-  protected function logInfo(string $message, array $context = []) {
-    $this->configService->logInfo($message, $context);
+  protected function logInfo(string $message, array $context = [], $shift = 2) {
+    $this->configService->logInfo($message, $context, $shift);
   }
 
-  protected function logWarn(string $message, array $context = []) {
-    $this->configService->logWarn($message, $context);
+  protected function logWarn(string $message, array $context = [], $shift = 2) {
+    $this->configService->logWarn($message, $context, $shift);
   }
 
-  protected function logFatal(string $message, array $context = []) {
-    $this->configService->logFatal($message, $context);
+  protected function logFatal(string $message, array $context = [], $shift = 2) {
+    $this->configService->logFatal($message, $context, $shift);
   }
 
 }
