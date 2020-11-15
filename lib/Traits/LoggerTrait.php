@@ -34,7 +34,15 @@ trait LoggerTrait
   protected $l;
 
   public function log(int $level, string $message, array $context = []) {
-    return $this->logger->log($level, $message, $context);
+    $trace = debug_backtrace();
+    $caller = array_shift($trace);
+    $file = $caller['file'];
+    $line = $caller['line'];
+    $class = $caller['class'];
+    $method = $caller['function'];
+
+    $prefix = $file.':'.$line.': '.$class.'::'.$method.': ';
+    return $this->logger->log($level, $prefix.$message, $context);
   }
 
   public function logException($exception, $message = null) {

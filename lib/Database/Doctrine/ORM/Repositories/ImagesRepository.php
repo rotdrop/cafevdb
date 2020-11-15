@@ -26,6 +26,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Logging\DebugStack;
+use Doctrine\ORM\Mapping as ORM;
 
 class ImagesRepository extends EntityRepository
 {
@@ -48,7 +49,7 @@ class ImagesRepository extends EntityRepository
     $logger = new DebugStack();
     $this->getEntityManager()->getConfiguration()->setSQLLogger($logger);
 
-    $joinTableEntity = $this->getJoinTableCompletionEntity($joinTableEntity);
+    $joinTableEntity = $this->resolveJoinTableEntity($joinTableEntity);
     $qb = $this->getEntityManager()->createQueryBuilder();
     $qb = $qb->select('jt.imageId')
              ->from($joinTableEntity, 'jt')
@@ -73,7 +74,8 @@ class ImagesRepository extends EntityRepository
                  ->getQuery()
                  ->getResult();
 
-    $this->log(print_r($logger->queries, true));
+    self::log(print_r($logger->queries, true));
+    $this->getEntityManager()->getConfiguration()->setSQLLogger(null);
 
     return $images;
   }
@@ -90,7 +92,88 @@ class ImagesRepository extends EntityRepository
     return empty($images) ? null : $images[0];
   }
 
-  private function getJoinTableCompletionEntity($joinTableEntity)
+  /**
+   * Persist the given image for the given owner.  Depending on the
+   * association type between the owner and the join table
+   * (i.e. OneToOne or OneToMany) the image will replace an existing
+   * image or just added the collection of images.
+   *
+   * @param string Possibly partial joint-table entity class.
+   *
+   *
+   */
+  public function persistForEntity(string $joinTableEntity, int $ownerId, \OCP\Image $image):Entities\Image
+  {
+    $entityManager = $this->getEntityManager();
+
+    //$logger = new DebugStack();
+    //$entityManager->getConfiguration()->setSQLLogger($logger);
+
+    // Get full class name
+    $joinTableEntityClass = $this->resolveJoinTableEntity($joinTableEntity);
+
+    // Get meta-data of owner mapping
+    $mapping = $entityManager->getClassMetadata($joinTableEntityClass)->getAssociationMapping('owner');
+    if (empty($mapping)) {
+      throw new \Exception("Unable to read owner mapping meta-data");
+    }
+
+    $ownerEntityClass = $mapping['targetEntity'];
+    $uniqueImage = $mapping['type'] == ORM\ClassMetadataInfo::ONE_TO_ONE;
+
+    // data entity
+    $imageData = $image->data();
+    $dbImageData = Entities\ImageData::create()
+                 ->setData($imageData, 'binary');
+
+    // image entity
+    $dbImage = Entities\Image::create()
+             ->setWidth($image->width())
+             ->setHeight($image->height())
+             ->setMimeType($image->mimeType())
+             ->setMd5(md5($imageData))
+             ->setImageData($dbImageData);
+    $dbImageData->setImage($dbImage);
+
+    if ($uniqueImage) {
+      $joinTableRepository = $entityManager->getRepository($joinTableEntityClass);
+      $joinTableEntity = $joinTableRepository->findOneBy(['ownerId' => $ownerId]);
+    } else {
+      // owner reference with just the id
+      $owner = $entityManager->getReference($ownerEntityClass, [ 'id' => $ownerId ]);
+      $joinTableEntity = $joinTableEntityClass::create()->setOwner($owner);
+    }
+    $joinTableEntity->setImage($dbImage);
+    $joinTableEntity = $entityManager->merge($joinTableEntity);
+
+    // flush in order to get the last insert id
+    $entityManager->flush();
+
+    $dbImage = $joinTableEntity->getImage();
+    $imageId = $dbImage->getId();
+
+    self::log("Stored image with id ".$imageId." mime ".$image->mimeType());
+
+    //self::log(print_r($logger->queries, true));
+    //$entityManager->getConfiguration()->setSQLLogger(null);
+
+    return $dbImage;
+  }
+
+  /**
+   * Complete a possibly incomplete join-table entity class name by
+   * looking the parent namespaces of this class.
+   *
+   * @param string $joinTableEntity
+   *
+   * @return string Possibly completed class-name.
+   */
+  public function joinTableClass(string $joinTableEntity):string
+  {
+    return $this->resolveJoinTableEntity($joinTableEntity);
+  }
+
+  private function resolveJoinTableEntity(string $joinTableEntity):string
   {
     $backSlashPos = strrpos($joinTableEntity, '\\');
     if ($backSlashPos === false) {
@@ -103,10 +186,6 @@ class ImagesRepository extends EntityRepository
     return $joinTableEntity;
   }
 
-  public function joinTableClass(string $joinTableEntity)
-  {
-    return $this->getJoinTableCompletionEntity($joinTableEntity);
-  }
 }
 
 // Local Variables: ***

@@ -264,63 +264,18 @@ class ImagesController extends Controller {
       }
 
       try {
-        // @TODO wrap into as function in the ImagesRepository
-
-        // complete entity class name
         $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-        $joinTable = $imagesRepository->joinTableClass($joinTable);
-
-        // Get meta-data of owner mapping
-        $mapping = $this->entityManager->getClassMetadata($joinTable)->getAssociationMapping('owner');
-        if (empty($mapping)) {
-          return $this->grumble($this->l->t("Unable to read owner mapping meta-data"));
-        }
-
-        $ownerClass = $mapping['targetEntity'];
-        $uniqueImage = $mapping['type'] == ORM\ClassMetadataInfo::ONE_TO_ONE;
-
-        // owner reference with just the id
-        $owner = $this->entityManager->getReference($ownerClass, [ 'id' => $ownerId ]);
-
-        // data entity
-        $imageData = $image->data();
-        $dbImageData = Entities\ImageData::create()
-                     ->setData($imageData, 'binary');
-
-        // image entity
-        $dbImage = Entities\Image::create()
-                 ->setWidth($image->width())
-                 ->setHeight($image->height())
-                 ->setMimeType($image->mimeType())
-                 ->setMd5(md5($imageData))
-                 ->setImageData($dbImageData);
-        $dbImageData->setImage($dbImage);
-
-        if ($uniqueImage) {
-          $this->setDataBaseRepository($joinTable);
-          $joinTableEntity = $this->findOneBy(['ownerId' => $ownerId]);
-        } else {
-          $joinTableEntity = $joinTable::create()->setOwner($owner);
-        }
-        $joinTableEntity->setImage($dbImage);
-        $joinTableEntity = $this->merge($joinTableEntity);
-        $this->flush();
-
-        $dbImage = $joinTableEntity->getImage();
-        $imageId = $dbImage->getId();
-
-        $this->logInfo("Stored image with id ".$imageId." mime ".$image->mimeType());
-
-        return self::dataResponse([
-          'ownerId' => $ownerId,
-          'joinTable' => $joinTable,
-          'imageId' => $dbImage->getId(),
-        ]);
-
+        $dbImage = $imagesRepository->persistForEntity($joinTable, $ownerId, $image);
       } catch (\Throwable $t) {
         $this->logException($t);
         return self::grumble($this->exceptionChainData($t));
       }
+
+      return self::dataResponse([
+        'ownerId' => $ownerId,
+        'joinTable' => $joinTable,
+        'imageId' => $dbImage->getId(),
+      ]);
 
       break;
     case 'delete':
