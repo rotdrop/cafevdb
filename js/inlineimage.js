@@ -79,7 +79,7 @@ var CAFEVDB = CAFEVDB || {};
   Photo.imageSize  = 400;
   Photo.data = {PHOTO:false};
   Photo.uploadPhoto = function(filelist) {
-    var self = CAFEVDB.Photo;
+    const self = CAFEVDB.Photo;
     if (!filelist) {
       CAFEVDB.dialogs.alert(t('cafevdb', 'No files selected for upload.'), t('cafevdb', 'Error'));
       return;
@@ -122,19 +122,21 @@ var CAFEVDB = CAFEVDB || {};
     }
   };
   Photo.cloudPhotoSelected = function(path) {
-    var self = CAFEVDB.Photo;
-    $.getJSON(OC.generateUrl('/apps/cafevdb/image/cloud/'+path),
-              { 'item_id': self.ownerId,
-                'image_size': self.imageSize
-              }, function(jsondata) {
-                if (jsondata.status == 'success') {
-                  //alert(jsondata.data.page);
-                  self.editPhoto(jsondata.data.ownerId, jsondata.data.tmp);
-                  $('#edit_photo_dialog_img').html(jsondata.data.page);
-                } else {
-                  CAFEVDB.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
-                }
-              });
+    const self = CAFEVDB.Photo;
+    $.post(OC.generateUrl('/apps/cafevdb/image/cloud'),
+           { 'path': path,
+             'ownerId': self.ownerId,
+             'joinTable': self.joinTable,
+             'imageSize': self.imageSize })
+    .fail(function(xhr, status, errorThrown) {
+      CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+    })
+    .done(function(data) {
+      if (!CAFEVDB.validateAjaxResponse(data, [ 'ownerId', 'tmpKey' ])) {
+        return;
+      }
+      self.editPhoto(data.ownerId, data.tmpKey);
+    });
   };
   Photo.loadPhoto = function(ownerId, joinTable, imageSize, callback) {
     var self = CAFEVDB.Photo;
@@ -368,7 +370,7 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
     phototools.find('.cloud').on('click', function(event) {
-      OC.dialogs.filepicker(t('cafevdb', 'Select image'), self.cloudPhotoSelected, false, 'image', true);
+      OC.dialogs.filepicker(t('cafevdb', 'Select image'), self.cloudPhotoSelected, false, [ 'image\\/.*' ], true);
       event.stopImmediatePropagation();
       return false;
     });

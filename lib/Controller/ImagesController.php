@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use OCP\Files\IRootFolder;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IConfig;
@@ -60,12 +61,16 @@ class ImagesController extends Controller {
   /** @var \OCP\ICache */
   private $fileCache;
 
+  /** @var  \OCP\FILES\IRootFolder */
+  private $rootFolder;
+
   public function __construct(
     $appName
     , IRequest $request
     , RequestParameterService $parameterService
     , ConfigService $configService
     , EntityManager $entityManager
+    , IRootFolder $rootFolder
     , CalDavService $calDavService
     , ICache $fileCache
   ) {
@@ -75,6 +80,7 @@ class ImagesController extends Controller {
     $this->parameterService = $parameterService;
     $this->configService = $configService;
     $this->entityManager = $entityManager;
+    $this->rootFolder = $rootFolder;
     $this->calDavService = $calDavService; // ? why
     $this->fileCache = $fileCache;
     $this->l = $this->l10N();
@@ -155,38 +161,61 @@ class ImagesController extends Controller {
       return self::grumble($this->l->t("Image owner not given"));
     }
 
+    // response data skeleton, augmented by sub-topics.
+    $responseData = [
+      'ownerId' => $ownerId,
+      'joinTable' => $joinTable,
+    ];
+
     switch ($action) {
     case 'upload':
-        $this->logInfo(print_r($this->parameterService->getParams(), true));
-      $this->logInfo(print_r($this->parameterService->files, true));
+    case 'cloud':
+      if ($action == 'cloud') {
+        $path = $this->parameterService['path'];
+        if (empty($path)) {
+          return self::grumble($this->l->t('No image path was submitted'));
+        }
 
-      // @TODO handle drag'n drop
-      // we only upload one image at a time, and its called
+        $this->logInfo($path);
 
-      $upload = $this->parameterService->getUpload(self::UPLOAD_NAME);
-      if (empty($upload)) {
-        return self::grumble($this->l->t("Image has not been uploaded"));
+        $userFolder = $this->rootFolder->getUserFolder($this->userId());
+
+        try {
+          $file = $userFolder->get($path);
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          return self::grumble(
+            $this->l->t("File `' not found in user's %s cloud storage.",
+                        [$this->userId(), $path]));
+        }
+
+        $tmpKey = $this->appName().'-inline-image-'.md5($path);
+        $image = new \OCP\Image();
+        if (!$image->loadFromData($file->getContent())) {
+          return self::grumble($this->l->t("Unable to validate cloud image file %s", [$path]));
+        }
+      } else { // file upload
+
+        // @TODO handle drag'n drop
+
+        $upload = $this->parameterService->getUpload(self::UPLOAD_NAME);
+        if (empty($upload)) {
+          return self::grumble($this->l->t("Image has not been uploaded"));
+        }
+
+        $tmpName = $upload['tmp_name'];
+        if (!file_exists($tmpName)) {
+          return self::grumble($this->l->t("Uploaded file seems to have vanished on server"));
+        }
+
+        $tmpKey = $this->appName().'-inline-image-'.md5(basename($tmpName));
+        $image = new \OCP\Image();
+        if (!$image->loadFromFile($tmpName)) {
+          return self::grumble($this->l->t("Unable to validate uploaded image data"));
+        }
       }
 
-      $tmpName = $upload['tmp_name'];
-      if (!file_exists($tmpName)) {
-        return self::grumble($this->l->t("Uploaded file seems to have vanished on server"));
-      }
-
-      $tmpKey = $this->appName().'-inline-image-'.md5(basename($tmpName));
-      $image = new \OCP\Image();
-      if (!$image->loadFromFile($tmpName)) {
-        return self::grumble($this->l->t("Unable to validate uploaded image data"));
-      }
-
-      if($image->width() > $imageSize || $image->height() > $imageSize) {
-        $image->resize($imageSize); // Prettier resizing than with browser and saves bandwidth.
-      }
-      if(!$image->fixOrientation()) { // No fatal error so we don't bail out.
-        $this->logDebug("Unable to fix orientation of uploaded image");
-      }
-
-      if (!$this->fileCache->set($tmpKey, $image->data(), 600)) {
+      if (!$this->cacheTemporaryImage($tmpKey, $image, $imageSize))  {
         return self::grumble($this->l->t(
           "Unable to save image data of size %s to temporary storage with key %s",
           [ strlen($image->data()), $tmpKey ]));
@@ -194,16 +223,9 @@ class ImagesController extends Controller {
 
       $this->logInfo("Stored cache file as ".$tmpKey);
 
-      // that's it, return the result data to the caller
-      return self::dataResponse([
-        'mime' => $image->mimeType(),
-        'size' => strlen($image->data()),
-        'name' => $upload['name'],
-        'ownerId' => $ownerId,
-        'joinTable' => $joinTable,
-        'tmpKey' => $tmpKey,
-      ]);
-      break;
+      $responseData['tmpKey'] = $tmpKey;
+
+      return self::dataResponse($responseData);
     case 'save':
       $this->logInfo('crop data: '.print_r($this->parameterService->getParams(), true));
       /*
@@ -271,13 +293,9 @@ class ImagesController extends Controller {
         return self::grumble($this->exceptionChainData($t));
       }
 
-      return self::dataResponse([
-        'ownerId' => $ownerId,
-        'joinTable' => $joinTable,
-        'imageId' => $dbImage->getId(),
-      ]);
+      $responseData['imageId']  = $dbImage->getId();
 
-      break;
+      return self::dataResponse($responseData);
     case 'delete':
       // need to delete image and join table entry
       try {
@@ -346,6 +364,18 @@ EOT;
 </svg>
 EOT;
     return $data;
+  }
+
+  private function cacheTemporaryImage(string $tmpKey, \OCP\Image $image, int $imageSize):bool
+  {
+    if($image->width() > $imageSize || $image->height() > $imageSize) {
+      $image->resize($imageSize); // Prettier resizing than with browser and saves bandwidth.
+    }
+    if(!$image->fixOrientation()) { // No fatal error so we don't bail out.
+      $this->logDebug("Unable to fix orientation of uploaded image");
+    }
+
+    return $this->fileCache->set($tmpKey, $image->data(), 600);
   }
 
 }
