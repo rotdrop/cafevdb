@@ -151,7 +151,7 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function post($action, $joinTable, $ownerId, $imageSize = 400)
+  public function post($action, $joinTable, $ownerId, $imageId = -1, $imageSize = 400)
   {
     if (empty($joinTable)) {
       return self::grumble($this->l->t("Relation between image and object missing"));
@@ -297,20 +297,37 @@ class ImagesController extends Controller {
 
       return self::dataResponse($responseData);
     case 'delete':
-      // need to delete image and join table entry
+      // if ownerId only is given, delete all images, if ownerId and
+      // imageId is given (not yet used), delete only the given image
+      // and join-table entry.
+
+      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+      $joinTableClass = $imagesRepository->joinTableClass($joinTable);
+      $joinTableRepository =$this->getDatabaseRepository($joinTableClass);
+
+      $findBy =  [ 'ownerId' => $ownerId ];
+      if ($imageId > 0) {
+        $findBy['imageId'] = $imageId;
+      }
+
       try {
 
-        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-        $oldImages = $imagesRepository->findForEntity($joinTable, $ownerId);
-        foreach ($oldImages as $oldImage) {
-          // @TODO: correct cascade?
-          $this->remove($oldImage);
+        $joinTableEntities = $joinTableRepository->findBy($findBy);
+        if (count($joinTableEntities) < 1) {
+          return self::grumble(
+            $this->l->t("Unable to find image link for ownerId %s in join-table %s",
+                        [ $ownerId, $joinTable ]));
         }
-
+        foreach ($joinTableEntities as $joinTableEntity) {
+          $this->remove($joinTableEntity);
+        }
+        $this->flush();
       } catch (\Throwable $t) {
         $this->logException($t);
         return self::grumble($this->exceptionChainData($t));
       }
+
+      return self::dataResponse('');
 
       break;
     default:
