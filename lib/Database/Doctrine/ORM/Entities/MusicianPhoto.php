@@ -41,7 +41,7 @@ class MusicianPhoto
   private $imageId;
 
   /**
-   * @ORM\OneToOne(targetEntity="Musician", inversedBy="photo", cascade="all", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="Musician", cascade="persist", inversedBy="photo", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(name="owner_id", referencedColumnName="Id")
    */
   private $owner;
