@@ -152,7 +152,7 @@ class RequestParameterService implements \ArrayAccess, \Countable
    * @return bool
    */
   public function __isset($name) {
-    return isset($this[$name]) || $this->request->_isset($name);
+    return isset($this[$name]) || $this->request->__isset($name);
   }
 
   /**
