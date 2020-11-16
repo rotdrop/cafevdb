@@ -106,8 +106,8 @@ class ImagesRepository extends EntityRepository
   {
     $entityManager = $this->getEntityManager();
 
-    //$logger = new DebugStack();
-    //$entityManager->getConfiguration()->setSQLLogger($logger);
+    $logger = new DebugStack();
+    $entityManager->getConfiguration()->setSQLLogger($logger);
 
     // Get full class name
     $joinTableEntityClass = $this->resolveJoinTableEntity($joinTableEntity);
@@ -138,10 +138,13 @@ class ImagesRepository extends EntityRepository
     if ($uniqueImage) {
       $joinTableRepository = $entityManager->getRepository($joinTableEntityClass);
       $joinTableEntity = $joinTableRepository->findOneBy(['ownerId' => $ownerId]);
-    } else {
+    }
+    if (empty($joinTableEntity)) {
       // owner reference with just the id
       $owner = $entityManager->getReference($ownerEntityClass, [ 'id' => $ownerId ]);
       $joinTableEntity = $joinTableEntityClass::create()->setOwner($owner);
+      //self::log("OwnerEntityId: ".$owner->getId());
+      $entityManager->persist($joinTableEntity); // why is this necessary?
     }
     $joinTableEntity->setImage($dbImage);
     $joinTableEntity = $entityManager->merge($joinTableEntity);
@@ -154,8 +157,8 @@ class ImagesRepository extends EntityRepository
 
     self::log("Stored image with id ".$imageId." mime ".$image->mimeType());
 
-    //self::log(print_r($logger->queries, true));
-    //$entityManager->getConfiguration()->setSQLLogger(null);
+    self::log(print_r($logger->queries, true));
+    $entityManager->getConfiguration()->setSQLLogger(null);
 
     return $dbImage;
   }
@@ -182,7 +185,7 @@ class ImagesRepository extends EntityRepository
       $backSlashPos = strrpos($imageEntityClass, '\\');
       $joinTableEntity = substr_replace($imageEntityClass, $joinTableEntity, $backSlashPos+1);
     }
-    $this->log("entity: ".$joinTableEntity);
+    //$this->log("entity: ".$joinTableEntity);
     return $joinTableEntity;
   }
 

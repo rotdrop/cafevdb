@@ -89,12 +89,15 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function get($joinTable, $ownerId)
+  public function get($joinTable, $ownerId, $imageId = -1, $metaData = false)
   {
-    $this->logInfo("table: ".$joinTable.", owner: ".$ownerId);
+    $this->logDebug("table: ".$joinTable.", owner: ".$ownerId. ", image: ".$imageId);
     $imageFileName = "image";
     $imageMimeType = "image/unknown";
     $imageData = '';
+
+    $metaData = (bool)filter_var($metaData, FILTER_VALIDATE_BOOLEAN);
+
     if ($joinTable == 'cache') {
       $cacheKey = $ownerId;
       $imageData = $this->fileCache->get($cacheKey);
@@ -109,19 +112,47 @@ class ImagesController extends Controller {
         return self::grumble($this->l->t("Owner-ID is missing"));
       }
 
+      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+
+      // ownername_imagename
+      $joinTable = Util::dashesToCamelCase($joinTable, true);
+      $joinTableClass = $imagesRepository->joinTableClass($joinTable);
+      $this->logInfo("cooked table: ".$joinTableClass);
+
+      $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
+      $findBy =  [ 'ownerId' => $ownerId ];
+      if ($imageId > 0) {
+        $findBy['imageId'] = $imageId;
+      }
+
       try {
 
-        // ownername_imagename
-        $joinTable = Util::dashesToCamelCase($joinTable, true);
-        $this->logInfo("cooked table: ".$joinTable);
-
-        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-
-        $dbImage = $imagesRepository->findOneForEntity($joinTable, $ownerId);
-        if (empty($dbImage)) {
-          // @TODO: maybe better throw and catch
-          return $this->getPlaceHolder($joinTable);
+        $joinTableEntity = $joinTableRepository->findOneBy($findBy);
+        if ($joinTableEntity == null) {
+          if ($metaData === true) {
+            // no image yet
+            return new Http\DataResponse([], Http::STATUS_NOT_FOUND);
+          } else {
+            // return placeholder if metadata is not requested
+            return $this->getPlaceHolder($joinTable);
+          }
         }
+
+        $dbImage = $joinTableEntity->getImage();
+
+        if ($metaData === true) {
+          return self::dataResponse([
+            'joinTable' => $joinTable,
+            'ownerId' => $ownerId,
+            'imageId' => $dbImage->getId(),
+            'mimeType' => $dbImage->getMimeType(),
+            'md5' => $dbImage->getMd5(),
+            'width' => $dbImage->getWidth(),
+            'height' => $dbImage->getHeight(),
+          ]);
+        }
+
+        // otherwise return image blob as download
 
         $imageMimeType = $dbImage->getMimeType();
         $imageData = $dbImage->getImageData()->getData('binary');
@@ -135,9 +166,7 @@ class ImagesController extends Controller {
         }
       } catch (\Throwable $t) {
         $this->logException($t);
-        $message = $this->l->t("Unable to load image data for %s@%s", [$ownerId, $joinTable]);
-        $this->logError($message);
-        return self::grumble($message);
+        return self::grumble($this->exceptionChainData($t));
       }
 
     }
@@ -160,6 +189,8 @@ class ImagesController extends Controller {
     if (!is_numeric($ownerId) || $ownerId <= 0) {
       return self::grumble($this->l->t("Image owner not given"));
     }
+
+    $joinTable = Util::dashesToCamelCase($joinTable, true);
 
     // response data skeleton, augmented by sub-topics.
     $responseData = [
@@ -294,6 +325,53 @@ class ImagesController extends Controller {
       }
 
       $responseData['imageId']  = $dbImage->getId();
+
+      return self::dataResponse($responseData);
+    case 'edit':
+      // fetch the image, create a temporary copy and return a link to it
+
+      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+
+      // ownername_imagename
+      $joinTable = Util::dashesToCamelCase($joinTable, true);
+      $joinTableClass = $imagesRepository->joinTableClass($joinTable);
+      $this->logInfo("cooked table: ".$joinTableClass);
+
+      $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
+      $findBy =  [ 'ownerId' => $ownerId ];
+      if ($imageId > 0) {
+        $findBy['imageId'] = $imageId;
+      }
+
+      try {
+
+        $joinTableEntity = $joinTableRepository->findOneBy($findBy);
+        if ($joinTableEntity == null) {
+          return self::grumble($this->l->t("Unable to find image to edit for %s@%s", [$ownerId, $joinTable]));
+        }
+
+        $dbImage = $joinTableEntity->getImage();
+        $imageId = $dbImage->getId();
+        $imageData = $dbImage->getImageData()->getData('binary');
+
+        $image = new \OCP\Image();
+        if (!$image->loadFromData($imageData)) {
+          return self::grumble($this->l->t("Unable to create temporary image for %s@%s", [$ownerId, $joinTable]));
+        }
+
+        $tmpKey = $this->appName().'-inline-image-'.$joinTable.'-'.$ownerId.'-'.$imageId.'-'.$dbImage->getMd5();
+
+        if (!$this->cacheTemporaryImage($tmpKey, $image, $imageSize)) {
+        return self::grumble($this->l->t(
+          "Unable to save image data of size %s to temporary storage with key %s",
+          [ strlen($image->data()), $tmpKey ]));
+        }
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+
+      $responseData['tmpKey'] = $tmpKey;
 
       return self::dataResponse($responseData);
     case 'delete':

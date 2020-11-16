@@ -30,7 +30,7 @@
  * @param cancel If set cancel all ongoing timer events and hide the notification.
  */
 OC.notify = function(params) {
-  var self = this;
+  const self = this;
   if(!self.notifier) {
     self.notifier = $('#notification');
   }
@@ -47,7 +47,7 @@ OC.notify = function(params) {
   self.notifier.text(params.message);
   self.notifier.fadeIn().css('display', 'inline');
   self.notifier.on('click', function() { $(this).fadeOut();});
-  var timer = setTimeout(function() {
+  const timer = setTimeout(function() {
     self.notifier.fadeOut();
     if(params.timeouthandler && $.isFunction(params.timeouthandler)) {
       params.timeouthandler(self.notifier.data(dataid));
@@ -55,7 +55,7 @@ OC.notify = function(params) {
       self.notifier.removeData(dataid);
     }
   }, params.timeout && $.isNumeric(params.timeout) ? parseInt(params.timeout)*1000 : 10000);
-  var dataid = timer.toString();
+  const dataid = timer.toString();
   if(params.data) {
     self.notifier.data(dataid, params.data);
   }
@@ -73,7 +73,7 @@ var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
   'use strict';
-  var Photo = function() {};
+  const Photo = function() {};
   Photo.ownerId   = -1;
   Photo.imageItmTable = '';
   Photo.imageSize  = 400;
@@ -87,7 +87,7 @@ var CAFEVDB = CAFEVDB || {};
     const file = filelist[0];
     //var target = $('#file_upload_target');
     const form = $('#file_upload_form');
-    var totalSize=0;
+    //var totalSize=0;
     if (file.size > $('#max_upload').val()) {
       CAFEVDB.dialogs.alert(t('cafevdb', 'The file you are trying to upload exceed the maximum size of {max} for file uploads on this server.', { max: $('#max_upload_human').val()}), t('cafevdb', 'Error'));
       return;
@@ -112,7 +112,7 @@ var CAFEVDB = CAFEVDB || {};
     }
   };
   Photo.loadPhotoHandlers = function() {
-    var phototools = $('#phototools');
+    const phototools = $('#phototools');
     if (this.data.PHOTO) {
       phototools.find('.delete').show();
       phototools.find('.edit').show();
@@ -139,7 +139,7 @@ var CAFEVDB = CAFEVDB || {};
     });
   };
   Photo.loadPhoto = function(ownerId, joinTable, imageSize, callback) {
-    var self = CAFEVDB.Photo;
+    const self = CAFEVDB.Photo;
     if (typeof ownerId !== 'undefined') {
       self.ownerId = ownerId;
     }
@@ -149,28 +149,32 @@ var CAFEVDB = CAFEVDB || {};
     if (typeof imageSize !== 'undefined') {
       self.imageSize = imageSize;
     }
+    // first determine if there is a photo ...
     $.get(
-      OC.generateUrl('/apps/cafevdb/image/'+self.joinTable+'/'+self.ownerId),
-      { 'imageSize': self.imageSize })
-    .fail(function(xhr, status, errorThrown) {
-      CAFEVDB.handleAjaxError(xhr, status, errorThrown);
-      self.data.PHOTO = false;
-    })
+      OC.generateUrl('/apps/cafevdb/image/' + self.joinTable+ '/' + self.ownerId),
+      { 'metaData': true })
+     .fail(function(xhr, status, errorThrown) {
+       if (xhr.status != CAFEVDB.httpStatus.NOT_FOUND) { // ok, no photo yet
+         CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+       }
+       self.data.PHOTO = false;
+       self.loadPhotoHandlers();
+     })
     .done(function(data) {
       self.data.PHOTO = true;
       self.loadPhotoHandlers();
     });
     $('#phototools li a').cafevTooltip('hide');
-    var wrapper = $('#cafevdb_inline_image_wrapper');
+    const wrapper = $('#cafevdb_inline_image_wrapper');
     wrapper.addClass('loading').addClass('wait');
     delete this.photo;
     this.photo = new Image();
     console.log('image tag', this.photo);
 
     const requestParams =
-      '?ImageSize='+self.imageSize +
-      '&refresh='+Math.random() + // this disables browser-caching via URL change.
-      '&requesttoken='+encodeURIComponent(OC.requestToken);
+      '?metaData=false'
+      + '&refresh=' + Math.random() // disable browser-caching
+      + '&requesttoken=' + encodeURIComponent(OC.requestToken);
     $(this.photo)
     .on('load', function () {
       $('img.cafevdb_inline_image').remove();
@@ -206,25 +210,28 @@ var CAFEVDB = CAFEVDB || {};
     this.loadPhotoHandlers();
   };
   Photo.editCurrentPhoto = function() {
-    var self = CAFEVDB.Photo;
-    $.getJSON(OC.generateUrl('/apps/cafevdb/image/'+self.joinTable+'/'+self.ownerId),
-              { 'image_size': self.imageSize },
-              function(jsondata) {
-                if (jsondata.status == 'success') {
-                  self.editPhoto(jsondata.data.ownerId, jsondata.data.tmp);
-                  //$('#edit_photo_dialog_img').html(jsondata.data.page);
-                } else {
-                  wrapper.removeClass('wait');
-                  CAFEVDB.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
-                }
-              });
+    const self = CAFEVDB.Photo;
+    $.post(OC.generateUrl('/apps/cafevdb/image/edit'),
+           { 'ownerId': self.ownerId,
+             'joinTable': self.joinTable,
+             'imageSize': self.imageSize })
+     .fail(function(xhr, status, errorThrown) {
+       CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+       wrapper.removeClass('wait');
+     })
+     .done(function(data) {
+       if (!CAFEVDB.validateAjaxResponse(data, [ 'ownerId', 'tmpKey' ])) {
+         return;
+       }
+       self.editPhoto(data.ownerId, data.tmpKey);
+     });
   };
   Photo.editPhoto = function(ownerId, tmpKey) {
     //console.log('editPhoto', ownerId, tmpKey);
     $.fn.cafevTooltip.remove();
     // Simple event handler, called from onChange and onSelect
     // event handlers, as per the Jcrop invocation above
-    var showCoords = function(c) {
+    const showCoords = function(c) {
       $('#x1').val(c.x);
       $('#y1').val(c.y);
       $('#x2').val(c.x2);
@@ -233,33 +240,33 @@ var CAFEVDB = CAFEVDB || {};
       $('#h').val(c.h);
     };
 
-    var clearCoords = function() {
+    const clearCoords = function() {
       $('#coords input').val('');
     };
 
-    var self = CAFEVDB.Photo;
+    const self = CAFEVDB.Photo;
     if(!self.$cropBoxTmpl) {
       self.$cropBoxTmpl = $('#cropBoxTemplate');
     }
     $('body').append('<div id="edit_photo_dialog"></div>');
-    var $dlg = self.$cropBoxTmpl.octemplate({
+    const $dlg = self.$cropBoxTmpl.octemplate({
       ownerId: ownerId,
       joinTable: self.joinTable,
       imageSize: self.imageSize,
       tmpKey: tmpKey
     });
 
-    var cropphoto = new Image();
+    const cropphoto = new Image();
     $(cropphoto)
     .on('load', function () {
       //var x = 5, y = 5, w = this.width-10, h = this.height-10;
-      var x = 0, y = 0, w = this.width, h = this.height;
+      const x = 0, y = 0, w = this.width, h = this.height;
       $(this).attr('id', 'cropbox');
       $(this).prependTo($dlg).fadeIn();
-      var photoDlg = $('#edit_photo_dialog');
+      const photoDlg = $('#edit_photo_dialog');
 
-      var boxW = Math.min(self.imageSize, window.innerWidth*0.95);
-      var boxH = Math.min(self.imageSize, window.innerHeight*0.80);
+      const boxW = Math.min(self.imageSize, window.innerWidth*0.95);
+      const boxH = Math.min(self.imageSize, window.innerHeight*0.80);
 
       $(this).Jcrop({
         onChange:       showCoords,
@@ -327,8 +334,8 @@ var CAFEVDB = CAFEVDB || {};
     });
   };
   Photo.deletePhoto = function() {
-    var self = CAFEVDB.Photo;
-    var wrapper = $('#cafevdb_inline_image_wrapper');
+    const self = CAFEVDB.Photo;
+    const wrapper = $('#cafevdb_inline_image_wrapper');
     wrapper.addClass('wait');
     $.post(OC.generateUrl('/apps/cafevdb/image/delete'),
            { 'joinTable': self.joinTable,
@@ -343,8 +350,8 @@ var CAFEVDB = CAFEVDB || {};
     });
   };
   Photo.loadHandlers = function() {
-    var self = CAFEVDB.Photo;
-    var phototools = $('#phototools');
+    const self = CAFEVDB.Photo;
+    const phototools = $('#phototools');
     $('#phototools li a').click(function() {
       $(this).cafevTooltip('hide');
     });
@@ -415,7 +422,7 @@ var CAFEVDB = CAFEVDB || {};
       if (files.length < 1) {
         return;
       }
-      var file = files[0];
+      const file = files[0];
       if(file.size > $('#max_upload').val()){
         CAFEVDB.dialogs.alert(t('cafevdb', 'The file you are trying to upload exceed the maximum size for file uploads on this server.'), t('cafevdb','Upload too large'));
         return;
@@ -424,14 +431,14 @@ var CAFEVDB = CAFEVDB || {};
         CAFEVDB.dialogs.alert(t('cafevdb', 'Only image files can be used as profile picture.'), t('cafevdb','Wrong file type'));
         return;
       }
-      var xhr = new XMLHttpRequest();
+      const xhr = new XMLHttpRequest();
 
       if (!xhr.upload) {
         CAFEVDB.dialogs.alert(t('cafevdb', 'Your browser doesn\'t support AJAX upload. Please click on the profile picture to select a photo to upload.'), t('cafevdb', 'Error'))
       }
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4){
-          var response = $.parseJSON(xhr.responseText);
+          const response = $.parseJSON(xhr.responseText);
           if(response.status == 'success') {
             if(xhr.status == 200) {
               CAFEVDB.Photo.editPhoto(response.data.ownerId, response.data.tmp);
@@ -446,7 +453,7 @@ var CAFEVDB = CAFEVDB || {};
 
       xhr.upload.onprogress = function(e){
         if (e.lengthComputable){
-          var _progress = Math.round((e.loaded * 100) / e.total);
+          const _progress = Math.round((e.loaded * 100) / e.total);
           //if (_progress != 100){
           //}
         }
@@ -466,8 +473,8 @@ var CAFEVDB = CAFEVDB || {};
    * functionality.
    */
   Photo.ready = function(ownerId, joinTable, callback) {
-    var ownerIdField = $('#file_upload_form input[name="ownerId"]');
-    var joinTableField = $('#file_upload_form input[name="joinTable"]');
+    const ownerIdField = $('#file_upload_form input[name="ownerId"]');
+    const joinTableField = $('#file_upload_form input[name="joinTable"]');
     if (typeof ownerId == 'undefined') {
       ownerId = ownerIdField.val();
     } else {
@@ -490,12 +497,12 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   Photo.popup = function(image) {
-    var overlay = $('<div id="photooverlay" style="width:auto;height:auto;"></div>');
-    var imgClone = $(image).clone();
+    const overlay = $('<div id="photooverlay" style="width:auto;height:auto;"></div>');
+    const imgClone = $(image).clone();
     imgClone.removeClass('zoomable');
     overlay.append(imgClone);
     $.fn.cafevTooltip.remove(); // get rid of disturbing tooltips.
-    var popup = overlay.cafevDialog({
+    const popup = overlay.cafevDialog({
       title: t('cafevdb', 'Photo Zoom'),
       position: { my: "middle top+5%",
                   at: "middle bottom",
@@ -507,27 +514,27 @@ var CAFEVDB = CAFEVDB || {};
       dialogClass: 'photo-zoom no-close transparent-titlebar no-border content-box',
       resizable: false,
       open: function() {
-        var dialogHolder = $(this);
-        var dialogWidget = dialogHolder.dialog('widget');
+        const dialogHolder = $(this);
+        const dialogWidget = dialogHolder.dialog('widget');
         dialogHolder.on('click', function() {
           // @TODO should close when clicking anywhere apart from the move handle
           dialogHolder.dialog('close');
         });
         dialogHolder.imagesLoaded(function() {
-          var title = dialogWidget.find('.ui-dialog-titlebar');
-          var titleBarHeight = title.is(':visible') ? title.outerHeight() : '0';
-          var newHeight = dialogWidget.height() - titleBarHeight;
-          var newWidth = dialogWidget.width();
+          const title = dialogWidget.find('.ui-dialog-titlebar');
+          const titleBarHeight = title.is(':visible') ? title.outerHeight() : '0';
+          const newHeight = dialogWidget.height() - titleBarHeight;
+          const newWidth = dialogWidget.width();
 
-          var height = dialogHolder.height();
-          var width = dialogHolder.width();
-          var outerHeight = dialogHolder.outerHeight(true);
-          var outerWidth = dialogHolder.outerWidth(true);
+          const height = dialogHolder.height();
+          const width = dialogHolder.width();
+          const outerHeight = dialogHolder.outerHeight(true);
+          const outerWidth = dialogHolder.outerWidth(true);
 
-          var imageHeight = imgClone.height();
-          var imageWidth  = imgClone.width();
-          var imageOuterHeight = imgClone.outerHeight(true);
-          var imageOuterWidth  = imgClone.outerWidth(true);
+          const imageHeight = imgClone.height();
+          const imageWidth  = imgClone.width();
+          const imageOuterHeight = imgClone.outerHeight(true);
+          const imageOuterWidth  = imgClone.outerWidth(true);
 
           console.log('inner w/h', width, height);
           console.log('outer w/h', outerWidth, outerHeight);
@@ -538,13 +545,13 @@ var CAFEVDB = CAFEVDB || {};
           /* newHeight and newWidth are the relevant sizes
            * which must hold the entire stuff.
            */
-          var vOffset    = outerHeight - height;
-          var hOffset    = outerWidth - width;
-          var imgVOffset = imageOuterHeight - imageHeight;
-          var imgHOffset = imageOuterWidth - imageWidth;
-          var imageMaxHeight = Math.round(newHeight - vOffset - imgVOffset);
-          var imageMaxWidth  = Math.round(newWidth - hOffset - imgHOffset);
-          var imageRatio = imageWidth / imageHeight;
+          const vOffset    = outerHeight - height;
+          const hOffset    = outerWidth - width;
+          const imgVOffset = imageOuterHeight - imageHeight;
+          const imgHOffset = imageOuterWidth - imageWidth;
+          const imageMaxHeight = Math.round(newHeight - vOffset - imgVOffset);
+          const imageMaxWidth  = Math.round(newWidth - hOffset - imgHOffset);
+          const imageRatio = imageWidth / imageHeight;
 
           console.log('off h/v', hOffset, vOffset);
           console.log('imgoff h/v', imgHOffset, imgVOffset);
@@ -577,7 +584,7 @@ var CAFEVDB = CAFEVDB || {};
         });
       },
       close: function() {
-        var dialogHolder = $(this);
+        const dialogHolder = $(this);
         //container.html(img);
         dialogHolder.dialog('close');
         dialogHolder.dialog('destroy').remove();
@@ -591,6 +598,4 @@ var CAFEVDB = CAFEVDB || {};
 
 // Local Variables: ***
 // js-indent-level: 2 ***
-// js3-indent-level: 2 ***
-// js3-label-indent-offset: -2 ***
 // End: ***

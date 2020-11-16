@@ -1188,6 +1188,16 @@ var CAFEVDB = CAFEVDB || {};
     '599': t('cafevdb', 'Network connect timeout error')
   };
 
+  // Seemingly Nextcloud always ever only returns one of these:
+  CAFEVDB.httpStatus = {
+    'OK': 200,
+    'BAD_REQUEST': 400,
+    'UNAUTHORIZED': 401,
+    'NOT_FOUND': 404,
+    'CONFLICT': 409,
+    'INTERNAL_SERVER_ERROR': 500
+  };
+
   /**Generate some diagnostic output, mostly needed during application
    * development. This is intended to be called from the fail()
    * callback.
@@ -1197,14 +1207,6 @@ var CAFEVDB = CAFEVDB || {};
     if (typeof errorCB == 'undefined') {
       errorCB = function () {}
     }
-
-    // Seemingly Nextcloud always ever only returns one of these:
-    const HTTP_STATUS_OK = 200;
-    const HTTP_STATUS_BAD_REQUEST = 400;
-    const HTTP_STATUS_UNAUTHORIZED = 401;
-    const HTTP_STATUS_NOT_FOUND = 404;
-    const HTTP_STATUS_CONFLICT = 409;
-    const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
     const failData = CAFEVDB.ajaxFailData(xhr, textStatus, errorThrown);
     console.info("AJAX failure data", failData);
@@ -1248,11 +1250,11 @@ var CAFEVDB = CAFEVDB || {};
           + '</a>';
 
     switch (xhr.status) {
-    case HTTP_STATUS_OK:
-    case HTTP_STATUS_BAD_REQUEST:
-    case HTTP_STATUS_NOT_FOUND:
-    case HTTP_STATUS_CONFLICT:
-    case HTTP_STATUS_INTERNAL_SERVER_ERROR:
+    case CAFEVDB.httpStatus.OK:
+    case CAFEVDB.httpStatus.BAD_REQUEST:
+    case CAFEVDB.httpStatus.NOT_FOUND:
+    case CAFEVDB.httpStatus.CONFLICT:
+    case CAFEVDB.httpStatus.INTERNAL_SERVER_ERROR:
       if (failData.error) {
 	info += ': ' + '<span class="error toastify name">' + failData.error + '</span>';
       }
@@ -1275,7 +1277,7 @@ var CAFEVDB = CAFEVDB || {};
 	}
       }
       break;
-    case HTTP_STATUS_UNAUTHORIZED:
+    case CAFEVDB.httpStatus.UNAUTHORIZED:
       // no point in continuing, direct the user to the login page
       errorCB = function() {
         if(OC.webroot !== '') {
