@@ -910,16 +910,20 @@ var CAFEVDB = CAFEVDB || {};
 
   }
 
-  /**Open one invisible modal dialog in order to have a persistent
+  /**
+   * Open one invisible modal dialog in order to have a persistent
    * overlay for a group of dialogs.
+   *
+   * @param bool open
    */
   CAFEVDB.modalizer = function(open) {
     var modalizer = $('#cafevdb-modalizer');
     if (open) {
       if (modalizer.length > 0) {
+        $('body').addClass('cafevdb-modalizer');
         return modalizer;
       }
-      var dialogHolder = $('<div id="cafevdb-modalizer" class="cafevdb-modalizer"></div>');
+      const dialogHolder = $('<div id="cafevdb-modalizer" class="cafevdb-modalizer"></div>');
       $('body').append(dialogHolder);
       dialogHolder.cafevDialog({
         title: '',
@@ -935,16 +939,19 @@ var CAFEVDB = CAFEVDB || {};
         open: function() {
           // This one must be ours.
           CAFEVDB.dialogOverlay = $('.ui-widget-overlay:last');
+          $('body').addClass('cafevdb-modalizer');
         },
         close: function() {
           CAFEVDB.dialogOverlay = false;
           dialogHolder.dialog('close');
           dialogHolder.dialog('destroy').remove();
+          $('body').removeClass('cafevdb-modalizer');
         }
       });
       return dialogHolder;
     } else {
       if (modalizer.length <= 0) {
+        $('body').removeClass('cafevdb-modalizer');
         return true;
       }
       var overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
@@ -965,6 +972,7 @@ var CAFEVDB = CAFEVDB || {};
       }
 
       modalizer.dialog('close');
+      $('body').removeClass('cafevdb-modalizer');
 
       return true;
     }

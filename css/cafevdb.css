@@ -473,19 +473,39 @@ form#personalsettings input[type="submit"] {
   border:0px;
   vertical-align:middle;
   border-radius:0px;
-  opacity:0.6;
-  background-color: rga(255,255,255,0.7);
+  background-color: rgba(255,255,255,0.0);
+}
+
+#app-navigation-toggle {
+  background-color: rgba(255,255,255,0.0);
+}
+
+#app-navigation-toggle:hover,
+form#personalsettings .button:hover,
+form#personalsettings button:hover,
+form#personalsettings input[type="submit"]:hover {
+  background-color: rgba(255,255,255,1.0);
+  opacity:1.0;
+}
+
+body.cafevdb-modalizer #app-navigation-toggle,
+body.cafevdb-modalizer form#personalsettings .button,
+body.cafevdb-modalizer form#personalsettings button,
+body.cafevdb-modalizer form#personalsettings input[type="submit"] {
+  background-color: rgba(255,255,255,0.6);
+}
+
+body.cafevdb-modalizer #app-navigation-toggle:hover,
+body.cafevdb-modalizer form#personalsettings .button:hover,
+body.cafevdb-modalizer form#personalsettings button:hover,
+body.cafevdb-modalizer form#personalsettings input[type="submit"]:hover {
+  opacity:1.0;
+  background-color: rgba(255,255,255,1.0);
 }
 
 form#personalsettings .table-cell.centered * {
   display: block !important;
   margin: auto !important;
-}
-
-form#personalsettings .button:hover,
-form#personalsettings button:hover,
-form#personalsettings input[type="submit"]:hover {
-  opacity:0.8;
 }
 
 form#personalsettings .button:active:not(:disabled),
@@ -961,25 +981,6 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
 
 .cafevdb-busy {
   animation: busyfading 3s ease infinite alternate;
-}
-
-/*****************************************************************************
- *
- * Fix some full-screen stuff.
- *
- */
-.mce-fullscreen {
-  padding-top:45px!important; /* must match size of OC header bar. */
-  box-sizing:border-box!important;
-}
-
-.snapjs-left .mce-fullscreen {
-  padding-top:0px!important;
-}
-
-/* Make room for the nav-snapper toggle in full-screen mode */
-.mce-fullscreen .mce-menubar {
-  margin-left:44px; /* has to match width of nav-snapper menu button */
 }
 
 #content-wrapper {
