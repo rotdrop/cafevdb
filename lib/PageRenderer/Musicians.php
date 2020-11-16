@@ -22,12 +22,15 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use chillerlan\QRCode\QRCode;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\ContactsService;
 
 use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -55,9 +58,11 @@ class Musicians extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , GeoCodingService $geoCodingService
+    , ContactsService $contactsService
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
+    $this->contactsService = $contactsService;
     $this->projectMode = false;
   }
 
@@ -503,7 +508,7 @@ make sure that the musicians are also automatically added to the
 //       }
 //       );
 
-    $opts['fdd']['Portrait'] = [
+    $opts['fdd']['Photo'] = [
       'tab'      => ['id' => 'miscinfo'],
       'input' => 'V',
       'name' => $this->l->t('Photo'),
@@ -513,7 +518,7 @@ make sure that the musicians are also automatically added to the
       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
         $stampIdx = array_search('Aktualisiert', $fds);
         $stamp = strtotime($row['qf'.$stampIdx]);
-        return self::portraitImageLink($musicianId, $action, $stamp);
+        return self::photoImageLink($musicianId, $action, $stamp);
       },
       'css' => ['postfix' => ' photo'],
       'default' => '',
@@ -522,43 +527,41 @@ make sure that the musicians are also automatically added to the
 
 //     ///////////////////// Test
 
-//     $opts['fdd']['VCard'] = [
-//       'tab' => ['id' => 'miscinfo'],
-//       'input' => 'V',
-//       'name' => 'VCard',
-//       'select' => 'T',
-//       'options' => 'ACPDV',
-//       'sql' => '`PMEtable0`.`Id`',
-//       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
-//         switch($action) {
-//         case 'change':
-//         case 'display':
-//           //$data = self::fetchMusicianPersonalData($musicianId);
-//           //return nl2br(print_r($fds, true).print_r($row, true));
-//           $data = [);
-//           foreach($fds as $idx => $label) {
-//             $data[$label] = $row['qf'.$idx];
-//           }
-//           //return nl2br(print_r($data, true));
-//           $vcard = VCard::export($data);
-//           if (true) {
-//             unset($vcard->PHOTO);
-//             ob_start();
-//             \QRcode::png($vcard->serialize());
-//             $image = ob_get_contents();
-//             ob_end_clean();
-//             return '<img height="231" width="231" src="data:image/png;base64,'."\n".base64_encode($image).'"></img>';
-// //                '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
-//           } else {
-//             return '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
-//           }
-//         default:
-//           return '';
-//         }
-//       },
-//       'default' => '',
-//       'sort' => false
-//       );
+    $opts['fdd']['VCard'] = [
+      'tab' => ['id' => 'miscinfo'],
+      'input' => 'V',
+      'name' => 'VCard',
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => '`PMEtable0`.`Id`',
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        switch($action) {
+        case 'change':
+        case 'display':
+          $data = [];
+          foreach($fds as $idx => $label) {
+            $data[$label] = $row['qf'.$idx];
+          }
+          $this->logInfo(print_r($data, true));
+          $musician = new Entities\Musician();
+          foreach ($data as $key => $value) {
+            try {
+              $musician[$key] = $value;
+            } catch (\Throwable $t) {
+              $this->logException($t);
+            }
+          }
+          $vcard = $this->contactsService->export($musician);
+          unset($vcard->PHOTO); // too much information
+          $this->logInfo(print_r($vcard->serialize(), true));
+          return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
+        default:
+          return '';
+        }
+      },
+      'default' => '',
+      'sort' => false
+    ];
 
 //     /////////////////////////
 
@@ -634,11 +637,11 @@ make sure that the musicians are also automatically added to the
     }
   }
 
-  public function portraitImageLink($musicianId, $action = 'display', $timeStamp = '')
+  public function photoImageLink($musicianId, $action = 'display', $timeStamp = '')
   {
     switch ($action) {
     case 'add':
-      return $this->l->t("Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
+      return $this->l->t("Photos or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
     case 'display':
       $div = ''
         .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tooltip-top" src="'
@@ -664,7 +667,7 @@ make sure that the musicians are also automatically added to the
 
       return $photoarea;
     default:
-      return $this->l->t("Internal error, don't know what to do concerning portrait images in the given context.");
+      return $this->l->t("Internal error, don't know what to do concerning photos in the given context.");
     }
   }
 

@@ -173,7 +173,6 @@ class Musician implements \ArrayAccess
   public function __construct() {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
-    //$this->photos = new ArrayCollection();
   }
 
   /**
@@ -558,6 +557,30 @@ class Musician implements \ArrayAccess
   public function getAktualisiert()
   {
     return $this->aktualisiert;
+  }
+
+  /**
+   * Set instruments.
+   *
+   * @param Image $instruments|null
+   *
+   * @return Musician
+   */
+  public function setInstruments($instruments = null)
+  {
+    $this->instruments = $instruments;
+
+    return $this;
+  }
+
+  /**
+   * Get instruments.
+   *
+   * @return Image|null
+   */
+  public function getInstruments()
+  {
+    return $this->instruments;
   }
 
   /**

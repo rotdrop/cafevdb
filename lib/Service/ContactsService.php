@@ -366,13 +366,13 @@ EOTEOT;
     $vcard->add('CATEGORIES', $categories);
 
     $photo = null;
-    if (isset($musician['Portrait'])) {
-      if (is_array($musician['Portrait'])) {
-        $photo = $musician['Portrait'];
-      } else if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['Portrait'], $matches)) {
+    if (isset($musician['Photo'])) {
+      if (is_array($musician['Photo'])) {
+        $photo = $musician['Photo'];
+      } else if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['Photo'], $matches)) {
         // data uri
         $mimeType = $matches[1];
-        $imageData = substr($musician['Portrait'], strlen($matches[0]));
+        $imageData = substr($musician['Photo'], strlen($matches[0]));
         $photo = array('MimeType' => $mimeType,
                        'Data' => $imageData);
       }
