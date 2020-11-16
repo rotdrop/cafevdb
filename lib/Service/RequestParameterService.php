@@ -74,7 +74,7 @@ class RequestParameterService implements \ArrayAccess, \Countable
   public function setParams($parameters): array {
     $old = $this->parameters;
 
-    $this->parameters = Util::arrayMergerRecursive(
+    $this->parameters = Util::arrayMergeRecursive(
       [ 'renderAs' => 'user',
         'projectName' => '',
         'projectId' => -1,

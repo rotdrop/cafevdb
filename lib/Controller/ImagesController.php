@@ -219,7 +219,7 @@ class ImagesController extends Controller {
         } catch (\Throwable $t) {
           $this->logException($t);
           return self::grumble(
-            $this->l->t("File `' not found in user's %s cloud storage.",
+            $this->l->t("File `%s' not found in user's %s cloud storage.",
                         [$this->userId(), $path]));
         }
 

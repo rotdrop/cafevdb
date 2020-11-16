@@ -2,3 +2,4 @@
 vendor/
 build/
 doc/db-app/phpdoc/
+doc/db-app/doxygen/

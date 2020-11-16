@@ -108,10 +108,10 @@ $buttons['example'] =
              title="<?php echo $l->t('Open the login-window to the data-base back-bone. Although this is `expert mode\' you will fall in love with the `export\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
       <br/>
       <input type="submit"
-             value="<?php echo $l->t('Database Nextcloud'); ?>"
+             value="<?php echo $l->t('Database Cloud'); ?>"
              formaction="<?php echo $_['phpmyadminoc']; ?>"
              formtarget="Nextcloud@phpmyadmin"
-             title="<?php echo $l->t('Open the login-window to the data-base back-bone for the Nextcloud WebUI.'); ?>"/>
+             title="<?php echo $l->t('Open the login-window to the data-base back-bone for the Cloud WebUI.'); ?>"/>
       <br/>
       <input type="submit"
              value="<?php echo $l->t('Source-Code Archive'); ?>"
