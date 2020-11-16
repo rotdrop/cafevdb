@@ -532,6 +532,28 @@ class Musician extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician impl
     /**
      * {@inheritDoc}
      */
+    public function setInstruments($instruments = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setInstruments', [$instruments]);
+
+        return parent::setInstruments($instruments);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getInstruments()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getInstruments', []);
+
+        return parent::getInstruments();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setPhoto($photo = NULL)
     {
 
