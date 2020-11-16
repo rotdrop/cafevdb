@@ -6,7 +6,7 @@ use OCP\ILogger;
 
 trait LogTrait {
 
-  public static function log($message, int $level = ILogger::INFO, $shift = 1)
+  public static function log($message, int $level = ILogger::INFO, $shift = 0)
   {
     $trace = debug_backtrace();
     $caller = $trace[$shift];
