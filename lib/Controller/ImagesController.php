@@ -200,8 +200,11 @@ class ImagesController extends Controller {
 
     switch ($action) {
     case 'upload':
+    case 'dragndrop':
     case 'cloud':
-      if ($action == 'cloud') {
+      $image = new \OCP\Image();
+      switch ($action) {
+      case 'cloud':
         $path = $this->parameterService['path'];
         if (empty($path)) {
           return self::grumble($this->l->t('No image path was submitted'));
@@ -221,14 +224,21 @@ class ImagesController extends Controller {
         }
 
         $tmpKey = $this->appName().'-inline-image-'.md5($path);
-        $image = new \OCP\Image();
         if (!$image->loadFromData($file->getContent())) {
           return self::grumble($this->l->t("Unable to validate cloud image file %s", [$path]));
         }
-      } else { // file upload
-
-        // @TODO handle drag'n drop
-
+        break;
+      case 'dragndrop':
+        if (empty($this->parameterService->server['HTTP_X_FILE_NAME'])) {
+          return self::grumble($this->l->t("Drag'n drop filename not submitted"));
+        }
+        $fileName = $this->parameterService->server['HTTP_X_FILE_NAME'];
+        $tmpKey = $this->appName().'-inline-image-'.md5($fileName);
+        if (!$image->loadFromData(file_get_contents('php://input'))) {
+          return self::grumble($this->l->t("Unable to validate uploaded image data"));
+        }
+        break;
+      case 'fileupload':
         $upload = $this->parameterService->getUpload(self::UPLOAD_NAME);
         if (empty($upload)) {
           return self::grumble($this->l->t("Image has not been uploaded"));
@@ -240,10 +250,10 @@ class ImagesController extends Controller {
         }
 
         $tmpKey = $this->appName().'-inline-image-'.md5(basename($tmpName));
-        $image = new \OCP\Image();
         if (!$image->loadFromFile($tmpName)) {
           return self::grumble($this->l->t("Unable to validate uploaded image data"));
         }
+        break;
       }
 
       if (!$this->cacheTemporaryImage($tmpKey, $image, $imageSize))  {

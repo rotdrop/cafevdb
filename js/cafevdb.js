@@ -1185,11 +1185,9 @@ var CAFEVDB = CAFEVDB || {};
     '510': t('cafevdb', 'Not Extended'),
     '511': t('cafevdb', 'Network Authentication Required'),
     '598': t('cafevdb', 'Network read timeout error'),
-    '599': t('cafevdb', 'Network connect timeout error')
-  };
+    '599': t('cafevdb', 'Network connect timeout error'),
 
-  // Seemingly Nextcloud always ever only returns one of these:
-  CAFEVDB.httpStatus = {
+    // Seemingly Nextcloud always ever only returns one of these:
     'OK': 200,
     'BAD_REQUEST': 400,
     'UNAUTHORIZED': 401,

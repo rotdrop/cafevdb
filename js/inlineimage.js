@@ -94,7 +94,7 @@ var CAFEVDB = CAFEVDB || {};
     } else {
       const uploadData = new FormData(form[0]);
       $.ajax({
-        url: OC.generateUrl('/apps/cafevdb/image/upload'),
+        url: OC.generateUrl('/apps/cafevdb/image/fileupload'),
         data: uploadData,
         type: 'POST',
         processData: false,
@@ -437,16 +437,12 @@ var CAFEVDB = CAFEVDB || {};
         CAFEVDB.dialogs.alert(t('cafevdb', 'Your browser doesn\'t support AJAX upload. Please click on the profile picture to select a photo to upload.'), t('cafevdb', 'Error'))
       }
       xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4){
+        if (xhr.readyState == 4) { // done
           const response = $.parseJSON(xhr.responseText);
-          if(response.status == 'success') {
-            if(xhr.status == 200) {
-              CAFEVDB.Photo.editPhoto(response.data.ownerId, response.data.tmp);
-            } else {
-              CAFEVDB.dialogs.alert(xhr.status + ': ' + xhr.responseText, t('cafevdb', 'Error'));
-            }
+          if (xhr.status == CAFEVDB.httpStatus.OK) {
+            CAFEVDB.Photo.editPhoto(response.ownerId, response.tmpKey);
           } else {
-            CAFEVDB.dialogs.alert(response.data.message, t('cafevdb', 'Error'));
+            CAFEVDB.handleAjaxError(xhr, xhr.status, CAFEVDB.httpStatus[xhr.status]);
           }
         }
       };
@@ -458,7 +454,15 @@ var CAFEVDB = CAFEVDB || {};
           //}
         }
       };
-      xhr.open('POST', OC.generateUrl('/apps/cafevdb/image/upload'+'?owner_id='+CAFEVDB.Photo.ownerId+'&image_size='+CAFEVDB.Photo.imageSize+'&requesttoken='+encodeURIComponent(OC.requestToken)+'&image_file='+encodeURIComponent(file.name)), true);
+
+      xhr.open('POST', OC.generateUrl(
+        '/apps/cafevdb/image/dragndrop'
+        + '?ownerId=' + CAFEVDB.Photo.ownerId
+        + '&joinTable=' + CAFEVDB.Photo.joinTable
+        + '&imageSize=' + CAFEVDB.Photo.imageSize
+        + '&requesttoken=' + encodeURIComponent(OC.requestToken)
+        + '&imageFile=' + encodeURIComponent(file.name)),
+               true);
       xhr.setRequestHeader('Cache-Control', 'no-cache');
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       xhr.setRequestHeader('X-File-Name', encodeURIComponent(file.name));
@@ -531,7 +535,7 @@ var CAFEVDB = CAFEVDB || {};
           const outerHeight = dialogHolder.outerHeight(true);
           const outerWidth = dialogHolder.outerWidth(true);
 
-          const imageHeight = imgClone.height();
+          var imageHeight = imgClone.height();
           const imageWidth  = imgClone.width();
           const imageOuterHeight = imgClone.outerHeight(true);
           const imageOuterWidth  = imgClone.outerWidth(true);

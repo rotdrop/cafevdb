@@ -198,7 +198,9 @@ $routes = [
      *     Respond with temporary image path
      *   - cloud, select from cloud storage
      *     Respond with temporary image path
+     *   - dragndrop
      *   - save, save image data, possibly from crop-editor
+     *   - edit, crop existing edit
      *   - delete, delete given image
      */
     [
