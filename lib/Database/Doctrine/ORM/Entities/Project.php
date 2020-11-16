@@ -121,12 +121,12 @@ class Project
   private $instrumentation;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectPoster", mappedBy="project")
+   * @ORM\OneToMany(targetEntity="ProjectPoster", mappedBy="owner")
    */
   private $posters;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectFlyer", mappedBy="project")
+   * @ORM\OneToMany(targetEntity="ProjectFlyer", mappedBy="owner")
    */
   private $flyers;
 
