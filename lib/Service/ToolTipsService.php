@@ -117,7 +117,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
     $tip = '';
     if (!empty($subKey)) {
-      if (isset(self::$toolTipsData[$key][$subKey])) {
+      if (isset($this->toolTipsData[$key][$subKey])) {
         $tip = $this->toolTipsData[$key][$subKey];
       } else if (isset($this->toolTipsData[$key]['default'])) {
         $tip = $this->toolTipsData[$key]['default'];
