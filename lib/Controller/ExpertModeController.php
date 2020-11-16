@@ -33,6 +33,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 class ExpertModeController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -49,17 +50,22 @@ class ExpertModeController extends Controller {
   /** @var GeoCodingService */
   private $geoCodingService;
 
+  /** @var OCA\CAFEVDB\PageRenderer\Util\Navigation */
+  private $pageNavigation;
+
   public function __construct(
-    $appName,
-    IRequest $request,
-    ConfigService $configService,
-    ToolTipsService $toolTipsService,
-    GeoCodingService $geoCodingService
+    $appName
+    , IRequest $request
+    , ConfigService $configService
+    , ToolTipsService $toolTipsService
+    , GeoCodingService $geoCodingService
+    , PageNavigation $pageNavigation
   ) {
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
     $this->toolTipsService = $toolTipsService;
+    $this->pageNavigation = $pageNavigation;
     $this->geoCodingService = $geoCodingService;
     $this->l = $this->l10N();
   }
@@ -88,6 +94,7 @@ class ExpertModeController extends Controller {
       'expertmode' => $this->getUserValue('expertmode', 'off'),
       'showToolTips' => $this->getUserValue('tooltips', 'on'),
       'toolTips' => $this->toolTipsService,
+      'pageNavigation' => $this->pageNavigation,
     ];
     $links = ['phpmyadmin',
               'phpmyadminoc',

@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use OCA\CAFEVDB\Common\Navigation;
+namespace OCA\CAFEVDB;
 
 style($appName, 'cafevdb');
 style($appName, 'tooltips');
@@ -87,10 +87,10 @@ $buttons['example'] =
 <div id="expertmode">
   <h2 class="popup-title"><?php p($l->t('Advanced operations, use with care')); ?></h2>
   <fieldset id="expertmode" class="operations expert"><legend><?php echo $l->t('Predefined data-base operations'); ?></legend>
-  <?php echo Navigation::buttonsFromArray($buttons); ?>
+  <?php echo $pageNavigation->buttonsFromArray($buttons); ?>
   <label for="" class="bold"><?php echo $l->t('Operation generated Response');?></label>
 <?php
-  echo Navigation::buttonsFromArray(
+  echo $pageNavigation->buttonsFromArray(
     array('only' =>
           array('name' => $l->t('Clear Output'),
                 'id' => 'clearoutput',
