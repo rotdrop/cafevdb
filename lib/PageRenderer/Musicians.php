@@ -513,12 +513,12 @@ make sure that the musicians are also automatically added to the
       'input' => 'V',
       'name' => $this->l->t('Photo'),
       'select' => 'T',
-      'options' => 'ACPDV',
+      'options' => 'APVCD',
       'sql' => '`PMEtable0`.`Id`',
       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
         $stampIdx = array_search('Aktualisiert', $fds);
         $stamp = strtotime($row['qf'.$stampIdx]);
-        return self::photoImageLink($musicianId, $action, $stamp);
+        return $this->photoImageLink($musicianId, $action, $stamp);
       },
       'css' => ['postfix' => ' photo'],
       'default' => '',
@@ -645,7 +645,7 @@ make sure that the musicians are also automatically added to the
     case 'display':
       $div = ''
         .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tooltip-top" src="'
-        .($this->urlGenerator->linkToRoute('cafevdb.image.get.'.self::PHOTO_JOIN.'.'.$musicianId)).'?image_size=1200&time_stamp='.$timeStamp
+        .($this->urlGenerator->linkToRoute('cafevdb.image.get.'.self::PHOTO_JOIN.'.'.$musicianId)).'?imageSize=1200&timeStamp='.$timeStamp
         .'" '
         .'title="'.$this->l->t("Photo, if available").'" /></div>';
       return $div;

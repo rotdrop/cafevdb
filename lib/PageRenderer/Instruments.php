@@ -164,6 +164,8 @@ class Instruments extends PMETableViewBase
     $opts['fdd']['Sortierung'] = [
       'name'     => $this->l->t('sort order'),
       'select'   => 'N',
+      'default'  => 0,
+      'sqlw'     => 'IF($val_qas = "", 0, $val_qas)',
       'maxlen'   => 9,
       'size'     => 6,
       'sort'     => true,
@@ -345,7 +347,7 @@ class Instruments extends PMETableViewBase
    *
    * @return boolean. If returning @c false the operation will be terminated
    */
-  private function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
     $entity = $this->getDatabaseRepository(ORM\Entities\Instrument::class)->find($pme->rec);
 

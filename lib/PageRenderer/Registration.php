@@ -46,6 +46,7 @@ class Registration
       $musicians->enableProjectMode();
       return $musicians;
     });
+    $context->registerServiceAlias('template:'.'projects', Projects::class);
     $context->registerServiceAlias('template:'.'instruments', Instruments::class);
     $context->registerServiceAlias('template:'.'instrument-families', InstrumentFamilies::class);
     $context->registerServiceAlias('template:'.'blog', BlogMapper::class);

@@ -38,13 +38,13 @@ trait ResponseTrait
     }
     $this->logException($throwable, $method);
     if ($renderAs == 'blank') {
-      return self::grumble($this->exceptionChainData($t));
+      return self::grumble($this->exceptionChainData($throwable));
     }
 
     $templateParameters = [
       'error' => 'exception',
       'exception' => $throwable->getMessage(),
-      'trace' => $this->exceptionChainData($t),
+      'trace' => $this->exceptionChainData($throwable),
       'debug' => true,
       'admin' => 'bofh@nowhere.com',
     ];

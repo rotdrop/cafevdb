@@ -207,7 +207,7 @@ class Instrument implements \ArrayAccess
     public function usage()
     {
         return $this->musicians->count()
-            + $this->projcts->count()
-            + $this->families->count();
+            + $this->projects->count()
+          /*+ $this->families->count()*/;
     }
 }

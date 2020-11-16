@@ -70,6 +70,28 @@ class ProjectsRepository extends EntityRepository
       'yearByName' => $yearByName,
     ];
   }
+
+  /**
+   * Return minimum and maximum year of all projects.
+   *
+   * @return array<string, int>
+   *
+   * ```php
+   * [
+   *   'min' => MIN_YEAR,
+   *   'max' => MAX_YEAR,
+   * ]
+   * ```
+   */
+  public function findYearRange()
+  {
+    $range = $this->createQueryBuilder('p')
+           ->select('MIN(p.year) AS min, MAX(p.year) AS max')
+           ->getQuery()
+           ->getResult();
+    return $range[0]; // ????
+  }
+
 }
 
 // Local Variables: ***

@@ -20,29 +20,24 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB {
+namespace OCA\CAFEVDB;
 
-  $table   = new Projects();
-  $css_pfx = Projects::CSS_PREFIX;
+$css_pfx = $renderer->cssPrefix();
 
-  $nav = '';
-  //$nav .= Navigation::pageControlElement('projectinstruments');
-  $nav .= Navigation::pageControlElement('all');
-  $nav .= Navigation::pageControlElement('projects');
-  $nav .= Navigation::pageControlElement('instruments');
-  $nav .= Navigation::pageControlElement('project-extra');
+$nav = '';
+//$nav .= $pageNavigation->pageControlElement('projectinstruments');
+$nav .= $pageNavigation->pageControlElement('all');
+$nav .= $pageNavigation->pageControlElement('projects');
+$nav .= $pageNavigation->pageControlElement('instruments');
+$nav .= $pageNavigation->pageControlElement('project-extra');
 
-  echo $this->inc('part.common.header',
-                  array('css-prefix' => $css_pfx,
-                        'navigationcontrols' => $nav,
-                        'header' => $table->headerText()));
+echo $this->inc('part.common.header',
+                [ 'css-prefix' => $css_pfx,
+                  'navigationcontrols' => $nav,
+                  'header' => $renderer->headerText() ]);
 
-  // Issue the main part. The method will echo itself
-  $table->display();
+// Issue the main part. The method will echo itself
+$renderer->render();
 
-  // Close some still opened divs
-  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
-
-} // CAFEVDB
-
-?>
+// Close some still opened divs
+echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);
