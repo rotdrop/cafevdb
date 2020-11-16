@@ -248,7 +248,7 @@ $(function() {
   container.on('change', '.wysiwyg', function(event) {
     const self = $(this);
     const value = self.val();
-    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/wysiwyg'),
+    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/wysiwygEditor'),
            { 'value': value })
     .done(function(data) {
       msgElement.html(data.message).show();
@@ -258,7 +258,7 @@ $(function() {
       msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
-    $('.personal-settings select.wysiwyg').val(value);
+    $('.personal-settings select.wysiwygEditor').val(value);
     return false;
   });
 

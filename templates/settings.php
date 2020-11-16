@@ -161,11 +161,11 @@ $toolTipClass = "tooltip-right";
         <select name="wysiwygEditor"
                 data-placeholder="<?php echo $l->t('WYSIWYG Editor'); ?>"
                 class="wysiwyg wysiwyg-editor <?php p($toolTipClass); ?>"
-                title="<?php echo $toolTips['wysiwyg-edtior']; ?>">
+                title="<?php echo $toolTips['wysiwyg-editor']; ?>">
           <?php
           foreach ($wysiwygOptions as $key => $value) {
             $disabled = $value['enabled'] ? '' : ' disabled="disabled" ';
-            echo '<option value="'.$key.'" '.$disabled.($_['wysiwyg'] == $key ? 'selected="selected"' : '').'>'.$value['name'].'</option>'."\n";
+            echo '<option value="'.$key.'" '.$disabled.($wysiwygEditor == $key ? 'selected="selected"' : '').'>'.$value['name'].'</option>'."\n";
           }
           ?>
         </select>

@@ -124,7 +124,7 @@ class PersonalSettingsController extends Controller {
         'message' => $this->l->t('Setting %2$s to %1$s', [$debug, 'debug']),
         'value' => $debug
       ]);
-    case 'wysiwyg':
+    case 'wysiwygEditor':
       if (!isset(ConfigService::WYSIWYG_EDITORS[$value])) {
         return grumble($this->l->t('Unknown WYSIWYG-editor: %s$s', [ $value ]));
       }

@@ -51,3 +51,32 @@
 .tox button {
   min-height:unset!important;
 }
+
+/* tinymce fullscreen cannot reach up to the top, need to offset by
+ * navigation bar height.
+ */
+div.tox-tinymce.tox-fullscreen {
+  top:50px; /* needs to be adjusted if embedding cloud layout changes */
+}
+
+body.snapjs-left div.tox-fullscreen {
+  top:44px;
+}
+
+div.tox-fullscreen .tox-menubar {
+  margin-left:44px;
+}
+
+body.snapjs-left div.tox-fullscreen .tox-menubar {
+  margin-left:0px;
+}
+
+/* leave ckeditor alone if used in our app */
+div[contenteditable="true"].ck.ck-content {
+  width:unset;
+  min-height:unset;
+  box-sizing:unset;
+  margin:unset;
+  font-size:unset;
+  outline:unset;
+}

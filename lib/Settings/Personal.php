@@ -100,7 +100,7 @@ class Personal implements ISettings {
         'directchange' => $this->getUserValue('directchange', 'off'),
         'showdisabled' => $this->getUserValue('showdisabled', 'off'),
         'expertmode' => $this->getUserValue('expertmode', 'off'),
-        'wysiwyg' => $this->getUserValue('wysiwyg', self::DEFAULT_EDITOR),
+        'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),
         'wysiwygOptions' => ConfigService::WYSIWYG_EDITORS,
       ];
 
