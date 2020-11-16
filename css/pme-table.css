@@ -554,40 +554,30 @@ hr.pme-hr {
   vertical-align:middle;
 }
 
-input.pme-view-navigation {
-  background:url(../img/pme-view.png) no-repeat !important;
+.pme-navigation.graphic-links input {
   width:16px !important;
   height:15px !important;
   border:0 !important;
   font-size:0 !important;
   vertical-align:middle;
+  min-height:unset;
+  padding:unset;
+}
+
+input.pme-view-navigation {
+  background:url(../img/pme-view.png) no-repeat !important;
 }
 
 input.pme-copy-navigation {
   background:url(../img/pme-copy.png) no-repeat !important;
-  width:16px !important;
-  height:15px !important;
-  border:0 !important;
-  font-size:0 !important;
-  vertical-align:middle;
 }
 
 input.pme-change-navigation {
   background:url(../img/pme-change.png) no-repeat !important;
-  width:16px !important;
-  height:15px !important;
-  border:0 !important;
-  font-size:0 !important;
-  vertical-align:middle;
 }
 
 input.pme-delete-navigation {
   background:url(../img/pme-delete.png) no-repeat !important;
-  width:16px !important;
-  height:15px !important;
-  border:0 !important;
-  font-size:0 !important;
-  vertical-align:middle;
 }
 
 :not(.lt-ie9) input.pme-sort[type=checkbox] {
