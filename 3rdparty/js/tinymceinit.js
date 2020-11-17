@@ -1,6 +1,4 @@
-var tinyMCEUrl = OC.filePath('cafevdb', '3rdparty/js/tinymce', '');
-var tinyMCESmileyUrl = tinyMCEUrl + '/plugins/emoticons/img/';
-var myTinyMCE = myTinyMCE || {};
+const myTinyMCE = myTinyMCE || {};
 
 (function(window, $, myTinyMCE, undefined) {
   myTinyMCE.postProcessCallback = function(e) {
@@ -28,7 +26,7 @@ var myTinyMCE = myTinyMCE || {};
     //document_base_url: 'https://fritz.claus-justus-heine.info:8888/owncloud8/index.php/apps/cafevdb/',
 
     setup: function(editor) {
-      console.info('tinyMCE::setup()');
+      console.debug('tinyMCE::setup()');
       //editor.on('PostProcess', myTinyMCE.postProcessCallback);
       //editor.on('PostRender', function(e) { console.info('Event tinyMCE::PostRender()'); });
       //editor.on('init', function(e) { console.info('Event tinyMCE::init()'); });
@@ -40,7 +38,7 @@ var myTinyMCE = myTinyMCE || {};
     },
     init_instance_callback: function(inst) {
 
-      console.info('tinyMCE::init_instance_callback(), id is ' + inst.id);
+      console.debug('tinyMCE::init_instance_callback(), id is ' + inst.id);
 
       // Propagate the resize event to the enclosing div in order to
       // be able to resize dialog windows. As this potentially yields
@@ -48,17 +46,17 @@ var myTinyMCE = myTinyMCE || {};
       // container will again fire a new resize event to the MCE
       // instance -- we try to be clever and only forward if the size
       // actually has changed.
-      var mceWindow = inst.getWin();
-      var mceContainer = inst.getContainer();
-      console.info(mceContainer);
-      var ambientContainer = $(mceContainer).closest('.resize-target, .ui-dialog-content');
+      const mceWindow = inst.getWin();
+      const mceContainer = inst.getContainer();
+      console.debug(mceContainer);
+      const ambientContainer = $(mceContainer).closest('.resize-target, .ui-dialog-content');
       mceWindow.oldWidth = [ -1, -1 ];
       mceWindow.oldHeight = [ -1, -1 ];
       mceWindow.onresize = function(e) {
-        var win = this;
+        const win = this;
         if (!win.resizeTimeout) {
-          var width = (win.innerWidth > 0) ? win.innerWidth : win.width;
-          var height = (win.innerHeight > 0) ? win.innerHeight : win.height;
+          const width = (win.innerWidth > 0) ? win.innerWidth : win.width;
+          const height = (win.innerHeight > 0) ? win.innerHeight : win.height;
           if ((win.oldWidth[0] != width && win.oldWidth[1] != width) ||
               (win.oldHeight[0] != height && win.oldHeight[1] != height)) {
             console.log('tinymce size change', width, win.oldWidth, height, win.oldHeight);
@@ -74,6 +72,7 @@ var myTinyMCE = myTinyMCE || {};
           }
         }
       };
+      console.debug("trigger tinemce-done");
       $('#' + inst.id).trigger('cafevdb:tinemce-done');
     },
 
