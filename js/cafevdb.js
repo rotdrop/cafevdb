@@ -75,7 +75,7 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Add a WYSIWYG editor to the element specified by @a selector. */
   CAFEVDB.addEditor = function(selector, initCallback, initialHeight) {
-    console.info('CAFEVDB.addEditor');
+    console.debug('CAFEVDB.addEditor');
     var editorElement;
     if (selector instanceof jQuery) {
       editorElement = selector;
@@ -94,15 +94,18 @@ var CAFEVDB = CAFEVDB || {};
       if (typeof initCallback != 'function') {
         initCallback = function() {};
       }
-      ClassicEditor.create(editorElement.get(0))
-      .then(editor => {
-        editorElement.data('ckeditor', editor);
-        initCallback();
-      })
-      .catch( error => {
-        console.error( 'There was a problem initializing the editor.', error );
-        initCallback();
-      });
+      console.debug("attach ckeditor");
+      ClassicEditor
+        .create(editorElement.get(0))
+        .then(editor => {
+          console.debug("ckeditor promise");
+          editorElement.data('ckeditor', editor);
+          initCallback();
+        })
+        .catch( error => {
+          console.debug('There was a problem initializing the editor.', error );
+          initCallback();
+        });
       break;
     case 'tinymce':
       $(document).on('focusin', function(e) {
@@ -121,11 +124,12 @@ var CAFEVDB = CAFEVDB || {};
       }
       var mceConfig = myTinyMCE.getConfig(plusConfig);
       editorElement.on('cafevdb:tinemce-done', function(event) {
-	console.info('tinyMCE init done callback');
+	console.debug('tinyMCE init done callback');
 	if (typeof initCallback == 'function') {
 	  initCallback();
 	}
       });
+      console.debug("attach tinymce");
       editorElement.tinymce(mceConfig);
       break;
     };
@@ -133,6 +137,7 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Remove a WYSIWYG editor from the element specified by @a selector. */
   CAFEVDB.removeEditor = function(selector) {
+    console.debug("CAFEVDB.removeEditor");
     var editorElement;
     if (selector instanceof jQuery) {
       editorElement = selector;
@@ -154,6 +159,9 @@ var CAFEVDB = CAFEVDB || {};
     default:
       if (editorElement.ckeditor) {
         editorElement.ckeditor().remove()
+      }
+      if (editorElement.tinymce) {
+        editorElement.tinymce().remove()
       }
       break;
     };
@@ -1215,7 +1223,7 @@ var CAFEVDB = CAFEVDB || {};
     }
 
     const failData = CAFEVDB.ajaxFailData(xhr, textStatus, errorThrown);
-    console.info("AJAX failure data", failData);
+    console.debug("AJAX failure data", failData);
 
     switch (textStatus) {
     case 'notmodified':
@@ -1273,7 +1281,6 @@ var CAFEVDB = CAFEVDB || {};
       autoReport = '';
       var exceptionData = failData;
       if (exceptionData.exception  !== undefined) {
-	console.info("hello");
         info += '<div class="exception error name"><pre>'+exceptionData.exception+'</pre></div>'
 	  + '<div class="exception error trace"><pre>'+exceptionData.trace+'</pre></div>';
 	while ((exceptionData = exceptionData.previous) != null) {
@@ -1397,8 +1404,8 @@ var CAFEVDB = CAFEVDB || {};
       'message': t('cafevdb', 'Unknown JSON error response to AJAX call: {status} / {error}')
     };
     if (ct.indexOf('html') > -1) {
-      console.log('html response', xhr, status, errorThrown);
-      console.log(xhr.status);
+      console.debug('html response', xhr, status, errorThrown);
+      console.debug(xhr.status);
       data.message = t('cafevdb', 'HTTP error response to AJAX call: {code} / {error}',
                        {'code': xhr.status, 'error': errorThrown});
     } else if (ct.indexOf('json') > -1) {
@@ -1533,7 +1540,7 @@ var CAFEVDB = CAFEVDB || {};
     }
     var container = $(containerSel);
 
-    console.log("tooltips container", containerSel, container.length);
+    console.debug("tooltips container", containerSel, container.length);
 
     // container.find('button.settings').cafevTooltip({placement:'bottom'});
     container.find('select').cafevTooltip({placement:'right'});
@@ -1609,7 +1616,7 @@ var CAFEVDB = CAFEVDB || {};
     select = $(select);
     var multiple = select.prop('multiple');
     if (typeof optionValues === 'undefined') {
-      console.log('selectValues read = ', select.val());
+      console.debug('selectValues read = ', select.val());
       var result = select.val();
       if (multiple && !result) {
         result = [];
@@ -1634,7 +1641,7 @@ var CAFEVDB = CAFEVDB || {};
         var option = $(this);
         option.prop('selected', optionValues.indexOf(option.val()) >= 0);
       });
-      console.log('selectValues', 'update chosen');
+      console.debug('selectValues', 'update chosen');
       self.trigger('chosen:updated'); // in case ...
       return true;
     });
@@ -1654,12 +1661,12 @@ var CAFEVDB = CAFEVDB || {};
       $.get(OC.generateUrl('/apps/cafevdb/foregroundjob/progress/'+id))
       .done(function(data) {
         if (!callbacks.update(data)) {
-	  console.info("Finish polling");
+	  console.debug("Finish polling");
           clearTimeout(progressTimer);
           progressTimer = false;
           return;
         }
-	console.info("Restart timer.");
+	console.debug("Restart timer.");
         progressTimer = setTimeout(poll, interval);
       })
       .fail(function(xhr, status, errorThrown) {
@@ -1695,7 +1702,7 @@ $(document).ready(function(){
       var width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
       var height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
       if (win.oldWidth != width || win.oldHeight != height) {
-        console.log('cafevdb size change', width, win.oldWidth, height, win.oldHeight);
+        console.debug('cafevdb size change', width, win.oldWidth, height, win.oldHeight);
         win.resizeTimeout = setTimeout(
           function() {
             win.resizeTimeout = null;
@@ -1762,7 +1769,7 @@ $(document).ready(function(){
   });
 
   // fire an event when this have been finished
-  console.log("trigger loaded");
+  console.debug("trigger loaded");
   $(document).trigger("cafevdb:donecafevdbjs")
 });
 
