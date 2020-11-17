@@ -50,8 +50,9 @@ class PHPMyEdit extends \phpMyEdit
 
   private $debug;
 
-  /**Override constructor, delay most of the actual work to the
-   **execute() method.
+  /**
+   * Override constructor, delay most of the actual work to the
+   * execute() method.
    *
    * @param \OCA\CAFEVDB\Database\Connection $connection
    *
@@ -231,7 +232,8 @@ class PHPMyEdit extends \phpMyEdit
     return parent::make_language_labels($this->currentLanguage);
   }
 
-  /**Decode the record idea from the CGI data, return -1 if none
+  /**
+   * Decode the record idea from the CGI data, return -1 if none
    * found.
    */
   public function getCGIRecordId()
@@ -250,9 +252,20 @@ class PHPMyEdit extends \phpMyEdit
     return $recordId > 0 ? $recordId : -1;
   }
 
-  public function cgiSysName($suffix)
+  /**
+   * Get prefixed name for control variables.
+   */
+  public function cgiSysName($suffix = '')
   {
     return $this->cgi['prefix']['sys'].$suffix;
+  }
+
+  /**
+   * Get prefixed name for data variables, i.e. table-field data.
+   */
+  public function cgiDataName($suffix = '')
+  {
+    return $this->cgi['prefix']['data'].$suffix;
   }
 }
 

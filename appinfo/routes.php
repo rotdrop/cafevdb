@@ -208,6 +208,14 @@ $routes = [
       'url' => '/image/{action}',
       'verb' => 'POST',
     ],
+    /**
+     * Project data validation etc.
+     */
+    [
+      'name' => 'projects#validate',
+      'url' => '/projects/validate/{topic}',
+      'verb' => 'POST',
+    ],
   ],
 ];
 

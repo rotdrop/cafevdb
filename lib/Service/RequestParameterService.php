@@ -86,6 +86,25 @@ class RequestParameterService implements \ArrayAccess, \Countable
   }
 
   /**
+   * Get all request parameters matching the given prefix at the start
+   * as an associated array, with the prefix removed.
+   *
+   * @param string $prefix
+   *
+   * @return array<string, mixed>
+   */
+  public function getPrefixParams(string $prefix):array
+  {
+    $result = [];
+    foreach ($this->parameters as $key => $value)
+      if (strpos($key, $prefix) === 0) {
+        $outKey = substr($key, strlen($prefix));
+        $result[$outKey] = $value;
+      }
+    return $result;
+  }
+
+  /**
    * Countable method
    * @return int
    */

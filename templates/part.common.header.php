@@ -67,6 +67,7 @@ script($appName, 'inlineimage');
 script($appName, 'events');
 script($appName, 'pme');
 script($appName, 'musicians');
+script($appName, 'projects');
 script($appName, 'personal-settings');
 script($appName, 'settings');
 script($appName, 'expertmode');
@@ -74,6 +75,8 @@ script($appName, 'app-settings');
 script($appName, 'jquery-extensions');
 script($appName, 'before-ready');
 script($appName, 'ready');
+
+style($appName, '../node_modules/@nextcloud/dialogs/styles/toast');
 
 script($appName, '../3rdparty/chosen/js/chosen.jquery');
 style($appName, '../3rdparty/chosen/css/chosen.min');

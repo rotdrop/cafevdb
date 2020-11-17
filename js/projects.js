@@ -341,13 +341,13 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
     if (form.find(submitSel).length > 0) {
 
-      var nameSelector = 'input.projectname';
-      var yearSelector = 'select[name="PME_data_Jahr"]';
-      var attachSelector = 'select[name="PME_data_Art"]';
+      const nameSelector = 'input.projectname';
+      const yearSelector = 'select[name="PME_data_Jahr"]';
+      const attachSelector = 'select[name="PME_data_Art"]';
 
-      var name = container.find(nameSelector);
-      var year = container.find(yearSelector);
-      var attach = container.find(attachSelector);
+      const name = container.find(nameSelector);
+      const year = container.find(yearSelector);
+      const attach = container.find(attachSelector);
 
       var oldProjectYear = $(form).find(yearSelector + ' :selected').text();
       var oldProjectName = name.val();
@@ -356,7 +356,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
        * depending on whether the user has activated the name or
        * year control, or has clicked the submit button.
        */
-      var verifyYearName = function (postAddOn, button) {
+      const verifyYearName = function (postAddOn, button) {
         /* Forward the request to the server via Ajax
          * technologies.
          */
@@ -364,47 +364,47 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         post += '&control='+postAddOn;
 
         CAFEVDB.Notification.hide(function () {
-          $.post(OC.filePath('cafevdb', 'ajax/projects', 'verifyName.php'),
-                 post,
-                 function (data) {
-                   if (!CAFEVDB.validateAjaxResponse(data, [
-                     'projectName', 'projectYear'
-                   ], function() {})) {
-                     if (name.val() == '') {
-                       name.val(oldProjectName);
-                     }
-                     if (year.val() == '') {
-                       year.val(oldProjectYear);
-                       year.trigger('chosen:updated');
-                     }
-                   } else {
-                     var rqData = data.data;
-                     if (rqData.message != '') {
-                       CAFEVDB.Notification.showTemporary(
-                         rqData.message,
-                         {
-                           'isHTML': true,
-                           'timeout': 30
-                         }
-                       );
-                     }
-                     name.val(rqData.projectName);
-                     year.val(rqData.projectYear);
-                     year.trigger('chosen:updated');
-                     oldProjectYear = rqData.projectYear;
-                     oldProjectName = rqData.projectName;
-                     if (postAddOn == 'submit') {
-                       if (typeof button !== 'undefined') {
-                         $(form).off('click', submitSel);
-                         button.trigger('click');
-                       } else {
-                         form.submit();
-                       }
-                     }
-                   }
-                 });
+          const cleanup = function() {
+            if (name.val() == '') {
+              name.val(oldProjectName);
+            }
+            if (year.val() == '') {
+              year.val(oldProjectYear);
+              year.trigger('chosen:updated');
+            }
+          }
+          $.post(OC.generateUrl('/apps/cafevdb/projects/validate/name'), post)
+           .fail(function(xhr, status, errorThrown) {
+             CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+             cleanup();
+           })
+          .done(function(rqData) {
+            if (!CAFEVDB.validateAjaxResponse(rqData, [
+              'projectName', 'projectYear'
+            ])) {
+              cleanup();
+            }
+            if (rqData.message != '') {
+              CAFEVDB.Notification.showTemporary(
+                rqData.message, { 'isHTML': true, 'timeout': 300 }
+              );
+            }
+            name.val(rqData.projectName);
+            year.val(rqData.projectYear);
+            year.trigger('chosen:updated');
+            oldProjectYear = rqData.projectYear;
+            oldProjectName = rqData.projectName;
+            if (false && postAddOn == 'submit') {
+              if (typeof button !== 'undefined') {
+                $(form).off('click', submitSel);
+                button.trigger('click');
+              } else {
+                form.submit();
+              }
+            }
+          });
         });
-      }
+      };
 
       attach.off('change').change(function(event) {
         event.preventDefault();
