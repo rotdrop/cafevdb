@@ -238,6 +238,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var args = [ selector, parameters, resizeReadyCB ];
     $.merge(args, cbHandle.parameters);
 
+    console.info("Run table load callback", callback);
     return callback.apply(context, args);
   };
 
@@ -389,7 +390,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     return false;
   };
 
-  /**Overload the phpMyEdit submit buttons in order to be able to
+  /**
+   * Overload the phpMyEdit submit buttons in order to be able to
    * display the single data-set display, edit, add and copy form in a
    * popup.
    *
@@ -433,9 +435,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
      */
     if (container.find(pme.pmeClassSelector('form', 'list')).length) {
       // main list view, just leave as is.
-      var resize = function(reason) {
+      const resize = function(reason) {
+        console.info("resize callback");
         callback( { reason: reason } );
-        var reloadSel = pme.pmeClassSelector('input', 'reload');
+        const reloadSel = pme.pmeClassSelector('input', 'reload');
         container.find(reloadSel)
         .off('click')
         .on('click', function(event) {
@@ -816,7 +819,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
           pme.init(containerSel);
           console.info(containerSel);
 
-          var resizeHandler = function(parameters) {
+          const resizeHandler = function(parameters) {
             dialogHolder.dialog('option', 'height', 'auto');
             dialogHolder.dialog('option', 'width', 'auto');
             var newHeight = dialogWidget.height()
@@ -828,30 +831,39 @@ var PHPMYEDIT = PHPMYEDIT || {};
           };
 
           pme.tableDialogHandlers(tableOptions, function(parameters) {
+            parameters = $.extend({ reason: 'unknown' }, parameters);
+            console.info("dialog handlers callback", parameters);
             dialogHolder.css('height', 'auto');
-            CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
-              console.info('pme.addEditor');
-              pme.transposeReady(containerSel);
-              pme.tableLoadCallback(template, containerSel, parameters, function() {
-                console.info('tableLoadCallback');
-                resizeHandler(parameters);
-                dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
-                dialogHolder.dialog('moveToTop');
-                CAFEVDB.toolTipsInit(containerSel);
-                CAFEVDB.Page.busyIcon(false);
-                dialogHolder.find(pme.navigationSelector('reload')).removeClass('loading');
+            switch (parameters.reason) {
+            case 'dialogOpen':
+              CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
+                console.info('pme.addEditor');
+                pme.transposeReady(containerSel);
+                pme.tableLoadCallback(template, containerSel, parameters, function() {
+                  console.info('tableLoadCallback');
+                  resizeHandler(parameters);
+                  dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+                  dialogHolder.dialog('moveToTop');
+                  CAFEVDB.toolTipsInit(containerSel);
+                  CAFEVDB.Page.busyIcon(false);
+                  dialogHolder.find(pme.navigationSelector('reload')).removeClass('loading');
+                });
+                CAFEVDB.pmeTweaks(dialogHolder);
+                $.fn.cafevTooltip.remove();
               });
-              CAFEVDB.pmeTweaks(dialogHolder);
-              $.fn.cafevTooltip.remove();
-            });
+            case 'tabChange':
+              resizeHandler(parameters);
+            }
           });
 
           // install delegate handlers on the widget s.t. we
           // can call .off() on the container
-          dialogWidget.on('resize', containerSel, resizeHandler);
+          dialogWidget.on('resize', containerSel, function(event) {
+            console.info("pme dialog resize handler");
+            resizeHandler(event);
+          });
           dialogWidget.on('pmedialog:changed', containerSel, function(event) {
             tableOptions.modified = true;
-            return true; // let it bubble upwards ... actually: only the widget and body ;)
           });
         },
         close: function(event) {
@@ -961,7 +973,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 	return;
       }
 
-      pme.notifySqlError(data);
+      pme.notifySqlError(data);gg
 
       if (data.history.size > 0) {
         CAFEVDB.Page.historySize = data.history.size;
@@ -973,9 +985,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
       CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
       pme.inner(container).html(data.content);
       pme.init(selector);
+      console.info("Attaching editors");
       CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
         pme.transposeReady(selector);
-        //alert('pseudo submit');
+        //alert('psegudo submit');
         pme.tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
         CAFEVDB.pmeTweaks(container);
         CAFEVDB.toolTipsInit(selector);
