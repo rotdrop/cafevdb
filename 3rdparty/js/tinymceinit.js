@@ -1,4 +1,4 @@
-const myTinyMCE = myTinyMCE || {};
+var myTinyMCE = myTinyMCE || {};
 
 (function(window, $, myTinyMCE, undefined) {
   myTinyMCE.postProcessCallback = function(e) {
