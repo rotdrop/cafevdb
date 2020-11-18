@@ -102,7 +102,7 @@ class ImagesController extends Controller {
       $cacheKey = $ownerId;
       $imageData = $this->fileCache->get($cacheKey);
 
-      $this->logInfo("Requested cache file with key ".$cacheKey);
+      $this->logDebug("Requested cache file with key ".$cacheKey);
 
       $image = new \OCP\Image();
       $image->loadFromData($imageData);
@@ -117,7 +117,7 @@ class ImagesController extends Controller {
       // ownername_imagename
       $joinTable = Util::dashesToCamelCase($joinTable, true);
       $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-      $this->logInfo("cooked table: ".$joinTableClass);
+      $this->logDebug("cooked table: ".$joinTableClass);
 
       $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
       $findBy =  [ 'ownerId' => $ownerId ];
@@ -160,7 +160,7 @@ class ImagesController extends Controller {
         $image = new \OCP\Image();
         $image->loadFromData($imageData);
 
-        $this->logInfo("Image data: ".strlen($imageData)." mime ".$imageMimeType);
+        $this->logDebug("Image data: ".strlen($imageData)." mime ".$imageMimeType);
         if ($image->mimeType() !== $imageMimeType) {
           $this->logError("Mime-types stored / computed: ".$imageMimeType." / ".$image->mimeType());
         }
@@ -210,7 +210,7 @@ class ImagesController extends Controller {
           return self::grumble($this->l->t('No image path was submitted'));
         }
 
-        $this->logInfo($path);
+        $this->logDebug($path);
 
         $userFolder = $this->rootFolder->getUserFolder($this->userId());
 
@@ -262,13 +262,13 @@ class ImagesController extends Controller {
           [ strlen($image->data()), $tmpKey ]));
       }
 
-      $this->logInfo("Stored cache file as ".$tmpKey);
+      $this->logDebug("Stored cache file as ".$tmpKey);
 
       $responseData['tmpKey'] = $tmpKey;
 
       return self::dataResponse($responseData);
     case 'save':
-      $this->logInfo('crop data: '.print_r($this->parameterService->getParams(), true));
+      $this->logDebug('crop data: '.print_r($this->parameterService->getParams(), true));
       /*
         Array (
         [renderAs] => user
@@ -299,7 +299,7 @@ class ImagesController extends Controller {
         return self::grumble($this->l->t('Unable to load image with cache key %s', [$tmpKey]));
       }
       $this->fileCache->remove($tmpKey);
-      $this->logInfo("Image data for key ".$tmpKey." of size ".strlen($imageData));
+      $this->logDebug("Image data for key ".$tmpKey." of size ".strlen($imageData));
 
       $image = new \OCP\Image();
       if (!$image->loadFromData($imageData)) {
@@ -345,7 +345,7 @@ class ImagesController extends Controller {
       // ownername_imagename
       $joinTable = Util::dashesToCamelCase($joinTable, true);
       $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-      $this->logInfo("cooked table: ".$joinTableClass);
+      $this->logDebug("cooked table: ".$joinTableClass);
 
       $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
       $findBy =  [ 'ownerId' => $ownerId ];
