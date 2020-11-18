@@ -207,7 +207,8 @@ class Navigation
     return $button;
   }
 
-  /**Add a new button to the left of the already registered
+  /**
+   * Add a new button to the left of the already registered
    * phpMyEdit buttons. This is a dirty hack. But so what. Only the
    * L and F (list and filter) views are augmented.
    *
@@ -224,7 +225,8 @@ class Navigation
     return self::prependTableButtons(array($button), $misc, $all);
   }
 
-  /**Add a new button to the left of the already registered
+  /**
+   * Add a new button to the left of the already registered
    * phpMyEdit buttons. This is a dirty hack. But so what. Only the
    * L and F (list and filter) views are augmented.
    *
@@ -241,14 +243,22 @@ class Navigation
     // Cloned from phpMyEdit class:
     if (!$misc) {
       $default_buttons_no_B = array(
-        'L' => array('<<', '<',
-                     'placeholder', 'add',
-                     '>', '>>',
-                     'goto', 'rows_per_page','reload'),
-        'F' => array('<<', '<',
-                     'placeholder', 'add',
-                     '>', '>>',
-                     'goto', 'rows_per_page','reload'),
+        'L' => [
+          'placeholder', 'add',
+          '<<', '<',
+          'goto',
+          '>', '>>',
+          'rows_per_page',
+          'reload',
+        ],
+        'F' => [
+          'placeholder', 'add',
+          '<<', '<',
+          'goto',
+          '>', '>>',
+          'rows_per_page',
+          'reload',
+        ],
         'A' => array('save', 'apply', 'more', 'cancel'),
         'C' => array('save', 'more', 'cancel', 'reload'),
         'P' => array('save', 'apply', 'cancel'),
@@ -257,14 +267,22 @@ class Navigation
       );
     } else {
       $default_buttons_no_B = array(
-        'L' => array('<<','<',
-                     'misc', 'placeholder', 'add',
-                     '>','>>',
-                     'goto','rows_per_page','reload'),
-        'F' => array('<<','<',
-                     'misc', 'placeholder', 'add',
-                     '>','>>',
-                     'goto','rows_per_page','reload'),
+        'L' => [
+          'misc', 'placeholder', 'add',
+          '<<','<',
+          'goto',
+          '>','>>',
+          'rows_per_page',
+          'reload',
+        ],
+        'F' => [
+          'misc', 'placeholder', 'add',
+          '<<','<',
+          'goto',
+          '>','>>',
+          'rows_per_page',
+          'reload',
+        ],
         'A' => array('save', 'apply', 'more', 'cancel'),
         'C' => array('save', 'more', 'cancel', 'reload'),
         'P' => array('save', 'apply', 'cancel'),
