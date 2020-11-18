@@ -25,9 +25,17 @@
  *
  */
 
+body {
+  overflow:hidden;
+}
+
 #content.app-cafevdb {
   width:100%;
   height:100%;
+}
+
+#content.app-cafevdb #app-content {
+  max-width:100vw;
 }
 
 #controls {
