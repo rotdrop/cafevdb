@@ -67,6 +67,5 @@ trait UuidTrait
         if (empty($this->getUuid())) {
             $this->uuid = Uuid::uuid4();
         }
-
     }
 }
