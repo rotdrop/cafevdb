@@ -133,38 +133,10 @@ class PmeTableController extends Controller {
         'recordId' => $this->pme->getCGIRecordId(),
       ];
 
-      $tmpl = new TemplateResponse($this->appName, $template, $templateParameters, 'blank');
+      $response = new TemplateResponse($this->appName, $template, $templateParameters, 'blank');
 
-      $html =$tmpl->render();
-
-      // Search for MySQL error messages echoes by phpMyEdit, sometimes
-      // the contents of the template will be discarded, but we still want
-      //
-      // to get the error messages.
-      //
-      // <h4>MySQL error 1288</h4>The target table Spielwiese2013View of the DELETE is not updatable<hr size="1">
-
-      if (preg_match('|<h4>MySQL error (\d+)</h4>\s*([^<]+)|', $html, $matches)) {
-        $mySQLError = [
-          'error' => $matches[1],
-          'message' => $matches[2],
-        ];
-      } else {
-        $mySQLError = null;
-      }
-
-      $response = self::dataResponse([
-        'content' => $html,
-        'sqlerror' => $mySQLError,
-        'history' => [ 'size' => $historySize,
-                       'position' => $historyPosition, ],
-      ]);
-
-      $policy = new ContentSecurityPolicy();
-      //$policy->addAllowedWorkerSrcDomain("'self'");
-      //$policy->addAllowedScriptDomain("'self'");
-      //$policy->addAllowedConnectDomain("'self'");
-      $response->setContentSecurityPolicy($policy);
+      $response->addHeader('X-'.$this->appName.'-history-size', $historySize);
+      $response->addHeader('X-'.$this->appName.'-history-position', $historyPosition);
 
       if (!$dialogMode && !$reloadAction) {
         $this->historyService->store();

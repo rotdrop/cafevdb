@@ -27,7 +27,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
 (function(window, $, PHPMYEDIT, undefined) {
   'use strict';
-
   PHPMYEDIT.directChange            = false;
   PHPMYEDIT.filterSelectPlaceholder = 'Select a filter Option';
   PHPMYEDIT.filterSelectNoResult    = 'No values match';
@@ -40,7 +39,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.pmePrefix               = 'pme';
   PHPMYEDIT.PMEPrefix               = PHPMYEDIT.pmePrefix.toUpperCase();
   PHPMYEDIT.singleDeselectOffset    = 18;
-  PHPMYEDIT.defaultSelector         = '#cafevdb-page-body'; ///< for delegate handlers, survives pseudo-submit
+  PHPMYEDIT.defaultSelector         = '#'+CAFEVDB.appName+'-page-body'; ///< for delegate handlers, survives pseudo-submit
   PHPMYEDIT.defaultInnerSelector    = 'inner'; ///< to override delegate handlers, survices pseudo-submit
   PHPMYEDIT.dialogCSSId             = PHPMYEDIT.pmePrefix+'-table-dialog';
 
@@ -321,7 +320,27 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     // re-attach events
     pme.tableDialogHandlers(options, callback);
-   };
+  };
+
+  PHPMYEDIT.post = function(post, callbacks) {
+    const dfltCallbacks = {
+      fail: function(xhr, status, errorThrown) {},
+      done: function(htmlContent, historySize, historyPosition) {}
+    };
+    callbacks = $.extend(dfltCallbacks, callbacks);
+
+    $.post(CAFEVDB.generateUrl('page/pme'), post)
+      .fail(function(xhr, status, errorThrown) {
+        CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+        callbacks.fail(xhr, status, errorThrown);
+      })
+      // HTTP response
+      .done(function (htmlContent, textStatus, request) {
+        const historySize = request.getResponseHeader('X-'+CAFEVDB.appName+'-history-size');
+        const historyPosition = request.getResponseHeader('X-'+CAFEVDB.appName+'-history-position');
+        callbacks.done(htmlContent, historySize, historyPosition);
+      });
+  };
 
   /**Reload the current PME-dialog.
    *
@@ -337,14 +356,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * to shape the HTML after loading.
    */
   PHPMYEDIT.tableDialogReload = function(options, callback) {
-    var pme  = this;
+    const pme  = this;
 
-    var reloadName  = options.ReloadName;
-    var reloadValue = options.ReloadValue;
+    const reloadName  = options.ReloadName;
+    const reloadValue = options.ReloadValue;
 
-    var containerSel = '#'+options.DialogHolderCSSId;
-    var container = $(containerSel);
-    var contentChanged = false;
+    const containerSel = '#'+options.DialogHolderCSSId;
+    const container = $(containerSel);
 
     container.dialog('widget').addClass(pme.pmeToken('table-dialog-blocked'));
     container.find(pme.navigationSelector('reload')).addClass('loading');
@@ -362,29 +380,18 @@ var PHPMYEDIT = PHPMYEDIT || {};
       obj[reloadName] = reloadValue;
       post += '&' + $.param(obj);
 
-      //alert("Post: "+post);
-      const cleanup = function() {
-        console.info('cleanup');
-        const dialogWidget = container.dialog('widget');
+      PHPMYEDIT.post(post, {
+        fail: function(xhr, status, errorThrown) {
+          console.info('cleanup');
+          const dialogWidget = container.dialog('widget');
 
-        CAFEVDB.Page.busyIcon(false);
-        dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
-        container.find(pme.navigationSelector('reload')).removeClass('loading');
-      };
-      $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
-      .fail(function(xhr, status, errorThrown) {
-        CAFEVDB.handleAjaxError(xhr, status, errorThrown);
-	cleanup();
-      })
-      .done(function (data) {
-	if (!CAFEVDB.validateAjaxResponse(data, [ 'content' ])) {
-	  cleanup();
-	  return;
+          CAFEVDB.Page.busyIcon(false);
+          dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+          container.find(pme.navigationSelector('reload')).removeClass('loading');
+        },
+        done: function(htmlContent, historySize, historyPosition) {
+          pme.tableDialogReplace(container, htmlContent, options, callback);
         }
-
-        pme.notifySqlError(data);
-
-        pme.tableDialogReplace(container, data.content, options, callback);
       });
     });
     return false;
@@ -414,14 +421,14 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * dynamically loaded content.
    */
   PHPMYEDIT.tableDialogHandlers = function(options, callback) {
-    var pme = this;
+    const pme = this;
 
     if (typeof callback === 'undefined') {
       callback = function() { return false; };
     }
 
-    var containerSel = '#'+options.DialogHolderCSSId;
-    var container = $(containerSel);
+    const containerSel = '#'+options.DialogHolderCSSId;
+    const container = $(containerSel);
     var contentChanged = false;
 
     pme.cancelDeferredReload(container);
@@ -461,7 +468,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
     // The easy one, but for changed content
-    var cancelButton = $(container).find(pme.pmeClassSelector('input', 'cancel'));
+    const cancelButton = $(container).find(pme.pmeClassSelector('input', 'cancel'));
     cancelButton.off('click');
     cancelButton.on('click', function(event) {
       event.preventDefault();
@@ -485,10 +492,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
     // The complicated ones. This reloads new data.
-    var ReloadButtonSel = pme.pmeClassSelectors(
+    const ReloadButtonSel = pme.pmeClassSelectors(
       'input',
       [ 'change', 'delete', 'copy', 'apply', 'more', 'reload' ]);
-    var reloadingButton = $(container).find(ReloadButtonSel);
+    const reloadingButton = $(container).find(ReloadButtonSel);
 
     // remove non-delegate handlers and stop default actions in any case.
     reloadingButton.off('click');
@@ -534,70 +541,60 @@ var PHPMYEDIT = PHPMYEDIT || {};
      * view-mode.
      *
      */
-    var saveButtonSel = 'input.'+pme.pmeToken('save');
-    var saveButton = $(container).find(saveButtonSel);
+    const saveButtonSel = 'input.'+pme.pmeToken('save');
+    const saveButton = $(container).find(saveButtonSel);
     saveButton.off('click');
 
     container
     .off('click', saveButtonSel)
     .on('click', saveButtonSel, function(event) {
-        event.preventDefault();
+      event.preventDefault();
 
-        container.find(pme.navigationSelector('reload')).addClass('loading');
+      container.find(pme.navigationSelector('reload')).addClass('loading');
 
-        options.modified = true; // we are the save-button ...
+      options.modified = true; // we are the save-button ...
 
-        var applySelector = pme.pmeSysNameSelectors(
-          'input',
-          ['morechange', 'applyadd', 'applycopy']);
-        var deleteSelector = pme.pmeSysNameSelector('input', 'savedelete');
+      const applySelector = pme.pmeSysNameSelectors(
+        'input',
+        ['morechange', 'applyadd', 'applycopy']);
+      const deleteSelector = pme.pmeSysNameSelector('input', 'savedelete');
 
-        pme.reloadDeferred(container).then(function() {
-          var post = $(container).find(pme.formSelector()).serialize();
-          post += '&' + $.param(options);
-          var name, value;
+      pme.reloadDeferred(container).then(function() {
+        var post = $(container).find(pme.formSelector()).serialize();
+        post += '&' + $.param(options);
+        var name, value;
 
-          var deleteButton = container.find(deleteSelector);
-          if (deleteButton.length > 0) {
-            name  = deleteButton.attr('name');
-            value = deleteButton.val();
-          } else {
-            var applyButton = container.find(applySelector);
-            if (applyButton.length > 0) {
-              name  = applyButton.attr('name');
-              value = applyButton.val();
-            }
+        const deleteButton = container.find(deleteSelector);
+        if (deleteButton.length > 0) {
+          name  = deleteButton.attr('name');
+          value = deleteButton.val();
+        } else {
+          var applyButton = container.find(applySelector);
+          if (applyButton.length > 0) {
+            name  = applyButton.attr('name');
+            value = applyButton.val();
           }
-          var obj = {};
-          obj[name] = value;
-          post += '&' + $.param(obj);
+        }
+        var obj = {};
+        obj[name] = value;
+        post += '&' + $.param(obj);
 
-          //alert(post);
+        //alert(post);
 
-          CAFEVDB.Notification.hide(function() {
-            var dialogWidget = container.dialog('widget');
+        CAFEVDB.Notification.hide(function() {
+          const dialogWidget = container.dialog('widget');
 
-            dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
+          dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
 
-	    const cleanup = function() {
+          pme.post(post, {
+            fail: function(xhr, status, errorThrown) {
               console.info('cleanup');
               dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
               container.find(pme.navigationSelector('reload')).removeClass('loading');
               CAFEVDB.Page.busyIcon(false);
-	    };
-	    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
-	    .fail(function(xhr, status, errorThrown) {
-              CAFEVDB.handleAjaxError(xhr, status, errorThrown);
-	      cleanup();
-	    })
-	    .done(function (data) {
-	      if (!CAFEVDB.validateAjaxResponse(data, [ 'content' ])) {
-		cleanup();
-		return;
-	      }
-              pme.notifySqlError(data);
-
-              var op = $(data.content).find(pme.pmeSysNameSelector('input', 'op_name'));
+	    },
+            done: function(htmlContent, historySize, historyPosition) {
+              const op = $(htmlContent).find(pme.pmeSysNameSelector('input', 'op_name'));
               if (op.length > 0 &&
                   (op.val() === 'add' || op.val() === 'delete')) {
                 // Some error occured. Stay in the given mode.
@@ -611,7 +608,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                 setTimeout(function() {
                   $('#notification').fadeOut();
                 }, 10000);
-                pme.tableDialogReplace(container, data.content, options, callback);
+                pme.tableDialogReplace(container, htmlContent, options, callback);
                 return;
               }
 
@@ -627,12 +624,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
               }
               container.find(pme.navigationSelector('reload')).removeClass('loading');
               CAFEVDB.Page.busyIcon(false);
-            });
+            }
           });
         });
-      return false;
+        return false;
+      });
     });
-
     // Finally do the styling ...
     callback( { reason: 'dialogOpen' } );
   };
@@ -741,162 +738,153 @@ var PHPMYEDIT = PHPMYEDIT || {};
     } else {
       post += '&' + $.param(tableOptions);
     }
-    const cleanup = function() {
-      console.info('cleanup');
-      CAFEVDB.Page.busyIcon(false);
-      pme.dialogOpen[containerCSSId] = false;
-    };
-    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
-    .fail(function(xhr, status, errorThrown) {
-      CAFEVDB.handleAjaxError(xhr, status, errorThrown);
-      cleanup();
-    })
-    .done(function (data) {
-      if (!CAFEVDB.validateAjaxResponse(data, [ 'content' ])) {
-        cleanup();
+    pme.post(post, {
+      fail: function(xhr, status, errorThrown) {
+        console.info('cleanup');
+        CAFEVDB.Page.busyIcon(false);
+        pme.qdialogOpen[containerCSSId] = false;
+      },
+      done: function(htmlContent, historySize, historyPosition) {
+        const containerSel = '#'+containerCSSId;
+        var dialogHolder;
+        dialogHolder = $('<div id="'+containerCSSId+'" class="resize-target"></div>');
+        dialogHolder.html(htmlContent);
+        dialogHolder.data('AmbientContainer', tableOptions.ambientContainerSelector);
+
+        dialogHolder.find(pme.navigationSelector('reload')).addClass('loading');
+        if (tableOptions.ModalDialog) {
+          CAFEVDB.modalizer(true);
+        }
+
+        const popup = dialogHolder.cafevDialog({
+          title: dialogHolder.find(pme.pmeClassSelector('span', 'short-title')).html(),
+          position: pme.popupPosition,
+          width: 'auto',
+          height: 'auto',
+          modal: false, //tableOptions.ModalDialog,
+          closeOnEscape: false,
+          dialogClass: pme.pmeToken('table-dialog')+' custom-close resize-target',
+          resizable: false,
+          dragStart: function(event) {
+            var self = $(this);
+            var widget = self.dialog('widget');
+            var cssWidth = widget.prop('style').width;
+            if (cssWidth === 'auto') {
+              self.data('drag-width-tweak', true);
+              widget.width(widget.width()+1); // copy with jquery-ui + ff drag bug
+            }
+          },
+          resize_: function() {
+            console.info('jq resize');
+          },
+          open: function() {
+
+            //var tmp = CAFEVDB.modalWaitNotification("BlahBlah");
+            //tmp.dialog('close');
+            const dialogHolder = $(this);
+            const dialogWidget = dialogHolder.dialog('widget');
+
+            //dialogWidget.draggable('option', 'containment', '#content');
+
+            CAFEVDB.dialogToBackButton(dialogHolder);
+            CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
+              event.preventDefault();
+              var cancelButton = container.find(pme.pmeClassSelector('input', 'cancel')).first();
+              if (cancelButton.length > 0) {
+                event.stopImmediatePropagation();
+                cancelButton.trigger('click');
+              } else {
+                dialogHolder.dialog('close');
+              }
+              return false;
+            });
+
+            dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
+
+            // general styling
+            pme.init(containerSel);
+            console.info(containerSel);
+
+            const resizeHandler = function(parameters) {
+              console.info('pme-resize');
+              dialogHolder.dialog('option', 'height', 'auto');
+              dialogHolder.dialog('option', 'width', 'auto');
+              var newHeight = dialogWidget.height()
+                    - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
+              newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
+              //alert("Setting height to " + newHeight);
+              dialogHolder.height(newHeight);
+            };
+
+            pme.tableDialogHandlers(tableOptions, function(parameters) {
+              parameters = $.extend({ reason: 'unknown' }, parameters);
+              console.info("dialog handlers callback", parameters);
+              dialogHolder.css('height', 'auto');
+              switch (parameters.reason) {
+              case 'dialogOpen':
+                CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
+                  console.info('pme.addEditor');
+                  pme.transposeReady(containerSel);
+                  pme.tableLoadCallback(template, containerSel, parameters, function() {
+                    console.info('tableLoadCallback');
+                    resizeHandler(parameters);
+                    dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+                    dialogHolder.dialog('moveToTop');
+                    CAFEVDB.toolTipsInit(containerSel);
+                    CAFEVDB.Page.busyIcon(false);
+                    dialogHolder.find(pme.navigationSelector('reload')).removeClass('loading');
+                  });
+                  CAFEVDB.pmeTweaks(dialogHolder);
+                  $.fn.cafevTooltip.remove();
+                });
+              case 'tabChange':
+                console.info('tab change');
+                resizeHandler(parameters);
+              }
+            });
+
+            // install delegate handlers on the widget s.t. we
+            // can call .off() on the container
+            dialogWidget.on('resize', containerSel, function(event) {
+              console.info("pme dialog resize handler");
+              resizeHandler(event);
+            });
+            dialogWidget.on('pmedialog:changed', containerSel, function(event) {
+              tableOptions.modified = true;
+            });
+          },
+          close: function(event) {
+            $.fn.cafevTooltip.remove();
+            var dialogHolder = $(this);
+
+            dialogHolder.find('iframe').removeAttr('src');
+
+            //alert($.param(tableOptions));
+            if (tableOptions.modified === true) {
+              //alert("Changed, triggerring on "+tableOptions.ambientContainerSelector);
+              $(tableOptions.ambientContainerSelector).trigger('pmedialog:changed');
+              pme.submitOuterForm(tableOptions.ambientContainerSelector);
+            }
+
+            dialogHolder.dialog('destroy');
+
+            // At least konq. has the bug that removing a form
+            // with submit inputs will submit the form. Very strange.
+            dialogHolder.find('form input[type="submit"]').remove();
+            dialogHolder.remove();
+
+            // Remove modal plane if appropriate
+            CAFEVDB.modalizer(false);
+
+            pme.dialogOpen[containerCSSId] = false;
+
+            CAFEVDB.unfocus();
+
+            return false;
+          }
+        });
         return;
       }
-
-      pme.notifySqlError(data);
-
-      var containerSel = '#'+containerCSSId;
-      var dialogHolder;
-      dialogHolder = $('<div id="'+containerCSSId+'" class="resize-target"></div>');
-      dialogHolder.html(data.content);
-      dialogHolder.data('AmbientContainer', tableOptions.ambientContainerSelector);
-
-      dialogHolder.find(pme.navigationSelector('reload')).addClass('loading');
-      if (tableOptions.ModalDialog) {
-        CAFEVDB.modalizer(true);
-      }
-
-      const popup = dialogHolder.cafevDialog({
-        title: dialogHolder.find(pme.pmeClassSelector('span', 'short-title')).html(),
-        position: pme.popupPosition,
-        width: 'auto',
-        height: 'auto',
-        modal: false, //tableOptions.ModalDialog,
-        closeOnEscape: false,
-        dialogClass: pme.pmeToken('table-dialog')+' custom-close resize-target',
-        resizable: false,
-        dragStart: function(event) {
-          var self = $(this);
-          var widget = self.dialog('widget');
-          var cssWidth = widget.prop('style').width;
-          if (cssWidth === 'auto') {
-            self.data('drag-width-tweak', true);
-            widget.width(widget.width()+1); // copy with jquery-ui + ff drag bug
-          }
-        },
-        resize_: function() {
-          console.info('jq resize');
-        },
-        open: function() {
-
-          //var tmp = CAFEVDB.modalWaitNotification("BlahBlah");
-          //tmp.dialog('close');
-          var dialogHolder = $(this);
-          var dialogWidget = dialogHolder.dialog('widget');
-
-          //dialogWidget.draggable('option', 'containment', '#content');
-
-          CAFEVDB.dialogToBackButton(dialogHolder);
-          CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
-            event.preventDefault();
-            var cancelButton = container.find(pme.pmeClassSelector('input', 'cancel')).first();
-            if (cancelButton.length > 0) {
-              event.stopImmediatePropagation();
-              cancelButton.trigger('click');
-            } else {
-              dialogHolder.dialog('close');
-            }
-            return false;
-          });
-
-          dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
-
-          // general styling
-          pme.init(containerSel);
-          console.info(containerSel);
-
-          const resizeHandler = function(parameters) {
-            dialogHolder.dialog('option', 'height', 'auto');
-            dialogHolder.dialog('option', 'width', 'auto');
-            var newHeight = dialogWidget.height()
-                                   - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
-            newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
-            //alert("Setting height to " + newHeight);
-            dialogHolder.height(newHeight);
-            console.info('pme-resize');
-          };
-
-          pme.tableDialogHandlers(tableOptions, function(parameters) {
-            parameters = $.extend({ reason: 'unknown' }, parameters);
-            console.info("dialog handlers callback", parameters);
-            dialogHolder.css('height', 'auto');
-            switch (parameters.reason) {
-            case 'dialogOpen':
-              CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
-                console.info('pme.addEditor');
-                pme.transposeReady(containerSel);
-                pme.tableLoadCallback(template, containerSel, parameters, function() {
-                  console.info('tableLoadCallback');
-                  resizeHandler(parameters);
-                  dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
-                  dialogHolder.dialog('moveToTop');
-                  CAFEVDB.toolTipsInit(containerSel);
-                  CAFEVDB.Page.busyIcon(false);
-                  dialogHolder.find(pme.navigationSelector('reload')).removeClass('loading');
-                });
-                CAFEVDB.pmeTweaks(dialogHolder);
-                $.fn.cafevTooltip.remove();
-              });
-            case 'tabChange':
-              resizeHandler(parameters);
-            }
-          });
-
-          // install delegate handlers on the widget s.t. we
-          // can call .off() on the container
-          dialogWidget.on('resize', containerSel, function(event) {
-            console.info("pme dialog resize handler");
-            resizeHandler(event);
-          });
-          dialogWidget.on('pmedialog:changed', containerSel, function(event) {
-            tableOptions.modified = true;
-          });
-        },
-        close: function(event) {
-           $.fn.cafevTooltip.remove();
-           var dialogHolder = $(this);
-
-          dialogHolder.find('iframe').removeAttr('src');
-
-          //alert($.param(tableOptions));
-          if (tableOptions.modified === true) {
-            //alert("Changed, triggerring on "+tableOptions.ambientContainerSelector);
-            $(tableOptions.ambientContainerSelector).trigger('pmedialog:changed');
-            pme.submitOuterForm(tableOptions.ambientContainerSelector);
-          }
-
-          dialogHolder.dialog('destroy');
-
-          // At least konq. has the bug that removing a form
-          // with submit inputs will submit the form. Very strange.
-          dialogHolder.find('form input[type="submit"]').remove();
-          dialogHolder.remove();
-
-          // Remove modal plane if appropriate
-          CAFEVDB.modalizer(false);
-
-          pme.dialogOpen[containerCSSId] = false;
-
-          CAFEVDB.unfocus();
-
-          return false;
-        }
-      });
-      return;
     });
     return true;
   };
@@ -915,7 +903,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * phpMyEdit to reset the filter.
    */
   PHPMYEDIT.pseudoSubmit = function(form, element, selector, resetFilter) {
-    var pme = this;
+    const pme = this;
 
     if (resetFilter === true) {
       form.append('<input type="hidden"'
@@ -924,7 +912,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
 
     selector = this.selector(selector);
-    var container = this.container(selector);
+    const container = this.container(selector);
 
     var templateRenderer = form.find('input[name="templateRenderer"]');
     if (templateRenderer.length <= 0 || element.hasClass('formsubmit')) {
@@ -957,49 +945,40 @@ var PHPMYEDIT = PHPMYEDIT || {};
       post += '&' + $.param(obj);
     }
 
-    const cleanup = function() {
-      console.info('cleanup');
-      CAFEVDB.Page.busyIcon(false);
-      CAFEVDB.modalizer(false);
-    };
-    $.post(OC.generateUrl('/apps/cafevdb/page/pme'), post)
-    .fail(function(xhr, status, errorThrown) {
-      CAFEVDB.handleAjaxError(xhr, status, errorThrown);
-      cleanup();
-    })
-    .done(function (data) {
-      if (!CAFEVDB.validateAjaxResponse(data, [ 'content', 'history' ])) {
-        cleanup();
-	return;
-      }
-
-      pme.notifySqlError(data);gg
-
-      if (data.history.size > 0) {
-        CAFEVDB.Page.historySize = data.history.size;
-        CAFEVDB.Page.historyPosition = data.history.position;
-        CAFEVDB.Page.updateHistoryControls();
-      }
-      $.fn.cafevTooltip.remove();
-
-      CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
-      pme.inner(container).html(data.content);
-      pme.init(selector);
-      console.info("Attaching editors");
-      CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
-        pme.transposeReady(selector);
-        //alert('psegudo submit');
-        pme.tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
-        CAFEVDB.pmeTweaks(container);
-        CAFEVDB.toolTipsInit(selector);
-
-        /* kill the modalizer */
+    pme.post(post, {
+      fail: function(xhr, status, errorThrown) {
+        console.info('cleanup');
         CAFEVDB.Page.busyIcon(false);
         CAFEVDB.modalizer(false);
-        CAFEVDB.unfocus(); // move focus away from submit button
+      },
+      done: function(htmlContent, historySize, historyPosition) {
 
-        container.trigger('pmetable:layoutchange');
-      });
+        if (historySize > 0) {
+          CAFEVDB.Page.historySize = historySize;
+          CAFEVDB.Page.historyPosition = historyPosition;
+          CAFEVDB.Page.updateHistoryControls();
+        }
+        $.fn.cafevTooltip.remove();
+
+        CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
+        pme.inner(container).html(htmlContent);
+        pme.init(selector);
+        console.info("Attaching editors");
+        CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
+          pme.transposeReady(selector);
+          //alert('psegudo submit');
+          pme.tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
+          CAFEVDB.pmeTweaks(container);
+          CAFEVDB.toolTipsInit(selector);
+
+          /* kill the modalizer */
+          CAFEVDB.Page.busyIcon(false);
+          CAFEVDB.modalizer(false);
+          CAFEVDB.unfocus(); // move focus away from submit button
+
+          container.trigger('pmetable:layoutchange');
+        });
+      }
     });
     return false;
   };

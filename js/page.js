@@ -57,7 +57,7 @@ var CAFEVDB = CAFEVDB || {};
       action = 'remember';
       parameter = 'blank'
     }
-    $.post(OC.generateUrl('/apps/cafevdb/page/' + action + '/' + parameter), post)
+    $.post(CAFEVDB.generateUrl('page/' + action + '/' + parameter), post)
     .fail(function(xhr, status, errorThrown) {
       const errorData = CAFEVDB.handleAjaxError(xhr, status, errorThrown);
       // If the error response contains history data, use it. Othewise
@@ -75,25 +75,28 @@ var CAFEVDB = CAFEVDB || {};
       CAFEVDB.modalizer(false),
       Page.busyIcon(false);
     })
-    .done(function(data) {
+    .done(function(htmlContent, textStatus, request) {
       //console.log(data);
-      if (!CAFEVDB.validateAjaxResponse(data, [ 'contents', 'history' ])) {
-        // re-enable inputs on error
-        if (false) {
-          container.find('input').prop('disabled', false);
-          container.find('select').prop('disabled', false);
-          container.find('select').trigger('chosen:updated');
-        }
-        CAFEVDB.modalizer(false),
-        Page.busyIcon(false);
-        return false;
-      }
+      const historySize = request.getResponseHeader('X-'+CAFEVDB.appName+'-history-size');
+      const historyPosition = request.getResponseHeader('X-'+CAFEVDB.appName+'-history-position');
+
+      // if (!CAFEVDB.validateAjaxResponse(data, [ 'contents', 'history' ])) {
+      //   // re-enable inputs on error
+      //   if (false) {
+      //     container.find('input').prop('disabled', false);
+      //     container.find('select').prop('disabled', false);
+      //     container.find('select').trigger('chosen:updated');
+      //   }
+      //   CAFEVDB.modalizer(false),
+      //   Page.busyIcon(false);
+      //   return false;
+      // }
 
       // Remove pending dialog when moving away from the page
       $('.ui-dialog-content').dialog('destroy').remove();
 
-      CAFEVDB.Page.historyPosition = data.history.position;
-      CAFEVDB.Page.historySize = data.history.size;
+      CAFEVDB.Page.historyPosition = historyPosition;
+      CAFEVDB.Page.historySize = historySize;
 
       // remove left-over notifications
       CAFEVDB.Notification.hide();
@@ -107,12 +110,13 @@ var CAFEVDB = CAFEVDB || {};
       // avoid overriding event handler, although this should
       // be somewhat slower than replacing everything in one run.
 
-      var newContent = $('<div>'+data.contents+'</div>');
-      var newAppContent = newContent.find('#cafevdb-general').children();
-      var newAppNavigation = newContent.find('#app-navigation').children();
+      const appGeneralId = CAFEVDB.appName+'-general';
+      const newContent = $('<div>'+htmlContent+'</div>');
+      const newAppContent = newContent.find('#'+appGeneralId).children();
+      const newAppNavigation = newContent.find('#app-navigation').children();
 
       $('#app-navigation').empty().prepend(newAppNavigation);
-      $('#cafevdb-general').empty().prepend(newAppContent);
+      $('#'+appGeneralId).empty().prepend(newAppContent);
 
       CAFEVDB.snapperClose();
       CAFEVDB.modalizer(false),
@@ -145,7 +149,7 @@ var CAFEVDB = CAFEVDB || {};
   Page.renderTag = 'template:';
   Page.templateRenderer = function(template) {
     return Page.renderTag + template;
-  }
+  };
 
   Page.templateFromRenderer = function(templateRenderer) {
     return templateRenderer.replace(Page.renderTag, '');
@@ -155,7 +159,7 @@ var CAFEVDB = CAFEVDB || {};
 
 })(window, jQuery, CAFEVDB);
 
-$(document).ready(function(){
+$(function(){
 
   var appInnerContent = $('#app-inner-content');
 
@@ -166,7 +170,7 @@ $(document).ready(function(){
 
   $('#app-navigation-toggle').on('click', function() {
     $('body').removeClass('dialog-titlebar-clicked');
-    $(this).cafevTooltip('hide')
+    $(this).cafevTooltip('hide');
   });
 
   appInnerContent.on('click keydown',
@@ -210,7 +214,7 @@ $(document).ready(function(){
   CAFEVDB.addReadyCallback(function() {
     //content.find('form.pme-form input.pme-reload').hide();
     $('#app-navigation-toggle').
-      attr('title', t('cafevdb', 'Display the application menu and settings side-bar')).
+      attr('title', t(CAFEVDB.appName, 'Display the application menu and settings side-bar')).
       cafevTooltip({
         placement: 'auto',
         container: '#app-content'

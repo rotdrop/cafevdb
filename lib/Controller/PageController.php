@@ -229,6 +229,9 @@ class PageController extends Controller {
       return $this->exceptionResponse($t, $renderAs, __METHOD__);
     }
 
+    $historySize = $this->historyService->size();
+    $historyPosition = $this->historyService->position();
+
     $templateParameters = [
       'template' => $template,
       'renderer' => $renderer,
@@ -260,8 +263,8 @@ class PageController extends Controller {
       'musicianId' => $musicianId,
       'locale' => $this->getLocale(),
       'timezone' => $this->getTimezone(),
-      'historySize' => $this->historyService->size(),
-      'historyPosition' => $this->historyService->position(),
+      'historySize' => $historySize,
+      'historyPosition' => $historyPosition,
       'requesttoken' => \OCP\Util::callRegister(), // @TODO: check
       'csrfToken' => \OCP\Util::callRegister(), // @TODO: check
       'filtervisibility' => $usrFiltVis,
@@ -273,17 +276,8 @@ class PageController extends Controller {
     // renderAs = admin, user, blank
     // $renderAs = 'user';
     $response = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
-    if ($renderAs == 'blank') {
-      try {
-        $response = new JSONResponse([
-          'contents' => $response->render(),
-          'history' => ['size' => $this->historyService->size(),
-                        'position' => $this->historyService->position()]
-        ]);
-      } catch (\Throwable $t) {
-        return $this->exceptionResponse($t, $renderAs, __METHOD__);
-      }
-    }
+    $response->addHeader('X-'.$this->appName.'-history-size', $historySize);
+    $response->addHeader('X-'.$this->appName.'-history-position', $historyPosition);
 
     // ok no exception, so flush the history to the session, when we
     // got so far.
