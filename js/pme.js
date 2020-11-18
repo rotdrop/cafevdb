@@ -887,7 +887,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     return true;
   };
 
-  /**Quasi-submit the pme-form.
+  /**
+   * Quasi-submit the pme-form.
    *
    * @param form The jQuery object corresponding to the pme-form.
    *
@@ -931,7 +932,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
     templateRenderer = templateRenderer.val();
     const template = CAFEVDB.Page.templateFromRenderer(templateRenderer);
 
-    // TODO: arguments
     var post = form.serialize();
     post += '&templateRenderer='+templateRenderer;
     if (element.attr('name') &&
@@ -1247,7 +1247,7 @@ console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true)
     if (typeof callback != 'function') {
       callback = function() {
         CAFEVDB.toolTipsInit(container);
-      }
+      };
     }
 
     var tabsSelector = pme.pmeClassSelector('li', 'navigation')+'.table-tabs';
@@ -1310,16 +1310,16 @@ console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true)
     console.info('PME.init(): container selector: ', containerSel);
     console.info('PME.init(): container found: ', container.length);
 
-    var tableSel = 'table.'+pme.pmeToken('main');
-    var formSel = 'form.'+pme.pmeToken('form');
-    var form = container.find(formSel);
-    var hiddenClass = pme.pmeToken('hidden');
-    var pmeFilter = pme.pmeToken('filter');
-    var pmeSearch = pme.pmeToken('search');
-    var pmeHide = pme.pmeToken('hide');
-    var pmeSort = pme.pmeToken('sort');
-    var pmeGoto = pme.pmeToken('goto');
-    var pmePageRows = pme.pmeToken('pagerows');
+    const tableSel = 'table.'+pme.pmeToken('main');
+    const formSel = 'form.'+pme.pmeToken('form');
+    const form = container.find(formSel);
+    const hiddenClass = pme.pmeToken('hidden');
+    const pmeFilter = pme.pmeToken('filter');
+    const pmeSearch = pme.pmeToken('search');
+    const pmeHide = pme.pmeToken('hide');
+    const pmeSort = pme.pmeToken('sort');
+    const pmeGoto = pme.pmeToken('goto');
+    const pmePageRows = pme.pmeToken('pagerows');
 
     //alert(containerSel+" "+container.length);
 
@@ -1386,18 +1386,20 @@ console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true)
     });
 
     var onChangeSel =
-      'input[type="checkbox"].'+pmeSort+','+
-      'select.'+pmeGoto+','+
-      'select.'+pmePageRows;
+          'input[type="checkbox"].'+pmeSort
+          + ','
+          + 'select.'+pmeGoto
+          + ','
+          + 'select.'+pmePageRows;
     if (!pme.selectChosen) {
       onChangeSel += ','+'select.'+pmeFilter;
     }
-    container.
-      off('change', onChangeSel).
-      on('change', onChangeSel, function(event) {
-      event.preventDefault();
-      return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel);
-    });
+    container
+      .off('change', onChangeSel)
+      .on('change', onChangeSel, function(event) {
+        event.preventDefault();
+        return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel);
+      });
 
     // view/change/copy/delete buttons lead to a a popup
     if (form.find('input[name="templateRenderer"]').length > 0) {
