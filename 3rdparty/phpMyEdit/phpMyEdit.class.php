@@ -2923,16 +2923,21 @@ class phpMyEdit
 		if (($but_str = $this->display_buttons($position)) === null)
 			return;
 		if($position == 'down') echo '<hr size="1" class="'.$this->getCSSclass('hr', 'down').'" />'."\n";
+		$num_nav_cols = 0;
 		echo '<table summary="navigation" class="',$this->getCSSclass('navigation', $position),'">',"\n";
 		echo '<tr class="',$this->getCSSclass('navigation', $position),'">',"\n";
 		echo '<td class="',$this->getCSSclass('buttons', $position),'">',"\n";
+		++$num_nav_cols;
 		echo $but_str,'</td>',"\n";
 		// Message is now written here
 		if (strlen(@$this->message) > 0) {
 			echo '<td class="',$this->getCSSclass('message', $position),'">',$this->message,'</td>',"\n";
+			++$num_nav_cols;
 		}
-		if($this->display['num_pages'] || $this->display['num_records'])
+		if($this->display['num_pages'] || $this->display['num_records']) {
 			echo '<td class="',$this->getCSSclass('stats', $position),'">',"\n";
+			++$num_nav_cols;
+		}
 		if($this->display['num_pages']) {
 			if ($this->listall()) {
 				echo $this->labels['Page'],':&nbsp;1&nbsp;',$this->labels['of'],'&nbsp;1';
@@ -2949,7 +2954,7 @@ class phpMyEdit
 		echo '</tr>',"\n";
 		if ($position == 'up' && $this->tabs_enabled()) {
 			echo '<tr class="'.$this->getCSSclass('navigation', $position).' table-tabs">'."\n";
-			echo '<td colspan="2" class="table-tabs">'."\n";
+			echo '<td colspan="'.$num_nav_cols.'" class="table-tabs">'."\n";
 			echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs container">'."\n";
 			echo '<ul class="'.$this->getCSSclass('navigation', $position).' table-tabs tab-menu">'."\n";
 			foreach($this->tabs as $idx => $name) {
