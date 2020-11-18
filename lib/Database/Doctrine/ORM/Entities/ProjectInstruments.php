@@ -64,8 +64,6 @@ class ProjectInstruments
      */
     private $sectionleader = '0';
 
-
-
     /**
      * Get id.
      *

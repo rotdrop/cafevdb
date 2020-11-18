@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 use chillerlan\QRCode\QRCode;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -29,6 +31,7 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 
@@ -43,6 +46,7 @@ class Musicians extends PMETableViewBase
 {
   const CSS_CLASS = 'musicians';
   const TABLE = 'Musicians';
+  const INSTRUMENTS_JOIN = 'MusicianInstrument';
   const PHOTO_JOIN = 'MusicianPhoto';
 
   /** @var GeoCodingService */
@@ -55,12 +59,13 @@ class Musicians extends PMETableViewBase
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
+    , ChangeLogService $changeLogService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , GeoCodingService $geoCodingService
     , ContactsService $contactsService
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->projectMode = false;
@@ -286,7 +291,7 @@ make sure that the musicians are also automatically added to the
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
-        'table'       => 'musician_instrument',
+        'table'       => self::INSTRUMENTS_JOIN,
         'column'      => 'instrument_id',
         'description' => ['columns' => 'instrument_id'],
         'join'        => '$join_table.musician_id = $main_table.Id',
@@ -295,7 +300,7 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['InstrumentKey'] = [
       'name'  => $this->l->t('Instrument Key'),
-      'sql'   => 'GROUP_CONCAT(DISTINCT PMEjoin'.$musInstIdx.'.instrument_id ORDER BY PMEjoin'.$musInstIdx.'.instrument_id ASC)',
+      'sql'   => 'GROUP_CONCAT(DISTINCT PMEjoin'.$musInstIdx.'.id ORDER BY PMEjoin'.$musInstIdx.'.instrument_id ASC)',
       'input' => 'SRH',
       'filter' => 'having', // need "HAVING" for group by stuff
     ];
@@ -548,12 +553,13 @@ make sure that the musicians are also automatically added to the
             try {
               $musician[$key] = $value;
             } catch (\Throwable $t) {
-              $this->logException($t);
+              // Don't care, we know virtual stuff is not there
+              // $this->logException($t);
             }
           }
           $vcard = $this->contactsService->export($musician);
           unset($vcard->PHOTO); // too much information
-          $this->logInfo(print_r($vcard->serialize(), true));
+          //$this->logDebug(print_r($vcard->serialize(), true));
           return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
         default:
           return '';
@@ -563,13 +569,15 @@ make sure that the musicians are also automatically added to the
       'sort' => false
     ];
 
-//     /////////////////////////
+    //////////////////////////
 
     $opts['fdd']['UUID'] = [
       'tab'      => ['id' => 'miscinfo'],
       'name'     => 'UUID',
       'options'  => 'AVCPDR', // auto increment
       'css'      => ['postfix' => ' musician-uuid'.' '.$addCSS],
+      'sql'      => 'BIN2UUID(`PMEtable0`.`UUID`)',
+      'sqlw'     => 'UUID2BIN($val_qas)',
       'select'   => 'T',
       'maxlen'   => 32,
       'sort'     => false,
@@ -596,17 +604,15 @@ make sure that the musicians are also automatically added to the
     }
 
     // @@TODO oops. This will have to get marrried with interleaved ORM stuff
-//     $opts['triggers']['update']['before'] = [);
-//     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-//     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::addOrChangeInstruments';
+    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'addOrChangeInstruments' ];
 //     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
 //     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
 
-//     $opts['triggers']['insert']['before'] = [);
-//     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-//     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::addUUIDTrigger';
+    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'addUUIDTrigger' ];
 //     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
-//     $opts['triggers']['insert']['after'][]  = 'CAFEVDB\Musicians::addOrChangeInstruments';
+    $opts['triggers']['insert']['after'][]  = [ $this, 'addOrChangeInstruments' ];
 
 //     $opts['triggers']['delete']['before'][]  = 'CAFEVDB\Musicians::beforeDeleteTrigger';
 
@@ -671,6 +677,91 @@ make sure that the musicians are also automatically added to the
     }
   }
 
+  /**
+   * Instruments are stored in a separate pivot-table, hence we have
+   * to take care of them from outside PME or use a view.
+   *
+   * @copydoc beforeTriggerSetTimestamp
+   *
+   * @todo Find out about transactions to be able to do a roll-back on
+   * error.
+   */
+  public function addOrChangeInstruments($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $this->logInfo("OLD: ".print_r($oldValues, true));
+    $this->logInfo("CHANGED: ".print_r($changed, true));
+    $this->logInfo("NEW: ".print_r($newValues, true));
+    $this->logInfo("REQ: ".$pme->rec);
+    $field = 'Instruments';
+    $keyField = 'InstrumentKey';
+    $key = array_search($field, $changed);
+    if ($key !== false) {
+      $table      = self::INSTRUMENTS_JOIN;
+      $musicianId = $pme->rec;
+      $oldIds     = Util::explode(',', $oldValues[$field]);
+      $newIds     = Util::explode(',', $newValues[$field]);
+      $oldKeys    = Util::explode(',', $oldValues[$keyField]);
+      $oldRecords = array_combine($oldIds, $oldKeys);
+
+      // we have to delete any removed instruments and to add any new instruments
+      $repository = $this->getDatabaseRepository(Entities\MusicianInstrument::class);
+      try {
+        foreach(array_diff($oldIds, $newIds) as $id) {
+          $this->remove([ 'id' => $oldRecords[$id] ]);
+          $this->changeLogService->logDelete($table, 'id', [
+            'id' => $oldRecords[$id],
+            'musician_id' => $musicianId,
+            'instrument_id' => $id
+          ]);
+        }
+        $this->flush();
+        $musician = $this->entityManager->getReference(Entities\Musician::class, [ 'id' => $musicianId ]);
+        foreach(array_diff($newIds, $oldIds) as $instrumentId) {
+          $instrument = $this->entityManager->getReference(Entities\Instrument::class, [ 'id' => $instrumentId ]);
+          $musicianInstrument = Entities\MusicianInstrument::create()
+                              ->setMusician($musician)
+                              ->setInstrument($instrument);
+          // @todo ranking by ordering in select
+          $this->persist($musicianInstrument);
+          $this->flush();
+          $rec = $musicianInstrument->getId();
+          if (!empty($rec)) {
+            $this->changeLogService->logInsert($table, $rec, [
+              'musician_id' => $musicianId,
+              'instrument_id' => $instrumentId,
+            ]);
+          }
+        }
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        // @todo Do we want to bailout here?
+        // return false;
+      }
+      $this->flush(); // sync with DB
+
+      /**
+       * @note Unset in particular the $changed records. Note that
+       * phpMyEdit will generate a new change-set after its operations
+       * have completed, so the change-log entries for the original
+       * table will also be present.
+       */
+      unset($changed[$key]);
+      unset($newValues[$field]);
+      unset($newValues[$keyField]);
+    }
+    return true;
+  }
+
+  public static function addUUIDTrigger($pme, $op, $step, $oldvalues, &$changed, &$newvals)
+  {
+    $uuid = Uuid::uuid4();
+
+    $key = 'UUID';
+    $changed[] = $key;
+    $newvals[$key] = $uuid;
+
+    return true;
+  }
 }
 
 // Local Variables: ***

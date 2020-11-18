@@ -27,8 +27,8 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-
 use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
@@ -50,10 +50,11 @@ class Projects extends PMETableViewBase
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
+    , ChangeLogService $changeLogService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
   }
 
   public function cssClass() { return self::CSS_CLASS; }
@@ -447,15 +448,16 @@ __EOT__;
     // data. However, at the moment the stuff does not work without JS
     // anyway, and we use Ajax calls to verify the form data.
 
-    // $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-    // $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
-    // $opts['triggers']['update']['before'][]  = 'CAFEVDB\Projects::addOrChangeInstrumentation';
-    // $opts['triggers']['update']['before'][]  = 'CAFEVDB\Projects::beforeUpdateTrigger';
+    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+
+    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeUpdateRemoveUnchanged' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'addOrChangeInstrumentation' ];
+    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeUpdateTrigger' ];
     // $opts['triggers']['update']['after'][]   = 'CAFEVDB\Projects::afterUpdateTrigger';
 
-    // $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-    // $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Projects::beforeInsertTrigger';
-    // $opts['triggers']['insert']['after'][]   = 'CAFEVDB\Projects::addOrChangeInstrumentation';
+    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeInsertTrigger' ];
+    $opts['triggers']['insert']['after'][]   = [ $this, 'addOrChangeInstrumentation' ];
     // $opts['triggers']['insert']['after'][]   = 'CAFEVDB\Projects::afterInsertTrigger';
 
     // $opts['triggers']['delete']['before'][] = 'CAFEVDB\Projects::deleteTrigger';
@@ -708,6 +710,172 @@ project without a flyer first.");
     // $tmpl->assign('app', Config::APP_NAME);
     // $html = $tmpl->fetchPage();
     // return $html;
+  }
+
+  /**
+   * Validate the name, no spaces, camel case, last four characters
+   * are either digits of the form 20XX.
+   *
+   * @param string $projectName The name to validate.
+   *
+   * @param boolean $requireYear Year in last four characters is
+   * mandatory.
+   */
+  private static function sanitizeName($projectName, $requireYear = false)
+  {
+    $projectYear = substr($projectName, -4);
+    if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
+      $projectYear = null;
+    } else {
+      $projectName = substr($projectName, 0, -4);
+    }
+    if ($requireYear && !$projectYear) {
+      return false;
+    }
+
+    if ($projectName ==  strtoupper($projectName)) {
+      $projectName = strtolower($projectName);
+    }
+    $projectName = ucwords($projectName);
+    $projectName = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $projectName);
+
+    if ($projectYear) {
+      $projectName .= $projectYear;
+    }
+    return $projectName;
+  }
+
+  /**
+   * phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    if (isset($newvals['Name']) && $newvals['Name']) {
+      $newvals['Name'] = self::sanitizeName($newvals['Name']);
+      if ($newvals['Name'] === false) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   *
+   * @bug Convert this to a function triggering a "user-friendly" error message.
+   */
+  public static function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    if (array_search('Name', $changed) === false) {
+      return true;
+    }
+    if (isset($newvals['Name']) && $newvals['Name']) {
+      $newvals['Name'] = self::sanitizeName($newvals['Name']);
+      if ($newvals['Name'] === false) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Instruments are stored in a separate pivot-table, hence we have
+   * to take care of them from outside PME or use a view.
+   *
+   * @copydoc beforeTriggerSetTimestamp
+   *
+   * @todo Find out about transactions to be able to do a roll-back on
+   * error.
+   */
+  public function addOrChangeInstrumentation($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $field = 'Instrumentation';
+    $keyField = 'InstrumentationKey';
+    $key = array_search($field, $changed);
+    if ($key !== false) {
+      //error_log('key: '.$key.' value: '.$changed[$key]);
+      $table      = self::INSTRUMENTATION;
+      $projectId  = $pme->rec;
+      $oldIds     = Util::explode(',', $oldValues[$field]);
+      $newIds     = Util::explode(',', $newValues[$field]);
+      $oldKeys    = Util::explode(',', $oldValues[$keyField]);
+      $oldRecords = array_combine($oldIds, $oldKeys);
+
+      // we have to delete any removed instruments and to add any new instruments
+
+      $repository = $this->getDatabaseRepository(Entities\ProjectInstrumentation::class);
+      try {
+        foreach(array_diff($oldIds, $newIds) as $id) {
+          $this->remove([ 'Id' => $oldRecords[$id] ]);
+          $this->changeLogService->logDelete($table, 'Id', [
+            'Id' => $oldRecords[$id],
+            'ProjectId' => $musicianId,
+            'InstrumentId' => $id,
+          ]);
+        }
+        $this->flush();
+        // need references instead of id in order to "satisfy" associations
+        $project = $this->entityManager->getReference(Entities\Project::class, [ 'Id' => $projectId ]);
+        foreach(array_diff($newIds, $oldIds) as $instrumentId) {
+          $instrument = $this->entityManager->getReference(Entities\Instrument::class, [ 'id' => $instrumentId ]);
+          $projectInstrument = Entities\ProjectInstrumentation::create()
+                             ->setProject($project)
+                             ->setInstrument($instrument);
+          $this->persist($projectInstrument);
+          $this->flush($projectInstrument);
+          $rec = $projectInstrument->getId();
+          if (!empty($rec)) {
+            $this->changeLogService->logInsert($table, $rec, [
+              'ProjectId' => $projectId,
+              'InstrumentId' => $id
+            ]);
+          }
+        }
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        // @todo Do we want to bailout here?
+        // return false;
+      }
+      /**
+       * @note Unset in particular the $changed records. Note that
+       * phpMyEdit will generate a new change-set after its operations
+       * have completed, so the change-log entries for the original
+       * table will also be present.
+       */
+      unset($changed[$key]);
+      unset($newValues[$field]);
+      unset($newValues[$keyField]);
+    }
+
+    return true;
   }
 
 }

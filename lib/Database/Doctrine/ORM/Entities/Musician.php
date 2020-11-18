@@ -154,12 +154,7 @@ class Musician implements \ArrayAccess
   private $aktualisiert;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Instrument", inversedBy="musicians", orphanRemoval=true)
-   * @ORM\JoinTable(
-   *   name="musician_instrument",
-   *   joinColumns={@ORM\JoinColumn(name="musician_id", referencedColumnName="Id", onDelete="CASCADE")},
-   *   inverseJoinColumns={@ORM\JoinColumn(name="instrument_id", referencedColumnName="Id", onDelete="CASCADE")}
-   * )
+   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", orphanRemoval=true)
    */
   private $instruments;
 

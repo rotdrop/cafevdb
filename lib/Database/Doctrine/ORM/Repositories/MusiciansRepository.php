@@ -53,8 +53,6 @@ class MusiciansRepository extends EntityRepository
     return $this->findOneBy([ 'uuid' => $uuid ]);
   }
 
-
-
   /**Fetch the street address of the respected musician. Needed in
    * order to generate automated snail-mails.
    *

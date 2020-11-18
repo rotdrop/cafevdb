@@ -71,16 +71,6 @@ class Instrument implements \ArrayAccess
     private $disabled = false;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Musician", mappedBy="instruments", fetch="EXTRA_LAZY")
-     */
-    private $musicians;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Project", mappedBy="instrumentation", fetch="EXTRA_LAZY")
-     */
-    private $projects;
-
-    /**
      * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(
      *   name="instrument_family",
@@ -94,7 +84,6 @@ class Instrument implements \ArrayAccess
         \OCP\Util::writeLog('cafevdb', __METHOD__, ILogger::INFO);
         $this->arrayCTOR();
         $this->musicians = new ArrayCollection();
-        $this->projects = new ArrayCollection();
         $this->families = new ArrayCollection();
     }
 

@@ -111,12 +111,7 @@ class Project
   private $aktualisiert;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Instrument", inversedBy="projects", orphanRemoval=true, fetch="EXTRA_LAZY")
-   * @ORM\JoinTable(
-   *   name="project_instrument",
-   *   joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="Id", onDelete="CASCADE")},
-   *   inverseJoinColumns={@ORM\JoinColumn(name="instrument_id", referencedColumnName="Id", onDelete="CASCADE")}
-   * )
+   * @ORM\OneToMany(targetEntity="ProjectInstrumentation", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $instrumentation;
 
