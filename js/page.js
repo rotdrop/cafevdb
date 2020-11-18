@@ -135,7 +135,7 @@ var CAFEVDB = CAFEVDB || {};
     var redo = $('#personalsettings .navigation.redo');
     var undo = $('#personalsettings .navigation.undo');
 
-    console.info(undo);
+    // console.info(undo);
 
     //alert('history: '+CAFEVDB.Page.historyPosition+' size '+CAFEVDB.Page.historySize);
     redo.prop('disabled', CAFEVDB.Page.historyPosition == 0);
