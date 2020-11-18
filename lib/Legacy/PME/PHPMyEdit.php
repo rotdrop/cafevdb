@@ -50,6 +50,8 @@ class PHPMyEdit extends \phpMyEdit
 
   private $debug;
 
+  private $disabledLogTable;
+
   /**
    * Override constructor, delay most of the actual work to the
    * execute() method.
@@ -109,12 +111,44 @@ class PHPMyEdit extends \phpMyEdit
 
     // Needs lang path
     $this->labels = $this->make_language_labels($options['language']?:null);
-    $this->debug = isset($options['debug']) && $options['debug'];
+    if (isset($options['debug'])) {
+      $this->debug = $options['debug'];
+    }
   }
 
   public function getOptions()
   {
     return $this->defaultOptions;
+  }
+
+  /**
+   * Enable or disable writing to the change-log table.
+   *
+   * @param bool $enable Flag value.
+   */
+  public function setLogging(bool $enable)
+  {
+    if ($enable) {
+      if (empty($this->logtable)) {
+        $this->logtable = $this->disabledLogTable;
+      }
+    } else if (!empty($this->logtable)) {
+      $this->disabledLogTable = $logTable;
+      $this->logtable = null;
+    }
+  }
+
+  /**
+   * Enable or disabled debugging.
+   *
+   * @param bool $enable Flag value.
+   */
+  public function setDebug(bool $enable)
+  {
+    $this->debug = $enable;
+    if (isset($this->defaultOptions['debug'])) {
+      $this->defaultOptions['debug'] = $enable;
+    }
   }
 
   /**
@@ -129,7 +163,9 @@ class PHPMyEdit extends \phpMyEdit
   public function execute($opts = [])
   {
     $opts = Util::arrayMergeRecursive($this->defaultOptions, $opts, $this->overrideOptions);
-    $this->debug = isset($opts['debug']) && $opts['debug'];
+    if (isset($opts['debug'])) {
+      $this->debug = $opts['debug'];
+    }
     parent::__construct($opts); // oh oh
     parent::execute();
   }
