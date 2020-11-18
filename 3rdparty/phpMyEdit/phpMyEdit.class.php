@@ -5109,7 +5109,7 @@ class phpMyEdit
 
 		$this->sql_disconnect();
 		if ($this->display['time'] && $this->timer != null) {
-			echo $this->timer->end(),' miliseconds';
+			echo '<span>'.$this->timer->end().' miliseconds'.'</span>';
 		}
 	} /* }}} */
 
