@@ -221,6 +221,13 @@ g
     background-image:none !important;
     padding-left: 0px !important;
   }
+
+  body.snapjs-left .cafevdb-page-header-box {
+    display:none;
+    width:0;
+    height:0;
+  }
+
 }
 
 /*

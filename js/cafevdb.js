@@ -1547,7 +1547,6 @@ var CAFEVDB = CAFEVDB || {};
     container.find('select').cafevTooltip({placement:'right'});
     container.find('option').cafevTooltip({placement:'right'});
     container.find('div.chosen-container').cafevTooltip({placement:'top'});
-    container.find('form.cafevdb-control input').cafevTooltip({placement:'bottom'});
     container.find('button.settings').cafevTooltip({placement:'bottom'});
     container.find('.pme-sort').cafevTooltip({placement:'bottom'});
     container.find('.pme-misc-check').cafevTooltip({placement:'bottom'});
