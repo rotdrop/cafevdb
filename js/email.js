@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -339,7 +339,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     var Email = this;
 
     {
-      CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), undefined, '20em');
+      CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
 
       $('#cafevdb-stored-messages-selector').chosen({ disable_search_threshold: 10 });
 
@@ -463,7 +463,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  case 'everything':
                    // replace the entire tab.
                    $.fn.cafevTooltip.remove();
-                   CAFEVDB.removeEditor(panelHolder.find('textarea.wysiwygeditor'));
+                   CAFEVDB.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
                    panelHolder.html(requestData.elementData);
                    fieldset = panelHolder.find('fieldset.email-composition.page');
                    Email.emailFormCompositionHandlers(fieldset,
@@ -560,7 +560,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                case 'loadDraft': {
                  $.fn.cafevTooltip.remove();
                  { // replace the entire composer tab
-                   CAFEVDB.removeEditor(panelHolder.find('textarea.wysiwygeditor'));
+                   CAFEVDB.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
                    panelHolder.html(requestData.composerForm);
                    fieldset = panelHolder.find('fieldset.email-composition.page');
                    Email.emailFormCompositionHandlers(fieldset,
@@ -1490,7 +1490,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                },
                close: function() {
                  $.fn.cafevTooltip.remove();
-                 CAFEVDB.removeEditor(dialogHolder.find('textarea.wysiwygeditor'));
+                 CAFEVDB.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
                  dialogHolder.dialog('close');
                  dialogHolder.dialog('destroy').remove();
 

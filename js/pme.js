@@ -302,7 +302,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     const containerSel = '#'+options.DialogHolderCSSId;
 
     // remove the WYSIWYG editor, if any is attached
-    CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
+    CAFEVDB.removeEditor(container.find('textarea.wysiwyg-editor'));
 
     container.css('height', 'auto');
     $.fn.cafevTooltip.remove();
@@ -522,6 +522,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
           // so this is pme-more, morechange
           options.modified = true;
         }
+        console.info(options);
         pme.tableDialogReload(options, callback);
 
         return false;
@@ -686,7 +687,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       console.info('parent selector', containerSel, 'dialog selector', dialogCSSId);
     }
 
-    var tableOptions = {
+    const tableOptions = {
       ambientContainerSelector: pme.selector(containerSel),
       DialogHolderCSSId: dialogCSSId,
       templateRenderer: templateRenderer,
@@ -820,7 +821,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
               dialogHolder.css('height', 'auto');
               switch (parameters.reason) {
               case 'dialogOpen':
-                CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
+                CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), function() {
                   console.info('pme.addEditor');
                   pme.transposeReady(containerSel);
                   pme.tableLoadCallback(template, containerSel, parameters, function() {
@@ -957,11 +958,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
         }
         $.fn.cafevTooltip.remove();
 
-        CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
+        CAFEVDB.removeEditor(container.find('textarea.wysiwyg-editor'));
         pme.inner(container).html(htmlContent);
         pme.init(selector);
         console.info("Attaching editors");
-        CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
+        CAFEVDB.addEditor(container.find('textarea.wysiwyg-editor'), function() {
           pme.transposeReady(selector);
           //alert('psegudo submit');
           pme.tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});

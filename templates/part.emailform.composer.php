@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -174,7 +174,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
     </tr>
     <tr>
       <td class="body caption"><?php echo $l->t('Message-Body'); ?></td>
-      <td colspan="2" class="messagetext"><textarea name="emailComposer[MessageText]" class="wysiwygeditor" cols="60" rows="20" id="message-text"><?php echo $_['message']; ?></textarea></td>
+      <td colspan="2" class="messagetext"><textarea name="emailComposer[MessageText]" class="wysiwyg-editor" cols="60" rows="20" id="message-text"><?php echo $_['message']; ?></textarea></td>
     </tr>
     <tr>
       <td class="caption"><?php echo $l->t('Sender-Name'); ?></td>

@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB;
 <div id="blogedit">
   <div id="blogeditscrollframe">
     <form id="blogeditform">
-      <textarea class="wysiwygeditor" id="blogtextarea" rows="15" cols="66"></textarea>
+      <textarea class="wysiwyg-editor" id="blogtextarea" rows="15" cols="66"></textarea>
       <br/>
       <input
       type="button"

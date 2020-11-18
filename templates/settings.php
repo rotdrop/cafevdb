@@ -157,10 +157,10 @@ $toolTipClass = "tooltip-right";
           <?php echo $l->t('Display #Rows/Page in Tables'); ?>
         </label>
       </div>
-      <div class="wysiwygeditor settings-control">
+      <div class="wysiwyg-editor settings-control">
         <select name="wysiwygEditor"
                 data-placeholder="<?php echo $l->t('WYSIWYG Editor'); ?>"
-                class="wysiwyg wysiwyg-editor <?php p($toolTipClass); ?>"
+                class="wysiwyg-editor <?php p($toolTipClass); ?>"
                 title="<?php echo $toolTips['wysiwyg-editor']; ?>">
           <?php
           foreach ($wysiwygOptions as $key => $value) {

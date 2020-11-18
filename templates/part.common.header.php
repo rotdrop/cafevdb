@@ -56,6 +56,7 @@ style($appName, 'dialogs');
 style($appName, 'inlineimage');
 style($appName, 'navsnapper');
 style($appName, 'pme-table');
+style($appName, 'mobile');
 
 script($appName, 'cafevdb');
 script($appName, 'events-test'); /**< @TODO remove */

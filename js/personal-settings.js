@@ -40,7 +40,6 @@ $(function() {
 
     container.find('select.wysiwyg-editor').each(function(index) {
       const self = $(this);
-      //console.log("chosen wysiwyg", self);
       if (CAFEVDB.chosenActive(self)) {
         self.chosen('destroy');
       }
@@ -245,20 +244,21 @@ $(function() {
     return false;
   });
 
-  container.on('change', '.wysiwyg', function(event) {
+  container.on('change', '.wysiwyg-editor', function(event) {
     const self = $(this);
     const value = self.val();
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/wysiwygEditor'),
            { 'value': value })
     .done(function(data) {
       msgElement.html(data.message).show();
+      CAFEVDB.wysiwygEditor = value;
       console.log(data);
     })
     .fail(function(xhr, status, errorThrown) {
       msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
-    $('.personal-settings select.wysiwygEditor').val(value);
+    $('.personal-settings select.wysiwyg-editor').val(value);
     return false;
   });
 

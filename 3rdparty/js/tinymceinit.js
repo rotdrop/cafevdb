@@ -138,8 +138,8 @@ var myTinyMCE = myTinyMCE || {};
     const nonceConfig = {
       nonce: btoa(OC.requestToken)
     };
-    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    if (width <= 768) { // perhaps mobile
+    const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    if (false && width <= 768) { // perhaps mobile
       return $.extend({}, myTinyMCE.config, myTinyMCE.smallConfig, plusConfig, { width: width });
     } else {
       return $.extend(nonceConfig, myTinyMCE.config, plusConfig);

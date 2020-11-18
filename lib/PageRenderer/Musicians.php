@@ -480,7 +480,7 @@ make sure that the musicians are also automatically added to the
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => ['postfix' => ' remarks tooltip-top'],
-      'textarea' => ['css' => 'wysiwygeditor',
+      'textarea' => ['css' => 'wysiwyg-editor',
                      'rows' => 5,
                      'cols' => 50],
       'display|LF' => ['popup' => 'data'],
