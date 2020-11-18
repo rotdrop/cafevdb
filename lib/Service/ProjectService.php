@@ -23,14 +23,18 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Projekte;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Projects;
 
+/**
+ * @todo sync with database repository
+ * OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository
+ */
 class ProjectService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const DBTABLE = 'Projekte';
+  const DBTABLE = 'Projects';
 
   /** @var EntityManager */
   protected $entityManager;
@@ -41,7 +45,7 @@ class ProjectService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
-    $this->setDatabaseRepository(Projekte::class);
+    $this->setDatabaseRepository(Projects::class);
   }
 
   /**Generate an option table with all participants, suitable to be
