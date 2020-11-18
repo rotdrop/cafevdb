@@ -290,7 +290,7 @@ class phpMyEdit
 
 	function default_sort() { return !isset($this->sfn) || count($this->sfn) == 0; }
 
-	function listall()		  { return $this->inc < 0 || $this->inc > $this->total_recs; }
+	function listall()		  { return $this->inc < 0 || $this->inc >= $this->total_recs; }
 	function add_enabled()	  { return stristr($this->options, 'A'); }
 	function change_enabled() { return stristr($this->options, 'C'); }
 	function delete_enabled() { return stristr($this->options, 'D'); }
@@ -3162,11 +3162,13 @@ class phpMyEdit
 					$selected = (string)$i;
 				}
 			}
-			if (!isset($selected) && $this->inc >= 0 && $nummax < $this->total_recs) {
-				$kv_array[$this->inc] = $this->inc;
-				$selected = (string)$this->inc;
-			} else /* if ($this->inc < 0) */ {
-				$selected = '-1';
+			if (!isset($selected)) {
+				if ($this->inc > 0 /* && $nummax < $this->total_recs */) {
+					$kv_array[$this->inc] = $this->inc;
+					$selected = (string)$this->inc;
+				} else /* if ($this->inc < 0) */ {
+					$selected = '-1';
+				}
 			}
 			$disabled = $this->total_recs <= 1;
 			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
@@ -5466,6 +5468,7 @@ class phpMyEdit
 			$this->inc = $prevnp;
 			if($navnpdown != NULL && $navnpdown != $this->inc) $this->inc = $navnpdown;
 			elseif($navnpup != NULL && $navnpup != $this->inc) $this->inc = $navnpup;
+			$this->logInfo("Inc init: ".$this->inc." up ".$navnpup." down ".$navnpdown);
 		}
 		if ($prevnp != NULL && $prevnp != $this->inc && $this->inc > 0 && $prevnp > 0) {
 			// Set current form such that it is at least close to the old position.
