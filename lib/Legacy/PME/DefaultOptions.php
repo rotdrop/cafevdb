@@ -27,7 +27,7 @@ class DefaultOptions extends \ArrayObject implements IOptions
   public function __construct(array $options = [])
   {
     $default = [
-      'logtable' => 'changelog',
+      'logtable' => 'ChangeLog',
       // Set default prefixes for variables for PME
       'js' => [ 'prefix' => 'PME_js_' ],
       'dhtml' => [ 'prefix' => 'PME_dhtml_' ],
