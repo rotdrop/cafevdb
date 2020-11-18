@@ -107,7 +107,7 @@ trait EntityManagerTrait {
    * A removed entity will be removed from the database at or before transaction commit
    * or as a result of the flush operation.
    *
-   * @param object $entity The entity instance to remove.
+   * @param mixed $entity The entity instance to remove.
    *
    * @return void
    *
@@ -116,10 +116,12 @@ trait EntityManagerTrait {
    */
   protected function remove($entity)
   {
-    if (is_array($entity)) {
-      $entity = $this->entityManager->getReference($this->entityClassName, $entity);
-    }
     $this->logInfo("Call EM remove");
+    if (is_array($entity)) {
+      $key = $entity;
+      $entity = $this->entityManager->getReference($this->entityClassName, $key);
+      $this->logInfo("Create reference from ".print_r($key, true)." id ".$entity->getId());
+    }
     return $this->entityManager->remove($entity);
   }
 
