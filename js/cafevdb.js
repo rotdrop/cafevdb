@@ -19,20 +19,21 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-console.log("CAFEVDB: here I am");
-
 var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
-  CAFEVDB.name             = 'cafevdb';
   CAFEVDB.toolTipsEnabled  = true;
   CAFEVDB.wysiwygEditor    = 'tinymce';
   CAFEVDB.language         = 'en';
   CAFEVDB.readyCallbacks   = []; ///< quasi-document-ready-callbacks
   CAFEVDB.creditsTimer     = -1;
-  CAFEVDB.adminEmail       = t('cafevdb', 'unknown');
-  CAFEVDB.adminName        = t('cafevdb', 'unknown');
-  CAFEVDB.phpUserAgent     = t('cafevdb', 'unknown');
+  CAFEVDB.adminEmail       = t(CAFEVDB.appName, 'unknown');
+  CAFEVDB.adminName        = t(CAFEVDB.appName, 'unknown');
+  CAFEVDB.phpUserAgent     = t(CAFEVDB.appName, 'unknown');
+
+  CAFEVDB.generateUrl = function(postFix) {
+    return OC.generateUrl('/apps/' + CAFEVDB.appName + '/' + postFix);
+  }
 
   // overrides from PHP, see config.js
   $.extend(CAFEVDB, CAFEVDB.initialState);
@@ -612,16 +613,16 @@ var CAFEVDB = CAFEVDB || {};
     var CAFEVDB = this;
 
     var options = {
-      title: t('cafevdb', 'Choose some Options'),
+      title: t(CAFEVDB.appName, 'Choose some Options'),
       position: { my: "center center",
                   at: "center center",
                   of: window },
       dialogClass: false,
-      saveText: t('cafevdb', 'Save'),
-      saveTitle: t('cafevdb',
+      saveText: t(CAFEVDB.appName, 'Save'),
+      saveTitle: t(CAFEVDB.appName,
                    'Accept the currently selected options and return to the underlying form. '),
-      cancelText: t('cafevdb', 'Cancel'),
-      cancelTitle: t('cafevdb',
+      cancelText: t(CAFEVDB.appName, 'Cancel'),
+      cancelTitle: t(CAFEVDB.appName,
                      'Discard the current selection and close the dialog. '+
                      'The initial set of selected options will remain unchanged.'),
       buttons: [], // additional buttons.
@@ -772,7 +773,7 @@ var CAFEVDB = CAFEVDB || {};
       popup.hide().html('');
     } else {
       const arrowclass = popup.hasClass('topright') ? 'up' : 'left';
-      $.get(OC.generateUrl('/apps/cafevdb/' + route))
+      $.get(CAFEVDB.generateUrl(route))
 	.done(function(data) {
 	  popup.html(data).ready(function() {
 	    // assume the first element is a container div
@@ -858,13 +859,13 @@ var CAFEVDB = CAFEVDB || {};
     }
 
     if (exportscript == '') {
-      CAFEVDB.dialogs.alert(t('cafevdb', 'Export to the following format is not yet supported:')
+      CAFEVDB.dialogs.alert(t(CAFEVDB.appName, 'Export to the following format is not yet supported:')
 			    +' "'+selected+'"',
-			    t('cafevdb', 'Unimplemented'));
+			    t(CAFEVDB.appName, 'Unimplemented'));
     } else {
 
       // this will be the alternate form-action
-      exportscript = OC.filePath('cafevdb', 'ajax/export', exportscript);
+      exportscript = OC.filePath(CAFEVDB.appName, 'ajax/export', exportscript);
 
       // Our export-scripts have the task to convert the display
       // PME-table into another format, so submitting the current
@@ -992,7 +993,7 @@ var CAFEVDB = CAFEVDB || {};
    */
   CAFEVDB.dialogToBackButton = function(dialogHolder) {
     var dialogWidget = dialogHolder.dialog('widget');
-    var toBackButtonTitle = t('cafevdb',
+    var toBackButtonTitle = t(CAFEVDB.appName,
                               'If multiple dialogs are open, '+
                               'then move this one to the lowest layer '+
                               'and display it below the others. '+
@@ -1042,7 +1043,7 @@ var CAFEVDB = CAFEVDB || {};
    */
   CAFEVDB.dialogCustomCloseButton = function(dialogHolder, callback) {
     var dialogWidget = dialogHolder.dialog('widget');
-    var customCloseButtonTitle = t('cafevdb',
+    var customCloseButtonTitle = t(CAFEVDB.appName,
                                    'Close the current dialog and return to the view '+
                                    'which was active before this dialog had been opened. '+
                                    'If the current view shows a `Back\' button, then intentionally '+
@@ -1130,78 +1131,78 @@ var CAFEVDB = CAFEVDB || {};
         callback = undefined;
       }
       CAFEVDB.dialogs.info('<div class="debug error contents">'+data.debug+'</div>',
-			   t('cafevdb', 'Debug Information'),
+			   t(CAFEVDB.appName, 'Debug Information'),
 			   callback, true, true);
     }
   };
 
   CAFEVDB.httpStatus = {
-    '200': t('cafevdb', 'OK'),
-    '201': t('cafevdb', 'Created'),
-    '202': t('cafevdb', 'Accepted'),
-    '203': t('cafevdb', 'Non-Authoritative Information'),
-    '204': t('cafevdb', 'No Content'),
-    '205': t('cafevdb', 'Reset Content'),
-    '206': t('cafevdb', 'Partial Content'),
-    '207': t('cafevdb', 'Multi-Status (WebDAV)'),
-    '208': t('cafevdb', 'Already Reported (WebDAV)'),
-    '226': t('cafevdb', 'IM Used'),
-    '300': t('cafevdb', 'Multiple Choices'),
-    '301': t('cafevdb', 'Moved Permanently'),
-    '302': t('cafevdb', 'Found'),
-    '303': t('cafevdb', 'See Other'),
-    '304': t('cafevdb', 'Not Modified'),
-    '305': t('cafevdb', 'Use Proxy'),
-    '306': t('cafevdb', '(Unused)'),
-    '307': t('cafevdb', 'Temporary Redirect'),
-    '308': t('cafevdb', 'Permanent Redirect (experimental)'),
-    '400': t('cafevdb', 'Bad Request'),
-    '401': t('cafevdb', 'Unauthorized'),
-    '402': t('cafevdb', 'Payment Required'),
-    '403': t('cafevdb', 'Forbidden'),
-    '404': t('cafevdb', 'Not Found'),
-    '405': t('cafevdb', 'Method Not Allowed'),
-    '406': t('cafevdb', 'Not Acceptable'),
-    '407': t('cafevdb', 'Proxy Authentication Required'),
-    '408': t('cafevdb', 'Request Timeout'),
-    '409': t('cafevdb', 'Conflict'),
-    '410': t('cafevdb', 'Gone'),
-    '411': t('cafevdb', 'Length Required'),
-    '412': t('cafevdb', 'Precondition Failed'),
-    '413': t('cafevdb', 'Request Entity Too Large'),
-    '414': t('cafevdb', 'Request-URI Too Long'),
-    '415': t('cafevdb', 'Unsupported Media Type'),
-    '416': t('cafevdb', 'Requested Range Not Satisfiable'),
-    '417': t('cafevdb', 'Expectation Failed'),
-    '418': t('cafevdb', 'I\'m a teapot (RFC 2324)'),
-    '420': t('cafevdb', 'Enhance Your Calm (Twitter)'),
-    '422': t('cafevdb', 'Unprocessable Entity (WebDAV)'),
-    '423': t('cafevdb', 'Locked (WebDAV)'),
-    '424': t('cafevdb', 'Failed Dependency (WebDAV)'),
-    '425': t('cafevdb', 'Reserved for WebDAV'),
-    '426': t('cafevdb', 'Upgrade Required'),
-    '428': t('cafevdb', 'Precondition Required'),
-    '429': t('cafevdb', 'Too Many Requests'),
-    '431': t('cafevdb', 'Request Header Fields Too Large'),
-    '444': t('cafevdb', 'No Response (Nginx)'),
-    '449': t('cafevdb', 'Retry With (Microsoft)'),
-    '450': t('cafevdb', 'Blocked by Windows Parental Controls (Microsoft)'),
-    '451': t('cafevdb', 'Unavailable For Legal Reasons'),
-    '499': t('cafevdb', 'Client Closed Request (Nginx)'),
-    '500': t('cafevdb', 'Internal Server Error'),
-    '501': t('cafevdb', 'Not Implemented'),
-    '502': t('cafevdb', 'Bad Gateway'),
-    '503': t('cafevdb', 'Service Unavailable'),
-    '504': t('cafevdb', 'Gateway Timeout'),
-    '505': t('cafevdb', 'HTTP Version Not Supported'),
-    '506': t('cafevdb', 'Variant Also Negotiates (Experimental)'),
-    '507': t('cafevdb', 'Insufficient Storage (WebDAV)'),
-    '508': t('cafevdb', 'Loop Detected (WebDAV)'),
-    '509': t('cafevdb', 'Bandwidth Limit Exceeded (Apache)'),
-    '510': t('cafevdb', 'Not Extended'),
-    '511': t('cafevdb', 'Network Authentication Required'),
-    '598': t('cafevdb', 'Network read timeout error'),
-    '599': t('cafevdb', 'Network connect timeout error'),
+    '200': t(CAFEVDB.appName, 'OK'),
+    '201': t(CAFEVDB.appName, 'Created'),
+    '202': t(CAFEVDB.appName, 'Accepted'),
+    '203': t(CAFEVDB.appName, 'Non-Authoritative Information'),
+    '204': t(CAFEVDB.appName, 'No Content'),
+    '205': t(CAFEVDB.appName, 'Reset Content'),
+    '206': t(CAFEVDB.appName, 'Partial Content'),
+    '207': t(CAFEVDB.appName, 'Multi-Status (WebDAV)'),
+    '208': t(CAFEVDB.appName, 'Already Reported (WebDAV)'),
+    '226': t(CAFEVDB.appName, 'IM Used'),
+    '300': t(CAFEVDB.appName, 'Multiple Choices'),
+    '301': t(CAFEVDB.appName, 'Moved Permanently'),
+    '302': t(CAFEVDB.appName, 'Found'),
+    '303': t(CAFEVDB.appName, 'See Other'),
+    '304': t(CAFEVDB.appName, 'Not Modified'),
+    '305': t(CAFEVDB.appName, 'Use Proxy'),
+    '306': t(CAFEVDB.appName, '(Unused)'),
+    '307': t(CAFEVDB.appName, 'Temporary Redirect'),
+    '308': t(CAFEVDB.appName, 'Permanent Redirect (experimental)'),
+    '400': t(CAFEVDB.appName, 'Bad Request'),
+    '401': t(CAFEVDB.appName, 'Unauthorized'),
+    '402': t(CAFEVDB.appName, 'Payment Required'),
+    '403': t(CAFEVDB.appName, 'Forbidden'),
+    '404': t(CAFEVDB.appName, 'Not Found'),
+    '405': t(CAFEVDB.appName, 'Method Not Allowed'),
+    '406': t(CAFEVDB.appName, 'Not Acceptable'),
+    '407': t(CAFEVDB.appName, 'Proxy Authentication Required'),
+    '408': t(CAFEVDB.appName, 'Request Timeout'),
+    '409': t(CAFEVDB.appName, 'Conflict'),
+    '410': t(CAFEVDB.appName, 'Gone'),
+    '411': t(CAFEVDB.appName, 'Length Required'),
+    '412': t(CAFEVDB.appName, 'Precondition Failed'),
+    '413': t(CAFEVDB.appName, 'Request Entity Too Large'),
+    '414': t(CAFEVDB.appName, 'Request-URI Too Long'),
+    '415': t(CAFEVDB.appName, 'Unsupported Media Type'),
+    '416': t(CAFEVDB.appName, 'Requested Range Not Satisfiable'),
+    '417': t(CAFEVDB.appName, 'Expectation Failed'),
+    '418': t(CAFEVDB.appName, 'I\'m a teapot (RFC 2324)'),
+    '420': t(CAFEVDB.appName, 'Enhance Your Calm (Twitter)'),
+    '422': t(CAFEVDB.appName, 'Unprocessable Entity (WebDAV)'),
+    '423': t(CAFEVDB.appName, 'Locked (WebDAV)'),
+    '424': t(CAFEVDB.appName, 'Failed Dependency (WebDAV)'),
+    '425': t(CAFEVDB.appName, 'Reserved for WebDAV'),
+    '426': t(CAFEVDB.appName, 'Upgrade Required'),
+    '428': t(CAFEVDB.appName, 'Precondition Required'),
+    '429': t(CAFEVDB.appName, 'Too Many Requests'),
+    '431': t(CAFEVDB.appName, 'Request Header Fields Too Large'),
+    '444': t(CAFEVDB.appName, 'No Response (Nginx)'),
+    '449': t(CAFEVDB.appName, 'Retry With (Microsoft)'),
+    '450': t(CAFEVDB.appName, 'Blocked by Windows Parental Controls (Microsoft)'),
+    '451': t(CAFEVDB.appName, 'Unavailable For Legal Reasons'),
+    '499': t(CAFEVDB.appName, 'Client Closed Request (Nginx)'),
+    '500': t(CAFEVDB.appName, 'Internal Server Error'),
+    '501': t(CAFEVDB.appName, 'Not Implemented'),
+    '502': t(CAFEVDB.appName, 'Bad Gateway'),
+    '503': t(CAFEVDB.appName, 'Service Unavailable'),
+    '504': t(CAFEVDB.appName, 'Gateway Timeout'),
+    '505': t(CAFEVDB.appName, 'HTTP Version Not Supported'),
+    '506': t(CAFEVDB.appName, 'Variant Also Negotiates (Experimental)'),
+    '507': t(CAFEVDB.appName, 'Insufficient Storage (WebDAV)'),
+    '508': t(CAFEVDB.appName, 'Loop Detected (WebDAV)'),
+    '509': t(CAFEVDB.appName, 'Bandwidth Limit Exceeded (Apache)'),
+    '510': t(CAFEVDB.appName, 'Not Extended'),
+    '511': t(CAFEVDB.appName, 'Network Authentication Required'),
+    '598': t(CAFEVDB.appName, 'Network read timeout error'),
+    '599': t(CAFEVDB.appName, 'Network connect timeout error'),
 
     // Seemingly Nextcloud always ever only returns one of these:
     'OK': 200,
@@ -1236,7 +1237,7 @@ var CAFEVDB = CAFEVDB || {};
     default:
     }
 
-    const caption = t('cafevdb', 'Error');
+    const caption = t(CAFEVDB.appName, 'Error');
     var info = '<span class="http-status error">' + CAFEVDB.httpStatus[xhr.status] + '</span>';
     //console.info(xhr.status, info, errorThrown, textStatus);
 
@@ -1276,7 +1277,7 @@ var CAFEVDB = CAFEVDB || {};
         info += '<div class="error toastify">' + failData.message + '</div>';
       }
       info += '<div class="error toastify feedback-link">'
-            + t('cafevdb', 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
+            + t(CAFEVDB.appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
             + '</div>';
       autoReport = '';
       var exceptionData = failData;
@@ -1300,19 +1301,19 @@ var CAFEVDB = CAFEVDB || {};
         }
       };
 
-      var generalHint = t('cafevdb', 'Something went wrong.');
+      var generalHint = t(CAFEVDB.appName, 'Something went wrong.');
       generalHint += '<br/>'
-                   + t('cafevdb', 'If it should be the case that you are already '
+                   + t(CAFEVDB.appName, 'If it should be the case that you are already '
                                 + 'logged in for a long time without interacting '
                                 + 'with the web-app, then the reason for this '
                                 + 'error is probably a simple timeout.');
       generalHint += '<br/>'
-                   + t('cafevdb', 'I any case it may help to logoff and logon again, as a '
+                   + t(CAFEVDB.appName, 'I any case it may help to logoff and logon again, as a '
                                 + 'temporary work-around. You will be redirected to the '
                                 + 'log-in page when you close this window.');
       info += '<div class="error general">'+generalHint+'</div>';
       // info += '<div class="error toastify feedback-link">'
-      //       + t('cafevdb', 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
+      //       + t(CAFEVDB.appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
       //       + '</div>';
       break;
     }
@@ -1348,16 +1349,16 @@ var CAFEVDB = CAFEVDB || {};
     }
     // error handling
     if (typeof data == 'undefined' || !data) {
-      CAFEVDB.dialogs.alert(t('cafevdb', 'Unrecoverable unknown internal error, '+
+      CAFEVDB.dialogs.alert(t(CAFEVDB.appName, 'Unrecoverable unknown internal error, '+
                               'no further information available, sorry.'),
-			    t('cafevdb', 'Internal Error'), errorCB, true);
+			    t(CAFEVDB.appName, 'Internal Error'), errorCB, true);
       return false;
     }
     var missing = '';
     var idx;
     for (idx = 0; idx < required.length; ++idx) {
       if (typeof data[required[idx]] == 'undefined') {
-        missing += t('cafevdb', 'Field {RequiredField} not present in AJAX response.',
+        missing += t(CAFEVDB.appName, 'Field {RequiredField} not present in AJAX response.',
                      { RequiredField: required[idx] })+"<br>";
       }
     }
@@ -1367,7 +1368,7 @@ var CAFEVDB = CAFEVDB || {};
 	info += data.message;
       }
       if (missing.length > 0) {
-        info += t('cafevdb', 'Missing data');
+        info += t(CAFEVDB.appName, 'Missing data');
       }
       // Add missing fields only if no exception or setup-error was
       // caught as in this case no regular data-fields have been
@@ -1379,7 +1380,7 @@ var CAFEVDB = CAFEVDB || {};
 
       var caption = data.caption;
       if (typeof caption == 'undefined' || caption == '') {
-        caption = t('cafevdb', 'Error');
+        caption = t(CAFEVDB.appName, 'Error');
         data.caption = caption;
       }
       CAFEVDB.dialogs.alert(info, caption, errorCB, true, true);
@@ -1401,12 +1402,12 @@ var CAFEVDB = CAFEVDB || {};
     var data = {
       'error': errorThrown,
       'status': status,
-      'message': t('cafevdb', 'Unknown JSON error response to AJAX call: {status} / {error}')
+      'message': t(CAFEVDB.appName, 'Unknown JSON error response to AJAX call: {status} / {error}')
     };
     if (ct.indexOf('html') > -1) {
       console.debug('html response', xhr, status, errorThrown);
       console.debug(xhr.status);
-      data.message = t('cafevdb', 'HTTP error response to AJAX call: {code} / {error}',
+      data.message = t(CAFEVDB.appName, 'HTTP error response to AJAX call: {code} / {error}',
                        {'code': xhr.status, 'error': errorThrown});
     } else if (ct.indexOf('json') > -1) {
       const response = JSON.parse(xhr.responseText);
@@ -1658,7 +1659,7 @@ var CAFEVDB = CAFEVDB || {};
     interval = interval || 800;
 
     const poll = function() {
-      $.get(OC.generateUrl('/apps/cafevdb/foregroundjob/progress/'+id))
+      $.get(CAFEVDB.generateUrl('foregroundjob/progress/'+id))
       .done(function(data) {
         if (!callbacks.update(data)) {
 	  console.debug("Finish polling");
@@ -1734,7 +1735,7 @@ $(document).ready(function(){
                  // We store the values in the name attribute as serialized
                  // string.
                  var values = $(this).attr('name');
-                 $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
+                 $.post(OC.filePath(CAFEVDB.appName, 'ajax/events', 'events.php'),
                         values, CAFEVDB.Events.UI.init, 'json');
                }
                return false;
