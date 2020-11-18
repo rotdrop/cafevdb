@@ -169,7 +169,6 @@ var CAFEVDB = CAFEVDB || {};
     wrapper.addClass('loading').addClass('wait');
     delete this.photo;
     this.photo = new Image();
-    console.log('image tag', this.photo);
 
     const requestParams =
       '?metaData=false'
