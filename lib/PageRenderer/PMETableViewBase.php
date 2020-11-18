@@ -26,6 +26,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\ChangeLogService;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
@@ -40,6 +41,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected $requestParameters;
 
   protected $toolTipsService;
+
+  protected $changeLogService;
 
   protected $l;
 
@@ -72,6 +75,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
+    , ChangeLogService $changeLogService
     , ToolTipsService $toolTipsService
     , Util\Navigation $pageNavigation
   ) {
@@ -79,6 +83,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->requestParameters = $requestParameters;
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
+    $this->changeLogService = $changeLogService;
     $this->toolTipsService = $toolTipsService;
     $this->pageNavigation = $pageNavigation;
     $this->l = $this->l10n();
@@ -287,6 +292,79 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     return $fdd;
   }
+
+  /**
+   * phpMyEdit calls the triggers (callbacks) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   *
+   * This trigger simply removes all unchanged fields.
+   *
+   * @return bool true if anything still needs to be done.
+   *
+   * @todo Check whether this is really needed, should not be the case.
+   */
+  public static function beforeUpdateRemoveUnchanged($pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  {
+    $newvals = array_intersect_key($newvals, array_fill($changed, 1));
+    return count($newvals) > 0;
+  }
+
+  /**
+   * phpMyEdit calls the triggers (callbacks) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   *
+   * This trigger trims any spaces from the new fields. In order to
+   * sanitize old data records this trigger function adds to
+   * $changed if trimming changes something. Otherwise
+   * self::beforeUpdateRemoveUnchanged() would silently ignore the
+   * sanitized values.
+   */
+  public static function beforeAnythingTrimAnything($pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  {
+    foreach ($newvals as $key => &$value) {
+      if (!is_scalar($value)) { // don't trim arrays
+        continue;
+      }
+      // Convert unicode space to ordinary space
+      $value = str_replace("\xc2\xa0", "\x20", $value);
+      $value = preg_replace('/\s+/', ' ', $value);
+
+      // Then trim away ...
+      $value = trim($value);
+      if (array_search($key, $changed) === false && $oldvals[$key] != $value) {
+        $changed[] = $key;
+      }
+    }
+
+    return true;
+  }
+
 }
 
 // Local Variables: ***
