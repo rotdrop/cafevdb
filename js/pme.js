@@ -245,15 +245,15 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * by the dialog form.
    */
   PHPMYEDIT.submitOuterForm = function(selector) {
-    var pme = this;
-    var outerSel = this.selector(selector);
+    const pme = this;
+    const outerSel = this.selector(selector);
 
     // try a reload while saving data. This is in order to resolve
     // inter-table dependencies like changed instrument lists and so
     // on. Be careful not to trigger top and bottom buttons.
-    var outerForm = $(outerSel + ' ' + pme.formSelector());
+    const outerForm = $(outerSel + ' ' + pme.formSelector());
 
-    var submitNames = [
+    const submitNames = [
       'morechange',
       'applyadd',
       'applycopy',
@@ -262,7 +262,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       'reloadlist'
     ];
 
-    var button = $(outerForm).find(pme.pmeSysNameSelectors('input', submitNames)).first();
+    const button = $(outerForm).find(pme.pmeSysNameSelectors('input', submitNames)).first();
     if (button.length > 0) {
       console.info('submit outer form by trigger click');
       button.trigger('click');
@@ -297,9 +297,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
   /**Replace the content of the already opened dialog with the given HTML-data.*/
   PHPMYEDIT.tableDialogReplace = function(container, content, options, callback) {
-    var pme = this;
+    const pme = this;
 
-    var containerSel = '#'+options.DialogHolderCSSId;
+    const containerSel = '#'+options.DialogHolderCSSId;
 
     // remove the WYSIWYG editor, if any is attached
     CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
@@ -429,7 +429,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     const containerSel = '#'+options.DialogHolderCSSId;
     const container = $(containerSel);
-    var contentChanged = false;
 
     pme.cancelDeferredReload(container);
 
@@ -511,15 +510,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
       function(event) {
         event.preventDefault();
 
-        var submitButton = $(this);
-        var reloadName  = submitButton.attr('name');
-        var reloadValue = submitButton.val();
+        const submitButton = $(this);
+        const reloadName  = submitButton.attr('name');
+        const reloadValue = submitButton.val();
         options.ReloadName = reloadName;
         options.ReloadValue = reloadValue;
         if (!submitButton.hasClass(pme.pmeToken('change')) &&
             !submitButton.hasClass(pme.pmeToken('delete')) &&
             !submitButton.hasClass(pme.pmeToken('copy')) &&
             !submitButton.hasClass(pme.pmeToken('reload'))) {
+          // so this is pme-more, morechange
           options.modified = true;
         }
         pme.tableDialogReload(options, callback);
@@ -620,7 +620,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
                 pme.tableDialogReload(options, callback);
               } else {
                 console.info('trigger close dialog');
-                container.dialog('close');
+                if (container.hasClass('ui-dialog-content')) {
+                  container.dialog('close');
+                }
               }
               container.find(pme.navigationSelector('reload')).removeClass('loading');
               CAFEVDB.Page.busyIcon(false);
@@ -779,12 +781,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
           },
           open: function() {
 
-            //var tmp = CAFEVDB.modalWaitNotification("BlahBlah");
-            //tmp.dialog('close');
             const dialogHolder = $(this);
             const dialogWidget = dialogHolder.dialog('widget');
-
-            //dialogWidget.draggable('option', 'containment', '#content');
 
             CAFEVDB.dialogToBackButton(dialogHolder);
             CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
@@ -859,9 +857,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
             dialogHolder.find('iframe').removeAttr('src');
 
-            //alert($.param(tableOptions));
             if (tableOptions.modified === true) {
-              //alert("Changed, triggerring on "+tableOptions.ambientContainerSelector);
+              // reload outer form
               $(tableOptions.ambientContainerSelector).trigger('pmedialog:changed');
               pme.submitOuterForm(tableOptions.ambientContainerSelector);
             }
