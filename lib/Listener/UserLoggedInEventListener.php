@@ -28,11 +28,15 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IGroupManager;
 use OCP\IConfig;
+use OCP\ILogger;
+use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\EncryptionService;
 
 class UserLoggedInEventListener implements IEventListener
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   const EVENT = [ Event1::class, Event2::class ];
 
   /** @var string */
@@ -45,20 +49,27 @@ class UserLoggedInEventListener implements IEventListener
   private $encryptionService;
 
   public function __construct(
-    $appName,
-    IGroupManager $groupManager,
-    IConfig $containerConfig,
-    EncryptionService $encryptionService
+    /*$appName
+      , */IGroupManager $groupManager
+    , IConfig $containerConfig
+    , EncryptionService $encryptionService
+    , ILogger $logger
+    , IL10N $l10n
   ) {
-    $this->appName = $appName; // can this work?
+    $this->appName = ''; //$appName; // can this work?
     $this->groupManager = $groupManager;
     $this->encryptionService = $encryptionService;
+    $this->logger = $logger;
+    $this->l = $l10n;
   }
 
   public function handle(Event $event): void {
     if (!($event instanceOf Event1 && !($event instanceOf Event2))) {
       return;
     }
+
+    $this->logInfo("Hello Login-Handler!");
+
     $groupId = $this->encryptionService->getAppValue('usergroup');
     $user = $event->getUser();
     $userId = $user->getUID();

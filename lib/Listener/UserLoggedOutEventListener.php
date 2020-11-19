@@ -26,24 +26,37 @@ use OCP\User\Events\UserLoggedOutEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IGroupManager;
+use OCP\ILogger;
+use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\Config;
 
 class UserLoggedOutEventListener implements IEventListener
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   const EVENT = HandledEvent::class;
 
   /** @var ISubAdmin */
   private $groupManager;
 
-  public function __construct(IGroupManager $groupManager) {
+  public function __construct(
+    IGroupManager $groupManager
+    , ILogger $logger
+    , IL10N $l10n
+  ) {
     $this->groupManager = $groupManager;
+    $this->logger = $logger;
+    $this->l = $l10n;
   }
 
   public function handle(Event $event): void {
     if (!($event instanceOf HandledEvent)) {
       return;
     }
+
+    $this->logInfo("Hello Logout-Handler!");
+
     // @@TODO check if we want this.
     return;
   }
