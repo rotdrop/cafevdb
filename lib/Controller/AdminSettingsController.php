@@ -43,6 +43,9 @@ class AdminSettingsController extends Controller {
     $this->l = $this->l10N();
   }
 
+  /**
+   * @NoGroupMemberRequired
+   */
   public function set($orchestraUserGroup) {
     if (!empty($orchestraUserGroup)) {
       $this->setAppValue('usergroup', $orchestraUserGroup);
