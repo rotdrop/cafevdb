@@ -26,8 +26,6 @@ namespace OCA\CAFEVDB\Traits;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 
-use OCA\CAFEVDB\Service\SessionService;
-
 trait ResponseTrait
 {
 
