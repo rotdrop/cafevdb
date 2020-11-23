@@ -5468,7 +5468,6 @@ class phpMyEdit
 			$this->inc = $prevnp;
 			if($navnpdown != NULL && $navnpdown != $this->inc) $this->inc = $navnpdown;
 			elseif($navnpup != NULL && $navnpup != $this->inc) $this->inc = $navnpup;
-			$this->logInfo("Inc init: ".$this->inc." up ".$navnpup." down ".$navnpdown);
 		}
 		if ($prevnp != NULL && $prevnp != $this->inc && $this->inc > 0 && $prevnp > 0) {
 			// Set current form such that it is at least close to the old position.
