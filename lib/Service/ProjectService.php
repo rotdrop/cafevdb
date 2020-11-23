@@ -436,6 +436,47 @@ Whatever.',
     //   $html = $tmpl->fetchPage();
     //   return $html;
     // }
+
+  /**
+   * Attach an existing web page to the project.
+   *
+   * @param $projectId Project Id.
+   *
+   * @param $article Article array as returned from $rex->articlesByName().
+   *
+   */
+  public function attachProjectWebPage($projectId, $article)
+  {
+    // Try to remove from trashbin, if appropriate.
+    $trashCategory = $this->getConfigValue('redaxoTrashbin');
+    if ($article['CategoryId'] == $trashCategory) {
+      if (stristr($article['ArticleName'], $this->l->t('Rehearsals')) !== false) {
+        $destinationCategory = $this->getConfigValue('redaxoRehearsals');
+      } else {
+        $destinationCategory = $this->getConfigValue('redaxoPreview');
+      }
+      $rex = \OC::$server->query(OCA\Redaxo4Embedded\Service\RPC::class);
+      $articleId = $article['ArticleId'];
+      $result = $rex->moveArticle($articleId, $destinationCategory);
+      if ($result === false) {
+        $this->logDebug("Failed moving ".$articleId." to ".$destinationCategory);
+      } else {
+        $artical['CategoryId'] = $destinationCategory;
+      }
+      // @TODO Shouldn't this be recorded in the data-base as well, as the
+      // category has changed?
+    }
+
+    $webPageRepository = $this->entityManger->getRepository(Entities\ProjectWebpage::class);
+    try {
+      $projectWebPage = $webPageRepository->attachProjectWebPage($projectid, $articleId);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
+
+ }
+
 }
 
 // Local Variables: ***
