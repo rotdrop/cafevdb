@@ -467,17 +467,35 @@ Whatever.',
       // category has changed?
     }
 
-    $webPageRepository = $this->entityManger->getRepository(Entities\ProjectWebpage::class);
+    $webPagesRepository = $this->entityManger->getRepository(Entities\ProjectWebpage::class);
     try {
-      $projectWebPage = $webPageRepository->attachProjectWebPage($projectid, $articleId);
+      $projectWebPage = $webPagesRepository->attachProjectWebPage($projectid, $articleId);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
+  }
+
+  /**
+   * Detach a web page, but do not delete it. Meant as utility routine
+   * for the UI (in order to correct wrong associations).
+   */
+  public function detachProjectWebPage($projectId, $articleId)
+  {
+    try {
+      $this->remove([ 'projectId' => $projectId, 'articleId' => $articleId  ]);
+      $this->flush();
     } catch (\Throwable $t) {
       $this->logException($t);
       return false;
     }
 
- }
+    return true;
+  }
+
 
 }
+
 
 // Local Variables: ***
 // c-basic-offset: 2 ***
