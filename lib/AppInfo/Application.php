@@ -78,6 +78,7 @@ class Application extends App implements IBootstrap {
             }
         );
 
+        // @todo: still necessary?
         $dispatcher->addServiceListener(
             TranslationNotFound::class,
             TranslationNotFoundListener::class
