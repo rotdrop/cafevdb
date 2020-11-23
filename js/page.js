@@ -177,7 +177,7 @@ $(function(){
              '#personalsettings .navigation.reload',
              function(event) {
                event.stopImmediatePropagation();
-               var pmeReload = appInnerContent.find('form.pme-form input.pme-reload').first();
+               const pmeReload = appInnerContent.find('form.pme-form input.pme-reload').first();
                if (pmeReload.length > 0) {
                  // remove left-over notifications
                  CAFEVDB.Notification.hide();
