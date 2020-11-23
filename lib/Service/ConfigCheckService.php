@@ -143,8 +143,17 @@ class ConfigCheckService
    * true or false, depending the checks performed. The summary
    * component is just the logic and of all other items.
    *
-   * @return bool
-   * array('summary','orchestra','usergroup','shareowner','sharedfolder','database','encryptionkey')
+   * @return array
+   * ```
+   * [ 'summary',
+   *   'orchestra',
+   *   'usergroup',
+   *   'shareowner',
+   *   'sharedfolder',
+   *   'database',
+   *   'encryptionkey'
+   * ]
+   * ```
    *
    * where summary is a bool and everything else is
    * array('status','message') where 'message' should be empty if
@@ -152,7 +161,7 @@ class ConfigCheckService
    */
   public function configured()
   {
-    $result = array();
+    $result = [];
 
     foreach (['orchestra','usergroup','shareowner','sharedfolder','database','encryptionkey'] as $key) {
       $result[$key] = ['status' => false, 'message' => ''];
