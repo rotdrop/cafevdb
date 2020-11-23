@@ -153,7 +153,7 @@ class Project
    *
    * @param int $jahr
    *
-   * @return Projekte
+   * @return Project
    */
   public function setJahr($jahr)
   {
@@ -177,7 +177,7 @@ class Project
    *
    * @param string $name
    *
-   * @return Projekte
+   * @return Project
    */
   public function setName($name)
   {
@@ -201,7 +201,7 @@ class Project
    *
    * @param enumprojecttemporaltype $art
    *
-   * @return Projekte
+   * @return Project
    */
   public function setArt($art)
   {
@@ -225,7 +225,7 @@ class Project
    *
    * @param array|null $besetzung
    *
-   * @return Projekte
+   * @return Project
    */
   public function setBesetzung($besetzung = null)
   {
@@ -249,7 +249,7 @@ class Project
    *
    * @param string $unkostenbeitrag
    *
-   * @return Projekte
+   * @return Project
    */
   public function setUnkostenbeitrag($unkostenbeitrag)
   {
@@ -273,7 +273,7 @@ class Project
    *
    * @param string $anzahlung
    *
-   * @return Projekte
+   * @return Project
    */
   public function setAnzahlung($anzahlung)
   {
@@ -297,7 +297,7 @@ class Project
    *
    * @param string $extrafelder
    *
-   * @return Projekte
+   * @return Project
    */
   public function setExtrafelder($extrafelder)
   {
@@ -321,7 +321,7 @@ class Project
    *
    * @param bool $disabled
    *
-   * @return Projekte
+   * @return Project
    */
   public function setDisabled($disabled)
   {
@@ -345,7 +345,7 @@ class Project
    *
    * @param \DateTime|null $aktualisiert
    *
-   * @return Projekte
+   * @return Project
    */
   public function setAktualisiert($aktualisiert = null)
   {
@@ -362,5 +362,29 @@ class Project
   public function getAktualisiert()
   {
     return $this->aktualisiert;
+  }
+
+  /**
+   * Set webPages.
+   *
+   * @param ArrayCollection $webPages
+   *
+   * @return Project
+   */
+  public function setWebPages($webPages)
+  {
+    $this->webPages = $webPages;
+
+    return $this;
+  }
+
+  /**
+   * Get webPages.
+   *
+   * @return ArrayCollection
+   */
+  public function getWebPages()
+  {
+    return $this->webPages;
   }
 }

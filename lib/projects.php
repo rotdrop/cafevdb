@@ -802,7 +802,7 @@ __EOT__;
 
       return true;
     }
-
+, 2020
     /**@copydoc Projects::afterInsertTrigger()
      *
      * This trigger, in particular, tries to take care to remove all
@@ -1955,7 +1955,7 @@ ORDER BY i.Sortierung ASC";
     /**Create a HTML table with the missing musicians. */
     public static function missingInstrumentationTable($projectId, $handle = false)
     {
-      return ""; 
+      return "";
       $output = '';
       $numbers = self::fetchMissingInstrumentation($projectId, $handle);
 

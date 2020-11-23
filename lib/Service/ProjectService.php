@@ -27,7 +27,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
 use OCA\CAFEVDB\Storage\UserStorage;
 
-use OCA\DokuWikiEmbedded\Service\AuthDokuWiki;
+use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
+use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -49,14 +50,24 @@ class ProjectService
   /** @var OCA\CAFEVDB\Storage\UserStorage */
   private $userStorage;
 
+  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
+  private $wikiRPC;
+
+  /** @var OCA\Redaxo4Embedded\Service\RPC */
+  private $webPagesRPC;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
     , UserStorage $userStorage
+    , WikiRPC $wikiRPC
+    , WebPagesRPC $webPagesRPC
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->userStorage = $userStorage;
+    $this->wikiRPC = $wikiRPC;
+    $this->webPagesRPC = $webPagesRPC;
     $this->repository = $this->getDatabaseRepository(Entities\Project::class);
   }
 
@@ -199,7 +210,7 @@ class ProjectService
    *
    * @return array Array with newly renamed or created folders.
    */
-  public static function renameProjectFolder($newProject, $oldProject)
+  public function renameProjectFolder($newProject, $oldProject)
   {
     $sharedFolder   = $this->getConfigValue('sharedfolder');
     $projectsFolder = $this->getConfigValue('projectsfolder');
@@ -290,15 +301,14 @@ class ProjectService
       // create a new page as copy from the old one and change the
       // text of the old one to contain a link to the new page.
 
-      $page .= "  * [[".self::projectWikiLink($name)."|".$bareName."]]\n";
+      $page .= "  * [[".$this->projectWikiLink($name)."|".$bareName."]]\n";
     }
 
-    $pageName = self::projectWikiLink('projects');
+    $pageName = $this->projectWikiLink('projects');
 
-    $dokuWiki = \OC::$service->query(AuthDokuWiki::class);
-    $dokuWiki->putPage($pagename, $page,
-                       [ "sum" => "Automatic CAFEVDB synchronization",
-                         "minor" => true ]);
+    $this->wikiRPC->putPage($pagename, $page,
+                            [ "sum" => "Automatic CAFEVDB synchronization",
+                              "minor" => true ]);
 
   }
 
@@ -342,138 +352,251 @@ Whatever.',
                  [ $projectName ]);
 
       $pagename = $this->projectWikiLink($projectName);
-      $dokuWiki = \OC::$service->query(AuthDokuWiki::class);
-      $dokuWiki->putPage($pagename, $page,
-                         [ "sum" => "Automatic CAFEVDB synchronization",
-                           "minor" => true ]);
+      $this->wikiRPC->putPage($pagename, $page,
+                              [ "sum" => "Automatic CAFEVDB synchronization",
+                                "minor" => true ]);
 
   }
 
-  public static function renameProjectWikiPage($newProject, $oldProject)
+  public function renameProjectWikiPage($newProject, $oldProject)
   {
     $oldName = $oldProject['Name'];
     $newName = $newProject['Name'];
     $oldPageName = $this->projectWikiLink($oldName);
     $newPageName = $this->projectWikiLink($newName);
 
-    $dokuWiki = \OC::$service->query(AuthDokuWiki::class);
-
     $oldPage = " *  ".$oldvals['Name']." wurde zu [[".$newPageName."]] umbenant\n";
-    $newPage = $dokuWiki->getPage($oldPageName);
+    $newPage = $this->wikiRPC->getPage($oldPageName);
     if ($newPage) {
       // Geneate stuff if there is an old page
-      $dokuWiki->putPage($oldPageName, $oldPage, [ "sum" => "Automatic CAFEVDB page renaming",
+      $this->wikiRPC->putPage($oldPageName, $oldPage, [ "sum" => "Automatic CAFEVDB page renaming",
                                                    "minor" => false ]);
-      $dokuWiki->putPage($newPageName, $newPage, [ "sum" => "Automatic CAFEVDB page renaming",
+      $this->wikiRPC->putPage($newPageName, $newPage, [ "sum" => "Automatic CAFEVDB page renaming",
                                                    "minor" => false ]);
     }
 
     $this->generateWikiOverview();
   }
 
-
-
-
-
-    // /** THIS WILL GOT TO THE PageRendere/ space
-    //  * Genereate the input data for the link to the CMS in order to edit
-    //  * the project's public web articles inline.
-    //  *
-    //  * @todo Do something more useful in the case of an error (database
-    //  * or CMS unavailable)
-    //  */
-    // public static function projectProgram($projectId, $action)
-    // {
-    //   $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
-    //   $rex = new \Redaxo\RPC($redaxoLocation);
-
-    //   /* Fetch all the data available. */
-    //   $webPages = self::fetchProjectWebPages($projectId);
-    //   if ($webPages === false) {
-    //     return L::t("Unable to fetch public web pages for project id %d",
-    //                 array($projectId));
-    //   }
-    //   $articleIds = array();
-    //   foreach ($webPages as $idx => $article) {
-    //     // this is cheap, there are only few articles attached to a project
-    //     $articleIds[$article['ArticleId']] = $idx;
-    //   }
-
-    //   $categories = array(array('id' => Config::getValue('redaxoPreview'),
-    //                             'name' => L::t('Preview')),
-    //                       array('id' => Config::getValue('redaxoRehearsals'),
-    //                             'name' => L::t('Rehearsals')),
-    //                       array('id' => Config::getValue('redaxoArchive'),
-    //                             'name' => L::t('Archive')),
-    //                       array('id' => Config::getValue('redaxoTrashbin'),
-    //                             'name' => L::t('Trashbin')));
-    //   $detachedPages = array();
-    //   foreach ($categories as $category) {
-    //     // Fetch all articles and remove those already registered
-    //     $pages = $rex->articlesByName('.*', $category['id']);
-    //     \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".$category['id'], \OCP\Util::DEBUG);
-    //     if (is_array($pages)) {
-    //       foreach ($pages as $idx => $article) {
-    //         $article['CategoryName'] = $category['name'];
-    //         $article['Linked'] = isset($articleIds[$article['ArticleId']]);
-    //         $detachedPages[] = $article;
-    //         \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".print_r($article, true), \OCP\Util::DEBUG);
-    //       }
-    //     }
-    //   }
-
-    //   $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
-    //   $tmpl->assign('projectId', $projectId);
-    //   $tmpl->assign('projectArticles', $webPages);
-    //   $tmpl->assign('detachedArticles', $detachedPages);
-    //   $urlTemplate = $rex->redaxoURL('%ArticleId%', $action == 'change');
-    //   if ($action != 'change') {
-    //     $urlTemplate .= '&rex_version=1';
-    //   }
-    //   $tmpl->assign('cmsURLTemplate', $urlTemplate);
-    //   $tmpl->assign('action', $action);
-    //   $tmpl->assign('app', Config::APP_NAME);
-    //   $html = $tmpl->fetchPage();
-    //   return $html;
-    // }
+  /**
+   */
+  public function webPageCMSURL($articleId, $editMode = false)
+  {
+    return $this->webPageRPC->redaxoURL($articleId, $editMode);
+  }
 
   /**
-   * Attach an existing web page to the project.
+   * Fetch all articles known to the system.
    *
-   * @param $projectId Project Id.
-   *
-   * @param $article Article array as returned from $rex->articlesByName().
-   *
+   * @return array
+   * ```
+   * [
+   *   'projectPages' => WEBPAGES,
+   *   'otherPages' => WEBPAGES,
+   * ]
+   * ```
    */
-  public function attachProjectWebPage($projectId, $article)
+  public function projectWebPages($projectId)
   {
-    // Try to remove from trashbin, if appropriate.
-    $trashCategory = $this->getConfigValue('redaxoTrashbin');
-    if ($article['CategoryId'] == $trashCategory) {
-      if (stristr($article['ArticleName'], $this->l->t('Rehearsals')) !== false) {
-        $destinationCategory = $this->getConfigValue('redaxoRehearsals');
-      } else {
-        $destinationCategory = $this->getConfigValue('redaxoPreview');
-      }
-      $rex = \OC::$server->query(OCA\Redaxo4Embedded\Service\RPC::class);
-      $articleId = $article['ArticleId'];
-      $result = $rex->moveArticle($articleId, $destinationCategory);
-      if ($result === false) {
-        $this->logDebug("Failed moving ".$articleId." to ".$destinationCategory);
-      } else {
-        $artical['CategoryId'] = $destinationCategory;
-      }
-      // @TODO Shouldn't this be recorded in the data-base as well, as the
-      // category has changed?
-    }
-
-    $webPagesRepository = $this->entityManger->getRepository(Entities\ProjectWebpage::class);
-    try {
-      $projectWebPage = $webPagesRepository->attachProjectWebPage($projectid, $articleId);
-    } catch (\Throwable $t) {
-      $this->logException($t);
+    $project = $this->find($projectid);
+    if (empty($project)) {
       return false;
     }
+
+    $articleIds = [];
+    foreach ($project->getWebPages() as $idx => $article) {
+      $articleIds[$article['ArticleId']] = $idx;
+    }
+
+    $categories = [ [ 'id' => Config::getValue('redaxoPreview'),
+                      'name' => L::t('Preview') ],
+                    [ 'id' => Config::getValue('redaxoRehearsals'),
+                      'name' => L::t('Rehearsals') ],
+                    [ 'id' => Config::getValue('redaxoArchive'),
+                      'name' => L::t('Archive') ],
+                    [ 'id' => Config::getValue('redaxoTrashbin'),
+                      'name' => L::t('Trashbin')] ];
+    $projectPages = [];
+    $otherPages = [];
+    foreach ($categories as $category) {
+      // Fetch all articles and remove those already registered
+      $pages = $this->webPagesRPC->articlesByName('.*', $category['id']);
+      $this->logDebug("Projects: ".$category['id']);
+      if (is_array($pages)) {
+        foreach ($pages as $idx => $article) {
+          $article['CategoryName'] = $category['name'];
+          if (isset($articleIds[$article['ArticleId']])) {
+            $projectPages[] = $article;
+          } else {
+            $otherPages[] = $article;
+          }
+          $this->logDebug("Projects: ".print_r($article, true));
+        }
+      }
+    }
+    return [
+      'projectPages' => $projectPages,
+      'otherPages' => $otherPages,
+    ];
+  }
+
+  // /** THIS WILL GOT TO THE PageRendere/ space
+  //  * Genereate the input data for the link to the CMS in order to edit
+  //  * the project's public web articles inline.
+  //  *
+  //  * @todo Do something more useful in the case of an error (database
+  //  * or CMS unavailable)
+  //  */
+  // public function projectProgram($projectId, $action)
+  // {
+  //   $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
+  //   $rex = new \Redaxo\RPC($redaxoLocation);
+
+  //   /* Fetch all the data available. */
+  //   $webPages = self::fetchProjectWebPages($projectId);
+  //   if ($webPages === false) {
+  //     return L::t("Unable to fetch public web pages for project id %d",
+  //                 array($projectId));
+  //   }
+  //   $articleIds = array();
+  //   foreach ($webPages as $idx => $article) {
+  //     // this is cheap, there are only few articles attached to a project
+  //     $articleIds[$article['ArticleId']] = $idx;
+  //   }
+
+  //   $categories = array(array('id' => Config::getValue('redaxoPreview'),
+  //                             'name' => L::t('Preview')),
+  //                       array('id' => Config::getValue('redaxoRehearsals'),
+  //                             'name' => L::t('Rehearsals')),
+  //                       array('id' => Config::getValue('redaxoArchive'),
+  //                             'name' => L::t('Archive')),
+  //                       array('id' => Config::getValue('redaxoTrashbin'),
+  //                             'name' => L::t('Trashbin')));
+  //   $detachedPages = array();
+  //   foreach ($categories as $category) {
+  //     // Fetch all articles and remove those already registered
+  //     $pages = $rex->articlesByName('.*', $category['id']);
+  //     \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".$category['id'], \OCP\Util::DEBUG);
+  //     if (is_array($pages)) {
+  //       foreach ($pages as $idx => $article) {
+  //         $article['CategoryName'] = $category['name'];
+  //         $article['Linked'] = isset($articleIds[$article['ArticleId']]);
+  //         $detachedPages[] = $article;
+  //         \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".print_r($article, true), \OCP\Util::DEBUG);
+  //       }
+  //     }
+  //   }
+
+  //   $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
+  //   $tmpl->assign('projectId', $projectId);
+  //   $tmpl->assign('projectArticles', $webPages);
+  //   $tmpl->assign('detachedArticles', $detachedPages);
+  //   $urlTemplate = $rex->redaxoURL('%ArticleId%', $action == 'change');
+  //   if ($action != 'change') {
+  //     $urlTemplate .= '&rex_version=1';
+  //   }
+  //   $tmpl->assign('cmsURLTemplate', $urlTemplate);
+  //   $tmpl->assign('action', $action);
+  //   $tmpl->assign('app', Config::APP_NAME);
+
+  //   $html = $tmpl->fetchPage();
+  //   return $html;
+  // }
+
+  /**
+   * Create and add a new web-page. The first one will have the name
+   * of the project, subsequent one have a number attached like
+   * Tango2014-5.
+   *
+   * @param $projectId Id of the project
+   *
+   * @param $kind One of 'concert' or 'rehearsals'
+   *
+   * @param $handle Optional active data-base handle.
+   */
+  public function createProjectWebPage($projectId, $kind = 'concert')
+  {
+    $project = $this->find($projectid);
+    if (empty($project)) {
+      return false;
+    }
+    $projectName = $project->getName();
+
+    switch ($kind) {
+    case 'rehearsals':
+      $prefix = $this->l->t('Rehearsals').' ';
+      $category = $this->getConfigValue('redaxoRehearsals');
+      $module = $this->getConfigValue('redaxoRehearsalsModule');
+      break;
+    default:
+      // Don't care about the archive, new pages go to preview, and the
+      // id will be unique even in case of a name clash
+      $prefix = '';
+      $category = $this->getConfigValue('redaxoPreview');
+      $module = $this->getConfigValue('redaxoConcertModule');
+      break;
+    }
+
+    // General page template
+    $pageTemplate = $this->getConfigValue('redaxoTemplate');
+
+    $pageName = $prefix.$projectName;
+    $articles = $this->webPagesRPC->articlesByName($pageName.'(-[0-9]+)?', $category);
+    if (!is_array($articles)) {
+      return false;
+    }
+
+    $names = array();
+    foreach ($articles as $article) {
+      $names[] = $article['ArticleName'];
+    }
+    if (array_search($pageName, $names) !== false) {
+      for ($i = 1; ; ++$i) {
+        if (array_search($pageName.'-'.$i, $names) === false) {
+          // this will teminate ;)
+          $pageName = $pageName.'-'.$i;
+          break;
+        }
+      }
+    }
+
+    $article = $this->webPagesRPC->addArticle($pageName, $category, $pageTemplate);
+
+    if ($article === false) {
+      $this->logError("Error generating web page template");
+      return false;
+    }
+
+    // just forget about the rest, we can't help it anyway if the
+    // names are not unique
+    $article = $article[0];
+
+    // insert into the db table to form the link
+    if ($this->attachProjectWebPage($projectId, $article) === false) {
+      $this->logError("Error attaching web page template");
+      return false;
+    }
+
+    $this->webPagesRPC->addArticleBlock($article['ArticleId'], $module);
+
+    return $article;
+  }
+
+  /**
+   * Delete a web page. This is implemented by moving the page to the
+   * Trashbin category, leaving the real cleanup to a human being.
+   */
+  public function deleteProjectWebPage($projectId, $articleId)
+  {
+    if ($this->detachProjectWebPage($projectId, $articleId) === false) {
+      return false;
+    }
+    $trashCategory = $this->getConfigValue('redaxoTrashbin');
+    $result = $this->webPagesRPC->moveArticle($articleId, $trashCategory);
+    if ($result === false) {
+      $this->logError("Failed moving ".$articleId." to ".$trashCategory);
+    }
+    return $result;
   }
 
   /**
@@ -493,9 +616,128 @@ Whatever.',
     return true;
   }
 
+  /**
+   * Attach an existing web page to the project.
+   *
+   * @param $projectId Project Id.
+   *
+   * @param $article Article array as returned from articlesByName().
+   *
+   */
+  public function attachProjectWebPage($projectId, $article)
+  {
+    // Try to remove from trashbin, if appropriate.
+    $trashCategory = $this->getConfigValue('redaxoTrashbin');
+    if ($article['CategoryId'] == $trashCategory) {
+      if (stristr($article['ArticleName'], $this->l->t('Rehearsals')) !== false) {
+        $destinationCategory = $this->getConfigValue('redaxoRehearsals');
+      } else {
+        $destinationCategory = $this->getConfigValue('redaxoPreview');
+      }
+      $articleId = $article['ArticleId'];
+      $result = $this->webPagesRPC->moveArticle($articleId, $destinationCategory);
+      if ($result === false) {
+        $this->logDebug("Failed moving ".$articleId." to ".$destinationCategory);
+      } else {
+        $artical['CategoryId'] = $destinationCategory;
+      }
+      // @TODO Shouldn't this be recorded in the data-base as well, as the
+      // category has changed?
+    }
+
+    $webPagesRepository = $this->entityManger->getRepository(Entities\ProjectWebpage::class);
+    try {
+      $projectWebPage = $webPagesRepository->attachProjectWebPage($projectid, $articleId);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
+  }
+
+  /**
+   * Set the name of all registered web-pages to the canonical name,
+   * project name given.
+   */
+  public function nameProjectWebPages($projectId)
+  {
+    $project = $this->find($projectId);
+    if (empty($project)) {
+      return false;
+    }
+    $webPages = $project->getWebPages();
+
+    $rehearsalsName = $this->l->t('Rehearsals');
+    $webPagesRepository = $this->entityManger->getRepository(Entities\ProjectWebpage::class);
+
+    $concertNr = 0;
+    $rehearsalNr = 0; // should stay at zero
+    foreach ($webPages as $article) {
+      if (stristr($article['ArticleName'], $rehearsalsName) !== false) {
+        $newName = $rehearsalsName.' '.$projectName;
+        if ($rehearsalNr > 0) {
+          $newName .= '-'.$rehearsalNr;
+        }
+        ++$rehearsalNr;
+      } else {
+        $newName = $projectName;
+        if ($concertNr > 0) {
+          $newName .= '-'.$concertNr;
+        }
+        ++$concertNr;
+      }
+      if ($this->webPagesRPC->setArticleName($article['ArticleId'], $newName)) {
+        // if successful then also update the data-base entry
+        $webPagesRepository->mergeAttributes(
+          [ 'articleId' => $article['ArticleId'] ],
+          [ 'articleName' => newName ]);
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Search through the list of all projects and attach those with a
+   * matching name. Something which should go to the "expert"
+   * controls.
+   */
+  public function attachMatchingWebPages($projectId)
+  {
+    $project = $this->find($projectId);
+    $projectName = $project->getName();
+
+    $previewCat    = $this->getConfigtValue('redaxoPreview');
+    $archiveCat    = $this->getConfigValue('redaxoArchive');
+    $rehearsalsCat = $this->getConfigValue('redaxoRehearsals');
+
+    $cntRe = '(?:-[0-9]+)?';
+
+    $preview = $this->webPagesRPC->articlesByName($projectName.$cntRe, $previewCat);
+    if (!is_array($preview)) {
+      return false;
+    }
+    $archive = $this->webPagesRPC->articlesByName($projectName.$cntRe, $archiveCat);
+    if (!is_array($archive)) {
+      return false;
+    }
+    $rehearsals = $this->webPagesRPC->articlesByName($this->l->t('Rehearsals').' '.$projectName.$cntRe, $rehearsalsCat);
+    if (!is_array($rehearsals)) {
+      return false;
+    }
+
+    $articles = array_merge($preview, $archive, $rehearsals);
+
+    //\OCP\Util::writeLog(Config::APP_NAME, "Web pages for ".$projectName.": ".print_r($articles, true), \OCP\Util::DEBUG);
+
+    foreach ($articles as $article) {
+      // ignore any error
+      $this->attachProjectWebPage($projectId, $article);
+    }
+
+    return true;
+  }
 
 }
-
 
 // Local Variables: ***
 // c-basic-offset: 2 ***

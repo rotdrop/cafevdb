@@ -63,9 +63,22 @@ class ProjectWebPagessRepository extends EntityRepository
                    ->setCategoryId($article['CategoryId'])
                    ->setPriority($article['Priority']);
     $projectWebPage = $entityManager->merge($projectWebPage);
-    $this->entityManager->flush($projectWebPage);
+    $entityManager->flush($projectWebPage);
 
     return $projectWebPage;
+  }
+
+  public function mergeAttributes($selector, $attributes)
+  {
+    $entityManager = $this->getEntityManager();
+    $articles = $this->findBy($selector);
+    foreach ($articles as $article) {
+      foreach ($attributes as $key => $value) {
+        $article[$key] = $value;
+      }
+      $entityManager->merge($article);
+    }
+    $entityManager->flush();
   }
 
 }

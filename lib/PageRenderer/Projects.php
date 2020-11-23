@@ -22,8 +22,11 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCP\AppFramework\Http\TemplateResponse;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -48,6 +51,7 @@ class Projects extends PMETableViewBase
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
+    , ProjectService $projectService
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ChangeLogService $changeLogService
@@ -55,6 +59,7 @@ class Projects extends PMETableViewBase
     , PageNavigation $pageNavigation
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
+    $this->projectService = $projectService;
   }
 
   public function cssClass() { return self::CSS_CLASS; }
@@ -387,7 +392,7 @@ __EOT__;
       'sql'      => '`PMEtable0`.`Id`',
       'php|CV'    => function($value, $action, $field, $fds, $fdd, $row, $recordId) {
         $projectId = $recordId; // and also $value
-        return self::projectProgram($projectId, $action);
+        return $this->projectProgram($projectId, $action);
       },
       'sort'     => true,
       'escape' => false
@@ -471,7 +476,7 @@ __EOT__;
 
   }
 
-  public static function flyerImageLink($projectId, $action = 'display', $timeStamp = '')
+  public function flyerImageLink($projectId, $action = 'display', $timeStamp = '')
   {
     switch ($action) {
       case 'add':
@@ -480,7 +485,7 @@ project without a flyer first.");
       case 'display':
         $div = ''
              .'<div class="photo"><img class="cafevdb_inline_image flyer zoomable" src="'
-             .$this->urlGenerator->linkToRoute('cafevdb.image.get.'.self::FLYER_JOIN.'.'.$projectId).'&imageSize=1200&timeStamp='.$timeStamp
+             .$this->urlGenerator()->linkToRoute('cafevdb.image.get.'.self::FLYER_JOIN.'.'.$projectId).'&imageSize=1200&timeStamp='.$timeStamp
              .'" '
              .'title="Flyer, if available" /></div>';
         return $div;
@@ -508,100 +513,96 @@ project without a flyer first.");
   public function projectActions($projectId, $projectName, $placeHolder = false, $overview = false)
   {
     return "<H2>Project-Actions Placeholder</H2>";
-//       $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
+    $projectPaths = $this->projectService->ensureProjectFolders($projectId, $projectName);
 
-//       if ($placeHolder === false) {
-//         // Strip the 4-digit year from the end, if present
-//         // $placeHolder = preg_replace("/^(.*\D)(\d{4})$/", "$1", $projectName);
-//         $placeHolder = $projectName; // or maybe don't strip.
-//       }
+    if ($placeHolder === false) {
+      // Strip the 4-digit year from the end, if present
+      // $placeHolder = preg_replace("/^(.*\D)(\d{4})$/", "$1", $projectName);
+      $placeHolder = $projectName; // or maybe don't strip.
+    }
 
-//       $control = '
-// <span class="project-actions-block">
-//   <select data-placeholder="'.$placeHolder.'"
-//           class="project-actions"
-//           title="'.Config::toolTips('project-actions').'"
-//           data-project-id="'.$projectId.'"
-//           data-project-name="'.Util::htmlEncode($projectName).'">
-//     <option value=""></option>
-// '
-//                      .($overview
-//                        ? Navigation::htmlTagsFromArray(
-//                          array('pre' => '<optgroup>', 'post' => '</optgroup>',
-//                                array('type' => 'option',
-//                                      'title' => Config::toolTips('project-infopage'),
-//                                      'value' => 'project-infopage',
-//                                      'name' => L::t('Project Overview')
-//                                  )
-//                            ))
-//                        : '')
-//                      .Navigation::htmlTagsFromArray(
-//                        array('pre' => '<optgroup>', 'post' => '</optgroup>',
-
-//                              array('type' => 'option',
-//                                    'title' => Config::toolTips('project-action-detailed-instrumentation'),
-//                                    'value' => 'detailed-instrumentation',
-//                                    'name' => L::t('Instrumentation')
-//                                ),
-//                              array('type' => 'option',
-//                                    'title' => Config::toolTips('project-action-instrumentation-numbers'),
-//                                    'value' => 'project-instruments',
-//                                    'name' => L::t('Instrumentation Numbers')
-//                                ),
-//                              array('type' => 'option',
-//                                    'title' => Config::toolTips('project-action-extra-fields'),
-//                                    'value' => 'project-extra',
-//                                    'name' => L::t('Extra Member Data')
-//                                )
-//                          ))
-//                      .Navigation::htmlTagsFromArray(
-//                        array('pre' => '<optgroup>', 'post' => '</optgroup>',
-//                              array('type' => 'option',
-//                                    'title' => Config::toolTips('project-action-files'),
-//                                    'value' => 'project-files',
-//                                    'data' => array('projectFiles' => $projectPaths['project']),
-//                                    'name' => L::t('Project Files')
-//                                ),
-//                              array('type' => 'option',
-//                                    'title' => Config::toolTips('project-action-wiki'),
-//                                    'value' => 'project-wiki',
-//                                    'data' => array(
-//                                      'wikiPage' => self::projectWikiLink($projectName),
-//                                      'wikiTitle' => L::t('Project Wiki for %s', array($projectName))
-//                                      ),
-//                                    'name' => L::t('Project Notes')
-//                                ),
-//                              array('type' => 'option',
-//                                    'title' => Config::toolTips('project-action-events'),
-//                                    'value' => 'events',
-//                                    'name' => L::t('Events')
-//                                ),
-//                              array('type' => 'option',
-//                                    'title' => Config::toolTips('project-action-email'),
-//                                    'value' => 'project-email',
-//                                    'name' => L::t('Em@il')
-//                                ),
-//                          ))
-//                      .Navigation::htmlTagsFromArray(
-//                        array('pre' => '<optgroup>', 'post' => '</optgroup>',
-//                              array('type' => 'option',
-//                                    'title' => Config::toolTips('project-action-debit-mandates'),
-//                                    'value' => 'sepa-debit-mandates',
-//                                    'disabled' => !Config::isTreasurer(),
-//                                    'name' => L::t('Debit Mandates')
-//                                ),
-//                              array('type' => 'option',
-//                                    'title' => Config::toolTips('project-action-financial-balance'),
-//                                    'value' => 'profit-and-loss',
-//                                    'data' => array('projectFiles' => $projectPaths['balance']),
-//                                    'name' => L::t('Profit and Loss Account')
-//                                )
-//                          ))
-//                      .'
-//   </select>
-// </span>
-// ';
-//       return $control;
+   $control = ''
+            .'
+<span class="project-actions-block">
+  <select data-placeholder="'.$placeHolder.'"
+          class="project-actions"
+          title="'.$this->toolTipsService['project-actions'].'"
+          data-project-id="'.$projectId.'"
+          data-project-name="'.Util::htmlEncode($projectName).'">
+    <option value=""></option>
+'
+             .($overview
+               ? $this->pageNavigation->htmlTagsFromArray([
+                 'pre' => '<optgroup>', 'post' => '</optgroup>',
+                 ['type' => 'option',
+                  'title' => $this->toolTipsService['project-infopage'],
+                  'value' => 'project-infopage',
+                'name' => $this->l->t('Project Overview')
+                 ]])
+               : '')
+             .$this->pageNavigation->htmlTagsFromArray([
+               'pre' => '<optgroup>',
+               'post' => '</optgroup>',
+               [ 'type' => 'option',
+                 'title' => $this->toolTipsService['project-action-detailed-instrumentation'],
+                 'value' => 'detailed-instrumentation',
+                 'name' => $this->l->t('Instrumentation') ],
+               [ 'type' => 'option',
+                 'title' => $this->toolTipsService['project-action-instrumentation-numbers'],
+                 'value' => 'project-instruments',
+                 'name' => $this->l->t('Instrumentation Numbers') ],
+               [ 'type' => 'option',
+                 'title' => $this->toolTipsService['project-action-extra-fields'],
+                 'value' => 'project-extra',
+                 'name' => $this->l->t('Extra Member Data') ], ])
+             .$this->pageNavigation->htmlTagsFromArray([
+               'pre' => '<optgroup>',
+               'post' => '</optgroup>',
+               [ 'type' => 'option',
+                 'title' => $this->toolTipsService['project-action-files'],
+                 'value' => 'project-files',
+                 'data' => [ 'projectFiles' => $projectPaths['project'] ],
+                 'name' => $this->l->t('Project Files')
+               ],
+               [ 'type' => 'option',
+                 'title' => $this->toolTipsService['project-action-wiki'],
+                 'value' => 'project-wiki',
+                 'data' => [
+                   'wikiPage' => $this->projectService->projectWikiLink($projectName),
+                   'wikiTitle' => $this->l->t('Project Wiki for %s', [ $projectName ])
+                 ],
+                 'name' => $this->l->t('Project Notes')
+               ],
+               [ 'type' => 'option',
+                 'title' => $this->toolTipsService['project-action-events'],
+                 'value' => 'events',
+                 'name' => $this->l->t('Events')
+               ],
+               [ 'type' => 'option',
+                 'title' => $this->toolTipsService['project-action-email'],
+                 'value' => 'project-email',
+                 'name' => $this->l->t('Em@il')
+               ], ])
+            .$this->pageNavigation->htmlTagsFromArray([
+              'pre' => '<optgroup>',
+              'post' => '</optgroup>',
+              [ 'type' => 'option',
+                'title' => $this->toolTipsService['project-action-debit-mandates'],
+                'value' => 'sepa-debit-mandates',
+                'disabled' => false, // @TODO !Config::isTreasurer(),
+                'name' => $this->l->t('Debit Mandates')
+              ],
+              [ 'type' => 'option',
+                'title' => $this->toolTipsService['project-action-financial-balance'],
+                'value' => 'profit-and-loss',
+                'data' => [ 'projectFiles' => $projectPaths['balance'] ],
+                'name' => $this->l->t('Profit and Loss Account')
+              ] ])
+            .'
+  </select>
+</span>
+';
+      return $control;
   }
 
   /**Gather events, instrumentation numbers and the wiki-page in a
@@ -618,7 +619,7 @@ project without a flyer first.");
         [ 'type' => 'button',
           'title' => $this->toolTipsService['project-action-wiki'],
           'data' => [
-            'wikiPage' => 'WIKI PAGE PLACEHOLDER', //self::projectWikiLink($projectName),
+            'wikiPage' => $this->projectService->projectWikiLink($projectName),
             'wikiTitle' => $this->l->t('Project Wiki for %s', [ $projectName ])
           ],
           'class' => 'project-wiki tooltip-top',
@@ -656,60 +657,33 @@ project without a flyer first.");
    * @todo Do something more useful in the case of an error (database
    * or CMS unavailable)
    */
-  public static function projectProgram($projectId, $action)
+  public function projectProgram($projectId, $action)
   {
-    return '<H2>Project-Program Placeholder</H2>';
-    // $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
-    // $rex = new \Redaxo\RPC($redaxoLocation);
+    $projectPages = $this->projectService->projectWebPages($projectId);
+    $urlTemplate = $this->projectService->webPageCMSURL('%ArticleId%', $action == 'change');
+    if ($action != 'change') {
+      $urlTemplate .= '&rex_version=1';
+    }
+    $templateParameters = array_merge(
+      $projectPages,
+      [
+        'appName' => $this->appName(),
+        'urlGenerator' => $this->urlGenerator(),
+        'pageNavigation' => $this->pageNavigation,
+        'projectId' => $projectId,
+        'action' => $action,
+        'cmsURLTemplate' => $urlTemplate,
+      ]
+    );
 
-    // /* Fetch all the data available. */
-    // $webPages = self::fetchProjectWebPages($projectId);
-    // if ($webPages === false) {
-    //   return L::t("Unable to fetch public web pages for project id %d",
-    //               array($projectId));
-    // }
-    // $articleIds = array();
-    // foreach ($webPages as $idx => $article) {
-    //   // this is cheap, there are only few articles attached to a project
-    //   $articleIds[$article['ArticleId']] = $idx;
-    // }
+    $template = new TemplateResponse(
+      $this->appName(),
+      'project-web-articles',
+      $templateParameters,
+      'blank'
+    );
 
-    // $categories = array(array('id' => Config::getValue('redaxoPreview'),
-    //                           'name' => L::t('Preview')),
-    //                     array('id' => Config::getValue('redaxoRehearsals'),
-    //                           'name' => L::t('Rehearsals')),
-    //                     array('id' => Config::getValue('redaxoArchive'),
-    //                           'name' => L::t('Archive')),
-    //                     array('id' => Config::getValue('redaxoTrashbin'),
-    //                           'name' => L::t('Trashbin')));
-    // $detachedPages = array();
-    // foreach ($categories as $category) {
-    //   // Fetch all articles and remove those already registered
-    //   $pages = $rex->articlesByName('.*', $category['id']);
-    //   \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".$category['id'], \OCP\Util::DEBUG);
-    //   if (is_array($pages)) {
-    //     foreach ($pages as $idx => $article) {
-    //       $article['CategoryName'] = $category['name'];
-    //       $article['Linked'] = isset($articleIds[$article['ArticleId']]);
-    //       $detachedPages[] = $article;
-    //       \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".print_r($article, true), \OCP\Util::DEBUG);
-    //     }
-    //   }
-    // }
-
-    // $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
-    // $tmpl->assign('projectId', $projectId);
-    // $tmpl->assign('projectArticles', $webPages);
-    // $tmpl->assign('detachedArticles', $detachedPages);
-    // $urlTemplate = $rex->redaxoURL('%ArticleId%', $action == 'change');
-    // if ($action != 'change') {
-    //   $urlTemplate .= '&rex_version=1';
-    // }
-    // $tmpl->assign('cmsURLTemplate', $urlTemplate);
-    // $tmpl->assign('action', $action);
-    // $tmpl->assign('app', Config::APP_NAME);
-    // $html = $tmpl->fetchPage();
-    // return $html;
+    return $template->render();
   }
 
   /**

@@ -651,7 +651,7 @@ make sure that the musicians are also automatically added to the
     case 'display':
       $div = ''
         .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tooltip-top" src="'
-        .($this->urlGenerator->linkToRoute('cafevdb.image.get.'.self::PHOTO_JOIN.'.'.$musicianId)).'?imageSize=1200&timeStamp='.$timeStamp
+        .($this->urlGenerator()->linkToRoute('cafevdb.image.get.'.self::PHOTO_JOIN.'.'.$musicianId)).'?imageSize=1200&timeStamp='.$timeStamp
         .'" '
         .'title="'.$this->l->t("Photo, if available").'" /></div>';
       return $div;
