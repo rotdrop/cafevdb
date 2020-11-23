@@ -116,20 +116,26 @@ class Project
   private $instrumentation;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectPoster", mappedBy="owner")
+   * @ORM\OneToMany(targetEntity="ProjectPoster", mappedBy="owner", fetch="EXTRA_LAZY")
    */
   private $posters;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectFlyer", mappedBy="owner")
+   * @ORM\OneToMany(targetEntity="ProjectFlyer", mappedBy="owner", fetch="EXTRA_LAZY")
    */
   private $flyers;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectWebPage", mappedBy="projects", fetch="EXTRA_LAZY")
+   */
+  private $webPages;
 
   public function __construct() {
     $this->arrayCTOR();
     $this->instrumentation = new ArrayCollection();
     $this->posters = new ArrayCollection();
     $this->flyers = new ArrayCollection();
+    $this->webPages = new ArrayCollection();
   }
 
   /**
