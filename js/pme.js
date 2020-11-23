@@ -630,8 +630,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
             }
           });
         });
-        return false;
       });
+      return false;
     });
     // Finally do the styling ...
     callback( { reason: 'dialogOpen' } );
