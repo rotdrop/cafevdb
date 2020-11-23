@@ -27,6 +27,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
 use OCA\CAFEVDB\Storage\UserStorage;
 
+use OCA\DokuWikiEmbedded\Service\AuthDokuWiki;
+
 /**
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
@@ -241,10 +243,10 @@ class ProjectService
     return $orchestra.":projects:".$pageName;
   }
 
-  /** Generate an automated overview. Actually, the orchestra-title
-   * should be made configurable.
+  /**
+   * Generate an automated overview
    */
-  public function generateWikiOverview($handle = false)
+  public function generateWikiOverview()
   {
 /*
   ====== Projekte der Camerata Academica Freiburg e.V. ======
@@ -293,67 +295,81 @@ class ProjectService
 
     $pageName = self::projectWikiLink('projects');
 
-    // $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
-    // $dwembed = new \DWEMBED\App($wikiLocation);
-    // $dwembed->putPage($pagename, $page,
-    //                   [ "sum" => "Automatic CAFEVDB synchronization",
-    //                     "minor" => true ]);
+    $dokuWiki = \OC::$service->query(AuthDokuWiki::class);
+    $dokuWiki->putPage($pagename, $page,
+                       [ "sum" => "Automatic CAFEVDB synchronization",
+                         "minor" => true ]);
 
   }
 
-//     /**Generate an almost empty project page. This spares people the
-//      * need to click on "new page".
-//      *
-//      * - We insert a proper title heading
-//      *
-//      * - We insert a sub-title "Contacts"
-//      *
-//      * - We insert a sub-title "Financial Arrangements"
-//      *
-//      * - We insert a sub-title "Location"
-//      */
-//     public static function generateProjectWikiPage($projectId, $projectName, $handle)
-//     {
-//       $orchestra = Config::$opts['orchestra']; // for the name-space
+  /**Generate an almost empty project page. This spares people the
+   * need to click on "new page".
+   *
+   * - We insert a proper title heading
+   *
+   * - We insert a sub-title "Contacts"
+   *
+   * - We insert a sub-title "Financial Arrangements"
+   *
+   * - We insert a sub-title "Location"
+   */
+  public function generateProjectWikiPage($projectId, $projectName)
+  {
+    $page = L::t('====== Project %s ======
 
-//       $page = L::t('====== Project %s ======
+===== Forword =====
 
-// ===== Forword =====
+This wiki-page is useful to store selected project related
+informations in comfortable and structured form. This can be useful
+for "permant information" like details about supplementary fees,
+contact informations and the like. In particular, this page could be
+helpful to reduce unnecessary data-digging in our email box.
 
-// This wiki-page is useful to store selected project related
-// informations in comfortable and structured form. This can be useful
-// for "permant information" like details about supplementary fees,
-// contact informations and the like. In particular, this page could be
-// helpful to reduce unnecessary data-digging in our email box.
+===== Contacts =====
+Please add any relevant email and mail-adresses here. Please use the wiki-syntax
+* [[foobar@important.com|Mister Universe]]
 
-// ===== Contacts =====
-// Please add any relevant email and mail-adresses here. Please use the wiki-syntax
-// * [[foobar@important.com|Mister Universe]]
+===== Financial Arrangements =====
+Please add any special financial arrangements here. For example:
+single-room fees, double-roome fees. Please consider using an
+unordered list for this like so:
+  * single room fee: 3000€
+  * double room fee: 6000€
+  * supplemenrary fee for Cello-players: 1500€
 
-// ===== Financial Arrangements =====
-// Please add any special financial arrangements here. For example:
-// single-room fees, double-roome fees. Please consider using an
-// unordered list for this like so:
-//   * single room fee: 3000€
-//   * double room fee: 6000€
-//   * supplemenrary fee for Cello-players: 1500€
+===== Location =====
+Whatever.',
+                 [ $projectName ]);
 
-// ===== Location =====
-// Whatever.',
-//                    array($projectName));
+      $pagename = $this->projectWikiLink($projectName);
+      $dokuWiki = \OC::$service->query(AuthDokuWiki::class);
+      $dokuWiki->putPage($pagename, $page,
+                         [ "sum" => "Automatic CAFEVDB synchronization",
+                           "minor" => true ]);
 
-//       $pagename = self::projectWikiLink($projectName);
+  }
 
-//       $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
-//       $dwembed = new \DWEMBED\App($wikiLocation);
-//       $dwembed->putPage($pagename, $page,
-//                         array("sum" => "Automatic CAFEVDB synchronization",
-//                               "minor" => true));
+  public static function renameProjectWikiPage($newProject, $oldProject)
+  {
+    $oldName = $oldProject['Name'];
+    $newName = $newProject['Name'];
+    $oldPageName = $this->projectWikiLink($oldName);
+    $newPageName = $this->projectWikiLink($newName);
 
-//     }
+    $dokuWiki = \OC::$service->query(AuthDokuWiki::class);
 
-//   }; // class Projects
+    $oldPage = " *  ".$oldvals['Name']." wurde zu [[".$newPageName."]] umbenant\n";
+    $newPage = $dokuWiki->getPage($oldPageName);
+    if ($newPage) {
+      // Geneate stuff if there is an old page
+      $dokuWiki->putPage($oldPageName, $oldPage, [ "sum" => "Automatic CAFEVDB page renaming",
+                                                   "minor" => false ]);
+      $dokuWiki->putPage($newPageName, $newPage, [ "sum" => "Automatic CAFEVDB page renaming",
+                                                   "minor" => false ]);
+    }
 
+    $this->generateWikiOverview();
+  }
 }
 
 // Local Variables: ***
