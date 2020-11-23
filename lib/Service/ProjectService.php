@@ -370,6 +370,72 @@ Whatever.',
 
     $this->generateWikiOverview();
   }
+
+
+
+
+
+    // /** THIS WILL GOT TO THE PageRendere/ space
+    //  * Genereate the input data for the link to the CMS in order to edit
+    //  * the project's public web articles inline.
+    //  *
+    //  * @todo Do something more useful in the case of an error (database
+    //  * or CMS unavailable)
+    //  */
+    // public static function projectProgram($projectId, $action)
+    // {
+    //   $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
+    //   $rex = new \Redaxo\RPC($redaxoLocation);
+
+    //   /* Fetch all the data available. */
+    //   $webPages = self::fetchProjectWebPages($projectId);
+    //   if ($webPages === false) {
+    //     return L::t("Unable to fetch public web pages for project id %d",
+    //                 array($projectId));
+    //   }
+    //   $articleIds = array();
+    //   foreach ($webPages as $idx => $article) {
+    //     // this is cheap, there are only few articles attached to a project
+    //     $articleIds[$article['ArticleId']] = $idx;
+    //   }
+
+    //   $categories = array(array('id' => Config::getValue('redaxoPreview'),
+    //                             'name' => L::t('Preview')),
+    //                       array('id' => Config::getValue('redaxoRehearsals'),
+    //                             'name' => L::t('Rehearsals')),
+    //                       array('id' => Config::getValue('redaxoArchive'),
+    //                             'name' => L::t('Archive')),
+    //                       array('id' => Config::getValue('redaxoTrashbin'),
+    //                             'name' => L::t('Trashbin')));
+    //   $detachedPages = array();
+    //   foreach ($categories as $category) {
+    //     // Fetch all articles and remove those already registered
+    //     $pages = $rex->articlesByName('.*', $category['id']);
+    //     \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".$category['id'], \OCP\Util::DEBUG);
+    //     if (is_array($pages)) {
+    //       foreach ($pages as $idx => $article) {
+    //         $article['CategoryName'] = $category['name'];
+    //         $article['Linked'] = isset($articleIds[$article['ArticleId']]);
+    //         $detachedPages[] = $article;
+    //         \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".print_r($article, true), \OCP\Util::DEBUG);
+    //       }
+    //     }
+    //   }
+
+    //   $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
+    //   $tmpl->assign('projectId', $projectId);
+    //   $tmpl->assign('projectArticles', $webPages);
+    //   $tmpl->assign('detachedArticles', $detachedPages);
+    //   $urlTemplate = $rex->redaxoURL('%ArticleId%', $action == 'change');
+    //   if ($action != 'change') {
+    //     $urlTemplate .= '&rex_version=1';
+    //   }
+    //   $tmpl->assign('cmsURLTemplate', $urlTemplate);
+    //   $tmpl->assign('action', $action);
+    //   $tmpl->assign('app', Config::APP_NAME);
+    //   $html = $tmpl->fetchPage();
+    //   return $html;
+    // }
 }
 
 // Local Variables: ***
