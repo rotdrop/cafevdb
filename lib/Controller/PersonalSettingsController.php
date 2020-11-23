@@ -197,6 +197,17 @@ class PersonalSettingsController extends Controller {
       } catch(\Exception $e) {
         return self::grumble($this->l->t('DB-test failed with exception `%s\'.', [$e->getMessage()]));
       }
+    case 'streetAddressName01':
+    case 'streetAddressName02':
+    case 'streetAddressStreet':
+    case 'streetAddressHouseNumber':
+    case 'streetAddressCity':
+    case 'streetAddressZIP':
+    case 'streetAddressCountry':
+      $realValue = trim($value);
+      $this->setConfigValue($parameter, $realValue);
+      return self::valueResponse($realValue, $this->l->t(' `%s\' set to `%s\'.', [$parameter, $realValue]));
+      break;
     case 'shareowner':
       if (!isset($value['shareowner'])
           || !isset($value['shareowner-saved'])
@@ -445,7 +456,8 @@ class PersonalSettingsController extends Controller {
         }
       }
       $this->setConfigValue($parameter, $realValue);
-      $key = $parameter; trigger_error($key . ' => ' . $this->getConfigValue($key));
+      $key = $parameter;
+      $this->logDebug($key . ' => ' . $this->getConfigValue($key));
       return self::valueResponse($realValue, $this->l->t(' `%s\' set to `%s\'.', [$parameter, $realValue]));
     default:
     }
