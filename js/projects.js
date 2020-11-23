@@ -64,20 +64,20 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       }
       wikiDlg.dialog('close').remove();
     }
-    DWEmbed.wikiPopup({ wikiPage: post.wikiPage,
-                        popupTitle: post.popupTitle,
-                        modal: false },
-                      function(dwDialog, dwDialogWidget) {
-                        // open callback
-                        dwDialog.dialog('option', 'appendTo', '#cafevdb-general');
-                        // Custom shuffle button
-                        CAFEVDB.dialogToBackButton(dwDialog);
-                      },
-                      function() {
-                        // close callback
-                        // Remove modal plane if appropriate
-                        CAFEVDB.modalizer(false);
-                      });
+    DokuWikiEmbedded.wikiPopup({ wikiPage: post.wikiPage,
+				 popupTitle: post.popupTitle,
+				 modal: false },
+			       function(dwDialog, dwDialogWidget) {
+				 // open callback
+				 dwDialog.dialog('option', 'appendTo', '#cafevdb-general');
+				 // Custom shuffle button
+				 CAFEVDB.dialogToBackButton(dwDialog);
+			       },
+			       function() {
+				 // close callback
+				 // Remove modal plane if appropriate
+				 CAFEVDB.modalizer(false);
+			       });
   };
 
   /**Generate a popup-dialog for the events-listing for the given
@@ -394,7 +394,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             year.trigger('chosen:updated');
             oldProjectYear = rqData.projectYear;
             oldProjectName = rqData.projectName;
-            if (false && postAddOn == 'submit') {
+            if (postAddOn == 'submit') {
               if (typeof button !== 'undefined') {
                 $(form).off('click', submitSel);
                 button.trigger('click');
@@ -427,18 +427,18 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       // Attach a delegate handler to the form; this gives the
       // possibility to attach another delegate handler to the
       // container element.
-      form.off('click', submitSel).
-        on('click',
-           submitSel,
-           function(event) {
-             if ($(this).attr('name').indexOf('savedelete') < 0) {
-               event.preventDefault();
-               verifyYearName('submit', $(this));
-               return false;
-             } else {
-               return true;
-             }
-           });
+      form.off('click', submitSel)
+	.on('click',
+            submitSel,
+            function(event) {
+              if ($(this).attr('name').indexOf('savedelete') < 0) {
+		event.preventDefault();
+		verifyYearName('submit', $(this));
+		return false;
+              } else {
+		return true;
+              }
+            });
 
     }
 
