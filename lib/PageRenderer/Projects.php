@@ -857,6 +857,217 @@ project without a flyer first.");
     return true;
   }
 
+  // /**
+  //  * phpMyEdit calls the trigger (callback) with the following arguments:
+  //  *
+  //  * @param $pme The phpMyEdit instance
+  //  *
+  //  * @param $op The operation, 'insert', 'update' etc.
+  //  *
+  //  * @param $step 'before' or 'after'
+  //  *
+  //  * @param $oldvals Self-explanatory.
+  //  *
+  //  * @param &$changed Set of changed fields, may be modified by the callback.
+  //  *
+  //  * @param &$newvals Set of new values, which may also be modified.
+  //  *
+  //  * @return boolean. If returning @c false the operation will be terminated
+  //  */
+  // public static function afterInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  // {
+  //   // $newvals contains the new values
+  //   $projectId   = $pme->rec;
+  //   $projectName = $newvals['Name'];
+
+  //   // Create the view and make sure we have enough extra fields in the
+  //   // Besetzungen table
+  //   self::createView($projectId, $projectName, $pme->dbh);
+
+  //   // Also create the project folders.
+  //   $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
+
+  //   // Maybe create a wiki-page with just the project-title
+
+  //   if (false) {
+  //     $orchestra = Config::$opts['orchestra']; // for the name-space
+  //     $pagename = $orchestra.":projekte:".$projectName;
+
+  //     $page = "===== ".$projectName." im Jahr ".$newvals['Jahr']." =====";
+
+  //     $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
+  //     $dwembed = new \DWEMBED\App($wikiLocation);
+  //     $dwembed->putPage($pagename, $page, array("sum" => "Automatic CAFEVDB page creation",
+  //                                               "minor" => false));
+  //   }
+  //   self::generateWikiOverview();
+  //   self::generateProjectWikiPage($projectId, $projectName, $handle);
+
+  //   // Generate an empty offline page template in the public web-space
+  //   self::createProjectWebPage($projectId, 'concert', $pme->dbh);
+  //   self::createProjectWebPage($projectId, 'rehearsals', $pme->dbh);
+
+  //   return true;
+  // }
+
+  // /**@copydoc Projects::afterInsertTrigger() */
+  // public static function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  // {
+  //   // Simply recreate the view, update the extra tables etc.
+  //   self::createView($pme->rec, $newvals['Name'], $pme->dbh);
+
+  //   if (array_search('Name', $changed) === false) {
+  //     // Nothing more has to be done if the name stays the same
+  //     return true;
+  //   }
+
+  //   // Drop the old view, which still exists with the old name
+  //   $sqlquery = 'DROP VIEW IF EXISTS `'.$oldvals['Name'].'View`';
+  //   mySQL::query($sqlquery, $pme->dbh);
+
+  //   // Now that we link events to projects using their short name as
+  //   // category, we also need to update all linke events in case the
+  //   // short-name has changed.
+  //   $events = Events::events($pme->rec, $pme->dbh);
+
+  //   foreach ($events as $event) {
+  //     // Last parameter "true" means to also perform string substitution
+  //     // in the summary field of the event.
+  //     Events::replaceCategory($event, $oldvals['Name'], $newvals['Name'], true);
+  //   }
+
+  //   // Now, we should also rename the project folder. We simply can
+  //   // pass $newvals and $oldvals
+  //   self::renameProjectFolder($newvals, $oldvals);
+
+
+  //   // Fetch the old wiki-page, if any, push as new page to the wiki,
+  //   // push a new "old" page to the wiki with a "has been renamed"
+  //   // notice", then update the overview page
+
+  //   $orchestra = Config::$opts['orchestra']; // for the name-space
+
+  //   $oldname = $oldvals['Name'];
+  //   $newname = $newvals['Name'];
+  //   $oldpagename = $orchestra.":projekte:".$oldname;
+  //   $newpagename = $orchestra.":projekte:".$newname;
+
+  //   $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
+  //   $dwembed = new \DWEMBED\App($wikiLocation);
+
+  //   $oldpage =
+  //            " *  ".$oldvals['Name']." wurde zu [[".$orchestra.":projekte:".$newname."]] umbenant\n";
+  //   $newpage = $dwembed->getPage($oldpagename);
+  //   if ($newpage) {
+  //     // Geneate stuff if there is an old page
+  //     $dwembed->putPage($oldpagename, $oldpage, array("sum" => "Automatic CAFEVDB page renaming",
+  //                                                     "minor" => false));
+  //     $dwembed->putPage($newpagename, $newpage, array("sum" => "Automatic CAFEVDB page renaming",
+  //                                                     "minor" => false));
+  //   }
+
+  //   self::generateWikiOverview();
+
+  //   // TODO: if the name changed, then change also the template, but
+  //   // is not so important, OTOH, would just look better.
+  //   self::nameProjectWebPages($pme->rec, $newvals['Name'], $pme->dbh);
+
+  //   return true;
+  // }
+
+  // /**@copydoc Projects::afterInsertTrigger()
+  //  *
+  //  * This trigger, in particular, tries to take care to remove all
+  //  * "side-effects" the existance of the project had. However, there
+  //  * is some data which must not be removed automatically
+  //  */
+  // public static function deleteTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  // {
+  //   $projectId   = $pme->rec;
+  //   $projectName = $oldvals['Name'];
+  //   if (!$projectName) {
+  //     $projectName = Projects::fetchName($projectId, $pme->dbh);
+  //     $oldvals['Name'] = $projectName;
+  //   }
+
+  //   $safeMode = false;
+  //   if ($step === 'before') {
+  //     $payments = ProjectPayments::payments($projectId, $pme->dbh);
+  //     if ($payments === false) {
+  //       return false; // play safe, don't try to remove anything if we
+  //       // catch an error early
+  //     }
+
+  //     $safeMode = !empty($payments); // don't really remove if we have finance data
+  //   }
+
+  //   if ($step === 'after' || $safeMode) {
+  //     // And now remove the project folder ... OC has undelete
+  //     // functionality and we have a long-ranging backup.
+  //     self::removeProjectFolder($oldvals);
+
+  //     // Regenerate the TOC page in the wiki.
+  //     self::generateWikiOverview();
+
+  //     // Delete the page template from the public web-space. However,
+  //     // here we only move it to the trashbin.
+  //     $webPages = self::fetchProjectWebPages($projectId, $pme->dbh);
+  //     foreach ($webPages as $page) {
+  //       // ignore errors
+  //       \OCP\Util::writeLog(Config::APP_NAME, "Attempt to delete for ".$projectId.": ".$page['ArticleId']." all ".print_r($page, true), \OCP\Util::DEBUG);
+
+  //       self::deleteProjectWebPage($projectId, $page['ArticleId'], $handle);
+  //     }
+
+  //     // Remove all attached events. This really deletes stuff.
+  //     $projectEvents = Events::projectEvents($projectId, $pme->dbh);
+  //     foreach($projectEvents AS $event) {
+  //       Events::deleteEvents($event, $pme->dbh);
+  //     }
+  //   }
+
+  //   if ($safeMode) {
+  //     mySQL::update(self::TABLE_NAME, "`Id` = $projectId", ['Disabled' => 1], $pme->dbh);
+  //     return false; // clean-up has to be done manually later
+  //   }
+
+  //   // remaining part cannot be reached if project-payments need to be maintained, as in this case the 'before' trigger already has aborted the deletion. Only events, web-pages and wiki are deleted, and in the case of the wiki and the web-pages the respective underlying "external" services make a backup-copy of their own (respectively CAFEVDB just moves web-pages to the Redaxo "trash" category).
+
+  //   // delete all extra fields and associated data.
+  //   $projectExtra = ProjectExtra::projectExtraFields($projectId, false, $pme->dbh);
+  //   foreach($projectExtra as $fieldInfo) {
+  //     $fieldId = $fieldInfo['Id'];
+  //     ProjectExtra::deleteExtraField($fieldId, $projectId, true, $pme->dbh);
+  //   }
+
+  //   // in principle, if we have potentially dangling finance data
+  //   // (payments) hanging around, then the project structure should
+  //   // not be deleted ... later.
+
+  //   $sqlquery = 'DROP VIEW IF EXISTS `'.$projectName.'View`';
+  //   mySQL::query($sqlquery, $pme->dbh);
+
+  //   $deleteTables = [
+  //     [ 'table' => 'Besetzungen', 'column' => 'ProjektId' ],
+  //     [ 'table' => 'ProjectInstruments', 'column' => 'ProjectId' ],
+  //     [ 'table' => 'ProjectWebPages', 'column' => 'ProjectId' ],
+  //     // [ 'table' => 'ProjectExtraFields', 'column' => 'ProjectId' ], handled above
+  //     // [ 'table' => 'ProjectEvents', 'column' => 'ProjectId' ], handled above
+  //   ];
+
+  //   $triggerResult = true;
+  //   foreach($deleteTables as $table) {
+  //     $query = "DELETE FROM ".$table['table']." WHERE ".$table['column']." = $projectId";
+  //     if (mySQL::query($query, $pme->dbh) === false) {
+  //       $triggerResult = false;
+  //       break; // stop on error
+  //     }
+  //   }
+
+  //   return $triggerResult;
+  // }
+
+
 }
 
 // Local Variables: ***
