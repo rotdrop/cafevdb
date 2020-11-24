@@ -4143,6 +4143,14 @@ class phpMyEdit
 						echo "<!-- ".$fn." -->\n";
 					}
 				}
+				$this->logInfo("fd  is ".$fd." / ".$fn);
+				if  ($this->col_has_checkboxes($k) ||
+					 ($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
+					$this->logInfo("Checkbox, value: ".$fn);
+					if  (empty($fn)) {
+						$fn = @$this->fdd[$k]['default'];
+					}
+				}
 				if ($fd == $this->key) {
 					$key_col_val = $fn;
 				}
@@ -4256,6 +4264,7 @@ class phpMyEdit
 		$changed	  = array();
 		$stamps		  = array();
 		$checks       = array();
+		$defaults     = array();
 		// Prepare query to retrieve oldvals
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if ($this->processed($k)) {
@@ -4275,6 +4284,7 @@ class phpMyEdit
 				if ($this->col_has_checkboxes($k) ||
 					($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
 					$checks[$fd] = true;
+					$defaults[$fd] = @$this->fdd[$k]['default'];
 					//error_log('checkbox: '.$fd.' value '.$fn);
 				}
 				// Don't include disabled fields into newvals, but
@@ -4336,6 +4346,7 @@ class phpMyEdit
 					// may as well store nothing or 0.
 					//error_log('Changed check '.$fd.' "'.intval($oldvals[$fd]).'" "'.intval($value));
 					$changed[] = $fd;
+					$newvals[$fd] = $defaults[$fd];
 				}
 			} else if ($value != $oldvals[$fd]) {
 				//error_log('Changed '.$fd.' "'.$oldvals[$fd].'" "'.$value.'"');
