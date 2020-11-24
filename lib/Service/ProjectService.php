@@ -69,6 +69,7 @@ class ProjectService
     $this->wikiRPC = $wikiRPC;
     $this->webPagesRPC = $webPagesRPC;
     $this->repository = $this->getDatabaseRepository(Entities\Project::class);
+    $this->l = $this->l10n();
   }
 
   /**Generate an option table with all participants, suitable to be
@@ -249,7 +250,7 @@ class ProjectService
 
   public function projectWikiLink($pageName)
   {
-    $orchestra = $this>getConfigValue('orchestra');
+    $orchestra = $this->getConfigValue('orchestra');
 
     return $orchestra.":projects:".$pageName;
   }
@@ -325,7 +326,7 @@ class ProjectService
    */
   public function generateProjectWikiPage($projectId, $projectName)
   {
-    $page = L::t('====== Project %s ======
+    $page = $this->l->t('====== Project %s ======
 
 ===== Forword =====
 
@@ -382,7 +383,7 @@ Whatever.',
    */
   public function webPageCMSURL($articleId, $editMode = false)
   {
-    return $this->webPageRPC->redaxoURL($articleId, $editMode);
+    return $this->webPagesRPC->redaxoURL($articleId, $editMode);
   }
 
   /**
@@ -398,7 +399,7 @@ Whatever.',
    */
   public function projectWebPages($projectId)
   {
-    $project = $this->find($projectid);
+    $project = $this->find($projectId);
     if (empty($project)) {
       return false;
     }
@@ -408,14 +409,14 @@ Whatever.',
       $articleIds[$article['ArticleId']] = $idx;
     }
 
-    $categories = [ [ 'id' => Config::getValue('redaxoPreview'),
-                      'name' => L::t('Preview') ],
-                    [ 'id' => Config::getValue('redaxoRehearsals'),
-                      'name' => L::t('Rehearsals') ],
-                    [ 'id' => Config::getValue('redaxoArchive'),
-                      'name' => L::t('Archive') ],
-                    [ 'id' => Config::getValue('redaxoTrashbin'),
-                      'name' => L::t('Trashbin')] ];
+    $categories = [ [ 'id' => $this->getConfigValue('redaxoPreview'),
+                      'name' => $this->l->t('Preview') ],
+                    [ 'id' => $this->getConfigValue('redaxoRehearsals'),
+                      'name' => $this->l->t('Rehearsals') ],
+                    [ 'id' => $this->getConfigValue('redaxoArchive'),
+                      'name' => $this->l->t('Archive') ],
+                    [ 'id' => $this->getConfigValue('redaxoTrashbin'),
+                      'name' => $this->l->t('Trashbin')] ];
     $projectPages = [];
     $otherPages = [];
     foreach ($categories as $category) {
@@ -439,69 +440,6 @@ Whatever.',
       'otherPages' => $otherPages,
     ];
   }
-
-  // /** THIS WILL GOT TO THE PageRendere/ space
-  //  * Genereate the input data for the link to the CMS in order to edit
-  //  * the project's public web articles inline.
-  //  *
-  //  * @todo Do something more useful in the case of an error (database
-  //  * or CMS unavailable)
-  //  */
-  // public function projectProgram($projectId, $action)
-  // {
-  //   $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
-  //   $rex = new \Redaxo\RPC($redaxoLocation);
-
-  //   /* Fetch all the data available. */
-  //   $webPages = self::fetchProjectWebPages($projectId);
-  //   if ($webPages === false) {
-  //     return L::t("Unable to fetch public web pages for project id %d",
-  //                 array($projectId));
-  //   }
-  //   $articleIds = array();
-  //   foreach ($webPages as $idx => $article) {
-  //     // this is cheap, there are only few articles attached to a project
-  //     $articleIds[$article['ArticleId']] = $idx;
-  //   }
-
-  //   $categories = array(array('id' => Config::getValue('redaxoPreview'),
-  //                             'name' => L::t('Preview')),
-  //                       array('id' => Config::getValue('redaxoRehearsals'),
-  //                             'name' => L::t('Rehearsals')),
-  //                       array('id' => Config::getValue('redaxoArchive'),
-  //                             'name' => L::t('Archive')),
-  //                       array('id' => Config::getValue('redaxoTrashbin'),
-  //                             'name' => L::t('Trashbin')));
-  //   $detachedPages = array();
-  //   foreach ($categories as $category) {
-  //     // Fetch all articles and remove those already registered
-  //     $pages = $rex->articlesByName('.*', $category['id']);
-  //     \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".$category['id'], \OCP\Util::DEBUG);
-  //     if (is_array($pages)) {
-  //       foreach ($pages as $idx => $article) {
-  //         $article['CategoryName'] = $category['name'];
-  //         $article['Linked'] = isset($articleIds[$article['ArticleId']]);
-  //         $detachedPages[] = $article;
-  //         \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".print_r($article, true), \OCP\Util::DEBUG);
-  //       }
-  //     }
-  //   }
-
-  //   $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
-  //   $tmpl->assign('projectId', $projectId);
-  //   $tmpl->assign('projectArticles', $webPages);
-  //   $tmpl->assign('detachedArticles', $detachedPages);
-  //   $urlTemplate = $rex->redaxoURL('%ArticleId%', $action == 'change');
-  //   if ($action != 'change') {
-  //     $urlTemplate .= '&rex_version=1';
-  //   }
-  //   $tmpl->assign('cmsURLTemplate', $urlTemplate);
-  //   $tmpl->assign('action', $action);
-  //   $tmpl->assign('app', Config::APP_NAME);
-
-  //   $html = $tmpl->fetchPage();
-  //   return $html;
-  // }
 
   /**
    * Create and add a new web-page. The first one will have the name

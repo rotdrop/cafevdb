@@ -197,11 +197,11 @@ class Projects extends PMETableViewBase
       $opts['fdd']['Disabled'] = [
         'name'     => $this->l->t('Disabled'),
         'css'      => ['postfix' => ' project-disabled'],
-        'values2|CAP' => [1 => ''],
+        'values2|CAP' => [1 => '' ],
         'values2|LVFD' => [1 => $this->l->t('true'),
                            0 => $this->l->t('false')],
-        'default'  => '',
-        'select'   => 'O',
+        'default'  => '0',
+        'select'   => 'C',
         'sort'     => true,
         'tooltip'  => $this->toolTipsService['extra-fields-disabled']
       ];
@@ -614,7 +614,7 @@ project without a flyer first.");
       [
         'pre' => ('<fieldset class="projectToolbox" '.
                   'data-project-id="'.$projectId.'" '.
-                  'data-project-name="'.html_entities($projectName).'">'), // @TODO: standard way to do this
+                  'data-project-name="'.htmlentities($projectName).'">'), // @TODO: standard way to do this
         'post' => '</fieldset>',
         [ 'type' => 'button',
           'title' => $this->toolTipsService['project-action-wiki'],

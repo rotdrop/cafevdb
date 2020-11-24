@@ -611,7 +611,7 @@ $(document).ready(function(){
         if (idField.length > 0) {
           recordId = idField.val();
         }
-        CAFEVDB.Photo.ready(recordId, 'Projekte', function() {
+        CAFEVDB.Photo.ready(recordId, 'ProjectFlyer', function() {
           imagesReady = true;
         });
       } else {
