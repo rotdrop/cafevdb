@@ -28,12 +28,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Projekte
+ * Projects
  *
  * @ORM\Table(name="Projects", uniqueConstraints={@ORM\UniqueConstraint(name="Name", columns={"Name"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository")
  */
-class Project
+class Project implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -78,28 +78,21 @@ class Project
   /**
    * @var string
    *
-   * @ORM\Column(name="Unkostenbeitrag", type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
+   * @ORM\Column(name="Unkostenbeitrag", type="decimal", precision=7, scale=2, nullable=true, options={"default"="0.00"})
    */
   private $unkostenbeitrag = '0.00';
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Anzahlung", type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
+   * @ORM\Column(name="Anzahlung", type="decimal", precision=7, scale=2, nullable=true, options={"default"="0.00"})
    */
   private $anzahlung = '0.00';
 
   /**
-   * @var string
-   *
-   * @ORM\Column(name="ExtraFelder", type="text", length=65535, nullable=false, options={"comment"="Extra-Datenfelder"})
-   */
-  private $extrafelder;
-
-  /**
    * @var bool
    *
-   * @ORM\Column(name="Disabled", type="boolean", nullable=false, options={"default"="0"})
+   * @ORM\Column(name="Disabled", type="boolean", nullable=true, options={"default"="0"})
    */
   private $disabled = '0';
 
@@ -126,7 +119,7 @@ class Project
   private $flyers;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectWebPage", mappedBy="projects", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectWebPage", mappedBy="project", fetch="EXTRA_LAZY")
    */
   private $webPages;
 
@@ -149,27 +142,27 @@ class Project
   }
 
   /**
-   * Set jahr.
+   * Set year.
    *
-   * @param int $jahr
+   * @param int $year
    *
    * @return Project
    */
-  public function setJahr($jahr)
+  public function setYear($year)
   {
-    $this->jahr = $jahr;
+    $this->year = $year;
 
     return $this;
   }
 
   /**
-   * Get jahr.
+   * Get year.
    *
    * @return int
    */
-  public function getJahr()
+  public function getYear()
   {
-    return $this->jahr;
+    return $this->year;
   }
 
   /**
