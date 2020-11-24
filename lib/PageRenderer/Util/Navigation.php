@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB\PageRenderer\Util;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Legacy\PME\IOptions as PMEOptions;
+use OCA\CAFEVDB\Database\Legacy\PME\IOptions as PMEOptions;
 use OCA\CAFEVDB\Common\Util;
 
 /**Support class to generate navigation buttons and the like.
@@ -41,7 +41,7 @@ class Navigation
   /** @var OCA\CAFEVDB\Service\ToolTipsService */
   protected $toolTipsService;
 
-  /** @var OCA\CAFEVDB\Legacy\PME\IOptions */
+  /** @var OCA\CAFEVDB\Database\Legacy\PME\IOptions */
   protected $pmeOptions;
 
   public function __construct(

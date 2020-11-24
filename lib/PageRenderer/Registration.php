@@ -24,7 +24,7 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
-use OCA\CAFEVDB\Legacy\PME\IOptions as IPMEOptions;
+use OCA\CAFEVDB\Database\Legacy\PME\IOptions as IPMEOptions;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 
 class Registration

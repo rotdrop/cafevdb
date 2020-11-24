@@ -24,7 +24,7 @@ namespace OCA\CAFEVDB\PageRenderer\PME;
 
 use \OCP\IURLGenerator;
 
-use OCA\CAFEVDB\Legacy\PME\DefaultOptions;
+use OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 

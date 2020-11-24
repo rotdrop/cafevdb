@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 
-use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 

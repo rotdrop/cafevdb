@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 
 class ProjectsController extends Controller {
@@ -41,7 +41,7 @@ class ProjectsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  /** @var \OCA\CAFEVDB\Legacy\PME\PHPMyEdit */
+  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
   protected $pme;
 
   /** @var RequestParameterService */

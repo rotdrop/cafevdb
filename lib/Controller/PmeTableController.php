@@ -36,7 +36,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 
 class PmeTableController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -48,7 +48,7 @@ class PmeTableController extends Controller {
   /** @var ParameterService */
   private $parameterService;
 
-  /** @var \OCA\CAFEVDB\Legacy\PME\PHPMyEdit */
+  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
   protected $pme;
 
   /** @var string */

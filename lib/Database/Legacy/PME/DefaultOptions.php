@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Legacy\PME;
+namespace OCA\CAFEVDB\Database\Legacy\PME;
 
 class DefaultOptions extends \ArrayObject implements IOptions
 {

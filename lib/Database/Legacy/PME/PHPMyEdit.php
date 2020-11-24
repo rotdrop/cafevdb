@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Legacy\PME;
+namespace OCA\CAFEVDB\Database\Legacy\PME;
 
 use \OCP\ILogger;
 use \OCP\IL10N;
@@ -58,7 +58,7 @@ class PHPMyEdit extends \phpMyEdit
    *
    * @param \OCA\CAFEVDB\Database\Connection $connection
    *
-   * @param \OCA\CAFEVDB\Legacy\PME\IOptions $options
+   * @param \OCA\CAFEVDB\Database\Legacy\PME\IOptions $options
    *
    * We do also some construction thing s.t. add_operation() and
    * friends does something useful.

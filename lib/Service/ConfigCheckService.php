@@ -72,7 +72,7 @@ class ConfigCheckService
     CalDavService $calDavService,
     CardDavService $cardDavService,
     EventsService $eventsService
-    //, \OCA\CAFEVDB\Legacy\PME\PHPMyEdit $phpMyEdit
+    //, \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit $phpMyEdit
     //, \OCA\CAFEVDB\Database\Connection $dbConnection
     //, \OCA\CAFEVDB\Service\RequestParameterService $requestParameters
     //, \OCA\CAFEVDB\PageRenderer\Musicians $musiciansView
@@ -97,7 +97,7 @@ class ConfigCheckService
     // while ($row = $mySQLiShim->fetch_array($result)) {
     //   $this->logInfo(__METHOD__." ".print_r($row, true));
     // }
-    //new \OCA\CAFEVDB\Legacy\PME\PHPMyEdit($connection, $pmeConfig);
+    //new \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit($connection, $pmeConfig);
     //new \OCA\CAFEVDB\PageRenderer\Musicians($configService, $requestParameters, $entityManager, $phpMyEdit);
     // try {
     //   $musiciansView->disableProjectMode();
