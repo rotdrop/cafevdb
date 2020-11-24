@@ -70,14 +70,14 @@ if ($cnt > 0) {
   echo '    <li id="cmsarticle-tab-nopage"><a href="#projectArticle-nopage">'.$l->t('nothing').'</a></li>
 ';
 }
-echo '    <li id="cmsarticle-tab-newpage" class="tip" title="'.Config::toolTips('project-web-article-add').'"><a href="#projectArticle-newpage" class="compact">'.'<span class="ui-icon ui-icon-plusthick">+</span>'.'</a></li>
+echo '    <li id="cmsarticle-tab-newpage" class="tip" title="'.$toolTips['project-web-article-add'].'"><a href="#projectArticle-newpage" class="compact">'.'<span class="ui-icon ui-icon-plusthick">+</span>'.'</a></li>
 ';
-echo '    <li id="cmsarticle-tab-linkpage" class="tip" title="'.Config::toolTips('project-web-article-linkpage').'"><a href="#projectArticle-linkpage" class="compact">'.'<span class="ui-icon cafevdb-link-icon">link</span>'.'</a></li>
+echo '    <li id="cmsarticle-tab-linkpage" class="tip" title="'.$toolTips['project-web-article-linkpage'].'"><a href="#projectArticle-linkpage" class="compact">'.'<span class="ui-icon cafevdb-link-icon">link</span>'.'</a></li>
 ';
 if ($cnt > 0) {
-  echo '    <li id="cmsarticle-tab-unlinkpage" class="tip" title="'.Config::toolTips('project-web-article-unlinkpage').'"><a href="#projectArticle-unlinkpage" class="compact">'.'<span class="ui-icon cafevdb-unlink-icon">link</span>'.'</a></li>
+  echo '    <li id="cmsarticle-tab-unlinkpage" class="tip" title="'.$toolTips['project-web-article-unlinkpage'].'"><a href="#projectArticle-unlinkpage" class="compact">'.'<span class="ui-icon cafevdb-unlink-icon">link</span>'.'</a></li>
 ';
-  echo '    <li id="cmsarticle-tab-deletepage" class="tip" title="'.Config::toolTips('project-web-article-delete').'"><a href="#projectArticle-deletepage" class="compact">'.'<span class="ui-icon ui-icon-minusthick">-</span>'.'</a></li>
+  echo '    <li id="cmsarticle-tab-deletepage" class="tip" title="'.$toolTips['project-web-article-delete'].'"><a href="#projectArticle-deletepage" class="compact">'.'<span class="ui-icon ui-icon-minusthick">-</span>'.'</a></li>
 ';
 }
 echo '  </ul>
