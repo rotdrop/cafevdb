@@ -211,6 +211,10 @@ div.cfgerror {
   margin-top:2em;
 }
 
+.cafevdb.error-page .error-wide {
+  margin-left: 0px !important;
+}
+
 /*******************************************************************************
  *
  * Pointer above controls

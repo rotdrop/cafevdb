@@ -1274,14 +1274,14 @@ var CAFEVDB = CAFEVDB || {};
 	info += ': ' + '<span class="error toastify name">' + failData.error + '</span>';
       }
       if (failData.message) {
-        info += '<div class="error toastify">' + failData.message + '</div>';
+        info += '<div class="'+CAFEVDB.appName+' error toastify">' + failData.message + '</div>';
       }
       info += '<div class="error toastify feedback-link">'
             + t(CAFEVDB.appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
             + '</div>';
       autoReport = '';
       var exceptionData = failData;
-      if (exceptionData.exception  !== undefined) {
+      if (exceptionData.exception !== undefined) {
         info += '<div class="exception error name"><pre>'+exceptionData.exception+'</pre></div>'
 	  + '<div class="exception error trace"><pre>'+exceptionData.trace+'</pre></div>';
 	while ((exceptionData = exceptionData.previous) != null) {
@@ -1289,6 +1289,9 @@ var CAFEVDB = CAFEVDB || {};
           info += '<div class="exception error name"><pre>'+exceptionData.exception+'</pre></div>'
 	  + '<div class="exception error trace"><pre>'+exceptionData.trace+'</pre></div>';
 	}
+      }
+      if (failData.info) {
+        info += '<div class="'+CAFEVDB.appName+' error-page">'+failData.info+'</div>';
       }
       break;
     case CAFEVDB.httpStatus.UNAUTHORIZED:
@@ -1409,6 +1412,7 @@ var CAFEVDB = CAFEVDB || {};
       console.debug(xhr.status);
       data.message = t(CAFEVDB.appName, 'HTTP error response to AJAX call: {code} / {error}',
                        {'code': xhr.status, 'error': errorThrown});
+      data.info = $(xhr.responseText).find('main').html();
     } else if (ct.indexOf('json') > -1) {
       const response = JSON.parse(xhr.responseText);
       //console.info('XHR response text', xhr.responseText);
