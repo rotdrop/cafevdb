@@ -152,6 +152,33 @@ class PHPMyEdit extends \phpMyEdit
   }
 
   /**
+   * Forward transaction support of underlying Doctrine\Dbal
+   * connection.
+   */
+  public function beginTransaction()
+  {
+    $this->connection->beginTransaction();
+  }
+
+  /**
+   * Forward transaction support of underlying Doctrine\Dbal
+   * connection.
+   */
+  public function commit()
+  {
+    $this->connection->commit();
+  }
+
+  /**
+   * Forward transaction support of underlying Doctrine\Dbal
+   * connection.
+   */
+  public function rollBack()
+  {
+    $this->connection->rollBack();
+  }
+
+  /**
    * Call phpMyEdit::execute() with the given options. This function
    * actually calls the constructor of the base-class and overrides
    * its options with the given argument.

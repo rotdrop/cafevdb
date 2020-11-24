@@ -154,7 +154,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** Run underlying table-manager (phpMyEdit for now). */
   public function execute($opts = [])
   {
-    $this->pme->execute($opts);
+    $this->pme->beginTransaction();
+    try {
+      $this->pme->execute($opts);
+      $this->pme->commit();
+    } catch (\Throwable $t) {
+      $this->logError("Rolling back SQL transaction ...");
+      $this->pme->rollBack();
+      throw new \Exception($this->l->t("SQL Transaction failed."), $t->getCode(), $t);
+    }
   }
 
   public function getProjectName() { return $this->projectName; }
@@ -357,8 +365,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
       // Then trim away ...
       $value = trim($value);
-      if (array_search($key, $changed) === false && $oldvals[$key] != $value) {
+      $chgIdx = array_search($key, $changed);
+      if ($chgIdx === false && $oldvals[$key] != $value) {
         $changed[] = $key;
+      }
+      if ($op == 'insert' && empty($value) && $chgIdx !== false) {
+        unset($changed[$chgIdx]);
+        $changed = array_values($changed);
+        unset($newvals[$key]);
       }
     }
 
