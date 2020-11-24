@@ -3010,7 +3010,6 @@ class phpMyEdit
 		$ret = '';
 		$nav_fnc = 'nav_'.$position;
 		if(! $this->$nav_fnc()) {
-			$this->logInfo(__METHOD__.' '.isset($this->buttons[$this->page_type]['up']));
 			return;
 		}
 		if ($this->nav_buttons()) {
@@ -4143,10 +4142,8 @@ class phpMyEdit
 						echo "<!-- ".$fn." -->\n";
 					}
 				}
-				$this->logInfo("fd  is ".$fd." / ".$fn);
 				if  ($this->col_has_checkboxes($k) ||
 					 ($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
-					$this->logInfo("Checkbox, value: ".$fn);
 					if  (empty($fn)) {
 						$fn = @$this->fdd[$k]['default'];
 					}
