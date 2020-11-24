@@ -42,8 +42,8 @@ class Util
     $bt = '`';
     $dot = '.';
     $ind = '  ';
-    $nl = '
-';
+    $nl = "\n";
+
     $firstTable = reset($joinStructure);
     if ($firstTable == false) {
       return false;
