@@ -521,7 +521,7 @@ make sure that the musicians are also automatically added to the
       'options' => 'APVCD',
       'sql' => '`PMEtable0`.`Id`',
       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
-        $stampIdx = array_search('Aktualisiert', $fds);
+        $stampIdx = array_search('Updated', $fds);
         $stamp = strtotime($row['qf'.$stampIdx]);
         return $this->photoImageLink($musicianId, $action, $stamp);
       },
@@ -583,7 +583,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => false,
     ];
 
-    $opts['fdd']['Aktualisiert'] =
+    $opts['fdd']['Updated'] =
       array_merge(
         $this->defaultFDD['datetime'],
         [

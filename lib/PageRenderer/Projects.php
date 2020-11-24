@@ -403,7 +403,7 @@ __EOT__;
       'name' => $this->l->t('Flyer'),
       'select' => 'T',
       'options' => 'VCD',
-      'sql'      => '`PMEtable0`.`Aktualisiert`',
+      'sql'      => '`PMEtable0`.`Updated`',
       'php' => function($value, $action, $field, $fds, $fdd, $row, $recordId) {
         $projectId = $recordId;
         $stamp = $value;
@@ -414,7 +414,7 @@ __EOT__;
       'sort' => false,
     ];
 
-    $opts['fdd']['Aktualisiert'] =
+    $opts['fdd']['Updated'] =
       array_merge(
         $this->defaultFDD['datetime'],
         [

@@ -99,9 +99,9 @@ class Project implements \ArrayAccess
   /**
    * @var \DateTime|null
    *
-   * @ORM\Column(name="Aktualisiert", type="datetime", nullable=true)
+   * @ORM\Column(name="Updated", type="datetime", nullable=true)
    */
-  private $aktualisiert;
+  private $updated;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentation", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
@@ -334,27 +334,27 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set aktualisiert.
+   * Set updated.
    *
-   * @param \DateTime|null $aktualisiert
+   * @param \DateTime|null $updated
    *
    * @return Project
    */
-  public function setAktualisiert($aktualisiert = null)
+  public function setUpdated($updated = null)
   {
-    $this->aktualisiert = $aktualisiert;
+    $this->updated = $updated;
 
     return $this;
   }
 
   /**
-   * Get aktualisiert.
+   * Get updated.
    *
    * @return \DateTime|null
    */
-  public function getAktualisiert()
+  public function getUpdated()
   {
-    return $this->aktualisiert;
+    return $this->updated;
   }
 
   /**
