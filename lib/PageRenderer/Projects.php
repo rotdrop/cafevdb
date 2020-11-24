@@ -857,58 +857,44 @@ project without a flyer first.");
     return true;
   }
 
-  // /**
-  //  * phpMyEdit calls the trigger (callback) with the following arguments:
-  //  *
-  //  * @param $pme The phpMyEdit instance
-  //  *
-  //  * @param $op The operation, 'insert', 'update' etc.
-  //  *
-  //  * @param $step 'before' or 'after'
-  //  *
-  //  * @param $oldvals Self-explanatory.
-  //  *
-  //  * @param &$changed Set of changed fields, may be modified by the callback.
-  //  *
-  //  * @param &$newvals Set of new values, which may also be modified.
-  //  *
-  //  * @return boolean. If returning @c false the operation will be terminated
-  //  */
-  // public static function afterInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
-  // {
-  //   // $newvals contains the new values
-  //   $projectId   = $pme->rec;
-  //   $projectName = $newvals['Name'];
+  /**
+   * phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public function afterInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    // $newvals contains the new values
+    $projectId   = $pme->rec;
+    $projectName = $newvals['Name'];
 
-  //   // Create the view and make sure we have enough extra fields in the
-  //   // Besetzungen table
-  //   self::createView($projectId, $projectName, $pme->dbh);
+    // Create the view
+    //self::createView($projectId, $projectName, $pme->dbh);
 
-  //   // Also create the project folders.
-  //   $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
+    // Also create the project folders.
+    $projectPaths = $this->projectService->ensureProjectFolders($projectId, $projectName);
 
-  //   // Maybe create a wiki-page with just the project-title
+    $this->projectService->generateWikiOverview();
+    $this->projectService->generateProjectWikiPage($projectId, $projectName);
 
-  //   if (false) {
-  //     $orchestra = Config::$opts['orchestra']; // for the name-space
-  //     $pagename = $orchestra.":projekte:".$projectName;
+    // Generate an empty offline page template in the public web-space
+    $this->projectService->createProjectWebPage($projectId, 'concert');
+    $this->projectService->createProjectWebPage($projectId, 'rehearsals');
 
-  //     $page = "===== ".$projectName." im Jahr ".$newvals['Jahr']." =====";
-
-  //     $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
-  //     $dwembed = new \DWEMBED\App($wikiLocation);
-  //     $dwembed->putPage($pagename, $page, array("sum" => "Automatic CAFEVDB page creation",
-  //                                               "minor" => false));
-  //   }
-  //   self::generateWikiOverview();
-  //   self::generateProjectWikiPage($projectId, $projectName, $handle);
-
-  //   // Generate an empty offline page template in the public web-space
-  //   self::createProjectWebPage($projectId, 'concert', $pme->dbh);
-  //   self::createProjectWebPage($projectId, 'rehearsals', $pme->dbh);
-
-  //   return true;
-  // }
+    return true;
+  }
 
   // /**@copydoc Projects::afterInsertTrigger() */
   // public static function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
