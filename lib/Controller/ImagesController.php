@@ -89,7 +89,7 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function get($joinTable, $ownerId, $imageId = -1, $metaData = false)
+  public function get($joinTable, $ownerId, $imageId = -1, $metaData = false, $imageSize = 400)
   {
     $this->logDebug("table: ".$joinTable.", owner: ".$ownerId. ", image: ".$imageId);
     $imageFileName = "image";
@@ -134,7 +134,7 @@ class ImagesController extends Controller {
             return new Http\DataResponse([], Http::STATUS_NOT_FOUND);
           } else {
             // return placeholder if metadata is not requested
-            return $this->getPlaceHolder($joinTable);
+            return $this->getPlaceHolder($joinTable, $imageSize);
           }
         }
 
@@ -427,14 +427,14 @@ class ImagesController extends Controller {
   /**
    * Redirect to a place-holder image.
    */
-  private function getPlaceHolder($joinTable)
+  private function getPlaceHolder($joinTable, $imageSize)
   {
     $placeHolderName = 'placeholder/'.Util::camelCaseToDashes($joinTable).'.svg';
     try {
       $placeHolderUrl = $this->urlGenerator()->imagePath($this->appName(), $placeHolderName);
     } catch (\Throwable $t) {
       $this->logException($t);
-      $imageData = $this->fallbackPlaceholder();
+      $imageData = $this->fallbackPlaceholder($imageSize);
       $imageFileName = 'placeholder.svg';
       $imageMimeType = 'image/svg+xml';
       return new Http\DataDownloadResponse($imageData, $imageFileName, $imageMimeType);
@@ -442,15 +442,23 @@ class ImagesController extends Controller {
     return new Http\RedirectResponse($placeHolderUrl);
   }
 
-  private function fallbackPlaceholder()
+  private function fallbackPlaceholder($imageSize)
   {
+    if (empty($imageSize)) {
+      $imageSize = '240pt';
+    } else {
+      $imageSize .= 'px';
+    }
     $data =<<<'EOT'
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
     xmlns:svg="http://www.w3.org/2000/svg"
     xmlns="http://www.w3.org/2000/svg"
-    width="180pt"
-    height="180pt"
+EOT;
+    $data .= '
+    width="'.$imageSize.'"
+    height="'.$imageSize.'"';
+    $data .=<<<'EOT'
     viewBox="0 0 120 120">
   <rect
       x="0" y="0" width="120" height="120"

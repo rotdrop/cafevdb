@@ -649,10 +649,14 @@ make sure that the musicians are also automatically added to the
     case 'add':
       return $this->l->t("Photos or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
     case 'display':
+      $url = $this->urlGenerator()->linkToRoute(
+        'cafevdb.images.get',
+        [ 'joinTable' => self::PHOTO_JOIN,
+          'ownerId' => $musicianId ]);
+      $url .= '?imageSize=1200&timoeStamp='.$timeStamp;
+      $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
       $div = ''
-        .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tooltip-top" src="'
-        .($this->urlGenerator()->linkToRoute('cafevdb.image.get.'.self::PHOTO_JOIN.'.'.$musicianId)).'?imageSize=1200&timeStamp='.$timeStamp
-        .'" '
+        .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tooltip-top" src="'.$url.'" '
         .'title="'.$this->l->t("Photo, if available").'" /></div>';
       return $div;
     case 'change':

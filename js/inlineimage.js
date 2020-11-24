@@ -172,6 +172,7 @@ var CAFEVDB = CAFEVDB || {};
 
     const requestParams =
       '?metaData=false'
+      + '&imageSize=' + imageSize
       + '&refresh=' + Math.random() // disable browser-caching
       + '&requesttoken=' + encodeURIComponent(OC.requestToken);
     $(this.photo)
@@ -489,7 +490,7 @@ var CAFEVDB = CAFEVDB || {};
       joinTableField.val(joinTable);
     }
     if (typeof ownerId !== 'undefined' && typeof joinTable != 'undefined' && ownerId >= 0) {
-      var imageSize = $('input[name="ImageSize"]').val();
+      var imageSize = $('input[name="imageSize"]').val();
       if (typeof imageSize == 'undefined') {
         imageSize = 400;
       }
@@ -508,8 +509,8 @@ var CAFEVDB = CAFEVDB || {};
     const popup = overlay.cafevDialog({
       title: t('cafevdb', 'Photo Zoom'),
       position: { my: "middle top+5%",
-                  at: "middle bottom",
-                  of: "#controls" },
+                  at: "middle top",
+                  of: "#app-content" },
       width: 'auto',
       height: 'auto',
       modal: true,

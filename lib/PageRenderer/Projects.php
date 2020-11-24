@@ -483,10 +483,14 @@ __EOT__;
         return $this->l->t("Flyers can only be added to existing projects, please add the new
 project without a flyer first.");
       case 'display':
+        $url = $this->urlGenerator()->linkToRoute(
+          'cafevdb.images.get',
+          [ 'joinTable' => self::FLYER_JOIN,
+            'ownerId' => $projectId ]);
+        $url .= '?imageSize=1200&timeStamp='.$timeStamp;
+        $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
         $div = ''
-             .'<div class="photo"><img class="cafevdb_inline_image flyer zoomable" src="'
-             .$this->urlGenerator()->linkToRoute('cafevdb.image.get.'.self::FLYER_JOIN.'.'.$projectId).'&imageSize=1200&timeStamp='.$timeStamp
-             .'" '
+             .'<div class="photo"><img class="cafevdb_inline_image flyer zoomable" src="'.$url.'" '
              .'title="Flyer, if available" /></div>';
         return $div;
       case 'change':
@@ -837,6 +841,7 @@ project without a flyer first.");
         $this->logException($t);
         // @todo Do we want to bailout here?
         // return false;
+        throw new \Exception($this->l->t("Unable to update instrumentation"), $t->getCode(), $t);
       }
       /**
        * @note Unset in particular the $changed records. Note that
