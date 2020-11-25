@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,50 +20,44 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB {
+namespace OCA\CAFEVDB;
 
-  $table = new ProjectPayments();
+$css_pfx = $renderer->cssPrefix();
+$project = $renderer->getProjectName();
+$projectId = $renderer->getProjectId();
 
-  $projectName = $_['projectName'];
-  $projectId = $_['projectId'];
-  $css_pfx = ProjectPayments::CSS_PREFIX;
-
-  $nav = '';
-  if ($projectId >= 0) {
-    $nav .= Navigation::pageControlElement('projectlabel', $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('detailed', $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('project-extra', $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('debit-mandates', $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('project-payments', $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('debit-notes', $projectName, $projectId);
-    if ($projectName === Config::getValue('memberTable', false)) {
-      $nav .= Navigation::pageControlElement('insurances');
-    }
-    $nav .= Navigation::pageControlElement('projectinstruments', $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('projects');
-  } else {
-    $nav .= Navigation::pageControlElement('projects');
-    $nav .= Navigation::pageControlElement('all');
-    $nav .= Navigation::pageControlElement('instruments');
+$nav = '';
+if ($projectId >= 0) {
+  $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-extra', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);
+  if ($projectName === Config::getValue('memberTable', false)) {
+    $nav .= $pageNavigation->pageControlElement('insurances');
   }
+  $nav .= $pageNavigation->pageControlElement('projectinstruments', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('projects');
+} else {
+  $nav .= $pageNavigation->pageControlElement('projects');
+  $nav .= $pageNavigation->pageControlElement('all');
+  $nav .= $pageNavigation->pageControlElement('instruments');
+}
 
-  echo $this->inc('part.common.header',
-                  array('css-prefix' => $css_pfx,
-                        'navigationcontrols' => $nav,
-                        'header' => $table->headerText()));
+echo $this->inc('part.common.header',
+                array('css-prefix' => $css_pfx,
+                      'navigationcontrols' => $nav,
+                      'header' => $table->headerText()));
 
-  if (Config::isTreasurer()) {
-    $table->display();
-  } else {
-    echo '<div class="specialrole error">'.
-      $l->t("Sorry, this view is only available to the %s.",
-           array($l->t('treasurer'))).
-      '</div>';
-  }
+if (Config::isTreasurer()) {
+  $renderer->render();
+} else {
+  echo '<div class="specialrole error">'.
+       $l->t("Sorry, this view is only available to the %s.",
+             [ $l->t('treasurer') ]).
+       '</div>';
+}
 
-  // Close some still opened divs
-  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
-
-} // namespace CAFEVDB
-
-?>
+// Close some still opened divs
+echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
