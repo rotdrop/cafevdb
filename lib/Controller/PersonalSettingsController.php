@@ -459,6 +459,30 @@ class PersonalSettingsController extends Controller {
       $key = $parameter;
       $this->logDebug($key . ' => ' . $this->getConfigValue($key));
       return self::valueResponse($realValue, $this->l->t(' `%s\' set to `%s\'.', [$parameter, $realValue]));
+    // link to CMS, currently Redaxo4
+    case 'redaxo'.str_replace('redaxo', '', $parameter):
+      $redaxoKeys = [
+        'Preview',
+        'Archive',
+        'Rehearsals',
+        'Trashbin',
+        'Template',
+        'ConcertModule',
+        'RehearsalsModule'
+      ];
+      $key = str_replace('redaxo', '', $parameter);
+      if (array_search($key, $redaxoKeys) === false) {
+        return self::grumble($this->l->t('Unknown configuation key %s', [ $parameter ]));
+      }
+      $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 1]);
+      if ($realValue === false) {
+        return self::grumble($this->l->t('Value "%s" for setting "%s" is not in the allowed range.', [$value, $parameter]));
+      }
+      $this->setConfigValue($parameter, $realValue);
+      return self::valueResponse(
+        $realvalue,
+        $this->l->t("Redaxo categorie Id for `%s' set to %s", [ $key, $realValue ])
+      );
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));
