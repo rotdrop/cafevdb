@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 echo '<div class="cafevdb cfgerror error toastify">';
 switch ($error) {
 case 'notamember':
@@ -46,9 +47,9 @@ case 'exception':
   echo '<br/>';
   echo '<br/>';
   if ($debug) {
-    echo '<div class="error stacktrace">
+    echo '<div class="error stacktrace"><pre>
   '.$trace.'
-</div>';
+</pre></div>';
   }
   break;
 case 'nocalendar':
