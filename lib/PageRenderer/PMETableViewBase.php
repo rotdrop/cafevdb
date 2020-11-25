@@ -109,7 +109,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     foreach ($cgiDefault as $key => $default) {
       $this->pmeOptions['cgi']['persist'][$key] =
         $this->{lcFirst($key)} =
-        $this->requestParameters->getParam($key, $default);
+          $this->requestParameters->getParam($key, $default);
     }
 
     // @TODO: the following should be done only on demand and is
