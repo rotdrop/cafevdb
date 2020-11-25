@@ -25,6 +25,8 @@ namespace OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Legacy\Util as DataBaseUtil;
+
 /**
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
@@ -44,6 +46,430 @@ class InstrumentationService
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->l = $this->l10n();
+  }
+
+  /**
+   * Returns an associative array which describes a view which
+   * collects various information for the instrumentation / line-up of
+   * a project. This is rather a maintenance / setup / migration
+   * service function.
+   *
+   * This structure is also used in the PME-stuff in
+   * detailed-instrumentation.php to group the fields of the view
+   * s.t. update queries can be split into updates for single tables
+   * (either Besetzungen or Musiker). mySQL allows write-through
+   * through certain views, but only if the target is a single table.
+   *
+   * Information about particular projects can be selected with a
+   * WHERE query with the project Id as search criterion.
+   */
+  public static function instrumentationJoinStructure()
+  {
+    $viewStructure = [
+      // Principal key is still the key from the Besetzungen ==
+      // Instrumentation table.
+      'Id' => [ 'table' => 'Besetzungen',
+                'tablename' => 'b',
+                'column' => true,
+                'key' => true,
+                'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'MusicianId' => [
+        'table' => 'Musicians',
+        'tablename' => 'm',
+        'column' => 'Id',
+        'key' => true,
+        'join' => [
+          'type' => 'LEFT',
+          'condition' => 'm.Id = b.MusikerId'
+        ],
+      ],
+
+      'ProjectId' => [
+        'table' => 'b',
+        'column' => 'ProjektId',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Projects' => [
+        'table' => 'Besetzungen',
+        'tablename' => 'b2',
+        'column' => "GROUP_CONCAT(DISTINCT p.Name ORDER BY p.Name ASC SEPARATOR ',')",
+        'verbatim' => true,
+        'join' => [
+          'type' => 'LEFT',
+          'condition' => 'm.Id = b2.MusikerId
+  LEFT JOIN Projects p
+  ON b2.ProjektId = p.Id'
+        ],
+      ],
+
+      'ProjectCount' => [
+        'tablename' => 'b2',
+        'column' => 'COUNT(DISTINCT p.Id)',
+        'verbatim' => true,
+      ],
+
+      'MusicianInstrumentKey' => [
+        'table' => 'MusicianInstrument',
+        'tablename' => 'mi',
+        'key' => true,
+        'column' => "GROUP_CONCAT(DISTINCT mi.id ORDER BY i2.Sortierung ASC SEPARATOR ',')",
+        'verbatim' => true,
+        'join' => [
+          'type' => 'LEFT',
+          'condition' => 'mi.musician_id = b.MusikerId'
+        ],
+      ],
+
+      'MusicianInstrumentId' => [
+        'table' => 'Instruments',
+        'tablename' => 'i2',
+        'column' => "GROUP_CONCAT(DISTINCT i2.Id ORDER BY i2.Sortierung ASC SEPARATOR ',')",
+        'verbatim' => true,
+        'join' => [
+          'type' => 'LEFT',
+          'condition' => 'mi.instrument_id = i2.Id',
+        ],
+      ],
+
+      'MusicianInstrument' => [
+        'table' => 'i2',
+        'column' => "GROUP_CONCAT(DISTINCT i2.Instrument ORDER BY i2.Sortierung ASC SEPARATOR ',')",
+        'verbatim' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'MusicianInstrumentCount' => [
+        'table' => 'i2',
+        'column' => "COUNT(DISTINCT i2.Id)",
+        'verbatim' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'ProjectInstrumentKey' => [
+        'table' => 'ProjectInstruments',
+        'tablename' => 'pi',
+        'key' => true,
+        'column' => 'Id',
+        'join' => [
+          'type' =>'LEFT',
+          'condition' => 'pi.InstrumentationId = b.Id'
+        ],
+      ],
+
+      'ProjectInstrumentId' => [
+        'table' => 'pi',
+        'column' => 'InstrumentId',
+        'join' => [ 'type' =>'LEFT' ],
+      ],
+
+      'Voice' => [
+        'table' => 'pi',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'SectionLeader' => [
+        'table' => 'pi',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'ProjectInstrument' => [
+        'table' => 'Instruments',
+        'tablename' => 'i',
+        'column' => 'Instrument',
+        'join' => [
+          'type' =>'LEFT',
+          'condition' => 'pi.InstrumentId = i.Id',
+        ],
+      ],
+
+      'InstrumentFamily' => [
+        'table' => 'instrument_family',
+        'tablename' => 'if_link',
+        'column' => "GROUP_CONCAT(DISTINCT if_tb.family ORDER BY if_tb.family ASC SEPARATOR ',')",
+        'verbatim' => true,
+        'join' => [
+          'type' => 'LEFT',
+          'condition' => 'i.Id = if_link.instrument_id
+  LEFT JOIN InstrumentFamilies if_tb
+  ON if_link.family_id = if_tb.id AND NOT if_tb.disabled = 1'
+        ],
+      ],
+
+      'InstrumentOrdering' => [
+        'table' => 'i',
+        'column' => 'Sortierung',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Registration' => [
+        'table' => 'b',
+        'column' => 'Anmeldung',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Disabled' => [
+        'table' => 'b',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Name' => [
+        'table' => 'm',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'FirstName' => [
+        'table' => 'm',
+        'column' => 'Vorname',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Email' => [
+        'table' => 'm',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'MobilePhone' => [
+        'table' => 'm',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'FixedLinePhone' => [
+        'table' => 'm',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Street' => [
+        'table' => 'm',
+        'column' => 'Strasse',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'ZIPCode' => [
+        'table' => 'm',
+        'column' => 'Postleitzahl',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'City' => [
+        'table' => 'm',
+        'column' => 'Stadt',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Coutry' => [
+        'table' => 'm',
+        'column' => 'Land',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Fees' => [
+        'table' => 'b',
+        'column' => 'Unkostenbeitrag',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'PrePayment' => [
+        'table' => 'b',
+        'column' => 'Anzahlung',
+        'join' => [ 'type' => 'LEFT' ],
+       ],
+
+      'AmountPaid' => [
+        'table' => 'ProjectPayments',
+        'tablename' => 'f',
+        'column' => 'IFNULL(SUM(IF(b.Id = b2.Id, f.Amount, 0)), 0)
+/
+IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
+        'verbatim' => true,
+        'join' => [
+          'type' =>'LEFT',
+          'condition' => 'f.InstrumentationId = b.Id'
+        ],
+      ],
+
+      'PaidCurrentYear' => [
+        'tablename' => 'f',
+        'column' => 'IFNULL(SUM(IF(b.Id = b2.Id AND YEAR(NOW()) = YEAR(f.DateOfReceipt), f.Amount, 0)), 0)
+/
+IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
+        'verbatim' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'DebitNote' => [
+        'table' => 'b',
+        'column' => 'LastSchrift',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'ProjectRemarks' => [
+        'table' => 'b',
+        'column' => 'Bemerkungen',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Language' => [
+        'table' => 'm',
+        'column' => 'Sprachpräferenz',
+        'join' => [ 'type' => 'LEFT' ]
+      ],
+
+      'Birthday' => [
+        'table' => 'm',
+        'column' => 'Geburtstag',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'MemberStatus' => [
+        'table' => 'm',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Remarks' => [
+        'table' => 'm',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Portrait' => [
+        'table' => 'MusicianPhoto',
+        'tablename' => 'mp',
+        'column' => "CONCAT('data:',img.mime_type,';base64,',TO_BASE64(id.data))",
+        'verbatim' => true,
+        'join' => [
+          'type' => 'LEFT',
+          'condition' => 'm.Id = mp.owner_id
+  LEFT JOIN Images img
+  ON mp.image_id = img.id
+  LEFT JOIN ImageData id
+  ON img.image_data_id = id.id'
+        ],
+      ],
+
+      'UUID' => [
+        'table' => 'm',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'Updated' => [
+        'table' => 'm',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+    ];
+
+    $tableAlias = [];
+    foreach ($viewStructure as $column => $data) {
+      // here table and tablename neeed to be defined correctly, if
+      // both are given.
+      if (isset($data['table']) && isset($data['tablename'])) {
+        $tableAlias[$data['tablename']] = $data['table'];
+      }
+    }
+    foreach ($viewStructure as $column => &$data) {
+      if (!isset($data['key'])) {
+        $data['key'] = false;
+      }
+      isset($data['table']) || $data['table'] = $data['tablename'];
+      $table = $data['table'];
+      if (isset($tableAlias[$table])) {
+        // switch, this is the alias
+        $data['table'] = $tableAlias[$table];
+        $data['tablename'] = $table;
+      }
+      isset($data['tablename']) || $data['tablename'] = $data['table'];
+    }
+
+    return $viewStructure;
+  }
+
+  public static function musicianPhotoJoinStructure()
+  {
+    $viewStructure = [
+      // Principal key is still the key from the Besetzungen ==
+      // Instrumentation table.
+      'id' => [
+        'table' => 'MusicianPhoto',
+        'tablename' => 'mp',
+        'column' => true,
+        'key' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'musician_id' => [
+        'table' => 'mp',
+        'column' => 'owner_id',
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'image_id' => [
+        'table' => 'Images',
+        'tablename' => 'img',
+        'column' => 'id',
+        'join' => [
+          'type' => 'LEFT',
+          'condition' => 'mp.image_id = img.id',
+        ],
+      ],
+
+      'mime_type' => [
+        'table' => 'img',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'width' => [
+        'table' => 'img',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'height' => [
+        'table' => 'img',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'md5' => [
+        'table' => 'img',
+        'column' => true,
+        'join' => [ 'type' => 'LEFT' ],
+      ],
+
+      'data' => [
+        'table' => 'ImageData',
+        'tablename' => 'id',
+        'column' => 'TO_BASE64(id.data)',
+        'verbatim' => true,
+        'join' => [
+          'type' => 'LEFT',
+          'condition' => 'id.id = img.image_data_id',
+        ],
+      ],
+
+    ];
+
+    return $viewStructure;
+  }
+
+  public static function generateJoinSql($method)
+  {
+    $method = lcfirst($method);
+    $method .= 'JoinStructure';
+    return DataBaseUtil::generateJoinSelect(self::$method());
   }
 
 }
