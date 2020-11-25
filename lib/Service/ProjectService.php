@@ -596,12 +596,16 @@ Whatever.',
    * Set the name of all registered web-pages to the canonical name,
    * project name given.
    */
-  public function nameProjectWebPages($projectId)
+  public function nameProjectWebPages($projectId, $projectName = null)
   {
     $project = $this->find($projectId);
     if (empty($project)) {
       return false;
     }
+    if (empty($projectName)) {
+      $projectName = $project->getName(); // @TODO check if already set
+    }
+
     $webPages = $project->getWebPages();
 
     $rehearsalsName = $this->l->t('Rehearsals');
