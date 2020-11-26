@@ -387,6 +387,11 @@ li.cafevdb-page-config-check span.set {
 #expertmode>input[type=button] {
 }
 
+#expertmode .error  {
+  font-weight:bold;
+  color:red;
+}
+
 .actions {
   height: 33px;
   min-width: 800px;
@@ -630,7 +635,7 @@ form.focusstealer input.focusstealer {
 }
 
 #cafevdb-loader {
-  position: absolute;
+  position: fixed;/*absolute;*/
   top: 50%;
   left: 50%;
   width: 128px;

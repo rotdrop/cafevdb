@@ -58,10 +58,10 @@ $pageRows = floor($_['pagerows'] / 10) * 10;
 $pageRowsOptions = array(-1 => '&infin;');
 $maxRows = 100;
 for ($i = 10; $i <= $maxRows; $i += 10) {
-    $pageRowsOptions[$i] = $i;
+  $pageRowsOptions[$i] = $i;
 }
 if ($pageRows > $maxRows) {
-    $pageRows = 0;
+  $pageRows = 0;
 }
 
 date_default_timezone_set($timezone);
@@ -74,7 +74,7 @@ $expertClass = $expertmode == 'on' ? '' : ' hidden';
 $toolTipClass = "tooltip-right";
 
 ?>
-<div id="personal-settings-container" class="app-admin-settings">
+<div id="personal-settings-container" class="app-admin-settings hidden">
   <ul id="adminsettingstabs">
     <li><a href="#tabs-1"><?php echo $l->t('Personal'); ?></a></li>
     <?php $tabNo = 2; if ($_['adminsettings']) { ?>

@@ -768,26 +768,31 @@ var CAFEVDB = CAFEVDB || {};
    * instead of script loading
    */
   CAFEVDB.appSettings = function(route, callback) {
-    var popup = $('#appsettings_popup');
+    const popup = $('#appsettings_popup');
     if (popup.is(':visible')) {
-      popup.hide().html('');
+      popup.addClass('hidden').html('');
+      //popup.hide().html('');
     } else {
       const arrowclass = popup.hasClass('topright') ? 'up' : 'left';
       $.get(CAFEVDB.generateUrl(route))
 	.done(function(data) {
-	  popup.html(data).ready(function() {
-	    // assume the first element is a container div
-	    if (popup.find('.popup-title').length > 0) {
-	      popup.find(">:first-child").prepend('<a class="close"></a>').show();
-	    } else {
-	      popup.find(">:first-child").prepend('<h2>' + t('core', 'Settings') + '</h2><a class="close"></a>').show();
-	    }
-	    popup.find('.close').bind('click', function() {
-	      popup.hide().html('');
-	    });
-	    popup.removeClass('hidden');
-	    callback(popup);
-	  }).show();
+	  popup
+	    .html(data)
+	    .ready(function() {
+	      // assume the first element is a container div
+	      if (popup.find('.popup-title').length > 0) {
+		popup.find(">:first-child").prepend('<a class="close"></a>').show();
+	      } else {
+		popup.find(">:first-child").prepend('<h2>' + t('core', 'Settings') + '</h2><a class="close"></a>').show();
+	      }
+	      popup.find('.close').bind('click', function() {
+		popup.hide().html('');
+	      });
+	      popup.removeClass('hidden');
+	      callback(popup);
+	    })
+	    .removeClass('hidden');
+	    //.show();
 	})
 	.fail(function(data) {
 	  console.log(data);
@@ -1271,7 +1276,7 @@ var CAFEVDB = CAFEVDB || {};
     case CAFEVDB.httpStatus.CONFLICT:
     case CAFEVDB.httpStatus.INTERNAL_SERVER_ERROR:
       if (failData.error) {
-	info += ': ' + '<span class="error toastify name">' + failData.error + '</span>';
+	info += ': ' + '<span class="bold error toastify name">' + failData.error + '</span>';
       }
       if (failData.message) {
         info += '<div class="'+CAFEVDB.appName+' error toastify">' + failData.message + '</div>';
@@ -1285,7 +1290,7 @@ var CAFEVDB = CAFEVDB || {};
         info += '<div class="exception error name"><pre>'+exceptionData.exception+'</pre></div>'
 	  + '<div class="exception error trace"><pre>'+exceptionData.trace+'</pre></div>';
 	while ((exceptionData = exceptionData.previous) != null) {
-	  info += '<div class="error toastify">' + exceptionData.message + '</div>';
+	  info += '<div class="bold error toastify">' + exceptionData.message + '</div>';
           info += '<div class="exception error name"><pre>'+exceptionData.exception+'</pre></div>'
 	  + '<div class="exception error trace"><pre>'+exceptionData.trace+'</pre></div>';
 	}
@@ -1691,7 +1696,7 @@ var CAFEVDB = CAFEVDB || {};
 
 })(window, jQuery, CAFEVDB);
 
-$(document).ready(function(){
+$(function(){
   // @@TODO perhaps collects these things in before-ready.js
   document.onkeypress = CAFEVDB.stopRKey;
 

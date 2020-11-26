@@ -201,8 +201,8 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                alt="<?php echo $l->t('Upload new File'); ?>"/>
         </button>
         <button type="button"
-                class="attachment owncloud"
-                title="<?php echo Config::toolTips('owncloud-attachment'); ?>"
+                class="attachment cloud"
+                title="<?php echo Config::toolTips('cloud-attachment'); ?>"
                 value="<?php echo $l->t('Select from Owncloud'); ?>">
           <img class="svg small"
                src="<?php echo \OCP\Util::imagePath('cafevdb', 'cloud.svg'); ?>"

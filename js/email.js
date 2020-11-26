@@ -50,12 +50,12 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     fileAttachHolder.val(JSON.stringify(fileAttach));
   };
 
-  Email.owncloudAttachment = function(path, callback) {
-    $.getJSON(OC.filePath('cafevdb', 'ajax', 'email/owncloudattachment.php'),
+  Email.cloudAttachment = function(path, callback) {
+    $.getJSON(OC.filePath('cafevdb', 'ajax', 'email/cloudattachment.php'),
               {'path':path},
               function(response) {
                 if (response != undefined && response.status == 'success') {
-                  CAFEVDB.Email.attachmentFromJSON(response, { 'origin': 'owncloud'});
+                  CAFEVDB.Email.attachmentFromJSON(response, { 'origin': 'cloud'});
                   if (typeof callback == 'function') {
                     callback();
                   }
@@ -1137,11 +1137,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       $('#attachment_upload_start').trigger('click');
     });
 
-    fieldset.find('.attachment.owncloud').off('click');
-    fieldset.find('.attachment.owncloud').on('click', function() {
+    fieldset.find('.attachment.cloud').off('click');
+    fieldset.find('.attachment.cloud').on('click', function() {
       OC.dialogs.filepicker(t('cafevdb', 'Select Attachment'),
                             function(path) {
-                              CAFEVDB.Email.owncloudAttachment(path, updateFileAttachments);
+                              CAFEVDB.Email.cloudAttachment(path, updateFileAttachments);
                               return false;
                             },
                             false, '', true)

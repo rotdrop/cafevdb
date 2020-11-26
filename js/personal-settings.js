@@ -41,8 +41,12 @@ $(function() {
     container.find('select.wysiwyg-editor').each(function(index) {
       const self = $(this);
       if (CAFEVDB.chosenActive(self)) {
+	console.info('destroy chosen', self);
         self.chosen('destroy');
       }
+      console.info('call chosen', self);
+      self.chosen('destroy');
+      self.show();
       self.chosen({
         inherit_select_classes:true,
         disable_search:true
@@ -77,7 +81,7 @@ $(function() {
   });
 
   container.on('change', '.tooltips', function(event) {
-    var self = $(this);
+    const self = $(this);
     CAFEVDB.toolTipsOnOff(self.prop('checked'));
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/tooltips'),
            { 'value': CAFEVDB.toolTipsEnabled })
@@ -121,8 +125,8 @@ $(function() {
   });
 
   container.on('change', '.directchange', function(event) {
-    var self = $(this);
-    var checked = self.prop('checked')
+    const self = $(this);
+    const checked = self.prop('checked')
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/directchange'),
            { 'value': checked })
     .done(function(data) {
@@ -141,8 +145,8 @@ $(function() {
   });
 
   container.on('change', '.showdisabled', function(event) {
-    var self = $(this);
-    var checked = self.prop('checked')
+    const self = $(this);
+    const checked = self.prop('checked')
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/showdisabled'),
            { 'value': checked })
     .done(function(data) {
@@ -177,8 +181,8 @@ $(function() {
   });
 
   container.on('change', '.expertmode', function(event) {
-    var self = $(this);
-    var checked = self.prop('checked');
+    const self = $(this);
+    const checked = self.prop('checked');
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/expertmode'),
            { 'value': checked })
     .done(function(data) {

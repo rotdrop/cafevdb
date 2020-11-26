@@ -19,9 +19,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//OCP.Loader.loadScript('cafevdb', 'personal-settings.js');
-//OCP.Loader.loadStyle('cafevdb', 'settings.css');
-
 var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
@@ -84,6 +81,11 @@ var CAFEVDB = CAFEVDB || {};
 
     container = container || $(Settings.containerSelector);
     const tabsHolder = $(Settings.tabsSelector);
+
+    if (!container.is(':parent')) {
+      // nothing to do, empty container
+      return;
+    }
 
     tabsHolder.tabs({ selected: 0});
 
@@ -254,7 +256,7 @@ var CAFEVDB = CAFEVDB || {};
       const oldKeyInput = container.find('#oldkey');
 
       const keyInputClone = showPassword(keyInput);
-      const oldKeyInputClone = showPassword(oldKeyInput)
+      const oldKeyInputClone = showPassword(oldKeyInput);
 
       $("#keychangebutton").on('click', function() {
         // We allow empty keys, meaning no encryption
@@ -409,7 +411,7 @@ var CAFEVDB = CAFEVDB || {};
           shareOwner.prop('disabled', false);
         }
         return false;
-      })
+      });
 
       shareOwner.on('blur', function(event) {
         shareOwnerCheck.prop("disabled", shareOwner.val() == '');
@@ -948,6 +950,7 @@ var CAFEVDB = CAFEVDB || {};
 
     CAFEVDB.toolTipsInit(container);
 
+    container.removeClass('hidden');//show(); // fadeIn()...
   };
 
   CAFEVDB.Settings = Settings;
@@ -955,7 +958,8 @@ var CAFEVDB = CAFEVDB || {};
 })(window, jQuery, CAFEVDB);
 
 
-$(document).ready(function() {
+$(function() {
+  console.info('settings ready');
   CAFEVDB.Settings.documentReady();
 });
 

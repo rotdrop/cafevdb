@@ -19,7 +19,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).ready(function() {
+$(function() {
 
   const container = $('.app-admin-settings');
 
@@ -46,53 +46,49 @@ $(document).ready(function() {
   simpleActions.forEach(function(action, index) {
     container.on('click', '#' + action, function() {
       const msg = container.find('.msg');
+      const error = container.find('.error');
       $.post(OC.generateUrl('/apps/cafevdb/expertmode/action/' + action), { 'data': {} })
 	.done(function(data) {
 	  console.log(data);
+          error.html('').hide();
 	  msg.html(data.message).show();
 	})
-	.fail(function(jqXHR) {
-	  console.log(jqXHR);
-	  const response = JSON.parse(jqXHR.responseText);
-	  if (response.message) {
-	    msg.html(response.message).show();
-	  }
-	});
+        .fail(function(xhr, status, errorThrown) {
+          CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+          msg.hide();
+          error.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+        });
       return false;
     });
   });
 
   container.on('click', '#setupdb', function() {
     const msg = container.find('.msg');
+    const error = container.find('.error');
     $.post(OC.generateUrl('/apps/cafevdb/expertmode/action/setupdb'), { 'data': {} })
       .done(function(data) {
 	console.log(data);
-             if (!CAFEVDB.validateAjaxResponse(
-	       { 'data': data,
-		 'status': 'success'
-	       }, ['success', 'error'])) {
-               return;
-             }
-             OC.dialogs.alert(t('cafevdb', 'Successfull:')+
-                              '<br/>'+
-                              data.data.success+
-                              '<br/>'+
-                              t('cafevdb', 'Unsuccessfull:')+
-                              '<br/>'+
-                              '<pre>'+
-                              data.data.error+
-                              '</pre>',
-                              t('cafevdb', 'Result of expert operation "setupdb"'),
-                              undefined, true, true);
+        if (!CAFEVDB.validateAjaxResponse(data, [ 'success', 'error' ])) {
+          return;
+        }
+        OC.dialogs.alert(t('cafevdb', 'Successfull:')+
+                         '<br/>'+
+                         data.data.success+
+                         '<br/>'+
+                         t('cafevdb', 'Unsuccessfull:')+
+                         '<br/>'+
+                         '<pre>'+
+                         data.data.error+
+                         '</pre>',
+                         t('cafevdb', 'Result of expert operation "setupdb"'),
+                         undefined, true, true);
+        error.html('').hide();
         msg.html(data.message).show();
       })
-      .fail(function(jqXHR) {
-	console.log(jqXHR);
-	const response = JSON.parse(jqXHR.responseText);
-	console.log(response);
-	if (response.message) {
-	  msg.html(response.message).show();
-	}
+      .fail(function(xhr, status, errorThrown) {
+        CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+        msg.html('').hide();
+        error.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
       });
     return false;
   });
@@ -106,3 +102,7 @@ $(document).ready(function() {
   CAFEVDB.toolTipsInit('#appsettings_popup');
 
 });
+
+// Local Variables: ***
+// js-indent-level: 2 ***
+// End: ***

@@ -137,6 +137,10 @@ input.randomkey {
   width: 18em;
 }
 
+/* #personal-settings-container { */
+/*     display:none; */
+/* } */
+
 #personal-settings-container div.settings-control {
   margin:0.2ex 0 0.2ex 0;
 }

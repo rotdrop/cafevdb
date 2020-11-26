@@ -21,7 +21,7 @@
 
 // @@TODO these are rather personal settings
 
-$(document).ready(function() {
+$(function() {
 
   var appNav = $('#app-navigation');
 

@@ -42,15 +42,15 @@ $(function() {
     });
   }
 
-  var content = $('#content');
+  const content = $('#content');
 
   content.on('cafevdb:content-update', function(event) {
     $.fn.cafevTooltip.remove(); // remove any left-over items.
   });
 
   content.on('chosen:showing_dropdown', 'select', function(event, params)   {
-    var results = params.chosen.search_results;
-    var menuItems = results.find('li');
+    const results = params.chosen.search_results;
+    const menuItems = results.find('li');
     menuItems.cafevTooltip({placement:'right'});
     if (!CAFEVDB.toolTipsEnabled) {
       menuItems.cafevTooltip('disable');
@@ -62,13 +62,14 @@ $(function() {
   // here intercepted and redirected to the page-loader in order to
   // reduce load-time and to record usable history information.
   content.on('submit', 'form', function(event) {
-    var form = $(this);
-    var action = form.attr('action');
+    console.info('Catchall form submit', event);
+    const form = $(this);
+    const action = form.attr('action');
     if (action != '') {
       // not for us, external target.
       return true;
     }
-    var post = form.serialize();
+    const post = form.serialize();
     //alert('post: '+post);
     CAFEVDB.Page.loadPage(post);
     return false;
@@ -78,9 +79,14 @@ $(function() {
   // here intercepted and redirected to the page-loader in order to
   // reduce load-time and to record usable history information.
   content.on('click', ':submit', function(event) {
-    var form = $(this.form);
-    var post = form.serialize();
-    var self = $(this);
+    console.info('Catchall form submit input', event);
+    const form = $(this.form);
+    const action = self.attr('formaction');
+    if (action != '') {
+      return true; // not for us
+    }
+    const post = form.serialize();
+    const self = $(this);
     if (self.attr('name')) {
       var obj = {};
       obj[self.attr('name')] = self.val();
@@ -99,7 +105,7 @@ $(function() {
       // don't recurse on nav-heading which just should close the sidebar.
       return true;
     }
-    var post = $(this).data('post');
+    const post = $(this).data('post');
     CAFEVDB.Page.loadPage(post);
     //alert('post: '+post);
     return false;
@@ -114,7 +120,7 @@ $(function() {
         return;
       }
 
-      var container = $(selector);
+      const container = $(selector);
       CAFEVDB.exportMenu(selector);
 
       container.find('div.photo, #cafevdb_inline_image_wrapper').
@@ -129,7 +135,7 @@ $(function() {
 
       $(':button.musician-instrument-insurance').click(function(event) {
         event.preventDefault();
-        var values = $(this).attr('name');
+        const values = $(this).attr('name');
 
         CAFEVDB.Page.loadPage($(this).attr('name'));
 
@@ -137,7 +143,7 @@ $(function() {
       });
 
       if (container.find('#contact_photo_upload').length > 0) {
-        var idField = container.find('input[name="PME_data_Id"]');
+        const idField = container.find('input[name="PME_data_Id"]');
         var recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();
@@ -215,13 +221,15 @@ $(function() {
     CAFEVDB.toolTipsInit();
 
     // Prevent drag&drop outside allowed areas.
-    window.addEventListener("dragover", function(e){
+    window.addEventListener("dragover", function(e) {
       e = e || event;
       e.preventDefault();
+      console.info("Prevented dragover event");
     }, false);
-    window.addEventListener("drop", function(e){
+    window.addEventListener("drop", function(e) {
       e = e || event;
       e.preventDefault();
+      console.info("Prevented drop event");
     }, false);
 
   });
