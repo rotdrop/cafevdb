@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Database\Legacy\PME;
 use \OCP\ILogger;
 use \OCP\IL10N;
 
+use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\DBALException;
 
@@ -207,11 +208,13 @@ class PHPMyEdit extends \phpMyEdit
 
   function resultValid(&$stmt)
   {
-    return is_object($stmt);
+    return ($stmt instanceof ResultStatement);
+    //return is_object($stmt);
   }
 
   function dbhValid() {
-    return is_object($this->dbh);
+    return ($this->dbh instanceof Connection);
+    //return is_object($this->dbh);
   }
 
   function sql_fetch(&$stmt, $type = 'a')
