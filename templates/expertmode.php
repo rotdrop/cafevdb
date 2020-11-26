@@ -29,75 +29,76 @@ script($appName, 'cafevdb');
 script($appName, 'jquery-extensions');
 script($appName, 'expertmode');
 
-$buttons = array();
+$buttons = [];
 $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
 $buttons['between'] = '</div><div>';
 $buttons['setupdb'] =
-  array('name' => $l->t('Provide Basic DB Layout'),
-        'title' => $l->t('Make sure the data-base layout corresponds to the state of the software.'),
-        'id' => 'setupdb',
-        'class' => 'setupdb operations expert button');
+  [ 'name' => $l->t('Provide Basic DB Layout'),
+    'title' => $l->t('Make sure the data-base layout corresponds to the state of the software.'),
+    'id' => 'setupdb',
+    'class' => 'setupdb operations expert button' ];
 $buttons['makeviews'] =
-  array('name' => $l->t('Recreate all Views'),
-        'title' => $l->t('Recreate the `Instrumentation\' hybrid-table for each project'),
-        'id' => 'makeviews',
-        'class' => 'makeviews operations expert button');
+  [ 'name' => $l->t('Recreate all Views'),
+    'title' => $l->t('Recreate the `Instrumentation\' hybrid-table for each project'),
+    'id' => 'makeviews',
+    'class' => 'makeviews operations expert button' ];
 $buttons['syncevents'] =
-  array('name' => $l->t('Synchronize Events'),
-        'title' => $toolTips['syncevents'],
-        'id' => 'syncevents',
-        'class' => 'syncevents operations expert button');
+  [ 'name' => $l->t('Synchronize Events'),
+    'title' => $toolTips['syncevents'],
+    'id' => 'syncevents',
+    'class' => 'syncevents operations expert button' ];
 $buttons['wikicontents'] =
-  array('name' => $l->t('Recreate Wiki Project TOC'),
-        'title' => $l->t('Recreate table of contents for the project pages in the wiki'),
-        'id' => 'wikiprojecttoc',
-        'class' => 'wikiprojecttoc operations expert button');
+  [ 'name' => $l->t('Recreate Wiki Project TOC'),
+    'title' => $l->t('Recreate table of contents for the project pages in the wiki'),
+    'id' => 'wikiprojecttoc',
+    'class' => 'wikiprojecttoc operations expert button' ];
 $buttons['webpages'] =
-  array('name' => $l->t('Attach matching Web-Pages'),
-        'title' => $l->t('Link all web-pages matching the project name to the respective project'),
-        'id' => 'attachwebpages',
-        'class' => 'attachwebpages operations expert buttont');
+  [ 'name' => $l->t('Attach matching Web-Pages'),
+    'title' => $l->t('Link all web-pages matching the project name to the respective project'),
+    'id' => 'attachwebpages',
+    'class' => 'attachwebpages operations expert buttont' ];
 $buttons['telephone'] =
-  array('name' => $l->t('Sanitize Phone Numbers'),
-        'title' => $l->t('Perform some sanity checks on the stored telephone numbers, move the mobile numbers to their respective column, format all numbers in an ``international\'\' format.'),
-        'id' => 'sanitizephones',
-        'class' => 'sanitizephones operation expert button');
+  [ 'name' => $l->t('Sanitize Phone Numbers'),
+    'title' => $l->t('Perform some sanity checks on the stored telephone numbers, move the mobile numbers to their respective column, format all numbers in an ``international\'\' format.'),
+    'id' => 'sanitizephones',
+    'class' => 'sanitizephones operation expert button' ];
 $buttons['geodata'] =
-  array('name' => $l->t('Update Geo-Data'),
-        'title' => $l->t('Update the internal cache of geographical data using some backend. We are currently only interested into ZIP codes, the respective name of the corresponding location and the country/continent name'),
-        'id' => 'geodata',
-        'class' => 'geodata operation expert button');
+  [ 'name' => $l->t('Update Geo-Data'),
+    'title' => $l->t('Update the internal cache of geographical data using some backend. We are currently only interested into ZIP codes, the respective name of the corresponding location and the country/continent name'),
+    'id' => 'geodata',
+    'class' => 'geodata operation expert button' ];
 $buttons['uuid'] =
-  array('name' => $l->t('Add missing UUIDs'),
-        'title' => $l->t('Ensure that each musicians is assigned a UUID for vCard export and similar stuff.'),
-        'id' => 'uuid',
-        'class' => 'uuid operator expert button');
+  [ 'name' => $l->t('Add missing UUIDs'),
+    'title' => $l->t('Ensure that each musicians is assigned a UUID for vCard export and similar stuff.'),
+    'id' => 'uuid',
+    'class' => 'uuid operator expert button' ];
 $buttons['imagemeta'] =
-  array('name' => $l->t('Update Image Meta-Data'),
-        'title' => $l->t('Update mime-type and MD5 hash for stored images.'),
-        'id' => 'imagemeta',
-        'class' => 'imagemeta operator expert button');
+  [ 'name' => $l->t('Update Image Meta-Data'),
+    'title' => $l->t('Update mime-type and MD5 hash for stored images.'),
+    'id' => 'imagemeta',
+    'class' => 'imagemeta operator expert button' ];
 $buttons['example'] =
-  array('name' => $l->t('Example'),
-        'title' => $l->t('Example Do-Nothing Button'),
-        'id' => 'example',
-        'class' => 'example operations example button');
+  [ 'name' => $l->t('Example'),
+    'title' => $l->t('Example Do-Nothing Button'),
+    'id' => 'example',
+    'class' => 'example operations example button' ];
 ?>
 <div id="expertmode">
   <h2 class="popup-title"><?php p($l->t('Advanced operations, use with care')); ?></h2>
   <fieldset id="expertmode" class="operations expert"><legend><?php echo $l->t('Predefined data-base operations'); ?></legend>
-  <?php echo $pageNavigation->buttonsFromArray($buttons); ?>
-  <label for="" class="bold"><?php echo $l->t('Operation generated Response');?></label>
-<?php
-  echo $pageNavigation->buttonsFromArray(
-    array('only' =>
-          array('name' => $l->t('Clear Output'),
-                'id' => 'clearoutput',
-                'title' => $l->t('Remove output, if any is present.'),
-                'class' => 'clearoutput operations expert button')));
-?>
-<div class="msg"><span style="opacity:0.5"><?php echo $l->t('empty') ?></span></div>
+    <?php echo $pageNavigation->buttonsFromArray($buttons); ?>
+    <label for="" class="bold"><?php echo $l->t('Operation generated Response');?></label>
+    <?php
+    echo $pageNavigation->buttonsFromArray(
+      [
+        'only' => [ 'name' => $l->t('Clear Output'),
+                    'id' => 'clearoutput',
+                    'title' => $l->t('Remove output, if any is present.'),
+                    'class' => 'clearoutput operations expert button' ],
+      ]);
+    ?>
+    <div class="msg"><span style="opacity:0.5"><?php echo $l->t('empty') ?></span></div>
   </fieldset>
   <form method="post">
     <fieldset id="expertlinks" class="operations expert links"><legend><?php echo $l->t('Links'); ?></legend>
@@ -130,5 +131,5 @@ $buttons['example'] =
              formaction="<?php echo $_['nextclouddev']; ?>"
              formtarget="Doxygen@<?php echo $appName; ?>"
              title="<?php echo $l->t('Nextcloud Developer Manual, mostly useful for web-developers.'); ?>"/>
-  </fieldset>
+    </fieldset>
 </div>
