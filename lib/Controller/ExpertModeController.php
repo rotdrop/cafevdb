@@ -33,10 +33,13 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
-class ExpertModeController extends Controller {
+class ExpertModeController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\ResponseTrait;
 
   const ERROR_TEMPLATE = "errorpage";
   const TEMPLATE = "expertmode";
@@ -50,6 +53,9 @@ class ExpertModeController extends Controller {
   /** @var GeoCodingService */
   private $geoCodingService;
 
+  /** @var InstrumentationService */
+  private $instrumentationService;
+
   /** @var OCA\CAFEVDB\PageRenderer\Util\Navigation */
   private $pageNavigation;
 
@@ -59,6 +65,7 @@ class ExpertModeController extends Controller {
     , ConfigService $configService
     , ToolTipsService $toolTipsService
     , GeoCodingService $geoCodingService
+    , instrumentationService $instrumentationService
     , PageNavigation $pageNavigation
   ) {
     parent::__construct($appName, $request);
@@ -67,6 +74,7 @@ class ExpertModeController extends Controller {
     $this->toolTipsService = $toolTipsService;
     $this->pageNavigation = $pageNavigation;
     $this->geoCodingService = $geoCodingService;
+    $this->instrumentationService = $instrumentationService;
     $this->l = $this->l10N();
   }
 
@@ -96,11 +104,13 @@ class ExpertModeController extends Controller {
       'toolTips' => $this->toolTipsService,
       'pageNavigation' => $this->pageNavigation,
     ];
-    $links = ['phpmyadmin',
-              'phpmyadminoc',
-              'sourcecode',
-              'sourcedocs',
-              'nextclouddev'];
+    $links = [
+      'phpmyadmin'
+      , 'phpmyadmincloud'
+      , 'sourcecode'
+      , 'sourcedocs'
+      , 'clouddev'
+    ];
     foreach ($links as $link) {
       $templateParameters[$link] = $this->getConfigValue($link);
     }
@@ -120,39 +130,38 @@ class ExpertModeController extends Controller {
    */
   public function action($operation, $data) {
     switch ($operation) {
-    case 'setupdb':
-    case 'makeviews':
-    case 'syncevents':
-    case 'wikiprojecttoc':
-    case 'attachwebpages':
-    case 'sanitizephones':
-    case 'geodata':
-      $this->geoCodingService->updateCountries();
-      $this->geoCodingService->updatePostalCodes(null, 1, [
-        [ 'country' => 'de', 'postalCode' => '71229' ]
-      ]);
-      return self::response($this->l->t('Triggered GeoCoding update.'));
-      break;
-    case 'uuid':
-    case 'imagemeta':
-      return self::grumble($this->l->t('TO BE IMPLEMENTED'));
-    case 'example':
-      return self::response($this->l->t('Hello World!'));
-    case 'clearoutput':
-      return self::response($this->l->t('empty'));
-    default:
+      case 'syncevents':
+      case 'wikiprojecttoc':
+      case 'attachwebpages':
+      case 'sanitizephones':
+        break;
+      case 'setupdb':
+      case 'makeviews':
+        try {
+          $this->instrumentationService->createJoinTableViews();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          return self::grumble($this->exceptionChainData($t));
+        }
+        return self::response($this->l->t('Database maintenance succeeded'));
+        break;
+      case 'geodata':
+        $this->geoCodingService->updateCountries();
+        $this->geoCodingService->updatePostalCodes(null, 1, [
+          [ 'country' => 'de', 'postalCode' => '71229' ]
+        ]);
+        return self::response($this->l->t('Triggered GeoCoding update.'));
+        break;
+      case 'uuid':
+      case 'imagemeta':
+        return self::grumble($this->l->t('TO BE IMPLEMENTED'));
+      case 'example':
+        return self::response($this->l->t('Hello World!'));
+      case 'clearoutput':
+        return self::response($this->l->t('empty'));
+      default:
     }
     return self::grumble($this->l->t('Unknown Request'));
-  }
-
-  static private function response($message, $status = Http::STATUS_OK)
-  {
-    return new DataResponse(['message' => $message], $status);
-  }
-
-  static private function grumble($message)
-  {
-    return self::response($message, Http::STATUS_BAD_REQUEST);
   }
 }
 

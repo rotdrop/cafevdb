@@ -39,12 +39,12 @@
       <input type="text" class="devlink" id="sourcedocs" name="sourcedocs" placeholder="<?php echo $l->t('Link to the source-code documentation'); ?>" value="<?php echo $_['sourcedocs']; ?>" title="<?php echo $toolTips['sourcedocs-link']; ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('Link to the source-code documentation'); ?></label>
       <br/>
-      <input type="button" class="devlinktest" id="testownclouddev" name="testownclouddev" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text" class="devlink" id="ownclouddev"
-         name="ownclouddev"
+      <input type="button" class="devlinktest" id="testclouddev" name="testclouddev" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
+      <input type="text" class="devlink" id="clouddev"
+         name="clouddev"
          placeholder="<?php echo $l->t('Link to cloud Developer Information'); ?>"
-         value="<?php echo $_['ownclouddev']; ?>"
-         title="<?php echo $toolTips['ownclouddev-link']; ?>"/>
+         value="<?php echo $_['clouddev']; ?>"
+         title="<?php echo $toolTips['clouddev-link']; ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('Ambient cloud provider developer documentation'); ?></label>
     </fieldset>
     <span class="statusmessage" id="msg"></span>

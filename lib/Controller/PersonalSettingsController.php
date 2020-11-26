@@ -440,7 +440,7 @@ class PersonalSettingsController extends Controller {
         return self::grumble($this->l->t('Recording the translation failed'));
       }
       return self::response($this->l->t("Successfully recorded the given translation for the language `%s'", $language));
-    case 'ownclouddev':
+    case 'clouddev':
     case 'sourcedocs':
     case 'sourcecode':
     case 'phpmyadmincloud':
@@ -495,18 +495,27 @@ class PersonalSettingsController extends Controller {
    */
   public function get($parameter) {
     switch ($parameter) {
-    case 'passwordgenerate':
-    case 'generatepassword':
-      return self::valueResponse($this->generateRandomBytes(32));
-    case 'testownclouddev':
-    case 'testsourcedocs':
-    case 'testsourcecode':
-    case 'testphpmyadmincloud':
-    case 'testphpmyadmin':
-      $key = substr($parameter, 4);
-      //trigger_error($key . ' => ' . $this->getConfigValue($key));
-      return self::valueResponse([ 'link' => $this->getConfigValue($key), 'target' => $key]);
-    default:
+      case 'passwordgenerate':
+      case 'generatepassword':
+        return self::valueResponse($this->generateRandomBytes(32));
+      case 'test'.str_replace('test', '', $parameter):
+        $testKeys = [
+          'clouddev',
+          'sourcedocs',
+          'sourcecode',
+          'phpmyadmincloud',
+          'phpmyadmin',
+        ];
+        $key = substr($parameter, 4);
+        if (array_search($key, $testKeys) === false) {
+          return self::grumble($this->l->t('Unknown link target %s', [ $parameter ]));
+        }
+        //trigger_error($key . ' => ' . $this->getConfigValue($key));
+        return self::valueResponse([
+          'link' => $this->getConfigValue($key),
+          'target' => $key.':'.$this->appName,
+        ]);
+      default:
     }
     return self::grumble($this->l->t('Unknown Request'));
   }

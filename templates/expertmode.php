@@ -78,15 +78,39 @@ $buttons['imagemeta'] =
     'title' => $l->t('Update mime-type and MD5 hash for stored images.'),
     'id' => 'imagemeta',
     'class' => 'imagemeta operator expert button' ];
-$buttons['example'] =
+  $buttons['example'] =
   [ 'name' => $l->t('Example'),
     'title' => $l->t('Example Do-Nothing Button'),
     'id' => 'example',
     'class' => 'example operations example button' ];
+
+$links = [
+  'phpmyadmin' => [
+    'title' => $l->t('Open the login-window to the management portal for the data-base back-bone.'),
+    'text' => $l->t('Database musicians/projects'),
+  ],
+  'phpmyadmincloud' => [
+    'title' => $l->t('Open the login-window to the data-base back-bone for the Cloud WebUI.'),
+    'text' => $l->t('Database Cloud'),
+  ],
+  'sourcecode' => [
+    'text' => $l->t('Source-Code Archive'),
+    'title' => $l->t('View the git-repository holding all revision of this entire mess. Mostly useful for web-developers.'),
+  ],
+  'sourcedocs' => [
+    'text' => $l->t('Source-Code Documentation'),
+    'title' => $l->t('Internal documentation of the `CAFEV-App\', mostly useful for web-developers.'),
+  ],
+  'clouddev' => [
+    'text' => $l->t('Nextcloud Developer Documentation'),
+    'title' => $l->t('Nextcloud Developer Manual, mostly useful for web-developers.'),
+  ],
+];
+
 ?>
 <div id="expertmode">
   <h2 class="popup-title"><?php p($l->t('Advanced operations, use with care')); ?></h2>
-  <fieldset id="expertmode" class="operations expert"><legend><?php echo $l->t('Predefined data-base operations'); ?></legend>
+  <fieldset id="expertmode" class="operations expert"><legend class="bold"><?php echo $l->t('Predefined data-base operations'); ?></legend>
     <?php echo $pageNavigation->buttonsFromArray($buttons); ?>
     <label for="" class="bold"><?php echo $l->t('Operation generated Response');?></label>
     <?php
@@ -96,40 +120,24 @@ $buttons['example'] =
                     'id' => 'clearoutput',
                     'title' => $l->t('Remove output, if any is present.'),
                     'class' => 'clearoutput operations expert button' ],
-      ]);
+    ]);
     ?>
     <div class="msg"><span style="opacity:0.5"><?php echo $l->t('empty') ?></span></div>
+    <div class="error"><span style="opacity:0.5;display:none"><?php echo $l->t('empty') ?></span></div>
   </fieldset>
-  <form method="post">
-    <fieldset id="expertlinks" class="operations expert links"><legend><?php echo $l->t('Links'); ?></legend>
-      <input type="submit"
-             value="<?php echo $l->t('Database musicians/projects'); ?>"
-             formaction="<?php echo $_['phpmyadmin']; ?>"
-             formtarget="<?php echo $appName.'@phpmyadmin'; ?>"
-             title="<?php echo $l->t('Open the login-window to the data-base back-bone. Although this is `expert mode\' you will fall in love with the `export\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
+  <form>
+    <fieldset id="expertlinks" class="operations expert links"><legend class="bold"><?php echo $l->t('Links'); ?></legend>
+      <?php
+      foreach ($links as $link => $info) {
+      ?>
+      <a href="<?php echo $_[$link]; ?>"
+         class="button"
+         target="<?php p($link.':'.$appName); ?>"
+         title="<?php echo $info['title']"
+      >
+        <?php echo $info['text']; ?>
+      </a>
       <br/>
-      <input type="submit"
-             value="<?php echo $l->t('Database Cloud'); ?>"
-             formaction="<?php echo $_['phpmyadminoc']; ?>"
-             formtarget="Nextcloud@phpmyadmin"
-             title="<?php echo $l->t('Open the login-window to the data-base back-bone for the Cloud WebUI.'); ?>"/>
-      <br/>
-      <input type="submit"
-             value="<?php echo $l->t('Source-Code Archive'); ?>"
-             formaction="<?php echo $_['sourcecode']; ?>"
-             formtarget="GIT@<?php echo $appName; ?>"
-             title="<?php echo $l->t('View the git-repository holding all revision of this entire mess. Mostly useful for web-developers.'); ?>" />
-      <br/>
-      <input type="submit"
-             value="<?php echo $l->t('Source-Code Documentation'); ?>"
-             formaction="<?php echo $_['sourcedocs']; ?>"
-             formtarget="Doxygen@<?php echo $appName; ?>"
-             title="<?php echo $l->t('Internal documentation of the `CAFEV-App\', mostly useful for web-developers.'); ?>"/>
-      <br/>
-      <input type="submit"
-             value="<?php echo $l->t('Nextcloud Developer Documentation'); ?>"
-             formaction="<?php echo $_['nextclouddev']; ?>"
-             formtarget="Doxygen@<?php echo $appName; ?>"
-             title="<?php echo $l->t('Nextcloud Developer Manual, mostly useful for web-developers.'); ?>"/>
+      <?php } ?>
     </fieldset>
 </div>
