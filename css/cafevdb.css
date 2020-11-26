@@ -387,6 +387,10 @@ li.cafevdb-page-config-check span.set {
 #expertmode>input[type=button] {
 }
 
+#expertmode a.button {
+  display: inline-block;
+}
+
 #expertmode .error  {
   font-weight:bold;
   color:red;

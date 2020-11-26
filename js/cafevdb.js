@@ -764,7 +764,8 @@ var CAFEVDB = CAFEVDB || {};
     return result;
   }
 
-  /**A variant of the old fashioned appsettings with a callback
+  /**
+   * A variant of the old fashioned appsettings with a callback
    * instead of script loading
    */
   CAFEVDB.appSettings = function(route, callback) {
@@ -781,18 +782,18 @@ var CAFEVDB = CAFEVDB || {};
 	    .ready(function() {
 	      // assume the first element is a container div
 	      if (popup.find('.popup-title').length > 0) {
-		popup.find(">:first-child").prepend('<a class="close"></a>').show();
+		popup.find('.popup-title').append('<a class="close"></a>');
+		  //popup.find(">:first-child").prepend('<a class="close"></a>').show();
 	      } else {
-		popup.find(">:first-child").prepend('<h2>' + t('core', 'Settings') + '</h2><a class="close"></a>').show();
+		popup.find(">:first-child").prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
 	      }
 	      popup.find('.close').bind('click', function() {
-		popup.hide().html('');
+		popup.addClass('hidden').html('');
 	      });
-	      popup.removeClass('hidden');
 	      callback(popup);
-	    })
-	    .removeClass('hidden');
-	    //.show();
+	      popup.find('>:first-child').removeClass('hidden');
+	      popup.removeClass('hidden');
+	    });
 	})
 	.fail(function(data) {
 	  console.log(data);

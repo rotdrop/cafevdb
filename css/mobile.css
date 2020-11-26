@@ -153,7 +153,7 @@
     min-height: 100% !important;
     width: 100% !important;
     height: 100% !important;
-    overflow: auto !important;
+    /* overflow: auto !important; */
     padding: 0px !important;
     margin: 0px !important;
   }
@@ -227,6 +227,12 @@
     width:0;
     height:0;
   }
+
+  .popup > div:first-child {
+    max-height: 100vh !important;
+  }
+}
+
 
 }
 

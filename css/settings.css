@@ -225,12 +225,36 @@ input.randomkey {
     box-shadow: 0 0 10px #aaa;
     color: #333;
     /* padding: 10px; */
-    position: fixed !important;
+    position: absolute;
     z-index: 100;
 }
 
+#appsettings_popup.popup.bottomleft {
+    bottom:1em;
+    left:300px;
+    margin-left:1em;
+    position: absolute;
+    z-index: 1050;
+    height: auto;
+}
+
 .popup > div:first-child {
-    padding: 10px;
+    /* top right bottom left */
+    margin: 0 0 0.5em 1em;
+    padding: 0;
+    border:0;
+    max-height: calc(100vh - 50px - 1.5em); /* header - top and bottom */
+    height: 100%;
+    overflow: auto;
+}
+
+#appsettings_popup .popup-title {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #fff;
+    padding-top: 1em;
 }
 
 .popup .close {
@@ -240,14 +264,6 @@ input.randomkey {
     height: 20px;
     width: 20px;
     background: url('../../../core/img/actions/close.svg') no-repeat center;
-}
-
-#appsettings_popup.popup.bottomleft {
-    bottom:1em;
-    left:300px;
-    margin-left:1em;
-    position: fixed !important;
-    z-index: 1050;
 }
 
 .personal-settings .debugmode-container {

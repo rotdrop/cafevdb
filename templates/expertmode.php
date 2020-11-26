@@ -78,7 +78,7 @@ $buttons['imagemeta'] =
     'title' => $l->t('Update mime-type and MD5 hash for stored images.'),
     'id' => 'imagemeta',
     'class' => 'imagemeta operator expert button' ];
-  $buttons['example'] =
+$buttons['example'] =
   [ 'name' => $l->t('Example'),
     'title' => $l->t('Example Do-Nothing Button'),
     'id' => 'example',
@@ -109,35 +109,40 @@ $links = [
 
 ?>
 <div id="expertmode">
-  <h2 class="popup-title"><?php p($l->t('Advanced operations, use with care')); ?></h2>
-  <fieldset id="expertmode" class="operations expert"><legend class="bold"><?php echo $l->t('Predefined data-base operations'); ?></legend>
-    <?php echo $pageNavigation->buttonsFromArray($buttons); ?>
-    <label for="" class="bold"><?php echo $l->t('Operation generated Response');?></label>
-    <?php
-    echo $pageNavigation->buttonsFromArray(
-      [
-        'only' => [ 'name' => $l->t('Clear Output'),
-                    'id' => 'clearoutput',
-                    'title' => $l->t('Remove output, if any is present.'),
-                    'class' => 'clearoutput operations expert button' ],
-    ]);
-    ?>
-    <div class="msg"><span style="opacity:0.5"><?php echo $l->t('empty') ?></span></div>
-    <div class="error"><span style="opacity:0.5;display:none"><?php echo $l->t('empty') ?></span></div>
-  </fieldset>
-  <form>
-    <fieldset id="expertlinks" class="operations expert links"><legend class="bold"><?php echo $l->t('Links'); ?></legend>
+  <div class="popup-title">
+    <h2><?php p($l->t('Advanced operations, use with care')); ?></h2>
+  </div>
+  <div class="popup-content">
+    <fieldset class="operations expert"><legend class="bold"><?php echo $l->t('Predefined data-base operations'); ?></legend>
+      <?php echo $pageNavigation->buttonsFromArray($buttons); ?>
+      <label for="" class="bold"><?php echo $l->t('Operation generated Response');?></label>
       <?php
-      foreach ($links as $link => $info) {
+      echo $pageNavigation->buttonsFromArray(
+        [
+          'only' => [ 'name' => $l->t('Clear Output'),
+                      'id' => 'clearoutput',
+                      'title' => $l->t('Remove output, if any is present.'),
+                      'class' => 'clearoutput operations expert button' ],
+      ]);
       ?>
-      <a href="<?php echo $_[$link]; ?>"
-         class="button"
-         target="<?php p($link.':'.$appName); ?>"
-         title="<?php echo $info['title']"
-      >
-        <?php echo $info['text']; ?>
-      </a>
-      <br/>
-      <?php } ?>
+      <div class="msg"><span style="opacity:0.5"><?php echo $l->t('empty') ?></span></div>
+      <div class="error"><span style="opacity:0.5;display:none"><?php echo $l->t('empty') ?></span></div>
     </fieldset>
+    <form>
+      <fieldset class="operations expert links"><legend class="bold"><?php echo $l->t('Links'); ?></legend>
+        <?php
+        foreach ($links as $link => $info) {
+        ?>
+          <a href="<?php echo $_[$link]; ?>"
+             class="button"
+             target="<?php p($link.':'.$appName); ?>"
+             title="<?php echo $info['title']; ?>"
+          >
+            <?php echo $info['text']; ?>
+          </a>
+          <br/>
+        <?php } ?>
+      </fieldset>
+    </form>
+  </div>
 </div>
