@@ -45,6 +45,7 @@ class InstrumentationService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
+    $this->connection = $this->entityManager->getConnection();
     $this->l = $this->l10n();
   }
 
@@ -72,6 +73,7 @@ class InstrumentationService
                 'tablename' => 'b',
                 'column' => true,
                 'key' => true,
+                'groupby' => true,
                 'join' => [ 'type' => 'LEFT' ],
       ],
 
@@ -162,6 +164,7 @@ class InstrumentationService
       'ProjectInstrumentId' => [
         'table' => 'pi',
         'column' => 'InstrumentId',
+        'groupby' => true,
         'join' => [ 'type' =>'LEFT' ],
       ],
 
@@ -169,12 +172,14 @@ class InstrumentationService
         'table' => 'pi',
         'column' => true,
         'join' => [ 'type' => 'LEFT' ],
+        'sort' => 'ASC',
       ],
 
       'SectionLeader' => [
         'table' => 'pi',
         'column' => true,
         'join' => [ 'type' => 'LEFT' ],
+        'sort' => 'DESC',
       ],
 
       'ProjectInstrument' => [
@@ -204,6 +209,7 @@ class InstrumentationService
         'table' => 'i',
         'column' => 'Sortierung',
         'join' => [ 'type' => 'LEFT' ],
+        'sort' => 'ASC',
       ],
 
       'Registration' => [
@@ -222,12 +228,14 @@ class InstrumentationService
         'table' => 'm',
         'column' => true,
         'join' => [ 'type' => 'LEFT' ],
+        'sort' => 'ASC',
       ],
 
       'FirstName' => [
         'table' => 'm',
         'column' => 'Vorname',
         'join' => [ 'type' => 'LEFT' ],
+        'sort' => 'ASC',
       ],
 
       'Email' => [
@@ -407,6 +415,7 @@ IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
         'column' => true,
         'key' => true,
         'join' => [ 'type' => 'LEFT' ],
+        'sort' => 'ASC',
       ],
 
       'musician_id' => [
@@ -465,11 +474,42 @@ IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
     return $viewStructure;
   }
 
-  public static function generateJoinSql($method)
+  public function generateJoinSql($slug)
   {
-    $method = lcfirst($method);
+    $method = lcfirst($slug);
     $method .= 'JoinStructure';
-    return DataBaseUtil::generateJoinSelect(self::$method());
+    $joinStructure = self::$method();
+    return DataBaseUtil::generateJoinSelect($joinStructure);
+  }
+
+  private function createJoinTableView($slug)
+  {
+    $joinSelect = $this->generateJoinSql($slug);
+    $viewQuery = 'CREATE OR REPLACE VIEW `'.lcfirst($slug).'View` AS
+'.$joinSelect;
+    $this->logInfo('Try to create view with query '.$viewQuery);
+    try {
+      $this->connection->executeQuery($viewQuery);
+    } catch (\Throwable $t) {
+      throw new \Exception($this->l->t('Unable to create view for slug `%s`', [ $slug ]), $t->getCode(), $t);
+    }
+    return true;
+  }
+
+  /**
+   * Generate some convenience views. This is rather a setup function.
+   *
+   * @todo Check whether this is really needed ...
+   */
+  public function createJoinTableViews()
+  {
+    $views = [
+      'instrumentation',
+      'musicianPhoto',
+    ];
+    foreach ($views as $viewSlug) {
+      $this->createJoinTableView($viewSlug);
+    }
   }
 
 }

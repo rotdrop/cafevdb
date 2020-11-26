@@ -73,10 +73,14 @@ class Util
       return false;
     }
 
-    $joinDflt = [ 'table' => false,
-                  'tablename' => false,
-                  'column' => true,
-                  'verbatim' => false ];
+    $joinDflt = [
+      'table' => false,
+      'tablename' => false,
+      'column' => true,
+      'sort' => false,
+      'groupby' => false,
+      'verbatim' => false,
+    ];
 
     $firstTable = array_merge($joinDflt, $firstTable);
     $table = $firstTable['table'];
@@ -90,6 +94,8 @@ class Util
     }
     $join .= $nl;
     $select = 'SELECT'.$nl;
+    $sort = [];
+    $groupBy = [];
     foreach ($joinStructure as $joinColumn => $joinedColumn) {
       // Set default options. The default options array MUST come
       // first, later arrays override (see manual for array_merge())
@@ -128,7 +134,20 @@ class Util
         $join .= $nl.
               $ind.$ind.$ind.'ON '.$cond.$nl;
       }
+      if (!empty($joinedColumn['groupby'])) {
+        $groupBy[] = $column;
+      }
+      if (!empty($joinedColumn['sort'])) {
+        $sort[] = $column.' '.$joinedColumn['sort'];
+      }
     }
-    return rtrim($select, "\n,").$nl.$join;
+    $query = rtrim($select, "\n,").$nl.$join;
+    if (!empty($groupBy)) {
+      $query .= $nl.'GROUP BY '.implode(', ', $groupBy);
+    }
+    if (!empty($sort)) {
+      $query .= $nl.'ORDER BY '.implode(', ', $sort);
+    }
+    return $query;
   }
 }
