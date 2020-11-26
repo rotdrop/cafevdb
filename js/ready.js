@@ -21,11 +21,9 @@
 
 /**Run just all registered read-callbacks once. */
 $(function() {
-    CAFEVDB.runReadyCallbacks();
+  CAFEVDB.runReadyCallbacks();
 });
 
 // Local Variables: ***
-// js-indent-level: 4 ***
-// js3-indent-level: 4 ***
-// js3-label-indent-offset: -2 ***
+// js-indent-level: 2 ***
 // End: ***
