@@ -30,6 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
  * MusicianPhoto
  *
  * @ORM\Table(name="MusicianPhoto", uniqueConstraints={@ORM\UniqueConstraint(name="owner_image", columns={"owner_id", "image_id"})})
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusicianPhotosRepository")
  * @ORM\Entity
  */
 class MusicianPhoto
