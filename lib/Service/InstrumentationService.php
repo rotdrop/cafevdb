@@ -39,11 +39,16 @@ class InstrumentationService
   /** @var EntityManager */
   protected $entityManager;
 
+  /** @var ToolTipsService */
+  private $toolTipsService;
+
   public function __construct(
     ConfigService $configService
+    , ToolTipsService $toolTipsService
     , EntityManager $entityManager
   ) {
     $this->configService = $configService;
+    $this->toolTipsService = $toolTipsService;
     $this->entityManager = $entityManager;
     $this->connection = $this->entityManager->getConnection();
     $this->l = $this->l10n();
@@ -503,6 +508,8 @@ IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
    */
   public function createJoinTableViews()
   {
+    $this->getDatabaseRepository(Entities\MusicianPhoto::class)->joinTable();
+
     $views = [
       'instrumentation',
       'musicianPhoto',
@@ -510,6 +517,100 @@ IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
     foreach ($views as $viewSlug) {
       $this->createJoinTableView($viewSlug);
     }
+  }
+
+  /**
+   * @todo DetailedInstrumentationService? Maybe overkill
+   */
+
+  public function tableTabId($idOrName)
+  {
+    $dflt = $this->defaultTableTabs();
+    foreach ($dflt as $tab) {
+      if ($idOrName === $tab['name']) {
+        return $idOrName;
+      }
+    }
+    return $idOrName;
+  }
+
+  /**
+   * Export the default tabs family.
+   */
+  public function defaultTableTabs($useFinanceTab = false)
+  {
+    $pre = [
+      [
+        'id' => 'instrumentation',
+        'default' => true,
+        'tooltip' => $this->toolTipsService['project-instrumentation-tab'],
+        'name' => $this->l->t('Instrumentation related data'),
+      ],
+      [
+        'id' => 'project',
+        'tooltip' => $this->toolTipsService['project-metadata-tab'],
+        'name' => $this->l->t('Project related data'),
+      ],
+    ];
+    $finance = [
+      [
+        'id' => 'finance',
+        'tooltip' => $this->toolTipsService['project-finance-tab'],
+        'name' => $this->l->t('Finance related data'),
+      ],
+    ];
+    $post = [
+      [
+        'id' => 'musician',
+        'tooltip' => $this->toolTipsService['project-personaldata-tab'],
+        'name' => $this->l->t('Personal data'),
+      ],
+      [
+        'id' => 'tab-all',
+        'tooltip' => $this->toolTipsService['pme-showall-tab'],
+        'name' => $this->l->t('Display all columns'),
+      ],
+    ];
+    if ($useFinanceTab) {
+      return array_merge($pre, $finance, $post);
+    } else {
+      return array_merge($pre, $post);
+    }
+  }
+
+  /**Export the description for the table tabs. */
+  public function tableTabs($extraFields = false, $useFinanceTab = false)
+  {
+    $dfltTabs = $this->defaultTableTabs($useFinanceTab);
+
+    if (!is_array($extraFields)) {
+      return $dfltTabs;
+    }
+
+    $extraTabs = array();
+    foreach ($extraFields as $field) {
+      if (empty($field['Tab'])) {
+        continue;
+      }
+
+      $extraTab = $field['Tab'];
+      foreach ($dfltTabs as $tab) {
+        if ($extraTab === $tab['id'] ||
+            $extraTab === (string)$tab['name']) {
+          $extraTab = false;
+          break;
+        }
+      }
+      if ($extraTab !== false) {
+        $extraTabs[] = [
+          'id' => $extraTab,
+          'name' => $this->l->t($extraTab),
+          'tooltip' => $this->toolTipsService['extra-fields-extra-tab'],
+        ];
+      }
+    }
+
+    return array_merge($dfltTabs, $extraTabs);
   }
 
 }
