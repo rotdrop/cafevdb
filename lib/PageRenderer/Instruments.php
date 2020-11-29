@@ -88,7 +88,8 @@ class Instruments extends PMETableViewBase
     $projectId       = $this->projectId;
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
-    $opts            = $this->pmeOptions;
+
+    $opts            = [];
 
     $expertMode = $this->getUserValue('expertmode');
 
@@ -103,12 +104,12 @@ class Instruments extends PMETableViewBase
     //$opts['debug'] = true;
 
     $template = 'instruments';
-    $opts['cgi']['persist'] = array(
+    $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
       'recordsPerPage' => $recordsPerPage,
-      );
+    ];
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
@@ -132,16 +133,14 @@ class Instruments extends PMETableViewBase
     //$opts['navigation'] = 'DB';
 
     // Display special page elements
-    $opts['display'] =  Util::arrayMergeRecursive(
-      $opts['display'],
-      [
-        'form'  => true,
-        //'query' => true,
-        'sort'  => true,
-        'time'  => true,
-        'tabs'  => false,
-        'navigation' => 'CPD'
-      ]);
+    $opts['display'] = [
+      'form'  => true,
+      //'query' => true,
+      'sort'  => true,
+      'time'  => true,
+      'tabs'  => false,
+      'navigation' => 'CPD'
+    ];
 
     $opts['fdd']['Id'] = [
       'name'      => 'Id',
@@ -310,6 +309,8 @@ class Instruments extends PMETableViewBase
         }
         return true;
       };
+
+    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opt);
 
     if ($execute) {
       $this->execute($opts);

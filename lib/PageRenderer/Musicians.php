@@ -122,7 +122,8 @@ make sure that the musicians are also automatically added to the
     $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
-    $opts            = $this->pmeOptions;
+
+    $opts            = [];
 
     $expertMode = $this->getUserValue('expertmode');
 
@@ -176,31 +177,28 @@ make sure that the musicians are also automatically added to the
     }
 
     // Display special page elements
-    $opts['display'] =  Util::arrayMergeRecursive(
-      $opts['display'],
-      [
-        'form'  => true,
-        //'query' => true,
-        'sort'  => true,
-        'time'  => true,
-        'tabs'  => [
-          [ 'id' => 'orchestra',
-            'default' => true,
-            'tooltip' => $this->toolTipsService['musician-orchestra-tab'],
-            'name' => $this->l->t('Instruments and Status') ],
-          [ 'id' => 'contact',
-            'tooltip' => $this->toolTipsService['musican-contact-tab'],
-            'name' => $this->l->t('Contact Information') ],
-          [ 'id' => 'miscinfo',
-            'tooltip' => $this->toolTipsService['musician-miscinfo-tab'],
-            'name' => $this->l->t('Miscellaneous Data') ],
-          [ 'id' => 'tab-all',
-            'tooltip' => $this->toolTipsService['pme-showall-tab'],
-            'name' => $this->l->t('Display all columns')
-          ],
+    $opts['display'] =  [
+      'form'  => true,
+      //'query' => true,
+      'sort'  => true,
+      'time'  => true,
+      'tabs'  => [
+        [ 'id' => 'orchestra',
+          'default' => true,
+          'tooltip' => $this->toolTipsService['musician-orchestra-tab'],
+          'name' => $this->l->t('Instruments and Status') ],
+        [ 'id' => 'contact',
+          'tooltip' => $this->toolTipsService['musican-contact-tab'],
+          'name' => $this->l->t('Contact Information') ],
+        [ 'id' => 'miscinfo',
+          'tooltip' => $this->toolTipsService['musician-miscinfo-tab'],
+          'name' => $this->l->t('Miscellaneous Data') ],
+        [ 'id' => 'tab-all',
+          'tooltip' => $this->toolTipsService['pme-showall-tab'],
+          'name' => $this->l->t('Display all columns')
         ],
-      ],
-    );
+        ],
+    ];
 
     // field definitions
 
@@ -635,6 +633,8 @@ make sure that the musicians are also automatically added to the
         $opts['fdd'][$key]['sort'] = false;
       }
     }
+
+    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opt);
 
     if ($execute) {
       $this->execute($opts);

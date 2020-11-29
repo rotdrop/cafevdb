@@ -78,7 +78,8 @@ class ProjectPayments extends PMETableViewBase
     $projectId       = $this->projectId;
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
-    $opts            = $this->pmeOptions;
+
+    $opts            = [];
 
     if (empty($projectName) || empty($projectId)) {
       throw new \InvalidArgumentException('Project-id and/or -name must be given.');
@@ -93,12 +94,12 @@ class ProjectPayments extends PMETableViewBase
     //$opts['debug'] = true;
 
     $template = 'project-payments';
-    $opts['cgi']['persist'] = array(
+    $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
       'recordsPerPage' => $recordsPerPage,
-    );
+    ];
 
     // Name of field which is the unique key
     $opts['key'] = 'id';
@@ -246,6 +247,8 @@ class ProjectPayments extends PMETableViewBase
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
 
     $opts['filters'] = 'PMEjoin'.$instrumentationIdx.'.ProjectId = '.$projectId;
+
+    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opt);
 
     if ($execute) {
       $this->execute($opts);

@@ -79,7 +79,8 @@ class Projects extends PMETableViewBase
     $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
-    $opts            = $this->pmeOptions;
+
+    $opts            = [];
 
     $expertMode = $this->getUserValue('expertmode');
 
@@ -126,16 +127,13 @@ class Projects extends PMETableViewBase
     //$opts['navigation'] = 'DB';
 
     // Display special page elements
-    $opts['display'] =  Util::arrayMergeRecursive(
-      $opts['display'],
-      [
-        'form'  => true,
-        //'query' => true,
-        'sort'  => true,
-        'time'  => true,
-        'tabs'  => false
-      ],
-    );
+    $opts['display'] = [
+      'form'  => true,
+      //'query' => true,
+      'sort'  => true,
+      'time'  => true,
+      'tabs'  => false
+    ];
 
     $idIdx = 0;
     $opts['fdd']['Id'] = [
@@ -436,7 +434,6 @@ __EOT__;
 
        $opts['filters']['OR'] = expression or array;
        $opts['filters']['AND'] = expression or array;
-
        $opts['filters'] = andexpression or [andexpression1, andexpression2);
     */
     $opts['filters'] = [ 'OR' => [], 'AND' => [] ];
@@ -467,6 +464,8 @@ __EOT__;
 
     // $opts['triggers']['delete']['before'][] = 'CAFEVDB\Projects::deleteTrigger';
     // $opts['triggers']['delete']['after'][] = 'CAFEVDB\Projects::deleteTrigger';
+
+    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opt);
 
     if ($execute) {
       $this->execute($opts);
