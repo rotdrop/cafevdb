@@ -25,9 +25,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\DBAL\Logging\DebugStack;
 
 class MusicianPhotosRepository extends EntityRepository
 {
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
+
 //   SELECT m.mac AS mac, vi.id AS viid, m.id AS id,
 //     m.firstseen AS firstseen, m.lastseen AS lastseen,
 //     c.id AS customerid, c.abbreviatedName AS customer,
@@ -51,7 +54,32 @@ class MusicianPhotosRepository extends EntityRepository
 // GROUP BY m.mac, vi.id, m.id, m.firstseen, m.lastseen,
 //     c.id, c.abbreviatedName, s.name, o.organisation
 
-// ORDER BY c.abbreviatedName ASC
+  // ORDER BY c.abbreviatedName ASC
+
+  public function joinTable()
+  {
+    $em = $this->getEntityManager();
+    $logger = new DebugStack();
+    $em->getConfiguration()->setSQLLogger($logger);
+
+    $qb = $em->createQueryBuilder()
+             ->select([ 'mp.ownerId AS musicianId', 'i.id AS imageId' ])
+             ->from($this->getEntityName(), 'mp')
+             ->leftJoin('mp.image', 'i');
+    //->leftJoin('i.imageData', 'id');
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+
+    self::log(print_r($logger->queries, true));
+    $this->getEntityManager()->getConfiguration()->setSQLLogger(null);
+    self::log(print_r($result, true));
+
+    $view = new Doctrine_View($query, 'TestView');
+    $view->create();
+
+    return $result;
+  }
+
 }
 
 // Local Variables: ***
