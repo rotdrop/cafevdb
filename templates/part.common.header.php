@@ -104,6 +104,8 @@ script($appName, '../3rdparty/js/imagesloaded/imagesloaded.pkgd.min');
 
 //style($appName, '../3rdparty/jquery-ui/jquery-ui');
 
+script('dokuwikiembedded', 'doku-wiki');
+
 echo Common\Util::emitExternalScripts(); // @@TODO rework
 
 /*
