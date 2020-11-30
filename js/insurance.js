@@ -253,7 +253,7 @@ $(document).ready(function(){
     });
 
     CAFEVDB.addReadyCallback(function() {
-        const renderer = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="renderTemplate"]').val();
+        const renderer = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
         if (renderer == CAFEVDB.Page.templateRenderer('instrument-insurance')
             || renderer == CAFEVDB.Page.templateRenderer('insuranc-rates')) {
           CAFEVDB.Insurances.pmeFormInit(PHPMYEDIT.defaultSelector);

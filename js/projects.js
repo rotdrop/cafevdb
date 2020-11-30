@@ -148,7 +148,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       AmbientContainerSelector: containerSel,
       DialogHolderCSSId: template + '-dialog',
       emplate: template,
-      renderTemplate: CAFEVDB.Page.renderTemplate(template),
+      emplateRenderer: CAFEVDB.Page.templateRenderer(template),
       Table: 'BesetzungsZahlen',
       Transpose: 'transposed',
       InhibitTranspose: 'true',
@@ -187,7 +187,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       AmbientContainerSelector: containerSel,
       DialogHolderCSSId: 'project-overview',
       template: template,
-      renderTemplate: CAFEVDB.Page.renderTemplate(template),
+      templateRenderer: CAFEVDB.Page.templateRenderer(template),
       // Now special options for the dialog popup
       InitialViewOperation: true,
       InitialName: 'PME_sys_operation',

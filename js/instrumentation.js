@@ -87,7 +87,7 @@ var CAFEVDB = CAFEVDB || {};
     if (tableOptions.Table == 'Musiker') {
       var projectMode = options.ProjectId > 0;
       tableOptions.template =  projectMode ? 'add-musicians' : 'all-musicians';
-      tableOptions.renderTemplate = CAFEVDB.Page.renderTemplate(tableOptions.template);
+      tableOptions.templateRenderer = CAFEVDB.Page.templateRenderer(tableOptions.template);
     } else if (options.ProjectId > 0) {
       tableOptions.table = options.projectName+'View';
       tableOptions.template = 'detailed-instrumenation'
@@ -95,7 +95,7 @@ var CAFEVDB = CAFEVDB || {};
     } else {
       tableOptions.table = 'Musiker';
       tableOptions.template = 'all-musicians';
-      tableOptions.renderTemplate = CAFEVDB.Page.renderTemplate(tableOptions.template);
+      tableOptions.templateRenderer = CAFEVDB.Page.templateRenderer(tableOptions.template);
     }
 
     //alert('options: '+CAFEVDB.print_r(tableOptions, true));
@@ -181,7 +181,7 @@ var CAFEVDB = CAFEVDB || {};
    * formData = {
    *   template: "detailed-instrumentation",
    *   table: "Musiker",
-   *   renderTemplate: "template:detailed-instrumentation"
+   *   templateRenderer: "template:detailed-instrumentation"
    * };
    *
    * The form is submitted with an empty pseudo-submit button.
@@ -213,7 +213,7 @@ var CAFEVDB = CAFEVDB || {};
    * formData = {
    *   template: "detailed-instrumentation",
    *   table: "Musiker",
-   *   renderTemplate: "template:detailed-instrumentation"
+   *   templateRenderer: "template:detailed-instrumentation"
    * };
    *
    * The form is submitted with an empty pseudo-submit button.
@@ -276,7 +276,7 @@ var CAFEVDB = CAFEVDB || {};
     const inputTweak = {
       template: template,
       table: "Musiker",
-      renderTemplate: CAFEVDB.Page.renderTemplate(template)
+      templateRenderer: CAFEVDB.Page.templateRenderer(template)
     };
 
     Instrumentation.loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
@@ -315,7 +315,7 @@ var CAFEVDB = CAFEVDB || {};
     const inputTweak = {
       template: template,
       table: table,
-      renderTemplate: CAFEVDB.Page.renderTemplate(template)
+      templateRenderer: CAFEVDB.Page.templateRenderer(template)
     };
 
     var ids = [ -1 ];
