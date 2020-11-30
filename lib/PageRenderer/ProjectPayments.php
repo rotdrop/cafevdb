@@ -248,7 +248,7 @@ class ProjectPayments extends PMETableViewBase
 
     $opts['filters'] = 'PMEjoin'.$instrumentationIdx.'.ProjectId = '.$projectId;
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opt);
+    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     if ($execute) {
       $this->execute($opts);

@@ -465,7 +465,7 @@ __EOT__;
     // $opts['triggers']['delete']['before'][] = 'CAFEVDB\Projects::deleteTrigger';
     // $opts['triggers']['delete']['after'][] = 'CAFEVDB\Projects::deleteTrigger';
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opt);
+    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     if ($execute) {
       $this->execute($opts);
@@ -515,7 +515,6 @@ project without a flyer first.");
 
   public function projectActions($projectId, $projectName, $placeHolder = false, $overview = false)
   {
-    return "<H2>Project-Actions Placeholder</H2>";
     $projectPaths = $this->projectService->ensureProjectFolders($projectId, $projectName);
 
     if ($placeHolder === false) {
@@ -531,7 +530,7 @@ project without a flyer first.");
           class="project-actions"
           title="'.$this->toolTipsService['project-actions'].'"
           data-project-id="'.$projectId.'"
-          data-project-name="'.Util::htmlEncode($projectName).'">
+          data-project-name="'.htmlentities($projectName).'">
     <option value=""></option>
 '
              .($overview

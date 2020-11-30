@@ -238,7 +238,7 @@ class InstrumentFamilies extends PMETableViewBase
         return true;
       };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opt);
+    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     if ($execute) {
       $this->execute($opts);

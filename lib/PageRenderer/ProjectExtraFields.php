@@ -293,7 +293,7 @@ class ProjectPayments extends PMETableViewBase
     $opts['fdd']['AllowedValues'] = [
       'name' => L::t('Allowed Values'),
       'css|LF' => [ 'postfix' => ' allowed-values hide-subsequent-lines' ],
-      'css' => ['postfix' => ' allowed-values'),
+      'css' => ['postfix' => ' allowed-values' ],
       'select' => 'T',
       'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
         return self::showAllowedValues($value, $op, $recordId);
@@ -362,7 +362,7 @@ class ProjectPayments extends PMETableViewBase
       'sort' => true,
       'display|LF' => [ 'popup' => 'data' ],
       'tooltip' => Config::toolTips('extra-fields-default-value'),
-    );
+    ];
 
     $opts['fdd']['DefaultMultiValue'] = [
       'name' => L::t('Default Value'),
@@ -412,10 +412,10 @@ class ProjectPayments extends PMETableViewBase
     $opts['fdd']['ToolTip'] = [
       'tab'      => [ 'id' => 'display' ],
       'name' => L::t('Tooltip'),
-      'css' => ['postfix' => ' extra-field-tooltip hide-subsequent-lines'),
+      'css' => [ 'postfix' => ' extra-field-tooltip hide-subsequent-lines' ],
       'select' => 'T',
-      'textarea' => ['rows' => 5,
-                          'cols' => 28),
+      'textarea' => [ 'rows' => 5,
+                      'cols' => 28 ],
       'maxlen' => 1024,
       'size' => 30,
       'sort' => true,
@@ -566,7 +566,7 @@ class ProjectPayments extends PMETableViewBase
     $opts['triggers']['update']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
     $opts['triggers']['delete']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opt);
+    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     if ($execute) {
       $this->execute($opts);
