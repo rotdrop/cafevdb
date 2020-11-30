@@ -802,7 +802,7 @@ __EOT__;
 
       return true;
     }
-, 2020
+
     /**@copydoc Projects::afterInsertTrigger()
      *
      * This trigger, in particular, tries to take care to remove all
