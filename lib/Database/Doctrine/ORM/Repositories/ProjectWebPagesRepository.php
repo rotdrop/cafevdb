@@ -55,7 +55,7 @@ class ProjectWebPagessRepository extends EntityRepository
                                          'articleId' => $articleId, ]);
     if (empty($projectWebPage)) {
       $project = $entityManager->getReference(Entities\Project::class, $projectId);
-      $projectWebPage = new Entities\ProjectWebPage()
+      $projectWebPage = (new Entities\ProjectWebPage())
                       ->setProject($project)
                       ->setArticleId($article['ArticleId']);
     }
