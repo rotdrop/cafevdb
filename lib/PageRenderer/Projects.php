@@ -460,7 +460,7 @@ __EOT__;
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeInsertTrigger' ];
     $opts['triggers']['insert']['after'][]   = [ $this, 'addOrChangeInstrumentation' ];
-    // $opts['triggers']['insert']['after'][]   = 'CAFEVDB\Projects::afterInsertTrigger';
+    $opts['triggers']['insert']['after'][]   = [ $this, 'afterInsertTrigger' ];
 
     // $opts['triggers']['delete']['before'][] = 'CAFEVDB\Projects::deleteTrigger';
     // $opts['triggers']['delete']['after'][] = 'CAFEVDB\Projects::deleteTrigger';
@@ -813,13 +813,13 @@ project without a flyer first.");
           $this->remove([ 'Id' => $oldRecords[$id] ]);
           $this->changeLogService->logDelete($table, 'Id', [
             'Id' => $oldRecords[$id],
-            'ProjectId' => $musicianId,
+            'ProjectId' => $projectId,
             'InstrumentId' => $id,
           ]);
         }
         $this->flush();
         // need references instead of id in order to "satisfy" associations
-        $project = $this->entityManager->getReference(Entities\Project::class, [ 'Id' => $projectId ]);
+        $project = $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectId ]);
         foreach(array_diff($newIds, $oldIds) as $instrumentId) {
           $instrument = $this->entityManager->getReference(Entities\Instrument::class, [ 'id' => $instrumentId ]);
           $projectInstrument = Entities\ProjectInstrumentation::create()

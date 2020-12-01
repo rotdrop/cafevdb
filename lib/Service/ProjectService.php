@@ -454,7 +454,7 @@ Whatever.',
    */
   public function createProjectWebPage($projectId, $kind = 'concert')
   {
-    $project = $this->find($projectid);
+    $project = $this->find($projectId);
     if (empty($project)) {
       return false;
     }
