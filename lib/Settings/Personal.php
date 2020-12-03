@@ -33,6 +33,9 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ErrorService;
 use OCA\CAFEVDB\Service\TranslationService;
 
+use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
+use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+
 class Personal implements ISettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
@@ -52,18 +55,28 @@ class Personal implements ISettings {
   /** @var OCA\CAFEVDB\Service\TranslationService */
   private $translationService;
 
+  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
+  private $wikiRPC;
+
+  /** @var OCA\Redaxo4Embedded\Service\RPC */
+  private $webPagesRPC;
+
   public function __construct(
     ConfigService $configService
     , ProjectService $projectService
     , ToolTipsService $toolTipsService
     , ErrorService $errorService
     , TranslationService $translationService
+    , WikiRPC $wikiRPC
+    , WebPagesRPC $webPagesRPC
   ) {
     $this->configService = $configService;
     $this->projectService = $projectService;
     $this->toolTipsService = $toolTipsService;
     $this->errorService = $errorService;
     $this->translationService = $translationService;
+    $this->wikiRPC = $wikiRPC;
+    $this->webPagesRPC = $webPagesRPC;
     $this->l = $this->l10N();
   }
 
@@ -80,6 +93,13 @@ class Personal implements ISettings {
     try {
       // Are we a group-admin?
       $isGroupAdmin = $this->isSubAdminOfGroup() && $this->encryptionKeyValid();
+
+      try {
+        $webPageCategories = $this->webPagesRPC->getCategories();
+      } catch (\Throwable $t) {
+        $webPageCategories = [];
+        $this->logException($t);
+      }
 
       $templateParameters = [
         'appName' => $this->appName(),
@@ -102,6 +122,7 @@ class Personal implements ISettings {
         'expertmode' => $this->getUserValue('expertmode', 'off'),
         'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),
         'wysiwygOptions' => ConfigService::WYSIWYG_EDITORS,
+        'webPageCategories' => $webPageCategories,
       ];
 
       if ($isGroupAdmin) {
