@@ -26,7 +26,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\EntityRepository;
 
-class ProjectWebPagessRepository extends EntityRepository
+class ProjectWebPagesRepository extends EntityRepository
 {
   /**
    * Attach the given web-article to the given project.

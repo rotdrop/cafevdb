@@ -33,7 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="ProjectWebPages", uniqueConstraints={@ORM\UniqueConstraint(name="ProjectId", columns={"ProjectId", "ArticleId"})})
  * @ORM\Entity
  */
-class ProjectWebPage
+class ProjectWebPage implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
