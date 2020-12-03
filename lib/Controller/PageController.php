@@ -12,6 +12,7 @@
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\IRequest;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
@@ -278,6 +279,12 @@ class PageController extends Controller {
     $response = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
     $response->addHeader('X-'.$this->appName.'-history-size', $historySize);
     $response->addHeader('X-'.$this->appName.'-history-position', $historyPosition);
+
+    // @TODO: we need this only for some site like DokuWiki and CMS
+    $policy = new ContentSecurityPolicy();
+    $policy->addAllowedChildSrcDomain('*');
+    $policy->addAllowedFrameDomain('*');
+    $response->setContentSecurityPolicy($policy);
 
     // ok no exception, so flush the history to the session, when we
     // got so far.
