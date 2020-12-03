@@ -27,6 +27,7 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\Files\IRootFolder;
 use OCP\Files\Folder;
+use OCP\Files\FileInfo;
 
 /**
  * Some tweaks to for the user-folder stuff.
@@ -45,11 +46,14 @@ class UserStorage
   protected $userFolder;
 
   public function __construct(
-    string $userId
+    $userId
     , IRootFolder $rootFolder
     , ILogger $logger
     , IL10N $l10n
   ) {
+    if (empty($userId)) {
+      throw new \Exception("Empty user-id");
+    }
     $this->userId = $userId;
     $this->rootFolder = $rootFolder;
     $this->logger = $logger;
@@ -108,12 +112,12 @@ class UserStorage
   {
     try {
       $node = $this->userFolder->get($path);
-      if ($node->getType() != \OCP\FileInfo::TYPE_FOLDER) {
+      if ($node->getType() != FileInfo::TYPE_FOLDER) {
         $node->delete();
         throw new \OCP\Files\NotFoundException($this->l->t("Deleted non-directory %s", [$path]));
       }
     } catch (\OCP\Files\NotFoundException $e) {
-      $node = $userFolder->newFolder($path);
+      $node = $this->userFolder->newFolder($path);
     }
     return $node;
   }
