@@ -227,15 +227,15 @@ $toolTipClass = "tooltip-right";
     <?php
     $tabNo = 2;
     if ($adminsettings === true) {
-      echo $this->inc("app-settings", [ 'tabNr' => $tabNo++ ]);
-      echo $this->inc("orchestra-settings", [ 'tabNr' => $tabNo++ ]);
-      echo $this->inc("share-settings", [ 'tabNr' => $tabNo++ ]);
-      echo $this->inc("email-settings", [ 'tabNr' => $tabNo++ ]);
-      echo $this->inc("translations", [ 'tabNr' => $tabNo++ ]);
-      echo $this->inc("devel-settings", [ 'tabNr' => $tabNo++ ]);
-      echo $this->inc("cms-settings", [ 'tabNr' => $tabNo++ ]);
+      echo $this->inc("settings/app-settings", [ 'tabNr' => $tabNo++ ]);
+      echo $this->inc("settings/orchestra-settings", [ 'tabNr' => $tabNo++ ]);
+      echo $this->inc("settings/share-settings", [ 'tabNr' => $tabNo++ ]);
+      echo $this->inc("settings/email-settings", [ 'tabNr' => $tabNo++ ]);
+      echo $this->inc("settings/translations", [ 'tabNr' => $tabNo++ ]);
+      echo $this->inc("settings/devel-settings", [ 'tabNr' => $tabNo++ ]);
+      echo $this->inc("settings/cms-settings", [ 'tabNr' => $tabNo++ ]);
     }
-    echo $this->inc("about", [ 'tabNr' => $tabNo++ ]);
+    echo $this->inc("settings/about", [ 'tabNr' => $tabNo++ ]);
     ?>
   </div>
 </div>
