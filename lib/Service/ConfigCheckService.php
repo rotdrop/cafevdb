@@ -41,6 +41,14 @@ class ConfigCheckService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  const SHARE_PERMISSIONS = (
+      \OCP\Constants::PERMISSION_CREATE
+      | \OCP\Constants::PERMISSION_READ
+      | \OCP\Constants::PERMISSION_UPDATE
+      | \OCP\Constants::PERMISSION_DELETE
+      //| \OCP\Constants::PERMISSION_SHARE
+  );
+
   /** @var EntityManager */
   private $entityManager;
 
@@ -263,7 +271,8 @@ class ConfigCheckService
     return $result;
   }
 
-  /**Check whether the shared object exists. Note: this function has
+  /**
+   * Check whether the shared object exists. Note: this function has
    * to be executed under the uid of the user the object belongs
    * to. See ConfigService::sudo().
    *
@@ -280,10 +289,7 @@ class ConfigCheckService
   {
     // First check whether the object is already shared.
     $shareType  = IShare::TYPE_GROUP;
-    $groupPerms = (\OCP\Constants::PERMISSION_CREATE|
-                   \OCP\Constants::PERMISSION_READ|
-                   \OCP\Constants::PERMISSION_UPDATE|
-                   \OCP\Constants::PERMISSION_DELETE);
+    $groupPerms = self::SHARE_PERMISSIONS;
 
     if ($type != 'folder' && $type != 'file') {
       $this->logError('only folder and file for now');
@@ -303,7 +309,8 @@ class ConfigCheckService
     return false;
   }
 
-  /**Share an object between the members of the specified group. Note:
+  /**
+   * Share an object between the members of the specified group. Note:
    * this function has to be executed under the uid of the user the
    * object belongs to. See ConfigService::sudo().
    *
@@ -321,10 +328,13 @@ class ConfigCheckService
   public function groupShareObject($id, $groupId, $type = 'calendar', $shareOwner = null)
   {
     $shareType = IShare::TYPE_GROUP;
-    $groupPerms = (\OCP\Constants::PERMISSION_CREATE|
-                   \OCP\Constants::PERMISSION_READ|
-                   \OCP\Constants::PERMISSION_UPDATE|
-                   \OCP\Constants::PERMISSION_DELETE);
+    $groupPerms = (
+      \OCP\Constants::PERMISSION_CREATE
+      | \OCP\Constants::PERMISSION_READ
+      | \OCP\Constants::PERMISSION_UPDATE
+      | \OCP\Constants::PERMISSION_DELETE
+      //| \OCP\Constants::PERMISSION_SHARE
+    );
 
     if ($type != 'folder' && $type != 'file') {
       $this->logError('only folder and file for now');
@@ -517,8 +527,9 @@ class ConfigCheckService
     return $result;
   }
 
-  /**Check for existence of the shared folder and create it when not
-   * found.
+  /**
+   * Check for the existence of the shared folder and create it when
+   * not found.
    *
    * @param $sharedFolder The name of the folder.
    *
@@ -557,11 +568,14 @@ class ConfigCheckService
 
       if ($rootView->nodeExists($sharedFolder)
           && (($node = $rootView->get($sharedFolder))->getType() != FileInfo::TYPE_FOLDER
-              || !$node->isShareable())
-          && !$node->delete()) {
-        return false;
+              || !$node->isShareable())) {
+        try {
+          $node->delete();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          return false;
+        }
       }
-
 
       //->get($sharedFolder)->getId();
       if (!$rootView->nodeExists($sharedFolder) && !$rootView->newFolder($sharedFolder)) {
@@ -571,7 +585,6 @@ class ConfigCheckService
       if (!$rootView->nodeExists($sharedFolder)
           || ($node = $rootView->get($sharedFolder))->getType() != FileInfo::TYPE_FOLDER) {
         throw new \Exception($this->l->t('Folder \`%s\' could not be created', [$sharedFolder]));
-        return false;
       }
 
       // Now it should exist as directory and $node should contain its file-info
@@ -594,15 +607,16 @@ class ConfigCheckService
     return $this->sharedFolderExists($sharedFolder);
   }
 
-  /**Check for existence of the project folder and create it when not
+  /**
+   * Check for existence of the project folder and create it when not
    * found.
    *
-   * @param $projectsFolder The name of the folder. The name may
+   * @param $projectFolder The name of the folder. The name may
    * be composed of several path components.
    *
    * @return bool, @c true on success.
    */
-  public function checkProjectsFolder($projectsFolder)
+  public function checkProjectFolder($projectFolder)
   {
     $sharedFolder = $this->getConfigValue('sharedfolder');
 
@@ -623,38 +637,44 @@ class ConfigCheckService
 
     $rootView = $this->rootFolder->getUserFolder($groupAdmin);
 
-    $projectsFolder = trim(preg_replace('|[/]+|', '/', $projectsFolder), "/");
-    $projectsFolder = Util::explode('/', $projectsFolder);
+    $projectFolder = trim(preg_replace('|[/]+|', '/', $projectFolder), "/");
+    $projectFolder = Util::explode('/', $projectFolder);
 
     $path = '/'.$sharedFolder;
 
-    //trigger_error("Path: ".print_r($projectsFolder, true), E_USER_NOTICE);
+    //trigger_error("Path: ".print_r($projectFolder, true), E_USER_NOTICE);
 
-    foreach ($projectsFolder as $pathComponent) {
+    foreach ($projectFolder as $pathComponent) {
       $path .= '/'.$pathComponent;
       //trigger_error("Path: ".$path, E_USER_NOTICE);
       try {
         $node = $rootView->get($path);
-      } catch(\Exception $e) {
+        if ($node->getType() != FileInfo::TYPE_FOLDER
+            || $node->getPermissions() != self::SHARE_PERMISSIONS) {
+          try {
+            $node->delete();
+          } catch (\Throwable $t) {
+            $this->logException($t);
+            $this->logError('Could not delete node ' . $path
+                            . ' type ' . $node->getType()
+                            . ' permissions ' . $node->getPermissions());
+            return false;
+          }
+        }
+      } catch(\Throwable $t) {
         $node = null;
       }
-      if (empty($node)
-          || $node->getType() != FileInfo::TYPE_FOLDER
-          || !$node->isShareable()) {
-        if ($node && !$node->delete()) {
-          $this->logError('Could not delete non-folder node ' . $path . ' type ' . $node->getType());
-          return false;
-        }
+      if (empty($node)) {
         try {
           $node = $rootView->newFolder($path);
         } catch(\Exception $e) {
           $this->logError('Could not create ' . $path . ' ' . $e->getMessage() . ' ' . $e->getTraceAsString());
           return false;
         }
-        if ($node->getType() != FileInfo::TYPE_FOLDER) {
-          $this->logError($path . ' is not a folder!');
-          return false;
-        }
+      }
+      if ($node->getType() != FileInfo::TYPE_FOLDER) {
+        $this->logError($path . ' is not a folder!');
+        return false;
       }
     }
 
