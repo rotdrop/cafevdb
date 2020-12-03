@@ -64,20 +64,23 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       }
       wikiDlg.dialog('close').remove();
     }
-    DokuWikiEmbedded.wikiPopup({ wikiPage: post.wikiPage,
-				 popupTitle: post.popupTitle,
-				 modal: false },
-			       function(dwDialog, dwDialogWidget) {
-				 // open callback
-				 dwDialog.dialog('option', 'appendTo', '#cafevdb-general');
-				 // Custom shuffle button
-				 CAFEVDB.dialogToBackButton(dwDialog);
-			       },
-			       function() {
-				 // close callback
-				 // Remove modal plane if appropriate
-				 CAFEVDB.modalizer(false);
-			       });
+    DokuWikiEmbedded.wikiPopup(
+      {
+        wikiPage: post.wikiPage,
+        popupTitle: post.popupTitle,
+        modal: false
+      },
+      function(dwDialog, dwDialogWidget) {
+	// open callback
+	dwDialog.dialog('option', 'appendTo', '#cafevdb-general');
+	// Custom shuffle button
+	CAFEVDB.dialogToBackButton(dwDialog);
+      },
+      function() {
+	// close callback
+	// Remove modal plane if appropriate
+	CAFEVDB.modalizer(false);
+      });
   };
 
   /**Generate a popup-dialog for the events-listing for the given
