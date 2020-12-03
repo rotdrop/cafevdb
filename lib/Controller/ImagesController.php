@@ -433,7 +433,7 @@ class ImagesController extends Controller {
     try {
       $placeHolderUrl = $this->urlGenerator()->imagePath($this->appName(), $placeHolderName);
     } catch (\Throwable $t) {
-      $this->logException($t);
+      //$this->logException($t);
       $imageData = $this->fallbackPlaceholder($imageSize);
       $imageFileName = 'placeholder.svg';
       $imageMimeType = 'image/svg+xml';
