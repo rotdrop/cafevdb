@@ -67,7 +67,9 @@ class ProjectService
     $this->entityManager = $entityManager;
     $this->userStorage = $userStorage;
     $this->wikiRPC = $wikiRPC;
+    $this->wikiRPC->errorReporting(WikiRPC::ON_ERROR_THROW);
     $this->webPagesRPC = $webPagesRPC;
+    //$this->logInfo(print_r($this->webPagesRPC->getCategories(), true));
     $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     $this->l = $this->l10n();
   }
@@ -310,7 +312,6 @@ class ProjectService
     $this->wikiRPC->putPage($pagename, $page,
                             [ "sum" => "Automatic CAFEVDB synchronization",
                               "minor" => true ]);
-
   }
 
   /**Generate an almost empty project page. This spares people the
@@ -356,7 +357,6 @@ Whatever.',
       $this->wikiRPC->putPage($pagename, $page,
                               [ "sum" => "Automatic CAFEVDB synchronization",
                                 "minor" => true ]);
-
   }
 
   public function renameProjectWikiPage($newProject, $oldProject)
@@ -583,12 +583,11 @@ Whatever.',
       // category has changed?
     }
 
-    $webPagesRepository = $this->entityManger->getRepository(Entities\ProjectWebpage::class);
+    $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebpage::class);
     try {
       $projectWebPage = $webPagesRepository->attachProjectWebPage($projectid, $articleId);
     } catch (\Throwable $t) {
-      $this->logException($t);
-      return false;
+      throw new \Exception("Unable to attach web-page ".$articleId." for ".$projectId);
     }
   }
 
