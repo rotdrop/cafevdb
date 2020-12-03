@@ -29,6 +29,10 @@ body {
   overflow:hidden;
 }
 
+body#body-settings {
+  overflow:scroll;
+}
+
 #content.app-cafevdb {
   width:100%;
   height:100%;
