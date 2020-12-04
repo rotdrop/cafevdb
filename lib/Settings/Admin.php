@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 
+use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 
 class Admin implements ISettings {
@@ -32,8 +33,15 @@ class Admin implements ISettings {
 
   const TEMPLATE = "admin-settings";
 
-  public function __construct(ConfigService $configService) {
+  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
+  private $wikiRPC;
+
+  public function __construct(
+    ConfigService $configService
+    , WikiRPC $wikiRPC
+  ) {
     $this->configService = $configService;
+    $this->wikiRPC = $wikiRPC;
   }
 
   public function getForm() {
@@ -42,7 +50,9 @@ class Admin implements ISettings {
       self::TEMPLATE,
       [
         'appName' => $this->appName(),
-        'usergroup' => $this->getAppValue('usergroup'),
+        'userGroup' => $this->getAppValue('usergroup'),
+        'wikiNameSpace' => $this->getAppValue('wikinamespace'),
+        'wikiVersion' => $this->wikiRPC->version(),
       ]);
   }
 

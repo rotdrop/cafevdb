@@ -90,7 +90,7 @@ $routes = [
     // internal "ajax" routes
     [
       'name' => 'admin_settings#set',
-      'url' => '/settings/admin/set',
+      'url' => '/settings/admin/set/{parameter}',
       'verb' => 'POST',
     ],
     // personal settings

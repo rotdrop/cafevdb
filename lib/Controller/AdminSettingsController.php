@@ -28,37 +28,92 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IL10N;
 
+use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 
 class AdminSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\ResponseTrait;
 
-  /** @var IL10N */
-  private $l;
+  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
+  private $wikiRPC;
 
-  public function __construct($appName, IRequest $request, ConfigService $configService) {
+  public function __construct(
+    $appName
+    , IRequest $request
+    , ConfigService $configService
+    , WikiRPC $wikiRPC
+  ) {
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
+    $this->wikiRPC = $wikiRPC;
     $this->l = $this->l10N();
   }
 
   /**
    * @NoGroupMemberRequired
    */
-  public function set($orchestraUserGroup) {
-    if (!empty($orchestraUserGroup)) {
-      $this->setAppValue('usergroup', $orchestraUserGroup);
-      return new DataResponse(
-        ['message' => $this->l->t('Setting orchestra group to `%s\'. Please login as group administrator and configure the Camerata DB application.', [$orchestraUserGroup])]
-      );
-    } else {
-      return new DataResponse(
-        ['message' => $this->l->t('Refusing to set the orchestra group to an empty string')],
-        Http::STATUS_BAD_REQUEST
-      );
+  public function set($parameter, $value) {
+    $wikiNameSpace = $this->getAppValue('wikinamespace');
+    $orchestraUserGroup = $this->getAppValue('usergroup');
+    switch ($parameter) {
+      case 'orchestraUserGroup':
+        $realValue = trim($value);
+        if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
+          $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
+        }
+        $orchestraUserGroup = $realValue;
+        $this->setAppValue('usergroup', $orchestraUserGroup);
+        $result = [
+          'orchestraUserGroup' => $orchestraUserGroup,
+        ];
+        if (empty($wikiNameSpace)) {
+          $wikiNameSpace = $orchestraUserGroup;
+          $this->setAppValue('wikinamespace', $wikiNameSpace);
+          $result['wikiNameSpace'] = $wikiNameSpace;
+        }
+        $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
+        $result['message'] = $this->l->t('Setting orchestra group to `%s\'. Please login as group administrator and configure the Camerata DB application.', [$realValue]);
+        return self::dataResponse($result);
+        break;
+      case 'wikiNameSpace':
+        if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
+          $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
+        }
+        $realValue = trim($value);
+        $wikiNameSpace = $realValue;
+        $this->setAppValue('wikinamespace', $wikiNameSpace);
+        $result['wikiNameSpace'] = $wikiNameSpace;
+
+        if (!empty($orchestraUserGroup)) {
+          $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
+        }
+
+        $result['message'] = $this->l->t('Setting wiki name-space to `%s\'.', [$realValue]);
+        return self::dataResponse($result);
+        break;
+      default:
+        return self::grumble($this->l->t('Unknown Request'));
     }
   }
+
+  /**
+   * Grant access to wiki-namespace
+   */
+  private function grantWikiAccess($nameSpace, $group)
+  {
+    $this->wikiRPC->addAcl($nameSpace.':*', '@'.$group, WikiRPC::AUTH_DELETE);
+  }
+
+  /**
+   * Revoke access to wiki-namespace
+   */
+  private function revokeWikiAccess($nameSpace, $group)
+  {
+    $this->wikiRPC->delAcl($nameSpace.':*', '@'.$group);
+  }
+
 }
 
 // Local Variables: ***

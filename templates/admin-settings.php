@@ -20,17 +20,43 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-script($_['appName'], 'admin-settings');
-style($_['appName'], 'admin-settings');
+script($appName, 'admin-settings');
+style($appName, 'admin-settings');
+
+if (empty($wikiVersion)) {
+  $wikiHide = '';
+  $wikiShow = 'hidden';
+} else {
+  $wikiHide = 'hidden';
+  $wikiShow = '';
+}
 
 ?>
 
 <div class="section">
   <h2>Camerata DB</h2>
   <form id="cafevdb-admin-settings">
-    <input type="text" name="orchestraUserGroup" id="orchestraUserGroup" value="<?php echo $_['usergroup']; ?>" placeholder="<?php echo $l->t('Group');?>" />
-    <label for="orchestraUserGroup"><?php echo $l->t('User Group');?></label>
-    <br/>
+    <div>
+      <input type="text"
+             class="orchetraUserGroup"
+             name="orchestraUserGroup"
+             id="orchestraUserGroup"
+             value="<?php p($userGroup); ?>"
+             placeholder="<?php p($l->t('Group')); ?>" />
+      <label for="orchestraUserGroup"><?php p($l->t('User Group')); ?></label>
+    </div>
+    <div class="<?php p($wikiShow); ?>">
+      <input type="text"
+             class="wikiNameSpace"
+             name="wikiNameSpace"
+             id="wikiNameSpace"
+             value="<?php p($wikiNameSpace); ?>"
+             placeholder="<?php p($l->t('Wiki NameSpace'));?>" />
+      <label for="wikiNameSpace"><?php p($l->t('Wiki Name-Space')); ?></label>
+    </div>
+    <div class="<?php p($wikiHide); ?>">
+      <?php p($l->t('Wiki is inaccessible')); ?>
+    </div>
     <span class="msg"></span>
   </form>
 </div>
