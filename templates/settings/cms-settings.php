@@ -19,72 +19,144 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\PageRenderer\Util\Navigation;
+use OCA\CAFEVDB\Service\ConfigService;
+
+$probablyOffline = empty($webPageCategories);
+if ($probablyOffline) {
+  $hideOffline = ' hidden';
+  $hideOnline = '';
+} else {
+  $hideOffline = '';
+  $hideOnline = ' hidden';
+}
+
+$categoryOptions = [];
+foreach ($webPageCategories as $category) {
+  $name = $category['name'];
+  $indent = '';
+  for ($i = 0; $i < $category['level']*3; ++$i) {
+    $indent .= '&nbsp;';
+  }
+  $name = $indent.$category['name'].' ['.$category['id'].']';
+  $categoryOptions[] = [
+    'value' => $category['id'],
+    'name' => $name,
+  ];
+}
+
+$moduleOptions = [];
+foreach ($webPageModules as $module) {
+  $name = $module['name'];
+  $moduleOptions[] = [
+    'value' => $module['id'],
+    'name' => $module['name'],
+  ];
+}
+
+$templateOptions = [];
+foreach ($webPageTemplates as $template) {
+  $templateOptions[] = [
+    'value' => $template['id'],
+    'name' => $template['name'],
+  ];
+}
+
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin cms">
   <form id="cmssettings">
     <fieldset id="redaxocategories"><legend><?php echo $l->t('Redaxo Categories');?></legend>
-      <input type="text"
-             class="redaxo"
-             id="redaxoPreview"
-             name="redaxoPreview"
-             placeholder="<?php $l->t('preview'); ?>"
-             value="<?php echo $_['redaxoPreview']; ?>"
-             title="<?php echo $toolTips['redaxo-preview']; ?>" />
-      <label for="redaxoPreview"><?php echo $l->t('Id of Redaxo Preview Category'); ?></label>
-      <br/>
-      <input type="text"
-             class="redaxo"
-             id="redaxoArchive"
-             name="redaxoArchive"
-             placeholder="<?php $l->t('archive'); ?>"
-             value="<?php echo $_['redaxoArchive']; ?>"
-             title="<?php echo $toolTips['redaxo-archive']; ?>" />
-      <label for="redaxoArchive"><?php echo $l->t('Id of Redaxo Archive Category'); ?></label>
-      <br/>
-      <input type="text"
-             class="redaxo"
-             id="redaxoRehearsals"
-             name="redaxoRehearsals"
-             placeholder="<?php $l->t('rehearsals'); ?>"
-             value="<?php echo $_['redaxoRehearsals']; ?>"
-             title="<?php echo $toolTips['redaxo-rehearsals']; ?>" />
-      <label for="redaxoArchive"><?php echo $l->t('Id of Redaxo Rehearsals Category'); ?></label>
-      <br/>
-      <input type="text"
-             class="redaxo"
-             id="redaxoTrashbin"
-             name="redaxoTrashbin"
-             placeholder="<?php $l->t('trashbin'); ?>"
-             value="<?php echo $_['redaxoTrashbin']; ?>"
-             title="<?php echo $toolTips['redaxo-trashbin']; ?>" />
-      <label for="redaxoTrashbin"><?php echo $l->t('Id of Redaxo Trashbin Category'); ?></label>
-      <br/>
-      <input type="text"
-             class="redaxo"
-             id="redaxoTemplate"
-             name="redaxoTemplate"
-             placeholder="<?php $l->t('template'); ?>"
-             value="<?php echo $_['redaxoTemplate']; ?>"
-             title="<?php echo $toolTips['redaxo-template']; ?>" />
-      <label for="redaxoTemplate"><?php echo $l->t('Id of Redaxo Default-Template'); ?></label>
-      <br/>
-      <input type="text"
-             class="redaxo"
-             id="redaxoConcertModule"
-             name="redaxoConcertModule"
-             placeholder="<?php $l->t('template'); ?>"
-             value="<?php echo $_['redaxoConcertModule']; ?>"
-             title="<?php echo $toolTips['redaxo-template']; ?>" />
-      <label for="redaxoConcertModule"><?php echo $l->t('Id of Redaxo Concert-Module'); ?></label>
-      <br/>
-      <input type="text"
-             class="redaxo"
-             id="redaxoRehearsalsModule"
-             name="redaxoRehearsalsModule"
-             placeholder="<?php $l->t('template'); ?>"
-             value="<?php echo $_['redaxoRehearsalsModule']; ?>"
-             title="<?php echo $toolTips['redaxo-template']; ?>" />
-      <label for="redaxoRehearsalsModule"><?php echo $l->t('Id of Redaxo Rehearsals-Module'); ?></label>
+      <?php
+      foreach (ConfigService::CMS_CATEGORIES as $categorySlug) {
+        $class = 'redaxo';
+        $ucSlug = ucfirst($categorySlug);
+        $id = $class.$ucSlug;
+        $name = $id;
+        $title = $class.'-'.$categorySlug;
+      ?>
+        <div class="<?php p($class); ?> textfield <?php p($hideOnline); ?>">
+          <input type="text"
+                 class="<?php p($class); ?>"
+                 id="<?php p($id); ?>-textfield"
+                 name="<?php p($name); ?>"
+                 placeholder="<?php p($l->t($categorySlug)); ?>"
+                 value="<?php p($_[$name]); ?>"
+                 title="<?php p($toolTips[$title]); ?>" />
+          <label for="<?php p($id); ?>-textfield"><?php p($l->t('Id of Redaxo %s Category', [$ucSlug])); ?></label>
+        </div>
+        <div class="<?php p($class); ?> select  <?php p($hideOffline); ?>">
+          <select class="<?php p($class); ?>"
+                  id="<?php p($id); ?>-select"
+                  name="<?php p($name); ?>"
+                  title="<?php p($toolTips[$title]); ?>">
+            <?php echo Navigation::selectOptions($categoryOptions, [ $_[$name] ]); ?>
+          </select>
+          <label for="<?php p($id); ?>-select"><?php p($l->t('Id of Redaxo %s Category', [$ucSlug])); ?></label>
+        </div>
+      <?php } ?>
+    </fieldset>
+    <fieldset id="redaxotemplates"><legend><?php echo $l->t('Redaxo Templates');?></legend>
+      <?php
+      foreach (ConfigService::CMS_TEMPLATES as $templateSlug) {
+        $class = 'redaxo';
+        $ucSlug = ucfirst($templateSlug);
+        $id = $class.$ucSlug.'Template';
+        $name = $id;
+        $title = $class.'-'.$templateSlug;
+      ?>
+        <div class="<?php p($class); ?> textfield <?php p($hideOnline); ?>">
+          <input type="text"
+                 class="<?php p($class); ?>"
+                 id="<?php p($id); ?>-textfield"
+                 name="<?php p($name); ?>"
+                 placeholder="<?php p($l->t($templateSlug)); ?>"
+                 value="<?php p($_[$name]); ?>"
+                 title="<?php p($toolTips[$title]); ?>" />
+          <label for="<?php p($id); ?>-textfield"><?php p($l->t('Id of Redaxo %s Template', [$ucSlug])); ?></label>
+        </div>
+        <div class="<?php p($class); ?> select  <?php p($hideOffline); ?>">
+          <select class="<?php p($class); ?>"
+                  id="<?php p($id); ?>-select"
+                  name="<?php p($name); ?>"
+                  title="<?php p($toolTips[$title]); ?>">
+            <?php echo Navigation::selectOptions($templateOptions, [ $_[$name] ]); ?>
+          </select>
+          <label for="<?php p($id); ?>-select"><?php p($l->t('Id of Redaxo %s Template', [$ucSlug])); ?></label>
+        </div>
+      <?php } ?>
+    </fieldset>
+    <fieldset id="redaxomodules"><legend><?php echo $l->t('Redaxo Modules');?></legend>
+      <?php
+      foreach (ConfigService::CMS_MODULES as $moduleSlug) {
+        $class = 'redaxo';
+        $ucSlug = ucfirst($moduleSlug);
+        $id = $class.$ucSlug.'Module';
+        $name = $id;
+        $title = $class.'-'.$moduleSlug;
+      ?>
+        <div class="<?php p($class); ?> textfield <?php p($hideOnline); ?>">
+          <input type="text"
+                 class="<?php p($class); ?>"
+                 id="<?php p($id); ?>-textfield"
+                 name="<?php p($name); ?>"
+                 placeholder="<?php p($l->t($moduleSlug)); ?>"
+                 value="<?php p($_[$name]); ?>"
+                 title="<?php p($toolTips[$title]); ?>" />
+          <label for="<?php p($id); ?>-textfield"><?php p($l->t('Id of Redaxo %s Module', [$ucSlug])); ?></label>
+        </div>
+        <div class="<?php p($class); ?> select  <?php p($hideOffline); ?>">
+          <select class="<?php p($class); ?>"
+                  id="<?php p($id); ?>-select"
+                  name="<?php p($name); ?>"
+                  title="<?php p($toolTips[$title]); ?>">
+            <?php echo Navigation::selectOptions($moduleOptions, [ $_[$name] ]); ?>
+          </select>
+          <label for="<?php p($id); ?>-select"><?php p($l->t('Id of Redaxo %s Module', [$ucSlug])); ?></label>
+        </div>
+      <?php } ?>
     </fieldset>
     <span class="statusmessage" id="msg"></span>
   </form>

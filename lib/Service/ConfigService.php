@@ -147,6 +147,19 @@ class ConfigService {
     'redaxoConcertModule',
     'redaxoRehearsalsModule',
   ];
+  const CMS_CATEGORIES = [
+    'preview',
+    'archive',
+    'rehearsals',
+    'trashbin',
+  ];
+  const CMS_MODULES = [
+    'concert',
+    'rehearsals',
+  ];
+  const CMS_TEMPLATES = [
+    '',
+  ];
   const WYSIWYG_EDITORS = [
     'tinymce' => [ 'name' => 'TinyMCE', 'enabled' => true],
     // ckeditor still uses excessive inline js-code. So what?

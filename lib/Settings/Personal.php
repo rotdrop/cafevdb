@@ -101,6 +101,20 @@ class Personal implements ISettings {
         $this->logException($t);
       }
 
+      try {
+        $webPageModules = $this->webPagesRPC->getModules();
+      } catch (\Throwable $t) {
+        $webPageModules = [];
+        $this->logException($t);
+      }
+
+      try {
+        $webPageTemplates = $this->webPagesRPC->getTemplates();
+      } catch (\Throwable $t) {
+        $webPageTemplates = [];
+        $this->logException($t);
+      }
+
       $templateParameters = [
         'appName' => $this->appName(),
         'userId' => $this->userId(),
@@ -123,6 +137,8 @@ class Personal implements ISettings {
         'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),
         'wysiwygOptions' => ConfigService::WYSIWYG_EDITORS,
         'webPageCategories' => $webPageCategories,
+        'webPageTemplates' => $webPageTemplates,
+        'webPageModules' => $webPageModules,
       ];
 
       if ($isGroupAdmin) {

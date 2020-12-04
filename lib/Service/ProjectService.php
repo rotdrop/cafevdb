@@ -70,6 +70,8 @@ class ProjectService
     $this->wikiRPC->errorReporting(WikiRPC::ON_ERROR_THROW);
     $this->webPagesRPC = $webPagesRPC;
     //$this->logInfo(print_r($this->webPagesRPC->getCategories(), true));
+    //$this->logInfo(print_r($this->webPagesRPC->getTemplates(), true));
+    //$this->logInfo(print_r($this->webPagesRPC->getModules(), true));
     $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     $this->l = $this->l10n();
   }

@@ -36,6 +36,9 @@ use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\TranslationService;
 use OCA\CAFEVDB\Common\Util;
 
+use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
+use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+
 class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -51,6 +54,12 @@ class PersonalSettingsController extends Controller {
   /** @var OCA\CAFEVDB\Service\TranslationService */
   private $translationService;
 
+  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
+  private $wikiRPC;
+
+  /** @var OCA\Redaxo4Embedded\Service\RPC */
+  private $webPagesRPC;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -59,6 +68,8 @@ class PersonalSettingsController extends Controller {
     , ConfigCheckService $configCheckService
     , CalDavService $calDavService
     , TranslationService $translationService
+    , WikiRPC $wikiRPC
+    , WebPagesRPC $webPagesRPC
   ) {
 
     parent::__construct($appName, $request);
@@ -68,6 +79,8 @@ class PersonalSettingsController extends Controller {
     $this->personalSettings = $personalSettings;
     $this->calDavService = $calDavService;
     $this->translationService = $translationService;
+    $this->wikiRPC = $wikiRPC;
+    $this->webPagesRPC = $webPagesRPC;
     $this->l = $this->l10N();
   }
 
@@ -346,7 +359,7 @@ class PersonalSettingsController extends Controller {
       try {
         if (empty($saved) || $force) {
 
-          if ($this->configCheckService->checkProjectsFolder($real)) {
+          if ($this->configCheckService->checkProjectFolder($real)) {
             $this->setConfigValue($parameter, $real);
             return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'.', [$real]));
           } else {

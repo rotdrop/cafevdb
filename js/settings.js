@@ -942,6 +942,8 @@ var CAFEVDB = CAFEVDB || {};
 
     simpleSetValueHandler($('input.redaxo'), 'blur', $('form#cmssettings .statusmessage'));
 
+    simpleSetValueHandler($('select.redaxo'), 'change', $('form#cmssettings .statusmessage'));
+
     ///////////////////////////////////////////////////////////////////////////
     //
     // Tooltips
