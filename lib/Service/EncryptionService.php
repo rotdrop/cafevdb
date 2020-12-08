@@ -63,7 +63,13 @@ class EncryptionService
   private $userPrivateKey = null;
 
   /** @var string */
+  private $userPublicKey = null;
+
+  /** @var string */
   private $appEncryptionKey = null;
+
+  /** @var string */
+  private $userPassword = null;
 
   public function __construct(
     $appName
@@ -98,36 +104,73 @@ class EncryptionService
       $this->credentials = null;
       $this->userPassword = null;
     }
+    if (!empty($this->userId) && !empty($this->userPassword)) {
+      $this->initUserKeyPair();
+    } else {
+      $this->userPrivateKey = null;
+      $this->userPublicKey = null;
+    }
+    if ($this->bound()) {
+      try {
+        $this->initAppEncryptionKey();
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        $this->appEncryptionKey = '';
+      }
+    }
   }
 
-  public function initUserPrivateKey($login, $password)
+  /**
+   * Bind $this to the given userId and password, for instance during
+   * listeners for password-change etc.
+   */
+  public function bind(string $userId, string $password)
   {
-    $privKey = $this->getUserValue($login, 'privateSSLKey', null);
-    if (empty($privKey)) {
+    $this->userId = $userId;
+    $this->userPassword = $password;
+    $this->initUserKeyPair();
+  }
+
+  /**
+   * Test if we a bound to a user
+   */
+  public function bound():bool
+  {
+    return !empty($this->userId)
+      && !empty($this->userPassword)
+      && !empty($this->userPrivateKey)
+      && !empty($this->userPublicKey);
+  }
+
+  public function getAppEncryptionKey()
+  {
+    return $this->appEncryptionKey;
+  }
+
+  /**
+   * Initialize the per-user public/private key pair, which
+   * inparticular is used to propagate the app's encryption key to all
+   * relevant users.
+   */
+  public function initUserKeyPair()
+  {
+    if (empty($this->userId) || empty($this->userPassword)) {
+      throw new \Exception($this->l->t('Cannot initialize SSL key-pair without user and password'));
+    }
+
+    $privKey = $this->getUserValue($this->userId, 'privateSSLKey', null);
+    $pubKey = $this->getUserValue($this->userId, 'publicSSLKey', null);
+    if (empty($privKey) || empty($pubKey)) {
       // Ok, generate one. But this also means that we have not yet
       // access to the data-base encryption key.
-      $this->generateUserKeyPair($login, $password);
-      $privKey = $this->getUserValue($login, 'privateSSLKey');
+      $this->generateUserKeyPair($this->userId, $this->userPassword);
+      $privKey = $this->getUserValue($this->userId, 'privateSSLKey');
     }
 
-    $privKey = openssl_pkey_get_private($privKey, $password);
-    if ($privKey === false) {
-      return;
-    }
+    $privKey = openssl_pkey_get_private($privKey, $this->userPassword);
 
-    // Success. Store the private key. This may or may not be
-    // permanent storage. ATM, it is not.
-    $this->setUserPrivateKey($privKey);
-  }
-
-  /**Return the private key. First try local storage as static class
-   * variable. If unset, try the session. Else return @c false.
-   */
-  public function getUserPrivateKey() {
-    if (empty($this->userPrivateKey)) {
-      $this->userPrivateKey = $this->sessionRetrieveValue('privatekey');
-    }
-    return $this->userPrivateKey;
+    $this->userPrivateKey = $privKey;
+    $this->userPublicKey = $pubKey;
   }
 
   // To distribute the encryption key for the data base and
@@ -166,156 +209,110 @@ class EncryptionService
     return true;
   }
 
-  /**Set the private key used to decode some sensible data like the
-   * general shared encryption key and so forth.
-   *
-   * @param $key The key to safe.
-   *
-   * @param $storeDecrypted Whether or not to export the key before
-   * storing it. This will convert the key-argument, which may only be
-   * a resource, to a string-representation of the key.
-   *
-   * @param $permanent Whether or not to store the key in permanent
-   * storage, which means something at least persisitent during the
-   * lifetime of the PHP session. Whether or not this is really the
-   * PHP $_SESSION data is left open.
-   *
-   * @return @c true in the case of success, @c false otherwise.
-   *
-   */
-  private function setUserPrivateKey($key, $storeDecrypted = false, $permanent = false)
+  public function getUserEncryptionKey()
   {
-    if ($storeDecrypted) {
-      // Really: DO NOT DO THIS. PERIOD.
-      if (openssl_pkey_export($key, $key) === false) {
-        return false;
-      }
-    }
-    $this->userPrivateKey = $key;
-    if ($permanent) {
-      $this->sessionStoreValue('privatekey', $key);
-    }
-    return true;
+    return $this->getSharedPrivateValue('encryptionkey', null);
   }
 
-  public function initAppEncryptionKey($login)
+  public function setUserEncryptionKey($key)
   {
-    // Fetch the encrypted "user" key from the preferences table
-    $usrdbkey = $this->getUserValue($login, 'encryptionkey');
+    return $this->setSharedPrivateValue('encryptionkey', $key);
+  }
 
-    if (empty($usrdbkey)) {
-      // No key -> unencrypted, maybe
-      \OCP\Util::writeLog($this->appName, "No Encryption Key", \OCP\Util::DEBUG);
-      return false;
+  public function initAppEncryptionKey()
+  {
+    if (!$this->bound()) {
+      throw new \Exception($this->l-t>('Cannot initialize global encryption key without bound user credentials.'));
     }
 
-    $usrdbkey = base64_decode($usrdbkey);
-
-    $privKey = $this->getUserPrivateKey();
-
-    // Try to decrypt the $usrdbkey
-    if (openssl_private_decrypt($usrdbkey, $usrdbkey, $privKey) === false) {
-      \OCP\Util::writeLog($this->appName, "Decryption of EncryptionKey failed", \OCP\Util::DEBUG);
+    $usrdbkey = $this->getUserEncryptionKey();
+    if (empty($usrdbkey)) {
+      // No key -> unencrypted
+      $this->logDebug("No Encryption Key");
+      $this->appEncryptionKey = ''; // not null, just empty
       return false;
     }
 
     // Now try to decrypt the data-base encryption key
-    $this->setAppEncryptionKey($usrdbkey);
-    $sysdbkey = $this->getAppValue('encryptionkey');
+    $this->appEncryptionKey = $usrdbkey;
+    $sysdbkey = $this->getConfigValue('encryptionkey');
 
     if ($sysdbkey != $usrdbkey) {
       // Failed
-      $this->setAppEncryptionKey('');
-      \OCP\Util::writeLog($this->appName, "EncryptionKeys do not match", \OCP\Util::DEBUG);
-      return false;
+      $this->appEncryptionKey = null;
+      throw new \Exception($this->l->t('Stored keys for application and user do not match'));
     }
-
-    // Otherwise store the key in the session data
-    $this->setAppEncryptionKey($sysdbkey);
     return true;
   }
 
-  public function setUserEncryptionKey($userId, $enckey = null)
-  {
-    if (empty($enckey)) {
-      $enckey = $this->getAppEncryptionKey();
-    }
-
-    if ($enckey != '') {
-      $pubKey = $this->getUserValue($userId, 'publicSSLKey', '');
-      $usrdbkey = '';
-      if ($pubKey == '' ||
-          openssl_public_encrypt($enckey, $usrdbkey, $pubKey) === false) {
-        return false;
-      }
-      $usrdbkey = base64_encode($usrdbkey);
-    } else {
-      $usrdbkey = '';
-    }
-
-    $this->setUserValue($userId, 'encryptionkey', $usrdbkey);
-
-    return true;
-  }
-
-  public function recryptAppEncryptionKey($login, $password, $enckey = null)
-  {
-    // ok, new password, generate a new key-pair. Then re-encrypt the
-    // global encryption key with the new key.
-
-    // new key pair
-    if (!$this->generateUserKeyPair($login, $password)) {
-      return false;
-    }
-
-    // store the re-encrypted key in the configuration space
-    return $this->setUserEncryptionKey($login, $enckey);
-  }
-
-  /**Store the encryption key in the session data. This cannot (i.e.:
-   *must not) fail.
+  /**
+   * Get and decrypt an personal 'user' value encrypted with the
+   * public key of key-pair. Throw an exception if $this is not bound
+   * to a user and password, see self::bind().
    *
-   * @param $key The encryption key to store.
+   * @return string Decrypt config value.
    */
-  public function setAppEncryptionKey($key) {
-    //\OCP\Util::writeLog(Config::APP_NAME, "Storing encryption key: ".$key, \OCP\Util::DEBUG);
-    $this->appEncryptionKey = $key;
-    $this->sessionStoreValue('encryptionkey', $key);
-  }
-
-  /**Retrieve the encryption key from the session data.
-   *
-   * @return @c false in case of error, otherwise the encryption key.
-   */
-  public function getAppEncryptionKey() {
-    if (empty($this->appEncryptionKey)) {
-      $this->appEncryptionKey = $this->sessionRetrieveValue('encryptionkey');
+  public function getSharedPrivateValue($key, $default = null)
+  {
+    if (!$this->bound()) {
+      throw new \Exception($this->l->t('Cannot decrypt private values without bound user credentials'));
     }
-    return $this->appEncryptionKey;
+
+    // Fetch the encrypted "user" key from the preferences table
+    $value = $this->getUserValue($this->userId, $key, $default);
+
+    // we allow null values without encryption
+    if (empty($value) || $value === $default) {
+      return $value;
+    }
+
+    $value = base64_decode($value);
+
+    // Try to decrypt the $usrdbkey
+    if (openssl_private_decrypt($value, $value, $this->userPrivateKey) === false) {
+      throw new \Exception($this->l->t('Decryption of "%s" with private key of user "%s" failed.', [ $key, $this->userId ]));
+    }
+
+    return $value;
   }
 
-  /**Check the validity of the encryption. In order to do so we fetch
+  /**
+   * Encrypt the given value with the user's public key.
+   */
+  public function setSharedPrivateValue($key, $value)
+  {
+    if (!$this->bound()) {
+      throw new \Exception($this->l->t('Cannot encrypt private values without bound user credentials'));
+    }
+
+    if (openssl_public_encrypt($value, $encrypted, $this->userPublicKey) === false) {
+      throw new \Exception($this->l->t('Encrypting value for key "%s" with public key of user "%s" failed.', [ $key, $this->userId ]));
+    }
+
+    $encrypted = base64_encode($encrypted);
+
+    $this->setUserValue($this->userId, $key, $encrypted);
+  }
+
+  /**
+   * Check the validity of the encryption key. In order to do so we fetch
    * an encrypted representation of the key from the OC config space
    * and try to decrypt that key with the given key. If the decrypted
    * key matches our key, then we accept the key.
-   *
-   * @bug This scheme of storing a key which is encrypted with itself
-   * is a security issue. Think about it. It really is.
    */
-  public function encryptionKeyValid($sesdbkey = null)
+  public function encryptionKeyValid()
   {
-    empty($sesdbkey) && ($sesdbkey = $this->getAppEncryptionKey());
+    if (!$this->bound()) {
+      throw new \Exception($this->l->t('Cannot validate app encryption key without bound user credentials'));
+    }
 
     // Fetch the encrypted "system" key from the app-config table
     $sysdbkey = $this->getAppValue('encryptionkey');
 
     // Now try to decrypt the data-base encryption key
-    $sysdbkey = $this->decrypt($sysdbkey, $sesdbkey);
+    $sysdbkey = $this->decrypt($sysdbkey, $this->appEncryptionKey);
 
-    //trigger_error('sysdbkey ' . print_r($sysdbkey, true) . ' sesdbkey ' . print_r($sesdbkey, true));
-
-    // an empty key is ok, !== false catches decryption errors.
-    return $sysdbkey !== false && $sysdbkey == $sesdbkey;
+    return $sysdbkey == $sesdbkey;
   }
 
   public function getAppValue($key, $default = null)
@@ -344,15 +341,15 @@ class EncryptionService
       return false;
     }
 
-    $enckey = $this->getAppEncryptionKey();
     $value  = $this->getAppValue($key, $default);
 
-    $value  = $this->decrypt($value, $enckey);
+    $value  = $this->decrypt($value, $this->appEncryptionKey);
 
     return $value;
   }
 
-  /**Encrypt the given value and store it in the application settings
+  /**
+   * Encrypt the given value and store it in the application settings
    * table of OwnCloud.
    *
    * @param $key Configuration key.
@@ -364,10 +361,8 @@ class EncryptionService
       return false;
     }
 
-    $enckey = $this->getAppEncryptionKey();
-
-    if (!empty($enckey)) {
-      $value = $this->encrypt($value, $enckey);
+    if (!empty($this->appEncryptionKey)) {
+      $value = $this->encrypt($value, $this->appEncryptionKey);
     }
     $this->setAppValue($key, $value);
     return true;
