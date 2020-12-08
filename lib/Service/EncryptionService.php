@@ -24,26 +24,31 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\IConfig;
 use OCP\ISession;
+use OCP\IUserSession;
 use OCP\Security\ICrypto;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
+use OCP\ILogger;
+use OCP\IL10N;
 
 // Perhaps just use NC builtin encryption via ICrypto?
 use \ioncube\phpOpensslCryptor\Cryptor;
 
 /**
- * Some general thoughts:
+ * Handle some encryption tasks:
  *
- * - private/public key to communicate sensitive data to users
- * - user login password in NextCloud is available through CredentialStore
+ * - shared encryption key
+ * - encrypted app config values with the shared encryption key
+ * - encrypted per-user config values where needed
+ * - asymmetric encryption for per-user encryption key
  *
- * Ok, still need priv/pub key pair
- *
- * - generate at login
+ * We only support the case where the password is available through
+ * the credential store of the emedding cloud instance.
  */
 class EncryptionService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var string */
   private $appName;
@@ -51,7 +56,7 @@ class EncryptionService
   /** @var IConfig */
   private $containerConfig;
 
-  /** @var string */
+  /** @var  */
   private $cryptor;
 
   /** @var string */
@@ -64,11 +69,35 @@ class EncryptionService
     $appName
     , IConfig $containerConfig
     , ISession $session
+    , IUserSession $userSession
+    , ICrypto $crypto
+    , ICredentialsStore $credentialsStore
+    , ILogger $logger
+    , IL10N $l10n
   ) {
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
     $this->session = $session;
     $this->cryptor = new Cryptor();
+    $this->crypto = $crypto;
+    $this->logger = $logger;
+    $this->l = $l10n;
+    try {
+      $this->user = $userSession->getUser();
+      $this->userId = $this->user->getUID();
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->user = null;
+      $this->userId = null;
+    }
+    try {
+      $this->credentials = $credentialsStore->getLoginCredentials();
+      $this->userPassword = $this->credentials->getPassword();
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->credentials = null;
+      $this->userPassword = null;
+    }
   }
 
   public function initUserPrivateKey($login, $password)
@@ -192,7 +221,7 @@ class EncryptionService
 
     // Now try to decrypt the data-base encryption key
     $this->setAppEncryptionKey($usrdbkey);
-    $sysdbkey = $this->getValue('encryptionkey');
+    $sysdbkey = $this->getAppValue('encryptionkey');
 
     if ($sysdbkey != $usrdbkey) {
       // Failed
@@ -289,27 +318,27 @@ class EncryptionService
     return $sysdbkey !== false && $sysdbkey == $sesdbkey;
   }
 
-  function getAppValue($key, $default = null)
+  public function getAppValue($key, $default = null)
   {
     return $this->containerConfig->getAppValue($this->appName, $key, $default);
   }
 
-  function setAppValue($key, $value)
+  public function setAppValue($key, $value)
   {
     return $this->containerConfig->setAppValue($this->appName, $key, $value);
   }
 
-  function getUserValue($userId, $key, $default = null)
+  public function getUserValue($userId, $key, $default = null)
   {
     return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
   }
 
-  function setUserValue($userId, $key, $value)
+  public function setUserValue($userId, $key, $value)
   {
     return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
   }
 
-  public function getValue($key, $default = null, $strict = false)
+  public function getConfigValue($key, $default = null, $strict = false)
   {
     if ($strict && !$this->encryptionKeyValid()) {
       return false;
@@ -329,7 +358,7 @@ class EncryptionService
    * @param $key Configuration key.
    * @param $value Configuration value.
    */
-  public function setValue($key, $value, bool $strict = false)
+  public function setConfigValue($key, $value, bool $strict = false)
   {
     if ($strict && !$this->encryptionKeyValid()) {
       return false;

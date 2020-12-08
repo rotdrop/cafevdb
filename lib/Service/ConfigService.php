@@ -465,7 +465,7 @@ class ConfigService {
   public function getValue($key, $default = null)
   {
     if (!isset($this->encryptionCache[$key])) {
-      $value = $this->encryptionService->getValue($key, $default);
+      $value = $this->encryptionService->getConfigValue($key, $default);
       if ($value !== false) {
         $this->encryptionCache[$key] = $value;
       } else {
@@ -477,7 +477,7 @@ class ConfigService {
 
   public function setValue($key, $value)
   {
-    if ($this->encryptionService->setValue($key, $value)) {
+    if ($this->encryptionService->setAppValue($key, $value)) {
       $this->encryptionCache[$key] = $value;
       return true;
     }
