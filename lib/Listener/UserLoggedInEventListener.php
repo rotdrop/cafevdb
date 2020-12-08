@@ -49,14 +49,13 @@ class UserLoggedInEventListener implements IEventListener
   private $encryptionService;
 
   public function __construct(
-    /*$appName
-      , */IGroupManager $groupManager
-    , IConfig $containerConfig
+    $appName
+    , IGroupManager $groupManager
     , EncryptionService $encryptionService
     , ILogger $logger
     , IL10N $l10n
   ) {
-    $this->appName = ''; //$appName; // can this work?
+    $this->appName = $appName;
     $this->groupManager = $groupManager;
     $this->encryptionService = $encryptionService;
     $this->logger = $logger;
@@ -69,6 +68,8 @@ class UserLoggedInEventListener implements IEventListener
     }
 
     $this->logInfo("Hello Login-Handler!");
+
+    return;
 
     $groupId = $this->encryptionService->getAppValue('usergroup');
     $user = $event->getUser();

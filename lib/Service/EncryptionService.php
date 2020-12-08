@@ -26,6 +26,16 @@ use OCP\IConfig;
 
 use \ioncube\phpOpensslCryptor\Cryptor;
 
+/**
+ * Some general thoughts:
+ *
+ * - private/public key to communicate sensitive data to users
+ * - user login password in NextCloud is available through CredentialStore
+ *
+ * Ok, still need priv/pub key pair
+ *
+ * - generate at login
+ */
 class EncryptionService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
@@ -45,7 +55,11 @@ class EncryptionService
   /** @var string */
   private $appEncryptionKey = null;
 
-  public function __construct($appName, IConfig $containerConfig, SessionService $sessionService) {
+  public function __construct(
+    $appName
+    , IConfig $containerConfig
+    , SessionService $sessionService
+  ) {
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
     $this->sessionService = $sessionService;
@@ -55,7 +69,7 @@ class EncryptionService
   public function initUserPrivateKey($login, $password)
   {
     $privKey = $this->getUserValue($login, 'privateSSLKey', null);
-    if ($privKey == '') {
+    if (empty($privKey)) {
       // Ok, generate one. But this also means that we have not yet
       // access to the data-base encryption key.
       $this->generateUserKeyPair($login, $password);
@@ -85,8 +99,8 @@ class EncryptionService
   // To distribute the encryption key for the data base and
   // application configuration values we use a public/private key pair
   // for each user. Then the admin-user can distribute the global
-  // encryption pair to each authorized user (in the orchestra-group)
-  // using the pulic key. Then the user logs into owncloud, the key is
+  // encryption key to each authorized user (in the orchestra-group)
+  // using the public key. When the user logs into owncloud, the key is
   // decrypted with the users private key (which again is secured by
   // the user's password.
   private function generateUserKeyPair($login, $password)

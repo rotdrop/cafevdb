@@ -29,8 +29,6 @@ use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Common\Config;
-
 class UserLoggedOutEventListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;

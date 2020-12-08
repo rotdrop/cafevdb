@@ -26,24 +26,43 @@ use OCP\User\Events\PasswordUpdatedEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IGroupManager;
+use OCP\ILogger;
+use OCP\IL10N;
 
-use OCA\CAFEVDB\Common\Config;
+use OCA\CAFEVDB\Service\EncryptionService;
 
 class PasswordUpdatedEventListener implements IEventListener
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   const EVENT = HandledEvent::class;
 
   /** @var ISubAdmin */
   private $groupManager;
 
-  public function __construct(IGroupManager $groupManager) {
+  public function __construct(
+    $appName
+    , IGroupManager $groupManager
+    , EncryptionService $encryptionService
+    , ILogger $logger
+    , IL10N $l10n
+  ) {
+    $this->appName = $appName;
     $this->groupManager = $groupManager;
+    $this->encryptionService = $encryptionService;
+    $this->logger = $logger;
+    $this->l = $l10n;
   }
 
   public function handle(Event $event): void {
     if (!($event instanceOf HandledEvent)) {
       return;
     }
+
+    $this->logInfo('Hello PasswordUpdated: '.get_class($event));
+
+    return;
+
     $groupIdf = Config::getAppValue('usergroup', '');
     $user = $event->getUser();
     $userId = $user->getUID();
