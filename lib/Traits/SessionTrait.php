@@ -23,12 +23,12 @@
 //WIP
 namespace OCA\CAFEVDB\Traits;
 
-use OCA\CAFEVDB\Service\SessionService;
+use OCP\ISession;
 
 trait SessionTrait {
 
-  /** @var SessionService */
-  private $sessionService;
+  /** @var \OCP\ISession */
+  private $session;
 
   /**Store something in the session-data. It is completely left open
    * how this is done.
@@ -38,7 +38,7 @@ trait SessionTrait {
    */
   protected function sessionStoreValue($key, $value)
   {
-    $this->sessionService->storeValue($key, $value);
+    $this->session->set($key, $value);
   }
 
   /**Fetch something from the session-data. It is completely left open
@@ -52,9 +52,13 @@ trait SessionTrait {
    * sessionStoreValue() and sessionRetrieveValue() should be the only
    * interface points to the PHP session (except for, ahem, tweaks).
    */
-  protected function sessionRetrieveValue($key, $default = false)
+  protected function sessionRetrieveValue($key, $default = null)
   {
-    return $this->sessionService->retrieveValue($key, $default);
+    $value =  $this->session->get($key);
+    if (empty($value)) {
+      $value = $default;
+    }
+    return $value;
   }
 }
 

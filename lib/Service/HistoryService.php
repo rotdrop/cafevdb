@@ -11,10 +11,13 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCP\ISession;
 use OCP\IL10N;
 
 class HistoryService
 {
+  use \OCA\CAFEVDB\Traits\SessionTrait;
+
   const MAX_HISTORY_SIZE = 100;
   const SESSION_HISTORY_KEY = 'PageHistory';
   const PME_ERROR_READONLY = 1;
@@ -29,7 +32,6 @@ class HistoryService
    *       'position' => CURRENT_POSITION_INTO_HISTORY_RECORDS,
    *       'records' => array(# => clone of $_POST));
    */
-  private $session;
   private $historyRecords;
   private $historyPosition;
   private $historySize;
@@ -38,7 +40,7 @@ class HistoryService
    * empty history if no history record is found.
    */
   public function __construct(
-    SessionService $session
+    ISession $session
     , IL10N $l10n
   ) {
     $this->session = $session;
@@ -120,7 +122,7 @@ class HistoryService
     $storageValue = [ 'size' => $this->historySize,
                       'position' => $this->historyPosition,
                       'records' => $this->historyRecords ];
-    $this->session->storeValue(self::SESSION_HISTORY_KEY, $storageValue);
+    $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $storageValue);
   }
 
   /**Load the history state. Initialize to default state in case of
@@ -128,7 +130,7 @@ class HistoryService
    */
   private function load()
   {
-    $loadValue = $this->session->retrieveValue(self::SESSION_HISTORY_KEY);
+    $loadValue = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
     if (!$this->validate($loadValue)) {
       $this->default();
       return false;

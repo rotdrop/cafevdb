@@ -23,7 +23,12 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCP\IConfig;
+use OCP\ISession;
+use OCP\Security\ICrypto;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
+use OCP\Authentication\LoginCredentials\ICredentials;
 
+// Perhaps just use NC builtin encryption via ICrypto?
 use \ioncube\phpOpensslCryptor\Cryptor;
 
 /**
@@ -58,11 +63,11 @@ class EncryptionService
   public function __construct(
     $appName
     , IConfig $containerConfig
-    , SessionService $sessionService
+    , ISession $session
   ) {
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
-    $this->sessionService = $sessionService;
+    $this->session = $session;
     $this->cryptor = new Cryptor();
   }
 
