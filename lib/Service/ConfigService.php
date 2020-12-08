@@ -290,9 +290,7 @@ class ConfigService {
       }
     }
 
-    // Initialize the encryption service.
-    $this->encryptionService->initAppEncryptionKey($this->userId);
-
+    // Cache encrypted config values in order to speed up things
     $this->encryptionCache = [];
   }
 
