@@ -67,7 +67,7 @@ class UserLoggedInEventListener implements IEventListener
       return;
     }
 
-    $this->logInfo("Hello Login-Handler!");
+    $this->logInfo("Hello Login-Handler: ".get_class($event));
 
     return;
 
