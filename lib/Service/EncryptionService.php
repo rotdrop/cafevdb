@@ -35,7 +35,7 @@ class FakeL10N
 {
   public function t($text, $parameters = [])
   {
-    return vsprintf($text, $parameers);
+    return vsprintf($text, $parameters);
   }
 }
 

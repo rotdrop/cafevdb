@@ -157,7 +157,7 @@ class PersonalSettingsController extends Controller {
       }
 
       // Then check whether the key is correct
-      if (true && !$this->encryptionKeyValid($encryptionkey)) {
+      if (!$this->encryptionKeyValid($encryptionkey) ) {
         return self::grumble($this->l->t('Invalid encryption key.'));
       }
 
