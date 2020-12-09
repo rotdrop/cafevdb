@@ -174,7 +174,6 @@ class PersonalSettingsController extends Controller {
          $this->logException($t);
         return self::grumble($this->exceptionChainData($t));
       }
-
       return self::response($this->l->t('Encryption key stored.'));
     default:
     }
@@ -216,6 +215,100 @@ class PersonalSettingsController extends Controller {
       } catch(\Exception $e) {
         return self::grumble($this->l->t('DB-test failed with exception `%s\'.', [$e->getMessage()]));
       }
+    case 'systemkey':
+      foreach (['systemkey', 'oldkey'] as $key) {
+        if (!isset($value[$key])) {
+          return self::grumble($this->l->t("Missing parameter `%s'.", $key));
+        }
+        $this->logInfo($key.' '.$value[$key]);
+      }
+
+      $oldKey = $value['oldkey'];
+      $systemKey = $value['systemkey'];
+
+      $encryptionService = $this->encryptionService();
+      $currentKey = $encryptionService->getAppEncryptionKey();
+
+      $encryptionService->setAppEncryptionKey($oldKey);
+      $storedKey = $encryptionService->getConfigValue('encryptionkey', '');
+
+      if ($storedKey !== $oldKey) {
+        return self::grumble($this->l->t('Wrong old encryption key'));
+      }
+
+      // do some rudimentary locking
+      $configLock = $this->getAppValue('configlock');
+      if (!empty($configLock)) {
+        return self::grumble($this->l->t('Configuration locked, refusing to change encryption key.'));
+      }
+
+      $configLock = $this->generateRandomBytes(32);
+      $this->setAppValue('configlock', $configLock);
+      if ($configLock !== $this->getAppValue('configlock')) {
+        return self::grumble($this->l->t('Configuration locked, refusing to change encryption key.'));
+      }
+
+      // Still: this does ___NOT___ hack the worst-case scenario, but should suffice for our purposes.
+
+      try {
+        // load all config values and decrypt with the old key
+        $configValues = $this->configService->decryptConfigValues();
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        $this->deleteAppValue('configlock');
+        return self::grumble($this->exceptionChainData($t));
+      }
+
+      //$this->logInfo(print_r($configValues, true));
+
+      // make a backup
+      $backupSuffix = '::'.(new \DateTime())->format('YmdHis');
+
+      try {
+        foreach ($configValues as $key => $value) {
+          $encryptionService->setConfigValue($key.$backSuffix, $value);
+        }
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        foreach ($configValues as $key => $value) {
+          try {
+            $this->deleteConfigValue($key.$backupSuffix);
+          } catch (\Throwable $t1) {
+            //$this->logException($t1);
+          }
+        }
+        $this->deleteAppValue('configlock');
+        return self::grumble($this->exceptionChainData($t));
+      }
+
+      $encryptionService->setAppEncryptionKey($systemKey);
+      try {
+        $this->configService->encryptConfigValues([ 'encryptionkey' => $systemKey ]);
+      } catch (\Throwable $t) {
+        // Ok, at least it is possible to recover the old values by
+        // direct data-base manipulation. This is all for now. In
+        // principle one would have to use data-base transactions.
+        $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+
+      foreach ($configValues as $key => $value) {
+        try {
+          $this->deleteConfigValue($key.$backupSuffix);
+        } catch (\Throwable $t1) {
+          //$this->logException($t1);
+        }
+      }
+
+      $this->logInfo('Deleting config-lock');
+      $this->deleteAppValue('configlock');
+
+      // this should be it: the new encryption key is stored in the
+      // config space, encrypted with itself.
+
+      // Shouldn't we distribute the key as well?
+
+      return self::response($this->l->t('Stored new encryption key'));
     case 'streetAddressName01':
     case 'streetAddressName02':
     case 'streetAddressStreet':

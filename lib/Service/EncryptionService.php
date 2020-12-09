@@ -31,6 +31,10 @@ use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\ILogger;
 use OCP\IL10N;
 
+/**
+ * This kludge is here as long as our slightly over-engineered
+ * "missing-translation" event-handler is in action.
+ */
 class FakeL10N
 {
   public function t($text, $parameters = [])
@@ -76,7 +80,7 @@ class EncryptionService
   private $userPublicKey = null;
 
   /** @var string */
-  private $appEncryptionKey = null;
+  public $appEncryptionKey = null;
 
   /** @var string */
   private $userPassword = null;
@@ -128,7 +132,7 @@ class EncryptionService
         $this->initAppEncryptionKey();
       } catch (\Throwable $t) {
         $this->logException($t);
-        $this->appEncryptionKey = '';
+        $this->appEncryptionKey = null;
       }
     }
   }
@@ -162,6 +166,7 @@ class EncryptionService
 
   public function setAppEncryptionKey($key)
   {
+    //$this->logInfo('Installing encryption key '.$key);
     $this->appEncryptionKey = $key;
   }
 
@@ -262,7 +267,6 @@ class EncryptionService
       // No key -> unencrypted
       $this->logDebug("No Encryption Key");
       $this->appEncryptionKey = ''; // not null, just empty
-      return false;
     }
 
     // Now try to decrypt the data-base encryption key
@@ -343,9 +347,20 @@ class EncryptionService
     if (empty($encryptionKey)) {
       $encryptionKey = $this->appEncryptionKey;
     }
+    if (empty($encryptionKey)) {
+      $this->logWarn('Provided encryption-key is empty, encryption is switched off.');
+    }
 
     // Fetch the encrypted "system" key from the app-config table
     $sysdbkey = $this->getAppValue('encryptionkey');
+    if (empty($sysdbkey) !== empty($encryptionKey)) {
+      if (empty($sysdbkey)) {
+        $this->logError('Stored encryption key is empty while provided encryption key is not empty.');
+      } else {
+        $this->logError('Stored encryption key is not empty while provided encryption key is empty.');
+      }
+      return false;
+    }
 
     // Now try to decrypt the data-base encryption key
     $sysdbkey = $this->decrypt($sysdbkey, $encryptionKey);
@@ -373,16 +388,20 @@ class EncryptionService
     return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
   }
 
-  public function getConfigValue($key, $default = null, $strict = false)
+  public function getConfigValue($key, $default = null)
   {
-    if ($strict && !$this->encryptionKeyValid()) {
-      return false;
-    }
-
     $value  = $this->getAppValue($key, $default);
 
-    if (!isset(self::NEVER_ENCRYPT[$key])) {
-      $value  = $this->decrypt($value, $this->appEncryptionKey);
+    if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
+      if ($this->appEncryptionKey === null) {
+        return false;
+      }
+      try {
+        $value  = $this->decrypt($value, $this->appEncryptionKey);
+      } catch (\Throwable $t) {
+        throw new \Exception($this->l->t('Unable to decrypt value "%s" for "%s"', [$value, $key]), $t->getCode(), $t);
+      }
+      //$this->logInfo("Decrypted value for $key: ".$value);
     }
 
     return $value;
@@ -395,13 +414,13 @@ class EncryptionService
    * @param $key Configuration key.
    * @param $value Configuration value.
    */
-  public function setConfigValue($key, $value, bool $strict = false)
+  public function setConfigValue($key, $value)
   {
-    if ($strict && !$this->encryptionKeyValid()) {
-      return false;
-    }
-
-    if (!empty($this->appEncryptionKey) && !isset(self::NEVER_ENCRYPT[$key])) {
+    if (!empty($this->appEncryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
+      if ($this->appEncryptionKey === null) {
+        return false;
+      }
+      //$this->logInfo('Encrypting value for key '.$key);
       $value = $this->encrypt($value, $this->appEncryptionKey);
     }
     $this->setAppValue($key, $value);

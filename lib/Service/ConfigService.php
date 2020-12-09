@@ -406,6 +406,7 @@ class ConfigService {
 
   public function setConfigValue($key, $value)
   {
+    $this->logInfo("enckey: ". $this->encryptionService->appEncryptionKey);
     if ($this->encryptionService->setConfigValue($key, $value)) {
       $this->encryptionCache[$key] = $value;
       return true;
@@ -419,6 +420,16 @@ class ConfigService {
     return $this->deleteAppValue($key);
   }
 
+  public function getAppKeys()
+  {
+    return array_values(
+      array_filter(
+        $this->containerConfig->getAppKeys($this->appName),
+        function($k) { return strpos('::', $k) === false; }
+      )
+    );
+  }
+
   /**
    * Fetch all config values and decrypt them.
    *
@@ -426,7 +437,7 @@ class ConfigService {
    */
   public function decryptConfigValues()
   {
-    foreach ($this->containerConfig->getAppKeys($this->appName) as $key) {
+    foreach ($this->getAppKeys() as $key) {
       $this->getConfigValue($key);
     }
     return $this->encryptionCache;
@@ -436,9 +447,10 @@ class ConfigService {
    * Flush all configuration values to the database, possibly
    * encrypting them.
    */
-  public function encryptConfigValues()
+  public function encryptConfigValues(array $override = [])
   {
-    $appKeys = $this->containerConfig->getAppKeys($this->appName);
+    $this->encryptionCache = array_merge($this->encryptionCache, $override);
+    $appKeys = $this->getAppKeys();
     $cacheKeys = array_keys($this->encryptionCache);
     foreach (array_diff($appKeys, $cacheKeys) as $uncached) {
       $this->logWarn("Found un-cached configuration key $uncached");
@@ -448,6 +460,7 @@ class ConfigService {
       $this->logWarn("Found un-persisted configuration key $unstored");
     }
     $cacheKeys = array_keys($this->encryptionCache);
+    //$this->logInfo('keys: '.print_r($cacheKeys, true));
     foreach ($cacheKeys as $key) {
       $this->setConfigValue($key, $this->encryptionCache[$key]);
     }
