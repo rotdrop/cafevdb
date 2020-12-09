@@ -271,7 +271,7 @@ var CAFEVDB = CAFEVDB || {};
 	  CAFEVDB.Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
 
 	  $.post(
-	    OC.generateUrl('/apps/cafevdb/settings/personal/set/systemkey'),
+	    OC.generateUrl('/apps/cafevdb/settings/app/set/systemkey'),
             { 'value': { 'systemkey': keyInput.val(),
                          'oldkey': oldKeyInput.val() }
             })
