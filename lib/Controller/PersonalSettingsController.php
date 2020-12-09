@@ -157,17 +157,23 @@ class PersonalSettingsController extends Controller {
       }
 
       // Then check whether the key is correct
-      if (!$this->encryptionKeyValid($encryptionkey)) {
+      if (true && !$this->encryptionKeyValid($encryptionkey)) {
         return self::grumble($this->l->t('Invalid encryption key.'));
       }
 
-      // So generate a new key-pair and store the key.
-      if (!$this->recryptAppEncryptionKey($this->userId(), $password, $encryptionkey)) {
-        return self::grumble($this->l->t('Unable to store encrypted encryption key in user-data.'));
+      // So generate a new key-pair and store the key. This will only
+      // change the user's preferences.
+      // @TODO If we ever should encrypt anything else with the user's
+      // SSL key-pair then we would need to be more careful about the
+      // key-pair.
+      try {
+        $this->encryptionService()->initUserKeyPair(true);
+        $this->encryptionService()->setUserEncryptionKey($encryptionkey);
+        $this->encryptionService()->setAppEncryptionKey($encryptionkey);
+      } catch (\Throwable $t) {
+         $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
       }
-
-      // Then store the key in the session as it is the valid key
-      $this->setAppEncryptionKey($encryptionkey);
 
       return self::response($this->l->t('Encryption key stored.'));
     default:

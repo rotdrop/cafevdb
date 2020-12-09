@@ -91,6 +91,11 @@ trait ConfigTrait {
     return $this->configService->setAppValue($key, $value);
   }
 
+  protected function encryptionService()
+  {
+    return $this->configService->encryptionService();
+  }
+
   protected function deleteAppValue($key)
   {
     return $this->configService->deleteAppValue($key);
@@ -111,25 +116,21 @@ trait ConfigTrait {
     return $this->configService->encryptionKeyValid($encryptionKey);
   }
 
-  protected function recryptAppEncryptionKey($login, $password, $enckey = null) {
-    return $this->configService->recryptAppEncryptionKey($login, $password, $enckey);
-  }
-
   /**Get a possibly encrypted app-config value. */
   public function getConfigValue($key, $default = null)
   {
-    return $this->configService->getValue($key, $default);
+    return $this->configService->getConfigValue($key, $default);
   }
 
-  /**Get a possibly encrypted app-config value. */
+  /** Set a possibly encrypted app-config value. */
   public function setConfigValue($key, $value)
   {
-    return $this->configService->setValue($key, $value);
+    return $this->configService->setConfigValue($key, $value);
   }
 
   public function deleteConfigValue($key)
   {
-    return $this->configService->deleteValue($key);
+    return $this->configService->deleteConfigValue($key);
   }
 
   public function generateRandomBytes($length = 30)

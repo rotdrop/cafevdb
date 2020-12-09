@@ -32,6 +32,7 @@ use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 
 class UserLoggedInEventListener implements IEventListener
 {
@@ -42,22 +43,17 @@ class UserLoggedInEventListener implements IEventListener
   /** @var string */
   private $appName;
 
-  /** @var IGroupManager */
-  private $groupManager;
-
-  /** @var EncryptionService */
-  private $encryptionService;
+  /** @var \OCA\CAFEVDB\Service\AuthorizationService */
+  private $authorization;
 
   public function __construct(
     $appName
-    , IGroupManager $groupManager
-    , EncryptionService $encryptionService
+    , AuthorizationService $authorization
     , ILogger $logger
     , IL10N $l10n
   ) {
     $this->appName = $appName;
-    $this->groupManager = $groupManager;
-    $this->encryptionService = $encryptionService;
+    $this->authorization = $authorization;
     $this->logger = $logger;
     $this->l = $l10n;
   }
@@ -67,21 +63,18 @@ class UserLoggedInEventListener implements IEventListener
       return;
     }
 
-    $this->logInfo("Hello Login-Handler: ".get_class($event));
+    $userId = $event->getUser()->getUID();
 
-    return;
-
-    $groupId = $this->encryptionService->getAppValue('usergroup');
-    $user = $event->getUser();
-    $userId = $user->getUID();
-    $password = $event->getPassword();
-    $tokenLogin = $event->isTokenLogin();
-
-    if (!empty($groupId) && $this->groupManager->isInGroup($userId, $groupId)) {
-      // Fetch the encryption key and store in the session data
-      $this->encryptionService->initUserPrivateKey($userId, $password);
-      $this->encryptionService->initAppEncryptionKey($userId);
+    if (!$this->authorization->authorized($userId)) {
+      return;
     }
+
+    // in principle the constructor should do it all, i.e. generate
+    // any missing keys and check for the global encryption key
+    $encryptionService = \OC::$server->query(EncryptionService::class);
+
+    // but play safe
+    $encryptionService->bind($userId, $event->getPassword());
   }
 }
 

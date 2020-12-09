@@ -31,8 +31,13 @@ use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\ILogger;
 use OCP\IL10N;
 
-// Perhaps just use NC builtin encryption via ICrypto?
-use \ioncube\phpOpensslCryptor\Cryptor;
+class FakeL10N
+{
+  public function t($text, $parameters = [])
+  {
+    return vsprintf($text, $parameers);
+  }
+}
 
 /**
  * Handle some encryption tasks:
@@ -50,14 +55,19 @@ class EncryptionService
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const NEVER_ENCRYPT = [
+    'enabled',
+    'installed_version',
+    'types',
+    'usergroup',
+    'wikinamespace',
+  ];
+
   /** @var string */
   private $appName;
 
   /** @var IConfig */
   private $containerConfig;
-
-  /** @var  */
-  private $cryptor;
 
   /** @var string */
   private $userPrivateKey = null;
@@ -73,6 +83,7 @@ class EncryptionService
 
   public function __construct(
     $appName
+    , AuthorizationService $authorization
     , IConfig $containerConfig
     , ISession $session
     , IUserSession $userSession
@@ -84,10 +95,9 @@ class EncryptionService
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
     $this->session = $session;
-    $this->cryptor = new Cryptor();
     $this->crypto = $crypto;
     $this->logger = $logger;
-    $this->l = $l10n;
+    $this->l = new FakeL10N(); // $l10n;
     try {
       $this->user = $userSession->getUser();
       $this->userId = $this->user->getUID();
@@ -95,6 +105,9 @@ class EncryptionService
       $this->logException($t);
       $this->user = null;
       $this->userId = null;
+    }
+    if (!$authorization->authorized($this->userId)) {
+      return;
     }
     try {
       $this->credentials = $credentialsStore->getLoginCredentials();
@@ -147,27 +160,46 @@ class EncryptionService
     return $this->appEncryptionKey;
   }
 
+  public function setAppEncryptionKey($key)
+  {
+    $this->appEncryptionKey = $key;
+  }
+
   /**
    * Initialize the per-user public/private key pair, which
    * inparticular is used to propagate the app's encryption key to all
    * relevant users.
+   *
+   * @param bool $forceNewKeyPair Generate a new key pair even if an
+   * old one is found.
    */
-  public function initUserKeyPair()
+  public function initUserKeyPair($forceNewKeyPair = false)
   {
     if (empty($this->userId) || empty($this->userPassword)) {
       throw new \Exception($this->l->t('Cannot initialize SSL key-pair without user and password'));
     }
 
-    $privKey = $this->getUserValue($this->userId, 'privateSSLKey', null);
-    $pubKey = $this->getUserValue($this->userId, 'publicSSLKey', null);
+    if (!$forceNewKeyPair) {
+      $privKey = $this->getUserValue($this->userId, 'privateSSLKey', null);
+      $pubKey = $this->getUserValue($this->userId, 'publicSSLKey', null);
+    }
     if (empty($privKey) || empty($pubKey)) {
       // Ok, generate one. But this also means that we have not yet
       // access to the data-base encryption key.
-      $this->generateUserKeyPair($this->userId, $this->userPassword);
-      $privKey = $this->getUserValue($this->userId, 'privateSSLKey');
+      $keys = $this->generateUserKeyPair($this->userId, $this->userPassword);
+      if ($keys === false) {
+        throw new \Exception($this->l->t('Unable to generate SSL key pair for user "%s".', [ $this->userId ]));
+      }
+      list($privKey, $pubKey) = $keys;
     }
 
     $privKey = openssl_pkey_get_private($privKey, $this->userPassword);
+
+    if ($privKey === false) {
+      $this->userPrivateKey = null;
+      $this->userPublicKey = null;
+      throw new \Exception($this->l->t('Unable to unlock private key for user "%s"', [ $this->userId ]));
+    }
 
     $this->userPrivateKey = $privKey;
     $this->userPublicKey = $pubKey;
@@ -206,7 +238,7 @@ class EncryptionService
     $this->setUserValue($login, 'publicSSLKey', $pubKey);
     $this->setUserValue($login, 'privateSSLKey', $privKey);
 
-    return true;
+    return [ $privKey, $pubKey ];
   }
 
   public function getUserEncryptionKey()
@@ -299,20 +331,26 @@ class EncryptionService
    * an encrypted representation of the key from the OC config space
    * and try to decrypt that key with the given key. If the decrypted
    * key matches our key, then we accept the key.
+   *
+   * @param string $encrytionKey
    */
-  public function encryptionKeyValid()
+  public function encryptionKeyValid($encryptionKey = null)
   {
     if (!$this->bound()) {
       throw new \Exception($this->l->t('Cannot validate app encryption key without bound user credentials'));
+    }
+
+    if (empty($encryptionKey)) {
+      $encryptionKey = $this->appEncryptionKey;
     }
 
     // Fetch the encrypted "system" key from the app-config table
     $sysdbkey = $this->getAppValue('encryptionkey');
 
     // Now try to decrypt the data-base encryption key
-    $sysdbkey = $this->decrypt($sysdbkey, $this->appEncryptionKey);
+    $sysdbkey = $this->decrypt($sysdbkey, $encryptionKey);
 
-    return $sysdbkey == $sesdbkey;
+    return $sysdbkey == $encryptionKey;
   }
 
   public function getAppValue($key, $default = null)
@@ -343,7 +381,9 @@ class EncryptionService
 
     $value  = $this->getAppValue($key, $default);
 
-    $value  = $this->decrypt($value, $this->appEncryptionKey);
+    if (!isset(self::NEVER_ENCRYPT[$key])) {
+      $value  = $this->decrypt($value, $this->appEncryptionKey);
+    }
 
     return $value;
   }
@@ -361,7 +401,7 @@ class EncryptionService
       return false;
     }
 
-    if (!empty($this->appEncryptionKey)) {
+    if (!empty($this->appEncryptionKey) && !isset(self::NEVER_ENCRYPT[$key])) {
       $value = $this->encrypt($value, $this->appEncryptionKey);
     }
     $this->setAppValue($key, $value);
@@ -388,10 +428,13 @@ class EncryptionService
     // rely on padding. We store the value in hexadecimal notation
     // in order to keep text-fields as text fields.
     $value = strval($value);
-    $md5   = md5($value);
-    $cnt   = sprintf('%04x', strlen($value));
-    $src   = $cnt.$md5.$value; // 4 Bytes + 32 Bytes + X bytes of data
-    $value = $this->cryptor->encrypt($src, $enckey, Cryptor::FORMAT_B64);
+    if (!empty($enckey)) {
+      try {
+        $value = $this->crypto->encrypt($value, $enckey);
+      } catch (\Throwable $t) {
+         throw new \Exception($this->l->t('Encrypt failed'), $t->getCode(), $t);
+      }
+    }
     return $value;
   }
 
@@ -412,13 +455,10 @@ class EncryptionService
   private function decrypt($value, $enckey)
   {
     if (!empty($enckey) && !empty($value)) {
-      $value = $this->cryptor->decrypt($value, $enckey, Cryptor::FORMAT_B64);
-      $cnt = intval(substr($value, 0, 4), 16);
-      $md5 = substr($value, 4, 32);
-      $value = substr($value, 36, $cnt);
-
-      if (strlen($md5) != 32 || strlen($value) != $cnt || $md5 != md5($value)) {
-        return false;
+      try {
+         $value = $this->crypto->decrypt($value, $enckey);
+      } catch (\Throwable $t) {
+        throw new \Exception($this->l->t('Decrypt failed'), $t->getCode(), $t);
       }
     }
     return $value;

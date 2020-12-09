@@ -65,88 +65,9 @@ class ConfigService {
   /*
    ****************************************************************************
    *
-   * Keys for encrypted configuration values. In order for
-   * encryption/decryption to work properly, every config setting has
-   * to be listed here.
+   * Some configuration constants
    *
    */
-  const CFG_KEYS = [
-    'orchestra',
-    'dbserver',
-    'dbuser',
-    'dbpassword',
-    'dbname',
-    'shareowner',
-    'shareownerpassword',
-    'sharedfolder',
-    'concertscalendar',
-    'concertscalendarid',
-    'rehearsalscalendar',
-    'rehearsalscalendarid',
-    'othercalendar',
-    'othercalendarid',
-    'managementcalendar',
-    'managementcalendarid',
-    'financecalendar',
-    'financecalendarid',
-    'eventduration',
-    'generaladdressbook',
-    'generaladdressbookid',
-    'musiciansaddressbook',
-    'musiciansaddressbookid',
-    'emailuser',
-    'emailpassword',
-    'emailfromname',
-    'emailfromaddress',
-    'smtpserver',
-    'smtpport',
-    'smtpsecure',
-    'imapserver',
-    'imapport',
-    'imapsecure',
-    'emailtestaddress',
-    'emailtestmode',
-    'phpmyadmin',
-    'phpmyadminoc',
-    'sourcecode',
-    'sourcedocs',
-    'ownclouddev',
-    'presidentId',
-    'presidentUserId',
-    'presidentUserGroup',
-    'secretaryId',
-    'secretaryUserId',
-    'secretaryUserGroup',
-    'treasurerId',
-    'treasurerUserId',
-    'treasurerUserGroup',
-    'streetAddressName01',
-    'streetAddressName02',
-    'streetAddressStreet',
-    'streetAddressHouseNumber',
-    'streetAddressCity',
-    'streetAddressZIP',
-    'streetAddressCountry',
-    'phoneNumber',
-    'bankAccountOwner',
-    'bankAccountIBAN',
-    'bankAccountBLZ',
-    'bankAccountBIC',
-    'bankAccountCreditorIdentifier',
-    'projectsbalancefolder',
-    'projectsfolder',
-    'executiveBoardTable',
-    'executiveBoardTableId',
-    'memberTable',
-    'memberTableId',
-    'redaxoPreview',
-    'redaxoArchive',
-    'redaxoRehearsals',
-    'redaxoTrashbin',
-    'redaxoTemplate',
-    'redaxoConcertModule',
-    'redaxoRehearsalsModule',
-  ];
   const CMS_CATEGORIES = [
     'preview',
     'archive',
@@ -440,6 +361,21 @@ class ConfigService {
    * encrypted config space
    *
    */
+  public function encryptionService()
+  {
+    return $this->encryptionService;
+  }
+
+  public function setUserEncryptionKey($key)
+  {
+    return $this->encryptionService->setUserEncryptionKey($key);
+  }
+
+  public function getUserEncryptionKey()
+  {
+    return $this->encryptionService->getUserEncryptionKey();
+  }
+
   public function setAppEncryptionKey($key)
   {
     return $this->encryptionService->setAppEncryptionKey($key);
@@ -450,12 +386,12 @@ class ConfigService {
     return $this->encryptionService->getAppEncryptionKey();
   }
 
-  public function encryptionKeyValid()
+  public function encryptionKeyValid($encryptionKey)
   {
-    return $this->encryptionService->encryptionKeyValid();
+    return $this->encryptionService->encryptionKeyValid($encryptionKey);
   }
 
-  public function getValue($key, $default = null)
+  public function getConfigValue($key, $default = null)
   {
     if (!isset($this->encryptionCache[$key])) {
       $value = $this->encryptionService->getConfigValue($key, $default);
@@ -468,20 +404,62 @@ class ConfigService {
     return $this->encryptionCache[$key];
   }
 
-  public function setValue($key, $value)
+  public function setConfigValue($key, $value)
   {
-    if ($this->encryptionService->setAppValue($key, $value)) {
+    if ($this->encryptionService->setConfigValue($key, $value)) {
       $this->encryptionCache[$key] = $value;
       return true;
     }
     return false;
   }
 
-  public function deleteValue($key)
+  public function deleteConfigValue($key)
   {
+    unset($this->encryptionCache[$key]);
     return $this->deleteAppValue($key);
   }
 
+  /**
+   * Fetch all config values and decrypt them.
+   *
+   * @return array Configuration values.
+   */
+  public function decryptConfigValues()
+  {
+    foreach ($this->containerConfig->getAppKeys($this->appName) as $key) {
+      $this->getConfigValue($key);
+    }
+    return $this->encryptionCache;
+  }
+
+  /**
+   * Flush all configuration values to the database, possibly
+   * encrypting them.
+   */
+  public function encryptConfigValues()
+  {
+    $appKeys = $this->containerConfig->getAppKeys($this->appName);
+    $cacheKeys = array_keys($this->encryptionCache);
+    foreach (array_diff($appKeys, $cacheKeys) as $uncached) {
+      $this->logWarn("Found un-cached configuration key $uncached");
+      $this->getConfigValue($uncached);
+    }
+    foreach (array_diff($cacheKeys, $appKeys) as $unstored) {
+      $this->logWarn("Found un-persisted configuration key $unstored");
+    }
+    $cacheKeys = array_keys($this->encryptionCache);
+    foreach ($cacheKeys as $key) {
+      $this->setConfigValue($key, $this->encryptionCache[$key]);
+    }
+  }
+
+  /*
+   ****************************************************************************
+   */
+
+  /**
+   * Would rather belong to the EncryptionService
+   */
   public function generateRandomBytes($length = 30)
   {
     return $this->secureRandom->generate($length);
@@ -490,11 +468,12 @@ class ConfigService {
   /*
    ****************************************************************************
    *
-   * logging
+   * Sudo, run a function as other user, e.g. to setup shares.
    *
    */
 
-  /**Fake execution with other user-id. Note that this function will
+  /**
+   * Fake execution with other user-id. Note that this function will
    * catch any exception thrown while executing the callback-function
    * and in case an exeption has been called will re-throw the
    * exception.
