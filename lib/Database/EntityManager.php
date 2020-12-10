@@ -22,13 +22,16 @@
 
 namespace OCA\CAFEVDB\Database;
 
+use OCP\ILogger;
+use OCP\IL10N;
+
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\DBAL\Types\Type;
 
 use Ramsey\Uuid\Doctrine as Ramsey;
 
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldKind;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus;
@@ -43,19 +46,25 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
  */
 class EntityManager extends EntityManagerDecorator
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
-
-  /** @var \Doctrine\DBAL\Logging\DebugStack */
-  private $logger;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var \Doctrine\ORM\EntityManager */
   private $entityManager;
 
+  /** @var \OCA\CAFEVDB\Service\EncryptionService */
+  private $encryptionService;
+
   // @@TODO catch failures, allow construction without database for
   // initial setup.
-  public function __construct(ConfigService $configService)
+  public function __construct(
+    EncryptionService $encryptionService
+    , ILogger $logger
+    , IL10N $l10n
+  )
   {
-    $this->configService = $configService;
+    $this->encryptionService = $encryptionService;
+    $this->logger = $logger;
+    $this->l = $l10n;
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
     $this->registerTypes();
@@ -75,23 +84,38 @@ class EntityManager extends EntityManagerDecorator
     ];
 
     $connection = $this->entityManager->getConnection();
-    $platform = $connection->getDatabasePlatform();
-    foreach ($types as $type => $sqlType) {
-      $instance = new $type;
-      $typeName = $instance->getName();
-      Type::addType($typeName, $type);
-      if (!empty($sqlType)) {
-        $platform->registerDoctrineTypeMapping($sqlType, $typeName);
+    $params = $connection->getParams();
+    $impossible = false;
+    foreach ([ 'host', 'user', 'password', 'dbname' ] as $key) {
+      if (empty($params[$key])) {
+        $this->logError('Unable to access database, "'.$key.'" is empty.');
+        $impossible = true;
       }
+    }
+    if ($impossible) {
+      return;
+    }
+    try {
+      $platform = $connection->getDatabasePlatform();
+      foreach ($types as $type => $sqlType) {
+        $instance = new $type;
+        $typeName = $instance->getName();
+        Type::addType($typeName, $type);
+        if (!empty($sqlType)) {
+          $platform->registerDoctrineTypeMapping($sqlType, $typeName);
+        }
+      }
+    } catch (\Throwable $t) {
+      $this->logException($t);
     }
   }
 
   private function connectionParameters($params = null) {
     $connectionParams = [
-      'dbname' => $this->getConfigValue('dbname'),
-      'user' => $this->getConfigValue('dbuser'),
-      'password' => $this->getConfigValue('dbpassword'),
-      'host' => $this->getConfigValue('dbserver'),
+      'dbname' => $this->encryptionService->getConfigValue('dbname'),
+      'user' => $this->encryptionService->getConfigValue('dbuser'),
+      'password' => $this->encryptionService->getConfigValue('dbpassword'),
+      'host' => $this->encryptionService->getConfigValue('dbserver'),
     ];
     $driverParams = [
       'driver' => 'pdo_mysql',
@@ -133,11 +157,6 @@ class EntityManager extends EntityManagerDecorator
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config);
 
     return $entityManager;
-  }
-
-  public function getLogger()
-  {
-    return $this->logger;
   }
 }
 
