@@ -66,6 +66,7 @@ class ProjectService
     $this->wikiRPC = $wikiRPC;
     $this->wikiRPC->errorReporting(WikiRPC::ON_ERROR_THROW);
     $this->webPagesRPC = $webPagesRPC;
+    $this->webPagesRPC->errorReporting(WebPagesRPC::ON_ERROR_THROW);
     //$this->logInfo(print_r($this->webPagesRPC->getCategories(), true));
     //$this->logInfo(print_r($this->webPagesRPC->getTemplates(), true));
     //$this->logInfo(print_r($this->webPagesRPC->getModules(), true));
