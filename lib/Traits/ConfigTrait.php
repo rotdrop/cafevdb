@@ -249,6 +249,12 @@ trait ConfigTrait {
     return $this->configService->findAvailableLocales();
   }
 
+  /**Return the currency symbol for the locale. */
+  public function currencySymbol($locale = null)
+  {
+    return $this->currencySymbol($locale);
+  }
+
   protected function generateUUID() {
     \Sabre\VObject\UUIDUtil::getUUID();
   }

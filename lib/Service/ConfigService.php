@@ -580,7 +580,7 @@ class ConfigService {
   public function currencySymbol($locale = null)
   {
     if (empty($locale)) {
-      $locale = self::getLocale();
+      $locale = $this->getLocale();
     }
     $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
     return $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
