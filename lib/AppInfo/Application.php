@@ -77,12 +77,6 @@ class Application extends App implements IBootstrap {
                 \OCA\CAFEVDB\Common\Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
             }
         );
-
-        // @todo: still necessary?
-        $dispatcher->addServiceListener(
-            TranslationNotFound::class,
-            TranslationNotFoundListener::class
-        );
     }
 
     // Called earlier than boot, so anything initialized in the
