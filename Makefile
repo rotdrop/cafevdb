@@ -64,7 +64,7 @@ COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--no-dev --prefer-dist
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
-PHPDOC_TEMPLATE=--template=default
+PHPDOC_TEMPLATE=--template=clean
 #--template=clean --template=xml
 
 #--template=responsive-twig
