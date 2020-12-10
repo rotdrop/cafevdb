@@ -74,7 +74,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   private $field;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="extraFieldsData")
    * @ORM\JoinColumn(name="ProjectParticipantId", referencedColumnName="Id")
    *
    */
