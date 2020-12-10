@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
 
 /**Table generator for Instruments table. */
-class ProjectPayments extends PMETableViewBase
+class ProjectExtraFields extends PMETableViewBase
 {
   const CSS_CLASS = 'project-extra-fields';
   const TABLE = 'ProjectExtraFields';

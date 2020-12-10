@@ -23,21 +23,33 @@
 namespace OCA\CAFEVDB;
 
 $css_pfx = $renderer->cssPrefix();
+$project = $renderer->getProjectName();
+$projectId = $renderer->getProjectId();
 
 $nav = '';
-//$nav .= $pageNavigation->pageControlElement('projectinstruments');
-$nav .= $pageNavigation->pageControlElement('all');
-$nav .= $pageNavigation->pageControlElement('projects');
-$nav .= $pageNavigation->pageControlElement('instruments');
-$nav .= $pageNavigation->pageControlElement('project-extra-fields');
+if (!empty($project)) {
+  $nav .= $pageNavigation->pageControlElement('projectlabel', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('detailed', $project, $projectId);
+  if (Config::isTreasurer()) {
+    $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
+    $nav .= $pageNavigation->pageControlElement('debit-mandates', $table->projectName, $table->projectId);
+  }
+  $nav .= $pageNavigation->pageControlElement('projects');
+  $nav .= $pageNavigation->pageControlElement('instruments', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-extra-fields', $project, $projectId);
+} else {
+  $nav .= $pageNavigation->pageControlElement('projects');
+  $nav .= $pageNavigation->pageControlElement('instruments');
+  $nav .= $pageNavigation->pageControlElement('project-extra-fields');
+  $nav .= $pageNavigation->pageControlElement('all');
+}
 
 echo $this->inc('part.common.header',
                 [ 'css-prefix' => $css_pfx,
                   'navigationcontrols' => $nav,
                   'header' => $renderer->headerText() ]);
 
-// Issue the main part. The method will echo itself
 $renderer->render();
 
 // Close some still opened divs
-echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);
+echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));

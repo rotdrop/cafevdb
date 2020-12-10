@@ -525,11 +525,11 @@ class Navigation
                       $sysPfx.'qf1' => $year);
         break;
 
-      case 'project-extra':
+      case 'project-extra-fields':
         $value = $this->l->t("Project Extra-Fields");
         $title = $this->l->t("Add additional data-fields to the instrumenation table for the project.");
         $post = array('projectExtraFields' => $value,
-                      'template' => 'project-extra',
+                      'template' => 'project-extra-fields',
                       'showDisabledFields' => false,
                       'projectName' => $projectName,
                       'projectId' => $projectId);
