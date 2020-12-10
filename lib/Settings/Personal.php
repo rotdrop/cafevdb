@@ -32,6 +32,8 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 class Personal implements ISettings {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const ERROR_TEMPLATE = "errorpage";
+
   /** @var string */
   private $appName;
 
