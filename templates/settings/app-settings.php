@@ -40,7 +40,13 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
 <!-- ENCRYPTION-KEY -->
   <form id="systemkey">
     <fieldset class="systemkey" <?php echo $off; ?> ><legend><?php echo $l->t('Encryption settings'); ?></legend>
-      <input class="cafevdb-password" type="password" id="oldkey" name="oldkey" placeholder="<?php echo $l->t('Current Key');?>" data-typetoggle="#oldkey-show" />
+      <input class="cafevdb-password"
+             type="password"
+             value="<?php p($encryptionkey); ?>"
+             id="oldkey"
+             name="oldkey"
+             placeholder="<?php echo $l->t('Current Key');?>"
+             data-typetoggle="#oldkey-show" />
       <input class="cafevdb-password-show" type="checkbox" id="oldkey-show" name="show" />
       <label class="cafevdb-password-show" for="oldkey-show"><?php echo $l->t('show');?></label>
       <input class="cafevdb-password randomkey" type="password" id="key" name="systemkey" placeholder="<?php echo $l->t('New Key');?>" data-typetoggle="#systemkey-show" />
@@ -48,7 +54,7 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
       <label class="cafevdb-password-show" for="systemkey-show"><?php echo $l->t('show');?></label>
       <input name="keygenerate" id="keygenerate" type="button" value="<?php echo $l->t('Generate'); ?>" title="<?php echo $l->t('Generate a random encryption key');?>" />
       <input id="keychangebutton" type="button" value="<?php echo $l->t('Change Encryption Key');?>" />
-      <!-- <span><?php echo $_['encryptionkey']; ?></span> -->
+      <!-- <span><?php p($encryptionkey); ?></span> -->
       <div class="statusmessage changed"><?php echo $l->t('The encryption key was changed');?></div>
       <div class="statusmessage error"><?php echo $l->t('Unable to change the encryption key');?></div>
       <div class="statusmessage insecure"><?php echo $l->t('Data will be stored unencrypted');?></div>
