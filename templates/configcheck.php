@@ -49,37 +49,6 @@ echo $this->inc('part.common.header',
                       'navigationcontrols' => $nav,
                       'header' => $header));
 
-?>
-
-<div id="<?php echo $css_pfx; ?>-body-config-check">
-  <form id="configrecheckform" action="?app=cafevdb" method="get">
-    <input type="hidden" name="app" value="<?php echo $appName; ?>" /><!-- @@TODO should not be needed -->
-    <input
-      type="submit"
-      title="<?php echo $toolTips['configrecheck'];?>"
-      value="<?php echo $l->t('Test again'); ?>"
-      id="configrecheck"
-    />
-    <a href="#" class="new-event button">NewEventDialog</a>
-    <a href="#"
-       class="edit-event button"
-       data-uri="E59CC606-AB43-443F-ACC8-3EA742ADD672.ics"
-            data-calendar-id="30">EditEventDialog</a>
-    <input id="edit-event-test-uri" type="text" name="uri" placeholder="uri"/>
-    <input id="edit-event-test-calendar-id" type="number" name="calendar-id" placeholder="calendar-id"/>
-    <a href="#" class="geo-coding button">TestGeoCodingCache</a>
-    <br/>
-    <a href="#" class="progress-status button">TestProgressStatus</a>
-    <span id="progress-status-info"></span>
-  </form>
-  <br/>
-  <pre><?php echo $_SERVER['PHP_SELF']; ?></pre>
-  <pre>Image: <?php echo $urlGenerator->imagePath('cafevdb', ''); ?></pre>
-  <pre>File: <?php echo $urlGenerator->linkTo('cafevdb', ''); ?></pre>
-  <pre>Route: <?php echo $urlGenerator->linkToRoute('cafevdb.page.index'); ?></pre>
-  <ul>
-<?php
-
 $cfgchk = $_['configcheck'];
 
 $missingtext = ['orchestra' => $l->t('You need to specify a name for the orchestra.  Please click as
@@ -126,77 +95,121 @@ log-in again in order to be able to access the encrypted values.',
                            [$_['usergroup']]),
   ];
 
-$ok    = $_['groupadmin'] ? 'set' : 'missing';
-$key   = 'groupadmin';
-$value = ($_['groupadmin']
-          ? $l->t('You are a group administrator.')
-          : $l->t('You are not a group administrator.'));
-$text = (!$_['groupadmin']
-         ? $l->t('Ask a user with group-administrator rights to perform the required
+?>
+
+<div id="<?php echo $css_pfx; ?>-body-config-check">
+  <form id="configrecheckform" action="?app=cafevdb" method="get">
+    <input type="hidden" name="app" value="<?php echo $appName; ?>" /><!-- @@TODO should not be needed -->
+    <input
+      type="submit"
+      title="<?php echo $toolTips['configrecheck'];?>"
+      value="<?php echo $l->t('Test again'); ?>"
+      id="configrecheck"
+    />
+    <a href="#" class="new-event button">NewEventDialog</a>
+    <a href="#"
+       class="edit-event button"
+       data-uri="E59CC606-AB43-443F-ACC8-3EA742ADD672.ics"
+            data-calendar-id="30">EditEventDialog</a>
+    <input id="edit-event-test-uri" type="text" name="uri" placeholder="uri"/>
+    <input id="edit-event-test-calendar-id" type="number" name="calendar-id" placeholder="calendar-id"/>
+    <a href="#" class="geo-coding button">TestGeoCodingCache</a>
+    <br/>
+    <a href="#" class="progress-status button">TestProgressStatus</a>
+    <span id="progress-status-info"></span>
+  </form>
+  <br/>
+  <pre><?php echo $_SERVER['PHP_SELF']; ?></pre>
+  <pre>Image: <?php echo $urlGenerator->imagePath('cafevdb', ''); ?></pre>
+  <pre>File: <?php echo $urlGenerator->linkTo('cafevdb', ''); ?></pre>
+  <pre>Route: <?php echo $urlGenerator->linkToRoute('cafevdb.page.index'); ?></pre>
+  <ul>
+
+<?php
+
+$diagnosticItems = [
+  'usergroup',
+  'groupadmin',
+  'encryptionkey',
+  'orchestra',
+  'shareowner',
+  'sharedfolder',
+  'database'
+];
+
+foreach ($diagnosticItems as $key) {
+
+  switch ($key) {
+    case 'groupadmin':
+      $ok    = $_['groupadmin'] ? 'set' : 'missing';
+      $key   = 'groupadmin';
+      $value = ($_['groupadmin']
+              ? $l->t('You are a group administrator.')
+              : $l->t('You are not a group administrator.'));
+      $text = (!$_['groupadmin']
+             ? $l->t('Ask a user with group-administrator rights to perform the required
 settings or ask the Owncloud-administror to assign to you the rol of a
 group-administrator for the group `%s\'.',
-             array($_['usergroup']))
-         : '');
+                     array($_['usergroup']))
+             : '');
 
-echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
+      echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
       <span class="'.$css_pfx.'-config-check value"> '.$value.'</span>
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
+      break;
+    case 'encryptionkey':
+      $key = 'encryptionkey';
+      $encrkey = $encryptionkey;
+      $cfgkey  = $configkey;
+      $error   = $cfgchk[$key]['message'];
+      if ($error != '') {
+            $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
+      }
 
-foreach (['orchestra',
-          'usergroup',
-          'shareowner',
-          'sharedfolder',
-          'database'] as $key) {
-  $status = $cfgchk[$key]['status'];
-  $ok     = $status ? 'set' : 'missing';
-  $tok    = $status ? $l->t('is set') : $l->t('is missing');
-  $text   = $status ? '' : $missingtext[$key];
-  $error  = $cfgchk[$key]['message'];
-  if ($error != '') {
-    $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
-  }
+      if ($encrkey != '') {
+        $ok    = 'set';
+        $tok   = $l->t('is set');
+        $value = 'XXXXXXXX'; // $encrkey;
+        $text  = '';
+      } else if ($cfgkey != '') {
+        $ok    = 'missing';
+        $tok   = $l->t('is set, but inaccessible');
+        $value = '';
+        $text  = $missingtext[$key];
+      } else {
+        $ok    = 'missing';
+        $tok   = $l->t('is not set');
+        $value = '';
+        $text  = $missingtext[$key];
+      }
 
-  echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
+      echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
+      <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
+      <span class="'.$css_pfx.'-config-check value"> '.$value.'</span>
+      <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
+      <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
+    </li>';
+      break;
+    default:
+      $status = $cfgchk[$key]['status'];
+      $ok     = $status ? 'set' : 'missing';
+      $tok    = $status ? $l->t('is set') : $l->t('is missing');
+      $text   = $status ? '' : $missingtext[$key];
+      $error  = $cfgchk[$key]['message'];
+      if ($error != '') {
+        $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
+      }
+
+      echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
       <span class="'.$css_pfx.'-config-check value"> '.$_[$key].'</span>
       <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
+  }
 }
-
-$key = 'encryptionkey';
-$encrkey = $encryptionkey;
-$cfgkey  = $configkey;
-$error   = $cfgchk[$key]['message'];
-if ($error != '') {
-  $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
-}
-
-if ($encrkey != '') {
-  $ok    = 'set';
-  $tok   = $l->t('is set');
-  $value = 'XXXXXXXX'; // $encrkey;
-  $text  = '';
-} else if ($cfgkey != '') {
-  $ok    = 'missing';
-  $tok   = $l->t('is set, but inaccessible');
-  $value = '';
-  $text  = $missingtext[$key];
-} else {
-  $ok    = 'missing';
-  $tok   = $l->t('is not set');
-  $value = '';
-  $text  = $missingtext[$key];
-}
-
-echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
-      <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
-      <span class="'.$css_pfx.'-config-check value"> '.$value.'</span>
-      <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
-      <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
-    </li>';
 
 ?>
   </ul>
