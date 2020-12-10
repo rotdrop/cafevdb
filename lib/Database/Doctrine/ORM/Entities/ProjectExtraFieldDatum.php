@@ -73,6 +73,14 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    */
   private $field;
 
+  /**
+   * @ORM\ManyToOne(targetEntity="ProjectParticipant")
+   * @ORM\JoinColumn(name="ProjectParticipantId", referencedColumnName="Id")
+   *
+   */
+  private $projectParticipant;
+
+
   public function __construct() {
     $this->arrayCTOR();
   }
