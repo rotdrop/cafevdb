@@ -156,7 +156,7 @@ $appDir = __DIR__ . '/..';
 if (isset($_ENV['CAFEVDB_USER'])) {
     $cafevDbUser = $_ENV['CAFEVDB_USER'];
 } else {
-    $cafevDbUser = $user['name'];#
+    $cafevDbUser = $user['name'];
 }
 $GLOBALS['cafevdb-user'] = $cafevDbUser;
 $cafevDbPassword = file_get_contents($appDir . '/.clipassword');
@@ -165,7 +165,9 @@ if (empty($cafevDbPassword)) {
 }
 
 $encryptionService = \OC::$server->query(EncryptionService::class);
-$encryptionService->initUserPrivateKey($cafevDbUser, $cafevDbPassword);
+$encryptionService->bind($cafevDbUser, $cafevDbPassword);
+$encryptionService->initUserKeyPair();
+$encryptionService->initAppEncryptionKey();
 
 /*
  *
