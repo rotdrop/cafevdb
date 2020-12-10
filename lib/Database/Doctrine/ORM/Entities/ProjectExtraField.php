@@ -51,21 +51,21 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @ORM\Column(name="ProjectId", type="integer", nullable=false)
    */
-  private $projectid;
+  private $projectId;
 
   /**
    * @var int
    *
    * @ORM\Column(name="FieldIndex", type="integer", nullable=false, options={"comment"="Extra-field index into Besetzungen table."})
    */
-  private $fieldindex;
+  private $fieldIndex;
 
   /**
    * @var int|null
    *
    * @ORM\Column(name="DisplayOrder", type="integer", nullable=true)
    */
-  private $displayorder;
+  private $displayOrder;
 
   /**
    * @var string
@@ -77,9 +77,9 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="Type", type="integer", nullable=false, options={"default"="1"})
+   * @ORM\Column(name="TypeId", type="integer", nullable=false, options={"default"="1","comment"="Link to ProjectExtraFieldTypes"})
    */
-  private $type = '1';
+  private $typeId = '1';
 
   /**
    * @var string|null
@@ -93,14 +93,14 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @ORM\Column(name="DefaultValue", type="string", length=1024, nullable=false, options={"comment"="Default value."})
    */
-  private $defaultvalue;
+  private $defaultValue;
 
   /**
    * @var string
    *
    * @ORM\Column(name="ToolTip", type="string", length=4096, nullable=false)
    */
-  private $tooltip;
+  private $toolTip;
 
   /**
    * @var string
@@ -137,6 +137,12 @@ class ProjectExtraField implements \ArrayAccess
    */
   private $disabled = '0';
 
+  /**
+   * @ORM\ManyToOne(targetEntity="ProjectExtraFieldType")
+   * @ORM\JoinColumn(name="TypeId", referencedColumnName="Id")
+   */
+  private $type;
+
   public function __construct() {
     $this->arrayCTOR();
   }
@@ -152,75 +158,75 @@ class ProjectExtraField implements \ArrayAccess
   }
 
   /**
-   * Set projectid.
+   * Set projectId.
    *
-   * @param int $projectid
+   * @param int $projectId
    *
    * @return ProjectExtraFields
    */
-  public function setProjectid($projectid)
+  public function setProjectId($projectId)
   {
-    $this->projectid = $projectid;
+    $this->projectId = $projectId;
 
     return $this;
   }
 
   /**
-   * Get projectid.
+   * Get projectId.
    *
    * @return int
    */
-  public function getProjectid()
+  public function getProjectId()
   {
-    return $this->projectid;
+    return $this->projectId;
   }
 
   /**
-   * Set fieldindex.
+   * Set fieldIndex.
    *
-   * @param int $fieldindex
+   * @param int $fieldIndex
    *
    * @return ProjectExtraFields
    */
-  public function setFieldindex($fieldindex)
+  public function setFieldIndex($fieldIndex)
   {
-    $this->fieldindex = $fieldindex;
+    $this->fieldIndex = $fieldIndex;
 
     return $this;
   }
 
   /**
-   * Get fieldindex.
+   * Get fieldIndex.
    *
    * @return int
    */
-  public function getFieldindex()
+  public function getFieldIndex()
   {
-    return $this->fieldindex;
+    return $this->fieldIndex;
   }
 
   /**
-   * Set displayorder.
+   * Set displayOrder.
    *
-   * @param int|null $displayorder
+   * @param int|null $displayOrder
    *
    * @return ProjectExtraFields
    */
-  public function setDisplayorder($displayorder = null)
+  public function setDisplayOrder($displayOrder = null)
   {
-    $this->displayorder = $displayorder;
+    $this->displayOrder = $displayOrder;
 
     return $this;
   }
 
   /**
-   * Get displayorder.
+   * Get displayOrder.
    *
    * @return int|null
    */
-  public function getDisplayorder()
+  public function getDisplayOrder()
   {
-    return $this->displayorder;
+    return $this->displayOrder;
   }
 
   /**
@@ -296,51 +302,51 @@ class ProjectExtraField implements \ArrayAccess
   }
 
   /**
-   * Set defaultvalue.
+   * Set defaultValue.
    *
-   * @param string $defaultvalue
+   * @param string $defaultValue
    *
    * @return ProjectExtraFields
    */
-  public function setDefaultvalue($defaultvalue)
+  public function setDefaultValue($defaultValue)
   {
-    $this->defaultvalue = $defaultvalue;
+    $this->defaultValue = $defaultValue;
 
     return $this;
   }
 
   /**
-   * Get defaultvalue.
+   * Get defaultValue.
    *
    * @return string
    */
-  public function getDefaultvalue()
+  public function getDefaultValue()
   {
-    return $this->defaultvalue;
+    return $this->defaultValue;
   }
 
   /**
-   * Set tooltip.
+   * Set toolTip.
    *
-   * @param string $tooltip
+   * @param string $toolTip
    *
    * @return ProjectExtraFields
    */
-  public function setTooltip($tooltip)
+  public function setToolTip($toolTip)
   {
-    $this->tooltip = $tooltip;
+    $this->toolTip = $toolTip;
 
     return $this;
   }
 
   /**
-   * Get tooltip.
+   * Get toolTip.
    *
    * @return string
    */
-  public function getTooltip()
+  public function getToolTip()
   {
-    return $this->tooltip;
+    return $this->toolTip;
   }
 
   /**
