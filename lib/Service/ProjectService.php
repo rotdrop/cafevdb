@@ -44,9 +44,6 @@ class ProjectService
   /** @var EntityManager */
   protected $entityManager;
 
-  /** @var ProjectsRepository */
-  private $repository;
-
   /** @var OCA\CAFEVDB\Storage\UserStorage */
   private $userStorage;
 
@@ -72,7 +69,6 @@ class ProjectService
     //$this->logInfo(print_r($this->webPagesRPC->getCategories(), true));
     //$this->logInfo(print_r($this->webPagesRPC->getTemplates(), true));
     //$this->logInfo(print_r($this->webPagesRPC->getModules(), true));
-    $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     $this->l = $this->l10n();
   }
 
@@ -143,7 +139,7 @@ class ProjectService
    */
   public function ensureProjectFolders($projectId, $projectName = false, $only = false)
   {
-    $project = $this->repository->find($projectId);
+    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     if (!$projectName) {
       $projectName = $project['Name'];
     } else if ($projectName != $project['Name']) {
