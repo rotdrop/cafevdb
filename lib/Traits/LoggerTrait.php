@@ -23,15 +23,11 @@
 namespace OCA\CAFEVDB\Traits;
 
 use \OCP\ILogger;
-use OCP\IL10N;
 
 trait LoggerTrait
 {
   /** @var ILogger */
   protected $logger;
-
-  /** @var IL10N */
-  protected $l;
 
   public function log(int $level, string $message, array $context = [], $shift = 0) {
     $trace = debug_backtrace();
