@@ -22,9 +22,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \Doctrine\ORM\Query\Expr\Join;
+use OCP\ILogger;
 
-use OCA\CAFEVDB\Common\Util;
+use \Doctrine\ORM\Query\Expr\Join;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Translation;
@@ -33,15 +33,15 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationLocation;
 
 class TranslationService
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public function __construct(
-    ConfigService $configService,
     EntityManager $entityManager
+    , ILogger $logger
   ) {
-    $this->configService = $configService;
     $this->entityManager = $entityManager;
+    $this->logger = $logger;
   }
 
   public function recordUntranslated($phrase, $locale, $file, $line)
