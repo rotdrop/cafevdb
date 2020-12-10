@@ -69,7 +69,10 @@ PHPDOC_TEMPLATE=--template=clean
 
 #--template=responsive-twig
 
-all: build
+MAKE_HELP_DIR=$(SRCDIR)/dev-scripts/MakeHelp
+include $(MAKE_HELP_DIR)/MakeHelp.mk
+
+all: help
 
 composer.json: composer.json.in
 	cp composer.json.in composer.json
@@ -86,10 +89,10 @@ composer.lock: composer.json composer.json.in
  $(COMPOSER) install $(COMPOSER_OPTIONS);\
 }
 
+.PHONY: build
 # Fetches the PHP and JS dependencies and compiles the JS. If no composer.json
 # is present, the composer step is skipped, if no package.json or js/package.json
 # is present, the npm step is skipped
-.PHONY: build
 build: composer.json
 	[ -n "$(wildcard $(CURDIR)/composer.json)" ] && make composer
 ifneq (,$(wildcard $(CURDIR)/package.json))
@@ -124,20 +127,20 @@ endif
 
 # Removes the appstore build
 .PHONY: clean
-clean:
+clean: ## Tidy up local environment
 	rm -rf ./build
 
 # Same as clean but also removes dependencies installed by composer, bower and
 # npm
 .PHONY: distclean
-distclean: clean
+distclean: clean ## Clean even more, calls clean
 	rm -rf vendor
 	rm -rf node_modules
 	rm -rf js/vendor
 	rm -rf js/node_modules
 
 .PHONY: realclean
-realclean: distclean
+realclean: distclean ## Really delete everything but the bare source files
 	rm -f composer.lock
 	rm -f composer.json
 	rm -f stamp.composer-core-versions
