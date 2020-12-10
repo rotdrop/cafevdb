@@ -46,9 +46,9 @@ if ($projectId >= 0) {
 }
 
 echo $this->inc('part.common.header',
-                array('css-prefix' => $css_pfx,
-                      'navigationcontrols' => $nav,
-                      'header' => $table->headerText()));
+                [ 'css-prefix' => $css_pfx,
+                  'navigationcontrols' => $nav,
+                  'header' => $renderer->headerText() ]);
 
 if (Config::isTreasurer()) {
   $renderer->render();
