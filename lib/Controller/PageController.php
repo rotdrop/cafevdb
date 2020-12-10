@@ -256,7 +256,7 @@ class PageController extends Controller {
       'urlGenerator' => $this->urlGenerator,
       'debugMode' => $debugMode,
       'encryptionkey' => $encrkey,
-      'configkey' => $this->getConfigValue('encryptionkey'),
+      'configkey' => ($this->getConfigValue('encryptionkey')?: $this->getAppValue('encryptionkey')),
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
       'projectName' => $projectName,
