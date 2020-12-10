@@ -94,57 +94,6 @@ class ConfigCheckService
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
 
-    //$contactsService = new ContactsService($configService, $entityManager, $geoCodingService);
-    //$contactsService->playground();
-
-    //new PMEConfig($configService, $toolTipsService, $urlGenerator);
-    //new PMEOptions();
-    //new PHPMyEdit($this->entityManager->getConnection(), $pmeConfig);
-
-    // $result = $mySQLiShim->query('SELECT * FROM Musiker');
-    // while ($row = $mySQLiShim->fetch_array($result)) {
-    //   $this->logInfo(__METHOD__." ".print_r($row, true));
-    // }
-    //new \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit($connection, $pmeConfig);
-    //new \OCA\CAFEVDB\PageRenderer\Musicians($configService, $requestParameters, $entityManager, $phpMyEdit);
-    // try {
-    //   $musiciansView->disableProjectMode();
-    //   ob_start();
-    //   $musiciansView->render();
-    //   $table = ob_get_contents();
-    //   ob_end_clean();
-    //   $this->logInfo($table);
-    // } catch (\Throwable $t) {
-    //   $this->logException($t);
-    //   $table = ob_get_contents();
-    //   ob_end_clean();
-    //   $this->logInfo($table);
-    // }
-    // try {
-    //   $query = "SELECT * FROM Musicians";
-    //   $this->logInfo("Query: ".$query);
-    //   $result = $phpMyEdit->myquery($query);
-    //   if (empty($result)) {
-    //     if ($phpMyEdit->exception) {
-    //       $this->logException($phpMyEdit->exception);
-    //     }
-    //   }
-    //   while (($row = $phpMyEdit->sql_fetch($result))) {
-    //     $this->logInfo(print_r($row, true));
-    //   }
-    // } catch (\Throwable $t) {
-    //   $this->logException($t);
-    // }
-    // try {
-    //   $query = "SELECT * FROM Musicians";
-    //   $this->logInfo("Query: ".$query);
-    //   $result = $dbConnection->executeQuery($query);
-    //   while (($row = $result->fetch())) {
-    //     $this->logInfo(print_r($row, true));
-    //   }
-    // } catch (\Throwable $t) {
-    //   $this->logException($t);
-    // }
   }
 
   /**Return an array with necessary configuration items, being either
@@ -154,12 +103,12 @@ class ConfigCheckService
    * @return array
    * ```
    * [ 'summary',
-   *   'orchestra',
    *   'usergroup',
+   *   'encryptionkey'
+   *   'orchestra',
    *   'shareowner',
    *   'sharedfolder',
    *   'database',
-   *   'encryptionkey'
    * ]
    * ```
    *
@@ -177,17 +126,19 @@ class ConfigCheckService
 
     $key ='orchestra';
     try {
-      $result[$key]['status'] = $this->encryptionKeyValid() && $this->getConfigValue('orchestra');
+      $result[$key]['status'] = $this->getConfigValue('orchestra');
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
+    $this->logInfo($key.': '.$result[$key]['status']);
 
     $key = 'encryptionkey';
     try {
-      $result[$key]['status'] = $result['orchestra']['status'] &&$this->encryptionKeyValid();
+      $result[$key]['status'] = $result['orchestra']['status'] && $this->encryptionKeyValid();
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
+    $this->logInfo($key.': '.$result[$key]['status']);
 
     $key = 'database';
     try {
@@ -195,6 +146,7 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
+    $this->logInfo($key.': '.$result[$key]['status']);
 
     $key = 'usergroup';
     try {
@@ -202,6 +154,7 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
+    $this->logInfo($key.': '.$result[$key]['status']);
 
     $key = 'shareowner';
     try {
@@ -209,6 +162,7 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
+    $this->logInfo($key.': '.$result[$key]['status']);
 
     $key = 'sharedfolder';
     try {
@@ -216,12 +170,14 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
+    $this->logInfo($key.': '.$result[$key]['status']);
 
     $summary = true;
     foreach ($result as $key => $value) {
       $summary = $summary && $value['status'];
     }
     $result['summary'] = $summary;
+    $this->logInfo(print_r($result, true));
 
     return $result;
   }
