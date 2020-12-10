@@ -23,14 +23,19 @@
 namespace OCA\CAFEVDB\Settings;
 
 use OCP\Settings\IIconSection;
-
-use OCA\CAFEVDB\Service\ConfigService;
+use OCP\IURLGenerator;
 
 class PersonalSection implements IIconSection {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  public function __construct(ConfigService $configService) {
-    $this->configService = $configService;
+  /** @var string */
+  private $appName;
+
+  public function __construct(
+    $appName
+    , IURLGenerator $urlGenerator
+  ) {
+    $this->appName = $appName;
+    $this->urlGenerator = $urlGenerator;
   }
 
   /**
@@ -39,7 +44,11 @@ class PersonalSection implements IIconSection {
    * @returns string
    */
   public function getID() {
-    return $this->appName();
+    return $this->appName;
+  }
+
+  public function getIcon() {
+    return $this->urlGenerator->imagePath($this->appName, 'app.svg');
   }
 
   /**

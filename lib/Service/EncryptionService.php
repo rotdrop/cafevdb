@@ -70,6 +70,9 @@ class EncryptionService
   /** @var string */
   private $appName;
 
+  /** @var string */
+  private $userId;
+
   /** @var IConfig */
   private $containerConfig;
 
@@ -80,7 +83,7 @@ class EncryptionService
   private $userPublicKey = null;
 
   /** @var string */
-  public $appEncryptionKey = null;
+  private $appEncryptionKey = null;
 
   /** @var string */
   private $userPassword = null;
@@ -265,18 +268,21 @@ class EncryptionService
     $usrdbkey = $this->getUserEncryptionKey();
     if (empty($usrdbkey)) {
       // No key -> unencrypted
-      $this->logDebug("No Encryption Key");
+      $this->logInfo("No Encryption Key, setting to empty string in order to disable encryption.");
       $this->appEncryptionKey = ''; // not null, just empty
+    } else {
+      $this->appEncryptionKey = $usrdbkey;
     }
 
     // Now try to decrypt the data-base encryption key
-    $this->appEncryptionKey = $usrdbkey;
     $sysdbkey = $this->getConfigValue('encryptionkey');
 
     if ($sysdbkey != $usrdbkey) {
       // Failed
       $this->appEncryptionKey = null;
       throw new \Exception($this->l->t('Stored keys for application and user do not match'));
+    } else {
+      $this->logInfo('Encryption keys validated'.(empty($usrdbkey) ? ' (no encryption)' : '').'.');
     }
     return true;
   }
@@ -365,7 +371,13 @@ class EncryptionService
     // Now try to decrypt the data-base encryption key
     $sysdbkey = $this->decrypt($sysdbkey, $encryptionKey);
 
-    return $sysdbkey == $encryptionKey;
+    $match = ($sysdbkey == $encryptionKey);
+
+    if (!$match) {
+      $this->logError('Encryption keys do not match.');
+    }
+
+    return $match;
   }
 
   public function getAppValue($key, $default = null)
@@ -394,6 +406,8 @@ class EncryptionService
 
     if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
       if ($this->appEncryptionKey === null) {
+        //throw new \Exception($this->l->t('Encryption requested but not configured, empty encryption key'));
+        $this->logError($this->l->t('Encryption requested but not configured for user '.($this->userId).', empty encryption key'));
         return false;
       }
       try {
@@ -418,6 +432,8 @@ class EncryptionService
   {
     if (!empty($this->appEncryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
       if ($this->appEncryptionKey === null) {
+        //throw new \Exception($this->l->t('Encryption requested but not configured, empty encryption key'));
+        $this->logError($this->l->t('Encryption requested but not configured for user '.($this->userId).', empty encryption key'));
         return false;
       }
       //$this->logInfo('Encrypting value for key '.$key);

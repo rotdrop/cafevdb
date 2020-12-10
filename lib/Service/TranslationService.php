@@ -56,9 +56,9 @@ class TranslationService
         $this->logException($t);
       }
       //$this->flush();
-      $this->logDebug(__METHOD__.' translation key for '.$phrase.' was empty, new id '.$translationKey->getId());
+      $this->logDebug('Translation key for '.$phrase.' was empty, new id '.$translationKey->getId());
     } else {
-      $this->logDebug(__METHOD__.' existing translation key for '.$phrase.' has id '.$translationKey->getId());
+      $this->logDebug('Existing translation key for '.$phrase.' has id '.$translationKey->getId());
     }
 
     $this->setDataBaseRepository(TranslationLocation::class);

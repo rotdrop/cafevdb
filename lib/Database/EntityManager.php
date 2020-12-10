@@ -67,7 +67,32 @@ class EntityManager extends EntityManagerDecorator
     $this->l = $l10n;
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
-    $this->registerTypes();
+    if ($this->connected()) {
+      $this->registerTypes();
+    }
+  }
+
+  private function connected()
+  {
+    $connection = $this->entityManager->getConnection();
+    $params = $connection->getParams();
+    $impossible = false;
+    foreach ([ 'host', 'user', 'password', 'dbname' ] as $key) {
+      if (empty($params[$key])) {
+        $impossible = true;
+      }
+    }
+    if ($impossible) {
+      $this->logError('Unable to access database, connection parameters are unset');
+      return false;
+    }
+    if (!$connection->ping()) {
+      if (!$connection->connect()) {
+        $this->logError('db cannot connect');
+        return false;
+      }
+    }
+    return true;
   }
 
   private function registerTypes()
@@ -84,17 +109,6 @@ class EntityManager extends EntityManagerDecorator
     ];
 
     $connection = $this->entityManager->getConnection();
-    $params = $connection->getParams();
-    $impossible = false;
-    foreach ([ 'host', 'user', 'password', 'dbname' ] as $key) {
-      if (empty($params[$key])) {
-        $this->logError('Unable to access database, "'.$key.'" is empty.');
-        $impossible = true;
-      }
-    }
-    if ($impossible) {
-      return;
-    }
     try {
       $platform = $connection->getDatabasePlatform();
       foreach ($types as $type => $sqlType) {

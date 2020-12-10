@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Listener;
 
 use OCP\ILogger;
+use OCP\IUserSession;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OC\L10N\Events\TranslationNotFound as HandledEvent;
@@ -36,23 +37,20 @@ class TranslationNotFoundListener implements IEventListener
   const APP_NAME = 'cafevdb';
   const EVENT = HandledEvent::class;
 
-  /** @var EventsService */
-  private $eventsService;
-
   /** @var string */
   protected $appName;
 
-  /** @var OCA\CAFEVDB\Service\TranslationService */
-  protected $translationService;
+  /** @var IUser */
+  private $user;
 
   public function __construct(
     $appName
+    , IUserSession $userSession
     , ILogger $logger
-    , TranslationService $translationService
   ) {
     $this->appName = $appName;
+    $this->user = $userSession->getUser();
     $this->logger = $logger;
-    $this->translationService = $translationService;
   }
 
   public function handle(Event $event): void {
@@ -63,13 +61,20 @@ class TranslationNotFoundListener implements IEventListener
     if ($appName != $this->appName) {
       return;
     }
+    if (empty($this->user)) {
+      return;
+    }
     $phrase = $event->getPhrase();
     $locale = $event->getLocale();
     $language = $event->getLanguage();
     $file = $event->getFile();
     $line = $event->getLine();
     $this->logDebug(__METHOD__.": ".$appName.'; '.$phrase.'; '.$locale.'; '.$language.'; '.$file.'; '.$line);
-    $this->translationService->recordUntranslated($phrase, $locale, $file, $line);
+    try {
+      OC::$server->query(TranslationService::class)->recordUntranslated($phrase, $locale, $file, $line);
+    } catch (\Throwable $t) {
+      $this->logDebug('Ignoring data-base errors.');
+    }
   }
 }
 
