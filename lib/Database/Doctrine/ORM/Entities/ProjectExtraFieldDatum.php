@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectExtraFieldsData
  *
- * @ORM\Table(name="ProjectExtraFieldsData", uniqueConstraints={@ORM\UniqueConstraint(name="BesetzungenId", columns={"BesetzungenId", "FieldId"})})
+ * @ORM\Table(name="ProjectExtraFieldsData")
  * @ORM\Entity
  */
 class ProjectExtraFieldDatum implements \ArrayAccess
@@ -49,16 +49,16 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="BesetzungenId", type="integer", nullable=false)
+   * @ORM\Column(name="ProjectParticipantId", type="integer", nullable=false)
    */
-  private $besetzungenid;
+  private $projectParticipantId;
 
   /**
    * @var int
    *
    * @ORM\Column(name="FieldId", type="integer", nullable=false)
    */
-  private $fieldid;
+  private $fieldId;
 
   /**
    * @var string
@@ -66,6 +66,12 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    * @ORM\Column(name="FieldValue", type="text", length=16777215, nullable=false)
    */
   private $fieldvalue;
+
+  /**
+   * @ORM\ManyToOne(targetEntity="ProjectExtraField")
+   * @ORM\JoinColumn(name="FieldId", referencedColumnName="Id")
+   */
+  private $field;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -82,74 +88,74 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   }
 
   /**
-   * Set besetzungenid.
+   * Set projectParticipantId.
    *
-   * @param int $besetzungenid
+   * @param int $projectParticipantId
    *
    * @return ProjectExtraFieldsData
    */
-  public function setBesetzungenid($besetzungenid)
+  public function setProjectParticipantId($projectParticipantId)
   {
-    $this->besetzungenid = $besetzungenid;
+    $this->projectParticipantId = $projectParticipantId;
 
     return $this;
   }
 
   /**
-   * Get besetzungenid.
+   * Get projectParticipantId.
    *
    * @return int
    */
-  public function getBesetzungenid()
+  public function getProjectParticipantId()
   {
-    return $this->besetzungenid;
+    return $this->projectParticipantId;
   }
 
   /**
-   * Set fieldid.
+   * Set fieldId.
    *
-   * @param int $fieldid
+   * @param int $fieldId
    *
    * @return ProjectExtraFieldsData
    */
-  public function setFieldid($fieldid)
+  public function setFieldId($fieldId)
   {
-    $this->fieldid = $fieldid;
+    $this->fieldId = $fieldId;
 
     return $this;
   }
 
   /**
-   * Get fieldid.
+   * Get fieldId.
    *
    * @return int
    */
-  public function getFieldid()
+  public function getFieldId()
   {
-    return $this->fieldid;
+    return $this->fieldId;
   }
 
   /**
-   * Set fieldvalue.
+   * Set fieldValue.
    *
-   * @param string $fieldvalue
+   * @param string $fieldValue
    *
    * @return ProjectExtraFieldsData
    */
-  public function setFieldvalue($fieldvalue)
+  public function setFieldValue($fieldValue)
   {
-    $this->fieldvalue = $fieldvalue;
+    $this->fieldValue = $fieldValue;
 
     return $this;
   }
 
   /**
-   * Get fieldvalue.
+   * Get fieldValue.
    *
    * @return string
    */
-  public function getFieldvalue()
+  public function getFieldValue()
   {
-    return $this->fieldvalue;
+    return $this->fieldValue;
   }
 }
