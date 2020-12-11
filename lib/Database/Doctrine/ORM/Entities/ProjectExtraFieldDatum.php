@@ -30,7 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ProjectExtraFieldsData
  *
  * @ORM\Table(name="ProjectExtraFieldsData")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectExtraFieldDataRepository")
  */
 class ProjectExtraFieldDatum implements \ArrayAccess
 {
@@ -68,18 +68,17 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   private $fieldvalue;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectExtraField")
+   * @ORM\ManyToOne(targetEntity="ProjectExtraField", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(name="FieldId", referencedColumnName="Id")
    */
   private $field;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="extraFieldsData")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="extraFieldsData", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(name="ProjectParticipantId", referencedColumnName="Id")
    *
    */
   private $projectParticipant;
-
 
   public function __construct() {
     $this->arrayCTOR();

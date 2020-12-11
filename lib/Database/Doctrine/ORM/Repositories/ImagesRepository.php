@@ -98,7 +98,7 @@ class ImagesRepository extends EntityRepository
    * (i.e. OneToOne or OneToMany) the image will replace an existing
    * image or just added the collection of images.
    *
-   * @param string Possibly partial joint-table entity class.
+   * @param string Possibly partial join-table entity class.
    *
    *
    */

@@ -243,16 +243,9 @@ class ProjectExtraFields extends PMETableViewBase
     $typeData = [];
     $typeTitles = [];
 
-    $types = $this
-           ->getDatabaseRepository(Entities\ProjectExtraFieldType::class)
-           ->findBy([], [
-             'kind' => 'ASC',
-             'multiplicity' => 'ASC',
-             'name' => 'ASC'
-           ]);
+    $types = $this->fieldTypes();
     if (!empty($types)) {
-      foreach ($types as $typeInfo) {
-        $id = $typeInfo['id'];
+      foreach ($types as $id => $typeInfo) {
         $name = $typeInfo['name'];
         $multiplicity = $typeInfo['multiplicity'];
         $group = $typeInfo['kind'];
@@ -563,22 +556,22 @@ class ProjectExtraFields extends PMETableViewBase
     }
 
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-    $opts['triggers']['update']['before'][]  = 'CAFEVDB\ProjectExtra::beforeUpdateOrInsertTrigger';
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
     $opts['triggers']['update']['before'][] = [ __CLASS__, 'beforeUpdateRemoveUnchanged' ];
 
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-    $opts['triggers']['insert']['before'][]  = 'CAFEVDB\ProjectExtra::beforeInsertTrigger';
-    $opts['triggers']['insert']['before'][]  = 'CAFEVDB\ProjectExtra::beforeUpdateOrInsertTrigger';
+    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertTrigger' ];
+    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
 
-    $opts['triggers']['delete']['before'][]  = 'CAFEVDB\ProjectExtra::beforeDeleteTrigger';
+    $opts['triggers']['delete']['before'][]  = [ $this, 'beforeDeleteTrigger' ];
 
-    $opts['triggers']['filter']['pre'][]  =
-      $opts['triggers']['update']['pre'][]  =
-      $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
+    // $opts['triggers']['filter']['pre'][]  =
+    //   $opts['triggers']['update']['pre'][]  =
+    //   $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
 
-    $opts['triggers']['insert']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
-    $opts['triggers']['update']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
-    $opts['triggers']['delete']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
+    // $opts['triggers']['insert']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
+    // $opts['triggers']['update']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
+    // $opts['triggers']['delete']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
@@ -601,4 +594,298 @@ class ProjectExtraFields extends PMETableViewBase
       .$this->l->t('Amount').' ['.($this->currencySymbol).']'
       .'</span>';
   }
+
+  /**
+   * phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    /* error_log('******* before ******************'); */
+    /* error_log(print_r($oldvals, true)); */
+    /* error_log(print_r($newvals, true)); */
+    /* error_log(print_r($changed, true)); */
+
+    if ($op === 'update') {
+      /************************************************************************
+       *
+       * The field-index should not change, but the input field is
+       * disabled. Make sure it does not change.
+       *
+       */
+      if (isset($newvals['FieldIndex']) &&
+          $oldvals['FieldIndex'] != $newvals['FieldIndex']) {
+        return false;
+      }
+    }
+
+    // make sure writer-acls are a subset of reader-acls
+    $writers = preg_split('/\s*,\s*/', $newvals['Writers'], -1, PREG_SPLIT_NO_EMPTY);
+    $readers = preg_split('/\s*,\s*/', $newvals['Readers'], -1, PREG_SPLIT_NO_EMPTY);
+    $missing = array_diff($writers, $readers);
+    if (!empty($missing)) {
+      $readers = array_merge($readers, $missing);
+      $newvals['Readers'] = implode(',', $readers);
+    }
+
+    /************************************************************************
+     *
+     * Move the data from DefaultMultiValue to DefaultValue s.t. PME
+     * can do its work.
+     *
+     */
+    // @TODO : custom repo or so, index by tabel.Id
+// With the QueryBuilder object you can set the index at the from statement:
+
+// $qb = $em->createQueryBuilder();
+// $qb->select('s');
+// $qb->from('models\Settings', 's', 's.arg');  // here the magic
+// $result = $qb->getQuery()->getResult();
+
+    $key = array_search('DefaultMultiValue', $changed);
+    $types = $this->fieldTypes();
+    if ($types[$newvals['TypeId']]['multiplicity'] === 'multiple' ||
+        $types[$newvals['TypeId']]['multiplicity'] === 'parallel') {
+      $newvals['DefaultValue'] = $newvals['DefaultMultiValue'];
+      if ($key !== false) {
+        $changed[] = 'DefaultValue';
+      }
+    }
+    unset($newvals['DefaultMultiValue']);
+    unset($oldvals['DefaultMultiValue']);
+    if ($key !== false) {
+      unset($changed[$key]);
+    }
+
+    /************************************************************************
+     *
+     * Move the data from MaximumGroupSize to
+     * AllowedValues. Plural is "misleading" here, of course ;)
+     *
+     */
+    $tag = "MaximumGroupSize";
+    $key = array_search($tag, $changed);
+    if ($types[$newvals['TypeId']]['multiplicity'] === 'groupofpeople')
+    {
+      $max = $newvals[$tag];
+      if ($op === 'update' && !empty($newvals['AllowedValuesSingle'][0])) {
+        $maxdata = $newvals['AllowedValuesSingle'];
+        $maxdata[0]['column5'] = $max;
+      } else {
+        $maxdata = 'max:group:::active:'.$max;
+      }
+      $newvals['AllowedValues'] = $maxdata;
+      if ($key !== false) {
+        $changed[] = 'AllowedValues';
+      }
+    }
+    unset($newvals[$tag]);
+    unset($oldvals[$tag]);
+    if ($key !== false) {
+      unset($changed[$key]);
+    }
+
+    /************************************************************************
+     *
+     * Move the data from AllowedValuesSingle to
+     * AllowedValues. Plural is "misleading" here, of course ;)
+     *
+     */
+    $key = array_search('AllowedValuesSingle', $changed);
+    if ($types[$newvals['TypeId']]['multiplicity'] === 'single') {
+      $newvals['AllowedValues'] = $newvals['AllowedValuesSingle'];
+      if ($key !== false) {
+        $changed[] = 'AllowedValues';
+      }
+    }
+    unset($newvals['AllowedValuesSingle']);
+    unset($oldvals['AllowedValuesSingle']);
+    if ($key !== false) {
+      unset($changed[$key]);
+    }
+
+    /************************************************************************
+     *
+     * Sanitize AllowedValues
+     *
+     */
+
+    if (!is_array($newvals['AllowedValues'])) {
+      // textfield
+      $allowed = self::explodeAllowedValues($newvals['AllowedValues']);
+
+    } else {
+      $allowed = $newvals['AllowedValues'];
+    }
+    // make unused keys unique
+    self::allowedValuesUniqueKeys($allowed, $pme->rec);
+
+    //error_log('trigger '.print_r($allowed, true));
+    $newvals['AllowedValues'] = self::implodeAllowedValues($allowed);
+    if ($oldvals['AllowedValues'] !== $newvals['AllowedValues']) {
+      $changed[] = 'AllowedValues';
+    }
+
+    /************************************************************************
+     *
+     * Move the data from DefaultSingleValue to DefaultValue s.t. PME
+     * can do its work.
+     *
+     */
+    $key = array_search('DefaultSingleValue', $changed);
+    if ($types[$newvals['TypeId']]['multiplicity'] === 'single') {
+      $newvals['DefaultValue'] = $newvals['DefaultSingleValue'];
+      if ($key !== false) {
+        $changed[] = 'DefaultValue';
+      }
+    }
+    unset($newvals['DefaultSingleValue']);
+    unset($oldvals['DefaultSingleValue']);
+    if ($key !== false) {
+      unset($changed[$key]);
+    }
+
+    /************************************************************************
+     *
+     * Add the data from NewTab to Tab s.t. PME can do its work.
+     *
+     */
+    $key = array_search('NewTab', $changed);
+    if (!empty($newvals['NewTab']) && empty($newvals['Tab'])) {
+      $newvals['Tab'] = $newvals['NewTab'];
+      $changed[] = 'Tab';
+    }
+    unset($newvals['NewTab']);
+    unset($oldvals['NewTab']);
+    if ($key !== false) {
+      unset($changed[$key]);
+    }
+
+    if (!empty($newvals['ToolTip'])) {
+      $newvals['ToolTip'] = FuzzyInput::purifyHTML($newvals['ToolTip']);
+      if ($newvals['ToolTip'] !== $oldvals['ToolTip']) {
+        $changed[] = 'ToolTip';
+      } else {
+        $key = array_search('NewTab', $changed);
+        if ($key !== false) {
+          unset($changed[$key]);
+        }
+      }
+    }
+
+    /* error_log('*************************'); */
+    /* error_log(print_r($oldvals, true)); */
+    /* error_log(print_r($newvals, true)); */
+    /* error_log(print_r($changed, true)); */
+
+    return true;
+  }
+
+  /**
+   * phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   *
+   * @todo Is this necessary? Just require the project-id not to be empty?
+   */
+  public function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    $projectId = $newvals['ProjectId'];
+    if ($projectId <= 0) {
+      $projectId = $newvals['ProjectId'] = $this->projectId;
+    }
+
+    if (empty($projectId) || $projectId < 0) {
+      return false;
+    }
+
+    // Oh well. This is the only place this is used and presumably was
+    // purely cosmetic.
+
+    // // insert the beast with the next available field id
+    // $index = mySQL::selectFirstHoleFromTable(self::TABLE_NAME, 'FieldIndex',
+    //                                          "`ProjectId` = ".$projectId,
+    //                                          $pme->dbh);
+
+    // if ($index === false) {
+    //   return false;
+    // }
+
+    // $newvals['FieldIndex'] = $index;
+
+    return true;
+  }
+
+  /**
+   * phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   *
+   */
+  public static function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    $used = $this->usedFields(-1, $pme->rec);
+
+    if (count($used) === 1 && $used[0] == $pme->rec) {
+      $this->disable($pme->rec);
+      return false;
+    }
+    return true;
+  }
+
+  private function fieldTypes()
+  {
+    return $this->getDatabaseRepository(Entities\ProjectExtraFieldType::class)
+                ->indexedBy('id');
+  }
+
+  private function usedFields($projectId = -1, $fieldId = -1)
+  {
+    return $this->getDatabaseRepository(Entities\ProjectExtraFieldData::class)
+                ->usedFields($projectId, $fieldId);
+  }
+
+  private function disable($fieldId, $disable = true)
+  {
+    $this->getDatabaseRepository(Entities\ProjectExtraFiel::class)
+         ->disable($fieldId);
+  }
+
 }

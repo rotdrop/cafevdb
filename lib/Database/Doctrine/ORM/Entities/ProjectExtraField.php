@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ProjectExtraFields
@@ -143,8 +144,20 @@ class ProjectExtraField implements \ArrayAccess
    */
   private $type;
 
+  /**
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="extraFields", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(name="ProjectId", referencedColumnName="Id")
+   */
+  private $project;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldValueOption", mappedBy="field")
+   */
+  private $valueOptions;
+
   public function __construct() {
     $this->arrayCTOR();
+    $this->valueOptions = new ArrayCollection();
   }
 
   /**
@@ -278,27 +291,27 @@ class ProjectExtraField implements \ArrayAccess
   }
 
   /**
-   * Set allowedvalues.
+   * Set allowedValues.
    *
-   * @param string|null $allowedvalues
+   * @param string|null $allowedValues
    *
    * @return ProjectExtraFields
    */
-  public function setAllowedvalues($allowedvalues = null)
+  public function setAllowedValues($allowedValues = null)
   {
-    $this->allowedvalues = $allowedvalues;
+    $this->allowedValues = $allowedValues;
 
     return $this;
   }
 
   /**
-   * Get allowedvalues.
+   * Get allowedValues.
    *
    * @return string|null
    */
-  public function getAllowedvalues()
+  public function getAllowedValues()
   {
-    return $this->allowedvalues;
+    return $this->allowedValues;
   }
 
   /**

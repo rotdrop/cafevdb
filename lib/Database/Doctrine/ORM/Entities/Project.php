@@ -123,12 +123,18 @@ class Project implements \ArrayAccess
    */
   private $webPages;
 
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectExtraField", mappedBy="project", fetch="EXTRA_LAZY")
+   */
+  private $extraFields;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instrumentation = new ArrayCollection();
     $this->posters = new ArrayCollection();
     $this->flyers = new ArrayCollection();
     $this->webPages = new ArrayCollection();
+    $this->extraFields = new ArrayCollection();
   }
 
   /**

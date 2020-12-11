@@ -30,7 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ProjectExtraFieldTypes
  *
  * @ORM\Table(name="ProjectExtraFieldTypes")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectExtraFieldTypesRepository")
  */
 class ProjectExtraFieldType implements \ArrayAccess
 {
