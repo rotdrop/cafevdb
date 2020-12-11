@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -90,7 +90,7 @@ var CAFEVDB = CAFEVDB || {};
       }
     };
 
-    var fieldTypeData = function(elem) {
+    const fieldTypeData = function(elem) {
       var data = null;
       if (typeof elem === 'undefined') {
         elem = container.find('select.field-type');
@@ -107,21 +107,14 @@ var CAFEVDB = CAFEVDB || {};
       return data;
     };
 
-    handleFieldType(fieldTypeData());
-
-    var allowedHeaderVisibility = function() {
-      var allowedValuesTable = container.find('table.allowed-values');
+    const allowedHeaderVisibility = function() {
+      const allowedValuesTable = container.find('table.allowed-values');
       if (allowedValuesTable.find('tbody tr:visible').length >= 2) {
         allowedValuesTable.find('thead').show();
       } else {
         allowedValuesTable.find('thead').hide();
       }
     };
-
-    allowedHeaderVisibility();
-
-    // synthesize resize events for textareas.
-    CAFEVDB.textareaResize(container, 'textarea.field-tooltip, textarea.extra-field-tooltip');
 
     // Field-Type Selector
     container.on('change', 'select.field-type', function(event) {
@@ -433,6 +426,13 @@ var CAFEVDB = CAFEVDB || {};
                 return false;
             });
 
+    handleFieldType(fieldTypeData());
+
+    allowedHeaderVisibility();
+    // synthesize resize events for textareas.
+    CAFEVDB.textareaResize(container, 'textarea.field-tooltip, textarea.extra-field-tooltip');
+
+    console.info('before resizeCB');
     resizeCB();
   };
 
@@ -440,11 +440,11 @@ var CAFEVDB = CAFEVDB || {};
 
 })(window, jQuery, CAFEVDB);
 
-$(document).ready(function(){
+$(function(){
 
   CAFEVDB.addReadyCallback(function() {
     var container = PHPMYEDIT.container();
-    if (!container.hasClass('project-extra')) {
+    if (!container.hasClass('project-extra-fields')) {
       return; // not for us
     }
 

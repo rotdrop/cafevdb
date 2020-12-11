@@ -160,7 +160,7 @@ $(function() {
   PHPMYEDIT.addTableLoadCallback('all-musicians', musiciansCallback);
   PHPMYEDIT.addTableLoadCallback('add-musicians', musiciansCallback);
 
-  PHPMYEDIT.addTableLoadCallback('project-extra', {
+  PHPMYEDIT.addTableLoadCallback('project-extra-fields', {
     callback: function(selector, parameters, resizeCB) {
 
       if (parameters.reason != 'dialogOpen') {
