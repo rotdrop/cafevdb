@@ -44,6 +44,7 @@ class ProjectExtraFields extends PMETableViewBase
   const TABLE = 'ProjectExtraFields';
   const TYPE_TABLE = 'ProjectExtraFieldTypes';
   const DATA_TABLE = 'ProjectExtraFieldsData';
+  const PROJECTS_TABLE = 'Projects';
 
   /** @var InstrumentationService */
   private $instrumentationService;
@@ -89,7 +90,10 @@ class ProjectExtraFields extends PMETableViewBase
     $projectId       = $this->projectId;
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
-    $opts            = $this->pmeOptions;
+
+    $opts = [];
+
+    $expertMode = $this->getUserValue('expertmode');
 
     $projectMode  = $projectId > 0;
 
@@ -101,28 +105,27 @@ class ProjectExtraFields extends PMETableViewBase
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
-    $opts['inc'] = -1;
+    $opts['inc'] = $recordsPerPage;
 
     $opts['tb'] = self::TABLE;
 
-    //$opts['debug'] = true;
+    $opts['css']['postfix'] = ' show-hide-disabled';
 
     $template = 'project-extra-fields';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
-      'recordsPerPage' => $recordsPerPage,
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = 'id';
+    $opts['key'] = 'Id';
 
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = [ '-DateOfReceipt', 'DebitNoteId', 'InstrumentationId' ];
+    $opts['sort_field'] = [ 'ProjectId', 'DisplayOrder', 'Name' ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -203,7 +206,7 @@ class ProjectExtraFields extends PMETableViewBase
       'default'  => ($projectMode ? $projectId : -1),
       'sort'     => true,
       'values|ACP' => [
-        'table' => 'Projekte',
+        'table' => self::PROJECTS_TABLE,
         'column' => 'Id',
         'description' => 'Name',
         'groups' => 'Jahr',
@@ -211,7 +214,7 @@ class ProjectExtraFields extends PMETableViewBase
         'join' => '$main_table.ProjectId = $join_table.Id',
       ],
       'values|DVFL' => [
-        'table' => 'Projekte',
+        'table' => self::PROJECTS_TABLE,
         'column' => 'Id',
         'description' => 'Name',
         'groups' => 'Jahr',
@@ -239,12 +242,21 @@ class ProjectExtraFields extends PMETableViewBase
     $typeGroups = [];
     $typeData = [];
     $typeTitles = [];
-    $types = self::fieldTypes();
+
+    $types = $this
+           ->getDatabaseRepository(Entities\ProjectExtraFieldType::class)
+           ->findBy([], [
+             'kind' => 'ASC',
+             'multiplicity' => 'ASC',
+             'name' => 'ASC'
+           ]);
     if (!empty($types)) {
-      foreach ($types as $id => $typeInfo) {
-        $name = $typeInfo['Name'];
-        $multiplicity = $typeInfo['Multiplicity'];
-        $group = $typeInfo['Kind'];
+      foreach ($types as $typeInfo) {
+        $id = $typeInfo['id'];
+        $name = $typeInfo['name'];
+        $multiplicity = $typeInfo['multiplicity'];
+        $group = $typeInfo['kind'];
+
         $typeValues[$id] = $this->l->t($name);
         $typeGroups[$id] = $this->l->t($group);
         $typeData[$id] = json_encode(
@@ -253,7 +265,7 @@ class ProjectExtraFields extends PMETableViewBase
             'Group' => $group,
           ]
         );
-        $typeTitles[$id] = Config::toolTips('extra-field-'.$group.'-'.$multiplicity);
+        $typeTitles[$id] = $this->toolTipsService['extra-field-'.$group.'-'.$multiplicity];
       }
     }
 
@@ -272,7 +284,7 @@ class ProjectExtraFields extends PMETableViewBase
       ];
     }
 
-    $opts['fdd']['Type'] = [
+    $opts['fdd']['TypeId'] = [
       'tab'      => [ 'id' => 'definition' ],
       'name' => $this->l->t('Type'),
       'css' => [ 'postfix' => ' field-type' ],
@@ -440,7 +452,7 @@ class ProjectExtraFields extends PMETableViewBase
       'css' => [ 'postfix' => ' tab allow-empty' ],
       'select' => 'D',
       'values' => [
-        'table' => self::TABLE_NAME,
+        'table' => self::TABLE,
         'column' => 'Tab',
         'description' => 'Tab',
       ],
@@ -482,7 +494,7 @@ class ProjectExtraFields extends PMETableViewBase
       'sort'     => true,
     ];
 
-    if (Config::$expertmode) {
+    if ($expertMode) {
 
       // will hide this later
       $opts['fdd']['FieldIndex'] = [
@@ -511,12 +523,13 @@ class ProjectExtraFields extends PMETableViewBase
         'tooltip' => $this->toolTipsService['extra-fields-encrypted'],
       ];
 
-      $ownCloudGroups = \OC_Group::getGroups();
+      // @TODO wildcards?
+      $cloudGroups = $this->groupManager()->search('');
       $opts['fdd']['Readers'] = [
         'name' => $this->l->t('Readers'),
         'css' => [ 'postfix' => ' readers user-groups' ],
         'select' => 'M',
-        'values' => $ownCloudGroups,
+        'values' => $cloudGroups,
         'maxlen' => 10,
         'sort' => true,
         'display' => [ 'popup' => 'data' ],
@@ -527,7 +540,7 @@ class ProjectExtraFields extends PMETableViewBase
         'name' => $this->l->t('Writers'),
         'css' => [ 'postfix' => ' writers chosen-dropup_ user-groups' ],
         'select' => 'M',
-        'values' => $ownCloudGroups,
+        'values' => $cloudGroups,
         'maxlen' => 10,
         'sort' => true,
         'display' => [ 'popup' => 'data' ],
@@ -585,8 +598,7 @@ class ProjectExtraFields extends PMETableViewBase
     return
       '<span class="general">'.$label.'</span>'.
       '<span class="surcharge currencylabel">'
-      .L::t('Amount').' ['.($this->currencySymbol).']'
+      .$this->l->t('Amount').' ['.($this->currencySymbol).']'
       .'</span>';
   }
-
 }
