@@ -50,11 +50,21 @@ class ProjectWebPagesRepository extends EntityRepository
    */
   public function attachProjectWebPage($projectOrId, $webArticle):Entities\ProjectWebPage
   {
+    if ($projectOrId instanceof Entities\Project) {
+      $project = $projectOrId;
+      $projectId = $project->getId();
+    } else {
+      $projectId = $projectOrId;
+      $project = null;
+    }
+
     $entityManager = $this->getEntityManager();
     $projectWebPage = $this->findOneBy([ 'projectId' => $projectId,
                                          'articleId' => $articleId, ]);
     if (empty($projectWebPage)) {
-      $project = $entityManager->getReference(Entities\Project::class, $projectId);
+      if (empty($project)) {
+        $project = $entityManager->getReference(Entities\Project::class, $projectId);
+      }
       $projectWebPage = (new Entities\ProjectWebPage())
                       ->setProject($project)
                       ->setArticleId($article['ArticleId']);
