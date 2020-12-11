@@ -215,7 +215,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
     if (typeof this.tableLoadCallbacks[template] !== 'undefined') {
       cbHandle = this.tableLoadCallbacks[template];
     } else {
-//      alert("No Callback for "+template);
       console.info('no table load callback for ' + template);
       return false;
     }
@@ -580,8 +579,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
         obj[name] = value;
         post += '&' + $.param(obj);
 
-        //alert(post);
-
         CAFEVDB.Notification.hide(function() {
           const dialogWidget = container.dialog('widget');
 
@@ -680,7 +677,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
     }
 
-    //alert('post: '+CAFEVDB.print_r(post, true));
     var dialogCSSId = pme.dialogCSSId;
     if (containerSel !== pme.defaultSelector) {
       dialogCSSId = containerSel.substring(1)+'-'+dialogCSSId;
@@ -745,7 +741,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       fail: function(xhr, status, errorThrown) {
         console.info('cleanup');
         CAFEVDB.Page.busyIcon(false);
-        pme.qdialogOpen[containerCSSId] = false;
+        pme.dialogOpen[containerCSSId] = false;
       },
       done: function(htmlContent, historySize, historyPosition) {
         const containerSel = '#'+containerCSSId;
@@ -811,7 +807,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
               var newHeight = dialogWidget.height()
                     - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
               newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
-              //alert("Setting height to " + newHeight);
               dialogHolder.height(newHeight);
             };
 
@@ -825,7 +820,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
                   console.info('pme.addEditor');
                   pme.transposeReady(containerSel);
                   pme.tableLoadCallback(template, containerSel, parameters, function() {
+		    //console.trace();
                     console.info('tableLoadCallback');
+		    //pme.installInputChosen(containerSel);
                     resizeHandler(parameters);
                     dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
                     dialogHolder.dialog('moveToTop');
@@ -837,6 +834,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                   $.fn.cafevTooltip.remove();
                 });
               case 'tabChange':
+		pme.installInputChosen(containerSel, 'chosen-invisible');
                 console.info('tab change');
                 resizeHandler(parameters);
               }
@@ -964,7 +962,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
         console.info("Attaching editors");
         CAFEVDB.addEditor(container.find('textarea.wysiwyg-editor'), function() {
           pme.transposeReady(selector);
-          //alert('psegudo submit');
           pme.tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
           CAFEVDB.pmeTweaks(container);
           CAFEVDB.toolTipsInit(selector);
@@ -1122,8 +1119,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
                             container.find(trDown).hasClass(trClass) ||
                             container.find(tr).hasClass(trClass));
 
-    //alert('Inhibit: '+inhibitTranspose+' control: '+controlTranspose);
-
     if (!inhibitTranspose && controlTranspose) {
       this.maybeTranspose(true);
     } else {
@@ -1185,19 +1180,19 @@ var PHPMYEDIT = PHPMYEDIT || {};
       attr("title", pme.filterSelectChosenTitle);
   };
 
-  PHPMYEDIT.installInputChosen = function(containerSel) {
-    var pme = this;
+  PHPMYEDIT.installInputChosen = function(containerSel, onlyClass) {
+    const pme = this;
 
     if (!pme.selectChosen) {
       return;
     }
 
-    var pmeInput = pme.pmeToken('input');
-    var pmeValue = pme.pmeToken('value');
+    const pmeInput = pme.pmeToken('input');
+    const pmeValue = pme.pmeToken('value');
 
-    var container = pme.container(containerSel);
+    const container = pme.container(containerSel);
 
-    var noRes = pme.inputSelectNoResult;
+    const noRes = pme.inputSelectNoResult;
 
     // Provide a data-placeholder and also remove the match-all
     // filter, which is not needed when using chosen.
@@ -1207,10 +1202,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     // Then the general stuff
     container.find("select."+pmeInput).each(function(index) {
-      var self = $(this);
-      if (self.hasClass('no-chosen')) {
+      const self = $(this);
+      if (self.hasClass('no-chosen') || (onlyClass !== undefined && !self.hasClass(onlyClass))) {
         return;
       }
+      console.info('destroy chosen');
+      self.chosen('destroy');
       var chosenOptions = {
         //width:'100%',
         inherit_select_classes:true,
@@ -1222,11 +1219,17 @@ var PHPMYEDIT = PHPMYEDIT || {};
       };
       if (self.hasClass('allow-empty')) {
         chosenOptions.width = (this.offsetWidth + pme.singleDeselectOffset) + 'px';
-console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true));
+	console.info(self, 'chosen width', 'width', this.offsetWidth, self.outerWidth(), self.outerWidth(true));
+	if (!self.is(':visible')) {
+	  self.addClass('chosen-invisible'); // kludge, correct later
+	} else {
+	  self.removeClass('chosen-invisible');
+	}
       }
       if (self.hasClass('chosen-width-auto')) {
         chosenOptions.width = 'auto';
       }
+      console.info('add chosen');
       self.chosen(chosenOptions);
     });
 
@@ -1264,8 +1267,6 @@ console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true)
 
       console.info('old tab: ' + oldTabClass + ' new tab: ' + tabClass);
 
-      //alert('old tab: ' + oldTabClass + ' new tab: ' + tabClass);
-
       // Inject the display triggers ...
       table.removeClass(oldTabClass).addClass(tabClass);
 
@@ -1281,7 +1282,6 @@ console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true)
       var pfx = (tabClass == 'tab-all') ? '' : 'td.' + tabClass;
       var selector = pme.pmeClassSelectors(pfx+' '+'div.chosen-container',
                                            [ 'input', 'filter', 'comp-filter' ]);
-      //alert('selector: '+selector);
       form.find(selector).each(function(idx) {
         if ($(this).width() <= pme.singleDeselectOffset) {
           $(this).prev().chosen('destroy');
@@ -1320,8 +1320,6 @@ console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true)
     const pmeSort = pme.pmeToken('sort');
     const pmeGoto = pme.pmeToken('goto');
     const pmePageRows = pme.pmeToken('pagerows');
-
-    //alert(containerSel+" "+container.length);
 
     //Disable page-rows and goto submits, just not necessary
     container.find('input.'+pmePageRows).on('click', function(event) {
@@ -1369,7 +1367,6 @@ console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true)
       var pfx = 'tbody tr td'+(!tabClass || tabClass == 'all' ? '' : '.tab-' + tabClass);
       var selector = pme.pmeClassSelectors(pfx+' '+'div.chosen-container',
                                            ['filter', 'comp-filter']);
-      //alert('selector: '+selector);
       table.find(selector).each(function(idx) {
         if ($(this).width() == 0 || $(this).width() == 60) {
           $(this).prev().chosen('destroy');
@@ -1485,7 +1482,6 @@ console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true)
 
       event.preventDefault();
 
-      //alert("Button: "+$(this).attr('name'));
       console.info('submit');
       return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel);
     });
@@ -1588,7 +1584,7 @@ console.info('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true)
   };
 })(window, jQuery, PHPMYEDIT);
 
-$(document).ready(function(){
+$(function(){
 
   CAFEVDB.addReadyCallback(function() {
     PHPMYEDIT.transposeReady();
