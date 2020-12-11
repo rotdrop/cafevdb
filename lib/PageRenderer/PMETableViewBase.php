@@ -316,7 +316,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *
    * @param &$newvals Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    *
    * This trigger simply removes all unchanged fields.
    *
@@ -345,7 +345,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *
    * @param &$newvals Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    *
    * This trigger trims any spaces from the new fields. In order to
    * sanitize old data records this trigger function adds to

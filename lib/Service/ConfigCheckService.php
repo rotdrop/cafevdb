@@ -239,7 +239,7 @@ class ConfigCheckService
    * @param $type The type of the item, for exmaple calendar,
    * event, folder, file etc.
    *
-   * @return @c true for success, @c false on error.
+   * @return bool @c true for success, @c false on error.
    */
   public function groupSharedExists($id, $group, $type, $shareOwner = null)
   {
@@ -279,7 +279,7 @@ class ConfigCheckService
    *
    * @param $shareOwner The user sharing the object.
    *
-   * @return @c true for success, @c false on error.
+   * @return bool @c true for success, @c false on error.
    */
   public function groupShareObject($id, $groupId, $type = 'calendar', $shareOwner = null)
   {
@@ -338,7 +338,7 @@ class ConfigCheckService
    * @param $shareOwnerId Optional. If unset, then the uid is
    * fetched from the application configuration options.
    *
-   * @return bool, @c true on success.
+   * @return bool @c true on success.
    */
   public function shareOwnerExists($shareOwnerId = null)
   {
@@ -376,7 +376,7 @@ class ConfigCheckService
    *
    * @param $shareOwnerId The account id holding the shared resources.
    *
-   * @return bool, @c true on success.
+   * @return bool @c true on success.
    */
   public function checkShareOwner($shareOwnerId, $shareOwnerPassword = null)
   {
@@ -442,7 +442,7 @@ class ConfigCheckService
    * @param $sharedFolder Optional. If unset, the name is fetched
    * from the application configuration options.
    *
-   * @return bool, @c true on success.
+   * @return bool @c true on success.
    */
   public function sharedFolderExists($sharedFolder = '')
   {
@@ -489,7 +489,7 @@ class ConfigCheckService
    *
    * @param $sharedFolder The name of the folder.
    *
-   * @return bool, @c true on success.
+   * @return bool @c true on success.
    */
   public function checkSharedFolder($sharedFolder)
   {
@@ -570,7 +570,7 @@ class ConfigCheckService
    * @param $projectFolder The name of the folder. The name may
    * be composed of several path components.
    *
-   * @return bool, @c true on success.
+   * @return bool @c true on success.
    */
   public function checkProjectFolder($projectFolder)
   {
@@ -802,7 +802,7 @@ class ConfigCheckService
    * @para, $connectionParams Array with keys 'dbname', 'user',
    * 'password', 'host' or null for default options.
    *
-   * @return bool, @c true on success.
+   * @return bool @c true on success.
    *
    * @todo Initial database structure and migrations
    */

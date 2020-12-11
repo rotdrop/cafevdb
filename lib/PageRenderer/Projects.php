@@ -736,7 +736,7 @@ project without a flyer first.");
    *
    * @param &$newvals Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    */
   public static function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
@@ -764,7 +764,7 @@ project without a flyer first.");
    *
    * @param &$newvals Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    *
    * @bug Convert this to a function triggering a "user-friendly" error message.
    */
@@ -870,7 +870,7 @@ project without a flyer first.");
    *
    * @param &$newvals Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    */
   public function afterInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
