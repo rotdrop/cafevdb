@@ -1,3 +1,4 @@
+package-lock.json
 /
 *~
 lib/tooltips.php.new
@@ -11,5 +12,11 @@ ajax
 build
 .clipassword
 doc/db-app/phpdoc/[!.]*
+doc/db-app/doxygen/[!.]*
 .phpdoc
-
+lib/Database/Doctrine/ORM/Proxies/**
+blah*
+foo*
+bar*
+node_modules
+**/*old*
