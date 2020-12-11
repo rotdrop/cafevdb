@@ -355,14 +355,14 @@ make sure that the musicians are also automatically added to the
     $join_table = 'PMEjoin'.$idx;
     $opts['fdd']['MusikerId'] = [
       'input' => 'VH',
-      'sql' => '`'.$join_table.'`.`MusikerId`',
-//    'sqlw' => '`'.$join_table.'`.`MusikerId`',
+      'sql' => '`'.$join_table.'`.`MusicianId`',
+//    'sqlw' => '`'.$join_table.'`.`MusicianId`',
       'options' => '',
       'values' => [
-        'table' => 'Besetzungen',
-        'column' => 'MusikerId',
-        'description' => 'MusikerId',
-        'join' => '$main_table.`Id` = $join_table.`MusikerId`'
+        'table' => 'ProjectParticipants',
+        'column' => 'MusicianId',
+        'description' => 'MusicianId',
+        'join' => '$main_table.`Id` = $join_table.`MusicianId`'
       ],
     ];
 
@@ -384,7 +384,7 @@ make sure that the musicians are also automatically added to the
         'table' => 'Projects',
         'column' => 'Name',
         'description' => 'Name',
-        'join' => '`PMEjoin'.($idx-1).'`.`ProjektId` = $join_table.`Id`',
+        'join' => '`PMEjoin'.($idx-1).'`.`ProjectId` = $join_table.`Id`',
       ],
       'values2' => $projects,
       'valueGroups' => $groupedProjects
