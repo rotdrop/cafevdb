@@ -43,6 +43,7 @@ class ProjectExtraFields extends PMETableViewBase
   const CSS_CLASS = 'project-extra-fields';
   const TABLE = 'ProjectExtraFields';
   const TYPE_TABLE = 'ProjectExtraFieldTypes';
+  const OPTIONS_TABLE = 'ProjectExtraFieldValueOptions';
   const DATA_TABLE = 'ProjectExtraFieldsData';
   const PROJECTS_TABLE = 'Projects';
 
@@ -302,7 +303,7 @@ class ProjectExtraFields extends PMETableViewBase
       'css' => ['postfix' => ' allowed-values' ],
       'select' => 'T',
       'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
-        return self::showAllowedValues($value, $op, $recordId);
+        return $this->showAllowedValues($value, $op, $recordId);
       },
       'maxlen' => 1024,
       'size' => 30,
@@ -317,11 +318,11 @@ class ProjectExtraFields extends PMETableViewBase
       'sql' => 'PMEtable0.AllowedValues',
       'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx, $tooltipIdx) {
         // provide defaults
-        $protoRecord = array_merge(
-          self::allowedValuesPrototype(),
-          [ 'key' => $recordId,
-            'label' => $row['qf'.$nameIdx],
-            'tooltip' => $row['qf'.$tooltipIdx] ]);
+        // $protoRecord = array_merge(
+        //   self::allowedValuesPrototype(),
+        //   [ 'key' => $recordId,
+        //     'label' => $row['qf'.$nameIdx],
+        //     'tooltip' => $row['qf'.$tooltipIdx] ]);
         return self::showAllowedSingleValue($value, $op, $fdd[$field]['tooltip'], $protoRecord);
       },
       'options' => 'ACDPV',
@@ -378,18 +379,19 @@ class ProjectExtraFields extends PMETableViewBase
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D',
       'values' => [
-        'table' => "SELECT Id,
- splitString(splitString(AllowedValues, '\\n', N), ':', 1) AS Value,
- splitString(splitString(AllowedValues, '\\n', N), ':', 2) AS Label,
- splitString(splitString(AllowedValues, '\\n', N), ':', 5) AS Flags
- FROM
-   `ProjectExtraFields`
-   JOIN `numbers`
-   ON tokenCount(AllowedValues, '\\n') >= `numbers`.N",
+ //        'table' => "SELECT Id,
+ // splitString(splitString(AllowedValues, '\\n', N), ':', 1) AS Value,
+ // splitString(splitString(AllowedValues, '\\n', N), ':', 2) AS Label,
+ // splitString(splitString(AllowedValues, '\\n', N), ':', 5) AS Flags
+ // FROM
+ //   `ProjectExtraFields`
+ //   JOIN `numbers`
+ //   ON tokenCount(AllowedValues, '\\n') >= `numbers`.N",
+ //        'column' => 'Value',
+        'table' => self::OPTIONS_TABLE,
         'column' => 'Value',
         'description' => 'Label',
-        'subquery' => true,
-        'filters' => '$table.`Id` = $record_id AND NOT $table.`Flags` = \'deleted\'',
+        'filters' => '$table.`FieldId` = $record_id AND $table.`Disabled` = 0',
         'join' => '$join_table.$join_column = $main_table.`DefaultValue`'
       ],
       'maxlen' => 29,
@@ -610,7 +612,7 @@ class ProjectExtraFields extends PMETableViewBase
    *
    * @param &$newvals Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    */
   public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
@@ -809,7 +811,7 @@ class ProjectExtraFields extends PMETableViewBase
    *
    * @param &$newvals Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    *
    * @todo Is this necessary? Just require the project-id not to be empty?
    */
@@ -856,7 +858,7 @@ class ProjectExtraFields extends PMETableViewBase
    *
    * @param &$newvals Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    *
    */
   public static function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
@@ -886,6 +888,240 @@ class ProjectExtraFields extends PMETableViewBase
   {
     $this->getDatabaseRepository(Entities\ProjectExtraFiel::class)
          ->disable($fieldId);
+  }
+
+  /**
+   * Generate a table in order to define field-valus for
+   * multi-select stuff.
+   */
+  private function showAllowedValues($value, $op, $recordId)
+  {
+    return '<PRE>UNIMPLEMENTED</PRE>';
+    $allowed = self::explodeAllowedValues($value);
+    $protoCount = count(self::allowedValuesPrototype());
+    if ($op === 'display' && count($allowed) == 1) {
+      return '';
+    }
+    $maxColumns = 0;
+    foreach($allowed as $value) {
+      $maxColumns = max(count($value), $maxColumns);
+    }
+    $html = '<div class="pme-cell-wrapper quarter-sized">';
+    if ($op === 'add' || $op === 'change') {
+      $showDeletedLabel = L::t("Show deleted items.");
+      $showDeletedTip = Config::toolTips('extra-fields-show-deleted');
+      $showDataLabel = L::t("Show data-fields.");
+      $showDataTip = Config::toolTips('extra-fields-show-data');
+      $html .=<<<__EOT__
+<div class="field-display-options">
+  <div class="show-deleted">
+    <input type="checkbox"
+           name="show-deleted"
+           class="show-deleted checkbox"
+           value="show"
+           id="allowed-values-show-deleted"
+           />
+    <label class="show-deleted"
+           for="allowed-values-show-deleted"
+           title="$showDeletedTip"
+           >
+      $showDeletedLabel
+    </label>
+  </div>
+  <div class="show-data">
+    <input type="checkbox"
+           name="show-data"
+           class="show-data checkbox"
+           value="show"
+           id="allowed-values-show-data"
+           />
+    <label class="show-data"
+           for="allowed-values-show-data"
+           title="$showDataTip"
+           >
+      $showDataLabel
+    </label>
+  </div>
+</div>
+__EOT__;
+    }
+
+    $html .= '<table class="operation-'.$op.' allowed-values">
+  <thead>
+     <tr>';
+          $html .= '<th class="operations"></th>';
+          $headers = array('key' => L::t('Key'),
+                           'label' => L::t('Label'),
+                           'limit' => L::t('Limit'),
+                           'data' => self::currencyLabel(L::t('Data')),
+                           'tooltip' => L::t('Tooltip'));
+          foreach($headers as $key => $value) {
+            $html .=
+                  '<th'
+                  .' class="field-'.$key.'"'
+                  .' title="'.Config::toolTips('extra-fields-allowed-values', $key).'"'
+                  .'>'
+                  .$value
+                  .'</th>';
+          }
+          for($i = $protoCount; $i < $maxColumns; ++$i) {
+            $key = 'column'.$i;
+            $value = L::t('%dth column', array($i));
+            $html .=
+                  '<th'
+                  .' class="field-'.$key.'"'
+                  .' title="'.Config::toolTips('extra-fields-allowed-values', $key).'"'
+                  .'>'
+                  .$value
+                  .'</th>';
+          }
+          $html .= '
+     </tr>
+  </thead>
+  <tbody>';
+                switch ($op) {
+                case 'display':
+                  foreach ($allowed as $idx => $value) {
+                    if (empty($value['key']) || $value['flags'] === 'deleted') {
+                      continue;
+                    }
+                    $html .= '
+    <tr>
+      <td class="operations"></td>';
+                          foreach(['key', 'label', 'limit', 'data', 'tooltip'] as $field) {
+                            $html .= '<td class="field-'.$field.'">'
+                                  .($field === 'data'
+                                    ? self::currencyValue($value[$field])
+                                    : $value[$field])
+                                  .'</td>';
+                          }
+                          for($i = $protoCount; $i < count($value); ++$i) {
+                            $field = 'column'.$i;
+                            $html .= '<td class="field-'.$field.'">'
+                                  .$value[$field]
+                                  .'</td>';
+                          }
+                          $html .= '
+    </tr>';
+                  }
+                  break;
+                case 'add':
+                case 'change':
+                  $usedKeys = self::fieldValuesFromDB($recordId);
+                  //error_log(print_r($usedKeys, true));
+                  $pfx = Config::$pmeopts['cgi']['prefix']['data'];
+                  $pfx .= 'AllowedValues';
+                  $css = 'class="allowed-values"';
+                  foreach ($allowed as $idx => $value) {
+                    if (!empty($value['key'])) {
+                      $key = $value['key'];
+                      $used = array_search($key, $usedKeys) !== false;
+                    } else {
+                      $used = false;
+                    }
+                    $html .= self::allowedValueInputRow($value, $idx, $used);
+                  }
+                  break;
+                }
+                $html .= '
+  </tbody>
+</table></div>';
+                return $html;
+  }
+
+  /**
+   * Display the input stuff for a single-value choice, probably
+   * only for surcharge fields.
+   */
+  private function showAllowedSingleValue($value, $op, $toolTip, $protoRecord)
+  {
+    return '<PRE>UNIMPLEMENTED</PRE>';
+    $allowed = self::explodeAllowedValues($value, false);
+    // if there are multiple options available (after a type
+    // change) we just pick the first non-deleted.
+    $entry = false;
+    foreach($allowed as $idx => $item) {
+      if (empty($item['key']) || $item['flags'] === 'deleted') {
+        continue;
+      } else {
+        $entry = $item;
+        unset($allowed[$idx]);
+        break;
+      }
+    }
+    $allowed = array_values($allowed); // compress index range
+    $value = empty($entry) ? '' : $entry['data'];
+    if ($op === 'display') {
+      return self::currencyValue($value);
+    }
+    empty($entry) && $entry = $protoRecord;
+    $protoCount = count($protoRecord);
+    $name  = Config::$pmeopts['cgi']['prefix']['data'];
+    $name .= 'AllowedValuesSingle';
+    $value = htmlspecialchars($entry['data']);
+    $tip   = $toolTip;
+    $html  = '<div class="active-value">';
+    $html  .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="text"
+       maxlength="29"
+       size="30"
+       value="{$value}"
+       name="{$name}[0][data]"
+       title="{$tip}"
+/>
+__EOT__;
+    foreach(['key', 'label', 'limit', 'tooltip', 'flags'] as $field) {
+      $value = htmlspecialchars($entry[$field]);
+      $html .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="hidden"
+       value="{$value}"
+       name="{$name}[0][{$field}]"
+/>
+__EOT__;
+    }
+    for($i = $protoCount; $i < count($entry); ++$i) {
+      $field = 'column'.$i;
+      $value = htmlspecialchars($entry[$field]);
+      $html .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="hidden"
+       value="{$value}"
+       name="{$name}[0][{$field}]"
+/>
+__EOT__;
+    }
+    $html .= '</div>';
+    $html .= '<div class="inactive-values">';
+    // Now emit all left-over values. Flag all items as deleted.
+    foreach($allowed as $idx => $item) {
+      ++$idx; // shift ...
+      $item['flags'] = 'deleted';
+      foreach(['key', 'label', 'limit', 'data', 'tooltip', 'flags'] as $field) {
+        $value = htmlspecialchars($item[$field]);
+        $html .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="hidden"
+       value="{$value}"
+       name="{$name}[{$idx}][{$field}]"
+/>
+__EOT__;
+      }
+      for($i = $protoCOunt; $i < count($item); ++$i) {
+        $field = 'column'.$i;
+        $value = htmlspecialchars($item[$field]);
+        $html .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="hidden"
+       value="{$value}"
+       name="{$name}[{$idx}][{$field}]"
+/>
+__EOT__;
+      }
+    }
+    $html .= '</div>';
+    return $html;
   }
 
 }

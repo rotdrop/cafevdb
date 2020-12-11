@@ -56,6 +56,7 @@ style($appName, 'dialogs');
 style($appName, 'inlineimage');
 style($appName, 'navsnapper');
 style($appName, 'pme-table');
+style($appName, 'project-extra');
 style($appName, 'mobile');
 
 script($appName, 'cafevdb');
@@ -69,6 +70,7 @@ script($appName, 'events');
 script($appName, 'pme');
 script($appName, 'musicians');
 script($appName, 'projects');
+script($appName, 'project-extra');
 script($appName, 'personal-settings');
 script($appName, 'settings');
 script($appName, 'expertmode');

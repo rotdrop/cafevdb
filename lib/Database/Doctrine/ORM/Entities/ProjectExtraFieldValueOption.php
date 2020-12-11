@@ -63,9 +63,9 @@ class ProjectExtraFieldValueOption implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(name="Data", type="string", length=4096, options={"default"=""})
+   * @ORM\Column(name="Value", type="string", length=4096, options={"default"=""})
    */
-  private $data;
+  private $value;
 
   /**
    * @var int
