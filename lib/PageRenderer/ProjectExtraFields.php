@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\PageRenderer\Util\FuzzyInput;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -43,12 +44,15 @@ class ProjectExtraFields extends PMETableViewBase
   const CSS_CLASS = 'project-extra-fields';
   const TABLE = 'ProjectExtraFields';
   const TYPE_TABLE = 'ProjectExtraFieldTypes';
-  const OPTIONS_TABLE = 'ProjectExtraFieldValueOptions';
+  //const OPTIONS_TABLE = 'ProjectExtraFieldValueOptions';
   const DATA_TABLE = 'ProjectExtraFieldsData';
   const PROJECTS_TABLE = 'Projects';
 
   /** @var InstrumentationService */
   private $instrumentationService;
+
+  /** @var FuzzyInput */
+  private $fuzzyInput;
 
   public function __construct(
     ConfigService $configService
@@ -59,9 +63,11 @@ class ProjectExtraFields extends PMETableViewBase
     , InstrumentationService $instrumentationService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
+    , FuzzyInput $fuzzyInput
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
     $this->instrumentationService = $instrumentationService;
+    $this->fuzzyInput = $fuzzyInput;
   }
 
   public function cssClass() {
@@ -72,7 +78,7 @@ class ProjectExtraFields extends PMETableViewBase
   {
     if ($this->projectId > 0) {
       return $this->l->t("Extra-Fields for Project %s",
-                  array($this->projectName));
+                         array($this->projectName));
     } else {
       return $this->l->t("Extra Fields for Projects");
     }
@@ -238,6 +244,21 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-fields-field-name'],
     ];
 
+    if ($this->showDisabled) {
+      $opts['fdd']['Disabled'] = [
+        'tab'      => [ 'id' => 'definition' ],
+        'name'     => $this->l->t('Disabled'),
+        'css'      => [ 'postfix' => ' extra-field-disabled' ],
+        'values2|CAP' => [ 1 => '' ],
+        'values2|LVFD' => [ 1 => $this->l->t('true'),
+                            0 => $this->l->t('false') ],
+        'default'  => '',
+        'select'   => 'O',
+        'sort'     => true,
+        'tooltip'  => $this->toolTipsService['extra-fields-disabled']
+      ];
+    }
+
     // TODO: maybe get rid of enums and sets alltogether
     $typeValues = [];
     $typeGroups = [];
@@ -261,21 +282,6 @@ class ProjectExtraFields extends PMETableViewBase
         );
         $typeTitles[$id] = $this->toolTipsService['extra-field-'.$group.'-'.$multiplicity];
       }
-    }
-
-    if ($this->showDisabled) {
-      $opts['fdd']['Disabled'] = [
-        'tab'      => [ 'id' => 'definition' ],
-        'name'     => $this->l->t('Disabled'),
-        'css'      => [ 'postfix' => ' extra-field-disabled' ],
-        'values2|CAP' => [ 1 => '' ],
-        'values2|LVFD' => [ 1 => $this->l->t('true'),
-                            0 => $this->l->t('false') ],
-        'default'  => '',
-        'select'   => 'O',
-        'sort'     => true,
-        'tooltip'  => $this->toolTipsService['extra-fields-disabled']
-      ];
     }
 
     $opts['fdd']['TypeId'] = [
@@ -318,12 +324,14 @@ class ProjectExtraFields extends PMETableViewBase
       'sql' => 'PMEtable0.AllowedValues',
       'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx, $tooltipIdx) {
         // provide defaults
-        // $protoRecord = array_merge(
-        //   self::allowedValuesPrototype(),
-        //   [ 'key' => $recordId,
-        //     'label' => $row['qf'.$nameIdx],
-        //     'tooltip' => $row['qf'.$tooltipIdx] ]);
-        return self::showAllowedSingleValue($value, $op, $fdd[$field]['tooltip'], $protoRecord);
+        $protoRecord = array_merge(
+          $this->allowedValuesPrototype(),
+          [
+            'key' => $recordId,
+            'label' => $row['qf'.$nameIdx],
+            'tooltip' => $row['qf'.$tooltipIdx]
+          ]);
+        return $this->showAllowedSingleValue($value, $op, $fdd[$field]['tooltip'], $protoRecord);
       },
       'options' => 'ACDPV',
       'select' => 'T',
@@ -379,15 +387,15 @@ class ProjectExtraFields extends PMETableViewBase
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D',
       'values' => [
- //        'table' => "SELECT Id,
- // splitString(splitString(AllowedValues, '\\n', N), ':', 1) AS Value,
- // splitString(splitString(AllowedValues, '\\n', N), ':', 2) AS Label,
- // splitString(splitString(AllowedValues, '\\n', N), ':', 5) AS Flags
- // FROM
- //   `ProjectExtraFields`
- //   JOIN `numbers`
- //   ON tokenCount(AllowedValues, '\\n') >= `numbers`.N",
- //        'column' => 'Value',
+        //        'table' => "SELECT Id,
+        // splitString(splitString(AllowedValues, '\\n', N), ':', 1) AS Value,
+        // splitString(splitString(AllowedValues, '\\n', N), ':', 2) AS Label,
+        // splitString(splitString(AllowedValues, '\\n', N), ':', 5) AS Flags
+        // FROM
+        //   `ProjectExtraFields`
+        //   JOIN `numbers`
+        //   ON tokenCount(AllowedValues, '\\n') >= `numbers`.N",
+        //        'column' => 'Value',
         'table' => self::OPTIONS_TABLE,
         'column' => 'Value',
         'description' => 'Label',
@@ -585,19 +593,6 @@ class ProjectExtraFields extends PMETableViewBase
   }
 
   /**
-   * Return an alternate "Amount [CUR]" label which can be hidden by
-   * CSS.
-   */
-  private function currencyLabel($label = 'Data')
-  {
-    return
-      '<span class="general">'.$label.'</span>'.
-      '<span class="surcharge currencylabel">'
-      .$this->l->t('Amount').' ['.($this->currencySymbol).']'
-      .'</span>';
-  }
-
-  /**
    * phpMyEdit calls the trigger (callback) with the following arguments:
    *
    * @param $pme The phpMyEdit instance
@@ -649,14 +644,6 @@ class ProjectExtraFields extends PMETableViewBase
      * can do its work.
      *
      */
-    // @TODO : custom repo or so, index by tabel.Id
-// With the QueryBuilder object you can set the index at the from statement:
-
-// $qb = $em->createQueryBuilder();
-// $qb->select('s');
-// $qb->from('models\Settings', 's', 's.arg');  // here the magic
-// $result = $qb->getQuery()->getResult();
-
     $key = array_search('DefaultMultiValue', $changed);
     $types = $this->fieldTypes();
     if ($types[$newvals['TypeId']]['multiplicity'] === 'multiple' ||
@@ -727,16 +714,17 @@ class ProjectExtraFields extends PMETableViewBase
 
     if (!is_array($newvals['AllowedValues'])) {
       // textfield
-      $allowed = self::explodeAllowedValues($newvals['AllowedValues']);
+      $allowed = $this->explodeAllowedValues($newvals['AllowedValues']);
 
     } else {
       $allowed = $newvals['AllowedValues'];
     }
-    // make unused keys unique
+
+    // make unused keys unique @TODO make it a uuid
     self::allowedValuesUniqueKeys($allowed, $pme->rec);
 
     //error_log('trigger '.print_r($allowed, true));
-    $newvals['AllowedValues'] = self::implodeAllowedValues($allowed);
+    $newvals['AllowedValues'] = $this->implodeAllowedValues($allowed);
     if ($oldvals['AllowedValues'] !== $newvals['AllowedValues']) {
       $changed[] = 'AllowedValues';
     }
@@ -777,7 +765,7 @@ class ProjectExtraFields extends PMETableViewBase
     }
 
     if (!empty($newvals['ToolTip'])) {
-      $newvals['ToolTip'] = FuzzyInput::purifyHTML($newvals['ToolTip']);
+      $newvals['ToolTip'] = $this->fuzzyInput->purifyHTML($newvals['ToolTip']);
       if ($newvals['ToolTip'] !== $oldvals['ToolTip']) {
         $changed[] = 'ToolTip';
       } else {
@@ -884,10 +872,173 @@ class ProjectExtraFields extends PMETableViewBase
                 ->usedFields($projectId, $fieldId);
   }
 
+  private function fieldValues($fieldId)
+  {
+    return $this->getDatabaseRepository(Entities\ProjectExtraFieldData::class)
+                ->fieldValues($fieldId);
+  }
+
   private function disable($fieldId, $disable = true)
   {
     $this->getDatabaseRepository(Entities\ProjectExtraFiel::class)
          ->disable($fieldId);
+  }
+
+  /**
+   * Generate a row given values and index for the "change" view
+   * corresponding to the multi-choice fields.
+   *
+   * @param array $value One row of the form as returned form
+   * self::explodeAllowedValues()
+   *
+   * @param integer $index A unique row number.
+   *
+   * @param boolean $used Whether the DB already contains data
+   * records referring to this item.
+   *
+   * @return string HTML data for one row.
+   */
+  public static function allowedValueInputRow($value, $index = -1, $used = false)
+  {
+    $pfx = $this->pme->cgiDataValue('AllowedValues');
+    $key = $value['key'];
+    $placeHolder = empty($key);
+    $deleted = $value['flags'] === 'deleted';
+    empty($value['flags']) && $value['flags'] = 'active';
+    $data = ''
+          .' data-index="'.$index.'"' // real index
+          .' data-used="'.($used ? 'used' : 'unused').'"'
+          .' data-flags="'.$value['flags'].'"';
+    $html = '';
+    $html .= '
+    <tr'
+    .' class="data-line'
+    .' allowed-values'
+    .($placeHolder ? ' placeholder' : '')
+    .' '.$value['flags']
+    .'"'
+    .' '.$data.'>';
+    if (!$placeHolder) {
+      $html .= '<td class="delete-undelete">'
+            .'<input'
+            .' class="delete-undelete"'
+            .' title="'.$this->toolTipsService['extra-fields-delete-undelete'].'"'
+            .' type="button"/>'
+            .'</td>';
+    } else {
+      $index = -1; // move out of the way
+    }
+    // label
+    $prop = 'label';
+    $label = ''
+           .'<input'
+           .($deleted ? ' readonly="readonly"' : '')
+           .' class="field-'.$prop.'"'
+           .' spellcheck="true"'
+           .' type="text"'
+           .' name="'.$pfx.'['.$index.']['.$prop.']"'
+           .' value="'.$value[$prop].'"'
+           .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.($placeHolder ? 'placeholder' : $prop)].'"'
+           .' placeholder="'.($placeHolder ? $this->l->t('new option') : '').'"'
+           .' size="33"'
+           .' maxlength="32"'
+           .'/>';
+    if (!$placeHolder) {
+      // key
+      // TODO: use a UUID
+      $prop = 'key';
+      $html .= '<td class="field-'.$prop.'">'
+            .'<input'
+            .($used || $deleted ? ' readonly="readonly"' : '')
+            .' type="text"'
+            .' class="field-key"'
+            .' name="'.$pfx.'['.$index.']['.$prop.']"'
+            .' value="'.$value[$prop].'"'
+            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+            .' size="9"'
+            .' maxlength="8"'
+            .'/>'
+            .'<input'
+            .' type="hidden"'
+            .' class="field-flags"'
+            .' name="'.$pfx.'['.$index.'][flags]"'
+            .' value="'.$value['flags'].'"'
+            .'/>'
+            .'</td>';
+      // label
+      $prop = 'label';
+      $html .= '<td class="field-'.$prop.'">'.$label.'</td>';
+      // limit
+      $prop = 'limit';
+      $html .= '<td class="field-'.$prop.'"><input'
+            .($deleted ? ' readonly="readonly"' : '')
+            .' class="field-'.$prop.'"'
+            .' type="text"'
+            .' name="'.$pfx.'['.$index.']['.$prop.']"'
+            .' value="'.$value[$prop].'"'
+            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+            .' maxlength="8"'
+            .' size="9"'
+            .'/></td>';
+      // data
+      $prop = 'data';
+      $html .= '<td class="field-'.$prop.'"><input'
+            .($deleted ? ' readonly="readonly"' : '')
+            .' class="field-'.$prop.'"'
+            .' type="text"'
+            .' name="'.$pfx.'['.$index.']['.$prop.']"'
+            .' value="'.$value[$prop].'"'
+            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+            .' maxlength="8"'
+            .' size="9"'
+            .'/></td>';
+      // tooltip
+      $prop = 'tooltip';
+      $html .= '<td class="field-'.$prop.'">'
+            .'<textarea'
+            .($deleted ? ' readonly="readonly"' : '')
+            .' class="field-'.$prop.'"'
+            .' name="'.$pfx.'['.$index.']['.$prop.']"'
+            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+            .' cols="32"'
+            .' rows="1"'
+            .'>'
+            .$value[$prop]
+            .'</textarea>'
+            .'</td>';
+
+      // general further fields
+      for($i = 6; $i < count($value); ++$i) {
+        $prop = 'column'.$i;
+        $html .= '<td class="field-'.$prop.'"><input'
+              .($deleted ? ' readonly="readonly"' : '')
+              .' class="field-'.$prop.'"'
+              .' type="text"'
+              .' name="'.$pfx.'['.$index.']['.$prop.']"'
+              .' value="'.$value[$prop].'"'
+              .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+              .' maxlength="8"'
+              .' size="9"'
+              .'/></td>';
+      }
+
+    } else {
+      $html .= '<td class="placeholder" colspan="6">'
+            .$label;
+      foreach (['key', 'limit', 'data', 'tooltip'] as $prop) {
+        $html .= '<input'
+              .' class="field-'.$prop.'"'
+              .' type="hidden"'
+              .' name="'.$pfx.'['.$index.']['.$prop.']"'
+              .' value=""'
+              .'/>';
+      }
+      $html .= '</td>';
+    }
+    // finis
+    $html .= '
+    </tr>';
+    return $html;
   }
 
   /**
@@ -896,36 +1047,23 @@ class ProjectExtraFields extends PMETableViewBase
    */
   private function showAllowedValues($value, $op, $recordId)
   {
-    return '<PRE>UNIMPLEMENTED</PRE>';
-    $allowed = self::explodeAllowedValues($value);
-    $protoCount = count(self::allowedValuesPrototype());
+    $allowed = $this->explodeAllowedValues($value);
     if ($op === 'display' && count($allowed) == 1) {
+      // "1" means empty (headerline)
       return '';
     }
+    $protoCount = count($this->allowedValuesPrototype());
     $maxColumns = 0;
     foreach($allowed as $value) {
       $maxColumns = max(count($value), $maxColumns);
     }
     $html = '<div class="pme-cell-wrapper quarter-sized">';
     if ($op === 'add' || $op === 'change') {
-      $showDeletedLabel = L::t("Show deleted items.");
-      $showDeletedTip = Config::toolTips('extra-fields-show-deleted');
-      $showDataLabel = L::t("Show data-fields.");
-      $showDataTip = Config::toolTips('extra-fields-show-data');
+      $showDeletedLabel = $this->l->t("Show deleted items.");
+      $showDeletedTip = $this->toolTipsService['extra-fields-show-deleted'];
+      $showDataLabel = $this->l->t("Show data-fields.");
+      $showDataTip = $this->toolTipsService['extra-fields-show-data'];
       $html .=<<<__EOT__
-<div class="field-display-options">
-  <div class="show-deleted">
-    <input type="checkbox"
-           name="show-deleted"
-           class="show-deleted checkbox"
-           value="show"
-           id="allowed-values-show-deleted"
-           />
-    <label class="show-deleted"
-           for="allowed-values-show-deleted"
-           title="$showDeletedTip"
-           >
-      $showDeletedLabel
     </label>
   </div>
   <div class="show-data">
@@ -949,84 +1087,83 @@ __EOT__;
     $html .= '<table class="operation-'.$op.' allowed-values">
   <thead>
      <tr>';
-          $html .= '<th class="operations"></th>';
-          $headers = array('key' => L::t('Key'),
-                           'label' => L::t('Label'),
-                           'limit' => L::t('Limit'),
-                           'data' => self::currencyLabel(L::t('Data')),
-                           'tooltip' => L::t('Tooltip'));
-          foreach($headers as $key => $value) {
-            $html .=
-                  '<th'
-                  .' class="field-'.$key.'"'
-                  .' title="'.Config::toolTips('extra-fields-allowed-values', $key).'"'
-                  .'>'
-                  .$value
-                  .'</th>';
-          }
-          for($i = $protoCount; $i < $maxColumns; ++$i) {
-            $key = 'column'.$i;
-            $value = L::t('%dth column', array($i));
-            $html .=
-                  '<th'
-                  .' class="field-'.$key.'"'
-                  .' title="'.Config::toolTips('extra-fields-allowed-values', $key).'"'
-                  .'>'
-                  .$value
-                  .'</th>';
-          }
-          $html .= '
+    $html .= '<th class="operations"></th>';
+    $headers = array('key' => $this->l->t('Key'),
+                     'label' => $this->l->t('Label'),
+                     'limit' => $this->l->t('Limit'),
+                     'data' => $this->currencyLabel($this->l->t('Data')),
+                     'tooltip' => $this->l->t('Tooltip'));
+    foreach ($headers as $key => $value) {
+      $html .=
+            '<th'
+            .' class="field-'.$key.'"'
+            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$key].'"'
+            .'>'
+            .$value
+            .'</th>';
+    }
+    for ($i = $protoCount; $i < $maxColumns; ++$i) {
+      $key = 'column'.$i;
+      $value = $this->l->t('%dth column', [ $i ]);
+      $html .=
+            '<th'
+            .' class="field-'.$key.'"'
+            .' title="'.$this->toolTipsService('extra-fields-allowed-values:'.$key).'"'
+            .'>'
+            .$value
+            .'</th>';
+    }
+    $html .= '
      </tr>
   </thead>
   <tbody>';
-                switch ($op) {
-                case 'display':
-                  foreach ($allowed as $idx => $value) {
-                    if (empty($value['key']) || $value['flags'] === 'deleted') {
-                      continue;
-                    }
-                    $html .= '
+    switch ($op) {
+      case 'display':
+        foreach ($allowed as $idx => $value) {
+          if (empty($value['key']) || $value['flags'] === 'deleted') {
+            continue;
+          }
+          $html .= '
     <tr>
       <td class="operations"></td>';
-                          foreach(['key', 'label', 'limit', 'data', 'tooltip'] as $field) {
-                            $html .= '<td class="field-'.$field.'">'
-                                  .($field === 'data'
-                                    ? self::currencyValue($value[$field])
-                                    : $value[$field])
-                                  .'</td>';
-                          }
-                          for($i = $protoCount; $i < count($value); ++$i) {
-                            $field = 'column'.$i;
-                            $html .= '<td class="field-'.$field.'">'
-                                  .$value[$field]
-                                  .'</td>';
-                          }
-                          $html .= '
+          foreach (['key', 'label', 'limit', 'data', 'tooltip'] as $field) {
+            $html .= '<td class="field-'.$field.'">'
+                  .($field === 'data'
+                    ? $this->currencyValue($value[$field])
+                    : $value[$field])
+                  .'</td>';
+          }
+          for ($i = $protoCount; $i < count($value); ++$i) {
+            $field = 'column'.$i;
+            $html .= '<td class="field-'.$field.'">'
+                  .$value[$field]
+                  .'</td>';
+          }
+          $html .= '
     </tr>';
-                  }
-                  break;
-                case 'add':
-                case 'change':
-                  $usedKeys = self::fieldValuesFromDB($recordId);
-                  //error_log(print_r($usedKeys, true));
-                  $pfx = Config::$pmeopts['cgi']['prefix']['data'];
-                  $pfx .= 'AllowedValues';
-                  $css = 'class="allowed-values"';
-                  foreach ($allowed as $idx => $value) {
-                    if (!empty($value['key'])) {
-                      $key = $value['key'];
-                      $used = array_search($key, $usedKeys) !== false;
-                    } else {
-                      $used = false;
-                    }
-                    $html .= self::allowedValueInputRow($value, $idx, $used);
-                  }
-                  break;
-                }
-                $html .= '
+        }
+        break;
+      case 'add':
+      case 'change':
+        $usedKeys = $this->fieldValues($recordId);
+        //error_log(print_r($usedKeys, true));
+        //$pfx = $this->pme->cgiDataValue('AllowedValues');
+        //$css = 'class="allowed-values"';
+        foreach ($allowed as $idx => $value) {
+          if (!empty($value['key'])) {
+            $key = $value['key'];
+            $used = array_search($key, $usedKeys) !== false;
+          } else {
+            $used = false;
+          }
+          $html .= $this->allowedValueInputRow($value, $idx, $used);
+        }
+        break;
+    }
+    $html .= '
   </tbody>
 </table></div>';
-                return $html;
+    return $html;
   }
 
   /**
@@ -1035,8 +1172,7 @@ __EOT__;
    */
   private function showAllowedSingleValue($value, $op, $toolTip, $protoRecord)
   {
-    return '<PRE>UNIMPLEMENTED</PRE>';
-    $allowed = self::explodeAllowedValues($value, false);
+    $allowed = $this->explodeAllowedValues($value, false);
     // if there are multiple options available (after a type
     // change) we just pick the first non-deleted.
     $entry = false;
@@ -1052,12 +1188,11 @@ __EOT__;
     $allowed = array_values($allowed); // compress index range
     $value = empty($entry) ? '' : $entry['data'];
     if ($op === 'display') {
-      return self::currencyValue($value);
+      return $this->currencyValue($value);
     }
     empty($entry) && $entry = $protoRecord;
     $protoCount = count($protoRecord);
-    $name  = Config::$pmeopts['cgi']['prefix']['data'];
-    $name .= 'AllowedValuesSingle';
+    $name  = $this->pme->cgiDataName('AllowedValuesSingle');
     $value = htmlspecialchars($entry['data']);
     $tip   = $toolTip;
     $html  = '<div class="active-value">';
@@ -1071,7 +1206,7 @@ __EOT__;
        title="{$tip}"
 />
 __EOT__;
-    foreach(['key', 'label', 'limit', 'tooltip', 'flags'] as $field) {
+    foreach (['key', 'label', 'limit', 'tooltip', 'flags'] as $field) {
       $value = htmlspecialchars($entry[$field]);
       $html .=<<<__EOT__
 <input class="pme-input allowed-values-single"
@@ -1095,7 +1230,7 @@ __EOT__;
     $html .= '</div>';
     $html .= '<div class="inactive-values">';
     // Now emit all left-over values. Flag all items as deleted.
-    foreach($allowed as $idx => $item) {
+    foreach ($allowed as $idx => $item) {
       ++$idx; // shift ...
       $item['flags'] = 'deleted';
       foreach(['key', 'label', 'limit', 'data', 'tooltip', 'flags'] as $field) {
@@ -1108,7 +1243,7 @@ __EOT__;
 />
 __EOT__;
       }
-      for($i = $protoCOunt; $i < count($item); ++$i) {
+      for ($ i = $protoCount; $i < count($item); ++$i) {
         $field = 'column'.$i;
         $value = htmlspecialchars($item[$field]);
         $html .=<<<__EOT__
@@ -1124,4 +1259,90 @@ __EOT__;
     return $html;
   }
 
+  /**Return a currency value where the number symbol can be hidden
+   * by CSS.
+   */
+  private function currencyValue($value)
+  {
+    $money = $this->moneyValue($value);
+    return
+      '<span class="surcharge currency-amount">'.$money.'</span>'.
+      '<span class="general">'.$value.'</span>';
+  }
+
+  /**
+   * Return an alternate "Amount [CUR]" label which can be hidden by
+   * CSS.
+   */
+  private function currencyLabel($label = 'Data')
+  {
+    return
+      '<span class="general">'.$label.'</span>'.
+      '<span class="surcharge currencylabel">'
+      .$this->l->t('Amount').' ['.$this->currencySymbol().']'
+      .'</span>';
+  }
+
+  /**
+   * Prototype for allowed values, i.e. multiple-value options.
+   */
+  private static function allowedValuesPrototype()
+  {
+    return [
+      'key' => false,
+      'label' => false,
+      'data' => false,
+      'tooltip' => false,
+      'flags' => 'active',
+      'limit' => false,
+    ];
+  }
+
+  /**
+   * Explode the given json encoded string into a PHP array.
+   */
+  public function explodeAllowedValues($values, $addProto = true, $trimInactive = false)
+  {
+    $options = json_decode($values);
+    if (array_keys($values) !== range(0, count($values) - 1)) {
+      throw new \InvalidArgumentException($this->l->t('Value options do not yield a sequential array'));
+    }
+    $protoType = $this->allowedValuesPrototype();
+    $protoKeys = array_keys($protoType);
+    foreach ($options as $index => &$option) {
+      $keys = array_keys($option);
+      if ($keys !== $protoKeys) {
+        throw new \InvalidArgumentException(
+          $this->l->t('Prototype keys "%s" and options keys "%s" differ',
+                      [ implode(',', $protoKeys), implode(',', $keys) ])
+        );
+      }
+      if ($trimInactive && $option['disabled'] === true) { //  @TODO check for string boolean conversion
+        unset($option);
+      }
+    }
+    if ($addProto) {
+      $options[] = $this->allowedValuesPrototype();
+    }
+    return $options;
+  }
+
+  /**
+   * Serialize a list of allowed values in the form
+   * ```
+   * [
+   *   [ 'key' => KEY1, ... ],
+   *   [ 'key' => KEY2, ... ],
+   * ]
+   * ```
+   * as json for storing in the database.
+   */
+  public static function implodeAllowedValues($options)
+  {
+    $proto = $this->allowedValuesPrototype();
+    foreach ($options as &$option) {
+      $option = array_merge($proto, $option);
+    }
+    return json_encode($values);
+  }
 }
