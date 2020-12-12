@@ -252,7 +252,13 @@ trait ConfigTrait {
   /**Return the currency symbol for the locale. */
   public function currencySymbol($locale = null)
   {
-    return $this->currencySymbol($locale);
+    return $this->configService->currencySymnbol($locale);
+  }
+
+  //!Just display the given value
+  public function moneyValue($value, $locale = null)
+  {
+    return $this->configService->moneyValue($value, $locale);
   }
 
   protected function generateUUID() {
