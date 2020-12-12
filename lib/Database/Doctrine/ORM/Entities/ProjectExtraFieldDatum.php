@@ -65,7 +65,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    *
    * @ORM\Column(name="FieldValue", type="text", length=16777215, nullable=false)
    */
-  private $fieldvalue;
+  private $fieldValue;
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectExtraField", fetch="EXTRA_LAZY")

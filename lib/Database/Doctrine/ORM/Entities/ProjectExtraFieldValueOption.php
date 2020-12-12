@@ -88,11 +88,11 @@ class ProjectExtraFieldValueOption implements \ArrayAccess
    */
   private $disabled = '0';
 
-  /**
-   * @ORM\ManyToOne(targetEntity="ProjectExtraField", inversedBy="valueOptions", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="FieldId", referencedColumnName="Id")
-   */
-  private $field;
+  // /**
+  //  * @ORM\ManyToOne(targetEntity="ProjectExtraField", inversedBy="valueOptions", fetch="EXTRA_LAZY")
+  //  * @ORM\JoinColumn(name="FieldId", referencedColumnName="Id")
+  //  */
+  // private $field;
 
   public function __construct() {
     $this->arrayCTOR();

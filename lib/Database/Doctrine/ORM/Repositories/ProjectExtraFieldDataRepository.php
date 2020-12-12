@@ -67,6 +67,21 @@ class ProjectExtraFieldDataRepository extends EntityRepository
               ->getQuery()
               ->getResult('COLUMN_HYDRATOR');
   }
+
+
+  /**
+   * Fetch all values stored for the given extra-field, e.g. in order
+   * to recover or generate select boxes.
+   */
+  public function fieldValues($fieldId)
+  {
+    $qb = $this->createQueryBuilder(self::ALIAS)
+               ->select(self::ALIAS.'.fieldValue')
+               ->where(self::ALIAS.'.fieldId = :field')
+               ->setParameter('field', $fieldId);
+    return $qb->getQuery()->getResult('COLUMN_HYDRATOR');
+  }
+
 }
 
 // Local Variables: ***

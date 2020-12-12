@@ -85,14 +85,14 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * @var string|null
    *
-   * @ORM\Column(name="AllowedValues", type="string", length=1024, nullable=true, options={"comment"="Set of allowed values for set and enumerations."})
+   * @ORM\Column(name="AllowedValues", type="json", nullable=true, options={"comment"="Set of allowed values for set and enumerations."})
    */
-  private $allowedvalues;
+  private $allowedValues;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="DefaultValue", type="string", length=1024, nullable=false, options={"comment"="Default value."})
+   * @ORM\Column(name="DefaultValue", type="text", length=16777215, nullable=true, options={"comment"="Default value."})
    */
   private $defaultValue;
 
@@ -144,20 +144,20 @@ class ProjectExtraField implements \ArrayAccess
    */
   private $type;
 
+  // /**
+  //  * @ORM\OneToMany(targetEntity="ProjectExtraFieldValueOption", mappedBy="field")
+  //  */
+  // private $valueOptions;
+
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="extraFields", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(name="ProjectId", referencedColumnName="Id")
    */
   private $project;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldValueOption", mappedBy="field")
-   */
-  private $valueOptions;
-
   public function __construct() {
     $this->arrayCTOR();
-    $this->valueOptions = new ArrayCollection();
+    //$this->valueOptions = new ArrayCollection();
   }
 
   /**
