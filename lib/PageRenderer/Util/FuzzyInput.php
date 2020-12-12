@@ -20,17 +20,37 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\PageRenderer;
+namespace OCA\CAFEVDB\PageRenderer\Util;
 
-/**Try to correct common human input "errors", respectively
- * sloppiness. Not much, ATM. */
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Storage\UserStorage;
+
+/**
+ * Try to correct common human input "errors", respectively
+ * sloppiness. Not much, ATM.
+ */
 class FuzzyInput
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+
   const HTML_TIDY = 1;
   const HTML_PURIFY = 2;
   const HTML_ALL = ~0;
 
-  /**Check $input for "transposition error". Interchange each
+  /** @var \OCA\CAFEVDB\Storage\UserStorage */
+  private $userStorage;
+
+  public function __construct(
+    ConfigService $config
+    , UserStorage $userStorage
+  ) {
+    $this->configService = $config;
+    $this->userStorage = $userStorage;
+    $this->l = $this->l10n();
+  }
+
+  /**
+   * Check $input for "transposition error". Interchange each
    * consecutive pair of letters, try to validate by $callback, return
    * an array of transposed input strings, for which $callback
    * returned true.
@@ -38,9 +58,9 @@ class FuzzyInput
   public static function transposition($input, $callback)
   {
     if (!is_callable($callback)) {
-      return array();
+      return [];
     }
-    $result = array();
+    $result = [];
     $len = strlen($input);
     for ($idx = 0; $idx < $len - 1; ++$idx) {
       $victim = $input;
@@ -53,7 +73,8 @@ class FuzzyInput
     return $result;
   }
 
-  /**Try to get the number of bugs from a currency value. We act
+  /**
+   * Try to get the number of bucks from a currency value. We act
    * quite simple: Strip the currency symbols from the users locale
    * and then try to parse the number, first with the users locale,
    * then with the C locale.
@@ -61,15 +82,16 @@ class FuzzyInput
    * @return mixed Either @c false or the floating point value
    * extracted from the input string.
    */
-  public static function currencyValue($value)
+  public function currencyValue($value)
   {
+    $locale = $this->getLocale();
     $amount = preg_replace('/\s+/u', '', $value);
-    $fmt = new \NumberFormatter(Util::getLocale(), \NumberFormatter::CURRENCY);
+    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
     $cur = $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
     $amount = str_replace($cur, '', $amount);
     $cur = $fmt->getSymbol(\NumberFormatter::INTL_CURRENCY_SYMBOL);
     $amount = str_replace($cur, '', $amount);
-    $fmt = new \NumberFormatter(Util::getLocale(), \NumberFormatter::DECIMAL);
+    $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
     $parsed = $fmt->parse($amount);
     if ($parsed === false) {
       $fmt = new \NumberFormatter('en_US_POSIX', \NumberFormatter::DECIMAL);
@@ -78,12 +100,14 @@ class FuzzyInput
     return $parsed !== false ? sprintf('%.02f', $parsed) : $parsed;
   }
 
-  /**Try to correct HTML code.*/
-  public static function purifyHTML($dirtyHTML, $method = self::HTML_PURIFY)
+  /**
+   *  Try to correct HTML code.
+   */
+  public function purifyHTML($dirtyHTML, $method = self::HTML_PURIFY)
   {
     $purifier = null;
     if ($method & self::HTML_PURIFY) {
-      $cacheDir = Config::userCacheDirectory('HTMLPurifier');
+      $cacheDir = $this->userStorage->getCacheFolder('HTMLPurifier');
       $config = \HTMLPurifier_Config::createDefault();
       $config->set('Cache.SerializerPath', $cacheDir);
       $config->set('HTML.TargetBlank', true);
@@ -94,12 +118,12 @@ class FuzzyInput
     $tidy = null;
     $tidyConfig = null;
     if ($method & self::HTML_TIDY) {
-      $tidyConfig = array(
+      $tidyConfig = [
         'indent'         => true,
         'output-xhtml'   => true,
         'show-body-only' => true,
         'wrap'           => 200
-      );
+      ];
       $tidy = new \tidy;
     }
 
