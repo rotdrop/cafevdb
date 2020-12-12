@@ -36,6 +36,8 @@ class UserStorage
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const CACHE_DIRECTORY = '/cache';
+
   /** @var string */
   protected $userId;
 
@@ -101,7 +103,9 @@ class UserStorage
    * and is not a directory, it will be moved out of the way or
    * deleted.
    *
-   * @param string $path The path the check and possibly create.
+   * @param string $path The path the check and possibly create. The
+   * path is relative to the user storage base directory and may
+   * contain multiple components.
    *
    * @return \OCP\Files\Folder The folder object pointing to the given
    * path.
@@ -121,6 +125,18 @@ class UserStorage
     }
     return $node;
   }
+
+  /**
+   * @param string $subDirectory Folder name inside cache
+   * subdirectory.
+   *
+   * @return \OCP\Files\Folder The requested cache folder
+   */
+  public function getCacheFolder(string $subDirectory)
+  {
+    return $this->ensureFolder(self::CACHE_DIRECTORY.'/'.$subDirectory);
+  }
+
 }
 
 // Local Variables: ***
