@@ -436,7 +436,7 @@ __EOT__;
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeUpdateRemoveUnchanged' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'addOrChangeInstrumentation' ];
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeUpdateTrigger' ];
-    // $opts['triggers']['update']['after'][]   = 'CAFEVDB\Projects::afterUpdateTrigger';
+    $opts['triggers']['update']['after'][]   = [ $this, 'afterUpdateTrigger' ];
 
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeInsertTrigger' ];
@@ -906,13 +906,14 @@ project without a flyer first.");
     return true;
   }
 
-  /**@Copydoc Projects::afterInsertTrigger()
+  /**
+   * @Copydoc Projects::afterInsertTrigger()
    *
    * This trigger, in particular, tries to take care to remove all
    * "side-effects" the existance of the project had. However, there
    * is some data which must not be removed automatically
    */
-  public static function deleteTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  public function deleteTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
     $projectId   = $pme->rec;
     $projectName = $oldvals['Name'];
