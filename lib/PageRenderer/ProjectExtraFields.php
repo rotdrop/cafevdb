@@ -387,6 +387,21 @@ class ProjectExtraFields extends PMETableViewBase
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D',
       'values' => [
+
+// SELECT
+//     n1.number AS array_index,
+//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.DatabaseName') AS 'DatabaseName',
+//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Schema Name') AS 'Schema Name',
+//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Object Name') AS 'Object Name',
+//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.column_index_id') AS 'column_index_id',
+//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Buffer size(MB)') AS 'Buffer size(MB)',
+//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.BufferCount') AS 'BufferCount',
+//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Row Count') AS 'Row Count',
+//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Compression Type') AS 'Compression Type'
+// FROM numbers_table AS n1
+// WHERE
+//     n1.number < json_length(@json_doc);
+
         //        'table' => "SELECT Id,
         // splitString(splitString(AllowedValues, '\\n', N), ':', 1) AS Value,
         // splitString(splitString(AllowedValues, '\\n', N), ':', 2) AS Label,
@@ -1243,7 +1258,7 @@ __EOT__;
 />
 __EOT__;
       }
-      for ($ i = $protoCount; $i < count($item); ++$i) {
+      for ($i = $protoCount; $i < count($item); ++$i) {
         $field = 'column'.$i;
         $value = htmlspecialchars($item[$field]);
         $html .=<<<__EOT__
