@@ -53,6 +53,9 @@ class ProjectService
   /** @var OCA\Redaxo4Embedded\Service\RPC */
   private $webPagesRPC;
 
+  /** @var ProjectsRepository */
+  private $repository;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
@@ -70,6 +73,7 @@ class ProjectService
     //$this->logInfo(print_r($this->webPagesRPC->getCategories(), true));
     //$this->logInfo(print_r($this->webPagesRPC->getTemplates(), true));
     //$this->logInfo(print_r($this->webPagesRPC->getModules(), true));
+    $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     $this->l = $this->l10n();
   }
 
@@ -114,7 +118,7 @@ class ProjectService
    */
   public function fetchName($projectId)
   {
-    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    $project = $this->repository->find($projectId);
     if ($project == null) {
       return null;
     }
@@ -122,7 +126,7 @@ class ProjectService
   }
 
   public function fetchAll() {
-    return $this->findAll();
+    return $this->repository->findAll();
   }
 
   /**
@@ -140,7 +144,7 @@ class ProjectService
    */
   public function ensureProjectFolders($projectId, $projectName = false, $only = false)
   {
-    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    $project = $this->repository->find($projectId);
     if (!$projectName) {
       $projectName = $project['Name'];
     } else if ($projectName != $project['Name']) {
@@ -160,9 +164,9 @@ class ProjectService
       }
       try {
         $this->userStorage->ensureFolder($path);
-        $path .= "/".$project['Jahr'];
+        $path .= "/".$project['year'];
         $this->userStorage->ensureFolder($path);
-        $path .= "/".$project['Name'];
+        $path .= "/".$project['name'];
         $this->userStorage->ensureFolder($path);
         $returnPaths[$key] = $path;
       } catch (\Throwable $t) {
@@ -196,7 +200,7 @@ class ProjectService
 
     foreach($prefixPath as $key => $prefix) {
 
-      $oldPath = $prefix.$oldProject['Jahr']."/".$oldProject['Name'];
+      $oldPath = $prefix.$oldProject['year']."/".$oldProject['name'];
       $this->userStorage->delete($oldPath);
     }
 
@@ -226,10 +230,10 @@ class ProjectService
     $returnPaths = [];
     foreach ($prefixPath as $key => $prefix) {
 
-      $oldPath = $prefix.$oldProject['Jahr']."/".$oldProject['Name'];
-      $newPrefixPath = $prefix.$newProject['Jahr'];
+      $oldPath = $prefix.$oldProject['year']."/".$oldProject['name'];
+      $newPrefixPath = $prefix.$newProject['year'];
 
-      $newPath = $newPrefixPath.'/'.$newProject['Name'];
+      $newPath = $newPrefixPath.'/'.$newProject['name'];
 
       if ($fileView->is_dir($oldPath)) {
 
@@ -278,14 +282,14 @@ class ProjectService
     $orchestra = $this->getConfigValue('orchestra');
     $orchestra = $this->getConfigValue('streetAddressName=1', $orchestra);
 
-    $projects = $this->findAll();
+    $projects = $this->repository->findAll();
 
     $page = "====== ".($this->l->t('Projects of %s', [$orchestra]))."======\n\n";
 
     $year = -1;
     foreach ($projects as $project) {
-      if ($project['Jahr'] != $year) {
-        $year = $row['Jahr'];
+      if ($project['year'] != $year) {
+        $year = $row['year'];
         $page .= "\n==== ".$year."====\n";
       }
       $name = $row['Name'];
@@ -398,7 +402,7 @@ Whatever.',
    */
   public function projectWebPages($projectId)
   {
-    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    $project = $this->repository->find($projectId);
     if (empty($project)) {
       return false;
     }
@@ -453,7 +457,7 @@ Whatever.',
    */
   public function createProjectWebPage($projectId, $kind = 'concert')
   {
-    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    $project = $this->repository->find($projectId);
     if (empty($project)) {
       return false;
     }
@@ -603,7 +607,7 @@ Whatever.',
    */
   public function nameProjectWebPages($projectId, $projectName = null)
   {
-    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    $project = $this->repository->find($projectId);
     if (empty($project)) {
       return false;
     }
@@ -650,7 +654,7 @@ Whatever.',
    */
   public function attachMatchingWebPages($projectId)
   {
-    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    $project = $this->repository->find($projectId);
     $projectName = $project->getName();
 
     $previewCat    = $this->getConfigtValue('redaxoPreview');
@@ -684,6 +688,15 @@ Whatever.',
     return true;
   }
 
+  public function disable($projectId, $disable = true)
+  {
+    $this->repository->disable($projectId);
+  }
+
+  public function enable($projectId, $disable = true)
+  {
+    $this->repository->enable($projectId);
+  }
 }
 
 // Local Variables: ***
