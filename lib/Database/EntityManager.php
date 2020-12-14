@@ -28,6 +28,7 @@ use OCP\IL10N;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 
 use Ramsey\Uuid\Doctrine as Ramsey;
 
@@ -166,6 +167,9 @@ class EntityManager extends EntityManagerDecorator
     $config->addCustomStringFunction('timestampdiff', 'Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff');
 
     $config->addCustomHydrationMode('COLUMN_HYDRATOR', ColumnHydrator::class);
+
+    $namingStrategy = new UnderscoreNamingStrategy(CASE_LOWER);
+    $config->setNamingStrategy($namingStrategy);
 
     // obtaining the entity manager
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config);
