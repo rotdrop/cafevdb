@@ -137,7 +137,7 @@ var CAFEVDB = CAFEVDB || {};
                instrumentValues: selectMusicianInstrument.val()
              },
              function (data) {
-               if (!CAFEVDB.validateAjaxResponse(data, [ 'message' ], function() {
+               if (!CAFEVDB.Ajax.validateResponse(data, [ 'message' ], function() {
                       if (typeof errorCB == 'function' &&
                           typeof data.data != 'undefined' &&
                           typeof data.data.instruments != 'undefined') {

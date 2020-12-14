@@ -46,7 +46,7 @@ var CAFEVDB = CAFEVDB || {};
   SepaDebitMandate.init = function(data, reloadCB) {
     var self = SepaDebitMandate;
 
-    if (!CAFEVDB.validateAjaxResponse(data, [
+    if (!CAFEVDB.Ajax.validateResponse(data, [
       'contents',
       'projectId', 'projectName',
       'musicianId', 'musicianName',
@@ -306,7 +306,7 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-store.php'),
            post,
            function (data) {
-             if (!CAFEVDB.validateAjaxResponse(data, [ 'message' ])) {
+             if (!CAFEVDB.Ajax.validateResponse(data, [ 'message' ])) {
                return false;
              }
 	     $(dialogId+' #msg').html(data.data.message);
@@ -333,7 +333,7 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-delete.php'),
            post,
            function (data) {
-             if (!CAFEVDB.validateAjaxResponse(data, [ 'message' ])) {
+             if (!CAFEVDB.Ajax.validateResponse(data, [ 'message' ])) {
                return false;
              }
 	     $(dialogId+' #msg').html(data.data.message);
@@ -382,7 +382,7 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
            post,
            function (data) {
-             if (!CAFEVDB.validateAjaxResponse(data,
+             if (!CAFEVDB.Ajax.validateResponse(data,
                                            [ 'suggestions', 'message' ],
                                            validateUnlock)) {
                if (data.data.suggestions !== '') {
@@ -547,7 +547,7 @@ var CAFEVDB = CAFEVDB || {};
                            + t('cafevdb', 'Please do not accept these alternatives lightly!');
                data.data.message += hints;
              }
-             if (!CAFEVDB.validateAjaxResponse(data,
+             if (!CAFEVDB.Ajax.validateResponse(data,
                                            [ 'suggestions', 'message' ],
                                            validateErrorUnlock)) {
                if (data.data.blz) {
@@ -642,7 +642,7 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php'),
            formPost,
            function (data) {
-             if (!CAFEVDB.validateAjaxResponse(data, [ 'message', 'debitnote' ],
+             if (!CAFEVDB.Ajax.validateResponse(data, [ 'message', 'debitnote' ],
                                            clearBusyState)) {
                return false;
              }

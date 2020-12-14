@@ -140,7 +140,7 @@ var CAFEVDB = CAFEVDB || {};
 	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
             { 'value': value })
 	  .fail(function(xhr, status, errorThrown) {
-            msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+            msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
             callbacks.fail(xhr, status,  errorThrown);
             callbacks.cleanup();
           })
@@ -162,7 +162,7 @@ var CAFEVDB = CAFEVDB || {};
         $.post(
 	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name))
 	.fail(function(xhr, status, errorThrown) {
-          msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
           msgElement.html(data.message).show();
@@ -203,7 +203,7 @@ var CAFEVDB = CAFEVDB || {};
           $('#userkey .changed').show();
 	})
 	.fail(function(xhr, status, errorThrown) {
-          $('#userkey .info').html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+          $('#userkey .info').html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown));
           $('#userkey .info').show();
           $('#userkey .error').show();
         });
@@ -306,7 +306,7 @@ var CAFEVDB = CAFEVDB || {};
             CAFEVDB.Notification.hide();
 
             $('.statusmessage.error').show();
-            const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+            const msg = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown);
             if (msg) {
               container.find('.statusmessage.general').html(msg).show();
             }
@@ -331,7 +331,7 @@ var CAFEVDB = CAFEVDB || {};
         $.post(
 	  OC.generateUrl('/apps/cafevdb/settings/get/passwordgenerate'))
         .fail(function(xhr, status, errorThrown) {
-          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
 	  // Make sure both inputs have the same value
@@ -351,7 +351,7 @@ var CAFEVDB = CAFEVDB || {};
         $.post(
 	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name))
 	.fail(function(xhr, status, errorThrown) {
-          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
           msg.html(data.message).show();
@@ -479,7 +479,7 @@ var CAFEVDB = CAFEVDB || {};
         $.post(
 	  OC.generateUrl('/apps/cafevdb/settings/get/passwordgenerate'))
         .fail(function(xhr, status, errorThrown) {
-          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
           // TODO check integrity of return etc.
@@ -593,7 +593,7 @@ var CAFEVDB = CAFEVDB || {};
 	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
             { 'value': value })
 	  .fail(function(xhr, status, errorThrown) {
-            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+            msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
             msg.html(data.message).show();
@@ -616,7 +616,7 @@ var CAFEVDB = CAFEVDB || {};
 	      OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
               { 'value': value })
 	    .fail(function(xhr, status, errorThrown) {
-              msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+              msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
             })
             .done(function(data) {
               msg.html(data.message).show();
@@ -638,7 +638,7 @@ var CAFEVDB = CAFEVDB || {};
           $.post(
 	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name))
 	  .fail(function(xhr, status, errorThrown) {
-            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+            msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
             msg.html(data.message).show();
@@ -659,7 +659,7 @@ var CAFEVDB = CAFEVDB || {};
 	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
             { 'value': value })
 	  .fail(function(xhr, status, errorThrown) {
-            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+            msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
 	    $('#'+data.proto+'port').val(data.port);
@@ -676,7 +676,7 @@ var CAFEVDB = CAFEVDB || {};
 	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
             { 'value': value })
 	  .fail(function(xhr, status, errorThrown) {
-            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+            msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
             msg.html(data.message).show();
@@ -697,7 +697,7 @@ var CAFEVDB = CAFEVDB || {};
 	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
             { 'value': value })
 	  .fail(function(xhr, status, errorThrown) {
-            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+            msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
             msg.html(data.message).show();
@@ -925,7 +925,7 @@ var CAFEVDB = CAFEVDB || {};
         $.post(
 	  OC.generateUrl('/apps/cafevdb/settings/get/' + target))
         .fail(function(xhr, status, errorThrown) {
-          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
           console.log(data);

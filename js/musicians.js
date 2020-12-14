@@ -38,7 +38,7 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/instrumentation', 'add-musicians.php'),
            post,
            function(data) {
-             if (!CAFEVDB.validateAjaxResponse(data, [
+             if (!CAFEVDB.Ajax.validateResponse(data, [
                'musicians'
              ])) {
                // Load the underlying base-view in any case in order to go "back" ...
@@ -99,7 +99,7 @@ var CAFEVDB = CAFEVDB || {};
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validatephone.php'),
              post,
              function (data) {
-               if (!CAFEVDB.validateAjaxResponse(
+               if (!CAFEVDB.Ajax.validateResponse(
                  data, [ 'message',
                          'mobilePhone',
                          'mobileMeta',
@@ -158,7 +158,7 @@ var CAFEVDB = CAFEVDB || {};
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validateemail.php'),
              post,
              function (data) {
-               if (!CAFEVDB.validateAjaxResponse(
+               if (!CAFEVDB.Ajax.validateResponse(
                  data, [ 'message',
                          'email' ],
                  function() {
@@ -296,7 +296,7 @@ var CAFEVDB = CAFEVDB || {};
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validateaddress.php'),
              post,
              function(data) {
-               if (!CAFEVDB.validateAjaxResponse(
+               if (!CAFEVDB.Ajax.validateResponse(
                  data,
                  [ 'message', 'city', 'zip', 'street', 'suggestions' ],
                  function() {
@@ -387,7 +387,7 @@ var CAFEVDB = CAFEVDB || {};
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validate.php'),
              post,
              function (data) {
-               if (!CAFEVDB.validateAjaxResponse(data, [ 'message' ],
+               if (!CAFEVDB.Ajax.validateResponse(data, [ 'message' ],
                                              function() {
                                                nameValidationActive = false;
                                              })) {

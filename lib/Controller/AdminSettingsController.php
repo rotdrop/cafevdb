@@ -48,6 +48,7 @@ class AdminSettingsController extends Controller {
 
     $this->configService = $configService;
     $this->wikiRPC = $wikiRPC;
+    $this->wikiRPC->errorReporting(WikiRPC::ON_ERROR_THROW);
     $this->l = $this->l10N();
   }
 
@@ -57,7 +58,8 @@ class AdminSettingsController extends Controller {
   public function set($parameter, $value) {
     $wikiNameSpace = $this->getAppValue('wikinamespace');
     $orchestraUserGroup = $this->getAppValue('usergroup');
-    switch ($parameter) {
+    try {
+      switch ($parameter) {
       case 'orchestraUserGroup':
         $realValue = trim($value);
         if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
@@ -95,6 +97,9 @@ class AdminSettingsController extends Controller {
         break;
       default:
         return self::grumble($this->l->t('Unknown Request'));
+      }
+    } catch (\Throwable $t) {
+      return self::grumble($this->exceptionChainData($t));
     }
   }
 

@@ -238,7 +238,7 @@ var CAFEVDB = CAFEVDB || {};
                value: { amount: amount }
              },
              function (data) {
-               if (!CAFEVDB.validateAjaxResponse(data, [ 'Amount' ],
+               if (!CAFEVDB.Ajax.validateResponse(data, [ 'Amount' ],
                                              function() {
                                                self.prop('readonly', false);
                                                submitDefer.resolve();
@@ -309,7 +309,7 @@ var CAFEVDB = CAFEVDB || {};
       $.post(OC.filePath('cafevdb', 'ajax/projects', 'extra-fields.php'),
              postData,
              function (data) {
-               if (!CAFEVDB.validateAjaxResponse(data,
+               if (!CAFEVDB.Ajax.validateResponse(data,
                                              [ 'AllowedValueOption',
                                                'AllowedValueInput',
                                                'AllowedValue'

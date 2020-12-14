@@ -19,69 +19,41 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var CAFEVDB = CAFEVDB || { appName: 'cafevdb' };
-
-/**Fetch data from an error response.
- *
- * @param xhr jqXHR, see fail() method of jQuery ajax.
- *
- * @param status from jQuery, see fail() method of jQuery ajax.
- *
- * @param errorThrown, see fail() method of jQuery ajax.
- */
-CAFEVDB.ajaxFailData = function(xhr, status, errorThrown) {
-  const ct = xhr.getResponseHeader("content-type") || "";
-  var data = {
-    'error': errorThrown,
-    'status': status,
-    'message': t(CAFEVDB.appName, 'Unknown JSON error response to AJAX call: {status} / {error}')
-  };
-  if (ct.indexOf('html') > -1) {
-    console.debug('html response', xhr, status, errorThrown);
-    console.debug(xhr.status);
-    data.message = t(CAFEVDB.appName, 'HTTP error response to AJAX call: {code} / {error}',
-                     {'code': xhr.status, 'error': errorThrown});
-  } else if (ct.indexOf('json') > -1) {
-    const response = JSON.parse(xhr.responseText);
-    //console.info('XHR response text', xhr.responseText);
-    //console.log('JSON response', response);
-    data = {...data, ...response };
-  } else {
-    console.log('unknown response');
-  }
-  //console.info(data);
-  return data;
-};
+var CAFEVDB = CAFEVDB || {};
+if (!CAFEVDB.appName) {
+  CAFEVDB.appName = 'cafevdb';
+}
 
 $(function(){
 
-    const $container = $('#' + CAFEVDB.appName + '-admin-settings');
-    const $msg = $container.find('.msg');
+  const $container = $('#' + CAFEVDB.appName + '-admin-settings');
+  const $msg = $container.find('.msg');
 
-    $container.find('input').blur(function(event){
-        const $self = $(this);
+  $container.find('input').blur(function(event){
+    const $self = $(this);
 
-        const name = $self.attr('name');
-        const value = $self.val();
+    const name = $self.attr('name');
+    const value = $self.val();
 
-        $msg.hide();
+    $msg.hide();
 
-	$.post(
-          OC.generateUrl('/apps/cafevdb/settings/admin/set/' + name),
-          { 'value': value })
-        .done(function(data) {
-          console.log(data);
-	  $msg.html(data.message).show();
-          if (data.wikiNameSpace !== undefined) {
-            $container.find('input.wikiNameSpace').val(data.wikiNameSpace);
-          }
-        })
-        .fail(function(xhr, status, errorThrown) {
-          const response = CAFEVDB.ajaxFailData(xhr, status, errorThrown);
-          console.log(response);
-          if (response.message) {
-	    $msg.html(response.message).show();
-          }
-        });
-    });
+    $.post(
+      OC.generateUrl('/apps/cafevdb/settings/admin/set/' + name),
+      { 'value': value })
+      .done(function(data) {
+	console.log(data);
+	$msg.html(data.message).show();
+	if (data.wikiNameSpace !== undefined) {
+	  $container.find('input.wikiNameSpace').val(data.wikiNameSpace);
+        }
+      })
+      .fail(function(xhr, status, errorThrown) {
+	CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
+	$msg.html(CAFEVDB.Ajax.failMessage(xh, status, errorThrown)).show();
+      });
+  });
 });
+
+// Local Variables: ***
+// js-indent-level: 2 ***
+// End: ***

@@ -54,9 +54,9 @@ $(function() {
 	  msg.html(data.message).show();
 	})
         .fail(function(xhr, status, errorThrown) {
-          CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+          CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
           msg.hide();
-          error.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          error.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
         });
       return false;
     });
@@ -68,7 +68,7 @@ $(function() {
     $.post(OC.generateUrl('/apps/cafevdb/expertmode/action/setupdb'), { 'data': {} })
       .done(function(data) {
 	console.log(data);
-        if (!CAFEVDB.validateAjaxResponse(data, [ 'success', 'error' ])) {
+        if (!CAFEVDB.Ajax.validateResponse(data, [ 'success', 'error' ])) {
           return;
         }
         OC.dialogs.alert(t('cafevdb', 'Successfull:')+
@@ -86,9 +86,9 @@ $(function() {
         msg.html(data.message).show();
       })
       .fail(function(xhr, status, errorThrown) {
-        CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+        CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
         msg.html('').hide();
-        error.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+        error.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       });
     return false;
   });

@@ -378,11 +378,11 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
           }
           $.post(OC.generateUrl('/apps/cafevdb/projects/validate/name'), post)
            .fail(function(xhr, status, errorThrown) {
-             CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+             CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
              cleanup();
            })
           .done(function(rqData) {
-            if (!CAFEVDB.validateAjaxResponse(rqData, [
+            if (!CAFEVDB.Ajax.validateResponse(rqData, [
               'projectName', 'projectYear'
             ])) {
               cleanup();
@@ -484,7 +484,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       $.post(OC.filePath('cafevdb', 'ajax/projects', 'web-articles.php'),
              post,
              function (data) {
-               if (!CAFEVDB.validateAjaxResponse(data, [])) {
+               if (!CAFEVDB.Ajax.validateResponse(data, [])) {
                  // do nothing
                } else if (data.data.message != '') {
                  CAFEVDB.Notification.showHtml(data.data.message);

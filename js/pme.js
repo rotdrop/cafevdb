@@ -330,7 +330,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     $.post(CAFEVDB.generateUrl('page/pme'), post)
       .fail(function(xhr, status, errorThrown) {
-        CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+        CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
         callbacks.fail(xhr, status, errorThrown);
       })
       // HTTP response

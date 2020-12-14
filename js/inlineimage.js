@@ -81,7 +81,7 @@ var CAFEVDB = CAFEVDB || {};
   Photo.uploadPhoto = function(filelist) {
     const self = CAFEVDB.Photo;
     if (!filelist) {
-      CAFEVDB.dialogs.alert(t('cafevdb', 'No files selected for upload.'), t('cafevdb', 'Error'));
+      CAFEVDB.Dialogs.alert(t('cafevdb', 'No files selected for upload.'), t('cafevdb', 'Error'));
       return;
     }
     const file = filelist[0];
@@ -89,7 +89,7 @@ var CAFEVDB = CAFEVDB || {};
     const form = $('#file_upload_form');
     //var totalSize=0;
     if (file.size > $('#max_upload').val()) {
-      CAFEVDB.dialogs.alert(t('cafevdb', 'The file you are trying to upload exceed the maximum size of {max} for file uploads on this server.', { max: $('#max_upload_human').val()}), t('cafevdb', 'Error'));
+      CAFEVDB.Dialogs.alert(t('cafevdb', 'The file you are trying to upload exceed the maximum size of {max} for file uploads on this server.', { max: $('#max_upload_human').val()}), t('cafevdb', 'Error'));
       return;
     } else {
       const uploadData = new FormData(form[0]);
@@ -101,10 +101,10 @@ var CAFEVDB = CAFEVDB || {};
         contentType: false // 'multipart/form-data' // ???
       })
       .fail(function(xhr, status, errorThrown) {
-        CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+        CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
       })
       .done(function(data) {
-        if (!CAFEVDB.validateAjaxResponse(data, [ 'ownerId', 'tmpKey' ])) {
+        if (!CAFEVDB.Ajax.validateResponse(data, [ 'ownerId', 'tmpKey' ])) {
           return;
         }
         self.editPhoto(data.ownerId, data.tmpKey);
@@ -129,10 +129,10 @@ var CAFEVDB = CAFEVDB || {};
              'joinTable': self.joinTable,
              'imageSize': self.imageSize })
     .fail(function(xhr, status, errorThrown) {
-      CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+      CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
     })
     .done(function(data) {
-      if (!CAFEVDB.validateAjaxResponse(data, [ 'ownerId', 'tmpKey' ])) {
+      if (!CAFEVDB.Ajax.validateResponse(data, [ 'ownerId', 'tmpKey' ])) {
         return;
       }
       self.editPhoto(data.ownerId, data.tmpKey);
@@ -154,8 +154,8 @@ var CAFEVDB = CAFEVDB || {};
       OC.generateUrl('/apps/cafevdb/image/' + self.joinTable+ '/' + self.ownerId),
       { 'metaData': true })
      .fail(function(xhr, status, errorThrown) {
-       if (xhr.status != CAFEVDB.httpStatus.NOT_FOUND) { // ok, no photo yet
-         CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+       if (xhr.status != CAFEVDB.Ajax.httpStatus.NOT_FOUND) { // ok, no photo yet
+         CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
        }
        self.data.PHOTO = false;
        self.loadPhotoHandlers();
@@ -196,7 +196,7 @@ var CAFEVDB = CAFEVDB || {};
       // returned by the server. So only information is "there was an
       // error".
 
-      CAFEVDB.dialogs.alert(
+      CAFEVDB.Dialogs.alert(
         t('cafevdb', 'Could not open image.'), t('cafevdb', 'Error'),
         function () {
           if (typeof callback == 'function') {
@@ -216,11 +216,11 @@ var CAFEVDB = CAFEVDB || {};
              'joinTable': self.joinTable,
              'imageSize': self.imageSize })
      .fail(function(xhr, status, errorThrown) {
-       CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+       CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
        wrapper.removeClass('wait');
      })
      .done(function(data) {
-       if (!CAFEVDB.validateAjaxResponse(data, [ 'ownerId', 'tmpKey' ])) {
+       if (!CAFEVDB.Ajax.validateResponse(data, [ 'ownerId', 'tmpKey' ])) {
          return;
        }
        self.editPhoto(data.ownerId, data.tmpKey);
@@ -324,7 +324,7 @@ var CAFEVDB = CAFEVDB || {};
     console.log('savePhoto', q);
     $.post(OC.generateUrl('/apps/cafevdb/image/save'), q)
     .fail(function(xhr, status, errorThrown) {
-      CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+      CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
       self.data.PHOTO = false;
     })
     .done(function(data) {
@@ -342,7 +342,7 @@ var CAFEVDB = CAFEVDB || {};
              'ownerId': self.ownerId
            })
     .fail(function(xhr, status, errorThrown) {
-      CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+      CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
       wrapper.removeClass('wait');
     })
     .done(function(data) {
@@ -424,25 +424,25 @@ var CAFEVDB = CAFEVDB || {};
       }
       const file = files[0];
       if(file.size > $('#max_upload').val()){
-        CAFEVDB.dialogs.alert(t('cafevdb', 'The file you are trying to upload exceed the maximum size for file uploads on this server.'), t('cafevdb','Upload too large'));
+        CAFEVDB.Dialogs.alert(t('cafevdb', 'The file you are trying to upload exceed the maximum size for file uploads on this server.'), t('cafevdb','Upload too large'));
         return;
       }
       if (file.type.indexOf("image") != 0) {
-        CAFEVDB.dialogs.alert(t('cafevdb', 'Only image files can be used as profile picture.'), t('cafevdb','Wrong file type'));
+        CAFEVDB.Dialogs.alert(t('cafevdb', 'Only image files can be used as profile picture.'), t('cafevdb','Wrong file type'));
         return;
       }
       const xhr = new XMLHttpRequest();
 
       if (!xhr.upload) {
-        CAFEVDB.dialogs.alert(t('cafevdb', 'Your browser doesn\'t support AJAX upload. Please click on the profile picture to select a photo to upload.'), t('cafevdb', 'Error'))
+        CAFEVDB.Dialogs.alert(t('cafevdb', 'Your browser doesn\'t support AJAX upload. Please click on the profile picture to select a photo to upload.'), t('cafevdb', 'Error'))
       }
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) { // done
           const response = $.parseJSON(xhr.responseText);
-          if (xhr.status == CAFEVDB.httpStatus.OK) {
+          if (xhr.status == CAFEVDB.Ajax.httpStatus.OK) {
             CAFEVDB.Photo.editPhoto(response.ownerId, response.tmpKey);
           } else {
-            CAFEVDB.handleAjaxError(xhr, xhr.status, CAFEVDB.httpStatus[xhr.status]);
+            CAFEVDB.Ajax.handleError(xhr, xhr.status, CAFEVDB.Ajax.httpStatus[xhr.status]);
           }
         }
       };

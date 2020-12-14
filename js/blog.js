@@ -165,7 +165,7 @@ var CAFEVDB = CAFEVDB || {};
              clearReader: clearReaderValue
            })
     .fail(function(xhr, status, errorThrown) {
-            const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+            const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown);
             OC.dialogs.alert(message, t('cafevdb', 'Error'));
     })
     .done(function (data) {
@@ -214,7 +214,7 @@ var CAFEVDB = CAFEVDB || {};
               $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
                      { blogId: thisBlogId })
 	      .fail(function(xhr, status, errorThrown) {
-                const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
+                const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
                 OC.dialogs.alert(message, t('cafevdb', 'Error'));
               })
               .done(function (data) {
@@ -271,7 +271,7 @@ $(function() {
       $.post(OC.generateUrl('/apps/cafevdb/blog/editentry'),
              post)
       .fail(function(xhr, status, errorThrown) {
-        const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
+        const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
         OC.dialogs.alert(message, t('cafevdb', 'Error'));
       })
       .done(Blog.editWindow);
@@ -290,7 +290,7 @@ $(function() {
                { blogId: -1,
                  inReplyTo: $(this).val() })
         .fail(function(xhr, status, errorThrown) {
-          const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
+          const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
           OC.dialogs.alert(message, t('cafevdb', 'Error'));
         })
         .done(Blog.editWindow);
@@ -307,7 +307,7 @@ $(function() {
                  inReplyTo: -1
                })
         .fail(function(xhr, status, errorThrown) {
-          const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
+          const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
           OC.dialogs.alert(message, t('cafevdb', 'Error'));
         })
         .done(Blog.editWindow);
@@ -330,7 +330,7 @@ $(function() {
               $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
                      { blogId: blogId })
 	      .fail(function(xhr, status, errorThrown) {
-                const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
+                const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
                 OC.dialogs.alert(message, t('cafevdb', 'Error'));
               })
               .done(Blog.updateThreads);
@@ -356,7 +356,7 @@ $(function() {
                  inReplyTo: -1
                })
 	.fail(function(xhr, status, errorThrown) {
-          const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
+          const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
           OC.dialogs.alert(message, t('cafevdb', 'Error'));
         })
         .done(Blog.updateThreads);
@@ -379,7 +379,7 @@ $(function() {
                  inReplyTo: -1
                })
 	.fail(function(xhr, status, errorThrown) {
-          const message = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)
+          const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
           OC.dialogs.alert(message, t('cafevdb', 'Error'));
         })
         .done(Blog.updateThreads);

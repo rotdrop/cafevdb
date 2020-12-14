@@ -59,7 +59,7 @@ var CAFEVDB = CAFEVDB || {};
     }
     $.post(CAFEVDB.generateUrl('page/' + action + '/' + parameter), post)
     .fail(function(xhr, status, errorThrown) {
-      const errorData = CAFEVDB.handleAjaxError(xhr, status, errorThrown);
+      const errorData = CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
       // If the error response contains history data, use it. Othewise
       // reset the history
       if (action == 'recall') {
@@ -80,7 +80,7 @@ var CAFEVDB = CAFEVDB || {};
       const historySize = request.getResponseHeader('X-'+CAFEVDB.appName+'-history-size');
       const historyPosition = request.getResponseHeader('X-'+CAFEVDB.appName+'-history-position');
 
-      // if (!CAFEVDB.validateAjaxResponse(data, [ 'contents', 'history' ])) {
+      // if (!CAFEVDB.Ajax.validateResponse(data, [ 'contents', 'history' ])) {
       //   // re-enable inputs on error
       //   if (false) {
       //     container.find('input').prop('disabled', false);

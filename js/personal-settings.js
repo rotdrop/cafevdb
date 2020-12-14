@@ -90,7 +90,7 @@ $(function() {
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
-        msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+        msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
         console.error(data);
       });
     $('.personal-settings input[type="checkbox"].tooltips').prop('checked', CAFEVDB.toolTipsEnabled);
@@ -112,7 +112,7 @@ $(function() {
       console.log(data);
     })
     .fail(function(xhr, status, errorThrown) {
-      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
     if (checked) {
@@ -134,7 +134,7 @@ $(function() {
       console.log(data);
     })
     .fail(function(xhr, status, errorThrown) {
-      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
     if (window.PHPMYEDIT !== undefined) {
@@ -170,7 +170,7 @@ $(function() {
       return false;
     })
     .fail(function(xhr, status, errorThrown) {
-      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
     if (window.PHPMYEDIT !== undefined) {
@@ -198,7 +198,7 @@ $(function() {
       }
     })
     .fail(function(xhr, status, errorThrown) {
-      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
     if (checked) {
@@ -222,7 +222,7 @@ $(function() {
       console.log(data);
     })
     .fail(function(xhr, status, errorThrown) {
-      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
     $('.personal-settings select.pagerows').val(value);
@@ -241,7 +241,7 @@ $(function() {
       CAFEVDB.debugModes = data.value;
     })
     .fail(function(xhr, status, errorThrown) {
-      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
     // TODO cross update options.
@@ -259,7 +259,7 @@ $(function() {
       console.log(data);
     })
     .fail(function(xhr, status, errorThrown) {
-      msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+      msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
     $('.personal-settings select.wysiwyg-editor').val(value);

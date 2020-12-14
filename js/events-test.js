@@ -51,7 +51,7 @@ $(function() {
         CAFEVDB.Legacy.Calendar.UI.startEventDialog();
       })
       .fail(function(xhr, status, errorThrown) {
-        const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+        const msg = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown);
         OC.dialogs.alert(msg, t('cafevdb', 'Event-testing caught an error'));
       });
     });
@@ -73,7 +73,7 @@ $(function() {
       })
       .fail(function(xhr, status, errorThrown) {
         console.log("failed starting event");
-        const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+        const msg = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown);
         OC.dialogs.alert(msg, t('cafevdb', 'Event-testing caught an error'));
       });
     });
@@ -86,7 +86,7 @@ $(function() {
       })
       .fail(function(xhr, status, errorThrown) {
         console.log("failed triggering geo-data retrieval");
-        const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+        const msg = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown);
         OC.dialogs.alert(msg, t('cafevdb', 'Geo-Data testing caught an error'));
       });
     });
@@ -99,12 +99,12 @@ $(function() {
       $.post(OC.generateUrl('/apps/cafevdb/foregroundjob/progress/create'),
 	     { 'id': id, 'target': 100, 'current': 0 })
       .fail(function(xhr, status, errorThrown) {
-        $('#progress-status-info').html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+        $('#progress-status-info').html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown));
       })
       .done(function(data) {
         $.post(OC.generateUrl('/apps/cafevdb/foregroundjob/progress/test'), { 'id': id })
 	.fail(function(xhr, status, errorThrown) {
-          $('#progress-status-info').html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+          $('#progress-status-info').html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown));
 	});
         CAFEVDB.pollProgressStatus(
 	  id,
@@ -115,7 +115,7 @@ $(function() {
               return parseInt(data.current) < parseInt(data.target);
             },
             'fail': function(xhr, status, errorThrown) {
-              $('#progress-status-info').html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+              $('#progress-status-info').html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown));
             }
 	  });
       });

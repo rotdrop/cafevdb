@@ -60,6 +60,9 @@ style($appName, 'project-extra');
 style($appName, 'mobile');
 
 script($appName, 'cafevdb');
+script($appName, 'dialogs');
+script($appName, 'print-r');
+script($appName, 'ajax');
 script($appName, 'events-test'); /**< @TODO remove */
 script($appName, 'backgroundjobs');
 script($appName, 'notification');
