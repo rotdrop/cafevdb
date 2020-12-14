@@ -31,7 +31,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ProjectWebPage
  *
  * @ORM\Table(name="ProjectWebPages", uniqueConstraints={@ORM\UniqueConstraint(name="ProjectId", columns={"ProjectId", "ArticleId"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectWebPagesRepository")
  */
 class ProjectWebPage implements \ArrayAccess
 {
@@ -88,7 +88,7 @@ class ProjectWebPage implements \ArrayAccess
    * just a pain in the ass.
    *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="webPages", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="projectId", referencedColumnName="Id")
+   * @ORM\JoinColumn(name="ProjectId", referencedColumnName="Id")
    */
   private $project;
 
@@ -224,5 +224,29 @@ class ProjectWebPage implements \ArrayAccess
   public function getPriority()
   {
     return $this->priority;
+  }
+
+  /**
+   * Set project.
+   *
+   * @param Project $project
+   *
+   * @return ProjectWebPages
+   */
+  public function setProject($project)
+  {
+    $this->project = $project;
+
+    return $this;
+  }
+
+  /**
+   * Get project.
+   *
+   * @return Project
+   */
+  public function getProject()
+  {
+    return $this->project;
   }
 }
