@@ -27,6 +27,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -48,10 +49,14 @@ class Projects extends PMETableViewBase
   const POSTER_JOIN = 'ProjectPoster';
   const FLYER_JOIN = 'ProjectFlyer';
 
+  /** @var EventsService */
+  private $eventsService;
+
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
     , ProjectService $projectService
+    , EventsService $eventsService
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ChangeLogService $changeLogService
@@ -60,6 +65,7 @@ class Projects extends PMETableViewBase
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
     $this->projectService = $projectService;
+    $this->eventsService = $eventsService;
   }
 
   public function cssClass() { return self::CSS_CLASS; }
@@ -916,85 +922,83 @@ project without a flyer first.");
   public function deleteTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
     $projectId   = $pme->rec;
-    $projectName = $oldvals['Name'];
+    $projectName = $oldvals['name'];
     if (empty($projectName)) {
       $projectName = $this->projectService->fetchName($projectId); // @TODO: really needed?
-      $oldvals['Name'] = $projectName;
+      $oldvals['name'] = $projectName;
     }
 
-    // $safeMode = false;
-    // if ($step === 'before') {
-    //   $payments = ProjectPayments::payments($projectId, $pme->dbh);
-    //   if ($payments === false) {
-    //     return false; // play safe, don't try to remove anything if we
-    //     // catch an error early
-    //   }
+    $safeMode = false;
+    if ($step === 'before') {
+      $payments = $this->getDatabaseRepository(Entities\ProjectPayment::class)->findBy([ 'projectId' => $projectid ]);
+      $safeMode = !empty($payments); // don't really remove if we have finance data
+    }
 
-    //   $safeMode = !empty($payments); // don't really remove if we have finance data
-    // }
+    if ($step === 'after' || $safeMode) {
+      // And now remove the project folder ... OC has undelete
+      // functionality and we have a long-ranging backup.
+      $this->projectService->removeProjectFolders($oldvals);
 
-    // if ($step === 'after' || $safeMode) {
-    //   // And now remove the project folder ... OC has undelete
-    //   // functionality and we have a long-ranging backup.
-    //   $this->projectService->removeProjectFolders($oldvals);
+      // Regenerate the TOC page in the wiki.
+      $this->projectService->generateWikiOverview();
 
-    //   // Regenerate the TOC page in the wiki.
-    //   $this->projectService->generateWikiOverview();
+      // Delete the page template from the public web-space. However,
+      // here we only move it to the trashbin.
+      $webPages = $this->getDatabaseRepository(Entities\ProjectWebPage::class)->findBy([ 'projectId' => $projectid ]);
+      foreach ($webPages as $page) {
+        // ignore errors
+        $this->logDebug("Attempt to delete for ".$projectId.": ".$page['ArticleId']." all ".print_r($page, true));
 
-    //   // Delete the page template from the public web-space. However,
-    //   // here we only move it to the trashbin.
-    //   $webPages = self::fetchProjectWebPages($projectId, $pme->dbh);
-    //   foreach ($webPages as $page) {
-    //     // ignore errors
-    //     $this->logDebug("Attempt to delete for ".$projectId.": ".$page['ArticleId']." all ".print_r($page, true));
+        $this->projectService->deleteProjectWebPage($projectId, $page['ArticleId']);
+      }
 
-    //     $this->projectService->deleteProjectWebPage($projectId, $page['ArticleId']);
-    //   }
+      // // Remove all attached events. This really deletes stuff.
+      // $projectEvents = $this->eventsService->projectEvents($projectId);
+      // foreach($projectEvents as $event) {
+      //   $this->eventsService->deleteEvent($event);
+      // }
+    }
 
-    //   // Remove all attached events. This really deletes stuff.
-    //   $projectEvents = Events::projectEvents($projectId, $pme->dbh);
-    //   foreach($projectEvents AS $event) {
-    //     Events::deleteEvents($event, $pme->dbh);
-    //   }
-    // }
+    if ($safeMode) {
+      $this->projectService->disable($projectId);
+      return false; // clean-up has to be done manually later
+    }
 
-    // if ($safeMode) {
-    //   mySQL::update(self::TABLE_NAME, "`id` = $projectId", ['Disabled' => 1], $pme->dbh);
-    //   return false; // clean-up has to be done manually later
-    // }
-
-    // // remaining part cannot be reached if project-payments need to be maintained, as in this case the 'before' trigger already has aborted the deletion. Only events, web-pages and wiki are deleted, and in the case of the wiki and the web-pages the respective underlying "external" services make a backup-copy of their own (respectively CAFEVDB just moves web-pages to the Redaxo "trash" category).
+    // remaining part cannot be reached if project-payments need to be
+    // maintained, as in this case the 'before' trigger already has
+    // aborted the deletion. Only events, web-pages and wiki are
+    // deleted, and in the case of the wiki and the web-pages the
+    // respective underlying "external" services make a backup-copy of
+    // their own (respectively CAFEVDB just moves web-pages to the
+    // Redaxo "trash" category).
 
     // // delete all extra fields and associated data.
+    $repository = $this->getDatabaseRepository(Entities\ProjectExtraField::class);
+    // @TODO use cascading to delete
     // $projectExtra = ProjectExtra::projectExtraFields($projectId, false, $pme->dbh);
     // foreach($projectExtra as $fieldInfo) {
     //   $fieldId = $fieldInfo['id'];
     //   ProjectExtra::deleteExtraField($fieldId, $projectId, true, $pme->dbh);
     // }
 
-    // // in principle, if we have potentially dangling finance data
-    // // (payments) hanging around, then the project structure should
-    // // not be deleted ... later.
+    $deleteTables = [
+      Entities\ProjectParticipant::class,
+      Entities\ProjectInstrument::class,
+      Entities\ProjectWebPage::class,
+      Entities\ProjectExtraField::class, // needs cascading
+      // [ 'table' => 'ProjectEvents', 'column' => 'project_id' ], handled above
+    ];
 
-    // $sqlquery = 'DROP VIEW IF EXISTS `'.$projectName.'View`';
-    // mySQL::query($sqlquery, $pme->dbh);
-
-    // $deleteTables = [
-    //   [ 'table' => 'Besetzungen', 'column' => 'ProjektId' ],
-    //   [ 'table' => 'ProjectInstruments', 'column' => 'project_id' ],
-    //   [ 'table' => 'ProjectWebPages', 'column' => 'project_id' ],
-    //   // [ 'table' => 'ProjectExtraFields', 'column' => 'project_id' ], handled above
-    //   // [ 'table' => 'ProjectEvents', 'column' => 'project_id' ], handled above
-    // ];
-
-    // $triggerResult = true;
-    // foreach($deleteTables as $table) {
-    //   $query = "DELETE FROM ".$table['table']." WHERE ".$table['column']." = $projectId";
-    //   if (mySQL::query($query, $pme->dbh) === false) {
-    //     $triggerResult = false;
-    //     break; // stop on error
-    //   }
-    // }
+    $triggerResult = true;
+    foreach($deleteTables as $table) {
+      $this->entityManager
+        ->createQueryBuilder()
+        ->delete($table, 't'_)
+        ->where('t.projectId = :projectId')
+        ->setParameter('projectId', $projectId)
+        ->getQuery()
+        ->execute();
+    }
 
     return $triggerResult;
   }
