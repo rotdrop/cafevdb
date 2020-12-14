@@ -308,7 +308,7 @@ class ProjectService
 
     $pageName = $this->projectWikiLink('projects');
 
-    $this->wikiRPC->putPage($pagename, $page,
+    $this->wikiRPC->putPage($pageName, $page,
                             [ "sum" => "Automatic CAFEVDB synchronization",
                               "minor" => true ]);
   }
@@ -584,9 +584,9 @@ Whatever.',
 
     $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebpage::class);
     try {
-      $projectWebPage = $webPagesRepository->attachProjectWebPage($projectid, $articleId);
+      $projectWebPage = $webPagesRepository->attachProjectWebPage($projectId, $articleId);
     } catch (\Throwable $t) {
-      throw new \Exception("Unable to attach web-page ".$articleId." for ".$projectId);
+      throw new \Exception("Unable to attach web-page ".$articleId." for ".$projectId, $t->getCode(), $t);
     }
   }
 
