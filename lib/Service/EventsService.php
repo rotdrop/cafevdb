@@ -66,7 +66,7 @@ class EventsService
     $this->projectService = $projectService;
     $this->calDavService = $calDavService;
     $this->vCalendarService = $vCalendarService;
-    $this->setDatabaseRepository(ProjectEvents::class);
+    $this->setDatabaseRepository(ProjectEvent::class);
   }
 
   /**
@@ -209,13 +209,13 @@ class EventsService
   /** @return ProjectEvents[] */
   private function eventProjects($eventURI)
   {
-    return $this->findBy(['EventURI' => $eventURI]);
+    return $this->findBy(['eventUri' => $eventURI]);
   }
 
   /** @return ProjectEvents[] */
   private function projectEvents($projectId)
   {
-    return $this->findBy(['ProjectId' => $projectid, 'Type' => 'VEVENT']);
+    return $this->findBy(['projectId' => $projectId, 'type' => 'VEVENT']);
   }
 
   /**Augment database entity by calendar data. */
