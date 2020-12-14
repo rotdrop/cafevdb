@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * MusicianPhoto
  *
- * @ORM\Table(name="MusicianPhoto", uniqueConstraints={@ORM\UniqueConstraint(name="owner_image", columns={"owner_id", "image_id"})})
+ * @ORM\Table(name="MusicianPhoto", uniqueConstraints={@ORM\UniqueConstraint(columns={"owner_id", "image_id"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusicianPhotosRepository")
  */
 class MusicianPhoto
@@ -40,7 +40,7 @@ class MusicianPhoto
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -49,26 +49,26 @@ class MusicianPhoto
   /**
    * @var int
    *
-   * @ORM\Column(name="owner_id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $ownerId;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="image_id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $imageId;
 
   /**
    * @ORM\OneToOne(targetEntity="Musician", cascade="persist", inversedBy="photo", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="owner_id", referencedColumnName="Id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $owner;
 
   /**
    * @ORM\OneToOne(targetEntity="Image", cascade="all", orphanRemoval=true)
-   * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $image;
 

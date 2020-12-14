@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Numbers
  *
- * @ORM\Table(name="numbers")
+ * @ORM\Table()
  * @ORM\Entity
  */
 class Numbers
@@ -16,7 +16,7 @@ class Numbers
     /**
      * @var int
      *
-     * @ORM\Column(name="N", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */

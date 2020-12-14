@@ -40,7 +40,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="Id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -49,33 +49,33 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="ProjectParticipantId", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $projectParticipantId;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="FieldId", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $fieldId;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="FieldValue", type="text", length=16777215, nullable=false)
+   * @ORM\Column(type="text", length=16777215, nullable=false)
    */
   private $fieldValue;
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectExtraField", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="FieldId", referencedColumnName="Id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $field;
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="extraFieldsData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="ProjectParticipantId", referencedColumnName="Id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    *
    */
   private $projectParticipant;

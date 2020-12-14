@@ -32,7 +32,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="GeoPostalCodes",
  *    uniqueConstraints={
- *      @ORM\UniqueConstraint(name="Country_PostalCode_Name", columns={"Country", "PostalCode", "Name"})
+ *      @ORM\UniqueConstraint(columns={"country", "postal_code", "name"})
  *    })
  * @ORM\Entity
  */
@@ -44,7 +44,7 @@ class GeoPostalCode implements \ArrayAccess
     /**
      * @var int
      *
-     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -53,42 +53,42 @@ class GeoPostalCode implements \ArrayAccess
     /**
      * @var string
      *
-     * @ORM\Column(name="Country", type="string", length=2, nullable=false)
+     * @ORM\Column(type="string", length=2, nullable=false)
      */
     private $country;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PostalCode", type="string", length=32, nullable=false)
+     * @ORM\Column(type="string", length=32, nullable=false)
      */
     private $postalCode;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=650, nullable=false)
+     * @ORM\Column(type="string", length=650, nullable=false)
      */
     private $name;
 
     /**
      * @var double
      *
-     * @ORM\Column(name="Latitude", type="float", nullable=false)
+     * @ORM\Column(type="float", nullable=false)
      */
     private $latitude;
 
     /**
      * @var double
      *
-     * @ORM\Column(name="Longitude", type="float", nullable=false)
+     * @ORM\Column(type="float", nullable=false)
      */
     private $longitude;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Updated", type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $updated;
 

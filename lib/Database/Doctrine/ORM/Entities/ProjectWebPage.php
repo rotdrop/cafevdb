@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * ProjectWebPage
  *
- * @ORM\Table(name="ProjectWebPages", uniqueConstraints={@ORM\UniqueConstraint(name="ProjectId", columns={"ProjectId", "ArticleId"})})
+ * @ORM\Table(name="ProjectWebPages", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "article_id"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectWebPagesRepository")
  */
 class ProjectWebPage implements \ArrayAccess
@@ -41,7 +41,7 @@ class ProjectWebPage implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="Id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -50,35 +50,35 @@ class ProjectWebPage implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="ProjectId", type="integer", nullable=false, options={"default"="-1"})
+   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
    */
   private $projectId = '-1';
 
   /**
    * @var int
    *
-   * @ORM\Column(name="ArticleId", type="integer", nullable=false, options={"default"="-1"})
+   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
    */
   private $articleId = '-1';
 
   /**
    * @var string
    *
-   * @ORM\Column(name="ArticleName", type="string", length=128, nullable=false, options={"default"=""})
+   * @ORM\Column(type="string", length=128, nullable=false, options={"default"=""})
    */
   private $articleName = '';
 
   /**
    * @var int
    *
-   * @ORM\Column(name="CategoryId", type="integer", nullable=false, options={"default"="-1"})
+   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
    */
   private $categoryId = '-1';
 
   /**
    * @var int
    *
-   * @ORM\Column(name="Priority", type="integer", nullable=false, options={"default"="-1"})
+   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
    */
   private $priority = '-1';
 
@@ -88,7 +88,7 @@ class ProjectWebPage implements \ArrayAccess
    * just a pain in the ass.
    *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="webPages", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="ProjectId", referencedColumnName="Id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $project;
 

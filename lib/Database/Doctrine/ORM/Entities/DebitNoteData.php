@@ -16,7 +16,7 @@ class DebitNoteData
     /**
      * @var int
      *
-     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -25,28 +25,28 @@ class DebitNoteData
     /**
      * @var int
      *
-     * @ORM\Column(name="DebitNoteId", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $debitnoteid;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="FileName", type="string", length=1024, nullable=false)
+     * @ORM\Column(type="string", length=1024, nullable=false)
      */
     private $filename;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MimeType", type="string", length=1024, nullable=false)
+     * @ORM\Column(type="string", length=1024, nullable=false)
      */
     private $mimetype;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Data", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $data;
 

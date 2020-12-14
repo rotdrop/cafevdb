@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GeoPostalCodeTranslation
  *
- * @ORM\Table(name="GeoPostalCodeTranslations", uniqueConstraints={@ORM\UniqueConstraint(name="PostalCodeId_Target", columns={"PostalCodeId", "Target"})})
+ * @ORM\Table(name="GeopostalCodeTranslations")
  * @ORM\Entity
  */
 class GeoPostalCodeTranslation implements \ArrayAccess
@@ -40,7 +40,7 @@ class GeoPostalCodeTranslation implements \ArrayAccess
     /**
      * @var int
      *
-     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -49,27 +49,27 @@ class GeoPostalCodeTranslation implements \ArrayAccess
     /**
      * @var int
      *
-     * @ORM\Column(name="PostalCodeId", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $postalCodeId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Target", type="string", length=2, nullable=false)
+     * @ORM\Column(type="string", length=2, nullable=false)
      */
     private $target;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Translation", type="string", length=1024, nullable=false)
+     * @ORM\Column(type="string", length=1024, nullable=false)
      */
     private $translation;
 
     /**
      * @ORM\ManyToOne(targetEntity="GeoPostalCode", inversedBy="translations")
-     * @ORM\JoinColumn(name="PostalCodeId", referencedColumnName="Id", onDelete="CASCADE")
+     * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
      */
     private $geoPostalCode;
 

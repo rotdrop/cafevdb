@@ -698,7 +698,7 @@ $(document).ready(function(){
       });
 
       if (container.find('#contact_photo_upload').length > 0) {
-        var idField = container.find('input[name="PME_data_MusikerId"]');
+        var idField = container.find('input[name="PME_data_musician_id"]');
         var recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();

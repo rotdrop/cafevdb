@@ -57,7 +57,7 @@ class ProjectWebPagesRepository extends EntityRepository
       $projectId = $projectOrId;
       $project = null;
     }
-    $articleId = $webArticle['articleId'];
+    $articleId = $webArticle['ArticleId'];
 
     $entityManager = $this->getEntityManager();
     $projectWebPage = $this->findOneBy([ 'projectId' => $projectId,

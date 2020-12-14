@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SentEmail
  *
- * @ORM\Table(name="SentEmail")
+ * @ORM\Table(name="SentEmails")
  * @ORM\Entity
  */
 class SentEmail
@@ -16,7 +16,7 @@ class SentEmail
     /**
      * @var int
      *
-     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -25,238 +25,238 @@ class SentEmail
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
      */
     private $date = 'CURRENT_TIMESTAMP';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="user", type="text", length=0, nullable=false)
+     * @ORM\Column(type="text", length=0, nullable=false)
      */
     private $user;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="host", type="string", length=64, nullable=false)
+     * @ORM\Column(type="string", length=64, nullable=false)
      */
     private $host;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="BulkRecipients", type="text", length=0, nullable=false)
+     * @ORM\Column(type="text", length=0, nullable=false)
      */
     private $bulkrecipients;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5BulkRecipients", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5bulkrecipients;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Cc", type="text", length=0, nullable=false)
+     * @ORM\Column(type="text", length=0, nullable=false)
      */
     private $cc;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Bcc", type="text", length=0, nullable=false)
+     * @ORM\Column(type="text", length=0, nullable=false)
      */
     private $bcc;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Subject", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $subject;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="HtmlBody", type="text", length=0, nullable=false)
+     * @ORM\Column(type="text", length=0, nullable=false)
      */
     private $htmlbody;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Text", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5text;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment1", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment1;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment1", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment1;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment2", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment2;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment2", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment2;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment3", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment3;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment3", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment3;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment4", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment4;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment4", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment4;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment00", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment00;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment00", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment00;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment01", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment01;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment01", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment01;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment02", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment02;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment02", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment02;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment03", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment03;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment03", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment03;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment04", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment04;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment04", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment04;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment05", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment05;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment05", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment05;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment06", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment06;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment06", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment06;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Attachment07", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $attachment07;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MD5Attachment07", type="text", length=16777215, nullable=false)
+     * @ORM\Column(type="text", length=16777215, nullable=false)
      */
     private $md5attachment07;
 

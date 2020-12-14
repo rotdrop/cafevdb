@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2016-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2016-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -485,7 +485,7 @@ namespace CAFEVDB
  FROM
    `ProjectExtraFields`
    JOIN `numbers`
-   ON tokenCount(AllowedValues, '\\n') >= `numbers`.N",
+   ON JSON_LENGTH(allowed_values) >= `numbers`.n",
           'column' => 'Value',
           'description' => 'Label',
           'subquery' => true,

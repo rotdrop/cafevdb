@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * InstrumentInsurance
  *
- * @ORM\Table(name="InstrumentInsurance", indexes={@ORM\Index(name="MusikerId", columns={"MusicianId"})})
+ * @ORM\Table(name="InstrumentInsurance", indexes={@ORM\Index(columns={"musician_id"})})
  * @ORM\Entity
  */
 class InstrumentInsurance
@@ -16,7 +16,7 @@ class InstrumentInsurance
     /**
      * @var int
      *
-     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -25,72 +25,72 @@ class InstrumentInsurance
     /**
      * @var int
      *
-     * @ORM\Column(name="MusicianId", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private $musicianid;
+    private $musicianId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Broker", type="string", length=128, nullable=false)
+     * @ORM\Column(type="string", length=128, nullable=false)
      */
     private $broker;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="GeographicalScope", type="string", length=128, nullable=false)
+     * @ORM\Column(type="string", length=128, nullable=false)
      */
-    private $geographicalscope;
+    private $geographicalScope;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Object", type="string", length=128, nullable=false)
+     * @ORM\Column(type="string", length=128, nullable=false)
      */
     private $object;
 
     /**
      * @var array
      *
-     * @ORM\Column(name="Accessory", type="simple_array", length=0, nullable=false, options={"default"="false"})
+     * @ORM\Column(type="simple_array", length=0, nullable=false, options={"default"="false"})
      */
     private $accessory = 'false';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Manufacturer", type="string", length=128, nullable=false)
+     * @ORM\Column(type="string", length=128, nullable=false)
      */
     private $manufacturer;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="YearOfConstruction", type="string", length=64, nullable=false)
+     * @ORM\Column(type="string", length=64, nullable=false)
      */
-    private $yearofconstruction;
+    private $yearOfConstruction;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="InsuranceAmount", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private $insuranceamount;
+    private $insuranceAmount;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="BillToParty", type="integer", nullable=false, options={"default"="0"})
+     * @ORM\Column(type="integer", nullable=false, options={"default"="0"})
      */
-    private $billtoparty = '0';
+    private $billToParty = '0';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="StartOfInsurance", type="date", nullable=false)
+     * @ORM\Column(type="date", nullable=false)
      */
-    private $startofinsurance;
+    private $startOfInsurance;
 
 
 
@@ -105,27 +105,27 @@ class InstrumentInsurance
     }
 
     /**
-     * Set musicianid.
+     * Set musicianId.
      *
-     * @param int $musicianid
+     * @param int $musicianId
      *
      * @return InstrumentInsurance
      */
-    public function setMusicianid($musicianid)
+    public function setMusicianId($musicianId)
     {
-        $this->musicianid = $musicianid;
+        $this->musicianId = $musicianId;
 
         return $this;
     }
 
     /**
-     * Get musicianid.
+     * Get musicianId.
      *
      * @return int
      */
-    public function getMusicianid()
+    public function getMusicianId()
     {
-        return $this->musicianid;
+        return $this->musicianId;
     }
 
     /**
@@ -153,27 +153,27 @@ class InstrumentInsurance
     }
 
     /**
-     * Set geographicalscope.
+     * Set geographicalScope.
      *
-     * @param string $geographicalscope
+     * @param string $geographicalScope
      *
      * @return InstrumentInsurance
      */
-    public function setGeographicalscope($geographicalscope)
+    public function setGeographicalScope($geographicalScope)
     {
-        $this->geographicalscope = $geographicalscope;
+        $this->geographicalScope = $geographicalScope;
 
         return $this;
     }
 
     /**
-     * Get geographicalscope.
+     * Get geographicalScope.
      *
      * @return string
      */
-    public function getGeographicalscope()
+    public function getGeographicalScope()
     {
-        return $this->geographicalscope;
+        return $this->geographicalScope;
     }
 
     /**
@@ -249,98 +249,98 @@ class InstrumentInsurance
     }
 
     /**
-     * Set yearofconstruction.
+     * Set yearOfConstruction.
      *
-     * @param string $yearofconstruction
+     * @param string $yearOfConstruction
      *
      * @return InstrumentInsurance
      */
-    public function setYearofconstruction($yearofconstruction)
+    public function setYearOfConstruction($yearOfConstruction)
     {
-        $this->yearofconstruction = $yearofconstruction;
+        $this->yearOfConstruction = $yearOfConstruction;
 
         return $this;
     }
 
     /**
-     * Get yearofconstruction.
+     * Get yearOfConstruction.
      *
      * @return string
      */
-    public function getYearofconstruction()
+    public function getYearOfConstruction()
     {
-        return $this->yearofconstruction;
+        return $this->yearOfConstruction;
     }
 
     /**
-     * Set insuranceamount.
+     * Set insuranceAmount.
      *
-     * @param int $insuranceamount
+     * @param int $insuranceAmount
      *
      * @return InstrumentInsurance
      */
-    public function setInsuranceamount($insuranceamount)
+    public function setInsuranceAmount($insuranceAmount)
     {
-        $this->insuranceamount = $insuranceamount;
+        $this->insuranceAmount = $insuranceAmount;
 
         return $this;
     }
 
     /**
-     * Get insuranceamount.
+     * Get insuranceAmount.
      *
      * @return int
      */
-    public function getInsuranceamount()
+    public function getInsuranceAmount()
     {
-        return $this->insuranceamount;
+        return $this->insuranceAmount;
     }
 
     /**
-     * Set billtoparty.
+     * Set billToParty.
      *
-     * @param int $billtoparty
+     * @param int $billToParty
      *
      * @return InstrumentInsurance
      */
-    public function setBilltoparty($billtoparty)
+    public function setBillToParty($billToParty)
     {
-        $this->billtoparty = $billtoparty;
+        $this->billToParty = $billToParty;
 
         return $this;
     }
 
     /**
-     * Get billtoparty.
+     * Get billToParty.
      *
      * @return int
      */
-    public function getBilltoparty()
+    public function getBillToParty()
     {
-        return $this->billtoparty;
+        return $this->billToParty;
     }
 
     /**
-     * Set startofinsurance.
+     * Set startOfInsurance.
      *
-     * @param \DateTime $startofinsurance
+     * @param \DateTime $startOfInsurance
      *
      * @return InstrumentInsurance
      */
-    public function setStartofinsurance($startofinsurance)
+    public function setStartOfInsurance($startOfInsurance)
     {
-        $this->startofinsurance = $startofinsurance;
+        $this->startOfInsurance = $startOfInsurance;
 
         return $this;
     }
 
     /**
-     * Get startofinsurance.
+     * Get startOfInsurance.
      *
      * @return \DateTime
      */
-    public function getStartofinsurance()
+    public function getStartOfInsurance()
     {
-        return $this->startofinsurance;
+        return $this->startOfInsurance;
     }
 }

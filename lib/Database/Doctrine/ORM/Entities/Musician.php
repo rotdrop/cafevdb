@@ -42,7 +42,7 @@ class Musician implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="Id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -51,105 +51,105 @@ class Musician implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(name="Name", type="string", length=128, nullable=false)
+   * @ORM\Column(type="string", length=128, nullable=false)
    */
   private $name;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Vorname", type="string", length=128, nullable=false)
+   * @ORM\Column(type="string", length=128, nullable=false)
    */
-  private $vorname;
+  private $firstName;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Stadt", type="string", length=128, nullable=false)
+   * @ORM\Column(type="string", length=128, nullable=false)
    */
-  private $stadt;
+  private $city;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Strasse", type="string", length=128, nullable=false)
+   * @ORM\Column(type="string", length=128, nullable=false)
    */
-  private $strasse;
+  private $street;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Land", type="string", length=2, nullable=false)
+   * @ORM\Column(type="string", length=2, nullable=false)
    */
-  private $land = 'DE';
+  private $country = 'DE';
 
   /**
    * @var int|null
    *
-   * @ORM\Column(name="Postleitzahl", type="string", length=32, nullable=false)
+   * @ORM\Column(type="string", length=32, nullable=false)
    */
-  private $postleitzahl;
+  private $postalCode;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Sprachpräferenz", type="string", length=128, nullable=false, options={"comment"="Und was es sonst noch so gibt ..."})
+   * @ORM\Column(type="string", length=128, nullable=false, options={"comment"="Und was es sonst noch so gibt ..."})
    */
-  private $sprachpräferenz;
+  private $language;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="MobilePhone", type="string", length=128, nullable=false)
+   * @ORM\Column(type="string", length=128, nullable=false)
    */
-  private $mobilephone;
+  private $mobilePhone;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="FixedLinePhone", type="string", length=128, nullable=false)
+   * @ORM\Column(type="string", length=128, nullable=false)
    */
-  private $fixedlinephone;
+  private $fixedLinePhone;
 
   /**
    * @var \DateTime|null
    *
-   * @ORM\Column(name="Geburtstag", type="date", nullable=true)
+   * @ORM\Column(type="date", nullable=true)
    */
-  private $geburtstag;
+  private $birthday;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Email", type="string", length=256, nullable=false)
+   * @ORM\Column(type="string", length=256, nullable=false)
    */
   private $email;
 
   /**
    * @var enummemberstatus|null
    *
-   * @ORM\Column(name="MemberStatus", type="enummemberstatus", nullable=true, options={"default"="regular","comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."})
+   * @ORM\Column(type="enummemberstatus", nullable=true, options={"default"="regular","comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."})
    */
-  private $memberstatus = 'regular';
+  private $memberStatus = 'regular';
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="Remarks", type="string", length=1024, nullable=true)
+   * @ORM\Column(type="string", length=1024, nullable=true)
    */
   private $remarks;
 
   /**
    * @var bool
    *
-   * @ORM\Column(name="Disabled", type="boolean", nullable=false, options={"default"="0"})
+   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
    */
   private $disabled = '0';
 
   /**
    * @var \DateTime|null
    *
-   * @ORM\Column(name="Updated", type="datetime", nullable=true)
+   * @ORM\Column(type="datetime", nullable=true)
    */
   private $updated;
 
@@ -219,219 +219,219 @@ class Musician implements \ArrayAccess
   }
 
   /**
-   * Set vorname.
+   * Set firstName.
    *
-   * @param string $vorname
+   * @param string $firstName
    *
    * @return Musician
    */
-  public function setVorname($vorname)
+  public function setFirstName($firstName)
   {
-    $this->vorname = $vorname;
+    $this->firstName = $firstName;
 
     return $this;
   }
 
   /**
-   * Get vorname.
+   * Get firstName.
    *
    * @return string
    */
-  public function getVorname()
+  public function getFirstName()
   {
-    return $this->vorname;
+    return $this->firstName;
   }
 
   /**
-   * Set stadt.
+   * Set city.
    *
-   * @param string $stadt
+   * @param string $city
    *
    * @return Musician
    */
-  public function setStadt($stadt)
+  public function setCity($city)
   {
-    $this->stadt = $stadt;
+    $this->city = $city;
 
     return $this;
   }
 
   /**
-   * Get stadt.
+   * Get city.
    *
    * @return string
    */
-  public function getStadt()
+  public function getCity()
   {
-    return $this->stadt;
+    return $this->city;
   }
 
   /**
-   * Set strasse.
+   * Set street.
    *
-   * @param string $strasse
+   * @param string $street
    *
    * @return Musician
    */
-  public function setStrasse($strasse)
+  public function setStreet($street)
   {
-    $this->strasse = $strasse;
+    $this->street = $street;
 
     return $this;
   }
 
   /**
-   * Get strasse.
+   * Get street.
    *
    * @return string
    */
-  public function getStrasse()
+  public function getStreet()
   {
-    return $this->strasse;
+    return $this->street;
   }
 
   /**
-   * Set postleitzahl.
+   * Set postalCode.
    *
-   * @param int|null $postleitzahl
+   * @param int|null $postalCode
    *
    * @return Musician
    */
-  public function setPostleitzahl($postleitzahl = null)
+  public function setPostalCode($postalCode = null)
   {
-    $this->postleitzahl = $postleitzahl;
+    $this->postalCode = $postalCode;
 
     return $this;
   }
 
   /**
-   * Get postleitzahl.
+   * Get postalCode.
    *
    * @return int|null
    */
-  public function getPostleitzahl()
+  public function getPostalCode()
   {
-    return $this->postleitzahl;
+    return $this->postalCode;
   }
 
   /**
-   * Set land.
+   * Set country.
    *
-   * @param string $land
+   * @param string $country
    *
    * @return Musician
    */
-  public function setLand($land)
+  public function setCountry($country)
   {
-    $this->land = $land;
+    $this->country = $country;
 
     return $this;
   }
 
   /**
-   * Get land.
+   * Get country.
    *
    * @return string
    */
-  public function getLand()
+  public function getCountry()
   {
-    return $this->land;
+    return $this->country;
   }
 
   /**
-   * Set sprachpräferenz.
+   * Set language.
    *
-   * @param string $sprachpräferenz
+   * @param string $language
    *
    * @return Musician
    */
-  public function setSprachpräferenz($sprachpräferenz)
+  public function setLanguage($language)
   {
-    $this->sprachpräferenz = $sprachpräferenz;
+    $this->language = $language;
 
     return $this;
   }
 
   /**
-   * Get sprachpräferenz.
+   * Get language.
    *
    * @return string
    */
-  public function getSprachpräferenz()
+  public function getLanguage()
   {
-    return $this->sprachpräferenz;
+    return $this->language;
   }
 
   /**
-   * Set mobilephone.
+   * Set mobilePhone.
    *
-   * @param string $mobilephone
+   * @param string $mobilePhone
    *
    * @return Musician
    */
-  public function setMobilephone($mobilephone)
+  public function setMobilePhone($mobilePhone)
   {
-    $this->mobilephone = $mobilephone;
+    $this->mobilePhone = $mobilePhone;
 
     return $this;
   }
 
   /**
-   * Get mobilephone.
+   * Get mobilePhone.
    *
    * @return string
    */
-  public function getMobilephone()
+  public function getMobilePhone()
   {
-    return $this->mobilephone;
+    return $this->mobilePhone;
   }
 
   /**
-   * Set fixedlinephone.
+   * Set fixedLinePhone.
    *
-   * @param string $fixedlinephone
+   * @param string $fixedLinePhone
    *
    * @return Musician
    */
-  public function setFixedlinephone($fixedlinephone)
+  public function setFixedLinePhone($fixedLinePhone)
   {
-    $this->fixedlinephone = $fixedlinephone;
+    $this->fixedLinePhone = $fixedLinePhone;
 
     return $this;
   }
 
   /**
-   * Get fixedlinephone.
+   * Get fixedLinePhone.
    *
    * @return string
    */
-  public function getFixedlinephone()
+  public function getFixedLinePhone()
   {
-    return $this->fixedlinephone;
+    return $this->fixedLinePhone;
   }
 
   /**
-   * Set geburtstag.
+   * Set birthday.
    *
-   * @param \DateTime|null $geburtstag
+   * @param \DateTime|null $birthday
    *
    * @return Musician
    */
-  public function setGeburtstag($geburtstag = null)
+  public function setBirthday($birthday = null)
   {
-    $this->geburtstag = $geburtstag;
+    $this->birthday = $birthday;
 
     return $this;
   }
 
   /**
-   * Get geburtstag.
+   * Get birthday.
    *
    * @return \DateTime|null
    */
-  public function getGeburtstag()
+  public function getBirthday()
   {
-    return $this->geburtstag;
+    return $this->birthday;
   }
 
   /**
@@ -459,27 +459,27 @@ class Musician implements \ArrayAccess
   }
 
   /**
-   * Set memberstatus.
+   * Set memberStatus.
    *
-   * @param enummemberstatus|null $memberstatus
+   * @param enummemberstatus|null $memberStatus
    *
    * @return Musician
    */
-  public function setMemberstatus($memberstatus = null)
+  public function setMemberStatus($memberStatus = null)
   {
-    $this->memberstatus = $memberstatus;
+    $this->memberStatus = $memberStatus;
 
     return $this;
   }
 
   /**
-   * Get memberstatus.
+   * Get memberStatus.
    *
    * @return enummemberstatus|null
    */
-  public function getMemberstatus()
+  public function getMemberStatus()
   {
-    return $this->memberstatus;
+    return $this->memberStatus;
   }
 
   /**

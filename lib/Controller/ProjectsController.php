@@ -77,9 +77,9 @@ class ProjectsController extends Controller {
     switch ($topic) {
       case 'name':
         $required = [
-          'Jahr' => $this->l->t("project-year"),
-          'Name' => $this->l->t("project-name"),
-          'Art'  => $this->l->t("project-kind"),
+          'year' => $this->l->t("project-year"),
+          'name' => $this->l->t("project-name"),
+          'temporal_type'  => $this->l->t("project-kind"),
         ];
         foreach ($required as $key => $subject) {
           if (empty($projectValues[$key])) {
@@ -88,9 +88,9 @@ class ProjectsController extends Controller {
         }
         $control = $this->parameterService->getParam('control', 'name');
         $projectId = $this->pme->getCGIRecordId();
-        $projectName = $projectValues['Name'];
-        $projectYear = $projectValues['Jahr'];
-        $attachYear  = !empty($projectValues['Art']) && $projectValues['Art'] == 'temporary';
+        $projectName = $projectValues['name'];
+        $projectYear = $projectValues['year'];
+        $attachYear  = !empty($projectValues['temporal_type']) && $projectValues['temporal_type'] == 'temporary';
 
         $infoMessage = "";
         switch ($control) {

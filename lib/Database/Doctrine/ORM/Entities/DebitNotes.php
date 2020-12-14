@@ -11,12 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="DebitNotes")
  * @ORM\Entity
  */
-class DebitNotes
+class DebitNote
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -25,63 +25,63 @@ class DebitNotes
     /**
      * @var int
      *
-     * @ORM\Column(name="ProjectId", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $projectid;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="DateIssued", type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $dateissued;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="SubmissionDeadline", type="date", nullable=false)
+     * @ORM\Column(type="date", nullable=false)
      */
     private $submissiondeadline;
 
     /**
      * @var \DateTime|null
      *
-     * @ORM\Column(name="SubmitDate", type="date", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $submitdate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="DueDate", type="date", nullable=false)
+     * @ORM\Column(type="date", nullable=false)
      */
     private $duedate;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Job", type="string", length=128, nullable=false)
+     * @ORM\Column(type="string", length=128, nullable=false)
      */
     private $job;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="SubmissionEvent", type="integer", nullable=false, options={"comment"="OwnCloud Calendar Object Id"})
+     * @ORM\Column(type="integer", nullable=false, options={"comment"="OwnCloud Calendar Object Id"})
      */
     private $submissionevent;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="SubmissionTask", type="integer", nullable=false, options={"comment"="OwnCloud Calendar Object Id"})
+     * @ORM\Column(type="integer", nullable=false, options={"comment"="OwnCloud Calendar Object Id"})
      */
     private $submissiontask;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="DueEvent", type="integer", nullable=false, options={"comment"="OwnCloud Calendar Object Id"})
+     * @ORM\Column(type="integer", nullable=false, options={"comment"="OwnCloud Calendar Object Id"})
      */
     private $dueevent;
 

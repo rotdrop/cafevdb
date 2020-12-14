@@ -111,7 +111,7 @@ class InstrumentFamilies extends PMETableViewBase
       );
 
     // Name of field which is the unique key
-    $opts['key'] = 'Id';
+    $opts['key'] = 'id';
 
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
@@ -141,8 +141,8 @@ class InstrumentFamilies extends PMETableViewBase
       'navigation' => 'CPD'
     ];
 
-    $opts['fdd']['Id'] = [
-      'name'      => 'Id',
+    $opts['fdd']['id'] = [
+      'name'      => 'id',
       'select'    => 'N',
       'input|AP'  => 'RH',
       'input'     => 'R',
@@ -153,7 +153,7 @@ class InstrumentFamilies extends PMETableViewBase
       'sort'      => true,
       ];
 
-    $opts['fdd']['Family'] = [
+    $opts['fdd']['family'] = [
       'name'   => $this->l->t('Family'),
       'select' => 'T',
       'maxlen' => 64,
@@ -164,7 +164,7 @@ class InstrumentFamilies extends PMETableViewBase
     ];
 
     $instFamIdx = count($opts['fdd']);
-    $opts['fdd']['InstrumentJoin'] = [
+    $opts['fdd']['instrument_join'] = [
       'name' => 'InstrumentDummyJoin',
       'input'    => 'VRH',
       'sql'      => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.family_id
@@ -180,7 +180,7 @@ class InstrumentFamilies extends PMETableViewBase
     ];
 
     $instIdx = count($opts['fdd']);
-    $opts['fdd']['Instruments'] = [
+    $opts['fdd']['instruments'] = [
       'name'        => $this->l->t('Instruments'),
       'input'       => 'VR',
       'sort'        => true,
@@ -208,7 +208,7 @@ class InstrumentFamilies extends PMETableViewBase
     ];
 
     if ($this->showDisabled) {
-      $opts['fdd']['Disabled'] = [
+      $opts['fdd']['disabled'] = [
         'name'     => $this->l->t('Disabled'),
         'options' => $expertMode ? 'LAVCPDF' : 'LAVCPDF',
         'input'    => $expertMode ? '' : 'R',

@@ -34,7 +34,7 @@ use OCP\ILogger;
  *
  * @ORM\Table(name="Translations",
  *   uniqueConstraints={
- *     @ORM\UniqueConstraint(name="keyId_locale", columns={"key_id", "locale"})
+ *     @ORM\UniqueConstraint(columns={"key_id", "locale"})
  *   })
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationsRepository")
  */
@@ -46,7 +46,7 @@ class Translation implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -55,14 +55,14 @@ class Translation implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="key_id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $keyId;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="locale", type="string", length=5, nullable=false, options={
+   * @ORM\Column(type="string", length=5, nullable=false, options={
    *   "fixed":true,
    *   "comment":"Locale for translation, .e.g. en_US"
    * })
@@ -72,13 +72,13 @@ class Translation implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(name="translation", type="string", length=1024, nullable=false)
+   * @ORM\Column(type="string", length=1024, nullable=false)
    */
   private $translation;
 
   /**
    * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="translations")
-   * @ORM\JoinColumn(name="key_id", referencedColumnName="id", onDelete="CASCADE")
+   * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
    */
   private $translationKey;
 

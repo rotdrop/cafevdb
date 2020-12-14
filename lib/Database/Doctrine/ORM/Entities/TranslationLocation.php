@@ -34,7 +34,7 @@ use OCP\ILogger;
  *
  * @ORM\Table(name="TranslationLocations",
  *   uniqueConstraints={
- *     @ORM\UniqueConstraint(name="key_file_line", columns={"key_id", "file", "line"})
+ *     @ORM\UniqueConstraint(columns={"key_id", "file", "line"})
  *   })
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationLocationsRepository")
  */
@@ -46,7 +46,7 @@ class TranslationLocation implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -55,27 +55,27 @@ class TranslationLocation implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="key_id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $keyId;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="file", type="string", length=766, nullable=false)
+   * @ORM\Column(type="string", length=766, nullable=false)
    */
   private $file;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="line", type="integer", length=11, nullable=false)
+   * @ORM\Column(type="integer", length=11, nullable=false)
    */
   private $line;
 
   /**
    * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="locations")
-   * @ORM\JoinColumn(name="key_id", referencedColumnName="id", onDelete="CASCADE")
+   * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
    */
   private $translationKey;
 

@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Projects
  *
- * @ORM\Table(name="Projects", uniqueConstraints={@ORM\UniqueConstraint(name="Name", columns={"Name"})})
+ * @ORM\Table(name="Projects", uniqueConstraints={@ORM\UniqueConstraint(columns={"name"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository")
  */
 class Project implements \ArrayAccess
@@ -41,7 +41,7 @@ class Project implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="Id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -50,56 +50,49 @@ class Project implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="Jahr", type="integer", nullable=false, options={"unsigned"=true})
+   * @ORM\Column(type="integer", nullable=false, options={"unsigned"=true})
    */
   private $year;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Name", type="string", length=64, nullable=false)
+   * @ORM\Column(type="string", length=64, nullable=false)
    */
   private $name;
 
   /**
    * @var enumprojecttemporaltype
    *
-   * @ORM\Column(name="Art", type="enumprojecttemporaltype", nullable=false, options={"default"="temporary"})
+   * @ORM\Column(type="enumprojecttemporaltype", nullable=false, options={"default"="temporary"})
    */
-  private $art = 'temporary';
-
-  /**
-   * @var array|null
-   *
-   * @ORM\Column(name="Besetzung", type="simple_array", length=0, nullable=true, options={"comment"="obsolete"})
-   */
-  private $besetzung;
+  private $temporalType = 'temporary';
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Unkostenbeitrag", type="decimal", precision=7, scale=2, nullable=true, options={"default"="0.00"})
+   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=true, options={"default"="0.00"})
    */
-  private $unkostenbeitrag = '0.00';
+  private $serviceCharge = '0.00';
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Anzahlung", type="decimal", precision=7, scale=2, nullable=true, options={"default"="0.00"})
+   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=true, options={"default"="0.00"})
    */
-  private $anzahlung = '0.00';
+  private $prePayment = '0.00';
 
   /**
    * @var bool
    *
-   * @ORM\Column(name="Disabled", type="boolean", nullable=true, options={"default"="0"})
+   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
    */
   private $disabled = '0';
 
   /**
    * @var \DateTime|null
    *
-   * @ORM\Column(name="Updated", type="datetime", nullable=true)
+   * @ORM\Column(type="datetime", nullable=true)
    */
   private $updated;
 
@@ -244,27 +237,27 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set unkostenbeitrag.
+   * Set serviceCharge.
    *
-   * @param string $unkostenbeitrag
+   * @param string $serviceCharge
    *
    * @return Project
    */
-  public function setUnkostenbeitrag($unkostenbeitrag)
+  public function setServiceCharge($serviceCharge)
   {
-    $this->unkostenbeitrag = $unkostenbeitrag;
+    $this->serviceCharge = $serviceCharge;
 
     return $this;
   }
 
   /**
-   * Get unkostenbeitrag.
+   * Get serviceCharge.
    *
    * @return string
    */
-  public function getUnkostenbeitrag()
+  public function getServiceCharge()
   {
-    return $this->unkostenbeitrag;
+    return $this->serviceCharge;
   }
 
   /**

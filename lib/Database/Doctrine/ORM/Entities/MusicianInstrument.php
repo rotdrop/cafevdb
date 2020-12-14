@@ -34,7 +34,7 @@ use Doctrine\ORM\Mapping as ORM;
  * a loose ranking like "primary instrument", i.e. the preference of
  * instruments of the given musician.
  *
- * @ORM\Table(name="MusicianInstrument", uniqueConstraints={@ORM\UniqueConstraint(name="MusicianInstrument", columns={"musician_id", "instrument_id"})})
+ * @ORM\Table(name="MusicianInstrument", options={"comment":"Join-table Musicians -> Instruments"}, uniqueConstraints={@ORM\UniqueConstraint(columns={"musician_id", "instrument_id"})})
  * @ORM\Entity
  */
 class MusicianInstrument
@@ -45,7 +45,7 @@ class MusicianInstrument
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -54,21 +54,21 @@ class MusicianInstrument
   /**
    * @var int
    *
-   * @ORM\Column(name="musician_id", type="integer", nullable=false, options={"comment"="Link into table Musicians"})
+   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link into table Musicians"})
    */
   private $musicianId;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="instrument_id", type="integer", nullable=false, options={"comment"="Link into table Instruments"})
+   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link into table Instruments"})
    */
   private $instrumentId;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="ranking", type="integer", nullable=false, options={"default"="1","comment"="Ranking of the instrument w.r.t. to the given musician (lower is better)"})
+   * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Ranking of the instrument w.r.t. to the given musician (lower is better)"})
    */
   private $ranking = '1';
 
@@ -77,7 +77,7 @@ class MusicianInstrument
    * instrument-id given here points to exactly one musician.
    *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instruments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="musician_id", referencedColumnName="Id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $musician;
 
@@ -85,7 +85,7 @@ class MusicianInstrument
    * Many-One unidirectional. So the non-owning side just does not matter.
    *
    * @ORM\ManyToOne(targetEntity="Instrument", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="instrument_id", referencedColumnName="Id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $instrument;
 

@@ -29,8 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectFlyer
  *
- * @ORM\Table(name="ProjectFlyer")
- * @ORM\Table(name="ProjectFlyer", uniqueConstraints={@ORM\UniqueConstraint(name="owner_image", columns={"owner_id", "image_id"})})
+ * @ORM\Table(name="ProjectFlyer", uniqueConstraints={@ORM\UniqueConstraint(columns={"owner_id", "image_id"})})
  * @ORM\Entity
  */
 class ProjectFlyer
@@ -41,7 +40,7 @@ class ProjectFlyer
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -50,26 +49,26 @@ class ProjectFlyer
   /**
    * @var int
    *
-   * @ORM\Column(name="owner_id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $ownerId;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="image_id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $imageId;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", cascade="persist", inversedBy="flyers", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="owner_id", referencedColumnName="Id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $owner;
 
   /**
    * @ORM\OneToOne(targetEntity="Image", cascade="all", orphanRemoval=true)
-   * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $image;
 

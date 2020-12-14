@@ -40,7 +40,7 @@ class ChangeLog
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -49,63 +49,63 @@ class ChangeLog
   /**
    * @var \DateTime
    *
-   * @ORM\Column(name="updated", type="datetime")
+   * @ORM\Column(type="datetime")
    */
   private $updated;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="user", type="string", length=255, nullable=true)
+   * @ORM\Column(type="string", length=255, nullable=true)
    */
   private $user;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="host", type="string", length=255, nullable=true)
+   * @ORM\Column(type="string", length=255, nullable=true)
    */
   private $host;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="operation", type="string", length=255, nullable=true)
+   * @ORM\Column(type="string", length=255, nullable=true)
    */
   private $operation;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="tab", type="string", length=255, nullable=true)
+   * @ORM\Column(type="string", length=255, nullable=true)
    */
   private $tab;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="rowkey", type="string", length=255, nullable=true)
+   * @ORM\Column(type="string", length=255, nullable=true)
    */
   private $rowkey;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="col", type="string", length=255, nullable=true)
+   * @ORM\Column(type="string", length=255, nullable=true)
    */
   private $col;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="oldval", type="blob", length=65535, nullable=true)
+   * @ORM\Column(type="blob", length=65535, nullable=true)
    */
   private $oldval;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="newval", type="blob", length=65535, nullable=true)
+   * @ORM\Column(type="blob", length=65535, nullable=true)
    */
   private $newval;
 

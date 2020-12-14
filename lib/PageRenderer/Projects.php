@@ -103,16 +103,16 @@ class Projects extends PMETableViewBase
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = 'Id';
+    $opts['key'] = 'id';
 
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = ['-Jahr', 'Name'];
+    $opts['sort_field'] = ['-year', 'Name'];
 
     // GROUP BY clause, if needed.
-    $opts['groupby_fields'] = 'Id';
+    $opts['groupby_fields'] = 'id';
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -136,8 +136,8 @@ class Projects extends PMETableViewBase
     ];
 
     $idIdx = 0;
-    $opts['fdd']['Id'] = [
-      'name'     => 'Id',
+    $opts['fdd']['id'] = [
+      'name'     => 'id',
       'select'   => 'T',
       'input'    => 'R',
       'input|AP' => 'RH', // always auto-increment
@@ -155,8 +155,8 @@ class Projects extends PMETableViewBase
     }
 
     $yearIdx = count($opts['fdd']);
-    $opts['fdd']['Jahr'] = [
-      'name'     => 'Jahr',
+    $opts['fdd']['year'] = [
+      'name'     => 'year',
       'select'   => 'N',
       //'options'  => 'LAVCPDF'
       'maxlen'   => 5,
@@ -166,7 +166,7 @@ class Projects extends PMETableViewBase
     ];
 
     $nameIdx = count($opts['fdd']);
-    $opts['fdd']['Name'] = [
+    $opts['fdd']['name'] = [
       'name'     => $this->l->t('Projekt-Name'),
       'php|LF'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
         //error_log('project-id: '.$recordId);
@@ -185,14 +185,14 @@ class Projects extends PMETableViewBase
         'table' => self::TABLE,
         'column' => 'Name',
         'description' => 'Name',
-        'groups' => 'Jahr',
-        'orderby' => '$table.`Jahr` DESC',
+        'groups' => 'year',
+        'orderby' => '$table.`year` DESC',
       ],
     ];
 
 
     if ($this->showDisabled) {
-      $opts['fdd']['Disabled'] = [
+      $opts['fdd']['disabled'] = [
         'name'     => $this->l->t('Disabled'),
         'css'      => ['postfix' => ' project-disabled'],
         'values2|CAP' => [1 => '' ],
@@ -205,7 +205,7 @@ class Projects extends PMETableViewBase
       ];
     }
 
-    $opts['fdd']['Art'] = [
+    $opts['fdd']['temporal_type'] = [
       'name'     => $this->l->t('Kind'),
       'select'   => 'D',
       'options'  => 'AVCPD', // auto increment
@@ -218,7 +218,7 @@ class Projects extends PMETableViewBase
       'tooltip' => $this->toolTipsService['project-kind'],
     ];
 
-    $opts['fdd']['Actions'] = [
+    $opts['fdd']['actions'] = [
       'name'     => $this->l->t('Actions'),
       'input'    => 'RV',
       'sql'      => '`PMEtable0`.`Name`',
@@ -237,50 +237,31 @@ class Projects extends PMETableViewBase
       'sort'     => false
     ];
 
-    if (false) {
-      $groupedInstruments = $this->instrumentInfo['nameGroups'];
-      $instruments        = $this->instrumentInfo['byName'];
-
-      $opts['fdd']['Besetzung'] = [
-        'name'     => 'Besetzung',
-        'options'  => 'LAVCPD',
-        'select'   => 'M',
-        'maxlen'   => 11,
-        'sort'     => true,
-        'display|LF' => ["popup" => 'data',
-                         "prefix" => '<div class="projectinstrumentation">',
-                         "postfix" => '</div>'],
-        'css'      => ['postfix' => ' projectinstrumentation tooltip-top'],
-        'values'   => $instruments,
-        'valueGroups' => $groupedInstruments,
-      ];
-    }
-
     $projInstIdx = count($opts['fdd']);
-    $opts['fdd']['ProjectInstrumentationJoin'] = [
+    $opts['fdd']['project_instrumentation_join'] = [
       'name'   => $this->l->t('Instrumentation Join Pseudo Field'),
       'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$projInstIdx.'.Id
-  ORDER BY PMEjoin'.$projInstIdx.'.InstrumentId ASC)',
+  ORDER BY PMEjoin'.$projInstIdx.'.instrument_id ASC)',
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table'       => self::INSTRUMENTATION,
-        'column'      => 'Id',
-        'description' => ['columns' => 'Id'],
-        'join'        => '$join_table.ProjectId = $main_table.Id',
+        'column'      => 'id',
+        'description' => ['columns' => 'id'],
+        'join'        => '$join_table.project_id = $main_table.Id',
       ]
     ];
 
-    $opts['fdd']['InstrumentationKey'] = [
+    $opts['fdd']['instrumentation_key'] = [
       'name'  => $this->l->t('Instrumentation Key'),
       'sql'   => 'GROUP_CONCAT(DISTINCT PMEjoin'.$projInstIdx.'.Id
-  ORDER BY PMEjoin'.$projInstIdx.'.InstrumentId ASC)',
+  ORDER BY PMEjoin'.$projInstIdx.'.instrument_id ASC)',
       'input' => 'SRH',
       'filter' => 'having', // need "HAVING" for group by stuff
     ];
 
     $instIdx = count($opts['fdd']);
-    $opts['fdd']['Instrumentation'] = [
+    $opts['fdd']['instrumentation'] = [
       'name'        => $this->l->t('Instrumentation'),
       'input'       => 'S', // skip
       'sort'        => true,
@@ -295,16 +276,16 @@ class Projects extends PMETableViewBase
       'maxlen'      => 11,
       'values' => [
         'table'       => 'Instruments',
-        'column'      => 'Id',
-        'description' => 'Id',
+        'column'      => 'id',
+        'description' => 'id',
         'orderby'     => 'Sortierung',
-        'join'        => '$join_table.Id = PMEjoin'.$projInstIdx.'.InstrumentId'
+        'join'        => '$join_table.Id = PMEjoin'.$projInstIdx.'.instrument_id'
       ],
       'values2'     => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
 
-    $opts['fdd']['Tools'] = [
+    $opts['fdd']['tools'] = [
       'name'     => $this->l->t('Toolbox'),
       'input'    => 'V',
       'options'  => 'VCD',
@@ -321,36 +302,36 @@ class Projects extends PMETableViewBase
       'escape'   => false
     ];
 
-    $opts['fdd']['Unkostenbeitrag'] = $this->defaultFDD['money'];
-    $opts['fdd']['Unkostenbeitrag']['name'] = $this->l->t("Project Fee");
-    $opts['fdd']['Unkostenbeitrag']['maxlen'] = 8;
-    $opts['fdd']['Unkostenbeitrag']['tooltip'] = $this->l->t('Default project fee for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
-    $opts['fdd']['Unkostenbeitrag']['display|LF'] = ['popup' => 'tooltip'];
-    $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' tooltip-top';
+    $opts['fdd']['service_charge'] = $this->defaultFDD['money'];
+    $opts['fdd']['service_charge']['name'] = $this->l->t("Project Fee");
+    $opts['fdd']['service_charge']['maxlen'] = 8;
+    $opts['fdd']['service_charge']['tooltip'] = $this->l->t('Default project fee for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
+    $opts['fdd']['service_charge']['display|LF'] = ['popup' => 'tooltip'];
+    $opts['fdd']['service_charge']['css']['postfix'] .= ' tooltip-top';
 
-    $opts['fdd']['Anzahlung'] = $this->defaultFDD['money'];
-    $opts['fdd']['Anzahlung']['name'] = $this->l->t("Deposit");
-    $opts['fdd']['Anzahlung']['maxlen'] = 8;
-    $opts['fdd']['Anzahlung']['tooltip'] = $this->l->t('Default project deposit for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
-    $opts['fdd']['Anzahlung']['display|LF'] = ['popup' => 'tooltip'];
-    $opts['fdd']['Anzahlung']['css']['postfix'] .= ' tooltip-top';
+    $opts['fdd']['pre_payment'] = $this->defaultFDD['money'];
+    $opts['fdd']['pre_payment']['name'] = $this->l->t("Deposit");
+    $opts['fdd']['pre_payment']['maxlen'] = 8;
+    $opts['fdd']['pre_payment']['tooltip'] = $this->l->t('Default project deposit for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
+    $opts['fdd']['pre_payment']['display|LF'] = ['popup' => 'tooltip'];
+    $opts['fdd']['pre_payment']['css']['postfix'] .= ' tooltip-top';
 
     $idx = count($opts['fdd']);
     $join_table = 'PMEjoin'.$idx;
-    $opts['fdd']['ExtraFelderJoin'] = [
+    $opts['fdd']['extra_fields_join'] = [
       'options'  => 'FLCVD',
       'input'    => 'VRH',
-      'sql'      => '`PMEtable0`.`Id`',
+      'sql'      => '`PMEtable0`.`id`',
       'filter'   => 'having',
       'values'   => [
         'table'  => 'ProjectExtraFields',
         'column' => 'Name',
         'description' => 'Name',
-        'join'   => '$main_table.`Id` = $join_table.`ProjectId`'
+        'join'   => '$main_table.`id` = $join_table.`project_id`'
       ],
     ];
 
-    $opts['fdd']['ExtraFelder'] = [
+    $opts['fdd']['extra_fields'] = [
       'name' => $this->l->t('Extra Member Data'),
       'options'  => 'FLCVD',
       'input'    => 'VR',
@@ -360,7 +341,7 @@ class Projects extends PMETableViewBase
         $post = ['ProjectExtraFields' => $value,
                  'Template' => 'project-extra',
                  'ProjectName' => $row['qf'.$nameIdx],
-                 'ProjectId' => $recordId];
+                 'project_id' => $recordId];
         $post = http_build_query($post, '', '&');
         $title = $this->toolTipsService['project-action-extra-fields'];
         $link =<<<__EOT__
@@ -380,14 +361,14 @@ __EOT__;
       'display|LF' => ['popup' => 'data'],
     ];
 
-    $opts['fdd']['Programm'] = [
+    $opts['fdd']['program'] = [
       'name'     => $this->l->t('Program'),
       'input'    => 'V',
       'options'  => 'VCD',
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => ['postfix' => ' projectprogram'],
-      'sql'      => '`PMEtable0`.`Id`',
+      'sql'      => '`PMEtable0`.`id`',
       'php|CV'    => function($value, $action, $field, $fds, $fdd, $row, $recordId) {
         $projectId = $recordId; // and also $value
         return $this->projectProgram($projectId, $action);
@@ -396,7 +377,7 @@ __EOT__;
       'escape' => false
     ];
 
-    $opts['fdd']['Flyer'] = [
+    $opts['fdd']['flyer'] = [
       'input' => 'V',
       'name' => $this->l->t('Flyer'),
       'select' => 'T',
@@ -412,7 +393,7 @@ __EOT__;
       'sort' => false,
     ];
 
-    $opts['fdd']['Updated'] =
+    $opts['fdd']['updated'] =
       array_merge(
         $this->defaultFDD['datetime'],
         [
@@ -442,9 +423,9 @@ __EOT__;
       unset($_POST[$this->pme->cgiSysName('qf'.$yearIdx)]);
       unset($_GET[$this->pme->cgiSysName('qf'.$yearIdx)]);
     } else {
-      $opts['filters']['OR'][] = "`PMEtable0`.`Art` = 'permanent'";
+      $opts['filters']['OR'][] = "`PMEtable0`.`temporal_type` = 'permanent'";
     }
-    $opts['filters']['AND'][] = '`PMEtable0`.`Disabled` <= '.intval($this->showDisabled);
+    $opts['filters']['AND'][] = '`PMEtable0`.`disabled` <= '.intval($this->showDisabled);
 
     // We could try to use 'before' triggers in order to verify the
     // data. However, at the moment the stuff does not work without JS
@@ -810,11 +791,11 @@ project without a flyer first.");
       $repository = $this->getDatabaseRepository(Entities\ProjectInstrumentation::class);
       try {
         foreach(array_diff($oldIds, $newIds) as $id) {
-          $this->remove([ 'Id' => $oldRecords[$id] ]);
-          $this->changeLogService->logDelete($table, 'Id', [
-            'Id' => $oldRecords[$id],
-            'ProjectId' => $projectId,
-            'InstrumentId' => $id,
+          $this->remove([ 'id' => $oldRecords[$id] ]);
+          $this->changeLogService->logDelete($table, 'id', [
+            'id' => $oldRecords[$id],
+            'project_id' => $projectId,
+            'instrument_id' => $id,
           ]);
         }
         $this->flush();
@@ -830,8 +811,8 @@ project without a flyer first.");
           $rec = $projectInstrument->getId();
           if (!empty($rec)) {
             $this->changeLogService->logInsert($table, $rec, [
-              'ProjectId' => $projectId,
-              'InstrumentId' => $id
+              'project_id' => $projectId,
+              'instrument_id' => $id
             ]);
           }
         }
@@ -977,7 +958,7 @@ project without a flyer first.");
     // }
 
     // if ($safeMode) {
-    //   mySQL::update(self::TABLE_NAME, "`Id` = $projectId", ['Disabled' => 1], $pme->dbh);
+    //   mySQL::update(self::TABLE_NAME, "`id` = $projectId", ['Disabled' => 1], $pme->dbh);
     //   return false; // clean-up has to be done manually later
     // }
 
@@ -986,7 +967,7 @@ project without a flyer first.");
     // // delete all extra fields and associated data.
     // $projectExtra = ProjectExtra::projectExtraFields($projectId, false, $pme->dbh);
     // foreach($projectExtra as $fieldInfo) {
-    //   $fieldId = $fieldInfo['Id'];
+    //   $fieldId = $fieldInfo['id'];
     //   ProjectExtra::deleteExtraField($fieldId, $projectId, true, $pme->dbh);
     // }
 
@@ -999,10 +980,10 @@ project without a flyer first.");
 
     // $deleteTables = [
     //   [ 'table' => 'Besetzungen', 'column' => 'ProjektId' ],
-    //   [ 'table' => 'ProjectInstruments', 'column' => 'ProjectId' ],
-    //   [ 'table' => 'ProjectWebPages', 'column' => 'ProjectId' ],
-    //   // [ 'table' => 'ProjectExtraFields', 'column' => 'ProjectId' ], handled above
-    //   // [ 'table' => 'ProjectEvents', 'column' => 'ProjectId' ], handled above
+    //   [ 'table' => 'ProjectInstruments', 'column' => 'project_id' ],
+    //   [ 'table' => 'ProjectWebPages', 'column' => 'project_id' ],
+    //   // [ 'table' => 'ProjectExtraFields', 'column' => 'project_id' ], handled above
+    //   // [ 'table' => 'ProjectEvents', 'column' => 'project_id' ], handled above
     // ];
 
     // $triggerResult = true;

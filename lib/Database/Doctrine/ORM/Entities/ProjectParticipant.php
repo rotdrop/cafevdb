@@ -28,7 +28,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Besetzungen *
- * @ORM\Table(name="ProjectParticipants", uniqueConstraints={@ORM\UniqueConstraint(name="ProjectId", columns={"ProjectId", "MusicianId"})})
+ * @ORM\Table(name="ProjectParticipants", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "musician_id"})})
  * @ORM\Entity
  */
 class ProjectParticipant
@@ -36,7 +36,7 @@ class ProjectParticipant
   /**
    * @var int
    *
-   * @ORM\Column(name="Id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -45,56 +45,56 @@ class ProjectParticipant
   /**
    * @var int
    *
-   * @ORM\Column(name="ProjectId", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $projectId;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="MusicianId", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    */
   private $musicianId;
 
   /**
    * @var bool
    *
-   * @ORM\Column(name="Registration", type="boolean", nullable=false, options={"default"="0"})
+   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
    */
   private $registration = '0';
 
   /**
    * @var string
    *
-   * @ORM\Column(name="ServiceCharge", type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00","comment"="Gagen negativ"})
+   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00","comment"="Gagen negativ"})
    */
   private $serviceCharge = '0.00';
 
   /**
    * @var string
    *
-   * @ORM\Column(name="PrePayment", type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
+   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
    */
   private $prePayment = '0.00';
 
   /**
    * @var bool
    *
-   * @ORM\Column(name="Debitnote", type="boolean", nullable=false, options={"default"="1"})
+   * @ORM\Column(type="boolean", nullable=false, options={"default"="1"})
    */
   private $debitnote = '1';
 
   /**
    * @var string
    *
-   * @ORM\Column(name="Remarks", type="text", length=65535, nullable=false, options={"comment"="Allgemeine Bermerkungen"})
+   * @ORM\Column(type="text", length=65535, nullable=false, options={"comment"="Allgemeine Bermerkungen"})
    */
   private $remarks;
 
   /**
    * @var bool
    *
-   * @ORM\Column(name="Disabled", type="boolean", nullable=false, options={"default"="0"})
+   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
    */
   private $disabled = '0';
 

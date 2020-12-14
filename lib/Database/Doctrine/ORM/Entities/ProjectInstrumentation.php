@@ -37,7 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
  * multi-voice instruments. Although this almost only affects violins
  * ...
  *
- * @ORM\Table(name="ProjectInstrumentation", uniqueConstraints={@ORM\UniqueConstraint(name="ProjectId", columns={"ProjectId", "InstrumentId"})})
+ * @ORM\Table(name="ProjectInstrumentation", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "instrument_id"})})
  * @ORM\Entity
  */
 class ProjectInstrumentation
@@ -48,7 +48,7 @@ class ProjectInstrumentation
   /**
    * @var int
    *
-   * @ORM\Column(name="Id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -57,21 +57,21 @@ class ProjectInstrumentation
   /**
    * @var int
    *
-   * @ORM\Column(name="ProjectId", type="integer", nullable=false, options={"comment"="Link into table Projekte"})
+   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link into table Projects"})
    */
   private $projectid;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="InstrumentId", type="integer", nullable=false, options={"comment"="Link into table Instrumente"})
+   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link into table Instrumente"})
    */
   private $instrumentid;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="Quantity", type="integer", nullable=false, options={"default"="1","comment"="Number of required musicians for this instrument"})
+   * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Number of required musicians for this instrument"})
    */
   private $quantity = '1';
 
@@ -80,7 +80,7 @@ class ProjectInstrumentation
    * instrument-id given here points to exactly one project
    *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="instrumentation", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="ProjectId", referencedColumnName="Id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $project;
 
@@ -88,7 +88,7 @@ class ProjectInstrumentation
    * Many-One unidirectional. So the non-owning side just does not matter.
    *
    * @ORM\ManyToOne(targetEntity="Instrument", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="InstrumentId", referencedColumnName="Id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $instrument;
 

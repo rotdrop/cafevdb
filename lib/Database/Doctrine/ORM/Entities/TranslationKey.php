@@ -34,7 +34,7 @@ use OCP\ILogger;
  *
  * @ORM\Table(name="TranslationKeys",
  *   uniqueConstraints={
- *     @ORM\UniqueConstraint(name="phrase", columns={"phrase"})
+ *     @ORM\UniqueConstraint(columns={"phrase"})
  *   })
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationKeysRepository")
  */
@@ -46,7 +46,7 @@ class TranslationKey implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -55,7 +55,7 @@ class TranslationKey implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(name="phrase", type="string", length=768, nullable=false,
+   * @ORM\Column(type="string", length=768, nullable=false,
    *   options={
    *     "comment":"Keyword to be translated. Normally en_US, but could be any unique tag"
    *   })

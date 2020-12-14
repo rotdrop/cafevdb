@@ -40,7 +40,7 @@ class ProjectExtraFieldType implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="Id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -49,21 +49,21 @@ class ProjectExtraFieldType implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(name="Name", type="string", length=256, nullable=false)
+   * @ORM\Column(type="string", length=256, nullable=false)
    */
   private $name;
 
   /**
    * @var enumextrafieldmultiplicity
    *
-   * @ORM\Column(name="Multiplicity", type="enumextrafieldmultiplicity", nullable=false)
+   * @ORM\Column(type="enumextrafieldmultiplicity", nullable=false)
    */
   private $multiplicity;
 
   /**
    * @var enumextrafieldkind
    *
-   * @ORM\Column(name="Kind", type="enumextrafieldkind", nullable=false, options={"default"="general"})
+   * @ORM\Column(type="enumextrafieldkind", nullable=false, options={"default"="general"})
    */
   private $kind = 'general';
 

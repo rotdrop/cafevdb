@@ -40,7 +40,7 @@ class InstrumentFamily implements \ArrayAccess
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -49,14 +49,14 @@ class InstrumentFamily implements \ArrayAccess
     /**
      * @var string
      *
-     * @ORM\Column(name="family", type="string", length=64, nullable=false, unique=true)
+     * @ORM\Column(type="string", length=64, nullable=false, unique=true)
      */
     private $family;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="disabled", type="boolean", nullable=false, options={"default"="0"})
+     * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
      */
     private $disabled = false;
 

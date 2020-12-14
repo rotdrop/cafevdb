@@ -126,13 +126,13 @@ class ProjectExtraFields extends PMETableViewBase
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = 'Id';
+    $opts['key'] = 'id';
 
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'ProjectId', 'DisplayOrder', 'Name' ];
+    $opts['sort_field'] = [ 'project_id', 'DisplayOrder', 'Name' ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -192,7 +192,7 @@ class ProjectExtraFields extends PMETableViewBase
     $projects = [];
     $groupedProjects = [];
     foreach ($allProjects as $proj) {
-      $id = $proj['Id'];
+      $id = $proj['id'];
       $name = $proj['Name'];
       $year = $proj['Year'];
       $projectQueryValues[$id] = $year.': '.$name;
@@ -201,7 +201,7 @@ class ProjectExtraFields extends PMETableViewBase
     }
 
     $projectIdx = 0; // just the start here count($opts['fdd']);
-    $opts['fdd']['ProjectId'] = [
+    $opts['fdd']['project_id'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'      => $this->l->t('Project-Name'),
       'css' => [ 'postfix' => ' project-extra-project-name' ],
@@ -214,26 +214,26 @@ class ProjectExtraFields extends PMETableViewBase
       'sort'     => true,
       'values|ACP' => [
         'table' => self::PROJECTS_TABLE,
-        'column' => 'Id',
-        'description' => 'Name',
-        'groups' => 'Jahr',
-        'orderby' => '$table.`Jahr` DESC',
-        'join' => '$main_table.ProjectId = $join_table.Id',
+        'column' => 'id',
+        'description' => 'name',
+        'groups' => 'year',
+        'orderby' => '$table.`year` DESC',
+        'join' => '$main_table.project_id = $join_table.Id',
       ],
       'values|DVFL' => [
         'table' => self::PROJECTS_TABLE,
-        'column' => 'Id',
-        'description' => 'Name',
-        'groups' => 'Jahr',
-        'orderby' => '$table.`Jahr` DESC',
-        'join' => '$main_table.`ProjectId` = $join_table.`Id`',
-        'filters' => '$table.`Id` IN (SELECT `ProjectId` FROM $main_table)',
+        'column' => 'id',
+        'description' => 'name',
+        'groups' => 'year',
+        'orderby' => '$table.`year` DESC',
+        'join' => '$main_table.`project_id` = $join_table.`id`',
+        'filters' => '$table.`id` IN (SELECT `project_id` FROM $main_table)',
       ],
     ];
 
     $tooltipIdx = -1;
     $nameIdx = count($opts['fdd']);
-    $opts['fdd']['Name'] = [
+    $opts['fdd']['name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name' => $this->l->t('Field-Name'),
       'css' => [ 'postfix' => ' field-name' ],
@@ -245,7 +245,7 @@ class ProjectExtraFields extends PMETableViewBase
     ];
 
     if ($this->showDisabled) {
-      $opts['fdd']['Disabled'] = [
+      $opts['fdd']['disabled'] = [
         'tab'      => [ 'id' => 'definition' ],
         'name'     => $this->l->t('Disabled'),
         'css'      => [ 'postfix' => ' extra-field-disabled' ],
@@ -284,7 +284,7 @@ class ProjectExtraFields extends PMETableViewBase
       }
     }
 
-    $opts['fdd']['TypeId'] = [
+    $opts['fdd']['type_id'] = [
       'tab'      => [ 'id' => 'definition' ],
       'name' => $this->l->t('Type'),
       'css' => [ 'postfix' => ' field-type' ],
@@ -303,7 +303,7 @@ class ProjectExtraFields extends PMETableViewBase
       'valueTitles' => $typeTitles,
     ];
 
-    $opts['fdd']['AllowedValues'] = [
+    $opts['fdd']['allowed_values'] = [
       'name' => $this->l->t('Allowed Values'),
       'css|LF' => [ 'postfix' => ' allowed-values hide-subsequent-lines' ],
       'css' => ['postfix' => ' allowed-values' ],
@@ -318,7 +318,7 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-fields-allowed-values'],
     ];
 
-    $opts['fdd']['AllowedValuesSingle'] = [
+    $opts['fdd']['allowed_values_single'] = [
       'name' => $this->currencyLabel($this->l->t('Data')),
       'css' => [ 'postfix' => ' allowed-values-single' ],
       'sql' => 'PMEtable0.AllowedValues',
@@ -352,7 +352,7 @@ class ProjectExtraFields extends PMETableViewBase
     for (; $dpy <= 30; $dpy += 5) {
       $values2[$dpy] = $dpy;
     }
-    $opts['fdd']['MaximumGroupSize'] = [
+    $opts['fdd']['maximum_group_size'] = [
       'name' => $this->l->t('Maximum Size'),
       'css' => [ 'postfix' => ' no-search maximum-group-size' ],
       'sql' => "SUBSTRING_INDEX(PMEtable0.AllowedValues, ':', -1)",
@@ -368,7 +368,7 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-fields-maximum-group-size'],
     ];
 
-    $opts['fdd']['DefaultValue'] = [
+    $opts['fdd']['default_value'] = [
       'name' => $this->l->t('Default Value'),
       'css' => [ 'postfix' => ' default-value' ],
       'select' => 'T',
@@ -379,7 +379,7 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-fields-default-value'],
     ];
 
-    $opts['fdd']['DefaultMultiValue'] = [
+    $opts['fdd']['default_multi_value'] = [
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'CPA',
@@ -387,35 +387,18 @@ class ProjectExtraFields extends PMETableViewBase
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D',
       'values' => [
-
-// SELECT
-//     n1.number AS array_index,
-//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.DatabaseName') AS 'DatabaseName',
-//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Schema Name') AS 'Schema Name',
-//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Object Name') AS 'Object Name',
-//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.column_index_id') AS 'column_index_id',
-//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Buffer size(MB)') AS 'Buffer size(MB)',
-//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.BufferCount') AS 'BufferCount',
-//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Row Count') AS 'Row Count',
-//     JSON_VALUE(JSON_QUERY(@json_doc,CONCAT('$[',n1.number,']')),'$.Compression Type') AS 'Compression Type'
-// FROM numbers_table AS n1
-// WHERE
-//     n1.number < json_length(@json_doc);
-
-        //        'table' => "SELECT Id,
-        // splitString(splitString(AllowedValues, '\\n', N), ':', 1) AS Value,
-        // splitString(splitString(AllowedValues, '\\n', N), ':', 2) AS Label,
-        // splitString(splitString(AllowedValues, '\\n', N), ':', 5) AS Flags
-        // FROM
-        //   `ProjectExtraFields`
-        //   JOIN `numbers`
-        //   ON tokenCount(AllowedValues, '\\n') >= `numbers`.N",
-        //        'column' => 'Value',
-        'table' => self::OPTIONS_TABLE,
-        'column' => 'Value',
-        'description' => 'Label',
-        'filters' => '$table.`FieldId` = $record_id AND $table.`Disabled` = 0',
-        'join' => '$join_table.$join_column = $main_table.`DefaultValue`'
+        'table' => "SELECT id AS field_id,
+    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key') AS 'key',
+    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.value') AS 'value',
+    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.label') AS 'label',
+    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.flags') AS 'flags'
+  FROM `ProjectExtraFields`
+  JOIN `numbers` n
+    ON JSON_LENGTH(allowed_values) >= n.n",
+        'column' => 'value',
+        'description' => 'label',
+        'filters' => '$table.`field_id` = $record_id AND $table.`flags` = \'deleted\'',
+        'join' => '$join_table.$join_column = $main_table.`default_value`'
       ],
       'maxlen' => 29,
       'size' => 30,
@@ -423,7 +406,7 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-fields-default-multi-value'],
     ];
 
-    $opts['fdd']['DefaultSingleValue'] = [
+    $opts['fdd']['default_single_value'] = [
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'CPA',
@@ -440,7 +423,7 @@ class ProjectExtraFields extends PMETableViewBase
     ];
 
     $tooltipIdx = count($opts['fdd']);
-    $opts['fdd']['ToolTip'] = [
+    $opts['fdd']['tool_tip'] = [
       'tab'      => [ 'id' => 'display' ],
       'name' => $this->l->t('Tooltip'),
       'css' => [ 'postfix' => ' extra-field-tooltip hide-subsequent-lines' ],
@@ -455,7 +438,7 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-fields-tooltip'],
     ];
 
-    $opts['fdd']['DisplayOrder'] = [
+    $opts['fdd']['display_order'] = [
       'name' => $this->l->t('Display-Order'),
       'css' => [ 'postfix' => ' display-order' ],
       'select' => 'N',
@@ -465,7 +448,7 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-fields-display-order'],
     ];
 
-    $opts['fdd']['Tab'] = [
+    $opts['fdd']['tab'] = [
       'name' => $this->l->t('Table Tab'),
       'css' => [ 'postfix' => ' tab allow-empty' ],
       'select' => 'D',
@@ -485,7 +468,7 @@ class ProjectExtraFields extends PMETableViewBase
     if ($recordMode) {
       // In order to be able to add a new tab, the select box first
       // has to be emptied (in order to avoid conflicts).
-      $opts['fdd']['NewTab'] = [
+      $opts['fdd']['new_tab'] = [
         'name' => $this->l->t('New Tab Name'),
         'options' => 'CPA',
         'sql' => "''",
@@ -499,9 +482,9 @@ class ProjectExtraFields extends PMETableViewBase
     }
 
     // outside the expertmode "if", this is the index!
-    $opts['fdd']['Id'] = [
+    $opts['fdd']['id'] = [
       'tab'      => ['id' => 'advanced' ],
-      'name'     => 'Id',
+      'name'     => 'id',
       'select'   => 'T',
       'input'    => 'R',
       'input|AP' => 'RH',
@@ -514,21 +497,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     if ($expertMode) {
 
-      // will hide this later
-      $opts['fdd']['FieldIndex'] = [
-        'tab' => [ 'id' => 'advanced' ],
-        'name' => $this->l->t('Field-Index'),
-        'css' => [ 'postfix' => ' field-index' ],
-        // 'options' => 'VCDAPR',
-        'align'    => 'right',
-        'select' => 'N',
-        'maxlen' => 5,
-        'sort' => true,
-        'input' => 'R',
-        'tooltip' => $this->toolTipsService['extra-fields-field-index'],
-      ];
-
-      $opts['fdd']['Encrypted'] = [
+      $opts['fdd']['encrypted'] = [
         'name' => $this->l->t('Encrypted'),
         'css' => [ 'postfix' => ' encrypted' ],
         'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
@@ -543,7 +512,7 @@ class ProjectExtraFields extends PMETableViewBase
 
       // @TODO wildcards?
       $cloudGroups = $this->groupManager()->search('');
-      $opts['fdd']['Readers'] = [
+      $opts['fdd']['readers'] = [
         'name' => $this->l->t('Readers'),
         'css' => [ 'postfix' => ' readers user-groups' ],
         'select' => 'M',
@@ -554,7 +523,7 @@ class ProjectExtraFields extends PMETableViewBase
         'tooltip' => $this->toolTipsService['extra-fields-readers'],
       ];
 
-      $opts['fdd']['Writers'] = [
+      $opts['fdd']['writers'] = [
         'name' => $this->l->t('Writers'),
         'css' => [ 'postfix' => ' writers chosen-dropup_ user-groups' ],
         'select' => 'M',
@@ -567,7 +536,7 @@ class ProjectExtraFields extends PMETableViewBase
     }
 
     // GROUP BY clause, if needed.
-    $opts['groupby_fields'] = 'Id';
+    $opts['groupby_fields'] = 'id';
 
     $opts['filters'] = [];
     if (!$this->showDisabled) {
@@ -577,7 +546,7 @@ class ProjectExtraFields extends PMETableViewBase
       }
     }
     if ($projectMode !== false) {
-      $opts['filters'][] = 'PMEtable0.ProjectId = '.$this->projectId;
+      $opts['filters'][] = 'PMEtable0.project_id = '.$this->projectId;
     }
 
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
@@ -820,9 +789,9 @@ class ProjectExtraFields extends PMETableViewBase
    */
   public function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $projectId = $newvals['ProjectId'];
+    $projectId = $newvals['project_id'];
     if ($projectId <= 0) {
-      $projectId = $newvals['ProjectId'] = $this->projectId;
+      $projectId = $newvals['project_id'] = $this->projectId;
     }
 
     if (empty($projectId) || $projectId < 0) {
@@ -834,7 +803,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     // // insert the beast with the next available field id
     // $index = mySQL::selectFirstHoleFromTable(self::TABLE_NAME, 'FieldIndex',
-    //                                          "`ProjectId` = ".$projectId,
+    //                                          "`project_id` = ".$projectId,
     //                                          $pme->dbh);
 
     // if ($index === false) {
@@ -883,19 +852,19 @@ class ProjectExtraFields extends PMETableViewBase
 
   private function usedFields($projectId = -1, $fieldId = -1)
   {
-    return $this->getDatabaseRepository(Entities\ProjectExtraFieldData::class)
+    return $this->getDatabaseRepository(Entities\ProjectExtraFieldDatum::class)
                 ->usedFields($projectId, $fieldId);
   }
 
   private function fieldValues($fieldId)
   {
-    return $this->getDatabaseRepository(Entities\ProjectExtraFieldData::class)
+    return $this->getDatabaseRepository(Entities\ProjectExtraFieldDatum::class)
                 ->fieldValues($fieldId);
   }
 
   private function disable($fieldId, $disable = true)
   {
-    $this->getDatabaseRepository(Entities\ProjectExtraFiel::class)
+    $this->getDatabaseRepository(Entities\ProjectExtraField::class)
          ->disable($fieldId);
   }
 
@@ -913,9 +882,9 @@ class ProjectExtraFields extends PMETableViewBase
    *
    * @return string HTML data for one row.
    */
-  public static function allowedValueInputRow($value, $index = -1, $used = false)
+  public function allowedValueInputRow($value, $index = -1, $used = false)
   {
-    $pfx = $this->pme->cgiDataValue('AllowedValues');
+    $pfx = $this->pme->cgiDataName('AllowedValues');
     $key = $value['key'];
     $placeHolder = empty($key);
     $deleted = $value['flags'] === 'deleted';
@@ -1162,7 +1131,7 @@ __EOT__;
       case 'change':
         $usedKeys = $this->fieldValues($recordId);
         //error_log(print_r($usedKeys, true));
-        //$pfx = $this->pme->cgiDataValue('AllowedValues');
+        //$pfx = $this->pme->cgiDataName('AllowedValues');
         //$css = 'class="allowed-values"';
         foreach ($allowed as $idx => $value) {
           if (!empty($value['key'])) {
@@ -1318,8 +1287,8 @@ __EOT__;
    */
   public function explodeAllowedValues($values, $addProto = true, $trimInactive = false)
   {
-    $options = json_decode($values);
-    if (array_keys($values) !== range(0, count($values) - 1)) {
+    $options = empty($values) ? [] : json_decode($values);
+    if (count($options) > 0 && array_keys($options) !== range(0, count($options) - 1)) {
       throw new \InvalidArgumentException($this->l->t('Value options do not yield a sequential array'));
     }
     $protoType = $this->allowedValuesPrototype();

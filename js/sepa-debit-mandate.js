@@ -509,7 +509,7 @@ var CAFEVDB = CAFEVDB || {};
     var changed = $element.attr('name');
     changed = inputMapping[changed];
 
-    var projectElem = $('[name="PME_data_projectId"]');
+    var projectElem = $('[name="PME_data_project_id"]');
     var projectId;
     if (!projectElem.is('input')) {
       projectElem = projectElem.find('option[selected="selected"]');
@@ -517,16 +517,16 @@ var CAFEVDB = CAFEVDB || {};
     projectId = projectElem.val();
 
     var mandateData = {
-      mandateReference: $('input[name="PME_data_mandateReference"]').val(),
-      mandateDate: $('input[name="PME_data_mandateDate"]').val(),
-      bankAccountOwner: $('input[name="PME_data_bankAccountOwner"]').val(),
-      lastUsedDate: $('input[name="PME_data_lastUsedDate"]').val(),
-      MusicianId:  $('select[name="PME_data_musicianId"] option[selected="selected"]').val(),
+      mandateReference: $('input[name="PME_data_mandate_reference"]').val(),
+      mandateDate: $('input[name="PME_data_mandate_date"]').val(),
+      bankAccountOwner: $('input[name="PME_data_bank_account_owner"]').val(),
+      lastUsedDate: $('input[name="PME_data_last_used_date"]').val(),
+      MusicianId:  $('select[name="PME_data_musician_id"] option[selected="selected"]').val(),
       ProjectId:  projectId,
       MandateProjectId:  projectId,
-      bankAccountIBAN: $('input[name="PME_data_IBAN"]').val(),
-      bankAccountBIC: $('input[name="PME_data_BIC"]').val(),
-      bankAccountBLZ: $('input[name="PME_data_BLZ"]').val(),
+      bankAccountIBAN: $('input[name="PME_data_iban"]').val(),
+      bankAccountBIC: $('input[name="PME_data_bic"]').val(),
+      bankAccountBLZ: $('input[name="PME_data_blz"]').val(),
       changed: changed
     };
 
@@ -562,13 +562,13 @@ var CAFEVDB = CAFEVDB || {};
                $element.val(data.data.value);
              }
              if (data.data.iban) {
-               $('input[name="PME_data_IBAN"]').val(data.data.iban);
+               $('input[name="PME_data_iban"]').val(data.data.iban);
              }
              if (data.data.bic) {
-               $('input[name="PME_data_BIC"]').val(data.data.bic);
+               $('input[name="PME_data_bic"]').val(data.data.bic);
              }
              if (data.data.blz) {
-               $('input[name="PME_data_BLZ"]').val(data.data.blz);
+               $('input[name="PME_data_blz"]').val(data.data.blz);
              }
 
              validateUnlock();

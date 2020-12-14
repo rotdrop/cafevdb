@@ -40,7 +40,7 @@ class GeoCountry implements \ArrayAccess
     /**
      * @var string
      *
-     * @ORM\Column(name="ISO", type="string", length=2, nullable=false, options={"fixed":true})
+     * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true})
      * @ORM\Id
      */
     private $iso;
@@ -49,14 +49,14 @@ class GeoCountry implements \ArrayAccess
      * @var string
      * @ORM\Id
      *
-     * @ORM\Column(name="Target", type="string", length=2, nullable=false, options={"fixed":true})
+     * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true})
      */
     private $target;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Data", type="string", length=1024, nullable=false)
+     * @ORM\Column(type="string", length=1024, nullable=false)
      */
     private $data;
 

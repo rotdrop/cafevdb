@@ -114,7 +114,7 @@ class ProjectService
    */
   public function fetchName($projectId)
   {
-    $project = $this->find($projectid);
+    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     if ($project == null) {
       return null;
     }
@@ -398,7 +398,7 @@ Whatever.',
    */
   public function projectWebPages($projectId)
   {
-    $project = $this->find($projectId);
+    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     if (empty($project)) {
       return false;
     }
@@ -453,7 +453,7 @@ Whatever.',
    */
   public function createProjectWebPage($projectId, $kind = 'concert')
   {
-    $project = $this->find($projectId);
+    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     if (empty($project)) {
       return false;
     }
@@ -478,9 +478,13 @@ Whatever.',
     $pageTemplate = $this->getConfigValue('redaxoTemplate');
 
     $pageName = $prefix.$projectName;
-    $articles = $this->webPagesRPC->articlesByName($pageName.'(-[0-9]+)?', $category);
-    if (!is_array($articles)) {
-      return false;
+    try {
+      $articles = $this->webPagesRPC->articlesByName($pageName.'(-[0-9]+)?', $category);
+    } catch (\Throwable $t)  {
+      throw new \Exception(
+        $this->l->t('Unable to fetch web-pages like "%s".', [ $pageName ]),
+        $t->getCode(),
+        $t);
     }
 
     $names = array();
@@ -497,24 +501,29 @@ Whatever.',
       }
     }
 
-    $article = $this->webPagesRPC->addArticle($pageName, $category, $pageTemplate);
-
-    if ($article === false) {
-      $this->logError("Error generating web page template");
-      return false;
+    try {
+      $article = $this->webPagesRPC->addArticle($pageName, $category, $pageTemplate);
+    } catch (\Throwable $t) {
+      throw new \Exception(
+        $this->l->t('Unable to create web-page like "%s".', [ $pageName ]),
+        $t->getCode(),
+        $t);
     }
 
     // just forget about the rest, we can't help it anyway if the
     // names are not unique
     $article = $article[0];
 
-    // insert into the db table to form the link
-    if ($this->attachProjectWebPage($projectId, $article) === false) {
-      $this->logError("Error attaching web page template");
-      return false;
+    try {
+      // insert into the db table to form the link
+      $this->attachProjectWebPage($projectId, $article);
+      $this->webPagesRPC->addArticleBlock($article['ArticleId'], $module);
+    } catch (\Throwable $t)  {
+      throw new \Exception(
+        $this->l->t('Unable to attach article "%s".', [ $pageName ]),
+        $t->getCode,
+        $t);
     }
-
-    $this->webPagesRPC->addArticleBlock($article['ArticleId'], $module);
 
     return $article;
   }
@@ -576,15 +585,13 @@ Whatever.',
       if ($result === false) {
         $this->logDebug("Failed moving ".$articleId." to ".$destinationCategory);
       } else {
-        $artical['CategoryId'] = $destinationCategory;
+        $artile['CategoryId'] = $destinationCategory;
       }
-      // @TODO Shouldn't this be recorded in the data-base as well, as the
-      // category has changed?
     }
 
-    $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebpage::class);
+    $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebPage::class);
     try {
-      $projectWebPage = $webPagesRepository->attachProjectWebPage($projectId, $articleId);
+      $projectWebPage = $webPagesRepository->attachProjectWebPage($projectId, $article);
     } catch (\Throwable $t) {
       throw new \Exception("Unable to attach web-page ".$articleId." for ".$projectId, $t->getCode(), $t);
     }
@@ -596,7 +603,7 @@ Whatever.',
    */
   public function nameProjectWebPages($projectId, $projectName = null)
   {
-    $project = $this->find($projectId);
+    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     if (empty($project)) {
       return false;
     }
@@ -643,7 +650,7 @@ Whatever.',
    */
   public function attachMatchingWebPages($projectId)
   {
-    $project = $this->find($projectId);
+    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     $projectName = $project->getName();
 
     $previewCat    = $this->getConfigtValue('redaxoPreview');

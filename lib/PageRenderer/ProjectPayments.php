@@ -146,13 +146,13 @@ class ProjectPayments extends PMETableViewBase
       'name'     => $this->l->t('Musician'),
       'css'      => [ 'postfix' => ' instrumentation-id' ],
       'values'   => [
-        'table'  => "SELECT b.ProjektId AS ProjectId, b.Id, CONCAT(b.Id,': ',m.Vorname,' ',m.Name) AS Name
+        'table'  => "SELECT b.ProjektId AS project_id, b.Id, CONCAT(b.Id,': ',m.Vorname,' ',m.Name) AS Name
   FROM Besetzungen b
   LEFT JOIN Musicians m
   ON b.MusikerId = m.Id
   WHERE b.ProjektId = ".$projectId."
   ORDER BY m.Vorname ASC, m.Name ASC",
-        'column' => 'Id',
+        'column' => 'id',
         'description' => 'Name',
         'join'   => '$join_table.Id = $main_table.instrumentation_id'
       ],
@@ -195,7 +195,7 @@ class ProjectPayments extends PMETableViewBase
         'options' => 'LCFVD',
         'values' => [
           'table' => self::DEBIT_NOTES,
-          'column' => 'Id',
+          'column' => 'id',
           'description' => 'DateIssued',
         ],
         'sort' => true,
@@ -246,7 +246,7 @@ class ProjectPayments extends PMETableViewBase
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
 
-    $opts['filters'] = 'PMEjoin'.$instrumentationIdx.'.ProjectId = '.$projectId;
+    $opts['filters'] = 'PMEjoin'.$instrumentationIdx.'.project_id = '.$projectId;
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 

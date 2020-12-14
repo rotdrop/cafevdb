@@ -20,7 +20,7 @@ class ProjectPayment implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -29,49 +29,49 @@ class ProjectPayment implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="instrumentation_id", type="integer", nullable=false, options={"comment"="Link to Besetzungen.Id"})
+   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link to Besetzungen.Id"})
    */
   private $instrumentationId;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="amount", type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
+   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
    */
   private $amount = '0.00';
 
   /**
    * @var \DateTime|null
    *
-   * @ORM\Column(name="date_of_receipt", type="date", nullable=true)
+   * @ORM\Column(type="date", nullable=true)
    */
   private $dateOfReceipt;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="subject", type="string", length=1024, nullable=false)
+   * @ORM\Column(type="string", length=1024, nullable=false)
    */
   private $subject;
 
   /**
    * @var int|null
    *
-   * @ORM\Column(name="debit_note_id", type="integer", nullable=true, options={"comment"="Link to the ProjectDirectDebit table."})
+   * @ORM\Column(type="integer", nullable=true, options={"comment"="Link to the ProjectDirectDebit table."})
    */
   private $debitNoteId;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="mandate_reference", type="string", length=35, nullable=true, options={"comment"="Link into the SepaDebitMandates table, this is not the ID but the mandate Id."})
+   * @ORM\Column(type="string", length=35, nullable=true, options={"comment"="Link into the SepaDebitMandates table, this is not the ID but the mandate Id."})
    */
   private $mandateReference;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="debit_message_id", type="string", length=1024, nullable=false)
+   * @ORM\Column(type="string", length=1024, nullable=false)
    */
   private $debitMessageId;
 

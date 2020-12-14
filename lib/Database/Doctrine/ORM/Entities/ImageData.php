@@ -42,7 +42,7 @@ class ImageData implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -51,7 +51,7 @@ class ImageData implements \ArrayAccess
   /**
    * @var string|null
    *
-   * @ORM\Column(name="data", type="blob", nullable=false)
+   * @ORM\Column(type="blob", nullable=false)
    */
   private $data;
 

@@ -43,7 +43,7 @@ class Instrument implements \ArrayAccess
     /**
      * @var int
      *
-     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -52,30 +52,29 @@ class Instrument implements \ArrayAccess
     /**
      * @var string
      *
-     * @ORM\Column(name="Instrument", type="string", length=64, nullable=false)
+     * @ORM\Column(type="string", length=64, nullable=false)
      */
     private $instrument;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="Sortierung", type="smallint", nullable=false, options={"comment"="Orchestersortierung"})
+     * @ORM\Column(type="smallint", nullable=false, options={"comment"="Orchestersortierung"})
      */
     private $sortierung;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="Disabled", type="boolean", nullable=false, options={"default"="0"})
+     * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
      */
     private $disabled = false;
 
     /**
      * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(
-     *   name="instrument_family",
-     *   joinColumns={@ORM\JoinColumn(name="instrument_id", referencedColumnName="Id", onDelete="CASCADE")},
-     *   inverseJoinColumns={@ORM\JoinColumn(name="family_id", referencedColumnName="id", onDelete="CASCADE")}
+     *   joinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")},
+     *   inverseJoinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")}
      * )
      */
     private $families;

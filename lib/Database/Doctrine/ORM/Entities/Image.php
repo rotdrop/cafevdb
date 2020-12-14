@@ -42,7 +42,7 @@ class Image implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(name="id", type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
@@ -51,35 +51,35 @@ class Image implements \ArrayAccess
   /**
    * @var string|null
    *
-   * @ORM\Column(name="mime_type", type="string", length=128, nullable=true)
+   * @ORM\Column(type="string", length=128, nullable=true)
    */
   private $mimeType;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="width", type="integer", nullable=false, options={"default"=-1})
+   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
   private $width;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="height", type="integer", nullable=false, options={"default"=-1})
+   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
   private $height;
 
   /**
    * @var string|null
    *
-   * @ORM\Column(name="md5", type="string", length=32, nullable=true, options={"fixed"=true})
+   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed"=true})
    */
   private $md5;
 
   /**
    * @var int
    *
-   * @ORM\Column(name="image_data_id", type="integer", nullable=false, options={"default"=-1})
+   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
   private $imageDataId;
 
@@ -89,7 +89,7 @@ class Image implements \ArrayAccess
    * owning side
    *
    * @ORM\OneToOne(targetEntity="ImageData", inversedBy="image", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="image_data_id", referencedColumnName="id", unique=true, onDelete="CASCADE")
+   * @ORM\JoinColumn(referencedColumnName="id", unique=true, onDelete="CASCADE")
    */
   private $imageData;
 

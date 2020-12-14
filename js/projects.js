@@ -345,8 +345,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     if (form.find(submitSel).length > 0) {
 
       const nameSelector = 'input.projectname';
-      const yearSelector = 'select[name="PME_data_Jahr"]';
-      const attachSelector = 'select[name="PME_data_Art"]';
+      const yearSelector = 'select[name="PME_data_year"]';
+      const attachSelector = 'select[name="PME_data_temporal_type"]';
 
       const name = container.find(nameSelector);
       const year = container.find(yearSelector);
@@ -609,7 +609,7 @@ $(document).ready(function(){
       };
 
       if (container.find('#project_flyer_upload').length > 0) {
-        var idField = container.find('input[name="PME_data_Id"]');
+        var idField = container.find('input[name="PME_data_id"]');
         var recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();

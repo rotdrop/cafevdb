@@ -143,7 +143,7 @@ $(function() {
       });
 
       if (container.find('#contact_photo_upload').length > 0) {
-        const idField = container.find('input[name="PME_data_Id"]');
+        const idField = container.find('input[name="PME_data_id"]');
         var recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();

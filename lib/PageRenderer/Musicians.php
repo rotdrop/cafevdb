@@ -146,16 +146,16 @@ make sure that the musicians are also automatically added to the
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = 'Id';
+    $opts['key'] = 'id';
 
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = ['Instrumente','Name','Vorname','Id'];
+    $opts['sort_field'] = ['instrumentsx','name','first_name','id'];
 
     // GROUP BY clause, if needed.
-    $opts['groupby_fields'] = 'Id';
+    $opts['groupby_fields'] = 'id';
 
     $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
 
@@ -202,9 +202,9 @@ make sure that the musicians are also automatically added to the
 
     // field definitions
 
-    $opts['fdd']['Id'] = [
+    $opts['fdd']['id'] = [
       'tab'      => [ 'id' => 'miscinfo' ],
-      'name'     => 'Id',
+      'name'     => 'id',
       'select'   => 'T',
       'input'    => 'R',
       'input|AP' => 'RH', // new id, no sense to display
@@ -218,7 +218,7 @@ make sure that the musicians are also automatically added to the
     $bval = strval($this->l->t('Add to %s', array($projectName)));
     $tip  = strval($this->toolTipsService['register-musician']);
     if ($this->projectMode) {
-      $opts['fdd']['AddMusicians'] = [
+      $opts['fdd']['add_musicians'] = [
         'tab' => [ 'id' => 'orchestra' ],
         'name' => $this->l->t('Add Musicians'),
         'select' => 'T',
@@ -233,7 +233,7 @@ make sure that the musicians are also automatically added to the
 ."name=\"registerMusician\" "
 ."class=\"register-musician\" />"
 ."</div>'"
-.",'@@key@@',`PMEtable0`.`Id`)",
+.",'@@key@@',`PMEtable0`.`id`)",
         'escape' => false,
         'nowrap' => true,
         'sort' =>false,
@@ -247,7 +247,7 @@ make sure that the musicians are also automatically added to the
       $addCSS = '';
     }
 
-    $opts['fdd']['Name'] = [
+    $opts['fdd']['name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Surname'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
@@ -256,7 +256,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
-    $opts['fdd']['Vorname'] = [
+    $opts['fdd']['first_name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Forename'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
@@ -266,7 +266,7 @@ make sure that the musicians are also automatically added to the
     ];
 
     if ($this->showDisabled) {
-      $opts['fdd']['Disabled'] = [
+      $opts['fdd']['disabled'] = [
         'name'     => $this->l->t('Disabled'),
         'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
         'input'    => $expertMode ? '' : 'R',
@@ -283,7 +283,7 @@ make sure that the musicians are also automatically added to the
     }
 
     $musInstIdx = count($opts['fdd']);
-    $opts['fdd']['MusicianInstrumentJoin'] = [
+    $opts['fdd']['musician_instrument_join'] = [
       'name'   => $this->l->t('Instrument Join Pseudo Field'),
       'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$musInstIdx.'.instrument_id ORDER BY PMEjoin'.$musInstIdx.'.instrument_id ASC)',
       'input'  => 'VRH',
@@ -296,7 +296,7 @@ make sure that the musicians are also automatically added to the
       ]
     ];
 
-    $opts['fdd']['InstrumentKey'] = [
+    $opts['fdd']['instrument_key'] = [
       'name'  => $this->l->t('Instrument Key'),
       'sql'   => 'GROUP_CONCAT(DISTINCT PMEjoin'.$musInstIdx.'.id ORDER BY PMEjoin'.$musInstIdx.'.instrument_id ASC)',
       'input' => 'SRH',
@@ -304,35 +304,35 @@ make sure that the musicians are also automatically added to the
     ];
 
     $instIdx = count($opts['fdd']);
-    $opts['fdd']['Instruments'] = [
+    $opts['fdd']['instruments'] = [
       'tab'         => ['id' => 'orchestra'],
       'name'        => $this->l->t('Instruments'),
       'css'         => ['postfix' => ' musician-instruments tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
       'input'       => 'S', // skip
       'sort'        => true,
-      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.Id ORDER BY PMEjoin'.$instIdx.'.Id ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.id ORDER BY PMEjoin'.$instIdx.'.id ASC)',
       //'input' => 'V', not virtual, tweaked by triggers
       'select'      => 'M',
       'filter'      => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table'       => 'Instruments',
-        'column'      => 'Id',
-        'description' => 'Instrument',
-        'orderby'     => 'Sortierung',
+        'column'      => 'id',
+        'description' => 'instrument',
+        'orderby'     => 'sortierung',
         //        'groups'      => 'Familie',
         'join'        => '$join_table.Id = PMEjoin'.$musInstIdx.'.instrument_id'
       ],
     ];
 
-    $opts['fdd']['Instruments']['values|ACP'] = array_merge(
-      $opts['fdd']['Instruments']['values'],
+    $opts['fdd']['instruments']['values|ACP'] = array_merge(
+      $opts['fdd']['instruments']['values'],
       [ 'filters' => '$table.Disabled = 0' ]);
 
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
-    $opts['fdd']['MemberStatus'] = [
+    $opts['fdd']['member_status'] = [
       'name'    => strval($this->l->t('Member Status')),
       'select'  => 'D',
       'maxlen'  => 128,
@@ -353,23 +353,23 @@ make sure that the musicians are also automatically added to the
     // Dummy field in order to get the Besetzungen table for the Projects field
     $idx = count($opts['fdd']);
     $join_table = 'PMEjoin'.$idx;
-    $opts['fdd']['MusikerId'] = [
+    $opts['fdd']['musician_id'] = [
       'input' => 'VH',
-      'sql' => '`'.$join_table.'`.`MusicianId`',
-//    'sqlw' => '`'.$join_table.'`.`MusicianId`',
+      'sql' => '`'.$join_table.'`.`musician_id`',
+//    'sqlw' => '`'.$join_table.'`.`musician_id`',
       'options' => '',
       'values' => [
         'table' => 'ProjectParticipants',
-        'column' => 'MusicianId',
-        'description' => 'MusicianId',
-        'join' => '$main_table.`Id` = $join_table.`MusicianId`'
+        'column' => 'musician_id',
+        'description' => 'musician_id',
+        'join' => '$main_table.`id` = $join_table.`musician_id`'
       ],
     ];
 
     $projectsIdx = count($opts['fdd']);
     $idx = count($opts['fdd']);
     $join_table = 'PMEjoin'.$idx;
-    $opts['fdd']['Projects'] = [
+    $opts['fdd']['projects'] = [
       'tab' => ['id' => 'orchestra'],
       'input' => 'VR',
       'options' => 'LFV',
@@ -378,19 +378,19 @@ make sure that the musicians are also automatically added to the
       'sort' => true,
       'css'      => ['postfix' => ' projects tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
-      'sql' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`Name` ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ',')",
+      'sql' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`name` ORDER BY `".$join_table."`.`name` ASC SEPARATOR ',')",
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table' => 'Projects',
-        'column' => 'Name',
-        'description' => 'Name',
-        'join' => '`PMEjoin'.($idx-1).'`.`ProjectId` = $join_table.`Id`',
+        'column' => 'name',
+        'description' => 'name',
+        'join' => '`PMEjoin'.($idx-1).'`.`project_id` = $join_table.`id`',
       ],
       'values2' => $projects,
       'valueGroups' => $groupedProjects
     ];
 
-    $opts['fdd']['MobilePhone'] = [
+    $opts['fdd']['mobile_phone'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Mobile Phone'),
       'css'      => ['postfix' => ' phone-number'],
@@ -407,7 +407,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
       ];
 
-    $opts['fdd']['FixedLinePhone'] = [
+    $opts['fdd']['fixed_line_phone'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Fixed Line Phone'),
       'css'      => ['postfix' => ' phone-number'],
@@ -424,10 +424,10 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
     ];
 
-     $opts['fdd']['Email'] = $this->defaultFDD['email'];
-     $opts['fdd']['Email']['tab'] = ['id' => 'contact'];
+     $opts['fdd']['email'] = $this->defaultFDD['email'];
+     $opts['fdd']['email']['tab'] = ['id' => 'contact'];
 
-    $opts['fdd']['Strasse'] = [
+    $opts['fdd']['street'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Street'),
       'css'      => ['postfix' => ' musician-address street'],
@@ -436,7 +436,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
-    $opts['fdd']['Postleitzahl'] = [
+    $opts['fdd']['postal_code'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Postal Code'),
       'css'      => ['postfix' => ' musician-address postal-code'],
@@ -445,7 +445,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
-    $opts['fdd']['Stadt'] = [
+    $opts['fdd']['city'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('City'),
       'css'      => ['postfix' => ' musician-address city'],
@@ -457,7 +457,7 @@ make sure that the musicians are also automatically added to the
      $countries = $this->geoCodingService->countryNames();
      $countryGroups = $this->geoCodingService->countryContinents();
 
-    $opts['fdd']['Land'] = [
+    $opts['fdd']['country'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Country'),
       'select'   => 'D',
@@ -469,10 +469,10 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
-    $opts['fdd']['Geburtstag'] = $this->defaultFDD['birthday'];
-    $opts['fdd']['Geburtstag']['tab'] = ['id' => 'miscinfo'];
+    $opts['fdd']['birthday'] = $this->defaultFDD['birthday'];
+    $opts['fdd']['birthday']['tab'] = ['id' => 'miscinfo'];
 
-    $opts['fdd']['Remarks'] = [
+    $opts['fdd']['remarks'] = [
       'tab'      => ['id' => 'orchestra'],
       'name'     => strval($this->l->t('Remarks')),
       'select'   => 'T',
@@ -486,7 +486,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
-    $opts['fdd']['Sprachpräferenz'] = [
+    $opts['fdd']['language'] = [
       'tab'      => ['id' => 'miscinfo'],
       'name'     => $this->l->t('Language'),
       'select'   => 'D',
@@ -496,13 +496,13 @@ make sure that the musicians are also automatically added to the
       'values2'  => $this->findAvailableLanguages(),
     ];
 
-//     $opts['fdd']['Insurance'] = [
+//     $opts['fdd']['insurance'] = [
 //       'tab'      => ['id' => 'miscinfo'],
 //       'input' => 'V',
 //       'name' => $this->l->t('Instrument Insurance'),
 //       'select' => 'T',
 //       'options' => 'CDV',
-//       'sql' => "`PMEtable0`.`Id`",
+//       'sql' => "`PMEtable0`.`id`",
 //       'escape' => false,
 //       'nowrap' => true,
 //       'sort' =>false,
@@ -511,13 +511,13 @@ make sure that the musicians are also automatically added to the
 //       }
 //       );
 
-    $opts['fdd']['Photo'] = [
+    $opts['fdd']['photo'] = [
       'tab'      => ['id' => 'miscinfo'],
       'input' => 'V',
       'name' => $this->l->t('Photo'),
       'select' => 'T',
       'options' => 'APVCD',
-      'sql' => '`PMEtable0`.`Id`',
+      'sql' => '`PMEtable0`.`id`',
       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
         $stampIdx = array_search('Updated', $fds);
         $stamp = strtotime($row['qf'.$stampIdx]);
@@ -530,13 +530,13 @@ make sure that the musicians are also automatically added to the
 
 //     ///////////////////// Test
 
-    $opts['fdd']['VCard'] = [
+    $opts['fdd']['vcard'] = [
       'tab' => ['id' => 'miscinfo'],
       'input' => 'V',
       'name' => 'VCard',
       'select' => 'T',
       'options' => 'ACPDV',
-      'sql' => '`PMEtable0`.`Id`',
+      'sql' => '`PMEtable0`.`id`',
       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
         switch($action) {
         case 'change':
@@ -569,7 +569,7 @@ make sure that the musicians are also automatically added to the
 
     //////////////////////////
 
-    $opts['fdd']['UUID'] = [
+    $opts['fdd']['uuid'] = [
       'tab'      => ['id' => 'miscinfo'],
       'name'     => 'UUID',
       'options'  => 'AVCPDR', // auto increment
@@ -581,7 +581,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => false,
     ];
 
-    $opts['fdd']['Updated'] =
+    $opts['fdd']['updated'] =
       array_merge(
         $this->defaultFDD['datetime'],
         [

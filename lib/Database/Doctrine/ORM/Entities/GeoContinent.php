@@ -40,7 +40,7 @@ class GeoContinent implements \ArrayAccess
     /**
      * @var string
      *
-     * @ORM\Column(name="Code", type="string", length=2, nullable=false)
+     * @ORM\Column(type="string", length=2, nullable=false)
      * @ORM\Id
      */
     private $code;
@@ -48,7 +48,7 @@ class GeoContinent implements \ArrayAccess
     /**
      * @var string
      *
-     * @ORM\Column(name="Target", type="string", length=2, nullable=false)
+     * @ORM\Column(type="string", length=2, nullable=false)
      * @ORM\Id
      */
     private $target;
@@ -56,7 +56,7 @@ class GeoContinent implements \ArrayAccess
     /**
      * @var string
      *
-     * @ORM\Column(name="Translation", type="string", length=1024, nullable=false)
+     * @ORM\Column(type="string", length=1024, nullable=false)
      */
     private $translation;
 

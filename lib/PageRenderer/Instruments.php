@@ -112,7 +112,7 @@ class Instruments extends PMETableViewBase
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = 'Id';
+    $opts['key'] = 'id';
 
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
@@ -142,8 +142,8 @@ class Instruments extends PMETableViewBase
       'navigation' => 'CPD'
     ];
 
-    $opts['fdd']['Id'] = [
-      'name'      => 'Id',
+    $opts['fdd']['id'] = [
+      'name'      => 'id',
       'select'    => 'N',
       'input|AP'  => 'RH',
       'input'     => 'R',
@@ -154,14 +154,14 @@ class Instruments extends PMETableViewBase
       'sort'      => true,
       ];
 
-    $opts['fdd']['Instrument'] = [
+    $opts['fdd']['instrument'] = [
       'name'     => $this->l->t('Instrument'),
       'select'   => 'T',
       'maxlen'   => 64,
       'sort'     => true,
     ];
 
-    $opts['fdd']['Sortierung'] = [
+    $opts['fdd']['sortierung'] = [
       'name'     => $this->l->t('sort order'),
       'select'   => 'N',
       'default'  => 0,
@@ -173,7 +173,7 @@ class Instruments extends PMETableViewBase
       ];
 
     $instFamIdx = count($opts['fdd']);
-    $opts['fdd']['InstrumentFamilyJoin'] = [
+    $opts['fdd']['instrument_family_join'] = [
       'name'   => $this->l->t('Family Join Pseudo Field'),
       'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.family_id
   ORDER BY PMEjoin'.$instFamIdx.'.family_id ASC)',
@@ -188,7 +188,7 @@ class Instruments extends PMETableViewBase
     ];
 
     $famIdx = count($opts['fdd']);
-    $opts['fdd']['Families'] = [
+    $opts['fdd']['families'] = [
       'name'        => $this->l->t('Families'),
       'css'         => [ 'postfix' => ' instrument-families' ],
       'display|LVF' => [ 'popup' => 'data' ],
@@ -205,12 +205,12 @@ class Instruments extends PMETableViewBase
         'join'        => '$join_table.id = PMEjoin'.$instFamIdx.'.family_id'
       ],
     ];
-    $opts['fdd']['Families']['values|ACP'] = array_merge(
-      $opts['fdd']['Families']['values'],
+    $opts['fdd']['families']['values|ACP'] = array_merge(
+      $opts['fdd']['families']['values'],
       [ 'filters' => '$table.disabled = 0' ]);
 
     if ($this->showDisabled) {
-      $opts['fdd']['Disabled'] = [
+      $opts['fdd']['disabled'] = [
         'name'     => $this->l->t('Disabled'),
         'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
         'input'    => $expertMode ? '' : 'R',
@@ -233,7 +233,7 @@ class Instruments extends PMETableViewBase
     $instrumentTables = [
       'musician_instrument' => [ 'musician_id', 'instrument_id' ],
       'project_instrument' => [ 'project_id', 'instrument_id' ],
-      'ProjectInstrumentation' => [ 'ProjectId', 'InstrumentId' ],
+      'ProjectInstrumentation' => [ 'project_id', 'instrument_id' ],
     ];
     $usageIdx = count($opts['fdd']);
     foreach ($instrumentTables as $table => $indexes) {
@@ -255,7 +255,7 @@ class Instruments extends PMETableViewBase
     }
     $usageSQL = implode('+', $usageSQL);
     $usageIdx = count($opts['fdd']);
-    $opts['fdd']['Usage'] = [
+    $opts['fdd']['usage'] = [
       'name'    => $this->l->t('Usage'),
       'input'   => 'VR',
       'input|D' => 'VR',
@@ -269,12 +269,12 @@ class Instruments extends PMETableViewBase
     $lang = locale_get_primary_language($this->l->getLanguageCode());
 
     // Provide a link to Wikipedia for fun ...
-    $opts['fdd']['Lexikon'] = [
+    $opts['fdd']['encyclopedia'] = [
       'name'    => 'Wikipedia',
       'select'  => 'T',
       'input'   => 'VR',
       'options' => 'LF',
-      'sql'     => '`PMEtable0`.`Id`',
+      'sql'     => '`PMEtable0`.`id`',
       'php'   =>  function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($lang) {
         $inst = $this->l->t($row['qf1']);
         return '<a '
@@ -289,7 +289,7 @@ class Instruments extends PMETableViewBase
 
     $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
 
-    $opts['groupby_fields'] = [ 'Id' ];
+    $opts['groupby_fields'] = [ 'id' ];
 
     //$opts['triggers']['update']['before']  = 'CAFEVDB\Instruments::beforeUpdateTrigger';
     //$opts['triggers']['insert']['before']  = 'CAFEVDB\Instruments::beforeInsertTrigger';
