@@ -28,6 +28,8 @@ use Doctrine\ORM\EntityRepository;
 
 class ProjectsRepository extends EntityRepository
 {
+  const ALIAS = 'proj';
+
   /**Sort by configured sorting column. */
   public function findAll()
   {
@@ -92,6 +94,35 @@ class ProjectsRepository extends EntityRepository
     return $range[0]; // ????
   }
 
+  /**
+   * Disable the given entity by settings its "disable" flag.
+   *
+   * @param mixed $entityOrId The entity or entity id.
+   *
+   * @param bool $disable Whether to enable or disable
+   */
+  public function disable($entityOrId, bool $disable = true)
+  {
+    $entityManager = $this->getEntityManager();
+    if ($entityOrId instanceof Entities\Project) {
+      $entity = $entityOrId;
+      $entity->setDisabled($disabled);
+      $getEntityManager()->flush();
+    } else {
+      $entityId = $entityOrId;
+      $qb = $entitiyManager->createQueryBuilder()
+                           ->update($this->getEntityName(), self::ALIAS)
+                           ->set(self::ALIAS.'.disabled', true)
+                           ->where(self::ALIAS.'.id = :entityId')
+                           ->setParameter('entityId', $fieldId);
+      $qb->getQuery()->execute();
+    }
+  }
+
+  public function enable(bool $enable = true)
+  {
+    return $this->disabled(!$enable);
+  }
 }
 
 // Local Variables: ***

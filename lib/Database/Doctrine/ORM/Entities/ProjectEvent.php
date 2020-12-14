@@ -36,9 +36,9 @@ class ProjectEvent
      * @var int|null
      *
      * @ORM\Column(type="integer", nullable=false)
-     * @ORM\Id
+`     * @ORM\Id
      */
-    private $projectid;
+    private $projectId;
 
     /**
      * @var string|null
@@ -46,14 +46,14 @@ class ProjectEvent
      * @ORM\Column(type="string", length=764, nullable=false)
      * @ORM\Id
      */
-    private $eventuri;
+    private $eventUri;
 
     /**
      * @var int
      *
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $calendarid;
+    private $calendarId;
 
     /**
      * @var enumvcalendartype|null
@@ -63,75 +63,75 @@ class ProjectEvent
     private $type;
 
     /**
-     * Set projectid.
+     * Set projectId.
      *
-     * @param int|null $projectid
+     * @param int|null $projectId
      *
      * @return ProjectEvents
      */
-    public function setProjectId($projectid = null)
+    public function setProjectId($projectId = null)
     {
-        $this->projectid = $projectid;
+        $this->projectId = $projectId;
 
         return $this;
     }
 
     /**
-     * Get projectid.
+     * Get projectId.
      *
      * @return int|null
      */
     public function getProjectId()
     {
-        return $this->projectid;
+        return $this->projectId;
     }
 
     /**
-     * Set calendarid.
+     * Set calendarId.
      *
-     * @param int $calendarid
+     * @param int $calendarId
      *
      * @return ProjectEvents
      */
-    public function setCalendarId($calendarid)
+    public function setCalendarId($calendarId)
     {
-        $this->calendarid = $calendarid;
+        $this->calendarId = $calendarId;
 
         return $this;
     }
 
     /**
-     * Get calendarid.
+     * Get calendarId.
      *
      * @return int
      */
     public function getCalendarId()
     {
-        return $this->calendarid;
+        return $this->calendarId;
     }
 
     /**
-     * Set eventuri.
+     * Set eventUri.
      *
-     * @param string|null $eventuri
+     * @param string|null $eventUri
      *
      * @return ProjectEvents
      */
-    public function setEventURI($eventuri = null)
+    public function setEventUri($eventUri = null)
     {
-        $this->eventuri = $eventuri;
+        $this->eventUri = $eventUri;
 
         return $this;
     }
 
     /**
-     * Get eventuri.
+     * Get eventUri.
      *
      * @return string|null
      */
-    public function getEventURI()
+    public function getEventUri()
     {
-        return $this->eventuri;
+        return $this->eventUri;
     }
 
     /**
