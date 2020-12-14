@@ -155,27 +155,27 @@ class ProjectWebPage implements \ArrayAccess
   }
 
   /**
-   * Set articlename.
+   * Set articleName.
    *
-   * @param string $articlename
+   * @param string $articleName
    *
    * @return ProjectWebPages
    */
-  public function setArticlename($articlename)
+  public function setArticleName($articleName)
   {
-    $this->articlename = $articlename;
+    $this->articleName = $articleName;
 
     return $this;
   }
 
   /**
-   * Get articlename.
+   * Get articleName.
    *
    * @return string
    */
-  public function getArticlename()
+  public function getArticleName()
   {
-    return $this->articlename;
+    return $this->articleName;
   }
 
   /**
