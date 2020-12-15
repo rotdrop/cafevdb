@@ -90,7 +90,11 @@ class UserStorage
 
   public function delete($path)
   {
-    $this->userFolder->get($path)->delete();
+    try {
+      $this->userFolder->get($path)->delete();
+    } catch (\OCP\Files\NotFoundException $t) {
+      $this->logInfo("Not deleting non-existing path $path");
+    }
   }
 
   public function rename($oldPath, $newPath)
