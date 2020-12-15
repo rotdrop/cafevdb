@@ -29,13 +29,24 @@ class ProjectDeletedEvent extends Event {
   /** @var int */
   private $projectId;
 
-  public function __construct($projectId) {
+  /** @var bool
+   *
+   * Set to true if the project was kept but disabled.
+   */
+  private $disabled;
+
+  public function __construct($projectId, $disabled) {
     parent::__construct();
     $this->projectId = $projectId;
+    $this->diabled = $disabled;
   }
 
   public function getProjectId(): int {
     return $this->projectId;
+  }
+
+  public function getDisabled(): bool {
+    return $this->disabled;
   }
 }
 

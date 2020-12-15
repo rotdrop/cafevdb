@@ -22,6 +22,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -35,6 +36,7 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Events;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -52,6 +54,9 @@ class Projects extends PMETableViewBase
   /** @var EventsService */
   private $eventsService;
 
+  /** @var \OCP\EventDispatcher\IEventDispatcher */
+  private $eventDispatcher;
+
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
@@ -62,10 +67,12 @@ class Projects extends PMETableViewBase
     , ChangeLogService $changeLogService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
+    , IEventDispatcher $eventDispatcher
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
     $this->projectService = $projectService;
     $this->eventsService = $eventsService;
+    $this->eventDispatcher = $eventDispatcher;
   }
 
   public function cssClass() { return self::CSS_CLASS; }
@@ -449,8 +456,8 @@ __EOT__;
     $opts['triggers']['insert']['after'][]   = [ $this, 'addOrChangeInstrumentation' ];
     $opts['triggers']['insert']['after'][]   = [ $this, 'afterInsertTrigger' ];
 
-    // $opts['triggers']['delete']['before'][] = 'CAFEVDB\Projects::deleteTrigger';
-    // $opts['triggers']['delete']['after'][] = 'CAFEVDB\Projects::deleteTrigger';
+    $opts['triggers']['delete']['before'][] = [ $this , 'deleteTrigger' ];
+    $opts['triggers']['delete']['after'][] = [ $this, 'deleteTrigger' ];
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
@@ -935,6 +942,8 @@ project without a flyer first.");
     }
 
     if ($step === 'after' || $safeMode) {
+      // with $safeMode there is no 'after'. This should be cleaned up.
+
       // And now remove the project folder ... OC has undelete
       // functionality and we have a long-ranging backup.
       $this->projectService->removeProjectFolders($oldvals);
@@ -957,6 +966,10 @@ project without a flyer first.");
       // foreach($projectEvents as $event) {
       //   $this->eventsService->deleteEvent($event);
       // }
+
+      if ($step === 'after') {
+        $this->eventDispatcher->dispatchTyped(new Events\ProjectDeletedEvent($projectId, $safeMode));
+      }
     }
 
     if ($safeMode) {
@@ -993,7 +1006,7 @@ project without a flyer first.");
     foreach($deleteTables as $table) {
       $this->entityManager
         ->createQueryBuilder()
-        ->delete($table, 't'_)
+        ->delete($table, 't')
         ->where('t.projectId = :projectId')
         ->setParameter('projectId', $projectId)
         ->getQuery()

@@ -172,12 +172,22 @@ class EventsService
 
   public function onProjectDeleted(ProjectDeletedEvent $event)
   {
-    $events = $this->projectEvents($event->getProjectId());
-    foreach ($events as $event) {
+    $projectId = $event->getProjectId();
+    $projectEvents = $this->projectEvents($projectId);
+    foreach ($calendarEvents as $projectEvent) {
+      $eventUri = $projectEvent->getEventUri();
+
+      // remove project link from join table
       $this->remove($event);
-      $uri = $event->getEventURI();
-      $calId = $event->getCalendarId();
-      $this->calDavService->deleteCalendarObject($calId, $uri);
+
+      // still used?
+      if (count($this->eventProjects($eventUri)) === 0) {
+        $calId = $event->getCalendarId();
+        $this->calDavService->deleteCalendarObject($calId, $uri);
+      } else {
+        // update categories
+        $this->unchain($projectId, $eventUri);
+      }
     }
   }
 
@@ -610,6 +620,10 @@ class EventsService
     return $result;
   }
 
+  /**
+   * Remove the calendar object from the join table as the calendar
+   * object is no more.
+   */
   private function deleteCalendarObject($objectData)
   {
     $eventURI   = $objectData['uri'];
