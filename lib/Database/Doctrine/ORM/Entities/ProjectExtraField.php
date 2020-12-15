@@ -31,7 +31,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ProjectExtraFields
  *
  * @ORM\Table(name="ProjectExtraFields")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectExtraFieldsRepository")
  */
 class ProjectExtraField implements \ArrayAccess
 {
