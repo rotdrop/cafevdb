@@ -109,6 +109,7 @@ class AdminSettingsController extends Controller {
   private function grantWikiAccess($nameSpace, $group)
   {
     $this->wikiRPC->addAcl($nameSpace.':*', '@'.$group, WikiRPC::AUTH_DELETE);
+    $this->wikiRPC->addAcl('*', '@'.$group, WikiRPC::AUTH_READ);
   }
 
   /**
@@ -116,6 +117,7 @@ class AdminSettingsController extends Controller {
    */
   private function revokeWikiAccess($nameSpace, $group)
   {
+    $this->wikiRPC->delAcl('*', '@'.$group);
     $this->wikiRPC->delAcl($nameSpace.':*', '@'.$group);
   }
 
