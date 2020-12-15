@@ -108,7 +108,7 @@ class ProjectPayments extends PMETableViewBase
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = array('-DateOfReceipt', 'DebitNoteId', 'InstrumentationId');
+    $opts['sort_field'] = [ '-date_of_receipt', 'debit_note_id', 'project_participant_id' ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -142,19 +142,19 @@ class ProjectPayments extends PMETableViewBase
     ];
 
     $instrumentationIdx = count($opts['fdd']);
-    $opts['fdd']['instrumentation_id'] = [
+    $opts['fdd']['project_participant_id'] = [
       'name'     => $this->l->t('Musician'),
       'css'      => [ 'postfix' => ' instrumentation-id' ],
       'values'   => [
-        'table'  => "SELECT b.ProjektId AS project_id, b.Id, CONCAT(b.Id,': ',m.Vorname,' ',m.Name) AS Name
-  FROM Besetzungen b
+        'table'  => "SELECT pp.project_id AS project_id, b.Id, CONCAT(b.Id,': ',m.first_name,' ',m.name) AS name
+  FROM ProjectParticipants pp
   LEFT JOIN Musicians m
-  ON b.MusikerId = m.Id
-  WHERE b.ProjektId = ".$projectId."
-  ORDER BY m.Vorname ASC, m.Name ASC",
+  ON pp.musician_id = m.id
+  WHERE pp.project_id = ".$projectId."
+  ORDER BY m.first_name ASC, m.name ASC",
         'column' => 'id',
-        'description' => 'Name',
-        'join'   => '$join_table.Id = $main_table.instrumentation_id'
+        'description' => 'name',
+        'join'   => '$join_table.id = $main_table.project_participant_id'
       ],
       'select'   => 'T',
       'maxlen'   => 40,
@@ -196,7 +196,7 @@ class ProjectPayments extends PMETableViewBase
         'values' => [
           'table' => self::DEBIT_NOTES,
           'column' => 'id',
-          'description' => 'DateIssued',
+          'description' => 'date_issued',
         ],
         'sort' => true,
       ],

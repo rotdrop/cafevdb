@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ProjectPayments
  *
  * @ORM\Table(name="ProjectPayments")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectPaymentsRepository")
  */
 class ProjectPayment implements \ArrayAccess
 {
@@ -29,9 +29,9 @@ class ProjectPayment implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link to Besetzungen.Id"})
+   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link to ProjectParticipan.id"})
    */
-  private $instrumentationId;
+  private $projectParticipantId;
 
   /**
    * @var string
@@ -74,6 +74,17 @@ class ProjectPayment implements \ArrayAccess
    * @ORM\Column(type="string", length=1024, nullable=false)
    */
   private $debitMessageId;
+
+  /**
+   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payment", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(referencedColumnName="id")
+   *
+   */
+  private $projectParticipant;
+
+  public function __construct() {
+    $this->arrayCTOR();
+  }
 
   /**
    * Get id.

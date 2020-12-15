@@ -99,6 +99,13 @@ class ProjectParticipant
   private $disabled = '0';
 
   /**
+   * Link to payments
+   *
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectParticipant")
+   */
+  private $payment;
+
+  /**
    * Link to extra fields data
    *
    * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="projectParticipant")

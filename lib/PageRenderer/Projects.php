@@ -937,7 +937,7 @@ project without a flyer first.");
 
     $safeMode = false;
     if ($step === 'before') {
-      $payments = $this->getDatabaseRepository(Entities\ProjectPayment::class)->findBy([ 'projectId' => $projectid ]);
+      $payments = $this->getDatabaseRepository(Entities\ProjectPayment::class)->findBy([ 'projectId' => $projectId ]);
       $safeMode = !empty($payments); // don't really remove if we have finance data
     }
 
