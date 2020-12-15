@@ -276,7 +276,7 @@ class ProjectService
   * [[Listenpunkt]]
   */
     $orchestra = $this->getConfigValue('orchestra');
-    $orchestra = $this->getConfigValue('streetAddressName=1', $orchestra);
+    $orchestra = $this->getConfigValue('streetAddressName01', $orchestra);
 
     $projects = $this->repository->findAll();
 
@@ -285,10 +285,10 @@ class ProjectService
     $year = -1;
     foreach ($projects as $project) {
       if ($project['year'] != $year) {
-        $year = $row['year'];
+        $year = $project['year'];
         $page .= "\n==== ".$year."====\n";
       }
-      $name = $row['Name'];
+      $name = $project['name'];
 
       $matches = false;
       if (preg_match('/^(.*\D)?(\d{4})$/', $name, $matches) == 1) {

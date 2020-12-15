@@ -122,7 +122,7 @@ class Projects extends PMETableViewBase
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = ['-year', 'Name'];
+    $opts['sort_field'] = ['-year', 'name'];
 
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
@@ -196,8 +196,8 @@ class Projects extends PMETableViewBase
       'sort'     => true,
       'values|LF'   => [
         'table' => self::TABLE,
-        'column' => 'Name',
-        'description' => 'Name',
+        'column' => 'name',
+        'description' => 'name',
         'groups' => 'year',
         'orderby' => '$table.`year` DESC',
       ],
@@ -338,8 +338,8 @@ class Projects extends PMETableViewBase
       'filter'   => 'having',
       'values'   => [
         'table'  => 'ProjectExtraFields',
-        'column' => 'Name',
-        'description' => 'Name',
+        'column' => 'name',
+        'description' => 'name',
         'join'   => '$main_table.`id` = $join_table.`project_id`'
       ],
     ];
@@ -734,9 +734,9 @@ project without a flyer first.");
    */
   public static function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    if (isset($newvals['Name']) && $newvals['Name']) {
-      $newvals['Name'] = self::sanitizeName($newvals['Name']);
-      if ($newvals['Name'] === false) {
+    if (isset($newvals['name']) && $newvals['name']) {
+      $newvals['name'] = self::sanitizeName($newvals['name']);
+      if ($newvals['name'] === false) {
         return false;
       }
     }
@@ -764,12 +764,12 @@ project without a flyer first.");
    */
   public static function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    if (array_search('Name', $changed) === false) {
+    if (array_search('name', $changed) === false) {
       return true;
     }
-    if (isset($newvals['Name']) && $newvals['Name']) {
-      $newvals['Name'] = self::sanitizeName($newvals['Name']);
-      if ($newvals['Name'] === false) {
+    if (isset($newvals['name']) && $newvals['name']) {
+      $newvals['name'] = self::sanitizeName($newvals['name']);
+      if ($newvals['name'] === false) {
         return false;
       }
     }
@@ -870,7 +870,7 @@ project without a flyer first.");
   {
     // $newvals contains the new values
     $projectId   = $pme->rec;
-    $projectName = $newvals['Name'];
+    $projectName = $newvals['name'];
 
     // Also create the project folders.
     $projectPaths = $this->projectService->ensureProjectFolders($projectId, $projectName);
@@ -890,7 +890,7 @@ project without a flyer first.");
    */
   public static function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    if (array_search('Name', $changed) === false) {
+    if (array_search('name', $changed) === false) {
       // Nothing more has to be done if the name stays the same
       return true;
     }
@@ -903,7 +903,7 @@ project without a flyer first.");
     // foreach ($events as $event) {
     //   // Last parameter "true" means to also perform string substitution
     //   // in the summary field of the event.
-    //   Events::replaceCategory($event, $oldvals['Name'], $newvals['Name'], true);
+    //   Events::replaceCategory($event, $oldvals['name'], $newvals['name'], true);
     // }
 
     // Now, we should also rename the project folder. We simply can
