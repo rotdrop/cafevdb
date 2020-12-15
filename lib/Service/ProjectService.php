@@ -194,10 +194,6 @@ class ProjectService
       'balance' => '/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
     ];
 
-    $userFolder = $this->rootFolder->getUserFolder($this->userID());
-
-    $fileView = \OC\Files\Filesystem::getView();
-
     foreach($prefixPath as $key => $prefix) {
 
       $oldPath = $prefix.$oldProject['year']."/".$oldProject['name'];
