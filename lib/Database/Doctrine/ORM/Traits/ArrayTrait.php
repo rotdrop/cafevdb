@@ -35,7 +35,7 @@ trait ArrayTrait
         if (empty($this->keys)) {
             $this->arrayCTOR();
         }
-        $offset = strtolower((string)$offset);
+        //$offset = strtolower((string)$offset);
         return is_array($this->keys) && in_array($offset, $this->keys);
     }
 
