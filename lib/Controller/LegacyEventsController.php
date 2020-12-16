@@ -107,7 +107,7 @@ class LegacyEventsController extends Controller {
       case 'edit':
         return $this->editEventForm();
       default:
-        breal;
+        break;
       }
       break;
     case 'actions':

@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -36,40 +36,25 @@ var CAFEVDB = CAFEVDB || {};
     /**Initialize the mess with contents
      *
      * @param data JSON response with the fields data.status,
-     *                 data.data.contents,
-     *                 data.data.message is place in an error-popup if status != 'success'
-     *                 data.data.debug. data.data.debug is placed
-     *                 inside the '#debug' div.
+     *                 data.contents,
+     *                 data.message,
+     *                 data.debug
      */
     init: function(data) {
       CAFEVDB.Events.UI.confirmText['delete'] =
         t('cafevdb', 'Do you really want to delete this event?');
       CAFEVDB.Events.UI.confirmText['detach'] =
         t('cafevdb', 'Do you really want to detach this event from the current project?');
-      if (data.status == 'success') {
-        //$('#dialog_holder').html(data.data.contents);
-        CAFEVDB.Events.projectId = data.data.projectId;
-        CAFEVDB.Events.projectName = data.data.projectName;
-      } else {
-	var info = '';
-	if (typeof data.data.message != 'undefined') {
-	  info = data.data.message;
-	} else {
-	  info = t('cafevdb', 'Unknown error :(');
-	}
-	if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
-	  info += '<p><pre>'+data.data.exception+'</pre>';
-	  info += '<p><pre>'+data.data.trace+'</pre>';
-	}
-        OC.dialogs.alert(info, t('cafevdb', 'Error'));
-      }
-      if (typeof data.data.debug != 'undefined') {
-	$('div.debug').html(data.data.debug);
+      //$('#dialog_holder').html(data.contents);
+      CAFEVDB.Events.projectId = data.projectId;
+      CAFEVDB.Events.projectName = data.projectName;
+      if (typeof data.debug != 'undefined') {
+	$('div.debug').html(data.debug);
 	$('div.debug').show();
       }
 
       //var popup = $('#events').cafevDialog({
-      var dialogContent = $(data.data.contents);
+      var dialogContent = $(data.contents);
       var popup = dialogContent.cafevDialog({
         dialogClass: 'cafevdb-project-events no-scroll',
         position: { my: "middle top+50%",
@@ -119,10 +104,9 @@ var CAFEVDB = CAFEVDB || {};
             var eventType = eventMenu.find('option:selected').val();
             post.push({ name: 'EventKind', value: eventType });
 
-            $('#dialog_holder').load(OC.filePath('cafevdb',
-                                                 'ajax/events',
-                                                 'new.form.php'),
-                                     post, Calendar.UI.startEventDialog);
+            $('#dialog_holder').load(
+              OC.generateUrl('/apps/cafevdb/legacy/events/forms/new'),
+              post, CAFEVDB.Legacy.Calendar.UI.startEventDialog);
 
             eventMenu.find('option').removeAttr('selected');
             $.fn.cafevTooltip.remove();
@@ -146,10 +130,11 @@ var CAFEVDB = CAFEVDB || {};
           dialogHolder.
             off('cafevdb:events_changed').
             on('cafevdb:events_changed', function(event, events) {
-            $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
+              // @TODO
+              $.post(
+                OC.generateUrl('/apps/cafevdb/projects/events/redisplay'),
                    { ProjectId: Events.projectId,
                      ProjectName: Events.projectName,
-                     Action: 'redisplay',
                      EventSelect: events },
                    CAFEVDB.Events.UI.relist);
             return false;
@@ -199,7 +184,7 @@ var CAFEVDB = CAFEVDB || {};
       var height = dimensionElement.outerHeight(true);
       dialogWidget.innerHeight(top+height);
       dialogWidget.innerWidth(width);
-      
+
       var needScroll = scrollElement.needScrollbars();
       if (!needScroll.horizontal) {
         scrollElement.addClass('inhibit-overflow-x');
@@ -207,7 +192,7 @@ var CAFEVDB = CAFEVDB || {};
       if (!needScroll.vertical) {
         scrollElement.addClass('inhibit-overflow-y');
       }
-      
+
       var scroll;
       scroll = scrollElement.horizontalScrollbarHeight();
       if (scroll > 0) {
@@ -221,27 +206,13 @@ var CAFEVDB = CAFEVDB || {};
     relist: function(data) {
       var events =$('#events');
       var listing = events.find('#eventlistholder');
-      if (data.status == 'success') {
-        listing.html(data.data.contents);
+      listing.html(data.contents);
 
-        /* Adjust dimensions to do proper scrolling. */
-        var dialogWidget = events.dialog('widget');
-	Events.UI.adjustSize(events, dialogWidget);
-      } else {
-	var info = '';
-	if (typeof data.data.message != 'undefined') {
-	  info = data.data.message;
-	} else {
-	  info = t('cafevdb', 'Unknown error :(');
-	}
-	if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
-	  info += '<p><pre>'+data.data.exception+'</pre>';
-	  info += '<p><pre>'+data.data.trace+'</pre>';
-	}
-        OC.dialogs.alert(info, t('cafevdb', 'Error'));
-      }
-      if (typeof data.data.debug != 'undefined') {
-	events.find('#debug').html(data.data.debug);
+      /* Adjust dimensions to do proper scrolling. */
+      var dialogWidget = events.dialog('widget');
+      Events.UI.adjustSize(events, dialogWidget);
+      if (typeof data.debug != 'undefined') {
+	events.find('#debug').html(data.debug);
 	events.find('#debug').show();
       }
 
@@ -254,14 +225,11 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     },
     redisplay: function() {
-      var post = $('#eventlistform').serializeArray();
+      const post = $('#eventlistform').serializeArray();
 
-      var type = { name: 'Action',
-                   value: 'redisplay' };
-      post.push(type);
-
-      $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
-             post, CAFEVDB.Events.UI.relist);
+      $.post(
+        OC.generateUrl('/apps/cafevdb/projects/events/redisplay'),
+        post, CAFEVDB.Events.UI.relist);
 
       return true;
     },
@@ -286,12 +254,11 @@ var CAFEVDB = CAFEVDB || {};
       if (name == 'edit') {
 
         // Edit existing event
-
+        // @TODO use post?
         post.push({ name: 'id', value:  $(this).val()});
-        $('#dialog_holder').load(OC.filePath('calendar',
-                                             'ajax/event',
-                                             'edit.form.php'),
-                                 post, Calendar.UI.startEventDialog);
+        $('#dialog_holder').load(
+          OC.generateUrl('/apps/cafevdb/legacy/events/forms/edit'),
+          post, CAFEVDB.Legacy.Calendar.UI.startEventDialog);
 
         return false;
       } else if (name == 'delete' || name == 'detach' ||
@@ -299,25 +266,25 @@ var CAFEVDB = CAFEVDB || {};
         // Execute the task and redisplay the event list.
 
         post.push({ name: 'EventId', value: $(this).val() });
-        post.push({ name: 'Action', value: $(this).attr('name') });
 
-        var really = CAFEVDB.Events.UI.confirmText[name];
+        const really = CAFEVDB.Events.UI.confirmText[name];
         if (really != '') {
-
           // Attention: dialogs do not block, so the action needs to be
           // wrapped into the callback.
 	  OC.dialogs.confirm(really,
                              t('cafevdb', 'Really delete?'),
                              function (decision) {
                                if (decision) {
-                                 $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
-                                        post, CAFEVDB.Events.UI.relist);
+                                 $.post(
+                                   OC.generateUrl('/apps/cafevdb/projects/events/' + name),
+                                   post, CAFEVDB.Events.UI.relist);
                                }
                              },
                              true);
         } else {
-          $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
-                 post, CAFEVDB.Events.UI.relist);
+          $.post(
+            OC.generateUrl('/apps/cafevdb/projects/events/' + name),
+            post, CAFEVDB.Events.UI.relist);
         }
         return false;
       } else if (name == 'sendmail') {
@@ -338,10 +305,10 @@ var CAFEVDB = CAFEVDB || {};
       } else if (name == 'download') {
 
         // As always, there may be a more elegant solution, but this
-        // opens the "download" diaglog of my web-browser. Need to set
+        // opens the "download" dialog of my web-browser. Need to set
         // the form-method to "post" to do this.
 
-        var exportscript = OC.filePath('cafevdb', 'ajax/events', 'download.php');
+        const exportscript = OC.generateUrl('/apps/cafevdb/projects/events/download');
         $('#eventlistform').attr("method", "post");
         $('#eventlistform').attr("action", exportscript);
 

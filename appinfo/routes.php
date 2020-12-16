@@ -60,11 +60,11 @@ $routes = [
       'url' => '/',
       'verb' => 'GET',
     ],
-    [
-      'name' => 'page#index',
-      'url' => '/',
-      'verb' => 'POST',
-    ],
+    // [
+    //   'name' => 'page#index',
+    //   'url' => '/',
+    //   'verb' => 'POST',
+    // ],
     [
       'name' => 'page#loader',
       'url' => '/page/loader/{renderAs}',
@@ -219,6 +219,23 @@ $routes = [
     [
       'name' => 'projects#validate',
       'url' => '/projects/validate/{topic}',
+      'verb' => 'POST',
+    ],
+    /**
+     * Project events
+     */
+    [
+      'name' => 'project_events#service_switch',
+      'url' => '/projects/events/{topic}',
+      'verb' => 'POST',
+      'defaults' => [ 'topic' => 'dialog' ],
+    ],
+    /**
+     * Project web-pages
+     */
+    [
+      'name' => 'project_web_pages#service_switch',
+      'url' => '/projects/webpages',
       'verb' => 'POST',
     ],
   ],

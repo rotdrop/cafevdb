@@ -400,7 +400,8 @@ class EventsService
     return $datestring;
   }
 
-  /**Convert the given flat event-list (as returned by self::events())
+  /**
+   * Convert the given flat event-list (as returned by self::events())
    * into a matrix grouped as specified by the array $calendarIds in
    * the given order. The result is an associative array where the
    * keys are the displaynames of the calenders; the last row will
@@ -424,7 +425,7 @@ class EventsService
       $cal = $this->calDavService->calendarById($calendarId);
       $displayName = !empty($cal)
                    ? $cal->getDisplayName()
-                   : strval($this->l-t('Unknown Calendar').' '.$calendarId);
+                   : strval($this->l->t('Unknown Calendar').' '.$calendarId);
 
       $result[$calendarId] = [
         'name' => $displayName,

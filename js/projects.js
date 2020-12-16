@@ -105,8 +105,12 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       }
       eventsDlg.dialog('close').remove();
     }
-    $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
-           post, CAFEVDB.Events.UI.init, 'json');
+    $.post(
+      OC.generateUrl('/apps/cafevdb/projects/events/dialog'), post)
+      .fail(function(xhr, status, errorThrown) {
+        CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
+      })
+      .done(CAFEVDB.Events.UI.init);
   };
 
   /**Generate a popup-dialog for project related email.
@@ -376,7 +380,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
               year.val(oldProjectYear);
               year.trigger('chosen:updated');
             }
-          }
+          };
           $.post(OC.generateUrl('/apps/cafevdb/projects/validate/name'), post)
            .fail(function(xhr, status, errorThrown) {
              CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
@@ -482,22 +486,22 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
   Projects.projectWebPageRequest = function(post, container) {
 
     CAFEVDB.Notification.hide(function() {
-      $.post(OC.filePath('cafevdb', 'ajax/projects', 'web-articles.php'),
-             post,
-             function (data) {
-               if (!CAFEVDB.Ajax.validateResponse(data, [])) {
-                 // do nothing
-               } else if (data.data.message != '') {
-                 CAFEVDB.Notification.showHtml(data.data.message);
-               }
-               var form = container.find('table.pme-navigation');
-               var submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
-               submit.first().trigger('click');
-               setTimeout(function() {
-                 CAFEVDB.Notification.hide();
-               }, 5000);
-
-             });
+      $.post(
+        OC.generateUrl('/apps/cafevdb/projects/webpages'),
+        post,
+        function (data) {
+          if (!CAFEVDB.Ajax.validateResponse(data, [])) {
+            // do nothing
+          } else if (data.data.message != '') {
+            CAFEVDB.Notification.showHtml(data.data.message);
+          }
+          var form = container.find('table.pme-navigation');
+          var submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
+          submit.first().trigger('click');
+          setTimeout(function() {
+            CAFEVDB.Notification.hide();
+          }, 5000);
+        });
     });
   };
 

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,23 +19,27 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-use CAFEVDB\L;
-use CAFEVDB\Config;
-use CAFEVDB\Events;
 ?>
 <table id="table" class="nostyle listing size-holder">
 <?php
 $prjId   = $_['ProjectId'];
 $prjName = $_['ProjectName'];
 $class   = $_['CSSClass'];
-$evtButtons = array('Edit' => array('tag' => 'edit',
-                                    'title' => Config::toolTips('projectevents-edit')),
-                    'Delete' => array('tag' => 'delete',
-                                      'title' =>Config::toolTips('projectevents-delete')),
-                    'Detach' => array('tag' => 'detach',
-                                      'title' =>Config::toolTips('projectevents-detach'))
-);
+
+$evtButtons = [
+  'Edit' => [
+    'tag' => 'edit',
+    'title' => $toolTips[projectevents-edit]
+  ],
+  'Delete' => [
+    'tag' => 'delete',
+    'title' =>$toolTips[projectevents-delete]
+  ],
+  'Detach' => [
+    'tag' => 'detach',
+    'title' =>$toolTips[projectevents-detach]
+  ],
+];
 
 $locale = $_['locale'];
 $zone   = $_['timezone'];
@@ -74,7 +78,7 @@ __EOT__;
         <input class="$tag" id="$tag-$evtId" type="button" name="$tag" title="$title" value="$evtId" />
 __EOT__;
     }
-    $title = Config::toolTips('projectevents-selectevent');
+    $title = $toolTips[projectevents-selectevent];
     $checked = isset($_['Selected'][$evtId]) ? 'checked="checked"' : '';
     echo <<<__EOT__
       </td>
