@@ -309,13 +309,13 @@ EOTEOT;
   public function export(Musician $musician, $version = self::VCARD_VERSION)
   {
     $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
-    $uuid = isset($musician['UUID']) ? $musician['UUID'] : $this->generateUUID();
-    $categories = array('cafevdb');
-    if (isset($musician['Instruments'])) {
-      $categories =  array_merge($categories, explode(',', $musician['Instruments']));
+    $uuid = isset($musician['uuid']) ? $musician['UUID'] : $this->generateUUID();
+    $categories = [ 'cafevdb' ];
+    if (isset($musician['instruments'])) {
+      $categories =  array_merge($categories, explode(',', $musician['instruments']));
     }
-    if (isset($musician['Projekte'])) {
-      $categories =  array_merge($categories, explode(',', $musician['Projekte']));
+    if (isset($musician['projects'])) {
+      $categories =  array_merge($categories, explode(',', $musician['projects']));
     }
     $categories = array_map('trim', $categories);
     $prodid = '-//CAF e.V.//NONSGML ' . $this->appName() . ' ' . $this->appVersion() . '//EN';
@@ -325,67 +325,67 @@ EOTEOT;
         'VERSION' => self::VCARD_VERSION,
         'PRODID' => $prodid,
         'UID' => $uuid,
-        'FN' => $musician['Vorname'].' '.$musician['Name'],
-        'N' => [ $musician['Name'], $musician['Vorname'] ],
+        'FN' => $musician['firstName'].' '.$musician['name'],
+        'N' => [ $musician['name'], $musician['firstName'] ],
       ]);
-    if ($musician['Sprachpräferenz']) {
-      $vcard->add('LANG', $musician['Sprachpräferenz']);
+    if ($musician['language']) {
+      $vcard->add('LANG', $musician['language']);
     }
     if ($musician['Email']) {
-      $vcard->add('EMAIL', $musician['Email']);
+      $vcard->add('EMAIL', $musician['email']);
     }
     if ($musician['MobilePhone']) {
-      $vcard->add('TEL', $musician['MobilePhone'], ['TYPE' => 'cell']);
+      $vcard->add('TEL', $musician['mobilePhone'], ['TYPE' => 'cell']);
     }
     if ($musician['FixedLinePhone']) {
-      $vcard->add('TEL', $musician['FixedLinePhone']);
+      $vcard->add('TEL', $musician['fixedLinePhone']);
     }
     if ($musician['Geburtstag'] != 0) {
-      $vcard->add('BDAY', new \DateTime($musician['Geburtstag']));
+      $vcard->add('BDAY', new \DateTime($musician['birthday']));
     }
     if ($musician['Aktualisiert'] != 0) {
-      $vcard->add('REV', (new \DateTime($musician['Aktualisiert']))->format(\DateTime::W3C));
+      $vcard->add('REV', (new \DateTime($musician['updated']))->format(\DateTime::W3C));
     }
     $countryNames = $this->geoCodingService->countryNames('en');
-    if (!isset($countryNames[$musician['Land']])) {
+    if (!isset($countryNames[$musician['country']])) {
       $country = null;
     } else {
-      $country = $countryNames[$musician['Land']];
+      $country = $countryNames[$musician['country']];
     }
 
     $vcard->add('ADR',
                 [ '', // PO box
                   '', // address extension (appartment nr. and such)
-                  $musician['Strasse'], // street
-                  $musician['Stadt'], // city
+                  $musician['street'], // street
+                  $musician['city'], // city
                   '', // province
-                  $musician['Postleitzahl'], //zip code
+                  $musician['postalCode'], //zip code
                   $country
                 ],
                 [ 'TYPE' => 'home' ]);
     $vcard->add('CATEGORIES', $categories);
 
     $photo = null;
-    if (isset($musician['Photo'])) {
-      if (is_array($musician['Photo'])) {
-        $photo = $musician['Photo'];
-      } else if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['Photo'], $matches)) {
+    if (isset($musician['photo'])) {
+      if (is_array($musician['photo'])) {
+        $photo = $musician['photo'];
+      } else if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['photo'], $matches)) {
         // data uri
         $mimeType = $matches[1];
-        $imageData = substr($musician['Photo'], strlen($matches[0]));
+        $imageData = substr($musician['photo'], strlen($matches[0]));
         $photo = array('MimeType' => $mimeType,
                        'Data' => $imageData);
       }
     } else {
-      $musicianId = isset($musician['MusikerId']) ? $musician['MusikerId'] : $musician['Id'];
-      $inlineImage = new InlineImageService($this->configService /* 'Musiker' */);
+      $musicianId = isset($musician['musicianId']) ? $musician['musicianId'] : $musician['id'];
+      $inlineImage = new InlineImageService($this->configService, $this->entityManager);
       $photo = $inlineImage->fetch($musicianId);
     }
-    if (isset($photo['Data']) && $photo['Data']) {
+    if (isset($photo['data']) && $photo['data']) {
       $mimeType = $photo['MimeType'];
       if (self::VCARD_VERSION == '4.0') {
         // the OC Sabre version seeming does not auto-escape stuff ...
-        $vcard->add('PHOTO', 'data:'.$mimeType.';base64\,'.$photo['Data']);
+        $vcard->add('PHOTO', 'data:'.$mimeType.';base64\,'.$photo['data']);
       } else {
         $type = Util::explode('/', $mimeType);
         $type = strtoupper(array_pop($type));
