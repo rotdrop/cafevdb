@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Events\ProjectDeletedEvent;
 use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent;
 
 /**Events and tasks handling.
  */
@@ -131,7 +131,7 @@ class EventsService
     }
 
     $this->queryBuilder()
-         ->delete(ProjectEvents::class, 'e')
+         ->delete(ProjectEvent::class, 'e')
          ->where('e.CalendarId = :calendarId')
          ->setParameter('calendarId', $event->getCalendarId())
          ->getQuery()
@@ -200,8 +200,8 @@ class EventsService
       $calendarId = $projectEvent->getCalendarId();
       $eventURI = $projectEvent->getEventURI();
       $event = $this->calDavService->getCalendarObject($calendarId, $eventURI);
-      $vCalendar  = CalendarService::getVCalendar($event);
-      $categories = calendarService::getVCategories($vCalendar);
+      $vCalendar  = VCalendarService::getVCalendar($event);
+      $categories = VCalendarService::getCategories($vCalendar);
 
       $key = array_search($oldName, $categories);
       $categories[$key] = $newName;
@@ -216,13 +216,13 @@ class EventsService
     }
   }
 
-  /** @return ProjectEvents[] */
+  /** @return ProjectEvent[] */
   private function eventProjects($eventURI)
   {
     return $this->findBy(['eventUri' => $eventURI]);
   }
 
-  /** @return ProjectEvents[] */
+  /** @return ProjectEvent[] */
   private function projectEvents($projectId)
   {
     return $this->findBy(['projectId' => $projectId, 'type' => 'VEVENT']);
@@ -276,7 +276,7 @@ class EventsService
    */
   public function fetchEvent($projectId, $eventURI)
   {
-    $projectEvent = $this->find(['ProjectId' => $projectId, 'EventURI' => $eventURI]);
+    $projectEvent = $this->find(['projectId' => $projectId, 'eventUri' => $eventURI]);
     if (empty($projectEvent)) {
       return null;
     }
@@ -583,7 +583,7 @@ class EventsService
     return $this->setConfigValue($uri.'calendar', $displayName);
   }
 
-  /**Parse the respective event and make sure the ProjectEvents
+  /**Parse the respective event and make sure the ProjectEvent
    * table is uptodate.
    *
    * @param $eventId The OwnCloud-Id of the event.
@@ -596,8 +596,8 @@ class EventsService
   {
     $eventURI   = $objectData['uri'];
     $calId      = $objectData['calendarid'];
-    $vCalendar  = CalendarService::getVCalendar($objectData);
-    $categories = calendarService::getVCategories($vCalendar);
+    $vCalendar  = VCalendarService::getVCalendar($objectData);
+    $categories = VCalendarService::getCategories($vCalendar);
 
     // Now fetch all projects and their names ...
     $projects = $this->projectService->fetchAll();
@@ -648,7 +648,7 @@ class EventsService
                             $calendarId,
                             $type)
   {
-    return $this->persist((new ProjectEvents())
+    return $this->persist((new ProjectEvent())
                           ->setProjectId($projectId)
                           ->setEventURI($eventURI)
                           ->setCalendarId($calendarId)
@@ -664,7 +664,7 @@ class EventsService
    */
   private function unregister($projectId, $eventURI)
   {
-    return $this->remove(['ProjectId' => $projectId, 'EventURI' => $eventURI]);
+    return $this->remove(['projectId' => $projectId, 'eventUri' => $eventURI]);
   }
 
   /**Unconditionally unregister the given event with the given
@@ -681,11 +681,11 @@ class EventsService
     $this->unregister($projectId, $eventURI);
 
     $projectName = $this->projectService->fetchName($projectId);
-    $projectEvent = $this->find(['ProjectId' => $projectId, 'EventURI' => $eventURI]);
+    $projectEvent = $this->find(['projectId' => $projectId, 'eventUri' => $eventURI]);
     $calendarId = $projectEvent->getCalendaId();
     $event = $this->calDavService->getCalendarObject($calendarId, $eventURI);
     $vCalendar  = VCalendarService::getVCalendar($event);
-    $categories = VCalendarService::getVCategories($vCalendar);
+    $categories = VCalendarService::getCategories($vCalendar);
 
     $key = array_search($projectName, $categories);
     unset($categories[$key]);
@@ -703,8 +703,8 @@ class EventsService
    */
   private function isRegistered($projectId, $eventURI)
   {
-    //return !empty($this->find(['ProjectId' => $projectId, 'EventURI' => $eventURI]));
-    return $this->count(['ProjectId' => $projectId, 'EventURI' => $eventURI]) > 0;
+    //return !empty($this->find(['projectId' => $projectId, 'eventUri' => $eventURI]));
+    return $this->count(['projectId' => $projectId, 'eventUri' => $eventURI]) > 0;
   }
 
   /**Inject a new task into the given calendar. This function calls
