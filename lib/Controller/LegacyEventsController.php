@@ -638,11 +638,9 @@ class LegacyEventsController extends Controller {
     try {
       $localUri = $this->calDavService->createCalendarObject($cal, null, $vCalendar);
       $this->logError(__METHOD__ . ": created object with uri " . $localUri);
-    } catch(\Exception $e) {
-      $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
-      return self::grumble(
-        $this->l->t('Failure creating calendar object, caught an exception `%s\'.',
-                    [$e->getMessage()]));
+    } catch(\Throwable $t) {
+      $this->logException($t);
+      return self::grumble($this->exceptionChainData($t));
     }
     return self::valueResponse($localUri, $this->l->t("Calendar object successfully created."));
   }
