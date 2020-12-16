@@ -227,7 +227,9 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     var projectName = select.data('projectName');
     var post = {
       ProjectId: projectId,
-      ProjectName: projectName
+      ProjectName: projectName,
+      projectId: projectId,
+      projectName: projectName
     };
 
     var error = false;
@@ -982,7 +984,9 @@ $(document).ready(function(){
         var projectName = toolbox.data('projectName');
         var post = {
           ProjectId: projectId,
-          ProjectName: projectName
+          ProjectName: projectName,
+          projectId: projectId,
+          projectName: projectName
         };
         toolbox.off('click', '**'); // safeguard
         toolbox.on('click', 'button.project-wiki',

@@ -20,9 +20,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$prjId   = $_['ProjectId'];
-$prjName = $_['ProjectName'];
-$class   = $_['CSSClass'];
+$prjId   = $projectId;
+$prjName = $projectName;
+$class   = $cssClass;
 
 ?>
 <div id="events" class="cafev fixed-container"
@@ -33,7 +33,7 @@ $class   = $_['CSSClass'];
     <div class="eventcontrols content-controls">
       <select class="event-menu cafevdb-menu tooltip-right"
               data-placeholder="<?php echo $l->t('New Event'); ?>"
-              title="<?php echo $toolTips[new-project-event]; ?>">
+              title="<?php echo $toolTips['new-project-event']; ?>">
         <option value=""></option>
         <option value="concerts"><?php echo $l->t('Concert'); ?></option>
         <option value="rehearsals"><?php echo $l->t('Rehearsal'); ?></option>
@@ -46,19 +46,19 @@ $class   = $_['CSSClass'];
                class="<?php echo $class; ?>-sendmail tooltip-bottom"
                name="sendmail"
                value="Em@il"
-               title="<?php echo $toolTips[projectevents-sendmail]; ?>"
+               title="<?php echo $toolTips['projectevents-sendmail']; ?>"
         />
         <input type="button"
                class="<?php echo $class; ?>-sendmail-select tooltip-bottom"
                name="select"
                value="+"
-               title="<?php echo $toolTips[projectevents-select]; ?>"
+               title="<?php echo $toolTips['projectevents-select']; ?>"
         />
         <input type="button"
                class="<?php echo $class; ?>-sendmail-deselect tooltip-bottom"
                name="deselect"
                value="-"
-               title="<?php echo $toolTips[projectevents-deselect]; ?>"
+               title="<?php echo $toolTips['projectevents-deselect']; ?>"
         />
       </span>
       <span class="<?php echo $class; ?>-download">
@@ -67,7 +67,7 @@ $class   = $_['CSSClass'];
                type="button"
                name="download"
                value="<?php echo $l->t('Download'); ?>"
-               title="<?php echo $toolTips[projectevents-download]; ?>"/>
+               title="<?php echo $toolTips['projectevents-download']; ?>"/>
       </span>
     </div>
     <div id="eventlist" class="container">

@@ -40,32 +40,31 @@ var CAFEVDB = CAFEVDB || {};
      *                 data.message,
      *                 data.debug
      */
-    init: function(data) {
+    init: function(htmlContent, textStatus, request) {
+      // @TODO why here
       CAFEVDB.Events.UI.confirmText['delete'] =
         t('cafevdb', 'Do you really want to delete this event?');
       CAFEVDB.Events.UI.confirmText['detach'] =
         t('cafevdb', 'Do you really want to detach this event from the current project?');
       //$('#dialog_holder').html(data.contents);
-      CAFEVDB.Events.projectId = data.projectId;
-      CAFEVDB.Events.projectName = data.projectName;
-      if (typeof data.debug != 'undefined') {
-	$('div.debug').html(data.debug);
-	$('div.debug').show();
-      }
+
+      CAFEVDB.Events.projectId = request.getResponseHeader('X-' + CAFEVDB.appName + '-project-id');
+      CAFEVDB.Events.projectName = request.getResponseHeader('X-' + CAFEVDB.appName + '-project-name');
 
       //var popup = $('#events').cafevDialog({
-      var dialogContent = $(data.contents);
+      var dialogContent = $(htmlContent);
       var popup = dialogContent.cafevDialog({
         dialogClass: 'cafevdb-project-events no-scroll',
-        position: { my: "middle top+50%",
-                    at: "middle bottom",
-                    of: "#controls" },
+        position: {
+          my: "middle top+50%",
+          at: "middle bottom",
+          of: "#app-content"
+        },
         width : "auto", //510,
         height: "auto",
 	resizable: false,
         open  : function(){
           //$.fn.cafevTooltip.remove();
-
           var dialogHolder = $(this);
           var dialogWidget = dialogHolder.dialog('widget');
 

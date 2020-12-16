@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
+use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -31,6 +32,9 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 class ProjectEventsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  /** @var ParameterService */
+  private $parameterService;
 
   public function __construct(
     $appName
@@ -49,21 +53,47 @@ class ProjectEventsController extends Controller {
    */
   public function serviceSwitch($topic)
   {
-    switch ($action) {
-      case 'dialog': // open
-        break;
-      case 'delete':
-      case 'detach':
-      case 'redisplay':
-      case 'select':
-      case 'deselect':
-      case 'download':
-      case 'email':
-        break;
-      default:
-        break;
+    try {
+      switch ($topic) {
+        case 'dialog': // open
+          $projectId = $this->parameterService['projectId'];
+          $projectId = $this->parameterService['projectName'];
+          $templateParameters = [
+            'projectId' => $projectId,
+            'projectName' => $projectName,
+            'cssClass' => 'projectevevents',
+            // $tmpl->assign('Events', $events);
+            // $tmpl->assign('EventMatrix', $eventMatrix);
+            // $tmpl->assign('locale', $locale);
+            // $tmpl->assign('timezone', Util::getTimezone());
+            // $tmpl->assign('Selected', $selected);
+          ];
+          $response = new TemplateResponse(
+            $this->appName(),
+            'events',
+            $templateParameters,
+            'blank'
+          );
+
+          $response->addHeader('X-'.$this->appName().'-project-id', $projectId);
+          $response->addHeader('X-'.$this->appName().'-project-name', $projectName);
+
+          return $response;
+        case 'delete':
+        case 'detach':
+        case 'redisplay':
+        case 'select':
+        case 'deselect':
+        case 'download':
+        case 'email':
+          break;
+        default:
+          break;
+      }
+      return self::grumble($this->l->t('Unknown Request'));
+    } catch (\Throwable $t) {
+      return self::grumble($this->exceptionChainData($t));
     }
-    return self::grumble($this->l->t('Unknown Request'));
   }
 
 }
