@@ -82,7 +82,7 @@ class ProjectEventsController extends Controller {
           $templateParameters = [
             'projectId' => $projectId,
             'projectName' => $projectName,
-            'cssClass' => 'projectevevents',
+            'cssClass' => 'projectevents',
             'locale' => $this->getLocale(),
             'timezone' => $this->getTimeZone(),
             'events' => $events,
