@@ -68,6 +68,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       {
         wikiPage: post.wikiPage,
         popupTitle: post.popupTitle,
+        cssClass: 'cafevdb',
         modal: false
       },
       function(dwDialog, dwDialogWidget) {

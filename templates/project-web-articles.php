@@ -82,7 +82,7 @@ if ($cnt > 0) {
 }
 echo '  </ul>
 ';
-foreach ($webPages as $nr => $webPage) {
+foreach ($projectPages as $nr => $webPage) {
   $url = $cmsURLTemplate;
   foreach ($webPage as $key => $value) {
     $url = str_replace('%'.$key.'%', $value, $url);

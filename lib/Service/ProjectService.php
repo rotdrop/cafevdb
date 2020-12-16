@@ -405,7 +405,7 @@ Whatever.',
 
     $articleIds = [];
     foreach ($project->getWebPages() as $idx => $article) {
-      $articleIds[$article['ArticleId']] = $idx;
+      $articleIds[$article['articleId']] = $idx;
     }
 
     $categories = [ [ 'id' => $this->getConfigValue('redaxoPreview'),
@@ -434,6 +434,8 @@ Whatever.',
         }
       }
     }
+    //$this->logInfo('PROJECT '.print_r($projectPages, true));
+    //$this->logInfo('OTHER '.print_r($otherPages, true));
     return [
       'projectPages' => $projectPages,
       'otherPages' => $otherPages,
