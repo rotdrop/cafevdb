@@ -166,7 +166,7 @@ class VCalendarService
    *
    * @return A reference to the inner object.
    */
-  public static function &getVObect(&$vCalendar)
+  public static function &getVObject(&$vCalendar)
   {
     if (isset($vCalendar->VEVENT)) {
       $vobject = &$vCalendar->VEVENT;
