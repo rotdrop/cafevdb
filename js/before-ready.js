@@ -80,13 +80,13 @@ $(function() {
   // reduce load-time and to record usable history information.
   content.on('click', ':submit', function(event) {
     console.info('Catchall form submit input', event);
+    const self = $(this);
     const form = $(this.form);
     const action = self.attr('formaction');
     if (action != '') {
       return true; // not for us
     }
     const post = form.serialize();
-    const self = $(this);
     if (self.attr('name')) {
       var obj = {};
       obj[self.attr('name')] = self.val();
