@@ -647,7 +647,8 @@ project without a flyer first.");
 ';
   }
 
-  /**Genereate the input data for the link to the CMS in order to edit
+  /**
+   * Genereate the input data for the link to the CMS in order to edit
    * the project's public web articles inline.
    *
    * @todo Do something more useful in the case of an error (database
@@ -678,6 +679,9 @@ project without a flyer first.");
       $templateParameters,
       'blank'
     );
+
+    // in case the login at start did not work
+    $this->projectService->refreshCMSCookies();
 
     return $template->render();
   }

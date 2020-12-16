@@ -386,6 +386,15 @@ Whatever.',
   }
 
   /**
+   * Refresh the login cookies for the underlying CMS system for the
+   * public web-pages.
+   */
+  public function refreshCMSCookies()
+  {
+    $this->webPagesRPC->refreshCookies();
+  }
+
+  /**
    * Fetch all articles known to the system.
    *
    * @return array

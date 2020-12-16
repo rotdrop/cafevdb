@@ -28,23 +28,29 @@ use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\EventsService;
 
 class ProjectEventsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var ParameterService */
+  /** @var \OCA\CAFEVDB\Service\ParameterService */
   private $parameterService;
+
+  /** @var \OCA\CAFEVDB\Service\EventsService */
+  private $eventsService;
 
   public function __construct(
     $appName
     , IRequest $request
     , RequestParameterService $parameterService
     , ConfigService $configService
+    , EventsService $eventsService
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
     $this->configService = $configService;
+    $this->eventsService = $eventsService;
     $this->l = $this->l10N();
   }
 
@@ -58,15 +64,31 @@ class ProjectEventsController extends Controller {
         case 'dialog': // open
           $projectId = $this->parameterService['projectId'];
           $projectName = $this->parameterService['projectName'];
+
+          $events = $this->eventsService->events($projectId);
+          $dfltIds = $this->eventsService->defaultCalendars();
+          $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
+
+          $this->logInfo('ProjectId: '.$projectId);
+          $this->logInfo('Events: '.print_r($events, true));
+          $this->logInfo('Matrix: '.print_r($eventMatrix, true));
+
+          $selectedEvents = $this->parameterService->getParam('EventSelect', []);
+          $selected = []; // array marking selected events
+          foreach ($selectedEvents as $eventUri) {
+            $selected[$eventUri] = true;
+          }
+
           $templateParameters = [
             'projectId' => $projectId,
             'projectName' => $projectName,
             'cssClass' => 'projectevevents',
-            // $tmpl->assign('Events', $events);
-            // $tmpl->assign('EventMatrix', $eventMatrix);
-            // $tmpl->assign('locale', $locale);
-            // $tmpl->assign('timezone', Util::getTimezone());
-            // $tmpl->assign('Selected', $selected);
+            'locale' => $this->getLocale(),
+            'timezone' => $this->getTimeZone(),
+            'events' => $events,
+            'eventMatrix' => $eventMatrix,
+            'selected' => $selected,
+            'eventsService' => $this->eventsService,
           ];
           $response = new TemplateResponse(
             $this->appName(),

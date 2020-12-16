@@ -35,6 +35,8 @@ use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent;
 
+use OCA\CAFEVDB\Common\Util;
+
 /**Events and tasks handling.
  */
 class EventsService
@@ -67,6 +69,7 @@ class EventsService
     $this->calDavService = $calDavService;
     $this->vCalendarService = $vCalendarService;
     $this->setDatabaseRepository(ProjectEvent::class);
+    $this->l = $this->l10n();
   }
 
   /**
@@ -107,7 +110,7 @@ class EventsService
       // not for us
       return;
     }
-    $this->logError(__METHOD__);
+    $this->logError(print_r($objectData, true));
     $this->syncCalendarObject($objectData);
   }
 
@@ -232,10 +235,10 @@ class EventsService
   private function makeEvent($projectEvent)
   {
     $event = [];
-    $event['projectid'] = $projectId;
-    $event['uri'] = $projectEvent->getEventURI();
+    $event['projectid'] = $projectEvent->getProjectId();
+    $event['uri'] = $projectEvent->getEventUri();
     $event['calendarid'] = $projectEvent->getCalendarId();
-    $calendarObject = $this->calDavService->getCalendarObject($event['CalendarId'], $event['URI']);
+    $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     $vCalendar = VCalendarService::getVCalendar($calendarObject);
     $vObject = VCalendarService::getVObject($vCalendar);
     $dtStart = $vObject->DTSTART;
@@ -295,12 +298,12 @@ class EventsService
   public function events($projectId)
   {
     // fetch the relevant data from the pivot-table
-    $events = $this->projectEvents($projectId);
+    $projectEvents = $this->projectEvents($projectId);
 
     $utc = new \DateTimeZone("UTC");
 
     $events = [];
-    foreach ($events as $projectEvent) {
+    foreach ($projectEvents as $projectEvent) {
       $events[] = $this->makeEvent($projectEvent);
     }
 
@@ -309,6 +312,8 @@ class EventsService
               ? 0
               : (($a['start'] < $b['start']) ? -1 : 1));
     });
+
+    $this->logInfo("Events: ".print_r($events, true));
 
     return $events;
   }
@@ -415,7 +420,7 @@ class EventsService
    *
    * @return Associative array with calendarnames as keys.
    */
-  public static function eventMatrix($projectEvents, $calendarIds)
+  public function eventMatrix($projectEvents, $calendarIds)
   {
     $calendarNames = [];
 
@@ -433,7 +438,7 @@ class EventsService
       ];
     }
     $result[-1] = [
-      'name' => strval(L::t('Miscellaneous Calendars')),
+      'name' => strval($this->l->t('Miscellaneous Calendars')),
       'events' => []
     ];
 
@@ -611,7 +616,7 @@ class EventsService
       if (in_array($project->getName(), $categories)) {
         // register or update the event
         $type = VCalendarService::getVObjectType($vCalendar);
-        $this->register($prKey, $calId, $eventURI, $type);
+        $this->register($prKey, $eventURI, $calId, $type);
         $result = !$registered;
       } else if ($registered) {
         // unregister the event
@@ -634,25 +639,28 @@ class EventsService
     }
   }
 
-  /**Unconditionally register the given event with the given project.
+  /**
+   * Unconditionally register the given event with the given project.
    *
-   * @param $projectId The project key.
-   * @param $eventURI The event key (external key).
-   * @param $calendarId The id of the calender the vent belongs to.
-   * @param $type The event type (VEVENT, VTODO, VJOURNAL, VCARD).
+   * @param int $projectId The project key.
+   * @param string $eventURI The event key (external key).
+   * @param int $calendarId The id of the calender the vent belongs to.
+   * @param string $type The event type (VEVENT, VTODO, VJOURNAL, VCARD).
    *
    * @return Undefined.
    */
-  private function register($projectId,
-                            $eventURI,
-                            $calendarId,
-                            $type)
+  private function register(int $projectId,
+                            string $eventURI,
+                            int $calendarId,
+                            string $type)
   {
-    return $this->persist((new ProjectEvent())
-                          ->setProjectId($projectId)
-                          ->setEventURI($eventURI)
-                          ->setCalendarId($calendarId)
-                          ->setType($type));
+    $entity = new ProjectEvent();
+    $entity->setProjectId($projectId)
+           ->setEventUri($eventURI)
+           ->setCalendarId($calendarId)
+           ->setType($type);
+    $this->persist($entity);
+    $this->flush($entity);
   }
 
   /**Unconditionally unregister the given event with the given project.

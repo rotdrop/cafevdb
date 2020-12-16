@@ -67,7 +67,7 @@
     </div>
     <div id="eventlist" class="container">
       <div id="eventlistholder" class="container scroller">
-        <?php echo $this->inc("eventslisting"); ?>
+        <?php echo $this->inc('eventslisting', $_); ?>
       </div>
     </div>
   </form>

@@ -24,25 +24,37 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\ILogger;
+use OCP\IL10N;
+
 use OCA\DAV\Events\CalendarObjectCreatedEvent as HandledEvent;
 
 use OCA\CAFEVDB\Service\EventsService;
 
 class CalendarObjectCreatedEventListener implements IEventListener
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   const EVENT = HandledEvent::class;
 
   /** @var EventsService */
   private $eventsService;
 
-  public function __construct(EventsService $eventsService) {
+  public function __construct(
+    EventsService $eventsService
+    , ILogger $logger
+    , IL10N $l10n
+  ) {
     $this->eventsService = $eventsService;
+    $this->logger = $logger;
+    $this->l = $l10n;
   }
 
   public function handle(Event $event): void {
     if (!($event instanceOf HandledEvent)) {
       return;
     }
+    $this->logInfo("Hello World");
     $this->eventsService->onCalendarObjectCreated($event);
   }
 }

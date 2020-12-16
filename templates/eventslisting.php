@@ -22,9 +22,6 @@
 ?>
 <table id="table" class="nostyle listing size-holder">
 <?php
-$prjId   = $_['ProjectId'];
-$prjName = $_['ProjectName'];
-$class   = $_['CSSClass'];
 
 $evtButtons = [
   'Edit' => [
@@ -41,10 +38,8 @@ $evtButtons = [
   ],
 ];
 
-$locale = $_['locale'];
-$zone   = $_['timezone'];
 $n = 0;
-foreach ($_['EventMatrix'] as $key => $eventGroup) {
+foreach ($eventMatrix as $key => $eventGroup) {
   $dpyName = $eventGroup['name'];
   $events   = $eventGroup['events'];
   if (!empty($events)) {
@@ -54,41 +49,40 @@ foreach ($_['EventMatrix'] as $key => $eventGroup) {
     echo "<tr><th colspan=\"4\">$dpyName ($noEvents)</th></tr>";
   }
   foreach ($eventGroup['events'] as $event) {
-    $evtId  = $event['EventId'];
-    $calId  = $event['CalendarId'];
-    $object = $event['object'];
-    $brief  = htmlspecialchars(stripslashes($object['summary']));
-    $description = htmlspecialchars(nl2br("\n".stripslashes(Events::getDescription($object))));
+    $evtUri  = $event['uri'];
+    $calId  = $event['calendarid'];
+    $brief  = htmlspecialchars(stripslashes($event['summary']));
+    $description = htmlspecialchars(nl2br("\n".stripslashes($event['description'])));
 
-    $datestring = Events::briefEventDate($object, $zone, $locale);
-    $longDate = Events::longEventDate($object, $zone, $locale);
+    $datestring = $eventsService->briefEventDate($event, $timezone, $locale);
+    $longDate = $eventsService->longEventDate($event, $timezone, $locale);
 
     $description = $longDate.'<br/>'.$brief.$description;
 
     echo <<<__EOT__
-    <tr class="$class step-$n">
+    <tr class="$cssClass step-$n">
       <td class="eventbuttons">
-      <input type="hidden" id="calendarid-$evtId" name="CalendarId[$evtId]" value="$calId"/>
+      <input type="hidden" id="calendarid-$evtUri" name="CalendarId[$evtUri]" value="$calId"/>
 __EOT__;
     foreach ($evtButtons as $btn => $values) {
       $tag   = $values['tag'];
       $title = $values['title'];
-      $name  = $tag."[$evtId]";
+      $name  = $tag."[$evtUri]";
       echo <<<__EOT__
-        <input class="$tag" id="$tag-$evtId" type="button" name="$tag" title="$title" value="$evtId" />
+        <input class="$tag" id="$tag-$evtUri" type="button" name="$tag" title="$title" value="$evtUri" />
 __EOT__;
     }
     $title = $toolTips[projectevents-selectevent];
-    $checked = isset($_['Selected'][$evtId]) ? 'checked="checked"' : '';
+    $checked = isset($selected[$evtUri]) ? 'checked="checked"' : '';
     echo <<<__EOT__
       </td>
       <td class="eventemail">
-        <label class="email-check" for="email-check-$evtId"  title="$title" >
-        <input class="email-check" title="" id="email-check-$evtId" type="checkbox" name="EventSelect[]" value="$evtId" $checked />
+        <label class="email-check" for="email-check-$evtUri"  title="$title" >
+        <input class="email-check" title="" id="email-check-$evtUri" type="checkbox" name="EventSelect[]" value="$evtUri" $checked />
         <div class="email-check" /></label>
       </td>
-      <td class="eventdata brief tooltip-top tooltip-wide" id="brief-$evtId" title="$description">$brief</td>
-      <td class="eventdata date tooltip-top tooltip-wide" id="data-$evtId" title="$description">$datestring</td>
+      <td class="eventdata brief tooltip-top tooltip-wide" id="brief-$evtUri" title="$description">$brief</td>
+      <td class="eventdata date tooltip-top tooltip-wide" id="data-$evtUri" title="$description">$datestring</td>
     </tr>
 __EOT__;
     $n = ($n + 1) & 1;
