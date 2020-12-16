@@ -38,9 +38,9 @@
   padding:0.3em 0.3em 0 0.3em;
 }
 
-#eventlist {
-  padding:5.6em 0 0 0;
-}
+/* #eventlist { */
+/*   padding:5.6em 0 0 0; */
+/* } */
 
 .projectevents table.listing {
   border:0px solid #004d9c;
@@ -161,37 +161,29 @@
   font-size:0pt;
 }
 
-.projectevents input.detach {
-  background:url(../img/link_break16x16.png);
+.projectevents input.event-action {
   background-repeat:no-repeat;
-  min-width:0;
+  background-color:rgba(0,0,0,0) !important;
+  min-width:unset;
   width:16px;
   height:15px;
   border:0;
   font-size:0;
   vertical-align:middle;
+  min-height:unset;
+  padding:5px;
+}
+
+.projectevents input.detach {
+  background-image: url(../img/link_break16x16.png);
 }
 
 .projectevents input.edit {
-  background:url(../img/pme-change.png);
-  background-repeat:no-repeat;
-  min-width:0;
-  width:16px;
-  height:15px;
-  border:0;
-  font-size:0;
-  vertical-align:middle;
+  background-image: url(../img/pme-change.png);
 }
 
 .projectevents input.delete {
-  background:url(../img/pme-delete.png);
-  background-repeat:no-repeat;
-  min-width:0;
-  width:16px;
-  height:15px;
-  border:0;
-  font-size:0;
-  vertical-align:middle;
+  background-image: url(../img/pme-delete.png);
 }
 
 :not(.lt-ie9) .projectevents input.email-check[type=checkbox] {
@@ -228,6 +220,12 @@ td.eventdata, td.eventbuttons, td.eventemail {
   /*vertical-align:middle;*/
   border:1px solid #004d9c;
   padding:3px;
+}
+
+td.eventbuttons, td.eventemail {
+  text-align:center;
+  width:0.1%;
+  white-space:nowrap;
 }
 
 td.eventdata {
@@ -362,7 +360,7 @@ td.eventdata-brief {
 	overflow-y: auto;
 	overflow-x: hidden;
 	padding: 0;
-        min-width:30em;
+/*        min-width:30em;*/
 }
 
 .ui-dialog.cafevdb-project-events .ui-dialog-content {
