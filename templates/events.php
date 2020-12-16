@@ -19,17 +19,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-$prjId   = $projectId;
-$prjName = $projectName;
-$class   = $cssClass;
-
 ?>
-<div id="events" class="cafev fixed-container"
-     title="<?php echo $l->t('Events for').' '.$_['ProjectName'];?>">
-  <form id="eventlistform" class="<?php echo $class; ?> fixed-container" >
-    <input type="hidden" name="ProjectId"   value="<?php echo $prjId; ?>" />
-    <input type="hidden" name="ProjectName" value="<?php echo $prjName; ?>" />
+<div id="events" class="cafev not-fixed-container"
+     title="<?php echo $l->t('Events for').' '.$projectName;?>">
+  <form id="eventlistform" class="<?php echo $cssClass; ?> not-fixed-container" >
+    <input type="hidden" name="ProjectId"   value="<?php echo $projectId; ?>" />
+    <input type="hidden" name="ProjectName" value="<?php echo $projectName; ?>" />
     <div class="eventcontrols content-controls">
       <select class="event-menu cafevdb-menu tooltip-right"
               data-placeholder="<?php echo $l->t('New Event'); ?>"
@@ -41,27 +36,27 @@ $class   = $cssClass;
         <option value="management"><?php echo $l->t('Management'); ?></option>
         <option value="finance"><?php echo $l->t('Finance'); ?></option>
       </select>
-      <span class="<?php echo $class; ?>-email">
+      <span class="<?php echo $cssClass; ?>-email">
         <input type="button"
-               class="<?php echo $class; ?>-sendmail tooltip-bottom"
+               class="<?php echo $cssClass; ?>-sendmail tooltip-bottom"
                name="sendmail"
                value="Em@il"
                title="<?php echo $toolTips['projectevents-sendmail']; ?>"
         />
         <input type="button"
-               class="<?php echo $class; ?>-sendmail-select tooltip-bottom"
+               class="<?php echo $cssClass; ?>-sendmail-select tooltip-bottom"
                name="select"
                value="+"
                title="<?php echo $toolTips['projectevents-select']; ?>"
         />
         <input type="button"
-               class="<?php echo $class; ?>-sendmail-deselect tooltip-bottom"
+               class="<?php echo $cssClass; ?>-sendmail-deselect tooltip-bottom"
                name="deselect"
                value="-"
                title="<?php echo $toolTips['projectevents-deselect']; ?>"
         />
       </span>
-      <span class="<?php echo $class; ?>-download">
+      <span class="<?php echo $cssClass; ?>-download">
         <input id="projectevents-download"
                class="projectevents-download tooltip-bottom"
                type="button"

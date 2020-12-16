@@ -69,7 +69,8 @@ var CAFEVDB = CAFEVDB || {};
           var dialogWidget = dialogHolder.dialog('widget');
 
           /* Adjust dimensions to do proper scrolling. */
-	  Events.UI.adjustSize(dialogHolder, dialogWidget);
+          // @TODO this really needs to be reworked
+	  // Events.UI.adjustSize(dialogHolder, dialogWidget);
 
           var eventForm = dialogHolder.find('#eventlistform');
           var eventMenu = eventForm.find('select.event-menu');

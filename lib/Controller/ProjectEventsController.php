@@ -57,7 +57,7 @@ class ProjectEventsController extends Controller {
       switch ($topic) {
         case 'dialog': // open
           $projectId = $this->parameterService['projectId'];
-          $projectId = $this->parameterService['projectName'];
+          $projectName = $this->parameterService['projectName'];
           $templateParameters = [
             'projectId' => $projectId,
             'projectName' => $projectName,
