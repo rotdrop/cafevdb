@@ -104,10 +104,7 @@ script($appName, '../node_modules/@ckeditor/ckeditor5-build-classic/build/ckedit
 
 script($appName, '../3rdparty/js/imagesloaded/imagesloaded.pkgd.min');
 
-//script($appName, '../3rdparty/js/ckeditor/ckeditor.min');
-//script($appName, '../3rdparty/js/ckeditor/adapters/jquery');
-
-//style($appName, '../3rdparty/jquery-ui/jquery-ui');
+script($appName, '../node_modules/jquery-file-download/src/Scripts/jquery.fileDownload');
 
 style('dokuwikiembedded', 'doku-wiki-popup');
 script('dokuwikiembedded', 'doku-wiki');
