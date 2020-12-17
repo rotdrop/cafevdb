@@ -123,6 +123,17 @@ class ProjectParticipant
    */
   private $musician;
 
+  /**
+   * Core functionality: a project has many participants. Note: The
+   * case where one specific human being play multiple instruments in
+   * one project is handled elsewhere. Here we handle only "real"
+   * human beings without role-multiplexing.
+   *
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants")
+   * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+   */
+  private $project;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->extraFieldsData = new ArrayCollection();

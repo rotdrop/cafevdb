@@ -121,6 +121,13 @@ class Project implements \ArrayAccess
    */
   private $extraFields;
 
+  /**
+   * Core functionality: many participants for each project
+   *
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project")
+   */
+  private $participants;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instrumentation = new ArrayCollection();
@@ -128,6 +135,7 @@ class Project implements \ArrayAccess
     $this->flyers = new ArrayCollection();
     $this->webPages = new ArrayCollection();
     $this->extraFields = new ArrayCollection();
+    $this->participants = new ArrayCollection();
   }
 
   /**
