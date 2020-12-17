@@ -56,8 +56,8 @@ var CAFEVDB = CAFEVDB || {};
       var popup = dialogContent.cafevDialog({
         dialogClass: 'cafevdb-project-events no-scroll',
         position: {
-          my: "middle top+50%",
-          at: "middle bottom",
+          my: "middle middle",
+          at: "middle top+50%",
           of: "#app-content"
         },
         width : "auto", //510,
