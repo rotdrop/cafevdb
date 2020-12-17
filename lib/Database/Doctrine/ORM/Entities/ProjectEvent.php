@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,131 +32,138 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ProjectEvents")
  * @ORM\Entity
  */
-class ProjectEvent
+class ProjectEvent implements \ArrayAccess
 {
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(type="integer", nullable=false)
-`     * @ORM\Id
-     */
-    private $projectId;
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="string", length=764, nullable=false)
-     * @ORM\Id
-     */
-    private $eventUri;
+  /**
+   * @var int|null
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   `     * @ORM\Id
+  */
+  private $projectId;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     */
-    private $calendarId;
+  /**
+   * @var string|null
+   *
+   * @ORM\Column(type="string", length=764, nullable=false)
+   * @ORM\Id
+   */
+  private $eventUri;
 
-    /**
-     * @var enumvcalendartype|null
-     *
-     * @ORM\Column(type="enumvcalendartype", nullable=true)
-     */
-    private $type;
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   */
+  private $calendarId;
 
-    /**
-     * Set projectId.
-     *
-     * @param int|null $projectId
-     *
-     * @return ProjectEvents
-     */
-    public function setProjectId($projectId = null)
-    {
-        $this->projectId = $projectId;
+  /**
+   * @var enumvcalendartype|null
+   *
+   * @ORM\Column(type="enumvcalendartype", nullable=true)
+   */
+  private $type;
 
-        return $this;
-    }
+  public function __construct() {
+    $this->arrayCTOR();
+  }
 
-    /**
-     * Get projectId.
-     *
-     * @return int|null
-     */
-    public function getProjectId()
-    {
-        return $this->projectId;
-    }
+  /**
+   * Set projectId.
+   *
+   * @param int|null $projectId
+   *
+   * @return ProjectEvents
+   */
+  public function setProjectId($projectId = null)
+  {
+    $this->projectId = $projectId;
 
-    /**
-     * Set calendarId.
-     *
-     * @param int $calendarId
-     *
-     * @return ProjectEvents
-     */
-    public function setCalendarId($calendarId)
-    {
-        $this->calendarId = $calendarId;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get projectId.
+   *
+   * @return int|null
+   */
+  public function getProjectId()
+  {
+    return $this->projectId;
+  }
 
-    /**
-     * Get calendarId.
-     *
-     * @return int
-     */
-    public function getCalendarId()
-    {
-        return $this->calendarId;
-    }
+  /**
+   * Set calendarId.
+   *
+   * @param int $calendarId
+   *
+   * @return ProjectEvents
+   */
+  public function setCalendarId($calendarId)
+  {
+    $this->calendarId = $calendarId;
 
-    /**
-     * Set eventUri.
-     *
-     * @param string|null $eventUri
-     *
-     * @return ProjectEvents
-     */
-    public function setEventUri($eventUri = null)
-    {
-        $this->eventUri = $eventUri;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get calendarId.
+   *
+   * @return int
+   */
+  public function getCalendarId()
+  {
+    return $this->calendarId;
+  }
 
-    /**
-     * Get eventUri.
-     *
-     * @return string|null
-     */
-    public function getEventUri()
-    {
-        return $this->eventUri;
-    }
+  /**
+   * Set eventUri.
+   *
+   * @param string|null $eventUri
+   *
+   * @return ProjectEvents
+   */
+  public function setEventUri($eventUri = null)
+  {
+    $this->eventUri = $eventUri;
 
-    /**
-     * Set type.
-     *
-     * @param enumvcalendartype|null $type
-     *
-     * @return ProjectEvents
-     */
-    public function setType($type = null)
-    {
-        $this->type = $type;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get eventUri.
+   *
+   * @return string|null
+   */
+  public function getEventUri()
+  {
+    return $this->eventUri;
+  }
 
-    /**
-     * Get type.
-     *
-     * @return enumvcalendartype|null
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
+  /**
+   * Set type.
+   *
+   * @param enumvcalendartype|null $type
+   *
+   * @return ProjectEvents
+   */
+  public function setType($type = null)
+  {
+    $this->type = $type;
+
+    return $this;
+  }
+
+  /**
+   * Get type.
+   *
+   * @return enumvcalendartype|null
+   */
+  public function getType()
+  {
+    return $this->type;
+  }
 }
