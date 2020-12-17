@@ -109,20 +109,26 @@ trait EntityManagerTrait {
    *
    * @param mixed $entity The entity instance to remove.
    *
+   * @param bool $flush Initiate a flush if true.
+   *
    * @return void
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  protected function remove($entity)
+  protected function remove($entity, bool $flush = false)
   {
-    $this->logInfo("Call EM remove");
     if (is_array($entity)) {
       $key = $entity;
       $entity = $this->entityManager->getReference($this->entityClassName, $key);
-      $this->logInfo("Create reference from ".print_r($key, true)." id ".$entity->getId());
+      $this->logDebug("Create reference from ".print_r($key, true).' for '.$this->entityClassName);
     }
-    return $this->entityManager->remove($entity);
+    $this->entityManager->remove($entity);
+
+    // This seems to be necessary, why?
+    if ($flush) {
+      $this->flush();
+    }
   }
 
   /**
