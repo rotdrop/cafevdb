@@ -282,7 +282,7 @@ class EncryptionService
       $this->appEncryptionKey = null;
       throw new \Exception($this->l->t('Stored keys for application and user do not match'));
     } else {
-      $this->logInfo('Encryption keys validated'.(empty($usrdbkey) ? ' (no encryption)' : '').'.');
+      $this->logDebug('Encryption keys validated'.(empty($usrdbkey) ? ' (no encryption)' : '').'.');
     }
     return true;
   }
