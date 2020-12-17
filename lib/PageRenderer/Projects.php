@@ -73,16 +73,26 @@ class Projects extends PMETableViewBase
     $this->projectService = $projectService;
     $this->eventsService = $eventsService;
     $this->eventDispatcher = $eventDispatcher;
+
+    if (empty($this->projectId) || $this->projectId < 0 || empty($this->projectName)) {
+      $this->projectId = $this->pmeRecordId;
+      if ($this->projectId > 0) {
+        $this->projectName = $this->projectService->fetchName($this->projectId);
+      }
+    }
   }
 
   public function cssClass() { return self::CSS_CLASS; }
 
   /** Short title for heading. */
   public function shortTitle() {
-  }
-
-  /** Header text informations. */
-  public function headerText() {
+    if (!empty($this->projectName)) {
+      return $this->l->t("%s Project %s",
+                         [ ucfirst($this->getConfigValue('orchestra')),
+                           $this->projectName]);
+    } else {
+      return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue('orchestra')) ]);
+    }
   }
 
   /** Show the underlying table. */

@@ -173,7 +173,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   // public function shortTitle();
 
   /** Header text informations. */
-  // public function headerText();
+  public function headerText()
+  {
+    return $this->shortTitle();
+  }
 
   /** Show the underlying table. */
   // public function render();
