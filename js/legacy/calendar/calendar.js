@@ -157,7 +157,6 @@ var CAFEVDB = CAFEVDB || {};
         }
       },
       startEventDialog:function(){
-        console.log('hello');
         Calendar.UI.loading(false);
         $.fn.cafevTooltip.remove();
         //                      $('#fullcalendar').fullCalendar('unselect');

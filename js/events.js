@@ -106,7 +106,14 @@ var CAFEVDB = CAFEVDB || {};
 
             $('#dialog_holder').load(
               OC.generateUrl('/apps/cafevdb/legacy/events/forms/new'),
-              post, CAFEVDB.Legacy.Calendar.UI.startEventDialog);
+              post,
+              function(response, textStatus, xhr) {
+                if (textStatus == 'success') {
+                  CAFEVDB.Legacy.Calendar.UI.startEventDialog();
+                  return;
+                }
+                CAFEVDB.Ajax.handleError(xhr, textStatus, xhr.status);
+              });
 
             eventMenu.find('option').removeAttr('selected');
             $.fn.cafevTooltip.remove();
@@ -133,10 +140,11 @@ var CAFEVDB = CAFEVDB || {};
               // @TODO
               $.post(
                 OC.generateUrl('/apps/cafevdb/projects/events/redisplay'),
-                   { ProjectId: Events.projectId,
-                     ProjectName: Events.projectName,
-                     EventSelect: events },
-                   CAFEVDB.Events.UI.relist);
+                { ProjectId: Events.projectId,
+                  ProjectName: Events.projectName,
+                  EventSelect: events })
+	        .fail(CAFEVDB.Ajax.handleError)
+                .done(CAFEVDB.Events.UI.relist);
             return false;
           });
           dialogHolder.
@@ -203,44 +211,40 @@ var CAFEVDB = CAFEVDB || {};
         dialogWidget.innerWidth(width+scroll);
       }
     },
-    relist: function(data) {
-      var events =$('#events');
-      var listing = events.find('#eventlistholder');
-      listing.html(data.contents);
+    relist: function(htmlContent, textStatus, xhr) {
+
+      //CAFEVDB.Events.projectId = xhr.getResponseHeader('X-' + CAFEVDB.appName + '-project-id');
+      //CAFEVDB.Events.projectName = xhr.getResponseHeader('X-' + CAFEVDB.appName + '-project-name');
+
+      const events = $('#events');
+      const listing = events.find('#eventlistholder');
+      listing.html(htmlContent);
 
       /* Adjust dimensions to do proper scrolling. */
-      var dialogWidget = events.dialog('widget');
-      Events.UI.adjustSize(events, dialogWidget);
-      if (typeof data.debug != 'undefined') {
-	events.find('#debug').html(data.debug);
-	events.find('#debug').show();
-      }
+      const dialogWidget = events.dialog('widget');
+      //Events.UI.adjustSize(events, dialogWidget);
 
       $.fn.cafevTooltip.remove();
 
       CAFEVDB.toolTipsInit(listing);
 
       Events.UI.updateEmailForm();
-
-      return false;
     },
     redisplay: function() {
       const post = $('#eventlistform').serializeArray();
 
-      $.post(
-        OC.generateUrl('/apps/cafevdb/projects/events/redisplay'),
-        post, CAFEVDB.Events.UI.relist);
-
-      return true;
+      $.post(OC.generateUrl('/apps/cafevdb/projects/events/redisplay'), post)
+	.fail(CAFEVDB.Ajax.handleError)
+        .done(CAFEVDB.Events.UI.relist);
     },
     buttonClick: function(event) {
       event.preventDefault();
 
-      var evntdlgopen = $('#event').dialog('isOpen');
+      const evntdlgopen = $('#event').dialog('isOpen');
 
-      var post = $('#eventlistform').serializeArray();
+      const post = $('#eventlistform').serializeArray();
 
-      if(evntdlgopen === true){
+      if (evntdlgopen === true){
         // TODO: maybe save event
         $('#event').dialog('close');
         return false;
@@ -249,42 +253,52 @@ var CAFEVDB = CAFEVDB || {};
       $('#events #debug').hide();
       $('#events #debug').empty();
 
-      var name = $(this).attr('name');
+      const name = $(this).attr('name');
 
       if (name == 'edit') {
 
         // Edit existing event
-        // @TODO use post?
-        post.push({ name: 'id', value:  $(this).val()});
+        post.push({ name: 'uri', value:  $(this).val()});
+        post.push({ name: 'calendarid', value: $(this).data('calendarId')});
         $('#dialog_holder').load(
           OC.generateUrl('/apps/cafevdb/legacy/events/forms/edit'),
-          post, CAFEVDB.Legacy.Calendar.UI.startEventDialog);
-
+          post,
+          function(response, textStatus, xhr) {
+            if (textStatus == 'success') {
+              CAFEVDB.Legacy.Calendar.UI.startEventDialog();
+              return;
+            }
+            CAFEVDB.Ajax.handleError(xhr, textStatus, xhr.status);
+          });
         return false;
-      } else if (name == 'delete' || name == 'detach' ||
-                 name == 'select' || name == 'deselect') {
+      } else if (name == 'delete' ||
+                 name == 'detach' ||
+                 name == 'select' ||
+                 name == 'deselect') {
         // Execute the task and redisplay the event list.
 
-        post.push({ name: 'EventId', value: $(this).val() });
+        post.push({ name: 'EventURI', value: $(this).val() });
 
         const really = CAFEVDB.Events.UI.confirmText[name];
-        if (really != '') {
+        console.info('really', name, really);
+        if (really !== undefined && really != '') {
           // Attention: dialogs do not block, so the action needs to be
           // wrapped into the callback.
-	  OC.dialogs.confirm(really,
-                             t('cafevdb', 'Really delete?'),
-                             function (decision) {
-                               if (decision) {
-                                 $.post(
-                                   OC.generateUrl('/apps/cafevdb/projects/events/' + name),
-                                   post, CAFEVDB.Events.UI.relist);
-                               }
-                             },
-                             true);
+	  OC.dialogs.confirm(
+            really,
+            t('cafevdb', 'Really delete?'),
+            function (decision) {
+              if (decision) {
+                $.post(OC.generateUrl('/apps/cafevdb/projects/events/' + name), post)
+	          .fail(CAFEVDB.Ajax.handleError)
+                  .done(CAFEVDB.Events.UI.relist);
+              }
+            },
+            true);
         } else {
-          $.post(
-            OC.generateUrl('/apps/cafevdb/projects/events/' + name),
-            post, CAFEVDB.Events.UI.relist);
+          $.post(OC.generateUrl('/apps/cafevdb/projects/events/' + name), post)
+	    .fail(CAFEVDB.Ajax.handleError)
+            .done(CAFEVDB.Events.UI.relist);
         }
         return false;
       } else if (name == 'sendmail') {
@@ -304,16 +318,27 @@ var CAFEVDB = CAFEVDB || {};
 
       } else if (name == 'download') {
 
-        // As always, there may be a more elegant solution, but this
-        // opens the "download" dialog of my web-browser. Need to set
-        // the form-method to "post" to do this.
+        const cookieValue = CAFEVDB.makeId();
+        const cookieName = CAFEVDB.appName + '_' + 'project_events_download'
+        post.push({ name: 'DownloadCookieName', value: cookieName });
+        post.push({ name: 'DownloadCookieValue', value: cookieValue });
 
-        const exportscript = OC.generateUrl('/apps/cafevdb/projects/events/download');
-        $('#eventlistform').attr("method", "post");
-        $('#eventlistform').attr("action", exportscript);
-
-        $('#eventlistform').submit();
-
+        $.fileDownload(
+          OC.generateUrl('/apps/cafevdb/projects/events/download'), {
+            httpMethod: 'POST',
+            data: post,
+            cookieName:  cookieName,
+            cookieValue: cookieValue,
+            cookiePath: oc_webroot,
+          })
+	  .fail(function (responseHtml, url) {
+            CAFEVDB.Dialogs.alert(t('cafevdb', 'Unable to download calendar events: {response}',
+                                    { 'response': responseHtml }),
+                                  t('cafevdb', 'Error'),
+                                  function () {},
+                                  true, true);
+          })
+	  .done(function (url) { console.info('DONE downloading', url); });
         return false;
       }
 

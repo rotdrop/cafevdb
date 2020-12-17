@@ -51,7 +51,7 @@ class VCalendarService
    *
    * @return array|false Array of error messages or false on success
    */
-  public function validateRequest($eventData, $kind = self::VEVENT) {
+  public function validateRequest($eventData, string $kind = self::VEVENT) {
     switch ($kind) {
     case self::VEVENT:
       return $this->legacyCalendarObject->validateRequest($eventData);
@@ -89,23 +89,12 @@ class VCalendarService
    *                   'alarm' => $alarm); // optional
    *
    */
-  public function createVCalendarFromRequest($vObjectData, $kind = self::VEVENT) {
+  public function createVCalendarFromRequest($vObjectData, string $kind = self::VEVENT) {
     switch ($kind) {
     case self::VEVENT:
       return $this->createVEventFromRequest($vObjectData);
     case 'VTODO':
       return $this->createVTodoFromRequest($vObjectData);
-    default:
-      return null;
-    }
-  }
-
-  public function updateVCalendarFromRequest($objectData, $kind = self::VEVENT) {
-    switch ($kind) {
-    case self::VEVENT:
-      return $this->updateVEventFromRequest($vObjectData);
-    case 'VTODO':
-      return $this->updateVTodoFromRequest($vObjectData);
     default:
       return null;
     }
@@ -123,14 +112,25 @@ class VCalendarService
     return $vObject;
   }
 
-  private function updateVEventFromRequest($objectData)
+  public function updateVCalendarFromRequest($vCalendar, $objectData, string $kind = self::VEVENT) {
+    switch ($kind) {
+    case self::VEVENT:
+      return $this->updateVEventFromRequest($vCalendar, $objectData);
+    case 'VTODO':
+      return $this->updateVTodoFromRequest($vCalendar, $objectData);
+    default:
+      return null;
+    }
+  }
+
+  private function updateVEventFromRequest($vCalendar, $objectData)
   {
-    $vCalendar = $this->legacyCalendarObject->updateVCalendarFromRequest($objectData);
+    $vCalendar = $this->legacyCalendarObject->updateVCalendarFromRequest($objectData, $vCalendar);
     if (empty($vCalendar) || empty($objectData['alarm'])) {
       return $vCalendar;
     }
     if (!empty($request['alarm'])) {
-      $vObjet->VEVENT->VALARM = $this->createVAlarmFromSeconds($vCalendar, $request['alarm'], $request['summary']);
+      $vCalendar->VEVENT->VALARM = $this->createVAlarmFromSeconds($vCalendar, $request['alarm'], $request['summary']);
     } else {
       unset($vOBJECT->VEVENT->{'VALARM'});
     }
@@ -356,7 +356,7 @@ class VCalendarService
     }
 
     $vTodo = $vCalendar->VTODO;
-    $timezone = $this->getDateTimeZone()->getTimeZone();
+    $timezone = $this->getDateTimeZone();
 
     $vTodo->{'LAST-MODIFIED'} = new \DateTime('now', new \DateTimeZone('UTC'));
     $vTodo->DTSTAMP = new \DateTime('now', new \DateTimeZone('UTC'));

@@ -125,23 +125,28 @@
   /*background-color:#C6DEFF !important;*/
 }
 
-.projectevents input.projectevents-sendmail-deselect[type=button] {
-  background-image:url('../img/e_mail_X.png');
+.projectevents input.image-button {
   background-repeat:no-repeat;
+  background-position:center;
   width:28px;
   height:28px;
   vertical-align:middle;
   font-size:0pt;
+  min-height:unset;
+}
+
+.projectevents input.projectevents-sendmail-deselect[type=button] {
+  background-image:url('../img/e_mail_X.png');
 }
 .projectevents input.projectevents-sendmail-select[type=button] {
   background-image:url('../img/e_mail_checked.png');
-  background-repeat:no-repeat;
-  width:28px;
-  height:28px;
-  vertical-align:middle;
-  font-size:0pt;
 }
 
+.projectevents input.projectevents-download {
+  background-image:url('../../../core/img/actions/download.svg');
+}
+
+/* Larger button */
 .projectevents input.projectevents-sendmail[type=button] {
   background-image:url('../img/e_mail.png');
   background-repeat:no-repeat;
@@ -149,16 +154,6 @@
   padding-left:24px;
   min-height:28px;
   vertical-align:middle;
-}
-
-.projectevents input.projectevents-download {
-  background-image:url('../../../core/img/actions/download.svg');
-  background-repeat:no-repeat;
-  background-position:center center;
-  height:28px;
-  width:28px;
-  vertical-align:middle;
-  font-size:0pt;
 }
 
 .projectevents input.event-action {

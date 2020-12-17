@@ -70,15 +70,15 @@ class LegacyEventsController extends Controller {
   private $ocCalendarObject;
 
   public function __construct(
-    $appName,
-    IRequest $request,
-    ConfigService $configService,
-    ConfigCheckService $configCheckService,
-    RequestParameterService $parameterService,
-    ProjectService $projectService,
-    CalDavService $calDavService,
-    VCalendarService $vCalendarService,
-    \OCP\IURLGenerator $urlGenerator
+    $appName
+    , IRequest $request
+    , ConfigService $configService
+    , ConfigCheckService $configCheckService
+    , RequestParameterService $parameterService
+    , ProjectService $projectService
+    , CalDavService $calDavService
+    , VCalendarService $vCalendarService
+    , \OCP\IURLGenerator $urlGenerator
   ) {
     parent::__construct($appName, $request);
 
@@ -263,7 +263,8 @@ class LegacyEventsController extends Controller {
         // cafevdb defaults
         'categories' => $categories,
         'protectCategories' => $protectCategories,
-        'summary' => $summary,
+        // 'summary' => $summary,
+        'title' => $summary,
       ],
       'blank');
   }
@@ -554,7 +555,8 @@ class LegacyEventsController extends Controller {
       'repeat_bymonthday_options' => $repeat_bymonthday_options,
       'repeat_weekofmonth_options' => $repeat_weekofmonth_options,
 
-      'summary' => $summary,
+      // 'summary' => $summary,
+      'title' => $summary,
       'accessclass' => $accessClass,
       'location' => $location,
       'allday' => $allday,
@@ -666,7 +668,7 @@ class LegacyEventsController extends Controller {
       return self::grumble($this->l->t('Race-condition, event was modified in between.'));
     }
 
-    $vCalendar = $this->vCalendarService->updateVCalendarFromRequest($this->parameterService, $vCalendar);
+    $vCalendar = $this->vCalendarService->updateVCalendarFromRequest($vCalendar, $this->parameterService);
 
     if ($data['calendarid'] != $calendarId) {
       $this->calDavService->deleteCalendarObject($data['calendarid'], $uri);

@@ -69,7 +69,14 @@ __EOT__;
       $title = $values['title'];
       $name  = $tag."[$evtUri]";
       echo <<<__EOT__
-        <input class="$tag event-action" id="$tag-$evtUri" type="button" name="$tag" title="$title" value="$evtUri" />
+        <input class="$tag event-action"
+               id="$tag-$evtUri"
+               type="button"
+               name="$tag"
+               title="$title"
+               value="$evtUri"
+               data-calendar-id="$calId"
+        />
 __EOT__;
     }
     $title = $toolTips[projectevents-selectevent];

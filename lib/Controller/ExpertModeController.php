@@ -33,6 +33,8 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
@@ -53,6 +55,12 @@ class ExpertModeController extends Controller
   /** @var GeoCodingService */
   private $geoCodingService;
 
+  /** @var EventsService */
+  private $eventsService;
+
+  /** @var CalDavService */
+  private $calDavService;
+
   /** @var InstrumentationService */
   private $instrumentationService;
 
@@ -65,6 +73,8 @@ class ExpertModeController extends Controller
     , ConfigService $configService
     , ToolTipsService $toolTipsService
     , GeoCodingService $geoCodingService
+    , EventsService $eventsService
+    , CalDavService $calDavService
     , instrumentationService $instrumentationService
     , PageNavigation $pageNavigation
   ) {
@@ -74,6 +84,8 @@ class ExpertModeController extends Controller
     $this->toolTipsService = $toolTipsService;
     $this->pageNavigation = $pageNavigation;
     $this->geoCodingService = $geoCodingService;
+    $this->eventsService = $eventsService;
+    $this->calDavService = $calDavService;
     $this->instrumentationService = $instrumentationService;
     $this->l = $this->l10N();
   }
@@ -131,6 +143,26 @@ class ExpertModeController extends Controller
   public function action($operation, $data) {
     switch ($operation) {
       case 'syncevents':
+        $result = [];
+        //$calendarIds = $this->eventsService->defaultCalendars();
+        $calendars = $this->calDavService->getCalendars(true);
+        foreach ($calendars as $calendar) {
+          if (!$this->calDavService->isGroupSharedCalendar($calendar->getKey(), $this->groupId()))  {
+            continue;
+          }
+          $events = $calendar->search('', [], [ 'types' => [ 'VEVENT' ] ]);
+          foreach ($events as $event) {
+            $eventData = $this->calDavService->getCalendarObject($calendar->getKey(), $event['uri']);
+            if (empty($eventData)) {
+              $this->logError('Unable to fetch event '.$event['uri']);
+            }
+            $status = $this->eventsService->syncCalendarObject($eventData);
+            if (!empty($status['registered']) || !empty($status['unregistered'])) {
+              $result[$event['uri']] = $status;
+            }
+          }
+        }
+        return self::valueResponse($result, print_r($result, true));
       case 'wikiprojecttoc':
       case 'attachwebpages':
       case 'sanitizephones':

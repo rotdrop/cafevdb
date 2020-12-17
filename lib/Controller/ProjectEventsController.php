@@ -25,10 +25,12 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\DataDownloadResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\CalDavService;
 
 class ProjectEventsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -40,17 +42,22 @@ class ProjectEventsController extends Controller {
   /** @var \OCA\CAFEVDB\Service\EventsService */
   private $eventsService;
 
+  /** @var \OCA\CAFEVDB\Service\CalDavService */
+  private $calDavService;
+
   public function __construct(
     $appName
     , IRequest $request
     , RequestParameterService $parameterService
     , ConfigService $configService
     , EventsService $eventsService
+    , CalDavService $calDavService
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
     $this->configService = $configService;
     $this->eventsService = $eventsService;
+    $this->calDavService = $calDavService;
     $this->l = $this->l10N();
   }
 
@@ -60,59 +67,121 @@ class ProjectEventsController extends Controller {
   public function serviceSwitch($topic)
   {
     try {
+      $projectId = $this->parameterService['ProjectId'];
+      $projectName = $this->parameterService['ProjectName'];
+
+      if (empty($projectId) || empty($projectName)) {
+        return self::grumble(
+          $this->l->t('Project-id AND -name have to be specified (%s / %s)',
+                      [ empty($projectId) ? '?' : $projectId,
+                        empty($projectName) ? '?' : $projectName ]));
+      }
+
+      $selectedEvents = $this->parameterService->getParam('EventSelect', []);
+      $selected = []; // array marking selected events
+
+      foreach ($selectedEvents as $eventUri) {
+        $selected[$eventUri] = true;
+      }
+
       switch ($topic) {
         case 'dialog': // open
-          $projectId = $this->parameterService['projectId'];
-          $projectName = $this->parameterService['projectName'];
-
+          $template = 'events';
           $events = $this->eventsService->events($projectId);
-          $dfltIds = $this->eventsService->defaultCalendars();
-          $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
-
-          $this->logInfo('ProjectId: '.$projectId);
-          $this->logInfo('Events: '.print_r($events, true));
-          $this->logInfo('Matrix: '.print_r($eventMatrix, true));
-
-          $selectedEvents = $this->parameterService->getParam('EventSelect', []);
+          break;
+        case 'redisplay':
+          $template = 'eventslisting';
+          $events = $this->eventsService->events($projectId);
+          break;
+        case 'select':
+          $template = 'eventslisting';
+          $events = $this->eventsService->events($projectId);
           $selected = []; // array marking selected events
-          foreach ($selectedEvents as $eventUri) {
-            $selected[$eventUri] = true;
+          foreach ($events as $event) {
+            $selected[$event['uri']] = true;
+          }
+          break;
+        case 'deselect':
+          $template = 'eventslisting';
+          $events = $this->eventsService->events($projectId);
+          $selected = []; // array marking selected events
+          break;
+        case 'delete':
+          $template = 'eventslisting';
+          $eventUri = $this->parameterService['EventURI'];
+          $calendarId = $this->parameterService['CalendarId'][$eventUri];
+          $this->calDavService->deleteCalendarObject($calendarId, $eventUri);
+          $events = $this->eventsService->events($projectId);
+          unset($selected[$eventUri]);
+          break;
+        case 'detach':
+          $template = 'eventslisting';
+          $eventUri = $this->parameterService['EventURI'];
+          $this->eventsService->unchain($projectId, $eventUri);
+          unset($selected[$eventUri]);
+          break;
+        case 'download':
+          $template = 'eventslisting';
+          $calendarIds = $this->parameterService['CalendarId'];
+          $cookieName = $this->parameterService['DownloadCookieName'];
+          $cookieValue = $this->parameterService['DownloadCookieValue'];
+
+          if (empty($cookieName) || empty($cookieValue)) {
+            return self::grumble($this->l->t('Download-cookies have not been submitted'));
           }
 
-          $templateParameters = [
-            'projectId' => $projectId,
-            'projectName' => $projectName,
-            'cssClass' => 'projectevents',
-            'locale' => $this->getLocale(),
-            'timezone' => $this->getTimeZone(),
-            'events' => $events,
-            'eventMatrix' => $eventMatrix,
-            'selected' => $selected,
-            'eventsService' => $this->eventsService,
-          ];
-          $response = new TemplateResponse(
-            $this->appName(),
-            'events',
-            $templateParameters,
-            'blank'
-          );
+          if (count($selected) > 0) {
+            $exports = [];
+            foreach ($selected as $eventUri) {
+              $exports[$eventUri] = $calendarIds[$eventUri];
+            }
+          } else {
+            $exports = $calendarIds;
+          }
 
-          $response->addHeader('X-'.$this->appName().'-project-id', $projectId);
-          $response->addHeader('X-'.$this->appName().'-project-name', $projectName);
+          $fileName = $projectName.'-'.$this->timeStamp().'.ics';
+
+          $response = new DataDownloadResponse(
+            $this->eventsService->exportEvents($exports, $projectName),
+            $fileName,
+            'text/calendar');
+
+          $response->addCookie($cookieName, $cookieValue);
 
           return $response;
-        case 'delete':
-        case 'detach':
-        case 'redisplay':
-        case 'select':
-        case 'deselect':
-        case 'download':
+
         case 'email':
-          break;
         default:
-          break;
+          return self::grumble($this->l->t('Unknown Request'));
       }
-      return self::grumble($this->l->t('Unknown Request'));
+
+      $dfltIds = $this->eventsService->defaultCalendars();
+      $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
+
+      $templateParameters = [
+        'projectId' => $projectId,
+        'projectName' => $projectName,
+        'cssClass' => 'projectevents',
+        'locale' => $this->getLocale(),
+        'timezone' => $this->getTimeZone(),
+        'events' => $events,
+        'eventMatrix' => $eventMatrix,
+        'selected' => $selected,
+        'eventsService' => $this->eventsService,
+        'requestToken' => \OCP\Util::callRegister(),
+      ];
+      $response = new TemplateResponse(
+        $this->appName(),
+        $template,
+        $templateParameters,
+        'blank'
+      );
+
+      $response->addHeader('X-'.$this->appName().'-project-id', $projectId);
+      $response->addHeader('X-'.$this->appName().'-project-name', $projectName);
+
+      return $response;
+
     } catch (\Throwable $t) {
       return self::grumble($this->exceptionChainData($t));
     }

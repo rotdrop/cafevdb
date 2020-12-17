@@ -25,6 +25,7 @@
   <form id="eventlistform" class="<?php echo $cssClass; ?> not-fixed-container" >
     <input type="hidden" name="ProjectId"   value="<?php echo $projectId; ?>" />
     <input type="hidden" name="ProjectName" value="<?php echo $projectName; ?>" />
+    <input type="hidden" name="requesttoken" value="<?php echo $requestToken; ?>"/>
     <div class="eventcontrols content-controls">
       <select class="event-menu cafevdb-menu tooltip-right"
               data-placeholder="<?php echo $l->t('New Event'); ?>"
@@ -44,21 +45,21 @@
                title="<?php echo $toolTips['projectevents-sendmail']; ?>"
         />
         <input type="button"
-               class="<?php echo $cssClass; ?>-sendmail-select tooltip-bottom"
+               class="<?php echo $cssClass; ?>-sendmail-select image-button tooltip-bottom"
                name="select"
                value="+"
                title="<?php echo $toolTips['projectevents-select']; ?>"
         />
         <input type="button"
-               class="<?php echo $cssClass; ?>-sendmail-deselect tooltip-bottom"
+               class="<?php echo $cssClass; ?>-sendmail-deselect image-button tooltip-bottom"
                name="deselect"
                value="-"
                title="<?php echo $toolTips['projectevents-deselect']; ?>"
         />
       </span>
       <span class="<?php echo $cssClass; ?>-download">
-        <input id="projectevents-download"
-               class="projectevents-download tooltip-bottom"
+        <input id="<?php echo $cssClass; ?>-download"
+               class="<?php echo $cssClass; ?>-download image-button tooltip-bottom"
                type="button"
                name="download"
                value="<?php echo $l->t('Download'); ?>"

@@ -98,7 +98,8 @@ class CalDavService
     return -1;
   }
 
-  /**Delete the calendar with the given id.
+  /**
+   * Delete the calendar with the given id.
    *
    * @bug This function uses internal APIs.
    */
@@ -106,26 +107,51 @@ class CalDavService
     $this->calDavBackend->deleteCalendar($id);
   }
 
-  /**Share the given calendar with a group.
-   *
-   * @bug This function uses internal APIs.
-   */
-  public function groupShareCalendar($calendarId, $groupId, $readOnly = false) {
-    $share = [
+  static private function makeGroupShare(string $groupId, bool $readOnly = false)
+  {
+    return [
       'href' => 'principal:principals/groups/'.$groupId,
       'commonName' => '',
       'summary' => '',
       'readOnly' => $readOnly,
     ];
+  }
+
+  private function makeCalendar(int $calendarId)
+  {
     $calendarInfo = $this->calDavBackend->getCalendarById($calendarId);
     if (empty($calendarInfo)) {
+      return null;
+    }
+    return new Calendar($this->calDavBackend, $calendarInfo, $this->l10n(), $this->appConfig());
+  }
+
+  /**
+   * Share the given calendar with a group.
+   *
+   * @bug This function uses internal APIs.
+   */
+  public function groupShareCalendar($calendarId, $groupId, $readOnly = false) {
+    if ($this->isGroupSharedCalendar($calendarId, $groupId, $readOnly)) {
+      return true;
+    }
+    $share = self::makeGroupShare($groupId, $readOnly);
+    $calendar = $this->makeCalendar($calendarId);
+    if (empty($calendar)) {
       return false;
     }
-    // convert to ISharable
-    $calendar = new Calendar($this->calDavBackend, $calendarInfo, $this->l10n(), $this->appConfig());
     $this->calDavBackend->updateShares($calendar, [$share], []);
+    return $this->isGroupSharedCalendar($calendarId, $groupid, $readOnly);
+  }
+
+  /**
+   * Test if the given calendar is shared with the given group
+   */
+  public function isGroupSharedCalendar($calendarId, $groupId, $readOnly = false)
+  {
+    $share = self::makeGroupShare($groupId, $readOnly);
     $shares = $this->calDavBackend->getShares($calendarId);
-    foreach($shares as $share) {
+    foreach ($shares as $share) {
       if ($share['href'] === $share['href'] && $share['readOnly'] == $readOnly) {
         return true;
       }
@@ -289,7 +315,8 @@ class CalDavService
     $this->calDavBackend->deleteCalendarObject($calendarId, $localUri);
   }
 
-  /** Fetch an event object by its local URI.
+  /**
+   * Fetch an event object by its local URI.
    *
    * The return value is an array with the following keys:
    *   * calendardata - The iCalendar-compatible calendar data
