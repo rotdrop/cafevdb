@@ -112,6 +112,17 @@ class ProjectParticipant
    */
   private $extraFieldsData;
 
+  /**
+   * Core functionality: a participant needs to be present in the
+   * Musician table. No participation without registration as musician
+   * (where looking after childs of other musicians also counts as
+   * playing an instrument :) )
+   *
+   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectParticipation")
+   * @ORM\JoinColumn(name="musician_id", referencedColumnName="id")
+   */
+  private $musician;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->extraFieldsData = new ArrayCollection();

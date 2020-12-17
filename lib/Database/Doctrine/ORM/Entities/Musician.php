@@ -165,9 +165,17 @@ class Musician implements \ArrayAccess
    */
   private $photo;
 
+  /**
+   * Core functionality: one musican participates in many projects
+   *
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician")
+   */
+  private $projectParticipation;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
+    $this->projectParticipation = new ArrayCollection();
   }
 
   /**
