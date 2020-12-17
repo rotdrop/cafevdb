@@ -786,18 +786,18 @@ $(document).ready(function(){
 
       var changeArticleLoad = function(frame) {
         if (typeof frame != 'undefined') {
-          var self = frame;
-          var iframe = $(self);
-          var contents = iframe.contents();
+          const self = frame;
+          const iframe = $(self);
+          const contents = iframe.contents();
 
           // in order to be prepared for automatic reloads
           // caused by resize or redraw events we have to
           // update the src-uri of the iframe.
           // alert('src: '+ self.contentWindow.location.href);
 
-          var wrapper = contents.find('#rex-wrapper');
-          var website = contents.find('#rex-website');
-          var rexForm = wrapper.find('form#REX_FORM');
+          const wrapper = contents.find('#rex-wrapper');
+          const website = contents.find('#rex-website');
+          const rexForm = wrapper.find('form#REX_FORM');
 
           // set to auto and fix later for correct size and
           // scrollbars when necessary.
@@ -891,6 +891,7 @@ $(document).ready(function(){
                 return Projects.projectWebPageTabHandler(event, ui, container);
               }
             });
+            $('#projectWebArticles').css({ opacity: 1.0 });
           });
         } else if (numChangeFrames < 0) {
           // < 0 happens when inside the frame a reload
@@ -898,6 +899,7 @@ $(document).ready(function(){
           imagePoller(function() {
             resizeCB();
             scrollbarAdjust();
+            $('#projectWebArticles').css({ opacity: 1.0 });
           });
         }
       };
@@ -915,6 +917,7 @@ $(document).ready(function(){
         }
       } else if (allChangeFrames.length > 0) {
         if (changeFrames.length > 0) {
+          $('#projectWebArticles').css({ opacity: 0.0 });
           changeFrames.on('load', function(event) {
             changeArticleLoad(this);
           });
