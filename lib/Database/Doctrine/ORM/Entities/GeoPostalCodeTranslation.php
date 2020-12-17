@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GeoPostalCodeTranslation
  *
- * @ORM\Table(name="GeopostalCodeTranslations")
+ * @ORM\Table(name="GeoPostalCodeTranslations")
  * @ORM\Entity
  */
 class GeoPostalCodeTranslation implements \ArrayAccess
