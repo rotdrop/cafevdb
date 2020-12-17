@@ -959,6 +959,7 @@ class OC_Calendar_Object{
 			$totime = $request['totime'];
 		}
 		$vevent = $vcalendar->VEVENT;
+                $this->logInfo(get_class($vcalendar));
 		$description = $request["description"];
 		$repeat = $request["repeat"];
 		if($repeat != 'doesnotrepeat') {
@@ -1129,7 +1130,7 @@ class OC_Calendar_Object{
 		}else{
 			//$timezone = OC_Calendar_App::getTimezone();
 			//$timezone = new \DateTimeZone($timezone);
-            $timezone = $this->getDateTimeZone()->getTimeZone();
+            $timezone = $this->getDateTimeZone();
 
 			$start = new \DateTime($from.' '.$fromtime, $timezone);
 			$end = new \DateTime($to.' '.$totime, $timezone);

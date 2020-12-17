@@ -523,7 +523,7 @@ class ConfigService {
    */
 
   public function getDateTimeZone($timeStamp = null) {
-    return $this->dateTimeZone;
+    return $this->dateTimeZone->getTimeZone($timeStamp);
   }
 
   /**Return the locale as string, e.g. de_DE.UTF-8.
@@ -595,6 +595,17 @@ class ConfigService {
     $result = money_format('%n', (float)$value);
     setlocale(LC_MONETARY, $oldlocale);
     return $result;
+  }
+
+  public function timeStamp($format = null, $timeZone = null)
+  {
+    if (empty($format)) {
+      $format = 'Ymd-his-T';
+    }
+    if (empty($timeZone)) {
+      $timeZone = $this->getDateTimeZone();
+    }
+    return (new \DateTime())->setTimeZone($timeZone)->format($format);
   }
 }
 

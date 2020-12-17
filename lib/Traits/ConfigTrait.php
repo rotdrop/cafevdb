@@ -219,12 +219,12 @@ trait ConfigTrait {
     return $this->configService->getIcon();
   }
 
-  protected function getDateTimeZone() {
-    return $this->configService->getDateTimeZone();
+  protected function getDateTimeZone($timeStamp = false) {
+    return $this->configService->getDateTimeZone($timeStamp);
   }
 
-  protected function getTimezone($timeStamp = null) {
-    $timeZone = $this->getDateTimeZone()->getTimeZone($timeStamp);
+  protected function getTimezone($timeStamp = false) {
+    $timeZone = $this->getDateTimeZone($timeStamp);
     if (empty($timeZone)) {
       return 'UTC';
     }
@@ -259,6 +259,12 @@ trait ConfigTrait {
   public function moneyValue($value, $locale = null)
   {
     return $this->configService->moneyValue($value, $locale);
+  }
+
+  /** Return the current time as short time-stamp (textual). */
+  protected function timeStamp($format = null, $timeZone = null)
+  {
+    return $this->configService->timeStamp($format, $timeZone);
   }
 
   protected function generateUUID() {
