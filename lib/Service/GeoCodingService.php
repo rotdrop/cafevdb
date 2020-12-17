@@ -385,7 +385,7 @@ class GeoCodingService
                ->leftJoin(
                  Musician::class, 'm',
                  Join::WITH,
-                 'gpc.country = m.land AND gpc.postalCode = m.postleitzahl'
+                 'gpc.country = m.country AND gpc.postalCode = m.postalCode'
                )
                ->where('TIMESTAMPDIFF(MONTH, gpc.updated, CURRENT_TIMESTAMP()) > 1')
                ->orderBy('gpc.updated', 'ASC')
