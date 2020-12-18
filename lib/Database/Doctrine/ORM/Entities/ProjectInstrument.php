@@ -41,7 +41,7 @@ use Doctrine\ORM\Mapping as ORM;
  * instrument. Still we need to handle the more fabular cases for fun
  * -- and otherwise they imply ugly kludges and conventions in the frontend usage.
  *
- * @ORM\Table(name="ProjectInstruments", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "musician_id", "instrument_id"}), @ORM\UniqueConstraint(columns={"instrumentation_id", "instrument_id"})})
+ * @ORM\Table(name="ProjectInstruments", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "musician_id", "instrument_id"}), @ORM\UniqueConstraint(columns={"project_participant_id", "instrument_id"})})
  * @ORM\Entity
  */
 class ProjectInstrument implements \ArrayAccess
@@ -77,7 +77,7 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @ORM\Column(type="integer", nullable=false, options={"comment"="Index into table ProjectParticipants"})
    */
-  private $instrumentationId;
+  private $projectParticipantId;
 
   /**
    * @var int
@@ -107,7 +107,7 @@ class ProjectInstrument implements \ArrayAccess
    * project.
    *
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="projectInstruments")
-   * @ORM\JoinColumn(name="instrumentationId", referencedColumnName="id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $participant;
 
@@ -174,27 +174,27 @@ class ProjectInstrument implements \ArrayAccess
   }
 
   /**
-   * Set instrumentationId.
+   * Set projectParticipantId.
    *
-   * @param int $instrumentationId
+   * @param int $projectParticipantId
    *
    * @return ProjectInstruments
    */
-  public function setInstrumentationId($instrumentationId)
+  public function setProjectParticipantId($projectParticipantId)
   {
-    $this->instrumentationId = $instrumentationId;
+    $this->projectParticipantId = $projectParticipantId;
 
     return $this;
   }
 
   /**
-   * Get instrumentationId.
+   * Get projectParticipantId.
    *
    * @return int
    */
-  public function getInstrumentationId()
+  public function getProjectParticipantId()
   {
-    return $this->instrumentationId;
+    return $this->projectParticipantId;
   }
 
   /**

@@ -97,27 +97,27 @@ class ProjectPayment implements \ArrayAccess
   }
 
   /**
-   * Set instrumentationId.
+   * Set projectParticipantId.
    *
-   * @param int $instrumentationId
+   * @param int $projectParticipantId
    *
    * @return ProjectPayments
    */
-  public function setInstrumentationId($instrumentationId)
+  public function setProjectParticipantId($projectParticipantId)
   {
-    $this->instrumentationId = $instrumentationId;
+    $this->projectParticipantId = $projectParticipantId;
 
     return $this;
   }
 
   /**
-   * Get instrumentationId.
+   * Get projectParticipantId.
    *
    * @return int
    */
-  public function getInstrumentationId()
+  public function getProjectParticipantId()
   {
-    return $this->instrumentationId;
+    return $this->projectParticipantId;
   }
 
   /**
