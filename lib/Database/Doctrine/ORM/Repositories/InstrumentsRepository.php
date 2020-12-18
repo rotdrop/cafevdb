@@ -36,7 +36,7 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findByName(string $name)
   {
-    return $this->findOneBy([ 'instrument' => $name ], ['sortierung' => 'ASC' ]);
+    return $this->findOneBy([ 'instrument' => $name ], [ 'sortOrder' => 'ASC' ]);
   }
 
   /**
@@ -46,7 +46,7 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findAll()
   {
-    return $this->findBy(['disabled' => false], ['sortierung' => 'ASC']);
+    return $this->findBy(['disabled' => false], [ 'sortOrder' => 'ASC']);
   }
 
   /**

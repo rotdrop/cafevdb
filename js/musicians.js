@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -42,14 +42,14 @@ var CAFEVDB = CAFEVDB || {};
                'musicians'
              ])) {
                // Load the underlying base-view in any case in order to go "back" ...
-               CAFEVDB.Instrumentation.loadDetailedInstrumentation(form);
+               CAFEVDB.Instrumentation.loadProjectParticipants(form);
                return false;
              }
              if (data.data.musicians.length == 1) {
                // open single person change dialog
                var musician = data.data.musicians[0];
                //alert('data: '+CAFEVDB.print_r(musician, true));
-               CAFEVDB.Instrumentation.loadDetailedInstrumentation(
+               CAFEVDB.Instrumentation.loadProjectParticipants(
                  form,
                  undefined,
                  function() {
@@ -64,7 +64,7 @@ var CAFEVDB = CAFEVDB || {};
                  });
              } else {
                // load the instrumentation table, initially restricted to the new musicians
-               CAFEVDB.Instrumentation.loadDetailedInstrumentation(form, data.data.musicians);
+               CAFEVDB.Instrumentation.loadProjectParticipants(form, data.data.musicians);
              }
              return false;
            }

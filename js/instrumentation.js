@@ -90,8 +90,8 @@ var CAFEVDB = CAFEVDB || {};
       tableOptions.templateRenderer = CAFEVDB.Page.templateRenderer(tableOptions.template);
     } else if (options.ProjectId > 0) {
       tableOptions.table = options.projectName+'View';
-      tableOptions.template = 'detailed-instrumenation'
-      tableOptions.tisplayClass = 'DetailedInstrumentation';
+      tableOptions.template = 'project-participants'
+      tableOptions.tisplayClass = 'ProjectParticipants';
     } else {
       tableOptions.table = 'Musiker';
       tableOptions.template = 'all-musicians';
@@ -179,9 +179,9 @@ var CAFEVDB = CAFEVDB || {};
    * form's "native" data. Example:
    *
    * formData = {
-   *   template: "detailed-instrumentation",
+   *   template: "project-participants",
    *   table: "Musiker",
-   *   templateRenderer: "template:detailed-instrumentation"
+   *   templateRenderer: "template:project-participants"
    * };
    *
    * The form is submitted with an empty pseudo-submit button.
@@ -211,9 +211,9 @@ var CAFEVDB = CAFEVDB || {};
    * form's "native" data. Example:
    *
    * formData = {
-   *   template: "detailed-instrumentation",
+   *   template: "project-participants",
    *   table: "Musiker",
-   *   templateRenderer: "template:detailed-instrumentation"
+   *   templateRenderer: "template:project-participants"
    * };
    *
    * The form is submitted with an empty pseudo-submit button.
@@ -307,11 +307,11 @@ var CAFEVDB = CAFEVDB || {};
    * @param afterLoadCallback An optional callback executed after
    * the PME table has been loaded.
    */
-  Instrumentation.loadDetailedInstrumentation = function(form, musicians, afterLoadCallback) {
+  Instrumentation.loadProjectParticipants = function(form, musicians, afterLoadCallback) {
     const projectName = form.find('input[name="ProjectName"]').val();
     const table = projectName+'View';
 
-    const template = 'detailed-instrumentation';
+    const template = 'project-participants';
     const inputTweak = {
       template: template,
       table: table,
@@ -664,7 +664,7 @@ console.log('deselect', option.val());
 
 $(document).ready(function(){
 
-  PHPMYEDIT.addTableLoadCallback('detailed-instrumentation', {
+  PHPMYEDIT.addTableLoadCallback('project-participants', {
     callback: function(selector, parameters, resizeCB) {
 
       if (parameters.reason == 'tabChange') {
@@ -713,7 +713,7 @@ $(document).ready(function(){
   });
 
   CAFEVDB.addReadyCallback(function() {
-    if ($('div#cafevdb-page-body.detailed-instrumentation').length > 0) {
+    if ($('div#cafevdb-page-body.project-participants').length > 0) {
       CAFEVDB.Instrumentation.ready();
     }
   });

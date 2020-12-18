@@ -17,7 +17,7 @@
  * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * License along with this library.  If not, see <http://www.gnuorg/licenses/>.
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
@@ -47,7 +47,7 @@ class Registration
       return $musicians;
     });
     $context->registerServiceAlias('template:'.'projects', Projects::class);
-    $context->registerServiceAlias('template:'.'project-participants', ProjectPaticipants::class);
+    $context->registerServiceAlias('template:'.'project-participants', ProjectParticipants::class);
     $context->registerServiceAlias('template:'.'project-payments', ProjectPayments::class);
     $context->registerServiceAlias('template:'.'project-extra-fields', ProjectExtraFields::class);
     $context->registerServiceAlias('template:'.'instruments', Instruments::class);

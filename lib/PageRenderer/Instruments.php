@@ -118,7 +118,7 @@ class Instruments extends PMETableViewBase
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'Sortierung' ];
+    $opts['sort_field'] = [ 'sort_order' ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -161,7 +161,7 @@ class Instruments extends PMETableViewBase
       'sort'     => true,
     ];
 
-    $opts['fdd']['sortierung'] = [
+    $opts['fdd']['sort_order'] = [
       'name'     => $this->l->t('sort order'),
       'select'   => 'N',
       'default'  => 0,

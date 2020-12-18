@@ -315,7 +315,8 @@ class PageController extends Controller {
 
       // should return 'project' when it is available again, or
       // perhaps a configurable starting page.
-      return 'all-musicians';
+      //return 'all-musicians';
+      return 'project-participants';
     }
     return $template;
   }

@@ -599,9 +599,9 @@ and even edit the public web-pages for the project and other things.");
         break;
 
       case 'detailed':
-        $value = $this->l->t("Instrumentation");
+        $value = $this->l->t("Participants");
         $title = $this->l->t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
-        $post = array('template' => 'detailed-instrumentation',
+        $post = array('template' => 'project-participants',
                       'projectName' => $projectName,
                       'projectId' => $projectId);
         break;

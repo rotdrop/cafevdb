@@ -59,9 +59,9 @@ class Instrument implements \ArrayAccess
     /**
      * @var int
      *
-     * @ORM\Column(type="smallint", nullable=false, options={"comment"="Orchestersortierung"})
+     * @ORM\Column(type="smallint", nullable=false, options={"comment"="Orchestral Ordering"})
      */
-    private $sortierung;
+    private $sortOrder;
 
     /**
      * @var bool
@@ -145,27 +145,27 @@ class Instrument implements \ArrayAccess
     }
 
     /**
-     * Set sortierung.
+     * Set sortOrder.
      *
-     * @param int $sortierung
+     * @param int $sortOrder
      *
      * @return Instrumente
      */
-    public function setSortierung($sortierung)
+    public function setSortOrder($sortOrder)
     {
-        $this->sortierung = $sortierung;
+        $this->sortOrder = $sortOrder;
 
         return $this;
     }
 
     /**
-     * Get sortierung.
+     * Get sortOrder.
      *
      * @return int
      */
-    public function getSortierung()
+    public function getSortOrder()
     {
-        return $this->sortierung;
+        return $this->sortOrder;
     }
 
     /**

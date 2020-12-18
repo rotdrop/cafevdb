@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB;
 $css_pfx = $renderer->cssPrefix();
 
 $nav = '';
-//$nav .= $pageNavigation->pageControlElement('projectinstruments');
+//$nav .= $pageNavigation->pageControlElement('projectinstrumets');
 $nav .= $pageNavigation->pageControlElement('all');
 $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('instruments');

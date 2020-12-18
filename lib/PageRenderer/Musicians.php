@@ -319,7 +319,7 @@ make sure that the musicians are also automatically added to the
         'table'       => 'Instruments',
         'column'      => 'id',
         'description' => 'instrument',
-        'orderby'     => 'sortierung',
+        'orderby'     => 'sort_order',
         //        'groups'      => 'Familie',
         'join'        => '$join_table.Id = PMEjoin'.$musInstIdx.'.instrument_id'
       ],
@@ -725,7 +725,7 @@ make sure that the musicians are also automatically added to the
           $musicianInstrument = Entities\MusicianInstrument::create()
                               ->setMusician($musician)
                               ->setInstrument($instrument);
-          // @todo ranking by ordering in select
+          // @todo ranking by sort-order in select
           $this->persist($musicianInstrument);
           $this->flush();
           $rec = $musicianInstrument->getId();

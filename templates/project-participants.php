@@ -30,22 +30,22 @@ $projectId = $renderer->getProjectId();
 //$missing = Projects::missingInstrumentationTable($projectId);
 
 $nav = '';
-$nav .= $pageNaviagation->pageControlElement('projectlabel', $projectName, $projectId);
-$nav .= $pageNaviagation->pageControlElement('detailed', $projectName, $projectId);
-$nav .= $pageNaviagation->pageControlElement('project-extra', $projectName, $projectId);
-$nav .= $pageNaviagation->pageControlElement('projectinstruments', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('project-extra', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('projectinstruments', $projectName, $projectId);
 // @TODO CHECK! TO ID!
 // if (Config::isTreasurer()) {
-//   $nav .= $pageNaviagation->pageControlElement('project-payments', $projectName, $projectId);
-//   $nav .= $pageNaviagation->pageControlElement('debit-mandates', $projectName, $projectId);
-//   $nav .= $pageNaviagation->pageControlElement('debit-notes', $projectName, $projectId);
+//   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
+//   $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
+//   $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);
 //   if ($projectName === Config::getValue('memberTable', false)) {
-//     $nav .= $pageNaviagation->pageControlElement('insurances');
+//     $nav .= $pageNavigation->pageControlElement('insurances');
 //   }
 // }
-$nav .= $pageNaviagation->pageControlElement('projects');
-$nav .= $pageNaviagation->pageControlElement('all');
-$nav .= $pageNaviagation->pageControlElement('instruments', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('projects');
+$nav .= $pageNavigation->pageControlElement('all');
+$nav .= $pageNavigation->pageControlElement('instruments', $projectName, $projectId);
 
 echo $this->inc(
   'part.common.header',
@@ -53,7 +53,7 @@ echo $this->inc(
     'css-prefix' => $cssPfx,
     'css-class' => $css_class,
     'navigationcontrols' => $nav,
-    'header' => $table->headerText(),
+    'header' => $renderer->headerText(),
     //'navBarInfo' => $missing
   ]);
 

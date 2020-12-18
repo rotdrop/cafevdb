@@ -702,7 +702,7 @@ oder auszuschalten!'),
 
       'project-action-debit-mandates' => $this->l->t('Load a new page with all debit-mandates for project-fees'),
 
-      'project-action-detailed-instrumentation' => $this->l->t('Display all registered musicians for the selected project. The table
+      'project-action-project-participants' => $this->l->t('Display all registered musicians for the selected project. The table
         shows project related details as well as all stored personal
         "information about the respective musician'),
 
