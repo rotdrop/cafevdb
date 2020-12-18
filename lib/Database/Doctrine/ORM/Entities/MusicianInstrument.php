@@ -43,27 +43,16 @@ class MusicianInstrument
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instruments", fetch="EXTRA_LAZY")
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
+  private $musician;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link into table Musicians"})
+   * @ORM\ManyToOne(targetEntity="Instrument", inversedBy="musicians", fetch="EXTRA_LAZY")
+   * @ORM\Id
    */
-  private $musicianId;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link into table Instruments"})
-   */
-  private $instrumentId;
+  private $instrument;
 
   /**
    * @var int
@@ -71,23 +60,6 @@ class MusicianInstrument
    * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Ranking of the instrument w.r.t. to the given musician (lower is better)"})
    */
   private $ranking = '1';
-
-  /**
-   * Many-One as each musician may play multiple instruments, but each
-   * instrument-id given here points to exactly one musician.
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instruments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   */
-  private $musician;
-
-  /**
-   * Many-One unidirectional. So the non-owning side just does not matter.
-   *
-   * @ORM\ManyToOne(targetEntity="Instrument", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   */
-  private $instrument;
 
   public function __construct() {
     $this->arrayCTOR();

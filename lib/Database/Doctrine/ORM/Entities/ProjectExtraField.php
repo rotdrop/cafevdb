@@ -41,18 +41,23 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Column(type="integer")
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
+   * @ORM\GeneratedValue
    */
-  private $id;
+  private $id = null;
 
   /**
    * @var int
    *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Column(type="integer")
    */
   private $projectId;
+
+  /**
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="extraFields", fetch="EXTRA_LAZY")
+   */
+  private $project;
 
   /**
    * @var int|null
@@ -137,20 +142,14 @@ class ProjectExtraField implements \ArrayAccess
    */
   private $type;
 
-  // /**
-  //  * @ORM\OneToMany(targetEntity="ProjectExtraFieldValueOption", mappedBy="field")
-  //  */
-  // private $valueOptions;
-
   /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="extraFields", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="field", fetch="EXTRA_LAZY")
    */
-  private $project;
+  private $fieldData;
 
   public function __construct() {
     $this->arrayCTOR();
-    //$this->valueOptions = new ArrayCollection();
+    $this->fieldData = new ArrayCollection();
   }
 
   /**

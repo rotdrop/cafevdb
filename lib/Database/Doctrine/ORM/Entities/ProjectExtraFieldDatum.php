@@ -38,27 +38,22 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="ProjectExtraField", inversedBy="fieldData", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(name="field_id", referencedColumnName="id"),
+   */
+  private $field;
+
+  /**
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="extraFieldsData", fetch="EXTRA_LAZY")
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
+  private $project;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectExtraFieldsData", fetch="EXTRA_LAZY")
+   * @ORM\Id
    */
-  private $projectParticipantId;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   */
-  private $fieldId;
+  private $musician;
 
   /**
    * @var string
@@ -68,15 +63,11 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   private $fieldValue;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectExtraField", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   */
-  private $field;
-
-  /**
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="extraFieldsData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   *
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id")
+   * )
    */
   private $projectParticipant;
 

@@ -37,165 +37,169 @@ use OCP\ILogger;
  */
 class Instrument implements \ArrayAccess
 {
-    use CAFEVDB\Traits\ArrayTrait;
-    use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+  private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=64, nullable=false)
-     */
-    private $instrument;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=64, nullable=false)
+   */
+  private $instrument;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="smallint", nullable=false, options={"comment"="Orchestral Ordering"})
-     */
-    private $sortOrder;
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="smallint", nullable=false, options={"comment"="Orchestral Ordering"})
+   */
+  private $sortOrder;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
-     */
-    private $disabled = false;
+  /**
+   * @var bool
+   *
+   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
+   */
+  private $disabled = false;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EXTRA_LAZY")
-     * @ORM\JoinTable(
-     *   joinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")},
-     *   inverseJoinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")}
-     * )
-     */
-    private $families;
+  /**
+   * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EXTRA_LAZY")
+   * @ORM\JoinTable(
+   *   joinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")},
+   *   inverseJoinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")}
+   * )
+   */
+  private $families;
 
-    public function __construct() {
-        \OCP\Util::writeLog('cafevdb', __METHOD__, ILogger::INFO);
-        $this->arrayCTOR();
-        $this->musicians = new ArrayCollection();
-        $this->families = new ArrayCollection();
-    }
+  /**
+   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="instrument")
+   */
+  private $musicians;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->musicians = new ArrayCollection();
+    $this->families = new ArrayCollection();
+  }
 
-    /**
-     * Set instrument.
-     *
-     * @param string $instrument
-     *
-     * @return Instrumente
-     */
-    public function setInstrument($instrument)
-    {
-        $this->instrument = $instrument;
+  /**
+   * Get id.
+   *
+   * @return int
+   */
+  public function getId()
+  {
+    return $this->id;
+  }
 
-        return $this;
-    }
+  /**
+   * Set instrument.
+   *
+   * @param string $instrument
+   *
+   * @return Instrumente
+   */
+  public function setInstrument($instrument)
+  {
+    $this->instrument = $instrument;
 
-    /**
-     * Get instrument.
-     *
-     * @return string
-     */
-    public function getInstrument()
-    {
-        return $this->instrument;
-    }
+    return $this;
+  }
 
-    /**
-     * Set familie.
-     *
-     * @param array $familie
-     *
-     * @return Instrumente
-     */
-    public function setFamilies($families)
-    {
-        $this->families = $families;
+  /**
+   * Get instrument.
+   *
+   * @return string
+   */
+  public function getInstrument()
+  {
+    return $this->instrument;
+  }
 
-        return $this;
-    }
+  /**
+   * Set familie.
+   *
+   * @param array $familie
+   *
+   * @return Instrumente
+   */
+  public function setFamilies($families)
+  {
+    $this->families = $families;
 
-    /**
-     * Get familie.
-     *
-     * @return array
-     */
-    public function getFamilies()
-    {
-        return $this->families;
-    }
+    return $this;
+  }
 
-    /**
-     * Set sortOrder.
-     *
-     * @param int $sortOrder
-     *
-     * @return Instrumente
-     */
-    public function setSortOrder($sortOrder)
-    {
-        $this->sortOrder = $sortOrder;
+  /**
+   * Get familie.
+   *
+   * @return array
+   */
+  public function getFamilies()
+  {
+    return $this->families;
+  }
 
-        return $this;
-    }
+  /**
+   * Set sortOrder.
+   *
+   * @param int $sortOrder
+   *
+   * @return Instrumente
+   */
+  public function setSortOrder($sortOrder)
+  {
+    $this->sortOrder = $sortOrder;
 
-    /**
-     * Get sortOrder.
-     *
-     * @return int
-     */
-    public function getSortOrder()
-    {
-        return $this->sortOrder;
-    }
+    return $this;
+  }
 
-    /**
-     * Set disabled.
-     *
-     * @param bool $disabled
-     *
-     * @return Instrumente
-     */
-    public function setDisabled($disabled)
-    {
-        $this->disabled = $disabled;
+  /**
+   * Get sortOrder.
+   *
+   * @return int
+   */
+  public function getSortOrder()
+  {
+    return $this->sortOrder;
+  }
 
-        return $this;
-    }
+  /**
+   * Set disabled.
+   *
+   * @param bool $disabled
+   *
+   * @return Instrumente
+   */
+  public function setDisabled($disabled)
+  {
+    $this->disabled = $disabled;
 
-    /**
-     * Get disabled.
-     *
-     * @return bool
-     */
-    public function getDisabled()
-    {
-        return $this->disabled;
-    }
+    return $this;
+  }
 
-    public function usage()
-    {
-        return $this->musicians->count()
-            + $this->projects->count()
-          /*+ $this->families->count()*/;
-    }
+  /**
+   * Get disabled.
+   *
+   * @return bool
+   */
+  public function getDisabled()
+  {
+    return $this->disabled;
+  }
+
+  public function usage()
+  {
+    return $this->musicians->count()
+      + $this->projects->count()
+      /*+ $this->families->count()*/;
+  }
 }

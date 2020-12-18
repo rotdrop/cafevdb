@@ -172,10 +172,22 @@ class Musician implements \ArrayAccess
    */
   private $projectParticipation;
 
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musician")
+   */
+  private $projectInstruments;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="musician")
+   */
+  private $projectExtraFieldsData;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
+    $this->projectInstruments = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
+    $this->projectExtraFieldsData = new ArrayCollection();
   }
 
   /**

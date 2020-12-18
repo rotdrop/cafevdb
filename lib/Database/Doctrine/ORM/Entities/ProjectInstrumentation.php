@@ -46,27 +46,16 @@ class ProjectInstrumentation
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="instrumentation", fetch="EXTRA_LAZY")
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
+  private $project;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link into table Projects"})
+   * @ORM\ManyToOne(targetEntity="Instrument", fetch="EXTRA_LAZY")
+   * @ORM\Id
    */
-  private $projectid;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link into table Instrumente"})
-   */
-  private $instrumentid;
+  private $instrument;
 
   /**
    * @var int
@@ -74,23 +63,6 @@ class ProjectInstrumentation
    * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Number of required musicians for this instrument"})
    */
   private $quantity = '1';
-
-  /**
-   * Many-One as each project may have multiple instruments, but each
-   * instrument-id given here points to exactly one project
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="instrumentation", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   */
-  private $project;
-
-  /**
-   * Many-One unidirectional. So the non-owning side just does not matter.
-   *
-   * @ORM\ManyToOne(targetEntity="Instrument", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   */
-  private $instrument;
 
   public function __construct() {
     $this->arrayCTOR();

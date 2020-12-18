@@ -41,7 +41,7 @@ use Doctrine\ORM\Mapping as ORM;
  * instrument. Still we need to handle the more fabular cases for fun
  * -- and otherwise they imply ugly kludges and conventions in the frontend usage.
  *
- * @ORM\Table(name="ProjectInstruments", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "musician_id", "instrument_id"}), @ORM\UniqueConstraint(columns={"project_participant_id", "instrument_id"})})
+ * @ORM\Table(name="ProjectInstruments")
  * @ORM\Entity
  */
 class ProjectInstrument implements \ArrayAccess
@@ -50,34 +50,16 @@ class ProjectInstrument implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantInstruments", fetch="EXTRA_LAZY")
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
+  private $project;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Index into table Projects"})
+   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
+   * @ORM\Id
    */
-  private $projectId;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Index into table Musicians"})
-   */
-  private $musicianId;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Index into table ProjectParticipants"})
-   */
-  private $projectParticipantId;
+  private $musician;
 
   /**
    * @var int
@@ -107,7 +89,10 @@ class ProjectInstrument implements \ArrayAccess
    * project.
    *
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="projectInstruments")
-   * @ORM\JoinColumn(referencedColumnName="id")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id")
+   * )
    */
   private $participant;
 

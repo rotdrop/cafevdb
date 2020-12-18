@@ -27,13 +27,6 @@ class ProjectPayment implements \ArrayAccess
   private $id;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Link to ProjectParticipan.id"})
-   */
-  private $projectParticipantId;
-
-  /**
    * @var string
    *
    * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
@@ -77,8 +70,10 @@ class ProjectPayment implements \ArrayAccess
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payment", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   *
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id")
+   * )
    */
   private $projectParticipant;
 

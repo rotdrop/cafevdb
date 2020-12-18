@@ -122,11 +122,19 @@ class Project implements \ArrayAccess
   private $extraFields;
 
   /**
-   * Core functionality: many participants for each project
-   *
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="project", fetch="EXTRA_LAZY")
+   */
+  private $extraFieldsData;
+
+  /**
    * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project")
    */
   private $participants;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="project")
+   */
+  private $participantInstruments;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -135,6 +143,7 @@ class Project implements \ArrayAccess
     $this->flyers = new ArrayCollection();
     $this->webPages = new ArrayCollection();
     $this->extraFields = new ArrayCollection();
+    $this->extraFieldsData = new ArrayCollection();
     $this->participants = new ArrayCollection();
   }
 

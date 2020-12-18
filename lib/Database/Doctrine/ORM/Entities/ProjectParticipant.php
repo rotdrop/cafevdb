@@ -29,7 +29,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Besetzungen *
- * @ORM\Table(name="ProjectParticipants", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "musician_id"})})
+ * @ORM\Table(name="ProjectParticipants")
  * @ORM\Entity
  */
 class ProjectParticipant implements \ArrayAccess
@@ -38,27 +38,16 @@ class ProjectParticipant implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants", fetch="EXTRA_LAZY")
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
+  private $project;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectParticipation", fetch="EXTRA_LAZY")
+   * @ORM\Id
    */
-  private $projectId;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   */
-  private $musicianId;
+  private $musician;
 
   /**
    * @var bool
@@ -115,28 +104,6 @@ class ProjectParticipant implements \ArrayAccess
    * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="projectParticipant")
    */
   private $extraFieldsData;
-
-  /**
-   * Core functionality: a participant needs to be present in the
-   * Musician table. No participation without registration as musician
-   * (where looking after childs of other musicians also counts as
-   * playing an instrument :) )
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectParticipation")
-   * @ORM\JoinColumn(name="musician_id", referencedColumnName="id")
-   */
-  private $musician;
-
-  /**
-   * Core functionality: a project has many participants. Note: The
-   * case where one specific human being play multiple instruments in
-   * one project is handled elsewhere. Here we handle only "real"
-   * human beings without role-multiplexing.
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants")
-   * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
-   */
-  private $project;
 
   /**
    * Core functionality: a musician (i.e. a natural person not
