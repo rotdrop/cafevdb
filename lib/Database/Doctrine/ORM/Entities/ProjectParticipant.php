@@ -22,6 +22,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,8 +32,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="ProjectParticipants", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "musician_id"})})
  * @ORM\Entity
  */
-class ProjectParticipant
+class ProjectParticipant implements \ArrayAccess
 {
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+
   /**
    * @var int
    *
@@ -134,9 +138,20 @@ class ProjectParticipant
    */
   private $project;
 
+  /**
+   * Core functionality: a musician (i.e. a natural person not
+   * necessarily a musician in its proper sense) may be employed for
+   * more than just one instrument (or organizational role) in each
+   * project.
+   *
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="participant")
+   */
+  private $projectInstruments;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->extraFieldsData = new ArrayCollection();
+    $this->projectInstruments = new ArrayCollection();
   }
 
   /**
