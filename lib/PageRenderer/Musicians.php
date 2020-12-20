@@ -291,16 +291,9 @@ make sure that the musicians are also automatically added to the
       'values' => [
         'table'       => self::INSTRUMENTS_JOIN,
         'column'      => 'instrument_id',
-        'description' => ['columns' => 'instrument_id'],
+        'description' => [ 'columns' => 'instrument_id' ],
         'join'        => '$join_table.musician_id = $main_table.Id',
       ]
-    ];
-
-    $opts['fdd']['instrument_key'] = [
-      'name'  => $this->l->t('Instrument Key'),
-      'sql'   => 'GROUP_CONCAT(DISTINCT PMEjoin'.$musInstIdx.'.id ORDER BY PMEjoin'.$musInstIdx.'.instrument_id ASC)',
-      'input' => 'SRH',
-      'filter' => 'having', // need "HAVING" for group by stuff
     ];
 
     $instIdx = count($opts['fdd']);
