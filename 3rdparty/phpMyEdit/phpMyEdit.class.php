@@ -776,7 +776,7 @@ class phpMyEdit
 
 		$subs = array(
 			'main_table'  => $this->tb,
-			'record_id'   => $this->rec, // may be useful for change oggp.
+			'record_id'   =>c, // may be useful for change oggp.
 			'table'		  => $table_name,
 			'column'	  => $key,
 			'description' => $desc);
@@ -918,8 +918,10 @@ class phpMyEdit
 		$qparts['type']	  = 'select';
 		$qparts['select'] = $this->get_SQL_column_list();
 		// Even if the key field isn't displayed, we still need its value
-		if (!in_array ($this->key, $this->fds)) {
-			$qparts['select'] .= ','.$this->fqn($this->key);
+		foreach (array_keys($this->key) as $key) {
+			if (!in_array ($key, $this->fds)) {
+				$qparts['select'] .= ','.$this->fqn($key);
+			}
 		}
 		$qparts['from']	 = @$this->get_SQL_join_clause();
 		$qparts['where'] = $this->get_SQL_where_from_query_opts();
@@ -1019,7 +1021,7 @@ class phpMyEdit
 	{
 		$fields = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if (/*false*/! $this->displayed[$k] && $k != $this->key_num) {
+			if (/*false*/! $this->displayed[$k] && !in_array($k, $this->key_num)) {
 				continue;
 			}
 			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed; // no delimiters here, or maybe some yes
@@ -1736,8 +1738,12 @@ class phpMyEdit
 			$qparts['type']	  = 'select';
 			$qparts['select'] = @$this->get_SQL_column_list();
 			$qparts['from']	  = @$this->get_SQL_join_clause();
-			$qparts['where']  = '('.$this->fqn($this->key, true).'='
-				.$this->key_delim.$this->rec.$this->key_delim.')';
+			$wparts = [];
+			foreach ($this->rec as $key => $rec) {
+				$delim = $this->key_delim[$key];
+				$wparts[] = $this->fqn($key, true).' = '.$delim.$rec.$delim;
+			}
+			$qparts['where'] = '('.implode(' AND ', $wparts).')';
 			//echo htmlspecialchars($this->rec.' '.$this->key);
 			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
 			if (! ($row = $this->sql_fetch($res))) {
@@ -1774,7 +1780,7 @@ class phpMyEdit
 			}
 			if ($this->copy_operation() || $this->change_operation()) {
 				if ($this->hidden($k)) {
-					if ($k != $this->key_num || $this->change_operation()) {
+					if (!in_array($k, $this->key_num) || $this->change_operation()) {
 						echo $this->htmlHiddenData($this->fds[$k], $row["qf$k"]);
 					}
 					continue;
@@ -2218,10 +2224,12 @@ class phpMyEdit
 			}
 			$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf$k"."encrypted"]);
 		}
-		if ($this->col_has_values($this->key_num)) {
-			$key_rec = $row['qf'.$this->key_num.'_idx'];
-		} else {
-			$key_rec = $row['qf'.$this->key_num];
+		foreach ($this->key_num as $key => $key_num) {
+			if ($this->col_has_values($key_num)) {
+				$key_rec[$key] = $row['qf'.$key_num.'_idx'];
+			} else {
+				$key_rec[$key] = $row['qf'.$key_num];
+			}
 		}
 		$this->col_has_values($k) && $this->set_values($k);
 		if ($this->col_has_datemask($k)) {
@@ -2885,7 +2893,6 @@ class phpMyEdit
 		echo 'dbh=',$this->dbh,'   ';
 		echo 'tb=',$this->tb,'	 ';
 		echo 'key=',$this->key,'   ';
-		echo 'key_type=',$this->key_type,'	 ';
 		echo 'inc=',$this->inc,'   ';
 		echo 'options=',$this->options,'   ';
 		echo 'fdd=',$this->fdd,'   ';
@@ -2894,7 +2901,7 @@ class phpMyEdit
 		echo 'sfn=',htmlspecialchars($this->get_sfn_cgi_vars()),'	';
 		echo 'qfn=',$this->qfn,'   ';
 		echo 'sw=',$this->sw,'	 ';
-		echo 'rec=',$this->rec,'   ';
+		echo 'rec=',implode(',', $this->rec),'   ';
 		echo 'navop=',$this->navop,'   ';
 		echo 'saveadd=',$this->saveadd,'   ';
 		echo 'moreadd=',$this->moreadd,'   ';
@@ -3538,7 +3545,7 @@ class phpMyEdit
 		 * If user is allowed to Change/Delete records, we need an extra column
 		 * to allow users to select a record
 		 */
-		$select_recs = $this->key != '' &&
+		$select_recs = !empty($this->key) &&
 			($this->change_enabled() || $this->delete_enabled() || $this->view_enabled());
 
 		/*
@@ -3750,18 +3757,40 @@ class phpMyEdit
 		while ((!$fetched && ($row = $this->sql_fetch($res)) != false)
 			   || ($fetched && $row != false)) {
 			$fetched = false;
-			if ($this->col_has_values($this->key_num)) {
-				$key_rec = $row['qf'.$this->key_num.'_idx'];
-			} else {
-				$key_rec = $row['qf'.$this->key_num];
+			foreach ($this->key_num as $key => $key_num) {
+				if ($this->col_has_values($key_num)) {
+					$key_rec[$key] = $row['qf'.$key_num.'_idx'];
+				} else {
+					$key_rec[$key] = $row['qf'.$key_num];
+				}
 			}
-			//$key_rec	   = $row['qf'.$this->key_num];
+			//$key_rec[$key]   = $row['qf'.$key_num];
 
 			$this->exec_data_triggers('select', $row);
 
+			switch (count($key_rec)) {
+				case 0:
+					$recordDataQuoted = '""';
+					$recordQueryData = $this->cgi['prefix']['sys'].'rec'.'=""';
+					break;
+				case 1:
+					$value = array_values($key_rec)[0];
+					$recordDataQuoted = '"'.$value.'"';
+					$recordQueryData = $this->cgi['prefix']['sys'].'rec'.'='.$value;
+					break;
+				default:
+					$recordDataQuoted = "'".json_encode($key_rec)."'";
+					$data = [];
+					foreach ($key_rec as $key => $value) {
+						$data[] = $this->cgi['prefix']['sys'].'rec['.$key.']'.'='.$value;
+					}
+					$recordQueryData = implode('&', $data);
+					break;
+			}
+			$recordData = trim($recordDataQuoted, '"\'');
 			echo
 				'<tr class="'.$this->getCSSclass('row', null, 'next').'"'.
-				'    data-'./*$this->cgi['prefix']['sys']*/'PME_sys_'.'rec="'.$key_rec.'">'."\n";
+				'    data-'.$this->cgi['prefix']['sys'].'rec='.$recordDataQuoted."\n".'>'."\n";
 			if ($this->sys_cols) { /* {{{ */
 				$css_class_name = $this->getCSSclass('navigation', null, true);
 				if ($select_recs) {
@@ -3769,7 +3798,7 @@ class phpMyEdit
 						echo '<td class="',$css_class_name,'">';
 					}
 					if ($this->nav_text_links() || $this->nav_graphic_links()) {
-						$queryAppend = htmlspecialchars('&'.$this->cgi['prefix']['sys'].'rec'.'='.$key_rec);
+						$queryAppend = htmlspecialchars($recordQueryData);
 						$viewQuery	 = $qpviewStr	. $queryAppend;
 						$copyQuery	 = $qpcopyStr	. $queryAppend;
 						$changeQuery = $qpchangeStr . $queryAppend;
@@ -3787,13 +3816,12 @@ class phpMyEdit
 						 * the translated operation. Ugly, but still much cleaner than
 						 * textlinks.
 						 */
-						$record = $this->cgi['prefix']['sys'].'rec'.'='.$key_rec;
 						echo '<div class="'.$css_class_name.' graphic-links">';
 						$navButtons = array();
 						if ($this->view_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
 								'operation',
-								$viewTitle.'?'.$record,
+								$viewTitle.'?'.$recordQueryData,
 								$this->getCSSclass('view-navigation'),
 								$this->view_enabled() == false,
 								sprintf($imgstyle, 'pme-view.png'));
@@ -3801,7 +3829,7 @@ class phpMyEdit
 						if ($this->change_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
 								'operation',
-								$changeTitle.'?'.$record,
+								$changeTitle.'?'.$recordQueryData,
 								$this->getCSSclass('change-navigation'),
 								$this->change_enabled() == false,
 								sprintf($imgstyle, 'pme-change.png'));
@@ -3809,7 +3837,7 @@ class phpMyEdit
 						if ($this->copy_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
 								'operation',
-								$copyTitle.'?'.$record,
+								$copyTitle.'?'.$recordQueryData,
 								$this->getCSSclass('copy-navigation'),
 								$this->copy_enabled() == false,
 								sprintf($imgstyle, 'pme-copy.png'));
@@ -3817,7 +3845,7 @@ class phpMyEdit
 						if ($this->delete_nav_displayed()) {
 							$navButtons[] =$this->htmlSubmit(
 								'operation',
-								$deleteTitle.'?'.$record,
+								$deleteTitle.'?'.$recordQueryData,
 								$this->getCSSclass('delete-navigation'),
 								$this->delete_enabled() == false,
 								sprintf($imgstyle, 'pme-delete.png'));
@@ -3857,8 +3885,8 @@ class phpMyEdit
 					if ($this->nav_buttons()) {
 						echo '<td class="',$css_class_name,'"><input class="',$css_class_name;
 						echo '" type="radio" name="'.$this->cgi['prefix']['sys'].'rec';
-						echo '" value="',htmlspecialchars($key_rec),'"';
-						if (($this->rec == '' && $first) || ($this->rec == $key_rec)) {
+						echo '" value="',htmlspecialchars($recordData),'"';
+						if ((empty($this->rec) && $first) || ($this->rec == $key_rec)) {
 							echo ' checked';
 							$first = false;
 						}
@@ -3873,13 +3901,13 @@ class phpMyEdit
 
 						echo '<td class="'.$css_class_name.' '.$misccss.'">'
 							.'<label class="'.$css
-							.'" for="'.$namebase.'-'.htmlspecialchars($key_rec)
+							.'" for="'.$namebase.'-'.htmlspecialchars($recordData)
 							.'" '.$ttip.'>'
 							.'<input class="'.$css
 							.'" '.$ttip
-							.'id="'.$namebase.'-'.htmlspecialchars($key_rec)
+							.'id="'.$namebase.'-'.htmlspecialchars($recordData)
 							.'" type="checkbox" name="'.$namebase.'[]'
-							.'" value="',htmlspecialchars($key_rec),'"';
+							.'" value="',htmlspecialchars($recordData),'"';
 						// Set all members of $this->mrecs as checked, or add the current file
 						// result
 						$mrecs_key = array_search($key_rec, $this->mrecs, true);
@@ -3991,8 +4019,24 @@ class phpMyEdit
 		// Finally add some more hidden stuff ...
 		if ($this->misc_enabled()) {
 			echo $this->htmlHiddenSys('mtable', $this->tb);
-			echo $this->htmlHiddenSys('mkey', $this->key);
-			echo $this->htmlHiddenSys('mkeytype', $this->key_type);
+			switch (count($this->key)) {
+				case 0:
+					echo $this->htmlHiddenSys('mkey', '');
+					echo $this->htmlHiddenSys('mkeytype', '');
+					break;
+				case 1:
+					foreach ($this->key as $key => $key_type) {
+						echo $this->htmlHiddenSys('mkey', $key);
+						echo $this->htmlHiddenSys('mkeytype', $key_type);
+					}
+					break;
+				default:
+					foreach ($this->key as $key => $key_type) {
+						echo $this->htmlHiddenSys('mkey[]', $key);
+						echo $this->htmlHiddenSys('mkeytype[]', $key_type);
+					}
+					break;
+			}
 			foreach ($this->mrecs as $key => $val) {
 				//echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
 				echo $this->htmlHiddenSys('mrecs[]', $val);
@@ -4041,8 +4085,15 @@ class phpMyEdit
 			$qparts['type']	  = 'select';
 			$qparts['select'] = @$this->get_SQL_column_list();
 			$qparts['from']	  = @$this->get_SQL_join_clause();
-			$qparts['where']  = '('.$this->fqn($this->key, true).'='
-				.$this->key_delim.$this->rec.$this->key_delim.')';
+			$wparts = [];
+			foreach ($this->rec as $key => $rec) {
+				$delim = $this->key_delim[$key];
+				$wparts[] = $this->fqn($key, true).'='.$delim.$rec.$delim;
+			}
+			$this->logInfo(print_r($wparts, true));
+			$qparts['where'] = '('.implode(' AND ', $wparts).')';
+			$this->logInfo(print_r($qparts['where'], true));
+
 			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
 			if (! ($row = $this->sql_fetch($res))) {
 				$row = false;
@@ -4064,8 +4115,24 @@ class phpMyEdit
 			 * will do for us.
 			 */
 			echo $this->htmlHiddenSys('mtable', $this->tb);
-			echo $this->htmlHiddenSys('mkey', $this->key);
-			echo $this->htmlHiddenSys('mkeytype', $this->key_type);
+			switch (count($this->key)) {
+				case 0:
+					echo $this->htmlHiddenSys('mkey', '');
+					echo $this->htmlHiddenSys('mkeytype', '');
+					break;
+				case 1:
+					foreach ($this->key as $key => $key_type) {
+						echo $this->htmlHiddenSys('mkey', $key);
+						echo $this->htmlHiddenSys('mkeytype', $key_type);
+					}
+					break;
+				default:
+					foreach ($this->key as $key => $key_type) {
+						echo $this->htmlHiddenSys('mkey[]', $key);
+						echo $this->htmlHiddenSys('mkeytype[]', $key_type);
+					}
+					break;
+			}
 			foreach ($this->mrecs as $key => $val) {
 				echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
 			}
@@ -4089,7 +4156,15 @@ class phpMyEdit
 		echo $this->get_origvars_html($this->qfn);
 		echo $this->htmlHiddenSys('cur_tab', $this->cur_tab);
 		echo $this->htmlHiddenSys('qfn', $this->qfn);
-		echo $this->htmlHiddenSys('rec', $this->copy_operation() ? '' : $this->rec);
+		if ($this->copy_operation() || empty($this->rec)) {
+			echo $this->htmlHiddenSys('rec', '');
+		} else if (count($this->rec) == 1) {
+			echo $this->htmlHiddenSys('rec', array_values($this->rec)[0]);
+		} else {
+			foreach ($this->rec as $key => $value) {
+				echo $this->htmlHiddenSys('rec['.$key.']', $value);
+			}
+		}
 		echo $this->htmlHiddenSys('fm', $this->fm);
 		echo $this->htmlHiddenSys('np', $this->inc);
 		echo $this->htmlHiddenSys('translations', $this->translations);
@@ -4123,7 +4198,7 @@ class phpMyEdit
 	{
 		// Preparing query
 		$query = ''; // query_groups not supported, would be difficult
-		$key_col_val = '';
+		$key_col_val = [];
 		$newvals	 = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if ($this->processed($k)) {
@@ -4148,8 +4223,10 @@ class phpMyEdit
 						$fn = @$this->fdd[$k]['default'];
 					}
 				}
-				if ($fd == $this->key) {
-					$key_col_val = $fn;
+				foreach (array_keys($this->key) as $key) {
+					if ($fd == $key) {
+						$key_col_val[$key] = $fn;
+					}
 				}
 				if (is_array($fn) && self::is_flat($fn)) {
 					$newvals[$fd] = join(',',$fn);
@@ -4220,7 +4297,12 @@ class phpMyEdit
 		if (! $res) {
 			return false;
 		}
-		$this->rec = $this->sql_insert_id();
+		$rec = $this->sql_insert_id();
+		if ($rec > 0 && count($this->key) == 1) {
+			$this->rec[array_keys($this->key)[0]] = $rec;
+		} else if (count($key_col_val) == count($this->key)) {
+			$this->rec = $key_col_val;
+		}
 		// Notify list
 		if (@$this->notify['insert'] || @$this->notify['all']) {
 			$this->email_notify(false, $newvals);
@@ -4228,14 +4310,21 @@ class phpMyEdit
 		// Note change in log table
 		if ($this->logtable) {
 			if (empty($key_col_val)) {
-				$key_col_val = $this->rec;
+				if (count($this->key) == 1) {
+					$key_col_val = $this->rec;
+				} else {
+					$key_col_val = [];
+					foreach (array_keys($this->key) as $key) {
+						$key_col_val[$key] = '?';
+					}
+				}
 			}
 			$query = sprintf('INSERT INTO %s'
 							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
 							 .' VALUES (NOW(), "%s", "%s", "insert", "%s", "%s", "", "", "%s")',
 							 $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
 							 addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
-							 addslashes($key_col_val), addslashes(serialize($newvals)));
+							 addslashes(implode(',', $key_col_val)), addslashes(serialize($newvals)));
 			$this->myquery($query, __LINE__);
 		}
 		// After trigger
@@ -4248,11 +4337,15 @@ class phpMyEdit
 	function do_change_record() /* {{{ */
 	{
 		// Preparing queries
-		$where_part = " WHERE (".
-			$this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->key.$this->ed.
-			'='.
-			$this->key_delim.$this->rec.$this->key_delim.
-			')';
+		$wparts = [];
+		foreach ($this->rec as $key => $rec) {
+			$delim = $this->key_delim[$key];
+			$wparts[] =
+				$this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$key.$this->ed.
+				'='.
+				$delim.$this->rec.$delim;
+		}
+		$where_part = " WHERE (".implode(' AND ', $wparts).')';
 		$query_groups = array($this->tb => '');
 		$where_groups = array($this->tb => $where_part);
 		$query_oldrec = '';
@@ -4470,14 +4563,22 @@ class phpMyEdit
 		} else {
 			$this->message = $affected_rows.' '.$this->labels['records changed'];
 		}
+
 		// Another additional query (must go after real query). This
 		// also really determines the changed records, in case only
 		// some of the query-groups have failed.
-		if (in_array($this->key, $changed)) {
-			$this->rec = $newvals[$this->key]; // key has changed
-			//error_log('changed '.print_r($changed, true));
+		foreach (array_keys($this->key) as $key) {
+			if (in_array($key, $changed)) {
+				$this->rec[$key] = $newvals[$key]; // key has changed
+				//error_log('changed '.print_r($changed, true));
+			}
 		}
-		$query_newrec .= ' WHERE (PMEtable0.'.$this->key.'='.$this->key_delim.$this->rec.$this->key_delim.')';
+		$wparts = [];
+		foreach ($this->rec as $key => $rec) {
+			$delim = $this->key_delim[$key];
+			$wparts[] = 'PMEtable0.'.$key.'='.$delim.$rec.$delim;
+		}
+		$query_newrec .= ' WHERE ('.implode(' AND ', $wparts).')';
 		$res	 = $this->myquery($query_newrec, __LINE__);
 		if ($res === false) {
 			return false;
@@ -4504,7 +4605,7 @@ class phpMyEdit
 							   .' VALUES (NOW(), "%s", "%s", "update", "%s", "%s", "%s", "%s", "%s")',
 							   $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
 							   addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
-							   addslashes($this->rec), addslashes($key),
+							   addslashes(implode(',',$this->rec)), addslashes($key),
 							   addslashes($oldvals[$key]), addslashes($newvals[$key]));
 				$this->myquery($qry, __LINE__);
 			}
@@ -4519,9 +4620,13 @@ class phpMyEdit
 	function do_delete_record() /* {{{ */
 	{
 		// Additional query
+		$wparts = [];
+		foreach ($this->rec as $key => $rec) {
+			$delim = $this->key_delim[$key];
+			$wparts[] = $this->sd.$key.$this->ed.' = '.$delim.$rec.$delim;
+		}
 		$query	 = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed
-			.' WHERE ('.$this->sd.$this->key.$this->ed.' = '
-			.$this->key_delim.$this->rec.$this->key_delim.')'; // )
+			.' WHERE ('.implode(' AND ', $wparts).')';
 		$res	 = $this->myquery($query, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
@@ -4533,8 +4638,12 @@ class phpMyEdit
 			return false;
 		}
 		// Real query
-		$query = 'DELETE FROM '.$this->tb.' WHERE ('.$this->key.' = '
-			.$this->key_delim.$this->rec.$this->key_delim.')'; // )
+		$wparts = [];
+		foreach ($this->rec as $key => $rec) {
+			$delim = $this->key_delim[$key];
+			$wparts[] = $this->sd.$key.$this->ed.' = '.$delim.$rec.$delim;
+		}
+		$query = 'DELETE FROM '.$this->tb.' WHERE ('.implode(' AND ', $wparts).')';
 		$res = $this->myquery($query, __LINE__);
 		$this->message = $this->sql_affected_rows().' '.$this->labels['record deleted'];
 		if (! $res) {
@@ -4555,7 +4664,7 @@ class phpMyEdit
 							 .' VALUES (NOW(), "%s", "%s", "delete", "%s", "%s", "%s", "%s", "")',
 							 $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
 							 addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
-							 addslashes($this->rec), addslashes($key), addslashes(serialize($oldvals)));
+							 addslashes(implode(',', $this->rec)), addslashes($key), addslashes(serialize($oldvals)));
 			$this->myquery($query, __LINE__);
 		}
 		// After trigger
@@ -4573,8 +4682,12 @@ class phpMyEdit
 		if ($old_vals != false && $new_vals != false) {
 			$action	 = 'update';
 			$subject = 'Record updated in';
-			$body	 = 'An item with '.$this->fdd[$this->key]['name'].' = '
-				.$this->key_delim.$this->rec.$this->key_delim .' was updated in';
+			$kparts = [];
+			foreach ($this->rec as $key => $rec) {
+				$delim = $this->key_delim[$key];
+				$kparts[] = $this->fdd[$this->key]['name'].' = '.$this->key_delim.$this->rec.$this->key_delim;
+			}
+			$body	 = 'An item with '.implode(', ', $kparts).' was updated in';
 			$vals	 = $new_vals;
 		} elseif ($new_vals != false) {
 			$action	 = 'insert';
@@ -4809,7 +4922,9 @@ class phpMyEdit
 		}
 		$this->num_fds				= $field_num;
 		$this->num_fields_displayed = $num_fields_displayed;
-		$this->key_num				= array_search($this->key, $this->fds);
+		foreach (array_keys($this->key) as $key) {
+			$this->key_num[$key] = array_search($key, $this->fds);
+		}
 		/* Adds first displayed column into sorting fields by replacing last
 		   array entry. Also remove duplicite values and change column names to
 		   their particular field numbers.
@@ -5015,7 +5130,7 @@ class phpMyEdit
 		if ($this->label_cmp($this->saveadd, 'Save')
 			|| $this->label_cmp($this->savecopy, 'Save')) {
 			$this->add_enabled() && $this->do_add_record();
-			if ($this->rec <= 0) {
+			if (empty($this->rec)) {
 				$this->operation = $this->labels['Add']; // to force add operation
 			} else {
 				$this->saveadd	= null; // unset($this->saveadd)
@@ -5026,7 +5141,7 @@ class phpMyEdit
 		elseif ($this->label_cmp($this->applyadd, 'Apply')
 				|| $this->label_cmp($this->applycopy, 'Apply')) {
 			$this->add_enabled() && $this->do_add_record();
-			if ($this->rec <= 0) {
+			if (empty($this->rec)) {
 				$this->operation = $this->labels['Add']; // to force add operation
 			} else {
 				$this->saveadd	 = null; // unset($this->saveadd)
@@ -5041,7 +5156,7 @@ class phpMyEdit
 		}
 		elseif ($this->label_cmp($this->moreadd, 'More')) {
 			$this->add_enabled() && $this->do_add_record();
-			if ($this->rec <= 0) {
+			if (empty($this->rec)) {
 				$this->operation = $this->labels['Add']; // to force add operation
 			}
 			$this->recreate_fdd();
@@ -5147,7 +5262,9 @@ class phpMyEdit
 		$this->tb  = $opts['tb'];
 		// Other variables§
 		$this->key		 = $opts['key'];
-		$this->key_type	 = $opts['key_type'];
+		if (!is_array($this->key)) {
+			$this->key = [ $this->key => $opts['key_type'] ];
+		}
 		$this->groupby   = @$opts['groupby_fields'];
 		if ($this->groupby && !is_array($this->groupby)) {
 			$this->groupby = array($this->groupby);
@@ -5375,7 +5492,10 @@ class phpMyEdit
 		 * override by operation query string.
 		 */
 		$querypart = '';
-		$this->rec	 = $this->get_sys_cgi_var('rec', '');
+		$this->rec	 = $this->get_sys_cgi_var('rec', []);
+		if (!empty($this->rec) && !is_array($this->rec)) {
+			$this->rec = [ array_keys($this->key)[0] => $this->rec ];
+		}
 		$qpos = strpos($this->operation, '?');
 		if ($qpos !== false) {
 			$querypart = substr($this->operation, $qpos);
@@ -5411,6 +5531,10 @@ class phpMyEdit
 		if (isset($opquery[$key])) {
 			$this->rec = $opquery[$key];
 		}
+		if (!empty($this->rec) && !is_array($this->rec)) {
+			$this->rec = [ array_keys($this->key)[0] => $this->rec ];
+		}
+		$this->logInfo(print_r($this->rec, true));
 		/* echo '<PRE>'; */
 		/* print_r($opquery); */
 		/* echo "\nkey: ".$key."\n"; */
@@ -5512,17 +5636,19 @@ class phpMyEdit
 		// TAB names
 		$this->tabs = array();
 		// Setting key_delim according to key_type
-		if ($this->key_type == 'real') {
-			/* If 'real' key_type does not work,
-			   try change MySQL datatype from float to double */
-			$this->rec = doubleval($this->rec);
-			$this->key_delim = '';
-		} elseif ($this->key_type == 'int') {
-			$this->rec = intval($this->rec);
-			$this->key_delim = '';
-		} else {
-			$this->key_delim = '"';
-			// $this->rec remains unmodified
+		foreach ($this->key as $key => $key_type) {
+			if ($key_type == 'real') {
+				/* If 'real' key_type does not work,
+				   try change MySQL datatype from float to double */
+				$this->rec[$key] = doubleval($this->rec[$key]);
+				$this->key_delim[$key] = '';
+			} elseif ($key_type == 'int') {
+				$this->rec[$key] = intval($this->rec[$key]);
+				$this->key_delim[$key] = '';
+			} else {
+				$this->key_delim[$key] = '"';
+				// $this->rec remains unmodified
+			}
 		}
 		// Specific $fdd modifications depending on performed action
 		$this->recreate_fdd();
