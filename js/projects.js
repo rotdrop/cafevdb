@@ -245,7 +245,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     case 'project-participants':
     case 'sepa-debit-mandates':
     case 'project-extra-fields':
-      post.Template = selectedValue;
+      post.template = selectedValue;
       CAFEVDB.formSubmit('', $.param(post), 'post');
       break;
     case 'profit-and-loss':
