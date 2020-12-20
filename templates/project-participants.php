@@ -57,7 +57,15 @@ echo $this->inc(
     //'navBarInfo' => $missing
   ]);
 
-$renderer->render();
+try {
+  $renderer->render();
+} catch (\Throwable $t) {
+  $keys = [
+    'projectId' => true,
+    'projectName' => true,
+  ];
+  throw new \Exception(print_r(array_intersect_key($_, $keys), true), $t->getCode(), $t);
+}
 
 // Close some still opened divs
 echo $this->inc('part.common.footer', array('css-prefix' => $cssPfx));
