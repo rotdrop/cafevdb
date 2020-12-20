@@ -219,6 +219,7 @@ class PageController extends Controller {
     };
 
     $template = $this->getTemplate($template);
+    $this->logInfo("Try load template ".$template);
     try {
       $renderer = $this->appContainer->query('template:'.$template);
       if (empty($renderer)) {
@@ -308,13 +309,7 @@ class PageController extends Controller {
       if ($blogMapper->notificationPending($this->userId())) {
         return 'blog';
       }
-      // This would need tracing the last-logged in status of the
-      // user.
-      //
-      // $latestBlog = $blogMapper->lastModifiedTimestamp();
 
-      // should return 'project' when it is available again, or
-      // perhaps a configurable starting page.
       return 'all-musicians';
     }
     return $template;
