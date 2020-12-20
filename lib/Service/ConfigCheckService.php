@@ -130,7 +130,7 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
-    $this->logInfo($key.': '.$result[$key]['status']);
+    $this->logDebug($key.': '.$result[$key]['status']);
 
     $key = 'encryptionkey';
     try {
@@ -138,7 +138,7 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
-    $this->logInfo($key.': '.$result[$key]['status']);
+    $this->logDebug($key.': '.$result[$key]['status']);
 
     $key = 'database';
     try {
@@ -146,7 +146,7 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
-    $this->logInfo($key.': '.$result[$key]['status']);
+    $this->logDebug($key.': '.$result[$key]['status']);
 
     $key = 'usergroup';
     try {
@@ -154,7 +154,7 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
-    $this->logInfo($key.': '.$result[$key]['status']);
+    $this->logDebug($key.': '.$result[$key]['status']);
 
     $key = 'shareowner';
     try {
@@ -162,7 +162,7 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
-    $this->logInfo($key.': '.$result[$key]['status']);
+    $this->logDebug($key.': '.$result[$key]['status']);
 
     $key = 'sharedfolder';
     try {
@@ -170,14 +170,14 @@ class ConfigCheckService
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
-    $this->logInfo($key.': '.$result[$key]['status']);
+    $this->logDebug($key.': '.$result[$key]['status']);
 
     $summary = true;
     foreach ($result as $key => $value) {
       $summary = $summary && $value['status'];
     }
     $result['summary'] = $summary;
-    $this->logInfo(print_r($result, true));
+    $this->logDebug(print_r($result, true));
 
     return $result;
   }
