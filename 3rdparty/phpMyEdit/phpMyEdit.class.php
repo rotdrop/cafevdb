@@ -251,6 +251,63 @@ class phpMyEdit
 	function nav_down()			 { return !empty($this->navigation) && stristr($this->navigation, 'D') && (!isset($this->buttons[$this->page_type]['down']) || !($this->buttons[$this->page_type]['down'] === false)); }
 
 	/*
+	 * Handle multi-column record keys
+	 */
+	private function key_record($key_record = null)
+	{
+		if (empty($key_record)) {
+			$key_record = $this->rec;
+		}
+		if (empty($key_record) || empty($this->key)) {
+			return null;
+		}
+		if (count($this->key) == 1) {
+			return array_values($key_record)[0];
+		}
+		return $key_record;
+	}
+
+	private function key_record_where()
+	{
+		$wparts = [];
+		foreach ($this->rec as $key => $rec) {
+			$delim = $this->key_delim[$key];
+			// no need for fqn. ?
+			//$wparts[] = $this->fqn($key, true).' = '.$delim.$rec.$delim;
+			$wparts[] =
+				$this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$key.$this->ed.
+				' = '.
+				$delim.$rec.$delim;
+		}
+		return '('.implode(' AND ', $wparts).')';
+	}
+
+	private function emit_misc_recs()
+	{
+		echo $this->htmlHiddenSys('mtable', $this->tb);
+		switch (count($this->key)) {
+			case 0:
+				echo $this->htmlHiddenSys('mkey', '');
+				echo $this->htmlHiddenSys('mkeytype', '');
+				break;
+			case 1:
+				foreach ($this->key as $key => $key_type) {
+					echo $this->htmlHiddenSys('mkey', $key);
+					echo $this->htmlHiddenSys('mkeytype', $key_type);
+				}
+				break;
+			default:
+				foreach ($this->key as $key => $key_type) {
+					echo $this->htmlHiddenSys('mkey['.$key.']', $key_type);
+				}
+				break;
+		}
+		foreach ($this->mrecs as $key => $val) {
+			echo $this->htmlHiddenSys('mrecs[]', $val);
+		}
+	}
+
+	/*
 	 * helper functions.
 	 */
 	static function is_flat($array)
@@ -1738,12 +1795,7 @@ class phpMyEdit
 			$qparts['type']	  = 'select';
 			$qparts['select'] = @$this->get_SQL_column_list();
 			$qparts['from']	  = @$this->get_SQL_join_clause();
-			$wparts = [];
-			foreach ($this->rec as $key => $rec) {
-				$delim = $this->key_delim[$key];
-				$wparts[] = $this->fqn($key, true).' = '.$delim.$rec.$delim;
-			}
-			$qparts['where'] = '('.implode(' AND ', $wparts).')';
+			$qparts['where'] = $this->key_record_where();
 			//echo htmlspecialchars($this->rec.' '.$this->key);
 			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
 			if (! ($row = $this->sql_fetch($res))) {
@@ -1881,17 +1933,18 @@ class phpMyEdit
 				$value = $row["qf$k"];
 			}
 			$php = $this->fdd[$k]['php'];
+			$rec = $this->key_record($this->rec);
 			if (is_callable($php)) {
 				echo call_user_func($php, $value,
 									'change', // action to be performed
 									$k, $this->fds, $this->fdd, $row,
-									$this->rec, $this);
+									$rec, $this);
 			} else if (is_array($php)) {
 				$opts = isset($php['parameters']) ? $php['parameters'] : '';
 				echo call_user_func($php['function'], $value, $opts,
 									'change', // action to be performed
 									$k, $this->fds, $this->fdd, $row,
-									$this->rec, $this);
+									$rec, $this);
 			} else if (file_exists($php)) {
 				echo include($php);
 			}
@@ -2231,6 +2284,7 @@ class phpMyEdit
 				$key_rec[$key] = $row['qf'.$key_num];
 			}
 		}
+		$key_rec = $this->key_record($key_rec);
 		$this->col_has_values($k) && $this->set_values($k);
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
@@ -4018,29 +4072,7 @@ class phpMyEdit
 		$this->display_list_table_buttons('down');
 		// Finally add some more hidden stuff ...
 		if ($this->misc_enabled()) {
-			echo $this->htmlHiddenSys('mtable', $this->tb);
-			switch (count($this->key)) {
-				case 0:
-					echo $this->htmlHiddenSys('mkey', '');
-					echo $this->htmlHiddenSys('mkeytype', '');
-					break;
-				case 1:
-					foreach ($this->key as $key => $key_type) {
-						echo $this->htmlHiddenSys('mkey', $key);
-						echo $this->htmlHiddenSys('mkeytype', $key_type);
-					}
-					break;
-				default:
-					foreach ($this->key as $key => $key_type) {
-						echo $this->htmlHiddenSys('mkey[]', $key);
-						echo $this->htmlHiddenSys('mkeytype[]', $key_type);
-					}
-					break;
-			}
-			foreach ($this->mrecs as $key => $val) {
-				//echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
-				echo $this->htmlHiddenSys('mrecs[]', $val);
-			}
+			$this->emit_misc_recs();
 		}
 		$this->form_end();
 	} /* }}} */
@@ -4085,14 +4117,7 @@ class phpMyEdit
 			$qparts['type']	  = 'select';
 			$qparts['select'] = @$this->get_SQL_column_list();
 			$qparts['from']	  = @$this->get_SQL_join_clause();
-			$wparts = [];
-			foreach ($this->rec as $key => $rec) {
-				$delim = $this->key_delim[$key];
-				$wparts[] = $this->fqn($key, true).'='.$delim.$rec.$delim;
-			}
-			$this->logInfo(print_r($wparts, true));
-			$qparts['where'] = '('.implode(' AND ', $wparts).')';
-			$this->logInfo(print_r($qparts['where'], true));
+			$qparts['where'] = $this->key_record_where();
 
 			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
 			if (! ($row = $this->sql_fetch($res))) {
@@ -4110,32 +4135,7 @@ class phpMyEdit
 		}
 		// Finally add some more hidden stuff ...
 		if ($this->misc_enabled()) {
-			/* First dump the table and the key-name,
-			 * doesn't work for the most general case, but
-			 * will do for us.
-			 */
-			echo $this->htmlHiddenSys('mtable', $this->tb);
-			switch (count($this->key)) {
-				case 0:
-					echo $this->htmlHiddenSys('mkey', '');
-					echo $this->htmlHiddenSys('mkeytype', '');
-					break;
-				case 1:
-					foreach ($this->key as $key => $key_type) {
-						echo $this->htmlHiddenSys('mkey', $key);
-						echo $this->htmlHiddenSys('mkeytype', $key_type);
-					}
-					break;
-				default:
-					foreach ($this->key as $key => $key_type) {
-						echo $this->htmlHiddenSys('mkey[]', $key);
-						echo $this->htmlHiddenSys('mkeytype[]', $key_type);
-					}
-					break;
-			}
-			foreach ($this->mrecs as $key => $val) {
-				echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
-			}
+			$this->emit_misc_recs();
 		}
 		// Also transport the query options ...
 		for ($k = 0; $k < $this->num_fds; $k++) {
@@ -4337,15 +4337,7 @@ class phpMyEdit
 	function do_change_record() /* {{{ */
 	{
 		// Preparing queries
-		$wparts = [];
-		foreach ($this->rec as $key => $rec) {
-			$delim = $this->key_delim[$key];
-			$wparts[] =
-				$this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$key.$this->ed.
-				'='.
-				$delim.$this->rec.$delim;
-		}
-		$where_part = " WHERE (".implode(' AND ', $wparts).')';
+		$where_part = " WHERE ".$this->key_record_where();
 		$query_groups = array($this->tb => '');
 		$where_groups = array($this->tb => $where_part);
 		$query_oldrec = '';
@@ -4573,12 +4565,7 @@ class phpMyEdit
 				//error_log('changed '.print_r($changed, true));
 			}
 		}
-		$wparts = [];
-		foreach ($this->rec as $key => $rec) {
-			$delim = $this->key_delim[$key];
-			$wparts[] = 'PMEtable0.'.$key.'='.$delim.$rec.$delim;
-		}
-		$query_newrec .= ' WHERE ('.implode(' AND ', $wparts).')';
+		$query_newrec .= ' WHERE '.$this->key_record_where();
 		$res	 = $this->myquery($query_newrec, __LINE__);
 		if ($res === false) {
 			return false;
@@ -4620,13 +4607,8 @@ class phpMyEdit
 	function do_delete_record() /* {{{ */
 	{
 		// Additional query
-		$wparts = [];
-		foreach ($this->rec as $key => $rec) {
-			$delim = $this->key_delim[$key];
-			$wparts[] = $this->sd.$key.$this->ed.' = '.$delim.$rec.$delim;
-		}
 		$query	 = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed
-			.' WHERE ('.implode(' AND ', $wparts).')';
+			.' WHERE '.$this->key_record_where();
 		$res	 = $this->myquery($query, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
@@ -4638,12 +4620,7 @@ class phpMyEdit
 			return false;
 		}
 		// Real query
-		$wparts = [];
-		foreach ($this->rec as $key => $rec) {
-			$delim = $this->key_delim[$key];
-			$wparts[] = $this->sd.$key.$this->ed.' = '.$delim.$rec.$delim;
-		}
-		$query = 'DELETE FROM '.$this->tb.' WHERE ('.implode(' AND ', $wparts).')';
+		$query = 'DELETE FROM '.$this->tb.' WHERE '.$this->key_record_where();
 		$res = $this->myquery($query, __LINE__);
 		$this->message = $this->sql_affected_rows().' '.$this->labels['record deleted'];
 		if (! $res) {
