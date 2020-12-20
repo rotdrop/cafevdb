@@ -833,7 +833,7 @@ class phpMyEdit
 
 		$subs = array(
 			'main_table'  => $this->tb,
-			'record_id'   =>c, // may be useful for change oggp.
+			'record_id'   => $this->rec, // may be useful for change oggp.
 			'table'		  => $table_name,
 			'column'	  => $key,
 			'description' => $desc);
