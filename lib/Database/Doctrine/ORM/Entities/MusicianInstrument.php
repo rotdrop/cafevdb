@@ -49,7 +49,7 @@ class MusicianInstrument
   private $musician;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Instrument", inversedBy="musicians", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Instrument", inversedBy="musicianInstruments", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $instrument;
@@ -60,6 +60,20 @@ class MusicianInstrument
    * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Ranking of the instrument w.r.t. to the given musician (lower is better)"})
    */
   private $ranking = '1';
+
+  // /**
+  //  * Core functionality: a musician (i.e. a natural person not
+  //  * necessarily a musician in its proper sense) may be employed for
+  //  * more than just one instrument (or organizational role) in each
+  //  * project.
+  //  *
+  //  * @ORM\OneToOne(targetEntity="ProjectInstrument", mappedBy="musicianInstrument")
+  //  * @ORM\JoinColumns(
+  //  *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id"),
+  //  *   @ORM\JoinColumn(name="instrument_id",referencedColumnName="instrument_id")
+  //  * )
+  //  */
+  // private $projectInstruments;
 
   public function __construct() {
     $this->arrayCTOR();

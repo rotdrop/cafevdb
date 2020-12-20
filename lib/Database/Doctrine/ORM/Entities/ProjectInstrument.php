@@ -62,11 +62,10 @@ class ProjectInstrument implements \ArrayAccess
   private $musician;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Index into table Instruments"})
+   * @Orm\ManytoOne(targetEntity="Instrument", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
+   * @ORM\Id
    */
-  private $instrumentId;
+  private $instrument;
 
   /**
    * @var int|null
@@ -83,11 +82,6 @@ class ProjectInstrument implements \ArrayAccess
   private $sectionLeader = '0';
 
   /**
-   * Core functionality: a musician (i.e. a natural person not
-   * necessarily a musician in its proper sense) may be employed for
-   * more than just one instrument (or organizational role) in each
-   * project.
-   *
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="projectInstruments")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
@@ -95,6 +89,15 @@ class ProjectInstrument implements \ArrayAccess
    * )
    */
   private $participant;
+
+  /**
+   * @ORM\OneToOne(targetEntity="MusicianInstrument")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id"),
+   *   @ORM\JoinColumn(name="instrument_id",referencedColumnName="instrument_id")
+   * )
+   */
+  private $musicianInstrument;
 
   public function __construct() {
     $this->arrayCTOR();

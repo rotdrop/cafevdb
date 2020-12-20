@@ -82,11 +82,17 @@ class Instrument implements \ArrayAccess
   /**
    * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="instrument")
    */
-  private $musicians;
+  private $musicianInstruments;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="instrument")
+   */
+  private $projectInstruments;
 
   public function __construct() {
     $this->arrayCTOR();
-    $this->musicians = new ArrayCollection();
+    $this->musicianInstruments = new ArrayCollection();
+    $this->projectInstruments = new ArrayCollection();
     $this->families = new ArrayCollection();
   }
 
