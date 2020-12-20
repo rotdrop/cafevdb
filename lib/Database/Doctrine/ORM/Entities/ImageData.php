@@ -40,13 +40,12 @@ class ImageData implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
+   * @var Image
    *
-   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
+   * @ORM\OneToOne(targetEntity="Image", inversedBy="imageData", cascade="all")
    */
-  private $id;
+  private $image;
 
   /**
    * @var string|null
@@ -54,15 +53,6 @@ class ImageData implements \ArrayAccess
    * @ORM\Column(type="blob", nullable=false)
    */
   private $data;
-
-  /**
-   * @var Image
-   *
-   * Inverse side.
-   *
-   * @ORM\OneToOne(targetEntity="Image", mappedBy="imageData", cascade="all")
-   */
-  private $image;
 
   public function __construct() {
     $this->arrayCTOR();

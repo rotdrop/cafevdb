@@ -77,19 +77,11 @@ class Image implements \ArrayAccess
   private $md5;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
-   */
-  private $imageDataId;
-
-  /**
    * @var ImageData This is "toMany" only for the sake of lazy loading.
    *
    * owning side
    *
-   * @ORM\OneToOne(targetEntity="ImageData", inversedBy="image", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id", unique=true, onDelete="CASCADE")
+   * @ORM\OneToOne(targetEntity="ImageData", mappedBy="image", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $imageData;
 
