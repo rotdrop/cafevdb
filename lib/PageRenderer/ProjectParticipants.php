@@ -83,7 +83,7 @@ class ProjectParticipants extends PMETableViewBase
     $opts            = [];
 
     if (empty($projectName) || empty($projectId)) {
-      throw new \InvalidArgumentException('Project-id and/or -name must be given.');
+      throw new \InvalidArgumentException('Project-id and/or -name must be given ('.$projectName.' / '.$projectId.').');
     }
 
     // Number of records to display on the screen
@@ -102,10 +102,7 @@ class ProjectParticipants extends PMETableViewBase
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = 'id';
-
-    // Type of key field (int/real/string/date etc.)
-    $opts['key_type'] = 'int';
+    $opts['key'] = [ 'project_id' => 'int', 'musician_id' => 'int' ];
 
     // Sorting field(s)
     $opts['sort_field'] = [ 'sort_order', 'voice', '-section_leader', 'name', 'first_name' ];
@@ -128,18 +125,6 @@ class ProjectParticipants extends PMETableViewBase
         'time'  => true,
         'tabs'  => false
     ]);
-
-    $opts['fdd']['id'] = array(
-      'name'     => $this->l->t('Participant-Id'),
-      'select'   => 'T',
-      'input'    => 'R',
-      'options'  => 'LACPD',
-      'maxlen'   => 5,
-      'align'    => 'right',
-      'default'  => '0',
-      'sort'     => true,
-      'tab'      => array('id' => 'instrumentation')
-      );
 
     $musIdIdx = count($opts['fdd']);
     $opts['fdd']['musician_id'] = array(
