@@ -46,7 +46,7 @@ class Projects extends PMETableViewBase
   const CSS_CLASS = 'projects';
   const TABLE = 'Projects';
   const ENTITY = Entities\Project::class;
-  const INSTRUMENTATION= 'ProjectInstrumentation';
+  const INSTRUMENTATION_TABLE = 'ProjectInstrumentation';
   const NAME_LENGTH_MAX = 20;
   const POSTER_JOIN = 'ProjectPoster';
   const FLYER_JOIN = 'ProjectFlyer';
@@ -263,21 +263,21 @@ class Projects extends PMETableViewBase
     $projInstIdx = count($opts['fdd']);
     $opts['fdd']['project_instrumentation_join'] = [
       'name'   => $this->l->t('Instrumentation Join Pseudo Field'),
-      'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$projInstIdx.'.Id
+      'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$projInstIdx.'.instrument_id
   ORDER BY PMEjoin'.$projInstIdx.'.instrument_id ASC)',
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
-        'table'       => self::INSTRUMENTATION,
-        'column'      => 'id',
-        'description' => ['columns' => 'id'],
-        'join'        => '$join_table.project_id = $main_table.Id',
+        'table'       => self::INSTRUMENTATION_TABLE,
+        'column'      => 'instrument_id',
+        'description' => [ 'columns' => 'instrument_id' ],
+        'join'        => '$join_table.project_id = $main_table.id',
       ]
     ];
 
     $opts['fdd']['instrumentation_key'] = [
       'name'  => $this->l->t('Instrumentation Key'),
-      'sql'   => 'GROUP_CONCAT(DISTINCT PMEjoin'.$projInstIdx.'.Id
+      'sql'   => 'GROUP_CONCAT(DISTINCT PMEjoin'.$projInstIdx.'.instrument_id
   ORDER BY PMEjoin'.$projInstIdx.'.instrument_id ASC)',
       'input' => 'SRH',
       'filter' => 'having', // need "HAVING" for group by stuff
@@ -292,7 +292,7 @@ class Projects extends PMETableViewBase
                         "prefix" => '<div class="projectinstrumentation">',
                         "postfix" => '</div>'],
       'css'         => ['postfix' => ' projectinstrumentation tooltip-top'],
-      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.Id ORDER BY PMEjoin'.$instIdx.'.Id ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.id ORDER BY PMEjoin'.$instIdx.'.id ASC)',
       //'input' => 'V', not virtual, tweaked by triggers
       'filter'      => 'having',
       'select'      => 'M',
@@ -302,7 +302,7 @@ class Projects extends PMETableViewBase
         'column'      => 'id',
         'description' => 'id',
         'orderby'     => 'sort_order',
-        'join'        => '$join_table.Id = PMEjoin'.$projInstIdx.'.instrument_id'
+        'join'        => '$join_table.id = PMEjoin'.$projInstIdx.'.instrument_id'
       ],
       'values2'     => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -409,6 +409,7 @@ __EOT__;
       'php' => function($value, $action, $field, $fds, $fdd, $row, $recordId) {
         $projectId = $recordId;
         $stamp = $value;
+        $this->logInfo(print_r($projectId, true));
         return $this->flyerImageLink($projectId, $action, $stamp);
       },
       'css' => ['postfix' => ' projectflyer'],
@@ -527,7 +528,7 @@ project without a flyer first.");
       $placeHolder = $projectName; // or maybe don't strip.
     }
 
-   $control = ''
+    $control = ''
             .'
 <span class="project-actions-block">
   <select data-placeholder="'.$placeHolder.'"
@@ -806,7 +807,7 @@ project without a flyer first.");
     $key = array_search($field, $changed);
     if ($key !== false) {
       //error_log('key: '.$key.' value: '.$changed[$key]);
-      $table      = self::INSTRUMENTATION;
+      $table      = self::INSTRUMENTATION_TABLE;
       $projectId  = $pme->rec;
       $oldIds     = Util::explode(',', $oldValues[$field]);
       $newIds     = Util::explode(',', $newValues[$field]);
