@@ -863,7 +863,7 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.SepaDebitMandate = SepaDebitMandate;
 })(window, jQuery, CAFEVDB);
 
-$(document).ready(function(){
+$(function(){
 
   PHPMYEDIT.addTableLoadCallback('sepa-debit-mandates',
                                  {
