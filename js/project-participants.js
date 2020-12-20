@@ -662,7 +662,7 @@ console.log('deselect', option.val());
 
 })(window, jQuery, CAFEVDB);
 
-$(document).ready(function(){
+$(function(){
 
   PHPMYEDIT.addTableLoadCallback('project-participants', {
     callback: function(selector, parameters, resizeCB) {
