@@ -215,7 +215,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     if (typeof this.tableLoadCallbacks[template] !== 'undefined') {
       cbHandle = this.tableLoadCallbacks[template];
     } else {
-      console.info('no table load callback for ' + template);
+      //console.info('no table load callback for ' + template);
+      throw 'no table load callback for ' + template;
       return false;
     }
 
@@ -1419,7 +1420,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       });
 
       // Trigger view or change "operation" when clicking on a data-row.
-      var rowSelector = formSel+' td.'+pme.pmeToken('cell')+':not(.control)'
+      const rowSelector = formSel+' td.'+pme.pmeToken('cell')+':not(.control)'
                       + ','
                       + formSel+' td.'+pme.pmeToken('navigation');
       container
@@ -1452,19 +1453,29 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
         event.preventDefault();
         event.stopImmediatePropagation();
-        var recordId = $(this).parent().data(pme.pmePrefix+'_sys_rec');
-        var recordKey = pme.pmeSys('rec');
-        var recordEl;
+        const recordId = $(this).parent().data(pme.pmePrefix+'_sys_rec');
+        const recordKey = pme.pmeSys('rec');
+        var recordQuery = [];
+        if (typeof recordId === 'object' && recordId !== null) {
+          for (const property in recordId) {
+            recordQuery.push(recordKey + '[' + property + ']=' + recordId[property]);
+          }
+        } else {
+          recordQuery.push(recordKey + '=' + recrodId);
+        }
+        recordQuery = recordQuery.join('&');
 
+        // @TODO The following is a real ugly kludge
         // "this" does not necessarily has a form attribute
-        var form = container.find(formSel);
+        const form = container.find(formSel);
+        var recordEl;
         if (form.hasClass(pme.pmeToken('direct-change')) || PHPMYEDIT.directChange) {
           recordEl = '<input type="hidden" class="'+pme.pmeToken('change-navigation')+'"'
-                   +' value="Change?'+recordKey+'='+recordId+'"'
+                   +' value="Change?'+recordQuery+'"'
                    +' name="'+pme.pmeSys('operation')+'" />';
         } else {
           recordEl = '<input type="hidden" class="'+pme.pmeToken('view-navigation')+'"'
-                   +' value="View?'+recordKey+'='+recordId+'"'
+                   +' value="View?'+recordQuery+'"'
                    +' name="'+pme.pmeSys('operation')+'" />';
         }
 
