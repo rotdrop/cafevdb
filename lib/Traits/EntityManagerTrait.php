@@ -291,7 +291,7 @@ trait EntityManagerTrait {
   }
 
   /**
-   * Obtain the column name of the currently used database entity.
+   * Obtain the column names of the currently used database entity.
    *
    * @param string|null $entityClassName The database entity to use.
    *
@@ -304,6 +304,23 @@ trait EntityManagerTrait {
     }
     return $this->entityManager->getClassMetadata($entityClassName)->getColumnNames();
   }
+
+  /**
+   * Obtain the class meta-data for the given or most recently used
+   * entity class.
+   *
+   * @param string|null $entityClassName The database entity to use.
+   *
+   * @return array The class meta-data
+   */
+  protected function classMetadata($entityClassName = null) {
+    empty($entityClassName) && ($entityClassName = $this->entityClassName);
+    if (empty($entityClassName)) {
+      return null;
+    }
+    return $this->entityManager->getClassMetadata($entityClassName);
+  }
+
 }
 
 // Local Variables: ***
