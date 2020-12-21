@@ -567,7 +567,7 @@ make sure that the musicians are also automatically added to the
       'name'     => 'UUID',
       'options'  => 'AVCPDR', // auto increment
       'css'      => ['postfix' => ' musician-uuid'.' '.$addCSS],
-      'sql'      => 'BIN2UUID(`PMEtable0`.`UUID`)',
+      'sql'      => 'BIN2UUID(`PMEtable0`.`uuid`)',
       'sqlw'     => 'UUID2BIN($val_qas)',
       'select'   => 'T',
       'maxlen'   => 32,
@@ -594,10 +594,10 @@ make sure that the musicians are also automatically added to the
       $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
     }
 
-    // @@TODO oops. This will have to get marrried with interleaved ORM stuff
+    // @@TODO This will have to get marrried with interleaved ORM stuff
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'addOrChangeInstruments' ];
-//     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+    // ??    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeUpdateRemoveUnchanged' ];
 //     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
 
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
@@ -753,7 +753,7 @@ make sure that the musicians are also automatically added to the
   {
     $uuid = Uuid::uuid4();
 
-    $key = 'UUID';
+    $key = 'uuid';
     $changed[] = $key;
     $newvals[$key] = $uuid;
 
