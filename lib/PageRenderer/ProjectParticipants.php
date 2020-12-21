@@ -29,9 +29,10 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ChangeLogService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
@@ -45,6 +46,9 @@ class ProjectParticipants extends PMETableViewBase
   const TABLE = 'ProjectParticipants';
   const MUSICIANS_TABLE = 'Musicians';
   const PROJECTS_TABLE = 'Projects';
+  const INSTRUMENTS_TABLE = 'Instruments';
+  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
+  const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
   /**
    * @const list of join-tables which cannot be updated directly,
    * handled in the varous "beforeSOMETHING" trigger functions.
@@ -56,18 +60,46 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'id',
       'description' => [ 'name', 'first_name' ],
     ],
+    self::PROJECTS_TABLE => [
+      'entity' => Entities\Project::class,
+      'identifier' => [ 'id' => 'project_id' ],
+      'column' => 'id',
+      'description' => [ 'name' ],
+    ],
+    self::PROJECT_INSTRUMENTS_TABLE => [
+      'entity' => Entities\ProjectInstrument::class,
+      'identifier' => [
+        'project_id' => 'project_id',
+        'musician_id' => 'musician_id',
+      ],
+      'column' => 'instrument_id',
+      'description' => [ 'instrument_id' ],
+    ],
+    self::MUSICIAN_INSTRUMENT_TABLE => [
+      'entity' => Entities\MusicianInstrument::class,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+      ],
+      'column' => 'instrument_id',
+      'description' => [ 'instrument_id' ],
+    ],
   ];
+
+  /** @var OCA\CAFEVDB\ServicePhoneNumberService */
+  private $phoneNumberService;
 
   public function __construct(
     ConfigService $configService
-  , RequestParameterService $requestParameters
-  , EntityManager $entityManager
-  , PHPMyEdit $phpMyEdit
-  , ChangeLogService $changeLogService
-  , ToolTipsService $toolTipsService
-  , PageNavigation $pageNavigation
+    , RequestParameterService $requestParameters
+    , EntityManager $entityManager
+    , PHPMyEdit $phpMyEdit
+    , ChangeLogService $changeLogService
+    , ToolTipsService $toolTipsService
+    , PageNavigation $pageNavigation
+    , PhoneNumberService $phoneNumberService
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
+    $this->phoneNumberService = $phoneNumberService;
   }
 
   public function cssClass() {
@@ -210,9 +242,12 @@ class ProjectParticipants extends PMETableViewBase
         'options' => '',
         'sort' => true,
         'values' => [
-          'table' => self::MUSICIANS_TABLE,
+          'table' => $table,
           'column' => $joinInfo['column'],
-          'description' => $joinInfo['description'],
+          'description' => [
+            'columns' => $joinInfo['description'],
+            'divs' => array_fill(0, count($joinInfo['description'])-1, ', '),
+          ],
           'join' => implode(' AND ', $joinData),
         ],
       ];
@@ -231,7 +266,7 @@ class ProjectParticipants extends PMETableViewBase
     ];
 
     $opts['fdd']['name'] = [
-      'name'     => $this->l->t('First Name'),
+      'name'     => $this->l->t('Name'),
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
@@ -240,8 +275,63 @@ class ProjectParticipants extends PMETableViewBase
       'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
     ];
 
+    if ($this->showDisabled) {
+      $opts['fdd']['disabled'] = [
+        'name'     => $this->l->t('Disabled'),
+        'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
+        'input'    => $expertMode ? '' : 'R',
+        'select'   => 'C',
+        'maxlen'   => 1,
+        'sort'     => true,
+        'escape'   => false,
+        'sqlw'     => 'IF($val_qas = "", 0, 1)',
+        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
+        'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+        'tooltip'  => $this->toolTipsService['musician-disabled'],
+        'css'      => [ 'postfix' => ' musician-disabled' ],
+      ];
+    }
+
+    $opts['fdd']['mobile_phone'] = [
+      'name'     => $this->l->t('Mobile Phone'),
+      'tab'      => [ 'id' => 'musician' ],
+      'css'      => [ 'postfix' => ' phone-number' ],
+      'input'    => 'S',
+      'sql'      => 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE].'.mobile_phone',
+      'display'  => [
+        'popup' => function($data) {
+          return $this->phoneNumberService->metaData($data, null, '<br/>');
+        }
+      ],
+      'nowrap'   => true,
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true
+    ];
+
+    $opts['fdd']['fixed_line_phone'] = [
+      'name'     => $this->l->t('Fixed Line Phone'),
+      'tab'      => [ 'id' => 'musician' ],
+      'css'      => [ 'postfix' => ' phone-number' ],
+      'input'    => 'S',
+      'sql'      => 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE].'.fixed_line_phone',
+      'display'  => [
+        'popup' => function($data) {
+          return $this->phoneNumberService->metaData($data, null, '<br/>');
+        }
+      ],
+      'nowrap'   => true,
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true
+    ];
+
     // GROUP BY clause, if needed. Should come last
-    $opts['groupby_fields'] = [ 'PMEtable.projectId', PMEtable0.musicianId, /* 'ProjectInstrumentId' */ ];
+    $opts['groupby_fields'] = [
+      'project_id',
+      'musician_id',
+      'ProjectInstruments_key',
+    ];
 
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateTrigger' ];
@@ -251,65 +341,6 @@ class ProjectParticipants extends PMETableViewBase
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
 
     ///@@@@@@@@@@@@@@@@@@@@@
-
-//     $opts['fdd'] = array();
-
-//     $opts['fdd']['Id'] = array(
-//       'name'     => $this->l->t('Instrumentation Id'),
-//       'select'   => 'T',
-//       'input'    => 'R',
-//       'options'  => 'AVCPD', // auto increment
-//       'maxlen'   => 5,
-//       'align'    => 'right',
-//       'default'  => '0',
-//       'sort'     => true,
-//       'tab'      => array('id' => 'instrumentation')
-//       );
-
-//     $musIdIdx = count($opts['fdd']);
-//     $opts['fdd']['MusikerId'] = array(
-//       'tab'      => array('id' => 'musician'),
-//       'name'     => $this->l->t('Musician Id'),
-//       'input'    => 'H',
-//       'select'   => 'T',
-//       'options'  => 'LAVCPD', // auto increment
-//       'maxlen'   => 5,
-//       'align'    => 'right',
-//       'default'  => '0',
-//       'sort'     => true,
-//       );
-
-//     $musFirstNameIdx = count($opts['fdd']);
-//     $opts['fdd']['Vorname'] = array(
-//       'name'     => 'Vorname',
-//       'select'   => 'T',
-//       'maxlen'   => 384,
-//       'sort'     => true,
-//       'tab'      => array('id' => 'tab-all') // display on all tabs, or just give -1
-//       );
-
-//     $musLastNameIdx = count($opts['fdd']);
-//     $opts['fdd']['Name'] = array(
-//       'name'     => 'Name',
-//       'select'   => 'T',
-//       'maxlen'   => 384,
-//       'sort'     => true,
-//       'tab'      => array('id' => 'tab-all')
-//       );
-
-//     if ($this->showDisabled) {
-//       $opts['fdd']['Disabled'] = array(
-//         'name'     => $this->l->t('Disabled'),
-//         'css'      => array('postfix' => ' musician-disabled'),
-//         'values2|CAP' => array(1 => ''),
-//         'values2|LVFD' => array(1 => $this->l->t('true'),
-//                                 0 => $this->l->t('false')),
-//         'default'  => '',
-//         'select'   => 'O',
-//         'sort'     => true,
-//         'tooltip'  => Config::toolTips('musician-disabled')
-//         );
-//     }
 
 //     $opts['fdd']['ProjectInstrumentKey'] = array(
 //       'name'   => $this->l->t('Project Instrument'),

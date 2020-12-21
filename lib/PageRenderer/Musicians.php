@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -54,6 +55,9 @@ class Musicians extends PMETableViewBase
 
   private $projectMode;
 
+  /** @var OCA\CAFEVDB\ServicePhoneNumberService */
+  private $phoneNumberService;
+
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
@@ -64,10 +68,12 @@ class Musicians extends PMETableViewBase
     , PageNavigation $pageNavigation
     , GeoCodingService $geoCodingService
     , ContactsService $contactsService
+    , PhoneNumberService $phoneNumberService
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
+    $this->phoneNumberService = $phoneNumberService;
     $this->projectMode = false;
   }
 
@@ -387,14 +393,11 @@ make sure that the musicians are also automatically added to the
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Mobile Phone'),
       'css'      => ['postfix' => ' phone-number'],
-      'display'  => ['popup' => function($data) {
-        return null;
-        // if (PhoneNumbers::validate($data)) {
-        //   return nl2br(PhoneNumbers::metaData());
-        // } else {
-        //   return null;
-        // }
-        }],
+      'display'  => [
+        'popup' => function($data) {
+          return $this->phoneNumberService->metaData($data, null, '<br/>');
+      }
+      ],
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
@@ -404,14 +407,11 @@ make sure that the musicians are also automatically added to the
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Fixed Line Phone'),
       'css'      => ['postfix' => ' phone-number'],
-      'display'  => ['popup' => function($data) {
-        return null;
-        // if (PhoneNumbers::validate($data)) {
-        //   return nl2br(PhoneNumbers::metaData());
-        // } else {
-        //     return null;
-        // }
-      }],
+      'display'  => [
+        'popup' => function($data) {
+          return $this->phoneNumberService->metaData($data, null, '<br/>');
+        }
+      ],
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
