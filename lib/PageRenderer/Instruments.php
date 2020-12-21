@@ -372,7 +372,7 @@ class Instruments extends PMETableViewBase
   {
     $this->logInfo(__METHOD__);
 
-    $field = 'Families';
+    $field = 'families';
     $key = array_search($field, $changed);
     if ($key !== false) {
 
