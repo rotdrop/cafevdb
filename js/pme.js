@@ -1461,7 +1461,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
             recordQuery.push(recordKey + '[' + property + ']=' + recordId[property]);
           }
         } else {
-          recordQuery.push(recordKey + '=' + recrodId);
+          recordQuery.push(recordKey + '=' + recordId);
         }
         recordQuery = recordQuery.join('&');
 
