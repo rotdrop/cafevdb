@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
@@ -44,6 +45,18 @@ class ProjectParticipants extends PMETableViewBase
   const TABLE = 'ProjectParticipants';
   const MUSICIANS_TABLE = 'Musicians';
   const PROJECTS_TABLE = 'Projects';
+  /**
+   * @const list of join-tables which cannot be updated directly,
+   * handled in the varous "beforeSOMETHING" trigger functions.
+   */
+  const JOIN_TABLES = [
+    self::MUSICIANS_TABLE => [
+      'entity' => Entities\Musician::class,
+      'identifier' => [ 'id' => 'musician_id' ],
+      'column' => 'id',
+      'description' => [ 'name', 'first_name' ],
+    ],
+  ];
 
   public function __construct(
     ConfigService $configService
@@ -179,46 +192,63 @@ class ProjectParticipants extends PMETableViewBase
       'sort'     => true,
     );
 
-    // initiate the join with the musicians table
-    $joinIndex[self::MUSICIANS_TABLE] = count($opts['fdd']);
-    $opts['fdd']['musicians_key'] = [
-      'tab' => 'all',
-      'name' => $this->l->t('Musician'),
-      'input' => 'V',
-      'sql' => 'musician_id',
-      'options' => '',
-      'sort' => true,
-      'values' => [
-        'table' => self::MUSICIANS_TABLE,
-        'column' => 'id',
-        'description' => [
-          'columns' => [ 'name', 'first_name' ],
-          'divs' => [ ', ' ],
+    foreach (self::JOIN_TABLES as $table => $joinInfo) {
+
+      $joinIndex[$table] = count($opts['fdd']);
+
+      //'identifier' => [ 'id' => 'musician_id' ],
+
+      $joinData = [];
+      foreach ($joinInfo['identifier'] as $joinTableKey => $mainTableKey) {
+        $joinData[] = '$main_table.'.$mainTableKey.' = $join_table.'.$joinTableKey;
+      }
+      $opts['fdd'][$table.'_key'] = [
+        'tab' => 'all',
+        'name' => $table.'_key',
+        'input' => 'V',
+        'sql' => 'PMEjoin'.$joinIndex[$table].'.'.$joinInfo['column'],
+        'options' => '',
+        'sort' => true,
+        'values' => [
+          'table' => self::MUSICIANS_TABLE,
+          'column' => $joinInfo['column'],
+          'description' => $joinInfo['description'],
+          'join' => implode(' AND ', $joinData),
         ],
-        'join' => '$main_table.`musician_id` = $join_table.`id`'
-      ],
+      ];
+      $this->logInfo('JOIN '.print_r($opts['fdd'][$table.'_key'], true));
+
+    }
+
+    $opts['fdd']['first_name'] = [
+      'name'     => $this->l->t('First Name'),
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true,
+      'sql'      => 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE].'.first_name',
+      'input'    => 'S', // skip
+      'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
     ];
 
-
-    // $musFirstNameIdx = count($opts['fdd']);
-    // $opts['fdd']['first_name'] = [
-    //   'name'     => $this->l->t('First Name'),
-    //   'select'   => 'T',
-    //   'maxlen'   => 384,
-    //   'sort'     => true,
-    //   'sql'     => '`PMEjoin'.$musFirstNameIdx.'`.`first_name`',
-    //   'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
-    //   'values' => [
-    //     'table'  => self::MUSICIANS_TABLE,
-    //     'column' => 'id',
-    //     'description' => 'first_name',
-    //     'join' => '$join_table.id = $main_table.musician_id',
-    //   ],
-    // ];
-
+    $opts['fdd']['name'] = [
+      'name'     => $this->l->t('First Name'),
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true,
+      'sql'     => 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE].'.name',
+      'input'    => 'S', // skip
+      'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
+    ];
 
     // GROUP BY clause, if needed. Should come last
     $opts['groupby_fields'] = [ 'PMEtable.projectId', PMEtable0.musicianId, /* 'ProjectInstrumentId' */ ];
+
+    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateTrigger' ];
+
+//     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
+//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
 
     ///@@@@@@@@@@@@@@@@@@@@@
 
@@ -1286,6 +1316,56 @@ class ProjectParticipants extends PMETableViewBase
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /**
+   * phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
+   */
+  public function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    foreach (self::JOIN_TABLES as $table => $joinInfo) {
+      $entityClass = $joinInfo['entity'];
+      $meta = $this->classMetadata($entityClass);
+      $fieldNames = $meta->fieldNames;
+      $entityChangeSet = array_intersect_key($fieldNames, array_fill_keys($changed, true));
+
+      $this->logInfo('Old: '.print_r($oldvals,true));
+      $this->logInfo('New: '.print_r($newvals,true));
+      $this->logInfo('Entity: '.print_r($entityClass, true));
+      $this->logInfo('FieldNames: '.print_r($meta->fieldNames, true));
+      $this->logInfo('Changed: '.print_r($changed, true));
+      $this->logInfo('ChangeSet: '.print_r($entityChangeSet, true));
+      $this->logInfo('Keys: '.print_r($meta->identifier, true));
+
+      $identifier = [];
+      foreach ($meta->identifier as $key) {
+        $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
+      }
+      $this->logInfo('Keys: '.print_r($identifier, true));
+
+      $entity = $this->getDatabaseRepository($entityClass)->find($identifier);
+      foreach ($entityChangeSet as $column => $field) {
+        $entity[$field] = $newvals[$column];
+      }
+      $this->persist($entity);
+      $this->flush($entity);
+      $changed = array_diff($changed, array_keys($entityChangeSet));
+    }
+    return false;
   }
 
 }
