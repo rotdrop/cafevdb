@@ -359,7 +359,7 @@ class phpMyEdit
 	function copy_enabled()	  { return stristr($this->options, 'P') && $this->add_enabled(); }
 	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tabs) > 0; }
 	function hidden($k)		  { return stristr(@$this->fdd[$k]['input'],'H'); }
-	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S'); }
+	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S') || isset($this->fdd[$k]['values']['join']['reference']); }
 	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
 	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R'); }
 	function annotation($k)	  { return stristr(@$this->fdd[$k]['input'],'A'); }
@@ -1916,7 +1916,7 @@ class phpMyEdit
 		 * only one possible value, then this value must not be changed.
 		 */
 		$multiValues = false;
-		if (stristr("MCOD", $this->fdd[$k]['select']) !== false) {
+		if (empty($this->fdd[$k]['select']) || stristr("MCOD", $this->fdd[$k]['select']) !== false) {
 			$vals        = false;
 			$groups      = false;
 			$data        = false;
@@ -1968,7 +1968,8 @@ class phpMyEdit
 			} else if (file_exists($php)) {
 				echo include($php);
 			}
-		} elseif ($vals !== false && $multiValues) {
+		} elseif ($vals !== false &&
+				  (stristr("MCOD", $this->fdd[$k]['select']) !== false || $multiValues)) {
 			$multiple = $this->col_has_multiple($k);
 			$readonly = $this->disabledTag($k) || count($vals) == 0;
 			$selected = @$row["qf$k"];
