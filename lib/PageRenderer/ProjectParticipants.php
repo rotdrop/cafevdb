@@ -388,7 +388,6 @@ class ProjectParticipants extends PMETableViewBase
       'tab'      => [ 'id' => 'musician' ],
       'css'      => [ 'postfix' => ' phone-number' ],
       'input'    => 'S',
-      'sql'      => $musiciansJoin.'.mobile_phone',
       'display'  => [
         'popup' => function($data) {
           return $this->phoneNumberService->metaData($data, null, '<br/>');
@@ -397,7 +396,12 @@ class ProjectParticipants extends PMETableViewBase
       'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
-      'sort'     => true
+      'sort'     => true,
+      //'sql'      => $musiciansJoin.'.mobile_phone',
+      'values' => [
+        'column' => 'mobile_phone',
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
     ];
 
     $opts['fdd']['fixed_line_phone'] = [
@@ -405,7 +409,6 @@ class ProjectParticipants extends PMETableViewBase
       'tab'      => [ 'id' => 'musician' ],
       'css'      => [ 'postfix' => ' phone-number' ],
       'input'    => 'S',
-      'sql'      => $musiciansJoin.'.fixed_line_phone',
       'display'  => [
         'popup' => function($data) {
           return $this->phoneNumberService->metaData($data, null, '<br/>');
@@ -414,12 +417,22 @@ class ProjectParticipants extends PMETableViewBase
       'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
-      'sort'     => true
+      'sort'     => true,
+      //'sql'      => $musiciansJoin.'.fixed_line_phone',
+      'values' => [
+        'column' => 'fixed_line_phone',
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
     ];
 
     $opts['fdd']['email'] = $this->defaultFDD['email'];
     $opts['fdd']['email']['tab'] = ['id' => 'musician'];
-    $opts['fdd']['email']['sql'] = $musiciansJoin.'.email';
+    //$opts['fdd']['email']['sql'] = $musiciansJoin.'.email';
+    $opts['fdd']['email']['values'] = [
+      'column' => 'email',
+      'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+    ];
+
     $opts['fdd']['email']['input'] = 'S';
 
     $opts['fdd']['street'] = [
@@ -430,7 +443,11 @@ class ProjectParticipants extends PMETableViewBase
       'maxlen'   => 128,
       'sort'     => true,
       'input'    => 'S',
-      'sql'      => $musiciansJoin.'.street',
+      //'sql'      => $musiciansJoin.'.street',
+      'values' => [
+        'column' => 'street',
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
     ];
 
     $opts['fdd']['postal_code'] = [
@@ -441,7 +458,11 @@ class ProjectParticipants extends PMETableViewBase
       'maxlen'   => 11,
       'sort'     => true,
       'input'    => 'S',
-      'sql'      => $musiciansJoin.'.postal_code',
+      //'sql'      => $musiciansJoin.'.postal_code',
+      'values' => [
+        'column' => 'postal_code',
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
     ];
 
     $opts['fdd']['city'] = [
@@ -452,7 +473,11 @@ class ProjectParticipants extends PMETableViewBase
       'maxlen'   => 128,
       'sort'     => true,
       'input'    => 'S',
-      'sql'      => $musiciansJoin.'.city',
+      //'sql'      => $musiciansJoin.'.city',
+      'values' => [
+        'column' => 'city',
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
     ];
 
     $countries = $this->geoCodingService->countryNames();
@@ -467,7 +492,6 @@ class ProjectParticipants extends PMETableViewBase
       'css'      => ['postfix' => ' musician-address country chosen-dropup'],
       'sort'     => true,
       'input'    => 'S',
-      //'sql'      => $musiciansJoin.'.country',
       'values' => [
         'column' => 'country',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
