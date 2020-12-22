@@ -36,7 +36,7 @@ namespace CAFEVDB {
     $nav .= Navigation::pageControlElement('debit-mandates', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('project-payments', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('debit-notes', $projectName, $projectId);
-    if ($projectName === Config::getValue('memberTable', false)) {
+    if ($projectName === $appConifg->getConfigValue('memberTable', false)) {
       $nav .= Navigation::pageControlElement('insurances');
     }
     $nav .= Navigation::pageControlElement('projectinstruments', $projectName, $projectId);

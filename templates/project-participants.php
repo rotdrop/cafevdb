@@ -39,7 +39,7 @@ $nav .= $pageNavigation->pageControlElement('projectinstruments', $projectName, 
 //   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
 //   $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
 //   $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);
-//   if ($projectName === Config::getValue('memberTable', false)) {
+//   if ($projectName === $appConifg->getConfigValue('memberTable', false)) {
 //     $nav .= $pageNavigation->pageControlElement('insurances');
 //   }
 // }

@@ -36,7 +36,7 @@ if ($projectId >= 0) {
     $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
     $nav .= $pageNavigation->pageControlElement('debit-mandates', $project, $projectId);
     $nav .= $pageNavigation->pageControlElement('debit-notes', $project, $projectId);
-    if ($project === Config::getValue('memberTable', false)) {
+    if ($project === $appConifg->getConfigValue('memberTable', false)) {
       $nav .= $pageNavigation->pageControlElement('insurances');
     }
   }

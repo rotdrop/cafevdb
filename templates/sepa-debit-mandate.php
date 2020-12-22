@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -36,7 +36,7 @@ $musId      = $_['MusicianId'];
 $musName    = $_['MusicianName'];
 $class      = $_['CSSClass'];
 
-$membersTableId = Config::getSetting('memberTableId', -1);
+$membersTableId = $appConfig->getConfigValue('memberTableId', -1);
 
 $recurring = $l->t('Type: ').($_['sequenceType'] == 'once' ? $l->t('once') : $l->t('permanent'));
 

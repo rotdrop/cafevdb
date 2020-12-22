@@ -25,8 +25,8 @@ namespace CAFEVDB {
   $table = new InstrumentInsurance();
   $css_pfx = InstrumentInsurance::CSS_PREFIX;
 
-  $projectName = Config::getValue('memberTable', false);
-  $projectId = Config::getValue('memberTableId', false);
+  $projectName = $appConifg->getConfigValue('memberTable', false);
+  $projectId = $appConifg->getConfigValue('memberTableId', false);
 
   $nav = '';
   $nav .= Navigation::pageControlElement('projectlabel', $projectName, $projectId);
