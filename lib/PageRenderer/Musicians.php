@@ -47,16 +47,20 @@ class Musicians extends PMETableViewBase
 {
   const CSS_CLASS = 'musicians';
   const TABLE = 'Musicians';
-  const INSTRUMENTS_JOIN = 'MusicianInstrument';
+  const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
   const PHOTO_JOIN = 'MusicianPhoto';
 
   /** @var GeoCodingService */
   private $geoCodingService;
 
-  private $projectMode;
-
   /** @var OCA\CAFEVDB\ServicePhoneNumberService */
   private $phoneNumberService;
+
+  /**
+   * @var bool Called with project-id in order to add musicians to an
+   * existing project
+   */
+  private $projectMode;
 
   public function __construct(
     ConfigService $configService
@@ -295,10 +299,10 @@ make sure that the musicians are also automatically added to the
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
-        'table'       => self::INSTRUMENTS_JOIN,
+        'table'       => self::MUSICIAN_INSTRUMENT_TABLE,
         'column'      => 'instrument_id',
         'description' => [ 'columns' => 'instrument_id' ],
-        'join'        => '$join_table.musician_id = $main_table.Id',
+        'join'        => '$join_table.musician_id = $main_table.id',
       ]
     ];
 
@@ -320,7 +324,7 @@ make sure that the musicians are also automatically added to the
         'description' => 'instrument',
         'orderby'     => 'sort_order',
         //        'groups'      => 'Familie',
-        'join'        => '$join_table.Id = PMEjoin'.$musInstIdx.'.instrument_id'
+        'join'        => '$join_table.id = PMEjoin'.$musInstIdx.'.instrument_id'
       ],
     ];
 
@@ -396,7 +400,7 @@ make sure that the musicians are also automatically added to the
       'display'  => [
         'popup' => function($data) {
           return $this->phoneNumberService->metaData($data, null, '<br/>');
-      }
+        }
       ],
       'select'   => 'T',
       'maxlen'   => 128,
@@ -417,8 +421,8 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
     ];
 
-     $opts['fdd']['email'] = $this->defaultFDD['email'];
-     $opts['fdd']['email']['tab'] = ['id' => 'contact'];
+    $opts['fdd']['email'] = $this->defaultFDD['email'];
+    $opts['fdd']['email']['tab'] = ['id' => 'contact'];
 
     $opts['fdd']['street'] = [
       'tab'      => ['id' => 'contact'],
@@ -447,8 +451,8 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
-     $countries = $this->geoCodingService->countryNames();
-     $countryGroups = $this->geoCodingService->countryContinents();
+    $countries = $this->geoCodingService->countryNames();
+    $countryGroups = $this->geoCodingService->countryContinents();
 
     $opts['fdd']['country'] = [
       'tab'      => ['id' => 'contact'],
@@ -693,7 +697,7 @@ make sure that the musicians are also automatically added to the
     $keyField = 'InstrumentKey';
     $key = array_search($field, $changed);
     if ($key !== false) {
-      $table      = self::INSTRUMENTS_JOIN;
+      $table      = self::MUSICIAN_INSTRUMENT_TABLE;
       $musicianId = $pme->rec;
       $oldIds     = Util::explode(',', $oldValues[$field]);
       $newIds     = Util::explode(',', $newValues[$field]);
