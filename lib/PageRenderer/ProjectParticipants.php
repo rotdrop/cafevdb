@@ -197,8 +197,7 @@ class ProjectParticipants extends PMETableViewBase
         //'query' => true,
         'sort'  => true,
         'time'  => true,
-        'tabs'  => false,
-        //'tabs' => self::tableTabs($userExtraFields, $useFinanceTab),
+        'tabs' => $this->tableTabs($userExtraFields, $useFinanceTab),
         'navigation' => 'VCD',
     ]);
 
@@ -247,7 +246,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'][$table.'_key'] = [
         'tab' => 'all',
         'name' => $table.'_key',
-        'input' => 'V',
+        'input' => 'VH',
         'sql' => ($group
                   ? 'GROUP_CONCAT(DISTINCT '.$fqnColumn.' ORDER BY '.$fqnColumn.' ASC)'
                   : $fqnColumn),
@@ -269,27 +268,28 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts['fdd']['first_name'] = [
       'name'     => $this->l->t('First Name'),
+      'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
       'sql'      => 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE].'.first_name',
       'input'    => 'S', // skip
-      'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
     ];
 
     $opts['fdd']['name'] = [
       'name'     => $this->l->t('Name'),
+      'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
       'sql'     => 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE].'.name',
       'input'    => 'S', // skip
-      'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
     ];
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
         'name'     => $this->l->t('Disabled'),
+        'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
         'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
         'input'    => $expertMode ? '' : 'R',
         'select'   => 'C',
@@ -308,14 +308,14 @@ class ProjectParticipants extends PMETableViewBase
     $column = 'id';
     $fqnColumn = 'PMEjoin'.$fieldIndex.'.'.$column;
     $opts['fdd']['musician_instruments'] = [
-      //'tab'         => ['id' => 'orchestra'],
       'name'        => $this->l->t('All Instruments'),
+      'tab'         => [ 'id' => [ 'musician', 'instrumentation' ] ],
       'css'         => ['postfix' => ' musician-instruments tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
       'input'       => 'S', // skip
       'sort'        => true,
       'sql'         => 'GROUP_CONCAT(DISTINCT '.$fqnColumn.' ORDER BY '.$fqnColumn.' ASC)',
-      'input'       => 'SV',
+      'input'       => 'S',
       'select'      => 'M',
       'filter'      => 'having', // need "HAVING" for group by stuff
       'values' => [
@@ -332,15 +332,21 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd']['musician_instruments']['values'],
       [ 'filters' => '$table.Disabled = 0' ]);
 
+    /*
+     *
+     **************************************************************************
+     *
+     * several fields from Musicians table
+     *
+     */
 
-    //// several fields from Musicians table
     $musiciansJoin = 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE];
 
     $opts['fdd']['mobile_phone'] = [
       'name'     => $this->l->t('Mobile Phone'),
       'tab'      => [ 'id' => 'musician' ],
       'css'      => [ 'postfix' => ' phone-number' ],
-      'input'    => 'SV',
+      'input'    => 'S',
       'sql'      => $musiciansJoin.'.mobile_phone',
       'display'  => [
         'popup' => function($data) {
@@ -357,7 +363,7 @@ class ProjectParticipants extends PMETableViewBase
       'name'     => $this->l->t('Fixed Line Phone'),
       'tab'      => [ 'id' => 'musician' ],
       'css'      => [ 'postfix' => ' phone-number' ],
-      'input'    => 'SV',
+      'input'    => 'S',
       'sql'      => $musiciansJoin.'.fixed_line_phone',
       'display'  => [
         'popup' => function($data) {
@@ -371,40 +377,40 @@ class ProjectParticipants extends PMETableViewBase
     ];
 
     $opts['fdd']['email'] = $this->defaultFDD['email'];
-    $opts['fdd']['email']['tab'] = ['id' => 'contact'];
+    $opts['fdd']['email']['tab'] = ['id' => 'musician'];
     $opts['fdd']['email']['sql'] = $musiciansJoin.'.email';
-    $opts['fdd']['email']['input'] = 'SV';
+    $opts['fdd']['email']['input'] = 'S';
 
     $opts['fdd']['street'] = [
-      'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Street'),
+      'tab'      => [ 'id' => 'musician' ],
       'css'      => ['postfix' => ' musician-address street'],
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true,
-      'input'    => 'SV',
+      'input'    => 'S',
       'sql'      => $musiciansJoin.'.street',
     ];
 
     $opts['fdd']['postal_code'] = [
-      'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Postal Code'),
+      'tab'      => [ 'id' => 'musician' ],
       'css'      => ['postfix' => ' musician-address postal-code'],
       'select'   => 'T',
       'maxlen'   => 11,
       'sort'     => true,
-      'input'    => 'SV',
+      'input'    => 'S',
       'sql'      => $musiciansJoin.'.postal_code',
     ];
 
     $opts['fdd']['city'] = [
-      'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('City'),
+      'tab'      => [ 'id' => 'musician' ],
       'css'      => ['postfix' => ' musician-address city'],
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true,
-      'input'    => 'SV',
+      'input'    => 'S',
       'sql'      => $musiciansJoin.'.city',
     ];
 
@@ -412,8 +418,8 @@ class ProjectParticipants extends PMETableViewBase
     $countryGroups = $this->geoCodingService->countryContinents();
 
     $opts['fdd']['country'] = [
-      'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Country'),
+      'tab'      => [ 'id' => 'musician' ],
       'select'   => 'D',
       'maxlen'   => 128,
       'default'  => $this->getConfigValue('streetAddressCountry'),
@@ -421,7 +427,7 @@ class ProjectParticipants extends PMETableViewBase
       'valueGroups' => $countryGroups,
       'css'      => ['postfix' => ' musician-address country chosen-dropup'],
       'sort'     => true,
-      'input'    => 'SV',
+      'input'    => 'S',
       'sql'      => $musiciansJoin.'.country',
     ];
 
@@ -1501,6 +1507,98 @@ class ProjectParticipants extends PMETableViewBase
       $changed = array_diff($changed, array_keys($entityChangeSet));
     }
     return false;
+  }
+
+  private function tableTabId($idOrName)
+  {
+    $dflt = $this->defaultTableTabs();
+    foreach($dflt as $tab) {
+      if ($idOrName === $tab['name']) {
+        return $idOrName;
+      }
+    }
+    return $idOrName;
+  }
+
+  /**
+   * Export the default tabs family.
+   */
+  private function defaultTableTabs($useFinanceTab = false)
+  {
+    $pre = [
+      [
+        'id' => 'instrumentation',
+        'default' => true,
+        'tooltip' => $this->toolTipsService['project-instrumentation-tab'],
+        'name' => $this->l->t('Instrumentation related data'),
+      ],
+      [
+        'id' => 'project',
+        'tooltip' => $this->toolTipsService['project-metadata-tab'],
+        'name' => $this->l->t('Project related data'),
+      ],
+    ];
+    $finance = [
+      [
+        'id' => 'finance',
+        'tooltip' => $this->toolTipsService['project-finance-tab'],
+        'name' => $this->l->t('Finance related data'),
+      ],
+    ];
+    $post = [
+      [
+        'id' => 'musician',
+        'tooltip' => $this->toolTipsService['project-personaldata-tab'],
+        'name' => $this->l->t('Personal data'),
+      ],
+      [
+        'id' => 'tab-all',
+        'tooltip' => $this->toolTipsService['pme-showall-tab'],
+        'name' => $this->l->t('Display all columns'),
+      ],
+    ];
+    if ($useFinanceTab) {
+      return array_merge($pre, $finance, $post);
+    } else {
+      return array_merge($pre, $post);
+    }
+  }
+
+  /**
+   * Export the description for the table tabs.
+   */
+  private function tableTabs($extraFields = false, $useFinanceTab = false)
+  {
+    $dfltTabs = $this->defaultTableTabs($useFinanceTab);
+
+    if (!is_array($extraFields)) {
+      return $dfltTabs;
+    }
+
+    $extraTabs = array();
+    foreach($extraFields as $field) {
+      if (empty($field['Tab'])) {
+        continue;
+      }
+
+      $extraTab = $field['Tab'];
+      foreach($dfltTabs as $tab) {
+        if ($extraTab === $tab['id'] ||
+            $extraTab === (string)$tab['name']) {
+          $extraTab = false;
+          break;
+        }
+      }
+      if ($extraTab !== false) {
+        $extraTabs[] = [
+          'id' => $extraTab,
+          'name' => $this->l->t($extraTab),
+          'tooltip' => $this->toolTipsService['extra-fields-extra-tab'],
+        ];
+      }
+    }
+
+    return array_merge($dfltTabs, $extraTabs);
   }
 
 }
