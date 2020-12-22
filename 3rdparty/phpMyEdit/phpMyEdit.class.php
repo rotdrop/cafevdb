@@ -1916,18 +1916,20 @@ class phpMyEdit
 		 * only one possible value, then this value must not be changed.
 		 */
 		$multiValues = false;
-		$vals        = false;
-		$groups      = false;
-		$data        = false;
-		$titles      = false;
-		$valgrp      = false;
-		if ($this->col_has_values($k)) {
-			$valgrp = $this->set_values($k);
-			$vals   = $valgrp['values'];
-			$groups = $valgrp['groups'];
-			$titles = $valgrp['titles'];
-			$data   = $valgrp['data'];
-			$multiValues = count($vals) > 1;
+		if (stristr("MCOD", $this->fdd[$k]['select']) !== false) {
+			$vals        = false;
+			$groups      = false;
+			$data        = false;
+			$titles      = false;
+			$valgrp      = false;
+			if ($this->col_has_values($k)) {
+				$valgrp = $this->set_values($k);
+				$vals   = $valgrp['values'];
+				$groups = $valgrp['groups'];
+				$titles = $valgrp['titles'];
+				$data   = $valgrp['data'];
+				$multiValues = count($vals) > 1;
+			}
 		}
 
 		/* If multi is not requested and the value-array has only one
@@ -1966,8 +1968,7 @@ class phpMyEdit
 			} else if (file_exists($php)) {
 				echo include($php);
 			}
-		} elseif ($vals !== false &&
-			(stristr("MCOD", $this->fdd[$k]['select']) !== false || $multiValues)) {
+		} elseif ($vals !== false && $multiValues) {
 			$multiple = $this->col_has_multiple($k);
 			$readonly = $this->disabledTag($k) || count($vals) == 0;
 			$selected = @$row["qf$k"];
@@ -3294,7 +3295,7 @@ class phpMyEdit
 			);
 		$query = $this->get_SQL_main_list_query($count_parts);
 		if (!empty($groupBy)) {
-			$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
+			//$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
 		}
 		$res = $this->myquery($query, __LINE__);
 		$row = $this->sql_fetch($res, 'n');
