@@ -71,9 +71,9 @@ class OrganizationalRolesService
    * Return true if the logged in or given user has a dedicated
    * administrative role for the orchestra.
    */
-  private function isDedicatedBoardMember(string $role, string $uid, bool $allowGroupAccess)
+  private function isDedicatedBoardMember(string $role, $uid, bool $allowGroupAccess)
   {
-    empty($uid) && $uid = $this->getUserId();
+    empty($uid) && $uid = $this->userId();
     $musicianId = $this->getConfigValue($role.'Id', -1);
     if ($musicianId == -1) {
       return false;
@@ -95,7 +95,7 @@ class OrganizationalRolesService
    */
   public function isTreasurer($uid = null, $allowGroupAccess = false)
   {
-    return isDedicatedBoardMember('treasurer', $uid, $allowGroupAccess);
+    return $this->isDedicatedBoardMember('treasurer', $uid, $allowGroupAccess);
   }
 
   /**
@@ -173,7 +173,7 @@ class OrganizationalRolesService
    */
   public function isCloudAdmin($uid = null)
   {
-    empty($uid) && $uid = $this->getUserId();
+    empty($uid) && $uid = $this->userId();
     return $this->groupManager()->isAdmin($uid);
   }
 
