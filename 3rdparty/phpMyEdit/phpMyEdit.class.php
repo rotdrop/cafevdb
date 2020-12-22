@@ -771,7 +771,7 @@ class phpMyEdit
 			$values = $this->fdd[$field_num]['values']['queryValues'];
 		} else if (isset($this->fdd[$field_num]['values']['table']) || $strict) {
 			$value_group_data = $this->set_values_from_table($field_num, $strict);
-			$groups = (array)$groups + (array)$value_group_data['groups'];
+			$groups = (array)$groups + (array)$valuegroup_data['groups'];
 			$data = (array)$data + (array)$value_group_data['data'];
 			$values = [];
 			if (!empty($this->fdd[$field_num]['values2'])) {
@@ -910,20 +910,25 @@ class phpMyEdit
 			return $this->fdd[$field]['sql'];
 		}
 		// on copy/change always use simple key retrieving, or given sql descriptor
-		if ($this->virtual($field)
-			|| $this->skipped($field)
-			|| $this->add_operation()
-			|| $this->copy_operation()
-			|| $this->change_operation()) {
+		if (!isset($this->fdd[$field]['values']['join']['reference'])
+			&&
+			($this->virtual($field)
+			 || $this->add_operation()
+			 || $this->copy_operation()
+			 || $this->change_operation())) {
 			return $this->col_has_sql($field)
 				? $this->fdd[$field]['sql']
 				: $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
 		} else {
-			if (isset($this->fdd[$this->fds[$field]]['values']['description']) && ! $dont_desc) {
+			$fdd = $this->fdd[$field];
+			if (isset($fdd['values']['description']) && ! $dont_desc) {
 
-				$join_table = 'PMEjoin'.$field;
+				$join_index = isset($fdd['values']['join']['reference'])
+							? $fdd['values']['join']['reference']
+							: $field;
+				$join_table = 'PMEjoin'.$join_index;
 
-				$desc = &$this->fdd[$this->fds[$field]]['values']['description'];
+				$desc = $fdd['values']['description'];
 				if (is_array($desc) && is_array($desc['columns'])) {
 					$ret	  = 'CONCAT('; // )
 					$num_cols = sizeof($desc['columns']);
@@ -945,13 +950,18 @@ class phpMyEdit
 				} else if (is_array($desc)) {
 					// TODO
 				} else {
-					$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$this->fdd[$this->fds[$field]]['values']['description'].$this->ed;
+					$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$fdd['values']['description'].$this->ed;
 				}
-			} else if (isset($this->fdd[$this->fds[$field]]['values']['column']) && ! $dont_cols) {
-				$join_table = 'PMEjoin'.$field;
-				$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$this->fdd[$this->fds[$field]]['values']['column'].$this->ed;
+			} else if (isset($fdd['values']['column']) && ! $dont_cols) {
+				$join_index = isset($fdd['values']['join']['reference'])
+							? $fdd['values']['join']['reference']
+							: $field;
+				$join_table = 'PMEjoin'.$join_index;
+				$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$fdd['values']['column'].$this->ed;
 			} else {
-				$ret = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
+				$ret = $this->col_has_sql($field)
+					 ? $this->fdd[$field]['sql']
+					 : $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
 			}
 		}
 		return $ret;
@@ -1085,7 +1095,7 @@ class phpMyEdit
 			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed; // no delimiters here, or maybe some yes
 			if ($this->col_has_values($k)) {
 				if($this->col_has_sql($k)) $fields[] = $this->fdd[$k]['sql'].' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
-				else $fields[] = $this->fqn($k, true, true).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
+				else $fields[] = $this->fqn($k, true).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
 			}
 			if ($this->col_has_datemask($k)) {
 				// Date functions of mysql are a nightmare. Leave the
@@ -1111,6 +1121,13 @@ class phpMyEdit
 			$join_column = $this->sd.$this->fdd[$main_column]['values']['column'].$this->ed;
 			$join_desc	 = $this->sd.$this->fdd[$main_column]['values']['description'].$this->ed;
 			$join        = $this->fdd[$main_column]['values']['join'];
+			if (is_array($join)) {
+				if (isset($join['condition'])) {
+					$join = $join['condition'];
+				} else {
+					$join = false;
+				}
+			}
 			if ($join === false) {
 				// use this just for values definitions
 				continue;
@@ -4881,6 +4898,11 @@ class phpMyEdit
 			if ($this->displayed[$field_num] = $this->displayed($field_num)) {
 				$num_fields_displayed++;
 			}
+			if (isset($this->fdd[$key]['values']['join']['reference'])
+				&& !isset($this->fdd[$key]['values']['join']['table'])) {
+				$ref = $this->fdd[$key]['values']['join']['reference'];
+				$this->fdd[$key]['values']['table'] = $this->fdd[$ref]['values']['table'];
+			}
 			if (is_array(@$this->fdd[$key]['values']) &&
 				!($this->fdd[$key]['values']['table'] || $this->fdd[$key]['values']['queryValues'])) {
 				foreach ($this->fdd[$key]['values'] as $val) {
@@ -4892,11 +4914,6 @@ class phpMyEdit
 
 			$this->fdd[$field_num] = $this->fdd[$key];
 			$field_num++;
-		}
-		if (false) {
-			echo '<PRE>';
-			print_r($this->fdd);
-			echo '</PRE>';
 		}
 		$this->num_fds				= $field_num;
 		$this->num_fields_displayed = $num_fields_displayed;
@@ -5649,6 +5666,7 @@ class phpMyEdit
 // c-basic-offset: 4 ***
 // tab-width: 4 ***
 // indent-tabs-mode: t ***
+// web-mode-code-indent-offset: 4 ***
 // End: ***
 
 ?>
