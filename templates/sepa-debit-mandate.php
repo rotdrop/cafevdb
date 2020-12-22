@@ -27,7 +27,7 @@ $title = $l->t("SEPA Debit Mandate of %s", array($_['MusicianName']));
 
 $reference  = $_['mandateReference'];
 $expired    = $_['mandateExpired'];
-$expiredTip = Config::toolTips('sepa-mandate-expired');
+$expiredTip = $toolTips['sepa-mandate-expired'];
 $mandateId  = $_['mandateId'];
 $prjId      = $_['ProjectId'];
 $mdtPrjId   = $_['MandateProjectId'];
@@ -75,7 +75,7 @@ $recurring = $l->t('Type: ').($_['sequenceType'] == 'once' ? $l->t('once') : $l-
            <?php echo $mdtPrjId === $membersTableId ? 'checked="checked"' : ''; ?>
            />
     <label for="debit-mandate-orchestra-member"
-           title="<?php echo  Config::toolTips('debit-mandate-orchestra-member'); ?>"
+           title="<?php echo  $toolTips['debit-mandate-orchestra-member']; ?>"
            class="tooltip-right">
       <?php echo $l->t('Club Member'); ?>
     </label>
@@ -129,7 +129,7 @@ $recurring = $l->t('Type: ').($_['sequenceType'] == 'once' ? $l->t('once') : $l-
     <span id="debitRecurringInfo"><?php echo $recurring; ?></span>
     <label class="sepa-validation-toggle"
            for="sepa-validation-toggle"
-           title="<?php echo Config::toolTips('sepa-instant-validation'); ?>">
+           title="<?php echo $toolTips['sepa-instant-validation']; ?>">
       <?php echo $l->t('Instant IBAN Validation:'); ?>
       <input type="checkbox"
              checked="checked"

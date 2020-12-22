@@ -79,7 +79,7 @@ $frozen = $_['FrozenRecipients'];
         <span id="basic-recipient-set-wrapper" class="basic-recipients-set container outer left">
           <span class="label vmiddle">
             <label class="basic-recipients-set"
-                   title="<?php echo Config::tooltips('email-recipients-basic-set'); ?>">
+                   title="<?php echo $toolTips['email-recipients-basic-set']; ?>">
               <?php echo $l->t('Basic Recipients Set'); ?>
             </label>
           </span>
@@ -87,7 +87,7 @@ $frozen = $_['FrozenRecipients'];
             <input type="checkbox"
                    id="basic-recipients-set-from-project"
                    class="basic-recipients-set from-project tip"
-                   title="<?php echo Config::tooltips('email-recipients-from-project'); ?>"
+                   title="<?php echo $toolTips['email-recipients-from-project']; ?>"
                    name="emailRecipients[BasicRecipientsSet][FromProject]"
                    value="1"
             <?php echo $_['BasicRecipientsSet']['FromProject'] ? 'checked="checked"' : ''; ?>
@@ -95,7 +95,7 @@ $frozen = $_['FrozenRecipients'];
             <span class="label right">
               <label for="basic-recipients-set-from-project"
                      class="tip"
-                     title="<?php echo Config::tooltips('email-recipients-from-project'); ?>">
+                     title="<?php echo $toolTips['email-recipients-from-project']; ?>">
                 <span class="basic-recipients-set from-project button">&isin; <?php echo $projectName; ?></span>
               </label>
             </span>
@@ -104,7 +104,7 @@ $frozen = $_['FrozenRecipients'];
             <input type="checkbox"
                    id="basic-recipients-set-except-project"
                    class="basic-recipients-set except-project tip"
-                   title="<?php echo Config::tooltips('email-recipients-except-project'); ?>"
+                   title="<?php echo $toolTips['email-recipients-except-project']; ?>"
                    name="emailRecipients[BasicRecipientsSet][ExceptProject]"
                    value="1"
             <?php echo $_['BasicRecipientsSet']['ExceptProject'] ? 'checked="checked"' : ''; ?>
@@ -112,7 +112,7 @@ $frozen = $_['FrozenRecipients'];
             <span class="label right">
               <label for="basic-recipients-set-except-project"
                      class="tip"
-                     title="<?php echo Config::tooltips('email-recipients-except-project'); ?>">
+                     title="<?php echo $toolTips['email-recipients-except-project']; ?>">
                 <span class="basic-recipients-set except-project button">&notin; <?php echo $projectName; ?></span>
               </label>
             </span>
@@ -126,7 +126,7 @@ $frozen = $_['FrozenRecipients'];
     <span class="member-status-filter container left vmiddle">
       <span class="label left">
         <label for="member-status-filter"
-               title="<?php echo Config::tooltips('email-recipients-member-status-filter'); ?>"
+               title="<?php echo $toolTips['email-recipients-member-status-filter']; ?>"
                >
           <?php echo $l->t('Member-Status'); ?>
         </label>
@@ -135,7 +135,7 @@ $frozen = $_['FrozenRecipients'];
               multiple="multiple"
               size="<?php echo count($_['MemberStatusFilter']); ?>"
               class="member-status-filter"
-              title="<?php echo Config::tooltips('email-recipients-member-status-filter'); ?>"
+              title="<?php echo $toolTips['email-recipients-member-status-filter']; ?>"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
               name="emailRecipients[MemberStatusFilter][]">
         <?php echo Navigation::selectOptions($_['MemberStatusFilter']); ?>
@@ -153,17 +153,17 @@ $frozen = $_['FrozenRecipients'];
       <select id="recipients-select"
               multiple="multiple"
               size="18"
-              title="<?php echo Config::tooltips('email-recipients-choices'); ?>"
+              title="<?php echo $toolTips['email-recipients-choices']; ?>"
               name="emailRecipients[SelectedRecipients][]">
         <?php echo Navigation::selectOptions($_['EmailRecipientsChoices']); ?>
       </select>
     </span>
     <span class="instruments-filter container right tooltip-top"
-          title="<?php echo Config::tooltips('email-recipients-instruments-filter-container'); ?>">
+          title="<?php echo $toolTips['email-recipients-instruments-filter-container']; ?>">
       <span class="label top">
         <label for="instruments-filter"
                class="tooltip-off"
-               title="<?php echo Config::tooltips('email-recipients-instruments-filter-label'); ?>">
+               title="<?php echo $toolTips['email-recipients-instruments-filter-label']; ?>">
           <?php echo $l->t('Instruments Filter'); ?>
         </label>
       </span>
@@ -172,7 +172,7 @@ $frozen = $_['FrozenRecipients'];
                 multiple="multiple"
                 size="18"
                 class="instruments-filter"
-                title="<?php echo Config::tooltips('email-recipients-instruments-filter'); ?>"
+                title="<?php echo $toolTips['email-recipients-instruments-filter']; ?>"
                 data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
                 name="emailRecipients[InstrumentsFilter][]">
           <?php echo Navigation::selectOptions($_['InstrumentsFilter']); ?>
@@ -185,7 +185,7 @@ $frozen = $_['FrozenRecipients'];
   </div>
   <div class="row">
     <span class="container left missing-email-addresses tooltip-top"
-          title="<?php echo Config::tooltips('email-recipients-broken-emails'); ?>">
+          title="<?php echo $toolTips['email-recipients-broken-emails']; ?>">
       <span class="label top missing-email-addresses<?php echo $missingClass; ?>">
         <?php echo $missingText; ?>
       </span>
@@ -208,27 +208,27 @@ $frozen = $_['FrozenRecipients'];
              id="instruments-filter-apply"
              value="<?php echo $l->t('Apply Filter'); ?>"
              class="instruments-filter-controls apply"
-             title="<?php echo Config::tooltips('email-recipients-filter-apply'); ?>"
+             title="<?php echo $toolTips['email-recipients-filter-apply']; ?>"
              name="emailRecipients[ApplyInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-undo"
              value="<?php echo $l->t('Undo Filter'); ?>"
              class="instruments-filter-controls undo"
-             title="<?php echo Config::tooltips('email-recipients-filter-undo'); ?>"
+             title="<?php echo $toolTips['email-recipients-filter-undo']; ?>"
              disabled="disabled"
              name="emailRecipients[UndoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-redo"
              value="<?php echo $l->t('Redo Filter'); ?>"
              class="instruments-filter-controls redo"
-             title="<?php echo Config::tooltips('email-recipients-filter-redo'); ?>"
+             title="<?php echo $toolTips['email-recipients-filter-redo']; ?>"
              disabled="disabled"
              name="emailRecipients[RedoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-reset"
              value="<?php echo $l->t('Reset Filter'); ?>"
              class="instruments-filter-controls reset"
-             title="<?php echo Config::tooltips('email-recipients-filter-reset'); ?>"
+             title="<?php echo $toolTips['email-recipients-filter-reset']; ?>"
              name="emailRecipients[ResetInstrumentsFilter]" />
     </span>
   </div>

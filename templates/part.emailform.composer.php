@@ -43,12 +43,12 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
     <tr class="stored-messages">
      <!-- <td class="caption stored-messages"><?php echo $l->t("Drafts"); ?>, <?php echo $l->t('Templates')?></td> -->
       <td colspan="2" class="stored-messages-choose stored-messages">
-        <label notitle="<?php echo Config::toolTips('select-stored-messages'); ?>">
+        <label notitle="<?php echo $toolTips['select-stored-messages']; ?>">
           <select size="<?php echo
                               count($_['storedEmails']['drafts']) +
                               count($_['storedEmails']['templates']); ?>"
                   class="stored-messages-selector"
-                  title="<?php echo Config::toolTips('select-stored-messages'); ?>"
+                  title="<?php echo $toolTips['select-stored-messages']; ?>"
                   data-placeholder="<?php echo $l->t("Select draft or template"); ?>"
                   name="emailComposer[StoredMessagesSelector]"
                   id="cafevdb-stored-messages-selector">
@@ -79,7 +79,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       <td class="stored-messages-storage stored-messages">
         <input size="20" placeholder="<?php echo $l->t('New Template Name'); ?>"
         <?php echo ($_['templateName'] != '' ? 'value="'.$_['templateName'].'"' : ''); ?>
-               title="<?php echo Config::toolTips('new-email-template'); ?>"
+               title="<?php echo $toolTips['new-email-template']; ?>"
                name="emailComposer[TemplateName]"
                type="text"
                class="tooltip-bottom"
@@ -92,16 +92,16 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                  name="emailComposer[SaveAsTemplate]"/>
           <label for="check-save-as-template"
                  class="tip save-as-template"
-                 title="<?php echo Config::toolTips('save-as-template'); ?>">
+                 title="<?php echo $toolTips['save-as-template']; ?>">
             <span class="save-as-template button"></span>
           </label>
         </span>
-        <input title="<?php echo Config::toolTips('save-email-message'); ?>"
+        <input title="<?php echo $toolTips['save-email-message']; ?>"
                type="submit"
                class="submit save-message tooltip-wide tooltip-bottom"
                name="emailComposer[SaveMessage]"
                value="<?php echo $l->t('Save Message'); ?>"/>
-        <input title="<?php echo Config::toolTips('delete-saved-message'); ?>"
+        <input title="<?php echo $toolTips['delete-saved-message']; ?>"
                type="submit"
                class="submit delete-message tooltip-bottom"
                name="emailComposer[DeleteMessage]"
@@ -112,9 +112,9 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
     <tr class="email-address">
       <td class="email-address email-recipients caption"><?php echo $l->t('Recipients'); ?></td>
       <td class="email-address email-recipients display" colspan="2">
-        <span title="<?php echo Config::tooltips('email-recipients-listing').'</br>'.htmlspecialchars($_['TO']); ?>"
+        <span title="<?php echo $toolTips['email-recipients-listing'].'</br>'.htmlspecialchars($_['TO']); ?>"
               data-placeholder="<?php echo $l->t('No recipients selected.'); ?>"
-              data-title-intro="<?php echo Config::tooltips('email-recipients-listing'); ?>"
+              data-title-intro="<?php echo $toolTips['email-recipients-listing']; ?>"
               class="email-recipients tooltip-bottom tooltip-mostwide">
           <?php echo $_['TO'] == '' ? $l->t('No recipients selected.') :  $_['TO']; ?>
         </span>
@@ -124,13 +124,13 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       <td class="email-address caption"><?php echo $l->t('Carbon Copy'); ?></td>
       <td class="email-address input" colspan="2">
         <input size="40"
-               title="<?php echo Config::toolTips('email-recipients-freeform-CC'); ?>"
+               title="<?php echo $toolTips['email-recipients-freeform-CC']; ?>"
                class="tooltip-top"
                value="<?php echo htmlspecialchars($_['CC']); ?>"
                name="emailComposer[CC]"
                type="text"
                id="carbon-copy" />
-        <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
+        <input title="<?php echo $toolTips['address-book-emails']; ?>"
                type="submit"
                class="submit address-book-emails CC tooltip-bottom"
                data-for="#carbon-copy"
@@ -142,13 +142,13 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       <td class="email-address caption"><?php echo $l->t('Blind CC'); ?></td>
       <td colspan="2" class="email-address input">
         <input size="40"
-               title="<?php echo Config::toolTips('email-recipients-freeform-BCC'); ?>"
+               title="<?php echo $toolTips['email-recipients-freeform-BCC']; ?>"
                class="tooltip-top"
                value="<?php echo htmlspecialchars($_['BCC']); ?>"
                name="emailComposer[BCC]"
                type="text"
                id="blind-carbon-copy"/>
-        <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
+        <input title="<?php echo $toolTips['address-book-emails']; ?>"
                type="submit"
                class="submit address-book-emails BCC tooltip-bottom"
                data-for="#blind-carbon-copy"
@@ -194,7 +194,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       <td class="attachments" colspan="2">
         <button type="button"
                 class="attachment upload"
-                title="<?php echo Config::toolTips('upload-attachment'); ?>"
+                title="<?php echo $toolTips['upload-attachment']; ?>"
                 value="<?php echo $l->t('Upload new File'); ?>">
           <img class="svg"
                src="<?php echo \OCP\Util::imagePath('core', 'actions/upload.svg'); ?>"
@@ -202,7 +202,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         </button>
         <button type="button"
                 class="attachment cloud"
-                title="<?php echo Config::toolTips('cloud-attachment'); ?>"
+                title="<?php echo $toolTips['cloud-attachment']; ?>"
                 value="<?php echo $l->t('Select from Owncloud'); ?>">
           <img class="svg small"
                src="<?php echo \OCP\Util::imagePath('cafevdb', 'cloud.svg'); ?>"
@@ -211,7 +211,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         <button type="button"
                 <?php echo ($_['ProjectId'] < 0 ? 'style="display:none;"' : ''); ?>
                 class="attachment events"
-                title="<?php echo Config::tooltips('events-attachment'); ?>"
+                title="<?php echo $toolTips['events-attachment']; ?>"
                 value="<?php echo $l->t('Project Events'); ?>">
           <img class="svg events"
                src="<?php echo \OCP\Util::imagePath('cafevdb', 'calendar-dark.svg'); ?>"
@@ -226,13 +226,13 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       </td>
       <td class="event-attachments events" colspan="2">
         <select multiple="multiple"
-                title="<?php echo Config::toolTips('event-attachments-select'); ?>"
+                title="<?php echo $toolTips['event-attachments-select']; ?>"
                 name="emailComposer[AttachedEvents][]"
                 class="event-attachments select"
                 id="event-attachments-selector">
           <?php echo Navigation::selectOptions($eventAttachmentOptions); ?>
         </select>
-        <input title="<?php echo Config::toolTips('delete-all-event-attachments'); ?>"
+        <input title="<?php echo $toolTips['delete-all-event-attachments']; ?>"
                type="submit"
                class="submit delete-all-event-attachments tooltip-top"
                name="emailComposer[DeleteAllAttachments]"
@@ -246,13 +246,13 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       </td>
       <td class="file-attachments" colspan="2">
         <select multiple="multiple"
-                title="<?php echo Config::toolTips('file-attachments-select'); ?>"
+                title="<?php echo $toolTips['file-attachments-select']; ?>"
                 name="emailComposer[AttachedFiles][]"
                 class="file-attachments select"
                 id="file-attachments-selector">
           <?php echo Navigation::selectOptions($fileAttachmentOptions); ?>
         </select>
-        <input title="<?php echo Config::toolTips('delete-all-file-attachments'); ?>"
+        <input title="<?php echo $toolTips['delete-all-file-attachments']; ?>"
                type="submit"
                class="submit delete-all-file-attachments tooltip-top"
                name="emailComposer[DeleteAllAttachments]"
@@ -262,19 +262,19 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
     <tr class="spacer rule below"><td colspan="3"></td></tr>
     <tr class="submit">
       <td class="send">
-        <input title="<?php echo Config::toolTips('send-mass-email'); ?>"
+        <input title="<?php echo $toolTips['send-mass-email']; ?>"
                class="email-composer submit send"
                type="submit" name="emailComposer[Send]"
                value="<?php echo $l->t('Send Em@il'); ?>"/>
       </td>
       <td>
-        <input title="<?php echo Config::toolTips('email-message-export'); ?>"
+        <input title="<?php echo $toolTips['email-message-export']; ?>"
                class="email-composer submit message-export"
                type="submit" name="emailComposer[MessageExport]"
                value="<?php echo $l->t('Message Preview'); ?>"/>
       </td>
       <td class="cancel">
-        <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"
+        <input title="<?php echo $toolTips['cancel-email-composition']; ?>"
                class="email-composer submit cancel tooltip-top"
                type="submit" name="emailComposer[Cancel]"
                value="<?php echo $l->t('Cancel'); ?>" />
