@@ -30,7 +30,7 @@ $nav = '';
 if (!empty($project)) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $project, $projectId);
   $nav .= $pageNavigation->pageControlElement('detailed', $project, $projectId);
-  if (Config::isTreasurer()) {
+  if ($roles->inTreasurerGroup()) {
     $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
     $nav .= $pageNavigation->pageControlElement('debit-mandates', $table->projectName, $table->projectId);
   }

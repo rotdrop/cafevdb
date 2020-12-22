@@ -35,7 +35,7 @@ $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId
 $nav .= $pageNavigation->pageControlElement('project-extra', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('projectinstruments', $projectName, $projectId);
 // @TODO CHECK! TO ID!
-// if (Config::isTreasurer()) {
+// if ($oles->inTreasurerGroup()) {
 //   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
 //   $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
 //   $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);

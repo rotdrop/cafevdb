@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -50,7 +50,7 @@
 
 namespace CAFEVDB {
 
-  $admin = Config::adminContact();
+  $admin = $roles->cloudAdminContact();
 
   $diagnostics = $_['Diagnostics'];
   $numTotal = $diagnostics['TotalCount'];

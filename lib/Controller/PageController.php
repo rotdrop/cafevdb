@@ -29,6 +29,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
@@ -51,6 +52,9 @@ class PageController extends Controller {
   /** @var ConfigCheckService */
   private $configCheckService;
 
+  /** @var \OCA\CAFEVDB\Service\OrganizationalRolesService */
+  private $organizationalRolesService;
+
   /** @var \OCP\IURLGenerator */
   private $urlGenerator;
 
@@ -72,6 +76,7 @@ class PageController extends Controller {
     , IAppContainer $appContainer
     , ConfigService $configService
     , HistoryService $historyService
+    //, OrganizationalRolesService $organizationalRolesService
     , RequestParameterService $parameterService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
@@ -89,6 +94,7 @@ class PageController extends Controller {
     $this->toolTipsService = $toolTipsService;
     $this->pageNavigation = $pageNavigation;
     $this->initialStateService = $initialStateService;
+    $this->organizationalRolesService = new OrganizationalRolesService($configService);
     $this->configCheckService = $configCheckService;
     $this->urlGenerator = $urlGenerator;
     $this->l = $this->l10N();
@@ -237,7 +243,9 @@ class PageController extends Controller {
     $templateParameters = [
       'template' => $template,
       'renderer' => $renderer,
+      'appConfig' => $this->configService,
       'pageNavigation' => $this->pageNavigation,
+      'roles' => $this->organizationalRolesService,
 
       //'l' => $this->l,
       'appName' => $this->appName,

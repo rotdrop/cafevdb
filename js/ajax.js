@@ -131,7 +131,7 @@ var CAFEVDB = CAFEVDB || {};
     //console.info(xhr.status, info, errorThrown, textStatus);
 
     var autoReport = '<a href="mailto:'
-          + CAFEVDB.adminEmail
+          + encodeURIComponent(CAFEVDB.adminContact)
           + '?subject=' + '[CAFEVDB Error] Error Feedback'
           + '&body=' + encodeURIComponent(
 	    'JavaScript User Agent:'
@@ -150,7 +150,7 @@ var CAFEVDB = CAFEVDB || {};
 	      + 'Error Data: ' + CAFEVDB.print_r(failData, true)
               + "\n")
           + '">'
-          + CAFEVDB.adminName
+          + t('cafevdb', 'System Administrator')
           + '</a>';
 
     switch (xhr.status) {

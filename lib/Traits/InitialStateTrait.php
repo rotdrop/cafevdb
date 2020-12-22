@@ -29,6 +29,7 @@ use OCP\IConfig;
 
 use OCA\CAFEVDB\Common\Config;
 use OCA\CAFEVDB\Service\HistoryService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 
 trait InitialStateTrait {
   use ConfigTrait;
@@ -53,9 +54,12 @@ trait InitialStateTrait {
     $language  = $this->getUserValue('lang', 'en');
     $editor    = $this->getUserValue('wysiwygEditor', 'tinymce');
 
-    $admin = Config::adminContact();
-    $adminEmail = $admin['email'];
-    $adminName = $admin['name'];
+    $admins = \OC::$server->query(OrganizationalRolesService::class)->cloudAdminContact();
+    $adminEmail = [];
+    foreach ($admins as $admin) {
+      $adminEmail[] = empty($admin['name']) ? $admin['email'] : $admin['name'].' <'.$admin['email'].'>';
+    }
+    $adminContact = implode(',', $adminEmail);
 
     $this->initialStateService->provideInitialState(
       $this->appName,
@@ -64,8 +68,7 @@ trait InitialStateTrait {
         'toolTipsEnabled' => ($tooltips == 'off' ? false : true),
         'wysiwygEditor' => $editor,
         'language' => $language,
-        'adminEmail' => $adminEmail,
-        'adminName' => $adminName,
+        'adminContact' => $adminContact,
         'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@TODO get from request
         'Page' => [
           'historySize' => $this->historyService->size(),

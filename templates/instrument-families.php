@@ -32,7 +32,7 @@ if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('detailed', $project, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-extra', $project, $projectId);
   $nav .= $pageNavigation->pageControlElement('projectinstruments', $project, $projectId);
-  if (/*Config::isTreasurer()*/true) { // @@TODO
+  if ($roles->inTreasurerGroup()) { // @@TODO
     $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
     $nav .= $pageNavigation->pageControlElement('debit-mandates', $project, $projectId);
     $nav .= $pageNavigation->pageControlElement('debit-notes', $project, $projectId);

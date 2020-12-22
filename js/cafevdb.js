@@ -27,8 +27,7 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.language         = 'en';
   CAFEVDB.readyCallbacks   = []; ///< quasi-document-ready-callbacks
   CAFEVDB.creditsTimer     = -1;
-  CAFEVDB.adminEmail       = t(CAFEVDB.appName, 'unknown');
-  CAFEVDB.adminName        = t(CAFEVDB.appName, 'unknown');
+  CAFEVDB.adminContact     = t(CAFEVDB.appName, 'unknown');
   CAFEVDB.phpUserAgent     = t(CAFEVDB.appName, 'unknown');
 
   CAFEVDB.generateUrl = function(postFix) {

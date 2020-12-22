@@ -50,7 +50,7 @@ echo $this->inc('part.common.header',
                   'navigationcontrols' => $nav,
                   'header' => $renderer->headerText() ]);
 
-if (Config::isTreasurer()) {
+if ($roles->inTreasurerGroup()) {
   $renderer->render();
 } else {
   echo '<div class="specialrole error">'.
