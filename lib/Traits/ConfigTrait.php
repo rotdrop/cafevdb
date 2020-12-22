@@ -178,6 +178,9 @@ trait ConfigTrait {
     return $this->getConfigValue('shareowner');
   }
 
+  /**
+   * @return \OCP\IUSER
+   */
   protected function shareOwner()
   {
     $shareOwnerUid = $this->getConfigValue('shareowner');
@@ -192,6 +195,9 @@ trait ConfigTrait {
     return $this->configService->getGroupId();
   }
 
+  /**
+   * @return \OCP\IGroup
+   */
   protected function group($groupId = null)
   {
     return $this->configService->getGroup($groupId);
