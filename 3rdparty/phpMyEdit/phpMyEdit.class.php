@@ -911,6 +911,7 @@ class phpMyEdit
 		}
 		// on copy/change always use simple key retrieving, or given sql descriptor
 		if ($this->virtual($field)
+			|| $this->skipped($field)
 			|| $this->add_operation()
 			|| $this->copy_operation()
 			|| $this->change_operation()) {
