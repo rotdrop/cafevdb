@@ -35,7 +35,8 @@ use OCP\IDateTimeZone;
 use OCP\Security\ISecureRandom;
 use \OCP\ILogger;
 
-/**Configuration do-it-all class.
+/**
+ * Configuration do-it-all class.
  *
  * @todo This is called on boot without user, determine why.
  *

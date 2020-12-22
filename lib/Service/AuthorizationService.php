@@ -90,7 +90,7 @@ class AuthorizationService
    *
    * @return bool Status of the check.
    */
-  public function admin(string $userId):bool
+  public function isAdmin(string $userId):bool
   {
     if (empty($this->userGroup)) {
       return false;
@@ -103,6 +103,7 @@ class AuthorizationService
     }
     return $this->groupSubAdmin->isSubAdminofGroup($user, $group);
   }
+
 }
 
 // Local Variables: ***
