@@ -266,13 +266,15 @@ class ProjectParticipants extends PMETableViewBase
 
     }
 
+    $musiciansJoin = 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE];
+
     $opts['fdd']['first_name'] = [
       'name'     => $this->l->t('First Name'),
       'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
-      'sql'      => 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE].'.first_name',
+      'sql'      => $musiciansJoin.'.first_name',
       'input'    => 'S', // skip
     ];
 
@@ -282,9 +284,15 @@ class ProjectParticipants extends PMETableViewBase
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
-      'sql'     => 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE].'.name',
+      'sql'     => $musiciansJoin.'.name',
       'input'    => 'S', // skip
     ];
+
+    // $opts['fdd']['project_instrument'] = [
+    //   'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
+    //   'name'        => L::t('Project Instrument'),
+    //   'input'       => 'S',
+    // ];
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
@@ -339,8 +347,6 @@ class ProjectParticipants extends PMETableViewBase
      * several fields from Musicians table
      *
      */
-
-    $musiciansJoin = 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE];
 
     $opts['fdd']['mobile_phone'] = [
       'name'     => $this->l->t('Mobile Phone'),
