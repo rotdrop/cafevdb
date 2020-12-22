@@ -288,10 +288,41 @@ class ProjectParticipants extends PMETableViewBase
       'input'    => 'S', // skip
     ];
 
-    // $opts['fdd']['project_instrument'] = [
+    $projectInstrumentJoin = 'PMEjoin'.$joinIndex[self::PROJECT_INSTRUMENTS_TABLE];
+    $fieldIndex = $projectInstrumentNameIndex = count($opts['fdd']);
+    $projectInstrumentNameJoin = 'PMEjoin'.$projectInstrumentNameIndex;
+    $column = 'id';
+    $description = 'instrument';
+    $orderBy = 'sort_order';
+    $joinTable = 'PMEjoin'.$fieldIndex;
+    $fqnColumn = $joinTable.'.'.$column;
+    $fqnOrderBy = $joinTable.'.'.$orderBy;
+    $opts['fdd']['project_instrument'] = [
+      'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
+      'name'        => $this->l->t('Project Instrument'),
+      'css'         => ['postfix' => ' project-instruments tooltip-top'],
+      'display|LVF' => ['popup' => 'data'],
+      'input'       => 'S', // skip
+      'sort'        => true,
+      'sql|VCP'     => 'GROUP_CONCAT(DISTINCT '.$fqnColumn.' ORDER BY '.$fqnOrderBy.' ASC)',
+      'input'       => 'S',
+      'select'      => 'M',
+      //'filter'      => 'having', // need "HAVING" for group by stuff
+      'values' => [
+        'table'       => self::INSTRUMENTS_TABLE,
+        'column'      => $column,
+        'description' => $description,
+        'orderby'     => $sort,
+        //        'groups'      => 'Familie',
+        'join'        => '$join_table.id = '.$projectInstrumentJoin.'.instrument_id'
+      ],
+    ];
+
+    // $opts['fdd']['sort_order'] = [
     //   'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
-    //   'name'        => L::t('Project Instrument'),
+    //   'name'        => $this->l->t('Instrument Sort Order'),
     //   'input'       => 'S',
+    //   'sql'         => 'PMEjoin'.$projectInstrumentIndex.'.sort_order',
     // ];
 
     if ($this->showDisabled) {
@@ -314,7 +345,11 @@ class ProjectParticipants extends PMETableViewBase
 
     $fieldIndex = $musicianInstrumentsIndex = count($opts['fdd']);
     $column = 'id';
-    $fqnColumn = 'PMEjoin'.$fieldIndex.'.'.$column;
+    $description = 'instrument';
+    $orderBy = 'sort_order';
+    $joinTable =  'PMEjoin'.$fieldIndex;
+    $fqnColumn = $joinTable.'.'.$column;
+    $fqnOrderBy = $joinTable.'.'.$orderBy;
     $opts['fdd']['musician_instruments'] = [
       'name'        => $this->l->t('All Instruments'),
       'tab'         => [ 'id' => [ 'musician', 'instrumentation' ] ],
@@ -322,15 +357,15 @@ class ProjectParticipants extends PMETableViewBase
       'display|LVF' => ['popup' => 'data'],
       'input'       => 'S', // skip
       'sort'        => true,
-      'sql'         => 'GROUP_CONCAT(DISTINCT '.$fqnColumn.' ORDER BY '.$fqnColumn.' ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT '.$fqnColumn.' ORDER BY '.$fqnOrderBy.' ASC)',
       'input'       => 'S',
       'select'      => 'M',
       'filter'      => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
-        'column'      => 'id',
-        'description' => 'instrument',
-        'orderby'     => 'sort_order',
+        'column'      => $column,
+        'description' => $description,
+        'orderby'     => $orderBy,
         //        'groups'      => 'Familie',
         'join'        => '$join_table.id = PMEjoin'.$joinIndex[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
       ],
@@ -429,12 +464,16 @@ class ProjectParticipants extends PMETableViewBase
       'select'   => 'D',
       'maxlen'   => 128,
       'default'  => $this->getConfigValue('streetAddressCountry'),
-      'values2'     => $countries,
-      'valueGroups' => $countryGroups,
       'css'      => ['postfix' => ' musician-address country chosen-dropup'],
       'sort'     => true,
       'input'    => 'S',
-      'sql'      => $musiciansJoin.'.country',
+      //'sql'      => $musiciansJoin.'.country',
+      'values' => [
+        'column' => 'country',
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
+      'values2'     => $countries,
+      'valueGroups' => $countryGroups,
     ];
 
     // $opts['fdd']['birthday'] = $this->defaultFDD['birthday'];
