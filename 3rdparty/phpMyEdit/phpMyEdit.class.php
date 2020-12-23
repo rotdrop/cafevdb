@@ -267,7 +267,7 @@ class phpMyEdit
 		return $key_record;
 	}
 
-	private function key_record_where()
+	private function key_record_where($table = 'PMEtable0')
 	{
 		$wparts = [];
 		foreach ($this->rec as $key => $rec) {
@@ -275,7 +275,7 @@ class phpMyEdit
 			// no need for fqn. ?
 			//$wparts[] = $this->fqn($key, true).' = '.$delim.$rec.$delim;
 			$wparts[] =
-				$this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$key.$this->ed.
+				$this->sd.$table.$this->ed.'.'.$this->sd.$key.$this->ed.
 				' = '.
 				$delim.$rec.$delim;
 		}
@@ -4628,7 +4628,7 @@ class phpMyEdit
 	{
 		// Additional query
 		$query	 = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed
-			.' WHERE '.$this->key_record_where();
+			.' WHERE '.$this->key_record_where($this->tb);
 		$res	 = $this->myquery($query, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
@@ -4640,7 +4640,7 @@ class phpMyEdit
 			return false;
 		}
 		// Real query
-		$query = 'DELETE FROM '.$this->tb.' WHERE '.$this->key_record_where();
+		$query = 'DELETE FROM '.$this->tb.' WHERE '.$this->key_record_where($this->tb);
 		$res = $this->myquery($query, __LINE__);
 		$this->message = $this->sql_affected_rows().' '.$this->labels['record deleted'];
 		if (! $res) {
@@ -5531,7 +5531,6 @@ class phpMyEdit
 		if (!empty($this->rec) && !is_array($this->rec)) {
 			$this->rec = [ array_keys($this->key)[0] => $this->rec ];
 		}
-		$this->logInfo(print_r($this->rec, true));
 		/* echo '<PRE>'; */
 		/* print_r($opquery); */
 		/* echo "\nkey: ".$key."\n"; */
