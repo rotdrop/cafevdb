@@ -320,12 +320,12 @@ class ProjectParticipants extends PMETableViewBase
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
 
-    // $opts['fdd']['sort_order'] = [
-    //   'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
-    //   'name'        => $this->l->t('Instrument Sort Order'),
-    //   'input'       => 'S',
-    //   'sql'         => 'PMEjoin'.$projectInstrumentIndex.'.sort_order',
-    // ];
+    $opts['fdd']['sort_order'] = [
+      'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
+      'name'        => $this->l->t('Instrument Sort Order'),
+      'input'       => 'HRS',
+      'sql'         => 'PMEjoin'.$projectInstrumentNameIndex.'.sort_order',
+    ];
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
@@ -386,6 +386,23 @@ class ProjectParticipants extends PMETableViewBase
      * several fields from Musicians table
      *
      */
+
+    /* Make "Status" a set, 'soloist','conductor','noemail', where in
+     * general the first two imply the last.
+     */
+    $opts['fdd']['member_status'] = [
+      'name'    => $this->l->t('Member Status'),
+      'select'  => 'D',
+      'maxlen'  => 128,
+      'sort'    => true,
+      'css'     => ['postfix' => ' memberstatus tooltip-wide'],
+      'values2' => $this->memberStatusNames,
+      'tooltip' => $this->toolTipsService['member-status'],
+      'values' => [
+        'column' => 'member_status',
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
+    ];
 
     $opts['fdd']['mobile_phone'] = [
       'name'     => $this->l->t('Mobile Phone'),
@@ -504,8 +521,12 @@ class ProjectParticipants extends PMETableViewBase
       'valueGroups' => $countryGroups,
     ];
 
-    // $opts['fdd']['birthday'] = $this->defaultFDD['birthday'];
-    // $opts['fdd']['birthday']['tab'] = ['id' => 'miscinfo'];
+    $opts['fdd']['birthday'] = $this->defaultFDD['birthday'];
+    $opts['fdd']['birthday']['tab'] = [ 'id' => 'musician' ];
+    $opts['fdd']['birthday']['values'] = [
+      'column' => 'birthday',
+      'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+    ];
 
     //////// END Field definitions
 
