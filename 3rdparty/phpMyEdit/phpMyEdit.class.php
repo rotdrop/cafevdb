@@ -267,7 +267,7 @@ class phpMyEdit
 		return $key_record;
 	}
 
-	private function key_record_where($table = 'PMEtable0')
+	private function key_record_where()
 	{
 		$wparts = [];
 		foreach ($this->rec as $key => $rec) {
@@ -275,7 +275,7 @@ class phpMyEdit
 			// no need for fqn. ?
 			//$wparts[] = $this->fqn($key, true).' = '.$delim.$rec.$delim;
 			$wparts[] =
-				$this->sd.$table.$this->ed.'.'.$this->sd.$key.$this->ed.
+				$this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$key.$this->ed.
 				' = '.
 				$delim.$rec.$delim;
 		}
@@ -800,6 +800,10 @@ class phpMyEdit
 			];
 
 		//error_log(__METHOD__.' '.print_r($this->fdd[$field_num]['setvalues'], true));
+
+		if ($this->fds[$field_num]  == 'updated') {
+			throw new \Exception('blah');
+		}
 
 		return $this->fdd[$field_num]['setvalues'];
 	} /* }}} */
@@ -2305,7 +2309,8 @@ class phpMyEdit
 			}
 		}
 		$key_rec = $this->key_record($key_rec);
-		$this->col_has_values($k) && $this->set_values($k);
+		// @TODO check
+		//		$this->col_has_values($k) && $this->set_values($k);
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
 		} else if (isset($this->fdd[$k]['values2'])) {
@@ -2557,6 +2562,8 @@ class phpMyEdit
 		$lastGroup = null;
 		$groupId = 0;
 		$ret .= $multiple ? '' : '<option value=""></option>'."\n";
+		$this->logInfo('KV '.print_r($kv_array, true));
+		$this->logInfo('KG '.print_r($kg_array, true));
 		foreach ($kv_array as $key => $value) {
 			$group = !empty($kg_array[$key]) ? $kg_array[$key] : $dfltGroup;
 			if (!empty($group) && $group != $lastGroup) {
@@ -3296,8 +3303,7 @@ class phpMyEdit
 			);
 		$query = $this->get_SQL_main_list_query($count_parts);
 		if (!empty($groupBy)) {
-			// The first count just groups for each groupBy record
-			$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
+			//$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
 		}
 		$res = $this->myquery($query, __LINE__);
 		$row = $this->sql_fetch($res, 'n');
@@ -4320,12 +4326,10 @@ class phpMyEdit
 		}
 		$rec = $this->sql_insert_id();
 		if ($rec > 0 && count($this->key) == 1) {
-			$key = array_keys($this->key)[0];
-			$this->rec = [ $key => $rec ];
+			$this->rec[array_keys($this->key)[0]] = $rec;
 		} else if (count($key_col_val) == count($this->key)) {
 			$this->rec = $key_col_val;
 		}
-
 		// Notify list
 		if (@$this->notify['insert'] || @$this->notify['all']) {
 			$this->email_notify(false, $newvals);
@@ -4631,7 +4635,7 @@ class phpMyEdit
 	{
 		// Additional query
 		$query	 = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed
-			.' WHERE '.$this->key_record_where($this->tb);
+			.' WHERE '.$this->key_record_where();
 		$res	 = $this->myquery($query, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
@@ -4643,7 +4647,7 @@ class phpMyEdit
 			return false;
 		}
 		// Real query
-		$query = 'DELETE FROM '.$this->tb.' WHERE '.$this->key_record_where($this->tb);
+		$query = 'DELETE FROM '.$this->tb.' WHERE '.$this->key_record_where();
 		$res = $this->myquery($query, __LINE__);
 		$this->message = $this->sql_affected_rows().' '.$this->labels['record deleted'];
 		if (! $res) {
@@ -5156,7 +5160,9 @@ class phpMyEdit
 		}
 		elseif ($this->label_cmp($this->moreadd, 'More')) {
 			$this->add_enabled() && $this->do_add_record();
-			$this->operation = $this->labels['Add']; // to force add operation
+			if (empty($this->rec)) {
+				$this->operation = $this->labels['Add']; // to force add operation
+			}
 			$this->recreate_fdd();
 			$this->backward_compatibility();
 			$this->recreate_displayed();
@@ -5532,6 +5538,7 @@ class phpMyEdit
 		if (!empty($this->rec) && !is_array($this->rec)) {
 			$this->rec = [ array_keys($this->key)[0] => $this->rec ];
 		}
+		$this->logInfo(print_r($this->rec, true));
 		/* echo '<PRE>'; */
 		/* print_r($opquery); */
 		/* echo "\nkey: ".$key."\n"; */
