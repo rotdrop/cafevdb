@@ -128,7 +128,7 @@ class InstrumentFamily implements \ArrayAccess
         return $this->disabled;
     }
 
-    public function getUsage()
+    public function usage()
     {
         return $this->instruments->count();
     }
