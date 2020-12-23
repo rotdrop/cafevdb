@@ -123,7 +123,7 @@ class Instruments extends PMETableViewBase
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'ACDPF';
+    $opts['options'] = 'ACPVDF';
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '4';
@@ -139,7 +139,7 @@ class Instruments extends PMETableViewBase
       'sort'  => true,
       'time'  => true,
       'tabs'  => false,
-      'navigation' => 'CPD'
+      'navigation' => 'VCPD'
     ];
 
     $opts['fdd']['id'] = [
@@ -175,15 +175,15 @@ class Instruments extends PMETableViewBase
     $instFamIdx = count($opts['fdd']);
     $opts['fdd']['instrument_family_join'] = [
       'name'   => $this->l->t('Family Join Pseudo Field'),
-      'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.family_id
-  ORDER BY PMEjoin'.$instFamIdx.'.family_id ASC)',
+      'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.instrument_family_id
+  ORDER BY PMEjoin'.$instFamIdx.'.instrument_family_id ASC)',
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => array(
-        'table'       => 'instrument_family',
-        'column'      => 'family_id',
-        'description' => [ 'columns' => 'family_id' ],
-        'join'        => '$join_table.instrument_id = $main_table.Id',
+        'table'       => 'instrument_instrument_family',
+        'column'      => 'instrument_family_id',
+        'description' => [ 'columns' => 'instrument_family_id' ],
+        'join'        => '$join_table.instrument_id = $main_table.id',
       )
     ];
 
@@ -202,7 +202,7 @@ class Instruments extends PMETableViewBase
         'column'      => 'id',
         'description' => 'family',
         'orderby'     => 'family',
-        'join'        => '$join_table.id = PMEjoin'.$instFamIdx.'.family_id'
+        'join'        => '$join_table.id = PMEjoin'.$instFamIdx.'.instrument_family_id'
       ],
     ];
     $opts['fdd']['families']['values|ACP'] = array_merge(
@@ -231,20 +231,20 @@ class Instruments extends PMETableViewBase
     // undeletable, while allowing deletion for unused ones (more
     // practical after adding new instruments)
     $instrumentTables = [
-      'musician_instrument' => [ 'musician_id', 'instrument_id' ],
-      'project_instrument' => [ 'project_id', 'instrument_id' ],
+      'MusicianInstrument' => [ 'musician_id', 'instrument_id' ],
+      'ProjectInstruments' => [ 'project_id', 'instrument_id' ],
       'ProjectInstrumentation' => [ 'project_id', 'instrument_id' ],
     ];
     $usageIdx = count($opts['fdd']);
     foreach ($instrumentTables as $table => $indexes) {
       $opts['fdd'][$table] = [
         'input' => 'VRH',
-        'sql' => 'PMEtable0.Id',
+        'sql' => 'PMEtable0.id',
         'values' => [
           'table' => $table,
           'column' => $table[1],
           'description' => $indexes[1],
-          'join' => '$main_table.Id = $join_table.'.$indexes[1],
+          'join' => '$main_table.id = $join_table.'.$indexes[1],
           ],
         ];
     }

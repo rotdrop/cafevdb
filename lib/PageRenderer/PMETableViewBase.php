@@ -54,6 +54,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   protected $showDisabled;
 
+  protected $expertMode;
+
   protected $pmeOptions;
 
   protected $musicianId;
@@ -91,6 +93,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pmeBare = false;
     $this->pmeRecordId = $this->pme->getCGIRecordId();
     $this->showDisabled = $this->getUserValue('showdisabled', false) === 'on';
+    $this->expertMode = $this->getUserValue('expertmode', false) === 'on';
 
     $this->defaultFDD = $this->createDefaultFDD();
 

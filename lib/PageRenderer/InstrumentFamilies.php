@@ -87,10 +87,10 @@ class InstrumentFamilies extends PMETableViewBase
     $projectId       = $this->projectId;
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
+    $expertMode      = $this->expertMode;
 
     $opts            = [];
 
-    $expertMode = $this->getUserValue('expertmode');
 
     $opts['css']['postfix'] = 'direct-change show-hide-disabled';
 
@@ -122,7 +122,7 @@ class InstrumentFamilies extends PMETableViewBase
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'ACDPF';
+    $opts['options'] = 'ACPVDPF';
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '4';
@@ -138,7 +138,7 @@ class InstrumentFamilies extends PMETableViewBase
       'sort'  => true,
       'time'  => true,
       'tabs'  => false,
-      'navigation' => 'CPD'
+      'navigation' => 'VCPD'
     ];
 
     $opts['fdd']['id'] = [
@@ -167,15 +167,15 @@ class InstrumentFamilies extends PMETableViewBase
     $opts['fdd']['instrument_join'] = [
       'name' => 'InstrumentDummyJoin',
       'input'    => 'VRH',
-      'sql'      => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.family_id
-  ORDER BY PMEjoin'.$instFamIdx.'.family_id ASC)',
+      'sql'      => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.instrument_family_id
+  ORDER BY PMEjoin'.$instFamIdx.'.instrument_family_id ASC)',
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => array(
-        'table'       => 'instrument_family',
+        'table'       => 'instrument_instrument_family',
         'column'      => 'instrument_id',
         'description' => [ 'columns' => 'instrument_id' ],
-        'join'        => '$join_table.family_id = $main_table.Id',
+        'join'        => '$join_table.instrument_family_id = $main_table.id',
       )
     ];
 

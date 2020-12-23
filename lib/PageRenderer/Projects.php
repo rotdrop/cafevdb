@@ -102,10 +102,9 @@ class Projects extends PMETableViewBase
     $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
+    $expertMode      = $this->expertMode;
 
     $opts            = [];
-
-    $expertMode = $this->getUserValue('expertmode');
 
     $opts['tb'] = self::TABLE;
 

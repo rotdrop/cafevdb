@@ -132,6 +132,7 @@ class ProjectParticipants extends PMETableViewBase
     $projectId       = $this->projectId;
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
+    $expertMode      = $this->expertMode;
 
     $opts            = [];
 
