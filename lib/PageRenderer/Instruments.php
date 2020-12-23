@@ -290,11 +290,6 @@ class Instruments extends PMETableViewBase
 
     $opts['groupby_fields'] = [ 'id' ];
 
-    //$opts['triggers']['update']['before']  = 'CAFEVDB\Instruments::beforeUpdateTrigger';
-    //$opts['triggers']['insert']['before']  = 'CAFEVDB\Instruments::beforeInsertTrigger';
-
-    //$opts['triggers']['delete']['before']  = 'CAFEVDB\Instruments::beforeDeleteTrigger';
-
     $opts['triggers']['update']['before'][]  = [ $this, 'updateFamilies' ];
     $opts['triggers']['insert']['after'][]  = [ $this, 'updateFamilies' ];
 
@@ -329,7 +324,8 @@ class Instruments extends PMETableViewBase
     return $result;
   }
 
-  /**This is a phpMyEdit before-SOMETHING trigger.
+  /**
+   * This is a phpMyEdit before-SOMETHING trigger.
    *
    * phpMyEdit calls the trigger (callback) with
    * the following arguments:
@@ -373,44 +369,45 @@ class Instruments extends PMETableViewBase
 
     $field = 'families';
     $key = array_search($field, $changed);
-    if ($key !== false) {
 
-      $oldIds  = Util::explode(',', $oldValues[$field]);
-      $newIds  = Util::explode(',', $newValues[$field]);
-
-      $removed = array_diff($oldIds, $newIds);
-      $added   = array_diff($newIds, $oldIds);
-
-      $this->logInfo(__METHOD__.': oldIds: '.print_r($oldIds, true));
-      $this->logInfo(__METHOD__.': newIds: '.print_r($newIds, true));
-
-      $entity = $this->getDatabaseRepository(ORM\Entities\Instrument::class)->find($pme->rec);
-
-      $families = $entity->getFamilies();
-
-      $this->logInfo(__METHOD__.': families '.$families->count());
-
-      foreach ($families->getIterator() as $i => $family) {
-        if (in_array($family->getid(), $removed)) {
-          $families->remove($i);
-        }
-      }
-
-      $familyRepository = $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class);
-      foreach ($added as $id) {
-        $family = $familyRepository->find($id);
-        $families->add($family);
-      }
-
-      $entity->setFamilies($families);
-
-      $this->flush();
+    if ($key === false) {
+      return true;
     }
+
+    $oldIds  = Util::explode(',', $oldValues[$field]);
+    $newIds  = Util::explode(',', $newValues[$field]);
+
+    $removed = array_diff($oldIds, $newIds);
+    $added   = array_diff($newIds, $oldIds);
+
+    $this->logInfo(__METHOD__.': oldIds: '.print_r($oldIds, true));
+    $this->logInfo(__METHOD__.': newIds: '.print_r($newIds, true));
+
+    $entity = $this->getDatabaseRepository(ORM\Entities\Instrument::class)->find($pme->rec);
+
+    $families = $entity->getFamilies();
+
+    $this->logInfo(__METHOD__.': families '.$families->count());
+
+    foreach ($families->getIterator() as $i => $family) {
+      if (in_array($family->getid(), $removed)) {
+        $families->remove($i);
+      }
+    }
+
+    $familyRepository = $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class);
+    foreach ($added as $id) {
+      $family = $familyRepository->find($id);
+      $families->add($family);
+    }
+
+    $entity->setFamilies($families);
+
+    $this->flush();
 
     unset($changed[$key]);
     unset($newValues[$field]);
 
-    return false;
     return true;
   }
 
