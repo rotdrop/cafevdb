@@ -89,8 +89,11 @@ class ProjectParticipants extends PMETableViewBase
   /** @var GeoCodingService */
   private $geoCodingService;
 
-  /** @var OCA\CAFEVDB\ServicePhoneNumberService */
+  /** @var \OCA\CAFEVDB\ServicePhoneNumberService */
   private $phoneNumberService;
+
+  /** @var \OCA\CAFEVDB\PageRenderer\Musicians */
+  private $musiciansRenderer;
 
   public function __construct(
     ConfigService $configService
@@ -102,10 +105,12 @@ class ProjectParticipants extends PMETableViewBase
     , PageNavigation $pageNavigation
     , GeoCodingService $geoCodingService
     , PhoneNumberService $phoneNumberService
+    , Musicians $musiciansRenderer
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->phoneNumberService = $phoneNumberService;
+    $this->musiciansRenderer = $musiciansRenderer;
   }
 
   public function cssClass() {
@@ -217,10 +222,8 @@ class ProjectParticipants extends PMETableViewBase
 
     $musIdIdx = count($opts['fdd']);
     $opts['fdd']['musician_id'] = array(
-      'tab'      => [ 'id' => 'misc' ],
+      'tab'      => [ 'id' => 'musician' ],
       'name'     => $this->l->t('Musician-Id'),
-      'input'    => 'R',
-      'input|AP' => 'RH',
       'input'    => 'R',
       'select'   => 'T',
       'options'  => 'LACPDV',
@@ -526,6 +529,55 @@ class ProjectParticipants extends PMETableViewBase
     $opts['fdd']['birthday']['values'] = [
       'column' => 'birthday',
       'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+    ];
+
+    $opts['fdd']['remarks'] = [
+      'tab'      => ['id' => 'musician'],
+      'name'     => strval($this->l->t('Remarks')),
+      'select'   => 'T',
+      'maxlen'   => 65535,
+      'css'      => ['postfix' => ' remarks tooltip-top'],
+      'textarea' => ['css' => 'wysiwyg-editor',
+                     'rows' => 5,
+                     'cols' => 50],
+      'display|LF' => ['popup' => 'data'],
+      'escape' => false,
+      'sort'     => true,
+      'values' => [
+        'column' => 'remarks',
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
+    ];
+
+    $opts['fdd']['language'] = [
+      'tab'      => ['id' => 'musician'],
+      'name'     => $this->l->t('Language'),
+      'select'   => 'D',
+      'maxlen'   => 128,
+      'default'  => 'Deutschland',
+      'sort'     => true,
+      'values' => [
+        'column' => 'language',
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
+      'values2'  => $this->findAvailableLanguages(),
+    ];
+
+    $opts['fdd']['photo'] = [
+      'tab'      => ['id' => 'musician'],
+      'input' => 'V',
+      'name' => $this->l->t('Photo'),
+      'select' => 'T',
+      'options' => 'APVCD',
+      'sql' => '`PMEtable0`.`musician_id`', // @TODO: needed?
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        $stampIdx = array_search('Updated', $fds);
+        $stamp = strtotime($row['qf'.$stampIdx]);
+        return $this->musiciansRenderer->photoImageLink($musicianId, $action, $stamp);
+      },
+      'css' => ['postfix' => ' photo'],
+      'default' => '',
+      'sort' => false
     ];
 
     //////// END Field definitions
