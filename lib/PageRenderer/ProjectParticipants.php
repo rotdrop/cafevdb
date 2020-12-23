@@ -22,6 +22,10 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
+use chillerlan\QRCode\QRCode;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -29,6 +33,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ChangeLogService;
+use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -104,11 +109,13 @@ class ProjectParticipants extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , GeoCodingService $geoCodingService
+    , ContactsService $contactsService
     , PhoneNumberService $phoneNumberService
     , Musicians $musiciansRenderer
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
+    $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
     $this->musiciansRenderer = $musiciansRenderer;
   }
@@ -564,7 +571,7 @@ class ProjectParticipants extends PMETableViewBase
     ];
 
     $opts['fdd']['photo'] = [
-      'tab'      => ['id' => 'musician'],
+      'tab'      => ['id' => 'miscinfo'],
       'input' => 'V',
       'name' => $this->l->t('Photo'),
       'select' => 'T',
@@ -579,6 +586,70 @@ class ProjectParticipants extends PMETableViewBase
       'default' => '',
       'sort' => false
     ];
+
+    $opts['fdd']['vcard'] = [
+      'tab' => ['id' => 'miscinfo'],
+      'input' => 'V',
+      'name' => 'VCard',
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => '`PMEtable0`.`musician_id`',
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        switch($action) {
+        case 'change':
+        case 'display':
+          $data = [];
+          foreach($fds as $idx => $label) {
+            $data[$label] = $row['qf'.$idx];
+          }
+          $musician = new Entities\Musician();
+          foreach ($data as $key => $value) {
+            try {
+              $musician[$key] = $value;
+            } catch (\Throwable $t) {
+              // Don't care, we know virtual stuff is not there
+              // $this->logException($t);
+            }
+          }
+          $vcard = $this->contactsService->export($musician);
+          unset($vcard->PHOTO); // too much information
+          //$this->logDebug(print_r($vcard->serialize(), true));
+          return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
+        default:
+          return '';
+        }
+      },
+      'default' => '',
+      'sort' => false
+    ];
+
+    $opts['fdd']['uuid'] = [
+      'tab'      => [ 'id' => 'miscinfo' ],
+      'name'     => 'UUID',
+      'options'  => 'LAVCPDR',
+      'css'      => ['postfix' => ' musician-uuid'],
+      'sql'      => 'BIN2UUID('.$musiciansJoin.'.uuid)',
+      'sqlw'     => 'UUID2BIN($val_qas)',
+      'select'   => 'T',
+      'maxlen'   => 32,
+      'sort'     => false,
+    ];
+
+    $opts['fdd']['updated'] =
+      array_merge(
+        $this->defaultFDD['datetime'],
+        [
+          'tab' => ['id' => 'miscinfo'],
+          "name" => $this->l->t("Last Updated"),
+          "default" => date($this->defaultFDD['datetime']['datemask']),
+          "nowrap" => true,
+          "options" => 'LFAVCPDR',
+          'values' => [
+            'column' => 'updated',
+            'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+          ],
+        ]
+      );
 
     //////// END Field definitions
 
@@ -1696,6 +1767,11 @@ class ProjectParticipants extends PMETableViewBase
         'id' => 'musician',
         'tooltip' => $this->toolTipsService['project-personaldata-tab'],
         'name' => $this->l->t('Personal data'),
+      ],
+      [
+        'id' => 'miscinfo',
+        'tooltip' => $this->toolTipsService['project-personalmisc-tab'],
+        'name' => $this->l->t('Miscinfo'),
       ],
       [
         'id' => 'tab-all',
