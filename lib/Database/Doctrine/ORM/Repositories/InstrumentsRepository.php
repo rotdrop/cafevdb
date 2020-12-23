@@ -29,6 +29,8 @@ use Doctrine\DBAL\Logging\DebugStack;
 
 class InstrumentsRepository extends EntityRepository
 {
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
+
   /**
    * Find an instrument by its name.
    *
@@ -76,12 +78,13 @@ class InstrumentsRepository extends EntityRepository
     $all = $this->findAll();
 
     foreach($all as $entity) {
-      $id         = $entity['Id'];
-      $instrument = $entity['Instrument'];
+      $id         = $entity['id'];
+      $instrument = $entity['instrument'];
       $families   = $entity['families']->map(function($entity) {
         return $entity['family'];
       })->toArray();
       sort($families);
+      //$this->log('ID '.$id.' INST '.$instrument.' FAM '.print_r($families, true));
       $family = implode(',', $families);
       $byName[$instrument] = $byId[$id] = $instrument;
       $nameGroups[$instrument] = $idGroups[$id] = $family;
