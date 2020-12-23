@@ -132,10 +132,9 @@ make sure that the musicians are also automatically added to the
     $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
+    $expertMode      = $this->expertMode;
 
     $opts            = [];
-
-    $expertMode = $this->getUserValue('expertmode');
 
     $opts['tb'] = self::TABLE;
 
@@ -162,7 +161,7 @@ make sure that the musicians are also automatically added to the
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = ['instrumentsx','name','first_name','id'];
+    $opts['sort_field'] = ['instruments','name','first_name','id'];
 
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
@@ -323,9 +322,10 @@ make sure that the musicians are also automatically added to the
         'column'      => 'id',
         'description' => 'instrument',
         'orderby'     => 'sort_order',
-        //        'groups'      => 'Familie',
         'join'        => '$join_table.id = PMEjoin'.$musInstIdx.'.instrument_id'
       ],
+      'values2' => $this->instrumentInfo['byId'],
+      'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
 
     $opts['fdd']['instruments']['values|ACP'] = array_merge(
@@ -542,7 +542,6 @@ make sure that the musicians are also automatically added to the
           foreach($fds as $idx => $label) {
             $data[$label] = $row['qf'.$idx];
           }
-          $this->logInfo(print_r($data, true));
           $musician = new Entities\Musician();
           foreach ($data as $key => $value) {
             try {

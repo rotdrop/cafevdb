@@ -88,10 +88,9 @@ class Instruments extends PMETableViewBase
     $projectId       = $this->projectId;
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
+    $expertMode      = $this->expertMode;
 
     $opts            = [];
-
-    $expertMode = $this->getUserValue('expertmode');
 
     $opts['css']['postfix'] = 'direct-change show-hide-disabled';
 
@@ -194,7 +193,7 @@ class Instruments extends PMETableViewBase
       'display|LVF' => [ 'popup' => 'data' ],
       'input'       => 'S', // skip, handled by triggers
       'sort'        => true,
-      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$famIdx.'.id ORDER BY PMEjoin'.$famIdx.'.id ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$famIdx.'.id ORDER BY PMEjoin'.$famIdx.'.family ASC)',
       'filter'      => 'having',
       'select'      => 'M',
       'values' => [

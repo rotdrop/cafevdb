@@ -314,9 +314,10 @@ class ProjectParticipants extends PMETableViewBase
         'column'      => $column,
         'description' => $description,
         'orderby'     => $sort,
-        //        'groups'      => 'Familie',
         'join'        => '$join_table.id = '.$projectInstrumentJoin.'.instrument_id'
       ],
+      'values2' => $this->instrumentInfo['byId'],
+      'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
 
     // $opts['fdd']['sort_order'] = [
@@ -370,6 +371,8 @@ class ProjectParticipants extends PMETableViewBase
         //        'groups'      => 'Familie',
         'join'        => '$join_table.id = PMEjoin'.$joinIndex[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
       ],
+      'values2' => $this->instrumentInfo['byId'],
+      'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
 
     $opts['fdd']['musician_instruments']['values|ACP'] = array_merge(
