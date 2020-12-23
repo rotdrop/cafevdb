@@ -524,7 +524,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
         }
         console.info(options);
         pme.tableDialogReload(options, callback);
-        $(options.ambientContainerSelector).trigger('pmedialog:changed');
+	// might be costly?
         pme.submitOuterForm(options.ambientContainerSelector);
 
         return false;
