@@ -266,15 +266,18 @@ class InstrumentFamilies extends PMETableViewBase
    *
    * @return boolean. If returning @c false the operation will be terminated
    */
-  private function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
-    $entity = $this->getDatabaseRepository(ORM\Entities\Instrument::class)->find($pme->rec);
+    // $this->logInfo("Record key is ".print_r($pme->rec, true));
+    // $entity = $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->find($pme->rec);
 
-    if ($entity->usage() > 0) {
-      $entity->setDisabled(true);
-      $this->flush();
-      return false;
-    }
+    // if (false && $entity->usage() > 0) {
+    //   $this->logInfo("Soft-delete entity ".print_r($pme->rec));
+    //   $entity->setDisabled(true);
+    //   $this->persist($entity);
+    //   $this->flush();
+    //   return false;
+    // }
 
     return true;
   }
