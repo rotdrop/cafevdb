@@ -516,7 +516,7 @@ Whatever.',
       $article = $this->webPagesRPC->addArticle($pageName, $category, $pageTemplate);
     } catch (\Throwable $t) {
       throw new \Exception(
-        $this->l->t('Unable to create web-page like "%s".', [ $pageName ]),
+        $this->l->t('Unable to create web-page "%s".', [ $pageName ]),
         $t->getCode(),
         $t);
     }

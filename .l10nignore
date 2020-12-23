@@ -1,5 +1,7 @@
+ajax/
 3rdparty/
 vendor/
 build/
-doc/db-app/phpdoc/
-doc/db-app/doxygen/
+doc/db-app/
+doc/db-app/
+translationfiles/music/
