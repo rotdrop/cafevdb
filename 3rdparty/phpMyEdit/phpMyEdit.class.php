@@ -3296,7 +3296,8 @@ class phpMyEdit
 			);
 		$query = $this->get_SQL_main_list_query($count_parts);
 		if (!empty($groupBy)) {
-			//$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
+			// The first count just groups for each groupBy record
+			$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
 		}
 		$res = $this->myquery($query, __LINE__);
 		$row = $this->sql_fetch($res, 'n');
@@ -4319,10 +4320,12 @@ class phpMyEdit
 		}
 		$rec = $this->sql_insert_id();
 		if ($rec > 0 && count($this->key) == 1) {
-			$this->rec[array_keys($this->key)[0]] = $rec;
+			$key = array_keys($this->key)[0];
+			$this->rec = [ $key => $rec ];
 		} else if (count($key_col_val) == count($this->key)) {
 			$this->rec = $key_col_val;
 		}
+
 		// Notify list
 		if (@$this->notify['insert'] || @$this->notify['all']) {
 			$this->email_notify(false, $newvals);
@@ -5153,9 +5156,7 @@ class phpMyEdit
 		}
 		elseif ($this->label_cmp($this->moreadd, 'More')) {
 			$this->add_enabled() && $this->do_add_record();
-			if (empty($this->rec)) {
-				$this->operation = $this->labels['Add']; // to force add operation
-			}
+			$this->operation = $this->labels['Add']; // to force add operation
 			$this->recreate_fdd();
 			$this->backward_compatibility();
 			$this->recreate_displayed();
