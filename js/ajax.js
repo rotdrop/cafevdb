@@ -327,8 +327,8 @@ var CAFEVDB = CAFEVDB || {};
     return Ajax.failData(xhr, status, errorThrown).message;
   };
 
-
   CAFEVDB.Ajax = Ajax;
+
 })(window, jQuery, CAFEVDB);
 
 // Local Variables: ***

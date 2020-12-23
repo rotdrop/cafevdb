@@ -1281,6 +1281,10 @@ $(function(){
   // @@TODO perhaps collects these things in before-ready.js
   document.onkeypress = CAFEVDB.stopRKey;
 
+  $('body').on('dblclick', '.oc-dialog', function() {
+    $('.oc-dialog').toggleClass('maximize-width');
+  });
+
   var resizeCount = 0;
 
   window.oldWidth = -1;
