@@ -633,6 +633,8 @@ class ProjectParticipants extends PMETableViewBase
       'select'   => 'T',
       'maxlen'   => 32,
       'sort'     => false,
+      //      'table'    => NAME or join-nr
+      //'sql' => BLAH( $join_table $main_table $column)
     ];
 
     $opts['fdd']['updated'] =
