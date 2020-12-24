@@ -224,7 +224,10 @@ class phpMyEdit
 	function col_has_sql($k)	{ return isset($this->fdd[$k]['sql']); }
 	function col_has_sqlw($k)	{ return isset($this->fdd[$k]['sqlw']) && !$this->virtual($k); }
 	function col_needs_having($k) { return @$this->fdd[$k]['filter'] == 'having'; }
-	function col_has_values($k) { return isset($this->fdd[$k]['values']) || isset($this->fdd[$k]['values2']); }
+	function col_has_values($k) {
+		return (isset($this->fdd[$k]['values']) && !empty($this->fdd[$k]['values']['description']))
+			|| isset($this->fdd[$k]['values2']);
+	}
 	function col_has_php($k)	{ return isset($this->fdd[$k]['php']); }
 	function col_has_URL($k)	{ return isset($this->fdd[$k]['URL'])
 			|| isset($this->fdd[$k]['URLprefix']) || isset($this->fdd[$k]['URLpostfix']); }
@@ -906,6 +909,46 @@ class phpMyEdit
 		return array('values' => $values, 'groups' => $grps, 'data' => $dt, 'titles' => $titles);
 	} /* }}} */
 
+	/**
+	 * Substitute placeholders in sql field:
+	 *
+	 * - $table Either PMEtable0 or PMEjoinNR if join information is specified
+	 *
+	 * - $column $this->fds[$field] or column of join info if set
+	 *
+	 * @param int $field Field number.
+	 *
+	 */
+	function sql_field($field)
+	{
+		$main_table = 'PMEtable0';
+		$fdd = $this->fdd[$field];
+		if (!isset($fdd['values']['join'])) {
+			$table = $main_table;
+		} else {
+			$join_index = isset($fdd['values']['join']['reference'])
+						? $fdd['values']['join']['reference']
+						: $field;
+			$table = 'PMEjoin'.$join_index;
+		}
+		if (!isset($fdd['values']['column'])) {
+			$column = $this->fds[$field];
+		} else {
+			$column = $fdd['values']['column'];
+		}
+		$column = $this->sd.$table.$this->ed.'.'.$this->sd.$column.$this->ed;
+		if (isset($fdd['sql'])) {
+			return $this->substituteVars(
+				$fdd['sql'], array(
+					'main_table' => $main_table,
+					'table' => $table,
+					'column' => $column,
+				));
+		} else {
+			return $column;
+		}
+	}
+
 	function fqn($field, $dont_desc = false, $dont_cols = false) /* {{{ */
 	{
 		is_numeric($field) || $field = array_search($field, $this->fds);
@@ -1096,7 +1139,7 @@ class phpMyEdit
 			if (/*false*/! $this->displayed[$k] && !in_array($k, $this->key_num)) {
 				continue;
 			}
-			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed; // no delimiters here, or maybe some yes
+			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed;
 			if ($this->col_has_values($k)) {
 				if($this->col_has_sql($k)) $fields[] = $this->fdd[$k]['sql'].' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
 				else $fields[] = $this->fqn($k, true).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
