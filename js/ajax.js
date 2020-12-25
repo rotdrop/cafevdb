@@ -268,7 +268,7 @@ var CAFEVDB = CAFEVDB || {};
       info += '<div class="missing error">'+missing+'</div>';
 
       // Display additional debug info if any
-      CAFEVDB.debugPopup(data);
+      CAFEVDB.Dialogs.debugPopup(data);
 
       var caption = data.caption;
       if (typeof caption == 'undefined' || caption == '') {

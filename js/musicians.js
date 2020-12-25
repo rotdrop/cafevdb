@@ -131,7 +131,7 @@ var CAFEVDB = CAFEVDB || {};
                                     phones.prop('disabled', false);
                                     submitDefer.resolve();
                                   }, true, true);
-                 CAFEVDB.debugPopup(data);
+                 CAFEVDB.Dialogs.debugPopup(data);
                } else {
                  phones.prop('disabled', false);
                  submitDefer.resolve();
@@ -176,7 +176,7 @@ var CAFEVDB = CAFEVDB || {};
                                     email.prop('disabled', false);
                                     submitDefer.resolve();
                                   }, true, true);
-                 CAFEVDB.debugPopup(data);
+                 CAFEVDB.Dialogs.debugPopup(data);
                } else {
                  email.prop('disabled', false);
                  submitDefer.resolve();
@@ -344,7 +344,7 @@ var CAFEVDB = CAFEVDB || {};
                                     address.prop('disabled', false);
                                     submitDefer.resolve();
                                   }, true, true);
-                 CAFEVDB.debugPopup(data);
+                 CAFEVDB.Dialogs.debugPopup(data);
                } else {
                  reload.removeClass('loading');
                  address.prop('disabled', false);

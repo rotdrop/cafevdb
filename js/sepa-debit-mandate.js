@@ -66,7 +66,7 @@ var CAFEVDB = CAFEVDB || {};
     self.mandateId = data.data.mandateId;
     self.mandateReference = data.data.mandateReference;
 
-    CAFEVDB.debugPopup(data);
+    CAFEVDB.Dialogs.debugPopup(data);
 
     var popup = $(data.data.contents)
     var mandateForm = popup.find('#sepa-debit-mandate-form');
