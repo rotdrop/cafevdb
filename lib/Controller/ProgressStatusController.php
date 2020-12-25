@@ -92,9 +92,9 @@ class ProgressStatusController extends Controller {
    *
    * @NoAdminRequired
    */
-  public function action($action)
+  public function action($operation)
   {
-    switch($action) {
+    switch($operation) {
     case 'create':
       try {
         $progress = $this->progressStatusService->create(

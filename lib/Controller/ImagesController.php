@@ -180,7 +180,7 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function post($action, $joinTable, $ownerId, $imageId = -1, $imageSize = 400)
+  public function post($operation, $joinTable, $ownerId, $imageId = -1, $imageSize = 400)
   {
     if (empty($joinTable)) {
       return self::grumble($this->l->t("Relation between image and object missing"));
@@ -198,12 +198,12 @@ class ImagesController extends Controller {
       'joinTable' => $joinTable,
     ];
 
-    switch ($action) {
-    case 'upload':
+    switch ($operation) {
+    case 'fileupload':
     case 'dragndrop':
     case 'cloud':
       $image = new \OCP\Image();
-      switch ($action) {
+      switch ($operation) {
       case 'cloud':
         $path = $this->parameterService['path'];
         if (empty($path)) {

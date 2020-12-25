@@ -166,7 +166,7 @@ $routes = [
     ],
     [
       'name' => 'progress_status#action',
-      'url' => '/foregroundjob/progress/{action}',
+      'url' => '/foregroundjob/progress/{operation}',
       'verb' => 'POST',
     ],
     // various download stuff
@@ -198,7 +198,7 @@ $routes = [
       'verb' => 'GET',
     ],
     /**
-     * actions:
+     * operations:
      *   - upload, upload from client machine
      *     Respond with temporary image path
      *   - cloud, select from cloud storage
@@ -210,7 +210,7 @@ $routes = [
      */
     [
       'name' => 'images#post',
-      'url' => '/image/{action}',
+      'url' => '/image/{operation}',
       'verb' => 'POST',
     ],
     /**
