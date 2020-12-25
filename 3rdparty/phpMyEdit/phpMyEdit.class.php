@@ -224,6 +224,8 @@ class phpMyEdit
 	function col_has_sql($k)	{ return isset($this->fdd[$k]['sql']); }
 	function col_has_sqlw($k)	{ return isset($this->fdd[$k]['sqlw']) && !$this->virtual($k); }
 	function col_needs_having($k) { return @$this->fdd[$k]['filter'] == 'having'; }
+	function col_has_join($k) { return !empty($this->fdd[$k]['values']['join']); }
+	function col_has_description($k) { return !empty($this->fdd[$k]['values']['description']); }
 	function col_has_values($k) {
 		return (isset($this->fdd[$k]['values']) && !empty($this->fdd[$k]['values']['description']))
 			|| isset($this->fdd[$k]['values2']);
@@ -919,33 +921,43 @@ class phpMyEdit
 	 * @param int $field Field number.
 	 *
 	 */
-	function sql_field($field)
+	protected function sql_field($field)
 	{
-		$main_table = 'PMEtable0';
+		$main_table = $this->sd.'PMEtable0'.$this->ed;
 		$fdd = $this->fdd[$field];
 		if (!isset($fdd['values']['join'])) {
-			$table = $main_table;
+			$join_table = $main_table;
 		} else {
 			$join_index = isset($fdd['values']['join']['reference'])
 						? $fdd['values']['join']['reference']
 						: $field;
-			$table = 'PMEjoin'.$join_index;
+			$join_table = $this->sd.'PMEjoin'.$join_index.$this->ed;
 		}
 		if (!isset($fdd['values']['column'])) {
-			$column = $this->fds[$field];
+			$join_column = $this->sd.$this->fds[$field].$this->ed;
 		} else {
-			$column = $fdd['values']['column'];
+			$join_column = $this->sd.$fdd['values']['column'].$this->ed;
 		}
-		$column = $this->sd.$table.$this->ed.'.'.$this->sd.$column.$this->ed;
+		$join_col_fqn = $join_table.'.'.$join_column;
+		if (!isset($fdd['values']['description'])) {
+			$join_desc = $join_column;
+		} else {
+			$join_desc = $this->sd.$fdd['values']['description'].$this->ed;
+		}
+		$join_desc_fqn = $join_table.'.'.$join_desc;
 		if (isset($fdd['sql'])) {
 			return $this->substituteVars(
 				$fdd['sql'], array(
 					'main_table' => $main_table,
-					'table' => $table,
-					'column' => $column,
+					'field_name' => $this->fds[$field],
+					'join_table' => $join_table,
+					'join_column' => $join_column,
+					'join_col_fqn' => $join_col_fqn,
+					'join_description' => $join_desc,
+					'join_desc_fqn' => $join_desc_fqn,
 				));
 		} else {
-			return $column;
+			return $join_col_fqn;
 		}
 	}
 
@@ -953,19 +965,15 @@ class phpMyEdit
 	{
 		is_numeric($field) || $field = array_search($field, $this->fds);
 		// if read SQL expression exists use it
-		if ($this->col_has_sql($field) && (!$this->col_has_values($field) || $dont_desc)) {
-			return $this->fdd[$field]['sql'];
+		if ($this->col_has_sql($field) && (!$this->col_has_description($field) || $dont_desc)) {
+			return $this->sql_field($field);
 		}
 		// on copy/change always use simple key retrieving, or given sql descriptor
-		if (!isset($this->fdd[$field]['values']['join']['reference'])
-			&&
-			($this->virtual($field)
+		if ($this->virtual($field)
 			 || $this->add_operation()
 			 || $this->copy_operation()
-			 || $this->change_operation())) {
-			return $this->col_has_sql($field)
-				? $this->fdd[$field]['sql']
-				: $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
+			 || $this->change_operation()) {
+			return $this->sql_field($field);
 		} else {
 			$fdd = $this->fdd[$field];
 			if (isset($fdd['values']['description']) && ! $dont_desc) {
@@ -999,16 +1007,14 @@ class phpMyEdit
 				} else {
 					$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$fdd['values']['description'].$this->ed;
 				}
-			} else if (isset($fdd['values']['column']) && ! $dont_cols) {
-				$join_index = isset($fdd['values']['join']['reference'])
-							? $fdd['values']['join']['reference']
-							: $field;
-				$join_table = 'PMEjoin'.$join_index;
-				$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$fdd['values']['column'].$this->ed;
+			// } else if (isset($fdd['values']['column']) && ! $dont_cols) {
+			// 	$join_index = isset($fdd['values']['join']['reference'])
+			// 				? $fdd['values']['join']['reference']
+			// 				: $field;
+			// 	$join_table = 'PMEjoin'.$join_index;
+			// 	$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$fdd['values']['column'].$this->ed;
 			} else {
-				$ret = $this->col_has_sql($field)
-					 ? $this->fdd[$field]['sql']
-					 : $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
+				$ret = $this->sql_field($field);
 			}
 		}
 		return $ret;
@@ -1140,9 +1146,8 @@ class phpMyEdit
 				continue;
 			}
 			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed;
-			if ($this->col_has_values($k)) {
-				if($this->col_has_sql($k)) $fields[] = $this->fdd[$k]['sql'].' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
-				else $fields[] = $this->fqn($k, true).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
+			if ($this->col_has_description($k)) {
+				$fields[] = $this->fqn($k, true).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
 			}
 			if ($this->col_has_datemask($k)) {
 				// Date functions of mysql are a nightmare. Leave the
@@ -1195,7 +1200,10 @@ class phpMyEdit
 					'main_column'	   => $this->sd.$main_column.$this->ed,
 					'join_table'	   => $join_table,
 					'join_column'	   => $join_column,
-					'join_description' => $join_desc);
+					'join_col_fqn'     => $join_table.'.'.$join_column,
+					'join_description' => $join_desc,
+					'join_desc_fqn'    => $join_table.'.'.$join_desc,
+				);
 				$join_clause .= " LEFT OUTER JOIN ".$table." AS $join_table ON (";
 				$join_clause .= !empty($join)
 					? $this->substituteVars($join, $ar)
@@ -2345,7 +2353,7 @@ class phpMyEdit
 			$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf$k"."encrypted"]);
 		}
 		foreach ($this->key_num as $key => $key_num) {
-			if ($this->col_has_values($key_num)) {
+			if ($this->col_has_description($key_num)) {
 				$key_rec[$key] = $row['qf'.$key_num.'_idx'];
 			} else {
 				$key_rec[$key] = $row['qf'.$key_num];
@@ -2605,8 +2613,8 @@ class phpMyEdit
 		$lastGroup = null;
 		$groupId = 0;
 		$ret .= $multiple ? '' : '<option value=""></option>'."\n";
-		$this->logInfo('KV '.print_r($kv_array, true));
-		$this->logInfo('KG '.print_r($kg_array, true));
+		//$this->logInfo('KV '.print_r($kv_array, true));
+		//$this->logInfo('KG '.print_r($kg_array, true));
 		foreach ($kv_array as $key => $value) {
 			$group = !empty($kg_array[$key]) ? $kg_array[$key] : $dfltGroup;
 			if (!empty($group) && $group != $lastGroup) {
@@ -3882,7 +3890,7 @@ class phpMyEdit
 			   || ($fetched && $row != false)) {
 			$fetched = false;
 			foreach ($this->key_num as $key => $key_num) {
-				if ($this->col_has_values($key_num)) {
+				if ($this->col_has_description($key_num)) {
 					$key_rec[$key] = $row['qf'.$key_num.'_idx'];
 				} else {
 					$key_rec[$key] = $row['qf'.$key_num];
@@ -4454,11 +4462,12 @@ class phpMyEdit
 				} else {
 					//error_log('skipping '.$fd.' value '.$fn);
 				}
-				if ($this->col_has_sql($k)) {
-					$query_part = $this->fdd[$k]['sql']." AS '".$fd."'";
-				} else {
-					$query_part = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$fd.$this->ed;
-				}
+				// if ($this->col_has_sql($k)) {
+				// 	$query_part = $this->fdd[$k]['sql']." AS '".$fd."'";
+				// } else {
+				// 	$query_part = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$fd.$this->ed;
+				// }
+				$query_part = $this->sql_field($k)." AS '".$fd.".'";
 				if ($query_oldrec == '') {
 					$query_oldrec = 'SELECT '.$query_part;
 				} else {
