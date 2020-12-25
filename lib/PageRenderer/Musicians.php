@@ -294,7 +294,7 @@ make sure that the musicians are also automatically added to the
     $musInstIdx = count($opts['fdd']);
     $opts['fdd']['musician_instrument_join'] = [
       'name'   => $this->l->t('Instrument Join Pseudo Field'),
-      'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$musInstIdx.'.instrument_id ORDER BY PMEjoin'.$musInstIdx.'.instrument_id ASC)',
+      'sql'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC)',
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
@@ -313,7 +313,7 @@ make sure that the musicians are also automatically added to the
       'display|LVF' => ['popup' => 'data'],
       'input'       => 'S', // skip
       'sort'        => true,
-      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.id ORDER BY PMEjoin'.$instIdx.'.sort_order ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.sort_order ASC)',
       //'input' => 'V', not virtual, tweaked by triggers
       'select'      => 'M',
       'filter'      => 'having', // need "HAVING" for group by stuff
@@ -322,7 +322,7 @@ make sure that the musicians are also automatically added to the
         'column'      => 'id',
         'description' => 'instrument',
         'orderby'     => 'sort_order',
-        'join'        => '$join_table.id = PMEjoin'.$musInstIdx.'.instrument_id'
+        'join'        => '$join_col_fqn = PMEjoin'.$musInstIdx.'.instrument_id'
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -350,22 +350,20 @@ make sure that the musicians are also automatically added to the
     $projects =
       $this->getDatabaseRepository(Entities\Project::class)->shortDescription();
     $allProjects = $projects['projects'];
-    $groupedProjects = $projects['yearByName'];
-    $projects = $projects['nameByName'];
+    $groupedProjects = $projects['yearById'];
+    $projects = $projects['nameById'];
 
     // Dummy field in order to get the Besetzungen table for the Projects field
     $idx = count($opts['fdd']);
-    $join_table = 'PMEjoin'.$idx;
+    $projectParticipantsJoin = '`PMEjoin'.$idx.'`';
     $opts['fdd']['musician_id'] = [
       'input' => 'VH',
-      'sql' => '`'.$join_table.'`.`musician_id`',
-//    'sqlw' => '`'.$join_table.'`.`musician_id`',
       'options' => '',
       'values' => [
         'table' => 'ProjectParticipants',
         'column' => 'musician_id',
         'description' => 'musician_id',
-        'join' => '$main_table.`id` = $join_table.`musician_id`'
+        'join' => '$join_col_fqn = $main_table.`id`'
       ],
     ];
 
@@ -381,13 +379,13 @@ make sure that the musicians are also automatically added to the
       'sort' => true,
       'css'      => ['postfix' => ' projects tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
-      'sql' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`name` ORDER BY `".$join_table."`.`name` ASC SEPARATOR ',')",
+      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_desc_fqn ASC SEPARATOR \',\')',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table' => 'Projects',
-        'column' => 'name',
+        'column' => 'id',
         'description' => 'name',
-        'join' => '`PMEjoin'.($idx-1).'`.`project_id` = $join_table.`id`',
+        'join' => $projectParticipantsJoin.'.`project_id` = $join_col_fqn',
       ],
       'values2' => $projects,
       'valueGroups' => $groupedProjects
