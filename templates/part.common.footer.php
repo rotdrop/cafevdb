@@ -73,7 +73,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
         method="post"
         enctype="multipart/form-data"
         target="crop_target"
-        action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.images.post', ['action' => 'save'])); ?>">
+        action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.images.post', ['operation' => 'save'])); ?>">
     <input type="hidden" id="<?php p($appName); ?>-owner-id" name="ownerId" value="{ownerId}" />
     <input type="hidden" id="<?php p($appName); ?>-join-table" name="joinTable" value="{joinTable}" />
     <input type="hidden" id="<?php p($appName); ?>-image-size" name="imageSize" value="{imageSize}" />

@@ -285,7 +285,7 @@ class ImagesController extends Controller {
         [y2] => 684
         [w] => 513
         [h] => 516
-        [action] => save
+        [opeation] => save
         [_route] => cafevdb.images.post )
       */
 
