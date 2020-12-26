@@ -243,7 +243,8 @@ class ProjectParticipants extends PMETableViewBase
     foreach (self::JOIN_TABLES as $table => $joinInfo) {
 
       $joinIndex[$table] = count($opts['fdd']);
-      $fqnColumn = 'PMEjoin'.$joinIndex[$table].'.'.$joinInfo['column'];
+      $joinTable[$table] = 'PMEjoin'.$joinIndex[$table];
+      $fqnColumn = $joinTable[$table].'.'.$joinInfo['column'];
 
       $group = false;
       $joinData = [];
@@ -259,8 +260,8 @@ class ProjectParticipants extends PMETableViewBase
         'name' => $table.'_key',
         'input' => 'VH',
         'sql' => ($group
-                  ? 'GROUP_CONCAT(DISTINCT '.$fqnColumn.' ORDER BY '.$fqnColumn.' ASC)'
-                  : $fqnColumn),
+                  ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC)'
+                  : '$join_col_fqn'),
         'options' => '',
         'sort' => true,
         'values' => [
@@ -274,10 +275,9 @@ class ProjectParticipants extends PMETableViewBase
         ],
       ];
       $this->logInfo('JOIN '.print_r($opts['fdd'][$table.'_key'], true));
-
     }
 
-    $musiciansJoin = 'PMEjoin'.$joinIndex[self::MUSICIANS_TABLE];
+    $musiciansJoin = $joinTable[self::MUSICIANS_TABLE];
 
     $opts['fdd']['first_name'] = [
       'name'     => $this->l->t('First Name'),
@@ -285,8 +285,9 @@ class ProjectParticipants extends PMETableViewBase
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
-      'sql'      => $musiciansJoin.'.first_name',
-      'input'    => 'S', // skip
+      'values' => [
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
     ];
 
     $opts['fdd']['name'] = [
@@ -295,19 +296,14 @@ class ProjectParticipants extends PMETableViewBase
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
-      'sql'     => $musiciansJoin.'.name',
-      'input'    => 'S', // skip
+      'values' => [
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
     ];
 
-    $projectInstrumentJoin = 'PMEjoin'.$joinIndex[self::PROJECT_INSTRUMENTS_TABLE];
+    $projectInstrumentJoin = $joinTable[self::PROJECT_INSTRUMENTS_TABLE];
     $fieldIndex = $projectInstrumentNameIndex = count($opts['fdd']);
     $projectInstrumentNameJoin = 'PMEjoin'.$projectInstrumentNameIndex;
-    $column = 'id';
-    $description = 'instrument';
-    $orderBy = 'sort_order';
-    $joinTable = 'PMEjoin'.$fieldIndex;
-    $fqnColumn = $joinTable.'.'.$column;
-    $fqnOrderBy = $joinTable.'.'.$orderBy;
     $opts['fdd']['project_instrument'] = [
       'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
       'name'        => $this->l->t('Project Instrument'),
@@ -315,16 +311,16 @@ class ProjectParticipants extends PMETableViewBase
       'display|LVF' => ['popup' => 'data'],
       'input'       => 'S', // skip
       'sort'        => true,
-      'sql|VCP'     => 'GROUP_CONCAT(DISTINCT '.$fqnColumn.' ORDER BY '.$fqnOrderBy.' ASC)',
+      'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'input'       => 'S',
       'select'      => 'M',
       //'filter'      => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
-        'column'      => $column,
-        'description' => $description,
-        'orderby'     => $sort,
-        'join'        => '$join_table.id = '.$projectInstrumentJoin.'.instrument_id'
+        'column'      => 'id',
+        'description' => 'instrument',
+        'orderby'     => '$table.sort_order ASC',
+        'join'        => '$join_col_fqn = '.$projectInstrumentJoin.'.instrument_id'
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -334,7 +330,10 @@ class ProjectParticipants extends PMETableViewBase
       'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'input'       => 'HRS',
-      'sql'         => 'PMEjoin'.$projectInstrumentNameIndex.'.sort_order',
+      'sort'     => true,
+      'values' => [
+        'join' => [ 'reference' => $projectInstrumentNameIndex ],
+      ],
     ];
 
     if ($this->showDisabled) {
@@ -356,12 +355,6 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     $fieldIndex = $musicianInstrumentsIndex = count($opts['fdd']);
-    $column = 'id';
-    $description = 'instrument';
-    $orderBy = 'sort_order';
-    $joinTable =  'PMEjoin'.$fieldIndex;
-    $fqnColumn = $joinTable.'.'.$column;
-    $fqnOrderBy = $joinTable.'.'.$orderBy;
     $opts['fdd']['musician_instruments'] = [
       'name'        => $this->l->t('All Instruments'),
       'tab'         => [ 'id' => [ 'musician', 'instrumentation' ] ],
@@ -369,17 +362,17 @@ class ProjectParticipants extends PMETableViewBase
       'display|LVF' => ['popup' => 'data'],
       'input'       => 'S', // skip
       'sort'        => true,
-      'sql'         => 'GROUP_CONCAT(DISTINCT '.$fqnColumn.' ORDER BY '.$fqnOrderBy.' ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'input'       => 'S',
       'select'      => 'M',
       'filter'      => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
-        'column'      => $column,
-        'description' => $description,
-        'orderby'     => $orderBy,
+        'column'      => 'id',
+        'description' => 'instrument',
+        'orderby'     => '$table.sort_order ASC',
         //        'groups'      => 'Familie',
-        'join'        => '$join_table.id = PMEjoin'.$joinIndex[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
+        'join'        => '$join_col_fqn = '.$joinTable[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -387,7 +380,7 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts['fdd']['musician_instruments']['values|ACP'] = array_merge(
       $opts['fdd']['musician_instruments']['values'],
-      [ 'filters' => '$table.Disabled = 0' ]);
+      [ 'filters' => '$table.disabled = 0' ]);
 
     /*
      *
@@ -409,7 +402,7 @@ class ProjectParticipants extends PMETableViewBase
       'values2' => $this->memberStatusNames,
       'tooltip' => $this->toolTipsService['member-status'],
       'values' => [
-        'column' => 'member_status',
+        'column' => 'member_status',//@TODO
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
@@ -428,9 +421,7 @@ class ProjectParticipants extends PMETableViewBase
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
-      //'sql'      => $musiciansJoin.'.mobile_phone',
       'values' => [
-        'column' => 'mobile_phone',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
@@ -449,18 +440,14 @@ class ProjectParticipants extends PMETableViewBase
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
-      //'sql'      => $musiciansJoin.'.fixed_line_phone',
       'values' => [
-        'column' => 'fixed_line_phone',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
 
     $opts['fdd']['email'] = $this->defaultFDD['email'];
     $opts['fdd']['email']['tab'] = ['id' => 'musician'];
-    //$opts['fdd']['email']['sql'] = $musiciansJoin.'.email';
     $opts['fdd']['email']['values'] = [
-      'column' => 'email',
       'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
     ];
 
@@ -474,9 +461,7 @@ class ProjectParticipants extends PMETableViewBase
       'maxlen'   => 128,
       'sort'     => true,
       'input'    => 'S',
-      //'sql'      => $musiciansJoin.'.street',
       'values' => [
-        'column' => 'street',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
@@ -489,9 +474,7 @@ class ProjectParticipants extends PMETableViewBase
       'maxlen'   => 11,
       'sort'     => true,
       'input'    => 'S',
-      //'sql'      => $musiciansJoin.'.postal_code',
       'values' => [
-        'column' => 'postal_code',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
@@ -504,9 +487,7 @@ class ProjectParticipants extends PMETableViewBase
       'maxlen'   => 128,
       'sort'     => true,
       'input'    => 'S',
-      //'sql'      => $musiciansJoin.'.city',
       'values' => [
-        'column' => 'city',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
@@ -524,7 +505,6 @@ class ProjectParticipants extends PMETableViewBase
       'sort'     => true,
       'input'    => 'S',
       'values' => [
-        'column' => 'country',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
       'values2'     => $countries,
@@ -534,7 +514,6 @@ class ProjectParticipants extends PMETableViewBase
     $opts['fdd']['birthday'] = $this->defaultFDD['birthday'];
     $opts['fdd']['birthday']['tab'] = [ 'id' => 'musician' ];
     $opts['fdd']['birthday']['values'] = [
-      'column' => 'birthday',
       'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
     ];
 
@@ -551,7 +530,6 @@ class ProjectParticipants extends PMETableViewBase
       'escape' => false,
       'sort'     => true,
       'values' => [
-        'column' => 'remarks',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
@@ -564,7 +542,6 @@ class ProjectParticipants extends PMETableViewBase
       'default'  => 'Deutschland',
       'sort'     => true,
       'values' => [
-        'column' => 'language',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
       'values2'  => $this->findAvailableLanguages(),
@@ -628,13 +605,14 @@ class ProjectParticipants extends PMETableViewBase
       'name'     => 'UUID',
       'options'  => 'LAVCPDR',
       'css'      => ['postfix' => ' musician-uuid'],
-      'sql'      => 'BIN2UUID('.$musiciansJoin.'.uuid)',
+      'sql'      => 'BIN2UUID($join_col_fqn)',
       'sqlw'     => 'UUID2BIN($val_qas)',
       'select'   => 'T',
       'maxlen'   => 32,
       'sort'     => false,
-      //      'table'    => NAME or join-nr
-      //'sql' => BLAH( $join_table $main_table $column)
+      'values' => [
+        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+      ],
     ];
 
     $opts['fdd']['updated'] =
@@ -647,7 +625,6 @@ class ProjectParticipants extends PMETableViewBase
           "nowrap" => true,
           "options" => 'LFAVCPDR',
           'values' => [
-            'column' => 'updated',
             'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
           ],
         ]
@@ -1697,6 +1674,7 @@ class ProjectParticipants extends PMETableViewBase
    */
   public function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
+    $this->logInfo('OLDVALS '.print_r($oldvals, true));
     foreach (self::JOIN_TABLES as $table => $joinInfo) {
       $entityClass = $joinInfo['entity'];
       $meta = $this->classMetadata($entityClass);
