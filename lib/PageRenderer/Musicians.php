@@ -566,13 +566,14 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['uuid'] = [
       'tab'      => ['id' => 'miscinfo'],
       'name'     => 'UUID',
-      'options'  => 'AVCPDR', // auto increment
+      //'options'  => 'AVCPDR',
+      'input'    => 'R',
       'css'      => ['postfix' => ' musician-uuid'.' '.$addCSS],
       'sql'      => 'BIN2UUID(`PMEtable0`.`uuid`)',
       'sqlw'     => 'UUID2BIN($val_qas)',
       'select'   => 'T',
       'maxlen'   => 32,
-      'sort'     => false,
+      'sort'     => true,
     ];
 
     $opts['fdd']['updated'] =
