@@ -747,9 +747,15 @@ class phpMyEdit
 	 */
 	function set_values($field_num, $prepend = null, $append = null, $strict = false) /* {{{ */
 	{
-		if (!empty($this->fdd[$field_num]['setvalues'])) {
-			return $this->fdd[$field_num]['setvalues']; // use cache.
+		$fdd = &$this->fdd[$field_num]; // reference is important here
+		if (!empty($fdd['setvalues'])) {
+			return $fdd['setvalues']; // use cache.
 		}
+
+		$this->logInfo('SetValues for '.$this->fds[$field_num]);
+
+		$valuesDef = $this->values_with_defaults($field_num);
+		$this->logInfo('Resulting Values '.print_r($valuesDef, true));
 
 		$values = array();
 		$groups = null;
@@ -757,36 +763,36 @@ class phpMyEdit
 		$titles = null;
 
 		// allow for unconditional override
-		if (isset($this->fdd[$field_num]['values']['valueGroups'])) {
-			$groups = $this->fdd[$field_num]['values']['valueGroups'];
-		} else if (isset($this->fdd[$field_num]['valueGroups'])) {
-			$groups = $this->fdd[$field_num]['valueGroups'];
+		if (isset($valuesDef['valueGroups'])) {
+			$groups = $valuesDef['valueGroups'];
+		} else if (isset($fdd['valueGroups'])) {
+			$groups = $fdd['valueGroups'];
 		}
-		if (isset($this->fdd[$field_num]['values']['valueData'])) {
-			$data = $this->fdd[$field_num]['values']['valueData'];
-		} else if (isset($this->fdd[$field_num]['valueData'])) {
-			$data = $this->fdd[$field_num]['valueData'];
+		if (isset($valuesDef['valueData'])) {
+			$data = $valuesDef['valueData'];
+		} else if (isset($fdd['valueData'])) {
+			$data = $fdd['valueData'];
 		}
-		if (isset($this->fdd[$field_num]['values']['valueTitles'])) {
-			$titles = $this->fdd[$field_num]['values']['valueTitles'];
-		} else if (isset($this->fdd[$field_num]['valueTitles'])) {
-			$titles = $this->fdd[$field_num]['valueTitles'];
+		if (isset($valuesDef['valueTitles'])) {
+			$titles = $valuesDef['valueTitles'];
+		} else if (isset($fdd['valueTitles'])) {
+			$titles = $fdd['valueTitles'];
 		}
-		if (isset($this->fdd[$field_num]['values']['queryValues'])) {
-			$values = $this->fdd[$field_num]['values']['queryValues'];
-		} else if (isset($this->fdd[$field_num]['values']['table']) || $strict) {
+		if (isset($valuesDef['queryValues'])) {
+			$values = $valuesDef['queryValues'];
+		} else if (isset($valuesDef['table']) || $strict) {
 			$value_group_data = $this->set_values_from_table($field_num, $strict);
 			$groups = (array)$groups + (array)$valuegroup_data['groups'];
 			$data = (array)$data + (array)$value_group_data['data'];
 			$values = [];
-			if (!empty($this->fdd[$field_num]['values2'])) {
-				$values += $this->fdd[$field_num]['values2'];
+			if (!empty($fdd['values2'])) {
+				$values += $fdd['values2'];
 			}
 			if (!empty($value_group_data['values'])) {
 				$values += $value_group_data['values'];
 			}
 		} else {
-			$values = (array)$this->fdd[$field_num]['values2'];
+			$values = (array)$fdd['values2'];
 		}
 
 		$values = (array)$prepend + (array)$values + (array)$append;
@@ -795,22 +801,22 @@ class phpMyEdit
 		//error_log('data: '.print_r($data, true));
 		//error_log('values: '.print_r($values, true));
 
-		$this->fdd[$field_num]['values2'] = $values;
+		$fdd['values2'] = $values;
 
-		$this->fdd[$field_num]['setvalues'] = [
+		$fdd['setvalues'] = [
 			'values' => $values,
 			'groups' => $groups,
 			'titles' => $titles,
 			'data' => $data
 			];
 
-		//error_log(__METHOD__.' '.print_r($this->fdd[$field_num]['setvalues'], true));
+		//error_log(__METHOD__.' '.print_r($fdd['setvalues'], true));
 
 		if ($this->fds[$field_num]  == 'updated') {
 			throw new \Exception('blah');
 		}
 
-		return $this->fdd[$field_num]['setvalues'];
+		return $fdd['setvalues'];
 	} /* }}} */
 
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
@@ -820,12 +826,15 @@ class phpMyEdit
 		if (empty($table)) {
 			$table = $this->tb;
 		}
-		$key      = &$this->fdd[$field_num]['values']['column'];
-		$desc     = &$this->fdd[$field_num]['values']['description'];
-		$filters  = &$this->fdd[$field_num]['values']['filters'];
-		$orderby  = &$this->fdd[$field_num]['values']['orderby'];
-		$groups   = &$this->fdd[$field_num]['values']['groups'];
-		$data     = &$this->fdd[$field_num]['values']['data'];
+		$valuesDef = $this->values_with_defaults($field_num);
+		$this->logInfo('Resulting Values '.print_r($valuesDef, true));
+
+		$key      = $valuesDef['column'];
+		$desc     = $valuesDef['description'];
+		$filters  = $valuesDef['filters'];
+		$orderby  = $valuesDef['orderby'];
+		$groups   = $valuesDef['groups'];
+		$data     = $valuesDef['data'];
 		$dbp      = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 
 		$qparts['type'] = 'select';
@@ -842,7 +851,7 @@ class phpMyEdit
 
 		$subs = array(
 			'main_table'  => $this->tb,
-			'record_id'   => $this->rec, // may be useful for change oggp.
+			'record_id'   => $this->rec, // may be useful for change op.
 			'table'		  => $table_name,
 			'column'	  => $key,
 			'description' => $desc);
@@ -912,6 +921,49 @@ class phpMyEdit
 	} /* }}} */
 
 	/**
+	 * Add some defaults for missing 'values' fields.
+	 */
+	protected function values_with_defaults(int $field)
+	{
+		$fdd = $this->fdd[$field];
+		if (!isset($fdd['values']['join'])) {
+			$join_table = 'PMEtable0';
+		} else {
+			$join_index = isset($fdd['values']['join']['reference'])
+						? $fdd['values']['join']['reference']
+						: $field;
+			$join_table = 'PMEjoin'.$join_index;
+		}
+
+		if (!isset($fdd['values']['column'])) {
+			$join_column = $this->fds[$field];
+		} else {
+			$join_column = $fdd['values']['column'];
+		}
+
+		if (!isset($fdd['values']['description'])) {
+			$join_desc = $join_column;
+		} else {
+			$join_desc = $fdd['values']['description'];
+		}
+
+		if (!isset($fdd['values']['orderby'])) {
+			$orderBy = '$table.$column ASC';
+		} else {
+			$orderBy = $sd.$fdd['values']['orderby'];
+		}
+		return array_merge(
+			[
+				'join_table' => $join_table,
+				'column' => $join_column,
+				'description' => $join_desc,
+				'orderby' => $orderBy,
+			],
+			$fdd['values']?:[]
+		);
+	}
+
+	/**
 	 * Substitute placeholders in sql field:
 	 *
 	 * - $table Either PMEtable0 or PMEjoinNR if join information is specified
@@ -923,28 +975,17 @@ class phpMyEdit
 	 */
 	protected function sql_field($field)
 	{
+		$values = $this->values_with_defaults($field);
+
 		$main_table = $this->sd.'PMEtable0'.$this->ed;
-		$fdd = $this->fdd[$field];
-		if (!isset($fdd['values']['join'])) {
-			$join_table = $main_table;
-		} else {
-			$join_index = isset($fdd['values']['join']['reference'])
-						? $fdd['values']['join']['reference']
-						: $field;
-			$join_table = $this->sd.'PMEjoin'.$join_index.$this->ed;
-		}
-		if (!isset($fdd['values']['column'])) {
-			$join_column = $this->sd.$this->fds[$field].$this->ed;
-		} else {
-			$join_column = $this->sd.$fdd['values']['column'].$this->ed;
-		}
+		$join_table = $this->sd.$values['join_table'].$this->ed;
+		$join_column = $this->sd.$values['column'].$this->ed;
 		$join_col_fqn = $join_table.'.'.$join_column;
-		if (!isset($fdd['values']['description'])) {
-			$join_desc = $join_column;
-		} else {
-			$join_desc = $this->sd.$fdd['values']['description'].$this->ed;
-		}
+		$join_desc = $this->sd.$values['description'].$this->ed;
 		$join_desc_fqn = $join_table.'.'.$join_desc;
+		$order_by = $values['orderby'];
+
+		$fdd = $this->fdd[$field];
 		if (isset($fdd['sql'])) {
 			return $this->substituteVars(
 				$fdd['sql'], array(
@@ -955,6 +996,10 @@ class phpMyEdit
 					'join_col_fqn' => $join_col_fqn,
 					'join_description' => $join_desc,
 					'join_desc_fqn' => $join_desc_fqn,
+					'table' => $join_table,
+					'column' => $join_column,
+					'description' => $join_desc,
+					'order_by' => $order_by,
 				));
 		} else {
 			return $join_col_fqn;
@@ -2231,17 +2276,20 @@ class phpMyEdit
 	 * Substitutes variables in string
 	 * (this is very simple but secure eval() replacement)
 	 */
-	function substituteVars($str, $subst_ar) /* {{{ */
+	function substituteVars($str, $subst_ar, $max_depth = 2) /* {{{ */
 	{
+		if ($max_depth <= 0) {
+			return $str;
+		}
 		$array = preg_split('/(\\$\w+)/', $str, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$count = count($array);
 		for ($i = 1; $i < $count; $i += 2) {
 			$key = substr($array[$i], 1);
 			if (isset($subst_ar[$key])) {
-				$array[$i] = $subst_ar[$key];
+				$array[$i] = $this->substituteVars($subst_ar[$key], $subst_ar, $max_depth - 1);
 			}
 		}
-		return join('', $array);
+		return $str = join('', $array);
 	} /* }}} */
 
 	/**
@@ -4467,7 +4515,7 @@ class phpMyEdit
 				// } else {
 				// 	$query_part = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$fd.$this->ed;
 				// }
-				$query_part = $this->sql_field($k)." AS '".$fd.".'";
+				$query_part = $this->sql_field($k)." AS '".$fd."'";
 				if ($query_oldrec == '') {
 					$query_oldrec = 'SELECT '.$query_part;
 				} else {
@@ -5590,7 +5638,6 @@ class phpMyEdit
 		if (!empty($this->rec) && !is_array($this->rec)) {
 			$this->rec = [ array_keys($this->key)[0] => $this->rec ];
 		}
-		$this->logInfo(print_r($this->rec, true));
 		/* echo '<PRE>'; */
 		/* print_r($opquery); */
 		/* echo "\nkey: ".$key."\n"; */
