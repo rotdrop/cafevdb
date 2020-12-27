@@ -354,8 +354,7 @@ make sure that the musicians are also automatically added to the
     $projects = $projects['nameById'];
 
     // Dummy field in order to get the Besetzungen table for the Projects field
-    $idx = count($opts['fdd']);
-    $projectParticipantsJoin = '`PMEjoin'.$idx.'`';
+    $projectParticipantsJoin = 'PMEjoin'.count($opts['fdd']);
     $opts['fdd']['musician_id'] = [
       'input' => 'VH',
       'options' => '',
@@ -368,8 +367,7 @@ make sure that the musicians are also automatically added to the
     ];
 
     $projectsIdx = count($opts['fdd']);
-    $idx = count($opts['fdd']);
-    $join_table = 'PMEjoin'.$idx;
+    $join_table = 'PMEjoin'.$projectsIdx;
     $opts['fdd']['projects'] = [
       'tab' => ['id' => 'orchestra'],
       'input' => 'VR',
