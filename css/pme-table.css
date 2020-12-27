@@ -851,6 +851,24 @@ td.pme-cell span.clip-long-text {
   vertical-align:top;
 }
 
+td.pme-cell.medium-width,
+td.pme-cell .medium-width {
+  width:12em;
+  max-width:12em;
+}
+
+td.pme-cell.short-width,
+td.pme-cell .short-width {
+  width:8em;
+  max-width:8em;
+}
+
+td.pme-cell.tiny-width,
+td.pme-cell .tiny-width {
+  width:4em;
+  max-width:4em;
+}
+
 td.pme-cell.projects {
   width:15em;
   max-width:15em;
