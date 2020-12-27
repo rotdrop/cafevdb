@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2020-12-23 15:30+0100\n"
+"POT-Creation-Date: 2020-12-27 12:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -404,7 +404,7 @@ msgstr ""
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/js/cafevdb.js:30
 #: /var/www/html/nextcloud-git/apps/cafevdb/js/cafevdb.js:31
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Instruments.php:327
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Instruments.php:322
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/PhoneNumberService.php:84
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/PhoneNumberService.php:206
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/instruments.php:636
@@ -895,11 +895,11 @@ msgstr ""
 msgid "Display the application menu and settings side-bar"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/js/pme.js:1085
+#: /var/www/html/nextcloud-git/apps/cafevdb/js/pme.js:1087
 msgid "#columns"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/js/pme.js:1094
+#: /var/www/html/nextcloud-git/apps/cafevdb/js/pme.js:1096
 msgid "#rows"
 msgstr ""
 
@@ -2210,7 +2210,7 @@ msgid "Short Name"
 msgstr ""
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Finance/insurance-brokers.php:228
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:286
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:294
 msgid "Name"
 msgstr ""
 
@@ -2340,7 +2340,7 @@ msgstr ""
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Finance/sepa-debit-mandates.php:241
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:207
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:173
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1703
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1759
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:571
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1854
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/instrument-insurance.php:193
@@ -2673,7 +2673,7 @@ msgstr ""
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Instruments.php:213
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:279
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:250
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:335
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:341
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:218
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:267
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/instruments.php:240
@@ -2864,75 +2864,76 @@ msgstr ""
 msgid "Member Status"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:380
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:378
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1034
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:405
 msgid "Projects"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:398
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:396
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:411
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1050
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:423
 msgid "Mobile Phone"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:412
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:432
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:410
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:430
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1067
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:439
 msgid "Fixed Line Phone"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:429
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:463
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:427
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:457
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1084
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:458
 msgid "Street"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:438
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:478
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:436
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:470
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1094
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:467
 msgid "Postal Code"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:447
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:493
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:445
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:483
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1103
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:476
 msgid "City"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:459
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:511
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:457
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:499
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1115
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:488
 msgid "Country"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:474
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:536
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:472
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:522
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1010
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:502
 msgid "Remarks"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:488
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:554
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:486
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:539
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:515
 msgid "Language"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:514
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:569
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:512
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:553
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1152
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:540
 msgid "Photo"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:585
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:584
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:623
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:424
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1180
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:610
@@ -2940,50 +2941,50 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:597
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:596
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:622
 #, php-format
 msgid "Add all to %s"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:646
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:645
 msgid ""
 "Photos or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:656
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:655
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:887
 msgid "Photo, if available"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:662
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:661
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:893
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:665
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:664
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:896
 msgid "Delete current photo"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:666
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:665
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:897
 msgid "Edit current photo"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:667
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:666
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:898
 msgid "Upload new photo"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:668
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:667
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/musicians.php:899
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:676
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:675
 msgid ""
 "Internal error, don't know what to do concerning photos in the given context."
 msgstr ""
@@ -3230,48 +3231,48 @@ msgstr ""
 msgid "Prototype keys \"%s\" and options keys \"%s\" differ"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:123
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:130
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:46
 #, php-format
 msgid "Remove the musician from %s?"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:125
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:132
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:48
 msgid "Display of all stored data for the shown musician."
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:127
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:134
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:50
 msgid "Edit the data of the displayed musician."
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:129
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:136
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:52
 #, php-format
 msgid "Instrumentation for Project `%s'"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:213
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:220
 msgid "Project-Id"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:226
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:233
 msgid "Musician-Id"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:276
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:283
 msgid "First Name"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:306
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:309
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:280
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:289
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:325
 msgid "Project Instrument"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:328
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:331
 msgid "Instrument Sort Order"
 msgstr ""
 
@@ -3280,28 +3281,32 @@ msgstr ""
 msgid "All Instruments"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1679
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1730
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:547
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1838
 msgid "Instrumentation related data"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1684
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1735
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:552
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1841
 msgid "Project related data"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1691
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1742
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:559
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1846
 msgid "Finance related data"
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1698
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1749
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:566
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:1851
 msgid "Personal data"
+msgstr ""
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1754
+msgid "Miscinfo"
 msgstr ""
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:65
@@ -3741,7 +3746,7 @@ msgstr ""
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:519
 #, php-format
-msgid "Unable to create web-page like \"%s\"."
+msgid "Unable to create web-page \"%s\"."
 msgstr ""
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:534
