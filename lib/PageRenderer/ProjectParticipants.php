@@ -89,6 +89,15 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'instrument_id',
       'description' => [ 'instrument_id' ],
     ],
+    // in order to get the participations in _other projects
+    self::TABLE => [
+      'entity' => Entities\ProjectParticipant::class,
+      'identifier' => [
+        'project_id' => false,
+        'musician_id' => 'musician_id',
+      ],
+      'column' => 'project_id',
+    ],
   ];
 
   /** @var GeoCodingService */
@@ -216,7 +225,7 @@ class ProjectParticipants extends PMETableViewBase
 
     $projIdIdx = count($opts['fdd']);
     $opts['fdd']['project_id'] = array(
-      'tab'      => [ 'id' => 'musician' ],
+      'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => $this->l->t('Project-Id'),
       'input'    => 'R',
       'select'   => 'T',
@@ -229,7 +238,7 @@ class ProjectParticipants extends PMETableViewBase
 
     $musIdIdx = count($opts['fdd']);
     $opts['fdd']['musician_id'] = array(
-      'tab'      => [ 'id' => 'musician' ],
+      'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => $this->l->t('Musician-Id'),
       'input'    => 'R',
       'select'   => 'T',
@@ -301,6 +310,24 @@ class ProjectParticipants extends PMETableViewBase
       ],
     ];
 
+    if ($this->showDisabled) {
+      $opts['fdd']['disabled'] = [
+        'name'     => $this->l->t('Disabled'),
+        'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
+        'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
+        'input'    => $expertMode ? '' : 'R',
+        'select'   => 'C',
+        'maxlen'   => 1,
+        'sort'     => true,
+        'escape'   => false,
+        'sqlw'     => 'IF($val_qas = "", 0, 1)',
+        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
+        'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+        'tooltip'  => $this->toolTipsService['musician-disabled'],
+        'css'      => [ 'postfix' => ' musician-disabled' ],
+      ];
+    }
+
     $projectInstrumentJoin = $joinTable[self::PROJECT_INSTRUMENTS_TABLE];
     $fieldIndex = $projectInstrumentNameIndex = count($opts['fdd']);
     $projectInstrumentNameJoin = 'PMEjoin'.$projectInstrumentNameIndex;
@@ -335,24 +362,6 @@ class ProjectParticipants extends PMETableViewBase
         'join' => [ 'reference' => $projectInstrumentNameIndex ],
       ],
     ];
-
-    if ($this->showDisabled) {
-      $opts['fdd']['disabled'] = [
-        'name'     => $this->l->t('Disabled'),
-        'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
-        'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
-        'input'    => $expertMode ? '' : 'R',
-        'select'   => 'C',
-        'maxlen'   => 1,
-        'sort'     => true,
-        'escape'   => false,
-        'sqlw'     => 'IF($val_qas = "", 0, 1)',
-        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
-        'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
-        'tooltip'  => $this->toolTipsService['musician-disabled'],
-        'css'      => [ 'postfix' => ' musician-disabled' ],
-      ];
-    }
 
     $fieldIndex = $musicianInstrumentsIndex = count($opts['fdd']);
     $opts['fdd']['musician_instruments'] = [
@@ -402,10 +411,41 @@ class ProjectParticipants extends PMETableViewBase
       'values2' => $this->memberStatusNames,
       'tooltip' => $this->toolTipsService['member-status'],
       'values' => [
-        'column' => 'member_status',//@TODO
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
+
+    $allProjectsIdx = count($opts['fdd']);
+    $opts['fdd']['all_projects'] = [
+      'tab' => ['id' => 'musician'],
+      'input' => 'VR',
+      'options' => 'LFVC',
+      'select' => 'M',
+      'name' => $this->l->t('Projects'),
+      'sort' => true,
+      'css'      => ['postfix' => ' projects tooltip-top'],
+      'display|LVF' => ['popup' => 'data'],
+      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
+      'filter' => 'having', // need "HAVING" for group by stuff
+      'values' => [
+        'table' => 'Projects',
+        'column' => 'id',
+        'description' => 'name',
+        'orderby' => '$table.year ASC, $table.name ASC',
+        'groups' => 'year',
+        'join' => '$join_col_fqn = '.$joinTable[self::TABLE].'.project_id'
+      ],
+      // @TODO check whether this is still needed or 'groups' => 'year' is just fine.
+      //'values2' => $projects,
+      //'valueGroups' => $groupedProjects
+    ];
+
+    $opts['fdd']['email'] = $this->defaultFDD['email'];
+    $opts['fdd']['email']['tab'] = ['id' => 'musician'];
+    $opts['fdd']['email']['values'] = [
+      'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+    ];
+    $opts['fdd']['email']['input'] = 'S';
 
     $opts['fdd']['mobile_phone'] = [
       'name'     => $this->l->t('Mobile Phone'),
@@ -444,14 +484,6 @@ class ProjectParticipants extends PMETableViewBase
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
-
-    $opts['fdd']['email'] = $this->defaultFDD['email'];
-    $opts['fdd']['email']['tab'] = ['id' => 'musician'];
-    $opts['fdd']['email']['values'] = [
-      'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-    ];
-
-    $opts['fdd']['email']['input'] = 'S';
 
     $opts['fdd']['street'] = [
       'name'     => $this->l->t('Street'),
@@ -604,12 +636,13 @@ class ProjectParticipants extends PMETableViewBase
       'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => 'UUID',
       'options'  => 'LAVCPDR',
-      'css'      => ['postfix' => ' musician-uuid'],
+      'css'      => ['postfix' => ' musician-uuid clip-long-text tiny-width'],
       'sql'      => 'BIN2UUID($join_col_fqn)',
+      'display|LVF' => ['popup' => 'data'],
       'sqlw'     => 'UUID2BIN($val_qas)',
       'select'   => 'T',
       'maxlen'   => 32,
-      'sort'     => false,
+      'sort'     => true,
       'values' => [
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
