@@ -287,6 +287,29 @@ class phpMyEdit
 		return '('.implode(' AND ', $wparts).')';
 	}
 
+	private function key_record_query_data($key_rec)
+	{
+		if (empty($key_record)) {
+			$key_record = $this->rec;
+		}
+		switch (count($key_rec)) {
+		case 0:
+			$recordQueryData = $this->cgi['prefix']['sys'].'rec'.'=""';
+			break;
+		case 1:
+			$recordQueryData = $this->cgi['prefix']['sys'].'rec'.'='.array_values($key_rec)[0];
+			break;
+		default:
+			$data = [];
+			foreach ($key_rec as $key => $value) {
+				$data[] = $this->cgi['prefix']['sys'].'rec['.$key.']'.'='.$value;
+			}
+			$recordQueryData = implode('&', $data);
+			break;
+		}
+		return $recordQueryData;
+	}
+
 	private function emit_misc_recs()
 	{
 		echo $this->htmlHiddenSys('mtable', $this->tb);
@@ -2311,7 +2334,7 @@ class phpMyEdit
 		$url .= '&'.$this->cgi['prefix']['sys'].'qfn'.'='.rawurlencode($this->qfn).$this->qfn;
 		$url .= '&'.$this->get_sfn_cgi_vars().$this->cgi['persist'];
 		$ar	  = array(
-			'key'	=> $key,
+			'key'	=> $this->key_record_query_data($key),
 			'name'	=> $name,
 			'link'	=> $link_val,
 			'value' => $disp_val,
@@ -3950,27 +3973,19 @@ class phpMyEdit
 
 			switch (count($key_rec)) {
 				case 0:
-					$recordDataQuoted = '""';
-					$recordQueryData = $this->cgi['prefix']['sys'].'rec'.'=""';
+					$recordData = '';
 					break;
 				case 1:
-					$value = array_values($key_rec)[0];
-					$recordDataQuoted = '"'.$value.'"';
-					$recordQueryData = $this->cgi['prefix']['sys'].'rec'.'='.$value;
+					$recordData = array_values($key_rec)[0];
 					break;
 				default:
-					$recordDataQuoted = "'".json_encode($key_rec)."'";
-					$data = [];
-					foreach ($key_rec as $key => $value) {
-						$data[] = $this->cgi['prefix']['sys'].'rec['.$key.']'.'='.$value;
-					}
-					$recordQueryData = implode('&', $data);
+					$recordData = json_encode($key_rec);
 					break;
 			}
-			$recordData = trim($recordDataQuoted, '"\'');
+			$recordQueryData = $this->key_record_query_data($key_rec);
 			echo
 				'<tr class="'.$this->getCSSclass('row', null, 'next').'"'.
-				'    data-'.$this->cgi['prefix']['sys'].'rec='.$recordDataQuoted."\n".'>'."\n";
+				'    data-'.$this->cgi['prefix']['sys']."rec='".$recordData."'\n".'>'."\n";
 			if ($this->sys_cols) { /* {{{ */
 				$css_class_name = $this->getCSSclass('navigation', null, true);
 				if ($select_recs) {
