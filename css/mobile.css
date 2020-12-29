@@ -180,6 +180,10 @@
     min-width:0 !important;
   }
 
+  tr.table-tabs td ul.table-tabs {
+    flex-wrap: wrap;
+  }
+
   tr.table-tabs td li.table-tabs {
     box-sizing:border-box;
     max-width:18%; // 5 tabs
