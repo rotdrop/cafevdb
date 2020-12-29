@@ -115,6 +115,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $this->requestParameters->getParam($key, $default);
     }
 
+    $this->pmeOptions['tooltips'] = $this->toolTipsService;
+
     // @TODO: the following should be done only on demand and is
     // somewhat chaotic.
 
