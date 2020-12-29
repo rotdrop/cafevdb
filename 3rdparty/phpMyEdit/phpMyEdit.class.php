@@ -3876,7 +3876,11 @@ class phpMyEdit
 				// Generate a button and a check
 				// box. The check box is activated if the field is selected for sorting
 
-				echo '<th class="',$css_class_name,' ',$css_sort_class,'">';
+				echo '<th class="'.$css_class_name.' '.$css_sort_class.'"';
+				if (!empty($this->fdd[$k]['tooltip'])) {
+					echo 'title="'.$this->fdd[$k]['tooltip'].'"';
+				}
+				echo '>';
 				if (!$sorted) {
 					echo "\n  ".$this->htmlSubmit("sort[$k]", $fdn, $this->getCSSclass('sort'));
 				} else {
@@ -5541,7 +5545,7 @@ class phpMyEdit
 			}
 		}
 		$this->tooltips = array();
-		if (isset($opts['tooltips']) && is_array($opts['tooltips'])) {
+		if (isset($opts['tooltips']) && (is_array($opts['tooltips']) || ($opts['tooltips'] instanceof \ArrayAccess))) {
 			$this->tooltips = $opts['tooltips'];
 			/* echo '<PRE>'; */
 			/* print_r($this->tooltips); */
