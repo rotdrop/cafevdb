@@ -436,7 +436,23 @@ class ProjectParticipants extends PMETableViewBase
       ],
     ];
 
-    $allProjectsIdx = count($opts['fdd']);
+    $opts['fdd']['remarks'] = [
+      'name' => $this->l->t("Remarks")."\n(".$projectName.")",
+      'tooltip' => $this->toolTipsService['project-remarks'],
+      'select'   => 'T',
+      'maxlen'   => 65535,
+      'css'      => [ 'postfix' => ' remarks tooltip-left' ],
+      'textarea' => [
+        'css' => 'wysiwyg-editor',
+        'rows' => 5,
+        'cols' => 50,
+      ],
+      'display|LF' => [ 'popup' => 'data' ],
+      'escape' => false,
+      'sort'   => true,
+      'tab'    => [ 'id' => 'project' ]
+    ];
+
     $opts['fdd']['all_projects'] = [
       'tab' => ['id' => 'musician'],
       'input' => 'VR',
@@ -570,19 +586,22 @@ class ProjectParticipants extends PMETableViewBase
       'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
     ];
 
-    $opts['fdd']['remarks'] = [
+    $opts['fdd']['musician_remarks'] = [
       'tab'      => ['id' => 'musician'],
-      'name'     => strval($this->l->t('Remarks')),
+      'name'     => $this->l->t('Remarks'),
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => ['postfix' => ' remarks tooltip-top'],
-      'textarea' => ['css' => 'wysiwyg-editor',
-                     'rows' => 5,
-                     'cols' => 50],
+      'textarea' => [
+        'css' => 'wysiwyg-editor',
+        'rows' => 5,
+        'cols' => 50,
+      ],
       'display|LF' => ['popup' => 'data'],
       'escape' => false,
       'sort'     => true,
       'values' => [
+        'column' => 'remarks',
         'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
       ],
     ];
@@ -1172,7 +1191,7 @@ class ProjectParticipants extends PMETableViewBase
 //         unset($fdd['textarea']);
 //         break;
 //       case 'HTML':
-//         $fdd['textarea'] = array('css' => 'wysiwygeditor',
+//         $fdd['textarea'] = array('css' => 'wysiwyg-editor',
 //                                  'rows' => 5,
 //                                  'cols' => 50);
 //         $fdd['css']['postfix'] .= ' hide-subsequent-lines';
@@ -1438,7 +1457,7 @@ class ProjectParticipants extends PMETableViewBase
 //             'maxlen'   => 65535,
 //             'css'      => array('postfix' => ' remarks tooltip-left'),
 //             'display|LF' => array('popup' => 'data'),
-//             'textarea' => array('css' => 'wysiwygeditor',
+//             'textarea' => array('css' => 'wysiwyg-editor',
 //                                 'rows' => 5,
 //                                 'cols' => 50),
 //             'escape' => false,
@@ -1559,7 +1578,7 @@ class ProjectParticipants extends PMETableViewBase
 //       'maxlen'   => 65535,
 //       'css'      => array('postfix' => ' remarks tooltip-left'),
 //       'display|LF' => array('popup' => 'data'),
-//       'textarea' => array('css' => 'wysiwygeditor',
+//       'textarea' => array('css' => 'wysiwyg-editor',
 //                           'rows' => 5,
 //                           'cols' => 50),
 //       'escape'   => false,

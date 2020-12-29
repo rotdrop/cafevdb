@@ -766,6 +766,8 @@ of the project name before the year is added.'),
 
       'project-personalmisc-tab' => $this->l->t('Further "not so important" data of the participant.'),
 
+      'project-remarks' => $this->l->t('Project specific remarks for this musician. Please check first if there is a special field for the things you want to note'),
+
       'project-total-fee-summary' => $this->l->t('The accumulated total of all charges the participant has to pay.'),
 
       'project-web-article-add' => $this->l->t('Add a new public web-page to the project by generating a new, empty concert announcement.'),
