@@ -148,7 +148,7 @@ var myTinyMCE = myTinyMCE || {};
   myTinyMCE.init = function(lang) {
     myTinyMCE.config.language = lang;
     var allconfig = myTinyMCE.getConfig({
-      selector: "textarea.wysiwygeditor",
+      selector: "textarea.wysiwyg-editor",
       nonce: btoa(OC.requestToken)
     });
     tinyMCE.init(allconfig);
