@@ -363,6 +363,27 @@ class ProjectParticipants extends PMETableViewBase
       ],
     ];
 
+    $opts['fdd']['registration'] = [
+      'name|LF' => ' &#10004;',
+      'name|CAPDV' => $this->l->t("Registration"),
+      'tab' => [ 'id' => [ 'project', 'instrumentation' ] ],
+      'options'  => 'LAVCPDF',
+      'select' => 'C',
+      'maxlen' => '1',
+      'sort' => true,
+      'escape' => false,
+      'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
+      'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+      'tooltip' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
+                               [ "&#10004;" ]),
+      'display|LF' => [
+        'popup' => function($data) {
+          return $this->toolTipsService['registration-mark'];
+        },
+      ],
+      'css'      => [ 'postfix' => ' registration tooltip-top' ],
+    ];
+
     $fieldIndex = $musicianInstrumentsIndex = count($opts['fdd']);
     $opts['fdd']['musician_instruments'] = [
       'name'        => $this->l->t('All Instruments'),
