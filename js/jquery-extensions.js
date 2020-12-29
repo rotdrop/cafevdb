@@ -128,7 +128,7 @@ var CAFEVDB = CAFEVDB || {};
     return node.offsetWidth - node.clientWidth;
   }
 
-  /**Determine horizonatl scrollbar height. */
+  /**Determine horizontal scrollbar height. */
   $.fn.horizontalScrollbarHeight = function() {
     var node = this.get(0);
     return node.offsetHeight - node.clientHeight;
