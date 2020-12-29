@@ -764,6 +764,8 @@ of the project name before the year is added.'),
 
       'project-personaldata-tab' => $this->l->t('Displays the personal data of the respective musicians, like address, email, date of birth if known, phone numbers.'),
 
+      'project-personalmisc-tab' => $this->l->t('Further "not so important" data of the participant.'),
+
       'project-total-fee-summary' => $this->l->t('The accumulated total of all charges the participant has to pay.'),
 
       'project-web-article-add' => $this->l->t('Add a new public web-page to the project by generating a new, empty concert announcement.'),
