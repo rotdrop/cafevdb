@@ -232,7 +232,7 @@ opened.'),
       'debit-notes-download' => $this->l->t('Download the data-set of this debit-note for transferal to our bank
 institute.'),
 
-      'debug-mode' => $this->l->t('Amount of debug output. Keep this disabled for normal use.'),
+      'debug-mode' => $this->l->t('Amount of debug output. Keep this disabled for normal use. Debug output can be found in the log-file.'),
 
       'delete-all-event-attachments' => $this->l->t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
 
