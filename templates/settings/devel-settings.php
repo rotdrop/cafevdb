@@ -23,29 +23,91 @@
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin devel">
   <form id="develsettings">
     <fieldset id="devlinks"><legend><?php echo $l->t('Links');?></legend>
-      <input type="button" class="devlinktest" id="testphpmyadmin" name="testphpmyadmin" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text" class="devlink" id="phpmyadmin" name="phpmyadmin" placeholder="<?php echo $appName.'@phpmyadmin'; ?>" value="<?php echo $_['phpmyadmin']; ?>" title="<?php echo $toolTips['phpmyadmin-link']; ?>" />
+      <input type="button"
+             class="devlinktest"
+             id="testphpmyadmin"
+             name="testphpmyadmin"
+             value="<?php echo $l->t('Test Link'); ?>"
+             title="<?php echo $toolTips['test-linktarget']; ?>"  />
+      <input type="text"
+             class="devlink"
+             id="phpmyadmin"
+             name="phpmyadmin"
+             placeholder="<?php echo $appName.'@phpmyadmin'; ?>"
+             value="<?php echo $_['phpmyadmin']; ?>"
+             title="<?php echo $toolTips['phpmyadmin-link']; ?>" />
       <label for="phpmyadmin"><?php echo $l->t('Link to %s', array('phpMyAdmin')); ?></label>
       <br/>
-      <input type="button" class="devlinktest" id="testphpmyadmincloud" name="testphpmyadmincloud" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text" class="devlink" id="phpmyadmincloud" name="phpmyadmincloud" placeholder="Owncloud@phpMyAdmin" value="<?php echo $_['phpmyadmincloud']; ?>" title="<?php echo $toolTips['phpmyadmincloud-link']; ?>" />
+      <input type="button"
+             class="devlinktest"
+             id="testphpmyadmincloud"
+             name="testphpmyadmincloud"
+             value="<?php echo $l->t('Test Link'); ?>"
+             title="<?php echo $toolTips['test-linktarget']; ?>" />
+      <input type="text" class="devlink"
+             id="phpmyadmincloud"
+             name="phpmyadmincloud"
+             placeholder="Owncloud@phpMyAdmin"
+             value="<?php echo $_['phpmyadmincloud']; ?>"
+             title="<?php echo $toolTips['phpmyadmincloud-link']; ?>" />
       <label for="phpmyadmincloud"><?php echo $l->t('Link to Cloud@%s', array('phpMyAdmin')); ?></label>
       <br/>
-      <input type="button" class="devlinktest" id="testsourcecode" name="testsourcecode" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
-  <input type="text" class="devlink" id="sourcecode" name="sourcecode" placeholder="<?php echo $l->t('Link to the source-code'); ?>" value="<?php echo $_['sourcecode']; ?>" title="<?php echo $toolTips['sourcecode-link']; ?>" />
+      <input type="button"
+             class="devlinktest"
+             id="testsourcecode"
+             name="testsourcecode"
+             value="<?php echo $l->t('Test Link'); ?>"
+             title="<?php echo $toolTips['test-linktarget']; ?>" />
+      <input type="text" class="devlink"
+             id="sourcecode"
+             name="sourcecode"
+             placeholder="<?php echo $l->t('Link to the source-code'); ?>"
+             value="<?php echo $_['sourcecode']; ?>"
+             title="<?php echo $toolTips['sourcecode-link']; ?>" />
       <label for="phpmyadmin"><?php echo $l->t('Link to the source-code'); ?></label>
       <br/>
-      <input type="button" class="devlinktest" id="testsourcedocs" name="testsourcedocs" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text" class="devlink" id="sourcedocs" name="sourcedocs" placeholder="<?php echo $l->t('Link to the source-code documentation'); ?>" value="<?php echo $_['sourcedocs']; ?>" title="<?php echo $toolTips['sourcedocs-link']; ?>"/>
+      <input type="button"
+             class="devlinktest"
+             id="testsourcedocs"
+             name="testsourcedocs"
+             value="<?php echo $l->t('Test Link'); ?>"
+             title="<?php echo $toolTips['test-linktarget']; ?>"  />
+      <input type="text"
+             class="devlink"
+             id="sourcedocs"
+             name="sourcedocs"
+             placeholder="<?php echo $l->t('Link to the source-code documentation'); ?>"
+             value="<?php echo $_['sourcedocs']; ?>"
+             title="<?php echo $toolTips['sourcedocs-link']; ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('Link to the source-code documentation'); ?></label>
       <br/>
-      <input type="button" class="devlinktest" id="testclouddev" name="testclouddev" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text" class="devlink" id="clouddev"
-         name="clouddev"
-         placeholder="<?php echo $l->t('Link to cloud Developer Information'); ?>"
-         value="<?php echo $_['clouddev']; ?>"
-         title="<?php echo $toolTips['clouddev-link']; ?>"/>
+      <input type="button"
+             class="devlinktest"
+             id="testclouddev"
+             name="testclouddev"
+             value="<?php echo $l->t('Test Link'); ?>"
+             title="<?php echo $toolTips['test-linktarget']; ?>"  />
+      <input type="text" class="devlink"
+             id="clouddev"
+             name="clouddev"
+             placeholder="<?php echo $l->t('Link to cloud Developer Information'); ?>"
+             value="<?php echo $_['clouddev']; ?>"
+             title="<?php echo $toolTips['clouddev-link']; ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('Ambient cloud provider developer documentation'); ?></label>
+      <br/>
+      <input type="button"
+             class="devlinktest"
+             id="testcspfailurereporting"
+             name="testcspfailurereporting"
+             value="<?php echo $l->t('Test Link'); ?>"
+             title="<?php echo $toolTips['test-linktarget']; ?>"  />
+      <input type="text" class="devlink"
+             id="cspfailurereporting"
+             name="cspfailurereporting"
+             placeholder="<?php echo $l->t('Link for uploading CSP failure information'); ?>"
+             value="<?php echo $_['cspfailurereporting']; ?>"
+             title="<?php echo $toolTips['cspfailure-link']; ?>"/>
+      <label for="phpmyadmin"><?php echo $l->t('CSP-failure upload link'); ?></label>
     </fieldset>
     <span class="statusmessage" id="msg"></span>
   </form>
