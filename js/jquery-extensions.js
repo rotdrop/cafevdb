@@ -55,7 +55,9 @@ var CAFEVDB = CAFEVDB || {};
       } else {
         argument.dialogClass = 'cafev cafevdb';
       }
-      CAFEVDB.snapperClose();
+      if ($('#appsettings_popup').length == 0) {
+        CAFEVDB.snapperClose();
+      }
       console.log("will open dialog");
       $.fn.dialog.call(this, argument);
       if (this.dialog('option', 'draggable')) {
