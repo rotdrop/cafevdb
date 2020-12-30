@@ -77,28 +77,33 @@ trait ConfigTrait {
     return $this->configService->setUserValue($key, $value, $userId);
   }
 
-  /**A short-cut, redirecting to the stock functions for the app.
+  /**
+   * A short-cut, redirecting to the stock functions for the app.
    */
   protected function getAppValue($key, $default = null)
   {
     return $this->configService->getAppValue($key, $default);
   }
 
-  /**A short-cut, redirecting to the stock functions for the app.
+  /**
+   * A short-cut, redirecting to the stock functions for the app.
    */
   protected function setAppValue($key, $value)
   {
     return $this->configService->setAppValue($key, $value);
   }
 
-  protected function encryptionService()
-  {
-    return $this->configService->encryptionService();
-  }
-
+  /**
+   * A short-cut, redirecting to the stock functions for the app.
+   */
   protected function deleteAppValue($key)
   {
     return $this->configService->deleteAppValue($key);
+  }
+
+  protected function encryptionService()
+  {
+    return $this->configService->encryptionService();
   }
 
   protected function getAppEncryptionKey()

@@ -140,12 +140,6 @@ if ($pageRows > $maxRows) {
     $pageRows = 0;
 }
 
-$debugModes = [ ConfigService::DEBUG_GENERAL => $l->t('General Information'),
-                ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
-                ConfigService::DEBUG_REQUEST => $l->t('HTTP Request'),
-                ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
-                ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form') ];
-
 $navigationControls = $pageNavigation->buttonsFromArray(
     array(
         'undo' => array(
@@ -201,7 +195,7 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
     $header = '';
 }
 
-$expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
+$expertClass = 'expertmode'.($expertMode != 'on' ? ' hidden' : '');
 
 $sideBarToolTipPos = 'auto';
 ?>
@@ -260,30 +254,6 @@ $sideBarToolTipPos = 'auto';
             <?php echo $l->t('Quick Change-Dialog'); ?>
           </label>
         </li>
-        <li class="<?php echo $expertClass; ?> expertmode-container">
-          <input id="app-settings-showdisabled"
-                 type="checkbox"
-                 name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox showdisabled tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo $toolTips['show-disabled']; ?>"/>
-          <label for="app-settings-showdisabled"
-                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo $toolTips['show-disabled']; ?>">
-            <?php echo $l->t('Show Disabled Data-Sets'); ?>
-          </label>
-        </li>
-        <li>
-          <input id="app-settings-expertmode"
-                 type="checkbox"
-                 name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox expertmode tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo $toolTips['expert-mode']; ?>"/>
-          <label for="app-settings-expertmode"
-                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo $toolTips['expert-mode']; ?>">
-            <?php echo $l->t('Expert-Mode'); ?>
-          </label>
-        </li>
         <li class="chosen-dropup">
           <select name="pagerows"
                   data-placeholder="<?php echo $l->t('#Rows'); ?>"
@@ -311,7 +281,31 @@ $sideBarToolTipPos = 'auto';
             <?php echo $l->t('Further Settings'); ?>
           </a>
         </li>
-        <li class="expertmode-container">
+        <li>
+          <input id="app-settings-expertmode"
+                 type="checkbox"
+                 name="expertmode" <?php echo $expertMode == 'on' ? 'checked="checked"' : ''; ?>
+                 class="checkbox expertmode tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 title="<?php echo $toolTips['expert-mode']; ?>"/>
+          <label for="app-settings-expertmode"
+                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 title="<?php echo $toolTips['expert-mode']; ?>">
+            <?php echo $l->t('Expert-Mode'); ?>
+          </label>
+        </li>
+        <li class="<?php echo $expertClass; ?> expertmode-container">
+          <input id="app-settings-showdisabled"
+                 type="checkbox"
+                 name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
+                 class="checkbox showdisabled tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 title="<?php echo $toolTips['show-disabled']; ?>"/>
+          <label for="app-settings-showdisabled"
+                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 title="<?php echo $toolTips['show-disabled']; ?>">
+            <?php echo $l->t('Show Disabled Data-Sets'); ?>
+          </label>
+        </li>
+        <li class="<?php echo $expertClass; ?> expertmode-container">
           <a id="app-settings-expert-operations"
              class="settings expertoperations tooltip-<?php echo $sideBarToolTipPos; ?>"
              title="<?php echo $toolTips['expert-operations']; ?>"
@@ -319,20 +313,8 @@ $sideBarToolTipPos = 'auto';
             <?php echo $l->t('Expert Operations'); ?>
           </a>
         </li>
-        <li class="expertmode-container chosen-dropup">
-          <select <?php echo ($_['expertmode'] != 'on' ? 'disabled="disabled"' : '') ?>
-            id="app-settings-debugmode"
-            multiple
-            name="debugmode"
-            data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
-            class="debug-mode debugmode chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
-            title="<?php echo $toolTips['debug-mode']; ?>">
-            <?php
-            foreach ($debugModes as $key => $value) {
-              echo '<option value="'.$key.'" '.(($debugMode & $key) != 0 ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
-            }
-            ?>
-          </select>
+        <li class="<?php echo $expertClass; ?> expertmode-container chosen-dropup">
+          <?php echo $this->inc('settings/part.debug-mode', [ 'toolTipsPos' => $sideBarToolTipPos ]); ?>
         </li>
         <li><br/></li>
       </ul>

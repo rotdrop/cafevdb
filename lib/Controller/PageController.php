@@ -205,7 +205,8 @@ class PageController extends Controller {
     $showDisabled = $this->getUserValue('showdisabled', 'off');
     $expertMode   = $this->getUserValue('expertmode', false);
     $pageRows     = $this->getUserValue('pagerows', 20);
-    $debugMode    = $this->getUserValue('debug', 0);
+
+    $debugMode    = $this->getConfigValue('debugmode', 0);
 
     // @@TODO this should not go here, I think. Rather into PMETableBase.
     //
@@ -258,7 +259,6 @@ class PageController extends Controller {
       'database' => $this->getConfigValue('database'),
       'groupadmin' => $this->isSubAdminOfGroup(),
       'user' => $this->userId(),
-      'expertmode' => $expertMode,
       'expertMode' => $expertMode,
       'showToolTips' => $showToolTips,
       'toolTips' => $this->toolTipsService,

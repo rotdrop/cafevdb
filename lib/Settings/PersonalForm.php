@@ -132,13 +132,13 @@ class PersonalForm {
         'adminsettings' => $isGroupAdmin,
         'encryptionkey' => $this->getAppEncryptionKey(),
         'showToolTips' => $this->getUserValue('tooltips', 'on'),
-        'debugMode' => $this->getUserValue('debug', 0),
+        'debugMode' => $this->getConfigValue('debugmode', 0), // @TODO depend on group admin
         'pagerows' => $this->getUserValue('pagerows', 20),
         'toolTips' => $this->toolTipsService,
         'filtervisibility' => $this->getUserValue('filtervisibility', 'off'),
         'directchange' => $this->getUserValue('directchange', 'off'),
         'showdisabled' => $this->getUserValue('showdisabled', 'off'),
-        'expertmode' => $this->getUserValue('expertmode', 'off'),
+        'expertMode' => $this->getUserValue('expertmode', 'off'),
         'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),
         'wysiwygOptions' => ConfigService::WYSIWYG_EDITORS,
         'webPageCategories' => $webPageCategories,
@@ -238,12 +238,15 @@ class PersonalForm {
           $templateParameters['redaxo'.$key] = $this->getConfigValue('redaxo'.$key);
         }
 
-        foreach (['phpmyadmin',
-                  'phpmyadmincloud',
-                  'sourcecode',
-                  'sourcedocs',
-                  'ownclouddev'] as $link) {
-          $templateParameters[$link] = $this->getConfigValue($link);
+        foreach ([
+          'phpmyadmin' => null,
+          'phpmyadmincloud' => null,
+          'sourcecode' => null,
+          'sourcedocs' => null,
+          'clouddev' => null,
+          'cspfailurereporting' => $this->urlGenerator()->linkToRouteAbsolute($this->appName().'.csp_violation.post', ['operation' => 'report']),
+        ] as $link => $default) {
+          $templateParameters[$link] = $this->getConfigValue($link, $default);
         }
       }
 

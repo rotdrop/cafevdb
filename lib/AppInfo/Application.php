@@ -53,6 +53,7 @@ use OCA\CAFEVDB\Service\EventsService;
 
 use OCA\CAFEVDB\Middleware\SubadminMiddleware;
 use OCA\CAFEVDB\Middleware\GroupMemberMiddleware;
+use OCA\CAFEVDB\Middleware;
 
 class Application extends App implements IBootstrap {
 
@@ -97,6 +98,7 @@ class Application extends App implements IBootstrap {
         $context->registerMiddleWare('SubadminMiddleware');
         $context->registerServiceAlias('GroupMemberMiddleware', GroupMemberMiddleware::class);
         $context->registerMiddleWare('GroupMemberMiddleware');
+        $context->registerMiddleWare(Middleware\CSPViolationReporting::class);
 
         // Register listeners
         ListenerRegistration::register($context);

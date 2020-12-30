@@ -57,6 +57,7 @@ class ConfigService {
   const DEBUG_QUERY1    = (1 << 2);
   const DEBUG_QUERY2    = (1 << 3);
   const DEBUG_QUERY     = self::DEBUG_QUERY0;
+  const DEBUG_CSP       = self::DEBUG_QUERY1;
   const DEBUG_REQUEST   = (1 << 4);
   const DEBUG_TOOLTIPS  = (1 << 5);
   const DEBUG_EMAILFORM = (1 << 6);
@@ -337,20 +338,25 @@ class ConfigService {
     return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
   }
 
-  /**A short-cut, redirecting to the stock functions for the app.
+  /**
+   * A short-cut, redirecting to the stock functions for the app.
    */
   public function getAppValue($key, $default = null)
   {
     return $this->containerConfig->getAppValue($this->appName, $key, $default);
   }
 
-  /**A short-cut, redirecting to the stock functions for the app.
+  /**
+   * A short-cut, redirecting to the stock functions for the app.
    */
   public function setAppValue($key, $value)
   {
     return $this->containerConfig->setAppValue($this->appName, $key, $value);
   }
 
+  /**
+   * A short-cut, redirecting to the stock functions for the app.
+   */
   public function deleteAppValue($key)
   {
     return $this->containerConfig->deleteAppValue($this->appName, $key);
@@ -407,7 +413,7 @@ class ConfigService {
 
   public function setConfigValue($key, $value)
   {
-    $this->logInfo("enckey: ". $this->encryptionService->appEncryptionKey);
+    //$this->logInfo("enckey: ". $this->encryptionService->appEncryptionKey);
     if ($this->encryptionService->setConfigValue($key, $value)) {
       $this->encryptionCache[$key] = $value;
       return true;

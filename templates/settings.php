@@ -34,6 +34,8 @@ script($appName, 'cafevdb');
 script($appName, 'notification');
 script($appName, 'jquery-extensions');
 script($appName, 'settings');
+script($appName, 'dialogs');
+script($appName, 'ajax');
 script($appName, 'personal-settings');
 script($appName, 'ready');
 
@@ -45,14 +47,9 @@ $filtervistitle = $toolTips['filter-visibility'];
 $directchgtitle = $toolTips['direct-change'];
 $showdistitle   = $toolTips['show-disabled'];
 $pagerowstitle  = $toolTips['table-rows-per-page'];
+$wysiwygtitle   = $toolTips['settings-wysiwyg-editor'];
 $experttitle    = $toolTips['expert-operations'];
 $debugtitle     = $toolTips['debug-mode'];
-
-$debugModes = array(ConfigService::DEBUG_GENERAL => $l->t('General Information'),
-                    ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
-                    ConfigService::DEBUG_REQUEST => $l->t('HTTP Request'),
-                    ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
-                    ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form'));
 
 $pageRows = floor($_['pagerows'] / 10) * 10;
 $pageRowsOptions = array(-1 => '&infin;');
@@ -70,7 +67,7 @@ $oldlocale = setlocale(LC_TIME, $locale);
 $time = strftime('%x %X');
 setlocale(LC_TIME, $oldlocale);
 
-$expertClass = $expertmode == 'on' ? '' : ' hidden';
+$expertClass = $expertMode == 'on' ? '' : ' hidden';
 $toolTipClass = "tooltip-right";
 
 ?>
@@ -86,9 +83,9 @@ $toolTipClass = "tooltip-right";
         <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Orchestra'); ?></a></li>
         <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Sharing'); ?></a></li>
         <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Email'); ?></a></li>
+        <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('CMS'); ?></a></li>
         <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Translations'); ?></a></li>
         <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Development'); ?></a></li>
-        <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('CMS'); ?></a></li>
       <?php } ?>
       <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('?'); ?></a></li>
     </ul>
@@ -129,19 +126,6 @@ $toolTipClass = "tooltip-right";
           <?php echo $l->t('Quick Change-Dialog') ?>
         </label>
         <br />
-        <div class="expertmode-container<?php p($expertClass); ?>">
-          <input id="showdisabled"
-                 type="checkbox"
-                 class="checkbox showdisabled <?php p($toolTipClass); ?>"
-                 name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
-                 title="<?php echo $showdistitle ?>"
-          />
-          <label for="showdisabled"
-                 class="<?php p($toolTipClass); ?>"
-                 title="<?php echo $showdistitle; ?>">
-            <?php echo $l->t('Show Disabled Data-Sets'); ?>
-          </label>
-        </div>
         <div class="table-pagerows settings-control">
           <select name="pagerows"
                   data-placeholder="<?php echo $l->t('#Rows'); ?>"
@@ -165,6 +149,7 @@ $toolTipClass = "tooltip-right";
           <select name="wysiwygEditor"
                   data-placeholder="<?php echo $l->t('WYSIWYG Editor'); ?>"
                   class="wysiwyg-editor <?php p($toolTipClass); ?>"
+                  id="wysiwyg-editor"
                   title="<?php echo $toolTips['wysiwyg-editor']; ?>">
             <?php
             foreach ($wysiwygOptions as $key => $value) {
@@ -173,11 +158,16 @@ $toolTipClass = "tooltip-right";
             }
             ?>
           </select>
+          <label for="wysiwyg-editor"
+                 class="<?php p($toolTipClass); ?>"
+                 title="<?php echo $wysiwygtitle; ?>">
+            <?php echo $l->t('WYSIWYG Text-Editor'); ?>
+          </label>
         </div>
         <input id="expertmode"
                type="checkbox"
                class="checkbox expertmode <?php p($toolTipClass); ?>"
-               name="expertmode" <?php echo $expertmode == 'on' ? 'checked="checked"' : ''; ?>
+               name="expertmode" <?php echo $expertMode == 'on' ? 'checked="checked"' : ''; ?>
                id="expertmode" title="<?php echo $experttitle ?>"
         />
         <label for="expertmode"
@@ -186,19 +176,33 @@ $toolTipClass = "tooltip-right";
           <?php echo $l->t('Expert-Mode') ?>
         </label>
         <br />
+        <div class="expertmode-container<?php p($expertClass); ?>">
+          <input id="showdisabled"
+                 type="checkbox"
+                 class="checkbox showdisabled <?php p($toolTipClass); ?>"
+                 name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
+                 title="<?php echo $showdistitle ?>"
+          />
+          <label for="showdisabled"
+                 class="<?php p($toolTipClass); ?>"
+                 title="<?php echo $showdistitle; ?>">
+            <?php echo $l->t('Show Disabled Data-Sets'); ?>
+          </label>
+        </div>
         <div class="debugmode-container expertmode-container<?php p($expertClass); ?>">
-          <select
-            multiple
-            name="debugmode"
-            data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
-            class="debug-mode debugmode <?php p($toolTipClass); ?>"
-            title="<?php echo $debugtitle; ?>">
-            <?php
-            foreach ($debugModes as $key => $value) {
-              echo '<option value="'.$key.'" '.(($debugMode & $key) != 0 ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
-            }
-            ?>
-          </select>
+          <?php echo $this->inc('settings/part.debug-mode', [ 'toolTipsPos' => $toolTipClass ]); ?>
+          <!-- <select
+               multiple
+               name="debugmode"
+               data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
+               class="debug-mode debugmode <?php p($toolTipClass); ?>"
+               title="<?php echo $debugtitle; ?>">
+               <?php
+               foreach ($debugModes as $key => $value) {
+               echo '<option value="'.$key.'" '.(($debugMode & $key) != 0 ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
+               }
+               ?>
+               </select> -->
         </div>
         <span class="statusmessage" id="msg"></span><span>&nbsp;</span>
         <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo $l->t('Dummy'); ?>" />
@@ -244,9 +248,9 @@ $toolTipClass = "tooltip-right";
       echo $this->inc("settings/orchestra-settings", [ 'tabNr' => $tabNo++ ]);
       echo $this->inc("settings/share-settings", [ 'tabNr' => $tabNo++ ]);
       echo $this->inc("settings/email-settings", [ 'tabNr' => $tabNo++ ]);
+      echo $this->inc("settings/cms-settings", [ 'tabNr' => $tabNo++ ]);
       echo $this->inc("settings/translations", [ 'tabNr' => $tabNo++ ]);
       echo $this->inc("settings/devel-settings", [ 'tabNr' => $tabNo++ ]);
-      echo $this->inc("settings/cms-settings", [ 'tabNr' => $tabNo++ ]);
     }
     echo $this->inc("settings/about", [ 'tabNr' => $tabNo++ ]);
     ?>

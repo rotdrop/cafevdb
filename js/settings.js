@@ -928,7 +928,7 @@ var CAFEVDB = CAFEVDB || {};
           msg.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
-          console.log(data);
+          console.info('Open dev-link', data.value.link, data.value.target);
 	  window.open(data.value.link, data.value.target);
         });
       });

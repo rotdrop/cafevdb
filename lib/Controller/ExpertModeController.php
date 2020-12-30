@@ -107,11 +107,10 @@ class ExpertModeController extends Controller
       'blank');
     };
 
-    // may restrict this to the group admins
-
+    // maybe restrict this to the group admins
     $templateParameters = [
       'appName' => $this->appName(),
-      'expertmode' => $this->getUserValue('expertmode', 'off'),
+      'expertMode' => $this->getUserValue('expertmode', 'off'),
       'showToolTips' => $this->getUserValue('tooltips', 'on'),
       'toolTips' => $this->toolTipsService,
       'pageNavigation' => $this->pageNavigation,
@@ -122,6 +121,7 @@ class ExpertModeController extends Controller
       , 'sourcecode'
       , 'sourcedocs'
       , 'clouddev'
+      , 'cspfailure'
     ];
     foreach ($links as $link) {
       $templateParameters[$link] = $this->getConfigValue($link);

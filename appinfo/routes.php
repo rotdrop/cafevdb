@@ -169,6 +169,13 @@ $routes = [
       'url' => '/foregroundjob/progress/{operation}',
       'verb' => 'POST',
     ],
+    // CSP violation logging
+    [
+      'name' => 'csp_violation#post',
+      'url' => '/csp-violation/{operation}',
+      'verb' => 'POST',
+      'defaults' => [ 'operation' => 'report' ],
+    ],
     // various download stuff
     [
       'name' => 'downloads#fetch',

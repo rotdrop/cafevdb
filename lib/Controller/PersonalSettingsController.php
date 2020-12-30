@@ -132,7 +132,13 @@ class PersonalSettingsController extends Controller {
       if ($debug > ConfigService::DEBUG_ALL) {
         return grumble($this->l->t('Unknown debug modes in request: %s$s', [print_r($debugModes, true)]));
       }
-      $this->setUserValue('debug', $debug);
+      $this->setConfigValue('debugmode', $debug);
+      if ($debug & ConfigService::DEBUG_CSP) {
+        // generate a random magic key for sort-of authentication
+        $this->setAppValue('cspfailuretoken', $this->generateRandomBytes(128));
+      } else {
+        $this->deleteAppValue('cspfailuretoken');
+      }
       return new DataResponse([
         'message' => $this->l->t('Setting %2$s to %1$s', [$debug, 'debug']),
         'value' => $debug
@@ -557,6 +563,7 @@ class PersonalSettingsController extends Controller {
     case 'sourcecode':
     case 'phpmyadmincloud':
     case 'phpmyadmin':
+    case 'cspfailurereporting':
       if (!empty($value)) {
         $realValue = filter_var($value, FILTER_VALIDATE_URL);
         if ($realValue == null) {
@@ -612,19 +619,19 @@ class PersonalSettingsController extends Controller {
         return self::valueResponse($this->generateRandomBytes(32));
       case 'test'.str_replace('test', '', $parameter):
         $testKeys = [
-          'clouddev',
-          'sourcedocs',
-          'sourcecode',
-          'phpmyadmincloud',
-          'phpmyadmin',
+          'cspfailurereporting' => $this->urlGenerator()->linkToRouteAbsolute($this->appName().'.csp_violation.post', ['operation' => 'report']),
+          'clouddev' => null,
+          'sourcedocs' => null,
+          'sourcecode' => null,
+          'phpmyadmincloud' => null,
+          'phpmyadmin' => null,
         ];
         $key = substr($parameter, 4);
-        if (array_search($key, $testKeys) === false) {
+        if (array_search($key, array_keys($testKeys)) === false) {
           return self::grumble($this->l->t('Unknown link target %s', [ $parameter ]));
         }
-        //trigger_error($key . ' => ' . $this->getConfigValue($key));
         return self::valueResponse([
-          'link' => $this->getConfigValue($key),
+          'link' => $this->getConfigValue($key, $testKeys[$key]),
           'target' => $key.':'.$this->appName,
         ]);
       default:

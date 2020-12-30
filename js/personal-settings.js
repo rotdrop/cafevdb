@@ -49,7 +49,8 @@ $(function() {
       self.show();
       self.chosen({
         inherit_select_classes:true,
-        disable_search:true
+        disable_search:true,
+        width:'auto'
       });
     });
 
@@ -213,8 +214,8 @@ $(function() {
   });
 
   container.on('change', '.pagerows', function(event) {
-    const self = $(this);
-    const value = self.val();
+    const $self = $(this);
+    const value = $self.val();
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/pagerows'),
            { 'value': value })
     .done(function(data) {
@@ -225,13 +226,17 @@ $(function() {
       msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
-    $('.personal-settings select.pagerows').val(value);
+    $('.personal-settings select.pagerows').each(function(index) {
+      if (this != $self[0]) {
+        CAFEVDB.selectValues(this, CAFEVDB.selectValues($self));
+      }
+    });
     return false;
   });
 
   container.on('change', '.debugmode', function(event) {
-    const self = $(this);
-    const post = self.serializeArray();
+    const $self = $(this);
+    const post = $self.serializeArray();
     console.log(post);
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/debugmode'),
            { 'value': post })
@@ -244,13 +249,17 @@ $(function() {
       msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
-    // TODO cross update options.
+    $('.personal-settings select.debugmode').each(function(index) {
+      if (this != $self[0]) {
+        CAFEVDB.selectValues(this, CAFEVDB.selectValues($self));
+      }
+    });
     return false;
   });
 
   container.on('change', '.wysiwyg-editor', function(event) {
-    const self = $(this);
-    const value = self.val();
+    const $self = $(this);
+    const value = $self.val();
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/wysiwygEditor'),
            { 'value': value })
     .done(function(data) {
@@ -262,7 +271,11 @@ $(function() {
       msgElement.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
       console.error(data);
     });
-    $('.personal-settings select.wysiwyg-editor').val(value);
+    $('.personal-settings select.wysiwyg-editor').each(function(index) {
+      if (this != $self[0]) {
+        CAFEVDB.selectValues(this, CAFEVDB.selectValues($self));
+      }
+    });
     return false;
   });
 
