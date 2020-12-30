@@ -186,7 +186,7 @@
 
   tr.table-tabs td li.table-tabs {
     box-sizing:border-box;
-    max-width:18%; // 5 tabs
+    max-width:18%; /* 5 tabs */
   }
 
   tr.table-tabs td li.table-tabs a {
