@@ -63,8 +63,9 @@ class EncryptionService
     'enabled',
     'installed_version',
     'types',
-    'usergroup',
-    'wikinamespace',
+    'usergroup', // cloud-admin setting
+    'wikinamespace', // cloud-admin setting
+    'cspfailuretoken', // for public post route
   ];
 
   /** @var string */
@@ -109,7 +110,7 @@ class EncryptionService
       $this->user = $userSession->getUser();
       $this->userId = $this->user->getUID();
     } catch (\Throwable $t) {
-      $this->logException($t);
+      //$this->logException($t);
       $this->user = null;
       $this->userId = null;
     }
@@ -407,7 +408,9 @@ class EncryptionService
     if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
       if ($this->appEncryptionKey === null) {
         //throw new \Exception($this->l->t('Encryption requested but not configured, empty encryption key'));
-        $this->logError($this->l->t('Encryption requested but not configured for user '.($this->userId).', empty encryption key'));
+        if (!empty($this->userId)) {
+          $this->logError($this->l->t('Encryption requested but not configured for user "'.($this->userId).'", empty encryption key'));
+        }
         return false;
       }
       try {
