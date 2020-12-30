@@ -275,13 +275,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
   }
 
   PHPMYEDIT.cancelDeferredReload = function(container) {
-    var deferKey = this.pme_prefix + '-submitdefer';
+    const deferKey = this.pme_prefix + '-submitdefer';
     container.removeData(deferKey);
   };
 
   PHPMYEDIT.deferReload = function(container) {
-    var deferKey = this.pme_prefix + '-submitdefer';
-    var defer = $.Deferred();
+    const deferKey = this.pme_prefix + '-submitdefer';
+    const defer = $.Deferred();
 
     container.data(deferKey, defer.promise());
 
@@ -290,7 +290,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
   PHPMYEDIT.reloadDeferred = function(container)
   {
-    var deferKey = this.pme_prefix + '-submitdefer';
+    const deferKey = this.pme_prefix + '-submitdefer';
 
     return $.when(container.data(deferKey));
   };
