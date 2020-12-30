@@ -1204,14 +1204,14 @@ var CAFEVDB = CAFEVDB || {};
    */
   CAFEVDB.selectValues = function(select, optionValues) {
     select = $(select);
-    var multiple = select.prop('multiple');
+    const multiple = select.prop('multiple');
     if (typeof optionValues === 'undefined') {
       console.debug('selectValues read = ', select.val());
       var result = select.val();
       if (multiple && !result) {
         result = [];
       }
-      return select.val();
+      return result;
     }
     if (!(optionValues instanceof Array)) {
       optionValues = [ optionValues ];
