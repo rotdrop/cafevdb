@@ -283,7 +283,7 @@ class ProjectParticipants extends PMETableViewBase
           'join' => implode(' AND ', $joinData),
         ],
       ];
-      $this->logInfo('JOIN '.print_r($opts['fdd'][$table.'_key'], true));
+      $this->logDebug('JOIN '.print_r($opts['fdd'][$table.'_key'], true));
     }
 
     $musiciansJoin = $joinTable[self::MUSICIANS_TABLE];
