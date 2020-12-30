@@ -775,10 +775,10 @@ class phpMyEdit
 			return $fdd['setvalues']; // use cache.
 		}
 
-		$this->logInfo('SetValues for '.$this->fds[$field_num]);
+		//$this->logInfo('SetValues for '.$this->fds[$field_num]);
 
 		$valuesDef = $this->values_with_defaults($field_num);
-		$this->logInfo('Resulting Values '.print_r($valuesDef, true));
+		//$this->logInfo('Resulting Values '.print_r($valuesDef, true));
 
 		$values = array();
 		$groups = null;
@@ -850,7 +850,7 @@ class phpMyEdit
 			$table = $this->tb;
 		}
 		$valuesDef = $this->values_with_defaults($field_num);
-		$this->logInfo('Resulting Values '.print_r($valuesDef, true));
+		//$this->logInfo('Resulting Values '.print_r($valuesDef, true));
 
 		$key      = $valuesDef['column'];
 		$desc     = $valuesDef['description'];
