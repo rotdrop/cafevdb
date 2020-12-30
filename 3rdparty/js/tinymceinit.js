@@ -6,6 +6,7 @@ var myTinyMCE = myTinyMCE || {};
     e.content = e.content.replace(/^((&nbsp;|[\n\r\s])*<p>(&nbsp;|[\n\r\s])*<\/p>(&nbsp;|[\n\r\s])*)+/g, '');
     e.content = e.content.replace(/^<p>(((?!<p>)[\s\S])*)<\/p>$/g, '$1');
   };
+  myTinyMCE.nonce = '';
   myTinyMCE.config = {
     //auto_focus: 'mce_0',
     //theme_advanced_resizing: true,
@@ -72,8 +73,8 @@ var myTinyMCE = myTinyMCE || {};
           }
         }
       };
-      console.debug("trigger tinemce-done");
-      $('#' + inst.id).trigger('cafevdb:tinemce-done');
+      console.debug("trigger tinymce-done");
+      $('#' + inst.id).trigger('cafevdb:tinymce-done');
     },
 
 //    spellchecker_rpc_url: OC.filePath('cafevdb', '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
@@ -136,7 +137,7 @@ var myTinyMCE = myTinyMCE || {};
       plusConfig = {};
     }
     const nonceConfig = {
-      nonce: btoa(OC.requestToken)
+      nonce: btoa(myTinyMCE.nonce)
     };
     const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     if (false && width <= 768) { // perhaps mobile
@@ -146,19 +147,21 @@ var myTinyMCE = myTinyMCE || {};
     }
   };
   myTinyMCE.init = function(lang) {
+    myTinyMCE.nonce = OC.requestToken;
     myTinyMCE.config.language = lang;
     var allconfig = myTinyMCE.getConfig({
       selector: "textarea.wysiwyg-editor",
-      nonce: btoa(OC.requestToken)
+      nonce: btoa(myTinyMCE.nonce)
     });
     tinyMCE.init(allconfig);
-  }
+  };
 })(window, jQuery, myTinyMCE);
 
-$(document).ready(function() {
+// @TODO inject nonce later
+$(function() {
   myTinyMCE.init(CAFEVDB.language);
+  console.debug('MCE nonce', myTinyMCE.nonce);
 });
-
 
 // Local Variables: ***
 // js-indent-level: 2 ***

@@ -48,8 +48,7 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Run artificial document-ready stuff. */
   CAFEVDB.runReadyCallbacks = function() {
-    var idx;
-    for (idx = 0; idx < this.readyCallbacks.length; ++idx) {
+    for (var idx = 0; idx < this.readyCallbacks.length; ++idx) {
       var callback = this.readyCallbacks[idx];
       if (typeof callback == 'function') {
         callback();
@@ -61,12 +60,7 @@ var CAFEVDB = CAFEVDB || {};
   /**Add a WYSIWYG editor to the element specified by @a selector. */
   CAFEVDB.addEditor = function(selector, initCallback, initialHeight) {
     console.debug('CAFEVDB.addEditor');
-    var editorElement;
-    if (selector instanceof jQuery) {
-      editorElement = selector;
-    } else {
-      editorElement = $(selector);
-    }
+    const editorElement = $(selector);
     if (!editorElement.length) {
       if (typeof initCallback == 'function') {
         initCallback();
@@ -93,6 +87,7 @@ var CAFEVDB = CAFEVDB || {};
         });
       break;
     case 'tinymce':
+      // This is a Gurkerei
       $(document).on('focusin', function(e) {
 	//e.stopImmediatePropagaion();
         //alert(CAFEVDB.print_r(e.target, true));
@@ -107,15 +102,36 @@ var CAFEVDB = CAFEVDB || {};
       if (typeof initialHeight != 'undefined') {
         plusConfig.height = initialHeight;
       }
-      var mceConfig = myTinyMCE.getConfig(plusConfig);
-      editorElement.on('cafevdb:tinemce-done', function(event) {
-	console.debug('tinyMCE init done callback');
-	if (typeof initCallback == 'function') {
-	  initCallback();
-	}
-      });
+      const mceDeferred = $.Deferred();
+      mceDeferred.then(
+        function() {
+          console.debug('MCE promise succeeded');
+	  if (typeof initCallback == 'function') {
+	    initCallback();
+	  }
+        },
+        function() {
+          console.error('MCE promise failed');
+	  if (typeof initCallback == 'function') {
+	    initCallback();
+	  }
+          editorElement.css('visibility', '');
+        }
+      );
+      const mceConfig = myTinyMCE.getConfig(plusConfig);
+      editorElement
+        .off('cafevdb:tinymce-done')
+        .on('cafevdb:tinymce-done', function(event) {
+	  console.debug('tinyMCE init done callback');
+          mceDeferred.resolve();
+        });
       console.debug("attach tinymce");
       editorElement.tinymce(mceConfig);
+      // wait for at most 5 seconds, then cancel
+      const timeout = 5;
+      setTimeout(function() {
+        mceDeferred.reject();
+      }, timeout * 1000);
       break;
     };
   };
@@ -123,19 +139,14 @@ var CAFEVDB = CAFEVDB || {};
   /**Remove a WYSIWYG editor from the element specified by @a selector. */
   CAFEVDB.removeEditor = function(selector) {
     console.debug("CAFEVDB.removeEditor");
-    var editorElement;
-    if (selector instanceof jQuery) {
-      editorElement = selector;
-    } else {
-      editorElement = $(selector);
-    }
+    const editorElement = $(selector);
     if (!editorElement.length) {
       return;
     }
     switch (this.wysiwygEditor) {
     case 'ckeditor':
       if (editorElement.ckeditor) {
-        editorElement.ckeditor().remove()
+        editorElement.ckeditor().remove();
       }
       break;
     case 'tinymce':
@@ -143,10 +154,10 @@ var CAFEVDB = CAFEVDB || {};
       break;
     default:
       if (editorElement.ckeditor) {
-        editorElement.ckeditor().remove()
+        editorElement.ckeditor().remove();
       }
       if (editorElement.tinymce) {
-        editorElement.tinymce().remove()
+        editorElement.tinymce().remove();
       }
       break;
     };
@@ -154,19 +165,15 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Replace the contents of the given editor by contents. */
   CAFEVDB.updateEditor = function(selector, contents) {
-    var editorElement;
-    if (selector instanceof jQuery) {
-      editorElement = selector;
-    } else {
-      editorElement = $(selector);
-    }
+    const editorElement = $(selector);
+    var editor;
     if (!editorElement.length) {
       return;
     }
     switch (this.wysiwygEditor) {
     case 'ckeditor':
       if (editorElement.ckeditor) {
-        var editor = editorElement.ckeditor().ckeditorGet();
+        editor = editorElement.ckeditor().ckeditorGet();
         editor.setData(contents);
         // ckeditor snapshots itself on update.
         //editor.undoManager.save(true);
@@ -178,32 +185,28 @@ var CAFEVDB = CAFEVDB || {};
       break;
     default:
       if (editorElement.ckeditor) {
-        var editor = editorElement.ckeditor().ckeditorGet();
+        editor = editorElement.ckeditor().ckeditorGet();
         editor.setData(contents);
         // ckeditor snapshots itself on update.
         //editor.undoManager.save(true);
       }
       break;
     };
-  }
+  };
 
   /**Generate a "snapshot", meaning an undo-level, for instance after
    * replacing all data by loading email templates and stuff.
    */
   CAFEVDB.snapshotEditor = function(selector) {
-    var editorElement;
-    if (selector instanceof jQuery) {
-      editorElement = selector;
-    } else {
-      editorElement = $(selector);
-    }
+    const editorElement = $(selector);
+    var editor;
     if (!editorElement.length) {
       return;
     }
     switch (this.wysiwygEditor) {
     case 'ckeditor':
       if (editorElement.ckeditor) {
-        var editor = editorElement.ckeditor().ckeditorGet();
+        editor = editorElement.ckeditor().ckeditorGet();
         editor.undoManager.save(true);
       }
       break;
@@ -212,14 +215,15 @@ var CAFEVDB = CAFEVDB || {};
       break;
     default:
       if (editorElement.ckeditor) {
-        var editor = editorElement.ckeditor().ckeditorGet();
+        editor = editorElement.ckeditor().ckeditorGet();
         editor.undoManager.save(true);
       }
       break;
     };
   };
 
-  /**Steal the focus by moving it to a hidden element. Is there a
+  /**
+   * Steal the focus by moving it to a hidden element. Is there a
    * better way? The blur() method just does not work.
    */
   CAFEVDB.unfocus = function(element) {
@@ -231,8 +235,8 @@ var CAFEVDB = CAFEVDB || {};
       length = 8;
     }
 
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var text = '';
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     for(var i = 0; i < length; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -244,7 +248,7 @@ var CAFEVDB = CAFEVDB || {};
   /**Display a transparent modal dialog which blocks the UI.
    */
   CAFEVDB.modalWaitNotification = function(message) {
-    var dialogHolder = $('<div class="cafevdb modal-wait-notification"></div>');
+    const dialogHolder = $('<div class="cafevdb modal-wait-notification"></div>');
     dialogHolder.html('<div class="cafevdb modal-wait-message">'+message+'</div>'+
                       '<div class="cafevdb modal-wait-animation"></div>');
     $('body').append(dialogHolder);
@@ -301,7 +305,7 @@ var CAFEVDB = CAFEVDB || {};
       delay = 50; // ms
     }
 
-    var handler = function(event) {
+    const handler = function(event) {
       if (this.oldwidth  === null) {
         this.oldwidth  = this.style.width;
       }
@@ -309,7 +313,7 @@ var CAFEVDB = CAFEVDB || {};
         this.oldheight = this.style.height;
       }
       if (this.style.width != this.oldwidth || this.style.height != this.oldheight) {
-        var self = this;
+        const self = this;
         if (delay > 0) {
           if (this.resize_timeout) {
             clearTimeout(this.resize_timeout);
@@ -325,7 +329,7 @@ var CAFEVDB = CAFEVDB || {};
       }
       return true;
     };
-    var events = 'mouseup mousemove';
+    const events = 'mouseup mousemove';
     if (container) {
       $(container).off(events, textarea).on(events, textarea, handler);
     } else {
@@ -334,8 +338,8 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   CAFEVDB.stopRKey = function(evt) {
-    var evt = (evt) ? evt : ((event) ? event : null);
-    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+    evt = (evt) ? evt : ((event) ? event : null);
+    const node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
     if ((evt.keyCode == 13) && (node.type=="text"))  {
       return false;
     }
@@ -455,7 +459,7 @@ var CAFEVDB = CAFEVDB || {};
       queryString = queryString.replace(/\+/g, ' ');
 
       // split the query string around ampersands and semicolons
-      var queryComponents = queryString.split(/[&;]/g);
+      const queryComponents = queryString.split(/[&;]/g);
 
       // loop over the query string components
       for (var index = 0; index < queryComponents.length; index ++){
@@ -470,7 +474,7 @@ var CAFEVDB = CAFEVDB || {};
           // create the value array if necessary and store the value
           if (!(key in result)) result[key] = [];
           result[key].push(value);
-        }else{
+        } else {
           // store the value
           result[key] = value;
         }
@@ -494,21 +498,19 @@ var CAFEVDB = CAFEVDB || {};
       // restore the data-placeholder as first option if chosen
       // is not active
       select.each(function(index) {
-        var self = $(this);
-        var placeHolder = self.data('placeholder');
+        const self = $(this);
+        const placeHolder = self.data('placeholder');
         self.find('option:first').html(placeHolder);
       });
     }
-  }
+  };
 
   /*jQuery dialog popup with one chosen multi-selelct box inside.
    *
    */
   CAFEVDB.chosenPopup = function(contents, userOptions)
   {
-    var CAFEVDB = this;
-
-    var options = {
+    const defaultOptions = {
       title: t(CAFEVDB.appName, 'Choose some Options'),
       position: { my: "center center",
                   at: "center center",
@@ -525,26 +527,26 @@ var CAFEVDB = CAFEVDB || {};
       openCallback: false,
       saveCallback: false,
       closeCallback: false
-    }
-    $.extend(options, userOptions);
+    };
+    const options = $.extend({}, defaultOptions, userOptions);
 
-    var cssClass = (options.dialogClass ? options.dialogClass + ' ' : '') + 'chosen-popup-dialog';
-    var dialogHolder = $('<div class="'+cssClass+'"></div>');
+    const cssClass = (options.dialogClass ? options.dialogClass + ' ' : '') + 'chosen-popup-dialog';
+    const dialogHolder = $('<div class="'+cssClass+'"></div>');
     dialogHolder.html(contents);
-    var selectElement = dialogHolder.find('select');
+    const selectElement = dialogHolder.find('select');
     $('body').append(dialogHolder);
 
-    var buttons = [
+    const buttons = [
       { text: options.saveText,
         //icons: { primary: 'ui-icon-check' },
         'class': 'save',
         title: options.saveTitle,
         click: function() {
-          var self = this;
+          const self = this;
 
           var selectedOptions = [];
           selectElement.find('option:selected').each(function(idx) {
-            var self = $(this);
+            const self = $(this);
             selectedOptions[idx] = { 'value': self.val(),
                                      'html' : self.html(),
                                      'text' : self.text() };
@@ -580,7 +582,7 @@ var CAFEVDB = CAFEVDB || {};
       buttons: buttons,
       open:function() {
         selectElement.chosen(); //{disable_search_threshold: 10});
-        var dialogWidget = dialogHolder.dialog('widget');
+        const dialogWidget = dialogHolder.dialog('widget');
         CAFEVDB.toolTipsInit(dialogWidget);
         dialogHolder.find('.chosen-container').off('dblclick').
           on('dblclick', function(event) {
@@ -619,11 +621,9 @@ var CAFEVDB = CAFEVDB || {};
       method = 'post';
     }
 
-    var form = '<form method="'+method+'" action="'+url+'"></form>';
+    const form = $('<form method="'+method+'" action="'+url+'"></form>');
 
-    form = $(form);
-
-    var splitValues = values.split('&');
+    const splitValues = values.split('&');
     for (var i = 0; i < splitValues.length; ++i) {
       var nameValue = splitValues[i].split('=');
       $('<input />').attr('type', 'hidden')
@@ -645,8 +645,7 @@ var CAFEVDB = CAFEVDB || {};
     }
     var result = '';
     if (value.constructor === Array) {
-      var idx;
-      for (idx = 0; idx < value.length; ++idx) {
+      for (var idx = 0; idx < value.length; ++idx) {
         result += this.objectToHiddenInput(value[idx], namePrefix+'['+idx+']');
       }
     } else {
@@ -658,7 +657,7 @@ var CAFEVDB = CAFEVDB || {};
       }
     }
     return result;
-  }
+  };
 
   /**
    * A variant of the old fashioned appsettings with a callback
@@ -711,11 +710,10 @@ var CAFEVDB = CAFEVDB || {};
    */
   CAFEVDB.iframeFormSubmit = function(action, target, values)
   {
-    var idx;
-    var form = $('<form method="post" action="'+action+'" target="'+target+'"></form>');
+    const form = $('<form method="post" action="'+action+'" target="'+target+'"></form>');
     if (values.constructor === Array) {
       // serializeArray() stuff
-      for(idx = 0; idx < values.length; ++idx) {
+      for(var idx = 0; idx < values.length; ++idx) {
         form.append('<input type="hidden" name="'+values[idx].name+'" value="'+values[idx].value+'"/>');
       }
     } else {
@@ -729,11 +727,11 @@ var CAFEVDB = CAFEVDB || {};
   /**Handle the export menu actions.*/
   CAFEVDB.tableExportMenu = function(select) {
     // determine the export format
-    var selected = select.find('option:selected').val();
+    const selected = select.find('option:selected').val();
     //$("select.pme-export-choice option:selected").val();
 
     // this is the form; we need its values
-    var form = $('form.pme-form');
+    const form = $('form.pme-form');
 
     form.find('#exportmimetype').remove();
 
@@ -775,7 +773,7 @@ var CAFEVDB = CAFEVDB || {};
       // really get all selected parameters and can regenerate the
       // current view. Of course, this is then not really jQuery, and
       // the ajax/export/-scripts are not ajax scripts. But so what.
-      var old_action= form.attr('action');
+      const old_action= form.attr('action');
       form.attr('action', exportscript);
       form.submit();
       form.attr('action', old_action);
@@ -798,11 +796,11 @@ var CAFEVDB = CAFEVDB || {};
     if (typeof containerSel === 'undefined') {
       containerSel = '#cafevdb-page-body';
     }
-    var container = $(containerSel);
+    const container = $(containerSel);
 
     // Emulate a pull-down menu with export options via the chosen
     // plugin.
-    var exportSelect = container.find('select.pme-export-choice');
+    const exportSelect = container.find('select.pme-export-choice');
     exportSelect.chosen({
       disable_search:true,
       inherit_select_classes:true
@@ -819,7 +817,7 @@ var CAFEVDB = CAFEVDB || {};
       return CAFEVDB.tableExportMenu($(this));
     });
 
-  }
+  };
 
   /**
    * Open one invisible modal dialog in order to have a persistent
@@ -828,7 +826,7 @@ var CAFEVDB = CAFEVDB || {};
    * @param bool open
    */
   CAFEVDB.modalizer = function(open) {
-    var modalizer = $('#cafevdb-modalizer');
+    const modalizer = $('#cafevdb-modalizer');
     if (open) {
       if (modalizer.length > 0) {
         $('body').addClass('cafevdb-modalizer');
@@ -865,7 +863,7 @@ var CAFEVDB = CAFEVDB || {};
         $('body').removeClass('cafevdb-modalizer');
         return true;
       }
-      var overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
+      const overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
       //alert('overlay index: '+overlayIndex);
       var numDialogs = 0;
       $('.ui-dialog.ui-widget').each(function(index) {
@@ -894,13 +892,13 @@ var CAFEVDB = CAFEVDB || {};
    * juse above a potential "modal" window layer.
    */
   CAFEVDB.dialogToBackButton = function(dialogHolder) {
-    var dialogWidget = dialogHolder.dialog('widget');
-    var toBackButtonTitle = t(CAFEVDB.appName,
-                              'If multiple dialogs are open, '+
-                              'then move this one to the lowest layer '+
-                              'and display it below the others. '+
-                              'Clicking anywhere on the dialog will bring to the front again.');
-    var toBackButton = $('<button class="toBackButton customDialogHeaderButton" title="'+toBackButtonTitle+'"></button>');
+    const dialogWidget = dialogHolder.dialog('widget');
+    const toBackButtonTitle = t(CAFEVDB.appName,
+                                'If multiple dialogs are open, '+
+                                'then move this one to the lowest layer '+
+                                'and display it below the others. '+
+                                'Clicking anywhere on the dialog will bring to the front again.');
+    const toBackButton = $('<button class="toBackButton customDialogHeaderButton" title="'+toBackButtonTitle+'"></button>');
     toBackButton.button({label: '_',
                          icons: { primary: 'ui-icon-minusthick', secondary: null },
                          text: false});
@@ -909,7 +907,7 @@ var CAFEVDB = CAFEVDB || {};
 
     toBackButton.off('click');
     toBackButton.on('click', function() {
-      var overlay = $('.ui-widget-overlay:last');
+      const overlay = $('.ui-widget-overlay:last');
       var overlayIndex = 100; // OwnCloud header resides at 50.
       if (overlay.length > 0) {
         overlayIndex = parseInt(overlay.css('z-index'));
@@ -917,13 +915,13 @@ var CAFEVDB = CAFEVDB || {};
       // will be only few, so what
       var needShuffle = false;
       $('.ui-dialog.ui-widget').not('.cafevdb-modalizer').each(function(index) {
-        var thisIndex = parseInt($(this).css('z-index'));
+        const thisIndex = parseInt($(this).css('z-index'));
         if (thisIndex == overlayIndex + 1) {
           needShuffle = true;
         }
       }).each(function(index) {
         if (needShuffle) {
-          var thisIndex = parseInt($(this).css('z-index'));
+          const thisIndex = parseInt($(this).css('z-index'));
           $(this).css('z-index', thisIndex + 1);
         }
       });
@@ -944,14 +942,14 @@ var CAFEVDB = CAFEVDB || {};
    *
    */
   CAFEVDB.dialogCustomCloseButton = function(dialogHolder, callback) {
-    var dialogWidget = dialogHolder.dialog('widget');
-    var customCloseButtonTitle = t(CAFEVDB.appName,
-                                   'Close the current dialog and return to the view '+
-                                   'which was active before this dialog had been opened. '+
-                                   'If the current view shows a `Back\' button, then intentionally '+
-                                   'clicking the close-button (THIS button) should just be '+
-                                   'equivalent to clicking the `Back\' button');
-    var customCloseButton = $('<button class="customCloseButton customDialogHeaderButton" title="'+customCloseButtonTitle+'"></button>');
+    const dialogWidget = dialogHolder.dialog('widget');
+    const customCloseButtonTitle = t(CAFEVDB.appName,
+                                     'Close the current dialog and return to the view '+
+                                     'which was active before this dialog had been opened. '+
+                                     'If the current view shows a `Back\' button, then intentionally '+
+                                     'clicking the close-button (THIS button) should just be '+
+                                     'equivalent to clicking the `Back\' button');
+    const customCloseButton = $('<button class="customCloseButton customDialogHeaderButton" title="'+customCloseButtonTitle+'"></button>');
     customCloseButton.button({label: 'x',
                               icons: { primary: 'ui-icon-closethick', secondary: null },
                               text: false});
@@ -961,7 +959,7 @@ var CAFEVDB = CAFEVDB || {};
     customCloseButton.off('click');
     customCloseButton.on('click', function(event) {
       if (typeof callback == 'function') {
-        callback(event, dialogHolder)
+        callback(event, dialogHolder);
       } else {
         dialogHolder.dialog('close');
       }
@@ -999,17 +997,17 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
-    var form = container.find('form.pme-form').first();
+    const form = container.find('form.pme-form').first();
     form.find('a.email').off('click').on('click', function(event) {
       event.preventDefault();
-      var href = $(this).attr('href');
-      var recordId = href.match(/[?]recordId=(\d+)$/);
+      const href = $(this).attr('href');
+      const recordId = href.match(/[?]recordId=(\d+)$/);
       if (typeof recordId[1] != 'undefined') {
         recordId = recordId[1];
       } else {
         return false; // Mmmh, echo error diagnostics to the user?
       }
-      var post = form.serialize();
+      const post = form.serialize();
       post += '&PME_sys_mrecs[]=' + recordId;
       post += '&emailRecipients[MemberStatusFilter][0]=regular';
       post += '&emailRecipients[MemberStatusFilter][1]=passive';
@@ -1025,7 +1023,7 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   CAFEVDB.attachToolTip = function(selector, options) {
-    var defaultOptions = {
+    const defaultOptions = {
         container:'body',
         html:true,
         placement:'auto'
@@ -1065,7 +1063,7 @@ var CAFEVDB = CAFEVDB || {};
     // fetch suitable options from the elements class attribute
     var classOptions = { placement:'auto',
                          html: true };
-    var classAttr = element.attr('class');
+    const classAttr = element.attr('class');
     var extraClass = false;
     if (options.hasOwnProperty('cssclass')) {
       extraClass = options.cssclass;
@@ -1077,8 +1075,7 @@ var CAFEVDB = CAFEVDB || {};
       }
       var tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
       if (tooltipClasses) {
-        var idx;
-        for(idx = 0; idx < tooltipClasses.length; ++idx) {
+        for(var idx = 0; idx < tooltipClasses.length; ++idx) {
           var tooltipClass = tooltipClasses[idx];
           var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
           if (placement && placement.length == 2 && placement[1].length > 0) {
@@ -1129,7 +1126,7 @@ var CAFEVDB = CAFEVDB || {};
     if (typeof containerSel === 'undefined') {
       containerSel = '#content.app-cafevdb';
     }
-    var container = $(containerSel);
+    const container = $(containerSel);
 
     console.debug("tooltips container", containerSel, container.length);
 
@@ -1207,7 +1204,7 @@ var CAFEVDB = CAFEVDB || {};
     const multiple = select.prop('multiple');
     if (typeof optionValues === 'undefined') {
       console.debug('selectValues read = ', select.val());
-      var result = select.val();
+      const result = select.val();
       if (multiple && !result) {
         result = [];
       }
@@ -1221,14 +1218,14 @@ var CAFEVDB = CAFEVDB || {};
     }
     // setter has to use foreach
     select.each(function(idx) {
-      var self = $(this);
+      const self = $(this);
       if (!self.is('select')) {
         // graceful degrade for non selects
         self.val(optionValues[0] ? optionValues[0] : '');
         return true;
       }
       self.find('option').each(function(idx) {
-        var option = $(this);
+        const option = $(this);
         option.prop('selected', optionValues.indexOf(option.val()) >= 0);
       });
       console.debug('selectValues', 'update chosen');
@@ -1238,7 +1235,7 @@ var CAFEVDB = CAFEVDB || {};
     return true;
   };
 
-  var progressTimer;
+  CAFEVDB.progressTimer = null;
   CAFEVDB.pollProgressStatus = function(id, callbacks, interval) {
     const defaultCallbacks = {
       'update': function(data) {},
@@ -1252,27 +1249,27 @@ var CAFEVDB = CAFEVDB || {};
       .done(function(data) {
         if (!callbacks.update(data)) {
 	  console.debug("Finish polling");
-          clearTimeout(progressTimer);
-          progressTimer = false;
+          clearTimeout(CAFEVDB.progressTimer);
+          CAFEVDB.progressTimer = false;
           return;
         }
 	console.debug("Restart timer.");
-        progressTimer = setTimeout(poll, interval);
+        CAFEVDB.progressTimer = setTimeout(poll, interval);
       })
       .fail(function(xhr, status, errorThrown) {
-        clearTimeout(progressTimer);
-        progressTimer = false;
+        clearTimeout(CAFEVDB.progressTimer);
+        CAFEVDB.progressTimer = false;
         callbacks.fail(xhr, status, errorThrown);
       });
     };
     poll();
   };
   CAFEVDB.pollProgressStatus.stop = function() {
-    clearTimeout(progressTimer);
-    progressTimer = false;
+    clearTimeout(CAFEVDB.progressTimer);
+    CAFEVDB.progressTimer = false;
   };
   CAFEVDB.pollProgressStatus.active = function() {
-    return !!progressTimer;
+    return !!CAFEVDB.progressTimer;
   };
 
 })(window, jQuery, CAFEVDB);
@@ -1285,16 +1282,14 @@ $(function(){
     $('.oc-dialog').toggleClass('maximize-width');
   });
 
-  var resizeCount = 0;
-
   window.oldWidth = -1;
   window.oldHeight = -1;
   $(window).on('resize', function(event) {
-    var win = this;
+    const win = this;
     if (!win.resizeTimeout) {
-      var delay = 50;
-      var width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
-      var height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
+      const delay = 50;
+      const width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
+      const height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
       if (win.oldWidth != width || win.oldHeight != height) {
         console.debug('cafevdb size change', width, win.oldWidth, height, win.oldHeight);
         win.resizeTimeout = setTimeout(
@@ -1317,8 +1312,8 @@ $(function(){
    * insert another div-container inside #app-content.
    *
    */
-  var content = $('#content');
-  var appInnerContent = $('#app-inner-content');
+  const content = $('#content');
+  const appInnerContent = $('#app-inner-content');
 
   content.on('click', ':button.events',
              function(event) {
@@ -1327,7 +1322,7 @@ $(function(){
                } else {
                  // We store the values in the name attribute as serialized
                  // string.
-                 var values = $(this).attr('name');
+                 const values = $(this).attr('name');
                  $.post(OC.filePath(CAFEVDB.appName, 'ajax/events', 'events.php'),
                         values, CAFEVDB.Events.UI.init, 'json');
                }
@@ -1339,7 +1334,7 @@ $(function(){
              function(event) {
                event.stopImmediatePropagation();
 
-               var data = $(this).data('json');
+               const data = $(this).data('json');
 
                CAFEVDB.Projects.projectViewPopup(PHPMYEDIT.selector(), data);
                return false;
@@ -1348,15 +1343,15 @@ $(function(){
   // Display the instrumentation numbers in a dialog widget
   content.on('click', 'ul#navigation-list li.nav-projectinstrumentscontrol a',
              function(event) {
-               var data = $(this).data('json');
+               const data = $(this).data('json');
                CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.defaultSelector, data);
                return false;
              });
 
   CAFEVDB.addReadyCallback(function() {
     $('input.alertdata.cafevdb-page').each(function(index) {
-      var title = $(this).attr('name');
-      var text  = $(this).attr('value');
+      const title = $(this).attr('name');
+      const text  = $(this).attr('value');
       CAFEVDB.Dialogs.alert(text, title, undefined, true, true);
     });
 
@@ -1364,7 +1359,7 @@ $(function(){
 
   // fire an event when this have been finished
   console.debug("trigger loaded");
-  $(document).trigger("cafevdb:donecafevdbjs")
+  $(document).trigger("cafevdb:donecafevdbjs");
 });
 
 // Local Variables: ***
