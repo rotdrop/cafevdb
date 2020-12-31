@@ -117,6 +117,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $this->pmeOptions['tooltips'] = $this->toolTipsService;
 
+    if ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY) {
+      $this->pmeOptions['debug'] = true;
+    }
+
     // @TODO: the following should be done only on demand and is
     // somewhat chaotic.
 
