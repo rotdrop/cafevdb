@@ -300,7 +300,7 @@ make sure that the musicians are also automatically added to the
       'values' => [
         'table'       => self::MUSICIAN_INSTRUMENT_TABLE,
         'column'      => 'instrument_id',
-        'description' => [ 'columns' => 'instrument_id' ],
+        'description' => [ 'columns' => [ 'instrument_id', ], ],
         'join'        => '$join_table.musician_id = $main_table.id',
       ]
     ];

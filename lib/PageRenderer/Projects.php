@@ -269,7 +269,7 @@ class Projects extends PMETableViewBase
       'values' => [
         'table'       => self::INSTRUMENTATION_TABLE,
         'column'      => 'instrument_id',
-        'description' => [ 'columns' => 'instrument_id' ],
+        'description' => [ 'columns' => [ 'instrument_id', ], ],
         'join'        => '$join_table.project_id = $main_table.id',
       ]
     ];
