@@ -1037,8 +1037,8 @@ class phpMyEdit
 			return $this->sql_field($field);
 		}
 		// on copy/change always use simple key retrieving, or given sql descriptor
-		if ($this->virtual($field)
-			 || $this->add_operation()
+		if (/*$this->virtual($field)
+			  ||*/ $this->add_operation()
 			 || $this->copy_operation()
 			 || $this->change_operation()) {
 			return $this->sql_field($field);
@@ -1232,14 +1232,6 @@ class phpMyEdit
 		$join_clause = $this->sd.$this->tb.$this->ed." AS $main_table";
 		for ($k = 0, $numfds = sizeof($this->fds); $k < $numfds; $k++) {
 			$main_column = $this->fds[$k];
-			if (isset($this->fdd[$main_column]['values']['db'])) {
-				$dbp = $this->sd.$this->fdd[$main_column]['values']['db'].$this->ed.'.';
-			} else {
-				//$dbp = $this->dbp; not needed
-			}
-
-			$join_column = $this->sd.$this->fdd[$main_column]['values']['column'].$this->ed;
-			$join_desc	 = $this->sd.$this->fdd[$main_column]['values']['description'].$this->ed;
 			$join        = $this->fdd[$main_column]['values']['join'];
 			if (is_array($join)) {
 				if (isset($join['condition'])) {
@@ -1252,7 +1244,18 @@ class phpMyEdit
 				// use this just for values definitions
 				continue;
 			}
-			if ($join_desc != $this->sd.$this->ed && $join_column != $this->sd.$this->ed) {
+			if (isset($this->fdd[$main_column]['values']['db'])) {
+				$dbp = $this->sd.$this->fdd[$main_column]['values']['db'].$this->ed.'.';
+			} else {
+				//$dbp = $this->dbp; not needed
+			}
+
+			$join_column = $this->sd.$this->fdd[$main_column]['values']['column'].$this->ed;
+			$join_desc	 = $this->sd.$this->fdd[$main_column]['values']['description'].$this->ed;
+			if ($join_desc == $this->sd.$this->ed) {
+				$join_desc = $join_column;
+			}
+			if ($join_column != $this->sd.$this->ed) {
 
 				$table = trim($this->fdd[$main_column]['values']['table']);
 				$subquery = stripos($table, 'SELECT') !== false;
