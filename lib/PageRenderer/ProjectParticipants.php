@@ -54,6 +54,9 @@ class ProjectParticipants extends PMETableViewBase
   const INSTRUMENTS_TABLE = 'Instruments';
   const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
   const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
+
+  const JOIN_FIELD_NAME_SEPARATOR = ':';
+
   /**
    * @const list of join-tables which cannot be updated directly,
    * handled in the varous "beforeSOMETHING" trigger functions.
@@ -63,22 +66,21 @@ class ProjectParticipants extends PMETableViewBase
       'entity' => Entities\Musician::class,
       'identifier' => [ 'id' => 'musician_id' ],
       'column' => 'id',
-      'description' => [ 'name', 'first_name' ],
     ],
     self::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
-      'description' => [ 'name' ],
     ],
     self::PROJECT_INSTRUMENTS_TABLE => [
       'entity' => Entities\ProjectInstrument::class,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
+        'instrument_id' => false,
       ],
       'column' => 'instrument_id',
-      'description' => [ 'instrument_id' ],
+      'group_by' => true,
     ],
     self::MUSICIAN_INSTRUMENT_TABLE => [
       'entity' => Entities\MusicianInstrument::class,
@@ -87,9 +89,8 @@ class ProjectParticipants extends PMETableViewBase
         'musician_id' => 'musician_id',
       ],
       'column' => 'instrument_id',
-      'description' => [ 'instrument_id' ],
     ],
-    // in order to get the participations in _other projects
+    // in order to get the participation in all projects
     self::TABLE => [
       'entity' => Entities\ProjectParticipant::class,
       'identifier' => [
@@ -264,10 +265,11 @@ class ProjectParticipants extends PMETableViewBase
         }
         $joinData[] = '$main_table.'.$mainTableKey.' = $join_table.'.$joinTableKey;
       }
-      $opts['fdd'][$table.'_key'] = [
+      $fieldName = $this->joinTableMasterFieldName($table);
+      $opts['fdd'][$fieldName] = [
         'tab' => 'all',
-        'name' => $table.'_key',
-        'input' => 'VH',
+        'name' => $fieldName,
+        'input' => 'H',
         'sql' => ($group
                   ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC)'
                   : '$join_col_fqn'),
@@ -276,14 +278,20 @@ class ProjectParticipants extends PMETableViewBase
         'values' => [
           'table' => $table,
           'column' => $joinInfo['column'],
-          'description' => [
-            'columns' => $joinInfo['description'],
-            'divs' => array_fill(0, count($joinInfo['description'])-1, ', '),
-          ],
           'join' => implode(' AND ', $joinData),
         ],
       ];
-      $this->logDebug('JOIN '.print_r($opts['fdd'][$table.'_key'], true));
+      if (!empty($joinInfo['group_by'])) {
+        $opts['groupby_fields'][] = $fieldName;
+        // use simple field grouping for list operation
+        $sql = $opts['fdd'][$fieldName]['sql'];
+        $opts['fdd'][$fieldName]['sql|L'] = '$join_col_fqn';
+      }
+      $this->logInfo('JOIN '.print_r($opts['fdd'][$fieldName], true));
+    }
+    if (!empty($opts['groupby_fields'])) {
+      $opts['groupby_fields'] = array_merge(array_keys($opts['key']), $opts['groupby_fields']);
+      $this->logInfo('GROUP_BY '.print_r($opts['groupby_fields'], true));
     }
 
     $musiciansJoin = $joinTable[self::MUSICIANS_TABLE];
@@ -704,13 +712,6 @@ class ProjectParticipants extends PMETableViewBase
       );
 
     //////// END Field definitions
-
-    // GROUP BY clause, if needed. Should come last
-    $opts['groupby_fields'] = [
-      'project_id',
-      'musician_id',
-      'ProjectInstruments_key',
-    ];
 
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateTrigger' ];
@@ -1749,6 +1750,7 @@ class ProjectParticipants extends PMETableViewBase
   {
     $this->logInfo('OLDVALS '.print_r($oldvals, true));
     foreach (self::JOIN_TABLES as $table => $joinInfo) {
+      $joinField  = $this->joinTableMasterFieldName($table);
       $entityClass = $joinInfo['entity'];
       $meta = $this->classMetadata($entityClass);
       $fieldNames = $meta->fieldNames;
@@ -1761,19 +1763,26 @@ class ProjectParticipants extends PMETableViewBase
       $this->logInfo('Changed: '.print_r($changed, true));
       $this->logInfo('ChangeSet: '.print_r($entityChangeSet, true));
       $this->logInfo('Keys: '.print_r($meta->identifier, true));
+      $this->logInfo('Key-Cols: '.print_r($meta->getIdentifierColumnNames(), true));
 
       $identifier = [];
-      foreach ($meta->identifier as $key) {
-        $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
+      $identifierColumns = $meta->getIdentifierColumnNames();
+      foreach ($identifierColumns as $key) {
+        if (empty($joinInfo['identifier'][$key])) {
+        } else {
+          $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
+        }
       }
-      $this->logInfo('Keys: '.print_r($identifier, true));
+      $this->logInfo('Keys Values: '.print_r($identifier, true));
 
       $entity = $this->getDatabaseRepository($entityClass)->find($identifier);
-      foreach ($entityChangeSet as $column => $field) {
-        $entity[$field] = $newvals[$column];
+      if (!empty($entityChangeSet)) {
+        foreach ($entityChangeSet as $column => $field) {
+          $entity[$field] = $newvals[$column];
+        }
+        $this->persist($entity);
+        $this->flush($entity);
       }
-      $this->persist($entity);
-      $this->flush($entity);
       $changed = array_diff($changed, array_keys($entityChangeSet));
     }
     return false;
@@ -1874,6 +1883,60 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     return array_merge($dfltTabs, $extraTabs);
+  }
+
+  /**
+   * The name of the master join table field which triggers PME to
+   * actually do the join.
+   */
+  private function joinTableMasterFieldName(string $table)
+  {
+    return $table.'_key';
+  }
+
+  /**
+   * The name of the field-descriptor for a join-table field
+   * referencing a master-join-table.
+   */
+  private function joinTableFieldName(string $table, string $column)
+  {
+    return $table.self::JOIN_FIELD_NAME_SEPARATOR.$column;
+  }
+
+  /**
+   * Generate a join-table field, given join-table and field name.
+   */
+  // $opts['fdd']['street'] = [
+  //   'name'     => $this->l->t('Street'),
+  //   'tab'      => [ 'id' => 'musician' ],
+  //   'css'      => ['postfix' => ' musician-address street'],
+  //   'select'   => 'T',
+  //   'maxlen'   => 128,
+  //   'sort'     => true,
+  //   'input'    => 'S',
+  //   'values' => [
+  //     'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
+  //   ],
+  // ];
+  private function makeJoinTableField(array &$fieldDescriptionData, string $table, string $column, array $fdd)
+  {
+    $masterFieldName = $this->joinTableMasterFieldName($table);
+    $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
+    if ($joinIndex === false) {
+      throw new \Exception($this->l->t("Master join-table field for %s not found.", $table));
+    }
+    $fieldName = $this->joinTableFieldName($table, $column);
+    $defaultFDD = [
+      'select' => 'T',
+      'maxlen' => 128,
+      'sort' => true,
+      'input' => 'S',
+      'values' => [
+        'column' => $column,
+        'join' => [ 'reference' => $joinIndex, ],
+      ],
+    ];
+    $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
   }
 
 }
