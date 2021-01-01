@@ -269,7 +269,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'][$fieldName] = [
         'tab' => 'all',
         'name' => $fieldName,
-        'input' => 'H',
+        'input' => 'HV',
         'sql' => ($group
                   ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC)'
                   : '$join_col_fqn'),
@@ -294,29 +294,21 @@ class ProjectParticipants extends PMETableViewBase
       $this->logInfo('GROUP_BY '.print_r($opts['groupby_fields'], true));
     }
 
-    $musiciansJoin = $joinTable[self::MUSICIANS_TABLE];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'first_name',
+      [
+        'name'     => $this->l->t('First Name'),
+        'tab'      => [ 'id' => 'tab-all' ],
+        'maxlen'   => 384,
+      ]);
 
-    $opts['fdd']['first_name'] = [
-      'name'     => $this->l->t('First Name'),
-      'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
-      'select'   => 'T',
-      'maxlen'   => 384,
-      'sort'     => true,
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
-
-    $opts['fdd']['name'] = [
-      'name'     => $this->l->t('Name'),
-      'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
-      'select'   => 'T',
-      'maxlen'   => 384,
-      'sort'     => true,
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'name',
+      [
+        'name'     => $this->l->t('Name'),
+        'tab'      => [ 'id' => 'tab-all' ],
+        'maxlen'   => 384,
+      ]);
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
@@ -336,37 +328,36 @@ class ProjectParticipants extends PMETableViewBase
       ];
     }
 
-    $projectInstrumentJoin = $joinTable[self::PROJECT_INSTRUMENTS_TABLE];
-    $fieldIndex = $projectInstrumentNameIndex = count($opts['fdd']);
-    $projectInstrumentNameJoin = 'PMEjoin'.$projectInstrumentNameIndex;
-    $opts['fdd']['project_instrument'] = [
-      'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
-      'name'        => $this->l->t('Project Instrument'),
-      'css'         => ['postfix' => ' project-instruments tooltip-top'],
-      'display|LVF' => ['popup' => 'data'],
-      'input'       => 'S', // skip
-      'sort'        => true,
-      'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-      'input'       => 'S',
-      'select'      => 'M',
-      //'filter'      => 'having', // need "HAVING" for group by stuff
-      'values' => [
-        'table'       => self::INSTRUMENTS_TABLE,
-        'column'      => 'id',
-        'description' => 'instrument',
-        'orderby'     => '$table.sort_order ASC',
-        'join'        => '$join_col_fqn = '.$projectInstrumentJoin.'.instrument_id'
-      ],
-      'values2' => $this->instrumentInfo['byId'],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
-    ];
+    $projectInstrumentNameIndex = count($opts['fdd']);
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id',
+      [
+        'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
+        'name'        => $this->l->t('Project Instrument'),
+        'css'         => ['postfix' => ' project-instruments tooltip-top'],
+        'display|LVF' => ['popup' => 'data'],
+        'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'select'      => 'M',
+        //'filter'      => 'having', // need "HAVING" for group by stuff
+        'values' => [
+          'table'       => self::INSTRUMENTS_TABLE,
+          'column'      => 'id',
+          'description' => 'instrument',
+          'orderby'     => '$table.sort_order ASC',
+          'join'        => '$join_col_fqn = '.$joinTable[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
+        ],
+        'values2' => $this->instrumentInfo['byId'],
+        'valueGroups' => $this->instrumentInfo['idGroups'],
+      ]);
 
     $opts['fdd']['sort_order'] = [
       'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
+      'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'input'       => 'HRS',
       'sort'     => true,
       'values' => [
+        'orderby' => '$table.sort_order ASC',
         'join' => [ 'reference' => $projectInstrumentNameIndex ],
       ],
     ];
@@ -392,18 +383,15 @@ class ProjectParticipants extends PMETableViewBase
       'css'      => [ 'postfix' => ' registration tooltip-top' ],
     ];
 
-    $fieldIndex = $musicianInstrumentsIndex = count($opts['fdd']);
-    $opts['fdd']['musician_instruments'] = [
+    $fdd = [
       'name'        => $this->l->t('All Instruments'),
       'tab'         => [ 'id' => [ 'musician', 'instrumentation' ] ],
       'css'         => ['postfix' => ' musician-instruments tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
       'input'       => 'S', // skip
-      'sort'        => true,
       'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-      'input'       => 'S',
       'select'      => 'M',
-      'filter'      => 'having', // need "HAVING" for group by stuff
+      //'filter'      => 'having', // ?????? need "HAVING" for group by stuff
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
@@ -415,10 +403,10 @@ class ProjectParticipants extends PMETableViewBase
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.disabled = 0' ]);
 
-    $opts['fdd']['musician_instruments']['values|ACP'] = array_merge(
-      $opts['fdd']['musician_instruments']['values'],
-      [ 'filters' => '$table.disabled = 0' ]);
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIAN_INSTRUMENT_TABLE, 'instrument_id', $fdd);
 
     /*
      *
@@ -431,18 +419,16 @@ class ProjectParticipants extends PMETableViewBase
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
-    $opts['fdd']['member_status'] = [
-      'name'    => $this->l->t('Member Status'),
-      'select'  => 'D',
-      'maxlen'  => 128,
-      'sort'    => true,
-      'css'     => ['postfix' => ' memberstatus tooltip-wide'],
-      'values2' => $this->memberStatusNames,
-      'tooltip' => $this->toolTipsService['member-status'],
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'member_status',
+      [
+        'name'    => $this->l->t('Member Status'),
+        'select'  => 'D',
+        'maxlen'  => 128,
+        'css'     => ['postfix' => ' memberstatus tooltip-wide'],
+        'values2' => $this->memberStatusNames,
+        'tooltip' => $this->toolTipsService['member-status'],
+      ]);
 
     $opts['fdd']['remarks'] = [
       'name' => $this->l->t("Remarks")."\n(".$projectName.")",
@@ -485,147 +471,113 @@ class ProjectParticipants extends PMETableViewBase
       //'valueGroups' => $groupedProjects
     ];
 
-    $opts['fdd']['email'] = $this->defaultFDD['email'];
-    $opts['fdd']['email']['tab'] = ['id' => 'musician'];
-    $opts['fdd']['email']['values'] = [
-      'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-    ];
-    $opts['fdd']['email']['input'] = 'S';
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'email',
+      array_merge($this->defaultFDD['email'], [ 'tab' => ['id' => 'musician'], ]));
 
-    $opts['fdd']['mobile_phone'] = [
-      'name'     => $this->l->t('Mobile Phone'),
-      'tab'      => [ 'id' => 'musician' ],
-      'css'      => [ 'postfix' => ' phone-number' ],
-      'input'    => 'S',
-      'display'  => [
-        'popup' => function($data) {
-          return $this->phoneNumberService->metaData($data, null, '<br/>');
-        }
-      ],
-      'nowrap'   => true,
-      'select'   => 'T',
-      'maxlen'   => 384,
-      'sort'     => true,
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'mobile_phone',
+      [
+        'name'     => $this->l->t('Mobile Phone'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => [ 'postfix' => ' phone-number' ],
+        'display'  => [
+          'popup' => function($data) {
+            return $this->phoneNumberService->metaData($data, null, '<br/>');
+          }
+        ],
+        'nowrap'   => true,
+        'maxlen'   => 384,
+      ]);
 
-    $opts['fdd']['fixed_line_phone'] = [
-      'name'     => $this->l->t('Fixed Line Phone'),
-      'tab'      => [ 'id' => 'musician' ],
-      'css'      => [ 'postfix' => ' phone-number' ],
-      'input'    => 'S',
-      'display'  => [
-        'popup' => function($data) {
-          return $this->phoneNumberService->metaData($data, null, '<br/>');
-        }
-      ],
-      'nowrap'   => true,
-      'select'   => 'T',
-      'maxlen'   => 384,
-      'sort'     => true,
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'fixed_line_phone',
+      [
+        'name'     => $this->l->t('Fixed Line Phone'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => [ 'postfix' => ' phone-number' ],
+        'display'  => [
+          'popup' => function($data) {
+            return $this->phoneNumberService->metaData($data, null, '<br/>');
+          }
+        ],
+        'nowrap'   => true,
+        'maxlen'   => 384,
+      ]);
 
-    $opts['fdd']['street'] = [
-      'name'     => $this->l->t('Street'),
-      'tab'      => [ 'id' => 'musician' ],
-      'css'      => ['postfix' => ' musician-address street'],
-      'select'   => 'T',
-      'maxlen'   => 128,
-      'sort'     => true,
-      'input'    => 'S',
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'street',
+      [
+        'name'     => $this->l->t('Street'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => ['postfix' => ' musician-address street'],
+        'maxlen'   => 128,
+      ]);
 
-    $opts['fdd']['postal_code'] = [
-      'name'     => $this->l->t('Postal Code'),
-      'tab'      => [ 'id' => 'musician' ],
-      'css'      => ['postfix' => ' musician-address postal-code'],
-      'select'   => 'T',
-      'maxlen'   => 11,
-      'sort'     => true,
-      'input'    => 'S',
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'postal_code',
+      [
+        'name'     => $this->l->t('Postal Code'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => ['postfix' => ' musician-address postal-code'],
+        'maxlen'   => 11,
+      ]);
 
-    $opts['fdd']['city'] = [
-      'name'     => $this->l->t('City'),
-      'tab'      => [ 'id' => 'musician' ],
-      'css'      => ['postfix' => ' musician-address city'],
-      'select'   => 'T',
-      'maxlen'   => 128,
-      'sort'     => true,
-      'input'    => 'S',
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'city',
+      [
+        'name'     => $this->l->t('City'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => ['postfix' => ' musician-address city'],
+        'maxlen'   => 128,
+      ]);
 
     $countries = $this->geoCodingService->countryNames();
     $countryGroups = $this->geoCodingService->countryContinents();
 
-    $opts['fdd']['country'] = [
-      'name'     => $this->l->t('Country'),
-      'tab'      => [ 'id' => 'musician' ],
-      'select'   => 'D',
-      'maxlen'   => 128,
-      'default'  => $this->getConfigValue('streetAddressCountry'),
-      'css'      => ['postfix' => ' musician-address country chosen-dropup'],
-      'sort'     => true,
-      'input'    => 'S',
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-      'values2'     => $countries,
-      'valueGroups' => $countryGroups,
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'country',
+      [
+        'name'     => $this->l->t('Country'),
+        'tab'      => [ 'id' => 'musician' ],
+        'select'   => 'D',
+        'maxlen'   => 128,
+        'default'  => $this->getConfigValue('streetAddressCountry'),
+        'css'      => ['postfix' => ' musician-address country chosen-dropup'],
+        'values2'     => $countries,
+        'valueGroups' => $countryGroups,
+      ]);
 
-    $opts['fdd']['birthday'] = $this->defaultFDD['birthday'];
-    $opts['fdd']['birthday']['tab'] = [ 'id' => 'musician' ];
-    $opts['fdd']['birthday']['values'] = [
-      'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'birthday',
+      array_merge($this->defaultFDD['birthday'], [ 'tab' => [ 'id' => 'musician' ], ]));
 
-    $opts['fdd']['musician_remarks'] = [
-      'tab'      => ['id' => 'musician'],
-      'name'     => $this->l->t('Remarks'),
-      'select'   => 'T',
-      'maxlen'   => 65535,
-      'css'      => ['postfix' => ' remarks tooltip-top'],
-      'textarea' => [
-        'css' => 'wysiwyg-editor',
-        'rows' => 5,
-        'cols' => 50,
-      ],
-      'display|LF' => ['popup' => 'data'],
-      'escape' => false,
-      'sort'     => true,
-      'values' => [
-        'column' => 'remarks',
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'remarks',
+      [
+        'tab'      => ['id' => 'musician'],
+        'name'     => $this->l->t('Remarks'),
+        'maxlen'   => 65535,
+        'css'      => ['postfix' => ' remarks tooltip-top'],
+        'textarea' => [
+          'css' => 'wysiwyg-editor',
+          'rows' => 5,
+          'cols' => 50,
+        ],
+        'display|LF' => ['popup' => 'data'],
+        'escape' => false,
+      ]);
 
-    $opts['fdd']['language'] = [
-      'tab'      => ['id' => 'musician'],
-      'name'     => $this->l->t('Language'),
-      'select'   => 'D',
-      'maxlen'   => 128,
-      'default'  => 'Deutschland',
-      'sort'     => true,
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-      'values2'  => $this->findAvailableLanguages(),
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'language',
+      [
+        'tab'      => ['id' => 'musician'],
+        'name'     => $this->l->t('Language'),
+        'select'   => 'D',
+        'maxlen'   => 128,
+        'default'  => 'Deutschland',
+        'values2'  => $this->findAvailableLanguages(),
+      ]);
 
     $opts['fdd']['photo'] = [
       'tab'      => ['id' => 'miscinfo'],
@@ -680,23 +632,22 @@ class ProjectParticipants extends PMETableViewBase
       'sort' => false
     ];
 
-    $opts['fdd']['uuid'] = [
-      'tab'      => [ 'id' => 'miscinfo' ],
-      'name'     => 'UUID',
-      'options'  => 'LAVCPDR',
-      'css'      => ['postfix' => ' musician-uuid clip-long-text tiny-width'],
-      'sql'      => 'BIN2UUID($join_col_fqn)',
-      'display|LVF' => ['popup' => 'data'],
-      'sqlw'     => 'UUID2BIN($val_qas)',
-      'select'   => 'T',
-      'maxlen'   => 32,
-      'sort'     => true,
-      'values' => [
-        'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'uuid',
+      [
+        'tab'      => [ 'id' => 'miscinfo' ],
+        'name'     => 'UUID',
+        'options'  => 'LAVCPDR',
+        'css'      => ['postfix' => ' musician-uuid clip-long-text tiny-width'],
+        'sql'      => 'BIN2UUID($join_col_fqn)',
+        'display|LVF' => ['popup' => 'data'],
+        'sqlw'     => 'UUID2BIN($val_qas)',
+        'maxlen'   => 32,
+        'sort'     => true,
+      ]);
 
-    $opts['fdd']['updated'] =
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'updated',
       array_merge(
         $this->defaultFDD['datetime'],
         [
@@ -705,11 +656,7 @@ class ProjectParticipants extends PMETableViewBase
           "default" => date($this->defaultFDD['datetime']['datemask']),
           "nowrap" => true,
           "options" => 'LFAVCPDR',
-          'values' => [
-            'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-          ],
-        ]
-      );
+        ]));
 
     //////// END Field definitions
 
@@ -1901,6 +1848,12 @@ class ProjectParticipants extends PMETableViewBase
   private function joinTableFieldName(string $table, string $column)
   {
     return $table.self::JOIN_FIELD_NAME_SEPARATOR.$column;
+  }
+
+  private function fieldIndex(array $fieldDescriptionData, string $table, string $column)
+  {
+    $fieldName = $this->joinTableFieldName($table, $column);
+    return array_search($fieldName, array_keys($fieldDescriptionData));
   }
 
   /**
