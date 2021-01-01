@@ -1696,42 +1696,48 @@ class ProjectParticipants extends PMETableViewBase
   public function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     $this->logInfo('OLDVALS '.print_r($oldvals, true));
-    foreach (self::JOIN_TABLES as $table => $joinInfo) {
-      $joinField  = $this->joinTableMasterFieldName($table);
-      $entityClass = $joinInfo['entity'];
-      $meta = $this->classMetadata($entityClass);
-      $fieldNames = $meta->fieldNames;
-      $entityChangeSet = array_intersect_key($fieldNames, array_fill_keys($changed, true));
-
-      $this->logInfo('Old: '.print_r($oldvals,true));
-      $this->logInfo('New: '.print_r($newvals,true));
-      $this->logInfo('Entity: '.print_r($entityClass, true));
-      $this->logInfo('FieldNames: '.print_r($meta->fieldNames, true));
-      $this->logInfo('Changed: '.print_r($changed, true));
-      $this->logInfo('ChangeSet: '.print_r($entityChangeSet, true));
-      $this->logInfo('Keys: '.print_r($meta->identifier, true));
-      $this->logInfo('Key-Cols: '.print_r($meta->getIdentifierColumnNames(), true));
-
-      $identifier = [];
-      $identifierColumns = $meta->getIdentifierColumnNames();
-      foreach ($identifierColumns as $key) {
-        if (empty($joinInfo['identifier'][$key])) {
-        } else {
-          $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
-        }
-      }
-      $this->logInfo('Keys Values: '.print_r($identifier, true));
-
-      $entity = $this->getDatabaseRepository($entityClass)->find($identifier);
-      if (!empty($entityChangeSet)) {
-        foreach ($entityChangeSet as $column => $field) {
-          $entity[$field] = $newvals[$column];
-        }
-        $this->persist($entity);
-        $this->flush($entity);
-      }
-      $changed = array_diff($changed, array_keys($entityChangeSet));
+    $this->logInfo('NEWVALS '.print_r($newvals, true));
+    $this->logInfo('CHANGED '.print_r($changed, true));
+    foreach ($changed as $field) {
+      $fieldInfo = $this->joinTableField($field);
+      $this->logInfo(sprintf("Would change column %s of table %s", $fieldInfo['column'], $fieldInfo['table']));
     }
+    // foreach (self::JOIN_TABLES as $table => $joinInfo) {
+    //   $joinField  = $this->joinTableMasterFieldName($table);
+    //   $entityClass = $joinInfo['entity'];
+    //   $meta = $this->classMetadata($entityClass);
+    //   $fieldNames = $meta->fieldNames;
+    //   $entityChangeSet = array_intersect_key($fieldNames, array_fill_keys($changed, true));
+
+    //   $this->logInfo('Old: '.print_r($oldvals,true));
+    //   $this->logInfo('New: '.print_r($newvals,true));
+    //   $this->logInfo('Entity: '.print_r($entityClass, true));
+    //   $this->logInfo('FieldNames: '.print_r($meta->fieldNames, true));
+    //   $this->logInfo('Changed: '.print_r($changed, true));
+    //   $this->logInfo('ChangeSet: '.print_r($entityChangeSet, true));
+    //   $this->logInfo('Keys: '.print_r($meta->identifier, true));
+    //   $this->logInfo('Key-Cols: '.print_r($meta->getIdentifierColumnNames(), true));
+
+    //   $identifier = [];
+    //   $identifierColumns = $meta->getIdentifierColumnNames();
+    //   foreach ($identifierColumns as $key) {
+    //     if (empty($joinInfo['identifier'][$key])) {
+    //     } else {
+    //       $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
+    //     }
+    //   }
+    //   $this->logInfo('Keys Values: '.print_r($identifier, true));
+
+    //   $entity = $this->getDatabaseRepository($entityClass)->find($identifier);
+    //   if (!empty($entityChangeSet)) {
+    //     foreach ($entityChangeSet as $column => $field) {
+    //       $entity[$field] = $newvals[$column];
+    //     }
+    //     $this->persist($entity);
+    //     $this->flush($entity);
+    //   }
+    //   $changed = array_diff($changed, array_keys($entityChangeSet));
+    // }
     return false;
   }
 
@@ -1848,6 +1854,22 @@ class ProjectParticipants extends PMETableViewBase
   private function joinTableFieldName(string $table, string $column)
   {
     return $table.self::JOIN_FIELD_NAME_SEPARATOR.$column;
+  }
+
+  /**
+   * Inverse of self::joinTableFieldName().
+   */
+  private function joinTableField(string $fieldName)
+  {
+    $parts = explode(self::JOIN_FIELD_NAME_SEPARATOR, $fieldName);
+    if (count($parts) == 1) {
+      $parts[1] = $parts[0];
+      $parts[0] = self::TABLE;
+    }
+    return [
+      'table' => $parts[0],
+      'column' => $parts[1],
+    ];
   }
 
   private function fieldIndex(array $fieldDescriptionData, string $table, string $column)
