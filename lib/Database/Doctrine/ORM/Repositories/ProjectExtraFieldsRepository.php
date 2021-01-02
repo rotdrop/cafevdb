@@ -47,11 +47,11 @@ class ProjectExtraFieldsRepository extends EntityRepository
       $getEntityManager()->flush();
     } else {
       $fieldId = $fieldOrId;
-      $qb = $entitiyManager->createQueryBuilder()
-                           ->update($this->getEntityName(), self::ALIAS)
-                           ->set(self::ALIAS.'.disabled', true)
-                           ->where(self::ALIAS.'.id = :fieldId')
-                           ->setParameter('fieldId', $fieldId);
+      $qb = $entityManager->createQueryBuilder()
+                          ->update($this->getEntityName(), self::ALIAS)
+                          ->set(self::ALIAS.'.disabled', true)
+                          ->where(self::ALIAS.'.id = :fieldId')
+                          ->setParameter('fieldId', $fieldId);
       $qb->getQuery()->execute();
     }
   }
