@@ -41,6 +41,8 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
 
+use OCA\CAFEVDB\Common\Util;
+
 /**Use this as the actual EntityManager in order to be able to
  * construct it without a Factory and to define an extension point for
  * later.
@@ -176,6 +178,18 @@ class EntityManager extends EntityManagerDecorator
 
     return $entityManager;
   }
+
+  public function columnName($propertyName)
+  {
+    //return $this->getConfiguration()->getNamingStrategy()->propertyToColumnName($propertyName);
+    return Util::camelCaseToDashes($propertyName, '_');
+  }
+
+  public function property($columnName)
+  {
+    return Util::dashesToCamelCase($columnName);
+  }
+
 }
 
 // Local Variables: ***

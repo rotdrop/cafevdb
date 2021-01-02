@@ -321,6 +321,11 @@ trait EntityManagerTrait {
     return $this->entityManager->getClassMetadata($entityClassName);
   }
 
+  protected function property($columnName)
+  {
+    return $this->entityManager->property($columnName);
+  }
+
 }
 
 // Local Variables: ***
