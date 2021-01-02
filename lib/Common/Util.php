@@ -160,7 +160,7 @@ __EOT__;
 
   /**
    * Take any dashed or "underscored" lower-case string and convert to
-   * camel-acse.
+   * camel-case.
    *
    * @param string $string the string to convert.
    *
@@ -170,7 +170,7 @@ __EOT__;
    */
   public static function dashesToCamelCase($string, $capitalizeFirstCharacter = false, $dashes = '_-')
   {
-    $str = str_replace(' ', '', ucwords(preg_replace('/[_-]/', ' ', $string)));
+    $str = str_replace(str_split($dashes), '', ucwords($string, $dashes));
 
     if (!$capitalizeFirstCharacter) {
       $str[0] = strtolower($str[0]);
