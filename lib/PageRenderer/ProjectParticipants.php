@@ -287,11 +287,11 @@ class ProjectParticipants extends PMETableViewBase
         $sql = $opts['fdd'][$fieldName]['sql'];
         $opts['fdd'][$fieldName]['sql|L'] = '$join_col_fqn';
       }
-      $this->logInfo('JOIN '.print_r($opts['fdd'][$fieldName], true));
+      $this->logDebug('JOIN '.print_r($opts['fdd'][$fieldName], true));
     }
     if (!empty($opts['groupby_fields'])) {
       $opts['groupby_fields'] = array_merge(array_keys($opts['key']), $opts['groupby_fields']);
-      $this->logInfo('GROUP_BY '.print_r($opts['groupby_fields'], true));
+      $this->logDebug('GROUP_BY '.print_r($opts['groupby_fields'], true));
     }
 
     $this->makeJoinTableField(
@@ -1698,46 +1698,117 @@ class ProjectParticipants extends PMETableViewBase
     $this->logInfo('OLDVALS '.print_r($oldvals, true));
     $this->logInfo('NEWVALS '.print_r($newvals, true));
     $this->logInfo('CHANGED '.print_r($changed, true));
+    $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
-      $this->logInfo(sprintf("Would change column %s of table %s", $fieldInfo['column'], $fieldInfo['table']));
+      $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
-    // foreach (self::JOIN_TABLES as $table => $joinInfo) {
-    //   $joinField  = $this->joinTableMasterFieldName($table);
-    //   $entityClass = $joinInfo['entity'];
-    //   $meta = $this->classMetadata($entityClass);
-    //   $fieldNames = $meta->fieldNames;
-    //   $entityChangeSet = array_intersect_key($fieldNames, array_fill_keys($changed, true));
+    foreach (self::JOIN_TABLES as $table => $joinInfo) {
+      if ($table == self::TABLE || empty($changeSets[$table])) {
+        continue;
+      }
+      $changeSet = $changeSets[$table];
+      $this->logInfo('CHANGESETS '.$table.' '.print_r($changeSet, true));
+      $entityClass = $joinInfo['entity'];
+      $repository = $this->getDatabaseRepository($entityClass);
+      $meta = $this->classMetadata($entityClass);
+      //$this->logInfo('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
 
-    //   $this->logInfo('Old: '.print_r($oldvals,true));
-    //   $this->logInfo('New: '.print_r($newvals,true));
-    //   $this->logInfo('Entity: '.print_r($entityClass, true));
-    //   $this->logInfo('FieldNames: '.print_r($meta->fieldNames, true));
-    //   $this->logInfo('Changed: '.print_r($changed, true));
-    //   $this->logInfo('ChangeSet: '.print_r($entityChangeSet, true));
-    //   $this->logInfo('Keys: '.print_r($meta->identifier, true));
-    //   $this->logInfo('Key-Cols: '.print_r($meta->getIdentifierColumnNames(), true));
+      $identifier = [];
+      $identifierColumns = $meta->getIdentifierColumnNames();
+      foreach ($identifierColumns as $key) {
+        if (empty($joinInfo['identifier'][$key])) {
+          // assume that the 'column' component contains the keys.
+          $keyField = $this->joinTableFieldName($table, $joinInfo['column']);
+          $identifier[$key] = [
+            'old' => explode(',', $oldvals[$keyField]),
+            'new' => explode(',', $newvals[$keyField]),
+          ];
 
-    //   $identifier = [];
-    //   $identifierColumns = $meta->getIdentifierColumnNames();
-    //   foreach ($identifierColumns as $key) {
-    //     if (empty($joinInfo['identifier'][$key])) {
-    //     } else {
-    //       $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
-    //     }
-    //   }
-    //   $this->logInfo('Keys Values: '.print_r($identifier, true));
+          $identifier[$key]['del'] = array_diff($identifier[$key]['old'], $identifier[$key]['new']);
+          $identifier[$key]['add'] = array_diff($identifier[$key]['new'], $identifier[$key]['old']);
+          $identifier[$key]['rem'] = array_intersect($identifier[$key]['new'], $identifier[$key]['old']);
 
-    //   $entity = $this->getDatabaseRepository($entityClass)->find($identifier);
-    //   if (!empty($entityChangeSet)) {
-    //     foreach ($entityChangeSet as $column => $field) {
-    //       $entity[$field] = $newvals[$column];
-    //     }
-    //     $this->persist($entity);
-    //     $this->flush($entity);
-    //   }
-    //   $changed = array_diff($changed, array_keys($entityChangeSet));
-    // }
+          unset($changeSet[$joinInfo['column']]);
+          $multiple = $key;
+        } else {
+          $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
+        }
+      }
+      $this->logInfo('Keys Values: '.print_r($identifier, true));
+      if (!empty($multiple)) {
+        foreach ($identifier[$multiple]['old'] as $oldKey) {
+          $oldIdentifier[$oldKey] = $identifier;
+          $oldIdentifier[$oldKey][$multiple] = $oldKey;
+        }
+        foreach ($identifier[$multiple]['new'] as $newKey) {
+          $newIdentifier[$newKey] = $identifier;
+          $newIdentifier[$newKey][$multiple] = $newKey;
+        }
+
+        // Delete removed entities
+        foreach ($identifier[$multiple]['del'] as $del) {
+          $id = $oldIdentifier[$del];
+          $entityId = $this->makeJoinTableId($meta, $id);
+          $entity = $this->find($entityId);
+          foreach ($this->entityManager->wrapped->unitOfWork->identityMap as $blah => $blub) {
+            $this->logInfo(print_r(array_keys($blub), true));
+          }
+          $this->remove($entityId);
+          $this->changeLogService->logDelete($table, $id, $id);
+        }
+        $this->flush();
+
+        // Add new entities
+        foreach ($identifier[$multiple]['new'] as $new) {
+          $id = $newIdentifier[$new];
+          $entityId = $this->makeJoinTableId($meta, $id);
+          if (isset($identifier[$multiple]['add'][$new])) {
+            $entity = $entityClass::create();
+            foreach ($entityId as $key => $value) {
+              $entity[$key] = $value;
+            }
+          } else if (!empty($changeSet)) {
+            $entity = $this->find($entityId);
+          } else {
+            continue;
+          }
+          // set further properties ...
+          if (!empty($changeSet)) {
+            throw new \Exception($this->l->t('Unimplemented'));
+          }
+          // persist
+          $this->persist($entity);
+          $this->flush($entity);
+        }
+      } else { // !multiple, simply update
+        if (true) {
+          // probably  easier
+          $entityId = $this->makeJoinTableId($meta, $identifier);
+          $entity = $this->find($entityId);
+          foreach ($changeSet as $column => $field) {
+            $entity[$column] = $newvals[$field];
+            unset($changed[$field]);
+          }
+          $this->flush($entity);
+        } else {
+          // probably faster
+          $qb = $repository->createQueryBuilder('e')
+                           ->update();
+          foreach ($changeSet as $column => $field) {
+            $qb->set('e.'.$this->property($column), ':'.$column)
+               ->setParameter($column, $newvals[$field]);
+            unset($changed[$field]);
+          }
+          foreach ($identifier as $column => $value) {
+            $qb->andWhere('e.'.$this->property($column).' = :'.$key)
+               ->setParameter($key, $value);
+          }
+          $qb->getQuery()
+             ->execute();
+        }
+      }
+    }
     return false;
   }
 
@@ -1912,6 +1983,25 @@ class ProjectParticipants extends PMETableViewBase
       ],
     ];
     $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
+  }
+
+  private function makeJoinTableId($meta, $idValues)
+  {
+    $entityId = [];
+    foreach ($meta->identifier as $metaId) {
+      if (isset($idValues[$metaId])) {
+        $columnName = $metaId;
+      } else if (isset($meta->associationMappings[$metaId])) {
+        if (count($meta->associationMappings[$metaId]['joinColumns']) != 1) {
+          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+        }
+        $columnName = $meta->associationMappings[$metaId]['joinColumns'][0]['name'];
+      } else {
+        throw new \Exception($this->l->t('Unexpected id: %s', $metaId));
+      }
+      $entityId[$metaId] = $idValues[$columnName];
+    }
+    return $entityId;
   }
 
 }
