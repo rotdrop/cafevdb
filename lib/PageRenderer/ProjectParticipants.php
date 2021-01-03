@@ -1818,7 +1818,7 @@ class ProjectParticipants extends PMETableViewBase
           $this->flush($entity);
         }
       } else { // !multiple, simply update
-        if (true) {
+        if (false) {
           // probably  easier
           $entityId = $this->makeJoinTableId($meta, $identifier);
           $entity = $this->find($entityId);
@@ -1828,7 +1828,14 @@ class ProjectParticipants extends PMETableViewBase
           }
           $this->flush($entity);
         } else {
-          // probably faster
+          // probably faster, but life-cycle callbacks and events are
+          // not handled.
+
+          // hack 'updated' column, ugly, but should work
+          if (isset($meta->fieldNames['updated'])) {
+            $changeSet['updated'] = $this->joinTableFieldName($table, 'updated');
+            $newvals[$changeSet['updated']] = new \DateTime();
+          }
           $qb = $repository->createQueryBuilder('e')
                            ->update();
           foreach ($changeSet as $column => $field) {
@@ -1960,7 +1967,7 @@ class ProjectParticipants extends PMETableViewBase
    */
   private function joinTableFieldName(string $table, string $column)
   {
-    return $table.self::JOIN_FIELD_NAME_SEPARATOR.$column;
+    return $table == self::TABLE ? $column : $table.self::JOIN_FIELD_NAME_SEPARATOR.$column;
   }
 
   /**
