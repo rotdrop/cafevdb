@@ -158,7 +158,8 @@ class EntityManager extends EntityManagerDecorator
   // Create a simple "default" Doctrine ORM configuration for Annotations
   private function getEntityManager($params = null)
   {
-    list($config, $eventManager) = $this->createSimpleConfiguration();
+    //list($config, $eventManager) = $this->createSimpleConfiguration();
+    list($config, $eventManager) = $this->createExtendedConfiguration();
     if (self::DEV_MODE) {
       $config->setAutoGenerateProxyClasses(true);
     } else {
@@ -188,41 +189,44 @@ class EntityManager extends EntityManagerDecorator
 
   private function createExtendedConfiguration()
   {
+    // don't call internals directly
+    $this->createSimpleConfiguration();
+
     // globally used cache driver, in production use APC or memcached
-    $cache = new Doctrine\Common\Cache\ArrayCache;
+    $cache = new \Doctrine\Common\Cache\ArrayCache;
 
     // standard annotation reader
-    $annotationReader = new Doctrine\Common\Annotations\AnnotationReader;
-    $cachedAnnotationReader = new Doctrine\Common\Annotations\CachedReader(
+    $annotationReader = new \Doctrine\Common\Annotations\AnnotationReader;
+    $cachedAnnotationReader = new \Doctrine\Common\Annotations\CachedReader(
       $annotationReader, // use reader
       $cache // and a cache driver
     );
 
     // create a driver chain for metadata reading
-    $driverChain = new Doctrine\ORM\Mapping\Driver\DriverChain();
+    $driverChain = new \Doctrine\ORM\Mapping\Driver\DriverChain();
 
     // load superclass metadata mapping only, into driver chain
     // also registers Gedmo annotations.NOTE: you can personalize it
-    Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
+    \Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
       $driverChain, // our metadata driver chain, to hook into
       $cachedAnnotationReader // our cached annotation reader
     );
 
     // now we want to register our application entities,
     // for that we need another metadata driver used for Entity namespace
-    $annotationDriver = new Doctrine\ORM\Mapping\Driver\AnnotationDriver(
+    $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver(
       $cachedAnnotationReader, // our cached annotation reader
       self::ENTITY_PATHS, // paths to look in
     );
 
     // NOTE: driver for application Entity can be different, Yaml, Xml or whatever
     // register annotation driver for our application Entity namespace
-    $driverChain->addDriver($annotationDriver, 'OCA\CAFEVDB\Database\Doctrine\ORM\Entities');
+    $driverChain->addDriver($annotationDriver, 'OCA\CAFEVDB\Database\\Doctrine\ORM\Entities');
 
     // general ORM configuration
-    $config = new Doctrine\ORM\Configuration;
+    $config = new \Doctrine\ORM\Configuration;
     $config->setProxyDir(self::PROXY_DIR);
-    $config->setProxyNamespace('OCA\CAFEVDB\Database\Doctrine\ORM\Proxies');
+    $config->setProxyNamespace('OCA\CAFEVDB\Database\\Doctrine\ORM\Proxies');
     $config->setAutoGenerateProxyClasses(self::DEV_MODE); // this can be based on production config.
 
     // register metadata driver
@@ -233,31 +237,31 @@ class EntityManager extends EntityManagerDecorator
     $config->setQueryCacheImpl($cache);
 
     // Third, create event manager and hook prefered extension listeners
-    $evm = new Doctrine\Common\EventManager();
+    $evm = new \Doctrine\Common\EventManager();
 
     // gedmo extension listeners
 
     // loggable
-    $loggableListener = new Gedmo\Loggable\LoggableListener;
+    $loggableListener = new \Gedmo\Loggable\LoggableListener;
     $loggableListener->setAnnotationReader($cachedAnnotationReader);
     $loggableListener->setUsername($this->encryptionService->userId());
     $evm->addEventSubscriber($loggableListener);
 
     // timestampable
-    $timestampableListener = new Gedmo\Timestampable\TimestampableListener();
+    $timestampableListener = new \Gedmo\Timestampable\TimestampableListener();
     $timestampableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($timestampableListener);
 
     // soft deletable
-    $config->addFilter('soft-deleteable', 'Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter');
+    $config->addFilter('soft-deleteable', '\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter');
 
     // sortable
-    $sortableListener = new Gedmo\Sortable\SortableListener;
+    $sortableListener = new \Gedmo\Sortable\SortableListener;
     $sortableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($sortableListener);
 
     // mysql set names UTF-8 if required
-    $evm->addEventSubscriber(new Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
+    $evm->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
 
     return [ $config, $evm ];
   }
