@@ -61,18 +61,30 @@ class ProjectParticipants extends PMETableViewBase
    * @const list of join-tables which cannot be updated directly,
    * handled in the varous "beforeSOMETHING" trigger functions.
    */
-  const JOIN_TABLES = [
-    self::MUSICIANS_TABLE => [
+  const TABLES = [
+    [
+      'table' => self::TABLE,
+      'master' => true,
+      'entity' => Entities\ProjectParticipant::class,
+      'identifier' => [
+        'project_id' => 'project_id',
+        'musician_id' => 'musician_id',
+      ],
+    ],
+    [
+      'table' => self::MUSICIANS_TABLE,
       'entity' => Entities\Musician::class,
       'identifier' => [ 'id' => 'musician_id' ],
       'column' => 'id',
     ],
-    self::PROJECTS_TABLE => [
+    [
+      'table' => self::PROJECTS_TABLE,
       'entity' => Entities\Project::class,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
     ],
-    self::PROJECT_INSTRUMENTS_TABLE => [
+    [
+      'table' => self::PROJECT_INSTRUMENTS_TABLE,
       'entity' => Entities\ProjectInstrument::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -82,7 +94,8 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'instrument_id',
       'group_by' => true,
     ],
-    self::MUSICIAN_INSTRUMENT_TABLE => [
+    [
+      'table' => self::MUSICIAN_INSTRUMENT_TABLE,
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
         'instrument_id' => false,
@@ -91,13 +104,15 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'instrument_id',
     ],
     // in order to get the participation in all projects
-    self::TABLE => [
+    [
+      'table' => self::TABLE,
       'entity' => Entities\ProjectParticipant::class,
       'identifier' => [
         'project_id' => false,
         'musician_id' => 'musician_id',
       ],
       'column' => 'project_id',
+      'read_only' => true,
     ],
   ];
 
@@ -250,7 +265,11 @@ class ProjectParticipants extends PMETableViewBase
       'sort'     => true,
     );
 
-    foreach (self::JOIN_TABLES as $table => $joinInfo) {
+    foreach (self::TABLES as $joinInfo) {
+      if (!empty($joinInfo['master'])) {
+        continue;
+      }
+      $table = $joinInfo['table'];
 
       $joinIndex[$table] = count($opts['fdd']);
       $joinTable[$table] = 'PMEjoin'.$joinIndex[$table];
@@ -371,6 +390,7 @@ class ProjectParticipants extends PMETableViewBase
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
+      'sqlw' => 'IF($val_qas = "", 0, 1)',
       'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
       'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
       'tooltip' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
@@ -1715,8 +1735,12 @@ class ProjectParticipants extends PMETableViewBase
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
-    foreach (self::JOIN_TABLES as $table => $joinInfo) {
-      if ($table == self::TABLE || empty($changeSets[$table])) {
+    foreach (self::TABLES as $joinInfo) {
+      if (!empty($joinInfo['read_only'])) {
+        continue;
+      }
+      $table = $joinInfo['table'];
+      if (empty($changeSets[$table])) {
         continue;
       }
       $changeSet = $changeSets[$table];
