@@ -658,6 +658,18 @@ class ProjectParticipants extends PMETableViewBase
           "options" => 'LFAVCPDR',
         ]));
 
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'created',
+      array_merge(
+        $this->defaultFDD['datetime'],
+        [
+          'tab' => ['id' => 'miscinfo'],
+          "name" => $this->l->t("Created"),
+          "default" => date($this->defaultFDD['datetime']['datemask']),
+          "nowrap" => true,
+          "options" => 'LFAVCPDR',
+        ]));
+
     //////// END Field definitions
 
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];

@@ -586,6 +586,18 @@ make sure that the musicians are also automatically added to the
         ]
       );
 
+    $opts['fdd']['created'] =
+      array_merge(
+        $this->defaultFDD['datetime'],
+        [
+          'tab' => ['id' => 'miscinfo'],
+          "name" => $this->l->t("Created"),
+          "default" => date($this->defaultFDD['datetime']['datemask']),
+          "nowrap" => true,
+          "options" => 'LFAVCPDR' // Set by update trigger.
+        ]
+      );
+
     if ($this->projectMode) {
       //$key = 'qf'.$projectsIdx;
       $projects = "GROUP_CONCAT(DISTINCT `PMEjoin{$projectsIdx}`.`Name`)";

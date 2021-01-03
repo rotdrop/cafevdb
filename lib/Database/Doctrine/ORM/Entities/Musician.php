@@ -32,6 +32,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="Musicians")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Musician implements \ArrayAccess
 {
@@ -145,6 +146,13 @@ class Musician implements \ArrayAccess
    * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
    */
   private $disabled = '0';
+
+  /**
+   * @var \DateTime|null
+   *
+   * @ORM\Column(type="datetime", nullable=true)
+   */
+  private $created;
 
   /**
    * @var \DateTime|null
