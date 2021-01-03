@@ -746,7 +746,7 @@ class EventsService
    * @param $projectId The project key.
    * @param $eventURI The event uri.
    *
-   * @return Undefined.
+   * @return undefined
    */
   public function unchain($projectId, $eventURI)
   {
@@ -773,7 +773,7 @@ class EventsService
    * @param $projectId The project key.
    * @param $eventURI The event key (external key).
    *
-   * @return @c true if the event is registered, otherwise false.
+   * @return bool @c true if the event is registered, otherwise false.
    */
   private function isRegistered($projectId, $eventURI)
   {
@@ -805,7 +805,7 @@ class EventsService
    * in seconds (i.e. time-stamp diff). The function may throw
    * errors.
    *
-   * @return task-uri on success, null on error.
+   * @return string task-uri on success, null on error.
    */
   public function newTask($taskData)
   {
