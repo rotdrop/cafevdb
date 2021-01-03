@@ -303,7 +303,7 @@ class ChangeLog
    */
   public function setOldval($oldval = null)
   {
-    $this->oldval = $oldval;
+    $this->oldval = $this->stringize($oldval);
 
     return $this;
   }
@@ -327,7 +327,7 @@ class ChangeLog
    */
   public function setNewval($newval = null)
   {
-    $this->newval = $newval;
+    $this->newval = $this->stringize($newval);
 
     return $this;
   }
@@ -340,5 +340,19 @@ class ChangeLog
   public function getNewval()
   {
     return $this->newval;
+  }
+
+  private function stringize($value)
+  {
+    try {
+      $value = (string)$value;
+    } catch (\Throwable $t) {
+      try {
+        $value = serialize($value);
+      } catch (\Throwable $t) {
+        $value = 'Unpresentable Value';
+      }
+    }
+    return $value;
   }
 }
