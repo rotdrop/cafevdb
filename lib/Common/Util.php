@@ -192,6 +192,24 @@ __EOT__;
   {
     return strtolower(preg_replace('/([A-Z])/', $separator.'$1', lcfirst($string)));
   }
+
+  /**
+   * Unset all array elements with value $value.
+   *
+   * @param array $hayStack The array to modify.
+   *
+   * @param mixed $value The value to remove.
+   *
+   * @return array The resulting array. Note that $hayStack is also
+   * passed by reference.
+   */
+  public static function unsetValue(array &$hayStack, $value)
+  {
+    while (($key = array_search($value, $hayStack)) !== false) {
+      unset($hayStack[$key]);
+    }
+    return $hayStack;
+  }
 }
 
 // Local Variables: ***
