@@ -35,7 +35,7 @@ trait ArrayTrait
    * @ORM\PostLoad
    */
   protected function arrayCTOR() {
-    $this->keys = (new \ReflectionClass(get_class($this)))
+    $this->keys = (new \ReflectionClass(__CLASS__))
                 ->getProperties(\ReflectionProperty::IS_PRIVATE);
 
     $this->keys = array_map(function($property) {
@@ -72,7 +72,7 @@ trait ArrayTrait
       $method = self::methodName('set', $offset);
       $this->$method($value);
     } else {
-      throw new \Exception("$offset does not exist");
+      throw new \Exception("Offset ".self::offsetNormalize($offset)." does not exist, keys ".print_r($this->keys, true));
     }
   }
 
