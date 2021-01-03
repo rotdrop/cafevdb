@@ -88,7 +88,7 @@ class Project implements \ArrayAccess
    *
    * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
    */
-  private $disabled = '0';
+  private $disabled = false;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentation", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")

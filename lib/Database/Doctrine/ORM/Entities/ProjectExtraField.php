@@ -132,9 +132,9 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * @var bool
    *
-   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
+   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
    */
-  private $disabled = '0';
+  private $disabled = false;
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectExtraFieldType")
