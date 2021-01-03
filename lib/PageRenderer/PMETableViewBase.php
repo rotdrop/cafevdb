@@ -32,11 +32,16 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+
 /** Base for phpMyEdit based table-views. */
 abstract class PMETableViewBase extends Renderer implements IPageRenderer
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  const JOIN_FIELD_NAME_SEPARATOR = ':';
 
   protected $requestParameters;
 
@@ -72,6 +77,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   protected $pageNavigation;
 
+  protected $joinStructure = [];
+
   protected function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
@@ -79,7 +86,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     , PHPMyEdit $phpMyEdit
     , ChangeLogService $changeLogService
     , ToolTipsService $toolTipsService
-    , Util\Navigation $pageNavigation
+    , PageNavigation $pageNavigation
   ) {
     $this->configService = $configService;
     $this->requestParameters = $requestParameters;
@@ -390,6 +397,387 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
 
     return true;
+  }
+
+  /**
+   * Before update-trigger which ideally should update all data such
+   * that nothing remains to do for phpMyEdit.
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
+   */
+  public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    $this->logInfo('OLDVALS '.print_r($oldvals, true));
+    $this->logInfo('NEWVALS '.print_r($newvals, true));
+    $this->logInfo('CHANGED '.print_r($changed, true));
+    $changeSets = [];
+    foreach ($changed as $field) {
+      $fieldInfo = $this->joinTableField($field);
+      $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
+    }
+    foreach ($this->joinStructure as $joinInfo) {
+      if (!empty($joinInfo['read_only'])) {
+        continue;
+      }
+      $table = $joinInfo['table'];
+      if (empty($changeSets[$table])) {
+        continue;
+      }
+      $changeSet = $changeSets[$table];
+      //$this->logInfo('CHANGESETS '.$table.' '.print_r($changeSet, true));
+      $entityClass = $joinInfo['entity'];
+      $repository = $this->getDatabaseRepository($entityClass);
+      $meta = $this->classMetadata($entityClass);
+      //$this->logInfo('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
+
+      $identifier = [];
+      $identifierColumns = $meta->getIdentifierColumnNames();
+      foreach ($identifierColumns as $key) {
+        if (empty($joinInfo['identifier'][$key])) {
+          // assume that the 'column' component contains the keys.
+          $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+          $identifier[$key] = [
+            'old' => explode(',', $oldvals[$keyField]),
+            'new' => explode(',', $newvals[$keyField]),
+          ];
+
+          $identifier[$key]['del'] = array_diff($identifier[$key]['old'], $identifier[$key]['new']);
+          $identifier[$key]['add'] = array_diff($identifier[$key]['new'], $identifier[$key]['old']);
+          $identifier[$key]['rem'] = array_intersect($identifier[$key]['new'], $identifier[$key]['old']);
+
+          Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
+          unset($changeSet[$joinInfo['column']]);
+          $multiple = $key;
+        } else {
+          $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
+        }
+      }
+      $this->logInfo('Keys Values: '.print_r($identifier, true));
+      if (!empty($multiple)) {
+        foreach ($identifier[$multiple]['old'] as $oldKey) {
+          $oldIdentifier[$oldKey] = $identifier;
+          $oldIdentifier[$oldKey][$multiple] = $oldKey;
+        }
+        foreach ($identifier[$multiple]['new'] as $newKey) {
+          $newIdentifier[$newKey] = $identifier;
+          $newIdentifier[$newKey][$multiple] = $newKey;
+        }
+
+        // Delete removed entities
+        foreach ($identifier[$multiple]['del'] as $del) {
+          $id = $oldIdentifier[$del];
+          $entityId = $this->makeJoinTableId($meta, $id);
+          $entity = $this->find($entityId);
+          foreach ($this->entityManager->wrapped->unitOfWork->identityMap as $blah => $blub) {
+            $this->logInfo(print_r(array_keys($blub), true));
+          }
+          $this->remove($entityId);
+          $this->changeLogService->logDelete($table, $id, $id);
+        }
+
+        // Add new entities
+        foreach ($identifier[$multiple]['new'] as $new) {
+          $id = $newIdentifier[$new];
+          $entityId = $this->makeJoinTableId($meta, $id);
+          if (isset($identifier[$multiple]['add'][$new])) {
+            $entity = $entityClass::create();
+            foreach ($entityId as $key => $value) {
+              $entity[$key] = $value;
+            }
+            $this->changeLogService->logInsert($table, $id, $id);
+          } else if (!empty($changeSet)) {
+            $entity = $this->find($entityId);
+            // @TODO real update
+            $this->changeLogService->logUpdate($table, $id, $id, $id);
+          } else {
+            continue;
+          }
+
+          // set further properties ...
+          if (!empty($changeSet)) {
+            throw new \Exception($this->l->t('Unimplemented'));
+            foreach ($changeSet as $column => $field) {
+              Util::unsetValue($changed, $field);
+            }
+          }
+
+          // persist
+          $this->persist($entity);
+        }
+      } else { // !multiple, simply update
+        if (false) {
+          // probably  easier
+          $entityId = $this->makeJoinTableId($meta, $identifier);
+          $entity = $this->find($entityId);
+          $logOld = [];
+          $logNew = [];
+          foreach ($changeSet as $column => $field) {
+            $entity[$column] = $newvals[$field];
+            Util::unsetValue($changed, $field);
+            $logOld[$column] = $oldvals[$field];
+            $logNew[$column] = $newvals[$field];
+          }
+          $this->changeLogService->logUpdate($table, $entityId, $logOld, $logNew);
+        } else {
+          // probably faster, but life-cycle callbacks and events are
+          // not handled.
+
+          // hack 'updated' column, ugly, but should work
+          if (isset($meta->fieldNames['updated'])) {
+            $changeSet['updated'] = $this->joinTableFieldName($joinInfo, 'updated');
+            $newvals[$changeSet['updated']] = new \DateTime();
+          }
+          $qb = $repository->createQueryBuilder('e')
+                           ->update();
+          $logOld = [];
+          $logNew = [];
+          foreach ($changeSet as $column => $field) {
+            $qb->set('e.'.$this->property($column), ':'.$column)
+               ->setParameter($column, $newvals[$field]);
+            $this->logInfo("Unset $field in changed");
+            Util::unsetValue($changed, $field);
+            $logOld[$column] = $oldvals[$field];
+            $logNew[$column] = $newvals[$field];
+          }
+          foreach ($identifier as $column => $value) {
+            $qb->andWhere('e.'.$this->property($column).' = :'.$key)
+               ->setParameter($key, $value);
+          }
+          $qb->getQuery()
+             ->execute();
+          $this->changeLogService->logUpdate($table, $identifier, $logOld, $logNew);
+        }
+      }
+    }
+    $this->flush(); // flush everything to the data-base
+    if (!empty($changed)) {
+      throw new \Exception('Change-set '.print_r($changed, true).' should be empty.');
+    }
+    return false; // nothing left to do
+  }
+
+  /**
+   * Define a basic join-structure for phpMyEdit by using the
+   * information from self::$joinStructure.
+   *
+   * @param array $opts phpMyEdit options.
+   *
+   * @return array ```[ TABLE_NAME => phpMyEdit_alias ]```
+   */
+  protected function defineJoinStructure(array &$opts)
+  {
+    foreach ($this->joinStructure as $joinInfo) {
+      if (!empty($joinInfo['master'])) {
+        continue;
+      }
+      $table = $joinInfo['table'];
+
+      $joinIndex[$table] = count($opts['fdd']);
+      $joinTable[$table] = 'PMEjoin'.$joinIndex[$table];
+      $fqnColumn = $joinTable[$table].'.'.$joinInfo['column'];
+
+      $group = false;
+      $joinData = [];
+      foreach ($joinInfo['identifier'] as $joinTableKey => $mainTableKey) {
+        if (empty($mainTableKey)) {
+          $group = true;
+          continue;
+        }
+        $joinData[] = '$main_table.'.$mainTableKey.' = $join_table.'.$joinTableKey;
+      }
+      $fieldName = $this->joinTableMasterFieldName($table);
+      $opts['fdd'][$fieldName] = [
+        'tab' => 'all',
+        'name' => $fieldName,
+        'input' => 'HV',
+        'sql' => ($group
+                  ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC)'
+                  : '$join_col_fqn'),
+        'options' => '',
+        'sort' => true,
+        'values' => [
+          'table' => $table,
+          'column' => $joinInfo['column'],
+          'join' => implode(' AND ', $joinData),
+        ],
+      ];
+      if (!empty($joinInfo['group_by'])) {
+        $opts['groupby_fields'][] = $fieldName;
+        // use simple field grouping for list operation
+        $sql = $opts['fdd'][$fieldName]['sql'];
+        $opts['fdd'][$fieldName]['sql|L'] = '$join_col_fqn';
+      }
+      $this->logDebug('JOIN '.print_r($opts['fdd'][$fieldName], true));
+    }
+    if (!empty($opts['groupby_fields'])) {
+      $opts['groupby_fields'] = array_merge(array_keys($opts['key']), $opts['groupby_fields']);
+      $this->logDebug('GROUP_BY '.print_r($opts['groupby_fields'], true));
+    }
+    return $joinTable;
+  }
+
+  /**
+   * The name of the master join table field which triggers PME to
+   * actually do the join.
+   *
+   * @param string|array $tableInfo @see joinTableFieldName().
+   *
+   * @return string
+   */
+  protected function joinTableMasterFieldName($tableInfo)
+  {
+    if (is_array($tableInfo)) {
+      $table = $tableInfo['table'];
+    } else {
+      $table = $tableInfo;
+    }
+    return $table.'_key';
+  }
+
+  /**
+   * The name of the field-descriptor for a join-table field
+   * referencing a master-join-table.
+   *
+   * @param string|array $table Table-description-data
+   * ```
+   * [
+   *   'table' => SQL_TABLE_NAME,
+   *   'entity' => DOCTRINE_ORM_ENTITY_CLASS_NAME,
+   *   'master' => bool optional master-table
+   *   'read_only' => bool optional not considered for update
+   *   'column' => column used in select statements
+   *   'identifier' => [
+   *     TO_JOIN_TABLE_COLUMN => ALREADY_THERE_COLUMN_NAME,
+   *     ...
+   *   ]
+   * ]
+   * ```
+   *
+   * @param string $column column to generate a query field for. This
+   * is another column different from $tableInfo['column'] in order to
+   * generate further query fields from an existing join-table.
+   *
+   * @return string Cooked field-name composed of $tableInfo and $column.
+   *
+   */
+  protected function joinTableFieldName($tableInfo, string $column)
+  {
+    if (is_array($tableInfo)) {
+      if (!empty($tableInfo['master'])) {
+        return $column;
+      }
+      $table = $tableInfo['table'];
+    } else {
+      $table = $tableInfo;
+    }
+    return $table.self::JOIN_FIELD_NAME_SEPARATOR.$column;
+  }
+
+  /**
+   * Inverse of self::joinTableFieldName().
+   */
+  protected function joinTableField(string $fieldName)
+  {
+    $parts = explode(self::JOIN_FIELD_NAME_SEPARATOR, $fieldName);
+    if (count($parts) == 1) {
+      $parts[1] = $parts[0];
+      $parts[0] = self::TABLE;
+    }
+    return [
+      'table' => $parts[0],
+      'column' => $parts[1],
+    ];
+  }
+
+  /**
+   * Compute the index into the phpMyEdit field-description data of
+   * the given $tableInfo and $column.
+   *
+   * @param array $fieldDescriptionData See phpMyEdit source code and
+   * look-out for "fdd"
+   *
+   * @param string|array $tableInfo @see joinTableFieldName().
+   *
+   * @param string $column @see joinTableFieldName().
+   */
+  protected function fieldIndex(array $fieldDescriptionData, array $tableInfo, string $column)
+  {
+    $fieldName = $this->joinTableFieldName($tableInfo, $column);
+    return array_search($fieldName, array_keys($fieldDescriptionData));
+  }
+
+  /**
+   * Generate a join-table field, given join-table and field name.
+   *
+   * @param array $fieldDescriptionData See phpMyEdit source code and
+   * look-out for "fdd"
+   *
+   * @param string|array $tableInfo @see joinTableFieldName().
+   *
+   * @param string $column SQL column.
+   *
+   * @param array $fdd Override FDD, see phpMyEdit.
+   */
+  protected function makeJoinTableField(array &$fieldDescriptionData, $tableInfo, string $column, array $fdd)
+  {
+    $masterFieldName = $this->joinTableMasterFieldName($tableInfo);
+    $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
+    if ($joinIndex === false) {
+      $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
+      throw new \Exception($this->l->t("Master join-table field for %s not found.", $table));
+    }
+    $fieldName = $this->joinTableFieldName($tableInfo, $column);
+    $defaultFDD = [
+      'select' => 'T',
+      'maxlen' => 128,
+      'sort' => true,
+      'input' => 'S',
+      'values' => [
+        'column' => $column,
+        'join' => [ 'reference' => $joinIndex, ],
+      ],
+    ];
+    $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
+  }
+
+  /**
+   * Generate ids for use with Doctrine/ORM from home-brewn table values.
+   *
+   * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Class-meta.
+   *
+   * @param array $idValues
+   *
+   * @return array
+   */
+  protected function makeJoinTableId($meta, $idValues)
+  {
+    $entityId = [];
+    foreach ($meta->identifier as $metaId) {
+      if (isset($idValues[$metaId])) {
+        $columnName = $metaId;
+      } else if (isset($meta->associationMappings[$metaId])) {
+        if (count($meta->associationMappings[$metaId]['joinColumns']) != 1) {
+          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+        }
+        $columnName = $meta->associationMappings[$metaId]['joinColumns'][0]['name'];
+      } else {
+        throw new \Exception($this->l->t('Unexpected id: %s', $metaId));
+      }
+      $entityId[$metaId] = $idValues[$columnName];
+    }
+    return $entityId;
   }
 
 }

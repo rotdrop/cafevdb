@@ -41,7 +41,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Navigation;
 
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
@@ -61,7 +60,7 @@ class ProjectParticipants extends PMETableViewBase
    * @const list of join-tables which cannot be updated directly,
    * handled in the varous "beforeSOMETHING" trigger functions.
    */
-  const TABLES = [
+  protected $joinStructure = [
     [
       'table' => self::TABLE,
       'master' => true,
@@ -116,10 +115,10 @@ class ProjectParticipants extends PMETableViewBase
     ],
   ];
 
-  /** @var GeoCodingService */
+  /** @var \OCA\CAFEVDB\Service\GeoCodingService */
   private $geoCodingService;
 
-  /** @var \OCA\CAFEVDB\ServicePhoneNumberService */
+  /** @var \OCA\CAFEVDB\Service\PhoneNumberService */
   private $phoneNumberService;
 
   /** @var \OCA\CAFEVDB\PageRenderer\Musicians */
@@ -265,53 +264,7 @@ class ProjectParticipants extends PMETableViewBase
       'sort'     => true,
     );
 
-    foreach (self::TABLES as $joinInfo) {
-      if (!empty($joinInfo['master'])) {
-        continue;
-      }
-      $table = $joinInfo['table'];
-
-      $joinIndex[$table] = count($opts['fdd']);
-      $joinTable[$table] = 'PMEjoin'.$joinIndex[$table];
-      $fqnColumn = $joinTable[$table].'.'.$joinInfo['column'];
-
-      $group = false;
-      $joinData = [];
-      foreach ($joinInfo['identifier'] as $joinTableKey => $mainTableKey) {
-        if (empty($mainTableKey)) {
-          $group = true;
-          continue;
-        }
-        $joinData[] = '$main_table.'.$mainTableKey.' = $join_table.'.$joinTableKey;
-      }
-      $fieldName = $this->joinTableMasterFieldName($table);
-      $opts['fdd'][$fieldName] = [
-        'tab' => 'all',
-        'name' => $fieldName,
-        'input' => 'HV',
-        'sql' => ($group
-                  ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC)'
-                  : '$join_col_fqn'),
-        'options' => '',
-        'sort' => true,
-        'values' => [
-          'table' => $table,
-          'column' => $joinInfo['column'],
-          'join' => implode(' AND ', $joinData),
-        ],
-      ];
-      if (!empty($joinInfo['group_by'])) {
-        $opts['groupby_fields'][] = $fieldName;
-        // use simple field grouping for list operation
-        $sql = $opts['fdd'][$fieldName]['sql'];
-        $opts['fdd'][$fieldName]['sql|L'] = '$join_col_fqn';
-      }
-      $this->logDebug('JOIN '.print_r($opts['fdd'][$fieldName], true));
-    }
-    if (!empty($opts['groupby_fields'])) {
-      $opts['groupby_fields'] = array_merge(array_keys($opts['key']), $opts['groupby_fields']);
-      $this->logDebug('GROUP_BY '.print_r($opts['groupby_fields'], true));
-    }
+    $joinTable = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'first_name',
@@ -693,7 +646,7 @@ class ProjectParticipants extends PMETableViewBase
     //////// END Field definitions
 
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateTrigger' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
@@ -1708,153 +1661,6 @@ class ProjectParticipants extends PMETableViewBase
     }
   }
 
-  /**
-   * phpMyEdit calls the trigger (callback) with the following arguments:
-   *
-   * @param $pme The phpMyEdit instance
-   *
-   * @param $op The operation, 'insert', 'update' etc.
-   *
-   * @param $step 'before' or 'after'
-   *
-   * @param $oldvals Self-explanatory.
-   *
-   * @param &$changed Set of changed fields, may be modified by the callback.
-   *
-   * @param &$newvals Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   */
-  public function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
-  {
-    $this->logInfo('OLDVALS '.print_r($oldvals, true));
-    $this->logInfo('NEWVALS '.print_r($newvals, true));
-    $this->logInfo('CHANGED '.print_r($changed, true));
-    $changeSets = [];
-    foreach ($changed as $field) {
-      $fieldInfo = $this->joinTableField($field);
-      $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
-    }
-    foreach (self::TABLES as $joinInfo) {
-      if (!empty($joinInfo['read_only'])) {
-        continue;
-      }
-      $table = $joinInfo['table'];
-      if (empty($changeSets[$table])) {
-        continue;
-      }
-      $changeSet = $changeSets[$table];
-      $this->logInfo('CHANGESETS '.$table.' '.print_r($changeSet, true));
-      $entityClass = $joinInfo['entity'];
-      $repository = $this->getDatabaseRepository($entityClass);
-      $meta = $this->classMetadata($entityClass);
-      //$this->logInfo('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
-
-      $identifier = [];
-      $identifierColumns = $meta->getIdentifierColumnNames();
-      foreach ($identifierColumns as $key) {
-        if (empty($joinInfo['identifier'][$key])) {
-          // assume that the 'column' component contains the keys.
-          $keyField = $this->joinTableFieldName($table, $joinInfo['column']);
-          $identifier[$key] = [
-            'old' => explode(',', $oldvals[$keyField]),
-            'new' => explode(',', $newvals[$keyField]),
-          ];
-
-          $identifier[$key]['del'] = array_diff($identifier[$key]['old'], $identifier[$key]['new']);
-          $identifier[$key]['add'] = array_diff($identifier[$key]['new'], $identifier[$key]['old']);
-          $identifier[$key]['rem'] = array_intersect($identifier[$key]['new'], $identifier[$key]['old']);
-
-          unset($changeSet[$joinInfo['column']]);
-          $multiple = $key;
-        } else {
-          $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
-        }
-      }
-      $this->logInfo('Keys Values: '.print_r($identifier, true));
-      if (!empty($multiple)) {
-        foreach ($identifier[$multiple]['old'] as $oldKey) {
-          $oldIdentifier[$oldKey] = $identifier;
-          $oldIdentifier[$oldKey][$multiple] = $oldKey;
-        }
-        foreach ($identifier[$multiple]['new'] as $newKey) {
-          $newIdentifier[$newKey] = $identifier;
-          $newIdentifier[$newKey][$multiple] = $newKey;
-        }
-
-        // Delete removed entities
-        foreach ($identifier[$multiple]['del'] as $del) {
-          $id = $oldIdentifier[$del];
-          $entityId = $this->makeJoinTableId($meta, $id);
-          $entity = $this->find($entityId);
-          foreach ($this->entityManager->wrapped->unitOfWork->identityMap as $blah => $blub) {
-            $this->logInfo(print_r(array_keys($blub), true));
-          }
-          $this->remove($entityId);
-          $this->changeLogService->logDelete($table, $id, $id);
-        }
-        $this->flush();
-
-        // Add new entities
-        foreach ($identifier[$multiple]['new'] as $new) {
-          $id = $newIdentifier[$new];
-          $entityId = $this->makeJoinTableId($meta, $id);
-          if (isset($identifier[$multiple]['add'][$new])) {
-            $entity = $entityClass::create();
-            foreach ($entityId as $key => $value) {
-              $entity[$key] = $value;
-            }
-          } else if (!empty($changeSet)) {
-            $entity = $this->find($entityId);
-          } else {
-            continue;
-          }
-          // set further properties ...
-          if (!empty($changeSet)) {
-            throw new \Exception($this->l->t('Unimplemented'));
-          }
-          // persist
-          $this->persist($entity);
-          $this->flush($entity);
-        }
-      } else { // !multiple, simply update
-        if (false) {
-          // probably  easier
-          $entityId = $this->makeJoinTableId($meta, $identifier);
-          $entity = $this->find($entityId);
-          foreach ($changeSet as $column => $field) {
-            $entity[$column] = $newvals[$field];
-            unset($changed[$field]);
-          }
-          $this->flush($entity);
-        } else {
-          // probably faster, but life-cycle callbacks and events are
-          // not handled.
-
-          // hack 'updated' column, ugly, but should work
-          if (isset($meta->fieldNames['updated'])) {
-            $changeSet['updated'] = $this->joinTableFieldName($table, 'updated');
-            $newvals[$changeSet['updated']] = new \DateTime();
-          }
-          $qb = $repository->createQueryBuilder('e')
-                           ->update();
-          foreach ($changeSet as $column => $field) {
-            $qb->set('e.'.$this->property($column), ':'.$column)
-               ->setParameter($column, $newvals[$field]);
-            unset($changed[$field]);
-          }
-          foreach ($identifier as $column => $value) {
-            $qb->andWhere('e.'.$this->property($column).' = :'.$key)
-               ->setParameter($key, $value);
-          }
-          $qb->getQuery()
-             ->execute();
-        }
-      }
-    }
-    return false;
-  }
-
   private function tableTabId($idOrName)
   {
     $dflt = $this->defaultTableTabs();
@@ -1950,101 +1756,6 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     return array_merge($dfltTabs, $extraTabs);
-  }
-
-  /**
-   * The name of the master join table field which triggers PME to
-   * actually do the join.
-   */
-  private function joinTableMasterFieldName(string $table)
-  {
-    return $table.'_key';
-  }
-
-  /**
-   * The name of the field-descriptor for a join-table field
-   * referencing a master-join-table.
-   */
-  private function joinTableFieldName(string $table, string $column)
-  {
-    return $table == self::TABLE ? $column : $table.self::JOIN_FIELD_NAME_SEPARATOR.$column;
-  }
-
-  /**
-   * Inverse of self::joinTableFieldName().
-   */
-  private function joinTableField(string $fieldName)
-  {
-    $parts = explode(self::JOIN_FIELD_NAME_SEPARATOR, $fieldName);
-    if (count($parts) == 1) {
-      $parts[1] = $parts[0];
-      $parts[0] = self::TABLE;
-    }
-    return [
-      'table' => $parts[0],
-      'column' => $parts[1],
-    ];
-  }
-
-  private function fieldIndex(array $fieldDescriptionData, string $table, string $column)
-  {
-    $fieldName = $this->joinTableFieldName($table, $column);
-    return array_search($fieldName, array_keys($fieldDescriptionData));
-  }
-
-  /**
-   * Generate a join-table field, given join-table and field name.
-   */
-  // $opts['fdd']['street'] = [
-  //   'name'     => $this->l->t('Street'),
-  //   'tab'      => [ 'id' => 'musician' ],
-  //   'css'      => ['postfix' => ' musician-address street'],
-  //   'select'   => 'T',
-  //   'maxlen'   => 128,
-  //   'sort'     => true,
-  //   'input'    => 'S',
-  //   'values' => [
-  //     'join' => [ 'reference' => $joinIndex[self::MUSICIANS_TABLE] ],
-  //   ],
-  // ];
-  private function makeJoinTableField(array &$fieldDescriptionData, string $table, string $column, array $fdd)
-  {
-    $masterFieldName = $this->joinTableMasterFieldName($table);
-    $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
-    if ($joinIndex === false) {
-      throw new \Exception($this->l->t("Master join-table field for %s not found.", $table));
-    }
-    $fieldName = $this->joinTableFieldName($table, $column);
-    $defaultFDD = [
-      'select' => 'T',
-      'maxlen' => 128,
-      'sort' => true,
-      'input' => 'S',
-      'values' => [
-        'column' => $column,
-        'join' => [ 'reference' => $joinIndex, ],
-      ],
-    ];
-    $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
-  }
-
-  private function makeJoinTableId($meta, $idValues)
-  {
-    $entityId = [];
-    foreach ($meta->identifier as $metaId) {
-      if (isset($idValues[$metaId])) {
-        $columnName = $metaId;
-      } else if (isset($meta->associationMappings[$metaId])) {
-        if (count($meta->associationMappings[$metaId]['joinColumns']) != 1) {
-          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
-        }
-        $columnName = $meta->associationMappings[$metaId]['joinColumns'][0]['name'];
-      } else {
-        throw new \Exception($this->l->t('Unexpected id: %s', $metaId));
-      }
-      $entityId[$metaId] = $idValues[$columnName];
-    }
-    return $entityId;
   }
 
 }
