@@ -38,231 +38,225 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class GeoPostalCode implements \ArrayAccess
 {
-    use CAFEVDB\Traits\ArrayTrait;
-    use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TimestampableTrait;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+  private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=2, nullable=false)
-     */
-    private $country;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=2, nullable=false)
+   */
+  private $country;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=32, nullable=false)
-     */
-    private $postalCode;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=32, nullable=false)
+   */
+  private $postalCode;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=650, nullable=false)
-     */
-    private $name;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=650, nullable=false)
+   */
+  private $name;
 
-    /**
-     * @var double
-     *
-     * @ORM\Column(type="float", nullable=false)
-     */
-    private $latitude;
+  /**
+   * @var double
+   *
+   * @ORM\Column(type="float", nullable=false)
+   */
+  private $latitude;
 
-    /**
-     * @var double
-     *
-     * @ORM\Column(type="float", nullable=false)
-     */
-    private $longitude;
+  /**
+   * @var double
+   *
+   * @ORM\Column(type="float", nullable=false)
+   */
+  private $longitude;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=false)
-     */
-    private $updated;
+  /**
+   * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslation", mappedBy="geoPostalCode", cascade={"all"})
+   */
+  private $translations;
 
-    /**
-     * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslation", mappedBy="geoPostalCode", cascade={"all"})
-     */
-    private $translations;
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->translations = new ArrayCollection();
+  }
 
-    public function __construct() {
-        $this->arrayCTOR();
-        $this->translations = new ArrayCollection();
-    }
+  /**
+   * Get id.
+   *
+   * @return int
+   */
+  public function getId()
+  {
+    return $this->id;
+  }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+  /**
+   * Set country.
+   *
+   * @param string $country
+   *
+   * @return GeoPostalCode
+   */
+  public function setCountry($country)
+  {
+    $this->country = $country;
 
-    /**
-     * Set country.
-     *
-     * @param string $country
-     *
-     * @return GeoPostalCode
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get country.
+   *
+   * @return string
+   */
+  public function getCountry()
+  {
+    return $this->country;
+  }
 
-    /**
-     * Get country.
-     *
-     * @return string
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
+  /**
+   * Set postalCode.
+   *
+   * @param string $postalCode
+   *
+   * @return GeoPostalCode
+   */
+  public function setPostalCode($postalCode)
+  {
+    $this->postalCode = $postalCode;
 
-    /**
-     * Set postalCode.
-     *
-     * @param string $postalCode
-     *
-     * @return GeoPostalCode
-     */
-    public function setPostalCode($postalCode)
-    {
-        $this->postalCode = $postalCode;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get postalCode.
+   *
+   * @return string
+   */
+  public function getPostalCode()
+  {
+    return $this->postalCode;
+  }
 
-    /**
-     * Get postalCode.
-     *
-     * @return string
-     */
-    public function getPostalCode()
-    {
-        return $this->postalCode;
-    }
+  /**
+   * Set name.
+   *
+   * @param string $name
+   *
+   * @return GeoPostalCode
+   */
+  public function setName($name)
+  {
+    $this->name = $name;
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return GeoPostalCode
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get name.
+   *
+   * @return string
+   */
+  public function getName()
+  {
+    return $this->name;
+  }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+  /**
+   * Set latitude.
+   *
+   * @param int $latitude
+   *
+   * @return GeoPostalCode
+   */
+  public function setLatitude($latitude)
+  {
+    $this->latitude = $latitude;
 
-    /**
-     * Set latitude.
-     *
-     * @param int $latitude
-     *
-     * @return GeoPostalCode
-     */
-    public function setLatitude($latitude)
-    {
-        $this->latitude = $latitude;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get latitude.
+   *
+   * @return int
+   */
+  public function getLatitude()
+  {
+    return $this->latitude;
+  }
 
-    /**
-     * Get latitude.
-     *
-     * @return int
-     */
-    public function getLatitude()
-    {
-        return $this->latitude;
-    }
+  /**
+   * Set longitude.
+   *
+   * @param double $longitude
+   *
+   * @return GeoPostalCode
+   */
+  public function setLongitude($longitude)
+  {
+    $this->longitude = $longitude;
 
-    /**
-     * Set longitude.
-     *
-     * @param double $longitude
-     *
-     * @return GeoPostalCode
-     */
-    public function setLongitude($longitude)
-    {
-        $this->longitude = $longitude;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get longitude.
+   *
+   * @return double
+   */
+  public function getLongitude()
+  {
+    return $this->longitude;
+  }
 
-    /**
-     * Get longitude.
-     *
-     * @return double
-     */
-    public function getLongitude()
-    {
-        return $this->longitude;
-    }
+  /**
+   * Set updated.
+   *
+   * @param \DateTime $updated
+   *
+   * @return GeoPostalCode
+   */
+  public function setUpdated($updated)
+  {
+    $this->updated = $updated;
 
-    /**
-     * Set updated.
-     *
-     * @param \DateTime $updated
-     *
-     * @return GeoPostalCode
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get updated.
+   *
+   * @return \DateTime
+   */
+  public function getUpdated()
+  {
+    return $this->updated;
+  }
 
-    /**
-     * Get updated.
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
-     * Get linked GeoPostalCodeTranslation entities.
-     *
-     * @return ArrayCollection[]
-     */
-    public function getTranslations()
-    {
-        return $this->translations;
-    }
+  /**
+   * Get linked GeoPostalCodeTranslation entities.
+   *
+   * @return ArrayCollection[]
+   */
+  public function getTranslations()
+  {
+    return $this->translations;
+  }
 }

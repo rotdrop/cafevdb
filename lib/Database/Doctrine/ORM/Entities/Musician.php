@@ -39,6 +39,7 @@ class Musician implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\UuidTrait;
+  use CAFEVDB\Traits\TimestampableTrait;
 
   /**
    * @var int
@@ -146,20 +147,6 @@ class Musician implements \ArrayAccess
    * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
    */
   private $disabled = '0';
-
-  /**
-   * @var \DateTime|null
-   *
-   * @ORM\Column(type="datetime", nullable=true)
-   */
-  private $created;
-
-  /**
-   * @var \DateTime|null
-   *
-   * @ORM\Column(type="datetime", nullable=true)
-   */
-  private $updated;
 
   /**
    * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", orphanRemoval=true)
@@ -556,30 +543,6 @@ class Musician implements \ArrayAccess
   public function getDisabled()
   {
     return $this->disabled;
-  }
-
-  /**
-   * Set updated.
-   *
-   * @param \DateTime|null $updated
-   *
-   * @return Musician
-   */
-  public function setUpdated($updated = null)
-  {
-    $this->updated = $updated;
-
-    return $this;
-  }
-
-  /**
-   * Get updated.
-   *
-   * @return \DateTime|null
-   */
-  public function getUpdated()
-  {
-    return $this->updated;
   }
 
   /**

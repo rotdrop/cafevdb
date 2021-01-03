@@ -37,6 +37,7 @@ class Project implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TimestampableTrait;
 
   /**
    * @var int
@@ -88,13 +89,6 @@ class Project implements \ArrayAccess
    * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
    */
   private $disabled = '0';
-
-  /**
-   * @var \DateTime|null
-   *
-   * @ORM\Column(type="datetime", nullable=true)
-   */
-  private $updated;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentation", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
@@ -347,30 +341,6 @@ class Project implements \ArrayAccess
   public function getDisabled()
   {
     return $this->disabled;
-  }
-
-  /**
-   * Set updated.
-   *
-   * @param \DateTime|null $updated
-   *
-   * @return Project
-   */
-  public function setUpdated($updated = null)
-  {
-    $this->updated = $updated;
-
-    return $this;
-  }
-
-  /**
-   * Get updated.
-   *
-   * @return \DateTime|null
-   */
-  public function getUpdated()
-  {
-    return $this->updated;
   }
 
   /**
