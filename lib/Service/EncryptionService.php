@@ -163,6 +163,14 @@ class EncryptionService
       && !empty($this->userPublicKey);
   }
 
+  /**
+   * Return bound user id
+   */
+  public function userId()
+  {
+    return $this->bound() ? $this->userId : null;
+  }
+
   public function getAppEncryptionKey()
   {
     return $this->appEncryptionKey;
