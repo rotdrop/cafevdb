@@ -54,21 +54,15 @@ class ProjectParticipants extends PMETableViewBase
   const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
   const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
 
-  const JOIN_FIELD_NAME_SEPARATOR = ':';
-
   /**
-   * @const list of join-tables which cannot be updated directly,
-   * handled in the varous "beforeSOMETHING" trigger functions.
+   * Join table structure. All update are handled in
+   * parent::beforeUpdateDoUpdateAll().
    */
   protected $joinStructure = [
     [
       'table' => self::TABLE,
       'master' => true,
       'entity' => Entities\ProjectParticipant::class,
-      'identifier' => [
-        'project_id' => 'project_id',
-        'musician_id' => 'musician_id',
-      ],
     ],
     [
       'table' => self::MUSICIANS_TABLE,
@@ -264,7 +258,7 @@ class ProjectParticipants extends PMETableViewBase
       'sort'     => true,
     );
 
-    $joinTable = $this->defineJoinStructure($opts);
+    $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'first_name',
@@ -311,14 +305,23 @@ class ProjectParticipants extends PMETableViewBase
         'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
         'select'      => 'M',
         //'filter'      => 'having', // need "HAVING" for group by stuff
-        'values' => [
+        'values|VDPC' => [
           'table'       => self::INSTRUMENTS_TABLE,
           'column'      => 'id',
           'description' => 'instrument',
           'orderby'     => '$table.sort_order ASC',
-          'join'        => '$join_col_fqn = '.$joinTable[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
+          'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
+          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENT_TABLE." mi WHERE \$record_id[project_id] = ".$projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
         ],
-        'values2' => $this->instrumentInfo['byId'],
+        'values|LF' => [
+          'table'       => self::INSTRUMENTS_TABLE,
+          'column'      => 'id',
+          'description' => 'instrument',
+          'orderby'     => '$table.sort_order ASC',
+          'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
+          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$projectId." = pi.project_id GROUP BY pi.project_id))",
+        ],
+        //'values2' => $this->instrumentInfo['byId'],
         'valueGroups' => $this->instrumentInfo['idGroups'],
       ]);
 
@@ -361,7 +364,6 @@ class ProjectParticipants extends PMETableViewBase
       'tab'         => [ 'id' => [ 'musician', 'instrumentation' ] ],
       'css'         => ['postfix' => ' musician-instruments tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
-      'input'       => 'S', // skip
       'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'select'      => 'M',
       //'filter'      => 'having', // ?????? need "HAVING" for group by stuff
@@ -370,8 +372,7 @@ class ProjectParticipants extends PMETableViewBase
         'column'      => 'id',
         'description' => 'instrument',
         'orderby'     => '$table.sort_order ASC',
-        //        'groups'      => 'Familie',
-        'join'        => '$join_col_fqn = '.$joinTable[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
+        'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -437,7 +438,7 @@ class ProjectParticipants extends PMETableViewBase
         'description' => 'name',
         'orderby' => '$table.year ASC, $table.name ASC',
         'groups' => 'year',
-        'join' => '$join_col_fqn = '.$joinTable[self::TABLE].'.project_id'
+        'join' => '$join_col_fqn = '.$joinTables[self::TABLE].'.project_id'
       ],
       // @TODO check whether this is still needed or 'groups' => 'year' is just fine.
       //'values2' => $projects,
