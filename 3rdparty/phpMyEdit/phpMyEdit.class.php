@@ -75,6 +75,11 @@ class phpMyEdit_timer /* {{{ */
 
 class phpMyEdit
 {
+	const COLUMN_ALIAS = 'PMEcolumn';
+	const TABLE_ALIAS = 'PMEalias';
+	const JOIN_ALIAS = 'PMEjoin';
+	const MAIN_ALIAS = 'PMEtable0';
+
 	// Class variables {{{
 
 	// Database handling
@@ -280,7 +285,7 @@ class phpMyEdit
 			// no need for fqn. ?
 			//$wparts[] = $this->fqn($key, true).' = '.$delim.$rec.$delim;
 			$wparts[] =
-				$this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$key.$this->ed.
+				$this->sd.self::MAIN_ALIAS.$this->ed.'.'.$this->sd.$key.$this->ed.
 				' = '.
 				$delim.$rec.$delim;
 		}
@@ -865,7 +870,7 @@ class phpMyEdit
 		$subquery = stripos($table, 'SELECT') !== false;
 		$table_name = $table;
 		if ($subquery) {
-			$table_name = 'PMEtablealias'.$field_num;
+			$table_name = self::TABLE_ALIAS.$field_num;
 			$from_table = '('.$table.') '.$table_name;
 		} else {
 			$table      = $this->sd.$table.$this->ed;
@@ -890,23 +895,29 @@ class phpMyEdit
 		if ($desc && is_array($desc) && is_array($desc['columns'])) {
 			$qparts['select'] .= ',CONCAT('; // )
 			$num_cols = sizeof($desc['columns']);
-			if (isset($desc['divs'][-1])) {
+			if (!empty($desc['divs'][-1]) && is_array($desc['divs'])) {
 				$qparts['select'] .= '"'.addslashes($desc['divs'][-1]).'",';
 			}
+			$selects = [];
 			foreach ($desc['columns'] as $key => $val) {
 				if ($val) {
-					$qparts['select'] .= 'IFNULL(CAST('.$this->sd.$val.$this->ed.' AS CHAR),';
+					$select = 'IFNULL(CAST('.$this->sd.$val.$this->ed.' AS CHAR),';
 					$null = empty($desc['ifnull'][$key]) ? '""' : $desc['ifnull'][$key];
-					$qparts['select'] .= $null.')';
-					if ($desc['divs'][$key]) {
-						$qparts['select'] .= ',"'.addslashes($desc['divs'][$key]).'"';
+					$select .= $null.')';
+					if (!empty($desc['divs'][$key]) && is_array($desc['divs'])) {
+						$select .= ',"'.addslashes($desc['divs'][$key]).'"';
 					}
-					$qparts['select'] .= ',';
+					$selects[] = $select;
 				}
 			}
+			$sep = ',';
+			if (is_string($desc['divs'])) {
+				$sep .= '"'.addslashes($desc['divs']).'",';
+			}
+			$qparts['select'] .= implode($sep, $selects).',';
 			$qparts['select'][strlen($qparts['select']) - 1] = ')';
-			$qparts['select'] .= ' AS '.$this->sd.'PMEalias'.$field_num.$this->ed;
-			$qparts['orderby'] = $this->sd.'PMEalias'.$field_num.$this->ed;
+			$qparts['select'] .= ' AS '.$this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
+			$qparts['orderby'] = $this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
 		} else if ($desc && is_array($desc)) {
 			// TODO
 		} else if ($desc) {
@@ -950,21 +961,52 @@ class phpMyEdit
 		return array('values' => $values, 'groups' => $grps, 'data' => $dt, 'titles' => $titles);
 	} /* }}} */
 
+	protected function join_table_reference($fdd)
+	{
+		if (!isset($fdd['values']['join']['reference'])) {
+			return false;
+		}
+		$ref = $fdd['values']['join']['reference'];
+		if (preg_match('/^(PMEjoin)?([0-9]+)$/', $ref, $matches)) {
+			return $matches[2];
+		}
+		return false;
+	}
+
+	/**
+	 * Compute join table reference index
+	 */
+	protected function join_table_index(int $field)
+	{
+		$fdd = $this->fdd[$field];
+		if (!isset($fdd['values']['join'])) {
+			return false;
+		}
+		if (!isset($fdd['values']['join']['reference'])) {
+			return $field;
+		}
+		return $this->join_table_reference($fdd);
+	}
+
+	/**
+	 * Compute $join_table name (maybe main-table if no info)
+	 */
+	protected function join_table_alias(int $field)
+	{
+		$fdd = $this->fdd[$field];
+		if (!isset($fdd['values']['join'])) {
+			return self::MAIN_ALIAS;
+		}
+		return self::JOIN_ALIAS.$this->join_table_index($field);
+	}
+
 	/**
 	 * Add some defaults for missing 'values' fields.
 	 */
 	protected function values_with_defaults(int $field)
 	{
 		$fdd = $this->fdd[$field];
-		if (!isset($fdd['values']['join'])) {
-			$join_table = 'PMEtable0';
-		} else {
-			$join_index = isset($fdd['values']['join']['reference'])
-						? $fdd['values']['join']['reference']
-						: $field;
-			$join_table = 'PMEjoin'.$join_index;
-		}
-
+		$join_table = $this->join_table_alias($field);
 		if (!isset($fdd['values']['column'])) {
 			$join_column = $this->fds[$field];
 		} else {
@@ -1007,7 +1049,7 @@ class phpMyEdit
 	{
 		$values = $this->values_with_defaults($field);
 
-		$main_table = $this->sd.'PMEtable0'.$this->ed;
+		$main_table = $this->sd.self::MAIN_ALIAS.$this->ed;
 		$join_table = $this->sd.$values['join_table'].$this->ed;
 		$join_column = $this->sd.$values['column'].$this->ed;
 		$join_col_fqn = $join_table.'.'.$join_column;
@@ -1053,41 +1095,38 @@ class phpMyEdit
 			$fdd = $this->fdd[$field];
 			if (isset($fdd['values']['description']) && ! $dont_desc) {
 
-				$join_index = isset($fdd['values']['join']['reference'])
-							? $fdd['values']['join']['reference']
-							: $field;
-				$join_table = 'PMEjoin'.$join_index;
+				$join_table = $this->join_table_alias($field);
 
 				$desc = $fdd['values']['description'];
 				if (is_array($desc) && is_array($desc['columns'])) {
 					$ret	  = 'CONCAT('; // )
 					$num_cols = sizeof($desc['columns']);
-					if (isset($desc['divs'][-1])) {
+					if (!empty($desc['divs'][-1]) && is_array($desc['divs'])) {
 						$ret .= '"'.addslashes($desc['divs'][-1]).'",';
 					}
+					$descFields = [];
 					foreach ($desc['columns'] as $key => $val) {
 						if ($val) {
-							$ret .= 'IFNULL(CAST('.$this->sd.$join_table.$this->ed.'.'.$this->sd.$val.$this->ed.' AS CHAR),';
+							$descField = 'IFNULL(CAST('.$this->sd.$join_table.$this->ed.'.'.$this->sd.$val.$this->ed.' AS CHAR),';
 							$null = empty($desc['ifnull'][$key]) ? '""' : $desc['ifnull'][$key];
-							$ret .= $null.')';
-							if ($desc['divs'][$key]) {
-								$ret .= ',"'.addslashes($desc['divs'][$key]).'"';
+							$descField .= $null.')';
+							if (!empty($desc['divs'][$key]) && is_array($desc['divs'])) {
+								$descField .= ',"'.addslashes($desc['divs'][$key]).'"';
 							}
-							$ret .= ',';
+							$descFields[] = $descField;
 						}
 					}
+					$sep = ',';
+					if (is_string($desc['divs'])) {
+						$sep .= '"'.addslashes($desc['divs']).'",';
+					}
+					$ret .= implode($sep, $descFields).',';
 					$ret[strlen($ret) - 1] = ')';
 				} else if (is_array($desc)) {
 					// TODO
 				} else {
 					$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$fdd['values']['description'].$this->ed;
 				}
-			// } else if (isset($fdd['values']['column']) && ! $dont_cols) {
-			// 	$join_index = isset($fdd['values']['join']['reference'])
-			// 				? $fdd['values']['join']['reference']
-			// 				: $field;
-			// 	$join_table = 'PMEjoin'.$join_index;
-			// 	$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$fdd['values']['column'].$this->ed;
 			} else {
 				$ret = $this->sql_field($field);
 			}
@@ -1235,7 +1274,7 @@ class phpMyEdit
 
 	function get_SQL_join_clause() /* {{{ */
 	{
-		$main_table	 = $this->sd.'PMEtable0'.$this->ed;
+		$main_table	 = $this->sd.self::MAIN_ALIAS.$this->ed;
 		$join_clause = $this->sd.$this->tb.$this->ed." AS $main_table";
 		for ($k = 0, $numfds = sizeof($this->fds); $k < $numfds; $k++) {
 			$main_column = $this->fds[$k];
@@ -1271,7 +1310,7 @@ class phpMyEdit
 				} else {
 					$table = $dbp.$this->sd.$table.$this->ed;
 				}
-				$join_table = $this->sd.'PMEjoin'.$k.$this->ed;
+				$join_table = $this->sd.self::JOIN_ALIAS.$k.$this->ed;
 				$ar = array(
 					'data_base'        => $dbp,
 					'main_table'	   => $main_table,
@@ -4244,27 +4283,33 @@ class phpMyEdit
 			$formCssClass = $this->getCSSclass('change', null, null, $postfix);
 			if (!$this->exec_triggers_simple($trigger, 'pre')) {
 				// if PRE update fails, then back to view operation
+				// @TODO: why? Just emit an error?
 				$this->operation = $this->labels['View'];
+
+				// recurse in order to restart the logic.
+				return $this->display_record();
 			}
-		}
-		if ($this->add_operation() || $this->copy_operation()) {
-			$formCssClass = $this->getCSSclass('copyadd', null, null, $postfix);
-			$trigger = 'insert';
-		}
-		if ($this->view_operation()) {
-			$formCssClass = $this->getCSSclass('view', null, null, $postfix);
-			$trigger = 'select';
-		}
-		if ($this->delete_operation()) {
-			$formCssClass = $this->getCSSclass('delete', null, null, $postfix);
-			$trigger = 'delete';
-		}
-		$ret = $this->exec_triggers_simple($trigger, 'pre');
-		// if PRE insert/view/delete fail, then back to the list
-		if ($ret == false) {
-			$this->operation = '';
-			$this->list_table();
-			return;
+		} else {
+			if ($this->add_operation() || $this->copy_operation()) {
+				$formCssClass = $this->getCSSclass('copyadd', null, null, $postfix);
+				$trigger = 'insert';
+			}
+			if ($this->view_operation()) {
+				$formCssClass = $this->getCSSclass('view', null, null, $postfix);
+				$trigger = 'select';
+			}
+			if ($this->delete_operation()) {
+				$formCssClass = $this->getCSSclass('delete', null, null, $postfix);
+				$trigger = 'delete';
+			}
+			$ret = $this->exec_triggers_simple($trigger, 'pre');
+			// if PRE insert/view/delete fail, then back to the list
+			if ($ret == false) {
+				// @TODO: this may be located in another window
+				$this->operation = '';
+				$this->list_table();
+				return;
+			}
 		}
 
 		$row = false;
@@ -4542,7 +4587,7 @@ class phpMyEdit
 				// if ($this->col_has_sql($k)) {
 				// 	$query_part = $this->fdd[$k]['sql']." AS '".$fd."'";
 				// } else {
-				// 	$query_part = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$fd.$this->ed;
+				// 	$query_part = $this->sd.self::MAIN_ALIAS.$this->ed.'.'.$this->sd.$fd.$this->ed;
 				// }
 				$query_part = $this->sql_field($k)." AS '".$fd."'";
 				if ($query_oldrec == '') {
@@ -4626,7 +4671,7 @@ class phpMyEdit
 					$key = $queryGroup['column'];
 					$rec = $value;
 					$where_groups[$tablename] =
-						' WHERE (PMEtable0.'.$this->sd.$key.$this->ed.'='.$this->key_delim.$rec.$this->key_delim.')';
+											  ' WHERE ('.self::MAIN_ALIAS.'.'.$this->sd.$key.$this->ed.'='.$this->key_delim.$rec.$this->key_delim.')';
 				}
 			}
 		}
@@ -4684,7 +4729,7 @@ class phpMyEdit
 				$value = "'".addslashes($val)."'";
 			}
 			if ($query_real == '') {
-				$query_real	  = 'UPDATE '.$this->sd.$table.$this->ed.' AS '.$this->sd.'PMEtable0'.$this->ed.'
+				$query_real	  = 'UPDATE '.$this->sd.$table.$this->ed.' AS '.$this->sd.self::MAIN_ALIAS.$this->ed.'
   SET '.$this->sd.$column.$this->ed.'='.$value;
 			} else {
 				$query_real	  .= ','.$this->sd.$column.$this->ed.'='.$value;
@@ -5012,6 +5057,8 @@ class phpMyEdit
 				// Make field backups
 				if (isset($this->fdd[$column][$col_ar[0]])) {
 					$this->fdd[$column][$col_ar[0] .'~'] = $this->fdd[$column][$col_ar[0]];
+				} else {
+					$this->fdd[$column][$col_ar[0] .'~'] = null;
 				}
 				$this->fdd[$column][$col_option.'~'] = $this->fdd[$column][$col_option];
 				// Set particular field
@@ -5040,9 +5087,9 @@ class phpMyEdit
 			if ($this->displayed[$field_num] = $this->displayed($field_num)) {
 				$num_fields_displayed++;
 			}
-			if (isset($this->fdd[$key]['values']['join']['reference'])
-				&& !isset($this->fdd[$key]['values']['join']['table'])) {
-				$ref = $this->fdd[$key]['values']['join']['reference'];
+			$ref = $this->join_table_reference($this->fdd[$key]);
+			if ($ref !== false &&
+				!isset($this->fdd[$key]['values']['join']['table'])) {
 				$this->fdd[$key]['values']['table'] = $this->fdd[$ref]['values']['table'];
 			}
 			if (is_array(@$this->fdd[$key]['values']) &&
