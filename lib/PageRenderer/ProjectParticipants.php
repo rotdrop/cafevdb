@@ -195,7 +195,7 @@ class ProjectParticipants extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      'sort_order',
+      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
       'voice',
       '-section_leader',
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'name'),
@@ -300,7 +300,6 @@ class ProjectParticipants extends PMETableViewBase
       ];
     }
 
-    $projectInstrumentNameIndex = count($opts['fdd']);
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id',
       [
@@ -330,16 +329,18 @@ class ProjectParticipants extends PMETableViewBase
         //'values2' => $this->instrumentInfo['byId'],
         'valueGroups' => $this->instrumentInfo['idGroups'],
       ]);
+    $joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
-    $opts['fdd']['sort_order'] = [
+    $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'input'       => 'HRS',
-      'sort'     => true,
+      'sort'        => true,
       'values' => [
+        'column' =>  'sort_order',
         'orderby' => '$table.sort_order ASC',
-        'join' => [ 'reference' => $projectInstrumentNameIndex ],
+        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
       ],
     ];
 
@@ -350,6 +351,35 @@ class ProjectParticipants extends PMETableViewBase
         'name'     => $this->l->t('Voice'),
         'select'   => 'M',
         'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
+        'sql|VD' => "GROUP_CONCAT(DISTINCT CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".instrument,' ', \$join_col_fqn) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+        'sql|CP' => "GROUP_CONCAT(DISTINCT CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".id,':',".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+        'values|CP' => [
+          'table' => "SELECT
+  pi.project_id,
+  pi.musician_id,
+  i.instrument,
+  i.sort_order,
+  n.n,
+  CONCAT(pi.instrument_id,':', n.n) AS value
+  FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
+  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
+    ON i.id = pi.instrument_id
+  JOIN numbers n
+    ON n.n <= 8 AND n.n >= 1
+  WHERE
+    pi.project_id = $projectId
+  ORDER BY
+    i.sort_order ASC, n.n ASC",
+          'column' => 'value',
+          'description' => [
+            'columns' => [ 'instrument', 'n' ],
+            'divs' => ' ',
+          ],
+          'orderby' => '$table.sort_order ASC, $table.n ASC',
+          'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
+          'join' => false,
+        ],
+        'values2|LF' => [ '' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
       ]);
 
     $opts['fdd']['registration'] = [
@@ -1638,8 +1668,6 @@ class ProjectParticipants extends PMETableViewBase
 //         $opts['fdd'][$key]['sort'] = false;
 //       }
 //     }
-
-//     $opts['execute'] = $this->execute;
 
 //     // Inject the underlying table name as 'querygroup' parameter
 //     // s.t. update queries can be split into several queries which
