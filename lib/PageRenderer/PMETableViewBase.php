@@ -501,9 +501,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $id = $oldIdentifier[$del];
           $entityId = $this->makeJoinTableId($meta, $id);
           $entity = $this->find($entityId);
-          foreach ($this->entityManager->wrapped->unitOfWork->identityMap as $blah => $blub) {
-            $this->logInfo(print_r(array_keys($blub), true));
-          }
           $this->remove($entityId);
           $this->changeLogService->logDelete($table, $id, $id);
         }
@@ -616,8 +613,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $table = $joinInfo['table'];
 
       $joinIndex[$table] = count($opts['fdd']);
-      $joinTable[$table] = 'PMEjoin'.$joinIndex[$table];
-      $fqnColumn = $joinTable[$table].'.'.$joinInfo['column'];
+      $joinTables[$table] = 'PMEjoin'.$joinIndex[$table];
+      $fqnColumn = $joinTables[$table].'.'.$joinInfo['column'];
 
       $group = false;
       $joinData = [];
@@ -650,14 +647,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // use simple field grouping for list and filter operation
         $opts['fdd'][$fieldName]['sql|FL'] = '$join_col_fqn';
       }
-      $this->logInfo('JOIN '.print_r($opts['fdd'][$fieldName], true));
+      $this->logDebug('JOIN '.print_r($opts['fdd'][$fieldName], true));
     }
     if (!empty($opts['groupby_fields'])) {
       $keys = is_array($opts['key']) ? array_keys($opts['key']) : [ $opts['key'] ];
       $opts['groupby_fields'] = array_unique(array_merge($keys, $opts['groupby_fields']));
-      $this->logInfo('GROUP_BY '.print_r($opts['groupby_fields'], true));
+      $this->logDebug('GROUP_BY '.print_r($opts['groupby_fields'], true));
     }
-    return $joinTable;
+    return $joinTables;
   }
 
   /**
@@ -744,7 +741,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *
    * @param string $column @see joinTableFieldName().
    */
-  protected function fieldIndex(array $fieldDescriptionData, array $tableInfo, string $column)
+  protected function fieldIndex(array $fieldDescriptionData, $tableInfo, string $column)
   {
     $fieldName = $this->joinTableFieldName($tableInfo, $column);
     return array_search($fieldName, array_keys($fieldDescriptionData));
