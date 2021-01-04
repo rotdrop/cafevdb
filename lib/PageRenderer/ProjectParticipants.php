@@ -238,7 +238,6 @@ class ProjectParticipants extends PMETableViewBase
         'navigation' => 'VCD',
     ]);
 
-    $projIdIdx = count($opts['fdd']);
     $opts['fdd']['project_id'] = array(
       'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => $this->l->t('Project-Id'),
@@ -251,7 +250,6 @@ class ProjectParticipants extends PMETableViewBase
       'sort'     => true,
       );
 
-    $musIdIdx = count($opts['fdd']);
     $opts['fdd']['musician_id'] = array(
       'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => $this->l->t('Musician-Id'),
