@@ -30,8 +30,8 @@ $nav = '';
 if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $project, $projectId);
   $nav .= $pageNavigation->pageControlElement('detailed', $project, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-extra', $project, $projectId);
-  $nav .= $pageNavigation->pageControlElement('projectinstruments', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-extra-fields', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-instrumentation', $project, $projectId);
   if ($roles->inTreasurerGroup()) {
     $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
     $nav .= $pageNavigation->pageControlElement('debit-mandates', $project, $projectId);

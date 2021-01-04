@@ -32,13 +32,13 @@ namespace CAFEVDB {
     $nav .= Navigation::pageControlElement('projects');
     $nav .= Navigation::pageControlElement('email', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('detailedg', $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('projectinstruments', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('project-instrumentation', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('instruments', $projectName, $projectId);
   } else {
     $nav .= Navigation::pageControlElement('projects');
     $nav .= Navigation::pageControlElement('email');
     $nav .= Navigation::pageControlElement('all');
-    $nav .= Navigation::pageControlElement('projectinstruments');
+    $nav .= Navigation::pageControlElement('project-instrumentation');
     $nav .= Navigation::pageControlElement('instruments');
   }
 

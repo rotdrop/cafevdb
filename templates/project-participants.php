@@ -32,8 +32,8 @@ $projectId = $renderer->getProjectId();
 $nav = '';
 $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
-$nav .= $pageNavigation->pageControlElement('project-extra', $projectName, $projectId);
-$nav .= $pageNavigation->pageControlElement('projectinstruments', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('project-extra-fields', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('project-instrumentation', $projectName, $projectId);
 // @TODO CHECK! TO ID!
 // if ($oles->inTreasurerGroup()) {
 //   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
@@ -68,4 +68,4 @@ try {
 }
 
 // Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $cssPfx));
+echo $this->inc('part.common.footer', [ 'css-prefix' => $cssPfx, ]);

@@ -32,14 +32,14 @@ namespace CAFEVDB {
   if ($projectId >= 0) {
     $nav .= Navigation::pageControlElement('projectlabel', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('detailed', $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('project-extra', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('project-extra-fields', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('debit-mandates', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('project-payments', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('debit-notes', $projectName, $projectId);
     if ($projectName === $appConifg->getConfigValue('memberTable', false)) {
       $nav .= Navigation::pageControlElement('insurances');
     }
-    $nav .= Navigation::pageControlElement('projectinstruments', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('project-instrumentation', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('projects');
   } else {
     $nav .= Navigation::pageControlElement('projects');

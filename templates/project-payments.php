@@ -30,14 +30,14 @@ $nav = '';
 if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-extra', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-extra-fields', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);
   if ($projectName === $appConifg->getConfigValue('memberTable', false)) {
     $nav .= $pageNavigation->pageControlElement('insurances');
   }
-  $nav .= $pageNavigation->pageControlElement('projectinstruments', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-instrumentation', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('projects');
 } else {
   $nav .= $pageNavigation->pageControlElement('projects');
