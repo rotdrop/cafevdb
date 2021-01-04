@@ -4916,11 +4916,15 @@ class phpMyEdit
 	 */
 	function exec_triggers($op, $step, &$oldvals, &$changed, &$newvals) /* {{{ */
 	{
-		if (! isset($this->triggers[$op][$step])) {
+		if (!empty($this->triggers[$op][$step])) {
+			$trig = $this->triggers[$op][$step];
+		} else if (!empty($this->triggers['*'][$step])) {
+			$trig = $this->triggers['*'][$step];
+		}
+		if (empty($trig)) {
 			return true;
 		}
 		$ret  = true;
-		$trig = $this->triggers[$op][$step];
 		if (is_array($trig)) {
 			ksort($trig);
 			for ($t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
