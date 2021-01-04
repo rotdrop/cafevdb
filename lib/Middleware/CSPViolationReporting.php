@@ -55,7 +55,7 @@ class CSPViolationReporting extends Middleware
       if (empty($this->reportLocation)) {
         $cspFailureToken = $this->getAppValue('cspfailuretoken');
         $reportLocation = $this->urlGenerator()->linkToRoute($this->appName().'.csp_violation.post', ['operation' => 'report']);
-        $reportLocation .= '?cspFailureToken='.$cspFailureToken;
+        $reportLocation .= '?cspFailureToken='.urlencode($cspFailureToken);
       }
       $csp = $response->getContentSecurityPolicy();
       $csp->addReportTo($reportLocation);
