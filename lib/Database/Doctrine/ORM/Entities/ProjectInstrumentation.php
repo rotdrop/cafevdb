@@ -60,94 +60,19 @@ class ProjectInstrumentation
   /**
    * @var int
    *
+   * @ORM\Column(type="integer", nullable=true, options={"default"="null","comment"="Voice specification if applicable"})
+   */
+  private $voice;
+
+  /**
+   * @var int
+   *
    * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Number of required musicians for this instrument"})
    */
   private $quantity = '1';
 
   public function __construct() {
     $this->arrayCTOR();
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
-
-  /**
-   * Set projectid.
-   *
-   * @param int $projectid
-   *
-   * @return ProjectInstrumentation
-   */
-  public function setProjectid($projectid)
-  {
-    $this->projectid = $projectid;
-
-    return $this;
-  }
-
-  /**
-   * Get projectid.
-   *
-   * @return int
-   */
-  public function getProjectid()
-  {
-    return $this->projectid;
-  }
-
-  /**
-   * Set instrumentid.
-   *
-   * @param int $instrumentid
-   *
-   * @return ProjectInstrumentation
-   */
-  public function setInstrumentid($instrumentid)
-  {
-    $this->instrumentid = $instrumentid;
-
-    return $this;
-  }
-
-  /**
-   * Get instrumentid.
-   *
-   * @return int
-   */
-  public function getInstrumentid()
-  {
-    return $this->instrumentid;
-  }
-
-  /**
-   * Set quantity.
-   *
-   * @param int $quantity
-   *
-   * @return ProjectInstrumentation
-   */
-  public function setQuantity($quantity)
-  {
-    $this->quantity = $quantity;
-
-    return $this;
-  }
-
-  /**
-   * Get quantity.
-   *
-   * @return int
-   */
-  public function getQuantity()
-  {
-    return $this->quantity;
   }
 
   /**
@@ -196,6 +121,54 @@ class ProjectInstrumentation
   public function getProject()
   {
     return $this->project;
+  }
+
+  /**
+   * Set voice.
+   *
+   * @param int $voice
+   *
+   * @return ProjectInstrumentation
+   */
+  public function setVoice($voice)
+  {
+    $this->voice = $voice;
+
+    return $this;
+  }
+
+  /**
+   * Get voice.
+   *
+   * @return int
+   */
+  public function getVoice()
+  {
+    return $this->voice;
+  }
+
+  /**
+   * Set voice.
+   *
+   * @param int $quantity
+   *
+   * @return ProjectInstrumentation
+   */
+  public function setQuantity($quantity)
+  {
+    $this->quantity = $quantity;
+
+    return $this;
+  }
+
+  /**
+   * Get quantity.
+   *
+   * @return int
+   */
+  public function getQuantity()
+  {
+    return $this->quantity;
   }
 
 }
