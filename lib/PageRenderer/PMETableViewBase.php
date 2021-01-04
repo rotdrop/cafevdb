@@ -578,8 +578,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function defineJoinStructure(array &$opts)
   {
-    foreach ($this->joinStructure as $joinInfo) {
+    if (!empty($opts['groupby_fields']) && !is_array($opts['groupby_fields'])) {
+      $opts['groupby_fields'] = [ $opts['groupby_fields'], ];
+    }
+    foreach ($this->joinStructure as &$joinInfo) {
       if (!empty($joinInfo['master'])) {
+        if (is_array($opts['key'])) {
+          foreach (array_keys($opts['key']) as $key) {
+            $joinInfo['identifier'][$key] = $key;
+          }
+        } else {
+          $joinInfo['identifier'][$opts['key']] = $opts['key'];
+        }
         continue;
       }
       $table = $joinInfo['table'];
@@ -615,15 +625,16 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       ];
       if (!empty($joinInfo['group_by'])) {
         $opts['groupby_fields'][] = $fieldName;
+
         // use simple field grouping for list operation
-        $sql = $opts['fdd'][$fieldName]['sql'];
         $opts['fdd'][$fieldName]['sql|L'] = '$join_col_fqn';
       }
-      $this->logDebug('JOIN '.print_r($opts['fdd'][$fieldName], true));
+      $this->logInfo('JOIN '.print_r($opts['fdd'][$fieldName], true));
     }
     if (!empty($opts['groupby_fields'])) {
-      $opts['groupby_fields'] = array_merge(array_keys($opts['key']), $opts['groupby_fields']);
-      $this->logDebug('GROUP_BY '.print_r($opts['groupby_fields'], true));
+      $keys = is_array($opts['key']) ? array_keys($opts['key']) : [ $opts['key'] ];
+      $opts['groupby_fields'] = array_unique(array_merge($keys, $opts['groupby_fields']));
+      $this->logInfo('GROUP_BY '.print_r($opts['groupby_fields'], true));
     }
     return $joinTable;
   }
