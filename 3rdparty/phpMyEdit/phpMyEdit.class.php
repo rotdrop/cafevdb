@@ -874,10 +874,17 @@ class phpMyEdit
 
 		$subs = array(
 			'main_table'  => $this->tb,
-			'record_id'   => $this->rec, // may be useful for change op.
+			'record_id'   => implode(',', $this->rec), // may be useful for change op.
 			'table'		  => $table_name,
 			'column'	  => $key,
 			'description' => $desc);
+		if (!empty($this->rec)) {
+			//$this->logInfo('REC '.print_r($this->rec, true));
+			foreach ($this->rec as $recKey => $recValue) {
+				$subs['record_id['.$recKey.']'] = $recValue;
+			}
+		}
+		//$this->logInfo('SUBS '.print_r($subs, true));
 
 		$qparts['select'] = 'DISTINCT '.$table_name.'.'.$this->sd.$key.$this->ed;
 		if ($desc && is_array($desc) && is_array($desc['columns'])) {
@@ -2307,7 +2314,7 @@ class phpMyEdit
 		if ($max_depth <= 0) {
 			return $str;
 		}
-		$array = preg_split('/(\\$\w+)/', $str, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$array = preg_split('/(\\$[_a-zA-Z0-9[\\]]+)/', $str, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$count = count($array);
 		for ($i = 1; $i < $count; $i += 2) {
 			$key = substr($array[$i], 1);
