@@ -626,8 +626,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       if (!empty($joinInfo['group_by'])) {
         $opts['groupby_fields'][] = $fieldName;
 
-        // use simple field grouping for list operation
-        $opts['fdd'][$fieldName]['sql|L'] = '$join_col_fqn';
+        // use simple field grouping for list and filter operation
+        $opts['fdd'][$fieldName]['sql|FL'] = '$join_col_fqn';
       }
       $this->logInfo('JOIN '.print_r($opts['fdd'][$fieldName], true));
     }
