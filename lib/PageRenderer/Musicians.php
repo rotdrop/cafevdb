@@ -48,6 +48,8 @@ class Musicians extends PMETableViewBase
   const CSS_CLASS = 'musicians';
   const TABLE = 'Musicians';
   const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
+  const INSTRUMENTS_TABLE = 'Instruments';
+  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
   const PHOTO_JOIN = 'MusicianPhoto';
 
   /** @var GeoCodingService */
@@ -61,6 +63,37 @@ class Musicians extends PMETableViewBase
    * existing project
    */
   private $projectMode;
+
+  /**
+   * Join table structure. All update are handled in
+   * parent::beforeUpdateDoUpdateAll().
+   */
+  protected $joinStructure = [
+    [
+      'table' => self::TABLE,
+      'master' => true,
+      'entity' => Entities\Musician::class,
+    ],
+    [
+      'table' => self::MUSICIAN_INSTRUMENT_TABLE,
+      'entity' => Entities\MusicianInstrument::class,
+      'identifier' => [
+        'instrument_id' => false,
+        'musician_id' => 'id',
+      ],
+      'column' => 'instrument_id',
+    ],
+    [
+      'table' => self::PROJECT_PARTICIPANTS_TABLE,
+      'entity' => Entities\ProjectParticipant::class,
+      'identifier' => [
+        'project_id' => false,
+        'musician_id' => 'id',
+      ],
+      'column' => 'project_id',
+      'read_only' => true,
+    ],
+  ];
 
   public function __construct(
     ConfigService $configService
@@ -161,7 +194,7 @@ make sure that the musicians are also automatically added to the
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = ['instruments','name','first_name','id'];
+    $opts['sort_field'] = ['sort_order','name','first_name','id'];
 
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
@@ -224,6 +257,9 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
     ];
 
+    // must come after the key-def fdd
+    $joinTables = $this->defineJoinStructure($opts);
+
     $bval = strval($this->l->t('Add to %s', array($projectName)));
     $tip  = strval($this->toolTipsService['register-musician']);
     if ($this->projectMode) {
@@ -274,6 +310,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
+    // @TODO unify soft-delete
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
         'name'     => $this->l->t('Disabled'),
@@ -291,46 +328,41 @@ make sure that the musicians are also automatically added to the
       ];
     }
 
-    $musInstIdx = count($opts['fdd']);
-    $opts['fdd']['musician_instrument_join'] = [
-      'name'   => $this->l->t('Instrument Join Pseudo Field'),
-      'sql'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC)',
-      'input'  => 'VRH',
-      'filter' => 'having', // need "HAVING" for group by stuff
-      'values' => [
-        'table'       => self::MUSICIAN_INSTRUMENT_TABLE,
-        'column'      => 'instrument_id',
-        'description' => [ 'columns' => [ 'instrument_id', ], ],
-        'join'        => '$join_table.musician_id = $main_table.id',
-      ]
-    ];
-
-    $instIdx = count($opts['fdd']);
-    $opts['fdd']['instruments'] = [
-      'tab'         => ['id' => 'orchestra'],
+    $instrumentsNameIndex = count($opts['fdd']);
+    $fdd = [
       'name'        => $this->l->t('Instruments'),
+      'tab'         => ['id' => 'orchestra'],
       'css'         => ['postfix' => ' musician-instruments tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
-      'input'       => 'S', // skip
-      'sort'        => true,
       'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.sort_order ASC)',
-      //'input' => 'V', not virtual, tweaked by triggers
       'select'      => 'M',
-      'filter'      => 'having', // need "HAVING" for group by stuff
+      // 'filter'      => 'having', // need "HAVING" for group by stuff really ?
       'values' => [
-        'table'       => 'Instruments',
+        'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
         'description' => 'instrument',
-        'orderby'     => 'sort_order',
-        'join'        => '$join_col_fqn = PMEjoin'.$musInstIdx.'.instrument_id'
+        'orderby'     => '$table.sort_order ASC',
+        'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.Disabled = 0' ]);
 
-    $opts['fdd']['instruments']['values|ACP'] = array_merge(
-      $opts['fdd']['instruments']['values'],
-      [ 'filters' => '$table.Disabled = 0' ]);
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIAN_INSTRUMENT_TABLE, 'instrument_id', $fdd);
+
+    $opts['fdd']['sort_order'] = [
+      'tab'         => [ 'id' => [ 'orchestra' ] ],
+      'name'        => $this->l->t('Instrument Sort Order'),
+      'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+      'input'       => 'HRS',
+      'sort'     => true,
+      'values' => [
+        'orderby' => '$table.sort_order ASC',
+        'join' => [ 'reference' => $instrumentsNameIndex ],
+      ],
+    ];
 
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
@@ -345,48 +377,37 @@ make sure that the musicians are also automatically added to the
       'tooltip' => $this->toolTipsService['member-status'],
     ];
 
+    // @TODO still needed?
     // fetch the list of all projects in order to provide a somewhat
     // cooked filter list
-    $projects =
-      $this->getDatabaseRepository(Entities\Project::class)->shortDescription();
-    $allProjects = $projects['projects'];
-    $groupedProjects = $projects['yearById'];
-    $projects = $projects['nameById'];
+    // $projects =
+    //   $this->getDatabaseRepository(Entities\Project::class)->shortDescription();
+    // $allProjects = $projects['projects'];
+    // $groupedProjects = $projects['yearById'];
+    // $projects = $projects['nameById'];
 
-    // Dummy field in order to get the Besetzungen table for the Projects field
-    $projectParticipantsJoin = 'PMEjoin'.count($opts['fdd']);
-    $opts['fdd']['musician_id'] = [
-      'input' => 'VH',
-      'options' => '',
-      'values' => [
-        'table' => 'ProjectParticipants',
-        'column' => 'musician_id',
-        'description' => 'musician_id',
-        'join' => '$join_col_fqn = $main_table.`id`'
-      ],
-    ];
-
-    $projectsIdx = count($opts['fdd']);
-    $join_table = 'PMEjoin'.$projectsIdx;
     $opts['fdd']['projects'] = [
       'tab' => ['id' => 'orchestra'],
       'input' => 'VR',
-      'options' => 'LFV',
+      'options' => 'LFVC',
       'select' => 'M',
       'name' => $this->l->t('Projects'),
       'sort' => true,
       'css'      => ['postfix' => ' projects tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
-      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_desc_fqn ASC SEPARATOR \',\')',
+      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table' => 'Projects',
         'column' => 'id',
         'description' => 'name',
-        'join' => $projectParticipantsJoin.'.`project_id` = $join_col_fqn',
+        'orderby' => '$table.year ASC, $table.name ASC',
+        'groups' => 'year',
+        'join' => '$join_col_fqn = '.$joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id'
       ],
-      'values2' => $projects,
-      'valueGroups' => $groupedProjects
+      // @TODO check whether this is still needed or 'groups' => 'year' is just fine.
+      //'values2' => $projects,
+      //'valueGroups' => $groupedProjects
     ];
 
     $opts['fdd']['mobile_phone'] = [
@@ -608,9 +629,7 @@ make sure that the musicians are also automatically added to the
 
     // @@TODO This will have to get marrried with interleaved ORM stuff
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'addOrChangeInstruments' ];
-    // ??    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeUpdateRemoveUnchanged' ];
-//     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'addUUIDTrigger' ];
@@ -691,73 +710,12 @@ make sure that the musicians are also automatically added to the
    * to take care of them from outside PME or use a view.
    *
    * @copydoc beforeTriggerSetTimestamp
-   *
-   * @todo Find out about transactions to be able to do a roll-back on
-   * error.
    */
   public function addOrChangeInstruments($pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
-    $this->logInfo("OLD: ".print_r($oldValues, true));
-    $this->logInfo("CHANGED: ".print_r($changed, true));
-    $this->logInfo("NEW: ".print_r($newValues, true));
-    $this->logInfo("REQ: ".$pme->rec);
-    $field = 'Instruments';
-    $keyField = 'InstrumentKey';
-    $key = array_search($field, $changed);
-    if ($key !== false) {
-      $table      = self::MUSICIAN_INSTRUMENT_TABLE;
-      $musicianId = $pme->rec;
-      $oldIds     = Util::explode(',', $oldValues[$field]);
-      $newIds     = Util::explode(',', $newValues[$field]);
-      $oldKeys    = Util::explode(',', $oldValues[$keyField]);
-      $oldRecords = array_combine($oldIds, $oldKeys);
-
-      // we have to delete any removed instruments and to add any new instruments
-      $repository = $this->getDatabaseRepository(Entities\MusicianInstrument::class);
-      try {
-        foreach(array_diff($oldIds, $newIds) as $id) {
-          $this->remove([ 'id' => $oldRecords[$id] ]);
-          $this->changeLogService->logDelete($table, 'id', [
-            'id' => $oldRecords[$id],
-            'musician_id' => $musicianId,
-            'instrument_id' => $id
-          ]);
-        }
-        $this->flush();
-        $musician = $this->entityManager->getReference(Entities\Musician::class, [ 'id' => $musicianId ]);
-        foreach(array_diff($newIds, $oldIds) as $instrumentId) {
-          $instrument = $this->entityManager->getReference(Entities\Instrument::class, [ 'id' => $instrumentId ]);
-          $musicianInstrument = Entities\MusicianInstrument::create()
-                              ->setMusician($musician)
-                              ->setInstrument($instrument);
-          // @todo ranking by sort-order in select
-          $this->persist($musicianInstrument);
-          $this->flush();
-          $rec = $musicianInstrument->getId();
-          if (!empty($rec)) {
-            $this->changeLogService->logInsert($table, $rec, [
-              'musician_id' => $musicianId,
-              'instrument_id' => $instrumentId,
-            ]);
-          }
-        }
-      } catch (\Throwable $t) {
-        $this->logException($t);
-        // @todo Do we want to bailout here?
-        // return false;
-      }
-      $this->flush(); // sync with DB
-
-      /**
-       * @note Unset in particular the $changed records. Note that
-       * phpMyEdit will generate a new change-set after its operations
-       * have completed, so the change-log entries for the original
-       * table will also be present.
-       */
-      unset($changed[$key]);
-      unset($newValues[$field]);
-      unset($newValues[$keyField]);
-    }
+    $field = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENT_TABLE, 'instrument_id');
+    $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, [ $field ], $newValues);
+    Util::unsetValue($changed, $field);
     return true;
   }
 
