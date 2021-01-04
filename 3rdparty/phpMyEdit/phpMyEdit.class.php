@@ -3435,7 +3435,7 @@ class phpMyEdit
 			);
 		$query = $this->get_SQL_main_list_query($count_parts);
 		if (!empty($groupBy)) {
-			//$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
+			$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
 		}
 		$res = $this->myquery($query, __LINE__);
 		$row = $this->sql_fetch($res, 'n');
