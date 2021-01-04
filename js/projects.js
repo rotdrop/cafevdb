@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -38,7 +39,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
    * digits are attached to the end of name return false.
    */
   Projects.extractYear = function(name) {
-    var year = name.match(/[^\d](\d{4})$/);
+    const year = name.match(/[^\d](\d{4})$/);
     return year !== null ? year[1] : false;
   };
 
@@ -47,7 +48,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
    * attached to the "post"-object
    *
    * @param post Arguments object:
-   * { ProjectName: 'NAME', ProjectId: XX }
+   * { projectName: 'NAME', projectId: XX }
    *
    * @param reopen If true, close any already dialog and re-open it
    * (the default). If false, only raise an existing dialog to top.
@@ -56,7 +57,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     if (typeof reopen == 'undefined') {
       reopen = false;
     }
-    var wikiDlg = $('#dokuwiki_popup');
+    const wikiDlg = $('#dokuwiki_popup');
     if (wikiDlg.dialog('isOpen') == true) {
       if (reopen === false) {
         wikiDlg.dialog('moveToTop');
@@ -88,7 +89,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
    * project.
    *
    * @param post Arguments object:
-   * { ProjectName: 'NAME', ProjectId: XX }
+   * { projectName: 'NAME', projectId: XX }
    *
    * @param reopen If true, close any already dialog and re-open it
    * (the default). If false, only raise an existing dialog to top.
@@ -97,7 +98,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     if (typeof reopen == 'undefined') {
       reopen = false;
     }
-    var eventsDlg = $('#events');
+    const eventsDlg = $('#events');
     if (eventsDlg.dialog('isOpen') == true) {
       if (reopen === false) {
         eventsDlg.dialog('moveToTop');
@@ -116,7 +117,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
   /**Generate a popup-dialog for project related email.
    *
    * @param post Arguments object:
-   * { ProjectName: 'NAME', ProjectId: XX }
+   * { projectName: 'NAME', projectId: XX }
    *
    * @param reopen If true, close any already dialog and re-open it
    * (the default). If false, only raise an existing dialog to top.
@@ -125,7 +126,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     if (typeof reopen == 'undefined') {
       reopen = false;
     }
-    var emailDlg = $('#emailformdialog');
+    const emailDlg = $('#emailformdialog');
     if (emailDlg.dialog('isOpen') == true) {
       if (reopen === false) {
         emailDlg.dialog('moveToTop');
@@ -143,7 +144,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
    * initiated from.
    *
    * @param past Arguments object:
-   * { ProjectName: 'NAME', ProjectId: XX }
+   * { projectName: 'NAME', projectId: XX }
    */
   Projects.instrumentationNumbersPopup = function(containerSel, post)
   {
@@ -160,8 +161,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       Table: 'BesetzungsZahlen',
       Transpose: 'transposed',
       InhibitTranspose: 'true',
-      ProjectId: post.ProjectId || post.projectId,
-      ProjectName: post.ProjectName || post.projectName,
+      projectId: post.projectId,
+      projectName: post.projectName,
       // Now special options for the dialog popup
       InitialViewOperation: true,
       InitialName: false, // 'PME_sys_operation',
@@ -182,7 +183,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
    * initiated from.
    *
    * @param past Arguments object:
-   * { ProjectName: 'NAME', ProjectId: XX }
+   * { projectName: 'NAME', projectId: XX }
    */
   Projects.projectViewPopup = function(containerSel, post)
   {
@@ -203,7 +204,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       ReloadName: 'PME_sys_operation',
       ReloadValue: 'View',
       PME_sys_operation: 'View',
-      PME_sys_rec: post.ProjectId || post.projectId,
+      PME_sys_rec: post.projectId,
       ModalDialog: true,
       modified: false
     };
@@ -217,17 +218,15 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
    * data-fields in the options.
    */
   Projects.actions = function(select, containerSel) {
-    var Projects = this;
+    const Projects = this;
 
     // determine the export format
-    var selected = select.find('option:selected');
-    var selectedValue = selected.val();
+    const selected = select.find('option:selected');
+    const selectedValue = selected.val();
 
-    var projectId = select.data('projectId');
-    var projectName = select.data('projectName');
-    var post = {
-      ProjectId: projectId,
-      ProjectName: projectName,
+    const projectId = select.data('projectId');
+    const projectName = select.data('projectName');
+    const post = {
       projectId: projectId,
       projectName: projectName
     };
@@ -250,8 +249,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       break;
     case 'profit-and-loss':
     case 'project-files':
-      var url  = OC.linkTo('files', 'index.php');
-      var path = selected.data('projectFiles');
+      const url  = OC.linkTo('files', 'index.php');
+      const path = selected.data('projectFiles');
       CAFEVDB.formSubmit(url, $.param({dir: path}), 'get');
       break;
 
@@ -306,10 +305,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
   Projects.actionMenu = function(containerSel) {
     containerSel = PHPMYEDIT.selector(containerSel);
-    var container = PHPMYEDIT.container(containerSel);
-    var projectActions = container.find('select.project-actions');
+    const container = PHPMYEDIT.container(containerSel);
+    const projectActions = container.find('select.project-actions');
 
-    var chosenOptions = {
+    const chosenOptions = {
       placeholder_text_single:t('cafevdb', 'Select an Action'),
       inherit_select_classes:true,
       disable_search:true
@@ -317,7 +316,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
     // Install placeholder for proper sizing
     CAFEVDB.fixupNoChosenMenu(projectActions);
-    var maxWidth = projectActions.maxOuterWidth(true);
+    const maxWidth = projectActions.maxOuterWidth(true);
     chosenOptions.width = maxWidth+'px';
 
     //alert('max: '+projectActions.maxOuterWidth(true));
@@ -344,10 +343,11 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
   Projects.pmeFormInit = function(containerSel) {
     containerSel = PHPMYEDIT.selector(containerSel);
-    var container = PHPMYEDIT.container(containerSel);
-    var form = container.find('form[class^="pme-form"]');
-    var submitSel = PHPMYEDIT.pmeClassSelectors('input',
-                                                ['save', 'apply', 'more']);
+    const container = PHPMYEDIT.container(containerSel);
+    const form = container.find('form[class^="pme-form"]');
+    const submitSel = PHPMYEDIT.pmeClassSelectors(
+      'input',
+      ['save', 'apply', 'more']);
 
     if (form.find(submitSel).length > 0) {
 
@@ -359,8 +359,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       const year = container.find(yearSelector);
       const attach = container.find(attachSelector);
 
-      var oldProjectYear = $(form).find(yearSelector + ' :selected').text();
-      var oldProjectName = name.val();
+      const oldProjectYear = $(form).find(yearSelector + ' :selected').text();
+      const oldprojectName = name.val();
 
       /**Verify the user submitted name and year settings,
        * depending on whether the user has activated the name or
@@ -376,7 +376,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         CAFEVDB.Notification.hide(function () {
           const cleanup = function() {
             if (name.val() == '') {
-              name.val(oldProjectName);
+              name.val(oldprojectName);
             }
             if (year.val() == '') {
               year.val(oldProjectYear);
@@ -403,7 +403,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             year.val(rqData.projectYear);
             year.trigger('chosen:updated');
             oldProjectYear = rqData.projectYear;
-            oldProjectName = rqData.projectName;
+            oldprojectName = rqData.projectName;
             if (postAddOn == 'submit') {
               if (typeof button !== 'undefined') {
                 $(form).off('click', submitSel);
@@ -461,25 +461,25 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
   ///
   /// Supported post packages:
   ///
-  /// { Action: delete,
-  ///   ArticleId: XX,
-  ///   ProjectId: XX,
-  ///   ArticleData: JSON }
+  /// { action: delete,
+  ///   articleId: XX,
+  ///   projectId: XX,
+  ///   articleData: JSON }
   ///
-  /// { Action: add,
-  ///   ProjectId: XX,
-  ///   ArticleId: XX,
-  ///   ArticleData: JSON }
+  /// { action: add,
+  ///   projectId: XX,
+  ///   articleId: XX,
+  ///   articleData: JSON }
   ///
-  /// { Action: link,
-  ///   ProjectId: XX,
-  ///   ArticleId: XX,
-  ///   ArticleData: JSON }
+  /// { action: link,
+  ///   projectId: XX,
+  ///   articleId: XX,
+  ///   articleData: JSON }
   ///
-  /// { Action: unlink,
-  ///   ProjectId: XX,
-  ///   ArticleId: XX,
-  ///   ArticleData: JSON }
+  /// { action: unlink,
+  ///   projectId: XX,
+  ///   articleId: XX,
+  ///   articleData: JSON }
   ///
   /// For Action 'add' a negative ArticleId triggers the geneation
   /// of a new article, otherwise it is the id of an existing
@@ -497,8 +497,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
           } else if (data.data.message != '') {
             CAFEVDB.Notification.showHtml(data.data.message);
           }
-          var form = container.find('table.pme-navigation');
-          var submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
+          const form = container.find('table.pme-navigation');
+          const submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
           submit.first().trigger('click');
           setTimeout(function() {
             CAFEVDB.Notification.hide();
@@ -518,7 +518,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
    *
    */
   Projects.projectWebPageTabHandler = function(event, ui, container) {
-    var tabId = ui.newTab.attr('id');
+    const tabId = ui.newTab.attr('id');
     //alert('id' + tabId);
     var projectId;
     var articleId;
@@ -528,9 +528,9 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       event.stopImmediatePropagation();
       projectId = ui.newPanel.data('projectId');
       // just do it ...
-      Projects.projectWebPageRequest({ Action: 'add',
-                                       ArticleId: -1,
-                                       ProjectId: projectId },
+      Projects.projectWebPageRequest({ action: 'add',
+                                       articleId: -1,
+                                       projectId: projectId },
                                      container);
       return false;
     case 'cmsarticle-tab-unlinkpage':
@@ -545,16 +545,16 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       OC.dialogs.confirm(
         t('cafevdb', 'Really unlink the displayed event announcement?'),
         t('cafevdb', 'Unlink Web-Page with Id {ArticleId}?',
-          { ArticleId: articleId }),
+          { articleId: articleId }),
         function(answer) {
           if (!answer) {
             return;
           }
           // do it ...
-          Projects.projectWebPageRequest({ Action: 'unlink',
-                                           ArticleId: articleId,
-                                           ArticleData: articleData,
-                                           ProjectId: projectId },
+          Projects.projectWebPageRequest({ action: 'unlink',
+                                           articleId: articleId,
+                                           articleData: articleData,
+                                           projectId: projectId },
                                          container);
         },
         true);
@@ -571,16 +571,16 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       OC.dialogs.confirm(
         t('cafevdb', 'Really delete the displayed event announcement?'),
         t('cafevdb', 'Delete Web-Page with Id {ArticleId}?',
-          { ArticleId: articleId }),
+          { articleId: articleId }),
         function(answer) {
           if (!answer) {
             return;
           }
           // do it ...
-          Projects.projectWebPageRequest({ Action: 'delete',
-                                           ArticleId: articleId,
-                                           ArticleData: articleData,
-                                           ProjectId: projectId },
+          Projects.projectWebPageRequest({ action: 'delete',
+                                           articleId: articleId,
+                                           articleData: articleData,
+                                           projectId: projectId },
                                          container);
         },
         true);
@@ -596,13 +596,13 @@ $(document).ready(function(){
 
   PHPMYEDIT.addTableLoadCallback('projects', {
     callback: function(selector, parameters, resizeCB) {
-      var Projects = this;
-      var container = PHPMYEDIT.container(selector);
-      var containerNode = container[0];
+      const Projects = this;
+      const container = PHPMYEDIT.container(selector);
+      const containerNode = container[0];
       Projects.actionMenu(selector);
       Projects.pmeFormInit(selector);
       var imagesReady = false;
-      var imagePoller = function(callback) {
+      const imagePoller = function(callback) {
         if (!imagesReady) {
           var poller = setInterval(function() {
             if (imagesReady) {
@@ -616,7 +616,7 @@ $(document).ready(function(){
       };
 
       if (container.find('#project_flyer_upload').length > 0) {
-        var idField = container.find('input[name="PME_data_id"]');
+        const idField = container.find('input[name="PME_data_id"]');
         var recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();
@@ -633,26 +633,26 @@ $(document).ready(function(){
       // Intercept app-navigation events here and redirect to the page
       // loader
       container.on('click', 'li.nav > a.nav', function(event) {
-        var post = $(this).data('post');
+        const post = $(this).data('post');
         CAFEVDB.Page.loadPage(post);
         //alert('post: '+post);
         return false;
       });
 
-      var articleBox = container.find('#projectWebArticles');
+      const articleBox = container.find('#projectWebArticles');
 
-      var displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
-      var numDisplayFrames = displayFrames.length;
+      const displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
+      const numDisplayFrames = displayFrames.length;
 
-      var changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
-      var numChangeFrames = changeFrames.length;
+      const changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
+      const numChangeFrames = changeFrames.length;
 
       // allFrames also contains some div + all available iframes
-      var allDisplayFrames = articleBox.find('.cmsarticleframe.display');
-      var allChangeFrames = articleBox.find('.cmsarticleframe.change');
-      var allContainers = articleBox.find('.cmsarticlecontainer');
+      const allDisplayFrames = articleBox.find('.cmsarticleframe.display');
+      const allChangeFrames = articleBox.find('.cmsarticleframe.change');
+      const allContainers = articleBox.find('.cmsarticlecontainer');
 
-      var articleSelect = container.find('#cmsarticleselect');
+      const articleSelect = container.find('#cmsarticleselect');
       articleSelect.chosen({width: 'auto',
                             disable_search_threshold: 10,
                             no_result_text: t('cafevdb','No values match')});
@@ -668,29 +668,29 @@ $(document).ready(function(){
       articleSelect.on('change', function(event) {
         event.preventDefault();
 
-        var projectId = articleSelect.data('projectId');
-        var selected  = articleSelect.find('option:selected');
-        var articleId = selected.val();
-        var articleData = selected.data('article');
+        const projectId = articleSelect.data('projectId');
+        const selected  = articleSelect.find('option:selected');
+        const articleId = selected.val();
+        const articleData = selected.data('article');
         // just do it ...
-        Projects.projectWebPageRequest({ Action: 'link',
-                                         ArticleId: articleId,
-                                         ProjectId: projectId,
-                                         ArticleData: articleData },
+        Projects.projectWebPageRequest({ action: 'link',
+                                         articleId: articleId,
+                                         projectId: projectId,
+                                         articleData: articleData },
                                        container);
 
         return false;
       });
 
-      var scrollbarAdjust = function() {
-        var scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
+      const scrollbarAdjust = function() {
+        const scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
         articleBox.css('margin-right', scrollBarWidth + 'px');
       }
 
-      var forceSize = function(iframe) {
-        var domFrame = iframe[0];
-        var scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
-        var scrollWidth = domFrame.contentWindow.document.body.scrollWidth;
+      const forceSize = function(iframe) {
+        const domFrame = iframe[0];
+        const scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
+        const scrollWidth = domFrame.contentWindow.document.body.scrollWidth;
         iframe.css({ width: scrollWidth + 'px',
                      height: scrollHeight + 'px',
                      overflow: 'hidden' });
@@ -700,11 +700,11 @@ $(document).ready(function(){
         });
       };
 
-      var displayArticleLoad = function(frame) {
+      cosnt displayArticleLoad = function(frame) {
         if (typeof frame != 'undefined') {
-          var self = frame;
-          var iframe = $(self);
-          var contents = iframe.contents();
+          const self = frame;
+          const iframe = $(self);
+          const contents = iframe.contents();
 
           // For the pretty-print version. We remove everything
           // except the article itself
@@ -715,7 +715,7 @@ $(document).ready(function(){
                                      'width': 'unset'});
           contents.find('#content').css({'width': 'auto',
                                          'height': '100%'});
-          var itemText = contents.find('div.item-text');
+          const itemText = contents.find('div.item-text');
           itemText.css({ 'width': '700px',
                          //'min-width': '600px',
                          'margin-left': '10px',
@@ -723,8 +723,8 @@ $(document).ready(function(){
                          'position': 'unset' });
           itemText.children(':not(div.marginalie)').css('margin', '0px 10px 1em 300px');
 
-          var scrollWidth = self.contentWindow.document.body.scrollWidth;
-          var scrollHeight = self.contentWindow.document.body.scrollHeight;
+          const scrollWidth = self.contentWindow.document.body.scrollWidth;
+          const scrollHeight = self.contentWindow.document.body.scrollHeight;
           iframe.css({
             width: scrollWidth + 'px',
             height: scrollHeight + 'px'
@@ -747,8 +747,8 @@ $(document).ready(function(){
               create: function(event, ui) {
                 articleBox.height('auto');
 
-                var forcedWidth = articleBox.width();
-                var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
+                const forcedWidth = articleBox.width();
+                const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
 
                 allDisplayFrames.width(forcedWidth);
                 allDisplayFrames.height(forcedHeight);
@@ -767,8 +767,8 @@ $(document).ready(function(){
           // can happen, moving dialogs around causes
           // reloads, at least with FF.
 
-          var forcedWidth = articleBox.width();
-          var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
+          const forcedWidth = articleBox.width();
+          const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
 
           allDisplayFrames.width(forcedWidth);
           allDisplayFrames.height(forcedHeight);
@@ -784,7 +784,7 @@ $(document).ready(function(){
         }
       };
 
-      var changeArticleLoad = function(frame) {
+      const changeArticleLoad = function(frame) {
         if (typeof frame != 'undefined') {
           const self = frame;
           const iframe = $(self);
@@ -832,20 +832,20 @@ $(document).ready(function(){
           });
           contents.find('textarea').css({ 'max-width': '720px' });
 
-          var scrollWidth = self.contentWindow.document.body.scrollWidth;
-          var scrollHeight = self.contentWindow.document.body.scrollHeight;
+          const scrollWidth = self.contentWindow.document.body.scrollWidth;
+          const scrollHeight = self.contentWindow.document.body.scrollHeight;
           iframe.css({
             width: scrollWidth + 'px',
             height: scrollHeight + 'px'
           });
 
-          var articleContainer = iframe.parent();
+          const articleContainer = iframe.parent();
           articleContainer.css({
             height: 'unset',
             width: 'unset'
           });
 
-          var editArea = rexForm.find('textarea');
+          const editArea = rexForm.find('textarea');
           if (editArea.length > 0) {
             CAFEVDB.textareaResize(editArea);
 
@@ -879,7 +879,7 @@ $(document).ready(function(){
                 });
               },
               activate: function(event, ui) {
-                var iframe = ui.newPanel.find('iframe');
+                const iframe = ui.newPanel.find('iframe');
                 if (iframe.length == 1) {
                   forceSize(iframe);
                 } else {
@@ -938,7 +938,7 @@ $(document).ready(function(){
         return false;
       });
 
-      var toolbox = container.find('fieldset.projectToolbox');
+      const toolbox = container.find('fieldset.projectToolbox');
       if (toolbox.length > 0) {
         // If any of the 3 dialogs is already open, move it to top.
         var popup;
@@ -983,13 +983,11 @@ $(document).ready(function(){
           });
         }
 
-        var projectId = toolbox.data('projectId');
-        var projectName = toolbox.data('projectName');
+        const projectId = toolbox.data('projectId');
+        const projectName = toolbox.data('projectName');
         var post = {
-          ProjectId: projectId,
-          ProjectName: projectName,
           projectId: projectId,
-          projectName: projectName
+          projectName: projectName,
         };
         toolbox.off('click', '**'); // safeguard
         toolbox.on('click', 'button.project-wiki',
@@ -1023,7 +1021,7 @@ $(document).ready(function(){
   });
 
   CAFEVDB.addReadyCallback(function() {
-    var container = PHPMYEDIT.container();
+    const container = PHPMYEDIT.container();
     if (!container.hasClass('projects')) {
       return;
     }
