@@ -194,7 +194,13 @@ class ProjectParticipants extends PMETableViewBase
     $opts['key'] = [ 'project_id' => 'int', 'musician_id' => 'int' ];
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'sort_order', 'voice', '-section_leader', 'name', 'first_name' ];
+    $opts['sort_field'] = [
+      'sort_order',
+      'voice',
+      '-section_leader',
+      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'name'),
+      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
+    ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
