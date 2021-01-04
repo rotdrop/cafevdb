@@ -77,7 +77,28 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   protected $pageNavigation;
 
+  /** @var array
+   * ```
+   * [
+   *   [
+   *     'table' => SQL_TABLE_NAME,
+   *     'entity' => DOCTRINE_ORM_ENTITY_CLASS_NAME,
+   *     'master' => bool optional master-table
+   *     'read_only' => bool optional not considered for update
+   *     'column' => column used in select statements
+   *     'identifier' => [
+   *       TO_JOIN_TABLE_COLUMN => ALREADY_THERE_COLUMN_NAME,
+   *       ...
+   *     ]
+   *   ],
+   *   ...
+   * ]
+   * ```
+   */
   protected $joinStructure = [];
+
+  /** @var int Minimum numbers value to generate by self::preTrigger(). */
+  protected $minimumNumbersValue = 128;
 
   protected function __construct(
     ConfigService $configService
@@ -790,6 +811,35 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     return $entityId;
   }
+
+  /**
+   * Fill the sequence table 'numbers' with values from 1 up to $min.
+   *
+   * @param int $min Mininum max value of sequence table.
+   */
+  protected function generateNumbers(int $min)
+  {
+    $query = 'CALL generateNumbers('.$min.')';
+    $this->pme->sql_free_result($this->pme->myquery($query));
+  }
+
+  /**
+   * phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after' or 'pre'
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public function preTrigger(&$pme, $op, $step)
+  {
+    $this->generateNumbers($this->minimumNumbersValue);
+    return true;
+  }
+
 
 }
 
