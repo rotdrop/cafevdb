@@ -525,7 +525,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
         console.info(options);
         pme.tableDialogReload(options, callback);
 	// might be costly?
-        pme.submitOuterForm(options.ambientContainerSelector);
+        //pme.submitOuterForm(options.ambientContainerSelector);
 
         return false;
       });
