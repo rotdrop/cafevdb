@@ -62,22 +62,22 @@ class ProjectInstrumentation extends PMETableViewBase
   public function shortTitle()
   {
     if ($this->projectName) {
-      return L::t("Instrumentation Numbers for `%s'", array($this->projectName));
+      return $this->l->t("Instrumentation Numbers for `%s'", array($this->projectName));
     } else {
-      return L::t("Instrumentation Numbers");
+      return $this->l->t("Instrumentation Numbers");
     }
   }
 
   public function headerText()
   {
     $header = $this->shortTitle();
-    $header .= "<p>".L::t("The target instrumentation numbers can be filled into this table. ".
+    $header .= "<p>".$this->l->t("The target instrumentation numbers can be filled into this table. ".
                           "The `have'-numbers are the numbers of the musicians ".
                           "already registered for the project.".
                           "In order to transfer the instruments of the already registerd musicions ".
                           "into this table click the `Adjust Instrument' option from the `Actions' menu.");
 
-    return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
+    return '<div class="'.self::CSS_CLASS.'-header-text">'.$header.'</div>';
   }
 
   /** Show the underlying table. */
@@ -137,10 +137,10 @@ class ProjectInstrumentation extends PMETableViewBase
     if ($projectMode) {
       $adjustButton = array(
         'name' => 'transfer_instruments',
-        'value' => L::t('Transfer Instruments'),
+        'value' => $this->l->t('Transfer Instruments'),
         'css' => 'transfer-registered-instruments'
         );
-      $opts['buttons'] = Navigation::prependTableButton($adjustButton, false, false);
+      $opts['buttons'] = $this->pageNavigation->prependTableButton($adjustButton, false, false);
     }
 
     // field definitions

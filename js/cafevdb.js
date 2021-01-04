@@ -1333,18 +1333,16 @@ $(function(){
   content.on('click', 'ul#navigation-list li.nav-projectlabelcontrol a',
              function(event) {
                event.stopImmediatePropagation();
-
                const data = $(this).data('json');
-
                CAFEVDB.Projects.projectViewPopup(PHPMYEDIT.selector(), data);
                return false;
              });
 
   // Display the instrumentation numbers in a dialog widget
-  content.on('click', 'ul#navigation-list li.nav-projectinstrumentscontrol a',
+  content.on('click', 'ul#navigation-list li.nav-project-instrumentationcontrol a',
              function(event) {
                const data = $(this).data('json');
-               CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.defaultSelector, data);
+               CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.selector(), data);
                return false;
              });
 

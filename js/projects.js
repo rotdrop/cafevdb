@@ -160,8 +160,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       Table: 'BesetzungsZahlen',
       Transpose: 'transposed',
       InhibitTranspose: 'true',
-      ProjectId: post.ProjectId,
-      ProjectName: post.ProjectName, // this is the name
+      ProjectId: post.ProjectId || post.projectId,
+      ProjectName: post.ProjectName || post.projectName,
       // Now special options for the dialog popup
       InitialViewOperation: true,
       InitialName: false, // 'PME_sys_operation',
@@ -203,7 +203,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       ReloadName: 'PME_sys_operation',
       ReloadValue: 'View',
       PME_sys_operation: 'View',
-      PME_sys_rec: post.ProjectId,
+      PME_sys_rec: post.ProjectId || post.projectId,
       ModalDialog: true,
       modified: false
     };
