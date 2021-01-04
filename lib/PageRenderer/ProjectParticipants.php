@@ -343,6 +343,15 @@ class ProjectParticipants extends PMETableViewBase
       ],
     ];
 
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'voice',
+      [
+        'tab'      => [ 'id' => 'instrumentation' ],
+        'name'     => $this->l->t('Voice'),
+        'select'   => 'M',
+        'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
+      ]);
+
     $opts['fdd']['registration'] = [
       'name|LF' => ' &#10004;',
       'name|CAPDV' => $this->l->t("Registration"),
@@ -437,7 +446,7 @@ class ProjectParticipants extends PMETableViewBase
       'css'      => ['postfix' => ' projects tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
       'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
-      'filter' => 'having', // need "HAVING" for group by stuff
+      //'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table' => 'Projects',
         'column' => 'id',
@@ -651,6 +660,8 @@ class ProjectParticipants extends PMETableViewBase
         ]));
 
     //////// END Field definitions
+
+    $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
 
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
