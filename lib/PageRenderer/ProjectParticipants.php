@@ -382,6 +382,46 @@ class ProjectParticipants extends PMETableViewBase
         'values2|LF' => [ '' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
       ]);
 
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'section_leader',
+      [
+       'name|LF' => ' &alpha;',
+       'name|CAPVD' => $this->l->t("Section Leader"),
+       'tab' => [ 'id' => 'instrumentation' ],
+       'css'      => [ 'postfix' => ' section-leader tooltip-top' ],
+       'options'  => 'LAVCPDF',
+       'select' => 'C',
+       'maxlen' => '1',
+       'sort' => true,
+       'escape' => false,
+       'sql|CAPDV' => "GROUP_CONCAT(
+  IF(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader = 1, ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id, 0) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+       'display|LF' => [ 'popup' => function($data) {
+         return $this->toolTipsService['section-leader-mark'];
+       }],
+       'values|CAPDV' => [
+         'table' => "SELECT
+  pi.project_id,
+  pi.musician_id,
+  pi.instrument_id,
+  i.instrument,
+  i.sort_order
+  FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
+  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
+    ON i.id = pi.instrument_id
+  WHERE
+    pi.project_id = $projectId",
+         'column' => "instrument_id",
+         'description' => "instrument",
+         'orderby' => '$table.sort_order',
+         'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
+         'join' => false,
+       ],
+       'values2|LF' => [ '0' => '&nbsp;', '1' => '&alpha;' ],
+       'tooltip' => $this->l->t("Set to `%s' in order to mark the section leader",
+                                [ "&alpha;" ]),
+      ]);
+
     $opts['fdd']['registration'] = [
       'name|LF' => ' &#10004;',
       'name|CAPDV' => $this->l->t("Registration"),
@@ -824,7 +864,6 @@ class ProjectParticipants extends PMETableViewBase
 //       'display|LF' => array('popup' => function($data) {
 //           return Config::ToolTips('section-leader-mark');
 //         }),
-//       'css'      => array('postfix' => ' section-leader tooltip-top'),
 //       );
 
 //     $opts['fdd']['Anmeldung'] = array(
