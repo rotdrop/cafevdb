@@ -67,8 +67,8 @@ class ProjectEventsController extends Controller {
   public function serviceSwitch($topic)
   {
     try {
-      $projectId = $this->parameterService['ProjectId'];
-      $projectName = $this->parameterService['ProjectName'];
+      $projectId = $this->parameterService['projectId'];
+      $projectName = $this->parameterService['projectName'];
 
       if (empty($projectId) || empty($projectName)) {
         return self::grumble(

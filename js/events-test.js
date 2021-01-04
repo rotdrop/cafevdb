@@ -41,9 +41,9 @@ $(function() {
       console.log($('#dialog_holder'));
       $.post(
         OC.generateUrl('/apps/cafevdb/legacy/events/forms/new'),
-        { 'ProjectId': '99999',
-          'ProjectName': 'Test',
-          'EventKind': 'other',
+        { 'projectId': '99999',
+          'projectName': 'Test',
+          'eventKind': 'other',
           'protectCategories': 1
         })
       .done(function(data) {
@@ -59,9 +59,9 @@ $(function() {
       console.log($('#dialog_holder'));
       $.post(
         OC.generateUrl('/apps/cafevdb/legacy/events/forms/edit'),
-        { 'ProjectId': '99999',
-          'ProjectName': 'Test',
-          'EventKind': 'other',
+        { 'projectId': '99999',
+          'projectName': 'Test',
+          'eventKind': 'other',
 	  'calendarid': $('#edit-event-test-calendar-id').val(),
           'uri': $('#edit-event-test-uri').val(),
           'protectCategories': 1

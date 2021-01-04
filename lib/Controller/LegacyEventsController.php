@@ -132,9 +132,9 @@ class LegacyEventsController extends Controller {
 
   private function newEventForm()
   {
-    $projectId = $this->parameterService['ProjectId'];
-    $projectName = $this->parameterService['ProjectName'];
-    $eventKind = $this->parameterService['EventKind'];
+    $projectId = $this->parameterService['projectId'];
+    $projectName = $this->parameterService['projectName'];
+    $eventKind = $this->parameterService['eventKind'];
 
     if ($projectId < 0 ||
         (empty($projectName) &&

@@ -102,7 +102,7 @@ var CAFEVDB = CAFEVDB || {};
 
             var post = eventForm.serializeArray();
             var eventType = eventMenu.find('option:selected').val();
-            post.push({ name: 'EventKind', value: eventType });
+            post.push({ name: 'eventKind', value: eventType });
 
             $('#dialog_holder').load(
               OC.generateUrl('/apps/cafevdb/legacy/events/forms/new'),

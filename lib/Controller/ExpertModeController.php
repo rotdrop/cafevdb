@@ -168,14 +168,6 @@ class ExpertModeController extends Controller
       case 'sanitizephones':
         break;
       case 'setupdb':
-      case 'makeviews':
-        try {
-          $this->instrumentationService->createJoinTableViews();
-        } catch (\Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->exceptionChainData($t));
-        }
-        return self::response($this->l->t('Database maintenance succeeded'));
         break;
       case 'geodata':
         $this->geoCodingService->updateCountries();

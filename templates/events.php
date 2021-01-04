@@ -23,8 +23,8 @@
 <div id="events" class="cafev not-fixed-container"
      title="<?php echo $l->t('Events for').' '.$projectName;?>">
   <form id="eventlistform" class="<?php echo $cssClass; ?> not-fixed-container" >
-    <input type="hidden" name="ProjectId"   value="<?php echo $projectId; ?>" />
-    <input type="hidden" name="ProjectName" value="<?php echo $projectName; ?>" />
+    <input type="hidden" name="projectId"   value="<?php echo $projectId; ?>" />
+    <input type="hidden" name="projectName" value="<?php echo $projectName; ?>" />
     <input type="hidden" name="requesttoken" value="<?php echo $requestToken; ?>"/>
     <div class="eventcontrols content-controls">
       <select class="event-menu cafevdb-menu tooltip-right"
