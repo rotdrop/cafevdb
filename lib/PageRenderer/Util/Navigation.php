@@ -628,10 +628,10 @@ and even edit the public web-pages for the project and other things.");
         $post = [ 'template' => 'configcheck' ];
         break;
 
-      case 'projectinstruments':
+      case 'project-instrumentation':
         $value = $this->l->t('Instrumentation Numbers');
         $title = $this->l->t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');
-        $json = array('template' => 'project-instruments',
+        $json = array('template' => 'project-instrumentation',
                       'projectName' => $projectName,
                       'projectId' => $projectId);
         break;
