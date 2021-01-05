@@ -440,9 +440,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $this->logInfo('OLDVALS '.print_r($oldvals, true));
-    $this->logInfo('NEWVALS '.print_r($newvals, true));
-    $this->logInfo('CHANGED '.print_r($changed, true));
+    $this->logDebug('OLDVALS '.print_r($oldvals, true));
+    $this->logDebug('NEWVALS '.print_r($newvals, true));
+    $this->logDebug('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
@@ -456,12 +456,17 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       if (empty($changeSets[$table])) {
         continue;
       }
+      if ($joinInfo['master']) {
+        // leave this to phpMyEdit, otherwise key-updates would need
+        // further care.
+        continue;
+      }
       $changeSet = $changeSets[$table];
-      //$this->logInfo('CHANGESETS '.$table.' '.print_r($changeSet, true));
+      //$this->logDebug('CHANGESETS '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
-      //$this->logInfo('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
+      //$this->logDebug('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
 
       $identifier = [];
       $identifierColumns = $meta->getIdentifierColumnNames();
@@ -485,7 +490,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
         }
       }
-      $this->logInfo('Keys Values: '.print_r($identifier, true));
+      $this->logDebug('Keys Values: '.print_r($identifier, true));
       if (!empty($multiple)) {
         foreach ($identifier[$multiple]['old'] as $oldKey) {
           $oldIdentifier[$oldKey] = $identifier;
@@ -525,7 +530,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
           // set further properties ...
           if (!empty($changeSet)) {
-            throw new \Exception($this->l->t('Unimplemented'));
+            throw new \Exception(
+              $this->l->t('Unimplemented, table %s, change-set %s',
+                          [ $table, print_r($changeSet, true) ]));
             foreach ($changeSet as $column => $field) {
               Util::unsetValue($changed, $field);
             }
@@ -562,16 +569,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $logOld = [];
           $logNew = [];
           foreach ($changeSet as $column => $field) {
-            $qb->set('e.'.$this->property($column), ':'.$column)
-               ->setParameter($column, $newvals[$field]);
-            $this->logInfo("Unset $field in changed");
+            $parameter = $column.'Value';
+            $qb->set('e.'.$this->property($column), ':'.$parameter)
+               ->setParameter($parameter, $newvals[$field]);
+            $this->logDebug("Unset $field in changed");
             Util::unsetValue($changed, $field);
             $logOld[$column] = $oldvals[$field];
             $logNew[$column] = $newvals[$field];
           }
-          foreach ($identifier as $column => $value) {
-            $qb->andWhere('e.'.$this->property($column).' = :'.$key)
-               ->setParameter($key, $value);
+          foreach ($this->makeJoinTableId($meta, $identifier) as $column => $value) {
+            $parameter = $column.'Key';
+            $qb->andWhere('e.'.$this->property($column).' = :'.$parameter)
+               ->setParameter($parameter, $value);
           }
           $qb->getQuery()
              ->execute();
@@ -580,10 +589,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
     }
     $this->flush(); // flush everything to the data-base
-    if (!empty($changed)) {
-      throw new \Exception('Change-set '.print_r($changed, true).' should be empty.');
+    foreach ($changed as $field) {
+      $fieldInfo = $this->joinTableField($field);
+      if ($fieldInfo['table'] != $this->pme->tb) {
+        throw new \Exception(
+          $this->l->t('Remaining change-set %s must belong to the principal table %s.',
+                      [ print_r($changed, true), $this->pme->tb ]));
+      }
     }
-    return false; // nothing left to do
+    return !empty($changed);
   }
 
   /**
@@ -723,7 +737,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $parts = explode(self::JOIN_FIELD_NAME_SEPARATOR, $fieldName);
     if (count($parts) == 1) {
       $parts[1] = $parts[0];
-      $parts[0] = self::TABLE;
+      $parts[0] = $this->pme->tb;
+      if (empty($this->pme->tb)) {
+        throw new \Exception($this->l->t('Table-name not specified'));
+      }
     }
     return [
       'table' => $parts[0],
