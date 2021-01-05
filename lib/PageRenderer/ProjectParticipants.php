@@ -351,7 +351,13 @@ class ProjectParticipants extends PMETableViewBase
         'default'  => -1, // keep in sync with ProjectInstrumentationNumbers
         'select'   => 'M',
         'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
-        'sql|VD' => "GROUP_CONCAT(DISTINCT CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".instrument,' ', \$join_col_fqn) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+        'sql|VD' => "GROUP_CONCAT(DISTINCT
+  IF(\$join_col_fqn != -1,
+     CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".instrument,
+            ' ',
+            \$join_col_fqn),
+     NULL)
+  ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
         'sql|CP' => "GROUP_CONCAT(DISTINCT CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".id,':',".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
         'values|CP' => [
           'table' => "SELECT
@@ -396,6 +402,7 @@ class ProjectParticipants extends PMETableViewBase
        'name|CAPVD' => $this->l->t("Section Leader"),
        'tab' => [ 'id' => 'instrumentation' ],
        'css'      => [ 'postfix' => ' section-leader tooltip-top' ],
+       'default' => false,
        'options'  => 'LAVCPDF',
        'select' => 'C',
        'maxlen' => '1',
