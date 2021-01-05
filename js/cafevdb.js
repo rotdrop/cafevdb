@@ -1341,6 +1341,7 @@ $(function(){
   // Display the instrumentation numbers in a dialog widget
   content.on('click', 'ul#navigation-list li.nav-project-instrumentationcontrol a',
              function(event) {
+               event.stopImmediatePropagation(); // this is vital
                const data = $(this).data('json');
                CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.selector(), data);
                return false;

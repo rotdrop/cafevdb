@@ -83,19 +83,20 @@ var CAFEVDB = CAFEVDB || {};
 
 $(function(){
 
-  PHPMYEDIT.addTableLoadCallback('project-instrumentation',
-                                 {
-                                   callback: function(selector, parameters, resizeCB) {
-                                     if (parameters.reason != 'dialogOpen') {
-                                       resizeCB();
-                                       return;
-                                     }
-                                     CAFEVDB.ProjectInstrumentation.ready(selector);
-                                     resizeCB();
-                                   },
-                                   context: CAFEVDB.ProjectInstrumentation,
-                                   parameters: []
-                                 });
+  PHPMYEDIT.addTableLoadCallback(
+    'project-instrumentation',
+    {
+      callback: function(selector, parameters, resizeCB) {
+        if (parameters.reason != 'dialogOpen') {
+          resizeCB();
+          return;
+        }
+        CAFEVDB.ProjectInstrumentation.ready(selector);
+        resizeCB();
+      },
+      context: CAFEVDB.ProjectInstrumentation,
+      parameters: []
+    });
 
   CAFEVDB.addReadyCallback(function() {
     const container = $(PHPMYEDIT.defaultSelector+'.project-instrumentation');
