@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
@@ -42,6 +42,42 @@ class ProjectInstrumentation extends PMETableViewBase
   const TEMPLATE = 'project-instrumentation';
   const CSS_CLASS = self::TEMPLATE;
   const TABLE = 'ProjectInstrumentation';
+  const PROJECTS_TABLE = 'Projects';
+  const INSTRUMENTS_TABLE = 'Instruments';
+  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
+
+  // Projects Instruments ProjectInstruments
+  protected $joinStructure = [
+    [
+      'table' => self::TABLE,
+      'master' => true,
+      'entity' => Entities\ProjectInstrumentation::class,
+    ],
+    [
+      'table' => self::PROJECTS_TABLE,
+      'entity' => Entities\Project::class,
+      'identifier' => [ 'id' => 'project_id' ],
+      'column' => 'id',
+    ],
+    [
+      'table' => self::PROJECT_INSTRUMENTS_TABLE,
+      'entity' => Entities\ProjectInstrument::class,
+      'identifier' => [
+        'project_id' => 'project_id',
+        'instrument_id' => 'instrument_id',
+        'musician_id' => false,
+      ],
+      'column' => 'musician_id',
+    ],
+    [
+      'table' => self::INSTRUMENTS_TABLE,
+      'entity' => Entities\Instrument::class,
+      'identifier' => [
+        'id' => 'instrument_id',
+      ],
+      'column' => 'id',
+    ],
+  ];
 
   public function __construct(
     ConfigService $configService
@@ -98,7 +134,7 @@ class ProjectInstrumentation extends PMETableViewBase
 
     $opts['tb'] = self::TABLE;
 
-    $template = 'project-payments';
+    $template = self::TEMPLATE;
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],
@@ -107,7 +143,8 @@ class ProjectInstrumentation extends PMETableViewBase
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = [ 'project_id' => 'int', 'instrument_id' => 'int' ];
+    $opts['key'] = [ 'project_id' => 'int', 'instrument_id' => 'int', 'voice' => 'int' ];
+    $opts['groupby_fields'] = array_keys($opts['key']);
 
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
@@ -168,6 +205,66 @@ class ProjectInstrumentation extends PMETableViewBase
     );
 
     $joinTables = $this->defineJoinStructure($opts);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'name',
+      [
+        'name'  => $this->l->t('Project Name'),
+        'input' => ($projectMode ? 'HR' : ''),
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'year',
+      [
+        'name'  => $this->l->t('Project Year'),
+        'input' => 'VHR',
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::INSTRUMENTS_TABLE, 'sort_order',
+      [
+        'name'  => $this->l->t('Orchestral Sorting'),
+        'input' => 'VHR',
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::INSTRUMENTS_TABLE, 'id',
+      [
+        'name'        => $this->l->t('Instrument'),
+        'input|CP'    => 'R',
+        'select'      => 'D',
+        'sort'        => $sort,
+  //       'values|A' => [
+  //         'orderby' => '$table.order_by',
+  //         'filters' => "NOT \$table.id
+  // IN
+  // (SELECT instrument_id FROM \$main_table WHERE project_id = $projectId)",
+  //       ],
+        'values2|AVCPDLF'     => $this->instrumentInfo['byId'],
+        'valueGroups' => $this->instrumentInfo['idGroups'],
+      ]);
+
+    $opts['fdd']['voice'] = array(
+      'name'     => $this->l->t('Voice'),
+      //'input'    => 'R',
+      'select'   => 'N',
+      'options'  => 'LACPDVF',
+      'maxlen'   => 5,
+      'align'    => 'right',
+      'default'  => '-1',
+      'sort'     => $sort,
+      'tooltip'  => $this->toolTipsService['instrumentation-voice'],
+    );
+
+    // required quantity
+    $opts['fdd']['quantity'] = [
+      'name' => $this->l->t('Required'),
+      'name|A' => $this->l->t('Count'),
+      'select' => 'N',
+      'css'    => [ 'postfix' => ' instrumentation-required' ],
+      'sort' => $sort,
+      'align' => 'right',
+    ];
 
     // trigger
 
