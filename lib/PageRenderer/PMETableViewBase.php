@@ -499,6 +499,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($identifier[$multiple]['new'] as $newKey) {
           $newIdentifier[$newKey] = $identifier;
           $newIdentifier[$newKey][$multiple] = $newKey;
+          $multipleValues[$newKey] = [];
         }
 
         // Delete removed entities
@@ -509,6 +510,20 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $this->remove($entityId);
           $this->changeLogService->logDelete($table, $id, $id);
         }
+
+        foreach ($changeSet as $column => $field) {
+          // convention for multiple change-sets:
+          //
+          // - the values start with the key
+          // - boolean false values are omitted
+          // - optional values are omitted
+          // - values are separated by a colon from the key
+          foreach (explode(',', $newvals[$field]) as $value) {
+            $keyVal = array_merge(explode(':', $value), [ true, true ]);
+            $multipleValues[$keyVal[0]][$column] = $keyVal[1];
+          }
+        }
+        //$this->logInfo("MULTIPLE VALUES ".print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
@@ -529,17 +544,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
 
           // set further properties ...
-          if (!empty($changeSet)) {
-            throw new \Exception(
-              $this->l->t('Unimplemented, table %s, change-set %s',
-                          [ $table, print_r($changeSet, true) ]));
-            foreach ($changeSet as $column => $field) {
-              Util::unsetValue($changed, $field);
-            }
+          foreach ($multipleValues[$new] as $column => $value) {
+            $entity[$column] = $value;
           }
 
           // persist
           $this->persist($entity);
+        }
+        foreach ($changeSet as $column => $field) {
+          Util::unsetValue($changed, $field);
         }
       } else { // !multiple, simply update
         if (false) {
