@@ -642,7 +642,7 @@ $(document).ready(function(){
       const articleBox = container.find('#projectWebArticles');
 
       const displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
-      const numDisplayFrames = displayFrames.length;
+      var numDisplayFrames = displayFrames.length; // count-down variable
 
       const changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
       const numChangeFrames = changeFrames.length;
@@ -700,7 +700,7 @@ $(document).ready(function(){
         });
       };
 
-      cosnt displayArticleLoad = function(frame) {
+      const displayArticleLoad = function(frame) {
         if (typeof frame != 'undefined') {
           const self = frame;
           const iframe = $(self);
