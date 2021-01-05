@@ -33,7 +33,7 @@ table.pme-main td.project-instrumentation-numbers-required {
 table.pme-main td.project-instrumentation-numbers-balance .negative {
     font-weight:bold;
     color:red;
-    font-size:140%;
+    /* font-size:140%; */
 }
 
 table.pme-main td.project-instrumentation-numbers-balance {

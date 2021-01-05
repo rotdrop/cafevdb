@@ -431,6 +431,8 @@ each individual table view.'),
 
       'project-instrumentation-numbers-voice' => $this->l->t('The voice for the respective instrument. Leave at the default to signal that this instrument does not need to be separated into voices. You probably want to distinguish between violin 1 and violin 2, thought ...'),
 
+      'project-instrumentation-numbers-balance' => $this->l->t('The differences between the number of required musicians and the registered / confirmed musicians.'),
+
       'instrument-insurance-bill' => $this->l->t('Generate a PDF with detailed records of the insured items and the
 resulting insurance fee.'),
 

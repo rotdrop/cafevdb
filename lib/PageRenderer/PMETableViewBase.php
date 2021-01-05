@@ -802,24 +802,39 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function makeJoinTableField(array &$fieldDescriptionData, $tableInfo, string $column, array $fdd)
   {
-    $masterFieldName = $this->joinTableMasterFieldName($tableInfo);
-    $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
-    if ($joinIndex === false) {
-      $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
-      throw new \Exception($this->l->t("Master join-table field for %s not found.", $table));
+    if (is_string($tableInfo) && isset($fdd['values']['join'])) {
+      $defaultFDD = [
+        'select' => 'T',
+        'maxlen' => 128,
+        'sort' => true,
+        'input' => 'S',
+        'values' => [
+          'table' => $tableInfo,
+          'column' => $column,
+        ],
+      ];
+    } else {
+      $masterFieldName = $this->joinTableMasterFieldName($tableInfo);
+      $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
+      if ($joinIndex === false) {
+        $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
+        throw new \Exception($this->l->t("Master join-table field for %s not found.", $table));
+      }
+      $defaultFDD = [
+        'select' => 'T',
+        'maxlen' => 128,
+        'sort' => true,
+        'input' => 'S',
+        'values' => [
+          'column' => $column,
+          'join' => [ 'reference' => $joinIndex, ],
+        ],
+      ];
     }
     $fieldName = $this->joinTableFieldName($tableInfo, $column);
-    $defaultFDD = [
-      'select' => 'T',
-      'maxlen' => 128,
-      'sort' => true,
-      'input' => 'S',
-      'values' => [
-        'column' => $column,
-        'join' => [ 'reference' => $joinIndex, ],
-      ],
-    ];
+    $index = count($fieldDescriptionData);
     $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
+    return $index;
   }
 
   /**

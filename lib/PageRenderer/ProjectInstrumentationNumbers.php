@@ -307,21 +307,46 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'sql'    => 'COUNT($join_col_fqn)',
       ]);
 
-    $opts['fdd'][$this->joinTableFieldName(self::PROJECT_PARTICIPANTS_TABLE, 'musician_id')] = [
-      'name'   => $this->l->t('Confirmed'),
+    $joinTables[self::PROJECT_PARTICIPANTS_TABLE] =
+      'PMEjoin'
+      .$this->makeJoinTableField(
+        $opts['fdd'], self::PROJECT_PARTICIPANTS_TABLE, 'musician_id',
+        [
+          'name'   => $this->l->t('Confirmed'),
+          'input'  => 'VR',
+          'sort'   => $sort,
+          'select' => 'N',
+          'align' => 'right',
+          'sql'    => 'COUNT($join_col_fqn)',
+          'values' => [
+            'join' => '$join_table.project_id = $main_table.project_id
+  AND $join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.musician_id
+  AND $join_table.registration = 1',
+          ],
+      ]);
+
+    $opts['fdd']['missing'] = [
+      'name'   => $this->l->t('Balance'),
       'input'  => 'VR',
       'sort'   => $sort,
       'select' => 'N',
-      'align' => 'right',
-      'sql'    => 'COUNT($join_col_fqn)',
-      'values' => [
-        'table' => self::PROJECT_PARTICIPANTS_TABLE,
-        'column' => 'musician_id',
-        'join' => '$join_table.project_id = $main_table.project_id
-  AND $join_table.musician_id = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.musician_id
-  AND $join_table.registration = 1',
-      ],
+      'sql'    => "CONCAT(
+  COUNT(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".musician_id) - PMEtable0.quantity,
+  ':',
+  COUNT(".$joinTables[self::PROJECT_PARTICIPANTS_TABLE].".musician_id) - PMEtable0.quantity
+)",
+      'php' => function($balance, $op, $field, $fds, $fdd, $row, $recordId) {
+        $values = Util::explode(':', $balance);
+        $html = '';
+        $html .= '<span'.($values[0] < 0 ? ' class="negative"' : '').'>'.$values[0].'</span>';
+        $html .= ' / ';
+        $html .= '<span'.($values[1] < 0 ? ' class="negative"' : '').'>'.$values[1].'</span>';
+        return $html;
+      },
+      'escape' => false,
+      'align'  => 'right',
     ];
+    $this->addSlug('balance', $opts['fdd']['missing']);
 
     // trigger
 
