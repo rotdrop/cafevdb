@@ -392,7 +392,7 @@ class phpMyEdit
 	function copy_enabled()	  { return stristr($this->options, 'P') && $this->add_enabled(); }
 	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tabs) > 0; }
 	function hidden($k)		  { return stristr(@$this->fdd[$k]['input'],'H'); }
-	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S') || isset($this->fdd[$k]['values']['join']['reference']); }
+	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S') /*|| isset($this->fdd[$k]['values']['join']['reference'])*/; }
 	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
 	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R'); }
 	function annotation($k)	  { return stristr(@$this->fdd[$k]['input'],'A'); }
@@ -780,10 +780,7 @@ class phpMyEdit
 			return $fdd['setvalues']; // use cache.
 		}
 
-		//$this->logInfo('SetValues for '.$this->fds[$field_num]);
-
 		$valuesDef = $this->values_with_defaults($field_num);
-		//$this->logInfo('Resulting Values '.print_r($valuesDef, true));
 
 		$values = array();
 		$groups = null;
@@ -855,7 +852,6 @@ class phpMyEdit
 			$table = $this->tb;
 		}
 		$valuesDef = $this->values_with_defaults($field_num);
-		//$this->logInfo('Resulting Values '.print_r($valuesDef, true));
 
 		$key      = $valuesDef['column'];
 		$desc     = $valuesDef['description'];
@@ -1315,6 +1311,7 @@ class phpMyEdit
 					'data_base'        => $dbp,
 					'main_table'	   => $main_table,
 					'main_column'	   => $this->sd.$main_column.$this->ed,
+					'main_col_fqn'     => $main_table.'.'.$this->sd.$main_column.$this->ed,
 					'join_table'	   => $join_table,
 					'join_column'	   => $join_column,
 					'join_col_fqn'     => $join_table.'.'.$join_column,
@@ -2481,11 +2478,10 @@ class phpMyEdit
 		}
 		$key_rec = $this->key_record($key_rec);
 		// @TODO check
-		//		$this->col_has_values($k) && $this->set_values($k);
+		//$this->col_has_values($k) && $this->set_values($k);
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
 		} else if (isset($this->fdd[$k]['values2'])) {
-			//error_log(print_r($this->fdd[$k]['values2'], true));
 			if (isset($row['qf'.$k.'_idx'])) {
 				$value = $row['qf'.$k.'_idx'];
 			} else {
@@ -4224,7 +4220,7 @@ class phpMyEdit
 		 * XXX this feature does not work yet!!!
 		 */
 		// aggregates listing (if any)
-		if (0 && $$var_to_total) {
+		if (false && $$var_to_total) {
 			// do the aggregate query if necessary
 			//if ($vars_to_total) {
 			$qp = array();
@@ -5413,6 +5409,7 @@ class phpMyEdit
 		else {
 			$this->recreate_fdd();
 			$this->backward_compatibility();
+			$this->recreate_displayed();
 			$this->list_table();
 		}
 
