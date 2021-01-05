@@ -29,7 +29,7 @@ unset($this->vars['css-class']);
 $nav = '';
 $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('all');
-//$nav .= $pageNavigation->pageControlElement('project-instrumentation');
+//$nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers');
 $nav .= $pageNavigation->pageControlElement('instruments');
 $nav .= $pageNavigation->pageControlElement('instrument-families');
 if ($expertMode) {

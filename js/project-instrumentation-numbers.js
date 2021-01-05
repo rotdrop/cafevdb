@@ -24,13 +24,13 @@ var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
   'use strict';
-  var ProjectInstrumentation = function() {};
+  var ProjectInstrumentationNumbers = function() {};
 
-  ProjectInstrumentation.recordRegistered = function() {
+  ProjectInstrumentationNumbers.recordRegistered = function() {
     const post = optionValues[1];
   };
 
-  ProjectInstrumentation.ready = function(selector) {
+  ProjectInstrumentationNumbers.ready = function(selector) {
     const self = this;
     const container = PHPMYEDIT.container(selector);
 
@@ -77,33 +77,33 @@ var CAFEVDB = CAFEVDB || {};
     });
   };
 
-  CAFEVDB.ProjectInstrumentation = ProjectInstrumentation;
+  CAFEVDB.ProjectInstrumentationNumbers = ProjectInstrumentationNumbers;
 
 })(window, jQuery, CAFEVDB);
 
 $(function(){
 
   PHPMYEDIT.addTableLoadCallback(
-    'project-instrumentation',
+    'project-instrumentation-numbers',
     {
       callback: function(selector, parameters, resizeCB) {
         if (parameters.reason != 'dialogOpen') {
           resizeCB();
           return;
         }
-        CAFEVDB.ProjectInstrumentation.ready(selector);
+        CAFEVDB.ProjectInstrumentationNumbers.ready(selector);
         resizeCB();
       },
-      context: CAFEVDB.ProjectInstrumentation,
+      context: CAFEVDB.ProjectInstrumentationNumbers,
       parameters: []
     });
 
   CAFEVDB.addReadyCallback(function() {
-    const container = $(PHPMYEDIT.defaultSelector+'.project-instrumentation');
+    const container = $(PHPMYEDIT.defaultSelector+'.project-instrumentation-numbers');
     if (container.length <= 0) {
       return; // not for us
     }
-    CAFEVDB.ProjectInstrumentation.ready();
+    CAFEVDB.ProjectInstrumentationNumbers.ready();
   });
 
 });

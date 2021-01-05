@@ -57,7 +57,7 @@ style($appName, 'inlineimage');
 style($appName, 'navsnapper');
 style($appName, 'pme-table');
 style($appName, 'projects');
-style($appName, 'project-instrumentation');
+style($appName, 'project-instrumentation-numbers');
 style($appName, 'project-extra');
 style($appName, 'mobile');
 
@@ -76,7 +76,7 @@ script($appName, 'pme');
 script($appName, 'musicians');
 script($appName, 'projects');
 script($appName, 'project-participants');
-script($appName, 'project-instrumentation');
+script($appName, 'project-instrumentation-numbers');
 script($appName, 'project-extra');
 script($appName, 'sepa-debit-mandate');
 script($appName, 'personal-settings');

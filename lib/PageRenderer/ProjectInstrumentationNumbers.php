@@ -37,9 +37,9 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
 
 /**Table generator for Instruments table. */
-class ProjectInstrumentation extends PMETableViewBase
+class ProjectInstrumentationNumbers extends PMETableViewBase
 {
-  const TEMPLATE = 'project-instrumentation';
+  const TEMPLATE = 'project-instrumentation-numbers';
   const CSS_CLASS = self::TEMPLATE;
   const TABLE = 'ProjectInstrumentation';
   const PROJECTS_TABLE = 'Projects';
@@ -149,10 +149,10 @@ class ProjectInstrumentation extends PMETableViewBase
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
     if ($projectMode) {
-      $opts['options'] = 'ACDF';
+      $opts['options'] = 'ACDFVP';
       $sort = false;
     } else {
-      $opts['options'] = 'ACDF';
+      $opts['options'] = 'ACDFVP';
       $sort = true;
     }
 
@@ -168,7 +168,7 @@ class ProjectInstrumentation extends PMETableViewBase
         'sort'  => $sort,
         'time'  => true,
         'tabs'  => false,
-        'navigation' => 'CD',
+        'navigation' => 'CDVP',
     ]);
 
     if ($projectMode) {
@@ -182,29 +182,56 @@ class ProjectInstrumentation extends PMETableViewBase
 
     // field definitions
 
-    $opts['fdd']['project_id'] = array(
-      'name'     => $this->l->t('Project-Id'),
-      'input'    => 'R',
-      'select'   => 'T',
-      'options'  => 'LACPDV',
-      'maxlen'   => 5,
-      'align'    => 'right',
-      'default'  => '0',
-      'sort'     => true,
-      );
-
-    $opts['fdd']['instrument_id'] = array(
-      'name'     => $this->l->t('Instrument-Id'),
-      'input'    => 'R',
-      'select'   => 'T',
-      'options'  => 'LACPDV',
-      'maxlen'   => 5,
-      'align'    => 'right',
-      'default'  => '0',
-      'sort'     => true,
-    );
-
     $joinTables = $this->defineJoinStructure($opts);
+
+    $opts['fdd']['project_id'] = [
+      'name'      => $this->l->t('Project'),
+      'input'     => ($projectMode ? 'R' : ''),
+      'css' => [ 'postfix' => ' project-instrument-project-name' ],
+      'select|DV' => 'T', // delete, filter, list, view
+      'select|ACPFL' => 'D',  // add, change, copy
+      'maxlen'   => 20,
+      'size'     => 16,
+      'default'  => ($projectMode ? $projectId : -1),
+      'sort'     => $sort,
+      'values|ACP' => [
+        'column'      => 'id',
+        'description' => 'name',
+        'groups'      => 'year',
+        'orderby'     => '$table.year DESC',
+        //        'join'        => '$main_col_fqn = $join_col_fqn',
+        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+      ],
+      'values|DVFL' => [
+        'column'      => 'id',
+        'description' => 'name',
+        'groups'      => 'year',
+        'orderby'     => '$table.year DESC',
+        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+        'filters'     => '$table.id IN (SELECT project_id FROM $main_table)',
+      ],
+    ];
+    $this->addSlug('project', $opts['fdd']['project_id']);
+
+    $opts['fdd']['instrument_id'] = [
+      'name'     => $this->l->t('Instrument'),
+      'input|CP' => 'R',
+      'select'   => 'D',
+      'options'  => 'LACPDVF',
+      'maxlen'   => 5,
+      'align'    => 'right',
+      'default'  => '0',
+      'sort'     => $sort,
+      'values'   => [
+        'column' => 'id',
+        'description' => 'instrument',
+        'orderby' => '$table.sort_order',
+        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+      ],
+      //'values2|AVCPDLF' => $this->instrumentInfo['byId'],
+      'valueGroups' => $this->instrumentInfo['idGroups'],
+    ];
+    $this->addSlug('instrument', $opts['fdd']['instrument_id']);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECTS_TABLE, 'name',
@@ -227,46 +254,37 @@ class ProjectInstrumentation extends PMETableViewBase
         'input' => 'VHR',
       ]);
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::INSTRUMENTS_TABLE, 'id',
-      [
-        'name'        => $this->l->t('Instrument'),
-        'input|CP'    => 'R',
-        'select'      => 'D',
-        'sort'        => $sort,
-  //       'values|A' => [
-  //         'orderby' => '$table.order_by',
-  //         'filters' => "NOT \$table.id
-  // IN
-  // (SELECT instrument_id FROM \$main_table WHERE project_id = $projectId)",
-  //       ],
-        'values2|AVCPDLF'     => $this->instrumentInfo['byId'],
-        'valueGroups' => $this->instrumentInfo['idGroups'],
-      ]);
-
-    $opts['fdd']['voice'] = array(
+    $opts['fdd']['voice'] = [
       'name'     => $this->l->t('Voice'),
       //'input'    => 'R',
-      'select'   => 'N',
+      'select'   => 'D',
       'options'  => 'LACPDVF',
       'maxlen'   => 5,
       'align'    => 'right',
       'default'  => '-1',
       'sort'     => $sort,
-      'tooltip'  => $this->toolTipsService['instrumentation-voice'],
-    );
+      'values2' => [ '-1' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+    ];
+    $this->addSlug('voice', $opts['fdd']['voice']);
 
     // required quantity
     $opts['fdd']['quantity'] = [
       'name' => $this->l->t('Required'),
-      'name|A' => $this->l->t('Count'),
       'select' => 'N',
-      'css'    => [ 'postfix' => ' instrumentation-required' ],
       'sort' => $sort,
       'align' => 'right',
     ];
+    $this->addSlug('required', $opts['fdd']['quantity']);
 
     // trigger
+
+    $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
+
+    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+    $opts['triggers']['copy']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
     // go
 
@@ -279,4 +297,14 @@ class ProjectInstrumentation extends PMETableViewBase
     }
   }
 
+  private function addSlug(string $slug, array &$fdd)
+  {
+    $slug = self::CSS_CLASS.'-'.$slug;
+    if (!isset($fdd['css']['postfix'])) {
+      $fdd['css'] = [ 'postfix' => '' ];
+    }
+    $fdd['css']['postfix'] .= ' '.$slug;
+    $fdd['tooltip'] = $this->toolTipsService[$slug];
+    $this->logInfo('TOOLTIP: '.$fdd['tooltip']);
+  }
 }

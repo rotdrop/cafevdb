@@ -139,7 +139,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
                            [$key, $subKey]);
       } else {
         $tip = $this->l->t('Unknown Tooltip for key "%s" requested.',
-                    [$key]);
+                           [$key]);
       }
     }
 
@@ -427,6 +427,10 @@ each individual table view.'),
 
       'further-settings' => $this->l->t('Further personal settings, normally not needed use with care.'),
 
+      'project-instrumentation-numbers-required' => $this->l->t('The number of the required musicians per instrument per voice (if the section is split by voices, e.g. "violin 1", "violin 2")'),
+
+      'project-instrumentation-numbers-voice' => $this->l->t('The voice for the respective instrument. Leave at the default to signal that this instrument does not need to be separated into voices. You probably want to distinguish between violin 1 and violin 2, thought ...'),
+
       'instrument-insurance-bill' => $this->l->t('Generate a PDF with detailed records of the insured items and the
 resulting insurance fee.'),
 
@@ -493,7 +497,7 @@ the event.'),
 <dt>%s</dt>
 <dd>Final payment has been received.</dd>
 </dl>',
-                               array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;')
+                                      array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;')
       ),
 
       'phpmyadmin-link' => $this->l->t('Link to the data-base administration tool for the underlying data-base. Swiss-army-knife-like.'),
@@ -893,7 +897,7 @@ the `Debug\' tab'),
       'sepa-mandate-expired' => $this->l->t('This debit-mandate has not been used for more than %d month and
 therefore is expired and cannot be used any longer. Pleae delete it
 and contact the treasurer for further instructions.',
-                                     array('Finance::SEPA_MANDATE_EXPIRE_MONTHS')
+                                            array('Finance::SEPA_MANDATE_EXPIRE_MONTHS')
       ),
 
       'settings-button' => $this->l->t('Personal application settings.'),

@@ -608,6 +608,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         } else {
           $joinInfo['identifier'][$opts['key']] = $opts['key'];
         }
+        $joinTables[$joinInfo['table']] = 'PMEtable0';
         continue;
       }
       $table = $joinInfo['table'];

@@ -152,7 +152,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     // instrumentation numbers are somewhat nasty and require too
     // many options.
 
-    const template = 'project-instrumentation';
+    const template = 'project-instrumentation-numbers';
     const tableOptions = {
       AmbientContainerSelector: containerSel,
       DialogHolderCSSId: template + '-dialog',
@@ -263,7 +263,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     case 'project-email':
       Projects.emailPopup(post);
       break;
-    case 'project-instrumentation':
+    case 'project-instrumentation-numbers':
       Projects.instrumentationNumbersPopup(containerSel, post);
       break;
     case 'project-wiki':
@@ -974,7 +974,7 @@ $(document).ready(function(){
             of: window
           });
         }
-        if ((popup = $('#project-instrumentation-dialog')).dialog('isOpen') === true) {
+        if ((popup = $('#project-instrumentation-numbers-dialog')).dialog('isOpen') === true) {
           popup.dialog('moveToTop');
           popup.dialog('option', 'position', {
             my: 'right top',
@@ -1008,7 +1008,7 @@ $(document).ready(function(){
                      Projects.emailPopup(post);
                      return false;
                    });
-        toolbox.on('click', 'button.project-instrumentation',
+        toolbox.on('click', 'button.project-instrumentation-numbers',
                    function(event) {
                      Projects.instrumentationNumbersPopup(selector, post);
                      return false;

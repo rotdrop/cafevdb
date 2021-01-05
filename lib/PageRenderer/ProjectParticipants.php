@@ -238,7 +238,7 @@ class ProjectParticipants extends PMETableViewBase
         'navigation' => 'VCD',
     ]);
 
-    $opts['fdd']['project_id'] = array(
+    $opts['fdd']['project_id'] = [
       'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => $this->l->t('Project-Id'),
       'input'    => 'R',
@@ -248,9 +248,9 @@ class ProjectParticipants extends PMETableViewBase
       'align'    => 'right',
       'default'  => '0',
       'sort'     => true,
-      );
+      ];
 
-    $opts['fdd']['musician_id'] = array(
+    $opts['fdd']['musician_id'] = [
       'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => $this->l->t('Musician-Id'),
       'input'    => 'R',
@@ -260,7 +260,7 @@ class ProjectParticipants extends PMETableViewBase
       'align'    => 'right',
       'default'  => '0',
       'sort'     => true,
-    );
+    ];
 
     $joinTables = $this->defineJoinStructure($opts);
 

@@ -25,18 +25,18 @@
  *
  */
 
-table.pme-main td.instrumentation-required {
+table.pme-main td.project-instrumentation-numbers-required {
     color:blue;
     font-weight:bold;
 }
 
-table.pme-main td.instrumentation-balance .negative {
+table.pme-main td.project-instrumentation-numbers-balance .negative {
     font-weight:bold;
     color:red;
     font-size:140%;
 }
 
-table.pme-main td.instrumentation-balance {
+table.pme-main td.project-instrumentation-numbers-balance {
     color:green;
 }
 
@@ -46,24 +46,24 @@ table.pme-main td.instrumentation-balance {
  *
  */
 
-.pme-instrumentation-actions-block div {
+.pme-project-instrumentation-numbers-actions-block div {
   vertical-align:middle;
   font-weight:bold;
 }
 
-.pme-instrumentation-actions-block a.chosen-default span {
+.pme-project-instrumentation-numbers-actions-block a.chosen-default span {
   /*font-weight:bold;*/
   color:#555;
 }
 
-.pme-instrumentation-actions-block a.chosen-default span:hover,
-.pme-instrumentation-actions-block a.chosen-default span:focus,
-.pme-instrumentation-actions-block a.chosen-default span:active {
+.pme-project-instrumentation-numbers-actions-block a.chosen-default span:hover,
+.pme-project-instrumentation-numbers-actions-block a.chosen-default span:focus,
+.pme-project-instrumentation-numbers-actions-block a.chosen-default span:active {
   /*font-weight:bold;*/
   color:#333;
 }
 
-.pme-instrumentation-actions-block a.chosen-single {
+.pme-project-instrumentation-numbers-actions-block a.chosen-single {
   height: auto;
   background: transparent;
   box-shadow: none;
@@ -85,7 +85,7 @@ table.pme-main td.instrumentation-balance {
  *
  */
 
-#project-instrumentation-dialog {
+#project-project-instrumentation-numbers-dialog {
   /*overflow:;*/
   min-width:30em;
 }

@@ -39,7 +39,7 @@ namespace CAFEVDB {
     if ($projectName === $appConifg->getConfigValue('memberTable', false)) {
       $nav .= Navigation::pageControlElement('insurances');
     }
-    $nav .= Navigation::pageControlElement('project-instrumentation', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
     $nav .= Navigation::pageControlElement('projects');
   } else {
     $nav .= Navigation::pageControlElement('projects');

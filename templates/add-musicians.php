@@ -31,7 +31,7 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('projectlabel', $table->projectName, $table->projectId);
   $nav .= Navigation::pageControlElement('projects');
   $nav .= Navigation::pageControlElement('detailed', $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('project-instrumentation', $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('project-instrumentation-numbers', $table->projectName, $table->projectId);
   $nav .= Navigation::pageControlElement('instruments', $table->projectName, $table->projectId);
   //$nav .= Navigation::pageControlElement('detailed', $table->projectName, $table->projectId);
 

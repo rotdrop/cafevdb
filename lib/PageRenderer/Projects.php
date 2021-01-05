@@ -554,8 +554,8 @@ project without a flyer first.");
                  'value' => 'project-participants',
                  'name' => $this->l->t('Participants') ],
                [ 'type' => 'option',
-                 'title' => $this->toolTipsService['project-action-instrumentation-numbers'],
-                 'value' => 'project-instrumentation',
+                 'title' => $this->toolTipsService['project-action-project-instrumentation-numbers'],
+                 'value' => 'project-instrumentation-numbers',
                  'name' => $this->l->t('Instrumentation Numbers') ],
                [ 'type' => 'option',
                  'title' => $this->toolTipsService['project-action-extra-fields'],
@@ -646,8 +646,8 @@ project without a flyer first.");
         ],
         [ 'type' => 'button',
           'title' => $this->toolTipsService['project-action-instrumentation-numbers'],
-          'class' => 'project-instrumentation tooltip-top',
-          'value' => 'project-instrumentation',
+          'class' => 'project-instrumentation-numbers tooltip-top',
+          'value' => 'project-instrumentation-numbers',
           'name' => $this->l->t('Instrumentation Numbers')
         ],
       ]);

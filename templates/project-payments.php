@@ -37,7 +37,7 @@ if ($projectId >= 0) {
   if ($projectName === $appConifg->getConfigValue('memberTable', false)) {
     $nav .= $pageNavigation->pageControlElement('insurances');
   }
-  $nav .= $pageNavigation->pageControlElement('project-instrumentation', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('projects');
 } else {
   $nav .= $pageNavigation->pageControlElement('projects');

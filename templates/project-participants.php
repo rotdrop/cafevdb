@@ -33,7 +33,7 @@ $nav = '';
 $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-extra-fields', $projectName, $projectId);
-$nav .= $pageNavigation->pageControlElement('project-instrumentation', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
 // @TODO CHECK! TO ID!
 // if ($oles->inTreasurerGroup()) {
 //   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);

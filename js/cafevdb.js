@@ -1330,7 +1330,7 @@ $(function(){
              });
 
   // Display the overview-page for the given project.
-  content.on('click', 'ul#navigation-list li.nav-projectlabelcontrol a',
+  content.on('click', 'ul#navigation-list li.nav-projectlabel-control a',
              function(event) {
                event.stopImmediatePropagation();
                const data = $(this).data('json');
@@ -1339,7 +1339,7 @@ $(function(){
              });
 
   // Display the instrumentation numbers in a dialog widget
-  content.on('click', 'ul#navigation-list li.nav-project-instrumentationcontrol a',
+  content.on('click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
              function(event) {
                event.stopImmediatePropagation(); // this is vital
                const data = $(this).data('json');
