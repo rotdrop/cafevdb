@@ -2773,7 +2773,7 @@ class phpMyEdit
 			// selects can only be disabled, but not made readonly.
 			foreach ($selected as $value) {
 				$name = htmlspecialchars($name).($multiple ? '[]' : '');
-				$this->htmlHiddenData($name, $value);
+				$ret .= $this->htmlHidden($name, $value);
 				if (!$multiple) {
 					break;
 				}
