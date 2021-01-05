@@ -243,7 +243,7 @@ class Projects extends PMETableViewBase
     $opts['fdd']['actions'] = [
       'name'     => $this->l->t('Actions'),
       'input'    => 'RV',
-      'sql'      => '`PMEtable0`.`Name`',
+      'sql'      => '`PMEtable0`.`name`',
       'php|VCLDF'    => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
         $projectId = $recordId;
         $projectName = $value;
@@ -362,7 +362,7 @@ class Projects extends PMETableViewBase
       'php|VCP'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx) {
         $post = ['ProjectExtraFields' => $value,
                  'Template' => 'project-extra',
-                 'ProjectName' => $row['qf'.$nameIdx],
+                 'projectName' => $row['qf'.$nameIdx],
                  'project_id' => $recordId];
         $post = http_build_query($post, '', '&');
         $title = $this->toolTipsService['project-action-extra-fields'];
