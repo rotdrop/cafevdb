@@ -66,6 +66,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'identifier' => [
         'project_id' => 'project_id',
         'instrument_id' => 'instrument_id',
+        'voice' => 'voice',
         'musician_id' => false,
       ],
       'column' => 'musician_id',
