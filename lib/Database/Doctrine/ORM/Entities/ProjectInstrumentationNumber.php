@@ -27,20 +27,16 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProjectInstrumentation
+ * ProjectInstrumentationNumber
  *
  * This is almost only a pivot table (i.e. a join table between
  * instruments and projects) but for the "Quantity" column which
  * states how many instruments are needed.
  *
- * @todo "Quantity" should probably be augmented by "voice" for
- * multi-voice instruments. Although this almost only affects violins
- * ...
- *
- * @ORM\Table(name="ProjectInstrumentation", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "instrument_id"})})
+ * @ORM\Table(name="ProjectInstrumentationNumbers")
  * @ORM\Entity
  */
-class ProjectInstrumentation
+class ProjectInstrumentationNumber implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -81,7 +77,7 @@ class ProjectInstrumentation
    *
    * @param int $instrument
    *
-   * @return ProjectInstrumentation
+   * @return ProjectInstrumentationNumber
    */
   public function setInstrument($instrument)
   {
@@ -105,7 +101,7 @@ class ProjectInstrumentation
    *
    * @param int $project
    *
-   * @return ProjectInstrumentation
+   * @return ProjectInstrumentationNumber
    */
   public function setProject($project)
   {
@@ -129,7 +125,7 @@ class ProjectInstrumentation
    *
    * @param int $voice
    *
-   * @return ProjectInstrumentation
+   * @return ProjectInstrumentationNumber
    */
   public function setVoice($voice)
   {
@@ -153,7 +149,7 @@ class ProjectInstrumentation
    *
    * @param int $quantity
    *
-   * @return ProjectInstrumentation
+   * @return ProjectInstrumentationNumber
    */
   public function setQuantity($quantity)
   {

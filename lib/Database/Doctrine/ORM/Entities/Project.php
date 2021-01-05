@@ -91,7 +91,7 @@ class Project implements \ArrayAccess
   private $disabled = false;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrumentation", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $instrumentation;
 

@@ -41,17 +41,18 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 {
   const TEMPLATE = 'project-instrumentation-numbers';
   const CSS_CLASS = self::TEMPLATE;
-  const TABLE = 'ProjectInstrumentation';
+  const TABLE = 'ProjectInstrumentationNumbers';
   const PROJECTS_TABLE = 'Projects';
   const INSTRUMENTS_TABLE = 'Instruments';
   const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
+  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
 
   // Projects Instruments ProjectInstruments
   protected $joinStructure = [
     [
       'table' => self::TABLE,
       'master' => true,
-      'entity' => Entities\ProjectInstrumentation::class,
+      'entity' => Entities\ProjectInstrumentationNumber::class,
     ],
     [
       'table' => self::PROJECTS_TABLE,
@@ -77,6 +78,18 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       ],
       'column' => 'id',
     ],
+    // [
+    //   'table' => self::PROJECT_PARTICIPANTS_TABLE,
+    //   'entity' => Entities\ProjectParticipant::class,
+    //   'identifier' => [
+    //     'project_id' => 'project_id',
+    //     'musician_id' => [
+    //       'table' => self::PROJECT_INSTRUMENTS_TABLE,
+    //       'column' => 'musician_id',
+    //     ],
+    //   ],
+    //   'column' => 'registration',
+    // ],
   ];
 
   public function __construct(
@@ -145,6 +158,13 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     // Name of field which is the unique key
     $opts['key'] = [ 'project_id' => 'int', 'instrument_id' => 'int', 'voice' => 'int' ];
     $opts['groupby_fields'] = array_keys($opts['key']);
+    // Sorting field(s)
+    $opts['sort_field'] = [
+      $this->joinTableFieldName(self::PROJECTS_TABLE, 'year'),
+      $this->joinTableFieldName(self::PROJECTS_TABLE, 'name'),
+      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      'voice',
+    ];
 
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
@@ -213,9 +233,22 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     ];
     $this->addSlug('project', $opts['fdd']['project_id']);
 
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'name',
+      [
+        'name'  => $this->l->t('Project Name'),
+        'input' => ($projectMode ? 'HR' : ''),
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'year',
+      [
+        'name'  => $this->l->t('Project Year'),
+        'input' => 'VHR',
+      ]);
+
     $opts['fdd']['instrument_id'] = [
       'name'     => $this->l->t('Instrument'),
-      'input|CP' => 'R',
       'select'   => 'D',
       'options'  => 'LACPDVF',
       'maxlen'   => 5,
@@ -232,20 +265,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
     $this->addSlug('instrument', $opts['fdd']['instrument_id']);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'name',
-      [
-        'name'  => $this->l->t('Project Name'),
-        'input' => ($projectMode ? 'HR' : ''),
-      ]);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'year',
-      [
-        'name'  => $this->l->t('Project Year'),
-        'input' => 'VHR',
-      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::INSTRUMENTS_TABLE, 'sort_order',
@@ -276,6 +295,33 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     ];
     $this->addSlug('required', $opts['fdd']['quantity']);
 
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'musician_id',
+      [
+        'name'   => $this->l->t('Registered'),
+        'input'  => 'VR',
+        'sort'   => $sort,
+        'select' => 'N',
+        'align' => 'right',
+        'sql'    => 'COUNT($join_col_fqn)',
+      ]);
+
+    $opts['fdd'][$this->joinTableFieldName(self::PROJECT_PARTICIPANTS_TABLE, 'musician_id')] = [
+      'name'   => $this->l->t('Confirmed'),
+      'input'  => 'VR',
+      'sort'   => $sort,
+      'select' => 'N',
+      'align' => 'right',
+      'sql'    => 'COUNT($join_col_fqn)',
+      'values' => [
+        'table' => self::PROJECT_PARTICIPANTS_TABLE,
+        'column' => 'musician_id',
+        'join' => '$join_table.project_id = $main_table.project_id
+  AND $join_table.musician_id = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.musician_id
+  AND $join_table.registration = 1',
+      ],
+    ];
+
     // trigger
 
     $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
@@ -305,6 +351,5 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     }
     $fdd['css']['postfix'] .= ' '.$slug;
     $fdd['tooltip'] = $this->toolTipsService[$slug];
-    $this->logInfo('TOOLTIP: '.$fdd['tooltip']);
   }
 }

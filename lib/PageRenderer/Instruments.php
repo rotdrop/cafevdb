@@ -226,13 +226,13 @@ class Instruments extends PMETableViewBase
     }
 
     // Provide joins with MusicianInstruments, ProjectInstruments,
-    // ProjectInstrumentation in order to flag used instruments as
+    // ProjectInstrumentationNumbers in order to flag used instruments as
     // undeletable, while allowing deletion for unused ones (more
     // practical after adding new instruments)
     $instrumentTables = [
       'MusicianInstrument' => [ 'musician_id', 'instrument_id' ],
       'ProjectInstruments' => [ 'project_id', 'instrument_id' ],
-      'ProjectInstrumentation' => [ 'project_id', 'instrument_id' ],
+      'ProjectInstrumentationNumbers' => [ 'project_id', 'instrument_id' ],
     ];
     $usageIdx = count($opts['fdd']);
     foreach ($instrumentTables as $table => $indexes) {

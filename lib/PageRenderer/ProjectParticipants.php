@@ -305,7 +305,7 @@ class ProjectParticipants extends PMETableViewBase
         'name'        => $this->l->t('Project Instrument'),
         'css'         => ['postfix' => ' project-instruments tooltip-top'],
         'display|LVF' => ['popup' => 'data'],
-        'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'sql|VDCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
         'select'      => 'M',
         //'filter'      => 'having', // need "HAVING" for group by stuff
         'values|VDPC' => [
@@ -316,7 +316,7 @@ class ProjectParticipants extends PMETableViewBase
           'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
           'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENT_TABLE." mi WHERE \$record_id[project_id] = ".$projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
         ],
-        'values|LF' => [
+        'values|LFV' => [
           'table'       => self::INSTRUMENTS_TABLE,
           'column'      => 'id',
           'description' => 'instrument',
@@ -347,6 +347,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'tab'      => [ 'id' => 'instrumentation' ],
         'name'     => $this->l->t('Voice'),
+        'default'  => -1, // keep in sync with ProjectInstrumentationNumbers
         'select'   => 'M',
         'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".instrument,' ', \$join_col_fqn) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
@@ -355,6 +356,7 @@ class ProjectParticipants extends PMETableViewBase
           'table' => "SELECT
   pi.project_id,
   pi.musician_id,
+  i.id AS instrument_id,
   i.instrument,
   i.sort_order,
   n.n,
@@ -375,9 +377,10 @@ class ProjectParticipants extends PMETableViewBase
           ],
           'orderby' => '$table.sort_order ASC, $table.n ASC',
           'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
+          //'join' => '$join_table.musician_id = $main_table.musician_id AND $join_table.project_id = $main_table.project_id',
           'join' => false,
         ],
-        'values2|LF' => [ '' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+        'values2|LF' => [ '-1' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
       ]);
 
     $this->makeJoinTableField(
@@ -413,7 +416,7 @@ class ProjectParticipants extends PMETableViewBase
          'description' => "instrument",
          'orderby' => '$table.sort_order',
          'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
-         'join' => false,
+         'join' => '$join_table.project_id = $main_table.project_id AND $join_table.musician_id = $main_table.musician_id',
        ],
        'values2|LF' => [ '0' => '&nbsp;', '1' => '&alpha;' ],
        'tooltip' => $this->l->t("Set to `%s' in order to mark the section leader",

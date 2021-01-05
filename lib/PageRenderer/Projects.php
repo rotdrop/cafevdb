@@ -46,7 +46,7 @@ class Projects extends PMETableViewBase
   const CSS_CLASS = 'projects';
   const TABLE = 'Projects';
   const ENTITY = Entities\Project::class;
-  const INSTRUMENTATION_TABLE = 'ProjectInstrumentation';
+  const INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const NAME_LENGTH_MAX = 20;
   const POSTER_JOIN = 'ProjectPoster';
   const FLYER_JOIN = 'ProjectFlyer';
@@ -267,7 +267,7 @@ class Projects extends PMETableViewBase
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
-        'table'       => self::INSTRUMENTATION_TABLE,
+        'table'       => self::INSTRUMENTATION_NUMBERS_TABLE,
         'column'      => 'instrument_id',
         'description' => [ 'columns' => [ 'instrument_id', ], ],
         'join'        => '$join_table.project_id = $main_table.id',
@@ -806,7 +806,7 @@ project without a flyer first.");
     $key = array_search($field, $changed);
     if ($key !== false) {
       //error_log('key: '.$key.' value: '.$changed[$key]);
-      $table      = self::INSTRUMENTATION_TABLE;
+      $table      = self::INSTRUMENTATION_NUMBERS_TABLE;
       $projectId  = $pme->rec;
       $oldIds     = Util::explode(',', $oldValues[$field]);
       $newIds     = Util::explode(',', $newValues[$field]);
@@ -815,7 +815,7 @@ project without a flyer first.");
 
       // we have to delete any removed instruments and to add any new instruments
 
-      $repository = $this->getDatabaseRepository(Entities\ProjectInstrumentation::class);
+      $repository = $this->getDatabaseRepository(Entities\ProjectInstrumentationNumber::class);
       try {
         foreach(array_diff($oldIds, $newIds) as $id) {
           $this->remove([ 'id' => $oldRecords[$id] ]);
@@ -830,7 +830,7 @@ project without a flyer first.");
         $project = $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectId ]);
         foreach(array_diff($newIds, $oldIds) as $instrumentId) {
           $instrument = $this->entityManager->getReference(Entities\Instrument::class, [ 'id' => $instrumentId ]);
-          $projectInstrument = Entities\ProjectInstrumentation::create()
+          $projectInstrument = Entities\ProjectInstrumentationNumber::create()
                              ->setProject($project)
                              ->setInstrument($instrument);
           $this->persist($projectInstrument);

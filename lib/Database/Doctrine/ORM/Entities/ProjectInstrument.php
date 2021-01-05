@@ -70,9 +70,9 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * @var int|null
    *
-   * @ORM\Column(type="integer", nullable=true)
+   * @ORM\Column(type="integer", options={"default"="-1","comment"="Voice specification if applicable, set to -1 if separation by voice is not needed"})
    */
-  private $voice;
+  private $voice = -1;
 
   /**
    * @var bool
