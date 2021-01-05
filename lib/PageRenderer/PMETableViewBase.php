@@ -522,6 +522,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $keyVal = array_merge(explode(':', $value), [ true, true ]);
             $multipleValues[$keyVal[0]][$column] = $keyVal[1];
           }
+          foreach ($identifier[$multiple]['new'] as $new) {
+            if (!isset($multipleValues[$new][$column])) {
+              $multipleValues[$new][$column] =
+                isset($pme->fdd[$field]['default']) ? $pme->fdd[$field]['default'] : null;
+            }
+          }
         }
         //$this->logInfo("MULTIPLE VALUES ".print_r($multipleValues, true));
 
@@ -651,7 +657,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $group = true;
           continue;
         }
-        $joinData[] = '$main_table.'.$mainTableKey.' = $join_table.'.$joinTableKey;
+        if (!empty($mainTableKey['table'])) {
+          $joinData[] = $joinTables[$mainTableKey['table']].'.'.$mainTableKey['column'];
+        } else {
+          $joinData[] = '$main_table.'.$mainTableKey.' = $join_table.'.$joinTableKey;
+        }
       }
       $fieldName = $this->joinTableMasterFieldName($table);
       $opts['fdd'][$fieldName] = [
