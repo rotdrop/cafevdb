@@ -3912,10 +3912,14 @@ class phpMyEdit
 			$css_sort_class = $this->getCSSclass('sortfield');
 			$css_nosort_class = $this->getCSSclass('nosort');
 			$fdn = $this->fdd[$fd]['name'];
-			if (!empty($this->fdd[$fd]['encryption']) ||
-				empty($this->fdd[$fd]['sort']) ||
-				$this->password($fd)) {
-				echo '<th class="',$css_class_name,' ',$css_nosort_class,'">',$fdn,'</th>',"\n";
+			if (!empty($this->fdd[$k]['encryption']) ||
+				empty($this->fdd[$k]['sort']) ||
+				$this->password($k)) {
+				echo '<th class="',$css_class_name,' ',$css_nosort_class,'"';
+				if (!empty($this->fdd[$k]['tooltip'])) {
+					echo ' ','title="'.$this->fdd[$k]['tooltip'].'"',' ';
+				}
+				echo '>',$fdn,'</th>',"\n";
 			} else {
 				// Clicking on the current sort field reverses the sort order
 				// Generate a button and a check
