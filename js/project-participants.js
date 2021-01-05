@@ -363,40 +363,37 @@ var CAFEVDB = CAFEVDB || {};
         selected = [];
       }
       const prevSelected = self.data('selected');
-      if (!prevSelected) {
-        console.info(self, self.data());
-      }
-      var instruments = selectProjectInstrument.val();
+      const instruments = selectProjectInstrument.val();
 
       var prevVoices = {};
       var voices = {};
+      var i;
       for (i = 0; i < instruments.length; ++i) {
         voices[instruments[i]] = [];
         prevVoices[instruments[i]] = [];
       }
 
-      var i;
       for (i = 0; i < selected.length; ++i) {
-        var item = selected[i].split(':');
+        const item = selected[i].split(':');
         voices[item[0]].push(item[1]);
       }
 
-      for(i = 0; i < prevSelected.length; ++i) {
-        var item = prevSelected[i].split(':');
+      for (i = 0; i < prevSelected.length; ++i) {
+        const item = prevSelected[i].split(':');
         prevVoices[item[0]].push(item[1]);
       }
 
       // Now loop over old values. Unset multiple selections.
       var changed = false;
       var instrument;
-      for(instrument in voices) {
-        var values     = voices[instrument];
-        var prevValues = prevVoices[instrument];
+      for (instrument in voices) {
+        const values     = voices[instrument];
+        const prevValues = prevVoices[instrument];
         if (values.length < 2) {
           continue;
         }
         for (i = 0; i < prevValues.length; ++i) {
-          console.log('option: '+'option[value="'+instrument+':'+i+'"]');
+          console.debug('option: '+'option[value="'+instrument+':'+i+'"]');
           self.find('option[value="'+instrument+':'+prevValues[i]+'"]').prop('selected', false);
           changed = true;
         }

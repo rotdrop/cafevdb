@@ -53,6 +53,7 @@ class ProjectParticipants extends PMETableViewBase
   const INSTRUMENTS_TABLE = 'Instruments';
   const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
   const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
+  const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
 
   /**
    * Join table structure. All update are handled in
@@ -359,15 +360,20 @@ class ProjectParticipants extends PMETableViewBase
   i.id AS instrument_id,
   i.instrument,
   i.sort_order,
+  pin.quantity,
   n.n,
   CONCAT(pi.instrument_id,':', n.n) AS value
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
+  LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
+    ON pin.instrument_id = pi.instrument_id
   JOIN numbers n
-    ON n.n <= 8 AND n.n >= 1
+    ON n.n <= pin.voice AND n.n >= 1
   WHERE
     pi.project_id = $projectId
+  GROUP BY
+    project_id, musician_id, instrument_id, n
   ORDER BY
     i.sort_order ASC, n.n ASC",
           'column' => 'value',
