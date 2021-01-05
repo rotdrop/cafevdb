@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -328,31 +329,31 @@ var CAFEVDB = CAFEVDB || {};
 
   Instrumentation.ready = function(selector, resizeCB) {
     selector = PHPMYEDIT.selector(selector);
-    var container = PHPMYEDIT.container(selector);
+    const container = PHPMYEDIT.container(selector);
 
-    var self = this;
+    const self = this;
 
     CAFEVDB.Musicians.contactValidation(container);
 
     // Enable the controls, in order not to bloat SQL queries these PME
     // fields are flagged virtual which disables all controls initially.
-    var selectMusicianInstruments = container.find('.pme-value select.musician-instruments');
-    var selectProjectInstrument = container.find('.pme-value select.pme-input.project-instrument');
-    var selectGroupOfPeople = container.find('.pme-value select.pme-input.groupofpeople');
-    var selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
-    var form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
+    const selectMusicianInstruments = container.find('.pme-value select.musician-instruments');
+    const selectProjectInstrument = container.find('.pme-value select.pme-input.project-instruments');
+    const selectGroupOfPeople = container.find('.pme-value select.pme-input.groupofpeople');
+    const selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
+    const form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
 
     var recKey = form.find(PHPMYEDIT.pmeSysNameSelector('input', 'rec'));
     recKey = recKey.length === 1 ? recKey.val() : -1;
 
-    var selectedVoices = selectVoices.val();
-    selectVoices.data('selected', selectVoices ? selectedVoices : []);
+    const selectedVoices = selectVoices.val();
+    selectVoices.data('selected', selectedVoices ? selectedVoices : []);
 
     // This overly complicated piece of code turns a multi-select into
     // a per-group single select for the unlikely case that a musician
     // has multiple instruments for the project.
     selectVoices.off('change').on('change', function(event) {
-      var self = $(this);
+      const self = $(this);
       if (!self.prop('multiple')) {
         return true;
       }
@@ -361,18 +362,21 @@ var CAFEVDB = CAFEVDB || {};
       if (!selected) {
         selected = [];
       }
-      var prevSelected = self.data('selected');
+      const prevSelected = self.data('selected');
+      if (!prevSelected) {
+        console.info(self, self.data());
+      }
       var instruments = selectProjectInstrument.val();
 
       var prevVoices = {};
       var voices = {};
-      for(i = 0; i < instruments.length; ++i) {
+      for (i = 0; i < instruments.length; ++i) {
         voices[instruments[i]] = [];
         prevVoices[instruments[i]] = [];
       }
 
       var i;
-      for(i = 0; i < selected.length; ++i) {
+      for (i = 0; i < selected.length; ++i) {
         var item = selected[i].split(':');
         voices[item[0]].push(item[1]);
       }
@@ -398,7 +402,7 @@ var CAFEVDB = CAFEVDB || {};
         }
       }
 
-      self.data('selected', self.val());
+      self.data('selected', self.val() ? self.val() : []);
 
       if (changed) {
         self.trigger('chosen:updated');
