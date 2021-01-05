@@ -88,7 +88,7 @@ class Navigation
     if ($oldGroup) {
       $groupClass = isset($options[0]['groupClass']) ? ' class="'.$options[0]['groupClass'].'"' : '';
       $result .= '<optgroup label="'.$oldGroup.'"'.$groupClass.'>
-';
+      ';
       $indent = '  ';
     }
     foreach($options as $option) {
@@ -117,13 +117,13 @@ class Navigation
       }
       if ($group != $oldGroup) {
         $result .= '</optgroup>
-';
+        ';
         $oldGroup = $group;
         $indent = '';
         if ($group) {
           $groupClass = isset($option['groupClass']) ? ' class="'.$option['groupClass'].'"' : '';
           $result .= '<optgroup label="'.$group.'"'.$groupClass.'>
-';
+          ';
           $indent = '  ';
         }
       }
@@ -132,7 +132,7 @@ class Navigation
               '>'.
               Util::htmlEscape($option['name']).
               '</option>
-';
+                 ';
     }
     return $result;
   }
@@ -140,11 +140,11 @@ class Navigation
   /**Simple select option array from flat value array. */
   static public function simpleSelectOptions($options, $selected = null)
   {
-    $optionDescription = array();
+    $optionDescription = [];
     foreach ($options as $option) {
-      $optionDescription[] = array('name'  => $option,
-                                   'value' => $option,
-                                   'flags' => ($selected === $option ? self::SELECTED : 0));
+      $optionDescription[] = ['name'  => $option,
+                              'value' => $option,
+                              'flags' => ($selected === $option ? self::SELECTED : 0)];
     }
     return self::selectOptions($optionDescription);
   }
@@ -202,7 +202,7 @@ class Navigation
     .'value="HTML">'.$this->l->t('HTML Export').'</option>
 </select></label></span>';
 
-    $button = array('code' => $data);
+    $button = ['code' => $data];
 
     return $button;
   }
@@ -222,7 +222,7 @@ class Navigation
    */
   public function prependTableButton($button, $misc = false, $all = false)
   {
-    return self::prependTableButtons(array($button), $misc, $all);
+    return self::prependTableButtons([$button], $misc, $all);
   }
 
   /**
@@ -259,11 +259,11 @@ class Navigation
           'rows_per_page',
           'reload',
         ],
-        'A' => array('save', 'apply', 'more', 'cancel'),
-        'C' => array('save', 'more', 'cancel', 'reload'),
-        'P' => array('save', 'apply', 'cancel'),
-        'D' => array('save', 'cancel'),
-        'V' => array('change', 'copy', 'delete', 'cancel', 'reload')
+        'A' => ['save', 'apply', 'more', 'cancel'],
+        'C' => ['save', 'more', 'cancel', 'reload'],
+        'P' => ['save', 'apply', 'cancel'],
+        'D' => ['save', 'cancel'],
+        'V' => ['change', 'copy', 'delete', 'cancel', 'reload']
       );
     } else {
       $default_buttons_no_B = array(
@@ -283,21 +283,21 @@ class Navigation
           'rows_per_page',
           'reload',
         ],
-        'A' => array('save', 'apply', 'more', 'cancel'),
-        'C' => array('save', 'more', 'cancel', 'reload'),
-        'P' => array('save', 'apply', 'cancel'),
-        'D' => array('save', 'cancel'),
-        'V' => array('change', 'copy', 'delete', 'cancel', 'reload')
+        'A' => ['save', 'apply', 'more', 'cancel'],
+        'C' => ['save', 'more', 'cancel', 'reload'],
+        'P' => ['save', 'apply', 'cancel'],
+        'D' => ['save', 'cancel'],
+        'V' => ['change', 'copy', 'delete', 'cancel', 'reload']
       );
     }
 
-    $result = array();
+    $result = [];
     foreach ($default_buttons_no_B as $key => $value) {
       if ($all && stristr("ACPDV", $key) !== false) {
         array_unshift($value, $button);
       }
-      $upValue = array();
-      $downValue = array();
+      $upValue = [];
+      $downValue = [];
       foreach ($value as $oneButton) {
         if ($oneButton === 'placeholder') {
           foreach ($buttons as $button) {
@@ -318,7 +318,7 @@ class Navigation
           $downValue[] = $oneButton;
         }
       }
-      $result[$key] = array('up' => $upValue, 'down' => $downValue);
+      $result[$key] = ['up' => $upValue, 'down' => $downValue];
     }
 
     return $result;
@@ -388,7 +388,7 @@ class Navigation
       if (isset($tag['data'])) {
         $dataArray = $tag['data'];
         if (!is_array($dataArray)) {
-          $dataArray = array('value' => $dataArray);
+          $dataArray = ['value' => $dataArray];
         }
         foreach ($dataArray as $key => $dataValue) {
           $key = self::camelCaseToDashes($key);
@@ -396,75 +396,75 @@ class Navigation
         }
       }
       switch ($type) {
-        case 'resetbutton':
-        case 'submitbutton':
-        case 'button':
-          if ($type == 'resetbutton') {
-            $buttonType = 'reset';
-          } else if ($type == 'submitbutton') {
-            $buttonType = 'submit';
+      case 'resetbutton':
+      case 'submitbutton':
+      case 'button':
+        if ($type == 'resetbutton') {
+          $buttonType = 'reset';
+        } else if ($type == 'submitbutton') {
+          $buttonType = 'submit';
+        } else {
+          $buttonType = 'button';
+        }
+        $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
+        $html .= ''
+              .'<button type="'.$buttonType.'" '.$disabled.$class.$value.$title.$data.$id.$style.'>';
+        if (isset($tag['image'])) {
+          $images = false;
+          if (!is_array($tag['image'])) {
+            $images = [$tag['image']];
           } else {
-            $buttonType = 'button';
+            $images = $tag['image'];
           }
-          $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
-          $html .= ''
-                .'<button type="'.$buttonType.'" '.$disabled.$class.$value.$title.$data.$id.$style.'>';
-          if (isset($tag['image'])) {
-            $images = false;
-            if (!is_array($tag['image'])) {
-              $images = array($tag['image']);
-            } else {
-              $images = $tag['image'];
-            }
-            $count = 0;
-            foreach ($images as $image) {
-              if (isset($tag['id'])) {
-                $id = $tag['id'].'-img';
-                if ($count > 0) {
-                  $id .= '-'.$count;
-                }
-                $id = ' id="'.$id.'" ';
-              } else {
-                $id = '';
+          $count = 0;
+          foreach ($images as $image) {
+            if (isset($tag['id'])) {
+              $id = $tag['id'].'-img';
+              if ($count > 0) {
+                $id .= '-'.$count;
               }
-              $class = ' number-'.$count;
-              $html .= ''.
-                    '<img class="svg'.$class.'" '.
-                    $id.
-                    'src="'.$image.'" alt="'.$name.'" '.
-                    ' />';
-              ++$count;
+              $id = ' id="'.$id.'" ';
+            } else {
+              $id = '';
             }
-          } else {
-            $html .= $name;
+            $class = ' number-'.$count;
+            $html .= ''.
+                  '<img class="svg'.$class.'" '.
+                  $id.
+                  'src="'.$image.'" alt="'.$name.'" '.
+                  ' />';
+            ++$count;
           }
-          $html .= '</button>
-';
-          break;
-        case 'input':
-          $style = isset($tag['style']) ? $tag['style'] : '';
-          if (isset($tag['image'])) {
-            $style = 'background:url(\''.$tag['image'].'\') no-repeat center;'.$style;
-            $value  = '';
-          }
-          $style = $style ? ' style="'.$style.'"' : '';
-          $name  = $name != '' ? ' name="'.Util::htmlEscape($name).'"' : '';
-          $html .= ''
-                .'<input type="button" '.$class.$value.$title.$data.$id.$style.$name.'/>
-';
-          break;
-        case 'option':
-          $selected = '';
-          if (isset($tag['selected']) && $tag['selected'] !== false) {
-            $selected = ' selected="selected"';
-          }
-          $html .= ''
-                .'<option '.$class.$value.$title.$data.$id.$style.$selected.$disabled.'>'.$name.'</option>
-';
-          break;
-        default:
-          $html .= '<span>'.$this->l->t('Error: Unknonwn Button Type').'</span>'."\n";
-          break;
+        } else {
+          $html .= $name;
+        }
+        $html .= '</button>
+          ';
+        break;
+      case 'input':
+        $style = isset($tag['style']) ? $tag['style'] : '';
+        if (isset($tag['image'])) {
+          $style = 'background:url(\''.$tag['image'].'\') no-repeat center;'.$style;
+          $value  = '';
+        }
+        $style = $style ? ' style="'.$style.'"' : '';
+        $name  = $name != '' ? ' name="'.Util::htmlEscape($name).'"' : '';
+        $html .= ''
+              .'<input type="button" '.$class.$value.$title.$data.$id.$style.$name.'/>
+                  ';
+        break;
+      case 'option':
+        $selected = '';
+        if (isset($tag['selected']) && $tag['selected'] !== false) {
+          $selected = ' selected="selected"';
+        }
+        $html .= ''
+              .'<option '.$class.$value.$title.$data.$id.$style.$selected.$disabled.'>'.$name.'</option>
+                  ';
+        break;
+      default:
+        $html .= '<span>'.$this->l->t('Error: Unknonwn Button Type').'</span>'."\n";
+        break;
       }
       $html .= $between;
     }
@@ -501,182 +501,182 @@ class Navigation
    * @return string The HTML form control requested.
    */
   public function pageControlElement($id = 'projects',
-                                            $projectName = '',
-                                            $projectId = -1)
+                                     $projectName = '',
+                                     $projectId = -1)
   {
-    $controlid = $id.'control';
+    $controlid = $id.'-control';
     $controlclass = '';
     $form = '';
     $value = '';
     $title = '';
-    $post = array();
-    $json = array();
+    $post = [];
+    $json = [];
 
     switch ($id) {
 
-      case 'projects':
-        $value = $this->l->t("View all Projects");
-        $title = $this->l->t("Overview over all known projects (start-page).");
-        $year = date("Y") - 1;
-        $sysPfx = $this->pmeOptions['cgi']['prefix']['sys'];
-        $post = array('projects' => $value,
-                      'template' => 'projects',
-                      $sysPfx.'qf1_comp' => '>=',
-                      $sysPfx.'qf1' => $year);
-        break;
+    case 'projects':
+      $value = $this->l->t("View all Projects");
+      $title = $this->l->t("Overview over all known projects (start-page).");
+      $year = date("Y") - 1;
+      $sysPfx = $this->pmeOptions['cgi']['prefix']['sys'];
+      $post = ['projects' => $value,
+               'template' => 'projects',
+               $sysPfx.'qf1_comp' => '>=',
+               $sysPfx.'qf1' => $year];
+      break;
 
-      case 'project-extra-fields':
-        $value = $this->l->t("Project Extra-Fields");
-        $title = $this->l->t("Add additional data-fields to the instrumenation table for the project.");
-        $post = array('projectExtraFields' => $value,
-                      'template' => 'project-extra-fields',
-                      'showDisabledFields' => false,
-                      'projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+    case 'project-extra-fields':
+      $value = $this->l->t("Project Extra-Fields");
+      $title = $this->l->t("Add additional data-fields to the instrumenation table for the project.");
+      $post = ['projectExtraFields' => $value,
+               'template' => 'project-extra-fields',
+               'showDisabledFields' => false,
+               'projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'project-payments':
-        $value = $this->l->t("Received Payments");
-        $title = $this->l->t("A table holding the various payments of participants.");
-        $controlclass = 'finance';
-        $post = array('projectPayments' => $value,
-                      'template' => 'project-payments',
-                      'projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+    case 'project-payments':
+      $value = $this->l->t("Received Payments");
+      $title = $this->l->t("A table holding the various payments of participants.");
+      $controlclass = 'finance';
+      $post = ['projectPayments' => $value,
+               'template' => 'project-payments',
+               'projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'debit-notes':
-        $value = $this->l->t("Debit Notes");
-        $title = $this->l->t("A table holding all debit notes issued from the orchestra-software.");
-        $controlclass = 'finance';
-        $post = array('debitNotes' => $value,
-                      'template' => 'debit-notes',
-                      'projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+    case 'debit-notes':
+      $value = $this->l->t("Debit Notes");
+      $title = $this->l->t("A table holding all debit notes issued from the orchestra-software.");
+      $controlclass = 'finance';
+      $post = ['debitNotes' => $value,
+               'template' => 'debit-notes',
+               'projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'all':
-        $value = $this->l->t("Display all Musicians");
-        $title = $this->l->t("Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.");
-        $post = array('allMusicians' => $value,
-                      'template' => 'all-musicians');
-        break;
+    case 'all':
+      $value = $this->l->t("Display all Musicians");
+      $title = $this->l->t("Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.");
+      $post = ['allMusicians' => $value,
+               'template' => 'all-musicians'];
+      break;
 
-      case 'blog':
-        $value = $this->l->t("Frontpage Blog");
-        $title = $this->l->t("Simplistic blog page with follow apps, used primarily to display hints
+    case 'blog':
+      $value = $this->l->t("Frontpage Blog");
+      $title = $this->l->t("Simplistic blog page with follow apps, used primarily to display hints
 if something has changed in the orchestra app.");
-        $post = array('blog' => $value,
-                      'template' => 'blog');
-        break;
+      $post = ['blog' => $value,
+               'template' => 'blog'];
+      break;
 
-      case 'email':
-        $title = $this->l->t("Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other.");
-        $post = array('template' => 'email',
-                      'projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+    case 'email':
+      $title = $this->l->t("Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other.");
+      $post = ['template' => 'email',
+               'projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'emailhistory':
-        $value = $this->l->t("Email History");
-        $title = $this->l->t("Display all emails sent by our mass-email form.");
-        $post = array('template' => 'email-history',
-                      'projectName' => $projectName,
-                      'projectId' > $projectId);
-        break;
+    case 'emailhistory':
+      $value = $this->l->t("Email History");
+      $title = $this->l->t("Display all emails sent by our mass-email form.");
+      $post = ['template' => 'email-history',
+               'projectName' => $projectName,
+               'projectId' > $projectId];
+      break;
 
-      case 'projectlabel':
-        $sysPfx = $this->pmeOptions['cgi']['prefix']['sys'];
-        $opname = $sysPfx.'operation';
-        $opwhat = 'View?'.$sysPfx.'rec='.$projectId;
-        $opclass  = 'pme-view';
-        $title = $this->l->t("Display an overview page for the currently active project.
+    case 'projectlabel':
+      $sysPfx = $this->pmeOptions['cgi']['prefix']['sys'];
+      $opname = $sysPfx.'operation';
+      $opwhat = 'View?'.$sysPfx.'rec='.$projectId;
+      $opclass  = 'pme-view';
+      $title = $this->l->t("Display an overview page for the currently active project.
 The overview-page gives the possibility to add events, change the instrumentation
 and even edit the public web-pages for the project and other things.");
-        $value = $projectName;
-        $json = array('projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+      $value = $projectName;
+      $json = ['projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'detailed':
-        $value = $this->l->t("Participants");
-        $title = $this->l->t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
-        $post = array('template' => 'project-participants',
-                      'projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+    case 'detailed':
+      $value = $this->l->t("Participants");
+      $title = $this->l->t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
+      $post = ['template' => 'project-participants',
+               'projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'instruments':
-        $value = $this->l->t("Add Instruments");
-        $title = $this->l->t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
-        $post = array('template' => 'instruments',
-                      'projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+    case 'instruments':
+      $value = $this->l->t("Add Instruments");
+      $title = $this->l->t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
+      $post = ['template' => 'instruments',
+               'projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'instrument-families':
-        $value = $this->l->t("Instrument Families");
-        $title = $this->l->t("Display the list of instrument families and add or change them as needed.");
-        $post = array('template' => 'instrument-families',
-                      'projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+    case 'instrument-families':
+      $value = $this->l->t("Instrument Families");
+      $title = $this->l->t("Display the list of instrument families and add or change them as needed.");
+      $post = ['template' => 'instrument-families',
+               'projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'config-check':
-        $value = $this->l->t("Test Configuration");
-        $title = $this->l->t("Run brief sanity checks on the configuration options.");
-        $post = [ 'template' => 'configcheck' ];
-        break;
+    case 'config-check':
+      $value = $this->l->t("Test Configuration");
+      $title = $this->l->t("Run brief sanity checks on the configuration options.");
+      $post = [ 'template' => 'configcheck' ];
+      break;
 
-      case 'project-instrumentation':
-        $value = $this->l->t('Instrumentation Numbers');
-        $title = $this->l->t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');
-        $json = array('template' => 'project-instrumentation',
-                      'projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+    case 'project-instrumentation-numbers':
+      $value = $this->l->t('Instrumentation Numbers');
+      $title = $this->l->t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');
+      $json = ['template' => 'project-instrumentation-numbers',
+               'projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'debit-mandates':
-        $value = $this->l->t('Debit Mandates');
-        $title = $this->l->t('Display a table with the SEPA debit mandates related to the project.');
-        $controlclass = 'finance';
-        $post = array('template' => 'sepa-debit-mandates',
-                      'projectName' => $projectName,
-                      'projectId' => $projectId);
-        break;
+    case 'debit-mandates':
+      $value = $this->l->t('Debit Mandates');
+      $title = $this->l->t('Display a table with the SEPA debit mandates related to the project.');
+      $controlclass = 'finance';
+      $post = ['template' => 'sepa-debit-mandates',
+               'projectName' => $projectName,
+               'projectId' => $projectId];
+      break;
 
-      case 'insurances':
-        $value = $this->l->t("Insurances");
-        $title = $this->l->t("Display a table with an overview about the current state of the member's instrument insurances.");
-        $controlclass = 'finance';
-        $post = array('template' => 'instrument-insurance');
-        break;
+    case 'insurances':
+      $value = $this->l->t("Insurances");
+      $title = $this->l->t("Display a table with an overview about the current state of the member's instrument insurances.");
+      $controlclass = 'finance';
+      $post = ['template' => 'instrument-insurance'];
+      break;
 
-      case 'insurancerates':
-        $value = $this->l->t("Insurance Rates");
-        $title = $this->l->t("Display a table with the insurance rates for the individual instrument insurances.");
-        $controlclass = 'finance';
-        $post = array('template' => 'insurance-rates');
-        break;
+    case 'insurancerates':
+      $value = $this->l->t("Insurance Rates");
+      $title = $this->l->t("Display a table with the insurance rates for the individual instrument insurances.");
+      $controlclass = 'finance';
+      $post = ['template' => 'insurance-rates'];
+      break;
 
-      case 'insurancebrokers':
-        $value = $this->l->t("Insurance Brokers");
-        $title = $this->l->t("Display a table with the insurance brokers.");
-        $controlclass = 'finance';
-        $post = array('template' => 'insurance-brokers');
-        break;
+    case 'insurancebrokers':
+      $value = $this->l->t("Insurance Brokers");
+      $title = $this->l->t("Display a table with the insurance brokers.");
+      $controlclass = 'finance';
+      $post = ['template' => 'insurance-brokers'];
+      break;
     }
 
     $post = http_build_query($post, '', '&');
     $json = htmlspecialchars(json_encode($json));
     $html =<<<__EOT__
 <li class="nav-{$controlid} {$controlclass} tooltip-right" title="$title">
-  <a href="#"
-     data-id="{$controlid}"
-     data-post="{$post}"
-     data-json='{$json}'>
+<a href="#"
+data-id="{$controlid}"
+data-post="{$post}"
+data-json='{$json}'>
 $value
-  </a>
+</a>
 </li>
 __EOT__;
 
