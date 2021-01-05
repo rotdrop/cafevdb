@@ -60,9 +60,10 @@ class ProjectInstrumentation
   /**
    * @var int
    *
-   * @ORM\Column(type="integer", nullable=true, options={"default"="null","comment"="Voice specification if applicable"})
+   * @ORM\Column(type="integer", options={"default"="-1","comment"="Voice specification if applicable, set to -1 if separation by voice is not needed"})
+   * @ORM\Id
    */
-  private $voice;
+  private $voice = -1;
 
   /**
    * @var int
