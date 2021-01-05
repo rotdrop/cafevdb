@@ -1082,10 +1082,11 @@ class phpMyEdit
 			return $this->sql_field($field);
 		}
 		// on copy/change always use simple key retrieving, or given sql descriptor
-		if (/*$this->virtual($field)
-			  ||*/ $this->add_operation()
-			 || $this->copy_operation()
-			 || $this->change_operation()) {
+		if ($this->add_operation()
+			|| $this->view_operation()
+			|| $this->delete_operation()
+			|| $this->copy_operation()
+			|| $this->change_operation()) {
 			return $this->sql_field($field);
 		} else {
 			$fdd = $this->fdd[$field];
@@ -2478,7 +2479,7 @@ class phpMyEdit
 		}
 		$key_rec = $this->key_record($key_rec);
 		// @TODO check
-		//$this->col_has_values($k) && $this->set_values($k);
+		$this->col_has_values($k) && $this->set_values($k);
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
 		} else if (isset($this->fdd[$k]['values2'])) {
@@ -2768,6 +2769,16 @@ class phpMyEdit
 			$ret .= "</optgroup>\n";
 		}
 		$ret .= '</select>';
+		if ($readonly == 'readonly') {
+			// selects can only be disabled, but not made readonly.
+			foreach ($selected as $value) {
+				$name = htmlspecialchars($name).($multiple ? '[]' : '');
+				$this->htmlHiddenData($name, $value);
+				if (!$multiple) {
+					break;
+				}
+			}
+		}
 		return $ret;
 	} /* }}} */
 
