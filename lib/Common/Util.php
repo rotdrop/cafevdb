@@ -84,7 +84,8 @@ class Util
     return htmlspecialchars($string, $ent, 'UTF-8', $double_encode);
   }
 
-  /**Explode, but omit empty array members, i.e. return empty array
+  /**
+   * Explode, but omit empty array members, i.e. return empty array
    * for empty string.
    */
   static public function explode($delim, $string, $flags = self::OMIT_EMPTY_FIELDS)
