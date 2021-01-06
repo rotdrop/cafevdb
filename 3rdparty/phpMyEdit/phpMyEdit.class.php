@@ -4820,6 +4820,7 @@ class phpMyEdit
 	{
 		// Additional query
 		$query	 = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed
+				 .' AS '.$this->sd.self::MAIN_ALIAS.$this->ed
 			.' WHERE '.$this->key_record_where();
 		$res	 = $this->myquery($query, __LINE__);
 		$oldvals = $this->sql_fetch($res);
@@ -4832,7 +4833,7 @@ class phpMyEdit
 			return false;
 		}
 		// Real query
-		$query = 'DELETE FROM '.$this->tb.' WHERE '.$this->key_record_where();
+		$query = 'DELETE '.self::MAIN_ALIAS.' FROM '.$this->tb.' '.self::MAIN_ALIAS.' WHERE '.$this->key_record_where();
 		$res = $this->myquery($query, __LINE__);
 		$this->message = $this->sql_affected_rows().' '.$this->labels['record deleted'];
 		if (! $res) {
