@@ -430,6 +430,7 @@ var CAFEVDB = CAFEVDB || {};
           for (i = 0; i < oldInstruments.length; ++i) {
             selected[oldInstruments[i]] = true;
           }
+	  console.info("OLD INSTRUMENTS", oldInstruments, selected);
           self.find('option').each(function(idx) {
             const self = $(this);
             if (typeof selected[self.val()] != 'undefined') {

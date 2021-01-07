@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -66,6 +66,7 @@ class ProjectParticipantsController extends Controller {
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
     $this->l = $this->l10N();
+    $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }
 
   /**
@@ -75,10 +76,62 @@ class ProjectParticipantsController extends Controller {
    */
   public function serviceSwitch($topic, $recordId = [], $instrumentValues = [])
   {
+    $this->logDebug($topic.' / '.print_r($recordId, true).' / '.print_r($instrumentValues, true));
+
     switch ($topic) {
     case 'change-musician-instruments':
     case 'change-project-instruments':
-      $this->logInfo($topic.' / '.print_r($recordId, true).' / '.print_r($instrumentValues, true));
+      if (empty($recordId['projectId']) || empty($recordId['musicianId'])) {
+        return self::grumble($this->l->t("Project- or musician-id is missing (%s/%s)",
+                                         [ $recordId['projectId'], $recordId['musicianId'], ]));
+      }
+
+      $projectParticipant = $this->find([ 'project' => $recordId['projectId'], 'musician' => $recordId['musicianId'] ]);
+      if (empty($projectParticipant)) {
+        return self::grumble($this->l->t("Unable to fetch project-participant with given key %s", print_r($recordId, true)));
+      }
+
+      $musicianInstruments = [];
+      foreach ($projectParticipant['musician']['instruments'] as $musicianInstrument) {
+        $musicianInstruments[$musicianInstrument['instrument']['id']] = $musicianInstrument['instrument']['instrument'];
+      }
+
+      $projectInstruments = [];
+      foreach ($projectParticipant['projectInstruments'] as $projectInstrument) {
+        $projectInstruments[$projectInstrument['instrument']['id']] = $projectInstrument['instrument']['instrument'];
+      }
+
+      $allInstruments = [];
+      foreach ($this->getDatabaseRepository(Entities\Instrument::class)->findAll() as $instrument) {
+        $allInstruments[$instrument['id']] = $instrument['instrument'];
+      }
+
+      $this->logInfo('PRJ INST '.print_r($projectInstruments, true));
+      $this->logInfo('MUS INST '.print_r($musicianInstruments, true));
+      $this->logInfo('AJX INST '.print_r($instrumentValues, true));
+
+      switch ($topic) {
+      case 'change-musician-instruments':
+        // This should be cheap as most musicians only play very few instruments
+        foreach (array_diff(array_keys($musicianInstruments), $instrumentValues) as $removedId) {
+          if (isset($projectInstruments[$removedId])) {
+            return self::grumble($this->l->t('Denying the attempt to remove the instrument %s because it is used in the current project.', $projectInstruments[$removedId]));
+          }
+        }
+
+        foreach (array_diff($instrumentValues, array_keys($musicianInstruments)) as $addedId) {
+          if (!isset($allInstruments[$addedId])) {
+            return self::grumble($this->l->t('Denying the attempt to add an unknown instrument (id = %s)',
+                                             $addedId));
+          }
+        }
+
+        // TODO: check for usage everywhere before removing
+
+        break;
+      case 'change-project-instruments':
+        break;
+      }
       return self::response($this->l->t('Validation not yet implemented'));
       break;
     }
