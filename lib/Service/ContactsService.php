@@ -299,7 +299,7 @@ EOTEOT;
 
   /**Export the stored data for one musician as vCard.
    *
-   * @param MusicianEntity $musician One row from the musician table.
+   * @param Musician $musician One row from the musician table.
    *
    * @param $version vCard version -- which must be one
    * supported by \\Sabre\\VObject. Defaults to 3.0 for compatibility
@@ -340,10 +340,10 @@ EOTEOT;
     if ($musician['FixedLinePhone']) {
       $vcard->add('TEL', $musician['fixedLinePhone']);
     }
-    if ($musician['Geburtstag'] != 0) {
+    if ($musician['birthday'] != 0) {
       $vcard->add('BDAY', new \DateTime($musician['birthday']));
     }
-    if ($musician['Aktualisiert'] != 0) {
+    if ($musician['updated'] != 0) {
       $vcard->add('REV', (new \DateTime($musician['updated']))->format(\DateTime::W3C));
     }
     $countryNames = $this->geoCodingService->countryNames('en');
