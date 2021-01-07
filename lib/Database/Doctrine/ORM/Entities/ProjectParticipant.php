@@ -106,10 +106,7 @@ class ProjectParticipant implements \ArrayAccess
   private $extraFieldsData;
 
   /**
-   * Core functionality: a musician (i.e. a natural person not
-   * necessarily a musician in its proper sense) may be employed for
-   * more than just one instrument (or organizational role) in each
-   * project.
+   * Link in the project instruments, may be more than one per participant.
    *
    * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="projectParticipant", cascade={"all"})
    */
