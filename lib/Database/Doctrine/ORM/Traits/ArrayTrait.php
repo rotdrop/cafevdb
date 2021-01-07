@@ -62,8 +62,9 @@ trait ArrayTrait
     if ($this->offsetExists($offset)) {
       $method = self::methodName('get', $offset);
       return $this->$method();
+    } else {
+      throw new \Exception("Offset ".self::offsetNormalize($offset)." does not exist, keys ".print_r($this->keys, true));
     }
-    return null;
   }
 
   public function offsetSet($offset, $value):void
@@ -87,6 +88,11 @@ trait ArrayTrait
 
   private static function offsetNormalize($offset)
   {
-    return lcfirst(str_replace('_', '', ucwords($offset, '_')));
+    $words = explode('_', $offset);
+    if ($words[0] == strtoupper($words[0])) {
+      $words[0] = strtolower($words[0]);
+    }
+    $words = array_map(ucfirst, $words);
+    return lcfirst(implode('', $words));
   }
 }
