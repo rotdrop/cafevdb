@@ -111,7 +111,7 @@ class ProjectParticipant implements \ArrayAccess
    * more than just one instrument (or organizational role) in each
    * project.
    *
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="participant")
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="projectParticipant", cascade={"all"})
    */
   private $projectInstruments;
 
@@ -122,61 +122,51 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Get id.
+   * Set project.
    *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
-
-  /**
-   * Set projectId.
-   *
-   * @param int $projectId
+   * @param int $project
    *
    * @return Besetzungen
    */
-  public function setProjectId($projectId)
+  public function setProject($project)
   {
-    $this->projectId = $projectId;
+    $this->project = $project;
 
     return $this;
   }
 
   /**
-   * Get projectId.
+   * Get project.
    *
    * @return int
    */
-  public function getProjectId()
+  public function getProject()
   {
-    return $this->projectId;
+    return $this->project;
   }
 
   /**
-   * Set musicianId.
+   * Set musician.
    *
-   * @param int $musicianId
+   * @param int $musician
    *
    * @return Besetzungen
    */
-  public function setMusicianId($musicianId)
+  public function setMusician($musician)
   {
-    $this->musicianId = $musicianId;
+    $this->musician = $musician;
 
     return $this;
   }
 
   /**
-   * Get musicianId.
+   * Get musician.
    *
    * @return int
    */
-  public function getMusicianId()
+  public function getMusician()
   {
-    return $this->musicianId;
+    return $this->musician;
   }
 
   /**

@@ -62,7 +62,7 @@ class ProjectInstrument implements \ArrayAccess
   private $musician;
 
   /**
-   * @Orm\ManytoOne(targetEntity="Instrument", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
+   * @ORM\ManytoOne(targetEntity="Instrument", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $instrument;
@@ -70,7 +70,7 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * @var int|null
    *
-   * @ORM\Column(type="integer", options={"default"="-1","comment"="Voice specification if applicable, set to -1 if separation by voice is not needed"})
+   * @ORM\Column(type="integer", nullable=false, options={"default"="-1","comment"="Voice specification if applicable, set to -1 if separation by voice is not needed"})
    */
   private $voice = -1;
 
@@ -79,19 +79,19 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
    */
-  private $sectionLeader = '0';
+  private $sectionLeader = false;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="projectInstruments")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id")
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", onDelete="cascade"),
+   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", onDelete="cascade")
    * )
    */
-  private $participant;
+  private $projectParticipant;
 
   /**
-   * @ORM\OneToOne(targetEntity="MusicianInstrument")
+   * @ORM\OneToOne(targetEntity="MusicianInstrument", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id"),
    *   @ORM\JoinColumn(name="instrument_id",referencedColumnName="instrument_id")
@@ -104,109 +104,75 @@ class ProjectInstrument implements \ArrayAccess
   }
 
   /**
-   * Get id.
+   * Set project.
    *
-   * @return int
+   * @param int $project
+   *
+   * @return ProjectInstrument
    */
-  public function getId()
+  public function setProject($project)
   {
-    return $this->id;
-  }
-
-  /**
-   * Set projectId.
-   *
-   * @param int $projectId
-   *
-   * @return ProjectInstruments
-   */
-  public function setProjectId($projectId)
-  {
-    $this->projectId = $projectId;
+    $this->project = $project;
 
     return $this;
   }
 
   /**
-   * Get projectId.
+   * Get project.
    *
    * @return int
    */
-  public function getProjectId()
+  public function getProject()
   {
-    return $this->projectId;
+    return $this->project;
   }
 
   /**
-   * Set musicianId.
+   * Set musician.
    *
-   * @param int $musicianId
+   * @param int $musician
    *
-   * @return ProjectInstruments
+   * @return ProjectInstrument
    */
-  public function setMusicianId($musicianId)
+  public function setMusician($musician)
   {
-    $this->musicianId = $musicianId;
+    $this->musician = $musician;
 
     return $this;
   }
 
   /**
-   * Get musicianId.
+   * Get musician.
    *
    * @return int
    */
-  public function getMusicianId()
+  public function getMusician()
   {
-    return $this->musicianId;
+    return $this->musician;
   }
 
   /**
-   * Set projectParticipantId.
+   * Set instrument.
    *
-   * @param int $projectParticipantId
+   * @param int $instrument
    *
-   * @return ProjectInstruments
+   * @return ProjectInstrument
    */
-  public function setProjectParticipantId($projectParticipantId)
+  public function setInstrument($instrument)
   {
-    $this->projectParticipantId = $projectParticipantId;
+    $this->instrument = $instrument;
 
     return $this;
   }
 
   /**
-   * Get projectParticipantId.
+   * Get instrument.
    *
    * @return int
    */
-  public function getProjectParticipantId()
+  public function getInstrument()
   {
-    return $this->projectParticipantId;
-  }
-
-  /**
-   * Set instrumentId.
-   *
-   * @param int $instrumentId
-   *
-   * @return ProjectInstruments
-   */
-  public function setInstrumentId($instrumentId)
-  {
-    $this->instrumentId = $instrumentId;
-
-    return $this;
-  }
-
-  /**
-   * Get instrumentId.
-   *
-   * @return int
-   */
-  public function getInstrumentId()
-  {
-    return $this->instrumentId;
+    return $this->instrument;
   }
 
   /**
@@ -214,7 +180,7 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @param int|null $voice
    *
-   * @return ProjectInstruments
+   * @return ProjectInstrument
    */
   public function setVoice($voice = null)
   {
@@ -238,7 +204,7 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @param bool $sectionLeader
    *
-   * @return ProjectInstruments
+   * @return ProjectInstrument
    */
   public function setSectionLeader($sectionLeader)
   {
@@ -256,4 +222,71 @@ class ProjectInstrument implements \ArrayAccess
   {
     return $this->sectionLeader;
   }
+
+  /**
+   * Set projectParticipant.
+   *
+   * @param int $projectParticipant
+   *
+   * @return ProjectInstrument
+   */
+  public function setProjectParticipant($projectParticipant)
+  {
+    $this->projectParticipant = $projectParticipant;
+
+    if (!empty($this->projectParticipant)) {
+      if (empty($this->project)) {
+        $this->project = $this->projectParticipant->getProject();
+      }
+      if (empty($this->musician)) {
+        $this->musician = $this->projectParticipant->getMusician();
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get projectParticipant.
+   *
+   * @return int
+   */
+  public function getProjectParticipant()
+  {
+    return $this->projectParticipant;
+  }
+
+  /**
+   * Set musicianInstrument.
+   *
+   * @param int $musicianInstrument
+   *
+   * @return ProjectInstrument
+   */
+  public function setMusicianInstrument($musicianInstrument)
+  {
+    $this->musicianInstrument = $musicianInstrument;
+
+    if (!empty($this->musicianInstrument)) {
+      if (empty($this->instrument)) {
+        $this->instrument = $this->musicianInstrument->getInstrument();
+      }
+      if (empty($this->musician)) {
+        $this->musician = $this->musicianInstrument->getMusician();
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get musicianInstrument.
+   *
+   * @return int
+   */
+  public function getMusicianInstrument()
+  {
+    return $this->musicianInstrument;
+  }
+
 }

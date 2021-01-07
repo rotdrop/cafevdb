@@ -34,10 +34,10 @@ use Doctrine\ORM\Mapping as ORM;
  * a loose ranking like "primary instrument", i.e. the preference of
  * instruments of the given musician.
  *
- * @ORM\Table(name="MusicianInstrument", options={"comment":"Join-table Musicians -> Instruments"}, uniqueConstraints={@ORM\UniqueConstraint(columns={"musician_id", "instrument_id"})})
+ * @ORM\Table(name="MusicianInstrument", options={"comment":"Join-table Musicians -> Instruments"})
  * @ORM\Entity
  */
-class MusicianInstrument
+class MusicianInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -59,106 +59,10 @@ class MusicianInstrument
    *
    * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Ranking of the instrument w.r.t. to the given musician (lower is better)"})
    */
-  private $ranking = '1';
-
-  // /**
-  //  * Core functionality: a musician (i.e. a natural person not
-  //  * necessarily a musician in its proper sense) may be employed for
-  //  * more than just one instrument (or organizational role) in each
-  //  * project.
-  //  *
-  //  * @ORM\OneToOne(targetEntity="ProjectInstrument", mappedBy="musicianInstrument")
-  //  * @ORM\JoinColumns(
-  //  *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id"),
-  //  *   @ORM\JoinColumn(name="instrument_id",referencedColumnName="instrument_id")
-  //  * )
-  //  */
-  // private $projectInstruments;
+  private $ranking = 1;
 
   public function __construct() {
     $this->arrayCTOR();
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
-
-  /**
-   * Set musicianId.
-   *
-   * @param int $musicianId
-   *
-   * @return MusicianInstrument
-   */
-  public function setMusicianId($musicianId)
-  {
-    $this->musicianId = $musicianId;
-
-    return $this;
-  }
-
-  /**
-   * Get musicianId.
-   *
-   * @return int
-   */
-  public function getMusicianId()
-  {
-    return $this->musicianId;
-  }
-
-  /**
-   * Set instrumentId.
-   *
-   * @param int $instrumentId
-   *
-   * @return MusicianInstrument
-   */
-  public function setInstrumentId($instrumentId)
-  {
-    $this->instrumentId = $instrumentId;
-
-    return $this;
-  }
-
-  /**
-   * Get instrumentId.
-   *
-   * @return int
-   */
-  public function getInstrumentId()
-  {
-    return $this->instrumentId;
-  }
-
-  /**
-   * Set ranking.
-   *
-   * @param int $ranking
-   *
-   * @return MusicianInstrument
-   */
-  public function setRanking($ranking)
-  {
-    $this->ranking = $ranking;
-
-    return $this;
-  }
-
-  /**
-   * Get ranking.
-   *
-   * @return int
-   */
-  public function getRanking()
-  {
-    return $this->ranking;
   }
 
   /**
@@ -208,4 +112,29 @@ class MusicianInstrument
   {
     return $this->instrument;
   }
+
+  /**
+   * Set ranking.
+   *
+   * @param int $ranking
+   *
+   * @return MusicianInstrument
+   */
+  public function setRanking($ranking)
+  {
+    $this->ranking = $ranking;
+
+    return $this;
+  }
+
+  /**
+   * Get ranking.
+   *
+   * @return int
+   */
+  public function getRanking()
+  {
+    return $this->ranking;
+  }
+
 }
