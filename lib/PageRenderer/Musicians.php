@@ -340,7 +340,7 @@ make sure that the musicians are also automatically added to the
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
-        'description' => 'instrument',
+        'description' => 'name',
         'orderby'     => '$table.sort_order ASC',
         'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
       ],

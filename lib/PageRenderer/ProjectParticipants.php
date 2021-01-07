@@ -312,7 +312,7 @@ class ProjectParticipants extends PMETableViewBase
         'values|VDPC' => [
           'table'       => self::INSTRUMENTS_TABLE,
           'column'      => 'id',
-          'description' => 'instrument',
+          'description' => 'name',
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
           'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENT_TABLE." mi WHERE \$record_id[project_id] = ".$projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
@@ -320,7 +320,7 @@ class ProjectParticipants extends PMETableViewBase
         'values|LFV' => [
           'table'       => self::INSTRUMENTS_TABLE,
           'column'      => 'id',
-          'description' => 'instrument',
+          'description' => 'name',
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
           'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$projectId." = pi.project_id GROUP BY pi.project_id))",
@@ -353,7 +353,7 @@ class ProjectParticipants extends PMETableViewBase
         'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT
   IF(\$join_col_fqn != -1,
-     CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".instrument,
+     CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".name,
             ' ',
             \$join_col_fqn),
      NULL)
@@ -364,7 +364,7 @@ class ProjectParticipants extends PMETableViewBase
   pi.project_id,
   pi.musician_id,
   i.id AS instrument_id,
-  i.instrument,
+  i.name,
   i.sort_order,
   pin.quantity,
   n.n,
@@ -384,7 +384,7 @@ class ProjectParticipants extends PMETableViewBase
     i.sort_order ASC, n.n ASC",
           'column' => 'value',
           'description' => [
-            'columns' => [ 'instrument', 'n' ],
+            'columns' => [ 'name', 'n' ],
             'divs' => ' ',
           ],
           'orderby' => '$table.sort_order ASC, $table.n ASC',
@@ -418,7 +418,7 @@ class ProjectParticipants extends PMETableViewBase
   pi.project_id,
   pi.musician_id,
   pi.instrument_id,
-  i.instrument,
+  i.name,
   i.sort_order
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
@@ -426,7 +426,7 @@ class ProjectParticipants extends PMETableViewBase
   WHERE
     pi.project_id = $projectId",
          'column' => "instrument_id",
-         'description' => "instrument",
+         'description' => "name",
          'orderby' => '$table.sort_order',
          'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
          'join' => '$join_table.project_id = $main_table.project_id AND $join_table.musician_id = $main_table.musician_id',
@@ -469,7 +469,7 @@ class ProjectParticipants extends PMETableViewBase
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
-        'description' => 'instrument',
+        'description' => 'name',
         'orderby'     => '$table.sort_order ASC',
         'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
       ],

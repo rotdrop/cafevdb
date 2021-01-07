@@ -167,13 +167,13 @@ class InstrumentFamilies extends PMETableViewBase
     $opts['fdd']['instrument_join'] = [
       'name' => 'InstrumentDummyJoin',
       'input'    => 'VRH',
-      'sql'      => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.instrument_family_id
-  ORDER BY PMEjoin'.$instFamIdx.'.instrument_family_id ASC)',
+      'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'input'  => 'VRH',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => array(
         'table'       => 'instrument_instrument_family',
-        'column'      => 'instrument_id',
+        'column'      => 'instrument_family_id',
+        'orderby'     => 'instrument_family_id ASC',
         'description' => [ 'columns' => 'instrument_id' ],
         'join'        => '$join_table.instrument_family_id = $main_table.id',
       )
@@ -184,7 +184,7 @@ class InstrumentFamilies extends PMETableViewBase
       'name'        => $this->l->t('Instruments'),
       'input'       => 'VR',
       'sort'        => true,
-      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.Id ORDER BY PMEjoin'.$instIdx.'.instrument ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'filter'      => 'having',
       'select'      => 'M',
       'maxlen'      => 11,
@@ -201,9 +201,9 @@ class InstrumentFamilies extends PMETableViewBase
       'values' => [
         'table'       => 'Instruments',
         'column'      => 'id',
-        'description' => 'instrument',
-        'orderby'     => 'instrument',
-        'join'        => '$join_table.id = PMEjoin'.$instFamIdx.'.instrument_id'
+        'description' => 'name',
+        'orderby'     => 'name ASC',
+        'join'        => '$join_col_fqn = PMEjoin'.$instFamIdx.'.instrument_id'
       ],
     ];
 

@@ -258,7 +258,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'sort'     => $sort,
       'values'   => [
         'column' => 'id',
-        'description' => 'instrument',
+        'description' => 'name',
         'orderby' => '$table.sort_order',
         'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
       ],

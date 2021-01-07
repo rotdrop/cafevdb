@@ -153,7 +153,7 @@ class Instruments extends PMETableViewBase
       'sort'      => true,
       ];
 
-    $opts['fdd']['instrument'] = [
+    $opts['fdd']['name'] = [
       'name'     => $this->l->t('Instrument'),
       'select'   => 'T',
       'maxlen'   => 64,
