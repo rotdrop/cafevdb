@@ -8,7 +8,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "/bin/true"
+    "build": "npm install"
   },
   "repository": {
     "type": "git",
