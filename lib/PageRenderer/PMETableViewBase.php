@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -443,9 +443,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $this->logInfo('OLDVALS '.print_r($oldvals, true));
-    $this->logInfo('NEWVALS '.print_r($newvals, true));
-    $this->logInfo('CHANGED '.print_r($changed, true));
+    $this->logDebug('OLDVALS '.print_r($oldvals, true));
+    $this->logDebug('NEWVALS '.print_r($newvals, true));
+    $this->logDebug('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
