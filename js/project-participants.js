@@ -122,18 +122,16 @@ var CAFEVDB = CAFEVDB || {};
    * server if something changed. However, the validation is triggered
    * by a change event. So what.
    */
-  Instrumentation.validateInstrumentChoices = function(container,
-                                                       selectMusicianInstrument,
-                                                       ajaxScript,
-                                                       finalizeCB,
-                                                       errorCB) {
-    const projectId = container.find('input[name="ProjectId"]').val();
-    const recordId = container.find('input[name="PME_sys_rec"]').val();
+  Instrumentation.validateInstrumentChoices = function(
+    container,
+    selectMusicianInstrument,
+    ajaxScript,
+    finalizeCB,
+    errorCB) {
 
     CAFEVDB.Notification.hide(function () {
       $.post(ajaxScript, {
-        projectId: projectId,
-        recordId: recordId,
+        recordId: PHPMYEDIT.pmeRec(container),
         instrumentValues: selectMusicianInstrument.val()
       })
        .fail(function(xhr, status, errorThrown) {

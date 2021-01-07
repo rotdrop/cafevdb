@@ -73,11 +73,12 @@ class ProjectParticipantsController extends Controller {
    *
    * @TODO implement instruments check
    */
-  public function serviceSwitch($topic)
+  public function serviceSwitch($topic, $recordId = [], $instrumentValues = [])
   {
     switch ($topic) {
     case 'change-musician-instruments':
     case 'change-project-instruments':
+      $this->logInfo($topic.' / '.print_r($recordId, true).' / '.print_r($instrumentValues, true));
       return self::response($this->l->t('Validation not yet implemented'));
       break;
     }
