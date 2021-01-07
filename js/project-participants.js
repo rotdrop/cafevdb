@@ -148,11 +148,10 @@ var CAFEVDB = CAFEVDB || {};
          // Oops. Perhaps only submit on success.
          finalizeCB();
 
-         data = data;
          if (data.notice != '') {
            timeout = 15000;
          }
-         const info = (data.message + ' ' + data.notice).trim();
+         const info = (data.message + (data.notice ? ' ' + data.notice : '')).trim();
          if (info != '') {
            CAFEVDB.Notification.show(info);
            setTimeout(function() {
