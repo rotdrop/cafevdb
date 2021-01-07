@@ -512,7 +512,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // Delete removed entities
         foreach ($identifier[$multiple]['del'] as $del) {
           $id = $oldIdentifier[$del];
-          $entityId = $this->makeJoinTableId($meta, $id);
+          $entityId = $this->extractKeyValues($meta, $id);
           $entity = $this->find($entityId);
           $this->remove($entityId);
           $this->changeLogService->logDelete($table, $id, $id);
@@ -541,7 +541,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($identifier[$multiple]['new'] as $new) {
           if (isset($addIdentifier[$new])) {
             $id = $addIdentifier[$new];
-            $entityId = $this->makeJoinTableId($meta, $id);
+            $entityId = $this->extractKeyValues($meta, $id);
             $entity = $entityClass::create();
             foreach ($entityId as $key => $value) {
               $entity[$key] = $value;
@@ -549,7 +549,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $this->changeLogService->logInsert($table, $id, $id);
           } else if (isset($remIdentifier[$new])) {
             $id = $remIdentifier[$new];
-            $entityId = $this->makeJoinTableId($meta, $id);
+            $entityId = $this->extractKeyValues($meta, $id);
             $entity = $this->find($entityId);
             if (empty($entity)) {
               throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
@@ -574,7 +574,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       } else { // !multiple, simply update
         if (false) {
           // probably  easier
-          $entityId = $this->makeJoinTableId($meta, $identifier);
+          $entityId = $this->extractKeyValues($meta, $identifier);
           $entity = $this->find($entityId);
           $logOld = [];
           $logNew = [];
@@ -607,7 +607,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $logOld[$column] = $oldvals[$field];
             $logNew[$column] = $newvals[$field];
           }
-          foreach ($this->makeJoinTableId($meta, $identifier) as $column => $value) {
+          foreach ($this->extractKeyValues($meta, $identifier) as $column => $value) {
             $parameter = $column.'Key';
             $qb->andWhere('e.'.$this->property($column).' = :'.$parameter)
                ->setParameter($parameter, $value);
@@ -846,41 +846,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $index = count($fieldDescriptionData);
     $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
     return $index;
-  }
-
-  /**
-   * Generate ids for use with Doctrine/ORM from home-brewn table values.
-   *
-   * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Class-meta.
-   *
-   * @param array $idValues The actual identifier values indexed by
-   * the database column names (read: not the entity-class-names, but
-   * the raw column names in the database).
-   *
-   * @param $makeReferences For persisting new entities we need
-   * references or real entities for the association keys. For finding
-   * entities we need the column values.
-   *
-   * @return array
-   */
-  protected function makeJoinTableId($meta, $idValues)
-  {
-    $entityId = [];
-    foreach ($meta->identifier as $field) {
-      if (isset($meta->associationMappings[$field])) {
-        if (count($meta->associationMappings[$field]['joinColumns']) != 1) {
-          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
-        }
-        $columnName = $meta->associationMappings[$field]['joinColumns'][0]['name'];
-      } else {
-        $columnName = $meta->fieldMappings[$field]['columnName'];
-        if (!isset($idValues[$columnName])) {
-          throw new \Exception($this->l->t('Unexpected id: %s', $field));
-        }
-      }
-      $entityId[$field] = $idValues[$columnName];
-    }
-    return $entityId;
   }
 
   /**

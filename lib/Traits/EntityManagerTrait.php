@@ -321,9 +321,20 @@ trait EntityManagerTrait {
     return $this->entityManager->getClassMetadata($entityClassName);
   }
 
+  /**
+   * @see \OCA\CAFEVDB\Database\EntityManager::property
+   */
   protected function property($columnName)
   {
     return $this->entityManager->property($columnName);
+  }
+
+  /**
+   * @see \OCA\CAFEVDB\Database\EntityManager::extractkeyvalues
+   */
+  public function extractKeyValues($meta, array $columnValues):array
+  {
+    return $this->entityManager->extractKeyValues($meta, $columnValues);
   }
 
 }

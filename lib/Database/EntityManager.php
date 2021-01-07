@@ -314,7 +314,7 @@ class EntityManager extends EntityManagerDecorator
           $targetEntity = $association['targetEntity'];
           $targetMeta = $this->getClassMetadata($targetEntity);
 
-          $targetEntityId = $this->getKeyValues($targetMeta, $columnValues);
+          $targetEntityId = $this->extractKeyValues($targetMeta, $columnValues);
           $reference = $this->getReference($targetEntity, $targetEntityId);
 
           $meta->setFieldValue($entity, $property, $reference);
@@ -371,7 +371,9 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Generate ids for use with Doctrine/ORM from column values.
+   * Generate ids for use with find and self::persist() from database
+   * column values. $columnValues is allowed to contain excess data
+   * which comes in handy when recursing into associations.
    *
    * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Class-meta.
    *
@@ -380,8 +382,14 @@ class EntityManager extends EntityManagerDecorator
    * the raw column names in the database).
    *
    * @return array
+   * ```
+   * [
+   *   PROPERTY => ELEMENTARY_FIELD_VALUE,
+   *   ...
+   * ]
+   * ```
    */
-  protected function getKeyValues($meta, $columnValues)
+  public function extractKeyValues($meta, array $columnValues):array
   {
     $entityId = [];
     foreach ($meta->identifier as $field) {
