@@ -123,6 +123,8 @@ ifeq (,$(wildcard $(CURDIR)/package.json))
 	cd js && $(npm) run build
 else
 	npm run build
+	# ahem.
+	sed -Ei 's|^module[.]|//module.|g' node_modules/camelcase/index.js
 endif
 
 # Removes the appstore build
