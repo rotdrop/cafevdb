@@ -77,6 +77,9 @@ class ProjectParticipantsController extends Controller {
   public function serviceSwitch($topic, $recordId = [], $instrumentValues = [])
   {
     $this->logDebug($topic.' / '.print_r($recordId, true).' / '.print_r($instrumentValues, true));
+    if (empty($instrumentValues)) {
+      $instrumentValues = [];
+    }
 
     switch ($topic) {
     case 'change-musician-instruments':
@@ -93,30 +96,49 @@ class ProjectParticipantsController extends Controller {
 
       $musicianInstruments = [];
       foreach ($projectParticipant['musician']['instruments'] as $musicianInstrument) {
-        $musicianInstruments[$musicianInstrument['instrument']['id']] = $musicianInstrument['instrument']['instrument'];
+        $musicianInstruments[$musicianInstrument['instrument']['id']] = $musicianInstrument;
       }
 
       $projectInstruments = [];
       foreach ($projectParticipant['projectInstruments'] as $projectInstrument) {
-        $projectInstruments[$projectInstrument['instrument']['id']] = $projectInstrument['instrument']['instrument'];
+        $projectInstruments[$projectInstrument['instrument']['id']] = $projectInstrument;
       }
 
       $allInstruments = [];
       foreach ($this->getDatabaseRepository(Entities\Instrument::class)->findAll() as $instrument) {
-        $allInstruments[$instrument['id']] = $instrument['instrument'];
+        $allInstruments[$instrument['id']] = $instrument;
       }
 
-      $this->logInfo('PRJ INST '.print_r($projectInstruments, true));
-      $this->logInfo('MUS INST '.print_r($musicianInstruments, true));
+      $this->logInfo('PRJ INST '.print_r(array_keys($projectInstruments), true));
+      $this->logInfo('MUS INST '.print_r(array_keys($musicianInstruments), true));
       $this->logInfo('AJX INST '.print_r($instrumentValues, true));
 
       switch ($topic) {
       case 'change-musician-instruments':
+
+        $message   = [];
+
         // This should be cheap as most musicians only play very few instruments
         foreach (array_diff(array_keys($musicianInstruments), $instrumentValues) as $removedId) {
+
+          $this->logInfo('Checking '.$removedId);
+
           if (isset($projectInstruments[$removedId])) {
-            return self::grumble($this->l->t('Denying the attempt to remove the instrument %s because it is used in the current project.', $projectInstruments[$removedId]));
+            return self::grumble($this->l->t('Denying the attempt to remove the instrument %s because it is used in the current project.', $projectInstruments[$removedId]['instrument']['name']));
           }
+
+          if ($musicianInstruments[$removedId]->usage() > 0) {
+            return self::grumble(
+              $this->l->t(
+                'Denying the attempt to remove the instrument %s because it is still used in %s other contexts.',
+                [ $musicianInstruments['instrument']['name'], $musicianInstruments[$removedId]->usage() ]));
+          }
+
+          $message[]  = $this->l->t(
+            'Removing instrument %s from the list of instruments played by %s',
+            [ $musicianInstruments[$removedId]['instrument']['name'],
+              $projectParticipant['musician']['firstName'] ]);
+
         }
 
         foreach (array_diff($instrumentValues, array_keys($musicianInstruments)) as $addedId) {
@@ -124,11 +146,15 @@ class ProjectParticipantsController extends Controller {
             return self::grumble($this->l->t('Denying the attempt to add an unknown instrument (id = %s)',
                                              $addedId));
           }
+          $message[] = $this->l->t(
+            'Adding instrument %s to the list of instruments played by %s',
+            [ $allInstruments[$addedId]['name'],
+              $projectParticipant['musician']['firstName'] ]);
         }
 
-        // TODO: check for usage everywhere before removing
+        // all ok
+        return self::response(implode('; ', $message));
 
-        break;
       case 'change-project-instruments':
         break;
       }
