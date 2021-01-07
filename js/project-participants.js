@@ -143,7 +143,7 @@ var CAFEVDB = CAFEVDB || {};
          if (!CAFEVDB.Ajax.validateResponse(data, [ 'message' ], errorCB)) {
            return;
          }
-         const timeout = 10000;
+         var timeout = 10000;
 
          // Oops. Perhaps only submit on success.
          finalizeCB();
@@ -330,7 +330,7 @@ var CAFEVDB = CAFEVDB || {};
     // Enable the controls, in order not to bloat SQL queries these PME
     // fields are flagged virtual which disables all controls initially.
     const selectMusicianInstruments = container.find('.pme-value select.musician-instruments');
-    const selectProjectInstrument = container.find('.pme-value select.pme-input.project-instruments');
+    const selectProjectInstruments = container.find('.pme-value select.pme-input.project-instruments');
     const selectGroupOfPeople = container.find('.pme-value select.pme-input.groupofpeople');
     const selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
     const form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
@@ -355,7 +355,7 @@ var CAFEVDB = CAFEVDB || {};
         selected = [];
       }
       const prevSelected = self.data('selected');
-      const instruments = selectProjectInstrument.val();
+      const instruments = selectProjectInstruments.val();
 
       var prevVoices = {};
       var voices = {};
@@ -400,13 +400,19 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
-    selectProjectInstrument.on('change', function(event) {
+    selectProjectInstruments.data(
+      'selected',
+      selectProjectInstruments.val()
+      ? selectProjectInstruments.val()
+      : []);
+    selectProjectInstruments.on('change', function(event) {
+      const self = $(this);
 
       selectMusicianInstruments.prop('disabled', true);
       selectMusicianInstruments.trigger('chosen:updated');
 
-      self.validateInstrumentChoices(
-        container, selectProjectInstrument,
+      Instrumentation.validateInstrumentChoices(
+        container, selectProjectInstruments,
         OC.generateUrl('/apps/cafevdb/projects/participants/change-project-instruments'),
         function () {
           // Reenable, otherwise the value will not be submitted
@@ -414,7 +420,22 @@ var CAFEVDB = CAFEVDB || {};
           selectMusicianInstruments.trigger('chosen:updated');
           PHPMYEDIT.submitOuterForm(selector); // Mmmh
         },
-        function () {
+        function (oldInstruments) {
+          oldInstruments = oldInstruments || self.data('selected');
+          // failure case
+          var i;
+          var selected = {};
+          for (i = 0; i < oldInstruments.length; ++i) {
+            selected[oldInstruments[i]] = true;
+          }
+          self.find('option').each(function(idx) {
+            const self = $(this);
+            if (typeof selected[self.val()] != 'undefined') {
+              self.prop('selected', true);
+            } else {
+              self.prop('selected', false);
+            }
+          });
           // Reenable, otherwise the value will not be submitted
           selectMusicianInstruments.prop('disabled', false);
           selectMusicianInstruments.trigger('chosen:updated');
@@ -423,34 +444,42 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
-
+    selectMusicianInstruments.data(
+      'selected',
+      selectMusicianInstruments.val()
+      ? selectMusicianInstruments.val()
+      : []);
     selectMusicianInstruments.on('change', function(event) {
+      const self = $(this);
 
-      selectProjectInstrument.prop('disabled', true);
-      selectProjectInstrument.trigger('chosen:updated');
+      selectProjectInstruments.prop('disabled', true);
+      selectProjectInstruments.trigger('chosen:updated');
 
-      self.validateInstrumentChoices(
+      Instrumentation.validateInstrumentChoices(
         container, selectMusicianInstruments,
         OC.generateUrl('/apps/cafevdb/projects/participants/change-musician-instruments'),
         function () {
           // Reenable, otherwise the value will not be submitted
-          selectProjectInstrument.prop('disabled', false);
-          selectProjectInstrument.trigger('chosen:updated');
+          selectProjectInstruments.prop('disabled', false);
+          selectProjectInstruments.trigger('chosen:updated');
           // submit the form with the "right" button,
           // i.e. save any possible changes already
           // entered by the user. The form-submit
           // will then also reload with an up to date
           // list of instruments
+          self.data('selected', self.val() ? self.val() : []);
           PHPMYEDIT.submitOuterForm(selector);
         },
         function(oldInstruments) {
+          oldInstruments = oldInstruments || self.data('selected');
+          // failure case
           var i;
           var selected = {};
           for (i = 0; i < oldInstruments.length; ++i) {
             selected[oldInstruments[i]] = true;
           }
-          selectMusicianInstruments.find('option').each(function(idx) {
-            var self = $(this);
+          self.find('option').each(function(idx) {
+            const self = $(this);
             if (typeof selected[self.val()] != 'undefined') {
               self.prop('selected', true);
             } else {
@@ -458,8 +487,8 @@ var CAFEVDB = CAFEVDB || {};
             }
           });
           // Reenable, otherwise the value will not be submitted
-          selectProjectInstrument.prop('disabled', false);
-          selectProjectInstrument.trigger('chosen:updated');
+          selectProjectInstruments.prop('disabled', false);
+          selectProjectInstruments.trigger('chosen:updated');
           selectMusicianInstruments.trigger('chosen:updated');
         });
 
@@ -494,7 +523,7 @@ var CAFEVDB = CAFEVDB || {};
     // foreach group remember the current selection of people and the
     // group
     selectGroupOfPeople.each(function(idx) {
-      var self = $(this);
+      const self = $(this);
       var curSelected = self.val();
       self.data('selected', curSelected ? curSelected : []);
       var name = self.attr('name');
