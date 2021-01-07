@@ -41,14 +41,14 @@ trait TimestampableTrait
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $created;
+    private $created;
 
     /**
      * @var \DateTime
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $updated;
+    private $updated;
 
     /**
      * Sets created.
