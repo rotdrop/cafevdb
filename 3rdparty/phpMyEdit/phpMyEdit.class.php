@@ -888,7 +888,21 @@ class phpMyEdit
 		//$this->logInfo('SUBS '.print_r($subs, true));
 
 		$qparts['select'] = 'DISTINCT '.$table_name.'.'.$this->sd.$key.$this->ed;
-		if ($desc && is_array($desc) && is_array($desc['columns'])) {
+
+		if (!empty($desc)) {
+
+			// normalize $desc
+			if (!is_array($desc)) {
+				$desc = [ 'columns' => [ $desc, ] ];
+			} else {
+				if (!empty($desc['columns']) && !is_array($desc['columns'])) {
+					$desc['columns'] = [ $desc['columns'], ];
+				}
+				if (!empty($desc['divs']) && !is_array($desc['divs'])) {
+					$desc['divs'] = array_fill(0, min(0, count($desc['columns']) - 1), $desc['divs']);
+				}
+			}
+
 			$qparts['select'] .= ',CONCAT('; // )
 			$num_cols = sizeof($desc['columns']);
 			if (!empty($desc['divs'][-1]) && is_array($desc['divs'])) {
@@ -906,19 +920,10 @@ class phpMyEdit
 					$selects[] = $select;
 				}
 			}
-			$sep = ',';
-			if (is_string($desc['divs'])) {
-				$sep .= '"'.addslashes($desc['divs']).'",';
-			}
-			$qparts['select'] .= implode($sep, $selects).',';
+			$qparts['select'] .= implode(',', $selects).',';
 			$qparts['select'][strlen($qparts['select']) - 1] = ')';
 			$qparts['select'] .= ' AS '.$this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
 			$qparts['orderby'] = $this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
-		} else if ($desc && is_array($desc)) {
-			// TODO
-		} else if ($desc) {
-			$qparts['select'] .= ','.$table_name.'.'.$this->sd.$desc.$this->ed;
-			$qparts['orderby'] = $this->sd.$desc.$this->ed;
 		} else if ($key) {
 			$qparts['orderby'] = $this->sd.$key.$this->ed;
 		}
@@ -1095,35 +1100,38 @@ class phpMyEdit
 				$join_table = $this->join_table_alias($field);
 
 				$desc = $fdd['values']['description'];
-				if (is_array($desc) && is_array($desc['columns'])) {
-					$ret	  = 'CONCAT('; // )
-					$num_cols = sizeof($desc['columns']);
-					if (!empty($desc['divs'][-1]) && is_array($desc['divs'])) {
-						$ret .= '"'.addslashes($desc['divs'][-1]).'",';
-					}
-					$descFields = [];
-					foreach ($desc['columns'] as $key => $val) {
-						if ($val) {
-							$descField = 'IFNULL(CAST('.$this->sd.$join_table.$this->ed.'.'.$this->sd.$val.$this->ed.' AS CHAR),';
-							$null = empty($desc['ifnull'][$key]) ? '""' : $desc['ifnull'][$key];
-							$descField .= $null.')';
-							if (!empty($desc['divs'][$key]) && is_array($desc['divs'])) {
-								$descField .= ',"'.addslashes($desc['divs'][$key]).'"';
-							}
-							$descFields[] = $descField;
-						}
-					}
-					$sep = ',';
-					if (is_string($desc['divs'])) {
-						$sep .= '"'.addslashes($desc['divs']).'",';
-					}
-					$ret .= implode($sep, $descFields).',';
-					$ret[strlen($ret) - 1] = ')';
-				} else if (is_array($desc)) {
-					// TODO
+
+				// normalize $desc
+				if (!is_array($desc)) {
+					$desc = [ 'columns' => [ $desc, ] ];
 				} else {
-					$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$fdd['values']['description'].$this->ed;
+					if (!empty($desc['columns']) && !is_array($desc['columns'])) {
+						$desc['columns'] = [ $desc['columns'], ];
+					}
+					if (!empty($desc['divs']) && !is_array($desc['divs'])) {
+						$desc['divs'] = array_fill(0, min(0, count($desc['columns']) - 1), $desc['divs']);
+					}
 				}
+
+				$ret	  = 'CONCAT('; // )
+				$num_cols = sizeof($desc['columns']);
+				if (!empty($desc['divs'][-1]) && is_array($desc['divs'])) {
+					$ret .= '"'.addslashes($desc['divs'][-1]).'",';
+				}
+				$descFields = [];
+				foreach ($desc['columns'] as $key => $val) {
+					if ($val) {
+						$descField = 'IFNULL(CAST('.$this->sd.$join_table.$this->ed.'.'.$this->sd.$val.$this->ed.' AS CHAR),';
+						$null = empty($desc['ifnull'][$key]) ? '""' : $desc['ifnull'][$key];
+						$descField .= $null.')';
+						if (!empty($desc['divs'][$key]) && is_array($desc['divs'])) {
+							$descField .= ',"'.addslashes($desc['divs'][$key]).'"';
+						}
+						$descFields[] = $descField;
+					}
+				}
+				$ret .= implode(',', $descFields).',';
+				$ret[strlen($ret) - 1] = ')';
 			} else {
 				$ret = $this->sql_field($field);
 			}
