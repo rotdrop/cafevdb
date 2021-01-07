@@ -2605,17 +2605,19 @@ class phpMyEdit
 		} elseif($label && isset($this->tooltips[$label])) {
 			return $this->tooltips[$label];
 		}
-		foreach ($css_classes as $css_class_name) {
-			if (isset($this->tooltips[$css_class_name])) {
-				return $this->tooltips[$css_class_name];
-			}
-			// Then start stripping "components" from the end of the
-			// class, i.e. if we have pme-filter-blah, then also try pme-filter
-			$sfxpos = strrpos($css_class_name, '-');
-			if ($sfxpos !== false) {
-				$css_class_name = substr($css_class_name, 0, $sfxpos);
-				if (isset($this->tooltips[$css_class_name])) {
-					return $this->tooltips[$css_class_name];
+		foreach ([ ':'.$name, '' ] as $suffix) {
+			foreach ($css_classes as $css_class_name) {
+				if (isset($this->tooltips[$css_class_name.$suffix])) {
+					return $this->tooltips[$css_class_name.$suffix];
+				}
+				// Then start stripping "components" from the end of the
+				// class, i.e. if we have pme-filter-blah, then also try pme-filter
+				$sfxpos = strrpos($css_class_name, '-');
+				if ($sfxpos !== false) {
+					$css_class_name = substr($css_class_name, 0, $sfxpos);
+					if (isset($this->tooltips[$css_class_name.$suffix])) {
+						return $this->tooltips[$css_class_name.$suffix];
+					}
 				}
 			}
 		}
