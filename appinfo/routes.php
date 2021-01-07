@@ -245,6 +245,14 @@ $routes = [
       'url' => '/projects/webpages',
       'verb' => 'POST',
     ],
+    /**
+     * Project Participants
+     */
+    [
+      'name' => 'project_participants#service_switch',
+      'url' => '/projects/participants/{topic}',
+      'verb' => 'POST',
+    ],
   ],
 ];
 

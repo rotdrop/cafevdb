@@ -127,47 +127,39 @@ var CAFEVDB = CAFEVDB || {};
                                                        ajaxScript,
                                                        finalizeCB,
                                                        errorCB) {
-    var projectId = container.find('input[name="ProjectId"]').val();
-    var recordId = container.find('input[name="PME_sys_rec"]').val();
+    const projectId = container.find('input[name="ProjectId"]').val();
+    const recordId = container.find('input[name="PME_sys_rec"]').val();
 
     CAFEVDB.Notification.hide(function () {
-      $.post(ajaxScript,
-             {
-               projectId: projectId,
-               recordId: recordId,
-               instrumentValues: selectMusicianInstrument.val()
-             },
-             function (data) {
-               if (!CAFEVDB.Ajax.validateResponse(data, [ 'message' ], function() {
-                      if (typeof errorCB == 'function' &&
-                          typeof data.data != 'undefined' &&
-                          typeof data.data.instruments != 'undefined') {
-                        errorCB(data.data.instruments);
-                      }
-                    })) {
-                 return false;
-               }
-               var rqData;
-               var timeout = 10000;
+      $.post(ajaxScript, {
+        projectId: projectId,
+        recordId: recordId,
+        instrumentValues: selectMusicianInstrument.val()
+      })
+       .fail(function(xhr, status, errorThrown) {
+         CAFEVDB.Ajax.handleError(xhr, status, errorThrown, errorCB);
+       })
+       .done(function (data) {
+         if (!CAFEVDB.Ajax.validateResponse(data, [ 'message' ], errorCB)) {
+           return;
+         }
+         const timeout = 10000;
 
-               // Oops. Perhaps only submit on success.
-               finalizeCB();
+         // Oops. Perhaps only submit on success.
+         finalizeCB();
 
-               rqData = data.data;
-               if (rqData.notice != '') {
-                 timeout = 15000;
-               }
-               var info = rqData.message + ' ' + rqData.notice;
-               info = info.trim();
-               if (info != '') {
-                 CAFEVDB.Notification.show(info);
-                 setTimeout(function() {
-                   CAFEVDB.Notification.hide();
-                 }, timeout);
-               }
-
-               return false;
-             }, 'json');
+         data = data;
+         if (data.notice != '') {
+           timeout = 15000;
+         }
+         const info = (data.message + ' ' + data.notice).trim();
+         if (info != '') {
+           CAFEVDB.Notification.show(info);
+           setTimeout(function() {
+             CAFEVDB.Notification.hide();
+           }, timeout);
+         }
+       });
     });
   };
 
@@ -409,43 +401,41 @@ var CAFEVDB = CAFEVDB || {};
     });
 
     selectProjectInstrument.on('change', function(event) {
-      event.preventDefault();
 
       selectMusicianInstruments.prop('disabled', true);
       selectMusicianInstruments.trigger('chosen:updated');
 
       self.validateInstrumentChoices(
         container, selectProjectInstrument,
-        OC.filePath('cafevdb', 'ajax/instrumentation', 'change-project-instrument.php'),
+        OC.generateUrl('/apps/cafevdb/projects/participants/change-project-instruments'),
         function () {
-
           // Reenable, otherwise the value will not be submitted
           selectMusicianInstruments.prop('disabled', false);
           selectMusicianInstruments.trigger('chosen:updated');
-
-          // Mmmh.
-          PHPMYEDIT.submitOuterForm(selector);
-        });
+          PHPMYEDIT.submitOuterForm(selector); // Mmmh
+        },
+        function () {
+          // Reenable, otherwise the value will not be submitted
+          selectMusicianInstruments.prop('disabled', false);
+          selectMusicianInstruments.trigger('chosen:updated');
+      });
 
       return false;
     });
 
 
     selectMusicianInstruments.on('change', function(event) {
-      event.preventDefault();
 
       selectProjectInstrument.prop('disabled', true);
       selectProjectInstrument.trigger('chosen:updated');
 
       self.validateInstrumentChoices(
         container, selectMusicianInstruments,
-        OC.filePath('cafevdb', 'ajax/instrumentation', 'change-musician-instruments.php'),
+        OC.generateUrl('/apps/cafevdb/projects/participants/change-musician-instruments'),
         function () {
-
           // Reenable, otherwise the value will not be submitted
           selectProjectInstrument.prop('disabled', false);
           selectProjectInstrument.trigger('chosen:updated');
-
           // submit the form with the "right" button,
           // i.e. save any possible changes already
           // entered by the user. The form-submit
