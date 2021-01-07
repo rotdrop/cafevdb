@@ -110,6 +110,7 @@ script($appName, '../node_modules/@ckeditor/ckeditor5-build-classic/build/ckedit
 script($appName, '../3rdparty/js/imagesloaded/imagesloaded.pkgd.min');
 
 script($appName, '../node_modules/jquery-file-download/src/Scripts/jquery.fileDownload');
+script($appName, '../node_modules/camelcase/index');
 
 style('dokuwikiembedded', 'doku-wiki-popup');
 script('dokuwikiembedded', 'doku-wiki');

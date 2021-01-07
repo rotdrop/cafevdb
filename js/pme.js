@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -99,8 +100,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
   /**Generate a compound class selector with pme-.... prefix.*/
   PHPMYEDIT.pmeClassSelectors = function(element, tokens) {
-    var pme = this;
-    var elements = tokens.map(function(token) {
+    const pme = this;
+    const elements = tokens.map(function(token) {
                      return pme.pmeClassSelector(element, token);
                    });
     return elements.join(',');
@@ -108,7 +109,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
   /**Generate a name selector with PME_sys_.... prefix.*/
   PHPMYEDIT.pmeSysNameSelector = function(element, token) {
-    var pme = this;
+    const pme = this;
     return element+'[name="'+pme.pmeSys(token)+'"]';
   };
 
@@ -123,7 +124,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
   /**Generate a navigation selector with pme-.... prefix.*/
   PHPMYEDIT.navigationSelector = function(token) {
-    var pme = this;
+    const pme = this;
     return '.'+pme.pmeToken('navigation')+' '+pme.pmeClassSelector('input', token);
   };
 
@@ -137,7 +138,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     return 'table.'+this.pmeToken('main');
   };
 
-  /**Genereate the default selector.
+  /**
+   * Genereate the default selector.
    *
    * @param selector The selector to construct the final selector
    * from. Maybe a jQuery object.
@@ -149,7 +151,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     return selector;
   };
 
-  /**Generate the jQuery object corresponding to the ambient
+  /**
+   * Generate the jQuery object corresponding to the ambient
    * element. If the given argument is already a jQuery object, then
    * just return the argument.
    */
@@ -164,7 +167,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     return container;
   };
 
-  /**Generate the jQuery object corresponding to the inner container
+  /**
+   * Generate the jQuery object corresponding to the inner container
    * of the ambient container. If the given argument is already a
    * jQuery object, then just return its first div child.
    */
@@ -177,6 +181,28 @@ var PHPMYEDIT = PHPMYEDIT || {};
       container = $(selector);
     }
     return container.children('div:first');
+  };
+
+  /** Find the record id inside the given selector or jQuery collection. */
+  PHPMYEDIT.pmeRec = function(selector, options) {
+    options = options || { pascalCase: false };
+    if (options.camelCase === false) {
+      var munge = function(key) { return key; };
+    } else {
+      var munge = function(key) { return camelCase(key, options); };
+    }
+    const pme = this;
+    const records = $(selector).find('input[name^="'+pme.pmeSys('rec')+'"]').serializeArray();
+    var result = {};
+    for (const rec of records) {
+      const key = rec.name.match(/[^[]+\[([^\]]+)\]/);
+      if (key.length == 2) {
+        result[munge(key[1])] = rec.value;
+      } else {
+        result = rec.value;
+      }
+    }
+    return result;
   };
 
   /**Notify the spectator about SQL errors.*/

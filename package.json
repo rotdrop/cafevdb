@@ -24,6 +24,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^23.0.0",
     "@nextcloud/dialogs": "^2.0.1",
+    "camelcase": "^6.2.0",
     "jquery-file-download": "^1.4.6",
     "selectize": "^0.12.6"
   }
