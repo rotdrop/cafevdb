@@ -277,6 +277,120 @@ class EntityManager extends EntityManagerDecorator
     return Util::dashesToCamelCase($columnName);
   }
 
+  /**
+   * Persist an entity after performing some special tweaks:
+   *
+   * - nesting primary foreign keys is not supported, but a
+   *   work-around can be established by additional associations. Fill
+   *   those to-one associations with references if the necessary keys
+   *   are available.
+   *
+   * Then just move the modified entity on to the ordinary persister.
+   */
+  public function persist($entity)
+  {
+    $meta = $this->getClassMetadata(get_class($entity));
+    if ($meta->containsForeignIdentifier) {
+      $columnValues = $this->getIdentifierColumnValues($entity, $meta);
+
+      foreach ($meta->associationMappings as $property => $association) {
+
+        if (!$meta->isSingleValuedAssociation($property)) {
+          // only to-one makes sense
+          continue;
+        }
+
+        if (array_search($property, $meta->identifier) !== false) {
+          // all primary keys must already be there
+          continue;
+        }
+
+        if (!empty($meta->getFieldValue($entity, $property))) {
+          // don't override values already present
+          continue;
+        }
+
+        try {
+          $targetEntity = $association['targetEntity'];
+          $targetMeta = $this->getClassMetadata($targetEntity);
+
+          $targetEntityId = $this->getKeyValues($targetMeta, $columnValues);
+          $reference = $this->getReference($targetEntity, $targetEntityId);
+
+          $meta->setFieldValue($entity, $property, $reference);
+
+        } catch (\Throwable $t) {
+          $this->logException($t);
+        }
+      }
+
+    }
+    return parent::persist($entity);
+  }
+
+  /**
+   * The related MetaData::getIdentifierValues() function does not
+   * handle recursive into associations. Extract the column values of
+   * primary foreign keys by recursing into the meta-data.
+   *
+   * @return array
+   * ```
+   * [ COLUMN1 => VALUE1, ... ]
+   * ```
+   */
+  private function getIdentifierColumnValues($entity, $meta)
+  {
+    $columnValues = [];
+    foreach ($meta->getIdentifierValues($entity) as $field => $value) {
+      if (isset($meta->associationMappings[$field])) {
+        $association = $meta->associationMappings[$field];
+        $targetEntity = $association['targetEntity'];
+        $targetMeta = $this->getClassMetadata($targetEntity);
+        foreach ($association['joinColumns'] as $joinInfo) {
+          $columnName = $joinInfo['name'];
+          $targetColumn = $joinInfo['referencedColumnName'];
+          $targetField = $targetMeta->fieldNames[$targetColumn];
+          $columnValues[$columnName] = $targetMeta->getFieldValue($value, $targetField);
+        }
+      } else {
+        $columnName = $meta->fieldMappings[$field]['columnName'];
+        $columnValues[$columnName] = $value;
+      }
+    }
+    return $columnValues;
+  }
+
+  /**
+   * Generate ids for use with Doctrine/ORM from column values.
+   *
+   * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Class-meta.
+   *
+   * @param array $columnValues The actual identifier values indexed by
+   * the database column names (read: not the entity-class-names, but
+   * the raw column names in the database).
+   *
+   * @return array
+   */
+  protected function getKeyValues($meta, $columnValues)
+  {
+    $entityId = [];
+    foreach ($meta->identifier as $field) {
+      if (isset($meta->associationMappings[$field])) {
+        if (count($meta->associationMappings[$field]['joinColumns']) != 1) {
+          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+        }
+        $columnName = $meta->associationMappings[$field]['joinColumns'][0]['name'];
+      } else {
+        $columnName = $meta->fieldMappings[$field]['columnName'];
+        if (!isset($columnValues[$columnName])) {
+          throw new \Exception($this->l->t('Unexpected id: %s', $field));
+        }
+      }
+      $entityId[$field] = $columnValues[$columnName];
+    }
+    return $entityId;
+  }
+
 }
 
 // Local Variables: ***
