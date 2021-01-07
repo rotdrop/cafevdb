@@ -38,7 +38,7 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findByName(string $name)
   {
-    return $this->findOneBy([ 'instrument' => $name ], [ 'sortOrder' => 'ASC' ]);
+    return $this->findOneBy([ 'name' => $name ], [ 'sortOrder' => 'ASC' ]);
   }
 
   /**
@@ -79,7 +79,7 @@ class InstrumentsRepository extends EntityRepository
 
     foreach($all as $entity) {
       $id         = $entity['id'];
-      $instrument = $entity['instrument'];
+      $instrument = $entity['name'];
       $families   = $entity['families']->map(function($entity) {
         return $entity['family'];
       })->toArray();

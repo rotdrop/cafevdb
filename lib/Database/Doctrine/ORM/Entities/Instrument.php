@@ -52,9 +52,9 @@ class Instrument implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=64, nullable=false)
+   * @ORM\Column(type="string", length=128, nullable=false)
    */
-  private $instrument;
+  private $name;
 
   /**
    * @var int
@@ -80,26 +80,46 @@ class Instrument implements \ArrayAccess
   private $families;
 
   /**
-   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="instrument")
+   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="instrument", fetch="EXTRA_LAZY")
    */
   private $musicianInstruments;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="instrument")
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="instrument", fetch="EXTRA_LAZY")
    */
   private $projectInstruments;
 
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="instrument", fetch="EXTRA_LAZY")
+   */
+  private $projectInstrumentationNumbers;
+
   public function __construct() {
     $this->arrayCTOR();
+    $this->families = new ArrayCollection();
     $this->musicianInstruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
-    $this->families = new ArrayCollection();
+    $this->projectInstrumentationNumbers = new ArrayCollection();
+  }
+
+  /**
+   * Set id.
+   *
+   * @param string $id
+   *
+   * @return Ide
+   */
+  public function setId($id)
+  {
+    $this->id = $id;
+
+    return $this;
   }
 
   /**
    * Get id.
    *
-   * @return int
+   * @return string
    */
   public function getId()
   {
@@ -107,27 +127,27 @@ class Instrument implements \ArrayAccess
   }
 
   /**
-   * Set instrument.
+   * Set name.
    *
-   * @param string $instrument
+   * @param string $name
    *
-   * @return Instrumente
+   * @return Namee
    */
-  public function setInstrument($instrument)
+  public function setName($name)
   {
-    $this->instrument = $instrument;
+    $this->name = $name;
 
     return $this;
   }
 
   /**
-   * Get instrument.
+   * Get name.
    *
    * @return string
    */
-  public function getInstrument()
+  public function getName()
   {
-    return $this->instrument;
+    return $this->name;
   }
 
   /**
@@ -202,10 +222,82 @@ class Instrument implements \ArrayAccess
     return $this->disabled;
   }
 
+  /**
+   * Set musicianInstruments.
+   *
+   * @param bool $musicianInstruments
+   *
+   * @return Instrumente
+   */
+  public function setMusicianInstruments($musicianInstruments)
+  {
+    $this->musicianInstruments = $musicianInstruments;
+
+    return $this;
+  }
+
+  /**
+   * Get musicianInstruments.
+   *
+   * @return bool
+   */
+  public function getMusicianInstruments()
+  {
+    return $this->musicianInstruments;
+  }
+
+  /**
+   * Set projectInstruments.
+   *
+   * @param bool $projectInstruments
+   *
+   * @return Instrumente
+   */
+  public function setProjectInstruments($projectInstruments)
+  {
+    $this->projectInstruments = $projectInstruments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectInstruments.
+   *
+   * @return bool
+   */
+  public function getProjectInstruments()
+  {
+    return $this->projectInstruments;
+  }
+
+  /**
+   * Set projectInstrumentationNumbers.
+   *
+   * @param bool $projectInstrumentationNumbers
+   *
+   * @return Instrumente
+   */
+  public function setProjectInstrumentationNumbers($projectInstrumentationNumbers)
+  {
+    $this->projectInstrumentationNumbers = $projectInstrumentationNumbers;
+
+    return $this;
+  }
+
+  /**
+   * Get projectInstrumentationNumbers.
+   *
+   * @return bool
+   */
+  public function getProjectInstrumentationNumbers()
+  {
+    return $this->projectInstrumentationNumbers;
+  }
+
   public function usage()
   {
-    return $this->musicians->count()
-      + $this->projects->count()
-      /*+ $this->families->count()*/;
+    return $this->musicianInstruments->count()
+      + $this->projectInstruments->count()
+      + $this->projectInstrumentationNumbers->count();
   }
 }

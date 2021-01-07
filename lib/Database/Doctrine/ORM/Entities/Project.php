@@ -93,7 +93,7 @@ class Project implements \ArrayAccess
   /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
-  private $instrumentation;
+  private $projectInstrumentationNumbers;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectPoster", mappedBy="owner", fetch="EXTRA_LAZY")
@@ -132,7 +132,7 @@ class Project implements \ArrayAccess
 
   public function __construct() {
     $this->arrayCTOR();
-    $this->instrumentation = new ArrayCollection();
+    $this->projectInstrumentationNumbers = new ArrayCollection();
     $this->posters = new ArrayCollection();
     $this->flyers = new ArrayCollection();
     $this->webPages = new ArrayCollection();
@@ -296,30 +296,6 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set extrafelder.
-   *
-   * @param string $extrafelder
-   *
-   * @return Project
-   */
-  public function setExtrafelder($extrafelder)
-  {
-    $this->extrafelder = $extrafelder;
-
-    return $this;
-  }
-
-  /**
-   * Get extrafelder.
-   *
-   * @return string
-   */
-  public function getExtrafelder()
-  {
-    return $this->extrafelder;
-  }
-
-  /**
    * Set disabled.
    *
    * @param bool $disabled
@@ -341,6 +317,54 @@ class Project implements \ArrayAccess
   public function getDisabled()
   {
     return $this->disabled;
+  }
+
+  /**
+   * Set posters.
+   *
+   * @param ArrayCollection $posters
+   *
+   * @return Project
+   */
+  public function setPosters($posters)
+  {
+    $this->posters = $posters;
+
+    return $this;
+  }
+
+  /**
+   * Get posters.
+   *
+   * @return ArrayCollection
+   */
+  public function getPosters()
+  {
+    return $this->posters;
+  }
+
+  /**
+   * Set flyers.
+   *
+   * @param ArrayCollection $flyers
+   *
+   * @return Project
+   */
+  public function setFlyers($flyers)
+  {
+    $this->flyers = $flyers;
+
+    return $this;
+  }
+
+  /**
+   * Get flyers.
+   *
+   * @return ArrayCollection
+   */
+  public function getFlyers()
+  {
+    return $this->flyers;
   }
 
   /**
@@ -366,4 +390,77 @@ class Project implements \ArrayAccess
   {
     return $this->webPages;
   }
+
+  /**
+   * Set extraFields.
+   *
+   * @param ArrayCollection $extraFields
+   *
+   * @return Project
+   */
+  public function setExtraFields($extraFields)
+  {
+    $this->extraFields = $extraFields;
+
+    return $this;
+  }
+
+  /**
+   * Get extraFields.
+   *
+   * @return ArrayCollection
+   */
+  public function getExtraFields()
+  {
+    return $this->extraFields;
+  }
+
+  /**
+   * Set extraFieldsData.
+   *
+   * @param ArrayCollection $extraFieldsData
+   *
+   * @return Project
+   */
+  public function setExtraFieldsData($extraFieldsData)
+  {
+    $this->extraFieldsData = $extraFieldsData;
+
+    return $this;
+  }
+
+  /**
+   * Get extraFieldsData.
+   *
+   * @return ArrayCollection
+   */
+  public function getExtraFieldsData()
+  {
+    return $this->extraFieldsData;
+  }
+
+  /**
+   * Set participants.
+   *
+   * @param ArrayCollection $participants
+   *
+   * @return Project
+   */
+  public function setParticipants($participants)
+  {
+    $this->participants = $participants;
+
+    return $this;
+  }
+
+  /**
+   * Get participants.
+   *
+   * @return ArrayCollection
+   */
+  public function getParticipants()
+  {
+    return $this->participants;
+  }
+
 }

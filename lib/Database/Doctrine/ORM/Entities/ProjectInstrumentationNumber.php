@@ -42,13 +42,13 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="instrumentation", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectInstrumentationNumbers", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $project;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Instrument", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Instrument", inversedBy="projectInstrumentationNumbers", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $instrument;

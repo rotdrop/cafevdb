@@ -69,7 +69,7 @@ class ProjectPayment implements \ArrayAccess
   private $debitMessageId;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payment", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id")

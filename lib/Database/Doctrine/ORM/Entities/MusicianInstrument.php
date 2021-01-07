@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * MusicianInstrument
@@ -55,14 +56,27 @@ class MusicianInstrument implements \ArrayAccess
   private $instrument;
 
   /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musicianInstrument")
+   */
+  private $projectInstruments;
+
+  /**
    * @var int
    *
    * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Ranking of the instrument w.r.t. to the given musician (lower is better)"})
    */
   private $ranking = 1;
 
+  /**
+   * @var bool
+   *
+   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
+   */
+  private $disabled = false;
+
   public function __construct() {
     $this->arrayCTOR();
+    $this->projectInstruments = new ArrayCollection();
   }
 
   /**
@@ -135,6 +149,59 @@ class MusicianInstrument implements \ArrayAccess
   public function getRanking()
   {
     return $this->ranking;
+  }
+
+  /**
+   * Set disabled.
+   *
+   * @param bool $disabled
+   *
+   * @return Instrumente
+   */
+  public function setDisabled($disabled)
+  {
+    $this->disabled = $disabled;
+
+    return $this;
+  }
+
+  /**
+   * Get disabled.
+   *
+   * @return bool
+   */
+  public function getDisabled()
+  {
+    return $this->disabled;
+  }
+
+  /**
+   * Set projectInstruments.
+   *
+   * @param bool $projectInstruments
+   *
+   * @return Instrumente
+   */
+  public function setProjectInstruments($projectInstruments)
+  {
+    $this->projectInstruments = $projectInstruments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectInstruments.
+   *
+   * @return bool
+   */
+  public function getProjectInstruments()
+  {
+    return $this->projectInstruments;
+  }
+
+  public function usage()
+  {
+    return $this->projectInstruments->count();
   }
 
 }

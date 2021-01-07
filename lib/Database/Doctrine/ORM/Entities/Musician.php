@@ -163,17 +163,17 @@ class Musician implements \ArrayAccess
   /**
    * Core functionality: one musican participates in many projects
    *
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician")
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", fetch="EXTRA_LAZY")
    */
   private $projectParticipation;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musician")
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musician", fetch="EXTRA_LAZY")
    */
   private $projectInstruments;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="musician")
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="musician", fetch="EXTRA_LAZY")
    */
   private $projectExtraFieldsData;
 
@@ -592,4 +592,77 @@ class Musician implements \ArrayAccess
   {
     return $this->photo;
   }
+
+  /**
+   * Set projectInstruments.
+   *
+   * @param Image $projectInstruments|null
+   *
+   * @return Musician
+   */
+  public function setProjectInstruments($projectInstruments = null)
+  {
+    $this->projectInstruments = $projectInstruments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectInstruments.
+   *
+   * @return Image|null
+   */
+  public function getProjectInstruments()
+  {
+    return $this->projectInstruments;
+  }
+
+  /**
+   * Set projectcParticipation.
+   *
+   * @param Image $projectcParticipation|null
+   *
+   * @return Musician
+   */
+  public function setProjectcParticipation($projectcParticipation = null)
+  {
+    $this->projectcParticipation = $projectcParticipation;
+
+    return $this;
+  }
+
+  /**
+   * Get projectcParticipation.
+   *
+   * @return Image|null
+   */
+  public function getProjectcParticipation()
+  {
+    return $this->projectcParticipation;
+  }
+
+  /**
+   * Set projectExtraFieldsData.
+   *
+   * @param Image $projectExtraFieldsData|null
+   *
+   * @return Musician
+   */
+  public function setProjectExtraFieldsData($projectExtraFieldsData = null)
+  {
+    $this->projectExtraFieldsData = $projectExtraFieldsData;
+
+    return $this;
+  }
+
+  /**
+   * Get projectExtraFieldsData.
+   *
+   * @return Image|null
+   */
+  public function getProjectExtraFieldsData()
+  {
+    return $this->projectExtraFieldsData;
+  }
+
 }

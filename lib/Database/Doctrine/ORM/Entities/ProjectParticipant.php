@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,7 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Besetzungen *
+ * Besetzungen
  * @ORM\Table(name="ProjectParticipants")
  * @ORM\Entity
  */
@@ -96,7 +96,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectParticipant")
    */
-  private $payment;
+  private $payments;
 
   /**
    * Link to extra fields data
@@ -114,6 +114,7 @@ class ProjectParticipant implements \ArrayAccess
 
   public function __construct() {
     $this->arrayCTOR();
+    $this->payments = new ArrayCollection();
     $this->extraFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
   }
@@ -309,4 +310,77 @@ class ProjectParticipant implements \ArrayAccess
   {
     return $this->disabled;
   }
+
+  /**
+   * Set projectInstruments.
+   *
+   * @param bool $projectInstruments
+   *
+   * @return Besetzungen
+   */
+  public function setProjectInstruments($projectInstruments)
+  {
+    $this->projectInstruments = $projectInstruments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectInstruments.
+   *
+   * @return bool
+   */
+  public function getProjectInstruments()
+  {
+    return $this->projectInstruments;
+  }
+
+  /**
+   * Set extraFieldsData.
+   *
+   * @param bool $extraFieldsData
+   *
+   * @return Besetzungen
+   */
+  public function setExtraFieldsData($extraFieldsData)
+  {
+    $this->extraFieldsData = $extraFieldsData;
+
+    return $this;
+  }
+
+  /**
+   * Get extraFieldsData.
+   *
+   * @return bool
+   */
+  public function getExtraFieldsData()
+  {
+    return $this->extraFieldsData;
+  }
+
+  /**
+   * Set payments.
+   *
+   * @param bool $payments
+   *
+   * @return Besetzungen
+   */
+  public function setPayments($payments)
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return bool
+   */
+  public function getPayments()
+  {
+    return $this->payments;
+  }
+
 }

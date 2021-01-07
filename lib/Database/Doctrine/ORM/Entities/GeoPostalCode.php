@@ -251,6 +251,20 @@ class GeoPostalCode implements \ArrayAccess
   }
 
   /**
+   * Set translations.
+   *
+   * @param \DateTime $translations
+   *
+   * @return GeoPostalCode
+   */
+  public function setTranslations($translations)
+  {
+    $this->translations = $translations;
+
+    return $this;
+  }
+
+  /**
    * Get linked GeoPostalCodeTranslation entities.
    *
    * @return ArrayCollection[]

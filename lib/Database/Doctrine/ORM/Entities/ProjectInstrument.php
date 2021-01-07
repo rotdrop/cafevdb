@@ -91,7 +91,7 @@ class ProjectInstrument implements \ArrayAccess
   private $projectParticipant;
 
   /**
-   * @ORM\OneToOne(targetEntity="MusicianInstrument", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="MusicianInstrument", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id"),
    *   @ORM\JoinColumn(name="instrument_id",referencedColumnName="instrument_id")
