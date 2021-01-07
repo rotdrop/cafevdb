@@ -440,9 +440,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $this->logDebug('OLDVALS '.print_r($oldvals, true));
-    $this->logDebug('NEWVALS '.print_r($newvals, true));
-    $this->logDebug('CHANGED '.print_r($changed, true));
+    $this->logInfo('OLDVALS '.print_r($oldvals, true));
+    $this->logInfo('NEWVALS '.print_r($newvals, true));
+    $this->logInfo('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
@@ -475,8 +475,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // assume that the 'column' component contains the keys.
           $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = [
-            'old' => explode(',', $oldvals[$keyField]),
-            'new' => explode(',', $newvals[$keyField]),
+            'old' => Util::explode(',', $oldvals[$keyField]),
+            'new' => Util::explode(',', $newvals[$keyField]),
           ];
 
           $identifier[$key]['del'] = array_diff($identifier[$key]['old'], $identifier[$key]['new']);
@@ -490,7 +490,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
         }
       }
-      $this->logDebug('Keys Values: '.print_r($identifier, true));
       if (!empty($multiple)) {
         foreach ($identifier[$multiple]['old'] as $oldKey) {
           $oldIdentifier[$oldKey] = $identifier;
@@ -500,6 +499,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $newIdentifier[$newKey] = $identifier;
           $newIdentifier[$newKey][$multiple] = $newKey;
           $multipleValues[$newKey] = [];
+        }
+        foreach ($identifier[$multiple]['add'] as $addKey) {
+          $addIdentifier[$addKey] = $identifier;
+          $addIdentifier[$addKey][$multiple] = $addKey;
+        }
+        foreach ($identifier[$multiple]['rem'] as $remKey) {
+          $addIdentifier[$remKey] = $identifier;
+          $addIdentifier[$remKey][$multiple] = $remKey;
         }
 
         // Delete removed entities
@@ -529,21 +536,25 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
           }
         }
-        //$this->logInfo("MULTIPLE VALUES ".print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
-          $id = $newIdentifier[$new];
-          $entityId = $this->makeJoinTableId($meta, $id);
-          if (isset($identifier[$multiple]['add'][$new])) {
+          if (isset($addIdentifier[$new])) {
+            $id = $addIdentifier[$new];
+            $entityId = $this->makeJoinTableId($meta, $id, true);
             $entity = $entityClass::create();
             foreach ($entityId as $key => $value) {
               $entity[$key] = $value;
             }
             $this->changeLogService->logInsert($table, $id, $id);
-          } else if (!empty($changeSet)) {
+          } else if (isset($remIdentifier[$new])) {
+            $id = $remIdentifier[$new];
+            $entityId = $this->makeJoinTableId($meta, $id);
             $entity = $this->find($entityId);
-            // @TODO real update
+            if (empty($entity)) {
+              throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
+                                               [ $table, print_r($entityId, true) ]));
+            }
             $this->changeLogService->logUpdate($table, $id, $id, $id);
           } else {
             continue;
@@ -842,25 +853,38 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *
    * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Class-meta.
    *
-   * @param array $idValues
+   * @param array $idValues The actual identifier values indexed by
+   * the database column names (read: not the entity-class-names, but
+   * the raw column names in the database).
+   *
+   * @param $makeReferences For persisting new entities we need
+   * references or real entities for the association keys. For finding
+   * entities we need the column values.
    *
    * @return array
    */
-  protected function makeJoinTableId($meta, $idValues)
+  protected function makeJoinTableId($meta, $idValues, bool $makeReferences = false)
   {
     $entityId = [];
-    foreach ($meta->identifier as $metaId) {
-      if (isset($idValues[$metaId])) {
-        $columnName = $metaId;
-      } else if (isset($meta->associationMappings[$metaId])) {
-        if (count($meta->associationMappings[$metaId]['joinColumns']) != 1) {
+    foreach ($meta->identifier as $field) {
+      if (isset($meta->associationMappings[$field])) {
+        if (count($meta->associationMappings[$field]['joinColumns']) != 1) {
           throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
-        $columnName = $meta->associationMappings[$metaId]['joinColumns'][0]['name'];
+        $columnName = $meta->associationMappings[$field]['joinColumns'][0]['name'];
+        if ($makeReferences) {
+          $referencedColumn = $meta->associationMappings[$field]['joinColumns'][0]['referencedColumnName'];
+          $targetEntity = $meta->associationMappings[$field]['targetEntity'];
+          $reference = $this->entityManager->getReference($targetEntity, [ $referencedColumn => $idValues[$columnName],]);
+          $idValues[$columnName] = $reference;
+        }
       } else {
-        throw new \Exception($this->l->t('Unexpected id: %s', $metaId));
+        $columnName = $meta->fieldMappings[$field]['columnName'];
+        if (!isset($idValues[$columnName])) {
+          throw new \Exception($this->l->t('Unexpected id: %s', $field));
+        }
       }
-      $entityId[$metaId] = $idValues[$columnName];
+      $entityId[$field] = $idValues[$columnName];
     }
     return $entityId;
   }
