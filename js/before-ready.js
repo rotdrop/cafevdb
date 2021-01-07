@@ -49,13 +49,21 @@ $(function() {
   });
 
   content.on('chosen:showing_dropdown', 'select', function(event, params)   {
+    const container = params.chosen.container;
     const results = params.chosen.search_results;
     const menuItems = results.find('li');
     menuItems.cafevTooltip({placement:'right'});
     if (!CAFEVDB.toolTipsEnabled) {
       menuItems.cafevTooltip('disable');
     }
-    $.fn.cafevTooltip.remove(); // remove any left-over items.
+    container.cafevTooltip('hide');
+    container.cafevTooltip('disable');
+    //$.fn.cafevTooltip.remove(); // remove any left-over items.
+  });
+  content.on('chosen:hiding_dropdown', 'select', function(event, params)   {
+    if (CAFEVDB.toolTipsEnabled) {
+      params.chosen.container.cafevTooltip('enable');
+    }
   });
 
   // Any pending form-submit which has not been caught otherwise is
