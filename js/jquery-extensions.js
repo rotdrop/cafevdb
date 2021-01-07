@@ -226,8 +226,14 @@ var CAFEVDB = CAFEVDB || {};
     $('[data-original-title]').cafevTooltip('disable');
   }
 
+  // remove left-over tooltips
   $.fn.cafevTooltip.remove = function() {
-    $('div.tooltip[role=tooltip]').remove();
+    $('div.tooltip[role=tooltip]').each(function(index) {
+      const tip = $(this);
+      const id = tip.attr('id');
+      $('[aria-describedby='+id+']').removeAttr('aria-describedby');
+      $(this).remove();
+    });
   };
 
   $.fn.cafevTooltip.hide = function() {
