@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -415,10 +415,15 @@ var CAFEVDB = CAFEVDB || {};
           // Reenable, otherwise the value will not be submitted
           selectMusicianInstruments.prop('disabled', false);
           selectMusicianInstruments.trigger('chosen:updated');
-          PHPMYEDIT.submitOuterForm(selector); // Mmmh
+
+	  // save current instruments
+          self.data('selected', self.val() ? self.val() : []);
+
+	  // should we?
+          PHPMYEDIT.submitOuterForm(selector);
         },
-        function (oldInstruments) {
-          oldInstruments = oldInstruments || self.data('selected');
+        function (data) {
+          const oldInstruments = data.oldInstruments || self.data('selected');
           // failure case
           var i;
           var selected = {};
@@ -459,22 +464,26 @@ var CAFEVDB = CAFEVDB || {};
           // Reenable, otherwise the value will not be submitted
           selectProjectInstruments.prop('disabled', false);
           selectProjectInstruments.trigger('chosen:updated');
+
+	  // save current instruments
+          self.data('selected', self.val() ? self.val() : []);
+
           // submit the form with the "right" button,
           // i.e. save any possible changes already
           // entered by the user. The form-submit
           // will then also reload with an up to date
           // list of instruments
-          self.data('selected', self.val() ? self.val() : []);
           PHPMYEDIT.submitOuterForm(selector);
         },
-        function(oldInstruments) {
-          oldInstruments = oldInstruments || self.data('selected');
+        function(data) {
+          const oldInstruments = data.oldInstruments || self.data('selected');
           // failure case
           var i;
           var selected = {};
           for (i = 0; i < oldInstruments.length; ++i) {
             selected[oldInstruments[i]] = true;
           }
+	  console.info("OLD INSTRUMENTS", oldInstruments, selected);
           self.find('option').each(function(idx) {
             const self = $(this);
             if (typeof selected[self.val()] != 'undefined') {
