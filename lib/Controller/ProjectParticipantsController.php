@@ -70,6 +70,8 @@ class ProjectParticipantsController extends Controller {
 
   /**
    * @NoAdminRequired
+   *
+   * @TODO implement instruments check
    */
   public function serviceSwitch($topic)
   {
