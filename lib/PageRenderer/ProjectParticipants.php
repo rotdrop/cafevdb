@@ -686,8 +686,13 @@ class ProjectParticipants extends PMETableViewBase
           }
           $musician = new Entities\Musician();
           foreach ($data as $key => $value) {
+            $fieldInfo = $this->joinTableField($key);
+            if ($fieldInfo['table'] != self::MUSICIANS_TABLE) {
+              continue;
+            }
+            $column = $fieldInfo['column'];
             try {
-              $musician[$key] = $value;
+              $musician[$column] = $value;
             } catch (\Throwable $t) {
               // Don't care, we know virtual stuff is not there
               // $this->logException($t);
