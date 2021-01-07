@@ -25,6 +25,11 @@
  *
  */
 
+.cafevdb.tooltip[x-placement^="top"] .arrow,
+.cafevdb.tooltip[x-placement^="top"] .tooltip-arrow {
+    left: 50%;
+  }
+
 /* Need space for the close button. Unfortunatelly, this will also
  * apply to dialogs without close button.
  */

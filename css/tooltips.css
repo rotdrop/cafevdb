@@ -19,7 +19,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/
 
 /* Ok, some of our tooltips need more space ... */
-
 .tooltip-wide .tooltip-inner {
   max-width:40em;
   text-align:left;
