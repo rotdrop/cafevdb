@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -82,7 +82,7 @@ var CAFEVDB = CAFEVDB || {};
       vertical: node.scrollHeight > node.offsetHeight,
       horizontal: node.scrollWidth > node.offsetWidth
     };
-  }
+  };
 
   /**Determine whether scrollbars are actually present.
    *
@@ -128,13 +128,13 @@ var CAFEVDB = CAFEVDB || {};
   $.fn.verticalScrollbarWidth = function() {
     var node = this.get(0);
     return node.offsetWidth - node.clientWidth;
-  }
+  };
 
   /**Determine horizontal scrollbar height. */
   $.fn.horizontalScrollbarHeight = function() {
     var node = this.get(0);
     return node.offsetHeight - node.clientHeight;
-  }
+  };
 
   /**Extend the tooltips to honour some special class elements, and
    * attach user specified tooltip-... classes to the actual tooltip
@@ -153,10 +153,18 @@ var CAFEVDB = CAFEVDB || {};
         fallbackPlacement: 'flip',
         boundary: 'viewport'
         //, delay: { "show": 500, "hide": 10000 }
-      }
+      };
       argument = $.extend(true, {}, options, argument);
-      if (typeof argument.placement == 'string' && !argument.placement.match(/auto/)) {
-        argument.placement = argument.placement;
+      if (typeof argument.placement == 'string') {
+	const words = argument.placement.split(' ');
+	if (words.length > 1) {
+	  for (let word of words) {
+            if (word != 'auto') {
+              argument.placement = word;
+              break;
+            }
+	  }
+        }
       }
       if (argument.cssclass && typeof argument.cssclass == 'string') {
         argument.cssclass = [ argument.cssclass ];
@@ -221,11 +229,11 @@ var CAFEVDB = CAFEVDB || {};
 
   $.fn.cafevTooltip.enable = function() {
     $('[data-original-title]').cafevTooltip('enable');
-  }
+  };
 
   $.fn.cafevTooltip.disable = function() {
     $('[data-original-title]').cafevTooltip('disable');
-  }
+  };
 
   // remove left-over tooltips
   $.fn.cafevTooltip.remove = function() {
@@ -311,7 +319,6 @@ var CAFEVDB = CAFEVDB || {};
     return (that / scopeVal).toFixed(8) + 'em';
   };
 
-
   $.fn.toPx = function(settings){
     settings = jQuery.extend({
       scope: 'body'
@@ -324,3 +331,8 @@ var CAFEVDB = CAFEVDB || {};
   };
 
 })(window, jQuery, CAFEVDB);
+
+// Local Variables: ***
+// indent-tabs-mode: nil ***
+// js-indent-level: 2 ***
+// End: ***
