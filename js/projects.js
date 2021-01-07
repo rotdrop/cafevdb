@@ -333,12 +333,6 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         event.preventDefault();
         return Projects.actions($(this), containerSel);
       });
-    projectActions.
-      off('chosen:showing_dropdown').
-      on('chosen:showing_dropdown', function (event) {
-	$.fn.cafevTooltip.remove(); // remove any left-over items.
-	return true;
-      });
   };
 
   Projects.pmeFormInit = function(containerSel) {
