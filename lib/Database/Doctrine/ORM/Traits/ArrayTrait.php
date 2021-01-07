@@ -41,7 +41,7 @@ trait ArrayTrait
     $this->keys = array_map(function($property) {
       $doc = $property->getDocComment();
       $name = $property->getName();
-      if (preg_match('/@ORM\\\\(Column|(Many|One)To(Many|One))/', $doc)) {
+      if (preg_match('/@ORM\\\\(Column|(Many|One)To(Many|One))/i', $doc)) {
         return $name;
       }
       return false;
