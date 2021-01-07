@@ -505,8 +505,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $addIdentifier[$addKey][$multiple] = $addKey;
         }
         foreach ($identifier[$multiple]['rem'] as $remKey) {
-          $addIdentifier[$remKey] = $identifier;
-          $addIdentifier[$remKey][$multiple] = $remKey;
+          $remIdentifier[$remKey] = $identifier;
+          $remIdentifier[$remKey][$multiple] = $remKey;
         }
 
         // Delete removed entities
@@ -539,6 +539,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
+          $useMerge = false;
           if (isset($addIdentifier[$new])) {
             $id = $addIdentifier[$new];
             $entityId = $this->extractKeyValues($meta, $id);
@@ -547,7 +548,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $entity[$key] = $value;
             }
             $this->changeLogService->logInsert($table, $id, $id);
-          } else if (isset($remIdentifier[$new])) {
+          } else if (isset($remIdentifier[$new]) && !empty($changeSet)) {
             $id = $remIdentifier[$new];
             $entityId = $this->extractKeyValues($meta, $id);
             $entity = $this->find($entityId);
@@ -556,6 +557,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                                                [ $table, print_r($entityId, true) ]));
             }
             $this->changeLogService->logUpdate($table, $id, $id, $id);
+            $useMerge = true;
           } else {
             continue;
           }
@@ -868,7 +870,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *
    * @param $step 'before' or 'after' or 'pre'
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return boolean If returning @c false the operation will be terminated
    */
   public function preTrigger(&$pme, $op, $step)
   {
