@@ -639,7 +639,7 @@ $(document).ready(function(){
       var numDisplayFrames = displayFrames.length; // count-down variable
 
       const changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
-      const numChangeFrames = changeFrames.length;
+      var numChangeFrames = changeFrames.length;
 
       // allFrames also contains some div + all available iframes
       const allDisplayFrames = articleBox.find('.cmsarticleframe.display');
