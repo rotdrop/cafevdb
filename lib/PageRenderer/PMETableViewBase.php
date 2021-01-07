@@ -541,7 +541,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($identifier[$multiple]['new'] as $new) {
           if (isset($addIdentifier[$new])) {
             $id = $addIdentifier[$new];
-            $entityId = $this->makeJoinTableId($meta, $id, true);
+            $entityId = $this->makeJoinTableId($meta, $id);
             $entity = $entityClass::create();
             foreach ($entityId as $key => $value) {
               $entity[$key] = $value;
@@ -863,7 +863,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *
    * @return array
    */
-  protected function makeJoinTableId($meta, $idValues, bool $makeReferences = false)
+  protected function makeJoinTableId($meta, $idValues)
   {
     $entityId = [];
     foreach ($meta->identifier as $field) {
@@ -872,12 +872,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
         $columnName = $meta->associationMappings[$field]['joinColumns'][0]['name'];
-        if ($makeReferences) {
-          $referencedColumn = $meta->associationMappings[$field]['joinColumns'][0]['referencedColumnName'];
-          $targetEntity = $meta->associationMappings[$field]['targetEntity'];
-          $reference = $this->entityManager->getReference($targetEntity, [ $referencedColumn => $idValues[$columnName],]);
-          $idValues[$columnName] = $reference;
-        }
       } else {
         $columnName = $meta->fieldMappings[$field]['columnName'];
         if (!isset($idValues[$columnName])) {

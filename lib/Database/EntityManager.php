@@ -346,11 +346,21 @@ class EntityManager extends EntityManagerDecorator
         $association = $meta->associationMappings[$field];
         $targetEntity = $association['targetEntity'];
         $targetMeta = $this->getClassMetadata($targetEntity);
-        foreach ($association['joinColumns'] as $joinInfo) {
-          $columnName = $joinInfo['name'];
-          $targetColumn = $joinInfo['referencedColumnName'];
-          $targetField = $targetMeta->fieldNames[$targetColumn];
+        if (count($association['joinColumns']) != 1) {
+          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+        }
+        $joinInfo = $association['joinColumns'][0];
+        $columnName = $joinInfo['name'];
+        $targetColumn = $joinInfo['referencedColumnName'];
+        $targetField = $targetMeta->fieldNames[$targetColumn];
+        if ($value instanceof $targetEntity) {
           $columnValues[$columnName] = $targetMeta->getFieldValue($value, $targetField);
+        } else {
+          // assume this is the column value, not the entity of the foreign key
+          $columnValues[$columnName] = $value;
+          // replace the value by a reference
+          $reference = $this->getReference($targetEntity, [ $targetColumn => $value ]);
+          $meta->setFieldValue($entity, $field, $reference);
         }
       } else {
         $columnName = $meta->fieldMappings[$field]['columnName'];
