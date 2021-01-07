@@ -63,6 +63,7 @@ $(function() {
   content.on('chosen:hiding_dropdown', 'select', function(event, params)   {
     if (CAFEVDB.toolTipsEnabled) {
       params.chosen.container.cafevTooltip('enable');
+      //params.chosen.container.cafevTooltip('show');
     }
   });
 

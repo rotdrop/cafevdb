@@ -152,6 +152,7 @@ var CAFEVDB = CAFEVDB || {};
         cssclass: [],
         fallbackPlacement: 'flip',
         boundary: 'viewport'
+        //, delay: { "show": 500, "hide": 10000 }
       }
       argument = $.extend(true, {}, options, argument);
       if (typeof argument.placement == 'string' && !argument.placement.match(/auto/)) {
