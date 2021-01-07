@@ -109,9 +109,9 @@ class ProjectParticipantsController extends Controller {
         $allInstruments[$instrument['id']] = $instrument;
       }
 
-      $this->logInfo('PRJ INST '.print_r(array_keys($projectInstruments), true));
-      $this->logInfo('MUS INST '.print_r(array_keys($musicianInstruments), true));
-      $this->logInfo('AJX INST '.print_r($instrumentValues, true));
+      $this->logDebug('PRJ INST '.print_r(array_keys($projectInstruments), true));
+      $this->logDebug('MUS INST '.print_r(array_keys($musicianInstruments), true));
+      $this->logDebug('AJX INST '.print_r($instrumentValues, true));
 
       switch ($topic) {
       case 'change-musician-instruments':
@@ -121,12 +121,11 @@ class ProjectParticipantsController extends Controller {
         // This should be cheap as most musicians only play very few instruments
         foreach (array_diff(array_keys($musicianInstruments), $instrumentValues) as $removedId) {
 
-          $this->logInfo('Checking '.$removedId);
-
           if (isset($projectInstruments[$removedId])) {
             return self::grumble($this->l->t('Denying the attempt to remove the instrument %s because it is used in the current project.', $projectInstruments[$removedId]['instrument']['name']));
           }
 
+          /** @TODO implement soft-deletion */
           if ($musicianInstruments[$removedId]->usage() > 0) {
             return self::grumble(
               $this->l->t(
@@ -156,7 +155,36 @@ class ProjectParticipantsController extends Controller {
         return self::response(implode('; ', $message));
 
       case 'change-project-instruments':
-        break;
+
+        $message   = [];
+
+        // removing instruments should be just fine
+        foreach (array_diff(array_keys($instrumentValues, $projectInstruments)) as $addedId) {
+
+          if (!isset($allInstruments[$addedId])) {
+            return self::grumble(
+              $this->l->t('Denying the attempt to add an unknown instrument (id = %s)',
+                          $addedId));
+          }
+
+          if (!isset($musicianInstruments[$addedId])) {
+            // should not happen unless the UI is broken
+            return self::grumble(
+              $this->l->t(
+                'Denying the attempt to add the instrument %s because %s cannot play it.',
+                [ $allInstruments['name'],
+                  $projectParticipant['musician']['firstName'] ]));
+          }
+
+          $message[] = $this->l->t(
+            'Adding instrument %s to the list of project-instruments of %s',
+            [ $allInstruments[$addedId]['name'],
+              $projectParticipant['musician']['firstName'] ]);
+        }
+
+        // all ok
+        return self::response(implode('; ', $message));
+
       }
       return self::response($this->l->t('Validation not yet implemented'));
       break;
