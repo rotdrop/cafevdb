@@ -75,7 +75,7 @@ class Application extends App implements IBootstrap {
         $dispatcher->addListener(
             \OCP\AppFramework\Http\TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN,
             function() {
-                \OCA\CAFEVDB\Common\Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
+                //\OCA\CAFEVDB\Common\Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
             }
         );
     }
