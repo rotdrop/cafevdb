@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Database\Legacy\PME;
 
+use OCA\CAFEVDB\Common\Util;
+
 class DefaultOptions extends \ArrayObject implements IOptions
 {
   public function __construct(array $options = [])
@@ -58,7 +60,7 @@ class DefaultOptions extends \ArrayObject implements IOptions
         //'position' => true
       ],
     ];
-    $options = array_merge($default, $options);
+    $options = Util::arrayMergeRecursive($default, $options);
     if (!isset($options['cgi']['append'][$options['cgi']['prefix']['sys'].'fl'])) {
       $options['cgi']['append'][$options['cgi']['prefix']['sys'].'fl'] = 0;
     }
