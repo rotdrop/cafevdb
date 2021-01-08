@@ -141,7 +141,7 @@ class Musicians extends PMETableViewBase
     } else if (!$this->projectMode) {
       return $this->l->t('Overview over all registered musicians');
     } else {
-      return $this->l->t("Add musicians to the project `%s'", array($this->projectName));
+      return $this->l->t("Add musicians to the project `%s'", [ $this->projectName ]);
     }
   }
 
@@ -260,7 +260,7 @@ make sure that the musicians are also automatically added to the
     // must come after the key-def fdd
     $joinTables = $this->defineJoinStructure($opts);
 
-    $bval = strval($this->l->t('Add to %s', array($projectName)));
+    $bval = strval($this->l->t('Add to %s', [ $projectName ]));
     $tip  = strval($this->toolTipsService['register-musician']);
     if ($this->projectMode) {
       $opts['fdd']['add_musicians'] = [
@@ -386,6 +386,7 @@ make sure that the musicians are also automatically added to the
     // $groupedProjects = $projects['yearById'];
     // $projects = $projects['nameById'];
 
+    $projectsIdx = count($opts['fdd']);
     $opts['fdd']['projects'] = [
       'tab' => ['id' => 'orchestra'],
       'input' => 'VR',
@@ -621,7 +622,7 @@ make sure that the musicians are also automatically added to the
 
     if ($this->projectMode) {
       //$key = 'qf'.$projectsIdx;
-      $projects = "GROUP_CONCAT(DISTINCT `PMEjoin{$projectsIdx}`.`Name`)";
+      $projects = "GROUP_CONCAT(DISTINCT `PMEjoin{$projectsIdx}`.name)";
       $opts['having']['AND'] = "($projects IS NULL OR NOT FIND_IN_SET('$projectName', $projects))";
       $opts['misc']['css']['major']   = 'bulkcommit';
       $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
