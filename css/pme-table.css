@@ -523,47 +523,38 @@ hr.pme-hr {
   background-image:url('../../../core/img/loading.gif');
 }
 
-:not(.lt-ie9) input.pme-email-check[type=checkbox] {
+/* misc check-boxes */
+
+:not(.lt-ie9) input.pme-misc[type=checkbox] {
   display:none;
   /* visibility:hidden; */
   /* position:fixed; */
   /* left:0px; */
   /* top:0px; */
 }
-:not(.lt-ie9) div.pme-email-check {
+:not(.lt-ie9) div.pme-misc {
   width:24px;
   height:24px;
-  background:url(../img/e_mail.png);
+  background-size: 24px 24px;
   cursor:pointer;
-  vertical-align:middle;
-}
-:not(.lt-ie9) input.pme-email-check[type=checkbox]:checked ~ div.pme-email-check {
-  width:24px;
-  height:24px;
-  background:url(../img/e_mail_checked.png);
   vertical-align:middle;
 }
 
-:not(.lt-ie9) input.pme-bulkcommit-check[type=checkbox] {
-  display:none;
-  /* visibility:hidden; */
-  /* position:fixed; */
-  /* left:0px; */
-  /* top:0px; */
+:not(.lt-ie9) div.pme-email-check {
+  background-image:url(../img/e_mail.png);
 }
 :not(.lt-ie9) div.pme-bulkcommit-check {
-  width:24px;
-  height:24px;
-  background:url(../img/eighthrest24.png);
-  cursor:pointer;
-  vertical-align:middle;
+  background-image:url(../img/eighthrest24.png);
 }
-:not(.lt-ie9) input.pme-bulkcommit-check[type=checkbox]:checked ~ div.pme-bulkcommit-check {
-  width:24px;
-  height:24px;
-  background:url(../img/eighthnote24.png);
-  vertical-align:middle;
+
+:not(.lt-ie9) input.pme-misc[type=checkbox]:checked ~ div.pme-email-check {
+  background-image:url(../img/e_mail_checked.png);
 }
+:not(.lt-ie9) input.pme-misc[type=checkbox]:checked ~ div.pme-bulkcommit-check {
+  background-image:url(../img/eighthnote24.png);
+}
+
+/**************************************/
 
 .pme-navigation.graphic-links input {
   width:16px !important;
