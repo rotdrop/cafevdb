@@ -302,10 +302,13 @@ tr.pme-navigation .listall {
   padding-right:1.5em!important;
 }
 
-.pme-goto .chosen-container {
-  min-width:4em;
+.pme-export-choice.chosen-container,
+.pme-goto .chosen-container,
+.pme-pagerows .chosen-container {
+  height:28px;
 }
 
+.pme-goto .chosen-container,
 .pme-pagerows .chosen-container {
   min-width:4em;
 }
@@ -350,7 +353,8 @@ tr.pme-navigation .listall {
   background-color: rgba(240, 240, 240, 0.9);
   color: #555;
   border: 1px solid rgba(190, 190, 190, 0.9);
-  padding: 4px 4px 5px 4px;
+  padding: 4px 4px 4px 4px;
+  height:28px;
   line-height: 19px;
   font-size: 13px;
 }
@@ -618,52 +622,41 @@ input.pme-sort-rvrt[type=submit] {
   overflow:visible;
 }
 
+.pme-navigation .pme-buttons input[type=submit] {
+  min-height:unset;
+  background-repeat:no-repeat;
+  height:28px;
+  vertical-align:middle;
+  /*margin-top: 0px;*/
+}
+
 input.pme-email-[type=submit] {
   background-image:url('../img/e_mail_X.png');
-  background-repeat:no-repeat;
   width:28px;
-  height:28px;
   font-size:0pt;
-  vertical-align:middle;
-  margin-top: 0px;
 }
 input.pme-email+[type=submit] {
   background-image:url('../img/e_mail_checked.png');
-  background-repeat:no-repeat;
   width:28px;
-  height:28px;
   font-size:0pt;
-  vertical-align:middle;
-  margin-top: 0px;
 }
 input.pme-email[type=submit] {
   background-image:url('../img/e_mail.png');
-  background-repeat:no-repeat;
   background-position:0px;
   padding-left:24px;
-  /*padding-top:0px;*/
-  min-height:28px;
-  vertical-align:middle;
-  /* border-radius:4px; */
-  margin-top: 0px;
 }
 
 input.pme-bulkcommit-[type=submit] {
   background-image:url('../img/eighthrest24.png');
-  background-repeat:no-repeat;
   width:28px;
-  height:28px;
   font-size:0pt;
-  vertical-align:middle;
 }
 input.pme-bulkcommit+[type=submit] {
   background-image:url('../img/eighthnote24.png');
-  background-repeat:no-repeat;
   width:28px;
-  height:28px;
   font-size:0pt;
-  vertical-align:middle;
 }
+
 /* input.pme-bulkcommit[type=submit] { */
 /*   background-image:url('../img/eighthnote24.png'); */
 /*   background-repeat:no-repeat; */
