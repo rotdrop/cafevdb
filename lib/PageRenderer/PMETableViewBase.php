@@ -443,9 +443,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $this->logInfo('OLDVALS '.print_r($oldvals, true));
-    $this->logInfo('NEWVALS '.print_r($newvals, true));
-    $this->logInfo('CHANGED '.print_r($changed, true));
+    $this->logDebug('OLDVALS '.print_r($oldvals, true));
+    $this->logDebug('NEWVALS '.print_r($newvals, true));
+    $this->logDebug('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
@@ -523,8 +523,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $remIdentifier[$remKey][$multiple] = $remKey;
         }
 
-        $this->logInfo('IDS '.print_r($identifier, true));
-        $this->logInfo('CHG '.print_r($changeSet, true));
+        $this->logDebug('IDS '.print_r($identifier, true));
+        $this->logDebug('CHG '.print_r($changeSet, true));
 
         // Delete removed entities
         foreach ($identifier[$multiple]['del'] as $del) {
@@ -566,11 +566,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->logInfo('VAL '.print_r($multipleValues, true));
+        $this->logDebug('VAL '.print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
-          $this->logInfo('TRY MOD '.$new);
+          $this->logDebug('TRY MOD '.$new);
           if (isset($addIdentifier[$new])) {
             $id = $addIdentifier[$new];
             $entityId = $this->extractKeyValues($meta, $id);
