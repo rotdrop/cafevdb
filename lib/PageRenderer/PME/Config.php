@@ -47,7 +47,10 @@ class Config extends DefaultOptions
       'page_name' => $urlGenerator->linkToRoute($this->appName().'.page.index'),
       'tooltips' => $toolTipsService,
       'inc' => $this->getUserValue('pagerows', 20),
-      'debug' => 0 != ($this->getUserValue('debug') & ConfigService::DEBUG_QUERY),
+      'debug' => 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY),
+      'misc' => [
+        'css' => [ 'minor' => 'pme-misc' ],
+      ],
     ];
     parent::__construct($options);
   }
