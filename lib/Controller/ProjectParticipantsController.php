@@ -127,10 +127,16 @@ class ProjectParticipantsController extends Controller {
 
           /** @TODO implement soft-deletion */
           if ($musicianInstruments[$removedId]->usage() > 0) {
-            return self::grumble(
-              $this->l->t(
-                'Denying the attempt to remove the instrument %s because it is still used in %s other contexts.',
-                [ $musicianInstruments['instrument']['name'], $musicianInstruments[$removedId]->usage() ]));
+            // return self::grumble(
+            //   $this->l->t(
+            //     'Denying the attempt to remove the instrument %s because it is still used in %s other contexts.',
+            //     [ $musicianInstruments['instrument']['name'], $musicianInstruments[$removedId]->usage() ]));
+
+            // soft-delete works, but we still want to dis-allow
+            // deleting instrument used in _this_ project.
+            $message[] = $this->l->t(
+              'Just marking the instrument %s as disabled because it is still used in %s other contexts.',
+                [ $musicianInstruments['instrument']['name'], $musicianInstruments[$removedId]->usage() ]);
           }
 
           $message[]  = $this->l->t(
