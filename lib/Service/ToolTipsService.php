@@ -464,6 +464,8 @@ in the email form.'),
 deleted in order not to loose track of the payments. Instead, they are
 simply marked as "disabled" and normally are hidden from sight.'),
 
+      'musician-instruments-disabled' => $this->l->t('Instruments which were formerly known to be played by the respective musican but which are disabled for whatever reason. Re-enable by simply adding them again to the list of the musician\'s instruments.'),
+
       'musician-instrument-insurance' => $this->l->t('Opens a new table view with the insured items for the respective musician.'),
 
       'musician-miscinfo-tab' => $this->l->t('Further information like birthday, a photo, date of last change.'),

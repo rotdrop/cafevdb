@@ -443,9 +443,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $this->logDebug('OLDVALS '.print_r($oldvals, true));
-    $this->logDebug('NEWVALS '.print_r($newvals, true));
-    $this->logDebug('CHANGED '.print_r($changed, true));
+    $this->logInfo('OLDVALS '.print_r($oldvals, true));
+    $this->logInfo('NEWVALS '.print_r($newvals, true));
+    $this->logInfo('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
@@ -481,6 +481,17 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             'old' => Util::explode(',', $oldvals[$keyField]),
             'new' => Util::explode(',', $newvals[$keyField]),
           ];
+          // handle "disabled" information if present
+          $disabledField = $this->joinTableFieldName($joinInfo, 'disabled');
+          if (!empty($oldvals[$disabledField])) {
+            $disabledKeys = Util::explode(',', $oldvals[$disabledField]);
+            foreach (array_intersect($disabledKeys, $identifier[$key]['new']) as $disabledKey) {
+              $identifier[$key]['old'][] = $disabledKey;
+              $changeSet['disabled'] = $disabledField;
+            }
+            $identifier[$key]['old'] = array_values(array_unique($identifier[$key]['old']));
+            $newvals[$disabledField] = implode(',', array_diff($disabledKeys, $identifier[$key]['new']));
+          }
 
           $identifier[$key]['del'] = array_diff($identifier[$key]['old'], $identifier[$key]['new']);
           $identifier[$key]['add'] = array_diff($identifier[$key]['new'], $identifier[$key]['old']);
@@ -512,12 +523,27 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $remIdentifier[$remKey][$multiple] = $remKey;
         }
 
+        $this->logInfo('IDS '.print_r($identifier, true));
+        $this->logInfo('CHG '.print_r($changeSet, true));
+
         // Delete removed entities
         foreach ($identifier[$multiple]['del'] as $del) {
           $id = $oldIdentifier[$del];
           $entityId = $this->extractKeyValues($meta, $id);
           $entity = $this->find($entityId);
-          $this->remove($entityId);
+          $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
+          if ($usage > 0) {
+            /** @TODO needs more logic: disabled things would need to
+             *  be reenabled instead of adding new stuff. One
+             *  possibility would be to add disabled things as hidden
+             *  elements in order to keep them out of the way of the
+             *  select boxes of the user interface.
+             */
+            $entity->setDisabled(true); // should be persisted on flush
+            $this->flush($entity);
+          } else {
+            $this->remove($entityId);
+          }
           $this->changeLogService->logDelete($table, $id, $id);
         }
 
@@ -540,9 +566,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
+        $this->logInfo('VAL '.print_r($multipleValues, true));
+
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
-          $useMerge = false;
+          $this->logInfo('TRY MOD '.$new);
           if (isset($addIdentifier[$new])) {
             $id = $addIdentifier[$new];
             $entityId = $this->extractKeyValues($meta, $id);
@@ -558,6 +586,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             if (empty($entity)) {
               throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
                                                [ $table, print_r($entityId, true) ]));
+            }
+            if (method_exists($entity, 'setDisabled')) {
+              $entity['disabled'] = false; // reenable
             }
             $this->changeLogService->logUpdate($table, $id, $id, $id);
             $useMerge = true;

@@ -463,7 +463,7 @@ class ProjectParticipants extends PMETableViewBase
       'tab'         => [ 'id' => [ 'musician', 'instrumentation' ] ],
       'css'         => ['postfix' => ' musician-instruments tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
-      'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENT_TABLE].'.disabled, NULL, $join_col_fqn) ORDER BY $order_by)',
       'select'      => 'M',
       //'filter'      => 'having', // ?????? need "HAVING" for group by stuff
       'values' => [
@@ -480,6 +480,17 @@ class ProjectParticipants extends PMETableViewBase
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENT_TABLE, 'instrument_id', $fdd);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIAN_INSTRUMENT_TABLE, 'disabled', [
+        'name'    => $this->l->t('Disabled Instruments'),
+        'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
+        'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn, \$join_table.instrument_id, NULL))",
+        'default' => false,
+        'select'  => 'T',
+        'input'   => ($expertMode ? 'R' : 'RH'),
+        'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
+      ]);
 
     /*
      *
