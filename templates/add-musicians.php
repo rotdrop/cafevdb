@@ -19,35 +19,32 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace CAFEVDB {
+namespace OCA\CAFEVDB\Templates;
 
-  $table = new Musicians(true);
-  $css_pfx = Musicians::CSS_PREFIX;
-  $css_class = Musicians::CSS_CLASS;
+$css_pfx = $renderer->cssPrefix();
+$css_class = $renderer->cssClass();
 
-  $missing = Projects::missingInstrumentationTable($table->projectId);
+//$missing = Projects::missingInstrumentationTable($renderer->getProjectId());
 
-  $nav = '';
-  $nav .= Navigation::pageControlElement('projectlabel', $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('projects');
-  $nav .= Navigation::pageControlElement('detailed', $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('project-instrumentation-numbers', $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('instruments', $table->projectName, $table->projectId);
-  //$nav .= Navigation::pageControlElement('detailed', $table->projectName, $table->projectId);
+$nav = '';
+$nav .= $pageNavigation->pageControlElement('projectlabel', $renderer->getProjectName(), $renderer->getProjectId());
+$nav .= $pageNavigation->pageControlElement('projects');
+$nav .= $pageNavigation->pageControlElement('detailed', $renderer->getProjectName(), $renderer->getProjectId());
+$nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $renderer->getProjectName(), $renderer->getProjectId());
+$nav .= $pageNavigation->pageControlElement('instruments', $renderer->getProjectName(), $renderer->getProjectId());
+//$nav .= $pageNavigation->pageControlElement('detailed', $renderer->getProjectName(), $renderer->getProjectId());
 
-  echo $this->inc('part.common.header',
-                  array('css-prefix' => $css_pfx,
-                        'css-class' => $css_class,
-                        'navigationcontrols' => $nav,
-                        'header' => $table->headerText(),
-                        'navBarInfo' => $missing));
+echo $this->inc('part.common.header',
+                [
+                  'css-prefix' => $css_pfx,
+                  'css-class' => $css_class,
+                  'navigationcontrols' => $nav,
+                  'header' => $renderer->headerText(),
+                  //'navBarInfo' => $missing,
+                ]);
 
-  // Issue the main part. The method will echo itself
-  $table->display();
+// Issue the main part. The method will echo itself
+$renderer->render();
 
-  // Close some still opened divs
-  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
-
-} // CAFEVDB
-
-?>
+// Close some still opened divs
+echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);
