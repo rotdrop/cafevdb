@@ -211,8 +211,8 @@ class ProjectParticipants extends PMETableViewBase
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
 
-//  $export = Navigation::tableExportButton();
-//  $opts['buttons'] = Navigation::prependTableButton($export, true);
+    $export = $this->pageNavigation->tableExportButton();
+    $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
 
 //     // count number of finance fields
 //     $extraFinancial = 0;
