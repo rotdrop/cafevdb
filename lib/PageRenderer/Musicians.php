@@ -254,7 +254,7 @@ make sure that the musicians are also automatically added to the
       'maxlen'   => 5,
       'align'    => 'right',
       'default'  => '0',  // auto increment
-      'sort'     => true
+      'sort'     => true,
     ];
 
     // must come after the key-def fdd
@@ -266,24 +266,26 @@ make sure that the musicians are also automatically added to the
       $opts['fdd']['add_musicians'] = [
         'tab' => [ 'id' => 'orchestra' ],
         'name' => $this->l->t('Add Musicians'),
+        'css' => [ 'postfix' => ' register-musician' ],
         'select' => 'T',
-        'options' => 'VLR',
+        'options' => 'VCLR',
         'input' => 'V',
-        'sql' => "REPLACE('"
-."<div class=\"register-musician\">"
-."<input type=\"button\" "
-."value=\"$bval\" "
-."data-musician-id=\"@@key@@\" "
-."title=\"$tip\" "
-."name=\"registerMusician\" "
-."class=\"register-musician\" />"
-."</div>'"
-.",'@@key@@',`PMEtable0`.`id`)",
+        'sql' => 'PMEtable0.id',
+        'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId)
+          use($bval, $tip) {
+            return '<div class="register-musician">'
+              .'  <input type="button"'
+              .'         value="'.$bval.'"'
+              .'         data-musician-id="'.$musicianId.'"'
+              .'         title="'.$tip.'"'
+              .'         name="registerMusician"'
+              .'         class="register-musician" />'
+              .'</div>';
+        },
         'escape' => false,
         'nowrap' => true,
         'sort' =>false,
-        //'php' => "AddMusician.php"
-        ];
+      ];
     }
 
     if ($this->addOperation()) {
