@@ -72,9 +72,84 @@ class ProjectParticipantsController extends Controller {
   /**
    * @NoAdminRequired
    *
-   * @TODO implement instruments check
+   * @param string $topic
    */
-  public function serviceSwitch($topic, $recordId = [], $instrumentValues = [])
+  public function addMusicians($projectId, $projectName, $musicianId = null)
+  {
+    $this->logInfo($projectId.' '.$projectName.' '.$musicianId);
+
+    // Multi-mode:
+    // projectId: ID
+    // projectName: NAME
+    // PME_sys_mrecs[] = [ id1, ... ]
+    //
+    // Single mode:
+    // projectId: ID
+    // projectName: NAME
+    // musicianId: 1
+    $musicianIds = [];
+    if (!empty($musicianId)) {
+      $musicianIds[] = $musicianId;
+    } else {
+      $musicianIds = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);
+    }
+
+    $numRecords = count($musicianIds);
+    if ($numRecords == 0) {
+      return self::grumble($this->l->t('Missing Musician Ids'));
+    }
+
+    if (empty($projectId) || $projectId <= 0) {
+      return self::grumble($this->l->t('Missing Project Id'));
+    }
+
+    // @TODO: this is real work
+    // $result = WHATEVER->addMusicians($musicianIds, $projectid);
+    $result['failed'] = $numRecords;
+    $result['added'] = 0;
+
+    $failedMusicians = $result['failed'];
+    $addedMusicians  = $result['added'];
+
+    if ($numRecords == count($failedMusicians)) {
+
+      $message = $this->l->t('No musician could be added to the project, #failures: %d.',
+                             count($failedMusicians));
+
+      // foreach ($failedMusicians as $failure) {
+      //   $message .= ' '.$failure['notice'].' '.'SQL-error: '.$failure['sqlerror'];
+      // }
+
+      return self::grumble($message);
+
+    } else {
+
+      $notice = '';
+      // foreach ($addedMusicians as $newItem) {
+      //   $notice .= $newItem['notice'];
+      // }
+
+      return self::dataResponse(
+        [
+          'musicians' => $addedMusicians,
+          'message' => ($notice == ''
+                        ? '' // don't annoy the user with success messages.
+                        : $this->l->t("Operation succeeded with the following notifications:")),
+          'notice' => $notice,
+        ]);
+    }
+
+    return self::grumble($this->l->t('Unknown Request'));
+  }
+
+  /**
+   * @NoAdminRequired
+   *
+   * @param string $topic
+   * - change-musician-instruments
+   * - change-project-instruments
+   */
+  public function changeInstruments($topic, $recordId = [], $instrumentValues = [])
   {
     $this->logDebug($topic.' / '.print_r($recordId, true).' / '.print_r($instrumentValues, true));
     if (empty($instrumentValues)) {
@@ -82,8 +157,8 @@ class ProjectParticipantsController extends Controller {
     }
 
     switch ($topic) {
-    case 'change-musician-instruments':
-    case 'change-project-instruments':
+    case 'musician':
+    case 'project':
       if (empty($recordId['projectId']) || empty($recordId['musicianId'])) {
         return self::grumble($this->l->t("Project- or musician-id is missing (%s/%s)",
                                          [ $recordId['projectId'], $recordId['musicianId'], ]));
@@ -114,7 +189,7 @@ class ProjectParticipantsController extends Controller {
       $this->logDebug('AJX INST '.print_r($instrumentValues, true));
 
       switch ($topic) {
-      case 'change-musician-instruments':
+      case 'musician':
 
         $message   = [];
 
@@ -160,7 +235,7 @@ class ProjectParticipantsController extends Controller {
         // all ok
         return self::response(implode('; ', $message));
 
-      case 'change-project-instruments':
+      case 'project':
 
         $message   = [];
 

@@ -410,7 +410,7 @@ var CAFEVDB = CAFEVDB || {};
 
       Instrumentation.validateInstrumentChoices(
         container, selectProjectInstruments,
-        OC.generateUrl('/apps/cafevdb/projects/participants/change-project-instruments'),
+        OC.generateUrl('/apps/cafevdb/projects/participants/change-instruments/project'),
         function () {
           // Reenable, otherwise the value will not be submitted
           selectMusicianInstruments.prop('disabled', false);
@@ -460,7 +460,7 @@ var CAFEVDB = CAFEVDB || {};
 
       Instrumentation.validateInstrumentChoices(
         container, selectMusicianInstruments,
-        OC.generateUrl('/apps/cafevdb/projects/participants/change-musician-instruments'),
+        OC.generateUrl('/apps/cafevdb/projects/participants/change-instruments/musician'),
         function () {
           // Reenable, otherwise the value will not be submitted
           selectProjectInstruments.prop('disabled', false);
