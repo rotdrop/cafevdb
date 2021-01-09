@@ -249,8 +249,21 @@ $routes = [
      * Project Participants
      */
     [
-      'name' => 'project_participants#service_switch',
-      'url' => '/projects/participants/{topic}',
+      'name' => 'project_participants#change_instruments',
+      'url' => '/projects/participants/change-instruments/{context}',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'project_participants#add_musicians',
+      'url' => '/projects/participants/add-musicians',
+      'verb' => 'POST',
+    ],
+    /**
+     * Musicians
+     */
+    [
+      'name' => 'musicians#validate',
+      'url' => '/musicians/validate/{topic}',
       'verb' => 'POST',
     ],
   ],
