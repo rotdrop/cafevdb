@@ -613,6 +613,16 @@ input.pme-sort-rvrt[type=submit] {
   overflow:visible;
 }
 
+td.pme-cell.register-musician {
+  text-align:center;
+}
+
+input.register-musician {
+  height:28px;
+  min-height:unset;
+  margin:0px;
+}
+
 .pme-navigation .pme-buttons input[type=submit] {
   min-height:unset;
   background-repeat:no-repeat;
