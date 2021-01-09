@@ -50,6 +50,18 @@ var CAFEVDB = CAFEVDB || {};
     );
   };
 
+  Dialogs.confirm = function(text, title, callback, modal, allowHtml) {
+    return OC.dialogs.message(
+      text,
+      title,
+      'notice',
+      Dialogs.YES_NO_BUTTONS,
+      callback,
+      modal,
+      allowHtml
+    );
+  };
+
   /**Popup a dialog with debug info if data.data.debug is set and non
    * empty.
    */
