@@ -263,7 +263,27 @@ class EntityManager extends EntityManagerDecorator
     // mysql set names UTF-8 if required
     $evm->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
 
+    $evm->addEventListener([ \Doctrine\ORM\Tools\ToolEvents::postGenerateSchema ], $this);
+
     return [ $config, $evm ];
+  }
+
+  /**
+   * Remove unwanted constraints after schema generation.
+   *
+   * @param \Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args
+   */
+  public function postGenerateSchema(\Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args)
+  {
+    $schema = $args->getSchema();
+    $em = $args->getEntityManager();
+    foreach ($schema->getTables() as $table) {
+      foreach ($table->getForeignKeys() as $foreignKey) {
+        if ($foreignKey->getForeignTableName() == 'ProjectInstrumentationNumbers') {
+          $table->removeForeignKey($foreignKey->getName());
+        }
+      }
+    }
   }
 
   public function columnName($propertyName)
