@@ -100,6 +100,16 @@ class ProjectInstrument implements \ArrayAccess
    */
   private $musicianInstrument;
 
+  /**
+   * @ORM\ManyToOne(targetEntity="ProjectInstrumentationNumber", inversedBy="instruments", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *   @ORM\JoinColumn(name="instrument_id", referencedColumnName="instrument_id"),
+   *   @ORM\JoinColumn(name="voice", referencedColumnName="voice")
+   * )
+   */
+  private $instrumentationNumber;
+
   public function __construct() {
     $this->arrayCTOR();
   }
