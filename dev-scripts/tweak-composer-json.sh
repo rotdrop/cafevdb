@@ -38,7 +38,7 @@ function packageVersions() {
 function packageVersion() {
     local PKG=$1
     local LOCK=$2
-    grep $PKG $LOCK|awk '{ print $2; }'|sed 's/"//g'
+    grep '"'$PKG'"' $LOCK|awk '{ print $2; }'|sed 's/"//g'
 }
 
 CORE_VERSIONS=$WD/core-versions
@@ -69,7 +69,7 @@ VERSION_TWEAKS="$VERSION_TWEAKS
   }
 }"
 
-CONFIG_TWEAK=$WD/core-versions.json
+CONFIG_TWEAK=$WD/core-versions-tweaked.json
 TWEAKED_CONFIG=$WD/composer.json
 echo "$VERSION_TWEAKS" > $CONFIG_TWEAK
 
