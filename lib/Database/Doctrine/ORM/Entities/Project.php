@@ -139,6 +139,7 @@ class Project implements \ArrayAccess
     $this->extraFields = new ArrayCollection();
     $this->extraFieldsData = new ArrayCollection();
     $this->participants = new ArrayCollection();
+    $this->participantInstruments = new ArrayCollection();
   }
 
   /**
