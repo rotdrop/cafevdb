@@ -335,8 +335,8 @@ class phpMyEdit
 				}
 				break;
 		}
-		foreach ($this->mrecs as $key => $val) {
-			echo $this->htmlHiddenSys('mrecs[]', $val);
+		foreach ($this->mrecs as $mrec) {
+			echo $this->htmlHiddenSys('mrecs[]', $mrec);
 		}
 	}
 
@@ -4179,17 +4179,24 @@ class phpMyEdit
 							.'" value="',htmlspecialchars($recordData),'"';
 						// Set all members of $this->mrecs as checked, or add the current file
 						// result
-						$mrecs_key = array_search($key_rec, $this->mrecs, true);
+						$mrecs_key = array_search($recordData, $this->mrecs);
 						if (($this->operation != '-' && $mrecs_key !== false)
 							||
 							($this->operation == '+')) {
 							echo ' checked';
 						}
-						if ($this->operation == '-') {
-							// Remove, remember all others
+						// if ($this->operation == '-') {
+						// 	// Remove, remember all others
+						// 	unset($this->mrecs[$mrecs_key]);
+						// }
+
+						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check', null, null, $this->misccss2).'"></div></label></td>'."\n";
+
+						// remove all displayed misc records as these
+						// are handled by the check-boxes.
+						while (($mrecs_key = array_search($recordData, $this->mrecs)) !== false) {
 							unset($this->mrecs[$mrecs_key]);
 						}
-						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check', null, null, $this->misccss2).'"></div></label></td>'."\n";
 					}
 				} elseif ($this->sys_cols /* $this->filter_enabled() */) {
 					echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">&nbsp;</td>',"\n";
@@ -4851,7 +4858,13 @@ class phpMyEdit
 		}
 
 		// remove deleted record from misc selection
-		unset($this->mrecs[$this->rec]);
+		$recordData =
+			(count($this->rec) == 1)
+			? array_values($this->rec)[0];
+			: $recordData = json_encode($this->rec);
+		while (($mrecs_key = array_search($recordData, $this->mrecs)) !== false) {
+			unset($this->mrecs[$mrecs_key]);
+		}
 
 		// Notify list
 		if (@$this->notify['delete'] || @$this->notify['all']) {
@@ -5760,7 +5773,8 @@ class phpMyEdit
 			$opts['cgi']['persist'] = array();
 		}
 		$this->mrecs = $this->get_sys_cgi_var('mrecs', array());
-		$this->mrecs = array_unique($this->mrecs);
+		$this->mrecs = array_values(array_unique($this->mrecs));
+
 		foreach ($opts['cgi']['persist'] as $key => $val) {
 			if (is_array($val)) {
 				// We need to handle sys_recs in a special way: never
