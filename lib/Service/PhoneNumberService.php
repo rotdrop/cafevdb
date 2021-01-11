@@ -60,7 +60,11 @@ class PhoneNumberService
       }
     } else {
       $this->defaultPrefix = '';
-      $this->defaultRegion = 'ZZ';
+      $locale = $this->getLocale();
+      $language = locale_get_primary_language($locale);
+      $country = locale_get_region($locale);
+      $this->logInfo($language.' / '.$country);
+      $this->defaultRegion = $country;
     }
 
     $r = new \ReflectionClass('\libphonenumber\PhoneNumberType');
@@ -149,7 +153,7 @@ class PhoneNumberService
 
       $result = $this->backend->isValidNumber($this->currentObject);
 
-    } catch (\Exception $e) {
+    } catch (\Throwabled $e) {
       $result = false;
     }
 
