@@ -206,6 +206,9 @@ make sure that the musicians are also automatically added to the
     // F - filter, I - initial sort suppressed
     $opts['options'] = 'ACPVDFM';
 
+    // needed early as otherwise the add_operation() etc. does not work.
+    $this->pme->setOptions($opts);
+
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '5';
 
@@ -293,6 +296,7 @@ make sure that the musicians are also automatically added to the
     } else {
       $addCSS = '';
     }
+    $this->logInfo('ADD '.$addCSS.' enabled '.$this->pme->add_enabled().' options '.$this->pme->options);
 
     $opts['fdd']['name'] = [
       'tab'      => [ 'id' => 'tab-all' ],

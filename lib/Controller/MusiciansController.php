@@ -50,6 +50,9 @@ class MusiciansController extends Controller {
   /** @var EntityManager */
   protected $entityManager;
 
+  /** @var MusiciansRepository */
+  protected $musiciansRepository;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -66,20 +69,47 @@ class MusiciansController extends Controller {
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
     $this->l = $this->l10N();
-    $this->setDatabaseRepository(Entities\ProjectParticipant::class);
+    $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
   }
 
   /**
    * @NoAdminRequired
    *
    * @param string $topic
-   * - change-musician-instruments
-   * - change-project-instruments
-   * - add-musicians
+   * - phone
+   * - email
+   * - address
+   * - duplicates
    */
   public function validate($topic)
   {
     switch ($topic) {
+    case 'phone':
+    case 'email':
+    case 'address':
+      break;
+    case 'duplicates':
+      $lastName = $this->parameterService[$this->pme->cgiDataName('name')]?:'';
+      $firstName = $this->parameterService[$this->pme->cgiDataName('first_name')]?:'';
+      $musicians = $this->musiciansRepository->findByName($firstName, $lastName);
+
+      $duplicateNames = '';
+      $duplicates = [];
+      foreach ($musicians as $musician) {
+        $duplicateNames .= $musician['firstName'].' '.$musician['name']." (Id = ".$musician['id'].")"."\n";
+        $duplicates[$musician['id']] = $musician['firstName'].' '.$musician['name'];
+      }
+
+      $message = '';
+      if (count($duplicates) > 0) {
+        $message = $this->l->t('Musician(s) with the same first and sur-name already exist: %s', $duplicateNames);
+      }
+
+      return self::dataResponse([
+        'message' => nl2br($message),
+        'duplicates' => $duplicates,
+      ]);
+      break;
     default:
       break;
     }

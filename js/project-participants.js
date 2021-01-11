@@ -266,7 +266,7 @@ var CAFEVDB = CAFEVDB || {};
       // Check whether form contains an input element for a
       // ProjectId. If its value is positive, switch to project mode,
       // otherwise assume all-musicians mode.
-      var projectId = form.find('input[name="ProjectId"]').val();
+      var projectId = form.find('input[name="projectId"]').val();
       projectMode = projectId > 0;
     }
     const template = projectMode ? "add-musicians" : "all-musicians";
