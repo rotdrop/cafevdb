@@ -254,7 +254,7 @@ class EntityManager extends EntityManagerDecorator
     // loggable
     $loggableListener = new \Gedmo\Loggable\LoggableListener;
     $loggableListener->setAnnotationReader($cachedAnnotationReader);
-    $loggableListener->setUsername($this->encryptionService->userId());
+    $loggableListener->setUsername($this->encryptionService->userId()?:'unknown');
     $evm->addEventSubscriber($loggableListener);
 
     // timestampable
