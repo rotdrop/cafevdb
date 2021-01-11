@@ -38,8 +38,8 @@ class MusiciansRepository extends EntityRepository
   public function findByName(string $firstName, string $surName)
   {
     return $this->findBy(
-      [ 'vorname' => $firstName, 'name' => $surName ],
-      [ 'name' => 'ASC', 'vorname' => 'ASC' ]
+      [ 'firstName' => $firstName, 'name' => $surName ],
+      [ 'name' => 'ASC', 'firstName' => 'ASC' ]
     );
   }
 
