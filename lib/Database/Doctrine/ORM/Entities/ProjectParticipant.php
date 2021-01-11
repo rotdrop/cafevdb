@@ -27,15 +27,20 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+//use Gedmo\Mapping\Annotation as Gedmo;
+use Knp\DoctrineBehaviors\Model\Loggable\LoggableTrait;
+use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
+
 /**
  * Besetzungen
  * @ORM\Table(name="ProjectParticipants")
  * @ORM\Entity
  */
-class ProjectParticipant implements \ArrayAccess
+class ProjectParticipant implements \ArrayAccess, LoggableInterface
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use LoggableTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants", fetch="EXTRA_LAZY")
@@ -80,7 +85,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="text", length=65535, nullable=false, options={"comment"="Allgemeine Bermerkungen"})
+   * @ORM\Column(type="text", length=65535, nullable=true, options={"comment"="Allgemeine Bermerkungen"})
    */
   private $remarks;
 

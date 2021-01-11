@@ -93,7 +93,7 @@ class Project implements \ArrayAccess
   /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
-  private $projectInstrumentationNumbers;
+  private $instrumentationNumbers;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectPoster", mappedBy="owner", fetch="EXTRA_LAZY")
@@ -132,7 +132,7 @@ class Project implements \ArrayAccess
 
   public function __construct() {
     $this->arrayCTOR();
-    $this->projectInstrumentationNumbers = new ArrayCollection();
+    $this->instrumentationNumbers = new ArrayCollection();
     $this->posters = new ArrayCollection();
     $this->flyers = new ArrayCollection();
     $this->webPages = new ArrayCollection();
@@ -464,4 +464,27 @@ class Project implements \ArrayAccess
     return $this->participants;
   }
 
+  /**
+   * Set instrumentationNumbers.
+   *
+   * @param ArrayCollection $instrumentationNumbers
+   *
+   * @return Project
+   */
+  public function setInstrumentationNumbers($instrumentationNumbers)
+  {
+    $this->instrumentationNumbers = $instrumentationNumbers;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentationNumbers.
+   *
+   * @return ArrayCollection
+   */
+  public function getInstrumentationNumbers()
+  {
+    return $this->instrumentationNumbers;
+  }
 }
