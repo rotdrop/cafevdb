@@ -15,14 +15,15 @@
     "ioncube/php-openssl-cryptor": "dev-master",
     "components/jquery": "^2.2.0",
     "components/jquery-migrate": "^3.0.0",
-    "doctrine/orm": "~v2.6.0",
+    "doctrine/orm": "^2.6.0",
     "oro/doctrine-extensions": "dev-master",
     "ramsey/uuid-doctrine": "^1.6",
     "chillerlan/php-qrcode": "^4.2",
     "beberlei/doctrineextensions": "^1.2.0",
     "ezyang/htmlpurifier": "^4.13.0",
     "giggsey/libphonenumber-for-php": "^8.12",
-    "gedmo/doctrine-extensions": "^3.0.0"
+    "gedmo/doctrine-extensions": "^3.0.0",
+    "knplabs/doctrine-behaviors": "^2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.4"
