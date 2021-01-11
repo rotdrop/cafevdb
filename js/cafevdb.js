@@ -1315,20 +1315,6 @@ $(function(){
   const content = $('#content');
   const appInnerContent = $('#app-inner-content');
 
-  content.on('click', ':button.events',
-             function(event) {
-               if ($('#events').dialog('isOpen') == true) {
-                 $('#events').dialog('close').remove();
-               } else {
-                 // We store the values in the name attribute as serialized
-                 // string.
-                 const values = $(this).attr('name');
-                 $.post(OC.filePath(CAFEVDB.appName, 'ajax/events', 'events.php'),
-                        values, CAFEVDB.Events.UI.init, 'json');
-               }
-               return false;
-             });
-
   // Display the overview-page for the given project.
   content.on('click', 'ul#navigation-list li.nav-projectlabel-control a',
              function(event) {
