@@ -60,8 +60,8 @@ var CAFEVDB = CAFEVDB || {};
            function() {
              CAFEVDB.Instrumentation.personalRecordDialog(
                {
-                 musicianId: musicianId,
-                 projectId: projectId
+                 project_id: projectId,
+                 musician_id: musicianId
                },
                {
                  projectId: projectId,

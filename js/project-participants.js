@@ -93,7 +93,7 @@ var CAFEVDB = CAFEVDB || {};
       tableOptions.templateRenderer = CAFEVDB.Page.templateRenderer(tableOptions.template);
     } else if (options.projectId > 0) {
       tableOptions[pmeOperation] =
-        options.ReloadValue + '?'+pmeRecord+'[project_id]='+record.projectId+'&'+pmeRecord+'[musician_id]='+record.musicianId;
+        options.ReloadValue + '?'+pmeRecord+'[project_id]='+record.project_id+'&'+pmeRecord+'[musician_id]='+record.musician_id;
       tableOptions.table = 'ProjectParticipants';
       tableOptions.template = 'project-participants'
       tableOptions.templateRenderer = CAFEVDB.Page.templateRenderer(tableOptions.template);
@@ -222,16 +222,21 @@ var CAFEVDB = CAFEVDB || {};
       ids = [];
     }
 
-    var pmeSys = PHPMYEDIT.pmeSys('');
+    const pmeSys = PHPMYEDIT.pmeSys('');
     var filterData = {};
     for (var idx = 0; idx < ids.length; ++idx) {
-      var name = pmeSys+'qf0_idx['+idx+']';
-      var value = ids[idx];
-      if (value == -1) {
-        filterData = {};
-        break;
+      const indices = (typeof ids[idx] == 'object') ? ids[idx] : { '0': ids[idx] };
+      for (const keyIndex in indices) {
+        const name = pmeSys + 'qf' + keyIndex + '_idx[' + idx + ']';
+        const value = indices[keyIndex];
+        if (value == -1) {
+          filterData = {};
+          break;
+        }
+        //console.info('FILTER NAME', name);
+        //console.info('FILTER VALUE', value);
+        filterData[name] = value;
       }
-      filterData[name] = value;
     }
     $.extend(formData, filterData);
 
@@ -310,8 +315,7 @@ var CAFEVDB = CAFEVDB || {};
 
     var ids = [ -1 ];
     if (typeof musicians != 'undefined') {
-      ids = musicians.map(function(musician) { return { musicianId: musician, projectId: projectId } });
-      console.info('MUSIDS ', ids);
+      ids = musicians.map(function(musician) { return { /*'0': projectId,*/ '1': musician } });
     }
 
     Instrumentation.loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
