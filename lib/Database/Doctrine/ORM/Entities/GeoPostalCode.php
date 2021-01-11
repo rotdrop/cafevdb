@@ -54,7 +54,7 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, nullable=false)
+   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed" = true})
    */
   private $country;
 

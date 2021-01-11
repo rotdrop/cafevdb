@@ -34,166 +34,103 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GeoPostalCodeTranslation implements \ArrayAccess
 {
-    use CAFEVDB\Traits\ArrayTrait;
-    use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+  /**
+   * @ORM\ManyToOne(targetEntity="GeoPostalCode", inversedBy="translations")
+   * @ORM\Id
+   */
+  private $geoPostalCode;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     */
-    private $postalCodeId;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=2, options={"fixed" = true})
+   * @ORM\Id
+   */
+  private $target;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=2, nullable=false)
-     */
-    private $target;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=1024, nullable=false)
+   */
+  private $translation;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=1024, nullable=false)
-     */
-    private $translation;
+  public function __construct() {
+    $this->arrayCTOR();
+  }
 
-    /**
-     * @ORM\ManyToOne(targetEntity="GeoPostalCode", inversedBy="translations")
-     * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $geoPostalCode;
+  /**
+   * Set geoPostalCode.
+   *
+   * @param int $geoPostalCode
+   *
+   * @return GeoPostalCodeTranslation
+   */
+  public function setGeoPostalCode($geoPostalCode)
+  {
+    $this->geoPostalCode = $geoPostalCode;
 
-    public function __construct() {
-        $this->arrayCTOR();
-    }
+    return $this;
+  }
 
-    /**
-     * Set id.
-     *
-     * @param int $id
-     *
-     * @return GeoPostalCodeTranslation
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
+  /**
+   * Get geoPostalCode.
+   *
+   * @return int
+   */
+  public function getGeoPostalCode()
+  {
+    return $this->geoPostalCode;
+  }
 
-        return $this;
-    }
+  /**
+   * Set target.
+   *
+   * @param string $target
+   *
+   * @return GeoPostalCodeTranslation
+   */
+  public function setTarget($target)
+  {
+    $this->target = $target;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    return $this;
+  }
 
-    /**
-     * Set postalCodeId.
-     *
-     * @param int $postalCodeId
-     *
-     * @return GeoPostalCodeTranslation
-     */
-    public function setPostalCodeId($postalCodeId)
-    {
-        $this->postalCodeId = $postalCodeId;
+  /**
+   * Get target.
+   *
+   * @return string
+   */
+  public function getTarget()
+  {
+    return $this->target;
+  }
 
-        return $this;
-    }
+  /**
+   * Set translation.
+   *
+   * @param string $translation
+   *
+   * @return GeoPostalCodeTranslation
+   */
+  public function setTranslation($translation)
+  {
+    $this->translation = $translation;
 
-    /**
-     * Get postalCodeId.
-     *
-     * @return int
-     */
-    public function getPostalCodeId()
-    {
-        return $this->postalCodeId;
-    }
+    return $this;
+  }
 
-    /**
-     * Set target.
-     *
-     * @param string $target
-     *
-     * @return GeoPostalCodeTranslation
-     */
-    public function setTarget($target)
-    {
-        $this->target = $target;
-
-        return $this;
-    }
-
-    /**
-     * Get target.
-     *
-     * @return string
-     */
-    public function getTarget()
-    {
-        return $this->target;
-    }
-
-    /**
-     * Set translation.
-     *
-     * @param string $translation
-     *
-     * @return GeoPostalCodeTranslation
-     */
-    public function setTranslation($translation)
-    {
-        $this->translation = $translation;
-
-        return $this;
-    }
-
-    /**
-     * Get translation.
-     *
-     * @return string
-     */
-    public function getTranslation()
-    {
-        return $this->translation;
-    }
-
-    /**
-     * Get linked GeoPostalCode entity.
-     *
-     * @return string
-     */
-    public function getGeoPostalcode()
-    {
-        return $this->geoPostalCode;
-    }
-
-    /**
-     * Set geoPostalCode
-     *
-     * @param GeoPostalCode postalCode
-     *
-     * @return GeoPostalCodeTranslation
-     */
-    public function setGeoPostalCode($geoPostalCode)
-    {
-        $this->geoPostalCode = $geoPostalCode;
-
-        return $this;
-    }
+  /**
+   * Get translation.
+   *
+   * @return string
+   */
+  public function getTranslation()
+  {
+    return $this->translation;
+  }
 }
