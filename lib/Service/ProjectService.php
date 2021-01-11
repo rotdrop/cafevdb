@@ -747,9 +747,9 @@ Whatever.',
     ];
     foreach ($musicianIds as $id) {
       if ($this->addOneMusician($id, $project, $status)) {
-        $statusReport[ 'added' ] = array_merge($statusReport[ 'added' ], $status);
+        $statusReport['added'][$id] = $status;
       } else {
-        $statusReport[ 'failed' ] = array_merge($statusReport[ 'failed' ], $status);
+        $statusReport['failed'][$id] = $status;
       }
     }
 
@@ -765,6 +765,8 @@ Whatever.',
   private function addOneMusician($id, Entities\Project $project, &$status)
   {
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+
+    $status = [];
 
     $musician = $musiciansRepository->find($id);
     if (empty($musician)) {
@@ -785,7 +787,7 @@ Whatever.',
       return $participant['musician']['id'] == $musicion['id'];
     });
     if ($exists) {
-      $status[] = [
+      $status[$id][] = [
         'id' => $id,
         'notice' => $this->l->t(
           'The musician %s is already registered with project %s.',
@@ -794,6 +796,7 @@ Whatever.',
       return false;
     }
 
+    $this->logInfo('Starting transaction');
     $this->entityManager->beginTransaction();
     try {
 
@@ -821,7 +824,7 @@ Whatever.',
           $numbers =  $instrumentationNumbers->filter(function($number) use ($instrumentId) {
             return $number['instrument']['id'] == $instrumentId;
           });
-          if (empty($numbers)) {
+          if ($numbers->isEmpty()) {
             continue;
           }
           if ($musicianInstrument['ranking'] <= $ranking) {
@@ -873,10 +876,14 @@ Whatever.',
       $musician['updated'] = $project['updated'] = new \DateTime;
 
       $this->flush();
+      $this->logInfo('Committing transaction');
       $this->entityManager->commit();
 
     } catch (\Throwable $t) {
+      $this->logInfo('Rolling back transaction');
+      $this->entityManager->close();
       $this->entityManager->rollback();
+      $this->entityManager->reopen();
       $status[] = [
         'id' => $id,
         'notice' => $this->l->t(

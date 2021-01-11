@@ -94,11 +94,13 @@ class ProjectParticipantsController extends Controller {
     // projectName: NAME
     // musicianId: 1
     $musicianIds = [];
-    if (!empty($musicianId)) {
+    if (!empty($musicianId) && $musicianId > 0) {
       $musicianIds[] = $musicianId;
     } else {
       $musicianIds = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);
     }
+
+    $this->logInfo('Requested participants '.print_r($musicianIds, true));
 
     $numRecords = count($musicianIds);
     if ($numRecords == 0) {
@@ -114,14 +116,18 @@ class ProjectParticipantsController extends Controller {
     $failedMusicians = $result['failed'];
     $addedMusicians  = $result['added'];
 
+    $this->logInfo("RESULT ".print_r($result, true).' '. count($failedMusicians).' '.$numRecords);
+
     if ($numRecords == count($failedMusicians)) {
 
       $message = $this->l->t('No musician could be added to the project, #failures: %d.',
                              count($failedMusicians));
 
-      foreach ($failedMusicians as $failure) {
-        $message .= ' '.$failure['notice'];
-       }
+      foreach ($failedMusicians as $id => $failures) {
+        foreach ($failures as $failure) {
+          $message .= ' '.$failure['notice'];
+        }
+      }
 
       return self::grumble($message);
 
@@ -129,11 +135,12 @@ class ProjectParticipantsController extends Controller {
 
       $notice = '';
       $musicians = [];
-      foreach ($addedMusicians as $newItem) {
-        $notice .= $newItem['notice'];
-        $musicians[] = $newItem['id'];
+      foreach ($addedMusicians as $id => $notices) {
+        $musicians[] = $id;
+        foreach ($notices as $notice) {
+          $notice .= $notice['notice'];
+        }
       }
-      $musicians = array_values(array_unique($musicians));
 
       return self::dataResponse(
         [
