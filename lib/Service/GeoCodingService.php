@@ -45,6 +45,10 @@ class GeoCodingService
   const POSTALCODESLOOKUP_TAG = "postalcodes";
   const POSTALCODESSEARCH_TAG = "postalCodes";
   const PROVIDER_URL = 'http://api.geonames.org';
+  const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
+  const NOMINATIM_KEYS = [
+    'city', 'country', 'street', 'postalcode',
+  ];
   const CONTINENT_TARGET = '->';
   private $userName = null;
   private $countryNames = [];
@@ -82,21 +86,75 @@ class GeoCodingService
     }
     if ($type === self::JSON) {
       $url = self::PROVIDER_URL.'/'.$command.'JSON'.'?username='.$this->userName.'&'.$query;
-      $this->debug(__METHOD__ . ': ' . $url);
+      $this->logDebug($url);
       $response = file_get_contents($url);
       if ($response !== false) {
         $json = json_decode($response, true, 512, JSON_BIGINT_AS_STRING);
-        //$this->debug(__METHOD__ . ': ' . print_r($json, true));
+        //$this->logDebug(print_r($json, true));
         return $json;
       }
     }
     return null;
   }
 
-  /**Fetch an array of known locations given incomplete data. This
+  public function autoCompleteStreet($partialStreet, $country, $city = null, $postalCode = null)
+  {
+    // ignore complete street address with number
+    if (preg_match('/\s+[0-9]+[a-z]?$/i', $partialStreet)) {
+      $this->logInfo('Ignoring complete address');
+      return [ $partialStreet ];
+    }
+
+    $queryUrl = self::NOMINATIM_URL.'?street='.urlencode($partialStreet).'&country='.urlencode($country);
+    if (!empty($city)) {
+      $queryUrl .= '&city='.urlencode($city);
+    }
+    if (!empty($postalCode)) {
+      $queryUrl .= '&postalcode='.urlencode($postalCode);
+    }
+    $queryUrl .= '&format=jsonv2';
+    $this->logInfo($queryUrl);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $queryUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    if (empty($response)) {
+      return [];
+    }
+    $results = [];
+    $json = json_decode($response, true, 512, JSON_BIGINT_AS_STRING);
+    foreach ($json as $hit) {
+      if ($hit['category'] != 'highway') {
+        continue;
+      }
+      if ($hit['type'] != 'residential') {
+        continue;
+      }
+      if ($hit['osm_type'] != 'way') {
+        continue;
+      }
+      $info = explode(',', $hit['display_name']);
+      if (empty($info)) {
+        continue;
+      }
+      $this->logInfo(print_r($info, true));
+      $results[] = $info[0];
+    }
+    $this->logInfo(print_r($results, true));
+    return $results;
+  }
+
+  /**
+   * Fetch an array of known locations given incomplete data. This
    * uses an "OR" search in the data-base. The idea is that updating
    * input fields gradually should provide the user with the most
    * recent results.
+   *
+   * @return array
    */
   public function cachedLocations($postalCode = null,
                                   $name = null,
@@ -129,24 +187,36 @@ class GeoCodingService
 
     $expr = $this->expr();
     $qb = $this->queryBuilder()
-               ->select('qpc')
-               ->from(GeoPostalCode::class, 'qpc')
-               ->where($expr->in('country', ':countries'))
-               ->setParameter('countries', $countries);
+               ->select('gpc')
+               ->from(GeoPostalCode::class, 'gpc');
+    if (count($countries) == 1) {
+      $qb->where($expr->like('gpc.country', ':country'))
+         ->setParameter('country', $countries[0]);
+    } else {
+      $qb->where($expr->in('gpc.country', ':countries'))
+         ->setParameter('countries', $countries);
+    }
     $orExpr = [];
     if ($postalCode) {
-      $orExpr[] = $expr->eq('postalCode', $postalCode);
+      $orExpr[] = $expr->eq('gpc.postalCode', ':postalCode');
     }
     if ($name) {
-      $orExpr[] = $expr->eq('Name', $name);
+      $orExpr[] = $expr->eq('gpc.name', ':name');
     }
     if (!empty($orExpr)) {
       $qb = $qb->andWhere(call_user_func_array([$expr, 'orX'], $orExpr));
+      if ($postalCode) {
+        $qb->setParameter('postalCode',  $postalCode);
+      }
+      if ($name) {
+        $qb->setParameter('name', $name);
+      }
     }
-    $this->debug(__METHOD__ . ': ' . $qb->getDql());
+
+    $this->logDebug($qb->getDql());
     $locations = [];
     foreach ($qb->getQuery()->execute() as $location) {
-      $location = [
+      $oneLocation = [
         'Latitude' => $location->getLatitude(),
         'Longitude' => $location->getLongitude(),
         'Country' => $location->getCountry(),
@@ -160,12 +230,15 @@ class GeoCodingService
       foreach ($location->getTranslations() as $translation) {
         // so $translation is now an instance of
         // GeoPostalCodeTranslations ?
-        $location[$translation->getTarget()] = $translation->getTranslation();
+        $oneLocation[$translation->getTarget()] = $translation->getTranslation();
       }
+      $locations[] = $oneLocation;
     }
-  }
+    return $locations;
+    }
 
-  /**Fetch infornmation from the underlying geo-coding backend;
+  /**
+   * Fetch information from the underlying geo-coding backend;
    * store the retrieved information in our local cache. This
    * functions inserts any new loations into the local cache of
    * known locations.
@@ -259,21 +332,51 @@ class GeoCodingService
 
       $locations[] = $location;
 
-      $entity = GeoPostalCodes::create()
-              ->setLatitude($lat)
-              ->setLongitude($lng)
-              ->setCountry($cntry)
-              ->setPostalCode($postalCode)
-              ->setName($name);
-      $geoPostalCode = $this->merge($entity);
+      $hasChanged = false;
+      $this->setDatabaseRepository(GeoPostalCode::class);
+      $geoPostalCode = $this->findOneBy([
+        'country' => $country,
+        'postalCode' => $postalCode,
+        'name' => $name,
+      ]);
+      if (empty($geoPostalCode)) {
+        $geoPostalCode = GeoPostalCode::create()
+                ->setCountry($cntry)
+                ->setPostalCode($postalCode)
+                ->setName($name);
+        $hasChanged = true;
+      } else {
+        if (($lat != $geoPostalCode->getLatitude()) || ($lng != $geoPostalCode->getLongitude())) {
+          $hasChanged = true;
+        }
+        }
+      if ($hasChanged) {
+        $geoPostalCode->setLongitude($lng);
+        $geoPostalCode->setLatitude($lat);
+        $geoPostalCode = $this->merge($geoPostalCode);
+      }
 
       foreach ($translations as $language => $translation) {
-        $entity = GeoPostalCodeTranslations::create()
-                ->setPostalCodeId($geoPostalCode->getId())
-                ->setPostalCode($geoPostalCode)
-                ->setTarget($language)
-                ->setTranslation($translation);
-        $this->merge($entity);
+        $hasChanged = false;
+        $this->setDatabaseRepository(GeoPostalCodeTranslation::class);
+        $entity = $this->findOneBy([
+          'geoPostalCode' => $geoPostalCode,
+          'target' => $lang,
+        ]);
+        if (empty($entity)) {
+          $entity = GeoPostalCodeTranslations::create()
+                       ->setGeoPostalCode($geoPostalCode)
+                       ->setTarget($lang);
+          $hasChanged = true;
+        } else {
+          if ($translation != $entity->getTranslation()) {
+            $hasChanged = true;
+          }
+        }
+        if ($hasChanged) {
+          $entity->setTranslation($translation);
+          $entity = $this->merge($entity);
+        }
       }
 
     }
@@ -341,7 +444,7 @@ class GeoCodingService
                  ))
                ->setParameter('country', $country)
                ->setParameter('postalCode', $postalCode);
-    $this->debug(__METHOD__ . ': ' . $qb->getDql());
+    $this->logDebug($qb->getDql());
     $qb->getQuery()
        ->execute();
     $this->flush();
@@ -376,7 +479,7 @@ class GeoCodingService
       $language = locale_get_primary_language($locale);
     }
 
-    $this->debug(__METHOD__ . ': ' . "Updating postal codes for language " . $language);
+    $this->logDebug("Updating postal codes for language " . $language);
 
     // only fetch "old" postal codes for registered musicians.
     $qb = $this->queryBuilder()
@@ -390,7 +493,7 @@ class GeoCodingService
                ->where('TIMESTAMPDIFF(MONTH, gpc.updated, CURRENT_TIMESTAMP()) > 1')
                ->orderBy('gpc.updated', 'ASC')
                ->setMaxResults($limit);
-    $this->debug(__METHOD__ . ': ' . $qb->getDql());
+    $this->logDebug($qb->getDql());
 
     $zipCodes = [];
     foreach ($qb->getQuery()->getResult() as $postalCode) {
@@ -404,7 +507,7 @@ class GeoCodingService
     $numChanged = 0;
     $numTotal = 0;
     foreach ($zipCodes as $zipCode) {
-      $this->debug(print_r($zipCode, true));
+      $this->logDebug(print_r($zipCode, true));
       $zipCodeInfo = $this->request('postalCodeLookup', $zipCode);
       $postalCode = $zipCode['postalCode'];
       $country = $zipCode['country'];
@@ -433,9 +536,9 @@ class GeoCodingService
             $translation = Util::normalizeSpaces($translation);
             $translation = "'".$translation."'";
           }
-          $this->debug(__METHOD__.' '.print_r($translations, true));
-          $this->debug(__METHOD__.' '.print_r($lang, true));
-          $this->debug(__METHOD__.' '.print_r($translation, true));
+          $this->logDebug(print_r($translations, true));
+          $this->logDebug(print_r($lang, true));
+          $this->logDebug(print_r($translation, true));
           $translations[$lang] = $translation;
         }
 
@@ -467,18 +570,16 @@ class GeoCodingService
           $numChanged++;
         }
 
-        $postalCodeId = $geoPostalCode->getId();
-        $this->debug(__METHOD__.': '.'postal code id: '. $postalCodeId);
         foreach ($translations as $lang => $translation) {
           $hasChanged = false;
           $this->setDatabaseRepository(GeoPostalCodeTranslation::class);
           $entity = $this->findOneBy([
-            'postalCodeId' => $postalCodeId,
+            'geoPostalCode' => $geoPostalCode,
             'target' => $lang,
           ]);
           if (empty($entity)) {
             $entity = GeoPostalCodeTranslations::create()
-                    ->setPostalCodeId($postalCodeId)
+                    ->setGeoPostalCode($geoPostalCode)
                     ->setTarget($lang);
             $hasChanged = true;
           } else {
@@ -488,13 +589,12 @@ class GeoCodingService
           }
           if ($hasChanged) {
             $entity->setTranslation($translation);
-            $entity->setGeoPostalCode($geoPostalCode);
             $entity = $this->merge($entity);
           }
         }
 
         if ($limit == 1) {
-          $this->debug($postalCode.'@'.$country.': '.$name);
+          $this->logDebug($postalCode.'@'.$country.': '.$name);
         }
       }
 
@@ -504,7 +604,7 @@ class GeoCodingService
     }
     $this->flush();
 
-    $this->debug(__METHOD__.': Affected Postal Code records: '.$numChanged.' of '.$numTotal);
+    $this->logDebug('Affected Postal Code records: '.$numChanged.' of '.$numTotal);
 
     return true;
   }
@@ -579,7 +679,7 @@ class GeoCodingService
 
     foreach ($languages as $lang) {
       $numRows = $this->updateCountriesForLanguage($lang, $force);
-      $this->debug(__METHOD__.': Affected rows for language '.$lang.': '.print_r($numRows, true));
+      $this->logDebug('Affected rows for language '.$lang.': '.print_r($numRows, true));
     }
 
     return true;
@@ -589,7 +689,7 @@ class GeoCodingService
   public function updateCountriesForLanguage($lang, $force = false)
   {
     if (!$force && $this->count(['target' => $lang], GeoCountry::class) > 0) {
-      $this->debug(__METHOD__.': language '.$lang.' already retrieved and update not forced, skipping update.');
+      $this->logDebug('language '.$lang.' already retrieved and update not forced, skipping update.');
       return 0;
     }
 
@@ -613,7 +713,7 @@ class GeoCodingService
 
       $localeName = $localeCountryNames[$code];
       if ($localeName != $name) {
-        $this->debug(__METHOD__.': '.$lang.'_'.$code.': '.$localeName.' / '.$name.' (php/remote)');
+        $this->logDebug($lang.'_'.$code.': '.$localeName.' / '.$name.' (php/remote)');
       }
 
       $targets = [
@@ -678,7 +778,7 @@ class GeoCodingService
     $languages = array_unique(array_merge(['en', $currentLang], $languages));
     $this->languages = array_filter(array_unique(array_merge(['en', $currentLang, $extraLang], $languages)));
 
-    $this->debug(__METHOD__ . ': ' . print_r($this->languages, true));
+    $this->logDebug(print_r($this->languages, true));
 
     return $this->languages;
   }
