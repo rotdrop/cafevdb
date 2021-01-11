@@ -4860,7 +4860,7 @@ class phpMyEdit
 		// remove deleted record from misc selection
 		$recordData =
 			(count($this->rec) == 1)
-			? array_values($this->rec)[0];
+			? array_values($this->rec)[0]
 			: $recordData = json_encode($this->rec);
 		while (($mrecs_key = array_search($recordData, $this->mrecs)) !== false) {
 			unset($this->mrecs[$mrecs_key]);
