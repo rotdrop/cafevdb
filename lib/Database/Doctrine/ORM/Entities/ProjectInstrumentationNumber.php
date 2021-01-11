@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ProjectInstrumentationNumber
@@ -75,6 +76,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
 
   public function __construct() {
     $this->arrayCTOR();
+    $this->instruments = new ArrayCollection();
   }
 
   /**
@@ -150,7 +152,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   }
 
   /**
-   * Set voice.
+   * Set quantity
    *
    * @param int $quantity
    *
@@ -171,6 +173,30 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   public function getQuantity()
   {
     return $this->quantity;
+  }
+
+  /**
+   * Set instruments
+   *
+   * @param int $instruments
+   *
+   * @return ProjectInstrumentationNumber
+   */
+  public function setInstruments($instruments)
+  {
+    $this->instruments = $instruments;
+
+    return $this;
+  }
+
+  /**
+   * Get instruments.
+   *
+   * @return int
+   */
+  public function getInstruments()
+  {
+    return $this->instruments;
   }
 
 }
