@@ -43,7 +43,7 @@ var CAFEVDB = CAFEVDB || {};
       text,
       title,
       'info',
-      Dialogs.OK_BUTTON,
+      OC.dialogs.OK_BUTTON,
       callback,
       modal,
       allowHtml
@@ -55,7 +55,7 @@ var CAFEVDB = CAFEVDB || {};
       text,
       title,
       'notice',
-      Dialogs.YES_NO_BUTTONS,
+      OC.dialogs.YES_NO_BUTTONS,
       callback,
       modal,
       allowHtml
