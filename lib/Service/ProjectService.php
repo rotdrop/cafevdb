@@ -695,14 +695,206 @@ Whatever.',
     return true;
   }
 
+  /**
+   * Soft delete this project.
+   */
   public function disable($projectId, $disable = true)
   {
     $this->repository->disable($projectId);
   }
 
+  /**
+   * Undo soft-deletion.
+   */
   public function enable($projectId, $disable = true)
   {
     $this->repository->enable($projectId);
+  }
+
+  /**
+   * Add the given musicians to the project.
+   *
+   * @param array $musicianIds Flat array of the data-base keys for Entities\Musician.
+   *
+   * @param int $projectId The project-id for the destination project.
+   *
+   * @TODO Perhaps allow project-entities, i.e. "mixed $project"
+   * instead of "int $projectId".
+   *
+   * @return array
+   * ```
+   * [
+   *   'failed' => [
+   *     [ 'id' => ID, 'notice' => REMARK, ... ],
+   *     ...
+   *   ],
+   *   'added'  => [
+   *      [ id' => ID, 'notice' => REMARK, 'sqlerror' => OPTIONAL ],
+   *   ],
+   * ]
+   * ```
+   */
+  public function addMusicians(array $musicianIds, $projectId)
+  {
+    $project = $this->repository->find($projectId);
+    if (empty($project)) {
+      throw new \Exception($this->l->t('Unabled to retrieve project with id %d', $projectId));
+    }
+
+    $statusReport = [
+      'added' => [],
+      'failed' => [],
+    ];
+    foreach ($musicianIds as $id) {
+      if ($this->addOneMusician($id, $project, $status)) {
+        $statusReport[ 'added' ] = array_merge($statusReport[ 'added' ], $status);
+      } else {
+        $statusReport[ 'failed' ] = array_merge($statusReport[ 'failed' ], $status);
+      }
+    }
+
+    return $statusReport;
+  }
+
+  /**
+   * Add one given musician to the project.
+   *
+   * @param mixed $id Id of the musician, something understood by
+   * MusiciansRepository::find().
+   */
+  private function addOneMusician($id, Entities\Project $project, &$status)
+  {
+    $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+
+    $musician = $musiciansRepository->find($id);
+    if (empty($musician)) {
+      if (!empty($status)) {
+        $status[] = [
+          'id' => $id,
+          'notice' => $this->l->t(
+            'Unable to fetch musician\'s personal information for id %d.', $id),
+        ];
+      }
+      return false;
+    }
+
+    $musicianName = $musician['firstName'].' '.$musician['name'];
+
+    // check for already registered
+    $exists = $project['participants']->exists(function($key, $participant) use ($musician) {
+      return $participant['musician']['id'] == $musicion['id'];
+    });
+    if ($exists) {
+      $status[] = [
+        'id' => $id,
+        'notice' => $this->l->t(
+          'The musician %s is already registered with project %s.',
+          [ $musicianName, $project['name'] ]),
+      ];
+      return false;
+    }
+
+    $this->entityManager->beginTransaction();
+    try {
+
+      // The musician exists and is not already registered, so add it.
+      $participant = Entities\ProjectParticipant::create();
+      $participant['project'] = $project;
+      $participant['musician'] = $musician;
+      $this->persist($participant);
+
+      // Try to make a likely default choice for the project instrument.
+      $instrumentationNumbers = $project['instrumentationNumbers'];
+
+      if ($musician['instruments']->isEmpty()) {
+        $status[] = [
+          'id' => $id,
+          'notice' => $this->l->t('The musician %s does not play any instrument.', $musicianName),
+        ];
+      } else {
+
+        // first find one instrument with best ranking
+        $bestInstrument = null;
+        $ranking = PHP_INT_MIN;
+        foreach ($musician['instruments'] as $musicianInstrument) {
+          $instrumentId = $musicianInstrument['instrument']['id'];
+          $numbers =  $instrumentationNumbers->filter(function($number) use ($instrumentId) {
+            return $number['instrument']['id'] == $instrumentId;
+          });
+          if (empty($numbers)) {
+            continue;
+          }
+          if ($musicianInstrument['ranking'] <= $ranking) {
+            continue;
+          }
+          $ranking = $musicianInstrument['ranking'];
+
+          // if voice == -1 exist, use it (no voice), otherwise use
+          // the one with the lest registerd musicians or the
+          // potentially less demanding (highest numbered) voice.
+          $voice = 0;
+          $neededMost = PHP_INT_MIN;
+          foreach ($numbers as $number) {
+            if ($number['voice'] == -1) {
+              $voice = -1;
+              break;
+            }
+            $needed = $number['quantity'] - count($number['instruments']);
+            if ($needed > $neededMost ||
+                ($needed == $neededMost &&  $number['voice'] > $voice)) {
+              $neededMost = $needed;
+              $voice = $number['voice'];
+            }
+          }
+
+          $bestInstrument = [
+            'instrument' => $musicianInstrument['instrument'],
+            'voice' => $voice,
+          ];
+        }
+
+        if (empty($bestInstrument)) {
+          $status[] = [
+            'id' => $id,
+            'notice' => $this->l->t(
+              'The musician %s does not play any instrument registered in the instrumentation list for the project %s.',
+              [ $musicianName, $project['name'], ]),
+          ];
+        } else {
+          $projectInstrument = Entities\ProjectInstrument::create();
+          $projectInstrument['project'] = $project;
+          $projectInstrument['musician'] = $musician;
+          $projectInstrument['instrument'] = $bestInstrument['instrument'];
+          $projectInstrument['voice'] = $bestInstrument['voice'];
+          $this->persist($projectInstrument);
+        }
+      }
+
+      $musician['updated'] = $project['updated'] = new \DateTime;
+
+      $this->flush();
+      $this->entityManager->commit();
+
+    } catch (\Throwable $t) {
+      $this->entityManager->rollback();
+      $status[] = [
+        'id' => $id,
+        'notice' => $this->l->t(
+          'Adding the musician with id %d failed with exception %s',
+          [ $id, $t->getMessage(), ]),
+      ];
+      $this->logException($t);
+      return false;
+    }
+
+    $status[] = [
+      'id' => $id,
+      'notice' => $this->l->t('The musician %s has been added to project %s.',
+                              [ $musicianName, $project['name'], ]),
+    ];
+
+    return true;
+
   }
 }
 

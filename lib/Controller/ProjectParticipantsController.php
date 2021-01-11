@@ -31,6 +31,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -47,6 +48,9 @@ class ProjectParticipantsController extends Controller {
   /** @var RequestParameterService */
   private $parameterService;
 
+  /** @var ProjectService */
+  private $projectService;
+
   /** @var EntityManager */
   protected $entityManager;
 
@@ -57,6 +61,7 @@ class ProjectParticipantsController extends Controller {
     , ConfigService $configService
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
+    , ProjectService $projectService
   ) {
 
     parent::__construct($appName, $request);
@@ -65,6 +70,7 @@ class ProjectParticipantsController extends Controller {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
+    $this->projectService = $projectService;
     $this->l = $this->l10N();
     $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }
@@ -103,10 +109,7 @@ class ProjectParticipantsController extends Controller {
       return self::grumble($this->l->t('Missing Project Id'));
     }
 
-    // @TODO: this is real work
-    // $result = WHATEVER->addMusicians($musicianIds, $projectid);
-    $result['failed'] = $numRecords;
-    $result['added'] = 0;
+    $result = $this->projectService->addMusicians($musicianIds, $projectId);
 
     $failedMusicians = $result['failed'];
     $addedMusicians  = $result['added'];
@@ -116,22 +119,25 @@ class ProjectParticipantsController extends Controller {
       $message = $this->l->t('No musician could be added to the project, #failures: %d.',
                              count($failedMusicians));
 
-      // foreach ($failedMusicians as $failure) {
-      //   $message .= ' '.$failure['notice'].' '.'SQL-error: '.$failure['sqlerror'];
-      // }
+      foreach ($failedMusicians as $failure) {
+        $message .= ' '.$failure['notice'];
+       }
 
       return self::grumble($message);
 
     } else {
 
       $notice = '';
-      // foreach ($addedMusicians as $newItem) {
-      //   $notice .= $newItem['notice'];
-      // }
+      $musicians = [];
+      foreach ($addedMusicians as $newItem) {
+        $notice .= $newItem['notice'];
+        $musicians[] = $newItem['id'];
+      }
+      $musicians = array_values(array_unique($musicians));
 
       return self::dataResponse(
         [
-          'musicians' => $addedMusicians,
+          'musicians' => $musicians,
           'message' => ($notice == ''
                         ? '' // don't annoy the user with success messages.
                         : $this->l->t("Operation succeeded with the following notifications:")),

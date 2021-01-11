@@ -49,19 +49,23 @@ var CAFEVDB = CAFEVDB || {};
          CAFEVDB.Instrumentation.loadProjectParticipants(form);
          return;
        }
+       console.log(data);
        if (data.musicians.length == 1) {
          // open single person change dialog
-         var musician = data.musicians[0];
+         const musicianId = data.musicians[0];
          //alert('data: '+CAFEVDB.print_r(musician, true));
          CAFEVDB.Instrumentation.loadProjectParticipants(
            form,
            undefined,
            function() {
              CAFEVDB.Instrumentation.personalRecordDialog(
-               musician.instrumentationId,
                {
-                 ProjectId: projectId,
-                 ProjectName: projectName,
+                 musicianId: musicianId,
+                 projectId: projectId
+               },
+               {
+                 projectId: projectId,
+                 projectName: projectName,
                  InitialValue: 'Change',
                  modified: true
              });
@@ -429,10 +433,10 @@ var CAFEVDB = CAFEVDB || {};
                      CAFEVDB.Instrumentation.personalRecordDialog(
                        ids[0],
                        {
-                         Table: 'Musiker',
+                         table: 'Musicians',
                          InitialValue: 'View',
-                         ProjectId: projectId ? projectId : -1,
-                         ProjectName: projectName
+                         projectId: projectId ? projectId : -1,
+                         projectName: projectName
                        }
                      );
                    } else {

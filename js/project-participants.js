@@ -45,7 +45,7 @@ var CAFEVDB = CAFEVDB || {};
       options = {
         InitialValue: 'View',
         ReloadValue: 'View',
-        ProjectId: -1
+        projectId: -1
       };
     }
     if (typeof options.InitialValue == 'undefined') {
@@ -55,19 +55,19 @@ var CAFEVDB = CAFEVDB || {};
       options.ReloadValue = options.InitialValue;
     }
     if (typeof options.Project != 'undefined') {
-      options.ProjectName = options.Project;
-    } else if (typeof options.ProjectName != 'undefined') {
-      options.Project = options.ProjectName;
+      options.projectName = options.project;
+    } else if (typeof options.projectName != 'undefined') {
+      options.project = options.projectName;
     }
 
-    var pme = PHPMYEDIT;
-    var pmeOperation = pme.pmeSys('operation');
-    var pmeRecord = pme.pmeSys('rec');
+    const pme = PHPMYEDIT;
+    const pmeOperation = pme.pmeSys('operation');
+    const pmeRecord = pme.pmeSys('rec');
 
     var tableOptions = {
-      ProjectId: -1,
-      ProjectName: '',
-      AmbientContainerSelector: pme.selector(),
+      projectId: -1,
+      projectName: '',
+      ambientContainerSelector: pme.selector(),
       DialogHolderCSSId: 'personal-record-dialog',
       // Now special options for the dialog popup
       InitialViewOperation: options.InitialValue == 'View',
@@ -79,22 +79,26 @@ var CAFEVDB = CAFEVDB || {};
       modified: false
     };
 
+    console.info('RECORD', record);
+
     tableOptions[pmeOperation] = options.ReloadValue + '?'+pmeRecord+'='+record;
     tableOptions[pmeRecord] = record;
 
     // Merge remaining options in.
     tableOptions = $.extend(tableOptions, options);
 
-    if (tableOptions.Table == 'Musiker') {
-      var projectMode = options.ProjectId > 0;
+    if (tableOptions.table == 'Musicians') {
+      var projectMode = options.projectId > 0;
       tableOptions.template =  projectMode ? 'add-musicians' : 'all-musicians';
       tableOptions.templateRenderer = CAFEVDB.Page.templateRenderer(tableOptions.template);
-    } else if (options.ProjectId > 0) {
-      tableOptions.table = options.projectName+'View';
+    } else if (options.projectId > 0) {
+      tableOptions[pmeOperation] =
+        options.ReloadValue + '?'+pmeRecord+'[project_id]='+record.projectId+'&'+pmeRecord+'[musician_id]='+record.musicianId;
+      tableOptions.table = 'ProjectParticipants';
       tableOptions.template = 'project-participants'
-      tableOptions.tisplayClass = 'ProjectParticipants';
+      tableOptions.templateRenderer = CAFEVDB.Page.templateRenderer(tableOptions.template);
     } else {
-      tableOptions.table = 'Musiker';
+      tableOptions.table = 'Musicians';
       tableOptions.template = 'all-musicians';
       tableOptions.templateRenderer = CAFEVDB.Page.templateRenderer(tableOptions.template);
     }
@@ -170,7 +174,6 @@ var CAFEVDB = CAFEVDB || {};
    *
    * formData = {
    *   template: "project-participants",
-   *   table: "Musiker",
    *   templateRenderer: "template:project-participants"
    * };
    *
@@ -182,8 +185,8 @@ var CAFEVDB = CAFEVDB || {};
   Instrumentation.loadPMETable = function(form, formData, afterLoadCallback) {
     var pmeSys = PHPMYEDIT.pmeSys('');
     form.find('input').not('[name^="'+pmeSys+'"]').each(function(idx) {
-      var self = $(this);
-      var name = self.attr('name');
+      const self = $(this);
+      const name = self.attr('name');
       if (name) {
         if (typeof formData[name] == 'undefined') {
           formData[name] = self.val();
@@ -202,7 +205,6 @@ var CAFEVDB = CAFEVDB || {};
    *
    * formData = {
    *   template: "project-participants",
-   *   table: "Musiker",
    *   templateRenderer: "template:project-participants"
    * };
    *
@@ -265,7 +267,6 @@ var CAFEVDB = CAFEVDB || {};
     const template = projectMode ? "add-musicians" : "all-musicians";
     const inputTweak = {
       template: template,
-      table: "Musiker",
       templateRenderer: CAFEVDB.Page.templateRenderer(template)
     };
 
@@ -298,19 +299,19 @@ var CAFEVDB = CAFEVDB || {};
    * the PME table has been loaded.
    */
   Instrumentation.loadProjectParticipants = function(form, musicians, afterLoadCallback) {
-    const projectName = form.find('input[name="ProjectName"]').val();
-    const table = projectName+'View';
+    const projectName = form.find('input[name="projectName"]').val();
+    const projectId = form.find('input[name="projectId"]').val();
 
     const template = 'project-participants';
     const inputTweak = {
       template: template,
-      table: table,
       templateRenderer: CAFEVDB.Page.templateRenderer(template)
     };
 
     var ids = [ -1 ];
     if (typeof musicians != 'undefined') {
-      ids = musicians.map(function(musician) { return musician.instrumentationId; });
+      ids = musicians.map(function(musician) { return { musicianId: musician, projectId: projectId } });
+      console.info('MUSIDS ', ids);
     }
 
     Instrumentation.loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
