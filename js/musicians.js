@@ -96,8 +96,8 @@ var CAFEVDB = CAFEVDB || {};
                const form = container.find('form.pme-form');
                const phones = form.find('input.phone-number');
                const post = form.serialize();
-               const mobile = phones.filter('input[name$="MobilePhone"]');
-               const fixedLine = phones.filter('input[name$="FixedLinePhone"]');
+               const mobile = phones.filter('input[name$="mobile_phone"]');
+               const fixedLine = phones.filter('input[name$="fixed_line_phone"]');
 
                phones.prop('disabled', true);
 
@@ -182,7 +182,7 @@ var CAFEVDB = CAFEVDB || {};
                     return;
                   }
                   // inject the sanitized value into their proper input fields
-                  form.find('input[name$="Email"]').val(data.email);
+                  form.find('input[name$="email"]').val(data.email);
                   if (data.message != '') {
                     CAFEVDB.Dialogs.alert(data.message,
                                           t('cafevdb', 'Email Validation'),
@@ -294,7 +294,7 @@ var CAFEVDB = CAFEVDB || {};
 
       const form = container.find('form.pme-form');
       var post = form.serialize();
-      post += '&' + $.param({'ActiveElement': self.attr('name')});
+      post += '&' + $.param({'active_element': self.attr('name')});
 
       const reload = container.find('.pme-navigation input.pme-reload');
 
@@ -327,6 +327,7 @@ var CAFEVDB = CAFEVDB || {};
 
          city.autocomplete('option', 'source', suggestions.cities);
          zip.autocomplete('option', 'source', suggestions.postalCodes);
+         street.autocomplete('option', 'source', suggestions.streets);
          const selectedCountry = countrySelect.find('option:selected').val();
          const countries = suggestions.countries;
          countryInput.hide();
