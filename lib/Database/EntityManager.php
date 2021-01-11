@@ -81,6 +81,16 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
+  public function reopen()
+  {
+    $this->close();
+    parent::__construct($this->getEntityManager());
+    $this->entityManager = $this->wrapped;
+    if ($this->connected()) {
+      $this->registerTypes();
+    }
+  }
+
   private function connected()
   {
     $connection = $this->entityManager->getConnection();
