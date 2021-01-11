@@ -22,6 +22,7 @@
     "beberlei/doctrineextensions": "^1.2.0",
     "ezyang/htmlpurifier": "^4.13.0",
     "giggsey/libphonenumber-for-php": "^8.12",
+    "pear/mail": "^1.4",
     "gedmo/doctrine-extensions": "^3.0.0",
     "knplabs/doctrine-behaviors": "^2.0"
   },
