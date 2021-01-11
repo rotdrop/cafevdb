@@ -89,8 +89,9 @@ class MusiciansController extends Controller {
     case 'address':
       break;
     case 'duplicates':
-      $lastName = $this->parameterService[$this->pme->cgiDataName('name')]?:'';
-      $firstName = $this->parameterService[$this->pme->cgiDataName('first_name')]?:'';
+      $lastName = trim($this->parameterService[$this->pme->cgiDataName('name')]?:'');
+      $firstName = trim($this->parameterService[$this->pme->cgiDataName('first_name')]?:'');
+
       $musicians = $this->musiciansRepository->findByName($firstName, $lastName);
 
       $duplicateNames = '';
