@@ -279,7 +279,7 @@ class EntityManager extends EntityManagerDecorator
     $em = $args->getEntityManager();
     foreach ($schema->getTables() as $table) {
       foreach ($table->getForeignKeys() as $foreignKey) {
-        if ($foreignKey->getForeignTableName() == 'ProjectInstrumentationNumbers') {
+        if (false && $foreignKey->getForeignTableName() == 'ProjectInstrumentationNumbers') {
           $table->removeForeignKey($foreignKey->getName());
         }
       }
