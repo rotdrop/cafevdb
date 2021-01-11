@@ -482,22 +482,21 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
   Projects.projectWebPageRequest = function(post, container) {
 
     CAFEVDB.Notification.hide(function() {
-      $.post(
-        OC.generateUrl('/apps/cafevdb/projects/webpages'),
-        post,
-        function (data) {
-          if (!CAFEVDB.Ajax.validateResponse(data, [])) {
-            // do nothing
-          } else if (data.data.message != '') {
-            CAFEVDB.Notification.showHtml(data.data.message);
-          }
-          const form = container.find('table.pme-navigation');
-          const submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
-          submit.first().trigger('click');
-          setTimeout(function() {
-            CAFEVDB.Notification.hide();
-          }, 5000);
-        });
+      $.post(OC.generateUrl('/apps/cafevdb/projects/webpages/' + post.action), post)
+       .fail(function(xhr, status, errorThrown) {
+         CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
+       })
+       .done(function(data) {
+         if (data.message != '') {
+           CAFEVDB.Notification.showHtml(data.message);
+         }
+         const form = container.find('table.pme-navigation');
+         const submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
+         submit.first().trigger('click');
+         setTimeout(function() {
+           CAFEVDB.Notification.hide();
+         }, 5000);
+       });
     });
   };
 
@@ -522,10 +521,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       event.stopImmediatePropagation();
       projectId = ui.newPanel.data('projectId');
       // just do it ...
-      Projects.projectWebPageRequest({ action: 'add',
-                                       articleId: -1,
-                                       projectId: projectId },
-                                     container);
+        Projects.projectWebPageRequest({ action: 'add',
+                                         articleId: -1,
+                                         projectId: projectId },
+                                       container);
       return false;
     case 'cmsarticle-tab-unlinkpage':
       event.stopImmediatePropagation();
@@ -536,7 +535,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         // so what
         return false;
       }
-      OC.dialogs.confirm(
+      CAFEVDB.Dialogs.confirm(
         t('cafevdb', 'Really unlink the displayed event announcement?'),
         t('cafevdb', 'Unlink Web-Page with Id {ArticleId}?',
           { articleId: articleId }),
@@ -562,7 +561,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         // so what
         return false;
       }
-      OC.dialogs.confirm(
+      CAFEVDB.Dialogs.confirm(
         t('cafevdb', 'Really delete the displayed event announcement?'),
         t('cafevdb', 'Delete Web-Page with Id {ArticleId}?',
           { articleId: articleId }),

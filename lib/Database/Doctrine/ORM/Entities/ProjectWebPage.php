@@ -39,25 +39,16 @@ class ProjectWebPage implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="webPages", fetch="EXTRA_LAZY"))
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
+   * @TODO this should cascade deletes
    */
-  private $id;
+  private $project;
 
   /**
    * @var int
-   *
    * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
-   */
-  private $projectId = '-1';
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
+   * @ORM\Id
    */
   private $articleId = '-1';
 
@@ -82,16 +73,6 @@ class ProjectWebPage implements \ArrayAccess
    */
   private $priority = '-1';
 
-  /**
-   * In principle there can be more than one project attached to one
-   * web-page, however, this is just the join-table and ManyToMany is
-   * just a pain in the ass.
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="webPages", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   */
-  private $project;
-
   public function __construct() {
     $this->arrayCTOR();
   }
@@ -107,27 +88,27 @@ class ProjectWebPage implements \ArrayAccess
   }
 
   /**
-   * Set projectId.
+   * Set project.
    *
-   * @param int $projectId
+   * @param int $project
    *
    * @return ProjectWebPages
    */
-  public function setProjectId($projectId)
+  public function setProject($project)
   {
-    $this->projectId = $projectId;
+    $this->project = $project;
 
     return $this;
   }
 
   /**
-   * Get projectId.
+   * Get project.
    *
    * @return int
    */
-  public function getProjectId()
+  public function getProject()
   {
-    return $this->projectId;
+    return $this->project;
   }
 
   /**
@@ -224,29 +205,5 @@ class ProjectWebPage implements \ArrayAccess
   public function getPriority()
   {
     return $this->priority;
-  }
-
-  /**
-   * Set project.
-   *
-   * @param Project $project
-   *
-   * @return ProjectWebPages
-   */
-  public function setProject($project)
-  {
-    $this->project = $project;
-
-    return $this;
-  }
-
-  /**
-   * Get project.
-   *
-   * @return Project
-   */
-  public function getProject()
-  {
-    return $this->project;
   }
 }

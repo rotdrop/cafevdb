@@ -242,7 +242,7 @@ $routes = [
      */
     [
       'name' => 'project_web_pages#service_switch',
-      'url' => '/projects/webpages',
+      'url' => '/projects/webpages/{topic}',
       'verb' => 'POST',
     ],
     /**

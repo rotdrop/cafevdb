@@ -107,6 +107,7 @@ class Project implements \ArrayAccess
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectWebPage", mappedBy="project", fetch="EXTRA_LAZY")
+   * @TODO this should cascade deletes
    */
   private $webPages;
 

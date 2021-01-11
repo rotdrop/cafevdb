@@ -395,6 +395,21 @@ Whatever.',
   }
 
   /**
+   * Fetch fetch the article entities from the database
+   *
+   * @return ArrayCollection
+   */
+  public function fetchProjectWebPages($projectId)
+  {
+    $project = $this->repository->find($projectId);
+    if (empty($project)) {
+      return null;
+    }
+
+    return $project->getWebPages();
+  }
+
+  /**
    * Fetch all articles known to the system.
    *
    * @return array
@@ -466,7 +481,7 @@ Whatever.',
   {
     $project = $this->repository->find($projectId);
     if (empty($project)) {
-      return false;
+      throw new \Exception($this->l->t('Empty project-id'));
     }
     $projectName = $project->getName();
 
@@ -563,7 +578,8 @@ Whatever.',
   public function detachProjectWebPage($projectId, $articleId)
   {
     try {
-      $this->remove([ 'projectId' => $projectId, 'articleId' => $articleId  ]);
+      $this->setDatabaseRepository(Entities\ProjectWebPage::class);
+      $this->remove([ 'project' => $projectId, 'articleId' => $articleId  ]);
       $this->flush();
     } catch (\Throwable $t) {
       $this->logException($t);
