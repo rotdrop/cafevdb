@@ -203,7 +203,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** Short title for heading. */
   // public function shortTitle();
 
-  /** Header text informations. */
+  /**
+   * Header text informations.
+   *
+   * @TODO Display in popup in order not to bloat the small header space.
+   */
   public function headerText()
   {
     return $this->shortTitle();
