@@ -6,7 +6,7 @@
  * phpMyEdit.class.php - main table editor class definition file
  * ____________________________________________________________
  *
- * Copyright (c) 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2011-2016, 2020-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * C opyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
  * C opyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
@@ -807,8 +807,9 @@ class phpMyEdit
 			$values = $valuesDef['queryValues'];
 		} else if (isset($valuesDef['table']) || $strict) {
 			$value_group_data = $this->set_values_from_table($field_num, $strict);
-			$groups = (array)$groups + (array)$valuegroup_data['groups'];
+			$groups = (array)$groups + (array)$value_group_data['groups'];
 			$data = (array)$data + (array)$value_group_data['data'];
+			$titles = (array)$titles + (array)$value_group_data['titles'];
 			$values = [];
 			if (!empty($fdd['values2'])) {
 				$values += $fdd['values2'];
@@ -859,6 +860,7 @@ class phpMyEdit
 		$orderby  = $valuesDef['orderby'];
 		$groups   = $valuesDef['groups'];
 		$data     = $valuesDef['data'];
+		$titles   = $valuesDef['titles'];
 		$dbp      = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 
 		$qparts['type'] = 'select';
@@ -944,6 +946,10 @@ class phpMyEdit
 			$data = $this->substituteVars($data, $subs);
 			$qparts['select'] .= ', '.$data;
 		}
+		if (!empty($titles)) {
+			$data = $this->substituteVars($titles, $subs);
+			$qparts['select'] .= ', '.$titles;
+		}
 		$res	= $this->myquery($this->get_SQL_query($qparts), __LINE__);
 		$values = array();
 		$grps   = array();
@@ -957,6 +963,9 @@ class phpMyEdit
 			}
 			if (!empty($data)) {
 				$dt[$row[0]] = $row[$idx+2];
+			}
+			if (!empty($titles)) {
+				$titles[$row[0]] = $row[$idx+3];
 			}
 		}
 		return array('values' => $values, 'groups' => $grps, 'data' => $dt, 'titles' => $titles);
@@ -1025,6 +1034,7 @@ class phpMyEdit
 		} else {
 			$orderBy = $sd.$fdd['values']['orderby'];
 		}
+
 		return array_merge(
 			[
 				'join_table' => $join_table,
@@ -4527,7 +4537,7 @@ class phpMyEdit
 		}
 		$rec = $this->sql_insert_id();
 		if ($rec > 0 && count($this->key) == 1) {
-			$this->rec[array_keys($this->key)[0]] = $rec;
+			$this->rec = [ array_keys($this->key)[0] => $rec ];
 		} else if (count($key_col_val) == count($this->key)) {
 			$this->rec = $key_col_val;
 		}
@@ -5497,7 +5507,7 @@ class phpMyEdit
 
 		// WHERE filters
 		$this->filters   = array('AND' => false, 'OR' => false);
-		if (isset($opts['filters'])) {
+		if (!empty($opts['filters'])) {
 			$filters = $opts['filters'];
 			if (!is_array($filters)) {
 				$filters = array('AND' => array($filters), 'OR' => false);
