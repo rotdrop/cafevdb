@@ -78,16 +78,6 @@ class ProjectWebPage implements \ArrayAccess
   }
 
   /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
-
-  /**
    * Set project.
    *
    * @param int $project

@@ -60,8 +60,8 @@ class ProjectWebPagesRepository extends EntityRepository
     $articleId = $webArticle['ArticleId'];
 
     $entityManager = $this->getEntityManager();
-    $projectWebPage = $this->findOneBy([ 'projectId' => $projectId,
-                                         'articleId' => $articleId, ]);
+    $projectWebPage = $this->find([ 'project' => $projectId,
+                                    'articleId' => $articleId, ]);
     if (empty($projectWebPage)) {
       if (empty($project)) {
         $project = $entityManager->getReference(Entities\Project::class, $projectId);
