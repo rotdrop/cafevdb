@@ -144,8 +144,11 @@ if (count($otherPages) > 0) {
     $option = [ 'type' => 'option',
                 'value' => $webPage['ArticleId'],
                 'name' => $webPage['ArticleName'],
-                'data' => [ 'article' => json_encode($article)] ];
-    if ($article['Linked']) {
+                'data' => [ 'article' => json_encode($webPage)] ];
+    if ($webPage['Linked']) {
+      // THIS IS UNUSED CODE; WAS ALREADY DISABLED IN OC VERSION
+      // Idea was to provide all articles with the already linked
+      // articles selected.
       $option['selected'] = 'selected';
     }
     echo $pageNavigation->htmlTagsFromArray([ $option ]);
