@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or1
  * modify it under th52 terms of the GNU GENERAL PUBLIC LICENSE
@@ -56,15 +56,15 @@ class TranslationService
         $this->logException($t);
       }
       //$this->flush();
-      $this->logDebug('Translation key for '.$phrase.' was empty, new id '.$translationKey->getId());
+      $this->logDebug('Translation key for "'.$phrase.'" was empty, new id '.$translationKey->getId());
     } else {
-      $this->logDebug('Existing translation key for '.$phrase.' has id '.$translationKey->getId());
+      $this->logDebug('Existing translation key for "'.$phrase.'" has id '.$translationKey->getId());
     }
 
     $this->setDataBaseRepository(TranslationLocation::class);
     $keyId= $translationKey->getId();
     $location = $this->findOneBy([
-      'keyId' => $keyId,
+      'translationKey' => $keyId,
       'file' => $file,
       'line' => $line ]);
     if (empty($location)) {

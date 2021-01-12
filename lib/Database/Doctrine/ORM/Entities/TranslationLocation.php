@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -34,7 +34,7 @@ use OCP\ILogger;
  *
  * @ORM\Table(name="TranslationLocations",
  *   uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"key_id", "file", "line"})
+ *     @ORM\UniqueConstraint(columns={"translation_key_id", "file", "line"})
  *   })
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationLocationsRepository")
  */
@@ -51,13 +51,6 @@ class TranslationLocation implements \ArrayAccess
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
   private $id;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   */
-  private $keyId;
 
   /**
    * @var string

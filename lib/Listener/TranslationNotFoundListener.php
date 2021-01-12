@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -69,11 +69,12 @@ class TranslationNotFoundListener implements IEventListener
     $language = $event->getLanguage();
     $file = $event->getFile();
     $line = $event->getLine();
-    $this->logDebug(__METHOD__.": ".$appName.'; '.$phrase.'; '.$locale.'; '.$language.'; '.$file.'; '.$line);
+    $this->logDebug($appName.'; '.$phrase.'; '.$locale.'; '.$language.'; '.$file.'; '.$line);
     try {
-      OC::$server->query(TranslationService::class)->recordUntranslated($phrase, $locale, $file, $line);
+      \OC::$server->query(TranslationService::class)->recordUntranslated($phrase, $locale, $file, $line);
     } catch (\Throwable $t) {
-      $this->logDebug('Ignoring data-base errors.');
+      //$this->logDebug('Ignoring data-base errors.');
+      $this->logException($t);
     }
   }
 }
