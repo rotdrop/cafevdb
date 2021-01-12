@@ -28,6 +28,8 @@ use OCP\IRequest;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 
+use OCA\CAFEVDB\Common\Util;
+
 class ValidationController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -35,33 +37,42 @@ class ValidationController extends Controller {
   /** @var \OCA\CAFEVDB\Service\ParametereService */
   private $parameterService;
 
-  /** @var \OCA\CAFEVDB\Service\EventsService */
-  private $projectsService;
+  /** @var \OCA\CAFEVDB\Service\FuzzyInputService */
+  private $fuzzyInput;
 
   public function __construct(
     $appName
     , IRequest $request
     , RequestParameterService $parameterService
     , ConfigService $configService
+    , FuzzyInputService $fuzzyInput
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
     $this->configService = $configService;
+    $this->fuzzyInput = $fuzzyInput;
     $this->l = $this->l10N();
   }
 
   /**
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic)
+  public function serviceSwitch($topic, $value)
   {
     switch ($topic) {
     case 'monetary_value':
-      break;
+      $value = Util::normalizeSpaces($value);
+      $amount = 0;
+      if (!empty($value)) {
+        $amount = $this->fuzzyInput->currencyValue($value);
+        if ($amount === false) {
+          return self::grumble($this->l->t('Could not parse number: "%s"', [ $value ]));
+        }
+      }
+      return self::dataResponse([ 'amount' => $amount ]);
     }
     return self::grumble($this->l->t('Unknown Request'));
   }
-
 
 }
 

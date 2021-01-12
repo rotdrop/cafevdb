@@ -228,6 +228,11 @@ $routes = [
       'url' => '/validate/projects/{topic}',
       'verb' => 'POST',
     ],
+    [
+      'name' => 'project_extra_fields#service_switch',
+      'url' => '/projects/extra-fields/{topic}',
+      'verb' => 'POST',
+    ],
     /**
      * Project events
      */

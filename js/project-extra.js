@@ -174,49 +174,49 @@ var CAFEVDB = CAFEVDB || {};
 
     // single-value toggle input for data (i.e. amount of money)
     container.on('blur', 'tr.allowed-values-single input[type="text"]', function(event) {
-      var self = $(this);
+      const self = $(this);
       if (self.prop('readonly')) {
         return false;
       }
-      var amount = self.val().trim();
+      const amount = self.val().trim();
       if (amount === '') {
         self.val('');
         return false;
       }
 
       // defer submit until after validation.
-      var submitDefer = PHPMYEDIT.deferReload(container);
+      const submitDefer = PHPMYEDIT.deferReload(container);
       self.prop('readonly', true);
 
-      $.post(OC.filePath('cafevdb', 'ajax/projects', 'extra-fields.php'),
-             {
-               request: 'ValidateAmount',
-               value: { amount: amount }
-             },
-             function (data) {
-               if (!CAFEVDB.Ajax.validateResponse(data, [ 'Amount' ],
-                                             function() {
-                                               self.prop('readonly', false);
-                                               submitDefer.resolve();
-                                             })) {
-                 return;
-               }
-               var amount = data.data.Amount;
-               self.val(amount);
-               self.prop('readonly', false);
-               submitDefer.resolve();
-             });
+      const cleanup = function() {
+        self.prop('readonly', false);
+        submitDefer.resolve();
+      };
+
+      $.post(
+        OC.generateUrl('/apps/cafevdb/validate/monetary-value'),
+        { 'value': ammount})
+        .fail(function(xhr, status, errorThrown) {
+          CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
+        })
+        .done(function (data) {
+          if (!CAFEVDB.Ajax.validateResponse(data, [ 'amount' ], cleanup)) {
+            return;
+          }
+          self.val(data.amount);
+          cleanup();
+        });
       return false;
     });
 
     // multi-field input matrix
     container.on('blur', 'tr.allowed-values input[type="text"], tr.allowed-values textarea', function(event) {
-      var self = $(this);
+      const self = $(this);
       if (self.prop('readonly')) {
         return false;
       }
-      var row = self.closest('tr.allowed-values');
-      var placeHolder = row.hasClass('placeholder');
+      const row = self.closest('tr.allowed-values');
+      const placeHolder = row.hasClass('placeholder');
       if (placeHolder && self.val().trim() === '') {
         // don't add empty fields (but of course allow to remove field data)
         self.val('');
@@ -224,7 +224,7 @@ var CAFEVDB = CAFEVDB || {};
       }
 
       // associated data items
-      var data = $.extend({}, fieldTypeData(), row.data());
+      const data = $.extend({}, fieldTypeData(), row.data());
 
       // fetch all available keys, server validation will enforce
       // unique keys.
@@ -247,7 +247,7 @@ var CAFEVDB = CAFEVDB || {};
       var oldDflt = dflt.find(':selected').val();
 
       var postData = {
-        request: 'AllowedValuesOption',
+        request: 'allowed-values-option',
         value: {
           selected: oldDflt ? oldDflt : '',
           data: data,
@@ -259,57 +259,59 @@ var CAFEVDB = CAFEVDB || {};
       postData += '&'+allowed.serialize();
 
       // defer submit until after validation.
-      var submitDefer = PHPMYEDIT.deferReload(container);
+      const submitDefer = PHPMYEDIT.deferReload(container);
       allowed.prop('readonly', true);
+      const cleanup = function() {
+        allowed.prop('readonly', false);
+        submitDefer.resolve();
+      };
 
-      $.post(OC.filePath('cafevdb', 'ajax/projects', 'extra-fields.php'),
-             postData,
-             function (data) {
-               if (!CAFEVDB.Ajax.validateResponse(data,
-                                             [ 'AllowedValueOption',
-                                               'AllowedValueInput',
-                                               'AllowedValue'
-                                             ],
-                                             function() {
-                                               allowed.prop('readonly', false);
-                                               submitDefer.resolve();
-                                             })) {
-                 return;
-               }
-               var option = data.data.AllowedValueOption;
-               var input  = data.data.AllowedValueInput;
-               var value  = data.data.AllowedValue; // sanitized
-               $.fn.cafevTooltip.remove();
-               if (placeHolder) {
-                 row.parents('table').find('thead').show();
-                 row.before(input).prev().find('input, textarea').cafevTooltip({placement:'auto right'});
-                 self.val('');
-                 row.data('index', row.data('index')+1); // next index
-                 resizeCB();
-               } else {
-                 var next = row.next();
-                 row.replaceWith(input);
-                 next.prev().find('input, textarea').cafevTooltip({placement:'auto right'});;
-               }
-               // get the key <-> value connection right for the default selector
-               var newValue = $(option).val();
-               var oldOption = dflt.find('option[value="'+newValue+'"]');
-               if (oldOption.length > 0) {
-                 oldOption.replaceWith(option);
-               } else {
-                 dflt.children('option').first().after(option);
-               }
-               dflt.trigger('chosen:updated');
-               allowed.prop('readonly', false);
+      $.post(
+        OC.generateUrl('/apps/cafevdb/valid/projects/allowed-values-option'),
+        postData)
+        .fail(function(xhr, status, errorThrown) {
+          CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
+        })
+        .done(function (data) {
+          if (!CAFEVDB.Ajax.validateResponse(
+            data,
+            [ 'AllowedValueOption', 'AllowedValueInput', 'AllowedValue' ],
+            cleanup)) {
+            return;
+          }
+          const option = data.data.AllowedValueOption;
+          const input  = data.data.AllowedValueInput;
+          const value  = data.data.AllowedValue; // sanitized
+          $.fn.cafevTooltip.remove();
+          if (placeHolder) {
+            row.parents('table').find('thead').show();
+            row.before(input).prev().find('input, textarea').cafevTooltip({placement:'auto right'});
+            self.val('');
+            row.data('index', row.data('index')+1); // next index
+            resizeCB();
+          } else {
+            var next = row.next();
+            row.replaceWith(input);
+            next.prev().find('input, textarea').cafevTooltip({placement:'auto right'});;
+          }
+          // get the key <-> value connection right for the default selector
+          const newValue = $(option).val();
+          const oldOption = dflt.find('option[value="'+newValue+'"]');
+          if (oldOption.length > 0) {
+            oldOption.replaceWith(option);
+          } else {
+            dflt.children('option').first().after(option);
+          }
+          dflt.trigger('chosen:updated');
 
-               if (CAFEVDB.toolTipsEnabled) {
-                 $.fn.cafevTooltip.enable();
-               } else {
-                 $.fn.cafevTooltip.disable();
-               }
+          if (CAFEVDB.toolTipsEnabled) {
+            $.fn.cafevTooltip.enable();
+          } else {
+            $.fn.cafevTooltip.disable();
+          }
 
-               submitDefer.resolve();
-             });
+          cleanup();
+        });
       return false;
     });
 
@@ -317,70 +319,70 @@ var CAFEVDB = CAFEVDB || {};
     // writers. This -- of course -- only works if initially
     // the readers and writers list is in a sane state ;)
     container.on('change', 'select.readers', function(event) {
-         console.log('readers change');
-         var self = $(this);
+      console.log('readers change');
+      const self = $(this);
 
-         var changed = false;
-         var writers = container.find('select.writers');
-         self.find('option').not(':selected').each(function() {
-                                                    var writer = writers.find('option[value="'+this.value+'"]');
-                                                    if (writer.prop('selected')) {
-                                                      writer.prop('selected', false);
-                                                      changed = true;
-                                                    }
-                                                  });
-         if (changed) {
-           writers.trigger('chosen:updated');
-         }
-         return false;
-       });
+      var changed = false;
+      const writers = container.find('select.writers');
+      self.find('option').not(':selected').each(function() {
+        const writer = writers.find('option[value="'+this.value+'"]');
+        if (writer.prop('selected')) {
+          writer.prop('selected', false);
+          changed = true;
+        }
+      });
+      if (changed) {
+        writers.trigger('chosen:updated');
+      }
+      return false;
+    });
 
     // When a writer-group is added, then add it to the
     // readers as well ;)
     container.on('change', 'select.writers', function(event) {
-                             console.log('writers change');
-                             var self = $(this);
+      console.log('writers change');
+      const self = $(this);
 
-                             var changed = false;
-                             var readers = container.find('select.readers');
-                             self.find('option:selected').each(function() {
-                                var reader = readers.find('option[value="'+this.value+'"]');
-                                if (!reader.prop('selected')) {
-                                    reader.prop('selected', true);
-                                  changed = true;
-                                }
-                              });
-                             if (changed) {
-                               readers.trigger('chosen:updated');
-                             }
-                             return false;
-                           });
+      var changed = false;
+      const readers = container.find('select.readers');
+      self.find('option:selected').each(function() {
+        const reader = readers.find('option[value="'+this.value+'"]');
+        if (!reader.prop('selected')) {
+          reader.prop('selected', true);
+          changed = true;
+        }
+      });
+      if (changed) {
+        readers.trigger('chosen:updated');
+      }
+      return false;
+    });
 
     var tableContainerId = PHPMYEDIT.pmeIdSelector('table-container');
     container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
-                                                     console.log('chosen:showing_dropdown');
-                                                     var widget = container.cafevDialog('widget');
-                                                     var tableContainer = container.find(tableContainerId);
-                                                         widget.css('overflow', 'visible');
-                                                     container.css('overflow', 'visible');
-                                                     tableContainer.css('overflow', 'visible');
-                                                     return true;
-                                                   });
+      console.log('chosen:showing_dropdown');
+      const widget = container.cafevDialog('widget');
+      const tableContainer = container.find(tableContainerId);
+      widget.css('overflow', 'visible');
+      container.css('overflow', 'visible');
+      tableContainer.css('overflow', 'visible');
+      return true;
+    });
 
     container.on('chosen:hiding_dropdown', tableContainerId+' select', function(event) {
-                                                   console.log('chosen:hiding_dropdown');
-                                                   var widget = container.cafevDialog('widget');
-                                                   var tableContainer = container.find(tableContainerId);
-                                                   tableContainer.css('overflow', '');
-                                                   container.css('overflow', '');
-                                                   widget.css('overflow', '');
-                                                   return true;
-                                                 });
+      console.log('chosen:hiding_dropdown');
+      const widget = container.cafevDialog('widget');
+      const tableContainer = container.find(tableContainerId);
+      tableContainer.css('overflow', '');
+      container.css('overflow', '');
+      widget.css('overflow', '');
+      return true;
+    });
 
     container.on('chosen:update', 'select.writers, select.readers', function(event) {
-                resizeCB();
-                return false;
-            });
+      resizeCB();
+      return false;
+    });
 
     setFieldTypeCssClass(fieldTypeData());
 
@@ -399,7 +401,7 @@ var CAFEVDB = CAFEVDB || {};
 $(function(){
 
   CAFEVDB.addReadyCallback(function() {
-    var container = PHPMYEDIT.container();
+    const container = PHPMYEDIT.container();
     if (!container.hasClass('project-extra-fields')) {
       return; // not for us
     }
