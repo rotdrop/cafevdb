@@ -408,7 +408,6 @@ __EOT__;
       'php' => function($value, $action, $field, $fds, $fdd, $row, $recordId) {
         $projectId = $recordId;
         $stamp = $value;
-        $this->logInfo(print_r($projectId, true));
         return $this->flyerImageLink($projectId, $action, $stamp);
       },
       'css' => ['postfix' => ' projectflyer'],
