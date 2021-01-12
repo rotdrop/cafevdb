@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * Try to correct common human input "errors", respectively
  * sloppiness. Not much, ATM.
  */
-class FuzzyInput
+class FuzzyInputService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
@@ -79,10 +79,12 @@ class FuzzyInput
    * and then try to parse the number, first with the users locale,
    * then with the C locale.
    *
+   * @param string $value Any input string.
+   *
    * @return mixed Either @c false or the floating point value
    * extracted from the input string.
    */
-  public function currencyValue($value)
+  public function currencyValue(string $value)
   {
     $locale = $this->getLocale();
     $amount = preg_replace('/\s+/u', '', $value);

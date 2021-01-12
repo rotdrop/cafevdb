@@ -23,7 +23,6 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\PageRenderer\Util\FuzzyInput;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -31,6 +30,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Service\InstrumentationService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -78,7 +78,7 @@ class ProjectExtraFields extends PMETableViewBase
     , InstrumentationService $instrumentationService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
-    , FuzzyInput $fuzzyInput
+    , FuzzyInputService $fuzzyInput
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
     $this->instrumentationService = $instrumentationService;
