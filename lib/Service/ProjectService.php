@@ -540,11 +540,18 @@ Whatever.',
     // names are not unique
     $article = $article[0];
 
+    $this->entityManager->beginTransaction();
     try {
       // insert into the db table to form the link
       $this->attachProjectWebPage($projectId, $article);
       $this->webPagesRPC->addArticleBlock($article['ArticleId'], $module);
+
+      $this->flush();
+      $this->entityManager->commit();
     } catch (\Throwable $t)  {
+      $this->entityManager->close();
+      $this->entityManager->rollback();
+      $this->entityManager->reopen();
       throw new \Exception(
         $this->l->t('Unable to attach article "%s".', [ $pageName ]),
         $t->getCode,
@@ -560,15 +567,24 @@ Whatever.',
    */
   public function deleteProjectWebPage($projectId, $articleId)
   {
-    if ($this->detachProjectWebPage($projectId, $articleId) === false) {
-      return false;
+    $this->entityManager->beginTransaction();
+    try {
+      $this->detachProjectWebPage($projectId, $articleId);
+      $trashCategory = $this->getConfigValue('redaxoTrashbin');
+      $result = $this->webPagesRPC->moveArticle($articleId, $trashCategory);
+      if ($result === false) {
+        throw new \Exception($this->l->t("Failed moving %d to %s ", [ $articleId, $trashCategory ]));
+      }
+
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (\Throwable $t) {
+      $this->entityManager->close();
+      $this->entityManager->rollback();
+      $this->entityManager->reopen();
+      $this->logException($t);
+      throw new \Exception($this->l->t('Failed removing web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
-    $trashCategory = $this->getConfigValue('redaxoTrashbin');
-    $result = $this->webPagesRPC->moveArticle($articleId, $trashCategory);
-    if ($result === false) {
-      $this->logError("Failed moving ".$articleId." to ".$trashCategory);
-    }
-    return $result;
   }
 
   /**
@@ -581,12 +597,9 @@ Whatever.',
       $this->setDatabaseRepository(Entities\ProjectWebPage::class);
       $this->remove([ 'project' => $projectId, 'articleId' => $articleId  ]);
       $this->flush();
-    } catch (\Throwable $t) {
-      $this->logException($t);
-      return false;
+    } catch (\Throwabled $t) {
+      throw new \Exception($this->l->t('Failed detaching web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
-
-    return true;
   }
 
   /**

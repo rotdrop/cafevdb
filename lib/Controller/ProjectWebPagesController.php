@@ -129,19 +129,19 @@ class ProjectWebPagesController extends Controller {
         $this->l->t("Linked the existing public web-article %s (id %d) to the project with id %d",
                     [ $articleData['ArticleName'], $articleId, $projectId ]));
     case 'unlink':
-      if (!$this->projectService->detachProjectWebPage($projectId, $articleId)) {
-        return self::grumble(
-          $this->l->t("Failed to detach the article %s (id = %d) from the project with id %d.",
-                      [ $articleData['ArticleName'], $articleId, $projectId ]));
+      try {
+        $this->projectService->detachProjectWebPage($projectId, $articleId);
+      } catch (\Throwable $t) {
+        return self::grumble($this->exceptionChainData($t));
       }
       return self::response(
         $this->l->t("Detached the public web-article %s (id %d) from the project with id %d",
                     [ $articleData['ArticleName'], $articleId, $projectId ]));
     case 'delete':
-      if (!$this->projectService->deleteProjectWebPage($projectId, $articleId)) {
-        return self::grumble(
-          $this->l->t("Failed to remove public web page %s (id %d) from the project with id %d.",
-                      [ $articleData['ArticleName'], $articleId, $projectId ]));
+      try {
+        $this->projectService->deleteProjectWebPage($projectId, $articleId);
+      } catch (\Throwable $t) {
+        return self::grumble($this->exceptionChainData($t));
       }
       return self::response(
         $this->l->t("Removed public web page %s (id %d) from the project with id %d.",
