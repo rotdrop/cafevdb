@@ -296,7 +296,6 @@ make sure that the musicians are also automatically added to the
     } else {
       $addCSS = '';
     }
-    $this->logInfo('ADD '.$addCSS.' enabled '.$this->pme->add_enabled().' options '.$this->pme->options);
 
     $opts['fdd']['name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
