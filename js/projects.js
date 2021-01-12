@@ -377,7 +377,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
               year.trigger('chosen:updated');
             }
           };
-          $.post(OC.generateUrl('/apps/cafevdb/projects/validate/name'), post)
+          $.post(OC.generateUrl('/apps/cafevdb/validate/projects/name'), post)
            .fail(function(xhr, status, errorThrown) {
              CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
              cleanup();

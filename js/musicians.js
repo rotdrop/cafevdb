@@ -107,7 +107,7 @@ var CAFEVDB = CAFEVDB || {};
                };
 
                $.post(
-                 OC.generateUrl('/apps/cafevdb/musicians/validate/phone'),
+                 OC.generateUrl('/apps/cafevdb/validate/musicians/phone'),
                  post)
                 .fail(function(xhr, status, errorThrown) {
                   CAFEVDB.Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -171,7 +171,7 @@ var CAFEVDB = CAFEVDB || {};
                };
 
                $.post(
-                 OC.generateUrl('/apps/cafevdb/musicians/validate/email'),
+                 OC.generateUrl('/apps/cafevdb/validate/musicians/email'),
                  post)
                 .fail(function(xhr, status, errorThrown) {
                   CAFEVDB.Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -308,7 +308,7 @@ var CAFEVDB = CAFEVDB || {};
       };
 
       $.post(
-        OC.generateUrl('/apps/cafevdb/musicians/validate/address'),
+        OC.generateUrl('/apps/cafevdb/validate/musicians/address'),
         post)
        .fail(function(xhr, status, errorThrown) {
          CAFEVDB.Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -393,7 +393,7 @@ var CAFEVDB = CAFEVDB || {};
         }
 
         $.post(
-          OC.generateUrl('/apps/cafevdb/musicians/validate/duplicates'),
+          OC.generateUrl('/apps/cafevdb/validate/musicians/duplicates'),
           post)
          .fail(function(xhr, status, errorThrown) {
            CAFEVDB.Ajax.handleError(xhr, status, errorThrown, cleanup);
