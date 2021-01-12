@@ -39,7 +39,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectExtraField", inversedBy="fieldData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="field_id", referencedColumnName="id"),
+   * @ORM\Id
    */
   private $field;
 

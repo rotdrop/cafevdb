@@ -48,13 +48,6 @@ class ProjectExtraField implements \ArrayAccess
   private $id = null;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer")
-   */
-  private $projectId;
-
-  /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="extraFields", fetch="EXTRA_LAZY")
    */
   private $project;
