@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -33,7 +33,7 @@ use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Ramsey\Uuid\Doctrine as Ramsey;
 
 use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldKind;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType;
@@ -117,7 +117,7 @@ class EntityManager extends EntityManagerDecorator
   private function registerTypes()
   {
     $types = [
-      EnumExtraFieldKind::class => 'enum',
+      EnumExtraFieldDataType::class => 'enum',
       EnumExtraFieldMultiplicity::class => 'enum',
       EnumMemberStatus::class => 'enum',
       EnumProjectTemporalType::class => 'enum',

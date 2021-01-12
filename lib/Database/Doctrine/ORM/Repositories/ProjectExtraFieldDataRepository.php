@@ -34,10 +34,16 @@ class ProjectExtraFieldDataRepository extends EntityRepository
   /**
    * Fetch all ids which already have data associated to it.
    *
+   * @param int|Entities\Project $project Project id or entity
+   *
+   * @param int|Entities\ProjectExtrafield $field Project extra-field
+   * entity or id.
+   *
    * @return array Flat array of id's
    */
-  public function usedFields($projectId = -1, $fieldId = -1)
+  public function usedFields($project = null, $field = null)
   {
+
   //     $query = "SELECT DISTINCT d.`FieldId`
   // FROM `".self::DATA_TABLE."` d
   // LEFT JOIN `Besetzungen` b
@@ -52,16 +58,16 @@ class ProjectExtraFieldDataRepository extends EntityRepository
   //     }
 
     $qb = $this->createQueryBuilder(self::ALIAS)
-               ->select(self::ALIAS.'.fieldId')
+               ->select(self::ALIAS.'.fieldd')
                ->leftJoin(self::ALIAS.'.projectParticipant', 'p')
                ->where(self::ALIAS.".fieldValue > ''");
     if ($projectId > 0) {
-      $qb->andWhere('p.projectId = :project')
-         ->setParameter('project', $projectid);
+      $qb->andWhere('p.project = :project')
+         ->setParameter('project', $project);
     }
-    if ($filedId > 0) {
-      $qb->andWhere(self::ALIAS.'.fieldId = :field')
-         ->setParameter('field', $fieldId);
+    if (!empty($filedId)) {
+      $qb->andWhere(self::ALIAS.'.field = :field')
+         ->setParameter('field', $field);
     }
     return $qb->distinct()
               ->getQuery()
@@ -72,13 +78,15 @@ class ProjectExtraFieldDataRepository extends EntityRepository
   /**
    * Fetch all values stored for the given extra-field, e.g. in order
    * to recover or generate select boxes.
+   *
+   * @param int|Entities\ProjectExtraField
    */
-  public function fieldValues($fieldId)
+  public function fieldValues($field)
   {
     $qb = $this->createQueryBuilder(self::ALIAS)
                ->select(self::ALIAS.'.fieldValue')
-               ->where(self::ALIAS.'.fieldId = :field')
-               ->setParameter('field', $fieldId);
+               ->where(self::ALIAS.'.field = :field')
+               ->setParameter('field', $field);
     return $qb->getQuery()->getResult('COLUMN_HYDRATOR');
   }
 

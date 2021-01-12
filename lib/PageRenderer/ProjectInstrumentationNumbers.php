@@ -93,6 +93,8 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     // ],
   ];
 
+  protected $cassClass = self::CSS_CLASS;
+
   public function __construct(
     ConfigService $configService
   , RequestParameterService $requestParameters
@@ -218,7 +220,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'values|ACP' => [
         'column'      => 'id',
         'description' => 'name',
-        'groups'      => 'year',
+, 2021        'groups'      => 'year',
         'orderby'     => '$table.year DESC',
         //        'join'        => '$main_col_fqn = $join_col_fqn',
         'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
@@ -369,13 +371,4 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     }
   }
 
-  private function addSlug(string $slug, array &$fdd)
-  {
-    $slug = self::CSS_CLASS.'-'.$slug;
-    if (!isset($fdd['css']['postfix'])) {
-      $fdd['css'] = [ 'postfix' => '' ];
-    }
-    $fdd['css']['postfix'] .= ' '.$slug;
-    $fdd['tooltip'] = $this->toolTipsService[$slug];
-  }
 }

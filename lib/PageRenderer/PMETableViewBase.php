@@ -77,6 +77,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   protected $pageNavigation;
 
+  protected $cssClass = 'pme-table-view';
+
   /** @var array
    * ```
    * [
@@ -153,26 +155,23 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->groupedInstruments = $this->instrumentInfo['nameGroups'];
     $this->instrumentFamilies =
       $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->values();
+
+    // @TODO think about how to generate translations
     $this->memberStatus = (new DBTypes\EnumMemberStatus)->getValues();
-    $this->memberStatusNames = [
-      'regular' => strval($this->l->t('regular musician')),
-      'passive' => strval($this->l->t('passive member')),
-      'soloist' => strval($this->l->t('soloist')),
-      'conductor' => strval($this->l->t('conductor')),
-      'temporary' => strval($this->l->t('temporary musician'))
-      ];
     foreach ($this->memberStatus as $tag) {
       if (!isset($this->memberStatusNames[$tag])) {
-        $this->memberStatusNames[$tag] = strval($this->l->t(tag));
+        $this->memberStatusNames[$tag] = $this->l->t('member status '.$tag);
       }
     }
-    if (false) {
-      // Dummies to keep the translation right.
-      $this->l->t('regular');
-      $this->l->t('passive');
-      $this->l->t('soloist');
-      $this->l->t('conductor');
-      $this->l->t('temporary');
+
+    $this->extraFieldMultiplicities = (new DBTypes\EnumExtraFieldMultiplicity)->getValues();
+    foreach ($this->extraFieldMultiplicities as $tag) {
+      $this->extraFieldMultiplicityNames[$tag] = $this->l->t('extra field '.$tag);
+    }
+
+    $this->extraFieldDataTypes = (new DBTypes\EnumExtraFieldDataType)->getValues();
+    foreach ($this->extraFieldDataTypes as $tag) {
+      $this->extraFieldDataTypeNames[$tag] = $this->l->t('extra field type '.$tag);
     }
   }
 
@@ -907,7 +906,23 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return true;
   }
 
-
+  /**
+   * Add a "slug" as tooltips-index and css-class.
+   *
+   * @param string $slug The tag to add.
+   *
+   * @param array &$fdd The field-description-data. It is modified
+   * in-place.
+   */
+  protected function addSlug(string $slug, array &$fdd)
+  {
+    $slug = $this->cssClass.'-'.$slug;
+    if (!isset($fdd['css']['postfix'])) {
+      $fdd['css'] = [ 'postfix' => '' ];
+    }
+    $fdd['css']['postfix'] .= ' '.$slug;
+    $fdd['tooltip'] = $this->toolTipsService[$slug];
+  }
 }
 
 // Local Variables: ***

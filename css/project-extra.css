@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,25 +25,24 @@
  *
  */
 
-table.pme-main tr.field-type ~ tr.pme-row.maximum-group-size,
-table.pme-main tr.field-type ~ tr.pme-row.allowed-values,
-table.pme-main tr.field-type ~ tr.pme-row.allowed-values-single,
-table.pme-main tr.field-type ~ tr.pme-row.default-value,
-table.pme-main tr.field-type ~ tr.pme-row.default-single-value,
-table.pme-main tr.field-type ~ tr.pme-row.default-multi-value {
+table.pme-main tr.multiplicity ~ tr.pme-row.maximum-group-size,
+table.pme-main tr.multiplicity ~ tr.pme-row.allowed-values,
+table.pme-main tr.multiplicity ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.multiplicity ~ tr.pme-row.default-value,
+table.pme-main tr.multiplicity ~ tr.pme-row.default-single-value, table.pme-main tr.multiplicity ~ tr.pme-row.default-multi-value {
     display:none;
 }
 
-table.pme-main tr.field-type.group-field ~ tr.pme-row.maximum-group-size,
-table.pme-main tr.field-type.group-field.surcharge-field ~ tr.pme-row.allowed-values-single,
-table.pme-main tr.field-type.simple-value-field:not(.group-field) ~ tr.pme-row.default-value,
-table.pme-main tr.field-type.single-value-field ~ tr.pme-row.default-single-value,
-table.pme-main tr.field-type.single-value-field.surcharge-field ~ tr.pme-row.allowed-values-single,
-table.pme-main tr.field-type.groups-field ~ tr.pme-row.allowed-values,
-table.pme-main tr.field-type.multi-value-field ~ tr.pme-row.allowed-values,
-table.pme-main tr.field-type.multi-value-field ~ tr.pme-row.default-multi-value,
-table.pme-main tr.field-type.parallel-value-field ~ tr.pme-row.allowed-values,
-table.pme-main tr.field-type.parallel-value-field ~ tr.pme-row.default-multi-value {
+table.pme-main tr.multiplicity.multiplicity-groupofpeople ~ tr.pme-row.maximum-group-size,
+table.pme-main tr.multiplicity.multiplicity-groupofpeople.data-type-service-fee ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.multiplicity.multiplicity-simple:not(.multiplicity-groupofpeople) ~ tr.pme-row.default-value,
+table.pme-main tr.multiplicity.multiplicity-single ~ tr.pme-row.default-single-value,
+table.pme-main tr.multiplicity.multiplicity-single.data-type-service-fee ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row.allowed-values,
+table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.allowed-values,
+table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.default-multi-value,
+table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.allowed-values,
+table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.default-multi-value {
     display:table-row;
 }
 
@@ -104,33 +103,33 @@ table.allowed-values.show-data th.field-limit {
 }
 
 /* Show field-data for surcharge fields, because it holds the amount to pay. */
-table.pme-main tr.field-type.surcharge-field ~ tr.pme-row td.pme-value td.field-data,
-table.pme-main tr.field-type.surcharge-field ~ tr.pme-row td.pme-value th.field-data {
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row td.pme-value td.field-data,
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row td.pme-value th.field-data {
     display:table-cell!important;
 }
 
 /* Show field-limt for group-fields */
-table.pme-main tr.field-type.groups-field ~ tr.pme-row td.pme-value td.field-limit,
-table.pme-main tr.field-type.groups-field ~ tr.pme-row td.pme-value th.field-limit {
+table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row td.pme-value td.field-limit,
+table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row td.pme-value th.field-limit {
     display:table-cell!important;
 }
 
-table.pme-main tr.field-type ~ tr.pme-row span.surcharge,
-table.pme-main tr.field-type.surcharge-field ~ tr.pme-row span.general {
+table.pme-main tr.multiplicity ~ tr.pme-row span.surcharge,
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row span.general {
     display:none;
 }
 
-table.pme-main tr.field-type ~ tr.pme-row span.general,
-table.pme-main tr.field-type.surcharge-field ~ tr.pme-row span.surcharge {
+table.pme-main tr.multiplicity ~ tr.pme-row span.general,
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row span.surcharge {
     display:inline-block;
 }
 
-table.pme-main tr.field-type.surcharge-field ~ tr.pme-row.allowed-values td.pme-value div.show-data {
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row.allowed-values td.pme-value div.show-data {
     display:none;
 }
 
-table.pme-main tr.field-type.surcharge-field ~ tr.pme-row input.field-data,
-table.pme-main tr.field-type.surcharge-field ~ tr.pme-row input.allowed-values-single {
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.field-data,
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.allowed-values-single {
     text-align:right;
 }
 

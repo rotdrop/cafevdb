@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -67,11 +67,18 @@ class ProjectExtraField implements \ArrayAccess
   private $name;
 
   /**
-   * @var int
+   * @var enumextrafieldmultiplicity
    *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Link to ProjectExtraFieldTypes"})
+   * @ORM\Column(type="enumextrafieldmultiplicity", nullable=false)
    */
-  private $typeId = '1';
+  private $multiplicity;
+
+  /**
+   * @var enumextrafieldkind
+   *
+   * @ORM\Column(type="enumextrafielddatatype", nullable=false, options={"default"="text"})
+   */
+  private $dataType = 'text';
 
   /**
    * @var string|null
@@ -90,14 +97,14 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=4096, nullable=false)
+   * @ORM\Column(type="string", length=4096, nullable=true)
    */
   private $toolTip;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Tab to display the field in. If empty, then teh projects tab is used."})
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Tab to display the field in. If empty, then the projects tab is used."})
    */
   private $tab;
 
@@ -128,12 +135,6 @@ class ProjectExtraField implements \ArrayAccess
    * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
    */
   private $disabled = false;
-
-  /**
-   * @ORM\ManyToOne(targetEntity="ProjectExtraFieldType")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   */
-  private $type;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="field", fetch="EXTRA_LAZY")
@@ -228,27 +229,51 @@ class ProjectExtraField implements \ArrayAccess
   }
 
   /**
-   * Set type.
+   * Set multiplicity.
    *
-   * @param int $type
+   * @param enumextrafieldmultiplicity $multiplicity
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
-  public function setType($type)
+  public function setMultiplicity($multiplicity)
   {
-    $this->type = $type;
+    $this->multiplicity = $multiplicity;
 
     return $this;
   }
 
   /**
-   * Get type.
+   * Get multiplicity.
    *
-   * @return int
+   * @return enumextrafieldmultiplicity
    */
-  public function getType()
+  public function getMultiplicity()
   {
-    return $this->type;
+    return $this->multiplicity;
+  }
+
+  /**
+   * Set kind.
+   *
+   * @param enumextrafieldkind $kind
+   *
+   * @return ProjectExtraField
+   */
+  public function setKind($kind)
+  {
+    $this->kind = $kind;
+
+    return $this;
+  }
+
+  /**
+   * Get kind.
+   *
+   * @return enumextrafieldkind
+   */
+  public function getKind()
+  {
+    return $this->kind;
   }
 
   /**

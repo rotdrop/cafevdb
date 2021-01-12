@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -361,7 +361,7 @@ class Projects extends PMETableViewBase
                      "ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ', ')"),
       'php|VCP'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx) {
         $post = ['ProjectExtraFields' => $value,
-                 'Template' => 'project-extra',
+                 'template' => 'project-extra-fields',
                  'projectName' => $row['qf'.$nameIdx],
                  'project_id' => $recordId];
         $post = http_build_query($post, '', '&');
@@ -558,7 +558,7 @@ project without a flyer first.");
                  'name' => $this->l->t('Instrumentation Numbers') ],
                [ 'type' => 'option',
                  'title' => $this->toolTipsService['project-action-extra-fields'],
-                 'value' => 'project-extra',
+                 'value' => 'project-extra-fields',
                  'name' => $this->l->t('Extra Member Data') ], ])
              .$this->pageNavigation->htmlTagsFromArray([
                'pre' => '<optgroup>',

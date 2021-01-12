@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -36,75 +36,29 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
-    var handleFieldType = function(data) {
+    const setFieldTypeCssClass = function(data) {
       if (!data) {
         return;
       }
-      //
-      var simpleClass = 'simple-value-field';
-      var singleClass = 'single-value-field';
-      var multiClass = 'multi-value-field';
-      var parallelClass = 'parallel-value-field';
-      var surchargeClass = 'surcharge-field';
-      var generalClass = 'general-field';
-      var groupClass = 'group-field';
-      var groupsClass = 'groups-field';
-      //
-      var row = container.find('tr.field-type');
-      //
-      row.removeClass(multiClass);
-      row.removeClass(simpleClass);
-      row.removeClass(singleClass);
-      row.removeClass(parallelClass);
-      row.removeClass(surchargeClass);
-      row.removeClass(generalClass);
-      row.removeClass(groupClass);
-      row.removeClass(groupsClass);
-      //
-      switch(data.Multiplicity) {
-      case 'groupsofpeople':
-        row.addClass(groupsClass);
-        break;
-      case 'groupofpeople':
-        row.addClass(groupClass);
-        break;
-      case 'parallel':
-        row.addClass(parallelClass);
-      case 'multiple':
-        row.addClass(multiClass);
-        break;
-      case 'single':
-        row.addClass(singleClass);
-        break;
-      case 'simple':
-        row.addClass(simpleClass);
-        break;
-      }
-      switch(data.Group) {
-      case 'surcharge':
-        row.addClass(surchargeClass);
-        break;
-      case 'general':
-        row.addClass(generalClass);
-        break;
-      }
+
+      container.find('tr.multiplicity')
+	.removeClass(function(index, className) {
+	  return (className.match(/\b(multiplicity|data-type)-\S+/g) || []).join(' ');
+	})
+	.addClass('multiplicity-' + data.multiplicity + ' ' + 'data-type-' + data.data_type);
     };
 
-    const fieldTypeData = function(elem) {
-      var data = null;
-      if (typeof elem === 'undefined') {
-        elem = container.find('select.field-type');
-        if (elem.length === 0) {
-          elem = container.find('td.pme-value.field-type .data');
-        } else {
-          elem = elem.find(':selected');
-        }
-        if (elem.length <= 0) {
-          return null;
-        }
+    const fieldTypeData = function() {
+      const multiplicity = container.find('select.multiplicity');
+      const dataType = container.find('select.data-type');
+      if (multiplicity.length > 0 && dataType.length > 0) {
+	return { 'multiplicity': multiplicity.val(), 'data_type': dataType.val() };
       }
-      data = elem.data('data');
-      return data;
+      elem = container.find('td.pme-value.field-type .data');
+      if (elem.length <= 0) {
+        return null;
+      }
+      return elem.data('data');
     };
 
     const allowedHeaderVisibility = function() {
@@ -116,9 +70,11 @@ var CAFEVDB = CAFEVDB || {};
       }
     };
 
-    // Field-Type Selector
-    container.on('change', 'select.field-type', function(event) {
-      handleFieldType(fieldTypeData($(this).find(':selected')));
+    // Field-Type Selectors
+    container.on('change', 'select.multiplicity, select.data-type', function(event) {
+      const multiplicity = container.find('select.multiplicity').val();
+      const dataType = container.find('select.data-type').val();
+      setFieldTypeCssClass({ 'multiplicity': multiplicity, 'data_type': dataType });
       allowedHeaderVisibility();
       resizeCB();
       return false;
@@ -426,7 +382,7 @@ var CAFEVDB = CAFEVDB || {};
                 return false;
             });
 
-    handleFieldType(fieldTypeData());
+    setFieldTypeCssClass(fieldTypeData());
 
     allowedHeaderVisibility();
     // synthesize resize events for textareas.

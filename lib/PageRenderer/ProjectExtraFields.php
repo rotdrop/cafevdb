@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -43,10 +43,25 @@ class ProjectExtraFields extends PMETableViewBase
 {
   const CSS_CLASS = 'project-extra-fields';
   const TABLE = 'ProjectExtraFields';
-  const TYPE_TABLE = 'ProjectExtraFieldTypes';
   //const OPTIONS_TABLE = 'ProjectExtraFieldValueOptions';
   const DATA_TABLE = 'ProjectExtraFieldsData';
   const PROJECTS_TABLE = 'Projects';
+
+  protected $joinStructure = [
+    [
+      'table' => self::TABLE,
+      'master' => true,
+      'entity' => Entities\ProjectExtraField::class,
+    ],
+    [
+      'table' => self::PROJECTS_TABLE,
+      'entity' => Entities\Project::class,
+      'identifier' => [ 'id' => 'project_id' ],
+      'column' => 'id',
+    ],
+  ];
+
+  protected $cassClass = self::CSS_CLASS;
 
   /** @var InstrumentationService */
   private $instrumentationService;
@@ -103,6 +118,8 @@ class ProjectExtraFields extends PMETableViewBase
     $expertMode = $this->getUserValue('expertmode');
 
     $projectMode  = $projectId > 0;
+
+    $this->logInfo('PROJECT MODE '.$projectMode);
 
     $tableTabs   = $this->instrumentationService->tableTabs(null, true);
     $tableTabValues2 = [];
@@ -184,28 +201,28 @@ class ProjectExtraFields extends PMETableViewBase
      *
      */
 
-    // fetch the list of all projects in order to provide a somewhat
-    // cooked filter list
-    $allProjects = $this->getDatabaseRepository(Entities\Project::class)->findAll();
-    $projectQueryValues = [ '*' => '*' ]; // catch-all filter
-    $projectQueryValues[''] = $this->l->t('no projects yet');
-    $projects = [];
-    $groupedProjects = [];
-    foreach ($allProjects as $proj) {
-      $id = $proj['id'];
-      $name = $proj['name'];
-      $year = $proj['year'];
-      $projectQueryValues[$id] = $year.': '.$name;
-      $projects[$id] = $name;
-      $groupedProjects[$id] = $year;
-    }
+    // field definitions
 
-    $projectIdx = 0; // just the start here count($opts['fdd']);
+    $joinTables = $this->defineJoinStructure($opts);
+
+    // outside the expertmode "if", this is the index!
+    $opts['fdd']['id'] = [
+      'tab'      => ['id' => 'advanced' ],
+      'name'     => 'id',
+      'select'   => 'T',
+      'input'    => 'R',
+      'input|AP' => 'RH',
+      'options'  => 'LFAVCPD',
+      'maxlen'   => 11,
+      'align'    => 'right',
+      'default'  => '0', // auto increment
+      'sort'     => true,
+    ];
+
     $opts['fdd']['project_id'] = [
-      'tab'      => [ 'id' => 'tab-all' ],
-      'name'      => $this->l->t('Project-Name'),
-      'css' => [ 'postfix' => ' project-extra-project-name' ],
-      'options'   => ($projectMode ? 'VCDAPR' : 'FLVCDAP'),
+      'name'      => $this->l->t('Project'),
+      'input'     => ($projectMode ? 'R' : ''),
+      'css' => [ 'postfix' => ' project-instrument-project-name' ],
       'select|DV' => 'T', // delete, filter, list, view
       'select|ACPFL' => 'D',  // add, change, copy
       'maxlen'   => 20,
@@ -213,23 +230,23 @@ class ProjectExtraFields extends PMETableViewBase
       'default'  => ($projectMode ? $projectId : -1),
       'sort'     => true,
       'values|ACP' => [
-        'table' => self::PROJECTS_TABLE,
-        'column' => 'id',
+        'column'      => 'id',
         'description' => 'name',
-        'groups' => 'year',
-        'orderby' => '$table.`year` DESC',
-        'join' => '$main_table.project_id = $join_table.Id',
+        'groups'      => 'year',
+        'orderby'     => '$table.year DESC',
+        //        'join'        => '$main_col_fqn = $join_col_fqn',
+        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
       ],
       'values|DVFL' => [
-        'table' => self::PROJECTS_TABLE,
-        'column' => 'id',
+        'column'      => 'id',
         'description' => 'name',
-        'groups' => 'year',
-        'orderby' => '$table.`year` DESC',
-        'join' => '$main_table.`project_id` = $join_table.`id`',
-        'filters' => '$table.`id` IN (SELECT `project_id` FROM $main_table)',
+        'groups'      => 'year',
+        'orderby'     => '$table.year DESC',
+        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+        'filters'     => '$table.id IN (SELECT project_id FROM $main_table)',
       ],
     ];
+    $this->addSlug('project', $opts['fdd']['project_id']);
 
     $tooltipIdx = -1;
     $nameIdx = count($opts['fdd']);
@@ -249,58 +266,41 @@ class ProjectExtraFields extends PMETableViewBase
         'tab'      => [ 'id' => 'definition' ],
         'name'     => $this->l->t('Disabled'),
         'css'      => [ 'postfix' => ' extra-field-disabled' ],
+        'select'   => 'C',
+        'maxlen'   => 1,
+        'sort'     => true,
+        'escape'   => false,
+        'sqlw'     => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ 1 => '' ],
         'values2|LVFD' => [ 1 => $this->l->t('true'),
                             0 => $this->l->t('false') ],
-        'default'  => '',
-        'select'   => 'O',
-        'sort'     => true,
+        'default'  => false,
         'tooltip'  => $this->toolTipsService['extra-fields-disabled']
       ];
     }
 
-    // TODO: maybe get rid of enums and sets alltogether
-    $typeValues = [];
-    $typeGroups = [];
-    $typeData = [];
-    $typeTitles = [];
+    $opts['fdd']['multiplicity'] =[
+      'name'    => $this->l->t('Multiplicity'),
+      'select'  => 'D',
+      'maxlen'  => 128,
+      'sort'    => true,
+      'css'     => [ 'postfix' => ' multiplicity' ],
+      'default' => 'simple',
+      'values2' => $this->extraFieldMultiplicityNames,
+      'valueTitles' => array_map(function($tag) { $this->toolTipsService['extra-field-multiplicity-'.$tag]; }, $this->extraFieldMultiplicities),
+      'tooltip' => $this->toolTipsService['extra-field-multiplicity'],
+    ];
 
-    $types = $this->fieldTypes();
-    if (!empty($types)) {
-      foreach ($types as $id => $typeInfo) {
-        $name = $typeInfo['name'];
-        $multiplicity = $typeInfo['multiplicity'];
-        $group = $typeInfo['kind'];
-
-        $typeValues[$id] = $this->l->t($name);
-        $typeGroups[$id] = $this->l->t($group);
-        $typeData[$id] = json_encode(
-          [
-            'Multiplicity' => $multiplicity,
-            'Group' => $group,
-          ]
-        );
-        $typeTitles[$id] = $this->toolTipsService['extra-field-'.$group.'-'.$multiplicity];
-      }
-    }
-
-    $opts['fdd']['type_id'] = [
-      'tab'      => [ 'id' => 'definition' ],
-      'name' => $this->l->t('Type'),
-      'css' => [ 'postfix' => ' field-type' ],
-      'php|VD' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($typeData) {
-        $key = $row['qf'.$field];
-        return '<span class="data" data-data=\''.$typeData[$key].'\'></span>'.$value;
-      },
-      'size' => 30,
-      'maxlen' => 24,
-      'select' => 'D',
-      'sort' => true,
-      'tooltip' => $this->toolTipsService['extra-fields-type'],
-      'values2' => $typeValues,
-      'valueGroups' => $typeGroups,
-      'valueData' => $typeData,
-      'valueTitles' => $typeTitles,
+    $opts['fdd']['data_type'] =[
+      'name'    => $this->l->t('Data-Type'),
+      'select'  => 'D',
+      'maxlen'  => 128,
+      'sort'    => true,
+      'css'     => [ 'postfix' => ' data-type' ],
+      'default' => 'text',
+      'values2' => $this->extraFieldDataTypeNames,
+      'valueTitles' => array_map(function($tag) { $this->toolTipsService['extra-field-data-type-'.$tag]; }, $this->extraFieldDataTypes),
+      'tooltip' => $this->toolTipsService['extra-field-data-type'],
     ];
 
     $opts['fdd']['allowed_values'] = [
@@ -321,7 +321,7 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['allowed_values_single'] = [
       'name' => $this->currencyLabel($this->l->t('Data')),
       'css' => [ 'postfix' => ' allowed-values-single' ],
-      'sql' => 'PMEtable0.AllowedValues',
+      'sql' => 'PMEtable0.allowed_values',
       'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx, $tooltipIdx) {
         // provide defaults
         $protoRecord = array_merge(
@@ -355,7 +355,7 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['maximum_group_size'] = [
       'name' => $this->l->t('Maximum Size'),
       'css' => [ 'postfix' => ' no-search maximum-group-size' ],
-      'sql' => "SUBSTRING_INDEX(PMEtable0.AllowedValues, ':', -1)",
+      'sql' => "SUBSTRING_INDEX(PMEtable0.allowed_values, ':', -1)",
       'input' => 'S',
       'input|DV' => 'V',
       'options' => 'ACDPV',
@@ -383,7 +383,7 @@ class ProjectExtraFields extends PMETableViewBase
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'CPA',
-      'sql' => 'PMEtable0.`DefaultValue`',
+      'sql' => 'PMEtable0.`default_value`',
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D',
       'values' => [
@@ -410,7 +410,7 @@ class ProjectExtraFields extends PMETableViewBase
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'CPA',
-      'sql' => 'PMEtable0.`DefaultValue`',
+      'sql' => 'PMEtable0.`default_value`',
       'css' => [ 'postfix' => ' default-single-value' ],
       'select' => 'O',
       'values2' => [ '0' => $this->l->t('false'),
@@ -454,8 +454,8 @@ class ProjectExtraFields extends PMETableViewBase
       'select' => 'D',
       'values' => [
         'table' => self::TABLE,
-        'column' => 'Tab',
-        'description' => 'Tab',
+        'column' => 'tab',
+        'description' => 'tab',
       ],
       'values2' => $tableTabValues2,
       'default' => -1,
@@ -481,31 +481,18 @@ class ProjectExtraFields extends PMETableViewBase
       ];
     }
 
-    // outside the expertmode "if", this is the index!
-    $opts['fdd']['id'] = [
-      'tab'      => ['id' => 'advanced' ],
-      'name'     => 'id',
-      'select'   => 'T',
-      'input'    => 'R',
-      'input|AP' => 'RH',
-      'options'  => 'LFAVCPD',
-      'maxlen'   => 11,
-      'align'    => 'right',
-      'default'  => '0', // auto increment
-      'sort'     => true,
-    ];
-
     if ($expertMode) {
 
       $opts['fdd']['encrypted'] = [
         'name' => $this->l->t('Encrypted'),
         'css' => [ 'postfix' => ' encrypted' ],
+        'sqlw'     => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
         'values2|LVFD' => [ 1 => $this->l->t('true'),
                             0 => $this->l->t('false') ],
-        'default' => '',
-        'select' => 'O',
-        'maxlen' => 5,
+        'default' => false,
+        'select' => 'C',
+        'maxlen' => 1,
         'sort' => true,
         'tooltip' => $this->toolTipsService['extra-fields-encrypted'],
       ];
@@ -540,9 +527,9 @@ class ProjectExtraFields extends PMETableViewBase
 
     $opts['filters'] = [];
     if (!$this->showDisabled) {
-      $opts['filters'][] = 'NOT `PMEtable0`.`Disabled` = 1';
+      $opts['filters'][] = 'NOT `PMEtable0`.`disabled` = 1';
       if ($projectMode === false) {
-        $opts['filters'][] = 'NOT `PMEjoin'.$projectIdx.'`.`Disabled` = 1';
+        $opts['filters'][] = 'NOT '.$joinTables[self::PROJECTS_TABLE].'.disabled = 1';
       }
     }
     if ($projectMode !== false) {
@@ -600,22 +587,9 @@ class ProjectExtraFields extends PMETableViewBase
     /* error_log(print_r($newvals, true)); */
     /* error_log(print_r($changed, true)); */
 
-    if ($op === 'update') {
-      /************************************************************************
-       *
-       * The field-index should not change, but the input field is
-       * disabled. Make sure it does not change.
-       *
-       */
-      if (isset($newvals['FieldIndex']) &&
-          $oldvals['FieldIndex'] != $newvals['FieldIndex']) {
-        return false;
-      }
-    }
-
     // make sure writer-acls are a subset of reader-acls
-    $writers = preg_split('/\s*,\s*/', $newvals['Writers'], -1, PREG_SPLIT_NO_EMPTY);
-    $readers = preg_split('/\s*,\s*/', $newvals['Readers'], -1, PREG_SPLIT_NO_EMPTY);
+    $writers = preg_split('/\s*,\s*/', $newvals['writers'], -1, PREG_SPLIT_NO_EMPTY);
+    $readers = preg_split('/\s*,\s*/', $newvals['readers'], -1, PREG_SPLIT_NO_EMPTY);
     $missing = array_diff($writers, $readers);
     if (!empty($missing)) {
       $readers = array_merge($readers, $missing);
@@ -624,21 +598,20 @@ class ProjectExtraFields extends PMETableViewBase
 
     /************************************************************************
      *
-     * Move the data from DefaultMultiValue to DefaultValue s.t. PME
+     * Move the data from default_multi_value to default_value s.t. PME
      * can do its work.
      *
      */
-    $key = array_search('DefaultMultiValue', $changed);
-    $types = $this->fieldTypes();
-    if ($types[$newvals['TypeId']]['multiplicity'] === 'multiple' ||
-        $types[$newvals['TypeId']]['multiplicity'] === 'parallel') {
-      $newvals['DefaultValue'] = $newvals['DefaultMultiValue'];
+    $key = array_search('default_multi_value', $changed);
+    if ($newvals['multiplicity'] === 'multiple' ||
+        $newvals['multiplicity'] === 'parallel') {
+      $newvals['default_value'] = $newvals['default_multi_value'];
       if ($key !== false) {
-        $changed[] = 'DefaultValue';
+        $changed[] = 'default_value';
       }
     }
-    unset($newvals['DefaultMultiValue']);
-    unset($oldvals['DefaultMultiValue']);
+    unset($newvals['default_multi_value']);
+    unset($oldvals['default_multi_value']);
     if ($key !== false) {
       unset($changed[$key]);
     }
@@ -646,7 +619,7 @@ class ProjectExtraFields extends PMETableViewBase
     /************************************************************************
      *
      * Move the data from MaximumGroupSize to
-     * AllowedValues. Plural is "misleading" here, of course ;)
+     * allowed_values. Plural is "misleading" here, of course ;)
      *
      */
     $tag = "MaximumGroupSize";
@@ -654,15 +627,15 @@ class ProjectExtraFields extends PMETableViewBase
     if ($types[$newvals['TypeId']]['multiplicity'] === 'groupofpeople')
     {
       $max = $newvals[$tag];
-      if ($op === 'update' && !empty($newvals['AllowedValuesSingle'][0])) {
-        $maxdata = $newvals['AllowedValuesSingle'];
+      if ($op === 'update' && !empty($newvals['allowed_values_single'][0])) {
+        $maxdata = $newvals['allowed_values_single'];
         $maxdata[0]['column5'] = $max;
       } else {
         $maxdata = 'max:group:::active:'.$max;
       }
-      $newvals['AllowedValues'] = $maxdata;
+      $newvals['allowed_values'] = $maxdata;
       if ($key !== false) {
-        $changed[] = 'AllowedValues';
+        $changed[] = 'allowed_values';
       }
     }
     unset($newvals[$tag]);
@@ -673,61 +646,61 @@ class ProjectExtraFields extends PMETableViewBase
 
     /************************************************************************
      *
-     * Move the data from AllowedValuesSingle to
-     * AllowedValues. Plural is "misleading" here, of course ;)
+     * Move the data from allowed_values_single to
+     * allowed_values. Plural is "misleading" here, of course ;)
      *
      */
-    $key = array_search('AllowedValuesSingle', $changed);
+    $key = array_search('allowed_values_single', $changed);
     if ($types[$newvals['TypeId']]['multiplicity'] === 'single') {
-      $newvals['AllowedValues'] = $newvals['AllowedValuesSingle'];
+      $newvals['allowed_values'] = $newvals['allowed_values_single'];
       if ($key !== false) {
-        $changed[] = 'AllowedValues';
+        $changed[] = 'allowed_values';
       }
     }
-    unset($newvals['AllowedValuesSingle']);
-    unset($oldvals['AllowedValuesSingle']);
+    unset($newvals['allowed_values_single']);
+    unset($oldvals['allowed_values_single']);
     if ($key !== false) {
       unset($changed[$key]);
     }
 
     /************************************************************************
      *
-     * Sanitize AllowedValues
+     * Sanitize allowed_values
      *
      */
 
-    if (!is_array($newvals['AllowedValues'])) {
+    if (!is_array($newvals['allowed_values'])) {
       // textfield
-      $allowed = $this->explodeAllowedValues($newvals['AllowedValues']);
+      $allowed = $this->explodeAllowedValues($newvals['allowed_values']);
 
     } else {
-      $allowed = $newvals['AllowedValues'];
+      $allowed = $newvals['allowed_values'];
     }
 
     // make unused keys unique @TODO make it a uuid
-    self::allowedValuesUniqueKeys($allowed, $pme->rec);
+    //self::allowedValuesUniqueKeys($allowed, $pme->rec);
 
     //error_log('trigger '.print_r($allowed, true));
-    $newvals['AllowedValues'] = $this->implodeAllowedValues($allowed);
-    if ($oldvals['AllowedValues'] !== $newvals['AllowedValues']) {
-      $changed[] = 'AllowedValues';
+    $newvals['allowed_values'] = $this->implodeAllowedValues($allowed);
+    if ($oldvals['allowed_values'] !== $newvals['allowed_values']) {
+      $changed[] = 'allowed_values';
     }
 
     /************************************************************************
      *
-     * Move the data from DefaultSingleValue to DefaultValue s.t. PME
+     * Move the data from default_single_value to default_value s.t. PME
      * can do its work.
      *
      */
-    $key = array_search('DefaultSingleValue', $changed);
+    $key = array_search('default_single_value', $changed);
     if ($types[$newvals['TypeId']]['multiplicity'] === 'single') {
-      $newvals['DefaultValue'] = $newvals['DefaultSingleValue'];
+      $newvals['default_value'] = $newvals['default_single_value'];
       if ($key !== false) {
-        $changed[] = 'DefaultValue';
+        $changed[] = 'default_value';
       }
     }
-    unset($newvals['DefaultSingleValue']);
-    unset($oldvals['DefaultSingleValue']);
+    unset($newvals['default_single_value']);
+    unset($oldvals['default_single_value']);
     if ($key !== false) {
       unset($changed[$key]);
     }
@@ -737,23 +710,23 @@ class ProjectExtraFields extends PMETableViewBase
      * Add the data from NewTab to Tab s.t. PME can do its work.
      *
      */
-    $key = array_search('NewTab', $changed);
-    if (!empty($newvals['NewTab']) && empty($newvals['Tab'])) {
-      $newvals['Tab'] = $newvals['NewTab'];
-      $changed[] = 'Tab';
+    $key = array_search('new_tab', $changed);
+    if (!empty($newvals['new_tab']) && empty($newvals['tab'])) {
+      $newvals['tab'] = $newvals['new_tab'];
+      $changed[] = 'tab';
     }
-    unset($newvals['NewTab']);
-    unset($oldvals['NewTab']);
+    unset($newvals['new_tab']);
+    unset($oldvals['new_tab']);
     if ($key !== false) {
       unset($changed[$key]);
     }
 
-    if (!empty($newvals['ToolTip'])) {
-      $newvals['ToolTip'] = $this->fuzzyInput->purifyHTML($newvals['ToolTip']);
-      if ($newvals['ToolTip'] !== $oldvals['ToolTip']) {
-        $changed[] = 'ToolTip';
+    if (!empty($newvals['tool_tip'])) {
+      $newvals['tool_tip'] = $this->fuzzyInput->purifyHTML($newvals['tool_tip']);
+      if ($newvals['tool_tip'] !== $oldvals['tool_tip']) {
+        $changed[] = 'tool_tip';
       } else {
-        $key = array_search('NewTab', $changed);
+        $key = array_search('new_tab', $changed);
         if ($key !== false) {
           unset($changed[$key]);
         }
@@ -844,12 +817,6 @@ class ProjectExtraFields extends PMETableViewBase
     return true;
   }
 
-  private function fieldTypes()
-  {
-    return $this->getDatabaseRepository(Entities\ProjectExtraFieldType::class)
-                ->indexedBy('id');
-  }
-
   private function usedFields($projectId = -1, $fieldId = -1)
   {
     return $this->getDatabaseRepository(Entities\ProjectExtraFieldDatum::class)
@@ -884,7 +851,7 @@ class ProjectExtraFields extends PMETableViewBase
    */
   public function allowedValueInputRow($value, $index = -1, $used = false)
   {
-    $pfx = $this->pme->cgiDataName('AllowedValues');
+    $pfx = $this->pme->cgiDataName('allowed_values');
     $key = $value['key'];
     $placeHolder = empty($key);
     $deleted = $value['flags'] === 'deleted';
@@ -1131,7 +1098,7 @@ __EOT__;
       case 'change':
         $usedKeys = $this->fieldValues($recordId);
         //error_log(print_r($usedKeys, true));
-        //$pfx = $this->pme->cgiDataName('AllowedValues');
+        //$pfx = $this->pme->cgiDataName('allowed_values');
         //$css = 'class="allowed-values"';
         foreach ($allowed as $idx => $value) {
           if (!empty($value['key'])) {
@@ -1176,7 +1143,7 @@ __EOT__;
     }
     empty($entry) && $entry = $protoRecord;
     $protoCount = count($protoRecord);
-    $name  = $this->pme->cgiDataName('AllowedValuesSingle');
+    $name  = $this->pme->cgiDataName('allowed_values_single');
     $value = htmlspecialchars($entry['data']);
     $tip   = $toolTip;
     $html  = '<div class="active-value">';
@@ -1321,7 +1288,7 @@ __EOT__;
    * ```
    * as json for storing in the database.
    */
-  public static function implodeAllowedValues($options)
+  public function implodeAllowedValues($options)
   {
     $proto = $this->allowedValuesPrototype();
     foreach ($options as &$option) {
