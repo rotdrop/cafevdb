@@ -698,11 +698,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $group = true;
           continue;
         }
+        $joinCondition = '$join_table.'.$joinTableKey. ' = ';
         if (!empty($mainTableKey['table'])) {
-          $joinData[] = $joinTables[$mainTableKey['table']].'.'.$mainTableKey['column'];
+          $mainTableColumn = $mainTableKey['column']?: 'id';
+          $joinCondition .= $joinTables[$mainTableKey['table']].'.'.$mainTableKey['column'];
         } else {
-          $joinData[] = '$main_table.'.$mainTableKey.' = $join_table.'.$joinTableKey;
+          $joinCondition .= '$main_table.'.$mainTableKey;
         }
+        $joinData[] = $joinCondition;
       }
       $fieldName = $this->joinTableMasterFieldName($table);
       $opts['fdd'][$fieldName] = [
