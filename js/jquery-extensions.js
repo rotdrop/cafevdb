@@ -145,9 +145,19 @@ var CAFEVDB = CAFEVDB || {};
       argument = {};
     }
     if (typeof argument == 'object' && argument != null) {
-      var options = {
+      const whiteList = $.extend(
+        {},
+        $.fn.tooltip.Constructor.Default.whiteList,
+        {
+          table: [], thead: [], tbody: [], tr: [], td: [], th: [],
+          dl: [], dt: [], dd: []
+        }
+      );
+      const options = {
         container: 'body',
         html: true,
+        sanitize: true, // @todo just tweak whitelist
+        whiteList: whiteList,
         placement: 'auto',
         cssclass: [],
         fallbackPlacement: 'flip',
