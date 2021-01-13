@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Ramsey\Uuid\Uuid;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -119,7 +121,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     $projectMode  = $projectId > 0;
 
-    $this->logInfo('PROJECT MODE '.$projectMode);
+    //$this->logInfo('PROJECT MODE '.$projectMode);
 
     $tableTabs   = $this->instrumentationService->tableTabs(null, true);
     $tableTabValues2 = [];
@@ -898,11 +900,11 @@ class ProjectExtraFields extends PMETableViewBase
       // key
       // TODO: use a UUID
       $prop = 'key';
-      $html .= '<td class="field-'.$prop.'">'
+      $html .= '<td class="field-'.$prop.' expert-mode-only">'
             .'<input'
-            .($used || $deleted ? ' readonly="readonly"' : '')
+            .($used || $deleted || true ? ' readonly="readonly"' : '')
             .' type="text"'
-            .' class="field-key"'
+            .' class="field-key expert-mode-only"'
             .' name="'.$pfx.'['.$index.']['.$prop.']"'
             .' value="'.$value[$prop].'"'
             .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
@@ -1015,6 +1017,19 @@ class ProjectExtraFields extends PMETableViewBase
       $showDataLabel = $this->l->t("Show data-fields.");
       $showDataTip = $this->toolTipsService['extra-fields-show-data'];
       $html .=<<<__EOT__
+<div class="field-display-options">
+  <div class="show-deleted">
+    <input type="checkbox"
+           name="show-deleted"
+           class="show-deleted checkbox"
+           value="show"
+           id="allowed-values-show-deleted"
+           />
+    <label class="show-deleted"
+           for="allowed-values-show-deleted"
+           title="$showDeletedTip"
+           >
+      $showDeletedLabel
     </label>
   </div>
   <div class="show-data">
@@ -1039,15 +1054,21 @@ __EOT__;
   <thead>
      <tr>';
     $html .= '<th class="operations"></th>';
-    $headers = array('key' => $this->l->t('Key'),
-                     'label' => $this->l->t('Label'),
-                     'limit' => $this->l->t('Limit'),
-                     'data' => $this->currencyLabel($this->l->t('Data')),
-                     'tooltip' => $this->l->t('Tooltip'));
+    $headers = [
+      'key' => $this->l->t('Key'),
+      'label' => $this->l->t('Label'),
+      'limit' => $this->l->t('Limit'),
+      'data' => $this->currencyLabel($this->l->t('Data')),
+      'tooltip' => $this->l->t('Tooltip'),
+    ];
     foreach ($headers as $key => $value) {
+      $css = 'field-'.$key;
+      if ($key == 'key') {
+        $css .= ' expert-mode-only';
+      }
       $html .=
             '<th'
-            .' class="field-'.$key.'"'
+            .' class="'.$css.'"'
             .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$key].'"'
             .'>'
             .$value
@@ -1078,7 +1099,11 @@ __EOT__;
     <tr>
       <td class="operations"></td>';
           foreach (['key', 'label', 'limit', 'data', 'tooltip'] as $field) {
-            $html .= '<td class="field-'.$field.'">'
+            $css = 'field-'.$field;
+            if ($field == 'key') {
+              $css .= ' expert-mode-only';
+            }
+            $html .= '<td class=""'.$css.'">'
                   .($field === 'data'
                     ? $this->currencyValue($value[$field])
                     : $value[$field])
@@ -1254,10 +1279,11 @@ __EOT__;
    */
   public function explodeAllowedValues($values, $addProto = true, $trimInactive = false)
   {
-    $options = empty($values) ? [] : json_decode($values);
-    if (count($options) > 0 && array_keys($options) !== range(0, count($options) - 1)) {
-      throw new \InvalidArgumentException($this->l->t('Value options do not yield a sequential array'));
+    $options = empty($values) ? [] : json_decode($values, true);
+    if (isset($options[-1])) {
+      unset($options[-1]);
     }
+    $options = array_values($options);
     $protoType = $this->allowedValuesPrototype();
     $protoKeys = array_keys($protoType);
     foreach ($options as $index => &$option) {
@@ -1286,14 +1312,40 @@ __EOT__;
    *   [ 'key' => KEY2, ... ],
    * ]
    * ```
-   * as json for storing in the database.
+   *
+   * as JSON for storing in the database. As a side-effect missing
+   * keys are generated and empty missing fields are inserted.
+   *
+   * @param array As explained above.
+   *
+   * @return string JSON encoded data.
    */
   public function implodeAllowedValues($options)
   {
+    unset($options[-1]);
     $proto = $this->allowedValuesPrototype();
     foreach ($options as &$option) {
       $option = array_merge($proto, $option);
+      if (empty($option['key'])) {
+        $option['key'] = Uuid::uuid1();
+      }
     }
-    return json_encode($values);
+    return json_encode($options);
+  }
+
+    /**
+     * Make keys unique for multi-choice fields.
+     *
+     * @param array Item as return by self::explodeAllowedValues.
+     *
+     * @param array $keys Existing keys.
+     *
+     * @return Something "close" to $key, but not contained in $keys.
+     *
+     * @note ATM we use UUIDs. This function is a no-op.
+     */
+  public function allowedValuesUniqueKey($item, $keys)
+  {
+    return $item['key'];
   }
 }

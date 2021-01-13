@@ -80,7 +80,7 @@ class ProjectExtraFieldsController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function service_switch($topic, $value = null)
+  public function serviceSwitch($topic, $value = null)
   {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
@@ -97,11 +97,25 @@ class ProjectExtraFieldsController extends Controller {
         $used  = $data['used'] === 'used';
         $allowed = $projectValues['allowed_values'];
 
-        $allowed = json_decode(json_encode($allowed));
+        // sanitize and potentially add missing keys
+        $allowed = $this->renderer->explodeAllowedValues(
+          $this->renderer->implodeAllowedValues($allowed),
+          false);
+        $this->logInfo("ALLOWED ".print_r($allowed, true));
+
         if (count($allowed) !== 1) {
           return self::grumble($this->l->t('No or too many items available: %s',
-                                           print_r($allowed, true) );
+                                           print_r($allowed, true) ));
         }
+        $this->logInfo("ALLOWED after JSON ".print_r($allowed, true));
+
+        $item = $allowed[0];
+
+        // potentially tweak key to be unique (and simpler) if not already in use.
+        if (!$used) {
+          $item['key'] = $this->renderer->allowedValuesUniqueKey($item, $keys);
+        }
+        $this->logInfo("ITEM after unique ".print_r($allowed, true));
 
         // remove dangerous html
         $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
@@ -133,7 +147,7 @@ class ProjectExtraFieldsController extends Controller {
         }
         $options = PageNavigation::selectOptions($options);
 
-        return slef::dataResponse([
+        return self::dataResponse([
           'message' => $this->l->t("Request \"%s\" successful", $topic),
           'AllowedValue' => $allowed,
           'AllowedValueInput' => $input,

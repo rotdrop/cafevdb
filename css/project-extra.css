@@ -46,12 +46,12 @@ table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.default-multi-
     display:table-row;
 }
 
-.ProjectExtra table.pme-main tr:not(.pme-filter) .chosen-container {
+.project-extra-fields table.pme-main tr:not(.pme-filter) .chosen-container {
     box-sizing:border-box;
     min-width:50%;
 }
 
-.ProjectExtra table.pme-main tr.allowed-values input.delete-undelete {
+.project-extra-fields table.pme-main tr.allowed-values input.delete-undelete {
     background-repeat:no-repeat;
     background-size: 28px 28px;
     background-position: center;
@@ -61,11 +61,11 @@ table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.default-multi-
     margin-right:1em;
 }
 
-.ProjectExtra table.pme-main tr.allowed-values.active input.delete-undelete {
+.project-extra-fields table.pme-main tr.allowed-values.active input.delete-undelete {
     background-image:url('../img/delete.svg');
 }
 
-.ProjectExtra table.pme-main tr.allowed-values.deleted input.delete-undelete {
+.project-extra-fields table.pme-main tr.allowed-values.deleted input.delete-undelete {
     background-image:url('../img/history.svg');
 }
 
@@ -139,8 +139,8 @@ table.pme-main span.surcharge.currency-amount {
     width:100%;
 }
 
-.ProjectExtra table.pme-main textarea.field-tooltip,
-.ProjectExtra table.pme-main textarea.extra-field-tooltip {
+.project-extra-fields table.pme-main textarea.field-tooltip,
+.project-extra-fields table.pme-main textarea.extra-field-tooltip {
     overflow-x:hidden; /* fix FF extra-line bug */
 }
 
@@ -148,18 +148,18 @@ table.pme-main span.surcharge.currency-amount {
     display:none;
 }
 
-.ProjectExtra table.pme-main td.allowed-values {
+.project-extra-fields table.pme-main td.allowed-values {
     position:relative;
     background-clip:padding-box;
 }
 
-.ProjectExtra table.pme-main td.allowed-values div.field-display-options {
+.project-extra-fields table.pme-main td.allowed-values div.field-display-options {
     position:absolute;
     bottom:0px;
     right:0px;
 }
 
-.ProjectExtra table.pme-main td.allowed-values td.placeholder {
+.project-extra-fields table.pme-main td.allowed-values td.placeholder {
     min-width:35em;
 }
 
