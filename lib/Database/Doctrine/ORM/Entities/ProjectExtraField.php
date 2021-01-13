@@ -253,27 +253,27 @@ class ProjectExtraField implements \ArrayAccess
   }
 
   /**
-   * Set kind.
+   * Set dataType.
    *
-   * @param enumextrafieldkind $kind
+   * @param enumextrafielddataType $dataType
    *
    * @return ProjectExtraField
    */
-  public function setKind($kind)
+  public function setDataType($dataType)
   {
-    $this->kind = $kind;
+    $this->dataType = $dataType;
 
     return $this;
   }
 
   /**
-   * Get kind.
+   * Get dataType.
    *
-   * @return enumextrafieldkind
+   * @return enumextrafielddataType
    */
-  public function getKind()
+  public function getDataType()
   {
-    return $this->kind;
+    return $this->dataType;
   }
 
   /**
