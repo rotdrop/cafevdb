@@ -27,6 +27,7 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
 
 use OCA\CAFEVDB\Common\Util;
 
