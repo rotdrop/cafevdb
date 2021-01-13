@@ -119,6 +119,9 @@ class ProjectParticipants extends PMETableViewBase
   /** @var \OCA\CAFEVDB\PageRenderer\Musicians */
   private $musiciansRenderer;
 
+  /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
+  private $project;
+
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
@@ -137,6 +140,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
     $this->musiciansRenderer = $musiciansRenderer;
+    $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
   }
 
   public function cssClass() {
@@ -214,18 +218,22 @@ class ProjectParticipants extends PMETableViewBase
     $export = $this->pageNavigation->tableExportButton();
     $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
 
-//     // count number of finance fields
-//     $extraFinancial = 0;
-//     foreach ($userExtraFields as $field) {
-//       $extraFinancial += $fieldTypes[$field['Type']]['Kind'] === 'surcharge';
-//     }
-//     if ($extraFinancial > 0 || $project['Anzahlung'] > 0) {
-//       $useFinanceTab = true;
-//       $financeTab = 'finance';
-//     } else {
-//       $useFinanceTab = false;
-//       $financeTab = 'project';
-//     }
+    $extraFields = $this->project['extraFields'];
+
+    $this->logInfo(count($extraFields));
+
+    // count number of finance fields
+    $extraFinancial = 0;
+    foreach ($extraFields as $field) {
+      $extraFinancial += $field['dataType'] == 'service-fee';
+    }
+    if ($extraFinancial > 0 || $project['prePayment'] > 0) {
+      $useFinanceTab = true;
+      $financeTab = 'finance';
+    } else {
+      $useFinanceTab = false;
+      $financeTab = 'project';
+    }
 
     // Display special page elements
     $opts['display'] =  Util::arrayMergeRecursive(
