@@ -20,9 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\PageRenderer\Util;
+namespace OCA\CAFEVDB\Service;
 
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
