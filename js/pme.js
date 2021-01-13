@@ -663,7 +663,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     callback( { reason: 'dialogOpen' } );
   };
 
-  /**Post the content of a pme-form via AJAX into a dialog
+  /**
+   * Post the content of a pme-form via AJAX into a dialog
    * widget. Useful for editing, viewing etc. because this avoids the
    * need to reload the base table (when only viewing single
    * data-sets).
@@ -791,7 +792,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
           height: 'auto',
           modal: false, //tableOptions.ModalDialog,
           closeOnEscape: false,
-          dialogClass: pme.pmeToken('table-dialog')+' custom-close resize-target',
+          dialogClass: pme.pmeToken('table-dialog')+' custom-close resize-target ' + template,
           resizable: false,
           dragStart: function(event) {
             var self = $(this);
