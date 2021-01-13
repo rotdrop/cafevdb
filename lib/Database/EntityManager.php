@@ -33,11 +33,14 @@ use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Ramsey\Uuid\Doctrine as Ramsey;
 
 use OCA\CAFEVDB\Service\EncryptionService;
+
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType;
+
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
 
@@ -63,15 +66,20 @@ class EntityManager extends EntityManagerDecorator
   /** @var \OCA\CAFEVDB\Service\EncryptionService */
   private $encryptionService;
 
+  /** @var CloudLogger */
+  private $sqlLogger;
+
   // @@TODO catch failures, allow construction without database for
   // initial setup.
   public function __construct(
     EncryptionService $encryptionService
+    , CloudLogger $sqlLogger
     , ILogger $logger
     , IL10N $l10n
   )
   {
     $this->encryptionService = $encryptionService;
+    $this->sqlLogger = $sqlLogger;
     $this->logger = $logger;
     $this->l = $l10n;
     parent::__construct($this->getEntityManager());
@@ -182,6 +190,8 @@ class EntityManager extends EntityManagerDecorator
 
     $namingStrategy = new UnderscoreNamingStrategy(CASE_LOWER);
     $config->setNamingStrategy($namingStrategy);
+
+    $config->setSQLLogger($this->sqlLogger);
 
     // obtaining the entity manager
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
