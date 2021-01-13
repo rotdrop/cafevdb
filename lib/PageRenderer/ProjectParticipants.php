@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -54,6 +54,8 @@ class ProjectParticipants extends PMETableViewBase
   const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
   const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
+  const EXTRA_FIELDS_TABLE = 'ProjectExtraFields';
+  const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
 
   /**
    * Join table structure. All update are handled in
@@ -107,6 +109,31 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'column' => 'project_id',
       'read_only' => true,
+    ],
+    // extra input fields depending on the type of the project,
+    // e.g. service fees etc.
+    [
+      'table' => self::EXTRA_FIELDS_TABLE,
+      'entity' => Entities\ProjectExtraField::class,
+      'identifier' => [
+        'project_id' => 'project_id',
+        'id' => false,
+      ],
+      'column' => 'id',
+    ],
+    // the data for the extra input fields
+    [
+      'table' => self::EXTRA_FIELDS_DATA_TABLE,
+      'entity' => Entities\ProjectExtraFieldDatum::class,
+      'identifier' => [
+        'project_id' => 'project_id',
+        'musician_id' => 'musician_id',
+        'field_id' => [
+          'table' => self::EXTRA_FIELDS_TABLE,
+          'column' => 'id',
+        ],
+      ],
+      'column' => 'field_id',
     ],
   ];
 
@@ -500,6 +527,7 @@ class ProjectParticipants extends PMETableViewBase
         'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
       ]);
 
+
     /*
      *
      **************************************************************************
@@ -522,706 +550,59 @@ class ProjectParticipants extends PMETableViewBase
         'tooltip' => $this->toolTipsService['member-status'],
       ]);
 
-    $opts['fdd']['remarks'] = [
-      'name' => $this->l->t("Remarks")."\n(".$projectName.")",
-      'tooltip' => $this->toolTipsService['project-remarks'],
-      'select'   => 'T',
-      'maxlen'   => 65535,
-      'css'      => [ 'postfix' => ' remarks tooltip-left' ],
-      'textarea' => [
-        'css' => 'wysiwyg-editor',
-        'rows' => 5,
-        'cols' => 50,
-      ],
-      'display|LF' => [ 'popup' => 'data' ],
-      'escape' => false,
-      'sort'   => true,
-      'tab'    => [ 'id' => 'project' ]
-    ];
+    /*
+     *
+     **************************************************************************
+     *
+     * project fee and debit mandates information
+     *
+     */
 
-    $opts['fdd']['all_projects'] = [
-      'tab' => ['id' => 'musician'],
-      'input' => 'VR',
-      'options' => 'LFVC',
-      'select' => 'M',
-      'name' => $this->l->t('Projects'),
-      'sort' => true,
-      'css'      => ['postfix' => ' projects tooltip-top'],
-      'display|LVF' => ['popup' => 'data'],
-      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
-      //'filter' => 'having', // need "HAVING" for group by stuff
-      'values' => [
-        'table' => 'Projects',
-        'column' => 'id',
-        'description' => 'name',
-        'orderby' => '$table.year ASC, $table.name ASC',
-        'groups' => 'year',
-        'join' => '$join_col_fqn = '.$joinTables[self::TABLE].'.project_id'
-      ],
-      // @TODO check whether this is still needed or 'groups' => 'year' is just fine.
-      //'values2' => $projects,
-      //'valueGroups' => $groupedProjects
-    ];
+    /*
+     *
+     **************************************************************************
+     *
+     * extra columns like project fee, deposit etc.
+     *
+     */
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'email',
-      array_merge($this->defaultFDD['email'], [ 'tab' => ['id' => 'musician'], ]));
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'mobile_phone',
-      [
-        'name'     => $this->l->t('Mobile Phone'),
-        'tab'      => [ 'id' => 'musician' ],
-        'css'      => [ 'postfix' => ' phone-number' ],
-        'display'  => [
-          'popup' => function($data) {
-            return $this->phoneNumberService->metaData($data, null, '<br/>');
-          }
-        ],
-        'nowrap'   => true,
-        'maxlen'   => 384,
-      ]);
+    // Generate input fields for the extra columns
+    foreach ($extraFields as $field) {
+      $fieldName = field['name'];
+      $fieldId   = $field['id'];
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'fixed_line_phone',
-      [
-        'name'     => $this->l->t('Fixed Line Phone'),
-        'tab'      => [ 'id' => 'musician' ],
-        'css'      => [ 'postfix' => ' phone-number' ],
-        'display'  => [
-          'popup' => function($data) {
-            return $this->phoneNumberService->metaData($data, null, '<br/>');
-          }
-        ],
-        'nowrap'   => true,
-        'maxlen'   => 384,
-      ]);
+      // set tab unless overridden by field definition
+      if ($field['data_type'] == 'service-fee') {
+        $tab = [ 'id' => $financeTab ];
+      } else {
+        $tab = [ 'id' => 'project' ];
+      }
+      if (!empty($field['tab'])) {
+        $tabId = $this->tableTabId($field['tab']);
+        $tab = [ 'id' => $tabId ];
+      }
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'street',
-      [
-        'name'     => $this->l->t('Street'),
-        'tab'      => [ 'id' => 'musician' ],
-        'css'      => ['postfix' => ' musician-address street'],
-        'maxlen'   => 128,
-      ]);
+      // $curColIdx = count($opts['fdd']); // current column
+      // $opts['fdd'][$fieldName] = array(
+      //   'name'     => $this->l->t($fieldName), // ."\n(".$projectName.")",
+      //   'css'      => [ 'postfix' => ' extra-field' ],
+      //   'tab'      => $tab,
+      //   'select'   => 'T',
+      //   'maxlen'   => 65535,
+      //   'textarea' => [ 'css' => '',
+      //                   'rows' => 2,
+      //                   'cols' => 32 ],
+      //   'display|LF' => [ 'popup' => 'data' ],
+      //   'default'  => $field['default_value'],
+      //   'escape'   => false,
+      //   'sort'     => true
+      //   );
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'postal_code',
-      [
-        'name'     => $this->l->t('Postal Code'),
-        'tab'      => [ 'id' => 'musician' ],
-        'css'      => ['postfix' => ' musician-address postal-code'],
-        'maxlen'   => 11,
-      ]);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'city',
-      [
-        'name'     => $this->l->t('City'),
-        'tab'      => [ 'id' => 'musician' ],
-        'css'      => ['postfix' => ' musician-address city'],
-        'maxlen'   => 128,
-      ]);
-
-    $countries = $this->geoCodingService->countryNames();
-    $countryGroups = $this->geoCodingService->countryContinents();
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'country',
-      [
-        'name'     => $this->l->t('Country'),
-        'tab'      => [ 'id' => 'musician' ],
-        'select'   => 'D',
-        'maxlen'   => 128,
-        'default'  => $this->getConfigValue('streetAddressCountry'),
-        'css'      => ['postfix' => ' musician-address country chosen-dropup'],
-        'values2'     => $countries,
-        'valueGroups' => $countryGroups,
-      ]);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'birthday',
-      array_merge($this->defaultFDD['birthday'], [ 'tab' => [ 'id' => 'musician' ], ]));
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'remarks',
-      [
-        'tab'      => ['id' => 'musician'],
-        'name'     => $this->l->t('Remarks'),
-        'maxlen'   => 65535,
-        'css'      => ['postfix' => ' remarks tooltip-top'],
-        'textarea' => [
-          'css' => 'wysiwyg-editor',
-          'rows' => 5,
-          'cols' => 50,
-        ],
-        'display|LF' => ['popup' => 'data'],
-        'escape' => false,
-      ]);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'language',
-      [
-        'tab'      => ['id' => 'musician'],
-        'name'     => $this->l->t('Language'),
-        'select'   => 'D',
-        'maxlen'   => 128,
-        'default'  => 'Deutschland',
-        'values2'  => $this->findAvailableLanguages(),
-      ]);
-
-    $opts['fdd']['photo'] = [
-      'tab'      => ['id' => 'miscinfo'],
-      'input' => 'V',
-      'name' => $this->l->t('Photo'),
-      'select' => 'T',
-      'options' => 'APVCD',
-      'sql' => '`PMEtable0`.`musician_id`', // @TODO: needed?
-      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
-        $stampIdx = array_search('Updated', $fds);
-        $stamp = strtotime($row['qf'.$stampIdx]);
-        return $this->musiciansRenderer->photoImageLink($musicianId, $action, $stamp);
-      },
-      'css' => ['postfix' => ' photo'],
-      'default' => '',
-      'sort' => false
-    ];
-
-    $opts['fdd']['vcard'] = [
-      'tab' => ['id' => 'miscinfo'],
-      'input' => 'V',
-      'name' => 'VCard',
-      'select' => 'T',
-      'options' => 'ACPDV',
-      'sql' => '`PMEtable0`.`musician_id`',
-      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
-        switch($action) {
-        case 'change':
-        case 'display':
-          $data = [];
-          foreach($fds as $idx => $label) {
-            $data[$label] = $row['qf'.$idx];
-          }
-          $musician = new Entities\Musician();
-          foreach ($data as $key => $value) {
-            $fieldInfo = $this->joinTableField($key);
-            if ($fieldInfo['table'] != self::MUSICIANS_TABLE) {
-              continue;
-            }
-            $column = $fieldInfo['column'];
-            try {
-              $musician[$column] = $value;
-            } catch (\Throwable $t) {
-              // Don't care, we know virtual stuff is not there
-              // $this->logException($t);
-            }
-          }
-          $vcard = $this->contactsService->export($musician);
-          unset($vcard->PHOTO); // too much information
-          //$this->logDebug(print_r($vcard->serialize(), true));
-          return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
-        default:
-          return '';
-        }
-      },
-      'default' => '',
-      'sort' => false
-    ];
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'uuid',
-      [
-        'tab'      => [ 'id' => 'miscinfo' ],
-        'name'     => 'UUID',
-        'options'  => 'LAVCPDR',
-        'css'      => ['postfix' => ' musician-uuid clip-long-text tiny-width'],
-        'sql'      => 'BIN2UUID($join_col_fqn)',
-        'display|LVF' => ['popup' => 'data'],
-        'sqlw'     => 'UUID2BIN($val_qas)',
-        'maxlen'   => 32,
-        'sort'     => true,
-      ]);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'updated',
-      array_merge(
-        $this->defaultFDD['datetime'],
-        [
-          'tab' => ['id' => 'miscinfo'],
-          "name" => $this->l->t("Last Updated"),
-          "default" => date($this->defaultFDD['datetime']['datemask']),
-          "nowrap" => true,
-          "options" => 'LFAVCPDR',
-        ]));
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'created',
-      array_merge(
-        $this->defaultFDD['datetime'],
-        [
-          'tab' => ['id' => 'miscinfo'],
-          "name" => $this->l->t("Created"),
-          "default" => date($this->defaultFDD['datetime']['datemask']),
-          "nowrap" => true,
-          "options" => 'LFAVCPDR',
-        ]));
-
-    //////// END Field definitions
-
-    $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
-
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
-
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
-
-    ///@@@@@@@@@@@@@@@@@@@@@
-
-//     $opts['fdd']['ProjectInstrumentKey'] = array(
-//       'name'   => $this->l->t('Project Instrument'),
-//       'sql'    => 'GROUP_CONCAT(DISTINCT ProjectInstrumentKey ORDER BY PMEtable0.sort_order ASC)',
-//       'select' => 'N',
-//       'input'  => 'HR'
-//       );
-
-//     $prInstIdx = count($opts['fdd']);
-//     $opts['fdd']['ProjectInstrumentId'] = array(
-//       'tab'         => array('id' => array('instrumentation', 'project')),
-//       'name'        => $this->l->t('Project Instrument'),
-//       'select'      => 'M',
-//       'sql'         => 'GROUP_CONCAT(DISTINCT ProjectInstrumentId ORDER BY PMEtable0.sort_order ASC)',
-//       'filter' => 'having',
-//       'maxlen'      => 36,
-//       'css'         => array('postfix' => ' project-instrument'),
-//       'sort'        => true,
-//       'values|VDPC' => array(
-//         'table'       => 'Instrumente',
-//         'column'      => 'Id',
-//         'orderby'     => '$table.sort_order',
-//         'description' => 'Instrument',
-//         'groups'      => 'Familie',
-//         /* This rather fancy fillter masks out all instruments
-//          * currently not registerd with the given musician, but allows
-//          * for the currently active instrument.
-//          */
-//         'filters' => ("FIND_IN_SET(`Id`,
-//   CONCAT_WS(',',(SELECT GROUP_CONCAT(DISTINCT `ProjectInstrumentId`) FROM `\$main_table` WHERE \$record_id = `\$main_table`.`Id` GROUP BY \$main_table.Id),
-//                 (SELECT DISTINCT `MusicianInstrumentId` FROM `\$main_table`
-//                           WHERE \$record_id = `\$main_table`.`Id`)))"),
-//         'join' => '$join_table.Id = $main_table.ProjectInstrumentId'
-//         ),
-//       'values|LF' => array(
-//         'table'       => 'Instrumente',
-//         'column'      => 'Id',
-//         'orderby'     => '$table.sort_order',
-//         'description' => 'Instrument',
-//         'groups'      => 'Familie',
-//         'filters'     => ("`Id` IN ".
-//                           "(SELECT DISTINCT `ProjectInstrumentId` FROM `\$main_table` WHERE 1)"),
-//         'join'        => '$join_table.Id = $main_table.ProjectInstrumentId'
-//         ),
-//       );
-
-//     $opts['fdd']['ProjectInstrument'] = array(
-//       'name'     => $this->l->t('Project Instrument'),
-//       'sql'      => 'GROUP_CONCAT(DISTINCT PMEtable0.`ProjectInstrument` ORDER BY PMEtable0.`sort_order` ASC)',
-//       'input'    => 'HR',
-//       );
-
-//     $voices = [ '' => '&nbsp;' ] + array_combine(range(1, 8), range(1, 8));
-//     $opts['fdd']['Voice'] = array(
-//       'name'     => $this->l->t('Voice'),
-//       'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
-//       'sql|VD' => "GROUP_CONCAT(DISTINCT CONCAT(ProjectInstrument,' ', Voice) ORDER BY PMEtable0.sort_order ASC)",
-//       'sql|CP' => "GROUP_CONCAT(DISTINCT CONCAT(ProjectInstrumentId,':', Voice) ORDER BY PMEtable0.sort_order ASC)",
-//       'select'  => 'M',
-//       'values|CP' => [
-//         'table' => "SELECT
-//   pi.InstrumentationId,
-//   pi.InstrumentId,
-//   i.Instrument,
-//   i.sort_order,
-//   n.N,
-//   CONCAT(pi.InstrumentId,':', n.N) AS Value
-// FROM ".self::PROJECT_INSTRUMENTS." pi
-// LEFT JOIN Instrumente i
-//   ON i.Id = pi.InstrumentId
-// JOIN numbers n
-//   ON n.N <= 8 AND n.N >= 1
-// WHERE
-//   pi.Projectid = $projectId
-// ORDER BY
-//   i.sort_order ASC, n.N ASC",
-//         'column' => 'Value',
-//         'description' => [
-//           'columns' => [ 'Instrument', 'N' ],
-//           'divs' => ' '
-//           ],
-
-//         'orderby' => '$table.sort_order, $table.N',
-//         'groups'  => '$table.Instrument',
-//         'filters' => 'InstrumentationId = $record_id',
-//         'join' => false, //'$join_table.InstrumentationId = $main_table.Id',
-//         ],
-//       'values2|LF' => $voices,
-//       'maxlen'  => '8',
-//       'sort'    => true,
-//       'escape'  => false,
-//       'tab'     => array('id' => 'instrumentation')
-//       );
-
-//     $opts['fdd']['SectionLeader'] = array(
-//       'name|LF' => ' &alpha;',
-//       'name|CAPVD' => $this->l->t("Section Leader"),
-//       'tab' => array('id' => 'instrumentation'),
-//       'sql|CAPDV' => "GROUP_CONCAT(
-//   IF(PMEtable0.`SectionLeader` = 1, PMEtable0.`ProjectInstrumentId`, 0) ORDER BY PMEtable0.`sort_order` ASC)",
-//       'values|CAPDV' => [
-//         'table' => "SELECT
-//   `Id` AS `InstrumentationId`,
-//   `ProjectInstrumentId` AS `InstrumentId`,
-//   `ProjectInstrument` AS `Instrument`,
-//   `sort_order`
-// FROM $mainTable",
-//         'column' => "InstrumentId",
-//         'description' => "Instrument",
-//         'filters' => '$table.InstrumentationId = $record_id AND $table.InstrumentId IS NOT NULL',
-//         'orderby' => '$table.sort_order',
-//         ],
-//       'options'  => 'LAVCPDF',
-//       'select' => 'C',
-//       'maxlen' => '1',
-//       'sort' => true,
-//       'escape' => false,
-//       'values2|LF' => array('0' => '&nbsp;', '1' => '&alpha;'),
-//       'tooltip' => $this->l->t("Set to `%s' in order to mark the section leader",
-//                         array("&alpha;")),
-//       'display|LF' => array('popup' => function($data) {
-//           return Config::ToolTips('section-leader-mark');
-//         }),
-//       );
-
-//     $opts['fdd']['Anmeldung'] = array(
-//       'name|LF' => ' &#10004;',
-//       'name|CAPDV' => $this->l->t("Registration"),
-//       'tab' => array('id' => array('project', 'instrumentation')),
-//       'options'  => 'LAVCPDF',
-//       'select' => 'C',
-//       'maxlen' => '1',
-//       'sort' => true,
-//       'escape' => false,
-//       'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */),
-//       'values2|LVDF' => array('0' => '&nbsp;', '1' => '&#10004;'),
-//       'tooltip' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
-//                         array("&#10004;")),
-//       'display|LF' => array('popup' => function($data) {
-//           return Config::ToolTips('registration-mark');
-//         }),
-//       'css'      => array('postfix' => ' registration tooltip-top'),
-//       );
-
-//     $opts['fdd']['MusicianInstrumentKey'] = array(
-//       'name'   => $this->l->t('Musican Instrument'),
-//       'select' => 'T',
-//       'input'  => 'HR'
-//       );
-
-//     $opts['fdd']['MusicianInstrumentId'] = array(
-//       'tab'         => array('id' => array('musician', 'instrumentation')),
-//       'name'        => $this->l->t('All Instruments'),
-//       'css'         => array('postfix' => ' musician-instruments tooltip-top'),
-//       'display|LF'  => array('popup' => 'data'),
-//       'input'       => 'S', // needs to be handled separately
-//       //'options'   => 'AVCPD',
-//       'select'      => 'M',
-//       'maxlen'      => 136,
-//       'sort'        => true,
-//       'values'      => [
-//         'table'       => 'Instrumente',
-//         'column'      => 'Id',
-//         'description' => 'Instrument',
-//         'orderby'     => 'sort_order',
-//         'groups'      => 'Familie',
-//         ],
-//       );
-//     $opts['fdd']['MusicianInstrumentId']['values|CP'] = array_merge(
-//       $opts['fdd']['MusicianInstrumentId']['values'],
-//       [ 'filters' => '$table.Disabled = 0' ]);
-//     $opts['fdd']['MusicianInstrumentId']['values|LF'] = array_merge(
-//       $opts['fdd']['MusicianInstrumentId']['values'],
-//       [ 'filters' =>
-//         "`Id` IN (SELECT DISTINCT `MusicianInstrumentId` FROM `\$main_table` WHERE 1)" ]);
-
-//     $opts['fdd']['sort_order'] = array(
-//       'name'     => 'Orchester sort_order',
-//       'select'   => 'N',
-//       'input'    => 'HR',
-//       'maxlen'   => 8,
-//       'default'  => '0',
-//       'sort'     => true
-//       );
-
-//     $opts['fdd']['MemberStatus'] = array(
-//       'name'     => strval($this->l->t('Member Status')),
-//       'tab'      => array('id' => array('musician')), // multiple tabs are legal
-//       'select'   => 'D',
-//       'maxlen'   => 128,
-//       'sort'     => true,
-//       'css'     => array('postfix' => ' memberstatus tooltip-wide'),
-//       'values2'  => $this->memberStatusNames,
-//       'tooltip' => config::toolTips('member-status')
-//       );
-
-//     $feeIdx = count($opts['fdd']);
-//     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
-//     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
-//     $opts['fdd']['Unkostenbeitrag']['default'] = $project['Unkostenbeitrag'];
-//     $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' fee';
-//     $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => $financeTab);
-
-//     if ($project['Anzahlung'] > 0) {
-//       // only include if configured in project
-//       $opts['fdd']['Anzahlung'] = Config::$opts['money'];
-//       $opts['fdd']['Anzahlung']['name'] = "Anzahlung";
-//       $opts['fdd']['Anzahlung']['default'] = $project['Anzahlung'];
-//       $opts['fdd']['Anzahlung']['css']['postfix'] .= ' deposit';
-//       $opts['fdd']['Anzahlung']['tab'] = array('id' => $financeTab);
-//     }
-
-//     $needDebitMandates = Projects::needDebitMandates($projectId);
-//     $paymentStatusValues2 = array(
-//       'outstanding' => '&empty;',
-//       'awaitingdepositdebit' => '&#9972;',
-//       'deposited' => '&#9684;',
-//       'awaitingdebit' => '&#9951;',
-//       'payed' => '&#10004;'
-//       );
-
-//     if (Projects::needDebitMandates($projectId)) {
-
-//       $memberTableId = Config::getValue('memberTableId');
-//       $monetary = ProjectExtra::monetaryFields($userExtraFields, $fieldTypes);
-
-//       $amountPaidIdx = count($opts['fdd']);
-//       $opts['fdd']['AmountPaid'] = array(
-//         'input' => 'HR',
-//         );
-
-//       $paidCurrentYearIdx = count($opts['fdd']);
-//       $opts['fdd']['PaidCurrentYear'] = array(
-//         'input' => 'HR',
-//         );
-
-//       $opts['fdd']['TotalProjectFees'] = array(
-//         'tab'      => array('id' => $financeTab),
-//         'name'     => $this->l->t('Total Charges'),
-//         'css'      => array('postfix' => ' total-project-fees money'),
-//         'sort'    => false,
-//         'options' => 'VDLF', // wrong in change mode
-//         'input' => 'VR',
-//         'sql' => '`PMEtable0`.`Unkostenbeitrag`',
-//         'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
-//         use ($monetary, $amountPaidIdx, $paidCurrentYearIdx, $projectId, $memberTableId, $musIdIdx)
-//         {
-//           foreach($fds as $key => $label) {
-//             if (!isset($monetary[$label])) {
-//               continue;
-//             }
-//             $qf    = "qf{$key}";
-//             $qfidx = $qf.'_idx';
-//             if (isset($row[$qfidx])) {
-//               $value = $row[$qfidx];
-//             } else {
-//               $value = $row[$qf];
-//             }
-//             if (empty($value)) {
-//               continue;
-//             }
-//             $field   = $monetary[$label];
-//             $allowed = $field['AllowedValues'];
-//             $type    = $field['Type'];
-//             $amount += self::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
-//           }
-
-//           if ($projectId === $memberTableId) {
-//             $amount += InstrumentInsurance::annualFee($row['qf'.$musIdIdx]);
-//             $paid = $row['qf'.$paidCurrentYearIdx];
-//           } else {
-//             $paid = $row['qf'.$amountPaidIdx];
-//           }
-
-//           // display as TOTAL/PAID/REMAINDER
-//           $rest = $amount - $paid;
-
-//           $amount = Util::moneyValue($amount);
-//           $paid = Util::moneyValue($paid);
-//           $rest = Util::moneyValue($rest);
-//           return ('<span class="totals finance-state">'.$amount.'</span>'
-//                   .'<span class="received finance-state">'.$paid.'</span>'
-//                   .'<span class="outstanding finance-state">'.$rest.'</span>');
-//         },
-//         'tooltip'  => Config::toolTips('project-total-fee-summary'),
-//         'display|LFVD' => array('popup' => 'tooltip'),
-//         );
-
-//       $opts['fdd']['Lastschrift'] = array(
-//         'tab'      => array('id' => $financeTab),
-//         'name'     => $this->l->t('Direct Debit'),
-//         'css'      => array('postfix' => ' direct-debit-allowed'),
-//         'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /*'&#10004;'*/),
-//         'values2|LVDF' => array('0' => '&nbsp;',
-//                                 '1' => '&#10004;'),
-//         'escape' => false,
-//         //'values2|CAP' => array(1 => ''),
-//         //'values2|LVFD' => array(1 => $this->l->t('true'), 0 => $this->l->t('false')),
-//         'default'  => '',
-//         'select'   => 'O',
-//         'sort'     => true,
-//         'tooltip'  => Config::toolTips('project-direct-debit-allowed'),
-//         'display|LF' => array('popup' => 'tooltip'),
-//         );
-
-//       $debitJoinCondition =
-//         '('.
-//         '$join_table.projectId = '.$projectId.
-//         ' OR '.
-//         '$join_table.projectId = '.$memberTableId.
-//         ')'.
-//         ' AND $join_table.musicianId = $main_table.MusikerId'.
-//         ' AND $join_table.active = 1';
-
-//       // One virtual field in order to be able to manage SEPA debit
-//       // mandates. Note that in rare circumstances there may be two
-//       // debit mandates: one for general and one for the project. We
-//       // fetch both with the same sort-order and leave it to the calling
-//       // code to do THE RIGHT THING (tm).
-//       $mandateIdx = count($opts['fdd']);
-//       $mandateAlias = "`PMEjoin".$mandateIdx."`";
-//       $opts['fdd']['SepaDebitMandate'] = array(
-//         'name' => $this->l->t('SEPA Debit Mandate'),
-//         'input' => 'VR',
-//         'tab' => array('id' => $financeTab),
-//         'select' => 'M',
-//         'options' => 'LFACPDV',
-//         'sql' => "GROUP_CONCAT(DISTINCT ".$mandateAlias.".`mandateReference`
-//   ORDER BY ".$mandateAlias.".`projectId` DESC)",
-//         'values' => array(
-//           'table' => 'SepaDebitMandates',
-//           'column' => 'mandateReference',
-//           'join' => $debitJoinCondition,
-//           'description' => 'mandateReference'
-//           ),
-//         'nowrap' => true,
-//         'sort' => true,
-//         'php' => function($mandates, $action, $k, $fds, $fdd, $row, $recordId)
-//         use ($musIdIdx, $musFirstNameIdx, $musLastNameIdx)
-//         {
-//           if ($this->pme_bare) {
-//             return $mandates;
-//           }
-//           $projectId = $this->projectId;
-//           $projectName = $this->projectName;
-//           // can be multi-valued (i.e.: 2 for member table and project table)
-//           $mandateProjects = $row['qf'.($k+1)];
-//           $mandates = Util::explode(',', $mandates);
-//           $mandateProjects = Util::explode(',', $mandateProjects);
-//           if (count($mandates) !== count($mandateProjects)) {
-//             throw new \RuntimeException(
-//               $this->l->t('Data inconsistency, mandates: "%s", projects: "%s"',
-//                    array(implode(',', $mandates),
-//                          implode(',', $mandateProjects)))
-//               );
-//           }
-
-//           // Careful: this changes when rearranging the sort-order of the display
-//           $musicianId        = $row['qf'.$musIdIdx];
-//           $musicianFirstName = $row['qf'.$musFirstNameIdx];
-//           $musicianLastName  = $row['qf'.$musLastNameIdx];
-//           $musician = $musicianLastName.', '.$musicianFirstName;
-
-//           $html = array();
-//           foreach($mandates as $key => $mandate) {
-//             if (empty($mandate)) {
-//               continue;
-//             }
-//             $expired = Finance::mandateIsExpired($mandate);
-//             $mandateProject = $mandateProjects[$key];
-//             if ($mandateProject === $projectId) {
-//               $html[] = self::sepaDebitMandateButton(
-//                 $mandate, $expired,
-//                 $musicianId, $musician,
-//                 $projectId, $projectName);
-//             } else {
-//               $mandateProjectName = Projects::fetchName($mandateProject);
-//               $html[] = self::sepaDebitMandateButton(
-//                 $mandate, $expired,
-//                 $musicianId, $musician,
-//                 $projectId, $projectName,
-//                 $mandateProject, $mandateProjectName);
-//             }
-//           }
-//           if (empty($html)) {
-//             // Empty default knob
-//             $html = array(self::sepaDebitMandateButton(
-//                             $this->l->t("SEPA Debit Mandate"), false,
-//                             $musicianId, $musician,
-//                             $projectId, $projectName));
-//           }
-//           return implode("\n", $html);
-//         },
-//         );
-
-//       $mandateProjectIdx = count($opts['fdd']);
-//       $opts['fdd']['DebitMandateProject'] = array(
-//         'input' => 'VHR',
-//         'name' => 'internal data',
-//         'options' => 'H',
-//         'select' => 'T',
-//         'sql' => "GROUP_CONCAT(DISTINCT ".$mandateAlias.".`projectId`
-//   ORDER BY ".$mandateAlias.".`projectId` DESC)",
-//         );
-//     }
-
-//     // Generate input fields for the extra columns
-//     foreach ($userExtraFields as $field) {
-//       $fieldName = $name = $field['Name'];
-//       $fieldId   = $field['Id'];
-
-//       $type = $fieldTypes[$field['Type']];
-
-//       if ($type['Kind'] === 'surcharge') {
-//         $tab = array('id' => $financeTab);
-//       } else {
-//         $tab = array('id' => 'project');
-//       }
-//       if (!empty($field['Tab'])) {
-//         $tabId = self::tableTabId($field['Tab']);
-//         $tab = array('id' => $tabId);
-//       }
-
-//       $curColIdx = count($opts['fdd']); // current column
-//       $opts['fdd'][$name] = array(
-//         'name'     => $name, // ."\n(".$projectName.")",
-//         'css'      => array('postfix' => ' extra-field'),
-//         'tab'      => $tab,
-//         'select'   => 'T',
-//         'maxlen'   => 65535,
-//         'textarea' => array('css' => '',
-//                             'rows' => 2,
-//                             'cols' => 32),
-//         'display|LF' => array('popup' => 'data'),
-//         'default'  => $field['DefaultValue'],
-//         'escape'   => false,
-//         'sort'     => true
-//         );
-
-//       $fdd = &$opts['fdd'][$fieldName];
-//       if (!empty($field['ToolTip'])) {
-//         $opts['fdd'][$name]['tooltip'] = $field['ToolTip'];
-//       }
+      // $fdd = &$opts['fdd'][$fieldName];
+      // if (!empty($field['tool_tip'])) {
+      //   $opts['fdd'][$fieldName]['tooltip'] = $field['ToolTip'];
+      // }
 
 //       $allowed = ProjectExtra::explodeAllowedValues($field['AllowedValues'], false, true);
 //       $values2     = array();
@@ -1507,187 +888,483 @@ class ProjectParticipants extends PMETableViewBase
 //         'select'   => 'N',
 //         'escape'   => false,
 //         'sort'     => false);
+  }
+
+    /*
+     *
+     **************************************************************************
+     *
+     * several further fields from Musicians table
+     *
+     */
+
+    $opts['fdd']['remarks'] = [
+      'name' => $this->l->t("Remarks")."\n(".$projectName.")",
+      'tooltip' => $this->toolTipsService['project-remarks'],
+      'select'   => 'T',
+      'maxlen'   => 65535,
+      'css'      => [ 'postfix' => ' remarks tooltip-left' ],
+      'textarea' => [
+        'css' => 'wysiwyg-editor',
+        'rows' => 5,
+        'cols' => 50,
+      ],
+      'display|LF' => [ 'popup' => 'data' ],
+      'escape' => false,
+      'sort'   => true,
+      'tab'    => [ 'id' => 'project' ]
+    ];
+
+    $opts['fdd']['all_projects'] = [
+      'tab' => ['id' => 'musician'],
+      'input' => 'VR',
+      'options' => 'LFVC',
+      'select' => 'M',
+      'name' => $this->l->t('Projects'),
+      'sort' => true,
+      'css'      => ['postfix' => ' projects tooltip-top'],
+      'display|LVF' => ['popup' => 'data'],
+      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
+      //'filter' => 'having', // need "HAVING" for group by stuff
+      'values' => [
+        'table' => 'Projects',
+        'column' => 'id',
+        'description' => 'name',
+        'orderby' => '$table.year ASC, $table.name ASC',
+        'groups' => 'year',
+        'join' => '$join_col_fqn = '.$joinTables[self::TABLE].'.project_id'
+      ],
+      // @TODO check whether this is still needed or 'groups' => 'year' is just fine.
+      //'values2' => $projects,
+      //'valueGroups' => $groupedProjects
+    ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'email',
+      array_merge($this->defaultFDD['email'], [ 'tab' => ['id' => 'musician'], ]));
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'mobile_phone',
+      [
+        'name'     => $this->l->t('Mobile Phone'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => [ 'postfix' => ' phone-number' ],
+        'display'  => [
+          'popup' => function($data) {
+            return $this->phoneNumberService->metaData($data, null, '<br/>');
+          }
+        ],
+        'nowrap'   => true,
+        'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'fixed_line_phone',
+      [
+        'name'     => $this->l->t('Fixed Line Phone'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => [ 'postfix' => ' phone-number' ],
+        'display'  => [
+          'popup' => function($data) {
+            return $this->phoneNumberService->metaData($data, null, '<br/>');
+          }
+        ],
+        'nowrap'   => true,
+        'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'street',
+      [
+        'name'     => $this->l->t('Street'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => ['postfix' => ' musician-address street'],
+        'maxlen'   => 128,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'postal_code',
+      [
+        'name'     => $this->l->t('Postal Code'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => ['postfix' => ' musician-address postal-code'],
+        'maxlen'   => 11,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'city',
+      [
+        'name'     => $this->l->t('City'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => ['postfix' => ' musician-address city'],
+        'maxlen'   => 128,
+      ]);
+
+    $countries = $this->geoCodingService->countryNames();
+    $countryGroups = $this->geoCodingService->countryContinents();
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'country',
+      [
+        'name'     => $this->l->t('Country'),
+        'tab'      => [ 'id' => 'musician' ],
+        'select'   => 'D',
+        'maxlen'   => 128,
+        'default'  => $this->getConfigValue('streetAddressCountry'),
+        'css'      => ['postfix' => ' musician-address country chosen-dropup'],
+        'values2'     => $countries,
+        'valueGroups' => $countryGroups,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'birthday',
+      array_merge($this->defaultFDD['birthday'], [ 'tab' => [ 'id' => 'musician' ], ]));
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'remarks',
+      [
+        'tab'      => ['id' => 'musician'],
+        'name'     => $this->l->t('Remarks'),
+        'maxlen'   => 65535,
+        'css'      => ['postfix' => ' remarks tooltip-top'],
+        'textarea' => [
+          'css' => 'wysiwyg-editor',
+          'rows' => 5,
+          'cols' => 50,
+        ],
+        'display|LF' => ['popup' => 'data'],
+        'escape' => false,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'language',
+      [
+        'tab'      => ['id' => 'musician'],
+        'name'     => $this->l->t('Language'),
+        'select'   => 'D',
+        'maxlen'   => 128,
+        'default'  => 'Deutschland',
+        'values2'  => $this->findAvailableLanguages(),
+      ]);
+
+    $opts['fdd']['photo'] = [
+      'tab'      => ['id' => 'miscinfo'],
+      'input' => 'V',
+      'name' => $this->l->t('Photo'),
+      'select' => 'T',
+      'options' => 'APVCD',
+      'sql' => '`PMEtable0`.`musician_id`', // @TODO: needed?
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        $stampIdx = array_search('Updated', $fds);
+        $stamp = strtotime($row['qf'.$stampIdx]);
+        return $this->musiciansRenderer->photoImageLink($musicianId, $action, $stamp);
+      },
+      'css' => ['postfix' => ' photo'],
+      'default' => '',
+      'sort' => false
+    ];
+
+    $opts['fdd']['vcard'] = [
+      'tab' => ['id' => 'miscinfo'],
+      'input' => 'V',
+      'name' => 'VCard',
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => '`PMEtable0`.`musician_id`',
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        switch($action) {
+        case 'change':
+        case 'display':
+          $data = [];
+          foreach($fds as $idx => $label) {
+            $data[$label] = $row['qf'.$idx];
+          }
+          $musician = new Entities\Musician();
+          foreach ($data as $key => $value) {
+            $fieldInfo = $this->joinTableField($key);
+            if ($fieldInfo['table'] != self::MUSICIANS_TABLE) {
+              continue;
+            }
+            $column = $fieldInfo['column'];
+            try {
+              $musician[$column] = $value;
+            } catch (\Throwable $t) {
+              // Don't care, we know virtual stuff is not there
+              // $this->logException($t);
+            }
+          }
+          $vcard = $this->contactsService->export($musician);
+          unset($vcard->PHOTO); // too much information
+          //$this->logDebug(print_r($vcard->serialize(), true));
+          return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
+        default:
+          return '';
+        }
+      },
+      'default' => '',
+      'sort' => false
+    ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'uuid',
+      [
+        'tab'      => [ 'id' => 'miscinfo' ],
+        'name'     => 'UUID',
+        'options'  => 'LAVCPDR',
+        'css'      => ['postfix' => ' musician-uuid clip-long-text tiny-width'],
+        'sql'      => 'BIN2UUID($join_col_fqn)',
+        'display|LVF' => ['popup' => 'data'],
+        'sqlw'     => 'UUID2BIN($val_qas)',
+        'maxlen'   => 32,
+        'sort'     => true,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'updated',
+      array_merge(
+        $this->defaultFDD['datetime'],
+        [
+          'tab' => ['id' => 'miscinfo'],
+          "name" => $this->l->t("Last Updated"),
+          "default" => date($this->defaultFDD['datetime']['datemask']),
+          "nowrap" => true,
+          "options" => 'LFAVCPDR',
+        ]));
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'created',
+      array_merge(
+        $this->defaultFDD['datetime'],
+        [
+          'tab' => ['id' => 'miscinfo'],
+          "name" => $this->l->t("Created"),
+          "default" => date($this->defaultFDD['datetime']['datemask']),
+          "nowrap" => true,
+          "options" => 'LFAVCPDR',
+        ]));
+
+    //////// END Field definitions
+
+    $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
+
+    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+
+//     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
+//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
+
+    ///@@@@@@@@@@@@@@@@@@@@@
+
+//     $feeIdx = count($opts['fdd']);
+//     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
+//     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
+//     $opts['fdd']['Unkostenbeitrag']['default'] = $project['Unkostenbeitrag'];
+//     $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' fee';
+//     $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => $financeTab);
+
+//     if ($project['Anzahlung'] > 0) {
+//       // only include if configured in project
+//       $opts['fdd']['Anzahlung'] = Config::$opts['money'];
+//       $opts['fdd']['Anzahlung']['name'] = "Anzahlung";
+//       $opts['fdd']['Anzahlung']['default'] = $project['Anzahlung'];
+//       $opts['fdd']['Anzahlung']['css']['postfix'] .= ' deposit';
+//       $opts['fdd']['Anzahlung']['tab'] = array('id' => $financeTab);
 //     }
 
-//     $opts['fdd']['ProjectRemarks'] =
-//       array('name' => $this->l->t("Remarks")."\n(".$projectName.")",
-//             'select'   => 'T',
-//             'maxlen'   => 65535,
-//             'css'      => array('postfix' => ' remarks tooltip-left'),
-//             'display|LF' => array('popup' => 'data'),
-//             'textarea' => array('css' => 'wysiwyg-editor',
-//                                 'rows' => 5,
-//                                 'cols' => 50),
-//             'escape' => false,
-//             'sort'   => true,
-//             'tab'    => array('id' => 'project')
+//     $needDebitMandates = Projects::needDebitMandates($projectId);
+//     $paymentStatusValues2 = array(
+//       'outstanding' => '&empty;',
+//       'awaitingdepositdebit' => '&#9972;',
+//       'deposited' => '&#9684;',
+//       'awaitingdebit' => '&#9951;',
+//       'payed' => '&#10004;'
+//       );
+
+//     if (Projects::needDebitMandates($projectId)) {
+
+//       $memberTableId = Config::getValue('memberTableId');
+//       $monetary = ProjectExtra::monetaryFields($userExtraFields, $fieldTypes);
+
+//       $amountPaidIdx = count($opts['fdd']);
+//       $opts['fdd']['AmountPaid'] = array(
+//         'input' => 'HR',
 //         );
 
-//     // fetch the list of all projects in order to provide a somewhat
-//     // cooked filter list
-//     $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
-//     $projects = array();
-//     $groupedProjects = array();
-//     foreach ($allProjects as $proj) {
-//       $projects[$proj['Name']] = $proj['Name'];
-//       $groupedProjects[$proj['Name']] = $proj['Jahr'];
+//       $paidCurrentYearIdx = count($opts['fdd']);
+//       $opts['fdd']['PaidCurrentYear'] = array(
+//         'input' => 'HR',
+//         );
+
+//       $opts['fdd']['TotalProjectFees'] = array(
+//         'tab'      => array('id' => $financeTab),
+//         'name'     => $this->l->t('Total Charges'),
+//         'css'      => array('postfix' => ' total-project-fees money'),
+//         'sort'    => false,
+//         'options' => 'VDLF', // wrong in change mode
+//         'input' => 'VR',
+//         'sql' => '`PMEtable0`.`Unkostenbeitrag`',
+//         'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
+//         use ($monetary, $amountPaidIdx, $paidCurrentYearIdx, $projectId, $memberTableId, $musIdIdx)
+//         {
+//           foreach($fds as $key => $label) {
+//             if (!isset($monetary[$label])) {
+//               continue;
+//             }
+//             $qf    = "qf{$key}";
+//             $qfidx = $qf.'_idx';
+//             if (isset($row[$qfidx])) {
+//               $value = $row[$qfidx];
+//             } else {
+//               $value = $row[$qf];
+//             }
+//             if (empty($value)) {
+//               continue;
+//             }
+//             $field   = $monetary[$label];
+//             $allowed = $field['AllowedValues'];
+//             $type    = $field['Type'];
+//             $amount += self::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+//           }
+
+//           if ($projectId === $memberTableId) {
+//             $amount += InstrumentInsurance::annualFee($row['qf'.$musIdIdx]);
+//             $paid = $row['qf'.$paidCurrentYearIdx];
+//           } else {
+//             $paid = $row['qf'.$amountPaidIdx];
+//           }
+
+//           // display as TOTAL/PAID/REMAINDER
+//           $rest = $amount - $paid;
+
+//           $amount = Util::moneyValue($amount);
+//           $paid = Util::moneyValue($paid);
+//           $rest = Util::moneyValue($rest);
+//           return ('<span class="totals finance-state">'.$amount.'</span>'
+//                   .'<span class="received finance-state">'.$paid.'</span>'
+//                   .'<span class="outstanding finance-state">'.$rest.'</span>');
+//         },
+//         'tooltip'  => Config::toolTips('project-total-fee-summary'),
+//         'display|LFVD' => array('popup' => 'tooltip'),
+//         );
+
+//       $opts['fdd']['Lastschrift'] = array(
+//         'tab'      => array('id' => $financeTab),
+//         'name'     => $this->l->t('Direct Debit'),
+//         'css'      => array('postfix' => ' direct-debit-allowed'),
+//         'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /*'&#10004;'*/),
+//         'values2|LVDF' => array('0' => '&nbsp;',
+//                                 '1' => '&#10004;'),
+//         'escape' => false,
+//         //'values2|CAP' => array(1 => ''),
+//         //'values2|LVFD' => array(1 => $this->l->t('true'), 0 => $this->l->t('false')),
+//         'default'  => '',
+//         'select'   => 'O',
+//         'sort'     => true,
+//         'tooltip'  => Config::toolTips('project-direct-debit-allowed'),
+//         'display|LF' => array('popup' => 'tooltip'),
+//         );
+
+//       $debitJoinCondition =
+//         '('.
+//         '$join_table.projectId = '.$projectId.
+//         ' OR '.
+//         '$join_table.projectId = '.$memberTableId.
+//         ')'.
+//         ' AND $join_table.musicianId = $main_table.MusikerId'.
+//         ' AND $join_table.active = 1';
+
+//       // One virtual field in order to be able to manage SEPA debit
+//       // mandates. Note that in rare circumstances there may be two
+//       // debit mandates: one for general and one for the project. We
+//       // fetch both with the same sort-order and leave it to the calling
+//       // code to do THE RIGHT THING (tm).
+//       $mandateIdx = count($opts['fdd']);
+//       $mandateAlias = "`PMEjoin".$mandateIdx."`";
+//       $opts['fdd']['SepaDebitMandate'] = array(
+//         'name' => $this->l->t('SEPA Debit Mandate'),
+//         'input' => 'VR',
+//         'tab' => array('id' => $financeTab),
+//         'select' => 'M',
+//         'options' => 'LFACPDV',
+//         'sql' => "GROUP_CONCAT(DISTINCT ".$mandateAlias.".`mandateReference`
+//   ORDER BY ".$mandateAlias.".`projectId` DESC)",
+//         'values' => array(
+//           'table' => 'SepaDebitMandates',
+//           'column' => 'mandateReference',
+//           'join' => $debitJoinCondition,
+//           'description' => 'mandateReference'
+//           ),
+//         'nowrap' => true,
+//         'sort' => true,
+//         'php' => function($mandates, $action, $k, $fds, $fdd, $row, $recordId)
+//         use ($musIdIdx, $musFirstNameIdx, $musLastNameIdx)
+//         {
+//           if ($this->pme_bare) {
+//             return $mandates;
+//           }
+//           $projectId = $this->projectId;
+//           $projectName = $this->projectName;
+//           // can be multi-valued (i.e.: 2 for member table and project table)
+//           $mandateProjects = $row['qf'.($k+1)];
+//           $mandates = Util::explode(',', $mandates);
+//           $mandateProjects = Util::explode(',', $mandateProjects);
+//           if (count($mandates) !== count($mandateProjects)) {
+//             throw new \RuntimeException(
+//               $this->l->t('Data inconsistency, mandates: "%s", projects: "%s"',
+//                    array(implode(',', $mandates),
+//                          implode(',', $mandateProjects)))
+//               );
+//           }
+
+//           // Careful: this changes when rearranging the sort-order of the display
+//           $musicianId        = $row['qf'.$musIdIdx];
+//           $musicianFirstName = $row['qf'.$musFirstNameIdx];
+//           $musicianLastName  = $row['qf'.$musLastNameIdx];
+//           $musician = $musicianLastName.', '.$musicianFirstName;
+
+//           $html = array();
+//           foreach($mandates as $key => $mandate) {
+//             if (empty($mandate)) {
+//               continue;
+//             }
+//             $expired = Finance::mandateIsExpired($mandate);
+//             $mandateProject = $mandateProjects[$key];
+//             if ($mandateProject === $projectId) {
+//               $html[] = self::sepaDebitMandateButton(
+//                 $mandate, $expired,
+//                 $musicianId, $musician,
+//                 $projectId, $projectName);
+//             } else {
+//               $mandateProjectName = Projects::fetchName($mandateProject);
+//               $html[] = self::sepaDebitMandateButton(
+//                 $mandate, $expired,
+//                 $musicianId, $musician,
+//                 $projectId, $projectName,
+//                 $mandateProject, $mandateProjectName);
+//             }
+//           }
+//           if (empty($html)) {
+//             // Empty default knob
+//             $html = array(self::sepaDebitMandateButton(
+//                             $this->l->t("SEPA Debit Mandate"), false,
+//                             $musicianId, $musician,
+//                             $projectId, $projectName));
+//           }
+//           return implode("\n", $html);
+//         },
+//         );
+
+//       $mandateProjectIdx = count($opts['fdd']);
+//       $opts['fdd']['DebitMandateProject'] = array(
+//         'input' => 'VHR',
+//         'name' => 'internal data',
+//         'options' => 'H',
+//         'select' => 'T',
+//         'sql' => "GROUP_CONCAT(DISTINCT ".$mandateAlias.".`projectId`
+//   ORDER BY ".$mandateAlias.".`projectId` DESC)",
+//         );
 //     }
-
-//     $opts['fdd']['Projects'] = array(
-//       'name' => $this->l->t('Projects'),
-//       'tab' => array('id' => array('musician')),
-//       'input' => 'R',
-//       'options' => 'LFV',
-//       'select' => 'M',
-//       'display|LF'  => array('popup' => 'data'),
-//       'css'      => array('postfix' => ' projects'),
-//       'sort' => true,
-//       'values2' => $projects,
-//       'valueGroups' => $groupedProjects
-//       );
-
-//     $opts['fdd']['Email'] = Config::$opts['email'];
-//     $opts['fdd']['Email']['tab'] = array('id' => 'musician');
-
-//     $opts['fdd']['MobilePhone'] = array(
-//       'name'     => $this->l->t('Mobile Phone'),
-//       'tab'      => array('id' => 'musician'),
-//       'css'      => array('postfix' => ' phone-number'),
-//       'display'  => array('popup' => function($data) {
-//           if (PhoneNumbers::validate($data)) {
-//             return nl2br(PhoneNumbers::metaData());
-//           } else {
-//             return null;
-//           }
-//         }),
-//       'nowrap'   => true,
-//       'select'   => 'T',
-//       'maxlen'   => 384,
-//       'sort'     => true
-//       );
-
-//     $opts['fdd']['FixedLinePhone'] = array(
-//       'name'     => $this->l->t('Fixed Line Phone'),
-//       'tab'      => array('id' => 'musician'),
-//       'css'      => array('postfix' => ' phone-number'),
-//       'display'  => array('popup' => function($data) {
-//           if (PhoneNumbers::validate($data)) {
-//             return nl2br(PhoneNumbers::metaData());
-//           } else {
-//             return null;
-//           }
-//         }),
-//       'nowrap'   => true,
-//       'select'   => 'T',
-//       'maxlen'   => 384,
-//       'sort'     => true
-//       );
-
-//     $opts['fdd']['Strasse'] = array(
-//       'name'     => $this->l->t('Street'),
-//       'tab'      => array('id' => 'musician'),
-//       'css'      => array('postfix' => ' musician-address street'),
-//       'nowrap'   => true,
-//       'select'   => 'T',
-//       'maxlen'   => 384,
-//       'sort'     => true
-//       );
-
-//     $opts['fdd']['Postleitzahl'] = array(
-//       'name'     => $this->l->t('Postal Code'),
-//       'tab'      => array('id' => 'musician'),
-//       'css'      => array('postfix' => ' musician-address postal-code'),
-//       'select'   => 'T',
-//       'maxlen'   => 11,
-//       'sort'     => true
-//       );
-
-//     $opts['fdd']['Stadt'] = array(
-//       'name'     => $this->l->t('City'),
-//       'tab'      => array('id' => 'musician'),
-//       'css'      => array('postfix' => ' musician-address city'),
-//       'select'   => 'T',
-//       'maxlen'   => 384,
-//       'sort'     => true
-//       );
-
-//     $countries = GeoCoding::countryNames();
-//     $countryGroups = GeoCoding::countryContinents();
-
-//     $opts['fdd']['Land'] = array(
-//       'name'     => $this->l->t('Country'),
-//       'tab'      => array('id' => 'musician'),
-//       'select'   => 'D',
-//       'maxlen'   => 128,
-//       'default'  => Config::getValue('streetAddressCountry'),
-//       'values2'     => $countries,
-//       'valueGroups' => $countryGroups,
-//       'css'      => array('postfix' => ' musician-address country tooltip-top'),
-//       'sort'     => true,
-//       );
-
-//     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
-//     $opts['fdd']['Geburtstag']['tab'] = 'musician';
-
-//     $opts['fdd']['Remarks'] = array(
-//       'name'     => strval($this->l->t('General Remarks')),
-//       'tab'      => array('id' => 'musician'),
-//       'select'   => 'T',
-//       'maxlen'   => 65535,
-//       'css'      => array('postfix' => ' remarks tooltip-left'),
-//       'display|LF' => array('popup' => 'data'),
-//       'textarea' => array('css' => 'wysiwyg-editor',
-//                           'rows' => 5,
-//                           'cols' => 50),
-//       'escape'   => false,
-//       'sort'     => true);
-
-//     $opts['fdd']['Sprachpräferenz'] = array(
-//       'name'     => $this->l->t('Preferred Language'),
-//       'tab'      => array('id' => 'musician'),
-//       'select'   => 'D',
-//       'maxlen'   => 128,
-//       'default'  => 'Deutsch',
-//       'sort'     => true,
-//       'values'   => Config::$opts['languages']);
-
-//     $opts['fdd']['Portrait'] = array(
-//       'name'    => $this->l->t('Photo'),
-//       'tab'     => array('id' => 'musician'),
-//       'input'   => 'V',
-//       'select'  => 'T',
-//       'options' => 'ACPDV',
-//       'sql'     => '`PMEtable0`.`MusikerId`',
-//       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
-//         $stampIdx = array_search('Aktualisiert', $fds);
-//         $stamp = strtotime($row['qf'.$stampIdx]);
-//         return Musicians::portraitImageLink($musicianId, $action, $stamp);
-//       },
-//       'css' => array('postfix' => ' photo'),
-//       'default' => '',
-//       'css' => array('postfix' => ' photo'),
-//       'sort' => false);
-
-//     $opts['fdd']['UUID'] = array(
-//       'name'     => 'UUID', // no translation
-//       'tab'      => array('id' => 'miscinfo'),
-//       'options'  => 'AVCPDR', // auto increment
-//       'css'      => array('postfix' => ' musician-uuid'),
-//       'select'   => 'T',
-//       'maxlen'   => 32,
-//       'sort'     => false
-//       );
-
-//     $opts['fdd']['Aktualisiert'] = array_merge(
-//       Config::$opts['datetime'],
-//       array("name" => $this->l->t("Last Updated"),
-//             'tab'     => array('id' => array('tab-all')),
-//             "default" => date(Config::$opts['datetime']['datemask']),
-//             "nowrap"  => true,
-//             'input'   => 'R',
-//             "options" => 'LFAVCPD' // Set by update trigger.
-//         ));
-
 
 //     $opts['triggers']['update']['before'] = [];
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeAnythingTrimAnything';
