@@ -21,6 +21,10 @@
 
 $(function() {
 
+  if (CAFEVDB.expertMode) {
+    $('body').addClass('cafevdb-expert-mode');
+  }
+
   // ???? needed ????
   $.widget("ui.dialog", $.ui.dialog, {
     _allowInteraction: function(event) {
@@ -31,13 +35,13 @@ $(function() {
   if (false) {
     // should somehow depend on debug mode.
     $(document).on('ajaxError', function(event, xhr, settings, error) {
-      OC.dialogs.alert(t('cafevdb', 'Unhandled internal AJAX error:')+
-                       '<br/>'+
-                       t('cafevdb', 'Error')+': '+error+
-                       '<br/>'+
-                       t('cafevdb', 'URL')+': '+settings.url,
-                       t('cafevdb', 'Error'),
-                       undefined, true, true);
+      CAFEVDB.Dialogs.alert(t('cafevdb', 'Unhandled internal AJAX error:')+
+                            '<br/>'+
+                            t('cafevdb', 'Error')+': '+error+
+                            '<br/>'+
+                            t('cafevdb', 'URL')+': '+settings.url,
+                            t('cafevdb', 'Error'),
+                            undefined, true, true);
       return false;
     });
   }

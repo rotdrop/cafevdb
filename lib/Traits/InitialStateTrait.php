@@ -49,10 +49,12 @@ trait InitialStateTrait {
   protected function publishInitialStateForUser() {
     $l = $this->l10N();
 
-    $tooltips  = $this->getUserValue('tooltips', '');
-    $directChg = $this->getUserValue('directchange', '');
-    $language  = $this->getUserValue('lang', 'en');
-    $editor    = $this->getUserValue('wysiwygEditor', 'tinymce');
+    $tooltips   = $this->getUserValue('tooltips', '');
+    $directChg  = $this->getUserValue('directchange', '');
+    $language   = $this->getUserValue('lang', 'en');
+    $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
+    $expertMode = $this->getUserValue('expertmode');
+
 
     $admins = \OC::$server->query(OrganizationalRolesService::class)->cloudAdminContact();
     $adminEmail = [];
@@ -70,10 +72,11 @@ trait InitialStateTrait {
         'language' => $language,
         'adminContact' => $adminContact,
         'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@TODO get from request
+        'expertMode' => $expertMode,
         'Page' => [
           'historySize' => $this->historyService->size(),
           'historyPosition' => $this->historyService->position(),
-        ]
+        ],
       ]);
 
     $this->initialStateService->provideInitialState(
