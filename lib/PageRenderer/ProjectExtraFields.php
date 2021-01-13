@@ -540,6 +540,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
+    // needed ?
     $opts['triggers']['update']['before'][] = [ __CLASS__, 'beforeUpdateRemoveUnchanged' ];
 
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
@@ -706,6 +707,11 @@ class ProjectExtraFields extends PMETableViewBase
     if ($key !== false) {
       unset($changed[$key]);
     }
+
+
+    // $this->logInfo('OLD: '.print_r($oldvals['allowed_values'], true));
+    // $this->logInfo('NEW: '.print_r($newvals['allowed_values'], true));
+    // $this->logInfo('CHG: '.$changed['allowed_values']);
 
     /************************************************************************
      *

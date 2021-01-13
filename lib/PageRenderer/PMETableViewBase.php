@@ -364,7 +364,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public static function beforeUpdateRemoveUnchanged($pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
-    $newvals = array_intersect_key($newvals, array_fill($changed, 1));
+    $newvals = array_intersect_key($newvals, array_fill_keys($changed, 1));
     return count($newvals) > 0;
   }
 
