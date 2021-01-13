@@ -229,10 +229,10 @@ var CAFEVDB = CAFEVDB || {};
       // fetch all available keys, server validation will enforce
       // unique keys.
       var keys = [];
-      var tbody = self.closest('tbody');
+      const tbody = self.closest('tbody');
       var skipKey = placeHolder ? false : row.find('input.field-key').val().trim();
       tbody.find('tr.data-line').not('.placeholder').each(function(index) {
-        var key = $(this).find('input.field-key').val().trim();
+        const key = $(this).find('input.field-key').val().trim();
         if (key === skipKey) {
           skipKey = false; // skip once.
         } else if (key !== '') {
@@ -241,7 +241,7 @@ var CAFEVDB = CAFEVDB || {};
       });
       console.log('keys', keys, typeof keys);
 
-      var allowed = row.find('input[type="text"], input[type="hidden"], textarea');
+      const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
 
       var dflt = container.find('select.default-multi-value');
       var oldDflt = dflt.find(':selected').val();
@@ -267,10 +267,10 @@ var CAFEVDB = CAFEVDB || {};
       };
 
       $.post(
-        OC.generateUrl('/apps/cafevdb/valid/projects/allowed-values-option'),
+        OC.generateUrl('/apps/cafevdb/projects/extra-fields/allowed-values-option'),
         postData)
         .fail(function(xhr, status, errorThrown) {
-          CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
+          CAFEVDB.Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
         .done(function (data) {
           if (!CAFEVDB.Ajax.validateResponse(
@@ -279,9 +279,9 @@ var CAFEVDB = CAFEVDB || {};
             cleanup)) {
             return;
           }
-          const option = data.data.AllowedValueOption;
-          const input  = data.data.AllowedValueInput;
-          const value  = data.data.AllowedValue; // sanitized
+          const option = data.AllowedValueOption;
+          const input  = data.AllowedValueInput;
+          const value  = data.AllowedValue; // sanitized
           $.fn.cafevTooltip.remove();
           if (placeHolder) {
             row.parents('table').find('thead').show();
