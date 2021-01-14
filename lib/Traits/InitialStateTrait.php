@@ -46,7 +46,7 @@ trait InitialStateTrait {
   /** @var HistoryService */
   private $historyService;
 
-  protected function publishInitialStateForUser() {
+  protected function publishInitialStateForUser(string $userId) {
     $l = $this->l10N();
 
     $tooltips   = $this->getUserValue('tooltips', '');
