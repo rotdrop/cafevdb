@@ -323,18 +323,20 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'maxlen'   => 19,
         'sort'     => true,
         'datemask' => 'd.m.Y H:i:s',
-        'css'      => ['postfix' => ' datetime'],
+        'css'      => [ 'postfix' => ' datetime' ],
       ],
       'date' => [
-        'name' => strval($this->l->t('birthday')),
         'select'   => 'T',
         'maxlen'   => 10,
         'sort'     => true,
-        'css'      => ['postfix' => ' birthday date'],
+        'css'      => [ 'postfix' => ' date' ],
         'datemask' => 'd.m.Y',
       ]
     ];
     $fdd['birthday'] = $fdd['date'];
+    $fdd['birthday']['name'] = $this->l->t('birthday');
+    $fdd['birthday']['css']['postfix'] .= ' birthday';
+    $fdd['service-fee'] = $fdd['money'];
 
     return $fdd;
   }
@@ -878,7 +880,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $fieldName = $this->joinTableFieldName($tableInfo, $column);
     $index = count($fieldDescriptionData);
     $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
-    return $index;
+    return [ $index, $fieldName ];
   }
 
   /**

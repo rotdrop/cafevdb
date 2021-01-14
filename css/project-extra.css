@@ -81,7 +81,7 @@ table.allowed-values.show-deleted tr.allowed-values.deleted {
     display:table-row;
 }
 
-/* Data currently only useful for surcharge-fields, limit only for
+/* Data currently only useful for service-fee-fields, limit only for
  * group definitions.
  */
 td.field-data,
@@ -102,7 +102,7 @@ table.allowed-values.show-data th.field-limit {
     display:table-cell!important;
 }
 
-/* Show field-data for surcharge fields, because it holds the amount to pay. */
+/* Show field-data for service-fee fields, because it holds the amount to pay. */
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row td.pme-value td.field-data,
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row td.pme-value th.field-data {
     display:table-cell!important;
@@ -114,13 +114,13 @@ table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row td.pme-v
     display:table-cell!important;
 }
 
-table.pme-main tr.multiplicity ~ tr.pme-row span.surcharge,
+table.pme-main tr.multiplicity ~ tr.pme-row span.service-fee,
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row span.general {
     display:none;
 }
 
 table.pme-main tr.multiplicity ~ tr.pme-row span.general,
-table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row span.surcharge {
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row span.service-fee {
     display:inline-block;
 }
 
@@ -133,7 +133,7 @@ table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.allowed-
     text-align:right;
 }
 
-table.pme-main span.surcharge.currency-amount {
+table.pme-main span.service-fee.currency-amount {
     text-align:right;
     display:inline-block;
     width:100%;
@@ -144,9 +144,9 @@ table.pme-main span.surcharge.currency-amount {
     overflow-x:hidden; /* fix FF extra-line bug */
 }
 
-.tooltip span.surcharge {
+/*.tooltip span.service-fee {
     display:none;
-}
+}*/
 
 .project-extra-fields table.pme-main td.allowed-values {
     position:relative;

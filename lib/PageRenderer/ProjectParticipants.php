@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -143,6 +144,9 @@ class ProjectParticipants extends PMETableViewBase
   /** @var \OCA\CAFEVDB\Service\PhoneNumberService */
   private $phoneNumberService;
 
+  /** @var \OCA\CAFEVDB\Service\ProjectExtraFieldsService */
+  private $extraFieldsService;
+
   /** @var \OCA\CAFEVDB\PageRenderer\Musicians */
   private $musiciansRenderer;
 
@@ -160,6 +164,7 @@ class ProjectParticipants extends PMETableViewBase
     , GeoCodingService $geoCodingService
     , ContactsService $contactsService
     , PhoneNumberService $phoneNumberService
+    , ProjectExtraFieldsService $extraFieldsService
     , Musicians $musiciansRenderer
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
@@ -167,6 +172,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
     $this->musiciansRenderer = $musiciansRenderer;
+    $this->extraFieldsService = $extraFieldsService;
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
   }
 
@@ -569,7 +575,7 @@ class ProjectParticipants extends PMETableViewBase
 
     // Generate input fields for the extra columns
     foreach ($extraFields as $field) {
-      $fieldName = field['name'];
+      $fieldName = $field['name'];
       $fieldId   = $field['id'];
 
       // set tab unless overridden by field definition
@@ -583,139 +589,136 @@ class ProjectParticipants extends PMETableViewBase
         $tab = [ 'id' => $tabId ];
       }
 
-      // $curColIdx = count($opts['fdd']); // current column
-      // $opts['fdd'][$fieldName] = array(
-      //   'name'     => $this->l->t($fieldName), // ."\n(".$projectName.")",
-      //   'css'      => [ 'postfix' => ' extra-field' ],
-      //   'tab'      => $tab,
-      //   'select'   => 'T',
-      //   'maxlen'   => 65535,
-      //   'textarea' => [ 'css' => '',
-      //                   'rows' => 2,
-      //                   'cols' => 32 ],
-      //   'display|LF' => [ 'popup' => 'data' ],
-      //   'default'  => $field['default_value'],
-      //   'escape'   => false,
-      //   'sort'     => true
-      //   );
+      list($curColIdx, $fddName) = $this->makeJoinTableField(
+        $opts['fdd'], self::EXTRA_FIELDS_DATA_TABLE, $fieldName.':'.$fieldId,
+        [
+          'name' => $this->l->t($fieldName),
+          'tab' => $tab,
+          'css'      => [ 'postfix' => ' extra-field' ],
+          'sql' => 'GROUP_CONCAT(DISTINCT
+  IF($join_table.field_id = '.$fieldId.', $join_table.field_value, NULL))',
+          'default'  => $field['default_value'],
+          'values' => [
+            'column' => 'field_id',
+          ],
+          'tooltip' => $field['tool_tip']?:null,
+        ]);
+      $fdd = &$opts['fdd'][$fddName];
 
-      // $fdd = &$opts['fdd'][$fieldName];
-      // if (!empty($field['tool_tip'])) {
-      //   $opts['fdd'][$fieldName]['tooltip'] = $field['ToolTip'];
-      // }
+      $allowed = $this->extraFieldsService->explodeAllowedValues($field['allowed_values'], false, true);
+      $values2     = [];
+      $valueTitles = [];
+      $valueData   = [];
+      foreach ($allowed as $idx => $value) {
+        $key = $value['key'];
+        if (empty($key)) {
+          continue;
+        }
+        if ($value['flags'] === 'deleted') {
+          continue;
+        }
+        $values2[$key] = $value['label'];
+        $valueTitles[$key] = $value['tooltip'];
+        $valueData[$key] = $value['data'];
+      }
 
-//       $allowed = ProjectExtra::explodeAllowedValues($field['AllowedValues'], false, true);
-//       $values2     = array();
-//       $valueTitles = array();
-//       $valueData   = array();
-//       foreach($allowed as $idx => $value) {
-//         $key = $value['key'];
-//         if (empty($key)) {
-//           continue;
-//         }
-//         if ($value['flags'] === 'deleted') {
-//           continue;
-//         }
-//         $values2[$key] = $value['label'];
-//         $valueTitles[$key] = $value['tooltip'];
-//         $valueData[$key] = $value['data'];
-//       }
+      switch ($field['data_type']) {
+      case 'text':
+        // default config
+        break;
+      case 'html':
+        $fdd['textarea'] = [
+          'css' => 'wysiwyg-editor',
+          'rows' => 5,
+          'cols' => 50,
+        ];
+        $fdd['css']['postfix'] .= ' hide-subsequent-lines';
+        $fdd['display|LF'] = [ 'popup' => 'data' ];
+        $fdd['escape'] = false;
+        break;
+      case 'integer':
+        $fdd['select'] = 'N';
+        $fdd['mask'] = '%d';
+        breal;
+      case 'float':
+        $fdd['select'] = 'N';
+        $fdd['mask'] = '%g';
+        break;
+      case 'date':
+      case 'datetime':
+      case 'money':
+      case 'service-fee':
+        $style = $this->defaultFDD[$field['data_type']];
+        unset($style['name']);
+        $fdd = array_merge($fdd, $style);
+        $fdd['css']['postfix'] .= ' extra-field';
+        break;
+      default:
+        throw new \Exception($this->l->t('Unsupported data type: "%s"', $field['data_type']));
+      }
 
-//       switch ($type['Name']) {
-//       case 'Date':
-//         $fdd['maxlen'] = 10;
-//         $fdd['datemask'] = 'd.m.Y';
-//         $fdd['css']['postfix'] .= ' date';
-//         $fdd['maxlen'] = 10;
-//         unset($fdd['textarea']);
-//         break;
-//       case 'HTML':
-//         $fdd['textarea'] = array('css' => 'wysiwyg-editor',
-//                                  'rows' => 5,
-//                                  'cols' => 50);
-//         $fdd['css']['postfix'] .= ' hide-subsequent-lines';
-//         $fdd['display|LF'] = array('popup' => 'data');
-//         $fdd['escape'] = false;
-//         break;
-//       case 'Money':
-//         $fdd = Config::$opts['money'];
-//         $fdd['tab'] = $tab;
-//         $fdd['name'] = $name."\n(".$projectName.")";
-//         $fdd['css']['postfix'] .= ' extra-field';
-//         $fdd['default'] = $field['DefaultValue'];
-//         break;
-//       case 'Integer':
-//         $fdd['select'] = 'N';
-//         $fdd['mask'] = '%d';
-//         unset($fdd['textarea']);
-//         break;
-//       case 'Float':
-//         $fdd['select'] = 'N';
-//         $fdd['mask'] = '%g';
-//         unset($fdd['textarea']);
-//         break;
-//       case 'Boolean':
-//         reset($values2); $key = key($values2);
-//         $fdd['values2|CAP'] = array($key => ''); // empty label for simple checkbox
-//         $fdd['values2|LVDF'] = array(0 => $this->l->t('false'),
-//                                      $key => $this->l->t('true'));
-//         $fdd['select'] = 'O';
-//         $fdd['default'] = (string)!!(int)$field['DefaultValue'];
-//         $fdd['css']['postfix'] .= ' boolean single-valued';
-//         unset($fdd['textarea']);
-//         break;
-//       case 'Enum':
-//       case 'Set':
-//         $fdd['values2'] = $values2;
-//         $fdd['valueTitles'] = $valueTitles;
-//         $fdd['valueData'] = $valueData;
-//         if ($type['Multiplicity'] == 'parallel') {
-//           $fdd['css']['postfix'] .= ' set';
-//           $fdd['select'] = 'M';
-//         } else {
-//           $fdd['css']['postfix'] .= ' enumeration allow-empty';
-//           $fdd['select'] = 'D';
-//         }
-//         unset($fdd['textarea']);
-//         break;
-//       case 'SurchargeOption':
-//         // just use the amount to pay as label
-//         reset($values2); $key = key($values2);
-//         $money = Util::moneyValue(reset($valueData));
-//         $fdd['values2|CAP'] = array($key => ''); // empty label for simple checkbox
-//         $fdd['values2|LVDF'] = array(0 => '-,--',
-//                                      $key => $money);
-//         $fdd['select'] = 'C';
-//         $fdd['default'] = (string)!!(int)$field['DefaultValue'];
-//         $fdd['css']['postfix'] .= ' boolean money surcharge single-valued';
-//         $fdd['name|LFVD'] = $fdd['name'];
-//         $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
-//         unset($fdd['textarea']);
-//         break;
-//       case 'SurchargeEnum':
-//       case 'SurchargeSet':
-//         foreach($values2 as $key => $value) {
-//           $money = Util::moneyValue($valueData[$key], Config::$locale);
-//           $value = Util::htmlEscape($value);
-//           $value = '<span class="allowed-option-name money multiple-choice">'.$value.'</span>';
-//           $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
-//           $values2[$key] = $value.$money;
-//         }
-//         $fdd['values2'] = $values2;
-//         $fdd['values2glue'] = "<br/>";
-//         $fdd['valueTitles'] = $valueTitles;
-//         $fdd['valueData'] = $valueData;
-//         $fdd['escape'] = false;
-//         $fdd['display|LF'] = array('popup' => 'data');
-//         unset($fdd['textarea']);
-//         if ($type['Multiplicity'] == 'parallel') {
-//           $fdd['css']['postfix'] .= ' surcharge set hide-subsequent-lines';
-//           $fdd['select'] = 'M';
-//         } else {
-//           $fdd['css']['postfix'] .= ' surcharge enum money allow-empty';
-//           $fdd['select'] = 'D';
-//         }
-//         break;
+      switch ($field['multiplicity']) {
+      case 'simple':
+        // handled above
+        break;
+      case 'single':
+        // @TODO number options?
+        reset($values2); $key = key($values2);
+        $fdd['values2|CAP'] = [ $key => '' ]; // empty label for simple checkbox
+        $fdd['values2|LVDF'] = [
+          0 => $this->l->t('false'),
+          $key => $this->l->t('true'),
+        ];
+        $fdd['select'] = 'C';
+        $fdd['default'] = (string)!!(int)$field['default_value'];
+        $fdd['css']['postfix'] .= ' boolean single-valued '.$field['data_type'];
+        switch ($field['data_type']) {
+        case 'money':
+        case 'service-fee':
+          $money = $this->moneyValue(reset($valueData));
+          // just use the amount to pay as label
+          $fdd['values2|LVDF'] = [
+            0 => '-,--',
+            $key => $money
+          ];
+          $fdd['name|LFVD'] = $fdd['name'];
+          $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
+          break;
+        }
+        break;
+      case 'multiple':
+      case 'parallel':
+        if ($field['data_type'] == 'service-fee') {
+          foreach($values2 as $key => $value) {
+            $money = $this->moneyValue($valueData[$key]);
+            $value = Util::htmlEscape($value);
+            $value = '<span class="allowed-option-name money multiple-choice">'.$value.'</span>';
+            $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
+            $values2[$key] = $value.$money;
+          }
+          $fdd['values2glue'] = "<br/>";
+          $fdd['escape'] = false;
+        }
+        $fdd['values2'] = $values2;
+        $fdd['valueTitles'] = $valueTitles;
+        $fdd['valueData'] = $valueData;
+        if ($field['multiplicity'] == 'parallel') {
+          $fdd['css']['postfix'] .= ' set hide-subsequent-lines';
+          $fdd['select'] = 'M';
+        } else {
+          $fdd['css']['postfix'] .= ' enumeration allow-empty';
+          $fdd['select'] = 'D';
+        }
+        $fdd['css']['postfix'] .= ' '.$field['data_type'];
+        $fdd['display|LF'] = [ 'popup' => 'data' ];
+        break;
+      case 'groupofpeople':
+      case 'groupsofpeople':
+        break;
+      default:
+        throw new \Exception($this->l->t('Unsupported field multiplicity type: "%s"', $field['multiplicity']));
+      }
+
 //       case 'SimpleGroup':
 //       case 'SurchargeGroup':
 //         // keep the original value as hidden input field and generate
@@ -879,16 +882,7 @@ class ProjectParticipants extends PMETableViewBase
 //       default:
 //         break;
 //       }
-
-//       // Need also a hidden Id-field
-//       $opts['fdd'][$name.'Id'] = array(
-//         'name'     => $name.'Id',
-//         'tab'      => array('id' => 'project'),
-//         'input'    => 'H',
-//         'select'   => 'N',
-//         'escape'   => false,
-//         'sort'     => false);
-  }
+    }
 
     /*
      *
@@ -1323,7 +1317,7 @@ class ProjectParticipants extends PMETableViewBase
 //           $musicianLastName  = $row['qf'.$musLastNameIdx];
 //           $musician = $musicianLastName.', '.$musicianFirstName;
 
-//           $html = array();
+//           $html = [];
 //           foreach($mandates as $key => $mandate) {
 //             if (empty($mandate)) {
 //               continue;
@@ -1532,7 +1526,7 @@ class ProjectParticipants extends PMETableViewBase
       return $dfltTabs;
     }
 
-    $extraTabs = array();
+    $extraTabs = [];
     foreach($extraFields as $field) {
       if (empty($field['Tab'])) {
         continue;

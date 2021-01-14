@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Service\InstrumentationService;
+use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -71,6 +72,9 @@ class ProjectExtraFields extends PMETableViewBase
   /** @var FuzzyInput */
   private $fuzzyInput;
 
+  /** @var ExtraFieldsService */
+  private $extraFieldsService;
+
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
@@ -81,10 +85,12 @@ class ProjectExtraFields extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , FuzzyInputService $fuzzyInput
+    , ProjectExtraFieldsService $extraFieldsService
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
     $this->instrumentationService = $instrumentationService;
     $this->fuzzyInput = $fuzzyInput;
+    $this->extraFieldsService = $extraFieldsService;
   }
 
   public function cssClass() {
@@ -327,7 +333,7 @@ class ProjectExtraFields extends PMETableViewBase
       'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx, $tooltipIdx) {
         // provide defaults
         $protoRecord = array_merge(
-          $this->allowedValuesPrototype(),
+          $this->extraFieldsService->allowedValuesPrototype(),
           [
             'key' => $recordId,
             'label' => $row['qf'.$nameIdx],
@@ -674,7 +680,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     if (!is_array($newvals['allowed_values'])) {
       // textfield
-      $allowed = $this->explodeAllowedValues($newvals['allowed_values']);
+      $allowed = $this->extraFieldsService->explodeAllowedValues($newvals['allowed_values']);
 
     } else {
       $allowed = $newvals['allowed_values'];
@@ -684,7 +690,7 @@ class ProjectExtraFields extends PMETableViewBase
     //self::allowedValuesUniqueKeys($allowed, $pme->rec);
 
     //error_log('trigger '.print_r($allowed, true));
-    $newvals['allowed_values'] = $this->implodeAllowedValues($allowed);
+    $newvals['allowed_values'] = $this->extraFieldsService->implodeAllowedValues($allowed);
     if ($oldvals['allowed_values'] !== $newvals['allowed_values']) {
       $changed[] = 'allowed_values';
     }
@@ -1006,12 +1012,12 @@ class ProjectExtraFields extends PMETableViewBase
    */
   private function showAllowedValues($value, $op, $recordId)
   {
-    $allowed = $this->explodeAllowedValues($value);
+    $allowed = $this->extraFieldsService->explodeAllowedValues($value);
     if ($op === 'display' && count($allowed) == 1) {
       // "1" means empty (headerline)
       return '';
     }
-    $protoCount = count($this->allowedValuesPrototype());
+    $protoCount = count($this->extraFieldsService->allowedValuesPrototype());
     $maxColumns = 0;
     foreach($allowed as $value) {
       $maxColumns = max(count($value), $maxColumns);
@@ -1109,7 +1115,7 @@ __EOT__;
             if ($field == 'key') {
               $css .= ' expert-mode-only';
             }
-            $html .= '<td class=""'.$css.'">'
+            $html .= '<td class="'.$css.'">'
                   .($field === 'data'
                     ? $this->currencyValue($value[$field])
                     : $value[$field])
@@ -1150,11 +1156,11 @@ __EOT__;
 
   /**
    * Display the input stuff for a single-value choice, probably
-   * only for surcharge fields.
+   * only for service-fee fields.
    */
   private function showAllowedSingleValue($value, $op, $toolTip, $protoRecord)
   {
-    $allowed = $this->explodeAllowedValues($value, false);
+    $allowed = $this->extraFieldsService->explodeAllowedValues($value, false);
     // if there are multiple options available (after a type
     // change) we just pick the first non-deleted.
     $entry = false;
@@ -1248,7 +1254,7 @@ __EOT__;
   {
     $money = $this->moneyValue($value);
     return
-      '<span class="surcharge currency-amount">'.$money.'</span>'.
+      '<span class="service-fee currency-amount">'.$money.'</span>'.
       '<span class="general">'.$value.'</span>';
   }
 
@@ -1260,98 +1266,10 @@ __EOT__;
   {
     return
       '<span class="general">'.$label.'</span>'.
-      '<span class="surcharge currencylabel">'
+      '<span class="glue general currenylabel">/</span>'.
+      '<span class="service-fee currencylabel">'
       .$this->l->t('Amount').' ['.$this->currencySymbol().']'
       .'</span>';
   }
 
-  /**
-   * Prototype for allowed values, i.e. multiple-value options.
-   */
-  private static function allowedValuesPrototype()
-  {
-    return [
-      'key' => false,
-      'label' => false,
-      'data' => false,
-      'tooltip' => false,
-      'flags' => 'active',
-      'limit' => false,
-    ];
-  }
-
-  /**
-   * Explode the given json encoded string into a PHP array.
-   */
-  public function explodeAllowedValues($values, $addProto = true, $trimInactive = false)
-  {
-    $options = empty($values) ? [] : json_decode($values, true);
-    if (isset($options[-1])) {
-      unset($options[-1]);
-    }
-    $options = array_values($options);
-    $protoType = $this->allowedValuesPrototype();
-    $protoKeys = array_keys($protoType);
-    foreach ($options as $index => &$option) {
-      $keys = array_keys($option);
-      if ($keys !== $protoKeys) {
-        throw new \InvalidArgumentException(
-          $this->l->t('Prototype keys "%s" and options keys "%s" differ',
-                      [ implode(',', $protoKeys), implode(',', $keys) ])
-        );
-      }
-      if ($trimInactive && $option['disabled'] === true) { //  @TODO check for string boolean conversion
-        unset($option);
-      }
-    }
-    if ($addProto) {
-      $options[] = $this->allowedValuesPrototype();
-    }
-    return $options;
-  }
-
-  /**
-   * Serialize a list of allowed values in the form
-   * ```
-   * [
-   *   [ 'key' => KEY1, ... ],
-   *   [ 'key' => KEY2, ... ],
-   * ]
-   * ```
-   *
-   * as JSON for storing in the database. As a side-effect missing
-   * keys are generated and empty missing fields are inserted.
-   *
-   * @param array As explained above.
-   *
-   * @return string JSON encoded data.
-   */
-  public function implodeAllowedValues($options)
-  {
-    unset($options[-1]);
-    $proto = $this->allowedValuesPrototype();
-    foreach ($options as &$option) {
-      $option = array_merge($proto, $option);
-      if (empty($option['key'])) {
-        $option['key'] = Uuid::uuid1();
-      }
-    }
-    return json_encode($options);
-  }
-
-    /**
-     * Make keys unique for multi-choice fields.
-     *
-     * @param array Item as return by self::explodeAllowedValues.
-     *
-     * @param array $keys Existing keys.
-     *
-     * @return Something "close" to $key, but not contained in $keys.
-     *
-     * @note ATM we use UUIDs. This function is a no-op.
-     */
-  public function allowedValuesUniqueKey($item, $keys)
-  {
-    return $item['key'];
-  }
 }

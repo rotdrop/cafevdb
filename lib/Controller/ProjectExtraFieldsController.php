@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\ProjectExtraFields as Renderer;
+use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 class ProjectExtraFieldsController extends Controller {
@@ -52,6 +53,9 @@ class ProjectExtraFieldsController extends Controller {
   /** @var \OCA\CAFEVDB\Service\FuzzyInputService */
   private $fuzzyInput;
 
+  /** @var \OCA\CAFEVDB\Service\ProjectExtraFieldsService */
+  private $extraFieldsService;
+
   /** @var EntityManager */
   protected $entityManager;
 
@@ -64,6 +68,7 @@ class ProjectExtraFieldsController extends Controller {
     , Renderer $renderer
     , PHPMyEdit $phpMyEdit
     , FuzzyInputService $fuzzyInput
+    , ProjectExtraFieldsService $extraFieldsService
   ) {
 
     parent::__construct($appName, $request);
@@ -74,6 +79,7 @@ class ProjectExtraFieldsController extends Controller {
     $this->renderer = $renderer;
     $this->pme = $phpMyEdit;
     $this->fuzzyInput = $fuzzyInput;
+    $this->extraFieldsService = $extraFieldsService;
     $this->l = $this->l10N();
   }
 
@@ -98,8 +104,8 @@ class ProjectExtraFieldsController extends Controller {
         $allowed = $projectValues['allowed_values'];
 
         // sanitize and potentially add missing keys
-        $allowed = $this->renderer->explodeAllowedValues(
-          $this->renderer->implodeAllowedValues($allowed),
+        $allowed = $this->extraFieldsService->explodeAllowedValues(
+          $this->extraFieldsService->implodeAllowedValues($allowed),
           false);
         $this->logInfo("ALLOWED ".print_r($allowed, true));
 
@@ -113,7 +119,7 @@ class ProjectExtraFieldsController extends Controller {
 
         // potentially tweak key to be unique (and simpler) if not already in use.
         if (!$used) {
-          $item['key'] = $this->renderer->allowedValuesUniqueKey($item, $keys);
+          $item['key'] = $this->extraFieldsService->allowedValuesUniqueKey($item, $keys);
         }
         $this->logInfo("ITEM after unique ".print_r($allowed, true));
 
