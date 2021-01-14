@@ -121,7 +121,6 @@ class ProjectEventsController extends Controller {
           unset($selected[$eventUri]);
           break;
         case 'download':
-          $template = 'eventslisting';
           $calendarIds = $this->parameterService['CalendarId'];
           $cookieName = $this->parameterService['DownloadCookieName'];
           $cookieValue = $this->parameterService['DownloadCookieValue'];
