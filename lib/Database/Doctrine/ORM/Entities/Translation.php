@@ -32,10 +32,7 @@ use OCP\ILogger;
 /**
  * Translations
  *
- * @ORM\Table(name="Translations",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"key_id", "locale"})
- *   })
+ * @ORM\Table(name="Translations")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationsRepository")
  */
 class Translation implements \ArrayAccess
@@ -44,20 +41,11 @@ class Translation implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="translations")
+   * @ORM\JoinColumn(onDelete="CASCADE")
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   */
-  private $keyId;
+  private $translationKey;
 
   /**
    * @var string
@@ -66,6 +54,7 @@ class Translation implements \ArrayAccess
    *   "fixed":true,
    *   "comment":"Locale for translation, .e.g. en_US"
    * })
+   * @ORM\Id
    */
   private $locale;
 
@@ -76,48 +65,9 @@ class Translation implements \ArrayAccess
    */
   private $translation;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="translations")
-   * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
-   */
-  private $translationKey;
 
   public function __construct() {
     $this->arrayCTOR();
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
-
-  /**
-   * Set key.
-   *
-   * @param string $key
-   *
-   * @return Key
-   */
-  public function setKeyId($key)
-  {
-    $this->key = $key;
-
-    return $this;
-  }
-
-  /**
-   * Get key.
-   *
-   * @return string
-   */
-  public function getKeyId()
-  {
-    return $this->key;
   }
 
   /**

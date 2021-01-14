@@ -119,6 +119,11 @@ $routes = [
       'url' => '/settings/get/{parameter}',
       'verb' => 'POST',
     ],
+    [
+      'name' => 'personal_settings#get_app',
+      'url' => '/settings/app/get/{parameter}',
+      'verb' => 'POST',
+    ],
     // expert mode operations
     [
       'name' => 'expert_mode#form',

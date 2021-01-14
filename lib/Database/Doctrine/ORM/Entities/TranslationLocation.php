@@ -32,10 +32,7 @@ use OCP\ILogger;
 /**
  * TranslationLocations
  *
- * @ORM\Table(name="TranslationLocations",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"translation_key_id", "file", "line"})
- *   })
+ * @ORM\Table(name="TranslationLocations")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationLocationsRepository")
  */
 class TranslationLocation implements \ArrayAccess
@@ -44,18 +41,17 @@ class TranslationLocation implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="locations")
+   * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
    * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
+  private $translationKey;
 
   /**
    * @var string
    *
    * @ORM\Column(type="string", length=766, nullable=false)
+   * @ORM\Id
    */
   private $file;
 
@@ -63,14 +59,9 @@ class TranslationLocation implements \ArrayAccess
    * @var int
    *
    * @ORM\Column(type="integer", length=11, nullable=false)
+   * @ORM\Id
    */
   private $line;
-
-  /**
-   * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="locations")
-   * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
-   */
-  private $translationKey;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -85,30 +76,6 @@ class TranslationLocation implements \ArrayAccess
   function getId()
   {
     return $this->id;
-  }
-
-  /**
-   * Set translation key id.
-   *
-   * @param int $keyId
-   *
-   * @return TanslationLocation
-   */
-  public function setKeyId($keyId)
-  {
-    $this->keyId = $keyId;
-
-    return $this;
-  }
-
-  /**
-   * Get linked translation key id.
-   *
-   * @return int
-   */
-  public function getKeyId()
-  {
-    return $this->keyId;
   }
 
   /**

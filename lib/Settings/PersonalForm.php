@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB\Settings;
 
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
+use OCP\IInitialStateService;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\DatabaseFactory;
@@ -72,6 +73,7 @@ class PersonalForm {
     , ToolTipsService $toolTipsService
     , ErrorService $errorService
     , TranslationService $translationService
+    , IInitialStateService $initialStateService
     , WikiRPC $wikiRPC
     , WebPagesRPC $webPagesRPC
   ) {
@@ -80,6 +82,7 @@ class PersonalForm {
     $this->toolTipsService = $toolTipsService;
     $this->errorService = $errorService;
     $this->translationService = $translationService;
+    $this->initialStateService = $initialStateService;
     $this->wikiRPC = $wikiRPC;
     $this->webPagesRPC = $webPagesRPC;
     $this->l = $this->l10N();
@@ -96,6 +99,18 @@ class PersonalForm {
         ], 'blank');
     }
     try {
+      // Initial state injecton for JS
+      $this->initialStateService->provideInitialState(
+        $this->appName(),
+        'CAFEVDB',
+        [
+          'appName' => $this->appName(),
+          'toolTipsEnabled' => $this->getUserValue('tooltips', ''),
+          'language' => $this->getUserValue('lang', 'en'),
+          'wysiwygEditor' =>$this->getUserValue('wysiwygEditor', 'tinymce'),
+          'expertMode' => $this->getUserValue('expertmode'),
+        ]);
+
       // Are we a group-admin?
       $isGroupAdmin = $this->isSubAdminOfGroup() && $this->encryptionKeyValid();
 

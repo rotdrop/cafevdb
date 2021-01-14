@@ -22,8 +22,18 @@ var CAFEVDB = CAFEVDB || {};
 var PHPMYEDIT = PHPMYEDIT || {} ;
 
 CAFEVDB.appName = 'cafevdb';
-CAFEVDB.initialState = OCP.InitialState.loadState(CAFEVDB.appName, 'CAFEVDB');
-PHPMYEDIT.initialState = OCP.InitialState.loadState(CAFEVDB.appName, 'PHPMYEDIT');
 
-console.log("CAFEVDB INITIAL STATE", CAFEVDB.initialState);
-console.log("PHPMYEDIT INITIAL STATE", PHPMYEDIT.initialState);
+try {
+  CAFEVDB.initialState = OCP.InitialState.loadState(CAFEVDB.appName, 'CAFEVDB');
+  console.log("CAFEVDB INITIAL STATE", CAFEVDB.initialState);
+} catch (error) {
+  console.info('Failed to load initial state for CAFEVDB');
+  CAFEVDB.initialState = {};
+}
+try {
+  PHPMYEDIT.initialState = OCP.InitialState.loadState(CAFEVDB.appName, 'PHPMYEDIT');
+  console.log("PHPMYEDIT INITIAL STATE", PHPMYEDIT.initialState);
+} catch (error) {
+  console.info('Failed to load initial state for PHPMYEDIT');
+  PHPMYEDIT.initialState = {};
+}

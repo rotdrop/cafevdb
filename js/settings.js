@@ -806,6 +806,7 @@ var CAFEVDB = CAFEVDB || {};
       const translationKey = $('.translation-key');
       const translationText = $('textarea.translation-translation');
       const hideTranslated = $('#cafevdb-hide-translated');
+      const downloadPoTemplates = $('#'+CAFEVDB.appName+'-translations-download-pot');
       const msg = $('.translation.msg');
 
       var key;
@@ -900,6 +901,37 @@ var CAFEVDB = CAFEVDB || {};
           }
           return val;
         });
+
+      downloadPoTemplates.on('click', function(event) {
+        const self = $(this);
+
+        const post = [];
+        const cookieValue = CAFEVDB.makeId();
+        const cookieName = CAFEVDB.appName + '_' + 'translation_templates_download'
+        post.push({ name: 'DownloadCookieName', value: cookieName });
+        post.push({ name: 'DownloadCookieValue', value: cookieValue });
+        post.push({ name: 'requesttoken', value: OC.requestToken });
+
+        console.info('DOWNLOAD POST', post);
+        $.fileDownload(
+          OC.generateUrl('/apps/cafevdb/settings/app/get/translation-templates'), {
+            httpMethod: 'POST',
+            data: post,
+            cookieName:  cookieName,
+            cookieValue: cookieValue,
+            cookiePath: oc_webroot,
+          })
+	  .fail(function (responseHtml, url) {
+            CAFEVDB.Dialogs.alert(t('cafevdb', 'Unable to download translation templates: {response}',
+                                    { 'response': responseHtml }),
+                                  t('cafevdb', 'Error'),
+                                  function () {},
+                                  true, true);
+          })
+	  .done(function (url) { console.info('DONE downloading', url); });
+
+        return false;
+      });
 
       updateControls();
 

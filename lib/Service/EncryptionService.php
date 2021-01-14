@@ -417,7 +417,7 @@ class EncryptionService
       if ($this->appEncryptionKey === null) {
         //throw new \Exception($this->l->t('Encryption requested but not configured, empty encryption key'));
         if (!empty($this->userId)) {
-          $this->logError($this->l->t('Encryption requested but not configured for user "'.($this->userId).'", empty encryption key'));
+          $this->logError('Encryption requested but not configured for user "'.($this->userId).'", empty encryption key');
         }
         return false;
       }

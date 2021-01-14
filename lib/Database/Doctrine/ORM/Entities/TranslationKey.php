@@ -63,7 +63,7 @@ class TranslationKey implements \ArrayAccess
   private $phrase;
 
   /**
-   * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationKey", cascade={"all"})
+   * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationKey", cascade={"all"}, fetch="EXTRA_LAZY")
    */
   private $translations;
 

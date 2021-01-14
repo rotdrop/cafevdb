@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Translation;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationKey;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationLocation;
+use OCA\CAFEVDB\Common\Util;
 
 class TranslationService
 {
@@ -62,15 +63,13 @@ class TranslationService
     }
 
     $this->setDataBaseRepository(TranslationLocation::class);
-    $keyId= $translationKey->getId();
     $location = $this->findOneBy([
-      'translationKey' => $keyId,
+      'translationKey' => $translationKey,
       'file' => $file,
       'line' => $line ]);
     if (empty($location)) {
-      $this->logDebug(__METHOD__.' empty location for key '.$keyId);
+      $this->logInfo('Empty location for key '.$translationKey->getId());
       $location = TranslationLocation::create()
-                ->setKeyId($keyId)
                 ->setTranslationKey($translationKey)
                 ->setFile($file)
                 ->setLine($line);
@@ -95,6 +94,9 @@ class TranslationService
    */
   public function recordTranslation(string $phrase, string $translatedPhrase, string $locale)
   {
+    if (empty(Util::normalizeSpaces($translatedPhrase))) {
+      throw new \Exception('Translation for %s is empty.', $phrase);
+    }
     $this->setDataBaseRepository(TranslationKey::class);
     $translationKey = $this->findOneBy([ 'phrase' => $phrase ]);
     if (empty($translationKey)) {
@@ -108,17 +110,15 @@ class TranslationService
     }
 
     $this->setDataBaseRepository(Translation::class);
-    $keyId= $translationKey->getId();
     $changed = false;
     $translation = $this->findOneBy([
-      'keyId' => $keyId,
+      'translationKey' => $translationKey,
       'locale' => $locale ]);
     if (empty($translation)) {
       $translation = Translation::create()
-                ->setKeyId($keyId)
-                ->setTranslationKey($translationKey)
-                ->setTranslation($translatedPhrase)
-                ->setLocale($locale);
+                   ->setTranslationKey($translationKey)
+                   ->setTranslation($translatedPhrase)
+                   ->setLocale($locale);
       $changed = true;
     } else if ($translation->getTranslation() != $translatedPhrase) {
       $translation->setTranslation($translatedPhrase);
@@ -163,6 +163,28 @@ class TranslationService
     }
     return $translations;
   }
+
+  public function generateCatalogueTemplates()
+  {
+    $this->setDataBaseRepository(TranslationKey::class);
+    $translationKeys = $this->findAll();
+    $catalogue = [];
+    foreach ($translationKeys as $translationKey) {
+      $entry = [];
+      foreach ($translationKey['locations'] as $location) {
+        $entry[] = "#: {$location['file']}:{$location['line']}";
+      }
+      $entry[] = "#, php-format";
+      $entry[] = 'msgid "'.str_replace('"', '\\"', $translationKey['phrase']).'"';
+      $entry[] = 'msgstr ""';
+      $entry[] = '';
+      $catalogue[] = implode("\n", $entry);
+    }
+    $contents = implode("\n", $catalogue);
+
+    return $contents;
+  }
+
 }
 
 // Local Variables: ***

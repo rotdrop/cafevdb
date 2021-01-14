@@ -43,6 +43,7 @@ foreach ($translations as $keyId => $data) {
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin devel">
   <form id="translations">
+    <fieldset id="<?php p($appName); ?>-translations-translate">
     <select
         id="<?php echo $appName; ?>-translation-phrases"
         data-placeholder="<?php echo $l->t("Select a phrase to translate"); ?>"
@@ -65,10 +66,15 @@ foreach ($translations as $keyId => $data) {
     <label for="<?php echo $appName ?>-hide-translated" title="<?php echo $toolTips['hide-translated']; ?>" >
       <?php echo $l->t('hide translated');?>
     </label>
+    <div id="<?php echo $appName; ?>-translation-key" class="translation-key">
+    </div>
+    <textarea id="<?php echo $appName; ?>-translation-translation" class="translation-translation">
+    </textarea>
+    </fieldset>
+    <fieldset id="<?php p($appName); ?>-translations-download">
+      <input id="<?php p($appName); ?>-translations-download-pot" type="button" name="download-translations-template" value="<?php p($l->t('Download Template (.pot)')); ?>"/>
+      <!-- <input id="<?php p($appName); ?>-translations-download-translations" type="button" name="download-translations" value="<?php p($l->t('Download Translations (.po)')); ?>"/> -->
+    </fieldset>
+    <div class="translation msg"></div>
   </form>
-  <div id="<?php echo $appName; ?>-translation-key" class="translation-key">
-  </div>
-  <textarea id="<?php echo $appName; ?>-translation-translation" class="translation-translation">
-  </textarea>
-  <div class="translation msg"></div>
 </div>

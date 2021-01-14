@@ -25,12 +25,14 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\TranslationService;
@@ -49,6 +51,10 @@ class PersonalSettingsController extends Controller {
   /** @var Personal */
   private $personalSettings;
 
+  /** @var \OCA\CAFEVDB\Service\ParameterService */
+  private $parameterService;
+
+  /** @var \OCA\CAFEVDB\Service\CalDavService */
   private $calDavService;
 
   /** @var OCA\CAFEVDB\Service\TranslationService */
@@ -63,6 +69,7 @@ class PersonalSettingsController extends Controller {
   public function __construct(
     $appName
     , IRequest $request
+    , RequestParameterService $parameterService
     , ConfigService $configService
     , Personal $personalSettings
     , ConfigCheckService $configCheckService
@@ -73,6 +80,7 @@ class PersonalSettingsController extends Controller {
   ) {
 
     parent::__construct($appName, $request);
+    $this->parameterService = $parameterService;
 
     $this->configService = $configService;
     $this->configCheckService = $configCheckService;
@@ -548,7 +556,10 @@ class PersonalSettingsController extends Controller {
       if (!isset($value['translation'])) {
         return self::grumble($this->l->t('Missing translation'));
       }
-      $translation = Util::htmlEscape(trim($value['translation']));
+      $translation = Util::htmlEscape(Util::normalizeSpaces($value['translation']));
+      if (empty($translation)) {
+        return self::grumble($this->l->t('Empty translation for phrase "%s".', $key));
+      }
       $language = $value['language'];
       if (strlen($language) < 2 || strlen($language) > 5) {
         return self::grumble($this->l->t('Language specifier must between 2 and 5 chars (e.g. de or en_US), got %s', $language));
@@ -638,6 +649,38 @@ class PersonalSettingsController extends Controller {
     }
     return self::grumble($this->l->t('Unknown Request'));
   }
+
+  /**
+   * Store app settings.
+   *
+   * @NoAdminRequired
+   * @SubAdminRequired
+   */
+  public function getApp($parameter) {
+    $this->logInfo('PARAM '.$parameter);
+    switch ($parameter) {
+    case 'translation-templates':
+      $pot = $this->translationService->generateCatalogueTemplates();
+      $cookieName = $this->parameterService['DownloadCookieName'];
+      $cookieValue = $this->parameterService['DownloadCookieValue'];
+
+      if (empty($cookieName) || empty($cookieValue)) {
+        return self::grumble($this->l->t('Download-cookies have not been submitted'));
+      }
+
+      $fileName = $this->appName().'-'.$this->timeStamp().'.pot';
+
+      $response = new DataDownloadResponse($pot, $fileName, 'text/plain');
+
+      $response->addCookie($cookieName, $cookieValue);
+
+      return $response;
+    default:
+      break;
+    }
+    return self::grumble($this->l->t('Unknown Request'));
+  }
+
 }
 
 // Local Variables: ***
