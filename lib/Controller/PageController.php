@@ -191,7 +191,7 @@ class PageController extends Controller {
     $musicianId = -1) {
 
     // Initial state injecton for JS
-    $this->publishInitialStateForUser($this->user());
+    $this->publishInitialStateForUser($this->userId());
 
     // The most important ...
     $encrkey = $this->getAppEncryptionKey();
