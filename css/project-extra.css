@@ -133,20 +133,33 @@ table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.allowed-
     text-align:right;
 }
 
+/* list view */
+.pme-cell-wrapper table.operation-display.allowed-values th.field-data span.general,
+.pme-cell-wrapper table.operation-display.allowed-values.data-type-service-fee .field-data span.service-fee {
+  display:inline-block;
+}
+
+.pme-cell-wrapper table.operation-display.allowed-values.data-type-service-fee .field-data span.general,
+.pme-cell-wrapper table.operation-display.allowed-values .field-data span.service-fee {
+  display:none;
+}
+
+table.pme-main td.pme-cell span.align-right {
+  float:right;
+}
+
+/******************/
+
 table.pme-main span.service-fee.currency-amount {
-    text-align:right;
-    display:inline-block;
-    width:100%;
+  text-align:right;
+  display:inline-block;
+  width:100%;
 }
 
 .project-extra-fields table.pme-main textarea.field-tooltip,
 .project-extra-fields table.pme-main textarea.extra-field-tooltip {
     overflow-x:hidden; /* fix FF extra-line bug */
 }
-
-/*.tooltip span.service-fee {
-    display:none;
-}*/
 
 .project-extra-fields table.pme-main td.allowed-values {
     position:relative;

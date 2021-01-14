@@ -928,6 +928,16 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $fdd['css']['postfix'] .= ' '.$slug;
     $fdd['tooltip'] = $this->toolTipsService[$slug];
   }
+
+  protected function queryFieldIndex(string $key, array $fdd)
+  {
+    return array_search($key, array_keys($fdd));
+  }
+
+  protected function queryField(string $key, array $fdd)
+  {
+    return 'qf'.$this->queryFieldIndex($key, $fdd);
+  }
 }
 
 // Local Variables: ***

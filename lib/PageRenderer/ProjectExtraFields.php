@@ -287,6 +287,7 @@ class ProjectExtraFields extends PMETableViewBase
       ];
     }
 
+    $multiplicityIndex = count($opts['fdd']);
     $opts['fdd']['multiplicity'] =[
       'name'    => $this->l->t('Multiplicity'),
       'select'  => 'D',
@@ -299,6 +300,7 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-field-multiplicity'],
     ];
 
+    $dataTypeIndex = count($opts['fdd']);
     $opts['fdd']['data_type'] =[
       'name'    => $this->l->t('Data-Type'),
       'select'  => 'D',
@@ -317,7 +319,9 @@ class ProjectExtraFields extends PMETableViewBase
       'css' => ['postfix' => ' allowed-values' ],
       'select' => 'T',
       'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
-        return $this->showAllowedValues($value, $op, $recordId);
+        $multiplicity = $row[$this->queryField('multiplicity', $fdd)];
+        $dataType = $row[$this->queryField('data_type', $fdd)];
+        return $this->showAllowedValues($value, $op, $recordId, $multiplicity, $dataType);
       },
       'maxlen' => 1024,
       'size' => 30,
@@ -384,6 +388,21 @@ class ProjectExtraFields extends PMETableViewBase
       'size' => 30,
       'sort' => true,
       'display|LF' => [ 'popup' => 'data' ],
+      'php|LFDV' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+        $multiplicity = $row[$this->queryField('multiplicity', $fdd)];
+        $dataType = $row[$this->queryField('data_type', $fdd)];
+        if ($dataType != 'service-fee' && empty($value)) {
+          return $value;
+        }
+        $html = '<span class="';
+        if ($dataType != 'text' && $dataType != 'html') {
+          $html .= 'align-right';
+        }
+        $html .= '">';
+        $html .= ($dataType == 'service-fee') ? $this->moneyValue($value) : $value;
+        $html .= '</span>';
+        return $html;
+      },
       'tooltip' => $this->toolTipsService['extra-fields-default-value'],
     ];
 
@@ -1010,7 +1029,7 @@ class ProjectExtraFields extends PMETableViewBase
    * Generate a table in order to define field-valus for
    * multi-select stuff.
    */
-  private function showAllowedValues($value, $op, $recordId)
+  private function showAllowedValues($value, $op, $recordId, $multiplicity = null, $dataType = null)
   {
     $allowed = $this->extraFieldsService->explodeAllowedValues($value);
     if ($op === 'display' && count($allowed) == 1) {
@@ -1062,7 +1081,14 @@ class ProjectExtraFields extends PMETableViewBase
 __EOT__;
     }
 
-    $html .= '<table class="operation-'.$op.' allowed-values">
+    $cssClass = 'operation-'.$op.' allowed-values';
+    if (!empty($multiplicity)) {
+      $cssClass .= ' multiplicity-'.$multiplicity;
+    }
+    if (!empty($dataType)) {
+      $cssClass .= ' data-type-'.$dataType;
+    }
+    $html .= '<table class="'.$cssClass.'">
   <thead>
      <tr>';
     $html .= '<th class="operations"></th>';
@@ -1252,10 +1278,12 @@ __EOT__;
    */
   private function currencyValue($value)
   {
-    $money = $this->moneyValue($value);
     return
-      '<span class="service-fee currency-amount">'.$money.'</span>'.
-      '<span class="general">'.$value.'</span>';
+      '<span class="general">'.$value.'</span>'
+      .'<span class="service-fee currency-amount">'
+      .$this->moneyValue($value)
+      .'</span>';
+
   }
 
   /**
@@ -1265,9 +1293,8 @@ __EOT__;
   private function currencyLabel($label = 'Data')
   {
     return
-      '<span class="general">'.$label.'</span>'.
-      '<span class="glue general currenylabel">/</span>'.
-      '<span class="service-fee currencylabel">'
+      '<span class="general">'.$label.'</span>'
+      .'<span class="service-fee currency-label">'
       .$this->l->t('Amount').' ['.$this->currencySymbol().']'
       .'</span>';
   }
