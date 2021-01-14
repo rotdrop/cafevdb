@@ -10,9 +10,7 @@ class EnumExtraFieldDataType extends EnumType
     'integer',
     'float',
     'date',
-    'time',
-    'datatime',
-    'money',
+    'datetime',
     'service-fee',
   ];
 }
