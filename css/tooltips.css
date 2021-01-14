@@ -45,21 +45,39 @@ div.tooltip[role="tooltip"] dd {
    margin-left:1em;
 }
 
+div.tooltip[role="tooltip"] dl,
+div.tooltip[role="tooltip"] dd,
+div.tooltip[role="tooltip"] dt {
+    padding:unset;
+    width:unset;
+}
+
+div.tooltip[role="tooltip"] dt {
+  padding-right:1em;
+}
+
+div.tooltip[role="tooltip"] dl {
+  padding-top:0.3em;
+  padding-bottom:0.3em;
+}
+
+div.tooltip[role="tooltip"] dt {
+  text-align:unset;
+  font-weight:bold;
+  font-style:italic;
+}
+
 div.tooltip[role="tooltip"] h1,
 div.tooltip[role="tooltip"] h2,
 div.tooltip[role="tooltip"] h3,
 div.tooltip[role="tooltip"] h4,
 div.tooltip[role="tooltip"] h5 {
-    font-weight:bold;
+  font-weight:bold;
 }
 
 div.tooltip[role="tooltip"] var,
 div.tooltip[role="tooltip"] em {
     font-style:italic;
-}
-
-div.tooltip[role="tooltip"] code {
-    font-family:monospace;
 }
 
 div.tooltip[role="tooltip"] samp,
