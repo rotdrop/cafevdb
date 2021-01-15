@@ -719,6 +719,15 @@ class ProjectParticipants extends PMETableViewBase
         throw new \Exception($this->l->t('Unsupported field multiplicity type: "%s"', $field['multiplicity']));
       }
 
+      // @TODO Groups: "simple group" e.g. "twin rooms". Collect a
+      // number of participants into groups, e.g. to record
+      // preferences of the participants for multi-bed accomodation
+      //
+      // "PredefinedGroups": E.g. to collect concrete groups into a
+      // restricted number of named groups with restricted number of
+      // participants per group. E.g. to distribute the participants
+      // to cars or hotel-rooms and the like.
+
 //       case 'SimpleGroup':
 //       case 'SurchargeGroup':
 //         // keep the original value as hidden input field and generate
