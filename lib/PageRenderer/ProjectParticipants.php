@@ -253,8 +253,6 @@ class ProjectParticipants extends PMETableViewBase
 
     $extraFields = $this->project['extraFields'];
 
-    $this->logInfo(count($extraFields));
-
     // count number of finance fields
     $extraFinancial = 0;
     foreach ($extraFields as $field) {
@@ -266,6 +264,24 @@ class ProjectParticipants extends PMETableViewBase
     } else {
       $useFinanceTab = false;
       $financeTab = 'project';
+    }
+
+    /* For each extra field add one dedicated join table entry
+     * which is pinned to the repsective field-id.
+     */
+    foreach ($extraFields as $field) {
+      $fieldId = $field['id'];
+      $extraFieldJoinTable = [
+        'table' => self::EXTRA_FIELDS_DATA_TABLE.':'.$fieldId,
+        'entity' => Entities\ProjectExtraFieldDatum::class,
+        'identifier' => [
+          'project_id' => 'project_id',
+          'musician_id' => 'musician_id',
+          'field_id' => [ 'value' => $field['id'], ],
+        ],
+        'column' => 'field_value',
+      ];
+      $this->joinStructure[] = $extraFieldJoinTable;
     }
 
     // Display special page elements
@@ -713,6 +729,81 @@ class ProjectParticipants extends PMETableViewBase
         $fdd['display|LF'] = [ 'popup' => 'data' ];
         break;
       case 'groupofpeople':
+//         // keep the original value as hidden input field and generate
+//         // a new group-definition field as yet another column
+//         list($curColIdx, $fddName) = $this->makeJoinTableField(
+//           $opts['fdd'], self::EXTRA_FIELDS_DATA_TABLE, $fieldName.'Group'.':'.$fieldId, $fdd);
+//         $fdd['input'] = 'H';
+//         $fdd = &$opts['fdd'][$fddName];
+
+// //         $curColIdx++;
+
+//         // define the group stuff
+//         $max = $allowed[0]['limit']; // ATM, may change
+//         $fdd = array_merge(
+//           $fdd, [
+//             'select' => 'M',
+//             'sql' => "GROUP_CONCAT(DISTINCT \$join_table.instrumentation_id)",
+//             'display' => [ 'popup' => 'data' ],
+//             'colattrs' => [ 'data-groups' => json_encode([ 'Limit' => $max ]), ],
+//             'filter' => 'having',
+//             'values' => [
+//               'table' => "SELECT
+//    CONCAT_WS(':', pp.project_id, musician_id) AS instrumentation_id,
+//    CONCAT_WS(' ', m.first_name, m.name) AS name,
+//    m.name AS last_name,
+//    m.first_name AS first_name,
+//    fd.field_value AS group_id
+// FROM ProjectParticipants pp
+//  LEFT JOIN Musicians AS m
+//    ON m.id = pp.musician_id
+//  LEFT JOIN ProjectExtraFieldsData fd
+//    ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id= $fieldId
+//  WHERE pp.project_id = $projectId",
+//               'column' => 'instrumentation_id',
+//               'description' => 'name',
+//               'groups' => "CONCAT('".$fieldName." ',\$table.group_id)",
+//               'data' => "CONCAT('{\"Limit\":".$max.",\"group_id\":\"',IFNULL(\$table.group_id,-1),'\"}')",
+//               'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
+//               'join' => '$join_table.field_id = '.$joinTables[self::EXTRA_FIELDS_DATA_TABLE].'.field_id'
+//                        .' AND $join_table.group_id = '.$joinTables[self::EXTRA_FIELDS_DATA_TABLE].'.field_value',
+//             ],
+//             'valueGroups' => [ -1 => $this->l->t('without group') ],
+//         ]);
+
+        //         $fdd['css']['postfix'] .= ' groupofpeople single-valued';
+
+//         if ($type['Name'] === 'SurchargeGroup') {
+//           $fdd['css']['postfix'] .= ' surcharge';
+//           $money = Util::moneyValue(reset($valueData));
+//           $fdd['name|LFVD'] = $fdd['name'];
+//           $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
+//           $fdd['display|LFVD'] = array_merge(
+//             $fdd['display'],
+//             [
+//               'prefix' => '<span class="allowed-option-name clip-long-text group">',
+//               'postfix' => ('</span><span class="allowed-option-value money">'.
+//                             $money.
+//                             '</span>'),
+//               ]);
+//         }
+
+//         // in filter mode mask out all non-group-members
+//         $fdd['values|LF'] = array_merge(
+//           $fdd['values'],
+//           [ 'filters' => '$table.GroupId IS NOT NULL' ]);
+
+//         // after all this tweaking, we still need the real group id
+//         $opts['fdd'][$fieldName.'GroupId'] = [
+//           'name'     => $this->l->t('%s Group Id', array($name)),
+//           'css'      => [ 'postfix' => ' groupofpeople-id' ],
+//           'input|LFVD' => 'VRH',
+//           'input'      => 'SRH',
+//           'select'   => 'T',
+//           'sql'      => 'PMEtable0.`'.$fieldName.'`',
+//           ];
+//         break;
+        break;
       case 'groupsofpeople':
         break;
       default:

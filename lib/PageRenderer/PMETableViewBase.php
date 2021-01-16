@@ -690,6 +690,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       $table = $joinInfo['table'];
+      $valuesTable = explode(':', $table)[0];
 
       $joinIndex[$table] = count($opts['fdd']);
       $joinTables[$table] = 'PMEjoin'.$joinIndex[$table];
@@ -697,17 +698,21 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
       $group = false;
       $joinData = [];
-      foreach ($joinInfo['identifier'] as $joinTableKey => $mainTableKey) {
-        if (empty($mainTableKey)) {
+      foreach ($joinInfo['identifier'] as $joinTableKey => $joinTableValue) {
+        if (empty($joinTableValue)) {
           $group = true;
           continue;
         }
         $joinCondition = '$join_table.'.$joinTableKey. ' = ';
-        if (!empty($mainTableKey['table'])) {
-          $mainTableColumn = $mainTableKey['column']?: 'id';
-          $joinCondition .= $joinTables[$mainTableKey['table']].'.'.$mainTableKey['column'];
+        if (is_array($joinTableValue)) {
+          if (!empty($joinTableValue['table'])) {
+            $mainTableColumn = $joinTableValue['column']?: 'id';
+            $joinCondition .= $joinTables[$joinTableValue['table']].'.'.$mainTableColumn;
+          } else if (!empty($joinTableValue['value'])) {
+            $joinCondition .= $joinTableValue['value'];
+          }
         } else {
-          $joinCondition .= '$main_table.'.$mainTableKey;
+          $joinCondition .= '$main_table.'.$joinTableValue;
         }
         $joinData[] = $joinCondition;
       }
@@ -722,7 +727,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'options' => '',
         'sort' => true,
         'values' => [
-          'table' => $table,
+          'table' => $valuesTable,
           'column' => $joinInfo['column'],
           'join' => implode(' AND ', $joinData),
         ],
