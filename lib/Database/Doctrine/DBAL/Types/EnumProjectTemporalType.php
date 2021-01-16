@@ -24,6 +24,10 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 class EnumProjectTemporalType extends EnumType
 {
-    protected $name = 'enumprojecttemporaltype';
-    protected $values = ['temporary','permanent'];
+  protected $name = 'enumprojecttemporaltype';
+  protected $values = [
+    'temporary',
+    'permanent',
+    'template',
+  ];
 }
