@@ -34,6 +34,7 @@ use Ramsey\Uuid\Doctrine as Ramsey;
 
 use OCA\CAFEVDB\Service\EncryptionService;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus;
@@ -292,16 +293,33 @@ class EntityManager extends EntityManagerDecorator
    * Remove unwanted constraints after schema generation.
    *
    * @param \Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args
+   *
+   * @todo See that this is not necessary.
    */
   public function postGenerateSchema(\Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args)
   {
     $schema = $args->getSchema();
     $em = $args->getEntityManager();
     foreach ($schema->getTables() as $table) {
+
+        // tweak foreign keys
       foreach ($table->getForeignKeys() as $foreignKey) {
         if (false && $foreignKey->getForeignTableName() == 'ProjectInstrumentationNumbers') {
           $table->removeForeignKey($foreignKey->getName());
         }
+      }
+
+      $enumColumns = [];
+      // inject enum values into comments
+      foreach ($table->getColumns() as $column) {
+        if ($column->getType() instanceof EnumType) {
+          $enumColumns[] = $column;
+        }
+      }
+
+      /** @var \Doctrine\DBAL\Schema\Column $column */
+      foreach ($enumColumns as $column) {
+        $column->setComment(trim(sprintf('%s (%s)', $column->getComment(), implode(',', $column->getType()->getValues()))));
       }
     }
   }
