@@ -22,8 +22,18 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+/**
+ * Enum for "extra-field" multiplicity.
+ */
 class EnumExtraFieldMultiplicity extends EnumType
 {
-    protected $name = 'enumextrafieldmultiplicity';
-    protected $values = ['simple','single','multiple','parallel','groupofpeople','groupsofpeople'];
+  protected $name = 'enumextrafieldmultiplicity';
+  protected $values = [
+    'simple',
+    'single',
+    'multiple',
+    'parallel',
+    'groupofpeople',
+    'groupsofpeople',
+  ];
 }
