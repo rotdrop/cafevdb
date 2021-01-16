@@ -220,7 +220,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'values|ACP' => [
         'column'      => 'id',
         'description' => 'name',
-, 2021        'groups'      => 'year',
+        'groups'      => 'year',
         'orderby'     => '$table.year DESC',
         //        'join'        => '$main_col_fqn = $join_col_fqn',
         'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
