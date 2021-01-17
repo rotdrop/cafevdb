@@ -108,9 +108,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
   };
 
   /**Generate a name selector with PME_sys_.... prefix.*/
-  PHPMYEDIT.pmeSysNameSelector = function(element, token) {
+  PHPMYEDIT.pmeSysNameSelector = function(element, token, modifier) {
     const pme = this;
-    return element+'[name="'+pme.pmeSys(token)+'"]';
+    if (modifier === undefined) {
+      modifier = '';
+    }
+    return element + '[name' +modifier + '="' + pme.pmeSys(token) + '"]';
   };
 
   /**Generate a compound name selector with PME_sys_.... prefix.*/
