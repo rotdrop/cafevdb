@@ -32,12 +32,12 @@ div.detailed-instrumentation form.pme-form:not(.pme-change) span.allowed-option-
 
 div.detailed-instrumentation form.pme-form:not(.pme-change) td.groupofpeople,
 div.detailed-instrumentation form.pme-form:not(.pme-change) td.groupofpeople-id,
-div.detailed-instrumentation form.pme-form:not(.pme-change) td.surcharge.set,
-div.detailed-instrumentation form.pme-form:not(.pme-change) td.surcharge.enum {
+div.detailed-instrumentation form.pme-form:not(.pme-change) td.service-fee.set,
+div.detailed-instrumentation form.pme-form:not(.pme-change) td.service-fee.enum {
     min-width:10em;
 }
 
-div.detailed-instrumentation form.pme-form:not(.pme-change) td.surcharge.enum {
+div.detailed-instrumentation form.pme-form:not(.pme-change) td.service-fee.enum {
     font-family:inherit;
 }
 
@@ -57,34 +57,34 @@ div.detailed-instrumentation form.pme-form.pme-delete span.allowed-option-value.
     float:unset;
 }
 
-div.detailed-instrumentation form.pme-form.pme-view td.surcharge span.allowed-option-name:after,
-div.detailed-instrumentation form.pme-form.pme-delete td.surcharge span.allowed-option-name:after {
+div.detailed-instrumentation form.pme-form.pme-view td.service-fee span.allowed-option-name:after,
+div.detailed-instrumentation form.pme-form.pme-delete td.service-fee span.allowed-option-name:after {
     content: ": ";
 }
 
-div.detailed-instrumentation form.pme-form.pme-add td.pme-key.surcharge.single-valued,
-div.detailed-instrumentation form.pme-form.pme-change td.pme-key.surcharge.single-valued,
-div.detailed-instrumentation form.pme-form.pme-copy td.pme-key.surcharge.single-valued,
-div.detailed-instrumentation form.pme-form.pme-view td.surcharge.set,
-div.detailed-instrumentation form.pme-form.pme-delete td.surcharge.set {
+div.detailed-instrumentation form.pme-form.pme-add td.pme-key.service-fee.single-valued,
+div.detailed-instrumentation form.pme-form.pme-change td.pme-key.service-fee.single-valued,
+div.detailed-instrumentation form.pme-form.pme-copy td.pme-key.service-fee.single-valued,
+div.detailed-instrumentation form.pme-form.pme-view td.service-fee.set,
+div.detailed-instrumentation form.pme-form.pme-delete td.service-fee.set {
     position:relative;
 }
 
-div.detailed-instrumentation form.pme-form.pme-change td.pme-key.surcharge.single-valued span.allowed-option-name.money,
-div.detailed-instrumentation form.pme-form.pme-add td.pme-key.surcharge.single-valued span.allowed-option-name.money,
-div.detailed-instrumentation form.pme-form.pme-delete td.pme-key.surcharge.single-valued span.allowed-option-name.money {
+div.detailed-instrumentation form.pme-form.pme-change td.pme-key.service-fee.single-valued span.allowed-option-name.money,
+div.detailed-instrumentation form.pme-form.pme-add td.pme-key.service-fee.single-valued span.allowed-option-name.money,
+div.detailed-instrumentation form.pme-form.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-name.money {
     margin-right:6em; /* leave room for absolute positioned money value */
 }
 
-div.detailed-instrumentation form.pme-form.pme-change td.pme-key.surcharge.single-valued span.allowed-option-value.money,
-div.detailed-instrumentation form.pme-form.pme-add td.pme-key.surcharge.single-valued span.allowed-option-value.money,
-div.detailed-instrumentation form.pme-form.pme-delete td.pme-key.surcharge.single-valued span.allowed-option-value.money {
+div.detailed-instrumentation form.pme-form.pme-change td.pme-key.service-fee.single-valued span.allowed-option-value.money,
+div.detailed-instrumentation form.pme-form.pme-add td.pme-key.service-fee.single-valued span.allowed-option-value.money,
+div.detailed-instrumentation form.pme-form.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-value.money {
     position:absolute;
     right:1em;
 }
 
-div.detailed-instrumentation form.pme-form.pme-view td.surcharge.set span.allowed-option-value.money,
-div.detailed-instrumentation form.pme-form.pme-delete td.surcharge.set span.allowed-option-value.money {
+div.detailed-instrumentation form.pme-form.pme-view td.service-fee.set span.allowed-option-value.money,
+div.detailed-instrumentation form.pme-form.pme-delete td.service-fee.set span.allowed-option-value.money {
     font-family:monospace;
     font-size:120%;
     position:absolute;
