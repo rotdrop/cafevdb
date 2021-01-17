@@ -54,7 +54,7 @@ var CAFEVDB = CAFEVDB || {};
       if (multiplicity.length > 0 && dataType.length > 0) {
 	return { 'multiplicity': multiplicity.val(), 'data_type': dataType.val() };
       }
-      elem = container.find('td.pme-value.field-type .data');
+      const elem = container.find('td.pme-value.field-type .data');
       if (elem.length <= 0) {
         return null;
       }
