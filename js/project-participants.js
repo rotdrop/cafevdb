@@ -337,7 +337,7 @@ var CAFEVDB = CAFEVDB || {};
     const selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
     const form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
 
-    var recKey = form.find(PHPMYEDIT.pmeSysNameSelector('input', 'rec'));
+    var recKey = form.find(PHPMYEDIT.pmeSysNameSelector('input', 'rec[musician_id]'));
     recKey = recKey.length === 1 ? recKey.val() : -1;
 
     const selectedVoices = selectVoices.val();
@@ -564,6 +564,8 @@ var CAFEVDB = CAFEVDB || {};
       var recPrev = prevSelected.indexOf(recKey) >= 0;
       var recCur  = selected.indexOf(recKey) >= 0;
 
+
+
       var changed = false;
 
       console.log('prevSelected', prevSelected);
@@ -601,15 +603,15 @@ var CAFEVDB = CAFEVDB || {};
           console.log('single new item');
           var singleNewOption = null;
           self.find('option:selected').each(function(idx) {
-            var self = $(this);
+            const self = $(this);
             if (self.val() != recKey) {
               singleNewOption = self;
               return false;
             }
             return true;
           });
-console.log('other people group option', singleNewOption.length);
-console.log('key', recKey);
+          console.log('other people group option', singleNewOption);
+          console.log('key', recKey);
           var data = singleNewOption.data('data');
           if (data.GroupId != -1) {
             console.log('group: ', data.GroupId);
