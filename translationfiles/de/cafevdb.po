@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
 "POT-Creation-Date: 2021-01-17 15:09+0100\n"
-"PO-Revision-Date: 2021-01-17 15:33+0100\n"
+"PO-Revision-Date: 2021-01-17 15:35+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -9279,17 +9279,17 @@ msgstr "Personengruppen"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:169
 #, php-format
 msgid "extra field multiple"
-msgstr "eine von mehreren"
+msgstr "Einfachauswahl"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:169
 #, php-format
 msgid "extra field parallel"
-msgstr "mehrere gleichzeitig"
+msgstr "Mehrfachauswahl"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:169
 #, php-format
 msgid "extra field simple"
-msgstr "einfacher wert"
+msgstr "einfacher Wert"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:169
 #, php-format
