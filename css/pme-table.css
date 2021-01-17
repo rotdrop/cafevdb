@@ -43,6 +43,10 @@ html:not(.ie8) input[type="checkbox"].pme-input:checked + span.pme-label::before
   background-image: url('../img/actions/checkbox-checked.svg');
 }
 
+input.pme-input[type="radio"] {
+  min-height:unset;
+}
+
 /*******************************************************************************
  *
  * list view within jQuery dialogs, let them look like the ones
