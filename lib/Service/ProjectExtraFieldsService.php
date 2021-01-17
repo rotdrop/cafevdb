@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Ramsey\Uuid\Uuid;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
@@ -68,7 +70,7 @@ class ProjectExtraFieldsService
   {
     $options = empty($values) ? [] : json_decode($values, true);
     if (isset($options[-1])) {
-      unset($options[-1]);
+      throw new \Exception($this->l->t('Option index -1 should not be present here, options: %s', print_r($options, true)));
     }
     $options = array_values($options);
     $protoType = $this->allowedValuesPrototype();
@@ -109,7 +111,9 @@ class ProjectExtraFieldsService
    */
   public function implodeAllowedValues($options)
   {
-    unset($options[-1]);
+    if (isset($options[-1])) {
+      throw new \Exception($this->l->t('Option index -1 should not be present here, options: %s', print_r($options, true)));
+    }
     $proto = $this->allowedValuesPrototype();
     foreach ($options as &$option) {
       $option = array_merge($proto, $option);

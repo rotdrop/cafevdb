@@ -103,17 +103,17 @@ class ProjectExtraFieldsController extends Controller {
         $used  = $data['used'] === 'used';
         $allowed = $projectValues['allowed_values'];
 
+        $allowed = array_values($allowed);
+
         // sanitize and potentially add missing keys
         $allowed = $this->extraFieldsService->explodeAllowedValues(
           $this->extraFieldsService->implodeAllowedValues($allowed),
           false);
-        $this->logInfo("ALLOWED ".print_r($allowed, true));
 
         if (count($allowed) !== 1) {
           return self::grumble($this->l->t('No or too many items available: %s',
                                            print_r($allowed, true) ));
         }
-        $this->logInfo("ALLOWED after JSON ".print_r($allowed, true));
 
         $item = $allowed[0];
 
@@ -121,7 +121,6 @@ class ProjectExtraFieldsController extends Controller {
         if (!$used) {
           $item['key'] = $this->extraFieldsService->allowedValuesUniqueKey($item, $keys);
         }
-        $this->logInfo("ITEM after unique ".print_r($allowed, true));
 
         // remove dangerous html
         $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
