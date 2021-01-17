@@ -441,9 +441,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $this->logDebug('OLDVALS '.print_r($oldvals, true));
-    $this->logDebug('NEWVALS '.print_r($newvals, true));
-    $this->logDebug('CHANGED '.print_r($changed, true));
+    $this->logInfo('OLDVALS '.print_r($oldvals, true));
+    $this->logInfo('NEWVALS '.print_r($newvals, true));
+    $this->logInfo('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
@@ -690,7 +690,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       $table = $joinInfo['table'];
-      $valuesTable = explode(':', $table)[0];
+      $valuesTable = explode('@', $table)[0];
 
       $joinIndex[$table] = count($opts['fdd']);
       $joinTables[$table] = 'PMEjoin'.$joinIndex[$table];
