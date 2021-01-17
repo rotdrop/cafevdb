@@ -58,14 +58,14 @@ class ProjectExtraFieldDataRepository extends EntityRepository
   //     }
 
     $qb = $this->createQueryBuilder(self::ALIAS)
-               ->select(self::ALIAS.'.fieldd')
+               ->select('identity('.self::ALIAS.'.field)')
                ->leftJoin(self::ALIAS.'.projectParticipant', 'p')
                ->where(self::ALIAS.".fieldValue > ''");
     if ($projectId > 0) {
       $qb->andWhere('p.project = :project')
          ->setParameter('project', $project);
     }
-    if (!empty($filedId)) {
+    if (!empty($filed)) {
       $qb->andWhere(self::ALIAS.'.field = :field')
          ->setParameter('field', $field);
     }
