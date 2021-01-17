@@ -22,8 +22,6 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use Ramsey\Uuid\Uuid;
-
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -319,6 +317,7 @@ class ProjectExtraFields extends PMETableViewBase
       'css' => ['postfix' => ' allowed-values' ],
       'select' => 'T',
       'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+        //$this->logInfo('ALLOWED SHOW '.print_r($row, true));
         $multiplicity = $row[$this->queryField('multiplicity', $fdd)];
         $dataType = $row[$this->queryField('data_type', $fdd)];
         return $this->showAllowedValues($value, $op, $recordId, $multiplicity, $dataType);
@@ -367,7 +366,8 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['maximum_group_size'] = [
       'name' => $this->l->t('Maximum Size'),
       'css' => [ 'postfix' => ' no-search maximum-group-size' ],
-      'sql' => "SUBSTRING_INDEX(PMEtable0.allowed_values, ':', -1)",
+      //'sql' => "SUBSTRING_INDEX(PMEtable0.allowed_values, ':', -1)",
+      'sql' => "JSON_VALUE(PMEtable0.allowed_values, '\$[0].limit')",
       'input' => 'S',
       'input|DV' => 'V',
       'options' => 'ACDPV',
@@ -610,10 +610,9 @@ class ProjectExtraFields extends PMETableViewBase
    */
   public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    /* error_log('******* before ******************'); */
-    /* error_log(print_r($oldvals, true)); */
-    /* error_log(print_r($newvals, true)); */
-    /* error_log(print_r($changed, true)); */
+    $this->logDebug('BEFORE OLD '.print_r($oldvals, true));
+    $this->logDebug('BEFORE NEW '.print_r($newvals, true));
+    $this->logDebug('BEFORE CHG '.print_r($changed, true));
 
     // make sure writer-acls are a subset of reader-acls
     $writers = preg_split('/\s*,\s*/', $newvals['writers'], -1, PREG_SPLIT_NO_EMPTY);
@@ -650,18 +649,24 @@ class ProjectExtraFields extends PMETableViewBase
      * allowed_values. Plural is "misleading" here, of course ;)
      *
      */
-    $tag = "MaximumGroupSize";
+    $tag = "maximum_group_size";
     $key = array_search($tag, $changed);
-    if ($types[$newvals['TypeId']]['multiplicity'] === 'groupofpeople')
-    {
+    if ($newvals['multiplicity'] == 'groupofpeople') {
       $max = $newvals[$tag];
-      if ($op === 'update' && !empty($newvals['allowed_values_single'][0])) {
-        $maxdata = $newvals['allowed_values_single'];
-        $maxdata[0]['column5'] = $max;
+      if ($op == 'update' && !empty($newvals['allowed_values_single'][0])) {
+        $maxData = $newvals['allowed_values_single'][0];
+        $maxData['limit'] = $max;
       } else {
-        $maxdata = 'max:group:::active:'.$max;
+        $maxData = [
+          'key' => 'max',
+          'label' => 'group',
+          'data' => null,
+          'tooltip' => null,
+          'flags' => 'active',
+          'limit' => $max,
+        ];
       }
-      $newvals['allowed_values'] = $maxdata;
+      $newvals['allowed_values'] = [ $maxData ];
       if ($key !== false) {
         $changed[] = 'allowed_values';
       }
@@ -672,6 +677,10 @@ class ProjectExtraFields extends PMETableViewBase
       unset($changed[$key]);
     }
 
+    $this->logDebug('MAX OLD: '.print_r($oldvals['allowed_values'], true));
+    $this->logDebug('MAX NEW: '.print_r($newvals['allowed_values'], true));
+    $this->logDebug('MAX CHG: '.$changed['allowed_values']);
+
     /************************************************************************
      *
      * Move the data from allowed_values_single to
@@ -679,7 +688,7 @@ class ProjectExtraFields extends PMETableViewBase
      *
      */
     $key = array_search('allowed_values_single', $changed);
-    if ($types[$newvals['TypeId']]['multiplicity'] === 'single') {
+    if ($newvals['multiplicity'] === 'single') {
       $newvals['allowed_values'] = $newvals['allowed_values_single'];
       if ($key !== false) {
         $changed[] = 'allowed_values';
@@ -700,7 +709,6 @@ class ProjectExtraFields extends PMETableViewBase
     if (!is_array($newvals['allowed_values'])) {
       // textfield
       $allowed = $this->extraFieldsService->explodeAllowedValues($newvals['allowed_values']);
-
     } else {
       $allowed = $newvals['allowed_values'];
     }
@@ -721,7 +729,7 @@ class ProjectExtraFields extends PMETableViewBase
      *
      */
     $key = array_search('default_single_value', $changed);
-    if ($types[$newvals['TypeId']]['multiplicity'] === 'single') {
+    if ($newvals['multiplicity'] == 'single') {
       $newvals['default_value'] = $newvals['default_single_value'];
       if ($key !== false) {
         $changed[] = 'default_value';
@@ -734,9 +742,9 @@ class ProjectExtraFields extends PMETableViewBase
     }
 
 
-    // $this->logInfo('OLD: '.print_r($oldvals['allowed_values'], true));
-    // $this->logInfo('NEW: '.print_r($newvals['allowed_values'], true));
-    // $this->logInfo('CHG: '.$changed['allowed_values']);
+    $this->logDebug('AV OLD: '.print_r($oldvals['allowed_values'], true));
+    $this->logDebug('AV NEW: '.print_r($newvals['allowed_values'], true));
+    $this->logDebug('AV CHG: '.$changed['allowed_values']);
 
     /************************************************************************
      *
@@ -766,10 +774,9 @@ class ProjectExtraFields extends PMETableViewBase
       }
     }
 
-    /* error_log('*************************'); */
-    /* error_log(print_r($oldvals, true)); */
-    /* error_log(print_r($newvals, true)); */
-    /* error_log(print_r($changed, true)); */
+    $this->logDebug('AFTER OLD '.print_r($oldvals, true));
+    $this->logDebug('AFTER NEW '.print_r($newvals, true));
+    $this->logDebug('AFTER CHG '.print_r($changed, true));
 
     return true;
   }
@@ -839,7 +846,7 @@ class ProjectExtraFields extends PMETableViewBase
    * @return bool If returning @c false the operation will be terminated
    *
    */
-  public static function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     $used = $this->usedFields(-1, $pme->rec);
 
@@ -1031,6 +1038,7 @@ class ProjectExtraFields extends PMETableViewBase
    */
   private function showAllowedValues($value, $op, $recordId, $multiplicity = null, $dataType = null)
   {
+    $this->logDebug('OPTIONS so far: '.print_r($value, true));
     $allowed = $this->extraFieldsService->explodeAllowedValues($value);
     if ($op === 'display' && count($allowed) == 1) {
       // "1" means empty (headerline)
