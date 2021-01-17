@@ -63,7 +63,7 @@ class PhoneNumberService
       $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
       $country = locale_get_region($locale);
-      $this->logInfo($language.' / '.$country);
+      $this->logDebug($language.' / '.$country);
       $this->defaultRegion = $country;
     }
 
