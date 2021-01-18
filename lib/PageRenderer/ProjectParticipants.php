@@ -57,6 +57,7 @@ class ProjectParticipants extends PMETableViewBase
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const EXTRA_FIELDS_TABLE = 'ProjectExtraFields';
   const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
+  const FIXED_COLUMN_SEP = '@';
 
   /**
    * Join table structure. All update are handled in
@@ -269,10 +270,12 @@ class ProjectParticipants extends PMETableViewBase
     /* For each extra field add one dedicated join table entry
      * which is pinned to the repsective field-id.
      */
+    $extraFieldJoinIndex = [];
     foreach ($extraFields as $field) {
       $fieldId = $field['id'];
+      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
       $extraFieldJoinTable = [
-        'table' => self::EXTRA_FIELDS_DATA_TABLE.'@'.$fieldId,
+        'table' => $tableName,
         'entity' => Entities\ProjectExtraFieldDatum::class,
         'nullable' => true,
         'identifier' => [
@@ -282,6 +285,7 @@ class ProjectParticipants extends PMETableViewBase
         ],
         'column' => 'field_id',
       ];
+      $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
       $this->joinStructure[] = $extraFieldJoinTable;
     }
 
@@ -614,8 +618,10 @@ class ProjectParticipants extends PMETableViewBase
         $tab = [ 'id' => $tabId ];
       }
 
+      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+
       list($curColIdx, $fddName) = $this->makeJoinTableField(
-        $opts['fdd'], self::EXTRA_FIELDS_DATA_TABLE.'@'.$fieldId, 'field_value',
+        $opts['fdd'], $tableName, 'field_value',
         [
           'name' => $this->l->t($fieldName),
           'tab' => $tab,
@@ -665,14 +671,17 @@ class ProjectParticipants extends PMETableViewBase
         break;
       case 'boolean':
         // handled below
+        $fdd['align'] = 'right';
         break;
       case 'integer':
         $fdd['select'] = 'N';
         $fdd['mask'] = '%d';
+        $fdd['align'] = 'right';
         break;
       case 'float':
         $fdd['select'] = 'N';
         $fdd['mask'] = '%g';
+        $fdd['align'] = 'right';
         break;
       case 'date':
       case 'datetime':
@@ -683,11 +692,6 @@ class ProjectParticipants extends PMETableViewBase
         $fdd = array_merge($fdd, $style);
         $fdd['css']['postfix'] .= ' extra-field';
         break;
-      case 'people':
-        // handled below
-        break;
-      default:
-        throw new \Exception($this->l->t('Unsupported data type: "%s"', $dataType));
       }
 
       switch ($multiplicity) {
@@ -755,20 +759,32 @@ class ProjectParticipants extends PMETableViewBase
       case 'groupofpeople':
         // keep the original value as hidden input field and generate
         // a new group-definition field as yet another column
-        $tableName = $this->joinTableField($fddName)['table'];
         list($curColIdx, $fddName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'group', $fdd);
+          $opts['fdd'], $tableName, 'musician_id', $fdd);
         $fdd['input'] = 'H';
         $fdd = &$opts['fdd'][$fddName];
 
+        // tweak the join-structure entry for the group field
+        $joinInfo = &$this->joinStructure[$extraFieldJoinIndex[$tableName]];
+        $joinInfo = array_merge(
+          $joinInfo,
+          [
+            'identifier' => [
+              'project_id' => 'project_id',
+              'musician_id' => false,
+              'field_id' => [ 'value' => $fieldId, ],
+            ],
+            'column' => 'musician_id',
+          ]);
+
         // define the group stuff
-        $max = $allowed[0]['limit']; // ATM, may change
+        $max = $allowed[0]['limit'];
         $fdd = array_merge(
           $fdd, [
             'select' => 'M',
-            'sql' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
+            'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
             'display' => [ 'popup' => 'data' ],
-            'colattrs' => [ 'data-groups' => json_encode([ 'Limit' => $max ]), ],
+            'colattrs' => [ 'data-groups' => json_encode([ 'limit' => $max ]), ],
             'filter' => 'having',
             'values' => [
               'table' => "SELECT
@@ -781,12 +797,12 @@ FROM ProjectParticipants pp
 LEFT JOIN Musicians AS m
   ON m.id = pp.musician_id
 LEFT JOIN ProjectExtraFieldsData fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id= $fieldId
+  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
 WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
               'groups' => "CONCAT('".$fieldName." ',\$table.group_id)",
-              'data' => "CONCAT('{\"Limit\":".$max.",\"group_id\":\"',IFNULL(\$table.group_id,-1),'\"}')",
+              'data' => "CONCAT('{\"limit\":".$max.",\"group_id\":\"',IFNULL(\$table.group_id,-1),'\"}')",
               'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
             ],
@@ -817,13 +833,18 @@ WHERE pp.project_id = $projectId",
 
         break;
       case 'groupsofpeople':
-        // keep the original value as hidden input field and generate
-        // a new group-definition field as yet another column
-        $tableName = $this->joinTableField($fddName)['table'];
-        list($curColIdx, $fddName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'group', $fdd);
-        $fdd['input'] = 'H';
-        $fdd = &$opts['fdd'][$fddName];
+        // tweak the join-structure entry for the group field
+        $joinInfo = &$this->joinStructure[$extraFieldJoinIndex[$tableName]];
+        $joinInfo = array_merge(
+          $joinInfo,
+          [
+            'identifier' => [
+              'project_id' => 'project_id',
+              'musician_id' => false,
+              'field_id' => [ 'value' => $fieldId, ],
+            ],
+            'column' => 'musician_id',
+          ]);
 
         // define the group stuff
         $groupValues2   = $values2;
@@ -834,8 +855,48 @@ WHERE pp.project_id = $projectId",
         foreach($allowed as $value) {
           $valueGroups[--$idx] = $value['key'];
           $values2[$idx] = $this->l->t('add to this group');
-          $valueData[$idx] = json_encode([ 'GroupId' => $value['key'] ]);
+          $valueData[$idx] = json_encode([ 'group_id' => $value['key'] ]);
         }
+
+        // make the field a select box for the predefined groups, like
+        // for the "multiple" stuff.
+
+        $css = ' groupofpeople-id predefined';
+         if ($dataType === 'service-fee') {
+           $css .= ' service-fee';
+           foreach($groupValues2 as $key => $value) {
+             $money = $this->moneyValue($groupValueData[$key]);
+             $groupValues2ACP[$key] = $value.':&nbsp;'.$money;
+             $value = Util::htmlEscape($value);
+             $value = '<span class="allowed-option-name group clip-long-text">'.$value.'</span>';
+             $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
+             $groupValues2[$key] = $value.$money;
+           }
+         }
+
+        // generate a new group-definition field as yet another column
+        list($curColIdx, $fddName) = $this->makeJoinTableField(
+          $opts['fdd'], $tableName, 'musician_id', $fdd);
+
+        // old field, group selection
+        $fdd = array_merge(
+          $fdd,
+          [
+            'name' => $this->l->t('%s Group', $fieldName),
+            'css'         => [ 'postfix' => $css ],
+            'input|LFVD'  => 'VR',
+            'input'       => 'SR',
+            'select'      => 'D',
+             //'sql'         => $fieldName,
+            'values2'     => $groupValues2,
+            'values2|ACP' => $groupValues2ACP?:null,
+            'display'     => [ 'popup' => 'data' ],
+            'sort'        => true,
+            'escape'      => false,
+          ]);
+
+        // new field, member selection
+        $fdd = &$opts['fdd'][$fddName];
 
         $fdd = array_merge(
           $fdd, [
@@ -854,9 +915,9 @@ WHERE pp.project_id = $projectId",
   fd.field_value AS group_id
 FROM ProjectParticipants pp
 LEFT JOIN Musicians AS m
-  ON m.id = pp.musician_id,
+  ON m.id = pp.musician_id
 LEFT JOIN ProjectExtraFieldsData fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = $project_id AND fd.field_id = $fieldId
+  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
 WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
@@ -873,23 +934,10 @@ WHERE pp.project_id = $projectId",
         $fdd['css']['postfix'] .= ' groupofpeople predefined clip-long-text';
         $fdd['css|LFVD']['postfix'] = $fdd['css']['postfix'].' view';
 
-        // @TODO tweak display of service-charge groups
-        // if ($dataType == 'service-fee') {
-        //   $css .= ' surcharge';
-        //   foreach($groupValues2 as $key => $value) {
-        //     $money = Util::moneyValue($groupValueData[$key], Config::$locale);
-        //     $groupValues2ACP[$key] = $value.':&nbsp;'.$money;
-        //     $value = Util::htmlEscape($value);
-        //     $value = '<span class="allowed-option-name group clip-long-text">'.$value.'</span>';
-        //     $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
-        //     $groupValues2[$key] = $value.$money;
-        //   }
-        // }
-
         // in filter mode mask out all non-group-members
         $fdd['values|LF'] = array_merge(
           $fdd['values'],
-          [ 'filters' => '$table.GroupId IS NOT NULL' ]);
+          [ 'filters' => '$table.group_id IS NOT NULL' ]);
 
         break;
       }
@@ -1326,6 +1374,7 @@ WHERE pp.project_id = $projectId",
     $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
 
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateSanitizeExtraFields' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
@@ -1637,6 +1686,69 @@ WHERE pp.project_id = $projectId",
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /**
+   * phpMyEdit calls the trigger (callback) with
+   * the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldValues Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newValues Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   *
+   * @bug Too long, just split into multiple "triggers" or call subroutines.
+   */
+  public function beforeUpdateSanitizeExtraFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $this->logInfo('OLDVALUES '.print_r($oldValues, true));
+    $this->logInfo('NEWVALUES '.print_r($newValues, true));
+    $this->logInfo('CHANGED '.print_r($changed, true));
+
+    foreach ($this->project['extra_fields'] as $extraField) {
+      $fieldId = $extraField['id'];
+      $multiplicity = $extraField['multiplicity'];
+      $dataType = $extraField['dataType'];
+
+      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+
+      $fieldName = $this->joinTableFieldName($tableName, 'field_value');
+      $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
+
+      $this->logInfo('FIELDNAMES '.$fieldName." / ".$groupFieldName);
+
+      $this->logInfo("MULT ".$multiplicity);
+      switch ($multiplicity) {
+      case 'groupofpeople':
+        if (array_search($groupFieldName, $changed) === false) {
+          continue 2;
+        }
+        $this->logInfo("TWEAK GROUP");
+        // add the group id as data field in order to satisfy
+        // PMETableViewBase::beforeUpdateDoUpdateAll().
+        $groupId = $oldValues[$fieldName]?:Uuid::uuid1();
+        $members = explode(',', $newValues[$groupFieldName]);
+        foreach ($members as &$member) {
+          $member .= ':'.$groupId;
+        }
+        $newValues[$fieldName] = implode(',', $members);
+        $changed[] = $fieldName;
+        break;
+      case 'groupsofpeople':
+      default:
+        break;
+      }
+    }
+    return true;
   }
 
   private function tableTabId($idOrName)
