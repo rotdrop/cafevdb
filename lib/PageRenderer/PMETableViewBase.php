@@ -614,11 +614,16 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $field);
         }
       } else { // !multiple, simply update
-        $this->logInfo('IDENTIFIER '.print_r($identifier, true));
-        if (false) {
+        if (false || $joinInfo['nullable']) {
           // probably  easier
           $entityId = $this->extractKeyValues($meta, $identifier);
           $entity = $this->find($entityId);
+          if (empty($entity)) {
+            $entity = $entityClass::create();
+            foreach ($entityId as $key => $value) {
+              $entity[$key] = $value;
+            }
+          }
           $logOld = [];
           $logNew = [];
           foreach ($changeSet as $column => $field) {
@@ -627,6 +632,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $logOld[$column] = $oldvals[$field];
             $logNew[$column] = $newvals[$field];
           }
+          $this->persist($entity);
           $this->changeLogService->logUpdate($table, $entityId, $logOld, $logNew);
         } else {
           // probably faster, but life-cycle callbacks and events are

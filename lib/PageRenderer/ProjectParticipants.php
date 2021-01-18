@@ -274,6 +274,7 @@ class ProjectParticipants extends PMETableViewBase
       $extraFieldJoinTable = [
         'table' => self::EXTRA_FIELDS_DATA_TABLE.'@'.$fieldId,
         'entity' => Entities\ProjectExtraFieldDatum::class,
+        'nullable' => true,
         'identifier' => [
           'project_id' => 'project_id',
           'musician_id' => 'musician_id',
@@ -654,10 +655,13 @@ class ProjectParticipants extends PMETableViewBase
         $fdd['display|LF'] = [ 'popup' => 'data' ];
         $fdd['escape'] = false;
         break;
+      case 'boolean':
+        // handled below
+        break;
       case 'integer':
         $fdd['select'] = 'N';
         $fdd['mask'] = '%d';
-        breal;
+        break;
       case 'float':
         $fdd['select'] = 'N';
         $fdd['mask'] = '%g';
@@ -685,7 +689,6 @@ class ProjectParticipants extends PMETableViewBase
       case 'single':
         // @TODO number options?
         reset($values2); $key = key($values2);
-        $this->logInfo('BOOL VAL2 '.print_r($values2, true));
         $fdd['values2|CAP'] = [ $key => '' ]; // empty label for simple checkbox
         $fdd['values2|LVDF'] = [
           0 => $this->l->t('false'),
