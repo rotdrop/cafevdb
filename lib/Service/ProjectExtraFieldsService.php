@@ -68,7 +68,14 @@ class ProjectExtraFieldsService
    */
   public function explodeAllowedValues($values, $addProto = true, $trimInactive = false)
   {
-    $options = empty($values) ? [] : json_decode($values, true);
+    $options = empty($values) ? [] : (is_array($values) ? $values : json_decode($values, true));
+    if (is_string($values) && !empty($values) && empty($options)) {
+      $options = [
+        array_merge(
+          $this->allowedValuesPrototype(),
+          [ 'key' => Uuid::uuid1(), 'label' => $values, ]),
+      ];
+    }
     if (isset($options[-1])) {
       throw new \Exception($this->l->t('Option index -1 should not be present here, options: %s', print_r($options, true)));
     }

@@ -173,7 +173,7 @@ var CAFEVDB = CAFEVDB || {};
     });
 
     // single-value toggle input for data (i.e. amount of money)
-    container.on('blur', 'tr.allowed-values-single input[type="text"]', function(event) {
+    container.on('blur', 'tr.multiplicity.data-type-service-fee ~ tr.allowed-values-single input[type="text"]', function(event) {
       const self = $(this);
       if (self.prop('readonly')) {
         return false;
@@ -194,10 +194,10 @@ var CAFEVDB = CAFEVDB || {};
       };
 
       $.post(
-        OC.generateUrl('/apps/cafevdb/validate/monetary-value'),
-        { 'value': ammount})
+        OC.generateUrl('/apps/cafevdb/validate/general/monetary-value'),
+        { 'value': amount})
         .fail(function(xhr, status, errorThrown) {
-          CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
+          CAFEVDB.Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
         .done(function (data) {
           if (!CAFEVDB.Ajax.validateResponse(data, [ 'amount' ], cleanup)) {

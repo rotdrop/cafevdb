@@ -62,6 +62,7 @@ class ValidationController extends Controller {
   {
     switch ($topic) {
     case 'monetary_value':
+    case 'monetary-value':
       $value = Util::normalizeSpaces($value);
       $amount = 0;
       if (!empty($value)) {
