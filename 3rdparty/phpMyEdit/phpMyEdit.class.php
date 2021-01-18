@@ -823,8 +823,8 @@ class phpMyEdit
 
 		$values = (array)$prepend + (array)$values + (array)$append;
 		foreach ($values as $key => $value) {
-			if (empty($key)) {
-				$this->logError('Empty values key: '. print_r($values, true));
+			if ($key !== 0 && empty($key)) {
+				$this->logDebug('Empty values key: '. print_r($values, true));
 				unset($values[$key]);
 			}
 		}
