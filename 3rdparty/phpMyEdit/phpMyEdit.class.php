@@ -822,6 +822,12 @@ class phpMyEdit
 		}
 
 		$values = (array)$prepend + (array)$values + (array)$append;
+		foreach ($values as $key => $value) {
+			if (empty($key)) {
+				$this->logError('Empty values key: '. print_r($values, true));
+				unset($values[$key]);
+			}
+		}
 
 		//error_log('groups: '.print_r($groups, true));
 		//error_log('data: '.print_r($data, true));
@@ -841,6 +847,8 @@ class phpMyEdit
 		if ($this->fds[$field_num]  == 'updated') {
 			throw new \Exception('blah');
 		}
+
+		//$this->logInfo('VALUES '.print_r($fdd['setvalues'], true));
 
 		return $fdd['setvalues'];
 	} /* }}} */
