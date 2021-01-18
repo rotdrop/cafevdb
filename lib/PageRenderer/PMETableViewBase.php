@@ -449,6 +449,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
+    $this->logInfo('CHANGESETS: '.print_r($changeSets, true));
+
     foreach ($this->joinStructure as $joinInfo) {
       if (!empty($joinInfo['read_only'])) {
         continue;
@@ -463,7 +465,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       $changeSet = $changeSets[$table];
-      //$this->logDebug('CHANGESETS '.$table.' '.print_r($changeSet, true));
+      $this->logInfo('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
@@ -498,6 +500,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
           unset($changeSet[$joinInfo['column']]);
           $multiple = $key;
+        } else if (is_array($joinInfo['identifier'][$key])) {
+          if (!empty($joinInfo['identifier'][$key]['value'])) {
+            $identifier[$key] = $joinInfo['identifier'][$key]['value'];
+          } else {
+            throw new \Exception($this->l->t('Nested multi-value join tables are not yet supported.'));
+          }
         } else {
           $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
         }
@@ -606,6 +614,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $field);
         }
       } else { // !multiple, simply update
+        $this->logInfo('IDENTIFIER '.print_r($identifier, true));
         if (false) {
           // probably  easier
           $entityId = $this->extractKeyValues($meta, $identifier);
