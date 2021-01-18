@@ -28,6 +28,7 @@ class EnumExtraFieldDataType extends EnumType
   protected $values = [
     'text',
     'html',
+    'boolean',
     'integer',
     'float',
     'date',
