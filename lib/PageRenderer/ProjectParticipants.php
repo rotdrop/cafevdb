@@ -756,6 +756,7 @@ class ProjectParticipants extends PMETableViewBase
           $fdd['display|LF'] = [ 'popup' => 'data' ];
           break;
         }
+        break;
       case 'groupofpeople':
         // keep the original value as hidden input field and generate
         // a new group-definition field as yet another column
@@ -802,7 +803,7 @@ WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
               'groups' => "CONCAT('".$fieldName." ',\$table.group_id)",
-              'data' => "CONCAT('{\"limit\":".$max.",\"group_id\":\"',IFNULL(\$table.group_id,-1),'\"}')",
+              'data' => "CONCAT('{\"limit\":".$max.",\"groupId\":\"',IFNULL(\$table.group_id,-1),'\"}')",
               'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
             ],
@@ -852,27 +853,34 @@ WHERE pp.project_id = $projectId",
         $values2 = [];
         $valueGroups = [ -1 => $this->l->t('without group') ];
         $idx = -1;
-        foreach($allowed as $value) {
-          $valueGroups[--$idx] = $value['key'];
+        foreach($allowed as $key => $value) {
+          $valueGroups[--$idx] = $value['label'];
+          $data = $value['data'];
+          if ($dataType == 'service-fee') {
+            $data = $this->moneyValue($data);
+          }
+          if (!empty($data)) {
+            $valueGroups[$idx] .= ':&nbsp;' . $data;
+          }
           $values2[$idx] = $this->l->t('add to this group');
-          $valueData[$idx] = json_encode([ 'group_id' => $value['key'] ]);
+          $valueData[$idx] = json_encode([ 'groupId' => $value['key'] ]);
         }
 
         // make the field a select box for the predefined groups, like
         // for the "multiple" stuff.
 
         $css = ' groupofpeople-id predefined';
-         if ($dataType === 'service-fee') {
-           $css .= ' service-fee';
-           foreach($groupValues2 as $key => $value) {
-             $money = $this->moneyValue($groupValueData[$key]);
-             $groupValues2ACP[$key] = $value.':&nbsp;'.$money;
-             $value = Util::htmlEscape($value);
-             $value = '<span class="allowed-option-name group clip-long-text">'.$value.'</span>';
-             $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
-             $groupValues2[$key] = $value.$money;
-           }
-         }
+        if ($dataType === 'service-fee') {
+          $css .= ' service-fee';
+          foreach($groupValues2 as $key => $value) {
+            $money = $this->moneyValue($groupValueData[$key]);
+            $groupValues2ACP[$key] = $value.':&nbsp;'.$money;
+            $value = Util::htmlEscape($value);
+            $value = '<span class="allowed-option-name group clip-long-text">'.$value.'</span>';
+            $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
+            $groupValues2[$key] = $value.$money;
+          }
+        }
 
         // generate a new group-definition field as yet another column
         list($curColIdx, $fddName) = $this->makeJoinTableField(
@@ -887,12 +895,13 @@ WHERE pp.project_id = $projectId",
             'input|LFVD'  => 'VR',
             'input'       => 'SR',
             'select'      => 'D',
-             //'sql'         => $fieldName,
+            //'sql'         => $fieldName,
             'values2'     => $groupValues2,
             'values2|ACP' => $groupValues2ACP?:null,
             'display'     => [ 'popup' => 'data' ],
             'sort'        => true,
             'escape'      => false,
+            'mask' => null,
           ]);
 
         // new field, member selection
@@ -901,8 +910,9 @@ WHERE pp.project_id = $projectId",
         $fdd = array_merge(
           $fdd, [
             'select' => 'M',
-            'sql|LVFD' => 'GROUP_CONCAT(DISTINCT $join_table.group_id)', // should only be one
-            'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
+            //'sql|LVFD' => 'GROUP_CONCAT(DISTINCT $join_table.group_id)', // should only be one
+            //'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
+            'sql' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
             'display' => [ 'popup' => 'data' ], // @TODO
             'colattrs' => [ 'data-groups' => json_encode($allowed), ],
             'filter' => 'having',
@@ -922,13 +932,14 @@ WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
               'groups' => "\$table.group_id",
-              'data' => "CONCAT('{\"group_id\":\"',IFNULL(\$table.group_id, -1),'\"}')",
+              'data' => "CONCAT('{\"groupId\":\"',IFNULL(\$table.group_id, -1),'\"}')",
               'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
             ],
             'valueGroups' => $valueGroups,
             'valueData' => $valueData,
             'values2' => $values2,
+            'mask' => null,
           ]);
 
         $fdd['css']['postfix'] .= ' groupofpeople predefined clip-long-text';
@@ -1744,6 +1755,26 @@ WHERE pp.project_id = $projectId",
         $changed[] = $fieldName;
         break;
       case 'groupsofpeople':
+        if (array_search($groupFieldName, $changed) === false
+            && array_search($fieldName, $changed) === false) {
+          continue 2;
+        }
+        $oldGroupId = $oldValues[$fieldName];
+        $newGroupId = $newValues[$fieldName];
+
+        $newMembers = explode(',', $newValues[$groupFieldName]);
+        foreach ($newMembers as &$member) {
+          $member .= ':'.$newGroupId;
+        }
+        $newValues[$fieldName] = implode(',', $newMembers);
+
+        $oldMembers = explode(',', $oldValues[$groupFieldName]);
+        foreach ($newMembers as &$member) {
+          $member .= ':'.$oldGroupId;
+        }
+        $oldValues[$fieldName] = implode(',', $oldMembers);
+
+        $changed[] = $fieldName;
       default:
         break;
       }

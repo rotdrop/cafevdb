@@ -26,7 +26,8 @@ var CAFEVDB = CAFEVDB || {};
   'use strict';
   var Instrumentation = function() {};
 
-  /**Open a dialog in order to edit the personal reccords of one
+  /**
+   * Open a dialog in order to edit the personal reccords of one
    * musician.
    *
    * @param record The record id. This is either the Id from the
@@ -108,7 +109,8 @@ var CAFEVDB = CAFEVDB || {};
     PHPMYEDIT.tableDialogOpen(tableOptions);
   };
 
-  /**Trigger server-side validation and fetch the result.
+  /**
+   * Trigger server-side validation and fetch the result.
    *
    * @param container jQuery object for the curren active
    * form-container (i.e. the div the form is wrapped into)
@@ -164,7 +166,8 @@ var CAFEVDB = CAFEVDB || {};
     });
   };
 
-  /**Pseudo-submit an underlying PME-form with tweaked form data.
+  /**
+   * Pseudo-submit an underlying PME-form with tweaked form data.
    *
    * @param form A form with additional input data which is
    * submitted as well. Submit buttons are omitted.
@@ -196,7 +199,8 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.Page.loadPage(formData, afterLoadCallback);
   };
 
-  /**Pseudo-submit an underlying PME-form with tweaked form data, like
+  /**
+   * Pseudo-submit an underlying PME-form with tweaked form data, like
    * loadPMETable(), but restrict the display to the ids passed in the
    * flat array @a ids.
    *
@@ -243,7 +247,8 @@ var CAFEVDB = CAFEVDB || {};
     Instrumentation.loadPMETable(form, formData, afterLoadCallback);
   };
 
-  /**Load the table of all musicians, possibly in "project" mode and
+  /**
+   * Load the table of all musicians, possibly in "project" mode and
    * possibly restricted to subset of the musicians by providing an
    * array with selected ids.
    *
@@ -278,7 +283,8 @@ var CAFEVDB = CAFEVDB || {};
     Instrumentation.loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
   };
 
-  /**Load the table of all musicians in the "add musician to project"
+  /**
+   * Load the table of all musicians in the "add musician to project"
    * perspective. The underlying Musicians PHP class will take care of
    * constructing a suitable filter restricting the initial view to
    * all musicians @b not yet registered for the project.
@@ -292,7 +298,8 @@ var CAFEVDB = CAFEVDB || {};
     Instrumentation.loadMusicians(form, [], true, afterLoadCallback);
   };
 
-  /**Load the detailed instrumentation view.
+  /**
+   * Load the detailed instrumentation view.
    *
    * @param form The current PME form.
    *
@@ -513,20 +520,20 @@ var CAFEVDB = CAFEVDB || {};
         var option = $(this);
         var data = option.data('data');
 //console.log('option', option);
-        if (data.GroupId == -1) {
+        if (data.groupId == -1) {
           option.prop('disabled', disable);
         }
       });
     };
 
-    var selectGroup = function(select, group, doSelect) {
+    const selectGroup = function(select, group, doSelect) {
       if (typeof doSelect === 'undefined') {
         doSelect = true;
       }
       select.find('option').each(function(index) {
         var option = $(this);
         var data = option.data('data');
-        if (data.GroupId === group) {
+        if (data.groupId === group) {
           option.prop('selected', doSelect);
         }
       });
@@ -536,12 +543,12 @@ var CAFEVDB = CAFEVDB || {};
     // group
     selectGroupOfPeople.each(function(idx) {
       const self = $(this);
-      var curSelected = self.val();
+      const curSelected = self.val();
       self.data('selected', curSelected ? curSelected : []);
-      var name = self.attr('name');
+      const name = self.attr('name');
       console.log('group df name', name);
-      var groupFieldName = name.slice(0, -2)+'Id';
-      console.log('group id name', name);
+      const groupFieldName = name.split(':')[0] + ':' + 'field_value';
+      console.log('group id name', groupFieldName);
       self.data('groupField', form.find('[name="'+groupFieldName+'"]'));
       console.log('#groupIdFields', self.data('groupField').length);
       //console.log('groupField', self.data('groupField'));
@@ -610,11 +617,12 @@ var CAFEVDB = CAFEVDB || {};
           });
           console.log('other people group option', singleNewOption);
           console.log('key', recKey);
-          var data = singleNewOption.data('data');
-          if (data.GroupId != -1) {
-            console.log('group: ', data.GroupId);
-            selectGroup(self, data.GroupId);
-            CAFEVDB.selectValues(self.data('groupField'), data.GroupId);
+          const data = singleNewOption.data('data');
+          console.log('option data', data);
+          if (data.groupId != -1) {
+            console.log('group: ', data.groupId);
+            selectGroup(self, data.groupId);
+            CAFEVDB.selectValues(self.data('groupField'), data.groupId);
             maskUngrouped(self, false);
             changed = true;
           }
@@ -641,9 +649,9 @@ console.log('deselect', option.val());
         limit = self.closest('td').data('groups');
         limit = limit.Limit;
       } else {
-        var groupId = CAFEVDB.selectValues(self.data('groupField'));
+        const groupId = CAFEVDB.selectValues(self.data('groupField'));
         console.log('Id', groupId);
-        for (var i = 0; i < groupData.length; ++i) {
+        for (let i = 0; i < groupData.length; ++i) {
           console.log('data', groupData[i]);
           if (groupData[i].key === groupId) {
             console.log('limit', limit);
@@ -754,6 +762,4 @@ $(function(){
 
 // Local Variables: ***
 // js-indent-level: 2 ***
-// js3-indent-level: 2 ***
-// js3-label-indent-offset: -2 ***
 // End: ***
