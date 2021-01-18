@@ -711,6 +711,7 @@ class ProjectExtraFields extends PMETableViewBase
       $allowed = $this->extraFieldsService->explodeAllowedValues($newvals['allowed_values']);
     } else {
       $allowed = $newvals['allowed_values'];
+      unset($allowed[-1]); // remove dummy data
     }
 
     // make unused keys unique @TODO make it a uuid
