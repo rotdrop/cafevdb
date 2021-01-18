@@ -28,6 +28,7 @@
 table.pme-main tr.multiplicity ~ tr.pme-row.maximum-group-size,
 table.pme-main tr.multiplicity ~ tr.pme-row.allowed-values,
 table.pme-main tr.multiplicity ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.multiplicity.multiplicity-single.data-type-boolean ~ tr.pme-row.allowed-values-single,
 table.pme-main tr.multiplicity ~ tr.pme-row.default-value,
 table.pme-main tr.multiplicity ~ tr.pme-row.default-single-value, table.pme-main tr.multiplicity ~ tr.pme-row.default-multi-value {
     display:none;
@@ -37,7 +38,7 @@ table.pme-main tr.multiplicity.multiplicity-groupofpeople ~ tr.pme-row.maximum-g
 table.pme-main tr.multiplicity.multiplicity-groupofpeople.data-type-service-fee ~ tr.pme-row.allowed-values-single,
 table.pme-main tr.multiplicity.multiplicity-simple:not(.multiplicity-groupofpeople) ~ tr.pme-row.default-value,
 table.pme-main tr.multiplicity.multiplicity-single ~ tr.pme-row.default-single-value,
-table.pme-main tr.multiplicity.multiplicity-single.data-type-service-fee ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.multiplicity.multiplicity-single ~ tr.pme-row.allowed-values-single,
 table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row.allowed-values,
 table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.allowed-values,
 table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.default-multi-value,
