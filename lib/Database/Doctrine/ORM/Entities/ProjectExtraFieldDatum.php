@@ -76,61 +76,75 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   }
 
   /**
-   * Get id.
+   * Set project.
    *
-   * @return int
+   * @param int $project
+   *
+   * @return ProjectExtraProjectsData
    */
-  public function getId()
+  public function setProject($project)
   {
-    return $this->id;
-  }
-
-  /**
-   * Set projectParticipantId.
-   *
-   * @param int $projectParticipantId
-   *
-   * @return ProjectExtraFieldsData
-   */
-  public function setProjectParticipantId($projectParticipantId)
-  {
-    $this->projectParticipantId = $projectParticipantId;
+    $this->project = $project;
 
     return $this;
   }
 
   /**
-   * Get projectParticipantId.
+   * Get project.
    *
    * @return int
    */
-  public function getProjectParticipantId()
+  public function getProject()
   {
-    return $this->projectParticipantId;
+    return $this->project;
   }
 
   /**
-   * Set fieldId.
+   * Set musician.
    *
-   * @param int $fieldId
+   * @param int $musician
    *
    * @return ProjectExtraFieldsData
    */
-  public function setFieldId($fieldId)
+  public function setMusician($musician)
   {
-    $this->fieldId = $fieldId;
+    $this->musician = $musician;
 
     return $this;
   }
 
   /**
-   * Get fieldId.
+   * Get musician.
    *
    * @return int
    */
-  public function getFieldId()
+  public function getMusician()
   {
-    return $this->fieldId;
+    return $this->musician;
+  }
+
+  /**
+   * Set field.
+   *
+   * @param int $field
+   *
+   * @return ProjectExtraFieldsData
+   */
+  public function setField($field)
+  {
+    $this->field = $field;
+
+    return $this;
+  }
+
+  /**
+   * Get field.
+   *
+   * @return int
+   */
+  public function getField()
+  {
+    return $this->field;
   }
 
   /**
