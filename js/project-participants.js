@@ -554,7 +554,7 @@ var CAFEVDB = CAFEVDB || {};
     });
 
     selectGroupOfPeople.off('change').on('change', function(event) {
-      var self = $(this); // just the current one
+      const self = $(this); // just the current one
 
       var selected = self.val();
       if (!selected) {
@@ -563,8 +563,6 @@ var CAFEVDB = CAFEVDB || {};
       var prevSelected = self.data('selected');
       var recPrev = prevSelected.indexOf(recKey) >= 0;
       var recCur  = selected.indexOf(recKey) >= 0;
-
-
 
       var changed = false;
 
