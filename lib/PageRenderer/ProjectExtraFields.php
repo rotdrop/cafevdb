@@ -226,8 +226,9 @@ class ProjectExtraFields extends PMETableViewBase
     ];
 
     $opts['fdd']['project_id'] = [
+      'tab'       => [ 'id' => 'tab-all' ],
       'name'      => $this->l->t('Project'),
-      'input'     => ($projectMode ? 'R' : ''),
+      'input'     => ($projectMode ? 'HR' : ''),
       'css' => [ 'postfix' => ' project-instrument-project-name' ],
       'select|DV' => 'T', // delete, filter, list, view
       'select|ACPFL' => 'D',  // add, change, copy
@@ -391,15 +392,25 @@ class ProjectExtraFields extends PMETableViewBase
       'php|LFDV' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
         $multiplicity = $row[$this->queryField('multiplicity', $fdd)];
         $dataType = $row[$this->queryField('data_type', $fdd)];
-        if ($dataType != 'service-fee' && empty($value)) {
-          return $value;
+        switch ($multiplicity) {
+        case 'groupofpeople':
+        case 'groupsofpeople':
+          $value = $this->l->t('n/a');
+          break;
+        default:
+          switch ($dataType) {
+          case 'boolean':
+            $value = $value ? $this->l->t('true') : $this->l->t('false');
+          case 'service-fee':
+            $value = $this->moneyValue($value);
+          }
         }
         $html = '<span class="';
         if ($dataType != 'text' && $dataType != 'html') {
           $html .= 'align-right';
         }
         $html .= '">';
-        $html .= ($dataType == 'service-fee') ? $this->moneyValue($value) : $value;
+        $html .= $value;
         $html .= '</span>';
         return $html;
       },
