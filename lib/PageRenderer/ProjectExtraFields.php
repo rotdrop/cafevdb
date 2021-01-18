@@ -1238,7 +1238,7 @@ __EOT__;
 />
 __EOT__;
     }
-    for($i = $protoCount; $i < count($entry); ++$i) {
+    for ($i = $protoCount; $i < count($entry); ++$i) {
       $field = 'column'.$i;
       $value = htmlspecialchars($entry[$field]);
       $html .=<<<__EOT__
