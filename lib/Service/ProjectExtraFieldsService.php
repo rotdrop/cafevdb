@@ -33,6 +33,14 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class ProjectExtraFieldsService
 {
+  const UNSUPPORTED = [
+    'simple' => [ 'boolean', ],
+    'single' => [],
+    'multiple' => [ 'boolean', ],
+    'parallel' => [ 'boolean', ],
+    'groupofpeople' => [], // like single
+    'groupsofpeople' => [ 'boolean', ], // like multiple
+  ];
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
@@ -46,6 +54,14 @@ class ProjectExtraFieldsService
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->l = $this->l10n();
+  }
+
+  /**
+   * Determine whether a multiplicity-type combination is supported.
+   */
+  public static function isSupportedType(string $multiplicity, string $type):bool
+  {
+    return isset(self::UNSUPPORTED[$multiplicity]) && empty(self::UNSUPPORTED[$multiplicity][$type]);
   }
 
   /**

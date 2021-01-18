@@ -34,6 +34,5 @@ class EnumExtraFieldDataType extends EnumType
     'date',
     'datetime',
     'service-fee',
-    'person',
   ];
 }
