@@ -173,41 +173,46 @@ var CAFEVDB = CAFEVDB || {};
     });
 
     // single-value toggle input for data (i.e. amount of money)
-    container.on('blur', 'tr.multiplicity.data-type-service-fee ~ tr.allowed-values-single input[type="text"]', function(event) {
-      const self = $(this);
-      if (self.prop('readonly')) {
-        return false;
-      }
-      const amount = self.val().trim();
-      if (amount === '') {
-        self.val('');
-        return false;
-      }
+    container.on(
+      'blur',
+      'tr.multiplicity.data-type-service-fee ~ tr.allowed-values-single input[type="text"]'
+	+ ','
+	+ 'tr.multiplicity.data-type-service-fee ~ tr.allowed-values input.field-data[type="text"]',
+      function(event) {
+	const self = $(this);
+	if (self.prop('readonly')) {
+          return false;
+	}
+	const amount = self.val().trim();
+	if (amount === '') {
+          self.val('');
+          return false;
+	}
 
-      // defer submit until after validation.
-      const submitDefer = PHPMYEDIT.deferReload(container);
-      self.prop('readonly', true);
+	// defer submit until after validation.
+	const submitDefer = PHPMYEDIT.deferReload(container);
+	self.prop('readonly', true);
 
-      const cleanup = function() {
-        self.prop('readonly', false);
-        submitDefer.resolve();
-      };
+	const cleanup = function() {
+          self.prop('readonly', false);
+          submitDefer.resolve();
+	};
 
-      $.post(
-        OC.generateUrl('/apps/cafevdb/validate/general/monetary-value'),
-        { 'value': amount})
-        .fail(function(xhr, status, errorThrown) {
-          CAFEVDB.Ajax.handleError(xhr, status, errorThrown, cleanup);
-        })
-        .done(function (data) {
-          if (!CAFEVDB.Ajax.validateResponse(data, [ 'amount' ], cleanup)) {
-            return;
-          }
-          self.val(data.amount);
-          cleanup();
-        });
-      return false;
-    });
+	$.post(
+          OC.generateUrl('/apps/cafevdb/validate/general/monetary-value'),
+          { 'value': amount})
+          .fail(function(xhr, status, errorThrown) {
+            CAFEVDB.Ajax.handleError(xhr, status, errorThrown, cleanup);
+          })
+          .done(function (data) {
+            if (!CAFEVDB.Ajax.validateResponse(data, [ 'amount' ], cleanup)) {
+              return;
+            }
+            self.val(data.amount);
+            cleanup();
+          });
+	return false;
+      });
 
     // multi-field input matrix
     container.on('blur', 'tr.allowed-values input[type="text"], tr.allowed-values textarea', function(event) {
