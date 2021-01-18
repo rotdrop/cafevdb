@@ -594,6 +594,14 @@ class ProjectParticipants extends PMETableViewBase
     foreach ($extraFields as $field) {
       $fieldName = $field['name'];
       $fieldId   = $field['id'];
+      $multiplicity = $field['multiplicity'];
+      $dataType = $field['data_type'];
+
+      if (!$this->extraFieldsService->isSupportedType($multiplicity, $dataType)) {
+        throw new \Exception(
+          $this->l->t('Unsupported multiplicity / data-type combination: %s / %s',
+                      [ $multiplicity, $dataType ]));
+      }
 
       // set tab unless overridden by field definition
       if ($field['data_type'] == 'service-fee') {
@@ -641,7 +649,7 @@ class ProjectParticipants extends PMETableViewBase
         $valueData[$key] = $value['data'];
       }
 
-      switch ($field['data_type']) {
+      switch ($dataType) {
       case 'text':
         // default config
         break;
@@ -670,24 +678,22 @@ class ProjectParticipants extends PMETableViewBase
       case 'datetime':
       case 'money':
       case 'service-fee':
-        $style = $this->defaultFDD[$field['data_type']];
+        $style = $this->defaultFDD[$dataType];
         unset($style['name']);
         $fdd = array_merge($fdd, $style);
         $fdd['css']['postfix'] .= ' extra-field';
         break;
-      case 'person':
+      case 'people':
         // handled below
         break;
       default:
-        throw new \Exception($this->l->t('Unsupported data type: "%s"', $field['data_type']));
+        throw new \Exception($this->l->t('Unsupported data type: "%s"', $dataType));
       }
 
-      switch ($field['multiplicity']) {
+      switch ($multiplicity) {
       case 'simple':
-        // handled above
         break;
       case 'single':
-        // @TODO number options?
         reset($values2); $key = key($values2);
         $fdd['values2|CAP'] = [ $key => '' ]; // empty label for simple checkbox
         $fdd['values2|LVDF'] = [
@@ -696,8 +702,10 @@ class ProjectParticipants extends PMETableViewBase
         ];
         $fdd['select'] = 'C';
         $fdd['default'] = (string)!!(int)$field['default_value'];
-        $fdd['css']['postfix'] .= ' boolean single-valued '.$field['data_type'];
-        switch ($field['data_type']) {
+        $fdd['css']['postfix'] .= ' boolean single-valued '.$dataType;
+        switch ($dataType) {
+        case 'boolean':
+          break;
         case 'money':
         case 'service-fee':
           $money = $this->moneyValue(reset($valueData));
@@ -706,14 +714,19 @@ class ProjectParticipants extends PMETableViewBase
             0 => '-,--',
             $key => $money
           ];
-          $fdd['name|LFVD'] = $fdd['name'];
-          $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
+          $fdd['values2|CAP'] = [ $key => $money, ];
+          // $fdd['name|LFVD'] = $fdd['name'];
+          // $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
           break;
-        }
+        default:
+          $fdd['values2|CAP'] = [ $key => reset($valueData) ];
+          break;
+        } // data-type switch
         break;
-      case 'multiple':
       case 'parallel':
-        if ($field['data_type'] == 'service-fee') {
+      case 'multiple':
+        switch ($dataType) {
+        case 'service-fee':
           foreach($values2 as $key => $value) {
             $money = $this->moneyValue($valueData[$key]);
             $value = Util::htmlEscape($value);
@@ -723,20 +736,22 @@ class ProjectParticipants extends PMETableViewBase
           }
           $fdd['values2glue'] = "<br/>";
           $fdd['escape'] = false;
+          // fall through
+        default:
+          $fdd['values2'] = $values2;
+          $fdd['valueTitles'] = $valueTitles;
+          $fdd['valueData'] = $valueData;
+          if ($multiplicity == 'parallel') {
+            $fdd['css']['postfix'] .= ' set hide-subsequent-lines';
+            $fdd['select'] = 'M';
+          } else {
+            $fdd['css']['postfix'] .= ' enumeration allow-empty';
+            $fdd['select'] = 'D';
+          }
+          $fdd['css']['postfix'] .= ' '.$dataType;
+          $fdd['display|LF'] = [ 'popup' => 'data' ];
+          break;
         }
-        $fdd['values2'] = $values2;
-        $fdd['valueTitles'] = $valueTitles;
-        $fdd['valueData'] = $valueData;
-        if ($field['multiplicity'] == 'parallel') {
-          $fdd['css']['postfix'] .= ' set hide-subsequent-lines';
-          $fdd['select'] = 'M';
-        } else {
-          $fdd['css']['postfix'] .= ' enumeration allow-empty';
-          $fdd['select'] = 'D';
-        }
-        $fdd['css']['postfix'] .= ' '.$field['data_type'];
-        $fdd['display|LF'] = [ 'popup' => 'data' ];
-        break;
       case 'groupofpeople':
         // keep the original value as hidden input field and generate
         // a new group-definition field as yet another column
@@ -745,8 +760,6 @@ class ProjectParticipants extends PMETableViewBase
           $opts['fdd'], $tableName, 'group', $fdd);
         $fdd['input'] = 'H';
         $fdd = &$opts['fdd'][$fddName];
-
-//         $curColIdx++;
 
         // define the group stuff
         $max = $allowed[0]['limit']; // ATM, may change
@@ -765,11 +778,11 @@ class ProjectParticipants extends PMETableViewBase
    m.first_name AS first_name,
    fd.field_value AS group_id
 FROM ProjectParticipants pp
- LEFT JOIN Musicians AS m
-   ON m.id = pp.musician_id
- LEFT JOIN ProjectExtraFieldsData fd
-   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id= $fieldId
- WHERE pp.project_id = $projectId",
+LEFT JOIN Musicians AS m
+  ON m.id = pp.musician_id
+LEFT JOIN ProjectExtraFieldsData fd
+  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id= $fieldId
+WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
               'groups' => "CONCAT('".$fieldName." ',\$table.group_id)",
@@ -778,11 +791,11 @@ FROM ProjectParticipants pp
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
             ],
             'valueGroups' => [ -1 => $this->l->t('without group') ],
-        ]);
+          ]);
 
         $fdd['css']['postfix'] .= ' groupofpeople single-valued';
 
-        if ($field['data_type'] == 'service-fee') {
+        if ($dataType == 'service-fee') {
           $fdd['css']['postfix'] .= ' service-fee';
           $money = $this->moneyValue(reset($valueData));
           $fdd['name|LFVD'] = $fdd['name'];
@@ -793,7 +806,7 @@ FROM ProjectParticipants pp
               'prefix' => '<span class="allowed-option-name clip-long-text group">',
               'postfix' => ('</span><span class="allowed-option-value money">'.
                             $money.
-                             '</span>'),
+                            '</span>'),
             ]);
         }
 
@@ -801,11 +814,84 @@ FROM ProjectParticipants pp
         $fdd['values|LF'] = array_merge(
           $fdd['values'],
           [ 'filters' => '$table.group_id IS NOT NULL' ]);
+
         break;
       case 'groupsofpeople':
+        // keep the original value as hidden input field and generate
+        // a new group-definition field as yet another column
+        $tableName = $this->joinTableField($fddName)['table'];
+        list($curColIdx, $fddName) = $this->makeJoinTableField(
+          $opts['fdd'], $tableName, 'group', $fdd);
+        $fdd['input'] = 'H';
+        $fdd = &$opts['fdd'][$fddName];
+
+        // define the group stuff
+        $groupValues2   = $values2;
+        $groupValueData = $valueData;
+        $values2 = [];
+        $valueGroups = [ -1 => $this->l->t('without group') ];
+        $idx = -1;
+        foreach($allowed as $value) {
+          $valueGroups[--$idx] = $value['key'];
+          $values2[$idx] = $this->l->t('add to this group');
+          $valueData[$idx] = json_encode([ 'GroupId' => $value['key'] ]);
+        }
+
+        $fdd = array_merge(
+          $fdd, [
+            'select' => 'M',
+            'sql|LVFD' => 'GROUP_CONCAT(DISTINCT $join_table.group_id)', // should only be one
+            'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
+            'display' => [ 'popup' => 'data' ], // @TODO
+            'colattrs' => [ 'data-groups' => json_encode($allowed), ],
+            'filter' => 'having',
+            'values' => [
+              'table' => "SELECT
+  m.id AS musician_id,
+  CONCAT_WS(' ', m.first_name, m.name) AS name,
+  m.name AS last_name,
+  m.first_name AS first_name,
+  fd.field_value AS group_id
+FROM ProjectParticipants pp
+LEFT JOIN Musicians AS m
+  ON m.id = pp.musician_id,
+LEFT JOIN ProjectExtraFieldsData fd
+  ON fd.musician_id = pp.musician_id AND fd.project_id = $project_id AND fd.field_id = $fieldId
+WHERE pp.project_id = $projectId",
+              'column' => 'musician_id',
+              'description' => 'name',
+              'groups' => "\$table.group_id",
+              'data' => "CONCAT('{\"group_id\":\"',IFNULL(\$table.group_id, -1),'\"}')",
+              'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
+              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
+            ],
+            'valueGroups' => $valueGroups,
+            'valueData' => $valueData,
+            'values2' => $values2,
+          ]);
+
+        $fdd['css']['postfix'] .= ' groupofpeople predefined clip-long-text';
+        $fdd['css|LFVD']['postfix'] = $fdd['css']['postfix'].' view';
+
+        // @TODO tweak display of service-charge groups
+        // if ($dataType == 'service-fee') {
+        //   $css .= ' surcharge';
+        //   foreach($groupValues2 as $key => $value) {
+        //     $money = Util::moneyValue($groupValueData[$key], Config::$locale);
+        //     $groupValues2ACP[$key] = $value.':&nbsp;'.$money;
+        //     $value = Util::htmlEscape($value);
+        //     $value = '<span class="allowed-option-name group clip-long-text">'.$value.'</span>';
+        //     $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
+        //     $groupValues2[$key] = $value.$money;
+        //   }
+        // }
+
+        // in filter mode mask out all non-group-members
+        $fdd['values|LF'] = array_merge(
+          $fdd['values'],
+          [ 'filters' => '$table.GroupId IS NOT NULL' ]);
+
         break;
-      default:
-        throw new \Exception($this->l->t('Unsupported field multiplicity type: "%s"', $field['multiplicity']));
       }
 
       // @TODO Groups: "simple group" e.g. "twin rooms". Collect a
