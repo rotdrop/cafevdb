@@ -838,7 +838,7 @@ div#project_flyer_upload {
 td.pme-cell.clip-long-text,
 td.pme-cell .clip-long-text,
 td.pme-cell.musician-instruments {
-  width:12em;
+  /*width:12em;*/
   max-width:12em;
   max-height:1em;
   white-space:nowrap;
