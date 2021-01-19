@@ -955,28 +955,31 @@ class phpMyEdit
 			$qparts['select'] .= ', '.$data;
 		}
 		if (!empty($titles)) {
-			$data = $this->substituteVars($titles, $subs);
+			$titles = $this->substituteVars($titles, $subs);
 			$qparts['select'] .= ', '.$titles;
 		}
+
 		$res	= $this->myquery($this->get_SQL_query($qparts), __LINE__);
 		$values = array();
 		$grps   = array();
 		$dt     = array();
-		$titles = array();
+		$ttls   = array();
 		$idx    = $desc ? 1 : 0;
 		while ($row = $this->sql_fetch($res, 'n')) {
-			$values[$row[0]] = $row[$idx];
+			$colIdx = $idx;
+			$values[$row[0]] = $row[$colIdx++];
 			if (!empty($groups)) {
-				$grps[$row[0]] = $row[$idx+1];
+				$grps[$row[0]] = $row[$colIdx++];
 			}
 			if (!empty($data)) {
-				$dt[$row[0]] = $row[$idx+2];
+				$dt[$row[0]] = $row[$colIdx++];
 			}
 			if (!empty($titles)) {
-				$titles[$row[0]] = $row[$idx+3];
+				$ttls[$row[0]] = $row[$colIdx++];
 			}
 		}
-		return array('values' => $values, 'groups' => $grps, 'data' => $dt, 'titles' => $titles);
+
+		return array('values' => $values, 'groups' => $grps, 'data' => $dt, 'titles' => $ttls);
 	} /* }}} */
 
 	protected function join_table_reference($fdd)
