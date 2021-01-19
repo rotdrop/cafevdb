@@ -341,6 +341,7 @@ var CAFEVDB = CAFEVDB || {};
     const selectMusicianInstruments = container.find('.pme-value select.musician-instruments');
     const selectProjectInstruments = container.find('.pme-value select.pme-input.project-instruments');
     const selectGroupOfPeople = container.find('.pme-value select.pme-input.groupofpeople');
+    const inputGroupOfPeopleId = container.find('input.pme-input.groupofpeople-id');
     const selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
     const form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
 
@@ -515,7 +516,7 @@ var CAFEVDB = CAFEVDB || {};
     });
 
     // enable or disable ungrouped items
-    var maskUngrouped = function(select, disable) {
+    const maskUngrouped = function(select, disable) {
       select.find('option').each(function(index) {
         var option = $(this);
         var data = option.data('data');
@@ -546,10 +547,16 @@ var CAFEVDB = CAFEVDB || {};
       const curSelected = self.val();
       self.data('selected', curSelected ? curSelected : []);
       const name = self.attr('name');
-      console.log('group df name', name);
-      const groupFieldName = name.split(':')[0] + ':' + 'field_value';
+      const nameParts = name.split(/[@:]/);
+      console.log('NAME PARTS', nameParts);
+      const label = nameParts[0];
+      const fieldId = nameParts[1];
+      const column = nameParts[2];
+      const groupFieldName = label + '@' + fieldId + ':' + 'field_value';
       console.log('group id name', groupFieldName);
       self.data('groupField', form.find('[name="'+groupFieldName+'"]'));
+      self.data('fieldId', fieldId);
+      self.data('groupField').data('membersField', self).data('fieldId', fieldId);
       console.log('#groupIdFields', self.data('groupField').length);
       //console.log('groupField', self.data('groupField'));
 
@@ -558,6 +565,11 @@ var CAFEVDB = CAFEVDB || {};
         maskUngrouped(self, true);
         self.trigger('chosen:updated');
       }
+    });
+
+    // @todo maybe not needed
+    inputGroupOfPeopleId.off('change').on('change', function(event) {
+      const self = $(this);
     });
 
     selectGroupOfPeople.off('change').on('change', function(event) {
@@ -591,6 +603,7 @@ var CAFEVDB = CAFEVDB || {};
         // and empty select-box
         self.find('option:selected').prop('selected', false);
         CAFEVDB.selectValues(self.data('groupField'), false);
+        self.nextAll('span.allowed-option').removeClass('selected');
         maskUngrouped(self, true);
         changed = true;
       } else {
@@ -623,6 +636,9 @@ var CAFEVDB = CAFEVDB || {};
             console.log('group: ', data.groupId);
             selectGroup(self, data.groupId);
             CAFEVDB.selectValues(self.data('groupField'), data.groupId);
+            self.nextAll('span.allowed-option').removeClass('selected');
+            // @todo optimize
+            self.nextAll('span.allowed-option[data-key="' + data.groupId + '"]').addClass('selected');
             maskUngrouped(self, false);
             changed = true;
           }

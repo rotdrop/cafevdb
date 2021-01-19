@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -51,6 +51,10 @@ div.project-participants form.pme-form:not(.pme-change) span.allowed-option-valu
     float:right;
 }
 
+div.project-participants form.pme-form:not(.pme-change) span.allowed-option.group {
+  width:100%;
+}
+
 div.project-participants form.pme-form.pme-view span.allowed-option-name,
 div.project-participants form.pme-form.pme-delete span.allowed-option-name,
 div.project-participants form.pme-form.pme-view span.allowed-option-value.money,
@@ -90,4 +94,18 @@ div.project-participants form.pme-form.pme-delete td.service-fee.set span.allowe
     font-size:120%;
     position:absolute;
     left:12em;
+}
+
+div.project-participants span.allowed-option-name ~ span.allowed-option-value {
+    margin-left:1ex;
+}
+
+div.project-participants label.groupofpeople.predefined span.allowed-option {
+  margin-left:1ex;
+  display:none;
+}
+
+div.project-participants label.groupofpeople.predefined span.allowed-option.selected {
+  display:unset;
+  font-weight:bold;
 }

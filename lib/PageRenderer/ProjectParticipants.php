@@ -620,18 +620,18 @@ class ProjectParticipants extends PMETableViewBase
 
       $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
 
+      $css = [ 'extra-field', 'field-id-'.$fieldId, ];
       list($curColIdx, $fddName) = $this->makeJoinTableField(
         $opts['fdd'], $tableName, 'field_value',
         [
           'name' => $this->l->t($fieldName),
           'tab' => $tab,
-          'css'      => [ 'postfix' => ' extra-field' ],
-          //'sql' => 'GROUP_CONCAT(DISTINCT $join_table_fqn)',
+          'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
           'default'  => $field['default_value'],
           'values' => [
             'column' => 'field_value',
             'filters' => ('$table.field_id = '.$fieldId
-                          .' AND $table.project_id = $record_id[project_id]'
+                          .' AND $table.project_id = '.$projectId
                           .' AND $table.musician_id = $record_id[musician_id]'),
           ],
           'tooltip' => $field['tool_tip']?:null,
@@ -690,7 +690,7 @@ class ProjectParticipants extends PMETableViewBase
         $style = $this->defaultFDD[$dataType];
         unset($style['name']);
         $fdd = array_merge($fdd, $style);
-        $fdd['css']['postfix'] .= ' extra-field';
+        $fdd['css']['postfix'] .= ' '.implode(' ', $css);
         break;
       }
 
@@ -731,12 +731,11 @@ class ProjectParticipants extends PMETableViewBase
       case 'multiple':
         switch ($dataType) {
         case 'service-fee':
-          foreach($values2 as $key => $value) {
-            $money = $this->moneyValue($valueData[$key]);
-            $value = Util::htmlEscape($value);
-            $value = '<span class="allowed-option-name money multiple-choice">'.$value.'</span>';
-            $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
-            $values2[$key] = $value.$money;
+          foreach ($allowed as $option) {
+            $key = $option['key'];
+            $label = $option['label'];
+            $data  = $option['data'];
+            $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType, 'money');
           }
           $fdd['values2glue'] = "<br/>";
           $fdd['escape'] = false;
@@ -758,11 +757,46 @@ class ProjectParticipants extends PMETableViewBase
         }
         break;
       case 'groupofpeople':
-        // keep the original value as hidden input field and generate
-        // a new group-definition field as yet another column
+        // old field, group selection
+        $fdd = array_merge(
+          $fdd,
+          [
+            'mask' => null,
+          ]);
+
+        // generate a new group-definition field as yet another column
         list($curColIdx, $fddName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $fdd);
-        $fdd['input'] = 'H';
+
+        // hide value field and tweak for view displays.
+        $css[] = 'groupofpeople';
+        $css[] = 'single-valued';
+        $fdd = Util::arrayMergeRecursive(
+          $fdd,
+          [
+            'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
+            'input' => 'VSRH',
+//             'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
+//             'values|LFDV' => [
+//               'table' => "SELECT
+//   m.id AS musician_id,
+//   CONCAT_WS(' ', m.first_name, m.name) AS name,
+//   m.name AS last_name,
+//   m.first_name AS first_name,
+//   fd.field_value AS group_id
+// FROM ProjectParticipants pp
+// LEFT JOIN Musicians AS m
+//   ON m.id = pp.musician_id
+// LEFT JOIN ProjectExtraFieldsData fd
+//   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
+// WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
+//               'column' => 'name',
+//               'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
+//               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
+//             ],
+          ]);
+
+        // new field, member selection
         $fdd = &$opts['fdd'][$fddName];
 
         // tweak the join-structure entry for the group field
@@ -793,16 +827,26 @@ class ProjectParticipants extends PMETableViewBase
    CONCAT_WS(' ', m.first_name, m.name) AS name,
    m.name AS last_name,
    m.first_name AS first_name,
-   fd.field_value AS group_id
+   fd.field_value AS group_id,
+   fdg.group_number AS group_Number
 FROM ProjectParticipants pp
 LEFT JOIN Musicians AS m
   ON m.id = pp.musician_id
 LEFT JOIN ProjectExtraFieldsData fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
+LEFT JOIN (SELECT
+    fd2.field_value AS group_id,
+    ROW_NUMBER() OVER (ORDER BY fd2.field_id) AS group_number
+    FROM ProjectExtraFieldsData fd2
+    WHERE fd2.project_id = $projectId AND fd2.field_id = $fieldId
+    GROUP BY fd2.field_value
+  ) fdg
+  ON fdg.group_id = fd.field_value
 WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
-              'groups' => "CONCAT('".$fieldName." ',\$table.group_id)",
+              //'groups' => "CONCAT_WS(' ', '".$fieldName."',\$table.group_number,\$table.group_id)",
+              'groups' => "CONCAT_WS(' ', '".$fieldName."',\$table.group_number)",
               'data' => "CONCAT('{\"limit\":".$max.",\"groupId\":\"',IFNULL(\$table.group_id,-1),'\"}')",
               'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
@@ -810,20 +854,19 @@ WHERE pp.project_id = $projectId",
             'valueGroups' => [ -1 => $this->l->t('without group') ],
           ]);
 
-        $fdd['css']['postfix'] .= ' groupofpeople single-valued';
+        $fdd['css']['postfix'] .= ' '.implode(' ', $css);
 
         if ($dataType == 'service-fee') {
           $fdd['css']['postfix'] .= ' service-fee';
           $money = $this->moneyValue(reset($valueData));
           $fdd['name|LFVD'] = $fdd['name'];
-          $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
+          $fdd['name'] = $this->allowedOptionLabel($fdd['name'], reset($valueData), $dataType, 'money');
           $fdd['display|LFVD'] = array_merge(
             $fdd['display'],
             [
-              'prefix' => '<span class="allowed-option-name clip-long-text group">',
-              'postfix' => ('</span><span class="allowed-option-value money">'.
-                            $money.
-                            '</span>'),
+              'prefix' => '<span class="allowed-option-name money clip-long-text group">',
+              'postfix' => ('</span><span class="allowed-option-separator money">&nbsp;</span>'
+                            .'<span class="allowed-option-value money">'.$money.'</span>'),
             ]);
         }
 
@@ -869,54 +912,42 @@ WHERE pp.project_id = $projectId",
         // make the field a select box for the predefined groups, like
         // for the "multiple" stuff.
 
-        $css = ' groupofpeople-id predefined';
+        $css[] = 'groupofpeople';
+        $css[] = 'predefined';
         if ($dataType === 'service-fee') {
-          $css .= ' service-fee';
+          $css[] = 'service-fee';
           foreach($groupValues2 as $key => $value) {
-            $money = $this->moneyValue($groupValueData[$key]);
-            $groupValues2ACP[$key] = $value.':&nbsp;'.$money;
-            $value = Util::htmlEscape($value);
-            $value = '<span class="allowed-option-name group clip-long-text">'.$value.'</span>';
-            $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
-            $groupValues2[$key] = $value.$money;
+            $groupValues2[$key] = $this->allowedOptionLabel(
+              $value, $groupValueData[$key], $dataType, 'money group clip-long-text');
           }
         }
-
-        // generate a new group-definition field as yet another column
-        list($curColIdx, $fddName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'musician_id', $fdd);
 
         // old field, group selection
         $fdd = array_merge(
           $fdd,
           [
-            'name' => $this->l->t('%s Group', $fieldName),
-            'css'         => [ 'postfix' => $css ],
-            'input|LFVD'  => 'VR',
-            'input'       => 'SR',
+            //'name' => $this->l->t('%s Group', $fieldName),
+            'css'         => [ 'postfix' => ' '.implode(' ', $css) ],
             'select'      => 'D',
-            //'sql'         => $fieldName,
             'values2'     => $groupValues2,
-            'values2|ACP' => $groupValues2ACP?:null,
             'display'     => [ 'popup' => 'data' ],
             'sort'        => true,
             'escape'      => false,
             'mask' => null,
           ]);
 
-        // new field, member selection
-        $fdd = &$opts['fdd'][$fddName];
+        // generate a new group-definition field as yet another column
+        list($curColIdx, $fddName) = $this->makeJoinTableField(
+          $opts['fdd'], $tableName, 'musician_id', $fdd);
 
-        $fdd = array_merge(
-          $fdd, [
-            'select' => 'M',
-            //'sql|LVFD' => 'GROUP_CONCAT(DISTINCT $join_table.group_id)', // should only be one
-            //'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
-            'sql' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
-            'display' => [ 'popup' => 'data' ], // @TODO
-            'colattrs' => [ 'data-groups' => json_encode($allowed), ],
-            'filter' => 'having',
-            'values' => [
+        // hide value field and tweak for view displays.
+        $fdd = Util::arrayMergeRecursive(
+          $fdd,
+          [
+            'input' => 'VSRH',
+            'css'   => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id' ],
+            'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
+            'values|LFDV' => [
               'table' => "SELECT
   m.id AS musician_id,
   CONCAT_WS(' ', m.first_name, m.name) AS name,
@@ -927,28 +958,76 @@ FROM ProjectParticipants pp
 LEFT JOIN Musicians AS m
   ON m.id = pp.musician_id
 LEFT JOIN ProjectExtraFieldsData fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
-WHERE pp.project_id = $projectId",
-              'column' => 'musician_id',
-              'description' => 'name',
-              'groups' => "\$table.group_id",
-              'data' => "CONCAT('{\"groupId\":\"',IFNULL(\$table.group_id, -1),'\"}')",
+  ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
+WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
+              'column' => 'name',
               'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
             ],
-            'valueGroups' => $valueGroups,
-            'valueData' => $valueData,
-            'values2' => $values2,
-            'mask' => null,
           ]);
 
-        $fdd['css']['postfix'] .= ' groupofpeople predefined clip-long-text';
-        $fdd['css|LFVD']['postfix'] = $fdd['css']['postfix'].' view';
+        // new field, member selection
+        $fdd = &$opts['fdd'][$fddName];
 
-        // in filter mode mask out all non-group-members
-        $fdd['values|LF'] = array_merge(
-          $fdd['values'],
-          [ 'filters' => '$table.group_id IS NOT NULL' ]);
+        $fdd = Util::arrayMergeRecursive(
+          $fdd, [
+            'select' => 'M',
+            'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
+            //'sql' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
+            //'display' => [ 'popup' => 'data' ], // @TODO
+            'colattrs' => [ 'data-groups' => json_encode($allowed), ],
+            'values|ACP' => [
+              'table' => "SELECT
+  m.id AS musician_id,
+  CONCAT_WS(' ', m.first_name, m.name) AS name,
+  m.name AS last_name,
+  m.first_name AS first_name,
+  fd.field_value AS group_id,
+  JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', fd.field_value)), 'key', 'label')) AS group_label,
+  JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', fd.field_value)), 'key', 'data')) AS group_data
+FROM ProjectParticipants pp
+LEFT JOIN Musicians AS m
+  ON m.id = pp.musician_id
+LEFT JOIN ProjectExtraFieldsData fd
+  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
+LEFT JOIN ProjectExtraFields ef
+  ON ef.project_id = $projectId AND ef.id = fd.field_id
+WHERE pp.project_id = $projectId",
+              'column' => 'musician_id',
+              'description' => 'name',
+              'groups' => "CONCAT(\$table.group_label, ': ', \$table.group_data)",
+              'data' => "CONCAT('{\"groupId\":\"',IFNULL(\$table.group_id, -1),'\"}')",
+              'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
+              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
+              //'titles' => '$table.name',
+            ],
+            'valueGroups|ACP' => $valueGroups,
+            'valueData|ACP' => $valueData,
+            'values2|ACP' => $values2,
+            'mask' => null,
+            'display|LDV' => [
+              'popup' => 'data:previous',
+            ],
+            'display|ACP' => [
+              'prefix' => function($op, $pos, $row, $k, $pme) use ($css) {
+                return '<label class="'.implode(' ', $css).'">';
+              },
+              'postfix' => function($op, $pos, $row, $k, $pme) use ($allowed, $dataType) {
+                $html = '';
+                foreach ($allowed as $idx => $option) {
+                  $key = $option['key'];
+                  $active = $row['qf'.($k-1)] == $key ? 'selected' : null;
+                  $html .= $this->allowedOptionLabel(
+                    $option['label'], $option['data'], $dataType, $active, [ 'key' => $option['key'], ]);
+                }
+                $html .= '</label>';
+                return $html;
+              },
+            ],
+          ]);
+
+        $fdd['css']['postfix'] .= ' clip-long-text';
+        $fdd['css|LFVD']['postfix'] = $fdd['css']['postfix'].' view';
 
         break;
       }
@@ -1879,4 +1958,34 @@ WHERE pp.project_id = $projectId",
     return array_merge($dfltTabs, $extraTabs);
   }
 
+  private function allowedOptionLabel($label, $value, $dataType, $css = null, $data = null)
+  {
+    $this->logInfo('BLAH '.$dataType.' / '.$css);
+    $label = Util::htmlEscape($label);
+    $css = empty($css) ? $dataType : $css.' '.$dataType;
+    $innerCss = $dataType;
+    $htmlData = [];
+    if (is_array($data)) {
+      foreach ($data as $key => $_value) {
+        $htmlData[] = "data-".$key."='".$_value."'";
+      }
+    }
+    $htmlData = implode(' ', $htmlData);
+    if (!empty($htmlData)) {
+      $htmlData = ' '.$htmlData;
+    }
+    switch ($dataType) {
+    case 'service-fee':
+      $value = $this->moneyValue($value);
+      $innerCss .= ' money';
+      break;
+    default:
+      $value = Util::htmlEscape($value);
+      break;
+    }
+    $label = '<span class="allowed-option-name '.$innerCss.'">'.$label.'</span>';
+    $sep   = '<span class="allowed-option-separator '.$innerCss.'">&nbsp;</span>';
+    $value = '<span class="allowed-option-value '.$innerCss.'">'.$value.'</span>';
+    return '<span class="allowed-option '.$css.'"'.$htmlData.'>'.$label.$sep.$value.'</span>';
+  }
 }
