@@ -1910,7 +1910,8 @@ class phpMyEdit
 				//error_log('default: '.$this->fdd[$k]['name'].': '.$value);
 			}
 			if ($this->hidden($k)) {
-				echo $this->htmlHiddenData($this->fds[$k], $value);
+				$css_class_name = $this->getCSSclass('input', null, false, $css_postfix);
+				echo $this->htmlHiddenData($this->fds[$k], $value, $css_class_name);
 				continue;
 			}
 			echo '<tr class="',$this->getCSSclass('row', null, true, $css_postfix),'">',"\n";
@@ -1919,7 +1920,12 @@ class phpMyEdit
 			echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 			echo $this->getColAttributes($k),">\n";
 			if (isset($this->fdd[$k]['display']['prefix'])) {
-				echo $this->fdd[$k]['display']['prefix'];
+				$prefix = $this->fdd[$k]['display']['prefix'];
+				if (is_callable($prefix)) {
+					echo call_user_func($prefix, 'add', 'prefix', $row, $k, $this);
+				} else {
+					echo $this->fdd[$k]['display']['prefix'];
+				}
 			}
 			if ($this->col_has_php($k)) {
 				$php = $this->fdd[$k]['php'];
@@ -1985,7 +1991,12 @@ class phpMyEdit
 				echo '" />';
 			}
 			if (isset($this->fdd[$k]['display']['postfix'])) {
-				echo $this->fdd[$k]['display']['postfix'];
+				$postfix = $this->fdd[$k]['display']['prefix'];
+				if (is_callable($postfix)) {
+					echo call_user_func($postfix, 'add', 'postfix', $row, $k, $this);
+				} else {
+					echo $this->fdd[$k]['display']['postfix'];
+				}
 			}
 			echo '</td>',"\n";
 			if ($this->guidance) {
@@ -2023,24 +2034,7 @@ class phpMyEdit
 			if (! $this->displayed[$k]) {
 				continue;
 			}
-			$helptip = NULL;
-			if (isset($this->fdd[$k]['display']['popup'])) {
-				$css_postfix	= @$this->fdd[$k]['css']['postfix'];
-				$css_class_name = $this->getCSSclass('cell', null, true, $css_postfix);
-				$cell_data = $this->cellDisplay($k, $row, $css_class_name);
-				$popup = $this->fdd[$k]['display']['popup'];
-				if ($popup === 'data') {
-					$helptip = $cell_data;
-				} else if ($popup === 'tooltip') {
-					if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
-						$helptip = $this->fdd[$k]['tooltip'];
-					}
-				} else if (is_callable($popup)) {
-					$helptip = call_user_func($popup, $cell_data);
-				}
-			} else if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
-				$helptip = $this->fdd[$k]['tooltip'];
-			}
+			$helptip = $this->fetchCellPopup($k, $row);
 			if (!empty($this->fdd[$k]['encryption'])) {
 				if (!isset($row["qf$k"."encrypted"])) {
 					$row["qf$k"."encrypted"] = $row["qf$k"];
@@ -2050,7 +2044,9 @@ class phpMyEdit
 			if ($this->copy_operation() || $this->change_operation()) {
 				if ($this->hidden($k)) {
 					if (!in_array($k, $this->key_num) || $this->change_operation()) {
-						echo $this->htmlHiddenData($this->fds[$k], $row["qf$k"]);
+						$css_postfix	= @$this->fdd[$k]['css']['postfix'];
+						$css_class_name = $this->getCSSclass('input', null, false, $css_postfix);
+						echo $this->htmlHiddenData($this->fds[$k], $row["qf$k"], $css_class_name);
 					}
 					continue;
 				}
@@ -2107,7 +2103,12 @@ class phpMyEdit
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
 		if (isset($this->fdd[$k]['display']['prefix'])) {
-			echo $this->fdd[$k]['display']['prefix'];
+			$prefix = $this->fdd[$k]['display']['prefix'];
+			if (is_callable($prefix)) {
+				echo call_user_func($prefix, 'change', 'prefix', $row, $k, $this);
+			} else {
+				echo $this->fdd[$k]['display']['prefix'];
+			}
 		}
 
 		/* If $vals only contains one "multiple" value, then the
@@ -2193,7 +2194,8 @@ class phpMyEdit
 					$hiddenValues[] = '';
 				}
 				foreach($hiddenValues as $hidden) {
-					echo $this->htmlHiddenData($this->fds[$k].$array, $hidden);
+					// @TODO now emitted twice?
+					echo $this->htmlHiddenData($this->fds[$k].$array, $hidden, $css_class_name);
 				}
 			}
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
@@ -2243,7 +2245,12 @@ class phpMyEdit
 			echo '"',$len_props,' />',"\n";
 		}
 		if (isset($this->fdd[$k]['display']['postfix'])) {
-			echo $this->fdd[$k]['display']['postfix'];
+			$postfix = $this->fdd[$k]['display']['postfix'];
+			if (is_callable($postfix)) {
+				echo call_user_func($postfix, 'change', 'postfix', $row, $k, $this);
+			} else {
+				echo $this->fdd[$k]['display']['postfix'];
+			}
 		}
 		echo '</td>',"\n";
 	} /* }}} */
@@ -2254,7 +2261,12 @@ class phpMyEdit
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
 		if (isset($this->fdd[$k]['display']['prefix'])) {
-			echo $this->fdd[$k]['display']['prefix'];
+			$prefix = $this->fdd[$k]['display']['prefix'];
+			if (is_callable($prefix)) {
+				echo call_user_func($prefix, 'password', 'prefix', $row, $k, $this);
+			} else {
+				echo $this->fdd[$k]['display']['prefix'];
+			}
 		}
 		$len_props = '';
 		$maxlen = intval($this->fdd[$k]['maxlen']);
@@ -2273,7 +2285,12 @@ class phpMyEdit
 		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
 		echo htmlspecialchars($row["qf$k"]),'"',$len_props,' />',"\n";
 		if (isset($this->fdd[$k]['display']['postfix'])) {
-			echo $this->fdd[$k]['display']['postfix'];
+			$postfix = $this->fdd[$k]['display']['postfix'];
+			if (is_callable($postfix)) {
+				echo call_user_func($postfix, 'password', 'postfix', $row, $k, $this);
+			} else {
+				echo $this->fdd[$k]['display']['postfix'];
+			}
 		}
 		echo '</td>',"\n";
 	} /* }}} */
@@ -2285,11 +2302,21 @@ class phpMyEdit
 		$title          = !empty($helptip) ? ' title="'.$this->enc($helptip).'"' : '';
 		echo '<td class="',$css_class_name,'"',$this->getColAttributes($k),$title,">\n";
 		if (isset($this->fdd[$k]['display']['prefix'])) {
-			echo $this->fdd[$k]['display']['prefix'];
+			$prefix = $this->fdd[$k]['display']['prefix'];
+			if (is_callable($prefix)) {
+				echo call_user_func($prefix, 'display', 'prefix', $row, $k, $this);
+			} else {
+				echo $this->fdd[$k]['display']['prefix'];
+			}
 		}
 		echo $this->cellDisplay($k, $row, $css_class_name);
 		if (isset($this->fdd[$k]['display']['postfix'])) {
-			echo $this->fdd[$k]['display']['postfix'];
+			$postfix = $this->fdd[$k]['display']['postfix'];
+			if (is_callable($postfix)) {
+				echo call_user_func($postfix, 'display', 'postfix', $row, $k, $this);
+			} else {
+				echo $this->fdd[$k]['display']['postfix'];
+			}
 		}
 		echo '</td>',"\n";
 	} /* }}} */
@@ -2487,9 +2514,16 @@ class phpMyEdit
 		return $value;
 	}
 
-	function cellDisplay($k, $row, $css) /* {{{ */
+	function cellDisplay($k, $row, $css = null) /* {{{ */
 	{
+		if ($this->password($k)) {
+			return $this->labels['hidden'];
+		}
 		$escape	 = isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
+		if (empty($css)) {
+			$css_postfix = @$this->fdd[$k]['css']['postfix'];
+			$css = $this->getCSSclass('cell', null, true, $css_postfix);
+		}
 		if ($css == 'noescape') {
 			$escape = false;
 		}
@@ -2595,6 +2629,54 @@ class phpMyEdit
 		return $escape ? nl2br($value) : $value;
 	} /* }}} */
 
+	function fetchCellPopup($k, $row, $cell_data = null)
+	{
+		$helptip = null;
+		if (isset($this->fdd[$k]['display']['popup'])) {
+			$popup = $this->fdd[$k]['display']['popup'];
+			if (is_callable($popup)) {
+				if (empty($cell_data)) {
+					$cell_data = $this->cellDisplay($k, $row);
+				}
+				$helptip = call_user_func($popup, $cell_data);
+			} else if (is_string($popup)) {
+				switch ($popup) {
+				case 'data'.substr($popup, strlen('data')):
+					$cell = explode(':', $popup)[1];
+					if (empty($cell) || $cell == $k || $cell == 'this' || $cell == 'self') {
+						if (empty($cell_data)) {
+							$cell_data = $this->cellDisplay($k, $row);
+						}
+						$helptip = $cell_data;
+					} else {
+						if ($cell == 'previous') {
+							$cell = $k - 1;
+						} else if ($cell == 'next') {
+							$cell = $k + 1;
+						}
+						if (!is_numeric($cell)) {
+							$cell = $this->fdn[$cell];
+						}
+						if (!empty($this->fdd[$cell])) {
+							$helptip = $this->cellDisplay($cell, $row);
+						}
+					}
+					break;
+				case 'tooltip':
+					if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
+						$helptip = $this->fdd[$k]['tooltip'];
+					}
+					break;
+				default:
+					break;
+				}
+			}
+		} else if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
+			$helptip = $this->fdd[$k]['tooltip'];
+		}
+		return $helptip;
+	}
+
 	function fetchToolTip($css_class_name, $name, $label = false)
 	{
 		$title = $this->doFetchToolTip($css_class_name, $name, $label);
@@ -2687,20 +2769,22 @@ class phpMyEdit
 	 * @param	value	value
 	 */
 
-	function htmlHiddenSys($name, $value) /* {{{ */
+	function htmlHiddenSys($name, $value, $css = null) /* {{{ */
 	{
-		return $this->htmlHidden($this->cgi['prefix']['sys'].$name, $value);
+		return $this->htmlHidden($this->cgi['prefix']['sys'].$name, $value, $css);
 	} /* }}} */
 
-	function htmlHiddenData($name, $value) /* {{{ */
+	function htmlHiddenData($name, $value, $css = null) /* {{{ */
 	{
-		return $this->htmlHidden($this->cgi['prefix']['data'].$name, $value);
+		return $this->htmlHidden($this->cgi['prefix']['data'].$name, $value, $css);
 	} /* }}} */
 
-	function htmlHidden($name, $value) /* {{{ */
+	function htmlHidden($name, $value, $css = null) /* {{{ */
 	{
-		return '<input type="hidden" name="'.htmlspecialchars($name)
-			.'" value="'.htmlspecialchars($value).'" />'."\n";
+		return '<input type="hidden" '
+			.'name="'.htmlspecialchars($name).'" '
+			.(!empty($css) ? 'class="'.htmlspecialchars($css).'" ' : '')
+			.'value="'.htmlspecialchars($value).'" />'."\n";
 	} /* }}} */
 
 	/**
@@ -2804,7 +2888,7 @@ class phpMyEdit
 			// selects can only be disabled, but not made readonly.
 			foreach ($selected as $value) {
 				$name = htmlspecialchars($name).($multiple ? '[]' : '');
-				$ret .= $this->htmlHidden($name, $value);
+				$ret .= $this->htmlHidden($name, $value, $css);
 				if (!$multiple) {
 					break;
 				}
@@ -4230,38 +4314,30 @@ class phpMyEdit
 				}
 				$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 				$css_class_name = $this->getCSSclass('cell', null, true, $css_postfix);
-				if ($this->password($k)) {
-					echo '<td class="',$css_class_name,'">',$this->labels['hidden'],'</td>',"\n";
-					continue;
-				}
 				$cell_data = $this->cellDisplay($k, $row, $css_class_name);
 				$title = '';
-				$helptip = NULL;
-				if (isset($this->fdd[$k]['display']['popup'])) {
-					$popup = $this->fdd[$k]['display']['popup'];
-					if ($popup === 'data') {
-						$helptip = $cell_data;
-					} else if ($popup === 'tooltip') {
-						if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
-							$helptip = $this->fdd[$k]['tooltip'];
-						}
-					} else if (is_callable($popup)) {
-						$helptip = call_user_func($popup, $cell_data);
-					}
-					if ($helptip) {
-						$title = ' title="'.$this->enc($helptip).'"';
-					}
-				} else if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
-					$helptip = $this->fdd[$k]['tooltip'];
+				$helptip = $this->fetchCellPopup($k, $row, $cell_data);
+				if (!empty($helptip)) {
+					$title = ' title="'.$this->enc($helptip).'"';
 				}
 				echo '<td class="',$css_class_name,'"',$this->getColAttributes($fd),' ';
 				echo $this->getColAlign($fd),$title,'>';
 				if (isset($this->fdd[$k]['display']['prefix'])) {
-					echo $this->fdd[$k]['display']['prefix'];
+					$prefix = $this->fdd[$k]['display']['prefix'];
+					if (is_callable($prefix)) {
+						echo call_user_func($prefix, 'display', 'prefix', $row, $k, $this);
+					} else {
+						echo $this->fdd[$k]['display']['prefix'];
+					}
 				}
 				echo $cell_data;
 				if (isset($this->fdd[$k]['display']['postfix'])) {
-					echo $this->fdd[$k]['display']['postfix'];
+					$postfix = $this->fdd[$k]['display']['postfix'];
+					if (is_callable($postfix)) {
+						echo call_user_func($postfix, 'display', 'postfix', $row, $k, $this);
+					} else {
+						echo $this->fdd[$k]['display']['postfix'];
+					}
 				}
 				echo '</td>',"\n";
 			} /* }}} */
