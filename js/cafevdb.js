@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -89,11 +89,11 @@ var CAFEVDB = CAFEVDB || {};
     case 'tinymce':
       // This is a Gurkerei
       $(document).on('focusin', function(e) {
-	//e.stopImmediatePropagaion();
+        //e.stopImmediatePropagaion();
         //alert(CAFEVDB.print_r(e.target, true));
         if ($(e.target).closest(".mce-container").length) {
-	  e.stopImmediatePropagation();
-	}
+          e.stopImmediatePropagation();
+        }
       });
       var plusConfig = {};
       if (!editorElement.is('textarea')) {
@@ -106,15 +106,15 @@ var CAFEVDB = CAFEVDB || {};
       mceDeferred.then(
         function() {
           console.debug('MCE promise succeeded');
-	  if (typeof initCallback == 'function') {
-	    initCallback();
-	  }
+          if (typeof initCallback == 'function') {
+            initCallback();
+          }
         },
         function() {
           console.error('MCE promise failed');
-	  if (typeof initCallback == 'function') {
-	    initCallback();
-	  }
+          if (typeof initCallback == 'function') {
+            initCallback();
+          }
           editorElement.css('visibility', '');
         }
       );
@@ -122,7 +122,7 @@ var CAFEVDB = CAFEVDB || {};
       editorElement
         .off('cafevdb:tinymce-done')
         .on('cafevdb:tinymce-done', function(event) {
-	  console.debug('tinyMCE init done callback');
+          console.debug('tinyMCE init done callback');
           mceDeferred.resolve();
         });
       console.debug("attach tinymce");
@@ -671,28 +671,28 @@ var CAFEVDB = CAFEVDB || {};
     } else {
       const arrowclass = popup.hasClass('topright') ? 'up' : 'left';
       $.get(CAFEVDB.generateUrl(route))
-	.done(function(data) {
-	  popup
-	    .html(data)
-	    .ready(function() {
-	      // assume the first element is a container div
-	      if (popup.find('.popup-title').length > 0) {
-		popup.find('.popup-title').append('<a class="close"></a>');
-		  //popup.find(">:first-child").prepend('<a class="close"></a>').show();
-	      } else {
-		popup.find(">:first-child").prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
-	      }
-	      popup.find('.close').bind('click', function() {
-		popup.addClass('hidden').html('');
-	      });
-	      callback(popup);
-	      popup.find('>:first-child').removeClass('hidden');
-	      popup.removeClass('hidden');
-	    });
-	})
-	.fail(function(data) {
-	  console.log(data);
-	});
+        .done(function(data) {
+          popup
+            .html(data)
+            .ready(function() {
+              // assume the first element is a container div
+              if (popup.find('.popup-title').length > 0) {
+                popup.find('.popup-title').append('<a class="close"></a>');
+                  //popup.find(">:first-child").prepend('<a class="close"></a>').show();
+              } else {
+                popup.find(">:first-child").prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
+              }
+              popup.find('.close').bind('click', function() {
+                popup.addClass('hidden').html('');
+              });
+              callback(popup);
+              popup.find('>:first-child').removeClass('hidden');
+              popup.removeClass('hidden');
+            });
+        })
+        .fail(function(data) {
+          console.log(data);
+        });
     }
   };
 
@@ -760,8 +760,8 @@ var CAFEVDB = CAFEVDB || {};
 
     if (exportscript == '') {
       CAFEVDB.Dialogs.alert(t(CAFEVDB.appName, 'Export to the following format is not yet supported:')
-			    +' "'+selected+'"',
-			    t(CAFEVDB.appName, 'Unimplemented'));
+                            +' "'+selected+'"',
+                            t(CAFEVDB.appName, 'Unimplemented'));
     } else {
 
       // this will be the alternate form-action
@@ -1222,6 +1222,7 @@ var CAFEVDB = CAFEVDB || {};
       if (!self.is('select')) {
         // graceful degrade for non selects
         self.val(optionValues[0] ? optionValues[0] : '');
+        self.trigger('change');
         return true;
       }
       self.find('option').each(function(idx) {
@@ -1248,12 +1249,12 @@ var CAFEVDB = CAFEVDB || {};
       $.get(CAFEVDB.generateUrl('foregroundjob/progress/'+id))
       .done(function(data) {
         if (!callbacks.update(data)) {
-	  console.debug("Finish polling");
+          console.debug("Finish polling");
           clearTimeout(CAFEVDB.progressTimer);
           CAFEVDB.progressTimer = false;
           return;
         }
-	console.debug("Restart timer.");
+        console.debug("Restart timer.");
         CAFEVDB.progressTimer = setTimeout(poll, interval);
       })
       .fail(function(xhr, status, errorThrown) {
@@ -1349,4 +1350,5 @@ $(function(){
 
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***
