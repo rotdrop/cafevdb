@@ -58,6 +58,7 @@ style($appName, 'navsnapper');
 style($appName, 'pme-table');
 style($appName, 'projects');
 style($appName, 'project-instrumentation-numbers');
+style($appName, 'project-participants');
 style($appName, 'project-extra');
 style($appName, 'mobile');
 
