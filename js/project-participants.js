@@ -676,8 +676,6 @@ console.log('deselect', option.val());
         }
       }
 
-      console.log('group limit', limit);
-
       if (limit > 0 && curSelected.length > limit) {
         CAFEVDB.Notification.showTemporary(t('cafevdb',
                                         'Too many group members, allowed are {limit}, you specified {count}.'
