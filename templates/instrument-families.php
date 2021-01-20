@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -51,15 +51,15 @@ if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('instrument-families');
 }
 
-echo $this->inc('part.common.header',
-                [ 'css-prefix' => $css_pfx,
-                  'navigationcontrols' => $nav,
-                  'header' => $renderer->headerText() ]);
+echo $this->inc('part.common.header', [
+  'css-prefix' => $css_pfx,
+  'navigationcontrols' => $nav,
+  'header' => $renderer->headerText(),
+]);
 
-// Issue the main part. The method will echo itself
 $renderer->render();
 
 // Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx, ]);
 
 ?>
