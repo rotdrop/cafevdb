@@ -28,7 +28,7 @@ $nav = '';
 $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('all');
 $nav .= $pageNavigation->pageControlElement('insurances');
-$nav .= $pageNavigation->pageControlElement('insurancerates');
+$nav .= $pageNavigation->pageControlElement('insurance-rates');
 $nav .= $pageNavigation->pageControlElement('debit-mandates');
 
 echo $this->inc('part.common.header', [

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,29 +20,24 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB
-{
+namespace OCA\CAFEVDB;
 
-  $table = new InsuranceRates();
-  $css_pfx = InsuranceRates::CSS_PREFIX;
+$css_pfx = $renderer->cssPrefix();
 
-  $nav = '';
-  $nav .= Navigation::pageControlElement('projects');
-  $nav .= Navigation::pageControlElement('all');
-  $nav .= Navigation::pageControlElement('insurances');
-  $nav .= Navigation::pageControlElement('insurancebrokers');
-  $nav .= Navigation::pageControlElement('debit-mandates');
+$nav = '';
+$nav .= $pageNavigation->pageControlElement('projects');
+$nav .= $pageNavigation->pageControlElement('all');
+$nav .= $pageNavigation->pageControlElement('insurances');
+$nav .= $pageNavigation->pageControlElement('insurance-brokers');
+$nav .= $pageNavigation->pageControlElement('debit-mandates');
 
-  echo $this->inc('part.common.header',
-                  array('css-prefix' => $css_pfx,
-                        'navigationcontrols' => $nav,
-                        'header' => $table->headerText()));
+echo $this->inc('part.common.header', [
+  'css-prefix' => $css_pfx,
+  'navigationcontrols' => $nav,
+  'header' => $table->headerText(),
+]);
 
+$renderer->render();
 
-  $table->display();
-
-  // Close some still opened divs
-  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
-}
-
-?>
+// Close some still opened divs
+echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx, ]);
