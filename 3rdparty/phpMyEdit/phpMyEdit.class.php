@@ -1374,19 +1374,31 @@ class phpMyEdit
 			} else {
 				if (is_array($ov['value'])) {
 					$tmp_ov_val = '';
+					$inner_null = false;
 					foreach ($ov['value'] as $ov_val) {
 						strlen($tmp_ov_val) > 0 && $tmp_ov_val .= ' OR ';
+						// @todo should literal 0 match null?
 						if ($ov_val == '') {
 							// interprete this as empty or NULL
-							$tmp_ov_val .= sprintf("(%s IS NULL OR %s LIKE '')", $field, $field);
+							$this_ov_val = sprintf("%s LIKE ''", $field);
 						} else {
-							$tmp_ov_val .= sprintf('FIND_IN_SET("%s",%s)', $ov_val, $field);
+							$this_ov_val = sprintf('FIND_IN_SET("%s",%s)', $ov_val, $field);
+						}
+						if (empty($ov_val)) {
+							$inner_null = true;
+							$tmp_ov_val .= sprintf("(%s IS NULL OR %s)", $field, $this_ov_val);
+						} else {
+							$tmp_ov_val .= $this_ov_val;
 						}
 					}
 					if (isset($ov['oper']) &&
 						strtoupper($ov['oper']) == 'NOT' || $ov['oper'] == '!') {
-						$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))',
-											  $field, $tmp_ov_val);
+						if ($inner_null) {
+							$tmp_ov_val = sprintf('NOT (%s)', $tmp_ov_val);
+						} else {
+							$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))',
+												  $field, $tmp_ov_val);
+						}
 					}
 					$where[] = "($tmp_ov_val)";
 				} else {
@@ -1589,7 +1601,8 @@ class phpMyEdit
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'='.rawurlencode($mc);
 				} else {
 
-					/**The old behaviour was simply too unflexible:
+					/**
+					 * The old behaviour was simply too unflexible:
 					 * just adding wildcars around the search
 					 * string. The following hack introduces the
 					 * rules:
