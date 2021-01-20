@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -183,16 +183,14 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts['multiple'] = '16';
 
     // Display special page elements
-    $opts['display'] =  Util::arrayMergeRecursive(
-      $opts['display'],
-      [
-        'form'  => true,
-        //'query' => true,
-        'sort'  => $sort,
-        'time'  => true,
-        'tabs'  => false,
-        'navigation' => 'CDVP',
-    ]);
+    $opts['display'] = [
+      'form'  => true,
+      //'query' => true,
+      'sort'  => $sort,
+      'time'  => true,
+      'tabs'  => false,
+      'navigation' => 'CDVP',
+    ];
 
     if ($projectMode) {
       $adjustButton = array(
