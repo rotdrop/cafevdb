@@ -53,6 +53,14 @@ class InstrumentInsurance implements \ArrayAccess
   private $musician;
 
   /**
+   * A possibly different person which is responsible for paying the
+   * insurance fees.
+   *
+   * @ORM\ManyToOne(targetEntity="Musician", fetch="EXTRA_LAZY")
+   */
+  private $billToParty = null;
+
+  /**
    * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(nullable=false)
    */
@@ -108,13 +116,6 @@ class InstrumentInsurance implements \ArrayAccess
    * @ORM\Column(type="integer", nullable=false)
    */
   private $insuranceAmount;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="0"})
-   */
-  private $billToParty = '0';
 
   /**
    * @var \DateTime
