@@ -62,7 +62,7 @@ class InstrumentInsurance implements \ArrayAccess
 
   /**
    * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
+   * @ORM\JoinColumn(referencedColumnName="short_name", nullable=false)
    */
   private $broker;
 

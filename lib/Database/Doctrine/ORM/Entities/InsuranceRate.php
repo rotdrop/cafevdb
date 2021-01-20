@@ -39,6 +39,7 @@ class InsuranceRate implements \ArrayAccess
 
   /**
    * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="insuranceRates", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(referencedColumnName="short_name")
    * @ORM\Id
    */
   private $broker;

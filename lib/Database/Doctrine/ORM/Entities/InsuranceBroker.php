@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * InsuranceBrokers
  *
- * @ORM\Table(name="InsuranceBrokers", uniqueConstraints={@ORM\UniqueConstraint(columns={"short_name"})})
+ * @ORM\Table(name="InsuranceBrokers")
  * @ORM\Entity
  */
 class InsuranceBroker implements \ArrayAccess
@@ -38,18 +38,10 @@ class InsuranceBroker implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
-   */
-  private $id;
-
-  /**
    * @var string
    *
    * @ORM\Column(type="string", length=40, nullable=false)
+   * @ORM\Id
    */
   private $shortName;
 
