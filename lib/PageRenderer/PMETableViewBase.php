@@ -204,6 +204,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** Short title for heading. */
   // public function shortTitle();
 
+  public function cssClass()
+  {
+    return $this->cssClass;
+  }
+
   /**
    * Header text informations.
    *
@@ -943,7 +948,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function addSlug(string $slug, array &$fdd)
   {
-    $slug = $this->cssClass.'-'.$slug;
+    $slug = $this->cssClass().'-'.$slug;
     if (!isset($fdd['css']['postfix'])) {
       $fdd['css'] = [ 'postfix' => '' ];
     }
