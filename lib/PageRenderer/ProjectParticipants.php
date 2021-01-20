@@ -713,14 +713,14 @@ class ProjectParticipants extends PMETableViewBase
         case 'money':
         case 'service-fee':
           $money = $this->moneyValue(reset($valueData));
+          $noMoney = $this->moneyValue(0);
           // just use the amount to pay as label
           $fdd['values2|LVDF'] = [
-            0 => '-,--',
+            '' => '-,--',
+            0 => $noMoney, //'-,--',
             $key => $money
           ];
           $fdd['values2|CAP'] = [ $key => $money, ];
-          // $fdd['name|LFVD'] = $fdd['name'];
-          // $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
           break;
         default:
           $fdd['values2|CAP'] = [ $key => reset($valueData) ];
@@ -1032,178 +1032,6 @@ WHERE pp.project_id = $projectId",
         break;
       }
 
-      // @TODO Groups: "simple group" e.g. "twin rooms". Collect a
-      // number of participants into groups, e.g. to record
-      // preferences of the participants for multi-bed accomodation
-      //
-      // "PredefinedGroups": E.g. to collect concrete groups into a
-      // restricted number of named groups with restricted number of
-      // participants per group. E.g. to distribute the participants
-      // to cars or hotel-rooms and the like.
-
-//       case 'SimpleGroup':
-//       case 'SurchargeGroup':
-//         // keep the original value as hidden input field and generate
-//         // a new group-definition field as yet another column
-//         $opts['fdd'][$fieldName.'Group'] = $fdd;
-//         $fdd['input'] = 'H';
-//         $fdd = &$opts['fdd'][$fieldName.'Group'];
-//         $curColIdx++;
-
-//         // define the group stuff
-//         $max = $allowed[0]['limit']; // ATM, may change
-//         $fdd = array_merge(
-//           $fdd, [
-//             'select' => 'M',
-//             'sql' => "GROUP_CONCAT(DISTINCT PMEjoin{$curColIdx}.InstrumentationId)",
-//             'display' => [ 'popup' => 'data' ],
-//             'colattrs' => [ 'data-groups' => json_encode([ 'Limit' => $max ]), ],
-//             'filter' => 'having',
-//             'values' => [
-//               'table' => "SELECT
-//   b.Id AS InstrumentationId,
-//   CONCAT_WS(' ', m.Vorname, m.Name) AS Name,
-//   m.Name AS LastName, m.Vorname AS FirstName,
-//   fd.FieldValue AS GroupId
-// FROM Besetzungen b
-// LEFT JOIN Musiker AS m
-//   ON b.MusikerId = m.Id
-// LEFT JOIN ProjectExtraFieldsData fd
-//   ON b.Id = fd.BesetzungenId AND fd.FieldId = $fieldId
-// WHERE b.ProjektId = $projectId",
-//               'column' => 'InstrumentationId',
-//               'description' => 'Name',
-//               'groups' => "CONCAT('".$fieldName." ',\$table.GroupId)",
-//               'data' => "CONCAT('{\"Limit\":".$max.",\"GroupId\":\"',IFNULL(\$table.GroupId,-1),'\"}')",
-//               'orderby' => '$table.GroupId ASC, $table.LastName ASC, $table.FirstName ASC',
-//               'join' => '$main_table.`'.$fieldName.'` = $join_table.GroupId',
-//               ],
-//             'valueGroups' => [ -1 => $this->l->t('without group') ],
-//             ]);
-//         $fdd['css']['postfix'] .= ' groupofpeople single-valued';
-
-//         if ($type['Name'] === 'SurchargeGroup') {
-//           $fdd['css']['postfix'] .= ' surcharge';
-//           $money = Util::moneyValue(reset($valueData));
-//           $fdd['name|LFVD'] = $fdd['name'];
-//           $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
-//           $fdd['display|LFVD'] = array_merge(
-//             $fdd['display'],
-//             [
-//               'prefix' => '<span class="allowed-option-name clip-long-text group">',
-//               'postfix' => ('</span><span class="allowed-option-value money">'.
-//                             $money.
-//                             '</span>'),
-//               ]);
-//         }
-
-//         // in filter mode mask out all non-group-members
-//         $fdd['values|LF'] = array_merge(
-//           $fdd['values'],
-//           [ 'filters' => '$table.GroupId IS NOT NULL' ]);
-
-//         // after all this tweaking, we still need the real group id
-//         $opts['fdd'][$fieldName.'GroupId'] = [
-//           'name'     => $this->l->t('%s Group Id', array($name)),
-//           'css'      => [ 'postfix' => ' groupofpeople-id' ],
-//           'input|LFVD' => 'VRH',
-//           'input'      => 'SRH',
-//           'select'   => 'T',
-//           'sql'      => 'PMEtable0.`'.$fieldName.'`',
-//           ];
-//         break;
-//       case 'PredefinedGroups':
-//       case 'SurchargeGroups':
-//         // keep the original value as hidden input field and generate
-//         // a new group-definition field as yet another column
-//         $opts['fdd'][$fieldName.'Group'] = $fdd;
-//         $fdd['input'] = 'H';
-//         $fdd = &$opts['fdd'][$fieldName.'Group'];
-//         $curColIdx++;
-
-//         // define the group stuff
-//         $groupValues2   = $values2;
-//         $groupValueData = $valueData;
-//         $values2 = [];
-//         $valueGroups = [ -1 => $this->l->t('without group') ];
-//         $idx = -1;
-//         foreach($allowed as $value) {
-//           $valueGroups[--$idx] = $value['key'];
-//           $values2[$idx] = $this->l->t('add to this group');
-//           $valueData[$idx] = json_encode([ 'GroupId' => $value['key'] ]);
-//         }
-//         $fdd = array_merge(
-//           $fdd, [
-//             'select' => 'M',
-//             'sql' => "GROUP_CONCAT(DISTINCT PMEjoin{$curColIdx}.InstrumentationId)",
-//             'display' => [ 'popup' => 'data' ],
-//             'colattrs' => [ 'data-groups' => json_encode($allowed), ],
-//             'filter' => 'having',
-//             'values' => [
-//               'table' => "SELECT
-//   b.Id AS InstrumentationId,
-//   CONCAT_WS(' ', m.Vorname, m.Name) AS Name,
-//   m.Name AS LastName, m.Vorname AS FirstName,
-//   fd.FieldValue AS GroupId
-// FROM Besetzungen b
-// LEFT JOIN Musiker AS m
-//   ON b.MusikerId = m.Id
-// LEFT JOIN ProjectExtraFieldsData fd
-//   ON b.Id = fd.BesetzungenId AND fd.FieldId = $fieldId
-// WHERE b.ProjektId = $projectId",
-//               'column' => 'InstrumentationId',
-//               'description' => 'Name',
-//               'groups' => "\$table.GroupId",
-//               'data' => "CONCAT('{\"GroupId\":\"',IFNULL(\$table.GroupId, -1),'\"}')",
-//               'orderby' => '$table.GroupId ASC, $table.LastName ASC, $table.FirstName ASC',
-//               'join' => '$main_table.`'.$fieldName.'` = $join_table.GroupId',
-//               ],
-//             'valueGroups' => $valueGroups,
-//             'valueData' => $valueData,
-//             'values2' => $values2,
-//             ]);
-//         $fdd['css']['postfix'] .= ' groupofpeople predefined clip-long-text';
-//         $fdd['css|LFVD']['postfix'] = $fdd['css']['postfix'].' view';
-
-//         // in filter mode mask out all non-group-members
-//         $fdd['values|LF'] = array_merge(
-//           $fdd['values'],
-//           [ 'filters' => '$table.GroupId IS NOT NULL' ]);
-
-//         $css = ' groupofpeople-id predefined';
-//         if ($type['Name'] === 'SurchargeGroups') {
-//           $css .= ' surcharge';
-//           foreach($groupValues2 as $key => $value) {
-//             $money = Util::moneyValue($groupValueData[$key], Config::$locale);
-//             $groupValues2ACP[$key] = $value.':&nbsp;'.$money;
-//             $value = Util::htmlEscape($value);
-//             $value = '<span class="allowed-option-name group clip-long-text">'.$value.'</span>';
-//             $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
-//             $groupValues2[$key] = $value.$money;
-//           }
-//         }
-
-//         // after all this tweaking, we still need the real group id
-//         $opts['fdd'][$fieldName.'GroupId'] = [
-//           'name'        => $this->l->t('%s Group', array($name)),
-//           'css'         => [ 'postfix' => $css ],
-//           'input|LFVD'  => 'VR',
-//           'input'       => 'SR',
-//           'select'      => 'D',
-//           'sql'         => $fieldName,
-//           'values2'     => $groupValues2,
-// //          'values2|ACP' => $groupValues2ACP,
-//           'display'     => [ 'popup' => 'data' ],
-//           'sort'        => true,
-//           'escape'      => false,
-//           ];
-//         if (!empty($groupValues2ACP)) {
-//           $opts['fdd'][$fieldName.'GroupId']['values2|ACP'] = $groupValues2ACP;
-//         }
-//         break;
-//       default:
-//         break;
-//       }
     }
 
     /*
@@ -1740,33 +1568,6 @@ WHERE pp.project_id = $projectId",
 //       }
 //     }
 
-//     // Inject the underlying table name as 'querygroup' parameter
-//     // s.t. update queries can be split into several queries which
-//     // only target one of the underlying tables.
-//     $viewStructure = Projects::viewStructure($projectId, $userExtraFields);
-//     //print_r($viewStructure);
-//     foreach($opts['fdd'] as $name => &$data) {
-//       if (isset($viewStructure[$name])) {
-//         $joinField = $viewStructure[$name];
-//         $table = $joinField['table'];
-//         $tablename = $joinField['tablename'];
-//         $key = isset($joinField['key']) ? $joinField['key'] : false;
-//         if (isset($joinField['update'])) {
-//           $column = $joinField['update'];
-//         } else if ($joinField['column'] === true) {
-//           $column = $name;
-//         } else {
-//           $column = $joinField['column'];
-//         }
-//         $data['querygroup'] = array(
-//           'table' => $table,
-//           'tablename' => $tablename,
-//           'column' => $column,
-//           'key' => $key
-//           );
-//       }
-//     }
-
     ///@@@@@@@@@@@@@@@@@@@@@
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
@@ -1822,15 +1623,27 @@ WHERE pp.project_id = $projectId",
         if (array_search($groupFieldName, $changed) === false) {
           continue 2;
         }
-        $this->logInfo("TWEAK GROUP");
+
+        $allowed = $this->extraFieldsService->explodeAllowedValues($extraField['allowed_values'], false, true);
+        $max = $allowed[0]['limit'];
+
         // add the group id as data field in order to satisfy
         // PMETableViewBase::beforeUpdateDoUpdateAll().
         $groupId = $oldValues[$fieldName]?:Uuid::uuid1();
+
         $members = explode(',', $newValues[$groupFieldName]);
+
+        if (count($members) > $max) {
+          throw new \Exception(
+            $this->l->t('Number %d of requested participants for group %s is larger than the number %d of allowed participants.',
+                        [ $count($members), $extraField['name'], $max ]));
+        }
+
         foreach ($members as &$member) {
           $member .= ':'.$groupId;
         }
         $newValues[$fieldName] = implode(',', $members);
+
         $changed[] = $fieldName;
         break;
       case 'groupsofpeople':
@@ -1841,7 +1654,25 @@ WHERE pp.project_id = $projectId",
         $oldGroupId = $oldValues[$fieldName];
         $newGroupId = $newValues[$fieldName];
 
+        $allowed = $this->extraFieldsService->explodeAllowedValues($extraField['allowed_values'], false, true);
+        $max = PHP_INT_MAX;
+        $label = $this->l->t('unknown');
+        foreach ($allowed as $option) {
+          if ($option['key'] == $newGroupId) {
+            $max = $option['limit'];
+            $label = $option['label'];
+            break;
+          }
+        }
+
         $newMembers = explode(',', $newValues[$groupFieldName]);
+
+        if (count($newMembers) > $max) {
+          throw new \Exception(
+            $this->l->t('Number %d of requested participants for group %s is larger than the number %d of allowed participants.',
+                        [ $count($newMembers), $label, $max ]));
+        }
+
         foreach ($newMembers as &$member) {
           $member .= ':'.$newGroupId;
         }
@@ -1960,7 +1791,6 @@ WHERE pp.project_id = $projectId",
 
   private function allowedOptionLabel($label, $value, $dataType, $css = null, $data = null)
   {
-    $this->logInfo('BLAH '.$dataType.' / '.$css);
     $label = Util::htmlEscape($label);
     $css = empty($css) ? $dataType : $css.' '.$dataType;
     $innerCss = $dataType;
