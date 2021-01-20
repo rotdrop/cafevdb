@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType;
 
@@ -129,6 +130,7 @@ class EntityManager extends EntityManagerDecorator
       EnumExtraFieldDataType::class => 'enum',
       EnumExtraFieldMultiplicity::class => 'enum',
       EnumMemberStatus::class => 'enum',
+      EnumGeographicalScope::class => 'enum',
       EnumProjectTemporalType::class => 'enum',
       EnumVCalendarType::class => 'enum',
       Ramsey\UuidType::class => null,

@@ -1,7 +1,28 @@
 <?php
+/* Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,119 +32,136 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="InsuranceBrokers", uniqueConstraints={@ORM\UniqueConstraint(columns={"short_name"})})
  * @ORM\Entity
  */
-class InsuranceBroker
+class InsuranceBroker implements \ArrayAccess
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=40, nullable=false)
-     */
-    private $shortName;
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+  private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=512, nullable=false)
-     */
-    private $longName;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=40, nullable=false)
+   */
+  private $shortName;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=512, nullable=false)
-     */
-    private $address;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=512, nullable=false)
+   */
+  private $longName;
 
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=512, nullable=false)
+   */
+  private $address;
 
+  /**
+   * @ORM\OneToMany(targetEntity="InsuranceRate", mappedBy="broker")
+   */
+  private $insuranceRates;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+  /**
+   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="broker")
+   */
+  private $instrumentInsurances;
 
-    /**
-     * Set shortName.
-     *
-     * @param string $shortName
-     *
-     * @return InsuranceBrokers
-     */
-    public function setShortName($shortName)
-    {
-        $this->shortName = $shortName;
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->insuranceRates = new ArrayCollection();
+    $this->instrumentInsurance = new ArrayCollection();
+  }
 
-        return $this;
-    }
+  /**
+   * Get id.
+   *
+   * @return int
+   */
+  public function getId()
+  {
+    return $this->id;
+  }
 
-    /**
-     * Get shortName.
-     *
-     * @return string
-     */
-    public function getShortName()
-    {
-        return $this->shortName;
-    }
+  /**
+   * Set shortName.
+   *
+   * @param string $shortName
+   *
+   * @return InsuranceBrokers
+   */
+  public function setShortName($shortName)
+  {
+    $this->shortName = $shortName;
 
-    /**
-     * Set longName.
-     *
-     * @param string $longName
-     *
-     * @return InsuranceBrokers
-     */
-    public function setLongName($longName)
-    {
-        $this->longName = $longName;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get shortName.
+   *
+   * @return string
+   */
+  public function getShortName()
+  {
+    return $this->shortName;
+  }
 
-    /**
-     * Get longName.
-     *
-     * @return string
-     */
-    public function getLongName()
-    {
-        return $this->longName;
-    }
+  /**
+   * Set longName.
+   *
+   * @param string $longName
+   *
+   * @return InsuranceBrokers
+   */
+  public function setLongName($longName)
+  {
+    $this->longName = $longName;
 
-    /**
-     * Set address.
-     *
-     * @param string $address
-     *
-     * @return InsuranceBrokers
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * Get longName.
+   *
+   * @return string
+   */
+  public function getLongName()
+  {
+    return $this->longName;
+  }
 
-    /**
-     * Get address.
-     *
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
+  /**
+   * Set address.
+   *
+   * @param string $address
+   *
+   * @return InsuranceBrokers
+   */
+  public function setAddress($address)
+  {
+    $this->address = $address;
+
+    return $this;
+  }
+
+  /**
+   * Get address.
+   *
+   * @return string
+   */
+  public function getAddress()
+  {
+    return $this->address;
+  }
 }

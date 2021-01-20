@@ -1,191 +1,198 @@
 <?php
+/* Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * InsuranceRates
  *
- * @ORM\Table(name="InsuranceRates", uniqueConstraints={@ORM\UniqueConstraint(columns={"Id"})})
+ * @ORM\Table(name="InsuranceRates")
  * @ORM\Entity
  */
-class InsuranceRates
+class InsuranceRate implements \ArrayAccess
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=128, nullable=false)
-     */
-    private $broker;
+  /**
+   * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="insuranceRates", fetch="EXTRA_LAZY")
+   * @ORM\Id
+   */
+  private $broker;
 
-    /**
-     * @var array
-     *
-     * @ORM\Column(type="simple_array", length=0, nullable=false)
-     */
-    private $geographicalscope;
+  /**
+   * @var enumgeographicalscope
+   *
+   * @ORM\Column(type="enumgeographicalscope", nullable=false, options={"default"="Germany"})
+   * @ORM\Id
+   */
+  private $geographicalScope;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(type="float", precision=10, scale=0, nullable=false, options={"comment"="fraction, not percentage, excluding taxes"})
-     */
-    private $rate;
+  /**
+   * @var float
+   *
+   * @ORM\Column(type="float", precision=10, scale=0, nullable=false, options={"comment"="fraction, not percentage, excluding taxes"})
+   */
+  private $rate;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", nullable=false, options={"comment"="start of the yearly insurance period"})
-     */
-    private $duedate;
+  /**
+   * @var \DateTime
+   *
+   * @ORM\Column(type="date", nullable=false, options={"comment"="start of the yearly insurance period"})
+   */
+  private $dueDate;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=false)
-     */
-    private $policynumber;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=255, nullable=false)
+   */
+  private $policyNumber;
 
+  public function __construct() {
+    $this->arrayCTOR();
+  }
 
+  /**
+   * Set broker.
+   *
+   * @param string $broker
+   *
+   * @return InsuranceRates
+   */
+  public function setBroker($broker)
+  {
+    $this->broker = $broker;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    return $this;
+  }
 
-    /**
-     * Set broker.
-     *
-     * @param string $broker
-     *
-     * @return InsuranceRates
-     */
-    public function setBroker($broker)
-    {
-        $this->broker = $broker;
+  /**
+   * Get broker.
+   *
+   * @return string
+   */
+  public function getBroker()
+  {
+    return $this->broker;
+  }
 
-        return $this;
-    }
+  /**
+   * Set geographicalScope.
+   *
+   * @param array $geographicalScope
+   *
+   * @return InsuranceRates
+   */
+  public function setGeographicalScope($geographicalScope)
+  {
+    $this->geographicalScope = $geographicalScope;
 
-    /**
-     * Get broker.
-     *
-     * @return string
-     */
-    public function getBroker()
-    {
-        return $this->broker;
-    }
+    return $this;
+  }
 
-    /**
-     * Set geographicalscope.
-     *
-     * @param array $geographicalscope
-     *
-     * @return InsuranceRates
-     */
-    public function setGeographicalscope($geographicalscope)
-    {
-        $this->geographicalscope = $geographicalscope;
+  /**
+   * Get geographicalScope.
+   *
+   * @return array
+   */
+  public function getGeographicalScope()
+  {
+    return $this->geographicalScope;
+  }
 
-        return $this;
-    }
+  /**
+   * Set rate.
+   *
+   * @param float $rate
+   *
+   * @return InsuranceRates
+   */
+  public function setRate($rate)
+  {
+    $this->rate = $rate;
 
-    /**
-     * Get geographicalscope.
-     *
-     * @return array
-     */
-    public function getGeographicalscope()
-    {
-        return $this->geographicalscope;
-    }
+    return $this;
+  }
 
-    /**
-     * Set rate.
-     *
-     * @param float $rate
-     *
-     * @return InsuranceRates
-     */
-    public function setRate($rate)
-    {
-        $this->rate = $rate;
+  /**
+   * Get rate.
+   *
+   * @return float
+   */
+  public function getRate()
+  {
+    return $this->rate;
+  }
 
-        return $this;
-    }
+  /**
+   * Set dueDate.
+   *
+   * @param \DateTime $dueDate
+   *
+   * @return InsuranceRates
+   */
+  public function setDueDate($dueDate)
+  {
+    $this->dueDate = $dueDate;
 
-    /**
-     * Get rate.
-     *
-     * @return float
-     */
-    public function getRate()
-    {
-        return $this->rate;
-    }
+    return $this;
+  }
 
-    /**
-     * Set duedate.
-     *
-     * @param \DateTime $duedate
-     *
-     * @return InsuranceRates
-     */
-    public function setDuedate($duedate)
-    {
-        $this->duedate = $duedate;
+  /**
+   * Get dueDate.
+   *
+   * @return \DateTime
+   */
+  public function getDueDate()
+  {
+    return $this->dueDate;
+  }
 
-        return $this;
-    }
+  /**
+   * Set policyNumber.
+   *
+   * @param string $policyNumber
+   *
+   * @return InsuranceRates
+   */
+  public function setPolicyNumber($policyNumber)
+  {
+    $this->policyNumber = $policyNumber;
 
-    /**
-     * Get duedate.
-     *
-     * @return \DateTime
-     */
-    public function getDuedate()
-    {
-        return $this->duedate;
-    }
+    return $this;
+  }
 
-    /**
-     * Set policynumber.
-     *
-     * @param string $policynumber
-     *
-     * @return InsuranceRates
-     */
-    public function setPolicynumber($policynumber)
-    {
-        $this->policynumber = $policynumber;
-
-        return $this;
-    }
-
-    /**
-     * Get policynumber.
-     *
-     * @return string
-     */
-    public function getPolicynumber()
-    {
-        return $this->policynumber;
-    }
+  /**
+   * Get policyNumber.
+   *
+   * @return string
+   */
+  public function getPolicyNumber()
+  {
+    return $this->policyNumber;
+  }
 }

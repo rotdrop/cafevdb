@@ -130,7 +130,7 @@ class Musician implements \ArrayAccess
   /**
    * @var enummemberstatus|null
    *
-   * @ORM\Column(type="enummemberstatus", nullable=true, options={"default"="regular","comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."})
+   * @ORM\Column(type="enummemberstatus", nullable=false, options={"default"="regular","comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."})
    */
   private $memberStatus = 'regular';
 
@@ -177,12 +177,19 @@ class Musician implements \ArrayAccess
    */
   private $projectExtraFieldsData;
 
+  /**
+   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="musician", fetch="EXTRA_LAZY")
+   */
+  private $instrumentInsurances;
+
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
     $this->projectExtraFieldsData = new ArrayCollection();
+    $this->instrumentInsurances = new ArrayCollection();
   }
 
   /**
