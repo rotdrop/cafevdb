@@ -309,24 +309,25 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'sql'    => 'COUNT($join_col_fqn)',
       ]);
 
-    $joinTables[self::PROJECT_PARTICIPANTS_TABLE] =
-      'PMEjoin'
-      .$this->makeJoinTableField(
-        $opts['fdd'], self::PROJECT_PARTICIPANTS_TABLE, 'musician_id',
-        [
-          'name'   => $this->l->t('Confirmed'),
-          'input'  => 'VR',
-          'sort'   => $sort,
-          'select' => 'N',
-          'align' => 'right',
-          'sql'    => 'COUNT($join_col_fqn)',
-          'values' => [
-            'join' => '$join_table.project_id = $main_table.project_id
+    list($index,) = $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PARTICIPANTS_TABLE, 'musician_id',
+      [
+        'name'   => $this->l->t('Confirmed'),
+        'input'  => 'VR',
+        'sort'   => $sort,
+        'select' => 'N',
+        'align' => 'right',
+        'sql'    => 'COUNT($join_col_fqn)',
+        'values' => [
+          'join' => '$join_table.project_id = $main_table.project_id
   AND $join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.musician_id
   AND $join_table.registration = 1',
-          ],
+        ],
       ]);
 
+    $joinTables[self::PROJECT_PARTICIPANTS_TABLE] = 'PMEjoin'.$index;
+
+    // @todo tooltips
     $opts['fdd']['missing'] = [
       'name'   => $this->l->t('Balance'),
       'input'  => 'VR',
