@@ -27,7 +27,7 @@
  */
 
 div.project-participants form.pme-form:not(.pme-change) span.allowed-option-name:empty,
-div.project-participants form.pme-form:not(.pme-change) span.allowed-option-name:empty + span.allowed-option-value {
+div.project-participants form.pme-form:not(.pme-change) span.allowed-option-name:empty ~ span {
     display:none;
 }
 
