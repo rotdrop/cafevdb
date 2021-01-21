@@ -32,6 +32,9 @@ trait ConfigTrait {
   /** @var ConfigService */
   protected $configService;
 
+  /** @var IL10N */
+  protected $l;
+
   protected function appName()
   {
     return $this->configService->getAppName();
@@ -119,6 +122,16 @@ trait ConfigTrait {
   protected function encryptionKeyValid($encryptionKey = null)
   {
     return $this->configService->encryptionKeyValid($encryptionKey);
+  }
+
+  protected function encrypt($value, $key = null)
+  {
+    return $this->configService->encrypt($value, $key);
+  }
+
+  protected function decrypt($value, $key = null)
+  {
+    return $this->configService->decrypt($value, $key);
   }
 
   /**Get a possibly encrypted app-config value. */

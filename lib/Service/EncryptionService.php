@@ -468,7 +468,7 @@ class EncryptionService
    * @return The encrypted and encoded data.
    */
   //@@TODO catch exceptions
-  private function encrypt($value, $enckey)
+  public function encrypt($value, $enckey)
   {
     // Store the size in the first 4 bytes in order not to have to
     // rely on padding. We store the value in hexadecimal notation
@@ -498,7 +498,7 @@ class EncryptionService
    * value is just passed argument @c value.
    */
   //@@TODO catch exceptions
-  private function decrypt($value, $enckey)
+  public function decrypt($value, $enckey)
   {
     if (!empty($enckey) && !empty($value)) {
       try {

@@ -393,6 +393,18 @@ class ConfigService {
     return $this->encryptionService->getAppEncryptionKey();
   }
 
+  public function encrypt($value, $key = null)
+  {
+    $key = $key?: $this->getAppEncryptionKey();
+    return $this->encryptionService->encrypt($value, $key);
+  }
+
+  public function decrypt($value, $key = null)
+  {
+    $key = $key?: $this->getAppEncryptionKey();
+    return $this->encryptionService->decrypt($value, $key);
+  }
+
   public function encryptionKeyValid($encryptionKey)
   {
     return $this->encryptionService->encryptionKeyValid($encryptionKey);
