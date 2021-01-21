@@ -45,9 +45,6 @@ class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
-  /** @var IL10N */
-  private $l;
-
   /** @var Personal */
   private $personalSettings;
 

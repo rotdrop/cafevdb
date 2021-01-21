@@ -42,13 +42,9 @@ class GroupMemberMiddleware extends Middleware
   /** @var IControllerMethodReflector */
   protected $reflector;
 
-  /** @var IL10N */
-  private $l;
-
   /**
    * @param ControllerMethodReflector $reflector
    * @param ConfigService $configService
-   * @param IL10N $l
    */
   public function __construct(IControllerMethodReflector $reflector,
                               ConfigService $configService) {

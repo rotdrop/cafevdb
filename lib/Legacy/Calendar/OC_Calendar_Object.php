@@ -60,9 +60,6 @@ class OC_Calendar_Object{
      */
     use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-    /** @var IL10N */
-    private $l;
-
     public function __construct(ConfigService $configService)
     {
         $this->configService = $configService;
