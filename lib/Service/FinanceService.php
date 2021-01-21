@@ -78,7 +78,7 @@ class FinanceService
     $calendarId   = $this->getConfigValue($calKey.'id', false);
 
     $eventData = [
-      'title' => $title,
+      'summary' => $title,
       'from' => date('d-m-Y', $timeStamp),
       'to' => date('d-m-Y', $timeStamp),
       'allday' => 'on',
@@ -118,7 +118,7 @@ class FinanceService
     $calendarId   = $this->getConfigValue($calKey.'id', false);
 
     $taskData = [
-      'title' => $title,
+      'summary' => $title,
       'due' => date('d-m-Y', $timeStamp),
       'start' => date('d-m-Y'),
       'location' => 'Cyber-Space',
@@ -132,20 +132,27 @@ class FinanceService
     return $this->eventsService->newTask($taskData);
   }
 
-  /**Convert an UTF-8 encoded string to the brain-damaged SEPA
-   * requirements. Thank you so much, you idiots. Banks.
+  /**
+   * Convert an UTF-8 encoded string to something simpler, with
+   * transliteration of special characters. I may not be necesary any
+   * more, but at least at the beginning of the SEPA affair at least
+   * some banks were at least very restrictive concerning the allowed
+   * characters.
    */
   public function sepaTranslit($string)
   {
     $oldLocale = setlocale(LC_ALL, '0');
-    setlocale(LC_ALL, 'de_DE.UTF8');
+    setlocale(LC_ALL, 'de_DE.UTF8'); // after all, this is just for German banks.
     $result = iconv("utf-8","ascii//TRANSLIT", $string);
     setlocale(LC_ALL, $oldLocale);
     return $result;
   }
 
-  /**Validate whether the given string conforms to the brain-damaged
-   * SEPA requirements. Thank you so much, you idiots. Banks.
+  /**
+   * Validate whether the given string conforms to a very restricted
+   * character set. I may not be necesary any more, but at least at
+   * the beginning of the SEPA affair at least some banks were at
+   * least very restrictive concerning the allowed characters.
    */
   public function validateSepaString($string)
   {
@@ -153,15 +160,18 @@ class FinanceService
   }
 
 
-  /**The "SEPA mandat reference" must be unique per mandat, consist
+  /**
+   * The "SEPA mandat reference" must be unique per mandat, consist
    * more or less of alpha-numeric characters and has a maximum length
    * of 35 characters. We choose the format
    *
    * XXXX-YYYY-IN-PROJECTYEAR
    *
    * where XXXX is the project Id, YYYY the musician ID, PROJECT and
-   * YEAR are the project name and the year. The project name will
-   * be shortened s.t. the entire reference fits into 35 characters.
+   * YEAR are the project name and the year. The project name will be
+   * shortened s.t. the entire reference fits into 35 characters.  IN
+   * are the initials of the musican (first character of first first
+   * name, first character of first surname).
    *
    * Mandates expired after 36 months if not used, and if the bank
    * account information changes then we also need a new mandate
@@ -277,8 +287,13 @@ WHERE
     return $mandate;
   }
 
-  /**Set the sequence type based on the last-used date and the
+  /**
+   * Set the sequence type based on the last-used date and the
    * recurring/non-recurring status.
+   *
+   * @param array|SepaDebitMandate $mandate Either a plain array were
+   * the keys are the actual names of the database columns, or the
+   * database entity from the model.
    */
   public function sepaMandateSequenceType($mandate)
   {
@@ -338,7 +353,8 @@ WHERE
     return true;
   }
 
-  /**Store a SEPA-mandate, possibly with only partial
+  /**
+   * Store a SEPA-mandate, possibly with only partial
    * information. mandateReference, musicianId and projectId are
    * required.
    */
@@ -455,7 +471,8 @@ GROUP BY m.mandateReference";
     return $result;
   }
 
-  /**Determine if the given mandate is expired, in which case we
+  /**
+   * Determine if the given mandate is expired, in which case we
    * would need a new mandate.
    *
    * @param mixed $usageInfo Either a mandate-reference or a
@@ -522,16 +539,13 @@ GROUP BY m.mandateReference";
    * project and musician as well as the mandate reference.
    *
    * @param string $mandateReference The mandate reference string.
-   *
-   * @param mixed $handle Optional data-base handle.
-   *
    */
   public function deleteSepaMandate($mandateReference)
   {
-    $usage = $this->mandateReferenceUsage($mandateReference, true, $handle);
+    $usage = $this->mandateReferenceUsage($mandateReference, true);
 
     if (!empty($usage['LastUsed'])) {
-      $result = $this->deactivateSepaMandate($mandateReference, $handle);
+      $result = $this->deactivateSepaMandate($mandateReference);
     } else {
 
       $table = 'SepaDebitMandates';
