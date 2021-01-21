@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -807,7 +807,7 @@ class EventsService
    *
    * @return string task-uri on success, null on error.
    */
-  public function newTask($taskData)
+  public function newTask(array $taskData): ?string
   {
     if (empty($taskData['calendar'])) {
       return null;
@@ -844,7 +844,7 @@ class EventsService
    *
    * @return string|null event-uri or null on error.
    */
-  public function newEvent($eventData)
+  public function newEvent(array $eventData): ?string
   {
     if (empty($eventData['calendar'])) {
       return null;
