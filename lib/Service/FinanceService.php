@@ -41,9 +41,15 @@ class FinanceService
   const SEPA_MANDATE_LENGTH = 35; ///< Maximum length of mandate reference.
   const SEPA_MANDATE_EXPIRE_MONTHS = 36; ///< Unused mandates expire after this time.
 
-  public function __construct(ConfigService $configService)
-  {
+  /** @var EventsService */
+  private $eventsService;
+
+  public function __construct(
+    ConfigService $configService
+    , EventsService $eventsService
+  ) {
     $this->configService = $configService;
+    $this->eventsService = $eventsService;
     $this->l = $this->l10n();
   }
 
@@ -82,7 +88,7 @@ class FinanceService
       'alarm' => $alarm,
     ];
 
-    return Events::newEvent($eventData);
+    return $this->eventsService->newEvent($eventData);
   }
 
   /**Add a task to the finance calendar, possibly including a
@@ -119,7 +125,7 @@ class FinanceService
       'alarm' => $alarm,
     ];
 
-    return Events::newTask($taskData);
+    return $this->eventsService->newTask($taskData);
   }
 
   /**Convert an UTF-8 encoded string to the brain-damaged SEPA
@@ -163,8 +169,8 @@ class FinanceService
    * XXXX-YYYY-IN-PROJECTYEAR+SEQ
    */
   public function generateSepaMandateReference($projectId,
-                                                      $musicianId,
-                                                      $sequence = false)
+                                               $musicianId,
+                                               $sequence = false)
   {
     // fetch latest relevant mandate and possibly increase the sequence.
     $query = "SELECT mandateReference FROM `SepaDebitMandates`
