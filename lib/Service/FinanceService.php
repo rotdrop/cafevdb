@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -61,8 +61,10 @@ class FinanceService
    * @param $projectName (may be empty)
    * @param $timeStamp
    * @param $alarm (maybe <= 0 for no alarm)
+   *
+   * @return null|string new event uri
    */
-  public function financeEvent($title, $description, $projectName, $timeStamp, $alarm = false)
+  public function financeEvent($title, $description, $projectName, $timeStamp, $alarm = false): ?string
   {
     $eventKind = 'finance';
     $categories = '';
@@ -99,8 +101,10 @@ class FinanceService
    * @param $projectName (may be empty)
    * @param $timeStamp
    * @param $alarm (maybe <= 0 for no alarm)
+   *
+   * @return null|string new event uri
    */
-  public function financeTask($title, $description, $projectName, $timeStamp, $alarm = false)
+  public function financeTask($title, $description, $projectName, $timeStamp, $alarm = false): ?string
   {
     $taskKind = 'finance';
     $categories = '';
