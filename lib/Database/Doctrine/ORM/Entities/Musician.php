@@ -161,8 +161,6 @@ class Musician implements \ArrayAccess
   private $photo;
 
   /**
-   * Core functionality: one musican participates in many projects
-   *
    * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", fetch="EXTRA_LAZY")
    */
   private $projectParticipation;
@@ -182,6 +180,10 @@ class Musician implements \ArrayAccess
    */
   private $instrumentInsurances;
 
+  /**
+   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="musician", fetch="EXTRA_LAZY")
+   */
+  private $sepaDebitMandates;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -190,6 +192,7 @@ class Musician implements \ArrayAccess
     $this->projectParticipation = new ArrayCollection();
     $this->projectExtraFieldsData = new ArrayCollection();
     $this->instrumentInsurances = new ArrayCollection();
+    $this->sepaDebitMandates = new ArrayCollection();
   }
 
   /**
