@@ -9,7 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectPayments
  *
- * @ORM\Table(name="ProjectPayments")
+ * @ORM\Table(
+ *    name="ProjectPayments",
+ *    uniqueConstraints={@ORM\UniqueConstraint(columns={"debit_message_id"})}
+ * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectPaymentsRepository")
  */
 class ProjectPayment implements \ArrayAccess
@@ -48,31 +51,44 @@ class ProjectPayment implements \ArrayAccess
   private $subject;
 
   /**
-   * @var int|null
-   *
-   * @ORM\Column(type="integer", nullable=true, options={"comment"="Link to the ProjectDirectDebit table."})
+   * @ORM\OneToOne(targetEntity="DebitNote", fetch="EXTRA_LAZY")
    */
-  private $debitNoteId;
+  private $debitNote;
 
   /**
-   * @var string|null
+   * @var int
    *
-   * @ORM\Column(type="string", length=35, nullable=true, options={"comment"="Link into the SepaDebitMandates table, this is not the ID but the mandate Id."})
+   * This needs to be here, otherwise the nullable stuff from the
+   * association does not work.
+   *
+   * @ORM\Column(type="integer", nullable=true)
    */
-  private $mandateReference;
+  private $mandate_sequence;
+
+  /**
+   * @ORM\ManyToOne(targetEntity="SepaDebitMandate")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
+   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
+   *   @ORM\JoinColumn(name="mandate_sequence", referencedColumnName="sequence", nullable=true)
+   * )
+   */
+  private $sepaDebitMandate;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=1024, nullable=false)
+   * This is the unique message id from the email sent to the payees.
+   *
+   * @ORM\Column(type="string", length=512, nullable=true)
    */
   private $debitMessageId;
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id")
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
+   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false)
    * )
    */
   private $projectParticipant;
