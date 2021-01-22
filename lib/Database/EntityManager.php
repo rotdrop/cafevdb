@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB\Database;
 
 use OCP\ILogger;
 use OCP\IL10N;
+use \Psr\Log\LoggerInterface;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
@@ -56,6 +57,9 @@ class EntityManager extends EntityManagerDecorator
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const KNP = 'knp';
+  const GEDMO = 'gedmo';
+  const BEHAVIOR_PROVIDER = self::KNP;
   const ENTITY_PATHS = [
     __DIR__ . "/Doctrine/ORM/Entities",
   ];
@@ -71,6 +75,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var CloudLogger */
   private $sqlLogger;
 
+  /** @var Psr\Log\LoggerInterface */
+  private $psrLogger;
+
   // @@TODO catch failures, allow construction without database for
   // initial setup.
   public function __construct(
@@ -78,11 +85,13 @@ class EntityManager extends EntityManagerDecorator
     , CloudLogger $sqlLogger
     , ILogger $logger
     , IL10N $l10n
+    , LoggerInterface $psrLogger
   )
   {
     $this->encryptionService = $encryptionService;
     $this->sqlLogger = $sqlLogger;
     $this->logger = $logger;
+    $this->psrLogger = $psrLogger;
     $this->l = $l10n;
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
@@ -179,8 +188,24 @@ class EntityManager extends EntityManagerDecorator
   // Create a simple "default" Doctrine ORM configuration for Annotations
   private function getEntityManager($params = null)
   {
-    //list($config, $eventManager) = $this->createSimpleConfiguration();
-    list($config, $eventManager) = $this->createExtendedConfiguration();
+    $config = $this->createSimpleConfiguration();
+    switch (self::BEHAVIOR_PROVIDER) {
+    case self::KNP:
+      list($config, $eventManager) = $this->createKnpConfiguration($config);
+      break;
+    case self::GEDMO:
+      list($config, $eventManager) = $this->createGedmoConfiguration($config);
+      break;
+    default:
+      throw new \Exception('Unknown or unsupported behavior provider: '.self::BEHAVIOR_PROVIDER);
+      break;
+    }
+
+    // mysql set names UTF-8 if required
+    $eventManager->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
+
+    $eventManager->addEventListener([ \Doctrine\ORM\Tools\ToolEvents::postGenerateSchema ], $this);
+
     if (self::DEV_MODE) {
       $config->setAutoGenerateProxyClasses(true);
     } else {
@@ -207,14 +232,27 @@ class EntityManager extends EntityManagerDecorator
     $cache = null;
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
-    return [ $config, null ];
+    return $config;
   }
 
-  private function createExtendedConfiguration()
+  private function createKnpConfiguration($config)
   {
-    // don't call internals directly
-    $this->createSimpleConfiguration();
+    $evm = new \Doctrine\Common\EventManager();
 
+    $loggable = new \Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber($this->psrLogger);
+    $evm->addEventSubscriber($loggable);
+
+    $timeStampable = new \Knp\DoctrineBehaviors\EventSubscriber\TimestampableSubscriber('datetime');
+    $evm->addEventSubscriber($timeStampable);
+
+    $softDeletable = new \Knp\DoctrineBehaviors\EventSubscriber\SoftDeletableSubscriber;
+    $evm->addEventSubscriber($softDeletable);
+
+    return [ $config, $evm, ];
+  }
+
+  private function createGedmoConfiguration($config)
+  {
     // globally used cache driver, in production use APC or memcached
     $cache = new \Doctrine\Common\Cache\ArrayCache;
 
@@ -282,11 +320,6 @@ class EntityManager extends EntityManagerDecorator
     $sortableListener = new \Gedmo\Sortable\SortableListener;
     $sortableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($sortableListener);
-
-    // mysql set names UTF-8 if required
-    $evm->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
-
-    $evm->addEventListener([ \Doctrine\ORM\Tools\ToolEvents::postGenerateSchema ], $this);
 
     return [ $config, $evm ];
   }

@@ -26,6 +26,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
+use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableTrait;
 
 /**
  * SepaDebitMandates
@@ -34,10 +36,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository")
  */
-class SepaDebitMandate implements \ArrayAccess
+class SepaDebitMandate implements \ArrayAccess, SoftDeletableInterface
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use SoftDeletableTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
@@ -115,13 +118,6 @@ class SepaDebitMandate implements \ArrayAccess
    * @ORM\Column(type="string", length=512, nullable=false)
    */
   private $bankAccountOwner;
-
-  /**
-   * @var bool|null
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"=false})
-   */
-  private $disabled = false;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectPayment",
