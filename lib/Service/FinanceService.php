@@ -247,7 +247,7 @@ class FinanceService
 
     $mandate = $this->mandateRepository->findNewest($projectId, $musicianId);
 
-    if (!$expired && $this->mandateIsExpired($mandate['mandateReference'], $handle)) {
+    if (!$expired && $this->mandateIsExpired($mandate['mandateReference'])) {
       return false;
     }
 
@@ -431,14 +431,14 @@ class FinanceService
    *
    * @return @c true iff the mandate is expired, @c false otherwise.
    */
-  public function mandateIsExpired($usageInfo, $handle = false)
+  public function mandateIsExpired($usageInfo)
   {
     $mandate = $usageInfo;
-    if (empty($usageInfo['LastUsed'])) {
-      $usageInfo = $this->mandateReferenceUsage($usageInfo, true, $handle);
+    if (empty($usageInfo['lastUsed'])) {
+      $usageInfo = $this->mandateReferenceUsage($usageInfo, true);
     }
-    if (empty($usageInfo['LastUsed'])) {
-      $usageInfo['LastUsed'] = $usageInfo['MandateIssued'];
+    if (empty($usageInfo['lastUsed'])) {
+      $usageInfo['LastUsed'] = $usageInfo['mandateIssued'];
     }
     $oldLocale = setlocale(LC_TIME, '0');
     setlocale(LC_TIME, Util::getLocale());
@@ -448,7 +448,7 @@ class FinanceService
     date_default_timezone_set($tz);
 
     $nowDate  = new \DateTime(strftime('%Y-%m-%d'));
-    $usedDate = new \DateTime($usageInfo['LastUsed']);
+    $usedDate = new \DateTime($usageInfo['lastUsed']); // lastUsed may already be a DateTime object
 
     $diff = $usedDate->diff($nowDate);
     $months = $diff->format('%y') * 12 + $diff->format('%m');
