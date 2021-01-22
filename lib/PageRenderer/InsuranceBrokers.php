@@ -136,7 +136,7 @@ class InsuranceBrokers extends PMETableViewBase
       'select'   => 'T',
       'maxlen'   => 40,
       'sort'     => $sort,
-    );
+    ];
 
     $opts['fdd']['long_name'] = [
       'name'     => $this->l->t('Name'),
