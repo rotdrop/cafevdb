@@ -193,35 +193,23 @@ class FinanceService
    * for this purpose. Sequence numbers are only present if necessary:
    *
    * XXXX-YYYY-IN-PROJECTYEAR+SEQ
+   *
+   * @param Entities\Project $project
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param int $sequence
+   *
+   * @return string New mandate id
+   *
    */
-  public function generateSepaMandateReference($projectId,
-                                               $musicianId,
-                                               $previousReference = null)
+  public function generateSepaMandateReference(Entities\Project $project,
+                                               Entities\Musician $musician,
+                                               int $sequence = 1):string
   {
-    // fetch latest relevant mandate and possibly increase the sequence.
-    $query = "SELECT mandateReference FROM `SepaDebitMandates`
-  WHERE `projectId` = $projectId AND `musicianId` = $musicianId
-  ORDER BY id DESC
-  LIMIT 0,1";
-    $result = mySQL::query($query, $handle);
-    if ($result !== false && mySQL::numRows($result) === 1) {
-      $row = mySQL::fetch($result);
-      if ($row['mandateReference']) {
-        $seq = substr($row['mandateReference'], -3);
-        if ($seq[0] === '+') {
-          $sequence = intval($seq)+1;
-        } else {
-          $sequence = 1;
-        }
-      }
-    }
-
-    $musicianName = Musicians::fetchName($musicianId, $handle);
-    $projectName = Projects::fetchName($projectId, $handle);
-
-    $projectName = $this->sepaTranslit($projectName);
-    $firstName = $this->sepaTranslit($musicianName['firstName']);
-    $lastName = $this->sepaTranslit($musicianName['lastName']);
+    $projectName = $this->sepaTranslit($project['name']);
+    $firstName = $this->sepaTranslit($musician['firstName']);
+    $lastName = $this->sepaTranslit($musician['lastName']);
 
     $firstName .= 'X';
     $lastName .= 'X';
@@ -232,11 +220,7 @@ class FinanceService
 
     $ref = $prjId.'-'.$musId.'-'.$initials.'-';
 
-    if (is_numeric($sequence) && $sequence > 0) {
-      $tail = '+'.sprintf("%02d", intval($sequence));
-    } else {
-      $tail = '';
-    }
+    $tail = '+'.sprintf("%02d", intval($sequence));
 
     $year = substr($projectName, -4);
     if (is_numeric($year)) {
@@ -397,7 +381,7 @@ class FinanceService
     $table = $this->DATA_BASE_INFO['table'];
 
     // fetch the old mandate, but keep the old values encrypted
-    $oldMandate = $this->fetchSepaMandate($prj, $mus, $handle, false);
+    $oldMandate = $this->fetchSepaMandate($prj, $mus, false);
     if ($oldMandate) {
       // Sanity checks
       if (!is_array($oldMandate) ||
