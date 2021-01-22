@@ -32,6 +32,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="SepaDebitMandates", uniqueConstraints={@ORM\UniqueConstraint(columns={"mandate_reference"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository")
  */
 class SepaDebitMandate implements \ArrayAccess
 {
@@ -118,9 +119,21 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * @var bool|null
    *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="1"})
+   * @ORM\Column(type="boolean", nullable=true, options={"default"="false"})
    */
-  private $active = true;
+  private $disabled = false;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectPayment",
+   *                mappedBy="sepaDebitMandate",
+   *                fetch="EXTRA_LAZY")
+   */
+  private $projectPayments;
+
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->projectPayments = new ArrayCollection();
+  }
 
   /**
    * Get id.

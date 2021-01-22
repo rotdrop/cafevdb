@@ -48,7 +48,7 @@ class DebitNote implements \ArrayAccess
   private $id;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="debitNotes", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(nullable=false)
    */
   private $project;
@@ -113,6 +113,18 @@ class DebitNote implements \ArrayAccess
    * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
    */
   private $dueEventUri;
+
+  /**
+   * @var ArrayCollection
+   *
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="debitNote", fetch="EXTRA_LAZY")
+   */
+  private $projectPayments;
+
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->projectPayments = new ArrayCollection();
+  }
 
   /**
    * Get id.

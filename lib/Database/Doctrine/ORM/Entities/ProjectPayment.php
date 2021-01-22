@@ -51,7 +51,9 @@ class ProjectPayment implements \ArrayAccess
   private $subject;
 
   /**
-   * @ORM\OneToOne(targetEntity="DebitNote", fetch="EXTRA_LAZY")
+   * @var DebitNote
+   *
+   * @ORM\ManyToOne(targetEntity="DebitNote", inversedBy="projectPayments", fetch="EXTRA_LAZY")
    */
   private $debitNote;
 
@@ -66,7 +68,9 @@ class ProjectPayment implements \ArrayAccess
   private $mandate_sequence;
 
   /**
-   * @ORM\ManyToOne(targetEntity="SepaDebitMandate")
+   * @ORM\ManyToOne(targetEntity="SepaDebitMandate",
+   *                inversedBy="projectPayments",
+   *                fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
