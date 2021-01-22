@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -38,8 +38,8 @@ class MusiciansRepository extends EntityRepository
   public function findByName(string $firstName, string $surName)
   {
     return $this->findBy(
-      [ 'firstName' => $firstName, 'name' => $surName ],
-      [ 'name' => 'ASC', 'firstName' => 'ASC' ]
+      [ 'firstName' => $firstName, 'surName' => $surName ],
+      [ 'surName' => 'ASC', 'firstName' => 'ASC' ]
     );
   }
 
@@ -67,13 +67,13 @@ class MusiciansRepository extends EntityRepository
   public function findStreetAddress($musicianId)
   {
     $qb = $this->createQueryBuilder('m');
-    $address = $qb->select(['m.Name AS surName',
-                            'm.Vorname AS firstName',
-                            'm.Strasse AS street',
-                            'm.Stadt AS city',
-                            'm.Postleitzahl AS ZIP',
-                            'm.FixedLinePhone AS phone',
-                            'm.MobilePhone AS cellphone'])
+    $address = $qb->select(['m.surName AS surName',
+                            'm.firstName AS firstName',
+                            'm.street AS street',
+                            'm.city AS city',
+                            'm.postalCode AS postalCode',
+                            'm.fixedLinePhone AS phone',
+                            'm.nobilePhone AS cellphone'])
       ->where('m.Id = :id')
       ->setParameter('id', $musicianId)
       ->getQuery()->execute()[0];
@@ -91,9 +91,9 @@ class MusiciansRepository extends EntityRepository
   public function findName($musicianId)
   {
     $qb = $this->createQueryBuilder('m');
-    $name = $qb->select(['m.Name AS lastName',
-                         'm.Vorname AS firstName',
-                         'm.Email AS email'])
+    $name = $qb->select(['m.lastName AS lastName',
+                         'm.firstName AS firstName',
+                         'm.email AS email'])
       ->where('m.Id = :id')
       ->setParameter('id', $musicianId)
       ->getQuery()->execute()[0];

@@ -55,7 +55,7 @@ class Musician implements \ArrayAccess
    *
    * @ORM\Column(type="string", length=128, nullable=false)
    */
-  private $name;
+  private $surName;
 
   /**
    * @var string

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -194,7 +194,7 @@ make sure that the musicians are also automatically added to the
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = ['sort_order','name','first_name','id'];
+    $opts['sort_field'] = ['sort_order','sur_name','first_name','id'];
 
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
@@ -297,7 +297,7 @@ make sure that the musicians are also automatically added to the
       $addCSS = '';
     }
 
-    $opts['fdd']['name'] = [
+    $opts['fdd']['sur_name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Surname'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
