@@ -22,13 +22,18 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entites;
+
 /**Finance and bank related stuff. */
 class FinanceService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   private $useEncryption = true;
 
+  const ENTITY = Entities\SepaDebitMandate::class;
   const DATA_BASE_INFO = [
     'table' => 'SepaDebitMandates',
     'key' => 'id',
@@ -44,13 +49,20 @@ class FinanceService
   /** @var EventsService */
   private $eventsService;
 
+  /** @var SepaDebitMandatesRepository */
+  private $mandatesRepository;
+
   public function __construct(
     ConfigService $configService
+    , EntityManager $entityManager
     , EventsService $eventsService
   ) {
     $this->configService = $configService;
+    $this->entityManager = $entityManager;
     $this->eventsService = $eventsService;
     $this->l = $this->l10n();
+
+    $this->mandatesRepository = $this->getDatabaseRepository(self::ENTITY);
   }
 
   /**Add an event to the finance calendar, possibly including a
@@ -161,7 +173,7 @@ class FinanceService
 
 
   /**
-   * The "SEPA mandat reference" must be unique per mandat, consist
+   * The "SEPA mandat reference" must be unique per mandate, consist
    * more or less of alpha-numeric characters and has a maximum length
    * of 35 characters. We choose the format
    *
@@ -184,7 +196,7 @@ class FinanceService
    */
   public function generateSepaMandateReference($projectId,
                                                $musicianId,
-                                               $sequence = false)
+                                               $previousReference = null)
   {
     // fetch latest relevant mandate and possibly increase the sequence.
     $query = "SELECT mandateReference FROM `SepaDebitMandates`
@@ -247,23 +259,9 @@ class FinanceService
    */
   public function fetchSepaMandate($projectId, $musicianId, $cooked = true, $expired = false)
   {
-    $mandate = false;
+    $mandate = null;
 
-    $query = "SELECT * FROM `".$this->DATA_BASE_INFO['table']."`
-WHERE
-  `projectId` = $projectId
-  AND
-  `musicianId` = $musicianId
-  AND
-  `active` = 1";
-
-    $result = mySQL::query($query, $handle);
-    if ($result !== false && mySQL::numRows($result) == 1) {
-      $row = mySQL::fetch($result);
-      if ($row['mandateReference']) {
-        $mandate = $row;
-      }
-    }
+    $mandate = $this->mandateRepository->findNewest($projectId, $musicianId);
 
     if (!$expired && $this->mandateIsExpired($mandate['mandateReference'], $handle)) {
       return false;
@@ -437,38 +435,7 @@ WHERE
   /**Compute usage data for the given mandate reference*/
   public function mandateReferenceUsage($reference, $brief = false)
   {
-    $result = false;
-
-    $query = "SELECT
-  m.mandateReference AS MandateReference,
-  m.Active,
-  GREATEST(COALESCE(MAX(d.DueDate), ''), COALESCE(m.lastUsedDate, '')) AS LastUsed,
-  m.mandateDate AS MandateIssued";
-    if ($brief !== false) {
-      $query .= ",
-  m.lastUsedDate AS MandateLastUsed,
-  MAX(d.DateIssued) AS DebitNoteLastIssued,
-  MAX(d.SubmitDate) AS DebitNoteLastSubmitted,
-  MAX(d.DueDate) AS DebitNoteLastDue,
-  IF(p.DateOfReceipt = MAX(d.DueDate), p.DebitMessageId, NULL) AS DebitNoteLastNotified";
-    }
-    $query .= "
-FROM SepaDebitMandates m
-LEFT JOIN ProjectPayments p
-  ON p.MandateReference = m.mandateReference
-LEFT JOIN DebitNotes d
-  ON d.Id = p.DebitNoteId";
-    $query .= "
-WHERE m.mandateReference = '".$reference."'
-GROUP BY m.mandateReference";
-
-    $result = mySQL::query($query, $handle);
-    if ($result === false || mySQL::numRows($result) !== 1) {
-      return false;
-    }
-    $result = mySQL::fetch($result);
-
-    return $result;
+    return $this->mandateRepository->usage($reference, $brief);
   }
 
   /**
