@@ -780,8 +780,8 @@ class ProjectParticipants extends PMETableViewBase
 //             'values|LFDV' => [
 //               'table' => "SELECT
 //   m.id AS musician_id,
-//   CONCAT_WS(' ', m.first_name, m.name) AS name,
-//   m.name AS last_name,
+//   CONCAT_WS(' ', m.first_name, m.sur_name) AS name,
+//   m.sur_name AS sur_name,
 //   m.first_name AS first_name,
 //   fd.field_value AS group_id
 // FROM ProjectParticipants pp
@@ -791,7 +791,7 @@ class ProjectParticipants extends PMETableViewBase
 //   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
 // WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 //               'column' => 'name',
-//               'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
+//               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
 //               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
 //             ],
           ]);
@@ -823,15 +823,15 @@ class ProjectParticipants extends PMETableViewBase
             'filter' => 'having',
             'values' => [
               'table' => "SELECT
-   m.id AS musician_id,
-   CONCAT_WS(' ', m.first_name, m.name) AS name,
-   m.name AS last_name,
-   m.first_name AS first_name,
+   m1.id AS musician_id,
+   CONCAT_WS(' ', m1.first_name, m1.sur_name) AS name,
+   m1.sur_name AS sur_name,
+   m1.first_name AS first_name,
    fd.field_value AS group_id,
    fdg.group_number AS group_Number
 FROM ProjectParticipants pp
-LEFT JOIN Musicians AS m
-  ON m.id = pp.musician_id
+LEFT JOIN Musicians m1
+  ON m1.id = pp.musician_id
 LEFT JOIN ProjectExtraFieldsData fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
 LEFT JOIN (SELECT
@@ -848,7 +848,7 @@ WHERE pp.project_id = $projectId",
               //'groups' => "CONCAT_WS(' ', '".$fieldName."',\$table.group_number,\$table.group_id)",
               'groups' => "CONCAT_WS(' ', '".$fieldName."',\$table.group_number)",
               'data' => "CONCAT('{\"limit\":".$max.",\"groupId\":\"',IFNULL(\$table.group_id,-1),'\"}')",
-              'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
+              'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
             ],
             'valueGroups' => [ -1 => $this->l->t('without group') ],
@@ -949,19 +949,19 @@ WHERE pp.project_id = $projectId",
             'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
             'values|LFDV' => [
               'table' => "SELECT
-  m.id AS musician_id,
-  CONCAT_WS(' ', m.first_name, m.name) AS name,
-  m.name AS last_name,
-  m.first_name AS first_name,
+  m2.id AS musician_id,
+  CONCAT_WS(' ', m2.first_name, m2.sur_name) AS name,
+  m2.sur_name AS sur_name,
+  m2.first_name AS first_name,
   fd.field_value AS group_id
 FROM ProjectParticipants pp
-LEFT JOIN Musicians AS m
-  ON m.id = pp.musician_id
+LEFT JOIN Musicians m2
+  ON m2.id = pp.musician_id
 LEFT JOIN ProjectExtraFieldsData fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
 WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
               'column' => 'name',
-              'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
+              'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
             ],
           ]);
@@ -978,16 +978,16 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
             'colattrs' => [ 'data-groups' => json_encode($allowed), ],
             'values|ACP' => [
               'table' => "SELECT
-  m.id AS musician_id,
-  CONCAT_WS(' ', m.first_name, m.name) AS name,
-  m.name AS last_name,
-  m.first_name AS first_name,
+  m3.id AS musician_id,
+  CONCAT_WS(' ', m3.first_name, m3.sur_name) AS name,
+  m3.sur_name AS sur_name,
+  m3.first_name AS first_name,
   fd.field_value AS group_id,
   JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', fd.field_value)), 'key', 'label')) AS group_label,
   JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', fd.field_value)), 'key', 'data')) AS group_data
 FROM ProjectParticipants pp
-LEFT JOIN Musicians AS m
-  ON m.id = pp.musician_id
+LEFT JOIN Musicians m3
+  ON m3.id = pp.musician_id
 LEFT JOIN ProjectExtraFieldsData fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
 LEFT JOIN ProjectExtraFields ef
@@ -997,7 +997,7 @@ WHERE pp.project_id = $projectId",
               'description' => 'name',
               'groups' => "CONCAT(\$table.group_label, ': ', \$table.group_data)",
               'data' => "CONCAT('{\"groupId\":\"',IFNULL(\$table.group_id, -1),'\"}')",
-              'orderby' => '$table.group_id ASC, $table.last_name ASC, $table.first_name ASC',
+              'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
               //'titles' => '$table.name',
             ],
