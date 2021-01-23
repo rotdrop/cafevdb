@@ -57,9 +57,6 @@ class EntityManager extends EntityManagerDecorator
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const KNP = 'knp';
-  const GEDMO = 'gedmo';
-  const BEHAVIOR_PROVIDER = self::KNP;
   const ENTITY_PATHS = [
     __DIR__ . "/Doctrine/ORM/Entities",
   ];
@@ -188,18 +185,9 @@ class EntityManager extends EntityManagerDecorator
   // Create a simple "default" Doctrine ORM configuration for Annotations
   private function getEntityManager($params = null)
   {
-    $config = $this->createSimpleConfiguration();
-    switch (self::BEHAVIOR_PROVIDER) {
-    case self::KNP:
-      list($config, $eventManager) = $this->createKnpConfiguration($config);
-      break;
-    case self::GEDMO:
-      list($config, $eventManager) = $this->createGedmoConfiguration($config);
-      break;
-    default:
-      throw new \Exception('Unknown or unsupported behavior provider: '.self::BEHAVIOR_PROVIDER);
-      break;
-    }
+    list($config, $eventManager) = $this->createSimpleConfiguration();
+    list($config, $eventManager) = $this->createKnpConfiguration($config, $eventManager);
+    list($config, $eventManager) = $this->createGedmoConfiguration($config, $eventManager);
 
     // mysql set names UTF-8 if required
     $eventManager->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
@@ -232,13 +220,11 @@ class EntityManager extends EntityManagerDecorator
     $cache = null;
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
-    return $config;
+    return [ $config, new \Doctrine\Common\EventManager(), ];
   }
 
-  private function createKnpConfiguration($config)
+  private function createKnpConfiguration($config, $evm)
   {
-    $evm = new \Doctrine\Common\EventManager();
-
     $loggable = new \Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber($this->psrLogger);
     $evm->addEventSubscriber($loggable);
 
@@ -251,7 +237,7 @@ class EntityManager extends EntityManagerDecorator
     return [ $config, $evm, ];
   }
 
-  private function createGedmoConfiguration($config)
+  private function createGedmoConfiguration($config, $evm)
   {
     // globally used cache driver, in production use APC or memcached
     $cache = new \Doctrine\Common\Cache\ArrayCache;
@@ -280,14 +266,16 @@ class EntityManager extends EntityManagerDecorator
       self::ENTITY_PATHS, // paths to look in
     );
 
+    $this->logInfo(dirname((new \ReflectionClass(\Gedmo\Loggable\Entity\LogEntry::class))->getFileName()));
+
     // NOTE: driver for application Entity can be different, Yaml, Xml or whatever
     // register annotation driver for our application Entity namespace
-    $driverChain->addDriver($annotationDriver, 'OCA\CAFEVDB\Database\\Doctrine\ORM\Entities');
+    $driverChain->addDriver($annotationDriver, 'OCA\CAFEVDB\Database\Doctrine\ORM\Entities');
 
     // general ORM configuration
-    $config = new \Doctrine\ORM\Configuration;
+    //$config = new \Doctrine\ORM\Configuration;
     $config->setProxyDir(self::PROXY_DIR);
-    $config->setProxyNamespace('OCA\CAFEVDB\Database\\Doctrine\ORM\Proxies');
+    $config->setProxyNamespace('OCA\CAFEVDB\Database\Doctrine\ORM\Proxies');
     $config->setAutoGenerateProxyClasses(self::DEV_MODE); // this can be based on production config.
 
     // register metadata driver
@@ -297,13 +285,11 @@ class EntityManager extends EntityManagerDecorator
     $config->setMetadataCacheImpl($cache);
     $config->setQueryCacheImpl($cache);
 
-    // Third, create event manager and hook prefered extension listeners
-    $evm = new \Doctrine\Common\EventManager();
-
     // gedmo extension listeners
 
     // loggable
-    $loggableListener = new \Gedmo\Loggable\LoggableListener;
+    //$loggableListener = new \Gedmo\Loggable\LoggableListener;
+    $loggableListener = new Doctrine\ORM\Listeners\GedmoLoggableListener;
     $loggableListener->setAnnotationReader($cachedAnnotationReader);
     $loggableListener->setUsername($this->encryptionService->userId()?:'unknown');
     $evm->addEventSubscriber($loggableListener);
@@ -430,6 +416,7 @@ class EntityManager extends EntityManagerDecorator
    * ```
    * [ COLUMN1 => VALUE1, ... ]
    * ```
+   * The array is indexed by the database column-names.
    */
   private function getIdentifierColumnValues($entity, $meta)
   {
