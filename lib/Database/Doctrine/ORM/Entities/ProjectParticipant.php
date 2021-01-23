@@ -26,20 +26,19 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
-use Knp\DoctrineBehaviors\Model\Loggable\LoggableTrait;
-use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Besetzungen
  * @ORM\Table(name="ProjectParticipants")
  * @ORM\Entity
+ * @Gedmo\Loggable
  */
-class ProjectParticipant implements \ArrayAccess, LoggableInterface
+class ProjectParticipant implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\LoggableTrait;
+  use CAFEVDB\Traits\TimestampableTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants", fetch="EXTRA_LAZY")

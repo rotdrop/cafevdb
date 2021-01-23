@@ -26,8 +26,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Knp\DoctrineBehaviors\Contract\Entity as KnpInterface;
-use Knp\DoctrineBehaviors\Model as KnpModel;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Projects
@@ -35,11 +34,11 @@ use Knp\DoctrineBehaviors\Model as KnpModel;
  * @ORM\Table(name="Projects", uniqueConstraints={@ORM\UniqueConstraint(columns={"name"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository")
  */
-class Project implements \ArrayAccess, KnpInterface\TimestampableInterface
+class Project implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use KnpModel\Timestampable\TimestampableTrait;
+  use CAFEVDB\Traits\TimestampableTrait;
 
   /**
    * @var int

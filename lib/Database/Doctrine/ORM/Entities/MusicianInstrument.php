@@ -26,6 +26,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * MusicianInstrument
@@ -37,6 +38,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="MusicianInstrument", options={"comment":"Join-table Musicians -> Instruments"})
  * @ORM\Entity
+ * @Gedmo\Loggable
  */
 class MusicianInstrument implements \ArrayAccess
 {
