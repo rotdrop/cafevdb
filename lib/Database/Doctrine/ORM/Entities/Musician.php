@@ -220,27 +220,27 @@ class Musician implements \ArrayAccess
   }
 
   /**
-   * Set name.
+   * Set surName.
    *
-   * @param string $name
+   * @param string $surName
    *
    * @return Musician
    */
-  public function setName($name)
+  public function setSurName($surName)
   {
-    $this->name = $name;
+    $this->surName = $surName;
 
     return $this;
   }
 
   /**
-   * Get name.
+   * Get surName.
    *
    * @return string
    */
-  public function getName()
+  public function getSurName()
   {
-    return $this->name;
+    return $this->surName;
   }
 
   /**
