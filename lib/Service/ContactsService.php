@@ -325,8 +325,8 @@ EOTEOT;
         'VERSION' => self::VCARD_VERSION,
         'PRODID' => $prodid,
         'UID' => $uuid,
-        'FN' => $musician['firstName'].' '.$musician['name'],
-        'N' => [ $musician['name'], $musician['firstName'] ],
+        'FN' => $musician['firstName'].' '.$musician['sur_name'],
+        'N' => [ $musician['sur_name'], $musician['firstName'] ],
       ]);
     if ($musician['language']) {
       $vcard->add('LANG', $musician['language']);
