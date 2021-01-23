@@ -162,14 +162,14 @@ class ProjectParticipantsController extends Controller {
    * - change-musician-instruments
    * - change-project-instruments
    */
-  public function changeInstruments($topic, $recordId = [], $instrumentValues = [])
+  public function changeInstruments($context, $recordId = [], $instrumentValues = [])
   {
-    $this->logDebug($topic.' / '.print_r($recordId, true).' / '.print_r($instrumentValues, true));
+    $this->logDebug($context.' / '.print_r($recordId, true).' / '.print_r($instrumentValues, true));
     if (empty($instrumentValues)) {
       $instrumentValues = [];
     }
 
-    switch ($topic) {
+    switch ($context) {
     case 'musician':
     case 'project':
       if (empty($recordId['projectId']) || empty($recordId['musicianId'])) {
@@ -201,7 +201,7 @@ class ProjectParticipantsController extends Controller {
       $this->logDebug('MUS INST '.print_r(array_keys($musicianInstruments), true));
       $this->logDebug('AJX INST '.print_r($instrumentValues, true));
 
-      switch ($topic) {
+      switch ($context) {
       case 'musician':
 
         $message   = [];
@@ -283,7 +283,7 @@ class ProjectParticipantsController extends Controller {
       return self::response($this->l->t('Validation not yet implemented'));
       break;
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    return self::grumble($this->l->t('Unknown Request %s'), $context);
   }
 
 }
