@@ -38,7 +38,7 @@ trait InitialStateTrait {
   protected $appName;
 
   /** @var IL10N */
-  private $l;
+  protected $l;
 
   /** @var IInitialStateService */
   private $initialStateService;

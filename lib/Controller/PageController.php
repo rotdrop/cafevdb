@@ -38,7 +38,7 @@ class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
   /** @var IL10N */
-  private $l;
+  protected $l;
 
   /** @var HistoryService */
   private $historyService;

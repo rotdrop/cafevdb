@@ -50,7 +50,7 @@ class ImagesController extends Controller {
   private $parameterService;
 
   /** @var IL10N */
-  private $l;
+  protected $l;
 
   /** @var CalDavService */
   private $calDavService;
