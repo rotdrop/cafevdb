@@ -261,6 +261,46 @@ class phpMyEdit
 	function nav_down()			 { return !empty($this->navigation) && stristr($this->navigation, 'D') && (!isset($this->buttons[$this->page_type]['down']) || !($this->buttons[$this->page_type]['down'] === false)); }
 
 	/*
+	 * Handle logging
+	 */
+	public function logQuery($operation, $oldvals, $changed, $newvals)
+	{
+		switch($operation) {
+		case 'insert':
+			$query = sprintf('INSERT INTO %s'
+							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
+							 .' VALUES (NOW(), "%s", "%s", $operation, "%s", "%s", "", "", "%s")',
+							 $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
+							 addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
+							 addslashes(implode(',', $this->rec)), addslashes(serialize($newvals)));
+			$this->myquery($query, __LINE__);
+			break;
+		case 'udpate':
+			foreach ($changed as $key) {
+				$qry = sprintf('INSERT INTO %s'
+							   .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
+							   .' VALUES (NOW(), "%s", "%s", $operation, "%s", "%s", "%s", "%s", "%s")',
+							   $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
+							   addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
+							   addslashes(implode(',',$this->rec)), addslashes($key),
+							   addslashes($oldvals[$key]), addslashes($newvals[$key]));
+				$this->myquery($qry, __LINE__);
+			}
+			break;
+		case 'delete':
+			$query = sprintf('INSERT INTO %s'
+							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
+							 .' VALUES (NOW(), "%s", "%s", $operation, "%s", "%s", "", "%s", "")',
+							 $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
+							 addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
+							 addslashes(implode(',', $this->rec)), addslashes(serialize($oldvals)));
+			$this->myquery($query, __LINE__);
+
+			break;
+		}
+	}
+
+	/*
 	 * Handle multi-column record keys
 	 */
 	private function key_record($key_record = null)
@@ -4925,16 +4965,7 @@ class phpMyEdit
 		}
 		// Note change in log table
 		if ($this->logtable) {
-			foreach ($changed as $key) {
-				$qry = sprintf('INSERT INTO %s'
-							   .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
-							   .' VALUES (NOW(), "%s", "%s", "update", "%s", "%s", "%s", "%s", "%s")',
-							   $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
-							   addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
-							   addslashes(implode(',',$this->rec)), addslashes($key),
-							   addslashes($oldvals[$key]), addslashes($newvals[$key]));
-				$this->myquery($qry, __LINE__);
-			}
+			$this->logQuery('update', $oldvals, $changed, $newvals);
 		}
 		// After trigger
 		if ($this->exec_triggers('update', 'after', $oldvals, $changed, $newvals) == false) {
@@ -4982,13 +5013,7 @@ class phpMyEdit
 		}
 		// Note change in log table
 		if ($this->logtable) {
-			$query = sprintf('INSERT INTO %s'
-							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
-							 .' VALUES (NOW(), "%s", "%s", "delete", "%s", "%s", "%s", "%s", "")',
-							 $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
-							 addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
-							 addslashes(implode(',', $this->rec)), addslashes($key), addslashes(serialize($oldvals)));
-			$this->myquery($query, __LINE__);
+			$this->logQuery('delete', $oldvals, null, null);
 		}
 		// After trigger
 		if ($this->exec_triggers('delete', 'after', $oldvals, $changed, $newvals) == false) {
