@@ -266,8 +266,6 @@ class EntityManager extends EntityManagerDecorator
       self::ENTITY_PATHS, // paths to look in
     );
 
-    $this->logInfo(dirname((new \ReflectionClass(\Gedmo\Loggable\Entity\LogEntry::class))->getFileName()));
-
     // NOTE: driver for application Entity can be different, Yaml, Xml or whatever
     // register annotation driver for our application Entity namespace
     $driverChain->addDriver($annotationDriver, 'OCA\CAFEVDB\Database\Doctrine\ORM\Entities');
