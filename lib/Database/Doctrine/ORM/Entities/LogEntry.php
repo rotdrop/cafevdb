@@ -51,6 +51,19 @@ class LogEntry extends Loggable\Entity\MappedSuperclass\AbstractLogEntry
    * All required columns are mapped through inherited superclass
    */
 
+  /**
+   * @var string
+   *
+   * May key size for MariaDB with decent settings is 3072 / 4 = 768 bytes.
+   *
+   * We have object_id = X, object_class = 191 (why?), version = 4.
+   *
+   * So 768 - 4(version) - 191(object_class) = 573 should do.
+   *
+   * @ORM\Column(name="object_id", length=573, nullable=true)
+   */
+  protected $objectId;
+
   public function __construct() {
     $this->arrayCTOR();
   }
