@@ -26,15 +26,25 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * Override default for database query logging.
+ *
+ * @todo ATM all properties of all entities are logged with the
+ * exception of the LogEntry-class, of course. Perhaps make this configurable.
+ */
 class GedmoLoggableListener extends \Gedmo\Loggable\LoggableListener
 {
   public function getConfiguration(ObjectManager $objectManager, $class)
   {
     $config = parent::getConfiguration($objectManager, $class);
+    if (!isset($config['logEntryClass'])) {
+      $config['logEntryClass'] = CAFEVDB\Entities\LogEntry::class;
+    }
+    // @todo Perhaps make this configurable
+    if (!isset($config['loggable'])) {
+      $config['loggable'] = $class != $config['logEntryClass'];
+    }
     if (isset($config['loggable'])) {
-      if (!isset($config['logEntryClass'])) {
-        $config['logEntryClass'] = CAFEVDB\Entities\LogEntry::class;
-      }
       if (!isset($config['versioned'])) {
         $classMetadata = $objectManager->getClassMetadata($class);
         $config['versioned'] = $classMetadata->getFieldNames();
