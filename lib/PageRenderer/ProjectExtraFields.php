@@ -28,7 +28,6 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
@@ -78,14 +77,13 @@ class ProjectExtraFields extends PMETableViewBase
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
-    , ChangeLogService $changeLogService
     , InstrumentationService $instrumentationService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , FuzzyInputService $fuzzyInput
     , ProjectExtraFieldsService $extraFieldsService
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->instrumentationService = $instrumentationService;
     $this->fuzzyInput = $fuzzyInput;
     $this->extraFieldsService = $extraFieldsService;

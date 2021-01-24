@@ -31,7 +31,6 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
@@ -100,14 +99,13 @@ class Musicians extends PMETableViewBase
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
-    , ChangeLogService $changeLogService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , GeoCodingService $geoCodingService
     , ContactsService $contactsService
     , PhoneNumberService $phoneNumberService
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;

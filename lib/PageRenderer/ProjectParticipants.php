@@ -32,7 +32,6 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
@@ -159,7 +158,6 @@ class ProjectParticipants extends PMETableViewBase
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
-    , ChangeLogService $changeLogService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , GeoCodingService $geoCodingService
@@ -168,7 +166,7 @@ class ProjectParticipants extends PMETableViewBase
     , ProjectExtraFieldsService $extraFieldsService
     , Musicians $musiciansRenderer
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;

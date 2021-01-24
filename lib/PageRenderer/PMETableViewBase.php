@@ -26,7 +26,6 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\ChangeLogService;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
@@ -46,8 +45,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected $requestParameters;
 
   protected $toolTipsService;
-
-  protected $changeLogService;
 
   protected $l;
 
@@ -107,7 +104,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
-    , ChangeLogService $changeLogService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
@@ -115,7 +111,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->requestParameters = $requestParameters;
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
-    $this->changeLogService = $changeLogService;
     $this->toolTipsService = $toolTipsService;
     $this->pageNavigation = $pageNavigation;
     $this->l = $this->l10n();
@@ -555,7 +550,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           } else {
             $this->remove($entityId);
           }
-          $this->changeLogService->logDelete($table, $id, $id);
         }
 
         foreach ($changeSet as $column => $field) {
@@ -589,7 +583,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             foreach ($entityId as $key => $value) {
               $entity[$key] = $value;
             }
-            $this->changeLogService->logInsert($table, $id, $id);
           } else if (isset($remIdentifier[$new]) && !empty($changeSet)) {
             $id = $remIdentifier[$new];
             $entityId = $this->extractKeyValues($meta, $id);
@@ -601,7 +594,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             if (method_exists($entity, 'setDisabled')) {
               $entity['disabled'] = false; // reenable
             }
-            $this->changeLogService->logUpdate($table, $id, $id, $id);
             $useMerge = true;
           } else {
             continue;
@@ -638,7 +630,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $logNew[$column] = $newvals[$field];
           }
           $this->persist($entity);
-          $this->changeLogService->logUpdate($table, $entityId, $logOld, $logNew);
         } else {
           // probably faster, but life-cycle callbacks and events are
           // not handled.
@@ -668,7 +659,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
           $qb->getQuery()
              ->execute();
-          $this->changeLogService->logUpdate($table, $identifier, $logOld, $logNew);
         }
       }
     }

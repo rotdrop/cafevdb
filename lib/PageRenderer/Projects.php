@@ -33,7 +33,6 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Service\ChangeLogService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Events;
@@ -64,12 +63,11 @@ class Projects extends PMETableViewBase
     , EventsService $eventsService
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
-    , ChangeLogService $changeLogService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , IEventDispatcher $eventDispatcher
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $changeLogService, $toolTipsService, $pageNavigation);
+    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectService = $projectService;
     $this->eventsService = $eventsService;
     $this->eventDispatcher = $eventDispatcher;
@@ -818,11 +816,6 @@ project without a flyer first.");
       try {
         foreach(array_diff($oldIds, $newIds) as $id) {
           $this->remove([ 'id' => $oldRecords[$id] ]);
-          $this->changeLogService->logDelete($table, 'id', [
-            'id' => $oldRecords[$id],
-            'project_id' => $projectId,
-            'instrument_id' => $id,
-          ]);
         }
         $this->flush();
         // need references instead of id in order to "satisfy" associations
@@ -835,12 +828,6 @@ project without a flyer first.");
           $this->persist($projectInstrument);
           $this->flush($projectInstrument);
           $rec = $projectInstrument->getId();
-          if (!empty($rec)) {
-            $this->changeLogService->logInsert($table, $rec, [
-              'project_id' => $projectId,
-              'instrument_id' => $id
-            ]);
-          }
         }
       } catch (\Throwable $t) {
         $this->logException($t);
