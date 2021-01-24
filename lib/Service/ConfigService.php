@@ -53,15 +53,12 @@ class ConfigService {
    *
    */
   const DEBUG_GENERAL   = (1 << 0);
-  const DEBUG_QUERY0    = (1 << 1);
-  const DEBUG_QUERY1    = (1 << 2);
-  const DEBUG_QUERY2    = (1 << 3);
-  const DEBUG_QUERY     = self::DEBUG_QUERY0;
-  const DEBUG_CSP       = self::DEBUG_QUERY1;
+  const DEBUG_QUERY     = (1 << 1);
+  const DEBUG_CSP       = (1 << 2);
   const DEBUG_REQUEST   = (1 << 4);
   const DEBUG_TOOLTIPS  = (1 << 5);
   const DEBUG_EMAILFORM = (1 << 6);
-  const DEBUG_ALL       = self::DEBUG_GENERAL|self::DEBUG_QUERY0|self::DEBUG_QUERY1|self::DEBUG_QUERY2|self::DEBUG_REQUEST|self::DEBUG_TOOLTIPS|self::DEBUG_EMAILFORM;
+  const DEBUG_ALL       = self::DEBUG_GENERAL|self::DEBUG_QUERY|self::DEBUG_CSP|self::DEBUG_REQUEST|self::DEBUG_TOOLTIPS|self::DEBUG_EMAILFORM;
   const DEBUG_NONE      = 0;
 
   /*
