@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -114,7 +114,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       .done(CAFEVDB.Events.UI.init);
   };
 
-  /**Generate a popup-dialog for project related email.
+  /**
+   * Generate a popup-dialog for project related email.
    *
    * @param post Arguments object:
    * { projectName: 'NAME', projectId: XX }
@@ -347,14 +348,14 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
       const nameSelector = 'input.projectname';
       const yearSelector = 'select[name="PME_data_year"]';
-      const attachSelector = 'select[name="PME_data_temporal_type"]';
+      const typeSelector = 'select[name="PME_data_temporal_type"]';
 
       const name = container.find(nameSelector);
       const year = container.find(yearSelector);
-      const attach = container.find(attachSelector);
+      const projectType = container.find(typeSelector);
 
-      const oldProjectYear = $(form).find(yearSelector + ' :selected').text();
-      const oldprojectName = name.val();
+      var oldProjectYear = $(form).find(yearSelector + ' :selected').text();
+      var oldprojectName = name.val();
 
       /**Verify the user submitted name and year settings,
        * depending on whether the user has activated the name or
@@ -410,20 +411,19 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         });
       };
 
-      attach.off('change').change(function(event) {
-        event.preventDefault();
-        name.trigger('blur');
+      projectType.off('change').on('change', function(event) {
+	if (name.val() != '') {
+          name.trigger('blur');
+	}
         return false;
       });
 
-      year.off('change').change(function(event) {
-        event.preventDefault();
+      year.off('change').on('change', function(event) {
         verifyYearName('year');
         return false;
       });
 
-      name.off('blur').blur(function(event) {
-        event.preventDefault();
+      name.off('blur').on('blur', function(event) {
         verifyYearName('name');
         return false;
       });
@@ -431,7 +431,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
       // Attach a delegate handler to the form; this gives the
       // possibility to attach another delegate handler to the
       // container element.
-      form.off('click', submitSel)
+      form
+	.off('click', submitSel)
 	.on('click',
             submitSel,
             function(event) {
