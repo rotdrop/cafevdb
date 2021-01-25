@@ -110,7 +110,7 @@ class SepaDebitMandatesRepository extends EntityRepository
    * Find the sepa-mandate with the highest sequence number, if
    * any. Deactivated mandates are ignored.
    *
-   * @todo Use soft-delete behaviour
+   * @todo Check that soft-delete behavior actually works as filter.
    *
    * @return ?SepaDebitMandate
    */
