@@ -68,7 +68,7 @@ class Project implements \ArrayAccess
    *
    * @ORM\Column(type="enumprojecttemporaltype", nullable=false, options={"default"="temporary"})
    */
-  private $temporalType = 'temporary';
+  private $type = 'temporary';
 
   /**
    * @var string
