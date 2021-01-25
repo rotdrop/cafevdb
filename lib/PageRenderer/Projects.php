@@ -451,14 +451,10 @@ __EOT__;
     // data. However, at the moment the stuff does not work without JS
     // anyway, and we use Ajax calls to verify the form data.
 
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeUpdateRemoveUnchanged' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'addOrChangeInstrumentation' ];
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeUpdateTrigger' ];
     $opts['triggers']['update']['after'][]   = [ $this, 'afterUpdateTrigger' ];
 
-    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeInsertTrigger' ];
     $opts['triggers']['insert']['after'][]   = [ $this, 'addOrChangeInstrumentation' ];
     $opts['triggers']['insert']['after'][]   = [ $this, 'afterInsertTrigger' ];

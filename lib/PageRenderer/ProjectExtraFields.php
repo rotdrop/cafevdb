@@ -572,12 +572,8 @@ class ProjectExtraFields extends PMETableViewBase
       $opts['filters'][] = 'PMEtable0.project_id = '.$this->projectId;
     }
 
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
-    // needed ?
-    $opts['triggers']['update']['before'][] = [ __CLASS__, 'beforeUpdateRemoveUnchanged' ];
 
-    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertTrigger' ];
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
 

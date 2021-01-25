@@ -351,10 +351,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
     $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
 
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-    $opts['triggers']['copy']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
     // go

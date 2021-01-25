@@ -157,9 +157,6 @@ class InsuranceBrokers extends PMETableViewBase
       'sort'     => $sort,
     ];
 
-    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-    $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-
     // if ($this->showDisabled) {
     //   $opts['fdd']['disabled'] = [
     //     'name'     => $this->l->t('Disabled'),
@@ -178,9 +175,6 @@ class InsuranceBrokers extends PMETableViewBase
     // }
 
     // $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
-
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
 
     $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
 

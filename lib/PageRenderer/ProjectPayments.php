@@ -241,9 +241,6 @@ class ProjectPayments extends PMETableViewBase
       };
     $opts['triggers']['update']['data'] = $opts['triggers']['select']['data'];
 
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
-
     $opts['filters'] = 'PMEjoin'.$instrumentationIdx.'.project_id = '.$projectId;
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);

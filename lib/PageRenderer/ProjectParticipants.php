@@ -1289,8 +1289,6 @@ WHERE pp.project_id = $projectId",
 
     $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
 
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'suspendLoggingTrigger' ];
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateSanitizeExtraFields' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
@@ -1513,7 +1511,6 @@ WHERE pp.project_id = $projectId",
 //     }
 
 //     $opts['triggers']['update']['before'] = [];
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';

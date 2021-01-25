@@ -42,39 +42,62 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   const JOIN_FIELD_NAME_SEPARATOR = ':';
 
+  /** @var RequestParameterService */
   protected $requestParameters;
 
+  /** @var ToolTipsService */
   protected $toolTipsService;
 
+  /** @var IL10N */
   protected $l;
 
+  /** @var PHPMyEdit */
   protected $pme;
 
+  /** @var bool */
   protected $pmeBare;
 
+  /** @var ?array|mixed */
   protected $pmeRecordId;
 
+  /** @var bool */
   protected $showDisabled;
 
+  /** @var bool */
   protected $expertMode;
 
+  /** @var array default PHPMyEdit options */
   protected $pmeOptions;
 
+  /** @var ?int */
   protected $musicianId;
 
+  /** @var ?int */
   protected $projectId;
 
+  /** @var ?string */
   protected $projectName;
 
+  /** @var ?string */
   protected $template;
 
+  /** @var ?int */
   protected $recordsPerPage;
 
+  /** @var array */
   protected $defaultFDD;
 
+  /** @var PageNavigation */
   protected $pageNavigation;
 
+  /** @var string */
   protected $cssClass = 'pme-table-view';
+
+  /**
+   * @var int $changeSetSize Number of affected entries, fields or
+   * rows. Context dependent, for generating messages.
+   */
+  protected $changeSetSize = -1;
 
   /** @var array
    * ```
@@ -139,6 +162,31 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->{lcFirst($key)} =
           $this->requestParameters->getParam($key, $default);
     }
+
+    //$this->pmeOptions['triggers']['update']['before'][] = [ __CLASS__, 'suspendLoggingTrigger' ];
+    $this->pmeOptions['triggers']['update']['after'][] =
+      $this->pmeOptions['triggers']['insert']['after'][] =
+      $this->pmeOptions['triggers']['copy']['after'][] =
+      $this->pmeOptions['triggers']['delete']['after'][] = [ __CLASS__, 'resumeLoggingTrigger' ];
+
+    $this->pmeOptions['triggers']['update']['before'][] =
+      $this->pmeOptions['triggers']['copy']['before'][] =
+      $this->pmeOptions['triggers']['insert']['before'][] =
+        [ __CLASS__, 'beforeAnythingTrimAnything' ];
+
+    $this->pmeOptions['triggers']['update']['before'][] =
+       $this->pmeOptions['triggers']['insert']['before'][] =
+       $this->pmeOptions['triggers']['deeleteinsert']['before'][] =
+         function($pme, $op, $step, &$oldvals, &$changed, &$newvals) {
+           $this->changeSetSize = count($changed);
+         };
+
+    $this->pmeOptions['triggers']['update']['after'][] = function($pme) {
+      $pme->message = $this->l->t(
+        '%n data field affected',
+        '%n data fields affected',
+        $this->changeSetSize);
+    };
 
     // @TODO: the following should be done only on demand and is
     // somewhat chaotic.
@@ -676,6 +724,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
     }
     $this->flush(); // flush everything to the data-base
+
+    // debug
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
       if ($fieldInfo['table'] != $this->pme->tb) {
@@ -685,6 +735,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
     }
     $this->logDebug('BEFORE UPD: '.print_r($changed, true));
+
+    // all should be done
+    $pme->setLogging(false);
+
     return true; //!empty($changed);
   }
 
