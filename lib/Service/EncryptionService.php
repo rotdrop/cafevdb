@@ -166,7 +166,7 @@ class EncryptionService
   /**
    * Return bound user id
    */
-  public function userId()
+  public function getUserId()
   {
     return $this->bound() ? $this->userId : null;
   }
