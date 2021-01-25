@@ -23,12 +23,82 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVBD\Common\Util;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityRepository;
 
 class ProjectParticipantsRepository extends EntityRepository
 {
+  /**
+   * findBy() which optionally allows where and orderBy with the two
+   * "principal" associaions "project" and "musician".
+   *
+   * Syntax:
+   * ```
+   * findBy([ 'musician.name => 'blah' ], [ 'project.name' => 'DESC' ]);
+   * ```
+   */
+  public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+  {
+    $orderBy = $orderBy?:[];
+    $joinEntities = [];
+    foreach ([ 'project', 'musician' ] as $foreignKey) {
+      foreach ($criteria as $key => $value) {
+        if (preg_match('/^'.$foreignKey.'[.]/', $key)) {
+          $joinEntities[$foreignKey] = true;
+        }
+      }
+      foreach ($orderBy as $key => $value) {
+        if (preg_match('/^'.$foreignKey.'[.]/', $key)) {
+          $joinEntities[$foreignKey] = true;
+        }
+      }
+    }
+    if (empty($joinEntities)) {
+      return parent::findBy($criteria, $orderBy, $limit, $offset);
+    }
+    $qb = $this->createQueryBuilder('pp');
+    foreach (array_keys($joinEntities) as $foreignKey) {
+      $qb->join('pp.'.$foreignKey, $foreignKey);
+    }
+    $andX = $qb->expr()->andX();
+    foreach (array_keys($criteria) as $key) {
+      $param = str_replace('.', '_', $key);
+      $andX->add($qb->expr()->eq($key, ':'.$param));
+    }
+    $qb->where($andX);
+    foreach ($criteria as $key => $value) {
+      $param = str_replace('.', '_', $key);
+      $qb->setParameter($param, $value);
+    }
+    foreach ($orderBy as $key => $dir) {
+      $qb->addOrderBy($key, $dir);
+    }
+    if (!empty($limit)) {
+      $qb->setMaxResults($limit);
+    }
+    if (!empty($offset)) {
+      $qb->setFirstResult($offset);
+    }
+    return $qb->getQuery()->execute();
+  }
+
+  /**
+   * Find all the participant names of the given project indexed by
+   * the musician id. Handy for building select options for the
+   * web interface.
+   */
+  public function findParticipantNames($project)
+  {
+    return $this->createQueryBuilder('pp', 'pp.musician')
+                ->join('pp.musician', 'm')
+                ->select('m.firstName AS firstName', 'm.lastName AS lastName')
+                ->orderBy('m.lastName', 'ASC')
+                ->addOrderBy('m.firstName', 'ASC')
+                ->getQuery()
+                ->getResult();
+  }
 
 }
 

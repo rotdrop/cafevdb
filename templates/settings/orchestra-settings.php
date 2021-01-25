@@ -125,24 +125,38 @@ foreach ($localeCountryNames as $country => $name) {
     </fieldset>
     <fieldset <?php echo $off; ?> class="chosen-dropup">
       <legend><?php echo $l->t('Executive board and club members'); ?></legend>
-      <input class="specialMemberTables" type="text"
-             id="memberTable"
-             name="memberTable"
-             value="<?php echo $_['memberTable']; ?>"
+      <select id="memberProjectSelect"
+              data-placeholder="<?php echo $l->t('Select the club-members project'); ?>"
+              name="memberProjectId"
+              class="special-member-projects tooltip-left">
+        <option></option>
+        <?php echo Navigation::selectOptions($projectOptions, $memberProjectId); ?>
+      </select>
+      <input class="specialMemberProjects" type="text"
+             id="memberProject"
+             name="memberProject"
+             value="<?php echo $_['memberProject']; ?>"
              title="<?php echo $toolTips['club-member-project']; ?>"
              placeholder="<?php echo $l->t('member-table'); ?>"/>
-      <label for="memberTable"
+      <label for="memberProject"
              title="<?php echo $toolTips['club-member-project']; ?>">
         <?php echo $l->t('Club Member Project'); ?>
       </label>
       <br/>
-      <input class="specialMemberTables" type="text"
-             id="executiveBoardTable"
-             name="executiveBoardTable"
-             value="<?php echo $_['executiveBoardTable']; ?>"
+      <select id="executiveBoardProjectSelect"
+              data-placeholder="<?php echo $l->t('Select the executive-board project'); ?>"
+              name="executiveBoardProjectId"
+              class="special-member-projects tooltip-left">
+        <option></option>
+        <?php echo Navigation::selectOptions($projectOptions, $memberProjectId); ?>
+      </select>
+      <input class="specialMemberProjects" type="text"
+             id="executiveBoardProject"
+             name="executiveBoardProject"
+             value="<?php echo $_['executiveBoardProject']; ?>"
              title="<?php echo $toolTips['executive-board-project']; ?>"
              placeholder="<?php echo $l->t('executive board table'); ?>"/>
-      <label for="executiveBoardTable"
+      <label for="executiveBoardProject"
              title="<?php echo $toolTips['executive-board-project']; ?>">
         <?php echo $l->t('Executive Board Project'); ?>
       </label>

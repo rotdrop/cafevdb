@@ -751,7 +751,7 @@ var CAFEVDB = CAFEVDB || {};
       //
       ///////////////////////////////////////////////////////////////////////////
 
-      simpleSetValueHandler($('input.specialMemberTables'), 'blur', msg);
+      simpleSetValueHandler($('input.specialMemberProjects'), 'blur', msg);
 
       const executiveBoardIds = $('select.executive-board-ids');
       executiveBoardIds.chosen({
@@ -761,6 +761,15 @@ var CAFEVDB = CAFEVDB || {};
 	width: '30%'
       });
       simpleSetValueHandler(executiveBoardIds, 'change', msg);
+
+      const specialMemberProjectIds = $('select.special-member-projects');
+      specialMemberProjectIds.chosen({
+	disable_search_threshold: 10,
+	allow_single_deselect: true,
+	inherit_select_classes:true,
+	width: '30%'
+      });
+      simpleSetValueHandler(specialMemberProjectIds, 'change', msg);
 
       ///////////////////////////////////////////////////////////////////////////
       //

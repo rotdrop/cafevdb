@@ -162,12 +162,22 @@ class PersonalForm {
       ];
 
       if ($isGroupAdmin) {
-        $executiveBoardTable = $this->getConfigValue('executiveBoardTable', $this->l->t('ExecutiveBoardMembers'));
-        $executiveBoardTableId = $this->getConfigValue('executiveBoardTableId', -1);
-        if ($this->databaseConfigured() && $executiveBoardTableId > 0) {
+        $memberProject = $this->getConfigValue('memberProject', $this->l->t('ClubMembers'));
+        $memberProjectId = $this->getConfigValue('memberProjectId', -1);
+        $executiveBoardProject = $this->getConfigValue('executiveBoardProject', $this->l->t('ExecutiveBoardMembers'));
+        $executiveBoardProjectId = $this->getConfigValue('executiveBoardProjectId', -1);
+
+        if ($this->databaseConfigured()) {
+          $projectOptions = $this->projectService->projectOptions([ 'type' => 'permanent' ]);
+        } else {
+          $projectOptions = [];
+        }
+        $this->logInfo('PROJECT OPTIONS '.print_r($projectOptions, true));
+
+        if ($this->databaseConfigured() && $executiveBoardProjectId > 0) {
           // this can throw if there is no datadase configured yet.
           try {
-            $executiveBoardMembers = $this->projectService->participantOptions($executiveBoardTableId, $executiveBoardTable);
+            $executiveBoardMembers = $this->projectService->participantOptions($executiveBoardProjectId, $executiveBoardProject);
           } catch(\Exception $e) {
             $executiveBoardMembers = [];
           }
@@ -193,10 +203,12 @@ class PersonalForm {
             'bankAccountBIC' => $this->getConfigValue('bankAccountBIC'),
             'bankAccountCreditorIdentifier' => $this->getConfigValue('bankAccountCreditorIdentifier'),
 
-            'memberTable' => $this->getConfigValue('memberTable', $this->l->t('ClubMembers')),
-            'memberTableId' => $this->getConfigValue('memberTableId', -1),
-            'executiveBoardTable' => $executiveBoardTable,
-            'executiveBoardTableId' => $executiveBoardTableId,
+            'projectOptions' => $projectOptions,
+            'memberProject' => $memberProject,
+            'memberProjectId' => $memberProjectId,
+            'memberProjectOptions' => $memberProjectOptions,
+            'executiveBoardProject' => $executiveBoardProject,
+            'executiveBoardProjectId' => $executiveBoardProjectId,
             'executiveBoardMembers' => $executiveBoardMembers,
             'userGroupMembers' => array_map(function($user) { return $user->getUID(); }, $this->group()->getUsers()),
             'userGroups' => array_map(function($group) { return $group->getGID(); }, $this->groupManager()->search('')),

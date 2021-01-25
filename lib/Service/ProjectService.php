@@ -91,28 +91,34 @@ class ProjectService
    *
    * @param $musicianId A pre-selected musician, defaults to null.
    */
-  public function participantOptions($projectId, $projectName = null, $musicianId = -1)
+  public function participantOptions($projectId, $projectName = null, $selectedMusicianId = -1)
   {
-    if (empty($projectName)) {
-      $projectName = $this->fetchName($projectId);
-    }
-
-    $table = $projectName.'View';
-
+    $participants = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->findParticipantNames($projectId);
     $options = [];
-
-    // simply fetch all participants
-    $query = "SELECT Name,Vorname,MusikerId FROM ".$table." WHERE 1";
-    $stmt = $this->entityManager->getConnction()->query($query);
-    while ($row = $stmt->fetch()) {
-      $key = $row['MusikerId'];
-      $name = $row['Vorname'].' '.$row['Name'];
-      $flags = ($key == $musicianId) ? Navigation::SELECTED : 0;
-      $options[] = [ 'value' => $key,
-                     'name' => $name,
-                     'flags' => $flags ];
+    foreach ($participants as $musicianId => $name) {
+      $flags = ($musicianId == $selectedMusicianId) ? Navigation::SELECTED : 0;
+      $options[] = [
+        'value' => $musicianId,
+        'name' => $name['firstName'].' '.$name['lastName'],
+        'flags' => $flags,
+      ];
     }
+    return $options;
+  }
 
+  public function projectOptions($criteria = null, $selectedProject = -1)
+  {
+    $projects = $this->repository->findBy($criteria, [ 'year' => 'DESC', 'name' => 'ASC' ]);
+    $options = [];
+    foreach ($projects as $project) {
+      $flags = ($project['id'] == $selectedProject) ? Navigation::SELECTED : 0;
+      $options[] = [
+        'value' => $project['id'],
+        'name' => $project['name'],
+        'flags' => $flags,
+        'group' => $project['year'],
+      ];
+    }
     return $options;
   }
 
