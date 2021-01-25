@@ -340,8 +340,12 @@ EOTEOT;
     if ($musician['FixedLinePhone']) {
       $vcard->add('TEL', $musician['fixedLinePhone']);
     }
-    if ($musician['birthday'] != 0) {
-      $vcard->add('BDAY', new \DateTime($musician['birthday']));
+    if (!empty($musician['birthday'])) {
+      $birthDay = $musician['birthday'];
+      if (is_string($birthDay)) {
+        $birthDay = new \DateTime($birthDay);
+      }
+      $vcard->add('BDAY', $birthDay);
     }
     if ($musician['updated'] != 0) {
       $vcard->add('REV', (new \DateTime($musician['updated']))->format(\DateTime::W3C));
