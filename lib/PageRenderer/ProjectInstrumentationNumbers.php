@@ -349,8 +349,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
     // trigger
 
-    $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
-
+    // redirect all updates through Doctrine\ORM.
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
     // go

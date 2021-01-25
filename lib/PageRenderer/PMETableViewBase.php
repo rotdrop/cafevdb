@@ -163,6 +163,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $this->requestParameters->getParam($key, $default);
     }
 
+    $this->pmeOptions['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
+
     //$this->pmeOptions['triggers']['update']['before'][] = [ __CLASS__, 'suspendLoggingTrigger' ];
     $this->pmeOptions['triggers']['update']['after'][] =
       $this->pmeOptions['triggers']['insert']['after'][] =

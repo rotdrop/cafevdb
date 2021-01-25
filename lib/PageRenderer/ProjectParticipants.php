@@ -1287,12 +1287,8 @@ WHERE pp.project_id = $projectId",
 
     //////// END Field definitions
 
-    $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
-
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateSanitizeExtraFields' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
-
-    $opts['triggers']['update']['after'][]  = [ __CLASS__, 'resumeLoggingTrigger' ];
 
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
