@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM;
+use OCA\CAFEVDB\Database\Doctrine\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -39,6 +39,14 @@ class InsuranceRates extends PMETableViewBase
 {
   const CSS_CLASS = 'insurance-rates';
   const TABLE = 'InsuranceRates';
+
+  protected $joinStructure = [
+    [
+      'table' => self::TABLE,
+      'master' => true,
+      'entity' => Entities\InsuranceRate::class,
+    ],
+  ];
 
   public function __construct(
     ConfigService $configService
@@ -125,7 +133,7 @@ class InsuranceRates extends PMETableViewBase
 
     // field definitions
 
-    opts['fdd']['broker_id'] = [
+    $opts['fdd']['broker_id'] = [
         'name'     => $this->l->t('Broker'),
         'css'      => [ 'postfix' => ' broker', ],
         'select'   => 'D',
@@ -164,26 +172,8 @@ class InsuranceRates extends PMETableViewBase
       'sort' => $sort
     ];
 
-    // if ($this->showDisabled) {
-    //   $opts['fdd']['disabled'] = [
-    //     'name'     => $this->l->t('Disabled'),
-    //     'options' => $expertMode ? 'LAVCPDF' : 'LAVCPDF',
-    //     'input'    => $expertMode ? '' : 'R',
-    //     'select'   => 'C',
-    //     'maxlen'   => 1,
-    //     'sort'     => true,
-    //     'escape'   => false,
-    //     'sqlw'     => 'IF($val_qas = "", 0, 1)',
-    //     'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' ],
-    //     'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
-    //     'tooltip'  => $this->toolTipsService['instrument-family-disabled'],
-    //     'css'      => [ 'postfix' => ' instrument-family-disabled' ],
-    //   ];
-    // }
-
-    // $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
-
-    $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
+    // redirect all updates through Doctrine\ORM.
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
@@ -192,40 +182,5 @@ class InsuranceRates extends PMETableViewBase
     } else {
       $this->pme->setOptions($opts);
     }
-  }
-
-  /**This is the phpMyEdit before-delete trigger.
-   *
-   * phpMyEdit calls the trigger (callback) with
-   * the following arguments:
-   *
-   * @param $pme The phpMyEdit instance
-   *
-   * @param $op The operation, 'insert', 'update' etc.
-   *
-   * @param $step 'before' or 'after'
-   *
-   * @param $oldValues Self-explanatory.
-   *
-   * @param &$changed Set of changed fields, may be modified by the callback.
-   *
-   * @param &$newValues Set of new values, which may also be modified.
-   *
-   * @return boolean. If returning @c false the operation will be terminated
-   */
-  public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
-  {
-    // $this->logInfo("Record key is ".print_r($pme->rec, true));
-    // $entity = $this->getDatabaseRepository(ORM\Entities\InsuranceBroker::class)->find($pme->rec);
-
-    // if (false && $entity->usage() > 0) {
-    //   $this->logInfo("Soft-delete entity ".print_r($pme->rec));
-    //   $entity->setDisabled(true);
-    //   $this->persist($entity);
-    //   $this->flush();
-    //   return false;
-    // }
-
-    return true;
   }
 }
