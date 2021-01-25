@@ -46,7 +46,7 @@ class ProjectPaymentsRepository extends EntityRepository
    */
   public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
   {
-    if (isset($criteria['projectId']) || issset($citeria['musicianId'])) {
+    if (isset($criteria['projectId']) || isset($citeria['musicianId'])) {
       $qb = $this->createQueryBuilder(self::ALIAS)
                  ->join(self::ALIAS.'.projectParticipant', 'part');
       $andX = $qb->expr()->andX();
@@ -55,7 +55,7 @@ class ProjectPaymentsRepository extends EntityRepository
       }
       $qb->where($andX);
       foreach ($criteria as $key => $value) {
-        $qb->setParameter($key, $value_);
+        $qb->setParameter($key, $value);
       }
       foreach ($orderBy as $key => $dir) {
         $qb->addOrderBy($this->fqcn($key), $dir);
