@@ -43,6 +43,70 @@ class SepaDebitMandatesRepository extends EntityRepository
   }
 
   /**
+   * Find a SEPA-mandate by either its primary key or its mandate
+   * reference; no-op if $idOrReference already is a SEPA-mandate
+   * entity.
+   *
+   * @param string|array|Entities\SepaDebitMandate $idOrReference
+   * Mandate-reference or primary key or entity instance.
+   */
+  public function findOneBy($idOrReference, array $orderBy = null)
+  {
+    if ($idOrReference instanceof Entities\SepaDebitMandate) {
+      return $idOrReference;
+    } else if (is_string($idOrRerence)) {
+      return parent::findOneBy([ 'mandateReference' => $idOrReference ], null);
+    } else if (is_array($idOrReference)) {
+      return parent::findOneBy($idOrReference, $orderBy);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Ban a SEPA-mandate (timeout, withdrawn, erroneous data
+   * etc.). This flags the mandate as deleted, but we have to keep
+   * the data for the book-keeping.
+   *
+   * @param string|array|Entities\SepaDebitMandate $idOrReference
+   * Mandate-reference or primary key or entity instance.
+   *
+   * @return ?Entities\SepaDebitMandate
+   */
+  public function ban($idOrReference):?Entities\SepaDebitMandate
+  {
+    $mandate = $this->findOneBy($idOrReference);
+    if (!empty($mandate) && !$mandate->isDeleted()) {
+      $this->setDeletedAt(new \DataTime());
+      $this->getEntityManager()->flush($mandate);
+    }
+    return $mandate;
+  }
+
+  /**
+   * Delete the given mandate if it is not used.
+   *
+   * @return ?Entities\SepaDebitMandate
+   */
+  public function remove($idOrReference)
+  {
+    $entityManager = $this->getEntityManager();
+    $filter = $entityManager->getFilters()->disable('soft-deletable');
+    $mandate = $this->findOneBy($idOrReference);
+    if (!empty($mandate)) {
+      $usage = $this->usage($mandate, true);
+      $this->ban($mandate);
+      if (!empty($usage['lastUsed'])) {
+        // second removal should really remove it
+        $this->getEntityManager()->remove($mandate);
+        $this->getEntityManager()->flush($mandate);
+      }
+    }
+    $filter = $entityManager->getFilters()->enable('soft-deletable');
+    return $mandate;
+  }
+
+  /**
    * Find the sepa-mandate with the highest sequence number, if
    * any. Deactivated mandates are ignored.
    *
@@ -53,7 +117,7 @@ class SepaDebitMandatesRepository extends EntityRepository
   public function findNewest($project, $musician): ?SepaDebitMandate
   {
     return $this->findOneBy(
-      [ 'project' => $project, 'musician' => $musician, 'disabled' => false ],
+      [ 'project' => $project, 'musician' => $musician ],
       [ 'sequence' => 'DESC', ]);
   }
 

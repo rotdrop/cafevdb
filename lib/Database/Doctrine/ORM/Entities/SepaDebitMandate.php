@@ -25,9 +25,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 use Doctrine\Common\Collections\ArrayCollection;
-use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
-use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableTrait;
 
 /**
  * SepaDebitMandates
@@ -35,12 +35,13 @@ use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableTrait;
  * @ORM\Table(name="SepaDebitMandates", uniqueConstraints={@ORM\UniqueConstraint(columns={"mandate_reference"})})
  * @ORM\Entity
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository")
+ * @Gedmo\SoftDeleteable
  */
-class SepaDebitMandate implements \ArrayAccess, SoftDeletableInterface
+class SepaDebitMandate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use SoftDeletableTrait;
+  use \Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")

@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entites;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 /**Finance and bank related stuff. */
 class FinanceService
@@ -49,7 +50,7 @@ class FinanceService
   /** @var EventsService */
   private $eventsService;
 
-  /** @var SepaDebitMandatesRepository */
+  /** @var Repositories\SepaDebitMandatesRepository */
   private $mandatesRepository;
 
   public function __construct(
@@ -339,81 +340,79 @@ class FinanceService
    * Store a SEPA-mandate, possibly with only partial
    * information. mandateReference, musicianId and projectId are
    * required.
+   *
+   * @todo Switch to \Doctrine\ORM entities, i.e. $mandate should at
+   * least optionally be an Entities\SepaDebitMandate.
    */
-  public function storeSepaMandate($mandate)
+  public function storeSepaMandate($newMandate)
   {
     $result = false;
 
-    if (!is_array($mandate) ||
-        !isset($mandate['mandateReference']) ||
-        !isset($mandate['musicianId']) ||
-        !isset($mandate['projectId'])) {
+    if (!is_array($newMandate) ||
+        !isset($newMandate['mandateReference']) ||
+        !isset($newMandate['musicianId']) ||
+        !isset($newMandate['projectId'])) {
       return false;
     }
 
-    if (isset($mandate['sequenceType'])) {
-      $sequenceType = $mandate['sequenceType'];
-      $mandate['nonrecurring'] = $sequenceType == 'once';
-      unset($mandate['sequenceType']);
+    if (isset($newMandate['sequenceType'])) {
+      $sequenceType = $newMandate['sequenceType'];
+      $newMandate['nonrecurring'] = $sequenceType == 'once';
+      unset($newMandate['sequenceType']);
     }
 
-    $ref = $mandate['mandateReference'];
-    $mus = $mandate['musicianId'];
-    $prj = $mandate['projectId'];
+    $ref = $newMandate['mandateReference'];
+    $mus = $newMandate['musicianId'];
+    $prj = $newMandate['projectId'];
 
     // Convert to a date format understood by mySQL.
+    // @todo use \DateTime objects.
     $dateFields = [ 'lastUsedDate', 'mandateDate', ];
     foreach ($dateFields as $date) {
-      if (!empty($mandate[$date])) {
-        $stamp = strtotime($mandate[$date]);
+      if (!empty($newMandate[$date])) {
+        $stamp = strtotime($newMandate[$date]);
         $value = date('Y-m-d', $stamp);
         if ($stamp != strtotime($value)) {
           return false;
         }
-        $mandate[$date] = $value;
+        $newMandate[$date] = $value;
       } else {
-        unset($mandate[$date]);
+        unset($newMandate[$date]);
       }
     }
 
-    $this->encryptSepaMandate($mandate);
+    $this->encryptSepaMandate($newMandate);
 
     $table = $this->DATA_BASE_INFO['table'];
 
     // fetch the old mandate, but keep the old values encrypted
-    $oldMandate = $this->fetchSepaMandate($prj, $mus, false);
-    if ($oldMandate) {
+    $mandate = $this->fetchSepaMandate($prj, $mus, false);
+    if (!empty($mandate)) {
       // Sanity checks
-      if (!is_array($oldMandate) ||
-          !isset($oldMandate['mandateReference']) ||
-          !isset($oldMandate['musicianId']) ||
-          !isset($oldMandate['projectId']) ||
-          $oldMandate['mandateReference'] != $ref ||
-          $oldMandate['musicianId'] != $mus ||
-          $oldMandate['projectId'] != $prj) {
+      if (!isset($mandate['mandateReference']) ||
+          !isset($mandate['musicianId']) ||
+          !isset($mandate['projectId']) ||
+          $mandate['mandateReference'] != $ref ||
+          $mandate['musicianId'] != $mus ||
+          $mandate['projectId'] != $prj) {
         return false;
       }
       // passed: issue an update query
-      foreach ($mandate as $key => $value) {
+      foreach ($newMandate as $key => $value) {
         if (empty($value) && $key != 'lastUsedDate') {
-          unset($mandate[$key]);
+          unset($newMandate[$key]);
+          $value = null;
         }
-      }
-      $where = "`mandateReference` = '".$ref."'";
-      $result = mySQL::update($table, $where, $mandate, $handle);
-      if ($result !== false) {
-        mySQL::logUpdate($table, 'id', $oldMandate, $mandate, $handle);
+        $mandate[$key] = $value; // @todo check date and time-stamps.
       }
     } else {
-      // insert query
-      $result = mySQL::insert($table, $mandate, $handle);
-      if ($result !== false) {
-        mySQL::logInsert($table, mySQL::newestIndex($handle), $mandate, $handle);
+      $mandate = Entities\SepaDebitMandate::create();
+      foreach ($newMandate as $key => $value) {
+        $mandate[$key] = $value; // @todo check date and time-stamps.
       }
-
+      $this->persist($mandate);
     }
-
-    return $result;
+    $this->flush($mandate); // persist
   }
 
   /**Compute usage data for the given mandate reference*/
@@ -459,31 +458,18 @@ class FinanceService
     return $months >= $this->SEPA_MANDATE_EXPIRE_MONTHS;
   }
 
-  /**Deactivate a SEPA-mandate (timeout, withdrawn, erroneous data
+  /**
+   * Deactivate a SEPA-mandate (timeout, withdrawn, erroneous data
    * etc.). This flags the mandate as deleted, but we have to keep
    * the data for the book-keeping.
    *
    * @param string $mandateReference The mandate reference string.
    *
-   * @param mixed $handle Optional data-base handle.
-   *
+   * @return ?Entities\SepaDebitMandate
    */
-  public function deactivateSepaMandate($mandateReference)
+  public function deactivateSepaMandate($mandateReference):?Entities\SepaDebitMandate
   {
-    $table = 'SepaDebitMandates';
-    $where = "`mandateReference` = '$mandateReference'";
-    $oldValues = mySQL::fetchRows($table, $where, null, $handle);
-
-    $newValues = [ 'active' => 0, ];
-    $result = mySQL::update($table, $where, $newValues, $handle);
-
-    if ($result !== false) {
-      mySQL::logUpdate($table, 'mandateReference',
-                       [ 'mandateReference' => $mandateReference, ],
-                       $newValues, $handle);
-    }
-
-    return true; // hopefully
+    return !empty($this->mandatesRepository->ban($mandateReference));
   }
 
   /**Erase a SEPA-mandate. This is important data, so we require the
@@ -493,25 +479,7 @@ class FinanceService
    */
   public function deleteSepaMandate($mandateReference)
   {
-    $usage = $this->mandateReferenceUsage($mandateReference, true);
-
-    if (!empty($usage['LastUsed'])) {
-      $result = $this->deactivateSepaMandate($mandateReference);
-    } else {
-
-      $table = 'SepaDebitMandates';
-      $where = "`mandateReference` = '$mandateReference'";
-      $oldValues = mySQL::fetchRows($table, $where, null, $handle);
-
-      $query = "DELETE FROM `".$table."` WHERE ".$where;
-      $result = mySQL::query($query, $handle);
-
-      if ($result !== false && count($oldValues) > 0) {
-        mySQL::logDelete($table, 'id', $oldValues[0], $handle);
-      }
-    }
-
-    return $result !== false; // hopefully
+    return !empty($this->mandatesRepository->remove($mandateReference));
   }
 
   /**Verify the given mandate, throw an
