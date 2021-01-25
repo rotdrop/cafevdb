@@ -4916,7 +4916,7 @@ class phpMyEdit
 			}
 		}
 		$affected_rows = 0;
-		$upddateResult;
+		$updateResult = true;
 		foreach ($query_groups as $tablename => $query) {
 			if ($query === '') {
 				continue;
