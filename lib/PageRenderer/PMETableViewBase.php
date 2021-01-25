@@ -373,6 +373,24 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   }
 
   /**
+   * Disable PME logging if it was enabled.
+   */
+  public static function suspendLoggingTrigger($pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  {
+    $pme->setLogging(false);
+    return true;
+  }
+
+  /**
+   * Resume PME logging if it was enabled at all.
+   */
+  public static function resumeLoggingTrigger($pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  {
+    $pme->setLogging(true);
+    return true;
+  }
+
+  /**
    * phpMyEdit calls the triggers (callbacks) with the following arguments:
    *
    * @param $pme The phpMyEdit instance
@@ -449,7 +467,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
-    $this->logInfo('CHANGESETS: '.print_r($changeSets, true));
+    $this->logDebug('CHANGESETS: '.print_r($changeSets, true));
 
     foreach ($this->joinStructure as $joinInfo) {
       if (!empty($joinInfo['read_only'])) {
@@ -465,7 +483,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       $changeSet = $changeSets[$table];
-      $this->logInfo('CHANGESET '.$table.' '.print_r($changeSet, true));
+      $this->logDebug('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
@@ -611,8 +629,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $field);
         }
       } else { // !multiple, simply update
-        if (false || $joinInfo['nullable']) {
-          // probably  easier
+        if (true) {
+          // Note: this implies an additional fetch from the database,
+          // however, in the long run the goal would be to switch to
+          // Doctrine/ORM for everything. So we live with it for the
+          // moment.
           $entityId = $this->extractKeyValues($meta, $identifier);
           $entity = $this->find($entityId);
           if (empty($entity)) {
@@ -621,13 +642,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $entity[$key] = $value;
             }
           }
-          $logOld = [];
-          $logNew = [];
           foreach ($changeSet as $column => $field) {
             $entity[$column] = $newvals[$field];
             Util::unsetValue($changed, $field);
-            $logOld[$column] = $oldvals[$field];
-            $logNew[$column] = $newvals[$field];
           }
           $this->persist($entity);
         } else {
@@ -641,16 +658,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
           $qb = $repository->createQueryBuilder('e')
                            ->update();
-          $logOld = [];
-          $logNew = [];
           foreach ($changeSet as $column => $field) {
             $parameter = $column.'Value';
             $qb->set('e.'.$this->property($column), ':'.$parameter)
                ->setParameter($parameter, $newvals[$field]);
             $this->logDebug("Unset $field in changed");
             Util::unsetValue($changed, $field);
-            $logOld[$column] = $oldvals[$field];
-            $logNew[$column] = $newvals[$field];
           }
           foreach ($this->extractKeyValues($meta, $identifier) as $column => $value) {
             $parameter = $column.'Key';
@@ -671,7 +684,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                       [ print_r($changed, true), $this->pme->tb ]));
       }
     }
-    return !empty($changed);
+    $this->logDebug('BEFORE UPD: '.print_r($changed, true));
+    return true; //!empty($changed);
   }
 
   /**
