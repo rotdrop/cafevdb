@@ -174,13 +174,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pmeOptions['triggers']['update']['before'][] =
       $this->pmeOptions['triggers']['copy']['before'][] =
       $this->pmeOptions['triggers']['insert']['before'][] =
-        [ __CLASS__, 'beforeAnythingTrimAnything' ];
+        [ $this, 'beforeAnythingTrimAnything' ];
 
     $this->pmeOptions['triggers']['update']['before'][] =
        $this->pmeOptions['triggers']['insert']['before'][] =
        $this->pmeOptions['triggers']['deeleteinsert']['before'][] =
          function($pme, $op, $step, &$oldvals, &$changed, &$newvals) {
            $this->changeSetSize = count($changed);
+           return true;
          };
 
     $this->pmeOptions['triggers']['update']['after'][] = function($pme) {
@@ -188,6 +189,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         '%n data field affected',
         '%n data fields affected',
         $this->changeSetSize);
+      return true;
     };
 
     // @TODO: the following should be done only on demand and is
@@ -463,7 +465,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * self::beforeUpdateRemoveUnchanged() would silently ignore the
    * sanitized values.
    */
-  public static function beforeAnythingTrimAnything($pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  public function beforeAnythingTrimAnything($pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
     foreach ($newvals as $key => &$value) {
       if (!is_scalar($value)) { // don't trim arrays
