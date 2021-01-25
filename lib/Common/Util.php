@@ -30,7 +30,16 @@ class Util
 
   private static $externalScripts = [];
 
-  public static function arrayMergeRecursive(...$arrays)
+  /**
+   * Merge $arrays recursively where later arguments in the list
+   * override the values of previous arguments and numeric keys are
+   * just appended.
+   *
+   * @param ... $arrays
+   *
+   * @return array
+   */
+  public static function arrayMergeRecursive(...$arrays):array
   {
     if (count($arrays) == 0) {
       return [];
