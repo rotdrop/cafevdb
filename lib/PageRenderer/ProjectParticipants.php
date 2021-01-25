@@ -1289,9 +1289,12 @@ WHERE pp.project_id = $projectId",
 
     $opts['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
 
+    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'suspendLoggingTrigger' ];
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateSanitizeExtraFields' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+
+    $opts['triggers']['update']['after'][]  = [ __CLASS__, 'resumeLoggingTrigger' ];
 
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
@@ -1599,9 +1602,9 @@ WHERE pp.project_id = $projectId",
    */
   public function beforeUpdateSanitizeExtraFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
-    $this->logInfo('OLDVALUES '.print_r($oldValues, true));
-    $this->logInfo('NEWVALUES '.print_r($newValues, true));
-    $this->logInfo('CHANGED '.print_r($changed, true));
+    $this->logDebug('OLDVALUES '.print_r($oldValues, true));
+    $this->logDebug('NEWVALUES '.print_r($newValues, true));
+    $this->logDebug('CHANGED '.print_r($changed, true));
 
     foreach ($this->project['extra_fields'] as $extraField) {
       $fieldId = $extraField['id'];
@@ -1613,9 +1616,9 @@ WHERE pp.project_id = $projectId",
       $fieldName = $this->joinTableFieldName($tableName, 'field_value');
       $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
 
-      $this->logInfo('FIELDNAMES '.$fieldName." / ".$groupFieldName);
+      $this->logDebug('FIELDNAMES '.$fieldName." / ".$groupFieldName);
 
-      $this->logInfo("MULT ".$multiplicity);
+      $this->logDebug("MULT ".$multiplicity);
       switch ($multiplicity) {
       case 'groupofpeople':
         if (array_search($groupFieldName, $changed) === false) {

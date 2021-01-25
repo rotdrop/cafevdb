@@ -632,8 +632,11 @@ make sure that the musicians are also automatically added to the
     }
 
     // @@TODO This will have to get marrried with interleaved ORM stuff
+    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'suspendLoggingTrigger' ];
     $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+
+    $opts['triggers']['update']['after'][]  = [ __CLASS__, 'resumeLoggingTrigger' ];
 
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeAnythingTrimAnything' ];
     $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'addUUIDTrigger' ];
