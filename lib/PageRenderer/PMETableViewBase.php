@@ -788,6 +788,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           if (!empty($joinTableValue['table'])) {
             $mainTableColumn = $joinTableValue['column']?: 'id';
             $joinCondition .= $joinTables[$joinTableValue['table']].'.'.$mainTableColumn;
+          } else if ($joinTableValue['value'] === null) {
+            $joinCondition = '$join_table.'.$joinTableKey.' IS NULL';
           } else if (!empty($joinTableValue['value'])) {
             $joinCondition .= $joinTableValue['value'];
           }

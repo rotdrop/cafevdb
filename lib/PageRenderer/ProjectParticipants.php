@@ -56,6 +56,7 @@ class ProjectParticipants extends PMETableViewBase
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const EXTRA_FIELDS_TABLE = 'ProjectExtraFields';
   const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
+  const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
   const FIXED_COLUMN_SEP = '@';
 
   /**
@@ -135,6 +136,17 @@ class ProjectParticipants extends PMETableViewBase
         ],
       ],
       'column' => 'field_id',
+    ],
+    // SepaDebitMandates
+    [
+      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+      'entity' => Entities\SepaDebitMandate::class,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'project_id' => false,
+        'deleted_at' => [ 'value' => null ],
+      ],
+      'column' => 'sequence',
     ],
   ];
 
