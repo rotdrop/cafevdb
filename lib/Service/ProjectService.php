@@ -77,10 +77,12 @@ class ProjectService
     $this->l = $this->l10n();
   }
 
-  /**Generate an option table with all participants, suitable to be
+  /**
+   * Generate an option table with all participants, suitable to be
    * staffed into Navigation::selectOptions(). This is a single
    * select, only one musician may be preselected. The key is the
-   * musician id. The options are meant for a single-choice select box.
+   * musician id. The options are meant for a single-choice select
+   * box.
    *
    * @param $projectId The id of the project to fetch the musician options from
    *
