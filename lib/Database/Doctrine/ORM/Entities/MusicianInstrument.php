@@ -38,7 +38,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="MusicianInstrument", options={"comment":"Join-table Musicians -> Instruments"})
  * @ORM\Entity
- * @Gedmo\Loggable
  */
 class MusicianInstrument implements \ArrayAccess
 {
