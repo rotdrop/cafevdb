@@ -34,7 +34,7 @@ if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);
-  if ($projectName === $appConifg->getConfigValue('memberTable', false)) {
+  if ($projectName === $appConfig->getConfigValue('memberTable', false)) {
     $nav .= $pageNavigation->pageControlElement('insurances');
   }
   $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
@@ -50,7 +50,7 @@ echo $this->inc('part.common.header',
                   'navigationcontrols' => $nav,
                   'header' => $renderer->headerText() ]);
 
-if ($roles->inTreasurerGroup()) {
+if (true || $roles->inTreasurerGroup()) {
   $renderer->render();
 } else {
   echo '<div class="specialrole error">'.

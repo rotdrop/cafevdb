@@ -34,15 +34,14 @@ $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $proje
 $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-extra-fields', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
-// @TODO CHECK! TO ID!
-// if ($oles->inTreasurerGroup()) {
-//   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
-//   $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
-//   $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);
-//   if ($projectName === $appConifg->getConfigValue('memberTable', false)) {
-//     $nav .= $pageNavigation->pageControlElement('insurances');
-//   }
-// }
+if (true || $roles->inTreasurerGroup()) {
+  $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);
+  if ($projectName === $appConfig->getConfigValue('memberTable', false)) {
+    $nav .= $pageNavigation->pageControlElement('insurances');
+  }
+}
 $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('all');
 $nav .= $pageNavigation->pageControlElement('instruments', $projectName, $projectId);
