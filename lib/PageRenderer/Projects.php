@@ -228,13 +228,13 @@ class Projects extends PMETableViewBase
     $opts['fdd']['temporal_type'] = [
       'name'     => $this->l->t('Kind'),
       'select'   => 'D',
-      'options'  => 'AVCPD', // auto increment
+      'options'  => 'LFAVCPD', // auto increment
       'maxlen'   => 11,
       'css'      => ['postfix' => ' tooltip-right'],
       'values2'  => ['temporary' => $this->l->t('temporary'),
                      'permanent' => $this->l->t('permanent')],
       'default'  => 'temporary',
-      'sort'     => false,
+      'sort'     => true,
       'tooltip' => $this->toolTipsService['project-kind'],
     ];
 
@@ -452,10 +452,10 @@ __EOT__;
     // anyway, and we use Ajax calls to verify the form data.
 
     $opts['triggers']['update']['before'][]  = [ $this, 'addOrChangeInstrumentation' ];
-    $opts['triggers']['update']['before'][]  = [ __CLASS__, 'beforeUpdateTrigger' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateTrigger' ];
     $opts['triggers']['update']['after'][]   = [ $this, 'afterUpdateTrigger' ];
 
-    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'beforeInsertTrigger' ];
+    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertTrigger' ];
     $opts['triggers']['insert']['after'][]   = [ $this, 'addOrChangeInstrumentation' ];
     $opts['triggers']['insert']['after'][]   = [ $this, 'afterInsertTrigger' ];
 
@@ -698,7 +698,7 @@ project without a flyer first.");
    * @param boolean $requireYear Year in last four characters is
    * mandatory.
    */
-  private static function sanitizeName($projectName, $requireYear = false)
+  private function sanitizeName($projectName, $requireYear = false)
   {
     $projectYear = substr($projectName, -4);
     if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
@@ -739,10 +739,10 @@ project without a flyer first.");
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public static function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     if (isset($newvals['name']) && $newvals['name']) {
-      $newvals['name'] = self::sanitizeName($newvals['name']);
+      $newvals['name'] = $this->sanitizeName($newvals['name']);
       if ($newvals['name'] === false) {
         return false;
       }
@@ -769,13 +769,13 @@ project without a flyer first.");
    *
    * @bug Convert this to a function triggering a "user-friendly" error message.
    */
-  public static function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     if (array_search('name', $changed) === false) {
       return true;
     }
     if (isset($newvals['name']) && $newvals['name']) {
-      $newvals['name'] = self::sanitizeName($newvals['name']);
+      $newvals['name'] = $this->sanitizeName($newvals['name']);
       if ($newvals['name'] === false) {
         return false;
       }
@@ -884,7 +884,7 @@ project without a flyer first.");
   /**
    * @copydoc Projects::afterInsertTrigger()
    */
-  public static function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     if (array_search('name', $changed) === false) {
       // Nothing more has to be done if the name stays the same
