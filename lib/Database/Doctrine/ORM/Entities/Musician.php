@@ -438,12 +438,22 @@ class Musician implements \ArrayAccess
   /**
    * Set birthday.
    *
-   * @param \DateTime|null $birthday
+   * @param \DateTime|string|null $birthday If a string is passed it
+   *        has to be in a format understood by the constructor of
+   *        \DateTime.
+   *
    *
    * @return Musician
    */
   public function setBirthday($birthday = null)
   {
+    if (is_string($birthday)) {
+      try {
+        $birthday = new \DateTime($birthday);
+      } catch (\Throwable $t) {
+        throw new \Exception("Could not convert `$birthday' to DateTime-object", $t->getCode(), $t);
+      }
+    }
     $this->birthday = $birthday;
 
     return $this;
