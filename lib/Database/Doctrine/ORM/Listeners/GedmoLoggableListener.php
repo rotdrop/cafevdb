@@ -34,6 +34,31 @@ use Doctrine\Persistence\ObjectManager;
  */
 class GedmoLoggableListener extends \Gedmo\Loggable\LoggableListener
 {
+  /** @var string */
+  private $remoteAddress;
+
+  /**
+   * @param mixed $userId string or null
+   *
+   * @param mixed $remoteAddress string or null
+   */
+  public function __construct($userId = null, $remoteAddress = null)
+  {
+    parent::__construct();
+    $this->username = $userId;
+    $this->remoteAddress = $remoteAddress;
+  }
+
+  /**
+   * Set remote address for logging.
+   *
+   * @param mixed string or null
+   */
+  public function setRemoteAddress($remoteAddress)
+  {
+    $this->remoteAddress = $remoteAddress;
+  }
+
   public function getConfiguration(ObjectManager $objectManager, $class)
   {
     $config = parent::getConfiguration($objectManager, $class);
@@ -58,5 +83,13 @@ class GedmoLoggableListener extends \Gedmo\Loggable\LoggableListener
     return isset(self::$configurations[$this->name][$class]['logEntryClass']) ?
       self::$configurations[$this->name][$class]['logEntryClass'] :
       CAFEVDB\Entities\LogEntry::class;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function prePersistLogEntry($logEntry, $object)
+  {
+    $logEntry->setRemoteAddress($this->remoteAddress);
   }
 }

@@ -22,9 +22,9 @@
 
 namespace OCA\CAFEVDB\Database;
 
+use OCP\IRequest;
 use OCP\ILogger;
 use OCP\IL10N;
-use \Psr\Log\LoggerInterface;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
@@ -72,24 +72,35 @@ class EntityManager extends EntityManagerDecorator
   /** @var CloudLogger */
   private $sqlLogger;
 
-  /** @var Psr\Log\LoggerInterface */
-  private $psrLogger;
+  /** @var array Cache of entity names indexed by table names. */
+  private $entityNames = null;
+
+  /** @var string */
+  private $userId;
+
+  /** @var IRequest */
+  private $request;
+
+  /** @var IUserSession */
+  private $userSession;
 
   // @@TODO catch failures, allow construction without database for
   // initial setup.
   public function __construct(
     EncryptionService $encryptionService
     , CloudLogger $sqlLogger
+    , IRequest $request
     , ILogger $logger
     , IL10N $l10n
-    , LoggerInterface $psrLogger
   )
   {
     $this->encryptionService = $encryptionService;
     $this->sqlLogger = $sqlLogger;
+    $this->request = $request;
+    $this->userSession = $userSession;
     $this->logger = $logger;
-    $this->psrLogger = $psrLogger;
     $this->l = $l10n;
+    $this->userId = $this->encryptionService->getUserId()?:$this->l->t('unknown');
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
     if ($this->connected()) {
@@ -97,6 +108,19 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
+  /*
+   * @return null|string The user-id of the currently logged-in user
+   * if known.
+   */
+  public function getUserId():string
+  {
+    return $this->userId;
+  }
+
+  /*
+   * Reopen the entity-manager after it has been closed, e.g. after a
+   * failed transaction.
+   */
   public function reopen()
   {
     $this->close();
@@ -225,8 +249,8 @@ class EntityManager extends EntityManagerDecorator
 
   private function createKnpConfiguration($config, $evm)
   {
-    $loggable = new \Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber($this->psrLogger);
-    $evm->addEventSubscriber($loggable);
+    //$loggable = new \Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber($this->psrLogger);
+    //$evm->addEventSubscriber($loggable);
 
     $timeStampable = new \Knp\DoctrineBehaviors\EventSubscriber\TimestampableSubscriber('datetime');
     $evm->addEventSubscriber($timeStampable);
@@ -287,9 +311,11 @@ class EntityManager extends EntityManagerDecorator
 
     // loggable
     //$loggableListener = new \Gedmo\Loggable\LoggableListener;
-    $loggableListener = new Doctrine\ORM\Listeners\GedmoLoggableListener;
+    $userName = $this->userId;
+    $remoteAddress = $this->request->getRemoteAddress();
+    $loggableListener =
+      new Doctrine\ORM\Listeners\GedmoLoggableListener($userName, $remoteAddress);
     $loggableListener->setAnnotationReader($cachedAnnotationReader);
-    $loggableListener->setUsername($this->encryptionService->userId()?:'unknown');
     $evm->addEventSubscriber($loggableListener);
 
     // timestampable
@@ -485,6 +511,24 @@ class EntityManager extends EntityManagerDecorator
       $entityId[$field] = $columnValues[$columnName];
     }
     return $entityId;
+  }
+
+  private function createTableLookup()
+  {
+    $this->entityNames = [];
+    $classNames = $this->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
+    foreach ($classNames as $className) {
+      $classMetaData = $this->getClassMetadata($className);
+      $this->entityNames[$classMetaData->getTableName()] = $className;
+    }
+  }
+
+  public function entityOfTable(string $table): ?string
+  {
+    if (empty($this->entityNames)) {
+      $this->createTableLookup();
+    }
+    return $this->entityNames[$table]?:null;
   }
 
 }

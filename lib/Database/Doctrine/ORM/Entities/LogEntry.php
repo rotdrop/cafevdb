@@ -64,7 +64,38 @@ class LogEntry extends Loggable\Entity\MappedSuperclass\AbstractLogEntry
    */
   protected $objectId;
 
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=45, nullable=true)
+   */
+  private $remoteAddress;
+
   public function __construct() {
     $this->arrayCTOR();
+  }
+
+  /**
+   * Set remoteAddress.
+   *
+   * @param Image $remoteAddress|null
+   *
+   * @return Musician
+   */
+  public function setRemoteAddress($remoteAddress = null)
+  {
+    $this->remoteAddress = $remoteAddress;
+
+    return $this;
+  }
+
+  /**
+   * Get remoteAddress.
+   *
+   * @return Image|null
+   */
+  public function getRemoteAddress()
+  {
+    return $this->remoteAddress;
   }
 }
