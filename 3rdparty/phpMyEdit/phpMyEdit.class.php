@@ -263,40 +263,56 @@ class phpMyEdit
 	/*
 	 * Handle logging
 	 */
-	public function logQuery($operation, $oldvals, $changed, $newvals)
+	protected function logQuery($operation, $oldvals, $changed, $newvals)
 	{
 		switch($operation) {
 		case 'insert':
 			$query = sprintf('INSERT INTO %s'
 							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
-							 .' VALUES (NOW(), "%s", "%s", $operation, "%s", "%s", "", "", "%s")',
-							 $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
-							 addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
-							 addslashes(implode(',', $this->rec)), addslashes(serialize($newvals)));
-			$this->myquery($query, __LINE__);
+							 .' VALUES (NOW(), "%s", "%s", "%s", "%s", "%s", "", "", "%s")',
+							 $this->logtable,
+							 addslashes($this->get_server_var('REMOTE_USER')),
+							 addslashes($this->get_server_var('REMOTE_ADDR')),
+							 $operation,
+							 addslashes($this->tb),
+							 addslashes(implode(',', $this->rec)),
+							 addslashes(serialize($newvals)));
 			break;
-		case 'udpate':
+		case 'update':
+			$changeSetOld = [];
+			$changeSetNew = [];
 			foreach ($changed as $key) {
-				$qry = sprintf('INSERT INTO %s'
-							   .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
-							   .' VALUES (NOW(), "%s", "%s", $operation, "%s", "%s", "%s", "%s", "%s")',
-							   $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
-							   addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
-							   addslashes(implode(',',$this->rec)), addslashes($key),
-							   addslashes($oldvals[$key]), addslashes($newvals[$key]));
-				$this->myquery($qry, __LINE__);
+				$changeSetOld[$key] = $oldvals[$key];
+				$changeSetNew[$key] = $newvals[$key];
 			}
+			$query = sprintf('INSERT INTO %s'
+							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
+							 .' VALUES (NOW(), "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")',
+							 $this->logtable,
+							 addslashes($this->get_server_var('REMOTE_USER')),
+							 addslashes($this->get_server_var('REMOTE_ADDR')),
+							 $operation,
+							 addslashes($this->tb),
+							 addslashes(implode(',',$this->rec)),
+							 addslashes($key),
+							 addslashes(serialize($changeSetOld)),
+							 addslashes(serialize($changeSetNew)));
 			break;
 		case 'delete':
 			$query = sprintf('INSERT INTO %s'
 							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
-							 .' VALUES (NOW(), "%s", "%s", $operation, "%s", "%s", "", "%s", "")',
-							 $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
-							 addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
-							 addslashes(implode(',', $this->rec)), addslashes(serialize($oldvals)));
-			$this->myquery($query, __LINE__);
-
+							 .' VALUES (NOW(), "%s", "%s", "%s", "%s", "%s", "", "%s", "")',
+							 $this->logtable,
+							 addslashes($this->get_server_var('REMOTE_USER')),
+							 addslashes($this->get_server_var('REMOTE_ADDR')),
+							 $operation,
+							 addslashes($this->tb),
+							 addslashes(implode(',', $this->rec)),
+							 addslashes(serialize($oldvals)));
 			break;
+		}
+		if (!empty($query)) {
+			$this->myquery($query, __LINE__);
 		}
 	}
 
@@ -4687,23 +4703,7 @@ class phpMyEdit
 		}
 		// Note change in log table
 		if ($this->logtable) {
-			if (empty($key_col_val)) {
-				if (count($this->key) == 1) {
-					$key_col_val = $this->rec;
-				} else {
-					$key_col_val = [];
-					foreach (array_keys($this->key) as $key) {
-						$key_col_val[$key] = '?';
-					}
-				}
-			}
-			$query = sprintf('INSERT INTO %s'
-							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
-							 .' VALUES (NOW(), "%s", "%s", "insert", "%s", "%s", "", "", "%s")',
-							 $this->logtable, addslashes($this->get_server_var('REMOTE_USER')),
-							 addslashes($this->get_server_var('REMOTE_ADDR')), addslashes($this->tb),
-							 addslashes(implode(',', $key_col_val)), addslashes(serialize($newvals)));
-			$this->myquery($query, __LINE__);
+			$this->logQuery('insert', $oldvals, $changed, $newvals);
 		}
 		// After trigger
 		if ($this->exec_triggers('insert', 'after', $oldvals, $changed, $newvals) == false) {
@@ -4795,8 +4795,10 @@ class phpMyEdit
 			if (isset($stamps[$fd])) {
 				$oldstamp = $oldvals[$fd] != "" ? strtotime($oldvals[$fd]) : false;
 				//error_log($fd." Stamp: '".$stamps[$fd]."' old Stamp: '".$oldstamp."' oldvals: '".$oldvals[$fd]."' value '".$value."'");
+				//$this->logInfo($fd." Stamp: '".$stamps[$fd]."' old Stamp: '".$oldstamp."' oldvals: '".$oldvals[$fd]."' value '".$value."'");
 				if ($oldstamp != $stamps[$fd]) {
 					//error_log('Changed '.$fd.' "'.$oldstamps.'" "'.$stamps[$fd].'"');
+					//$this->logInfo('Changed '.$fd.' "'.$oldstamps.'" "'.$stamps[$fd].'"');
 					$changed[] = $fd;
 				} else {
 					$oldvals[$fd] = $value; // force equal, no reason to change.
@@ -4947,6 +4949,7 @@ class phpMyEdit
 		$query_newrec .= ' WHERE '.$this->key_record_where();
 		$res	 = $this->myquery($query_newrec, __LINE__);
 		if ($res === false) {
+			$this->logError('Could not query new records');
 			return false;
 		}
 		$newvals = $this->sql_fetch($res);
@@ -4954,8 +4957,14 @@ class phpMyEdit
 		// Creating array of changed keys ($changed)
 		$changed = array();
 		foreach ($newvals as $fd => $value) {
-			if ($value != $oldvals[$fd])
+			$k = $this->fdn[$fd];
+			if ($this->col_has_datemask($k)) {
+				if (strtotime($value) != strtotime($oldvals[$fd])) {
+					$changed[] = $fd;
+				}
+			} else if ($value != $oldvals[$fd]) {
 				$changed[] = $fd;
+			}
 		}
 		// Notify list
 		if (@$this->notify['update'] || @$this->notify['all']) {
