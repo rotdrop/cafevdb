@@ -22,6 +22,7 @@
 
 namespace OCA\CAFEVDB\Database\Legacy\PME;
 
+use \OCP\IRequest;
 use \OCP\ILogger;
 use \OCP\IL10N;
 
@@ -29,6 +30,7 @@ use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\DBALException;
 
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Common\Util;
 
@@ -37,10 +39,14 @@ use OCA\CAFEVDB\Common\Util;
  */
 class PHPMyEdit extends \phpMyEdit
 {
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var Connection */
   private $connection;
+
+  /** @var IRequest */
+  private $request;
 
   private $defaultOptions;
 
@@ -65,17 +71,20 @@ class PHPMyEdit extends \phpMyEdit
    * friends does something useful.
    */
   public function __construct(
-    Connection $connection
+    EntityManager $entityManager
     , IOptions $options
+    , IRequest $request
     , ILogger $logger
     , IL10N $l10n
   )
   {
-    $this->connection = $connection;
+    $this->entityManager = $entityManager;
+    $this->connection = $this->entityManager->getConnection();
     if (empty($this->connection)) {
       throw new \Exception("empty");
     }
     $this->dbh = $connection;
+    $this->request = $request;
     $this->logger = $logger;
     $this->l = $l10n;
     $this->debug = false;
@@ -332,6 +341,65 @@ class PHPMyEdit extends \phpMyEdit
   public function cgiDataName($suffix = '')
   {
     return $this->cgi['prefix']['data'].$suffix;
+  }
+
+  /*
+   * Handle logging
+   */
+  protected function logQuery($operation, $oldvals, $changed, $newvals)
+  {
+    switch($operation) {
+    case 'insert':
+      $query = sprintf('INSERT INTO %s'
+                       .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
+                       .' VALUES (NOW(), "%s", "%s", "%s", "%s", "%s", "", "", "%s")',
+                       $this->logtable,
+                       $this->entityManager->getUserId(),
+                       addslashes($this->request->getRemoteAddress()),
+                       $operation,
+                       addslashes($this->tb),
+                       addslashes(implode(',', $this->rec)),
+                       addslashes(serialize($newvals)));
+      break;
+    case 'update':
+      if (empty($changed)) {
+        return;
+      }
+      $changeSetOld = [];
+      $changeSetNew = [];
+      foreach ($changed as $key) {
+        $changeSetOld[$key] = $oldvals[$key];
+        $changeSetNew[$key] = $newvals[$key];
+      }
+      $query = sprintf('INSERT INTO %s'
+                       .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
+                       .' VALUES (NOW(), "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")',
+                       $this->logtable,
+                       $this->entityManager->getUserId(),
+                       addslashes($this->request->getRemoteAddress()),
+                       $operation,
+                       addslashes($this->tb),
+                       addslashes(implode(',',$this->rec)),
+                       addslashes(implode(',',$changed)),
+                       addslashes(serialize($changeSetOld)),
+                       addslashes(serialize($changeSetNew)));
+      break;
+    case 'delete':
+      $query = sprintf('INSERT INTO %s'
+                       .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
+                       .' VALUES (NOW(), "%s", "%s", "%s", "%s", "%s", "", "%s", "")',
+                       $this->logtable,
+                       $this->entityManager->getUserId(),
+                       addslashes($this->request->getRemoteAddress()),
+                       $operation,
+                       addslashes($this->tb),
+                       addslashes(implode(',', $this->rec)),
+                       addslashes(serialize($oldvals)));
+      break;
+    }
+    if (!empty($query)) {
+      $this->myquery($query, __LINE__);
+    }
   }
 }
 
