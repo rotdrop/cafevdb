@@ -31,10 +31,11 @@ $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('instruments');
 $nav .= $pageNavigation->pageControlElement('project-extra-fields');
 
-echo $this->inc('part.common.header',
-                [ 'css-prefix' => $css_pfx,
-                  'navigationcontrols' => $nav,
-                  'header' => $renderer->headerText() ]);
+echo $this->inc('part.common.header', [
+  'css-prefix' => $css_pfx,
+  'navigationcontrols' => $nav,
+  'header' => $renderer->headerText()
+]);
 
 // Issue the main part. The method will echo itself
 $renderer->render();
