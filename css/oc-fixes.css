@@ -85,3 +85,8 @@ div[contenteditable="true"].ck.ck-content {
   font-size:unset;
   outline:unset;
 }
+
+/* autocomplete is hidden by setting z-index = 1000 */
+ul.ui-autocomplete.ui-widget.ui-front {
+  z-index:10000;
+}
