@@ -519,10 +519,13 @@ class Navigation
       $title = $this->l->t("Overview over all known projects (start-page).");
       $year = date("Y") - 1;
       $sysPfx = $this->pmeOptions['cgi']['prefix']['sys'];
-      $post = ['projects' => $value,
-               'template' => 'projects',
-               $sysPfx.'qf1_comp' => '>=',
-               $sysPfx.'qf1' => $year];
+      $field = 'year';
+      $post = [
+        'projects' => $value,
+        'template' => 'projects',
+        $sysPfx.'qf'.$field.'_comp' => '>=',
+        $sysPfx.'qf'.$field => $year
+      ];
       break;
 
     case 'project-extra-fields':

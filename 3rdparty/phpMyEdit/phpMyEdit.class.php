@@ -104,7 +104,7 @@ class phpMyEdit
 	var $inc;		// number of records to display
 	var $fm;		// first record to display
 	var $fl;		// is the filter row displayed (boolean)
-	var $fds;		// sql field names
+	var $fds;		// $k => sql field names
 	var $fdn;		// sql field names => $k
 	var $num_fds;	// number of fields
 	var $options;	// options for users: ACDFVPI
@@ -1561,13 +1561,23 @@ class phpMyEdit
 		$query_group_opts = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			$l	  = 'qf'.$k;
-			$lc	  = 'qf'.$k.'_comp';
-			$li	  = 'qf'.$k.'_idx';
+			$lc	  = $l.'_comp';
+			$li	  = $l.'_idx';
 			$m	  = $this->get_sys_cgi_var($l);
 			$mc	  = $this->get_sys_cgi_var($lc);
 			$mi	  = $this->get_sys_cgi_var($li);
 			if (! isset($m) && ! isset($mi)) {
-				continue;
+				// retry with field-name to ease programmatic queries
+				$fd   = $this->fds[$k];
+				$l	  = 'qf'.$fd;
+				$lc	  = $l.'_comp';
+				$li	  = $l.'_idx';
+				$m	  = $this->get_sys_cgi_var($l);
+				$mc	  = $this->get_sys_cgi_var($lc);
+				$mi	  = $this->get_sys_cgi_var($li);
+				if (! isset($m) && ! isset($mi)) {
+					continue;
+				}
 			}
 
 			if ($this->col_needs_having($k)) {
@@ -3732,6 +3742,16 @@ class phpMyEdit
 				$m	= $this->get_sys_cgi_var($l);
 				$mc = $this->get_sys_cgi_var($lc);
 				$mi = $this->get_sys_cgi_var($li)?:[];
+				if (empty($m) && empty($mi)) {
+					// retry with field-name to ease programmatic queries
+					$fd   = $this->fds[$k];
+					$l	  = 'qf'.$fd;
+					$lc	  = $l.'_comp';
+					$li	  = $l.'_idx';
+					$m	  = $this->get_sys_cgi_var($l);
+					$mc	  = $this->get_sys_cgi_var($lc);
+					$mi	  = $this->get_sys_cgi_var($li)?:[];
+				}
 			}
 			echo '<td class="',$css_class_name,'">';
 			if ($this->password($k) || !$this->filtered($k)) {
