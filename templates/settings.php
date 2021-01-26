@@ -31,6 +31,7 @@ style($appName, 'settings');
 style($appName, 'tooltips');
 style($appName, 'about');
 style($appName, 'dialogs');
+style($appName, 'oc-fixes');
 
 script($appName, 'cafevdb');
 script($appName, 'notification');
