@@ -46,6 +46,8 @@ class Projects extends PMETableViewBase
   const TABLE = 'Projects';
   const ENTITY = Entities\Project::class;
   const INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
+  const INSTRUMENTS_TABLE = 'Instruments';
+  const EXTRA_FIELDS_TABLE  = 'ProjectExtraFields';
   const NAME_LENGTH_MAX = 20;
   const POSTER_JOIN = 'ProjectPoster';
   const FLYER_JOIN = 'ProjectFlyer';
@@ -55,6 +57,46 @@ class Projects extends PMETableViewBase
 
   /** @var \OCP\EventDispatcher\IEventDispatcher */
   private $eventDispatcher;
+
+  protected $joinStructure = [
+    [
+      'table' => self::TABLE,
+      'master' => true,
+      'entity' => Entities\Project::class,
+    ],
+    [
+      'table' => self::INSTRUMENTATION_NUMBERS_TABLE,
+      'entity' => Entities\ProjectInstrumentationNumber::class,
+      'identifier' => [
+        'project_id' => 'id',
+        'instrument_id' => false,
+        'voice' => false,
+      ],
+      'column' => 'instrument_id',
+    ],
+    [
+      'table' => self::INSTRUMENTS_TABLE,
+      'entity' => Entities\Instrument::class,
+      'readonly' => true,
+      'identifier' => [
+        'id' => [
+          'table' => self::INSTRUMENTATION_NUMBERS_TABLE,
+          'column' => 'instrument_id',
+        ],
+      ],
+      'column' => 'id',
+    ],
+    [
+      'table' => self::EXTRA_FIELDS_TABLE,
+      'entity' => Entities\ProjectExtraField::class,
+      'readonly' => true,
+      'identifier' => [
+        'project_id' => 'id',
+        'id' => false,
+      ],
+      'column' => 'id',
+    ],
+  ];
 
   public function __construct(
     ConfigService $configService
@@ -167,6 +209,8 @@ class Projects extends PMETableViewBase
       'sort'     => true,
     ];
 
+    $joinTables = $this->defineJoinStructure($opts);
+
     $currentYear = date('Y');
     $yearRange = $this->getDatabaseRepository(self::ENTITY)->findYearRange();
     $yearValues = [' '];
@@ -202,14 +246,13 @@ class Projects extends PMETableViewBase
       'css'      => ['postfix' => ' projectname control'],
       'sort'     => true,
       'values|LF'   => [
-        'table' => self::TABLE,
-        'column' => 'name',
+        //'table' => self::TABLE,
+        //'column' => 'name',
         'description' => 'name',
         'groups' => 'year',
         'orderby' => '$table.`year` DESC',
       ],
     ];
-
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
@@ -225,7 +268,7 @@ class Projects extends PMETableViewBase
       ];
     }
 
-    $opts['fdd']['temporal_type'] = [
+    $opts['fdd']['type'] = [
       'name'     => $this->l->t('Kind'),
       'select'   => 'D',
       'options'  => 'LFAVCPD', // auto increment
@@ -257,53 +300,25 @@ class Projects extends PMETableViewBase
       'sort'     => false
     ];
 
-    $projInstIdx = count($opts['fdd']);
-    $opts['fdd']['project_instrumentation_join'] = [
-      'name'   => $this->l->t('Instrumentation Join Pseudo Field'),
-      'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$projInstIdx.'.instrument_id
-  ORDER BY PMEjoin'.$projInstIdx.'.instrument_id ASC)',
-      'input'  => 'VRH',
-      'filter' => 'having', // need "HAVING" for group by stuff
-      'values' => [
-        'table'       => self::INSTRUMENTATION_NUMBERS_TABLE,
-        'column'      => 'instrument_id',
-        'description' => [ 'columns' => [ 'instrument_id', ], ],
-        'join'        => '$join_table.project_id = $main_table.id',
-      ]
-    ];
-
-    $opts['fdd']['instrumentation_key'] = [
-      'name'  => $this->l->t('Instrumentation Key'),
-      'sql'   => 'GROUP_CONCAT(DISTINCT PMEjoin'.$projInstIdx.'.instrument_id
-  ORDER BY PMEjoin'.$projInstIdx.'.instrument_id ASC)',
-      'input' => 'SRH',
-      'filter' => 'having', // need "HAVING" for group by stuff
-    ];
-
-    $instIdx = count($opts['fdd']);
-    $opts['fdd']['instrumentation'] = [
-      'name'        => $this->l->t('Instrumentation'),
-      'input'       => 'S', // skip
-      'sort'        => true,
-      'display|LF'  => ["popup" => 'data',
-                        "prefix" => '<div class="projectinstrumentation">',
-                        "postfix" => '</div>'],
-      'css'         => ['postfix' => ' projectinstrumentation tooltip-top'],
-      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.id ORDER BY PMEjoin'.$instIdx.'.id ASC)',
-      //'input' => 'V', not virtual, tweaked by triggers
-      'filter'      => 'having',
-      'select'      => 'M',
-      'maxlen'      => 11,
-      'values' => [
-        'table'       => 'Instruments',
-        'column'      => 'id',
-        'description' => 'id',
-        'orderby'     => 'sort_order',
-        'join'        => '$join_table.id = PMEjoin'.$projInstIdx.'.instrument_id'
-      ],
-      'values2'     => $this->instrumentInfo['byId'],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
+      [
+        'name' => $this->l->t('Instrumentation'),
+        'select' => 'M',
+        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'display|LF'  => ["popup" => 'data',
+                          "prefix" => '<div class="projectinstrumentation">',
+                          "postfix" => '</div>'],
+        'css'         => ['postfix' => ' projectinstrumentation tooltip-top'],
+        'values' => [
+          'column' => 'id',
+          'description' => 'name',
+          'orderby' => '$table.sort_order ASC',
+          'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        ],
+        'values2' => $this->instrumentInfo['byId'],
+        'valueGroups' => $this->instrumentInfo['idGroups'],
+      ]);
 
     $opts['fdd']['tools'] = [
       'name'     => $this->l->t('Toolbox'),
@@ -322,64 +337,38 @@ class Projects extends PMETableViewBase
       'escape'   => false
     ];
 
-    $opts['fdd']['service_charge'] = $this->defaultFDD['money'];
-    $opts['fdd']['service_charge']['name'] = $this->l->t("Project Fee");
-    $opts['fdd']['service_charge']['maxlen'] = 8;
-    $opts['fdd']['service_charge']['tooltip'] = $this->l->t('Default project fee for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
-    $opts['fdd']['service_charge']['display|LF'] = ['popup' => 'tooltip'];
-    $opts['fdd']['service_charge']['css']['postfix'] .= ' tooltip-top';
-
-    $opts['fdd']['pre_payment'] = $this->defaultFDD['money'];
-    $opts['fdd']['pre_payment']['name'] = $this->l->t("Deposit");
-    $opts['fdd']['pre_payment']['maxlen'] = 8;
-    $opts['fdd']['pre_payment']['tooltip'] = $this->l->t('Default project deposit for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
-    $opts['fdd']['pre_payment']['display|LF'] = ['popup' => 'tooltip'];
-    $opts['fdd']['pre_payment']['css']['postfix'] .= ' tooltip-top';
-
-    $idx = count($opts['fdd']);
-    $join_table = 'PMEjoin'.$idx;
-    $opts['fdd']['extra_fields_join'] = [
-      'options'  => 'FLCVD',
-      'input'    => 'VRH',
-      'sql'      => '`PMEtable0`.`id`',
-      'filter'   => 'having',
-      'values'   => [
-        'table'  => 'ProjectExtraFields',
-        'column' => 'name',
-        'description' => 'name',
-        'join'   => '$main_table.`id` = $join_table.`project_id`'
-      ],
-    ];
-
-    $opts['fdd']['extra_fields'] = [
-      'name' => $this->l->t('Extra Member Data'),
-      'options'  => 'FLCVD',
-      'input'    => 'VR',
-      'sql'      => ("GROUP_CONCAT(DISTINCT NULLIF(`".$join_table."`.`Name`,'') ".
-                     "ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ', ')"),
-      'php|VCP'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx) {
-        $post = ['ProjectExtraFields' => $value,
-                 'template' => 'project-extra-fields',
-                 'projectName' => $row['qf'.$nameIdx],
-                 'project_id' => $recordId];
-        $post = http_build_query($post, '', '&');
-        $title = $this->toolTipsService['project-action-extra-fields'];
-        $link =<<<__EOT__
+    $this->makeJoinTableField(
+      $opts['fdd'], self::EXTRA_FIELDS_TABLE, 'name',
+      [
+        'name' => $this->l->t('Extra Member Data'),
+        'options'  => 'FLCVD',
+        'input'    => 'VR',
+        'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \', \')',
+        'php|VCP'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+          $post = [
+            'ProjectExtraFields' => $value,
+            'template' => 'project-extra-fields',
+            'projectName' => $row[$this->queryField('name', $fdd)],
+            'project_id' => $recordId,
+          ];
+          $post = http_build_query($post, '', '&');
+          $title = $this->toolTipsService['project-action-extra-fields'];
+          $link =<<<__EOT__
 <li class="nav tooltip-top" title="$title">
   <a class="nav" href="#" data-post="$post">
 $value
   </a>
 </li>
 __EOT__;
-        return $link;
-      },
-      'select'   => 'T',
-      'maxlen'   => 30,
-      'css'      => ['postfix' => ' projectextra'],
-      'sort'     => false,
-      'escape'   => false,
-      'display|LF' => ['popup' => 'data'],
-    ];
+          return $link;
+        },
+        'select'   => 'T',
+        'maxlen'   => 30,
+        'css'      => ['postfix' => ' projectextra'],
+        'sort'     => false,
+        'escape'   => false,
+        'display|LF' => ['popup' => 'data'],
+      ]);
 
     $opts['fdd']['program'] = [
       'name'     => $this->l->t('Program'),
@@ -443,7 +432,7 @@ __EOT__;
       unset($_POST[$this->pme->cgiSysName('qf'.$yearIdx)]);
       unset($_GET[$this->pme->cgiSysName('qf'.$yearIdx)]);
     } else {
-      $opts['filters']['OR'][] = "`PMEtable0`.`temporal_type` = 'permanent'";
+      $opts['filters']['OR'][] = "`PMEtable0`.`type` = 'permanent'";
     }
     $opts['filters']['AND'][] = '`PMEtable0`.`disabled` <= '.intval($this->showDisabled);
 
@@ -451,12 +440,13 @@ __EOT__;
     // data. However, at the moment the stuff does not work without JS
     // anyway, and we use Ajax calls to verify the form data.
 
-    $opts['triggers']['update']['before'][]  = [ $this, 'addOrChangeInstrumentation' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateTrigger' ];
     $opts['triggers']['update']['after'][]   = [ $this, 'afterUpdateTrigger' ];
 
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertTrigger' ];
-    $opts['triggers']['insert']['after'][]   = [ $this, 'addOrChangeInstrumentation' ];
+    //@TODO write a general insert function like beforeUpdateDoUpdateAll
+    //$opts['triggers']['insert']['after'][]   = [ $this, 'addOrChangeInstrumentation' ];
     $opts['triggers']['insert']['after'][]   = [ $this, 'afterInsertTrigger' ];
 
     $opts['triggers']['delete']['before'][] = [ $this , 'deleteTrigger' ];
@@ -780,68 +770,6 @@ project without a flyer first.");
         return false;
       }
     }
-    return true;
-  }
-
-  /**
-   * Instruments are stored in a separate pivot-table, hence we have
-   * to take care of them from outside PME or use a view.
-   *
-   * @copydoc beforeTriggerSetTimestamp
-   *
-   * @todo Find out about transactions to be able to do a roll-back on
-   * error.
-   */
-  public function addOrChangeInstrumentation($pme, $op, $step, &$oldValues, &$changed, &$newValues)
-  {
-    $field = 'Instrumentation';
-    $keyField = 'InstrumentationKey';
-    $key = array_search($field, $changed);
-    if ($key !== false) {
-      //error_log('key: '.$key.' value: '.$changed[$key]);
-      $table      = self::INSTRUMENTATION_NUMBERS_TABLE;
-      $projectId  = $pme->rec;
-      $oldIds     = Util::explode(',', $oldValues[$field]);
-      $newIds     = Util::explode(',', $newValues[$field]);
-      $oldKeys    = Util::explode(',', $oldValues[$keyField]);
-      $oldRecords = array_combine($oldIds, $oldKeys);
-
-      // we have to delete any removed instruments and to add any new instruments
-
-      $repository = $this->getDatabaseRepository(Entities\ProjectInstrumentationNumber::class);
-      try {
-        foreach(array_diff($oldIds, $newIds) as $id) {
-          $this->remove([ 'id' => $oldRecords[$id] ]);
-        }
-        $this->flush();
-        // need references instead of id in order to "satisfy" associations
-        $project = $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectId ]);
-        foreach(array_diff($newIds, $oldIds) as $instrumentId) {
-          $instrument = $this->entityManager->getReference(Entities\Instrument::class, [ 'id' => $instrumentId ]);
-          $projectInstrument = Entities\ProjectInstrumentationNumber::create()
-                             ->setProject($project)
-                             ->setInstrument($instrument);
-          $this->persist($projectInstrument);
-          $this->flush($projectInstrument);
-          $rec = $projectInstrument->getId();
-        }
-      } catch (\Throwable $t) {
-        $this->logException($t);
-        // @todo Do we want to bailout here?
-        // return false;
-        throw new \Exception($this->l->t("Unable to update instrumentation"), $t->getCode(), $t);
-      }
-      /**
-       * @note Unset in particular the $changed records. Note that
-       * phpMyEdit will generate a new change-set after its operations
-       * have completed, so the change-log entries for the original
-       * table will also be present.
-       */
-      unset($changed[$key]);
-      unset($newValues[$field]);
-      unset($newValues[$keyField]);
-    }
-
     return true;
   }
 
