@@ -71,20 +71,6 @@ class Project implements \ArrayAccess
   private $type = 'temporary';
 
   /**
-   * @var string
-   *
-   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=true, options={"default"="0.00"})
-   */
-  private $serviceCharge = '0.00';
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=true, options={"default"="0.00"})
-   */
-  private $prePayment = '0.00';
-
-  /**
    * @var bool
    *
    * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
