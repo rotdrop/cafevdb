@@ -125,37 +125,53 @@ foreach ($localeCountryNames as $country => $name) {
     </fieldset>
     <fieldset <?php echo $off; ?> class="chosen-dropup">
       <legend><?php echo $l->t('Executive board and club members'); ?></legend>
-      <select id="memberProjectSelect"
-              data-placeholder="<?php echo $l->t('Select the club-members project'); ?>"
-              name="memberProjectId"
-              class="special-member-projects tooltip-left">
-        <option></option>
-        <?php echo Navigation::selectOptions($projectOptions, $memberProjectId); ?>
-      </select>
+      <!-- <select id="memberProjectSelect"
+           data-placeholder="<?php echo $l->t('Select the club-members project'); ?>"
+           name="memberProjectId"
+           class="special-member-projects tooltip-left">
+           <option></option>
+           <?php echo Navigation::selectOptions($projectOptions, $memberProjectId); ?>
+           </select> -->
+      <input class="specialMemberProjects"
+             type="button"
+             value="+"
+             title="<?php echo $l->t("Create club-members project if it does not exist yet."); ?>"
+             <?php if ($memberProjectId > 0 || empty($memberProject)) { echo('disabled="disabled"'); } ?>
+      />
       <input class="specialMemberProjects" type="text"
              id="memberProject"
              name="memberProject"
              value="<?php echo $_['memberProject']; ?>"
              title="<?php echo $toolTips['club-member-project']; ?>"
-             placeholder="<?php echo $l->t('member-table'); ?>"/>
+             placeholder="<?php echo $l->t('member-table'); ?>"
+             data-projects='<?php echo json_encode($projectOptions); ?>'
+      />
       <label for="memberProject"
              title="<?php echo $toolTips['club-member-project']; ?>">
         <?php echo $l->t('Club Member Project'); ?>
       </label>
       <br/>
-      <select id="executiveBoardProjectSelect"
-              data-placeholder="<?php echo $l->t('Select the executive-board project'); ?>"
-              name="executiveBoardProjectId"
-              class="special-member-projects tooltip-left">
-        <option></option>
-        <?php echo Navigation::selectOptions($projectOptions, $memberProjectId); ?>
-      </select>
+      <!-- <select id="executiveBoardProjectSelect"
+           data-placeholder="<?php echo $l->t('Select the executive-board project'); ?>"
+           name="executiveBoardProjectId"
+           class="special-member-projects tooltip-left">
+           <option></option>
+           <?php echo Navigation::selectOptions($projectOptions, $executiveBoardProjectId); ?>
+           </select> -->
+      <input class="specialMemberProjects"
+             type="button"
+             value="+"
+             title="<?php echo $l->t("Create executive-board project if it does not exist yet."); ?>"
+             <?php if ($executiveBoardProjectId > 0 || empty($executiveBoardProject)) { echo('disabled="disabled"'); } ?>
+      />
       <input class="specialMemberProjects" type="text"
              id="executiveBoardProject"
              name="executiveBoardProject"
              value="<?php echo $_['executiveBoardProject']; ?>"
              title="<?php echo $toolTips['executive-board-project']; ?>"
-             placeholder="<?php echo $l->t('executive board table'); ?>"/>
+             placeholder="<?php echo $l->t('executive board table'); ?>"
+             data-projects='<?php echo json_encode($projectOptions); ?>'
+      />
       <label for="executiveBoardProject"
              title="<?php echo $toolTips['executive-board-project']; ?>">
         <?php echo $l->t('Executive Board Project'); ?>

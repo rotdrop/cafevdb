@@ -106,17 +106,22 @@ class ProjectService
     return $options;
   }
 
-  public function projectOptions($criteria = null, $selectedProject = -1)
+  public function projectOptions($criteria = [], $selectedProject = -1)
   {
     $projects = $this->repository->findBy($criteria, [ 'year' => 'DESC', 'name' => 'ASC' ]);
     $options = [];
     foreach ($projects as $project) {
       $flags = ($project['id'] == $selectedProject) ? Navigation::SELECTED : 0;
+      $name = $project['name'];
+      $year = $project['year'];
+      $shortName = str_replace($year, '', $name);
       $options[] = [
         'value' => $project['id'],
-        'name' => $project['name'],
+        'name' => $name,
+        'label' => $shortName,
         'flags' => $flags,
-        'group' => $project['year'],
+        'group' => $year,
+        'type' => $project['type'],
       ];
     }
     return $options;

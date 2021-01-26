@@ -751,16 +751,16 @@ var CAFEVDB = CAFEVDB || {};
       //
       ///////////////////////////////////////////////////////////////////////////
 
-      simpleSetValueHandler($('input.specialMemberProjects'), 'blur', msg);
+      const specialMemberProjects = $('input[type="text"].specialMemberProjects');
+      simpleSetValueHandler(specialMemberProjects, 'blur', msg);
 
-      const executiveBoardIds = $('select.executive-board-ids');
-      executiveBoardIds.chosen({
-	disable_search_threshold: 10,
-	allow_single_deselect: true,
-	inherit_select_classes:true,
-	width: '30%'
+      console.info('PROJECTS', specialMemberProjects.data('projects'));
+
+      var autocompleteProjects = specialMemberProjects.data('projects').map(v => v.name);
+      specialMemberProjects.autocomplete({
+        source: autocompleteProjects,
+        position: { my: 'left bottom', at: 'left top' }
       });
-      simpleSetValueHandler(executiveBoardIds, 'change', msg);
 
       const specialMemberProjectIds = $('select.special-member-projects');
       specialMemberProjectIds.chosen({
@@ -770,6 +770,15 @@ var CAFEVDB = CAFEVDB || {};
 	width: '30%'
       });
       simpleSetValueHandler(specialMemberProjectIds, 'change', msg);
+
+      const executiveBoardIds = $('select.executive-board-ids');
+      executiveBoardIds.chosen({
+	disable_search_threshold: 10,
+	allow_single_deselect: true,
+	inherit_select_classes:true,
+	width: '30%'
+      });
+      simpleSetValueHandler(executiveBoardIds, 'change', msg);
 
       ///////////////////////////////////////////////////////////////////////////
       //
