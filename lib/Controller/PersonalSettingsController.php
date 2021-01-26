@@ -367,6 +367,27 @@ class PersonalSettingsController extends Controller {
 
       return self::response($this->l->t('Share-owner user `%s\' ok.', [$uid]));
 
+    case 'bankAccountOwner':
+    case 'bankAccountBLZ':
+    case 'bankAccountIBAN':
+    case 'bankAccountBIC':
+    case 'bankAccountCreditorIdentifer':
+    case 'memberProjectCreate':
+    case 'executiveBoardProjectCreate':
+    case 'memberProject':
+    case 'executiveBoardProject':
+    case 'presidentUserId':
+    case 'secretaryUserId':
+    case 'treasurerUserId':
+    case 'presidentId':
+    case 'secretaryId':
+    case 'treaserId':
+    case 'presidentGroupId':
+    case 'secretaryGroupId':
+    case 'treasurerGroupId':
+      return self::grumble($this->l->t('SETTING %s NOT YET IMPLEMENTED', $parameter));
+      break;
+
     case 'shareownerpassword':
       $shareOwnerUid = $this->getConfigValue('shareowner');
       if (empty($shareOwnerUid)) {

@@ -762,21 +762,24 @@ var CAFEVDB = CAFEVDB || {};
         position: { my: 'left bottom', at: 'left top' }
       });
 
-      const specialMemberProjectIds = $('select.special-member-projects');
-      specialMemberProjectIds.chosen({
-	disable_search_threshold: 10,
-	allow_single_deselect: true,
-	inherit_select_classes:true,
-	width: '30%'
-      });
-      simpleSetValueHandler(specialMemberProjectIds, 'change', msg);
+      const specialMemberProjectsCreate =$('input[type="button"].specialMemberProjects');
+      simpleSetValueHandler(specialMemberProjectsCreate, 'click', msg);
+
+      // const specialMemberProjectIds = $('select.special-member-projects');
+      // specialMemberProjectIds.chosen({
+      //   disable_search_threshold: 10,
+      //   allow_single_deselect: true,
+      //   inherit_select_classes:true,
+      //   width: '30%'
+      // });
+      // simpleSetValueHandler(specialMemberProjectIds, 'change', msg);
 
       const executiveBoardIds = $('select.executive-board-ids');
       executiveBoardIds.chosen({
-	disable_search_threshold: 10,
-	allow_single_deselect: true,
-	inherit_select_classes:true,
-	width: '30%'
+        disable_search_threshold: 10,
+        allow_single_deselect: true,
+        inherit_select_classes:true,
+        width: '30%'
       });
       simpleSetValueHandler(executiveBoardIds, 'change', msg);
 
