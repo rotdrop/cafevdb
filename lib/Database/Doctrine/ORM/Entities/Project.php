@@ -215,27 +215,27 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set art.
+   * Set type.
    *
-   * @param enumprojecttemporaltype $art
+   * @param enumprojecttemporaltype $type
    *
    * @return Project
    */
-  public function setArt($art)
+  public function setType($type)
   {
-    $this->art = $art;
+    $this->type = $type;
 
     return $this;
   }
 
   /**
-   * Get art.
+   * Get type.
    *
    * @return enumprojecttemporaltype
    */
-  public function getArt()
+  public function getType()
   {
-    return $this->art;
+    return $this->type;
   }
 
   /**
