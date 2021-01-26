@@ -138,7 +138,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     CAFEVDB.Email.emailFormPopup(post, false);
   };
 
-  /**Generate a popup for the instrumentation numbers.
+  /**
+   * Generate a popup for the instrumentation numbers.
    *
    * @param containerSel The ambient element of the container
    * (i.e. the base page, or the div holding the dialog this one was
@@ -245,6 +246,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     case 'project-participants':
     case 'sepa-debit-mandates':
     case 'project-extra-fields':
+      // @TODO: this really could be a popup
       post.template = selectedValue;
       CAFEVDB.formSubmit('', $.param(post), 'post');
       break;
