@@ -254,144 +254,142 @@ var CAFEVDB = CAFEVDB || {};
 
   CAFEVDB.Blog = Blog;
 
-})(window, jQuery, CAFEVDB);
+  $(function() {
+
+    CAFEVDB.addReadyCallback(function() {
+      var Blog = CAFEVDB.Blog;
+
+      $('#blogeditform').submit(function () { return false; });
+
+      $('#blogform #blognewentry').click(function(event) {
+        event.preventDefault();
+        var post = $('#blogform').serializeArray();
+        $.post(OC.generateUrl('/apps/cafevdb/blog/editentry'),
+               post)
+          .fail(function(xhr, status, errorThrown) {
+            const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
+            OC.dialogs.alert(message, t('cafevdb', 'Error'));
+          })
+          .done(Blog.editWindow);
+        return false;
+      });
+
+      // Use delegate handlers for dynamic content
+      var blogThreads = $('#blogthreads');
+
+      blogThreads.on(
+        'click',
+        '#blogentryactions button.reply',
+        function(event) {
+          event.preventDefault();
+          $.post(OC.generateUrl('/apps/cafevdb/blog/editentry'),
+                 { blogId: -1,
+                   inReplyTo: $(this).val() })
+            .fail(function(xhr, status, errorThrown) {
+              const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
+              OC.dialogs.alert(message, t('cafevdb', 'Error'));
+            })
+            .done(Blog.editWindow);
+          return false;
+        });
+
+      blogThreads.on(
+        'click',
+        '#blogentryactions button.edit',
+        function(event) {
+          event.preventDefault();
+          $.post(OC.generateUrl('/apps/cafevdb/blog/editentry'),
+                 { blogId: $(this).val() ,
+                   inReplyTo: -1
+                 })
+            .fail(function(xhr, status, errorThrown) {
+              const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
+              OC.dialogs.alert(message, t('cafevdb', 'Error'));
+            })
+            .done(Blog.editWindow);
+          return false;
+        });
 
 
+      blogThreads.on(
+        'click',
+        '#blogentryactions button.delete',
+        function(event) {
+          event.preventDefault();
+          var blogId = $(this).val();
+          OC.dialogs.confirm(
+            t('cafevdb', 'The entire message thread will be deleted if you press `Yes\''),
+            t('cafevdb', 'Really delete the entry?'),
+            function (decision) {
+              if (decision) {
+                const action = 'delete';
+                $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
+                       { blogId: blogId })
+	          .fail(function(xhr, status, errorThrown) {
+                    const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
+                    OC.dialogs.alert(message, t('cafevdb', 'Error'));
+                  })
+                  .done(Blog.updateThreads);
+              }
+            },
+            true);
+          return false;
+        });
 
-$(function() {
+      blogThreads.on(
+        'click',
+        '#blogentryactions button.raise',
+        function(event) {
+          event.preventDefault();
+          var id = $(this).val();
+          var prio = $('#blogpriority'+id).val();
+          const action = 'modify';
+          $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
+                 { content: '',
+                   blogId: id,
+                   priority: +prio+1,
+                   popup: false,
+                   inReplyTo: -1
+                 })
+	    .fail(function(xhr, status, errorThrown) {
+              const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
+              OC.dialogs.alert(message, t('cafevdb', 'Error'));
+            })
+            .done(Blog.updateThreads);
+          return false;
+        });
 
-  CAFEVDB.addReadyCallback(function() {
-    var Blog = CAFEVDB.Blog;
+      blogThreads.on(
+        'click',
+        '#blogentryactions button.lower',
+        function(event) {
+          event.preventDefault();
+          var id = $(this).val();
+          var prio = $('#blogpriority'+id).val();
+          const action = 'modify';
+          $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
+                 { content: '',
+                   blogId: id,
+                   priority: +prio-1,
+                   popup: false,
+                   inReplyTo: -1
+                 })
+	    .fail(function(xhr, status, errorThrown) {
+              const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
+              OC.dialogs.alert(message, t('cafevdb', 'Error'));
+            })
+            .done(Blog.updateThreads);
+          return false;
+        });
 
-    $('#blogeditform').submit(function () { return false; });
+      Blog.popupMessages(); // annoy people
+      Blog.avatar(); // display avatars
 
-    $('#blogform #blognewentry').click(function(event) {
-      event.preventDefault();
-      var post = $('#blogform').serializeArray();
-      $.post(OC.generateUrl('/apps/cafevdb/blog/editentry'),
-             post)
-      .fail(function(xhr, status, errorThrown) {
-        const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
-        OC.dialogs.alert(message, t('cafevdb', 'Error'));
-      })
-      .done(Blog.editWindow);
-      return false;
     });
-
-    // Use delegate handlers for dynamic content
-    var blogThreads = $('#blogthreads');
-
-    blogThreads.on(
-      'click',
-      '#blogentryactions button.reply',
-      function(event) {
-        event.preventDefault();
-        $.post(OC.generateUrl('/apps/cafevdb/blog/editentry'),
-               { blogId: -1,
-                 inReplyTo: $(this).val() })
-        .fail(function(xhr, status, errorThrown) {
-          const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
-          OC.dialogs.alert(message, t('cafevdb', 'Error'));
-        })
-        .done(Blog.editWindow);
-        return false;
-      });
-
-    blogThreads.on(
-      'click',
-      '#blogentryactions button.edit',
-      function(event) {
-        event.preventDefault();
-        $.post(OC.generateUrl('/apps/cafevdb/blog/editentry'),
-               { blogId: $(this).val() ,
-                 inReplyTo: -1
-               })
-        .fail(function(xhr, status, errorThrown) {
-          const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
-          OC.dialogs.alert(message, t('cafevdb', 'Error'));
-        })
-        .done(Blog.editWindow);
-        return false;
-      });
-
-
-    blogThreads.on(
-      'click',
-      '#blogentryactions button.delete',
-      function(event) {
-        event.preventDefault();
-        var blogId = $(this).val();
-        OC.dialogs.confirm(
-          t('cafevdb', 'The entire message thread will be deleted if you press `Yes\''),
-          t('cafevdb', 'Really delete the entry?'),
-          function (decision) {
-            if (decision) {
-              const action = 'delete';
-              $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
-                     { blogId: blogId })
-	      .fail(function(xhr, status, errorThrown) {
-                const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
-                OC.dialogs.alert(message, t('cafevdb', 'Error'));
-              })
-              .done(Blog.updateThreads);
-            }
-          },
-          true);
-        return false;
-      });
-
-    blogThreads.on(
-      'click',
-      '#blogentryactions button.raise',
-      function(event) {
-        event.preventDefault();
-        var id = $(this).val();
-        var prio = $('#blogpriority'+id).val();
-        const action = 'modify';
-        $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
-               { content: '',
-                 blogId: id,
-                 priority: +prio+1,
-                 popup: false,
-                 inReplyTo: -1
-               })
-	.fail(function(xhr, status, errorThrown) {
-          const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
-          OC.dialogs.alert(message, t('cafevdb', 'Error'));
-        })
-        .done(Blog.updateThreads);
-        return false;
-      });
-
-    blogThreads.on(
-      'click',
-      '#blogentryactions button.lower',
-      function(event) {
-        event.preventDefault();
-        var id = $(this).val();
-        var prio = $('#blogpriority'+id).val();
-        const action = 'modify';
-        $.post(OC.generateUrl('/apps/cafevdb/blog/action/' + action),
-               { content: '',
-                 blogId: id,
-                 priority: +prio-1,
-                 popup: false,
-                 inReplyTo: -1
-               })
-	.fail(function(xhr, status, errorThrown) {
-          const message = CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)
-          OC.dialogs.alert(message, t('cafevdb', 'Error'));
-        })
-        .done(Blog.updateThreads);
-        return false;
-      });
-
-    Blog.popupMessages(); // annoy people
-    Blog.avatar(); // display avatars
 
   });
 
-});
+})(window, jQuery, CAFEVDB);
 
 // Local Variables: ***
 // js-indent-level: 2 ***

@@ -24,7 +24,7 @@ if (!CAFEVDB.appName) {
   CAFEVDB.appName = 'cafevdb';
 }
 
-$(function(){
+$(function() {
 
   const $container = $('#' + CAFEVDB.appName + '-admin-settings');
   const $msg = $container.find('.msg');

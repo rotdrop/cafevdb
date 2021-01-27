@@ -56,8 +56,8 @@ CAFEVDB.BackgroundJobs = CAFEVDB.BackgroundJobs || {};
     }
   };
 
-})(window, jQuery, CAFEVDB.BackgroundJobs);
+  $(function() {
+    //CAFEVDB.BackgroundJobs.ready();
+  });
 
-$(function() {
-  //CAFEVDB.BackgroundJobs.ready();
-});
+})(window, jQuery, CAFEVDB.BackgroundJobs);

@@ -490,17 +490,16 @@ var CAFEVDB = CAFEVDB || {};
 
   CAFEVDB.Musicians = Musicians;
 
-})(window, jQuery, CAFEVDB);
-
-$(function(){
-
-  CAFEVDB.addReadyCallback(function() {
-    if ($('div#cafevdb-page-body.musicians').length > 0) {
-      CAFEVDB.Musicians.ready();
-    }
+  $(function() {
+    CAFEVDB.addReadyCallback(function() {
+      if ($('div#cafevdb-page-body.musicians').length > 0) {
+        CAFEVDB.Musicians.ready();
+      }
+    });
   });
 
-});
+})(window, jQuery, CAFEVDB);
+
 
 // Local Variables: ***
 // js-indent-level: 2 ***

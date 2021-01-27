@@ -1625,17 +1625,18 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
   };
-})(window, jQuery, PHPMYEDIT);
 
-$(function(){
+  $(function(){
 
-  CAFEVDB.addReadyCallback(function() {
-    PHPMYEDIT.transposeReady();
-    PHPMYEDIT.init();
-    PHPMYEDIT.dialogOpen = {}; // not cleared in init on purpose
+    CAFEVDB.addReadyCallback(function() {
+      PHPMYEDIT.transposeReady();
+      PHPMYEDIT.init();
+      PHPMYEDIT.dialogOpen = {}; // not cleared in init on purpose
+    });
+
   });
 
-});
+})(window, jQuery, PHPMYEDIT);
 
 // Local Variables: ***
 // js-indent-level: 2 ***

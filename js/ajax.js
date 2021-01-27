@@ -19,7 +19,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var CAFEVDB = CAFEVDB || {};
+let CAFEVDB = window.CAFEVDB || {};
+window.CAFEVDB = CAFEVDB;
 
 (function(window, $, CAFEVDB, undefined) {
 

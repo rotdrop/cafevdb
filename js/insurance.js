@@ -206,60 +206,60 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
         });
     };
 
+    $(function(){
+
+        PHPMYEDIT.addTableLoadCallback('insurance-rates', {
+            callback: function(selector, parameters, resizeCB) {
+                CAFEVDB.Insurances.pmeFormInit(selector);
+                resizeCB();
+            },
+            context: CAFEVDB.Insurances,
+            parameters: []
+        });
+
+        PHPMYEDIT.addTableLoadCallback('insurance-brokers', {
+            callback: function(selector, parameters, resizeCB) {
+                CAFEVDB.Insurances.pmeFormInit(selector);
+                resizeCB();
+            },
+            context: CAFEVDB.Insurances,
+            parameters: []
+        });
+
+        PHPMYEDIT.addTableLoadCallback('instrument-insurance', {
+            callback: function(selector, parameters, resizeCB) {
+                CAFEVDB.exportMenu(selector);
+
+                CAFEVDB.SepaDebitMandate.insuranceReady(selector);
+
+                CAFEVDB.Insurances.pmeFormInit(selector);
+
+                $(':button.musician-instrument-insurance').click(function(event) {
+                    event.preventDefault();
+                    var values = $(this).attr('name');
+
+                    CAFEVDB.Page.loadPage($(this).attr('name'));
+
+                    return false;
+                });
+
+                resizeCB();
+
+            },
+            context: CAFEVDB.Insurances,
+            parameters: []
+        });
+
+        CAFEVDB.addReadyCallback(function() {
+            const renderer = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
+            if (renderer == CAFEVDB.Page.templateRenderer('instrument-insurance')
+                || renderer == CAFEVDB.Page.templateRenderer('insuranc-rates')) {
+                CAFEVDB.Insurances.pmeFormInit(PHPMYEDIT.defaultSelector);
+            }
+        });
+    });
+
 })(window, jQuery, CAFEVDB.Insurances);
-
-$(function(){
-
-    PHPMYEDIT.addTableLoadCallback('insurance-rates', {
-        callback: function(selector, parameters, resizeCB) {
-            CAFEVDB.Insurances.pmeFormInit(selector);
-            resizeCB();
-        },
-        context: CAFEVDB.Insurances,
-        parameters: []
-    });
-
-    PHPMYEDIT.addTableLoadCallback('insurance-brokers', {
-        callback: function(selector, parameters, resizeCB) {
-            CAFEVDB.Insurances.pmeFormInit(selector);
-            resizeCB();
-        },
-        context: CAFEVDB.Insurances,
-        parameters: []
-    });
-
-    PHPMYEDIT.addTableLoadCallback('instrument-insurance', {
-        callback: function(selector, parameters, resizeCB) {
-            CAFEVDB.exportMenu(selector);
-
-            CAFEVDB.SepaDebitMandate.insuranceReady(selector);
-
-            CAFEVDB.Insurances.pmeFormInit(selector);
-
-            $(':button.musician-instrument-insurance').click(function(event) {
-                event.preventDefault();
-                var values = $(this).attr('name');
-
-                CAFEVDB.Page.loadPage($(this).attr('name'));
-
-                return false;
-            });
-
-            resizeCB();
-
-        },
-        context: CAFEVDB.Insurances,
-        parameters: []
-    });
-
-    CAFEVDB.addReadyCallback(function() {
-        const renderer = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
-        if (renderer == CAFEVDB.Page.templateRenderer('instrument-insurance')
-            || renderer == CAFEVDB.Page.templateRenderer('insuranc-rates')) {
-          CAFEVDB.Insurances.pmeFormInit(PHPMYEDIT.defaultSelector);
-        }
-    });
-});
 
 // Local Variables: ***
 // js-indent-level: 4 ***

@@ -77,6 +77,7 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   CAFEVDB.Dialogs = Dialogs;
+
 })(window, jQuery, CAFEVDB);
 
 // Local Variables: ***

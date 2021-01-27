@@ -136,14 +136,14 @@ var CAFEVDB = CAFEVDB || {};
 
   CAFEVDB.Location = Location;
 
-})(window, jQuery, CAFEVDB);
+  $(function(){
 
-$(function(){
+    CAFEVDB.addReadyCallback(function() {
+    });
 
-  CAFEVDB.addReadyCallback(function() {
   });
 
-});
+})(window, jQuery, CAFEVDB);
 
 // Local Variables: ***
 // js-indent-level: 2 ***

@@ -1503,32 +1503,32 @@ CAFEVDB.Email = CAFEVDB.Email || {};
            });
   };
 
-})(window, jQuery, CAFEVDB.Email);
+  $(function(){
 
-$(function(){
+    $('button.eventattachments.edit').click(function(event) {
+      event.preventDefault();
 
-  $('button.eventattachments.edit').click(function(event) {
-    event.preventDefault();
+      // Edit existing event
+      post = Array();
+      var type = new Object();
+      type['name']  = 'id';
+      type['value'] = $(this).val();
+      post.push(type);
+      $('#dialog_holder').load(
+        OC.filePath('calendar',
+                    'ajax/event',
+                    'edit.form.php'),
+        post, function () {
+          $('input[name="delete"]').attr('disabled','disabled');
+          Calendar.UI.startEventDialog();
+        });
 
-    // Edit existing event
-    post = Array();
-    var type = new Object();
-    type['name']  = 'id';
-    type['value'] = $(this).val();
-    post.push(type);
-    $('#dialog_holder').load(
-      OC.filePath('calendar',
-                  'ajax/event',
-                  'edit.form.php'),
-      post, function () {
-        $('input[name="delete"]').attr('disabled','disabled');
-        Calendar.UI.startEventDialog();
-      });
+      return false;
+    });
 
-    return false;
   });
 
-});
+})(window, jQuery, CAFEVDB.Email);
 
 // Local Variables: ***
 // js-indent-level: 2 ***

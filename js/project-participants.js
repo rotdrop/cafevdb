@@ -714,65 +714,65 @@ console.log('deselect', option.val());
 
   CAFEVDB.Instrumentation = Instrumentation;
 
-})(window, jQuery, CAFEVDB);
+  $(function(){
 
-$(function(){
+    PHPMYEDIT.addTableLoadCallback('project-participants', {
+      callback: function(selector, parameters, resizeCB) {
 
-  PHPMYEDIT.addTableLoadCallback('project-participants', {
-    callback: function(selector, parameters, resizeCB) {
-
-      if (parameters.reason == 'tabChange') {
-        resizeCB();
-        return;
-      }
-
-      var container = $(selector);
-      CAFEVDB.exportMenu(selector);
-      CAFEVDB.SepaDebitMandate.popupInit(selector);
-
-      this.ready(selector, resizeCB);
-
-      container.find('div.photo, #cafevdb_inline_image_wrapper').
-        off('click', 'img.zoomable').
-        on('click', 'img.zoomable', function(event) {
-        event.preventDefault();
-        CAFEVDB.Photo.popup(this);
-        return false;
-      });
-
-      $(':button.musician-instrument-insurance').
-        off('click').
-        on('click', function(event) {
-        event.preventDefault();
-        var values = $(this).attr('name');
-
-        CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
-
-        return false;
-      });
-
-      if (container.find('#contact_photo_upload').length > 0) {
-        var idField = container.find('input[name="PME_data_musician_id"]');
-        var recordId = -1;
-        if (idField.length > 0) {
-          recordId = idField.val();
+        if (parameters.reason == 'tabChange') {
+          resizeCB();
+          return;
         }
-        CAFEVDB.Photo.ready(recordId, 'MusicianPhoto', resizeCB);
-      } else {
-        container.find('div.photo, span.photo').imagesLoaded(resizeCB);
+
+        var container = $(selector);
+        CAFEVDB.exportMenu(selector);
+        CAFEVDB.SepaDebitMandate.popupInit(selector);
+
+        this.ready(selector, resizeCB);
+
+        container.find('div.photo, #cafevdb_inline_image_wrapper').
+          off('click', 'img.zoomable').
+          on('click', 'img.zoomable', function(event) {
+            event.preventDefault();
+            CAFEVDB.Photo.popup(this);
+            return false;
+          });
+
+        $(':button.musician-instrument-insurance').
+          off('click').
+          on('click', function(event) {
+            event.preventDefault();
+            var values = $(this).attr('name');
+
+            CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
+
+            return false;
+          });
+
+        if (container.find('#contact_photo_upload').length > 0) {
+          var idField = container.find('input[name="PME_data_musician_id"]');
+          var recordId = -1;
+          if (idField.length > 0) {
+            recordId = idField.val();
+          }
+          CAFEVDB.Photo.ready(recordId, 'MusicianPhoto', resizeCB);
+        } else {
+          container.find('div.photo, span.photo').imagesLoaded(resizeCB);
+        }
+      },
+      context: CAFEVDB.Instrumentation,
+      parameters: []
+    });
+
+    CAFEVDB.addReadyCallback(function() {
+      if ($('div#cafevdb-page-body.project-participants').length > 0) {
+        CAFEVDB.Instrumentation.ready();
       }
-    },
-    context: CAFEVDB.Instrumentation,
-    parameters: []
+    });
+
   });
 
-  CAFEVDB.addReadyCallback(function() {
-    if ($('div#cafevdb-page-body.project-participants').length > 0) {
-      CAFEVDB.Instrumentation.ready();
-    }
-  });
-
-});
+})(window, jQuery, CAFEVDB);
 
 // Local Variables: ***
 // js-indent-level: 2 ***

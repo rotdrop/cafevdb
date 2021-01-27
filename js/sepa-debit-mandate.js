@@ -861,24 +861,25 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   CAFEVDB.SepaDebitMandate = SepaDebitMandate;
-})(window, jQuery, CAFEVDB);
 
-$(function(){
+  $(function(){
 
-  PHPMYEDIT.addTableLoadCallback('sepa-debit-mandates',
-                                 {
+    PHPMYEDIT.addTableLoadCallback('sepa-debit-mandates',
+                                   {
                                      callback: function(selector, parameters, resizeCB) {
-                                         this.ready(selector);
-                                         resizeCB();
-                                         //alert("Here I am: "+selector);
+                                       this.ready(selector);
+                                       resizeCB();
+                                       //alert("Here I am: "+selector);
                                      },
                                      context: CAFEVDB.SepaDebitMandate,
                                      parameters: []
-                                 });
+                                   });
 
-  CAFEVDB.addReadyCallback(function() {
-    CAFEVDB.SepaDebitMandate.ready(PHPMYEDIT.defaultSelector);
-    CAFEVDB.SepaDebitMandate.popupInit(PHPMYEDIT.defaultSelector);
+    CAFEVDB.addReadyCallback(function() {
+      CAFEVDB.SepaDebitMandate.ready(PHPMYEDIT.defaultSelector);
+      CAFEVDB.SepaDebitMandate.popupInit(PHPMYEDIT.defaultSelector);
+    });
+
   });
 
-});
+})(window, jQuery, CAFEVDB);

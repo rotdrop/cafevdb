@@ -401,19 +401,20 @@ var CAFEVDB = CAFEVDB || {};
 
   CAFEVDB.ProjectExtra = ProjectExtra;
 
-})(window, jQuery, CAFEVDB);
+  $(function(){
 
-$(function(){
+    CAFEVDB.addReadyCallback(function() {
+      const container = PHPMYEDIT.container();
+      if (!container.hasClass('project-extra-fields')) {
+        return; // not for us
+      }
 
-  CAFEVDB.addReadyCallback(function() {
-    const container = PHPMYEDIT.container();
-    if (!container.hasClass('project-extra-fields')) {
-      return; // not for us
-    }
+    });
 
   });
 
-});
+})(window, jQuery, CAFEVDB);
+
 
 // Local Variables: ***
 // js-indent-level: 2 ***

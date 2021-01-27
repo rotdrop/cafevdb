@@ -1010,13 +1010,12 @@ var CAFEVDB = CAFEVDB || {};
 
   CAFEVDB.Settings = Settings;
 
+  $(function() {
+    console.info('settings ready');
+    CAFEVDB.Settings.documentReady();
+  });
+
 })(window, jQuery, CAFEVDB);
-
-
-$(function() {
-  console.info('settings ready');
-  CAFEVDB.Settings.documentReady();
-});
 
 // Local Variables: ***
 // js-indent-level: 2 ***

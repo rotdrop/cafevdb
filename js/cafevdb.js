@@ -19,9 +19,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var CAFEVDB = CAFEVDB || {};
+let CAFEVDB = window.CAFEVDB || {};
+window.CAFEVDB = CAFEVDB;
 
 (function(window, $, CAFEVDB, undefined) {
+
   CAFEVDB.toolTipsEnabled  = true;
   CAFEVDB.wysiwygEditor    = 'tinymce';
   CAFEVDB.language         = 'en';
@@ -1273,80 +1275,81 @@ var CAFEVDB = CAFEVDB || {};
     return !!CAFEVDB.progressTimer;
   };
 
-})(window, jQuery, CAFEVDB);
+  $(function(){
+    // @@TODO perhaps collects these things in before-ready.js
+    document.onkeypress = CAFEVDB.stopRKey;
 
-$(function(){
-  // @@TODO perhaps collects these things in before-ready.js
-  document.onkeypress = CAFEVDB.stopRKey;
-
-  $('body').on('dblclick', '.oc-dialog', function() {
-    $('.oc-dialog').toggleClass('maximize-width');
-  });
-
-  window.oldWidth = -1;
-  window.oldHeight = -1;
-  $(window).on('resize', function(event) {
-    const win = this;
-    if (!win.resizeTimeout) {
-      const delay = 50;
-      const width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
-      const height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
-      if (win.oldWidth != width || win.oldHeight != height) {
-        console.debug('cafevdb size change', width, win.oldWidth, height, win.oldHeight);
-        win.resizeTimeout = setTimeout(
-          function() {
-            win.resizeTimeout = null;
-            $('.resize-target, .ui-dialog-content').trigger('resize');
-          }, delay);
-        win.oldHeight = height;
-        win.oldWidth = width;
-      }
-    }
-    return false;
-  });
-
-  /****************************************************************************
-   *
-   * Add handlers as delegates. Note however that the snapper is
-   * attached to #app-content below #content, so it is not possible to
-   * prevent the snapper events. If we want to change this we have to
-   * insert another div-container inside #app-content.
-   *
-   */
-  const content = $('#content');
-  const appInnerContent = $('#app-inner-content');
-
-  // Display the overview-page for the given project.
-  content.on('click', 'ul#navigation-list li.nav-projectlabel-control a',
-             function(event) {
-               event.stopImmediatePropagation();
-               const data = $(this).data('json');
-               CAFEVDB.Projects.projectViewPopup(PHPMYEDIT.selector(), data);
-               return false;
-             });
-
-  // Display the instrumentation numbers in a dialog widget
-  content.on('click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
-             function(event) {
-               event.stopImmediatePropagation(); // this is vital
-               const data = $(this).data('json');
-               CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.selector(), data);
-               return false;
-             });
-
-  CAFEVDB.addReadyCallback(function() {
-    $('input.alertdata.cafevdb-page').each(function(index) {
-      const title = $(this).attr('name');
-      const text  = $(this).attr('value');
-      CAFEVDB.Dialogs.alert(text, title, undefined, true, true);
+    $('body').on('dblclick', '.oc-dialog', function() {
+      $('.oc-dialog').toggleClass('maximize-width');
     });
 
+    window.oldWidth = -1;
+    window.oldHeight = -1;
+    $(window).on('resize', function(event) {
+      const win = this;
+      if (!win.resizeTimeout) {
+        const delay = 50;
+        const width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
+        const height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
+        if (win.oldWidth != width || win.oldHeight != height) {
+          console.debug('cafevdb size change', width, win.oldWidth, height, win.oldHeight);
+          win.resizeTimeout = setTimeout(
+            function() {
+              win.resizeTimeout = null;
+              $('.resize-target, .ui-dialog-content').trigger('resize');
+            }, delay);
+          win.oldHeight = height;
+          win.oldWidth = width;
+        }
+      }
+      return false;
+    });
+
+    /****************************************************************************
+     *
+     * Add handlers as delegates. Note however that the snapper is
+     * attached to #app-content below #content, so it is not possible to
+     * prevent the snapper events. If we want to change this we have to
+     * insert another div-container inside #app-content.
+     *
+     */
+    const content = $('#content');
+    const appInnerContent = $('#app-inner-content');
+
+    // Display the overview-page for the given project.
+    content.on('click', 'ul#navigation-list li.nav-projectlabel-control a',
+               function(event) {
+                 event.stopImmediatePropagation();
+                 const data = $(this).data('json');
+                 CAFEVDB.Projects.projectViewPopup(PHPMYEDIT.selector(), data);
+                 return false;
+               });
+
+    // Display the instrumentation numbers in a dialog widget
+    content.on('click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
+               function(event) {
+                 event.stopImmediatePropagation(); // this is vital
+                 const data = $(this).data('json');
+                 CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.selector(), data);
+                 return false;
+               });
+
+    CAFEVDB.addReadyCallback(function() {
+      $('input.alertdata.cafevdb-page').each(function(index) {
+        const title = $(this).attr('name');
+        const text  = $(this).attr('value');
+        CAFEVDB.Dialogs.alert(text, title, undefined, true, true);
+      });
+
+    });
+
+    // fire an event when this have been finished
+    console.debug("trigger loaded");
+    $(document).trigger("cafevdb:donecafevdbjs");
   });
 
-  // fire an event when this have been finished
-  console.debug("trigger loaded");
-  $(document).trigger("cafevdb:donecafevdbjs");
-});
+})(window, jQuery, CAFEVDB);
+
 
 // Local Variables: ***
 // js-indent-level: 2 ***

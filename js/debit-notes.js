@@ -89,18 +89,19 @@ var CAFEVDB = CAFEVDB || {};
 
   CAFEVDB.DebitNotes = DebitNotes;
 
-})(window, jQuery, CAFEVDB);
+  $(function(){
 
-$(function(){
+    CAFEVDB.addReadyCallback(function() {
 
-  CAFEVDB.addReadyCallback(function() {
-
-    if ($('div#cafevdb-page-body.debit-notes').length > 0) {
+      if ($('div#cafevdb-page-body.debit-notes').length > 0) {
       CAFEVDB.DebitNotes.ready();
-    }
+      }
+    });
+
   });
 
-});
+})(window, jQuery, CAFEVDB);
+
 
 // Local Variables: ***
 // js-indent-level: 2 ***

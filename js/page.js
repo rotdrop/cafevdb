@@ -157,72 +157,73 @@ var CAFEVDB = CAFEVDB || {};
 
   CAFEVDB.Page = Page;
 
+  $(function(){
+
+    var appInnerContent = $('#app-inner-content');
+
+    appInnerContent.on('click', '.ui-dialog-titlebar', function(event) {
+      $('body').toggleClass('dialog-titlebar-clicked');
+      return false;
+    });
+
+    $('#app-navigation-toggle').on('click', function() {
+      $('body').removeClass('dialog-titlebar-clicked');
+      $(this).cafevTooltip('hide');
+    });
+
+    appInnerContent.on('click keydown',
+                       '#personalsettings .navigation.reload',
+                       function(event) {
+                         event.stopImmediatePropagation();
+                         const pmeReload = appInnerContent.find('form.pme-form input.pme-reload').first();
+                         if (pmeReload.length > 0) {
+                           // remove left-over notifications
+                           CAFEVDB.Notification.hide();
+                           pmeReload.trigger('click');
+                           $('body').removeClass('dialog-titlebar-clicked');
+                         } else {
+                           CAFEVDB.Page.loadPage({
+                             'historyOffset': 0
+                           });
+                         }
+                         return false;
+                       });
+
+    appInnerContent.on('click keydown',
+                       '#personalsettings .navigation.undo',
+                       function(event) {
+                         event.stopImmediatePropagation();
+                         CAFEVDB.Page.loadPage({
+                           'historyOffset': 1
+                         });
+                         return false;
+                       });
+
+    appInnerContent.on('click keydown',
+                       '#personalsettings .navigation.redo',
+                       function(event) {
+                         event.stopImmediatePropagation();
+                         CAFEVDB.Page.loadPage({
+                           'historyOffset': -1
+                         });
+                         return false;
+                       });
+
+    CAFEVDB.addReadyCallback(function() {
+      //content.find('form.pme-form input.pme-reload').hide();
+      $('#app-navigation-toggle').
+        attr('title', t(CAFEVDB.appName, 'Display the application menu and settings side-bar')).
+        cafevTooltip({
+          placement: 'auto',
+          container: '#app-content'
+        });
+      CAFEVDB.Page.updateHistoryControls();
+    });
+
+  });
+
 })(window, jQuery, CAFEVDB);
 
-$(function(){
-
-  var appInnerContent = $('#app-inner-content');
-
-  appInnerContent.on('click', '.ui-dialog-titlebar', function(event) {
-    $('body').toggleClass('dialog-titlebar-clicked');
-    return false;
-  });
-
-  $('#app-navigation-toggle').on('click', function() {
-    $('body').removeClass('dialog-titlebar-clicked');
-    $(this).cafevTooltip('hide');
-  });
-
-  appInnerContent.on('click keydown',
-             '#personalsettings .navigation.reload',
-             function(event) {
-               event.stopImmediatePropagation();
-               const pmeReload = appInnerContent.find('form.pme-form input.pme-reload').first();
-               if (pmeReload.length > 0) {
-                 // remove left-over notifications
-                 CAFEVDB.Notification.hide();
-                 pmeReload.trigger('click');
-                 $('body').removeClass('dialog-titlebar-clicked');
-               } else {
-                 CAFEVDB.Page.loadPage({
-                   'historyOffset': 0
-                 });
-               }
-               return false;
-             });
-
-  appInnerContent.on('click keydown',
-             '#personalsettings .navigation.undo',
-             function(event) {
-               event.stopImmediatePropagation();
-               CAFEVDB.Page.loadPage({
-                 'historyOffset': 1
-               });
-               return false;
-             });
-
-  appInnerContent.on('click keydown',
-             '#personalsettings .navigation.redo',
-             function(event) {
-               event.stopImmediatePropagation();
-               CAFEVDB.Page.loadPage({
-                 'historyOffset': -1
-               });
-               return false;
-             });
-
-  CAFEVDB.addReadyCallback(function() {
-    //content.find('form.pme-form input.pme-reload').hide();
-    $('#app-navigation-toggle').
-      attr('title', t(CAFEVDB.appName, 'Display the application menu and settings side-bar')).
-      cafevTooltip({
-        placement: 'auto',
-        container: '#app-content'
-      });
-    CAFEVDB.Page.updateHistoryControls();
-  });
-
-});
 
 // Local Variables: ***
 // js-indent-level: 2 ***
