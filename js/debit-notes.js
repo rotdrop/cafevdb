@@ -91,7 +91,7 @@ var CAFEVDB = CAFEVDB || {};
 
 })(window, jQuery, CAFEVDB);
 
-$(document).ready(function(){
+$(function(){
 
   CAFEVDB.addReadyCallback(function() {
 

@@ -1505,7 +1505,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
 })(window, jQuery, CAFEVDB.Email);
 
-$(document).ready(function(){
+$(function(){
 
   $('button.eventattachments.edit').click(function(event) {
     event.preventDefault();

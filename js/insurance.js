@@ -208,7 +208,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
 
 })(window, jQuery, CAFEVDB.Insurances);
 
-$(document).ready(function(){
+$(function(){
 
     PHPMYEDIT.addTableLoadCallback('insurance-rates', {
         callback: function(selector, parameters, resizeCB) {
