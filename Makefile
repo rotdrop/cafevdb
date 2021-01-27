@@ -2,46 +2,8 @@
 # later. See the COPYING file.
 #
 # @author Claus-Justus Heine <himself@claus-justus-heine.de>
-# @copyright Claus-Justus Heine 2020
-# @author Bernhard Posselt <dev@bernhard-posselt.com>
-# @copyright Bernhard Posselt 2016
-
-# Generic Makefile for building and packaging a Nextcloud app which uses npm and
-# Composer.
+# @copyright Claus-Justus Heine 2020,2021
 #
-# Dependencies:
-# * make
-# * which
-# * curl: used if phpunit and composer are not installed to fetch them from the web
-# * tar: for building the archive
-# * npm: for building and testing everything JS
-#
-# If no composer.json is in the app root directory, the Composer step
-# will be skipped. The same goes for the package.json which can be located in
-# the app root or the js/ directory.
-#
-# The npm command by launches the npm build script:
-#
-#    npm run build
-#
-# The npm test command launches the npm test script:
-#
-#    npm run test
-#
-# The idea behind this is to be completely testing and build tool agnostic. All
-# build tools and additional package managers should be installed locally in
-# your project, since this won't pollute people's global namespace.
-#
-# The following npm scripts in your package.json install and update the bower
-# and npm dependencies and use gulp as build system (notice how everything is
-# run from the node_modules folder):
-#
-#    "scripts": {
-#        "test": "node node_modules/gulp-cli/bin/gulp.js karma",
-#        "prebuild": "npm install && node_modules/bower/bin/bower install && node_modules/bower/bin/bower update",
-#        "build": "node node_modules/gulp-cli/bin/gulp.js"
-#    },
-
 app_name=$(notdir $(CURDIR))
 SRCDIR=.
 ABSSRCDIR=$(CURDIR)
@@ -54,7 +16,7 @@ source_package_name=$(source_build_directory)/$(app_name)
 appstore_build_directory=$(BUILDDIR)/artifacts/appstore
 appstore_package_name=$(appstore_build_directory)/$(app_name)
 BASH=$(shell which bash 2> /dev/null)
-SHELL:=$(BASH)
+SHELL := $(BASH)
 npm=$(shell which npm 2> /dev/null)
 COMPOSER_SYSTEM=$(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
@@ -89,43 +51,31 @@ composer.lock: composer.json composer.json.in
  $(COMPOSER) install $(COMPOSER_OPTIONS);\
 }
 
+#@@ Fetches the PHP and JS dependencies and compiles the JS.
+#@ If no composer.json is present, the composer step is skipped, if no
+#@ package.json or js/package.json is present, the npm step is skipped
+build: composer npm
 .PHONY: build
-# Fetches the PHP and JS dependencies and compiles the JS. If no composer.json
-# is present, the composer step is skipped, if no package.json or js/package.json
-# is present, the npm step is skipped
-build: composer.json
-	[ -n "$(wildcard $(CURDIR)/composer.json)" ] && make composer
-ifneq (,$(wildcard $(CURDIR)/package.json))
-	make npm
-endif
-ifneq (,$(wildcard $(CURDIR)/js/package.json))
-	make npm
-endif
-
-.PHONY: provide-composer
-provide-composer:
-ifeq (, $(COMPOSER_SYSTEM))
-	@echo "No composer command available, downloading a copy from the web"
-	mkdir -p $(build_tools_directory)
-	cd $(build_tools_directory) && curl -sS https://getcomposer.org/installer | php
-endif
 
 # Installs and updates the composer dependencies. If composer is not installed
 # a copy is fetched from the web
 .PHONY: composer
-composer: provide-composer stamp.composer-core-versions
+composer: stamp.composer-core-versions
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
+
+.PHONY: npm-update
+npm-update:
+	npm update
+
+.PHONY: npm-init
+npm-init:
+	npm install
+	sed -Ei 's|^module[.]|//module.|g' node_modules/camelcase/index.js
 
 # Installs npm dependencies
 .PHONY: npm
-npm:
-ifeq (,$(wildcard $(CURDIR)/package.json))
-	cd js && $(npm) run build
-else
-	npm run build
-	# ahem.
-	sed -Ei 's|^module[.]|//module.|g' node_modules/camelcase/index.js
-endif
+npm: npm-init
+	npm run dev
 
 # Removes the appstore build
 .PHONY: clean

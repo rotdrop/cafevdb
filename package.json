@@ -1,22 +1,24 @@
 {
   "name": "cafevdb",
   "version": "1.0.0",
-  "description": "BE WARNED: THIS BEAST -- unfortunately -- IS NOT YET IN A SHAPE THAT IT COULD BE INSTALLED EASILY BY MERE MORTALS.",
+  "description": "Orchestra-Management App",
+  "author": "Claus-Justus Heine <himself@claus-justus-heine.de>",
   "main": "index.js",
-  "directories": {
-    "doc": "doc",
-    "lib": "lib"
-  },
   "scripts": {
-    "build": "npm install"
+    "build": "true",
+    "dev": "true"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rotdrop/cafevdb.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "orchestra",
+    "project",
+    "management",
+    "instrumentation"
+  ],
+  "license": "agpl",
   "bugs": {
     "url": "https://github.com/rotdrop/cafevdb/issues"
   },
@@ -28,5 +30,12 @@
     "imagesloaded": "^4.1.4",
     "jquery-file-download": "^1.4.6",
     "selectize": "^0.12.6"
+  },
+  "devDependencies": {
+    "exports-loader": "^2.0.0",
+    "imports-loader": "^1.2.0",
+    "shim-loader": "^1.0.1",
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0"
   }
 }
