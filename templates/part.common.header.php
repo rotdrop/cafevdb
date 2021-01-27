@@ -66,7 +66,6 @@ script($appName, 'cafevdb');
 script($appName, 'dialogs');
 script($appName, 'print-r');
 script($appName, 'ajax');
-script($appName, 'events-test'); /**< @TODO remove */
 script($appName, 'backgroundjobs');
 script($appName, 'notification');
 script($appName, 'page');

@@ -22,13 +22,6 @@
 
 namespace OCA\CAFEVDB;
 
-style($appName, 'cafevdb');
-style($appName, 'tooltips');
-
-script($appName, 'cafevdb');
-script($appName, 'jquery-extensions');
-script($appName, 'expertmode');
-
 $buttons = [];
 $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
