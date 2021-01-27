@@ -676,50 +676,23 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $field);
         }
       } else { // !multiple, simply update
-        if (true) {
-          // Note: this implies an additional fetch from the database,
-          // however, in the long run the goal would be to switch to
-          // Doctrine/ORM for everything. So we live with it for the
-          // moment.
-          $entityId = $this->extractKeyValues($meta, $identifier);
-          $entity = $this->find($entityId);
-          if (empty($entity)) {
-            $entity = $entityClass::create();
-            foreach ($entityId as $key => $value) {
-              $entity[$key] = $value;
-            }
+        // Note: this implies an additional fetch from the database,
+        // however, in the long run the goal would be to switch to
+        // Doctrine/ORM for everything. So we live with it for the
+        // moment.
+        $entityId = $this->extractKeyValues($meta, $identifier);
+        $entity = $this->find($entityId);
+        if (empty($entity)) {
+          $entity = $entityClass::create();
+          foreach ($entityId as $key => $value) {
+            $entity[$key] = $value;
           }
-          foreach ($changeSet as $column => $field) {
-            $entity[$column] = $newvals[$field];
-            Util::unsetValue($changed, $field);
-          }
-          $this->persist($entity);
-        } else {
-          // probably faster, but life-cycle callbacks and events are
-          // not handled.
-
-          // hack 'updated' column, ugly, but should work
-          if (isset($meta->fieldNames['updated'])) {
-            $changeSet['updated'] = $this->joinTableFieldName($joinInfo, 'updated');
-            $newvals[$changeSet['updated']] = new \DateTime();
-          }
-          $qb = $repository->createQueryBuilder('e')
-                           ->update();
-          foreach ($changeSet as $column => $field) {
-            $parameter = $column.'Value';
-            $qb->set('e.'.$this->property($column), ':'.$parameter)
-               ->setParameter($parameter, $newvals[$field]);
-            $this->logDebug("Unset $field in changed");
-            Util::unsetValue($changed, $field);
-          }
-          foreach ($this->extractKeyValues($meta, $identifier) as $column => $value) {
-            $parameter = $column.'Key';
-            $qb->andWhere('e.'.$this->property($column).' = :'.$parameter)
-               ->setParameter($parameter, $value);
-          }
-          $qb->getQuery()
-             ->execute();
         }
+        foreach ($changeSet as $column => $field) {
+          $entity[$column] = $newvals[$field];
+          Util::unsetValue($changed, $field);
+        }
+        $this->persist($entity);
       }
     }
     $this->flush(); // flush everything to the data-base
@@ -884,11 +857,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // joined entities which are yet to be inserted.
         if ($joinInfo['master']) {
           $this->flush($entity);
-
           foreach ($this->pme->key as $key => $type) {
             $newvals[$key] = $entity[$key];
           }
-
         }
       }
     }
