@@ -350,12 +350,14 @@ class Projects extends PMETableViewBase
             'template' => 'project-extra-fields',
             'projectName' => $row[$this->queryField('name', $fdd)],
             'project_id' => $recordId,
+            'projectId' => $recordId,
           ];
+          $json = json_encode($post);
           $post = http_build_query($post, '', '&');
           $title = $this->toolTipsService['project-action-extra-fields'];
           $link =<<<__EOT__
 <li class="nav tooltip-top" title="$title">
-  <a class="nav" href="#" data-post="$post">
+  <a class="nav" href="#" data-post="$post" data-json='$json'>
 $value
   </a>
 </li>

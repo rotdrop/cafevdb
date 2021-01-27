@@ -178,7 +178,47 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     PHPMYEDIT.tableDialogOpen(tableOptions);
   };
 
-  /**Generate a popup for the "project (over-)view.
+
+  /**
+   * Generate a popup for the extra-fields setup
+   *
+   * @param containerSel The ambient element of the container
+   * (i.e. the base page, or the div holding the dialog this one was
+   * initiated from.
+   *
+   * @param past Arguments object:
+   * { projectName: 'NAME', projectId: XX }
+   */
+  Projects.extraFieldsPopup = function(containerSel, post)
+  {
+    // Prepate the data-array for PHPMYEDIT.tableDialogOpen(). The
+    // instrumentation numbers are somewhat nasty and require too
+    // many options.
+
+    const template = 'project-extra-fields';
+    const tableOptions = {
+      AmbientContainerSelector: containerSel,
+      DialogHolderCSSId: template + '-dialog',
+      template: template,
+      templateRenderer: CAFEVDB.Page.templateRenderer(template),
+      Table: 'ProjectExtraFields',
+      projectId: post.projectId,
+      projectName: post.projectName,
+      // Now special options for the dialog popup
+      InitialViewOperation: true,
+      InitialName: false, // 'PME_sys_operation',
+      InitialValue: false, // 'View',
+      ReloadName: false, // 'PME_sys_operation',
+      ReloadValue: false, // 'View',
+      PME_sys_operation: false, //'View',
+      ModalDialog: false,
+      modified: false
+    };
+    PHPMYEDIT.tableDialogOpen(tableOptions);
+  };
+
+  /**
+   * Generate a popup for the "project (over-)view.
    *
    * @param containerSel The ambient element of the container
    * (i.e. the base page, or the div holding the dialog this one was
@@ -588,7 +628,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
 })(window, jQuery, CAFEVDB.Projects);
 
-$(document).ready(function(){
+$(function(){
 
   PHPMYEDIT.addTableLoadCallback('projects', {
     callback: function(selector, parameters, resizeCB) {
@@ -1010,7 +1050,18 @@ $(document).ready(function(){
                      return false;
                    });
       };
-      return false;
+
+      const projectExtra = container.find('td.pme-value.projectextra a.nav');
+      projectExtra
+        .off('click')
+        .on('click', function(event) {
+          const data = projectExtra.data('json');
+          console.info('DATA', data, selector);
+          Projects.extraFieldsPopup(selector, data);
+          return false;
+        });
+
+      return false; // table load callback
     },
     context: CAFEVDB.Projects,
     parameters: []
