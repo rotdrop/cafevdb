@@ -350,6 +350,9 @@ class PHPMyEdit extends \phpMyEdit
   {
     switch($operation) {
     case 'insert':
+      if (empty($changed)) {
+        return;
+      }
       $query = sprintf('INSERT INTO %s'
                        .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
                        .' VALUES (NOW(), "%s", "%s", "%s", "%s", "%s", "", "", "%s")',
