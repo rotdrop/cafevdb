@@ -532,7 +532,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       if ($joinInfo['master']) {
         // leave this to phpMyEdit, otherwise key-updates would need
         // further care.
-        continue;
+        // continue;
       }
       $changeSet = $changeSets[$table];
       $this->logDebug('CHANGESET '.$table.' '.print_r($changeSet, true));
@@ -584,11 +584,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($identifier[$multiple]['old'] as $oldKey) {
           $oldIdentifier[$oldKey] = $identifier;
           $oldIdentifier[$oldKey][$multiple] = $oldKey;
-        }
-        foreach ($identifier[$multiple]['new'] as $newKey) {
-          $newIdentifier[$newKey] = $identifier;
-          $newIdentifier[$newKey][$multiple] = $newKey;
-          $multipleValues[$newKey] = [];
         }
         foreach ($identifier[$multiple]['add'] as $addKey) {
           $addIdentifier[$addKey] = $identifier;
@@ -724,6 +719,176 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
           $qb->getQuery()
              ->execute();
+        }
+      }
+    }
+    $this->flush(); // flush everything to the data-base
+
+    // debug
+    foreach ($changed as $field) {
+      $fieldInfo = $this->joinTableField($field);
+      throw new \Exception($this->l->t('Change-set %s should be empty.', print_r($changed, true)));
+    }
+    $this->logDebug('BEFORE UPD: '.print_r($changed, true));
+
+    // all should be done
+    $pme->setLogging(false);
+
+    return true; //!empty($changed);
+  }
+
+  /**
+   * Before insert-trigger which ideally should insert all data such
+   * that nothing remains to be done for phpMyEdit. The idea is to
+   * eventually abandon phpMyEdit and for the time being do as much as
+   * possible with the Doctrine ORM.
+   *
+   * @param $pme The phpMyEdit instance. This is
+   * OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit.
+   *
+   * @param $op The operation, here must be 'insert'.
+   *
+   * @param $step 'before' or 'after'. Here it is 'before'.
+   *
+   * @param $oldvals This is empty here, as we are the 'insert' handler.
+   *
+   * @param &$changed Set of changed fields, may be modified by the
+   * callback. This contains all fields to insert.
+   *
+   * @param &$newvals Set of new values, which may also be
+   * modified. Ideally this should be empty on return.
+   *
+   * @return bool If returning @c false the operation will be
+   * terminated. We have to return 'true' in order not hinder further
+   * callbacks and in order to update the primary identifier record of
+   * $pme.
+   */
+  public function beforeInsertDoInsertAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    $this->logInfo('OLDVALS '.print_r($oldvals, true));
+    $this->logInfo('NEWVALS '.print_r($newvals, true));
+    $this->logInfo('CHANGED '.print_r($changed, true));
+    $changeSets = [];
+    foreach ($changed as $field) {
+      $fieldInfo = $this->joinTableField($field);
+      $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
+    }
+    $this->logDebug('CHANGESETS: '.print_r($changeSets, true));
+
+    foreach ($this->joinStructure as $joinInfo) {
+      if (!empty($joinInfo['read_only'])) {
+        continue;
+      }
+      $table = $joinInfo['table'];
+      if (empty($changeSets[$table])) {
+        continue;
+      }
+      if ($joinInfo['master']) {
+        // leave this to phpMyEdit, otherwise key-updates would need
+        // further care.
+        // continue;
+      }
+      $changeSet = $changeSets[$table];
+      $this->logDebug('CHANGESET '.$table.' '.print_r($changeSet, true));
+      $entityClass = $joinInfo['entity'];
+      $repository = $this->getDatabaseRepository($entityClass);
+      $meta = $this->classMetadata($entityClass);
+      //$this->logDebug('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
+
+      $identifier = [];
+      $identifierColumns = $meta->getIdentifierColumnNames();
+      foreach ($identifierColumns as $key) {
+        if (empty($joinInfo['identifier'][$key])) {
+          // assume that the 'column' component contains the keys.
+          $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+          $identifier[$key] = Util::explode(',', $newvals[$keyField]);
+
+          Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
+          unset($changeSet[$joinInfo['column']]);
+          $multiple = $key;
+        } else if (is_array($joinInfo['identifier'][$key])) {
+          if (!empty($joinInfo['identifier'][$key]['value'])) {
+            $identifier[$key] = $joinInfo['identifier'][$key]['value'];
+          } else {
+            throw new \Exception($this->l->t('Nested multi-value join tables are not yet supported.'));
+          }
+        } else {
+          $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
+        }
+      }
+      if (!empty($multiple)) {
+        foreach ($identifier[$multiple] as $addKey) {
+          $addIdentifier[$addKey] = $identifier;
+          $addIdentifier[$addKey][$multiple] = $addKey;
+        }
+
+        $this->logDebug('IDS '.print_r($identifier, true));
+        $this->logDebug('CHG '.print_r($changeSet, true));
+
+        foreach ($changeSet as $column => $field) {
+          // convention for multiple change-sets:
+          //
+          // - the values start with the key
+          // - boolean false values are omitted
+          // - optional values are omitted
+          // - values are separated by a colon from the key
+          foreach (explode(',', $newvals[$field]) as $value) {
+            $keyVal = array_merge(explode(':', $value), [ true, true ]);
+            $multipleValues[$keyVal[0]][$column] = $keyVal[1];
+          }
+          foreach ($identifier[$multiple] as $new) {
+            if (!isset($multipleValues[$new][$column])) {
+              $multipleValues[$new][$column] =
+                isset($pme->fdd[$field]['default']) ? $pme->fdd[$field]['default'] : null;
+            }
+          }
+        }
+
+        $this->logDebug('VAL '.print_r($multipleValues, true));
+
+        // Add new entities
+        foreach ($identifier[$multiple] as $new) {
+          $this->logDebug('TRY MOD '.$new);
+          $id = $addIdentifier[$new];
+          $entityId = $this->extractKeyValues($meta, $id);
+          $entity = $entityClass::create();
+          foreach ($entityId as $key => $value) {
+            $entity[$key] = $value;
+          }
+
+          // set further properties ...
+          foreach ($multipleValues[$new] as $column => $value) {
+            $entity[$column] = $value;
+          }
+
+          // persist
+          $this->persist($entity);
+        }
+        foreach ($changeSet as $column => $field) {
+          Util::unsetValue($changed, $field);
+        }
+      } else { // !multiple, simply insert
+        $entityId = $this->extractKeyValues($meta, $identifier);
+        $entity = $entityClass::create();
+        foreach ($entityId as $key => $value) {
+          $entity[$key] = $value;
+        }
+        foreach ($changeSet as $column => $field) {
+          $entity[$column] = $newvals[$field];
+          Util::unsetValue($changed, $field);
+        }
+        $this->persist($entity);
+
+        // if this is the master table, then we need also to fetch the
+        // id and to insert the id(s) into the change-sets for the
+        // joined entities which are yet to be inserted.
+        if ($joinInfo['master']) {
+          $this->flush($entity);
+
+          foreach ($this->pme->key as $key => $type) {
+            $newvals[$key] = $entity[$key];
+          }
+
         }
       }
     }

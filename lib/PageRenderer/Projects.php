@@ -447,8 +447,7 @@ __EOT__;
     $opts['triggers']['update']['after'][]   = [ $this, 'afterUpdateTrigger' ];
 
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertTrigger' ];
-    //@TODO write a general insert function like beforeUpdateDoUpdateAll
-    //$opts['triggers']['insert']['after'][]   = [ $this, 'addOrChangeInstrumentation' ];
+    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts['triggers']['insert']['after'][]   = [ $this, 'afterInsertTrigger' ];
 
     $opts['triggers']['delete']['before'][] = [ $this , 'deleteTrigger' ];
