@@ -265,6 +265,9 @@ class phpMyEdit
 	 */
 	protected function logQuery($operation, $oldvals, $changed, $newvals)
 	{
+		if (empty($changed)) {
+			return;
+		}
 		switch($operation) {
 		case 'insert':
 			$query = sprintf('INSERT INTO %s'
@@ -4610,8 +4613,6 @@ class phpMyEdit
 
 	function do_add_record() /* {{{ */
 	{
-		// Preparing query
-		$query = ''; // query_groups not supported, would be difficult
 		$key_col_val = [];
 		$newvals	 = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
@@ -4655,9 +4656,12 @@ class phpMyEdit
 		if ($this->exec_triggers('insert', 'before', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
+
 		// Real query (no additional query in this method)
-		foreach ($newvals as $fd => $val) {
+		$query = ''; // query_groups not supported, would be difficult
+		foreach ($changed as $fd) {
 			if ($fd == '') continue;
+			$val = $newvals[$fd];
 			$fdn = $this->fdn[$fd];
 			$fdd = $this->fdd[$fdn];
 			if ($this->skipped($fdn)) {
@@ -4705,13 +4709,17 @@ class phpMyEdit
 				$query2 .= ', '.$value.'';
 			}
 		}
-		$query .= $query2.')';
-		$res	= $this->myquery($query, __LINE__);
-		$this->message = $this->sql_affected_rows().' '.$this->labels['record added'];
-		if (! $res) {
-			return false;
+		if (!empty($query)) {
+			$query .= $query2.')';
+			$res	= $this->myquery($query, __LINE__);
+			$this->message = $this->sql_affected_rows().' '.$this->labels['record added'];
+			if (! $res) {
+				return false;
+			}
+			$rec = $this->sql_insert_id();
+		} else {
+			$rec = -1;
 		}
-		$rec = $this->sql_insert_id();
 		if ($rec > 0 && count($this->key) == 1) {
 			$this->rec = [ array_keys($this->key)[0] => $rec ];
 		} else if (count($key_col_val) == count($this->key)) {
@@ -4726,6 +4734,7 @@ class phpMyEdit
 			$this->logQuery('insert', $oldvals, $changed, $newvals);
 		}
 		// After trigger
+		$changed = array_keys($newvals); // rebuild if reset by previous triggers.
 		if ($this->exec_triggers('insert', 'after', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
