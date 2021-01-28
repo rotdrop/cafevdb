@@ -18,22 +18,36 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-var CAFEVDB = CAFEVDB || {};
-var PHPMYEDIT = PHPMYEDIT || {} ;
-
-CAFEVDB.appName = 'cafevdb';
+const initialState = {
+  appName: __APP_NAME__
+};
 
 try {
-  CAFEVDB.initialState = OCP.InitialState.loadState(CAFEVDB.appName, 'CAFEVDB');
-  console.log("CAFEVDB INITIAL STATE", CAFEVDB.initialState);
+  initialState.CAFEVDB = OCP.InitialState.loadState(__APP_NAME__, 'CAFEVDB');
+  console.log('CAFEVDB INITIAL STATE', initialState.CAFEVDB);
+  if (__APP_NAME__ !== initialState.CAFEVDB.appName) {
+    throw new Error('__APP_NAME__ / CAFEVDB.appName are different: ' + __APP_NAME__ +  ' / ' + initialState.CAFEVDB.appName);
+  }
 } catch (error) {
   console.info('Failed to load initial state for CAFEVDB');
-  CAFEVDB.initialState = {};
+  initialState.CAFEVDB = {};
 }
 try {
-  PHPMYEDIT.initialState = OCP.InitialState.loadState(CAFEVDB.appName, 'PHPMYEDIT');
-  console.log("PHPMYEDIT INITIAL STATE", PHPMYEDIT.initialState);
+  initialState.PHPMYEDIT = OCP.InitialState.loadState(__APP_NAME__, 'PHPMYEDIT');
+  console.log('PHPMYEDIT INITIAL STATE', initialState.PHPMYEDIT);
 } catch (error) {
   console.info('Failed to load initial state for PHPMYEDIT');
-  PHPMYEDIT.initialState = {};
+  initialState.PHPMYEDIT = {};
 }
+
+// @TODO remove
+window.CAFEVDB = window.CAFEVDB || {};
+window.CAFEVDB.initialState = initialState.CAFEVDB;
+window.PHPMYEDIT = window.PHPMYEDIT || {};
+window.PHPMYEDIT.initialState = initialState.PHPMYEDIT;
+
+export { initialState };
+
+// Local Variables: ***
+// js-indent-level: 2 ***
+// End: ***

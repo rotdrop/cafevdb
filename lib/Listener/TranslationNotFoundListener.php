@@ -34,7 +34,6 @@ class TranslationNotFoundListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const APP_NAME = 'cafevdb';
   const EVENT = HandledEvent::class;
 
   /** @var string */
