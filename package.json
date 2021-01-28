@@ -28,7 +28,9 @@
     "@nextcloud/dialogs": "^2.0.1",
     "camelcase": "^5.2.0",
     "imagesloaded": "^4.1.4",
+    "jcrop": "^3.0.1",
     "jquery-file-download": "^1.4.6",
+    "jquery-jcrop": "^0.9.15",
     "selectize": "^0.12.6"
   },
   "devDependencies": {
