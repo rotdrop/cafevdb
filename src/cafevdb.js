@@ -1,5 +1,6 @@
-import * as Ajax from './cafevdb/ajax.js';
-import * as Projects from './cafevdb/projects.js';
+//import Ajax from './cafevdb/ajax.js';
+//import Projects from './cafevdb/projects.js';
 
 export * from './cafevdb/core.js';
-export { Ajax, Projects };
+
+//export { Ajax, Projects };
