@@ -37,6 +37,7 @@ import { documentReady as projectParticipantsDocumentReady } from './app/project
 import { documentReady as sepaDebitMandatesDocumentReady } from './app/sepa-debit-mandate.js';
 import { documentReady as projectsDocumentReady } from './app/projects.js';
 import { documentReady as projectInstrumentationNumbersDocumentReady } from './app/project-instrumentation-numbers.js';
+import { documentReady as blogDocumentReady } from './app/blog.js';
 import beforeReady from './app/before-ready.js';
 import './app/jquery-extensions.js';
 
@@ -46,6 +47,7 @@ globalState.print_r = print_r;
 
 $(function() {
   documentReady();
+  blogDocumentReady();
   musiciansDocumentReady();
   projectParticipantsDocumentReady();
   pageDocumentReady();
