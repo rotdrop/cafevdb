@@ -22,11 +22,12 @@
 import * as CAFEVDB from './cafevdb.js';
 import * as Page from './page.js';
 import * as Email from './email.js';
+import * as PHPMyEdit from './pme.js';
 
 const ready = function(container, resizeCB) {
 
   // sanitize
-  container = PHPMYEDIT.container(container);
+  container = PHPMyEdit.container(container);
 
   container.
     off('click', '.debit-note-actions a.announce').

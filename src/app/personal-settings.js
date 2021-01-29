@@ -23,6 +23,7 @@ import { globalState } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
+import * as PHPMyEdit from './pme.js';
 
 const documentReady = function() {
 
@@ -143,8 +144,8 @@ const documentReady = function() {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         console.error(data);
       });
-    if (window.PHPMYEDIT !== undefined) {
-      PHPMYEDIT.directChange = checked;
+    if (globalState.PHPMyEdit !== undefined) {
+      globalState.PHPMyEdit.directChange = checked;
     }
     $('.personal-settings input[type="checkbox"].directchange').prop('checked', checked)
     return false;
@@ -158,16 +159,15 @@ const documentReady = function() {
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
-        if (window.PHPMYEDIT !== undefined) {
-          const pme = PHPMYEDIT;
-          const pmeForm = $('#content '+pme.formSelector()+'.show-hide-disabled');
-          console.log('form',pmeForm);
+        if (globalState.PHPMyEdit !== undefined) {
+          const pmeForm = $('#content ' + PHPMyEdit.formSelector()+'.show-hide-disabled');
+          console.log('form', pmeForm);
           pmeForm.each(function(index) {
             const form = $(this);
-            const reload = form.find(pme.pmeClassSelector('input', 'reload')).first();
+            const reload = form.find(PHPMyEdit.classSelector('input', 'reload')).first();
             if (reload.length > 0) {
               form.append('<input type="hidden"'
-                          + ' name="'+pme.pmeSys('sw')+'"'
+                          + ' name="' + PHPMyEdit.sys('sw') + '"'
                           + ' value="Clear"/>');
               reload.trigger('click');
             }
@@ -179,8 +179,8 @@ const documentReady = function() {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         console.error(data);
       });
-    if (window.PHPMYEDIT !== undefined) {
-      PHPMYEDIT.showdisabled = checked;
+    if (globalState.PHPMyEdit !== undefined) {
+      globalState.PHPMyEdit.showdisabled = checked;
     }
     $('.personal-settings input[type="checkbox"].showdisabled').prop('checked', checked);
     return false;
@@ -194,11 +194,10 @@ const documentReady = function() {
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
-        if (window.PHPMYEDIT !== undefined) {
-          const pme = PHPMYEDIT;
-          const pmeForm = $('#content '+pme.formSelector());
+        if (globalState.PHPMyEdit !== undefined) {
+          const pmeForm = $('#content ' + PHPMyEdit.formSelector());
           pmeForm.each(function(index) {
-            const reload = $(this).find(pme.pmeClassSelector('input', 'reload')).first();
+            const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
             reload.trigger('click');
           });
         }

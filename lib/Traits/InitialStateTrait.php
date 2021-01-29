@@ -81,7 +81,7 @@ trait InitialStateTrait {
 
     $this->initialStateService->provideInitialState(
       $this->appName,
-      'PHPMYEDIT',
+      'PHPMyEdit',
       [
         'directChange' => ($directChg == "on" ? true : false),
         'selectChosen' => true,

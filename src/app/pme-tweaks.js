@@ -46,8 +46,7 @@ const pmeTweaks = function(container) {
     return $.trim($(this).text()).indexOf('-') == 0;
   }).addClass('negative');
 
-
-  $(PHPMYEDIT.defaultSelector + ' input.pme-email').
+  $(globalState.PHPMyEdit.defaultSelector + ' input.pme-email').
     off('click').
     on('click', function(event) {
       event.stopImmediatePropagation();
@@ -77,7 +76,7 @@ const pmeTweaks = function(container) {
 
   // This could also be wrapped into a popup maybe, and lead back to
   // the brief-instrumentation table on success.
-  // $(PHPMYEDIT.defaultSelector + ' input.pme-bulkcommit').addClass('formsubmit');
+  // $(PHPMyEdit.defaultSelector + ' input.pme-bulkcommit').addClass('formsubmit');
 };
 
 export default pmeTweaks;

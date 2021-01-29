@@ -27,6 +27,7 @@ import * as Photo from './inlineimage.js';
 import * as ProjectExtra from './project-extra.js';
 import * as DebitNotes from './debit-notes.js';
 import * as Musicians from './musicians.js';
+import * as PHPMyEdit from './pme.js';
 import pmeTweaks from './pme-tweaks.js';
 
 const documentReady = function() {
@@ -184,10 +185,10 @@ const documentReady = function() {
     parameters: []
   };
 
-  PHPMYEDIT.addTableLoadCallback('all-musicians', musiciansCallback);
-  PHPMYEDIT.addTableLoadCallback('add-musicians', musiciansCallback);
+  PHPMyEdit.addTableLoadCallback('all-musicians', musiciansCallback);
+  PHPMyEdit.addTableLoadCallback('add-musicians', musiciansCallback);
 
-  PHPMYEDIT.addTableLoadCallback('project-extra-fields', {
+  PHPMyEdit.addTableLoadCallback('project-extra-fields', {
     callback: function(selector, parameters, resizeCB) {
 
       if (parameters.reason != 'dialogOpen') {
@@ -202,7 +203,7 @@ const documentReady = function() {
   });
 
 
-  PHPMYEDIT.addTableLoadCallback('instruments', {
+  PHPMyEdit.addTableLoadCallback('instruments', {
     callback(selector, parameters, resizeCB) {
       resizeCB();
     },
@@ -210,7 +211,7 @@ const documentReady = function() {
     parameters: []
   });
 
-  PHPMYEDIT.addTableLoadCallback('instrument-families', {
+  PHPMyEdit.addTableLoadCallback('instrument-families', {
     callback(selector, parameters, resizeCB) {
       resizeCB();
     },
@@ -218,7 +219,7 @@ const documentReady = function() {
     parameters: []
   });
 
-  PHPMYEDIT.addTableLoadCallback('project-payments', {
+  PHPMyEdit.addTableLoadCallback('project-payments', {
     callback(selector, parameters, resizeCB) {
       resizeCB();
     },
@@ -226,7 +227,7 @@ const documentReady = function() {
     parameters: []
   });
 
-  PHPMYEDIT.addTableLoadCallback('debit-notes', {
+  PHPMyEdit.addTableLoadCallback('debit-notes', {
     callback(selector, parameters, resizeCB) {
 
       if (parameters.reason != 'dialogOpen') {

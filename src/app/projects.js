@@ -29,6 +29,7 @@ import * as Photo from './inlineimage.js';
 import * as Notification from './notification.js';
 import * as Events from './events.js';
 import * as Email from './email.js';
+import * as PHPMyEdit from './pme.js';
 
 /**
  * Strip any digit from the end of name and attach the four digit
@@ -155,7 +156,7 @@ const emailPopup = function(post, reopen) {
  */
 const instrumentationNumbersPopup = function(containerSel, post)
 {
-  // Prepate the data-array for PHPMYEDIT.tableDialogOpen(). The
+  // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
@@ -180,7 +181,7 @@ const instrumentationNumbersPopup = function(containerSel, post)
     ModalDialog: false,
     modified: false
   };
-  PHPMYEDIT.tableDialogOpen(tableOptions);
+  PHPMyEdit.tableDialogOpen(tableOptions);
 };
 
 
@@ -196,7 +197,7 @@ const instrumentationNumbersPopup = function(containerSel, post)
  */
 const extraFieldsPopup = function(containerSel, post)
 {
-  // Prepate the data-array for PHPMYEDIT.tableDialogOpen(). The
+  // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
@@ -219,7 +220,7 @@ const extraFieldsPopup = function(containerSel, post)
     ModalDialog: false,
     modified: false
   };
-  PHPMYEDIT.tableDialogOpen(tableOptions);
+  PHPMyEdit.tableDialogOpen(tableOptions);
 };
 
 /**
@@ -234,7 +235,7 @@ const extraFieldsPopup = function(containerSel, post)
  */
 const projectViewPopup = function(containerSel, post)
 {
-  // Prepate the data-array for PHPMYEDIT.tableDialogOpen(). The
+  // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
@@ -255,7 +256,7 @@ const projectViewPopup = function(containerSel, post)
     ModalDialog: true,
     modified: false
   };
-  PHPMYEDIT.tableDialogOpen(tableOptions);
+  PHPMyEdit.tableDialogOpen(tableOptions);
 };
 
 /**Parse the user-selection from the project-actions menu.
@@ -352,8 +353,8 @@ const actions = function(select, containerSel) {
 };
 
 const actionMenu = function(containerSel) {
-  containerSel = PHPMYEDIT.selector(containerSel);
-  const container = PHPMYEDIT.container(containerSel);
+  containerSel = PHPMyEdit.selector(containerSel);
+  const container = PHPMyEdit.container(containerSel);
   const projectActions = container.find('select.project-actions');
 
   const chosenOptions = {
@@ -384,10 +385,10 @@ const actionMenu = function(containerSel) {
 };
 
 const pmeFormInit = function(containerSel) {
-  containerSel = PHPMYEDIT.selector(containerSel);
-  const container = PHPMYEDIT.container(containerSel);
+  containerSel = PHPMyEdit.selector(containerSel);
+  const container = PHPMyEdit.container(containerSel);
   const form = container.find('form[class^="pme-form"]');
-  const submitSel = PHPMYEDIT.pmeClassSelectors(
+  const submitSel = PHPMyEdit.classSelectors(
     'input',
     ['save', 'apply', 'more']);
 
@@ -633,10 +634,10 @@ const projectWebPageTabHandler = function(event, ui, container) {
 
 const documentReady = function() {
 
-  PHPMYEDIT.addTableLoadCallback('projects', {
+  PHPMyEdit.addTableLoadCallback('projects', {
     callback: function(selector, parameters, resizeCB) {
       const Projects = this;
-      const container = PHPMYEDIT.container(selector);
+      const container = PHPMyEdit.container(selector);
       const containerNode = container[0];
       Projects.actionMenu(selector);
       Projects.pmeFormInit(selector);
@@ -1071,12 +1072,12 @@ const documentReady = function() {
   });
 
   CAFEVDB.addReadyCallback(function() {
-    const container = PHPMYEDIT.container();
+    const container = PHPMyEdit.container();
     if (!container.hasClass('projects')) {
       return;
     }
     actionMenu();
-    pmeFormInit(PHPMYEDIT.defaultSelector);
+    pmeFormInit(PHPMyEdit.defaultSelector);
   });
 };
 

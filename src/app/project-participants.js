@@ -28,6 +28,7 @@ import * as Notification from './notification.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
 import * as ProjectParticipants from './project-participants.js';
+import * as PHPMyEdit from './pme.js';
 
 /**
  * Open a dialog in order to edit the personal reccords of one
@@ -64,14 +65,13 @@ const personalRecordDialog = function(record, options) {
     options.project = options.projectName;
   }
 
-  const pme = PHPMYEDIT;
-  const pmeOperation = pme.pmeSys('operation');
-  const pmeRecord = pme.pmeSys('rec');
+  const pmeOperation = PHPMyEdit.sys('operation');
+  const pmeRecord = PHPMyEdit.sys('rec');
 
   var tableOptions = {
     projectId: -1,
     projectName: '',
-    ambientContainerSelector: pme.selector(),
+    ambientContainerSelector: PHPMyEdit.selector(),
     DialogHolderCSSId: 'personal-record-dialog',
     // Now special options for the dialog popup
     InitialViewOperation: options.InitialValue == 'View',
@@ -109,7 +109,7 @@ const personalRecordDialog = function(record, options) {
 
   //alert('options: '+CAFEVDB.print_r(tableOptions, true));
 
-  PHPMYEDIT.tableDialogOpen(tableOptions);
+  PHPMyEdit.tableDialogOpen(tableOptions);
 };
 
 /**
@@ -140,7 +140,7 @@ const validateInstrumentChoices = function(
 
   Notification.hide(function () {
     $.post(ajaxScript, {
-      recordId: PHPMYEDIT.pmeRec(container),
+      recordId: PHPMyEdit.rec(container),
       instrumentValues: selectMusicianInstrument.val()
     })
       .fail(function(xhr, status, errorThrown) {
@@ -189,7 +189,7 @@ const validateInstrumentChoices = function(
  * table-view has been loaded.
  */
 const loadPMETable = function(form, formData, afterLoadCallback) {
-  var pmeSys = PHPMYEDIT.pmeSys('');
+  var pmeSys = PHPMyEdit.sys('');
   form.find('input').not('[name^="'+pmeSys+'"]').each(function(idx) {
     const self = $(this);
     const name = self.attr('name');
@@ -229,7 +229,7 @@ const loadPMETableFiltered = function(form, formData, ids, afterLoadCallback) {
     ids = [];
   }
 
-  const pmeSys = PHPMYEDIT.pmeSys('');
+  const pmeSys = PHPMyEdit.sys('');
   var filterData = {};
   for (var idx = 0; idx < ids.length; ++idx) {
     const indices = (typeof ids[idx] == 'object') ? ids[idx] : { '0': ids[idx] };
@@ -332,8 +332,8 @@ const loadProjectParticipants = function(form, musicians, afterLoadCallback) {
 };
 
 const ready = function(selector, resizeCB) {
-  selector = PHPMYEDIT.selector(selector);
-  const container = PHPMYEDIT.container(selector);
+  selector = PHPMyEdit.selector(selector);
+  const container = PHPMyEdit.container(selector);
 
   const self = this;
 
@@ -346,9 +346,9 @@ const ready = function(selector, resizeCB) {
   const selectGroupOfPeople = container.find('.pme-value select.pme-input.groupofpeople');
   const inputGroupOfPeopleId = container.find('input.pme-input.groupofpeople-id');
   const selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
-  const form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
+  const form = container.find(PHPMyEdit.classSelector('form', 'form'));
 
-  var recKey = form.find(PHPMYEDIT.pmeSysNameSelector('input', 'rec[musician_id]'));
+  var recKey = form.find(PHPMyEdit.sysNameSelector('input', 'rec[musician_id]'));
   recKey = recKey.length === 1 ? recKey.val() : -1;
 
   const selectedVoices = selectVoices.val();
@@ -436,7 +436,7 @@ const ready = function(selector, resizeCB) {
         self.data('selected', self.val() ? self.val() : []);
 
 	// should we?
-        PHPMYEDIT.submitOuterForm(selector);
+        PHPMyEdit.submitOuterForm(selector);
       },
       function (data) {
         const oldInstruments = data.oldInstruments || self.data('selected');
@@ -490,7 +490,7 @@ const ready = function(selector, resizeCB) {
         // entered by the user. The form-submit
         // will then also reload with an up to date
         // list of instruments
-        PHPMYEDIT.submitOuterForm(selector);
+        PHPMyEdit.submitOuterForm(selector);
       },
       function(data) {
         const oldInstruments = data.oldInstruments || self.data('selected');
@@ -717,7 +717,7 @@ const ready = function(selector, resizeCB) {
 
 const documentReady = function() {
 
-  PHPMYEDIT.addTableLoadCallback('project-participants', {
+  PHPMyEdit.addTableLoadCallback('project-participants', {
     callback: function(selector, parameters, resizeCB) {
 
       if (parameters.reason == 'tabChange') {

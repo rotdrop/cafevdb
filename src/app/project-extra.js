@@ -23,6 +23,7 @@
 import { globalState } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
+import * as PHPMyEdit from './pme.js';
 
 const ready = function(selector, resizeCB) {
   var container = $(selector);
@@ -189,7 +190,7 @@ const ready = function(selector, resizeCB) {
       }
 
       // defer submit until after validation.
-      const submitDefer = PHPMYEDIT.deferReload(container);
+      const submitDefer = PHPMyEdit.deferReload(container);
       self.prop('readonly', true);
 
       const cleanup = function() {
@@ -263,7 +264,7 @@ const ready = function(selector, resizeCB) {
     postData += '&'+allowed.serialize();
 
     // defer submit until after validation.
-    const submitDefer = PHPMYEDIT.deferReload(container);
+    const submitDefer = PHPMyEdit.deferReload(container);
     allowed.prop('readonly', true);
     const cleanup = function() {
       allowed.prop('readonly', false);
@@ -362,7 +363,7 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  var tableContainerId = PHPMYEDIT.pmeIdSelector('table-container');
+  var tableContainerId = PHPMyEdit.idSelector('table-container');
   container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
     console.log('chosen:showing_dropdown');
     const widget = container.cafevDialog('widget');
@@ -401,7 +402,7 @@ const ready = function(selector, resizeCB) {
 const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
-    const container = PHPMYEDIT.container();
+    const container = PHPMyEdit.container();
     if (!container.hasClass('project-extra-fields')) {
       return; // not for us
     }

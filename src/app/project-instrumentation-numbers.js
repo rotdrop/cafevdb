@@ -24,9 +24,10 @@ import { globalState } from './globals.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 import * as CAFEVDB from './cafevdb.js';
+import * as PHPMyEdit from './pme.js';
 
 const ready = function(selector) {
-  const container = PHPMYEDIT.container(selector);
+  const container = PHPMyEdit.container(selector);
 
   const transferButton = container.find('input.transfer-registered-instruments');
   if (transferButton.lenght <= 0) {
@@ -44,9 +45,9 @@ const ready = function(selector) {
           // Anyhow, reload and see what happens. Hit
           // either the save and continue or the reload
           // button.
-          PHPMYEDIT.triggerSubmit('morechange', container)
-            || PHPMYEDIT.triggerSubmit('reloadview', container)
-            || PHPMYEDIT.triggerSubmit('reloadlist', container);
+          PHPMyEdit.triggerSubmit('morechange', container)
+            || PHPMyEdit.triggerSubmit('reloadview', container)
+            || PHPMyEdit.triggerSubmit('reloadlist', container);
         })
         .done(function(data) {
           var timeout = 0;
@@ -59,9 +60,9 @@ const ready = function(selector) {
               // Anyhow, reload and see what happens. Hit
               // either the save and continue or the reload
               // button.
-              PHPMYEDIT.triggerSubmit('morechange', container)
-                || PHPMYEDIT.triggerSubmit('reloadview', container)
-                || PHPMYEDIT.triggerSubmit('reloadlist', container);
+              PHPMyEdit.triggerSubmit('morechange', container)
+                || PHPMyEdit.triggerSubmit('reloadview', container)
+                || PHPMyEdit.triggerSubmit('reloadlist', container);
             });
           }, timeout);
         });
@@ -73,7 +74,7 @@ const ready = function(selector) {
 
 const documentReady = function() {
 
-  PHPMYEDIT.addTableLoadCallback(
+  PHPMyEdit.addTableLoadCallback(
     'project-instrumentation-numbers',
     {
       callback: function(selector, parameters, resizeCB) {
@@ -89,7 +90,7 @@ const documentReady = function() {
     });
 
   CAFEVDB.addReadyCallback(function() {
-    const container = $(PHPMYEDIT.defaultSelector+'.project-instrumentation-numbers');
+    const container = $(PHPMyEdit.defaultSelector+'.project-instrumentation-numbers');
     if (container.length <= 0) {
       return; // not for us
     }

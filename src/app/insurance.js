@@ -26,10 +26,11 @@ import * as Notification from './notification.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
+import * as PHPMyEdit from './pme.js';
 
 const pmeFormInit = function(containerSel) {
-  containerSel = PHPMYEDIT.selector(containerSel);
-  const container = PHPMYEDIT.container(containerSel);
+  containerSel = PHPMyEdit.selector(containerSel);
+  const container = PHPMyEdit.container(containerSel);
   const form = container.find('form[class^="pme-form"]');
   const submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
   const submits = form.find(submitSel);
@@ -211,7 +212,7 @@ const pmeFormInit = function(containerSel) {
 
 const documentReady = function() {
 
-  PHPMYEDIT.addTableLoadCallback('insurance-rates', {
+  PHPMyEdit.addTableLoadCallback('insurance-rates', {
     callback(selector, parameters, resizeCB) {
       pmeFormInit(selector);
       resizeCB();
@@ -220,7 +221,7 @@ const documentReady = function() {
     parameters: []
   });
 
-  PHPMYEDIT.addTableLoadCallback('insurance-brokers', {
+  PHPMyEdit.addTableLoadCallback('insurance-brokers', {
     callback(selector, parameters, resizeCB) {
       pmeFormInit(selector);
       resizeCB();
@@ -229,7 +230,7 @@ const documentReady = function() {
     parameters: []
   });
 
-  PHPMYEDIT.addTableLoadCallback('instrument-insurance', {
+  PHPMyEdit.addTableLoadCallback('instrument-insurance', {
     callback(selector, parameters, resizeCB) {
       CAFEVDB.exportMenu(selector);
 
@@ -251,10 +252,10 @@ const documentReady = function() {
   });
 
   CAFEVDB.addReadyCallback(function() {
-    const renderer = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
+    const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
     if (renderer == Page.templateRenderer('instrument-insurance')
         || renderer == Page.templateRenderer('insuranc-rates')) {
-      pmeFormInit(PHPMYEDIT.defaultSelector);
+      pmeFormInit(PHPMyEdit.defaultSelector);
     }
   });
 };

@@ -26,6 +26,7 @@ import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
 import * as Email from './email.js';
+import * as PHPMyEdit from './pme.js';
 
 globalState.SepaDebitMandate = {
   projectId: -1,
@@ -587,8 +588,8 @@ const validatePME = function(event, validateLockCB) {
 const popupInit = function(selector) {
   var self = this;
 
-  var containerSel = PHPMYEDIT.selector(selector);
-  var container = PHPMYEDIT.container(containerSel);
+  var containerSel = PHPMyEdit.selector(selector);
+  var container = PHPMyEdit.container(containerSel);
   var pmeReload = container.find('form.pme-form input.pme-reload').first();
   container.find(':button.sepa-debit-mandate').
     off('click').
@@ -618,8 +619,8 @@ const popupInit = function(selector) {
 const insuranceReady = function(selector) {
   var sdm = this;
 
-  var containerSel = PHPMYEDIT.selector(selector);
-  var container = PHPMYEDIT.container(containerSel);
+  var containerSel = PHPMyEdit.selector(selector);
+  var container = PHPMyEdit.container(containerSel);
 
   container.find('input.pme-debit-note').
     off('click').
@@ -729,8 +730,8 @@ const ready = function(selector) {
   var sdm = this;
   var self = this;
 
-  var containerSel = PHPMYEDIT.selector(selector);
-  var container = PHPMYEDIT.container(containerSel);
+  var containerSel = PHPMyEdit.selector(selector);
+  var container = PHPMyEdit.container(containerSel);
 
   // bail out if not for us.
   var form = container.find('form.pme-form');
@@ -812,7 +813,7 @@ const ready = function(selector) {
       }
 
       // allow delete button, validation makes no sense here
-      if (button.attr('name') === PHPMYEDIT.pmeSys('savedelete')) {
+      if (button.attr('name') === PHPMyEdit.sys('savedelete')) {
         return true;
       }
 
@@ -866,7 +867,7 @@ const ready = function(selector) {
 
 const documentReady = function() {
 
-  PHPMYEDIT.addTableLoadCallback('sepa-debit-mandates',
+  PHPMyEdit.addTableLoadCallback('sepa-debit-mandates',
                                  {
                                    callback: function(selector, parameters, resizeCB) {
                                      this.ready(selector);
@@ -878,8 +879,8 @@ const documentReady = function() {
                                  });
 
   CAFEVDB.addReadyCallback(function() {
-    ready(PHPMYEDIT.defaultSelector);
-    popupInit(PHPMYEDIT.defaultSelector);
+    ready(PHPMyEdit.defaultSelector);
+    popupInit(PHPMyEdit.defaultSelector);
   });
 
 };

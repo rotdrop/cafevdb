@@ -19,11 +19,12 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as ProjectParticipants from './project-participants.js';
-import generateUrl from './generate-url.js';
+import * as PHPMyEdit from './pme.js';
 
 const addMusicians = function(form, post) {
   const projectId = form.find('input[name="projectId"]').val();
@@ -90,7 +91,7 @@ const contactValidation = function(container) {
 
       event.stopImmediatePropagation();
 
-      const submitDefer = PHPMYEDIT.deferReload(container);
+      const submitDefer = PHPMyEdit.deferReload(container);
 
       const form = container.find('form.pme-form');
       const phones = form.find('input.phone-number');
@@ -157,7 +158,7 @@ const contactValidation = function(container) {
 
       event.stopImmediatePropagation();
 
-      const submitDefer = PHPMYEDIT.deferReload(container);
+      const submitDefer = PHPMyEdit.deferReload(container);
 
       const form = container.find('form.pme-form');
       const email = form.find('input.email');
@@ -289,7 +290,7 @@ const contactValidation = function(container) {
       return false;
     }
 
-    const submitDefer = PHPMYEDIT.deferReload(container);
+    const submitDefer = PHPMyEdit.deferReload(container);
 
     const form = container.find('form.pme-form');
     var post = form.serialize();
@@ -362,7 +363,7 @@ const ready = function(container) {
   const self = this;
 
   // sanitize
-  container = PHPMYEDIT.container(container);
+  container = PHPMyEdit.container(container);
 
   self.contactValidation(container);
 
@@ -424,8 +425,8 @@ const ready = function(container) {
                   if (!answer) {
                     return;
                   }
-                  var mainContainer = $(container.data('AmbientContainer'));
-                  var form = mainContainer.find(PHPMYEDIT.formSelector());
+                  const mainContainer = $(container.data('AmbientContainer'));
+                  const form = mainContainer.find(PHPMyEdit.formSelector());
                   container.dialog('close');
                   if (numDuplicates == 1) {
                     const projectId = form.find('input[name="ProjectId"]').val();

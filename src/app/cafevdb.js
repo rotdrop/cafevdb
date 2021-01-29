@@ -23,6 +23,7 @@
 import { globalState } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as Dialogs from './dialogs.js';
+import { selector as pmeSelector } from './pme.js';
 
 const appName = globalState.appName;
 
@@ -1285,7 +1286,7 @@ const documentReady = function() {
              function(event) {
                event.stopImmediatePropagation();
                const data = $(this).data('json');
-               Projects.projectViewPopup(PHPMYEDIT.selector(), data);
+               Projects.projectViewPopup(pmeSelector(), data);
                return false;
              });
 
@@ -1294,7 +1295,7 @@ const documentReady = function() {
              function(event) {
                event.stopImmediatePropagation(); // this is vital
                const data = $(this).data('json');
-               Projects.instrumentationNumbersPopup(PHPMYEDIT.selector(), data);
+               Projects.instrumentationNumbersPopup(pmeSelector(), data);
                return false;
              });
 

@@ -19,36 +19,45 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 const initialState = {
-  appName: __APP_NAME__
+  appName: __APP_NAME__,
+  CAFEVDB: {},
+  PHPMyEdit: {},
 };
 
 try {
-  initialState.CAFEVDB = OCP.InitialState.loadState(__APP_NAME__, 'CAFEVDB');
+  const state = OCP.InitialState.loadState(__APP_NAME__, 'CAFEVDB');
+  initialState.CAFEVDB = state;
   console.log('CAFEVDB INITIAL STATE', initialState.CAFEVDB);
   if (__APP_NAME__ !== initialState.CAFEVDB.appName) {
     throw new Error('__APP_NAME__ / CAFEVDB.appName are different: ' + __APP_NAME__ +  ' / ' + initialState.CAFEVDB.appName);
   }
 } catch (error) {
   console.info('Failed to load initial state for CAFEVDB');
-  initialState.CAFEVDB = {};
 }
 try {
-  initialState.PHPMYEDIT = OCP.InitialState.loadState(__APP_NAME__, 'PHPMYEDIT');
-  console.log('PHPMYEDIT INITIAL STATE', initialState.PHPMYEDIT);
+  const state = OCP.InitialState.loadState(__APP_NAME__, 'PHPMyEdit');
+  initialState.PHPMyEdit = state;
+  console.log('PHPMyEdit INITIAL STATE', initialState.PHPMyEdit);
 } catch (error) {
-  console.info('Failed to load initial state for PHPMYEDIT');
-  initialState.PHPMYEDIT = {};
+  console.info('Failed to load initial state for PHPMyEdit');
 }
 
 // @TODO remove
 window.CAFEVDB = window.CAFEVDB || {};
 window.CAFEVDB.initialState = initialState.CAFEVDB;
-window.PHPMYEDIT = window.PHPMYEDIT || {};
-window.PHPMYEDIT.initialState = initialState.PHPMYEDIT;
+window.PHPMyEdit = window.PHPMyEdit || {};
+window.PHPMyEdit.initialState = initialState.PHPMyEdit;
 
 const appName = initialState.appName;
+const PHPMyEdit = initialState.PHPMyEdit;
+const CAFEVDB = initialState.CAFEFDB;
 
-export { initialState, appName };
+export {
+  initialState,
+  CAFEVDB,
+  PHPMyEdit,
+  appName,
+};
 
 // Local Variables: ***
 // js-indent-level: 2 ***
