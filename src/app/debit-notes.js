@@ -21,6 +21,7 @@
 
 import * as CAFEVDB from './cafevdb.js';
 import * as Page from './page.js';
+import * as Email from './email.js';
 
 const ready = function(container, resizeCB) {
 
@@ -33,8 +34,7 @@ const ready = function(container, resizeCB) {
       const self = $(this);
       const post = self.data('post');
 
-      // call email dialog @TODO reenable
-      //CAFEVDB.Email.emailFormPopup($.param(post), true, false);
+      Email.emailFormPopup($.param(post), true, false);
 
       return false;
     });

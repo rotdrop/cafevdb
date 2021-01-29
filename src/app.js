@@ -38,6 +38,9 @@ import { documentReady as sepaDebitMandatesDocumentReady } from './app/sepa-debi
 import { documentReady as projectsDocumentReady } from './app/projects.js';
 import { documentReady as projectInstrumentationNumbersDocumentReady } from './app/project-instrumentation-numbers.js';
 import { documentReady as blogDocumentReady } from './app/blog.js';
+import { documentReady as emailDocumentReady } from './app/email.js';
+import { documentReady as insurancesDocumentReady } from './app/insurance.js';
+import { documentReady as phpMyEditDocumentReady } from './app/pme.js';
 import beforeReady from './app/before-ready.js';
 import './app/jquery-extensions.js';
 
@@ -48,6 +51,7 @@ globalState.print_r = print_r;
 $(function() {
   documentReady();
   blogDocumentReady();
+  emailDocumentReady();
   musiciansDocumentReady();
   projectParticipantsDocumentReady();
   pageDocumentReady();
@@ -56,6 +60,8 @@ $(function() {
   projectInstrumentationNumbersDocumentReady();
   debitNotesDocumentReady();
   sepaDebitMandatesDocumentReady();
+  insurancesDocumentReady();
+  phpMyEditDocumentReady();
   // backgroundJobs();
   settings();
   exportMode();

@@ -25,6 +25,7 @@ import generalUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Legacy from '../legacy.js';
+import * as Email from './email.js';
 
 globalState.Events = {
   projectId: -1,
@@ -55,7 +56,7 @@ const init = function(htmlContent, textStatus, request) {
     width : "auto", //510,
     height: "auto",
     resizable: false,
-    open  : function(){
+    open() {
       //$.fn.cafevTooltip.remove();
       var dialogHolder = $(this);
       var dialogWidget = dialogHolder.dialog('widget');
@@ -302,8 +303,7 @@ const buttonClick = function(event) {
     var emailFormDialog = $('div#emailformdialog');
     if (emailFormDialog.length == 0) {
       // If the email-form is not open, then open it :)
-      // @TODO reenable
-      // CAFEVDB.Email.emailFormPopup(post);
+      Email.emailFormPopup(post);
     } else {
       // Email dialog already open. We trigger a custom event to
       // propagte the data. We only submit the event ids.

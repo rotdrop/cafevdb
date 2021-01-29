@@ -983,62 +983,6 @@ const dialogCustomCloseButton = function(dialogHolder, callback) {
   });
 };
 
-/**Some general PME tweaks. */
-const pmeTweaks = function(container) {
-  if (typeof container == 'undefined') {
-    container = $('body');
-  }
-
-  container.find('input.date').datepicker({
-    dateFormat : 'dd.mm.yy', // this is 4-digit year
-    minDate: '01.01.1940'
-  });
-
-  container.find('input.datetime').datepicker({
-    dateFormat : 'dd.mm.yy', // this is 4-digit year
-    minDate: '01.01.1990'
-  });
-
-  container.find('td.money, td.signed-number').filter(function() {
-    return $.trim($(this).text()).indexOf("-") == 0;
-  }).addClass("negative");
-
-
-  $(PHPMYEDIT.defaultSelector + ' input.pme-email').
-    off('click').
-    on('click', function(event) {
-      event.stopImmediatePropagation();
-      // @TODO reenable
-      //Email.emailFormPopup($(this.form).serialize());
-      return false;
-    });
-
-  const form = container.find('form.pme-form').first();
-  form.find('a.email').off('click').on('click', function(event) {
-    event.preventDefault();
-    const href = $(this).attr('href');
-    const recordId = href.match(/[?]recordId=(\d+)$/);
-    if (typeof recordId[1] != 'undefined') {
-      recordId = recordId[1];
-    } else {
-      return false; // Mmmh, echo error diagnostics to the user?
-    }
-    const post = form.serialize();
-    post += '&PME_sys_mrecs[]=' + recordId;
-    post += '&emailRecipients[MemberStatusFilter][0]=regular';
-    post += '&emailRecipients[MemberStatusFilter][1]=passive';
-    post += '&emailRecipients[MemberStatusFilter][2]=soloist';
-    post += '&emailRecipients[MemberStatusFilter][3]=conductor';
-    // @TODO reenable
-    Email.emailFormPopup(post, true, true);
-    return false;
-  });
-
-  // This could also be wrapped into a popup maybe, and lead back to
-  // the brief-instrumentation table on success.
-  //$(PHPMYEDIT.defaultSelector + ' input.pme-bulkcommit').addClass('formsubmit');
-};
-
 const attachToolTip = function(selector, options) {
   const defaultOptions = {
     container:'body',
@@ -1398,7 +1342,6 @@ export {
   modalizer,
   dialogToBackButton,
   dialogCustomCloseButton,
-  pmeTweaks,
   attachToolTip,
   applyToolTips,
   toolTipsOnOff,
@@ -1438,7 +1381,6 @@ globalState.exportMenu = exportMenu;
 globalState.modalizer = modalizer;
 globalState.dialogToBackButton = dialogToBackButton;
 globalState.dialogCustomCloseButton = dialogCustomCloseButton;
-globalState.pmeTweaks = pmeTweaks;
 globalState.attachToolTip = attachToolTip;
 globalState.applyToolTips = applyToolTips;
 globalState.toolTipsOnOff = toolTipsOnOff;

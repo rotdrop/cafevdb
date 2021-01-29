@@ -25,6 +25,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
+import * as Email from './email.js';
 
 globalState.SepaDebitMandate = {
   projectId: -1,
@@ -694,8 +695,7 @@ const exportHandler = function(event) {
                    cookieValue: post['DownloadCookie'],
                    cookiePath: oc_webroot,
                    successCallback: function() {
-                     // call email dialog @TODO reenable
-                     //CAFEVDB.Email.emailFormPopup($.param(post), true, false, clearBusyState);
+                     Email.emailFormPopup($.param(post), true, false, clearBusyState);
                    },
                    failCallback: function(responseHtml, url, error) {
                      OC.dialogs.alert(t('cafevdb', 'Unable to export insurance overviews:')+
@@ -707,8 +707,7 @@ const exportHandler = function(event) {
                    }
                  });
                } else {
-                 // call email dialog @TODO reenable
-                 // CAFEVDB.Email.emailFormPopup($.param(post), true, false, clearBusyState);
+                 Email.emailFormPopup($.param(post), true, false, clearBusyState);
                }
              },
              failCallback: function(responseHtml, url, error) {
@@ -889,6 +888,7 @@ export {
   ready,
   documentReady,
   popupInit,
+  insuranceReady,
 };
 
 // Local Variables: ***

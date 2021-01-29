@@ -28,6 +28,7 @@ import * as Dialogs from './dialogs.js';
 import * as Photo from './inlineimage.js';
 import * as Notification from './notification.js';
 import * as Events from './events.js';
+import * as Email from './email.js';
 
 /**
  * Strip any digit from the end of name and attach the four digit
@@ -139,8 +140,7 @@ const emailPopup = function(post, reopen) {
     }
     emailDlg.dialog('close').remove();
   }
-  // @TODO reenable
-  //CAFEVDB.Email.emailFormPopup(post, false);
+  Email.emailFormPopup(post, false);
 };
 
 /**
@@ -1082,6 +1082,7 @@ const documentReady = function() {
 
 export {
   documentReady,
+  eventsPopup,
 };
 
 // Local Variables: ***

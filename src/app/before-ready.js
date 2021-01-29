@@ -27,6 +27,7 @@ import * as Photo from './inlineimage.js';
 import * as ProjectExtra from './project-extra.js';
 import * as DebitNotes from './debit-notes.js';
 import * as Musicians from './musicians.js';
+import pmeTweaks from './pme-tweaks.js';
 
 const documentReady = function() {
 
@@ -35,22 +36,23 @@ const documentReady = function() {
   }
 
   // ???? needed ????
-  $.widget("ui.dialog", $.ui.dialog, {
+  $.widget('ui.dialog', $.ui.dialog, {
     _allowInteraction: function(event) {
-      return !!$(event.target).closest(".mce-container").length || this._super( event );
+      return !!$(event.target).closest('.mce-container').length || this._super( event );
     }
   });
 
   if (false) {
     // should somehow depend on debug mode.
     $(document).on('ajaxError', function(event, xhr, settings, error) {
-      Dialogs.alert(t(appName, 'Unhandled internal AJAX error:')+
-                    '<br/>'+
-                    t(appName, 'Error')+': '+error+
-                    '<br/>'+
-                    t(appName, 'URL')+': '+settings.url,
-                    t(appName, 'Error'),
-                    undefined, true, true);
+      Dialogs.alert(
+        t(appName, 'Unhandled internal AJAX error:')
+          + '<br/>'
+          + t(appName, 'Error') + ': ' + error
+          + '<br/>'
+          + t(appName, 'URL') + ': ' + settings.url,
+        t(appName, 'Error'),
+        undefined, true, true);
       return false;
     });
   }
@@ -65,13 +67,13 @@ const documentReady = function() {
     const container = params.chosen.container;
     const results = params.chosen.search_results;
     const menuItems = results.find('li');
-    menuItems.cafevTooltip({placement:'right'});
+    menuItems.cafevTooltip({placement: 'right'});
     if (!globalState.toolTipsEnabled) {
       menuItems.cafevTooltip('disable');
     }
     container.cafevTooltip('hide');
     container.cafevTooltip('disable');
-    //$.fn.cafevTooltip.remove(); // remove any left-over items.
+    // $.fn.cafevTooltip.remove(); // remove any left-over items.
   });
   content.on('chosen:hiding_dropdown', 'select', function(event, params)   {
     const container = params.chosen.container;
@@ -80,7 +82,7 @@ const documentReady = function() {
     if (globalState.toolTipsEnabled) {
       menuItems.cafevTooltip('disable');
       container.cafevTooltip('enable');
-      //params.chosen.container.cafevTooltip('show');
+      // params.chosen.container.cafevTooltip('show');
     }
   });
 
@@ -96,7 +98,7 @@ const documentReady = function() {
       return true;
     }
     const post = form.serialize();
-    //alert('post: '+post);
+    // alert('post: '+post);
     Page.loadPage(post);
     return false;
   });
@@ -114,11 +116,11 @@ const documentReady = function() {
     }
     const post = form.serialize();
     if (self.attr('name')) {
-      var obj = {};
+      const obj = {};
       obj[self.attr('name')] = self.val();
       post += '&' + $.param(obj);
     }
-    //alert('post: '+post);
+    // alert('post: '+post);
     Page.loadPage(post);
     return false;
   });
@@ -133,10 +135,9 @@ const documentReady = function() {
     }
     const post = $(this).data('post');
     Page.loadPage(post);
-    //alert('post: '+post);
+    // alert('post: '+post);
     return false;
   });
-
 
   const musiciansCallback = {
     callback: function(selector, parameters, resizeCB) {
@@ -202,7 +203,7 @@ const documentReady = function() {
 
 
   PHPMYEDIT.addTableLoadCallback('instruments', {
-    callback: function(selector, parameters, resizeCB) {
+    callback(selector, parameters, resizeCB) {
       resizeCB();
     },
     context: CAFEVDB,
@@ -210,7 +211,7 @@ const documentReady = function() {
   });
 
   PHPMYEDIT.addTableLoadCallback('instrument-families', {
-    callback: function(selector, parameters, resizeCB) {
+    callback(selector, parameters, resizeCB) {
       resizeCB();
     },
     context: CAFEVDB,
@@ -218,7 +219,7 @@ const documentReady = function() {
   });
 
   PHPMYEDIT.addTableLoadCallback('project-payments', {
-    callback: function(selector, parameters, resizeCB) {
+    callback(selector, parameters, resizeCB) {
       resizeCB();
     },
     context: CAFEVDB,
@@ -226,7 +227,7 @@ const documentReady = function() {
   });
 
   PHPMYEDIT.addTableLoadCallback('debit-notes', {
-    callback: function(selector, parameters, resizeCB) {
+    callback(selector, parameters, resizeCB) {
 
       if (parameters.reason != 'dialogOpen') {
         resizeCB();
@@ -242,20 +243,20 @@ const documentReady = function() {
   CAFEVDB.addReadyCallback(function() {
     CAFEVDB.exportMenu();
 
-    CAFEVDB.pmeTweaks();
+    pmeTweaks();
 
     CAFEVDB.toolTipsInit();
 
     // Prevent drag&drop outside allowed areas.
-    window.addEventListener("dragover", function(e) {
+    window.addEventListener('dragover', function(e) {
       e = e || event;
       e.preventDefault();
-      console.info("Prevented dragover event");
+      console.info('Prevented dragover event');
     }, false);
-    window.addEventListener("drop", function(e) {
+    window.addEventListener('drop', function(e) {
       e = e || event;
       e.preventDefault();
-      console.info("Prevented drop event");
+      console.info('Prevented drop event');
     }, false);
 
   });
