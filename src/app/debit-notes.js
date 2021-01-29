@@ -19,41 +19,37 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var CAFEVDB = CAFEVDB || {};
+import * as CAFEVDB from './cafevdb.js';
+import * as Page from './page.js';
 
-(function(window, $, CAFEVDB, undefined) {
-  'use strict';
-  var DebitNotes = function() {};
+const ready = function(container, resizeCB) {
 
-  DebitNotes.ready = function(container, resizeCB) {
-    var self = this;
+  // sanitize
+  container = PHPMYEDIT.container(container);
 
-    // sanitize
-    container = PHPMYEDIT.container(container);
+  container.
+    off('click', '.debit-note-actions a.announce').
+    on('click', '.debit-note-actions a.announce', function(event) {
+      const self = $(this);
+      const post = self.data('post');
 
-    container.
-      off('click', '.debit-note-actions a.announce').
-      on('click', '.debit-note-actions a.announce', function(event) {
-      var self = $(this);
-      var post = self.data('post');
-
-      // call email dialog
-      CAFEVDB.Email.emailFormPopup($.param(post), true, false);
+      // call email dialog @TODO reenable
+      //CAFEVDB.Email.emailFormPopup($.param(post), true, false);
 
       return false;
     });
 
-    container.
-      off('click', '.debit-note-actions a.download').
-      on('click', '.debit-note-actions a.download', function(event) {
-      var self = $(this);
+  container
+    .off('click', '.debit-note-actions a.download')
+    .on('click', '.debit-note-actions a.download', function(event) {
+      const self = $(this);
 
       CAFEVDB.modalizer(true);
-      CAFEVDB.Page.busyIcon(true);
+      Page.busyIcon(true);
 
       var clearBusyState = function() {
         CAFEVDB.modalizer(false);
-        CAFEVDB.Page.busyIcon(false);
+        Page.busyIcon(false);
         return true;
       };
 
@@ -82,25 +78,23 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
-    if (typeof resizeCB === 'function') {
-      resizeCB();
+  if (typeof resizeCB === 'function') {
+    resizeCB();
+  }
+};
+
+const documentReady = function() {
+
+  CAFEVDB.addReadyCallback(function() {
+
+    if ($('div#cafevdb-page-body.debit-notes').length > 0) {
+      ready();
     }
-  };
-
-  CAFEVDB.DebitNotes = DebitNotes;
-
-  $(function(){
-
-    CAFEVDB.addReadyCallback(function() {
-
-      if ($('div#cafevdb-page-body.debit-notes').length > 0) {
-      CAFEVDB.DebitNotes.ready();
-      }
-    });
-
   });
 
-})(window, jQuery, CAFEVDB);
+};
+
+export { documentReady, ready };
 
 
 // Local Variables: ***

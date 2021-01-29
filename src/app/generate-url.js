@@ -20,18 +20,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initialState } from './config.js';
+const generateUrl = function(postFix) {
+  return OC.generateUrl('/apps/' + __APP_NAME__ + '/' + postFix);
+}
 
-// ok, this ain't pretty, but unless we really switch to object OOP we
-// need some global state which is accessible in all or most modules.
-
-const globalState = window.CAFEVDB = window.CAFEVDB || {};
-
-$.extend(globalState, initialState.CAFEVDB);
-
-const appName = initialState.appName;
-
-export { globalState, appName };
+export default generateUrl;
 
 // Local Variables: ***
 // js-indent-level: 2 ***

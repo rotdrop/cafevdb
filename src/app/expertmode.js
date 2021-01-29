@@ -19,13 +19,19 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(function() {
+import { appName } from './config.js';
+import * as CAFEVDB from './cafevdb.js';
+import * as Ajax from './ajax.js';
+import * as Dialogs from './dialogs.js';
+import generateUrl from './generate-url.js';
+
+const documentReady = function() {
 
   const container = $('.app-admin-settings');
 
   // container.on('click', 'button', function(event) {
-  //   OC.dialogs.alert(t('cafevdb', 'Unhandled expert operation: {operation}', {operation: $(this).val()}),
-  //                    t('cafevdb', 'Error'),
+  //   OC.dialogs.alert(t(appName, 'Unhandled expert operation: {operation}', {operation: $(this).val()}),
+  //                    t(appName, 'Error'),
   //                    undefined, true, true);
   //   return false;
   // });
@@ -47,16 +53,16 @@ $(function() {
     container.on('click', '#' + action, function() {
       const msg = container.find('.msg');
       const error = container.find('.error');
-      $.post(OC.generateUrl('/apps/cafevdb/expertmode/action/' + action), { 'data': {} })
-	.done(function(data) {
-	  console.log(data);
+      $.post(generateUrl('/expertmode/action/' + action), { data: {} })
+        .done(function(data) {
+          console.log(data);
           error.html('').hide();
-	  msg.html(data.message).show();
-	})
+          msg.html(data.message).show();
+        })
         .fail(function(xhr, status, errorThrown) {
-          CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
+          Ajax.handleError(xhr, status, errorThrown);
           msg.hide();
-          error.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
+          error.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         });
       return false;
     });
@@ -67,28 +73,28 @@ $(function() {
     const error = container.find('.error');
     $.post(OC.generateUrl('/apps/cafevdb/expertmode/action/setupdb'), { 'data': {} })
       .done(function(data) {
-	console.log(data);
-        if (!CAFEVDB.Ajax.validateResponse(data, [ 'success', 'error' ])) {
+        console.log(data);
+        if (!Ajax.validateResponse(data, [ 'success', 'error' ])) {
           return;
         }
-        OC.dialogs.alert(t('cafevdb', 'Successfull:')+
-                         '<br/>'+
-                         data.data.success+
-                         '<br/>'+
-                         t('cafevdb', 'Unsuccessfull:')+
-                         '<br/>'+
-                         '<pre>'+
-                         data.data.error+
-                         '</pre>',
-                         t('cafevdb', 'Result of expert operation "setupdb"'),
-                         undefined, true, true);
+        Dialogs.alert(t(appName, 'Successfull:')
+                      + '<br/>'
+                      + data.data.success
+                      + '<br/>'
+                      + t(appName, 'Unsuccessfull:')
+                      + '<br/>'
+                      + '<pre>'
+                      + data.data.error
+                      + '</pre>',
+                      t(appName, 'Result of expert operation "setupdb"'),
+                      undefined, true, true);
         error.html('').hide();
         msg.html(data.message).show();
       })
       .fail(function(xhr, status, errorThrown) {
-        CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
+        Ajax.handleError(xhr, status, errorThrown);
         msg.html('').hide();
-        error.html(CAFEVDB.Ajax.failMessage(xhr, status, errorThrown)).show();
+        error.html(Ajax.failMessage(xhr, status, errorThrown)).show();
       });
     return false;
   });
@@ -101,8 +107,11 @@ $(function() {
 
   CAFEVDB.toolTipsInit('#appsettings_popup');
 
-});
+};
+
+export default documentReady;
 
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***

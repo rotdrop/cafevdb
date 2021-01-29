@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -19,14 +20,15 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var CAFEVDB = CAFEVDB || {};
-if (!CAFEVDB.appName) {
-  CAFEVDB.appName = 'cafevdb';
-}
+import { initialState } from './app/config.js';
+import * as Ajax from './app/ajax.js';
+import generateUrl from './app/generate-url.js';
+
+const appName = initialState.appName;
 
 $(function() {
 
-  const $container = $('#' + CAFEVDB.appName + '-admin-settings');
+  const $container = $('#' + appName + '-admin-settings');
   const $msg = $container.find('.msg');
 
   $container.find('input').blur(function(event){
@@ -38,18 +40,17 @@ $(function() {
     $msg.hide();
 
     $.post(
-      OC.generateUrl('/apps/cafevdb/settings/admin/set/' + name),
-      { 'value': value })
+      generateUrl('/settings/admin/set/' + name), { value })
       .done(function(data) {
-	console.log(data);
-	$msg.html(data.message).show();
-	if (data.wikiNameSpace !== undefined) {
-	  $container.find('input.wikiNameSpace').val(data.wikiNameSpace);
+        console.log(data);
+        $msg.html(data.message).show();
+        if (data.wikiNameSpace !== undefined) {
+          $container.find('input.wikiNameSpace').val(data.wikiNameSpace);
         }
       })
       .fail(function(xhr, status, errorThrown) {
-	CAFEVDB.Ajax.handleError(xhr, status, errorThrown);
-	$msg.html(CAFEVDB.Ajax.failMessage(xh, status, errorThrown)).show();
+        Ajax.handleError(xhr, status, errorThrown);
+        $msg.html(Ajax.failMessage(xh, status, errorThrown)).show();
       });
   });
 });

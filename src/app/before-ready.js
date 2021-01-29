@@ -19,9 +19,18 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(function() {
+import { globalState, appName } from './globals.js';
+import * as CAFEVDB from './cafevdb.js';
+import * as Dialogs from './dialogs.js';
+import * as Page from './page.js';
+import * as Photo from './inlineimage.js';
+import * as ProjectExtra from './project-extra.js';
+import * as DebitNotes from './debit-notes.js';
+import * as Musicians from './musicians.js';
 
-  if (CAFEVDB.expertMode) {
+const documentReady = function() {
+
+  if (globalState.expertMode) {
     $('body').addClass('cafevdb-expert-mode');
   }
 
@@ -35,13 +44,13 @@ $(function() {
   if (false) {
     // should somehow depend on debug mode.
     $(document).on('ajaxError', function(event, xhr, settings, error) {
-      CAFEVDB.Dialogs.alert(t('cafevdb', 'Unhandled internal AJAX error:')+
-                            '<br/>'+
-                            t('cafevdb', 'Error')+': '+error+
-                            '<br/>'+
-                            t('cafevdb', 'URL')+': '+settings.url,
-                            t('cafevdb', 'Error'),
-                            undefined, true, true);
+      Dialogs.alert(t(appName, 'Unhandled internal AJAX error:')+
+                    '<br/>'+
+                    t(appName, 'Error')+': '+error+
+                    '<br/>'+
+                    t(appName, 'URL')+': '+settings.url,
+                    t(appName, 'Error'),
+                    undefined, true, true);
       return false;
     });
   }
@@ -57,7 +66,7 @@ $(function() {
     const results = params.chosen.search_results;
     const menuItems = results.find('li');
     menuItems.cafevTooltip({placement:'right'});
-    if (!CAFEVDB.toolTipsEnabled) {
+    if (!globalState.toolTipsEnabled) {
       menuItems.cafevTooltip('disable');
     }
     container.cafevTooltip('hide');
@@ -68,7 +77,7 @@ $(function() {
     const container = params.chosen.container;
     const results = params.chosen.search_results;
     const menuItems = results.find('li');
-    if (CAFEVDB.toolTipsEnabled) {
+    if (globalState.toolTipsEnabled) {
       menuItems.cafevTooltip('disable');
       container.cafevTooltip('enable');
       //params.chosen.container.cafevTooltip('show');
@@ -88,7 +97,7 @@ $(function() {
     }
     const post = form.serialize();
     //alert('post: '+post);
-    CAFEVDB.Page.loadPage(post);
+    Page.loadPage(post);
     return false;
   });
 
@@ -110,7 +119,7 @@ $(function() {
       post += '&' + $.param(obj);
     }
     //alert('post: '+post);
-    CAFEVDB.Page.loadPage(post);
+    Page.loadPage(post);
     return false;
   });
 
@@ -123,7 +132,7 @@ $(function() {
       return true;
     }
     const post = $(this).data('post');
-    CAFEVDB.Page.loadPage(post);
+    Page.loadPage(post);
     //alert('post: '+post);
     return false;
   });
@@ -144,28 +153,28 @@ $(function() {
         off('click', 'img.zoomable').
         on('click', 'img.zoomable', function(event) {
           event.preventDefault();
-          CAFEVDB.Photo.popup(this);
+          Photo.popup(this);
           return false;
         });
 
-      CAFEVDB.Musicians.ready(container);
+      Musicians.ready(container);
 
       $(':button.musician-instrument-insurance').click(function(event) {
         event.preventDefault();
         const values = $(this).attr('name');
 
-        CAFEVDB.Page.loadPage($(this).attr('name'));
+        Page.loadPage($(this).attr('name'));
 
         return false;
       });
 
       if (container.find('#contact_photo_upload').length > 0) {
         const idField = container.find('input[name="PME_data_id"]');
-        var recordId = -1;
+        let recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();
         }
-        CAFEVDB.Photo.ready(recordId, 'MusicianPhoto', resizeCB);
+        Photo.ready(recordId, 'MusicianPhoto', resizeCB);
       } else {
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);
       }
@@ -185,7 +194,7 @@ $(function() {
         return;
       }
 
-      CAFEVDB.ProjectExtra.ready(selector, resizeCB);
+      ProjectExtra.ready(selector, resizeCB);
     },
     context: CAFEVDB,
     parameters: []
@@ -224,7 +233,7 @@ $(function() {
         return;
       }
 
-      CAFEVDB.DebitNotes.ready(selector, resizeCB);
+      DebitNotes.ready(selector, resizeCB);
     },
     context: CAFEVDB,
     parameters: []
@@ -251,7 +260,9 @@ $(function() {
 
   });
 
-});
+};
+
+export default documentReady;
 
 // Local Variables: ***
 // js-indent-level: 2 ***

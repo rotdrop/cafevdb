@@ -36,13 +36,11 @@ use OCA\CAFEVDB\Service\ConfigService;
  *
  */
 
-script($appName, 'config');
+script($appName, 'app');
+
+//script($appName, 'config');
 
 /*****************************************************************************/
-
-//script($appName, 'jquery-noconflict');
-//script($appName, '../vendor/components/jquery/jquery.min');
-//script($appName, '../vendor/components/jquery-migrate/jquery-migrate.min');
 
 style($appName, 'cafevdb');
 style($appName, 'config-check');
@@ -62,43 +60,43 @@ style($appName, 'project-participants');
 style($appName, 'project-extra');
 style($appName, 'mobile');
 
-script($appName, 'cafevdb');
-script($appName, 'dialogs');
-script($appName, 'print-r');
-script($appName, 'ajax');
-script($appName, 'backgroundjobs');
-script($appName, 'notification');
-script($appName, 'page');
+//script($appName, 'cafevdb');
+//script($appName, 'dialogs');
+//script($appName, 'print-r');
+//script($appName, 'ajax');
+//script($appName, 'backgroundjobs');
+//script($appName, 'notification');
+//script($appName, 'page');
 script($appName, 'blog');
-script($appName, 'inlineimage');
-script($appName, 'events');
+//script($appName, 'inlineimage');
+//script($appName, 'events');
 script($appName, 'pme');
-script($appName, 'musicians');
-script($appName, 'projects');
-script($appName, 'project-participants');
+//script($appName, 'musicians');
+//script($appName, 'projects');
+//script($appName, 'project-participants');
 script($appName, 'project-instrumentation-numbers');
-script($appName, 'project-extra');
-script($appName, 'sepa-debit-mandate');
-script($appName, 'personal-settings');
-script($appName, 'settings');
-script($appName, 'expertmode');
-script($appName, 'app-settings');
-script($appName, 'jquery-extensions');
-script($appName, 'before-ready');
-script($appName, 'ready');
+//script($appName, 'project-extra');
+//script($appName, 'sepa-debit-mandate');
+//script($appName, 'personal-settings');
+//script($appName, 'settings');
+//script($appName, 'expertmode');
+//script($appName, 'app-settings');
+//script($appName, 'jquery-extensions');
+//script($appName, 'before-ready');
+//script($appName, 'ready');
 
 style($appName, '../node_modules/@nextcloud/dialogs/styles/toast');
 
 script($appName, '../3rdparty/chosen/js/chosen.jquery');
 style($appName, '../3rdparty/chosen/css/chosen.min');
 
-script($appName, 'legacy/calendar/calendar');
-script($appName, 'legacy/calendar/on-event');
-script($appName, 'legacy/calendar/jquery.ui.timepicker');
+//script($appName, 'legacy/calendar/calendar');
+//script($appName, 'legacy/calendar/on-event');
+//script($appName, 'legacy/calendar/jquery.ui.timepicker');
 style($appName, 'legacy/calendar/jquery.ui.timepicker');
-script($appName, 'legacy/calendar/jquery.multiselect');
+//script($appName, 'legacy/calendar/jquery.multiselect');
 style($appName, 'legacy/calendar/jquery.multiselect');
-script($appName, 'legacy/calendar/jquery.multi-autocomplete');
+//script($appName, 'legacy/calendar/jquery.multi-autocomplete');
 
 // TinyMCE stuff
 script($appName, '../3rdparty/js/tinymce/tinymce.min');

@@ -17,7 +17,9 @@ function appName() {
 
 module.exports = {
   entry: {
-    config: './src/app/config.js'
+    app: './src/app.js',
+    'admin-settings': './src/admin-settings.js',
+    settings: './src/settings.js',
   },
   output: {
     filename: '[name].js',

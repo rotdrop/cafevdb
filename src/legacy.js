@@ -20,18 +20,13 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initialState } from './config.js';
+import Calendar from './legacy/calendar/calendar.js';
+import './legacy/calendar/on-event.js';
+import './legacy/calendar/jquery.multi-autocomplete.js';
+import './legacy/calendar/jquery.multiselect.js';
+import './legacy/calendar/jquery.ui.timepicker.js';
 
-// ok, this ain't pretty, but unless we really switch to object OOP we
-// need some global state which is accessible in all or most modules.
-
-const globalState = window.CAFEVDB = window.CAFEVDB || {};
-
-$.extend(globalState, initialState.CAFEVDB);
-
-const appName = initialState.appName;
-
-export { globalState, appName };
+export { Calendar };
 
 // Local Variables: ***
 // js-indent-level: 2 ***

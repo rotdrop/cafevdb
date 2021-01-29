@@ -46,8 +46,11 @@ window.CAFEVDB.initialState = initialState.CAFEVDB;
 window.PHPMYEDIT = window.PHPMYEDIT || {};
 window.PHPMYEDIT.initialState = initialState.PHPMYEDIT;
 
-export { initialState };
+const appName = initialState.appName;
+
+export { initialState, appName };
 
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***

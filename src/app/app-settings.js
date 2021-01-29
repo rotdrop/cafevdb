@@ -21,7 +21,9 @@
 
 // @@TODO these are rather personal settings
 
-$(function() {
+import { appSettings, toolTipsInit, unfocus } from './cafevdb.js';
+
+const documentReady = function() {
 
   var appNav = $('#app-navigation');
 
@@ -32,12 +34,12 @@ $(function() {
       $('#app-settings').switchClass('', 'open');
     }
     $('#app-settings-header').cafevTooltip('hide');
-    CAFEVDB.unfocus('#app-settings-header');
+    unfocus('#app-settings-header');
     return false;
   });
 
   appNav.on('click', '#app-settings-further-settings', function(event) {
-    CAFEVDB.appSettings(
+    appSettings(
       'settings/personal/form',
       function(container) {
         container.trigger('cafevdb:content-update'); // perhaps remove this
@@ -47,17 +49,20 @@ $(function() {
   });
 
   appNav.on('click', '#app-settings-expert-operations', function(event) {
-    CAFEVDB.appSettings(
+    appSettings(
       'expertmode/form',
       function(container) {
         $.fn.cafevTooltip.remove(); // remove any left-over items
-        CAFEVDB.toolTipsInit(container);
+        toolTipsInit(container);
       });
     return false;
   });
 
-});
+};
+
+export default documentReady;
 
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***

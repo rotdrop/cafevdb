@@ -21,29 +21,27 @@
  */
 
 import { globalState } from './globals.js';
+import generateUrl from './generate-url.js';
+import * as Dialogs from './dialogs.js';
+
+const appName = globalState.appName;
 
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
 
 let CAFEVDB = {
-  appName: __APP_NAME__,
+  appName: appName,
   toolTipsEnabled: true,
   wysiwygEditor: 'tinymce',
   language: 'en',
   readyCallbacks: [], ///< quasi-document-ready-callbacks
   creditsTimer: -1,
-  adminContact: t(CAFEVDB.appName, 'unknown'),
-  phpUserAgent: t(CAFEVDB.appName, 'unknown'),
+  adminContact: t(appName, 'unknown'),
+  phpUserAgent: t(appName, 'unknown'),
 };
 
 // overrides from PHP, see config.js
 $.extend(globalState, CAFEVDB, globalState);
-
-const appName = globalState.appName;
-
-const generateUrl = function(postFix) {
-  return OC.generateUrl('/apps/' + appName + '/' + postFix);
-}
 
 /**Register callbacks which are run after partial page reload in
  * order to "fake" document-ready. An alternate possibility would
@@ -597,7 +595,7 @@ const chosenPopup = function(contents, userOptions)
     open:function() {
       selectElement.chosen(); //{disable_search_threshold: 10});
       const dialogWidget = dialogHolder.dialog('widget');
-      CAFEVDB.toolTipsInit(dialogWidget);
+      toolTipsInit(dialogWidget);
       dialogHolder.find('.chosen-container').off('dblclick').
         on('dblclick', function(event) {
           dialogWidget.find('.ui-dialog-buttonset .ui-button.save').trigger('click');
@@ -643,7 +641,7 @@ const formSubmit = function(url, values, method) {
     var nameValue = splitValues[i].split('=');
     $('<input />').attr('type', 'hidden')
       .attr('name', nameValue[0])
-      .attr('value', CAFEVDB.urldecode(nameValue[1]))
+      .attr('value', urldecode(nameValue[1]))
       .appendTo(form);
   }
   form.appendTo($('div#content')); // needed?
@@ -685,7 +683,7 @@ const appSettings = function(route, callback) {
     //popup.hide().html('');
   } else {
     const arrowclass = popup.hasClass('topright') ? 'up' : 'left';
-    $.get(CAFEVDB.generateUrl(route))
+    $.get(generateUrl(route))
       .done(function(data) {
         popup
           .html(data)
@@ -775,7 +773,7 @@ const tableExportMenu = function(select) {
   }
 
   if (exportscript == '') {
-    CAFEVDB.Dialogs.alert(t(appName, 'Export to the following format is not yet supported:')
+    Dialogs.alert(t(appName, 'Export to the following format is not yet supported:')
                           +' "'+selected+'"',
                           t(appName, 'Unimplemented'));
   } else {
@@ -799,7 +797,7 @@ const tableExportMenu = function(select) {
   // menu, so let the text remain at its default value. Make sure to
   // also remove and re-attach the tool-tips, otherwise some of the
   // tips remain, because chosen() removes the element underneath.
-  CAFEVDB.selectMenuReset(select);
+  selectMenuReset(select);
   $.fn.cafevTooltip.remove();
 
   $('div.chosen-container').cafevTooltip({placement:'auto'});
@@ -823,14 +821,14 @@ const exportMenu = function(containerSel) {
   });
 
   // install placeholder as first item if chosen is not active
-  CAFEVDB.fixupNoChosenMenu(exportSelect);
+  fixupNoChosenMenu(exportSelect);
 
   container.find('select.pme-export-choice').
     off('change').
     on('change', function (event) {
       event.preventDefault();
 
-      return CAFEVDB.tableExportMenu($(this));
+      return tableExportMenu($(this));
     });
 
 };
@@ -863,11 +861,11 @@ const modalizer = function(open) {
       resizable: false,
       open: function() {
         // This one must be ours.
-        CAFEVDB.dialogOverlay = $('.ui-widget-overlay:last');
+        globalState.dialogOverlay = $('.ui-widget-overlay:last');
         $('body').addClass('cafevdb-modalizer');
       },
       close: function() {
-        CAFEVDB.dialogOverlay = false;
+        globalState.dialogOverlay = false;
         dialogHolder.dialog('close');
         dialogHolder.dialog('destroy').remove();
         $('body').removeClass('cafevdb-modalizer');
@@ -1010,7 +1008,8 @@ const pmeTweaks = function(container) {
     off('click').
     on('click', function(event) {
       event.stopImmediatePropagation();
-      CAFEVDB.Email.emailFormPopup($(this.form).serialize());
+      // @TODO reenable
+      //Email.emailFormPopup($(this.form).serialize());
       return false;
     });
 
@@ -1030,7 +1029,8 @@ const pmeTweaks = function(container) {
     post += '&emailRecipients[MemberStatusFilter][1]=passive';
     post += '&emailRecipients[MemberStatusFilter][2]=soloist';
     post += '&emailRecipients[MemberStatusFilter][3]=conductor';
-    CAFEVDB.Email.emailFormPopup(post, true, true);
+    // @TODO reenable
+    Email.emailFormPopup(post, true, true);
     return false;
   });
 
@@ -1123,8 +1123,8 @@ const applyToolTips = function(selector, options, container) {
 };
 
 const toolTipsOnOff = function(onOff) {
-  CAFEVDB.toolTipsEnabled = !!onOff;
-  if (CAFEVDB.toolTipsEnabled) {
+  globalState.toolTipsEnabled = !!onOff;
+  if (globalState.toolTipsEnabled) {
     $.fn.cafevTooltip.enable();
   } else {
     $.fn.cafevTooltip.disable();
@@ -1202,7 +1202,7 @@ const toolTipsInit = function(containerSel) {
 
   // Tipsy greedily enables itself when attaching it to elements, so
   // ...
-  if (CAFEVDB.toolTipsEnabled) {
+  if (globalState.toolTipsEnabled) {
     $.fn.cafevTooltip.enable();
   } else {
     $.fn.cafevTooltip.disable();
@@ -1266,11 +1266,11 @@ const pollProgressStatus = function(id, callbacks, interval) {
   interval = interval || 800;
 
   const poll = function() {
-    $.get(CAFEVDB.generateUrl('foregroundjob/progress/'+id))
+    $.get(generateUrl('foregroundjob/progress/'+id))
       .done(function(data) {
         if (!callbacks.update(data)) {
           console.debug("Finish polling");
-          clearTimeout(CAFEVDB.progressTimer);
+          clearTimeout(globalState.progressTimer);
           globalState.progressTimer = false;
           return;
         }
@@ -1278,7 +1278,7 @@ const pollProgressStatus = function(id, callbacks, interval) {
         globalState.progressTimer = setTimeout(poll, interval);
       })
       .fail(function(xhr, status, errorThrown) {
-        clearTimeout(CAFEVDB.progressTimer);
+        clearTimeout(globalState.progressTimer);
         globalState.progressTimer = false;
         callbacks.fail(xhr, status, errorThrown);
       });
@@ -1297,7 +1297,7 @@ pollProgressStatus.active = function() {
 
 const documentReady = function() {
   // @@TODO perhaps collects these things in before-ready.js
-  document.onkeypress = CAFEVDB.stopRKey;
+  document.onkeypress = stopRKey;
 
   $('body').on('dblclick', '.oc-dialog', function() {
     $('.oc-dialog').toggleClass('maximize-width');
@@ -1341,7 +1341,7 @@ const documentReady = function() {
              function(event) {
                event.stopImmediatePropagation();
                const data = $(this).data('json');
-               CAFEVDB.Projects.projectViewPopup(PHPMYEDIT.selector(), data);
+               Projects.projectViewPopup(PHPMYEDIT.selector(), data);
                return false;
              });
 
@@ -1350,15 +1350,15 @@ const documentReady = function() {
              function(event) {
                event.stopImmediatePropagation(); // this is vital
                const data = $(this).data('json');
-               CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.selector(), data);
+               Projects.instrumentationNumbersPopup(PHPMYEDIT.selector(), data);
                return false;
              });
 
-  CAFEVDB.addReadyCallback(function() {
+  addReadyCallback(function() {
     $('input.alertdata.cafevdb-page').each(function(index) {
       const title = $(this).attr('name');
       const text  = $(this).attr('value');
-      CAFEVDB.Dialogs.alert(text, title, undefined, true, true);
+      Dialogs.alert(text, title, undefined, true, true);
     });
 
   });
@@ -1366,22 +1366,20 @@ const documentReady = function() {
   // fire an event when this have been finished
   console.debug("trigger loaded");
   $(document).trigger("cafevdb:donecafevdbjs");
-});
-
-$(documentReady);
+};
 
 export {
   globalState,
   generateUrl,
   addReadyCallback,
-  runReadCallbacks,
+  runReadyCallbacks,
   addEditor,
   removeEditor,
   updateEditor,
   snapshotEditor,
   unfocus,
   makeId,
-  modalWaitNotification
+  modalWaitNotification,
   textareaResize,
   stopRKey,
   urlEncode,
@@ -1407,88 +1405,47 @@ export {
   snapperClose,
   toolTipsInit,
   selectValues,
-  pollProgressState,
+  pollProgressStatus,
+  documentReady,
 };
 
 // compatibility settings
-CAFEVDB.generateUrl = generateUrl;
-CAFEVDB.addReadyCallback = addReadyCallback;
-CAFEVDB.runReadCallbacks = runReadCallbacks;
-CAFEVDB.addEditor = addEditor;
-CAFEVDB.removeEditor = removeEditor;
-CAFEVDB.updateEditor = updateEditor;
-CAFEVDB.snapshotEditor = snapshotEditor;
-CAFEVDB.unfocus = unfocus;
-CAFEVDB.makeId = makeId;
-CAFEVDB.modalWaitNotification
-textareaResize = modalWaitNotification
-textareaResize;
-CAFEVDB.stopRKey = stopRKey;
-CAFEVDB.urlEncode = urlEncode;
-CAFEVDB.urlDecode = urlDecode;
-CAFEVDB.queryData = queryData;
-CAFEVDB.selectMenuReset = selectMenuReset;
-CAFEVDB.
-chosenActive =
-chosenActive;
-CAFEVDB.
-fixupNoChosenMenu =
-fixupNoChosenMenu;
-CAFEVDB.
-chosenPopup =
-chosenPopup;
-CAFEVDB.
-formSubmit =
-formSubmit;
-CAFEVDB.
-objectToHiddenInput =
-objectToHiddenInput;
-CAFEVDB.
-appSettings =
-appSettings;
-CAFEVDB.
-iframeFormSubmit =
-iframeFormSubmit;
-CAFEVDB.
-tableExportMenu =
-tableExportMenu;
-CAFEVDB.
-exportMenu =
-exportMenu;
-CAFEVDB.
-modalizer =
-modalizer;
-CAFEVDB.
-dialogToBackButton =
-dialogToBackButton;
-CAFEVDB.
-dialogCustomCloseButton =
-dialogCustomCloseButton;
-CAFEVDB.
-pmeTweaks =
-pmeTweaks;
-CAFEVDB.
-attachToolTip =
-attachToolTip;
-CAFEVDB.
-applyToolTips =
-applyToolTips;
-CAFEVDB.
-toolTipsOnOff =
-toolTipsOnOff;
-CAFEVDB.
-snapperClose =
-snapperClose;
-CAFEVDB.
-toolTipsInit =
-toolTipsInit;
-CAFEVDB.
-selectValues =
-selectValues;
-CAFEVDB.
-pollProgressState =
-pollProgressState;
-
+globalState.generateUrl = generateUrl;
+globalState.addReadyCallback = addReadyCallback;
+globalState.runReadCallbacks = runReadCallbacks;
+globalState.addEditor = addEditor;
+globalState.removeEditor = removeEditor;
+globalState.updateEditor = updateEditor;
+globalState.snapshotEditor = snapshotEditor;
+globalState.unfocus = unfocus;
+globalState.makeId = makeId;
+globalState.modalWaitNotification = modalWaitNotification;
+globalState.textareaResize = textareaResize;
+globalState.stopRKey = stopRKey;
+globalState.urlEncode = urlEncode;
+globalState.urlDecode = urlDecode;
+globalState.queryData = queryData;
+globalState.selectMenuReset = selectMenuReset;
+globalState.chosenActive = chosenActive;
+globalState.fixupNoChosenMenu = fixupNoChosenMenu;
+globalState.chosenPopup = chosenPopup;
+globalState.formSubmit = formSubmit;
+globalState.objectToHiddenInput = objectToHiddenInput;
+globalState.appSettings = appSettings;
+globalState.iframeFormSubmit = iframeFormSubmit;
+globalState.tableExportMenu = tableExportMenu;
+globalState.exportMenu = exportMenu;
+globalState.modalizer = modalizer;
+globalState.dialogToBackButton = dialogToBackButton;
+globalState.dialogCustomCloseButton = dialogCustomCloseButton;
+globalState.pmeTweaks = pmeTweaks;
+globalState.attachToolTip = attachToolTip;
+globalState.applyToolTips = applyToolTips;
+globalState.toolTipsOnOff = toolTipsOnOff;
+globalState.snapperClose = snapperClose;
+globalState.toolTipsInit = toolTipsInit;
+globalState.selectValues = selectValues;
+globalState.pollProgressState = pollProgressState;
 
 // Local Variables: ***
 // js-indent-level: 2 ***

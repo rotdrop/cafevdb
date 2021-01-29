@@ -33,14 +33,14 @@ style($appName, 'about');
 style($appName, 'dialogs');
 style($appName, 'oc-fixes');
 
-script($appName, 'cafevdb');
-script($appName, 'notification');
-script($appName, 'jquery-extensions');
-script($appName, 'settings');
-script($appName, 'dialogs');
-script($appName, 'ajax');
-script($appName, 'personal-settings');
-script($appName, 'ready');
+//script($appName, 'cafevdb');
+//script($appName, 'notification');
+//script($appName, 'jquery-extensions');
+//script($appName, 'settings');
+//script($appName, 'dialogs');
+//script($appName, 'ajax');
+//script($appName, 'personal-settings');
+//script($appName, 'ready');
 
 script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
 style($appName, '../3rdparty/chosen/css/chosen.min');

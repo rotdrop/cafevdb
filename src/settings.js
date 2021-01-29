@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -19,11 +20,19 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**Run just all registered read-callbacks once. */
+// import { initialState } from './app/config.js';
+import { runReadyCallbacks } from './app/cafevdb.js';
+import appSettings from './app/settings.js';
+import personalSettings from './app/personal-settings.js';
+import './app/jquery-extensions.js';
+
 $(function() {
-  CAFEVDB.runReadyCallbacks();
+  appSettings();
+  personalSettings();
+  runReadyCallbacks();
 });
 
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***

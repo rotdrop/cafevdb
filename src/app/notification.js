@@ -19,55 +19,65 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var CAFEVDB = CAFEVDB || {};
+import { globalState } from './globals.js';
 
-(function(window, $, CAFEVDB, undefined) {
-  'use strict';
+const Notification = globalState.Notification;
+if (Notification === undefined) {
+  globalState.Notification = {
+    rows: []
+  };
+}
 
-  var Notification = function() {};
+let rows = globalState.Notification.rows;
 
-  Notification.rows = [];
-
-  Notification.hide = function($row, callback) {
-    if (_.isFunction($row)) {
-      // first arg is the callback
-      callback = $row
-      $row = undefined
-    }
-    if (!$row) {
-      if (this.rows.length == 0) {
-        if (callback) {
-          callback.call();
-        }
-        return;
+const hide = function($row, callback) {
+  if (_.isFunction($row)) {
+    // first arg is the callback
+    callback = $row
+    $row = undefined
+  }
+  if (!$row) {
+    if (rows.length == 0) {
+      if (callback) {
+        callback.call();
       }
-      this.rows.forEach(function(item, index) {
-        OC.Notification.hide(item, callback);
-      });
-      this.rows = [];
-    } else {
-      OC.Nofication.hide($row, callback);
+      return;
     }
-  };
+    rows.forEach(function(item, index) {
+      OC.Notification.hide(item, callback);
+    });
+    rows = [];
+  } else {
+    OC.Nofication.hide($row, callback);
+  }
+};
 
-  Notification.show = function(text, options) {
-    const row = OC.Notification.show(text, options);
-    this.rows.push(row);
-    return row;
-  };
+const show = function(text, options) {
+  const row = OC.Notification.show(text, options);
+  rows.push(row);
+  return row;
+};
 
-  Notification.showHtml = function(text, options) {
-    const row = OC.Notification.showHtml(text, options);
-    this.rows.push(row);
-    return row;
-  };
+const showHtml = function(text, options) {
+  const row = OC.Notification.showHtml(text, options);
+  rows.push(row);
+  return row;
+};
 
-  Notification.showTemporary = function(text, options) {
-    const row = OC.Notification.showTemporary(text, options);
-    this.rows.push(row);
-    return row;
-  };
+const showTemporary = function(text, options) {
+  const row = OC.Notification.showTemporary(text, options);
+  rows.push(row);
+  return row;
+};
 
-  CAFEVDB.Notification = Notification;
+export {
+  hide, show, showHtml, showTemporary,
+};
 
-})(window, jQuery, CAFEVDB);
+globalState.Notification = $.extend(
+  globalState.Notification, { hide, show, showHtml, showTemporary });
+
+// Local Variables: ***
+// js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***
