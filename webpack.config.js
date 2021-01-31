@@ -1,19 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
-const xmlReader = require('xml-reader');
-const fs = require('fs');
-
-function appName() {
-  const infoFile = path.join(__dirname, 'appinfo/info.xml');
-  const xmlData = fs.readFileSync(infoFile);
-  const result = xmlReader.parseSync(xmlData.toString());
-  for (const child of result.children) {
-    if (child.name === 'id') {
-      return child.children[0].value;
-    }
-  }
-  throw new Error('App-Name not found in ' + infoFile);
-}
+const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -22,15 +11,65 @@ module.exports = {
     settings: './src/settings.js',
   },
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'js'),
+    //path: path.resolve(__dirname, 'js'),
+    path: path.resolve(__dirname, '.'),
+    filename: 'js/[name].js',
   },
-  devtool: false, // 'source-map',
+  devtool: 'source-map',
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true, // Must be set to true if using source-maps in production
+        terserOptions: {
+          // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+        },
+      }),
+      new CssMinimizerPlugin(),
+    ],
+  },
   plugins: [
-    new webpack.DefinePlugin({
-      __APP_NAME__: JSON.stringify(appName())
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].css',
     }),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.xml$/i,
+        use: 'xml-loader',
+      },
+      {
+        test: /\.css$/,
+        use: [
+          // 'style-loader',
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: 'css/img/',
+          // the images will be emited to dist/assets/images/ folder
+        },
+      },
+    ],
+  },
+  resolve: {
+    modules: [
+      'node_modules',
+      path.resolve(__dirname),
+    ],
+  },
 };
 
 /**

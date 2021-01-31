@@ -70,7 +70,7 @@ npm-update:
 .PHONY: npm-init
 npm-init:
 	npm install
-	sed -Ei 's|^module[.]|//module.|g' node_modules/camelcase/index.js
+#	sed -Ei 's|^module[.]|//module.|g' node_modules/camelcase/index.js
 
 # Installs npm dependencies
 .PHONY: npm
