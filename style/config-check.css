@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,39 +19,12 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-div.cafevdb.about a:link {
-  color:CornFlowerBlue;
-  /* text-decoration:underline; */
-  font-weight:bold;  
+div.cafevdb-page-header-box.config-check {
+  height:21ex;
 }
-
-div.cafevdb.about a:visited {
-  color:CornFlowerBlue;
-  /* text-decoration:underline; */
-  font-weight:bold;  
+div.cafevdb-page-header.config-check {
+  height:20ex;
 }
-
-div.cafevdb.about a:hover {
-  color:CornFlowerBlue;
-  /* text-decoration:underline; */
-  font-style:italic;
-  font-weight:bold; 
+div.cafevdb-page-container.config-check {
+  padding-top:22ex;
 }
-
-#appsettings_popup div.personalblock.cafevdb.about {
-  max-width:46em;
-  width:46em;
-}
-
-div.cafevdb.about div.product.credits.intro {
-  padding:1em;
-  font-style:italic;
-}
-
-div.cafevdb.about div.product.credits.list ul {
-  list-style-type:circle;
-  list-style-position:inside;
-  list-style-image:none;
-  list-style-image:url('../img/listitems/info1.svg');
-}
-

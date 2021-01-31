@@ -1,7 +1,7 @@
 /* Alter the FontAwesome style sheet to not change the font for normal text.
  * Enable you to do eg. <button class="icon-fubar">Text</button> without the
  * need for an extra <i /> element.
- * 
+ *
  * This requires the 3rdparty_minimizer_path branch:
  *@import url('%3rdpartyroot%/fontawesome/css/font-awesome.min.css');*/
 

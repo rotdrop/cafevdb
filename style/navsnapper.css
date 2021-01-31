@@ -22,7 +22,7 @@
 /* Navigation snapper settings, stolen from core/css/mobile.css */
 
 @media only screen {
-    
+
     #app-navigation {
         transform: translateX(-#{$navigation-width});
     }
@@ -31,16 +31,16 @@
             transform: translateX(0);
         }
     }
-    
+
     #app-navigation:not(.hidden) + #app-content {
         margin-left: 0;
     }
-    
+
     .skip-navigation.skip-content {
         left: 3px;
         margin-left: 0;
     }
-    
+
     /* Show app details page */
     #app-content.showdetails {
         #app-navigation-toggle {
@@ -61,7 +61,7 @@
         }
         .app-content-list {
             transform: translateX(-100%);
-        }	
+        }
     }
 
     #app-navigation-toggle {
@@ -74,7 +74,7 @@
         cursor: pointer;
         opacity: 0.6;
     }
-    
+
     #app-navigation-toggle:hover, #app-navigation-toggle:focus {
         opacity: 1;
     }
