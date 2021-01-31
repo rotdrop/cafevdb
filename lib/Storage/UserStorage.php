@@ -53,14 +53,13 @@ class UserStorage
     , ILogger $logger
     , IL10N $l10n
   ) {
-    if (empty($userId)) {
-      throw new \Exception("Empty user-id");
-    }
     $this->userId = $userId;
     $this->rootFolder = $rootFolder;
     $this->logger = $logger;
     $this->l = $l10n;
-    $this->userFolder = $this->rootFolder->getUserFolder($this->userId);
+    if (!empty($this->userId)) {
+      $this->userFolder = $this->rootFolder->getUserFolder($this->userId);
+    }
   }
 
   /**

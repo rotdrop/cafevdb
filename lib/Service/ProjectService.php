@@ -73,7 +73,12 @@ class ProjectService
     //$this->logInfo(print_r($this->webPagesRPC->getCategories(), true));
     //$this->logInfo(print_r($this->webPagesRPC->getTemplates(), true));
     //$this->logInfo(print_r($this->webPagesRPC->getModules(), true));
-    $this->repository = $this->getDatabaseRepository(Entities\Project::class);
+    try {
+      $this->repository = $this->getDatabaseRepository(Entities\Project::class);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->repository = null;
+    }
     $this->l = $this->l10n();
   }
 
