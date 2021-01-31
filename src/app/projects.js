@@ -31,7 +31,7 @@ import * as Notification from './notification.js';
 import * as Events from './events.js';
 import * as Email from './email.js';
 import * as PHPMyEdit from './pme.js';
-import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki';
+import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
 
 /**
  * Strip any digit from the end of name and attach the four digit

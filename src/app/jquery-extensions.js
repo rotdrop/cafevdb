@@ -25,6 +25,10 @@
  */
 
 import * as CAFEVDB from './cafevdb.js';
+require('jquery-ui/ui/widgets/dialog');
+
+//jQuery = require('jquery');
+//require('jquery-ui');
 
 console.log('jquery-extensions');
 

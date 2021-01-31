@@ -2,8 +2,8 @@
  * Inspired by http://jqueryui.com/demos/autocomplete/#multiple
  */
 
-// jQuery = require('jquery');
-// require('jquery-ui');
+jQuery = require('jquery');
+require('jquery-ui');
 
 // window.$ = jQuery;
 // window.jQuery = jQuery;
@@ -97,4 +97,4 @@
                                 });*/
                 },
         });
-})( window.jQuery );
+})( jQuery );

@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Service\ConfigService;
  */
 
 script($appName, 'app');
+style($appName, 'app');
 
 //script($appName, 'config');
 
@@ -93,9 +94,9 @@ style($appName, '../3rdparty/chosen/css/chosen.min');
 //script($appName, 'legacy/calendar/calendar');
 //script($appName, 'legacy/calendar/on-event');
 //script($appName, 'legacy/calendar/jquery.ui.timepicker');
-style($appName, 'legacy/calendar/jquery.ui.timepicker');
+//style($appName, 'legacy/calendar/jquery.ui.timepicker');
 //script($appName, 'legacy/calendar/jquery.multiselect');
-style($appName, 'legacy/calendar/jquery.multiselect');
+//style($appName, 'legacy/calendar/jquery.multiselect');
 //script($appName, 'legacy/calendar/jquery.multi-autocomplete');
 
 // TinyMCE stuff
@@ -108,7 +109,7 @@ script($appName, '../node_modules/@ckeditor/ckeditor5-build-classic/build/ckedit
 script($appName, '../node_modules/imagesloaded/imagesloaded.pkgd.min');
 
 script($appName, '../node_modules/jquery-file-download/src/Scripts/jquery.fileDownload');
-script($appName, '../node_modules/camelcase/index');
+//script($appName, '../node_modules/camelcase/index');
 
 style('dokuwikiembedded', 'doku-wiki-popup');
 script('dokuwikiembedded', 'doku-wiki');

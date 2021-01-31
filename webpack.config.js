@@ -11,13 +11,13 @@ module.exports = {
     settings: './src/settings.js',
   },
   output: {
-    //path: path.resolve(__dirname, 'js'),
+    // path: path.resolve(__dirname, 'js'),
     path: path.resolve(__dirname, '.'),
     filename: 'js/[name].js',
   },
   devtool: 'source-map',
   optimization: {
-    minimize: true,
+    minimize: false,
     minimizer: [
       new TerserPlugin({
         cache: true,
@@ -34,6 +34,8 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
+      'window.$': 'jquery',
+      'window.jQuery': 'jquery',
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
@@ -67,7 +69,9 @@ module.exports = {
   resolve: {
     modules: [
       'node_modules',
-      path.resolve(__dirname),
+      'style',
+      'src',
+      path.resolve(__dirname, '.'),
     ],
   },
 };

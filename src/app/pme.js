@@ -32,6 +32,8 @@ import * as Page from './page.js';
 import * as Notification from './notification.js';
 import pmeTweaks from './pme-tweaks.js';
 
+require('camelcase');
+
 let PHPMyEdit = {
   directChange: false,
   filterSelectPlaceholder: 'Select a filter Option',

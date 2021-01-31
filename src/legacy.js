@@ -23,8 +23,20 @@
 import Calendar from './legacy/calendar/calendar.js';
 import './legacy/calendar/on-event.js';
 import './legacy/calendar/jquery.multi-autocomplete.js';
-import './legacy/calendar/jquery.multiselect.js';
-import './legacy/calendar/jquery.ui.timepicker.js';
+import 'legacy/calendar/jquery.ui.timepicker.js';
+
+jQuery = require('jquery');
+require('jquery-ui');
+
+//window.$ = jQuery;
+//window.jQuery = jQuery;
+
+console.info('JQUERY', window.jQuery.widget);
+
+require('legacy/calendar/jquery.ui.timepicker.css');
+
+require('jquery-ui-multiselect-widget');
+require('jquery-ui-multiselect-widget/css/jquery.multiselect.css');
 
 export { Calendar };
 

@@ -33,6 +33,7 @@
     "jquery-file-download": "^1.4.6",
     "jquery-jcrop": "^0.9.15",
     "jquery-ui": "^1.12.1",
+    "jquery-ui-multiselect-widget": "^3.0.0",
     "selectize": "^0.12.6"
   },
   "devDependencies": {

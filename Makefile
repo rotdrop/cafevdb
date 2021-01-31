@@ -70,7 +70,6 @@ npm-update:
 .PHONY: npm-init
 npm-init:
 	npm install
-#	sed -Ei 's|^module[.]|//module.|g' node_modules/camelcase/index.js
 
 # Installs npm dependencies
 .PHONY: npm
@@ -82,6 +81,7 @@ npm: npm-init
 clean: ## Tidy up local environment
 	rm -rf ./build
 	rm -rf ./js/*
+	rm -rf ./css/*
 
 # Same as clean but also removes dependencies installed by composer, bower and
 # npm
