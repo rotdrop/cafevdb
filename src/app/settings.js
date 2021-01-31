@@ -38,13 +38,13 @@ const tabsSelector = '#personal-settings-container';
  * elements. Everything attached to the container is initialized in
  * the $(document).ready() callback.
  *
- * @param container Should be a permanent DOM element.
+ * @param {jQUery} container Should be a permanent DOM element.
  *
  */
 const afterLoad = function(container) {
 
-  container = container || $(Settings.containerSelector);
-  const tabsHolder = $(Settings.tabsSelector);
+  container = container || $(containerSelector);
+  const tabsHolder = $(tabsSelector);
 
   if (!container.is(':parent')) {
     // nothing to do, empty container
@@ -57,7 +57,7 @@ const afterLoad = function(container) {
   // text input clone.
   const showPassword = function(element) {
     const tmp = element.val();
-    var showElement;
+    let showElement;
     element.showPassword(function(args) {
       showElement = args.clone;
     });
@@ -228,8 +228,8 @@ const afterLoad = function(container) {
       if (oldKeyInput.val() != keyInput.val()) {
 
 	// disable form elements until we got an answer
-	$(Settings.tabsSelector + ' fieldset').prop('disabled', true);
-	$(Settings.tabsSelector).tabs("disable");
+	$(tabsSelector + ' fieldset').prop('disabled', true);
+	$(tabsSelector).tabs("disable");
 	container.find('.statusmessage.standby').show();
 
 	Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
@@ -241,8 +241,8 @@ const afterLoad = function(container) {
           })
           .done(function(data) {
             // re-enable all forms
-            $(Settings.tabsSelector + ' fieldset').prop('disabled', false);
-            $(Settings.tabsSelector).tabs("enable");
+            $(tabsSelector + ' fieldset').prop('disabled', false);
+            $(tabsSelector).tabs("enable");
             container.find('.statusmessage.standby').hide();
 
             Notification.hide();
@@ -263,8 +263,8 @@ const afterLoad = function(container) {
             }
 	  })
           .fail(function(xhr, status, errorThrown) {
-            $(Settings.tabsSelector + ' fieldset').prop('disabled', false);
-            $(Settings.tabsSelector).tabs("enable");
+            $(tabsSelector + ' fieldset').prop('disabled', false);
+            $(tabsSelector).tabs("enable");
             container.find('.statusmessage.standby').hide();
 
             Notification.hide();
@@ -973,17 +973,18 @@ const afterLoad = function(container) {
 };
 
 const documentReady = function(container) {
+
   if (container === undefined) {
     console.log('default container');
-    container = $(Settings.containerSelector);
+    container = $(containerSelector);
   }
 
-  container.on("tabsselect", Settings.tabsContainer, function (event, ui) {
+  container.on("tabsselect", tabsSelector, function (event, ui) {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
   });
 
-  container.on("tabsshow", Settings.tabsContainer, function (event, ui) {
+  container.on("tabsshow", tabsSelector, function (event, ui) {
     if (ui.index == 3) {
       $('#smtpsecure').chosen({ disable_search_threshold: 10 });
       $('#imapsecure').chosen({ disable_search_threshold: 10 });

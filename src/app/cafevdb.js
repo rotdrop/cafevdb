@@ -44,7 +44,8 @@ let CAFEVDB = {
 // overrides from PHP, see config.js
 $.extend(globalState, CAFEVDB, globalState);
 
-/**Register callbacks which are run after partial page reload in
+/**
+ * Register callbacks which are run after partial page reload in
  * order to "fake" document-ready. An alternate possibility would
  * have been to attach handlers to a custom signal and trigger that
  * signal if necessary.
@@ -53,10 +54,10 @@ const addReadyCallback = function(callBack) {
   globalState.readyCallbacks.push(callBack);
 };
 
-/**Run artificial document-ready stuff. */
+/** Run artificial document-ready stuff. */
 const runReadyCallbacks = function() {
-  for (var idx = 0; idx < this.readyCallbacks.length; ++idx) {
-    let callback = this.readyCallbacks[idx];
+  for (var idx = 0; idx < globalState.readyCallbacks.length; ++idx) {
+    let callback = globalState.readyCallbacks[idx];
     if (typeof callback == 'function') {
       callback();
     }
@@ -74,7 +75,7 @@ const addEditor = function(selector, initCallback, initialHeight) {
     }
     return;
   }
-  switch (this.wysiwygEditor) {
+  switch (globalState.wysiwygEditor) {
   default:
   case 'ckeditor':
     if (typeof initCallback != 'function') {
@@ -149,7 +150,7 @@ const removeEditor = function(selector) {
   if (!editorElement.length) {
     return;
   }
-  switch (this.wysiwygEditor) {
+  switch (globalState.wysiwygEditor) {
   case 'ckeditor':
     if (editorElement.ckeditor) {
       editorElement.ckeditor().remove();
@@ -176,7 +177,7 @@ const updateEditor = function(selector, contents) {
   if (!editorElement.length) {
     return;
   }
-  switch (this.wysiwygEditor) {
+  switch (globalState.wysiwygEditor) {
   case 'ckeditor':
     if (editorElement.ckeditor) {
       editor = editorElement.ckeditor().ckeditorGet();
@@ -210,7 +211,7 @@ const snapshotEditor = function(selector) {
   if (!editorElement.length) {
     return;
   }
-  switch (this.wysiwygEditor) {
+  switch (globalState.wysiwygEditor) {
   case 'ckeditor':
     if (editorElement.ckeditor) {
       editor = editorElement.ckeditor().ckeditorGet();
@@ -507,7 +508,7 @@ const chosenActive = function(select) {
 };
 
 const fixupNoChosenMenu = function(select) {
-  if (!this.chosenActive(select)) {
+  if (!chosenActive(select)) {
     // restore the data-placeholder as first option if chosen
     // is not active
     select.each(function(index) {
@@ -660,12 +661,12 @@ const objectToHiddenInput = function(value, namePrefix)
   var result = '';
   if (value.constructor === Array) {
     for (var idx = 0; idx < value.length; ++idx) {
-      result += this.objectToHiddenInput(value[idx], namePrefix+'['+idx+']');
+      result += objectToHiddenInput(value[idx], namePrefix+'['+idx+']');
     }
   } else {
     for (var property in value) {
       if (value.hasOwnProperty(property)) {
-        result += this.objectToHiddenInput(
+        result += objectToHiddenInput(
           value[property], namePrefix === '' ? property : namePrefix+'['+property+']');
       }
     }
@@ -733,7 +734,7 @@ const iframeFormSubmit = function(action, target, values)
     }
   } else {
     // object with { name: value }
-    form.append(this.objectToHiddenInput(values));
+    form.append(objectToHiddenInput(values));
   }
   $('body').append(form);
   form.submit().remove();
@@ -1352,43 +1353,6 @@ export {
   pollProgressStatus,
   documentReady,
 };
-
-// compatibility settings
-globalState.generateUrl = generateUrl;
-globalState.addReadyCallback = addReadyCallback;
-globalState.runReadCallbacks = runReadCallbacks;
-globalState.addEditor = addEditor;
-globalState.removeEditor = removeEditor;
-globalState.updateEditor = updateEditor;
-globalState.snapshotEditor = snapshotEditor;
-globalState.unfocus = unfocus;
-globalState.makeId = makeId;
-globalState.modalWaitNotification = modalWaitNotification;
-globalState.textareaResize = textareaResize;
-globalState.stopRKey = stopRKey;
-globalState.urlEncode = urlEncode;
-globalState.urlDecode = urlDecode;
-globalState.queryData = queryData;
-globalState.selectMenuReset = selectMenuReset;
-globalState.chosenActive = chosenActive;
-globalState.fixupNoChosenMenu = fixupNoChosenMenu;
-globalState.chosenPopup = chosenPopup;
-globalState.formSubmit = formSubmit;
-globalState.objectToHiddenInput = objectToHiddenInput;
-globalState.appSettings = appSettings;
-globalState.iframeFormSubmit = iframeFormSubmit;
-globalState.tableExportMenu = tableExportMenu;
-globalState.exportMenu = exportMenu;
-globalState.modalizer = modalizer;
-globalState.dialogToBackButton = dialogToBackButton;
-globalState.dialogCustomCloseButton = dialogCustomCloseButton;
-globalState.attachToolTip = attachToolTip;
-globalState.applyToolTips = applyToolTips;
-globalState.toolTipsOnOff = toolTipsOnOff;
-globalState.snapperClose = snapperClose;
-globalState.toolTipsInit = toolTipsInit;
-globalState.selectValues = selectValues;
-globalState.pollProgressState = pollProgressState;
 
 // Local Variables: ***
 // js-indent-level: 2 ***

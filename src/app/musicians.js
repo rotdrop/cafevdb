@@ -78,7 +78,6 @@ const addMusicians = function(form, post) {
 };
 
 const contactValidation = function(container) {
-  const self = Musicians;
 
   if (typeof container == 'undefined') {
     container = $('body');
@@ -360,12 +359,11 @@ const contactValidation = function(container) {
 };
 
 const ready = function(container) {
-  const self = this;
 
   // sanitize
   container = PHPMyEdit.container(container);
 
-  self.contactValidation(container);
+  contactValidation(container);
 
   const form = container.find('form.pme-form');
   const nameInputs = form.find('input.musician-name');
@@ -466,15 +464,15 @@ const ready = function(container) {
       const projectName = form.find('input[name="projectName"]').val();
       const musicianId = $(this).data('musician-id');
 
-      self.addMusicians(form, {
-        'projectId': projectId,
-        'projectName': projectName,
-        'musicianId': musicianId
+      addMusicians(form, {
+        projectId,
+        projectName,
+        musicianId,
       });
       return false;
     });
 
-  //container.find('input.pme-bulkcommit').addClass('formsubmit');
+  // container.find('input.pme-bulkcommit').addClass('formsubmit');
   container
     .find('input.pme-bulkcommit')
     .addClass('pme-custom')

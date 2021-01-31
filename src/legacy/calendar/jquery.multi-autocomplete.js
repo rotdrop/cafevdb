@@ -2,6 +2,12 @@
  * Inspired by http://jqueryui.com/demos/autocomplete/#multiple
  */
 
+// jQuery = require('jquery');
+// require('jquery-ui');
+
+// window.$ = jQuery;
+// window.jQuery = jQuery;
+
 (function( $ ) {
         $.widget('ui.multiple_autocomplete', {
                 _create: function() {
@@ -91,4 +97,4 @@
                                 });*/
                 },
         });
-})( jQuery );
+})( window.jQuery );

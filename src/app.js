@@ -44,9 +44,13 @@ import { documentReady as phpMyEditDocumentReady } from './app/pme.js';
 import beforeReady from './app/before-ready.js';
 import './app/jquery-extensions.js';
 
-globalState.Ajax = Ajax;
-globalState.Dialogs = Dialogs;
-globalState.print_r = print_r;
+jQuery = require('jquery');
+require('jquery-ui');
+
+window.$ = jQuery;
+window.jQuery = jQuery;
+
+console.info('JQUERY', window.jQuery.widget);
 
 $(function() {
   documentReady();
@@ -70,8 +74,6 @@ $(function() {
   beforeReady();
   runReadyCallbacks();
 });
-
-export { globalState as CAFEVDB };
 
 // Local Variables: ***
 // js-indent-level: 2 ***

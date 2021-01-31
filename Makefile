@@ -81,6 +81,7 @@ npm: npm-init
 .PHONY: clean
 clean: ## Tidy up local environment
 	rm -rf ./build
+	rm -rf ./js/*
 
 # Same as clean but also removes dependencies installed by composer, bower and
 # npm
@@ -88,14 +89,13 @@ clean: ## Tidy up local environment
 distclean: clean ## Clean even more, calls clean
 	rm -rf vendor
 	rm -rf node_modules
-	rm -rf js/vendor
-	rm -rf js/node_modules
 
 .PHONY: realclean
 realclean: distclean ## Really delete everything but the bare source files
 	rm -f composer.lock
 	rm -f composer.json
 	rm -f stamp.composer-core-versions
+	rm -f package-lock.json
 
 # Builds the source and appstore package
 .PHONY: dist

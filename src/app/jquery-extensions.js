@@ -26,7 +26,7 @@
 
 import * as CAFEVDB from './cafevdb.js';
 
-console.log("jquery-extensions");
+console.log('jquery-extensions');
 
 /**
  * We leave it to the z-index-plane to disallow interaction. Every
@@ -59,10 +59,10 @@ $.fn.cafevDialog = function(argument) {
     if ($('#appsettings_popup').length == 0) {
       CAFEVDB.snapperClose();
     }
-    console.log("will open dialog");
+    console.log('will open dialog');
     $.fn.dialog.call(this, argument);
     if (this.dialog('option', 'draggable')) {
-      console.log("Try to set containment");
+      console.log('Try to set containment');
       $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#app-content');
     }
   } else {
@@ -78,7 +78,7 @@ $.fn.cafevDialog = function(argument) {
 
 /**
  * Determine whether scrollbars would be needed.
- * @returns
+ * @returns {object}
  */
 $.fn.needScrollbars = function() {
   const node = this.get(0);
@@ -110,7 +110,7 @@ $.fn.hasScrollbars = function() {
 
 /**
  * Determine dimensions of scrollbars.
- * @returns
+ * @returns{object}
  */
 $.fn.scrollbarDimensions = function() {
   const node = this.get(0);
@@ -120,25 +120,37 @@ $.fn.scrollbarDimensions = function() {
   };
 };
 
-/** Determine whether we have a horizontal scrollbar. */
+/**
+ * Determine whether we have a horizontal scrollbar.
+ * @returns {bool}
+ */
 $.fn.hasHorizontalScrollbar = function() {
   const node = this.get(0);
   return node.scrollWidth > node.clientWidth + 1;
 };
 
-/** Determine whether we have a vertical scrollbar. */
+/**
+ * Determine whether we have a vertical scrollbar.
+ * @returns {bool}
+ */
 $.fn.hasVerticalScrollbar = function() {
   const node = this.get(0);
   return node.scrollHeight > node.clientHeight + 1;
 };
 
-/** Determine vertical scrollbar width. */
+/**
+ * Determine vertical scrollbar width.
+ * @returns {int}
+ */
 $.fn.verticalScrollbarWidth = function() {
   const node = this.get(0);
   return node.offsetWidth - node.clientWidth;
 };
 
-/** Determine horizontal scrollbar height. */
+/**
+ * Determine horizontal scrollbar height.
+ * @returns {int}
+ */
 $.fn.horizontalScrollbarHeight = function() {
   const node = this.get(0);
   return node.offsetHeight - node.clientHeight;
@@ -150,7 +162,7 @@ $.fn.horizontalScrollbarHeight = function() {
  * popups.
  */
 $.fn.cafevTooltip = function(argument) {
-  if (typeof argument == 'undefined') {
+  if (typeof argument === 'undefined') {
     argument = {};
   }
   if (typeof argument == 'object' && argument != null) {
@@ -158,8 +170,7 @@ $.fn.cafevTooltip = function(argument) {
       {},
       $.fn.tooltip.Constructor.Default.whiteList,
       {
-        table: [], thead: [], tbody: [], tr: [], td: [], th: [],
-        dl: [], dt: [], dd: []
+        table: [], thead: [], tbody: [], tr: [], td: [], th: [], dl: [], dt: [], dd: [],
       }
     );
     const options = {
@@ -170,15 +181,15 @@ $.fn.cafevTooltip = function(argument) {
       placement: 'auto',
       cssclass: [],
       fallbackPlacement: 'flip',
-      boundary: 'viewport'
-      //, delay: { "show": 500, "hide": 100000 }
+      boundary: 'viewport',
+      //, delay: { 'show': 500, 'hide': 100000 }
     };
     argument = $.extend(true, {}, options, argument);
     if (typeof argument.placement == 'string') {
       const words = argument.placement.split(' ');
       if (words.length > 1) {
         for (const word of words) {
-          if (word != 'auto') {
+          if (word !== 'auto') {
             argument.placement = word;
             break;
           }
@@ -202,11 +213,10 @@ $.fn.cafevTooltip = function(argument) {
         }
         const tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
         if (tooltipClasses) {
-          var idx;
-          for(idx = 0; idx < tooltipClasses.length; ++idx) {
-            var tooltipClass = tooltipClasses[idx];
-            var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
-            if (placement && placement.length == 2 && placement[1].length > 0) {
+          for (let idx = 0; idx < tooltipClasses.length; ++idx) {
+            const tooltipClass = tooltipClasses[idx];
+            const placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
+            if (placement && placement.length === 2 && placement[1].length > 0) {
               selfOptions.placement = placement[1];
               continue;
             }
@@ -215,14 +225,14 @@ $.fn.cafevTooltip = function(argument) {
         }
       }
       $.fn.tooltip.call(self, 'dispose');
-      var originalTitle = self.data('original-title');
+      const originalTitle = self.data('original-title');
       if (originalTitle && !self.attr('title')) {
         self.attr('title', originalTitle);
       }
       self.removeAttr('data-original-title');
       self.removeData('original-title');
-      var title = self.attr('title');
-      if (title == undefined || title.trim() == '') {
+      const title = self.attr('title');
+      if (title === undefined || title.trim() === '') {
         self.removeAttr('title');
         self.cafevTooltip('destroy');
         return;
@@ -239,7 +249,7 @@ $.fn.cafevTooltip = function(argument) {
     });
   } else {
     if (argument === 'destroy') {
-      argument = 'dispose';
+      arguments[0] = 'dispose';
     }
     $.fn.tooltip.apply(this, arguments);
   }
@@ -268,44 +278,64 @@ $.fn.cafevTooltip.hide = function() {
   $('[data-original-title]').cafevTooltip('hide');
 };
 
-$.extend({ alert: function (message, title) {
-  $("<div></div>").dialog( {
-    buttons: { "Ok": function () { $(this).dialog("close"); } },
-    open: function(event, ui) {
-      $(this).css({'max-height': 800, 'overflow-y': 'auto', 'height': 'auto'});
-      $(this).dialog( "option", "resizable", false );
-    },
-    close: function (event, ui) { $(this).remove(); },
-    resizable: false,
-    title: title,
-    modal: true,
-    height: "auto"
-  }).html(message);
-}
-         });
+$.extend({
+  alert(message, title) {
+    $('<div></div>').dialog({
+      buttons: { Ok() { $(this).dialog('close'); } },
+      open(event, ui) {
+        $(this).css({ 'max-height': 800, 'overflow-y': 'auto', height: 'auto' });
+        $(this).dialog('option', 'resizable', false);
+      },
+      close(event, ui) { $(this).remove(); },
+      resizable: false,
+      title,
+      modal: true,
+      height: 'auto',
+    }).html(message);
+  },
+});
 
-/** Compute the maximum width of a set of elements */
+/**
+ * Compute the maximum width of a set of elements
+ * @returns {int}
+ */
 $.fn.maxWidth = function() {
   return Math.max.apply(null, this.map(function () {
     return $(this).width();
   }).get());
 };
 
-/** Compute the maximum width of a set of elements */
+/**
+ * Compute the maximum width of a set of elements
+ *
+ * @param {Object} extended Blah.
+ *
+ * @returns {int}
+ */
 $.fn.maxOuterWidth = function(extended) {
   return Math.max.apply(null, this.map(function () {
     return $(this).outerWidth(extended);
   }).get());
 };
 
-/** Compute the maximum height of a set of elements */
+/**
+ * Compute the maximum height of a set of elements
+ *
+ * @returns {int}
+ */
 $.fn.maxHeight = function() {
   return Math.max.apply(null, this.map(function () {
     return $(this).height();
   }).get());
 };
 
-/** Compute the maximum height of a set of elements */
+/**
+ * Compute the maximum height of a set of elements
+ *
+ * @param {Object} extended Blah.
+ *
+ * @returns {int}
+ */
 $.fn.maxOuterHeight = function(extended) {
   return Math.max.apply(null, this.map(function () {
     return $(this).outerHeight(extended);
@@ -331,9 +361,9 @@ $.fn.toEm = function(settings) {
   settings = jQuery.extend({
     scope: 'body'
   }, settings);
-  var that = parseInt(this[0],10),
-      scopeTest = jQuery('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope),
-      scopeVal = scopeTest.height();
+  const that = parseInt(this[0], 10);
+  const scopeTest = jQuery('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope);
+  const scopeVal = scopeTest.height();
   scopeTest.remove();
   return (that / scopeVal).toFixed(8) + 'em';
 };
@@ -342,9 +372,9 @@ $.fn.toPx = function(settings) {
   settings = jQuery.extend({
     scope: 'body'
   }, settings);
-  var that = parseFloat(this[0]),
-      scopeTest = jQuery('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope),
-      scopeVal = scopeTest.height();
+  const that = parseFloat(this[0]);
+  const scopeTest = jQuery('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope);
+  const scopeVal = scopeTest.height();
   scopeTest.remove();
   return Math.round(that * scopeVal) + 'px';
 };

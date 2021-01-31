@@ -9,7 +9,7 @@
  * See the COPYING-README file.
  */
 
-import { appName } from '../../app/config.js';x
+import { appName } from '../../app/config.js';
 import * as Ajax from '../../app/ajax.js';
 import * as CAFEVDB from '../../app/cafevdb.js';
 import * as Dialogs from '../../app/dialogs.js';

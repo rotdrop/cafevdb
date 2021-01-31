@@ -32,7 +32,6 @@ globalState.Photo = {
 };
 
 const uploadPhoto = function(filelist) {
-  const self = globalState.Photo;
   if (!filelist) {
     Dialogs.alert(t(appName, 'No files selected for upload.'), t(appName, 'Error'));
     return;

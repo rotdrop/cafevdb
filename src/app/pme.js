@@ -83,7 +83,7 @@ const PMEPrefix = pmePrefix.toUpperCase();
 
 /** Generate a string with PME_sys_.... prefix.*/
 const pmeSys = function(token) {
-  return PMEPrefix+"_sys_"+token;
+  return PMEPrefix + "_sys_"+ token;
 };
 
 /** Generate a string with PME_data_.... prefix.*/
@@ -124,7 +124,6 @@ const pmeSysNameSelector = function(element, token, modifier) {
 
 /** Generate a compound name selector with PME_sys_.... prefix.*/
 const pmeSysNameSelectors = function(element, tokens) {
-  var pme = this;
   var elements = tokens.map(function(token) {
     return pmeSysNameSelector(element, token);
   });
@@ -154,7 +153,7 @@ const pmeTableSelector = function() {
  */
 const pmeSelector = function(selector) {
   if (typeof selector === 'undefined') {
-    selector = defaultSelector;
+    selector = pmeDefaultSelector;
   }
   return selector;
 };
@@ -680,7 +679,6 @@ const tableDialogHandlers = function(options, callback) {
  * carries a CSS class "pme-viewXXXXX" with XXXXX being anything.
  */
 const tableDialog = function(form, element, containerSel) {
-  var pme  = this;
 
   var post = form.serialize();
   var templateRenderer = form.find('input[name="templateRenderer"]');
@@ -1131,7 +1129,6 @@ const maybeTranspose = function(transpose, containerSel) {
 
 /** Ready callback.*/
 const transposeReady = function(containerSel)  {
-  var pme = this;
 
   var container = pmeContainer(containerSel);
 
@@ -1157,7 +1154,6 @@ const transposeReady = function(containerSel)  {
 };
 
 const installFilterChosen = function(containerSel) {
-  var pme = this;
 
   if (!PHPMyEdit.selectChosen) {
     return;
@@ -1168,7 +1164,7 @@ const installFilterChosen = function(containerSel) {
 
   var container = pmeContainer(containerSel);
 
-  var noRes = filterSelectNoResult;
+  var noRes = PHPMyEdit.filterSelectNoResult;
 
   container.find("select." + pmeCompFilter).chosen({
     width:"auto",
@@ -1179,7 +1175,7 @@ const installFilterChosen = function(containerSel) {
 
   // Provide a data-placeholder and also remove the match-all
   // filter, which is not needed when using chosen.
-  container.find("select."+pmeFilter).attr("data-placeholder", filterSelectPlaceholder);
+  container.find("select."+pmeFilter).attr("data-placeholder", PHPMyEdit.filterSelectPlaceholder);
   container.off('change', 'select.'+pmeFilter);
   container.find("select."+pmeFilter+" option[value='*']").remove();
 
@@ -1206,7 +1202,7 @@ const installFilterChosen = function(containerSel) {
   });
 
   container.find("td."+pmeFilter+" div.chosen-container").
-    attr("title", filterSelectChosenTitle);
+    attr("title", PHPMyEdit.filterSelectChosenTitle);
 };
 
 const installInputChosen = function(containerSel, onlyClass) {
@@ -1220,11 +1216,11 @@ const installInputChosen = function(containerSel, onlyClass) {
 
   const container = pmeContainer(containerSel);
 
-  const noRes = inputSelectNoResult;
+  const noRes = PHPMyEdit.inputSelectNoResult;
 
   // Provide a data-placeholder and also remove the match-all
   // filter, which is not needed when using chosen.
-  container.find("select."+pmeInput).attr("data-placeholder", inputSelectPlaceholder);
+  container.find("select."+pmeInput).attr("data-placeholder", PHPMyEdit.inputSelectPlaceholder);
   container.off('change', 'select.'+pmeInput);
   //    container.find("select."+pmeInput+" option[value='*']").remove();
 
@@ -1265,13 +1261,12 @@ const installInputChosen = function(containerSel, onlyClass) {
   container.find("td."+pmeInput+" div.chosen-container, td."+pmeValue+" div.chosen-container").
     not('[title][title!=""]').
     each(function(index) {
-      $(this).attr("title", inputSelectChosenTitle);
+      $(this).attr("title", PHPMyEdit.inputSelectChosenTitle);
     });
 
 };
 
 const installTabHandler = function(containerSel, callback) {
-  var pme = this;
 
   var container = pmeContainer(containerSel);
 
@@ -1330,8 +1325,7 @@ const installTabHandler = function(containerSel, callback) {
     });
 };
 
-const init = function(containerSel) {
-  var pme = this;
+const pmeInit = function(containerSel) {
 
   containerSel = pmeSelector(containerSel);
   const container = pmeContainer(containerSel);
@@ -1625,7 +1619,7 @@ const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
     transposeReady();
-    init();
+    pmeInit();
     PHPMyEdit.dialogOpen = {}; // not cleared in init on purpose
   });
 }

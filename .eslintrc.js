@@ -13,6 +13,7 @@ module.exports = {
     firstDay: true
   },
   rules: {
+    'no-console': 'off',
     'no-tabs': 'ERROR',
     indent: ['error', 2],
     semi: ['error', 'always'],

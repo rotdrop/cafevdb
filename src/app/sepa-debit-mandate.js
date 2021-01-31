@@ -36,7 +36,7 @@ globalState.SepaDebitMandate = {
   mandateId: -1,
   mandateReference: '',
   instantValidation: true,
-  validationRunning:_false,
+  validationRunning: false,
 };
 
 /**

@@ -67,6 +67,7 @@ trait InitialStateTrait {
       $this->appName,
       'CAFEVDB',
       [
+        'appName' => $this->appName,
         'toolTipsEnabled' => ($tooltips == 'off' ? false : true),
         'wysiwygEditor' => $editor,
         'language' => $language,

@@ -20,9 +20,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { appName } from './config.js';
+
 const generateUrl = function(postFix) {
-  return OC.generateUrl('/apps/' + __APP_NAME__ + '/' + postFix);
-}
+  return OC.generateUrl('/apps/' + appName + '/' + postFix);
+};
 
 export default generateUrl;
 
