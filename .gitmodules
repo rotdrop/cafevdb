@@ -21,3 +21,7 @@
 [submodule "dev-scripts/MakeHelp"]
 	path = dev-scripts/MakeHelp
 	url = https://github.com/mrdor44/MakeHelp.git
+[submodule "3rdparty/chosen"]
+	path = 3rdparty/chosen
+	url = git@github.com:rotdrop/chosen.git
+	branch = tooltips
