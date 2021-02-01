@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.js';
+import { globalState, appName, } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -32,6 +32,8 @@ import * as Events from './events.js';
 import * as Email from './email.js';
 import * as PHPMyEdit from './pme.js';
 import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
+
+require('projects.css');
 
 /**
  * Strip any digit from the end of name and attach the four digit

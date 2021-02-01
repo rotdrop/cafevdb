@@ -25,6 +25,16 @@ import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 import { makeId, toolTipsInit } from './cafevdb.js';
 
+require('../legacy/nextcloud/jquery/showpassword.js');
+require('jquery-file-download');
+require('jquery-ui/ui/widgets/autocomplete');
+require('jquery-ui/themes/base/autocomplete.css');
+
+require('settings.css');
+require('about.css');
+
+console.info('JQUERY ', $.fn.jquery);
+
 /**
  * Permanent DOM element holding the dynamically injected settings
  * forms.

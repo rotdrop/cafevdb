@@ -110,6 +110,8 @@ class PersonalForm {
           'wysiwygEditor' =>$this->getUserValue('wysiwygEditor', 'tinymce'),
           'expertMode' => $this->getUserValue('expertmode'),
         ]);
+      $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
+      $this->initialStateService->provideInitialState($this->appName(), 'Calendar', []);
 
       // Are we a group-admin?
       $isGroupAdmin = $this->isSubAdminOfGroup() && $this->encryptionKeyValid();

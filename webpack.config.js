@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -34,12 +35,21 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
+      jquery: 'jquery',
       'window.$': 'jquery',
       'window.jQuery': 'jquery',
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
     }),
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     { from: './3rdparty/tinymce/plugins', to: 'js/plugins' },
+    //     { from: './3rdparty/tinymce/themes', to: 'js/themes' },
+    //     { from: './3rdparty/tinymce/skins', to: 'js/skins' },
+    //     { from: './3rdparty/tinymce/skins', to: 'js/langs' },
+    //   ],
+    // }),
   ],
   module: {
     rules: [
@@ -56,12 +66,22 @@ module.exports = {
         ],
       },
       {
+        test: /\.s(a|c)ss$/,
+        use: [
+          // 'style-loader',
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+        ],
+      },
+      {
         test: /\.(jpe?g|png|gif|svg)$/i,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]',
           outputPath: 'css/img/',
-          // the images will be emited to dist/assets/images/ folder
+          publicPath: 'img',
+          useRelativePaths: true,
         },
       },
     ],
@@ -71,9 +91,19 @@ module.exports = {
       'node_modules',
       'style',
       'src',
+      '3rdparty',
       path.resolve(__dirname, '.'),
     ],
+    alias: {
+      core: path.resolve(__dirname, '../../core/src'),
+      tinymce: path.resolve(__dirname, '3rdparty/tinymce/tinymce.min.js'),
+      // 'jquery.tinymce': path.resolve(__dirname, '3rdparty/tinymce/jquery.tinymce.min.js'),
+      'jquery.tinymce': path.resolve(__dirname, '3rdparty/tinymce/JqueryIntegration.js'),
+    },
   },
+  // externals: {
+  //   tinymce: 'window tinymce',
+  // },
 };
 
 /**

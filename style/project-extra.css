@@ -63,7 +63,7 @@ table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.default-multi-
 }
 
 .project-extra-fields table.pme-main tr.allowed-values.active input.delete-undelete {
-    background-image:url('../img/delete.svg');
+    background-image:url('../img/cafevdb-delete.svg');
 }
 
 .project-extra-fields table.pme-main tr.allowed-values.deleted input.delete-undelete {

@@ -61,10 +61,10 @@ const loadPage = function(post, afterLoadCallback) {
   }
   $.post(generateUrl('page/' + action + '/' + parameter), post)
     .fail(function(xhr, status, errorThrown) {
-      const errorData =  Ajax.handleError(xhr, status, errorThrown);
+      const errorData = Ajax.handleError(xhr, status, errorThrown);
       // If the error response contains history data, use it. Othewise
       // reset the history
-      if (action == 'recall') {
+      if (action === 'recall') {
         if (errorData.history !== undefined) {
           globalState.Page.historyPosition = errorData.history.position;
           globalState.Page.historySize = errorData.history.size;

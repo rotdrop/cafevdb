@@ -473,7 +473,7 @@ input[type=submit]:active:not(:disabled) {
 /* } */
 
 div[class|='cafevdb-nav'] {
-  background-image:url('..//img/logo-greyf128x128');
+  background-image:url('../img/logo-greyf128x128.png');
   background-repeat:repeat-x;
   background-position:center;
 }
@@ -724,7 +724,7 @@ a.ui-tabs-anchor.compact span.ui-icon {
 }
 
 .ui-dialog.no-close .ui-dialog-buttonpane {
-  padding: .3em .4em .5em .4em; // t r b l
+  padding: .3em .4em .5em .4em; /* t r b l */
 }
 
 .ui-dialog.zero-size {

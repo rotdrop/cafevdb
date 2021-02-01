@@ -24,27 +24,8 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
-script($appName, 'config');
-
-style($appName, 'cafevdb');
+script($appName, 'settings');
 style($appName, 'settings');
-style($appName, 'tooltips');
-style($appName, 'about');
-style($appName, 'dialogs');
-style($appName, 'oc-fixes');
-
-//script($appName, 'cafevdb');
-//script($appName, 'notification');
-//script($appName, 'jquery-extensions');
-//script($appName, 'settings');
-//script($appName, 'dialogs');
-//script($appName, 'ajax');
-//script($appName, 'personal-settings');
-//script($appName, 'ready');
-
-script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
-style($appName, '../3rdparty/chosen/css/chosen.min');
-script($appName, '../node_modules/jquery-file-download/src/Scripts/jquery.fileDownload');
 
 $tooltipstitle  = $toolTips['show-tool-tips'];
 $filtervistitle = $toolTips['filter-visibility'];

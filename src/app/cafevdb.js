@@ -20,29 +20,32 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.js';
+import { globalState, appName } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as Dialogs from './dialogs.js';
 import { selector as pmeSelector } from './pme.js';
+import myTinyMCE from './tinymceinit';
 
-const appName = globalState.appName;
+const ClassicEditor = require('@ckeditor/ckeditor5-build-classic');
+
+require('cafevdb.css');
 
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
 
-let CAFEVDB = {
-  appName: appName,
-  toolTipsEnabled: true,
-  wysiwygEditor: 'tinymce',
-  language: 'en',
-  readyCallbacks: [], ///< quasi-document-ready-callbacks
-  creditsTimer: -1,
-  adminContact: t(appName, 'unknown'),
-  phpUserAgent: t(appName, 'unknown'),
-};
-
-// overrides from PHP, see config.js
-$.extend(globalState, CAFEVDB, globalState);
+$.extend(
+  globalState,
+  $.extend({
+    appName,
+    toolTipsEnabled: true,
+    wysiwygEditor: 'tinymce',
+    language: 'en',
+    readyCallbacks: [], // quasi-document-ready-callbacks
+    creditsTimer: -1,
+    adminContact: t(appName, 'unknown'),
+    phpUserAgent: t(appName, 'unknown'),
+  }, globalState)
+);
 
 /**
  * Register callbacks which are run after partial page reload in
@@ -54,10 +57,14 @@ const addReadyCallback = function(callBack) {
   globalState.readyCallbacks.push(callBack);
 };
 
-/** Run artificial document-ready stuff. */
+/**
+ * Run artificial document-ready stuff.
+ *
+ * @returns {bool} TBD.
+ */
 const runReadyCallbacks = function() {
-  for (var idx = 0; idx < globalState.readyCallbacks.length; ++idx) {
-    let callback = globalState.readyCallbacks[idx];
+  for (let idx = 0; idx < globalState.readyCallbacks.length; ++idx) {
+    const callback = globalState.readyCallbacks[idx];
     if (typeof callback == 'function') {
       callback();
     }
@@ -65,7 +72,16 @@ const runReadyCallbacks = function() {
   return false;
 };
 
-/**Add a WYSIWYG editor to the element specified by @a selector. */
+/**
+ * Add a WYSIWYG editor to the element specified by @a selector.
+ *
+ * @param {string} selector TBD.
+ *
+ * @param {Function} initCallback TBD.
+ *
+ * @param {int} initialHeight TBD.
+ *
+ */
 const addEditor = function(selector, initCallback, initialHeight) {
   console.debug('CAFEVDB.addEditor');
   const editorElement = $(selector);
@@ -94,16 +110,16 @@ const addEditor = function(selector, initCallback, initialHeight) {
         initCallback();
       });
     break;
-  case 'tinymce':
+  case 'tinymce': {
     // This is a Gurkerei
     $(document).on('focusin', function(e) {
-      //e.stopImmediatePropagaion();
-      //alert(CAFEVDB.print_r(e.target, true));
+      // e.stopImmediatePropagaion();
+      // alert(CAFEVDB.print_r(e.target, true));
       if ($(e.target).closest(".mce-container").length) {
         e.stopImmediatePropagation();
       }
     });
-    var plusConfig = {};
+    const plusConfig = {};
     if (!editorElement.is('textarea')) {
       plusConfig.inline = true;
     }
@@ -113,7 +129,7 @@ const addEditor = function(selector, initCallback, initialHeight) {
     const mceDeferred = $.Deferred();
     mceDeferred.then(
       function() {
-        console.debug('MCE promise succeeded');
+        console.info('MCE promise succeeded');
         if (typeof initCallback == 'function') {
           initCallback();
         }
@@ -130,21 +146,26 @@ const addEditor = function(selector, initCallback, initialHeight) {
     editorElement
       .off('cafevdb:tinymce-done')
       .on('cafevdb:tinymce-done', function(event) {
-        console.debug('tinyMCE init done callback');
+        console.info('tinyMCE init done callback');
         mceDeferred.resolve();
       });
     console.debug("attach tinymce");
     editorElement.tinymce(mceConfig);
     // wait for at most 5 seconds, then cancel
-    const timeout = 5;
+    const timeout = 10;
     setTimeout(function() {
       mceDeferred.reject();
     }, timeout * 1000);
     break;
+  }
   };
 };
 
-/**Remove a WYSIWYG editor from the element specified by @a selector. */
+/**
+ * Remove a WYSIWYG editor from the element specified by @a selector.
+ *
+ * @param {String} selector TBD.
+ */
 const removeEditor = function(selector) {
   const editorElement = $(selector);
   if (!editorElement.length) {
@@ -624,11 +645,11 @@ const chosenPopup = function(contents, userOptions)
  * Create and submit a form with a POST request and given
  * parameters.
  *
- * @param url Location to post to.
+ * @param {String} url Location to post to.
  *
- * @param values Query string in GET notation.
+ * @param {String} values Query string in GET notation.
  *
- * @param method Either 'get' or 'post', default is 'post'.
+ * @param {String} method Either 'get' or 'post', default is 'post'.
  */
 const formSubmit = function(url, values, method) {
 
@@ -852,26 +873,28 @@ const modalizer = function(open) {
     $('body').append(dialogHolder);
     dialogHolder.cafevDialog({
       title: '',
-      position: { my: "top left",
-                  at: "top-100% left-100%",
-                  of: window },
+      position: {
+        my: 'top left',
+        at: 'top-100% left-100%',
+        of: window,
+      },
       width: '0px',
       height: '0px',
       modal: true,
       closeOnEscape: false,
       dialogClass: 'transparent no-close zero-size cafevdb-modalizer',
       resizable: false,
-      open: function() {
+      open() {
         // This one must be ours.
         globalState.dialogOverlay = $('.ui-widget-overlay:last');
         $('body').addClass('cafevdb-modalizer');
       },
-      close: function() {
+      close() {
         globalState.dialogOverlay = false;
         dialogHolder.dialog('close');
         dialogHolder.dialog('destroy').remove();
         $('body').removeClass('cafevdb-modalizer');
-      }
+      },
     });
     return dialogHolder;
   } else {
@@ -880,17 +903,17 @@ const modalizer = function(open) {
       return true;
     }
     const overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
-    //alert('overlay index: '+overlayIndex);
-    var numDialogs = 0;
+    console.info('overlay index: ', overlayIndex);
+    let numDialogs = 0;
     $('.ui-dialog.ui-widget').each(function(index) {
-      var thisIndex = parseInt($(this).css('z-index'));
-      //alert('that index: '+thisIndex);
+      const thisIndex = parseInt($(this).css('z-index'));
+      console.info('that index: ', thisIndex);
       if (thisIndex >= overlayIndex) {
         ++numDialogs;
       }
     });
 
-    //alert('num dialogs open: '+numDialogs);
+    console.info('num dialogs open: ', numDialogs);
     if (numDialogs > 1) {
       // one is the modalizer itself, of course.
       return modalizer;

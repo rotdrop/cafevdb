@@ -30,6 +30,8 @@ import * as Photo from './inlineimage.js';
 import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
 
+require('project-participants.css');
+
 /**
  * Open a dialog in order to edit the personal reccords of one
  * musician.

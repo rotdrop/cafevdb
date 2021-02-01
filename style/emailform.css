@@ -182,7 +182,7 @@ form#cafevdb-email-form td.file-attachments .chosen-container .chosen-drop {
 }
 
 form#cafevdb-email-form td.file-attachments input.delete-all-file-attachments {
-  background-image:url('../img/delete.svg');
+  background-image:url('../img/cafevdb-delete.svg');
   float:right;
   background-repeat:no-repeat;
   background-size: 24px 24px;
@@ -213,7 +213,7 @@ form#cafevdb-email-form td.event-attachments .chosen-container .chosen-drop {
 }
 
 form#cafevdb-email-form td.event-attachments input.delete-all-event-attachments {
-  background-image:url('../img/delete.svg');
+  background-image:url('../img/cafevdb-delete.svg');
   float:right;
   background-repeat:no-repeat;
   background-size: 24px 24px;
@@ -326,7 +326,7 @@ form#cafevdb-email-form td.stored-messages-storage input.save-message {
 }
 
 form#cafevdb-email-form td.stored-messages-storage input.delete-message {
-  background-image:url('../img/delete.svg');
+  background-image:url('../img/cafevdb-delete.svg');
 }
 
 form#cafevdb-email-form td.email-address.input input.address-book-emails {

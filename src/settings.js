@@ -26,6 +26,8 @@ import appSettings from './app/settings.js';
 import personalSettings from './app/personal-settings.js';
 import './app/jquery-extensions.js';
 
+require('settings.css');
+
 $(function() {
   appSettings();
   personalSettings();

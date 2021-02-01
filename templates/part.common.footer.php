@@ -56,7 +56,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
         src="about:blank"></iframe>
 
 <!-- image file upload support with drag'n drop -->
-<form class="float" id="file_upload_form" enctype="multipart/form-data">
+<form class="float hidden" id="file_upload_form" enctype="multipart/form-data">
     <input type="hidden" name="ownerId" value="-1"/>
     <input type="hidden" name="joinTable" value=""/>
     <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>

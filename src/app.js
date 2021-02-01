@@ -47,10 +47,7 @@ import './app/jquery-extensions.js';
 jQuery = require('jquery');
 require('jquery-ui');
 
-window.$ = jQuery;
-window.jQuery = jQuery;
-
-console.info('JQUERY', window.jQuery.widget);
+require('navsnapper.css');
 
 $(function() {
   documentReady();

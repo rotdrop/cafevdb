@@ -536,18 +536,15 @@ const tableDialogReload = function(options, callback) {
  * pme-table.php AJAX callback. Must at least contain the
  * templateRenderer component.
  *
- * @param {Function} callback Additional form validation callback. If
- * callback also attaches handlers to the save, change etc. buttons
- * then these should be attached as delegate event handlers to the
- * pme-form. The event handlers installed by this functions are
- * installed as delegate handlers at the \#pme-table-dialog div.
+ * @param {Function} changeCallback Handler to call after dialog open
+ * and tab change.
  *
  * @bug This function is by far too long.
  */
-const tableDialogHandlers = function(options, callback) {
+const tableDialogHandlers = function(options, changeCallback) {
 
-  if (typeof callback === 'undefined') {
-    callback = function() { return false; };
+  if (typeof changeCallback === 'undefined') {
+    changeCallback = function() { return false; };
   }
 
   const containerSel = '#' + options.DialogHolderCSSId;
@@ -566,12 +563,12 @@ const tableDialogHandlers = function(options, callback) {
     // main list view, just leave as is.
     const resize = function(reason) {
       console.info('resize callback');
-      callback.call({ reason });
+      changeCallback({ reason });
       const reloadSel = pmeClassSelector('input', 'reload');
       container.find(reloadSel)
         .off('click')
         .on('click', function(event) {
-          tableDialogReload(options, callback);
+          tableDialogReload(options, changeCallback);
           return false;
         });
     };
@@ -586,7 +583,7 @@ const tableDialogHandlers = function(options, callback) {
   container.off('click', '**');
 
   installTabHandler(container, function() {
-    callback.call({ reason: 'tabChange' });
+    changeCallback({ reason: 'tabChange' });
   });
 
   // The easy one, but for changed content
@@ -605,7 +602,7 @@ const tableDialogHandlers = function(options, callback) {
     if (options.InitialViewOperation && $(this).attr('name').indexOf('cancelview') < 0) {
       options.ReloadName = options.InitialName;
       options.ReloadValue = options.InitialValue;
-      tableDialogReload(options, callback);
+      tableDialogReload(options, changeCallback);
     } else {
       container.dialog('close');
     }
@@ -646,7 +643,7 @@ const tableDialogHandlers = function(options, callback) {
           options.modified = true;
         }
         console.info(options);
-        tableDialogReload(options, callback);
+        tableDialogReload(options, changeCallback);
         // might be costly?
         // pmeSubmitOuterForm(options.ambientContainerSelector);
 
@@ -701,7 +698,7 @@ const tableDialogHandlers = function(options, callback) {
             value = applyButton.val();
           }
         }
-        var obj = {};
+        const obj = {};
         obj[name] = value;
         post += '&' + $.param(obj);
 
@@ -732,7 +729,7 @@ const tableDialogHandlers = function(options, callback) {
                 setTimeout(function() {
                   $('#notification').fadeOut();
                 }, 10000);
-                tableDialogReplace(container, htmlContent, options, callback);
+                tableDialogReplace(container, htmlContent, options, changeCallback);
                 return;
               }
 
@@ -741,7 +738,7 @@ const tableDialogHandlers = function(options, callback) {
                 dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
                 options.ReloadName = options.InitialName;
                 options.ReloadValue = options.InitialValue;
-                tableDialogReload(options, callback);
+                tableDialogReload(options, changeCallback);
               } else {
                 console.info('trigger close dialog');
                 if (container.hasClass('ui-dialog-content')) {
@@ -757,7 +754,7 @@ const tableDialogHandlers = function(options, callback) {
       return false;
     });
   // Finally do the styling ...
-  callback.call({ reason: 'dialogOpen' });
+  changeCallback({ reason: 'dialogOpen' });
 };
 
 /**
@@ -778,9 +775,9 @@ const tableDialogHandlers = function(options, callback) {
 const tableDialog = function(form, element, containerSel) {
 
   let post = form.serialize();
-  const templateRenderer = form.find('input[name="templateRenderer"]');
+  let templateRenderer = form.find('input[name="templateRenderer"]');
 
-  if (templateRenderer.length == 0) {
+  if (templateRenderer.length === 0) {
     console.info('no template renderer');
     // This just does not work.
     return false;
@@ -856,7 +853,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
 
   Page.busyIcon(true);
 
-  if (typeof tableOptions.ModalDialog == 'undefined') {
+  if (typeof tableOptions.ModalDialog === 'undefined') {
     tableOptions.ModalDialog = true;
   }
   if (typeof post === 'undefined') {
@@ -939,7 +936,9 @@ const pmeTableDialogOpen = function(tableOptions, post) {
 
           tableDialogHandlers(tableOptions, function(parameters) {
             parameters = $.extend({ reason: 'unknown' }, parameters);
-            console.info('dialog handlers callback', parameters);
+            if (parameters.reason === 'unknown') {
+              console.trace();
+            }
             dialogHolder.css('height', 'auto');
             switch (parameters.reason) {
             case 'dialogOpen':
@@ -1038,7 +1037,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
   selector = pmeSelector(selector);
   const container = pmeContainer(selector);
 
-  const templateRenderer = form.find('input[name="templateRenderer"]');
+  let templateRenderer = form.find('input[name="templateRenderer"]');
   if (templateRenderer.length <= 0 || element.hasClass('formsubmit')) {
     form.off('submit');
     if (element.attr('name')) { // undefined == false
@@ -1171,7 +1170,7 @@ const transposeMainTable = function(selector, containerSel) {
     $(table)
       .find('tbody tr:eq(0)')
       .detach()
-      .appendTo( table.find('thead') )
+      .appendTo(table.find('thead'))
       .children()
       .each(function(){
         const tdclass = $(this).attr('class');
@@ -1247,7 +1246,7 @@ const maybeTranspose = function(transpose, containerSel) {
  *
  * @param {String} containerSel TBD.
  */
-const transposeReady = function(containerSel)  {
+const transposeReady = function(containerSel) {
 
   const container = pmeContainer(containerSel);
 
@@ -1258,8 +1257,8 @@ const transposeReady = function(containerSel)  {
   const unTrClass = pmeToken('untransposed');
 
   // Transpose or not: if there is a transpose button
-  const inhibitTranspose = container.find('input[name="InhibitTranspose"]').val() == 'true';
-  const controlTranspose = (container.find('input[name="Transpose"]').val() == 'transposed' ||
+  const inhibitTranspose = container.find('input[name="InhibitTranspose"]').val() === 'true';
+  const controlTranspose = (container.find('input[name="Transpose"]').val() === 'transposed' ||
                             container.find(trUp).hasClass(trClass) ||
                             container.find(trDown).hasClass(trClass) ||
                             container.find(tr).hasClass(trClass));
@@ -1351,14 +1350,14 @@ const installInputChosen = function(containerSel, onlyClass) {
     }
     console.info('destroy chosen');
     self.chosen('destroy');
-    var chosenOptions = {
+    const chosenOptions = {
       // width:'100%',
-      inherit_select_classes:true,
+      inherit_select_classes: true,
       disable_search: self.hasClass('no-search'),
       disable_search_threshold: self.hasClass('no-search') ? 999999 : 10,
       no_results_text: noRes,
       allow_single_deselect: self.hasClass('allow-empty'),
-      single_backstroke_delete: false
+      single_backstroke_delete: false,
     };
     if (self.hasClass('allow-empty')) {
       chosenOptions.width = (this.offsetWidth + PHPMyEdit.singleDeselectOffset) + 'px';
@@ -1385,12 +1384,12 @@ const installInputChosen = function(containerSel, onlyClass) {
 
 };
 
-const installTabHandler = function(containerSel, callback) {
+const installTabHandler = function(containerSel, changeCallback) {
 
   const container = pmeContainer(containerSel);
 
-  if (typeof callback != 'function') {
-    callback = function() {
+  if (typeof changeCallback !== 'function') {
+    changeCallback = function() {
       CAFEVDB.toolTipsInit(container);
     };
   }
@@ -1421,7 +1420,7 @@ const installTabHandler = function(containerSel, callback) {
 
       // account for unstyled chosen selected
       let reattachChosen = false;
-      const pfx = (tabClass == 'tab-all') ? '' : 'td.' + tabClass;
+      const pfx = (tabClass === 'tab-all') ? '' : 'td.' + tabClass;
       const selector = pmeClassSelectors(
         pfx + ' ' + 'div.chosen-container',
         ['input', 'filter', 'comp-filter']);
@@ -1439,7 +1438,7 @@ const installTabHandler = function(containerSel, callback) {
 
       $.fn.cafevTooltip.remove();
 
-      callback();
+      changeCallback();
 
       return false;
     });
@@ -1506,12 +1505,12 @@ const pmeInit = function(containerSel) {
     // maybe re-style chosen select-boxes
     let reattachChosen = false;
     const tabClass = form.find('input[name="' + pmeSys('cur_tab') + '"]').val();
-    const pfx = 'tbody tr td' + (!tabClass || tabClass == 'all' ? '' : '.tab-' + tabClass);
+    const pfx = 'tbody tr td' + (!tabClass || tabClass === 'all' ? '' : '.tab-' + tabClass);
     const selector = pmeClassSelectors(
       pfx + ' ' + 'div.chosen-container',
       ['filter', 'comp-filter']);
     table.find(selector).each(function(idx) {
-      if ($(this).width() == 0 || $(this).width() == 60) {
+      if ($(this).width() === 0 || $(this).width() === 60) {
         $(this).prev().chosen('destroy');
         reattachChosen = true;
       }

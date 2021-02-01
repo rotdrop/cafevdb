@@ -22,9 +22,10 @@
 
 import { globalState } from './globals.js';
 import * as Notification from './notification.js';
-import * as Dialogs from './dialogs.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
+
+require('project-instrumentation-numbers.css');
 
 const ready = function(selector) {
   const container = PHPMyEdit.container(selector);

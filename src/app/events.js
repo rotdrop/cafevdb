@@ -27,13 +27,15 @@ import * as Ajax from './ajax.js';
 import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
 
+require('events.css');
+
 globalState.Events = {
   projectId: -1,
   projectName: '',
   Events: { /* nothing */ },
   confirmText: {
     'delete': t(appName, 'Do you really want to delete this event?'),
-    'detach': t(appName, 'Do you really want to detach this event from the current project?'),
+    detach: t(appName, 'Do you really want to detach this event from the current project?'),
     select: '',
     deselect: '',
   },

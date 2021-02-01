@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -24,14 +25,18 @@ import generateUrl from './generate-url.js';
 import * as Dialogs from './dialogs.js';
 import * as Ajax from './ajax.js';
 
+require('../legacy/nextcloud/jquery/octemplate.js');
+require('inlineimage.css');
+
 globalState.Photo = {
   ownerId: -1,
   imageItmTable: '',
   imageSize: 400,
   data: { PHOTO: false },
+  photo: {},
 };
 
-const uploadPhoto = function(filelist) {
+const photoUpload = function(filelist) {
   if (!filelist) {
     Dialogs.alert(t(appName, 'No files selected for upload.'), t(appName, 'Error'));
     return;
@@ -64,9 +69,9 @@ const uploadPhoto = function(filelist) {
     });
 };
 
-const loadPhotoHandlers = function() {
+const photoLoadHandlers = function() {
   const phototools = $('#phototools');
-  if (this.data.PHOTO) {
+  if (globalState.Photo.data.PHOTO) {
     phototools.find('.delete').show();
     phototools.find('.edit').show();
   } else {
@@ -75,10 +80,10 @@ const loadPhotoHandlers = function() {
   }
 };
 
-const cloudPhotoSelected = function(path) {
+const photoCloudSelected = function(path) {
   const self = globalState.Photo;
   $.post(generateUrl('image/cloud'), {
-    path: path,
+    path,
     ownerId: self.ownerId,
     joinTable: self.joinTable,
     imageSize: self.imageSize,
@@ -94,7 +99,7 @@ const cloudPhotoSelected = function(path) {
     });
 };
 
-const loadPhoto = function(ownerId, joinTable, imageSize, callback) {
+const photoLoad = function(ownerId, joinTable, imageSize, callback) {
   const self = globalState.Photo;
   if (typeof ownerId !== 'undefined') {
     self.ownerId = ownerId;
@@ -113,59 +118,61 @@ const loadPhoto = function(ownerId, joinTable, imageSize, callback) {
         Ajax.handleError(xhr, status, errorThrown);
       }
       self.data.PHOTO = false;
-      loadPhotoHandlers();
+      photoLoadHandlers();
     })
     .done(function(data) {
       self.data.PHOTO = true;
-      loadPhotoHandlers();
+      photoLoadHandlers();
+    })
+    .always(function() {
+      $('#phototools li a').cafevTooltip('hide');
+      const wrapper = $('#cafevdb_inline_image_wrapper');
+      wrapper.addClass('loading').addClass('wait');
+      delete self.photo;
+      self.photo = new Image();
+
+      const requestParams =
+            '?metaData=false'
+            + '&imageSize=' + imageSize
+            + '&refresh=' + Math.random() // disable browser-caching
+            + '&requesttoken=' + encodeURIComponent(OC.requestToken);
+      $(self.photo)
+        .on('load', function () {
+          $('img.cafevdb_inline_image').remove();
+          $(this).addClass('cafevdb_inline_image');
+          $(this).addClass('zoomable');
+          $(this).insertAfter($('#phototools'));
+          wrapper.css('width', $(this).get(0).width + 10);
+          wrapper.removeClass('loading').removeClass('wait');
+          $(this).fadeIn(function() {
+            if (typeof callback == 'function') {
+              callback();
+            }
+          });
+        })
+        .on('error', function (event) {
+
+          // BIG FAT NOTE: the "event" data passed to this error handler
+          // just does not contain any information about the error-data
+          // returned by the server. So only information is "there was an
+          // error".
+
+          Dialogs.alert(
+            t(appName, 'Could not open image.'), t(appName, 'Error'),
+            function () {
+              if (typeof callback == 'function') {
+                // Still the callback needs to run ...
+                callback();
+              }
+            });
+          // self.notify({message:t(appName, 'Error loading image.')});
+        })
+        .attr('src', generateUrl('image/' + self.joinTable + '/' + self.ownerId + requestParams));
+      photoLoadHandlers();
     });
-  $('#phototools li a').cafevTooltip('hide');
-  const wrapper = $('#cafevdb_inline_image_wrapper');
-  wrapper.addClass('loading').addClass('wait');
-  delete this.photo;
-  this.photo = new Image();
-
-  const requestParams =
-        '?metaData=false'
-        + '&imageSize=' + imageSize
-        + '&refresh=' + Math.random() // disable browser-caching
-        + '&requesttoken=' + encodeURIComponent(OC.requestToken);
-  $(this.photo)
-    .on('load', function () {
-      $('img.cafevdb_inline_image').remove();
-      $(this).addClass('cafevdb_inline_image');
-      $(this).addClass('zoomable');
-      $(this).insertAfter($('#phototools'));
-      wrapper.css('width', $(this).get(0).width + 10);
-      wrapper.removeClass('loading').removeClass('wait');
-      $(this).fadeIn(function() {
-        if (typeof callback == 'function') {
-          callback();
-        }
-      });
-    })
-    .on('error', function (event) {
-
-      // BIG FAT NOTE: the "event" data passed to this error handler
-      // just does not contain any information about the error-data
-      // returned by the server. So only information is "there was an
-      // error".
-
-      Dialogs.alert(
-        t(appName, 'Could not open image.'), t(appName, 'Error'),
-        function () {
-          if (typeof callback == 'function') {
-            // Still the callback needs to run ...
-            callback();
-          }
-        });
-      // self.notify({message:t(appName, 'Error loading image.')});
-    })
-    .attr('src', generateUrl('image/' + self.joinTable + '/' + self.ownerId + requestParams));
-  this.loadPhotoHandlers();
 };
 
-const editCurrentPhoto = function() {
+const photoEditCurrent = function() {
   const self = globalState.Photo;
   $.post(generateUrl('image/edit'), {
     ownerId: self.ownerId,
@@ -294,7 +301,7 @@ const savePhoto = function($dlg) {
     })
     .done(function(data) {
       console.log(data); // unused
-      loadPhoto();
+      photoLoad();
       self.data.PHOTO = true;
     });
 };
@@ -312,7 +319,7 @@ const deletePhoto = function() {
       wrapper.removeClass('wait');
     })
     .done(function(data) {
-      loadPhoto();
+      photoLoad();
     });
 };
 
@@ -344,7 +351,7 @@ const loadHandlers = function() {
     return false;
   });
   phototools.find('.cloud').on('click', function(event) {
-    OC.dialogs.filepicker(t(appName, 'Select image'), cloudPhotoSelected, false, [ 'image\\/.*' ], true);
+    OC.dialogs.filepicker(t(appName, 'Select image'), photoCloudSelected, false, [ 'image\\/.*' ], true);
     event.stopImmediatePropagation();
     return false;
   });
@@ -357,7 +364,7 @@ const loadHandlers = function() {
   });
   phototools.find('.edit').on('click', function(event) {
     $(this).cafevTooltip('hide');
-    editCurrentPhoto();
+    photoEditCurrent();
     event.stopImmediatePropagation();
     return false;
   });
@@ -366,7 +373,7 @@ const loadHandlers = function() {
   // Profile image upload handling
   // New profile image selected
   $('#file_upload_start').on('change', function() {
-    uploadPhoto(this.files);
+    photoUpload(this.files);
   });
   $('#cafevdb_inline_image_wrapper').bind('dragover',function(event) {
     $(event.target).addClass('droppable');
@@ -384,7 +391,7 @@ const loadHandlers = function() {
   });
 };
 
-const uploadDragDrop = function() {
+const photoUploadDragDrop = function() {
   // Upload function for dropped images
   $.fileUpload = function(files) {
     if (files.length < 1) {
@@ -445,7 +452,7 @@ const uploadDragDrop = function() {
  * dynamically injecting html that needs the image upload
  * functionality.
  */
-const ready = function(ownerId, joinTable, callback) {
+const photoReady = function(ownerId, joinTable, callback) {
   const ownerIdField = $('#file_upload_form input[name="ownerId"]');
   const joinTableField = $('#file_upload_form input[name="joinTable"]');
   if (typeof ownerId == 'undefined') {
@@ -463,13 +470,13 @@ const ready = function(ownerId, joinTable, callback) {
     if (typeof imageSize == 'undefined') {
       imageSize = 400;
     }
-    this.loadHandlers();
-    this.loadPhoto(ownerId, joinTable, imageSize, callback);
+    loadHandlers();
+    photoLoad(ownerId, joinTable, imageSize, callback);
   }
-  $(this.uploadDragDrop);
+  $(photoUploadDragDrop); // @TODO what is this? double ready?
 };
 
-const popup = function(image) {
+const photoPopup = function(image) {
   const overlay = $('<div id="photooverlay" style="width:auto;height:auto;"></div>');
   const imgClone = $(image).clone();
   imgClone.removeClass('zoomable');
@@ -568,8 +575,8 @@ const popup = function(image) {
 };
 
 export {
-  popup,
-  ready,
+  photoPopup as popup,
+  photoReady as ready,
 };
 
 // Local Variables: ***

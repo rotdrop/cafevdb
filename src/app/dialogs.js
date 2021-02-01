@@ -22,6 +22,8 @@
 // Compatibility
 import { globalState } from './globals.js';
 
+require('dialogs.css');
+
 const alert = function(text, title, callback, modal, allowHtml) {
   return OC.dialogs.message(
     text,
@@ -61,6 +63,11 @@ const confirm = function(text, title, callback, modal, allowHtml) {
 /**
  * Popup a dialog with debug info if data.data.debug is set and non
  * empty.
+ *
+ * @param {Object} data TBD.
+ *
+ * @param {Function} callback TBD.
+ *
  */
 const debugPopup = function(data, callback) {
   if (typeof data.debug != 'undefined' && datadebug != '') {
@@ -81,4 +88,5 @@ globalState.Dialogs = {
 
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***

@@ -20,10 +20,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//script($appName, 'dialogs');
-//script($appName, 'print-r');
-//script($appName, 'ajax');
-
 script($appName, 'admin-settings');
 style($appName, 'admin-settings');
 

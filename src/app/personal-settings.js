@@ -25,10 +25,12 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
 
+console.info('JQUERY ', $.fn.jquery);
+
 const documentReady = function() {
 
   const container = $('.personal-settings');
-  const msgElement = $('form.personal-settings .statusmessage');
+  let msgElement = $('form.personal-settings .statusmessage');
 
   const chosenInit = function(container) {
     container.find('select.pagerows').each(function(index) {

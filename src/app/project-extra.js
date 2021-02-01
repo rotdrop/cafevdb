@@ -25,6 +25,8 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
 
+require('project-extra.css');
+
 const ready = function(selector, resizeCB) {
   var container = $(selector);
 

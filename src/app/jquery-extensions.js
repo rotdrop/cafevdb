@@ -25,10 +25,11 @@
  */
 
 import * as CAFEVDB from './cafevdb.js';
-require('jquery-ui/ui/widgets/dialog');
+import 'bootstrap/js/dist/tooltip';
 
-//jQuery = require('jquery');
-//require('jquery-ui');
+require('tooltips.css');
+
+//require('jquery-ui/ui/widgets/dialog');
 
 console.log('jquery-extensions');
 

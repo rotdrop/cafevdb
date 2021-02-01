@@ -143,7 +143,7 @@ const documentReady = function() {
   const musiciansCallback = {
     callback: function(selector, parameters, resizeCB) {
 
-      if (parameters.reason == 'tabChange') {
+      if (parameters.reason === 'tabChange') {
         resizeCB();
         return;
       }
@@ -162,11 +162,7 @@ const documentReady = function() {
       Musicians.ready(container);
 
       $(':button.musician-instrument-insurance').click(function(event) {
-        event.preventDefault();
-        const values = $(this).attr('name');
-
         Page.loadPage($(this).attr('name'));
-
         return false;
       });
 
@@ -176,13 +172,15 @@ const documentReady = function() {
         if (idField.length > 0) {
           recordId = idField.val();
         }
+        console.info('Run photo.ready');
         Photo.ready(recordId, 'MusicianPhoto', resizeCB);
       } else {
+        console.info('Call imagesLoaded');
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);
       }
     },
     context: CAFEVDB,
-    parameters: []
+    parameters: [],
   };
 
   PHPMyEdit.addTableLoadCallback('all-musicians', musiciansCallback);

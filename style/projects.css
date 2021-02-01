@@ -107,7 +107,7 @@ div.cmsarticlecontainer {
 
 ul#cmsarticletabs li {
     box-sizing:border-box;
-    max-width:25%; // concert and rehearsals
+    max-width:25%; /* concert and rehearsals */
 }
 
 ul#cmsarticletabs li.ui-tabs-active.ui-state-active {

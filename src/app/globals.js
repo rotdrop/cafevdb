@@ -22,6 +22,42 @@
 
 import { initialState } from './config.js';
 
+function importAll(r) {
+  r.keys().forEach(r);
+}
+
+// jQuery stuff
+
+const jQuery = require('jquery');
+const $ = jQuery;
+
+require('jquery-ui');
+require('jquery-ui/ui/effect');
+require('jquery-ui/ui/widgets/dialog');
+require('jquery-ui/ui/widgets/datepicker');
+require('jquery-ui/ui/widgets/tabs');
+importAll(require.context('jquery-ui/ui/i18n/', true, /^datepicker-.*\.js$/));
+require('chosen/public/chosen.jquery.js');
+require('chosen/public/chosen.css');
+
+const ImagesLoaded = require('imagesloaded');
+ImagesLoaded.makeJQueryPlugin(jQuery);
+
+require('jquery-file-download');
+
+//require('@ckeditor/ckeditor5-build-classic');
+
+// some nextcloud hacks
+
+require('../legacy/nextcloud/jquery/requesttoken.js');
+require('@nextcloud/dialogs/styles/toast.scss');
+
+// CSS unrelated to particular modules
+
+require('oc-fixes.css');
+require('mobile.css');
+require('config-check.css');
+
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
 
@@ -29,9 +65,11 @@ const globalState = window.CAFEVDB = window.CAFEVDB || {};
 
 $.extend(globalState, initialState.CAFEVDB);
 
+console.info('INITIAL GLOBAL STATE', globalState);
+
 const appName = initialState.appName;
 
-export { globalState, appName };
+export { globalState, appName, jQuery, $ };
 
 // Local Variables: ***
 // js-indent-level: 2 ***

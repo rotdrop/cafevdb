@@ -1,14 +1,15 @@
 // const jQuery = require('jquery');
 // window.jQuery = jQuery;
 
-import { appName } from './config.js';
-import tinymce from 'tinymce';
-import 'jquery.tinymce';
+import { globalState, appName } from './globals.js';
+
+require('tinymce');
+require('jquery.tinymce');
 
 const myTinyMCE = {};
 
 console.info('CAFEVDB MCE INIT: ', $.fn.jquery);
-console.info('OC WEBROOT: ', OC.appswebroots);
+console.info('MCE: ', window.tinyMCE, window.tinymce);
 
 (function(window, $, myTinyMCE) {
   myTinyMCE.postProcessCallback = function(e) {
@@ -99,22 +100,22 @@ console.info('OC WEBROOT: ', OC.appswebroots);
     toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullscreen | forecolor backcolor emoticons | code', // emoticons
     style_formats_merge: true,
     style_formats: [
-    {
+      {
         title: 'Image Left',
         selector: 'img',
         styles: {
-            'float': 'left',
-            'margin': '0 10px 0 10px'
+          float: 'left',
+          margin: '0 10px 0 10px',
         }
-     },
-     {
-         title: 'Image Right',
-         selector: 'img',
-         styles: {
-             'float': 'right',
-             'margin': '0 0 10px 10px'
-         }
-     }
+      },
+      {
+        title: 'Image Right',
+        selector: 'img',
+        styles: {
+          'float': 'right',
+          margin: '0 0 10px 10px'
+        },
+      },
     ],
     // style_formats: [
     //   {title: 'Bold text', inline: 'b'},
@@ -165,14 +166,16 @@ console.info('OC WEBROOT: ', OC.appswebroots);
       selector: 'textarea.wysiwyg-editor',
       nonce: btoa(myTinyMCE.nonce),
     });
-    window.tinyMCE.init(allconfig);
+    console.info('Try init tinymce');
+    console.info('tinymce: ', window.tinymce);
+    window.tinymce.init(allconfig);
   };
 })(window, jQuery, myTinyMCE);
 
 // @TODO inject nonce later
 $(function() {
-  myTinyMCE.init(CAFEVDB.language);
-  console.debug('MCE nonce', myTinyMCE.nonce);
+  myTinyMCE.init(globalState.language);
+  console.info('MCE nonce', myTinyMCE.nonce);
 });
 
 export default myTinyMCE;

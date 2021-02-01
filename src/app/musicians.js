@@ -26,6 +26,9 @@ import * as Dialogs from './dialogs.js';
 import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
 
+require('jquery-ui/ui/widgets/autocomplete');
+require('jquery-ui/themes/base/autocomplete.css');
+
 const addMusicians = function(form, post) {
   const projectId = form.find('input[name="projectId"]').val();
   const projectName = form.find('input[name="projectName"]').val();
@@ -40,7 +43,7 @@ const addMusicians = function(form, post) {
     post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
-        //ProjectParticipants.loadProjectParticipants(form);
+        // ProjectParticipants.loadProjectParticipants(form);
       });
     })
     .done(function(data) {

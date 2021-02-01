@@ -25,6 +25,8 @@ import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 
+require('blog.css');
+
 globalState.Blog = {
   author: 'unknown',
   blogId: -1,

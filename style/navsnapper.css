@@ -25,6 +25,8 @@
 
     #app-navigation {
         transform: translateX(-#{$navigation-width});
+        /* transform: translateX(-#{$navigation-width}); */
+        /* transform: translateX(-300px); */
     }
     .snapjs-left {
         #app-navigation {
