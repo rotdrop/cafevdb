@@ -32,6 +32,7 @@ module.exports = {
         resolvePaths: [
           './src',
           './style',
+          './3rdparty',
         ],
         tryExtensions: ['.js', '.json', '.node', '.css']
       },
