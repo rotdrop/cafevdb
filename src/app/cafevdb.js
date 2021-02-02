@@ -23,10 +23,7 @@
 import { globalState, appName } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as Dialogs from './dialogs.js';
-import { selector as pmeSelector } from './pme.js';
-import myTinyMCE from './tinymceinit';
-
-const ClassicEditor = require('@ckeditor/ckeditor5-build-classic');
+import { selector as pmeSelector } from './pme-selectors.js';
 
 require('cafevdb.css');
 
@@ -70,185 +67,6 @@ const runReadyCallbacks = function() {
     }
   }
   return false;
-};
-
-/**
- * Add a WYSIWYG editor to the element specified by @a selector.
- *
- * @param {string} selector TBD.
- *
- * @param {Function} initCallback TBD.
- *
- * @param {int} initialHeight TBD.
- *
- */
-const addEditor = function(selector, initCallback, initialHeight) {
-  console.debug('CAFEVDB.addEditor');
-  const editorElement = $(selector);
-  if (!editorElement.length) {
-    if (typeof initCallback == 'function') {
-      initCallback();
-    }
-    return;
-  }
-  switch (globalState.wysiwygEditor) {
-  default:
-  case 'ckeditor':
-    if (typeof initCallback != 'function') {
-      initCallback = function() {};
-    }
-    console.debug("attach ckeditor");
-    ClassicEditor
-      .create(editorElement.get(0))
-      .then(editor => {
-        console.debug("ckeditor promise");
-        editorElement.data('ckeditor', editor);
-        initCallback();
-      })
-      .catch( error => {
-        console.debug('There was a problem initializing the editor.', error );
-        initCallback();
-      });
-    break;
-  case 'tinymce': {
-    // This is a Gurkerei
-    $(document).on('focusin', function(e) {
-      // e.stopImmediatePropagaion();
-      // alert(CAFEVDB.print_r(e.target, true));
-      if ($(e.target).closest(".mce-container").length) {
-        e.stopImmediatePropagation();
-      }
-    });
-    const plusConfig = {};
-    if (!editorElement.is('textarea')) {
-      plusConfig.inline = true;
-    }
-    if (typeof initialHeight != 'undefined') {
-      plusConfig.height = initialHeight;
-    }
-    const mceDeferred = $.Deferred();
-    mceDeferred.then(
-      function() {
-        console.info('MCE promise succeeded');
-        if (typeof initCallback == 'function') {
-          initCallback();
-        }
-      },
-      function() {
-        console.error('MCE promise failed');
-        if (typeof initCallback == 'function') {
-          initCallback();
-        }
-        editorElement.css('visibility', '');
-      }
-    );
-    const mceConfig = myTinyMCE.getConfig(plusConfig);
-    editorElement
-      .off('cafevdb:tinymce-done')
-      .on('cafevdb:tinymce-done', function(event) {
-        console.info('tinyMCE init done callback');
-        mceDeferred.resolve();
-      });
-    console.debug("attach tinymce");
-    editorElement.tinymce(mceConfig);
-    // wait for at most 5 seconds, then cancel
-    const timeout = 10;
-    setTimeout(function() {
-      mceDeferred.reject();
-    }, timeout * 1000);
-    break;
-  }
-  };
-};
-
-/**
- * Remove a WYSIWYG editor from the element specified by @a selector.
- *
- * @param {String} selector TBD.
- */
-const removeEditor = function(selector) {
-  const editorElement = $(selector);
-  if (!editorElement.length) {
-    return;
-  }
-  switch (globalState.wysiwygEditor) {
-  case 'ckeditor':
-    if (editorElement.ckeditor) {
-      editorElement.ckeditor().remove();
-    }
-    break;
-  case 'tinymce':
-    editorElement.tinymce().remove();
-    break;
-  default:
-    if (editorElement.ckeditor) {
-      editorElement.ckeditor().remove();
-    }
-    if (editorElement.tinymce) {
-      editorElement.tinymce().remove();
-    }
-    break;
-  };
-};
-
-/**Replace the contents of the given editor by contents. */
-const updateEditor = function(selector, contents) {
-  const editorElement = $(selector);
-  var editor;
-  if (!editorElement.length) {
-    return;
-  }
-  switch (globalState.wysiwygEditor) {
-  case 'ckeditor':
-    if (editorElement.ckeditor) {
-      editor = editorElement.ckeditor().ckeditorGet();
-      editor.setData(contents);
-      // ckeditor snapshots itself on update.
-      //editor.undoManager.save(true);
-    }
-    break;
-  case 'tinymce':
-    editorElement.tinymce().setContent(contents);
-    editorElement.tinymce().undoManager.add();
-    break;
-  default:
-    if (editorElement.ckeditor) {
-      editor = editorElement.ckeditor().ckeditorGet();
-      editor.setData(contents);
-      // ckeditor snapshots itself on update.
-      //editor.undoManager.save(true);
-    }
-    break;
-  };
-};
-
-/**
- * Generate a "snapshot", meaning an undo-level, for instance after
- * replacing all data by loading email templates and stuff.
- */
-const snapshotEditor = function(selector) {
-  const editorElement = $(selector);
-  var editor;
-  if (!editorElement.length) {
-    return;
-  }
-  switch (globalState.wysiwygEditor) {
-  case 'ckeditor':
-    if (editorElement.ckeditor) {
-      editor = editorElement.ckeditor().ckeditorGet();
-      editor.undoManager.save(true);
-    }
-    break;
-  case 'tinymce':
-    editorElement.tinymce().undoManager.add();
-    break;
-  default:
-    if (editorElement.ckeditor) {
-      editor = editorElement.ckeditor().ckeditorGet();
-      editor.undoManager.save(true);
-    }
-    break;
-  };
 };
 
 /**
@@ -1338,14 +1156,11 @@ const documentReady = function() {
 };
 
 export {
+  appName,
   globalState,
   generateUrl,
   addReadyCallback,
   runReadyCallbacks,
-  addEditor,
-  removeEditor,
-  updateEditor,
-  snapshotEditor,
   unfocus,
   makeId,
   modalWaitNotification,

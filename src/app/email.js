@@ -24,6 +24,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import print_r from './print-r.js';
 import * as Projects from './projects.js';
+import * as WysiwygEditor from './wysiwyg-editor.js';
 
 globalState.Email = {
   enabled: true,
@@ -342,7 +343,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   var Email = this;
 
   {
-    CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
+    WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
 
     $('#cafevdb-stored-messages-selector').chosen({ disable_search_threshold: 10 });
 
@@ -466,7 +467,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                  case 'everything':
                    // replace the entire tab.
                    $.fn.cafevTooltip.remove();
-                   CAFEVDB.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
+                   WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
                    panelHolder.html(requestData.elementData);
                    fieldset = panelHolder.find('fieldset.email-composition.page');
                    Email.emailFormCompositionHandlers(fieldset,
@@ -537,7 +538,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                  var dataItem = fieldset.find('input[name="emailComposer[MessageDraftId]"]');
                  dataItem.val(-1);
                  currentTemplate.val(requestData.templateName);
-                 CAFEVDB.updateEditor(messageText, requestData.message);
+                 WysiwygEditor.updateEditor(messageText, requestData.message);
                  fieldset.find('input.email-subject').val(requestData.subject);
                  CAFEVDB.selectMenuReset(storedEmailsSelector);
                  break;
@@ -548,7 +549,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                  break;
                case 'deleteTemplate':
                  currentTemplate.val(requestData.templateName);
-                 CAFEVDB.updateEditor(messageText, requestData.message);
+                 WysiwygEditor.updateEditor(messageText, requestData.message);
                  storedEmailsSelector.html(requestData.storedEmailOptions);
                  CAFEVDB.selectMenuReset(storedEmailsSelector);
                  break;
@@ -563,7 +564,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                case 'loadDraft': {
                  $.fn.cafevTooltip.remove();
                  { // replace the entire composer tab
-                   CAFEVDB.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
+                   WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
                    panelHolder.html(requestData.composerForm);
                    fieldset = panelHolder.find('fieldset.email-composition.page');
                    Email.emailFormCompositionHandlers(fieldset,
@@ -1493,7 +1494,7 @@ const emailFormPopup = function(post, modal, single, afterInit) {
              },
              close: function() {
                $.fn.cafevTooltip.remove();
-               CAFEVDB.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+               WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
                dialogHolder.dialog('close');
                dialogHolder.dialog('destroy').remove();
 

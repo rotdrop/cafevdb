@@ -1,7 +1,7 @@
 // const jQuery = require('jquery');
 // window.jQuery = jQuery;
 
-import { globalState, appName } from './globals.js';
+import { globalState, appName, nonce } from './globals.js';
 
 require('tinymce');
 require('jquery.tinymce');
@@ -17,7 +17,7 @@ console.info('MCE: ', window.tinyMCE, window.tinymce);
     e.content = e.content.replace(/^((&nbsp;|[\n\r\s])*<p>(&nbsp;|[\n\r\s])*<\/p>(&nbsp;|[\n\r\s])*)+/g, '');
     e.content = e.content.replace(/^<p>(((?!<p>)[\s\S])*)<\/p>$/g, '$1');
   };
-  myTinyMCE.nonce = '';
+  myTinyMCE.nonce = nonce;
   myTinyMCE.config = {
     // auto_focus: 'mce_0',
     // theme_advanced_resizing: true,
@@ -150,21 +150,21 @@ console.info('MCE: ', window.tinyMCE, window.tinymce);
       plusConfig = {};
     }
     const nonceConfig = {
-      nonce: btoa(myTinyMCE.nonce)
+      nonce: myTinyMCE.nonce,
     };
     const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     if (false && width <= 768) { // perhaps mobile
-      return $.extend({}, myTinyMCE.config, myTinyMCE.smallConfig, plusConfig, { width: width });
+      return $.extend({}, myTinyMCE.config, myTinyMCE.smallConfig, plusConfig, { width });
     } else {
       return $.extend(nonceConfig, myTinyMCE.config, plusConfig);
     }
   };
   myTinyMCE.init = function(lang) {
-    myTinyMCE.nonce = OC.requestToken;
+    myTinyMCE.nonce = nonce;
     myTinyMCE.config.language = lang;
     const allconfig = myTinyMCE.getConfig({
       selector: 'textarea.wysiwyg-editor',
-      nonce: btoa(myTinyMCE.nonce),
+      nonce: myTinyMCE.nonce,
     });
     console.info('Try init tinymce');
     console.info('tinymce: ', window.tinymce);

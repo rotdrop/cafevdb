@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initialState } from './config.js';
+import { initialState, appName, webRoot } from './config.js';
 
 function importAll(r) {
   r.keys().forEach(r);
@@ -45,8 +45,6 @@ ImagesLoaded.makeJQueryPlugin(jQuery);
 
 require('jquery-file-download');
 
-//require('@ckeditor/ckeditor5-build-classic');
-
 // some nextcloud hacks
 
 require('../legacy/nextcloud/jquery/requesttoken.js');
@@ -61,15 +59,24 @@ require('config-check.css');
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
 
-const globalState = window.CAFEVDB = window.CAFEVDB || {};
-
-$.extend(globalState, initialState.CAFEVDB);
+if (window.CAFEFDB === undefined) {
+  window.CAFEVDB = initialState.CAFEVDB;
+  // @TODO the nonce in principle could go to the initial-state
+  window.CAFEVDB.nonce = btoa(OC.requestToken);
+}
+const globalState = window.CAFEVDB;
+const nonce = globalState.nonce;
 
 console.info('INITIAL GLOBAL STATE', globalState);
 
-const appName = initialState.appName;
-
-export { globalState, appName, jQuery, $ };
+export {
+  globalState,
+  appName,
+  webRoot,
+  nonce,
+  jQuery,
+  $,
+};
 
 // Local Variables: ***
 // js-indent-level: 2 ***

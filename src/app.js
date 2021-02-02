@@ -20,10 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, documentReady, runReadyCallbacks } from './app/cafevdb.js';
-import * as Ajax from './app/ajax.js';
-import * as Dialogs from './app/dialogs.js';
-import print_r from './app/print-r.js';
+import { nonce, webRoot } from './app/globals.js';
+import { documentReady, runReadyCallbacks } from './app/cafevdb.js';
 import settings from './app/settings.js';
 import appSettings from './app/app-settings.js';
 import personalSettings from './app/personal-settings.js';
@@ -48,6 +46,9 @@ jQuery = require('jquery');
 require('jquery-ui');
 
 require('navsnapper.css');
+
+__webpack_public_path__ = webRoot;
+__webpack_nonce__ = nonce;
 
 $(function() {
   documentReady();

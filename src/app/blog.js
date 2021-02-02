@@ -24,6 +24,7 @@ import { globalState } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
+import * as WysiwygEditor from  './wysiwyg-editor.js';
 
 require('blog.css');
 
@@ -111,7 +112,7 @@ const editWindow = function(data) {
 
       // $('#blogtextarea').tinymce(myTinyMCE.config);
       // $('#blogtextarea').ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});
-      CAFEVDB.addEditor('#blogtextarea', function() {
+      WysiwygEditor.addEditor('#blogtextarea', function() {
         $(self).dialog('option', 'position', popupPosition);
       });
 
@@ -121,7 +122,7 @@ const editWindow = function(data) {
       // $('#blogtextarea').tinymce().remove();
       // $('#blogtextarea').ckeditor().remove();
       $.fn.cafevTooltip.remove();
-      CAFEVDB.removeEditor('#blogtextarea');
+      WysiwygEditor.removeEditor('#blogtextarea');
       $(this).dialog('destroy').remove();
     }
   });
