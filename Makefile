@@ -76,6 +76,9 @@ npm-init:
 npm: npm-init
 	npm run dev
 
+npm-build: npm-init
+	npm run build
+
 # Removes the appstore build
 .PHONY: clean
 clean: ## Tidy up local environment
