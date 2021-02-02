@@ -3,6 +3,8 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
@@ -18,7 +20,7 @@ module.exports = {
   },
   devtool: 'source-map',
   optimization: {
-    minimize: false,
+    minimize: (process.env.NODE_ENV === 'production'),
     minimizer: [
       new TerserPlugin({
         cache: true,
@@ -32,6 +34,14 @@ module.exports = {
     ],
   },
   plugins: [
+    new BundleAnalyzerPlugin({
+      analyzerPort: 11111,
+      analyzerMode: 'static',
+      openAnalyzer: false,
+    }),
+    new Visualizer({
+      filename: './visualizer-stats.html',
+    }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
@@ -52,6 +62,7 @@ module.exports = {
     // }),
   ],
   module: {
+    noParse: /(ckeditor.js|tinymce.min.js)/,
     rules: [
       {
         test: /\.xml$/i,
