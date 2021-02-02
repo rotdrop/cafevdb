@@ -12,6 +12,13 @@ module.exports = {
     firstDay: true,
   },
   rules: {
+    'camelcase': [
+      'error', {
+        allow: [
+          '^__webpack_[_a-z]+__$',
+        ],
+      },
+    ],
     'no-console': 'off',
     'no-tabs': 'ERROR',
     indent: ['error', 2],
