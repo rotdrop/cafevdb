@@ -51,10 +51,14 @@ composer.lock: composer.json composer.json.in
  $(COMPOSER) install $(COMPOSER_OPTIONS);\
 }
 
+pre-build:
+	git submodule update --init
+.PHONY: pre-build
+
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-build: composer npm
+build: pre-build composer npm
 .PHONY: build
 
 # Installs and updates the composer dependencies. If composer is not installed
