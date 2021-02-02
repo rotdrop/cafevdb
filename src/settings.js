@@ -20,7 +20,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import { initialState } from './app/config.js';
 import { runReadyCallbacks } from './app/cafevdb.js';
 import appSettings from './app/settings.js';
 import personalSettings from './app/personal-settings.js';
