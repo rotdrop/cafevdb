@@ -25,55 +25,33 @@
  * General PME table stuff, popup-handling.
  */
 
-import { initialState, appName } from './config.js';
 import { globalState } from './globals.js';
+import * as PMEState from './pme-state.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as Notification from './notification.js';
+import * as WysiwygEditor from './wysiwyg-editor.js';
 import pmeTweaks from './pme-tweaks.js';
-
-const camelCase = require('camelcase');
+import clear from '../util/clear-object.js';
+import {
+  sys as pmeSys,
+  data as pmeData,
+  token as pmeToken,
+  idSelector as pmeIdSelector,
+  classSelector as pmeClassSelector,
+  classSelectors as pmeClassSelectors,
+  sysNameSelector as pmeSysNameSelector,
+  sysNameSelectors as pmeSysNameSelectors,
+  navigationSelector as pmeNavigationSelector,
+  formSelector as pmeFormSelector,
+  tableSelector as pmeTableSelector,
+  selector as pmeSelector,
+  rec as pmeRec,
+  container as pmeContainer,
+} from './pme-selectors.js';
 
 require('pme-table.css');
-
-let PHPMyEdit = {
-  directChange: false,
-  filterSelectPlaceholder: 'Select a filter Option',
-  filterSelectNoResult: 'No values match',
-  selectChosen: true,
-  filterSelectChosenTitle: 'Select from the pull-down menu. Double-click will submit the form.',
-  inputSelectPlaceholder: 'Select an option',
-  inputSelectNoResult: 'No values match',
-  inputSelectChosenTitle: 'Select from the pull-down menu.',
-  chosenPixelWidth: [],
-  pmePrefix: 'pme',
-};
-
-PHPMyEdit.singleDeselectOffset = 18;
-PHPMyEdit.defaultSelector = '#' + appName + '-page-body'; // for delegate handlers, survives pseudo-submit
-PHPMyEdit.defaultInnerSelector = 'inner'; // to override delegate handlers, survices pseudo-submit
-PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
-
-/****************************************************************************
- *
- * Mix-in PHP setup parameters.
- *
- */
-
-/****************************************************************************
- *
- * Only non-configurable data below this point.
- *
- */
-
-PHPMyEdit.tableLoadCallbacks = [];
-
-PHPMyEdit.dialogOpen = {};
-
-PHPMyEdit = $.extend(PHPMyEdit, initialState.PHPMyEdit);
-
-globalState.PHPMyEdit = PHPMyEdit;
 
 const popupPosition = {
   my: 'left top',
@@ -82,182 +60,18 @@ const popupPosition = {
   of: '#app-content',
 };
 
-const pmeDefaultSelector = PHPMyEdit.defaultSelector;
-const pmePrefix = PHPMyEdit.pmePrefix;
-const PMEPrefix = pmePrefix.toUpperCase();
-let pmeDialogOpen = PHPMyEdit.dialogOpen;
-
-/**
- * Generate a string with PME_sys_.... prefix.
- *
- * @param {String} token TBD.
- *
- * @returns String
- */
-const pmeSys = function(token) {
-  return PMEPrefix + '_sys_'+ token;
-};
-
-/**
- * Generate a string with PME_data_.... prefix.
- *
- * @param {String} token TBD.
- *
- * @returns String
- */
-const pmeData = function(token) {
-  return PMEPrefix + '_data_' + token;
-};
-
-/**
- * Generate a string with pme-.... prefix.
- *
- * @param {String} token TBD.
- *
- * @returns String
- */
-const pmeToken = function(token) {
-  return pmePrefix + '-' + token;
-};
-
-/**
- * Generate an id selector with pme-.... prefix.
- *
- * @param {String} token TBD.
- *
- * @returns String
- */
-const pmeIdSelector = function(token) {
-  return '#' + pmeToken(token);
-};
-
-/**
- * Generate a class selector with pme-.... prefix.
- *
- * @param {String} element TBD.
- *
- * @param {String} token TBD.
- *
- * @returns String
- */
-const pmeClassSelector = function(element, token) {
-  return element + '.' + pmeToken(token);
-};
-
-/**
- * Generate a compound class selector with pme-.... prefix.
- *
- * @param {String} element TBD.
- *
- * @param {String} tokens TBD.
- *
- * @returns String
- */
-const pmeClassSelectors = function(element, tokens) {
-  const elements = tokens.map(function(token) {
-    return pmeClassSelector(element, token);
-  });
-  return elements.join(',');
-};
-
-/**
- * Generate a name selector with PME_sys_.... prefix.
- *
- * @param {String} element TBD.
- *
- * @param {String} token TBD.
- *
- * @param {String} modifier TBD.
- *
- * @returns String
- */
-const pmeSysNameSelector = function(element, token, modifier) {
-  if (modifier === undefined) {
-    modifier = '';
-  }
-  return element + '[name' +modifier + '="' + pmeSys(token) + '"]';
-};
-
-/**
- * Generate a compound name selector with PME_sys_.... prefix.
- *
- * @param {String} element TBD.
- *
- * @param {String} tokens TBD.
- *
- * @returns String
- */
-const pmeSysNameSelectors = function(element, tokens) {
-  const elements = tokens.map(function(token) {
-    return pmeSysNameSelector(element, token);
-  });
-  return elements.join(',');
-};
-
-/**
- * Generate a navigation selector with pme-.... prefix.
- *
- * @param {String} token TBD.
- *
- * @returns String
- */
-const pmeNavigationSelector = function(token) {
-  return '.' + pmeToken('navigation') + '  ' + pmeClassSelector('input', token);
-};
-
-/**
- * Selector for main form
- *
- * @returns String
- */
-const pmeFormSelector = function() {
-  return 'form.' + pmeToken('form');
-};
-
-/**
- * Selector for main table
- *
- * @returns String
- */
-const pmeTableSelector = function() {
-  return 'table.' + pmeToken('main');
-};
-
-/**
- * Genereate the default selector.
- *
- * @param {String} selector The selector to construct the final
- * selector from. Maybe a jQuery object.
- */
-const pmeSelector = function(selector) {
-  if (typeof selector === 'undefined') {
-    selector = pmeDefaultSelector;
-  }
-  return selector;
-};
-
-/**
- * Generate the jQuery object corresponding to the ambient
- * element. If the given argument is already a jQuery object, then
- * just return the argument.
- */
-const pmeContainer = function(selector) {
-  let container;
-  if (selector instanceof jQuery) {
-    container = selector;
-  } else {
-    selector = pmeSelector(selector);
-    container = $(selector);
-  }
-  return container;
-};
+const appName = PMEState.appName;
+const PHPMyEdit = PMEState.PHPMyEdit;
+const pmeDefaultSelector = PMEState.defaultSelector;
+const pmePrefix = PMEState.prefix;
+const pmeOpenDialogs = PMEState.openDialogs;
 
 /**
  * Generate the jQuery object corresponding to the inner container
  * of the ambient container. If the given argument is already a
  * jQuery object, then just return its first div child.
  */
-const inner = function(selector) {
+const pmeInner = function(selector) {
   let container;
   if (selector instanceof jQuery) {
     container = selector;
@@ -266,35 +80,6 @@ const inner = function(selector) {
     container = $(selector);
   }
   return container.children('div:first');
-};
-
-/**
- * Find the record id inside the given selector or jQuery collection.
- *
- * @param {String} selector TBD.
- *
- * @param {Object} options TBD.
- *
- * @returns {Object}
- */
-const pmeRec = function(selector, options) {
-  options = options || { pascalCase: false };
-  if (options.camelCase === false) {
-    const munge = function(key) { return key; };
-  } else {
-    const munge = function(key) { return camelCase(key, options); };
-  }
-  const records = $(selector).find('input[name^="' + pmeSys('rec') + '"]').serializeArray();
-  let result = {};
-  for (const rec of records) {
-    const key = rec.name.match(/[^[]+\[([^\]]+)\]/);
-    if (key.length == 2) {
-      result[munge(key[1])] = rec.value;
-    } else {
-      result = rec.value;
-    }
-  }
-  return result;
 };
 
 /**
@@ -436,7 +221,7 @@ const tableDialogReplace = function(container, content, options, callback) {
   const containerSel = '#' + options.DialogHolderCSSId;
 
   // remove the WYSIWYG editor, if any is attached
-  CAFEVDB.removeEditor(container.find('textarea.wysiwyg-editor'));
+  WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
 
   container.css('height', 'auto');
   $.fn.cafevTooltip.remove();
@@ -845,11 +630,11 @@ const pmeTableDialogOpen = function(tableOptions, post) {
   const template = Page.templateFromRenderer(
     tableOptions.templateRenderer);
 
-  console.info(containerCSSId, pmeDialogOpen);
-  if (pmeDialogOpen[containerCSSId]) {
+  console.info(containerCSSId, pmeOpenDialogs);
+  if (pmeOpenDialogs[containerCSSId]) {
     return false;
   }
-  pmeDialogOpen[containerCSSId] = true;
+  pmeOpenDialogs[containerCSSId] = true;
 
   Page.busyIcon(true);
 
@@ -865,7 +650,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
     fail: function(xhr, status, errorThrown) {
       console.info('cleanup');
       Page.busyIcon(false);
-      pmeDialogOpen[containerCSSId] = false;
+      pmeOpenDialogs[containerCSSId] = false;
     },
     done: function(htmlContent, historySize, historyPosition) {
       const containerSel = '#' + containerCSSId;
@@ -942,7 +727,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
             dialogHolder.css('height', 'auto');
             switch (parameters.reason) {
             case 'dialogOpen':
-              CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), function() {
+              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), function() {
                 console.info('addEditor');
                 transposeReady(containerSel);
                 tableLoadCallback(template, containerSel, parameters, function() {
@@ -1000,7 +785,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
           // Remove modal plane if appropriate
           CAFEVDB.modalizer(false);
 
-          pmeDialogOpen[containerCSSId] = false;
+          pmeOpenDialogs[containerCSSId] = false;
 
           CAFEVDB.unfocus();
 
@@ -1082,11 +867,11 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       }
       $.fn.cafevTooltip.remove();
 
-      CAFEVDB.removeEditor(container.find('textarea.wysiwyg-editor'));
-      inner(container).html(htmlContent);
+      WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
+      pmeInner(container).html(htmlContent);
       pmeInit(selector);
       console.info('Attaching editors');
-      CAFEVDB.addEditor(container.find('textarea.wysiwyg-editor'), function() {
+      WysiwygEditor.addEditor(container.find('textarea.wysiwyg-editor'), function() {
         transposeReady(selector);
         tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
         pmeTweaks(container);
@@ -1740,7 +1525,7 @@ const documentReady = function() {
   CAFEVDB.addReadyCallback(function() {
     transposeReady();
     pmeInit();
-    pmeDialogOpen = {}; // not cleared in init on purpose
+    clear(pmeOpenDialogs); // not cleared in init on purpose
   });
 };
 

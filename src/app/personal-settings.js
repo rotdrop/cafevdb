@@ -23,7 +23,7 @@ import { globalState } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
-import * as PHPMyEdit from './pme.js';
+import * as PHPMyEdit from './pme-selectors.js';
 
 console.info('JQUERY ', $.fn.jquery);
 
