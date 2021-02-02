@@ -29,8 +29,6 @@ import 'bootstrap/js/dist/tooltip';
 
 require('tooltips.css');
 
-//require('jquery-ui/ui/widgets/dialog');
-
 console.log('jquery-extensions');
 
 /**
