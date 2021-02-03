@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -166,6 +167,7 @@ class InsuranceBrokers extends PMETableViewBase
     ];
 
     // redirect all updates through Doctrine\ORM.
+    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
