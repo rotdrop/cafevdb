@@ -23,7 +23,7 @@
     "url": "https://github.com/rotdrop/cafevdb/issues"
   },
   "homepage": "https://github.com/rotdrop/cafevdb#readme",
-  "dependencies": {
+  "devDependencies": {
     "@nextcloud/dialogs": "^2.0.1",
     "bootstrap": "^4.6.0",
     "camelcase": "^5.2.0",
@@ -34,9 +34,7 @@
     "jquery-jcrop": "^0.9.15",
     "jquery-ui": "^1.12.1",
     "jquery-ui-multiselect-widget": "^3.0.0",
-    "selectize": "^0.12.6"
-  },
-  "devDependencies": {
+    "selectize": "^0.12.6",
     "@ckeditor/ckeditor5-build-classic": "^23.0.0",
     "copy-webpack-plugin": "^v6.0.0",
     "css-loader": "^5.0.1",
