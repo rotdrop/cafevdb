@@ -25,3 +25,7 @@
 	path = 3rdparty/chosen
 	url = git@github.com:rotdrop/chosen.git
 	branch = tooltips
+[submodule "3rdparty/mediamonks-doctrine-extensions"]
+	path = 3rdparty/mediamonks-doctrine-extensions
+	url = git@github.com:rotdrop/mediamonks-doctrine-extensions.git
+	branch = feature/gedmo-dev
