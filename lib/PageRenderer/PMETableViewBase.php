@@ -385,7 +385,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'sort'     => true,
         'css'      => [ 'postfix' => ' date' ],
         'datemask' => 'd.m.Y',
-      ]
+      ],
+      // Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity
+      'deleted_at' => [
+        'name' => $this->l->t('Date Revoked'),
+        'maxlen' => 10,
+        'sort' => true,
+        'css' => [ 'postfix' => ' revocation-date date' ],
+        'datemask' => 'd.m.Y',
+      ],
     ];
     $fdd['birthday'] = $fdd['date'];
     $fdd['birthday']['name'] = $this->l->t('birthday');
