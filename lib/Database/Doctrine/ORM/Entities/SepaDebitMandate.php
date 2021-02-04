@@ -26,6 +26,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -96,6 +97,7 @@ class SepaDebitMandate implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=false)
+   * @MediaMonks\Transformable(name="encrypt")
    */
   private $iban;
 
@@ -103,6 +105,7 @@ class SepaDebitMandate implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=false)
+   * @MediaMonks\Transformable(name="encrypt")
    */
   private $bic;
 
@@ -110,6 +113,7 @@ class SepaDebitMandate implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=128, nullable=false)
+   * @MediaMonks\Transformable(name="encrypt")
    */
   private $blz;
 
@@ -117,6 +121,7 @@ class SepaDebitMandate implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=512, nullable=false)
+   * @MediaMonks\Transformable(name="encrypt")
    */
   private $bankAccountOwner;
 

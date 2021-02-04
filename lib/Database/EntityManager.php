@@ -31,6 +31,8 @@ use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 
+use MediaMonks\Doctrine\Transformable;
+
 use Ramsey\Uuid\Doctrine as Ramsey;
 
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -282,6 +284,9 @@ class EntityManager extends EntityManagerDecorator
       $driverChain, // our metadata driver chain, to hook into
       $cachedAnnotationReader // our cached annotation reader
     );
+    //<<< Further annotations can go here
+    \MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
+    //>>>
 
     // now we want to register our application entities,
     // for that we need another metadata driver used for Entity namespace
@@ -330,6 +335,35 @@ class EntityManager extends EntityManagerDecorator
     $sortableListener = new \Gedmo\Sortable\SortableListener;
     $sortableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($sortableListener);
+
+    // encryption
+    $transformerPool = new Transformable\Transformer\TransformerPool();
+    $transformerPool['encrypt'] = new class($this->encryptionService) implements Transformable\Transformer\TransformerInterface {
+
+      private $encryptionKey;
+
+      private $encryptionService;
+
+      public function __construct($encryptionService)
+      {
+        $this->encryptionService = $encryptionService;
+        $this->encryptionKey = $this->encryptionService->getAppEncryptionKey();
+      }
+
+      public function transform($value)
+      {
+        return $this->encryptionService->encrypt($value, $this->encryptionKey);
+      }
+
+      public function reverseTransform($value)
+      {
+        return $this->encryptionService->decrypt($value, $this->encryptionKey);
+      }
+
+    };
+    $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
+    $transformableListener->setAnnotationReader($cachedAnnotationReader);
+    $evm->addEventSubscriber($transformableListener);
 
     return [ $config, $evm ];
   }
