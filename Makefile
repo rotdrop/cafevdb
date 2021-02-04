@@ -61,6 +61,12 @@ pre-build:
 build: pre-build composer npm
 .PHONY: build
 
+.PHONY: comoser-download
+composer-download:
+	mkdir -p $(build_tools_directory)
+	curl -sS https://getcomposer.org/installer | php
+	mv composer.phar $(build_tools_directory)
+
 # Installs and updates the composer dependencies. If composer is not installed
 # a copy is fetched from the web
 .PHONY: composer
@@ -103,6 +109,7 @@ realclean: distclean ## Really delete everything but the bare source files
 	rm -f composer.json
 	rm -f stamp.composer-core-versions
 	rm -f package-lock.json
+	rm -f *.html
 
 # Builds the source and appstore package
 .PHONY: dist
