@@ -22,3 +22,7 @@ foo*
 bar*
 node_modules
 **/*old*
+current-key
+dependencygraph.svg
+*.html
+stats.json
