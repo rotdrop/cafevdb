@@ -172,7 +172,6 @@ console.info('MCE: ', window.tinyMCE, window.tinymce);
   };
 })(window, jQuery, myTinyMCE);
 
-// @TODO inject nonce later
 $(function() {
   myTinyMCE.init(globalState.language);
   console.info('MCE nonce', myTinyMCE.nonce);
