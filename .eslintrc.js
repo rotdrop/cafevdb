@@ -30,7 +30,7 @@ module.exports = {
           './src',
           './style',
         ],
-        tryExtensions: ['.js', '.json', '.node', '.css']
+        tryExtensions: ['.js', '.json', '.node', '.css'],
       },
     ],
     'node/no-missing-require': [
@@ -41,7 +41,7 @@ module.exports = {
           './style',
           './3rdparty',
         ],
-        tryExtensions: ['.js', '.json', '.node', '.css']
+        tryExtensions: ['.js', '.json', '.node', '.css'],
       },
     ],
   },
