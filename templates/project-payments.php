@@ -23,7 +23,7 @@
 namespace OCA\CAFEVDB;
 
 $css_pfx = $renderer->cssPrefix();
-$project = $renderer->getProjectName();
+$projectName = $renderer->getProjectName();
 $projectId = $renderer->getProjectId();
 
 $nav = '';
@@ -45,10 +45,13 @@ if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('instruments');
 }
 
-echo $this->inc('part.common.header',
-                [ 'css-prefix' => $css_pfx,
-                  'navigationcontrols' => $nav,
-                  'header' => $renderer->headerText() ]);
+echo $this->inc(
+  'part.common.header',
+  [
+    'css-prefix' => $css_pfx,
+    'navigationcontrols' => $nav,
+    'header' => $renderer->headerText(),
+]);
 
 if (true || $roles->inTreasurerGroup()) {
   $renderer->render();
@@ -60,4 +63,4 @@ if (true || $roles->inTreasurerGroup()) {
 }
 
 // Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);
