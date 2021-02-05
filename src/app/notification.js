@@ -24,31 +24,28 @@ import { globalState } from './globals.js';
 const Notification = globalState.Notification;
 if (Notification === undefined) {
   globalState.Notification = {
-    rows: []
+    rows: [],
   };
 }
 
-let rows = globalState.Notification.rows;
+const rows = globalState.Notification.rows;
 
 const hide = function($row, callback) {
   if (_.isFunction($row)) {
     // first arg is the callback
-    callback = $row
-    $row = undefined
+    callback = $row;
+    $row = undefined;
   }
   if (!$row) {
-    if (rows.length == 0) {
-      if (callback) {
-        callback.call();
-      }
-      return;
+    for (const row of rows) {
+      OC.Notification.hide(row);
     }
-    rows.forEach(function(item, index) {
-      OC.Notification.hide(item, callback);
-    });
-    rows = [];
+    rows.length = 0;
+    if (callback) {
+      callback.call();
+    }
   } else {
-    OC.Nofication.hide($row, callback);
+    OC.Notification.hide($row, callback);
   }
 };
 
@@ -73,9 +70,6 @@ const showTemporary = function(text, options) {
 export {
   hide, show, showHtml, showTemporary,
 };
-
-globalState.Notification = $.extend(
-  globalState.Notification, { hide, show, showHtml, showTemporary });
 
 // Local Variables: ***
 // js-indent-level: 2 ***
