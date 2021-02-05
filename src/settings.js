@@ -28,6 +28,11 @@ import './app/jquery-extensions.js';
 require('settings.css');
 
 $(function() {
+
+  $('body').on('dblclick', '.oc-dialog', function() {
+    $('.oc-dialog').toggleClass('maximize-width');
+  });
+
   appSettings();
   personalSettings();
   runReadyCallbacks();

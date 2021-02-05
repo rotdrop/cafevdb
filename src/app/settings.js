@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -23,7 +24,9 @@ import { appName } from './config.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
+import { simpleSetHandler, simpleSetValueHandler,  } from './simple-set-value.js';
 import { makeId, toolTipsInit } from './cafevdb.js';
+import generateUrl from './generate-url.js';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-file-download');
@@ -32,8 +35,6 @@ require('jquery-ui/themes/base/autocomplete.css');
 
 require('settings.css');
 require('about.css');
-
-console.info('JQUERY ', $.fn.jquery);
 
 /**
  * Permanent DOM element holding the dynamically injected settings
@@ -75,76 +76,6 @@ const afterLoad = function(container) {
     return showElement;
   };
 
-  // AJAX call with a simple value
-  const simpleSetValueHandler = function(element, eventType, msgElement, userCallbacks, getValue) {
-    const defaultCallbacks = {
-      setup: function() {},
-      success: function() {},
-      fail: function() {},
-      cleanup: function() {}
-    };
-    var callbacks = $.extend({}, defaultCallbacks);
-    if (typeof userCallbacks === 'function') {
-      callbacks.success = userCallbacks;
-    } else if (typeof userCallbacks === 'object') {
-      $.extend(callbacks, userCallbacks);
-    }
-    element.on(eventType, function(event) {
-      msgElement.hide();
-      $('.statusmessage').hide();
-      const self = $(this);
-      var name;
-      var value;
-      console.log('getValue', getValue);
-      if (getValue !== undefined) {
-        if ((value = getValue(element, msgElement)) !== undefined) {
-          name = value.name;
-          value = value.value;
-        }
-      } else {
-        name = self.attr('name');
-        value = element.is(':checkbox') ? element.is(':checked') : self.val();
-      }
-      console.log('value', value);
-      if (value === undefined) {
-        callbacks.cleanup();
-      } else {
-        callbacks.setup();
-        $.post(
-	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
-          { 'value': value })
-	  .fail(function(xhr, status, errorThrown) {
-            msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-            callbacks.fail(xhr, status,  errorThrown);
-            callbacks.cleanup();
-          })
-          .done(function(data) {
-            msgElement.html(data.message).show();
-            callbacks.success(element, data, value, msgElement);
-            callbacks.cleanup();
-          });
-      }
-      return false;
-    });
-  };
-
-  // AJAX call without a value
-  const simpleSetHandler = function(element, eventType, msgElement) {
-    element.on(eventType, function(event) {
-      msgElement.hide();
-      const name = $(this).attr('name');
-      $.post(
-	OC.generateUrl('/apps/cafevdb/settings/app/set/' + name))
-	.fail(function(xhr, status, errorThrown) {
-          msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        })
-        .done(function(data) {
-          msgElement.html(data.message).show();
-        });
-      return false;
-    });
-  };
-
   // 'show password' checkbox
   const encryptionKey = $('#userkey #encryptionkey');
   const loginPassword = $('#userkey #password');
@@ -162,13 +93,13 @@ const afterLoad = function(container) {
       return false;
     }
     $.post(
-      OC.generateUrl('/apps/cafevdb/settings/personal/set/encryptionkey'),
+      generateUrl('settings/personal/set/encryptionkey'),
       { 'value': {'encryptionkey': encryptionKey.val(),
                   'loginpassword': loginPassword.val()
                  }
       })
       .done(function(data) {
-	console.log(data);
+        console.log(data);
         $('#userkey input[name="dbkey1"]').val('');
         $('#userkey input[name="userkey"]').val('');
         $('#userkey input[name="userkey-clone"]').val('');
@@ -199,11 +130,11 @@ const afterLoad = function(container) {
     simpleSetValueHandler(
       adminGeneral.find(':input'), 'blur', msg,
       function(element, data, value, msg) {
-	if (value == '') {
+        if (value == '') {
           $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
             $(elm).attr('disabled','disabled');
           });
-	} else {
+        } else {
           $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
             $(elm).removeAttr('disabled');
           });
@@ -216,7 +147,7 @@ const afterLoad = function(container) {
               $(elm).removeAttr('disabled');
             });
           }
-	}
+        }
       });
   }
 
@@ -237,15 +168,15 @@ const afterLoad = function(container) {
       form.find('.statusmessage').hide();
       if (oldKeyInput.val() != keyInput.val()) {
 
-	// disable form elements until we got an answer
-	$(tabsSelector + ' fieldset').prop('disabled', true);
-	$(tabsSelector).tabs("disable");
-	container.find('.statusmessage.standby').show();
+        // disable form elements until we got an answer
+        $(tabsSelector + ' fieldset').prop('disabled', true);
+        $(tabsSelector).tabs("disable");
+        container.find('.statusmessage.standby').show();
 
-	Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
+        Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
 
-	$.post(
-	  OC.generateUrl('/apps/cafevdb/settings/app/set/systemkey'),
+        $.post(
+          generateUrl('settings/app/set/systemkey'),
           { 'value': { 'systemkey': keyInput.val(),
                        'oldkey': oldKeyInput.val() }
           })
@@ -271,7 +202,7 @@ const afterLoad = function(container) {
             if (data.message) {
               container.find('.statusmessage.general').html(data.message).show();
             }
-	  })
+          })
           .fail(function(xhr, status, errorThrown) {
             $(tabsSelector + ' fieldset').prop('disabled', false);
             $(tabsSelector).tabs("enable");
@@ -287,9 +218,9 @@ const afterLoad = function(container) {
           });
       } else {
         container.find('.statusmessage.equal').show();
-	if (oldKeyInput.val() == '') {
+        if (oldKeyInput.val() == '') {
           container.find('.statusmessage.insecure').show();
-	}
+        }
       }
       return false;
     });
@@ -299,18 +230,18 @@ const afterLoad = function(container) {
 
       // show the visible password text input
       if ($('form#systemkey #key').is(':visible')) {
-	$('#systemkey-show').click();
+        $('#systemkey-show').click();
       }
 
       $.post(
-	OC.generateUrl('/apps/cafevdb/settings/get/passwordgenerate'))
+        generateUrl('settings/get/passwordgenerate'))
         .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
-	  // Make sure both inputs have the same value
+          // Make sure both inputs have the same value
           keyInput.val(data.value);
-	  keyInputClone.val(data.value);
+          keyInputClone.val(data.value);
           if (data.message != '') {
             msg.html(data.message).show();
           }
@@ -323,8 +254,8 @@ const afterLoad = function(container) {
       form.find('.statusmessage').hide();
       const name = $(this).attr('name');
       $.post(
-	OC.generateUrl('/apps/cafevdb/settings/app/set/' + name))
-	.fail(function(xhr, status, errorThrown) {
+        generateUrl('settings/app/set/' + name))
+        .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
@@ -379,8 +310,8 @@ const afterLoad = function(container) {
     shareOwnerForce.on('change', function(event) {
       msg.hide();
       if (!$(this).is(':checked') && shareOwnerSaved.val() != '') {
-	shareOwner.val(shareOwnerSaved.val());
-	shareOwner.prop('disabled', true);
+        shareOwner.val(shareOwnerSaved.val());
+        shareOwner.prop('disabled', true);
       } else {
         shareOwner.prop('disabled', false);
       }
@@ -395,17 +326,17 @@ const afterLoad = function(container) {
     simpleSetValueHandler(
       shareOwnerCheck, 'click', msg,
       function(element, data, value, msg) { // done
-	shareOwner.attr('disabled', true);
-	shareOwnerSaved.val(shareOwner.val());
-	if (shareOwner.val() != '') {
+        shareOwner.attr('disabled', true);
+        shareOwnerSaved.val(shareOwner.val());
+        if (shareOwner.val() != '') {
           $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
             $(elm).removeAttr('disabled');
           });
-	} else {
+        } else {
           $('#calendars,#sharedfolderform').find('fieldset').each(function(i, elm) {
             $(elm).attr('disabled','disabled');
           });
-	}
+        }
       },
       function(element, msg) { // getValue
         return { 'name': 'shareowner',
@@ -447,11 +378,11 @@ const afterLoad = function(container) {
 
       // show the visible password input
       if (password.is(':visible')) {
-	$('#shareownerpassword-show').click();
+        $('#shareownerpassword-show').click();
       }
 
       $.post(
-	OC.generateUrl('/apps/cafevdb/settings/get/passwordgenerate'))
+        generateUrl('settings/get/passwordgenerate'))
         .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
@@ -502,10 +433,10 @@ const afterLoad = function(container) {
             sharedObjectForce.click(function(event) {
               msg.hide();
               if (!sharedObjectForce.is(':checked') && sharedObjectSaved.val() != '') {
-	        sharedObject.val(sharedObjectSaved.val());
-	        sharedObject.prop('disabled', true);
+                sharedObject.val(sharedObjectSaved.val());
+                sharedObject.prop('disabled', true);
               } else {
-	        sharedObject.prop('disabled', false);
+                sharedObject.prop('disabled', false);
               }
             });
 
@@ -513,10 +444,10 @@ const afterLoad = function(container) {
               sharedObjectCheck, 'click', msg,
               function(element, data, value, msg) { // done
                 // value is just the thing submitted to the AJAX call
-	        sharedObject.val(data.value);
-	        sharedObjectSaved.val(data.value);
+                sharedObject.val(data.value);
+                sharedObjectSaved.val(data.value);
                 if (value != '') {
-	          sharedObject.prop('disabled', true);
+                  sharedObject.prop('disabled', true);
                   sharedObjectForce.prop('checked', false);
                 }
                 if (callback !== undefined) {
@@ -564,9 +495,9 @@ const afterLoad = function(container) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+          generateUrl('settings/app/set/' + name),
           { 'value': value })
-	  .fail(function(xhr, status, errorThrown) {
+          .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
@@ -587,9 +518,9 @@ const afterLoad = function(container) {
         const name = password.attr('name');
         if (value != '') {
           $.post(
-	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+            generateUrl('settings/app/set/' + name),
             { 'value': value })
-	    .fail(function(xhr, status, errorThrown) {
+            .fail(function(xhr, status, errorThrown) {
               msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
             })
             .done(function(data) {
@@ -610,8 +541,8 @@ const afterLoad = function(container) {
         msg.hide();
         const name = $(this).attr('name');
         $.post(
-	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name))
-	  .fail(function(xhr, status, errorThrown) {
+          generateUrl('settings/app/set/' + name))
+          .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
@@ -623,20 +554,20 @@ const afterLoad = function(container) {
 
     {
       const container = form.find('fieldset.serversettings');
-      //const msg = container.find('.statusmessage');
+      // const msg = container.find('.statusmessage');
 
       $('[id$=secure]:input').change(function(event) {
         msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+          generateUrl('settings/app/set/' + name),
           { 'value': value })
-	  .fail(function(xhr, status, errorThrown) {
+          .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
-	    $('#'+data.proto+'port').val(data.port);
+            $('#'+data.proto+'port').val(data.port);
             msg.html(data.message).show();
           });
         return false;
@@ -647,9 +578,9 @@ const afterLoad = function(container) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+          generateUrl('settings/app/set/' + name),
           { 'value': value })
-	  .fail(function(xhr, status, errorThrown) {
+          .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
@@ -668,9 +599,9 @@ const afterLoad = function(container) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+          generateUrl('settings/app/set/' + name),
           { 'value': value })
-	  .fail(function(xhr, status, errorThrown) {
+          .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
@@ -690,11 +621,11 @@ const afterLoad = function(container) {
       simpleSetValueHandler(
         container.find('#emailtestmode'), 'change', msg,
         function(element, data) {
-	  if (element.is(':checked')) {
-	    emailTestAddress.prop('disabled', false);
-	  } else {
-	    emailTestAddress.prop('disabled',true);
-	  }
+          if (element.is(':checked')) {
+            emailTestAddress.prop('disabled', false);
+          } else {
+            emailTestAddress.prop('disabled',true);
+          }
         });
     }
   }
@@ -708,14 +639,22 @@ const afterLoad = function(container) {
 
     const msg = $('#orchestra #msg');
 
+    simpleSetValueHandler($('input[class^="streetAddress"]'), 'blur', msg);
+
     simpleSetValueHandler(
-      $('input[class^="streetAddress"], input.phoneNumber'), 'blur', msg);
+      $('input.phoneNumber'),
+      'blur',
+      msg,
+      function(element, data, value, msgElement) {
+        console.info(data);
+        element.val(data.number);
+      });
 
     const streetAddressCountry = $('select.streetAddressCountry');
     streetAddressCountry.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
-      width: '30%'
+      width: '30%',
     });
     simpleSetValueHandler(streetAddressCountry, 'change', msg);
 
@@ -763,38 +702,56 @@ const afterLoad = function(container) {
     //
     ///////////////////////////////////////////////////////////////////////////
 
+    const bankAccountInputs = $('input[class^="bankAccount"]');
+
+    bankAccountInputs.autocomplete({
+      source: [],
+      minLength: 0,
+    });
+
+    const bankAccountProperties = [
+      'bankAccountIBAN',
+      'bankAccountBLZ',
+      'bankAccountBIC',
+    ];
+
     simpleSetValueHandler(
-      $('input[class^="bankAccount"]'),
+      bankAccountInputs,
       'blur',
       msg,
-      function(element, data, value, msg) { // done
-        data = data.value;
-	if (data.suggestion) {
-	  $('#orchestra #suggestion').html(data.suggestion).show();
-        } else {
-	  $('#orchestra #suggestion').empt().hide();
-        }
-        if (data.value) {
-          element.val(data.value);
-        }
-	if (data.iban) {
-          $('input.bankAccountIBAN').val(data.iban);
-	}
-	if (data.blz) {
-          $('input.bankAccountBLZ').val(data.blz);
-	}
-	if (data.bic) {
-          $('input.bankAccountBIC').val(data.data.bic);
-	}
-      });
+      {
+        success(element, data, value, msg) { // done
+          if (data.suggestions && data.suggestions.length > 0) {
+            // TODO: make the autocomplete option(s) more visible
+            element.autocomplete('option', 'source', data.suggestions);
+            element.autocomplete('option', 'minLength', 0);
+            element.autocomplete('search', value);
+          } else {
+            console.debug('NO SUGGESTIONS', data.suggestion);
+            element.autocomplete('option', 'source', []);
+          }
+          if (data.value) {
+            element.val(data.value);
+          }
+          console.info('BK DATA', data);
+          for (const property of bankAccountProperties) {
+            if (data[property]) {
+              console.info('SET BK PROP', data[property], $('input.' + property));
+              $('input.' + property).val(data[property]);
+            }
+          }
+        },
+        fail: Ajax.handleError,
+      },
+    );
   }
 
   {
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // translations via extra tables in DB
-    //
-    ///////////////////////////////////////////////////////////////////////////
+    /**************************************************************************
+     *
+     * translations via extra tables in DB
+     *
+     */
 
     const translationKeys = $('select.translation-phrases');
     const locales = $('select.translation-locales');
@@ -909,21 +866,21 @@ const afterLoad = function(container) {
 
       console.info('DOWNLOAD POST', post);
       $.fileDownload(
-        OC.generateUrl('/apps/cafevdb/settings/app/get/translation-templates'), {
+        generateUrl('settings/app/get/translation-templates'), {
           httpMethod: 'POST',
           data: post,
           cookieName:  cookieName,
           cookieValue: cookieValue,
           cookiePath: oc_webroot,
         })
-	.fail(function (responseHtml, url) {
+        .fail(function (responseHtml, url) {
           Dialogs.alert(t('cafevdb', 'Unable to download translation templates: {response}',
-                                  { 'response': responseHtml }),
-                                t('cafevdb', 'Error'),
-                                function () {},
-                                true, true);
+                          { 'response': responseHtml }),
+                        t('cafevdb', 'Error'),
+                        function () {},
+                        true, true);
         })
-	.done(function (url) { console.info('DONE downloading', url); });
+        .done(function (url) { console.info('DONE downloading', url); });
 
       return false;
     });
@@ -950,13 +907,13 @@ const afterLoad = function(container) {
     devLinkTests.on('click', function(event) {
       const target = $(this).attr('name');
       $.post(
-	OC.generateUrl('/apps/cafevdb/settings/get/' + target))
+        generateUrl('settings/get/' + target))
         .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
           console.info('Open dev-link', data.value.link, data.value.target);
-	  window.open(data.value.link, data.value.target);
+          window.open(data.value.link, data.value.target);
         });
     });
   }
@@ -1009,7 +966,7 @@ const documentReady = function(container) {
     if (event.target == this) {
       console.log('S trigger PS content-update');
       if (!container.hasClass('personal-settings')) {
-	$('.personal-settings').trigger('cafevdb:content-update');
+        $('.personal-settings').trigger('cafevdb:content-update');
       }
       afterLoad($(this));
     } else {
