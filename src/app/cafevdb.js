@@ -1022,6 +1022,7 @@ const documentReady = function() {
     $('.oc-dialog').toggleClass('maximize-width');
   });
 
+  // @TODO move to global state context
   window.oldWidth = -1;
   window.oldHeight = -1;
   $(window).on('resize', function(event) {
