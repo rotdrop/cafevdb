@@ -36,6 +36,8 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\TranslationService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\FinanceService;
 use OCA\CAFEVDB\Common\Util;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
@@ -63,6 +65,12 @@ class PersonalSettingsController extends Controller {
   /** @var OCA\Redaxo4Embedded\Service\RPC */
   private $webPagesRPC;
 
+  /** @var PhoneNumberService */
+  private $phoneNumberService;
+
+  /** @var FinanceService */
+  private $financeService;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -70,6 +78,8 @@ class PersonalSettingsController extends Controller {
     , ConfigService $configService
     , Personal $personalSettings
     , ConfigCheckService $configCheckService
+    , PhoneNumberService $phoneNumberService
+    , FinanceService $financeService
     , CalDavService $calDavService
     , TranslationService $translationService
     , WikiRPC $wikiRPC
@@ -82,6 +92,8 @@ class PersonalSettingsController extends Controller {
     $this->configService = $configService;
     $this->configCheckService = $configCheckService;
     $this->personalSettings = $personalSettings;
+    $this->phoneNumberService = $phoneNumberService;
+    $this->financeService = $financeService;
     $this->calDavService = $calDavService;
     $this->translationService = $translationService;
     $this->wikiRPC = $wikiRPC;
@@ -367,11 +379,203 @@ class PersonalSettingsController extends Controller {
 
       return self::response($this->l->t('Share-owner user `%s\' ok.', [$uid]));
 
+    case 'phoneNumber':
+      $realValue = Util::normalizeSpaces($value);
+      if (empty($realValue)) {
+        return self::response('');
+      }
+      if ($this->phoneNumberService->validate($realValue)) {
+        $number['number'] = $this->phoneNumberService->format();
+        $number['meta'] = $this->phoneNumberService->metaData();
+        $number['isMobile'] = $this->phoneNumberService->isMobile();
+        $number['valid'] = true;
+        $this->setConfigValue($parameter, $number['number']);
+        return self::dataResponse(array_merge($number, [
+          'message' => $this->l->t('Orchestra Phone Number set to %s', $number['number']),
+        ]));
+      } else {
+        return self::grumble($this->l->t('The phone number %s does not appear to be a valid phone number. ',
+                                         [ $realValue, ]));
+      }
+      break;
     case 'bankAccountOwner':
     case 'bankAccountBLZ':
     case 'bankAccountIBAN':
     case 'bankAccountBIC':
-    case 'bankAccountCreditorIdentifer':
+    case 'bankAccountCreditorIdentifier':
+    {
+      $realValue = Util::normalizeSpaces($value);
+      $data = [
+        'bankAccountIBAN' => $this->getConfigValue('bankAccountIBAN'),
+        'bankAccountBLZ' => $this->getConfigValue('bankAccountBLZ'),
+        'bankAccountBIC' => $this->getConfigValue('bankAccountBIC'),
+        'bankAccountCreditorIdentifier' => $this->getConfigValue('bankAccountCreditorIdentifer'),
+        'bankAccountOwner' => $this->getConfigValue('bankAccountOwner'),
+        'message' => '',
+      ];
+      $this->logInfo('REAL '.$realValue.' / '.print_r($data, true));
+      if (empty($realValue) && !empty($data[$parameter])) {
+        // allow erasing
+        $this->setConfigValue($parameter, $realValue);
+        $data[$parameter] = $realValue;
+        $data['message'] = $this->l->t("Erased config value for parameter `%s'.", $parameter);
+        return self::dataResponse($data);
+      }
+      switch ($parameter) {
+      case 'bankAccountOwner':
+        $address = $this->getConfigValue('streetAddressName01');
+        if ($realValue !== $address) {
+          $data['suggestions'] = [ $address, ];
+        }
+        if (!empty($realValue)) {
+          $this->setConfigValue($parameter, $realValue);
+          $data[$parameter] = $realValue;
+          $data['message'] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+        }
+        return self::dataResponse($data);
+      case 'bankAccountCreditorIdentifier':
+        if (empty($realValue)) {
+          return self::response('');
+        }
+        if ($this->financeService->testCI($realValue)) {
+          $this->setConfigValue($parameter, $realValue);
+          $data[$parameter] = $realValue;
+          $data['message'] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+          return self::dataResponse($data);
+        }
+        break;
+      case 'bankAccountIBAN':
+        if (empty($realValue)) {
+          return self::response('');
+        }
+        $iban = new \PHP_IBAN\IBAN($realValue);
+        if (!$iban->Verify() && is_numeric($realValue)) {
+          // maybe simlpy the bank account number, if we have a BLZ,
+          // then compute the IBAN
+          $blz = $data['bankAccountBLZ'];
+          $bav = new \malkusch\bav\BAV;
+          if ($bav->isValidBank($blz)) {
+            $realValue = $this->financeService->makeIBAN($blz, $realValue);
+            $iban = new \PHP_IBAN\IBAN($realValue);
+          }
+        }
+        $data['message'] = [];
+        if ($iban->Verify()) {
+          $realValue = $iban->MachineFormat();
+          $this->setConfigValue($parameter, $realValue);
+          if ($data[$parameter] != $realValue) {
+            $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+          }
+          $data[$parameter] = $realValue;
+
+          // Compute as well the BLZ and the BIC
+          $blz = $iban->Bank();
+          $bav = new \malkusch\bav\BAV;
+          if ($bav->isValidBank($blz)) {
+            $realValue = $blz;
+            $parameter = 'bankAccountBLZ';
+            $this->setConfigValue($parameter, $realValue);
+            if ($data[$parameter] != $realValue) {
+              $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+            }
+            $data[$parameter] = $realValue;
+
+            $bic = $bav->getMainAgency($blz)->getBIC();
+            $realValue = $bic;
+            $parameter = 'bankAccountBIC';
+            $this->setConfigValue($parameter, $realValue);
+            if ($data[$parameter] != $realValue) {
+              $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+            }
+            $data[$parameter] = $realValue;
+          } else {
+            unset($data['bankAccountBLZ']);
+            unset($data['bankAccountBIC']);
+          }
+          return self::dataResponse($data);
+        } else {
+          $data['message'] = $this->l->t("Invalid IBAN: `%s'.", [ $value ]);
+          $suggestion = '';
+          $suggestions = $iban->MistranscriptionSuggestions();
+          $data['suggestions'] = [];
+          while (count($suggestions) > 0) {
+            $alternative = array_shift($suggestions);
+            if ($iban->Verify($alternative)) {
+              $alternative = $iban->MachineFormat($alternative);
+              $alternative = $iban->HumanFormat($alternative);
+              $data['suggestions'][] = $alternative;
+            }
+          }
+          return self::grumble($data);
+        }
+        break;
+      case 'bankAccountBLZ':
+        if (empty($realValue)) {
+          return self::response('');
+        }
+        $bav = new \malkusch\bav\BAV;
+        if ($bav->isValidBank($realValue)) {
+          $data['message'] = [];
+          $this->setConfigValue($parameter, $realValue);
+          if ($data[$parameter] != $realValue) {
+            $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+          }
+          $data[$parameter] = $realValue;
+
+          // set also the BIC
+          $agency = $bav->getMainAgency($realValue);
+          $bic = $agency->getBIC();
+          if ($this->financeService->validateSWIFT($bic)) {
+            $parameter = 'bankAccountBIC';
+            $realValue = $bic;
+            $this->setConfigValue($parameter, $realValue);
+            if ($data[$parameter] != $realValue) {
+              $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+            }
+            $data[$parameter] = $realValue;
+          } else {
+            unset($data['bankAccountBIC']);
+          }
+          return self::dataResponse($data);
+        }
+        break;
+      case 'bankAccountBIC':
+        if (empty($realValue)) {
+          return self::response('');
+        }
+        $data['message'] = [];
+        if (!$this->financeService->validateSWIFT($realValue)) {
+          // maybe a BLZ
+          $bav = new \malkusch\bav\BAV;
+          if ($bav->isValidBank($realValue)) {
+            $parameter = 'bankAccountBLZ';
+            $this->setConfigValue($parameter, $realValue);
+            if ($data[$parameter] != $realValue) {
+              $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+            }
+            $data[$parameter] = $realValue;
+            $agency = $bav->getMainAgency($realValue);
+            $realValue = $agency->getBIC();
+            $parameter = 'bankAccountBIC';
+            // Set also the BIC
+          } else {
+            unset($data['bankAccountBLZ']);
+          }
+        }
+        if ($this->financeService->validateSWIFT($realValue)) {
+          $parameter = 'bankAccountBIC';
+          $this->setConfigValue($parameter, $realValue);
+          if ($data[$parameter] != $realValue) {
+            $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+          }
+          $data[$parameter] = $realValue;
+          return self::dataResponse($data);
+        }
+        break; // error
+      }
+      $data['message'] = $this->l->t("Value for `%s' invalid: `%s'.", [ $parameter, $value ]);
+      return self::grumble($data);
+    }
     case 'memberProjectCreate':
     case 'executiveBoardProjectCreate':
     case 'memberProject':
