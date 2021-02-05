@@ -24,6 +24,7 @@
     "giggsey/libphonenumber-for-php": "^8.12",
     "pear/mail": "^1.4",
     "gedmo/doctrine-extensions": "dev-feature/loggable_composite_identifier_main",
+    "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
     "knplabs/doctrine-behaviors": "^2.0"
   },
   "require-dev": {
@@ -48,6 +49,10 @@
     {
       "type": "path",
       "url": "3rdparty/php-openssl-cryptor"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/mediamonks-doctrine-extensions"
     },
     {
       "type": "vcs",
