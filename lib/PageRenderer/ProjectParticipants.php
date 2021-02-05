@@ -278,7 +278,7 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     /* For each extra field add one dedicated join table entry
-     * which is pinned to the repsective field-id.
+     * which is pinned to the respective field-id.
      */
     $extraFieldJoinIndex = [];
     foreach ($extraFields as $field) {
