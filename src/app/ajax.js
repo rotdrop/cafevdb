@@ -189,7 +189,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
   case ajaxHttpStatus.UNAUTHORIZED: {
     // no point in continuing, direct the user to the login page
     errorCB = function() {
-      if(OC.webroot !== '') {
+      if (OC.webroot !== '') {
         window.location.replace(OC.webroot);
       } else {
         window.location.replace('/');
@@ -247,22 +247,23 @@ const ajaxValidateResponse = function(data, required, errorCB)
   }
   // error handling
   if (typeof data == 'undefined' || !data) {
-    Dialogs.alert(t(appName, 'Unrecoverable unknown internal error, '+
-                    'no further information available, sorry.'),
-                  t(appName, 'Internal Error'), errorCB, true);
+    Dialogs.alert(
+      t(appName, 'Unrecoverable unknown internal error, '
+        + 'no further information available, sorry.'),
+      t(appName, 'Internal Error'), errorCB, true);
     return false;
   }
-  var missing = '';
-  var idx;
-  for (idx = 0; idx < required.length; ++idx) {
+  let missing = '';
+  for (let idx = 0; idx < required.length; ++idx) {
     if (typeof data[required[idx]] == 'undefined') {
-      missing += t(appName, 'Field {RequiredField} not present in AJAX response.',
-                   { RequiredField: required[idx] })+"<br>";
+      missing += t(
+        appName, 'Field {RequiredField} not present in AJAX response.',
+        { RequiredField: required[idx] }) + '<br>';
     }
   }
   if (missing.length > 0) {
-    var info = '';
-    if (typeof data.message != 'undefined') {
+    let info = '';
+    if (typeof data.message !== 'undefined') {
       info += data.message;
     }
     if (missing.length > 0) {
@@ -271,12 +272,12 @@ const ajaxValidateResponse = function(data, required, errorCB)
     // Add missing fields only if no exception or setup-error was
     // caught as in this case no regular data-fields have been
     // constructed
-    info += '<div class="missing error">'+missing+'</div>';
+    info += '<div class="missing error">' + missing + '</div>';
 
     // Display additional debug info if any
     Dialogs.debugPopup(data);
 
-    var caption = data.caption;
+    let caption = data.caption;
     if (typeof caption == 'undefined' || caption == '') {
       caption = t(appName, 'Error');
       data.caption = caption;
@@ -290,34 +291,35 @@ const ajaxValidateResponse = function(data, required, errorCB)
 /**
  * Fetch data from an error response.
  *
- * @param xhr jqXHR, see fail() method of jQuery ajax.
+ * @param {Object} xhr jqXHR, see fail() method of jQuery ajax.
  *
- * @param status from jQuery, see fail() method of jQuery ajax.
+ * @param {String} textStatus from jQuery, see fail() method of jQuery ajax.
  *
- * @param errorThrown, see fail() method of jQuery ajax.
+ * @param {String} errorThrown, see fail() method of jQuery ajax.
  */
-const ajaxFailData = function(xhr, status, errorThrown) {
-  const ct = xhr.getResponseHeader("content-type") || "";
-  var data = {
-    'error': errorThrown,
-    'status': status,
-    'message': t(appName, 'Unknown JSON error response to AJAX call: {status} / {error}')
+const ajaxFailData = function(xhr, textStatus, errorThrown) {
+  const ct = xhr.getResponseHeader('content-type') || '';
+  let data = {
+    error: errorThrown,
+    status,
+    message: t(appName, 'Unknown JSON error response to AJAX call: {status} / {error}', { status, error: errorThrown }),
   };
   if (ct.indexOf('html') > -1) {
-    console.debug('html response', xhr, status, errorThrown);
+    console.debug('html response', xhr, textStatus, errorThrown);
     console.debug(xhr.status);
-    data.message = t(appName, 'HTTP error response to AJAX call: {code} / {error}',
-                     {'code': xhr.status, 'error': errorThrown});
+    data.message = t(
+      appName, 'HTTP error response to AJAX call: {code} / {error}',
+      { code: xhr.status, error: errorThrown });
     data.info = $(xhr.responseText).find('main').html();
   } else if (ct.indexOf('json') > -1) {
     const response = JSON.parse(xhr.responseText);
-    //console.info('XHR response text', xhr.responseText);
-    //console.log('JSON response', response);
-    data = {...data, ...response };
+    // console.info('XHR response text', xhr.responseText);
+    // console.log('JSON response', response);
+    data = { ...data, ...response };
   } else {
     console.log('unknown response');
   }
-  //console.info(data);
+  // console.info(data);
   return data;
 };
 
@@ -325,14 +327,14 @@ const ajaxFailData = function(xhr, status, errorThrown) {
  * Generate some diagnostic output, mostly needed during application
  * development.
  *
- * @param xhr jqXHR, see fail() method of jQuery ajax.
+ * @param {Object} xhr jqXHR, see fail() method of jQuery ajax.
  *
- * @param status from jQuery, see fail() method of jQuery ajax.
+ * @param {String} textStatus from jQuery, see fail() method of jQuery ajax.
  *
- * @param errorThrown, see fail() method of jQuery ajax.
+ * @param {String} errorThrown, see fail() method of jQuery ajax.
  */
-const ajaxFailMessage = function(xhr, status, errorThrown) {
-  return ajaxFailData(xhr, status, errorThrown).message;
+const ajaxFailMessage = function(xhr, textStatus, errorThrown) {
+  return ajaxFailData(xhr, textStatus, errorThrown).message;
 };
 
 export {
