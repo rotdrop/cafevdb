@@ -23,7 +23,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entites;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 /**Finance and bank related stuff. */

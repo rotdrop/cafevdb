@@ -42,6 +42,8 @@ class SepaDebitMandates extends PMETableViewBase
   const PROJECTS_TABLE = 'Projects';
   const MUSICIANS_TABLE = 'Musicians';
   const PAYMENTS_TABLE = 'ProjectPayments';
+  const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
+  const FIXED_COLUMN_SEP = '@';
 
   protected $cssClass = 'sepa-debit-mandates';
 
@@ -74,6 +76,12 @@ class SepaDebitMandates extends PMETableViewBase
     ],
   ];
 
+  /** @var \OCA\CAFEVDB\Service\ProjectExtraFieldsService */
+  private $extraFieldsService;
+
+  /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
+  private $project = null;
+
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
@@ -81,8 +89,10 @@ class SepaDebitMandates extends PMETableViewBase
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
+    , ProjectExtraFieldsService $extraFieldsService
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    $this->extraFieldsService = $extraFieldsService;
   }
 
   public function shortTitle()
@@ -283,7 +293,39 @@ received so far'),
 
     //////////////////////////////////////////////////////
 
-    // TODO id fields
+    if ($projectMode) {
+      // Add the amount to debit
+
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      $monetary = $this->extraFieldsService->monetaryFields($project);
+
+      /* For each monetary extra field add one dedicated join table
+       * entry which is pinned to the respective field-id.
+       */
+      $extraFieldJoinIndex = [];
+      foreach ($monetary as $name => $field) {
+        $fieldId = $field['id'];
+        $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+        $extraFieldJoinTable = [
+          'table' => $tableName,
+          'entity' => Entities\ProjectExtraFieldDatum::class,
+          'nullable' => true,
+          'identifier' => [
+            'project_id' => 'project_id',
+            'musician_id' => 'musician_id',
+            'field_id' => [ 'value' => $field['id'], ],
+          ],
+          'column' => 'field_id',
+        ];
+        $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
+        $this->joinStructure[] = $extraFieldJoinTable;
+      }
+    }
+
+    ////////////////////////////////////////////////////////////////&&&&&&&&&&&
+    //
+    // Add the id-columns of the main-table
+    //
 
     $opts['fdd']['project_id'] = [
       'name'     => $this->l->t('Project-Id'),
@@ -383,6 +425,138 @@ received so far'),
 
     // @TODO EXTRA FIELD STUFF / PROJECT MODE
 
+    if ($projectMode) {
+      foreach ($monetary as $name => $field) {
+        $fieldName = $field['name'];
+        $fieldId   = $field['id'];
+        $multiplicity = $field['multiplicity'];
+        $dataType = $field['data_type'];
+
+        $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+
+        $css = [ 'extra-field', 'field-id-'.$fieldId, ];
+        list($curColIdx, $fddName) = $this->makeJoinTableField(
+          $opts['fdd'], $tableName, 'field_value',
+          [
+            'name' => $this->l->t($fieldName),
+            'tab' => $tab,
+            'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
+            'default'  => $field['default_value'],
+            'values' => [
+              'column' => 'field_value',
+              'filters' => ('$table.field_id = '.$fieldId
+                            .' AND $table.project_id = '.$projectId
+                            .' AND $table.musician_id = $record_id[musician_id]'),
+            ],
+            'tooltip' => $field['tool_tip']?:null,
+            'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+              $amount = 0.0;
+
+              // TODO fill with data
+
+              $money = $this->moneyValue($amount);
+            },
+          ]);
+        $fdd = &$opts['fdd'][$fddName];
+
+        // TODO accumulate to total amount
+
+        // TODO define join for amountPaid
+
+        // TODO display overview field (also needed for participants table
+      }
+
+    //   $extraIdx = count($opts['fdd']);
+    //   $opts['fdd']['ExtraProjectFees'] = array_merge(
+    //     Config::$opts['money'],
+    //     array(
+    //       //'tab'      => array('id' => $financeTab),
+    //       'name'     => L::t('Extra Charges'),
+    //       'css'      => array('postfix' => ' extra-project-fees money'),
+    //       'sort'    => false,
+    //       'options' => 'VDL', // wrong in change mode
+    //       'input' => 'VR',
+    //       'sql' => $projectAlias.'.Unkostenbeitrag',
+    //       'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
+    //         use ($monetary)
+    //         {
+    //           $amount = 0.0;
+    //           foreach($fds as $key => $label) {
+    //             if (!isset($monetary[$label])) {
+    //               continue;
+    //             }
+    //             $value = $row['qf'.$key];
+    //             if (empty($value)) {
+    //               continue;
+    //             }
+    //             $field   = $monetary[$label];
+    //             $allowed = $field['AllowedValues'];
+    //             $type    = $field['Type'];
+    //             $amount += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+    //           }
+    //           return Util::moneyValue($amount);
+    //         },
+    //       'sort' => true,
+    //       'tooltip'  => Config::toolTips('project-extra-fee-summary'),
+    //       'display|LFVD' => array('popup' => 'tooltip'),
+    //     )
+    //   );
+
+    //   $amountPaidIdx = count($opts['fdd']);
+    //   $opts['fdd']['AmountPaid'] = array_merge(
+    //     Config::$opts['money'],
+    //     array(
+    //       'name' => L::t('Amount Paid'),
+    //       'input' => 'VR',
+    //       'sql' => $projectAlias.'.AmountPaid',
+    //       'sort' => 1
+    //     )
+    //   );
+
+    //   $totalsIdx = count($opts['fdd']);
+    //   $opts['fdd']['TotalProjectFees'] = array(
+    //     //'tab'      => array('id' => $financeTab),
+    //     'name'     => L::t('Total Charges'),
+    //     'css'      => array('postfix' => ' total-project-fees money'),
+    //     'sort'    => false,
+    //     'options' => 'VDLF', // wrong in change mode
+    //     'input' => 'VR',
+    //     'sql' => $projectAlias.'.Unkostenbeitrag',
+    //     'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
+    //       use ($monetary, $amountPaidIdx)
+    //       {
+    //         $paid = $row['qf'.$amountPaidIdx];
+    //         foreach($fds as $key => $label) {
+    //           if (!isset($monetary[$label])) {
+    //             continue;
+    //           }
+    //           $value = $row['qf'.$key];
+    //           if (empty($value)) {
+    //             continue;
+    //           }
+    //           $field   = $monetary[$label];
+    //           $allowed = $field['AllowedValues'];
+    //           $type    = $field['Type'];
+    //           $amount += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+    //         }
+    //         // display as TOTAL/PAID/REMAINDER
+    //         $rest = $amount - $paid;
+
+    //         $amount = Util::moneyValue($amount);
+    //         $paid = Util::moneyValue($paid);
+    //         $rest = Util::moneyValue($rest);
+    //         return ('<span class="totals finance-state">'.$amount.'</span>'
+    //                 .'<span class="received finance-state">'.$paid.'</span>'
+    //                 .'<span class="outstanding finance-state">'.$rest.'</span>');
+    //       },
+    //     'tooltip'  => Config::toolTips('project-total-fee-summary'),
+    //     'display|LFVD' => array('popup' => 'tooltip'),
+    //   );
+
+    }
+
+
+
     ///////////////
 
     $this->makeJoinTableField(
@@ -465,6 +639,21 @@ received so far'),
     ];
 
     ///////////////
+
+    $junctor = '';
+    if ($musicianId > 0) {
+      $opts['filters'] = $junctor."`PMEtable0`.`musicianId` = ".$musicianId;
+      $junctor = " AND ";
+    }
+    if ($projectMode) {
+      $opts['filters'] = $junctor
+                       . "("
+                       . "`PMEtable0`.`projectId` = " . $projectId
+                       . " OR "
+                       . "`PMEtable0`.`projectId` = " . $memberProjectId
+                       . ")";
+      $junctor = " AND ";
+    }
 
     // redirect all updates through Doctrine\ORM.
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];

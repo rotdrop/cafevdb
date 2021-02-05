@@ -57,6 +57,77 @@ class ProjectExtraFieldsService
   }
 
   /**
+   * Fetch all monetary fields for the given project.
+   *
+   * @param $project
+   */
+  public function monetaryFields(Entities\Project $project)
+  {
+    $extraFields = $project['extraFields'];
+
+    $monetary = [];
+    foreach ($extraFields as $field) {
+      if ($field['dataType'] == 'service-fee') {
+        //$allowed = $this->explodeAllowedValues($field['allowed_values'], false, true);
+        $monetary[$field['name']] = $field;
+      }
+    }
+    return $monetary;
+  }
+
+  /**
+   * Internal function: given a (multi-select) surcharge choice
+   * compute the associated amount of money and return that as float.
+   *
+   * @param string $value Value for the extra-fields table
+   *
+   * @param array $allowedValues Allowed-values array from the field
+   * definition.
+   *
+   * @parma string $multiplicity Multiplicity value from the
+   * field-definition as defined in
+   * OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity.
+   */
+  public function extraFieldSurcharge($value, $allowedValues, $multiplicity)
+  {
+    //error_log('value '.$value);
+    switch ($multiplicity) {
+    case 'groupofpeople':
+    case 'single':
+      // Non empty value means "yes".
+      $key = $allowedValues[0]['key'];
+      if ($key !== $value) {
+        $this->logWarn('Stored value "'.$value.'" unequal to stored key "'.$key.'"');
+      }
+      return (float)$allowedValues[0]['data'];
+    case 'groupsofpeople':
+    case 'multiple':
+      foreach($allowedValues as $item) {
+        if ($item['key'] === $value) {
+          return (float)$item['data'];
+        }
+      }
+      $this->logError('No data item for multiple choice key "'.$value.'"');
+      return 0.0;
+    case 'parallel':
+      $keys = Util::explode(',', $value);
+      $found = false;
+      $amount = 0.0;
+      foreach($allowedValues as $item) {
+        if (array_search($item['key'], $keys) !== false) {
+          $amount += (float)$item['data'];
+          $found = true;
+        }
+      }
+      if (!$found) {
+        $this->logError('No data item for parallel choice key "'.$value.'"');
+      }
+      return $amount;
+    }
+    return 0.0;
+  }
+
+  /**
    * Determine whether a multiplicity-type combination is supported.
    */
   public static function isSupportedType(string $multiplicity, string $type):bool
