@@ -67,16 +67,16 @@ class ProjectExtraField implements \ArrayAccess
   private $name;
 
   /**
-   * @var enumextrafieldmultiplicity
+   * @var EnumExtraFieldMultiplicity
    *
-   * @ORM\Column(type="enumextrafieldmultiplicity", nullable=false)
+   * @ORM\Column(type="EnumExtraFieldMultiplicity", nullable=false)
    */
   private $multiplicity;
 
   /**
-   * @var enumextrafieldkind
+   * @var EnumExtraFieldDataType
    *
-   * @ORM\Column(type="enumextrafielddatatype", nullable=false, options={"default"="text"})
+   * @ORM\Column(type="EnumExtraFieldDataType", nullable=false, options={"default"="text"})
    */
   private $dataType = 'text';
 
@@ -231,7 +231,7 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Set multiplicity.
    *
-   * @param enumextrafieldmultiplicity $multiplicity
+   * @param EnumExtraFieldMultiplicity $multiplicity
    *
    * @return ProjectExtraField
    */
@@ -245,7 +245,7 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Get multiplicity.
    *
-   * @return enumextrafieldmultiplicity
+   * @return EnumExtraFieldMultiplicity
    */
   public function getMultiplicity()
   {
@@ -255,7 +255,7 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Set dataType.
    *
-   * @param enumextrafielddataType $dataType
+   * @param EnumExtraFieldDataType $dataType
    *
    * @return ProjectExtraField
    */
@@ -269,7 +269,7 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Get dataType.
    *
-   * @return enumextrafielddataType
+   * @return EnumExtraFieldDataType
    */
   public function getDataType()
   {

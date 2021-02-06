@@ -22,12 +22,17 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use MyCLabs\Enum\Enum as EnumType;
+
 class EnumProjectTemporalType extends EnumType
 {
-  protected $name = 'enumprojecttemporaltype';
-  protected $values = [
-    'temporary',
-    'permanent',
-    'template',
-  ];
+  // protected $name = 'enumprojecttemporaltype';
+  // protected $values = [
+  //   'temporary',
+  //   'permanent',
+  //   'template',
+  // ];
+  const TEMPORARY = 'temporary';
+  const PERMANENT = 'permanent';
+  const TEMPLATE = 'template';
 }

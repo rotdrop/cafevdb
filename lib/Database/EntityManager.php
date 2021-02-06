@@ -32,18 +32,12 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 
 use MediaMonks\Doctrine\Transformable;
-
 use Ramsey\Uuid\Doctrine as Ramsey;
 
 use OCA\CAFEVDB\Service\EncryptionService;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldDataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use MyCLabs\Enum\Enum as EnumType;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 
@@ -159,12 +153,12 @@ class EntityManager extends EntityManagerDecorator
   private function registerTypes()
   {
     $types = [
-      EnumExtraFieldDataType::class => 'enum',
-      EnumExtraFieldMultiplicity::class => 'enum',
-      EnumMemberStatus::class => 'enum',
-      EnumGeographicalScope::class => 'enum',
-      EnumProjectTemporalType::class => 'enum',
-      EnumVCalendarType::class => 'enum',
+      Types\EnumExtraFieldDataType::class => 'enum',
+      Types\EnumExtraFieldMultiplicity::class => 'enum',
+      Types\EnumMemberStatus::class => 'enum',
+      Types\EnumGeographicalScope::class => 'enum',
+      Types\EnumProjectTemporalType::class => 'enum',
+      Types\EnumVCalendarType::class => 'enum',
       Ramsey\UuidType::class => null,
       Ramsey\UuidBinaryType::class => 'binary',
       Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
@@ -173,10 +167,21 @@ class EntityManager extends EntityManagerDecorator
     $connection = $this->entityManager->getConnection();
     try {
       $platform = $connection->getDatabasePlatform();
-      foreach ($types as $type => $sqlType) {
-        $instance = new $type;
-        $typeName = $instance->getName();
-        Type::addType($typeName, $type);
+      foreach ($types as $phpType => $sqlType) {
+        if ($sqlType == 'enum') {
+          $typeName = end(explode('\\', $phpType));
+          Types\EnumType::registerEnumType($typeName, $phpType);
+
+          // variant in lower case
+          $blah = strtolower($typeName);
+          Types\EnumType::registerEnumType($blah, $phpType);
+          $platform->registerDoctrineTypeMapping($sqlType, $blah);
+
+        } else {
+          $instance = new $phpType;
+          $typeName = $instance->getName();
+          Type::addType($typeName, $phpType);
+        }
         if (!empty($sqlType)) {
           $platform->registerDoctrineTypeMapping($sqlType, $typeName);
         }
@@ -391,14 +396,14 @@ class EntityManager extends EntityManagerDecorator
       $enumColumns = [];
       // inject enum values into comments
       foreach ($table->getColumns() as $column) {
-        if ($column->getType() instanceof EnumType) {
+        if ($column->getType() instanceof Types\EnumType) {
           $enumColumns[] = $column;
         }
       }
 
       /** @var \Doctrine\DBAL\Schema\Column $column */
       foreach ($enumColumns as $column) {
-        $column->setComment(trim(sprintf('%s (%s)', $column->getComment(), implode(',', $column->getType()->getValues()))));
+        $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->getValues()))));
       }
     }
   }

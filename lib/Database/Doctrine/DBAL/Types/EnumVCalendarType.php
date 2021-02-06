@@ -22,8 +22,19 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use MyCLabs\Enum\Enum as EnumType;
+
 class EnumVCalendarType extends EnumType
 {
-    protected $name = 'enumvcalendartype';
-    protected $values = ['VEVENT','VTODO','VJOURNAL','VCARD'];
+  // protected $name = 'enumvcalendartype';
+  // protected $values = [
+  //   'VEVENT',
+  //   'VTODO',
+  //   'VJOURNAL',
+  //   'VCARD',
+  // ];
+  CONST VEVENT = 'VEVENT';
+  CONST VTODO = 'VTODO';
+  CONST VJOURNAL = 'VJOURNAL';
+  CONST VCARD = 'VCARD';
 }

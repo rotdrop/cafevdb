@@ -22,8 +22,21 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use MyCLabs\Enum\Enum as EnumType;
+
 class EnumMemberStatus extends EnumType
 {
-    protected $name = 'enummemberstatus';
-    protected $values = ['regular','passive','soloist','conductor','temporary'];
+  // protected $name = 'enummemberstatus';
+  // protected $values = [
+  //   'regular',
+  //   'passive',
+  //   'soloist',
+  //   'conductor',
+  //   'temporary',
+  // ];
+  const REGULAR = 'regular';
+  const PASSIVE = 'passive';
+  const SOLOIST = 'soloist';
+  const CONDUCTOR = 'conductor';
+  const TEMPORARY = 'temporary';
 }

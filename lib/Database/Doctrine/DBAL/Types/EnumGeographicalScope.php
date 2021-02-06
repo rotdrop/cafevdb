@@ -22,10 +22,17 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use MyCLabs\Enum\Enum as EnumType;
+
 class EnumGeographicalScope extends EnumType
 {
-  protected $name = 'enumgeographicalscope';
-  protected $values = [
-    'Germany', 'Europe', 'World',
-  ];
+  // protected $name = 'enumgeographicalscope';
+  // protected $values = [
+  //   'Germany',
+  //   'Europe',
+  //   'World',
+  // ];
+  const GERMANY = 'Germany';
+  const EUROPE = 'Europe';
+  const WORLD = 'World';
 }

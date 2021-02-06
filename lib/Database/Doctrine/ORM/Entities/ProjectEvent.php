@@ -61,9 +61,9 @@ class ProjectEvent implements \ArrayAccess
   private $calendarId;
 
   /**
-   * @var enumvcalendartype|null
+   * @var EnumVCalendarType|null
    *
-   * @ORM\Column(type="enumvcalendartype", nullable=true)
+   * @ORM\Column(type="EnumVCalendarType", nullable=true)
    */
   private $type;
 
@@ -146,7 +146,7 @@ class ProjectEvent implements \ArrayAccess
   /**
    * Set type.
    *
-   * @param enumvcalendartype|null $type
+   * @param EnumVCalendarType|null $type
    *
    * @return ProjectEvents
    */
@@ -160,7 +160,7 @@ class ProjectEvent implements \ArrayAccess
   /**
    * Get type.
    *
-   * @return enumvcalendartype|null
+   * @return EnumVCalendarType|null
    */
   public function getType()
   {

@@ -45,9 +45,9 @@ class InsuranceRate implements \ArrayAccess
   private $broker;
 
   /**
-   * @var enumgeographicalscope
+   * @var EnumGeographicalScope
    *
-   * @ORM\Column(type="enumgeographicalscope", nullable=false, options={"default"="Germany"})
+   * @ORM\Column(type="EnumGeographicalScope", nullable=false, options={"default"="Germany"})
    * @ORM\Id
    */
   private $geographicalScope;

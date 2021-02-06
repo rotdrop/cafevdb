@@ -64,9 +64,9 @@ class Project implements \ArrayAccess
   private $name;
 
   /**
-   * @var enumprojecttemporaltype
+   * @var EnumProjectTemporalType
    *
-   * @ORM\Column(type="enumprojecttemporaltype", nullable=false, options={"default"="temporary"})
+   * @ORM\Column(type="EnumProjectTemporalType", nullable=false, options={"default"="temporary"})
    */
   private $type = 'temporary';
 
@@ -203,7 +203,7 @@ class Project implements \ArrayAccess
   /**
    * Set type.
    *
-   * @param enumprojecttemporaltype $type
+   * @param EnumProjectTemporalType $type
    *
    * @return Project
    */
@@ -217,7 +217,7 @@ class Project implements \ArrayAccess
   /**
    * Get type.
    *
-   * @return enumprojecttemporaltype
+   * @return EnumProjectTemporalType
    */
   public function getType()
   {

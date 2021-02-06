@@ -128,9 +128,9 @@ class Musician implements \ArrayAccess
   private $email;
 
   /**
-   * @var enummemberstatus|null
+   * @var EnumMemberStatus|null
    *
-   * @ORM\Column(type="enummemberstatus", nullable=false, options={"default"="regular","comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."})
+   * @ORM\Column(type="EnumMemberStatus", nullable=false, options={"default"="regular","comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."})
    */
   private $memberStatus = 'regular';
 
@@ -496,7 +496,7 @@ class Musician implements \ArrayAccess
   /**
    * Set memberStatus.
    *
-   * @param enummemberstatus|null $memberStatus
+   * @param EnumMemberStatus|null $memberStatus
    *
    * @return Musician
    */
@@ -510,7 +510,7 @@ class Musician implements \ArrayAccess
   /**
    * Get memberStatus.
    *
-   * @return enummemberstatus|null
+   * @return EnumMemberStatus|null
    */
   public function getMemberStatus()
   {

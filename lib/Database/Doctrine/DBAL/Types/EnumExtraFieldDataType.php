@@ -22,17 +22,27 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use MyCLabs\Enum\Enum as EnumType;
+
 class EnumExtraFieldDataType extends EnumType
 {
-  protected $name = 'enumextrafielddatatype';
-  protected $values = [
-    'text',
-    'html',
-    'boolean',
-    'integer',
-    'float',
-    'date',
-    'datetime',
-    'service-fee',
-  ];
-}
+  // protected $name = 'enumextrafielddatatype';
+  // protected $values = [
+  //   'text',
+  //   'html',
+  //   'boolean',
+  //   'integer',
+  //   'float',
+  //   'date',
+  //   'datetime',
+  //   'service-fee',
+  // ];
+  const TEXT = 'text';
+  const HTML = 'html';
+  const BOOLEAN = 'boolean';
+  const INTEGER = 'integer';
+  const FLOAT = 'float';
+  const DATE = 'date';
+  const DATETIME = 'datetime';
+  const SERVICE_FEE = 'service-fee';
+};

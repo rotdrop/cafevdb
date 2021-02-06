@@ -22,53 +22,29 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Acelaya\Doctrine\Type\PhpEnumType;
 
-abstract class EnumType extends Type
+use function call_user_func;
+use function implode;
+use function sprintf;
+
+/*abstract*/ class EnumType extends PhpEnumType
 {
-    protected $name;
-    protected $values = array();
+  public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform):string
+  {
+    $values = call_user_func([$this->enumClass, 'toArray']);
+    $values = array_map(function($val) { return "'".$val."'"; }, $values);
+    return "enum(".implode(",", $values).")";
+  }
 
-    public function getSQLType()
-    {
-        $values = array_map(function($val) { return "'".$val."'"; }, $this->values);
-
-        return "enum(".implode(",", $values).")";
-    }
-
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
-    {
-        $values = array_map(function($val) { return "'".$val."'"; }, $this->values);
-
-        return "enum(".implode(",", $values).")";
-    }
-
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        return $value;
-    }
-
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
-    {
-        if (!in_array($value, $this->values)) {
-            throw new \InvalidArgumentException("Invalid '".$this->name."' value.");
-        }
-        return $value;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
-    {
-        return true;
-    }
-
-    public function getValues()
-    {
-        return $this->values;
-    }
+  public function getValues()
+  {
+    return call_user_func([$this->enumClass, 'toArray']);
+  }
 }
+
+// Local Variables: ***
+// c-basic-offset: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***
