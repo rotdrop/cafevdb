@@ -204,21 +204,21 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->values();
 
     // @TODO think about how to generate translations
-    $this->memberStatus = (new DBTypes\EnumMemberStatus)->getValues();
-    foreach ($this->memberStatus as $tag) {
+    $this->memberStatus = DBTypes\EnumMemberStatus::toArray();
+    foreach ($this->memberStatus as $key => $tag) {
       if (!isset($this->memberStatusNames[$tag])) {
         $this->memberStatusNames[$tag] = $this->l->t('member status '.$tag);
       }
     }
 
-    $this->extraFieldMultiplicities = (new DBTypes\EnumExtraFieldMultiplicity)->getValues();
-    foreach ($this->extraFieldMultiplicities as $tag) {
+    $this->extraFieldMultiplicities = DBTypes\EnumExtraFieldMultiplicity::toArray();
+    foreach ($this->extraFieldMultiplicities as $key => $tag) {
       $slug = 'extra field '.$tag;
       $this->extraFieldMultiplicityNames[$tag] = $this->l->t($slug);
     }
 
-    $this->extraFieldDataTypes = (new DBTypes\EnumExtraFieldDataType)->getValues();
-    foreach ($this->extraFieldDataTypes as $tag) {
+    $this->extraFieldDataTypes = DBTypes\EnumExtraFieldDataType::toArray();
+    foreach ($this->extraFieldDataTypes as $key => $tag) {
       $slug = 'extra field type '.$tag;
       $this->extraFieldDataTypeNames[$tag] = $this->l->t($slug);
     }
