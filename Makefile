@@ -110,6 +110,7 @@ realclean: distclean ## Really delete everything but the bare source files
 	rm -f stamp.composer-core-versions
 	rm -f package-lock.json
 	rm -f *.html
+	rm -f stats.json
 
 # Builds the source and appstore package
 .PHONY: dist
