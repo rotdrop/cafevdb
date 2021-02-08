@@ -40,12 +40,21 @@ import * as Notification from './notification.js';
  * value to be communication via Ajax to the server as payload { value: VALUE }.
  *
  */
-const simpleSetValueHandler = function(element, eventType, msgElement, userCallbacks, getValue) {
+const simpleSetValueHandler = function(element, eventType, msgElement, userCallbacks) {
   const defaultCallbacks = {
+    post(name, value) {
+      return $.post(generateUrl('settings/app/set/' + name), { value });
+    },
     setup() {},
     success() {},
-    fail() {},
+    fail: Ajax.handleError,
     cleanup() {},
+    getValue($self, msgElement) {
+      return {
+        name: $self.attr('name'),
+        value: $self.is(':checkbox') ? $self.is(':checked') : $self.val(),
+      };
+    },
   };
   const callbacks = $.extend({}, defaultCallbacks);
   if (typeof userCallbacks === 'function') {
@@ -62,34 +71,27 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
     $('.statusmessage').hide();
     let name;
     let value;
-    console.debug('getValue', getValue);
-    if (getValue !== undefined) {
-      if ((value = getValue($self, msgElement)) !== undefined) {
-        name = value.name;
-        value = value.value;
-      }
-    } else {
-      name = $self.attr('name');
-      value = $self.is(':checkbox') ? $self.is(':checked') : $self.val();
+    if ((value = callbacks.getValue($self, msgElement)) !== undefined) {
+      name = value.name;
+      value = value.value;
     }
     console.debug('value', value);
     if (value === undefined) {
       callbacks.cleanup();
     } else {
       callbacks.setup();
-      $.post(
-        generateUrl('settings/app/set/' + name), { value })
+      callbacks
+        .post(name, value)
         .fail(function(xhr, status, errorThrown) {
           msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           callbacks.fail(xhr, status, errorThrown);
           callbacks.cleanup();
         })
         .done(function(data) {
-          console.info('initial hiding');
           Notification.hide(function() {
             if (data.message) {
               if (!Array.isArray(data.message)) {
-                data.message = [ data.message ];
+                data.message = [data.message];
               }
               for (const msg of data.message) {
                 Notification.show(msg, { timeout: 15 });

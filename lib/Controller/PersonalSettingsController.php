@@ -38,7 +38,9 @@ use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\TranslationService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\FinanceService;
+use \OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -71,6 +73,9 @@ class PersonalSettingsController extends Controller {
   /** @var FinanceService */
   private $financeService;
 
+  /** @var ProjectService */
+  private $projectService;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -80,6 +85,7 @@ class PersonalSettingsController extends Controller {
     , ConfigCheckService $configCheckService
     , PhoneNumberService $phoneNumberService
     , FinanceService $financeService
+    , ProjectService $projectService
     , CalDavService $calDavService
     , TranslationService $translationService
     , WikiRPC $wikiRPC
@@ -94,6 +100,7 @@ class PersonalSettingsController extends Controller {
     $this->personalSettings = $personalSettings;
     $this->phoneNumberService = $phoneNumberService;
     $this->financeService = $financeService;
+    $this->projectService = $projectService;
     $this->calDavService = $calDavService;
     $this->translationService = $translationService;
     $this->wikiRPC = $wikiRPC;
@@ -576,10 +583,178 @@ class PersonalSettingsController extends Controller {
       $data['message'] = $this->l->t("Value for `%s' invalid: `%s'.", [ $parameter, $value ]);
       return self::grumble($data);
     }
-    case 'memberProjectCreate':
-    case 'executiveBoardProjectCreate':
     case 'memberProject':
     case 'executiveBoardProject':
+      $realValue = Util::normalizeSpaces($value);
+      // fetch existing values
+      $currentProjectName = $this->getConfigValue($parameter, '');
+      $currentProjectId = $this->getConfigValue($parameter.'Id', -1);
+      $data = [
+        'message' => [],
+        'project' =>  $currentProjectName,
+        'projectId' => $currentProjectId,
+        'feedback' => false,
+        'newName' => '',
+        'suggestions' => $this->projectService->projectOptions([ 'type' => 'permanent' ]),
+      ];
+      if (!empty($currentProjectName) && empty($value)) {
+        // erase current setting
+        $this->deleteConfigValue($parameter);
+        $this->deleteConfigValue($parameter.'Id');
+        $data['message'][] = $this->l->t("Erased config value for parameter `%s'.", $parameter);
+
+        // ask to also remove the project if applicable
+        if ($currentProjectId != -1
+            && !empty($this->projectService->findById($currentProjectId))) {
+          $data['feedback']['Delete'] = [
+            'title' => $this->l->t('Delete old Project?'),
+            'message' => $this->l->t(
+              'Delete old project "%s" (%d) and all its associated data?',
+              [ $currentProjectName, $currentProjectId ]),
+          ];
+        } else {
+          $data['project'] = '';
+          $data['projectId'] = -1;
+        }
+        return self::dataResponse($data);
+      }
+      if (empty($realValue)) {
+        // silently ignore, just keep unconfigured
+        return self::response('');
+      }
+      $newName = $this->projectService->sanitizeName($realValue);
+      if ($newName !== $realValue) {
+        $data['message'][] = $this->l->t(
+          'Sanitized project name from "%s" to "%s".', [ $value, $newName ]);
+      }
+      $newProject = $this->projectService->findByName($newName);
+      $currentProject = $this->projectService->findByName($currentProjectName);
+      $haveOldProject = (int)$currentProject['id'] === (int)$currentProjectId;
+      $data['newName'] = $newName;
+
+      if ($newName !== $currentProjectName) {
+        $this->setConfigValue($parameter, $newName);
+        $data['message'][] = $this->l->t(
+          '`%s\' set to `%s\'.', [$parameter, $newName]);
+      }
+
+      if (empty($newProject)) {
+        $this->deleteConfigValue($parameter.'Id');
+      }
+
+      if ($haveOldProject
+          && empty($newProject)
+          && $newName !== $currentProjectName) {
+        $data['feedback']['Rename'] = [
+          'title' => $this->l->t('Rename Project?'),
+          'message' => $this->l->t(
+            '"%s" project already exists, rename it from "%s" to "%s?',
+            [ $this->l->t($parameter), $currentProjectName, $newName ]),
+        ];
+        return self::dataResponse($data);
+      }
+
+      if (!empty($newProject)) {
+        $data['project'] = $newName;
+        $data['projectId'] = $newProject['id'];
+        $this->data['message'][] = $this->l->t(
+          '`%s\' set to `%s\'.', [$parameter.'Id', $newProject['id'] ]);
+        $this->setConfigValue($parameter.'Id', $newProject['id']);
+        if ($newProject['type'] != Types\EnumProjectTemporalType::PERMANENT) {
+          $newProject['type'] = Types\EnumProjectTemporalType::PERMANENT();
+          $this->projectService->persistProject($newProject);
+          $this->data['message'][] = $this->l->t(
+            'Type of project "%s" set to "%s".', Types\EnumProjectTemporalType::PERMANENT);
+        }
+        return self::dataResponse($data);
+      } else {
+        $data['feedback']['Create'] = [
+          'title' => $this->l->t('Create project?'),
+          'message' => $this->l->t(
+            'A project with name "%s" does not exist, shall we create it?', $newName),
+        ];
+        return self::dataResponse($data);
+      }
+      break;
+    case 'memberProjectCreate':
+    case 'executiveBoardProjectCreate':
+      $projectName = '';
+      try {
+        $projectName = $value['newName'];
+        $project = $this->projectService->createProject($projectName, null, Types\EnumProjectTemporalType::PERMANENT);
+        if (!empty($project)) {
+          $projectParameter = preg_replace('/Create$/', '', $parameter);
+          $this->setConfigValue($projectParameter, $project['name']);
+          $this->setConfigValue($projectParameter.'Id', $project['id']);
+        }
+      } catch (\Throwable $t) {
+        throw new \Exception($this->l->t(
+          'Unable to create project with name "%s".', $projectName), $t->getCode(), $t);
+      }
+      $data = [
+        'message' => $this->l->t('Created Project "%s" with id "%d".',
+                                [ $project['name'], $project['id'] ]),
+        'suggestions' => $this->projectService->projectOptions([ 'type' => 'permanent' ]),
+      ];
+      return self::dataResponse($data);
+    case 'memberProjectDelete':
+    case 'executiveBoardProjectDelete':
+      $projectId = -1;
+      $projectName = '';
+      try {
+        $projectId = $value['projectId'];
+        $projectName = $value['project'];
+        $project = $this->projectService->deleteProject($projectId);
+        $data = [
+          'suggestions' => $this->projectService->projectOptions([ 'type' => 'permanent' ]),
+          'message' => (empty($project)
+                        ? $this->l->t('Deleted project "%s" with id "%d".',
+                                      [ $projectName, $projectId ])
+                        : $this->l->t('Project "%s", id "%d" has been marked as disabled as it is still needed for financial book-keeping.',
+                                      [ $projectName, $projectId ])),
+        ];
+        return self::dataResponse($data);
+      } catch (\Throwable $t) {
+        throw new \Exception($this->l->t(
+          'Failed to remove project "%s", id "%d".', [ $projectName, $projectId ]),
+                             $t->getCode(),
+                             $t);
+      }
+      break;
+    case 'memberProjectRename':
+    case 'executiveBoardProjectRename':
+      $projectId = -1;
+      $projectName = '';
+      $newName = '';
+      try  {
+        $projectId = $value['projectId'];
+        $projectName = $value['project'];
+        $newName = $value['newName'];
+        $project = $this->projectService->renameProject($projectId, $newName);
+        if (!empty($project)) {
+          $projectParameter = preg_replace('/Rename$/', '', $parameter);
+          $this->setConfigValue($projectParameter, $project['name']);
+          $this->setConfigValue($projectParameter.'Id', $project['id']);
+        } else {
+          throw new \Exception($this->l->t('Result of rename is empty without throwing an exception.'));
+        }
+
+        $data = [
+          'message' => $this->l->t(
+            'Renamed project "%s" (%d) to "%s".',
+            [ $projectName, $project['id'], $newName ]),
+          'project' => $newName,
+          'projectId' => $projectId,
+        ];
+        return self::dataResponse($data);
+      } catch (\Throwable $t) {
+        throw new \Exception($this->l->t(
+          'Failed to rename project "%s", id "%d" to new name "%s".',
+          [ $projectName, $projectId, $newName ]),
+                             $t->getCode(),
+                             $t);
+      }
+      break;
     case 'presidentUserId':
     case 'secretaryUserId':
     case 'treasurerUserId':
@@ -837,7 +1012,7 @@ class PersonalSettingsController extends Controller {
       );
     default:
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    return self::grumble($this->l->t('Unknown Request: "%s"', $parameter));
   }
 
   /**
@@ -869,7 +1044,7 @@ class PersonalSettingsController extends Controller {
         ]);
       default:
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    return self::grumble($this->l->t('Unknown Request: "%s"', $parameter));
   }
 
   /**

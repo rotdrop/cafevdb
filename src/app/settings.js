@@ -20,11 +20,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './config.js';
+import { appName, webRoot } from './config.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
-import { simpleSetHandler, simpleSetValueHandler,  } from './simple-set-value.js';
+import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.js';
 import { makeId, toolTipsInit } from './cafevdb.js';
 import generateUrl from './generate-url.js';
 
@@ -87,16 +87,18 @@ const afterLoad = function(container) {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
     if (loginPassword.val() == '') {
-      $('#userkey .info').html(t('cafevdb', 'You must type in your login password.'));
+      $('#userkey .info').html(t(appName, 'You must type in your login password.'));
       $('#userkey .info').show();
       $('#userkey .error').show();
       return false;
     }
     $.post(
       generateUrl('settings/personal/set/encryptionkey'),
-      { 'value': {'encryptionkey': encryptionKey.val(),
-                  'loginpassword': loginPassword.val()
-                 }
+      {
+        value: {
+          encryptionkey: encryptionKey.val(),
+          loginpassword: loginPassword.val(),
+        },
       })
       .done(function(data) {
         console.log(data);
@@ -115,11 +117,11 @@ const afterLoad = function(container) {
     return false;
   });
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // Application settings stuff
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   *
+   * Application settings stuff
+   *
+   ***************************************************************************/
 
   // name of orchestra
 
@@ -128,26 +130,27 @@ const afterLoad = function(container) {
     const msg = adminGeneral.find('.msg');
 
     simpleSetValueHandler(
-      adminGeneral.find(':input'), 'blur', msg,
-      function(element, data, value, msg) {
-        if (value == '') {
-          $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-            $(elm).attr('disabled','disabled');
-          });
-        } else {
-          $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
-            $(elm).removeAttr('disabled');
-          });
-          if ($('#shareowner #user-saved').val() != '') {
-            $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-              $(elm).removeAttr('disabled');
+      adminGeneral.find(':input'), 'blur', msg, {
+        success(element, data, value, msg) {
+          if (value === '') {
+            $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+              $(elm).attr('disabled','disabled');
             });
           } else {
-            $('#shareownerform').find('fieldset').each(function(i, elm) {
+            $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
               $(elm).removeAttr('disabled');
             });
+            if ($('#shareowner #user-saved').val() != '') {
+              $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+                $(elm).removeAttr('disabled');
+              });
+            } else {
+              $('#shareownerform').find('fieldset').each(function(i, elm) {
+                $(elm).removeAttr('disabled');
+              });
+            }
           }
-        }
+        },
       });
   }
 
@@ -163,7 +166,7 @@ const afterLoad = function(container) {
     const keyInputClone = showPassword(keyInput);
     const oldKeyInputClone = showPassword(oldKeyInput);
 
-    $("#keychangebutton").on('click', function() {
+    $('#keychangebutton').on('click', function() {
       // We allow empty keys, meaning no encryption
       form.find('.statusmessage').hide();
       if (oldKeyInput.val() != keyInput.val()) {
@@ -173,12 +176,15 @@ const afterLoad = function(container) {
         $(tabsSelector).tabs("disable");
         container.find('.statusmessage.standby').show();
 
-        Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
+        Notification.show(t(appName, 'Please standby, the operation will take some time!'));
 
         $.post(
           generateUrl('settings/app/set/systemkey'),
-          { 'value': { 'systemkey': keyInput.val(),
-                       'oldkey': oldKeyInput.val() }
+          {
+            value: {
+              systemkey: keyInput.val(),
+              oldkey: oldKeyInput.val(),
+            },
           })
           .done(function(data) {
             // re-enable all forms
@@ -205,7 +211,7 @@ const afterLoad = function(container) {
           })
           .fail(function(xhr, status, errorThrown) {
             $(tabsSelector + ' fieldset').prop('disabled', false);
-            $(tabsSelector).tabs("enable");
+            $(tabsSelector).tabs('enable');
             container.find('.statusmessage.standby').hide();
 
             Notification.hide();
@@ -265,39 +271,42 @@ const afterLoad = function(container) {
     });
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // data-base
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   *
+   * data-base
+   *
+   ***************************************************************************/
 
-  simpleSetValueHandler($('#dbgeneral :input'), 'blur', $('#dbsettings #msg'));
+  {
+    simpleSetValueHandler($('#dbgeneral :input'), 'blur', $('#dbsettings #msg'));
 
-  // DB-Password
-  // 'show password' checkbox
-  const dbPassword = $('fieldset.cafevdb_dbpassword #cafevdb-dbpassword')
-  showPassword(dbPassword);
+    // DB-Password
+    // 'show password' checkbox
+    const dbPassword = $('fieldset.cafevdb_dbpassword #cafevdb-dbpassword')
+    showPassword(dbPassword);
 
-  // test password
-  simpleSetValueHandler(
-    $("fieldset.cafevdb_dbpassword #button"), 'click', $('fieldset.cafevdb_dbpassword .statusmessage'),
-    function(element, data, value) {
-      //$('fieldset.cafevdb_dbpassword input[name="dbpassword"]').val('');
-      //$('fieldset.cafevdb_dbpassword input[name="dbpassword-clone"]').val('');
-    },
-    function(element, msg) {
-      var val = { 'name': dbPassword.attr('name'), 'value': dbPassword.val() };
-      if (val.value == '') {
-        msg.html(t('cafevdb', 'Empty password, trying to use configured credentials.')).show();
-      }
-      return val;
-    });
+    // test password
+    simpleSetValueHandler(
+      $('fieldset.cafevdb_dbpassword #button'), 'click', $('fieldset.cafevdb_dbpassword .statusmessage'), {
+        success(element, data, value) {
+          // $('fieldset.cafevdb_dbpassword input[name="dbpassword"]').val('');
+          // $('fieldset.cafevdb_dbpassword input[name="dbpassword-clone"]').val('');
+        },
+        getValue(element, msg) {
+          const val = { name: dbPassword.attr('name'), value: dbPassword.val() };
+          if (val.value === '') {
+            msg.html(t(appName, 'Empty password, trying to use configured credentials.')).show();
+          }
+          return val;
+        },
+      });
+  }
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // Sharing, share-owner
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   *
+   * Sharing, share-owner
+   *
+   ***************************************************************************/
 
   {
     const container = $('#shareowner');
@@ -319,37 +328,41 @@ const afterLoad = function(container) {
     });
 
     shareOwner.on('blur', function(event) {
-      shareOwnerCheck.prop("disabled", shareOwner.val() == '');
+      shareOwnerCheck.prop('disabled', shareOwner.val() == '');
       return false;
     });
 
     simpleSetValueHandler(
-      shareOwnerCheck, 'click', msg,
-      function(element, data, value, msg) { // done
-        shareOwner.attr('disabled', true);
-        shareOwnerSaved.val(shareOwner.val());
-        if (shareOwner.val() != '') {
-          $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-            $(elm).removeAttr('disabled');
-          });
-        } else {
-          $('#calendars,#sharedfolderform').find('fieldset').each(function(i, elm) {
-            $(elm).attr('disabled','disabled');
-          });
-        }
-      },
-      function(element, msg) { // getValue
-        return { 'name': 'shareowner',
-                 'value': { 'shareowner': shareOwner.val(),
-                            'shareowner-saved': shareOwnerSaved.val(),
-                            'shareowner-force': shareOwnerForce.is(':checked') ? true : false }
-               };
+      shareOwnerCheck, 'click', msg, {
+        sucess(element, data, value, msg) { // done
+          shareOwner.attr('disabled', true);
+          shareOwnerSaved.val(shareOwner.val());
+          if (shareOwner.val() != '') {
+            $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+              $(elm).removeAttr('disabled');
+            });
+          } else {
+            $('#calendars,#sharedfolderform').find('fieldset').each(function(i, elm) {
+              $(elm).attr('disabled','disabled');
+            });
+          }
+        },
+        getValue(element, msg) { // getValue
+          return {
+            name: 'shareowner',
+            value: {
+              shareowner: shareOwner.val(),
+              'shareowner-saved': shareOwnerSaved.val(),
+              'shareowner-force': shareOwnerForce.is(':checked') ? true : false,
+            },
+          };
+        },
       });
   } // fieldset block
 
   // Share-owner´s password
   {
-    let container = $('fieldset.shareownerpassword');
+    const container = $('fieldset.shareownerpassword');
     const password = container.find('#shareownerpassword');
     const change = container.find('#change');
     const msg = $('#shareownerform .statusmessage');
@@ -357,19 +370,20 @@ const afterLoad = function(container) {
     const passwordClone = showPassword(password);
 
     simpleSetValueHandler(
-      change, 'click', msg,
-      function(element, data, value, msg) { // done
-        // Why should we want to empty this except for security reasons?
-        //password.val('');
-        //passwordClone.val('');
-      },
-      function(element, msg) {
-        var val = { 'name': password.attr('name'), 'value': password.val() };
-        if (val.value == '') {
-          msg.html(t('cafevdb', 'Password field must not be empty')).show();
-          val = undefined;
-        }
-        return val;
+      change, 'click', msg, {
+        success(element, data, value, msg) { // done
+          // Why should we want to empty this except for security reasons?
+          // password.val('');
+          // passwordClone.val('');
+        },
+        getValue(element, msg) {
+          let val = { name: password.attr('name'), value: password.val() };
+          if (val.value == '') {
+            msg.html(t(appName, 'Password field must not be empty')).show();
+            val = undefined;
+          }
+          return val;
+        },
       });
 
     container.find('#generate').on('click', function(event) {
@@ -402,15 +416,13 @@ const afterLoad = function(container) {
     const container = $('#sharing-settings');
     const msg = container.find('.statusmessage.sharing-settings');
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Events, calendars, contacts
-    //
-    ///////////////////////////////////////////////////////////////////////////
+    /**************************************************************************
+     *
+     * Events, calendars, contacts
+     *
+     *************************************************************************/
 
     simpleSetValueHandler(container.find('#calendars :input, #contacts :input'), 'blur', msg);
-
-    ///////////////////////////////////////////
 
     const sharedFolder =
           function(cssBase, callback) {
@@ -426,7 +438,7 @@ const afterLoad = function(container) {
 
             form.submit(function () { return false; }); // @@TODO ???
 
-            sharedObjectForce.blur(function(event) { //@@TODO ???
+            sharedObjectForce.blur(function(event) { // @@TODO ???
               return false;
             });
 
@@ -441,33 +453,37 @@ const afterLoad = function(container) {
             });
 
             simpleSetValueHandler(
-              sharedObjectCheck, 'click', msg,
-              function(element, data, value, msg) { // done
-                // value is just the thing submitted to the AJAX call
-                sharedObject.val(data.value);
-                sharedObjectSaved.val(data.value);
-                if (value != '') {
-                  sharedObject.prop('disabled', true);
-                  sharedObjectForce.prop('checked', false);
-                }
-                if (callback !== undefined) {
-                  callback(element, data, value, msg);
-                }
-              },
-              function(element, msg) { // getValue
-                return { 'name': css,
-                         'value': { [css]: sharedObject.val(),
-                                    [cssSaved]: sharedObjectSaved.val(),
-                                    [cssForce]: sharedObjectForce.is(':checked') ? true : false }
-                       };
+              sharedObjectCheck, 'click', msg, {
+                success(element, data, value, msg) { // done
+                  // value is just the thing submitted to the AJAX call
+                  sharedObject.val(data.value);
+                  sharedObjectSaved.val(data.value);
+                  if (value !== '') {
+                    sharedObject.prop('disabled', true);
+                    sharedObjectForce.prop('checked', false);
+                  }
+                  if (callback !== undefined) {
+                    callback(element, data, value, msg);
+                  }
+                },
+                getValue(element, msg) { // getValue
+                  return {
+                    name: css,
+                    value: {
+                      [css]: sharedObject.val(),
+                      [cssSaved]: sharedObjectSaved.val(),
+                      [cssForce]: sharedObjectForce.is(':checked'),
+                    },
+                  };
+                },
               });
           };
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Sharing, share-folder, projects-folder, projects balance folder
-    //
-    ///////////////////////////////////////////////////////////////////////////
+    /**************************************************************************
+     *
+     * Sharing, share-folder, projects-folder, projects balance folder
+     *
+     *************************************************************************/
 
     sharedFolder('sharedfolder');
     sharedFolder('projectsfolder', function(element, data, value, msg) {
@@ -477,26 +493,26 @@ const afterLoad = function(container) {
 
   } // shared objects
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // email
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   *
+   * email
+   *
+   ***************************************************************************/
+
   {
     const form = $('#emailsettings');
     const msg = form.find('.statusmessage');
 
     {
       const container = form.find('fieldset.emailuser');
-      //const msg = container.find('.statusmessage');
+      // const msg = container.find('.statusmessage');
 
       $('#emailuser').blur(function(event) {
         msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-          generateUrl('settings/app/set/' + name),
-          { 'value': value })
+          generateUrl('settings/app/set/' + name), {  value })
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -518,8 +534,7 @@ const afterLoad = function(container) {
         const name = password.attr('name');
         if (value != '') {
           $.post(
-            generateUrl('settings/app/set/' + name),
-            { 'value': value })
+            generateUrl('settings/app/set/' + name), { value })
             .fail(function(xhr, status, errorThrown) {
               msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
             })
@@ -527,7 +542,7 @@ const afterLoad = function(container) {
               msg.html(data.message).show();
             });
         } else {
-          msg.html(t('cafevdb', 'Password field must not be empty')).show();
+          msg.html(t(appName, 'Password field must not be empty')).show();
         }
         return false;
       });
@@ -535,7 +550,7 @@ const afterLoad = function(container) {
 
     {
       const container = form.find('#emaildistribute');
-      //const msg = container.find('.statusmessage');
+      // const msg = container.find('.statusmessage');
 
       $('#emaildistributebutton').click(function() {
         msg.hide();
@@ -561,8 +576,7 @@ const afterLoad = function(container) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-          generateUrl('settings/app/set/' + name),
-          { 'value': value })
+          generateUrl('settings/app/set/' + name), { value })
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -599,8 +613,7 @@ const afterLoad = function(container) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-          generateUrl('settings/app/set/' + name),
-          { 'value': value })
+          generateUrl('settings/app/set/' + name), { value })
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -619,23 +632,24 @@ const afterLoad = function(container) {
       simpleSetHandler(container.find('#emailtestbutton'), 'click', msg);
       simpleSetValueHandler(emailTestAddress, 'blur', msg);
       simpleSetValueHandler(
-        container.find('#emailtestmode'), 'change', msg,
-        function(element, data) {
-          if (element.is(':checked')) {
-            emailTestAddress.prop('disabled', false);
-          } else {
-            emailTestAddress.prop('disabled',true);
-          }
+        container.find('#emailtestmode'), 'change', msg, {
+          success(element, data) {
+            if (element.is(':checked')) {
+              emailTestAddress.prop('disabled', false);
+            } else {
+              emailTestAddress.prop('disabled',true);
+            }
+          },
         });
     }
   }
 
   {
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // street address settings
-    //
-    ///////////////////////////////////////////////////////////////////////////
+    /**************************************************************************
+     *
+     * street address settings
+     *
+     *************************************************************************/
 
     const msg = $('#orchestra #msg');
 
@@ -644,10 +658,11 @@ const afterLoad = function(container) {
     simpleSetValueHandler(
       $('input.phoneNumber'),
       'blur',
-      msg,
-      function(element, data, value, msgElement) {
-        console.info(data);
-        element.val(data.number);
+      msg, {
+        success(element, data, value, msgElement) {
+          console.info(data);
+          element.val(data.number);
+        },
       });
 
     const streetAddressCountry = $('select.streetAddressCountry');
@@ -658,49 +673,112 @@ const afterLoad = function(container) {
     });
     simpleSetValueHandler(streetAddressCountry, 'change', msg);
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // special members
-    //
-    ///////////////////////////////////////////////////////////////////////////
+    /**************************************************************************
+     *
+     * special members
+     *
+     *************************************************************************/
 
+    // Set special members projects with create/rename/delete feedback
     const specialMemberProjects = $('input[type="text"].specialMemberProjects');
-    simpleSetValueHandler(specialMemberProjects, 'blur', msg);
 
     console.info('PROJECTS', specialMemberProjects.data('projects'));
 
-    var autocompleteProjects = specialMemberProjects.data('projects').map(v => v.name);
+    let autocompleteProjects = specialMemberProjects.data('projects').map(v => v.name);
+
     specialMemberProjects.autocomplete({
       source: autocompleteProjects,
-      position: { my: 'left bottom', at: 'left top' }
+      position: { my: 'left bottom', at: 'left top' },
+      minLength: 0,
     });
 
-    const specialMemberProjectsCreate =$('input[type="button"].specialMemberProjects');
-    simpleSetValueHandler(specialMemberProjectsCreate, 'click', msg);
-
-    // const specialMemberProjectIds = $('select.special-member-projects');
-    // specialMemberProjectIds.chosen({
-    //   disable_search_threshold: 10,
-    //   allow_single_deselect: true,
-    //   inherit_select_classes:true,
-    //   width: '30%'
-    // });
-    // simpleSetValueHandler(specialMemberProjectIds, 'change', msg);
-
-    const executiveBoardIds = $('select.executive-board-ids');
-    executiveBoardIds.chosen({
-      disable_search_threshold: 10,
-      allow_single_deselect: true,
-      inherit_select_classes:true,
-      width: '30%'
+    specialMemberProjects.on('focus', function(event) {
+      const $self = $(this);
+      if ($self.val() === '') {
+        $self.autocomplete('search', '');
+      }
     });
-    simpleSetValueHandler(executiveBoardIds, 'change', msg);
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // bank account settings
-    //
-    ///////////////////////////////////////////////////////////////////////////
+    simpleSetValueHandler(specialMemberProjects, 'blur', msg, {
+      success($self, data, value, msgElement) {
+        const name = $self.attr('name');
+        $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
+        if (data.newName) {
+          $self.val(data.newName);
+        }
+        if (data.suggestions) {
+          autocompleteProjects = data.suggestions.map(v => v.name);
+          specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
+        }
+        if (data.feedback) {
+          const feedbackOptions = ['Create', 'Rename', 'Delete'];
+          for (const option of feedbackOptions) {
+            if (data.feedback[option]) {
+              Dialogs.confirm(
+                data.feedback[option].message,
+                data.feedback[option].title,
+                function(decision) {
+                  data.feedback = decision;
+                  if (decision === true) {
+                    $.post(
+                      generateUrl('settings/app/set/' + name + option), {
+                        value: {
+                          project: data.project,
+                          projectId: data.projectId,
+                          newName: data.newName,
+                        },
+                      })
+                      .fail(function(xhr, status, errorThrown) {
+                        Ajax.handleError(xhr, status, errorThrown);
+                      })
+                      .done(function(data) {
+                        if (data.message) {
+                          if (!Array.isArray(data.message)) {
+                            data.message = [data.message];
+                          }
+                          for (const msg of data.message) {
+                            Notification.show(msg, { timeout: 15 });
+                          }
+                          msg.html(data.message.join('; ')).show();
+                        }
+                        if (data.suggestions) {
+                          autocompleteProjects = data.suggestions.map(v => v.name);
+                          specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
+                        }
+                        if (data.projectid) {
+                          $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
+                        }
+                      });
+                  }
+                },
+                true);
+            }
+          }
+        }
+      },
+    });
+
+    const specialMemberProjectsCreate = $('input[type="button"].specialMemberProjects');
+    simpleSetValueHandler(
+      specialMemberProjectsCreate, 'click', msg, {
+        success($self, data, value, msgElement) {},
+        getValue($self, msgElement) {
+          const name = $self.attr('name');
+          return {
+            name,
+            value: {
+              project: $self.next().val(),
+              projectId: -1,
+            },
+          };
+        },
+      });
+
+    /**************************************************************************
+     *
+     * bank account settings
+     *
+     *************************************************************************/
 
     const bankAccountInputs = $('input[class^="bankAccount"]');
 
@@ -751,7 +829,7 @@ const afterLoad = function(container) {
      *
      * translations via extra tables in DB
      *
-     */
+     *************************************************************************/
 
     const translationKeys = $('select.translation-phrases');
     const locales = $('select.translation-locales');
@@ -761,10 +839,10 @@ const afterLoad = function(container) {
     const downloadPoTemplates = $('#' + appName + '-translations-download-pot');
     const msg = $('.translation.msg');
 
-    var key;
-    var language;
-    var translations;
-    var translation;
+    let key;
+    let language;
+    let translations;
+    let translation;
 
     const updateControls = function() {
       key = translationKeys.find('option:selected');
@@ -801,7 +879,7 @@ const afterLoad = function(container) {
       });
       translationKeys.trigger('chosen:updated');
       translationKeys.trigger('change');
-      console.info("update options");
+      console.info('update options');
     };
 
     translationKeys.chosen({
@@ -833,30 +911,33 @@ const afterLoad = function(container) {
     });
 
     simpleSetValueHandler(
-      translationText, 'blur', msg,
-      function(element, data, value, msg) { // done
-        // no need to do any extra stuff?
-      },
-      function(element, msg) { // getValue
-        var val = undefined;
-        if (language && key.length == 1) {
-          // save it in order to restore, maybe we want to have an
-          // "OK" button in order not to accidentally damage
-          // existing translations.
-          translation = translationText.val();
-          translations[language] = translation;
-          key.data('translations', translations);
-          val = { 'name': 'translation',
-                  'value': { 'key': key.text(),
-                             'language': language,
-                             'translation': translationText.val() } };
-        }
-        return val;
+      translationText, 'blur', msg, {
+        success(element, data, value, msg) { // done
+          // no need to do any extra stuff?
+        },
+        getValue(element, msg) {
+          let val;
+          if (language && key.length == 1) {
+            // save it in order to restore, maybe we want to have an
+            // "OK" button in order not to accidentally damage
+            // existing translations.
+            translation = translationText.val();
+            translations[language] = translation;
+            key.data('translations', translations);
+            val = {
+              name: 'translation',
+              value: {
+                key: key.text(),
+                language: language,
+                translation: translationText.val(),
+              },
+            };
+          }
+          return val;
+        },
       });
 
     downloadPoTemplates.on('click', function(event) {
-      const self = $(this);
-
       const post = [];
       const cookieValue = makeId();
       const cookieName = appName + '_' + 'translation_templates_download'
@@ -869,18 +950,19 @@ const afterLoad = function(container) {
         generateUrl('settings/app/get/translation-templates'), {
           httpMethod: 'POST',
           data: post,
-          cookieName:  cookieName,
-          cookieValue: cookieValue,
-          cookiePath: oc_webroot,
+          cookieName,
+          cookieValue,
+          cookiePath: webRoot,
         })
         .fail(function (responseHtml, url) {
-          Dialogs.alert(t('cafevdb', 'Unable to download translation templates: {response}',
-                          { 'response': responseHtml }),
-                        t('cafevdb', 'Error'),
-                        function () {},
-                        true, true);
+          Dialogs.alert(
+            t(appName, 'Unable to download translation templates: {response}',
+              { response: responseHtml }),
+            t(appName, 'Error'),
+            function() {},
+            true, true);
         })
-        .done(function (url) { console.info('DONE downloading', url); });
+        .done(function(url) { console.info('DONE downloading', url); });
 
       return false;
     });
@@ -889,19 +971,19 @@ const afterLoad = function(container) {
 
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // development settings, mostly link stuff
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   *
+   * development settings, mostly link stuff
+   *
+   ***************************************************************************/
 
   {
     const msg = $('#develsettings #msg');
     const devLinkTests = $('input.devlinktest');
 
     simpleSetValueHandler($('input.devlink'), 'blur', msg, {
-      setup: function() { devLinkTests.prop('disabled', true); },
-      cleanup: function() { devLinkTests.prop('disabled', false); }
+      setup() { devLinkTests.prop('disabled', true); },
+      cleanup() { devLinkTests.prop('disabled', false); }
     });
 
     devLinkTests.on('click', function(event) {
@@ -918,25 +1000,25 @@ const afterLoad = function(container) {
     });
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // CMS stuff
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   *
+   * CMS stuff
+   *
+   ***************************************************************************/
 
   simpleSetValueHandler($('input.redaxo'), 'blur', $('form#cmssettings .statusmessage'));
 
   simpleSetValueHandler($('select.redaxo'), 'change', $('form#cmssettings .statusmessage'));
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // Tooltips
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   *
+   * Tooltips
+   *
+   ***************************************************************************/
 
   toolTipsInit(container);
 
-  container.removeClass('hidden');//show(); // fadeIn()...
+  container.removeClass('hidden');// show(); // fadeIn()...
 };
 
 const documentReady = function(container) {
@@ -946,24 +1028,24 @@ const documentReady = function(container) {
     container = $(containerSelector);
   }
 
-  container.on("tabsselect", tabsSelector, function (event, ui) {
+  container.on('tabsselect', tabsSelector, function (event, ui) {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
   });
 
-  container.on("tabsshow", tabsSelector, function (event, ui) {
-    if (ui.index == 3) {
+  container.on('tabsshow', tabsSelector, function (event, ui) {
+    if (ui.index === 3) {
       $('#smtpsecure').chosen({ disable_search_threshold: 10 });
       $('#imapsecure').chosen({ disable_search_threshold: 10 });
     } else {
-      //$('#smtpsecure').chosen().remove();
-      //$('#imapsecure').chosen().remove();
+      // $('#smtpsecure').chosen().remove();
+      // $('#imapsecure').chosen().remove();
     }
   });
 
   container.on('cafevdb:content-update', function(event) {
     console.log('S content-update');
-    if (event.target == this) {
+    if (event.target === this) {
       console.log('S trigger PS content-update');
       if (!container.hasClass('personal-settings')) {
         $('.personal-settings').trigger('cafevdb:content-update');

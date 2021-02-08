@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -24,6 +25,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
 use OCA\CAFEVDB\Storage\UserStorage;
 
@@ -40,9 +42,6 @@ class ProjectService
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const DBTABLE = 'Projects';
-
-  /** @var EntityManager */
-  protected $entityManager;
 
   /** @var OCA\CAFEVDB\Storage\UserStorage */
   private $userStorage;
@@ -132,7 +131,49 @@ class ProjectService
     return $options;
   }
 
-  /** Fetch the project-name name corresponding to $projectId.
+  /**
+   * Find a project by its Id.
+   *
+   * @param array|int $projectOrId
+   *
+   * @return null|Entities\Project
+   */
+  public function findById($projectOrId):?Entities\Project
+  {
+    if (!empty($projectOrId['id'])) { // allow plain array with id
+      $projectId = $projectId['id'];
+    } else {
+      $projectId = $projectOrId;
+    }
+    return $this->repository->findOneBy([
+      'id' => $projectId,
+      'disabled' => false,
+    ]);
+  }
+
+  /**
+   * Find a project by its name.
+   *
+   * @param string $projectName
+   *
+   * @return null|Entities\Project
+   */
+  public function findByName(string $projectName):?Entities\Project
+  {
+    return $this->repository->findOneBy([
+      'name' => $projectName,
+      'disabled' => false,
+    ]);
+  }
+
+  public function persistProject(Entities\Project $project)
+  {
+    $this->persist($project);
+    $this->flush($project);
+  }
+
+  /**
+   * Fetch the project-name name corresponding to $projectId.
    */
   public function fetchName($projectId)
   {
@@ -151,7 +192,7 @@ class ProjectService
    * Check for the existence of the project folders. Returns an array
    * of folders (balance and general files).
    *
-   * @param int $projectId Id of the project.
+   * @param int|Entities\Project $projectOrId
    *
    * @param string $projectName Name of the project.
    *
@@ -160,12 +201,12 @@ class ProjectService
    * @return array Array of created folders.
    *
    */
-  public function ensureProjectFolders($projectId, $projectName = false, $only = false)
+  public function ensureProjectFolders($projectOrId, $projectName = null, $only = false)
   {
-    $project = $this->repository->find($projectId);
-    if (!$projectName) {
-      $projectName = $project['Name'];
-    } else if ($projectName != $project['Name']) {
+    $project = $this->ensureProject($projectOrId);
+    if (empty($projectName)) {
+      $projectName = $project['name'];
+    } else if ($projectName !== $project['name']) {
       return false;
     }
 
@@ -222,16 +263,25 @@ class ProjectService
   }
 
   /**
-   * Remove the folders for the given projectgs
+   * Rename the associated project folders after project rename.
    *
-   * @param Project|array $newProject Project entity or plain query result.
+   * @param array|Entities\Project $newProject Array-like object,
+   * "id", "name" and "year" keys need to be present.
    *
-   * @param Project|array $oldProject Project entity or plain query result.
+   * @param array|Entities\Project $oldProject Array-like object,
+   * "id", "name" and "year" keys need to be present.
    *
-   * @return array Array with newly renamed or created folders.
+   * @return array Array with new paths.
    */
   public function renameProjectFolder($newProject, $oldProject)
   {
+    if (!isset($newProject['id'])) {
+      $newProject['id'] = $oldProject['id'];
+    }
+    if (!isset($newProject['year'])) {
+      $newProject['year'] = $oldProject['year'];
+    }
+
     $sharedFolder   = $this->getConfigValue('sharedfolder');
     $projectsFolder = $this->getConfigValue('projectsfolder');
     $balanceFolder  = $this->getConfigValue('projectsbalancefolder');
@@ -249,18 +299,18 @@ class ProjectService
 
       $newPath = $newPrefixPath.'/'.$newProject['name'];
 
-      if ($fileView->is_dir($oldPath)) {
-
+      $oldDir = $this->userStorage->get($oldPath);
+      if (!empty($oldDir)) {
         // If the year has changed it may be necessary to create a new
         // directory.
         $this->userStorage->ensureFolder($newPrefixPath);
         $this->userStorage->rename($oldPath, $newPath);
-
         $returnPaths[$key] = $newPath;
       } else {
         // Otherwise there is nothing to move; we simply create the new directory.
-        $returnPaths = array_merge($returnPaths,
-                                   $this->ensureProjectFolders($projectId, $projectName, $only = $key));
+        $returnPaths = array_merge(
+          $returnPaths,
+          $this->ensureProjectFolders($newProject, null, $key /* only */));
       }
     }
 
@@ -376,21 +426,36 @@ Whatever.',
                                 "minor" => true ]);
   }
 
+  /**
+   * Rename the associated wiki-pages after project rename.
+   *
+   * @param array|Entities\Project $newProject Array-like object,
+   * "name" and "year" keys need to be present.
+   *
+   * @param array|Entities\Project $oldProject Array-like object,
+   * "name" and "year" keys need to be present.
+   */
   public function renameProjectWikiPage($newProject, $oldProject)
   {
-    $oldName = $oldProject['Name'];
-    $newName = $newProject['Name'];
+    $oldName = $oldProject['name'];
+    $newName = $newProject['name'];
     $oldPageName = $this->projectWikiLink($oldName);
     $newPageName = $this->projectWikiLink($newName);
 
-    $oldPage = " *  ".$oldvals['Name']." wurde zu [[".$newPageName."]] umbenant\n";
+    $oldPage = " *  ".$oldvals['name']." wurde zu [[".$newPageName."]] umbenant\n";
     $newPage = $this->wikiRPC->getPage($oldPageName);
+
+    $this->logInfo('OLD '.$oldPageName.' / '.$oldPage);
+    $this->logInfo('NEW '.$newPageName.' / '.$newPage);
+
     if ($newPage) {
-      // Geneate stuff if there is an old page
-      $this->wikiRPC->putPage($oldPageName, $oldPage, [ "sum" => "Automatic CAFEVDB page renaming",
-                                                   "minor" => false ]);
-      $this->wikiRPC->putPage($newPageName, $newPage, [ "sum" => "Automatic CAFEVDB page renaming",
-                                                   "minor" => false ]);
+      $this->wikiRPC->putPage(
+        $newPageName, $newPage,
+        [ "sum" => "Automatic CAFEVDB page renaming", "minor" => false ]);
+      // Generate stuff if there is an old page
+      $this->wikiRPC->putPage(
+        $oldPageName, $oldPage,
+        [ "sum" => "Automatic CAFEVDB page renaming", "minor" => false ]);
     }
 
     $this->generateWikiOverview();
@@ -467,7 +532,7 @@ Whatever.',
       if (is_array($pages)) {
         foreach ($pages as $idx => $article) {
           $article['CategoryName'] = $category['name'];
-          if (isset($articleIds[$article['ArticleId']])) {
+          if (isset($articleIds[$article['articleId']])) {
             $projectPages[] = $article;
           } else {
             $otherPages[] = $article;
@@ -533,7 +598,7 @@ Whatever.',
 
     $names = array();
     foreach ($articles as $article) {
-      $names[] = $article['ArticleName'];
+      $names[] = $article['articleName'];
     }
     if (array_search($pageName, $names) !== false) {
       for ($i = 1; ; ++$i) {
@@ -562,17 +627,20 @@ Whatever.',
     try {
       // insert into the db table to form the link
       $this->attachProjectWebPage($projectId, $article);
-      $this->webPagesRPC->addArticleBlock($article['ArticleId'], $module);
+      $this->webPagesRPC->addArticleBlock($article['articleId'], $module);
 
       $this->flush();
       $this->entityManager->commit();
     } catch (\Throwable $t)  {
-      $this->entityManager->close();
+      $this->logException($t);
       $this->entityManager->rollback();
-      $this->entityManager->reopen();
+      if (!$this->entityManager->isTransactionActive()) {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      }
       throw new \Exception(
         $this->l->t('Unable to attach article "%s".', [ $pageName ]),
-        $t->getCode,
+        $t->getCode(),
         $t);
     }
 
@@ -583,24 +651,30 @@ Whatever.',
    * Delete a web page. This is implemented by moving the page to the
    * Trashbin category, leaving the real cleanup to a human being.
    */
-  public function deleteProjectWebPage($projectId, $articleId)
+  public function deleteProjectWebPage($projectId, $article)
   {
+    $articleId = $article['articleId'];
+    $categoryId = $article['categoryId'];
+
     $this->entityManager->beginTransaction();
     try {
       $this->detachProjectWebPage($projectId, $articleId);
       $trashCategory = $this->getConfigValue('redaxoTrashbin');
-      $result = $this->webPagesRPC->moveArticle($articleId, $trashCategory);
-      if ($result === false) {
-        throw new \Exception($this->l->t("Failed moving %d to %s ", [ $articleId, $trashCategory ]));
+
+      // try moving to tash if the article exists in its category.
+      if (!empty($this->webPagesRPC->articlesById([ $articleId ], $categoryId))) {
+        $result = $this->webPagesRPC->moveArticle($articleId, $trashCategory);
       }
 
       $this->flush();
       $this->entityManager->commit();
     } catch (\Throwable $t) {
-      $this->entityManager->close();
-      $this->entityManager->rollback();
-      $this->entityManager->reopen();
       $this->logException($t);
+      $this->entityManager->rollback();
+      if (!$this->entityManager->isTransactionActive()) {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      }
       throw new \Exception($this->l->t('Failed removing web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
@@ -611,11 +685,20 @@ Whatever.',
    */
   public function detachProjectWebPage($projectId, $articleId)
   {
+    $this->entityManager->beginTransaction();
     try {
       $this->setDatabaseRepository(Entities\ProjectWebPage::class);
       $this->remove([ 'project' => $projectId, 'articleId' => $articleId  ]);
       $this->flush();
-    } catch (\Throwabled $t) {
+
+      $this->entityManager->commit();
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      if (!$this->entityManager->isTransactionActive()) {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      }
       throw new \Exception($this->l->t('Failed detaching web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
@@ -632,18 +715,18 @@ Whatever.',
   {
     // Try to remove from trashbin, if appropriate.
     $trashCategory = $this->getConfigValue('redaxoTrashbin');
-    if ($article['CategoryId'] == $trashCategory) {
-      if (stristr($article['ArticleName'], $this->l->t('Rehearsals')) !== false) {
+    if ($article['categoryId'] == $trashCategory) {
+      if (stristr($article['articleName'], $this->l->t('Rehearsals')) !== false) {
         $destinationCategory = $this->getConfigValue('redaxoRehearsals');
       } else {
         $destinationCategory = $this->getConfigValue('redaxoPreview');
       }
-      $articleId = $article['ArticleId'];
+      $articleId = $article['articleId'];
       $result = $this->webPagesRPC->moveArticle($articleId, $destinationCategory);
       if ($result === false) {
         $this->logDebug("Failed moving ".$articleId." to ".$destinationCategory);
       } else {
-        $artile['CategoryId'] = $destinationCategory;
+        $article['CategoryId'] = $destinationCategory;
       }
     }
 
@@ -672,12 +755,12 @@ Whatever.',
     $webPages = $project->getWebPages();
 
     $rehearsalsName = $this->l->t('Rehearsals');
-    $webPagesRepository = $this->entityManger->getRepository(Entities\ProjectWebpage::class);
+    $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebpage::class);
 
     $concertNr = 0;
     $rehearsalNr = 0; // should stay at zero
     foreach ($webPages as $article) {
-      if (stristr($article['ArticleName'], $rehearsalsName) !== false) {
+      if (stristr($article['articleName'], $rehearsalsName) !== false) {
         $newName = $rehearsalsName.' '.$projectName;
         if ($rehearsalNr > 0) {
           $newName .= '-'.$rehearsalNr;
@@ -690,10 +773,10 @@ Whatever.',
         }
         ++$concertNr;
       }
-      if ($this->webPagesRPC->setArticleName($article['ArticleId'], $newName)) {
+      if ($this->webPagesRPC->setArticleName($article['articleId'], $newName)) {
         // if successful then also update the data-base entry
         $webPagesRepository->mergeAttributes(
-          [ 'articleId' => $article['ArticleId'] ],
+          [ 'articleId' => $article['articleId'] ],
           [ 'articleName' => newName ]);
       }
     }
@@ -843,7 +926,6 @@ Whatever.',
       return false;
     }
 
-    $this->logInfo('Starting transaction');
     $this->entityManager->beginTransaction();
     try {
 
@@ -923,21 +1005,22 @@ Whatever.',
       $musician['updated'] = $project['updated'] = new \DateTime;
 
       $this->flush();
-      $this->logInfo('Committing transaction');
-      $this->entityManager->commit();
 
+      $this->entityManager->commit();
     } catch (\Throwable $t) {
-      $this->logInfo('Rolling back transaction');
-      $this->entityManager->close();
+      $this->logException($t);
       $this->entityManager->rollback();
-      $this->entityManager->reopen();
+      if (!$this->entityManager->isTransactionActive()) {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      }
+
       $status[] = [
         'id' => $id,
         'notice' => $this->l->t(
           'Adding the musician with id %d failed with exception %s',
           [ $id, $t->getMessage(), ]),
       ];
-      $this->logException($t);
       return false;
     }
 
@@ -948,7 +1031,330 @@ Whatever.',
     ];
 
     return true;
+  }
 
+  /**
+   * Create the infra-structure to the given project.
+   *
+   * @param array|Entities\Project $project Either the project entity
+   * or an array with at least the entries for the id and name fields.
+   *
+   */
+  public function createProjectInfraStructure($project)
+  {
+    // $newvals contains the new values
+    $projectId   = $project['id'];
+    $projectName = $project['name'];
+
+    // Also create the project folders.
+    $projectPaths = $this->ensureProjectFolders($projectId, $projectName);
+
+    $this->generateWikiOverview();
+    $this->generateProjectWikiPage($projectId, $projectName);
+
+    // Generate an empty offline page template in the public web-space
+    $this->createProjectWebPage($projectId, 'concert');
+    $this->createProjectWebPage($projectId, 'rehearsals');
+  }
+
+  public function createProject(string $name, ?int $year = null, $type = Types\EnumProjectTemporalType::TEMPORARY):?Entities\Project
+  {
+    $project = null;
+
+    $this->entityManager->beginTransaction();
+    try {
+
+      $year = $year?:\date('Y');
+
+      $project = Entities\Project::create()
+               ->setName($name)
+               ->setYear($year)
+               ->setType($type);
+
+
+      $this->persist($project);
+
+      $this->flush($project);
+
+      $this->createProjectInfraStructure($project);
+
+      $this->entityManager->commit();
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      if (!$this->entityManager->isTransactionActive()) {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      }
+      throw new \Exception(
+        $this->l->t('Unable to create new project with name "%s".', $name),
+        $t->getCode(),
+        $t);
+    }
+
+    return $project;
+  }
+
+  /**
+   * Just return the argument if it is already a project entity,
+   * otherwise fetch the project, repectively geneate a reference.
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @return null|Entities\Project
+   */
+  private function ensureProject($projectOrId):? Entities\Project
+  {
+    if (!($projectOrId instanceof Entities\Project)) {
+      //return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
+      return $this->findById($projectOrId);
+    } else {
+      return $projectOrId;
+    }
+  }
+
+  /**
+   * Delete the given project or id.
+   *
+   * @param int|Entities\Project $project
+   *
+   * @return null|Entities\Project Returns null if project was
+   * actually deleted, else the updated "soft-deleted" project instance.
+   */
+  public function deleteProject($projectOrId):? Entities\Project
+  {
+    $project = $this->ensureProject($projectOrId);
+    $projectId = $project['id'];
+
+    $softDelete  = count($project['payments']) > 0;
+
+    $this->entityManager->beginTransaction();
+    try {
+
+      // Remove the project folder ... OC has undelete
+      // functionality and we have a long-ranging backup.
+      $this->removeProjectFolders($project);
+
+      // Regenerate the TOC page in the wiki.
+      $this->generateWikiOverview();
+
+      // Delete the page template from the public web-space. However,
+      // here we only move it to the trashbin.
+      $webPages = $project->getWebPages();
+      foreach ($webPages as $page) {
+        // ignore errors
+        $this->deleteProjectWebPage($projectId, $page);
+      }
+
+      if ($softDelete) {
+        $project['disabled'] = true;
+        $this->persistProject($project);
+      } else {
+
+        $this->remove($project, true);
+
+        // @TODO: use cascading to remove
+        $deleteTables = [
+          Entities\ProjectParticipant::class,
+          Entities\ProjectInstrument::class,
+          Entities\ProjectWebPage::class,
+          Entities\ProjectExtraField::class, // needs cascading
+          // [ 'table' => 'ProjectEvents', 'column' => 'project_id' ], handled above
+        ];
+
+        $triggerResult = true;
+        foreach ($deleteTables as $table) {
+          $this->entityManager
+            ->createQueryBuilder()
+            ->delete($table, 't')
+            ->where('t.project = :projectId')
+            ->setParameter('projectId', $projectId)
+            ->getQuery()
+            ->execute();
+        }
+      }
+
+      $this->entityManager->commit();
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      if (!$this->entityManager->isTransactionActive()) {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      }
+      throw new \Exception(
+        $this->l->t('Failed to remove project "%s", id "%d".',
+                    [ $project['name'], $project['id'] ]),
+        $t->getCode(),
+        $t);
+    }
+
+    // if ($this->entityManager->isTransactionActive()) {
+    //   throw new \Exception('Transaction still active '.$this->entityManager->getTransactionNestingLevel());
+    // }
+
+    return $softDelete ? $project : null;
+  }
+
+  /**
+   * Rename the given project or id.
+   *
+   * @param int|Entities\Project $project
+   *
+   * @param string|array|Entities\Project $newData
+   *
+   * @return Entities\Project Returns the renamed and persisted
+   * entity.
+   */
+  public function renameProject($projectOrId, $newData)
+  {
+    $project = $this->ensureProject($projectOrId);
+    $projectId = $project['id'];
+
+    if (is_string($newData)) {
+      list('name' => $newName, 'year' => $newYear) = $this->yearFromName($newData);
+      $newName = $newName.($newYear?:'');
+    } else {
+      $newName = $newData['name'];
+      $newYear = $newData['year'];
+    }
+    $newYear = $newYear?:$project['year'];
+    $newProject = [ 'id' => $projectId, 'name' => $newName, 'year' => $newYear ];
+
+    $stages = [
+      [
+        'method' => 'renameProjectFolder',
+        'forward' => [ $newProject, $project ],
+        'backwards' => [ $project, $newProject ],
+        'done' => false,
+      ],
+      [
+        'method' => 'renameProjectWikiPage',
+        'forward' => [ $newProject, $project ],
+        'backwards' => [ $project, $newProject ],
+        'done' => false,
+      ],
+      [
+        'method' => 'nameProjectWebPages',
+        'forward' => [ $projectId, $newName ],
+        'backwards' => [ $projectId, $project['name'] ],
+        'done' => false,
+      ],
+    ];
+    $this->entityManager->beginTransaction();
+    try {
+
+      // stages should throw on error
+      foreach ($stages as &$stage) {
+        \call_user_func_array([ $this, $stage['method'] ], $stage['forward']);
+        $stage['done'] = true;
+      }
+
+      // // Now that we link events to projects using their short name as
+      // // category, we also need to updated all linke events in case the
+      // // short-name has changed.
+      // $events = Events::events($pme->rec, $pme->dbh);
+
+      // foreach ($events as $event) {
+      //   // Last parameter "true" means to also perform string substitution
+      //   // in the summary field of the event.
+      //   Events::replaceCategory($event, $oldvals['name'], $newvals['name'], true);
+      // }
+
+      // // Now, we should also rename the project folder. We simply can
+      // // pass $newvals and $oldvals
+      // $this->renameProjectFolder($newProject, $project);
+
+      // // Same for the Wiki
+      // $this->renameProjectWikiPage($newProject, $project);
+
+      // // Rename titles of all public project web pages
+      // $this->nameProjectWebPages($projectId, $newName);
+
+      $project['name'] = $newName;
+      $project['year'] = $newYear;
+      $this->persistProject($project);
+
+      $this->entityManager->commit();
+
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      if (!$this->entityManager->isTransactionActive()) {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      }
+
+      foreach ($stages as $stage) {
+        try {
+          if ($stage['done']) {
+            \call_user_func_array([ $this, $stage['method'] ], $stage['backwards']);
+            $stage['done'] = false;
+          }
+        } catch (\Throwable $t2)  {
+          $this->logException($t2);
+        }
+      }
+
+      throw new \Exception(
+        $this->l->t('Failed to rename project "%s", id "%d" to new name "%s".',
+                    [ $project['name'], $project['id'], $newName ]),
+        $t->getCode(),
+        $t);
+    }
+
+    return $project;
+  }
+
+
+  /**
+   * Extract the year from the project name if present.
+   *
+   * @param string $name
+   *
+   * @return array
+   *
+   * ```
+   * [ 'name' => NAME_WITHOUT_YEAR, 'year' => NULL_OR_YEAR ]
+   * ```
+   */
+  public function yearFromName($projectName)
+  {
+    $projectYear = substr($projectName, -4);
+    if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
+      $projectYear = null;
+    } else {
+      $projectName = substr($projectName, 0, -4);
+    }
+    return [ 'name' => $projectName, 'year' => $projectYear ];
+  }
+
+  /**
+   * Validate the name, no spaces, camel case, last four characters
+   * may be digits of the form 20XX.
+   *
+   * @param string $projectName The name to validate.
+   *
+   * @param boolean $requireYear Year in last four characters is
+   * mandatory.
+   */
+  public function sanitizeName($projectName, $requireYear = false)
+  {
+    list('name' => $projectName, 'year' => $projectYear) = $this->yearFromName($projectName);
+    if ($requireYear && !$projectYear) {
+      return false;
+    }
+
+    if ($projectName ==  strtoupper($projectName)) {
+      $projectName = strtolower($projectName);
+    }
+    $projectName = ucwords($projectName);
+    $projectName = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $projectName);
+
+    if ($projectYear) {
+      $projectName .= $projectYear;
+    }
+    return $projectName;
   }
 }
 

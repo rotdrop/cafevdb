@@ -52,6 +52,9 @@ class Projects extends PMETableViewBase
   const POSTER_JOIN = 'ProjectPoster';
   const FLYER_JOIN = 'ProjectFlyer';
 
+  /** @var OCA\CAFEVDB\Service\ProjectService */
+  private $projectService;
+
   /** @var EventsService */
   private $eventsService;
 
@@ -490,7 +493,7 @@ project without a flyer first.");
       <li><a class="svg delete" title="'.$this->l->t("Delete current flyer").'"></a></li>
       <li><a class="svg edit" title="'.$this->l->t("Edit current flyer").'"></a></li>
       <li><a class="svg upload" title="'.$this->l->t("Upload new flyer").'"></a></li>
-      <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select image from ownCloud").'"></a></li>
+      <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select image from Cloud").'"></a></li>
     </ul>
   </div>
 </div> <!-- project_flyer -->
@@ -681,39 +684,6 @@ project without a flyer first.");
   }
 
   /**
-   * Validate the name, no spaces, camel case, last four characters
-   * are either digits of the form 20XX.
-   *
-   * @param string $projectName The name to validate.
-   *
-   * @param boolean $requireYear Year in last four characters is
-   * mandatory.
-   */
-  private function sanitizeName($projectName, $requireYear = false)
-  {
-    $projectYear = substr($projectName, -4);
-    if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
-      $projectYear = null;
-    } else {
-      $projectName = substr($projectName, 0, -4);
-    }
-    if ($requireYear && !$projectYear) {
-      return false;
-    }
-
-    if ($projectName ==  strtoupper($projectName)) {
-      $projectName = strtolower($projectName);
-    }
-    $projectName = ucwords($projectName);
-    $projectName = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $projectName);
-
-    if ($projectYear) {
-      $projectName .= $projectYear;
-    }
-    return $projectName;
-  }
-
-  /**
    * phpMyEdit calls the trigger (callback) with the following arguments:
    *
    * @param $pme The phpMyEdit instance
@@ -733,7 +703,7 @@ project without a flyer first.");
   public function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     if (isset($newvals['name']) && $newvals['name']) {
-      $newvals['name'] = $this->sanitizeName($newvals['name']);
+      $newvals['name'] = $this->projectService->sanitizeName($newvals['name']);
       if ($newvals['name'] === false) {
         return false;
       }
@@ -793,20 +763,7 @@ project without a flyer first.");
    */
   public function afterInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    // $newvals contains the new values
-    $projectId   = $pme->rec;
-    $projectName = $newvals['name'];
-
-    // Also create the project folders.
-    $projectPaths = $this->projectService->ensureProjectFolders($projectId, $projectName);
-
-    $this->projectService->generateWikiOverview();
-    $this->projectService->generateProjectWikiPage($projectId, $projectName);
-
-    // Generate an empty offline page template in the public web-space
-    $this->projectService->createProjectWebPage($projectId, 'concert');
-    $this->projectService->createProjectWebPage($projectId, 'rehearsals');
-
+    $this->projectService->createProjectInfraStructure($newvals);
     return true;
   }
 
@@ -821,7 +778,7 @@ project without a flyer first.");
     }
 
     // // Now that we link events to projects using their short name as
-    // // category, we also need to update all linke events in case the
+    // // category, we also need to updated all linke events in case the
     // // short-name has changed.
     // $events = Events::events($pme->rec, $pme->dbh);
 
@@ -839,7 +796,7 @@ project without a flyer first.");
     $this->projectService->renameProjectWikiPage($newvals, $oldvals);
 
     // Rename titles of all public project web pages
-    $this->projectService-nameProjectWebPages($pme->rec, $newvals['name']);
+    $this->projectService->nameProjectWebPages($pme->rec, $newvals['name']);
 
     return true;
   }
@@ -853,92 +810,11 @@ project without a flyer first.");
    */
   public function deleteTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
-    $projectId   = $pme->rec;
-    $projectName = $oldvals['name'];
-    if (empty($projectName)) {
-      $projectName = $this->projectService->fetchName($projectId); // @TODO: really needed?
-      $oldvals['name'] = $projectName;
-    }
+    $this->projectService->deleteProject($pme->rec);
 
-    $safeMode = false;
-    if ($step === 'before') {
-      $payments = $this->getDatabaseRepository(Entities\ProjectPayment::class)->findBy([ 'projectId' => $projectId ]);
-      $safeMode = !empty($payments); // don't really remove if we have finance data
-    }
+    $changed = []; // signal nothing more to delete
 
-    if ($step === 'after' || $safeMode) {
-      // with $safeMode there is no 'after'. This should be cleaned up.
-
-      // And now remove the project folder ... OC has undelete
-      // functionality and we have a long-ranging backup.
-      $this->projectService->removeProjectFolders($oldvals);
-
-      // Regenerate the TOC page in the wiki.
-      $this->projectService->generateWikiOverview();
-
-      // Delete the page template from the public web-space. However,
-      // here we only move it to the trashbin.
-      $webPages = $this->getDatabaseRepository(Entities\ProjectWebPage::class)->findBy([ 'projectId' => $projectid ]);
-      foreach ($webPages as $page) {
-        // ignore errors
-        $this->logDebug("Attempt to delete for ".$projectId.": ".$page['ArticleId']." all ".print_r($page, true));
-
-        $this->projectService->deleteProjectWebPage($projectId, $page['ArticleId']);
-      }
-
-      // // Remove all attached events. This really deletes stuff.
-      // $projectEvents = $this->eventsService->projectEvents($projectId);
-      // foreach($projectEvents as $event) {
-      //   $this->eventsService->deleteEvent($event);
-      // }
-
-      if ($step === 'after') {
-        $this->eventDispatcher->dispatchTyped(new Events\ProjectDeletedEvent($projectId, $safeMode));
-      }
-    }
-
-    if ($safeMode) {
-      $this->projectService->disable($projectId);
-      return false; // clean-up has to be done manually later
-    }
-
-    // remaining part cannot be reached if project-payments need to be
-    // maintained, as in this case the 'before' trigger already has
-    // aborted the deletion. Only events, web-pages and wiki are
-    // deleted, and in the case of the wiki and the web-pages the
-    // respective underlying "external" services make a backup-copy of
-    // their own (respectively CAFEVDB just moves web-pages to the
-    // Redaxo "trash" category).
-
-    // // delete all extra fields and associated data.
-    $repository = $this->getDatabaseRepository(Entities\ProjectExtraField::class);
-    // @TODO use cascading to delete
-    // $projectExtra = ProjectExtra::projectExtraFields($projectId, false, $pme->dbh);
-    // foreach($projectExtra as $fieldInfo) {
-    //   $fieldId = $fieldInfo['id'];
-    //   ProjectExtra::deleteExtraField($fieldId, $projectId, true, $pme->dbh);
-    // }
-
-    $deleteTables = [
-      Entities\ProjectParticipant::class,
-      Entities\ProjectInstrument::class,
-      Entities\ProjectWebPage::class,
-      Entities\ProjectExtraField::class, // needs cascading
-      // [ 'table' => 'ProjectEvents', 'column' => 'project_id' ], handled above
-    ];
-
-    $triggerResult = true;
-    foreach($deleteTables as $table) {
-      $this->entityManager
-        ->createQueryBuilder()
-        ->delete($table, 't')
-        ->where('t.projectId = :projectId')
-        ->setParameter('projectId', $projectId)
-        ->getQuery()
-        ->execute();
-    }
-
-    return $triggerResult;
+    return true;
   }
 
 }
