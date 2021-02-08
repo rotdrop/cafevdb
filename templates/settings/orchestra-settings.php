@@ -125,13 +125,6 @@ foreach ($localeCountryNames as $country => $name) {
     </fieldset>
     <fieldset <?php echo $off; ?> class="chosen-dropup">
       <legend><?php echo $l->t('Executive board and club members'); ?></legend>
-      <!-- <select id="memberProjectSelect"
-           data-placeholder="<?php echo $l->t('Select the club-members project'); ?>"
-           name="memberProjectId"
-           class="special-member-projects tooltip-left">
-           <option></option>
-           <?php echo Navigation::selectOptions($projectOptions, $memberProjectId); ?>
-           </select> -->
       <input class="specialMemberProjects"
              type="button"
              name="memberProjectCreate"
@@ -152,13 +145,6 @@ foreach ($localeCountryNames as $country => $name) {
         <?php echo $l->t('Club Member Project'); ?>
       </label>
       <br/>
-      <!-- <select id="executiveBoardProjectSelect"
-           data-placeholder="<?php echo $l->t('Select the executive-board project'); ?>"
-           name="executiveBoardProjectId"
-           class="special-member-projects tooltip-left">
-           <option></option>
-           <?php echo Navigation::selectOptions($projectOptions, $executiveBoardProjectId); ?>
-           </select> -->
       <input class="specialMemberProjects"
              type="button"
              name="executiveBoardProjectCreate"
