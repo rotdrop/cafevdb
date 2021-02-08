@@ -5022,18 +5022,21 @@ class phpMyEdit
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
 		// Creating array of changed keys ($changed)
+		// how the heck could this be empty?
 		$changed = is_array($oldvals) ? array_keys($oldvals) : array();
 		$newvals = array();
 		// Before trigger
 		if ($this->exec_triggers('delete', 'before', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
-		// Real query
-		$query = 'DELETE '.self::MAIN_ALIAS.' FROM '.$this->tb.' '.self::MAIN_ALIAS.' WHERE '.$this->key_record_where();
-		$res = $this->myquery($query, __LINE__);
-		$this->message = $this->sql_affected_rows().' '.$this->labels['record deleted'];
-		if (! $res) {
-			return false;
+		if (!empty($changed)) {
+			// Real query
+			$query = 'DELETE '.self::MAIN_ALIAS.' FROM '.$this->tb.' '.self::MAIN_ALIAS.' WHERE '.$this->key_record_where();
+			$res = $this->myquery($query, __LINE__);
+			$this->message = $this->sql_affected_rows().' '.$this->labels['record deleted'];
+			if (! $res) {
+				return false;
+			}
 		}
 
 		// remove deleted record from misc selection
@@ -5051,7 +5054,7 @@ class phpMyEdit
 		}
 		// Note change in log table
 		if ($this->logtable) {
-			$this->logQuery('delete', $oldvals, null, null);
+			$this->logQuery('delete', $oldvals, $changed, null);
 		}
 		// After trigger
 		if ($this->exec_triggers('delete', 'after', $oldvals, $changed, $newvals) == false) {
