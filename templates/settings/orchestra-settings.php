@@ -191,8 +191,8 @@ foreach ($localeCountryNames as $country => $name) {
       </select>
       <br/>
       <select id="presidentUserSelect"
-              data-placeholder="<?php echo $l->t('OwnCloud President-User'); ?>"
-              title="<?php echo $l->t('OwnCloud user-id of the president of the orchestra'); ?>"
+              data-placeholder="<?php echo $l->t('Cloud President-User'); ?>"
+              title="<?php echo $l->t('Cloud user-id of the president of the orchestra'); ?>"
               name="presidentUserId"
               class="executive-board-ids tooltip-left">
         <option></option>
@@ -201,8 +201,8 @@ foreach ($localeCountryNames as $country => $name) {
          ?>
       </select>
       <select id="secretaryUserSelect"
-              data-placeholder="<?php echo $l->t('OwnCloud Secretary-User'); ?>"
-              title="<?php echo $l->t('OwnCloud user-id of the secretary of the orchestra'); ?>"
+              data-placeholder="<?php echo $l->t('Cloud Secretary-User'); ?>"
+              title="<?php echo $l->t('Cloud user-id of the secretary of the orchestra'); ?>"
               name="secretaryUserId"
               class="executive-board-ids tooltip-left">
         <option></option>
@@ -211,8 +211,8 @@ foreach ($localeCountryNames as $country => $name) {
          ?>
       </select>
       <select id="treasurerUserSelect"
-              data-placeholder="<?php echo $l->t('OwnCloud Treasurer-User'); ?>"
-              title="<?php echo $l->t('OwnCloud user-id of the treasurer of the orchestra'); ?>"
+              data-placeholder="<?php echo $l->t('Cloud Treasurer-User'); ?>"
+              title="<?php echo $l->t('Cloud user-id of the treasurer of the orchestra'); ?>"
               name="treasurerUserId"
               class="executive-board-ids tooltip-left">
         <option></option>
@@ -222,8 +222,8 @@ foreach ($localeCountryNames as $country => $name) {
       </select>
       <br/>
       <select id="presidentGroupSelect"
-              data-placeholder="<?php echo $l->t('OwnCloud President-Group'); ?>"
-              title="<?php echo $l->t('OwnCloud group-id of the president of the orchestra'); ?>"
+              data-placeholder="<?php echo $l->t('Cloud President-Group'); ?>"
+              title="<?php echo $l->t('Cloud group-id of the president of the orchestra'); ?>"
               name="presidentGroupId"
               class="executive-board-ids tooltip-left">
         <option></option>
@@ -232,8 +232,8 @@ foreach ($localeCountryNames as $country => $name) {
          ?>
       </select>
       <select id="secretaryGroupSelect"
-              data-placeholder="<?php echo $l->t('OwnCloud Secretary-Group'); ?>"
-              title="<?php echo $l->t('OwnCloud group-id of the secretary of the orchestra'); ?>"
+              data-placeholder="<?php echo $l->t('Cloud Secretary-Group'); ?>"
+              title="<?php echo $l->t('Cloud group-id of the secretary of the orchestra'); ?>"
               name="secretaryGroupId"
               class="executive-board-ids tooltip-left">
         <option></option>
@@ -242,8 +242,8 @@ foreach ($localeCountryNames as $country => $name) {
          ?>
       </select>
       <select id="treasurerGroupSelect"
-              data-placeholder="<?php echo $l->t('OwnCloud Treasurer-Group'); ?>"
-              title="<?php echo $l->t('OwnCloud group-id of the treasurer of the orchestra'); ?>"
+              data-placeholder="<?php echo $l->t('Cloud Treasurer-Group'); ?>"
+              title="<?php echo $l->t('Cloud group-id of the treasurer of the orchestra'); ?>"
               name="treasurerGroupId"
               class="executive-board-ids tooltip-left">
         <option></option>

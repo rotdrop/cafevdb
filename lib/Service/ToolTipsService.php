@@ -152,7 +152,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
       return;
     }
     $this->toolTipsData = [
-      'address-book-emails' => $this->l->t('Opens a select-box with choices from the shared Owncloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Owncloud `Contacts\'-App.'),
+      'address-book-emails' => $this->l->t('Opens a select-box with choices from the shared Cloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Cloud `Contacts\'-App.'),
 
       'blog-acceptentry' => $this->l->t('Save the changes for this blog-entry.'),
 
@@ -388,7 +388,7 @@ needed, then please enter those in the <strong>Tooltip</strong> field in the
 predefined tab in the select box above, then enter the new name. The
 new tab-name will also be available as tab-option for other fields.'),
 
-      'extra-fields-readers' => $this->l->t('Members of these OwnCloud user-groups are allowed to view the
+      'extra-fields-readers' => $this->l->t('Members of these Cloud user-groups are allowed to view the
 field. If left blank, every logged in user is allowed to view the
 field.'),
 
@@ -415,7 +415,7 @@ may contain HTML formatting.'),
 yes-no and multiple-choice options. Extra-charge options can also be
 defined, with the respective extra-charge amount tied to the option.'),
 
-      'extra-fields-writers' => $this->l->t('Members of these OwnCloud user-groups are allowed to change the
+      'extra-fields-writers' => $this->l->t('Members of these Cloud user-groups are allowed to change the
 field. If left blank, every logged in user is allowed to change this field.'),
 
       'file-attachments-select' => $this->l->t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
@@ -484,9 +484,9 @@ the event.'),
 
       'nothing' => $this->l->t('nothing'),
 
-      'owncloud-attachment' => $this->l->t('Choose a file to attach from the files stored remotely on in the OwnCloud storage area.'),
+      'cloud-attachment' => $this->l->t('Choose a file to attach from the files stored remotely on in the Cloud storage area.'),
 
-      'ownclouddev-link' => $this->l->t('Web-link to the current OwnCloud developer documentation.'),
+      'clouddev-link' => $this->l->t('Web-link to the current Cloud developer documentation.'),
 
       'payment-status' => $this->l->t('Status of outstanding project fees:
 <dl>

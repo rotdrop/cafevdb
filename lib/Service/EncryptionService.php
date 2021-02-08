@@ -226,9 +226,9 @@ class EncryptionService
   // application configuration values we use a public/private key pair
   // for each user. Then the admin-user can distribute the global
   // encryption key to each authorized user (in the orchestra-group)
-  // using the public key. When the user logs into owncloud, the key is
-  // decrypted with the users private key (which again is secured by
-  // the user's password.
+  // using the public key. When the user logs into the cloud, the key
+  // is decrypted with the users private key (which again is secured
+  // by the user's password.
   private function generateUserKeyPair($login, $password)
   {
     /* Create the private and public key */
@@ -434,7 +434,7 @@ class EncryptionService
 
   /**
    * Encrypt the given value and store it in the application settings
-   * table of OwnCloud.
+   * table of the Cloud.
    *
    * @param $key Configuration key.
    * @param $value Configuration value.

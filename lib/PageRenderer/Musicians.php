@@ -695,7 +695,7 @@ make sure that the musicians are also automatically added to the
       <li><a class="svg delete" title="'.$this->l->t("Delete current photo").'"></a></li>
       <li><a class="svg edit" title="'.$this->l->t("Edit current photo").'"></a></li>
       <li><a class="svg upload" title="'.$this->l->t("Upload new photo").'"></a></li>
-      <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select photo from ownCloud").'"></a></li>
+      <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select photo from Cloud").'"></a></li>
     </ul>
   </div>
 </div> <!-- contact_photo -->
