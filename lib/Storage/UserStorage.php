@@ -72,11 +72,18 @@ class UserStorage
 
 
   /**
-   * @return \OCP\Files\Folder The user-folder
+   * @param string|null $path Path to lookup.
+   *
+   * @return \OCP\Files\Folder The user-folder or the given sub-folder
    */
-  public function get():Folder
+  public function get(?string $path):?Folder
   {
-    return $this->userFolder;
+    try {
+      return empty($path) ? $this->userFolder : $this->userFolder->get($path);
+    } catch (\OCP\Files\NotFoundException $t) {
+      $this->logInfo('File not found: '.$path);
+      return null;
+    }
   }
 
   /**
@@ -98,7 +105,12 @@ class UserStorage
 
   public function rename($oldPath, $newPath)
   {
-    $this->userFolder->get($oldPath)->move($newpath);
+    try {
+      $newPath = $this->userFolder->getFullPath($newPath);
+      $this->userFolder->get($oldPath)->move($newPath);
+    } catch (\Throwable $t) {
+      throw new \Exception($this->l->t('Rename of "%s" to "%s" failed.', [ $oldPath, $newPath ]), $t->getCode(), $t);
+    }
   }
 
   /**
