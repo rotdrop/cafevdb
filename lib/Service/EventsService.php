@@ -629,10 +629,6 @@ class EventsService
    * Parse the respective event and make sure the ProjectEvent
    * table is uptodate.
    *
-   * @param $eventId The OwnCloud-Id of the event.
-   *
-   * @param $handle Optional. MySQL handle.
-   **
    * @return array
    * ```
    * [
