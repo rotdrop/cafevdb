@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -45,7 +46,7 @@ class InsuranceRate implements \ArrayAccess
   private $broker;
 
   /**
-   * @var EnumGeographicalScope
+   * @var Types\EnumGeographicalScope
    *
    * @ORM\Column(type="EnumGeographicalScope", nullable=false, options={"default"="Germany"})
    * @ORM\Id
@@ -104,13 +105,13 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Set geographicalScope.
    *
-   * @param array $geographicalScope
+   * @param string|Types\EnumGeographicalScope $geographicalScope
    *
    * @return InsuranceRates
    */
-  public function setGeographicalScope($geographicalScope)
+  public function setGeographicalScope($geographicalScope):InsuranceRate
   {
-    $this->geographicalScope = $geographicalScope;
+    $this->geographicalScope = new Types\EnumGeographicalScope($geographicalScope);
 
     return $this;
   }
@@ -120,7 +121,7 @@ class InsuranceRate implements \ArrayAccess
    *
    * @return array
    */
-  public function getGeographicalScope()
+  public function getGeographicalScope():Types\EnumGeographicalScope
   {
     return $this->geographicalScope;
   }

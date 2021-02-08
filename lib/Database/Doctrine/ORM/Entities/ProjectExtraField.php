@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -67,7 +68,7 @@ class ProjectExtraField implements \ArrayAccess
   private $name;
 
   /**
-   * @var EnumExtraFieldMultiplicity
+   * @var Types\EnumExtraFieldMultiplicity
    *
    * @ORM\Column(type="EnumExtraFieldMultiplicity", nullable=false)
    */
@@ -231,13 +232,13 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Set multiplicity.
    *
-   * @param EnumExtraFieldMultiplicity $multiplicity
+   * @param EnumExtraFieldMultiplicity|string $multiplicity
    *
    * @return ProjectExtraField
    */
-  public function setMultiplicity($multiplicity)
+  public function setMultiplicity($multiplicity):ProjectExtraField
   {
-    $this->multiplicity = $multiplicity;
+    $this->multiplicity = new Types\EnumExtraFieldMultiplicity($multiplicity);
 
     return $this;
   }
@@ -247,7 +248,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return EnumExtraFieldMultiplicity
    */
-  public function getMultiplicity()
+  public function getMultiplicity():Types\EnumExtraFieldMultiplicity
   {
     return $this->multiplicity;
   }
@@ -255,13 +256,13 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Set dataType.
    *
-   * @param EnumExtraFieldDataType $dataType
+   * @param EnumExtraFieldDataType|string $dataType
    *
    * @return ProjectExtraField
    */
-  public function setDataType($dataType)
+  public function setDataType($dataType):ProjectExtraField
   {
-    $this->dataType = $dataType;
+    $this->dataType = new Types\EnumExtraFieldDataType($dataType);
 
     return $this;
   }
@@ -271,7 +272,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return EnumExtraFieldDataType
    */
-  public function getDataType()
+  public function getDataType():Types\EnumExtraFieldDataType
   {
     return $this->dataType;
   }

@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -61,7 +62,7 @@ class ProjectEvent implements \ArrayAccess
   private $calendarId;
 
   /**
-   * @var EnumVCalendarType|null
+   * @var null|Types\EnumVCalendarType
    *
    * @ORM\Column(type="EnumVCalendarType", nullable=true)
    */
@@ -146,13 +147,17 @@ class ProjectEvent implements \ArrayAccess
   /**
    * Set type.
    *
-   * @param EnumVCalendarType|null $type
+   * @param Types\EnumVCalendarType|null|string $type
    *
    * @return ProjectEvents
    */
-  public function setType($type = null)
+  public function setType($type = null):ProjectEvent
   {
-    $this->type = $type;
+    if ($type === null) {
+      $this->type = $type;
+    } else {
+      $this->type = new Types\EnumVCalendarType($type);
+    }
 
     return $this;
   }
@@ -160,9 +165,9 @@ class ProjectEvent implements \ArrayAccess
   /**
    * Get type.
    *
-   * @return EnumVCalendarType|null
+   * @return Types\EnumVCalendarType|null
    */
-  public function getType()
+  public function getType(): ?Types\EnumVCalendarType
   {
     return $this->type;
   }
