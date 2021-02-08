@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -128,11 +129,11 @@ class Musician implements \ArrayAccess
   private $email;
 
   /**
-   * @var EnumMemberStatus|null
+   * @var Types\EnumMemberStatus|null
    *
    * @ORM\Column(type="EnumMemberStatus", nullable=false, options={"default"="regular","comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."})
    */
-  private $memberStatus = 'regular';
+  private $memberStatus;
 
   /**
    * @var string|null
@@ -185,6 +186,11 @@ class Musician implements \ArrayAccess
    */
   private $sepaDebitMandates;
 
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="musician", fetch="EXTRA_LAZY")
+   */
+  private $payments;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
@@ -193,6 +199,9 @@ class Musician implements \ArrayAccess
     $this->projectExtraFieldsData = new ArrayCollection();
     $this->instrumentInsurances = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
+    $this->payments = new ArrayCollection();
+
+    $this->memberStatus = Types\EnumMemberStatus::REGULAR();
   }
 
   /**
@@ -496,13 +505,13 @@ class Musician implements \ArrayAccess
   /**
    * Set memberStatus.
    *
-   * @param EnumMemberStatus|null $memberStatus
+   * @param string|EnumMemberStatus $memberStatus
    *
    * @return Musician
    */
-  public function setMemberStatus($memberStatus = null)
+  public function setMemberStatus($memberStatus):Musician
   {
-    $this->memberStatus = $memberStatus;
+    $this->memberStatus = new Types\EnumMemberStatus($memberStatus);
 
     return $this;
   }
@@ -512,7 +521,7 @@ class Musician implements \ArrayAccess
    *
    * @return EnumMemberStatus|null
    */
-  public function getMemberStatus()
+  public function getMemberStatus(): Types\EnumMemberStatus
   {
     return $this->memberStatus;
   }

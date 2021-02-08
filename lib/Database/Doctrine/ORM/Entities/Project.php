@@ -23,8 +23,10 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -64,7 +66,7 @@ class Project implements \ArrayAccess
   private $name;
 
   /**
-   * @var EnumProjectTemporalType
+   * @var Types\EnumProjectTemporalType
    *
    * @ORM\Column(type="EnumProjectTemporalType", nullable=false, options={"default"="temporary"})
    */
@@ -124,6 +126,11 @@ class Project implements \ArrayAccess
   private $debitNotes;
 
   /**
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="project")
+   */
+  private $payments;
+
+  /**
    * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="project")
    */
   private $participantInstruments;
@@ -140,6 +147,7 @@ class Project implements \ArrayAccess
     $this->participantInstruments = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->debitNotes = new ArrayCollection();
+    $this->payments = new ArrayCollection();
   }
 
   /**
@@ -203,13 +211,13 @@ class Project implements \ArrayAccess
   /**
    * Set type.
    *
-   * @param EnumProjectTemporalType $type
+   * @param EnumProjectTemporalType|string $type
    *
    * @return Project
    */
-  public function setType($type)
+  public function setType($type):Project
   {
-    $this->type = $type;
+    $this->type = new Types\EnumProjectTemporalType($type);
 
     return $this;
   }
@@ -219,7 +227,7 @@ class Project implements \ArrayAccess
    *
    * @return EnumProjectTemporalType
    */
-  public function getType()
+  public function getType():Types\EnumProjectTemporalType
   {
     return $this->type;
   }
@@ -486,5 +494,29 @@ class Project implements \ArrayAccess
   public function getInstrumentationNumbers()
   {
     return $this->instrumentationNumbers;
+  }
+
+  /**
+   * Set payments.
+   *
+   * @param ArrayCollection $payments
+   *
+   * @return Project
+   */
+  public function setPayments(Collection $payments):Project
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return ArrayCollection
+   */
+  public function getPayments():Collection
+  {
+    return $this->payments;
   }
 }
