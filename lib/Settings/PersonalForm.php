@@ -185,6 +185,18 @@ class PersonalForm {
         } else {
           $executiveBoardMembers = [];
         }
+
+        if ($this->databaseConfigured() && $memberProjectId > 0) {
+          // this can throw if there is no datadase configured yet.
+          try {
+            $clubMembers = $this->projectService->participantOptions($memberProjectId, $memberProject);
+          } catch(\Exception $e) {
+            $clubMembers = [];
+          }
+        } else {
+          $clubBoardMembers = [];
+        }
+
         $templateParameters = array_merge(
           $templateParameters,
           [
@@ -207,7 +219,7 @@ class PersonalForm {
             'projectOptions' => $projectOptions,
             'memberProject' => $memberProject,
             'memberProjectId' => $memberProjectId,
-            'memberProjectOptions' => $memberProjectOptions,
+            'clubMembers' => $clubMembers,
             'executiveBoardProject' => $executiveBoardProject,
             'executiveBoardProjectId' => $executiveBoardProjectId,
             'executiveBoardMembers' => $executiveBoardMembers,
