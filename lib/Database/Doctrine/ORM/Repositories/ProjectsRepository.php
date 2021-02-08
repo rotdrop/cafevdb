@@ -50,7 +50,7 @@ class ProjectsRepository extends EntityRepository
    *   'nameByName' => [ NAME => NAME, ... ],
    *   'yearByName' => [ NAME => YEAR, ... ],
    * ]
-   * @end code
+   * @endcode
    *
    * nameByName is used by PME in order to construct select options etc.
    *
