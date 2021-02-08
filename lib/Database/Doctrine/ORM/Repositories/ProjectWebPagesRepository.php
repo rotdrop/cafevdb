@@ -57,7 +57,7 @@ class ProjectWebPagesRepository extends EntityRepository
       $projectId = $projectOrId;
       $project = null;
     }
-    $articleId = $webArticle['ArticleId'];
+    $articleId = $webArticle['articleId'];
 
     $entityManager = $this->getEntityManager();
     $projectWebPage = $this->find([ 'project' => $projectId,
@@ -70,9 +70,9 @@ class ProjectWebPagesRepository extends EntityRepository
                       ->setProject($project)
                       ->setArticleId($articleId);
     }
-    $projectWebPage->setArticlename($webArticle['ArticleName'])
-                   ->setCategoryId($webArticle['CategoryId'])
-                   ->setPriority($webArticle['Priority']);
+    $projectWebPage->setArticlename($webArticle['articleName'])
+                   ->setCategoryId($webArticle['categoryId'])
+                   ->setPriority($webArticle['priority']);
     $projectWebPage = $entityManager->merge($projectWebPage);
     $entityManager->flush($projectWebPage);
 
