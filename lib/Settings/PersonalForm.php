@@ -174,7 +174,6 @@ class PersonalForm {
         } else {
           $projectOptions = [];
         }
-        $this->logInfo('PROJECT OPTIONS '.print_r($projectOptions, true));
 
         if ($this->databaseConfigured() && $executiveBoardProjectId > 0) {
           // this can throw if there is no datadase configured yet.
