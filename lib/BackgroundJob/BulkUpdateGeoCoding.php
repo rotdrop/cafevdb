@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 
 class BulkUpdateGeoCoding extends LazyUpdateGeoCoding
 {
-  /** @var GeoCodignService */
+  /** @var GeoCodingService */
   private $geoCodingService;
 
   public function __construct(

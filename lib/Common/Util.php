@@ -35,7 +35,7 @@ class Util
    * override the values of previous arguments and numeric keys are
    * just appended.
    *
-   * @param ... $arrays
+   * @param mixed ...$arrays
    *
    * @return array
    */

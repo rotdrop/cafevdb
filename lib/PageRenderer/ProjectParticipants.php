@@ -1601,7 +1601,7 @@ WHERE pp.project_id = $projectId",
    *
    * @param &$newValues Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return boolean  If returning @c false the operation will be terminated
    *
    * @bug Too long, just split into multiple "triggers" or call subroutines.
    */
