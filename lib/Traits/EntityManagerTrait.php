@@ -171,7 +171,7 @@ trait EntityManagerTrait {
   protected function flush($entity = null)
   {
     if (!empty($entity)) {
-      $this->persist($entity);
+      $this->entityManager->persist($entity);
     }
     return $this->entityManager->flush($entity);
   }
