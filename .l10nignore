@@ -5,3 +5,5 @@ build/
 doc/db-app/
 doc/db-app/
 translationfiles/music/
+js/
+css/
