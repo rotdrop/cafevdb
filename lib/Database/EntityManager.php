@@ -122,9 +122,9 @@ class EntityManager extends EntityManagerDecorator
     $this->close();
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
-    if ($this->connected()) {
-      $this->registerTypes();
-    }
+    // if ($this->connected()) {
+    // $this->registerTypes();
+    // }
   }
 
   private function connected()
@@ -406,6 +406,16 @@ class EntityManager extends EntityManagerDecorator
         $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->getValues()))));
       }
     }
+  }
+
+  public function isTransactionActive()
+  {
+    return $this->entityManager->getConnection()->isTransactionActive();
+  }
+
+  public function getTransactionNestingLevel()
+  {
+    return $this->entityManager->getConnection()->getTransactionNestingLevel();
   }
 
   public function columnName($propertyName)
