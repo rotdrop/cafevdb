@@ -774,6 +774,15 @@ const afterLoad = function(container) {
         },
       });
 
+    const executiveBoardIds = $('select.executive-board-ids');
+    executiveBoardIds.chosen({
+      disable_search_threshold: 10,
+      allow_single_deselect: true,
+      inherit_select_classes:true,
+      width: '30%',
+    });
+    simpleSetValueHandler(executiveBoardIds, 'change', msg);
+
     /**************************************************************************
      *
      * bank account settings
