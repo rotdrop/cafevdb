@@ -20,21 +20,22 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.js';
-import generalUrl from './generate-url.js';
+import { globalState, appName, webRoot, $ } from './globals.js';
+import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
+import * as Dialogs from './dialogs.js';
 import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
 
 require('events.css');
 
-globalState.Events = {
+const Events = globalState.Events = {
   projectId: -1,
   projectName: '',
   Events: { /* nothing */ },
   confirmText: {
-    'delete': t(appName, 'Do you really want to delete this event?'),
+    delete: t(appName, 'Do you really want to delete this event?'),
     detach: t(appName, 'Do you really want to detach this event from the current project?'),
     select: '',
     deselect: '',
@@ -46,35 +47,35 @@ const init = function(htmlContent, textStatus, request) {
   globalState.Events.projectId = request.getResponseHeader('X-' + appName + '-project-id');
   globalState.Events.projectName = request.getResponseHeader('X-' + appName + '-project-name');
 
-  //var popup = $('#events').cafevDialog({
-  var dialogContent = $(htmlContent);
-  var popup = dialogContent.cafevDialog({
+  // var popup = $('#events').cafevDialog({
+  const dialogContent = $(htmlContent);
+  dialogContent.cafevDialog({
     dialogClass: 'cafevdb-project-events no-scroll',
     position: {
-      my: "middle middle",
-      at: "middle top+50%",
-      of: "#app-content"
+      my: 'middle middle',
+      at: 'middle top+50%',
+      of: '#app-content',
     },
-    width : "auto", //510,
-    height: "auto",
+    width: 'auto', // 510,
+    height: 'auto',
     resizable: false,
     open() {
-      //$.fn.cafevTooltip.remove();
-      var dialogHolder = $(this);
-      var dialogWidget = dialogHolder.dialog('widget');
+      // $.fn.cafevTooltip.remove();
+      const dialogHolder = $(this);
+      // const dialogWidget = dialogHolder.dialog('widget');
 
       /* Adjust dimensions to do proper scrolling. */
       // @TODO this really needs to be reworked
       // adjustSize(dialogHolder, dialogWidget);
 
-      var eventForm = dialogHolder.find('#eventlistform');
-      var eventMenu = eventForm.find('select.event-menu');
+      const eventForm = dialogHolder.find('#eventlistform');
+      const eventMenu = eventForm.find('select.event-menu');
 
       // style the menu with chosen
       eventMenu.chosen({
-        inherit_select_classes:true,
-        disable_search:true,
-        width:'10em'
+        inherit_select_classes: true,
+        disable_search: true,
+        width: '10em',
       });
 
       CAFEVDB.fixupNoChosenMenu(eventMenu);
@@ -95,15 +96,15 @@ const init = function(htmlContent, textStatus, request) {
         $('#events #debug').hide();
         $('#events #debug').empty();
 
-        var post = eventForm.serializeArray();
-        var eventType = eventMenu.find('option:selected').val();
+        const post = eventForm.serializeArray();
+        const eventType = eventMenu.find('option:selected').val();
         post.push({ name: 'eventKind', value: eventType });
 
         $('#dialog_holder').load(
           generateUrl('legacy/events/forms/new'),
           post,
           function(response, textStatus, xhr) {
-            if (textStatus == 'success') {
+            if (textStatus === 'success') {
               Legacy.Calendar.UI.startEventDialog();
               return;
             }
@@ -118,108 +119,110 @@ const init = function(htmlContent, textStatus, request) {
         return false;
       });
 
-      eventForm.
-        off('click', ':button').
-        on('click', ':button', buttonClick);
+      eventForm
+        .off('click', ':button')
+        .on('click', ':button', buttonClick);
 
-      eventForm.
-        off('click', 'td.eventdata').
-	on('click', 'td.eventdata', function(event) {
+      eventForm
+        .off('click', 'td.eventdata')
+        .on('click', 'td.eventdata', function(event) {
           $(this).parent().find(':button.edit').trigger('click');
           return false;
         });
 
-      dialogHolder.
-        off('cafevdb:events_changed').
-        on('cafevdb:events_changed', function(event, events) {
+      dialogHolder
+        .off('cafevdb:events_changed')
+        .on('cafevdb:events_changed', function(event, events) {
           // @TODO
           $.post(
             generateUrl('projects/events/redisplay'),
-            { ProjectId: Events.projectId,
+            {
+              ProjectId: Events.projectId,
               ProjectName: Events.projectName,
-              EventSelect: events })
-	    .fail(Ajax.handleError)
+              EventSelect: events,
+            })
+            .fail(Ajax.handleError)
             .done(relist);
           return false;
         });
-      dialogHolder.
-        off('change', 'input.email-check').
-        on('change', 'input.email-check', function(event) {
+      dialogHolder
+        .off('change', 'input.email-check')
+        .on('change', 'input.email-check', function(event) {
           updateEmailForm();
           return false;
         });
     },
-    close : function(event, ui) {
+    close(event, ui) {
       $.fn.cafevTooltip.remove();
       $('#event').dialog('close');
       $(this).dialog('destroy').remove();
 
       // Remove modal plane if appropriate
       CAFEVDB.modalizer(false);
-    }
+    },
   });
 };
 
 const updateEmailForm = function(post, emailFormDialog) {
-  if (typeof emailFormDialog == 'undefined') {
+  if (typeof emailFormDialog === 'undefined') {
     emailFormDialog = $('div#emailformdialog');
   }
   if (emailFormDialog.length > 0) {
     // Email dialog already open. We trigger a custom event to
     // propagte the data. We only submit the event ids.
-    if (typeof post == 'undefined') {
+    if (typeof post === 'undefined') {
       post = $('#eventlistform').serializeArray();
     }
-    var events = [];
-    $.each(post, function (i, param) {
-      if (param.name == 'EventSelect[]') {
+    const events = [];
+    $.each(post, function(i, param) {
+      if (param.name === 'EventSelect[]') {
         events.push(param.value);
       }
     });
-    emailFormDialog.trigger('cafevdb:events_changed', [ events ]);
+    emailFormDialog.trigger('cafevdb:events_changed', [events]);
   }
 };
 
-const adjustSize = function(dialogHolder, dialogWidget) {
-  var dimensionElement = dialogHolder.find('.size-holder');
-  var scrollElement = dialogHolder.find('.scroller');
-  var top    = scrollElement.position().top;
-  var width  = dimensionElement.outerWidth(true);
-  var height = dimensionElement.outerHeight(true);
-  dialogWidget.innerHeight(top+height);
-  dialogWidget.innerWidth(width);
+// const adjustSize = function(dialogHolder, dialogWidget) {
+//   const dimensionElement = dialogHolder.find('.size-holder');
+//   const scrollElement = dialogHolder.find('.scroller');
+//   const top = scrollElement.position().top;
+//   const width = dimensionElement.outerWidth(true);
+//   const height = dimensionElement.outerHeight(true);
+//   dialogWidget.innerHeight(top+height);
+//   dialogWidget.innerWidth(width);
 
-  var needScroll = scrollElement.needScrollbars();
-  if (!needScroll.horizontal) {
-    scrollElement.addClass('inhibit-overflow-x');
-  }
-  if (!needScroll.vertical) {
-    scrollElement.addClass('inhibit-overflow-y');
-  }
+//   const needScroll = scrollElement.needScrollbars();
+//   if (!needScroll.horizontal) {
+//     scrollElement.addClass('inhibit-overflow-x');
+//   }
+//   if (!needScroll.vertical) {
+//     scrollElement.addClass('inhibit-overflow-y');
+//   }
 
-  var scroll;
-  scroll = scrollElement.horizontalScrollbarHeight();
-  if (scroll > 0) {
-    dialogWidget.innerHeight(top+height+scroll);
-  }
-  scroll = scrollElement.verticalScrollbarWidth();
-  if (scroll > 0) {
-    dialogWidget.innerWidth(width+scroll);
-  }
-};
+//   let scroll;
+//   scroll = scrollElement.horizontalScrollbarHeight();
+//   if (scroll > 0) {
+//     dialogWidget.innerHeight(top+height+scroll);
+//   }
+//   scroll = scrollElement.verticalScrollbarWidth();
+//   if (scroll > 0) {
+//     dialogWidget.innerWidth(width+scroll);
+//   }
+// };
 
 const relist = function(htmlContent, textStatus, xhr) {
 
-  //globalState.Events.projectId = xhr.getResponseHeader('X-' + appName + '-project-id');
-  //globalState.Events.projectName = xhr.getResponseHeader('X-' + appName + '-project-name');
+  // globalState.Events.projectId = xhr.getResponseHeader('X-' + appName + '-project-id');
+  // globalState.Events.projectName = xhr.getResponseHeader('X-' + appName + '-project-name');
 
   const events = $('#events');
   const listing = events.find('#eventlistholder');
   listing.html(htmlContent);
 
   /* Adjust dimensions to do proper scrolling. */
-  const dialogWidget = events.dialog('widget');
-  //adjustSize(events, dialogWidget);
+  // const dialogWidget = events.dialog('widget');
+  // adjustSize(events, dialogWidget);
 
   $.fn.cafevTooltip.remove();
 
@@ -243,7 +246,7 @@ const buttonClick = function(event) {
 
   const post = $('#eventlistform').serializeArray();
 
-  if (evntdlgopen === true){
+  if (evntdlgopen === true) {
     // TODO: maybe save event
     $('#event').dialog('close');
     return false;
@@ -254,56 +257,56 @@ const buttonClick = function(event) {
 
   const name = $(this).attr('name');
 
-  if (name == 'edit') {
+  if (name === 'edit') {
 
     // Edit existing event
-    post.push({ name: 'uri', value:  $(this).val()});
-    post.push({ name: 'calendarid', value: $(this).data('calendarId')});
+    post.push({ name: 'uri', value: $(this).val() });
+    post.push({ name: 'calendarid', value: $(this).data('calendarId') });
     $('#dialog_holder').load(
       generateUrl('legacy/events/forms/edit'),
       post,
       function(response, textStatus, xhr) {
-        if (textStatus == 'success') {
+        if (textStatus === 'success') {
           Legacy.Calendar.UI.startEventDialog();
           return;
         }
         Ajax.handleError(xhr, textStatus, xhr.status);
       });
     return false;
-  } else if (name == 'delete' ||
-             name == 'detach' ||
-             name == 'select' ||
-             name == 'deselect') {
+  } else if (name === 'delete'
+             || name === 'detach'
+             || name === 'select'
+             || name === 'deselect') {
     // Execute the task and redisplay the event list.
 
     post.push({ name: 'EventURI', value: $(this).val() });
 
     const really = globalState.Events.confirmText[name];
     console.info('really', name, really);
-    if (really !== undefined && really != '') {
+    if (really !== undefined && really !== '') {
       // Attention: dialogs do not block, so the action needs to be
       // wrapped into the callback.
       OC.dialogs.confirm(
         really,
-        t('cafevdb', 'Really delete?'),
-        function (decision) {
+        t(appName, 'Really delete?'),
+        function(decision) {
           if (decision) {
             $.post(generateUrl('projects/events/' + name), post)
-	      .fail(Ajax.handleError)
+              .fail(Ajax.handleError)
               .done(relist);
           }
         },
         true);
     } else {
       $.post(generateUrl('projects/events/' + name), post)
-	.fail(Ajax.handleError)
+        .fail(Ajax.handleError)
         .done(relist);
     }
     return false;
-  } else if (name == 'sendmail') {
+  } else if (name === 'sendmail') {
 
-    var emailFormDialog = $('div#emailformdialog');
-    if (emailFormDialog.length == 0) {
+    const emailFormDialog = $('div#emailformdialog');
+    if (emailFormDialog.length === 0) {
       // If the email-form is not open, then open it :)
       Email.emailFormPopup(post);
     } else {
@@ -315,10 +318,10 @@ const buttonClick = function(event) {
       emailFormDialog.dialog('moveToTop');
     }
 
-  } else if (name == 'download') {
+  } else if (name === 'download') {
 
     const cookieValue = CAFEVDB.makeId();
-    const cookieName = appName + '_' + 'project_events_download'
+    const cookieName = appName + '_' + 'project_events_download';
     post.push({ name: 'DownloadCookieName', value: cookieName });
     post.push({ name: 'DownloadCookieValue', value: cookieValue });
 
@@ -326,18 +329,18 @@ const buttonClick = function(event) {
       generateUrl('projects/events/download'), {
         httpMethod: 'POST',
         data: post,
-        cookieName:  cookieName,
-        cookieValue: cookieValue,
-        cookiePath: oc_webroot,
+        cookieName,
+        cookieValue,
+        cookiePath: webRoot,
       })
-      .fail(function (responseHtml, url) {
-        Dialogs.alert(t('cafevdb', 'Unable to download calendar events: {response}',
-                        { 'response': responseHtml }),
-                      t('cafevdb', 'Error'),
-                      function () {},
-                      true, true);
+      .fail(function(responseHtml, url) {
+        Dialogs.alert(
+          t(appName, 'Unable to download calendar events: {response}', { response: responseHtml }),
+          t(appName, 'Error'),
+          function() {},
+          true, true);
       })
-      .done(function (url) { console.info('DONE downloading', url); });
+      .done(function(url) { console.info('DONE downloading', url); });
     return false;
   }
 

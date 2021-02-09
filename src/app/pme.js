@@ -25,7 +25,7 @@
  * General PME table stuff, popup-handling.
  */
 
-import { globalState } from './globals.js';
+import { globalState, $, jQuery } from './globals.js';
 import * as PMEState from './pme-state.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -70,6 +70,10 @@ const pmeOpenDialogs = PMEState.openDialogs;
  * Generate the jQuery object corresponding to the inner container
  * of the ambient container. If the given argument is already a
  * jQuery object, then just return its first div child.
+ *
+ * @param {Object|String} selector TBD.
+ *
+ * @returns {jQuery}
  */
 const pmeInner = function(selector) {
   let container;
@@ -82,26 +86,26 @@ const pmeInner = function(selector) {
   return container.children('div:first');
 };
 
-/**
- * Notify the spectator about SQL errors.
- *
- * @param {Object} data TBD.
- */
-const notifySqlError = function(data) {
-  // PHPMyEdit echos mySQL-errors back.
-  // console.info(data);
-  if (data.sqlerror && data.sqlerror.error != 0) {
-    $('#notification').text('MySQL Error: ' +
-                            data.sqlerror.error +
-                            ': ' +
-                            data.sqlerror.message);
-    $('#notification').fadeIn();
-    // hide notification after 5 sec
-    setTimeout(function() {
-      $('#notification').fadeOut();
-    }, 10000);
-  }
-};
+// /**
+//  * Notify the spectator about SQL errors.
+//  *
+//  * @param {Object} data TBD.
+//  */
+// const notifySqlError = function(data) {
+//   // PHPMyEdit echos mySQL-errors back.
+//   // console.info(data);
+//   if (data.sqlerror && data.sqlerror.error != 0) {
+//     $('#notification').text('MySQL Error: ' +
+//                             data.sqlerror.error +
+//                             ': ' +
+//                             data.sqlerror.message);
+//     $('#notification').fadeIn();
+//     // hide notification after 5 sec
+//     setTimeout(function() {
+//       $('#notification').fadeOut();
+//     }, 10000);
+//   }
+// };
 
 const pmeAddTableLoadCallback = function(template, cbObject) {
   if (typeof cbObject.context === 'undefined') {
@@ -111,7 +115,7 @@ const pmeAddTableLoadCallback = function(template, cbObject) {
     cbObject.parameters = [];
   }
   if (typeof cbObject.parameters !== 'object') {
-    cbObject.parameters = [ cbObject.parameters ];
+    cbObject.parameters = [cbObject.parameters];
   }
   PHPMyEdit.tableLoadCallbacks[template] = cbObject;
 };
@@ -169,7 +173,7 @@ const pmeSubmitOuterForm = function(selector) {
     'applycopy',
     'reloadchange',
     'reloadview',
-    'reloadlist'
+    'reloadlist',
   ];
 
   const button = $(outerForm).find(pmeSysNameSelectors('input', submitNames)).first();
@@ -198,8 +202,7 @@ const pmeDeferReload = function(container) {
   return defer;
 };
 
-const reloadDeferred = function(container)
-{
+const reloadDeferred = function(container) {
   const deferKey = pmePrefix + '-submitdefer';
 
   return $.when(container.data(deferKey));
@@ -254,14 +257,15 @@ const pmePost = function(post, callbacks) {
       callbacks.fail(xhr, status, errorThrown);
     })
   // HTTP response
-    .done(function (htmlContent, textStatus, request) {
+    .done(function(htmlContent, textStatus, request) {
       const historySize = request.getResponseHeader('X-' + appName + '-history-size');
       const historyPosition = request.getResponseHeader('X-' + appName + '-history-position');
       callbacks.done(htmlContent, historySize, historyPosition);
     });
 };
 
-/** Reload the current PME-dialog.
+/**
+ * Reload the current PME-dialog.
  *
  * @param {Object} options The current dialog options. In particular
  * options.ReloadName and options.ReloadValue must hold name and
@@ -273,7 +277,7 @@ const pmePost = function(post, callbacks) {
  */
 const tableDialogReload = function(options, callback) {
 
-  const reloadName  = options.ReloadName;
+  const reloadName = options.ReloadName;
   const reloadValue = options.ReloadValue;
 
   const containerSel = '#' + options.DialogHolderCSSId;
@@ -309,7 +313,6 @@ const tableDialogReload = function(options, callback) {
       },
     });
   });
-  return false;
 };
 
 /**
@@ -416,14 +419,14 @@ const tableDialogHandlers = function(options, changeCallback) {
         event.preventDefault();
 
         const submitButton = $(this);
-        const reloadName  = submitButton.attr('name');
+        const reloadName = submitButton.attr('name');
         const reloadValue = submitButton.val();
         options.ReloadName = reloadName;
         options.ReloadValue = reloadValue;
-        if (!submitButton.hasClass(pmeToken('change')) &&
-            !submitButton.hasClass(pmeToken('delete')) &&
-            !submitButton.hasClass(pmeToken('copy')) &&
-            !submitButton.hasClass(pmeToken('reload'))) {
+        if (!submitButton.hasClass(pmeToken('change'))
+            && !submitButton.hasClass(pmeToken('delete'))
+            && !submitButton.hasClass(pmeToken('copy'))
+            && !submitButton.hasClass(pmeToken('reload'))) {
           // so this is pme-more, morechange
           options.modified = true;
         }
@@ -474,7 +477,7 @@ const tableDialogHandlers = function(options, changeCallback) {
 
         const deleteButton = container.find(deleteSelector);
         if (deleteButton.length > 0) {
-          name  = deleteButton.attr('name');
+          name = deleteButton.attr('name');
           value = deleteButton.val();
         } else {
           const applyButton = container.find(applySelector);
@@ -493,16 +496,15 @@ const tableDialogHandlers = function(options, changeCallback) {
           dialogWidget.addClass(pmeToken('table-dialog-blocked'));
 
           pmePost(post, {
-            fail: function(xhr, status, errorThrown) {
+            fail(xhr, status, errorThrown) {
               console.info('cleanup');
               dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
               container.find(pmeNavigationSelector('reload')).removeClass('loading');
               Page.busyIcon(false);
             },
-            done: function(htmlContent, historySize, historyPosition) {
+            done(htmlContent, historySize, historyPosition) {
               const op = $(htmlContent).find(pmeSysNameSelector('input', 'op_name'));
-              if (op.length > 0 &&
-                  (op.val() === 'add' || op.val() === 'delete')) {
+              if (op.length > 0 && (op.val() === 'add' || op.val() === 'delete')) {
                 // Some error occured. Stay in the given mode.
 
                 $('#notification').text('An error occurred.'
@@ -532,7 +534,7 @@ const tableDialogHandlers = function(options, changeCallback) {
               }
               container.find(pmeNavigationSelector('reload')).removeClass('loading');
               Page.busyIcon(false);
-            }
+            },
           });
         });
       });
@@ -556,6 +558,8 @@ const tableDialogHandlers = function(options, changeCallback) {
  * carries a CSS class "pme-viewXXXXX" with XXXXX being anything.
  *
  * @param {String} containerSel TBD.
+ *
+ * @returns {bool}
  */
 const tableDialog = function(form, element, containerSel) {
 
@@ -622,6 +626,7 @@ const tableDialog = function(form, element, containerSel) {
  * is also possible to store all values in tableOptions, as this is
  * added to the query-string in any case.
  *
+ * @returns {bool}
  */
 const pmeTableDialogOpen = function(tableOptions, post) {
 
@@ -647,15 +652,14 @@ const pmeTableDialogOpen = function(tableOptions, post) {
     post += '&' + $.param(tableOptions);
   }
   pmePost(post, {
-    fail: function(xhr, status, errorThrown) {
+    fail(xhr, status, errorThrown) {
       console.info('cleanup');
       Page.busyIcon(false);
       pmeOpenDialogs[containerCSSId] = false;
     },
-    done: function(htmlContent, historySize, historyPosition) {
+    done(htmlContent, historySize, historyPosition) {
       const containerSel = '#' + containerCSSId;
-      let dialogHolder;
-      dialogHolder = $('<div id="' + containerCSSId + '" class="resize-target"></div>');
+      const dialogHolder = $('<div id="' + containerCSSId + '" class="resize-target"></div>');
       dialogHolder.html(htmlContent);
       dialogHolder.data('AmbientContainer', tableOptions.ambientContainerSelector);
 
@@ -669,7 +673,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
         position: popupPosition,
         width: 'auto',
         height: 'auto',
-        modal: false, //tableOptions.ModalDialog,
+        modal: false, // tableOptions.ModalDialog,
         closeOnEscape: false,
         dialogClass: pmeToken('table-dialog') + ' custom-close resize-target ' + template,
         resizable: false,
@@ -810,6 +814,8 @@ const pmeTableDialogOpen = function(tableOptions, post) {
  *
  * @param {bool} resetFilter Bool, post a sw=Clear sting in addition,
  * causing PHPMyEdit to reset the filter.
+ *
+ * @returns {bool}
  */
 const pseudoSubmit = function(form, element, selector, resetFilter) {
 
@@ -826,9 +832,10 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
   if (templateRenderer.length <= 0 || element.hasClass('formsubmit')) {
     form.off('submit');
     if (element.attr('name')) { // undefined == false
-      form.append('<input type="hidden" ' +
-                  'name="' + element.attr('name') + '" ' +
-                  'value="' + element.val() + '"/>');
+      form.append(
+        '<input type="hidden" '
+          + 'name="' + element.attr('name') + '" '
+          + 'value="' + element.val() + '"/>');
     }
     console.info('hard pseudo submit');
     form.submit();
@@ -843,9 +850,9 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
 
   let post = form.serialize();
   post += '&templateRenderer=' + templateRenderer;
-  if (element.attr('name') &&
-      (!element.is(':checkbox') || element.is(':checked'))) {
-    const name  = element.attr('name');
+  if (element.attr('name')
+      && (!element.is(':checkbox') || element.is(':checked'))) {
+    const name = element.attr('name');
     const value = element.val();
     const obj = {};
     obj[name] = value;
@@ -896,6 +903,8 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
  * @param {String} buttonName TBD.
  *
  * @param {String} containerSel TBD.
+ *
+ * @returns {bool}
  */
 const pmeTriggerSubmit = function(buttonName, containerSel) {
   const container = pmeContainer(containerSel);
@@ -923,7 +932,7 @@ const transposeMainTable = function(selector, containerSel) {
   const headerRow = table.find('thead tr');
   headerRow.detach();
   if (headerRow.length > 0) {
-    headerRow.prependTo( table.find('tbody') );
+    headerRow.prependTo(table.find('tbody'));
   }
   const t = table.find('tbody').eq(0);
   const sortinfo = t.find(pmeClassSelector('tr', 'sortinfo'));
@@ -933,17 +942,17 @@ const transposeMainTable = function(selector, containerSel) {
   sortinfo.detach();
   queryinfo.detach();
   const r = t.find('tr');
-  const cols= r.length;
-  const rows= r.eq(0).find('td,th').length;
+  const cols = r.length;
+  const rows = r.eq(0).find('td,th').length;
   let cell, next, tem;
   let i = 0;
-  const tb= $('<tbody></tbody>');
+  const tb = $('<tbody></tbody>');
 
-  while (i<rows) {
-    cell= 0;
-    tem= $('<tr></tr>');
-    while (cell<cols) {
-      next= r.eq(cell++).find('td,th').eq(0);
+  while (i < rows) {
+    cell = 0;
+    tem = $('<tr></tr>');
+    while (cell < cols) {
+      next = r.eq(cell++).find('td,th').eq(0);
       tem.append(next);
     }
     tb.append(tem);
@@ -957,8 +966,8 @@ const transposeMainTable = function(selector, containerSel) {
       .detach()
       .appendTo(table.find('thead'))
       .children()
-      .each(function(){
-        const tdclass = $(this).attr('class');
+      .each(function() {
+        let tdclass = $(this).attr('class');
         if (tdclass.length > 0) {
           tdclass = ' class="' + tdclass + '"';
         } else {
@@ -970,19 +979,19 @@ const transposeMainTable = function(selector, containerSel) {
   queryinfo.prependTo(table.find('tbody'));
   sortinfo.prependTo(table.find('tbody'));
 
-  if (true) {
-    $(table)
-      .find('tbody tr th:first-child')
-      .each(function(){
-        let thclass = $(this).attr('class');
-        if (thclass.length > 0) {
-          thclass = ' class="' + thclass + '"';
-        } else {
-          thclass = '';
-        }
-        $(this).replaceWith('<td' + thclass + ' scope="row">' + $(this).html() + '</td>');
-      });
-  }
+  // if (true) {
+  $(table)
+    .find('tbody tr th:first-child')
+    .each(function() {
+      let thclass = $(this).attr('class');
+      if (thclass.length > 0) {
+        thclass = ' class="' + thclass + '"';
+      } else {
+        thclass = '';
+      }
+      $(this).replaceWith('<td' + thclass + ' scope="row">' + $(this).html() + '</td>');
+    });
+  // }
   table.show();
 };
 
@@ -1039,14 +1048,14 @@ const transposeReady = function(containerSel) {
   const trDown = pmeIdSelector('transpose-down');
   const tr = pmeIdSelector('transpose');
   const trClass = pmeToken('transposed');
-  const unTrClass = pmeToken('untransposed');
+  // const unTrClass = pmeToken('untransposed');
 
   // Transpose or not: if there is a transpose button
   const inhibitTranspose = container.find('input[name="InhibitTranspose"]').val() === 'true';
-  const controlTranspose = (container.find('input[name="Transpose"]').val() === 'transposed' ||
-                            container.find(trUp).hasClass(trClass) ||
-                            container.find(trDown).hasClass(trClass) ||
-                            container.find(tr).hasClass(trClass));
+  const controlTranspose = (container.find('input[name="Transpose"]').val() === 'transposed'
+                            || container.find(trUp).hasClass(trClass)
+                            || container.find(trDown).hasClass(trClass)
+                            || container.find(tr).hasClass(trClass));
 
   if (!inhibitTranspose && controlTranspose) {
     maybeTranspose(true);
@@ -1084,10 +1093,10 @@ const installFilterChosen = function(containerSel) {
 
   // Then the general stuff
   container.find('select.' + pmeFilter).chosen({
-    width:'100%', // This needs margin:0 and box-sizing:border-box to be useful.
-    inherit_select_classes:true,
-    no_results_text:noRes,
-    single_backstroke_delete: false
+    width: '100%', // This needs margin:0 and box-sizing:border-box to be useful.
+    inherit_select_classes: true,
+    no_results_text: noRes,
+    single_backstroke_delete: false,
   });
 
   const dblClickSel =
@@ -1104,8 +1113,8 @@ const installFilterChosen = function(containerSel) {
     container.find('td.' + pmeFilter + ' input.' + pmeToken('query')).trigger('click');
   });
 
-  container.find('td.' + pmeFilter + ' div.chosen-container').
-    attr('title', PHPMyEdit.filterSelectChosenTitle);
+  container.find('td.' + pmeFilter + ' div.chosen-container')
+    .attr('title', PHPMyEdit.filterSelectChosenTitle);
 };
 
 const installInputChosen = function(containerSel, onlyClass) {
@@ -1309,7 +1318,7 @@ const pmeInit = function(containerSel) {
     return false;
   });
 
-  var onChangeSel =
+  let onChangeSel =
       'input[type="checkbox"].' + pmeSort
       + ','
       + 'select.' + pmeGoto
@@ -1353,7 +1362,7 @@ const pmeInit = function(containerSel) {
       .off('click', rowSelector)
       .on('click', rowSelector, function(event) {
 
-        if (event.target != this) {
+        if (event.target !== this) {
           const target = $(event.target);
           // divs and spans which make it up to here will be ignored,
           // everything else results in the default action.
@@ -1397,12 +1406,12 @@ const pmeInit = function(containerSel) {
         let recordEl;
         if (form.hasClass(pmeToken('direct-change')) || PHPMyEdit.directChange) {
           recordEl = '<input type="hidden" class="' + pmeToken('change-navigation') + '"'
-            +' value="Change?' + recordQuery + '"'
-            +' name="' + pmeSys('operation') + '" />';
+            + ' value="Change?' + recordQuery + '"'
+            + ' name="' + pmeSys('operation') + '" />';
         } else {
           recordEl = '<input type="hidden" class="' + pmeToken('view-navigation') + '"'
-            +' value="View?' + recordQuery + '"'
-            +' name="' + pmeSys('operation') + '" />';
+            + ' value="View?' + recordQuery + '"'
+            + ' name="' + pmeSys('operation') + '" />';
         }
 
         console.info('about to open dialog');
@@ -1428,9 +1437,9 @@ const pmeInit = function(containerSel) {
   if (PHPMyEdit.selectChosen) {
     const gotoSelect = container.find('select.' + pmeGoto);
     gotoSelect.chosen({
-      width:'auto',
-      inherit_select_classes:true,
-      disable_search_threshold: 10
+      width: 'auto',
+      inherit_select_classes: true,
+      disable_search_threshold: 10,
     });
     if (gotoSelect.is(':disabled')) {
       // there is only one page
@@ -1539,6 +1548,7 @@ export {
   pmeFormSelector as formSelector,
   pmeClassSelector as classSelector,
   pmeSys as sys,
+  pmeData as data,
   pmeIdSelector as idSelector,
   pmeTriggerSubmit as triggerSubmit,
   pmeTableDialogOpen as tableDialogOpen,

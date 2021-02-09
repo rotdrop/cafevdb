@@ -25,6 +25,7 @@
  * General PME table stuff, popup-handling.
  */
 
+import { $, jQuery } from './globals.js';
 import * as PHPMyEdit from './pme-state.js';
 
 const camelCase = require('camelcase');

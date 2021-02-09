@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.js';
+import { globalState, appName, webRoot, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Notification from './notification.js';
 import * as Ajax from './ajax.js';
@@ -46,14 +46,14 @@ const pmeFormInit = function(containerSel) {
       textInputs = {
         broker: container.find('input.broker'),
         brokername: container.find('input.brokername'),
-        brokeraddress: container.find('textarea.brokeraddress')
-      }
+        brokeraddress: container.find('textarea.brokeraddress'),
+      };
     } else if (rateDialog) {
       textInputs = {
         rate: container.find('input.rate'),
         // date: container.find('input.date'),
-        policy: container.find('input.policy')
-      }
+        policy: container.find('input.policy'),
+      };
     } else {
       // need to disable all of these on blur in order to avoid
       // focus ping-pong
@@ -61,7 +61,7 @@ const pmeFormInit = function(containerSel) {
         'insured-item': container.find('input.insured-item'),
         manufacturer: container.find('input.manufacturer'),
         'construction-year': container.find('input.construction-year'),
-        amount: container.find('input.amount')
+        amount: container.find('input.amount'),
       };
     }
 
@@ -79,7 +79,7 @@ const pmeFormInit = function(containerSel) {
 
     const validate = function(postAddOn, button, lockCallback) {
 
-      if (typeof lockCallback == 'undefined') {
+      if (lockCallback === undefined) {
         lockCallback = function(lock) {};
       }
 
@@ -92,7 +92,7 @@ const pmeFormInit = function(containerSel) {
       };
 
       let post = form.serialize();
-      post += '&control='+postAddOn;
+      post += '&control=' + postAddOn;
 
       // until end of validation
       validateLock(true);
@@ -110,21 +110,21 @@ const pmeFormInit = function(containerSel) {
                 textInputs[key].val(oldValues[key]);
               }
             } else {
-              if (data.data.message != '') {
+              if (data.data.message !== '') {
                 Notification.show(data.data.message);
                 setTimeout(function() {
                   Notification.hide();
                 }, 5000);
               }
               // alert('data: '+CAFEVDB.print_r(data.data, true));
-              if (typeof textInputs[postAddOn] != 'undefined') {
+              if (typeof textInputs[postAddOn] !== 'undefined') {
                 textInputs[postAddOn].val(data.data[postAddOn]);
               }
-              if (postAddOn == 'submit') {
+              if (postAddOn === 'submit') {
                 for (key in textInputs) {
                   textInputs[key].val(data.data[key]);
                 }
-                if (typeof button != 'undefined') {
+                if (typeof button !== 'undefined') {
                   $(form).off('click', submitSel);
                   button.trigger('click');
                 } else {
@@ -190,8 +190,8 @@ const pmeFormInit = function(containerSel) {
         httpMethod: 'POST',
         data: post,
         cookieName: 'insurance_invoice_download',
-        cookieValue: post['DownloadCookie'],
-        cookiePath: oc_webroot,
+        cookieValue: post.DownloadCookie,
+        cookiePath: webRoot,
         successCallback() {
           console.log('ready');
           Page.busyIcon(false);
@@ -204,7 +204,7 @@ const pmeFormInit = function(containerSel) {
             t(appName, 'Error'),
             function() { Page.busyIcon(false); },
             true, true);
-        }
+        },
       });
       return false;
     });
@@ -218,7 +218,7 @@ const documentReady = function() {
       resizeCB();
     },
     context: globalState,
-    parameters: []
+    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('insurance-brokers', {
@@ -227,7 +227,7 @@ const documentReady = function() {
       resizeCB();
     },
     context: globalState,
-    parameters: []
+    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('instrument-insurance', {
@@ -248,13 +248,13 @@ const documentReady = function() {
 
     },
     context: globalState,
-    parameters: []
+    parameters: [],
   });
 
   CAFEVDB.addReadyCallback(function() {
     const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
-    if (renderer == Page.templateRenderer('instrument-insurance')
-        || renderer == Page.templateRenderer('insuranc-rates')) {
+    if (renderer === Page.templateRenderer('instrument-insurance')
+        || renderer === Page.templateRenderer('insuranc-rates')) {
       pmeFormInit(PHPMyEdit.defaultSelector);
     }
   });

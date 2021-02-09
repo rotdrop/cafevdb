@@ -19,6 +19,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { $ } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';

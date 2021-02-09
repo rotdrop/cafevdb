@@ -20,7 +20,7 @@
  */
 
 import { initialState, appName } from './config.js';
-import { globalState } from './globals.js';
+import { globalState, $ } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as Notification from './notification.js';
 import * as CAFEVDB from './cafevdb.js';

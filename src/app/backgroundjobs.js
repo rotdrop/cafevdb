@@ -19,7 +19,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, cloudUser } from './globals.js';
+import { globalState, cloudUser, $ } from './globals.js';
 import generateUrl from './generate-url.js';
 
 globalState.BackgroundJobs = {

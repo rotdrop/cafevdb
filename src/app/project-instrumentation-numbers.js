@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.js';
+import { globalState, $ } from './globals.js';
 import * as Notification from './notification.js';
 import * as Ajax from './ajax.js';
 import * as CAFEVDB from './cafevdb.js';

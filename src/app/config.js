@@ -19,6 +19,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as ncAuth from '@nextcloud/auth';
+
 const appInfo = require('appinfo/info.xml');
 const appName = appInfo.info.id[0];
 
@@ -49,7 +51,7 @@ try {
 const PHPMyEdit = initialState.PHPMyEdit;
 const CAFEVDB = initialState.CAFEFDB;
 const webRoot = OC.appswebroots[appName] + '/';
-const cloudUser = OC.currentUser;
+const cloudUser = ncAuth.getCurrentUser();
 
 export {
   initialState,

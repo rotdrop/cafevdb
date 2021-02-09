@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, } from './globals.js';
+import { globalState, appName, $ } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -31,38 +31,42 @@ import * as Notification from './notification.js';
 import * as Events from './events.js';
 import * as Email from './email.js';
 import * as PHPMyEdit from './pme.js';
+import * as ncRouter from '@nextcloud/router';
 import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
 
 require('projects.css');
 
-/**
- * Strip any digit from the end of name and attach the four digit
- * year to the end of name.
- *
- * @param {String} name TBD.
- *
- * @param {int} year TBD.
- *
- * @returns {String}
- */
-const attachYear = function(name, year) {
-  name = name.replace(/\d+$/, '');
-  return name + year;
-};
+const pmeSys = PHPMyEdit.sys;
+const pmeData = PHPMyEdit.data;
 
-/**
- *Check whether exactly four digits are attached to the end of
- * name and return those as a four digit year. If not exactly four
- * digits are attached to the end of name return false.
- *
- * @param {String} name TBD.
- *
- * @returns {bool}
- */
-const extractYear = function(name) {
-  const year = name.match(/[^\d](\d{4})$/);
-  return year !== null ? year[1] : false;
-};
+// /**
+//  * Strip any digit from the end of name and attach the four digit
+//  * year to the end of name.
+//  *
+//  * @param {String} name TBD.
+//  *
+//  * @param {int} year TBD.
+//  *
+//  * @returns {String}
+//  */
+// const attachYear = function(name, year) {
+//   name = name.replace(/\d+$/, '');
+//   return name + year;
+// };
+
+// /**
+//  *Check whether exactly four digits are attached to the end of
+//  * name and return those as a four digit year. If not exactly four
+//  * digits are attached to the end of name return false.
+//  *
+//  * @param {String} name TBD.
+//  *
+//  * @returns {bool}
+//  */
+// const extractYear = function(name) {
+//   const year = name.match(/[^\d](\d{4})$/);
+//   return year !== null ? year[1] : false;
+// };
 
 /**
  * Generate a popup-dialog with a wiki-page. Not to much project
@@ -76,11 +80,11 @@ const extractYear = function(name) {
  * (the default). If false, only raise an existing dialog to top.
  */
 const wikiPopup = function(post, reopen) {
-  if (typeof reopen == 'undefined') {
+  if (typeof reopen === 'undefined') {
     reopen = false;
   }
   const wikiDlg = $('#dokuwiki_popup');
-  if (wikiDlg.dialog('isOpen') == true) {
+  if (wikiDlg.dialog('isOpen') === true) {
     if (reopen === false) {
       wikiDlg.dialog('moveToTop');
       return;
@@ -92,7 +96,7 @@ const wikiPopup = function(post, reopen) {
       wikiPage: post.wikiPage,
       popupTitle: post.popupTitle,
       cssClass: appName,
-      modal: false
+      modal: false,
     },
     function(dwDialog, dwDialogWidget) {
       // open callback
@@ -118,11 +122,11 @@ const wikiPopup = function(post, reopen) {
  * (the default). If false, only raise an existing dialog to top.
  */
 const eventsPopup = function(post, reopen) {
-  if (typeof reopen == 'undefined') {
+  if (typeof reopen === 'undefined') {
     reopen = false;
   }
   const eventsDlg = $('#events');
-  if (eventsDlg.dialog('isOpen') == true) {
+  if (eventsDlg.dialog('isOpen') === true) {
     if (reopen === false) {
       eventsDlg.dialog('moveToTop');
       return;
@@ -147,11 +151,11 @@ const eventsPopup = function(post, reopen) {
  * (the default). If false, only raise an existing dialog to top.
  */
 const emailPopup = function(post, reopen) {
-  if (typeof reopen == 'undefined') {
+  if (typeof reopen === 'undefined') {
     reopen = false;
   }
   const emailDlg = $('#emailformdialog');
-  if (emailDlg.dialog('isOpen') == true) {
+  if (emailDlg.dialog('isOpen') === true) {
     if (reopen === false) {
       emailDlg.dialog('moveToTop');
       return;
@@ -171,8 +175,7 @@ const emailPopup = function(post, reopen) {
  * @param {Object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
-const instrumentationNumbersPopup = function(containerSel, post)
-{
+const instrumentationNumbersPopup = function(containerSel, post) {
   // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
@@ -194,13 +197,12 @@ const instrumentationNumbersPopup = function(containerSel, post)
     InitialValue: false, // 'View',
     ReloadName: false, // 'PME_sys_operation',
     ReloadValue: false, // 'View',
-    PME_sys_operation: false, // 'View',
+    [pmeSys('operation')]: false, // 'View',
     ModalDialog: false,
-    modified: false
+    modified: false,
   };
   PHPMyEdit.tableDialogOpen(tableOptions);
 };
-
 
 /**
  * Generate a popup for the extra-fields setup
@@ -212,8 +214,7 @@ const instrumentationNumbersPopup = function(containerSel, post)
  * @param {Object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
-const extraFieldsPopup = function(containerSel, post)
-{
+const extraFieldsPopup = function(containerSel, post) {
   // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
@@ -233,7 +234,7 @@ const extraFieldsPopup = function(containerSel, post)
     InitialValue: false, // 'View',
     ReloadName: false, // 'PME_sys_operation',
     ReloadValue: false, // 'View',
-    PME_sys_operation: false, // 'View',
+    [pmeSys('operation')]: false, // 'View',
     ModalDialog: false,
     modified: false,
   };
@@ -250,8 +251,7 @@ const extraFieldsPopup = function(containerSel, post)
  * @param {Object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
-const projectViewPopup = function(containerSel, post)
-{
+const projectViewPopup = function(containerSel, post) {
   // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
@@ -264,23 +264,30 @@ const projectViewPopup = function(containerSel, post)
     templateRenderer: Page.templateRenderer(template),
     // Now special options for the dialog popup
     InitialViewOperation: true,
-    InitialName: 'PME_sys_operation',
+    InitialName: pmeSys('operation'),
     InitialValue: 'View',
-    ReloadName: 'PME_sys_operation',
+    ReloadName: pmeSys('operation'),
     ReloadValue: 'View',
-    PME_sys_operation: 'View',
-    PME_sys_rec: post.projectId,
+    [pmeSys('operation')]: 'View',
+    [pmeSys('rec')]: post.projectId,
     ModalDialog: true,
     modified: false,
   };
   PHPMyEdit.tableDialogOpen(tableOptions);
 };
 
-/**Parse the user-selection from the project-actions menu.
+/**
+ * Parse the user-selection from the project-actions menu.
  *
  * Project-id and -name are contained in data-fields of the
  * select, other potentially needed data is contained in
  * data-fields in the options.
+ *
+ * @param {jQuery} select TBD.
+ *
+ * @param {String|jQuery} containerSel TBD.
+ *
+ * @returns {bool}
  */
 const actions = function(select, containerSel) {
 
@@ -313,7 +320,7 @@ const actions = function(select, containerSel) {
     break;
   case 'profit-and-loss':
   case 'project-files': {
-    const url = OC.linkTo('files', 'index.php');
+    const url = ncRouter.linkTo('files', 'index.php');
     const path = selected.data('projectFiles');
     CAFEVDB.formSubmit(url, $.param({ dir: path }), 'get');
     break;
@@ -353,7 +360,7 @@ const actions = function(select, containerSel) {
 
   select.trigger('chosen:updated');
 
-  $('div.chosen-container').cafevTooltip({placement:'auto top'});
+  $('div.chosen-container').cafevTooltip({ placement: 'auto top' });
 
   if (!globalState.toolTipsEnabled) {
     $.fn.cafevTooltip.disable();
@@ -382,7 +389,7 @@ const actionMenu = function(containerSel) {
   // Install placeholder for proper sizing
   CAFEVDB.fixupNoChosenMenu(projectActions);
   const maxWidth = projectActions.maxOuterWidth(true);
-  chosenOptions.width = maxWidth+'px';
+  chosenOptions.width = maxWidth + 'px';
 
   // alert('max: '+projectActions.maxOuterWidth(true));
   // alert('max: '+projectActions.maxWidth());
@@ -411,15 +418,15 @@ const pmeFormInit = function(containerSel) {
   if (form.find(submitSel).length > 0) {
 
     const nameSelector = 'input.projectname';
-    const yearSelector = 'select[name="PME_data_year"]';
-    const typeSelector = 'select[name="PME_data_temporal_type"]';
+    const yearSelector = 'select[name="' + pmeData('year') + '"]';
+    const typeSelector = 'select[name="' + pmeData('temporal_type') + '"]';
 
     const name = container.find(nameSelector);
     const year = container.find(yearSelector);
     const projectType = container.find(typeSelector);
 
-    var oldProjectYear = $(form).find(yearSelector + ' :selected').text();
-    var oldprojectName = name.val();
+    let oldProjectYear = $(form).find(yearSelector + ' :selected').text();
+    let oldprojectName = name.val();
 
     /**
      * Verify the user submitted name and year settings,
@@ -430,7 +437,7 @@ const pmeFormInit = function(containerSel) {
      *
      * @param {Object} button TBD.
      */
-    const verifyYearName = function (postAddOn, button) {
+    const verifyYearName = function(postAddOn, button) {
       /* Forward the request to the server via Ajax
        * technologies.
        */
@@ -458,7 +465,7 @@ const pmeFormInit = function(containerSel) {
             ])) {
               cleanup();
             }
-            if (rqData.message != '') {
+            if (rqData.message !== '') {
               Notification.showTemporary(
                 rqData.message, { isHTML: true, timeout: 300 }
               );
@@ -515,37 +522,40 @@ const pmeFormInit = function(containerSel) {
 
 };
 
-///Place an ajax call for public web-page management, create,
-///delete, attach articles.
-///
-/// @param post The data array with action and information.
-///
-/// Supported post packages:
-///
-/// { action: delete,
-///   articleId: XX,
-///   projectId: XX,
-///   articleData: JSON }
-///
-/// { action: add,
-///   projectId: XX,
-///   articleId: XX,
-///   articleData: JSON }
-///
-/// { action: link,
-///   projectId: XX,
-///   articleId: XX,
-///   articleData: JSON }
-///
-/// { action: unlink,
-///   projectId: XX,
-///   articleId: XX,
-///   articleData: JSON }
-///
-/// For Action 'add' a negative ArticleId triggers the geneation
-/// of a new article, otherwise it is the id of an existing
-/// event-announcement to attach to this project.
-///
+/**
+ * Place an ajax call for public web-page management, create,
+ * delete, attach articles.
+ *
+ *  @param {Object} post The data array with action and information.
+ *
+ *  Supported post packages:
+ *
+ *  { action: delete,
+ *    articleId: XX,
+ *    projectId: XX,
+ *    articleData: JSON }
+ *
+ *  { action: add,
+ *    projectId: XX,
+ *    articleId: XX,
+ *    articleData: JSON }
+ *
+ *  { action: link,
+ *    projectId: XX,
+ *    articleId: XX,
+ *    articleData: JSON }
+ *
+ *  { action: unlink,
+ *    projectId: XX,
+ *    articleId: XX,
+ *    articleData: JSON }
+ *
+ *  For Action 'add' a negative ArticleId triggers the geneation
+ *  of a new article, otherwise it is the id of an existing
+ *  event-announcement to attach to this project.
+ *
+ * @param {jQuery} container TBD.
+ */
 const projectWebPageRequest = function(post, container) {
 
   Notification.hide(function() {
@@ -554,7 +564,7 @@ const projectWebPageRequest = function(post, container) {
         Ajax.handleError(xhr, status, errorThrown);
       })
       .done(function(data) {
-        if (data.message != '') {
+        if (data.message !== '') {
           Notification.showHtml(data.message);
         }
         const form = container.find('table.pme-navigation');
@@ -577,6 +587,7 @@ const projectWebPageRequest = function(post, container) {
  *
  * @param {Object} container The div which contains the current dialog.
  *
+ * @returns {bool}
  */
 const projectWebPageTabHandler = function(event, ui, container) {
   const tabId = ui.newTab.attr('id');
@@ -592,7 +603,7 @@ const projectWebPageTabHandler = function(event, ui, container) {
     projectWebPageRequest({
       action: 'add',
       articleId: -1,
-      projectId
+      projectId,
     }, container);
     return false;
   case 'cmsarticle-tab-unlinkpage':
@@ -600,7 +611,7 @@ const projectWebPageTabHandler = function(event, ui, container) {
     articleId = ui.oldPanel.data('articleId');
     projectId = ui.oldPanel.data('projectId');
     articleData = ui.oldPanel.data('article');
-    if (articleId == undefined) {
+    if (articleId === undefined) {
       // so what
       return false;
     }
@@ -626,7 +637,7 @@ const projectWebPageTabHandler = function(event, ui, container) {
     articleId = ui.oldPanel.data('articleId');
     projectId = ui.oldPanel.data('projectId');
     articleData = ui.oldPanel.data('article');
-    if (articleId == undefined) {
+    if (articleId === undefined) {
       // so what
       return false;
     }
@@ -663,7 +674,7 @@ const documentReady = function() {
       let imagesReady = false;
       const imagePoller = function(callback) {
         if (!imagesReady) {
-          var poller = setInterval(function() {
+          const poller = setInterval(function() {
             if (imagesReady) {
               clearInterval(poller);
               callback();
@@ -675,7 +686,7 @@ const documentReady = function() {
       };
 
       if (container.find('#project_flyer_upload').length > 0) {
-        const idField = container.find('input[name="PME_data_id"]');
+        const idField = container.find('input[name="' + pmeData('id') + '"]');
         let recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();
@@ -709,13 +720,13 @@ const documentReady = function() {
       // allFrames also contains some div + all available iframes
       const allDisplayFrames = articleBox.find('.cmsarticleframe.display');
       const allChangeFrames = articleBox.find('.cmsarticleframe.change');
-      const allContainers = articleBox.find('.cmsarticlecontainer');
+      // const allContainers = articleBox.find('.cmsarticlecontainer');
 
       const articleSelect = container.find('#cmsarticleselect');
       articleSelect.chosen({
         width: 'auto',
         disable_search_threshold: 10,
-        no_result_text: t(appName, 'No values match')
+        no_results_text: t(appName, 'No values match'),
       });
       articleSelect.on('chosen:showing_dropdown', function() {
         articleBox.css('overflow', 'visible');
@@ -730,7 +741,7 @@ const documentReady = function() {
         event.preventDefault();
 
         const projectId = articleSelect.data('projectId');
-        const selected  = articleSelect.find('option:selected');
+        const selected = articleSelect.find('option:selected');
         const articleId = selected.val();
         const articleData = selected.data('article');
         // just do it ...
@@ -765,7 +776,7 @@ const documentReady = function() {
       };
 
       const displayArticleLoad = function(frame) {
-        if (typeof frame != 'undefined') {
+        if (typeof frame !== 'undefined') {
           const self = frame;
           const iframe = $(self);
           const contents = iframe.contents();
@@ -786,7 +797,7 @@ const documentReady = function() {
           const itemText = contents.find('div.item-text');
           itemText.css({
             width: '700px',
-            //'min-width': '600px',
+            // 'min-width': '600px',
             'margin-left': '10px',
             left: 'unset',
             position: 'unset',
@@ -797,7 +808,7 @@ const documentReady = function() {
           const scrollHeight = self.contentWindow.document.body.scrollHeight;
           iframe.css({
             width: scrollWidth + 'px',
-            height: scrollHeight + 'px'
+            height: scrollHeight + 'px',
           });
 
           // alert('height: ' + iframe.height() + ' style ' + iframe.attr('style'));
@@ -830,7 +841,7 @@ const documentReady = function() {
               },
               beforeActivate(event, ui) {
                 return projectWebPageTabHandler(event, ui, container);
-              }
+              },
             });
           });
         } else if (numDisplayFrames < 0) {
@@ -843,14 +854,14 @@ const documentReady = function() {
           allDisplayFrames.width(forcedWidth);
           allDisplayFrames.height(forcedHeight);
 
-          if (false) {
-            // In principle, this should not be necessary
-            // as the height of the articleBox should not change.
-            imagePoller(function() {
-              resizeCB();
-              scrollbarAdjust();
-            });
-          }
+          // if (false) {
+          //   // In principle, this should not be necessary
+          //   // as the height of the articleBox should not change.
+          //   imagePoller(function() {
+          //     resizeCB();
+          //     scrollbarAdjust();
+          //   });
+          // }
         }
       };
 
@@ -888,17 +899,17 @@ const documentReady = function() {
             margin: 0,
             'background-image': 'none',
           });
-          contents.find('#rex-output').css({margin: 0});
+          contents.find('#rex-output').css({ margin: 0 });
           contents.find('#rex-navi-path a').removeAttr('href');
 
           wrapper.css({
             padding: 0,
             margin: 0,
-            float: 'left'
+            float: 'left',
           });
           website.css({
             width: '100%', // wrapper.css('width'),
-            'background-image': 'none'
+            'background-image': 'none',
           });
           contents.find('textarea').css({ 'max-width': '720px' });
 
@@ -919,9 +930,9 @@ const documentReady = function() {
           if (editArea.length > 0) {
             CAFEVDB.textareaResize(editArea);
 
-            rexForm.
-              off('resize', 'textarea').
-              on('resize', 'textarea', function() {
+            rexForm
+              .off('resize', 'textarea')
+              .on('resize', 'textarea', function() {
                 forceSize(iframe);
                 return false;
               });
@@ -936,7 +947,7 @@ const documentReady = function() {
           --numChangeFrames;
         }
         // alert('Change Frames: ' + numChangeFrames);
-        if (numChangeFrames == 0) {
+        if (numChangeFrames === 0) {
           $('#cmsFrameLoader').fadeOut(function() {
             container.find('#projectWebArticles').tabs({
               active: 0,
@@ -950,7 +961,7 @@ const documentReady = function() {
               },
               activate(event, ui) {
                 const iframe = ui.newPanel.find('iframe');
-                if (iframe.length == 1) {
+                if (iframe.length === 1) {
                   forceSize(iframe);
                 } else {
                   resizeCB();
@@ -959,7 +970,7 @@ const documentReady = function() {
               },
               beforeActivate(event, ui) {
                 return projectWebPageTabHandler(event, ui, container);
-              }
+              },
             });
             $('#projectWebArticles').css({ opacity: 1.0 });
           });
@@ -1041,7 +1052,7 @@ const documentReady = function() {
           popup.dialog('option', 'position', {
             my: 'center top',
             at: 'center top+20px',
-            of: window
+            of: window,
           });
         }
         if ((popup = $('#project-instrumentation-numbers-dialog')).dialog('isOpen') === true) {
@@ -1049,7 +1060,7 @@ const documentReady = function() {
           popup.dialog('option', 'position', {
             my: 'right top',
             at: 'right-20px top+30px',
-            of: window
+            of: window,
           });
         }
 
@@ -1087,7 +1098,7 @@ const documentReady = function() {
             instrumentationNumbersPopup(selector, post);
             return false;
           });
-      };
+      }
 
       const projectExtra = container.find('td.pme-value.projectextra a.nav');
       projectExtra
@@ -1102,7 +1113,7 @@ const documentReady = function() {
       return false; // table load callback
     },
     context: globalState,
-    parameters: []
+    parameters: [],
   });
 
   CAFEVDB.addReadyCallback(function() {

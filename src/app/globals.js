@@ -31,6 +31,9 @@ function importAll(r) {
 const jQuery = require('jquery');
 const $ = jQuery;
 
+window.$ = $;
+window.jQuery = jQuery;
+
 require('jquery-ui');
 require('jquery-ui/ui/effect');
 require('jquery-ui/ui/widgets/dialog');

@@ -24,8 +24,8 @@
 
 import { globalState, appName, nonce, $ } from './globals.js';
 
-require('tinymce');
-require('jquery.tinymce');
+require('3rdparty/tinymce/tinymce.min');
+require('3rdparty/tinymce/JqueryIntegration');
 
 // console.info('CAFEVDB MCE INIT: ', $.fn.jquery);
 // console.info('MCE: ', window.tinyMCE, window.tinymce);

@@ -32,6 +32,8 @@ import * as PHPMyEdit from './pme.js';
 import * as Dialogs from './dialogs.js';
 import pmeTweaks from './pme-tweaks.js';
 
+const pmeData = PHPMyEdit.data;
+
 const documentReady = function() {
 
   // @@TODO perhaps collects these things in before-ready.js
@@ -239,7 +241,7 @@ const documentReady = function() {
       });
 
       if (container.find('#contact_photo_upload').length > 0) {
-        const idField = container.find('input[name="PME_data_id"]');
+        const idField = container.find('input[name="' + pmeData('id') + '"]');
         let recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();

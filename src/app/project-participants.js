@@ -20,6 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
@@ -32,6 +33,8 @@ import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
 
 require('project-participants.css');
+
+const pmeData = PHPMyEdit.data;
 
 /**
  * Open a dialog in order to edit the personal reccords of one
@@ -98,7 +101,7 @@ const personalRecordDialog = function(record, options) {
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
   } else if (options.projectId > 0) {
     tableOptions[pmeOperation] =
-      options.ReloadValue + '?' + pmeRecord + '[project_id]=' + record.project_id + '&' + pmeRecord + '[musician_id]=' + record.musician_id;
+      options.ReloadValue + '?' + pmeRecord + '[project_id]=' + record.projectId + '&' + pmeRecord + '[musician_id]=' + record.musicianId;
     tableOptions.table = 'ProjectParticipants';
     tableOptions.template = 'project-participants';
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
@@ -749,7 +752,7 @@ const documentReady = function() {
         });
 
       if (container.find('#contact_photo_upload').length > 0) {
-        const idField = container.find('input[name="PME_data_musician_id"]');
+        const idField = container.find('input[name="' + pmeData('musician_id') + '"]');
         let recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();

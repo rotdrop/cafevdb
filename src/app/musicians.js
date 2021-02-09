@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -19,6 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { appName, $ } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -32,14 +34,13 @@ require('jquery-ui/themes/base/autocomplete.css');
 const addMusicians = function(form, post) {
   const projectId = form.find('input[name="projectId"]').val();
   const projectName = form.find('input[name="projectName"]').val();
-  if (typeof post == 'undefined') {
+  if (typeof post === 'undefined') {
     post = form.serialize();
   }
 
   // Open the change-musician dialog with the newly
   // added musician in case of success.
-  $.post(
-    generateUrl('projects/participants/add-musicians'),
+  $.post(generateUrl('projects/participants/add-musicians'),
     post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
@@ -47,30 +48,30 @@ const addMusicians = function(form, post) {
       });
     })
     .done(function(data) {
-      if (!Ajax.validateResponse(data, [ 'musicians' ])) {
+      if (!Ajax.validateResponse(data, ['musicians'])) {
         // Load the underlying base-view in any case in order to go "back" ...
         ProjectParticipants.loadProjectParticipants(form);
         return;
       }
       console.log(data);
-      if (data.musicians.length == 1) {
+      if (data.musicians.length === 1) {
         // open single person change dialog
         const musicianId = data.musicians[0];
-        //alert('data: '+CAFEVDB.print_r(musician, true));
+        // alert('data: '+CAFEVDB.print_r(musician, true));
         ProjectParticipants.loadProjectParticipants(
           form,
           undefined,
           function() {
             ProjectParticipants.personalRecordDialog(
               {
-                project_id: projectId,
-                musician_id: musicianId
+                projectId,
+                musicianId,
               },
               {
-                projectId: projectId,
-                projectName: projectName,
+                projectId,
+                projectName,
                 InitialValue: 'Change',
-                modified: true
+                modified: true,
               });
           });
       } else {
@@ -82,7 +83,7 @@ const addMusicians = function(form, post) {
 
 const contactValidation = function(container) {
 
-  if (typeof container == 'undefined') {
+  if (typeof container === 'undefined') {
     container = $('body');
   }
 
@@ -116,14 +117,16 @@ const contactValidation = function(container) {
         })
         .done(function(data) {
           if (!Ajax.validateResponse(
-            data, [ 'message',
-                    'mobilePhone',
-                    'mobileMeta',
-                    'fixedLinePhone',
-                    'fixedLineMeta' ],
+            data, [
+              'message',
+              'mobilePhone',
+              'mobileMeta',
+              'fixedLinePhone',
+              'fixedLineMeta',
+            ],
             cleanup)) {
             return false;
-          };
+          }
           // inject the sanitized value into their proper input fields
           mobile.val(data.mobilePhone);
           fixedLine.val(data.fixedLinePhone);
@@ -137,13 +140,14 @@ const contactValidation = function(container) {
             fixedLine.attr('title', data.fixedLineMeta);
             fixedLine.cafevTooltip();
           }
-          if (data.message != '') {
-            OC.dialogs.alert(data.message,
-                             t('cafevdb', 'Phone Number Validation'),
-                             function() {
-                               phones.prop('disabled', false);
-                               submitDefer.resolve();
-                             }, true, true);
+          if (data.message !== '') {
+            Dialogs.alert(
+              data.message,
+              t(appName, 'Phone Number Validation'),
+              function() {
+                phones.prop('disabled', false);
+                submitDefer.resolve();
+              }, true, true);
             Dialogs.debugPopup(data);
           } else {
             phones.prop('disabled', false);
@@ -179,16 +183,16 @@ const contactValidation = function(container) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
         .done(function(data) {
-          if (!Ajax.validateResponse(
-            data, [ 'message', 'email' ], cleanup)) {
+          if (!Ajax.validateResponse(data, ['message', 'email'], cleanup)) {
             return;
           }
           // inject the sanitized value into their proper input fields
           form.find('input[name$="email"]').val(data.email);
-          if (data.message != '') {
-            Dialogs.alert(data.message,
-                                  t('cafevdb', 'Email Validation'),
-                                  cleanup, true, true);
+          if (data.message !== '') {
+            Dialogs.alert(
+              data.message,
+              t(appName, 'Email Validation'),
+              cleanup, true, true);
             Dialogs.debugPopup(data);
           } else {
             cleanup();
@@ -205,16 +209,16 @@ const contactValidation = function(container) {
     .autocomplete({
       source: [],
       minLength: 0,
-      open: function(event, ui) {
-        const $input = $(event.target),
-              $results = $input.autocomplete("widget"),
-              top = $results.position().top,
-              height = $results.outerHeight(),
-              inputHeight = $input.outerHeight(),
-              newTop = top - height - inputHeight;
+      open(event, ui) {
+        const $input = $(event.target);
+        const $results = $input.autocomplete('widget');
+        const top = $results.position().top;
+        const height = $results.outerHeight();
+        const inputHeight = $input.outerHeight();
+        const newTop = top - height - inputHeight;
 
-        $results.css("top", newTop + "px");
-      }
+        $results.css('top', newTop + 'px');
+      },
     })
     .on('focus, click', function() {
       if (!$(this).autocomplete('widget').is(':visible')) {
@@ -227,7 +231,7 @@ const contactValidation = function(container) {
   const countryInput = $('<input type="text"'
                          + ' class="musician-address country"'
                          + ' id="country-autocomplete"'
-                         + ' placeholder="'+t('cafevdb', 'Suggestions')+'" />');
+                         + ' placeholder="' + t(appName, 'Suggestions') + '" />');
   countryInput.hide();
   $('tr.musician-address.country td[class|="pme-value"] select').before(countryInput);
   //    countryInput = $('#country-autocomplete');
@@ -235,22 +239,22 @@ const contactValidation = function(container) {
     .autocomplete({
       source: [],
       minLength: 0,
-      open: function(event, ui) {
-        const $input = $(event.target),
-              $results = $input.autocomplete("widget"),
-              top = $results.position().top,
-              height = $results.outerHeight(),
-              inputHeight = $input.outerHeight(),
-              newTop = top - height - inputHeight;
+      open(event, ui) {
+        const $input = $(event.target);
+        const $results = $input.autocomplete('widget');
+        const top = $results.position().top;
+        const height = $results.outerHeight();
+        const inputHeight = $input.outerHeight();
+        const newTop = top - height - inputHeight;
 
-        $results.css("top", newTop + "px");
+        $results.css('top', newTop + 'px');
       },
-      select: function(event, ui) {
+      select(event, ui) {
         const country = ui.item.value;
         countryInput.val(country);
         countryInput.trigger('blur');
         return true;
-      }
+      },
     })
     .on('focus, click', function() {
       if (!$(this).autocomplete('widget').is(':visible')) {
@@ -263,14 +267,14 @@ const contactValidation = function(container) {
       event.stopImmediatePropagation();
 
       const country = self.val();
-      countrySelect.find('option[value='+country+']').prop('selected', true);
+      countrySelect.find('option[value=' + country + ']').prop('selected', true);
       countrySelect.trigger('chosen:updated');
       countrySelect.trigger('change');
 
       return false;
     });
 
-  var lockCountry = false;
+  let lockCountry = false;
   countrySelect.on('change', function(event) {
     address.filter('.city').trigger('blur');
     lockCountry = true;
@@ -287,7 +291,7 @@ const contactValidation = function(container) {
     // this is somehow needed here ...
     event.stopImmediatePropagation();
 
-    if (!!self.autocomplete('widget').is(':visible')) {
+    if (self.autocomplete('widget').is(':visible')) {
       // don't validate while select box is open
       return false;
     }
@@ -295,8 +299,8 @@ const contactValidation = function(container) {
     const submitDefer = PHPMyEdit.deferReload(container);
 
     const form = container.find('form.pme-form');
-    var post = form.serialize();
-    post += '&' + $.param({'active_element': self.attr('name')});
+    let post = form.serialize();
+    post += '&' + $.param({ activeElement: self.attr('name') });
 
     const reload = container.find('.pme-navigation input.pme-reload');
 
@@ -317,7 +321,7 @@ const contactValidation = function(container) {
       })
       .done(function(data) {
         if (!Ajax.validateResponse(
-          data, [ 'message', 'city', 'zip', 'street', 'suggestions' ], cleanup)) {
+          data, ['message', 'city', 'zip', 'street', 'suggestions'], cleanup)) {
           return false;
         }
 
@@ -334,28 +338,28 @@ const contactValidation = function(container) {
         const countries = suggestions.countries;
         countryInput.hide();
         countryInput.autocomplete('option', 'source', []);
-        if (countries.length == 1 && countries[0] != selectedCountry && !lockCountry) {
+        if (countries.length === 1 && countries[0] !== selectedCountry && !lockCountry) {
           // if we have just one matching country, we force the
           // country-select to hold this value.
-          countrySelect.find('option[value='+countries[0]+']').prop('selected', true);
+          countrySelect.find('option[value=' + countries[0] + ']').prop('selected', true);
           countrySelect.trigger('chosen:updated');
-          //alert('selected: '+selectedCountry+' matching: '+countries[0]);
+          // alert('selected: '+selectedCountry+' matching: '+countries[0]);
         } else if (countries.length > 1) {
           // provide the user with some more choices.
-          //alert('blah');
+          // alert('blah');
           countryInput.autocomplete('option', 'source', countries);
           countryInput.show();
         }
         lockCountry = false;
 
-        //data.message += CAFEVDB.print_r(citySuggestions, true);
-        if (data.message != '') {
+        // data.message += CAFEVDB.print_r(citySuggestions, true);
+        if (data.message !== '') {
           Dialogs.alert(
-            data.message, t('cafevdb', 'Address Validation'), cleanup, true, true);
+            data.message, t(appName, 'Address Validation'), cleanup, true, true);
           Dialogs.debugPopup(data);
         } else {
           cleanup();
-	}
+        }
       });
     return false;
   });
@@ -369,9 +373,9 @@ const ready = function(container) {
   contactValidation(container);
 
   const form = container.find('form.pme-form');
-  const nameInputs = form.find('input.musician-name');
+  // const nameInputs = form.find('input.musician-name');
 
-  var nameValidationActive = false;
+  let nameValidationActive = false;
 
   // avoid duplicate entries in the DB, but only when adding new
   // musicians.
@@ -391,7 +395,7 @@ const ready = function(container) {
 
       const cleanup = function() {
         nameValidationActive = false;
-      }
+      };
 
       $.post(
         generateUrl('validate/musicians/duplicates'),
@@ -399,28 +403,32 @@ const ready = function(container) {
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
-        .done(function (data) {
-          if (!Ajax.validateResponse(data, [ 'message' ], cleanup)) {
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['message'], cleanup)) {
             return;
           }
 
           if (!$.isEmptyObject(data.duplicates)) {
-            var numDuplicates = 0;
-            var ids = [];
-            for (var id in data.duplicates) {
+            let numDuplicates = 0;
+            const ids = [];
+            for (const id in data.duplicates) {
               ++numDuplicates;
               ids.push(id);
             }
             if (numDuplicates > 0) {
               Dialogs.confirm(
-                t('cafevdb',
-                  'You definitely do not want to add duplicates to the database.'+"\n"
-                  + 'Please answer "no" in order to add a new musician,'+"\n"
-                  + 'otherwise answer "yes". If you react in a positive manner'+"\n"
-                  + 'you will be redirected to a web form in order to bring'+"\n"
+                t(appName,
+                  'You definitely do not want to add duplicates to the database.'
+                  + '\n'
+                  + 'Please answer "no" in order to add a new musician,'
+                  + '\n'
+                  + 'otherwise answer "yes". If you react in a positive manner'
+                  + '\n'
+                  + 'you will be redirected to a web form in order to bring'
+                  + '\n'
                   + 'the personal data of the respective musician up-to-date.')
                   .replace(/(?:\r\n|\r|\n)/g, '<br/>'),
-                t('cafevdb', 'Avoid Possible Duplicate?'),
+                t(appName, 'Avoid Possible Duplicate?'),
                 function(answer) {
                   nameValidationActive = false;
                   if (!answer) {
@@ -429,7 +437,7 @@ const ready = function(container) {
                   const mainContainer = $(container.data('AmbientContainer'));
                   const form = mainContainer.find(PHPMyEdit.formSelector());
                   container.dialog('close');
-                  if (numDuplicates == 1) {
+                  if (numDuplicates === 1) {
                     const projectId = form.find('input[name="ProjectId"]').val();
                     const projectName = form.find('input[name="ProjectName"]').val();
                     ProjectParticipants.personalRecordDialog(
@@ -437,8 +445,8 @@ const ready = function(container) {
                       {
                         table: 'Musicians',
                         InitialValue: 'View',
-                        projectId: projectId ? projectId : -1,
-                        projectName: projectName
+                        projectId: projectId || -1,
+                        projectName,
                       }
                     );
                   } else {
@@ -448,8 +456,8 @@ const ready = function(container) {
             }
             return false;
           }
-          if (data.message != '') {
-            CAFEFDB.dialogs.alert(data.message, t('cafevdb', 'Possible Duplicate!'), cleanup, true, true);
+          if (data.message !== '') {
+            Dialogs.alert(data.message, t(appName, 'Possible Duplicate!'), cleanup, true, true);
           } else {
             cleanup();
           }

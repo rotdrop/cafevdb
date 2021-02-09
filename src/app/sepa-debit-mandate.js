@@ -28,6 +28,8 @@ import * as Page from './page.js';
 import * as Email from './email.js';
 import * as PHPMyEdit from './pme.js';
 
+const pmeData = PHPMyEdit.data;
+
 const SepaDebitMandate = globalState.SepaDebitMandate = {
   projectId: -1,
   projectName: '',
@@ -102,14 +104,14 @@ const mandatesInit = function(data, reloadCB) {
         title: t(appName, 'Change the SEPA mandate. Note that the SEPA mandate-reference is automatically computed and cannot be changed.'),
         click() {
           // enable the form, disable the change button
-          $(this).dialog('widget').find('button.save').attr('disabled', !self.instantValidation);
-          $(this).dialog('widget').find('button.apply').attr('disabled', !self.instantValidation);
-          $(this).dialog('widget').find('button.delete').attr('disabled', false);
-          $(this).dialog('widget').find('button.change').attr('disabled', true);
+          $(this).dialog('widget').find('button.save').prop('disabled', !self.instantValidation);
+          $(this).dialog('widget').find('button.apply').prop('disabled', !self.instantValidation);
+          $(this).dialog('widget').find('button.delete').prop('disabled', false);
+          $(this).dialog('widget').find('button.change').prop('disabled', true);
           if (lastUsedDate.val().trim() === '') {
-            mandateForm.find('input.bankAccount').attr('disabled', false);
-            mandateForm.find('input.mandateDate').attr('disabled', false);
-            lastUsedDate.attr('disabled', false);
+            mandateForm.find('input.bankAccount').prop('disabled', false);
+            mandateForm.find('input.mandateDate').prop('disabled', false);
+            lastUsedDate.prop('disabled', false);
           }
           $.fn.cafevTooltip.remove(); // clean up left-over balloons
         },
@@ -140,13 +142,13 @@ const mandatesInit = function(data, reloadCB) {
             // If we are about to display an existing mandate, first
             // disable all inputs and leave only the "close" and
             // "change" buttons enabled, and the lastUsed date.
-            $(dlg).dialog('widget').find('button.save').attr('disabled', true);
-            $(dlg).dialog('widget').find('button.apply').attr('disabled', true);
-            $(dlg).dialog('widget').find('button.delete').attr('disabled', true);
-            $(dlg).dialog('widget').find('button.change').attr('disabled', false);
-            mandateForm.find('input.bankAccount').attr('disabled', true);
-            mandateForm.find('input.mandateDate').attr('disabled', true);
-            mandateForm.find('input.lastUsedDate').attr('disabled', true);
+            $(dlg).dialog('widget').find('button.save').prop('disabled', true);
+            $(dlg).dialog('widget').find('button.apply').prop('disabled', true);
+            $(dlg).dialog('widget').find('button.delete').prop('disabled', true);
+            $(dlg).dialog('widget').find('button.change').prop('disabled', false);
+            mandateForm.find('input.bankAccount').prop('disabled', true);
+            mandateForm.find('input.mandateDate').prop('disabled', true);
+            mandateForm.find('input.lastUsedDate').prop('disabled', true);
             $.fn.cafevTooltip.remove(); // clean up left-over balloons
             reloadCB();
           });
@@ -192,16 +194,16 @@ const mandatesInit = function(data, reloadCB) {
         // If we are about to display an existing mandate, first
         // disable all inputs and leave only the "close" and
         // "change" buttons enabled.
-        buttons.save.attr('disabled', true);
-        buttons.apply.attr('disabled', true);
-        buttons.delete.attr('disabled', true);
-        mandateForm.find('input.bankAccount').attr('disabled', true);
-        mandateForm.find('input.mandateDate').attr('disabled', true);
-        mandateForm.find('input.lastUsedDate').attr('disabled', true);
+        buttons.save.prop('disabled', true);
+        buttons.apply.prop('disabled', true);
+        buttons.delete.prop('disabled', true);
+        mandateForm.find('input.bankAccount').prop('disabled', true);
+        mandateForm.find('input.mandateDate').prop('disabled', true);
+        mandateForm.find('input.lastUsedDate').prop('disabled', true);
       } else {
-        buttons.save.attr('disabled', !self.instantValidation);
-        buttons.apply.attr('disabled', !self.instantValidation);
-        buttons.change.attr('disabled', true);
+        buttons.save.prop('disabled', !self.instantValidation);
+        buttons.apply.prop('disabled', !self.instantValidation);
+        buttons.change.prop('disabled', true);
       }
 
       widget.find('button, input, label, [class*="tooltip"]').cafevTooltip({ placement: 'auto bottom' });
@@ -257,11 +259,11 @@ const mandatesInit = function(data, reloadCB) {
           input.prop('readonly', lock);
           // disable save and apply during validation
           if (lock) {
-            buttons.save.attr('disabled', true);
-            buttons.apply.attr('disabled', true);
+            buttons.save.prop('disabled', true);
+            buttons.apply.prop('disabled', true);
           } else {
-            buttons.save.attr('disabled', !self.instantValidation);
-            buttons.apply.attr('disabled', !self.instantValidation);
+            buttons.save.prop('disabled', !self.instantValidation);
+            buttons.apply.prop('disabled', !self.instantValidation);
           }
         });
       };
@@ -284,8 +286,8 @@ const mandatesInit = function(data, reloadCB) {
           mandateForm.find('#bankAccountIBAN').on('blur', validateInput);
           mandateForm.find('#bankAccountIBAN').trigger('blur');
         }
-        buttons.save.attr('disabled', !self.instantValidation);
-        buttons.apply.attr('disabled', !self.instantValidation);
+        buttons.save.prop('disabled', !self.instantValidation);
+        buttons.apply.prop('disabled', !self.instantValidation);
 
         return false;
       });
@@ -526,33 +528,33 @@ const mandateValidatePME = function(event, validateLockCB) {
   // mandateDate
   // lastUsedDate
   const inputMapping = {
-    PME_data_lastUsedDate: 'lastUsedDate',
-    PME_data_mandateDate: 'mandateDate',
-    PME_data_bankAccountOwner: 'bankAccountOwner',
-    PME_data_IBAN: 'bankAccountIBAN',
-    PME_data_BIC: 'bankAccountBIC',
-    PME_data_BLZ: 'bankAccountBLZ',
+    [pmeData('lastUsedDate')]: 'lastUsedDate',
+    [pmeData('mandateDate')]: 'mandateDate',
+    [pmeData('bankAccountOwner')]: 'bankAccountOwner',
+    [pmeData('IBAN')]: 'bankAccountIBAN',
+    [pmeData('BIC')]: 'bankAccountBIC',
+    [pmeData('BLZ')]: 'bankAccountBLZ',
   };
   let changed = $element.attr('name');
   changed = inputMapping[changed];
 
-  let projectElem = $('[name="PME_data_project_id"]');
+  let projectElem = $('[name="' + pmeData('project_id') + '"]');
   if (!projectElem.is('input')) {
     projectElem = projectElem.find('option[selected="selected"]');
   }
   const projectId = projectElem.val();
 
   const mandateData = {
-    mandateReference: $('input[name="PME_data_mandate_reference"]').val(),
-    mandateDate: $('input[name="PME_data_mandate_date"]').val(),
-    bankAccountOwner: $('input[name="PME_data_bank_account_owner"]').val(),
-    lastUsedDate: $('input[name="PME_data_last_used_date"]').val(),
-    MusicianId: $('select[name="PME_data_musician_id"] option[selected="selected"]').val(),
+    mandateReference: $('input[name="' + pmeData('mandate_reference') + '"]').val(),
+    mandateDate: $('input[name="' + pmeData('mandate_date') + '"]').val(),
+    bankAccountOwner: $('input[name="' + pmeData('bank_account_owner') + '"]').val(),
+    lastUsedDate: $('input[name="' + pmeData('last_used_date') + '"]').val(),
+    MusicianId: $('select[name="' + pmeData('musician_id') + '"] option[selected="selected"]').val(),
     ProjectId: projectId,
     MandateProjectId: projectId,
-    bankAccountIBAN: $('input[name="PME_data_iban"]').val(),
-    bankAccountBIC: $('input[name="PME_data_bic"]').val(),
-    bankAccountBLZ: $('input[name="PME_data_blz"]').val(),
+    bankAccountIBAN: $('input[name="' + pmeData('iban') + '"]').val(),
+    bankAccountBIC: $('input[name="' + pmeData('bic') + '"]').val(),
+    bankAccountBLZ: $('input[name="' + pmeData('blz') + '"]').val(),
     changed,
   };
 
@@ -590,13 +592,13 @@ const mandateValidatePME = function(event, validateLockCB) {
         $element.val(data.data.value);
       }
       if (data.data.iban) {
-        $('input[name="PME_data_iban"]').val(data.data.iban);
+        $('input[name="' + pmeData('iban') + '"]').val(data.data.iban);
       }
       if (data.data.bic) {
-        $('input[name="PME_data_bic"]').val(data.data.bic);
+        $('input[name="' + pmeData('bic') + '"]').val(data.data.bic);
       }
       if (data.data.blz) {
-        $('input[name="PME_data_blz"]').val(data.data.blz);
+        $('input[name="' + pmeData('blz') + '"]').val(data.data.blz);
       }
 
       validateUnlock();
@@ -849,7 +851,7 @@ const mandateReady = function(selector) {
       inputs.prop('readonly', true);
       button.blur();
 
-      mandateValidatePME.call({ name: 'PME_data_IBAN' }, event, function(lock, validateOk) {
+      mandateValidatePME.call({ name: pmeData('IBAN') }, event, function(lock, validateOk) {
         if (lock) {
           inputs.prop('readonly', true);
         } else {

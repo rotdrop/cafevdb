@@ -19,7 +19,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, webRoot } from './globals.js';
+import { globalState, appName, webRoot, $ } from './globals.js';
 import print_r from './print-r.js';
 import * as Dialogs from './dialogs.js';
 

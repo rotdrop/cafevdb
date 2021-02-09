@@ -21,6 +21,7 @@
 
 // @@TODO these are rather personal settings
 
+import { $ } from './globals.js';
 import { appSettings, toolTipsInit, unfocus } from './cafevdb.js';
 
 const documentReady = function() {

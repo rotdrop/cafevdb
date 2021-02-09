@@ -21,7 +21,7 @@
  */
 
 // Compatibility
-import { globalState, appName } from './globals.js';
+import { appName } from './globals.js';
 
 require('dialogs.css');
 
@@ -81,13 +81,16 @@ const debugPopup = function(data, callback) {
   }
 };
 
-export { alert, info, confirm, debugPopup };
+const filePicker = function(title, callback, multiselect, mimetypeFilter, modal, type, path, options) {
+  return OC.dialogs.filepicker(title, callback, multiselect, mimetypeFilter, modal, type, path, options);
+};
 
-globalState.Dialogs = {
+export {
   alert,
   info,
   confirm,
   debugPopup,
+  filePicker,
 };
 
 // Local Variables: ***

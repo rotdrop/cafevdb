@@ -20,18 +20,19 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.js';
+import { globalState, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
+import generateUrl from './generate-url.js';
 
 require('project-extra.css');
 
 const ready = function(selector, resizeCB) {
-  var container = $(selector);
+  const container = $(selector);
 
-  var tableTab = container.find('select.tab');
-  var newTab = container.find('input.new-tab');
+  const tableTab = container.find('select.tab');
+  const newTab = container.find('input.new-tab');
   newTab.prop('readonly', !!tableTab.find(':selected').val());
   container.on('change', 'select.tab', function(event) {
     newTab.prop('readonly', !!tableTab.find(':selected').val());
@@ -45,16 +46,16 @@ const ready = function(selector, resizeCB) {
 
     container.find('tr.multiplicity')
       .removeClass(function(index, className) {
-	return (className.match(/\b(multiplicity|data-type)-\S+/g) || []).join(' ');
+        return (className.match(/\b(multiplicity|data-type)-\S+/g) || []).join(' ');
       })
-      .addClass('multiplicity-' + data.multiplicity + ' ' + 'data-type-' + data.data_type);
+      .addClass('multiplicity-' + data.multiplicity + ' ' + 'data-type-' + data.dataType);
   };
 
   const fieldTypeData = function() {
     const multiplicity = container.find('select.multiplicity');
     const dataType = container.find('select.data-type');
     if (multiplicity.length > 0 && dataType.length > 0) {
-      return { 'multiplicity': multiplicity.val(), 'data_type': dataType.val() };
+      return { multiplicity: multiplicity.val(), dataType: dataType.val() };
     }
     const elem = container.find('td.pme-value.field-type .data');
     if (elem.length <= 0) {
@@ -76,20 +77,20 @@ const ready = function(selector, resizeCB) {
   container.on('change', 'select.multiplicity, select.data-type', function(event) {
     const multiplicity = container.find('select.multiplicity').val();
     const dataType = container.find('select.data-type').val();
-    setFieldTypeCssClass({ 'multiplicity': multiplicity, 'data_type': dataType });
+    setFieldTypeCssClass({ multiplicity, dataType });
     allowedHeaderVisibility();
     resizeCB();
     return false;
   });
 
   container.on('keypress', 'tr.allowed-values input[type="text"]', function(event) {
-    var pressed_key;
+    let pressedKey;
     if (event.which) {
-      pressed_key = event.which;
+      pressedKey = event.which;
     } else {
-      pressed_key = event.keyCode;
+      pressedKey = event.keyCode;
     }
-    if (pressed_key == 13) { // enter pressed
+    if (pressedKey === 13) { // enter pressed
       event.stopImmediatePropagation();
       $(this).blur();
       return false;
@@ -119,23 +120,23 @@ const ready = function(selector, resizeCB) {
   });
 
   container.on('change', 'select.default-multi-value', function(event) {
-    var self = $(this);
+    const self = $(this);
     container.find('input.pme-input.default-value').val(self.find(':selected').val());
     return false;
   });
 
   container.on('blur', 'input.pme-input.default-value', function(event) {
-    var self = $(this);
-    var dfltSelect = container.find('select.default-multi-value');
-    dfltSelect.children('option[value="'+self.val()+'"]').prop('selected', true);
+    const self = $(this);
+    const dfltSelect = container.find('select.default-multi-value');
+    dfltSelect.children('option[value="' + self.val() + '"]').prop('selected', true);
     dfltSelect.trigger('chosen:updated');
     return false;
   });
 
   container.on('click', 'tr.allowed-values input.delete-undelete', function(event) {
-    var self = $(this);
-    var row = self.closest('tr.allowed-values');
-    var used = row.data('used');
+    const self = $(this);
+    const row = self.closest('tr.allowed-values');
+    let used = row.data('used');
     used = !(!used || used === 'unused');
     if (row.data('flags') === 'deleted') {
       // undelete
@@ -143,17 +144,17 @@ const ready = function(selector, resizeCB) {
       row.switchClass('deleted', 'active');
       row.find('input.field-flags').val('active');
       row.find('input[type="text"], textarea').prop('readonly', false);
-      var key = row.find('input.field-key');
-      var label = row.find('input.field-label');
+      const key = row.find('input.field-key');
+      const label = row.find('input.field-label');
       if (used) {
         key.prop('readonly', true);
       }
-      var dfltSelect = container.find('select.default-multi-value');
-      var option = '<option value="'+key.val()+'">'+label.val()+'</option>';
+      const dfltSelect = container.find('select.default-multi-value');
+      const option = '<option value="' + key.val() + '">' + label.val() + '</option>';
       dfltSelect.children('option').first().after(option);
       dfltSelect.trigger('chosen:updated');
     } else {
-      var key = row.find('input.field-key').val();
+      const key = row.find('input.field-key').val();
       if (!used) {
         // just remove the row
         row.remove();
@@ -167,8 +168,8 @@ const ready = function(selector, resizeCB) {
         row.find('input.field-flags').val('deleted');
         row.find('input[type="text"], textarea').prop('readonly', true);
       }
-      var dfltSelect = container.find('select.default-multi-value');
-      dfltSelect.find('option[value="'+key+'"]').remove();
+      const dfltSelect = container.find('select.default-multi-value');
+      dfltSelect.find('option[value="' + key + '"]').remove();
       dfltSelect.trigger('chosen:updated');
     }
     return false;
@@ -201,13 +202,12 @@ const ready = function(selector, resizeCB) {
       };
 
       $.post(
-        OC.generateUrl('/apps/cafevdb/validate/general/monetary-value'),
-        { 'value': amount})
+        generateUrl('validate/general/monetary-value'), { value: amount })
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
-        .done(function (data) {
-          if (!Ajax.validateResponse(data, [ 'amount' ], cleanup)) {
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['amount'], cleanup)) {
             return;
           }
           self.val(data.amount);
@@ -235,9 +235,9 @@ const ready = function(selector, resizeCB) {
 
     // fetch all available keys, server validation will enforce
     // unique keys.
-    var keys = [];
+    const keys = [];
     const tbody = self.closest('tbody');
-    var skipKey = placeHolder ? false : row.find('input.field-key').val().trim();
+    let skipKey = placeHolder ? false : row.find('input.field-key').val().trim();
     tbody.find('tr.data-line').not('.placeholder').each(function(index) {
       const key = $(this).find('input.field-key').val().trim();
       if (key === skipKey) {
@@ -250,20 +250,20 @@ const ready = function(selector, resizeCB) {
 
     const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
 
-    var dflt = container.find('select.default-multi-value');
-    var oldDflt = dflt.find(':selected').val();
+    const dflt = container.find('select.default-multi-value');
+    const oldDflt = dflt.find(':selected').val();
 
-    var postData = {
+    let postData = {
       request: 'allowed-values-option',
       value: {
-        selected: oldDflt ? oldDflt : '',
-        data: data,
-        keys: keys.length > 0 ? keys : 0
-      }
+        selected: oldDflt,
+        data,
+        keys: keys.length > 0 ? keys : 0,
+      },
     };
 
     postData = $.param(postData);
-    postData += '&'+allowed.serialize();
+    postData += '&' + allowed.serialize();
 
     // defer submit until after validation.
     const submitDefer = PHPMyEdit.deferReload(container);
@@ -274,36 +274,36 @@ const ready = function(selector, resizeCB) {
     };
 
     $.post(
-      OC.generateUrl('/apps/cafevdb/projects/extra-fields/allowed-values-option'),
+      generateUrl('projects/extra-fields/allowed-values-option'),
       postData)
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, cleanup);
       })
-      .done(function (data) {
+      .done(function(data) {
         if (!Ajax.validateResponse(
           data,
-          [ 'AllowedValueOption', 'AllowedValueInput', 'AllowedValue' ],
+          ['AllowedValueOption', 'AllowedValueInput', 'AllowedValue'],
           cleanup)) {
           return;
         }
         const option = data.AllowedValueOption;
-        const input  = data.AllowedValueInput;
-        const value  = data.AllowedValue; // sanitized
+        const input = data.AllowedValueInput;
+        // const value = data.AllowedValue; // sanitized
         $.fn.cafevTooltip.remove();
         if (placeHolder) {
           row.parents('table').find('thead').show();
-          row.before(input).prev().find('input, textarea').cafevTooltip({placement:'auto right'});
+          row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
           self.val('');
-          row.data('index', row.data('index')+1); // next index
+          row.data('index', row.data('index') + 1); // next index
           resizeCB();
         } else {
-          var next = row.next();
+          const next = row.next();
           row.replaceWith(input);
-          next.prev().find('input, textarea').cafevTooltip({placement:'auto right'});;
+          next.prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
         }
         // get the key <-> value connection right for the default selector
         const newValue = $(option).val();
-        const oldOption = dflt.find('option[value="'+newValue+'"]');
+        const oldOption = dflt.find('option[value="' + newValue + '"]');
         if (oldOption.length > 0) {
           oldOption.replaceWith(option);
         } else {
@@ -329,10 +329,10 @@ const ready = function(selector, resizeCB) {
     console.log('readers change');
     const self = $(this);
 
-    var changed = false;
+    let changed = false;
     const writers = container.find('select.writers');
     self.find('option').not(':selected').each(function() {
-      const writer = writers.find('option[value="'+this.value+'"]');
+      const writer = writers.find('option[value="' + this.value + '"]');
       if (writer.prop('selected')) {
         writer.prop('selected', false);
         changed = true;
@@ -350,10 +350,10 @@ const ready = function(selector, resizeCB) {
     console.log('writers change');
     const self = $(this);
 
-    var changed = false;
+    let changed = false;
     const readers = container.find('select.readers');
     self.find('option:selected').each(function() {
-      const reader = readers.find('option[value="'+this.value+'"]');
+      const reader = readers.find('option[value="' + this.value + '"]');
       if (!reader.prop('selected')) {
         reader.prop('selected', true);
         changed = true;
@@ -365,8 +365,8 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  var tableContainerId = PHPMyEdit.idSelector('table-container');
-  container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
+  const tableContainerId = PHPMyEdit.idSelector('table-container');
+  container.on('chosen:showing_dropdown', tableContainerId + ' select', function(event) {
     console.log('chosen:showing_dropdown');
     const widget = container.cafevDialog('widget');
     const tableContainer = container.find(tableContainerId);
@@ -376,7 +376,7 @@ const ready = function(selector, resizeCB) {
     return true;
   });
 
-  container.on('chosen:hiding_dropdown', tableContainerId+' select', function(event) {
+  container.on('chosen:hiding_dropdown', tableContainerId + ' select', function(event) {
     console.log('chosen:hiding_dropdown');
     const widget = container.cafevDialog('widget');
     const tableContainer = container.find(tableContainerId);
@@ -404,10 +404,10 @@ const ready = function(selector, resizeCB) {
 const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
-    const container = PHPMyEdit.container();
-    if (!container.hasClass('project-extra-fields')) {
-      return; // not for us
-    }
+    // const container = PHPMyEdit.container();
+    // if (!container.hasClass('project-extra-fields')) {
+    //   return; // not for us
+    // }
     // ready(); // ????
   });
 

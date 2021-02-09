@@ -21,9 +21,10 @@
  */
 
 import { appName } from './config.js';
+import * as ncRouter from '@nextcloud/router';
 
 const generateUrl = function(postFix) {
-  return OC.generateUrl('/apps/' + appName + '/' + postFix);
+  return ncRouter.generateUrl('/apps/' + appName + '/' + postFix);
 };
 
 export default generateUrl;

@@ -336,7 +336,7 @@ const afterLoad = function(container) {
     simpleSetValueHandler(
       shareOwnerCheck, 'click', msg, {
         sucess(element, data, value, msg) { // done
-          shareOwner.attr('disabled', true);
+          shareOwner.prop('disabled', true);
           shareOwnerSaved.val(shareOwner.val());
           if (shareOwner.val() !== '') {
             $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
@@ -549,7 +549,7 @@ const afterLoad = function(container) {
       });
     } // fieldset emailuser
 
-    {
+    { // eslint-disable-line
       // const container = form.find('#emaildistribute');
       // const msg = container.find('.statusmessage');
 

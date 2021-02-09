@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -19,9 +20,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const print_r = function(array, return_val, max_depth) {
-  if (max_depth == undefined) {
-    max_depth = 5;
+const print_r = function(array, returnVal, maxDepth) {
+  if (maxDepth === undefined) {
+    maxDepth = 5;
   }
   // discuss at: http://phpjs.org/functions/print_r/
   // original by: Michael White (http://getsprink.com)
@@ -32,54 +33,53 @@ const print_r = function(array, return_val, max_depth) {
   // depends on: echo
   // example 1: print_r(1, true);
   // returns 1: 1
-  var output = '',
-      pad_char = ' ',
-      pad_val = 4,
-      d = window.document,
-      getFuncName = function (fn) {
-        var name = (/\W*function\s+([\w\$]+)\s*\(/)
-            .exec(fn);
-        if (!name) {
-          return '(Anonymous)';
-        }
-        return name[1];
-      };
-  var repeat_char = function (len, pad_char) {
-    var str = '';
-    for (var i = 0; i < len; i++) {
-      str += pad_char;
+  let output = '';
+  const padChar = ' ';
+  const padVal = 4;
+  let d = window.document;
+  const getFuncName = function(fn) {
+    const name = (/\W*function\s+([\w$]+)\s*\(/).exec(fn);
+    if (!name) {
+      return '(Anonymous)';
+    }
+    return name[1];
+  };
+  const repeatChar = function(len, padChar) {
+    let str = '';
+    for (let i = 0; i < len; i++) {
+      str += padChar;
     }
     return str;
   };
-  var formatArray = function (obj, cur_depth, pad_val, pad_char, max_depth) {
-    if (cur_depth > 0) {
-      cur_depth++;
+  const formatArray = function(obj, curDepth, padVal, padChar, maxDepth) {
+    if (curDepth > 0) {
+      curDepth++;
     }
-    var base_pad = repeat_char(pad_val * cur_depth, pad_char);
-    var thick_pad = repeat_char(pad_val * (cur_depth + 1), pad_char);
-    var str = '';
-    if (typeof obj === 'object' && obj !== null && obj.constructor && getFuncName(obj.constructor) !==
-        'PHPJS_Resource') {
+    const basePad = repeatChar(padVal * curDepth, padChar);
+    const thickPad = repeatChar(padVal * (curDepth + 1), padChar);
+    let str = '';
+    if (typeof obj === 'object' && obj !== null && obj.constructor && getFuncName(obj.constructor)
+        !== 'PHPJS_Resource') {
       const type = Object.prototype.toString.call(obj);
       if (type === '[object Array]') {
         str += 'Array\n';
       } else /* if (type == '[object Object]') */ {
         str += 'Object\n';
       }
-      str += base_pad + '(\n';
-      for (var key in obj) {
-	const fieldType = Object.prototype.toString.call(obj[key]);
-	if (cur_depth > max_depth) {
-          str += thick_pad + '[' + key + '] => ' + obj[key] + '\n';
-	} else if (fieldType === '[object Array]') {
-          str += thick_pad + '[' + key + '] => ' + formatArray(obj[key], cur_depth + 1, pad_val, pad_char, max_depth);
-	} else if (fieldType === '[object Object]') {
-          str += thick_pad + '[' + key + '] => ' + formatArray(obj[key], cur_depth + 1, pad_val, pad_char, max_depth);
+      str += basePad + '(\n';
+      for (const key in obj) {
+        const fieldType = Object.prototype.toString.call(obj[key]);
+        if (curDepth > maxDepth) {
+          str += thickPad + '[' + key + '] => ' + obj[key] + '\n';
+        } else if (fieldType === '[object Array]') {
+          str += thickPad + '[' + key + '] => ' + formatArray(obj[key], curDepth + 1, padVal, padChar, maxDepth);
+        } else if (fieldType === '[object Object]') {
+          str += thickPad + '[' + key + '] => ' + formatArray(obj[key], curDepth + 1, padVal, padChar, maxDepth);
         } else {
-          str += thick_pad + '[' + key + '] => ' + obj[key] + '\n';
+          str += thickPad + '[' + key + '] => ' + obj[key] + '\n';
         }
       }
-      str += base_pad + ')\n';
+      str += basePad + ')\n';
     } else if (obj === null || obj === undefined) {
       str = '';
     } else {
@@ -88,8 +88,8 @@ const print_r = function(array, return_val, max_depth) {
     }
     return str;
   };
-  output = formatArray(array, 0, pad_val, pad_char);
-  if (return_val !== true) {
+  output = formatArray(array, 0, padVal, padChar);
+  if (returnVal !== true) {
     if (d.body) {
       window.echo(output);
     } else {
@@ -111,4 +111,5 @@ export default print_r;
 
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***

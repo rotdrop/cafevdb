@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import { $ } from './globals.js';
+import { $ } from './globals.js';
 import { globalState } from './cafevdb.js';
 
 /**

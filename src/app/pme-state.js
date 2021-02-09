@@ -25,8 +25,8 @@
  * General PME table stuff, popup-handling.
  */
 
+import { globalState, $ } from './globals.js';
 import { initialState, appName } from './config.js';
-import { globalState } from './globals.js';
 
 const PHPMyEdit = {
   directChange: false,

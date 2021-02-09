@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.js';
+import { globalState, appName, $ } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as Dialogs from './dialogs.js';
 import * as Ajax from './ajax.js';
@@ -353,7 +353,7 @@ const loadHandlers = function() {
     return false;
   });
   phototools.find('.cloud').on('click', function(event) {
-    OC.dialogs.filepicker(t(appName, 'Select image'), photoCloudSelected, false, ['image\\/.*'], true);
+    Dialogs.filePicker(t(appName, 'Select image'), photoCloudSelected, false, ['image\\/.*'], true);
     event.stopImmediatePropagation();
     return false;
   });
