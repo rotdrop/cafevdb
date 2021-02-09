@@ -764,6 +764,24 @@ class PersonalSettingsController extends Controller {
     case 'presidentGroupId':
     case 'secretaryGroupId':
     case 'treasurerGroupId':
+      $executiveBoardMembers = ['president', 'secretary', 'treasurer'];
+      foreach ($executiveBoardMembers as $prefix) {
+        foreach(['Id', 'UserId', 'GroupId'] as $postfix) {
+          $official = $prefix.$postfix;
+          if ($parameter === $official) {
+            $realValue = Util::normalizeSpaces($value);
+
+            // @TODO validate
+            if (empty($realValue)) {
+              $this->deleteConfigValue($official);
+              return self::response($this->l->t("Erased config value for parameter `%s'.", $official));
+            } else {
+              $this->setConfigValue($official, $realValue);
+              return self::response($this->l->t("Value for `%s' set to `%s'", [ $official, $realValue ]));
+            }
+          }
+        }
+      }
       return self::grumble($this->l->t('SETTING %s NOT YET IMPLEMENTED', $parameter));
       break;
 
