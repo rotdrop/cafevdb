@@ -212,7 +212,7 @@ class MusiciansController extends Controller {
       $city = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('city')]);
       $street = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('street')]);
       $zip = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('postal_code')]);
-      $active = $this->parameterService['active_element'];
+      $active = $this->parameterService['activeElement'];
 
 
       $locations = $this->geoCodingService->cachedLocations($zip, $city, $country);
