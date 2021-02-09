@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initialState, appName, webRoot } from './config.js';
+import { initialState, appName, webRoot, cloudUser } from './config.js';
 
 function importAll(r) {
   r.keys().forEach(r);
@@ -76,6 +76,7 @@ export {
   nonce,
   jQuery,
   $,
+  cloudUser,
 };
 
 // Local Variables: ***

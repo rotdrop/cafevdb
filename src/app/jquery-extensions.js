@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -18,12 +19,14 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**@file
+/**
+ * @file
  *
  * Collect some jQuery tweaks in this file.
  *
  */
 
+import { $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import 'bootstrap/js/dist/tooltip';
 
@@ -39,18 +42,21 @@ console.log('jquery-extensions');
 $.widget('ui.dialog', $.ui.dialog, {
   _allowInteraction(event) {
     return true;
-  }
+  },
 });
 
 /**
  * Special dialog version which attaches the dialog to the
  * #content-wrapper div.
- * @returns
+ *
+ * @param {Object} argument TBD.
+ *
+ * @returns {Object}
  */
 $.fn.cafevDialog = function(argument) {
-  if (arguments.length == 1 && typeof argument == 'object' && argument != null) {
+  if (arguments.length === 1 && typeof argument === 'object' && argument !== null) {
     const options = {
-      appendTo: '#cafevdb-general'
+      appendTo: '#cafevdb-general',
       // appendTop: 'body',
     };
     argument = $.extend({}, options, argument);
@@ -59,7 +65,7 @@ $.fn.cafevDialog = function(argument) {
     } else {
       argument.dialogClass = 'cafev cafevdb';
     }
-    if ($('#appsettings_popup').length == 0) {
+    if ($('#appsettings_popup').length === 0) {
       CAFEVDB.snapperClose();
     }
     console.log('will open dialog');
@@ -87,7 +93,7 @@ $.fn.needScrollbars = function() {
   const node = this.get(0);
   return {
     vertical: node.scrollHeight > node.offsetHeight,
-    horizontal: node.scrollWidth > node.offsetWidth
+    horizontal: node.scrollWidth > node.offsetWidth,
   };
 };
 
@@ -102,24 +108,27 @@ $.fn.needScrollbars = function() {
  *
  * Hence the +1 is an ugly tweak which seems to work a little bit.
  *
+ * @returns {Object}
+ *
  */
 $.fn.hasScrollbars = function() {
   const node = this.get(0);
   return {
     vertical: node.scrollHeight > node.clientHeight + 1,
-    horizontal: node.scrollWidth > node.clientWidth + 1
+    horizontal: node.scrollWidth > node.clientWidth + 1,
   };
 };
 
 /**
  * Determine dimensions of scrollbars.
- * @returns{object}
+ *
+ * @returns{Object}
  */
 $.fn.scrollbarDimensions = function() {
   const node = this.get(0);
   return {
     height: node.offsetHeight - node.clientHeight + 1,
-    width: node.offsetWidth - node.clientWidth + 1
+    width: node.offsetWidth - node.clientWidth + 1,
   };
 };
 
@@ -163,12 +172,17 @@ $.fn.horizontalScrollbarHeight = function() {
  * Extend the tooltips to honour some special class elements, and
  * attach user specified tooltip-... classes to the actual tooltip
  * popups.
+ *
+ * @param {Object} argument TBD.
+ *
+ * @returns {Object}
+ *
  */
 $.fn.cafevTooltip = function(argument) {
   if (typeof argument === 'undefined') {
     argument = {};
   }
-  if (typeof argument == 'object' && argument != null) {
+  if (typeof argument === 'object' && argument != null) {
     const whiteList = $.extend(
       {},
       $.fn.tooltip.Constructor.Default.whiteList,
@@ -188,7 +202,7 @@ $.fn.cafevTooltip = function(argument) {
       //, delay: { 'show': 500, 'hide': 100000 }
     };
     argument = $.extend(true, {}, options, argument);
-    if (typeof argument.placement == 'string') {
+    if (typeof argument.placement === 'string') {
       const words = argument.placement.split(' ');
       if (words.length > 1) {
         for (const word of words) {
@@ -199,8 +213,8 @@ $.fn.cafevTooltip = function(argument) {
         }
       }
     }
-    if (argument.cssclass && typeof argument.cssclass == 'string') {
-      argument.cssclass = [ argument.cssclass ];
+    if (argument.cssclass && typeof argument.cssclass === 'string') {
+      argument.cssclass = [argument.cssclass];
     }
     argument.cssclass.push('cafevdb');
     // iterator over individual element in order to pick up the
@@ -272,7 +286,7 @@ $.fn.cafevTooltip.remove = function() {
   $('div.tooltip[role=tooltip]').each(function(index) {
     const tip = $(this);
     const id = tip.attr('id');
-    $('[aria-describedby='+id+']').removeAttr('aria-describedby');
+    $('[aria-describedby=' + id + ']').removeAttr('aria-describedby');
     $(this).remove();
   });
 };
@@ -303,7 +317,7 @@ $.extend({
  * @returns {int}
  */
 $.fn.maxWidth = function() {
-  return Math.max.apply(null, this.map(function () {
+  return Math.max.apply(null, this.map(function() {
     return $(this).width();
   }).get());
 };
@@ -316,7 +330,7 @@ $.fn.maxWidth = function() {
  * @returns {int}
  */
 $.fn.maxOuterWidth = function(extended) {
-  return Math.max.apply(null, this.map(function () {
+  return Math.max.apply(null, this.map(function() {
     return $(this).outerWidth(extended);
   }).get());
 };
@@ -327,7 +341,7 @@ $.fn.maxOuterWidth = function(extended) {
  * @returns {int}
  */
 $.fn.maxHeight = function() {
-  return Math.max.apply(null, this.map(function () {
+  return Math.max.apply(null, this.map(function() {
     return $(this).height();
   }).get());
 };
@@ -340,12 +354,12 @@ $.fn.maxHeight = function() {
  * @returns {int}
  */
 $.fn.maxOuterHeight = function(extended) {
-  return Math.max.apply(null, this.map(function () {
+  return Math.max.apply(null, this.map(function() {
     return $(this).outerHeight(extended);
   }).get());
 };
 
-/*--------------------------------------------------------------------
+/**
  * jQuery pixel/em conversion plugins: toEm() and toPx()
  * by Scott Jehl (scott@filamentgroup.com), http://www.filamentgroup.com
  * Copyright (c) Filament Group
@@ -358,25 +372,28 @@ $.fn.maxOuterHeight = function(extended) {
  * Options:
  *   scope: string or jQuery selector for font-size scoping
  * Usage Example: $(myPixelValue).toEm(); or $(myEmValue).toPx();
- --------------------------------------------------------------------*/
-
+ *
+ * @param {Object} settings TBD.
+ *
+ * @returns {float}
+ */
 $.fn.toEm = function(settings) {
-  settings = jQuery.extend({
-    scope: 'body'
+  settings = $.extend({
+    scope: 'body',
   }, settings);
   const that = parseInt(this[0], 10);
-  const scopeTest = jQuery('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope);
+  const scopeTest = $('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope);
   const scopeVal = scopeTest.height();
   scopeTest.remove();
   return (that / scopeVal).toFixed(8) + 'em';
 };
 
 $.fn.toPx = function(settings) {
-  settings = jQuery.extend({
-    scope: 'body'
+  settings = $.extend({
+    scope: 'body',
   }, settings);
   const that = parseFloat(this[0]);
-  const scopeTest = jQuery('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope);
+  const scopeTest = $('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope);
   const scopeVal = scopeTest.height();
   scopeTest.remove();
   return Math.round(that * scopeVal) + 'px';

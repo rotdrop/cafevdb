@@ -19,18 +19,94 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.js';
+import { globalState, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
-import * as Dialogs from './dialogs.js';
+// import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
 import * as Photo from './inlineimage.js';
 import * as ProjectExtra from './project-extra.js';
 import * as DebitNotes from './debit-notes.js';
 import * as Musicians from './musicians.js';
+import * as Projects from './projects.js';
 import * as PHPMyEdit from './pme.js';
+import * as Dialogs from './dialogs.js';
 import pmeTweaks from './pme-tweaks.js';
 
 const documentReady = function() {
+
+  // @@TODO perhaps collects these things in before-ready.js
+  document.onkeypress = CAFEVDB.stopRKey;
+
+  $('body').on('dblclick', '.oc-dialog', function() {
+    $('.oc-dialog').toggleClass('maximize-width');
+  });
+
+  // @TODO move to global state context
+  window.oldWidth = -1;
+  window.oldHeight = -1;
+  $(window).on('resize', function(event) {
+    const win = this;
+    if (!win.resizeTimeout) {
+      const delay = 50;
+      const width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
+      const height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
+      if (win.oldWidth !== width || win.oldHeight !== height) {
+        console.debug('cafevdb size change', width, win.oldWidth, height, win.oldHeight);
+        win.resizeTimeout = setTimeout(
+          function() {
+            win.resizeTimeout = null;
+            $('.resize-target, .ui-dialog-content').trigger('resize');
+          }, delay);
+        win.oldHeight = height;
+        win.oldWidth = width;
+      }
+    }
+    return false;
+  });
+
+  /****************************************************************************
+   *
+   * Add handlers as delegates. Note however that the snapper is
+   * attached to #app-content below #content, so it is not possible to
+   * prevent the snapper events. If we want to change this we have to
+   * insert another div-container inside #app-content.
+   *
+   */
+  const content = $('#content');
+  // const appInnerContent = $('#app-inner-content');
+
+  // Display the overview-page for the given project.
+  content.on(
+    'click', 'ul#navigation-list li.nav-projectlabel-control a',
+    function(event) {
+      event.stopImmediatePropagation();
+      const data = $(this).data('json');
+      Projects.projectViewPopup(PHPMyEdit.selector(), data);
+      return false;
+    });
+
+  // Display the instrumentation numbers in a dialog widget
+  content.on(
+    'click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
+    function(event) {
+      event.stopImmediatePropagation(); // this is vital
+      const data = $(this).data('json');
+      Projects.instrumentationNumbersPopup(PHPMyEdit.selector(), data);
+      return false;
+    });
+
+  CAFEVDB.addReadyCallback(function() {
+    $('input.alertdata.cafevdb-page').each(function(index) {
+      const title = $(this).attr('name');
+      const text = $(this).attr('value');
+      Dialogs.alert(text, title, undefined, true, true);
+    });
+
+  });
+
+  // fire an event when this have been finished
+  console.debug('trigger loaded');
+  $(document).trigger('cafevdb:donecafevdbjs');
 
   if (globalState.expertMode) {
     $('body').addClass('cafevdb-expert-mode');
@@ -38,37 +114,33 @@ const documentReady = function() {
 
   // ???? needed ????
   $.widget('ui.dialog', $.ui.dialog, {
-    _allowInteraction: function(event) {
-      return !!$(event.target).closest('.mce-container').length || this._super( event );
-    }
+    _allowInteraction(event) {
+      return !!$(event.target).closest('.mce-container').length || this._super(event);
+    },
   });
 
-  if (false) {
-    // should somehow depend on debug mode.
-    $(document).on('ajaxError', function(event, xhr, settings, error) {
-      Dialogs.alert(
-        t(appName, 'Unhandled internal AJAX error:')
-          + '<br/>'
-          + t(appName, 'Error') + ': ' + error
-          + '<br/>'
-          + t(appName, 'URL') + ': ' + settings.url,
-        t(appName, 'Error'),
-        undefined, true, true);
-      return false;
-    });
-  }
-
-  const content = $('#content');
+  // // should somehow depend on debug mode.
+  // $(document).on('ajaxError', function(event, xhr, settings, error) {
+  //   Dialogs.alert(
+  //     t(appName, 'Unhandled internal AJAX error:')
+  //       + '<br/>'
+  //       + t(appName, 'Error') + ': ' + error
+  //       + '<br/>'
+  //       + t(appName, 'URL') + ': ' + settings.url,
+  //     t(appName, 'Error'),
+  //     undefined, true, true);
+  //   return false;
+  // });
 
   content.on('cafevdb:content-update', function(event) {
     $.fn.cafevTooltip.remove(); // remove any left-over items.
   });
 
-  content.on('chosen:showing_dropdown', 'select', function(event, params)   {
+  content.on('chosen:showing_dropdown', 'select', function(event, params) {
     const container = params.chosen.container;
     const results = params.chosen.search_results;
     const menuItems = results.find('li');
-    menuItems.cafevTooltip({placement: 'right'});
+    menuItems.cafevTooltip({ placement: 'right' });
     if (!globalState.toolTipsEnabled) {
       menuItems.cafevTooltip('disable');
     }
@@ -76,7 +148,7 @@ const documentReady = function() {
     container.cafevTooltip('disable');
     // $.fn.cafevTooltip.remove(); // remove any left-over items.
   });
-  content.on('chosen:hiding_dropdown', 'select', function(event, params)   {
+  content.on('chosen:hiding_dropdown', 'select', function(event, params) {
     const container = params.chosen.container;
     const results = params.chosen.search_results;
     const menuItems = results.find('li');
@@ -94,7 +166,7 @@ const documentReady = function() {
     console.info('Catchall form submit', event);
     const form = $(this);
     const action = form.attr('action');
-    if (action != '') {
+    if (action !== '') {
       // not for us, external target.
       return true;
     }
@@ -112,10 +184,10 @@ const documentReady = function() {
     const self = $(this);
     const form = $(this.form);
     const action = self.attr('formaction');
-    if (action != '') {
+    if (action !== '') {
       return true; // not for us
     }
-    const post = form.serialize();
+    let post = form.serialize();
     if (self.attr('name')) {
       const obj = {};
       obj[self.attr('name')] = self.val();
@@ -141,7 +213,7 @@ const documentReady = function() {
   });
 
   const musiciansCallback = {
-    callback: function(selector, parameters, resizeCB) {
+    callback(selector, parameters, resizeCB) {
 
       if (parameters.reason === 'tabChange') {
         resizeCB();
@@ -151,9 +223,9 @@ const documentReady = function() {
       const container = $(selector);
       CAFEVDB.exportMenu(selector);
 
-      container.find('div.photo, #cafevdb_inline_image_wrapper').
-        off('click', 'img.zoomable').
-        on('click', 'img.zoomable', function(event) {
+      container.find('div.photo, #cafevdb_inline_image_wrapper')
+        .off('click', 'img.zoomable')
+        .on('click', 'img.zoomable', function(event) {
           event.preventDefault();
           Photo.popup(this);
           return false;
@@ -187,9 +259,9 @@ const documentReady = function() {
   PHPMyEdit.addTableLoadCallback('add-musicians', musiciansCallback);
 
   PHPMyEdit.addTableLoadCallback('project-extra-fields', {
-    callback: function(selector, parameters, resizeCB) {
+    callback(selector, parameters, resizeCB) {
 
-      if (parameters.reason != 'dialogOpen') {
+      if (parameters.reason !== 'dialogOpen') {
         resizeCB();
         return;
       }
@@ -197,16 +269,15 @@ const documentReady = function() {
       ProjectExtra.ready(selector, resizeCB);
     },
     context: CAFEVDB,
-    parameters: []
+    parameters: [],
   });
-
 
   PHPMyEdit.addTableLoadCallback('instruments', {
     callback(selector, parameters, resizeCB) {
       resizeCB();
     },
     context: CAFEVDB,
-    parameters: []
+    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('instrument-families', {
@@ -214,7 +285,7 @@ const documentReady = function() {
       resizeCB();
     },
     context: CAFEVDB,
-    parameters: []
+    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('project-payments', {
@@ -222,13 +293,13 @@ const documentReady = function() {
       resizeCB();
     },
     context: CAFEVDB,
-    parameters: []
+    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('debit-notes', {
     callback(selector, parameters, resizeCB) {
 
-      if (parameters.reason != 'dialogOpen') {
+      if (parameters.reason !== 'dialogOpen') {
         resizeCB();
         return;
       }
@@ -236,7 +307,7 @@ const documentReady = function() {
       DebitNotes.ready(selector, resizeCB);
     },
     context: CAFEVDB,
-    parameters: []
+    parameters: [],
   });
 
   CAFEVDB.addReadyCallback(function() {

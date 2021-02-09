@@ -20,6 +20,13 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Decode an url-encoded query string.
+ *
+ * @param {String} str The query string.
+ *
+ * @returns {String} The decoded query string.
+ */
 const urlDecode = function(str) {
   // http://kevin.vanzonneveld.net
   // +   original by: Philip Peterson
@@ -56,6 +63,13 @@ const urlDecode = function(str) {
   }).replace(/\+/g, '%20'));
 };
 
+/**
+ * Encode a query string.
+ *
+ * @param {String} str The query string.
+ *
+ * @returns {String} The encoded query string.
+ */
 const urlEncode = function(str) {
   // http://kevin.vanzonneveld.net
   // + original by: Philip Peterson
@@ -85,11 +99,14 @@ const urlEncode = function(str) {
 
   // Tilde should be allowed unescaped in future versions of PHP (as reflected below), but if you want to reflect current
   // PHP behavior, you would need to add ".replace(/~/g, '%7E');" to the following.
-  return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').
-    replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');
+  return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28')
+    .replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');
 };
 
-export { urlEncode, urlDecode, };
+export {
+  urlEncode,
+  urlDecode,
+};
 
 // Local Variables: ***
 // js-indent-level: 2 ***

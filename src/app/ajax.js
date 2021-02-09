@@ -19,7 +19,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.js';
+import { globalState, appName, webRoot } from './globals.js';
 import print_r from './print-r.js';
 import * as Dialogs from './dialogs.js';
 
@@ -105,6 +105,16 @@ const ajaxHttpStatus = {
  * Generate some diagnostic output, mostly needed during application
  * development. This is intended to be called from the fail()
  * callback.
+ *
+ * @param {Object} xhr TBD.
+ *
+ * @param {String} textStatus TBD.
+ *
+ * @param {int} errorThrown TBD.
+ *
+ * @param {Function} errorCB TBD.
+ *
+ * @returns {Object} TBD.
  */
 const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
 
@@ -136,20 +146,20 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
       + '&body='
       + encodeURIComponent(
         'JavaScript User Agent:'
-          + "\n"
+          + '\n'
           + navigator.userAgent
-          + "\n"
-          + "\n"
+          + '\n'
+          + '\n'
           + 'PHP User Agent:'
-          + "\n"
+          + '\n'
           + globalState.phpUserAgent
-          + "\n"
-          + "\n"
+          + '\n'
+          + '\n'
           + 'Error Code: ' + ajaxHttpStatus[xhr.status]
-          + "\n"
-          + "\n"
+          + '\n'
+          + '\n'
           + 'Error Data: ' + print_r(failData, true)
-          + "\n")
+          + '\n')
       + '">'
       + t('cafevdb', 'System Administrator')
       + '</a>';
@@ -189,8 +199,8 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
   case ajaxHttpStatus.UNAUTHORIZED: {
     // no point in continuing, direct the user to the login page
     errorCB = function() {
-      if (OC.webroot !== '') {
-        window.location.replace(OC.webroot);
+      if (webRoot !== '') {
+        window.location.replace(webRoot);
       } else {
         window.location.replace('/');
       }
@@ -206,7 +216,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
       + t(appName, 'I any case it may help to logoff and logon again, as a '
           + 'temporary work-around. You will be redirected to the '
           + 'log-in page when you close this window.');
-    info += '<div class="error general">'+generalHint+'</div>';
+    info += '<div class="error general">' + generalHint + '</div>';
     // info += '<div class="error toastify feedback-link">'
     //       + t(appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
     //       + '</div>';
@@ -230,9 +240,9 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
  *
  * @param {Function} errorCB TBD.
  *
+ * @returns {bool} TBD.
  */
-const ajaxValidateResponse = function(data, required, errorCB)
-{
+const ajaxValidateResponse = function(data, required, errorCB) {
   if (typeof data.data !== 'undefined' && typeof data.data.status !== 'undefined') {
     console.error('********** Success handler called as error handler ************');
     if (data.data.status !== 'success') {
@@ -242,11 +252,11 @@ const ajaxValidateResponse = function(data, required, errorCB)
       data = data.data;
     }
   }
-  if (typeof errorCB == 'undefined') {
+  if (typeof errorCB === 'undefined') {
     errorCB = function() {};
   }
   // error handling
-  if (typeof data == 'undefined' || !data) {
+  if (typeof data === 'undefined' || !data) {
     Dialogs.alert(
       t(appName, 'Unrecoverable unknown internal error, '
         + 'no further information available, sorry.'),
@@ -255,7 +265,7 @@ const ajaxValidateResponse = function(data, required, errorCB)
   }
   let missing = '';
   for (let idx = 0; idx < required.length; ++idx) {
-    if (typeof data[required[idx]] == 'undefined') {
+    if (typeof data[required[idx]] === 'undefined') {
       missing += t(
         appName, 'Field {RequiredField} not present in AJAX response.',
         { RequiredField: required[idx] }) + '<br>';
@@ -278,7 +288,7 @@ const ajaxValidateResponse = function(data, required, errorCB)
     Dialogs.debugPopup(data);
 
     let caption = data.caption;
-    if (typeof caption == 'undefined' || caption == '') {
+    if (typeof caption === 'undefined' || caption === '') {
       caption = t(appName, 'Error');
       data.caption = caption;
     }
@@ -296,6 +306,8 @@ const ajaxValidateResponse = function(data, required, errorCB)
  * @param {String} textStatus from jQuery, see fail() method of jQuery ajax.
  *
  * @param {String} errorThrown, see fail() method of jQuery ajax.
+ *
+ * @returns {Object} TBD.
  */
 const ajaxFailData = function(xhr, textStatus, errorThrown) {
   const ct = xhr.getResponseHeader('content-type') || '';
@@ -332,6 +344,8 @@ const ajaxFailData = function(xhr, textStatus, errorThrown) {
  * @param {String} textStatus from jQuery, see fail() method of jQuery ajax.
  *
  * @param {String} errorThrown, see fail() method of jQuery ajax.
+ *
+ * @returns {Object} TBD.
  */
 const ajaxFailMessage = function(xhr, textStatus, errorThrown) {
   return ajaxFailData(xhr, textStatus, errorThrown).message;

@@ -19,36 +19,36 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.js';
+import { globalState } from './globals.js';
 import * as Email from './email.js';
 
 /**
  * Some general PME tweaks.
  *
- * @param container
+ * @param {jQuery} container TBD.
  */
 const pmeTweaks = function(container) {
-  if (typeof container == 'undefined') {
+  if (typeof container === 'undefined') {
     container = $('body');
   }
 
   container.find('input.date').datepicker({
-    dateFormat : 'dd.mm.yy', // this is 4-digit year
-    minDate: '01.01.1940'
+    dateFormat: 'dd.mm.yy', // this is 4-digit year
+    minDate: '01.01.1940',
   });
 
   container.find('input.datetime').datepicker({
-    dateFormat : 'dd.mm.yy', // this is 4-digit year
-    minDate: '01.01.1990'
+    dateFormat: 'dd.mm.yy', // this is 4-digit year
+    minDate: '01.01.1990',
   });
 
   container.find('td.money, td.signed-number').filter(function() {
-    return $.trim($(this).text()).indexOf('-') == 0;
+    return $.trim($(this).text()).indexOf('-') === 0;
   }).addClass('negative');
 
-  $(globalState.PHPMyEdit.defaultSelector + ' input.pme-email').
-    off('click').
-    on('click', function(event) {
+  $(globalState.PHPMyEdit.defaultSelector + ' input.pme-email')
+    .off('click')
+    .on('click', function(event) {
       event.stopImmediatePropagation();
       Email.emailFormPopup($(this.form).serialize());
       return false;
@@ -58,13 +58,13 @@ const pmeTweaks = function(container) {
   form.find('a.email').off('click').on('click', function(event) {
     event.preventDefault();
     const href = $(this).attr('href');
-    const recordId = href.match(/[?]recordId=(\d+)$/);
-    if (typeof recordId[1] != 'undefined') {
+    let recordId = href.match(/[?]recordId=(\d+)$/);
+    if (typeof recordId[1] !== 'undefined') {
       recordId = recordId[1];
     } else {
       return false; // Mmmh, echo error diagnostics to the user?
     }
-    const post = form.serialize();
+    let post = form.serialize();
     post += '&PME_sys_mrecs[]=' + recordId;
     post += '&emailRecipients[MemberStatusFilter][0]=regular';
     post += '&emailRecipients[MemberStatusFilter][1]=passive';

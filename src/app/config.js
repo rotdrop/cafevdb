@@ -49,6 +49,7 @@ try {
 const PHPMyEdit = initialState.PHPMyEdit;
 const CAFEVDB = initialState.CAFEFDB;
 const webRoot = OC.appswebroots[appName] + '/';
+const cloudUser = OC.currentUser;
 
 export {
   initialState,
@@ -57,6 +58,7 @@ export {
   appName,
   appInfo,
   webRoot,
+  cloudUser,
 };
 
 // Local Variables: ***

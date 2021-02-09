@@ -22,8 +22,10 @@
 
 import { globalState } from './globals.js';
 import * as Notification from './notification.js';
+import * as Ajax from './ajax.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
+import generateUrl from './generate-url.js';
 
 require('project-instrumentation-numbers.css');
 
@@ -39,7 +41,7 @@ const ready = function(selector) {
 
     Notification.hide(function() {
       $.post(
-        OC.generateUrl('/apps/cafevdb/instrumentation/adjust'),
+        generateUrl('instrumentation/adjust'),
         post)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown);
@@ -51,8 +53,8 @@ const ready = function(selector) {
             || PHPMyEdit.triggerSubmit('reloadlist', container);
         })
         .done(function(data) {
-          var timeout = 0;
-          if (data.message != '') {
+          let timeout = 0;
+          if (data.message !== '') {
             Notification.show(data.message);
             timeout = 5000;
           }
@@ -78,8 +80,8 @@ const documentReady = function() {
   PHPMyEdit.addTableLoadCallback(
     'project-instrumentation-numbers',
     {
-      callback: function(selector, parameters, resizeCB) {
-        if (parameters.reason != 'dialogOpen') {
+      callback(selector, parameters, resizeCB) {
+        if (parameters.reason !== 'dialogOpen') {
           resizeCB();
           return;
         }
@@ -87,11 +89,11 @@ const documentReady = function() {
         resizeCB();
       },
       context: globalState,
-      parameters: []
+      parameters: [],
     });
 
   CAFEVDB.addReadyCallback(function() {
-    const container = $(PHPMyEdit.defaultSelector+'.project-instrumentation-numbers');
+    const container = $(PHPMyEdit.defaultSelector + '.project-instrumentation-numbers');
     if (container.length <= 0) {
       return; // not for us
     }

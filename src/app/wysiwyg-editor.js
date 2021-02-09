@@ -20,6 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// import { $ } from './globals.js';
 import { globalState } from './cafevdb.js';
 
 /**
@@ -36,7 +37,7 @@ const addEditor = function(selector, initCallback, initialHeight) {
   console.debug('WysiwygEditor.addEditor');
   const editorElement = $(selector);
   if (!editorElement.length) {
-    if (typeof initCallback == 'function') {
+    if (typeof initCallback === 'function') {
       initCallback();
     }
     return;
@@ -44,7 +45,7 @@ const addEditor = function(selector, initCallback, initialHeight) {
   switch (globalState.wysiwygEditor) {
   default:
   case 'ckeditor':
-    if (typeof initCallback != 'function') {
+    if (typeof initCallback !== 'function') {
       initCallback = function() {};
     }
     console.debug('attach ckeditor');
@@ -80,27 +81,27 @@ const addEditor = function(selector, initCallback, initialHeight) {
     if (!editorElement.is('textarea')) {
       plusConfig.inline = true;
     }
-    if (typeof initialHeight != 'undefined') {
+    if (typeof initialHeight !== 'undefined') {
       plusConfig.height = initialHeight;
     }
     const mceDeferred = $.Deferred();
     mceDeferred.then(
       function() {
         console.info('MCE promise succeeded');
-        if (typeof initCallback == 'function') {
+        if (typeof initCallback === 'function') {
           initCallback();
         }
       },
       function() {
         console.error('MCE promise failed');
-        if (typeof initCallback == 'function') {
+        if (typeof initCallback === 'function') {
           initCallback();
         }
         editorElement.css('visibility', '');
       }
     );
     import('./tinymceinit')
-      .then(({ default: myTinyMCE }) => {
+      .then((myTinyMCE) => {
         const mceConfig = myTinyMCE.getConfig(plusConfig);
         editorElement
           .off('cafevdb:tinymce-done')
@@ -118,7 +119,7 @@ const addEditor = function(selector, initCallback, initialHeight) {
     }, timeout * 1000);
     break;
   }
-  };
+  }
 };
 
 /**

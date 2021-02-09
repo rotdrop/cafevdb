@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -19,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './config.js';
+import { appName } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
@@ -53,7 +54,7 @@ const documentReady = function() {
     container.on('click', '#' + action, function() {
       const msg = container.find('.msg');
       const error = container.find('.error');
-      $.post(generateUrl('/expertmode/action/' + action), { data: {} })
+      $.post(generateUrl('expertmode/action/' + action), { data: {} })
         .done(function(data) {
           console.log(data);
           error.html('').hide();
@@ -71,23 +72,24 @@ const documentReady = function() {
   container.on('click', '#setupdb', function() {
     const msg = container.find('.msg');
     const error = container.find('.error');
-    $.post(OC.generateUrl('/apps/cafevdb/expertmode/action/setupdb'), { 'data': {} })
+    $.post(generateUrl('expertmode/action/setupdb'), { data: {} })
       .done(function(data) {
         console.log(data);
-        if (!Ajax.validateResponse(data, [ 'success', 'error' ])) {
+        if (!Ajax.validateResponse(data, ['success', 'error'])) {
           return;
         }
-        Dialogs.alert(t(appName, 'Successfull:')
-                      + '<br/>'
-                      + data.data.success
-                      + '<br/>'
-                      + t(appName, 'Unsuccessfull:')
-                      + '<br/>'
-                      + '<pre>'
-                      + data.data.error
-                      + '</pre>',
-                      t(appName, 'Result of expert operation "setupdb"'),
-                      undefined, true, true);
+        Dialogs.alert(
+          t(appName, 'Successfull:')
+            + '<br/>'
+            + data.data.success
+            + '<br/>'
+            + t(appName, 'Unsuccessfull:')
+            + '<br/>'
+            + '<pre>'
+            + data.data.error
+            + '</pre>',
+          t(appName, 'Result of expert operation "setupdb"'),
+          undefined, true, true);
         error.html('').hide();
         msg.html(data.message).show();
       })
@@ -99,11 +101,11 @@ const documentReady = function() {
     return false;
   });
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // Tooltips
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   *
+   * Tooltips
+   *
+   ***************************************************************************/
 
   CAFEVDB.toolTipsInit('#appsettings_popup');
 

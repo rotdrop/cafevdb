@@ -21,7 +21,7 @@
  */
 
 import { nonce, webRoot } from './app/globals.js';
-import { documentReady, runReadyCallbacks } from './app/cafevdb.js';
+import { runReadyCallbacks } from './app/cafevdb.js';
 import settings from './app/settings.js';
 import appSettings from './app/app-settings.js';
 import personalSettings from './app/personal-settings.js';
@@ -51,7 +51,6 @@ __webpack_public_path__ = webRoot;
 __webpack_nonce__ = nonce;
 
 $(function() {
-  documentReady();
   blogDocumentReady();
   emailDocumentReady();
   musiciansDocumentReady();

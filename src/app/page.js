@@ -44,9 +44,15 @@ const busyIcon = function(on) {
   }
 };
 
-/** Load a page through the history-aware AJAX page loader. */
+/**
+ * Load a page through the history-aware AJAX page loader.
+ *
+ * @param {Object} post TBD.
+ *
+ * @param {Function} afterLoadCallback TBD.
+ *
+ */
 const loadPage = function(post, afterLoadCallback) {
-  const container = $('div#content');
   $('body').removeClass('dialog-titlebar-clicked');
   CAFEVDB.modalizer(true);
   busyIcon(true);
@@ -57,7 +63,7 @@ const loadPage = function(post, afterLoadCallback) {
     parameter = post.historyOffset;
   } else {
     action = 'remember';
-    parameter = 'blank'
+    parameter = 'blank';
   }
   $.post(generateUrl('page/' + action + '/' + parameter), post)
     .fail(function(xhr, status, errorThrown) {
@@ -118,14 +124,14 @@ const loadPage = function(post, afterLoadCallback) {
       const newAppNavigation = newContent.find('#app-navigation').children();
 
       $('#app-navigation').empty().prepend(newAppNavigation);
-      $('#'+appGeneralId).empty().prepend(newAppContent);
+      $('#' + appGeneralId).empty().prepend(newAppContent);
 
       CAFEVDB.snapperClose();
       CAFEVDB.modalizer(false);
       busyIcon(false);
 
       CAFEVDB.runReadyCallbacks();
-      if (typeof afterLoadCallback == 'function') {
+      if (typeof afterLoadCallback === 'function') {
         afterLoadCallback();
       }
 
@@ -140,7 +146,7 @@ const updateHistoryControls = function() {
   // console.info(undo);
 
   // alert('history: '+CAFEVDB.Page.historyPosition+' size '+CAFEVDB.Page.historySize);
-  redo.prop('disabled', globalState.Page.historyPosition == 0);
+  redo.prop('disabled', globalState.Page.historyPosition === 0);
   undo.prop('disabled', globalState.Page.historySize - globalState.Page.historyPosition <= 1);
 };
 
@@ -184,7 +190,7 @@ const documentReady = function() {
         $('body').removeClass('dialog-titlebar-clicked');
       } else {
         loadPage({
-          historyOffset: 0
+          historyOffset: 0,
         });
       }
       return false;
@@ -196,7 +202,7 @@ const documentReady = function() {
     function(event) {
       event.stopImmediatePropagation();
       loadPage({
-        historyOffset: 1
+        historyOffset: 1,
       });
       return false;
     });
@@ -207,18 +213,18 @@ const documentReady = function() {
     function(event) {
       event.stopImmediatePropagation();
       loadPage({
-        historyOffset: -1
+        historyOffset: -1,
       });
       return false;
     });
 
   CAFEVDB.addReadyCallback(function() {
     // content.find('form.pme-form input.pme-reload').hide();
-    $('#app-navigation-toggle').
-      attr('title', t(appName, 'Display the application menu and settings side-bar'))
+    $('#app-navigation-toggle')
+      .attr('title', t(appName, 'Display the application menu and settings side-bar'))
       .cafevTooltip({
         placement: 'auto',
-        container: '#app-content'
+        container: '#app-content',
       });
     updateHistoryControls();
   });

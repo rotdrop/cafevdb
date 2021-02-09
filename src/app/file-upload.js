@@ -21,15 +21,15 @@
 
 // @todo remove this file.
 
-import { globalState, appName } from './globals.js';
+import { globalState, appName, $ } from './globals.js';
 
-globalState.FileUpload = {
+const FileUpload = globalState.FileUpload = {
   uploadingFiles: {},
 };
 
 const cancelUploads = function() {
   $.each(FileUpload.uploadingFiles, function(index, file) {
-    if(typeof file['abort'] === 'function') {
+    if (typeof file.abort === 'function') {
       file.abort();
     } else {
       $.each(file, function(i, f) {
@@ -41,14 +41,18 @@ const cancelUploads = function() {
   });
 };
 
-/** To be called at some other document-ready invocation, as required. */
+/**
+ * To be called at some other document-ready invocation, as required.
+ *
+ * @param {Object} options TBD.
+ */
 const init = function(options) {
-  var defaultOptions = {
+  const defaultOptions = {
     doneCallback: null,
     stopCallback: null,
     dropZone: $(document),
     containerSelector: '#file_upload_wrapper',
-    inputSelector: '#file_upload_start'
+    inputSelector: '#file_upload_start',
   };
 
   options = $.extend({}, defaultOptions, options);
@@ -57,17 +61,17 @@ const init = function(options) {
   const form = container.find('form.file_upload_form');
   const fileUploadStart = form.find(options.inputSelector);
 
-  var fileUploadParam = {
+  const fileUploadParam = {
     multipart: true,
     singleFileUploads: false,
     sequentialUploads: true,
     dropZone: options.dropZone, // restrict dropZone to content div
     // singleFileUploads is on by default, so the data.files array will always have length 1
-    add: function(e, data) {
+    add(e, data) {
       for (let k = 0; k < data.files.length; ++k) {
-        if(data.files[k].type === '' && data.files[k].size == 4096) {
+        if (data.files[k].type === '' && data.files[k].size === 4096) {
           data.textStatus = 'dirorzero';
-          data.errorThrown = t('cafevdb', 'Unable to upload your file as it is a directory or has 0 bytes');
+          data.errorThrown = t(appName, 'Unable to upload your file as it is a directory or has 0 bytes');
           const fu = $(this).data('blueimp-fileupload') || $(this).data('fileupload');
           fu._trigger('fail', e, data);
           return true; // don't upload this file but go on with next in queue
@@ -75,13 +79,13 @@ const init = function(options) {
       }
 
       let totalSize = 0;
-      $.each(data.originalFiles, function(i,file) {
+      $.each(data.originalFiles, function(i, file) {
         totalSize += file.size;
       });
 
       if (totalSize > form.find('#max_upload').val()) {
         data.textStatus = 'notenoughspace';
-        data.errorThrown = t('cafevdb', 'Not enough space available');
+        data.errorThrown = t(appName, 'Not enough space available');
         const fu = $(this).data('blueimp-fileupload') || $(this).data('fileupload');
         fu._trigger('fail', e, data);
         return false; // don't upload anything
@@ -110,13 +114,14 @@ const init = function(options) {
     },
     /**
      * called after the first add, does NOT have the data param
-     * @param e
+     *
+     * @param {Object} event TBD.
      */
-    start: function(e) {
+    start(event) {
       // warn user not to leave the page while upload is in progress
       $(window).on('beforeunload', function(e) {
         if ($.assocArraySize(FileUpload.uploadingFiles) > 0) {
-          return t('cafevdb', 'File upload is in progress. Leaving the page now will cancel the upload.');
+          return t(appName, 'File upload is in progress. Leaving the page now will cancel the upload.');
         }
         return false;
       });
@@ -126,13 +131,13 @@ const init = function(options) {
         return;
       }
       const progressBar = container.find('div.uploadprogressbar');
-      progressBar.progressbar({value:0});
+      progressBar.progressbar({ value: 0 });
       progressBar.fadeIn();
     },
-    fail: function(e, data) {
-      if (typeof data.textStatus !== 'undefined' && data.textStatus !== 'success' ) {
+    fail(event, data) {
+      if (typeof data.textStatus !== 'undefined' && data.textStatus !== 'success') {
         if (data.textStatus === 'abort') {
-          $('#notification').text(t('cafevdb', 'Upload cancelled.'));
+          $('#notification').text(t(appName, 'Upload cancelled.'));
         } else {
           // HTTP connection problem
           $('#notification').text(data.errorThrown);
@@ -150,19 +155,21 @@ const init = function(options) {
     },
     progressall(e, data) {
       // IE < 10 does not fire the necessary events for the progress bar.
-      if($('html.lte9').length > 0) {
+      if ($('html.lte9').length > 0) {
         return;
       }
       // alert('total: '+ data.total+' loaded: '+data.loaded);
-      const progress = (data.loaded/data.total)*100;
-      container.find('div.uploadprogressbar').progressbar('value',progress);
+      const progress = (data.loaded / data.total) * 100;
+      container.find('div.uploadprogressbar').progressbar('value', progress);
     },
     /**
      * called for every successful upload
-     * @param e
-     * @param data
+     *
+     * @param {Object} event TBD.
+     *
+     * @param {Object} data TBD.
      */
-    done(e, data) {
+    done(event, data) {
       // handle different responses (json or body from iframe for ie)
       let response;
       if (typeof data.result === 'string') {
@@ -175,11 +182,11 @@ const init = function(options) {
 
       let k;
       const errors = [];
-      if (typeof result.length == 'undefined') {
-        if (typeof result.status != 'undefined') {
+      if (typeof result.length === 'undefined') {
+        if (typeof result.status !== 'undefined') {
           errors.push(result.data.message);
         } else {
-          errors.push(t('cafevdb', 'Unknown error uploading files'));
+          errors.push(t(appName, 'Unknown error uploading files'));
         }
       } else {
         for (k = 0; k < result.length; ++k) {
@@ -190,14 +197,14 @@ const init = function(options) {
             if (typeof data.context !== 'undefined' && data.context.data('type') === 'dir') {
               const dirName = data.context.data('file');
               delete globalState.FileUpload.uploadingFiles[dirName][filename];
-              if ($.assocArraySize(globalState.FileUpload.uploadingFiles[dirName]) == 0) {
+              if ($.assocArraySize(globalState.FileUpload.uploadingFiles[dirName]) === 0) {
                 delete globalState.FileUpload.uploadingFiles[dirName];
               }
             } else {
               delete globalState.FileUpload.uploadingFiles[filename];
             }
 
-            if (typeof options.doneCallback == 'function') {
+            if (typeof options.doneCallback === 'function') {
               options.doneCallback(result[k]);
             }
 
@@ -212,21 +219,23 @@ const init = function(options) {
         data.errorThrown = '';
         if (errors.length > 1) {
           for (k = 0; k < errors.length; ++k) {
-            data.errorThrown += t('cafevdb', 'Error {NR}: ', { NR: k })+errors[k]+"\n";
+            data.errorThrown += t(appName, 'Error {NR}: ', { NR: k }) + errors[k] + '\n';
           }
         } else {
           data.errorThrown += errors[0];
         }
         const fu = $(this).data('blueimp-fileupload') || $(this).data('fileupload');
-        fu._trigger('fail', e, data);
+        fu._trigger('fail', event, data);
       }
     },
     /**
      * called after last upload
-     * @param e
-     * @param data
+     *
+     * @param {Object} event TBD.
+     *
+     * @param {Object} data TBD.
      */
-    stop(e, data) {
+    stop(event, data) {
       if (data.dataType !== 'iframe') {
         container.find('div.uploadprogresswrapper input.stop').hide();
       }
@@ -237,42 +246,38 @@ const init = function(options) {
       }
 
       const progressBar = container.find('div.uploadprogressbar');
-      progressBar.progressbar('value',100);
+      progressBar.progressbar('value', 100);
       progressBar.fadeOut();
 
-      if (typeof options.stopCallback == 'function') {
-        options.stopCallback(e, data);
+      if (typeof options.stopCallback === 'function') {
+        options.stopCallback(event, data);
       }
 
       $(window).off('beforeunload');
-    }
+    },
   };
 
-  const file_upload_handler = function() {
+  const fileUploadHandler = function() {
     fileUploadStart.fileupload(fileUploadParam);
   };
 
   if (container.length > 0) {
-    $(file_upload_handler);
+    $(fileUploadHandler);
   }
   $.assocArraySize = function(obj) {
     // http://stackoverflow.com/a/6700/11236
-    let size = 0;
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) size++;
-    }
-    return size;
+    return Object.keys(obj).length;
   };
 
   container.find('div.uploadprogresswrapper input.stop').on('click', function(event) {
-    FileUpload.cancelUploads();
+    cancelUploads();
     return false;
   });
 
   // add multiply file upload attribute to all browsers except konqueror (which crashes when it's used)
-  if (navigator.userAgent.search(/konqueror/i) == -1 || true) {
-    fileUploadStart.attr('multiple','multiple');
-  }
+  // if (navigator.userAgent.search(/konqueror/i) === -1 || true) {
+  fileUploadStart.attr('multiple', 'multiple');
+  // }
 };
 
 export {

@@ -38,10 +38,10 @@ const PMEPrefix = PHPMyEdit.ucPrefix;
  *
  * @param {String} token TBD.
  *
- * @returns String
+ * @returns {String}
  */
 const pmeSys = function(token) {
-  return PMEPrefix + '_sys_'+ token;
+  return PMEPrefix + '_sys_' + token;
 };
 
 /**
@@ -49,7 +49,7 @@ const pmeSys = function(token) {
  *
  * @param {String} token TBD.
  *
- * @returns String
+ * @returns {String}
  */
 const pmeData = function(token) {
   return PMEPrefix + '_data_' + token;
@@ -60,7 +60,7 @@ const pmeData = function(token) {
  *
  * @param {String} token TBD.
  *
- * @returns String
+ * @returns {String}
  */
 const pmeToken = function(token) {
   return pmePrefix + '-' + token;
@@ -71,7 +71,7 @@ const pmeToken = function(token) {
  *
  * @param {String} token TBD.
  *
- * @returns String
+ * @returns {String}
  */
 const pmeIdSelector = function(token) {
   return '#' + pmeToken(token);
@@ -84,7 +84,7 @@ const pmeIdSelector = function(token) {
  *
  * @param {String} token TBD.
  *
- * @returns String
+ * @returns {String}
  */
 const pmeClassSelector = function(element, token) {
   return element + '.' + pmeToken(token);
@@ -97,7 +97,7 @@ const pmeClassSelector = function(element, token) {
  *
  * @param {String} tokens TBD.
  *
- * @returns String
+ * @returns {String}
  */
 const pmeClassSelectors = function(element, tokens) {
   const elements = tokens.map(function(token) {
@@ -115,13 +115,13 @@ const pmeClassSelectors = function(element, tokens) {
  *
  * @param {String} modifier TBD.
  *
- * @returns String
+ * @returns {String}
  */
 const pmeSysNameSelector = function(element, token, modifier) {
   if (modifier === undefined) {
     modifier = '';
   }
-  return element + '[name' +modifier + '="' + pmeSys(token) + '"]';
+  return element + '[name' + modifier + '="' + pmeSys(token) + '"]';
 };
 
 /**
@@ -131,7 +131,7 @@ const pmeSysNameSelector = function(element, token, modifier) {
  *
  * @param {String} tokens TBD.
  *
- * @returns String
+ * @returns {String}
  */
 const pmeSysNameSelectors = function(element, tokens) {
   const elements = tokens.map(function(token) {
@@ -145,7 +145,7 @@ const pmeSysNameSelectors = function(element, tokens) {
  *
  * @param {String} token TBD.
  *
- * @returns String
+ * @returns {String}
  */
 const pmeNavigationSelector = function(token) {
   return '.' + pmeToken('navigation') + '  ' + pmeClassSelector('input', token);
@@ -154,7 +154,7 @@ const pmeNavigationSelector = function(token) {
 /**
  * Selector for main form
  *
- * @returns String
+ * @returns {String}
  */
 const pmeFormSelector = function() {
   return 'form.' + pmeToken('form');
@@ -163,7 +163,7 @@ const pmeFormSelector = function() {
 /**
  * Selector for main table
  *
- * @returns String
+ * @returns {String}
  */
 const pmeTableSelector = function() {
   return 'table.' + pmeToken('main');
@@ -174,6 +174,8 @@ const pmeTableSelector = function() {
  *
  * @param {String} selector The selector to construct the final
  * selector from. Maybe a jQuery object.
+ *
+ * @returns {Strring}
  */
 const pmeSelector = function(selector) {
   if (typeof selector === 'undefined') {
@@ -186,6 +188,11 @@ const pmeSelector = function(selector) {
  * Generate the jQuery object corresponding to the ambient
  * element. If the given argument is already a jQuery object, then
  * just return the argument.
+ *
+ * @param {String} selector The selector to construct the final
+ * selector from. Maybe a jQuery object.
+ *
+ * @returns {jQuery}
  */
 const pmeContainer = function(selector) {
   let container;
@@ -198,21 +205,26 @@ const pmeContainer = function(selector) {
   return container;
 };
 
-/**
- * Generate the jQuery object corresponding to the inner container
- * of the ambient container. If the given argument is already a
- * jQuery object, then just return its first div child.
- */
-const inner = function(selector) {
-  let container;
-  if (selector instanceof jQuery) {
-    container = selector;
-  } else {
-    selector = pmeSelector(selector);
-    container = $(selector);
-  }
-  return container.children('div:first');
-};
+// /**
+//  * Generate the jQuery object corresponding to the inner container
+//  * of the ambient container. If the given argument is already a
+//  * jQuery object, then just return its first div child.
+//  *
+//  * @param {String} selector The selector to construct the final
+//  * selector from. Maybe a jQuery object.
+//  *
+//  * @returns {jQuery}
+//  */
+// const inner = function(selector) {
+//   let container;
+//   if (selector instanceof jQuery) {
+//     container = selector;
+//   } else {
+//     selector = pmeSelector(selector);
+//     container = $(selector);
+//   }
+//   return container.children('div:first');
+// };
 
 /**
  * Find the record id inside the given selector or jQuery collection.
@@ -225,16 +237,17 @@ const inner = function(selector) {
  */
 const pmeRec = function(selector, options) {
   options = options || { pascalCase: false };
+  let munge;
   if (options.camelCase === false) {
-    const munge = function(key) { return key; };
+    munge = function(key) { return key; };
   } else {
-    const munge = function(key) { return camelCase(key, options); };
+    munge = function(key) { return camelCase(key, options); };
   }
   const records = $(selector).find('input[name^="' + pmeSys('rec') + '"]').serializeArray();
   let result = {};
   for (const rec of records) {
     const key = rec.name.match(/[^[]+\[([^\]]+)\]/);
-    if (key.length == 2) {
+    if (key.length === 2) {
       result[munge(key[1])] = rec.value;
     } else {
       result = rec.value;

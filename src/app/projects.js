@@ -1118,6 +1118,8 @@ const documentReady = function() {
 export {
   documentReady,
   eventsPopup,
+  projectViewPopup,
+  instrumentationNumbersPopup,
 };
 
 // Local Variables: ***

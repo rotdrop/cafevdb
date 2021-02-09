@@ -19,22 +19,22 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.js';
+import { globalState, cloudUser } from './globals.js';
 import generateUrl from './generate-url.js';
 
 globalState.BackgroundJobs = {
   timer: false,
-  interval: 600
+  interval: 600,
 };
 
-const url = generateUrl('/backgroundjob/trigger');
+const url = generateUrl('backgroundjob/trigger');
 
-const runner = function(){
+const runner = function() {
   const self = globalState.BackgroundJobs;
-  if (OC.currentUser) {
+  if (cloudUser) {
     console.info('Triggered background jobs.');
     $.get(url).always(function() {
-      self.timer = setTimeout(self.runner, self.interval*1000);
+      self.timer = setTimeout(self.runner, self.interval * 1000);
     });
   } else if (self.timer !== false) {
     clearTimeout(self.timer);
@@ -45,10 +45,10 @@ const runner = function(){
 
 const documentReady = function() {
   const self = globalState.BackgroundJobs;
-  if (OC.currentUser) {
-    self.timer = setTimeout(self.runner, self.interval*1000);
+  if (cloudUser) {
+    self.timer = setTimeout(runner, self.interval * 1000);
     console.info('Started background jobs.');
-    self.runner();
+    runner();
   } else if (self.timer !== false) {
     clearTimeout(self.timer);
     self.timer = false;

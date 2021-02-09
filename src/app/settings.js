@@ -20,6 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { $ } from './globals.js';
 import { appName, webRoot } from './config.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
@@ -62,7 +63,7 @@ const afterLoad = function(container) {
     return;
   }
 
-  tabsHolder.tabs({ selected: 0});
+  tabsHolder.tabs({ selected: 0 });
 
   // Work around showPassword erasing the value and returns the
   // text input clone.
@@ -82,11 +83,11 @@ const afterLoad = function(container) {
   showPassword(encryptionKey);
   showPassword(loginPassword);
 
-  $("#userkey #button").click(function() {
+  $('#userkey #button').click(function() {
     // We allow empty keys, meaning no encryption
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
-    if (loginPassword.val() == '') {
+    if (loginPassword.val() === '') {
       $('#userkey .info').html(t(appName, 'You must type in your login password.'));
       $('#userkey .info').show();
       $('#userkey .error').show();
@@ -134,13 +135,13 @@ const afterLoad = function(container) {
         success(element, data, value, msg) {
           if (value === '') {
             $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-              $(elm).attr('disabled','disabled');
+              $(elm).prop('disabled', true);
             });
           } else {
             $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
               $(elm).removeAttr('disabled');
             });
-            if ($('#shareowner #user-saved').val() != '') {
+            if ($('#shareowner #user-saved').val() !== '') {
               $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
                 $(elm).removeAttr('disabled');
               });
@@ -169,11 +170,11 @@ const afterLoad = function(container) {
     $('#keychangebutton').on('click', function() {
       // We allow empty keys, meaning no encryption
       form.find('.statusmessage').hide();
-      if (oldKeyInput.val() != keyInput.val()) {
+      if (oldKeyInput.val() !== keyInput.val()) {
 
         // disable form elements until we got an answer
         $(tabsSelector + ' fieldset').prop('disabled', true);
-        $(tabsSelector).tabs("disable");
+        $(tabsSelector).tabs('disable');
         container.find('.statusmessage.standby').show();
 
         Notification.show(t(appName, 'Please standby, the operation will take some time!'));
@@ -189,12 +190,12 @@ const afterLoad = function(container) {
           .done(function(data) {
             // re-enable all forms
             $(tabsSelector + ' fieldset').prop('disabled', false);
-            $(tabsSelector).tabs("enable");
+            $(tabsSelector).tabs('enable');
             container.find('.statusmessage.standby').hide();
 
             Notification.hide();
 
-            if (keyInput.val() == '') {
+            if (keyInput.val() === '') {
               container.find('.statusmessage.insecure').show();
             }
             keyInput.val('');
@@ -224,7 +225,7 @@ const afterLoad = function(container) {
           });
       } else {
         container.find('.statusmessage.equal').show();
-        if (oldKeyInput.val() == '') {
+        if (oldKeyInput.val() === '') {
           container.find('.statusmessage.insecure').show();
         }
       }
@@ -248,7 +249,7 @@ const afterLoad = function(container) {
           // Make sure both inputs have the same value
           keyInput.val(data.value);
           keyInputClone.val(data.value);
-          if (data.message != '') {
+          if (data.message !== '') {
             msg.html(data.message).show();
           }
         });
@@ -282,7 +283,7 @@ const afterLoad = function(container) {
 
     // DB-Password
     // 'show password' checkbox
-    const dbPassword = $('fieldset.cafevdb_dbpassword #cafevdb-dbpassword')
+    const dbPassword = $('fieldset.cafevdb_dbpassword #cafevdb-dbpassword');
     showPassword(dbPassword);
 
     // test password
@@ -318,7 +319,7 @@ const afterLoad = function(container) {
 
     shareOwnerForce.on('change', function(event) {
       msg.hide();
-      if (!$(this).is(':checked') && shareOwnerSaved.val() != '') {
+      if (!$(this).is(':checked') && shareOwnerSaved.val() !== '') {
         shareOwner.val(shareOwnerSaved.val());
         shareOwner.prop('disabled', true);
       } else {
@@ -328,7 +329,7 @@ const afterLoad = function(container) {
     });
 
     shareOwner.on('blur', function(event) {
-      shareOwnerCheck.prop('disabled', shareOwner.val() == '');
+      shareOwnerCheck.prop('disabled', shareOwner.val() === '');
       return false;
     });
 
@@ -337,13 +338,13 @@ const afterLoad = function(container) {
         sucess(element, data, value, msg) { // done
           shareOwner.attr('disabled', true);
           shareOwnerSaved.val(shareOwner.val());
-          if (shareOwner.val() != '') {
+          if (shareOwner.val() !== '') {
             $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
               $(elm).removeAttr('disabled');
             });
           } else {
             $('#calendars,#sharedfolderform').find('fieldset').each(function(i, elm) {
-              $(elm).attr('disabled','disabled');
+              $(elm).prop('disabled', true);
             });
           }
         },
@@ -353,7 +354,7 @@ const afterLoad = function(container) {
             value: {
               shareowner: shareOwner.val(),
               'shareowner-saved': shareOwnerSaved.val(),
-              'shareowner-force': shareOwnerForce.is(':checked') ? true : false,
+              'shareowner-force': shareOwnerForce.is(':checked'),
             },
           };
         },
@@ -378,7 +379,7 @@ const afterLoad = function(container) {
         },
         getValue(element, msg) {
           let val = { name: password.attr('name'), value: password.val() };
-          if (val.value == '') {
+          if (val.value === '') {
             msg.html(t(appName, 'Password field must not be empty')).show();
             val = undefined;
           }
@@ -404,7 +405,7 @@ const afterLoad = function(container) {
           // TODO check integrity of return etc.
           password.val(data.value);
           passwordClone.val(data.value);
-          if (data.message != '') {
+          if (data.message !== '') {
             msg.html(data.message).show();
           }
         });
@@ -436,7 +437,7 @@ const afterLoad = function(container) {
             const sharedObjectForce = container.find('#' + cssForce);
             const sharedObjectCheck = container.find('#' + cssCheck);
 
-            form.submit(function () { return false; }); // @@TODO ???
+            form.submit(function() { return false; }); // @@TODO ???
 
             sharedObjectForce.blur(function(event) { // @@TODO ???
               return false;
@@ -444,7 +445,7 @@ const afterLoad = function(container) {
 
             sharedObjectForce.click(function(event) {
               msg.hide();
-              if (!sharedObjectForce.is(':checked') && sharedObjectSaved.val() != '') {
+              if (!sharedObjectForce.is(':checked') && sharedObjectSaved.val() !== '') {
                 sharedObject.val(sharedObjectSaved.val());
                 sharedObject.prop('disabled', true);
               } else {
@@ -487,7 +488,7 @@ const afterLoad = function(container) {
 
     sharedFolder('sharedfolder');
     sharedFolder('projectsfolder', function(element, data, value, msg) {
-      $('#projectsbalancefolderform fieldset').prop('disabled', value == '');
+      $('#projectsbalancefolderform fieldset').prop('disabled', value === '');
     });
     sharedFolder('projectsbalancefolder');
 
@@ -512,7 +513,7 @@ const afterLoad = function(container) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-          generateUrl('settings/app/set/' + name), {  value })
+          generateUrl('settings/app/set/' + name), { value })
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -525,14 +526,14 @@ const afterLoad = function(container) {
       // Email-Password
       // 'show password' checkbox
       const password = container.find('#emailpassword');
-      const passwordClone = showPassword(password);
+      // const passwordClone = showPassword(password);
       const passwordChange = container.find('#button');
 
       passwordChange.on('click', function() {
         msg.hide();
         const value = password.val();
         const name = password.attr('name');
-        if (value != '') {
+        if (value !== '') {
           $.post(
             generateUrl('settings/app/set/' + name), { value })
             .fail(function(xhr, status, errorThrown) {
@@ -549,7 +550,7 @@ const afterLoad = function(container) {
     } // fieldset emailuser
 
     {
-      const container = form.find('#emaildistribute');
+      // const container = form.find('#emaildistribute');
       // const msg = container.find('.statusmessage');
 
       $('#emaildistributebutton').click(function() {
@@ -581,7 +582,7 @@ const afterLoad = function(container) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
-            $('#'+data.proto+'port').val(data.port);
+            $('#' + data.proto + 'port').val(data.port);
             msg.html(data.message).show();
           });
         return false;
@@ -591,9 +592,7 @@ const afterLoad = function(container) {
         msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
-        $.post(
-          generateUrl('settings/app/set/' + name),
-          { 'value': value })
+        $.post(generateUrl('settings/app/set/' + name), { value })
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -608,7 +607,7 @@ const afterLoad = function(container) {
       const container = form.find('fieldset.emailidentity');
       console.log('************', container);
 
-      container.find('#emailfromname','#emailfromaddress').on('blur', function(event) {
+      container.find('#emailfromname', '#emailfromaddress').on('blur', function(event) {
         msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
@@ -637,7 +636,7 @@ const afterLoad = function(container) {
             if (element.is(':checked')) {
               emailTestAddress.prop('disabled', false);
             } else {
-              emailTestAddress.prop('disabled',true);
+              emailTestAddress.prop('disabled', true);
             }
           },
         });
@@ -778,7 +777,7 @@ const afterLoad = function(container) {
     executiveBoardIds.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
-      inherit_select_classes:true,
+      inherit_select_classes: true,
       width: '30%',
     });
     simpleSetValueHandler(executiveBoardIds, 'change', msg);
@@ -861,7 +860,7 @@ const afterLoad = function(container) {
 
       translationKey.html(key.text());
 
-      if (language && key.length == 1) {
+      if (language && key.length === 1) {
         translations = key.data('translations');
         translation = translations[language] || '';
       }
@@ -894,13 +893,13 @@ const afterLoad = function(container) {
     translationKeys.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
-      width: '30%'
+      width: '30%',
     });
 
     locales.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
-      width: '10%'
+      width: '10%',
     });
 
     translationKeys.on('change', function(event) {
@@ -926,7 +925,7 @@ const afterLoad = function(container) {
         },
         getValue(element, msg) {
           let val;
-          if (language && key.length == 1) {
+          if (language && key.length === 1) {
             // save it in order to restore, maybe we want to have an
             // "OK" button in order not to accidentally damage
             // existing translations.
@@ -937,7 +936,7 @@ const afterLoad = function(container) {
               name: 'translation',
               value: {
                 key: key.text(),
-                language: language,
+                language,
                 translation: translationText.val(),
               },
             };
@@ -949,7 +948,7 @@ const afterLoad = function(container) {
     downloadPoTemplates.on('click', function(event) {
       const post = [];
       const cookieValue = makeId();
-      const cookieName = appName + '_' + 'translation_templates_download'
+      const cookieName = appName + '_' + 'translation_templates_download';
       post.push({ name: 'DownloadCookieName', value: cookieName });
       post.push({ name: 'DownloadCookieValue', value: cookieValue });
       post.push({ name: 'requesttoken', value: OC.requestToken });
@@ -963,7 +962,7 @@ const afterLoad = function(container) {
           cookieValue,
           cookiePath: webRoot,
         })
-        .fail(function (responseHtml, url) {
+        .fail(function(responseHtml, url) {
           Dialogs.alert(
             t(appName, 'Unable to download translation templates: {response}',
               { response: responseHtml }),
@@ -992,7 +991,7 @@ const afterLoad = function(container) {
 
     simpleSetValueHandler($('input.devlink'), 'blur', msg, {
       setup() { devLinkTests.prop('disabled', true); },
-      cleanup() { devLinkTests.prop('disabled', false); }
+      cleanup() { devLinkTests.prop('disabled', false); },
     });
 
     devLinkTests.on('click', function(event) {
@@ -1037,12 +1036,12 @@ const documentReady = function(container) {
     container = $(containerSelector);
   }
 
-  container.on('tabsselect', tabsSelector, function (event, ui) {
+  container.on('tabsselect', tabsSelector, function(event, ui) {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
   });
 
-  container.on('tabsshow', tabsSelector, function (event, ui) {
+  container.on('tabsshow', tabsSelector, function(event, ui) {
     if (ui.index === 3) {
       $('#smtpsecure').chosen({ disable_search_threshold: 10 });
       $('#imapsecure').chosen({ disable_search_threshold: 10 });

@@ -25,7 +25,7 @@ import { appSettings, toolTipsInit, unfocus } from './cafevdb.js';
 
 const documentReady = function() {
 
-  var appNav = $('#app-navigation');
+  const appNav = $('#app-navigation');
 
   appNav.on('click keydown', '#app-settings-header', function(event) {
     if ($('#app-settings').hasClass('open')) {

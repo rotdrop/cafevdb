@@ -125,7 +125,10 @@ const simpleSetHandler = function(element, eventType, msgElement) {
   });
 };
 
-export { simpleSetHandler, simpleSetValueHandler, };
+export {
+  simpleSetHandler,
+  simpleSetValueHandler,
+};
 
 // Local Variables: ***
 // js-indent-level: 2 ***

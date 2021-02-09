@@ -24,7 +24,8 @@ import { globalState } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
-import * as WysiwygEditor from  './wysiwyg-editor.js';
+import * as Dialogs from './dialogs.js';
+import * as WysiwygEditor from './wysiwyg-editor.js';
 
 require('blog.css');
 
@@ -42,11 +43,11 @@ const popupPosition = {
   my: 'middle top+5%',
   at: 'middle bottom',
   of: '#controls',
-  offset: '0 0'
+  offset: '0 0',
 };
 
 const editWindow = function(data) {
-  let blog = globalState.Blog;
+  const blog = globalState.Blog;
 
   $('#dialog_holder').html(data.content);
   blog.author = data.author;
@@ -69,7 +70,7 @@ const editWindow = function(data) {
     width: 'auto',
     height: 'auto',
     resizable: false,
-    open : function () {
+    open() {
       const self = this;
 
       const dialogHolder = $(self);
@@ -97,7 +98,7 @@ const editWindow = function(data) {
 
       $('.ui-dialog-titlebar-close').hide();
 
-      dialogWidget.find('button, input, label').cafevTooltip({position:'auto bottom'});
+      dialogWidget.find('button, input, label').cafevTooltip({ position: 'auto bottom' });
 
       if (globalState.toolTipsEnabled) {
         $.fn.cafevTooltip.enable();
@@ -118,26 +119,26 @@ const editWindow = function(data) {
 
       dialogHolder.on('resize', resizeHandler);
     },
-    close : function(event, ui) {
+    close(event, ui) {
       // $('#blogtextarea').tinymce().remove();
       // $('#blogtextarea').ckeditor().remove();
       $.fn.cafevTooltip.remove();
       WysiwygEditor.removeEditor('#blogtextarea');
       $(this).dialog('destroy').remove();
-    }
+    },
   });
   return true;
 };
 const cancel = function(event) {
   event.preventDefault();
   // $('#blogtextarea').tinymce().save();
-  if ($('#blogtextarea').val() == globalState.Blog.text) {
+  if ($('#blogtextarea').val() === globalState.Blog.text) {
     $('#blogedit').dialog('close').remove();
   } else {
-    OC.dialogs.confirm(
+    Dialogs.confirm(
       t('cafevdb', 'The message content has been changed and will be lost if you press `Yes\''),
       t('cafevdb', 'Really cancel current entry?'),
-      function (decision) {
+      function(decision) {
         if (decision) {
           $('#blogedit').dialog('close').remove();
         }
@@ -148,7 +149,6 @@ const cancel = function(event) {
 };
 
 const submit = function(event) {
-  const self = this;
   event.preventDefault();
   // $('#blogtextarea').tinymce().save();
   let popupValue = 0;
@@ -171,13 +171,13 @@ const submit = function(event) {
     content: $('#blogtextarea').val(),
     priority: $('#blogpriority').val(),
     popup: popupValue,
-    clearReader: clearReaderValue
+    clearReader: clearReaderValue,
   })
     .fail(function(xhr, status, errorThrown) {
       const message = Ajax.failMessage(xhr, status, errorThrown);
-      OC.dialogs.alert(message, t('cafevdb', 'Error'));
+      Dialogs.alert(message, t('cafevdb', 'Error'));
     })
-    .done(function (data) {
+    .done(function(data) {
       $('#blogedit').dialog('close').remove();
       updateThreads(data);
       return true;
@@ -202,7 +202,7 @@ const popupMessages = function() {
 
   blogThreads.find('div.blogentrypopup').each(function(index) {
     let thisBlogId = $(this).find('input.blogentrypopupid').val();
-    if (thisBlogId === false || thisBlogId ==='') {
+    if (thisBlogId === false || thisBlogId === '') {
       thisBlogId = -1;
     }
     $(this).cafevDialog({
@@ -215,28 +215,29 @@ const popupMessages = function() {
       height: 'auto',
       resizable: false,
       buttons: [
-        { text: t('cafevdb', 'I have read this popup, please bother me no more!'),
+        {
+          text: t('cafevdb', 'I have read this popup, please bother me no more!'),
           title: t('cafevdb', 'Mark this popup as read; the popup will not show up again.'),
-          click: function() {
+          click() {
             const action = 'markread';
             $.post(generateUrl('blog/action/' + action), { blogId: thisBlogId })
 	      .fail(function(xhr, status, errorThrown) {
-                const message = Ajax.failMessage(xhr, status, errorThrown)
-                OC.dialogs.alert(message, t('cafevdb', 'Error'));
+                const message = Ajax.failMessage(xhr, status, errorThrown);
+                Dialogs.alert(message, t('cafevdb', 'Error'));
               })
-              .done(function (data) {
+              .done(function(data) {
                 // no need to submit the form
               });
             $(this).dialog('close').remove();
-          }
-        }
+          },
+        },
       ],
       open() {
         $('.ui-dialog-titlebar-close').hide();
 
-        $('button').cafevTooltip({position:'auto bottom'});
-        $('input').cafevTooltip({position:'auto bottom'});
-        $('label').cafevTooltip({position:'auto bottom'});
+        $('button').cafevTooltip({ position: 'auto bottom' });
+        $('input').cafevTooltip({ position: 'auto bottom' });
+        $('label').cafevTooltip({ position: 'auto bottom' });
 
         if (globalState.toolTips) {
           $.fn.cafevTooltip.enable();
@@ -264,15 +265,15 @@ const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
 
-    $('#blogeditform').submit(function () { return false; });
+    $('#blogeditform').submit(function() { return false; });
 
     $('#blogform #blognewentry').click(function(event) {
       event.preventDefault();
       const post = $('#blogform').serializeArray();
       $.post(generateUrl('blog/editentry'), post)
         .fail(function(xhr, status, errorThrown) {
-          const message = Ajax.failMessage(xhr, status, errorThrown)
-          OC.dialogs.alert(message, t('cafevdb', 'Error'));
+          const message = Ajax.failMessage(xhr, status, errorThrown);
+          Dialogs.alert(message, t('cafevdb', 'Error'));
         })
         .done(editWindow);
       return false;
@@ -288,11 +289,11 @@ const documentReady = function() {
         event.preventDefault();
         $.post(generateUrl('blog/editentry'), {
           blogId: -1,
-          inReplyTo: $(this).val()
+          inReplyTo: $(this).val(),
         })
           .fail(function(xhr, status, errorThrown) {
-            const message = Ajax.failMessage(xhr, status, errorThrown)
-            OC.dialogs.alert(message, t('cafevdb', 'Error'));
+            const message = Ajax.failMessage(xhr, status, errorThrown);
+            Dialogs.alert(message, t('cafevdb', 'Error'));
           })
           .done(editWindow);
         return false;
@@ -305,16 +306,15 @@ const documentReady = function() {
         event.preventDefault();
         $.post(generateUrl('blog/editentry'), {
           blogId: $(this).val(),
-          inReplyTo: -1
+          inReplyTo: -1,
         })
           .fail(function(xhr, status, errorThrown) {
-            const message = Ajax.failMessage(xhr, status, errorThrown)
-            OC.dialogs.alert(message, t('cafevdb', 'Error'));
+            const message = Ajax.failMessage(xhr, status, errorThrown);
+            Dialogs.alert(message, t('cafevdb', 'Error'));
           })
           .done(editWindow);
         return false;
       });
-
 
     blogThreads.on(
       'click',
@@ -322,16 +322,16 @@ const documentReady = function() {
       function(event) {
         event.preventDefault();
         const blogId = $(this).val();
-        OC.dialogs.confirm(
+        Dialogs.confirm(
           t('cafevdb', 'The entire message thread will be deleted if you press `Yes\''),
           t('cafevdb', 'Really delete the entry?'),
-          function (decision) {
+          function(decision) {
             if (decision) {
               const action = 'delete';
-              $.post(generateUrl('blog/action/' + action), { blogId: blogId })
+              $.post(generateUrl('blog/action/' + action), { blogId })
 	        .fail(function(xhr, status, errorThrown) {
-                  const message = Ajax.failMessage(xhr, status, errorThrown)
-                  OC.dialogs.alert(message, t('cafevdb', 'Error'));
+                  const message = Ajax.failMessage(xhr, status, errorThrown);
+                  Dialogs.alert(message, t('cafevdb', 'Error'));
                 })
                 .done(updateThreads);
             }
@@ -346,18 +346,18 @@ const documentReady = function() {
       function(event) {
         event.preventDefault();
         const id = $(this).val();
-        const prio = $('#blogpriority'+id).val();
+        const prio = $('#blogpriority' + id).val();
         const action = 'modify';
         $.post(generateUrl('blog/action/' + action), {
           content: '',
           blogId: id,
-          priority: +prio+1,
+          priority: +prio + 1,
           popup: false,
-          inReplyTo: -1
+          inReplyTo: -1,
         })
 	  .fail(function(xhr, status, errorThrown) {
-            const message = Ajax.failMessage(xhr, status, errorThrown)
-            OC.dialogs.alert(message, t('cafevdb', 'Error'));
+            const message = Ajax.failMessage(xhr, status, errorThrown);
+            Dialogs.alert(message, t('cafevdb', 'Error'));
           })
           .done(updateThreads);
         return false;
@@ -369,18 +369,18 @@ const documentReady = function() {
       function(event) {
         event.preventDefault();
         const id = $(this).val();
-        const prio = $('#blogpriority'+id).val();
+        const prio = $('#blogpriority' + id).val();
         const action = 'modify';
         $.post(generateUrl('blog/action/' + action), {
           content: '',
           blogId: id,
-          priority: +prio-1,
+          priority: +prio - 1,
           popup: false,
-          inReplyTo: -1
+          inReplyTo: -1,
         })
 	  .fail(function(xhr, status, errorThrown) {
-            const message = Ajax.failMessage(xhr, status, errorThrown)
-            OC.dialogs.alert(message, t('cafevdb', 'Error'));
+            const message = Ajax.failMessage(xhr, status, errorThrown);
+            Dialogs.alert(message, t('cafevdb', 'Error'));
           })
           .done(updateThreads);
         return false;

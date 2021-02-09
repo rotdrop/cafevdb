@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -20,7 +21,7 @@
  */
 
 // Compatibility
-import { globalState } from './globals.js';
+import { globalState, appName } from './globals.js';
 
 require('dialogs.css');
 
@@ -70,12 +71,12 @@ const confirm = function(text, title, callback, modal, allowHtml) {
  *
  */
 const debugPopup = function(data, callback) {
-  if (typeof data.debug != 'undefined' && datadebug != '') {
-    if (typeof callback != 'function') {
+  if (typeof data.debug !== 'undefined' && data.debug !== '') {
+    if (typeof callback !== 'function') {
       callback = undefined;
     }
-    info('<div class="debug error contents">'+data.debug+'</div>',
-	 t(CAFEVDB.appName, 'Debug Information'),
+    info('<div class="debug error contents">' + data.debug + '</div>',
+	 t(appName, 'Debug Information'),
 	 callback, true, true);
   }
 };
@@ -83,7 +84,10 @@ const debugPopup = function(data, callback) {
 export { alert, info, confirm, debugPopup };
 
 globalState.Dialogs = {
-  alert, info, confirm, debugPopup
+  alert,
+  info,
+  confirm,
+  debugPopup,
 };
 
 // Local Variables: ***

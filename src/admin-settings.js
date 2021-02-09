@@ -31,7 +31,7 @@ $(function() {
   const $container = $('#' + appName + '-admin-settings');
   const $msg = $container.find('.msg');
 
-  $container.find('input').blur(function(event){
+  $container.find('input').blur(function(event) {
     const $self = $(this);
 
     const name = $self.attr('name');
@@ -50,7 +50,7 @@ $(function() {
       })
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown);
-        $msg.html(Ajax.failMessage(xh, status, errorThrown)).show();
+        $msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
       });
   });
 });

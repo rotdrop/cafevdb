@@ -19,9 +19,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { webRoot, appName } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Page from './page.js';
 import * as Email from './email.js';
+import * as Dialogs from './dialogs.js';
 import * as PHPMyEdit from './pme.js';
 
 const ready = function(container, resizeCB) {
@@ -29,9 +31,9 @@ const ready = function(container, resizeCB) {
   // sanitize
   container = PHPMyEdit.container(container);
 
-  container.
-    off('click', '.debit-note-actions a.announce').
-    on('click', '.debit-note-actions a.announce', function(event) {
+  container
+    .off('click', '.debit-note-actions a.announce')
+    .on('click', '.debit-note-actions a.announce', function(event) {
       const self = $(this);
       const post = self.data('post');
 
@@ -48,32 +50,33 @@ const ready = function(container, resizeCB) {
       CAFEVDB.modalizer(true);
       Page.busyIcon(true);
 
-      var clearBusyState = function() {
+      const clearBusyState = function() {
         CAFEVDB.modalizer(false);
         Page.busyIcon(false);
         return true;
       };
 
-      var post = self.data('post');
-      post['DownloadCookie'] = CAFEVDB.makeId();
+      const post = self.data('post');
+      post.DownloadCookie = CAFEVDB.makeId();
 
-      var action = OC.filePath('cafevdb', 'ajax/finance', 'debit-note-download.php');
+      const action = OC.filePath(appName, 'ajax/finance', 'debit-note-download.php');
       $.fileDownload(action, {
         httpMethod: 'POST',
         data: post,
         cookieName: 'debit_note_download',
-        cookieValue: post['DownloadCookie'],
-        cookiePath: oc_webroot,
-        successCallback: function() {
-          clearBusyState()
+        cookieValue: post.DownloadCookie,
+        cookiePath: webRoot,
+        successCallback() {
+          clearBusyState();
         },
-        failCallback: function(responseHtml, url, error) {
-          OC.dialogs.alert(t('cafevdb', 'Unable to download debit notes:')+
-                           ' '+
-                           responseHtml,
-                           t('cafevdb', 'Error'),
-                           clearBusyState, true, true);
-        }
+        failCallback(responseHtml, url, error) {
+          Dialogs.alert(
+            t(appName, 'Unable to download debit notes:')
+              + ' '
+              + responseHtml,
+            t(appName, 'Error'),
+            clearBusyState, true, true);
+        },
       });
 
       return false;
@@ -97,7 +100,7 @@ const documentReady = function() {
 
 export { documentReady, ready };
 
-
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***

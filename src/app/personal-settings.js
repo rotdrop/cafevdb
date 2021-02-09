@@ -19,7 +19,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.js';
+import { globalState, $ } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -40,9 +40,9 @@ const documentReady = function() {
         self.chosen('destroy');
       }
       self.chosen({
-        disable_search:true,
-        inherit_select_classes:true,
-        width: '10ex'
+        disable_search: true,
+        inherit_select_classes: true,
+        width: '10ex',
       });
     });
 
@@ -56,9 +56,9 @@ const documentReady = function() {
       self.chosen('destroy');
       self.show();
       self.chosen({
-        inherit_select_classes:true,
-        disable_search:true,
-        width:'auto'
+        inherit_select_classes: true,
+        disable_search: true,
+        width: 'auto',
       });
     });
 
@@ -69,15 +69,15 @@ const documentReady = function() {
         self.chosen('destroy');
       }
       self.chosen({
-        inherit_select_classes:true,
-        disable_search:true,
-        width: '100%'
+        inherit_select_classes: true,
+        disable_search: true,
+        width: '100%',
       });
     });
   };
 
   container.on('cafevdb:content-update', function(event) {
-    if (event.target == this) {
+    if (event.target === this) {
       chosenInit($(this));
       msgElement = $('form.personal-settings .statusmessage');
     }
@@ -92,15 +92,14 @@ const documentReady = function() {
   container.on('change', '.tooltips', function(event) {
     const self = $(this);
     CAFEVDB.toolTipsOnOff(self.prop('checked'));
-    $.post(generateUrl('/settings/personal/set/tooltips'),
-           { value: globalState.toolTipsEnabled })
+    $.post(generateUrl('/settings/personal/set/tooltips'), { value: globalState.toolTipsEnabled })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        console.error(data);
+        // console.error(data);
       });
     $('.personal-settings input[type="checkbox"].tooltips').prop('checked', globalState.toolTipsEnabled);
     if (globalState.toolTipsEnabled) {
@@ -114,55 +113,52 @@ const documentReady = function() {
   container.on('change', '.filtervisibility', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
-    $.post(generateUrl('/settings/personal/set/filtervisibility'),
-           { value: checked })
+    $.post(generateUrl('/settings/personal/set/filtervisibility'), { value: checked })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        console.error(data);
+        // console.error(data);
       });
     if (checked) {
       $('input.pme-search').trigger('click');
     } else {
       $('input.pme-hide').trigger('click');
     }
-    $('.personal-settings input[type="checkbox"].filtervisibility').prop('checked', checked)
+    $('.personal-settings input[type="checkbox"].filtervisibility').prop('checked', checked);
     return false;
   });
 
   container.on('change', '.directchange', function(event) {
     const self = $(this);
-    const checked = self.prop('checked')
-    $.post(generateUrl('/settings/personal/set/directchange'),
-           { value: checked })
+    const checked = self.prop('checked');
+    $.post(generateUrl('/settings/personal/set/directchange'), { value: checked })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        console.error(data);
+        // console.error(data);
       });
     if (globalState.PHPMyEdit !== undefined) {
       globalState.PHPMyEdit.directChange = checked;
     }
-    $('.personal-settings input[type="checkbox"].directchange').prop('checked', checked)
+    $('.personal-settings input[type="checkbox"].directchange').prop('checked', checked);
     return false;
   });
 
   container.on('change', '.showdisabled', function(event) {
     const self = $(this);
-    const checked = self.prop('checked')
-    $.post(generateUrl('/settings/personal/set/showdisabled'),
-           { value: checked })
+    const checked = self.prop('checked');
+    $.post(generateUrl('/settings/personal/set/showdisabled'), { value: checked })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
         if (globalState.PHPMyEdit !== undefined) {
-          const pmeForm = $('#content ' + PHPMyEdit.formSelector()+'.show-hide-disabled');
+          const pmeForm = $('#content ' + PHPMyEdit.formSelector() + '.show-hide-disabled');
           console.log('form', pmeForm);
           pmeForm.each(function(index) {
             const form = $(this);
@@ -179,7 +175,7 @@ const documentReady = function() {
       })
       .fail(function(xhr, status, errorThrown) {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        console.error(data);
+        // console.error(data);
       });
     if (globalState.PHPMyEdit !== undefined) {
       globalState.PHPMyEdit.showdisabled = checked;
@@ -191,8 +187,7 @@ const documentReady = function() {
   container.on('change', '.expertmode', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
-    $.post(generateUrl('/settings/personal/set/expertmode'),
-           { value: checked })
+    $.post(generateUrl('/settings/personal/set/expertmode'), { value: checked })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
@@ -206,7 +201,7 @@ const documentReady = function() {
       })
       .fail(function(xhr, status, errorThrown) {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        console.error(data);
+        // console.error(data);
       });
     if (checked) {
       $('.expertmode-container').removeClass('hidden');
@@ -229,10 +224,10 @@ const documentReady = function() {
       })
       .fail(function(xhr, status, errorThrown) {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        console.error(data);
+        // console.error(data);
       });
     $('.personal-settings select.pagerows').each(function(index) {
-      if (this != $self[0]) {
+      if (this !== $self[0]) {
         CAFEVDB.selectValues(this, CAFEVDB.selectValues($self));
       }
     });
@@ -243,8 +238,7 @@ const documentReady = function() {
     const $self = $(this);
     const post = $self.serializeArray();
     console.log(post);
-    $.post(generateUrl('/settings/personal/set/debugmode'),
-           { value: post })
+    $.post(generateUrl('/settings/personal/set/debugmode'), { value: post })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
@@ -252,10 +246,10 @@ const documentReady = function() {
       })
       .fail(function(xhr, status, errorThrown) {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        console.error(data);
+        // console.error(data);
       });
     $('.personal-settings select.debugmode').each(function(index) {
-      if (this != $self[0]) {
+      if (this !== $self[0]) {
         CAFEVDB.selectValues(this, CAFEVDB.selectValues($self));
       }
     });
@@ -273,29 +267,27 @@ const documentReady = function() {
       })
       .fail(function(xhr, status, errorThrown) {
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        console.error(data);
+        // console.error(data);
       });
     $('.personal-settings select.wysiwyg-editor').each(function(index) {
-      if (this != $self[0]) {
+      if (this !== $self[0]) {
         CAFEVDB.selectValues(this, CAFEVDB.selectValues($self));
       }
     });
     return false;
   });
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // Credits list
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   * Credits list
+   *
+   ***************************************************************************/
 
-  const updateCredits = function()
-  {
+  const updateCredits = function() {
     const numItems = 5;
-    let items = [];
+    const items = [];
     const numTotal = $('div.cafevdb.about div.product.credits.list ul li').length;
     for (let i = 0; i < numItems; ++i) {
-      items.push(Math.round(Math.random()*(numTotal-1)));
+      items.push(Math.round(Math.random() * (numTotal - 1)));
     }
     $('div.cafevdb.about div.product.credits.list ul li').each(function(index) {
       if (items.includes(index)) {
@@ -313,18 +305,18 @@ const documentReady = function() {
   globalState.creditsTimer = setInterval(function() {
     if ($('div.cafevdb.about div.product.credits.list:visible').length > 0) {
       console.info('Updating credits.');
-      updateCredits()
+      updateCredits();
     } else {
       console.log('Clearing credits timer.');
       clearInterval(globalState.creditsTimer);
     }
   }, 30000);
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // Tooltips
-  //
-  ///////////////////////////////////////////////////////////////////////////
+  /****************************************************************************
+   *
+   * Tooltips
+   *
+   ***************************************************************************/
 
   CAFEVDB.toolTipsInit('#personal-settings-container');
 

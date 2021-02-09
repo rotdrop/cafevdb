@@ -41,7 +41,7 @@ const PHPMyEdit = {
   pmePrefix: 'pme',
   singleDeselectOffset: 18,
   defaultSelector: '#' + appName + '-page-body', // for delegate handlers, survives pseudo-submit
-  defaultInnerSelector: 'inner', // to override delegate handlers, survices pseud};
+  defaultInnerSelector: 'inner', // to override delegate handlers, survices pseudo-submit
 
   /* actual volatile state variables */
   tableLoadCallbacks: [],

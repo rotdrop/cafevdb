@@ -20,11 +20,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.js';
+import { globalState, appName, $, jQuery } from './globals.js';
 import generateUrl from './generate-url.js';
 import { urlEncode, urlDecode } from './url-decode.js';
 import * as Dialogs from './dialogs.js';
-import { selector as pmeSelector } from './pme-selectors.js';
 
 require('cafevdb.css');
 
@@ -50,6 +49,8 @@ $.extend(
  * order to "fake" document-ready. An alternate possibility would
  * have been to attach handlers to a custom signal and trigger that
  * signal if necessary.
+ *
+ * @param {Function} callBack TBD.
  */
 const addReadyCallback = function(callBack) {
   globalState.readyCallbacks.push(callBack);
@@ -63,7 +64,7 @@ const addReadyCallback = function(callBack) {
 const runReadyCallbacks = function() {
   for (let idx = 0; idx < globalState.readyCallbacks.length; ++idx) {
     const callback = globalState.readyCallbacks[idx];
-    if (typeof callback == 'function') {
+    if (typeof callback === 'function') {
       callback();
     }
   }
@@ -73,6 +74,8 @@ const runReadyCallbacks = function() {
 /**
  * Steal the focus by moving it to a hidden element. Is there a
  * better way? The blur() method just does not work.
+ *
+ * @param {jQuery} element TBD.
  */
 const unfocus = function(element) {
   $('#focusstealer').focus();
@@ -80,16 +83,20 @@ const unfocus = function(element) {
 
 /**
  * Generate some random Id. @TODO replace.
+ *
+ * @param {int} length TBD.
+ *
+ * @returns {String}
  */
 const makeId = function(length) {
   if (typeof length === 'undefined') {
     length = 8;
   }
 
-  var text = '';
-  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-  for(var i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
 
@@ -97,31 +104,37 @@ const makeId = function(length) {
 };
 
 /**
- *Display a transparent modal dialog which blocks the UI.
+ * Display a transparent modal dialog which blocks the UI.
+ *
+ * @param {String} message TBD.
+ *
+ * @returns {jQuery}
  */
 const modalWaitNotification = function(message) {
   const dialogHolder = $('<div class="cafevdb modal-wait-notification"></div>');
-  dialogHolder.html('<div class="cafevdb modal-wait-message">'+message+'</div>'+
-                    '<div class="cafevdb modal-wait-animation"></div>');
+  dialogHolder.html('<div class="cafevdb modal-wait-message">' + message + '</div>'
+                    + '<div class="cafevdb modal-wait-animation"></div>');
   $('body').append(dialogHolder);
   dialogHolder.find('div.modal-wait-animation').progressbar({ value: false });
   dialogHolder.cafevDialog({
     title: '',
-    position: { my: "center",
-                at: "center center-20%",
-                of: window },
+    position: {
+      my: 'center',
+      at: 'center center-20%',
+      of: window,
+    },
     width: '80%',
     height: 'auto',
     modal: true,
     closeOnEscape: false,
     dialogClass: 'transparent no-close wait-notification cafevdb',
     resizable: false,
-    open: function() {
+    open() {
     },
-    close: function() {
+    close() {
       dialogHolder.dialog('close');
       dialogHolder.dialog('destroy').remove();
-    }
+    },
   });
   return dialogHolder;
 };
@@ -130,18 +143,15 @@ const modalWaitNotification = function(message) {
  * Unfortunately, the textare element does not fire a resize
  * event. This function emulates one.
  *
- * @param container selector or jQuery of container for event
+ * @param {Object} container selector or jQuery of container for event
  * delegation.
  *
- * @param textarea selector or jQuery
+ * @param {Object} textarea selector or jQuery
  *
- * @param delay Optional, defaults to 50. If true, fire the event
+ * @param {int} delay Optional, defaults to 50. If true, fire the event
  * immediately, if set, then this is a delay in ms.
- *
- *
  */
-const textareaResize = function(container, textarea, delay)
-{
+const textareaResize = function(container, textarea, delay) {
   if (typeof textarea === 'undefined' && typeof delay === 'undefined') {
     // Variant with one argument, argument must be textarea.
     textarea = container;
@@ -155,30 +165,30 @@ const textareaResize = function(container, textarea, delay)
   }
 
   // otherwise first two arguments are container and textarea.
-  if (typeof delay == 'undefined') {
+  if (typeof delay === 'undefined') {
     delay = 50; // ms
   }
 
   const handler = function(event) {
-    if (textarea.oldwidth  === null) {
-      textarea.oldwidth  = textarea.style.width;
+    if (textarea.oldwidth === null) {
+      textarea.oldwidth = textarea.style.width;
     }
     if (textarea.oldheight === null) {
       textarea.oldheight = textarea.style.height;
     }
-    if (textarea.style.width != textarea.oldwidth || textarea.style.height != textarea.oldheight) {
+    if (textarea.style.width !== textarea.oldwidth || textarea.style.height !== textarea.oldheight) {
       const self = this;
       if (delay > 0) {
         if (textarea.resize_timeout) {
           clearTimeout(textarea.resize_timeout);
         }
-        textarea.resize_timeout = setTimeout(function() {
+        textarea.resizeTimeout = setTimeout(function() {
           $(self).resize();
         }, delay);
       } else {
         $(this).resize();
       }
-      textarea.oldwidth  = textarea.style.width;
+      textarea.oldwidth = textarea.style.width;
       textarea.oldheight = textarea.style.height;
     }
     return true;
@@ -192,16 +202,15 @@ const textareaResize = function(container, textarea, delay)
 };
 
 const stopRKey = function(evt) {
-  evt = (evt) ? evt : ((event) ? event : null);
+  evt = evt || event;
   const node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-  if ((evt.keyCode == 13) && (node.type=="text"))  {
+  if ((evt.keyCode === 13) && (node.type === 'text')) {
     return false;
   }
   return true;
 };
 
 /**
- *
  * QueryData.js
  *
  * A function to parse data from a query string
@@ -214,31 +223,32 @@ const stopRKey = function(evt) {
  * Creates an object containing data parsed from the specified query string. The
  * parameters are:
  *
- * queryString        - the query string to parse. The query string may start
- *                      with a question mark, spaces may be encoded either as
- *                      plus signs or the escape sequence '%20', and both
- *                      ampersands and semicolons are permitted as separators.
- *                      This optional parameter defaults to query string from
- *                      the page URL.
- * preserveDuplicates - true if duplicate values should be preserved by storing
- *                      an array of values, and false if duplicates should
- *                      overwrite earler occurrences. This optional parameter
- *                      defaults to false.
+ * @param {String} queryString The query string to parse. The query
+ *     string may start with a question mark, spaces may be encoded
+ *     either as plus signs or the escape sequence '%20', and both
+ *     ampersands and semicolons are permitted as separators.  This
+ *     optional parameter defaults to query string from the page URL.
+ * @param {bool} preserveDuplicates true if duplicate values should be
+ *     preserved by storing an array of values, and false if
+ *     duplicates should overwrite earler occurrences. This optional
+ *     parameter defaults to false.
+ *
+ * @returns {Object}
  */
 const queryData = function(queryString, preserveDuplicates) {
 
-  var result = {};
+  const result = {};
 
   // if a query string wasn't specified, use the query string from the URL
-  if (queryString == undefined){
+  if (queryString === undefined) {
     queryString = location.search ? location.search : '';
   }
 
   // remove the leading question mark from the query string if it is present
-  if (queryString.charAt(0) == '?') queryString = queryString.substring(1);
+  if (queryString.charAt(0) === '?') queryString = queryString.substring(1);
 
   // check whether the query string is empty
-  if (queryString.length > 0){
+  if (queryString.length > 0) {
 
     // replace plus signs in the query string with spaces
     queryString = queryString.replace(/\+/g, ' ');
@@ -247,15 +257,15 @@ const queryData = function(queryString, preserveDuplicates) {
     const queryComponents = queryString.split(/[&;]/g);
 
     // loop over the query string components
-    for (var index = 0; index < queryComponents.length; index ++){
+    for (let index = 0; index < queryComponents.length; index++) {
       // extract this component's key-value pair
-      var keyValuePair = queryComponents[index].split('=');
-      var key          = decodeURIComponent(keyValuePair[0]);
-      var value        = keyValuePair.length > 1
-          ? decodeURIComponent(keyValuePair[1])
-          : '';
+      const keyValuePair = queryComponents[index].split('=');
+      const key = decodeURIComponent(keyValuePair[0]);
+      const value = keyValuePair.length > 1
+        ? decodeURIComponent(keyValuePair[1])
+        : '';
       // check whether duplicates should be preserved
-      if (preserveDuplicates){
+      if (preserveDuplicates) {
         // create the value array if necessary and store the value
         if (!(key in result)) result[key] = [];
         result[key].push(value);
@@ -271,11 +281,11 @@ const queryData = function(queryString, preserveDuplicates) {
 const selectMenuReset = function(select) {
   // deselect menu item
   select.find('option').prop('selected', false);
-  select.trigger("chosen:updated");
+  select.trigger('chosen:updated');
 };
 
 const chosenActive = function(select) {
-  return select.data('chosen') != undefined;
+  return select.data('chosen') !== undefined;
 };
 
 const fixupNoChosenMenu = function(select) {
@@ -293,64 +303,69 @@ const fixupNoChosenMenu = function(select) {
 /*
  * jQuery dialog popup with one chosen multi-selelct box inside.
  */
-const chosenPopup = function(contents, userOptions)
-{
+const chosenPopup = function(contents, userOptions) {
   const defaultOptions = {
     title: t(appName, 'Choose some Options'),
-    position: { my: "center center",
-                at: "center center",
-                of: window },
+    position: {
+      my: 'center center',
+      at: 'center center',
+      of: window,
+    },
     dialogClass: false,
     saveText: t(appName, 'Save'),
-    saveTitle: t(appName,
-                 'Accept the currently selected options and return to the underlying form. '),
+    saveTitle: t(
+      appName,
+      'Accept the currently selected options and return to the underlying form. '),
     cancelText: t(appName, 'Cancel'),
-    cancelTitle: t(appName,
-                   'Discard the current selection and close the dialog. '+
-                   'The initial set of selected options will remain unchanged.'),
+    cancelTitle: t(
+      appName,
+      'Discard the current selection and close the dialog. '
+        + 'The initial set of selected options will remain unchanged.'),
     buttons: [], // additional buttons.
     openCallback: false,
     saveCallback: false,
-    closeCallback: false
+    closeCallback: false,
   };
   const options = $.extend({}, defaultOptions, userOptions);
 
   const cssClass = (options.dialogClass ? options.dialogClass + ' ' : '') + 'chosen-popup-dialog';
-  const dialogHolder = $('<div class="'+cssClass+'"></div>');
+  const dialogHolder = $('<div class="' + cssClass + '"></div>');
   dialogHolder.html(contents);
   const selectElement = dialogHolder.find('select');
   $('body').append(dialogHolder);
 
-  const buttons = [
-    { text: options.saveText,
-      //icons: { primary: 'ui-icon-check' },
-      'class': 'save',
+  let buttons = [
+    {
+      text: options.saveText,
+      // icons: { primary: 'ui-icon-check' },
+      class: 'save',
       title: options.saveTitle,
-      click: function() {
-        const self = this;
-
-        var selectedOptions = [];
+      click() {
+        const selectedOptions = [];
         selectElement.find('option:selected').each(function(idx) {
           const self = $(this);
-          selectedOptions[idx] = { 'value': self.val(),
-                                   'html' : self.html(),
-                                   'text' : self.text() };
+          selectedOptions[idx] = {
+            value: self.val(),
+            html: self.html(),
+            text: self.text(),
+          };
         });
-        //alert('selected: '+JSON.stringify(selectedOptions));
-        if (typeof options.saveCallback == 'function') {
+        // alert('selected: ' + JSON.stringify(selectedOptions));
+        if (typeof options.saveCallback === 'function') {
           options.saveCallback.call(this, selectElement, selectedOptions);
         }
 
         return false;
-      }
+      },
     },
-    { text: options.cancelText,
-      'class': 'cancel',
+    {
+      text: options.cancelText,
+      class: 'cancel',
       title: options.cancelTitle,
-      click: function() {
-        $(this).dialog("close");
-      }
-    }
+      click() {
+        $(this).dialog('close');
+      },
+    },
   ];
   buttons = buttons.concat(options.buttons);
 
@@ -358,36 +373,37 @@ const chosenPopup = function(contents, userOptions)
     title: options.title,
     position: options.position,
     dialogClass: cssClass,
-    modal:true,
-    draggable:false,
-    closeOnEscape:false,
-    width:'auto',
-    height:'auto',
-    resizable:false,
-    buttons: buttons,
-    open:function() {
-      selectElement.chosen(); //{disable_search_threshold: 10});
+    modal: true,
+    draggable: false,
+    closeOnEscape: false,
+    width: 'auto',
+    height: 'auto',
+    resizable: false,
+    buttons,
+    open() {
+      selectElement.chosen(); // {disable_search_threshold: 10});
       const dialogWidget = dialogHolder.dialog('widget');
       toolTipsInit(dialogWidget);
-      dialogHolder.find('.chosen-container').off('dblclick').
-        on('dblclick', function(event) {
+      dialogHolder.find('.chosen-container')
+        .off('dblclick')
+        .on('dblclick', function(event) {
           dialogWidget.find('.ui-dialog-buttonset .ui-button.save').trigger('click');
           return false;
         });
 
-      if (typeof options.openCallback == 'function') {
+      if (typeof options.openCallback === 'function') {
         options.openCallback.call(this, selectElement);
       }
     },
-    close:function() {
-      if (typeof options.closeCallback == 'function') {
+    close() {
+      if (typeof options.closeCallback === 'function') {
         options.closeCallback.call(this, selectElement);
       }
 
       $.fn.cafevTooltip.remove();
       dialogHolder.dialog('close');
       dialogHolder.dialog('destroy').remove();
-    }
+    },
   });
 };
 
@@ -407,11 +423,11 @@ const formSubmit = function(url, values, method) {
     method = 'post';
   }
 
-  const form = $('<form method="'+method+'" action="'+url+'"></form>');
+  const form = $('<form method="' + method + '" action="' + url + '"></form>');
 
   const splitValues = values.split('&');
-  for (var i = 0; i < splitValues.length; ++i) {
-    var nameValue = splitValues[i].split('=');
+  for (let i = 0; i < splitValues.length; ++i) {
+    const nameValue = splitValues[i].split('=');
     $('<input />').attr('type', 'hidden')
       .attr('name', nameValue[0])
       .attr('value', urlDecode(nameValue[1]))
@@ -421,25 +437,22 @@ const formSubmit = function(url, values, method) {
   form.submit();
 };
 
-const objectToHiddenInput = function(value, namePrefix)
-{
+const objectToHiddenInput = function(value, namePrefix) {
   if (typeof namePrefix === 'undefined') {
     namePrefix = '';
   }
   if (typeof value !== 'object') {
-    return '<input type="hidden" name="'+namePrefix+'" value="'+value+'"/>'+"\n";
+    return '<input type="hidden" name="' + namePrefix + '" value="' + value + '"/>' + '\n';
   }
-  var result = '';
+  let result = '';
   if (value.constructor === Array) {
-    for (var idx = 0; idx < value.length; ++idx) {
-      result += objectToHiddenInput(value[idx], namePrefix+'['+idx+']');
+    for (let idx = 0; idx < value.length; ++idx) {
+      result += objectToHiddenInput(value[idx], namePrefix + '[' + idx + ']');
     }
   } else {
-    for (var property in value) {
-      if (value.hasOwnProperty(property)) {
-        result += objectToHiddenInput(
-          value[property], namePrefix === '' ? property : namePrefix+'['+property+']');
-      }
+    for (const property of Object.keys(value)) {
+      result += objectToHiddenInput(
+        value[property], namePrefix === '' ? property : namePrefix + '[' + property + ']');
     }
   }
   return result;
@@ -448,14 +461,18 @@ const objectToHiddenInput = function(value, namePrefix)
 /**
  * A variant of the old fashioned appsettings with a callback
  * instead of script loading
+ *
+ * @param {String} route TBD.
+ *
+ * @param {Function} callback TBD.
  */
 const appSettings = function(route, callback) {
   const popup = $('#appsettings_popup');
   if (popup.is(':visible')) {
     popup.addClass('hidden').html('');
-    //popup.hide().html('');
+    // popup.hide().html('');
   } else {
-    const arrowclass = popup.hasClass('topright') ? 'up' : 'left';
+    // const arrowclass = popup.hasClass('topright') ? 'up' : 'left';
     $.get(generateUrl(route))
       .done(function(data) {
         popup
@@ -464,9 +481,9 @@ const appSettings = function(route, callback) {
             // assume the first element is a container div
             if (popup.find('.popup-title').length > 0) {
               popup.find('.popup-title').append('<a class="close"></a>');
-              //popup.find(">:first-child").prepend('<a class="close"></a>').show();
+              // popup.find(">:first-child").prepend('<a class="close"></a>').show();
             } else {
-              popup.find(">:first-child").prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
+              popup.find('>:first-child').prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
             }
             popup.find('.close').bind('click', function() {
               popup.addClass('hidden').html('');
@@ -482,26 +499,24 @@ const appSettings = function(route, callback) {
   }
 };
 
-
-/**G
+/**
  * Generate a form with given values, inject action (URL) and target
  * (iframe, ..), add to document, submit, remove from document.
  *
- * @param action URL
+ * @param {String} action URL
  *
- * @param target IFRAME
+ * @param {String} target IFRAME
  *
- * @param values An object, either like created by serializeArray()
+ * @param {Object} values An object, either like created by serializeArray()
  * orby serialize().
  *
  */
-const iframeFormSubmit = function(action, target, values)
-{
-  const form = $('<form method="post" action="'+action+'" target="'+target+'"></form>');
+const iframeFormSubmit = function(action, target, values) {
+  const form = $('<form method="post" action="' + action + '" target="' + target + '"></form>');
   if (values.constructor === Array) {
     // serializeArray() stuff
-    for(var idx = 0; idx < values.length; ++idx) {
-      form.append('<input type="hidden" name="'+values[idx].name+'" value="'+values[idx].value+'"/>');
+    for (let idx = 0; idx < values.length; ++idx) {
+      form.append('<input type="hidden" name="' + values[idx].name + '" value="' + values[idx].value + '"/>');
     }
   } else {
     // object with { name: value }
@@ -511,18 +526,22 @@ const iframeFormSubmit = function(action, target, values)
   form.submit().remove();
 };
 
-/**Handle the export menu actions.*/
+/**
+ * Handle the export menu actions.
+ *
+ * @param {jQuery} select TBD.
+ */
 const tableExportMenu = function(select) {
   // determine the export format
   const selected = select.find('option:selected').val();
-  //$("select.pme-export-choice option:selected").val();
+  // $("select.pme-export-choice option:selected").val();
 
   // this is the form; we need its values
   const form = $('form.pme-form');
 
   form.find('#exportmimetype').remove();
 
-  var exportscript;
+  let exportscript;
   switch (selected) {
   case 'HTML':
     exportscript = 'html.php';
@@ -545,10 +564,11 @@ const tableExportMenu = function(select) {
   default: exportscript = ''; break;
   }
 
-  if (exportscript == '') {
-    Dialogs.alert(t(appName, 'Export to the following format is not yet supported:')
-                          +' "'+selected+'"',
-                          t(appName, 'Unimplemented'));
+  if (exportscript === '') {
+    Dialogs.alert(
+      t(appName, 'Export to the following format is not yet supported:')
+        + ' "' + selected + '"',
+      t(appName, 'Unimplemented'));
   } else {
 
     // this will be the alternate form-action
@@ -560,10 +580,10 @@ const tableExportMenu = function(select) {
     // really get all selected parameters and can regenerate the
     // current view. Of course, this is then not really jQuery, and
     // the ajax/export/-scripts are not ajax scripts. But so what.
-    const old_action= form.attr('action');
+    const oldAction = form.attr('action');
     form.attr('action', exportscript);
     form.submit();
-    form.attr('action', old_action);
+    form.attr('action', oldAction);
   }
 
   // Cheating. In principle we mis-use this as a simple pull-down
@@ -573,10 +593,7 @@ const tableExportMenu = function(select) {
   selectMenuReset(select);
   $.fn.cafevTooltip.remove();
 
-  $('div.chosen-container').cafevTooltip({placement:'auto'});
-
-  return false;
-
+  $('div.chosen-container').cafevTooltip({ placement: 'auto' });
 };
 
 const exportMenu = function(containerSel) {
@@ -589,16 +606,16 @@ const exportMenu = function(containerSel) {
   // plugin.
   const exportSelect = container.find('select.pme-export-choice');
   exportSelect.chosen({
-    disable_search:true,
-    inherit_select_classes:true
+    disable_search: true,
+    inherit_select_classes: true,
   });
 
   // install placeholder as first item if chosen is not active
   fixupNoChosenMenu(exportSelect);
 
-  container.find('select.pme-export-choice').
-    off('change').
-    on('change', function (event) {
+  container.find('select.pme-export-choice')
+    .off('change')
+    .on('change', function(event) {
       event.preventDefault();
 
       return tableExportMenu($(this));
@@ -610,7 +627,9 @@ const exportMenu = function(containerSel) {
  * Open one invisible modal dialog in order to have a persistent
  * overlay for a group of dialogs.
  *
- * @param bool open
+ * @param {bool} open TBD.
+ *
+ * @returns {bool|jQuery}
  */
 const modalizer = function(open) {
   const modalizer = $('#cafevdb-modalizer');
@@ -680,33 +699,38 @@ const modalizer = function(open) {
  * Add a to-back-button to the titlebar of a jQuery-UI dialog. The
  * purpose is to be able to move the top-dialog to be bottom-most,
  * juse above a potential "modal" window layer.
+ *
+ * @Param {jQuery} dialogHolder TBD.
  */
 const dialogToBackButton = function(dialogHolder) {
   const dialogWidget = dialogHolder.dialog('widget');
-  const toBackButtonTitle = t(appName,
-                              'If multiple dialogs are open, '+
-                              'then move this one to the lowest layer '+
-                              'and display it below the others. '+
-                              'Clicking anywhere on the dialog will bring to the front again.');
-  const toBackButton = $('<button class="toBackButton customDialogHeaderButton" title="'+toBackButtonTitle+'"></button>');
-  toBackButton.button({label: '_',
-                       icons: { primary: 'ui-icon-minusthick', secondary: null },
-                       text: false});
+  const toBackButtonTitle = t(
+    appName,
+    'If multiple dialogs are open, '
+      + 'then move this one to the lowest layer '
+      + 'and display it below the others. '
+      + 'Clicking anywhere on the dialog will bring to the front again.');
+  const toBackButton = $('<button class="toBackButton customDialogHeaderButton" title="' + toBackButtonTitle + '"></button>');
+  toBackButton.button({
+    label: '_',
+    icons: { primary: 'ui-icon-minusthick', secondary: null },
+    text: false,
+  });
   dialogWidget.find('.ui-dialog-titlebar').append(toBackButton);
-  toBackButton.cafevTooltip({placement:'auto' });
+  toBackButton.cafevTooltip({ placement: 'auto' });
 
   toBackButton.off('click');
   toBackButton.on('click', function() {
     const overlay = $('.ui-widget-overlay:last');
-    var overlayIndex = 100; // OwnCloud header resides at 50.
+    let overlayIndex = 100; // OwnCloud header resides at 50.
     if (overlay.length > 0) {
       overlayIndex = parseInt(overlay.css('z-index'));
     }
     // will be only few, so what
-    var needShuffle = false;
+    let needShuffle = false;
     $('.ui-dialog.ui-widget').not('.cafevdb-modalizer').each(function(index) {
       const thisIndex = parseInt($(this).css('z-index'));
-      if (thisIndex == overlayIndex + 1) {
+      if (thisIndex === overlayIndex + 1) {
         needShuffle = true;
       }
     }).each(function(index) {
@@ -731,25 +755,32 @@ const dialogToBackButton = function(dialogHolder) {
  * If callback is undefined, then simply call the close
  * method. Otherwise it is called like callback(event, dialogHolder).
  *
+ * @param {jQuery} dialogHolder TBD.
+ *
+ * @param {Function} callback TBD.
+ *
  */
 const dialogCustomCloseButton = function(dialogHolder, callback) {
   const dialogWidget = dialogHolder.dialog('widget');
-  const customCloseButtonTitle = t(appName,
-                                   'Close the current dialog and return to the view '+
-                                   'which was active before this dialog had been opened. '+
-                                   'If the current view shows a `Back\' button, then intentionally '+
-                                   'clicking the close-button (THIS button) should just be '+
-                                   'equivalent to clicking the `Back\' button');
-  const customCloseButton = $('<button class="customCloseButton customDialogHeaderButton" title="'+customCloseButtonTitle+'"></button>');
-  customCloseButton.button({label: 'x',
-                            icons: { primary: 'ui-icon-closethick', secondary: null },
-                            text: false});
+  const customCloseButtonTitle = t(
+    appName,
+    'Close the current dialog and return to the view '
+      + 'which was active before this dialog had been opened. '
+      + 'If the current view shows a `Back\' button, then intentionally '
+      + 'clicking the close-button (THIS button) should just be '
+      + 'equivalent to clicking the `Back\' button');
+  const customCloseButton = $('<button class="customCloseButton customDialogHeaderButton" title="' + customCloseButtonTitle + '"></button>');
+  customCloseButton.button({
+    label: 'x',
+    icons: { primary: 'ui-icon-closethick', secondary: null },
+    text: false,
+  });
   dialogWidget.find('.ui-dialog-titlebar').append(customCloseButton);
-  customCloseButton.cafevTooltip({placement:'auto' });
+  customCloseButton.cafevTooltip({ placement: 'auto' });
 
   customCloseButton.off('click');
   customCloseButton.on('click', function(event) {
-    if (typeof callback == 'function') {
+    if (typeof callback === 'function') {
       callback(event, dialogHolder);
     } else {
       dialogHolder.dialog('close');
@@ -760,35 +791,33 @@ const dialogCustomCloseButton = function(dialogHolder, callback) {
 
 const attachToolTip = function(selector, options) {
   const defaultOptions = {
-    container:'body',
-    html:true,
-    placement:'auto'
+    container: 'body',
+    html: true,
+    placement: 'auto',
   };
   options = $.extend({}, defaultOptions, options);
-  if (typeof options.placement == 'string') {
-    options.placement = options.placement;
-  }
   return $(selector).cafevTooltip(options);
 };
 
-/**Exchange "tipsy" tooltips already attached to an element by
+/**
+ * Exchange "tipsy" tooltips already attached to an element by
  * something different. This has to be done the "hard" way: first
  * unset data('tipsy') by setting it to null, then call the
  * tipsy-constructor with the new values.
  *
- * @param selector jQuery element selector
+ * @param {String} selector jQuery element selector
  *
- * @param options Tool-tip options
+ * @param {Object} options Tool-tip options
  *
- * @param container Optional container containing selected
+ * @param {jQuery} container Optional container containing selected
  * elements, i.e. tool-tip stuff will be applied to all elements
  * inside @a container matching @a selector.
  */
 const applyToolTips = function(selector, options, container) {
-  var element;
+  let element;
   if (selector instanceof jQuery) {
     element = selector;
-  } else if (typeof container != 'undefined') {
+  } else if (typeof container !== 'undefined') {
     element = container.find(selector);
   } else {
     element = $(selector);
@@ -797,24 +826,26 @@ const applyToolTips = function(selector, options, container) {
   $.fn.cafevTooltip.remove();
 
   // fetch suitable options from the elements class attribute
-  var classOptions = { placement:'auto',
-                       html: true };
+  const classOptions = {
+    placement: 'auto',
+    html: true,
+  };
   const classAttr = element.attr('class');
-  var extraClass = false;
-  if (options.hasOwnProperty('cssclass')) {
+  let extraClass = false;
+  if (options.cssclass) {
     extraClass = options.cssclass;
   }
-  if (typeof classAttr != 'undefined') {
+  if (typeof classAttr !== 'undefined') {
     if (classAttr.match(/tooltip-off/) !== null) {
       $(this).cafevTooltip('disable');
       return;
     }
-    var tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
+    const tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
     if (tooltipClasses) {
-      for(var idx = 0; idx < tooltipClasses.length; ++idx) {
-        var tooltipClass = tooltipClasses[idx];
-        var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
-        if (placement && placement.length == 2 && placement[1].length > 0) {
+      for (let idx = 0; idx < tooltipClasses.length; ++idx) {
+        const tooltipClass = tooltipClasses[idx];
+        const placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
+        if (placement && placement.length === 2 && placement[1].length > 0) {
           classOptions.placement = placement[1];
           continue;
         }
@@ -822,7 +853,7 @@ const applyToolTips = function(selector, options, container) {
       }
     }
   }
-  if (typeof options == 'undefined') {
+  if (typeof options === 'undefined') {
     options = classOptions;
   } else {
     // supplied options override class options
@@ -838,7 +869,7 @@ const applyToolTips = function(selector, options, container) {
       + '</div>';
   }
   element.cafevTooltip('destroy'); // remove any already installed stuff
-  element.cafevTooltip(options);   // make it new
+  element.cafevTooltip(options); // make it new
 };
 
 const toolTipsOnOff = function(onOff) {
@@ -858,6 +889,8 @@ const snapperClose = function() {
 
 /**
  * Initialize our tipsy stuff. Only exchange for our own thingies, of course.
+ *
+ * @param {String|jQuery} containerSel TBD.
  */
 const toolTipsInit = function(containerSel) {
   if (typeof containerSel === 'undefined') {
@@ -865,55 +898,55 @@ const toolTipsInit = function(containerSel) {
   }
   const container = $(containerSel);
 
-  console.debug("tooltips container", containerSel, container.length);
+  console.debug('tooltips container', containerSel, container.length);
 
-  // container.find('button.settings').cafevTooltip({placement:'bottom'});
-  container.find('select').cafevTooltip({placement:'right'});
-  container.find('option').cafevTooltip({placement:'right'});
-  container.find('div.chosen-container').cafevTooltip({placement:'top'});
-  container.find('button.settings').cafevTooltip({placement:'bottom'});
-  container.find('.pme-sort').cafevTooltip({placement:'bottom'});
-  container.find('.pme-misc-check').cafevTooltip({placement:'bottom'});
-  container.find('label').cafevTooltip({placement:'top'});
-  container.find('.header-right img').cafevTooltip({placement:'bottom'});
-  container.find('img').cafevTooltip({placement:'bottom'});
-  container.find('button').cafevTooltip({placement:'right'});
-  container.find('li.pme-navigation.table-tabs').cafevTooltip({placement:'bottom'});
+  // container.find('button.settings').cafevTooltip({ placement: 'bottom' });
+  container.find('select').cafevTooltip({ placement: 'right' });
+  container.find('option').cafevTooltip({ placement: 'right' });
+  container.find('div.chosen-container').cafevTooltip({ placement: 'top' });
+  container.find('button.settings').cafevTooltip({ placement: 'bottom' });
+  container.find('.pme-sort').cafevTooltip({ placement: 'bottom' });
+  container.find('.pme-misc-check').cafevTooltip({ placement: 'bottom' });
+  container.find('label').cafevTooltip({ placement: 'top' });
+  container.find('.header-right img').cafevTooltip({ placement: 'bottom' });
+  container.find('img').cafevTooltip({ placement: 'bottom' });
+  container.find('button').cafevTooltip({ placement: 'right' });
+  container.find('li.pme-navigation.table-tabs').cafevTooltip({ placement: 'bottom' });
 
   // pme input stuff and tables.
   container.find('textarea.pme-input').cafevTooltip(
-    {placement:'top', cssclass:'tooltip-wide'});
+    { placement: 'top', cssclass: 'tooltip-wide' });
   container.find('input.pme-input').cafevTooltip(
-    {placement:'top', cssclass:'tooltip-wide'});
+    { placement: 'top', cssclass: 'tooltip-wide' });
   container.find('table.pme-main td').cafevTooltip(
-    {placement:'top', cssclass:'tooltip-wide'});
+    { placement: 'top', cssclass: 'tooltip-wide' });
   container.find('table.pme-main th').cafevTooltip(
-    {placement:'bottom'});
+    { placement: 'bottom' });
 
   // original tipsy stuff
-  container.find('.displayName .action').cafevTooltip({placement:'top'});
-  container.find('.password .action').cafevTooltip({placement:'top'});
-  container.find('#upload').cafevTooltip({placement:'right'});
-  container.find('.selectedActions a').cafevTooltip({placement:'top'});
-  container.find('a.action.delete').cafevTooltip({placement:'left'});
-  container.find('a.action').cafevTooltip({placement:'top'});
-  container.find('td .modified').cafevTooltip({placement:'top'});
-  container.find('td.lastLogin').cafevTooltip({placement:'top', html:true});
-  container.find('input:not([type=hidden])').cafevTooltip({placement:'right'});
-  container.find('textarea').cafevTooltip({placement:'right'});
+  container.find('.displayName .action').cafevTooltip({ placement: 'top' });
+  container.find('.password .action').cafevTooltip({ placement: 'top' });
+  container.find('#upload').cafevTooltip({ placement: 'right' });
+  container.find('.selectedActions a').cafevTooltip({ placement: 'top' });
+  container.find('a.action.delete').cafevTooltip({ placement: 'left' });
+  container.find('a.action').cafevTooltip({ placement: 'top' });
+  container.find('td .modified').cafevTooltip({ placement: 'top' });
+  container.find('td.lastLogin').cafevTooltip({ placement: 'top', html: true });
+  container.find('input:not([type=hidden])').cafevTooltip({ placement: 'right' });
+  container.find('textarea').cafevTooltip({ placement: 'right' });
 
   // everything else.
-  container.find('.tip').cafevTooltip({placement:'right'});
+  container.find('.tip').cafevTooltip({ placement: 'right' });
 
   container.find('select[class*="pme-filter"]').cafevTooltip(
-    { placement:'bottom', cssclass:'tooltip-wide' }
+    { placement: 'bottom', cssclass: 'tooltip-wide' }
   );
   container.find('input[class*="pme-filter"]').cafevTooltip(
-    { placement:'bottom', cssclass:'tooltip-wide' }
+    { placement: 'bottom', cssclass: 'tooltip-wide' }
   );
 
   container.find('[class*="tooltip-"]').each(function(index) {
-    //console.log("tooltip autoclass", $(this), $(this).attr('title'));
+    // console.log("tooltip autoclass", $(this), $(this).attr('title'));
     $(this).cafevTooltip({});
   });
 
@@ -931,28 +964,30 @@ const toolTipsInit = function(containerSel) {
 /**
  * Get or set the option value(s) of a select box.
  *
- * @param select The select element. If it is an ordinary input
+ * @param {jQuery} select The select element. If it is an ordinary input
  * element, then in "set" mode its value is set to optionValues.
  *
- * @param optionValues Single option value or array of option
+ * @param {Object} optionValues Single option value or array of option
  * values to set.
+ *
+ * @returns {bool|Array}
  */
 const selectValues = function(select, optionValues) {
   select = $(select);
   const multiple = select.prop('multiple');
   if (typeof optionValues === 'undefined') {
     console.debug('selectValues read = ', select.val());
-    const result = select.val();
+    let result = select.val();
     if (multiple && !result) {
       result = [];
     }
     return result;
   }
   if (!(optionValues instanceof Array)) {
-    optionValues = [ optionValues ];
+    optionValues = [optionValues];
   }
   if (!multiple && optionValues.length > 1) {
-    optionValues = [ optionValues[0] ];
+    optionValues = [optionValues[0]];
   }
   // setter has to use foreach
   select.each(function(idx) {
@@ -978,22 +1013,22 @@ globalState.progressTimer = null;
 
 const pollProgressStatus = function(id, callbacks, interval) {
   const defaultCallbacks = {
-    'update': function(data) {},
-    'fail': function(data) {}
+    update(data) {},
+    fail(data) {},
   };
   callbacks = { ...defaultCallbacks, ...callbacks };
   interval = interval || 800;
 
   const poll = function() {
-    $.get(generateUrl('foregroundjob/progress/'+id))
+    $.get(generateUrl('foregroundjob/progress/' + id))
       .done(function(data) {
         if (!callbacks.update(data)) {
-          console.debug("Finish polling");
+          console.debug('Finish polling');
           clearTimeout(globalState.progressTimer);
           globalState.progressTimer = false;
           return;
         }
-        console.debug("Restart timer.");
+        console.debug('Restart timer.');
         globalState.progressTimer = setTimeout(poll, interval);
       })
       .fail(function(xhr, status, errorThrown) {
@@ -1012,80 +1047,6 @@ pollProgressStatus.stop = function() {
 
 pollProgressStatus.active = function() {
   return !!globalState.progressTimer;
-};
-
-const documentReady = function() {
-  // @@TODO perhaps collects these things in before-ready.js
-  document.onkeypress = stopRKey;
-
-  $('body').on('dblclick', '.oc-dialog', function() {
-    $('.oc-dialog').toggleClass('maximize-width');
-  });
-
-  // @TODO move to global state context
-  window.oldWidth = -1;
-  window.oldHeight = -1;
-  $(window).on('resize', function(event) {
-    const win = this;
-    if (!win.resizeTimeout) {
-      const delay = 50;
-      const width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
-      const height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
-      if (win.oldWidth != width || win.oldHeight != height) {
-        console.debug('cafevdb size change', width, win.oldWidth, height, win.oldHeight);
-        win.resizeTimeout = setTimeout(
-          function() {
-            win.resizeTimeout = null;
-            $('.resize-target, .ui-dialog-content').trigger('resize');
-          }, delay);
-        win.oldHeight = height;
-        win.oldWidth = width;
-      }
-    }
-    return false;
-  });
-
-  /****************************************************************************
-   *
-   * Add handlers as delegates. Note however that the snapper is
-   * attached to #app-content below #content, so it is not possible to
-   * prevent the snapper events. If we want to change this we have to
-   * insert another div-container inside #app-content.
-   *
-   */
-  const content = $('#content');
-  const appInnerContent = $('#app-inner-content');
-
-  // Display the overview-page for the given project.
-  content.on('click', 'ul#navigation-list li.nav-projectlabel-control a',
-             function(event) {
-               event.stopImmediatePropagation();
-               const data = $(this).data('json');
-               Projects.projectViewPopup(pmeSelector(), data);
-               return false;
-             });
-
-  // Display the instrumentation numbers in a dialog widget
-  content.on('click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
-             function(event) {
-               event.stopImmediatePropagation(); // this is vital
-               const data = $(this).data('json');
-               Projects.instrumentationNumbersPopup(pmeSelector(), data);
-               return false;
-             });
-
-  addReadyCallback(function() {
-    $('input.alertdata.cafevdb-page').each(function(index) {
-      const title = $(this).attr('name');
-      const text  = $(this).attr('value');
-      Dialogs.alert(text, title, undefined, true, true);
-    });
-
-  });
-
-  // fire an event when this have been finished
-  console.debug("trigger loaded");
-  $(document).trigger("cafevdb:donecafevdbjs");
 };
 
 export {
@@ -1122,7 +1083,6 @@ export {
   toolTipsInit,
   selectValues,
   pollProgressStatus,
-  documentReady,
 };
 
 // Local Variables: ***

@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.js';
+import { globalState, appName, webRoot, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
@@ -28,7 +28,7 @@ import * as Page from './page.js';
 import * as Email from './email.js';
 import * as PHPMyEdit from './pme.js';
 
-globalState.SepaDebitMandate = {
+const SepaDebitMandate = globalState.SepaDebitMandate = {
   projectId: -1,
   projectName: '',
   musicianId: -1,
@@ -43,25 +43,28 @@ globalState.SepaDebitMandate = {
  * Initialize the mess with contents. The "mess" is a dialog window
  * with the input form element for the bank account data.
  *
- * @param data JSON response with the fields data.status,
- *                 data.data.contents,
- *                 data.data.message is place in an error-popup if status != 'success'
- *                 data.data.debug. data.data.debug is placed
- *                 inside the '#debug' div.
+ * @param {Object} data JSON response with the fields data.status,
+ *   data.data.contents, data.data.message is place in an error-popup
+ *   if status != 'success' data.data.debug. data.data.debug is placed
+ *   inside the '#debug' div.
+ *
+ * @param {Function} reloadCB TBD.
+ *
+ * @returns {bool}
  */
-const init = function(data, reloadCB) {
-  var self = SepaDebitMandate;
+const mandatesInit = function(data, reloadCB) {
+  const self = SepaDebitMandate;
 
   if (!Ajax.validateResponse(data, [
     'contents',
     'projectId', 'projectName',
     'musicianId', 'musicianName',
-    'mandateId', 'mandateReference'
+    'mandateId', 'mandateReference',
   ])) {
     return false;
   }
 
-  if (typeof reloadCB != 'function') {
+  if (typeof reloadCB !== 'function') {
     reloadCB = function() {};
   }
 
@@ -74,132 +77,134 @@ const init = function(data, reloadCB) {
 
   Dialogs.debugPopup(data);
 
-  var popup = $(data.data.contents)
-  var mandateForm = popup.find('#sepa-debit-mandate-form');
+  const popup = $(data.data.contents);
+  const mandateForm = popup.find('#sepa-debit-mandate-form');
   self.instantValidation = mandateForm.find('#sepa-validation-toggle').prop('checked');
-  var lastUsedDate = mandateForm.find('input.lastUsedDate');
+  const lastUsedDate = mandateForm.find('input.lastUsedDate');
 
   popup.cafevDialog({
-    position: { my: "middle top+50%",
-                at: "middle bottom",
-                of: "#controls" },
-    width : 550,
-    height: "auto",
+    position: {
+      my: 'middle top+50%',
+      at: 'middle bottom',
+      of: '#controls',
+    },
+    width: 550,
+    height: 'auto',
     modal: true,
     resizable: false,
     closeOnEscape: false,
     dialogClass: 'no-close',
     buttons: [
       {
-        'class': 'change',
+        class: 'change',
         id: 'sepaMandateChange',
-        text: t('cafevdb', 'Change'),
-        title: t('cafevdb', 'Change the SEPA mandate. Note that the SEPA mandate-reference is automatically computed and cannot be changed.'),
-        click: function() {
+        text: t(appName, 'Change'),
+        title: t(appName, 'Change the SEPA mandate. Note that the SEPA mandate-reference is automatically computed and cannot be changed.'),
+        click() {
           // enable the form, disable the change button
-          $(this).dialog("widget").find('button.save').attr("disabled", !self.instantValidation);
-          $(this).dialog("widget").find('button.apply').attr("disabled", !self.instantValidation);
-          $(this).dialog("widget").find('button.delete').attr("disabled", false);
-          $(this).dialog("widget").find('button.change').attr("disabled", true);
-          if (lastUsedDate.val().trim() == '') {
-            mandateForm.find('input.bankAccount').attr("disabled", false);
-            mandateForm.find('input.mandateDate').attr("disabled", false);
-            lastUsedDate.attr("disabled", false);
+          $(this).dialog('widget').find('button.save').attr('disabled', !self.instantValidation);
+          $(this).dialog('widget').find('button.apply').attr('disabled', !self.instantValidation);
+          $(this).dialog('widget').find('button.delete').attr('disabled', false);
+          $(this).dialog('widget').find('button.change').attr('disabled', true);
+          if (lastUsedDate.val().trim() === '') {
+            mandateForm.find('input.bankAccount').attr('disabled', false);
+            mandateForm.find('input.mandateDate').attr('disabled', false);
+            lastUsedDate.attr('disabled', false);
           }
           $.fn.cafevTooltip.remove(); // clean up left-over balloons
-        }
+        },
       },
       {
-        'class': 'save',
+        class: 'save',
         id: 'sepaMandateSave',
-        text: t('cafevdb', 'Save'),
-        title: t('cafevdb', 'Close the form and save the data in the underlying data-base storage.'),
-        click: function() {
-          var dlg = this;
-          self.store(function () {
-            $('#sepa-debit-mandate-'+self.musicianId+'-'+self.projectId).val(self.mandateReference);
+        text: t(appName, 'Save'),
+        title: t(appName, 'Close the form and save the data in the underlying data-base storage.'),
+        click() {
+          const dlg = this;
+          mandateStore(function() {
+            $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(self.mandateReference);
             $(dlg).dialog('close');
             reloadCB();
           });
-        }
+        },
       },
       {
-        'class': 'apply',
-        text: t('cafevdb', 'Apply'),
-        title: t('cafevdb', 'Save the data in the underlying data-base storage. Keep the form open.'),
-        click: function(event) {
-          var dlg = this;
-          self.store(function () {
-            $('#sepa-debit-mandate-'+self.musicianId+'-'+self.projectId).val(self.mandateReference);
+        class: 'apply',
+        text: t(appName, 'Apply'),
+        title: t(appName, 'Save the data in the underlying data-base storage. Keep the form open.'),
+        click(event) {
+          const dlg = this;
+          mandateStore(function() {
+            $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(self.mandateReference);
             // Disable everything and enable the change button
             // If we are about to display an existing mandate, first
             // disable all inputs and leave only the "close" and
             // "change" buttons enabled, and the lastUsed date.
-            $(dlg).dialog("widget").find('button.save').attr("disabled", true);
-            $(dlg).dialog("widget").find('button.apply').attr("disabled", true);
-            $(dlg).dialog("widget").find('button.delete').attr("disabled", true);
-            $(dlg).dialog("widget").find('button.change').attr("disabled", false);
-            mandateForm.find('input.bankAccount').attr("disabled", true);
-            mandateForm.find('input.mandateDate').attr("disabled", true);
-            mandateForm.find('input.lastUsedDate').attr("disabled", true);
+            $(dlg).dialog('widget').find('button.save').attr('disabled', true);
+            $(dlg).dialog('widget').find('button.apply').attr('disabled', true);
+            $(dlg).dialog('widget').find('button.delete').attr('disabled', true);
+            $(dlg).dialog('widget').find('button.change').attr('disabled', false);
+            mandateForm.find('input.bankAccount').attr('disabled', true);
+            mandateForm.find('input.mandateDate').attr('disabled', true);
+            mandateForm.find('input.lastUsedDate').attr('disabled', true);
             $.fn.cafevTooltip.remove(); // clean up left-over balloons
             reloadCB();
           });
-        }
+        },
       },
       {
-        'class': 'delete',
-        text: t('cafevdb', 'Delete'),
-        title: t('cafevdb', 'Delete this mandate from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
-        click: function() {
-          var dlg = this;
-          self.delete(function () {
-            $('#sepa-debit-mandate-'+self.musicianId+'-'+self.projectId).val(t('cafevdb', 'SEPA Debit Mandate'));
+        class: 'delete',
+        text: t(appName, 'Delete'),
+        title: t(appName, 'Delete this mandate from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
+        click() {
+          const dlg = this;
+          mandateDelete(function() {
+            $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(t(appName, 'SEPA Debit Mandate'));
             $(dlg).dialog('close');
             reloadCB();
           });
-        }
+        },
       },
       {
-        'class': 'close',
-        text: t('cafevdb', 'Close'),
-        title: t('cafevdb', 'Discard all filled-in data and close the form. Note that this will not undo any changes previously stored in the data-base by pressing the `Apply\' button.'),
-        click: function() {
+        class: 'close',
+        text: t(appName, 'Close'),
+        title: t(appName, 'Discard all filled-in data and close the form. Note that this will not undo any changes previously stored in the data-base by pressing the `Apply\' button.'),
+        click() {
           $(this).dialog('close');
-          //$('form.pme-form').submit();
-        }
-      }
+          // $('form.pme-form').submit();
+        },
+      },
     ],
-    open: function(){
-      var dlg = $(this);
-      var widget = dlg.dialog('widget');
-      //$.fn.cafevTooltip.remove(); // remove tooltip form "open-button"
+    open() {
+      const dlg = $(this);
+      const widget = dlg.dialog('widget');
+      // $.fn.cafevTooltip.remove(); // remove tooltip form "open-button"
       widget.find('button.close').focus();
 
-      var buttons = {
+      const buttons = {
         save: widget.find('button.save'),
         apply: widget.find('button.apply'),
         delete: widget.find('button.delete'),
-        change: widget.find('button.change')
+        change: widget.find('button.change'),
       };
 
       if (self.mandateId > 0) {
         // If we are about to display an existing mandate, first
         // disable all inputs and leave only the "close" and
         // "change" buttons enabled.
-        buttons.save.attr("disabled", true);
-        buttons.apply.attr("disabled", true);
-        buttons['delete'].attr("disabled", true);
-        mandateForm.find('input.bankAccount').attr("disabled", true);
-        mandateForm.find('input.mandateDate').attr("disabled", true);
-        mandateForm.find('input.lastUsedDate').attr("disabled", true);
+        buttons.save.attr('disabled', true);
+        buttons.apply.attr('disabled', true);
+        buttons.delete.attr('disabled', true);
+        mandateForm.find('input.bankAccount').attr('disabled', true);
+        mandateForm.find('input.mandateDate').attr('disabled', true);
+        mandateForm.find('input.lastUsedDate').attr('disabled', true);
       } else {
-        buttons.save.attr("disabled", !self.instantValidation);
-        buttons.apply.attr("disabled", !self.instantValidation);
-        buttons.change.attr("disabled", true);
+        buttons.save.attr('disabled', !self.instantValidation);
+        buttons.apply.attr('disabled', !self.instantValidation);
+        buttons.change.attr('disabled', true);
       }
 
-      widget.find('button, input, label, [class*="tooltip"]').cafevTooltip({placement:'auto bottom'});
+      widget.find('button, input, label, [class*="tooltip"]').cafevTooltip({ placement: 'auto bottom' });
 
       if (globalState.toolTipsEnabled) {
         $.fn.cafevTooltip.enable();
@@ -207,46 +212,47 @@ const init = function(data, reloadCB) {
         $.fn.cafevTooltip.disable();
       }
 
-      var expiredDiv = dlg.find('#mandate-expired-notice.active');
+      const expiredDiv = dlg.find('#mandate-expired-notice.active');
       if (expiredDiv.length > 0) {
-        var notice = expiredDiv.attr('title');
+        let notice = expiredDiv.attr('title');
         if (!notice) {
           notice = expiredDiv.attr('data-original-title');
         }
         if (notice) {
-          OC.dialogs.alert('<div class="sepa-mandate-expire-notice">'+
-                           notice+
-                           '</div>',
-                           t('cafevdb', 'Debit Mandate Expired'),
-                           undefined,
-                           true, true);
+          OC.dialogs.alert(
+            '<div class="sepa-mandate-expire-notice">'
+              + notice
+              + '</div>',
+            t(appName, 'Debit Mandate Expired'),
+            undefined,
+            true, true);
         }
       }
 
       $('#sepa-debit-mandate-form input[class$="Date"]').datepicker({
-        dateFormat : 'dd.mm.yy', // this is 4-digit year
+        dateFormat: 'dd.mm.yy', // this is 4-digit year
         minDate: '01.01.1990',
-        beforeShow: function(input) {
+        beforeShow(input) {
           $(input).off('blur');
         },
-        onSelect: function(dateText, inst) {
-          var input = $(this);
+        onSelect(dateText, inst) {
+          const input = $(this);
           input.on('blur', function(event) {
-            self.validate.call(this, event, function(lock) {
+            mandateValidate.call(this, event, function(lock) {
               input.prop('readonly', lock);
             });
           });
           input.focus();
           input.trigger('blur');
-        }
+        },
       });
 
-      var validateInput = function(event) {
-        var input = $(this);
+      const validateInput = function(event) {
+        const input = $(this);
         if (input.prop('readonly')) {
           return;
         }
-        self.validate.call(this, event, function(lock) {
+        mandateValidate.call(this, event, function(lock) {
           // disable the text field during validation
           input.prop('readonly', lock);
           // disable save and apply during validation
@@ -254,8 +260,8 @@ const init = function(data, reloadCB) {
             buttons.save.attr('disabled', true);
             buttons.apply.attr('disabled', true);
           } else {
-            buttons.save.attr("disabled", !self.instantValidation);
-            buttons.apply.attr("disabled", !self.instantValidation);
+            buttons.save.attr('disabled', !self.instantValidation);
+            buttons.apply.attr('disabled', !self.instantValidation);
           }
         });
       };
@@ -278,97 +284,104 @@ const init = function(data, reloadCB) {
           mandateForm.find('#bankAccountIBAN').on('blur', validateInput);
           mandateForm.find('#bankAccountIBAN').trigger('blur');
         }
-        buttons.save.attr("disabled", !self.instantValidation);
-        buttons.apply.attr("disabled", !self.instantValidation);
+        buttons.save.attr('disabled', !self.instantValidation);
+        buttons.apply.attr('disabled', !self.instantValidation);
 
         return false;
       });
 
-      mandateForm.find('#debit-mandate-orchestra-member').
-        off('change').
-        on('change', validateInput);
+      mandateForm.find('#debit-mandate-orchestra-member')
+        .off('change')
+        .on('change', validateInput);
 
     },
-    close: function(event, ui) {
+    close(event, ui) {
       $.fn.cafevTooltip.remove();
       $('#sepa-debit-mandate-dialog').dialog('close');
       $(this).dialog('destroy').remove();
-    }
+    },
   });
   return false;
 };
 
 // Store the form data. We assume that validation already has been
 // done
-const store = function(callbackOk) {
-  var dialogId = '#sepa-debit-mandate-dialog';
+const mandateStore = function(callbackOk) {
+  const dialogId = '#sepa-debit-mandate-dialog';
 
   $('div.statusmessage').hide();
   $('span.statusmessage').hide();
 
   // "submit" the entire form
-  var post = $('#sepa-debit-mandate-form').serialize();
+  const post = $('#sepa-debit-mandate-form').serialize();
 
-  $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-store.php'),
-         post,
-         function (data) {
-           if (!Ajax.validateResponse(data, [ 'message' ])) {
-             return false;
-           }
-	   $(dialogId+' #msg').html(data.data.message);
-	   $(dialogId+' #msg').show();
-           if (data.status == "success") {
-             callbackOk();
-             return true;
-           } else {
-             return false;
-           }
-         });
+  $.post(
+    OC.filePath(appName, 'ajax/finance', 'sepa-debit-store.php'),
+    post,
+    function(data) {
+      if (!Ajax.validateResponse(data, ['message'])) {
+        return false;
+      }
+      $(dialogId + ' #msg').html(data.data.message);
+      $(dialogId + ' #msg').show();
+      if (data.status === 'success') {
+        callbackOk();
+        return true;
+      } else {
+        return false;
+      }
+    });
 };
 
 // Delete a mandate
-const deleteMandate = function(callbackOk) {
-  var dialogId = '#sepa-debit-mandate-dialog';
+const mandateDelete = function(callbackOk) {
+  const dialogId = '#sepa-debit-mandate-dialog';
 
   $('div.statusmessage').hide();
   $('span.statusmessage').hide();
 
   // "submit" the entire form
-  var post = $('#sepa-debit-mandate-form').serialize();
+  const post = $('#sepa-debit-mandate-form').serialize();
 
-  $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-delete.php'),
-         post,
-         function (data) {
-           if (!Ajax.validateResponse(data, [ 'message' ])) {
-             return false;
-           }
-	   $(dialogId+' #msg').html(data.data.message);
-	   $(dialogId+' #msg').show();
-           if (data.status == "success") {
-             callbackOk();
-             return true;
-           } else {
-             return false;
-           }
-
-         });
+  $.post(
+    OC.filePath(appName, 'ajax/finance', 'sepa-debit-delete.php'),
+    post,
+    function(data) {
+      if (!Ajax.validateResponse(data, ['message'])) {
+        return false;
+      }
+      $(dialogId + ' #msg').html(data.data.message);
+      $(dialogId + ' #msg').show();
+      if (data.status === 'success') {
+        callbackOk();
+        return true;
+      } else {
+        return false;
+      }
+    });
 };
 
-/**Validate version for our popup-dialog. */
-const validate = function(event, validateLockCB) {
-  var element = this;
-  var dialogId = '#sepa-debit-mandate-dialog';
+/**
+ * Validate version for our popup-dialog.
+ *
+ * @param {Object} event TBD.
+ *
+ * @param {Function} validateLockCB TBD.
+ */
+const mandateValidate = function(event, validateLockCB) {
+  const element = this;
+  const dialogId = '#sepa-debit-mandate-dialog';
 
-  if (typeof validateLockCB == 'undefined') {
+  if (typeof validateLockCB === 'undefined') {
     validateLockCB = function(lock) {};
   }
 
-  var validateLock = function() {
-    validateLockCB(true)
+  const validateLock = function() {
+    validateLockCB(true);
   };
 
-  var validateUnlock = function() {
-    validateLockCB(false)
+  const validateUnlock = function() {
+    validateLockCB(false);
   };
 
   event.preventDefault();
@@ -377,81 +390,83 @@ const validate = function(event, validateLockCB) {
 
   // we "submit" the entire form in order to do some automatic
   // fill-in in checks for the bank accounts.
-  var changed = $(this).attr('name');
-  var post;
+  const changed = $(this).attr('name');
+  let post;
   post = $('#sepa-debit-mandate-form').serialize();
-  post += "&"+$.param( { 'changed': changed } );
+  post += '&' + $.param({ changed });
 
   // until end of validation
   validateLock();
 
-  $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
-         post,
-         function (data) {
-           if (!Ajax.validateResponse(data,
-                                              [ 'suggestions', 'message' ],
-                                              validateUnlock)) {
-             if (data.data.suggestions !== '') {
-               var hints = t('cafevdb', 'Suggested alternatives based on common human mis-transcriptions:')
-                   + ' '
-                   + data.data.suggestions
-                   + '. '
-                   + t('cafevdb', 'Please do not accept these alternatives lightly!');
-	       $(dialogId+' #suggestions').html(hints);
-             }
-             // One special case: if the user has submitted an IBAN
-             // and the BLZ appeared to be valid after all checks,
-             // then inject it into the form. Seems to be a common
-             // case, more or less.
-             if (data.data.blz) {
-               $('input.bankAccountBLZ').val(data.data.blz);
-             }
+  $.post(
+    OC.filePath(appName, 'ajax/finance', 'sepa-debit-settings.php'),
+    post,
+    function(data) {
+      if (!Ajax.validateResponse(
+        data,
+        ['suggestions', 'message'],
+        validateUnlock)) {
+        if (data.data.suggestions !== '') {
+          const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
+              + ' '
+              + data.data.suggestions
+              + '. '
+              + t(appName, 'Please do not accept these alternatives lightly!');
+          $(dialogId + ' #suggestions').html(hints);
+        }
+        // One special case: if the user has submitted an IBAN
+        // and the BLZ appeared to be valid after all checks,
+        // then inject it into the form. Seems to be a common
+        // case, more or less.
+        if (data.data.blz) {
+          $('input.bankAccountBLZ').val(data.data.blz);
+        }
 
-	     $(dialogId+' #msg').html(data.data.message);
-	     $(dialogId+' #msg').show();
-             if ($(dialogId+' #suggestions').html() !== '') {
-	       $(dialogId+' #suggestions').show();
-             }
-             return false;
-           }
-           if (changed === 'orchestraMember') {
-             $('input[name="MandateProjectId"]').val(data.data.mandateProjectId);
-             $('input[name="MandateProjectName"]').val(data.data.mandateProjectName);
-             $('input[name="mandateReference"]').val(data.data.reference);
-             $('legend.mandateCaption .reference').html(data.data.reference);
-           }
-           if (data.data.value) {
-             $(element).val(data.data.value);
-           }
-           if (data.data.iban) {
-             $('input.bankAccountIBAN').val(data.data.iban);
-           }
-           if (data.data.blz) {
-             $('input.bankAccountBLZ').val(data.data.blz);
-           }
-           if (data.data.bic) {
-             $('input.bankAccountBIC').val(data.data.bic);
-           }
-	   $(dialogId+' #msg').html(data.data.message);
-	   $(dialogId+' #msg').show();
-           if (data.data.suggestions !== '') {
-             var hints = t('cafevdb', 'Suggested alternatives based on common human mis-transcriptions:')
-                 + ' '
-                 + data.data.suggestions
-                 + '. '
-                 + t('cafevdb', 'Please do not accept these alternatives lightly!');
-	     $(dialogId+' #suggestions').html(hints);
-	     $(dialogId+' #suggestions').show();
-           } else {
-	     $(dialogId+' #suggestions').html('');
-	     $(dialogId+' #suggestions').hide();
-           }
+        $(dialogId + ' #msg').html(data.data.message);
+        $(dialogId + ' #msg').show();
+        if ($(dialogId + ' #suggestions').html() !== '') {
+          $(dialogId + ' #suggestions').show();
+        }
+        return false;
+      }
+      if (changed === 'orchestraMember') {
+        $('input[name="MandateProjectId"]').val(data.data.mandateProjectId);
+        $('input[name="MandateProjectName"]').val(data.data.mandateProjectName);
+        $('input[name="mandateReference"]').val(data.data.reference);
+        $('legend.mandateCaption .reference').html(data.data.reference);
+      }
+      if (data.data.value) {
+        $(element).val(data.data.value);
+      }
+      if (data.data.iban) {
+        $('input.bankAccountIBAN').val(data.data.iban);
+      }
+      if (data.data.blz) {
+        $('input.bankAccountBLZ').val(data.data.blz);
+      }
+      if (data.data.bic) {
+        $('input.bankAccountBIC').val(data.data.bic);
+      }
+      $(dialogId + ' #msg').html(data.data.message);
+      $(dialogId + ' #msg').show();
+      if (data.data.suggestions !== '') {
+        const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
+            + ' '
+            + data.data.suggestions
+            + '. '
+            + t(appName, 'Please do not accept these alternatives lightly!');
+        $(dialogId + ' #suggestions').html(hints);
+        $(dialogId + ' #suggestions').show();
+      } else {
+        $(dialogId + ' #suggestions').html('');
+        $(dialogId + ' #suggestions').hide();
+      }
 
-           validateUnlock();
+      validateUnlock();
 
-           return true;
+      return true;
 
-         }, 'json');
+    }, 'json');
 };
 
 /**
@@ -459,36 +474,41 @@ const validate = function(event, validateLockCB) {
  *
  * Note: the pme-dialog is disabled, but for the date, for the time
  * being.
+ *
+ * @param {Object} event TBD.
+ *
+ * @param {Function} validateLockCB TBD.
+ *
+ * @returns {bool}
  */
-const validatePME = function(event, validateLockCB) {
-  var $element = $(this);
+const mandateValidatePME = function(event, validateLockCB) {
+  const $element = $(this);
 
   if ($element.prop('readonly')) {
     return false;
   }
 
-  if (typeof validateLockCB == 'undefined') {
+  if (typeof validateLockCB === 'undefined') {
     validateLockCB = function(lock, validateOk) {};
   }
 
-  var validateLock = function() {
+  const validateLock = function() {
     globalState.SepaDebitMandate.validationRunning = true;
-    validateLockCB(true, null)
+    validateLockCB(true, null);
   };
 
-  var validateUnlock = function() {
-    validateLockCB(false, true)
+  const validateUnlock = function() {
+    validateLockCB(false, true);
     globalState.SepaDebitMandate.validationRunning = false;
   };
 
-  var validateErrorUnlock = function() {
-    validateLockCB(false, false)
+  const validateErrorUnlock = function() {
+    validateLockCB(false, false);
     globalState.SepaDebitMandate.validationRunning = false;
     $('div.oc-dialog-content').ocdialog('close');
     $('div.oc-dialog-content').ocdialog('destroy').remove();
     $.fn.cafevTooltip.hide();
   };
-
 
   event.preventDefault();
 
@@ -505,255 +525,259 @@ const validatePME = function(event, validateLockCB) {
   // bankAccountBIC
   // mandateDate
   // lastUsedDate
-  var inputMapping = {
+  const inputMapping = {
     PME_data_lastUsedDate: 'lastUsedDate',
     PME_data_mandateDate: 'mandateDate',
     PME_data_bankAccountOwner: 'bankAccountOwner',
     PME_data_IBAN: 'bankAccountIBAN',
     PME_data_BIC: 'bankAccountBIC',
-    PME_data_BLZ: 'bankAccountBLZ'
+    PME_data_BLZ: 'bankAccountBLZ',
   };
-  var changed = $element.attr('name');
+  let changed = $element.attr('name');
   changed = inputMapping[changed];
 
-  var projectElem = $('[name="PME_data_project_id"]');
-  var projectId;
+  let projectElem = $('[name="PME_data_project_id"]');
   if (!projectElem.is('input')) {
     projectElem = projectElem.find('option[selected="selected"]');
   }
-  projectId = projectElem.val();
+  const projectId = projectElem.val();
 
-  var mandateData = {
+  const mandateData = {
     mandateReference: $('input[name="PME_data_mandate_reference"]').val(),
     mandateDate: $('input[name="PME_data_mandate_date"]').val(),
     bankAccountOwner: $('input[name="PME_data_bank_account_owner"]').val(),
     lastUsedDate: $('input[name="PME_data_last_used_date"]').val(),
-    MusicianId:  $('select[name="PME_data_musician_id"] option[selected="selected"]').val(),
-    ProjectId:  projectId,
-    MandateProjectId:  projectId,
+    MusicianId: $('select[name="PME_data_musician_id"] option[selected="selected"]').val(),
+    ProjectId: projectId,
+    MandateProjectId: projectId,
     bankAccountIBAN: $('input[name="PME_data_iban"]').val(),
     bankAccountBIC: $('input[name="PME_data_bic"]').val(),
     bankAccountBLZ: $('input[name="PME_data_blz"]').val(),
-    changed: changed
+    changed,
   };
 
   // until end of validation
   validateLock();
 
-  var post = $.param(mandateData);
-  $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
-         post,
-         function (data) {
-           // hack ...
-           if (typeof data.data != 'undefined' &&
-               data.data.message && data.data.suggestions  && data.data.suggestions !== '') {
-             var hints = t('cafevdb', 'Suggested alternatives based on common human mis-transcriptions:')
-                 + ' '
-                 + data.data.suggestions
-                 + '. '
-                 + t('cafevdb', 'Please do not accept these alternatives lightly!');
-             data.data.message += hints;
-           }
-           if (!Ajax.validateResponse(data,
-                                              [ 'suggestions', 'message' ],
-                                              validateErrorUnlock)) {
-             if (data.data.blz) {
-               $('input.bankAccountBLZ').val(data.data.blz);
-             }
-             return false;
-           }
+  const post = $.param(mandateData);
+  $.post(
+    OC.filePath(appName, 'ajax/finance', 'sepa-debit-settings.php'),
+    post,
+    function(data) {
+      // hack ...
+      if (typeof data.data !== 'undefined'
+          && data.data.message && data.data.suggestions && data.data.suggestions !== '') {
+        const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
+            + ' '
+            + data.data.suggestions
+            + '. '
+            + t(appName, 'Please do not accept these alternatives lightly!');
+        data.data.message += hints;
+      }
+      if (!Ajax.validateResponse(
+        data,
+        ['suggestions', 'message'],
+        validateErrorUnlock)) {
+        if (data.data.blz) {
+          $('input.bankAccountBLZ').val(data.data.blz);
+        }
+        return false;
+      }
 
-           $('#cafevdb-page-debug').html(data.data.message);
-           $('#cafevdb-page-debug').show();
-           if (data.data.value) {
-             $element.val(data.data.value);
-           }
-           if (data.data.iban) {
-             $('input[name="PME_data_iban"]').val(data.data.iban);
-           }
-           if (data.data.bic) {
-             $('input[name="PME_data_bic"]').val(data.data.bic);
-           }
-           if (data.data.blz) {
-             $('input[name="PME_data_blz"]').val(data.data.blz);
-           }
+      $('#cafevdb-page-debug').html(data.data.message);
+      $('#cafevdb-page-debug').show();
+      if (data.data.value) {
+        $element.val(data.data.value);
+      }
+      if (data.data.iban) {
+        $('input[name="PME_data_iban"]').val(data.data.iban);
+      }
+      if (data.data.bic) {
+        $('input[name="PME_data_bic"]').val(data.data.bic);
+      }
+      if (data.data.blz) {
+        $('input[name="PME_data_blz"]').val(data.data.blz);
+      }
 
-           validateUnlock();
+      validateUnlock();
 
-           return true;
-         }, 'json');
+      return true;
+    }, 'json');
   return false;
 };
 
-const popupInit = function(selector) {
-  var self = this;
-
-  var containerSel = PHPMyEdit.selector(selector);
-  var container = PHPMyEdit.container(containerSel);
-  var pmeReload = container.find('form.pme-form input.pme-reload').first();
-  container.find(':button.sepa-debit-mandate').
-    off('click').
-    on('click', function(event) {
+const mandatePopupInit = function(selector) {
+  const containerSel = PHPMyEdit.selector(selector);
+  const container = PHPMyEdit.container(containerSel);
+  const pmeReload = container.find('form.pme-form input.pme-reload').first();
+  container.find(':button.sepa-debit-mandate')
+    .off('click')
+    .on('click', function(event) {
       event.preventDefault();
-      if (container.find('#sepa-debit-mandate-dialog').dialog('isOpen') == true) {
+      if (container.find('#sepa-debit-mandate-dialog').dialog('isOpen') === true) {
         container.find('#sepa-debit-mandate-dialog').dialog('close').remove();
       } else {
         // We store the values in the data attribute.
-        var values = $(this).data('debitMandate');
-        //alert('data: ' + CAFEVDB.print_r(values, true));
-        //alert('data: '+(typeof values.MandateExpired));
-        $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-mandate.php'),
-               values, function(data) {
-                 self.init(data, function() {
-                   if (pmeReload.length > 0) {
-                     pmeReload.trigger('click');
-                   }
-                 });
-               },
-               'json');
+        const values = $(this).data('debitMandate');
+        // alert('data: ' + CAFEVDB.print_r(values, true));
+        // alert('data: '+(typeof values.MandateExpired));
+        $.post(
+          OC.filePath(appName, 'ajax/finance', 'sepa-debit-mandate.php'),
+          values,
+          function(data) {
+            mandatesInit(data, function() {
+              if (pmeReload.length > 0) {
+                pmeReload.trigger('click');
+              }
+            });
+          },
+          'json');
       }
       return false;
     });
 };
 
-const insuranceReady = function(selector) {
-  var sdm = this;
+const mandateInsuranceReady = function(selector) {
+  const sdm = this;
 
-  var containerSel = PHPMyEdit.selector(selector);
-  var container = PHPMyEdit.container(containerSel);
+  const containerSel = PHPMyEdit.selector(selector);
+  const container = PHPMyEdit.container(containerSel);
 
-  container.find('input.pme-debit-note').
-    off('click').
-    on('click', sdm.exportHandler);
+  container.find('input.pme-debit-note')
+    .off('click')
+    .on('click', sdm.exportHandler);
 
   return true;
 };
 
-const exportHandler = function(event) {
-  var self = $(this);
-  var form = $(this.form);
+const mandateExportHandler = function(event) {
+  const form = $(this.form);
 
   event.stopImmediatePropagation(); // why?
 
   CAFEVDB.modalizer(true);
   Page.busyIcon(true);
 
-  var clearBusyState = function() {
+  const clearBusyState = function() {
     CAFEVDB.modalizer(false);
     Page.busyIcon(false);
     console.log('after init');
     return true;
   };
 
-  var formPost = form.serialize();
-  $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php'),
-         formPost,
-         function (data) {
-           if (!Ajax.validateResponse(data, [ 'message', 'debitnote' ],
-                                              clearBusyState)) {
-             return false;
-           }
+  const formPost = form.serialize();
+  $.post(
+    OC.filePath(appName, 'ajax/finance', 'sepa-debit-export.php'),
+    formPost,
+    function(data) {
+      if (!Ajax.validateResponse(
+        data,
+        ['message', 'debitnote'],
+        clearBusyState)) {
+        return false;
+      }
 
-           // Everything worked out, from here we now trigger the
-           // download and the mail dialog
+      // Everything worked out, from here we now trigger the
+      // download and the mail dialog
 
-           console.log('debitnote', data.data.debitnote);
+      console.log('debitnote', data.data.debitnote);
 
-           var debitNote = data.data.debitnote;
+      const debitNote = data.data.debitnote;
 
-           // custom post
-           var postItems = [
-             'requesttoken',
-             'ProjectId',
-             'ProjectName',
-             'Table',
-             'MusicianId'
-           ];
-           var post = {};
-           for(var i = 0; i < postItems.length; ++i) {
-             post[postItems[i]] = form.find('input[name="'+postItems[i]+'"]').val();
-           };
-           post['DebitNoteId']    = debitNote.Id;
-           post['DownloadCookie'] = CAFEVDB.makeId();
-           post['EmailTemplate']  = data.data.emailtemplate;
+      // custom post
+      const postItems = [
+        'requesttoken',
+        'ProjectId',
+        'ProjectName',
+        'Table',
+        'MusicianId',
+      ];
+      const post = {};
+      for (let i = 0; i < postItems.length; ++i) {
+        post[postItems[i]] = form.find('input[name="' + postItems[i] + '"]').val();
+      }
+      post.DebitNoteId = debitNote.Id;
+      post.DownloadCookie = CAFEVDB.makeId();
+      post.EmailTemplate = data.data.emailtemplate;
 
-           var action = OC.filePath('cafevdb', 'ajax/finance', 'debit-note-download.php');
+      const action = OC.filePath(appName, 'ajax/finance', 'debit-note-download.php');
 
-           $.fileDownload(action, {
-             httpMethod: 'POST',
-             data: post,
-             cookieName: 'debit_note_download',
-             cookieValue: post['DownloadCookie'],
-             cookiePath: oc_webroot,
-             successCallback: function() {
-               // if insurance, then also epxort the invoice PDFs
-               if (debitNote.Job === 'insurance') {
-                 var action = OC.filePath('cafevdb', 'ajax/insurance', 'instrument-insurance-export.php');
-                 $.fileDownload(action, {
-                   httpMethod: 'POST',
-                   data: formPost+'&'+'DownloadCookie='+post['DownloadCookie'],
-                   cookieName: 'insurance_invoice_download',
-                   cookieValue: post['DownloadCookie'],
-                   cookiePath: oc_webroot,
-                   successCallback: function() {
-                     Email.emailFormPopup($.param(post), true, false, clearBusyState);
-                   },
-                   failCallback: function(responseHtml, url, error) {
-                     OC.dialogs.alert(t('cafevdb', 'Unable to export insurance overviews:')+
-                                      ' '+
-                                      responseHtml,
-                                      t('cafevdb', 'Error'),
-                                      clearBusyState,
-                                      true, true);
-                   }
-                 });
-               } else {
-                 Email.emailFormPopup($.param(post), true, false, clearBusyState);
-               }
-             },
-             failCallback: function(responseHtml, url, error) {
-               OC.dialogs.alert(t('cafevdb', 'Unable to export debit notes:')+
-                                ' '+
-                                responseHtml,
-                                t('cafevdb', 'Error'),
-                                clearBusyState, true, true);
-             }
-           });
+      $.fileDownload(action, {
+        httpMethod: 'POST',
+        data: post,
+        cookieName: 'debit_note_download',
+        cookieValue: post.DownloadCookie,
+        cookiePath: webRoot,
+        successCallback() {
+          // if insurance, then also epxort the invoice PDFs
+          if (debitNote.Job === 'insurance') {
+            const action = OC.filePath(appName, 'ajax/insurance', 'instrument-insurance-export.php');
+            $.fileDownload(action, {
+              httpMethod: 'POST',
+              data: formPost + '&' + 'DownloadCookie=' + post.DownloadCookie,
+              cookieName: 'insurance_invoice_download',
+              cookieValue: post.DownloadCookie,
+              cookiePath: webRoot,
+              successCallback() {
+                Email.emailFormPopup($.param(post), true, false, clearBusyState);
+              },
+              failCallback(responseHtml, url, error) {
+                Dialogs.alert(
+                  t(appName, 'Unable to export insurance overviews:')
+                    + ' '
+                    + responseHtml,
+                  t(appName, 'Error'),
+                  clearBusyState,
+                  true, true);
+              },
+            });
+          } else {
+            Email.emailFormPopup($.param(post), true, false, clearBusyState);
+          }
+        },
+        failCallback(responseHtml, url, error) {
+          Dialogs.alert(
+            t(appName, 'Unable to export debit notes:')
+              + ' '
+              + responseHtml,
+            t(appName, 'Error'),
+            clearBusyState, true, true);
+        },
+      });
 
-           return true;
-         });
+      return true;
+    });
 
   return false;
 };
 
-const ready = function(selector) {
-  var sdm = this;
-  var self = this;
+const mandateReady = function(selector) {
+  const sdm = this;
+  const self = this;
 
-  var containerSel = PHPMyEdit.selector(selector);
-  var container = PHPMyEdit.container(containerSel);
+  const containerSel = PHPMyEdit.selector(selector);
+  const container = PHPMyEdit.container(containerSel);
 
   // bail out if not for us.
-  var form = container.find('form.pme-form');
-  var dbTable;
-  dbTable = form.find('input[value="InstrumentInsurance"]');
+  const form = container.find('form.pme-form');
+  let dbTable = form.find('input[value="InstrumentInsurance"]');
   if (dbTable.length > 0) {
     return self.insuranceReady(selector);
   }
 
-  var directDebitChooser = container.find('select.pme-debit-note-job');
+  const directDebitChooser = container.find('select.pme-debit-note-job');
   directDebitChooser.chosen({
     disable_search: true,
-    inherit_select_classes:true,
-    allow_single_deselect:true
+    inherit_select_classes: true,
+    allow_single_deselect: true,
   });
-  directDebitChooser.
-    off('change').
-    on('change', function(event) {
-      var self = $(this);
+  directDebitChooser
+    .off('change')
+    .on('change', function(event) {
+      const self = $(this);
       // not much to be done ...
-      var selected = self.find(':selected').val();
-      directDebitChooser.find('option[value="'+selected+'"]').prop('selected', true);
+      const selected = self.find(':selected').val();
+      directDebitChooser.find('option[value="' + selected + '"]').prop('selected', true);
       directDebitChooser.trigger('chosen:updated');
       if (selected === 'amount') {
         directDebitChooser.switchClass('predefined', 'custom');
@@ -764,49 +788,49 @@ const ready = function(selector) {
       return false;
     });
 
-  $.each(["debit-note-amount", "debit-note-subject"],
-         function(index, classValue) {
+  $.each(
+    ['debit-note-amount', 'debit-note-subject'],
+    function(index, classValue) {
+      container.find('#pme-debit-note-job-up input.' + classValue)
+        .off('blur')
+        .on('blur', function(event) {
+          const self = $(this);
+          container.find('#pme-debit-note-job-down input.' + classValue).val(self.val());
+          return false;
+        });
 
-           container.find('#pme-debit-note-job-up input.'+classValue).
-             off('blur').
-             on('blur', function(event) {
-               var self = $(this);
-               container.find('#pme-debit-note-job-down input.'+classValue).val(self.val());
-               return false;
-             });
-
-           container.find('#pme-debit-note-job-down input.'+classValue).
-             off('blur').
-             on('blur', function(event) {
-               var self = $(this);
-               container.find('#pme-debit-note-job-up input.'+classValue).val(self.val());
-               return false;
-             });
-         });
+      container.find('#pme-debit-note-job-down input.' + classValue)
+        .off('blur')
+        .on('blur', function(event) {
+          const self = $(this);
+          container.find('#pme-debit-note-job-up input.' + classValue).val(self.val());
+          return false;
+        });
+    });
 
   dbTable = form.find('input[value="SepaDebitMandates"]');
-  if (dbTable.length == 0) {
+  if (dbTable.length === 0) {
     return true;
   }
-  var table = form.find('table[summary="SepaDebitMandates"]');
+  const table = form.find('table[summary="SepaDebitMandates"]');
 
-  var validateInput = function(event) {
-    var input = $(this);
-    self.validatePME.call(this, event, function(lock) {
+  const validateInput = function(event) {
+    const input = $(this);
+    mandateValidatePME.call(this, event, function(lock) {
       input.prop('readonly', lock);
     });
   };
 
-  table.find('input[type="text"]').not('tr.pme-filter input').
-    off('blur').
-    on('blur', validateInput);
+  table.find('input[type="text"]').not('tr.pme-filter input')
+    .off('blur')
+    .on('blur', validateInput);
 
-  var submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
-  var submitActive = false;
-  form.
-    off('click', submitSel).
-    on('click', submitSel, function(event) {
-      var button = $(this);
+  const submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
+  let submitActive = false;
+  form
+    .off('click', submitSel)
+    .on('click', submitSel, function(event) {
+      const button = $(this);
       if (submitActive) {
         button.blur();
         return false;
@@ -819,13 +843,13 @@ const ready = function(selector) {
 
       submitActive = true;
 
-      var inputs = table.find('input[type="text"]');
+      const inputs = table.find('input[type="text"]');
 
       $.fn.cafevTooltip.hide();
       inputs.prop('readonly', true);
       button.blur();
 
-      self.validatePME.call({ name: 'PME_data_IBAN' }, event, function(lock, validateOk) {
+      mandateValidatePME.call({ name: 'PME_data_IBAN' }, event, function(lock, validateOk) {
         if (lock) {
           inputs.prop('readonly', true);
         } else {
@@ -846,50 +870,52 @@ const ready = function(selector) {
   CAFEVDB.exportMenu(containerSel);
 
   table.find('input.sepadate').datepicker({
-    dateFormat : 'dd.mm.yy', // this is 4-digit year
+    dateFormat: 'dd.mm.yy', // this is 4-digit year
     minDate: '01.01.1990',
-    beforeShow: function(input) {
+    beforeShow(input) {
       $(input).unbind('blur');
     },
-    onSelect: function(dateText, inst) {
+    onSelect(dateText, inst) {
       $(this).on('blur', validateInput);
       $(this).focus();
       $(this).trigger('blur');
-    }
+    },
   });
 
-  container.find('input.pme-debit-note').
-    off('click').
-    on('click', sdm.exportHandler);
+  container.find('input.pme-debit-note')
+    .off('click')
+    .on('click', sdm.exportHandler);
 
   return true;
 };
 
-const documentReady = function() {
+const mandatesDocumentReady = function() {
 
-  PHPMyEdit.addTableLoadCallback('sepa-debit-mandates',
-                                 {
-                                   callback: function(selector, parameters, resizeCB) {
-                                     this.ready(selector);
-                                     resizeCB();
-                                     //alert("Here I am: "+selector);
-                                   },
-                                   context: globalState.SepaDebitMandate,
-                                   parameters: []
-                                 });
+  PHPMyEdit.addTableLoadCallback(
+    'sepa-debit-mandates',
+    {
+      callback(selector, parameters, resizeCB) {
+        this.ready(selector);
+        resizeCB();
+        // alert("Here I am: "+selector);
+      },
+      context: globalState.SepaDebitMandate,
+      parameters: [],
+    });
 
   CAFEVDB.addReadyCallback(function() {
-    ready(PHPMyEdit.defaultSelector);
-    popupInit(PHPMyEdit.defaultSelector);
+    mandateReady(PHPMyEdit.defaultSelector);
+    mandatePopupInit(PHPMyEdit.defaultSelector);
   });
 
 };
 
 export {
-  ready,
-  documentReady,
-  popupInit,
-  insuranceReady,
+  mandateReady as ready,
+  mandatesDocumentReady as documentReady,
+  mandatePopupInit as popupInit,
+  mandateInsuranceReady as insuranceReady,
+  mandateExportHandler as exportHandler,
 };
 
 // Local Variables: ***
