@@ -12,10 +12,15 @@ module.exports = {
     firstDay: true,
   },
   rules: {
-    'camelcase': [
+    camelcase: [
       'error', {
         allow: [
           '^__webpack_[_a-z]+__$',
+          '^oc_',
+          '^print_r$',
+          'disable_search',
+          'inherit_select_classes',
+          'allow_single_deselect',
         ],
       },
     ],
@@ -31,6 +36,17 @@ module.exports = {
           './style',
         ],
         tryExtensions: ['.js', '.json', '.node', '.css'],
+      },
+    ],
+    'operator-linebreak': [
+      'error',
+      'before',
+      {
+        'overrides': {
+          '=': 'after',
+          '+=': 'after',
+          '-=': 'after',
+        },
       },
     ],
     'node/no-missing-require': [
