@@ -716,7 +716,8 @@ make sure that the musicians are also automatically added to the
   public function addOrChangeInstruments($pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
     $field = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENT_TABLE, 'instrument_id');
-    $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, [ $field ], $newValues);
+    $changedSet  = [ $field ];
+    $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, $changeSet, $newValues);
     Util::unsetValue($changed, $field);
     return true;
   }
