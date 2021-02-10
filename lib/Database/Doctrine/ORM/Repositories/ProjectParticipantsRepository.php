@@ -30,6 +30,8 @@ use Doctrine\ORM\EntityRepository;
 
 class ProjectParticipantsRepository extends EntityRepository
 {
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
+
   /**
    * findBy() which optionally allows where and orderBy with the two
    * "principal" associaions "project" and "musician".
@@ -85,19 +87,26 @@ class ProjectParticipantsRepository extends EntityRepository
   }
 
   /**
-   * Find all the participant names of the given project indexed by
-   * the musician id. Handy for building select options for the
-   * web interface.
+   * Find all the participant names of the given project.  Handy for
+   * building select options for the web interface.
+   *
+   * @param int $projectId
+   *
+   * @return array
    */
-  public function findParticipantNames($project)
+  public function fetchParticipantNames($projectId)
   {
-    return $this->createQueryBuilder('pp', 'pp.musician')
-                ->join('pp.musician', 'm')
-                ->select('m.firstName AS firstName', 'm.lastName AS lastName')
-                ->orderBy('m.lastName', 'ASC')
-                ->addOrderBy('m.firstName', 'ASC')
-                ->getQuery()
-                ->getResult();
+    $qb = $this->createQueryBuilder('pp');
+
+    return $qb->leftJoin('pp.musician', 'm', null, null, 'm.id')
+              ->leftJoin('pp.project', 'p')
+              ->select('m.id as musicianId', 'm.firstName AS firstName', 'm.surName AS surName')
+              ->orderBy('m.surName', 'ASC')
+              ->addOrderBy('m.firstName', 'ASC')
+              ->where($qb->expr()->eq('p.id', ':projectId'))
+              ->setParameter('projectId', $projectId)
+              ->getQuery()
+              ->getResult();
   }
 
 }
