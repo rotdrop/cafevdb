@@ -175,11 +175,14 @@ class PersonalForm {
           $projectOptions = [];
         }
 
+        $this->logDebug('MEMBER PROJECTS '.$executiveBoardProjectId.' / '.$memberProjectId);
+
         if ($this->databaseConfigured() && $executiveBoardProjectId > 0) {
           // this can throw if there is no datadase configured yet.
           try {
             $executiveBoardMembers = $this->projectService->participantOptions($executiveBoardProjectId, $executiveBoardProject);
-          } catch(\Exception $e) {
+          } catch(\Throwable $t) {
+            $this->logException($t);
             $executiveBoardMembers = [];
           }
         } else {
