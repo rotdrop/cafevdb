@@ -31,7 +31,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Besetzungen
  * @ORM\Table(name="ProjectParticipants")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantsRepository")
  * @Gedmo\Loggable
  */
 class ProjectParticipant implements \ArrayAccess
