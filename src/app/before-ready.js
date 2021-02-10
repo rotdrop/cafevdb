@@ -28,11 +28,10 @@ import * as ProjectExtra from './project-extra.js';
 import * as DebitNotes from './debit-notes.js';
 import * as Musicians from './musicians.js';
 import * as Projects from './projects.js';
+import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as Dialogs from './dialogs.js';
 import pmeTweaks from './pme-tweaks.js';
-
-const pmeData = PHPMyEdit.data;
 
 const documentReady = function() {
 

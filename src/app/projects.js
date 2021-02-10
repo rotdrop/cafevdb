@@ -30,14 +30,12 @@ import * as Photo from './inlineimage.js';
 import * as Notification from './notification.js';
 import * as Events from './events.js';
 import * as Email from './email.js';
+import { data as pmeData, sys as pmeSys } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
 import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
 
 require('projects.css');
-
-const pmeSys = PHPMyEdit.sys;
-const pmeData = PHPMyEdit.data;
 
 // /**
 //  * Strip any digit from the end of name and attach the four digit

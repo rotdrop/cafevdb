@@ -28,13 +28,11 @@ import * as Musicians from './musicians.js';
 import * as Notification from './notification.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
-import * as ProjectParticipants from './project-participants.js';
+import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
 
 require('project-participants.css');
-
-const pmeData = PHPMyEdit.data;
 
 /**
  * Open a dialog in order to edit the personal reccords of one
@@ -49,7 +47,7 @@ const pmeData = PHPMyEdit.data;
  * ReloadValue which should be one of 'View' or 'Change' (though
  * 'Delete' should also work).
  */
-const personalRecordDialog = function(record, options) {
+const myPersonalRecordDialog = function(record, options) {
   if (typeof options === 'undefined') {
     options = {
       InitialValue: 'View',
@@ -86,8 +84,6 @@ const personalRecordDialog = function(record, options) {
     ModalDialog: true,
     modified: false,
   };
-
-  console.info('RECORD', record);
 
   tableOptions[pmeOperation] = options.ReloadValue + '?' + pmeRecord + '=' + record;
   tableOptions[pmeRecord] = record;
@@ -275,7 +271,7 @@ const loadPMETableFiltered = function(form, formData, ids, afterLoadCallback) {
  * @param {Function} afterLoadCallback Optional. A function called after the
  * table-view has been loaded.
  */
-const loadMusicians = function(form, ids, projectMode, afterLoadCallback) {
+const myLoadMusicians = function(form, ids, projectMode, afterLoadCallback) {
   if (typeof projectMode === 'undefined' || projectMode === null) {
     // Check whether form contains an input element for a
     // ProjectId. If its value is positive, switch to project mode,
@@ -303,8 +299,8 @@ const loadMusicians = function(form, ids, projectMode, afterLoadCallback) {
  * @param {Function} afterLoadCallback An optional callback executed after
  * the PME table has been loaded.
  */
-const loadAddMusicians = function(form, afterLoadCallback) {
-  loadMusicians(form, [], true, afterLoadCallback);
+const myLoadAddMusicians = function(form, afterLoadCallback) {
+  myLoadMusicians(form, [], true, afterLoadCallback);
 };
 
 /**
@@ -319,7 +315,7 @@ const loadAddMusicians = function(form, afterLoadCallback) {
  * @param {Function} afterLoadCallback An optional callback executed after
  * the PME table has been loaded.
  */
-const loadProjectParticipants = function(form, musicians, afterLoadCallback) {
+const myLoadProjectParticipants = function(form, musicians, afterLoadCallback) {
   // const projectName = form.find('input[name="projectName"]').val();
   // const projectId = form.find('input[name="projectId"]').val();
 
@@ -337,7 +333,7 @@ const loadProjectParticipants = function(form, musicians, afterLoadCallback) {
   loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
 };
 
-const ready = function(selector, resizeCB) {
+const myReady = function(selector, resizeCB) {
   selector = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(selector);
 
@@ -703,7 +699,7 @@ const ready = function(selector, resizeCB) {
     .addClass('pme-custom').prop('disabled', false)
     .off('click').on('click', function(event) {
 
-      loadAddMusicians($(this.form));
+      myLoadAddMusicians($(this.form));
 
       return false;
     });
@@ -716,11 +712,12 @@ const ready = function(selector, resizeCB) {
   }
 };
 
-const documentReady = function() {
+const myDocumentReady = function() {
 
   PHPMyEdit.addTableLoadCallback('project-participants', {
     callback(selector, parameters, resizeCB) {
 
+      console.info('PME DATA', pmeData, PHPMyEdit.data, PHPMyEdit);
       if (parameters.reason === 'tabChange') {
         resizeCB();
         return;
@@ -730,7 +727,7 @@ const documentReady = function() {
       CAFEVDB.exportMenu(selector);
       SepaDebitMandate.popupInit(selector);
 
-      this.ready(selector, resizeCB);
+      myReady(selector, resizeCB);
 
       container.find('div.photo, #cafevdb_inline_image_wrapper')
         .off('click', 'img.zoomable')
@@ -762,24 +759,24 @@ const documentReady = function() {
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);
       }
     },
-    context: ProjectParticipants,
+    context: {},
     parameters: [],
   });
 
   CAFEVDB.addReadyCallback(function() {
     if ($('div#cafevdb-page-body.project-participants').length > 0) {
-      ready();
+      myReady();
     }
   });
 
 };
 
 export {
-  ready,
-  documentReady,
-  loadProjectParticipants,
-  personalRecordDialog,
-  loadMusicians,
+  myReady as ready,
+  myDocumentReady as documentReady,
+  myLoadProjectParticipants as loadProjectParticipants,
+  myPersonalRecordDialog as personalRecordDialog,
+  myLoadMusicians as loadMusicians,
 };
 
 // Local Variables: ***

@@ -26,9 +26,8 @@ import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
 import * as Email from './email.js';
+import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
-
-const pmeData = PHPMyEdit.data;
 
 const SepaDebitMandate = globalState.SepaDebitMandate = {
   projectId: -1,
