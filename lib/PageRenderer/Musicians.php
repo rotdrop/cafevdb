@@ -147,13 +147,12 @@ class Musicians extends PMETableViewBase
   public function headerText() {
     $header = $this->shortTitle();
     if ($this->projectMode) {
-      $header .= "
-<p>".$this->l->t("This page is the only way to add musicians to projects in order to
+      $title = $this->l->t("This page is the only way to add musicians to projects in order to
 make sure that the musicians are also automatically added to the
 `global' musicians data-base (and not only to the project).");
     }
 
-    return '<div class="'.$this->cssPrefix().'-header-text">'.$header.'</div>';
+    return '<div class="'.$this->cssPrefix().'-header-text" title="'.$title.'">'.$header.'</div>';
   }
 
   /** Show the underlying table. */
@@ -197,7 +196,7 @@ make sure that the musicians are also automatically added to the
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
 
-    $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
+    $opts['filters'] = "IFNULL(PMEtable0.disabled,0) <= ".intval($this->showDisabled);
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -323,6 +322,7 @@ make sure that the musicians are also automatically added to the
         'maxlen'   => 1,
         'sort'     => true,
         'escape'   => false,
+        'sql'      => 'IFNULL($main_table.$field_name, 0)',
         'sqlw'     => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ 1 => '' ],
         'values2|LVFD' => [ $this->l->t('false'), $this->l->t('true') ],
@@ -605,7 +605,7 @@ make sure that the musicians are also automatically added to the
         [
           'tab' => ['id' => 'miscinfo'],
           "name" => $this->l->t("Last Updated"),
-          "default" => date($this->defaultFDD['datetime']['datemask']),
+          //"default" => date($this->defaultFDD['datetime']['datemask']),
           "nowrap" => true,
           "options" => 'LFAVCPDR' // Set by update trigger.
         ]
@@ -617,7 +617,7 @@ make sure that the musicians are also automatically added to the
         [
           'tab' => ['id' => 'miscinfo'],
           "name" => $this->l->t("Created"),
-          "default" => date($this->defaultFDD['datetime']['datemask']),
+          //"default" => date($this->defaultFDD['datetime']['datemask']),
           "nowrap" => true,
           "options" => 'LFAVCPDR' // Set by update trigger.
         ]
@@ -634,9 +634,11 @@ make sure that the musicians are also automatically added to the
     // @@TODO This will have to get marrried with interleaved ORM stuff
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
-    $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'addUUIDTrigger' ];
-//     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
-    $opts['triggers']['insert']['after'][]  = [ $this, 'addOrChangeInstruments' ];
+    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
+
+    // $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'addUUIDTrigger' ];
+    // $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
+    // $opts['triggers']['insert']['after'][]  = [ $this, 'addOrChangeInstruments' ];
 
 //     $opts['triggers']['delete']['before'][]  = 'CAFEVDB\Musicians::beforeDeleteTrigger';
 
