@@ -554,6 +554,10 @@ class EntityManager extends EntityManagerDecorator
       } else {
         $columnName = $meta->fieldMappings[$field]['columnName'];
         if (!isset($columnValues[$columnName])) {
+          if ($meta->usesIdGenerator()) {
+            // possibly an attempt to extract from non-existing field.
+            continue;
+          }
           throw new \Exception($this->l->t('Unexpected id: %s', $field));
         }
       }
