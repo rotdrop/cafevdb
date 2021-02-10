@@ -53,7 +53,7 @@ echo $this->inc(
     'header' => $renderer->headerText(),
 ]);
 
-if (true || $roles->inTreasurerGroup()) {
+if ($roles->inTreasurerGroup()) {
   $renderer->render();
 } else {
   echo '<div class="specialrole error">'.

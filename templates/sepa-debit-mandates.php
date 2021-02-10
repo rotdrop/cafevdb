@@ -52,11 +52,11 @@ echo $this->inc(
   [
     'css-prefix' => $css_pfx,
     'navigationcontrols' => $nav,
-    'header' => $table->headerText(),
+    'header' => $renderer->headerText(),
   ]);
 
 if ($roles->inTreasurerGroup()) {
-  $table->display();
+  $renderer->render();
 } else {
   echo '<div class="specialrole error">'.
        $l->t("Sorry, this view is only available to the %s.",

@@ -29,9 +29,10 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -73,6 +74,7 @@ class SepaDebitMandates extends PMETableViewBase
         'musician_id' => 'musician_id',
         'mandate_sequence' => 'sequence',
       ],
+      'column' => 'id',
     ],
   ];
 
@@ -125,7 +127,7 @@ class SepaDebitMandates extends PMETableViewBase
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
-    $memberProjectId = $this->getConfigValue('memberTableId');
+    $memberProjectId = $this->getConfigValue('memberProjectId', -1);
 
     $projectMode = $projectId > 0 && !empty($projectName);
 
@@ -155,6 +157,9 @@ class SepaDebitMandates extends PMETableViewBase
     // Sorting field(s)
     $opts['sort_field'] = [ 'musician_id', 'project_id', 'sequence' ];
 
+    // Group by for to-many joins
+    $opts['groupby_fields'] = $opts['sort_field'];
+
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
@@ -182,7 +187,7 @@ class SepaDebitMandates extends PMETableViewBase
 <span id="pme-debit-note-job" class="pme-debit-note-job pme-menu-block">
   <select data-placeholder="'.$this->l->t('Debit Job').'"
           class="pme-debit-note-job'.' '.($debitJob === 'amount' ? 'custom' : 'predefined').'"
-          title="'.Config::toolTips('debit-note-job-choice').'"
+          title="'.$this->toolTipsService['debit-note-job-choice'].'"
           name="debit-job">
     <option value=""></option>';
 
@@ -191,19 +196,19 @@ class SepaDebitMandates extends PMETableViewBase
           [
             'value' => 'membership-fee',
             'name' => $this->l->t('Membership Fee'),
-            'titile' => Config::toolTips('debit-note-job-option-membership-fee'),
+            'titile' => $this->toolTipsService['debit-note-job-option-membership-fee'],
             'flags' => ($debitJob === 'membership-fee' ? Navigation::SELECTED : 0),
           ],
           [
             'value' => 'insurance',
             'name' => $this->l->t('Insurance'),
-            'titile' => Config::toolTips('debit-note-job-option-insurance'),
+            'titile' => $this->toolTipsService['debit-note-job-option-insurance'],
             'flags' => ($debitJob === 'insurance' ? Navigation::SELECTED : 0),
           ],
           [
             'value' => 'amount',
             'name' => $this->l->t('Amount'),
-            'titile' => Config::toolTips('debit-note-job-option-amount'),
+            'titile' => $this->toolTipsService['debit-note-job-option-amount'],
             'flags' => ($debitJob === 'amount' ? Navigation::SELECTED : 0),
           ]
         ];
@@ -212,19 +217,19 @@ class SepaDebitMandates extends PMETableViewBase
           [
             'value' => 'deposit',
             'name' => $this->l->t('Deposit'),
-            'titile' => Config::toolTips('debit-note-job-option-deposit'),
+            'titile' => $this->toolTipsService['debit-note-job-option-deposit'],
             'flags' => ($debitJob === 'deposit' ? Navigation::SELECTED : 0),
           ],
           [
             'value' => 'remaining',
             'name' => $this->l->t('Remaining'),
-            'titile' => Config::toolTips('debit-note-job-option-remaining'),
+            'titile' => $this->toolTipsService['debit-note-job-option-remaining'],
             'flags' => ($debitJob === 'remaining' ? Navigation::SELECTED : 0),
           ],
           [
             'value' => 'amount',
             'name' => $this->l->t('Amount'),
-            'titile' => Config::toolTips('debit-note-job-option-amount'),
+            'titile' => $this->toolTipsService['debit-note-job-option-amount'],
             'flags' => ($debitJob === 'amount' ? Navigation::SELECTED : 0),
           ],
         ];
@@ -282,7 +287,7 @@ received so far'),
     ];
     $allTab = [
       'id' => 'tab-all',
-      'tooltip' => Config::toolTips('pme-showall-tab'),
+      'tooltip' => $this->toolTipsService['pme-showall-tab'],
       'name' => $this->l->t('Display all columns'),
     ];
     if ($projectMode && $projectId !== $memberProjectId) {
@@ -297,7 +302,7 @@ received so far'),
       // Add the amount to debit
 
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-      $monetary = $this->extraFieldsService->monetaryFields($project);
+      $monetary = $this->extraFieldsService->monetaryFields($this->project);
 
       /* For each monetary extra field add one dedicated join table
        * entry which is pinned to the respective field-id.
@@ -369,7 +374,7 @@ received so far'),
       [
         'tab'      => [ 'id' => 'tab-all' ],
         'name'     => $this->l->t('Musician'),
-        'input'    => 'R',
+        //'input'    => 'R',
         'select'   => 'T',
         'maxlen'   => 11,
         'sort'     => true,
@@ -381,7 +386,7 @@ received so far'),
         ],
       ]);
 
-    $opts['fdd']['mandateReference'] = [
+    $opts['fdd']['mandate_reference'] = [
       'tab'    => [ 'id' => 'mandate' ],
       'name'   => $this->l->t('Mandate Reference'),
       'input'  => 'R',
@@ -393,7 +398,7 @@ received so far'),
     // soft-deletion
     $opts['fdd'][] = $this->defaultFDD['deleted_at'];
 
-    $opts['fdd']['mandateDate'] = [
+    $opts['fdd']['mandate_date'] = [
       'name'     => $this->l->t('Date Issued'),
       'select'   => 'T',
       'maxlen'   => 10,
@@ -497,7 +502,7 @@ received so far'),
     //           return Util::moneyValue($amount);
     //         },
     //       'sort' => true,
-    //       'tooltip'  => Config::toolTips('project-extra-fee-summary'),
+    //       'tooltip'  => $this->toolTipsService['project-extra-fee-summary'],
     //       'display|LFVD' => array('popup' => 'tooltip'),
     //     )
     //   );
@@ -549,7 +554,7 @@ received so far'),
     //                 .'<span class="received finance-state">'.$paid.'</span>'
     //                 .'<span class="outstanding finance-state">'.$rest.'</span>');
     //       },
-    //     'tooltip'  => Config::toolTips('project-total-fee-summary'),
+    //     'tooltip'  => $this->toolTipsService['project-total-fee-summary'],
     //     'display|LFVD' => array('popup' => 'tooltip'),
     //   );
 
@@ -581,7 +586,7 @@ received so far'),
         ],
         $projectMode
         ? array_merge(
-          [ 'values' => [ 'filters' => '$table.Id in ('.$projectId.','.$memberProjectId.')' ],],
+          [ 'values' => [ 'filters' => '$table.id in ('.$projectId.','.$memberProjectId.')' ],],
           ($projectId === $memberProjectId)
           ? [
             'select' => 'T',
@@ -648,9 +653,9 @@ received so far'),
     if ($projectMode) {
       $opts['filters'] = $junctor
                        . "("
-                       . "`PMEtable0`.`projectId` = " . $projectId
+                       . "PMEtable0.project_id = " . $projectId
                        . " OR "
-                       . "`PMEtable0`.`projectId` = " . $memberProjectId
+                       . "PMEtable0.project_id = " . $memberProjectId
                        . ")";
       $junctor = " AND ";
     }

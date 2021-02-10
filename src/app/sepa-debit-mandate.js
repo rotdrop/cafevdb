@@ -638,19 +638,6 @@ const mandatePopupInit = function(selector) {
     });
 };
 
-const mandateInsuranceReady = function(selector) {
-  const sdm = this;
-
-  const containerSel = PHPMyEdit.selector(selector);
-  const container = PHPMyEdit.container(containerSel);
-
-  container.find('input.pme-debit-note')
-    .off('click')
-    .on('click', sdm.exportHandler);
-
-  return true;
-};
-
 const mandateExportHandler = function(event) {
   const form = $(this.form);
 
@@ -752,9 +739,18 @@ const mandateExportHandler = function(event) {
   return false;
 };
 
+const mandateInsuranceReady = function(selector) {
+  const containerSel = PHPMyEdit.selector(selector);
+  const container = PHPMyEdit.container(containerSel);
+
+  container.find('input.pme-debit-note')
+    .off('click')
+    .on('click', mandateExportHandler);
+
+  return true;
+};
+
 const mandateReady = function(selector) {
-  const sdm = this;
-  const self = this;
 
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
@@ -763,7 +759,7 @@ const mandateReady = function(selector) {
   const form = container.find('form.pme-form');
   let dbTable = form.find('input[value="InstrumentInsurance"]');
   if (dbTable.length > 0) {
-    return self.insuranceReady(selector);
+    return mandateInsuranceReady(selector);
   }
 
   const directDebitChooser = container.find('select.pme-debit-note-job');
@@ -885,7 +881,7 @@ const mandateReady = function(selector) {
 
   container.find('input.pme-debit-note')
     .off('click')
-    .on('click', sdm.exportHandler);
+    .on('click', mandateExportHandler);
 
   return true;
 };
@@ -896,7 +892,7 @@ const mandatesDocumentReady = function() {
     'sepa-debit-mandates',
     {
       callback(selector, parameters, resizeCB) {
-        this.ready(selector);
+        mandateReady(selector);
         resizeCB();
         // alert("Here I am: "+selector);
       },
