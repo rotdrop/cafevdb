@@ -77,7 +77,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @ORM\Column(type="date", nullable=false)
    */
-  private $mandatedate;
+  private $mandateDate;
 
   /**
    * @var \DateTime|null
