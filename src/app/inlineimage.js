@@ -465,25 +465,28 @@ const photoUploadDragDrop = function() {
 const photoReady = function(ownerId, joinTable, callback) {
   const ownerIdField = $('#file_upload_form input[name="ownerId"]');
   const joinTableField = $('#file_upload_form input[name="joinTable"]');
-  if (typeof ownerId === 'undefined') {
+  if (ownerId === undefined) {
     ownerId = ownerIdField.val();
   } else {
     ownerIdField.val(ownerId);
   }
-  if (typeof joinTable === 'undefined') {
+  if (joinTable === undefined) {
     joinTable = joinTableField.val();
   } else {
     joinTableField.val(joinTable);
   }
-  if (typeof ownerId !== 'undefined' && typeof joinTable !== 'undefined' && ownerId >= 0) {
+  if (ownerId !== undefined && joinTable !== undefined && ownerId >= 0) {
     let imageSize = $('input[name="imageSize"]').val();
     if (typeof imageSize === 'undefined') {
       imageSize = 400;
     }
     loadHandlers();
     photoLoad(ownerId, joinTable, imageSize, callback);
+  } else {
+    // still run the callback
+    callback();
   }
-  $(photoUploadDragDrop); // @TODO what is this? double ready?
+  photoUploadDragDrop(); // @TODO what is this? double ready?
 };
 
 const photoPopup = function(image) {
