@@ -28,6 +28,7 @@ import * as Page from './page.js';
 import * as Email from './email.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
+import generateUrl from './generate-url.js';
 
 require('sepa-debit-mandate.css');
 
@@ -402,7 +403,7 @@ const mandateValidate = function(event, validateLockCB) {
   validateLock();
 
   $.post(
-    OC.filePath(appName, 'ajax/finance', 'sepa-debit-settings.php'),
+    generateUrl('finance/sepa/debit-notes/mandates/validate'),
     post,
     function(data) {
       if (!Ajax.validateResponse(
@@ -508,8 +509,8 @@ const mandateValidatePME = function(event, validateLockCB) {
   const validateErrorUnlock = function() {
     validateLockCB(false, false);
     globalState.SepaDebitMandate.validationRunning = false;
-    $('div.oc-dialog-content').ocdialog('close');
-    $('div.oc-dialog-content').ocdialog('destroy').remove();
+    // $('div.oc-dialog-content').ocdialog('close');
+    // $('div.oc-dialog-content').ocdialog('destroy').remove();
     $.fn.cafevTooltip.hide();
   };
 
@@ -529,30 +530,45 @@ const mandateValidatePME = function(event, validateLockCB) {
   // mandateDate
   // lastUsedDate
   const inputMapping = {
-    [pmeData('lastUsedDate')]: 'lastUsedDate',
-    [pmeData('mandateDate')]: 'mandateDate',
-    [pmeData('bankAccountOwner')]: 'bankAccountOwner',
+    [pmeData('last_used_date')]: 'lastUsedDate',
+    [pmeData('mandate_date')]: 'mandateDate',
+    [pmeData('bank_account_owner')]: 'bankAccountOwner',
     [pmeData('IBAN')]: 'bankAccountIBAN',
     [pmeData('BIC')]: 'bankAccountBIC',
     [pmeData('BLZ')]: 'bankAccountBLZ',
+    [pmeData('Projects:id')]: 'projectId',
+    [pmeData('Musicians:id')]: 'musicianId',
   };
+  console.info('INPUT MAPPING', inputMapping);
+  console.info('ELEMENT CHANGED', $element.attr('name'));
   let changed = $element.attr('name');
   changed = inputMapping[changed];
 
-  let projectElem = $('[name="' + pmeData('project_id') + '"]');
-  if (!projectElem.is('input')) {
-    projectElem = projectElem.find('option[selected="selected"]');
-  }
+  // let projectElem = $('[name="' + pmeData('project_id') + '"]');
+  // if (!projectElem.is('input')) {
+  //   projectElem = projectElem.find('option[selected="selected"]');
+  // }
+
+  const projectElem = $('[name="' + pmeData('Projects:id') + '"]');
+  // if (!projectElem.is('input')) {
+  //   projectElem = projectElem.find('option[selected="selected"]');
+  // }
   const projectId = projectElem.val();
+
+  const musicianElem = $('[name="' + pmeData('Musicians:id') + '"]');
+  // if (!musicianElem.is('input')) {
+  //   musicianElem = musicianElem.find('option[selected="selected"]');
+  // }
+  const musicianId = musicianElem.val();
 
   const mandateData = {
     mandateReference: $('input[name="' + pmeData('mandate_reference') + '"]').val(),
     mandateDate: $('input[name="' + pmeData('mandate_date') + '"]').val(),
     bankAccountOwner: $('input[name="' + pmeData('bank_account_owner') + '"]').val(),
     lastUsedDate: $('input[name="' + pmeData('last_used_date') + '"]').val(),
-    MusicianId: $('select[name="' + pmeData('musician_id') + '"] option[selected="selected"]').val(),
-    ProjectId: projectId,
-    MandateProjectId: projectId,
+    musicianId,
+    projectId,
+    mandateProjectId: projectId,
     bankAccountIBAN: $('input[name="' + pmeData('iban') + '"]').val(),
     bankAccountBIC: $('input[name="' + pmeData('bic') + '"]').val(),
     bankAccountBLZ: $('input[name="' + pmeData('blz') + '"]').val(),
@@ -563,43 +579,43 @@ const mandateValidatePME = function(event, validateLockCB) {
   validateLock();
 
   const post = $.param(mandateData);
-  $.post(
-    OC.filePath(appName, 'ajax/finance', 'sepa-debit-settings.php'),
-    post,
-    function(data) {
+  $.post(generateUrl('finance/sepa/debit-notes/mandates/validate'), post)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, validateErrorUnlock);
+    })
+    .done(function(data) {
       // hack ...
-      if (typeof data.data !== 'undefined'
-          && data.data.message && data.data.suggestions && data.data.suggestions !== '') {
+      if (data.message && data.suggestions && data.suggestions !== '') {
         const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
             + ' '
-            + data.data.suggestions
+            + data.suggestions
             + '. '
             + t(appName, 'Please do not accept these alternatives lightly!');
-        data.data.message += hints;
+        data.message += hints;
       }
       if (!Ajax.validateResponse(
         data,
         ['suggestions', 'message'],
         validateErrorUnlock)) {
-        if (data.data.blz) {
-          $('input.bankAccountBLZ').val(data.data.blz);
+        if (data.blz) {
+          $('input.bankAccountBLZ').val(data.blz);
         }
         return false;
       }
 
-      $('#cafevdb-page-debug').html(data.data.message);
+      $('#cafevdb-page-debug').html(data.message);
       $('#cafevdb-page-debug').show();
-      if (data.data.value) {
-        $element.val(data.data.value);
+      if (data.value) {
+        $element.val(data.value);
       }
-      if (data.data.iban) {
-        $('input[name="' + pmeData('iban') + '"]').val(data.data.iban);
+      if (data.iban) {
+        $('input[name="' + pmeData('iban') + '"]').val(data.iban);
       }
-      if (data.data.bic) {
-        $('input[name="' + pmeData('bic') + '"]').val(data.data.bic);
+      if (data.bic) {
+        $('input[name="' + pmeData('bic') + '"]').val(data.bic);
       }
-      if (data.data.blz) {
-        $('input[name="' + pmeData('blz') + '"]').val(data.data.blz);
+      if (data.blz) {
+        $('input[name="' + pmeData('blz') + '"]').val(data.blz);
       }
 
       validateUnlock();
@@ -625,7 +641,7 @@ const mandatePopupInit = function(selector) {
         // alert('data: ' + CAFEVDB.print_r(values, true));
         // alert('data: '+(typeof values.MandateExpired));
         $.post(
-          OC.filePath(appName, 'ajax/finance', 'sepa-debit-mandate.php'),
+          generateUrl('finance/sepa/debit-notes/mandates/dialog'),
           values,
           function(data) {
             mandatesInit(data, function() {
@@ -670,9 +686,9 @@ const mandateExportHandler = function(event) {
       // Everything worked out, from here we now trigger the
       // download and the mail dialog
 
-      console.log('debitnote', data.data.debitnote);
+      console.log('debitnote', data.debitnote);
 
-      const debitNote = data.data.debitnote;
+      const debitNote = data.debitnote;
 
       // custom post
       const postItems = [
@@ -688,7 +704,7 @@ const mandateExportHandler = function(event) {
       }
       post.DebitNoteId = debitNote.Id;
       post.DownloadCookie = CAFEVDB.makeId();
-      post.EmailTemplate = data.data.emailtemplate;
+      post.EmailTemplate = data.emailtemplate;
 
       const action = OC.filePath(appName, 'ajax/finance', 'debit-note-download.php');
 
@@ -823,6 +839,10 @@ const mandateReady = function(selector) {
   table.find('input[type="text"]').not('tr.pme-filter input')
     .off('blur')
     .on('blur', validateInput);
+
+  table.find('select').not('tr.pme-filter select')
+    .off('change')
+    .on('change', validateInput);
 
   const submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
   let submitActive = false;

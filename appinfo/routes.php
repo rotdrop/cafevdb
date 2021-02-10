@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -277,6 +278,14 @@ $routes = [
       'verb' => 'POST',
     ],
     /**
+     * Finance and stuff
+     */
+    [
+      'name' => 'sepa_debit_note#mandate',
+      'url' => '/finance/sepa/debit-notes/mandates/{topic}',
+      'verb' => 'POST',
+    ],
+    /**
      * General validations ...
      */
     [
@@ -288,105 +297,3 @@ $routes = [
 ];
 
 return $routes;
-
-/*Return an array of project-events, given the respective project id. */
-\OCP\API::register(
-  'get',
-  '/apps/'.Config::APP_NAME.'/projects/events/byProjectId/{projectId}/{calendar}/{timezone}/{locale}',
-  function($params) {
-    //\OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
-
-    $projectId = $params['projectId'];
-    $timezone = $params['timezone'];
-    $locale = $params['locale'];
-
-    if (!$timezone) {
-      $timezone = Util::getTimezone();
-    }
-    if (!$locale) {
-      $locale = Util::getLocale();
-    }
-
-    return new \OC_OCS_Result(Events::projectEventData($projectId, null, $timezone, $locale));
-  },
-  Config::APP_NAME,
-  \OC_API::USER_AUTH,
-  // defaults
-  array('calendar' => 'all',
-        'timezone' => false,
-        'locale' => false),
-  // requirements
-  array('projectId')
-);
-
-/*Return an array of project-events, given the respective web-article
- * id. 'calendar' can be any of 'all', 'concerts', 'rehearsals',
- * 'other'. 'management' and 'finance' calendars are not exported by
- * the API.
- */
-\OCP\API::register(
-  'get',
-  '/apps/'.Config::APP_NAME.'/projects/events/byWebPageId/{articleId}/{calendar}/{timezone}/{locale}',
-  function($params) {
-    //\OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
-
-    $articleId = $params['articleId'];
-    $calendar = $params['calendar'];
-    $timezone = $params['timezone'];
-    $locale = $params['locale'];
-
-    switch ($calendar) {
-      case 'all':
-        $calendar = null;
-        break;
-      case 'concerts':
-      case 'rehearsals':
-      case 'other':
-        $calendar = Config::getValue($calendar.'calendar'.'id');
-        break;
-      default:
-        return new \OC_OCS_Result(null,
-                                  \OCP\API::RESPOND_NOT_FOUND,
-                                  "Invalid calendar type: ".$calendar);
-    }
-
-    // OC uses symphony which rawurldecodes the request URL. This
-    // implies that in order to pass a slash / we caller must
-    // urlencode that thingy twice, and Symphony consequently will
-    // only deliver encoded data in this case.
-
-    if (!$timezone) {
-      $timezone = Util::getTimezone();
-    }
-    if (!$locale) {
-      $locale = Util::getLocale();
-    }
-    $timezone = rawurldecode($timezone);
-    $locale = rawurldecode($locale);
-
-    $projects = Projects::fetchWebPageProjects($articleId);
-
-
-
-    $data = array();
-    foreach ($projects as $projectId) {
-      $name = Projects::fetchName($projectId);
-      if ($name === false) {
-        continue;
-      }
-      $data[$name] = Events::projectEventData($projectId, $calendar, $timezone, $locale);
-    }
-
-    return new \OC_OCS_Result($data);
-  },
-  Config::APP_NAME,
-  \OC_API::USER_AUTH,
-  // defaults
-  array('calendar' => 'all',
-        'timezone' => false,
-        'locale' => false),
-  // requirements
-  array('articleId')
-);
-
-?>

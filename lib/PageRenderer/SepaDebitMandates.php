@@ -339,7 +339,7 @@ received so far'),
       'options'  => 'LACPDV',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => '0',
+      'default'  => $projectMode ? $projectId : -1,
       'sort'     => true,
       ];
 
@@ -350,7 +350,7 @@ received so far'),
       'options'  => 'LACPDV',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => '0',
+      'default'  => -1,
       'sort'     => true,
     ];
 
@@ -361,7 +361,7 @@ received so far'),
       'options'  => 'LACPDV',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => '0',
+      'default'  => 0,
       'sort'     => true,
     ];
 
@@ -571,11 +571,12 @@ received so far'),
           'tab' => [ 'id' => 'mandate' ],
           'name'     => $this->l->t('Project'),
           'input'    => 'R',
+          'input|A'  => $projectMode ? 'R' : null,
           'select'   => 'D',
           'maxlen'   => 11,
           'sort'     => true,
           //'options'  => 'LFADV', // no change allowed
-          'default' => 0,
+          'default' => $projectMode ? $projectId : -1,
           'css'      => [ 'postfix' => ' mandate-project' ],
           'values' => [
             'description' => [
