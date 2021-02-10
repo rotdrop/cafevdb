@@ -1142,7 +1142,7 @@ const installInputChosen = function(containerSel, onlyClass) {
     if (self.hasClass('no-chosen') || (onlyClass !== undefined && !self.hasClass(onlyClass))) {
       return;
     }
-    console.info('destroy chosen');
+    console.debug('destroy chosen');
     self.chosen('destroy');
     const chosenOptions = {
       // width:'100%',
@@ -1165,7 +1165,7 @@ const installInputChosen = function(containerSel, onlyClass) {
     if (self.hasClass('chosen-width-auto')) {
       chosenOptions.width = 'auto';
     }
-    console.info('add chosen');
+    console.debug('add chosen');
     self.chosen(chosenOptions);
   });
 

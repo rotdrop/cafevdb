@@ -123,7 +123,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
   }
 
   const failData = ajaxFailData(xhr, textStatus, errorThrown);
-  console.error('AJAX failure data', failData);
+  console.debug('AJAX failure data', failData);
 
   switch (textStatus) {
   case 'notmodified':

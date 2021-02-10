@@ -49,7 +49,7 @@ const documentReady = function() {
     container.find('select.wysiwyg-editor').each(function(index) {
       const self = $(this);
       if (CAFEVDB.chosenActive(self)) {
-        console.info('destroy chosen', self);
+        console.debug('destroy chosen', self);
         self.chosen('destroy');
       }
       console.info('call chosen', self);
