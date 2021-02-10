@@ -178,7 +178,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $this->pmeOptions['triggers']['update']['before'][] =
        $this->pmeOptions['triggers']['insert']['before'][] =
-       $this->pmeOptions['triggers']['deeleteinsert']['before'][] =
+       $this->pmeOptions['triggers']['delete']['before'][] =
          function($pme, $op, $step, &$oldvals, &$changed, &$newvals) {
            $this->changeSetSize = count($changed);
            return true;
@@ -519,9 +519,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $this->logInfo('OLDVALS '.print_r($oldvals, true));
-    $this->logInfo('NEWVALS '.print_r($newvals, true));
-    $this->logInfo('CHANGED '.print_r($changed, true));
+    // leave time-stamps to the ORM "behaviors"
+    Util::unsetValue($changed, 'updated');
+
+    $this->logDebug('OLDVALS '.print_r($oldvals, true));
+    $this->logDebug('NEWVALS '.print_r($newvals, true));
+    $this->logDebug('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
@@ -746,9 +749,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeInsertDoInsertAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $this->logInfo('OLDVALS '.print_r($oldvals, true));
-    $this->logInfo('NEWVALS '.print_r($newvals, true));
-    $this->logInfo('CHANGED '.print_r($changed, true));
+    // leave time-stamps to the ORM "behaviors"
+    Util::unsetValue($changed, 'created');
+    Util::unsetValue($changed, 'updated');
+
+    $this->logDebug('OLDVALS '.print_r($oldvals, true));
+    $this->logDebug('NEWVALS '.print_r($newvals, true));
+    $this->logDebug('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
@@ -848,7 +855,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($changeSet as $column => $field) {
           Util::unsetValue($changed, $field);
         }
-      } else { // !multiple, simply insert
+      } else {
+        // !$multiple, simply insert. The "master-"table can only
+        // "land" here
         $entityId = $this->extractKeyValues($meta, $identifier);
         $entity = $entityClass::create();
         foreach ($entityId as $key => $value) {
@@ -882,7 +891,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                       [ print_r($changed, true), $this->pme->tb ]));
       }
     }
-    $this->logDebug('BEFORE UPD: '.print_r($changed, true));
+    $this->logDebug('BEFORE INS: '.print_r($changed, true));
 
     // all should be done
     $pme->setLogging(false);
