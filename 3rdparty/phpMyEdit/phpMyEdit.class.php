@@ -4657,6 +4657,13 @@ class phpMyEdit
 			return false;
 		}
 
+		// the trigger may have changed the key-values (e.g. by inserting the row itself)
+		foreach (array_keys($this->key) as $key) {
+			if ($newvals[$key] != $key_col_val[$key]) {
+				$key_col_val[$key] = $newvals[$key];
+			}
+		}
+
 		// Real query (no additional query in this method)
 		$query = ''; // query_groups not supported, would be difficult
 		foreach ($changed as $fd) {
