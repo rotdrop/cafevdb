@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -47,6 +48,7 @@ class TranslationService
 
   public function recordUntranslated($phrase, $locale, $file, $line)
   {
+    $this->entityManager->suspendLogging();
     $this->setDataBaseRepository(TranslationKey::class);
     $translationKey = $this->findOneBy([ 'phrase' => $phrase ]);
     if (empty($translationKey)) {
@@ -79,6 +81,7 @@ class TranslationService
         $this->logException($t);
       }
     }
+    $this->entityManager->resumeLogging();
   }
 
   /**

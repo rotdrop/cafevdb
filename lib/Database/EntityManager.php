@@ -35,6 +35,7 @@ use MediaMonks\Doctrine\Transformable;
 use Ramsey\Uuid\Doctrine as Ramsey;
 
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use MyCLabs\Enum\Enum as EnumType;
@@ -80,6 +81,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var IUserSession */
   private $userSession;
 
+  /** @var bool */
+  private $debug;
+
   // @@TODO catch failures, allow construction without database for
   // initial setup.
   public function __construct(
@@ -97,11 +101,22 @@ class EntityManager extends EntityManagerDecorator
     $this->logger = $logger;
     $this->l = $l10n;
     $this->userId = $this->encryptionService->getUserId()?:$this->l->t('unknown');
+    $this->debug = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
     if ($this->connected()) {
       $this->registerTypes();
     }
+  }
+
+  public function suspendLogging()
+  {
+    $this->sqlLogger->disable();
+  }
+
+  public function resumeLogging()
+  {
+    $this->sqlLogger->enable($this->debug);
   }
 
   /*
