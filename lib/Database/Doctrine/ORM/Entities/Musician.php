@@ -89,28 +89,28 @@ class Musician implements \ArrayAccess
   /**
    * @var int|null
    *
-   * @ORM\Column(type="string", length=32, nullable=false)
+   * @ORM\Column(type="string", length=32, nullable=true)
    */
   private $postalCode;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=128, nullable=false, options={"comment"="Und was es sonst noch so gibt ..."})
+   * @ORM\Column(type="string", length=128, nullable=true, options={"comment"="Und was es sonst noch so gibt ..."})
    */
   private $language;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=128, nullable=false)
+   * @ORM\Column(type="string", length=128, nullable=true)
    */
   private $mobilePhone;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=128, nullable=false)
+   * @ORM\Column(type="string", length=128, nullable=true)
    */
   private $fixedLinePhone;
 
