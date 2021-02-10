@@ -210,11 +210,11 @@ class FinanceService
   {
     $projectName = $this->sepaTranslit($project['name']);
     $firstName = $this->sepaTranslit($musician['firstName']);
-    $lastName = $this->sepaTranslit($musician['lastName']);
+    $surName = $this->sepaTranslit($musician['surName']);
 
     $firstName .= 'X';
-    $lastName .= 'X';
-    $initials = $firstName[0].$lastName[0];
+    $surName .= 'X';
+    $initials = $firstName[0].$surName[0];
 
     $prjId = substr("0000".$projectId, -4);
     $musId = substr("0000".$musicianId, -4);

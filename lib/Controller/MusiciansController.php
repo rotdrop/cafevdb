@@ -268,10 +268,10 @@ class MusiciansController extends Controller {
 
       break;
     case 'duplicates':
-      $lastName = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('name')]?:'');
+      $surName = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('sur_name')]?:'');
       $firstName = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('first_name')]?:'');
 
-      $musicians = $this->musiciansRepository->findByName($firstName, $lastName);
+      $musicians = $this->musiciansRepository->findByName($firstName, $surName);
 
       $duplicateNames = '';
       $duplicates = [];

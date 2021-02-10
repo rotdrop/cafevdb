@@ -97,13 +97,14 @@ class ProjectService
    */
   public function participantOptions($projectId, $projectName = null, $selectedMusicianId = -1)
   {
-    $participants = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->findParticipantNames($projectId);
+    $participants = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->fetchParticipantNames($projectId);
     $options = [];
-    foreach ($participants as $musicianId => $name) {
+    foreach ($participants as $participant) {
+      $musicianId = $participant['musicianId'];
       $flags = ($musicianId == $selectedMusicianId) ? Navigation::SELECTED : 0;
       $options[] = [
         'value' => $musicianId,
-        'name' => $name['firstName'].' '.$name['lastName'],
+        'name' => $participant['firstName'].' '.$participant['surName'],
         'flags' => $flags,
       ];
     }

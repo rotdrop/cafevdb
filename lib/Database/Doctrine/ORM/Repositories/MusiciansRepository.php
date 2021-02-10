@@ -31,7 +31,7 @@ class MusiciansRepository extends EntityRepository
   /**
    * @param string $firstName
    *
-   * @param string $lastName
+   * @param string $surName
    *
    * @return array of \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician
    */
@@ -85,13 +85,13 @@ class MusiciansRepository extends EntityRepository
    * Return value is a flat array:
    *
    * array('firstName' => ...,
-   *       'lastName' => ...,
+   *       'surName' => ...,
    *       'email' => ...);
    */
   public function findName($musicianId)
   {
     $qb = $this->createQueryBuilder('m');
-    $name = $qb->select(['m.lastName AS lastName',
+    $name = $qb->select(['m.surName AS surName',
                          'm.firstName AS firstName',
                          'm.email AS email'])
       ->where('m.Id = :id')
