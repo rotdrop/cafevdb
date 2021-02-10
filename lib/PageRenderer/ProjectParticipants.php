@@ -363,6 +363,7 @@ class ProjectParticipants extends PMETableViewBase
         'maxlen'   => 1,
         'sort'     => true,
         'escape'   => false,
+        'sql'      => 'IFNULL($main_table.$field_name, 0)',
         'sqlw'     => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
         'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
