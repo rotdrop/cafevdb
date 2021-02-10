@@ -229,7 +229,7 @@ class GeoCodingService
       // translations.
       foreach ($location->getTranslations() as $translation) {
         // so $translation is now an instance of
-        // GeoPostalCodeTranslations ?
+        // GeoPostalCodeTranslation ?
         $oneLocation[$translation->getTarget()] = $translation->getTranslation();
       }
       $locations[] = $oneLocation;
@@ -305,21 +305,21 @@ class GeoCodingService
     foreach ($remoteLocations as $zipCodePlace) {
       $lat = (double)($zipCodePlace['lat']);
       $lng = (double)($zipCodePlace['lng']);
-      $name = $zipCodePlace['placeName'];
-      $cntry = $zipCodePlace['countryCode'];
+      $placeName = $zipCodePlace['placeName'];
+      $placeCountry = $zipCodePlace['countryCode'];
       $postalCode = $zipCodePlace['postalCode'];
 
       $location = [
         'Latitude' => $lat,
         'Longitude' => $lng,
-        'Country' => $cntry,
+        'Country' => $placeCountry,
         'PostalCode' => $postalCode,
-        'Name' => $name
+        'Name' => $placeName
       ];
 
       $translations = [];
       foreach ($languages as $lang) {
-        $translation = $this->translatePlaceName($name, $country, $lang);
+        $translation = $this->translatePlaceName($placeName, $country, $lang);
         if (!$translation) {
           $translation = 'NULL';
         } else {
@@ -335,15 +335,15 @@ class GeoCodingService
       $hasChanged = false;
       $this->setDatabaseRepository(GeoPostalCode::class);
       $geoPostalCode = $this->findOneBy([
-        'country' => $country,
+        'country' => $placeCountry,
         'postalCode' => $postalCode,
-        'name' => $name,
+        'name' => $placeName,
       ]);
       if (empty($geoPostalCode)) {
         $geoPostalCode = GeoPostalCode::create()
-                ->setCountry($cntry)
+                ->setCountry($placeCountry)
                 ->setPostalCode($postalCode)
-                ->setName($name);
+                ->setName($placeName);
         $hasChanged = true;
       } else {
         if (($lat != $geoPostalCode->getLatitude()) || ($lng != $geoPostalCode->getLongitude())) {
@@ -364,7 +364,7 @@ class GeoCodingService
           'target' => $lang,
         ]);
         if (empty($entity)) {
-          $entity = GeoPostalCodeTranslations::create()
+          $entity = GeoPostalCodeTranslation::create()
                        ->setGeoPostalCode($geoPostalCode)
                        ->setTarget($lang);
           $hasChanged = true;
@@ -578,7 +578,7 @@ class GeoCodingService
             'target' => $lang,
           ]);
           if (empty($entity)) {
-            $entity = GeoPostalCodeTranslations::create()
+            $entity = GeoPostalCodeTranslationf::create()
                     ->setGeoPostalCode($geoPostalCode)
                     ->setTarget($lang);
             $hasChanged = true;
