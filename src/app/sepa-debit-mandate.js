@@ -29,6 +29,8 @@ import * as Email from './email.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 
+require('sepa-debit-mandate.css');
+
 const SepaDebitMandate = globalState.SepaDebitMandate = {
   projectId: -1,
   projectName: '',
