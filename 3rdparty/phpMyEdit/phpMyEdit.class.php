@@ -968,7 +968,9 @@ class phpMyEdit
 					$desc['columns'] = [ $desc['columns'], ];
 				}
 				if (!empty($desc['divs']) && !is_array($desc['divs'])) {
-					$desc['divs'] = array_fill(0, min(0, count($desc['columns']) - 1), $desc['divs']);
+					$this->logInfo('DESC '.print_r($desc, true));
+					$desc['divs'] = array_fill(0, max(0, count($desc['columns']) - 1), $desc['divs']);
+					$this->logInfo('TWEAKED divs '.print_r($desc['divs'], true));
 				}
 			}
 
@@ -1189,7 +1191,7 @@ class phpMyEdit
 						$desc['columns'] = [ $desc['columns'], ];
 					}
 					if (!empty($desc['divs']) && !is_array($desc['divs'])) {
-						$desc['divs'] = array_fill(0, min(0, count($desc['columns']) - 1), $desc['divs']);
+						$desc['divs'] = array_fill(0, max(0, count($desc['columns']) - 1), $desc['divs']);
 					}
 				}
 
