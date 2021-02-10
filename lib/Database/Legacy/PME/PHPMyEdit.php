@@ -271,7 +271,7 @@ class PHPMyEdit extends \phpMyEdit
       echo '<h4>MySQL query at line ',$line,'</h4>',htmlspecialchars($query),'<hr size="1" />',"\n";
     }
     if ($debug || $this->debug) {
-      $this->logInfo("DEBUG (".$debug."/".$this->debug.")".$query, [], 2);
+      $this->logInfo("DEBUG QUERY: ".$query, [], 2);
     }
     try {
       $stmt = $this->dbh->executeQuery($query);
