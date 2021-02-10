@@ -83,7 +83,7 @@ trait UuidTrait
 
   private function ensureUuid()
   {
-    if (empty($this->getUuid())) {
+    if (empty($this->uuid)) {
       $this->uuid = Uuid::uuid4();
     }
   }
