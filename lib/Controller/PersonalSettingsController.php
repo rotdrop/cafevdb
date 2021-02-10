@@ -760,7 +760,7 @@ class PersonalSettingsController extends Controller {
     case 'treasurerUserId':
     case 'presidentId':
     case 'secretaryId':
-    case 'treaserId':
+    case 'treasurerId':
     case 'presidentGroupId':
     case 'secretaryGroupId':
     case 'treasurerGroupId':
