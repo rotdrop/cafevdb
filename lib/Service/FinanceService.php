@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -66,7 +67,8 @@ class FinanceService
     $this->mandatesRepository = $this->getDatabaseRepository(self::ENTITY);
   }
 
-  /**Add an event to the finance calendar, possibly including a
+  /**
+   * Add an event to the finance calendar, possibly including a
    * reminder.
    *
    * @param $title
@@ -106,7 +108,8 @@ class FinanceService
     return $this->eventsService->newEvent($eventData);
   }
 
-  /**Add a task to the finance calendar, possibly including a
+  /**
+   * Add a task to the finance calendar, possibly including a
    * reminder.
    *
    * @param $title
@@ -237,34 +240,20 @@ class FinanceService
     return strtoupper($ref);
   }
 
-  /**Fetch an exisiting reference given project and musician. This
+  /**
+   * Fetch an exisiting reference given project and musician. This
    * fetch the entire db-row, i.e. everything known about the
    * mandate. Expired and inactive mandates are ignored, i.e. false
    * is returned in this case.
    */
-  public function fetchSepaMandate($projectId, $musicianId, $cooked = true, $expired = false)
+  public function fetchSepaMandate($projectId, $musicianId, $expired = false)
   {
     $mandate = null;
 
     $mandate = $this->mandateRepository->findNewest($projectId, $musicianId);
 
     if (!$expired && $this->mandateIsExpired($mandate['mandateReference'])) {
-      return false;
-    }
-
-    if ($cooked) {
-      if ($mandate && !isset($mandate['sequenceType'])) {
-        if ($mandate['nonrecurring']) {
-          $mandate['sequenceType'] = 'once';
-        } else {
-          $mandate['sequenceType'] = 'permanent';
-        }
-        unset($mandate['nonrecurring']);
-      }
-
-      if (!$this->decryptSepaMandate($mandate)) {
-        $mandate = false;
-      }
+      return null;
     }
 
     return $mandate;
@@ -280,29 +269,17 @@ class FinanceService
    */
   public function sepaMandateSequenceType($mandate)
   {
-    if (isset($mandate['nonrecurring'])) {
-      if ($mandate['nonrecurring']) {
-        return 'once';
-      } else if (empty($mandate['lastUsedDate']) || $mandate['lastUsedDate'] == '0000-00-00') {
-        return 'first';
-      } else {
-        return 'following';
-      }
-      unset($mandate['nonrecurring']);
-      $mandate['sequenceType'] = $sequenceType;
-    } else if (isset($mandate['sequenceType'])) {
-      if ($mandate['sequenceType'] == 'permanent') {
-        return (empty($mandate['lastUsedDate']) || $mandate['lastUsedDate'] == '0000-00-00') ? 'first' : 'following';
-      } else {
-        return $mandate['sequenceType'];
-      }
+    if ($mandate['nonRecurring']) {
+      return 'once';
+    } else if (empty($mandate['lastUsedDate']) || $mandate['lastUsedDate'] == '0000-00-00') {
+      return 'first';
+    } else {
+      return 'following';
     }
-
-    // error: cannot compute sequenceType.
     return false;
   }
 
-  /**Given a mandate with plain text columns, encrypt them. */
+  /** Given a mandate with plain text columns, encrypt them. */
   public function encryptSepaMandate(&$mandate)
   {
     if (is_array($mandate) && $this->$useEncryption) {
@@ -320,7 +297,7 @@ class FinanceService
     return true;
   }
 
-  /**Given a mandate with encrypted columns, decrypt them. */
+  /** Given a mandate with encrypted columns, decrypt them. */
   public function decryptSepaMandate(&$mandate)
   {
     if (is_array($mandate) && $this->$useEncryption) {
@@ -482,7 +459,8 @@ class FinanceService
     return !empty($this->mandatesRepository->remove($mandateReference));
   }
 
-  /**Verify the given mandate, throw an
+  /**
+   * Verify the given mandate, throw an
    * InvalidArgumentException. The sequence type may or may not
    * already have been converted to the actual type based on the
    * lastUsedDate.
@@ -758,7 +736,10 @@ class FinanceService
     return preg_match('/^([a-zA-Z]){4}([a-zA-Z]){2}([0-9a-zA-Z]){2}([0-9a-zA-Z]{3})?$/i', $swift);
   }
 
-  /**Take a locale-formatted string and parse it into a float.
+  /**
+   * Take a locale-formatted string and parse it into a float.
+   *
+   * @todo FuzzyInputService
    */
   public function parseCurrency($value, $noThrow = false)
   {
