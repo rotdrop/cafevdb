@@ -30,6 +30,7 @@ class DefaultOptions extends \ArrayObject implements IOptions
   {
     $default = [
       'logtable' => 'ChangeLog',
+      'options' => 'ACPVDF',
       // Set default prefixes for variables for PME
       'js' => [ 'prefix' => 'PME_js_' ],
       'dhtml' => [ 'prefix' => 'PME_dhtml_' ],
