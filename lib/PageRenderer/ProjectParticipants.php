@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\FinanceService;
 use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -161,6 +162,9 @@ class ProjectParticipants extends PMETableViewBase
   /** @var \OCA\CAFEVDB\Service\PhoneNumberService */
   private $phoneNumberService;
 
+  /** @var \OCA\CAFEVDB\Service\FinanceService */
+  private $financeService;
+
   /** @var \OCA\CAFEVDB\Service\ProjectExtraFieldsService */
   private $extraFieldsService;
 
@@ -180,6 +184,7 @@ class ProjectParticipants extends PMETableViewBase
     , GeoCodingService $geoCodingService
     , ContactsService $contactsService
     , PhoneNumberService $phoneNumberService
+    , FinanceService $financeService
     , ProjectExtraFieldsService $extraFieldsService
     , Musicians $musiciansRenderer
   ) {
@@ -187,6 +192,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
+    $this->financeService = $financeService;
     $this->musiciansRenderer = $musiciansRenderer;
     $this->extraFieldsService = $extraFieldsService;
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
@@ -1325,6 +1331,100 @@ WHERE pp.project_id = $projectId",
           "options" => 'LFAVCPDR',
         ]));
 
+    ///////////////////////////////////////////////////////////////////////////
+
+    // One virtual field in order to be able to manage SEPA debit
+    // mandates. Note that in rare circumstances there may be two
+    // debit mandates: one for general and one for the project. We
+    // fetch both with the same sort-order and leave it to the calling
+    // code to do THE RIGHT THING (tm).
+
+    //       $mandateIdx = count($opts['fdd']);
+    //       $mandateAlias = "`PMEjoin".$mandateIdx."`";
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
+      array_merge([
+        'name' => $this->l->t('SEPA Debit Mandate'),
+        'input' => 'VR',
+        'tab' => array('id' => $financeTab),
+        'select' => 'M',
+        'options' => 'LFACPDV',
+        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.project_id DESC)',
+//         'values' => array(
+//           'table' => 'SepaDebitMandates',
+//           'column' => 'mandateReference',
+//           'join' => $debitJoinCondition,
+//           'description' => 'mandateReference'
+//           ),
+        'nowrap' => true,
+        'sort' => true,
+        'php' => function($mandates, $action, $k, $fds, $fdd, $row, $recordId) {
+           if ($this->pme_bare) {
+             return $mandates;
+           }
+           $projectId = $this->projectId;
+           $projectName = $this->projectName;
+
+           // can be multi-valued (i.e.: 2 for member table and project table)
+           $mandateProjects = $row['qf'.($k+1)];
+           $mandates = Util::explode(',', $mandates);
+           $mandateProjects = Util::explode(',', $mandateProjects);
+           if (count($mandates) !== count($mandateProjects)) {
+             throw new \RuntimeException(
+               $this->l->t('Data inconsistency, mandates: "%s", projects: "%s"',
+                           [ implode(',', $mandates),
+                             implode(',', $mandateProjects) ])
+             );
+           }
+
+           // Careful: this changes when rearranging the sort-order of the display
+           $musicianId        = $row[$this->queryField('musician_id', $fdd)];
+           $musicianFirstName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'first_name', $fdd)];
+           $musicianSurName  = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'sur_name', $fdd)];
+           $musician = $musicianSurName.', '.$musicianFirstName;
+
+           $html = [];
+           foreach($mandates as $key => $mandate) {
+             if (empty($mandate)) {
+               continue;
+             }
+             $expired = $this->financeService->mandateIsExpired($mandate);
+             $mandateProject = $mandateProjects[$key];
+             if ($mandateProject === $projectId) {
+               $html[] = self::sepaDebitMandateButton(
+                $mandate, $expired,
+                $musicianId, $musician,
+                $projectId, $projectName);
+            } else {
+              $mandateProjectName = Projects::fetchName($mandateProject);
+              $html[] = self::sepaDebitMandateButton(
+                $mandate, $expired,
+                $musicianId, $musician,
+                $projectId, $projectName,
+                $mandateProject, $mandateProjectName);
+            }
+          }
+          if (empty($html)) {
+            // Empty default knob
+            $html = array(self::sepaDebitMandateButton(
+                            $this->l->t("SEPA Debit Mandate"), false,
+                            $musicianId, $musician,
+                            $projectId, $projectName));
+          }
+          return implode("\n", $html);
+        },
+      ]));
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'project_id',
+      array_merge([
+        'input' => 'VHR',
+        'name' => 'internal data',
+        'options' => 'H',
+        'select' => 'T',
+        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn DESC)',
+      ]));
+
     //////// END Field definitions
 
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateSanitizeExtraFields' ];
@@ -1852,4 +1952,43 @@ WHERE pp.project_id = $projectId",
     $value = '<span class="allowed-option-value '.$innerCss.'">'.$value.'</span>';
     return '<span class="allowed-option '.$css.'"'.$htmlData.'>'.$label.$sep.$value.'</span>';
   }
+
+  /**
+   * Generate a clickable form element which finally will display the
+   * debit-mandate dialog, i.e. load some template stuff by means of
+   * some java-script and ajax blah.
+   */
+  public function sepaDebitMandateButton($reference, $expired,
+                                         $musicianId, $musician,
+                                         $projectId, $projectName,
+                                         $mandateProjectId = null, $mandateProjectName = null)
+  {
+    empty($mandateProjectId) && $mandateProjectId = $projectId;
+    empty($mandateProjectName) && $mandateProjectName = $projectName;
+    $data = [
+      'mandateReference' => $reference,
+      'mandateExpired' => $expired,
+      'musicianId' => $musicianId,
+      'musicianName' => $musician,
+      'projectId' => $projectId,
+      'projectName' => $projectName,
+      'mandateProjectId' => $mandateProjectId,
+      'mandateProjectName' => $mandateProjectName,
+    ];
+    $data = htmlspecialchars(json_encode($data, JSON_NUMERIC_CHECK));
+
+    $css= ($reference == ($this->l->t("SEPA Debit Mandate")) ? "missing-data " : "")."sepa-debit-mandate";
+    $button = '<div class="sepa-debit-mandate tooltip-left">'
+            .'<input type="button" '
+            .'       id="sepa-debit-mandate-'.$musicianId.'-'.$projectId.'"'
+            .'       class="'.$css.' tooltip-left" '
+            .'       value="'.$reference.'" '
+            .'       title="'.$this->l->t("Click to enter details of a potential SEPA debit mandate").' " '
+            .'       name="SepaDebitMandate" '
+            .'       data-debit-mandate="'.$data.'" '
+            .'/>'
+            .'</div>';
+    return $button;
+  }
+
 }

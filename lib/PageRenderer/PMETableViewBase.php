@@ -1185,6 +1185,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   {
     return 'qf'.$this->queryFieldIndex($key, $fdd);
   }
+
+  protected function joinQueryField($tableInfo, $column, array $fdd)
+  {
+    return $this->queryField($this->joinTableFieldName($tableInfo, $column), $fdd);
+  }
+
 }
 
 // Local Variables: ***
