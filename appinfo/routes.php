@@ -281,8 +281,13 @@ $routes = [
      * Finance and stuff
      */
     [
-      'name' => 'sepa_debit_note#mandate',
-      'url' => '/finance/sepa/debit-notes/mandates/{topic}',
+      'name' => 'sepa_debit_note#mandate_validate',
+      'url' => '/finance/sepa/debit-notes/mandates/validate',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'sepa_debit_note#mandate_form',
+      'url' => '/finance/sepa/debit-notes/mandates/dialog',
       'verb' => 'POST',
     ],
     /**
