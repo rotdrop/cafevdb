@@ -938,18 +938,21 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $group = true;
           continue;
         }
-        $joinCondition = '$join_table.'.$joinTableKey. ' = ';
+        $joinCondition = '$join_table.'.$joinTableKey.' ';
         if (is_array($joinTableValue)) {
           if (!empty($joinTableValue['table'])) {
             $mainTableColumn = $joinTableValue['column']?: 'id';
-            $joinCondition .= $joinTables[$joinTableValue['table']].'.'.$mainTableColumn;
-          } else if ($joinTableValue['value'] === null) {
+            $joinCondition .= '= '.$joinTables[$joinTableValue['table']].'.'.$mainTableColumn;
+          } else if (array_key_exists('value', $joinTableValue)
+                     && $joinTableValue['value'] === null) {
             $joinCondition = '$join_table.'.$joinTableKey.' IS NULL';
           } else if (!empty($joinTableValue['value'])) {
-            $joinCondition .= $joinTableValue['value'];
+            $joinCondition .= '= '.$joinTableValue['value'];
+          } else if (!empty($joinTableValue['condition'])) {
+            $joinCondition .= $joinTableValue['condition'];
           }
         } else {
-          $joinCondition .= '$main_table.'.$joinTableValue;
+          $joinCondition .= '= $main_table.'.$joinTableValue;
         }
         $joinData[] = $joinCondition;
       }
