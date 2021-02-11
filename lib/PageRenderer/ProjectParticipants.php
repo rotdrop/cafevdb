@@ -59,6 +59,9 @@ class ProjectParticipants extends PMETableViewBase
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
   const FIXED_COLUMN_SEP = '@';
 
+  /** @var int */
+  private $memberProjectId;
+
   /**
    * Join table structure. All update are handled in
    * parent::beforeUpdateDoUpdateAll().
@@ -138,16 +141,18 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'field_id',
     ],
     // SepaDebitMandates
-    [
-      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
-      'entity' => Entities\SepaDebitMandate::class,
-      'identifier' => [
-        'musician_id' => 'musician_id',
-        'project_id' => false,
-        'deleted_at' => [ 'value' => null ],
-      ],
-      'column' => 'sequence',
-    ],
+    // [
+    //   'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+    //   'entity' => Entities\SepaDebitMandate::class,
+    //   'identifier' => [
+    //     'musician_id' => 'musician_id',
+    //     'project_id' => [
+    //       'condition' => 'IN ($main_table.project_id, )',
+    //     ],
+    //     'deleted_at' => [ 'value' => null ],
+    //   ],
+    //   'column' => 'sequence',
+    // ],
   ];
 
   /** @var \OCA\CAFEVDB\Service\GeoCodingService */
@@ -203,7 +208,11 @@ class ProjectParticipants extends PMETableViewBase
     return $this->l->t("Instrumentation for Project `%s'", [ $this->projectName ]);
   }
 
-  /** Show the underlying table. */
+  /**
+   * Show the underlying table.
+   *
+   * @todo Much of this is really CTOR stuff.
+   */
   public function render(bool $execute = true)
   {
     $template        = $this->template;
@@ -212,6 +221,7 @@ class ProjectParticipants extends PMETableViewBase
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
+    $memberProjectId = $this->getConfigValue('memberProjectId', -1);
 
     $opts            = [];
 
@@ -276,6 +286,23 @@ class ProjectParticipants extends PMETableViewBase
       $useFinanceTab = false;
       $financeTab = 'project';
     }
+
+    /* Tweak the join-structure with dynamic data
+     */
+    $this->joinStructure[] = [
+      // SepaDebitMandates
+      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+      'entity' => Entities\SepaDebitMandate::class,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'project_id' => [
+          'condition' => 'IN ($main_table.project_id, '.$memberProjectId.')',
+        ],
+        'deleted_at' => [ 'value' => null ],
+        'sequence' => false,
+      ],
+      'column' => 'sequence',
+    ];
 
     /* For each extra field add one dedicated join table entry
      * which is pinned to the respective field-id.
