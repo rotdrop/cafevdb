@@ -111,6 +111,12 @@ class ProjectService
     return $options;
   }
 
+  public function findParticipant($projectId, $musicianId)
+  {
+    return $this->getDatabaseRepository(Entities\ProjectParticipant::class)
+                ->find([ 'project' => $projectId, 'musician' => $musicianId]);
+  }
+
   public function projectOptions($criteria = [], $selectedProject = -1)
   {
     $projects = $this->repository->findBy($criteria, [ 'year' => 'DESC', 'name' => 'ASC' ]);
