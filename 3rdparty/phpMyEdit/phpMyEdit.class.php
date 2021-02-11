@@ -454,6 +454,7 @@ class phpMyEdit
 	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S') /*|| isset($this->fdd[$k]['values']['join']['reference'])*/; }
 	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
 	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R'); }
+	function mandatory($k)	  { return stristr(@$this->fdd[$k]['input'],'M'); }
 	function annotation($k)	  { return stristr(@$this->fdd[$k]['input'],'A'); }
 	function disabled($k)	  { return stristr(@$this->fdd[$k]['input'],'D') || $this->virtual($k);		}
 	function virtual($k)	  { return stristr(@$this->fdd[$k]['input'],'V') && $this->col_has_sql($k); }
@@ -2067,6 +2068,8 @@ class phpMyEdit
 				echo ($this->password($k) ? 'type="password"' : 'type="text"');
 				echo ($this->disabled($k) ? ' disabled' : '');
 				echo ($this->readonly($k) ? ' readonly' : '');
+				echo ($this->mandatory($k) ? ' required' : '');
+
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
 				echo $len_props,' value="';
 				echo $value;
@@ -5417,9 +5420,9 @@ class phpMyEdit
 	{
 		foreach (array_keys($this->fdd) as $column) {
 			// move ['required'] to ['js']['required']
-			if (! isset($this->fdd[$column]['js']['required']) && isset($this->fdd[$column]['required'])) {
-				$this->fdd[$column]['js']['required'] = $this->fdd[$column]['required'];
-			}
+			// if (! isset($this->fdd[$column]['js']['required']) && isset($this->fdd[$column]['required'])) {
+			// 	$this->fdd[$column]['js']['required'] = $this->fdd[$column]['required'];
+			// }
 			// move 'HWR0' flags from ['options'] into ['input']
 			if (isset($this->fdd[$column]['options'])) {
 				$this->fdd[$column]['options'] = strtoupper($this->fdd[$column]['options']);
