@@ -52,14 +52,6 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
     }),
-    // new CopyWebpackPlugin({
-    //   patterns: [
-    //     { from: './3rdparty/tinymce/plugins', to: 'js/plugins' },
-    //     { from: './3rdparty/tinymce/themes', to: 'js/themes' },
-    //     { from: './3rdparty/tinymce/skins', to: 'js/skins' },
-    //     { from: './3rdparty/tinymce/skins', to: 'js/langs' },
-    //   ],
-    // }),
   ],
   module: {
     noParse: /(ckeditor.js|tinymce.min.js)/,
@@ -95,14 +87,21 @@ module.exports = {
           useRelativePaths: true,
         },
       },
+      {
+        test: /\.handlebars/,
+        loader: 'handlebars-loader',
+        query: {
+          extensions: '.handlebars',
+        },
+      },
     ],
   },
   resolve: {
     modules: [
       'node_modules',
-      'style',
-      'src',
-      '3rdparty',
+      path.resolve(__dirname, 'style'),
+      path.resolve(__dirname, 'src'),
+      path.resolve(__dirname, '3rdparty'),
       path.resolve(__dirname, '.'),
     ],
     alias: {

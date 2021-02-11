@@ -26,6 +26,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
+import '../legacy/nextcloud/jquery/avatar.js';
 
 require('blog.css');
 
