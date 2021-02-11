@@ -72,16 +72,16 @@ const mandatesInit = function(data, reloadCB) {
     reloadCB = function() {};
   }
 
-  self.projectId = data.data.projectId;
-  self.projectName = data.data.projectName;
-  self.musicianId = data.data.musicianId;
-  self.musicianName = data.data.musicianName;
-  self.mandateId = data.data.mandateId;
-  self.mandateReference = data.data.mandateReference;
+  self.projectId = data.projectId;
+  self.projectName = data.projectName;
+  self.musicianId = data.musicianId;
+  self.musicianName = data.musicianName;
+  self.mandateId = data.mandateId;
+  self.mandateReference = data.mandateReference;
 
   Dialogs.debugPopup(data);
 
-  const popup = $(data.data.contents);
+  const popup = $(data.contents);
   const mandateForm = popup.find('#sepa-debit-mandate-form');
   self.instantValidation = mandateForm.find('#sepa-validation-toggle').prop('checked');
   const lastUsedDate = mandateForm.find('input.lastUsedDate');
@@ -326,7 +326,7 @@ const mandateStore = function(callbackOk) {
       if (!Ajax.validateResponse(data, ['message'])) {
         return false;
       }
-      $(dialogId + ' #msg').html(data.data.message);
+      $(dialogId + ' #msg').html(data.message);
       $(dialogId + ' #msg').show();
       if (data.status === 'success') {
         callbackOk();
@@ -354,7 +354,7 @@ const mandateDelete = function(callbackOk) {
       if (!Ajax.validateResponse(data, ['message'])) {
         return false;
       }
-      $(dialogId + ' #msg').html(data.data.message);
+      $(dialogId + ' #msg').html(data.message);
       $(dialogId + ' #msg').show();
       if (data.status === 'success') {
         callbackOk();
@@ -410,10 +410,10 @@ const mandateValidate = function(event, validateLockCB) {
         data,
         ['suggestions', 'message'],
         validateUnlock)) {
-        if (data.data.suggestions !== '') {
+        if (data.suggestions !== '') {
           const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
               + ' '
-              + data.data.suggestions
+              + data.suggestions
               + '. '
               + t(appName, 'Please do not accept these alternatives lightly!');
           $(dialogId + ' #suggestions').html(hints);
@@ -422,11 +422,11 @@ const mandateValidate = function(event, validateLockCB) {
         // and the BLZ appeared to be valid after all checks,
         // then inject it into the form. Seems to be a common
         // case, more or less.
-        if (data.data.blz) {
-          $('input.bankAccountBLZ').val(data.data.blz);
+        if (data.blz) {
+          $('input.bankAccountBLZ').val(data.blz);
         }
 
-        $(dialogId + ' #msg').html(data.data.message);
+        $(dialogId + ' #msg').html(data.message);
         $(dialogId + ' #msg').show();
         if ($(dialogId + ' #suggestions').html() !== '') {
           $(dialogId + ' #suggestions').show();
@@ -434,29 +434,29 @@ const mandateValidate = function(event, validateLockCB) {
         return false;
       }
       if (changed === 'orchestraMember') {
-        $('input[name="MandateProjectId"]').val(data.data.mandateProjectId);
-        // $('input[name="MandateProjectName"]').val(data.data.mandateProjectName);
-        $('input[name="mandateReference"]').val(data.data.reference);
-        $('legend.mandateCaption .reference').html(data.data.reference);
+        $('input[name="MandateProjectId"]').val(data.mandateProjectId);
+        // $('input[name="MandateProjectName"]').val(data.mandateProjectName);
+        $('input[name="mandateReference"]').val(data.reference);
+        $('legend.mandateCaption .reference').html(data.reference);
       }
-      if (data.data.value) {
-        $(element).val(data.data.value);
+      if (data.value) {
+        $(element).val(data.value);
       }
-      if (data.data.iban) {
-        $('input.bankAccountIBAN').val(data.data.iban);
+      if (data.iban) {
+        $('input.bankAccountIBAN').val(data.iban);
       }
-      if (data.data.blz) {
-        $('input.bankAccountBLZ').val(data.data.blz);
+      if (data.blz) {
+        $('input.bankAccountBLZ').val(data.blz);
       }
-      if (data.data.bic) {
-        $('input.bankAccountBIC').val(data.data.bic);
+      if (data.bic) {
+        $('input.bankAccountBIC').val(data.bic);
       }
-      $(dialogId + ' #msg').html(data.data.message);
+      $(dialogId + ' #msg').html(data.message);
       $(dialogId + ' #msg').show();
-      if (data.data.suggestions !== '') {
+      if (data.suggestions !== '') {
         const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
             + ' '
-            + data.data.suggestions
+            + data.suggestions
             + '. '
             + t(appName, 'Please do not accept these alternatives lightly!');
         $(dialogId + ' #suggestions').html(hints);
@@ -646,10 +646,11 @@ const mandatePopupInit = function(selector) {
         const values = $(this).data('debitMandate');
         // alert('data: ' + CAFEVDB.print_r(values, true));
         // alert('data: '+(typeof values.MandateExpired));
-        $.post(
-          generateUrl('finance/sepa/debit-notes/mandates/dialog'),
-          values,
-          function(data) {
+        $.post(generateUrl('finance/sepa/debit-notes/mandates/dialog'), values)
+          .fail(function(xhr, status, errorThrown) {
+            Ajax.handleError(xhr, status, errorThrown);
+          })
+          .done(function(data) {
             mandatesInit(data, function() {
               if (pmeReload.length > 0) {
                 pmeReload.trigger('click');

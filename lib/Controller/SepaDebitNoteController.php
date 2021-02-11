@@ -28,6 +28,7 @@ use \PHP_IBAN\IBAN;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -403,6 +404,101 @@ class SepaDebitNoteController extends Controller {
         ]);
 
     } // validation loop
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function mandateForm(
+    $mandateReference
+    , $mandateExpired
+    , $projectId
+    , $mandateProjectId
+    , $musicianId
+    , $projectName
+    , $mandateProjectName
+    , $musicianName
+    ) {
+
+    $mandateExpired = filter_var($mandateExpired, FILTER_VALIDATE_BOOLEAN);
+
+     // check for an existing mandate, otherwise generate a new Id.
+    $mandate = $this->financeService->fetchSepaMandate($mandateProjectId, $musicianId, $mandateExpired);
+
+    if (empty($mandate)) {
+      $ref = $this->financeService->generateSepaMandateReference($projectId, $musicianId);
+      $memberProjectId = $this->getConfigValue('memberProjectId', -1);
+      // @todo check
+      $sequenceType = $projectNameId !== $memberProjectId ? 'once' : 'permanent';
+      $mandate = [
+        'projectId' => $mandateProjectId,
+        'musicianId' => $musicianId,
+        'sequenceType' => $sequenceType,
+        'mandateReference' => $ref,
+        'mandateDate' => '01-'.date('m-Y'),
+        'lastUsedDate' =>'',
+        'IBAN' => '',
+        'BIC' => '',
+        'BLZ' => '',
+        'bankAccountOwner' => $this->financeService->sepaTranslit($musicianName),
+      ];
+    } else {
+      $usage = $this->financeService->mandateReferenceUsage($mandate['reference'], true);
+      !empty($usage['lastUsed']) && $mandate['lastUsedDate'] = $usage['lastUsed'];
+    }
+
+    $iban = new IBAN($iban);
+    if ($iban->Verify()) {
+      $blz = $iban->Bank();
+      $bav = new \malkusch\bav\BAV;
+      if ($bav->isValidBank($blz)) {
+        $bic = $bav->getMainAgency($blz)->getBIC();
+      }
+    }
+
+    if ($mandate['lastUsedDate']) {
+      $lastUsedDate = date('d.m.Y', strtotime($mandate['lastUsedDate']));
+    } else {
+      $lastUsedDate = '';
+    }
+
+    $templateParameters = [
+      'projectName' => $projectName,
+      'ProjectId' => $projectId,
+      'MandateProjectId' => $mandateProjectId,
+      'MusicianName' => $musicianName,
+      'MusicianId' => $musicianId,
+
+      'cssClass', 'sepadebitmandate',
+
+      'mandateId' => $mandate['id'],
+      'mandateReference' => $mandate['mandateReference'],
+      'mandateExpired' => $mandateExpired,
+      'mandateDate' => date('d.m.Y', strtotime($mandate['mandateDate'])),
+      'lastUsedDate' => $lastUsedData,
+      'sequenceType' => $mandate['sequenceType'], // @todo will not work
+
+      'bankAccountOwner' => $mandate['bankAccountOwner'],
+
+      'bankAccountIBAN' => $iban,
+      'bankAccountBLZ' => $blz,
+      'bankAccountBIC' => $bic,
+    ];
+
+    $tmpl = new TemplateResponse($this->appName, 'sepa-debit-mandate', $templateParameters, 'blank');
+    $html = $tmpl->render();
+
+    $responseData = [
+      'contents' => $html,
+      'projectId' => $projectId,
+      'projectName' => $projectName,
+      'musicianId' => $musicianId,
+      'musicianName' => $musicianName,
+      'mandateReference' => $mandate['mandateReference'],
+      'mandateId' => $mandate['id'],
+    ];
+
+    return self::dataResponse($responseData);
   }
 
 }

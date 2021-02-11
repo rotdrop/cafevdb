@@ -1391,13 +1391,13 @@ WHERE pp.project_id = $projectId",
              $expired = $this->financeService->mandateIsExpired($mandate);
              $mandateProject = $mandateProjects[$key];
              if ($mandateProject === $projectId) {
-               $html[] = self::sepaDebitMandateButton(
+               $html[] = $this->sepaDebitMandateButton(
                 $mandate, $expired,
                 $musicianId, $musician,
                 $projectId, $projectName);
             } else {
               $mandateProjectName = Projects::fetchName($mandateProject);
-              $html[] = self::sepaDebitMandateButton(
+              $html[] = $this->sepaDebitMandateButton(
                 $mandate, $expired,
                 $musicianId, $musician,
                 $projectId, $projectName,
@@ -1406,10 +1406,12 @@ WHERE pp.project_id = $projectId",
           }
           if (empty($html)) {
             // Empty default knob
-            $html = array(self::sepaDebitMandateButton(
-                            $this->l->t("SEPA Debit Mandate"), false,
-                            $musicianId, $musician,
-                            $projectId, $projectName));
+            $html = [
+              $this->sepaDebitMandateButton(
+                $this->l->t("SEPA Debit Mandate"), false,
+                $musicianId, $musician,
+                $projectId, $projectName),
+            ];
           }
           return implode("\n", $html);
         },
@@ -1958,10 +1960,15 @@ WHERE pp.project_id = $projectId",
    * debit-mandate dialog, i.e. load some template stuff by means of
    * some java-script and ajax blah.
    */
-  public function sepaDebitMandateButton($reference, $expired,
-                                         $musicianId, $musician,
-                                         $projectId, $projectName,
-                                         $mandateProjectId = null, $mandateProjectName = null)
+  public function sepaDebitMandateButton(
+    $reference
+    , $expired
+    , $musicianId
+    , $musician
+    , $projectId
+    , $projectName
+    , $mandateProjectId = null
+    , $mandateProjectName = null)
   {
     empty($mandateProjectId) && $mandateProjectId = $projectId;
     empty($mandateProjectName) && $mandateProjectName = $projectName;
@@ -1975,7 +1982,9 @@ WHERE pp.project_id = $projectId",
       'mandateProjectId' => $mandateProjectId,
       'mandateProjectName' => $mandateProjectName,
     ];
+
     $data = htmlspecialchars(json_encode($data, JSON_NUMERIC_CHECK));
+    //$data = json_encode($data, JSON_NUMERIC_CHECK);
 
     $css= ($reference == ($this->l->t("SEPA Debit Mandate")) ? "missing-data " : "")."sepa-debit-mandate";
     $button = '<div class="sepa-debit-mandate tooltip-left">'
@@ -1985,7 +1994,7 @@ WHERE pp.project_id = $projectId",
             .'       value="'.$reference.'" '
             .'       title="'.$this->l->t("Click to enter details of a potential SEPA debit mandate").' " '
             .'       name="SepaDebitMandate" '
-            .'       data-debit-mandate="'.$data.'" '
+            .'       data-debit-mandate=\''.$data.'\' '
             .'/>'
             .'</div>';
     return $button;
