@@ -67,16 +67,22 @@ class Util
     return $dest;
   }
 
-  /**Normalize spaces and commas after and before spaces. */
-  public static function normalizeSpaces($name)
+  /** Normalize spaces and commas after and before spaces. */
+  public static function normalizeSpaces($name, $singleSpace = ' ')
   {
     /* Normalize name and translation */
     $name = str_replace("\xc2\xa0", "\x20", $name);
     $name = trim($name);
     $name = preg_replace('/\s*,([^\s])/', ', $1', $name);
-    $name = preg_replace('/\s+/', ' ', $name);
+    $name = preg_replace('/\s+/', $singleSpace, $name);
 
     return $name;
+  }
+
+  /** Remove all whitespace */
+  public static function removeSpaces($name)
+  {
+    return self:: normalizeSpaces($name, '');
   }
 
   /**Wrapper around htmlspecialchars(); avoid double encoding, standard
