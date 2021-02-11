@@ -620,6 +620,9 @@ const mandateValidatePME = function(event, validateLockCB) {
       if (data.owner) {
         $('input[name="' + pmeData('bank_account_owner') + '"]').val(data.owner);
       }
+      if (data.reference) {
+        $('input[name="' + pmeData('mandate_reference') + '"]').val(data.reference);
+      }
 
       validateUnlock();
 

@@ -167,6 +167,8 @@ class SepaDebitMandatesRepository extends EntityRepository
          ->setParameter('project', $identifier['project'])
          ->setParameter('musician', $identifier['musician'])
          ->setParameter('sequence', $identifeir['sequence']);
+    } else {
+      throw new \Exception('Mandate identifier is '.(empty($identifier) ? 'empty' : 'unsupported'));
     }
     return $qb->getQuery()->getOneOrNullResult();
   }

@@ -390,6 +390,7 @@ received so far'),
       [
         'tab'      => [ 'id' => 'tab-all' ],
         'name'     => $this->l->t('Musician'),
+        'css'      => [ 'postfix' => ' allow-empty' ],
         //'input'    => 'R',
         'select'   => 'T',
         'maxlen'   => 11,
@@ -424,7 +425,7 @@ received so far'),
           'sort'     => true,
           //'options'  => 'LFADV', // no change allowed
           'default' => $projectMode ? $projectId : -1,
-          'css'      => [ 'postfix' => ' mandate-project' ],
+          'css'      => [ 'postfix' => ' mandate-project allow-empty' ],
           'values' => [
             'description' => [
               'columns' => [ 'year' => 'year', 'name' => 'name' ],

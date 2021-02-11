@@ -109,15 +109,25 @@ class SepaDebitNoteController extends Controller {
     $changed = $this->parameterService['changed'];
     $value = $this->parameterService[$changed];
 
+    $validations[] = [
+      'changed' => $changed,
+      'value' => $value,
+    ];
+
     $feedback = [];
 
-    while (true) {
+    while (($validation = array_pop($validations)) !== null) {
+
+      $changed = $validation['changed'];
+      $value = $validation['value'];
 
       switch ($changed) {
       case 'projectId':
-        if ($projectId === $memberProjectId) {
-          $value = 'member';
-        }
+        $validations[] = [
+          'changed' => 'orchestraMember',
+          'value' => ($projectId === $memberProjectId) ? 'member' : '',
+        ];
+        break;
       case 'orchestraMember':
         // tricky, for now just generate a new reference
         $newProject = ($value === 'member') ? $memberProjectId : $projectId;
@@ -127,7 +137,7 @@ class SepaDebitNoteController extends Controller {
           $IBAN = $mandate['IBAN'];
           $BLZ = $mandate['BLZ'];
           $BIC = $mandate['BIC'];
-        } else {
+        } else if (!empty($newProject) && !empty($musicianId)) {
           $reference = $this->financeService->generateSepaMandateReference($newProject, $musicianId);
         }
         $mandateProjectId = $newProject;
@@ -163,14 +173,20 @@ class SepaDebitNoteController extends Controller {
         $this->logInfo('PART '.get_class($participant['musician']));
         $newOwner = $participant['musician']['surName'].', '.$participant['musician']['firstName'];
         if (empty($owner)) {
-          $changed = 'bankAccountOwner';
-          $value = $newOwner;
-          continue 2;
+          $validations[] = [
+            'changed' => 'bankAccountOwner',
+            'value' => $newOwner,
+          ];
+          if (!empty($projectId)) {
+            $validations[] = [
+              'changed' => 'projectId',
+              'value' => $projectId,
+            ];
+          }
         } else {
           $feedback['owner'] = $this->l->t('Set bank-account owner to musician\'s name?');
-          break;
         }
-        // fallthrough
+        break;
       case 'bankAccountOwner':
         $value = $this->financeService->sepaTranslit($value);
         if (!$this->financeService->validateSepaString($value)) {
@@ -327,9 +343,11 @@ class SepaDebitNoteController extends Controller {
         }
 
         // re-run the IBAN validation
-        $changed = 'bankAccountIBAN';
-        $value = $IBAN;
-        continue 2;
+        $validations[] = [
+          'changed' => 'bankAccountIBAN',
+          'value' => $IBAN,
+        ];
+        break;
       case 'bankAccountBIC':
         if ($value == '') {
           $BIC = '';
@@ -354,7 +372,17 @@ class SepaDebitNoteController extends Controller {
         break;
       default:
         return self::grumble(
-          $this->l->t('Unknown Request: %s / %s', [ 'validate', print_r($changed, true) ]));
+          $this->l->t(
+            'Unknown Request: %s / %s / %s',
+            [
+              'validate',
+              print_r($changed, true),
+              print_r($value, true),
+            ]));
+      }
+
+      if (!empty($validations)) {
+        continue;
       }
 
       // return with all the sanitized and canonicalized values for the

@@ -175,6 +175,39 @@ class FinanceService
     return !preg_match('@[^'.self::SEPA_CHARSET.']@', $string);
   }
 
+  /**
+   * Just return the argument if it is already a project entity,
+   * otherwise fetch the project, repectively generate a reference.
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @return null|Entities\Project
+   */
+  private function ensureProject($projectOrId):? Entities\Project
+  {
+    if (!($projectOrId instanceof Entities\Project)) {
+      return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
+    } else {
+      return $projectOrId;
+    }
+  }
+
+  /**
+   * Just return the argument if it is already a musician entity,
+   * otherwise fetch the musician, repectively generate a reference.
+   *
+   * @param int|Entities\Musician $musicianOrId
+   *
+   * @return null|Entities\Musician
+   */
+  private function ensureMusician($musicianOrId):? Entities\Musician
+  {
+    if (!($musicianOrId instanceof Entities\Musician)) {
+      return $this->entityManager->getReference(Entities\Musician::class, [ 'id' => $musicianOrId, ]);
+    } else {
+      return $musicianOrId;
+    }
+  }
 
   /**
    * The "SEPA mandat reference" must be unique per mandate, consist
@@ -198,20 +231,23 @@ class FinanceService
    *
    * XXXX-YYYY-IN-PROJECTYEAR+SEQ
    *
-   * @param Entities\Project $project
+   * @param int|Entities\Project $project
    *
-   * @param Entities\Musician $musician
+   * @param int|Entities\Musician $musician
    *
    * @param int $sequence
    *
    * @return string New mandate id
    *
    */
-  public function generateSepaMandateReference(Entities\Project $project,
-                                               Entities\Musician $musician,
-                                               int $sequence = 1):string
+  public function generateSepaMandateReference($project, $musician, int $sequence = 1):string
   {
+    $project = $this->ensureProject($project);
+    $projectId = $project['id'];
     $projectName = $this->sepaTranslit($project['name']);
+
+    $musician = $this->ensureMusician($musician);
+    $musicianId = $musician['id'];
     $firstName = $this->sepaTranslit($musician['firstName']);
     $surName = $this->sepaTranslit($musician['surName']);
 
@@ -250,9 +286,10 @@ class FinanceService
   {
     $mandate = null;
 
-    $mandate = $this->mandateRepository->findNewest($projectId, $musicianId);
+    $mandate = $this->mandatesRepository->findNewest($projectId, $musicianId);
 
-    if (!$expired && $this->mandateIsExpired($mandate['mandateReference'])) {
+    if (!empty($mandate) && !$expired
+        && $this->mandateIsExpired($mandate['mandateReference'])) {
       return null;
     }
 
@@ -395,7 +432,7 @@ class FinanceService
   /**Compute usage data for the given mandate reference*/
   public function mandateReferenceUsage($reference, $brief = false)
   {
-    return $this->mandateRepository->usage($reference, $brief);
+    return $this->mandatesRepository->usage($reference, $brief);
   }
 
   /**
@@ -683,8 +720,8 @@ class FinanceService
            . substr( $iban, 2, 2 );
 
     for( $i = 0; $i < strlen($iban1); $i++) {
-      if(ord( $iban1{$i} )>64 && ord( $iban1{$i} )<91) {
-        $iban1 = substr($iban1,0,$i) . strval( ord( $iban1{$i} )-55 ) . substr($iban1,$i+1);
+      if(ord( $iban1[$i] )>64 && ord( $iban1[$i] )<91) {
+        $iban1 = substr($iban1,0,$i) . strval( ord( $iban1[$i] )-55 ) . substr($iban1,$i+1);
       }
     }
     $rest=0;
