@@ -163,7 +163,7 @@ class SepaDebitMandates extends PMETableViewBase
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'ACPVD';
+    $opts['options'] = 'ACPVDF';
     $sort = false; // too few entries
 
     // Number of lines to display on multiple selection filters
@@ -296,6 +296,10 @@ received so far'),
     }
     $opts['display']['tabs'][] = $allTab;
 
+    if ($this->addOperation()) {
+      $opts['display']['tabs'] = false;
+    }
+
     //////////////////////////////////////////////////////
 
     if ($projectMode) {
@@ -386,6 +390,46 @@ received so far'),
         ],
       ]);
 
+    ///////////////////////////////////////////////////////////////////////////
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'id',
+      Util::arrayMergeRecursive(
+        [
+          'tab' => [ 'id' => 'mandate' ],
+          'name'     => $this->l->t('Project'),
+          'input'    => 'R',
+          'input|A'  => $projectMode ? 'R' : null,
+          'select'   => 'D',
+          'maxlen'   => 11,
+          'sort'     => true,
+          //'options'  => 'LFADV', // no change allowed
+          'default' => $projectMode ? $projectId : -1,
+          'css'      => [ 'postfix' => ' mandate-project' ],
+          'values' => [
+            'description' => [
+              'columns' => [ 'year' => 'year', 'name' => 'name' ],
+              'divs' => [ 'year' => ': ' ]
+            ],
+          ],
+        ],
+        $projectMode
+        ? array_merge(
+          [ 'values' => [ 'filters' => '$table.id in ('.$projectId.','.$memberProjectId.')' ],],
+          ($projectId === $memberProjectId)
+          ? [
+            'select' => 'T',
+            'sort' => false,
+            'maxlen' => 40,
+            'options' => 'VPCDL',
+          ]
+          : []
+        )
+        : []
+      ));
+
+    ///////////////////////////////////////////////////////////////////////////
+
     $opts['fdd']['mandate_reference'] = [
       'tab'    => [ 'id' => 'mandate' ],
       'name'   => $this->l->t('Mandate Reference'),
@@ -412,6 +456,7 @@ received so far'),
       [
         'name'     => $this->l->t('Last-Used Date'),
         'input'    => 'VR',
+        'input|A'  => 'VRH',
         'sql'      => "GREATEST(
   COALESCE(MAX(\$join_col_fqn), ''),
   COALESCE(last_used_date, '')
@@ -430,7 +475,7 @@ received so far'),
 
     // @TODO EXTRA FIELD STUFF / PROJECT MODE
 
-    if ($projectMode) {
+    if (!$this->addOperation() && $projectMode) {
       foreach ($monetary as $name => $field) {
         $fieldName = $field['name'];
         $fieldId   = $field['id'];
@@ -564,47 +609,12 @@ received so far'),
 
     ///////////////
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'id',
-      Util::arrayMergeRecursive(
-        [
-          'tab' => [ 'id' => 'mandate' ],
-          'name'     => $this->l->t('Project'),
-          'input'    => 'R',
-          'input|A'  => $projectMode ? 'R' : null,
-          'select'   => 'D',
-          'maxlen'   => 11,
-          'sort'     => true,
-          //'options'  => 'LFADV', // no change allowed
-          'default' => $projectMode ? $projectId : -1,
-          'css'      => [ 'postfix' => ' mandate-project' ],
-          'values' => [
-            'description' => [
-              'columns' => [ 'year' => 'year', 'name' => 'name' ],
-              'divs' => [ 'year' => ': ' ]
-            ],
-          ],
-        ],
-        $projectMode
-        ? array_merge(
-          [ 'values' => [ 'filters' => '$table.id in ('.$projectId.','.$memberProjectId.')' ],],
-          ($projectId === $memberProjectId)
-          ? [
-            'select' => 'T',
-            'sort' => false,
-            'maxlen' => 40,
-            'options' => 'VPCDL',
-          ]
-          : []
-        )
-        : []
-      ));
-
     // couple of "easy" fields
 
     $opts['fdd']['iban'] = [
       'tab' => array('id' => 'account'),
       'name'   => 'IBAN',
+      'input' => 'M',
       'options' => 'LACPDV',
       'select' => 'T',
       'maxlen' => 35,
