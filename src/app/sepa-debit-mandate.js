@@ -89,8 +89,8 @@ const mandatesInit = function(data, reloadCB) {
   popup.cafevDialog({
     position: {
       my: 'middle top+50%',
-      at: 'middle bottom',
-      of: '#controls',
+      at: 'middle top',
+      of: '#app-content',
     },
     width: 550,
     height: 'auto',
@@ -365,6 +365,20 @@ const mandateDelete = function(callbackOk) {
     });
 };
 
+const makeSuggestions = function(data) {
+  if (data.suggestions && data.suggestions !== '') {
+    if (!Array.isArray(data.suggestions)) {
+      data.suggestions = [data.suggestions];
+    }
+    return t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
+      + ' '
+      + data.suggestions.join(', ')
+      + '. '
+      + t(appName, 'Please do not accept these alternatives lightly!');
+  }
+  return false;
+};
+
 /**
  * Validate version for our popup-dialog.
  *
@@ -384,7 +398,13 @@ const mandateValidate = function(event, validateLockCB) {
     validateLockCB(true);
   };
 
-  const validateUnlock = function() {
+  const validateUnlock = function(data) {
+    if (data) {
+      const hints = makeSuggestions(data);
+      if (hints) {
+        $(dialogId + ' #suggestions').html(hints).show();
+      }
+    }
     validateLockCB(false);
   };
 
@@ -402,22 +422,27 @@ const mandateValidate = function(event, validateLockCB) {
   // until end of validation
   validateLock();
 
-  $.post(
-    generateUrl('finance/sepa/debit-notes/mandates/validate'),
-    post,
-    function(data) {
+  $.post(generateUrl('finance/sepa/debit-notes/mandates/validate'), post)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, {
+        cleanup: validateUnlock,
+        preProcess(data) {
+          const hints = makeSuggestions(data);
+          if (hints) {
+            if (data.message) {
+              data.message += ' ' + hints;
+            } else {
+              data.message = hints;
+            }
+          }
+        },
+      });
+    })
+    .done(function(data) {
       if (!Ajax.validateResponse(
         data,
         ['suggestions', 'message'],
         validateUnlock)) {
-        if (data.suggestions !== '') {
-          const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
-              + ' '
-              + data.suggestions
-              + '. '
-              + t(appName, 'Please do not accept these alternatives lightly!');
-          $(dialogId + ' #suggestions').html(hints);
-        }
         // One special case: if the user has submitted an IBAN
         // and the BLZ appeared to be valid after all checks,
         // then inject it into the form. Seems to be a common
@@ -425,16 +450,12 @@ const mandateValidate = function(event, validateLockCB) {
         if (data.blz) {
           $('input.bankAccountBLZ').val(data.blz);
         }
-
         $(dialogId + ' #msg').html(data.message);
         $(dialogId + ' #msg').show();
-        if ($(dialogId + ' #suggestions').html() !== '') {
-          $(dialogId + ' #suggestions').show();
-        }
         return false;
       }
       if (changed === 'orchestraMember') {
-        $('input[name="MandateProjectId"]').val(data.mandateProjectId);
+        $('input[name="mandateProjectId"]').val(data.mandateProjectId);
         // $('input[name="MandateProjectName"]').val(data.mandateProjectName);
         $('input[name="mandateReference"]').val(data.reference);
         $('legend.mandateCaption .reference').html(data.reference);
@@ -450,6 +471,12 @@ const mandateValidate = function(event, validateLockCB) {
       }
       if (data.bic) {
         $('input.bankAccountBIC').val(data.bic);
+      }
+      if (data.owner) {
+        $('input.bankAccountOwner').val(data.owner);
+      }
+      if (data.reference) {
+        $('span.reference').html(data.reference);
       }
       $(dialogId + ' #msg').html(data.message);
       $(dialogId + ' #msg').show();
@@ -506,11 +533,17 @@ const mandateValidatePME = function(event, validateLockCB) {
     globalState.SepaDebitMandate.validationRunning = false;
   };
 
-  const validateErrorUnlock = function() {
+  const validateErrorUnlock = function(responseData) {
+    if (responseData) {
+      const msg = (responseData.message || '')
+            + ' '
+            + (makeSuggestions(responseData) || '');
+      if (msg !== ' ') {
+        $('#cafevdb-page-debug').html(msg).show();
+      }
+    }
     validateLockCB(false, false);
     globalState.SepaDebitMandate.validationRunning = false;
-    // $('div.oc-dialog-content').ocdialog('close');
-    // $('div.oc-dialog-content').ocdialog('destroy').remove();
     $.fn.cafevTooltip.hide();
   };
 
@@ -581,18 +614,21 @@ const mandateValidatePME = function(event, validateLockCB) {
   const post = $.param(mandateData);
   $.post(generateUrl('finance/sepa/debit-notes/mandates/validate'), post)
     .fail(function(xhr, status, errorThrown) {
-      Ajax.handleError(xhr, status, errorThrown, validateErrorUnlock);
+      Ajax.handleError(xhr, status, errorThrown, {
+        cleanup: validateErrorUnlock,
+        preProcess(data) {
+          const hints = makeSuggestions(data);
+          if (hints) {
+            if (data.message) {
+              data.message += ' ' + hints;
+            } else {
+              data.message = hints;
+            }
+          }
+        },
+      });
     })
     .done(function(data) {
-      // hack ...
-      if (data.message && data.suggestions && data.suggestions !== '') {
-        const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
-            + ' '
-            + data.suggestions
-            + '. '
-            + t(appName, 'Please do not accept these alternatives lightly!');
-        data.message += hints;
-      }
       if (!Ajax.validateResponse(
         data,
         ['suggestions', 'message'],
@@ -603,8 +639,13 @@ const mandateValidatePME = function(event, validateLockCB) {
         return false;
       }
 
-      $('#cafevdb-page-debug').html(data.message);
-      $('#cafevdb-page-debug').show();
+      const hints = makeSuggestions(data);
+      if (hints) {
+        data.message += hints;
+      }
+
+      $('#cafevdb-page-debug').html(data.message).show();
+
       if (data.value) {
         $element.val(data.value);
       }

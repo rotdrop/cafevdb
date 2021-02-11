@@ -42,8 +42,8 @@ globalState.Blog = {
 
 const popupPosition = {
   my: 'middle top+5%',
-  at: 'middle bottom',
-  of: '#controls',
+  at: 'middle top',
+  of: '#app-content',
   offset: '0 0',
 };
 

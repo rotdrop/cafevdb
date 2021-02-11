@@ -112,18 +112,37 @@ const ajaxHttpStatus = {
  *
  * @param {int} errorThrown TBD.
  *
- * @param {Function} errorCB TBD.
+ * @param {Object} callbacks An object with hook-functions:
+ *
+ * ```
+ * {
+ *   cleanup: function(data) { ... },
+ *   preProcess: function(data) { ... }
+ * ```
+ *
+ * The callbacks as well as the callback object itself is optional and
+ * defaults to "do nothing". The argument is the data possibly
+ * submitted by the server, as computed by ajaFailData().
  *
  * @returns {Object} TBD.
  */
-const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
-
-  if (typeof errorCB === 'undefined') {
-    errorCB = function() {};
+const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
+  const defaultCallbacks = {
+    cleanup(data) {},
+    preProcess(data) {},
+  };
+  callbacks = callbacks || {};
+  if (callbacks instanceof Function) {
+    callbacks = {
+      cleanup: callbacks,
+    };
   }
+  callbacks = $.extend({}, defaultCallbacks, callbacks);
 
   const failData = ajaxFailData(xhr, textStatus, errorThrown);
   console.debug('AJAX failure data', failData);
+  callbacks.preProcess(failData);
+  console.debug('AJAX failure data after pre-process', failData);
 
   switch (textStatus) {
   case 'notmodified':
@@ -137,7 +156,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
   }
 
   const caption = t(appName, 'Error');
-  let info = '<span class="http-status error">' + ajaxHttpStatus[xhr.status] + '</span>';
+  let info = '<span class="bold toastify http-status error">' + ajaxHttpStatus[xhr.status] + '</span>';
   // console.info(xhr.status, info, errorThrown, textStatus);
 
   let autoReport = '<a href="mailto:'
@@ -171,8 +190,11 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
   case ajaxHttpStatus.CONFLICT:
   case ajaxHttpStatus.PRECONDITION_FAILED:
   case ajaxHttpStatus.INTERNAL_SERVER_ERROR: {
-    if (failData.error) {
-      info += ': ' + '<span class="bold error toastify name">' + failData.error + '</span>';
+    if (failData.error && ajaxHttpStatus[xhr.status] !== t(appName, failData.error)) {
+      info += ': '
+        + '<span class="bold error toastify name">'
+        + t(appName, failData.error)
+        + '</span>';
     }
     if (failData.message) {
       info += '<div class="' + appName + ' error toastify">' + failData.message + '</div>';
@@ -198,7 +220,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
   }
   case ajaxHttpStatus.UNAUTHORIZED: {
     // no point in continuing, direct the user to the login page
-    errorCB = function() {
+    callbacks.cleanup = function() {
       if (webRoot !== '') {
         window.location.replace(webRoot);
       } else {
@@ -225,7 +247,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, errorCB) {
   }
 
   // console.info(info);
-  Dialogs.alert(info, caption, function() { errorCB(failData); }, true, true);
+  Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
   return failData;
 };
 
@@ -253,14 +275,17 @@ const ajaxValidateResponse = function(data, required, errorCB) {
     }
   }
   if (typeof errorCB === 'undefined') {
-    errorCB = function() {};
+    errorCB = function(data) {};
   }
+  const dialogCallback = function() {
+    errorCB(data);
+  };
   // error handling
   if (typeof data === 'undefined' || !data) {
     Dialogs.alert(
       t(appName, 'Unrecoverable unknown internal error, '
         + 'no further information available, sorry.'),
-      t(appName, 'Internal Error'), errorCB, true);
+      t(appName, 'Internal Error'), dialogCallback, true);
     return false;
   }
   let missing = '';
@@ -292,7 +317,7 @@ const ajaxValidateResponse = function(data, required, errorCB) {
       caption = t(appName, 'Error');
       data.caption = caption;
     }
-    Dialogs.alert(info, caption, errorCB, true, true);
+    Dialogs.alert(info, caption, dialogCallback, true, true);
     return false;
   }
   return true;

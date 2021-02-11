@@ -257,12 +257,19 @@ class SepaDebitNoteController extends Controller {
         if (!$iban->Verify()) {
           $message = $this->l->t("Invalid IBAN: `%s'.", $value);
           $suggestions = [];
+          $this->logInfo('Try Alternatives');
           foreach ($iban->MistranscriptionSuggestions() as $alternative) {
+            $this->logInfo('ALTERNATIVE '.$alternative);
             if ($iban->Verify($alternative)) {
               $alternative = $iban->MachineFormat($alternative);
               $alternative = $iban->HumanFormat($alternative);
               $suggestions[] = $alternative;
             }
+          }
+          if (empty($suggestions)) {
+            $suggestions = $this->fuzzyInputService->transposition($value, function($input) use ($iban) {
+              return $iban->Verify($input);
+            });
           }
           $suggestions = implode(', ', $suggestions);
 
@@ -447,13 +454,19 @@ class SepaDebitNoteController extends Controller {
       !empty($usage['lastUsed']) && $mandate['lastUsedDate'] = $usage['lastUsed'];
     }
 
-    $iban = new IBAN($iban);
-    if ($iban->Verify()) {
-      $blz = $iban->Bank();
+    // If we have a valid IBAN, compute BLZ and BIC
+    $iban = $mandate['IBAN'];
+    $blz  = '';
+    $bic  = $mandate['BIC'];
+
+    $ibanValidator = new IBAN($iban);
+    if ($ibanValidator->Verify()) {
+      $blz = $ibanValidator->Bank();
       $bav = new \malkusch\bav\BAV;
       if ($bav->isValidBank($blz)) {
         $bic = $bav->getMainAgency($blz)->getBIC();
       }
+      $iban = $ibanValidator->MachineFormat();
     }
 
     if ($mandate['lastUsedDate']) {
@@ -464,10 +477,10 @@ class SepaDebitNoteController extends Controller {
 
     $templateParameters = [
       'projectName' => $projectName,
-      'ProjectId' => $projectId,
-      'MandateProjectId' => $mandateProjectId,
-      'MusicianName' => $musicianName,
-      'MusicianId' => $musicianId,
+      'projectId' => $projectId,
+      'mandateProjectId' => $mandateProjectId,
+      'musicianName' => $musicianName,
+      'musicianId' => $musicianId,
 
       'cssClass', 'sepadebitmandate',
 
@@ -483,6 +496,8 @@ class SepaDebitNoteController extends Controller {
       'bankAccountIBAN' => $iban,
       'bankAccountBLZ' => $blz,
       'bankAccountBIC' => $bic,
+
+      'memberProjectId' => $memberProjectId,
     ];
 
     $tmpl = new TemplateResponse($this->appName, 'sepa-debit-mandate', $templateParameters, 'blank');
