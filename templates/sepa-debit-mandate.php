@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,59 +20,45 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
+$title = $l->t("SEPA Debit Mandate of %s", $musicianName);
 
-$title = $l->t("SEPA Debit Mandate of %s", array($_['MusicianName']));
-
-$reference  = $_['mandateReference'];
-$expired    = $_['mandateExpired'];
 $expiredTip = $toolTips['sepa-mandate-expired'];
-$mandateId  = $_['mandateId'];
-$prjId      = $_['ProjectId'];
-$mdtPrjId   = $_['MandateProjectId'];
-$prjName    = $_['ProjectName'];
-$musId      = $_['MusicianId'];
-$musName    = $_['MusicianName'];
-$class      = $_['CSSClass'];
 
-$membersTableId = $appConfig->getConfigValue('memberTableId', -1);
-
-$recurring = $l->t('Type: ').($_['sequenceType'] == 'once' ? $l->t('once') : $l->t('permanent'));
+$recurring = $l->t('Type: ').($sequenceType == 'once' ? $l->t('once') : $l->t('permanent'));
 
 ?>
 <div id="sepa-debit-mandate-dialog" title="<?php echo $title;?>">
   <div style="display:none;"
        id="mandate-expired-notice"
-       class="<?php echo ($expired ? 'active' : ''); ?> mandate-expired-notice tooltip-bottom"
-       title="<?php echo $expiredTip; ?>">
+       class="<?php echo ($mandateExpired ? 'active' : ''); ?> mandate-expired-notice tooltip-bottom"
+       title="<?php echo $mandateExpiredTip; ?>">
     <div>
-      <?php echo ($expired ? $l->t('expired') : ''); ?>
+      <?php echo ($mandateExpired ? $l->t('expired') : ''); ?>
     </div>
   </div>
-  <form id="sepa-debit-mandate-form" class="<?php echo $class; ?>" >
+  <form id="sepa-debit-mandate-form" class="<?php echo $cssClass; ?>" >
     <legend class="mandateCaption">
       <?php echo $l->t('Mandate-Reference: '); ?>
       <span class="reference">
-        <?php echo $reference; ?>
+        <?php echo $mandateReference; ?>
       </span>
     </legend>
     <input type="hidden" autofocus="autofocus" />
-    <input type="hidden" name="MandateProjectId" value="<?php echo $mdtPrjId; ?>" />
-    <input type="hidden" name="ProjectId" value="<?php echo $prjId; ?>" />
-    <input type="hidden" name="ProjectName" value="<?php echo $prjName; ?>" />
-    <input type="hidden" name="MusicianId" value="<?php echo $musId; ?>" />
-    <input type="hidden" name="MusicianName" value="<?php echo $musName; ?>" />
-    <input type="hidden" name="expired" value="<?php echo $expired ? '1' : '0'; ?>" />
-    <input type="hidden" name="mandateReference" value="<?php echo $reference; ?>" />
-    <input type="hidden" name="sequenceType" value="<?php echo $_['sequenceType']; ?>" />
-    <?php if ($prjId !== $membersTableId) { ?>
+    <input type="hidden" name="mandateProjectId" value="<?php echo $mandateProjectId; ?>" />
+    <input type="hidden" name="projectId" value="<?php echo $projectId; ?>" />
+    <input type="hidden" name="projectName" value="<?php echo $projectName; ?>" />
+    <input type="hidden" name="musicianId" value="<?php echo $musicianId; ?>" />
+    <input type="hidden" name="musicianName" value="<?php echo $musicianName; ?>" />
+    <input type="hidden" name="expired" value="<?php echo $mandateExpired ? '1' : '0'; ?>" />
+    <input type="hidden" name="mandateReference" value="<?php echo $mandateReference; ?>" />
+    <input type="hidden" name="sequenceType" value="<?php echo $sequenceType; ?>" />
+    <?php if ($projectId !== $memberProjectId) { ?>
     <input id="debit-mandate-orchestra-member"
            class="bankAccount orchestraMember checkbox"
            type="checkbox"
            name="orchestraMember"
            value="member"
-           <?php echo $mdtPrjId === $membersTableId ? 'checked="checked"' : ''; ?>
+           <?php echo $mandateProjectId === $membersTableId ? 'checked="checked"' : ''; ?>
            />
     <label for="debit-mandate-orchestra-member"
            title="<?php echo  $toolTips['debit-mandate-orchestra-member']; ?>"
@@ -85,43 +71,43 @@ $recurring = $l->t('Type: ').($_['sequenceType'] == 'once' ? $l->t('once') : $l-
     <input class="bankAccount bankAccountOwner" type="text"
            id="bankAccountOwner"
            name="bankAccountOwner"
-           value="<?php echo $_['bankAccountOwner']; ?>"
+           value="<?php echo $bankAccountOwner; ?>"
            title="<?php echo $l->t('owner of the bank account, probably same as musician'); ?>"
            placeholder="<?php echo $l->t('owner of bank account'); ?>"/><br/>
     <input class="bankAccount bankAccountBLZ" type="text"
            id="bankAccountBLZ"
            name="bankAccountBLZ"
-           value="<?php echo $_['bankAccountBLZ']; ?>"
+           value="<?php echo $bankAccountBLZ; ?>"
            title="<?php echo $l->t('Optional BLZ of the musician\'s bank account'); ?>"
            placeholder="<?php echo $l->t('BLZ of bank account'); ?>"/>
     <input class="bankAccount bankAccountIBAN" type="text"
            id="bankAccountIBAN"
            name="bankAccountIBAN"
-           value="<?php echo $_['bankAccountIBAN']; ?>"
+           value="<?php echo $bankAccountIBAN; ?>"
            title="<?php echo $l->t('IBAN or number of the bank account. If this is a account number, then please first enter the BLZ'); ?>"
            placeholder="<?php echo $l->t('IBAN or no. of bank account'); ?>"/>
     <input class="bankAccount bankAccountBIC" type="text"
            id="bankAccountBIC"
            name="bankAccountBIC"
-           value="<?php echo $_['bankAccountBIC']; ?>"
+           value="<?php echo $bankAccountBIC; ?>"
            title="<?php echo $l->t('Optionally the BIC of the account; will be computed automatically if left blank.'); ?>"
            placeholder="<?php echo $l->t('BIC of bank account'); ?>"/><br/>
     <label for="mandateDate"><?php echo $l->t("Date issued:"); ?></label>
     <input class="mandateDate" type="text"
            id="mandateDate"
            name="mandateDate"
-           value="<?php echo $_['mandateDate']; ?>"
+           value="<?php echo $mandateDate; ?>"
            title="<?php echo $l->t('Date of mandate grant'); ?>"
            placeholder="<?php echo $l->t('mandate date'); ?>"/>
-<?php if ($_['sequenceType'] == 'once') { ?>
-    <input type="hidden" name="lastUsedDate" value="<?php echo $_['lastUsedDate']; ?>"/>
+<?php if ($sequenceType == 'once') { ?>
+    <input type="hidden" name="lastUsedDate" value="<?php echo $lastUsedDate; ?>"/>
 <?php } else { ?>
     <label for="lastUsedDate"><?php echo $l->t("Date of last usage:"); ?>
       <input class="lastUsedDate" type="text"
              id="lastUsedDate"
-             <?php echo $_['sequenceType'] == 'once' ? 'disabled' : '' ?>
+             <?php echo $sequenceType == 'once' ? 'disabled' : '' ?>
              name="lastUsedDate"
-             value="<?php echo $_['lastUsedDate']; ?>"
+             value="<?php echo $lastUsedDate; ?>"
              title="<?php echo $l->t('Date of last usage of debit-mandate'); ?>"
              placeholder="<?php echo $l->t('last used date'); ?>"/>
     </label>
