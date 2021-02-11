@@ -42,6 +42,7 @@ class SepaDebitMandates extends PMETableViewBase
   const TABLE = 'SepaDebitMandates';
   const PROJECTS_TABLE = 'Projects';
   const MUSICIANS_TABLE = 'Musicians';
+  const PARTICIPANTS_TABLE = 'ProjectParticipants';
   const PAYMENTS_TABLE = 'ProjectPayments';
   const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
   const FIXED_COLUMN_SEP = '@';
@@ -53,6 +54,15 @@ class SepaDebitMandates extends PMETableViewBase
       'table' => self::TABLE,
       'master' => true,
       'entity' => Entities\InsuranceRate::class,
+    ],
+    [
+      'table' => self::PARTICIPANTS_TABLE,
+      'entity' => Entities\ProjectParticipants::class,
+      'identifier' => [
+        'project_id' => 'project_id',
+        'musician_id' => 'musician_id',
+      ],
+      'column' => 'musician_id',
     ],
     [
       'table' => self::PROJECTS_TABLE,
@@ -373,6 +383,8 @@ received so far'),
 
     // field definitions
 
+    ///////////////////////////////////////////////////////////////////////////
+
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'id',
       [
@@ -387,6 +399,13 @@ received so far'),
             'columns' => [ 'sur_name', 'first_name', ],
             'divs' => ', ',
           ],
+          'filters' => (!$projectMode
+                        ? null
+                        : "FIND_IN_SET(id,
+  (SELECT GROUP_CONCAT(pp.musician_id)
+    FROM ".self::PARTICIPANTS_TABLE." pp
+    WHERE pp.project_id = ".$projectId."
+    GROUP BY pp.project_id))"),
         ],
       ]);
 
@@ -444,6 +463,7 @@ received so far'),
 
     $opts['fdd']['mandate_date'] = [
       'name'     => $this->l->t('Date Issued'),
+      'input' => 'M',
       'select'   => 'T',
       'maxlen'   => 10,
       'sort'     => true,
@@ -624,16 +644,6 @@ received so far'),
       ],
     ];
 
-    $opts['fdd']['bic'] = [
-      'name'   => 'BIC',
-      'select' => 'T',
-      'maxlen' => 35,
-      'encryption' => [
-        'encrypt' => function($value) { return $this->encrypt($value); },
-        'decrypt' => function($value) { return $this->decrypt($value); },
-      ],
-    ];
-
     $opts['fdd']['blz'] = [
       'name'   => $this->l->t('Bank Code'),
       'select' => 'T',
@@ -644,8 +654,19 @@ received so far'),
       ],
     ];
 
+    $opts['fdd']['bic'] = [
+      'name'   => 'BIC',
+      'select' => 'T',
+      'maxlen' => 35,
+      'encryption' => [
+        'encrypt' => function($value) { return $this->encrypt($value); },
+        'decrypt' => function($value) { return $this->decrypt($value); },
+      ],
+    ];
+
     $opts['fdd']['bank_account_owner'] = [
       'name'   => $this->l->t('Bank Account Owner'),
+      'input' => 'M',
       'select' => 'T',
       'maxlen' => 80,
       'encryption' => [
