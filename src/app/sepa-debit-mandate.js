@@ -519,8 +519,8 @@ const mandateValidatePME = function(event, validateLockCB) {
   // we use the same Ajax validation script; we remap the form
   // elements. We need
   //
-  // MusicianId
-  // ProjectId
+  // musicianId
+  // projectId
   // mandateReference
   // sequenceType
   // bankAccountOwner
@@ -693,10 +693,10 @@ const mandateExportHandler = function(event) {
       // custom post
       const postItems = [
         'requesttoken',
-        'ProjectId',
-        'ProjectName',
-        'Table',
-        'MusicianId',
+        'projectId',
+        'projectName',
+        // 'Table', ?? @TODO not needed?
+        'musicianId',
       ];
       const post = {};
       for (let i = 0; i < postItems.length; ++i) {
