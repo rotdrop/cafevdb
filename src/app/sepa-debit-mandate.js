@@ -435,7 +435,7 @@ const mandateValidate = function(event, validateLockCB) {
       }
       if (changed === 'orchestraMember') {
         $('input[name="MandateProjectId"]').val(data.data.mandateProjectId);
-        $('input[name="MandateProjectName"]').val(data.data.mandateProjectName);
+        // $('input[name="MandateProjectName"]').val(data.data.mandateProjectName);
         $('input[name="mandateReference"]').val(data.data.reference);
         $('legend.mandateCaption .reference').html(data.data.reference);
       }
@@ -533,9 +533,9 @@ const mandateValidatePME = function(event, validateLockCB) {
     [pmeData('last_used_date')]: 'lastUsedDate',
     [pmeData('mandate_date')]: 'mandateDate',
     [pmeData('bank_account_owner')]: 'bankAccountOwner',
-    [pmeData('IBAN')]: 'bankAccountIBAN',
-    [pmeData('BIC')]: 'bankAccountBIC',
-    [pmeData('BLZ')]: 'bankAccountBLZ',
+    [pmeData('iban')]: 'bankAccountIBAN',
+    [pmeData('bic')]: 'bankAccountBIC',
+    [pmeData('blz')]: 'bankAccountBLZ',
     [pmeData('Projects:id')]: 'projectId',
     [pmeData('Musicians:id')]: 'musicianId',
   };
@@ -616,6 +616,9 @@ const mandateValidatePME = function(event, validateLockCB) {
       }
       if (data.blz) {
         $('input[name="' + pmeData('blz') + '"]').val(data.blz);
+      }
+      if (data.owner) {
+        $('input[name="' + pmeData('bank_account_owner') + '"]').val(data.owner);
       }
 
       validateUnlock();
