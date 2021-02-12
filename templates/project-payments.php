@@ -31,9 +31,9 @@ if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-extra-fields', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('sepa-debit-mandates', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('sepa-debit-notes', $projectName, $projectId);
   if ($projectName === $appConfig->getConfigValue('memberTable', false)) {
     $nav .= $pageNavigation->pageControlElement('insurances');
   }

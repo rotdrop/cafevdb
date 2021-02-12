@@ -51,9 +51,9 @@ class ProjectPayment implements \ArrayAccess
   private $subject;
 
   /**
-   * @var DebitNote
+   * @var SepaDebitNote
    *
-   * @ORM\ManyToOne(targetEntity="DebitNote", inversedBy="projectPayments", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="SepaDebitNote", inversedBy="projectPayments", fetch="EXTRA_LAZY")
    */
   private $debitNote;
 

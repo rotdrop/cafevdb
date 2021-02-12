@@ -28,12 +28,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * DebitNotes
+ * SepaDebitNote
  *
- * @ORM\Table(name="DebitNotes")
+ * @ORM\Table(name="SepaDebitNotes")
  * @ORM\Entity
  */
-class DebitNote implements \ArrayAccess
+class SepaDebitNote implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -54,7 +54,7 @@ class DebitNote implements \ArrayAccess
   private $project;
 
   /**
-   * @ORM\OneToOne(targetEntity="DebitNoteData", mappedBy="debitNote", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="SepaDebitNoteData", mappedBy="debitNote", fetch="EXTRA_LAZY")
    */
   private $debitNoteData;
 
@@ -141,7 +141,7 @@ class DebitNote implements \ArrayAccess
    *
    * @param int $project
    *
-   * @return DebitNotes
+   * @return SepaDebitNote
    */
   public function setProject($project)
   {
@@ -165,7 +165,7 @@ class DebitNote implements \ArrayAccess
    *
    * @param \DateTime $dateIssued
    *
-   * @return DebitNotes
+   * @return SepaDebitNote
    */
   public function setDateIssued($dateIssued)
   {
@@ -189,7 +189,7 @@ class DebitNote implements \ArrayAccess
    *
    * @param \DateTime $submissionDeadline
    *
-   * @return DebitNotes
+   * @return SepaDebitNote
    */
   public function setSubmissionDeadline($submissionDeadline)
   {
@@ -213,7 +213,7 @@ class DebitNote implements \ArrayAccess
    *
    * @param \DateTime|null $submitDate
    *
-   * @return DebitNotes
+   * @return SepaDebitNote
    */
   public function setSubmitDate($submitDate = null)
   {
@@ -237,7 +237,7 @@ class DebitNote implements \ArrayAccess
    *
    * @param \DateTime $dueDate
    *
-   * @return DebitNotes
+   * @return SepaDebitNote
    */
   public function setDueDate($dueDate)
   {
@@ -261,7 +261,7 @@ class DebitNote implements \ArrayAccess
    *
    * @param string $job
    *
-   * @return DebitNotes
+   * @return SepaDebitNote
    */
   public function setJob($job)
   {
@@ -285,7 +285,7 @@ class DebitNote implements \ArrayAccess
    *
    * @param int $submissionEventUri
    *
-   * @return DebitNotes
+   * @return SepaDebitNote
    */
   public function setSubmissionEventUri($submissionEventUri)
   {
@@ -309,7 +309,7 @@ class DebitNote implements \ArrayAccess
    *
    * @param int $submissionTaskUri
    *
-   * @return DebitNotes
+   * @return SepaDebitNote
    */
   public function setSubmissionTaskUri($submissionTaskUri)
   {
@@ -333,7 +333,7 @@ class DebitNote implements \ArrayAccess
    *
    * @param int $dueEventUri
    *
-   * @return DebitNotes
+   * @return SepaDebitNote
    */
   public function setDueEventUri($dueEventUri)
   {

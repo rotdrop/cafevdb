@@ -548,12 +548,12 @@ class Navigation
                'projectId' => $projectId];
       break;
 
-    case 'debit-notes':
+    case 'sepa-debit-notes':
       $value = $this->l->t("Debit Notes");
       $title = $this->l->t("A table holding all debit notes issued from the orchestra-software.");
       $controlclass = 'finance';
       $post = ['debitNotes' => $value,
-               'template' => 'debit-notes',
+               'template' => 'sepa-debit-notes',
                'projectName' => $projectName,
                'projectId' => $projectId];
       break;
@@ -639,7 +639,7 @@ and even edit the public web-pages for the project and other things.");
                'projectId' => $projectId];
       break;
 
-    case 'debit-mandates':
+    case 'sepa-debit-mandates':
       $value = $this->l->t('Debit Mandates');
       $title = $this->l->t('Display a table with the SEPA debit mandates related to the project.');
       $controlclass = 'finance';

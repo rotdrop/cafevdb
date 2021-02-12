@@ -36,8 +36,8 @@ $nav .= $pageNavigation->pageControlElement('project-extra-fields', $projectName
 $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
 if (true || $roles->inTreasurerGroup()) {
   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('debit-mandates', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('debit-notes', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('sepa-debit-mandates', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('sepa-debit-notes', $projectName, $projectId);
   if ($projectName === $appConfig->getConfigValue('memberTable', false)) {
     $nav .= $pageNavigation->pageControlElement('insurances');
   }

@@ -121,7 +121,7 @@ class Project implements \ArrayAccess
   private $sepaDebitMandates;
 
   /**
-   * @ORM\OneToMany(targetEntity="DebitNote", mappedBy="project")
+   * @ORM\OneToMany(targetEntity="SepaDebitNote", mappedBy="project")
    */
   private $debitNotes;
 

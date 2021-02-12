@@ -28,18 +28,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * DebitNoteData
+ * SepaDebitNoteData
  *
- * @ORM\Table(name="DebitNoteData")
+ * @ORM\Table(name="SepaDebitNoteData")
  * @ORM\Entity
  */
-class DebitNoteData implements \ArrayAccess
+class SepaDebitNoteData implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @ORM\OneToOne(targetEntity="DebitNote", inversedBy="debitNoteData", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="SepaDebitNote", inversedBy="debitNoteData", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $debitNote;
@@ -68,9 +68,9 @@ class DebitNoteData implements \ArrayAccess
   /**
    * Set debitNote.
    *
-   * @param int $debitNote
+   * @param SepaDebitNote $debitNote
    *
-   * @return DebitNoteData
+   * @return SepaDebitNoteData
    */
   public function setDebitNote($debitNote)
   {
@@ -82,7 +82,7 @@ class DebitNoteData implements \ArrayAccess
   /**
    * Get debitNote.
    *
-   * @return int
+   * @return SepaDebitNote
    */
   public function getDebitNote()
   {
@@ -94,7 +94,7 @@ class DebitNoteData implements \ArrayAccess
    *
    * @param string $fileName
    *
-   * @return DebitNoteData
+   * @return SepaDebitNoteData
    */
   public function setFileName($fileName)
   {
@@ -118,7 +118,7 @@ class DebitNoteData implements \ArrayAccess
    *
    * @param string $mimeType
    *
-   * @return DebitNoteData
+   * @return SepaDebitNoteData
    */
   public function setMimeType($mimeType)
   {
@@ -142,7 +142,7 @@ class DebitNoteData implements \ArrayAccess
    *
    * @param string $data
    *
-   * @return DebitNoteData
+   * @return SepaDebitNoteData
    */
   public function setData($data)
   {

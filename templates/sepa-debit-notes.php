@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -30,7 +31,6 @@ $nav = '';
 if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-extra-fields', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('sepa-debit-mandates', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
@@ -38,9 +38,8 @@ if ($projectId >= 0) {
   if ($projectName === $appConfig->getConfigValue('memberProject', false)) {
     $nav .= $pageNavigation->pageControlElement('insurances');
   }
+  $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('projects');
-  $nav .= $pageNavigation->pageControlElement('all');
-  $nav .= $pageNavigation->pageControlElement('instruments', $projectName, $projectId);
 } else {
   $nav .= $pageNavigation->pageControlElement('projects');
   $nav .= $pageNavigation->pageControlElement('all');

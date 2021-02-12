@@ -35,8 +35,8 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('insurancerates');
   $nav .= Navigation::pageControlElement('insurancebrokers');
   $nav .= Navigation::pageControlElement('project-payments', $projectName, $projectId);
-  $nav .= Navigation::pageControlElement('debit-mandates', $projectName, $projectId);
-  $nav .= Navigation::pageControlElement('debit-notes', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('sepa-debit-mandates', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('sepa-debit-notes', $projectName, $projectId);
   $nav .= Navigation::pageControlElement('projects');
   $nav .= Navigation::pageControlElement('all');
 
