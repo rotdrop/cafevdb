@@ -467,7 +467,7 @@ class EncryptionService
    *
    * @return The encrypted and encoded data.
    */
-  //@@TODO catch exceptions
+  //@@todo catch exceptions
   public function encrypt($value, $enckey)
   {
     // Store the size in the first 4 bytes in order not to have to
@@ -497,7 +497,7 @@ class EncryptionService
    * otherwise. If either @c $value or @c enckey is empty the return
    * value is just passed argument @c value.
    */
-  //@@TODO catch exceptions
+  //@@todo catch exceptions
   public function decrypt($value, $enckey)
   {
     if (!empty($enckey) && !empty($value)) {

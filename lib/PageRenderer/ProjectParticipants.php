@@ -1018,7 +1018,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
             'select' => 'M',
             'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
             //'sql' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
-            //'display' => [ 'popup' => 'data' ], // @TODO
+            //'display' => [ 'popup' => 'data' ], // @todo
             'colattrs' => [ 'data-groups' => json_encode($allowed), ],
             'values|ACP' => [
               'table' => "SELECT
@@ -1122,7 +1122,7 @@ WHERE pp.project_id = $projectId",
         'groups' => 'year',
         'join' => '$join_col_fqn = '.$joinTables[self::TABLE].'.project_id'
       ],
-      // @TODO check whether this is still needed or 'groups' => 'year' is just fine.
+      // @todo check whether this is still needed or 'groups' => 'year' is just fine.
       //'values2' => $projects,
       //'valueGroups' => $groupedProjects
     ];
@@ -1241,7 +1241,7 @@ WHERE pp.project_id = $projectId",
       'name' => $this->l->t('Photo'),
       'select' => 'T',
       'options' => 'APVCD',
-      'sql' => '`PMEtable0`.`musician_id`', // @TODO: needed?
+      'sql' => '`PMEtable0`.`musician_id`', // @todo: needed?
       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
         $stampIdx = array_search('Updated', $fds);
         $stamp = strtotime($row['qf'.$stampIdx]);

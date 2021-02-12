@@ -27,7 +27,7 @@ use OCP\IGroupManager;
 use OCP\IUserSession;
 use OCP\IConfig;
 
-// @@TODO: many of these function should go into the Util class. Also:
+// @@todo: many of these function should go into the Util class. Also:
 // Config should be rather dynamic than static.
 
 /**Class for handling configuration values.
@@ -185,7 +185,7 @@ redaxoRehearsalsModule
    */
   static public function adminContact()
   {
-    // @@TODO fix this, get just some admin user, or all in the admin group
+    // @@todo fix this, get just some admin user, or all in the admin group
     $name = "BOfH"; // \OCP\User::getDisplayName('admin');
     $email = "bastard.operator@from.hell";  // \OCP\Config::getUserValue('admin', 'settings', 'email');
     return array('name' => $name,
@@ -871,12 +871,12 @@ redaxoRehearsalsModule
       self::$session = new Session();
     }
 
-    //@@TODO use dependency injection in controller
+    //@@todo use dependency injection in controller
     self::$userSession = \OC::$server->getUserSession();
     self::$containerConfig = \OC::$server->getConfig();
     self::$groupManager = \OC::$server->getGroupManager();
 
-    //@@TODO: still necessasry??? This does not work ATM
+    //@@todo: still necessasry??? This does not work ATM
     //date_default_timezone_set(Util::getTimezone());
 
     // Fetch possibly encrypted config values from the OC data-base

@@ -208,7 +208,7 @@ class PageController extends Controller {
 
     $debugMode    = $this->getConfigValue('debugmode', 0);
 
-    // @@TODO this should not go here, I think. Rather into PMETableBase.
+    // @@todo this should not go here, I think. Rather into PMETableBase.
     //
     // Filter visibility is stored here:
     //$pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
@@ -275,8 +275,8 @@ class PageController extends Controller {
       'timezone' => $this->getTimezone(),
       'historySize' => $historySize,
       'historyPosition' => $historyPosition,
-      'requesttoken' => \OCP\Util::callRegister(), // @TODO: check
-      'csrfToken' => \OCP\Util::callRegister(), // @TODO: check
+      'requesttoken' => \OCP\Util::callRegister(), // @todo: check
+      'csrfToken' => \OCP\Util::callRegister(), // @todo: check
       'filtervisibility' => $usrFiltVis,
       'directchange' => $directChg,
       'showdisabled' => $showDisabled,
@@ -289,7 +289,7 @@ class PageController extends Controller {
     $response->addHeader('X-'.$this->appName.'-history-size', $historySize);
     $response->addHeader('X-'.$this->appName.'-history-position', $historyPosition);
 
-    // @TODO: we need this only for some site like DokuWiki and CMS
+    // @todo: we need this only for some site like DokuWiki and CMS
     $policy = new ContentSecurityPolicy();
     $policy->addAllowedChildSrcDomain('*');
     $policy->addAllowedFrameDomain('*');

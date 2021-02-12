@@ -224,7 +224,7 @@ class ConfigService {
   }
 
   public function getIcon() {
-    // @@TODO make it configurable
+    // @@todo make it configurable
     return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
   }
 

@@ -733,7 +733,7 @@ namespace CAFEVDB
         if (isset($row['Instruments'])) {
           $instruments = Util::explode($row['Instruments']);
           // translate names to ids, then insert in MusicianInstruments ...
-          // @@TODO
+          // @@todo
         }
 
       } else if ((string)$addressBookId == (string)self::MAIN_ADDRESS_BOOK_ID) {

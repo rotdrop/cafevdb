@@ -41,7 +41,7 @@ class ProjectWebPage implements \ArrayAccess
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="webPages", fetch="EXTRA_LAZY"))
    * @ORM\Id
-   * @TODO this should cascade deletes
+   * @todo this should cascade deletes
    */
   private $project;
 

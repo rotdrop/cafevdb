@@ -533,7 +533,7 @@ class ProjectExtraFields extends PMETableViewBase
         'tooltip' => $this->toolTipsService['extra-fields-encrypted'],
       ];
 
-      // @TODO wildcards?
+      // @todo wildcards?
       $cloudGroups = $this->groupManager()->search('');
       $opts['fdd']['readers'] = [
         'name' => $this->l->t('Readers'),
@@ -719,7 +719,7 @@ class ProjectExtraFields extends PMETableViewBase
       unset($allowed[-1]); // remove dummy data
     }
 
-    // make unused keys unique @TODO make it a uuid
+    // make unused keys unique @todo make it a uuid
     //self::allowedValuesUniqueKeys($allowed, $pme->rec);
 
     //error_log('trigger '.print_r($allowed, true));

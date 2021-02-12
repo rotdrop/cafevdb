@@ -192,7 +192,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       return true;
     };
 
-    // @TODO: the following should be done only on demand and is
+    // @todo: the following should be done only on demand and is
     // somewhat chaotic.
 
     // List of instruments
@@ -203,7 +203,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->instrumentFamilies =
       $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->values();
 
-    // @TODO think about how to generate translations
+    // @todo think about how to generate translations
     $this->memberStatus = DBTypes\EnumMemberStatus::toArray();
     foreach ($this->memberStatus as $key => $tag) {
       if (!isset($this->memberStatusNames[$tag])) {
@@ -259,7 +259,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /**
    * Header text informations.
    *
-   * @TODO Display in popup in order not to bloat the small header space.
+   * @todo Display in popup in order not to bloat the small header space.
    */
   public function headerText()
   {
@@ -615,7 +615,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $entity = $this->find($entityId);
           $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
           if ($usage > 0) {
-            /** @TODO needs more logic: disabled things would need to
+            /** @todo needs more logic: disabled things would need to
              *  be reenabled instead of adding new stuff. One
              *  possibility would be to add disabled things as hidden
              *  elements in order to keep them out of the way of the

@@ -226,7 +226,7 @@ SEPARATE_MEMBER_PAGES  = NO
 # uses this value to replace tabs by spaces in code fragments.
 # Minimum value: 1, maximum value: 16, default value: 4.
 
-TAB_SIZE               = 1
+TAB_SIZE               = 8
 
 # This tag can be used to specify a number of aliases that act as commands in
 # the documentation. An alias has the form:
@@ -238,7 +238,14 @@ TAB_SIZE               = 1
 # "Side Effects:". You can put \n's in the value part of an alias to insert
 # newlines.
 
-ALIASES                =
+ALIASES                = "ORM=\@ORM" \
+                         "Gedmo=\@Gedmo" \
+                         "MediaMonks=\@MediaMonks" \
+                         "NoAdminRequired=\@NoAdminRequired" \
+                         "NoCSRFRequired=\@NoCSRFRequired" \
+                         "PublicPage=\@PublicPage" \
+                         "NoGroupMemberRequired=\@NoGroupMemberRequired" \
+                         "UseSession=\@UseSession"
 
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C sources
 # only. Doxygen will then generate output that is more tailored for C. For
@@ -850,7 +857,7 @@ EXCLUDE_SYMLINKS       = NO
 
 EXCLUDE_PATTERNS       = */cafevdb/3rdparty/* \
                          */cafevdb/doc/* \
-                         */cafevdb/js/*
+                         */cafevdb/js/* \
                          */cafevdb/css/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names

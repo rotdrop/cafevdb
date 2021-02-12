@@ -73,7 +73,7 @@ class Admin implements ISettings {
    * @since 9.1
    */
   public function getPriority() {
-    // @@TODO could be made a configure option.
+    // @@todo could be made a configure option.
     return 50;
   }
 }

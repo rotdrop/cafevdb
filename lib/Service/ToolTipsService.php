@@ -26,7 +26,7 @@ use OCP\IL10N;
 
 /** Tool-tips management with translations.
  *
- * @TODO Perhaps base on \ArrayObject
+ * @todo Perhaps base on \ArrayObject
  */
 class ToolTipsService implements \ArrayAccess, \Countable
 {

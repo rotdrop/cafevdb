@@ -193,7 +193,7 @@ class PersonalSettingsController extends Controller {
 
       // So generate a new key-pair and store the key. This will only
       // change the user's preferences.
-      // @TODO If we ever should encrypt anything else with the user's
+      // @todo If we ever should encrypt anything else with the user's
       // SSL key-pair then we would need to be more careful about the
       // key-pair.
       try {
@@ -771,7 +771,7 @@ class PersonalSettingsController extends Controller {
           if ($parameter === $official) {
             $realValue = Util::normalizeSpaces($value);
 
-            // @TODO validate
+            // @todo validate
             if (empty($realValue)) {
               $this->deleteConfigValue($official);
               return self::response($this->l->t("Erased config value for parameter `%s'.", $official));
@@ -797,7 +797,7 @@ class PersonalSettingsController extends Controller {
       if (!$shareOwner->canChangePassword()) {
         return self::grumble($this->l->t('Authentication backend does not support changing passwords.'));
       }
-      $realValue = trim($value); // @@TODO: check for valid password chars.
+      $realValue = trim($value); // @@todo: check for valid password chars.
       if (empty($realValue)) {
         return self::grumble($this->l->t('Password must not be empty'));
       }

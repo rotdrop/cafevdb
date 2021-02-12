@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB\Service;
 use OCP\Calendar\ICalendar;
 use OCP\Constants;
 
-// @@TODO: replace the stuff below by more persistent APIs. As it
+// @@todo: replace the stuff below by more persistent APIs. As it
 // shows (Sep. 2020) the only option would be http calls to the dav
 // service. Even the perhaps-forthcoming writable calendar API does
 // not allow the creation of calendars or altering shring options.

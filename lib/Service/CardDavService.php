@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-// @@TODO: replace the stuff below by more persistent APIs. As it
+// @@todo: replace the stuff below by more persistent APIs. As it
 // shows (Sep. 2020) the only option would be http calls to the dav
 // service. Even the perhaps-forthcoming writable addressBook API does
 // not allow the creation of addressBooks or altering shring options.
@@ -161,7 +161,8 @@ class CardDavService
     return null;
   }
 
-  /**Force OCP\Contacts\IManager to be refreshed.
+  /**
+   * Force OCP\Contacts\IManager to be refreshed.
    *
    * @bug This function uses internal APIs.
    */

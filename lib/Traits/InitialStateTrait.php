@@ -72,7 +72,7 @@ trait InitialStateTrait {
         'wysiwygEditor' => $editor,
         'language' => $language,
         'adminContact' => $adminContact,
-        'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@TODO get from request
+        'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get from request
         'expertMode' => $expertMode,
         'Page' => [
           'historySize' => $this->historyService->size(),

@@ -76,7 +76,7 @@ class Application extends App implements IBootstrap
     /* @var IEventDispatcher $eventDispatcher */
     $dispatcher = $container->query(IEventDispatcher::class);
 
-    // @@TODO remove
+    // @@todo remove
     $dispatcher->addListener(
       \OCP\AppFramework\Http\TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN,
       function() {

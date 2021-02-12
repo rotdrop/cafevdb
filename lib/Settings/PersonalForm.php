@@ -149,7 +149,7 @@ class PersonalForm {
         'adminsettings' => $isGroupAdmin,
         'encryptionkey' => $this->getAppEncryptionKey(),
         'showToolTips' => $this->getUserValue('tooltips', 'on'),
-        'debugMode' => $this->getConfigValue('debugmode', 0), // @TODO depend on group admin
+        'debugMode' => $this->getConfigValue('debugmode', 0), // @todo depend on group admin
         'pagerows' => $this->getUserValue('pagerows', 20),
         'toolTips' => $this->toolTipsService,
         'filtervisibility' => $this->getUserValue('filtervisibility', 'off'),

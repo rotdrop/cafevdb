@@ -582,7 +582,7 @@ project without a flyer first.");
               [ 'type' => 'option',
                 'title' => $this->toolTipsService['project-action-debit-mandates'],
                 'value' => 'sepa-debit-mandates',
-                'disabled' => false, // @TODO !Config::isTreasurer(),
+                'disabled' => false, // @todo !Config::isTreasurer(),
                 'name' => $this->l->t('Debit Mandates')
               ],
               [ 'type' => 'option',
@@ -607,7 +607,7 @@ project without a flyer first.");
       [
         'pre' => ('<fieldset class="projectToolbox" '.
                   'data-project-id="'.$projectId.'" '.
-                  'data-project-name="'.htmlentities($projectName).'">'), // @TODO: standard way to do this
+                  'data-project-name="'.htmlentities($projectName).'">'), // @todo: standard way to do this
         'post' => '</fieldset>',
         [ 'type' => 'button',
           'title' => $this->toolTipsService['project-action-wiki'],
@@ -802,7 +802,7 @@ project without a flyer first.");
   }
 
   /**
-   * @Copydoc Projects::afterInsertTrigger()
+   * @copydoc Projects::afterInsertTrigger()
    *
    * This trigger, in particular, tries to take care to remove all
    * "side-effects" the existance of the project had. However, there

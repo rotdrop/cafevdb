@@ -177,7 +177,7 @@ class ProjectExtraFieldsService
                       [ implode(',', $protoKeys), implode(',', $keys) ])
         );
       }
-      if ($trimInactive && $option['disabled'] === true) { //  @TODO check for string boolean conversion
+      if ($trimInactive && $option['disabled'] === true) { //  @todo check for string boolean conversion
         unset($option);
       }
     }

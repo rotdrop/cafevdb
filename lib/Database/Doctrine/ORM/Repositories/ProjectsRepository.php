@@ -54,7 +54,7 @@ class ProjectsRepository extends EntityRepository
    *
    * nameByName is used by PME in order to construct select options etc.
    *
-   * @TODO Could make this a custom hydrator.
+   * @todo Could make this a custom hydrator.
    */
   public function shortDescription()
   {

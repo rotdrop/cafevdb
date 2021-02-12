@@ -213,7 +213,7 @@ class ProjectParticipantsController extends Controller {
             return self::grumble($this->l->t('Denying the attempt to remove the instrument %s because it is used in the current project.', $projectInstruments[$removedId]['instrument']['name']));
           }
 
-          /** @TODO implement soft-deletion */
+          /** @todo implement soft-deletion */
           if ($musicianInstruments[$removedId]->usage() > 0) {
             // return self::grumble(
             //   $this->l->t(

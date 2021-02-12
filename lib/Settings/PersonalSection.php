@@ -58,7 +58,7 @@ class PersonalSection implements IIconSection {
    * @return string
    */
   public function getName() {
-    // @@TODO make this configurable
+    // @@todo make this configurable
     return 'Camerata DB';
   }
 

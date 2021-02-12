@@ -84,7 +84,7 @@ class EntityManager extends EntityManagerDecorator
   /** @var bool */
   private $debug;
 
-  // @@TODO catch failures, allow construction without database for
+  // @@todo catch failures, allow construction without database for
   // initial setup.
   public function __construct(
     EncryptionService $encryptionService

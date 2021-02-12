@@ -759,7 +759,7 @@ Whatever.',
       return false;
     }
     if (empty($projectName)) {
-      $projectName = $project->getName(); // @TODO check if already set
+      $projectName = $project->getName(); // @todo check if already set
     }
 
     $webPages = $project->getWebPages();
@@ -858,7 +858,7 @@ Whatever.',
    *
    * @param int $projectId The project-id for the destination project.
    *
-   * @TODO Perhaps allow project-entities, i.e. "mixed $project"
+   * @todo Perhaps allow project-entities, i.e. "mixed $project"
    * instead of "int $projectId".
    *
    * @return array
@@ -1163,7 +1163,7 @@ Whatever.',
 
         $this->remove($project, true);
 
-        // @TODO: use cascading to remove
+        // @todo: use cascading to remove
         $deleteTables = [
           Entities\ProjectParticipant::class,
           Entities\ProjectInstrument::class,

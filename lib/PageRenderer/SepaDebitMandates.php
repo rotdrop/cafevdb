@@ -494,7 +494,7 @@ received so far'),
 
     ///////////////
 
-    // @TODO EXTRA FIELD STUFF / PROJECT MODE
+    // @todo EXTRA FIELD STUFF / PROJECT MODE
 
     if (!$this->addOperation() && $projectMode) {
       foreach ($monetary as $name => $field) {

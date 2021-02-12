@@ -312,7 +312,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
-    // @TODO unify soft-delete
+    // @todo unify soft-delete
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
         'name'     => $this->l->t('Disabled'),
@@ -380,7 +380,7 @@ make sure that the musicians are also automatically added to the
       'tooltip' => $this->toolTipsService['member-status'],
     ];
 
-    // @TODO still needed?
+    // @todo still needed?
     // fetch the list of all projects in order to provide a somewhat
     // cooked filter list
     // $projects =
@@ -409,7 +409,7 @@ make sure that the musicians are also automatically added to the
         'groups' => 'year',
         'join' => '$join_col_fqn = '.$joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id'
       ],
-      // @TODO check whether this is still needed or 'groups' => 'year' is just fine.
+      // @todo check whether this is still needed or 'groups' => 'year' is just fine.
       //'values2' => $projects,
       //'valueGroups' => $groupedProjects
     ];
@@ -631,7 +631,7 @@ make sure that the musicians are also automatically added to the
       $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
     }
 
-    // @@TODO This will have to get marrried with interleaved ORM stuff
+    // @@todo This will have to get marrried with interleaved ORM stuff
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
