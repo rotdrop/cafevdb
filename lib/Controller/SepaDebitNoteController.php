@@ -516,6 +516,75 @@ class SepaDebitNoteController extends Controller {
     return self::dataResponse($responseData);
   }
 
+  /**
+   * @NoAdminRequired
+   */
+  public function mandateStore(
+    $mandateReference
+    , $sequenceType
+    , $musicianId
+    , $projectId
+    , $mandateProjectId
+    , $mandateDate
+    , $lastUsedDate
+    , $bankAccountIBAN
+    , $bankAccountBIC
+    , $bankAccountBLZ
+    , $bankAccountOwner
+  )
+  {
+    $requiredKeys = ['mandateProjectId', 'projectId', 'musicianId', 'mandateReference'];
+    foreach ($requiredKeys as $required) {
+      if (empty(${$required})) {
+        return self::grumble($this->l->t("Required information `%s' not provided.", $required));
+      }
+    }
+
+    // Compose the mandate
+    $mandate = [
+      'mandateReference' => $mandateReference,
+      'sequenceType' => $sequenceType,
+      'musicianId' => $musicianId,
+      'projectId' => $mandateProjectId,
+      'mandateDate' => $mandateDate,
+      'lastUsedDate' => $lastUsedDate,
+      'IBAN' => $bankAccountIBAN,
+      'BIC' => $bankAccountBIC,
+      'BLZ' => $bankAccountBLZ,
+      'bankAccountOwner' => $bankAccountOwner,
+    ];
+
+    // this will throw on error
+    $this->financeService->validateSepaMandate($mandate);
+
+    $mandate = $this->financeService->storeSepaMandate($mandate);
+
+    if (empty($mandate)) {
+      return self::grumble($this->l_>t('Unable to store SEPA debit mandate in data-base.'));
+    }
+
+    return self::response($this->l->t('SEPA debit mandate stored in data-base.'));
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function mandateDelete($musicianId, $projectId, $mandateReference)
+  {
+    $requiredKeys = [ 'projectId', 'musicianId', 'mandateReference' ];
+    foreach ($requiredKeys as $required) {
+      if (empty(${$required})) {
+        return self::grumble($this->l->t("Required information `%s' not provided.", $required));
+      }
+    }
+
+    if ($this->financeService->deleteSepaMandate($reference)) {
+      return self::response($this->l->t('SEPA debit mandate deleted from data-base.'));
+    } else {
+      return self::grumble($this->l->t('Unable to delete SEPA debit mandate from data-base.'));
+    }
+  }
+
 }
 
 // Local Variables: ***

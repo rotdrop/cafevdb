@@ -360,13 +360,11 @@ class FinanceService
    */
   public function storeSepaMandate($newMandate)
   {
-    $result = false;
-
     if (!is_array($newMandate) ||
         !isset($newMandate['mandateReference']) ||
         !isset($newMandate['musicianId']) ||
         !isset($newMandate['projectId'])) {
-      return false;
+      return null;
     }
 
     if (isset($newMandate['sequenceType'])) {
@@ -387,7 +385,7 @@ class FinanceService
         $stamp = strtotime($newMandate[$date]);
         $value = date('Y-m-d', $stamp);
         if ($stamp != strtotime($value)) {
-          return false;
+          return null;
         }
         $newMandate[$date] = $value;
       } else {
@@ -409,7 +407,7 @@ class FinanceService
           $mandate['mandateReference'] != $ref ||
           $mandate['musicianId'] != $mus ||
           $mandate['projectId'] != $prj) {
-        return false;
+        return null;
       }
       // passed: issue an update query
       foreach ($newMandate as $key => $value) {
@@ -427,6 +425,8 @@ class FinanceService
       $this->persist($mandate);
     }
     $this->flush($mandate); // persist
+
+    return $mandate;
   }
 
   /**Compute usage data for the given mandate reference*/
@@ -486,10 +486,13 @@ class FinanceService
     return !empty($this->mandatesRepository->ban($mandateReference));
   }
 
-  /**Erase a SEPA-mandate. This is important data, so we require the
+  /**
+   * Erase a SEPA-mandate. This is important data, so we require the
    * project and musician as well as the mandate reference.
    *
    * @param string $mandateReference The mandate reference string.
+   *
+   * @return bool True on success.
    */
   public function deleteSepaMandate($mandateReference)
   {

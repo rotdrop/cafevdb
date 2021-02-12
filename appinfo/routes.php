@@ -36,7 +36,7 @@ namespace OCA\CAFEVDB;
  */
 
 /**
- * @global array $routes
+ * @var array
  *
  * Cloud-routes registered with the app.
  *
@@ -288,6 +288,16 @@ $routes = [
     [
       'name' => 'sepa_debit_note#mandate_form',
       'url' => '/finance/sepa/debit-notes/mandates/dialog',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'sepa_debit_note#mandate_store',
+      'url' => '/finance/sepa/debit-notes/mandates/store',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'sepa_debit_note#mandate_delete',
+      'url' => '/finance/sepa/debit-notes/mandates/delete',
       'verb' => 'POST',
     ],
     /**

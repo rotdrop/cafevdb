@@ -319,21 +319,16 @@ const mandateStore = function(callbackOk) {
   // "submit" the entire form
   const post = $('#sepa-debit-mandate-form').serialize();
 
-  $.post(
-    OC.filePath(appName, 'ajax/finance', 'sepa-debit-store.php'),
-    post,
-    function(data) {
+  $.post(generateUrl('finance/sepa/debit-notes/mandates/store'), post)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, function() {});
+    })
+    .done(function(data) {
       if (!Ajax.validateResponse(data, ['message'])) {
         return false;
       }
       $(dialogId + ' #msg').html(data.message);
       $(dialogId + ' #msg').show();
-      if (data.status === 'success') {
-        callbackOk();
-        return true;
-      } else {
-        return false;
-      }
     });
 };
 
@@ -347,21 +342,16 @@ const mandateDelete = function(callbackOk) {
   // "submit" the entire form
   const post = $('#sepa-debit-mandate-form').serialize();
 
-  $.post(
-    OC.filePath(appName, 'ajax/finance', 'sepa-debit-delete.php'),
-    post,
-    function(data) {
+  $.post(generateUrl('finance/sepa/debit-notes/mandates/delete'), post)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, function() {});
+    })
+    .done(function(data) {
       if (!Ajax.validateResponse(data, ['message'])) {
         return false;
       }
       $(dialogId + ' #msg').html(data.message);
       $(dialogId + ' #msg').show();
-      if (data.status === 'success') {
-        callbackOk();
-        return true;
-      } else {
-        return false;
-      }
     });
 };
 
