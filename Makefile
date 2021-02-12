@@ -147,6 +147,8 @@ doc: $(PHPDOC)
 
 .PHONY: doxygen
 doxygen: doc/doxygen/Doxyfile
+	rm -rf $(DOC_BUILD_DIR)/doxygen/*
+	mkdir -p $(DOC_BUILD_DIR)/doxygen/
 	cd doc/doxygen && doxygen
 
 # Builds the source package

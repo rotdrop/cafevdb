@@ -850,7 +850,8 @@ EXCLUDE_SYMLINKS       = NO
 
 EXCLUDE_PATTERNS       = */cafevdb/3rdparty/* \
                          */cafevdb/doc/* \
-                         */cafevdb/tmp/*
+                         */cafevdb/js/*
+                         */cafevdb/css/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
