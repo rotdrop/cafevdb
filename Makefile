@@ -26,7 +26,7 @@ COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--no-dev --prefer-dist
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
-PHPDOC_TEMPLATE=--template=default
+PHPDOC_TEMPLATE=--template=clean
 #--template=clean --template=xml
 
 #--template=responsive-twig
@@ -128,7 +128,10 @@ cleanup: $(BUILDDIR)/core-exclude
 	$(COMPOSER) dump-autoload
 
 .PHONY: doc
-doc: $(PHPDOC)
+doc: phpdoc doxygen jsdoc
+
+.PHONY: phpdoc
+phpdoc: $(PHPDOC)
 	rm -rf $(DOC_BUILD_DIR)/phpdoc/*
 	$(PHPDOC) run \
  $(PHPDOC_TEMPLATE) \
@@ -150,6 +153,10 @@ doxygen: doc/doxygen/Doxyfile
 	rm -rf $(DOC_BUILD_DIR)/doxygen/*
 	mkdir -p $(DOC_BUILD_DIR)/doxygen/
 	cd doc/doxygen && doxygen
+
+.PHONY: jsdoc
+jsdoc: doc/jsdoc/jsdoc.json
+	npm run generate-docs
 
 # Builds the source package
 .PHONY: source
