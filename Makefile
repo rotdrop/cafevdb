@@ -26,7 +26,7 @@ COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--no-dev --prefer-dist
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
-PHPDOC_TEMPLATE=--template=clean
+PHPDOC_TEMPLATE=--template=default
 #--template=clean --template=xml
 
 #--template=responsive-twig
@@ -144,6 +144,10 @@ doc: $(PHPDOC)
 
 #--setting guides.enabled=true \
 #
+
+.PHONY: doxygen
+doxygen: doc/doxygen/Doxyfile
+	cd doc/doxygen && doxygen
 
 # Builds the source package
 .PHONY: source

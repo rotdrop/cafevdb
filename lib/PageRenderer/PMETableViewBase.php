@@ -94,7 +94,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected $cssClass = 'pme-table-view';
 
   /**
-   * @var int $changeSetSize Number of affected entries, fields or
+   * @var int Number of affected entries, fields or
    * rows. Context dependent, for generating messages.
    */
   protected $changeSetSize = -1;

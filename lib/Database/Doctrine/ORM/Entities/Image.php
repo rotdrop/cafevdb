@@ -77,7 +77,8 @@ class Image implements \ArrayAccess
   private $md5;
 
   /**
-   * @var ImageData This is "toMany" only for the sake of lazy loading.
+   * @var ImageData
+   * This is "toMany" only for the sake of lazy loading.
    *
    * owning side
    *

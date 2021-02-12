@@ -43,7 +43,10 @@ class ProjectService
 
   const DBTABLE = 'Projects';
 
-  /** @var OCA\CAFEVDB\Storage\UserStorage */
+  /**
+   * @var OCA\CAFEVDB\Storage\UserStorage
+   * This is an explanation.
+   */
   private $userStorage;
 
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */

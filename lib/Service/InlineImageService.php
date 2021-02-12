@@ -35,19 +35,14 @@ class InlineImageService
   const IMAGE_META_DATA = 2;
   const IMAGE_DATA_MASK = 3;
 
-  /** @var string
-   *
-   * Current data-base table.
-   */
+  /** @var string Current data-base table. */
   protected $itemTable;
 
-  /** @var string
-   *
-   * Current image-data.
-   */
+  /** @var string Current image-data. */
   protected $imageData;
 
-  /** @var int
+  /**
+   * @var int
    *
    * Current image id, i.e. id of row in self::$itemTable.
    */
