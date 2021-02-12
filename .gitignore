@@ -15,13 +15,15 @@ build
 .clipassword
 doc/db-app/phpdoc/[!.]*
 doc/db-app/doxygen/[!.]*
+doc/phpdoc/[!.]*
+doc/doxygen/html/[!.]*
 .phpdoc
 lib/Database/Doctrine/ORM/Proxies/**
 blah*
 foo*
 bar*
 node_modules
-**/*old*
+**/*.old*
 current-key
 dependencygraph.svg
 /*.html
