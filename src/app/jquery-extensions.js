@@ -122,7 +122,7 @@ $.fn.hasScrollbars = function() {
 /**
  * Determine dimensions of scrollbars.
  *
- * @returns{Object}
+ * @returns {Object}
  */
 $.fn.scrollbarDimensions = function() {
   const node = this.get(0);

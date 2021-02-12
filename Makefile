@@ -151,11 +151,13 @@ phpdoc: $(PHPDOC)
 .PHONY: doxygen
 doxygen: doc/doxygen/Doxyfile
 	rm -rf $(DOC_BUILD_DIR)/doxygen/*
-	mkdir -p $(DOC_BUILD_DIR)/doxygen/
+	mkdir -p $(DOC_BUILD_DIR)/doxygen
 	cd doc/doxygen && doxygen
 
 .PHONY: jsdoc
 jsdoc: doc/jsdoc/jsdoc.json
+	rm -rf $(DOC_BUILD_DIR)/jsdoc/*
+	mkdir -p $(DOC_BUILD_DIR)/jsdoc
 	npm run generate-docs
 
 # Builds the source package

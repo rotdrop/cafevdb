@@ -129,7 +129,7 @@ const myPersonalRecordDialog = function(record, options) {
  *
  * @param {Function} errorCB TBD.
  *
- * @note Would perhaps be snappier to only submit the form to the
+ * Would perhaps be snappier to only submit the form to the
  * server if something changed. However, the validation is triggered
  * by a change event. So what.
  */

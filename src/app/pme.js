@@ -326,8 +326,6 @@ const tableDialogReload = function(options, callback) {
  *
  * @param {Function} changeCallback Handler to call after dialog open
  * and tab change.
- *
- * @bug This function is by far too long.
  */
 const tableDialogHandlers = function(options, changeCallback) {
 
