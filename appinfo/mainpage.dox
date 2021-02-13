@@ -3,7 +3,7 @@
 
 @section Other generated API-docs for cafevdb
 
-- <a href="../../jsdoc/html">JavaScript API Docs (jsdoc)</a>
-- <a href="../../phpdoc/html">PHPDoc API Docs</a>
+- <a href="../../jsdoc/html" target="cafevdb-jsdoc">JavaScript API Docs (jsdoc)</a>
+- <a href="../../phpdoc/html" target="cafevdb-phpdoc">PHPDoc API Docs</a>
 
 */
