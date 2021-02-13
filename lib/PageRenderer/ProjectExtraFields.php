@@ -399,6 +399,7 @@ class ProjectExtraFields extends PMETableViewBase
           switch ($dataType) {
           case 'boolean':
             $value = $value ? $this->l->t('true') : $this->l->t('false');
+          case 'deposit':
           case 'service-fee':
             $value = $this->moneyValue($value);
           }
@@ -1287,7 +1288,8 @@ __EOT__;
     return $html;
   }
 
-  /**Return a currency value where the number symbol can be hidden
+  /**
+   * Return a currency value where the number symbol can be hidden
    * by CSS.
    */
   private function currencyValue($value)

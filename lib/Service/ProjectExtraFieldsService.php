@@ -67,9 +67,12 @@ class ProjectExtraFieldsService
 
     $monetary = [];
     foreach ($extraFields as $field) {
-      if ($field['dataType'] == 'service-fee') {
+      switch ($field['dataType']) {
+      case 'service-fee':
+      case 'deposit':
         //$allowed = $this->explodeAllowedValues($field['allowed_values'], false, true);
         $monetary[$field['name']] = $field;
+        break;
       }
     }
     return $monetary;

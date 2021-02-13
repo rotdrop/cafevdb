@@ -141,6 +141,7 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'column' => 'field_id',
     ],
+    // Defined dynamically in render():
     // SepaDebitMandates
     // [
     //   'table' => self::SEPA_DEBIT_MANDATES_TABLE,
@@ -1350,12 +1351,6 @@ WHERE pp.project_id = $projectId",
         'select' => 'M',
         'options' => 'LFACPDV',
         'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.project_id DESC)',
-//         'values' => array(
-//           'table' => 'SepaDebitMandates',
-//           'column' => 'mandateReference',
-//           'join' => $debitJoinCondition,
-//           'description' => 'mandateReference'
-//           ),
         'nowrap' => true,
         'sort' => true,
         'php' => function($mandates, $action, $k, $fds, $fdd, $row, $recordId) {
@@ -1530,122 +1525,6 @@ WHERE pp.project_id = $projectId",
 //         'display|LFVD' => array('popup' => 'tooltip'),
 //         );
 
-//       $opts['fdd']['Lastschrift'] = array(
-//         'tab'      => array('id' => $financeTab),
-//         'name'     => $this->l->t('Direct Debit'),
-//         'css'      => array('postfix' => ' direct-debit-allowed'),
-//         'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /*'&#10004;'*/),
-//         'values2|LVDF' => array('0' => '&nbsp;',
-//                                 '1' => '&#10004;'),
-//         'escape' => false,
-//         //'values2|CAP' => array(1 => ''),
-//         //'values2|LVFD' => array(1 => $this->l->t('true'), 0 => $this->l->t('false')),
-//         'default'  => '',
-//         'select'   => 'O',
-//         'sort'     => true,
-//         'tooltip'  => Config::toolTips('project-direct-debit-allowed'),
-//         'display|LF' => array('popup' => 'tooltip'),
-//         );
-
-//       $debitJoinCondition =
-//         '('.
-//         '$join_table.projectId = '.$projectId.
-//         ' OR '.
-//         '$join_table.projectId = '.$memberTableId.
-//         ')'.
-//         ' AND $join_table.musicianId = $main_table.MusikerId'.
-//         ' AND $join_table.active = 1';
-
-//       // One virtual field in order to be able to manage SEPA debit
-//       // mandates. Note that in rare circumstances there may be two
-//       // debit mandates: one for general and one for the project. We
-//       // fetch both with the same sort-order and leave it to the calling
-//       // code to do THE RIGHT THING (tm).
-//       $mandateIdx = count($opts['fdd']);
-//       $mandateAlias = "`PMEjoin".$mandateIdx."`";
-//       $opts['fdd']['SepaDebitMandate'] = array(
-//         'name' => $this->l->t('SEPA Debit Mandate'),
-//         'input' => 'VR',
-//         'tab' => array('id' => $financeTab),
-//         'select' => 'M',
-//         'options' => 'LFACPDV',
-//         'sql' => "GROUP_CONCAT(DISTINCT ".$mandateAlias.".`mandateReference`
-//   ORDER BY ".$mandateAlias.".`projectId` DESC)",
-//         'values' => array(
-//           'table' => 'SepaDebitMandates',
-//           'column' => 'mandateReference',
-//           'join' => $debitJoinCondition,
-//           'description' => 'mandateReference'
-//           ),
-//         'nowrap' => true,
-//         'sort' => true,
-//         'php' => function($mandates, $action, $k, $fds, $fdd, $row, $recordId)
-//         use ($musIdIdx, $musFirstNameIdx, $musLastNameIdx)
-//         {
-//           if ($this->pme_bare) {
-//             return $mandates;
-//           }
-//           $projectId = $this->projectId;
-//           $projectName = $this->projectName;
-//           // can be multi-valued (i.e.: 2 for member table and project table)
-//           $mandateProjects = $row['qf'.($k+1)];
-//           $mandates = Util::explode(',', $mandates);
-//           $mandateProjects = Util::explode(',', $mandateProjects);
-//           if (count($mandates) !== count($mandateProjects)) {
-//             throw new \RuntimeException(
-//               $this->l->t('Data inconsistency, mandates: "%s", projects: "%s"',
-//                    array(implode(',', $mandates),
-//                          implode(',', $mandateProjects)))
-//               );
-//           }
-
-//           // Careful: this changes when rearranging the sort-order of the display
-//           $musicianId        = $row['qf'.$musIdIdx];
-//           $musicianFirstName = $row['qf'.$musFirstNameIdx];
-//           $musicianLastName  = $row['qf'.$musLastNameIdx];
-//           $musician = $musicianLastName.', '.$musicianFirstName;
-
-//           $html = [];
-//           foreach($mandates as $key => $mandate) {
-//             if (empty($mandate)) {
-//               continue;
-//             }
-//             $expired = Finance::mandateIsExpired($mandate);
-//             $mandateProject = $mandateProjects[$key];
-//             if ($mandateProject === $projectId) {
-//               $html[] = self::sepaDebitMandateButton(
-//                 $mandate, $expired,
-//                 $musicianId, $musician,
-//                 $projectId, $projectName);
-//             } else {
-//               $mandateProjectName = Projects::fetchName($mandateProject);
-//               $html[] = self::sepaDebitMandateButton(
-//                 $mandate, $expired,
-//                 $musicianId, $musician,
-//                 $projectId, $projectName,
-//                 $mandateProject, $mandateProjectName);
-//             }
-//           }
-//           if (empty($html)) {
-//             // Empty default knob
-//             $html = array(self::sepaDebitMandateButton(
-//                             $this->l->t("SEPA Debit Mandate"), false,
-//                             $musicianId, $musician,
-//                             $projectId, $projectName));
-//           }
-//           return implode("\n", $html);
-//         },
-//         );
-
-//       $mandateProjectIdx = count($opts['fdd']);
-//       $opts['fdd']['DebitMandateProject'] = array(
-//         'input' => 'VHR',
-//         'name' => 'internal data',
-//         'options' => 'H',
-//         'select' => 'T',
-//         'sql' => "GROUP_CONCAT(DISTINCT ".$mandateAlias.".`projectId`
-//   ORDER BY ".$mandateAlias.".`projectId` DESC)",
-//         );
 //     }
 
 //     $opts['triggers']['update']['before'] = [];

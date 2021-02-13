@@ -45,4 +45,5 @@ class EnumExtraFieldDataType extends EnumType
   const DATE = 'date';
   const DATETIME = 'datetime';
   const SERVICE_FEE = 'service-fee';
+  const DEPOSIT = 'deposit';
 };
