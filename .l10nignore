@@ -2,8 +2,7 @@ ajax/
 3rdparty/
 vendor/
 build/
-doc/db-app/
-doc/db-app/
+doc/
 translationfiles/music/
 js/
 css/
