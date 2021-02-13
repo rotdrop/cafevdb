@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -55,6 +56,7 @@ class ProjectParticipants extends PMETableViewBase
   const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
   const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
+  const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
   const EXTRA_FIELDS_TABLE = 'ProjectExtraFields';
   const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
@@ -115,6 +117,15 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'column' => 'project_id',
       'read_only' => true,
+    ],
+    [
+      'table' => self::PROJECT_PAYMENTS_TABLE,
+      'entity' => Entities\ProjectPayment::class,
+      'identifier' => [
+        'project_id' => 'project_id',
+        'musician_id' => 'musician_id',
+      ],
+      'column' => 'id',
     ],
     // extra input fields depending on the type of the project,
     // e.g. service fees etc.
@@ -821,6 +832,7 @@ class ProjectParticipants extends PMETableViewBase
           [
             'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
             'input' => 'VSRH',
+// not needed anymore
 //             'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
 //             'values|LFDV' => [
 //               'table' => "SELECT
