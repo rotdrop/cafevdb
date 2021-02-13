@@ -39,7 +39,6 @@ import * as Notification from './notification.js';
  *
  * @param {Function} getValue If given a callback which computes the
  * value to be communication via Ajax to the server as payload { value: VALUE }.
- *
  */
 const simpleSetValueHandler = function(element, eventType, msgElement, userCallbacks) {
   const defaultCallbacks = {
@@ -108,8 +107,17 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
   });
 };
 
-// AJAX call without a value
+/**
+ * AJAX call without submitting a value.
+ *
+ * @param {jQuery} element TBD.
+ *
+ * @param {String} eventType Something like 'blue', 'change' etc.
+ *
+ * @param {jQuery} msgElement TBD.
+ */
 const simpleSetHandler = function(element, eventType, msgElement) {
+  // console.debug('simpleSetHandler', element, eventType);
   element.on(eventType, function(event) {
     const $self = $(this);
     msgElement.hide();
@@ -117,6 +125,7 @@ const simpleSetHandler = function(element, eventType, msgElement) {
     $.post(
       generateUrl('settings/app/set/' + name))
       .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown);
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
       })
       .done(function(data) {
