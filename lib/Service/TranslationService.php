@@ -188,6 +188,15 @@ class TranslationService
     return $contents;
   }
 
+  public function eraseTranslationKeys(string $phrase)
+  {
+    $repository = $this->getDatabaseRepository(TranslationKey::class);
+    foreach ($repository->findLike([ 'phrase' => $phrase]) as $translationKey) {
+      $this->remove($translationKey);
+    }
+    return true;
+  }
+
 }
 
 // Local Variables: ***

@@ -984,6 +984,13 @@ class PersonalSettingsController extends Controller {
         return self::grumble($this->l->t('Recording the translation failed'));
       }
       return self::response($this->l->t("Successfully recorded the given translation for the language `%s'", $language));
+    case 'erase-translations':
+      if (!$this->translationService->eraseTranslationKeys('*')) {
+        return self::grumble($this->l->t('Failed to erase all recorded translations.'));
+      } else {
+        return self::response($this->l->t('All recorded translations have been erased.'));
+      }
+      break;
     case 'clouddev':
     case 'sourcedocs':
     case 'sourcecode':

@@ -74,6 +74,7 @@ foreach ($translations as $keyId => $data) {
     <fieldset id="<?php p($appName); ?>-translations-download">
       <input id="<?php p($appName); ?>-translations-download-pot" type="button" name="download-translations-template" value="<?php p($l->t('Download Template (.pot)')); ?>"/>
       <!-- <input id="<?php p($appName); ?>-translations-download-translations" type="button" name="download-translations" value="<?php p($l->t('Download Translations (.po)')); ?>"/> -->
+      <input id="<?php p($appName); ?>-translations-erase-all" type="button" name="erase-translations" value="<?php p($l->t('Delete Recorded Untranslated')); ?>"/>
     </fieldset>
     <div class="translation msg"></div>
   </form>

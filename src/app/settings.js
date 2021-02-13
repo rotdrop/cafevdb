@@ -845,6 +845,7 @@ const afterLoad = function(container) {
     const translationText = $('textarea.translation-translation');
     const hideTranslated = $('#cafevdb-hide-translated');
     const downloadPoTemplates = $('#' + appName + '-translations-download-pot');
+    const deleteRecorded = $('#' + appName + '-translations-erase-all');
     const msg = $('.translation.msg');
 
     let key;
@@ -944,6 +945,8 @@ const afterLoad = function(container) {
           return val;
         },
       });
+
+    simpleSetHandler(deleteRecorded, 'click', msg);
 
     downloadPoTemplates.on('click', function(event) {
       const post = [];
