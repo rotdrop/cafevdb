@@ -78,7 +78,7 @@ class ConfigService {
     'rehearsals',
   ];
   const CMS_TEMPLATES = [
-    '',
+    'sub-page',
   ];
   const WYSIWYG_EDITORS = [
     'tinymce' => [ 'name' => 'TinyMCE', 'enabled' => true],
