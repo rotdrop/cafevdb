@@ -40,6 +40,46 @@ class ProjectsRepository extends EntityRepository
   }
 
   /**
+   * Find a project by its Id.
+   *
+   * @param array|int $projectOrId This may either be an integer --
+   * the plain id -- or "something" array-like with an 'id' index.
+   *
+   * @return null|Entities\Project
+   */
+  public function findById($projectOrId):?Entities\Project
+  {
+    if (!empty($projectOrId['id'])) { // allow plain array with id
+      $projectId = $projectId['id'];
+    } else {
+      $projectId = $projectOrId;
+    }
+    return $this->findOneBy([
+      'id' => $projectId,
+      'disabled' => false,
+    ]);
+  }
+
+  /**
+   * Convenience function: just return the argument if it is already a
+   * project entity, otherwise fetch the project, repectively generate
+   * a reference.
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @return null|Entities\Project
+   */
+  public function ensureProject($projectOrId):? Entities\Project
+  {
+    if (!($projectOrId instanceof Entities\Project)) {
+      //return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
+      return $this->findById($projectOrId);
+    } else {
+      return $projectOrId;
+    }
+  }
+
+  /**
    * Fetch a short description for all projects.
    *
    * @return array

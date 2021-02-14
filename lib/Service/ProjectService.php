@@ -142,26 +142,6 @@ class ProjectService
   }
 
   /**
-   * Find a project by its Id.
-   *
-   * @param array|int $projectOrId
-   *
-   * @return null|Entities\Project
-   */
-  public function findById($projectOrId):?Entities\Project
-  {
-    if (!empty($projectOrId['id'])) { // allow plain array with id
-      $projectId = $projectId['id'];
-    } else {
-      $projectId = $projectOrId;
-    }
-    return $this->repository->findOneBy([
-      'id' => $projectId,
-      'disabled' => false,
-    ]);
-  }
-
-  /**
    * Find a project by its name.
    *
    * @param string $projectName
@@ -213,7 +193,7 @@ class ProjectService
    */
   public function ensureProjectFolders($projectOrId, $projectName = null, $only = false)
   {
-    $project = $this->ensureProject($projectOrId);
+    $project = $this->repository->ensureProject($projectOrId);
     if (empty($projectName)) {
       $projectName = $project['name'];
     } else if ($projectName !== $project['name']) {
@@ -1106,24 +1086,6 @@ Whatever.',
   }
 
   /**
-   * Just return the argument if it is already a project entity,
-   * otherwise fetch the project, repectively geneate a reference.
-   *
-   * @param int|Entities\Project $projectOrId
-   *
-   * @return null|Entities\Project
-   */
-  private function ensureProject($projectOrId):? Entities\Project
-  {
-    if (!($projectOrId instanceof Entities\Project)) {
-      //return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
-      return $this->findById($projectOrId);
-    } else {
-      return $projectOrId;
-    }
-  }
-
-  /**
    * Delete the given project or id.
    *
    * @param int|Entities\Project $project
@@ -1133,7 +1095,7 @@ Whatever.',
    */
   public function deleteProject($projectOrId):? Entities\Project
   {
-    $project = $this->ensureProject($projectOrId);
+    $project = $this->repository->ensureProject($projectOrId);
     $projectId = $project['id'];
 
     $softDelete  = count($project['payments']) > 0;
@@ -1218,7 +1180,7 @@ Whatever.',
    */
   public function renameProject($projectOrId, $newData)
   {
-    $project = $this->ensureProject($projectOrId);
+    $project = $this->repository->ensureProject($projectOrId);
     $projectId = $project['id'];
 
     if (is_string($newData)) {
