@@ -655,7 +655,7 @@ class ProjectParticipants extends PMETableViewBase
           'options' => 'VDLF', // wrong in change mode
           'input' => 'VR',
           'sql' => 'IFNULL(SUM($join_col_fqn), 0.0)',
-          'php' => function($amountPaid, $op, $field, $row, $recordId, $pme) use ($monetary) {
+          'php' => function($amountPaid, $op, $k, $row, $recordId, $pme) use ($monetary) {
             $project_id = $recordId['project_id'];
             $musicianId = $recordId['musician_id'];
 
@@ -692,11 +692,11 @@ class ProjectParticipants extends PMETableViewBase
             // display as TOTAL/PAID/REMAINDER
             $rest = $amountInvoiced - $amountPaid;
 
-            $amountInvoiced = Util::moneyValue($amountInvoiced);
-            $amountPaid = Util::moneyValue($amountPaid);
-            $rest = Util::moneyValue($rest);
-            return ('<span class="totals finance-state">'.$amount.'</span>'
-                    .'<span class="received finance-state">'.$paid.'</span>'
+            $amountInvoiced = $this->moneyValue($amountInvoiced);
+            $amountPaid = $this->moneyValue($amountPaid);
+            $rest = $this->moneyValue($rest);
+            return ('<span class="totals finance-state">'.$amountInvoiced.'</span>'
+                    .'<span class="received finance-state">'.$amountPaid.'</span>'
                     .'<span class="outstanding finance-state">'.$rest.'</span>');
           },
         'tooltip'  => $this->toolTipsService['project-total-fee-summary'],
@@ -774,7 +774,7 @@ class ProjectParticipants extends PMETableViewBase
         $valueData[$key] = $value['data'];
       }
 
-      switch ($dataType) {
+    switch ($dataType) {
       case 'text':
         // default config
         break;
@@ -806,7 +806,14 @@ class ProjectParticipants extends PMETableViewBase
       case 'datetime':
       case 'money':
       case 'service-fee':
+      case 'deposit':
+        if ($dataType == 'service-fee' || $dataType == 'deposit') {
+          $dataType = 'money';
+        }
         $style = $this->defaultFDD[$dataType];
+        if (empty($style)) {
+          throw \Exception($this->l->t('Not default style for "%s" available.', $dataType));
+        }
         unset($style['name']);
         $fdd = array_merge($fdd, $style);
         $fdd['css']['postfix'] .= ' '.implode(' ', $css);
@@ -887,7 +894,7 @@ class ProjectParticipants extends PMETableViewBase
         list($curColIdx, $fddName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $fdd);
 
-        // hide value field and tweak for view displays.
+    // hide value field and tweak for view displays.
         $css[] = 'groupofpeople';
         $css[] = 'single-valued';
         $fdd = Util::arrayMergeRecursive(
@@ -1593,9 +1600,9 @@ WHERE pp.project_id = $projectId",
 //           // display as TOTAL/PAID/REMAINDER
 //           $rest = $amount - $paid;
 
-//           $amount = Util::moneyValue($amount);
-//           $paid = Util::moneyValue($paid);
-//           $rest = Util::moneyValue($rest);
+//           $amount = $this->moneyValue($amount);
+//           $paid = $this->moneyValue($paid);
+//           $rest = $this->moneyValue($rest);
 //           return ('<span class="totals finance-state">'.$amount.'</span>'
 //                   .'<span class="received finance-state">'.$paid.'</span>'
 //                   .'<span class="outstanding finance-state">'.$rest.'</span>');
