@@ -699,7 +699,7 @@ class ProjectParticipants extends PMETableViewBase
                     .'<span class="received finance-state">'.$paid.'</span>'
                     .'<span class="outstanding finance-state">'.$rest.'</span>');
           },
-        'tooltip'  => $this->toolTipsService('project-total-fee-summary'),
+        'tooltip'  => $this->toolTipsService['project-total-fee-summary'],
         'display|LFVD' => [ 'popup' => 'tooltip' ],
         ]);
 
