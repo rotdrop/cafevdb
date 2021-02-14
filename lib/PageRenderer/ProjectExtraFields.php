@@ -317,8 +317,8 @@ class ProjectExtraFields extends PMETableViewBase
       'select' => 'T',
       'php' => function($value, $op, $field, $row, $recordId, $pme) {
         //$this->logInfo('ALLOWED SHOW '.print_r($row, true));
-        $multiplicity = $row[$this->queryField('multiplicity', $fdd)];
-        $dataType = $row[$this->queryField('data_type', $fdd)];
+        $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
+        $dataType = $row[$this->queryField('data_type', $pme->fdd)];
         return $this->showAllowedValues($value, $op, $recordId, $multiplicity, $dataType);
       },
       'maxlen' => 1024,
@@ -387,9 +387,9 @@ class ProjectExtraFields extends PMETableViewBase
       'size' => 30,
       'sort' => true,
       'display|LF' => [ 'popup' => 'data' ],
-      'php|LFDV' => function($value, $op, $field, $row, $recordId) {
-        $multiplicity = $row[$this->queryField('multiplicity', $fdd)];
-        $dataType = $row[$this->queryField('data_type', $fdd)];
+      'php|LFDV' => function($value, $op, $field, $row, $recordId, $pme) {
+        $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
+        $dataType = $row[$this->queryField('data_type', $pme->fdd)];
         switch ($multiplicity) {
         case 'groupofpeople':
         case 'groupsofpeople':
