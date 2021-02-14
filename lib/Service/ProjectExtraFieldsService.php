@@ -71,7 +71,7 @@ class ProjectExtraFieldsService
       case 'service-fee':
       case 'deposit':
         //$allowed = $this->explodeAllowedValues($field['allowed_values'], false, true);
-        $monetary[$field['name']] = $field;
+        $monetary[$field['id']] = $field;
         break;
       }
     }
@@ -93,6 +93,9 @@ class ProjectExtraFieldsService
    */
   public function extraFieldSurcharge($value, $allowedValues, $multiplicity)
   {
+    if (!is_array($allowedValues)) {
+      $allowedValues = $this->explodeAllowedValues($allowedValues);
+    }
     //error_log('value '.$value);
     switch ($multiplicity) {
     case 'groupofpeople':

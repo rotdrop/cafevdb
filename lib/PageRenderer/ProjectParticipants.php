@@ -641,6 +641,70 @@ class ProjectParticipants extends PMETableViewBase
      *
      */
 
+    $monetary = $this->extraFieldsService->monetaryFields($this->project);
+
+    if (!empty($monetary) || ($projectId == $this->memberProjectId)) {
+
+      $this->makeJoinTableField(
+        $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
+        [
+          'tab'      => array('id' => $financeTab),
+          'name'     => $this->l->t('Total Charges'),
+          'css'      => [ 'postfix' => ' total-project-fees money' ],
+          'sort'    => false,
+          'options' => 'VDLF', // wrong in change mode
+          'input' => 'VR',
+          'sql' => 'IFNULL(SUM($join_col_fqn), 0.0)',
+          'php' => function($amountPaid, $op, $field, $row, $recordId, $pme) use ($monetary) {
+            $project_id = $recordId['project_id'];
+            $musicianId = $recordId['musician_id'];
+
+            $amountInvoiced = 0.0;
+            foreach ($monetary as $fieldId => $extraField) {
+
+              $table = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+              $label = $this->joinTableFieldName($table, 'field_value');
+
+              if (!isset($pme->fdn[$label])) {
+                throw new \Exception($this->l->t('Data for monetary field "%s" not found', $label));
+              }
+
+              $rowIndex = $pme->fdn[$label];
+              $qf = 'qf'.$rowIndex;
+              $qfIdx = $qf.'_idx';
+              if (isset($row[$qfidx])) {
+                $value = $row[$qfIdx];
+              } else {
+                $value = $row[$qf];
+              }
+              if (empty($value)) {
+                continue;
+              }
+              $allowed = $extraField['allowedValues'];
+              $multiplicity = $extraField['multiplicity'];
+              $amountInvoiced += $this->extraFieldsService->extraFieldSurcharge($value, $allowed, $multiplicity);
+            }
+
+            if ($projectId == $this->memberProjectId) {
+              // $amountInvoiced += InstrumentInsurance::annualFee($row['qf'.$musIdIdx]);
+            }
+
+            // display as TOTAL/PAID/REMAINDER
+            $rest = $amountInvoiced - $amountPaid;
+
+            $amountInvoiced = Util::moneyValue($amountInvoiced);
+            $amountPaid = Util::moneyValue($amountPaid);
+            $rest = Util::moneyValue($rest);
+            return ('<span class="totals finance-state">'.$amount.'</span>'
+                    .'<span class="received finance-state">'.$paid.'</span>'
+                    .'<span class="outstanding finance-state">'.$rest.'</span>');
+          },
+        'tooltip'  => $this->toolTipsService('project-total-fee-summary'),
+        'display|LFVD' => [ 'popup' => 'tooltip' ],
+        ]);
+
+    } // have monetary fields
+
     /*
      *
      **************************************************************************
@@ -648,7 +712,6 @@ class ProjectParticipants extends PMETableViewBase
      * extra columns like project fee, deposit etc.
      *
      */
-
 
     // Generate input fields for the extra columns
     foreach ($extraFields as $field) {
@@ -1255,8 +1318,8 @@ WHERE pp.project_id = $projectId",
       'select' => 'T',
       'options' => 'APVCD',
       'sql' => '`PMEtable0`.`musician_id`', // @todo: needed?
-      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
-        $stampIdx = array_search('Updated', $fds);
+      'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
+        $stampIdx = array_search('Updated', $pme->fds);
         $stamp = strtotime($row['qf'.$stampIdx]);
         return $this->musiciansRenderer->photoImageLink($musicianId, $action, $stamp);
       },
@@ -1272,12 +1335,12 @@ WHERE pp.project_id = $projectId",
       'select' => 'T',
       'options' => 'ACPDV',
       'sql' => '`PMEtable0`.`musician_id`',
-      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+      'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
         switch($action) {
         case 'change':
         case 'display':
           $data = [];
-          foreach($fds as $idx => $label) {
+          foreach($pme->fds as $idx => $label) {
             $data[$label] = $row['qf'.$idx];
           }
           $musician = new Entities\Musician();
@@ -1365,12 +1428,16 @@ WHERE pp.project_id = $projectId",
         'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.project_id DESC)',
         'nowrap' => true,
         'sort' => true,
-        'php' => function($mandates, $action, $k, $fds, $fdd, $row, $recordId) {
+        'php' => function($mandates, $action, $k, $row, $recordId, $pme) {
            if ($this->pme_bare) {
              return $mandates;
            }
            $projectId = $this->projectId;
            $projectName = $this->projectName;
+
+           if ($projectId != $recordId['project_id']) {
+             throw new \Exception($this->l->t('Inconsistent project-ids: %s / %s', [ $projectId, $recordId['project_id'] ]));
+           }
 
            // can be multi-valued (i.e.: 2 for member table and project table)
            $mandateProjects = $row['qf'.($k+1)];
@@ -1385,9 +1452,9 @@ WHERE pp.project_id = $projectId",
            }
 
            // Careful: this changes when rearranging the sort-order of the display
-           $musicianId        = $row[$this->queryField('musician_id', $fdd)];
-           $musicianFirstName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'first_name', $fdd)];
-           $musicianSurName  = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'sur_name', $fdd)];
+           $musicianId        = $row[$this->queryField('musician_id', $pme->fdd)];
+           $musicianFirstName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'first_name', $pme->fdd)];
+           $musicianSurName  = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'sur_name', $pme->fdd)];
            $musician = $musicianSurName.', '.$musicianFirstName;
 
            $html = [];
@@ -1493,10 +1560,10 @@ WHERE pp.project_id = $projectId",
 //         'options' => 'VDLF', // wrong in change mode
 //         'input' => 'VR',
 //         'sql' => '`PMEtable0`.`Unkostenbeitrag`',
-//         'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
+//         'php' => function($amount, $op, $field, $row, $recordId, $pme)
 //         use ($monetary, $amountPaidIdx, $paidCurrentYearIdx, $projectId, $memberTableId, $musIdIdx)
 //         {
-//           foreach($fds as $key => $label) {
+//           foreach($pme->fds as $key => $label) {
 //             if (!isset($monetary[$label])) {
 //               continue;
 //             }
