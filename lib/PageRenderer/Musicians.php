@@ -271,7 +271,7 @@ make sure that the musicians are also automatically added to the
         'options' => 'VCLR',
         'input' => 'V',
         'sql' => 'PMEtable0.id',
-        'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId)
+        'php' => function($musicianId, $action, $k, $row, $recordId, $pme)
           use($bval, $tip) {
             return '<div class="register-musician">'
               .'  <input type="button"'
@@ -524,7 +524,7 @@ make sure that the musicians are also automatically added to the
 //       'escape' => false,
 //       'nowrap' => true,
 //       'sort' =>false,
-//       'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+//       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
 //         return self::instrumentInsurance($musicianId);
 //       }
 //       );
@@ -536,8 +536,8 @@ make sure that the musicians are also automatically added to the
       'select' => 'T',
       'options' => 'APVCD',
       'sql' => '`PMEtable0`.`id`',
-      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
-        $stampIdx = array_search('Updated', $fds);
+      'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
+        $stampIdx = array_search('Updated', $pme->fds);
         $stamp = strtotime($row['qf'.$stampIdx]);
         return $this->photoImageLink($musicianId, $action, $stamp);
       },
@@ -555,12 +555,12 @@ make sure that the musicians are also automatically added to the
       'select' => 'T',
       'options' => 'ACPDV',
       'sql' => '`PMEtable0`.`id`',
-      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+      'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
         switch($action) {
         case 'change':
         case 'display':
           $data = [];
-          foreach($fds as $idx => $label) {
+          foreach($pme->fds as $idx => $label) {
             $data[$label] = $row['qf'.$idx];
           }
           $musician = new Entities\Musician();

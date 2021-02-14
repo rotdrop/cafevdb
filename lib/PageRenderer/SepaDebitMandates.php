@@ -520,7 +520,7 @@ received so far'),
                             .' AND $table.musician_id = $record_id[musician_id]'),
             ],
             'tooltip' => $field['tool_tip']?:null,
-            'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+            'php' => function($value, $op, $field, $row, $recordId, $pme) {
               $amount = 0.0;
 
               // TODO fill with data
@@ -548,11 +548,11 @@ received so far'),
     //       'options' => 'VDL', // wrong in change mode
     //       'input' => 'VR',
     //       'sql' => $projectAlias.'.Unkostenbeitrag',
-    //       'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
+    //       'php' => function($amount, $op, $field, $row, $recordId, $pme)
     //         use ($monetary)
     //         {
     //           $amount = 0.0;
-    //           foreach($fds as $key => $label) {
+    //           foreach($pme->fds as $key => $label) {
     //             if (!isset($monetary[$label])) {
     //               continue;
     //             }
@@ -593,11 +593,11 @@ received so far'),
     //     'options' => 'VDLF', // wrong in change mode
     //     'input' => 'VR',
     //     'sql' => $projectAlias.'.Unkostenbeitrag',
-    //     'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
+    //     'php' => function($amount, $op, $field, $row, $recordId, $pme)
     //       use ($monetary, $amountPaidIdx)
     //       {
     //         $paid = $row['qf'.$amountPaidIdx];
-    //         foreach($fds as $key => $label) {
+    //         foreach($pme->fds as $key => $label) {
     //           if (!isset($monetary[$label])) {
     //             continue;
     //           }

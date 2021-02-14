@@ -235,7 +235,7 @@ class Projects extends PMETableViewBase
     $nameIdx = count($opts['fdd']);
     $opts['fdd']['name'] = [
       'name'     => $this->l->t('Projekt-Name'),
-      'php|LF'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+      'php|LF'  => function($value, $op, $field, $row, $recordId, $pme) {
         //error_log('project-id: '.$recordId);
         $projectId = $recordId;
         $projectName = $value;
@@ -288,7 +288,7 @@ class Projects extends PMETableViewBase
       'name'     => $this->l->t('Actions'),
       'input'    => 'RV',
       'sql'      => '`PMEtable0`.`name`',
-      'php|VCLDF'    => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+      'php|VCLDF'    => function($value, $op, $field, $row, $recordId, $pme) {
         $projectId = $recordId;
         $projectName = $value;
         $overview = false;
@@ -331,7 +331,7 @@ class Projects extends PMETableViewBase
       'maxlen'   => 65535,
       'css'      => ['postfix' => ' projecttoolbox'],
       'sql'      => '`PMEtable0`.`Name`',
-      'php|CV'   =>  function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+      'php|CV'   =>  function($value, $op, $field, $row, $recordId, $pme) {
         $projectName = $value;
         $projectId = $recordId;
         return $this->projectToolbox($projectId, $projectName);
@@ -347,7 +347,7 @@ class Projects extends PMETableViewBase
         'options'  => 'FLCVD',
         'input'    => 'VR',
         'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \', \')',
-        'php|VCP'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+        'php|VCP'  => function($value, $op, $field, $row, $recordId, $pme) {
           $post = [
             'ProjectExtraFields' => $value,
             'template' => 'project-extra-fields',
@@ -383,7 +383,7 @@ __EOT__;
       'maxlen'   => 65535,
       'css'      => ['postfix' => ' projectprogram'],
       'sql'      => '`PMEtable0`.`id`',
-      'php|CV'    => function($value, $action, $field, $fds, $fdd, $row, $recordId) {
+      'php|CV'    => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId; // and also $value
         return $this->projectProgram($projectId, $action);
       },
@@ -397,7 +397,7 @@ __EOT__;
       'select' => 'T',
       'options' => 'VCD',
       'sql'      => '`PMEtable0`.`Updated`',
-      'php' => function($value, $action, $field, $fds, $fdd, $row, $recordId) {
+      'php' => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId;
         $stamp = $value;
         return $this->flyerImageLink($projectId, $action, $stamp);

@@ -250,7 +250,7 @@ class SepaDebitNotes extends PMETableViewBase
       'input' => 'VR',
       'sql' => 'PMEtable0.id',
       'sort'  => false,
-      'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId)
+      'php' => function($value, $op, $field, $row, $recordId, $pme)
         use ($projectIdIdx, $jobIdx) {
           $post = [
             'debitNoteId' => $recordId,

@@ -2013,13 +2013,10 @@ class phpMyEdit
 			if ($this->col_has_php($k)) {
 				$php = $this->fdd[$k]['php'];
 				if (is_callable($php)) {
-					echo call_user_func($php, false, 'add', // action to be performed
-										$k, $this->fds, $this->fdd, false, -1, $this);
+					echo call_user_func($php, false, 'add', $k, false, -1, $this);
 				} else if (is_array($php)) {
 					$opts = isset($php['parameters']) ? $php['parameters'] : '';
-					echo call_user_func($php['function'], false, $opts,
-										'add', // action to be performed
-										$k, $this->fds, $this->fdd, false, -1, $this);
+					echo call_user_func($php['function'], false, $opts, 'add', $k, false, -1, $this);
 				} else if (file_exists($php)) {
 					echo include($php);
 				}
@@ -2240,16 +2237,10 @@ class phpMyEdit
 			$php = $this->fdd[$k]['php'];
 			$rec = $this->key_record($this->rec);
 			if (is_callable($php)) {
-				echo call_user_func($php, $value,
-									'change', // action to be performed
-									$k, $this->fds, $this->fdd, $row,
-									$rec, $this);
+				echo call_user_func($php, $value, 'change',  $k, $row, $rec, $this);
 			} else if (is_array($php)) {
 				$opts = isset($php['parameters']) ? $php['parameters'] : '';
-				echo call_user_func($php['function'], $value, $opts,
-									'change', // action to be performed
-									$k, $this->fds, $this->fdd, $row,
-									$rec, $this);
+				echo call_user_func($php['function'], $value, $opts, 'change', $k, $row, $rec, $this);
 			} else if (file_exists($php)) {
 				echo include($php);
 			}
@@ -2689,15 +2680,10 @@ class phpMyEdit
 		if ($this->col_has_php($k)) {
 			$php = $this->fdd[$k]['php'];
 			if (is_callable($php)) {
-				return call_user_func($php, $value, 'display', // action to be performed
-									  $k, $this->fds, $this->fdd,
-									  $row, $key_rec, $this);
+				return call_user_func($php, $value, 'display', $k, $row, $key_rec, $this);
 			} else if (is_array($php)) {
 				$opts = isset($php['parameters']) ? $php['parameters'] : '';
-				return call_user_func($php['function'], $value, $opts,
-									  'display', // action to be performed
-									  $k, $this->fds, $this->fdd,
-									  $row, $key_rec, $this);
+				return call_user_func($php['function'], $value, $opts, 'display', $k, $row, $key_rec, $this);
 			} else if (file_exists($php)) {
 				return include($php);
 			}

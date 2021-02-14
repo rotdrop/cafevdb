@@ -334,7 +334,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   ':',
   COUNT(".$joinTables[self::PROJECT_PARTICIPANTS_TABLE].".musician_id) - PMEtable0.quantity
 )",
-      'php' => function($balance, $op, $field, $fds, $fdd, $row, $recordId) {
+      'php' => function($balance, $op, $field, $row, $recordId, $pme) {
         $values = Util::explode(':', $balance);
         $html = '';
         $html .= '<span'.($values[0] < 0 ? ' class="negative"' : '').'>'.$values[0].'</span>';

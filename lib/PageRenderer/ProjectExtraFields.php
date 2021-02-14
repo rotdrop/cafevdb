@@ -315,7 +315,7 @@ class ProjectExtraFields extends PMETableViewBase
       'css|LF' => [ 'postfix' => ' allowed-values hide-subsequent-lines' ],
       'css' => ['postfix' => ' allowed-values' ],
       'select' => 'T',
-      'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+      'php' => function($value, $op, $field, $row, $recordId, $pme) {
         //$this->logInfo('ALLOWED SHOW '.print_r($row, true));
         $multiplicity = $row[$this->queryField('multiplicity', $fdd)];
         $dataType = $row[$this->queryField('data_type', $fdd)];
@@ -332,7 +332,7 @@ class ProjectExtraFields extends PMETableViewBase
       'name' => $this->currencyLabel($this->l->t('Data')),
       'css' => [ 'postfix' => ' allowed-values-single' ],
       'sql' => 'PMEtable0.allowed_values',
-      'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx, $tooltipIdx) {
+      'php' => function($value, $op, $field, $row, $recordId, $pme) use ($nameIdx, $tooltipIdx) {
         // provide defaults
         $protoRecord = array_merge(
           $this->extraFieldsService->allowedValuesPrototype(),
@@ -387,7 +387,7 @@ class ProjectExtraFields extends PMETableViewBase
       'size' => 30,
       'sort' => true,
       'display|LF' => [ 'popup' => 'data' ],
-      'php|LFDV' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+      'php|LFDV' => function($value, $op, $field, $row, $recordId) {
         $multiplicity = $row[$this->queryField('multiplicity', $fdd)];
         $dataType = $row[$this->queryField('data_type', $fdd)];
         switch ($multiplicity) {

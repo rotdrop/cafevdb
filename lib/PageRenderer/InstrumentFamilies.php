@@ -186,7 +186,7 @@ class InstrumentFamilies extends PMETableViewBase
       'filter'      => 'having',
       'select'      => 'M',
       'maxlen'      => 11,
-      'php'   =>  function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+      'php'   =>  function($value, $op, $field, $row, $recordId, $pme) {
         if (empty($value)) {
           return $value;
         }

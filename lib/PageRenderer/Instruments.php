@@ -272,7 +272,7 @@ class Instruments extends PMETableViewBase
       'input'   => 'VR',
       'options' => 'LF',
       'sql'     => '`PMEtable0`.`id`',
-      'php'   =>  function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($lang) {
+      'php'   =>  function($value, $op, $field, $row, $recordId, $pme) use ($lang) {
         $inst = $this->l->t($row['qf1']);
         return '<a '
           .'href="http://'.$lang.'.wikipedia.org/wiki/'.$inst.'" '
