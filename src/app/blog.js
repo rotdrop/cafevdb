@@ -153,13 +153,13 @@ const submit = function(event) {
   event.preventDefault();
   // $('#blogtextarea').tinymce().save();
   let popupValue = 0;
-  if ($('#blogpopupset').attr('checked') !== undefined) {
+  if ($('#blogpopupset').prop('checked')) {
     popupValue = 1;
-  } else if ($('#blogpopupclear').attr('checked') !== undefined) {
+  } else if ($('#blogpopupclear').prop('checked')) {
     popupValue = -1;
   }
   let clearReaderValue = 0;
-  if ($('#blogreaderclear').attr('checked') !== undefined) {
+  if ($('#blogreaderclear').prop('checked')) {
     clearReaderValue = 1;
   } else {
     clearReaderValue = 0;

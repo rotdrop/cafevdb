@@ -354,8 +354,10 @@ const actions = function(select, containerSel) {
   // also remove and re-attach the tool-tips, otherwise some of the
   // tips remain, because chosen() removes the element underneath.
 
-  select.find('option').removeAttr('selected');
+  console.info('remove selected');
+  select.find('option').prop('selected', false);
 
+  console.info('update chosen', select.find('option:selected'));
   select.trigger('chosen:updated');
 
   $('div.chosen-container').cafevTooltip({ placement: 'auto top' });

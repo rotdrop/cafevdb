@@ -111,7 +111,7 @@ const init = function(htmlContent, textStatus, request) {
             Ajax.handleError(xhr, textStatus, xhr.status);
           });
 
-        eventMenu.find('option').removeAttr('selected');
+        eventMenu.find('option').prop('selected', false);
         $.fn.cafevTooltip.remove();
 
         eventMenu.trigger('chosen:updated');
