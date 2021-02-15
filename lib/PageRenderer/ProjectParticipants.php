@@ -1056,32 +1056,6 @@ WHERE pp.project_id = $projectId",
         list($curColIdx, $fddName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $fddValue);
 
-//         // hide value field and tweak for view displays.
-//         $fdd = Util::arrayMergeRecursive(
-//           $fdd,
-//           [
-//             'input' => 'VSRH',
-//             'css'   => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id' ],
-//             'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
-//             'values|LFDV' => [
-//               'table' => "SELECT
-//   m2.id AS musician_id,
-//   CONCAT_WS(' ', m2.first_name, m2.sur_name) AS name,
-//   m2.sur_name AS sur_name,
-//   m2.first_name AS first_name,
-//   fd.field_value AS group_id
-// FROM ProjectParticipants pp
-// LEFT JOIN Musicians m2
-//   ON m2.id = pp.musician_id
-// LEFT JOIN ProjectExtraFieldsData fd
-//   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
-// WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
-//               'column' => 'name',
-//               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-//               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
-//             ],
-//           ]);
-
         // new field, member selection
         $fdd = &$opts['fdd'][$fddName];
 
@@ -1152,7 +1126,7 @@ WHERE pp.project_id = $projectId",
         // new field, data-popup
         $fdd = &$opts['fdd'][$fddName];
 
-        // hide value field and tweak for view displays.
+        // data-popup field
         $fdd = Util::arrayMergeRecursive(
            $fdd,
            [
