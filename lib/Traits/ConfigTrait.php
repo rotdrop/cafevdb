@@ -285,6 +285,12 @@ trait ConfigTrait {
     return $this->configService->moneyValue($value, $locale);
   }
 
+  //!Just display the given value
+  public function floatValue($value, $locale = null)
+  {
+    return $this->configService->floatValue($value, $locale);
+  }
+
   /** Return the current time as short time-stamp (textual). */
   protected function timeStamp($format = null, $timeZone = null)
   {

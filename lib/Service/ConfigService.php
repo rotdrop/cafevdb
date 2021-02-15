@@ -613,6 +613,17 @@ class ConfigService {
     return $result;
   }
 
+  //! Display a float value in the given or default locale
+  public function floatValue($value, $locale = null)
+  {
+    $oldlocale = setlocale(LC_NUMERIC, '0');
+    empty($locale) && $locale = $this->getLocale();
+    setlocale(LC_NUMERIC, $locale);
+    $result = number_format((float)$value);
+    setlocale(LC_NUMERIC, $oldlocale);
+    return $result;
+  }
+
   public function timeStamp($format = null, $timeZone = null)
   {
     if (empty($format)) {
