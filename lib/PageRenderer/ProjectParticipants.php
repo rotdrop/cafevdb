@@ -670,9 +670,10 @@ class ProjectParticipants extends PMETableViewBase
               }
 
               $rowIndex = $pme->fdn[$label];
+
               $qf = 'qf'.$rowIndex;
               $qfIdx = $qf.'_idx';
-              if (isset($row[$qfidx])) {
+              if (isset($row[$qfIdx])) {
                 $value = $row[$qfIdx];
               } else {
                 $value = $row[$qf];
@@ -718,7 +719,7 @@ class ProjectParticipants extends PMETableViewBase
       $fieldName = $field['name'];
       $fieldId   = $field['id'];
       $multiplicity = $field['multiplicity'];
-      $dataType = $field['data_type'];
+      $dataType = (string)$field['data_type'];
 
       if (!$this->extraFieldsService->isSupportedType($multiplicity, $dataType)) {
         throw new \Exception(
@@ -774,7 +775,7 @@ class ProjectParticipants extends PMETableViewBase
         $valueData[$key] = $value['data'];
       }
 
-    switch ($dataType) {
+      switch ($dataType) {
       case 'text':
         // default config
         break;
@@ -807,12 +808,9 @@ class ProjectParticipants extends PMETableViewBase
       case 'money':
       case 'service-fee':
       case 'deposit':
-        if ($dataType == 'service-fee' || $dataType == 'deposit') {
-          $dataType = 'money';
-        }
         $style = $this->defaultFDD[$dataType];
         if (empty($style)) {
-          throw \Exception($this->l->t('Not default style for "%s" available.', $dataType));
+          throw new \Exception($this->l->t('Not default style for "%s" available.', $dataType));
         }
         unset($style['name']);
         $fdd = array_merge($fdd, $style);
@@ -894,7 +892,7 @@ class ProjectParticipants extends PMETableViewBase
         list($curColIdx, $fddName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $fdd);
 
-    // hide value field and tweak for view displays.
+        // hide value field and tweak for view displays.
         $css[] = 'groupofpeople';
         $css[] = 'single-valued';
         $fdd = Util::arrayMergeRecursive(
@@ -902,25 +900,6 @@ class ProjectParticipants extends PMETableViewBase
           [
             'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
             'input' => 'VSRH',
-// not needed anymore
-//             'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
-//             'values|LFDV' => [
-//               'table' => "SELECT
-//   m.id AS musician_id,
-//   CONCAT_WS(' ', m.first_name, m.sur_name) AS name,
-//   m.sur_name AS sur_name,
-//   m.first_name AS first_name,
-//   fd.field_value AS group_id
-// FROM ProjectParticipants pp
-// LEFT JOIN Musicians AS m
-//   ON m.id = pp.musician_id
-// LEFT JOIN ProjectExtraFieldsData fd
-//   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
-// WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
-//               'column' => 'name',
-//               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-//               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
-//             ],
           ]);
 
         // new field, member selection
@@ -1063,35 +1042,45 @@ WHERE pp.project_id = $projectId",
             'mask' => null,
           ]);
 
-        // generate a new group-definition field as yet another column
-        list($curColIdx, $fddName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'musician_id', $fdd);
+        $fddValue = Util::arrayMergeRecursive([], $fdd);
 
-        // hide value field and tweak for view displays.
+        // hide value field
         $fdd = Util::arrayMergeRecursive(
           $fdd,
           [
+            'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
             'input' => 'VSRH',
-            'css'   => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id' ],
-            'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
-            'values|LFDV' => [
-              'table' => "SELECT
-  m2.id AS musician_id,
-  CONCAT_WS(' ', m2.first_name, m2.sur_name) AS name,
-  m2.sur_name AS sur_name,
-  m2.first_name AS first_name,
-  fd.field_value AS group_id
-FROM ProjectParticipants pp
-LEFT JOIN Musicians m2
-  ON m2.id = pp.musician_id
-LEFT JOIN ProjectExtraFieldsData fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
-WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
-              'column' => 'name',
-              'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
-            ],
           ]);
+
+        // generate a new group-definition field as yet another column
+        list($curColIdx, $fddName) = $this->makeJoinTableField(
+          $opts['fdd'], $tableName, 'musician_id', $fddValue);
+
+//         // hide value field and tweak for view displays.
+//         $fdd = Util::arrayMergeRecursive(
+//           $fdd,
+//           [
+//             'input' => 'VSRH',
+//             'css'   => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id' ],
+//             'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
+//             'values|LFDV' => [
+//               'table' => "SELECT
+//   m2.id AS musician_id,
+//   CONCAT_WS(' ', m2.first_name, m2.sur_name) AS name,
+//   m2.sur_name AS sur_name,
+//   m2.first_name AS first_name,
+//   fd.field_value AS group_id
+// FROM ProjectParticipants pp
+// LEFT JOIN Musicians m2
+//   ON m2.id = pp.musician_id
+// LEFT JOIN ProjectExtraFieldsData fd
+//   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
+// WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
+//               'column' => 'name',
+//               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
+//               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
+//             ],
+//           ]);
 
         // new field, member selection
         $fdd = &$opts['fdd'][$fddName];
@@ -1133,7 +1122,7 @@ WHERE pp.project_id = $projectId",
             'values2|ACP' => $values2,
             'mask' => null,
             'display|LDV' => [
-              'popup' => 'data:previous',
+              'popup' => 'data:next',
             ],
             'display|ACP' => [
               'prefix' => function($op, $pos, $row, $k, $pme) use ($css) {
@@ -1155,6 +1144,39 @@ WHERE pp.project_id = $projectId",
 
         $fdd['css']['postfix'] .= ' clip-long-text';
         $fdd['css|LFVD']['postfix'] = $fdd['css']['postfix'].' view';
+
+        // generate yet another field to define popup-data
+        list($curColIdx, $fddName) = $this->makeJoinTableField(
+          $opts['fdd'], $tableName, 'musician_name', $fddValue);
+
+        // new field, data-popup
+        $fdd = &$opts['fdd'][$fddName];
+
+        // hide value field and tweak for view displays.
+        $fdd = Util::arrayMergeRecursive(
+           $fdd,
+           [
+             'input' => 'VSRH',
+             'css'   => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-popup' ],
+             'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
+            'values|LFDV' => [
+              'table' => "SELECT
+  m2.id AS musician_id,
+  CONCAT_WS(' ', m2.first_name, m2.sur_name) AS name,
+  m2.sur_name AS sur_name,
+  m2.first_name AS first_name,
+  fd.field_value AS group_id
+FROM ProjectParticipants pp
+LEFT JOIN Musicians m2
+  ON m2.id = pp.musician_id
+LEFT JOIN ProjectExtraFieldsData fd
+  ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
+WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
+              'column' => 'name',
+              'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
+              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
+            ],
+           ]);
 
         break;
       }
@@ -1771,7 +1793,7 @@ WHERE pp.project_id = $projectId",
         if (count($newMembers) > $max) {
           throw new \Exception(
             $this->l->t('Number %d of requested participants for group %s is larger than the number %d of allowed participants.',
-                        [ $count($newMembers), $label, $max ]));
+                        [ count($newMembers), $label, $max ]));
         }
 
         foreach ($newMembers as &$member) {
@@ -1906,6 +1928,8 @@ WHERE pp.project_id = $projectId",
       $htmlData = ' '.$htmlData;
     }
     switch ($dataType) {
+    case 'money':
+    case 'deposit':
     case 'service-fee':
       $value = $this->moneyValue($value);
       $innerCss .= ' money';
