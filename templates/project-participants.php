@@ -34,11 +34,11 @@ $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $proje
 $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-extra-fields', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
-if (true || $roles->inTreasurerGroup()) {
+if ($roles->inTreasurerGroup()) {
   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('sepa-debit-mandates', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('sepa-debit-notes', $projectName, $projectId);
-  if ($projectName === $appConfig->getConfigValue('memberTable', false)) {
+  if ($projectId == $appConfig->getConfigValue('memberProjectId', false)) {
     $nav .= $pageNavigation->pageControlElement('insurances');
   }
 }

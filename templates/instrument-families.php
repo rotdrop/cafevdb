@@ -36,7 +36,7 @@ if ($projectId >= 0) {
     $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
     $nav .= $pageNavigation->pageControlElement('sepa-debit-mandates', $project, $projectId);
     $nav .= $pageNavigation->pageControlElement('sepa-debit-notes', $project, $projectId);
-    if ($project === $appConifg->getConfigValue('memberTable', false)) {
+    if ($projectId == $appConifg->getConfigValue('memberProjectId', false)) {
       $nav .= $pageNavigation->pageControlElement('insurances');
     }
   }
