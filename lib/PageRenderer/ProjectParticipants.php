@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\FinanceService;
 use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
+use OCA\CAFEVDB\Service\InsuranceService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -60,7 +61,7 @@ class ProjectParticipants extends PMETableViewBase
   const EXTRA_FIELDS_TABLE = 'ProjectExtraFields';
   const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
-  const FIXED_COLUMN_SEP = '@';
+  const FIXED_COLUMN_SEP = parent::VALUES_TABLE_SEP;
 
   /** @var int */
   private $memberProjectId;
@@ -177,6 +178,9 @@ class ProjectParticipants extends PMETableViewBase
   /** @var \OCA\CAFEVDB\Service\FinanceService */
   private $financeService;
 
+  /** @var \OCA\CAFEVDB\Service\InsuranceService */
+  private $insuranceService;
+
   /** @var \OCA\CAFEVDB\Service\ProjectExtraFieldsService */
   private $extraFieldsService;
 
@@ -197,6 +201,7 @@ class ProjectParticipants extends PMETableViewBase
     , ContactsService $contactsService
     , PhoneNumberService $phoneNumberService
     , FinanceService $financeService
+    , InsuranceService $insuranceService
     , ProjectExtraFieldsService $extraFieldsService
     , Musicians $musiciansRenderer
   ) {
@@ -205,6 +210,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
     $this->financeService = $financeService;
+    $this->insuranceService = $insuranceService;
     $this->musiciansRenderer = $musiciansRenderer;
     $this->extraFieldsService = $extraFieldsService;
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
@@ -687,7 +693,7 @@ class ProjectParticipants extends PMETableViewBase
             }
 
             if ($projectId == $this->memberProjectId) {
-              // $amountInvoiced += InstrumentInsurance::annualFee($row['qf'.$musIdIdx]);
+              $amountInvoiced += $this->insuranceService->insuranceFee($musicianId, new \DateTime(), true);
             }
 
             // display as TOTAL/PAID/REMAINDER

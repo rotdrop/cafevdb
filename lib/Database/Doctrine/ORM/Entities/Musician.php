@@ -177,9 +177,14 @@ class Musician implements \ArrayAccess
   private $projectExtraFieldsData;
 
   /**
-   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="musician", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="instrumentHolder", fetch="EXTRA_LAZY")
    */
   private $instrumentInsurances;
+
+  /**
+   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="billToParty", fetch="EXTRA_LAZY")
+   */
+  private $payableInsurances;
 
   /**
    * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="musician", fetch="EXTRA_LAZY")

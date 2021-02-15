@@ -41,6 +41,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const JOIN_FIELD_NAME_SEPARATOR = ':';
+  const VALUES_TABLE_SEP = '@';
 
   /** @var RequestParameterService */
   protected $requestParameters;
@@ -926,7 +927,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       $table = $joinInfo['table'];
-      $valuesTable = explode('@', $table)[0];
+      $valuesTable = explode(self::VALUES_TABLE_SEP, $table)[0];
 
       $joinIndex[$table] = count($opts['fdd']);
       $joinTables[$table] = 'PMEjoin'.$joinIndex[$table];

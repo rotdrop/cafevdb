@@ -49,6 +49,7 @@ class Musicians extends PMETableViewBase
   const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
   const INSTRUMENTS_TABLE = 'Instruments';
   const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
+  const INSURANCES_TABLE = 'InstrumentInsurances';
   const PHOTO_JOIN = 'MusicianPhoto';
 
   /** @var GeoCodingService */
@@ -90,6 +91,16 @@ class Musicians extends PMETableViewBase
         'musician_id' => 'id',
       ],
       'column' => 'project_id',
+      'read_only' => true,
+    ],
+    [
+      'table' => self::INSURANCES_TABLE,
+      'entity' => Entities\InstrumentInsurance::class,
+      'identifier' => [
+        'id' => false,
+        'instrument_holder_id' => 'id',
+      ],
+      'column' => 'bill_to_party_id',
       'read_only' => true,
     ],
   ];
@@ -514,20 +525,35 @@ make sure that the musicians are also automatically added to the
       'values2'  => $this->findAvailableLanguages(),
     ];
 
-//     $opts['fdd']['insurance'] = [
-//       'tab'      => ['id' => 'miscinfo'],
-//       'input' => 'V',
-//       'name' => $this->l->t('Instrument Insurance'),
-//       'select' => 'T',
-//       'options' => 'CDV',
-//       'sql' => "`PMEtable0`.`id`",
-//       'escape' => false,
-//       'nowrap' => true,
-//       'sort' =>false,
-//       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
-//         return self::instrumentInsurance($musicianId);
-//       }
-//       );
+    $this->makeJoinTableField(
+      $opts['fdd'], self::INSURANCES_TABLE, 'amount', [
+       'tab'      => ['id' => 'miscinfo'],
+       'input' => 'V',
+       'name' => $this->l->t('Instrument Insurance'),
+       'select' => 'T',
+       'options' => 'CDV',
+       'sql' => 'SUM($join_col_fqn)',
+       'escape' => false,
+       'nowrap' => true,
+       'sort' =>false,
+       'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
+         $musicianId = $recordId['musician_id'];
+         $annualFee = $this->insuranceService->insuranceFee($musicianId, null, true);
+         $bval = $this->l->t(
+           'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
+         $tip = $this->toolTipsService['musician-instrument-insurance'];
+         $button = "<div class=\"musician-instrument-insurance\">"
+                 ."<input type=\"button\" "
+                 ."value=\"$bval\" "
+                 ."title=\"$tip\" "
+                 ."name=\""
+                 ."Template=instrument-insurance&amp;"
+                 ."MusicianId=".$musicianId."\" "
+                 ."class=\"musician-instrument-insurance\" />"
+                 ."</div>";
+         return $button;
+       }
+      ]);
 
     $opts['fdd']['photo'] = [
       'tab'      => ['id' => 'miscinfo'],

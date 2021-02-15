@@ -24,19 +24,22 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * InstrumentInsurance
  *
- * @ORM\Table(name="InstrumentInsurance")
- * @ORM\Entity
+ * @ORM\Table(name="InstrumentInsurances")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentInsurancesRepository")
+ * @Gedmo\SoftDeleteable
  */
 class InstrumentInsurance implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use \Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
   /**
    * @var int
@@ -51,15 +54,16 @@ class InstrumentInsurance implements \ArrayAccess
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(nullable=false)
    */
-  private $musician;
+  private $instrumentHolder;
 
   /**
    * A possibly different person which is responsible for paying the
    * insurance fees.
    *
-   * @ORM\ManyToOne(targetEntity="Musician", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payableInsurances", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(nullable=false)
    */
-  private $billToParty = null;
+  private $billToParty;
 
   /**
    * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
@@ -78,7 +82,7 @@ class InstrumentInsurance implements \ArrayAccess
    * @ORM\OneToOne(targetEntity="InsuranceRate")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="broker_id", referencedColumnName="broker_id"),
-   *   @ORM\JoinColumn(name="geographical_scope",referencedColumnName="geographical_scope")
+   *   @ORM\JoinColumn(name="geographical_scope", referencedColumnName="geographical_scope")
    * )
    */
   private $insuranceRate;
@@ -377,5 +381,29 @@ class InstrumentInsurance implements \ArrayAccess
   public function getStartOfInsurance()
   {
     return $this->startOfInsurance;
+  }
+
+  /**
+   * Set insuranceRate.
+   *
+   * @param int $insuranceRate
+   *
+   * @return InstrumentInsurance
+   */
+  public function setInsuranceRate($insuranceRate)
+  {
+    $this->insuranceRate = $insuranceRate;
+
+    return $this;
+  }
+
+  /**
+   * Get insuranceRate.
+   *
+   * @return InsuranceRate
+   */
+  public function getInsuranceRate()
+  {
+    return $this->insuranceRate;
   }
 }
