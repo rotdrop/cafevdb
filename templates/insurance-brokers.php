@@ -34,7 +34,7 @@ $nav .= $pageNavigation->pageControlElement('sepa-debit-mandates');
 echo $this->inc('part.common.header', [
   'css-prefix' => $css_pfx,
   'navigationcontrols' => $nav,
-  'header' => $table->headerText(),
+  'header' => $renderer->headerText(),
 ]);
 
 $renderer->render();
