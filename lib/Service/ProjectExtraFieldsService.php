@@ -98,6 +98,8 @@ class ProjectExtraFieldsService
     }
     //error_log('value '.$value);
     switch ($multiplicity) {
+    case 'simple':
+      return (float)$value;
     case 'groupofpeople':
     case 'single':
       // Non empty value means "yes".
