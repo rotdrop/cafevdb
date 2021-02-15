@@ -351,7 +351,7 @@ class Projects extends PMETableViewBase
           $post = [
             'ProjectExtraFields' => $value,
             'template' => 'project-extra-fields',
-            'projectName' => $row[$this->queryField('name', $fdd)],
+            'projectName' => $row[$this->queryField('name', $pme->fdd)],
             'project_id' => $recordId,
             'projectId' => $recordId,
           ];
