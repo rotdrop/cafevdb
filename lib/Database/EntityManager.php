@@ -527,7 +527,7 @@ class EntityManager extends EntityManagerDecorator
           // assume this is the column value, not the entity of the foreign key
           $columnValues[$columnName] = $value;
           // replace the value by a reference
-          $reference = $this->getReference($targetEntity, [ $targetColumn => $value ]);
+          $reference = $this->getReference($targetEntity, [ $targetField => $value ]);
           $meta->setFieldValue($entity, $field, $reference);
         }
       } else {
