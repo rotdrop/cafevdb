@@ -102,6 +102,47 @@ class FuzzyInputService
   }
 
   /**
+   * Try to parse a floating point value.
+   *
+   * @param string $value Input value. Maybe a percentage.
+   *
+   * @return bool|float
+   */
+  public function floatValue(string $value)
+  {
+    $amount = preg_replace('/\s+/u', '', $value);
+    $locales = [ $this->getLocale(), 'en_US_POSIX' ];
+    $parsed = false;
+    foreach ($locales as $locale) {
+      $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+
+      $decimalSeparator = $fmt->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
+      $groupingSeparator = $fmt->getSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL);
+
+      $decPos = strpos($amount, $decimalSeparator);
+      $grpPos = strpos($amount, $groupingSeparator);
+
+      if ($grpPos !== false && $decPos === false) {
+        // unlikely: 1,000, we assume 1,000.00 would be used
+        continue;
+      } else if ($decPos < $grpPos) {
+        // unlikely: 1.000,00 in en_US
+        continue;
+      }
+
+      $parsed = $fmt->parse($amount);
+      if ($parsed !== false) {
+        $percent = $fmt->getSymbol(\NumberFormatter::PERCENT_SYMBOL);
+        if (preg_match('/'.$percent.'/u', $amount)) {
+            $parsed /= 100.0;
+        }
+        break;
+      }
+    }
+    return $parsed !== false ? (float)$parsed : $parsed;
+  }
+
+  /**
    *  Try to correct HTML code.
    */
   public function purifyHTML($dirtyHTML, $method = self::HTML_PURIFY)
