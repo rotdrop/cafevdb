@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * Try to correct common human input "errors", respectively
@@ -99,6 +100,38 @@ class FuzzyInputService
       $parsed = $fmt->parse($amount);
     }
     return $parsed !== false ? sprintf('%.02f', $parsed) : $parsed;
+  }
+
+  /**
+   * Ensure the given word is a sensible camel-case slug:
+   *
+   * - if it does not contain spaces, then only capitalize the first
+   * letter, if requested.
+   *
+   * - if it contains spaces, then first convert consecutive capital
+   *  letters a the start of each word to lower case, then camelcalize
+   *  it.
+   *
+   * @return The resuling camel-case string.
+   */
+  public function ensureCamelCase(string $slug, bool $capitalizeFirst = true):string
+  {
+    $slug = Util::normalizeSpaces($slug);
+    $words = explode(' ', $slug);
+    if (count($words) > 1) {
+      foreach ($words as &$word) {
+        $word = preg_replace_callback(
+          '/\b([A-Z][A-Z]+)/',
+          function($arg) { return strtolower($arg[1]); },
+          $word);
+      }
+    }
+    foreach ($words as &$word) {
+      $word = Util::camelCaseToDashes($word, ' ');
+      $word = Util::dashesToCamelCase($word, $capitalizeFirst, ' ');
+    }
+    $slug = implode('', $words);
+    return $slug;
   }
 
   /**
