@@ -246,6 +246,24 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
   }
 
+  /**
+   * Quick and dirty general export. On each cell a call-back function
+   * is invoked with the html-output of that cell.
+   *
+   * This is just like list_table(), i.e. only the chosen range of
+   * data is displayed and in html-display order.
+   *
+   * @param Callable $cellFilter $line[] = Callback($i, $j, $celldata)
+   *
+   * @param Callable $lineCallback($i, $line)
+   *
+   * @param string $css CSS-class to pass to cellDisplay().
+   */
+  public function export($cellFilter = false, $lineCallback = false, $css = 'noescape')
+  {
+    $this->pme->export($cellFilter, $lineCallback, $css);
+  }
+
   public function getProjectName() { return $this->projectName; }
 
   public function getProjectId() { return $this->projectId; }

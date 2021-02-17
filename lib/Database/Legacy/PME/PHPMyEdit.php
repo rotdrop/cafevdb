@@ -83,7 +83,7 @@ class PHPMyEdit extends \phpMyEdit
     if (empty($this->connection)) {
       throw new \Exception("empty");
     }
-    $this->dbh = $connection;
+    $this->dbh = $this->connection;
     $this->request = $request;
     $this->logger = $logger;
     $this->l = $l10n;
@@ -205,6 +205,31 @@ class PHPMyEdit extends \phpMyEdit
     }
     parent::__construct($opts); // oh oh
     parent::execute();
+  }
+
+
+  /**
+   * Quick and dirty general export. On each cell a call-back
+   * function is invoked with the html-output of that cell.
+   *
+   * This is just like list_table(), i.e. only the chosen range of
+   * data is displayed and in html-display order.
+   *
+   * @param $cellFilter $line[] = Callback($i, $j, $celldata)
+   *
+   * @param $lineCallback($i, $line)
+   *
+   * @param $css CSS-class to pass to cellDisplay().
+   */
+  function export($cellFilter = false, $lineCallback = false, $css = 'noescape', $opts = [])
+  {
+    $opts = Util::arrayMergeRecursive($this->defaultOptions, $opts, $this->overrideOptions);
+    if (isset($opts['debug'])) {
+      $this->debug = $opts['debug'];
+    }
+    $opts['execute'] = false;
+    parent::__construct($opts); // oh oh
+    parent::export($cellFilter, $lineCallback, $css);
   }
 
   public function sql_connect() {
