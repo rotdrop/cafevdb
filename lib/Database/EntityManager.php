@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -33,6 +34,7 @@ use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 
 use MediaMonks\Doctrine\Transformable;
 use Ramsey\Uuid\Doctrine as Ramsey;
+use CJH\Doctrine\Extensions as CJH;
 
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -43,6 +45,7 @@ use MyCLabs\Enum\Enum as EnumType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -296,7 +299,7 @@ class EntityManager extends EntityManagerDecorator
     );
 
     // create a driver chain for metadata reading
-    $driverChain = new \Doctrine\ORM\Mapping\Driver\DriverChain();
+    $driverChain = new \Doctrine\Persistence\Mapping\Driver\MappingDriverChain();
 
     // load superclass metadata mapping only, into driver chain
     // also registers Gedmo annotations.NOTE: you can personalize it
@@ -306,6 +309,7 @@ class EntityManager extends EntityManagerDecorator
     );
     //<<< Further annotations can go here
     \MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
+    CJH\Setup::registerAnnotations();
     //>>>
 
     // now we want to register our application entities,
@@ -338,8 +342,7 @@ class EntityManager extends EntityManagerDecorator
     //$loggableListener = new \Gedmo\Loggable\LoggableListener;
     $userName = $this->userId;
     $remoteAddress = $this->request->getRemoteAddress();
-    $loggableListener =
-      new Doctrine\ORM\Listeners\GedmoLoggableListener($userName, $remoteAddress);
+    $loggableListener = new Listeners\GedmoLoggableListener($userName, $remoteAddress);
     $loggableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($loggableListener);
 
@@ -385,6 +388,11 @@ class EntityManager extends EntityManagerDecorator
     $transformableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($transformableListener);
 
+    // handle extra foreign key constraints
+    $foreignKeyListener = new CJH\ForeignKey\Listener($this);
+    $foreignKeyListener->setAnnotationReader($cachedAnnotationReader);
+    $evm->addEventSubscriber($foreignKeyListener);
+
     return [ $config, $evm ];
   }
 
@@ -401,7 +409,7 @@ class EntityManager extends EntityManagerDecorator
     $em = $args->getEntityManager();
     foreach ($schema->getTables() as $table) {
 
-        // tweak foreign keys
+      // tweak foreign keys
       foreach ($table->getForeignKeys() as $foreignKey) {
         if (false && $foreignKey->getForeignTableName() == 'ProjectInstrumentationNumbers') {
           $table->removeForeignKey($foreignKey->getName());
@@ -497,16 +505,25 @@ class EntityManager extends EntityManagerDecorator
 
   /**
    * The related MetaData::getIdentifierValues() function does not
-   * handle recursive into associations. Extract the column values of
+   * handle recursion into associations. Extract the column values of
    * primary foreign keys by recursing into the meta-data.
+   *
+   * @param mixed $entity The entity to extract the values from.
+   *
+   * @param \Doctrine\ORM\Mapping\ClassMetadata $meta The meta-data
+   * for the given $entity.
    *
    * @return array
    * ```
    * [ COLUMN1 => VALUE1, ... ]
    * ```
    * The array is indexed by the database column-names.
+   *
+   * @note As a side-effect, $entity is modified if a given foreign
+   * key is just a simple identifier value (like an int) and not en
+   * entity instance or reference.
    */
-  private function getIdentifierColumnValues($entity, $meta)
+  public function getIdentifierColumnValues($entity, $meta)
   {
     $columnValues = [];
     foreach ($meta->getIdentifierValues($entity) as $field => $value) {
@@ -577,6 +594,39 @@ class EntityManager extends EntityManagerDecorator
         }
       }
       $entityId[$field] = $columnValues[$columnName];
+    }
+    return $entityId;
+  }
+
+  /**
+   * Compute the mapping between entity-properties ("field-name") and
+   * plain SQL column-names. This is somewhat complicated when foreign
+   * keys are used.
+   *
+   *
+   * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Class-meta.
+   *
+   * @return array
+   * ```
+   * [
+   *   PROPERTY => SQL_COLUMN_NAME
+   *   ...
+   * ]
+   * ```
+   */
+  public function identifierColumns($meta):array
+  {
+    $entityId = [];
+    foreach ($meta->identifier as $field) {
+      if (isset($meta->associationMappings[$field])) {
+        if (count($meta->associationMappings[$field]['joinColumns']) != 1) {
+          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+        }
+        $columnName = $meta->associationMappings[$field]['joinColumns'][0]['name'];
+      } else {
+        $columnName = $meta->fieldMappings[$field]['columnName'];
+      }
+      $entityId[$field] = $columnName;
     }
     return $entityId;
   }
