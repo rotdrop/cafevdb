@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Traits;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
 
 trait ResponseTrait
 {
@@ -66,7 +67,10 @@ trait ResponseTrait
 
   static private function dataResponse($data, $status = Http::STATUS_OK)
   {
-    return new DataResponse($data, $status);
+    $response = new DataResponse($data, $status);
+    $policy = $response->getContentSecurityPolicy($policy);
+    $policy->addAllowedFrameAncestorDomain("'self'");
+    return $response;
   }
 
   static private function valueResponse($value, $message = '', $status = Http::STATUS_OK)
