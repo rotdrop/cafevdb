@@ -99,7 +99,7 @@ class PmeTableController extends Controller {
       return $this->load();
     case 'export':
     }
-    return self::grumble($this->l->t('Unknown Request "%s"', $topic));
+    return self::grumble($this->l->t('Unknown Request: "%s".', $topic));
   }
 
   /**
