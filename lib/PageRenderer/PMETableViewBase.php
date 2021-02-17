@@ -29,6 +29,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 
 use OCA\CAFEVDB\Common\Util;
@@ -543,6 +544,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       if ($joinInfo['master']) {
+        foreach ($this->pme->key as $key => $type) {
+          $joinInfo['identifier'][$key] = $key;
+        }
         // leave this to phpMyEdit, otherwise key-updates would need
         // further care.
         // continue;
@@ -774,6 +778,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       if ($joinInfo['master']) {
+        foreach ($this->pme->key as $key => $type) {
+          $joinInfo['identifier'][$key] = $key;
+        }
         // leave this to phpMyEdit, otherwise key-updates would need
         // further care.
         // continue;
@@ -803,7 +810,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             throw new \Exception($this->l->t('Nested multi-value join tables are not yet supported.'));
           }
         } else {
-          $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
+          $idKey = $joinInfo['identifier'][$key];
+          $identifier[$key] = $newvals[$idKey];
+          unset($changeSet[$idKey]);
+          Util::unsetValue($changed, $idKey);
         }
       }
       if (!empty($multiple)) {
@@ -876,24 +886,20 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // joined entities which are yet to be inserted.
         if ($joinInfo['master']) {
           $this->flush($entity);
-          foreach ($this->pme->key as $key => $type) {
-            $newvals[$key] = $entity[$key];
+          $identifier = $this->getIdentifierColumnValues($entity, $meta);
+          foreach (array_keys($this->pme->key) as $key) {
+            $newvals[$key] = $identifier[$key];
           }
         }
       }
     }
     $this->flush(); // flush everything to the data-base
 
-    // debug
-    foreach ($changed as $field) {
-      $fieldInfo = $this->joinTableField($field);
-      if ($fieldInfo['table'] != $this->pme->tb) {
-        throw new \Exception(
-          $this->l->t('Remaining change-set %s must belong to the principal table %s.',
-                      [ print_r($changed, true), $this->pme->tb ]));
-      }
-    }
     $this->logDebug('BEFORE INS: '.print_r($changed, true));
+    if (!empty($changed)) {
+      throw new \Exception(
+        $this->l->t('Remaining change-set %s must be empty', print_r($changed, true)));
+    }
 
     // all should be done
     $pme->setLogging(false);

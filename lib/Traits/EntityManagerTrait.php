@@ -330,13 +330,28 @@ trait EntityManagerTrait {
   }
 
   /**
-   * @see \OCA\CAFEVDB\Database\EntityManager::extractkeyvalues
+   * @see \OCA\CAFEVDB\Database\EntityManager::extractKeyValues
    */
-  public function extractKeyValues($meta, array $columnValues):array
+  public function extractKeyValues(\Doctrine\ORM\Mapping\ClassMetadata $meta, array $columnValues):array
   {
     return $this->entityManager->extractKeyValues($meta, $columnValues);
   }
 
+  /**
+   * @see \OCA\CAFEVDB\Database\EntityManager::identifierColumns
+   */
+  public function identifierColumns(\Doctrine\ORM\Mapping\ClassMetadata $meta):array
+  {
+    return $this->entityManager->identifierColumns($meta);
+  }
+
+  /**
+   * @see \OCA\CAFEVDB\Database\EntityManager::getIdentifierColumnValues
+   */
+  public function getIdentifierColumnValues($entity, \Doctrine\ORM\Mapping\ClassMetadata $meta):array
+  {
+    return $this->entityManager->getIdentifierColumnValues($entity, $meta);
+  }
 }
 
 // Local Variables: ***
