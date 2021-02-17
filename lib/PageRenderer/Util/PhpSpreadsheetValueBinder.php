@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\PageRenderer\Util;
 use PhpOffice\PhpSpreadsheet;
 
 use OCP\IL10N;
+use OCP\ILOgger;
 use OCA\CAFEVDB\Service\FinanceService;
 
 /**
@@ -36,6 +37,8 @@ class PhpSpreadsheetValueBinder
   extends PhpSpreadSheet\Cell\DefaultValueBinder
   implements PhpSpreadSheet\Cell\IValueBinder
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   /** @var IL10N */
   private $l;
 
@@ -43,11 +46,14 @@ class PhpSpreadsheetValueBinder
   private $financeService;
 
   public function __construct(
+    ILogger $logger,
     IL10n $l10n
     , FinanceService $financeService
   )
   {
     //parent::__construct();
+    $this->logger = $logger;
+    $this->l10n = $l10n;
     $this->l = $l10n;
     $this->financeService = $financeService;
   }
@@ -55,8 +61,8 @@ class PhpSpreadsheetValueBinder
   /**
    * Bind value to a cell
    *
-   * @param PHPExcel_Cell $cell	Cell to bind value to
-   * @param mixed $value			Value to bind in cell
+   * @param PhpSpreadsheet\Cell\Cell $cell Cell to bind value to
+   * @param mixed $value Value to bind in cell
    * @return boolean
    */
   public function bindValue(PhpSpreadsheet\Cell\Cell $cell, $value = null)
@@ -84,20 +90,20 @@ class PhpSpreadsheetValueBinder
           //$format = '#.##0,00 [$€];[ROT]-#.##0,00 [$€]';
           $format = '#,##0.00 [$€]';
           $format = '#,##0.00 [$€];[RED]-#,##0.00 [$€]';
-          $cell->getParent()->getStyle( $cell->getCoordinate() )
+          $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
                ->getNumberFormat()->setFormatCode( $format );
           return true;
         case '$':
           $cell->setValueExplicit($monetary['amount'], PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
           // Set style
-          $cell->getParent()->getStyle( $cell->getCoordinate() )
+          $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
                ->getNumberFormat()->setFormatCode( PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE );
           return true;
         }
       }
 
       // Interpret some basic html
-      $hrefre = '/^ *<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a> *$/ie';
+      $hrefre = '/^\s*<a[^>]+href="([^"]+)"[^>]*>(.*?)<\/a>\s*$/i';
       if (preg_match($hrefre, $value, $matches)) {
         $cell->setValueExplicit($matches[2], PhpSpreadsheet\Cell\DataType::TYPE_STRING);
         $cell->getHyperlink()->setUrl($matches[1]);
@@ -105,33 +111,33 @@ class PhpSpreadsheetValueBinder
       }
 
       // Handle remaining stuff by html2text
-      $h2t = new \html2text($value, false, array('width' => 0));
+      $h2t = new \Html2Text\Html2Text($value, [ 'width' => 0 ]);
       $value = trim($h2t->get_text());
 
       // Well, 'ja' or 'nein' ... should also count for truth values, maybe
       switch(strtoupper($value)) {
       case strtoupper($this->l->t('yes')):
       case strtoupper($this->l->t('true')):
-        $value = \PHPExcel_Calculation::getTRUE();
+        $value = PhpSpreadsheet\Calculation\Calculation::getTRUE();
         break;
       case strtoupper($this->l->t('no')):
       case strtoupper($this->l->t('false')):
-        $value = \PHPExcel_Calculation::getFALSE();
+        $value = PhpSpreadsheet\Calculation\Calculation::getFALSE();
         break;
       }
 
       //	Test for booleans using locale-setting
-      if ($value == \PHPExcel_Calculation::getTRUE()) {
+      if ($value == PhpSpreadsheet\Calculation\Calculation::getTRUE()) {
         $cell->setValueExplicit( TRUE, PhpSpreadsheet\Cell\DataType::TYPE_BOOL);
         return true;
-      } elseif($value == \PHPExcel_Calculation::getFALSE()) {
+      } elseif($value == PhpSpreadsheet\Calculation\Calculation::getFALSE()) {
         $cell->setValueExplicit( FALSE, PhpSpreadsheet\Cell\DataType::TYPE_BOOL);
         //$cell->setValueExplicit('=FALSE()', PhpSpreadsheet\Cell\DataType::TYPE_FORMULA);
         return true;
       }
 
       // Check for number in scientific format
-      if (preg_match('/^'.\PHPExcel_Calculation::CALCULATION_REGEXP_NUMBER.'$/', $value)) {
+      if (preg_match('/^'.PhpSpreadsheet\Calculation\Calculation::CALCULATION_REGEXP_NUMBER.'$/', $value)) {
         $cell->setValueExplicit( (float) $value, PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
         return true;
       }
@@ -145,7 +151,7 @@ class PhpSpreadsheetValueBinder
           if ($matches[1] == '-') $value = 0 - $value;
           $cell->setValueExplicit( (float) $value, PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
           // Set style
-          $cell->getParent()->getStyle( $cell->getCoordinate() )
+          $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
                ->getNumberFormat()->setFormatCode( '??/??' );
           return true;
         } elseif (preg_match('/^([+-]?)([0-9]*) +([0-9]*)\s?\/\s*([0-9]*)$/', $value, $matches)) {
@@ -154,7 +160,7 @@ class PhpSpreadsheetValueBinder
           if ($matches[1] == '-') $value = 0 - $value;
           $cell->setValueExplicit( (float) $value, PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
           // Set style
-          $cell->getParent()->getStyle( $cell->getCoordinate() )
+          $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
                ->getNumberFormat()->setFormatCode( '# ??/??' );
           return true;
         }
@@ -166,7 +172,7 @@ class PhpSpreadsheetValueBinder
         $value = (float) str_replace('%', '', $value) / 100;
         $cell->setValueExplicit( $value, PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
         // Set style
-        $cell->getParent()->getStyle( $cell->getCoordinate() )
+        $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
              ->getNumberFormat()->setFormatCode( PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00 );
         return true;
       }
@@ -178,7 +184,7 @@ class PhpSpreadsheetValueBinder
         $days = $h / 24 + $m / 1440;
         $cell->setValueExplicit($days, PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
         // Set style
-        $cell->getParent()->getStyle( $cell->getCoordinate() )
+        $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
              ->getNumberFormat()->setFormatCode( PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_TIME3 );
         return true;
       }
@@ -191,13 +197,13 @@ class PhpSpreadsheetValueBinder
         // Convert value to number
         $cell->setValueExplicit($days, PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
         // Set style
-        $cell->getParent()->getStyle( $cell->getCoordinate() )
+        $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
              ->getNumberFormat()->setFormatCode( PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_TIME4 );
         return true;
       }
 
       // Check for datetime, e.g. '2008-12-31', '2008-12-31 15:59', '2008-12-31 15:59:10'
-      if (($d = \PHPExcel_Shared_Date::stringToExcel($value)) !== false) {
+      if (($d = PhpSpreadsheet\Shared\Date::stringToExcel($value)) !== false) {
         // Convert value to number
         $cell->setValueExplicit($d, PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
         // Determine style. Either there is a time part or not. Look for ':'
@@ -206,7 +212,7 @@ class PhpSpreadsheetValueBinder
         } else {
           $formatCode = 'dd.mm.yyyy';
         }
-        $cell->getParent()->getStyle( $cell->getCoordinate() )
+        $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
              ->getNumberFormat()->setFormatCode($formatCode);
         return true;
       }
@@ -215,9 +221,9 @@ class PhpSpreadsheetValueBinder
       if (strpos($value, "\n") !== FALSE) {
         $cell->setValueExplicit($value, PhpSpreadsheet\Cell\DataType::TYPE_STRING);
         // Set style
-        $cell->getParent()->getStyle( $cell->getCoordinate() )
+        $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
              ->getAlignment()->setWrapText(TRUE);
-        $cell->getParent()->getStyle( $cell->getCoordinate() )
+        $cell->getWorksheet()->getStyle( $cell->getCoordinate() )
              ->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_JUSTIFY);
         return true;
       }
