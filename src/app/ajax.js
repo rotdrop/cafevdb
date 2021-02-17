@@ -335,11 +335,15 @@ const ajaxValidateResponse = function(data, required, errorCB) {
  * @returns {Object} TBD.
  */
 const ajaxFailData = function(xhr, textStatus, errorThrown) {
+  if (xhr.parsed !== undefined && xhr.error !== undefined && xhr.status !== undefined && xhr.message !== undefined) {
+    return xhr;
+  }
   const ct = xhr.getResponseHeader('content-type') || '';
   let data = {
     error: errorThrown,
-    status,
-    message: t(appName, 'Unknown JSON error response to AJAX call: {status} / {error}', { status, error: errorThrown }),
+    status: textStatus,
+    message: t(appName, 'Unknown JSON error response to AJAX call: {status} / {error}', { status: textStatus, error: errorThrown }),
+    parsed: false,
   };
   if (ct.indexOf('html') > -1) {
     console.debug('html response', xhr, textStatus, errorThrown);
@@ -348,11 +352,13 @@ const ajaxFailData = function(xhr, textStatus, errorThrown) {
       appName, 'HTTP error response to AJAX call: {code} / {error}',
       { code: xhr.status, error: errorThrown });
     data.info = $(xhr.responseText).find('main').html();
+    data.parsed = true;
   } else if (ct.indexOf('json') > -1) {
     const response = JSON.parse(xhr.responseText);
     // console.info('XHR response text', xhr.responseText);
     // console.log('JSON response', response);
     data = { ...data, ...response };
+    data.parsed = true;
   } else {
     console.log('unknown response');
   }
