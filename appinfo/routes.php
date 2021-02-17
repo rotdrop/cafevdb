@@ -301,6 +301,14 @@ $routes = [
       'verb' => 'POST',
     ],
     /**
+     * Insurances
+     */
+    [
+      'name' => 'instrument_insurance#validate',
+      'url' => '/insurance/validate/{control}',
+      'verb' => 'POST',
+    ],
+    /**
      * General validations ...
      */
     [

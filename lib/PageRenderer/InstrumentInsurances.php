@@ -153,7 +153,7 @@ class InstrumentInsurances extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'sepa-debit-notes';
+    $template = 'instrument-insurance';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],
@@ -221,6 +221,8 @@ class InstrumentInsurances extends PMETableViewBase
       $opts['filters'] = "PMEtable0.musician_id = ".$musicianId;
     }
 
+    $opts['groupby_fields'] = [ 'id' ];
+
     ///////////////////////////////////////////////////////////////////////////
     //
     // Field definitions
@@ -256,6 +258,7 @@ class InstrumentInsurances extends PMETableViewBase
           'columns' => [ 'sur_name', 'first_name' ],
           'divs' => ', ',
         ],
+        'join' => ' $join_col_fqn = $main_table.instrument_holder_id',
       ],
     ];
 
@@ -275,6 +278,7 @@ class InstrumentInsurances extends PMETableViewBase
           'columns' => [ 'sur_name', 'first_name' ],
           'divs' => ', ',
         ],
+        'join' => ' $join_col_fqn = $main_table.bill_to_party_id',
       ],
     ];
 
@@ -294,6 +298,7 @@ class InstrumentInsurances extends PMETableViewBase
           'columns' => [ 'long_name', 'address' ],
           'divs' => ' / ',
         ],
+        'join' => '$join_col_fqn = $main_table.broker_id',
       ],
     ];
 
@@ -352,7 +357,7 @@ class InstrumentInsurances extends PMETableViewBase
         'tab'  => [ 'id' => 'finance' ],
         'name' => $this->l->t('Insurance Amount'),
         'css'  => [ 'postfix' => ' amount align-right' ],
-        'php|LFPDV' => 'CAFEVDB\InstrumentInsurance::displayMoneyValuePME',
+        'php|LFPDV' => [$this, 'moneyValue' ],
       ]);
 
     $this->makeJoinTableField(
@@ -363,23 +368,25 @@ class InstrumentInsurances extends PMETableViewBase
         'name' => $this->l->t('Insurance Rate'),
         'options' => 'LFACPDV',
         'sql' => '$join_table.rate',
-        'php' => 'CAFEVDB\InstrumentInsurance::displayPercentageValuePME',
+        'php' => function($rate) {
+          return $this->floatValue($rate*100.0).' %';
+        }
       ]);
 
     $opts['fdd']['insurance_fee'] = [
       'tab'  => [ 'id' => 'finance' ],
       'input' => 'V',
       'css' => [ 'postfix' => ' align-right' ],
-      'name' => $this->l->t('Insurance Fee').'<br/>'.$this->t('including taxes'),
+      'name' => $this->l->t('Insurance Fee').'<br/>'.$this->l->t('including taxes'),
       'options' => 'LFACPDV',
       'sql' => 'ROUND($table.insurance_amount
  * '.$joinTables[self::RATES_TABLE].'.rate
- * (1+'.floatval(InstrumentInsuranceService::TAXES).'), 2)',
-      'php' => 'CAFEVDB\InstrumentInsurance::displayMoneyValuePME',
+ * (1+'.floatval(InsuranceService::TAXES).'), 2)',
+      'php' => [ $this, 'moneyValue' ],
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::TABLE, 'amount', [
+      $opts['fdd'], self::TABLE, 'insurance_amount', [
         'tab'  => [ 'id' => 'finance' ],
         'input' => 'V',
         'name' => $this->l->t('Total Insurance'),
@@ -420,13 +427,9 @@ class InstrumentInsurances extends PMETableViewBase
       'name'  => $this->l->t('Bill'),
       'css'   => [ 'postfix' => ' instrument-insurance-bill' ],
       'input' => 'VR',
-      'sql'   => 'musician_id',
+      'sql'   => '$main_table.bill_to_party_id',
       'sort'  => false,
       'php' => function($musicianId, $op, $field, $row, $recordId, $pme) {
-        $billTo = $row[$this->queryField('bill_to_party_id', $pme->fdd)];
-        if ($billTo > 0) {
-          $musicianId = $billTo;
-        }
         $post = [
           'musicianId' => $musicianId,
           'insuranceId' => $recordId,

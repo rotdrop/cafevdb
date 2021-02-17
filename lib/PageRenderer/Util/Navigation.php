@@ -655,14 +655,14 @@ and even edit the public web-pages for the project and other things.");
       $post = ['template' => 'instrument-insurance'];
       break;
 
-    case 'insurancerates':
+    case 'insurance-rates':
       $value = $this->l->t("Insurance Rates");
       $title = $this->l->t("Display a table with the insurance rates for the individual instrument insurances.");
       $controlclass = 'finance';
       $post = ['template' => 'insurance-rates'];
       break;
 
-    case 'insurancebrokers':
+    case 'insurance-brokers':
       $value = $this->l->t("Insurance Brokers");
       $title = $this->l->t("Display a table with the insurance brokers.");
       $controlclass = 'finance';

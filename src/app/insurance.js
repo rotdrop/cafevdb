@@ -27,6 +27,7 @@ import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.js';
+import generateUrl from './generate-url.js';
 
 const pmeFormInit = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
@@ -45,22 +46,21 @@ const pmeFormInit = function(containerSel) {
     if (brokerDialog) {
       textInputs = {
         broker: container.find('input.broker'),
-        brokername: container.find('input.brokername'),
-        brokeraddress: container.find('textarea.brokeraddress'),
+        brokerName: container.find('input.brokername'),
+        brokerAddress: container.find('textarea.brokeraddress'),
       };
     } else if (rateDialog) {
       textInputs = {
         rate: container.find('input.rate'),
-        // date: container.find('input.date'),
         policy: container.find('input.policy'),
       };
     } else {
       // need to disable all of these on blur in order to avoid
       // focus ping-pong
       textInputs = {
-        'insured-item': container.find('input.insured-item'),
+        insuredItem: container.find('input.insured-item'),
         manufacturer: container.find('input.manufacturer'),
-        'construction-year': container.find('input.construction-year'),
+        constructionYear: container.find('input.construction-year'),
         amount: container.find('input.amount'),
       };
     }
@@ -77,7 +77,7 @@ const pmeFormInit = function(containerSel) {
       submits.prop('disabled', lock);
     };
 
-    const validate = function(postAddOn, button, lockCallback) {
+    const validate = function(control, button, lockCallback) {
 
       if (lockCallback === undefined) {
         lockCallback = function(lock) {};
@@ -92,16 +92,22 @@ const pmeFormInit = function(containerSel) {
       };
 
       let post = form.serialize();
-      post += '&control=' + postAddOn;
+      post += '&control=' + control;
 
       // until end of validation
       validateLock(true);
 
       Notification.hide(function() {
-        $.post(
-          OC.filePath(appName, 'ajax/insurance', 'validate.php'),
-          post,
-          function(data) {
+        $.post(generateUrl('insurance/validate/' + control), post)
+          .fail(function(xhr, status, errorThrown) {
+            Ajax.handleError(xhr, status, errorThrown, function() {
+              for (const key in textInputs) {
+                textInputs[key].val(oldValues[key]);
+              }
+              validateUnlock();
+            });
+          })
+          .done(function(data) {
             if (!Ajax.validateResponse(
               data,
               Object.keys(textInputs),
@@ -109,36 +115,36 @@ const pmeFormInit = function(containerSel) {
               for (const key in textInputs) {
                 textInputs[key].val(oldValues[key]);
               }
-            } else {
-              if (data.data.message !== '') {
-                Notification.show(data.data.message);
-                setTimeout(function() {
-                  Notification.hide();
-                }, 5000);
-              }
-              // alert('data: '+CAFEVDB.print_r(data.data, true));
-              if (typeof textInputs[postAddOn] !== 'undefined') {
-                textInputs[postAddOn].val(data.data[postAddOn]);
-              }
-              if (postAddOn === 'submit') {
-                for (key in textInputs) {
-                  textInputs[key].val(data.data[key]);
-                }
-                if (typeof button !== 'undefined') {
-                  $(form).off('click', submitSel);
-                  button.trigger('click');
-                } else {
-                  form.submit();
-                }
-              }
-              for (key in textInputs) {
-                oldValues[key] = textInputs[key].val();
-              }
-
-              validateUnlock();
+              return;
             }
 
-            return false;
+            if (data.message !== undefined) {
+              if (!Array.isArray(data.message)) {
+                data.message = [ data.message ];
+              }
+              for (const message of data.message) {
+                Notification.show(message, { timeout: 5000 });
+              }
+            }
+            if (typeof textInputs[control] !== 'undefined') {
+              textInputs[control].val(data[control]);
+            }
+            if (control === 'submit') {
+              for (key in textInputs) {
+                textInputs[key].val(data[key]);
+              }
+              if (typeof button !== 'undefined') {
+                $(form).off('click', submitSel);
+                button.trigger('click');
+              } else {
+                form.submit();
+              }
+            }
+            for (key in textInputs) {
+              oldValues[key] = textInputs[key].val();
+            }
+
+            validateUnlock();
           });
       });
     };

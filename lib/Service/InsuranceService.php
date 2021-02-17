@@ -149,11 +149,12 @@ class InsuranceService
    *
    * @param bool $currentYearOnly
    */
-  public static function insuranceFee($musicianId, $date, bool $currentYearOnly = true)
+  public function insuranceFee($musicianId, $date, bool $currentYearOnly = true)
   {
     if (empty($date)) {
       $date = new \DateTime();
     }
+
     $payables = $this->insurancesRepository->findBy([ 'billToParty' => $musicianId ]);
 
     $fee = 0.0;

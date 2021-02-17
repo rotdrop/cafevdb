@@ -20,45 +20,41 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB {
+namespace OCA\CAFEVDB;
 
-  $table = new InstrumentInsurance();
-  $css_pfx = InstrumentInsurance::CSS_PREFIX;
+$css_pfx = $renderer->cssPrefix();
+$projectName = $renderer->getProjectName();
+$projectId = $renderer->getProjectId();
 
-  $projectName = $appConifg->getConfigValue('memberTable', false);
-  $projectId = $appConifg->getConfigValue('memberTableId', false);
+$nav = '';
+$nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('insurances');
+$nav .= $pageNavigation->pageControlElement('insurance-rates');
+$nav .= $pageNavigation->pageControlElement('insurance-brokers');
+$nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('sepa-debit-mandates', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('sepa-debit-notes', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('projects');
+$nav .= $pageNavigation->pageControlElement('all');
 
-  $nav = '';
-  $nav .= Navigation::pageControlElement('projectlabel', $projectName, $projectId);
-  $nav .= Navigation::pageControlElement('detailed', $projectName, $projectId);
-  $nav .= Navigation::pageControlElement('insurances');
-  $nav .= Navigation::pageControlElement('insurancerates');
-  $nav .= Navigation::pageControlElement('insurancebrokers');
-  $nav .= Navigation::pageControlElement('project-payments', $projectName, $projectId);
-  $nav .= Navigation::pageControlElement('sepa-debit-mandates', $projectName, $projectId);
-  $nav .= Navigation::pageControlElement('sepa-debit-notes', $projectName, $projectId);
-  $nav .= Navigation::pageControlElement('projects');
-  $nav .= Navigation::pageControlElement('all');
+echo $this->inc(
+  'part.common.header',
+  [
+    'css-prefix' => $css_pfx,
+    'navigationcontrols' => $nav,
+    'header' => $renderer->headerText(),
+]);
 
-  echo $this->inc('part.common.header',
-                  array('css-prefix' => $css_pfx,
-                        'navigationcontrols' => $nav,
-                        'header' => $table->headerText()));
+// Issue the main part. The method will echo itself
+if ($roles->inTreasurerGroup()) {
+  $renderer->render();
+} else {
+  echo '<div class="specialrole error">'.
+       $l->t("Sorry, this view is only available to the %s.",
+             array($l->t('treasurer'))).
+       '</div>';
+}
 
-  // Issue the main part. The method will echo itself
-  if ($roles->inTreasurerGroup()) {
-    $table->display();
-  } else {
-    echo '<div class="specialrole error">'.
-      $l->t("Sorry, this view is only available to the %s.",
-           array($l->t('treasurer'))).
-      '</div>';
-  }
-
-
-  // Close some still opened divs
-  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
-
-} // namespace CAFEVDB
-
-?>
+// Close some still opened divs
+echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);

@@ -31,7 +31,8 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -40,6 +41,7 @@ class InsuranceRates extends PMETableViewBase
 {
   const CSS_CLASS = 'insurance-rates';
   const TABLE = 'InsuranceRates';
+  const BROKER_TABLE = 'InsuranceBrokers';
 
   protected $joinStructure = [
     [
@@ -58,6 +60,13 @@ class InsuranceRates extends PMETableViewBase
     , PageNavigation $pageNavigation
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+
+    $scopes = array_values(Types\EnumGeographicalScope::toArray());
+
+    $this->scopeNames = [];
+    foreach ($scopes as $tag) {
+      $this->scopeNames[$tag] = $this->l->t($tag);
+    }
   }
 
   public function cssClass() { return self::CSS_CLASS; }
@@ -140,7 +149,15 @@ class InsuranceRates extends PMETableViewBase
         'select'   => 'D',
         'maxlen'   => 128,
         'sort'     => $sort,
-        'values'   => $this->broker,
+        'values'   => [
+          'table' => self::BROKER_TABLE,
+          'column' => 'short_name',
+          'description' => [
+            'columns' => [ 'long_name', 'address' ],
+            'divs' => ' / ',
+          ],
+          'join' => '$join_col_fqn = $main_table.broker_id',
+        ],
     ];
 
     $opts['fdd']['geographical_scope'] = [
@@ -149,7 +166,7 @@ class InsuranceRates extends PMETableViewBase
       'select'      => 'D',
       'maxlen'      => 137,
       'sort'        => $sort,
-      'values'      => $this->scope,
+      'values2'      => $this->scopeNames,
     ];
 
     $opts['fdd']['rate'] = [

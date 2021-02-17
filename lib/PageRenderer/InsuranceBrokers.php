@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -45,7 +45,7 @@ class InsuranceBrokers extends PMETableViewBase
     [
       'table' => self::TABLE,
       'master' => true,
-      'entity' => Entities\InsuranceBrokers::class,
+      'entity' => Entities\InsuranceBroker::class,
     ],
   ];
 
