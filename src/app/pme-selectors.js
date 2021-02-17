@@ -22,7 +22,7 @@
 /**
  * @file
  *
- * General PME table stuff, popup-handling.
+ * PME CSS selector support.
  */
 
 import { $, jQuery } from './globals.js';
@@ -278,4 +278,5 @@ export {
 
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***
