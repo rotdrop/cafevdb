@@ -21,11 +21,10 @@
  */
 
 import { globalState, appName, webRoot, $ } from './globals.js';
+import fileDownload from './file-download.js';
 import generateUrl from './generate-url.js';
-import generateId from './generate-id.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
-import * as Dialogs from './dialogs.js';
 import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
 
@@ -321,27 +320,12 @@ const buttonClick = function(event) {
 
   } else if (name === 'download') {
 
-    const cookieValue = generateId();
-    const cookieName = appName + '_' + 'project_events_download';
-    post.push({ name: 'DownloadCookieName', value: cookieName });
-    post.push({ name: 'DownloadCookieValue', value: cookieValue });
+    fileDownload(
+      'projects/events/download',
+      post,
+      t(appName, 'Unable to download calendar events.')
+    );
 
-    $.fileDownload(
-      generateUrl('projects/events/download'), {
-        httpMethod: 'POST',
-        data: post,
-        cookieName,
-        cookieValue,
-        cookiePath: webRoot,
-      })
-      .fail(function(responseHtml, url) {
-        Dialogs.alert(
-          t(appName, 'Unable to download calendar events: {response}', { response: responseHtml }),
-          t(appName, 'Error'),
-          function() {},
-          true, true);
-      })
-      .done(function(url) { console.info('DONE downloading', url); });
     return false;
   }
 

@@ -46,8 +46,6 @@ require('chosen/public/chosen.css');
 const ImagesLoaded = require('imagesloaded');
 ImagesLoaded.makeJQueryPlugin(jQuery);
 
-require('jquery-file-download');
-
 // some nextcloud hacks
 
 require('../legacy/nextcloud/jquery/requesttoken.js');

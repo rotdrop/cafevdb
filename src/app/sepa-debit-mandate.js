@@ -29,7 +29,7 @@ import * as Email from './email.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
-import generateId from './generate-id.js';
+import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 
 require('sepa-debit-mandate.css');
@@ -743,53 +743,38 @@ const mandateExportHandler = function(event) {
         post[postItems[i]] = form.find('input[name="' + postItems[i] + '"]').val();
       }
       post.DebitNoteId = debitNote.Id;
-      post.DownloadCookie = generateId();
       post.EmailTemplate = data.emailtemplate;
 
-      const action = OC.filePath(appName, 'ajax/finance', 'debit-note-download.php');
-
-      $.fileDownload(action, {
-        httpMethod: 'POST',
-        data: post,
-        cookieName: 'debit_note_download',
-        cookieValue: post.DownloadCookie,
-        cookiePath: webRoot,
-        successCallback() {
-          // if insurance, then also epxort the invoice PDFs
-          if (debitNote.Job === 'insurance') {
-            const action = OC.filePath(appName, 'ajax/insurance', 'instrument-insurance-export.php');
-            $.fileDownload(action, {
-              httpMethod: 'POST',
-              data: formPost + '&' + 'DownloadCookie=' + post.DownloadCookie,
-              cookieName: 'insurance_invoice_download',
-              cookieValue: post.DownloadCookie,
-              cookiePath: webRoot,
-              successCallback() {
-                Email.emailFormPopup($.param(post), true, false, clearBusyState);
-              },
-              failCallback(responseHtml, url, error) {
-                Dialogs.alert(
-                  t(appName, 'Unable to export insurance overviews:')
-                    + ' '
-                    + responseHtml,
-                  t(appName, 'Error'),
-                  clearBusyState,
-                  true, true);
-              },
-            });
-          } else {
-            Email.emailFormPopup($.param(post), true, false, clearBusyState);
-          }
-        },
-        failCallback(responseHtml, url, error) {
-          Dialogs.alert(
-            t(appName, 'Unable to export debit notes:')
-              + ' '
-              + responseHtml,
-            t(appName, 'Error'),
-            clearBusyState, true, true);
-        },
-      });
+      const action = 'ajax/finance/debit-note-download.php';
+      fileDownload(
+        action,
+        post, {
+          errorMessage(data, url) {
+            return t(appName, 'Unable to export debit notes.');
+          },
+          fail(data) {
+            clearBusyState();
+          },
+          done(url) {
+            // if insurance, then also epxort the invoice PDFs
+            if (debitNote.Job === 'insurance') {
+              const action = 'ajax/insurance/instrument-insurance-export.php';
+              fileDownload(
+                action,
+                formPost, {
+                  done(url) {
+                    Email.emailFormPopup($.param(post), true, false, clearBusyState);
+                  },
+                  errorMessage(data, url) {
+                    return t(appName, 'Unable to export insurance overviews.');
+                  },
+                  fail: clearBusyState,
+                });
+            } else {
+              Email.emailFormPopup($.param(post), true, false, clearBusyState);
+            }
+          },
+        });
 
       return true;
     });

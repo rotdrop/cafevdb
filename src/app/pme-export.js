@@ -25,11 +25,9 @@
  * PME table epxort.
  */
 
-import { appName, webRoot, $ } from './globals.js';
-import generateUrl from './generate-url.js';
-import generateId from './generate-id.js';
+import { appName, $ } from './globals.js';
+import fileDownload from './file-download.js';
 import { fixupNoChosenMenu, selectMenuReset } from './cafevdb.js';
-import * as Dialogs from './dialogs.js';
 
 /**
  * Handle the export menu actions.
@@ -43,33 +41,18 @@ const handleTableExportMenu = function(select) {
   const form = $('form.pme-form');
 
   const post = form.serializeArray();
-
-  const cookieValue = generateId();
-  const cookieName = appName + '_' + 'database_table_download';
-  post.push({ name: 'DownloadCookieName', value: cookieName });
-  post.push({ name: 'DownloadCookieValue', value: cookieValue });
-  post.push({ name: 'requesttoken', value: OC.requestToken });
   post.push({ name: 'exportFormat', value: exportFormat });
 
-  console.info('DOWNLOAD POST', post);
-
-  $.fileDownload(
-    generateUrl('page/pme/export'), {
-      httpMethod: 'POST',
-      data: post,
-      cookieName,
-      cookieValue,
-      cookiePath: webRoot,
-    })
-    .fail(function(responseHtml, url) {
-      Dialogs.alert(
-        t(appName, 'Unable to export to format "{format}": {response}',
-          { format: exportFormat, response: responseHtml }),
-        t(appName, 'Error'),
-        function() {},
-        true, true);
-    })
-    .done(function(url) { console.info('DONE downloading', url); });
+  fileDownload(
+    'page/pme/export',
+    post, {
+      errorMessage(data, url) {
+        return t(
+          appName,
+          'Unable to download table in format "{format}" from "{url}": ',
+          { format: exportFormat, url });
+      },
+    });
 
   // Cheating. In principle we mis-use this as a simple pull-down
   // menu, so let the text remain at its default value. Make sure to

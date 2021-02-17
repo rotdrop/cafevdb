@@ -20,14 +20,14 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName, webRoot, $ } from './globals.js';
+import { appName, $ } from './globals.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.js';
 import { toolTipsInit } from './cafevdb.js';
 import generateUrl from './generate-url.js';
-import generateId from './generate-id.js';
+import fileDownload from './file-download.js';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-file-download');
@@ -949,32 +949,14 @@ const afterLoad = function(container) {
     simpleSetHandler(deleteRecorded, 'click', msg);
 
     downloadPoTemplates.on('click', function(event) {
-      const post = [];
-      const cookieValue = generateId();
-      const cookieName = appName + '_' + 'translation_templates_download';
-      post.push({ name: 'DownloadCookieName', value: cookieName });
-      post.push({ name: 'DownloadCookieValue', value: cookieValue });
-      post.push({ name: 'requesttoken', value: OC.requestToken });
 
-      console.info('DOWNLOAD POST', post);
-      $.fileDownload(
-        generateUrl('settings/app/get/translation-templates'), {
-          httpMethod: 'POST',
-          data: post,
-          cookieName,
-          cookieValue,
-          cookiePath: webRoot,
-        })
-        .fail(function(responseHtml, url) {
-          Dialogs.alert(
-            t(appName, 'Unable to download translation templates: {response}',
-              { response: responseHtml }),
-            t(appName, 'Error'),
-            function() {},
-            true, true);
-        })
-        .done(function(url) { console.info('DONE downloading', url); });
-
+      fileDownload(
+        'settings/app/get/translation-templates',
+        [], {
+          errorMessage(data, url) {
+            return t(appName, 'Unable to download translation templates.');
+          },
+        });
       return false;
     });
 

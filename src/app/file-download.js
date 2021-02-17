@@ -53,16 +53,33 @@ const download = function(url, post, options) {
     },
   };
   options = options || {};
+  if (typeof options === 'string') { // error message
+    const errorMessage = options;
+    options = {
+      errorMessage(data, url) { return errorMessage; }
+    };
+  }
   options = $.extend({}, defaultOptions, options);
 
   if (post === undefined) {
     post = [];
   }
   const cookieValue = generateId();
-  const cookieName = appName + '_' + url.replace('/', '_') + '_' + 'download';
-  post.push({ name: 'DownloadCookieName', value: cookieName });
-  post.push({ name: 'DownloadCookieValue', value: cookieValue });
-  post.push({ name: 'requesttoken', value: OC.requestToken });
+  const cookieName = appName + '_' + url.replace(/\W+/g, '_') + '_' + 'download';
+  const cookiePost = [];
+  cookiePost.push({ name: 'DownloadCookieName', value: cookieName });
+  cookiePost.push({ name: 'DownloadCookieValue', value: cookieValue });
+  cookiePost.push({ name: 'requesttoken', value: OC.requestToken });
+
+  if (Array.isArray(post)) {
+    post = post.concat(cookiePost)
+  } else if (typeof post === 'string') {
+    post += '&' + $.param(cookiePost, false);
+  } else if (typeof post === 'object') {
+    for (const param of cookiePost) {
+      post[param.name] = param.value;
+    }
+  }
 
   console.info('DOWNLOAD POST', post);
 

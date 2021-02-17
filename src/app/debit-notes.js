@@ -25,7 +25,7 @@ import * as Page from './page.js';
 import * as Email from './email.js';
 import * as Dialogs from './dialogs.js';
 import * as PHPMyEdit from './pme.js';
-import generateId from './generate-id.js';
+import fileDownload from './file-download.js';
 
 const ready = function(container, resizeCB) {
 
@@ -60,25 +60,16 @@ const ready = function(container, resizeCB) {
       const post = self.data('post');
       post.DownloadCookie = generateId();
 
-      const action = OC.filePath(appName, 'ajax/finance', 'debit-note-download.php');
-      $.fileDownload(action, {
-        httpMethod: 'POST',
-        data: post,
-        cookieName: 'debit_note_download',
-        cookieValue: post.DownloadCookie,
-        cookiePath: webRoot,
-        successCallback() {
-          clearBusyState();
-        },
-        failCallback(responseHtml, url, error) {
-          Dialogs.alert(
-            t(appName, 'Unable to download debit notes:')
-              + ' '
-              + responseHtml,
-            t(appName, 'Error'),
-            clearBusyState, true, true);
-        },
-      });
+      const action = 'ajax/finance/debit-note-download.php';
+      fileDownload(
+        action,
+        post, {
+          done: clearBusyState,
+          errorMessage(data, url) {
+            return t(appName, 'Unable to download debit notes.');
+          },
+          fail: clearBusyState,
+        });
 
       return false;
     });

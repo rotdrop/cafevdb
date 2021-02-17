@@ -28,7 +28,7 @@ import * as Page from './page.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
-import generateId from './generate-id.js';
+import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 
 const pmeFormInit = function(containerSel) {
@@ -189,31 +189,24 @@ const pmeFormInit = function(containerSel) {
     .on('click', '.instrument-insurance-bill a.bill', function(event) {
       const self = $(this);
       const post = self.data('post');
-      const action = OC.filePath(appName, 'ajax/insurance', 'instrument-insurance-export.php');
-      post.DownloadCookie = generateId();
+      const action = 'ajax/insurance/instrument-insurance-export.php';
 
       Page.busyIcon(true);
 
-      $.fileDownload(action, {
-        httpMethod: 'POST',
-        data: post,
-        cookieName: 'insurance_invoice_download',
-        cookieValue: post.DownloadCookie,
-        cookiePath: webRoot,
-        successCallback() {
-          console.log('ready');
-          Page.busyIcon(false);
-        },
-        failCallback(responseHtml, url, error) {
-          OC.dialogs.alert(
-            t(appName, 'Unable to export insurance overview:')
-              + ' '
-              + responseHtml,
-            t(appName, 'Error'),
-            function() { Page.busyIcon(false); },
-            true, true);
-        },
-      });
+      fileDownload(
+        action,
+        post, {
+          done(url) {
+            console.log('ready');
+            Page.busyIcon(false);
+          },
+          errorMessage(data, url) {
+            return t(appName, 'Unable to export insurance overview.');
+          },
+          fail(data) {
+            Page.busyIcon(false);
+          },
+        });
       return false;
     });
 };
