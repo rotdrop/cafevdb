@@ -103,17 +103,34 @@ const download = function(url, post, options) {
         response = responseHtml;
       }
 
-      let data;
+      let data = {};
       try {
         data = JSON.parse(response);
         data.parsed = true;
+        console.info('JSON DATA', data);
       } catch (e) {
-        data = {
-          error: Ajax.httpStatus[500],
-          status: 500,
-          message: responseHtml,
-          parsed: false,
-        };
+        console.info('ERROR', e);
+        try {
+          data.info = $(response).find('main').html();
+          if (!data.info) {
+            throw Error('no html');
+          }
+          data.status = 500;
+          data.error = Ajax.httpStatus[data.status];
+          data.message = t(
+            appName,
+            'HTTP error response to AJAX call: {code} / {error}',
+            { code: data.status, error: data.error });
+          data.parsed = true;
+        } catch (e) {
+          console.info('ERROR', e);
+          data = {
+            error: Ajax.httpStatus[500],
+            status: 500,
+            message: responseHtml,
+            parsed: false,
+          };
+        }
       }
 
       data.error = Ajax.httpStatus[data.status];
