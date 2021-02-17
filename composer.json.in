@@ -28,7 +28,8 @@
     "knplabs/doctrine-behaviors": "^2.0",
     "acelaya/doctrine-enum-type": "^2.5",
     "cjh/doctrine-on-update-extension": "dev-master",
-    "phpoffice/phpspreadsheet": "^1.16"
+    "phpoffice/phpspreadsheet": "^1.16",
+    "tecnickcom/tcpdf": "^6.3"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.5"
