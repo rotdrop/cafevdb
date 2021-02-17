@@ -85,15 +85,16 @@ $routes = [
       'defaults' => [ 'level' => 0 ]
     ],
     [
-      'name' => 'pme_table#load',
-      'url' => '/page/pme',
+      'name' => 'pme_table#service_switch',
+      'url' => '/page/pme/{topic}', // load or export
       'verb' => 'POST',
+      'defaults' => [ 'topic' => 'load' ],
     ],
     [
       'name' => 'page#debug',
       'url' => '/page/debug',
     ],
-    // internal "ajax" routes
+    // admin settings
     [
       'name' => 'admin_settings#set',
       'url' => '/settings/admin/set/{parameter}',

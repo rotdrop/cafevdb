@@ -32,6 +32,7 @@ import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as Dialogs from './dialogs.js';
 import pmeTweaks from './pme-tweaks.js';
+import pmeExportMenu from './pme-export.js';
 
 const documentReady = function() {
 
@@ -222,7 +223,7 @@ const documentReady = function() {
       }
 
       const container = $(selector);
-      CAFEVDB.exportMenu(selector);
+      pmeExportMenu(selector);
 
       container.find('div.photo, #cafevdb_inline_image_wrapper')
         .off('click', 'img.zoomable')
@@ -312,7 +313,7 @@ const documentReady = function() {
   });
 
   CAFEVDB.addReadyCallback(function() {
-    CAFEVDB.exportMenu();
+    pmeExportMenu();
 
     pmeTweaks();
 

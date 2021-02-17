@@ -28,6 +28,8 @@ import * as Page from './page.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
+import generateId from './generate-id.js';
+import pmeExportMenu from './pme-export.js';
 
 const pmeFormInit = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
@@ -188,7 +190,7 @@ const pmeFormInit = function(containerSel) {
       const self = $(this);
       const post = self.data('post');
       const action = OC.filePath(appName, 'ajax/insurance', 'instrument-insurance-export.php');
-      post.DownloadCookie = CAFEVDB.makeId();
+      post.DownloadCookie = generateId();
 
       Page.busyIcon(true);
 
@@ -238,7 +240,7 @@ const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback('instrument-insurance', {
     callback(selector, parameters, resizeCB) {
-      CAFEVDB.exportMenu(selector);
+      pmeExportMenu(selector);
 
       SepaDebitMandate.insuranceReady(selector);
 

@@ -251,7 +251,7 @@ const pmePost = function(post, callbacks) {
   };
   callbacks = $.extend(dfltCallbacks, callbacks);
 
-  $.post(CAFEVDB.generateUrl('page/pme'), post)
+  $.post(CAFEVDB.generateUrl('page/pme/load'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
       callbacks.fail(xhr, status, errorThrown);

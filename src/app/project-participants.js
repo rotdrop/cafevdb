@@ -31,6 +31,7 @@ import * as Photo from './inlineimage.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
+import pmeExportMenu from './pme-export.js';
 
 require('project-participants.css');
 
@@ -724,7 +725,7 @@ const myDocumentReady = function() {
       }
 
       const container = $(selector);
-      CAFEVDB.exportMenu(selector);
+      pmeExportMenu(selector);
       SepaDebitMandate.popupInit(selector);
 
       myReady(selector, resizeCB);

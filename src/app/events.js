@@ -22,6 +22,7 @@
 
 import { globalState, appName, webRoot, $ } from './globals.js';
 import generateUrl from './generate-url.js';
+import generateId from './generate-id.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
@@ -320,7 +321,7 @@ const buttonClick = function(event) {
 
   } else if (name === 'download') {
 
-    const cookieValue = CAFEVDB.makeId();
+    const cookieValue = generateId();
     const cookieName = appName + '_' + 'project_events_download';
     post.push({ name: 'DownloadCookieName', value: cookieName });
     post.push({ name: 'DownloadCookieValue', value: cookieValue });

@@ -25,6 +25,7 @@ import * as Page from './page.js';
 import * as Email from './email.js';
 import * as Dialogs from './dialogs.js';
 import * as PHPMyEdit from './pme.js';
+import generateId from './generate-id.js';
 
 const ready = function(container, resizeCB) {
 
@@ -57,7 +58,7 @@ const ready = function(container, resizeCB) {
       };
 
       const post = self.data('post');
-      post.DownloadCookie = CAFEVDB.makeId();
+      post.DownloadCookie = generateId();
 
       const action = OC.filePath(appName, 'ajax/finance', 'debit-note-download.php');
       $.fileDownload(action, {

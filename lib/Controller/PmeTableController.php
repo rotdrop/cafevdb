@@ -92,7 +92,20 @@ class PmeTableController extends Controller {
    * @NoAdminRequired
    * @UseSession
    */
-  public function load()
+  public function serviceSwitch($topic)
+  {
+    switch ($topic) {
+    case 'load':
+      return $this->load();
+    case 'export':
+    }
+    return self::grumble($this->l->t('Unknown Request "%s"', $topic));
+  }
+
+  /**
+   * Return template for table load
+   */
+  private function load()
   {
     try {
       $templateRenderer = $this->parameterService->getParam('templateRenderer');

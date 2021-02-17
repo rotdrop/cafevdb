@@ -811,7 +811,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   //   var formPost = form.serialize();
   //   var post = {};
   //   post[$(this).attr('name')] = "whatever";
-  //   post['DownloadCookie'] = CAFEVDB.makeId();
+  //   post['DownloadCookie'] = generateId();
   //   formPost += '&'+$.param(post);
   //   $.fileDownload(action, {
   //     httpMethod: 'POST',

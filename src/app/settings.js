@@ -20,14 +20,14 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { $ } from './globals.js';
-import { appName, webRoot } from './config.js';
+import { appName, webRoot, $ } from './globals.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.js';
-import { makeId, toolTipsInit } from './cafevdb.js';
+import { toolTipsInit } from './cafevdb.js';
 import generateUrl from './generate-url.js';
+import generateId from './generate-id.js';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-file-download');
@@ -950,7 +950,7 @@ const afterLoad = function(container) {
 
     downloadPoTemplates.on('click', function(event) {
       const post = [];
-      const cookieValue = makeId();
+      const cookieValue = generateId();
       const cookieName = appName + '_' + 'translation_templates_download';
       post.push({ name: 'DownloadCookieName', value: cookieName });
       post.push({ name: 'DownloadCookieValue', value: cookieValue });

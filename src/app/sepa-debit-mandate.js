@@ -29,6 +29,8 @@ import * as Email from './email.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
+import generateId from './generate-id.js';
+import pmeExportMenu from './pme-export.js';
 
 require('sepa-debit-mandate.css');
 
@@ -741,7 +743,7 @@ const mandateExportHandler = function(event) {
         post[postItems[i]] = form.find('input[name="' + postItems[i] + '"]').val();
       }
       post.DebitNoteId = debitNote.Id;
-      post.DownloadCookie = CAFEVDB.makeId();
+      post.DownloadCookie = generateId();
       post.EmailTemplate = data.emailtemplate;
 
       const action = OC.filePath(appName, 'ajax/finance', 'debit-note-download.php');
@@ -924,7 +926,7 @@ const mandateReady = function(selector) {
       return false;
     });
 
-  CAFEVDB.exportMenu(containerSel);
+  pmeExportMenu(containerSel);
 
   table.find('input.sepadate').datepicker({
     dateFormat: 'dd.mm.yy', // this is 4-digit year
