@@ -25,9 +25,11 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * InsuranceBrokers
+ * InsuranceBroker
  *
  * @ORM\Table(name="InsuranceBrokers")
  * @ORM\Entity
@@ -60,12 +62,12 @@ class InsuranceBroker implements \ArrayAccess
   private $address;
 
   /**
-   * @ORM\OneToMany(targetEntity="InsuranceRate", mappedBy="broker")
+   * @ORM\OneToMany(targetEntity="InsuranceRate", mappedBy="broker", cascade={"persist", "merge"})
    */
   private $insuranceRates;
 
   /**
-   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="broker")
+   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="broker", cascade={"persist", "merge"})
    */
   private $instrumentInsurances;
 
@@ -76,23 +78,13 @@ class InsuranceBroker implements \ArrayAccess
   }
 
   /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
-
-  /**
    * Set shortName.
    *
    * @param string $shortName
    *
-   * @return InsuranceBrokers
+   * @return InsuranceBroker
    */
-  public function setShortName($shortName)
+  public function setShortName(string $shortName):InsuranceBroker
   {
     $this->shortName = $shortName;
 
@@ -104,7 +96,7 @@ class InsuranceBroker implements \ArrayAccess
    *
    * @return string
    */
-  public function getShortName()
+  public function getShortName():string
   {
     return $this->shortName;
   }
@@ -114,9 +106,9 @@ class InsuranceBroker implements \ArrayAccess
    *
    * @param string $longName
    *
-   * @return InsuranceBrokers
+   * @return InsuranceBroker
    */
-  public function setLongName($longName)
+  public function setLongName(string $longName):InsuranceBroker
   {
     $this->longName = $longName;
 
@@ -128,7 +120,7 @@ class InsuranceBroker implements \ArrayAccess
    *
    * @return string
    */
-  public function getLongName()
+  public function getLongName():string
   {
     return $this->longName;
   }
@@ -138,9 +130,9 @@ class InsuranceBroker implements \ArrayAccess
    *
    * @param string $address
    *
-   * @return InsuranceBrokers
+   * @return InsuranceBroker
    */
-  public function setAddress($address)
+  public function setAddress(string $address):InsuranceBroker
   {
     $this->address = $address;
 
@@ -152,8 +144,56 @@ class InsuranceBroker implements \ArrayAccess
    *
    * @return string
    */
-  public function getAddress()
+  public function getAddress():string
   {
     return $this->address;
+  }
+
+  /**
+   * Set insuranceRates.
+   *
+   * @param ArrayCollection $insuranceRates
+   *
+   * @return InsuranceBroker
+   */
+  public function setInsuranceRates(Collection $insuranceRates):InsuranceBroker
+  {
+    $this->insuranceRates = $insuranceRates;
+
+    return $this;
+  }
+
+  /**
+   * Get insuranceRates.
+   *
+   * @return ArrayCollection
+   */
+  public function getInsuranceRates():Collection
+  {
+    return $this->insuranceRates;
+  }
+
+  /**
+   * Set instrumentInsurances.
+   *
+   * @param ArrayCollection $instrumentInsurances
+   *
+   * @return InsuranceBroker
+   */
+  public function setInstrumentInsurances(Collection $instrumentInsurances):InsuranceBroker
+  {
+    $this->instrumentInsurances = $instrumentInsurances;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentInsurances.
+   *
+   * @return ArrayCollection
+   */
+  public function getInstrumentInsurances():Collection
+  {
+    return $this->instrumentInsurances;
   }
 }

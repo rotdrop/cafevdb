@@ -24,11 +24,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use CJH\Doctrine\Extensions\Mapping\Annotation as CJH;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * InsuranceRates
+ * InsuranceRate
  *
  * @ORM\Table(name="InsuranceRates")
  * @ORM\Entity
@@ -39,9 +40,10 @@ class InsuranceRate implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="insuranceRates", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="insuranceRates", cascade={"persist", "merge"}, fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(referencedColumnName="short_name")
    * @ORM\Id
+   * @CJH\ForeignKey(targetEntity="InsuranceBroker", referencedColumnName="short_name", onUpdate="cascade")
    */
   private $broker;
 
@@ -61,16 +63,16 @@ class InsuranceRate implements \ArrayAccess
   private $rate;
 
   /**
-   * @var \DateTime
+   * @var \DateTimeImmutable
    *
-   * @ORM\Column(type="date", nullable=false, options={"comment"="start of the yearly insurance period"})
+   * @ORM\Column(type="date_immutable", nullable=false, options={"comment"="start of the yearly insurance period"})
    */
   private $dueDate;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=255, nullable=false)
+   * @ORM\Column(type="string", length=255, nullable=true)
    */
   private $policyNumber;
 
@@ -83,9 +85,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param string $broker
    *
-   * @return InsuranceRates
+   * @return InsuranceRate
    */
-  public function setBroker($broker)
+  public function setBroker($broker):InsuranceRate
   {
     $this->broker = $broker;
 
@@ -97,7 +99,7 @@ class InsuranceRate implements \ArrayAccess
    *
    * @return string
    */
-  public function getBroker()
+  public function getBroker():InsuranceBroker
   {
     return $this->broker;
   }
@@ -107,7 +109,7 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param string|Types\EnumGeographicalScope $geographicalScope
    *
-   * @return InsuranceRates
+   * @return InsuranceRate
    */
   public function setGeographicalScope($geographicalScope):InsuranceRate
   {
@@ -131,9 +133,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param float $rate
    *
-   * @return InsuranceRates
+   * @return InsuranceRate
    */
-  public function setRate($rate)
+  public function setRate(float $rate):InsuranceRate
   {
     $this->rate = $rate;
 
@@ -145,7 +147,7 @@ class InsuranceRate implements \ArrayAccess
    *
    * @return float
    */
-  public function getRate()
+  public function getRate():float
   {
     return $this->rate;
   }
@@ -153,13 +155,17 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Set dueDate.
    *
-   * @param \DateTime $dueDate
+   * @param string|\DateTimeInterface $dueDate
    *
-   * @return InsuranceRates
+   * @return InsuranceRate
    */
-  public function setDueDate($dueDate)
+  public function setDueDate($dueDate):InsuranceRate
   {
-    $this->dueDate = $dueDate;
+    if (is_string($dueDate)) {
+      $this->dueDate = new \DateTimeImmutable($dueDate);
+    } else {
+      $this->dueDate = \DateTimeImmutable::createFromInterface($dueDate);
+    }
 
     return $this;
   }
@@ -167,9 +173,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get dueDate.
    *
-   * @return \DateTime
+   * @return \DateTimeImmutable
    */
-  public function getDueDate()
+  public function getDueDate():\DateTimeImmutable
   {
     return $this->dueDate;
   }
@@ -179,9 +185,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param string $policyNumber
    *
-   * @return InsuranceRates
+   * @return InsuranceRate
    */
-  public function setPolicyNumber($policyNumber)
+  public function setPolicyNumber(?string $policyNumber):InsuranceRate
   {
     $this->policyNumber = $policyNumber;
 
@@ -193,7 +199,7 @@ class InsuranceRate implements \ArrayAccess
    *
    * @return string
    */
-  public function getPolicyNumber()
+  public function getPolicyNumber():?string
   {
     return $this->policyNumber;
   }
