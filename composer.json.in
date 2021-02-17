@@ -26,7 +26,8 @@
     "gedmo/doctrine-extensions": "dev-feature/loggable_composite_identifier_main",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
     "knplabs/doctrine-behaviors": "^2.0",
-    "acelaya/doctrine-enum-type": "^2.5"
+    "acelaya/doctrine-enum-type": "^2.5",
+    "cjh/doctrine-on-update-extension": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.5"
@@ -54,6 +55,10 @@
     {
       "type": "path",
       "url": "3rdparty/mediamonks-doctrine-extensions"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/doctrine-on-update-extension"
     },
     {
       "type": "vcs",

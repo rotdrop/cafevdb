@@ -29,3 +29,6 @@
 	path = 3rdparty/mediamonks-doctrine-extensions
 	url = git@github.com:rotdrop/mediamonks-doctrine-extensions.git
 	branch = feature/gedmo-dev
+[submodule "3rdparty/doctrine-on-update-extension"]
+	path = 3rdparty/doctrine-on-update-extension
+	url = git@github.com:rotdrop/doctrine-on-update-extension.git
