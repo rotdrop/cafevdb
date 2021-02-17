@@ -27,7 +27,8 @@
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
     "knplabs/doctrine-behaviors": "^2.0",
     "acelaya/doctrine-enum-type": "^2.5",
-    "cjh/doctrine-on-update-extension": "dev-master"
+    "cjh/doctrine-on-update-extension": "dev-master",
+    "phpoffice/phpspreadsheet": "^1.16"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.5"
