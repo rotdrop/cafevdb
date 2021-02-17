@@ -82,28 +82,6 @@ const unfocus = function(element) {
 };
 
 /**
- * Generate some random Id. @TODO replace.
- *
- * @param {int} length TBD.
- *
- * @returns {String}
- */
-const makeId = function(length) {
-  if (typeof length === 'undefined') {
-    length = 8;
-  }
-
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-
-  return text;
-};
-
-/**
  * Display a transparent modal dialog which blocks the UI.
  *
  * @param {String} message TBD.
@@ -524,103 +502,6 @@ const iframeFormSubmit = function(action, target, values) {
   }
   $('body').append(form);
   form.submit().remove();
-};
-
-/**
- * Handle the export menu actions.
- *
- * @param {jQuery} select TBD.
- */
-const tableExportMenu = function(select) {
-  // determine the export format
-  const selected = select.find('option:selected').val();
-  // $("select.pme-export-choice option:selected").val();
-
-  // this is the form; we need its values
-  const form = $('form.pme-form');
-
-  form.find('#exportmimetype').remove();
-
-  let exportscript;
-  switch (selected) {
-  case 'HTML':
-    exportscript = 'html.php';
-    $('<input />').attr('type', 'hidden')
-      .attr('name', 'mimetype')
-      .attr('value', 'text/html')
-      .attr('id', 'exportmimetype')
-      .appendTo(form);
-    break;
-  case 'SSML':
-    exportscript = 'html.php';
-    $('<input />').attr('type', 'hidden')
-      .attr('name', 'mimetype')
-      .attr('value', 'application/spreadsheet')
-      .attr('id', 'exportmimetype')
-      .appendTo(form);
-    break;
-  case 'CSV': exportscript = 'csv.php'; break;
-  case 'EXCEL': exportscript = 'excel.php'; break;
-  default: exportscript = ''; break;
-  }
-
-  if (exportscript === '') {
-    Dialogs.alert(
-      t(appName, 'Export to the following format is not yet supported:')
-        + ' "' + selected + '"',
-      t(appName, 'Unimplemented'));
-  } else {
-
-    // this will be the alternate form-action
-    exportscript = OC.filePath(appName, 'ajax/export', exportscript);
-
-    // Our export-scripts have the task to convert the display
-    // PME-table into another format, so submitting the current
-    // pme-form to another backend-script just makes sure sure that we
-    // really get all selected parameters and can regenerate the
-    // current view. Of course, this is then not really jQuery, and
-    // the ajax/export/-scripts are not ajax scripts. But so what.
-    const oldAction = form.attr('action');
-    form.attr('action', exportscript);
-    form.submit();
-    form.attr('action', oldAction);
-  }
-
-  // Cheating. In principle we mis-use this as a simple pull-down
-  // menu, so let the text remain at its default value. Make sure to
-  // also remove and re-attach the tool-tips, otherwise some of the
-  // tips remain, because chosen() removes the element underneath.
-  selectMenuReset(select);
-  $.fn.cafevTooltip.remove();
-
-  $('div.chosen-container').cafevTooltip({ placement: 'auto' });
-};
-
-const exportMenu = function(containerSel) {
-  if (typeof containerSel === 'undefined') {
-    containerSel = '#cafevdb-page-body';
-  }
-  const container = $(containerSel);
-
-  // Emulate a pull-down menu with export options via the chosen
-  // plugin.
-  const exportSelect = container.find('select.pme-export-choice');
-  exportSelect.chosen({
-    disable_search: true,
-    inherit_select_classes: true,
-  });
-
-  // install placeholder as first item if chosen is not active
-  fixupNoChosenMenu(exportSelect);
-
-  container.find('select.pme-export-choice')
-    .off('change')
-    .on('change', function(event) {
-      event.preventDefault();
-
-      return tableExportMenu($(this));
-    });
-
 };
 
 /**
@@ -1056,7 +937,6 @@ export {
   addReadyCallback,
   runReadyCallbacks,
   unfocus,
-  makeId,
   modalWaitNotification,
   textareaResize,
   stopRKey,
@@ -1071,8 +951,6 @@ export {
   objectToHiddenInput,
   appSettings,
   iframeFormSubmit,
-  tableExportMenu,
-  exportMenu,
   modalizer,
   dialogToBackButton,
   dialogCustomCloseButton,
