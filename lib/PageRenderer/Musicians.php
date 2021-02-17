@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\InsuranceService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -55,8 +56,11 @@ class Musicians extends PMETableViewBase
   /** @var GeoCodingService */
   private $geoCodingService;
 
-  /** @var OCA\CAFEVDB\ServicePhoneNumberService */
+  /** @var OCA\CAFEVDB\Service\PhoneNumberService */
   private $phoneNumberService;
+
+  /** @var OCA\CAFEVDB\Service\InsuranceService */
+  private $insuranceService;
 
   /**
    * @var bool Called with project-id in order to add musicians to an
@@ -115,11 +119,13 @@ class Musicians extends PMETableViewBase
     , GeoCodingService $geoCodingService
     , ContactsService $contactsService
     , PhoneNumberService $phoneNumberService
+    , InsuranceService $insuranceService
   ) {
     parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
+    $this->insuranceService = $insuranceService;
     $this->projectMode = false;
   }
 
@@ -526,7 +532,7 @@ make sure that the musicians are also automatically added to the
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::INSURANCES_TABLE, 'amount', [
+      $opts['fdd'], self::INSURANCES_TABLE, 'insurance_amount', [
        'tab'      => ['id' => 'miscinfo'],
        'input' => 'V',
        'name' => $this->l->t('Instrument Insurance'),
