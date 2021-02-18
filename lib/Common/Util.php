@@ -226,6 +226,50 @@ __EOT__;
     }
     return $hayStack;
   }
+
+  /**
+   * Quick and dirty convenience function which combines
+   * "constructors" into a single function. In particular the case
+   * wherer $arg1 is already a date-time object is handled gracefully
+   * by either pass-through to the return value or converting it to a
+   * \DateTimeImmutable.
+   *
+   * @param string|\DateTimeImmutable|\DateTime|\DateTimeInterface TBD.
+   *
+   * @param null|string|\DateTimeZone TBD.
+   *
+   * @param null|string|\DateTimeZone TBD.
+   *
+   * @return \DateTimeImmutable TBD.
+   */
+  public static function dateTime($arg1 = "now", $arg2 = null, $arg3 = null)
+  {
+    if ($arg1 instanceof \DateTimeImmutable) {
+      if ($arg2 !== null || $arg3 !== null) {
+        throw \InvalidArgumentException('Excess arguments, expected 1, got 3.');
+      }
+      return $arg1;
+    }
+    if ($arg1 instanceof \DateTime) {
+      if ($arg2 !== null || $arg3 !== null) {
+        throw \InvalidArgumentException('Excess arguments, expected 1, got 3.');
+      }
+      return \DateTimeImmutable::createFromMutable($arg1);
+    }
+    if ($arg1 instanceof \DateTimeInterface) {
+      if ($arg2 !== null || $arg3 !== null) {
+        throw \InvalidArgumentException('Excess arguments, expected 1, got 3.');
+      }
+      return \DateTimeImmutable::createFromInterface($arg1);
+    }
+    if (is_string($arg1) && is_string($arg2)) {
+      return \DateTimeImmutable::createFromFormat($arg1, $arg2, $arg3);
+    } else if ($arg3 === null) {
+      return new \DateTimeImmutable($arg1, $arg2);
+    }
+    throw new \InvalidArgumentException('Unsupported arguments');
+  }
+
 }
 
 // Local Variables: ***
