@@ -51,18 +51,23 @@ use OCP\ITempManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 
 class PmeTableController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
-  // use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var HistoryService */
   private $historyService;
 
   /** @var ParameterService */
   private $parameterService;
+
+  /** @var ProjectService */
+  private $projectService;
 
   /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
   protected $pme;
@@ -89,6 +94,7 @@ class PmeTableController extends Controller {
     , ConfigService $configService
     , HistoryService $historyService
     , RequestParameterService $parameterService
+    , ProjectService $projectService
     , PHPMyEdit $phpMyEdit
     , ITempManager $tempManager
     , $userId
@@ -99,6 +105,7 @@ class PmeTableController extends Controller {
 
     $this->appContainer = $appContainer;
     $this->parameterService = $parameterService;
+    $this->projectService = $projectService;
     $this->historyService = $historyService;
     $this->configService = $configService;
     $this->pme = $phpMyEdit;
@@ -149,8 +156,8 @@ class PmeTableController extends Controller {
       }
 
       if (empty($templateRenderer)) {
-        return self::grumble(['error' => $this->l->t("missing arguments"),
-                              'message' => $this->l->t("No template-renderer submitted."), ]);
+        return self::grumble(['error' => $this->l->t('missing arguments'),
+                              'message' => $this->l->t('No template-renderer submitted.'), ]);
       }
 
       $renderer = $this->appContainer->query($templateRenderer);
@@ -195,8 +202,8 @@ class PmeTableController extends Controller {
     $template = $this->parameterService->getParam('template');
 
     if (empty($templateRenderer)) {
-      return self::grumble(['error' => $this->l->t("missing arguments"),
-                            'message' => $this->l->t("No template-renderer submitted."), ]);
+      return self::grumble(['error' => $this->l->t('missing arguments'),
+                            'message' => $this->l->t('No template-renderer submitted.'), ]);
     }
 
     $renderer = $this->appContainer->query($templateRenderer);
@@ -213,10 +220,11 @@ class PmeTableController extends Controller {
       $name  = $this->l->t('Musicians');
       break;
     case 'project-participants':
-      $projectId = $table->projectId;
-      $projectName = $table->projectName;
-      $name = $this->l->t("project participants for %s", $projectName);
-      $instrumentCol = 2;
+      $projectId = $renderer->getProjectId();
+      $projectName = $renderer->getProjectName();
+      $name = $this->l->t('project participants for %s', $projectName);
+      $instrumentLabel = $this->l->t('Instrument');
+      $instrumentCol = true;
       break;
     // case 'instrument-insurance':
     //   if (false) {
@@ -236,26 +244,29 @@ class PmeTableController extends Controller {
     $renderer->navigation(false);
     $renderer->render(false); // prepare export
 
-    // $missing = array();
-    // $missingInfo = array();
-    // if (isset($projectId) &&
-    //     $projectId > 0 &&
-    //     $table->defaultOrdering()) {
-    //   $numbers = Projects::fetchMissingInstrumentation($table->projectId);
 
-    //   if (false) {
-    //     OCP\Util::writeLog('cafevdb',
-    //                        print_r($missing, true),
-    //                        OCP\Util::INFO);
-    //   }
-    //   $missingInfo["missing"]     = $numbers;
-    //   $missingInfo["instruments"] = array_keys($numbers);
-    //   $missingInfo["lastKeyword"] = false;
-    //   $missingInfo["column"]      = $instrumentCol;
-    //   $missing = array_filter($numbers, function ($val) {
-    //     return $val['Registered'] > 0 || $val['Confirmed'] > 0;
-    //   });
-    // }
+    $missing = [];
+    $missingInfo = [];
+    if (isset($projectId) && $projectId > 0 && $renderer->defaultOrdering()) {
+      // [0] => Array ( [instrument] => doublebass [voice] => -1 [required] => 4 [registered] => 1 )
+      // [1] => Array ( [instrument] => violin [voice] => 1 [required] => 15 [registered] => 0 )
+      // [2] => Array ( [instrument] => violin [voice] => 2 [required] => 10 [registered] => 0 )
+      // [3] => Array ( [instrument] => violoncello [voice] => 1 [required] => 0 [registered] => 0 )
+      // [4] => Array ( [instrument] => violoncello [voice] => 2 [required] => 4 [registered] => 1 )
+
+      $balance = $this->projectService->instrumentationBalance($projectId, true);
+
+      $missingInfo['missing']     = $balance;
+      $missingInfo['instruments'] = array_keys($balance);
+      $missingInfo['lastKeyword'] = false;
+      $missingInfo['column'] = $instrumentCol;
+      $missingInfo['label'] = $instrumentLabel;
+      $missing = array_filter($balance, function ($val) {
+        return $val['registered'] > 0 || $val['confirmed'] > 0;
+      });
+    }
+
+    $this->logInfo('MISSING '.print_r($missing, true).' '.print_r($missingInfo, true));
 
     $creator   = $this->getConfigValue('emailfromname', 'Bilbo Baggins');
     $email     = $this->getConfigValue('emailfromaddress', 'bilbo@nowhere.com');
@@ -288,9 +299,9 @@ class PmeTableController extends Controller {
                 ->setLastModifiedBy($creator)
                 ->setTitle('CAFEV-'.$name)
                 ->setSubject('CAFEV-'.$name)
-                ->setDescription("Exported Database-Table")
-                ->setKeywords("office 2007 openxml php ".$name)
-                ->setCategory("Database Table Export");
+                ->setDescription('Exported Database-Table')
+                ->setKeywords('office 2007 openxml php '.$name)
+                ->setCategory('Database Table Export');
     $sheet = $spreadSheet->getActiveSheet();
 
     $offset = $headerOffset = 3;
@@ -309,15 +320,19 @@ class PmeTableController extends Controller {
       },
       // Dump-row callback
       function ($i, $lineData) use ($sheet, &$offset, &$rowCnt, &$missingInfo) {
-        if ($i >= 2 && !empty($missingInfo)) {
-          //error_log(print_r($lineData, true));
-          //error_log(print_r($missingInfo, true));
-          $col = $missingInfo["column"];
-          while (!empty($missingInfo["instruments"]) &&
-                 $missingInfo["instruments"][0] != $lineData[$col]) {
-            $instrument = array_shift($missingInfo["instruments"]);
-            for ($k = 0; $k < $missingInfo["missing"][$instrument]['Registered']; ++$k) {
-              $sheet->setCellValue(chr(ord("A")+$col).($i+$k+$offset), $instrument);
+        if ($i < 2 && $missingInfo['column'] === true) {
+          // search header for instrument label
+          $missingInfo['column'] = array_search($missingInfo['label'], $lineData);
+        }
+        if ($i >= 2 && !empty($missingInfo) && $missingInfo['column'] >= 0) {
+          // $this->logInfo(print_r($lineData, true));
+          // $this->logInfo(print_r($missingInfo, true));
+          $instrumentCol = $missingInfo['column'];
+          while (!empty($missingInfo['instruments']) &&
+                 ($missingInfo['instruments'][0] != $lineData[$instrumentCol])) {
+            $instrument = array_shift($missingInfo['instruments']);
+            for ($k = 0; $k < $missingInfo['missing'][$instrument]['registered']; ++$k) {
+              $sheet->setCellValue(chr(ord('A')+$instrumentCol).($i+$k+$offset), $instrument);
               ++$rowCnt;
               $sheet->getStyle('A'.($i+$k+$offset).':'.$sheet->getHighestColumn().($i+$k+$offset))->applyFromArray(
                 array(
@@ -343,7 +358,6 @@ class PmeTableController extends Controller {
         }
         if ($i >= 2) {
           ++$rowCnt;
-          $this->logInfo('STYLE FOR '.'A'.($i+$offset).':'.$sheet->getHighestColumn().($i+$offset));
           $style = [
             'fill' => [
               'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -364,14 +378,14 @@ class PmeTableController extends Controller {
      */
 
     // finally, dump all remaining missing musicians ...
-    if (!empty($missingInfo)) {
+    if (!empty($missingInfo) && $missingInfo['column'] >= 0) {
       $i      = $sheet->getHighestRow();
       $offset = 1;
-      $col = $missingInfo["column"];
-      while (!empty($missingInfo["instruments"])) {
-        $instrument = array_shift($missingInfo["instruments"]);
-        for ($k = 0; $k < $missingInfo["missing"][$instrument]['Registered']; ++$k) {
-          $sheet->setCellValue(chr(ord("A")+$col).($i+$k+$offset), $instrument);
+      $instrumentCol = $missingInfo['column'];
+      while (!empty($missingInfo['instruments'])) {
+        $instrument = array_shift($missingInfo['instruments']);
+        for ($k = 0; $k < $missingInfo['missing'][$instrument]['registered']; ++$k) {
+          $sheet->setCellValue(chr(ord('A')+$instrumentCol).($i+$k+$offset), $instrument);
           ++$rowCnt;
           $sheet->getStyle('A'.($i+$k+$offset).':'.$sheet->getHighestColumn().($i+$k+$offset))->applyFromArray(
             array(
@@ -397,7 +411,7 @@ class PmeTableController extends Controller {
 
     $pt_height = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
     $sheet->getRowDimension(1+$headerOffset)->setRowHeight($pt_height+$pt_height/4);
-    $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().(1+$headerOffset))->applyFromArray([
+    $sheet->getStyle('A'.(1+$headerOffset).':'.$sheet->getHighestColumn().(1+$headerOffset))->applyFromArray([
       'font' => [
         'bold' => true
       ],
@@ -448,18 +462,18 @@ class PmeTableController extends Controller {
       if (count($missing) > 0) {
         $missingStart = $rowNumber = $sheet->getHighestRow() + 4;
 
-        $sheet->setCellValue("A$rowNumber", $this->l->t("Missing Musicians"));
-        $sheet->mergeCells("A$rowNumber:C$rowNumber");
+        $sheet->setCellValue("A$rowNumber", $this->l->t('Missing Musicians'));
+        $sheet->mergeCells("A$rowNumber:D$rowNumber");
         $sheet->getRowDimension($rowNumber)->setRowHeight($pt_height+$pt_height/4);
 
         // Format the mess a little bit
-        $sheet->getStyle("A$rowNumber:B$rowNumber")->applyFromArray(
+        $sheet->getStyle("A$rowNumber:D$rowNumber")->applyFromArray(
           array(
             'font'    => array(
               'bold'      => true
             ),
             'alignment' => array(
-              'horizontal' => PhpSpreadsheet\Style\lignment::HORIZONTAL_CENTER_CONTINUOUS,
+              'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER_CONTINUOUS,
               'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
             ),
             'fill' => array(
@@ -473,13 +487,14 @@ class PmeTableController extends Controller {
 
         ++$rowNumber;
 
-        $sheet->setCellValue("A$rowNumber", $this->l->t("Instrument"));
-        $sheet->setCellValue("B$rowNumber", $this->l->t("Registered"));
-        $sheet->setCellValue("C$rowNumber", $this->l->t("Confirmed"));
+        $sheet->setCellValue("A$rowNumber", $this->l->t('Instrument'));
+        $sheet->setCellValue("B$rowNumber", $this->l->t('Required'));
+        $sheet->setCellValue("C$rowNumber", $this->l->t('Not Registered'));
+        $sheet->setCellValue("D$rowNumber", $this->l->t('Not Confirmed'));
         $sheet->getRowDimension($rowNumber)->setRowHeight($pt_height+$pt_height/4);
 
         // Format the mess a little bit
-        $sheet->getStyle("A$rowNumber:C$rowNumber")->applyFromArray(
+        $sheet->getStyle("A$rowNumber:D$rowNumber")->applyFromArray(
           array(
             'font'    => array(
               'bold'      => true
@@ -499,16 +514,17 @@ class PmeTableController extends Controller {
 
         $cnt = 0;
         foreach ($missing as $instrument => $number) {
-          if ($number['Registered'] <= 0 && $number['Confirmed'] <= 0) {
+          if ($number['registered'] <= 0 && $number['confirmed'] <= 0) {
             continue;
           }
           ++$rowNumber;
           ++$cnt;
           $sheet->setCellValue("A$rowNumber", $instrument);
-          $sheet->setCellValue("B$rowNumber", $number['Registered']);
-          $sheet->setCellValue("C$rowNumber", $number['Confirmed']);
+          $sheet->setCellValue("B$rowNumber", $number['required']);
+          $sheet->setCellValue("C$rowNumber", $number['registered']);
+          $sheet->setCellValue("D$rowNumber", $number['confirmed']);
 
-          $sheet->getStyle("A$rowNumber:C$rowNumber")->applyFromArray(
+          $sheet->getStyle("A$rowNumber:D$rowNumber")->applyFromArray(
             array(
               'fill' => array(
                 'fillType'  => PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -518,7 +534,7 @@ class PmeTableController extends Controller {
           );
         }
 
-        $sheet->getStyle("A".($missingStart).":C$rowNumber")->applyFromArray([
+        $sheet->getStyle("A".($missingStart).":D$rowNumber")->applyFromArray([
           'borders' => [
             'allBorders' => [
               'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -536,14 +552,14 @@ class PmeTableController extends Controller {
      */
 
     $highCol = $sheet->getHighestColumn();
-    $sheet->mergeCells("A1:".$highCol."1");
-    $sheet->mergeCells("A2:".$highCol."2");
+    $sheet->mergeCells("A1:".$highCol.'1');
+    $sheet->mergeCells("A2:".$highCol.'2');
 
-    $sheet->setCellValue("A1", $name.", ".$humanDate);
-    $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
+    $sheet->setCellValue('A1', $name.', '.$humanDate);
+    $sheet->setCellValue('A2', $creator.' &lt;'.$email.'&gt;');
 
     // Format the mess a little bit
-    $sheet->getStyle("A1:".$highCol."2")->applyFromArray(
+    $sheet->getStyle('A1:'.$highCol.'2')->applyFromArray(
       array(
         'font'    => array(
           'bold'   => true,
@@ -561,7 +577,7 @@ class PmeTableController extends Controller {
       )
     );
 
-    $sheet->getStyle("A1:".$highCol."2")->applyFromArray(
+    $sheet->getStyle('A1:'.$highCol.'2')->applyFromArray(
       array(
         'alignment' => array(
           'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
