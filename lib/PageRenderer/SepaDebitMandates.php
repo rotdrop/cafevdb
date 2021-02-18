@@ -53,7 +53,7 @@ class SepaDebitMandates extends PMETableViewBase
     [
       'table' => self::TABLE,
       'master' => true,
-      'entity' => Entities\InsuranceRate::class,
+      'entity' => Entities\SepaDebitMandate::class,
     ],
     [
       'table' => self::PARTICIPANTS_TABLE,
@@ -63,18 +63,21 @@ class SepaDebitMandates extends PMETableViewBase
         'musician_id' => 'musician_id',
       ],
       'column' => 'musician_id',
+      'read_only' => true,
     ],
     [
       'table' => self::PROJECTS_TABLE,
       'entity' => Entities\Project::class,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
+      'read_only' => true,
     ],
     [
       'table' => self::MUSICIANS_TABLE,
       'entity' => Entities\Musician::class,
       'identifier' => [ 'id' => 'musician_id' ],
       'column' => 'id',
+      'read_only' => true,
     ],
     [
       'table' => self::PAYMENTS_TABLE,
@@ -85,6 +88,7 @@ class SepaDebitMandates extends PMETableViewBase
         'mandate_sequence' => 'sequence',
       ],
       'column' => 'id',
+      'read_only' => true,
     ],
   ];
 
@@ -353,7 +357,7 @@ received so far'),
       'options'  => 'LACPDV',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => $projectMode ? $projectId : -1,
+      'default'  => $projectMode ? $projectId : null,
       'sort'     => true,
       ];
 
@@ -364,7 +368,7 @@ received so far'),
       'options'  => 'LACPDV',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => -1,
+      'default'  => null,
       'sort'     => true,
     ];
 
@@ -375,7 +379,7 @@ received so far'),
       'options'  => 'LACPDV',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => 0,
+      'default'  => 1,
       'sort'     => true,
     ];
 
@@ -429,8 +433,9 @@ received so far'),
         'tab'      => [ 'id' => 'tab-all' ],
         'name'     => $this->l->t('Musician'),
         'css'      => [ 'postfix' => ' allow-empty' ],
-        //'input'    => 'R',
-        'select'   => 'T',
+        'input'    => 'R',
+        'input|A'  => null,
+        'select'   => 'D',
         'maxlen'   => 11,
         'sort'     => true,
         'values' => [
@@ -459,8 +464,17 @@ received so far'),
       'sort'   => true,
     ];
 
-    // soft-deletion
-    $opts['fdd'][] = $this->defaultFDD['deleted_at'];
+    $opts['fdd']['non_recurring'] = [
+      'tab' => array('id' => 'mandate'),
+      'name' => $this->l->t('Non-Recurring'),
+      'select' => 'C',
+      'maxlen' => '1',
+      'sort' => true,
+      'escape' => false,
+      'sqlw' => 'IF($val_qas = "", 0, 1)',
+      'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
+      'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+    ];
 
     $opts['fdd']['mandate_date'] = [
       'name'     => $this->l->t('Date Issued'),
@@ -491,6 +505,9 @@ received so far'),
         'css'      => [ 'postfix' => ' last-used-date' ],
         'datemask' => 'd.m.Y'
       ]);
+
+    // soft-deletion
+    $opts['fdd']['deleted_at'] = $this->defaultFDD['deleted_at'];
 
     ///////////////
 

@@ -23,9 +23,12 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use \DateTimeImmutable AS DateTime;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Common\Util;
 
 /** Finance and bank related stuff. */
 class FinanceService
@@ -457,17 +460,17 @@ class FinanceService
       $usageInfo = $this->mandateReferenceUsage($usageInfo, true);
     }
     if (empty($usageInfo['lastUsed'])) {
-      $usageInfo['LastUsed'] = $usageInfo['mandateIssued'];
+      $usageInfo['lastUsed'] = $usageInfo['mandateIssued'];
     }
     $oldLocale = setlocale(LC_TIME, '0');
-    setlocale(LC_TIME, Util::getLocale());
+    setlocale(LC_TIME, $this->getLocale());
 
     $oldTZ = date_default_timezone_get();
-    $tz = Util::getTimezone();
+    $tz = $this->getTimezone();
     date_default_timezone_set($tz);
 
-    $nowDate  = new \DateTime(strftime('%Y-%m-%d'));
-    $usedDate = new \DateTime($usageInfo['lastUsed']); // lastUsed may already be a DateTime object
+    $nowDate  = Util::dateTime(strftime('%Y-%m-%d'));
+    $usedDate = Util::dateTime($usageInfo['lastUsed']); // lastUsed may already be a DateTime object
 
     $diff = $usedDate->diff($nowDate);
     $months = $diff->format('%y') * 12 + $diff->format('%m');
@@ -724,8 +727,8 @@ class FinanceService
   public function testIBAN( $iban ) {
     $iban = str_replace( ' ', '', $iban );
     $iban1 = substr( $iban,4 )
-           . strval( ord( $iban{0} )-55 )
-           . strval( ord( $iban{1} )-55 )
+           . strval( ord( $iban[0] )-55 )
+           . strval( ord( $iban[1] )-55 )
            . substr( $iban, 2, 2 );
 
     for( $i = 0; $i < strlen($iban1); $i++) {

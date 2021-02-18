@@ -98,9 +98,14 @@ class SepaDebitNoteController extends Controller {
     $musicianId = $this->parameterService['musicianId'];
     $reference  = $this->parameterService['mandateReference'];
     $mandateProjectId  = $this->parameterService['mandateProjectId'];
+    $nonRecurring = $this->parameterService['nonRecurring'];
+    $nonRecurring = filter_var($nonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+
+    $this->logInfo('NON RECUR '.$nonRecurring.' '.(!!$nonRecurring));
 
     $memberProjectId = $this->getConfigValue('memberProjectId', -1);
     $sequenceType = 'permanent';
+
 
     $IBAN = $this->parameterService['bankAccountIBAN'];
     $BLZ  = $this->parameterService['bankAccountBLZ'];
@@ -141,6 +146,7 @@ class SepaDebitNoteController extends Controller {
         break;
       case 'orchestraMember':
         // tricky, for now just generate a new reference
+        // @todo This has be made foolproof!
         $newProject = ($value === 'member') ? $memberProjectId : $projectId;
         $mandate = $this->financeService->fetchSepaMandate($newProject, $musicianId);
         if (!empty($mandate)) {
@@ -154,6 +160,10 @@ class SepaDebitNoteController extends Controller {
           $message[] = $this->l->t('Generated new reference "%s"', $reference);
         }
         $mandateProjectId = $newProject;
+        $newValidations[] = [
+          'changed' => 'nonRecurring',
+          'value' => $value != 'member',
+        ];
         break;
       case 'lastUsedDate':
         // Store the lastUsedDate immediately, if other fields are disabled
@@ -169,6 +179,9 @@ class SepaDebitNoteController extends Controller {
               $this->l->t('Failed setting `%s\' to `%s\'.', [ $changed, $value, ]));
           }
         }
+      case 'nonRecurring':
+        $nonRecurring = $value;
+        break;
       case 'mandateDate':
         // Whatever the user likes ;)
         // The date-picker does some validation on its own, so just live with it.
@@ -443,6 +456,7 @@ class SepaDebitNoteController extends Controller {
           'bic' => $BIC,
           'owner' => $owner,
           'feedback' => $feedback,
+          'nonRecurring' => $nonRecurring,
         ]);
 
     } // validation loop

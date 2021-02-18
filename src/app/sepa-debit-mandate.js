@@ -380,7 +380,6 @@ const makeSuggestions = function(data) {
  * @param {Function} validateLockCB TBD.
  */
 const mandateValidate = function(event, validateLockCB) {
-  const element = this;
   const dialogId = '#sepa-debit-mandate-dialog';
 
   if (typeof validateLockCB === 'undefined') {
@@ -453,9 +452,9 @@ const mandateValidate = function(event, validateLockCB) {
         $('input[name="mandateReference"]').val(data.reference);
         $('legend.mandateCaption .reference').html(data.reference);
       }
-      if (data.value) {
-        $(element).val(data.value);
-      }
+      // if (data.value) {
+      //   $(element).val(data.value);
+      // }
       if (data.iban) {
         $('input.bankAccountIBAN').val(data.iban);
       }
@@ -471,8 +470,12 @@ const mandateValidate = function(event, validateLockCB) {
       if (data.reference) {
         $('span.reference').html(data.reference);
       }
-      $(dialogId + ' #msg').html(data.message);
-      $(dialogId + ' #msg').show();
+      if (!Array.isArray(data.message)) {
+        data.message = [data.message];
+      }
+      for (const msg of data.message) {
+        Notification.show(msg, { timeout: 15 });
+      }
       if (data.suggestions !== '') {
         const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
             + ' '
@@ -506,7 +509,11 @@ const mandateValidate = function(event, validateLockCB) {
  * @returns {bool}
  */
 const mandateValidatePME = function(event, validateLockCB) {
+  event.preventDefault();
+
   const $element = $(this);
+
+  console.info('ELEMENT', $element);
 
   if ($element.prop('readonly')) {
     return false;
@@ -540,8 +547,6 @@ const mandateValidatePME = function(event, validateLockCB) {
     $.fn.cafevTooltip.hide();
   };
 
-  event.preventDefault();
-
   // we use the same Ajax validation script; we remap the form
   // elements. We need
   //
@@ -558,12 +563,14 @@ const mandateValidatePME = function(event, validateLockCB) {
   const inputMapping = {
     [pmeData('last_used_date')]: 'lastUsedDate',
     [pmeData('mandate_date')]: 'mandateDate',
+    [pmeData('non_recurring')]: 'mandateDate',
     [pmeData('bank_account_owner')]: 'bankAccountOwner',
     [pmeData('iban')]: 'bankAccountIBAN',
     [pmeData('bic')]: 'bankAccountBIC',
     [pmeData('blz')]: 'bankAccountBLZ',
     [pmeData('Projects:id')]: 'projectId',
     [pmeData('Musicians:id')]: 'musicianId',
+    [pmeData('non_recurring[]')]: 'nonRecurring',
   };
   // console.info('INPUT MAPPING', inputMapping);
   // console.info('ELEMENT CHANGED', $element.attr('name'));
@@ -596,6 +603,7 @@ const mandateValidatePME = function(event, validateLockCB) {
     bankAccountIBAN: $('input[name="' + pmeData('iban') + '"]').val(),
     bankAccountBIC: $('input[name="' + pmeData('bic') + '"]').val(),
     bankAccountBLZ: $('input[name="' + pmeData('blz') + '"]').val(),
+    nonRecurring: $('input[name="' + pmeData('non_recurring[]') + '"]').prop('checked'),
     changed,
   };
 
@@ -646,7 +654,7 @@ const mandateValidatePME = function(event, validateLockCB) {
       //   console.info('DATA', data);
       //   $element.val(data.value);
       // }
-      // console.info('DATA', data);
+      console.info('DATA', data);
       if (data.iban !== undefined) {
         $('input[name="' + pmeData('iban') + '"]').val(data.iban);
       }
@@ -661,6 +669,9 @@ const mandateValidatePME = function(event, validateLockCB) {
       }
       if (data.reference !== undefined) {
         $('input[name="' + pmeData('mandate_reference') + '"]').val(data.reference);
+      }
+      if (data.nonRecurring !== undefined) {
+        $('input[name="' + pmeData('non_recurring[]') + '"]').prop('checked', data.nonRecurring === 'true');
       }
 
       Notification.hide();
@@ -880,6 +891,10 @@ const mandateReady = function(selector) {
     .off('change')
     .on('change', validateInput);
 
+  table.find('input[type="checkbox"]').not('tr.pme-filter input')
+    .off('change')
+    .on('change', validateInput);
+
   const submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
   let submitActive = false;
   form
@@ -904,7 +919,7 @@ const mandateReady = function(selector) {
       inputs.prop('readonly', true);
       button.blur();
 
-      mandateValidatePME.call({ name: pmeData('IBAN') }, event, function(lock, validateOk) {
+      mandateValidatePME.call({ name: pmeData('iban') }, event, function(lock, validateOk) {
         if (lock) {
           inputs.prop('readonly', true);
         } else {
