@@ -35,7 +35,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * states how many instruments are needed.
  *
  * @ORM\Table(name="ProjectInstrumentationNumbers")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectInstrumentationNumbersRepository")
  */
 class ProjectInstrumentationNumber implements \ArrayAccess
 {
@@ -57,10 +57,10 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(type="integer", options={"default"="-1","comment"="Voice specification if applicable, set to -1 if separation by voice is not needed"})
+   * @ORM\Column(type="integer", options={"default"="0","comment"="Voice specification if applicable, set to 0 if separation by voice is not needed"})
    * @ORM\Id
    */
-  private $voice = -1;
+  private $voice = 0;
 
   /**
    * @var int

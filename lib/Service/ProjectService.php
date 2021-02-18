@@ -142,6 +142,65 @@ class ProjectService
   }
 
   /**
+   * Fetch the instrumentation balance for the given project, @see \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectInstrumentationNumbersRepository::fetchInstrumentationBalance().
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @param bool $sumVoices Sum-up all voices into a single instrument field
+   *
+   * @return array<string, array<> >
+   * ```
+   * [
+   *   INSTRUMENT:VOICE => [
+   *     'instrument' => INSTRUMENT,
+   *     'voice' => VOICE,
+   *     'registered' => (REQUIRED - REGISTERED),
+   *     'confirmed' => (REQUIRED - CONFIRMED),
+   *   ]
+   * ]
+   * ```
+   *
+   * If $sumVoices == true, the voice field is not present and the key
+   * consists of the instrument only.
+   */
+  public function instrumentationBalance($projectOrId, $sumVoices = false)
+  {
+    $projectId = ($projectOrId instanceof Entities\Project) ? $projectOrId['id'] : $projectOrId;
+
+
+    $balanceData = $this->getDatabaseRepository(Entities\ProjectInstrumentationNumber::class)
+                        ->fetchInstrumentationBalance($projectId);
+
+    $balance = [];
+    foreach ($balanceData as $row) {
+      $instrument = $row['instrument'];
+      if ($sumVoices) {
+        $key = $instrument;
+      } else {
+        $voice = $row['voice'] > 0 ? $row['voice'] : 0;
+        $key = $row['instrument'].':'.$voice;
+      }
+      if (empty($balance[$key])) {
+        $balance[$key] = [
+          'instrument' => $instrument,
+          'required' => 0,
+          'registered' => 0,
+          'confirmed' => 0,
+        ];
+      }
+      $required = $row['required'];
+      foreach (['registered', 'confirmed'] as $field) {
+        $balance[$key][$field] += $required - $row[$field];
+      }
+      $balance[$key]['required'] += $required;
+      if (!$sumVoices) {
+        $balance[$key]['voice'] = $voice;
+      }
+    }
+    return $balance;
+  }
+
+  /**
    * Find a project by its name.
    *
    * @param string $projectName
