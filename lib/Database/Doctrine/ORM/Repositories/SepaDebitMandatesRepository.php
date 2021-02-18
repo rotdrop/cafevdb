@@ -114,7 +114,7 @@ class SepaDebitMandatesRepository extends EntityRepository
    *
    * @return ?SepaDebitMandate
    */
-  public function findNewest($project, $musician): ?SepaDebitMandate
+  public function findNewest($project, $musician): ?Entities\SepaDebitMandate
   {
     return $this->findOneBy(
       [ 'project' => $project, 'musician' => $musician ],
@@ -136,8 +136,8 @@ class SepaDebitMandatesRepository extends EntityRepository
     // @todo find about multiple incremental selects ...
     $selects = [
       'm.mandateReference',
-      'm.disabled',
-      'GREATEST(COALESCE(MAX(d.dueDate), ""), COALESCE(MAX(m.lastUsedDate), "")) AS lastUsed',
+      'm.deletedAt',
+      "GREATEST(COALESCE(MAX(d.dueDate), ''), COALESCE(MAX(m.lastUsedDate), '')) AS lastUsed",
       'm.mandateDate AS mandateIssued',
     ];
     if (!$brief) {
@@ -159,7 +159,7 @@ class SepaDebitMandatesRepository extends EntityRepository
     // the where part ...
     if (is_string($identifier)) { // assume it is the mandate-reference
       $qb->where('m.mandateReference = :reference')
-         ->setParamter('reference', $identifier);
+         ->setParameter('reference', $identifier);
     } else if (is_array($identifier) || ($identifier instanceof Entities\SepaDebitMandate)) {
       $qb->where('m.project = :project')
          ->andWhere('m.musician = :musician')
