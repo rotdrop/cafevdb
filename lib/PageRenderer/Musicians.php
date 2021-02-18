@@ -674,27 +674,7 @@ make sure that the musicians are also automatically added to the
 
 //     $opts['triggers']['delete']['before'][]  = 'CAFEVDB\Musicians::beforeDeleteTrigger';
 
-    if ($this->pmeBare) {
-      // disable all navigation buttons, probably for html export
-      $opts['navigation'] = 'N'; // no navigation
-      $opts['options'] = '';
-      // Don't display special page elements
-      $opts['display'] =  array_merge(
-        $opts['display'],
-        [
-          'form'  => false,
-          'query' => false,
-          'sort'  => false,
-          'time'  => false,
-          'tabs'  => false
-        ]);
-      // Disable sorting buttons
-      foreach ($opts['fdd'] as $key => $value) {
-        $opts['fdd'][$key]['sort'] = false;
-      }
-    }
-
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = $this->mergeDefaultOptions($opts);
 
     if ($execute) {
       $this->execute($opts);

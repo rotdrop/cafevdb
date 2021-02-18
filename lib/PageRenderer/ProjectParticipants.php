@@ -472,11 +472,11 @@ class ProjectParticipants extends PMETableViewBase
       [
         'tab'      => [ 'id' => 'instrumentation' ],
         'name'     => $this->l->t('Voice'),
-        'default'  => -1, // keep in sync with ProjectInstrumentationNumbers
+        'default'  => 0, // keep in sync with ProjectInstrumentationNumbers
         'select'   => 'M',
         'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT
-  IF(\$join_col_fqn != -1,
+  IF(\$join_col_fqn > 0,
      CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".name,
             ' ',
             \$join_col_fqn),
@@ -516,7 +516,7 @@ class ProjectParticipants extends PMETableViewBase
           //'join' => '$join_table.musician_id = $main_table.musician_id AND $join_table.project_id = $main_table.project_id',
           'join' => false,
         ],
-        'values2|LF' => [ '-1' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+        'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
       ]);
 
     $this->makeJoinTableField(
@@ -1028,7 +1028,7 @@ WHERE pp.project_id = $projectId",
         $css[] = 'predefined';
         if ($dataType === 'service-fee') {
           $css[] = 'service-fee';
-          foreach($groupValues2 as $key => $value) {
+          foreach ($groupValues2 as $key => $value) {
             $groupValues2[$key] = $this->allowedOptionLabel(
               $value, $groupValueData[$key], $dataType, 'money group clip-long-text');
           }
@@ -1438,7 +1438,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         'nowrap' => true,
         'sort' => true,
         'php' => function($mandates, $action, $k, $row, $recordId, $pme) {
-           if ($this->pme_bare) {
+           if ($this->pmeBare) {
              return $mandates;
            }
            $projectId = $this->projectId;
@@ -1652,28 +1652,9 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 //       return true;
 //     };
 
-//     if ($this->pme_bare) {
-//       // disable all navigation buttons, probably for html export
-//       $opts['navigation'] = 'N'; // no navigation
-//       $opts['options'] = '';
-//       // Don't display special page elements
-//       $opts['display'] =  array_merge($opts['display'],
-//                                       array(
-//                                         'form'  => false,
-//                                         'query' => false,
-//                                         'sort'  => false,
-//                                         'time'  => false,
-//                                         'tabs'  => false,
-//                                         ));
-//       // Disable sorting buttons
-//       foreach ($opts['fdd'] as $key => $value) {
-//         $opts['fdd'][$key]['sort'] = false;
-//       }
-//     }
-
     ///@@@@@@@@@@@@@@@@@@@@@
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = $this->mergeDefaultOptions($opts);
 
     if ($execute) {
       $this->execute($opts);

@@ -226,6 +226,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
   }
 
+  /**Determine if we have the default ordering of rows. */
+  public function defaultOrdering()
+  {
+    if (!isset($this->pme)) {
+      return false;
+    }
+    return empty($this->pme->sfn);
+  }
+
   /** Set table-navigation enable/disable. */
   public function navigation($enable)
   {
@@ -322,6 +331,31 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   public function listOperation()
   {
     return $this->pme->list_operation();
+  }
+
+  protected function mergeDefaultOptions(array $opts)
+  {
+    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    if ($this->pmeBare) {
+      // disable all navigation buttons, probably for html export
+      $opts['navigation'] = 'N'; // no navigation
+      $opts['options'] = '';
+      // Don't display special page elements
+      $opts['display'] =  array_merge(
+        $opts['display'],
+        [
+          'form'  => false,
+          'query' => false,
+          'sort'  => false,
+          'time'  => false,
+          'tabs'  => false
+        ]);
+      // Disable sorting buttons
+      foreach ($opts['fdd'] as $key => $value) {
+        $opts['fdd'][$key]['sort'] = false;
+      }
+    }
+    return $opts;
   }
 
   /**
