@@ -443,6 +443,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       // Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity
       'deleted_at' => [
         'name' => $this->l->t('Date Revoked'),
+        'input' => 'R',
         'maxlen' => 10,
         'sort' => true,
         'css' => [ 'postfix' => ' revocation-date date' ],
@@ -535,8 +536,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       // Convert unicode space to ordinary space
-      $value = str_replace("\xc2\xa0", "\x20", $value);
-      $value = preg_replace('/\s+/', ' ', $value);
+      $value = Util::normalizeSpaces($value);
 
       // Then trim away ...
       $value = trim($value);
@@ -544,7 +544,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       if ($chgIdx === false && $oldvals[$key] != $value) {
         $changed[] = $key;
       }
-      if ($op == 'insert' && empty($value) && $chgIdx !== false) {
+      if ($op == 'insert' && (string)$value === '' && $chgIdx !== false) {
         unset($changed[$chgIdx]);
         $changed = array_values($changed);
         unset($newvals[$key]);
@@ -811,9 +811,34 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     Util::unsetValue($changed, 'created');
     Util::unsetValue($changed, 'updated');
 
-    $this->logDebug('OLDVALS '.print_r($oldvals, true));
+    $missingKeys = [];
+    foreach ($pme->key as $key => $type) {
+      if (!isset($newvals[$key])) {
+        $missingKeys[] = $key;
+      }
+    }
+    $this->logDebug('MISSING '.print_r($missingKeys, true));
+    foreach ($this->joinStructure as $joinInfo) {
+      if ($joinInfo['master']) {
+        continue;
+      }
+      foreach ($joinInfo['identifier'] as $joinColumn => $keyColumn) {
+        if (array_search($keyColumn, $missingKeys) === false) {
+          continue;
+        }
+        $joinFieldName = $this->joinTableFieldName($joinInfo, $joinColumn);
+        if (isset($newvals[$joinFieldName])) {
+          $newvals[$keyColumn] = $newvals[$joinFieldName];
+          $changed[] = $keyColumn;
+          unset($missingKeys[$keyColumn]);
+        }
+        if (empty($missingKeys)) {
+          break 2;
+        }
+      }
+    }
+
     $this->logDebug('NEWVALS '.print_r($newvals, true));
-    $this->logDebug('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
@@ -822,10 +847,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->logDebug('CHANGESETS: '.print_r($changeSets, true));
 
     foreach ($this->joinStructure as $joinInfo) {
+      $table = $joinInfo['table'];
+      $changeSet = $changeSets[$table];
       if (!empty($joinInfo['read_only'])) {
+        foreach ($changeSet as $column => $joinColumn) {
+          Util::unsetValue($changed, $joinColumn);
+        }
         continue;
       }
-      $table = $joinInfo['table'];
       if (empty($changeSets[$table])) {
         continue;
       }
@@ -837,7 +866,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // further care.
         // continue;
       }
-      $changeSet = $changeSets[$table];
       $this->logDebug('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
