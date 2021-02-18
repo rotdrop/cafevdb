@@ -195,6 +195,9 @@ class PmeTableController extends Controller {
 
   /**
    * Return template for table load
+   *
+   * @todo Most of this stuff should be moved somewhere else, e.g. to
+   * PageRenderer.
    */
   private function export()
   {
