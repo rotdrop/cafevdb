@@ -198,6 +198,39 @@ class PmeTableController extends Controller {
    */
   private function export()
   {
+    $fileTypes = [
+      'EXCEL' => [
+        'writer' => 'Xlsx',
+        'mimeType' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'extension' => 'xlsx',
+      ],
+      'ODS' => [
+        'writer' => 'Ods',
+        'mimeType' => 'application/vnd.oasis.opendocument.spreadsheet',
+        'extension' => 'ods',
+      ],
+      'CSV' => [
+        'writer' => 'Csv',
+        'mimeType' => 'text/csv',
+        'extension' => 'csv',
+      ],
+      'HTML' => [
+        'writer' => 'Html',
+        'mimeType' => 'text/html',
+        'extension' => 'html',
+      ],
+      'PDF' => [
+        'writer' => 'Pdf\\Mpdf',
+        'mimeType' => 'application/pdf',
+        'extension' => 'pdf',
+      ],
+    ];
+
+    $exportFormat = $this->parameterService['exportFormat'];
+    if (empty($fileTypes[$exportFormat])) {
+      return self::grumble($this->l->t('Export formt "%s" is not supported.', $exportFormat));
+    }
+
     $templateRenderer = $this->parameterService->getParam('templateRenderer');
     $template = $this->parameterService->getParam('template');
 
@@ -212,8 +245,6 @@ class PmeTableController extends Controller {
         $this->l->t("Template-renderer `%s' cannot be found.", [$templateRenderer]),
         Http::INTERNAL_SERVER_ERROR);
     }
-
-    $this->logInfo('Template: '.$template);
 
     switch ($template) {
     case 'all-musicians':
@@ -265,8 +296,6 @@ class PmeTableController extends Controller {
         return $val['registered'] > 0 || $val['confirmed'] > 0;
       });
     }
-
-    $this->logInfo('MISSING '.print_r($missing, true).' '.print_r($missingInfo, true));
 
     $creator   = $this->getConfigValue('emailfromname', 'Bilbo Baggins');
     $email     = $this->getConfigValue('emailfromaddress', 'bilbo@nowhere.com');
@@ -589,28 +618,45 @@ class PmeTableController extends Controller {
     /*
      **************************************************************************
      *
+     * Try to avoid truncated pages
+     *
+     */
+
+    $pageSetup = $spreadSheet->getActiveSheet()->getPageSetup();
+    $pageSetup->setFitToPage(true);
+    $pageSetup->setOrientation(PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+    $pageSetup->setPaperSize(PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A3);
+
+    /*
+     **************************************************************************
+     *
      * Dump the data to the client
      *
      */
+
+    $fileType = $fileTypes[$exportFormat];
+
+    $writerClass = '\\PhpOffice\\PhpSpreadsheet\\Writer\\'.$fileType['writer'];
+    $writer = new $writerClass($spreadSheet);
+    // if ($exportFormat == 'PDF') {
+    //   $writer->setPaperSize(PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A3);
+    //   $writer->setOrientation(PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+    // }
 
     $tmpFile = $this->tempManager->getTemporaryFile($this->appName());
     register_shutdown_function(function() {
       $this->tempManager->clean();
     });
 
-    $writer = new PhpSpreadsheet\Writer\Xlsx($spreadSheet);
     $writer->save($tmpFile);
 
     $data = file_get_contents($tmpFile);
     unlink($tmpFile);
 
-    $fileName  = $date.'-'.$this->appName().'-'.$name.'.xlsx';
+    $fileName  = $date.'-'.$this->appName().'-'.$name.'.'.$fileType['extension'];
 
-    return new DataDownloadResponse(
-      $data, $fileName,
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-    return self::grumble($this->l->t('Table export not yet implemented.'));
+    return new DataDownloadResponse($data, $fileName, $fileType['mimeType']);
+    // return self::grumble($this->l->t('Table export not yet implemented.'));
   }
 
 }
