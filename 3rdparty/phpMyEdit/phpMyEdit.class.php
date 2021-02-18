@@ -3929,7 +3929,24 @@ class phpMyEdit
 				if (!$this->displayed[$k] || $this->hidden($k)) {
 					continue;
 				}
-				$cell = $this->cellDisplay($k, $row, $css);
+				$cell = '';
+				if (isset($this->fdd[$k]['display']['prefix'])) {
+					$prefix = $this->fdd[$k]['display']['prefix'];
+					if (is_callable($prefix)) {
+						$cell .= call_user_func($prefix, 'display', 'prefix', $row, $k, $this);
+					} else {
+						$cell .= $this->fdd[$k]['display']['prefix'];
+					}
+				}
+				$cell .= $this->cellDisplay($k, $row, $css);
+				if (isset($this->fdd[$k]['display']['postfix'])) {
+					$postfix = $this->fdd[$k]['display']['postfix'];
+					if (is_callable($postfix)) {
+						$cell .= call_user_func($postfix, 'display', 'postfix', $row, $k, $this);
+					} else {
+						$cell .= $this->fdd[$k]['display']['postfix'];
+					}
+				}
 				if ($cellFilter !== false) {
 					$cell = call_user_func($cellFilter, $i, $j, $cell);
 				}
