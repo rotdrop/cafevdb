@@ -70,10 +70,10 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * @var int|null
    *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="-1","comment"="Voice specification if applicable, set to -1 if separation by voice is not needed"})
+   * @ORM\Column(type="integer", nullable=false, options={"default"="0","comment"="Voice specification if applicable, set to 0 if separation by voice is not needed"})
    * @ORM\Id
    */
-  private $voice = -1;
+  private $voice = 0;
 
   /**
    * @var bool

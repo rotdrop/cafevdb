@@ -279,9 +279,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'options'  => 'LACPDVF',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => '-1',
+      'default'  => '0',
       'sort'     => $sort,
-      'values2' => [ '-1' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+      'values2' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
     ];
     $this->addSlug('voice', $opts['fdd']['voice']);
 
