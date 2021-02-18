@@ -31,6 +31,7 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use Doctrine\ORM\Configuration;
 
 use MediaMonks\Doctrine\Transformable;
 use Ramsey\Uuid\Doctrine as Ramsey;
@@ -249,7 +250,7 @@ class EntityManager extends EntityManagerDecorator
       $config->setAutoGenerateProxyClasses(false);
     }
 
-    $config->addCustomStringFunction('timestampdiff', 'Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff');
+    $this->registerCustomFunctions($config);
 
     $config->addCustomHydrationMode('COLUMN_HYDRATOR', ColumnHydrator::class);
 
@@ -264,7 +265,17 @@ class EntityManager extends EntityManagerDecorator
     return $entityManager;
   }
 
-  private function createSimpleConfiguration()
+  /**
+   * @param Configuration $config
+   */
+  private function registerCustomFunctions(Configuration $config)
+  {
+    // $config->addCustomStringFunction('timestampdiff', 'Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff');
+    $config->addCustomDatetimeFunction('timestampdiff', 'DoctrineExtensions\Query\Mysql\TimestampDiff');
+    $config->addCustomStringFunction('greatest', 'DoctrineExtensions\Query\Mysql\Greatest');
+  }
+
+  private function createSimpleConfiguration():array
   {
     $cache = null;
     $useSimpleAnnotationReader = false;
@@ -590,7 +601,8 @@ class EntityManager extends EntityManagerDecorator
             // possibly an attempt to extract from non-existing field.
             continue;
           }
-          throw new \Exception($this->l->t('Unexpected id: %s', $field));
+          throw new \Exception(
+            $this->l->t('Missing value and no generator for identifier field: %s', $field));
         }
       }
       $entityId[$field] = $columnValues[$columnName];
