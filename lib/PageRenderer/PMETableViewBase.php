@@ -80,7 +80,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** @var ?string */
   protected $projectName;
 
-  /** @var ?string */
+  /** @var string */
   protected $template;
 
   /** @var ?int */
@@ -91,9 +91,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   /** @var PageNavigation */
   protected $pageNavigation;
-
-  /** @var string */
-  protected $cssClass = 'pme-table-view';
 
   /**
    * @var int Number of affected entries, fields or
@@ -125,13 +122,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected $minimumNumbersValue = 128;
 
   protected function __construct(
-    ConfigService $configService
+    string $template
+    , ConfigService $configService
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
+    $this->template = $template;
     $this->configService = $configService;
     $this->requestParameters = $requestParameters;
     $this->entityManager = $entityManager;
@@ -226,6 +225,16 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
   }
 
+  public function template()
+  {
+    return $this->template;
+  }
+
+  protected function setTempalte(string $template)
+  {
+    $this->template = $template;
+  }
+
   /**Determine if we have the default ordering of rows. */
   public function defaultOrdering()
   {
@@ -277,13 +286,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   public function getProjectId() { return $this->projectId; }
 
-  /** Short title for heading. */
-  // public function shortTitle();
-
   public function cssClass()
   {
-    return $this->cssClass;
+    return $this->template;
   }
+
+  /** Short title for heading. */
+  public abstract function shortTitle();
 
   /**
    * Header text informations.

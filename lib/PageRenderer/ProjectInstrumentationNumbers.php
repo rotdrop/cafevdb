@@ -39,7 +39,6 @@ use OCA\CAFEVDB\Common\Navigation;
 class ProjectInstrumentationNumbers extends PMETableViewBase
 {
   const TEMPLATE = 'project-instrumentation-numbers';
-  const CSS_CLASS = self::TEMPLATE;
   const TABLE = 'ProjectInstrumentationNumbers';
   const PROJECTS_TABLE = 'Projects';
   const INSTRUMENTS_TABLE = 'Instruments';
@@ -92,8 +91,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     // ],
   ];
 
-  protected $cassClass = self::CSS_CLASS;
-
   public function __construct(
     ConfigService $configService
   , RequestParameterService $requestParameters
@@ -102,11 +99,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   , ToolTipsService $toolTipsService
   , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-  }
-
-  public function cssClass() {
-    return self::CSS_CLASS;
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
   }
 
   public function shortTitle()
@@ -127,7 +120,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
                           "In order to transfer the instruments of the already registerd musicions ".
                           "into this table click the `Adjust Instrument' option from the `Actions' menu.");
 
-    return '<div class="'.self::CSS_CLASS.'-header-text">'.$header.'</div>';
+    return '<div class="'.$this->cssClass().'-header-text">'.$header.'</div>';
   }
 
   /** Show the underlying table. */
@@ -148,7 +141,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
     $opts['tb'] = self::TABLE;
 
-    $template = self::TEMPLATE;
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

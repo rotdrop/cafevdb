@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Common\Util;
 /**Table generator for Instruments table. */
 class InstrumentFamilies extends PMETableViewBase
 {
-  const CSS_CLASS = 'instrument-families';
+  const TEMPLATE = 'instrument-families';
   const TABLE = 'InstrumentFamilies';
 
   public function __construct(
@@ -48,11 +48,9 @@ class InstrumentFamilies extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
   }
-
-  public function cssClass() { return self::CSS_CLASS; }
 
   public function shortTitle()
   {
@@ -100,7 +98,6 @@ class InstrumentFamilies extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'instrument-families';
     $opts['cgi']['persist'] = array(
       'template' => $template,
       'table' => $opts['tb'],

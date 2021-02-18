@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\Navigation;
 /**Table generator for Instruments table. */
 class Instruments extends PMETableViewBase
 {
-  const CSS_CLASS = 'instruments';
+  const TEMPLATE = 'instruments';
   const TABLE = 'Instruments';
 
   public function __construct(
@@ -49,11 +49,9 @@ class Instruments extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
   }
-
-  public function cssClass() { return self::CSS_CLASS; }
 
   public function shortTitle()
   {
@@ -100,7 +98,6 @@ class Instruments extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'instruments';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

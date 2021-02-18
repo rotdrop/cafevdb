@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Common\Navigation;
 /**Table generator for Instruments table. */
 class ProjectExtraFields extends PMETableViewBase
 {
-  const CSS_CLASS = 'project-extra-fields';
+  const TEMPLATE = 'project-extra-fields';
   const TABLE = 'ProjectExtraFields';
   //const OPTIONS_TABLE = 'ProjectExtraFieldValueOptions';
   const DATA_TABLE = 'ProjectExtraFieldsData';
@@ -60,8 +60,6 @@ class ProjectExtraFields extends PMETableViewBase
       'column' => 'id',
     ],
   ];
-
-  protected $cassClass = self::CSS_CLASS;
 
   /** @var InstrumentationService */
   private $instrumentationService;
@@ -83,14 +81,10 @@ class ProjectExtraFields extends PMETableViewBase
     , FuzzyInputService $fuzzyInput
     , ProjectExtraFieldsService $extraFieldsService
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->instrumentationService = $instrumentationService;
     $this->fuzzyInput = $fuzzyInput;
     $this->extraFieldsService = $extraFieldsService;
-  }
-
-  public function cssClass() {
-    return self::CSS_CLASS;
   }
 
   public function shortTitle()
@@ -101,11 +95,6 @@ class ProjectExtraFields extends PMETableViewBase
     } else {
       return $this->l->t("Extra Fields for Projects");
     }
-  }
-
-  public function headerText()
-  {
-    return $this->shortTitle();
   }
 
   /** Show the underlying table. */
@@ -139,7 +128,6 @@ class ProjectExtraFields extends PMETableViewBase
 
     $opts['css']['postfix'] = ' show-hide-disabled';
 
-    $template = 'project-extra-fields';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

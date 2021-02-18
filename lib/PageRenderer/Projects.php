@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Common\Util;
 /**Table generator for Projects table. */
 class Projects extends PMETableViewBase
 {
-  const CSS_CLASS = 'projects';
+  const TEMPLATE = 'projects';
   const TABLE = 'Projects';
   const ENTITY = Entities\Project::class;
   const INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
@@ -112,7 +112,7 @@ class Projects extends PMETableViewBase
     , PageNavigation $pageNavigation
     , IEventDispatcher $eventDispatcher
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectService = $projectService;
     $this->eventsService = $eventsService;
     $this->eventDispatcher = $eventDispatcher;
@@ -124,8 +124,6 @@ class Projects extends PMETableViewBase
       }
     }
   }
-
-  public function cssClass() { return self::CSS_CLASS; }
 
   /** Short title for heading. */
   public function shortTitle() {
@@ -160,7 +158,6 @@ class Projects extends PMETableViewBase
     // Install values for after form-submit, e.g. $this->template ATM
     // is just the request parameter, while Template below will define
     // the value of $this->template after form submit.
-    $template = 'projects';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

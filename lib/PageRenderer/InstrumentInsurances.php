@@ -40,12 +40,11 @@ use OCA\CAFEVDB\Common\Util;
 /** TBD. */
 class InstrumentInsurances extends PMETableViewBase
 {
+  const TEMPLATE = 'instrument-insurance';
   const TABLE = 'InstrumentInsurances';
   const MUSICIANS_TABLE = 'Musicians';
   const BROKER_TABLE = 'InsuranceBrokers';
   const RATES_TABLE = 'InsuranceRates';
-
-  protected $cssClass = 'instrument-insurance';
 
   protected $joinStructure = [
     [
@@ -110,7 +109,7 @@ class InstrumentInsurances extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 
     $this->insuranceService = $insuranceService;
 
@@ -153,7 +152,6 @@ class InstrumentInsurances extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'instrument-insurance';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

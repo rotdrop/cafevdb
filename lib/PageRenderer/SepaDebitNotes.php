@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Common\Util;
 /** TBD. */
 class SepaDebitNotes extends PMETableViewBase
 {
+  const TEMPLATE = 'sepa-debit-notes';
   const TABLE = 'SepaDebitNotes';
   const DATA_TABLE = 'SepaDebitNoteData';
   const PROJECTS_TABLE = 'Projects';
@@ -76,7 +77,7 @@ class SepaDebitNotes extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
   }
 
   public function shortTitle()
@@ -109,7 +110,6 @@ class SepaDebitNotes extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'sepa-debit-notes';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

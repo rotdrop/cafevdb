@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Common\Util;
 /** TBD. */
 class SepaDebitMandates extends PMETableViewBase
 {
+  const TEMPLATE = 'sepa-debit-mandates';
   const TABLE = 'SepaDebitMandates';
   const PROJECTS_TABLE = 'Projects';
   const MUSICIANS_TABLE = 'Musicians';
@@ -107,7 +108,7 @@ class SepaDebitMandates extends PMETableViewBase
     , PageNavigation $pageNavigation
     , ProjectExtraFieldsService $extraFieldsService
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->extraFieldsService = $extraFieldsService;
   }
 
@@ -157,7 +158,6 @@ class SepaDebitMandates extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'sepa-debit-mandates';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

@@ -24,9 +24,11 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 abstract class Renderer implements IRenderer
 {
+  /** @var string */
   protected $template;
 
-  /**Show the underlying template page. This is supposed to echo html
+  /*
+   * Show the underlying template page. This is supposed to echo html
    * code to stdout. This is the default do-nothing implementation.
    *
    * @param bool $execute Kind of dry-run if set to false.
@@ -43,7 +45,7 @@ abstract class Renderer implements IRenderer
 
   public function cssClass()
   {
-    return '';
+    return $this->template;
   }
 }
 

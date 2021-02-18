@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Common\Util;
 /**Table generator for Instruments table. */
 class InsuranceRates extends PMETableViewBase
 {
-  const CSS_CLASS = 'insurance-rates';
+  const TEMPLATE = 'insurance-rates';
   const TABLE = 'InsuranceRates';
   const BROKER_TABLE = 'InsuranceBrokers';
 
@@ -59,7 +59,7 @@ class InsuranceRates extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 
     $scopes = array_values(Types\EnumGeographicalScope::toArray());
 
@@ -69,16 +69,9 @@ class InsuranceRates extends PMETableViewBase
     }
   }
 
-  public function cssClass() { return self::CSS_CLASS; }
-
   public function shortTitle()
   {
     return $this->l->t('Instrument Insurance Rates');
-  }
-
-  public function headerText()
-  {
-    return $this->shortTitle();
   }
 
   /** Show the underlying table. */
@@ -104,7 +97,6 @@ class InsuranceRates extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'insurance-rates';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

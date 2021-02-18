@@ -49,7 +49,6 @@ use OCA\CAFEVDB\Common\Util;
 class ProjectParticipants extends PMETableViewBase
 {
   const TEMPLATE = 'project-participants';
-  const CSS_CLASS = self::TEMPLATE;
   const TABLE = 'ProjectParticipants';
   const MUSICIANS_TABLE = 'Musicians';
   const PROJECTS_TABLE = 'Projects';
@@ -205,7 +204,7 @@ class ProjectParticipants extends PMETableViewBase
     , ProjectExtraFieldsService $extraFieldsService
     , Musicians $musiciansRenderer
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
@@ -214,10 +213,6 @@ class ProjectParticipants extends PMETableViewBase
     $this->musiciansRenderer = $musiciansRenderer;
     $this->extraFieldsService = $extraFieldsService;
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-  }
-
-  public function cssClass() {
-    return self::CSS_CLASS;
   }
 
   public function shortTitle()
@@ -267,7 +262,7 @@ class ProjectParticipants extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => self::TEMPLATE,
+      'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.self::TEMPLATE,
       'recordsPerPage' => $recordsPerPage,

@@ -45,6 +45,8 @@ use OCA\CAFEVDB\Common\Util;
 /**Table generator for Musicians table. */
 class Musicians extends PMETableViewBase
 {
+  const ALL_TEMPLATE = 'all-musicians';
+  const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
   const TABLE = 'Musicians';
   const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
@@ -121,7 +123,7 @@ class Musicians extends PMETableViewBase
     , PhoneNumberService $phoneNumberService
     , InsuranceService $insuranceService
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::ALL_TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
@@ -134,11 +136,13 @@ class Musicians extends PMETableViewBase
   public function enableProjectMode()
   {
     $this->projectMode = true;
+    $this->setTemplate(self::ADD_TEMPLATE);
   }
 
   public function disableProjectMode()
   {
     $this->projectMode = false;
+    $this->setTemplate(self::ALL_TEMPLATE);
   }
 
   /** Short title for heading. */
@@ -194,7 +198,6 @@ make sure that the musicians are also automatically added to the
     // Install values for after form-submit, e.g. $this->template ATM
     // is just the request parameter, while Template below will define
     // the value of $this->template after form submit.
-    $template = $this->projectMode ? 'add-musicians' : 'all-musicians';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

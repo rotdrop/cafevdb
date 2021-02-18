@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\Util;
 /**Table generator for Instruments table. */
 class InsuranceBrokers extends PMETableViewBase
 {
-  const CSS_CLASS = 'insurance-brokers';
+  const TEMPLATE = 'insurance-brokers';
   const TABLE = 'InsuranceBrokers';
 
   protected $joinStructure = [
@@ -57,10 +57,8 @@ class InsuranceBrokers extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
   }
-
-  public function cssClass() { return self::CSS_CLASS; }
 
   public function shortTitle()
   {
@@ -97,7 +95,6 @@ class InsuranceBrokers extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'insurance-brokers';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],

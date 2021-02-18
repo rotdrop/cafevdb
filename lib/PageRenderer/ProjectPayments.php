@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\Navigation;
 /**Table generator for Instruments table. */
 class ProjectPayments extends PMETableViewBase
 {
-  const CSS_CLASS = 'project-payments';
+  const TEMPLATE = 'project-payments';
   const TABLE = 'ProjectPayments';
   const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
   const MUSICIANS_TABLE = 'Musicians';
@@ -101,21 +101,12 @@ class ProjectPayments extends PMETableViewBase
   , ToolTipsService $toolTipsService
   , PageNavigation $pageNavigation
   ) {
-    parent::__construct($configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-  }
-
-  public function cssClass() {
-    return self::CSS_CLASS;
+    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
   }
 
   public function shortTitle()
   {
     return $this->l->t('Payments for project "%s"', [ $this->projectName ]);
-  }
-
-  public function headerText()
-  {
-    return $this->shortTitle();
   }
 
   /** Show the underlying table. */
@@ -141,7 +132,6 @@ class ProjectPayments extends PMETableViewBase
 
     //$opts['debug'] = true;
 
-    $template = 'project-payments';
     $opts['cgi']['persist'] = [
       'template' => $template,
       'table' => $opts['tb'],
