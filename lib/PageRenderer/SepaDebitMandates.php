@@ -386,33 +386,6 @@ received so far'),
     ///////////////////////////////////////////////////////////////////////////
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'id',
-      [
-        'tab'      => [ 'id' => 'tab-all' ],
-        'name'     => $this->l->t('Musician'),
-        'css'      => [ 'postfix' => ' allow-empty' ],
-        //'input'    => 'R',
-        'select'   => 'T',
-        'maxlen'   => 11,
-        'sort'     => true,
-        'values' => [
-          'description' => [
-            'columns' => [ 'sur_name', 'first_name', ],
-            'divs' => ', ',
-          ],
-          'filters' => (!$projectMode
-                        ? null
-                        : "FIND_IN_SET(id,
-  (SELECT GROUP_CONCAT(pp.musician_id)
-    FROM ".self::PARTICIPANTS_TABLE." pp
-    WHERE pp.project_id = ".$projectId."
-    GROUP BY pp.project_id))"),
-        ],
-      ]);
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    $this->makeJoinTableField(
       $opts['fdd'], self::PROJECTS_TABLE, 'id',
       Util::arrayMergeRecursive(
         [
@@ -447,6 +420,33 @@ received so far'),
         )
         : []
       ));
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'id',
+      [
+        'tab'      => [ 'id' => 'tab-all' ],
+        'name'     => $this->l->t('Musician'),
+        'css'      => [ 'postfix' => ' allow-empty' ],
+        //'input'    => 'R',
+        'select'   => 'T',
+        'maxlen'   => 11,
+        'sort'     => true,
+        'values' => [
+          'description' => [
+            'columns' => [ 'sur_name', 'first_name', ],
+            'divs' => ', ',
+          ],
+          'filters' => (!$projectMode
+                        ? null
+                        : "FIND_IN_SET(id,
+  (SELECT GROUP_CONCAT(pp.musician_id)
+    FROM ".self::PARTICIPANTS_TABLE." pp
+    WHERE pp.project_id = ".$projectId."
+    GROUP BY pp.project_id))"),
+        ],
+      ]);
 
     ///////////////////////////////////////////////////////////////////////////
 

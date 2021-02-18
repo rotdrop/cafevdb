@@ -113,20 +113,30 @@ class SepaDebitNoteController extends Controller {
     $validations[] = [
       'changed' => $changed,
       'value' => $value,
+      'initiator' => null,
     ];
 
     $feedback = [];
+    $message = [];
+    $result = [];
 
     while (($validation = array_pop($validations)) !== null) {
 
+      $changedPrev = $changed;
       $changed = $validation['changed'];
       $value = $validation['value'];
+      $initiator = $validation['initiator'];
 
+      $newValidations = [];
       switch ($changed) {
       case 'projectId':
-        $validations[] = [
+        $newValidations[] = [
           'changed' => 'orchestraMember',
           'value' => ($projectId === $memberProjectId) ? 'member' : '',
+        ];
+        $newValidations[] = [
+          'changed' => 'musicianId',
+          'value' => $musicianId,
         ];
         break;
       case 'orchestraMember':
@@ -138,8 +148,10 @@ class SepaDebitNoteController extends Controller {
           $IBAN = $mandate['IBAN'];
           $BLZ = $mandate['BLZ'];
           $BIC = $mandate['BIC'];
+          $message[] = $this->l->t('Found exisiting mandate with reference "%s"', $reference);
         } else if (!empty($newProject) && !empty($musicianId)) {
           $reference = $this->financeService->generateSepaMandateReference($newProject, $musicianId);
+          $message[] = $this->l->t('Generated new reference "%s"', $reference);
         }
         $mandateProjectId = $newProject;
         break;
@@ -166,24 +178,33 @@ class SepaDebitNoteController extends Controller {
           'value' => $value,
         ]);
       case 'musicianId':
+        if (empty($musicianId)) {
+          $newValidations[] = [
+            'changed' => 'bankAccountOwner',
+            'value' => '',
+          ];
+          break;
+        }
+        if (empty($projectId)) {
+          break;
+        }
         $participant = $this->projectService->findParticipant($projectId, $musicianId);
         if (empty($participant)) {
           return self::grumble(
             $this->l->t('Participant %d not found in project %d.', [ $musicianId, $projectId ]));
         }
-        $this->logInfo('PART '.get_class($participant['musician']));
         $newOwner = $participant['musician']['surName'].', '.$participant['musician']['firstName'];
-        if (empty($owner)) {
-          $validations[] = [
+        if (!empty($projectId)) {
+          $newValidations[] = [
+            'changed' => 'projectId',
+            'value' => $projectId,
+          ];
+        }
+        if (true || empty($owner)) {
+          $newValidations[] = [
             'changed' => 'bankAccountOwner',
             'value' => $newOwner,
           ];
-          if (!empty($projectId)) {
-            $validations[] = [
-              'changed' => 'projectId',
-              'value' => $projectId,
-            ];
-          }
         } else {
           $feedback['owner'] = $this->l->t('Set bank-account owner to musician\'s name?');
         }
@@ -257,9 +278,9 @@ class SepaDebitNoteController extends Controller {
         if (!$iban->Verify()) {
           $message = $this->l->t("Invalid IBAN: `%s'.", $value);
           $suggestions = [];
-          $this->logInfo('Try Alternatives');
+          // $this->logInfo('Try Alternatives');
           foreach ($iban->MistranscriptionSuggestions() as $alternative) {
-            $this->logInfo('ALTERNATIVE '.$alternative);
+            // $this->logInfo('ALTERNATIVE '.$alternative);
             if ($iban->Verify($alternative)) {
               $alternative = $iban->MachineFormat($alternative);
               $alternative = $iban->HumanFormat($alternative);
@@ -351,7 +372,7 @@ class SepaDebitNoteController extends Controller {
         }
 
         // re-run the IBAN validation
-        $validations[] = [
+        $newValidations[] = [
           'changed' => 'bankAccountIBAN',
           'value' => $IBAN,
         ];
@@ -389,6 +410,20 @@ class SepaDebitNoteController extends Controller {
             ]));
       }
 
+      $message[] = $this->l->t(
+        'Value for `%s\' set to `%s\'.', [ $changed, $value ]);
+      $result[$changed] = $value;
+
+      foreach ($newValidations as $validation) {
+        if ($initiator == $validation['changed']) {
+          // $this->logInfo('SKIP INITIATOR '.$initiator);
+          // avoid first-level recursion
+          continue;
+        }
+        $validation['initiator'] = $changed;
+        $validations[] = $validation;
+      }
+
       if (!empty($validations)) {
         continue;
       }
@@ -398,11 +433,11 @@ class SepaDebitNoteController extends Controller {
 
       return self::dataResponse(
         [
-          'message' => $this->l->t('Value for `%s\' set to `%s\'.', [ $changed, $value ]),
+          'message' => $message,
           'suggestions' => '',
           'mandateProjectId' => $mandateProjectId,
           'reference' => $reference,
-          'value' => $value,
+          'value' => $result,
           'iban' => $IBAN,
           'blz' => $BLZ,
           'bic' => $BIC,

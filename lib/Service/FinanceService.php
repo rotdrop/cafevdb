@@ -259,6 +259,7 @@ class FinanceService
     $musId = substr("0000".$musicianId, -4);
 
     $ref = $prjId.'-'.$musId.'-'.$initials.'-';
+    // $this->logInfo('REF 0: '.$ref);
 
     $tail = '+'.sprintf("%02d", intval($sequence));
 
@@ -267,9 +268,14 @@ class FinanceService
       $projectName = substr($projectName, 0, -4);
       $tail = $year.$tail;
     }
+
+    // $this->logInfo('REF 0: '.$ref.' / '.$tail.' / '.$projectName);
+
     $tailLength = strlen($tail);
-    $trimLength = $this->SEPA_MANDATE_LENGTH - strlen($tail);
+    $trimLength = self::SEPA_MANDATE_LENGTH - $tailLength;
     $ref = substr($ref.$projectName, 0, $trimLength).$tail;
+
+    // $this->logInfo('REF 0: '.$ref.' / '.$tail.' / '.$projectName.' / '.$tailLength.' / '.$trimLength);
 
     $ref = preg_replace('/\s+/', 'X', $ref); // replace space by X
 
@@ -469,7 +475,7 @@ class FinanceService
     date_default_timezone_set($oldTZ);
     setlocale(LC_TIME, $oldLocale);
 
-    return $months >= $this->SEPA_MANDATE_EXPIRE_MONTHS;
+    return $months >= self::SEPA_MANDATE_EXPIRE_MONTHS;
   }
 
   /**

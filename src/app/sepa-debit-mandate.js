@@ -26,6 +26,7 @@ import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
 import * as Email from './email.js';
+import * as Notification from './notification.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
@@ -564,15 +565,10 @@ const mandateValidatePME = function(event, validateLockCB) {
     [pmeData('Projects:id')]: 'projectId',
     [pmeData('Musicians:id')]: 'musicianId',
   };
-  console.info('INPUT MAPPING', inputMapping);
-  console.info('ELEMENT CHANGED', $element.attr('name'));
+  // console.info('INPUT MAPPING', inputMapping);
+  // console.info('ELEMENT CHANGED', $element.attr('name'));
   let changed = $element.attr('name');
   changed = inputMapping[changed];
-
-  // let projectElem = $('[name="' + pmeData('project_id') + '"]');
-  // if (!projectElem.is('input')) {
-  //   projectElem = projectElem.find('option[selected="selected"]');
-  // }
 
   const projectElem = $('[name="' + pmeData('Projects:id') + '"]');
   // if (!projectElem.is('input')) {
@@ -585,6 +581,9 @@ const mandateValidatePME = function(event, validateLockCB) {
   //   musicianElem = musicianElem.find('option[selected="selected"]');
   // }
   const musicianId = musicianElem.val();
+
+  // console.info('PROJECT', projectId, projectElem);
+  // console.info('MUSICIAN', musicianId, musicianElem);
 
   const mandateData = {
     mandateReference: $('input[name="' + pmeData('mandate_reference') + '"]').val(),
@@ -604,6 +603,9 @@ const mandateValidatePME = function(event, validateLockCB) {
   validateLock();
 
   const post = $.param(mandateData);
+
+  // console.info('POST', post);
+
   $.post(generateUrl('finance/sepa/debit-notes/mandates/validate'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, {
@@ -631,30 +633,39 @@ const mandateValidatePME = function(event, validateLockCB) {
         return false;
       }
 
+      if (!Array.isArray(data.message)) {
+        data.message = [data.message];
+      }
+
       const hints = makeSuggestions(data);
       if (hints) {
-        data.message += hints;
+        data.message.push(hints);
       }
 
-      $('#cafevdb-page-debug').html(data.message).show();
-
-      if (data.value) {
-        $element.val(data.value);
-      }
-      if (data.iban) {
+      // if (data.value) {
+      //   console.info('DATA', data);
+      //   $element.val(data.value);
+      // }
+      // console.info('DATA', data);
+      if (data.iban !== undefined) {
         $('input[name="' + pmeData('iban') + '"]').val(data.iban);
       }
-      if (data.bic) {
+      if (data.bic !== undefined) {
         $('input[name="' + pmeData('bic') + '"]').val(data.bic);
       }
-      if (data.blz) {
+      if (data.blz !== undefined) {
         $('input[name="' + pmeData('blz') + '"]').val(data.blz);
       }
-      if (data.owner) {
+      if (data.owner !== undefined) {
         $('input[name="' + pmeData('bank_account_owner') + '"]').val(data.owner);
       }
-      if (data.reference) {
+      if (data.reference !== undefined) {
         $('input[name="' + pmeData('mandate_reference') + '"]').val(data.reference);
+      }
+
+      Notification.hide();
+      for (const msg of data.message) {
+        Notification.show(msg, { timeout: 15 });
       }
 
       validateUnlock();
