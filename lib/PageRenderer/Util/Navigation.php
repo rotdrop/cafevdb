@@ -189,11 +189,14 @@ class Navigation
           .'name="export" >
   <option value=""></option>
   <option '
+    .'title="'.$this->toolTipsService['pme-export-ods'].'" '
+    .'value="ODS">'.$this->l->t('LibreOffice Export').'</option>
+  <option '
     .'title="'.$this->toolTipsService['pme-export-excel'].'" '
     .'value="EXCEL">'.$this->l->t('Excel Export').'</option>
   <option '
-    .'title="'.$this->toolTipsService['pme-export-htmlexcel'].'" '
-    .'value="SSML">'.$this->l->t('HTML/Spreadsheet').'</option>
+    .'title="'.$this->toolTipsService['pme-export-pdf'].'" '
+    .'value="PDF">'.$this->l->t('PDF Export').'</option>
   <option '
     .'title="'.$this->toolTipsService['pme-export-csv'].'" '
     .'value="CSV">'.$this->l->t('CSV Export').'</option>

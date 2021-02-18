@@ -615,11 +615,13 @@ korrigieren.'),
 
       'pme-export-csv' => $this->l->t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
 
+      'pme-export-ods' => $this->l->t('Export in OpenDocument-format (LibreOffice/OpenOffice)'),
+
+      'pme-export-pdf' => $this->l->t('Export as PDF in A3/Landscape, scaled to fit the page size'),
+
       'pme-export-excel' => $this->l->t('Export as `full-featured\' Excel-2007 table, `.xslx\'.'),
 
       'pme-export-html' => $this->l->t('Export as HTML page without navigation elements; can also be loaded into your office-programs.'),
-
-      'pme-export-htmlexcel' => $this->l->t('Export as HTML page, but set the file type to `spread-sheed\'. Should also be readable by standard office-programs as `Excel\'-table.'),
 
       'pme-filter' => $this->l->t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
