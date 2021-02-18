@@ -55,7 +55,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * @var bool
    *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
+   * @ORM\Column(type="boolean", nullable=true, options={"default"="0", "comment"="Participant has confirmed the registration."})
    */
   private $registration = '0';
 
