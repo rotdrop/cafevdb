@@ -276,8 +276,9 @@ class ProjectParticipants extends PMETableViewBase
       $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
       'voice',
       '-section_leader',
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
+      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
+      // $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
+      // $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
     ];
 
     // Options you wish to give the users
@@ -388,6 +389,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('First Name'),
         'tab'      => [ 'id' => 'tab-all' ],
+        'input|LF' => 'H',
         'maxlen'   => 384,
       ]);
 
@@ -395,6 +397,15 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
       [
         'name'     => $this->l->t('Name'),
+        'tab'      => [ 'id' => 'tab-all' ],
+        'input|LF' => 'H',
+        'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'display_name',
+      [
+        'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
         'maxlen'   => 384,
       ]);

@@ -318,6 +318,8 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Surname'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'input|LF' => 'H',
+      // 'options'  => 'AVCPD',
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true,
@@ -327,8 +329,20 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Forename'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'input|LF' => 'H',
+      // 'options'  => 'AVCPD',
       'select'   => 'T',
       'maxlen'   => 128,
+      'sort'     => true,
+    ];
+
+    $opts['fdd']['display_name'] = [
+      'tab'      => [ 'id' => 'tab-all' ],
+      'name'     => $this->l->t('Display-Name'),
+      'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'sql'      => 'IFNULL($column, CONCAT($table.sur_name, \', \', $table.first_name))',
+      'select'   => 'T',
+      'maxlen'   => 256,
       'sort'     => true,
     ];
 

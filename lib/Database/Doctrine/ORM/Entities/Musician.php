@@ -66,6 +66,14 @@ class Musician implements \ArrayAccess
   private $firstName;
 
   /**
+   * Display name, replaces default "$surName, $firstName"
+   *
+   * @var string
+   * @ORM\Column(type="string", length=256, nullable=true)
+   */
+  private $displayName;
+
+  /**
    * @var string
    *
    * @ORM\Column(type="string", length=128, nullable=true)
