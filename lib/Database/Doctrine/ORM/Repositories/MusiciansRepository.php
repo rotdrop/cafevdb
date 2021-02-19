@@ -28,19 +28,25 @@ use Doctrine\ORM\EntityRepository;
 
 class MusiciansRepository extends EntityRepository
 {
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
+
   /**
-   * @param string $firstName
+   * @param string $firstName First-name or display-name.
    *
-   * @param string $surName
+   * @param string|null $surName
    *
    * @return array of \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician
    */
-  public function findByName(string $firstName, string $surName)
+  public function findByName(string $firstName, string $surName = null)
   {
-    return $this->findBy(
-      [ 'firstName' => $firstName, 'surName' => $surName ],
-      [ 'surName' => 'ASC', 'firstName' => 'ASC' ]
-    );
+    if (empty($surName)) {
+      return $this->findBy([ 'displayName' => $firstName ]);
+    } else {
+      return $this->findBy(
+        [ 'firstName' => $firstName, 'surName' => $surName ],
+        [ 'surName' => 'ASC', 'firstName' => 'ASC' ]
+      );
+    }
   }
 
   /**

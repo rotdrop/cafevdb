@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,36 +28,7 @@ use Doctrine\ORM\EntityRepository;
 
 class TranslationKeysRepository extends EntityRepository
 {
-  const TABLE_ALIAS = 'tk';
-
-  public function findLike(array $criteria, array $orderBy = null, $limit = null, $offset = null)
-  {
-    $qb = $this->createQueryBuilder(self::TABLE_ALIAS);
-    $andX = $qb->expr()->andX();
-    foreach ($criteria as $key => &$value) {
-      $value = str_replace('*', '%', $value);
-      if (strpos($value, '%') !== false) {
-        $andX->add($qb->expr()->like(self::TABLE_ALIAS.'.'.$key, ':'.$key));
-      } else {
-        $andX->add($qb->expr()->eq(self::TABLE_ALIAS.'.'.$key, ':'.$key));
-      }
-    }
-    foreach ($criteria as $key => $value) {
-      $qb->setParameter($key, $value);
-    }
-    $qb->where($andX);
-    foreach ($orderBy as $key => $dir) {
-      $qb->addOrderBy(self::TABLE_ALIAS.'.'.$key, $dir);
-    }
-    if (!empty($limit)) {
-      $qb->setMaxResults($limit);
-    }
-    if (!empty($offset)) {
-      $qb->setFirstResult($offset);
-    }
-    return $qb->getQuery()->execute();
-  }
-
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
 }
 
 // Local Variables: ***
