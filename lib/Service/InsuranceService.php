@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use \DateTimeImmutable as DateTime;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -76,11 +78,11 @@ class InsuranceService
       $dateStamp = strtotime($date);
     }
 
-    $date = new \DateTime();
+    $date = new DateTime();
     $date->setTimestamp($dateStamp);
     $data->modify("+ ".$priorMonths." months");
 
-    $dueDate = new \DateTime($dueDate);
+    $dueDate = new DateTime($dueDate);
 
     $distance = $dueDate->diff($date);
     $years = 1 + $distance->format('%y');
@@ -116,10 +118,10 @@ class InsuranceService
   private static function yearFraction($insuranceStart, $dueDate, bool $currentYearOnly = false)
   {
     if (is_string($dueDate)) {
-      $dueDate = new \DateTime($dueDate);
+      $dueDate = new DateTime($dueDate);
     }
 
-    $startDate = new \DateTime($insuranceStart);
+    $startDate = new DateTime($insuranceStart);
     $distance = $startDate->diff($dueDate);
 
     // $dueDate is before $insuranceStart
@@ -145,14 +147,14 @@ class InsuranceService
    *
    * @param int $musicianId
    *
-   * @param string|\DateTime $date
+   * @param string|DateTime $date
    *
    * @param bool $currentYearOnly
    */
   public function insuranceFee($musicianId, $date, bool $currentYearOnly = true)
   {
     if (empty($date)) {
-      $date = new \DateTime();
+      $date = new DateTime();
     }
 
     $payables = $this->insurancesRepository->findBy([ 'billToParty' => $musicianId ]);
@@ -167,6 +169,61 @@ class InsuranceService
       $fee += $annualFee * self::TAXES;
     }
     return round($fee, 2);
+  }
+
+  /**
+   * Fetch the insurance rates of the respective brokers. For the time
+   * being brokers offer different rates, independent from the
+   * instrument, but depending on the geographical scope (Germany,
+   * Europe, World).
+   *
+   * Return value is an associative array of the form
+   *
+   * array(BROKERSCOPE => RATE)
+   *
+   * where "RATE" is the actual fraction, not the percentage.
+   */
+  public function getRates($translate = false)
+  {
+    $rates = [];
+    $entities = $this->getDatabaseRepository(Entities\InsuranceRate::class)->findAll();
+    foreach ($entities as $rate) {
+      $scope = (string)$entity['geographicalScope'];
+      if ($translate) {
+        $scope = $this->l->t($scope);
+      }
+      $rateKey = $entity['broker'].$scope;
+      $dueDate = $entity['dueDate'];
+      if (!empty($dueDate)) {
+        $dueDate = $this->dueDate($dueDate);
+      }
+      $rates[$rateKey] = [
+        'rate' => $entity['rate'],
+        'due' => $dueDate,
+        'policy' => $entity['policyNumber'],
+      ];
+    }
+    return $rates;
+  }
+
+  /**
+   * Fetch all the insurance brokers from the data-base, return an
+   * array indexed by the short name.
+   */
+  public function getBrokers()
+  {
+    $brokers = [];
+    $entities = $this->getDatabaseRepository(Entities\InsuranceBroker::class)->findAll();
+    foreach ($entities as $entity) {
+      $key = $entity['shortName'];
+      $brokers[$key] = [
+        'shortName' => $entity['shortName'],
+        'name' => $entity['longName'],
+        'address' => $entity['address'],
+      ];
+    }
+
+    return $brokers;
   }
 
 

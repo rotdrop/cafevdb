@@ -20,13 +20,13 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace OCA\CAFEVDB\PageRenderer\Util;
+namespace OCA\CAFEVDB\PageRenderer\Export;
 
 use PhpOffice\PhpSpreadsheet;
 
 use OCP\IL10N;
 use OCP\ILOgger;
-use OCA\CAFEVDB\Service\FinanceService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
 
 /**
  * Special value-binder class with tweaks the standard
@@ -42,20 +42,20 @@ class PhpSpreadsheetValueBinder
   /** @var IL10N */
   private $l;
 
-  /** @var FinanceService */
-  private $financeService;
+  /** @var FuzzyInputService */
+  private $fuzzyInputService;
 
   public function __construct(
     ILogger $logger,
     IL10n $l10n
-    , FinanceService $financeService
+    , FuzzyInputService $fuzzyInputService
   )
   {
     //parent::__construct();
     $this->logger = $logger;
     $this->l10n = $l10n;
     $this->l = $l10n;
-    $this->financeService = $financeService;
+    $this->fuzzyInputService = $fuzzyInputService;
   }
 
   /**
@@ -79,7 +79,7 @@ class PhpSpreadsheetValueBinder
     // negative. And we want to support €, of course.
     if ($dataType === PhpSpreadsheet\Cell\DataType::TYPE_STRING && !$value instanceof PhpSpreadsheet\RichText\RichText) {
       // Check for currency
-      $monetary = $this->financeService->parseCurrency($value, true);
+      $monetary = $this->fuzzyInputService->parseCurrency($value, true);
       if ($monetary !== false) {
         switch ($monetary['currency']) {
         case '€':

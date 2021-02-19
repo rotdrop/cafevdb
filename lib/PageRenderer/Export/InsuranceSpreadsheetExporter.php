@@ -24,9 +24,9 @@ namespace OCA\CAFEVDB\PageRenderer\Export;
 
 use PhpOffice\PhpSpreadsheet;
 
-use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\InsuranceService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\PageRenderer;
-use OCA\CAFEVDB\PageRenderer\Util\PhpSpreadsheetValueBinder;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
@@ -35,8 +35,11 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   /** @var PageRenderer\PMETableViewBase */
   protected $renderer;
 
-  /** @var ProjectService */
-  protected $projectService;
+  /** @var InsuranceService */
+  protected $insuranceService;
+
+  /** @var FuzzyInputService */
+  protected $fuzzyInputService;
 
   /**
    * Construct a spread-sheet exporter for selected tables.
@@ -44,11 +47,19 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
    * @param PageRenderer\PMETableViewBase $renderer
    * Underlying renderer, see self::fillSheet()
    *
-   * @param null|ProjectService
+   * @param InsuranceService $insuranceService
+   *
+   * @param FuzzyInputService $fuzzyInputService
    */
-  public function __construct(PageRenderer\InstrumentInsurances $renderer) {
+  public function __construct(
+    PageRenderer\InstrumentInsurances $renderer
+    , InsuranceService $insuranceService
+    , FuzzyInputService $fuzzyInputService
+  ) {
     parent::__construct($renderer->configService());
     $this->renderer = $renderer;
+    $this->insuranceService = $insuranceService;
+    $this->fuzzyInputService = $fuzzyInputService;
   }
 
   /**
@@ -88,8 +99,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
     $template = $this->renderer->template();
 
-    //@@@@@@@@@@@@@@
-
     $offset = $headerOffset = 6;
     $rowCnt = 0;
 
@@ -104,7 +113,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $total         = 0.0;
     $numRecords    = 0;
 
-    $headerLine  = array(
+    $headerLine  = [
       $this->l->t('Musician'),
       $this->l->t('Instrument'),
       $this->l->t('Manufacturer'),
@@ -113,10 +122,13 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
       $this->l->t('Accessory'),
       $this->l->t('Accessory Insurance Amount'),
       $this->l->t('Musician Insurance Total')
-    );
+    ];
 
-    $brokerNames = InstrumentInsurance::fetchBrokers();
-    $rates = InstrumentInsurance::fetchRates(false, true);
+    $brokerNames = $this->insuranceService->getBrokers();
+    $rates = $this->insuranceService->getRates(true);
+
+    $renderer->navigation(false); // inhibit navigation elements
+    $renderer->render(false); // dry-run, prepare export
 
     $renderer->export(
       // Cell-data filter
@@ -135,11 +147,11 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
                                     &$numRecords, $name, $creator, $email, $brokerNames, $rates,
                                     $humanDate, $headerOffset) {
         if ($i == 1) {
-          dumpRow($headerLine, $sheet, $i, $offset, $rowCnt, true);
+          $this->dumpRow($headerLine, $sheet, $i, $offset, $rowCnt, true);
           return;
         }
 
-        $exportData = array();
+        $exportData = [];
         for ($k = 0; $k < 8; $k++) {
           $exportData[$k] = '';
         }
@@ -157,16 +169,16 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
           $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[2]]['name']);
           $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
-          $sheet->setCellValue("A3", L::t('Policy Number').": ".$rates[$brokerScope]['policy']);
-          $sheet->setCellValue("A4", L::t('Geographical Scope').": ".$lineData[3]);
-          $sheet->setCellValue("A5", L::t('Date').": ".$humanDate);
+          $sheet->setCellValue("A3", $this->l->t('Policy Number').": ".$rates[$brokerScope]['policy']);
+          $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[3]);
+          $sheet->setCellValue("A5", $this->l->t('Date').": ".$humanDate);
         } else {
           $broker   = $lineData[2];
           $scope    = $lineData[3];
           $newScope = $broker.$scope;
 
           if ($musician != $lineData[0] || $newScope != $brokerScope) {
-            dumpMusicianTotal($sheet, $i, $offset++, $rowCnt, $musicianTotal);
+            $this->dumpMusicianTotal($sheet, $i, $offset++, $rowCnt, $musicianTotal);
             $total += $musicianTotal;
             $musicianTotal = 0.0;
             $newMusician = true;
@@ -174,7 +186,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           }
 
           if ($newScope != $brokerScope) {
-            dumpTotal($sheet, $i, $offset, $rowCnt, $total);
+            $this->dumpTotal($sheet, $i, $offset, $rowCnt, $total);
 
             $spreadSheet->createSheet();
             $spreadSheet->setActiveSheetIndex($spreadSheet->getSheetCount() - 1);
@@ -183,45 +195,45 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
             $brokerScope = $newScope;
             $offset = $headerOffset - $i + 2;
             $rowCnt = 0;
-            dumpRow($headerLine, $sheet, $i-1, $offset, $rowCnt, true);
+            $this->dumpRow($headerLine, $sheet, $i-1, $offset, $rowCnt, true);
 
             $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[2]]['name']);
             $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
-            $sheet->setCellValue("A3", L::t('Policy Number').": ".$rates[$brokerScope]['policy']);
-            $sheet->setCellValue("A4", L::t('Geographical Scope').": ".$lineData[3]);
-            $sheet->setCellValue("A5", L::t('Date').": ".$humanDate);
+            $sheet->setCellValue("A3", $this->l->t('Policy Number').": ".$rates[$brokerScope]['policy']);
+            $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[3]);
+            $sheet->setCellValue("A5", $this->l->t('Date').": ".$humanDate);
           }
         }
 
         $exportData[0] = $newMusician ? $lineData[0] : '';
-        if ($lineData[5] == L::t('false')) {
+        if ($lineData[5] == $this->l->t('false')) {
           $exportData[1] = $lineData[4];
           $exportData[2] = $lineData[6];
           $exportData[3] = $lineData[7];
           $exportData[4] = $lineData[8];
         } else {
           $exportData[5] = $lineData[4]." ".$lineData[6];
-          if ($lineData[7] != L::t('unknown')) {
+          if ($lineData[7] != $this->l->t('unknown')) {
             $exportData[5] .= ", ".$lineData[7];
           }
           $exportData[6] = $lineData[8];
         }
         $exportData[7] = '';
 
-        $monetary = Finance::parseCurrency($lineData[8]);
+        $monetary = $this->fuzzyInputService->parseCurrency($lineData[8]);
         if ($monetary !== false) {
           $musicianTotal += $monetary['amount'];
         }
 
-        dumpRow($exportData, $sheet, $i, $offset, $rowCnt);
+        $this->dumpRow($exportData, $sheet, $i, $offset, $rowCnt);
 
         $numRecords = $i+1;
       });
 
-    dumpMusicianTotal($sheet, $numRecords, $offset++, $rowCnt, $musicianTotal);
+    $this->dumpMusicianTotal($sheet, $numRecords, $offset++, $rowCnt, $musicianTotal);
     $total += $musicianTotal;
     $musicianTotal = 0.0;
-    dumpTotal($sheet, $numRecords, $offset, $rowCnt, $total);
+    $this->dumpTotal($sheet, $numRecords, $offset, $rowCnt, $total);
 
     // Then also dump the total insurance amount for the last sheet:
 
@@ -230,56 +242,50 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
       $sheet = $spreadSheet->getActiveSheet();
 
       // Make the header a little bit prettier
-      $pt_height = PHPExcel_Shared_Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
+      $pt_height = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
       $sheet->getRowDimension(1+$headerOffset)->setRowHeight($pt_height+$pt_height/4);
-      $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().(1+$headerOffset))->applyFromArray(
-        array(
-          'font'    => array(
-            'bold'      => true
-          ),
-          'alignment' => array(
-            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS,
-            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            'wrapText' => true
-          ),
-          'borders' => array(
-            'allborders'     => array(
-              'style' => PHPExcel_Style_Border::BORDER_THIN
-            ),
-            'bottom'     => array(
-              'style' => PHPExcel_Style_Border::BORDER_THIN
-            ),
-          ),
-          'fill' => array(
-            'type'       => PHPExcel_Style_Fill::FILL_SOLID,
-            'color' => array(
-              'argb' => 'FFadd8e6'
-            )
-          )
-        )
-      );
+      $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().(1+$headerOffset))->applyFromArray([
+        'font' => [
+          'bold' => true
+        ],
+        'alignment' => [
+          'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER_CONTINUOUS,
+          'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+          'wrapText' => true,
+        ],
+        'borders' => [
+          'allborders' => [
+            'style' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+          ],
+          'bottom' => [
+            'style' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+          ],
+        ],
+        'fill' => [
+          'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
+          'color' => [
+            'argb' => 'FFadd8e6',
+          ],
+        ],
+      ]);
 
       $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().(1+$headerOffset))->getAlignment()->setWrapText(true);
 
-      $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().$sheet->getHighestRow())->applyFromArray(
-        array(
-          'borders' => array(
-            'allborders'     => array(
-              'style' => PHPExcel_Style_Border::BORDER_THIN
-            ),
-          )
-        )
-      );
+      $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().$sheet->getHighestRow())->applyFromArray([
+        'borders' => [
+          'allborders' => [
+            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+          ],
+        ],
+      ]);
 
-      $sheet->getStyle($sheet->calculateWorkSheetDimension())->applyFromArray(
-        array(
-          'borders' => array(
-            'outline'     => array(
-              'style' => PHPExcel_Style_Border::BORDER_THIN
-            ),
-          )
-        )
-      );
+      $sheet->getStyle($sheet->calculateWorkSheetDimension())->applyFromArray([
+        'borders' => [
+          'outline' => [
+            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+          ],
+        ],
+      ]);
 
       /*
        *
@@ -297,49 +303,42 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
       }
 
       // Format the mess a little bit
-      $sheet->getStyle("A1:".$highCol.($headerOffset-1))->applyFromArray(
-        array(
-          'font'    => array(
-            'bold'   => true,
-          ),
-          'alignment' => array(
-            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS,
-            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-          ),
-          'fill' => array(
-            'type'       => PHPExcel_Style_Fill::FILL_SOLID,
-            'color' => array(
-              'argb' => 'FFF0F0F0'
-            )
-          )
-        )
-      );
+      $sheet->getStyle("A1:".$highCol.($headerOffset-1))->applyFromArray([
+        'font' => [
+          'bold'=> true,
+        ],
+        'alignment' => [
+          'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER_CONTINUOUS,
+          'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+        ],
+        'fill' => [
+          'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
+          'color' => [
+            'argb' => 'FFF0F0F0',
+          ],
+        ],
+      ]);
 
-      $sheet->getStyle("A1:".$highCol.($headerOffset-1))->applyFromArray(
-        array(
-          'alignment' => array(
-            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-          ),
-
-        )
-      );
+      $sheet->getStyle("A1:".$highCol.($headerOffset-1))->applyFromArray([
+        'alignment' => [
+          'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+          'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+        ],
+      ]);
     }
 
     /*
      *
      ***************************************************************************/
 
-    //@@@@@@@@@@@@@@
-
     $meta['name'] = $name;
 
     return $meta;
   }
 
-  private static function dumpRow($exportData, $sheet, $row, $offset, &$rowCnt, $header = false)
+  private function dumpRow($exportData, $sheet, $row, $offset, &$rowCnt, $header = false)
   {
-    $moneyColumns = array('E', 'G', 'H'); // aligned right
+    $moneyColumns = ['E', 'G', 'H']; // aligned right
     $column = 'A';
     foreach ($exportData as $cellValue) {
       $sheet->setCellValue($column.($row+$offset), $cellValue);
@@ -350,39 +349,56 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     }
     if (!$header) {
       ++$rowCnt;
-      $sheet->getStyle('A'.($row+$offset).':'.$sheet->getHighestColumn().($row+$offset))->applyFromArray(
-        array(
-          'fill' => array(
-            'type'       => PHPExcel_Style_Fill::FILL_SOLID,
-            'color' => array(
-              'argb' => ($rowCnt % 2 == 0) ? 'FFB7CEEC' : 'FFC6DEFF'
-            )
-          )
-        )
+      $sheet->getStyle('A'.($row+$offset).':'.$sheet->getHighestColumn().($row+$offset))->applyFromArray([
+        'fill' => [
+          'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
+          'color' => [
+            'argb' => ($rowCnt % 2 == 0) ? 'FFB7CEEC' : 'FFC6DEFF',
+          ],
+        ],
+      ]
       );
       foreach($moneyColumns as $col) {
-        $sheet->getStyle($col.($row+$offset))->applyFromArray(
-          array(
-            'alignment' => array(
-              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
-              'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-          )
-        );
+        $sheet->getStyle($col.($row+$offset))->applyFromArray([
+          'alignment' => [
+            'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+            'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+          ],
+        ]);
       }
     }
   }
 
-  private static function dumpMusicianTotal($sheet, $row, $offset, &$rowCnt, $musicianTotal)
+  private function dumpMusicianTotal($sheet, $row, $offset, &$rowCnt, $musicianTotal)
   {
-    $exportData = array(8);
-    for ($k = 0; $k < 8; $k++) {
-      $exportData[$k] = '';
-    }
+    $exportData = array_fill(0, 8, '');
     $exportData[7] = $musicianTotal.preg_quote('€');
-    dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
+    $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
   }
 
+  private function dumpTotal($sheet, $row, $offset, &$rowCnt, &$total)
+  {
+    $exportData = array_fill(0, 8, '');
+    $exportData[0]  = $this->l->t('Total Insurance Amount: ');
+    $exportData[7]  = $total.preg_quote('€');
+    $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
+    $total = 0.0;
+    $exportData[7] = '';
+    $highRow = $sheet->getHighestRow();
+    $sheet->mergeCells("A".$highRow.":"."G".$highRow);
+    $sheet->getStyle("A".$highRow.":"."H".$highRow)->applyFromArray([
+      'alignment' => [
+        'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+        'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+      ],
+      'fill' => [
+        'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
+        'color' => [
+          'argb' => 'FFF0F0F0',
+        ],
+      ],
+    ]);
+  }
 }
 
 // Local Variables: ***

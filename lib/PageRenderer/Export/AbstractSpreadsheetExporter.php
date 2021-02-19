@@ -23,7 +23,6 @@
 namespace OCA\CAFEVDB\PageRenderer\Export;
 
 use PhpOffice\PhpSpreadsheet;
-use OCA\CAFEVDB\PageRenderer\Util\PhpSpreadsheetValueBinder;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
