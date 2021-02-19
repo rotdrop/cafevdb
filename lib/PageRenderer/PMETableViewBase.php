@@ -230,7 +230,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return $this->template;
   }
 
-  protected function setTempalte(string $template)
+  protected function setTemplate(string $template)
   {
     $this->template = $template;
   }

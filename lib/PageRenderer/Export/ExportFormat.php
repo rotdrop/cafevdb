@@ -1,10 +1,10 @@
-<?php
+<?php // Hey, Emacs, we are -*- php -*- mode!
 /* Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,26 +20,17 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\PageRenderer;
+namespace OCA\CAFEVDB\PageRenderer\Export;
 
-interface IPageRenderer extends IRenderer
+use MyCLabs\Enum\Enum as EnumType;
+
+class ExportFormat extends EnumType
 {
-  /** Short title for heading. */
-  public function shortTitle();
-
-  /** Header text informations. */
-  public function headerText();
-
-  /** Set table-navigation enable/disable. */
-  public function navigation($enable);
-
-  /**
-   * Run underlying table-manager (phpMyEdit for now).
-   *
-   * @param array $options Override options. Otherwise the state
-   * set by render(false) are used.
-   */
-  public function execute($options = []);
+  const EXCEL = 'excel';
+  const ODS = 'ods';
+  const CSV = 'csv';
+  const HTML = 'html';
+  const PDF = 'pdf';
 }
 
 // Local Variables: ***

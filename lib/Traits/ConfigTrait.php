@@ -35,6 +35,21 @@ trait ConfigTrait {
   /** @var IL10N */
   protected $l;
 
+  /**
+   * Return the stored config-service for convenience.
+   *
+   * @return \OCA\CAFEVDB\Service\ConfigService
+   */
+  public function configService()
+  {
+    return $this->configService;
+  }
+
+  protected function l10N()
+  {
+    return $this->configService->getL10N();
+  }
+
   protected function appName()
   {
     return $this->configService->getAppName();
@@ -232,11 +247,6 @@ trait ConfigTrait {
 
   protected function isSubAdminOfGroup($userId = null, $groupId = null) {
     return $this->configService->isSubAdminOfGroup($userId, $groupId);
-  }
-
-  protected function l10N()
-  {
-    return $this->configService->getL10N();
   }
 
   public function getIcon() {

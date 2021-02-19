@@ -59,6 +59,25 @@ class Registration
     $context->registerServiceAlias('template:'.'insurance-brokers', InsuranceBrokers::class);
     $context->registerServiceAlias('template:'.'insurance-rates', InsuranceRates::class);
     $context->registerServiceAlias('template:'.'blog', BlogMapper::class);
+
+    // @todo find a cleaner way for the following
+
+    $context->registerService('export:'.'all-musicians', function($c) {
+      $renderer = $c->query('template:'.'all-musicians');
+      return new Export\PMETableSpreadsheetExporter($renderer);
+    });
+
+    $context->registerService('export:'.'project-participants', function($c) {
+      $renderer = $c->query('template:'.'project-participants');
+      $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
+      return new Export\PMETableSpreadsheetExporter($renderer, $projectService);
+    });
+
+    $context->registerService('export:'.'sepa-debit-mandates', function($c) {
+      $renderer = $c->query('template:'.'sepa-debit-mandates');
+      return new Export\PMETableSpreadsheetExporter($renderer);
+    });
+
   }
 }
 
