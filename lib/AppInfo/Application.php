@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2020
+ * @copyright Claus-Justus Heine 2014-2021
  */
 
 namespace OCA\CAFEVDB\AppInfo;
@@ -89,7 +89,7 @@ class Application extends App implements IBootstrap
   // "boot()" method must not be used here.
   public function register(IRegistrationContext $context): void
   {
-    if ((@include_once __DIR__ . '/../../vendor/autoload.php')===false) {
+    if ((@include_once __DIR__ . '/../../vendor/autoload.php') === false) {
       throw new \Exception('Cannot include autoload. Did you run install dependencies using composer?');
     }
 
