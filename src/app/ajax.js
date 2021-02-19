@@ -19,7 +19,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, webRoot, $ } from './globals.js';
+import { globalState, appName, cloudWebRoot, $ } from './globals.js';
 import print_r from './print-r.js';
 import * as Dialogs from './dialogs.js';
 
@@ -221,8 +221,8 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
   case ajaxHttpStatus.UNAUTHORIZED: {
     // no point in continuing, direct the user to the login page
     callbacks.cleanup = function() {
-      if (webRoot !== '') {
-        window.location.replace(webRoot);
+      if (cloudWebRoot !== '') {
+        window.location.replace(cloudWebRoot);
       } else {
         window.location.replace('/');
       }

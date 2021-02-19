@@ -51,6 +51,7 @@ try {
 const PHPMyEdit = initialState.PHPMyEdit;
 const CAFEVDB = initialState.CAFEFDB;
 const webRoot = OC.appswebroots[appName] + '/';
+const cloudWebRoot = OC.webRoot;
 const cloudUser = ncAuth.getCurrentUser();
 
 export {
@@ -60,6 +61,7 @@ export {
   appName,
   appInfo,
   webRoot,
+  cloudWebRoot,
   cloudUser,
 };
 
