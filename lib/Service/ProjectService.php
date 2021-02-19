@@ -148,7 +148,7 @@ class ProjectService
    *
    * @param bool $sumVoices Sum-up all voices into a single instrument field
    *
-   * @return array<string, array<> >
+   * @return array<string, array>
    * ```
    * [
    *   INSTRUMENT:VOICE => [
