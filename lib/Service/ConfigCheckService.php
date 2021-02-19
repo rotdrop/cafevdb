@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -71,19 +71,22 @@ class ConfigCheckService
   private $contactsManager;
 
   public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager,
-    IRootFolder $rootFolder,
-    \OCP\Share\IManager $shareManager,
-    \OCP\Calendar\IManager $calendarManager,
-    \OCP\Contacts\IManager $contactsManager,
-    CalDavService $calDavService,
-    CardDavService $cardDavService,
-    EventsService $eventsService
+    ConfigService $configService
+    , EntityManager $entityManager
+    , IRootFolder $rootFolder
+    , \OCP\Share\IManager $shareManager
+    , \OCP\Calendar\IManager $calendarManager
+    , \OCP\Contacts\IManager $contactsManager
+    , CalDavService $calDavService
+    , CardDavService $cardDavService
+    , EventsService $eventsService
+    //, \OCA\CAFEVDB\
     //, \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit $phpMyEdit
     //, \OCA\CAFEVDB\Database\Connection $dbConnection
     //, \OCA\CAFEVDB\Service\RequestParameterService $requestParameters
     //, \OCA\CAFEVDB\PageRenderer\Musicians $musiciansView
+    //, ContactsService $contactsService
+    //, \OCA\CAFEVDB\AddressBook\AddressBookProvider $blah
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -93,7 +96,6 @@ class ConfigCheckService
     $this->contactsManager = $contactsManager;
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
-
   }
 
   /**Return an array with necessary configuration items, being either

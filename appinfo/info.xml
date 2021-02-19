@@ -13,6 +13,11 @@
     <filesystem/><!-- required for catching dav events, otherwise app is not loaded -->
     <dav/>
   </types>
+  <sabre>
+    <address-book-plugins>
+      <plugin>OCA\CAFEVDB\AddressBook\AddressBookProvider</plugin>
+    </address-book-plugins>
+  </sabre>
   <dependencies>
     <php min-version="7.4" max-version="7.4" />
     <nextcloud min-version="20" max-version="20" />

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -36,6 +36,8 @@ use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
+
+use OCA\CAFEVDB\Common\Util;
 
 /**Contacts handling. */
 class ContactsService
@@ -297,7 +299,8 @@ EOTEOT;
     return $entity;
   }
 
-  /**Export the stored data for one musician as vCard.
+  /**
+   * Export the stored data for one musician as vCard.
    *
    * @param Musician $musician One row from the musician table.
    *
@@ -343,12 +346,12 @@ EOTEOT;
     if (!empty($musician['birthday'])) {
       $birthDay = $musician['birthday'];
       if (is_string($birthDay)) {
-        $birthDay = new \DateTime($birthDay);
+        $birthDay = Util::dateTime($birthDay);
       }
       $vcard->add('BDAY', $birthDay);
     }
     if ($musician['updated'] != 0) {
-      $vcard->add('REV', (new \DateTime($musician['updated']))->format(\DateTime::W3C));
+      $vcard->add('REV', (Util::dateTime($musician['updated']))->format(\DateTime::W3C));
     }
     $countryNames = $this->geoCodingService->countryNames('en');
     if (!isset($countryNames[$musician['country']])) {
