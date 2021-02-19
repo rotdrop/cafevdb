@@ -140,9 +140,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
   callbacks = $.extend({}, defaultCallbacks, callbacks);
 
   const failData = ajaxFailData(xhr, textStatus, errorThrown);
-  console.debug('AJAX failure data', failData);
   callbacks.preProcess(failData);
-  console.debug('AJAX failure data after pre-process', failData);
 
   switch (textStatus) {
   case 'notmodified':
