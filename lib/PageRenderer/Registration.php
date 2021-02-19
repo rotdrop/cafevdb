@@ -78,6 +78,11 @@ class Registration
       return new Export\PMETableSpreadsheetExporter($renderer);
     });
 
+    $context->registerService('export:'.'instrument-insurance', function($c) {
+      $renderer = $c->query('template:'.'instrument-insurance');
+      return new Export\InsuranceSpreadsheetExporter($renderer);
+    });
+
   }
 }
 
