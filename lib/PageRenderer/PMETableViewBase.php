@@ -130,7 +130,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
-    $this->template = $template;
     $this->configService = $configService;
     $this->requestParameters = $requestParameters;
     $this->entityManager = $entityManager;
@@ -163,6 +162,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->{lcFirst($key)} =
           $this->requestParameters->getParam($key, $default);
     }
+
+    $this->template = $template; // overwrite with child-class supplied value
 
     $this->pmeOptions['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
 
