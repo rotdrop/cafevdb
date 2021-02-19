@@ -191,9 +191,16 @@ class TranslationService
   public function eraseTranslationKeys(string $phrase)
   {
     $repository = $this->getDatabaseRepository(TranslationKey::class);
-    foreach ($repository->findLike([ 'phrase' => $phrase]) as $translationKey) {
+    $translationKeys = $repository->findLike([ 'phrase' => $phrase]);
+    if (count($translationKeys) == 0) {
+      $this->logWarn('Not translation-keys found to erase.');
+    } else {
+      $this->logWarn('About to erase '.count($translationKeys).' translation-keys.');
+    }
+    foreach ($translationKeys as $translationKey) {
       $this->remove($translationKey);
     }
+    $this->flush();
     return true;
   }
 
