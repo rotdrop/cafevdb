@@ -45,6 +45,15 @@ trait ConfigTrait {
     return $this->configService;
   }
 
+  /**
+   * Return the stored config-service of the embedding cloud
+   * container.
+   */
+  public function cloudConfig()
+  {
+    return $this->configService->getCloudConfig();
+  }
+
   protected function l10N()
   {
     return $this->configService->getL10N();
@@ -354,6 +363,29 @@ trait ConfigTrait {
     $this->configService->logFatal($message, $context, $shift);
   }
 
+  /** Forward to OCP\IConfig::getSystemValue() */
+  protected function getSystemValue($key , $default = '')
+  {
+    $this->cloudConfig()->getSystemValue($key, $default);
+  }
+
+  /** Forward to OCP\IConfig::getSystemValueBool() */
+  protected function getSystemValueBool($key , $default = ''): bool
+  {
+    $this->cloudConfig()->getSystemValueBool($key, $default);
+  }
+
+  /** Forward to OCP\IConfig::getSystemValueInt() */
+  protected function getSystemValueInt($key , $default = ''): int
+  {
+    $this->cloudConfig()->getSystemValueInt($key, $default);
+  }
+
+  /** Forward to OCP\IConfig::getSystemValueString() */
+  protected function getSystemValueString($key , $default = ''): string
+  {
+    $this->cloudConfig()->getSystemValueString($key, $default);
+  }
 }
 
 // Local Variables: ***
