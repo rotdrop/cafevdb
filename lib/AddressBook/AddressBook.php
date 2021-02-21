@@ -47,9 +47,9 @@ class AddressBook extends ExternalAddressBook
   private $principalUri;
 
   public function __construct(
-    string $principalUri
+    ConfigService $configService
     , ICardBackend $cardBackend
-    , ConfigService $configService
+    , string $principalUri
   ) {
     parent::__construct($configService->getAppName(), $cardBackend->getURI());
     $this->cardBackend = $cardBackend;
@@ -70,6 +70,7 @@ class AddressBook extends ExternalAddressBook
    * @throws RecordNotFound
    */
   function getChild($name) {
+    // $this->logInfo('name '.$name);
     return $this->cardBackend->getCard($name);
   }
 
@@ -77,13 +78,17 @@ class AddressBook extends ExternalAddressBook
    * @inheritDoc
    */
   function getChildren() {
-    return $this->cardBackend->getCards();
+    $cards = $this->cardBackend->getCards();
+
+    //$this->logInfo(print_r($cards, true));
+    return $cards;
   }
 
   /**
    * @inheritDoc
    */
   function childExists($name) {
+    // $this->logInfo('name '.$name);
     try {
       $this->getChild($name);
       return true;
@@ -117,10 +122,19 @@ class AddressBook extends ExternalAddressBook
    * @inheritDoc
    */
   function getProperties($properties) {
-    return [
+    $this->logInfo('properties '.print_r($properties, true), [], 2);
+    $props = [
       'principaluri' => $this->principalUri,
       '{DAV:}displayname' => $this->cardBackend->getDisplayName(),
       '{' . Plugin::NS_OWNCLOUD . '}read-only' => true,
+      '{http://calendarserver.org/ns/}getctag' => \rand(),
     ];
+    $result = [];
+    foreach ($properties as $key) {
+      if (isset($props[$key])) {
+        $result[$key] = $props[$key];
+      }
+    }
+    return $result;
   }
 }

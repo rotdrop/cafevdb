@@ -35,7 +35,6 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Exception\RecordNotFoundException;
 
 class MusicianCardBackend implements ICardBackend
 {
@@ -69,20 +68,30 @@ class MusicianCardBackend implements ICardBackend
   }
 
   /**
-   * @throws RecordNotFound
+   * @throws \Sabre\DAV\Exception\NotFound
    */
   public function getCard($name): MusicianCard
   {
-    $musician = $this->musiciansRepository->findByName($name);
+    $musician = $this->musiciansRepository->findOneBy([ 'uuid' => $name ]);
     if (empty($musician)) {
-      throw new RecordNotFoundException();
+      throw new \Sabre\DAV\Exception\NotFound();
     }
     return $this->entryToCard($musician);
   }
 
-  public function searchCards(string $pattern, int $limit = 0): array
+  /*
+   * @todo To support $searchProperties we would need the mapping from
+   * VCard properties to data-base properties.
+   */
+  public function searchCards(string $pattern, array $properties): array
   {
-    $musicians = $this->musiciansRepository->matching(self::cExpr()->contains('displayName', $pattern));
+    $this->logInfo('Search Pattern "'.$pattern.'"');
+    $expr = self::criteriaExpr();
+    $musicians = $this->musiciansRepository->matching(
+      self::criteria()->where($expr->contains('displayName', $pattern))
+                      ->orWhere($expr->contains('firstName', $pattern))
+                      ->orWhere($expr->contains('surName', $pattern))
+    );
     $vCards = [];
     foreach ($musicians as $musician) {
       $vCards[] = $this->entryToCard($musician);
@@ -105,9 +114,8 @@ class MusicianCardBackend implements ICardBackend
 
   protected function entryToCard(Entities\Musician $musician): MusicianCard
   {
-    $vCardData = $this->contactsService->export($musician);
-    $this->logInfo('VCARD is '.get_class($vCardData));
-    return new MusicianCard($vCardData);
+    $vCard = $this->contactsService->export($musician);
+    return new MusicianCard($vCard);
   }
 
 }

@@ -55,6 +55,8 @@ use OCA\CAFEVDB\Middleware\SubadminMiddleware;
 use OCA\CAFEVDB\Middleware\GroupMemberMiddleware;
 use OCA\CAFEVDB\Middleware;
 
+use OCA\CAFEVDB\AddressBook\AddressBookProvider;
+
 class Application extends App implements IBootstrap
 {
   /** @var string */
@@ -69,20 +71,14 @@ class Application extends App implements IBootstrap
   // Called later than "register".
   public function boot(IBootContext $context): void
   {
-    //trigger_error("cafevdb app");
-
-    $container = $context->getAppContainer();
-
-    /* @var IEventDispatcher $eventDispatcher */
-    $dispatcher = $container->query(IEventDispatcher::class);
-
-    // @@todo remove
-    $dispatcher->addListener(
-      \OCP\AppFramework\Http\TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN,
-      function() {
-        //\OCA\CAFEVDB\Common\Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
-      }
-    );
+    $context->injectFn(function(
+      \OCP\Contacts\IManager $contactsManager
+    ) {
+      $contactsManager->register(function() use ($contactsManager) {
+        $provider = $this->getContainer()->query(AddressBookProvider::class);
+        $contactsManager->registerAddressBook($provider->getContactsAddressBook());
+      });
+    });
   }
 
   // Called earlier than boot, so anything initialized in the

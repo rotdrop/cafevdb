@@ -37,14 +37,14 @@ interface ICardBackend
   public function getDisplayName(): string;
 
   /**
-   * @throws OCA\CAFEVDB\Exceptoin\RecordNotFoundException
+   * @throws \Sabre\DAV\Exception\NotFound
    */
   public function getCard($name): MusicianCard;
 
   /**
    * @return MusicianCard[]
 	 */
-  public function searchCards(string $pattern, int $limit = 0): array;
+  public function searchCards(string $pattern, array $properties): array;
 
   /**
    * @return MusicianCard[]

@@ -39,6 +39,12 @@ class AddressBookProvider implements IAddressBookProvider
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  /** @var AddressBook */
+  private static $addressBook = null;
+
+  /** @var ContactsAddressBook */
+  private static $contactsAddressBook = null;
+
   /** @var MusicianCardBackend */
   private $cardBackend;
 
@@ -84,6 +90,7 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function hasAddressBookInAddressBookHome(string $principalUri, string $uri): bool
   {
+    $this->logInfo('in group '.($this->inGroup() ? 'yes' : 'no'));
     return $this->inGroup();
   }
 
@@ -101,11 +108,26 @@ class AddressBookProvider implements IAddressBookProvider
     if ($uri !== $this->addressBookUri()) {
       return null;
     }
-    return new AddressBook($principalUri, $this->cardBackend, $this->configService);
+    if (empty(self::$addressBook)) {
+      self::$addressBook = new AddressBook($this->configService, $this->cardBackend, $principalUri);
+    }
+    return self::$addressBook;
   }
 
   private function addressBookUri()
   {
-    return $this->appName().'-musicians';
+    return $this->cardBackend->getURI();
+  }
+
+  /**
+   * Return a cloud-address-book suitable for registration with the
+  * \OCP\IContactsManager.
+   */
+  public function getContactsAddressBook()
+  {
+    if (empty(self::$contactsAddressBook)) {
+      self::$contactsAddressBook = new ContactsAddressBook($this->configService, $this->cardBackend);
+    }
+    return self::$contactsAddressBook;
   }
 }

@@ -36,77 +36,93 @@ use Sabre\VObject\Component\VCard;
 
 class MusicianCard implements ICard {
 
-	/** @var VCard */
-	private $vCard;
+  /** @var VCard */
+  private $vCard;
 
-	public function __construct(VCard $vCard) {
-		$this->vCard = $vCard;
-	}
+  public function __construct(VCard $vCard) {
+    $this->vCard = $vCard;
+  }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function put($data) {
-		throw new NotImplemented();
-	}
+  /**
+   * @inheritDoc
+   */
+  public function put($data) {
+    throw new NotImplemented();
+  }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function get() {
-		return $this->vCard->serialize();
-	}
+  /**
+   * @inheritDoc
+   */
+  public function get() {
+    $data = $this->vCard->serialize();
+    $trace = debug_backtrace();
+    $shift = 2;
+    $caller = $trace[$shift];
+    $file = $caller['file'];
+    $line = $caller['line'];
+    $caller = $trace[$shift+1];
+    $class = $caller['class'];
+    $method = $caller['function'];
 
-	// public function getData(): array {
-	// 	return $this->vCardData;
-	// }
+    $prefix = $file.':'.$line.': '.$class.'::'.$method.': ';
 
-	/**
-	 * @inheritDoc
-	 */
-	public function getContentType() {
-		return 'text/vcard; charset=utf-8';
-	}
+    // \OCP\Util::writeLog('cafevdb', $prefix.': '.$data, \OCP\Util::INFO);
+    return $data;
+  }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function getETag() {
-		return null;
-	}
+  /**
+   * Non-interface method, return the card as plain array.
+   */
+  public function getData(): array {
+    return $this->vCard->children();
+  }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function getSize() {
-		return \strlen($this->get());
-	}
+  /**
+   * @inheritDoc
+   */
+  public function getContentType() {
+    return 'text/vcard; charset=utf-8';
+  }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function delete() {
-		throw new NotImplemented();
-	}
+  /**
+   * @inheritDoc
+   */
+  public function getETag() {
+    return null;
+  }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function getName() {
-		return $this->vCard->URI;
-	}
+  /**
+   * @inheritDoc
+   */
+  public function getSize() {
+    return \strlen($this->get());
+  }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function setName($name) {
-		throw new NotImplemented();
-	}
+  /**
+   * @inheritDoc
+   */
+  public function delete() {
+    throw new NotImplemented();
+  }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function getLastModified() {
-		return null;
-	}
+  /**
+   * @inheritDoc
+   */
+  public function getName() {
+    return $this->vCard->URI;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function setName($name) {
+    throw new NotImplemented();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLastModified() {
+    return null;
+  }
 }
