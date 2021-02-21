@@ -38,6 +38,8 @@ class Image implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\Timestampable;
+  use CAFEVDB\Traits\CreatedAtEntity;
 
   /**
    * @var int
@@ -85,6 +87,13 @@ class Image implements \ArrayAccess
    * @ORM\OneToOne(targetEntity="ImageData", mappedBy="image", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $imageData;
+
+  /**
+   * @var \DateTimeImmutable
+   * @Gedmo\Timestampable(on={"update","change"}, field={"imageData.data"})
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $updated;
 
   public function __construct() {
     $this->arrayCTOR();

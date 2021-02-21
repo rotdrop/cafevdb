@@ -40,7 +40,7 @@ class GeoPostalCode implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\TimestampableTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
    * @var int

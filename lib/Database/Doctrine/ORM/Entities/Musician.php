@@ -40,7 +40,8 @@ class Musician implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\UuidTrait;
-  use CAFEVDB\Traits\TimestampableTrait;
+  use CAFEVDB\Traits\Timestampable;
+  use CAFEVDB\Traits\CreatedAtEntity;
 
   /**
    * @var int
@@ -203,6 +204,13 @@ class Musician implements \ArrayAccess
    * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="musician", fetch="EXTRA_LAZY")
    */
   private $payments;
+
+  /**
+   * @var \DateTimeImmutable
+   * @Gedmo\Timestampable(on={"update","change"}, field={"photo.updated"})
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $updated;
 
   public function __construct() {
     $this->arrayCTOR();

@@ -36,6 +36,8 @@ class MusicianPhoto
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\Timestampable;
+  use CAFEVDB\Traits\CreatedAtEntity;
 
   /**
    * @var int
@@ -71,6 +73,13 @@ class MusicianPhoto
    * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $image;
+
+  /**
+   * @var \DateTimeImmutable
+   * @Gedmo\Timestampable(on={"update","change"}, field={"image.updated"})
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $updated;
 
   public function __construct() {
     $this->arrayCTOR();

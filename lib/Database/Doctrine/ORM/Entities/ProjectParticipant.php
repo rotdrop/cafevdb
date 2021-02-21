@@ -38,7 +38,7 @@ class ProjectParticipant implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\TimestampableTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants", fetch="EXTRA_LAZY")
