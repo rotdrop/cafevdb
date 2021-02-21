@@ -45,7 +45,7 @@ class ContactsService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const VCARD_VERSION = '3.0';
+  const VCARD_VERSION = '4.0';
 
   /** @var GeoCodingService */
   private $geoCodingService;
@@ -328,6 +328,7 @@ EOTEOT;
         'VERSION' => self::VCARD_VERSION,
         'PRODID' => $prodid,
         'UID' => $uuid,
+        'URI' => $uuid, // needs to be present for cloud address-book to work
         'FN' => $musician['firstName'].' '.$musician['sur_name'],
         'N' => [ $musician['sur_name'], $musician['firstName'] ],
       ]);
