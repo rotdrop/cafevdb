@@ -251,6 +251,10 @@ trait EntityManagerTrait {
   }
 
   protected static function cExpr() {
+    return self::criteriaExpr();
+  }
+
+  protected static function criteriaExpr() {
     return Criteria::expr();
   }
 
