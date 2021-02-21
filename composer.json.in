@@ -23,7 +23,7 @@
     "ezyang/htmlpurifier": "^4.13.0",
     "giggsey/libphonenumber-for-php": "^8.12",
     "pear/mail": "^1.4",
-    "gedmo/doctrine-extensions": "dev-feature/loggable_composite_identifier_main",
+    "gedmo/doctrine-extensions": "dev-production/cafevdb",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
     "knplabs/doctrine-behaviors": "^2.0",
     "acelaya/doctrine-enum-type": "^2.5",
@@ -66,8 +66,8 @@
       "url": "3rdparty/doctrine-on-update-extension"
     },
     {
-      "type": "vcs",
-      "url": "https://github.com/MisatoTremor/DoctrineExtensions"
+      "type": "path",
+      "url": "3rdparty/gedmo-doctrine-extensions"
     }
   ],
   "minimum-stability": "dev",
