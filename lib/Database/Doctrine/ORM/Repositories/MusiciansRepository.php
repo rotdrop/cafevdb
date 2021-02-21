@@ -37,16 +37,12 @@ class MusiciansRepository extends EntityRepository
    *
    * @return array of \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician
    */
-  public function findByName(string $firstName, string $surName = null)
+  public function findByName(string $firstName, string $surName)
   {
-    if (empty($surName)) {
-      return $this->findBy([ 'displayName' => $firstName ]);
-    } else {
-      return $this->findBy(
-        [ 'firstName' => $firstName, 'surName' => $surName ],
-        [ 'surName' => 'ASC', 'firstName' => 'ASC' ]
-      );
-    }
+    return $this->findBy(
+      [ 'firstName' => $firstName, 'surName' => $surName ],
+      [ 'surName' => 'ASC', 'firstName' => 'ASC' ]
+    );
   }
 
   /**
