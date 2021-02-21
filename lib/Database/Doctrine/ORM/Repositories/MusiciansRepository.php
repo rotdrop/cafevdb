@@ -109,7 +109,7 @@ class MusiciansRepository extends EntityRepository
    *
    * @return null|\DateTimeImmutable
    */
-  public function fetchLastModified($musicianOrId):?\DateTimeImmutable
+  public function fetchLastModifiedDate($musicianOrId):?\DateTimeImmutable
   {
     if (is_int($musicianOrId)) {
       $musicianId = $musicianOrId;
@@ -132,6 +132,23 @@ class MusiciansRepository extends EntityRepository
     }
 
     return $qb->getQuery->getOneOrNullResult();
+  }
+
+  /**
+   * Return all musicians modified since the given date.
+   */
+  public function findModifiedSince(\DateTimeImmutable $dateTime)
+  {
+    $qb = $this->createQueryBuilder('m');
+    $qb->select('m')
+       ->leftJoin('m.projectParticipation', 'pp')
+       ->leftJoin('m.photo', 'photo')
+       ->leftJoin('m.instruments', 'mi')
+       ->groupBy('m.id')
+       ->where("GREATEST(MAX(m.updated), MAX(pp.updated), photo.updated, MAX(mi.updated)) > :dateTime")
+       ->setParameter('dateTime', $dateTime);
+
+    return $qb->getQuery->getResult();
   }
 
 }
