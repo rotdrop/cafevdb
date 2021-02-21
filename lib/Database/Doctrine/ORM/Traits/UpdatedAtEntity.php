@@ -36,10 +36,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 trait UpdatedAtEntity
 {
-  use Timestampable;
+  use UpdatedAt;
 
   /**
-   * @var \DateTime
+   * @var \DateTimeImmutable
    * @Gedmo\Timestampable(on="update")
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */

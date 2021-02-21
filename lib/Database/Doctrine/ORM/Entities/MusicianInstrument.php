@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -43,34 +44,36 @@ class MusicianInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
+   * @var Musician
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instruments", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $musician;
 
   /**
+   * @var Instrument
    * @ORM\ManyToOne(targetEntity="Instrument", inversedBy="musicianInstruments", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $instrument;
 
   /**
+   * @var Collection
    * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musicianInstrument")
    */
   private $projectInstruments;
 
   /**
    * @var int
-   *
    * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Ranking of the instrument w.r.t. to the given musician (lower is better)"})
    */
   private $ranking = 1;
 
   /**
    * @var bool
-   *
    * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
    */
   private $disabled = false;
@@ -87,7 +90,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return MusicianInstrument
    */
-  public function setMusician($musician)
+  public function setMusician($musician):MusicianInstrument
   {
     $this->musician = $musician;
 
@@ -97,9 +100,9 @@ class MusicianInstrument implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return int
+   * @return Musician
    */
-  public function getMusician()
+  public function getMusician():Musician
   {
     return $this->musician;
   }
@@ -107,11 +110,11 @@ class MusicianInstrument implements \ArrayAccess
   /**
    * Set instrument.
    *
-   * @param int $instrument
+   * @param Instrument $instrument
    *
-   * @return InstrumentInstrument
+   * @return MusicianInstrument
    */
-  public function setInstrument($instrument)
+  public function setInstrument($instrument):MusicianInstrument
   {
     $this->instrument = $instrument;
 
@@ -121,9 +124,9 @@ class MusicianInstrument implements \ArrayAccess
   /**
    * Get instrument.
    *
-   * @return int
+   * @return Instrument
    */
-  public function getInstrument()
+  public function getInstrument():Instrument
   {
     return $this->instrument;
   }
@@ -135,7 +138,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return MusicianInstrument
    */
-  public function setRanking($ranking)
+  public function setRanking(int $ranking):MusicianInstrument
   {
     $this->ranking = $ranking;
 
@@ -147,7 +150,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return int
    */
-  public function getRanking()
+  public function getRanking():int
   {
     return $this->ranking;
   }

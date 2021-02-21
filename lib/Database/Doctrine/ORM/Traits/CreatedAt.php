@@ -33,8 +33,33 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-trait Timestampable
+trait CreatedAt
 {
-  use UpdatedAt;
-  use CreatedAt;
+  /**
+   * @var \DateTimeImmutable
+   */
+  private $created;
+
+  /**
+   * Sets created.
+   *
+   * @param \DateTimeImmutable $created
+   * @return $this
+   */
+  public function setCreated(\DateTimeImmutable $created)
+  {
+    $this->created = $created;
+
+    return $this;
+  }
+
+  /**
+   * Returns created.
+   *
+   * @return \DateTimeImmutable
+   */
+  public function getCreated()
+  {
+    return $this->created;
+  }
 }

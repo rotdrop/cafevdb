@@ -36,10 +36,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 trait CreatedAtEntity
 {
-  use Timestampable;
+  use CreatedAt;
 
   /**
-   * @var \DateTime
+   * @var \DateTimeImmutable
    * @Gedmo\Timestampable(on="create")
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */

@@ -41,7 +41,7 @@ class Musician implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\UuidTrait;
-  use CAFEVDB\Traits\Timestampable;
+  use CAFEVDB\Traits\UpdatedAt;
   use CAFEVDB\Traits\CreatedAtEntity;
 
   /**

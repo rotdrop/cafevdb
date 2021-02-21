@@ -1,6 +1,5 @@
 <?php
-/**
- * Orchestra member, musician and project management application.
+/* Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -33,8 +32,33 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-trait Timestampable
+trait UpdatedAt
 {
-  use UpdatedAt;
-  use CreatedAt;
+  /**
+   * @var \DateTimeImmutable
+   */
+  private $updated;
+
+  /**
+   * Sets updated.
+   *
+   * @param  \DateTimeImmutable $updated
+   * @return $this
+   */
+  public function setUpdated(\DateTimeImmutable $updated)
+  {
+    $this->updated = $updated;
+
+    return $this;
+  }
+
+  /**
+   * Returns updated.
+   *
+   * @return \DateTimeImmutable
+   */
+  public function getUpdated()
+  {
+    return $this->updated;
+  }
 }
