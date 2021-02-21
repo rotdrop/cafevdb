@@ -35,6 +35,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *      @ORM\UniqueConstraint(columns={"country", "postal_code", "name"})
  *    })
  * @ORM\Entity
+ * @Gedmo\Loggable(enabled=false)
  */
 class GeoPostalCode implements \ArrayAccess
 {

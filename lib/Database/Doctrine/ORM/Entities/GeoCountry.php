@@ -31,6 +31,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="GeoCountries")
  * @ORM\Entity
+ * @Gedmo\Loggable(enabled=false)
  */
 class GeoCountry implements \ArrayAccess
 {

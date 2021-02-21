@@ -24,8 +24,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use OCP\ILogger;
 
@@ -37,6 +38,7 @@ use OCP\ILogger;
  *     @ORM\UniqueConstraint(columns={"phrase"})
  *   })
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationKeysRepository")
+ * @Gedmo\Loggable(enabled=false)
  */
 class TranslationKey implements \ArrayAccess
 {

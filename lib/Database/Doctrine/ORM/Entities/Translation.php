@@ -24,8 +24,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use OCP\ILogger;
 
@@ -34,6 +35,7 @@ use OCP\ILogger;
  *
  * @ORM\Table(name="Translations")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationsRepository")
+ * @Gedmo\Loggable(enabled=false)
  */
 class Translation implements \ArrayAccess
 {
