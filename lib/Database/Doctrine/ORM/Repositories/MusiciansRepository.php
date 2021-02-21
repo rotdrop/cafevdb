@@ -102,10 +102,38 @@ class MusiciansRepository extends EntityRepository
     return $name;
   }
 
-  public function findPhoto($musicianId)
+  /**
+   * Fetch the latest modification date of the given or all musicians.
+   *
+   * @param null|int|Entities\Musician $musicianOrId
+   *
+   * @return null|\DateTimeImmutable
+   */
+  public function fetchLastModified($musicianOrId):?\DateTimeImmutable
   {
+    if (is_int($musicianOrId)) {
+      $musicianId = $musicianOrId;
+    } else if (empty($musicianOrId)) {
+      $musicianId = null;
+    } else {
+      $musicianId = $musicianOrId['id'];
+    }
 
+    $qb = $this->createQueryBuilder('m');
+    $qb->select("GREATEST(MAX(m.updated), MAX(pp.updated), photo.updated, MAX(mi.updated))")
+       ->leftJoin('m.projectParticipation', 'pp')
+       ->leftJoin('m.photo', 'photo')
+       ->leftJoin('m.instruments', 'mi')
+       ->groupBy('m.id'); // <- perhaps not needed
+
+    if (!empty($musicianId)) {
+      $qb->where('m.id = :musicianId')
+         ->setParameter('musicianId', $musicianId);
+    }
+
+    return $qb->getQuery->getOneOrNullResult();
   }
+
 }
 
 // Local Variables: ***
