@@ -217,6 +217,11 @@ class ConfigService {
 
   public function getAppConfig()
   {
+    return $this->getCloudConfig();
+  }
+
+  public function getCloudConfig()
+  {
     return $this->containerConfig;
   }
 
