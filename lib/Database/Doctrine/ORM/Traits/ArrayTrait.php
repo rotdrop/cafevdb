@@ -36,7 +36,7 @@ trait ArrayTrait
    */
   protected function arrayCTOR() {
     $this->keys = (new \ReflectionClass(__CLASS__))
-                ->getProperties(\ReflectionProperty::IS_PRIVATE);
+                ->getProperties(\ReflectionProperty::IS_PRIVATE|\ReflectionProperty::IS_PROTECTED);
 
     $this->keys = array_map(function($property) {
       $doc = $property->getDocComment();
