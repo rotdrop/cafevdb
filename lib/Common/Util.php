@@ -73,7 +73,7 @@ class Util
     /* Normalize name and translation */
     $name = str_replace("\xc2\xa0", "\x20", $name);
     $name = trim($name);
-    $name = preg_replace('/\s*,([^\s])/', ', $1', $name);
+    $name = preg_replace('/\s*,([^\s])/', ','.$singleSpace.'$1', $name);
     $name = preg_replace('/\s+/', $singleSpace, $name);
 
     return $name;
