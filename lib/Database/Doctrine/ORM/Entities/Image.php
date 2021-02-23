@@ -110,13 +110,13 @@ class Image implements \ArrayAccess
   }
 
   /**
-   * Set mimetype.
+   * Set mimeType.
    *
-   * @param string|null $mimetype
+   * @param string|null $mimeType
    *
    * @return Image
    */
-  public function setMimetype($mimeType = null)
+  public function setMimeType($mimeType = null)
   {
     $this->mimeType = $mimeType;
 
@@ -124,11 +124,11 @@ class Image implements \ArrayAccess
   }
 
   /**
-   * Get mimetype.
+   * Get mimeType.
    *
    * @return string|null
    */
-  public function getMimetype()
+  public function getMimeType()
   {
     return $this->mimeType;
   }
