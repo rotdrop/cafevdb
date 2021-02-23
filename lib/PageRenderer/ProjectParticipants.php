@@ -407,6 +407,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
+        'sql|LF'   => 'IFNULL($column, CONCAT($table.sur_name, \', \', $table.first_name))',
         'maxlen'   => 384,
       ]);
 
@@ -1206,16 +1207,13 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
       //'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
-        'table' => 'Projects',
-        'column' => 'id',
-        'description' => 'name',
+        'table' => self::PROJECTS_TABLE,
+        'column' => 'name',
+        //'description' => 'name',
         'orderby' => '$table.year ASC, $table.name ASC',
         'groups' => 'year',
-        'join' => '$join_col_fqn = '.$joinTables[self::TABLE].'.project_id'
+        'join' => '$join_table.id = '.$joinTables[self::TABLE].'.project_id'
       ],
-      // @todo check whether this is still needed or 'groups' => 'year' is just fine.
-      //'values2' => $projects,
-      //'valueGroups' => $groupedProjects
     ];
 
     $this->makeJoinTableField(
@@ -1358,23 +1356,42 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           foreach($pme->fds as $idx => $label) {
             $data[$label] = $row['qf'.$idx];
           }
+          $categories = [];
           $musician = new Entities\Musician();
           foreach ($data as $key => $value) {
-            $fieldInfo = $this->joinTableField($key);
-            if ($fieldInfo['table'] != self::MUSICIANS_TABLE) {
-              continue;
-            }
-            $column = $fieldInfo['column'];
-            try {
-              $musician[$column] = $value;
-            } catch (\Throwable $t) {
-              // Don't care, we know virtual stuff is not there
-              // $this->logException($t);
+            switch ($key) {
+            case 'all_projects':
+              $categories = array_merge($categories, explode(',', Util::removeSpaces($value)));
+              break;
+            case 'MusicianInstrument:instrument_id':
+              foreach (explode(',', Util::removeSpaces($value)) as $instrumentId) {
+                $categories[] = $this->instrumentInfo['byId'][$instrumentId];
+              }
+              break;
+            default:
+              $fieldInfo = $this->joinTableField($key);
+              if ($fieldInfo['table'] != self::MUSICIANS_TABLE) {
+                continue 2;
+              }
+              $column = $fieldInfo['column'];
+              // In order to support "categories" the same way as the
+              // AddressBook-integration we need to feed the
+              // Musician-entity with more data:
+              try {
+                $musician[$column] = $value;
+              } catch (\Throwable $t) {
+                // Don't care, we know virtual stuff is not there
+                // $this->logException($t);
+              }
+              break;
             }
           }
           $vcard = $this->contactsService->export($musician);
           unset($vcard->PHOTO); // too much information
-          //$this->logDebug(print_r($vcard->serialize(), true));
+          $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
+          sort($categories);
+          $vcard->CATEGORIES->setParts($categories);
+          //$this->logInfo($vcard->serialize());
           return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
         default:
           return '';

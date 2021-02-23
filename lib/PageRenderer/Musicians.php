@@ -358,10 +358,10 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Display-Name'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
-      'sql'      => 'IFNULL($column, CONCAT($table.sur_name, \', \', $table.first_name))',
-      'select'   => 'T',
+      'sql|LF'   => 'IFNULL($column, CONCAT($table.sur_name, \', \', $table.first_name))',
       'maxlen'   => 256,
       'sort'     => true,
+      'select'   => 'T',
     ];
 
     // @todo unify soft-delete
@@ -443,8 +443,8 @@ make sure that the musicians are also automatically added to the
       'sort' => true,
       'css'      => ['postfix' => ' projects tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
-      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \', \')',
-      'filter' => 'having', // need "HAVING" for group by stuff
+      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
+      //'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
         'table' => self::PROJECTS_TABLE,
         'column' => 'name',
@@ -452,9 +452,6 @@ make sure that the musicians are also automatically added to the
         'groups' => 'year',
         'join' => '$join_table.id = '.$joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id'
       ],
-      // @todo check whether this is still needed or 'groups' => 'year' is just fine.
-      //'values2' => $projects,
-      //'valueGroups' => $groupedProjects
     ];
 
     $opts['fdd']['mobile_phone'] = [

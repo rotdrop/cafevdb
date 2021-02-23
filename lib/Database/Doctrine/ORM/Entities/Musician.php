@@ -797,7 +797,7 @@ class Musician implements \ArrayAccess
    *
    * @return Musician
    */
-  public function setSepaDebitMandates($sepaDebitMandates):Musician
+  public function setSepaDebitMandates(Collection $sepaDebitMandates):Musician
   {
     $this->sepaDebitMandates = $sepaDebitMandates;
 
@@ -812,6 +812,30 @@ class Musician implements \ArrayAccess
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
+  }
+
+  /**
+   * Set displayName.
+   *
+   * @param string|null $displayName
+   *
+   * @return Musician
+   */
+  public function setDisplayName(?string $displayName):Musician
+  {
+    $this->displayName = $displayName;
+
+    return $this;
+  }
+
+  /**
+   * Get displayName.
+   *
+   * @return string
+   */
+  public function getDisplayName():?string
+  {
+    return $this->displayName;
   }
 
 }
