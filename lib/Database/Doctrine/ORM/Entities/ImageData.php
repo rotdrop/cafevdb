@@ -59,23 +59,13 @@ class ImageData implements \ArrayAccess
   }
 
   /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
-
-  /**
    * Set data.
    *
-   * @param string|null $data
+   * @param string $data
    *
    * @return ImageData
    */
-  public function setData($data = null, string $format = 'binary')
+  public function setData($data, string $format = 'binary')
   {
     switch ($format) {
       case 'base64':
@@ -97,15 +87,16 @@ class ImageData implements \ArrayAccess
    */
   public function getData(string $format = 'binary')
   {
+    rewind($this->data);
     switch ($format) {
-      case 'base64':
-        return base64_encode(stream_get_contents($this->data));
-      case 'resource':
-        return $this->data;
-      case 'binary':
-        return stream_get_contents($this->data);
-      default:
-        return $this->data;
+    case 'base64':
+      return base64_encode(stream_get_contents($this->data));
+    case 'resource':
+      return $this->data;
+    case 'binary':
+      return stream_get_contents($this->data);
+    default:
+      return $this->data;
     }
   }
 
@@ -116,7 +107,7 @@ class ImageData implements \ArrayAccess
    *
    * @return ImageData
    */
-  public function setImage($image):self
+  public function setImage(Image $image):ImageData
   {
     $this->image = $image;
 
