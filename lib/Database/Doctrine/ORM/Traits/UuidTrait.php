@@ -32,7 +32,7 @@ trait UuidTrait
   /**
    * @var \Ramsey\Uuid\UuidInterface
    *
-   * @ORM\Column(name="UUID", type="uuid_binary", unique=true)
+   * @ORM\Column(type="uuid_binary", unique=true)
    */
   private $uuid;
 
