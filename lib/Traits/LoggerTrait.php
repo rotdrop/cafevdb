@@ -29,20 +29,25 @@ trait LoggerTrait
   /** @var ILogger */
   protected $logger;
 
-  public function log(int $level, string $message, array $context = [], $shift = 0) {
+  public function log(int $level, string $message, array $context = [], $shift = 0, bool $showTrace = false) {
     $trace = debug_backtrace();
-    $caller = $trace[$shift];
-    $file = $caller['file'];
-    $line = $caller['line'];
-    $caller = $trace[$shift+1];
-    $class = $caller['class'];
-    $method = $caller['function'];
+    $prefix = '';
+    $shift = min($shift, count($trace));
 
-    $prefix = $file.':'.$line.': '.$class.'::'.$method.': ';
+    do {
+      $caller = $trace[$shift];
+      $file = $caller['file'];
+      $line = $caller['line'];
+      $caller = $trace[$shift+1];
+      $class = $caller['class'];
+      $method = $caller['function'];
+
+      $prefix .= $file.':'.$line.': '.$class.'::'.$method.'(): ';
+    } while ($showTrace && --$shift > 0);
     return $this->logger->log($level, $prefix.$message, $context);
   }
 
-  public function logException($exception, $message = null, $shift = 0) {
+  public function logException($exception, $message = null, $shift = 0, bool $showTrace = false) {
     $trace = debug_backtrace();
     $caller = $trace[$shift];
     $file = $caller['file'];
@@ -57,24 +62,24 @@ trait LoggerTrait
     $this->logger->logException($exception, [ 'message' => $prefix.$message ]);
   }
 
-  public function logError(string $message, array $context = [], $shift = 1) {
-    return $this->log(ILogger::ERROR, $message, $context, $shift);
+  public function logError(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+    return $this->log(ILogger::ERROR, $message, $context, $shift, $showTrace);
   }
 
-  public function logDebug(string $message, array $context = [], $shift = 1) {
-    return $this->log(ILogger::DEBUG, $message, $context, $shift);
+  public function logDebug(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+    return $this->log(ILogger::DEBUG, $message, $context, $shift, $showTrace);
   }
 
-  public function logInfo(string $message, array $context = [], $shift = 1) {
-    return $this->log(ILogger::INFO, $message, $context, $shift);
+  public function logInfo(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+    return $this->log(ILogger::INFO, $message, $context, $shift, $showTrace);
   }
 
-  public function logWarn(string $message, array $context = [], $shift = 1) {
-    return $this->log(ILogger::WARN, $message, $context, $shift);
+  public function logWarn(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+    return $this->log(ILogger::WARN, $message, $context, $shift, $showTrace);
   }
 
-  public function logFatal(string $message, array $context = [], $shift = 1) {
-    return $this->log(ILogger::FATAL, $message, $context, $shift);
+  public function logFatal(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+    return $this->log(ILogger::FATAL, $message, $context, $shift, $showTrace);
   }
 
 }
