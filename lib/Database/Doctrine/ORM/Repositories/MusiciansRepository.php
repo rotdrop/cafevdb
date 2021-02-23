@@ -29,6 +29,7 @@ use Doctrine\ORM\EntityRepository;
 class MusiciansRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
 
   /**
    * @param string $firstName First-name or display-name.
@@ -105,11 +106,13 @@ class MusiciansRepository extends EntityRepository
   /**
    * Fetch the latest modification date of the given or all musicians.
    *
-   * @param null|int|Entities\Musician $musicianOrId
+   * @param array $criteria Criteria as for findBy(). However,
+   * wild-cards like '*' and '%' are allowed and internally converted
+   * to '%' in a LIKE comparison.
    *
    * @return null|\DateTimeImmutable
    */
-  public function fetchLastModifiedDate($musicianOrId):?\DateTimeImmutable
+  public function fetchLastModifiedDate(array $criteria = [], string $indexBy = 'uuid')
   {
     if (is_int($musicianOrId)) {
       $musicianId = $musicianOrId;
@@ -119,36 +122,46 @@ class MusiciansRepository extends EntityRepository
       $musicianId = $musicianOrId['id'];
     }
 
-    $qb = $this->createQueryBuilder('m');
-    $qb->select("GREATEST(MAX(m.updated), MAX(pp.updated), photo.updated, MAX(mi.updated))")
+    $selects = [];
+    if (!empty($criteria)) {
+      $selects[] = 'm.'.$indexBy.' AS '.$indexBy;
+    }
+    $selects[]  = "GREATEST(
+  MAX(COALESCE(m.updated, '')),
+  MAX(COALESCE(pp.updated, '')),
+  COALESCE(photo.updated, ''),
+  MAX(COALESCE(mi.updated, '')))
+  AS lastModified";
+
+    $qb = $this->createQueryBuilder('m', 'm.'.$indexBy);
+    $qb->select($selects)
        ->leftJoin('m.projectParticipation', 'pp')
        ->leftJoin('m.photo', 'photo')
-       ->leftJoin('m.instruments', 'mi')
-       ->groupBy('m.id'); // <- perhaps not needed
+       ->leftJoin('m.instruments', 'mi');
 
-    if (!empty($musicianId)) {
-      $qb->where('m.id = :musicianId')
-         ->setParameter('musicianId', $musicianId);
+    if (!empty($criteria)) {
+      $qb->groupBy('m.id');
+      $andX = $qb->expr()->andX();
+      foreach ($criteria as $key => &$value) {
+        $value = str_replace('*', '%', $value);
+        if (strpos($value, '%') !== false) {
+          $andX->add($qb->expr()->like('m'.'.'.$key, ':'.$key));
+        } else {
+          $andX->add($qb->expr()->eq('m'.'.'.$key, ':'.$key));
+        }
+      }
+      $qb->where($andX);
+      foreach ($criteria as $key => $value) {
+        $type = ($key == 'uuid') ? 'uuid_binary' : null;
+        $qb->setParameter($key, $value, $type);
+      }
     }
 
-    return $qb->getQuery->getOneOrNullResult();
-  }
+    // $this->log('CRIT '.print_r($criteria, true));
+    // $this->log('SQL '.$qb->getQuery()->getSql());
+    // $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
 
-  /**
-   * Return all musicians modified since the given date.
-   */
-  public function findModifiedSince(\DateTimeImmutable $dateTime)
-  {
-    $qb = $this->createQueryBuilder('m');
-    $qb->select('m')
-       ->leftJoin('m.projectParticipation', 'pp')
-       ->leftJoin('m.photo', 'photo')
-       ->leftJoin('m.instruments', 'mi')
-       ->groupBy('m.id')
-       ->where("GREATEST(MAX(m.updated), MAX(pp.updated), photo.updated, MAX(mi.updated)) > :dateTime")
-       ->setParameter('dateTime', $dateTime);
-
-    return $qb->getQuery->getResult();
+    return $qb->getQuery()->getResult();
   }
 
 }
