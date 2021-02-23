@@ -311,6 +311,7 @@ class ContactsService
         'UID' => $uuid,
         'FN' => $musician['firstName'].' '.$musician['surName'],
         'N' => [ $musician['surName'], $musician['firstName'] ],
+        'CATEGORIES' => $categories,
       ]);
     if ($musician['language']) {
       $vcard->add('LANG', $musician['language']);
@@ -351,9 +352,6 @@ class ContactsService
                   $country
                 ],
                 [ 'TYPE' => 'home' ]);
-    $vcard->add('CATEGORIES', $categories);
-
-    $this->logInfo('CATEGORIES '.print_r($categories, true));
 
     $photo = null;
     if (!empty($musician['photo'])) {
