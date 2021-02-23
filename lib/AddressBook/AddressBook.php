@@ -36,6 +36,9 @@ use OCA\DAV\DAV\Sharing\Plugin;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
+/**
+ * Cloud- and CardDAV address-book integration.
+ */
 class AddressBook extends ExternalAddressBook
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

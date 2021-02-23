@@ -64,7 +64,7 @@ class MusicianCardBackend implements ICardBackend
   }
 
   public function getDisplayName(): string {
-    return $this->l->t('Musicians');
+    return $this->l->t('%s Musicians', ucfirst($this->getConfigValue('orchestra', 'unknown')));
   }
 
   /**
@@ -134,7 +134,7 @@ class MusicianCardBackend implements ICardBackend
     return new MusicianCard($uri, $lastModified, $vCard);
   }
 
-  public function getLastModified(?string $uri = null)
+  public function getLastModified(?string $uri = null):int
   {
     $criteria = empty($uri) ? [] : [ 'uuid' => $this->getUuidFromUri($uri) ];
     $info = reset($this->musiciansRepository->fetchLastModifiedDate($criteria));

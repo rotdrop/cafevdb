@@ -50,4 +50,14 @@ interface ICardBackend
    * @return MusicianCard[]
    */
   public function getCards(): array;
+
+  /**
+   * Get the time of the last modification for either the address-book
+   * or an individual entry.
+   *
+   * @param string|null $uri
+   *
+   * @return int Seconds sinc 1970-0-0 of last modification.
+   */
+  public function getLastModified(?string $uri = null):int;
 }
