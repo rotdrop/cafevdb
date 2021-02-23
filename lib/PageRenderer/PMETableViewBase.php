@@ -1010,6 +1010,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     if (!empty($opts['groupby_fields']) && !is_array($opts['groupby_fields'])) {
       $opts['groupby_fields'] = [ $opts['groupby_fields'], ];
     }
+    $grouped = [];
+    $orderBy = [];
     foreach ($this->joinStructure as &$joinInfo) {
       if (!empty($joinInfo['master'])) {
         if (is_array($opts['key'])) {
@@ -1030,10 +1032,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $fqnColumn = $joinTables[$table].'.'.$joinInfo['column'];
 
       $group = false;
+      $groupOrderBy = [];
       $joinData = [];
       foreach ($joinInfo['identifier'] as $joinTableKey => $joinTableValue) {
         if (empty($joinTableValue)) {
           $group = true;
+          $groupOrderBy[] = $joinTables[$table].'.'.$joinInfo['column'].' ASC';
           continue;
         }
         $joinCondition = '$join_table.'.$joinTableKey.' ';
@@ -1041,6 +1045,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           if (!empty($joinTableValue['table'])) {
             $mainTableColumn = $joinTableValue['column']?: 'id';
             $joinCondition .= '= '.$joinTables[$joinTableValue['table']].'.'.$mainTableColumn;
+            $group = $grouped[$joinTableValue['table']];
+            $groupOrderBy = array_merge($groupOrderBy, $orderBy[$joinTableValue['table']]);
           } else if (array_key_exists('value', $joinTableValue)
                      && $joinTableValue['value'] === null) {
             $joinCondition = '$join_table.'.$joinTableKey.' IS NULL';
@@ -1054,13 +1060,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
         $joinData[] = $joinCondition;
       }
+      $grouped[$table] = $group;
+      $orderBy[$table] = $groupOrderBy;
       $fieldName = $this->joinTableMasterFieldName($table);
       $opts['fdd'][$fieldName] = [
         'tab' => 'all',
         'name' => $fieldName,
         'input' => 'HV',
         'sql' => ($group
-                  ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC)'
+                  ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.implode(', ', $groupOrderBy).')'
                   : '$join_col_fqn'),
         'options' => '',
         'sort' => true,

@@ -52,6 +52,7 @@ class Musicians extends PMETableViewBase
   const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
   const INSTRUMENTS_TABLE = 'Instruments';
   const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
+  const PROJECTS_TABLE = 'Projects';
   const INSURANCES_TABLE = 'InstrumentInsurances';
   const PHOTO_JOIN = 'MusicianPhoto';
 
@@ -99,6 +100,18 @@ class Musicians extends PMETableViewBase
       'column' => 'project_id',
       'read_only' => true,
     ],
+    // [
+    //   'table' => self::PROJECTS_TABLE,
+    //   'entity' => Entities\Project::class,
+    //   'identifier' => [
+    //     'id' => [
+    //       'table' => self::PROJECT_PARTICIPANTS_TABLE,
+    //       'column' => 'project_id',
+    //     ],
+    //   ],
+    //   'column' => 'name',
+    //   'read_only' => true,
+    // ],
     [
       'table' => self::INSURANCES_TABLE,
       'entity' => Entities\InstrumentInsurance::class,
@@ -370,7 +383,6 @@ make sure that the musicians are also automatically added to the
       ];
     }
 
-    $instrumentsNameIndex = count($opts['fdd']);
     $fdd = [
       'name'        => $this->l->t('Instruments'),
       'tab'         => ['id' => 'orchestra'],
@@ -421,16 +433,6 @@ make sure that the musicians are also automatically added to the
       'tooltip' => $this->toolTipsService['member-status'],
     ];
 
-    // @todo still needed?
-    // fetch the list of all projects in order to provide a somewhat
-    // cooked filter list
-    // $projects =
-    //   $this->getDatabaseRepository(Entities\Project::class)->shortDescription();
-    // $allProjects = $projects['projects'];
-    // $groupedProjects = $projects['yearById'];
-    // $projects = $projects['nameById'];
-
-    $projectsIdx = count($opts['fdd']);
     $opts['fdd']['projects'] = [
       'tab' => ['id' => 'orchestra'],
       'input' => 'VR',
@@ -440,15 +442,14 @@ make sure that the musicians are also automatically added to the
       'sort' => true,
       'css'      => ['postfix' => ' projects tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
-      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
+      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \', \')',
       'filter' => 'having', // need "HAVING" for group by stuff
       'values' => [
-        'table' => 'Projects',
-        'column' => 'id',
-        'description' => 'name',
+        'table' => self::PROJECTS_TABLE,
+        'column' => 'name',
         'orderby' => '$table.year ASC, $table.name ASC',
         'groups' => 'year',
-        'join' => '$join_col_fqn = '.$joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id'
+        'join' => '$join_table.id = '.$joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id'
       ],
       // @todo check whether this is still needed or 'groups' => 'year' is just fine.
       //'values2' => $projects,
@@ -612,6 +613,7 @@ make sure that the musicians are also automatically added to the
       'options' => 'ACPDV',
       'sql' => '`PMEtable0`.`id`',
       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
+        $this->logInfo('ROW: '.print_r($row, true));
         switch($action) {
         case 'change':
         case 'display':
@@ -619,18 +621,39 @@ make sure that the musicians are also automatically added to the
           foreach($pme->fds as $idx => $label) {
             $data[$label] = $row['qf'.$idx];
           }
+          $categories = [];
           $musician = new Entities\Musician();
           foreach ($data as $key => $value) {
-            try {
-              $musician[$key] = $value;
-            } catch (\Throwable $t) {
-              // Don't care, we know virtual stuff is not there
-              // $this->logException($t);
+            // In order to support "categories" the same way as the
+            // AddressBook-integration we need to feed the
+            // Musician-entity with more data:
+            switch ($key) {
+            case 'projects':
+              $categories = array_merge($categories, explode(',', Util::removeSpaces($value)));
+              break;
+            case 'MusicianInstrument:instrument_id':
+              foreach (explode(',', Util::removeSpaces($value)) as $instrumentId) {
+                $categories[] = $this->instrumentInfo['byId'][$instrumentId];
+              }
+              break;
+            default:
+              try {
+                $musician[$key] = $value;
+              } catch (\Throwable $t) {
+                // Don't care, we know virtual stuff is not there
+                // $this->logException($t);
+                $this->logInfo("Cannot set key ".$key.' / value '.$value);
+              }
+              break;
             }
+
           }
           $vcard = $this->contactsService->export($musician);
           unset($vcard->PHOTO); // too much information
-          //$this->logDebug(print_r($vcard->serialize(), true));
+          $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
+          sort($categories);
+          $vcard->CATEGORIES->setParts($categories);
+          $this->logInfo($vcard->serialize());
           return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
         default:
           return '';
@@ -681,8 +704,9 @@ make sure that the musicians are also automatically added to the
 
     if ($this->projectMode) {
       //$key = 'qf'.$projectsIdx;
-      $projects = "GROUP_CONCAT(DISTINCT `PMEjoin{$projectsIdx}`.name)";
-      $opts['having']['AND'] = "($projects IS NULL OR NOT FIND_IN_SET('$projectName', $projects))";
+      $projectsJoin = $joinTables[self::PROJECT_PARTICIPANTS_TABLE];
+      $projectIds = "GROUP_CONCAT(DISTINCT {$projectsJoin}.project_id)";
+      $opts['having']['AND'] = "($projectIds IS NULL OR NOT FIND_IN_SET('$projectId', $projectIds))";
       $opts['misc']['css']['major']   = 'bulkcommit';
       $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
     }
