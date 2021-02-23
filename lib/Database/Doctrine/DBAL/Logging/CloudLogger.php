@@ -108,7 +108,7 @@ class CloudLogger implements SQLLogger
 
     $this->currentQuery['executionMS'] = microtime(true) - $this->start;
 
-    $this->logInfo(print_r($this->currentQuery, true), [], 9);
+    $this->logInfo(print_r($this->currentQuery, true), [], 10, true);
 
     $this->currentQuery = null;
     $this->start = null;
