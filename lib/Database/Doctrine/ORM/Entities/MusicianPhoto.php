@@ -32,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="MusicianPhoto", uniqueConstraints={@ORM\UniqueConstraint(columns={"owner_id", "image_id"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusicianPhotosRepository")
  */
-class MusicianPhoto
+class MusicianPhoto implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -51,26 +51,30 @@ class MusicianPhoto
   /**
    * @var int
    *
+   * Doctrine/ORM ignores the nullable attribute on the join column. Why?
+   *
    * @ORM\Column(type="integer", nullable=false)
    */
   private $ownerId;
 
   /**
+   * @ORM\OneToOne(targetEntity="Musician", cascade="persist", inversedBy="photo", fetch="EXTRA_LAZY")
+   * @ ORM\JoinColumn(nullable=false)
+   */
+  private $owner;
+
+  /**
    * @var int
+   *
+   * Doctrine/ORM ignores the nullable attribute on the join column. Why?
    *
    * @ORM\Column(type="integer", nullable=false)
    */
   private $imageId;
 
   /**
-   * @ORM\OneToOne(targetEntity="Musician", cascade="persist", inversedBy="photo", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="id")
-   */
-  private $owner;
-
-  /**
    * @ORM\OneToOne(targetEntity="Image", cascade="all", orphanRemoval=true)
-   * @ORM\JoinColumn(referencedColumnName="id")
+   * @ ORM\JoinColumn(nullable=false)
    */
   private $image;
 
