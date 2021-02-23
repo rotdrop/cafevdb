@@ -41,7 +41,7 @@ trait CreatedAtEntity
   /**
    * @var \DateTimeImmutable
    * @Gedmo\Timestampable(on="create")
-   * @ORM\Column(type="datetime_immutable", nullable=true)
+   * @ORM\Column(type="datetimetz_immutable", nullable=true)
    */
   private $created;
 }
