@@ -653,7 +653,7 @@ make sure that the musicians are also automatically added to the
           $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
           sort($categories);
           $vcard->CATEGORIES->setParts($categories);
-          $this->logInfo($vcard->serialize());
+          // $this->logInfo($vcard->serialize());
           return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
         default:
           return '';
