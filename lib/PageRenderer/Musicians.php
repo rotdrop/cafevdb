@@ -211,7 +211,12 @@ make sure that the musicians are also automatically added to the
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = ['sort_order','sur_name','first_name','id'];
+    $opts['sort_field'] = [
+      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      'sur_name',
+      'first_name',
+      'id'
+    ];
 
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
@@ -388,16 +393,18 @@ make sure that the musicians are also automatically added to the
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENT_TABLE, 'instrument_id', $fdd);
+    $joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
-    $opts['fdd']['sort_order'] = [
+    $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'orchestra' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'input'       => 'HRS',
       'sort'     => true,
       'values' => [
+        'column' => 'sort_order',
         'orderby' => '$table.sort_order ASC',
-        'join' => [ 'reference' => $instrumentsNameIndex ],
+        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
       ],
     ];
 
