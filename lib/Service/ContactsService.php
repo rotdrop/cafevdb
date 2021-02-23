@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use Sabre\VObject\Component\VCard;
+use Doctrine\Common\Collections\Collection;
 
 use OCA\DAV\Events\AddressBookUpdatedEvent;
 use OCA\DAV\Events\AddressBookDeletedEvent;
@@ -295,13 +296,12 @@ class ContactsService
     $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
     $uuid = isset($musician['uuid']) ? $musician['uuid'] : $this->generateUUID();
     $categories = [ 'cafevdb' ];
-    if (isset($musician['instruments'])) {
-      $categories =  array_merge($categories, explode(',', $musician['instruments']));
+    foreach ($musician['instruments'] as $musicianInstrument) {
+      $categories[] = $musicianInstrument['instrument']['name'];
     }
-    if (isset($musician['projects'])) {
-      $categories =  array_merge($categories, explode(',', $musician['projects']));
+    foreach ($musician['projectParticipation'] as $participant) {
+      $categories[] = $participant['project']['name'];
     }
-    $categories = array_map('trim', $categories);
     $prodid = '-//CAF e.V.//NONSGML ' . $this->appName() . ' ' . $this->appVersion() . '//EN';
 
     $vcard = new VCard(
@@ -309,9 +309,8 @@ class ContactsService
         'VERSION' => $version,
         'PRODID' => $prodid,
         'UID' => $uuid,
-        // 'URI' => $uuid, // needs to be present for cloud address-book to work
-        'FN' => $musician['firstName'].' '.$musician['sur_name'],
-        'N' => [ $musician['sur_name'], $musician['firstName'] ],
+        'FN' => $musician['firstName'].' '.$musician['surName'],
+        'N' => [ $musician['surName'], $musician['firstName'] ],
       ]);
     if ($musician['language']) {
       $vcard->add('LANG', $musician['language']);
@@ -353,6 +352,8 @@ class ContactsService
                 ],
                 [ 'TYPE' => 'home' ]);
     $vcard->add('CATEGORIES', $categories);
+
+    $this->logInfo('CATEGORIES '.print_r($categories, true));
 
     $photo = null;
     if (!empty($musician['photo'])) {
