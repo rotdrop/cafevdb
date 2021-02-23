@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Events\ProjectDeletedEvent;
 use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
 
 use OCA\CAFEVDB\Common\Util;
@@ -58,26 +59,6 @@ class ContactsService
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->geoCodingService = $geoCodingService;
-  }
-
-  public function playground() {
-    $cardData = <<<EOTEOT
-BEGIN:VCARD
-VERSION:3.0
-PRODID:-//Sabre//Sabre VObject 4.3.0//EN
-UID:567e32b8-a10f-103a-8921-93d3d3897fe6
-FN:Heine\, Claus-Justus
-N:Claus-Justus;Heine\,;;;
-UID:567e32b8-a10f-103a-8921-93d3d3897fe6
-CLOUD:567e32b8-a10f-103a-8921-93d3d3897fe6@localhost/nextcloud-git
-END:VCARD
-EOTEOT;
-
-    $this->logInfo($cardData);
-    $musician = $this->import($cardData);
-    $this->logInfo(print_r($musician, true));
-    $vCalendar = $this->export($musician);
-    $this->logInfo($vCalendar->serialize());
   }
 
   /**Import the given vCard into the musician data-base. This is
@@ -312,7 +293,7 @@ EOTEOT;
   public function export(Musician $musician, $version = self::VCARD_VERSION)
   {
     $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
-    $uuid = isset($musician['uuid']) ? $musician['UUID'] : $this->generateUUID();
+    $uuid = isset($musician['uuid']) ? $musician['uuid'] : $this->generateUUID();
     $categories = [ 'cafevdb' ];
     if (isset($musician['instruments'])) {
       $categories =  array_merge($categories, explode(',', $musician['instruments']));
@@ -325,10 +306,10 @@ EOTEOT;
 
     $vcard = new VCard(
       [
-        'VERSION' => self::VCARD_VERSION,
+        'VERSION' => $version,
         'PRODID' => $prodid,
         'UID' => $uuid,
-        'URI' => $uuid, // needs to be present for cloud address-book to work
+        // 'URI' => $uuid, // needs to be present for cloud address-book to work
         'FN' => $musician['firstName'].' '.$musician['sur_name'],
         'N' => [ $musician['sur_name'], $musician['firstName'] ],
       ]);
@@ -374,35 +355,42 @@ EOTEOT;
     $vcard->add('CATEGORIES', $categories);
 
     $photo = null;
-    if (isset($musician['photo'])) {
-      if (is_array($musician['photo'])) {
-        $photo = $musician['photo'];
-      } else if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['photo'], $matches)) {
+    if (!empty($musician['photo'])) {
+      if ($musician['photo'] instanceof Entities\MusicianPhoto) {
+        $image = $musician['photo']->getImage(); //  ['image'];
+        $photo = [
+          'data' => $image->getImageData()->getData('base64'),
+          'mimeType' => $image->getMimeType(), //['mimeType'],
+        ];
+
+      } else if (is_string($musician['photo'])
+                 && preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['photo'], $matches)) {
         // data uri
         $mimeType = $matches[1];
         $imageData = substr($musician['photo'], strlen($matches[0]));
-        $photo = array('MimeType' => $mimeType,
-                       'Data' => $imageData);
-      }
-    } else {
-      $musicianId = isset($musician['musicianId']) ? $musician['musicianId'] : $musician['id'];
-      $inlineImage = new InlineImageService($this->configService, $this->entityManager);
-      $photo = $inlineImage->fetch($musicianId);
-    }
-    if (isset($photo['data']) && $photo['data']) {
-      $mimeType = $photo['MimeType'];
-      if (self::VCARD_VERSION == '4.0') {
-        // the OC Sabre version seeming does not auto-escape stuff ...
-        $vcard->add('PHOTO', 'data:'.$mimeType.';base64\,'.$photo['data']);
+        $photo = [
+          'mimeType' => $mimeType,
+          'data' => $imageData,
+        ];
       } else {
-        $type = Util::explode('/', $mimeType);
-        $type = strtoupper(array_pop($type));
-        $imageData = base64_decode($photo['Data']);
-        $vcard->add('PHOTO', $imageData, ['ENCODING' => 'b', 'TYPE' => $type ]);
+        throw new \Exception('Strange photo value');
+      }
+
+      if (!empty($photo['data'])) {
+        $mimeType = $photo['mimeType'];
+        $data = $photo['data'];
+        if ($version == '4.0') {
+          $vcard->add('PHOTO', 'data:'.$mimeType.';base64,'.$data);
+        } else {
+          $type = Util::explode('/', $mimeType);
+          $type = strtoupper(array_pop($type));
+          $data = base64_decode($data);
+          $vcard->add('PHOTO', $data, ['ENCODING' => 'b', 'TYPE' => $type ]);
+        }
       }
     }
 
-    if (self::VCARD_VERSION != '4.0') {
+    if ($version != '4.0') {
       foreach($textProperties as $property) {
         if (isset($vcard->{$property})) {
           $vcard->{$property}['CHARSET'] = 'UTF-8';
