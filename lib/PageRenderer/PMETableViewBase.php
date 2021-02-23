@@ -545,11 +545,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       if (!is_scalar($value)) { // don't trim arrays
         continue;
       }
-      // Convert unicode space to ordinary space
+
+      // Convert unicode space to ordinary space and trim
       $value = Util::normalizeSpaces($value);
 
-      // Then trim away ...
-      $value = trim($value);
+      $fdn = $pme->fdn[$key];
+      if ($pme->col_has_multiple($fdn)) {
+        $value = preg_replace('/\s*,\s*/', ',', $value);
+      }
+
+      if ($pme->skipped($fdn) || $pme->readonly($fdn)) {
+        continue;
+      }
+
       $chgIdx = array_search($key, $changed);
       if ($chgIdx === false && $oldvals[$key] != $value) {
         $changed[] = $key;
@@ -627,8 +635,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // assume that the 'column' component contains the keys.
           $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = [
-            'old' => Util::explode(',', $oldvals[$keyField]),
-            'new' => Util::explode(',', $newvals[$keyField]),
+            'old' => Util::explode(',', Util::removeSpaces($oldvals[$keyField])),
+            'new' => Util::explode(',', Util::removeSpaces($newvals[$keyField])),
           ];
           // handle "disabled" information if present
           $disabledField = $this->joinTableFieldName($joinInfo, 'disabled');

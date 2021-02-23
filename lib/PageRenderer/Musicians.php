@@ -412,6 +412,7 @@ make sure that the musicians are also automatically added to the
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'input'       => 'HRS',
+      'select'      => 'M',
       'sort'     => true,
       'values' => [
         'column' => 'sort_order',
@@ -642,7 +643,7 @@ make sure that the musicians are also automatically added to the
               } catch (\Throwable $t) {
                 // Don't care, we know virtual stuff is not there
                 // $this->logException($t);
-                $this->logInfo("Cannot set key ".$key.' / value '.$value);
+                // $this->logInfo("Cannot set key ".$key.' / value '.$value);
               }
               break;
             }
