@@ -17,6 +17,9 @@
     <address-book-plugins>
       <plugin>OCA\CAFEVDB\AddressBook\AddressBookProvider</plugin>
     </address-book-plugins>
+    <plugins>
+      <plugin>OCA\CAFEVDB\AddressBook\ImageExportPlugin</plugin>
+    </plugins>
   </sabre>
   <dependencies>
     <php min-version="7.4" max-version="7.4" />
