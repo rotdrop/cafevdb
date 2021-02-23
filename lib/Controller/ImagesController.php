@@ -33,7 +33,6 @@ use OCP\IL10N;
 use OCP\ICache;
 
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Common\Util;
@@ -52,9 +51,6 @@ class ImagesController extends Controller {
   /** @var IL10N */
   protected $l;
 
-  /** @var CalDavService */
-  private $calDavService;
-
   /** @var EntityManager */
   protected $entityManager;
 
@@ -71,7 +67,6 @@ class ImagesController extends Controller {
     , ConfigService $configService
     , EntityManager $entityManager
     , IRootFolder $rootFolder
-    , CalDavService $calDavService
     , ICache $fileCache
   ) {
 
@@ -81,7 +76,6 @@ class ImagesController extends Controller {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->rootFolder = $rootFolder;
-    $this->calDavService = $calDavService; // ? why
     $this->fileCache = $fileCache;
     $this->l = $this->l10N();
   }
