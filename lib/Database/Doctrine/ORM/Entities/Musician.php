@@ -25,7 +25,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -541,9 +543,9 @@ class Musician implements \ArrayAccess
   /**
    * Get memberStatus.
    *
-   * @return EnumMemberStatus|null
+   * @return EnumMemberStatus
    */
-  public function getMemberStatus(): Types\EnumMemberStatus
+  public function getMemberStatus():Types\EnumMemberStatus
   {
     return $this->memberStatus;
   }
@@ -555,7 +557,7 @@ class Musician implements \ArrayAccess
    *
    * @return Musician
    */
-  public function setRemarks($remarks = null)
+  public function setRemarks(?string $remarks = null):Musician
   {
     $this->remarks = $remarks;
 
@@ -567,7 +569,7 @@ class Musician implements \ArrayAccess
    *
    * @return string|null
    */
-  public function getRemarks()
+  public function getRemarks():?string
   {
     return $this->remarks;
   }
@@ -575,11 +577,11 @@ class Musician implements \ArrayAccess
   /**
    * Set disabled.
    *
-   * @param bool $disabled
+   * @param bool|null $disabled
    *
    * @return Musician
    */
-  public function setDisabled($disabled)
+  public function setDisabled(?bool $disabled):Musician
   {
     $this->disabled = $disabled;
 
@@ -589,9 +591,9 @@ class Musician implements \ArrayAccess
   /**
    * Get disabled.
    *
-   * @return bool
+   * @return bool|null
    */
-  public function getDisabled()
+  public function getDisabled():?bool
   {
     return $this->disabled;
   }
@@ -599,11 +601,11 @@ class Musician implements \ArrayAccess
   /**
    * Set instruments.
    *
-   * @param Image $instruments|null
+   * @param Collection $instruments
    *
    * @return Musician
    */
-  public function setInstruments($instruments = null)
+  public function setInstruments(Collection $instruments):Musician
   {
     $this->instruments = $instruments;
 
@@ -613,9 +615,9 @@ class Musician implements \ArrayAccess
   /**
    * Get instruments.
    *
-   * @return Image|null
+   * @return Collection
    */
-  public function getInstruments()
+  public function getInstruments():Collection
   {
     return $this->instruments;
   }
@@ -623,11 +625,11 @@ class Musician implements \ArrayAccess
   /**
    * Set photo.
    *
-   * @param Image $photo|null
+   * @param MusicianPhoto|null $photo
    *
    * @return Musician
    */
-  public function setPhoto($photo = null)
+  public function setPhoto(?MusicianPhoto $photo = null):Musician
   {
     $this->photo = $photo;
 
@@ -637,9 +639,9 @@ class Musician implements \ArrayAccess
   /**
    * Get photo.
    *
-   * @return Image|null
+   * @return MusicianPhoto|null
    */
-  public function getPhoto()
+  public function getPhoto():?MusicianPhoto
   {
     return $this->photo;
   }
@@ -647,11 +649,11 @@ class Musician implements \ArrayAccess
   /**
    * Set projectInstruments.
    *
-   * @param Image $projectInstruments|null
+   * @param Collection $projectInstruments
    *
    * @return Musician
    */
-  public function setProjectInstruments($projectInstruments = null)
+  public function setProjectInstruments(Collection $projectInstruments):Musician
   {
     $this->projectInstruments = $projectInstruments;
 
@@ -661,45 +663,45 @@ class Musician implements \ArrayAccess
   /**
    * Get projectInstruments.
    *
-   * @return Image|null
+   * @return Collection
    */
-  public function getProjectInstruments()
+  public function getProjectInstruments():Collection
   {
     return $this->projectInstruments;
   }
 
   /**
-   * Set projectcParticipation.
+   * Set projectParticipation.
    *
-   * @param Image $projectcParticipation|null
+   * @param Collection $projectParticipation
    *
    * @return Musician
    */
-  public function setProjectcParticipation($projectcParticipation = null)
+  public function setProjectParticipation(Collection $projectParticipation):Musician
   {
-    $this->projectcParticipation = $projectcParticipation;
+    $this->projectParticipation = $projectParticipation;
 
     return $this;
   }
 
   /**
-   * Get projectcParticipation.
+   * Get projectParticipation.
    *
-   * @return Image|null
+   * @return Collection
    */
-  public function getProjectcParticipation()
+  public function getProjectParticipation():Collection
   {
-    return $this->projectcParticipation;
+    return $this->projectParticipation;
   }
 
   /**
    * Set projectExtraFieldsData.
    *
-   * @param Image $projectExtraFieldsData|null
+   * @param Collection $projectExtraFieldsData
    *
    * @return Musician
    */
-  public function setProjectExtraFieldsData($projectExtraFieldsData = null)
+  public function setProjectExtraFieldsData($projectExtraFieldsData):Musician
   {
     $this->projectExtraFieldsData = $projectExtraFieldsData;
 
@@ -709,11 +711,107 @@ class Musician implements \ArrayAccess
   /**
    * Get projectExtraFieldsData.
    *
-   * @return Image|null
+   * @return Collection
    */
-  public function getProjectExtraFieldsData()
+  public function getProjectExtraFieldsData():Collection
   {
     return $this->projectExtraFieldsData;
+  }
+
+  /**
+   * Set instrumentInsurances.
+   *
+   * @param Collection $instrumentInsurances
+   *
+   * @return Musician
+   */
+  public function setInstrumentInsurances($instrumentInsurances):Musician
+  {
+    $this->instrumentInsurances = $instrumentInsurances;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentInsurances.
+   *
+   * @return Collection
+   */
+  public function getInstrumentInsurances():Collection
+  {
+    return $this->instrumentInsurances;
+  }
+
+  /**
+   * Set payableInsurances.
+   *
+   * @param Collection $payableInsurances
+   *
+   * @return Musician
+   */
+  public function setPayableInsurances($payableInsurances):Musician
+  {
+    $this->payableInsurances = $payableInsurances;
+
+    return $this;
+  }
+
+  /**
+   * Get payableInsurances.
+   *
+   * @return Collection
+   */
+  public function getPayableInsurances():Collection
+  {
+    return $this->payableInsurances;
+  }
+
+  /**
+   * Set payments.
+   *
+   * @param Collection $payments
+   *
+   * @return Musician
+   */
+  public function setPayments($payments):Musician
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return Collection
+   */
+  public function getPayments():Collection
+  {
+    return $this->payments;
+  }
+
+  /**
+   * Set sepaDebitMandates.
+   *
+   * @param Collection $sepaDebitMandates
+   *
+   * @return Musician
+   */
+  public function setSepaDebitMandates($sepaDebitMandates):Musician
+  {
+    $this->sepaDebitMandates = $sepaDebitMandates;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaDebitMandates.
+   *
+   * @return Collection
+   */
+  public function getSepaDebitMandates():Collection
+  {
+    return $this->sepaDebitMandates;
   }
 
 }
