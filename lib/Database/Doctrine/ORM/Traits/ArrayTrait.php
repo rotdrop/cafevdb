@@ -59,22 +59,26 @@ trait ArrayTrait
   }
 
   public function offsetGet($offset) {
-    if ($this->offsetExists($offset)) {
-      $method = self::methodName('get', $offset);
-      return $this->$method();
-    } else {
-      throw new \Exception("Offset ".self::offsetNormalize($offset)." does not exist, keys ".print_r($this->keys, true));
+    if (!$this->offsetExists($offset)) {
+      throw new \Exception('Offset '.self::offsetNormalize($offset).' does not exist, keys '.print_r($this->keys, true));
     }
+    $method = self::methodName('get', $offset);
+    if (!method_exists($this, $method)) {
+      throw new \Exception('Method '.$method.' does not exist, please implement it.');
+    }
+    return $this->$method();
   }
 
   public function offsetSet($offset, $value):void
   {
-    if ($this->offsetExists($offset)) {
-      $method = self::methodName('set', $offset);
-      $this->$method($value);
-    } else {
-      throw new \Exception("Offset ".self::offsetNormalize($offset)." does not exist, keys ".print_r($this->keys, true));
+    if (!$this->offsetExists($offset)) {
+      throw new \Exception('Offset '.self::offsetNormalize($offset).' does not exist, keys '.print_r($this->keys, true));
     }
+    $method = self::methodName('set', $offset);
+    if (!method_exists($this, $method)) {
+      throw new \Exception('Method '.$method.' does not exist, please implement it.');
+    }
+    $this->$method($value);
   }
 
   public function offsetUnset($offset):void
