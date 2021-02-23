@@ -36,10 +36,18 @@ use Sabre\VObject\Component\VCard;
 
 class MusicianCard implements ICard {
 
+  /** @var string $uri */
+  private $uri;
+
+  /** @var ?int $lastModified */
+  private $lastModified;
+
   /** @var VCard */
   private $vCard;
 
-  public function __construct(VCard $vCard) {
+  public function __construct(string $uri, ?int $lastModified, VCard $vCard) {
+    $this->uri = $uri;
+    $this->lastModified = $lastModified;
     $this->vCard = $vCard;
   }
 
@@ -54,20 +62,7 @@ class MusicianCard implements ICard {
    * @inheritDoc
    */
   public function get() {
-    $data = $this->vCard->serialize();
-    $trace = debug_backtrace();
-    $shift = 2;
-    $caller = $trace[$shift];
-    $file = $caller['file'];
-    $line = $caller['line'];
-    $caller = $trace[$shift+1];
-    $class = $caller['class'];
-    $method = $caller['function'];
-
-    $prefix = $file.':'.$line.': '.$class.'::'.$method.': ';
-
-    // \OCP\Util::writeLog('cafevdb', $prefix.': '.$data, \OCP\Util::INFO);
-    return $data;
+    return $this->vCard->serialize();
   }
 
   /**
@@ -75,6 +70,13 @@ class MusicianCard implements ICard {
    */
   public function getData(): array {
     return $this->vCard->children();
+  }
+
+  /**
+   * Non-interface method, return the underlying vCard
+   */
+  public function getVCard(): VCard {
+    return $this->vCard;
   }
 
   /**
@@ -88,7 +90,7 @@ class MusicianCard implements ICard {
    * @inheritDoc
    */
   public function getETag() {
-    return null;
+    return $this->getLastModified();
   }
 
   /**
@@ -109,7 +111,7 @@ class MusicianCard implements ICard {
    * @inheritDoc
    */
   public function getName() {
-    return $this->vCard->URI;
+    return $this->uri;
   }
 
   /**
@@ -123,6 +125,6 @@ class MusicianCard implements ICard {
    * @inheritDoc
    */
   public function getLastModified() {
-    return null;
+    return $this->lastModified;
   }
 }

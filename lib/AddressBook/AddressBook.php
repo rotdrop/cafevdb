@@ -108,7 +108,7 @@ class AddressBook extends ExternalAddressBook
    * @inheritDoc
    */
   function getLastModified() {
-    return null;
+    return $this->cardBackend->getLastModified();
   }
 
   /**
@@ -122,19 +122,15 @@ class AddressBook extends ExternalAddressBook
    * @inheritDoc
    */
   function getProperties($properties) {
-    $this->logInfo('properties '.print_r($properties, true), [], 2);
+    $lastModified = $this->getLastModified();
     $props = [
-      'principaluri' => $this->principalUri,
+      '{' . Plugin::NS_OWNCLOUD . '}principaluri' => $this->principalUri,
       '{DAV:}displayname' => $this->cardBackend->getDisplayName(),
       '{' . Plugin::NS_OWNCLOUD . '}read-only' => true,
-      '{http://calendarserver.org/ns/}getctag' => \rand(),
+      '{http://calendarserver.org/ns/}getctag' => $lastModified,
+      '{DAV:}getetag' => $lastModified,
     ];
-    $result = [];
-    foreach ($properties as $key) {
-      if (isset($props[$key])) {
-        $result[$key] = $props[$key];
-      }
-    }
-    return $result;
+    $this->logInfo('PROPERTIES '.print_r($props, true), [], 2);
+    return $props;
   }
 }

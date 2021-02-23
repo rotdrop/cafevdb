@@ -72,7 +72,8 @@ class MusicianCardBackend implements ICardBackend
    */
   public function getCard($name): MusicianCard
   {
-    $musician = $this->musiciansRepository->findOneBy([ 'uuid' => $name ]);
+    $uuid = $this->getUuidFromUri($name);
+    $musician = $this->musiciansRepository->findOneBy([ 'uuid' => $uuid ]);
     if (empty($musician)) {
       throw new \Sabre\DAV\Exception\NotFound();
     }
@@ -108,14 +109,35 @@ class MusicianCardBackend implements ICardBackend
     foreach ($musicians as $musician) {
       $vCards[] = $this->entryToCard($musician);
     }
-    $this->logInfo("#CARDS: ".count($vCards));
     return $vCards;
   }
 
-  protected function entryToCard(Entities\Musician $musician): MusicianCard
+  protected function getUriFromUuid($uuid)
   {
-    $vCard = $this->contactsService->export($musician);
-    return new MusicianCard($vCard);
+    return 'musician-'.$uuid.'.vcf';
   }
 
+  protected function getUuidFromUri($uri)
+  {
+    return substr($uri, strlen('musician-'), 36);
+  }
+
+  protected function entryToCard(Entities\Musician $musician, ?int $lastModified = null): MusicianCard
+  {
+    $vCard = $this->contactsService->export($musician);
+    $uuid = $musician['uuid'];
+    $uri = $this->getUriFromUuid($uuid);
+    if ($lastModified === null) {
+      $info = reset($this->musiciansRepository->fetchLastModifiedDate([ 'uuid' => $uuid ]));
+      $lastModified = strtotime($info['lastModified']);
+    }
+    return new MusicianCard($uri, $lastModified, $vCard);
+  }
+
+  public function getLastModified(?string $uri = null)
+  {
+    $criteria = empty($uri) ? [] : [ 'uuid' => $this->getUuidFromUri($uri) ];
+    $info = reset($this->musiciansRepository->fetchLastModifiedDate($criteria));
+    return strtotime($info['lastModified']);
+  }
 }
