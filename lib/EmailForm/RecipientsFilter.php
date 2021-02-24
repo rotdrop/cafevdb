@@ -23,6 +23,14 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
+use OCP\ISession;
+
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
 /**
  * Wrap the email filter form into a class to make things a little
  * less crowded. This is actually not to filter emails, but rather to
@@ -31,6 +39,9 @@ namespace OCA\CAFEVDB\EmailForm;
  */
 class EmailRecipientsFilter
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\SessionTrait;
+
   private const POST_TAG = 'emailRecipients';
   private const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
   private const SESSION_HISTORY_KEY = 'FilterHistory';
@@ -40,8 +51,6 @@ class EmailRecipientsFilter
     'InstrumentsFilter',
     'SelectedRecipients'
   ];
-
-  private $session;
 
   private $projectId;   // Project id or NULL or -1 or ''
   private $projectNem;  // Project name of NULL or ''
@@ -77,42 +86,50 @@ class EmailRecipientsFilter
   private $historyPosition;
   private $historySize;
 
+  /** @var ISession */
+  private $session;
+
+  /** @var RequestParameterService */
+  private $parameterService;
+
+  /** @var PHPMyEdit */
+  protected $pme;
+
   /*
    * constructor
    */
-  public function __construct()
-  {
+  public function __construct(
+    ConfigService $configService
+    , ISession $session
+    , RequestParameterService $parameterService
+    , PHPMyEdit $pme
+  ) {
+    $this->configService = $configService;
+    $this->l = $this->l10n();
+    $this->session = $session;
+    $this->parameterSerivice = $parameterService;
+    $this->pme = $pme;
+
     $this->jsonFlags = JSON_FORCE_OBJECT|JSON_HEX_QUOT|JSON_HEX_APOS;
-    if (Util::debugMode('request')) {
-      echo '<PRE>';
-      print_r($_POST);
-      echo '</PRE>';
-    }
-
-    $this->session = new Session();
-
-    Config::init();
-    $this->opts = Config::$pmeopts;
 
     // Fetch all data submitted by form
-    $this->cgiData = Util::cgiValue(self::POST_TAG, array());
+    $this->cgiData = $this->parameterService->getPrefixParams(self::POST_TAG);
 
     // Quirk: the usual checkbox issue
     $this->cgiData['BasicRecipientsSet']['FromProject'] =
-                                                        isset($this->cgiData['BasicRecipientsSet']['FromProject']);
+      isset($this->cgiData['BasicRecipientsSet']['FromProject']);
     $this->cgiData['BasicRecipientsSet']['ExceptProject'] =
-                                                          isset($this->cgiData['BasicRecipientsSet']['ExceptProject']);
+      isset($this->cgiData['BasicRecipientsSet']['ExceptProject']);
 
-    $this->projectId = Util::cgiValue('ProjectId', -1);
-    $this->projectName   = Util::cgiValue('ProjectName',
-                                          Util::cgiValue('ProjectName', ''));
-    $this->debitNoteId = Util::cgiValue('DebitNoteId', -1);
+    $this->projectId = $this->parameterService->getParam('projectId', -1);
+    $this->projectName = $this->parameterService->getParam('projectName', '');
+
+    $this->debitNoteId = $this->parameterService->getParam('DebitNoteId', -1);
 
     // See wether we were passed specific variables ...
-    $pmepfx          = $this->opts['cgi']['prefix']['sys'];
-    $this->emailKey  = $pmepfx.'mrecs';
-    $this->mtabKey   = $pmepfx.'mtable';
-    $this->EmailRecs = array(); // avoid null
+    $this->emailKey  = $this->pme->cgiSysName('mrecs');
+    $this->mtabKey   = $this->pme->cgiSysName('mtable');
+    $this->EmailRecs = []; // avoid null
 
     $this->frozen = $this->cgiValue('FrozenRecipients', false);
 
@@ -136,16 +153,16 @@ class EmailRecipientsFilter
     $this->submitted = $this->cgiValue('FormStatus', '') === 'submitted';
 
     // "sane" default setttings
-    $this->EmailRecs = Util::cgiValue($this->emailKey, array());
+    $this->EmailRecs = $this->parameterService->getParam($this->emailKey, []);
     $this->reload = false;
     $this->snapshot = false;
 
     if ($this->submitted) {
       $this->loadHistory(); // Fetch the filter-history from the session, if any.
-      $this->EmailRecs = $this->cgiValue($this->emailKey, array());
+      $this->EmailRecs = $this->cgiValue($this->emailKey, []);
       if ($this->cgiValue('ResetInstrumentsFilter', false) !== false) {
         $this->submitted = false; // fall back to defaults for everything
-        $this->cgiData = array();
+        $this->cgiData = [];
         $this->reload = true;
       } else if ($this->cgiValue('UndoInstrumentsFilter', false) !== false) {
         $this->applyHistory(1); // the current state
@@ -166,7 +183,7 @@ class EmailRecipientsFilter
     $dbh = mySQL::connect($this->opts);
 
     $this->remapEmailRecords($dbh);
-    $this->getMemberStatusNames($dbh);
+    $this->getMemberStatusNames();
     $this->initMemberStatusFilter();
     $this->getUserBase();
     $this->getInstrumentsFromDB($dbh);
@@ -187,7 +204,7 @@ class EmailRecipientsFilter
     }
   }
 
-  /**Fetch a CGI-variable out of the form-select name-space */
+  /** Fetch a CGI-variable out of the form-select name-space. */
   private function cgiValue($key, $default = null)
   {
     if (isset($this->cgiData[$key])) {
@@ -201,42 +218,44 @@ class EmailRecipientsFilter
     }
   }
 
-  /**Compose a default history record for the initial state */
+  /** Compose a default history record for the initial state */
   private function setDefaultHistory()
   {
     $this->historyPosition = 0;
     $this->historySize = 1;
 
-    $filter = array(
+    $filter = [
       'BasicRecipientsSet' => $this->defaultUserBase(),
       'MemberStatusFilter' => $this->defaultByStatus(),
-      'InstrumentsFilter' => array(),
+      'InstrumentsFilter' => [],
       'SelectedRecipients' => array_intersect($this->EmailRecs,
-                                              array_keys($this->EMailsDpy)));
+                                              array_keys($this->EMailsDpy))
+    ];
 
     // tweak: sort the selected recipients by key
     sort($filter['SelectedRecipients']);
 
     $md5 = md5(serialize($filter));
     $data = $filter;
-    $this->filterHistory = array(array('md5' => $md5,
-                                       'data' => $data));
+    $this->filterHistory = [ [ 'md5' => $md5, 'data' => $data ], ];
   }
 
   /**Store the history to somewhere, probably the session-data. */
   private function storeHistory()
   {
-    $storageValue = array('size' => $this->historySize,
-                          'position' => $this->historyPosition,
-                          'records' => $this->filterHistory);
+    $storageValue = [
+      'size' => $this->historySize,
+      'position' => $this->historyPosition,
+      'records' => $this->filterHistory,
+    ];
     //throw new \Exception(print_r($storageValue, true));
-    $this->session->storeValue(self::SESSION_HISTORY_KEY, $storageValue);
+    $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $storageValue);
   }
 
   /**Load the history from the session data. */
   private function loadHistory()
   {
-    $loadHistory = $this->session->retrieveValue(self::SESSION_HISTORY_KEY);
+    $loadHistory = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
     if (!$this->validateHistory($loadHistory)) {
       $this->setDefaultHistory();
       return false;
@@ -277,7 +296,7 @@ class EmailRecipientsFilter
 
   /**Validate all history records. */
   private function validateHistoryRecords($history) {
-    foreach($history['records'] as $record) {
+    foreach ($history['records'] as $record) {
       if (!$this->validateHistoryRecord($record)) {
         return false;
       }
@@ -291,9 +310,9 @@ class EmailRecipientsFilter
    */
   private function pushHistory($fastMode = false)
   {
-    $filter = array();
+    $filter = [];
     foreach (self::HISTORY_KEYS as $key) {
-      $filter[$key] = $this->cgiValue($key, array());
+      $filter[$key] = $this->cgiValue($key, []);
     }
 
     if (!$fastMode) {
@@ -322,8 +341,7 @@ class EmailRecipientsFilter
       // seems to be common behaviour as "re-doing" is no longer
       // well defined in this case.
       array_splice($this->filterHistory, 0, $this->historyPosition);
-      array_unshift($this->filterHistory, array('md5' => $md5,
-                                                'data' => $filter));
+      array_unshift($this->filterHistory, [ 'md5' => $md5, 'data' => $filter ]);
       $this->historyPosition = 0;
       $this->historySize = count($this->filterHistory);
       while ($this->historySize > self::MAX_HISTORY_SIZE) {
@@ -345,8 +363,8 @@ class EmailRecipientsFilter
     if ($newPosition >= $this->historySize || $newPosition < 0) {
       if (Util::debugMode('emailform')) {
         throw new \OutOfBoundsException(
-          L::t('Invalid history position %d request, history size is %d',
-               array($newPosition, $this->historySize)));
+          $this->l->t('Invalid history position %d request, history size is %d',
+                      [ $newPosition, $this->historySize ]));
       }
       return;
     }
@@ -369,12 +387,13 @@ class EmailRecipientsFilter
       $debitNoteId = $this->debitNoteId;
       $debitNote = DebitNotes::debitNote($debitNoteId, $dbh);
       if ($debitNote === false) {
-        throw new \RuntimeException(L::t('Unable to fetch debit note for id %d.', array($debitNoteId)));
+        throw new \RuntimeException($this->l->t('Unable to fetch debit note for id %d.',
+                                                $debitNoteId));
       }
       if ($this->projectId > 0 && $debitNote['ProjectId'] !== $this->projectId) {
         throw new \Exception(print_r($debitNote, true).' '.$this->projectId);
-        throw new \InvalidArgumentException(L::t('Debit note does not belong to the given project (%d <-> %d)',
-                                                 array($this->projectId, $debitNote['ProjectId'])));
+        throw new \InvalidArgumentException($this->l->t('Debit note does not belong to the given project (%d <-> %d)',
+                                                        [ $this->projectId, $debitNote['ProjectId'] ]));
       }
       $this->projectId = $debitNote['ProjectId'];
       if (empty($this->projectName)) {
@@ -383,12 +402,14 @@ class EmailRecipientsFilter
 
       $payments = ProjectPayments::debitNotePayments($debitNoteId, $dbh);
       if ($payments === false) {
-        throw new \RuntimeException(L::t('Unable to fetch payments for debit-note id %d.', array($debitNoteId)));
+        throw new \RuntimeException(
+          $this->l->t('Unable to fetch payments for debit-note id %d.', $debitNoteId));
       }
       if (empty($payments)) {
-        throw new \RuntimeException(L::t('No payments for debit-note id %d.', array($debitNoteId)));
+        throw new \RuntimeException(
+          $this->l->t('No payments for debit-note id %d.', [ $debitNoteId ]));
       }
-      $this->EmailRecs = array();
+      $this->EmailRecs = [];
       foreach($payments as $payment) {
         $this->EmailRecs[] = $payment['InstrumentationId'];
       }
@@ -427,17 +448,19 @@ class EmailRecipientsFilter
    */
   private function fetchMusicians($dbh, $table, $id, $projectId)
   {
-    $columnNames = array('Vorname',
-                         'Name',
-                         'Email',
-                         'MobilePhone',
-                         'FixedLinePhone',
-                         'Strasse',
-                         'Postleitzahl',
-                         'Stadt',
-                         'Land',
-                         'Geburtstag',
-                         'MemberStatus');
+    $columnNames = [
+      'Vorname',
+      'Name',
+      'Email',
+      'MobilePhone',
+      'FixedLinePhone',
+      'Strasse',
+      'Postleitzahl',
+      'Stadt',
+      'Land',
+      'Geburtstag',
+      'MemberStatus',
+    ];
     $btk = '`';
     $comma = ',';
     $sep = $btk.$comma.$btk;
@@ -598,7 +621,7 @@ WHERE";
           unset($line['ProjectMandateReference']);
           if ($this->debitNoteId > 0 &&
               $line['MandateReference'] !== $line['DebitNoteMandateReference']) {
-            throw new \RuntimeException(L::t('Inconsistent debit-note mandates: "%s" vs. "%s"',
+            throw new \RuntimeException($this->l->t('Inconsistent debit-note mandates: "%s" vs. "%s"',
                                              array($line['MandateReference'],
                                                    $line['DebitNoteMandateReference'])));
           }
@@ -677,9 +700,9 @@ WHERE";
    */
   private function getMusiciansFromDB($dbh)
   {
-    $this->brokenEMail = array();
-    $this->EMails = array();
-    $this->EMailsDpy = array(); // display records
+    $this->brokenEMail = [];
+    $this->EMails = [];
+    $this->EMailsDpy = []; // display records
 
     if ($this->projectId < 0) {
       self::fetchMusicians($dbh, 'Musiker', 'Id', -1);
@@ -730,10 +753,10 @@ WHERE";
     /* Remove instruments from the filter which are not known by the
      * current list of musicians.
      */
-    $filterInstruments = $this->cgiValue('InstrumentsFilter', array());
+    $filterInstruments = $this->cgiValue('InstrumentsFilter', []);
     array_intersect($filterInstruments, $this->instruments);
 
-    $this->instrumentsFilter = array();
+    $this->instrumentsFilter = [];
     foreach ($filterInstruments as $value) {
       $this->instrumentsFilter[] = $value;
     }
@@ -743,11 +766,11 @@ WHERE";
   {
     if ($this->frozen) {
       if (!$this->memberStatusNames) {
-        $this->memberStatusNames = array();
+        $this->memberStatusNames = [];
       }
       return array_keys($this->memberStatusNames);
     }
-    $byStatusDefault = array('regular');
+    $byStatusDefault = [ 'regular' ];
     if ($this->projectId > 0) {
       $byStatusDefault[] = 'passive';
       $byStatusDefault[] = 'temporary';
@@ -755,12 +778,13 @@ WHERE";
     return $byStatusDefault;
   }
 
-  private function getMemberStatusNames($dbh)
+  private function getMemberStatusNames()
   {
-    $memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $dbh);
-    $this->memberStatusNames = array();
-    foreach ($memberStatus as $tag) {
-      $this->memberStatusNames[$tag] = strval(L::t($tag));
+    $memberStatus = DBTypes\EnumMemberStatus::toArray();
+    foreach ($memberStatus as $key => $tag) {
+      if (!isset($this->memberStatusNames[$tag])) {
+        $this->memberStatusNames[$tag] = $this->l->t('member status '.$tag);
+      }
     }
   }
 
@@ -796,8 +820,10 @@ WHERE";
    */
   private function defaultUserBase()
   {
-    return array('FromProject' => $this->projectId >= 0,
-                 'ExceptProject' => false);
+    return [
+      'FromProject' => $this->projectId >= 0,
+      'ExceptProject' => false,
+    ];
   }
 
   /**Decode the check-boxes which select the set of users we
@@ -820,9 +846,11 @@ WHERE";
    */
   public function formData()
   {
-    return array($this->emailKey => $this->EmailRecs,
-                 'FrozenRecipients' => $this->frozen,
-                 'FormStatus' => 'submitted');
+    return [
+      $this->emailKey => $this->EmailRecs,
+      'FrozenRecipients' => $this->frozen,
+      'FormStatus' => 'submitted',
+    ];
   }
 
   /**Return the current filter history and the filter position as
@@ -830,8 +858,10 @@ WHERE";
    */
   public function filterHistory()
   {
-    return array('historyPosition' => $this->historyPosition,
-                 'historySize' => count($this->filterHistory));
+    return [
+      'historyPosition' => $this->historyPosition,
+      'historySize' => count($this->filterHistory),
+    ];
   }
 
   /**Return the current value of the member status filter or its
@@ -842,11 +872,13 @@ WHERE";
     $memberStatus = $this->cgiValue('MemberStatusFilter',
                                     $this->submitted ? '' : $this->defaultByStatus());
     $memberStatus = array_flip($memberStatus);
-    $result = array();
+    $result = [];
     foreach($this->memberStatusNames as $tag => $name) {
-      $result[] =  array('value' => $tag,
-                         'name' => $name,
-                         'flags' => isset($memberStatus[$tag]) ? Navigation::SELECTED : 0);
+      $result[] =  [
+        'value' => $tag,
+        'name' => $name,
+        'flags' => isset($memberStatus[$tag]) ? Navigation::SELECTED : 0,
+      ];
     }
     return $result;
   }
@@ -855,8 +887,10 @@ WHERE";
    */
   public function basicRecipientsSet()
   {
-    return array('FromProject' => $this->userBase['FromProject'] ? 1 : 0,
-                 'ExceptProject' => $this->userBase['ExceptProject'] ? 1 : 0);
+    return [
+      'FromProject' => $this->userBase['FromProject'] ? 1 : 0,
+      'ExceptProject' => $this->userBase['ExceptProject'] ? 1 : 0,
+      ];
   }
 
   /**Return the values for the instruments filter.
@@ -865,9 +899,9 @@ WHERE";
    */
   public function instrumentsFilter()
   {
-    $filterInstruments = $this->cgiValue('InstrumentsFilter', array('*'));
+    $filterInstruments = $this->cgiValue('InstrumentsFilter', [ '*' ]);
     $filterInstruments = array_flip(array_intersect($filterInstruments, $this->instruments));
-    $result = array();
+    $result = [];
     foreach($this->instruments as $instrument) {
       $name = $instrument;
       if ($instrument == '*') {
@@ -878,10 +912,12 @@ WHERE";
         $group = $this->instrumentGroups[$value];
       }
 
-      $result[] = array('value' => $value,
-                        'name' => $name,
-                        'group' => $group,
-                        'flags' => isset($filterInstruments[$instrument]) ? Navigation::SELECTED : 0);
+      $result[] = [
+        'value' => $value,
+        'name' => $name,
+        'group' => $group,
+        'flags' => isset($filterInstruments[$instrument]) ? Navigation::SELECTED : 0,
+      ];
     }
     return $result;
   }
@@ -890,20 +926,22 @@ WHERE";
   public function emailRecipientsChoices()
   {
     if ($this->submitted) {
-      $selectedRecipients = $this->cgiValue('SelectedRecipients', array());
+      $selectedRecipients = $this->cgiValue('SelectedRecipients', []);
     } else {
       $selectedRecipients = $this->EmailRecs;
     }
     $selectedRecipients = array_flip($selectedRecipients);
 
-    $result = array();
+    $result = [];
     foreach($this->EMailsDpy as $key => $email) {
       if ($this->frozen && array_search($key, $this->EmailRecs) === false) {
         continue;
       }
-      $result[] = array('value' => $key,
-                        'name' => $email,
-                        'flags' => isset($selectedRecipients[$key]) ? Navigation::SELECTED : 0);
+      $result[] = [
+        'value' => $key,
+        'name' => $email,
+        'flags' => isset($selectedRecipients[$key]) ? Navigation::SELECTED : 0,
+      ];
     }
 
     return $result;
@@ -912,7 +950,7 @@ WHERE";
   /**Return a list of musicians without email address, if any. */
   public function missingEmailAddresses()
   {
-    $result = array();
+    $result = [];
     foreach ($this->brokenEMail as $key => $problem) {
       if ($this->frozen && array_search($key, $this->EmailRecs) === false) {
         continue;
@@ -945,13 +983,13 @@ WHERE";
   public function selectedRecipients()
   {
     if ($this->submitted) {
-      $selectedRecipients = $this->cgiValue('SelectedRecipients', array());
+      $selectedRecipients = $this->cgiValue('SelectedRecipients', []);
     } else {
       $selectedRecipients = $this->EmailRecs;
     }
     $selectedRecipients = array_unique($selectedRecipients);
     //$_POST['blah'] = print_r($this->EMails, true);
-    $EMails = array();
+    $EMails = [];
     foreach ($selectedRecipients as $key) {
       if (isset($this->EMails[$key])) {
         $EMails[] = $this->EMails[$key];
