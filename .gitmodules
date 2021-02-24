@@ -35,3 +35,6 @@
 [submodule "3rdparty/gedmo-doctrine-extensions"]
 	path = 3rdparty/gedmo-doctrine-extensions
 	url = git@github.com:rotdrop/DoctrineExtensions.git
+[submodule "3rdparty/doctrine-orm"]
+	path = 3rdparty/doctrine-orm
+	url = git@github.com:rotdrop/orm.git
