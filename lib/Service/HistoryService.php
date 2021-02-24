@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2020
+ * @copyright Claus-Justus Heine 2014-2021
  */
 
 namespace OCA\CAFEVDB\Service;
@@ -25,7 +25,8 @@ class HistoryService
   /** @var IL10N */
   protected $l;
 
-  /**The data-contents. A "cooked" array structure with the
+  /**
+   * The data-contents. A "cooked" array structure with the
    * following components:
    *
    * array('size' => NUMBER_OF_HISTORY_RECORDS,
@@ -36,7 +37,8 @@ class HistoryService
   private $historyPosition;
   private $historySize;
 
-  /**Fetch any existing history from the session or initialize an
+  /**
+   * Fetch any existing history from the session or initialize an
    * empty history if no history record is found.
    */
   public function __construct(
@@ -114,7 +116,8 @@ class HistoryService
     return $this->historySize <= 1 && count($this->historyRecords[0]['data']) == 0;
   }
 
-  /**Store the current state whereever. Currently the PHP session
+  /**
+   * Store the current state whereever. Currently the PHP session
    * data, but this is not guaranteed.
    */
   public function store()
