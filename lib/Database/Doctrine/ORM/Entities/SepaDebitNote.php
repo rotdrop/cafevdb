@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -350,5 +351,29 @@ class SepaDebitNote implements \ArrayAccess
   public function getDueEventUri()
   {
     return $this->dueEventUri;
+  }
+
+  /**
+   * Set projectPayments.
+   *
+   * @param Collection $projectPayments
+   *
+   * @return SepaDebitNote
+   */
+  public function setProjectPayments(Collection $projectPayments):SepaDebitNote
+  {
+    $this->projectPayments = $projectPayments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectPayments.
+   *
+   * @return Collection
+   */
+  public function getProjectPayments():Collection
+  {
+    return $this->projectPayments;
   }
 }
