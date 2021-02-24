@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 
 class MusiciansRepository extends EntityRepository
@@ -164,6 +165,58 @@ class MusiciansRepository extends EntityRepository
     return $qb->getQuery()->getResult();
   }
 
+  /**
+   * Find musicians by their instruments, identified by the instrument
+   * ids.
+   *
+   * @param array<int, int> $instrumentIds
+   *
+   * @param array $oderBy ```[ KEY => ORDERING ]```
+   *
+   * @param int|null $limit Result-set limit
+   *
+   * @param int|null $offset Result-set offset
+   *
+   * @param string $indexBy Result by default are indexed by id.
+   *
+   * @return array<int, Entities\Musician>
+   */
+  public function findByInstruments(
+    array $instrumentIds
+    , array $orderBy = []
+    , ?int $limit = null
+    , ?int $offset = null
+    , string $indexBy = 'id'
+  ): array {
+    $qb = $this->createQueryBuilder('m', 'm.'.$indexBy);
+    $qb->leftJoin('m.instruments', 'i')
+       ->addCriteria(self::createInstrumentsCriteria($instrumentIds, 'i'))
+       ->groupBy('m.id');
+
+    self::addOrderBy($qb, $orderBy, $limit, $offset, 'm');
+
+    $this->log('SQL '.$qb->getQuery()->getSql());
+    $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
+
+    return $qb->getQuery()->getResult();
+  }
+
+  /**
+   * Create search criteria by instrument ids. The search field is
+   * "instrument" and generally is a collection of Entities\Instrument.
+   *
+   * @param array<int, int> $instrumenIds
+   *
+   * @param string|null $alias Optional alias to add to the field.
+   *
+   * @return Criteria
+   */
+  public static function createInstrumentsCriteria(array $instrumentIds, ?string $alias = null): Criteria
+  {
+    $field = ($alias ? $alias . '.' : '').instrument;
+    return Criteria::create()
+      ->andWhere(Criteria::expr()->in($field, $instrumentIds));
+  }
 }
 
 // Local Variables: ***
