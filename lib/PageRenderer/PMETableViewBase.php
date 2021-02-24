@@ -98,7 +98,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected $changeSetSize = -1;
 
-  /** @var array
+  /**
+   * @var array
    * ```
    * [
    *   [
