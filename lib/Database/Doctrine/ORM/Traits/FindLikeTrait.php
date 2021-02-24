@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use Doctrine\ORM;
+
 trait FindLikeTrait
 {
   /**
@@ -37,11 +39,14 @@ trait FindLikeTrait
    *
    * @param int|null $offset
    *
-   * @return \Doctrine\Common\Collections\Collection
+   * @return array
    *
    */
-  public function findLike(array $criteria, array $orderBy = null, ?int $limit = null, ?int $offset = null)
-    : \Doctrine\Common\Collections\Collection
+  public function findLike(
+    array $criteria
+    , array $orderBy = []
+    , ?int $limit = null
+    , ?int $offset = null): array
   {
     $qb = $this->createQueryBuilder('table');
     $andX = $qb->expr()->andX();
@@ -57,8 +62,36 @@ trait FindLikeTrait
       $qb->setParameter($key, $value);
     }
     $qb->where($andX);
+
+    self::addOrderBy($qb, $orderBy, $limit, $offset, 'table');
+
+    return $qb->getQuery()->execute();
+  }
+
+  /**
+   * Adds an order-by phrase and limits to the given query-builder.
+   *
+   * @parm ORM\QueryBuilder $qb
+   *
+   * @param array $orderBy Order-by criteria
+   *
+   * @param int|null $limit
+   *
+   * @param int|null $offset
+   *
+   * @param string|null $alias Table alias to prepend to the
+   * field-names in $orderBy. The alias is not added if the field
+   * names already contain a field-separator.
+   *
+   * @return ORM\QueryBuilder
+   */
+  protected static function addOrderBy(ORM\QueryBuilder $qb, array $orderBy = [], ?int $limit = null, ?int $offset = null, ?string $alias = null): ORM\QueryBuilder
+  {
     foreach ($orderBy as $key => $dir) {
-      $qb->addOrderBy('table'.'.'.$key, $dir);
+      if (strpos($key, '.') === false && !empty($alias)) {
+        $key = $alias . '.' . $key;
+      }
+      $qb->addOrderBy($key, $dir);
     }
     if (!empty($limit)) {
       $qb->setMaxResults($limit);
@@ -66,7 +99,7 @@ trait FindLikeTrait
     if (!empty($offset)) {
       $qb->setFirstResult($offset);
     }
-    return $qb->getQuery()->execute();
+    return $qb;
   }
 }
 
