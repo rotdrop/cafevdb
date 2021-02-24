@@ -62,7 +62,7 @@ class EmailRecipientsFilter
   private $userBase;    // Select from either project members and/or
   // all musicians w/o project-members
   private $memberFilter;// passive, regular, soloist, conductor, temporary
-  private $EmailRecs;   // Copy of email records from CGI env
+  private $emailRecs;   // Copy of email records from CGI env
   private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
   /** @var Entities\SepaDebitNote */
@@ -145,7 +145,7 @@ class EmailRecipientsFilter
     // See wether we were passed specific variables ...
     $this->emailKey  = $this->pme->cgiSysName('mrecs');
     $this->mtabKey   = $this->pme->cgiSysName('mtable');
-    $this->EmailRecs = []; // avoid null
+    $this->emailRecs = []; // avoid null
 
     $this->frozen = $this->cgiValue('FrozenRecipients', false);
 
@@ -169,13 +169,13 @@ class EmailRecipientsFilter
     $this->submitted = $this->cgiValue('FormStatus', '') === 'submitted';
 
     // "sane" default setttings
-    $this->EmailRecs = $this->parameterService->getParam($this->emailKey, []);
+    $this->emailRecs = $this->parameterService->getParam($this->emailKey, []);
     $this->reload = false;
     $this->snapshot = false;
 
     if ($this->submitted) {
       $this->loadHistory(); // Fetch the filter-history from the session, if any.
-      $this->EmailRecs = $this->cgiValue($this->emailKey, []);
+      $this->emailRecs = $this->cgiValue($this->emailKey, []);
       if ($this->cgiValue('ResetInstrumentsFilter', false) !== false) {
         $this->submitted = false; // fall back to defaults for everything
         $this->cgiData = [];
@@ -196,7 +196,7 @@ class EmailRecipientsFilter
       }
     }
 
-    $this->remapEmailRecords($dbh);
+    $this->remapEmailRecords();
     $this->getMemberStatusNames();
     $this->initMemberStatusFilter();
     $this->getUserBase();
@@ -240,7 +240,7 @@ class EmailRecipientsFilter
       'BasicRecipientsSet' => $this->defaultUserBase(),
       'MemberStatusFilter' => $this->defaultByStatus(),
       'InstrumentsFilter' => [],
-      'SelectedRecipients' => array_intersect($this->EmailRecs,
+      'SelectedRecipients' => array_intersect($this->emailRecs,
                                               array_keys($this->EMailsDpy))
     ];
 
@@ -394,37 +394,30 @@ class EmailRecipientsFilter
    * This function is called at the very start. For special purpose
    * emails this function forms the list of recipients.
    */
-  private function remapEmailRecords($dbh)
+  private function remapEmailRecords()
   {
     if ($this->debitNoteId > 0) {
-      $debitNoteId = $this->debitNoteId;
-      $debitNote = DebitNotes::debitNote($debitNoteId, $dbh);
-      if ($debitNote === false) {
-        throw new \RuntimeException($this->l->t('Unable to fetch debit note for id %d.',
-                                                $debitNoteId));
-      }
-      if ($this->projectId > 0 && $debitNote['ProjectId'] !== $this->projectId) {
-        throw new \Exception(print_r($debitNote, true).' '.$this->projectId);
+      $debitNote = $this->getDatabaseRepository(Entities\SepaDebitNote::class)
+                        ->find($this->debitNoteId);
+      if ($this->projectId > 0 && $debitNote['project']['id'] !== $this->projectId) {
         throw new \InvalidArgumentException($this->l->t('Debit note does not belong to the given project (%d <-> %d)',
-                                                        [ $this->projectId, $debitNote['ProjectId'] ]));
+                                                        [ $this->projectId, $debitNote['project']['id'] ]));
       }
-      $this->projectId = $debitNote['ProjectId'];
+      if (empty($this->project)) {
+        $this->project = $debitNote['project'];
+      }
       if (empty($this->projectName)) {
-        $this->projectName = Projects::fetchName($this->projectId, $dbh);
+        $this->projectName = $this->project['name'];
       }
 
-      $payments = ProjectPayments::debitNotePayments($debitNoteId, $dbh);
-      if ($payments === false) {
-        throw new \RuntimeException(
-          $this->l->t('Unable to fetch payments for debit-note id %d.', $debitNoteId));
-      }
+      $payments = $this->debitNote->getProjectPayments();
       if (empty($payments)) {
         throw new \RuntimeException(
           $this->l->t('No payments for debit-note id %d.', [ $debitNoteId ]));
       }
-      $this->EmailRecs = [];
+      $this->emailRecs = [];
       foreach($payments as $payment) {
-        $this->EmailRecs[] = $payment['InstrumentationId'];
+        $this->emailRecs[] = $payment->getMusician()->getId();
       }
 
       $this->frozen = true; // restrict to initial set of recipients
@@ -574,7 +567,7 @@ WHERE";
 
     if ($this->frozen && $projectId > 0) {
       $query .= "
-  AND MainTable.Id IN (".implode(',', $this->EmailRecs).") ";
+  AND MainTable.Id IN (".implode(',', $this->emailRecs).") ";
     }
 
     /* Don't bother any conductor etc. with mass-email. */
@@ -866,7 +859,7 @@ WHERE";
   public function formData()
   {
     return [
-      $this->emailKey => $this->EmailRecs,
+      $this->emailKey => $this->emailRecs,
       'FrozenRecipients' => $this->frozen,
       'FormStatus' => 'submitted',
     ];
@@ -947,13 +940,13 @@ WHERE";
     if ($this->submitted) {
       $selectedRecipients = $this->cgiValue('SelectedRecipients', []);
     } else {
-      $selectedRecipients = $this->EmailRecs;
+      $selectedRecipients = $this->emailRecs;
     }
     $selectedRecipients = array_flip($selectedRecipients);
 
     $result = [];
     foreach($this->EMailsDpy as $key => $email) {
-      if ($this->frozen && array_search($key, $this->EmailRecs) === false) {
+      if ($this->frozen && array_search($key, $this->emailRecs) === false) {
         continue;
       }
       $result[] = [
@@ -971,7 +964,7 @@ WHERE";
   {
     $result = [];
     foreach ($this->brokenEMail as $key => $problem) {
-      if ($this->frozen && array_search($key, $this->EmailRecs) === false) {
+      if ($this->frozen && array_search($key, $this->emailRecs) === false) {
         continue;
       }
       $result[$key] = $problem;
@@ -1004,7 +997,7 @@ WHERE";
     if ($this->submitted) {
       $selectedRecipients = $this->cgiValue('SelectedRecipients', []);
     } else {
-      $selectedRecipients = $this->EmailRecs;
+      $selectedRecipients = $this->emailRecs;
     }
     $selectedRecipients = array_unique($selectedRecipients);
     //$_POST['blah'] = print_r($this->EMails, true);
