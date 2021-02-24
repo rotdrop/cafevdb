@@ -390,7 +390,8 @@ class EmailRecipientsFilter
     }
   }
 
-  /**This function is called at the very start. For special purpose
+  /**
+   * This function is called at the very start. For special purpose
    * emails this function forms the list of recipients.
    */
   private function remapEmailRecords($dbh)
