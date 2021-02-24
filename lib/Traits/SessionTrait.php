@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,7 +30,8 @@ trait SessionTrait {
   /** @var \OCP\ISession */
   private $session;
 
-  /**Store something in the session-data. It is completely left open
+  /**
+   * Store something in the session-data. It is completely left open
    * how this is done.
    *
    * sessionStoreValue() and sessionRetrieveValue() should be the only
@@ -41,7 +42,8 @@ trait SessionTrait {
     $this->session->set($key, $value);
   }
 
-  /**Fetch something from the session-data. It is completely left open
+  /**
+   * Fetch something from the session-data. It is completely left open
    * how this is done.
    *
    * @param $key The key tagging the desired data.
