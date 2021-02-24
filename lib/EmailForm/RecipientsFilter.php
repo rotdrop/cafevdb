@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * Wrap the email filter form into a class to make things a little
@@ -41,6 +42,7 @@ class EmailRecipientsFilter
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\SessionTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   private const POST_TAG = 'emailRecipients';
   private const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
@@ -52,8 +54,10 @@ class EmailRecipientsFilter
     'SelectedRecipients'
   ];
 
+  /** @var null|Entities\Project */
+  private $project;
   private $projectId;   // Project id or NULL or -1 or ''
-  private $projectNem;  // Project name of NULL or ''
+  private $projectName; // Project name of NULL or ''
   private $instrumentsFilter; // Current instrument filter
   private $userBase;    // Select from either project members and/or
   // all musicians w/o project-members
@@ -61,6 +65,8 @@ class EmailRecipientsFilter
   private $EmailRecs;   // Copy of email records from CGI env
   private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
+  /** @var Entities\SepaDebitNote */
+  private $debitNote;
   private $debitNoteId;
 
   private $instruments; // List of instruments for filtering
@@ -102,12 +108,14 @@ class EmailRecipientsFilter
     ConfigService $configService
     , ISession $session
     , RequestParameterService $parameterService
+    , EntityManager $entityManager
     , PHPMyEdit $pme
   ) {
     $this->configService = $configService;
     $this->l = $this->l10n();
     $this->session = $session;
-    $this->parameterSerivice = $parameterService;
+    $this->parameterService = $parameterService;
+    $this->entityManager = $entityManager;
     $this->pme = $pme;
 
     $this->jsonFlags = JSON_FORCE_OBJECT|JSON_HEX_QUOT|JSON_HEX_APOS;
@@ -123,8 +131,16 @@ class EmailRecipientsFilter
 
     $this->projectId = $this->parameterService->getParam('projectId', -1);
     $this->projectName = $this->parameterService->getParam('projectName', '');
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)
+                            ->find($this->projectId);
+    }
 
     $this->debitNoteId = $this->parameterService->getParam('DebitNoteId', -1);
+    if ($this->debitNoteId > 0) {
+      $this->debitNote = $this->getDatabaseRepository(Entities\SepaDebitNote::class)
+                              ->find($this->debitNoteId);
+    }
 
     // See wether we were passed specific variables ...
     $this->emailKey  = $this->pme->cgiSysName('mrecs');
@@ -180,17 +196,13 @@ class EmailRecipientsFilter
       }
     }
 
-    $dbh = mySQL::connect($this->opts);
-
     $this->remapEmailRecords($dbh);
     $this->getMemberStatusNames();
     $this->initMemberStatusFilter();
     $this->getUserBase();
-    $this->getInstrumentsFromDB($dbh);
+    $this->getInstrumentsFromDB();
     $this->fetchInstrumentsFilter();
     $this->getMusiciansFromDB($dbh);
-
-    mySQL::close($dbh);
 
     if (!$this->submitted) {
       // Do this at end in order to have any tweaks around
@@ -420,7 +432,8 @@ class EmailRecipientsFilter
     }
   }
 
-  /**Fetch musicians from either the "Musiker" table or a project
+  /**
+   * Fetch musicians from either the "Musicians" table or a project
    * view. Depending on the table in use, $restrict is either
    * 'Instrumente' or 'Instrument' (normally). Also, fetch all data
    * needed to do any per-recipient substitution later.
@@ -446,7 +459,7 @@ class EmailRecipientsFilter
    * - status (MemberStatus)
    * - dbdata (data as returned from the DB for variable substitution)
    */
-  private function fetchMusicians($dbh, $table, $id, $projectId)
+  private function fetchMusicians($table, $id, $projectId)
   {
     $columnNames = [
       'Vorname',
@@ -461,23 +474,22 @@ class EmailRecipientsFilter
       'Geburtstag',
       'MemberStatus',
     ];
-    $btk = '`';
     $comma = ',';
-    $sep = $btk.$comma.$btk;
+    $sep = $comma;
     $dot = '.';
-    $origId = $btk.'MainTable'.$btk.$dot.$btk.'Id'.$btk.' AS '.$btk.'OrigId'.$btk;
-    $realId = $btk.'MainTable'.$btk.$dot.$btk.$id.$btk.' AS '.$btk.'musicianId'.$btk;
+    $origId = 'MainTable'.$dot.'Id'.' AS '.'OrigId';
+    $realId = 'MainTable'.$dot.$id.' AS '.'musicianId';
     $fields =
             $origId.$comma.
             $realId.$comma.
-            $btk.implode($sep, $columnNames).$btk;
+            implode($sep, $columnNames);
 
     $table .= ' MainTable';
 
     $instrument = $projectId > 0 ? 'ProjectInstrument' : 'Instruments';
     $instrumentFilter = [];
     foreach ($this->instrumentsFilter as $value) {
-      $instrumentFilter[] = $btk.$instrument.$btk." LIKE '%".$value."%'";
+      $instrumentFilter[] = $instrument." LIKE '%".$value."%'";
     }
     $instrumentFilter = implode("\n  OR\n", $instrumentFilter);
     $where = '1 ';
@@ -704,7 +716,7 @@ WHERE";
     $this->EMails = [];
     $this->EMailsDpy = []; // display records
 
-    if ($this->projectId < 0) {
+    if ($this->projectId <= 0) {
       self::fetchMusicians($dbh, 'Musiker', 'Id', -1);
     } else {
       // Possibly add musicians from the project
@@ -734,12 +746,18 @@ WHERE";
    *
    * Also: construct the filter by instrument.
    */
-  private function getInstrumentsFromDb($dbh)
+  private function getInstrumentsFromDb()
   {
     // Get the current list of instruments for the filter
-    $instrumentInfo = Instruments::fetchInfo($dbh);
-    if ($this->projectId >= 0 && !$this->userBase['ExceptProject']) {
-      $this->instruments = Instruments::fetchProjectMusiciansInstruments($this->projectId, $dbh);
+    $instrumentInfo =
+      $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
+    if ($this->projectId > 0 && !$this->userBase['ExceptProject']) {
+      $this->instruments = [];
+      // @todo Perhaps write a special repository-method
+      foreach ($this->project['participantInstruments'] as $projectInstrument)  {
+        $instrument = $projectInstrument['instrument'];
+        $this->instruments[$instrument['id']] = $instrument['name'];
+      }
     } else {
       $this->instruments = $instrumentInfo['byId'];
     }
