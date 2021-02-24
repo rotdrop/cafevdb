@@ -236,7 +236,7 @@ class EntityManager extends EntityManagerDecorator
   private function getEntityManager($params = null)
   {
     list($config, $eventManager) = $this->createSimpleConfiguration();
-    list($config, $eventManager) = $this->createKnpConfiguration($config, $eventManager);
+    //list($config, $eventManager) = $this->createKnpConfiguration($config, $eventManager);
     list($config, $eventManager) = $this->createGedmoConfiguration($config, $eventManager);
 
     // mysql set names UTF-8 if required
