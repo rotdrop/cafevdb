@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB\Traits;
 
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections;
 use Doctrine\ORM\EntityRepository;
 use OCA\CAFEVDB\Database\EntityManager;
 
@@ -235,18 +235,18 @@ trait EntityManagerTrait {
    * Select all elements from a selectable that match the expression and
    * return a new collection containing these elements.
    *
-   * @param \Doctrine\Common\Collections\Criteria $criteria
+   * @param Collections\Criteria $criteria
    *
    * @param string|null $entityClassName
    *
-   * @return \Doctrine\Common\Collections\Collection
+   * @return Collections\Collection
    */
-  protected function matching(Criteria $criteria, $entityClassName = null)
+  protected function matching(Collections\Criteria $criteria, ?string $entityClassName = null)
   {
     return $this->getDatabaseRepository($entityClassName)->matching($criteria);
   }
 
-  protected static function criteria() {
+  protected static function criteria(): Collections\Criteria {
     return new Criteria();
   }
 
@@ -254,7 +254,7 @@ trait EntityManagerTrait {
     return self::criteriaExpr();
   }
 
-  protected static function criteriaExpr() {
+  protected static function criteriaExpr(): Collections\ExpressionBuilder {
     return Criteria::expr();
   }
 
