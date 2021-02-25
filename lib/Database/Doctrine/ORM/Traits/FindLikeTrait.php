@@ -27,7 +27,17 @@ use \Doctrine\Common\Collections;
 
 trait FindLikeTrait
 {
-  // use LogTrait;
+  use LogTrait;
+  private static $modifiers = [
+    '!' => 'not',
+  ];
+  private static $comparisons = [
+    '<=' => 'lte',
+    '>=' => 'gte',
+    '=' => 'eq',
+    '<' => 'lt',
+    '>' => 'gt',
+  ];
 
   /**
    * Find entities by given wild-card criteria. This is like findBy()
@@ -132,17 +142,50 @@ trait FindLikeTrait
         unset($criteria[$key]);
       }
     }
-    // find "nots" for convenience
-    $nots = [];
+    // find modifiers (only [ '!' => 'not' ] ATM)
+    $modifiers = [];
+    $comparators = [];
     foreach ($criteria as $key => $value) {
-      $notPos = strpos($key, '!');
-      if ($notPos === 0) {
-        unset($criteria[$key]);
-        $key = substr($key, 1);
-        $nots[$key] = true;
-        $criteria[$key] = $value;
+      if (!preg_match('/^[!=<>]+/', $key, $matches)) {
+        continue;
+      }
+      $operators = $matches[0];
+      unset($criteria[$key]);
+      $key = substr($key, strlen($operators));
+      $criteria[$key] = $value;
+      while (!empty($operators)) {
+        foreach (self::$modifiers as $abbr => $modifier) {
+          $pos = strpos($operators, $abbr);
+          if ($pos === 0) {
+            $operators = substr($operators, strlen($abbr));
+            $modifiers[$key][] = $modifier;
+          }
+          if (empty($operators)) {
+            break 2;
+          }
+        }
+        foreach (self::$comparisons as $abbr => $comparator) {
+          $pos = strpos($operators, $abbr);
+          if ($pos === 0) {
+            if (!empty($comparators[$key])) {
+              throw new \Exception('Comparison for key "'.$key.'" already set to "'.$comparators[$key].'".');
+            }
+            if ($abbr == '=' && $value === null) {
+              throw new \Exception('Comparison with null is undefined, only equality is allowed.');
+            }
+            if (is_array($value)) {
+              throw new \Exception('Array-valued comparisons are not allowed.');
+            }
+            $operators = substr($operators, strlen($abbr));
+            $comparators[$key] = $comparator;
+          }
+          if (empty($operators)) {
+            break 2;
+          }
+        }
       }
     }
+
     // walk through criteria and find associations ASSOCIATION.FIELD
     $joinEntities = [];
     foreach ($criteria as $key => $value) {
@@ -170,7 +213,7 @@ trait FindLikeTrait
 
     // $this->log(print_r($joinEntities, true).' / '.print_r($indexBy, true));
 
-    if (empty($joinEntities) && empty($indexBy)) {
+    if (empty($joinEntities) && empty($indexBy) && empty($modifiers)) {
       // vanilla
       return parent::findBy($criteria, $orderBy, $limit, $offset);
     }
@@ -190,6 +233,7 @@ trait FindLikeTrait
         $field = $tableAlias.'.'.$key;
       }
       $param = str_replace('.', '_', $field);
+      $comparator = $comparators[$key]?:'eq';
       if ($value === null) {
         $expr = $qb->expr()->isNull($field);
       } else if (is_array($value)) {
@@ -199,13 +243,13 @@ trait FindLikeTrait
         if (strpos($value, '%') !== false) {
           $expr = $qb->expr()->like($field, ':'.$param);
         } else {
-          $expr = $qb->expr()->eq($field, ':'.$param);
+          $expr = $qb->expr()->$comparator($field, ':'.$param);
         }
       } else {
-        $expr = $qb->expr()->eq($field, ':'.$param);
+        $expr = $qb->expr()->$comparator($field, ':'.$param);
       }
-      if (!empty($nots[$key])) {
-        $expr = $qb->expr()->not($expr);
+      foreach ($modifiers[$key] as $modifier) {
+        $expr = $qb->expr()->$modifier($expr);
       }
       $andX->add($expr);
     }
@@ -230,8 +274,8 @@ trait FindLikeTrait
       $qb->addCriteria($criteria);
     }
 
-    // $this->log('SQL '.$qb->getQuery()->getSql());
-    // $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
+    $this->log('SQL '.$qb->getQuery()->getSql());
+    $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
 
     return $qb->getQuery()->getResult();
   }
