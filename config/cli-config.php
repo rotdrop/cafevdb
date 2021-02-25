@@ -196,19 +196,16 @@ $entityManager = \OC::$server->query(EntityManager::class);
 // $musicians = $entityManager->getRepository(Entities\Musician::class)
 //                            ->findBy(
 //                              // [ 'id' => [ 1, 2 ] ],
-//                              // [ 'instruments.instrument' => [ 3, 5, 7 ] ],
+                             // [ '>instruments.instrument' => [ 3, 5, 7 ] ],
+//                  [ '!>instruments.instrument' => 3 ],
 //                              // [ '!instruments.instrument' => null ],
-//                              [ '!instruments.instrument' => null, $criteria ],
+//                             [ '!instruments.instrument' => null, $criteria ],
 //                              // [ 'instruments.ranking' => '*' ],
 //                              // [ 'instruments.instrument' => '*' ],
 //                              // [ 'id' => '2' ],
-//                              [ 'id' => 'indEX' ],
+//                               [ 'id' => 'indEX' ],
 //                            );
 
-// $criteria = new Criteria();
-// $criteria->where(Criteria::expr()->neq('instruments.instrument', 0));
-// $musicians = $entityManager->getRepository(Entities\Musician::class)
-//                            ->matching($criteria);
 
 // $blah = [];
 // foreach ($musicians as $musician) {
