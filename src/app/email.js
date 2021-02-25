@@ -1356,7 +1356,7 @@ const emailFormPopup = function(post, modal, single, afterInit) {
     afterInit = function() {};
   }
   $.post(generateUrl('communication/email/outgoing/form'), post)
-    .fail(xhr, status, errorThrown) {
+    .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
         self.active = false;
         afterInit(false);

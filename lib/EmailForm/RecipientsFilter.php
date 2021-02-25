@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 /**
  * Wrap the email filter form into a class to make things a little
@@ -41,7 +42,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  * select specific groups of musicians (depending on instrument and
  * project).
  */
-class EmailRecipientsFilter
+class RecipientsFilter
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\SessionTrait;
@@ -385,7 +386,7 @@ class EmailRecipientsFilter
 
     // Check for valid position.
     if ($newPosition >= $this->historySize || $newPosition < 0) {
-      if (Util::debugMode('emailform')) {
+      if ($this->shouldDebug(ConfigService::DEBUG_EMAILFORM)) {
         throw new \OutOfBoundsException(
           $this->l->t('Invalid history position %d request, history size is %d',
                       [ $newPosition, $this->historySize ]));
@@ -452,12 +453,14 @@ class EmailRecipientsFilter
   {
     // add the instruments filter
     if (!empty($this->instrumentsFilter)) {
-      $criteria[] = [ 'instruments.instrument' => $this->instrumentsFilter ];
+      $criteria['instruments.instrument'] = $this->instrumentsFilter;
     }
     if ($this->frozen && $projectId > 0) {
-      $criteria[] = [ 'id' => $this->emailRecs ];
+      $criteria['id'] = $this->emailRecs;
     }
-    $criteria[] = [ '!memberStatus' => $this->memberStatusBlackList() ];
+    $criteria['!memberStatus'] = $this->memberStatusBlackList();
+
+    $this->logInfo('CRITERIA '.print_r($criteria, true));
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
@@ -510,7 +513,7 @@ class EmailRecipientsFilter
     // do this later when constructing the message
     foreach($this->eMails as $key => $record) {
       $dbdata = $record['dbdata'];
-      setlocale(LC_MONETARY, Util::getLocale());
+      setlocale(LC_MONETARY, $this->getLocale());
       foreach($moneyKeys as $moneyKey) {
         $fee = money_format('%n', floatval($dbdata[$moneyKey]));
         $dbdata[$moneyKey] = $fee;
@@ -681,7 +684,7 @@ class EmailRecipientsFilter
       $result[] =  [
         'value' => $tag,
         'name' => $name,
-        'flags' => isset($memberStatus[$tag]) ? Navigation::SELECTED : 0,
+        'flags' => isset($memberStatus[$tag]) ? PageNavigation::SELECTED : 0,
       ];
     }
     return $result;
@@ -717,7 +720,7 @@ class EmailRecipientsFilter
         'value' => $value,
         'name' => $instrumentName,
         'group' => $group,
-        'flags' => isset($filterInstruments[$instrumentId]) ? Navigation::SELECTED : 0,
+        'flags' => isset($filterInstruments[$instrumentId]) ? PageNavigation::SELECTED : 0,
       ];
     }
     return $result;
@@ -741,7 +744,7 @@ class EmailRecipientsFilter
       $result[] = [
         'value' => $key,
         'name' => $email,
-        'flags' => isset($selectedRecipients[$key]) ? Navigation::SELECTED : 0,
+        'flags' => isset($selectedRecipients[$key]) ? PageNavigation::SELECTED : 0,
       ];
     }
 

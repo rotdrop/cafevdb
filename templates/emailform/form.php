@@ -45,7 +45,7 @@ namespace OCA\CAFEVDB;
     </fieldset>
     <div id="emailformrecipients" class="resize-target"><?php echo $this->inc('part.emailform.recipients'); ?></div>
     <div id="emailformcomposer" class="resize-target"><?php echo $this->inc('part.emailform.composer'); ?></div>
-    <div id="emailformdebug" class="resize-target"><pre><?php print_r($_POST); print_r($_); ?></pre></div>
+    <div id="emailformdebug" class="resize-target"><pre><?php print_r($_POST); ?></pre></div>
   </form>
 
   <!-- Download support via iframe -->

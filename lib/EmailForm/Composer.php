@@ -33,7 +33,7 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
  * careful to have useful error reporting, and avoid sending garbled
  * messages or duplicates.
  */
-class EmailComposer
+class Composer
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
@@ -156,7 +156,7 @@ DebitNotePurpose
     , RecipientsFilter $recipientsFilter
   )
   {
-    $this->configSerivce = $configService;
+    $this->configService = $configService;
     $this->parameterService = $parameterService;
     $this->eventsService = $eventsService;
     $this->recipientsFilter = $recipientsFilter;
@@ -1623,6 +1623,8 @@ DebitNotePurpose
    */
   private function fetchTemplate($templateName)
   {
+    return '';
+
     $handle = $this->dataBaseConnect();
 
     $query   = "SELECT * FROM `EmailTemplates` WHERE `Tag` LIKE '".$templateName."'";
@@ -1645,6 +1647,9 @@ DebitNotePurpose
    */
   private function fetchTemplateNames()
   {
+    return [];
+
+
     $handle = $this->dataBaseConnect();
 
     $query  = "SELECT `Tag` FROM `EmailTemplates` WHERE 1";
@@ -1665,6 +1670,8 @@ DebitNotePurpose
    */
   private function fetchDraftsList()
   {
+    return [];
+
     $handle = $this->dataBaseConnect();
 
     $query = "SELECT Id, Subject, Created, Updated FROM EmailDrafts WHERE 1";

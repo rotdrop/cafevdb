@@ -31,6 +31,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\EmailForm\RecipientsFilter;
 use OCA\CAFEVDB\EmailForm\Composer;
@@ -47,6 +48,9 @@ class EmailFormController extends Controller {
   /** @var \OCA\CAFEVDB\Service\ProjectService */
   private $projectService;
 
+  /** @var OCA\CAFEVDB\PageRenderer\Util\Navigation */
+  private $pageNavigation;
+
   /** @var PHPMyEdit */
   protected $pme;
 
@@ -54,12 +58,14 @@ class EmailFormController extends Controller {
     $appName
     , IRequest $request
     , RequestParameterService $parameterService
+    , PageNavigation $pageNavigation
     , ConfigService $configService
     , ProjectService $projectService
     , PHPMyEdit $pme
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
+    $this->pageNavigation = $pageNavigation;
     $this->configService = $configService;
     $this->projectService = $projectService;
     $this->pme = $pme;
@@ -79,6 +85,7 @@ class EmailFormController extends Controller {
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
       'requesttoken' => \OCP\Util::callRegister(), // @todo: check
       'csrfToken' => \OCP\Util::callRegister(), // @todo: check
+      'pageNavigation' => $this->pageNavigation,
       'projectName' => $projectName,
       'projectId' => $projectId,
       'debitNoteId' => $debitNoteId,
