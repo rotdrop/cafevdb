@@ -163,13 +163,14 @@ class EmailRecipientsFilter
     $this->execute();
   }
 
-  /**Store the history records to the session data. */
+  /** Store the history records to the session data. */
   public function __destruct()
   {
     $this->storeHistory();
   }
 
-  /**Parse the CGI stuff and compute the list of selected musicians,
+  /**
+   * Parse the CGI stuff and compute the list of selected musicians,
    * either for the initial form setup as during the interaction
    * with the user.
    */

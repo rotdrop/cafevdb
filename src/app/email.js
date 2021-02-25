@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,6 +30,7 @@ import * as Projects from './projects.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as FileUpload from './file-upload.js';
 import * as Legacy from '../legacy.js';
+import generateUrl from './generate-url.js';
 import print_r from './print-r.js';
 
 const Email = globalState.Email = {
@@ -1354,10 +1355,14 @@ const emailFormPopup = function(post, modal, single, afterInit) {
   if (typeof afterInit !== 'function') {
     afterInit = function() {};
   }
-  $.post(
-    OC.filePath(appName, 'ajax/email', 'emailform.php'),
-    post,
-    function(data) {
+  $.post(generateUrl('communication/email/outgoing/form'), post)
+    .fail(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, function() {
+        self.active = false;
+        afterInit(false);
+      });
+    })
+    .done(function(data) {
       const containerId = 'emailformdialog';
 
       if (!Ajax.validateResponse(
@@ -1371,7 +1376,7 @@ const emailFormPopup = function(post, modal, single, afterInit) {
       afterInit(true);
 
       const dialogHolder = $('<div id="' + containerId + '"></div>');
-      dialogHolder.html(data.data.contents);
+      dialogHolder.html(data.contents);
       $('body').append(dialogHolder);
 
       const emailForm = $('form#cafevdb-email-form');
@@ -1379,8 +1384,8 @@ const emailFormPopup = function(post, modal, single, afterInit) {
       const composerPanel = dialogHolder.find('div#emailformcomposer');
 
       let dlgTitle = '';
-      if (data.data.projectId >= 0) {
-        dlgTitle = t(appName, 'Em@il Form for {ProjectName}', { ProjectName: data.data.projectName });
+      if (data.projectId >= 0) {
+        dlgTitle = t(appName, 'Em@il Form for {ProjectName}', { ProjectName: data.projectName });
       } else {
         dlgTitle = t(appName, 'Em@il Form');
       }
@@ -1390,7 +1395,7 @@ const emailFormPopup = function(post, modal, single, afterInit) {
       }
 
       let recipientsAlertText;
-      if (data.data.projectId >= 0) {
+      if (data.projectId >= 0) {
         recipientsAlertText = t(appName, 'Email will be sent with an open recipients list!');
       } else {
         recipientsAlertText = t(appName, 'Email will be sent with a hidden recipients list!');
@@ -1493,7 +1498,7 @@ const emailFormPopup = function(post, modal, single, afterInit) {
                   }
                   // could check whether formElement is indeed 'TO' ...
                   const toSpan = emailForm.find('span.email-recipients');
-                  let rcpts = data.data.requestData.elementData;
+                  let rcpts = data.requestData.elementData;
 
                   if (rcpts.length === 0) {
                     rcpts = toSpan.data('placeholder');

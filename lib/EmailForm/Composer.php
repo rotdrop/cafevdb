@@ -23,11 +23,20 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
-/**This is the mass-email composer class. We try to be somewhat
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+
+/**
+ * This is the mass-email composer class. We try to be somewhat
  * careful to have useful error reporting, and avoid sending garbled
  * messages or duplicates.
  */
-class EmailComposer {
+class EmailComposer
+{
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
 <p>
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -96,10 +105,6 @@ DebitNotePurpose
 ';
   const POST_TAG = 'emailComposer';
 
-  private $opts; ///< For db connection and stuff.
-  private $dbh;  ///< Data-base handle.
-  private $user; ///< Owncloud user.
-
   private $recipients; ///< The list of recipients.
   private $onLookers;  ///< Cc: and Bcc: recipients.
 
@@ -129,34 +134,52 @@ DebitNotePurpose
 
   private $memberVariables; // VARIABLENAME => column name
 
+  /** @var ConfigService */
+  private $configSerivce;
+
+  /** @var RequestParameterService */
+  private $parameterService;
+
+  /** @var RecipientsFilter */
+  private  $recipientsFilter;
+
+  /** @var EventsService */
+  private $eventsService;
+
   /*
    * constructor
    */
-  public function __construct($recipients = array(), $template = null)
+  public function __construct(
+    ConfigService $configService
+    , RequestParameterService $parameterService
+    , EventsService $eventsService
+    , RecipientsFilter $recipientsFilter
+  )
   {
-    Config::init();
+    $this->configSerivce = $configService;
+    $this->parameterService = $parameterService;
+    $this->eventsService = $eventsService;
+    $this->recipientsFilter = $recipientsFilter;
 
-    $this->opts = Config::$pmeopts;
-    $this->dbh = false;
+    $this->recipients = $this->recipientsFilter->selectedRecipients();
 
-    $this->user = \OCP\USER::getUser();
+    $template = $this->parameterService['emailTemplate'];
 
-    $this->constructionMode = Config::$opts['emailtestmode'] != 'off';
+    $this->constructionMode = true; // Config::$opts['emailtestmode'] != 'off';
     $this->setCatchAll();
 
-    $this->cgiData = Util::cgiValue(self::POST_TAG, array());
+    $this->cgiData = $this->parameterService->getParam(self::POST_TAG, []);
 
     if (!empty($template)) {
-      $this->cgiData['StoredMessagesSelector'] = $template;
+      $this->cgiData['storedMessagesSelector'] = $template;
     }
 
-    $this->recipients = $recipients;
-
-    $this->projectId   = $this->cgiValue('ProjectId', Util::cgiValue('ProjectId', -1));
-    $this->projectName = $this->cgiValue('ProjectName',
-                                         Util::cgiValue('ProjectName',
-                                                        Util::cgiValue('ProjectName', '')));
-    $this->debitNoteId = $this->cgiValue('DebitNoteId', Util::cgiValue('DebitNoteId', -1));
+    $this->projectId   = $this->cgiValue(
+      'projectId', $this->parameterService->getParam('projectId', -1));
+    $this->projectName = $this->cgiValue(
+      'projectName', $this->parameterService->getParam('projectName', ''));
+    $this->debitNoteId = $this->cgiValue(
+      'debitNoteId', $this->parameterService->getParam('debitNoteId', -1));
 
     $this->setSubjectTag();
 
@@ -222,8 +245,8 @@ DebitNotePurpose
         } else {
           // still leave the name as default in order to signal what was missing
           $this->cgiData['Subject'] =
-                                    L::t('Unknown Template "%s"', array($initialTemplate));
-          $template = $this->fetchTemplate(L::t('ExampleFormletter'));
+                                    $this->l->t('Unknown Template "%s"', array($initialTemplate));
+          $template = $this->fetchTemplate($this->l->t('ExampleFormletter'));
           if ($template !== false) {
             $this->messageContents = $template;
           }
@@ -276,7 +299,7 @@ DebitNotePurpose
       $this->sendMessages();
       if (!$this->errorStatus()) {
         // Hurray!!!
-        $this->diagnostics['Caption'] = L::t('Message(s) sent out successfully!');
+        $this->diagnostics['Caption'] = $this->l->t('Message(s) sent out successfully!');
 
         // If sending out a draft, remove the draft.
         $this->deleteDraft();
@@ -290,7 +313,7 @@ DebitNotePurpose
       // any kind of "nasty" exceptions.
       $this->exportMessages();
       if (!$this->errorStatus()) {
-        $this->diagnostics['Caption'] = L::t('Message(s) exported successfully!');
+        $this->diagnostics['Caption'] = $this->l->t('Message(s) exported successfully!');
       }
     }
   }
@@ -326,62 +349,64 @@ DebitNotePurpose
    * contains the substitutions.
    *
    * @return HTML message with variable substitutions.
+   *
+   * @todo This needs to be reworked TOTALLY
    */
   private function replaceMemberVariables($templateMessage, $dbdata)
   {
-    $enckey = Config::getEncryptionKey();
-    if ($dbdata['Geburtstag'] && $dbdata['Geburtstag'] != '') {
-      $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
-    }
-    $strMessage = $templateMessage;
-    foreach ($this->memberVariables as $placeholder => $column) {
-      if ($placeholder === 'EXTRAS') {
-        // EXTRAS is a multi-field stuff. In order to allow stuff
-        // like forming tables we allow lead-in, lead-out and separator.
-        if ($this->projectId <= 0) {
-          $extras = [ [ 'label' => L::t("nothing"), 'surcharge' => 0 ] ];
-        } else {
-          $extras = $dbdata[$column];
-        }
-        $strMessage = preg_replace_callback(
-          '/([^$]|^)[$]{MEMBER::EXTRAS(:([^!}]+)!([^!}]+)!([^}]+))?}/',
-          function($matches) use ($extras) {
-            if (count($matches) === 6) {
-              $pre  = $matches[3];
-              $sep  = $matches[4];
-              $post = $matches[5];
-            } else {
-              $pre  = '';
-              $sep  = ': ';
-              $post = "\n";
-            }
-            $result = $matches[1];
-            foreach($extras as $records) {
-              $result .=
-                      $pre.
-                      $records['label'].
-                      $sep.
-                      $records['surcharge'].
-                      $post;
-            }
-            return $result;
-          },
-          $strMessage);
-        continue;
-      } else if ($placeholder === 'SEPAMANDATSIBAN' ||
-                 $placeholder === 'SEPAMANDATSBIC' ||
-                 $placeholder === 'SEPAMANDATSINHABER') {
-        $dbdata[$column] = Config::decrypt($dbdata[$column], $enckey);
-        if ($placeholder === 'SEPAMANDATSIBAN') {
-          $dbdata[$column] = substr($dbdata[$column], 0, 6).'...'.substr($dbdata[$column], -4, 4);
-        }
-      }
-      // replace all remaining stuff
-      $strMessage = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/',
-                                 '${1}'.htmlspecialchars($dbdata[$column]),
-                                 $strMessage);
-    }
-    $strMessage = preg_replace('/[$]{2}{/', '${', $strMessage);
+    return $templateMessage;
+    // if ($dbdata['Geburtstag'] && $dbdata['Geburtstag'] != '') {
+    //   $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
+    // }
+    // $strMessage = $templateMessage;
+    // foreach ($this->memberVariables as $placeholder => $column) {
+    //   if ($placeholder === 'EXTRAS') {
+    //     // EXTRAS is a multi-field stuff. In order to allow stuff
+    //     // like forming tables we allow lead-in, lead-out and separator.
+    //     if ($this->projectId <= 0) {
+    //       $extras = [ [ 'label' => $this->l->t("nothing"), 'surcharge' => 0 ] ];
+    //     } else {
+    //       $extras = $dbdata[$column];
+    //     }
+    //     $strMessage = preg_replace_callback(
+    //       '/([^$]|^)[$]{MEMBER::EXTRAS(:([^!}]+)!([^!}]+)!([^}]+))?}/',
+    //       function($matches) use ($extras) {
+    //         if (count($matches) === 6) {
+    //           $pre  = $matches[3];
+    //           $sep  = $matches[4];
+    //           $post = $matches[5];
+    //         } else {
+    //           $pre  = '';
+    //           $sep  = ': ';
+    //           $post = "\n";
+    //         }
+    //         $result = $matches[1];
+    //         foreach($extras as $records) {
+    //           $result .=
+    //                   $pre.
+    //                   $records['label'].
+    //                   $sep.
+    //                   $records['surcharge'].
+    //                   $post;
+    //         }
+    //         return $result;
+    //       },
+    //       $strMessage);
+    //     continue;
+    //   } else if ($placeholder === 'SEPAMANDATSIBAN' ||
+    //              $placeholder === 'SEPAMANDATSBIC' ||
+    //              $placeholder === 'SEPAMANDATSINHABER') {
+    //     $dbdata[$column] = Config::decrypt($dbdata[$column], $enckey);
+    //     if ($placeholder === 'SEPAMANDATSIBAN') {
+    //       $dbdata[$column] = substr($dbdata[$column], 0, 6).'...'.substr($dbdata[$column], -4, 4);
+    //     }
+    //   }
+    //   // replace all remaining stuff
+    //   $strMessage = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/',
+    //                              '${1}'.htmlspecialchars($dbdata[$column]),
+    //                              $strMessage);
+    // }
+    // $strMessage = preg_replace('/[$]{2}{/', '${', $strMessage);
     return $strMessage;
   }
 
@@ -409,7 +434,7 @@ DebitNotePurpose
       // defaults to d.m.Y. datestring is everything understood by
       // strtotime().
       $oldLocale = setlocale(LC_TIME, '0');
-      setlocale(LC_TIME, Util::getLocale());
+      setlocale(LC_TIME, $this->getLocale());
       $message = preg_replace_callback(
         '/([^$]|^)[$]{GLOBAL::DATE:([^!]*)!([^}]*)}/',
         function($matches) use ($vars) {
@@ -589,17 +614,17 @@ DebitNotePurpose
         }
       };
 
-      $phpMailer->Host = Config::getValue('smtpserver');
-      $phpMailer->Port = Config::getValue('smtpport');
-      switch (Config::getValue('smtpsecure')) {
+      $phpMailer->Host = $this->getConfigValue('smtpserver');
+      $phpMailer->Port = $this->getConfigValue('smtpport');
+      switch ($this->getConfigValue('smtpsecure')) {
       case 'insecure': $phpMailer->SMTPSecure = ''; break;
       case 'starttls': $phpMailer->SMTPSecure = 'tls'; break;
       case 'ssl':      $phpMailer->SMTPSecure = 'ssl'; break;
       default:         $phpMailer->SMTPSecure = ''; break;
       }
       $phpMailer->SMTPAuth = true;
-      $phpMailer->Username = Config::getValue('emailuser');
-      $phpMailer->Password = Config::getValue('emailpassword');
+      $phpMailer->Username = $this->getConfigValue('emailuser');
+      $phpMailer->Password = $this->getConfigValue('emailpassword');
 
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
@@ -702,7 +727,7 @@ DebitNotePurpose
       $logMessage->events = $events;
       if ($this->projectId >= 0 && !empty($events)) {
         // Construct the calendar
-        $calendar = Events::exportEvents($events, $this->projectName);
+        $calendar = $this->eventsService->exportEvents($events, $this->projectName);
 
         // Encode it as attachment
         $phpMailer->AddStringEmbeddedImage($calendar,
@@ -771,18 +796,18 @@ DebitNotePurpose
       if ($attachment['status'] != 'selected') {
         continue;
       }
-      $size     = \OC_Helper::humanFileSize($attachment['size']);
+      $size     = \OCP\Util::humanFileSize($attachment['size']);
       $name     = basename($attachment['name']).' ('.$size.')';
       $this->diagnostics['Message']['Files'][] = $name;
     }
 
     $this->diagnostics['Message']['Events'] = array();
     $events = $this->eventAttachments();
-    $locale = Util::getLocale();
-    $zone = Util::getTimezone();
-    foreach($events as $eventId) {
-      $event = Events::fetchEvent($eventId);
-      $datestring = Events::briefEventDate($event, $zone, $locale);
+    $locale = $this->getLocale();
+    $timezone = $this->getTimezone();
+    foreach($events as $eventUri) {
+      $event = $this->eventsService->fetchEvent($this->projectId, $eventUri);
+      $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
       $name = stripslashes($event['summary']).', '.$datestring;
       $this->diagnostics['Message']['Events'][] = $name;
     }
@@ -795,9 +820,9 @@ DebitNotePurpose
     // PEAR IMAP works without the c-client library
     ini_set('error_reporting', ini_get('error_reporting') & ~E_STRICT);
 
-    $imaphost   = Config::getValue('imapserver');
-    $imapport   = Config::getValue('imapport');
-    $imapsecure = Config::getValue('imapsecure');
+    $imaphost   = $this->getConfigValue('imapserver');
+    $imapport   = $this->getConfigValue('imapport');
+    $imapsecure = $this->getConfigValue('imapsecure');
 
     $progressProvider = new ProgressStatus(0);
     $diagnostics = $this->diagnostics;
@@ -820,8 +845,8 @@ DebitNotePurpose
                           },
                           64*1024); // 64 kb chunk-size
 
-    $user = Config::getValue('emailuser');
-    $pass = Config::getValue('emailpassword');
+    $user = $this->getConfigValue('emailuser');
+    $pass = $this->getConfigValue('emailpassword');
     if (($ret = $imap->login($user, $pass)) !== true) {
       $this->executionStatus = false;
       $this->diagnostics['CopyToSent']['login'] = $ret->toString();
@@ -986,7 +1011,8 @@ DebitNotePurpose
     return $logQuery;
   }
 
-  /**Compose and export one message to HTML.
+  /**
+   * Compose and export one message to HTML.
    *
    * @param $strMessage The message to send.
    *
@@ -1109,7 +1135,7 @@ DebitNotePurpose
       $logMessage->events = $events;
       if ($this->projectId >= 0 && !empty($events)) {
         // Construct the calendar
-        $calendar = Events::exportEvents($events, $this->projectName);
+        $calendar = $this->eventsService->exportEvents($events, $this->projectName);
 
         // Encode it as attachment
         $phpMailer->AddStringEmbeddedImage($calendar,
@@ -1261,15 +1287,15 @@ DebitNotePurpose
 
     // event attachment
     $events = $this->eventAttachments();
-    foreach($events as $eventId) {
-      if (!Events::fetchEvent($eventId)) {
+    foreach ($events as $eventUri) {
+      if (!$this->eventsService->fetchEvent($this->projectId, $eventUri)) {
         $this->executionStatus = false;
         $this->diagnostics['AttachmentValidation']['Events'][] = $eventId;
       }
     }
 
     if (!$this->executionStatus) {
-      $this->diagnostics['Caption'] = L::t('Pre-composition validation has failed!');
+      $this->diagnostics['Caption'] = $this->l->t('Pre-composition validation has failed!');
     }
     return $this->executionStatus;
   }
@@ -1305,17 +1331,12 @@ DebitNotePurpose
     $parsedRecipients = $parser->parseAddressList($freeForm);
     $parseError = $parser->parseError();
     if ($parseError !== false) {
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          "Parse-error on email address list: ".
-                          vsprintf($parseError['message'], $parseError['data']),
-                          \OCP\Util::DEBUG);
+      $this->logDebug("Parse-error on email address list: ".
+                      vsprintf($parseError['message'], $parseError['data']));
       // We report the entire string.
-      $brokenRecipients[] = L::t($parseError['message'], $parseError['data']);
+      $brokenRecipients[] = $this->l->t($parseError['message'], $parseError['data']);
     } else {
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          "Parsed address list: ".
-                          print_r($parsedRecipients, true),
-                          \OCP\Util::DEBUG);
+      $this->logDebug("Parsed address list: ". print_r($parsedRecipients, true));
       $recipients = array();
       foreach ($parsedRecipients as $emailRecord) {
         $email = $emailRecord->mailbox.'@'.$emailRecord->host;
@@ -1340,10 +1361,7 @@ DebitNotePurpose
       $this->executionStatus = false;
       return false;
     } else {
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          "Returned address list: ".
-                          print_r($recipients, true),
-                          \OCP\Util::DEBUG);
+      $this->logDebug("Returned address list: ".print_r($recipients, true));
       return $recipients;
     }
   }
@@ -1452,11 +1470,11 @@ DebitNotePurpose
   private function setCatchAll()
   {
     if ($this->constructionMode) {
-      $this->catchAllEmail = Config::getValue('emailtestaddress');
+      $this->catchAllEmail = $this->getConfigValue('emailtestaddress');
       $this->catchAllName  = 'Bilbo Baggins';
     } else {
-      $this->catchAllEmail = Config::getValue('emailfromaddress');
-      $this->catchAllName  = Config::getValue('emailfromname');
+      $this->catchAllEmail = $this->getConfigValue('emailfromaddress');
+      $this->catchAllName  = $this->getConfigValue('emailfromname');
     }
   }
 
@@ -1479,10 +1497,10 @@ DebitNotePurpose
     if ($globalVars === false) {
       $globalVars = array(
         'ORGANIZER' => $this->fetchExecutiveBoard(),
-        'CREDITORIDENTIFIER' => Config::getValue('bankAccountCreditorIdentifier'),
+        'CREDITORIDENTIFIER' => $this->getConfigValue('bankAccountCreditorIdentifier'),
         'ADDRESS' => $this->streetAddress(),
         'BANKACCOUNT' => $this->bankAccount(),
-        'PROJECT' => $this->projectName != '' ? $this->projectName : L::t('no project involved'),
+        'PROJECT' => $this->projectName != '' ? $this->projectName : $this->l->t('no project involved'),
         'DEBITNOTEDUEDATE' => '',
         'DEBITNOTEDUEDAYS' => '',
         'DEBITNOTESUBMITDATE' => '',
@@ -1493,13 +1511,13 @@ DebitNotePurpose
       if ($this->debitNoteId > 0) {
         $debitNote = DebitNotes::debitNote($this->debitNoteId, $this->dbh);
 
-        $globalVars['DEBITNOTEJOB'] = L::t($debitNote['Job']);
+        $globalVars['DEBITNOTEJOB'] = $this->l->t($debitNote['Job']);
 
         $oldLocale = setlocale(LC_TIME, '0');
-        setlocale(LC_TIME, Util::getLocale());
+        setlocale(LC_TIME, $this->getLocale());
 
         $oldTZ = date_default_timezone_get();
-        $tz = Util::getTimezone();
+        $tz = $this->getTimezone();
         date_default_timezone_set($tz);
 
         $nowDate = new \DateTime(strftime('%Y-%m-%d'));
@@ -1523,21 +1541,21 @@ DebitNotePurpose
   private function streetAddress()
   {
     return
-      Config::getValue('streetAddressName01')."<br/>\n".
-      Config::getValue('streetAddressName02')."<br/>\n".
-      Config::getValue('streetAddressStreet')."&nbsp;".
-      Config::getValue('streetAddressHouseNumber')."<br/>\n".
-      Config::getValue('streetAddressZIP')."&nbsp;".
-      Config::getValue('streetAddressCity');
+      $this->getConfigValue('streetAddressName01')."<br/>\n".
+      $this->getConfigValue('streetAddressName02')."<br/>\n".
+      $this->getConfigValue('streetAddressStreet')."&nbsp;".
+      $this->getConfigValue('streetAddressHouseNumber')."<br/>\n".
+      $this->getConfigValue('streetAddressZIP')."&nbsp;".
+      $this->getConfigValue('streetAddressCity');
   }
 
   private function bankAccount()
   {
-    $iban = new \IBAN(Config::getValue('bankAccountIBAN'));
+    $iban = new \IBAN($this->getConfigValue('bankAccountIBAN'));
     return
-      Config::getValue('bankAccountOwner')."<br/>\n".
+      $this->getConfigValue('bankAccountOwner')."<br/>\n".
       "IBAN ".$iban->HumanFormat()." (".$iban->MachineFormat().")<br/>\n".
-      "BIC ".Config::getValue('bankAccountBIC');
+      "BIC ".$this->getConfigValue('bankAccountBIC');
   }
 
   /**Fetch the pre-names of the members of the organizing committee in
@@ -1545,7 +1563,7 @@ DebitNotePurpose
    */
   private function fetchExecutiveBoard()
   {
-    $executiveBoard = Config::getValue('executiveBoardTable');
+    $executiveBoard = $this->getConfigValue('executiveBoardTable');
 
     $handle = $this->dataBaseConnect();
 
@@ -1554,7 +1572,7 @@ DebitNotePurpose
     $result = mySQL::query($query, $handle);
 
     if ($result === false) {
-      throw new \RuntimeException("\n".L::t('Unable to fetch executive board contents from data-base.'.$query));
+      throw new \RuntimeException("\n".$this->l->t('Unable to fetch executive board contents from data-base.'.$query));
     }
 
     $vorstand = array();
@@ -1567,25 +1585,9 @@ DebitNotePurpose
     for ($i = 1; $i < $cnt-1; $i++) {
       $text .= ', '.$vorstand[$i];
     }
-    $text .= ' '.L::t('and').' '.$vorstand[$cnt-1];
+    $text .= ' '.$this->l->t('and').' '.$vorstand[$cnt-1];
 
     return $text;
-  }
-
-  public function dataBaseConnect()
-  {
-    if ($this->dbh === false) {
-      $this->dbh = mySQL::connect($this->opts);
-    }
-    return $this->dbh;
-  }
-
-  private function dataBaseDisconnect()
-  {
-    if ($this->dbh !== false) {
-      mySQL::close($this->dbh);
-      $this->dbh = false;
-    }
   }
 
   /**Take the text supplied by $contents and store it in the DB
@@ -1677,7 +1679,7 @@ DebitNotePurpose
     }
     if (count($drafts) == 0) {
       $drafts = array(array('value' => -1,
-                            'name' => L::t('empty')));
+                            'name' => $this->l->t('empty')));
     }
     return $drafts;
   }
@@ -1896,7 +1898,7 @@ DebitNotePurpose
       if ($tmpdir == '') {
         $tmpdir = sys_get_temp_dir();
       }
-      $tmpFile = tempnam($tmpdir, Config::APP_NAME);
+      $tmpFile = tempnam($tmpdir, $this->appName());
       if ($tmpFile === false) {
         return false;
       }
@@ -2075,7 +2077,7 @@ DebitNotePurpose
   }
 
   /**A helper function to generate suitable select options for
-   * Navigation::selectOptions()
+   * PageNavigation::selectOptions()
    */
   static public function fileAttachmentOptions($fileAttach)
   {
@@ -2084,12 +2086,12 @@ DebitNotePurpose
       $value    = $attachment['tmp_name'];
       $size     = \OC_Helper::humanFileSize($attachment['size']);
       $name     = $attachment['name'].' ('.$size.')';
-      $group    = $attachment['origin'] == 'owncloud' ? 'Owncloud' : L::t('Local Filesystem');
+      $group    = $attachment['origin'] == 'owncloud' ? 'Owncloud' : $this->l->t('Local Filesystem');
       $selected = $attachment['status'] == 'selected';
       $selectOptions[] = array('value' => $value,
                                'name' => $name,
                                'group' => $group,
-                               'flags' => $selected ? Navigation::SELECTED : 0);
+                               'flags' => $selected ? PageNavigation::SELECTED : 0);
     }
     return $selectOptions;
   }
@@ -2101,13 +2103,13 @@ DebitNotePurpose
    */
   public function eventAttachments()
   {
-    $attachedEvents = Util::cgiValue('EventSelect',
-                                     $this->cgiValue('AttachedEvents', array()));
+    $attachedEvents = $this->parameterService->getParam(
+      'eventSelect', $this->cgiValue('attachedEvents', []));
     return $attachedEvents;
   }
 
   /**A helper function to generate suitable select options for
-   * Navigation::selectOptions().
+   * PageNavigation::selectOptions().
    *
    * @param $projectId Id of the active project. If <= 0 an empty
    * array is returned.
@@ -2121,13 +2123,13 @@ DebitNotePurpose
     }
 
     // fetch all events for this project
-    $events      = Events::events($projectId);
-    $dfltIds     = Events::defaultCalendars();
-    $eventMatrix = Events::eventMatrix($events, $dfltIds);
+    $events      = $this->eventsService->events($projectId);
+    $dfltIds     = $this->eventsService->defaultCalendars();
+    $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
 
     // timezone, locale
-    $locale = Util::getLocale();
-    $zone = Util::getTimezone();
+    $locale = $this->getLocale();
+    $timezone = $this->getTimezone();
 
     // transpose for faster lookup
     $attachedEvents = array_flip($attachedEvents);
@@ -2138,13 +2140,13 @@ DebitNotePurpose
       $group = $eventGroup['name'];
       foreach($eventGroup['events'] as $event) {
         $object = $event['object'];
-        $datestring = Events::briefEventDate($object, $zone, $locale);
+        $datestring = $this->eventsService->briefEventDate($object, $timezone, $locale);
         $name = stripslashes($object['summary']).', '.$datestring;
         $value = $event['EventId'];
         $selectOptions[] = array('value' => $value,
                                  'name' => $name,
                                  'group' => $group,
-                                 'flags' => isset($attachedEvents[$value]) ? Navigation::SELECTED : 0
+                                 'flags' => isset($attachedEvents[$value]) ? PageNavigation::SELECTED : 0
         );
       }
     }
