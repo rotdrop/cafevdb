@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,10 +20,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-use CAFEVDB\Config;
-use CAFEVDB\Navigation;
-use CAFEVDB\L;
 
 /* The form expects the following data in $_[key] for key equal to:
  *
@@ -66,7 +63,7 @@ $frozen = $_['FrozenRecipients'];
 ?>
 
 <fieldset id="cafevdb-email-recipients-fieldset" class="email-recipients page">
-  <?php echo Navigation::persistentCGI('emailRecipients', $_['RecipientsFormData']); ?>
+  <?php echo $pageNavigation->persistentCGI('emailRecipients', $_['RecipientsFormData']); ?>
   <?php if ($projectId >= 0) { ?>
     <?php if ($frozen) { ?>
       <input type="hidden"
@@ -136,7 +133,7 @@ $frozen = $_['FrozenRecipients'];
               title="<?php echo $toolTips['email-recipients-member-status-filter']; ?>"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
               name="emailRecipients[MemberStatusFilter][]">
-        <?php echo Navigation::selectOptions($_['MemberStatusFilter']); ?>
+        <?php echo $pageNavigation->selectOptions($_['MemberStatusFilter']); ?>
       </select>
     </span>
   </div>
@@ -153,7 +150,7 @@ $frozen = $_['FrozenRecipients'];
               size="18"
               title="<?php echo $toolTips['email-recipients-choices']; ?>"
               name="emailRecipients[SelectedRecipients][]">
-        <?php echo Navigation::selectOptions($_['EmailRecipientsChoices']); ?>
+        <?php echo $pageNavigation->selectOptions($_['EmailRecipientsChoices']); ?>
       </select>
     </span>
     <span class="instruments-filter container right tooltip-top"
@@ -173,7 +170,7 @@ $frozen = $_['FrozenRecipients'];
                 title="<?php echo $toolTips['email-recipients-instruments-filter']; ?>"
                 data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
                 name="emailRecipients[InstrumentsFilter][]">
-          <?php echo Navigation::selectOptions($_['InstrumentsFilter']); ?>
+          <?php echo $pageNavigation->selectOptions($_['InstrumentsFilter']); ?>
         </select>
       </span>
     </span>

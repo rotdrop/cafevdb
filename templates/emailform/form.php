@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,12 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Util;
-use CAFEVDB\Navigation;
-use CAFEVDB\Email;
-
-CAFEVDB\Error::exceptions(true);
+namespace OCA\CAFEVDB;
 
 ?>
 
@@ -46,7 +41,7 @@ CAFEVDB\Error::exceptions(true);
         id="cafevdb-email-form"
         class="cafevdb-email-form">
     <fieldset id="cafevdb-email-form-data" class="form-data">
-      <?php echo Navigation::persistentCGI($_['FormData']); ?>
+      <?php echo $pageNavigation->persistentCGI($_['FormData']); ?>
     </fieldset>
     <div id="emailformrecipients" class="resize-target"><?php echo $this->inc('part.emailform.recipients'); ?></div>
     <div id="emailformcomposer" class="resize-target"><?php echo $this->inc('part.emailform.composer'); ?></div>
