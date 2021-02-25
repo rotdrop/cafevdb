@@ -310,6 +310,14 @@ $routes = [
       'verb' => 'POST',
     ],
     /**
+     *
+     */
+    [
+      'name' => 'email_form#web_form',
+      'url' => '/communication/email/outgoing/form',
+      'verb' => 'POST',
+    ],
+    /**
      * General validations ...
      */
     [

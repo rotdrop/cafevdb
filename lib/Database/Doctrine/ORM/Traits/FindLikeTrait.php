@@ -222,6 +222,12 @@ trait FindLikeTrait
     foreach (array_keys($joinEntities) as $association) {
       $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$associaion]);
     }
+
+    // joining may produce excessive extra columns, try to group by the primary keys.
+    foreach ($this->getClassMetadata()->identifier as $field) {
+      $qb->groupBy('mainTable.'.$field);
+    }
+
     $andX = $qb->expr()->andX();
     foreach ($criteria as $key => &$value) {
       $dotPos = strpos($key, '.');

@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 use OCP\ISession;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -30,6 +32,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 
 /**
@@ -53,6 +56,9 @@ class EmailRecipientsFilter
     'InstrumentsFilter',
     'SelectedRecipients'
   ];
+  private const MUSICIANS_FROM_PROJECT = (1 << 0);
+  private const MUSICIANS_EXCEPT_PROJECT = (1 << 1);
+  private const ALL_MUSICIANS = self::MUSICIANS_FROM_PROJECT | self::MUSICIANS_EXCEPT_PROJECT;
 
   /** @var null|Entities\Project */
   private $project;
@@ -75,8 +81,8 @@ class EmailRecipientsFilter
   private $opts;        // Copy of global options
 
   private $brokenEMail;     // List of people without email
-  private $EMails;      // List of people with email
-  private $EMailsDpy;   // Display list with namee an email
+  private $eMails;      // List of people with email
+  private $eMailsDpy;   // Display list with namee an email
   private $frozen;      // Only allow the preselected recipients (i.e. for debit notes)
 
   // Form elements
@@ -101,6 +107,9 @@ class EmailRecipientsFilter
   /** @var PHPMyEdit */
   protected $pme;
 
+  /** @var Repositories\MusiciansRepository */
+  protected $musiciansRepository;
+
   /*
    * constructor
    */
@@ -117,6 +126,8 @@ class EmailRecipientsFilter
     $this->parameterService = $parameterService;
     $this->entityManager = $entityManager;
     $this->pme = $pme;
+
+    $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
     $this->jsonFlags = JSON_FORCE_OBJECT|JSON_HEX_QUOT|JSON_HEX_APOS;
 
@@ -176,17 +187,17 @@ class EmailRecipientsFilter
     if ($this->submitted) {
       $this->loadHistory(); // Fetch the filter-history from the session, if any.
       $this->emailRecs = $this->cgiValue($this->emailKey, []);
-      if ($this->cgiValue('ResetInstrumentsFilter', false) !== false) {
+      if ($this->cgiValue('resetInstrumentsFilter', false) !== false) {
         $this->submitted = false; // fall back to defaults for everything
         $this->cgiData = [];
         $this->reload = true;
-      } else if ($this->cgiValue('UndoInstrumentsFilter', false) !== false) {
+      } else if ($this->cgiValue('undoInstrumentsFilter', false) !== false) {
         $this->applyHistory(1); // the current state
         $this->reload = true;
-      } else if ($this->cgiValue('RedoInstrumentsFilter', false) !== false) {
+      } else if ($this->cgiValue('redoInstrumentsFilter', false) !== false) {
         $this->applyHistory(-1);
         $this->reload = true;
-      } else if ($this->cgiValue('HistorySnapshot', false) !== false) {
+      } else if ($this->cgiValue('historySnapshot', false) !== false) {
         // fast mode, only CGI data, no DB access. Only the
         // $this->filterHistory() should be queried afterwards,
         // everything else is undefined.
@@ -202,7 +213,7 @@ class EmailRecipientsFilter
     $this->getUserBase();
     $this->getInstrumentsFromDB();
     $this->fetchInstrumentsFilter();
-    $this->getMusiciansFromDB($dbh);
+    $this->getMusiciansFromDB();
 
     if (!$this->submitted) {
       // Do this at end in order to have any tweaks around
@@ -237,15 +248,15 @@ class EmailRecipientsFilter
     $this->historySize = 1;
 
     $filter = [
-      'BasicRecipientsSet' => $this->defaultUserBase(),
-      'MemberStatusFilter' => $this->defaultByStatus(),
-      'InstrumentsFilter' => [],
-      'SelectedRecipients' => array_intersect($this->emailRecs,
-                                              array_keys($this->EMailsDpy))
+      'basicRecipientsSet' => $this->defaultUserBase(),
+      'memberStatusFilter' => $this->defaultByStatus(),
+      'instrumentsFilter' => [],
+      'selectedRecipients' => array_intersect($this->emailRecs,
+                                              array_keys($this->eMailsDpy))
     ];
 
     // tweak: sort the selected recipients by key
-    sort($filter['SelectedRecipients']);
+    sort($filter['selectedRecipients']);
 
     $md5 = md5(serialize($filter));
     $data = $filter;
@@ -332,7 +343,7 @@ class EmailRecipientsFilter
       // selected recipients before recording the history
       $filter['SelectedRecipients'] =
                                     array_intersect($filter['SelectedRecipients'],
-                                                    array_keys($this->EMailsDpy));
+                                                    array_keys($this->eMailsDpy));
 
       // tweak: sort the selected recipients by key
     }
@@ -427,23 +438,6 @@ class EmailRecipientsFilter
   }
 
   /**
-   * Fetch musicians from either the "Musicians" table or a project
-   * view. Depending on the table in use, $restrict is either
-   * 'Instrumente' or 'Instrument' (normally). Also, fetch all data
-   * needed to do any per-recipient substitution later.
-   *
-   * @param $dbh Data-base handle.
-   *
-   * @param $table The table to use, either 'Musiker' or a project view.
-   *
-   * @param $id The name of the column holding the musicians
-   *                global id, this is either 'Id' (Musiker-table) or
-   *                'MusikerId' (project view).
-   *
-   * @param $restrict The filter restriction, either 'Instrument'
-   *                (German singular) or 'Instrumente' (German
-   *                plural).
-   *
    * @param $projectId Either a valid project-id, or -1 if not in
    *                "project-mode".
    *
@@ -453,225 +447,47 @@ class EmailRecipientsFilter
    * - status (MemberStatus)
    * - dbdata (data as returned from the DB for variable substitution)
    */
-  private function fetchMusicians($table, $id, $projectId)
+  private function fetchMusicians(array $criteria)
   {
-    $columnNames = [
-      'Vorname',
-      'Name',
-      'Email',
-      'MobilePhone',
-      'FixedLinePhone',
-      'Strasse',
-      'Postleitzahl',
-      'Stadt',
-      'Land',
-      'Geburtstag',
-      'MemberStatus',
-    ];
-    $comma = ',';
-    $sep = $comma;
-    $dot = '.';
-    $origId = 'MainTable'.$dot.'Id'.' AS '.'OrigId';
-    $realId = 'MainTable'.$dot.$id.' AS '.'musicianId';
-    $fields =
-            $origId.$comma.
-            $realId.$comma.
-            implode($sep, $columnNames);
-
-    $table .= ' MainTable';
-
-    $instrument = $projectId > 0 ? 'ProjectInstrument' : 'Instruments';
-    $instrumentFilter = [];
-    foreach ($this->instrumentsFilter as $value) {
-      $instrumentFilter[] = $instrument." LIKE '%".$value."%'";
+    // add the instruments filter
+    if (!empty($this->instrumentsFilter)) {
+      $criteria[] = [ 'instruments.instrument' => $this->instrumentsFilter ];
     }
-    $instrumentFilter = implode("\n  OR\n", $instrumentFilter);
-    $where = '1 ';
-
-    if ($projectId > 0) { // Add the project fee
-
-      if (!empty($instrumentFilter)) {
-        $where .= "
-  AND (".$instrumentFilter.")";
-      }
-      $having = '';
-
-      // Add the relevant payment information (except the global
-      // information attached to the debit note)
-      if ($this->debitNoteId > 0) {
-        $fields .=
-                ',p.`Id` AS `PaymentId`'.
-                ',p.`Amount` AS `DebitNoteAmount`'.
-                ',p.`Subject` AS `DebitNotePurpose`'.
-                ',p.`MandateReference` AS `DebitNoteMandateReference`';
-        $joinCond =
-                  'p.InstrumentationId = MainTable.Id'.
-                  ' AND '.
-                  'p.DebitNoteId = '.$this->debitNoteId;
-
-        $table .= " LEFT JOIN `ProjectPayments` p ON "
-               ."( ".$joinCond." )";
-      }
-
-      $fields .= ''
-              .',`Unkostenbeitrag`'
-              .',`Anzahlung`'
-              .',`AmountPaid`'
-              .',`PaidCurrentYear`'
-              .',m.`mandateReference` AS `ProjectMandateReference`'
-              .',m.`IBAN` AS `MandateIBAN`'
-              .',m.`BIC` AS `MandateBIC`'
-              .',m.`bankAccountOwner` AS `MandateAccountOwner`';
-      // join table with the SEPA mandate reference table
-      $memberTableId = Config::getValue('memberTableId');
-      $joinCond =
-                '('.
-                'm.projectId = '.$projectId.
-                ' OR '.
-                'm.projectId = '.$memberTableId.
-                ')'.
-                ' AND m.musicianId = MusikerId'.
-                ' AND m.active = 1';
-
-      // if debit-note payment is given use its payment information.
-      if ($this->debitNoteId > 0) {
-        $joinCond .= ' AND m.mandateReference = p.MandateReference';
-      }
-
-      $table .= " LEFT JOIN `SepaDebitMandates` m ON "
-             ."( ".$joinCond." ) ";
-
-      // Add also any extra charges
-      $monetary = ProjectExtra::monetaryFields($projectId, $dbh);
-
-      foreach(array_keys($monetary) AS $extraLabel) {
-        $fields .= ', `'.$extraLabel.'`';
-      }
-    } else { // $projectId > 0
-      $fields .= ',
-  GROUP_CONCAT(i.Instrument) AS Instruments';
-      $table .= "
-  LEFT JOIN `MusicianInstruments` mi
-    ON mi.MusicianId = MainTable.Id
-  LEFT JOIN `Instrumente` i
-    ON i.Id = mi.InstrumentId
-";
-      $having = empty($instrumentFilter) ? '' : 'HAVING '.$instrumentFilter;
-    }
-
-    $query = "SELECT $fields
-FROM  $table
-WHERE";
-    $query .= "
-  $where";
-
     if ($this->frozen && $projectId > 0) {
-      $query .= "
-  AND MainTable.Id IN (".implode(',', $this->emailRecs).") ";
+      $criteria[] = [ 'id' => $this->emailRecs ];
     }
+    $criteria[] = [ '!memberStatus' => $this->memberStatusBlackList() ];
 
-    /* Don't bother any conductor etc. with mass-email. */
-    $query .= "
-  ".$this->memberStatusSQLFilter();
-
-    $query .= "
-  AND MainTable.Disabled = 0";
-
-    if (false) {
-      echo '<PRE>';
-      echo $query;
-      echo '</PRE>';
-    }
-    //$_POST['QUERY'] = $query;
-
-    $query .= "
-  GROUP BY MainTable.Id";
-    $query .= "
-  $having";
+    $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
     // use the mailer-class we are using later anyway in order to
     // validate email addresses syntactically now. Add broken
     // addresses to the "brokenEMail" list.
-    $mailer = new \PHPMailer(true);
+    $mailer = new PHPMailer(true);
 
-    // Fetch the result or die
-    $result = mySQL::query($query, $dbh, true); // here we want to bail out on error
+    foreach ($musicians as $musician) {
 
-    /* Stuff all emails into one array for later usage, remember the
-     * Id in order to combine any selection from the new
-     * "multi-select" check-boxes. Data is only needed for persons
-     * with emails
-     */
-    while ($line = mySQL::fetch($result)) {
-      $name = $line['Vorname'].' '.$line['Name'];
-      $rec = $line['OrigId'];
-      if ($line['Email'] != '') {
+      $displayName = $musician['displayName']?: $musician['firstName'].' '.$musician['surName'];
+      if (!empty($musician['email'])) {
         // We allow comma separated multiple addresses
-        $musmail = explode(',',$line['Email']);
-        if ($this->debitNoteId <= 0) {
-          $line['PaymentId'] = '';
-          $line['DebitNoteAmount'] = '';
-          $line['DebitNotePurpose'] = '';
-        }
-        if ($projectId <= 0) {
-          $line['Unkostenbeitrag'] = '';
-          $line['Anzahlung'] = '';
-          $line['SurchargeFees'] = '';
-          $line['Extras'] = '';
-          $line['TotalFees'] = '';
-          $line['MandateReference'] = '';
-          $line['AmountPaid'] = '';
-          $line['AmountMissing'] = '';
-        } else {
-          $line['MandateReference'] = $line['ProjectMandateReference'];
-          unset($line['ProjectMandateReference']);
-          if ($this->debitNoteId > 0 &&
-              $line['MandateReference'] !== $line['DebitNoteMandateReference']) {
-            throw new \RuntimeException($this->l->t('Inconsistent debit-note mandates: "%s" vs. "%s"',
-                                             array($line['MandateReference'],
-                                                   $line['DebitNoteMandateReference'])));
-          }
-          $line['Extras'] = [];
-          setlocale(LC_MONETARY, Util::getLocale());
-          $extra = 0.0;
-          foreach($monetary as $label => $fieldInfo) {
-            $value = $line[$label];
-            unset($line[$label]);
-            if (empty($value)) {
-              continue;
-            }
-            $allowed   = $fieldInfo['AllowedValues'];
-            $type      = $fieldInfo['Type']['Multiplicity'];
-            $surcharge = DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type);
-            $extra    += $surcharge;
-            $surcharge = money_format('%n', floatval($surcharge));
-            $line['Extras'][] = array('label' => $label, 'surcharge' => $surcharge);
-          }
-          $line['SurchargeFees'] = $extra;
-          $line['TotalFees'] = $extra + $line['Unkostenbeitrag'];
-          if ($this->debitNoteId > 0) {
-            $line['AmountPaid'] -=  $line['DebitNoteAmount']; // compensate for current payment
-          }
-          $line['AmountMissing'] = $line['TotalFees'] - $line['AmountPaid'];
-        }
-        $line['InsuranceFee'] = InstrumentInsurance::annualFee($line['musicianId'], $dbh);
-        foreach ($musmail as $emailval) {
-          if (!$mailer->validateAddress($emailval)) {
-            $bad = htmlspecialchars($name.' <'.$emailval.'>');
+        $musMail = explode(',', $musician['email']);
+        foreach ($musMail as $emailVal) {
+          if (!$mailer->validateAddress($emailVal)) {
+            $bad = htmlspecialchars($displayName.' <'.$emailVal.'>');
             if (isset($this->brokenEMail[$rec])) {
               $this->brokenEMail[$rec] .= ', '.$bad;
             } else {
               $this->brokenEMail[$rec] = $bad;
             }
           } else {
-            $this->EMails[$rec] =
-                                array('email'   => $emailval,
-                                      'name'    => $name,
-                                      'status'  => $line['MemberStatus'],
-                                      'project' => $projectId,
-                                      'dbdata'  => $line);
-            $this->EMailsDpy[$rec] =
-                                   htmlspecialchars($name.' <'.$emailval.'>');
+            $this->eMails[$rec] = [
+              'email'   => $emailVal,
+              'name'    => $name,
+              'status'  => $musician['memberStatus'],
+              'project' => $projectId,
+              'dbdata'  => $musican,
+            ];
+            $this->eMailsDpy[$rec] = htmlspecialchars($name.' <'.$emailVal.'>');
           }
         }
       } else {
@@ -691,49 +507,35 @@ WHERE";
     ];
 
     // do this later when constructing the message
-    foreach($this->EMails as $key => $record) {
+    foreach($this->eMails as $key => $record) {
       $dbdata = $record['dbdata'];
       setlocale(LC_MONETARY, Util::getLocale());
       foreach($moneyKeys as $moneyKey) {
         $fee = money_format('%n', floatval($dbdata[$moneyKey]));
         $dbdata[$moneyKey] = $fee;
       }
-      $this->EMails[$key]['dbdata'] = $dbdata;
+      $this->eMails[$key]['dbdata'] = $dbdata;
     }
   }
 
   /* Fetch the list of musicians for the given context (project/global)
    */
-  private function getMusiciansFromDB($dbh)
+  private function getMusiciansFromDB()
   {
     $this->brokenEMail = [];
-    $this->EMails = [];
-    $this->EMailsDpy = []; // display records
+    $this->eMails = [];
+    $this->eMailsDpy = []; // display records
 
-    if ($this->projectId <= 0) {
-      self::fetchMusicians($dbh, 'Musiker', 'Id', -1);
-    } else {
-      // Possibly add musicians from the project
-      if ($this->userBase['FromProject']) {
-        self::fetchMusicians($dbh,
-                             $this->projectName.'View', 'MusikerId', $this->projectId);
-      }
-
-      // and/or not from the project
-      if ($this->userBase['ExceptProject']) {
-        $table =
-               '(SELECT a.* FROM Musiker a
-    LEFT JOIN `'.$this->projectName.'View'.'` b
-      ON a.Id = b.MusikerId
-      WHERE b.MusikerId IS NULL)';
-        self::fetchMusicians($dbh, $table, 'Id', -1);
-      }
-
-      // And otherwise leave it empty ;)
+    if (empty($this->project) || $this->userBase == self::ALL_MUSICIANS) {
+      $this->fetchMusicians([]);
+    } else if ($this->userBase == self::MUSICIANS_FROM_PROJECT) {
+      $this->fetchMusicians([ 'projectParticipation.project' => $this->projectId ]);
+    } else if ($this->userBase == self::MUSICIANS_EXCEPT_PROJECT) {
+      $this->fetchMusicians([ '!projectParticipation.project' => $this->projectId ]);
     }
 
     // Finally sort the display array
-    asort($this->EMailsDpy);
+    asort($this->eMailsDpy);
   }
 
   /* Fetch the list of instruments (either only for project or all)
@@ -743,9 +545,7 @@ WHERE";
   private function getInstrumentsFromDb()
   {
     // Get the current list of instruments for the filter
-    $instrumentInfo =
-      $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
-    if ($this->projectId > 0 && !$this->userBase['ExceptProject']) {
+    if ($this->projectId > 0 && $this->userBase == self::MUSICIANS_FROM_PROJECT) {
       $this->instruments = [];
       // @todo Perhaps write a special repository-method
       foreach ($this->project['participantInstruments'] as $projectInstrument)  {
@@ -753,11 +553,13 @@ WHERE";
         $this->instruments[$instrument['id']] = $instrument['name'];
       }
     } else {
+      $instrumentInfo =
+        $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
       $this->instruments = $instrumentInfo['byId'];
     }
-    $this->instrumentGroups = $instrumentInfo['nameGroups'];
+    $this->instrumentGroups = $instrumentInfo['idGroups'];
 
-    array_unshift($this->instruments, '*');
+    $this->instruments[0] = '*';
   }
 
   private function fetchInstrumentsFilter()
@@ -765,13 +567,10 @@ WHERE";
     /* Remove instruments from the filter which are not known by the
      * current list of musicians.
      */
-    $filterInstruments = $this->cgiValue('InstrumentsFilter', []);
-    array_intersect($filterInstruments, $this->instruments);
+    $filterInstruments = array_flip($this->cgiValue('instrumentsFilter', []));
+    array_intersect_key($filterInstruments, $this->instruments);
 
-    $this->instrumentsFilter = [];
-    foreach ($filterInstruments as $value) {
-      $this->instrumentsFilter[] = $value;
-    }
+    $this->instrumentsFilter = array_keys($filterInstruments);
   }
 
   private function defaultByStatus()
@@ -805,25 +604,17 @@ WHERE";
    */
   private function initMemberStatusFilter()
   {
-    $this->memberFilter = $this->cgiValue('MemberStatusFilter',
+    $this->memberFilter = $this->cgiValue('memberStatusFilter',
                                           $this->defaultByStatus());
   }
 
 
   /**Form a SQL filter expression for the memeber status. */
-  private function memberStatusSQLFilter()
+  private function memberStatusBlackList()
   {
     $allStatusFlags = array_keys($this->memberStatusNames);
     $statusBlackList = array_diff($allStatusFlags, $this->memberFilter);
-
-    // Explicitly include NULL MemberStatus (which in principle should not happen
-    $filter = "AND ( `MemberStatus` IS NULL OR (1 ";
-    foreach ($statusBlackList as $badStatus) {
-      $filter .= " AND `MemberStatus` NOT LIKE '".$badStatus."'";
-    }
-    $filter .= "))";
-
-    return $filter;
+    return $statusBlackList;
   }
 
   /**The default user base. Simple, but just keep the scheme in sync
@@ -881,7 +672,7 @@ WHERE";
    */
   public function memberStatusFilter()
   {
-    $memberStatus = $this->cgiValue('MemberStatusFilter',
+    $memberStatus = $this->cgiValue('memberStatusFilter',
                                     $this->submitted ? '' : $this->defaultByStatus());
     $memberStatus = array_flip($memberStatus);
     $result = [];
@@ -900,35 +691,32 @@ WHERE";
   public function basicRecipientsSet()
   {
     return [
-      'FromProject' => $this->userBase['FromProject'] ? 1 : 0,
-      'ExceptProject' => $this->userBase['ExceptProject'] ? 1 : 0,
+      'fromProject' => ($this->userBase & self::MUSICIANS_FROM_PROJECT) != 0,
+      'exceptProject' => ($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) != 0,
       ];
   }
 
-  /**Return the values for the instruments filter.
-   *
-   * TODO: group by instrument kind (strings, wind etc.)
+  /**
+   * Return the values for the instruments filter.
    */
   public function instrumentsFilter()
   {
-    $filterInstruments = $this->cgiValue('InstrumentsFilter', [ '*' ]);
-    $filterInstruments = array_flip(array_intersect($filterInstruments, $this->instruments));
+    $filterInstruments = array_flip($this->cgiValue('instrumentsFilter', [ '*' ]));
     $result = [];
-    foreach($this->instruments as $instrument) {
-      $name = $instrument;
-      if ($instrument == '*') {
+    foreach($this->instruments as $instrumentId => $instrumentName) {
+      if ($instrumentName == '*') {
         $value = '';
         $group = '';
       } else {
-        $value = $instrument;
+        $value = $instrumentId;
         $group = $this->instrumentGroups[$value];
       }
 
       $result[] = [
         'value' => $value,
-        'name' => $name,
+        'name' => $instrumentName,
         'group' => $group,
-        'flags' => isset($filterInstruments[$instrument]) ? Navigation::SELECTED : 0,
+        'flags' => isset($filterInstruments[$instrumentId]) ? Navigation::SELECTED : 0,
       ];
     }
     return $result;
@@ -938,14 +726,14 @@ WHERE";
   public function emailRecipientsChoices()
   {
     if ($this->submitted) {
-      $selectedRecipients = $this->cgiValue('SelectedRecipients', []);
+      $selectedRecipients = $this->cgiValue('selectedRecipients', []);
     } else {
       $selectedRecipients = $this->emailRecs;
     }
     $selectedRecipients = array_flip($selectedRecipients);
 
     $result = [];
-    foreach($this->EMailsDpy as $key => $email) {
+    foreach($this->eMailsDpy as $key => $email) {
       if ($this->frozen && array_search($key, $this->emailRecs) === false) {
         continue;
       }
@@ -995,19 +783,19 @@ WHERE";
   public function selectedRecipients()
   {
     if ($this->submitted) {
-      $selectedRecipients = $this->cgiValue('SelectedRecipients', []);
+      $selectedRecipients = $this->cgiValue('selectedRecipients', []);
     } else {
       $selectedRecipients = $this->emailRecs;
     }
     $selectedRecipients = array_unique($selectedRecipients);
-    //$_POST['blah'] = print_r($this->EMails, true);
-    $EMails = [];
+    //$_POST['blah'] = print_r($this->eMails, true);
+    $eMails = [];
     foreach ($selectedRecipients as $key) {
-      if (isset($this->EMails[$key])) {
-        $EMails[] = $this->EMails[$key];
+      if (isset($this->eMails[$key])) {
+        $eMails[] = $this->eMails[$key];
       }
     }
-    return $EMails;
+    return $eMails;
   }
 
   /**Return true if the list of recipients is frozen,
