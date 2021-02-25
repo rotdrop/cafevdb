@@ -27,7 +27,7 @@ use \Doctrine\Common\Collections;
 
 trait FindLikeTrait
 {
-  use LogTrait;
+  // use LogTrait;
 
   /**
    * Find entities by given wild-card criteria. This is like findBy()
@@ -47,7 +47,7 @@ trait FindLikeTrait
    */
   public function findLike(
     array $criteria
-    , array $orderBy = []
+    , ?array $orderBy = null
     , ?int $limit = null
     , ?int $offset = null): array
   {
@@ -88,7 +88,7 @@ trait FindLikeTrait
    *
    * @return ORM\QueryBuilder
    */
-  protected static function addOrderBy(ORM\QueryBuilder $qb, array $orderBy = [], ?int $limit = null, ?int $offset = null, ?string $alias = null): ORM\QueryBuilder
+  protected static function addOrderBy(ORM\QueryBuilder $qb, ?array $orderBy = null, ?int $limit = null, ?int $offset = null, ?string $alias = null): ORM\QueryBuilder
   {
     foreach ($orderBy as $key => $dir) {
       if (strpos($key, '.') === false && !empty($alias)) {

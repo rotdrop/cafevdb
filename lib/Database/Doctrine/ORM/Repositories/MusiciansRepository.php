@@ -171,7 +171,7 @@ class MusiciansRepository extends EntityRepository
    *
    * @param array<int, int> $instrumentIds
    *
-   * @param array $oderBy ```[ KEY => ORDERING ]```
+   * @param array|null $orderBy ```[ KEY => ORDERING ]```
    *
    * @param int|null $limit Result-set limit
    *
@@ -183,22 +183,13 @@ class MusiciansRepository extends EntityRepository
    */
   public function findByInstruments(
     array $instrumentIds
-    , array $orderBy = []
+    , ?array $orderBy = null
     , ?int $limit = null
     , ?int $offset = null
     , string $indexBy = 'id'
   ): array {
-    $qb = $this->createQueryBuilder('m', 'm.'.$indexBy);
-    $qb->leftJoin('m.instruments', 'i')
-       ->addCriteria(self::createInstrumentsCriteria($instrumentIds, 'i'))
-       ->groupBy('m.id');
-
-    self::addOrderBy($qb, $orderBy, $limit, $offset, 'm');
-
-    $this->log('SQL '.$qb->getQuery()->getSql());
-    $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
-
-    return $qb->getQuery()->getResult();
+    return $this->findBy([ 'instruments.indtrument' => $instrumentIds ],
+                         [ 'id' => 'INDEX' ]);
   }
 
   /**

@@ -30,61 +30,8 @@ use Doctrine\ORM\EntityRepository;
 
 class ProjectParticipantsRepository extends EntityRepository
 {
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
-
-  /**
-   * findBy() which optionally allows where and orderBy with the two
-   * "principal" associaions "project" and "musician".
-   *
-   * Syntax:
-   * ```
-   * findBy([ 'musician.name => 'blah' ], [ 'project.name' => 'DESC' ]);
-   * ```
-   */
-  public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
-  {
-    $orderBy = $orderBy?:[];
-    $joinEntities = [];
-    foreach ([ 'project', 'musician' ] as $foreignKey) {
-      foreach ($criteria as $key => $value) {
-        if (preg_match('/^'.$foreignKey.'[.]/', $key)) {
-          $joinEntities[$foreignKey] = true;
-        }
-      }
-      foreach ($orderBy as $key => $value) {
-        if (preg_match('/^'.$foreignKey.'[.]/', $key)) {
-          $joinEntities[$foreignKey] = true;
-        }
-      }
-    }
-    if (empty($joinEntities)) {
-      return parent::findBy($criteria, $orderBy, $limit, $offset);
-    }
-    $qb = $this->createQueryBuilder('pp');
-    foreach (array_keys($joinEntities) as $foreignKey) {
-      $qb->join('pp.'.$foreignKey, $foreignKey);
-    }
-    $andX = $qb->expr()->andX();
-    foreach (array_keys($criteria) as $key) {
-      $param = str_replace('.', '_', $key);
-      $andX->add($qb->expr()->eq($key, ':'.$param));
-    }
-    $qb->where($andX);
-    foreach ($criteria as $key => $value) {
-      $param = str_replace('.', '_', $key);
-      $qb->setParameter($param, $value);
-    }
-    foreach ($orderBy as $key => $dir) {
-      $qb->addOrderBy($key, $dir);
-    }
-    if (!empty($limit)) {
-      $qb->setMaxResults($limit);
-    }
-    if (!empty($offset)) {
-      $qb->setFirstResult($offset);
-    }
-    return $qb->getQuery()->execute();
-  }
 
   /**
    * Find all the participant names of the given project.  Handy for
