@@ -23,9 +23,12 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use Doctrine\ORM;
+use \Doctrine\Common\Collections;
 
 trait FindLikeTrait
 {
+  use LogTrait;
+
   /**
    * Find entities by given wild-card criteria. This is like findBy()
    * but the criterias may contain '%' or '*', in which case a LIKE
@@ -100,6 +103,137 @@ trait FindLikeTrait
       $qb->setFirstResult($offset);
     }
     return $qb;
+  }
+
+  /**
+   * Add some "missing" convenience stuff to findBy()
+   *
+   * - allow automatic filtering by association fields
+   * - allow sorting by association fields
+   * - allow indexing by adding a 'INDEX' option to $orderBy.
+   * - allow wild-cards, uses "LIKE" in comparison. '*' and '%' are
+   *   allowed wild-cards, wher '*' is internally simply replaced by
+   *   '%'.
+   * - ```'!FIELD' => SOMETHING``` will just invert the criterion
+   * - supports Collections\Criteria, these are applied at the end.
+   *
+   * In order to filter by empty collections a left-join with the
+   * main-table is performed.
+   *
+   * @return array The found entities.
+   */
+  public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
+  {
+    // filter out instances of criteria
+    $collectionCriteria = [];
+    foreach ($criteria as $key => $value) {
+      if ($value instanceof Collections\Criteria ) {
+        $collectionCriteria[] = $value;
+        unset($criteria[$key]);
+      }
+    }
+    // find "nots" for convenience
+    $nots = [];
+    foreach ($criteria as $key => $value) {
+      $notPos = strpos($key, '!');
+      if ($notPos === 0) {
+        unset($criteria[$key]);
+        $key = substr($key, 1);
+        $nots[$key] = true;
+        $criteria[$key] = $value;
+      }
+    }
+    // walk through criteria and find associations ASSOCIATION.FIELD
+    $joinEntities = [];
+    foreach ($criteria as $key => $value) {
+      $dotPos = strpos($key, '.');
+      if ($dotPos !== false) {
+        $joinEntities[substr($key, 0, $dotPos)] = true;
+      }
+    }
+    $indexBy = [];
+    foreach ($orderBy as $key => $ordering) {
+      $dotPos = strpos($key, '.');
+      if ($dotPos !== false) {
+        $tableAlias = substr($key, 0, $dotPos);
+        $field = $key;
+        $joinEntities[$tableAlias] = true;
+      } else {
+        $tableAlias = 'mainTable';
+        $field = $tableAlias.'.'.$key;
+      }
+      if (strtoupper($ordering) == 'INDEX') {
+        $indexBy[$tableAlias] = $field;
+        unset($orderBy[$key]);
+      }
+    }
+
+    // $this->log(print_r($joinEntities, true).' / '.print_r($indexBy, true));
+
+    if (empty($joinEntities) && empty($indexBy)) {
+      // vanilla
+      return parent::findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    $qb = $this->createQueryBuilder('mainTable', $indexBy['mainTable']);
+    foreach (array_keys($joinEntities) as $association) {
+      $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$associaion]);
+    }
+    $andX = $qb->expr()->andX();
+    foreach ($criteria as $key => &$value) {
+      $dotPos = strpos($key, '.');
+      if ($dotPos !== false) {
+        $tableAlias = substr($key, 0, $dotPos);
+        $field = $key;
+      } else {
+        $tableAlias = 'mainTable';
+        $field = $tableAlias.'.'.$key;
+      }
+      $param = str_replace('.', '_', $field);
+      if ($value === null) {
+        $expr = $qb->expr()->isNull($field);
+      } else if (is_array($value)) {
+        $expr = $qb->expr()->in($field, ':'.$param);
+      } else if (is_string($value)) {
+        $value = str_replace('*', '%', $value);
+        if (strpos($value, '%') !== false) {
+          $expr = $qb->expr()->like($field, ':'.$param);
+        } else {
+          $expr = $qb->expr()->eq($field, ':'.$param);
+        }
+      } else {
+        $expr = $qb->expr()->eq($field, ':'.$param);
+      }
+      if (!empty($nots[$key])) {
+        $expr = $qb->expr()->not($expr);
+      }
+      $andX->add($expr);
+    }
+    $qb->where($andX);
+    foreach ($criteria as $key => $value) {
+      if ($value === null)  {
+        continue;
+      }
+      if ($dotPos !== false) {
+        $tableAlias = substr($key, 0, $dotPos);
+        $field = $key;
+      } else {
+        $tableAlias = 'mainTable';
+        $field = $tableAlias.'.'.$key;
+      }
+      $param = str_replace('.', '_', $field);
+      $qb->setParameter($param, $value);
+    }
+    self::addOrderBy($qb, $orderBy, $limit, $offset, 'mainTable');
+
+    foreach ($collectionCriteria as $criteria) {
+      $qb->addCriteria($criteria);
+    }
+
+    // $this->log('SQL '.$qb->getQuery()->getSql());
+    // $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
+
+    return $qb->getQuery()->getResult();
   }
 }
 
