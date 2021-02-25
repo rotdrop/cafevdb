@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -181,5 +181,40 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use OCA\CAFEVDB\Database\EntityManager;
 
 $entityManager = \OC::$server->query(EntityManager::class);
+
+// use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+// use \Doctrine\Common\Collections\Criteria;
+
+//$musicians = $entityManager->getRepository(Entities\Musician::class)->findAll();
+
+// $musicians = $entityManager->getRepository(Entities\Musician::class)
+//                            ->findByInstruments([ 3, 5, 7 ]);
+
+// $criteria = new Criteria();
+// $criteria->where(Criteria::expr()->neq('mainTable.id', 1));
+
+// $musicians = $entityManager->getRepository(Entities\Musician::class)
+//                            ->findBy(
+//                              // [ 'id' => [ 1, 2 ] ],
+//                              // [ 'instruments.instrument' => [ 3, 5, 7 ] ],
+//                              // [ '!instruments.instrument' => null ],
+//                              [ '!instruments.instrument' => null, $criteria ],
+//                              // [ 'instruments.ranking' => '*' ],
+//                              // [ 'instruments.instrument' => '*' ],
+//                              // [ 'id' => '2' ],
+//                              [ 'id' => 'indEX' ],
+//                            );
+
+// $criteria = new Criteria();
+// $criteria->where(Criteria::expr()->neq('instruments.instrument', 0));
+// $musicians = $entityManager->getRepository(Entities\Musician::class)
+//                            ->matching($criteria);
+
+// $blah = [];
+// foreach ($musicians as $musician) {
+//   $blah[] = $musician['surName'].', '.$musician['firstName'].' '.count($musician['projectParticipation']);
+// }
+
+// throw new \Exception('Blah '.print_r(array_keys($musicians), true).' '.implode(' / ', $blah));
 
 return ConsoleRunner::createHelperSet($entityManager);
