@@ -247,7 +247,7 @@ trait EntityManagerTrait {
   }
 
   protected static function criteria(): Collections\Criteria {
-    return new Criteria();
+    return new Collections\Criteria();
   }
 
   protected static function cExpr() {
@@ -255,7 +255,7 @@ trait EntityManagerTrait {
   }
 
   protected static function criteriaExpr(): Collections\ExpressionBuilder {
-    return Criteria::expr();
+    return Collections\Criteria::expr();
   }
 
   protected function expr() {
