@@ -25,8 +25,6 @@
 import { globalState, appName, $ } from './globals.js';
 
 require('blueimp-file-upload');
-require('bootstrap-duallistbox/src/jquery.bootstrap-duallistbox.js');
-require('bootstrap-duallistbox/src/bootstrap-duallistbox.css');
 
 const FileUpload = globalState.FileUpload = {
   uploadingFiles: {},

@@ -54,6 +54,8 @@ const webRoot = OC.appswebroots[appName] + '/';
 const cloudWebRoot = OC.webRoot;
 const cloudUser = ncAuth.getCurrentUser();
 
+function appPrefix(id, join) { return appName + (join || '-') + id; }
+
 export {
   initialState,
   CAFEVDB,
@@ -63,6 +65,7 @@ export {
   webRoot,
   cloudWebRoot,
   cloudUser,
+  appPrefix,
 };
 
 // Local Variables: ***

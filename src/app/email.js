@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, $ } from './globals.js';
+import { globalState, appName, $, appPrefix } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
@@ -34,7 +34,8 @@ import * as DialogUtils from './dialog-utils.js';
 import generateUrl from './generate-url.js';
 import print_r from './print-r.js';
 
-require('emailform.css');
+require('bootstrap4-duallistbox');
+require('emailform.scss');
 
 const Email = globalState.Email = {
   enabled: true,
@@ -78,7 +79,7 @@ const cloudAttachment = function(path, callback) {
     });
 };
 
-const tabResize = function(dialogWidget, panelHolder) {
+function emailTabResize(dialogWidget, panelHolder) {
   // panelHolder.css('width', 'auto');
   // panelHolder.css('height', 'auto');
   panelHolder.css('max-height', 'none'); // reset in order to get auto-configuration
@@ -96,7 +97,7 @@ const tabResize = function(dialogWidget, panelHolder) {
   } else {
     panelHolder.css('padding-right', '');
   }
-};
+}
 
 /**
  * Add some extra JS stuff for the select boxes. This has to be
@@ -133,7 +134,7 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
       nonSelectedListLabel: t(appName, 'Remaining Recipients'),
       selectedListLabel: t(appName, 'Selected Recipients'),
       infoText: '&nbsp;', // t(appName, 'Showing all {0}'),
-      infoTextFiltered: '<span class="label label-warning">'
+      infoTextFiltered: '<span class="badge badge-warning">'
         + t(appName, 'Filtered')
         + '</span> {0} '
         + t(appName, 'from')
@@ -267,15 +268,15 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   // Attach above function to almost every sensible control :)
 
   // Controls :..
-  const controlsContainer = fieldset.find('.filter-controls.container');
+  const controlsContainer = fieldset.find('.filter-controls.' + appPrefix('container'));
 
   // Instruments filter
-  const instrumentsFilter = fieldset.find('.instruments-filter.container');
+  const instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container'));
   instrumentsFilter.on('dblclick', function(event) {
     applyRecipientsFilter.call(this, event);
   });
   // // Alternatively:
-  // var instrumentsFilter = fieldset.find('.instruments-filter.container select');
+  // var instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container') + ' select');
   // instrumentsFilter.off('change');
   // instrumentsFilter.on('change', function(event) {
   //   applyRecipientsFilter.call(this, event);
@@ -289,7 +290,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   });
 
   // Basic set
-  const basicRecipientsSet = fieldset.find('.basic-recipients-set.container input[type="checkbox"]');
+  const basicRecipientsSet = fieldset.find('.basic-recipients-set.' + appPrefix('container') + 'r input[type="checkbox"]');
   basicRecipientsSet.off('change');
   basicRecipientsSet.on('change', function(event) {
     applyRecipientsFilter.call(this, event);
@@ -338,7 +339,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   panelHolder
     .off('resize')
     .on('resize', function() {
-      Email.tabResize(dialogHolder.dialog('widget'), panelHolder);
+      emailTabResize(dialogHolder.dialog('widget'), panelHolder);
     });
 
   return false;
@@ -1314,7 +1315,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
   panelHolder.off('resize');
   panelHolder.on('resize', function() {
-    Email.tabResize(dialogWidget, panelHolder);
+    emailTabResize(dialogWidget, panelHolder);
   });
 };
 
@@ -1340,7 +1341,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
  *
  * @param {Function} afterInit TBD.
  */
-const emailFormPopup = function(post, modal, single, afterInit) {
+function emailFormPopup(post, modal, single, afterInit) {
   const self = this;
 
   if (this.active === true) {
@@ -1422,6 +1423,7 @@ const emailFormPopup = function(post, modal, single, afterInit) {
           $.fn.cafevTooltip.remove();
           DialogUtils.toBackButton(dialogHolder);
           DialogUtils.customCloseButton(dialogHolder, function(event, container) {
+            console.info('Custom Close Button');
             event.stopImmediatePropagation();
             dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
             // dialogHolder.dialog('close');
@@ -1438,7 +1440,7 @@ const emailFormPopup = function(post, modal, single, afterInit) {
             disabled: single ? [0] : [],
             heightStyle: 'content',
             create(event, ui) {
-              tabResize(dialogWidget, ui.panel);
+              emailTabResize(dialogWidget, ui.panel);
               return true;
             },
             activate(event, ui) {
@@ -1465,7 +1467,7 @@ const emailFormPopup = function(post, modal, single, afterInit) {
                 // At least in FF there is also a resize event,
                 // but only for the composition window. Don't
                 // know why.
-                Email.tabResize(dialogWidget, ui.newPanel);
+                emailTabResize(dialogWidget, ui.newPanel);
               }
 
               return true;

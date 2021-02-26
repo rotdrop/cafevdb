@@ -1947,7 +1947,7 @@ class phpMyEdit
 		echo '<table summary="labels" class="',$this->getCSSclass('tab', $position),'">',"\n";
 		echo '<tr class="'.$this->getCSSclass('navigation', $position).' table-tabs">'."\n";
 		echo '<td colspan="2" class="table-tabs">'."\n";
-		echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs container">'."\n";
+		echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs pme-container">'."\n";
 		echo '<ul class="'.$this->getCSSclass('navigation', $position).' table-tabs tab-menu">'."\n";
 		foreach($this->tabs as $idx => $name) {
 			$selected = strval($idx) == strval($this->cur_tab) ? ' selected' : '';
@@ -3407,7 +3407,7 @@ class phpMyEdit
 		if ($position == 'up' && $this->tabs_enabled()) {
 			echo '<tr class="'.$this->getCSSclass('navigation', $position).' table-tabs">'."\n";
 			echo '<td colspan="'.$num_nav_cols.'" class="table-tabs">'."\n";
-			echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs container">'."\n";
+			echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs pme-container">'."\n";
 			echo '<ul class="'.$this->getCSSclass('navigation', $position).' table-tabs tab-menu">'."\n";
 			foreach($this->tabs as $idx => $name) {
 				$selected = strval($idx) == strval($this->cur_tab) ? ' selected' : '';

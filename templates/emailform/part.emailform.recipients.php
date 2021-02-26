@@ -41,16 +41,11 @@
  *
  */
 
-$projectId = $_['ProjectId'];
-if ($projectId > 0) {
-  $projectName = $_['ProjectName'];
-} else {
-  $projectName = '';
-}
+namespace OCA\CAFEVDB;
 
 $noMissingClass = '';
 $missingClass = '';
-if (count($_['MissingEmailAddresses']) > 0) {
+if (count($missingEmailAddresses) > 0) {
   $noMissingClass = ' reallyhidden';
 } else {
   $missingClass = ' reallyhidden';
@@ -58,34 +53,34 @@ if (count($_['MissingEmailAddresses']) > 0) {
 $noMissingText = $l->t('No Musician without or obviously broken email-address found :)');
 $missingText = $l->t('Musicians without or obviously broken email-address');
 
-$frozen = $_['FrozenRecipients'];
+$frozen = $frozenRecipients;
 
 ?>
 
 <fieldset id="cafevdb-email-recipients-fieldset" class="email-recipients page">
-  <?php echo $pageNavigation->persistentCGI('emailRecipients', $_['RecipientsFormData']); ?>
+  <?php echo $pageNavigation->persistentCGI('emailRecipients', $recipientsFormData); ?>
   <?php if ($projectId >= 0) { ?>
     <?php if ($frozen) { ?>
       <input type="hidden"
              name="emailRecipients[BasicRecipientsSet][FromProject]"
              value="1"/>
     <?php } else { ?>
-      <div class="cafevdb-email-form row">
-        <span id="basic-recipient-set-wrapper" class="basic-recipients-set container outer left">
+      <div class="cafevdb-email-form <?php p($rowClass); ?>">
+        <span id="basic-recipient-set-wrapper" class="basic-recipients-set <?php p($containerClass); ?> outer left">
           <span class="label vmiddle">
             <label class="basic-recipients-set"
                    title="<?php echo $toolTips['email-recipients-basic-set']; ?>">
               <?php echo $l->t('Basic Recipients Set'); ?>
             </label>
           </span>
-          <span class="basic-recipients-set from-project inner vmiddle container">
+          <span class="basic-recipients-set from-project inner vmiddle <?php p($containerClass); ?>">
             <input type="checkbox"
                    id="basic-recipients-set-from-project"
                    class="basic-recipients-set from-project tip"
                    title="<?php echo $toolTips['email-recipients-from-project']; ?>"
                    name="emailRecipients[BasicRecipientsSet][FromProject]"
                    value="1"
-            <?php echo $_['BasicRecipientsSet']['FromProject'] ? 'checked="checked"' : ''; ?>
+            <?php echo $basicRecipientsSet['fromProject'] ? 'checked="checked"' : ''; ?>
                    />
             <span class="label right">
               <label for="basic-recipients-set-from-project"
@@ -95,14 +90,14 @@ $frozen = $_['FrozenRecipients'];
               </label>
             </span>
           </span>
-          <span class="basic-recipients-set except-project inner vmiddle container">
+          <span class="basic-recipients-set except-project inner vmiddle <?php p($containerClass); ?>">
             <input type="checkbox"
                    id="basic-recipients-set-except-project"
                    class="basic-recipients-set except-project tip"
                    title="<?php echo $toolTips['email-recipients-except-project']; ?>"
                    name="emailRecipients[BasicRecipientsSet][ExceptProject]"
                    value="1"
-            <?php echo $_['BasicRecipientsSet']['ExceptProject'] ? 'checked="checked"' : ''; ?>
+            <?php echo $basicRecipientsSet['exceptProject'] ? 'checked="checked"' : ''; ?>
                    />
             <span class="label right">
               <label for="basic-recipients-set-except-project"
@@ -117,8 +112,8 @@ $frozen = $_['FrozenRecipients'];
       <div class="spacer"></div>
     <?php } /* $projectId > = 0 */ ?>
   <?php } /* $projectId > = 0 */ ?>
-  <div class="cafevdb-email-form row">
-    <span class="member-status-filter container left vmiddle">
+  <div class="cafevdb-email-form <?php p($rowClass); ?>">
+    <span class="member-status-filter <?php p($containerClass); ?> left vmiddle">
       <span class="label left">
         <label for="member-status-filter"
                title="<?php echo $toolTips['email-recipients-member-status-filter']; ?>"
@@ -128,20 +123,20 @@ $frozen = $_['FrozenRecipients'];
       </span>
       <select id="member-status-filter"
               multiple="multiple"
-              size="<?php echo count($_['MemberStatusFilter']); ?>"
+              size="<?php echo count($memberStatusFilter); ?>"
               class="member-status-filter"
               title="<?php echo $toolTips['email-recipients-member-status-filter']; ?>"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
               name="emailRecipients[MemberStatusFilter][]">
-        <?php echo $pageNavigation->selectOptions($_['MemberStatusFilter']); ?>
+        <?php echo $pageNavigation->selectOptions($memberStatusFilter); ?>
       </select>
     </span>
   </div>
   <div class="spacer">
     <div class="ruler"></div>
   </div>
-  <div class="cafevdb-email-form row">
-    <span class="recipients-select container left">
+  <div class="cafevdb-email-form <?php p($rowClass); ?>">
+    <span class="recipients-select <?php p($containerClass); ?> left">
       <span class="label top">
         <label for="recipients-select"><?php echo  $l->t('Email Recipients'); ?></label>
       </span>
@@ -150,10 +145,10 @@ $frozen = $_['FrozenRecipients'];
               size="18"
               title="<?php echo $toolTips['email-recipients-choices']; ?>"
               name="emailRecipients[SelectedRecipients][]">
-        <?php echo $pageNavigation->selectOptions($_['EmailRecipientsChoices']); ?>
+        <?php echo $pageNavigation->selectOptions($emailRecipientsChoices); ?>
       </select>
     </span>
-    <span class="instruments-filter container right tooltip-top"
+    <span class="instruments-filter <?php p($containerClass); ?> right tooltip-top"
           title="<?php echo $toolTips['email-recipients-instruments-filter-container']; ?>">
       <span class="label top">
         <label for="instruments-filter"
@@ -170,7 +165,7 @@ $frozen = $_['FrozenRecipients'];
                 title="<?php echo $toolTips['email-recipients-instruments-filter']; ?>"
                 data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
                 name="emailRecipients[InstrumentsFilter][]">
-          <?php echo $pageNavigation->selectOptions($_['InstrumentsFilter']); ?>
+          <?php echo $pageNavigation->selectOptions($instrumentsFilter); ?>
         </select>
       </span>
     </span>
@@ -178,8 +173,8 @@ $frozen = $_['FrozenRecipients'];
   <div class="spacer">
     <div class="ruler"></div>
   </div>
-  <div class="row">
-    <span class="container left missing-email-addresses tooltip-top"
+  <div class="<?php p($rowClass); ?>">
+    <span class="<?php p($containerClass); ?> left missing-email-addresses tooltip-top"
           title="<?php echo $toolTips['email-recipients-broken-emails']; ?>">
       <span class="label top missing-email-addresses<?php echo $missingClass; ?>">
         <?php echo $missingText; ?>
@@ -190,7 +185,7 @@ $frozen = $_['FrozenRecipients'];
       <span class="missing-email-addresses names">
         <?php
         $separator = '';
-        foreach ($_['MissingEmailAddresses'] as $id => $name) {
+        foreach ($missingEmailAddresses as $id => $name) {
           echo $separator; $separator = ', ';
           echo '<span class="missing-email-addresses personal-record" '.
                '      data-id="'.$id.'">'.$name.'</span>';
@@ -198,7 +193,7 @@ $frozen = $_['FrozenRecipients'];
         ?>
       </span>
     </span>
-    <span class="container right filter-controls">
+    <span class="<?php p($containerClass); ?> right filter-controls">
       <input type="button"
              id="instruments-filter-apply"
              value="<?php echo $l->t('Apply Filter'); ?>"

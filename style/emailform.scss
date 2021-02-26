@@ -19,6 +19,14 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+.recipients-select {
+  button {
+    min-height: unset;
+  }
+  @import 'bootstrap/scss/bootstrap';
+  @import 'bootstrap4-duallistbox/dist/bootstrap-duallistbox';
+}
+
 /*****************************************************************************
  *
  * General stuff, background etc.
@@ -286,7 +294,7 @@ form#cafevdb-email-form td.stored-messages-storage input.submit {
   vertical-align:middle;
 }
 
-form#cafevdb-email-form td.stored-messages-storage span.save-as-template.container {
+form#cafevdb-email-form td.stored-messages-storage span.save-as-template.#{$cssPrefix}container {
   position:relative;
   vertical-align:middle;
 }
@@ -419,26 +427,26 @@ form#cafevdb-email-form td.messagetext {
  * email recipients selection
  *
  */
-form#cafevdb-email-form div.row {
+form#cafevdb-email-form div.#{$cssPrefix}row {
   width:100%;
 }
 
-form#cafevdb-email-form div.row:after {
+form#cafevdb-email-form div.#{$cssPrefix}row:after {
   content:" ";
   display:block;
   height:0;
   clear: both;
 }
 
-form#cafevdb-email-form span.container {
+form#cafevdb-email-form span.#{$cssPrefix}container {
   display:inline-block;
 }
 
-form#cafevdb-email-form .container.left {
+form#cafevdb-email-form .#{$cssPrefix}container.left {
   float:left;
 }
 
-form#cafevdb-email-form .container.right {
+form#cafevdb-email-form .#{$cssPrefix}container.right {
   float:right;
   text-align:right;
 }
@@ -506,7 +514,7 @@ div#sendingprogresswrapper .messagecount {
   text-align:center;
 }
 
-div#sendingprogresswrapper div.progress.row {
+div#sendingprogresswrapper div.progress.#{$cssPrefix}row {
   width:100%;
   height:2em;
   padding: 0.5em;
@@ -564,7 +572,7 @@ form#cafevdb-email-form .missing-email-addresses span.personal-record:active {
   background-color:LightSteelBlue;
 }
 
-form#cafevdb-email-form .member-status-filter.container {
+form#cafevdb-email-form .member-status-filter.#{$cssPrefix}container {
   min-height:2em;
   line-height:2em;
   width:100%;
@@ -576,7 +584,7 @@ form#cafevdb-email-form #member_status_filter_chosen {
   width:auto !important;
 }
 
-form#cafevdb-email-form .basic-recipients-set.container.inner {
+form#cafevdb-email-form .basic-recipients-set.#{$cssPrefix}container.inner {
   margin: 0 0.5em 0 0.5em;
   position:relative;
   max-width:35%;
@@ -590,7 +598,7 @@ form#cafevdb-email-form input[type=checkbox].basic-recipients-set {
   height: 1px;
   overflow: hidden;
 }
-form#cafevdb-email-form span.basic-recipients-set.container.outer {
+form#cafevdb-email-form span.basic-recipients-set.#{$cssPrefix}container.outer {
   max-width:100%;
   white-space:nowrap;
   overflow:hidden;
@@ -618,17 +626,17 @@ form#cafevdb-email-form input[type=checkbox]:checked + .label span.button {
   text-overflow:ellipsis;
 }
 
-form#cafevdb-email-form .recipients-select.container {
+form#cafevdb-email-form .recipients-select.#{$cssPrefix}container {
   width:80%;
 }
 
-form#cafevdb-email-form .instruments-filter.container {
+form#cafevdb-email-form .instruments-filter.#{$cssPrefix}container {
   width:18%;
   text-align:right;
   cursor: pointer;
 }
 
-form#cafevdb-email-form .instruments-filter.container label {
+form#cafevdb-email-form .instruments-filter.#{$cssPrefix}container label {
 }
 
 form#cafevdb-email-form span#instruments-filter-wrapper {
@@ -638,7 +646,7 @@ form#cafevdb-email-form span#instruments-filter-wrapper {
   width: 100%;
 }
 
-form#cafevdb-email-form .instruments-filter.container .chosen-container {
+form#cafevdb-email-form .instruments-filter.#{$cssPrefix}container .chosen-container {
   width:100% !important;
 }
 

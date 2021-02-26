@@ -10,6 +10,7 @@ module.exports = {
     oc_userconfig: true,
     dayNames: true,
     firstDay: true,
+    APP_NAME: true,
   },
   rules: {
     camelcase: [

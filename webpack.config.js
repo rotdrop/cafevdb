@@ -6,6 +6,18 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
+const fs = require('fs');
+const xml2js = require('xml2js');
+
+const infoFile = path.join(__dirname, 'appinfo/info.xml');
+let appInfo;
+xml2js.parseString(fs.readFileSync(infoFile), function(err, result) {
+  if (err) {
+    throw err;
+  }
+  appInfo = result;
+});
+const appName = appInfo.info.id[0];
 
 module.exports = {
   entry: {
@@ -52,6 +64,9 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
     }),
+    new webpack.DefinePlugin({
+      APP_NAME: JSON.stringify(appName),
+    }),
   ],
   module: {
     noParse: /(ckeditor.js|tinymce.min.js)/,
@@ -74,7 +89,14 @@ module.exports = {
           // 'style-loader',
           MiniCssExtractPlugin.loader,
           'css-loader',
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              // Prefer `dart-sass`
+              implementation: require('sass'),
+              additionalData: '$appName: ' + appName + '; $cssPrefix: ' + appName + '-;',
+            },
+          },
         ],
       },
       {

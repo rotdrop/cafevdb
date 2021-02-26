@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,25 +20,16 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Util;
-use CAFEVDB\Navigation;
-use CAFEVDB\Email;
-use CAFEVDB\Projects;
-use CAFEVDB\Config;
-use CAFEVDB\EmailComposer;
-use CAFEVDB\Events;
-
 $eventAttachmentOptions =
-  EmailComposer::eventAttachmentOptions($_['ProjectId'], $_['eventAttachments']);
-$fileAttachmentOptions = EmailComposer::fileAttachmentOptions($_['fileAttachments']);
+  $emailComposer->eventAttachmentOptions($_['ProjectId'], $_['eventAttachments']);
+$fileAttachmentOptions = $emailComposer->fileAttachmentOptions($_['fileAttachments']);
 $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
 
 ?>
 
 <fieldset id="cafevdb-email-composition-fieldset" class="email-composition page">
   <!-- <legend id="cafevdb-email-form-legend"><?php echo $l->t('Compose Em@il'); ?></legend> -->
-  <?php echo Navigation::persistentCGI('emailComposer', $_['ComposerFormData']); ?>
+  <?php echo $pageNavigation->persistentCGI('emailComposer', $_['ComposerFormData']); ?>
   <table class="cafevdb-email-composition-form">
     <tr class="stored-messages">
      <!-- <td class="caption stored-messages"><?php echo $l->t("Drafts"); ?>, <?php echo $l->t('Templates')?></td> -->
@@ -85,10 +76,10 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                class="tooltip-bottom"
                id="emailCurrentTemplate"
                disabled="disabled">
-        <span class="inner vmiddle container save-as-template">
+        <span class="inner vmiddle <?php p($containerClass); ?> save-as-template">
           <input type="checkbox"
                  id="check-save-as-template"
-                 class="save-as-template tooltip-wide tooltip-bottomo"
+                 class="save-as-template tooltip-wide tooltip-bottom"
                  name="emailComposer[SaveAsTemplate]"/>
           <label for="check-save-as-template"
                  class="tip save-as-template"
@@ -159,7 +150,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
     <tr>
       <td class="subject caption"><?php echo $l->t('Subject'); ?></td>
       <td colspan="2" class="subject input">
-        <div class="subject container">
+        <div class="subject <?php p($containerClass); ?>">
           <span class="subject tag"><?php echo htmlspecialchars($_['mailTag']); ?></span>
           <span class="subject input">
             <input value="<?php echo htmlspecialchars($_['subject']); ?>"
@@ -197,7 +188,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                 title="<?php echo $toolTips['upload-attachment']; ?>"
                 value="<?php echo $l->t('Upload new File'); ?>">
           <img class="svg"
-               src="<?php echo \OCP\Util::imagePath('core', 'actions/upload.svg'); ?>"
+               src="<?php echo $urlGenerator->imagePath('core', 'actions/upload.svg'); ?>"
                alt="<?php echo $l->t('Upload new File'); ?>"/>
         </button>
         <button type="button"
@@ -205,7 +196,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                 title="<?php echo $toolTips['cloud-attachment']; ?>"
                 value="<?php echo $l->t('Select from Owncloud'); ?>">
           <img class="svg small"
-               src="<?php echo \OCP\Util::imagePath('cafevdb', 'cloud.svg'); ?>"
+               src="<?php echo $urlGenerator->imagePath('cafevdb', 'cloud.svg'); ?>"
                alt="<?php echo $l->t('Select from Owncloud'); ?>"/>
         </button>
         <button type="button"
@@ -214,7 +205,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                 title="<?php echo $toolTips['events-attachment']; ?>"
                 value="<?php echo $l->t('Project Events'); ?>">
           <img class="svg events"
-               src="<?php echo \OCP\Util::imagePath('cafevdb', 'calendar-dark.svg'); ?>"
+               src="<?php echo $urlGenerator->imagePath('cafevdb', 'calendar-dark.svg'); ?>"
                alt="<?php echo $l->t('Select Events'); ?>"
         </button>
       </td>
@@ -230,7 +221,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                 name="emailComposer[AttachedEvents][]"
                 class="event-attachments select"
                 id="event-attachments-selector">
-          <?php echo Navigation::selectOptions($eventAttachmentOptions); ?>
+          <?php echo $pageNavigation->selectOptions($eventAttachmentOptions); ?>
         </select>
         <input title="<?php echo $toolTips['delete-all-event-attachments']; ?>"
                type="submit"
@@ -250,7 +241,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                 name="emailComposer[AttachedFiles][]"
                 class="file-attachments select"
                 id="file-attachments-selector">
-          <?php echo Navigation::selectOptions($fileAttachmentOptions); ?>
+          <?php echo $pageNavigation->selectOptions($fileAttachmentOptions); ?>
         </select>
         <input title="<?php echo $toolTips['delete-all-file-attachments']; ?>"
                type="submit"

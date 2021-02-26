@@ -22,6 +22,9 @@
 
 namespace OCA\CAFEVDB;
 
+$_['containerClass'] = $containerClass = $appPrefix('container');
+$_['rowClass'] = $rowClass = $appPrefix('row');
+
 ?>
 
 <div id="emailformwrapper">
@@ -43,8 +46,8 @@ namespace OCA\CAFEVDB;
     <fieldset id="cafevdb-email-form-data" class="form-data">
       <?php echo $pageNavigation->persistentCGI($_['FormData']); ?>
     </fieldset>
-    <div id="emailformrecipients" class="resize-target"><?php echo $this->inc('part.emailform.recipients'); ?></div>
-    <div id="emailformcomposer" class="resize-target"><?php echo $this->inc('part.emailform.composer'); ?></div>
+    <div id="emailformrecipients" class="resize-target"><?php echo $this->inc('emailform/part.emailform.recipients', $_); ?></div>
+    <div id="emailformcomposer" class="resize-target"><?php echo $this->inc('emailform/part.emailform.composer', $_); ?></div>
     <div id="emailformdebug" class="resize-target"><pre><?php print_r($_POST); ?></pre></div>
   </form>
 
@@ -56,7 +59,7 @@ namespace OCA\CAFEVDB;
     <form data-upload-id='1'
           id="attachment_upload_form"
           class="file_upload_form"
-          action="<?php print_unescaped(OCP\Util::linkTo('cafevdb', 'ajax/email/uploadattachment.php')); ?>"
+          action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.email_form.upload', [ 'object' => 'attachment' ])); ?>"
           method="post"
           enctype="multipart/form-data"
           target="attachment_upload_target_1">
@@ -79,11 +82,11 @@ namespace OCA\CAFEVDB;
   </div>
   <div id="sendingprogresswrapper">
     <div class="messagecount"></div>
-    <div class="progress row smtp">
+    <div class="progress <?php p($rowClass); ?> smtp">
       <span class="title"><?php echo $l->t('Message Delivery'); ?></span>
       <span class="progressbar"></span>
     </div>
-    <div class="progress row imap">
+    <div class="progress <?php p($rowClass); ?> imap">
       <span class="title"><?php echo $l->t('Copy to Sent'); ?></span>
       <span class="progressbar"></span>
     </div>
