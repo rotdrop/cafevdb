@@ -33,6 +33,7 @@ import * as Email from './email.js';
 import { data as pmeData, sys as pmeSys } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
+import * as DialogUtils from './dialog-utils.js';
 import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
 
 require('projects.css');
@@ -100,7 +101,7 @@ const wikiPopup = function(post, reopen) {
       // open callback
       dwDialog.dialog('option', 'appendTo', '#cafevdb-general');
       // Custom shuffle button
-      CAFEVDB.dialogToBackButton(dwDialog);
+      DialogUtils.toBackButton(dwDialog);
     },
     function() {
       // close callback

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,6 +27,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
+import * as DialogUtils from './dialog-utils.js';
 
 require('events.css');
 
@@ -80,7 +81,7 @@ const init = function(htmlContent, textStatus, request) {
 
       CAFEVDB.fixupNoChosenMenu(eventMenu);
 
-      CAFEVDB.dialogToBackButton($(this));
+      DialogUtils.toBackButton($(this));
 
       $.fn.cafevTooltip.remove();
       CAFEVDB.toolTipsInit('#events');

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,6 +26,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
+import * as DialogUtils from './dialog-utils.js';
 import '../legacy/nextcloud/jquery/avatar.js';
 
 require('blog.css');
@@ -77,7 +78,7 @@ const editWindow = function(data) {
       const dialogHolder = $(self);
       const dialogWidget = dialogHolder.dialog('widget');
 
-      CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
+      DialogUtils.customCloseButton(dialogHolder, function(event, container) {
         event.preventDefault();
         const cancelButton = container.find('#blogcancel').first();
         if (cancelButton.length > 0) {

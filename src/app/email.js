@@ -30,8 +30,11 @@ import * as Projects from './projects.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as FileUpload from './file-upload.js';
 import * as Legacy from '../legacy.js';
+import * as DialogUtils from './dialog-utils.js';
 import generateUrl from './generate-url.js';
 import print_r from './print-r.js';
+
+require('emailform.css');
 
 const Email = globalState.Email = {
   enabled: true,
@@ -1417,8 +1420,8 @@ const emailFormPopup = function(post, modal, single, afterInit) {
         resizable: false,
         open() {
           $.fn.cafevTooltip.remove();
-          CAFEVDB.dialogToBackButton(dialogHolder);
-          CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
+          DialogUtils.toBackButton(dialogHolder);
+          DialogUtils.customCloseButton(dialogHolder, function(event, container) {
             event.stopImmediatePropagation();
             dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
             // dialogHolder.dialog('close');

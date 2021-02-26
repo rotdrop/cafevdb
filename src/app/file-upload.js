@@ -1,9 +1,10 @@
-/* Orchestra member, musicion and project management application.
+/*
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,6 +23,10 @@
 // @todo remove this file.
 
 import { globalState, appName, $ } from './globals.js';
+
+require('blueimp-file-upload');
+require('bootstrap-duallistbox/src/jquery.bootstrap-duallistbox.js');
+require('bootstrap-duallistbox/src/bootstrap-duallistbox.css');
 
 const FileUpload = globalState.FileUpload = {
   uploadingFiles: {},

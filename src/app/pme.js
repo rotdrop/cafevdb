@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -32,6 +32,7 @@ import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
+import * as DialogUtils from './dialog-utils.js';
 import pmeTweaks from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import {
@@ -692,8 +693,8 @@ const pmeTableDialogOpen = function(tableOptions, post) {
           const dialogHolder = $(this);
           const dialogWidget = dialogHolder.dialog('widget');
 
-          CAFEVDB.dialogToBackButton(dialogHolder);
-          CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
+          DialogUtils.toBackButton(dialogHolder);
+          DialogUtils.customCloseButton(dialogHolder, function(event, container) {
             event.preventDefault();
             const cancelButton = container.find(pmeClassSelector('input', 'cancel')).first();
             if (cancelButton.length > 0) {
