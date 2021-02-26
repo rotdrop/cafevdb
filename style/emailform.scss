@@ -25,6 +25,11 @@
   }
   @import 'bootstrap/scss/bootstrap';
   @import 'bootstrap4-duallistbox/dist/bootstrap-duallistbox';
+  .bootstrap-duallistbox-container {
+    input, select, button {
+      background-color:#FFF;
+    }
+  }
 }
 
 /*****************************************************************************
@@ -32,9 +37,14 @@
  * General stuff, background etc.
  *
  */
+
 div#emailformwrapper {
   padding:0;
   background-color:#F2F8FF;
+}
+
+div#emailformwrapper .ui-tabs-nav {
+  margin-bottom: 0;
 }
 
 .ui-dialog.emailform {
@@ -141,13 +151,14 @@ form#cafevdb-email-form tr.attachments button {
   background-color:#C6DEFF;
   vertical-align:middle;
   height:28px;
+  width:34px;
   padding:5px;
   border-style:outset;
 }
-form#cafevdb-email-form tr.attachments button.owncloud {
+form#cafevdb-email-form tr.attachments button.cloud {
   padding:5px 0px 5px 0px;
 }
-form#cafevdb-email-form tr.attachments button.owncloud img {
+form#cafevdb-email-form tr.attachments button.cloud img {
   width:26px;
 }
 form#cafevdb-email-form tr.attachments button.events {
@@ -195,8 +206,8 @@ form#cafevdb-email-form td.file-attachments input.delete-all-file-attachments {
   background-repeat:no-repeat;
   background-size: 24px 24px;
   background-position: center;
-  width:27px;
-  height:27px;
+  width:34px;
+  height:34px;
   font-size:0pt;
   vertical-align:middle;
 }
@@ -305,12 +316,12 @@ form#cafevdb-email-form td.stored-messages-storage span.save-as-template.button 
   background-position:center;
   background-size:22px 22px;
   display:inline-block;
-  width:15px;
-  height:15px;
-  max-width:15px;
-  max-height:15px;
-  min-width:15px;
-  mim-height:15px;
+  width:34px;
+  /* height:15px;
+     max-width:15px;
+     max-height:15px;
+     min-width:15px;
+     min-height:15px; */
   box-shadow:2px 2px 2px #080808;/*, 2px 2px 2px #cfc;*/
 }
 
@@ -394,7 +405,7 @@ form#cafevdb-email-form td.email-address.display {
 
 form#cafevdb-email-form td.subject.input  span.subject.tag {
   font-family:monospace;
-  font-size:160%;
+  font-size:100%;
   width:auto;
   max-width:30%;
   text-align:right;
@@ -408,7 +419,7 @@ form#cafevdb-email-form td.subject.input  span.subject.tag {
 
 form#cafevdb-email-form td.subject.input span.subject.input {
   width:67%;
-  padding: 0 1em 0 0;
+  /* padding: 0 1em 0 0; */
   display:inline-block;
   line-height:2.5em;
   float:right;

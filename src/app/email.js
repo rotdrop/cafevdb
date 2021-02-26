@@ -142,6 +142,7 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
       infoTextEmpty: t(appName, 'Empty list'),
       filterPlaceHolder: t(appName, 'Filter'),
       filterTextClear: t(appName, 'show all'),
+      selectorMinimalHeight: 200,
     }
   );
   const dualSelect = fieldset.find('div.bootstrap-duallistbox-container select');
