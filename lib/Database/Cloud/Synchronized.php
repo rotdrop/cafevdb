@@ -8,8 +8,9 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db;
 use OCP\ILogger;
 
-/** A synchronized is a tuple of an entity and a mapper which writes
- *  all data straight through to the database.
+/**
+ * A synchronized is a tuple of an entity and a mapper which writes
+ * all data straight through to the database.
  */
 abstract class Synchronized extends Db\QBMapper
 {

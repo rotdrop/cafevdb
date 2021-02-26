@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -45,7 +45,10 @@ class ProgressStatusService
     $this->userId = $userId;
   }
 
-  public function create($start, $stop, $id = null)
+  /**
+   * @return ProgressStatus
+   */
+  public function create($start, $stop, $id = null): ProgressStatus
   {
     $progressStatus = new ProgressStatus($this->db, $this->appName, $this->userId, $id);
     $progressStatus->merge([ 'userId' => $this->userId, 'current' => $start, 'target' => $stop ]);

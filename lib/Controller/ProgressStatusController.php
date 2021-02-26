@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -66,8 +66,6 @@ class ProgressStatusController extends Controller {
   }
 
   /**
-   * Return settings form
-   *
    * @NoAdminRequired
    */
   public function get($id)
@@ -88,8 +86,6 @@ class ProgressStatusController extends Controller {
   }
 
   /**
-   * Return settings form
-   *
    * @NoAdminRequired
    */
   public function action($operation)
@@ -145,8 +141,6 @@ class ProgressStatusController extends Controller {
   }
 
   /**
-   * Return settings form
-   *
    * @NoAdminRequired
    */
   public function test($id)
