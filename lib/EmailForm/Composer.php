@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\EmailForm;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 /**
@@ -146,6 +147,9 @@ DebitNotePurpose
   /** @var EventsService */
   private $eventsService;
 
+  /** @var ProgressStatusService */
+  private $progressStatusService;
+
   /*
    * constructor
    */
@@ -154,11 +158,13 @@ DebitNotePurpose
     , RequestParameterService $parameterService
     , EventsService $eventsService
     , RecipientsFilter $recipientsFilter
+    , ProgressStatusService $progressStatusService
   )
   {
     $this->configService = $configService;
     $this->parameterService = $parameterService;
     $this->eventsService = $eventsService;
+    $this->progressStatusService = $progressStatusService;
     $this->recipientsFilter = $recipientsFilter;
 
     $this->recipients = $this->recipientsFilter->selectedRecipients();
@@ -600,18 +606,10 @@ DebitNotePurpose
       $phpMailer->IsSMTP();
 
       // Provide some progress feed-back to amuse the user
-      $progressProvider = new ProgressStatus();
+      $progressStatus = $this->progressStatusService->create(0, 0);
       $diagnostics = $this->diagnostics;
-      $phpMailer->ProgressCallback = function($currentLine, $totalLines) use ($diagnostics, $progressProvider) {
-        if ($currentLine == 0) {
-          $tag = array('proto' => 'smtp',
-                       'total' =>  $diagnostics['TotalPayload'],
-                       'active' => $diagnostics['TotalCount']);
-          $tag = json_encode($tag);
-          $progressProvider->save($currentLine, $totalLines, $tag);
-        } else if ($currentLine % 1024 == 0 || $currentLine >= $totalLines) {
-          $progressProvider->save($currentLine, $totalLines);
-        }
+      $phpMailer->ProgressCallback = function($currentLine, $totalLines) use ($progressStatus) {
+        $progressStatus->merge([ 'current' => $currentLine, 'target' =>  $totalLines ]);
       };
 
       $phpMailer->Host = $this->getConfigValue('smtpserver');

@@ -31,6 +31,7 @@ import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as FileUpload from './file-upload.js';
 import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
+import * as ProgressStatus from './progress-status.js';
 import generateUrl from './generate-url.js';
 import print_r from './print-r.js';
 
@@ -666,107 +667,113 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    *
    * Finally send the entire mess to the recipients
    */
-  sendButton.off('click').on('click', function(event) {
-    event.stopImmediatePropagation();
+  sendButton
+    .off('click')
+    .on('click', function(event) {
+      event.stopImmediatePropagation();
 
-    // try to provide status feed-back for large transfers or
-    // sending to many recipients. To this end we poll a special
-    // data-base table. If not finished after 5 seconds, we pop-up a
-    // dialog with status information.
+      // try to provide status feed-back for large transfers or
+      // sending to many recipients. To this end we poll a special
+      // data-base table. If not finished after 5 seconds, we pop-up a
+      // dialog with status information.
 
-    const initialTimeout = 3000;
-    const pollingTimeout = 800;
-    let progressTimer;
-    const progressWrapper = dialogHolder.find('div#sendingprogresswrapper');
-    let progressOpen = false;
+      const initialTimeout = 3000;
+      const pollingTimeout = 800;
+      let progressTimer;
+      const progressWrapper = dialogHolder.find('div#sendingprogresswrapper');
+      let progressOpen = false;
 
-    const pollProgress = function() {
-      $.post(
-        OC.filePath(appName, 'ajax/email', 'progress.php'),
-        { ProgressId: 0 },
-        function(data) {
-          let stop = false;
-          if (progressOpen
-              && typeof data !== 'undefined' && typeof data.progress !== 'undefined') {
-            const progress = data.progress;
-            const value = progress.current;
-            const max = progress.target;
-            const rel = value / max * 100.0;
-            const tagData = $.parseJSON(progress.tag);
-            let progressTitle;
-            if (tagData.total > 1) {
-              progressTitle =
-                t(appName, 'Sending message {active} out of {total}', tagData);
-            } else {
-              progressTitle = t(appName, 'Message delivery in progress');
+      // @todo: first create the progress status and get its id, then
+      // submit the progress status id with the send request to the server.
+      const progressPromise = ProgressStatus.create(0, 0);
+
+      const pollProgress = function() {
+        $.post(
+          OC.filePath(appName, 'ajax/email', 'progress.php'),
+          { ProgressId: 0 },
+          function(data) {
+            let stop = false;
+            if (progressOpen
+                && typeof data !== 'undefined' && typeof data.progress !== 'undefined') {
+              const progress = data.progress;
+              const value = progress.current;
+              const max = progress.target;
+              const rel = value / max * 100.0;
+              const tagData = $.parseJSON(progress.tag);
+              let progressTitle;
+              if (tagData.total > 1) {
+                progressTitle =
+                  t(appName, 'Sending message {active} out of {total}', tagData);
+              } else {
+                progressTitle = t(appName, 'Message delivery in progress');
+              }
+              progressWrapper.find('div.messagecount').html(progressTitle);
+              if (tagData.proto === 'smtp') {
+                progressWrapper.find('div.imap span.progressbar')
+                  .progressbar('option', 'value', 0);
+              }
+              progressWrapper.find('div.' + tagData.proto + ' span.progressbar')
+                .progressbar('option', 'value', rel);
+              if (tagData.proto === 'imap' && rel === 100 && tagData.active === tagData.total) {
+                stop = true;
+              }
             }
-            progressWrapper.find('div.messagecount').html(progressTitle);
-            if (tagData.proto === 'smtp') {
-              progressWrapper.find('div.imap span.progressbar')
-                .progressbar('option', 'value', 0);
+            if (!stop) {
+              progressTimer = setTimeout(pollProgress, pollingTimeout);
             }
-            progressWrapper.find('div.' + tagData.proto + ' span.progressbar')
-              .progressbar('option', 'value', rel);
-            if (tagData.proto === 'imap' && rel === 100 && tagData.active === tagData.total) {
-              stop = true;
+          });
+      };
+
+      const initialTimer = setTimeout(function() {
+        // alert('count: '+progressWrapper.length);
+        // alert('count: '+progressWrapper.length);
+        progressWrapper.show();
+        progressWrapper.find('span.progressbar').progressbar({ value: 0, max: 100 });
+        progressWrapper.cafevDialog({
+          title: t(appName, 'Message Delivery Status'),
+          width: 'auto',
+          height: 'auto',
+          modal: true,
+          closeOnEscape: false,
+          resizable: false,
+          dialogClass: 'emailform delivery progress no-close',
+          open() {
+            progressOpen = true;
+          },
+          close() {
+            progressOpen = false;
+            // progressWrapper.find('span.progressbar').progressbar('destroy');
+            progressWrapper.dialog('destroy');
+            progressWrapper.hide();
+          },
+        });
+        progressTimer = setTimeout(pollProgress, pollingTimeout);
+      }, initialTimeout);
+
+      applyComposerControls.call(
+        this, event, {
+          Request: 'send',
+          Send: 'ThePointOfNoReturn',
+          SubmitAll: true,
+        },
+        function(lock) {
+          if (lock) {
+            $(window).on('beforeunload', function(event) {
+              return t(appName, 'Email sending is in progress. Leaving the page now will cancel the email submission.');
+            });
+            dialogWidget.addClass('pme-table-dialog-blocked');
+          } else {
+            $(window).off('beforeunload');
+            clearTimeout(initialTimer);
+            clearTimeout(progressTimer);
+            if (progressOpen) {
+              progressWrapper.dialog('close');
             }
-          }
-          if (!stop) {
-            progressTimer = setTimeout(pollProgress, pollingTimeout);
+            dialogWidget.removeClass('pme-table-dialog-blocked');
           }
         });
-    };
-
-    const initialTimer = setTimeout(function() {
-      // alert('count: '+progressWrapper.length);
-      // alert('count: '+progressWrapper.length);
-      progressWrapper.show();
-      progressWrapper.find('span.progressbar').progressbar({ value: 0, max: 100 });
-      progressWrapper.cafevDialog({
-        title: t(appName, 'Message Delivery Status'),
-        width: 'auto',
-        height: 'auto',
-        modal: true,
-        closeOnEscape: false,
-        resizable: false,
-        dialogClass: 'emailform delivery progress no-close',
-        open() {
-          progressOpen = true;
-        },
-        close() {
-          progressOpen = false;
-          // progressWrapper.find('span.progressbar').progressbar('destroy');
-          progressWrapper.dialog('destroy');
-          progressWrapper.hide();
-        },
-      });
-      progressTimer = setTimeout(pollProgress, pollingTimeout);
-    }, initialTimeout);
-
-    applyComposerControls.call(
-      this, event, {
-        Request: 'send',
-        Send: 'ThePointOfNoReturn',
-        SubmitAll: true,
-      },
-      function(lock) {
-        if (lock) {
-          $(window).on('beforeunload', function(event) {
-            return t(appName, 'Email sending is in progress. Leaving the page now will cancel the email submission.');
-          });
-          dialogWidget.addClass('pme-table-dialog-blocked');
-        } else {
-          $(window).off('beforeunload');
-          clearTimeout(initialTimer);
-          clearTimeout(progressTimer);
-          if (progressOpen) {
-            progressWrapper.dialog('close');
-          }
-          dialogWidget.removeClass('pme-table-dialog-blocked');
-        }
-      });
-    return false;
-  });
+      return false;
+    });
 
   /*************************************************************************
    *
