@@ -796,46 +796,6 @@ const selectValues = function(select, optionValues) {
   return true;
 };
 
-globalState.progressTimer = null;
-
-const pollProgressStatus = function(id, callbacks, interval) {
-  const defaultCallbacks = {
-    update(data) {},
-    fail(data) {},
-  };
-  callbacks = { ...defaultCallbacks, ...callbacks };
-  interval = interval || 800;
-
-  const poll = function() {
-    $.get(generateUrl('foregroundjob/progress/' + id))
-      .done(function(data) {
-        if (!callbacks.update(data)) {
-          console.debug('Finish polling');
-          clearTimeout(globalState.progressTimer);
-          globalState.progressTimer = false;
-          return;
-        }
-        console.debug('Restart timer.');
-        globalState.progressTimer = setTimeout(poll, interval);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        clearTimeout(globalState.progressTimer);
-        globalState.progressTimer = false;
-        callbacks.fail(xhr, status, errorThrown);
-      });
-  };
-  poll();
-};
-
-pollProgressStatus.stop = function() {
-  clearTimeout(globalState.progressTimer);
-  globalState.progressTimer = false;
-};
-
-pollProgressStatus.active = function() {
-  return !!globalState.progressTimer;
-};
-
 export {
   appName,
   globalState,
@@ -864,7 +824,6 @@ export {
   snapperClose,
   toolTipsInit,
   selectValues,
-  pollProgressStatus,
 };
 
 // Local Variables: ***
