@@ -229,6 +229,11 @@ class ConfigService {
     return $this->appName;
   }
 
+  public function appPrefix($id, $join = '-')
+  {
+    return $this->appName . $join . $id;
+  }
+
   public function getIcon() {
     // @@todo make it configurable
     return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
