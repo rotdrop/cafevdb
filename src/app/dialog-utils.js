@@ -73,7 +73,7 @@ function dialogToBackButton(dialogHolder) {
     dialogWidget.css('z-index', overlayIndex + 1);
     return false;
   });
-};
+}
 
 /**
  * jQuery UI just is not flexible enough. We want to be able to
@@ -109,16 +109,17 @@ function dialogCustomCloseButton(dialogHolder, callback) {
   dialogWidget.find('.ui-dialog-titlebar').append(customCloseButton);
   customCloseButton.cafevTooltip({ placement: 'auto' });
 
-  customCloseButton.off('click');
-  customCloseButton.on('click', function(event) {
-    if (typeof callback === 'function') {
-      callback(event, dialogHolder);
-    } else {
-      dialogHolder.dialog('close');
-    }
-    return false;
-  });
-};
+  customCloseButton
+    .off('click')
+    .on('click', function(event) {
+      if (typeof callback === 'function') {
+        callback(event, dialogHolder);
+      } else {
+        dialogHolder.dialog('close');
+      }
+      return false;
+    });
+}
 
 export {
   dialogToBackButton as toBackButton,
