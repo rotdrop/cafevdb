@@ -541,7 +541,7 @@ DebitNotePurpose
    * "/\\n/". Note that this is enough for \\n and \\r\\n as the text is
    * afterwars imploded again with \n separator.
    */
-  static private function head($text, $lines = 64, $separators = "/\n/")
+  private function head($text, $lines = 64, $separators = "/\n/")
   {
     $text = preg_split($separators, $text, $lines+1);
     if (isset($text[$lines])) {
@@ -1488,7 +1488,8 @@ DebitNotePurpose
     return array_combine($vars, $values);
   }
 
-  /**Compose an associative array with keys and values for global
+  /**
+   * Compose an associative array with keys and values for global
    * variables which do not depend on the specific recipient.
    */
   private function emailGlobalVariables()
@@ -2086,7 +2087,7 @@ DebitNotePurpose
   /**A helper function to generate suitable select options for
    * PageNavigation::selectOptions()
    */
-  static public function fileAttachmentOptions($fileAttach)
+  public function fileAttachmentOptions($fileAttach)
   {
     $selectOptions = array();
     foreach($fileAttach as $attachment) {
@@ -2123,7 +2124,7 @@ DebitNotePurpose
    *
    * @param $attachedEvents Flat array of attached events.
    */
-  static public function eventAttachmentOptions($projectId, $attachedEvents)
+  public function eventAttachmentOptions($projectId, $attachedEvents)
   {
     if ($projectId <= 0) {
       return array();

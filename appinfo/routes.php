@@ -317,6 +317,12 @@ $routes = [
       'url' => '/communication/email/outgoing/form',
       'verb' => 'POST',
     ],
+    [
+      'name' => 'email_form#upload',
+      'url' => '/communication/email/outgoing/upload/{object}',
+      'verb' => 'POST',
+      'defaults' => [ 'object' => 'attachment' ],
+    ],
     /**
      * General validations ...
      */

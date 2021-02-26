@@ -27,7 +27,7 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
-
+use OCP\IURLGenerator;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -45,6 +45,9 @@ class EmailFormController extends Controller {
   /** @var \OCA\CAFEVDB\Service\ParameterService */
   private $parameterService;
 
+  /** @var \OCP\IURLGenerator */
+  private $urlGenerator;
+
   /** @var \OCA\CAFEVDB\Service\ProjectService */
   private $projectService;
 
@@ -57,6 +60,7 @@ class EmailFormController extends Controller {
   public function __construct(
     $appName
     , IRequest $request
+    , IURLGenerator $urlGenerator
     , RequestParameterService $parameterService
     , PageNavigation $pageNavigation
     , ConfigService $configService
@@ -64,6 +68,7 @@ class EmailFormController extends Controller {
     , PHPMyEdit $pme
   ) {
     parent::__construct($appName, $request);
+    $this->urlGenerator = $urlGenerator;
     $this->parameterService = $parameterService;
     $this->pageNavigation = $pageNavigation;
     $this->configService = $configService;
@@ -81,11 +86,17 @@ class EmailFormController extends Controller {
     $composer = \OC::$server->query(Composer::class);
 
     $templateParameters = [
+      'appName' => $this->appName(),
+      'appPrefix' => function($id, $join = '-') {
+        return $this->appName() . $join . $id;
+      },
+      'urlGenerator' => $this->urlGenerator,
+      'pageNavigation' => $this->pageNavigation,
+      'emailComposer' => $composer,
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
       'requesttoken' => \OCP\Util::callRegister(), // @todo: check
       'csrfToken' => \OCP\Util::callRegister(), // @todo: check
-      'pageNavigation' => $this->pageNavigation,
       'projectName' => $projectName,
       'projectId' => $projectId,
       'debitNoteId' => $debitNoteId,
@@ -148,6 +159,14 @@ class EmailFormController extends Controller {
     ];
 
     return self::dataResponse($responseData);
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function upload($object)
+  {
+    return self::grumble($this->l->t('UNIMPLEMENTED'));
   }
 
 }
