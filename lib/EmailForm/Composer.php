@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -149,6 +150,9 @@ DebitNotePurpose
 
   /** @var ProgressStatusService */
   private $progressStatusService;
+
+  /** @var int */
+  private $progressToken;
 
   /*
    * constructor
@@ -330,7 +334,7 @@ DebitNotePurpose
     if (isset($this->cgiData[$key])) {
       $value = $this->cgiData[$key];
       if (is_string($value)) {
-        $value = trim($value);
+        $value = Util::normalizeSpaces($value);
       }
       return $value;
     } else {
@@ -606,10 +610,21 @@ DebitNotePurpose
       $phpMailer->IsSMTP();
 
       // Provide some progress feed-back to amuse the user
-      $progressStatus = $this->progressStatusService->create(0, 0);
+      $progressStatus = $this->progressStatusService->get($this->progressToken);
       $diagnostics = $this->diagnostics;
-      $phpMailer->ProgressCallback = function($currentLine, $totalLines) use ($progressStatus) {
-        $progressStatus->merge([ 'current' => $currentLine, 'target' =>  $totalLines ]);
+      $phpMailer->ProgressCallback = function($currentLine, $totalLines) use ($progressStatus, $diagnostics) {
+        $data = [
+          'current' => $currentLine,
+          'target' => $totalLines,
+        ];
+        if ($currentLine == 0) {
+          $data['data'] =[
+            'proto' => 'smtp',
+            'total' =>  $diagnostics['TotalPayload'],
+            'active' => $diagnostics['TotalCount'],
+          ];
+        }
+        $progressStatus->merge($data);
       };
 
       $phpMailer->Host = $this->getConfigValue('smtpserver');
@@ -822,24 +837,27 @@ DebitNotePurpose
     $imapport   = $this->getConfigValue('imapport');
     $imapsecure = $this->getConfigValue('imapsecure');
 
-    $progressProvider = new ProgressStatus(0);
+    $progressStatus = $this->progressStatusService->get($this->progressToken);
     $diagnostics = $this->diagnostics;
     $imap = new \Net_IMAP($imaphost,
                           $imapport,
                           $imapsecure == 'starttls' ? true : false, 'UTF-8',
-                          function($pos, $total) use ($diagnostics, $progressProvider) {
+                          function($pos, $total) use ($progressStatus, $diagnostics) {
                             if ($total < 128) {
                               return; // ignore non-data transfers
                             }
+                            $data = [
+                              'current' => $pos,
+                              'target' => $total,
+                            ];
                             if ($pos == 0) {
-                              $tag = array('proto' => 'imap',
-                                           'total' =>  $diagnostics['TotalPayload'],
-                                           'active' => $diagnostics['TotalCount']);
-                              $tag = json_encode($tag);
-                              $progressProvider->save($pos, $total, $tag);
-                            } else {
-                              $progressProvider->save($pos);
+                              $data['data'] = [
+                                'proto' => 'imap',
+                                'total' =>  $diagnostics['TotalPayload'],
+                                'active' => $diagnostics['TotalCount'],
+                              ];
                             }
+                            $progressStatus->merge($data);
                           },
                           64*1024); // 64 kb chunk-size
 
