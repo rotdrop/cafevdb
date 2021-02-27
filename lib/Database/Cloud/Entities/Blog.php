@@ -2,6 +2,8 @@
 
 namespace OCA\CAFEVDB\Database\Cloud\Entities;
 
+use Doctrine\DBAL\Types\Types;
+
 use OCP\AppFramework\Db\Entity;
 
 class Blog extends Entity
@@ -19,17 +21,17 @@ class Blog extends Entity
   protected $reader;
 
   public function __construct() {
-    // $this->addType('id', 'int'); this is default
-    $this->addType('author', 'string');
-    $this->addType('created', 'int');
-    $this->addType('editor', 'string');
-    $this->addType('modified', 'int');
-    $this->addType('message', 'string');
-    $this->addType('inReplyTo', 'int');
-    $this->addType('deleted', 'bool');
-    $this->addType('priority', 'int');
-    $this->addType('popup', 'bool');
-    $this->addType('reader', 'string');
+    // $this->addType('id', Types::BIGINT); this is default
+    $this->addType('author', Types::STRING);
+    $this->addType('created', Types::BIGINT);
+    $this->addType('editor', Types::STRING);
+    $this->addType('modified', Types::BIGINT);
+    $this->addType('message', Types::STRING);
+    $this->addType('inReplyTo', Types::BIGINT);
+    $this->addType('deleted', Types::BOOLEAN);
+    $this->addType('priority', Types::BIGINT);
+    $this->addType('popup', Types::BOOLEAN);
+    $this->addType('reader', Types::STRING);
   }
 
 }
