@@ -2,6 +2,8 @@
 
 namespace OCA\CAFEVDB\Database\Cloud\Entities;
 
+use Doctrine\DBAL\Types\Types;
+
 use OCP\AppFramework\Db\Entity;
 
 use OCP\ILogger;
@@ -12,14 +14,16 @@ class ProgressStatus extends Entity
   protected $userId;
   protected $current;
   protected $target;
+  protected $data;
   protected $lastModified;
 
   public function __construct() {
     // $this->addType('id', 'int'); this is default
-    $this->addType('userId', 'string');
-    $this->addType('current', 'int');
-    $this->addType('target', 'int');
-    $this->addType('lastModified', 'int');
+    $this->addType('userId', Types::STRING);
+    $this->addType('current', Types::BIGINT);
+    $this->addType('target', Types::BIGINT);
+    $this->addType('data', Types::JSON);
+    $this->addType('lastModified', Types::BIGINT);
   }
 
 

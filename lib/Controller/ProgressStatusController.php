@@ -26,13 +26,14 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IDBConnection;
 use OCP\IUserSession;
 use OCP\IRequest;
 use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ProgressStatusService;
-use OCP\IDBConnection;
+use OCA\CAFEVDB\Database\Cloud\Entities\ProgressStatus;
 
 class ProgressStatusController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -82,7 +83,7 @@ class ProgressStatusController extends Controller {
     if ($progress->getUserId() != $this->userId) {
       return self::grumble($this->l->t('Permission denied').$progress->getUserId().'/'.$this->userId, Http::STATUS_FORBIDDEN);
     }
-    return self::dataResponse([ 'current' => $progress->getCurrent(), 'target' => $progress->getTarget() ]);
+    return self::progressResponse($progress);
   }
 
   /**
@@ -96,13 +97,9 @@ class ProgressStatusController extends Controller {
         $progress = $this->progressStatusService->create(
           $this->request['current'],
           $this->request['target'],
-          $this->request['id']
+          $this->request['data']
         );
-        return self::dataResponse([
-          'id' => $progress->getId(),
-          'current' => $progress->getCurrent(),
-          'target' => $progress->getTarget(),
-        ]);
+        return self::progressRespones($progress);
       } catch (\Throwable $t) {
         $this->logger->logException($t);
         return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
@@ -116,12 +113,14 @@ class ProgressStatusController extends Controller {
         return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
       }
       try {
-        $progress->merge(['current' => $this->request['current']]);
-        return self::dataResponse([
-          'id' => $progress->getId(),
-          'current' => $progress->getCurrent(),
-          'target' => $progress->getTarget(),
-        ]);
+        $data = [];
+        foreach ([ 'curren', 'target', 'data' ] as $key) {
+          if (isset($this->request[$key])) {
+            $data[$key] = $this->request[$key];
+          }
+        }
+        $progress->merge($data);
+        return self::progressResponse($progress);
       } catch (\Throwable $t) {
         $this->logger->logException($t);
         return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
@@ -140,11 +139,14 @@ class ProgressStatusController extends Controller {
     }
   }
 
-  /**
-   * @NoAdminRequired
-   */
-  public function test($id)
+  static private function progressResponse(ProgressStatus $progress)
   {
+    return self::dataResponse([
+      'id' => $progress->getId(),
+      'current' => $progress->getCurrent(),
+      'target' => $progress->getTarget(),
+      'data' => $progress->getData(),
+    ]);
   }
 
 }

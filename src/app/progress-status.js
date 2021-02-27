@@ -33,18 +33,24 @@ function createProgressStatus(target, current, id)
     { id, target: target || 100, current: current || 0});
 }
 
-function pollProgressStatus(id, callbacks, interval) {
-  const defaultCallbacks = {
-    update(data) {},
+function pollProgressStatus(id, options) {
+  const defaultOptions = {
+    update(id, current, target, data) {},
     fail: Ajax.handleError,
+    interval: 800,
   };
-  callbacks = { ...defaultCallbacks, ...callbacks };
-  interval = interval || 800;
+  options = { ...defaultOptions, ...options };
+  const interval = options.interval;
 
   const poll = function() {
     $.get(generateUrl('foregroundjob/progress/' + id))
       .done(function(data) {
-        if (!callbacks.update(data)) {
+        if (!Ajax.validateResponse(data, ['id', 'current', 'target', 'data'])) {
+          clearTimeout(globalState.progressTimer);
+          globalState.progressTimer = false;
+          return;
+        }
+        if (!options.update(data.id, data.current, data.target, data.data)) {
           console.debug('Finish polling');
           clearTimeout(globalState.progressTimer);
           globalState.progressTimer = false;
@@ -56,7 +62,7 @@ function pollProgressStatus(id, callbacks, interval) {
       .fail(function(xhr, status, errorThrown) {
         clearTimeout(globalState.progressTimer);
         globalState.progressTimer = false;
-        callbacks.fail(xhr, status, errorThrown);
+        options.fail(xhr, status, errorThrown);
       });
   };
   poll();

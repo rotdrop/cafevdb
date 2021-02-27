@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -48,10 +49,15 @@ class ProgressStatusService
   /**
    * @return ProgressStatus
    */
-  public function create($start, $stop, $id = null): ProgressStatus
+  public function create($start, $stop, $data = null, $id = null): ProgressStatus
   {
     $progressStatus = new ProgressStatus($this->db, $this->appName, $this->userId, $id);
-    $progressStatus->merge([ 'userId' => $this->userId, 'current' => $start, 'target' => $stop ]);
+    $progressStatus->merge([
+      'userId' => $this->userId,
+      'current' => $start,
+      'target' => $stop,
+      'data' => $data,
+    ]);
     return $progressStatus;
   }
 
