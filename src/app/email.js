@@ -197,10 +197,9 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         post += '&' + $.param(tmp);
       }
     }
-    $.post(
-      OC.filePath(appName, 'ajax/email', 'recipients.php'),
-      post,
-      function(data) {
+    $.post(generateUrl('communication/email/outgoing/recipients-filter'), post)
+      .fail(Ajax.handleError)
+      .done(function(data) {
         const requiredResponse = historySnapshot
           ? ['filterHistory']
           : ['recipientsOptions', 'missingEmailAddresses', 'filterHistory'];
@@ -209,11 +208,11 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         }
         if (historySnapshot) {
           // Just update the history, but nothing else
-          filterHistoryInput.val(data.data.filterHistory);
-        } else if (typeof data.data.contents !== 'undefined' && data.data.contents.length > 0) {
+          filterHistoryInput.val(data.filterHistory);
+        } else if (typeof data.contents !== 'undefined' && data.contents.length > 0) {
           // replace the entire tab.
           $.fn.cafevTooltip.remove();
-          panelHolder.html(data.data.contents);
+          panelHolder.html(data.contents);
           fieldset = panelHolder.find('fieldset.email-recipients.page');
           Email.emailFormRecipientsHandlers(fieldset, form, dialogHolder, panelHolder);
         } else {
@@ -221,11 +220,11 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
           // We only need to update the select-element and the list
           // of musicians which should be possible recipients but
           // do not have an email address.
-          recipientsSelect.html(data.data.recipientsOptions);
+          recipientsSelect.html(data.recipientsOptions);
           recipientsSelect.bootstrapDualListbox('refresh', true);
-          filterHistoryInput.val(data.data.filterHistory);
-          missingAddresses.html(data.data.missingEmailAddresses);
-          if (data.data.missingEmailAddresses.length > 0) {
+          filterHistoryInput.val(data.filterHistory);
+          missingAddresses.html(data.missingEmailAddresses);
+          if (data.missingEmailAddresses.length > 0) {
             missingLabel.removeClass('reallyhidden');
             noMissingLabel.addClass('reallyhidden');
           } else {
@@ -234,7 +233,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
           }
         }
 
-        const filterHistory = data.data.filterHistory;
+        const filterHistory = data.filterHistory;
         if (filterHistory.historyPosition >= 0
             && filterHistory.historyPosition < filterHistory.historySize - 1) {
           // enable the undo button
@@ -251,14 +250,14 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
 
         if (!historySnapshot) {
           let debugText = '';
-          if (typeof data.data.debug !== 'undefined') {
-            debugText = data.data.debug;
+          if (typeof data.debug !== 'undefined') {
+            debugText = data.debug;
           }
           debugOutput.html('<pre>' + $('<div></div>').text(debugText).html() + '</pre>'
                            + '<pre>'
-                           + $('<div></div>').text(data.data.recipientsOptions).html()
+                           + $('<div></div>').text(data.recipientsOptions).html()
                            + '</pre>'
-                           + data.data.missingEmailAddresses
+                           + data.missingEmailAddresses
                            + '</br>'
                            + $('<div></div>').text(CAFEVDB.urlDecode(post)).html());
         }
@@ -439,44 +438,25 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         post += '&' + $.param({ emailComposer: request });
       }
     }
-    // $.post(OC.filePath(appName, 'ajax/email', 'composer.php'),
-    $.ajax({
-      url: OC.filePath(appName, 'ajax/email', 'composer.php'),
-      type: 'POST',
-      data: post,
-      dataType: 'json',
-      async: true,
-      success(data) {
+    $.post(generateUrl('communication/email/outgoing/composer'), post)
+      .fail(Ajax.handleError)
+      .done(function(data) {
         let postponeEnable = false;
         $.fn.cafevTooltip.remove();
         if (!Ajax.validateResponse(
           data,
-          ['projectId', 'projectName', 'request', 'requestData'],
-          validateUnlock)) {
-          if (typeof data !== 'undefined' && typeof data.data !== 'undefined') {
-            let debugText = '';
-            if (typeof data.data.caption !== 'undefined') {
-              debugText += '<div class="error caption">' + data.data.caption + '</div>';
-            }
-            if (typeof data.data.message !== 'undefined') {
-              debugText += data.data.message;
-            }
-            if (typeof data.data.debug !== 'undefined') {
-              debugText += '<pre>' + data.data.debug + '</pre>';
-            }
-            debugOutput.html(debugText);
-          }
+          ['projectId', 'projectName', 'request', 'requestData'], validateUnlock)) {
           return false;
         }
-        const request = data.data.request;
-        const requestData = data.data.requestData;
+        const request = data.request;
+        const requestData = data.requestData;
         switch (request) {
         case 'send':
           storedEmailsSelector.html(requestData.storedEmailOptions);
           CAFEVDB.selectMenuReset(storedEmailsSelector);
-          if (typeof data.data.message !== 'undefined'
-              && typeof data.data.caption !== 'undefined') {
-            Dialogs.alert(data.data.message, data.data.caption, undefined, true, true);
+          if (typeof data.message !== 'undefined'
+              && typeof data.caption !== 'undefined') {
+            Dialogs.alert(data.message, data.caption, undefined, true, true);
           }
           break;
         case 'cancel':
@@ -492,7 +472,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             fieldset = panelHolder.find('fieldset.email-composition.page');
             emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
             break;
-          case 'TO': {
+          case 'to': {
             const toSpan = fieldset.find('span.email-recipients');
             let rcpts = requestData.elementData;
             if (rcpts.length === 0) {
@@ -505,7 +485,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             toSpan.cafevTooltip();
             break;
           }
-          case 'FileAttachments': {
+          case 'fileAttachments': {
             const options = requestData.elementData.options;
             // alert('options: '+JSON.stringify(options));
             const fileAttach = requestData.elementData.fileAttach;
@@ -521,7 +501,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             panelHolder.trigger('resize');
             break;
           }
-          case 'EventAttachments': {
+          case 'eventAttachments': {
             const options = requestData.elementData.options;
             const eventAttach = requestData.elementData.eventAttach;
             // alert('options: '+JSON.stringify(options));
@@ -626,22 +606,22 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         }
         default:
           postponeEnable = true;
-          data.data.message =
+          data.message =
             t(appName, 'Unknown request: {Request}', { Request: request });
-          data.data.caption = t(appName, 'Error');
-          Dialogs.alert(data.data.message, data.data.caption, validateUnlock, true, true);
+          data.caption = t(appName, 'Error');
+          Dialogs.alert(data.message, data.caption, validateUnlock, true, true);
           break;
         }
 
         let debugText = '';
-        if (typeof data.data.caption !== 'undefined') {
-          debugText += '<div class="error caption">' + data.data.caption + '</div>';
+        if (typeof data.caption !== 'undefined') {
+          debugText += '<div class="error caption">' + data.caption + '</div>';
         }
-        if (typeof data.data.message !== 'undefined') {
-          debugText += data.data.message;
+        if (typeof data.message !== 'undefined') {
+          debugText += data.message;
         }
-        if (typeof data.data.debug !== 'undefined') {
-          debugText += '<pre>' + data.data.debug + '</pre>';
+        if (typeof data.debug !== 'undefined') {
+          debugText += '<pre>' + data.debug + '</pre>';
         }
         if (debugText !== '') {
           let addOn;
@@ -788,7 +768,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             return false;
           }
 
-          debugOutput.html(data.data.contents);
+          debugOutput.html(data.contents);
 
           Page.busyIcon(false);
 
@@ -1219,7 +1199,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           ])) {
             return false;
           }
-          CAFEVDB.chosenPopup(data.data.contents, {
+          CAFEVDB.chosenPopup(data.contents, {
             title: t(appName, 'Address Book'),
             saveText: t(appName, 'Accept'),
             buttons: [
@@ -1257,7 +1237,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                           if (!Ajax.validateResponse(data, ['contents'])) {
                             return false;
                           }
-                          const newOptions = $(data.data.contents).html();
+                          const newOptions = $(data.contents).html();
                           selectElement.html(newOptions);
                           selectElement.trigger('chosen:updated');
                           if (selectElement.find('optgroup.free-form').length === 0) {

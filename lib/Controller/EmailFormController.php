@@ -164,6 +164,77 @@ class EmailFormController extends Controller {
   /**
    * @NoAdminRequired
    */
+  public function composer()
+  {
+    return self::grumble($this->l->t('UNIMPLEMENTED'));
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function recipientsFilter($projectId, $projectName, $debitNoteId)
+  {
+    $recipientsfilter = \OC::$server->query(RecipientsFilter::class);
+
+       if ($recipientsFilter->reloadState()) {
+         // Rebuild the entire page
+         $recipientsOptions = [];
+         $missingEmailAddresses = '';
+
+         $filterHistory = $recipientsFilter->filterHistory();
+         $templateData = [
+           'projectName' => $projectName,
+           'projectId' => $projectId,
+           'debitNoteId' => $debitNoteId,
+           // Needed for the recipient selection
+           'recipientsFormData' => $recipientsFilter->formData(),
+           'filterHistory' => $filterHistory,
+           'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+           'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
+           'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
+           'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
+           'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
+           'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+         ];
+
+         $tmpl = new TemplateResponse($this->appName, 'part.emailform.recipients', $templateParameters, 'blank');
+         $contents = $tmpl->render();
+       } else if ($recipientsFilter->snapshotState()) {
+         // short-circuit
+         $filterHistory = $recipientsFilter->filterHistory();
+         return self::dataResponse([ 'filterHistory' => $filterHistory ]);
+       } else {
+         $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
+         $recipientsOptions = Navigation::selectOptions($recipientsChoices);
+         $missingEmailAddresses = '';
+         $separator = '';
+         foreach ($recipientsFilter->missingEmailAddresses() as $id => $name) {
+           $missingEmailAddresses .= $separator;
+           $separator = ', ';
+           $missingEmailAddresses .=
+             '<span class="missing-email-addresses personal-record" data-id="'.$id.'">'
+             .$name
+             .'</span>';
+         }
+         $filterHistory = $recipientsFilter->filterHistory();
+         $contents = '';
+       }
+
+    return self::dataResponse([
+      'projectName' => $projectName,
+      'projectId' => $projectId,
+      'contents' => $contents,
+      'recipientsOptions' => $recipientsOptions,
+      'missingEmailAddresses' => $missingEmailAddresses,
+      'filterHistory' => $filterHistory,
+    ]);
+
+    return self::grumble($this->l->t('UNIMPLEMENTED'));
+  }
+
+  /**
+   * @NoAdminRequired
+   */
   public function upload($object)
   {
     return self::grumble($this->l->t('UNIMPLEMENTED'));

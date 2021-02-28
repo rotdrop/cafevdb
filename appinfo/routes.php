@@ -310,11 +310,21 @@ $routes = [
       'verb' => 'POST',
     ],
     /**
-     *
+     * Email form, mass email sending
      */
     [
       'name' => 'email_form#web_form',
       'url' => '/communication/email/outgoing/form',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'email_form#recipients_filter',
+      'url' => '/communication/email/outgoing/recipients-filter',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'email_form#composer',
+      'url' => '/communication/email/outgoing/composer',
       'verb' => 'POST',
     ],
     [
