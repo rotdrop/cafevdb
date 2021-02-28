@@ -237,6 +237,73 @@ class EmailFormController extends Controller {
    */
   public function upload($object)
   {
+    switch ($object) {
+    case 'attachment':
+      $fileKey = 'files';
+      if (!isset($_FILES[$fileKey])) {
+        return self::grumble($this->l->t('No file was uploaded. Unknown error'));
+      }
+
+      foreach ($_FILES[$fileKey]['error'] as $error) {
+        if ($error != 0) {
+          $errors = [
+            UPLOAD_ERR_OK => $this->l->t('There is no error, the file uploaded with success'),
+            UPLOAD_ERR_INI_SIZE => $this->l->t('The uploaded file exceeds the upload_max_filesize directive in php.ini: %s',
+                                               array(ini_get('upload_max_filesize'))),
+            UPLOAD_ERR_FORM_SIZE => $this->l->t('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'),
+            UPLOAD_ERR_PARTIAL => $this->l->t('The uploaded file was only partially uploaded'),
+            UPLOAD_ERR_NO_FILE => $this->l->t('No file was uploaded'),
+            UPLOAD_ERR_NO_TMP_DIR => $this->l->t('Missing a temporary folder'),
+            UPLOAD_ERR_CANT_WRITE => $this->l->t('Failed to write to disk'),
+          ];
+          return self::grumble($errors[$error]);
+        }
+      }
+      $files = $_FILES[$fileKey];
+
+      $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
+      $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
+      $maxUploadFileSize = min($upload_max_filesize, $post_max_size);
+
+      $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
+
+      $totalSize = 0;
+      foreach ($files['size'] as $size) {
+        $totalSize += $size;
+      }
+
+      if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
+        return self::grumble([
+          'message' => $this->l->t('Not enough storage available'),
+          'uploadMaxFilesize' => $maxUploadFileSize,
+          'maxHumanFilesize' => $maxHumanFileSize,
+        ]);
+      }
+
+      $result = [];
+      $fileCount = count($files['name']);
+      for ($i = 0; $i < $fileCount; $i++) {
+        $fileRecord = [];
+        foreach ($files as $key => $values) {
+          $fileRecord[$key] = $values[$i];
+        }
+        // Move the temporary files to locations where we can find them later.
+        $composer = \OC::$servce->query(Composer::class);
+        $fileRecord = $composer->saveAttachment($fileRecord);
+
+        // Submit the file-record back to the java-script in order to add the
+        // data to the form.
+        if ($fileRecord === false) {
+          return self::grumble($this->l->t('Couldn\'t save temporary file for: %s', $files['name'][$i]));
+        } else {
+          $fileRecord['originalname']      = $fileRecord['name']; // clone
+          $fileRecord['uploadMaxFilesize'] = $maxUploadFileSize;
+          $fileRecord['maxHumanFilesize']  = $maxHumanFileSize;
+          $result[] = $fileRecord;
+        }
+      }
+      return self::dataResponse($result);
+    }
     return self::grumble($this->l->t('UNIMPLEMENTED'));
   }
 
