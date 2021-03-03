@@ -1,4 +1,4 @@
-/*
+/**
  * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
@@ -49,7 +49,7 @@ const cancelUploads = function() {
  *
  * @param {Object} options TBD.
  */
-const init = function(options) {
+function init(options) {
   const defaultOptions = {
     doneCallback: null,
     stopCallback: null,
@@ -65,6 +65,7 @@ const init = function(options) {
   const fileUploadStart = form.find(options.inputSelector);
 
   const fileUploadParam = {
+    //url: generateUrl(''),
     multipart: true,
     singleFileUploads: false,
     sequentialUploads: true,
