@@ -124,13 +124,23 @@ class RecipientsFilter
     $this->configService = $configService;
     $this->l = $this->l10n();
     $this->session = $session;
-    $this->parameterService = $parameterService;
     $this->entityManager = $entityManager;
     $this->pme = $pme;
 
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
     $this->jsonFlags = JSON_FORCE_OBJECT|JSON_HEX_QUOT|JSON_HEX_APOS;
+
+    $this->bind($parameterService);
+  }
+
+  /**
+   * @param RequestParameterService $parameterService Bind self to the
+   * given request parameters.
+   */
+  public function bind(RequestParameterService $parameterService)
+  {
+    $this->parameterService = $parameterService;
 
     // Fetch all data submitted by form
     $this->cgiData = $this->parameterService->getPrefixParams(self::POST_TAG);

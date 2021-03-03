@@ -163,20 +163,40 @@ DebitNotePurpose
     , EventsService $eventsService
     , RecipientsFilter $recipientsFilter
     , ProgressStatusService $progressStatusService
-  )
-  {
+  ) {
     $this->configService = $configService;
-    $this->parameterService = $parameterService;
     $this->eventsService = $eventsService;
     $this->progressStatusService = $progressStatusService;
-    $this->recipientsFilter = $recipientsFilter;
+
+    $this->constructionMode = true; // Config::$opts['emailtestmode'] != 'off';
+    $this->setCatchAll();
+
+    $this->bind($parameterService, $recipientsFilter);
+  }
+
+  /**
+   * @param RequestParameterService $parameterservice Control
+   *   structure holding the request parameters to bind to.
+   *
+   * @param RecipientsFilter $recipientsFilter Already bound
+   *   recipients filter.  If null self::$recipientFilter will be
+   *   bound to $parameterservice.
+   */
+  public function bind(
+    RequestParameterService $parameterService
+    , RecipientsFilter $recipientsFilter = null
+  ) {
+    $this->parameterService = $parameterService;
+
+    if (empty($recipientsFilter)) {
+      $this->recipientsFilter->bind($parameterService);
+    } else {
+      $this->recipientsFilter = $recipientsFilter;
+    }
 
     $this->recipients = $this->recipientsFilter->selectedRecipients();
 
     $template = $this->parameterService['emailTemplate'];
-
-    $this->constructionMode = true; // Config::$opts['emailtestmode'] != 'off';
-    $this->setCatchAll();
 
     $this->cgiData = $this->parameterService->getParam(self::POST_TAG, []);
 
@@ -212,7 +232,7 @@ DebitNotePurpose
     // Error diagnostics, can be retrieved by
     // $this->statusDiagnostics()
     $this->diagnostics = array(
-      'Caption' => '',
+      'caption' => '',
       'AddressValidation' => array('CC' => array(),
                                    'BCC' => array(),
                                    'Empty' => false),
@@ -236,7 +256,15 @@ DebitNotePurpose
     $this->execute();
   }
 
-  /**Parse the submitted form data and act accordinly */
+  /**
+   * The email composer never goes without its recipients filter.
+   */
+  public function getRecipientsFilter()
+  {
+    return $this->recipientsFilter;
+  }
+
+  /** Parse the submitted form data and act accordinly */
   private function execute()
   {
     // Maybe should also check something else. If submitted is true,
@@ -309,7 +337,7 @@ DebitNotePurpose
       $this->sendMessages();
       if (!$this->errorStatus()) {
         // Hurray!!!
-        $this->diagnostics['Caption'] = $this->l->t('Message(s) sent out successfully!');
+        $this->diagnostics['caption'] = $this->l->t('Message(s) sent out successfully!');
 
         // If sending out a draft, remove the draft.
         $this->deleteDraft();
@@ -323,12 +351,12 @@ DebitNotePurpose
       // any kind of "nasty" exceptions.
       $this->exportMessages();
       if (!$this->errorStatus()) {
-        $this->diagnostics['Caption'] = $this->l->t('Message(s) exported successfully!');
+        $this->diagnostics['caption'] = $this->l->t('Message(s) exported successfully!');
       }
     }
   }
 
-  /**Fetch a CGI-variable out of the form-select name-space */
+  /** Fetch a CGI-variable out of the form-select name-space */
   private function cgiValue($key, $default = null)
   {
     if (isset($this->cgiData[$key])) {
@@ -342,7 +370,8 @@ DebitNotePurpose
     }
   }
 
-  /**Return true if this email needs per-member substitutions. Up to
+  /**
+   * Return true if this email needs per-member substitutions. Up to
    * now validation is not handled here, but elsewhere. Still this
    * is not a static method (future ...)
    */
@@ -351,14 +380,15 @@ DebitNotePurpose
     return preg_match('!([^$]|^)[$]{MEMBER::[^{]+}!', $message);
   }
 
-  /**Substitute any per-recipient variables into $templateMessage
+  /**
+   * Substitute any per-recipient variables into $templateMessage
    *
    * @param $templateMessage The email message without substitutions.
    *
    * @param $dbdata The data from the musician data-base which
    * contains the substitutions.
    *
-   * @return HTML message with variable substitutions.
+   * @return string HTML message with variable substitutions.
    *
    * @todo This needs to be reworked TOTALLY
    */
@@ -420,10 +450,10 @@ DebitNotePurpose
     return $strMessage;
   }
 
-  /**Substitute any global variables into
-   * $this->messageContents.
+  /**
+   * Substitute any global variables into $this->messageContents.
    *
-   * @return HTML message with variable substitutions.
+   * @return string HTML message with variable substitutions.
    */
   private function replaceGlobals()
   {
@@ -465,7 +495,8 @@ DebitNotePurpose
     return $message;
   }
 
-  /**Finally, send the beast out to all recipients, either in
+  /**
+   * Finally, send the beast out to all recipients, either in
    * single-email mode or as one message.
    *
    * Template emails are emails with per-member variable
@@ -541,7 +572,8 @@ DebitNotePurpose
     return $this->executionStatus;
   }
 
-  /**Extract the first few line of a text-buffer.
+  /**
+   * Extract the first few line of a text-buffer.
    *
    * @param $text The text to compute the "head" of.
    *
@@ -560,7 +592,8 @@ DebitNotePurpose
     return implode("\n", $text);
   }
 
-  /**Compose and send one message. If $EMails only contains one
+  /**
+   * Compose and send one message. If $EMails only contains one
    * address, then the emails goes out using To: and Cc: fields,
    * otherwise Bcc: is used, unless sending to the recipients of a
    * project. All emails are logged with an MD5-sum to the DB in order
@@ -580,7 +613,7 @@ DebitNotePurpose
    * sending a copy of a form-email with per-recipient substitutions
    * to the orchestra account.
    *
-   * @return The sent Mime-message which then may be stored in the
+   * @return string The sent Mime-message which then may be stored in the
    * Sent-Folder on the imap server (for example).
    */
   private function composeAndSend($strMessage, $EMails, $addCC = true, $allowDuplicates = false)
@@ -796,7 +829,9 @@ DebitNotePurpose
                  'message' => $phpMailer->GetSentMIMEMessage());
   }
 
-  /**Record diagnostic output from the actual message composition for the status page.
+  /**
+   * Record diagnostic output from the actual message composition for
+   * the status page.
    */
   private function recordMessageDiagnostics($mimeMsg)
   {
@@ -826,7 +861,8 @@ DebitNotePurpose
     }
   }
 
-  /**Take the supplied message and copy it to the "Sent" folder.
+  /**
+   * Take the supplied message and copy it to the "Sent" folder.
    */
   private function copyToSentFolder($mimeMessage)
   {
@@ -887,10 +923,11 @@ DebitNotePurpose
     return true;
   }
 
-  /**Log the sent message to the data base if it is new. Return
-   * false if this is a duplicate, return the data-base query string
-   * to be executed after successful sending of the message in cas
-   * of success.
+  /**
+   * Log the sent message to the data base if it is new. Return false
+   * if this is a duplicate, return the data-base query string to be
+   * executed after successful sending of the message in cas of
+   * success.
    *
    * @param $logMessage The email-message to record in the DB.
    *
@@ -1037,7 +1074,7 @@ DebitNotePurpose
    * @param $addCC If @c false, then additional CC and BCC recipients will
    *                   not be added.
    *
-   * @return true or false.
+   * @return bool true or false.
    */
   private function composeAndExport($strMessage, $EMails, $addCC = true)
   {
@@ -1205,10 +1242,11 @@ DebitNotePurpose
     return true;
   }
 
-  /**Generate a HTML-export with all variables substituted. This is
-   *primarily meant in order to debug actual variable substitutions,
-   *or to have hardcopies from debit note notifications and other
-   *important emails.
+  /**
+   * Generate a HTML-export with all variables substituted. This is
+   * primarily meant in order to debug actual variable substitutions,
+   * or to have hardcopies from debit note notifications and other
+   * important emails.
    */
   private function exportMessages()
   {
@@ -1247,8 +1285,9 @@ DebitNotePurpose
     return $this->executionStatus;
   }
 
-  /**Pre-message construction validation. Collect all data and
-   *perform some checks on it.
+  /**
+   * Pre-message construction validation. Collect all data and perform
+   * some checks on it.
    *
    * - Cc, valid email addresses
    * - Bcc, valid email addresses
@@ -1311,12 +1350,13 @@ DebitNotePurpose
     }
 
     if (!$this->executionStatus) {
-      $this->diagnostics['Caption'] = $this->l->t('Pre-composition validation has failed!');
+      $this->diagnostics['caption'] = $this->l->t('Pre-composition validation has failed!');
     }
     return $this->executionStatus;
   }
 
-  /**Compute the subject tag, depending on whether we are in project
+  /**
+   * Compute the subject tag, depending on whether we are in project
    * mode or not.
    */
   private function setSubjectTag()
@@ -1328,14 +1368,15 @@ DebitNotePurpose
     }
   }
 
-  /**Validate a comma separated list of email address from the Cc:
+  /**
+   * Validate a comma separated list of email address from the Cc:
    * or Bcc: input.
    *
    * @param $header For error diagnostics, either CC or BCC.
    *
    * @param $freeForm the value from the input field.
    *
-   * @return false in case of error, otherwise a borken down list of
+   * @return bool false in case of error, otherwise a borken down list of
    * recipients array(array('name' => '"Doe, John"', 'email' => 'john@doe.org'),...)
    */
   public function validateFreeFormAddresses($header, $freeForm)
@@ -1382,7 +1423,8 @@ DebitNotePurpose
     }
   }
 
-  /**Validates the given template, i.e. searches for unknown
+  /**
+   * Validates the given template, i.e. searches for unknown
    * substitutions. This function is invoked right before sending
    * stuff out and before storing drafts. In order to do so we
    * substitute each known variable by a dummy value and then make
@@ -1494,7 +1536,8 @@ DebitNotePurpose
     }
   }
 
-  /**Return an associative array with keys and column names for the
+  /**
+   * Return an associative array with keys and column names for the
    * values (Name, Stadt etc.) for substituting per-member data.
    */
   private function emailMemberVariables()
@@ -1575,7 +1618,8 @@ DebitNotePurpose
       "BIC ".$this->getConfigValue('bankAccountBIC');
   }
 
-  /**Fetch the pre-names of the members of the organizing committee in
+  /**
+   * Fetch the pre-names of the members of the organizing committee in
    * order to construct an up-to-date greeting.
    */
   private function fetchExecutiveBoard()
@@ -1607,9 +1651,10 @@ DebitNotePurpose
     return $text;
   }
 
-  /**Take the text supplied by $contents and store it in the DB
-   * EmailTemplates table with tag $templateName. An existing template with the
-   * same tag will be replaced.
+  /**
+   * Take the text supplied by $contents and store it in the DB
+   * EmailTemplates table with tag $templateName. An existing template
+   * with the same tag will be replaced.
    */
   private function storeTemplate($templateName, $subject, $contents)
   {
@@ -1624,8 +1669,7 @@ DebitNotePurpose
     mySQL::query($query, $handle);
   }
 
-  /**Delete the named email template.
-   */
+  /** Delete the named email template. */
   private function deleteTemplate($templateName)
   {
     $handle = $this->dataBaseConnect();
@@ -1636,7 +1680,9 @@ DebitNotePurpose
     mySQL::query($query, $handle);
   }
 
-  /**Fetch a specific template from the DB. Return false if that template is not found
+  /**
+   * Fetch a specific template from the DB. Return false if that
+   * template is not found
    */
   private function fetchTemplate($templateName)
   {
@@ -1660,8 +1706,7 @@ DebitNotePurpose
     return $line['Contents'];
   }
 
-  /**Return a flat array with all known template names.
-   */
+  /** Return a flat array with all known template names. */
   private function fetchTemplateNames()
   {
     return [];
@@ -1679,11 +1724,11 @@ DebitNotePurpose
     return $names;
   }
 
-  /**Return an associative matrix with all currently stored draft
-   * messages.  In order to load the draft we only need the id. The
-   * list of drafts is used to generate a select menu where some
-   * fancy title is displayed and the option value is the unique
-   * draft id.
+  /**
+   * Return an associative matrix with all currently stored draft
+   * messages. In order to load the draft we only need the id. The
+   * list of drafts is used to generate a select menu where some fancy
+   * title is displayed and the option value is the unique draft id.
    */
   private function fetchDraftsList()
   {
@@ -1708,7 +1753,8 @@ DebitNotePurpose
     return $drafts;
   }
 
-  /**Store a draft message. The only constraint on the "operator
+  /**
+   * Store a draft message. The only constraint on the "operator
    * behaviour" is that the subject must not be empty. Otherwise in
    * any way incomplete messages may be stored as drafts.
    */
@@ -1768,7 +1814,7 @@ DebitNotePurpose
     }
   }
 
-  /**Preliminary draft read-back. */
+  /** Preliminary draft read-back. */
   public function loadDraft()
   {
     if ($this->draftId >= 0) {
@@ -1794,7 +1840,7 @@ DebitNotePurpose
     return false;
   }
 
-  /**Delete the current message draft. */
+  /** Delete the current message draft. */
   private function deleteDraft()
   {
     if ($this->draftId >= 0 )  {
@@ -1813,15 +1859,16 @@ DebitNotePurpose
     }
   }
 
-  /**** file temporary utilities ***/
+  // temporary file utilities
 
-  /**Delete all temorary files not found in $fileAttach. If the file
+  /**
+   * Delete all temorary files not found in $fileAttach. If the file
    * is successfully removed, then it is also removed from the
    * config-space.
    *
    * @param $fileAttach List of files @b not to be removed.
    *
-   * @return Undefined.
+   * @return bool Undefined.
    */
   public function cleanTemporaries($fileAttach = array())
   {
@@ -1857,7 +1904,7 @@ DebitNotePurpose
     }
   }
 
-  /**Detach temporaries from a draft, i.e. after deleting the draft. */
+  /** Detach temporaries from a draft, i.e. after deleting the draft. */
   private function detachTemporaryFiles()
   {
     $handle = $this->dataBaseConnect();
@@ -1870,7 +1917,8 @@ DebitNotePurpose
     }
   }
 
-  /**Remember a temporary file. Files attached to message drafts are
+  /**
+   * Remember a temporary file. Files attached to message drafts are
    * remembered across sessions, temporaries not attached to message
    * drafts are cleaned at logout and when closing the email form.
    */
@@ -1889,7 +1937,7 @@ DebitNotePurpose
     }
   }
 
-  /**Forget a temporary file, i.e. purge it from the data-base. */
+  /** Forget a temporary file, i.e. purge it from the data-base. */
   private function forgetTemporaryFile($tmpFile)
   {
     $handle = $this->dataBaseConnect();
@@ -1901,7 +1949,8 @@ DebitNotePurpose
     }
   }
 
-  /**Handle file uploads. In order for upload to survive we have to
+  /**
+   * Handle file uploads. In order for upload to survive we have to
    * move them to an alternate location. And clean up afterwards, of
    * course. We store the generated temporaries in the user
    * config-space in order to (latest) remove them on logout/login.
@@ -1912,7 +1961,7 @@ DebitNotePurpose
    * @param $local If @c true the underlying file will be renamed,
    * otherwise copied.
    *
-   * @return Copy of $fileRecord with changed temporary file which
+   * @return array Copy of $fileRecord with changed temporary file which
    * survives script-reload, or @c false on error.
    */
   public function saveAttachment($fileRecord, $local = false)
@@ -1963,22 +2012,23 @@ DebitNotePurpose
     return false;
   }
 
-  /**** public methods exporting data needed by the web-page template ***/
+  // public methods exporting data needed by the web-page template
 
-  /**General form data for hidden input elements.*/
+  /** General form data for hidden input elements.*/
   public function formData()
   {
     return array('FormStatus' => 'submitted',
                  'MessageDraftId' => $this->draftId);
   }
 
-  /**Return the current catch-all email. */
+  /** Return the current catch-all email. */
   public function catchAllEmail()
   {
     return htmlspecialchars($this->catchAllName.' <'.$this->catchAllEmail.'>');
   }
 
-  /**Compose one "readable", comma separated list of recipients,
+  /**
+   * Compose one "readable", comma separated list of recipients,
    * meant only for display. The real recipients list is composed
    * somewhere else.
    */
@@ -1997,8 +2047,10 @@ DebitNotePurpose
     return htmlspecialchars(implode(', ', $toString));
   }
 
-  /***Export an option array suitable to load stored email messages,
-   * currently templates and message drafts. */
+  /**
+   * Export an option array suitable to load stored email messages,
+   * currently templates and message drafts.
+   */
   public function storedEmails()
   {
     $drafts = $this->fetchDraftsList();
@@ -2014,19 +2066,19 @@ DebitNotePurpose
     return $this->templateName;
   }
 
-  /**Export the currently selected draft id. */
+  /** Export the currently selected draft id. */
   public function messageDraftId()
   {
     return $this->draftId;
   }
 
-  /**Export the subject tag depending on whether we ar in "project-mode" or not. */
+  /** Export the subject tag depending on whether we ar in "project-mode" or not. */
   public function subjectTag()
   {
     return $this->messageTag;
   }
 
-  /**Export the From: name. This is modifiable. The From: email
+  /** Export the From: name. This is modifiable. The From: email
    * address, however, is fixed in order to prevent abuse.
    */
   public function fromName()
@@ -2034,37 +2086,37 @@ DebitNotePurpose
     return $this->cgiValue('FromName', $this->catchAllName);
   }
 
-  /**Return the current From: addres. This is fixed and cannot be changed. */
+  /** Return the current From: addres. This is fixed and cannot be changed. */
   public function fromAddress()
   {
     return htmlspecialchars($this->catchAllEmail);
   }
 
-  /**In principle the most important stuff: the message text. */
+  /** In principle the most important stuff: the message text. */
   public function messageText()
   {
     return $this->messageContents;
   }
 
-  /**Export BCC. */
+  /** Export BCC. */
   public function blindCarbonCopy()
   {
     return $this->cgiValue('BCC', '');
   }
 
-  /**Export CC. */
+  /** Export CC. */
   public function carbonCopy()
   {
     return $this->cgiValue('CC', '');
   }
 
-  /**Export Subject. */
+  /** Export Subject. */
   public function subject()
   {
     return $this->cgiValue('Subject', '');
   }
 
-  /**Return the file attachment data. */
+  /** Return the file attachment data. */
   public function fileAttachments()
   {
     // JSON encoded array
@@ -2100,7 +2152,8 @@ DebitNotePurpose
     return array_merge($localFileAttach, $ocFileAttach);
   }
 
-  /**A helper function to generate suitable select options for
+  /**
+   * A helper function to generate suitable select options for
    * PageNavigation::selectOptions()
    */
   public function fileAttachmentOptions($fileAttach)
@@ -2120,7 +2173,8 @@ DebitNotePurpose
     return $selectOptions;
   }
 
-  /**Return the file attachment data. This function checks for the
+  /**
+   * Return the file attachment data. This function checks for the
    * cgi-values of EventSelect or the "local" cgi values
    * emailComposer[AttachedEvents]. The "legacy" values take
    * precedence.
@@ -2132,7 +2186,8 @@ DebitNotePurpose
     return $attachedEvents;
   }
 
-  /**A helper function to generate suitable select options for
+  /**
+   * A helper function to generate suitable select options for
    * PageNavigation::selectOptions().
    *
    * @param $projectId Id of the active project. If <= 0 an empty
@@ -2177,19 +2232,19 @@ DebitNotePurpose
     return $selectOptions;
   }
 
-  /**If a complete reload has to be done ... for now */
+  /** If a complete reload has to be done ... for now */
   public function reloadState()
   {
     return true;
   }
 
-  /**Return the dispatch status. */
+  /** Return the dispatch status. */
   public function errorStatus()
   {
     return $this->executionStatus !== true;
   }
 
-  /**Return possible diagnostics or not. Depending on operation. */
+  /** Return possible diagnostics or not. Depending on operation. */
   public function statusDiagnostics()
   {
     return $this->diagnostics;

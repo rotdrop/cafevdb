@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\IAppContainer;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -55,11 +56,15 @@ class EmailFormController extends Controller {
   private $pageNavigation;
 
   /** @var PHPMyEdit */
-  protected $pme;
+  private $pme;
+
+  /** @var IAppContainer */
+  private $appContainer;
 
   public function __construct(
     $appName
     , IRequest $request
+    , IAppContainer $appContainer
     , IURLGenerator $urlGenerator
     , RequestParameterService $parameterService
     , PageNavigation $pageNavigation
@@ -68,6 +73,7 @@ class EmailFormController extends Controller {
     , PHPMyEdit $pme
   ) {
     parent::__construct($appName, $request);
+    $this->appContainer = $appContainer;
     $this->urlGenerator = $urlGenerator;
     $this->parameterService = $parameterService;
     $this->pageNavigation = $pageNavigation;
@@ -82,8 +88,8 @@ class EmailFormController extends Controller {
    */
   public function webForm($projectId = -1, $projectName = '', $debitNoteId = -1, $emailTemplate = null)
   {
-    $recipientsFilter = \OC::$server->query(RecipientsFilter::class);
-    $composer = \OC::$server->query(Composer::class);
+    $composer = $this->appContainer->query(Composer::class);
+    $recipientsFilter = $composer->getRecipientsFilter();
 
     $templateParameters = [
       'appName' => $this->appName(),
@@ -140,8 +146,11 @@ class EmailFormController extends Controller {
       'frozenRecipients' => $recipientsFilter->frozenRecipients(),
     ];
 
-    $tmpl = new TemplateResponse($this->appName, 'emailform/form', $templateParameters, 'blank');
-    $html = $tmpl->render();
+    $html = (new TemplateResponse(
+      $this->appName,
+      'emailform/form',
+      $templateParameters,
+      'blank'))->render();
 
     /**
      * @todo supposedly this should call the destructor. This cannot
@@ -161,12 +170,325 @@ class EmailFormController extends Controller {
     return self::dataResponse($responseData);
   }
 
+  private function storedEmailOptions($composer)
+  {
+    $stored = $composer->storedEmails();
+    $options = '';
+    $options .= '
+            <optgroup label="'.$this->l->t('Drafts').'">
+';
+    foreach ($stored['drafts'] as $draft) {
+      $options .= '
+              <option value="__draft-'.$draft['value'].'">'.$draft['name'].'</option>
+';
+    }
+    $options .= '
+            </optgroup>';
+    $options .= '<optgroup label="'.$this->l->t('Templates').'">
+';
+    foreach ($stored['templates'] as $template) {
+      $options .= '
+              <option value="'.$template.'">'.$template.'</option>
+';
+    }
+    $options .= '
+            </optgroup>';
+
+    return $options;
+  }
+
   /**
    * @NoAdminRequired
    */
-  public function composer()
+  public function composer($projectId, $projectName, $debitNodeId)
   {
-    return self::grumble($this->l->t('UNIMPLEMENTED'));
+    // Need to unset to trigger destructers in the correct order
+    $composer = false;
+    $recipientsFilter = false;
+
+    // Need to suspend the session for the progress bar (otherwise opening
+    // the current session in the progress-callback will block until
+    // send-script has finished)
+    $sessionSuspended = false;
+
+    $caption = ''; ///< Optional status message caption.
+    $messageText = ''; ///< Optional status message.
+    $debugText = ''; ///< Diagnostic output, only enabled on request.
+
+    // Close this session in order to enable progress feed-back
+    // @todo Check if really needed
+    // session_write_close();
+    // $sessionSuspended = true;
+
+    $defaultData = [
+      'request' => 'update',
+      'formElement' => 'everything',
+      'projectId' => $projectId,
+      'projectName' => $projectName,
+      'debitNoteId' => $debitNoteId,
+    ];
+    $requestData = array_merge($defaultData, $this->parameterService->getParam('emailComposer', []));
+    $projectId   = $requestData['projectId'];
+    $projectName = $requestData['projectName'];
+    $debitNoteId = $requestData['debitNoteId'];
+
+    $composer = null;
+    if (isset($requestData['singleItem'])) {
+      $requestData['errorStatus'] = false;
+      $requestData['diagnostics'] = '';
+    } else {
+      $recipientsFilter = \OC::$server->query(RecipientsFilter::class);
+      $recipients = $recipientsFilter->selectedRecipients();
+      $composer = \OC::$server->query(Composer::class);
+      $requestData['errorStatus'] = $composer->errorStatus();
+      $requestData['diagnostics'] = $composer->statusDiagnostics();
+    }
+
+    $request = $requestData['request'];
+    switch ($request) {
+    case 'send':
+      if (!$composer->errorStatus()) {
+        // Echo something back on success, error diagnostics are handled
+        // in a unified way at the end of this script.
+        $diagnostics = $composer->statusDiagnostics();
+        $caption = $diagnostics['caption'];
+
+        $tmpl = new TemplateResponse(
+          $this->appName,
+          'emailform/part.emailform.statuspage',
+          [
+            'projectName' => $projectName,
+            'projectId' => $projectId,
+            'diagnostics' => $diagnostics,
+          ],
+          'blank');
+        $messageText = $tmpl->render();
+
+        // Update list of drafts after sending the message (draft has
+        // been deleted)
+        $requestData['storedEmailOptions'] = storedEmailOptions($composer);
+      }
+      break;
+    case 'cancel':
+      // simply let it do the cleanup
+      $composer = \OC::$server->query(Composer::class);
+      $blah = $composer->cleanTemporaries();
+      $debugText .= "foo".print_r($blah, true);
+      break;
+    case 'update':
+      $composer = \OC::$server->query(Composer::class);
+      $formElement = $requestData['formElement'];
+      if ($formElement == 'everything') {
+        $templateParameters = [
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+          'emailTemplateName' => $composer->currentEmailTemplate(),
+          'storedEmails' => $composer->storedEmails(),
+          'TO' => $composer->toString(),
+          'BCC' => $composer->blindCarbonCopy(),
+          'CC' => $composer->carbonCopy(),
+          'mailTag' => $composer->subjectTag(),
+          'subject' => $composer->subject(),
+          'message' => $composer->messageText(),
+          'sender' => $composer->fromName(),
+          'catchAllEmail' => $composer->fromAddress(),
+          'fileAttachments' => $composer->fileAttachments(),
+          'eventAttachments' => $composer->eventAttachments(),
+          'composerFormData' => $composer->formData(),
+        ];
+        $elementData = (new TemplateResponse(
+          $this->appName,
+          'emailform/part.emailform.composer',
+          $templateParameters,
+          'blank'))->render();
+      } else {
+        switch ($formElement) {
+        case 'TO':
+          $elementData = $composer->toString();
+          break;
+        case 'fileAttachments':
+          $composer = new EmailComposer();
+          $fileAttach = $composer->fileAttachments();
+          $elementData = [
+            'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions($fileAttach)),
+            'fileAttach' => $fileAttach,
+          ];
+          break;
+        case 'eventAttachments':
+          $eventAttach = $composer->eventAttachments();
+          $elementData = [
+            'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttach)),
+            'eventAttach' => $eventAttach,
+          ];
+          break;
+        default:
+          return self::grumble($this->l->t("Unknown form element: `%s'.", $formElement));
+        }
+      }
+      $requestData['formElement'] = $formElement;
+      $requestData['elementData'] = $elementData;
+      break;
+    case 'deleteTemplate':
+    case 'setTemplate':
+      $requestData['templateName'] = $composer->currentEmailTemplate();
+      $requestData['message'] = $composer->messageText();
+      $requestData['subject'] = $composer->subject();
+      if ($request == 'setTemplate') {
+        break;
+      }
+    case 'saveTemplate':
+      if (!$requestData['errorStatus'])  {
+        $requestData['storedEmailOptions'] = storedEmailOptions($composer);
+      } else {
+        $requestData['diagnostics']['Caption'] =
+          $this->l->t('Template could not be saved');
+      }
+      break;
+    case 'saveDraft':
+      if (!$requestData['errorStatus'])  {
+        $requestData['storedEmailOptions'] = storedEmailOptions($composer);
+        $requestData['messageDraftId'] = $composer->messageDraftId();
+      } else {
+        $requestData['diagnostics']['caption'] = $this->l->t('Draft could not be saved');
+      }
+      break;
+    case 'deleteDraft':
+      $debugText .= $this->l->t("Deleted draft message with id %d",
+                         array($requestData['messageDraftId']));
+      $requestData['storedEmailOptions'] = storedEmailOptions($composer);
+      $requestData['messageDraftId'] = -1;
+      break;
+    case 'loadDraft':
+      // This seems to be somewhat tricky. The procedure here is to
+      // replace the $_POST array by the saved data, reconstruct the
+      // composer and the recipient dialogs. Better way than that???
+
+      $requestParameters = $this->parameterService->getParams();
+      $requestParameters = Util::arrayMergeRecursive($requestParameters, $composer->loadDraft());
+      $requestParameters['emailComposer']['messageDraftId'] = $composer->messageDraftId();
+
+      // Update project name and id
+      $projectId = $requestData['projectId'] = $requestParameters['projectId'];
+      $projectName = $requestData['projectName'] = $requestParameters['projectName'];
+      $debitNoteId = $requestData['debitNoteId'] = $requestParameters['debitNoteId'];
+      $requestData['messageDraftId'] = $composer->messageDraftId();
+
+      $this->parameterService->setParams($requestParameters);
+
+      // "reload" the composer and recipients filter
+      $composer->bind($this->parameterService);
+
+      $requestData['errorStatus'] = $composer->errorStatus();
+      $requestData['diagnostics'] = $composer->statusDiagnostics();
+
+      // Composer template
+      $templateParameters = [
+        'projectName' => $projectName,
+        'projectId' => $projectId,
+        'templateName' => $composer->currentEmailTemplate(),
+        'storedEmails' => $composer->storedEmails(),
+        'TO' => $composer->toString(),
+        'BCC' => $composer->blindCarbonCopy(),
+        'CC' => $composer->carbonCopy(),
+        'mailTag' => $composer->subjectTag(),
+        'subject' => $composer->subject(),
+        'message' => $composer->messageText(),
+        'sender' => $composer->fromName(),
+        'catchAllEmail' => $composer->fromAddress(),
+        'fileAttachments' => $composer->fileAttachments(),
+        'eventAttachments' => $composer->eventAttachments(),
+        'composerFormData' => $composer->formData(),
+      ];
+
+      $msgData = (new TemplateResponse(
+        $this->appName,
+        'emailform/part.emailform.composer',
+        $templateParameters,
+        'blank'))->render();
+
+      // Recipients template
+      $filterHistory = $recipientsFilter->filterHistory();
+      $templateParameters = [
+        'projectName' => $projectName,
+        'projectId' => $projectId,
+
+        // Needed for the recipient selection
+        'recipientsFormData' => $recipientsFilter->formData(),
+        'filterHistory' => $filterHistory,
+        'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+        'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
+        'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
+        'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
+        'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
+        'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+      ];
+
+      $rcptData = (new TemplateResponse(
+        $this->appName,
+        'emailform/part.emailform.recipients',
+        $templateParameters,
+        'blank'))->render();
+
+      $requestData['composerForm'] = $msgData;
+      $requestData['recipientsForm'] = $rcptData;
+
+      // $debugText .= print_r($_POST, true);
+      $debugText .= $this->l->t("Loaded new draft message with id %d",
+                                [ $requestData['messageDraftId'] ]);
+
+      break;
+    case 'validateEmailRecipients':
+      $composer = new EmailComposer();
+      $composer->validateFreeFormAddresses($requestData['Header'],
+                                           $requestData['Recipients']);
+      $requestData['errorStatus'] = $composer->errorStatus();
+      $requestData['diagnostics'] = $composer->statusDiagnostics();
+      if ($requestData['errorStatus']) {
+        $requestData['diagnostics']['caption'] =
+          $this->l->t('Email Address Validation Failed');
+      }
+      break;
+    default:
+      return self::grumble($this->l->t("Unknown request: `%s'.", $request));
+    }
+
+    // Restart sesssion when finished.
+    // @todo needed?
+    // session_start();
+    // $sessionSuspended = false;
+
+    if ($requestData['errorStatus']) {
+      $caption = $requestData['diagnostics']['caption'];
+
+      $messageText = (new TemplateResponse(
+        $this->appName,
+        'emailform/part.emailform.statuspage',
+        [
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+          'diagnostics' => $requestData['diagnostics'],
+        ],
+        'blank'))->render();
+      return self::grumble([
+        'projectName' => $projectName,
+        'projectId' => $projectId,
+        'caption' => $caption,
+        'message' => $messageText,
+        'request' => $request,
+        'requestData' => $requestData,
+        'debug' => htmlspecialchars($debugText),
+      ]);
+    } else {
+      return self::dataResponse([
+        'projectName' => $projectName,
+        'projectId' => $projectId,
+        'caption' => $caption,
+        'message' => $messageText,
+        'request' => $request,
+        'requestData' => $requestData,
+        'debug' => htmlspecialchars($debugText),
+      ]);
+    }
   }
 
   /**
@@ -174,51 +496,54 @@ class EmailFormController extends Controller {
    */
   public function recipientsFilter($projectId, $projectName, $debitNoteId)
   {
-    $recipientsfilter = \OC::$server->query(RecipientsFilter::class);
+    $recipientsfilter = $this->appContainer->query(RecipientsFilter::class);
 
-       if ($recipientsFilter->reloadState()) {
-         // Rebuild the entire page
-         $recipientsOptions = [];
-         $missingEmailAddresses = '';
+    if ($recipientsFilter->reloadState()) {
+      // Rebuild the entire page
+      $recipientsOptions = [];
+      $missingEmailAddresses = '';
 
-         $filterHistory = $recipientsFilter->filterHistory();
-         $templateData = [
-           'projectName' => $projectName,
-           'projectId' => $projectId,
-           'debitNoteId' => $debitNoteId,
-           // Needed for the recipient selection
-           'recipientsFormData' => $recipientsFilter->formData(),
-           'filterHistory' => $filterHistory,
-           'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
-           'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
-           'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
-           'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
-           'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
-           'frozenRecipients' => $recipientsFilter->frozenRecipients(),
-         ];
+      $filterHistory = $recipientsFilter->filterHistory();
+      $templateData = [
+        'projectName' => $projectName,
+        'projectId' => $projectId,
+        'debitNoteId' => $debitNoteId,
+        // Needed for the recipient selection
+        'recipientsFormData' => $recipientsFilter->formData(),
+        'filterHistory' => $filterHistory,
+        'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+        'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
+        'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
+        'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
+        'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
+        'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+      ];
 
-         $tmpl = new TemplateResponse($this->appName, 'part.emailform.recipients', $templateParameters, 'blank');
-         $contents = $tmpl->render();
-       } else if ($recipientsFilter->snapshotState()) {
-         // short-circuit
-         $filterHistory = $recipientsFilter->filterHistory();
-         return self::dataResponse([ 'filterHistory' => $filterHistory ]);
-       } else {
-         $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
-         $recipientsOptions = Navigation::selectOptions($recipientsChoices);
-         $missingEmailAddresses = '';
-         $separator = '';
-         foreach ($recipientsFilter->missingEmailAddresses() as $id => $name) {
-           $missingEmailAddresses .= $separator;
-           $separator = ', ';
-           $missingEmailAddresses .=
-             '<span class="missing-email-addresses personal-record" data-id="'.$id.'">'
-             .$name
-             .'</span>';
-         }
-         $filterHistory = $recipientsFilter->filterHistory();
-         $contents = '';
-       }
+      $contents = (new TemplateResponse(
+        $this->appName,
+        'emailform/part.emailform.recipients',
+        $templateParameters,
+        'blank'))->render();
+    } else if ($recipientsFilter->snapshotState()) {
+      // short-circuit
+      $filterHistory = $recipientsFilter->filterHistory();
+      return self::dataResponse([ 'filterHistory' => $filterHistory ]);
+    } else {
+      $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
+      $recipientsOptions = PageNavigation::selectOptions($recipientsChoices);
+      $missingEmailAddresses = '';
+      $separator = '';
+      foreach ($recipientsFilter->missingEmailAddresses() as $id => $name) {
+        $missingEmailAddresses .= $separator;
+        $separator = ', ';
+        $missingEmailAddresses .=
+                               '<span class="missing-email-addresses personal-record" data-id="'.$id.'">'
+                               .$name
+                               .'</span>';
+      }
+      $filterHistory = $recipientsFilter->filterHistory();
+      $contents = '';
+    }
 
     return self::dataResponse([
       'projectName' => $projectName,
@@ -228,8 +553,6 @@ class EmailFormController extends Controller {
       'missingEmailAddresses' => $missingEmailAddresses,
       'filterHistory' => $filterHistory,
     ]);
-
-    return self::grumble($this->l->t('UNIMPLEMENTED'));
   }
 
   /**
@@ -288,7 +611,7 @@ class EmailFormController extends Controller {
           $fileRecord[$key] = $values[$i];
         }
         // Move the temporary files to locations where we can find them later.
-        $composer = \OC::$servce->query(Composer::class);
+        $composer = $this->appContainer->query(Composer::class);
         $fileRecord = $composer->saveAttachment($fileRecord);
 
         // Submit the file-record back to the java-script in order to add the
