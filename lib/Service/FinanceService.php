@@ -451,7 +451,7 @@ class FinanceService
    * @param mixed $usageInfo Either a mandate-reference or a
    * previously fetched result from $this->mandateReferenceUsage()
    *
-   * @return @c true iff the mandate is expired, @c false otherwise.
+   * @return bool @c true iff the mandate is expired, @c false otherwise.
    */
   public function mandateIsExpired($usageInfo)
   {
