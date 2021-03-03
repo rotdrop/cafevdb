@@ -43,7 +43,7 @@ const Email = globalState.Email = {
   active: false,
 };
 
-const attachmentFromJSON = function(response, info) {
+function attachmentFromJSON(response, info) {
   const fileAttachHolder = $('form.cafevdb-email-form fieldset.attachments input.file-attach');
   if (fileAttachHolder === '') {
     Dialogs.alert(t(appName, 'Not called from main email-form.'), t(appName, 'Error'));
@@ -637,9 +637,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         if (!postponeEnable) {
           validateUnlock();
         }
-        return false;
-      },
-    });
+      });
     return false;
   };
 
@@ -1038,22 +1036,23 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   });
 
   // Update our selected events on request
-  dialogHolder.off('cafevdb:events_changed');
-  dialogHolder.on('cafevdb:events_changed', function(event, events) {
-    const formData = form.find('fieldset.form-data');
-    const projectId = formData.find('input[name="ProjectId"]').val();
-    const projectName = formData.find('input[name="ProjectName"]').val();
-    const requestData = {
-      Request: 'update',
-      FormElement: 'EventAttachments',
-      SingleItem: true,
-      ProjectId: projectId,
-      ProjectName: projectName,
-      AttachedEvents: events,
-    };
-    applyComposerControls.call(this, event, requestData);
-    return false;
-  });
+  dialogHolder
+    .off('cafevdb:events_changed')
+    .on('cafevdb:events_changed', function(event, events) {
+      const formData = form.find('fieldset.form-data');
+      const projectId = formData.find('input[name="ProjectId"]').val();
+      const projectName = formData.find('input[name="ProjectName"]').val();
+      const requestData = {
+        Request: 'update',
+        FormElement: 'EventAttachments',
+        SingleItem: true,
+        ProjectId: projectId,
+        ProjectName: projectName,
+        AttachedEvents: events,
+      };
+      applyComposerControls.call(this, event, requestData);
+      return false;
+    });
 
   fieldset
     .find('input.delete-all-event-attachments')
@@ -1081,17 +1080,18 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return false;
     });
 
-  eventAttachmentsSelector.off('change').on('change', function(event) {
-    const eventDialog = $('.cafevdb-project-events #events');
-    let events = $(this).val();
-    if (!events) {
-      events = [];
-      fieldset.find('tr.event-attachments').hide();
-    }
-    eventDialog.trigger('cafevdb:events_changed', [events]);
-
-    return false;
-  });
+  eventAttachmentsSelector
+    .off('change')
+    .on('change', function(event) {
+      const eventDialog = $('.cafevdb-project-events #events');
+      let events = $(this).val();
+      if (!events) {
+        events = [];
+        fieldset.find('tr.event-attachments').hide();
+      }
+      eventDialog.trigger('cafevdb:events_changed', [events]);
+      return false;
+    });
 
   /*************************************************************************
    *
@@ -1119,6 +1119,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   // Arguably, these should only be active if the
   // composer tab is active. Mmmh.
   FileUpload.init({
+    url: generateUrl('communication/email/outgoing/upload/attachment'),
     doneCallback(json) {
       attachmentFromJSON(json, { origin: 'local' });
     },
@@ -1128,10 +1129,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     containerSelector: '#attachment_upload_wrapper',
   });
 
-  fieldset.find('.attachment.upload').off('click');
-  fieldset.find('.attachment.upload').on('click', function() {
-    $('#attachment_upload_start').trigger('click');
-  });
+  fieldset
+    .find('.attachment.upload')
+    .off('click')
+    .on('click', function() {
+      $('#attachment_upload_start').trigger('click');
+    });
 
   fieldset.find('.attachment.cloud')
     .off('click')
@@ -1552,7 +1555,6 @@ const documentReady = function() {
 export {
   documentReady,
   emailFormPopup,
-  attachmentFromJSON,
 };
 
 // Local Variables: ***
