@@ -51,9 +51,6 @@ $_['rowClass'] = $rowClass = $appPrefix('row');
     <div id="emailformdebug" class="resize-target"><pre><?php print_r($_POST); ?></pre></div>
   </form>
 
-  <!-- Download support via iframe -->
-  <iframe name="emailformdownloadframe" id="emailformdownloadframe" style="display:none;" src="about:blank"></iframe>
-
   <!-- Upload support via blueimp. FIXME: is this still up-to-date? Probably got this from OC4 -->
   <div id="attachment_upload_wrapper" class="data_upload_wrapper">
     <form data-upload-id='1'
