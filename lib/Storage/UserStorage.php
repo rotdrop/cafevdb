@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Storage;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\Files\IRootFolder;
+use OCP\Files\Node;
 use OCP\Files\Folder;
 use OCP\Files\FileInfo;
 
@@ -70,13 +71,12 @@ class UserStorage
     return $this->userId;
   }
 
-
   /**
    * @param string|null $path Path to lookup.
    *
    * @return \OCP\Files\Folder The user-folder or the given sub-folder
    */
-  public function get(?string $path):?Folder
+  public function get(?string $path):?Node
   {
     try {
       return empty($path) ? $this->userFolder : $this->userFolder->get($path);
