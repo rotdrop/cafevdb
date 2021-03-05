@@ -6,7 +6,8 @@
       "php"
     ],
     "php-path-list": [
-      "."
+      ".",
+      "../../lib"
     ],
     "php-path-list-without-subdir": []
   }
