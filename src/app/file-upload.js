@@ -24,6 +24,7 @@
 
 import { globalState, appName, $ } from './globals.js';
 
+require('jquery-ui/ui/widgets/progressbar');
 require('blueimp-file-upload');
 
 const FileUpload = globalState.FileUpload = {
