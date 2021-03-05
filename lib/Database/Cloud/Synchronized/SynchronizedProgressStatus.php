@@ -10,7 +10,7 @@ use OCA\CAFEVDB\Database\Cloud\Synchronized;
 
 class SynchronizedProgressStatus extends Synchronized
 {
-  /** @var stingt */
+  /** @var string */
   private $userId;
 
   public function __construct(IDBConnection $db, $appName, $userId, $id = null) {

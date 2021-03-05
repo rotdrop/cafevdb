@@ -33,7 +33,7 @@ abstract class Synchronized extends Db\QBMapper
 
     parent::__construct($db, $tableName, $entityClass);
 
-    $this->entity = new $this->entityClass();
+    $this->entity = new $entityClass();
     $this->entity->setId($id);
 
     $this->attach();
@@ -44,8 +44,9 @@ abstract class Synchronized extends Db\QBMapper
     return $this->attached;
   }
 
-  /** Obtain object from database if it is "clean", if it is dirty or
-   *  new (no id) then create or update the database entry.
+  /**
+   * Obtain object from database if it is "clean", if it is dirty or
+   * new (no id) then create or update the database entry.
    */
   public function attach()
   {
@@ -71,10 +72,10 @@ abstract class Synchronized extends Db\QBMapper
     $this->attached = false;
   }
 
-  /** Update multiple properties and write them through to the
-   *  database if we are in $attached state. If called with no
-   *  arguments read the entity back from the database, possibly
-   *  attaching it first.
+  /**
+   * Update multiple properties and write them through to the database if we
+   * are in $attached state. If called with no arguments read the entity back
+   * from the database, possibly attaching it first.
    */
   public function merge(array $params = [])
   {

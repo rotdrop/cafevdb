@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -43,48 +44,50 @@ so. You may want to configure your language preferences.')
   .'</div>
 ';
 
-echo $this->inc('part.common.header',
-                array('css-prefix' => $css_pfx,
-                      'css-class' => $css_class,
-                      'navigationcontrols' => $nav,
-                      'header' => $header));
+echo $this->inc('part.common.header', [
+  'css-prefix' => $css_pfx,
+  'css-class' => $css_class,
+  'navigationcontrols' => $nav,
+  'header' => $header,
+]);
 
 $cfgchk = $_['configcheck'];
 
-$missingtext = ['orchestra' => $l->t('You need to specify a name for the orchestra.  Please click as
+$missingtext = [
+  'orchestra' => $l->t(
+    'You need to specify a name for the orchestra.  Please click as
 group-administrator on the gear-symbol in the top-right corner and
 specify a short-hand name for the orchestra in the
 `Administration\'-tab. This is just a tag to provide defaults for
 user-ids and folders; it should be a short one-word identifier.'),
-                     'usergroup' =>
-                     $l->t('You need to create a dedicatd user group.
+  'usergroup' => $l->t('You need to create a dedicatd user group.
 You have to log-in as administrator to do so.'),
-                     'shareowner' =>
-                     $l->t('You need to create a dummy-user which owns all shared resources
+  'shareowner' => $l->t(
+    'You need to create a dummy-user which owns all shared resources
 (calendars, files etc.). You need to be a group-admin for the
 orchestra user group `%s\' to do so. You can create the share-owner
 uid by setting the respective field in the application settings menu
 (click as group-admin on the gear-symbol in the top-right corner and
 choose the `Sharing\'-tab).',
-                           [$_['usergroup']]),
-                     'sharedfolder' =>
-                     $l->t('You need to create a dedicated shared folder shared among the
+                        [$_['usergroup']]),
+  'sharedfolder' => $l->t(
+    'You need to create a dedicated shared folder shared among the
 user-group `%s\'. You can do so through the respective web-form in the
 application settings windows accessible through the gear-symbol in the
 top-right corner. Click on the symbol and choose the `Sharing\'-tab in
 the settings-window. You need to be a group-admin, otherwise the
 application settings are not visible for you.',
-                           [$_['usergroup']]),
-                     'database' =>
-                     $l->t('You need to configure the database access. You can do so through the
+                          [$_['usergroup']]),
+  'sharedaddressbooks' => $l->t('blah'),
+  'database' => $l->t('You need to configure the database access. You can do so through the
 respective web-form in the application settings windows accessible
 through the gear-symbol in the upper left corner. Click on the
 gear-symbol and choose the `Administration\'-tab.You need to be a
 group-admin, otherwise the application settings are not visible for
 you.',
-                           [$_['usergroup']]),
-                     'encryptionkey' =>
-                     $l->t('You may want to set an encryption key for encrypting configuration
+                      [$_['usergroup']]),
+  'encryptionkey' => $l->t(
+    'You may want to set an encryption key for encrypting configuration
 values and (in the future) sensitive data in the members- and project
 database.  You can do so through the respective web-form in the
 application settings windows accessible through the gear-symbol in the
@@ -106,23 +109,25 @@ log-in again in order to be able to access the encrypted values.',
       value="<?php echo $l->t('Test again'); ?>"
       id="configrecheck"
     />
-    <a href="#" class="new-event button">NewEventDialog</a>
-    <a href="#"
-       class="edit-event button"
-       data-uri="E59CC606-AB43-443F-ACC8-3EA742ADD672.ics"
-            data-calendar-id="30">EditEventDialog</a>
-    <input id="edit-event-test-uri" type="text" name="uri" placeholder="uri"/>
-    <input id="edit-event-test-calendar-id" type="number" name="calendar-id" placeholder="calendar-id"/>
-    <a href="#" class="geo-coding button">TestGeoCodingCache</a>
+    <!-- <a href="#" class="new-event button">NewEventDialog</a>
+         <a href="#"
+         class="edit-event button"
+         data-uri="E59CC606-AB43-443F-ACC8-3EA742ADD672.ics"
+         data-calendar-id="30">EditEventDialog</a>
+         <input id="edit-event-test-uri" type="text" name="uri" placeholder="uri"/>
+         <input id="edit-event-test-calendar-id" type="number" name="calendar-id" placeholder="calendar-id"/>
+         <a href="#" class="geo-coding button">TestGeoCodingCache</a> -->
+    <br/>
     <br/>
     <a href="#" class="progress-status button">TestProgressStatus</a>
     <span id="progress-status-info"></span>
   </form>
   <br/>
-  <pre><?php echo $_SERVER['PHP_SELF']; ?></pre>
-  <pre>Image: <?php echo $urlGenerator->imagePath('cafevdb', ''); ?></pre>
-  <pre>File: <?php echo $urlGenerator->linkTo('cafevdb', ''); ?></pre>
-  <pre>Route: <?php echo $urlGenerator->linkToRoute('cafevdb.page.index'); ?></pre>
+  <!-- <br/>
+       <pre><?php echo $_SERVER['PHP_SELF']; ?></pre>
+       <pre>Image: <?php echo $urlGenerator->imagePath('cafevdb', ''); ?></pre>
+       <pre>File: <?php echo $urlGenerator->linkTo('cafevdb', ''); ?></pre>
+       <pre>Route: <?php echo $urlGenerator->linkToRoute('cafevdb.page.index'); ?></pre> -->
   <ul>
 
 <?php
@@ -134,6 +139,7 @@ $diagnosticItems = [
   'orchestra',
   'shareowner',
   'sharedfolder',
+  'sharedaddressbooks',
   'database'
 ];
 

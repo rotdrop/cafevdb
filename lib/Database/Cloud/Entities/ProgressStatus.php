@@ -22,10 +22,9 @@ class ProgressStatus extends Entity
     $this->addType('userId', Types::STRING);
     $this->addType('current', Types::BIGINT);
     $this->addType('target', Types::BIGINT);
-    $this->addType('data', Types::JSON);
+    $this->addType('data', Types::STRING);
     $this->addType('lastModified', Types::BIGINT);
   }
-
 
   public function __call($methodName, $args) {
     if (strpos($methodName, 'set') === 0) {

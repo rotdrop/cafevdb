@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -263,7 +263,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
  * @returns {bool} TBD.
  */
 const ajaxValidateResponse = function(data, required, errorCB) {
-  if (typeof data.data !== 'undefined' && typeof data.data.status !== 'undefined') {
+  if (data.data && data.data.status !== undefined) {
     console.error('********** Success handler called as error handler ************');
     if (data.data.status !== 'success') {
       ajaxHandleError(null, data, null);

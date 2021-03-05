@@ -26,11 +26,14 @@ namespace OCA\CAFEVDB\Service;
 use OCP\IUser;
 use OCP\IDBConnection;
 use OCP\ILogger;
+use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\Cloud\Synchronized\SynchronizedProgressStatus as ProgressStatus;
 
 class ProgressStatusService
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   /** @var IDBConnection */
   private $db;
 
@@ -40,10 +43,18 @@ class ProgressStatusService
   /** @var string */
   private $appName;
 
-  public function __construct(IDBConnection $db, $appName, $userId) {
+  public function __construct(
+    IDBConnection $db
+    , $appName
+    , $userId
+    , ILogger $logger
+    , IL10N $l10n
+  ) {
     $this->db = $db;
     $this->appName = $appName;
     $this->userId = $userId;
+    $this->logger = $logger;
+    $this->l = $l10n;
   }
 
   /**
@@ -52,12 +63,18 @@ class ProgressStatusService
   public function create($start, $stop, $data = null, $id = null): ProgressStatus
   {
     $progressStatus = new ProgressStatus($this->db, $this->appName, $this->userId, $id);
-    $progressStatus->merge([
+    $mergeData = [
       'userId' => $this->userId,
       'current' => $start,
       'target' => $stop,
-      'data' => $data,
-    ]);
+    ];
+    if (!empty($data)) {
+      if (is_array($data)) {
+        $data = json_encode($data);
+      }
+      $mergeData['data'] = $data;
+    }
+    $progressStatus->merge($mergeData);
     return $progressStatus;
   }
 

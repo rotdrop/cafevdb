@@ -30,7 +30,7 @@ function createProgressStatus(target, current, id)
 {
   return $.post(
     generateUrl('foregroundjob/progress/create'),
-    { id, target: target || 100, current: current || 0});
+    { id, target: target || 100, current: current || 0 });
 }
 
 function pollProgressStatus(id, options) {

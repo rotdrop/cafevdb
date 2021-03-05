@@ -39,6 +39,7 @@ import { documentReady as blogDocumentReady } from './app/blog.js';
 import { documentReady as emailDocumentReady } from './app/email.js';
 import { documentReady as insurancesDocumentReady } from './app/insurance.js';
 import { documentReady as phpMyEditDocumentReady } from './app/pme.js';
+import { documentReady as configCheckDocumentReady } from './app/configcheck.js';
 import beforeReady from './app/before-ready.js';
 import './app/jquery-extensions.js';
 
@@ -51,6 +52,7 @@ __webpack_public_path__ = webRoot;
 __webpack_nonce__ = nonce;
 
 $(function() {
+  configCheckDocumentReady();
   blogDocumentReady();
   emailDocumentReady();
   musiciansDocumentReady();

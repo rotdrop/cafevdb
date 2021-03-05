@@ -33,7 +33,7 @@ use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ProgressStatusService;
-use OCA\CAFEVDB\Database\Cloud\Entities\ProgressStatus;
+use OCA\CAFEVDB\Database\Cloud\Synchronized\SynchronizedProgressStatus as ProgressStatus;
 
 class ProgressStatusController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -92,50 +92,51 @@ class ProgressStatusController extends Controller {
   public function action($operation)
   {
     switch($operation) {
-    case 'create':
-      try {
-        $progress = $this->progressStatusService->create(
-          $this->request['current'],
-          $this->request['target'],
-          $this->request['data']
-        );
-        return self::progressRespones($progress);
-      } catch (\Throwable $t) {
-        $this->logger->logException($t);
-        return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-      }
-      break;
-    case 'update':
-      try {
-        $progress = $this->progressStatusService->get($this->request['id']);
-      } catch (\Throwable $t) {
-        $this->logger->logException($t);
-        return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-      }
-      try {
-        $data = [];
-        foreach ([ 'curren', 'target', 'data' ] as $key) {
-          if (isset($this->request[$key])) {
-            $data[$key] = $this->request[$key];
-          }
+      case 'create':
+        try {
+          $progress = $this->progressStatusService->create(
+            $this->request['current'],
+            $this->request['target'],
+            $this->request['data']
+          );
+          return self::progressResponse($progress);
+        } catch (\Throwable $t) {
+          $this->logger->logException($t);
+          return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
-        $progress->merge($data);
-        return self::progressResponse($progress);
-      } catch (\Throwable $t) {
-        $this->logger->logException($t);
-        return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-      }
-      break;
-    case 'test':
-      $progress = $this->progressStatusService->create(0, 100, $this->request['id']);
-      for ($i = 0; $i <= $progress->getTarget(); $i++) {
-        $progress->merge(['current' => $i]);
-        usleep(500000);
-      }
-      return self::dataResponse([]);
-      break;
-    default:
-      return self::grumble($this->l->t('Unknown Request'));
+        break;
+      case 'update':
+        try {
+          $progress = $this->progressStatusService->get($this->request['id']);
+        } catch (\Throwable $t) {
+          $this->logger->logException($t);
+          return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+        }
+        try {
+          $data = [];
+          foreach ([ 'curren', 'target', 'data' ] as $key) {
+            if (isset($this->request[$key])) {
+              $data[$key] = $this->request[$key];
+            }
+          }
+          $progress->merge($data);
+          return self::progressResponse($progress);
+        } catch (\Throwable $t) {
+          $this->logger->logException($t);
+          return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+        }
+        break;
+      case 'test':
+        $target = $this->request['target']?:100;
+        $progress = $this->progressStatusService->create(0, $target, $this->request['data'], $this->request['id']);
+        for ($i = 0; $i <= $progress->getTarget(); $i++) {
+          $progress->merge(['current' => $i]);
+          usleep(500000);
+        }
+        return self::dataResponse([]);
+        break;
+      default:
+        return self::grumble($this->l->t('Unknown Request'));
     }
   }
 
