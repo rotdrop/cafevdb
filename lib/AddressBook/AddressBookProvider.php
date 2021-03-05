@@ -114,7 +114,7 @@ class AddressBookProvider implements IAddressBookProvider
     return self::$addressBook;
   }
 
-  private function addressBookUri()
+  private function addressBookUri():string
   {
     return $this->cardBackend->getURI();
   }
@@ -123,10 +123,12 @@ class AddressBookProvider implements IAddressBookProvider
    * Return a cloud-address-book suitable for registration with the
   * \OCP\IContactsManager.
    */
-  public function getContactsAddressBook()
+  public function getContactsAddressBook():ContactsAddressBook
   {
     if (empty(self::$contactsAddressBook)) {
-      self::$contactsAddressBook = new ContactsAddressBook($this->configService, $this->cardBackend);
+      $addressBook = self::$addressBook?:(new AddressBook($this->configService, $this->cardBackend, ''));
+      $uri = $addressBook->getName();
+      self::$contactsAddressBook = new ContactsAddressBook($this->configService, $this->cardBackend, $uri);
     }
     return self::$contactsAddressBook;
   }

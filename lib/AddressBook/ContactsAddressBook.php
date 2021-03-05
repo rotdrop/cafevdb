@@ -46,19 +46,19 @@ class ContactsAddressBook implements IAddressBook
   private $cardBackend;
 
   /** @var string */
-  private $principalURI;
+  private $uri;
 
-  public const DAV_PROPERTY_SOURCE = 'X-NC_LDAP_CONTACTS_ID';
+  public const DAV_PROPERTY_SOURCE = 'X-CAFEVDB_CONTACTS_ID';
   /** @var PhotoService */
   private $photoService;
 
   public function __construct(
     ConfigService $configService
     , ICardBackend $cardBackend
-    , ?string $principalURI = null
+    , ?string $uri = null
   ) {
     $this->cardBackend = $cardBackend;
-    $this->principalUri = $principalUri;
+    $this->uri = $uri ?? $this->cardBackend->getURI();
     $this->configService = $configService;
     $this->l = $this->l10n();
   }
@@ -74,8 +74,7 @@ class ContactsAddressBook implements IAddressBook
    * @inheritDoc
    */
   public function getUri(): string {
-    // this will have the URL part to direct to the contacts app
-    return $this->principalURI ?? $this->cardBackend->getURI();
+    return $this->uri;
   }
 
   /**

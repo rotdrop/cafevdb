@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -423,7 +423,19 @@ const afterLoad = function(container) {
      *
      *************************************************************************/
 
-    simpleSetValueHandler(container.find('#calendars :input, #contacts :input'), 'blur', msg);
+    simpleSetValueHandler(
+      container.find('#calendars :input, #contacts :input'),
+      'blur',
+      msg,
+      {
+        success($self, data, value, msgElement) {
+          console.info('Hello World', value, data);
+          if (data.value.name && data.value.name !== value) {
+            $self.val(data.value.name);
+          }
+        },
+      }
+    );
 
     const sharedFolder =
           function(cssBase, callback) {

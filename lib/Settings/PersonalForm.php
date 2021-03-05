@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ErrorService;
 use OCA\CAFEVDB\Service\TranslationService;
+use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -67,6 +68,9 @@ class PersonalForm {
   /** @var OCA\Redaxo4Embedded\Service\RPC */
   private $webPagesRPC;
 
+  /** @var AddressBookProvider */
+  private $addressBookProvider;
+
   public function __construct(
     ConfigService $configService
     , ProjectService $projectService
@@ -76,6 +80,7 @@ class PersonalForm {
     , IInitialStateService $initialStateService
     , WikiRPC $wikiRPC
     , WebPagesRPC $webPagesRPC
+    , AddressBookProvider $addressBookProvider
   ) {
     $this->configService = $configService;
     $this->projectService = $projectService;
@@ -85,6 +90,7 @@ class PersonalForm {
     $this->initialStateService = $initialStateService;
     $this->wikiRPC = $wikiRPC;
     $this->webPagesRPC = $webPagesRPC;
+    $this->addressBookProvider = $addressBookProvider;
     $this->l = $this->l10N();
   }
 
@@ -200,6 +206,10 @@ class PersonalForm {
           $clubBoardMembers = [];
         }
 
+        $musiciansAddressBookName = $this->addressBookProvider
+          ->getContactsAddressBook()
+          ->getDisplayName();
+
         $templateParameters = array_merge(
           $templateParameters,
           [
@@ -245,7 +255,7 @@ class PersonalForm {
             'eventduration' => $this->getConfigValue('eventduration', '180'),
 
             'generaladdressbook' => $this->getConfigValue('generaladdressbook', $this->l->t('Miscellaneous')),
-            'musiciansaddressbook' => $this->getConfigValue('musisiciansaddressbook', $this->l->t('Musicians')),
+            'musiciansaddressbook' => $musiciansAddressBookName,
 
             'sharedfolder' => $this->getConfigValue('sharedfolder',''),
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),

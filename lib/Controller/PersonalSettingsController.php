@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\DataDownloadResponse;
@@ -38,9 +39,10 @@ use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\TranslationService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\FinanceService;
-use \OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -76,9 +78,13 @@ class PersonalSettingsController extends Controller {
   /** @var ProjectService */
   private $projectService;
 
+  /** @var IAppContainer */
+  private $appContainer;
+
   public function __construct(
     $appName
     , IRequest $request
+    , IAppContainer $appContainer
     , RequestParameterService $parameterService
     , ConfigService $configService
     , Personal $personalSettings
@@ -93,8 +99,8 @@ class PersonalSettingsController extends Controller {
   ) {
 
     parent::__construct($appName, $request);
+    $this->appContainer = $appContainer;
     $this->parameterService = $parameterService;
-
     $this->configService = $configService;
     $this->configCheckService = $configCheckService;
     $this->personalSettings = $personalSettings;
@@ -934,7 +940,6 @@ class PersonalSettingsController extends Controller {
                       [$real, $e->getMessage()]));
       }
     case 'generaladdressbook':
-    case 'musiciansaddressbook':
       $real = trim($value);
       $uri = substr($parameter, 0, -strlen('addressbook'));
       //$saved = $value[$parameter.'-saved'];
@@ -942,21 +947,37 @@ class PersonalSettingsController extends Controller {
       $actual = $this->getConfigValue($parameter);
       $actualId = $this->getConfigValue($parameter.'id');
       try {
-        if (($newId = $this->configCheckService->checkSharedAddressBook($uri, $real, $actualId)) > 0) {
-          $this->setConfigValue($parameter, $real);
-          $this->setConfigValue($parameter.'id', $newId);
-          return self::valueResponse(
-            ['name' => $real, 'id' => $newId],
-            $this->l->t('Created and shared new address book `%s\'.', [$real]));
-        } else {
+        if (($newId = $this->configCheckService->checkSharedAddressBook($uri, $real, $actualId)) <= 0) {
           return self::grumble($this->l->t('Failed to create new shared address book `%s\'.', [$real]));
         }
+        $this->setConfigValue($parameter, $real);
+        $this->setConfigValue($parameter.'id', $newId);
+        return self::valueResponse(
+          ['name' => $real, 'id' => $newId],
+          $this->l->t('Created and shared new address book `%s\'.', $real));
       } catch(\Exception $e) {
         $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
         return self::grumble(
           $this->l->t('Failure checking address book `%s\', caught an exception `%s\'.',
                       [$real, $e->getMessage()]));
       }
+    case 'musiciansaddressbook':
+      $real = trim($value);
+      $this->setConfigValue($parameter, $real);
+      $addressBook = $this->appContainer->query(AddressBookProvider::class)->getContactsAddressBook();
+      $this->setConfigValue($parameter.'id', $addressBook->getKey());
+      if (empty($real)) {
+        $real = $addressBook->getDisplayName();
+        $message = $this->l->t('Display name of musicians-addressbook reset to "%s".', $real);
+      } else {
+        $message = $this->l->t('Display name of musicians-addressbook set to "%s".', $real);
+      }
+      if ($addressBook->getDisplayName() != $real) {
+        return self::grumble($this->l->t('Unable to set display-name of musicians-addressbook to "%s", it remains at "%s".', [ $real, $addressBook->getDisplayName() ]));
+      }
+      return self::valueResponse(
+        [ 'name' => $addressBook->getDisplayName(), 'id' => $addressBook->getKey() ],
+        $message);
     case 'eventduration':
       $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
       if ($realValue === false) {

@@ -64,7 +64,11 @@ class MusicianCardBackend implements ICardBackend
   }
 
   public function getDisplayName(): string {
-    return $this->l->t('%s Musicians', ucfirst($this->getConfigValue('orchestra', 'unknown')));
+    $name = $this->getConfigValue('musiciansaddressbook');
+    if (empty($name)) {
+      $name = $this->l->t('%s Musicians', ucfirst($this->getConfigValue('orchestra', 'unknown')));
+    }
+    return $name;
   }
 
   /**

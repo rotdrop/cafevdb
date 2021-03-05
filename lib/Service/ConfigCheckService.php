@@ -24,6 +24,9 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\IUserManager;
 use OCP\IGroupManager;
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\Share\IManager as IShareManager;
+use OCP\Calendar\IManager as ICalendarManager;
 use OCP\IUserSession;
 use OCP\IUser;
 use OCP\IConfig;
@@ -32,7 +35,7 @@ use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
 
 use OCA\CAFEVDB\Database\EntityManager;
-
+use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
 
 /**Check for a usable configuration.
@@ -70,16 +73,20 @@ class ConfigCheckService
   /** @var \OCP\Contacts\IManager */
   private $contactsManager;
 
+  /** @var AddressBookProvider */
+  private $addressBookProvider;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
     , IRootFolder $rootFolder
-    , \OCP\Share\IManager $shareManager
-    , \OCP\Calendar\IManager $calendarManager
-    , \OCP\Contacts\IManager $contactsManager
+    , IShareManager $shareManager
+    , ICalendarManager $calendarManager
+    , IContactsManager $contactsManager
     , CalDavService $calDavService
     , CardDavService $cardDavService
     , EventsService $eventsService
+    , AddressBookProvider $addressBookProvider
     //, \OCA\CAFEVDB\
     //, \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit $phpMyEdit
     //, \OCA\CAFEVDB\Database\Connection $dbConnection
@@ -96,6 +103,7 @@ class ConfigCheckService
     $this->contactsManager = $contactsManager;
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
+    $this->addressBookProvider = $addressBookProvider;
   }
 
   /**Return an array with necessary configuration items, being either
@@ -173,6 +181,13 @@ class ConfigCheckService
       $result[$key]['message'] = $e->getMessage();
     }
     $this->logDebug($key.': '.$result[$key]['status']);
+
+    $key = 'sharedaddressbooks';
+    try {
+      $result[$key]['status'] = $result['shareowner']['status'] && $this->sharedAddressBooksExist();
+    } catch (\Exception $e) {
+      $result[$key]['message'] = $e->getMessage();
+    }
 
     $summary = true;
     foreach ($result as $key => $value) {
@@ -720,7 +735,49 @@ class ConfigCheckService
     return $result;
   }
 
-  /**Check for existence of the given addressBook. Create one if it could
+  private function sharedAddressBooksExist()
+  {
+    $configAddressBooks = [
+      'general' => [
+        'key' => $this->getConfigValue('generaladdressbook'.'id', -1),
+        'found' => false,
+      ],
+      'musicians' => [
+        'key' => $this->addressBookProvider->getContactsAddressBook()->getKey(),
+        'found' => false,
+      ],
+    ];
+
+    $addressBooks = $this->contactsManager->getUserAddressBooks();
+
+    foreach ($addressBooks as $addressBook) {
+      $displayName = $addressBook->getDisplayName();
+      $key = $addressBook->getKey();
+      $uri = $addressBook->getUri();
+      $shared = $addressBook->isShared();
+      $this->logInfo('AddressBook: '.print_r([
+        'DPY' => $displayName,
+        'KEY' => $key,
+        'URI' => $uri,
+        'SHR' => $shared,
+      ], true));
+      foreach ($configAddressBooks as &$configBook) {
+        if ($configBook['key'] == $key) {
+          $configBook['found'] = true;
+        }
+      }
+    }
+
+    $result = true;
+    foreach ($configAddressBooks as &$configBook) {
+      $result = $result &&  $configBook['found'];
+    }
+
+    return $result;
+  }
+
+  /**
+   * Check for existence of the given addressBook. Create one if it could
    * not be found. Make sure it is shared between the orchestra group.
    *
    * @param $uri The local URI of the addressBook.
@@ -779,7 +836,7 @@ class ConfigCheckService
 
         // make sure it is shared with the group
         if (!$this->cardDavService->groupShareAddressBook($id, $userGroupId)) {
-          $this->logError("Unable to shared " . $uri . " with " . $userGroupId);
+          $this->logError("Unable to share " . $uri . " with " . $userGroupId);
           if ($created) {
             $this->cardDavService->deleteAddressBook($id);
           }

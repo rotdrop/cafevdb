@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -45,9 +45,11 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
     post(name, value) {
       return $.post(generateUrl('settings/app/set/' + name), { value });
     },
-    setup() {},
-    success() {},
-    fail: Ajax.handleError,
+    setup(/* empty */) {},
+    success($self, data, value, msgElement) {},
+    fail(xhr, textStatus, errorThrown) {
+      Ajax.handleError(xhr, textStatus, errorThrown);
+    },
     cleanup() {},
     getValue($self, msgElement) {
       return {
@@ -82,9 +84,9 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
       callbacks.setup();
       callbacks
         .post(name, value)
-        .fail(function(xhr, status, errorThrown) {
-          msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-          callbacks.fail(xhr, status, errorThrown);
+        .fail(function(xhr, textStatus, errorThrown) {
+          msgElement.html(Ajax.failMessage(xhr, textStatus, errorThrown)).show();
+          callbacks.fail(xhr, textStatus, errorThrown);
           callbacks.cleanup();
         })
         .done(function(data) {

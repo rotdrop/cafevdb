@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -25,6 +26,9 @@ namespace OCA\CAFEVDB\Service;
 use Sabre\VObject\Component\VCard;
 use Doctrine\Common\Collections\Collection;
 
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\Constants;
+
 use OCA\DAV\Events\AddressBookUpdatedEvent;
 use OCA\DAV\Events\AddressBookDeletedEvent;
 
@@ -41,7 +45,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
 
 use OCA\CAFEVDB\Common\Util;
 
-/**Contacts handling. */
+/** Contacts handling. */
 class ContactsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -52,17 +56,132 @@ class ContactsService
   /** @var GeoCodingService */
   private $geoCodingService;
 
+  /** @var IContactsManager */
+  private $contactsManager;
+
   public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager,
-    GeoCodingService $geoCodingService
+    ConfigService $configService
+    , IContactsManager $contactsManager
+    , EntityManager $entityManager
+    , GeoCodingService $geoCodingService
   ) {
     $this->configService = $configService;
+    $this->contactsManager = $contactsManager;
     $this->entityManager = $entityManager;
     $this->geoCodingService = $geoCodingService;
   }
 
-  /**Import the given vCard into the musician data-base. This is
+  /**
+   * Find a matching addressbook by its displayname.
+   *
+   * @param $displayName The display name.
+   *
+   * @param $includeShared Include also shared addressbooks.
+   *
+   * @return The address-book object (row of the database, i.e. an array).
+   */
+  public function addressBookByName($displayName, $includeShared = false)
+  {
+    $addressBooks = $this->contactsManager->getUserAddressBooks();
+
+    foreach ($addressBooks as $addressBook) {
+      // $displayName = $addressBook->getDisplayName();
+      // $key = $addressBook->getKey();
+      // $uri = $addressBook->getUri();
+      // $permissions = $adressBook->getPermissions();
+      if (!$addressBook->isShared() && !$includeShared) {
+        continue;
+      }
+      if ($displayName == $addressBook->getDisplayName()) {
+        return $addressBook;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Fetch a list of contacts with email addresses for the current
+   * user. The return value is a "matrix" of the form
+   *
+   * ```
+   * [
+   *   [
+   *     'email' => 'email@address.com',
+   *     'name'  => 'John Doe',
+   *     'addressbook' => 'Bookname',
+   *   ]
+   * ]
+   * ```
+   *
+   * As of now categories are not exported for shared address-books,
+   * so we simply group the entries by addressbook-name.
+   *
+   * @todo Check for musicians address book
+   */
+  public function emailContacts()
+  {
+    $result = [];
+    $addressBooks = $this->contactsManager->getUserAddressBooks();
+    foreach ($addressBooks as $addressBook) {
+      // @todo skip musicians address book
+      $bookName = $addressBook->getDisplayName();
+      $contacts = $addressBook->search(null, [ 'FN', 'EMAIL' ]);
+      foreach ($contacts as $contact) {
+        $id = $contact['id'];
+        $fn = $contact['FN'];
+        $emails = $contact['EMAIL'];
+        if (!is_array($emails)) {
+          $emails = [ $emails ];
+        }
+        $theseContacts = array();
+        foreach ($emails as $email) {
+          $theseContacts[] = [
+            'id'    => $id,
+            'email' => $email,
+            'name'  => $fn,
+            'addressBook' => $bookName,
+          ];
+        }
+        usort($theseContacts, function($a, $b) {
+          $aName = $a['name'] != '' ? $a['name'] : $a['email'];
+          $bName = $b['name'] != '' ? $b['name'] : $b['email'];
+          return strcmp($aName, $bName);
+        });
+        $result = array_merge($result, $theseContacts);
+      }
+    }
+    return $result;
+  }
+
+  /**
+   * Add the given email address as possibly new entry to the address book.
+   *
+   * @param array $emailContact Contact to be added `[ 'name' => FN, 'email' => EMAIL ]`
+   *
+   * @param string $addressBookKey If set, the id of the address-book to add
+   * entries to. Otherwise the @c addressbookid config-value will be
+   * used. If none is set, return @c false.
+   */
+  public static function addEmailContact($emailContact, $addressBookKey = null)
+  {
+    if (empty($addressBookKey)) {
+      $addressBookKey = Config::getValue('addressbookid', false);
+      if (empty($addressBookKey)) {
+        return null;
+      }
+    }
+    $newContact = $this->contactsManager->createOrUpdate(
+      [
+        'EMAIL' => $emailContact['email'],
+        'FN' => $emailContact['name'],
+      ],
+      $addressBookKey);
+
+    return $newContact;
+  }
+
+  /**
+   * Import the given vCard into the musician data-base. This is
    * somewhat problematic: the CAFeV DB data-base does not support
    * fancy fields. Other things: being a layman-orchestra, we prefer
    * private entries for everything and just choose the first stuff
