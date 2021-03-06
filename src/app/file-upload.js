@@ -66,7 +66,6 @@ function init(options) {
   const fileUploadStart = form.find(options.inputSelector);
 
   const fileUploadParam = {
-    //url: generateUrl(''),
     multipart: true,
     singleFileUploads: false,
     sequentialUploads: true,
@@ -261,6 +260,10 @@ function init(options) {
       $(window).off('beforeunload');
     },
   };
+
+  if (options.url) {
+    fileUploadParam.url = options.url;
+  }
 
   const fileUploadHandler = function() {
     fileUploadStart.fileupload(fileUploadParam);
