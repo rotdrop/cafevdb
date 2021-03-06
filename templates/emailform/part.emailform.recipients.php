@@ -64,7 +64,7 @@ $frozen = $frozenRecipients;
   <?php if ($projectId >= 0) { ?>
     <?php if ($frozen) { ?>
       <input type="hidden"
-             name="emailRecipients[BasicRecipientsSet][FromProject]"
+             name="emailRecipients[basicRecipientsSet][fromProject]"
              value="1"/>
     <?php } else { ?>
       <div class="cafevdb-email-form <?php p($rowClass); ?>">
@@ -80,7 +80,7 @@ $frozen = $frozenRecipients;
                    id="basic-recipients-set-from-project"
                    class="basic-recipients-set from-project tip"
                    title="<?php echo $toolTips['email-recipients-from-project']; ?>"
-                   name="emailRecipients[BasicRecipientsSet][FromProject]"
+                   name="emailRecipients[basicRecipientsSet][fromProject]"
                    value="1"
             <?php echo $basicRecipientsSet['fromProject'] ? 'checked="checked"' : ''; ?>
                    />
@@ -97,7 +97,7 @@ $frozen = $frozenRecipients;
                    id="basic-recipients-set-except-project"
                    class="basic-recipients-set except-project tip"
                    title="<?php echo $toolTips['email-recipients-except-project']; ?>"
-                   name="emailRecipients[BasicRecipientsSet][ExceptProject]"
+                   name="emailRecipients[basicRecipientsSet][exceptProject]"
                    value="1"
             <?php echo $basicRecipientsSet['exceptProject'] ? 'checked="checked"' : ''; ?>
                    />
@@ -129,7 +129,7 @@ $frozen = $frozenRecipients;
               class="member-status-filter"
               title="<?php echo $toolTips['email-recipients-member-status-filter']; ?>"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
-              name="emailRecipients[MemberStatusFilter][]">
+              name="emailRecipients[memberStatusFilter][]">
         <?php echo PageNavigation::selectOptions($memberStatusFilter); ?>
       </select>
     </span>
@@ -146,7 +146,7 @@ $frozen = $frozenRecipients;
               multiple="multiple"
               size="18"
               title="<?php echo $toolTips['email-recipients-choices']; ?>"
-              name="emailRecipients[SelectedRecipients][]">
+              name="emailRecipients[selectedRecipients][]">
         <?php echo PageNavigation::selectOptions($emailRecipientsChoices); ?>
       </select>
     </span>
@@ -166,7 +166,7 @@ $frozen = $frozenRecipients;
                 class="instruments-filter"
                 title="<?php echo $toolTips['email-recipients-instruments-filter']; ?>"
                 data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
-                name="emailRecipients[InstrumentsFilter][]">
+                name="emailRecipients[instrumentsFilter][]">
           <?php echo PageNavigation::selectOptions($instrumentsFilter); ?>
         </select>
       </span>
@@ -201,27 +201,27 @@ $frozen = $frozenRecipients;
              value="<?php echo $l->t('Apply Filter'); ?>"
              class="instruments-filter-controls apply"
              title="<?php echo $toolTips['email-recipients-filter-apply']; ?>"
-             name="emailRecipients[ApplyInstrumentsFilter]" />
+             name="emailRecipients[applyInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-undo"
              value="<?php echo $l->t('Undo Filter'); ?>"
              class="instruments-filter-controls undo"
              title="<?php echo $toolTips['email-recipients-filter-undo']; ?>"
              disabled="disabled"
-             name="emailRecipients[UndoInstrumentsFilter]" />
+             name="emailRecipients[undoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-redo"
              value="<?php echo $l->t('Redo Filter'); ?>"
              class="instruments-filter-controls redo"
              title="<?php echo $toolTips['email-recipients-filter-redo']; ?>"
              disabled="disabled"
-             name="emailRecipients[RedoInstrumentsFilter]" />
+             name="emailRecipients[redoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-reset"
              value="<?php echo $l->t('Reset Filter'); ?>"
              class="instruments-filter-controls reset"
              title="<?php echo $toolTips['email-recipients-filter-reset']; ?>"
-             name="emailRecipients[ResetInstrumentsFilter]" />
+             name="emailRecipients[resetInstrumentsFilter]" />
     </span>
   </div>
 </fieldset>
