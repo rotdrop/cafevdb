@@ -32,7 +32,7 @@ import * as FileUpload from './file-upload.js';
 import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import print_r from './print-r.js';
 import chosenPopup from './chosen-popup.js';
 
@@ -43,6 +43,20 @@ const Email = globalState.Email = {
   enabled: true,
   active: false,
 };
+
+function generateUrl(url, urlParams, urlOptions) {
+  return generateAppUrl('communication/email/outgoing/' + url, urlParams, urlOptions);
+}
+
+function generateComposerUrl(operation, topic)
+{
+  if (topic === undefined && operation.operation) {
+    operation = operation.operation;
+    topic = operation.topic;
+  }
+  topic = topic || 'undefined';
+  return generateUrl('composer/{operation}/{topic}', { operation, topic });
+}
 
 function attachmentFromJSON(response, info) {
   const fileAttachHolder = $('form.cafevdb-email-form fieldset.attachments input.file-attach');
@@ -67,7 +81,7 @@ function attachmentFromJSON(response, info) {
 }
 
 const cloudAttachment = function(path, callback) {
-  $.post(generateUrl('communication/outgoing/email/attachment/cloud'), { path })
+  $.post(generateUrl('attachment/cloud'), { path })
     .fail(Ajax.handleError)
     .done(function(response) {
       if (response !== undefined && response.status === 'success') {
@@ -198,7 +212,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         post += '&' + $.param(tmp);
       }
     }
-    $.post(generateUrl('communication/email/outgoing/recipients-filter'), post)
+    $.post(generateUrl('recipients-filter'), post)
       .fail(Ajax.handleError)
       .done(function(data) {
         const requiredResponse = historySnapshot
@@ -420,12 +434,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     // until end of validation
     validateLock(true);
 
-    const operation = request.operation;
-    const topic = request.topic;
-    const url = generateUrl(
-      'communication/email/outgoing/composer/'
-        + operation
-        + (topic ? '/' + topic : ''));
+    const url = generateComposerUrl(request);
     let post = '';
     if (request.singleItem) {
       // Only serialize the request, no need to post all data around.
@@ -454,7 +463,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         $.fn.cafevTooltip.remove();
         if (!Ajax.validateResponse(
           data,
-          ['projectId', 'projectName', 'request', 'requestData'], validateUnlock)) {
+          ['projectId', 'projectName', 'operation', 'requestData'], validateUnlock)) {
           return false;
         }
         const operation = data.operation;
@@ -474,7 +483,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           break;
         case 'update':
           switch (topic) {
-          case 'everything':
+          case 'undefined':
             // replace the entire tab.
             $.fn.cafevTooltip.remove();
             WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
@@ -625,6 +634,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           break; // delete
         default:
           postponeEnable = true;
+          console.info('BLAH', data, operation, topic);
           data.message =
             t(appName, 'Unknown request: {operation} / {topic}', { operation, topic });
           data.caption = t(appName, 'Error');
@@ -771,7 +781,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
       Page.busyIcon(true);
 
-      $.post(generateUrl('communication/email/outgoing/composer/preview'), post)
+      $.post(generateComposerUrl('preview'), post)
         .fail(Ajax.handleError)
         .done(function(data) {
           if (!Ajax.validateResponse(
@@ -1133,10 +1143,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
     const requestData = {
       operation: 'update',
-      SingleItem: true,
-      FormElement: 'FileAttachments',
-      FileAttach: fileAttach, // JSON data of all files
-      FormStatus: 'submitted',
+      topic: 'element',
+      singleItem: true,
+      formElement: 'fileAttachments',
+      fileAttach, // JSON data of all files
+      formStatus: 'submitted',
     };
     if (selectedAttachments) {
       requestData.AttachedFiles = selectedAttachments;
@@ -1148,7 +1159,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   // Arguably, these should only be active if the
   // composer tab is active. Mmmh.
   FileUpload.init({
-    url: generateUrl('communication/email/outgoing/attachment/upload'),
+    url: generateUrl('attachment/upload'),
     doneCallback(json) {
       attachmentFromJSON(json, { origin: 'local' });
     },
@@ -1223,7 +1234,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       }
 
       const post = { freeFormRecipients: input.val() };
-      $.post(generateUrl('communication/outgoing/email/contacts/list'), post)
+      $.post(generateUrl('contacts/list'), post)
         .fail(Ajax.handleError)
         .done(function(data) {
           if (!Ajax.validateResponse(data, ['contents'])) {
@@ -1253,10 +1264,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                     };
                   });
                   const innerPost = { addressBookCandidates: selectedFreeForm };
-                  $.post(generateUrl('communication/outgoing/email/contacts/save'), innerPost)
+                  $.post(generateUrl('contacts/save'), innerPost)
                     .fail(Ajax.handleError)
                     .done(function(data) {
-                      $.post(generateUrl('communication/outgoing/email/contacts/list'), post)
+                      $.post(generateUrl('contacts/list'), post)
                         .fail(Ajax.handleError)
                         .done(function(data) {
                           if (!Ajax.validateResponse(data, ['contents'])) {
@@ -1357,7 +1368,7 @@ function emailFormPopup(post, modal, single, afterInit) {
   if (typeof afterInit !== 'function') {
     afterInit = function() {};
   }
-  $.post(generateUrl('communication/email/outgoing/form'), post)
+  $.post(generateUrl('form'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
         self.active = false;
@@ -1490,13 +1501,12 @@ function emailFormPopup(post, modal, single, afterInit) {
               let post = emailForm.serialize();
               // place our update request
               post += '&emailComposer[request]=update&emailComposer[formElement]=TO';
-              const url = generateUrl(
-                'communication/email/outgoing/composer/update/element');
+              const url = generateComposerUrl('update', 'element');
               $.post(url, post)
                 .fail(Ajax.handleError)
                 .done(function(data) {
                   if (!Ajax.validateResponse(data, [
-                    'projectId', 'projectName', 'request', 'requestData',
+                    'projectId', 'projectName', 'operation', 'requestData',
                   ])) {
                     return;
                   }
