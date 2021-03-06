@@ -6,7 +6,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * EmailTemplates
+ * EmailTemplate
  *
  * @ORM\Table(name="EmailTemplates", uniqueConstraints={@ORM\UniqueConstraint(columns={"Tag"}), @ORM\UniqueConstraint(columns={"id", "tag"})})
  * @ORM\Entity
