@@ -340,7 +340,7 @@ $routes = [
       'verb' => 'POST',
       'default' => [
         'operation' => 'update',
-        'topic' => null,
+        'topic' => 'undefined',
       ],
     ],
     /**
