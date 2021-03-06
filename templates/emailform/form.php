@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+
 $_['containerClass'] = $containerClass = $appPrefix('container');
 $_['rowClass'] = $rowClass = $appPrefix('row');
 
@@ -44,7 +46,7 @@ $_['rowClass'] = $rowClass = $appPrefix('row');
         id="cafevdb-email-form"
         class="cafevdb-email-form">
     <fieldset id="cafevdb-email-form-data" class="form-data">
-      <?php echo $pageNavigation->persistentCGI($_['FormData']); ?>
+      <?php echo PageNavigation::persistentCGI($_['FormData']); ?>
     </fieldset>
     <div id="emailformrecipients" class="resize-target"><?php echo $this->inc('emailform/part.emailform.recipients', $_); ?></div>
     <div id="emailformcomposer" class="resize-target"><?php echo $this->inc('emailform/part.emailform.composer', $_); ?></div>

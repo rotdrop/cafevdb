@@ -20,6 +20,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+
 $eventAttachmentOptions =
   $emailComposer->eventAttachmentOptions($_['ProjectId'], $_['eventAttachments']);
 $fileAttachmentOptions = $emailComposer->fileAttachmentOptions($_['fileAttachments']);
@@ -221,7 +225,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                 name="emailComposer[AttachedEvents][]"
                 class="event-attachments select"
                 id="event-attachments-selector">
-          <?php echo $pageNavigation->selectOptions($eventAttachmentOptions); ?>
+          <?php echo PageNavigation::selectOptions($eventAttachmentOptions); ?>
         </select>
         <input title="<?php echo $toolTips['delete-all-event-attachments']; ?>"
                type="submit"
@@ -241,7 +245,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                 name="emailComposer[AttachedFiles][]"
                 class="file-attachments select"
                 id="file-attachments-selector">
-          <?php echo $pageNavigation->selectOptions($fileAttachmentOptions); ?>
+          <?php echo PageNavigation::selectOptions($fileAttachmentOptions); ?>
         </select>
         <input title="<?php echo $toolTips['delete-all-file-attachments']; ?>"
                type="submit"

@@ -26,5 +26,14 @@ namespace OCA\CAFEVDB;
 ?>
 
 <div id="<?php p($appPrefix('email-preview')); ?>" class="email-preview">
-  <?php echo $contents; ?>
+  <div class="preview-heading">
+    <?php p($l->t('Email preview for project %s', $projectName)); ?>
+  </div>
+  <?php foreach ($messages as $message) { ?>
+    <div class="email-header"><pre><?php p($message['headers']); ?></pre></div>
+    <div class="email-body">
+      <?php print_unquoted($message['body']); ?>
+    </div>
+    <hr class="email-preview-separator"/>
+  <?php } ?>
 </div>

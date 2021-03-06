@@ -43,6 +43,8 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+
 $noMissingClass = '';
 $missingClass = '';
 if (count($missingEmailAddresses) > 0) {
@@ -128,7 +130,7 @@ $frozen = $frozenRecipients;
               title="<?php echo $toolTips['email-recipients-member-status-filter']; ?>"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
               name="emailRecipients[MemberStatusFilter][]">
-        <?php echo $pageNavigation->selectOptions($memberStatusFilter); ?>
+        <?php echo PageNavigation::selectOptions($memberStatusFilter); ?>
       </select>
     </span>
   </div>
@@ -145,7 +147,7 @@ $frozen = $frozenRecipients;
               size="18"
               title="<?php echo $toolTips['email-recipients-choices']; ?>"
               name="emailRecipients[SelectedRecipients][]">
-        <?php echo $pageNavigation->selectOptions($emailRecipientsChoices); ?>
+        <?php echo PageNavigation::selectOptions($emailRecipientsChoices); ?>
       </select>
     </span>
     <span class="instruments-filter <?php p($containerClass); ?> right tooltip-top"
@@ -165,7 +167,7 @@ $frozen = $frozenRecipients;
                 title="<?php echo $toolTips['email-recipients-instruments-filter']; ?>"
                 data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
                 name="emailRecipients[InstrumentsFilter][]">
-          <?php echo $pageNavigation->selectOptions($instrumentsFilter); ?>
+          <?php echo PageNavigation::selectOptions($instrumentsFilter); ?>
         </select>
       </span>
     </span>
