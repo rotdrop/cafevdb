@@ -264,6 +264,7 @@ trait FindLikeTrait
       if ($value === null)  {
         continue;
       }
+      $dotPos = strpos($key, '.');
       if ($dotPos !== false) {
         $tableAlias = substr($key, 0, $dotPos);
         $field = $key;
