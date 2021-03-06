@@ -34,6 +34,7 @@ import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import generateUrl from './generate-url.js';
 import print_r from './print-r.js';
+import chosenPopup from './chosen-popup.js';
 
 require('bootstrap4-duallistbox');
 require('emailform.scss');
@@ -50,7 +51,7 @@ function attachmentFromJSON(response, info) {
     return;
   }
 
-  let file = response.data;
+  let file = response;
   file.status = 'new';
   if (typeof info === 'object') {
     file = $.extend(file, info);
@@ -63,12 +64,12 @@ function attachmentFromJSON(response, info) {
     fileAttach.push(file);
   }
   fileAttachHolder.val(JSON.stringify(fileAttach));
-};
+}
 
 const cloudAttachment = function(path, callback) {
-  $.getJSON(
-    OC.filePath(appName, 'ajax', 'email/cloudattachment.php'), { path },
-    function(response) {
+  $.post(generateUrl('communication/outgoing/email/attachment/cloud'), { path })
+    .fail(Ajax.handleError)
+    .done(function(response) {
       if (response !== undefined && response.status === 'success') {
         attachmentFromJSON(response, { origin: 'cloud' });
         if (typeof callback === 'function') {
@@ -322,14 +323,13 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     event.preventDefault();
 
     const formData = form.find('fieldset.form-data');
-    const projectId = formData.find('input[name="ProjectId"]').val();
-    const projectName = formData.find('input[name="ProjectName"]').val();
+    const projectId = formData.find('input[name="projectId"]').val();
+    const projectName = formData.find('input[name="projectName"]').val();
 
     ProjectParticipants.personalRecordDialog(
-      $(this).data('id'),
-      {
-        ProjectId: projectId,
-        ProjectName: projectName,
+      $(this).data('id'), {
+        projectId,
+        projectName,
         InitialValue: 'Change',
         AmbientContainerSelector: '#emailformdialog',
       });
@@ -401,7 +401,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   const applyComposerControls = function(event, request, validateLockCB) {
     event.preventDefault();
 
-    if (typeof validateLockCB === 'undefined') {
+    if (request === undefined) {
+      throw Error('Request is undefined');
+    }
+
+    if (validateLockCB === undefined) {
       validateLockCB = function(lock) {};
     }
 
@@ -416,12 +420,18 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     // until end of validation
     validateLock(true);
 
+    const operation = request.operation;
+    const topic = request.topic;
+    const url = generateUrl(
+      'communication/email/outgoing/composer/'
+        + operation
+        + (topic ? '/' + topic : ''));
     let post = '';
-    if (typeof request !== 'undefined' && request.SingleItem) {
+    if (request.singleItem) {
       // Only serialize the request, no need to post all data around.
       post = $.param({ emailComposer: request });
     } else {
-      if (typeof request !== 'undefined' && request.SubmitAll) {
+      if (request.submitAll) {
         // Everything is greedily submitted ...
         post = form.serialize();
       } else {
@@ -434,11 +444,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         tmp[$(this).attr('name')] = $(this).val();
         post += '&' + $.param(tmp);
       }
-      if (typeof request !== 'undefined') {
-        post += '&' + $.param({ emailComposer: request });
-      }
+      // add the request itself as data
+      post += '&' + $.param({ emailComposer: request });
     }
-    $.post(generateUrl('communication/email/outgoing/composer'), post)
+    $.post(url, post)
       .fail(Ajax.handleError)
       .done(function(data) {
         let postponeEnable = false;
@@ -448,9 +457,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           ['projectId', 'projectName', 'request', 'requestData'], validateUnlock)) {
           return false;
         }
-        const request = data.request;
+        const operation = data.operation;
+        const topic = data.topic;
         const requestData = data.requestData;
-        switch (request) {
+        switch (operation) {
         case 'send':
           storedEmailsSelector.html(requestData.storedEmailOptions);
           CAFEVDB.selectMenuReset(storedEmailsSelector);
@@ -463,7 +473,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           // status feed-back handled by general code.
           break;
         case 'update':
-          switch (requestData.formElement) {
+          switch (topic) {
           case 'everything':
             // replace the entire tab.
             $.fn.cafevTooltip.remove();
@@ -472,146 +482,155 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             fieldset = panelHolder.find('fieldset.email-composition.page');
             emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
             break;
-          case 'to': {
-            const toSpan = fieldset.find('span.email-recipients');
-            let rcpts = requestData.elementData;
-            if (rcpts.length === 0) {
-              rcpts = toSpan.data('placeholder');
+          case 'element':
+            switch (requestData.formElement) {
+            case 'to': {
+              const toSpan = fieldset.find('span.email-recipients');
+              let rcpts = requestData.elementData;
+              if (rcpts.length === 0) {
+                rcpts = toSpan.data('placeholder');
+              }
+              const title = toSpan.data('titleIntro') + '<br>' + rcpts;
+
+              toSpan.html(rcpts);
+              toSpan.attr('title', title);
+              toSpan.cafevTooltip();
+              break;
             }
-            const title = toSpan.data('titleIntro') + '<br>' + rcpts;
-
-            toSpan.html(rcpts);
-            toSpan.attr('title', title);
-            toSpan.cafevTooltip();
-            break;
-          }
-          case 'fileAttachments': {
-            const options = requestData.elementData.options;
-            // alert('options: '+JSON.stringify(options));
-            const fileAttach = requestData.elementData.fileAttach;
-            fieldset.find('input.file-attach').val(JSON.stringify(fileAttach));
-            fileAttachmentsSelector.html(options);
-            if (options.length > 0) {
-              fieldset.find('tr.file-attachments').show();
-            } else {
-              fieldset.find('tr.file-attachments').hide();
+            case 'fileAttachments': {
+              const options = requestData.elementData.options;
+              // alert('options: '+JSON.stringify(options));
+              const fileAttach = requestData.elementData.fileAttach;
+              fieldset.find('input.file-attach').val(JSON.stringify(fileAttach));
+              fileAttachmentsSelector.html(options);
+              if (options.length > 0) {
+                fieldset.find('tr.file-attachments').show();
+              } else {
+                fieldset.find('tr.file-attachments').hide();
+              }
+              fileAttachmentsSelector.trigger('chosen:updated');
+              panelHolder.trigger('resize');
+              break;
             }
-            fileAttachmentsSelector.trigger('chosen:updated');
+            case 'eventAttachments': {
+              const options = requestData.elementData.options;
+              const eventAttach = requestData.elementData.eventAttach;
+              // alert('options: '+JSON.stringify(options));
+              // alert('options: '+JSON.stringify(requestData.elementData.eventAttach));
+              eventAttachmentsSelector.html(options);
 
-            panelHolder.trigger('resize');
-            break;
-          }
-          case 'eventAttachments': {
-            const options = requestData.elementData.options;
-            const eventAttach = requestData.elementData.eventAttach;
-            // alert('options: '+JSON.stringify(options));
-            // alert('options: '+JSON.stringify(requestData.elementData.eventAttach));
-            eventAttachmentsSelector.html(options);
+              if (/* options.length */ eventAttach.length > 0) {
+                fieldset.find('tr.event-attachments').show();
+              } else {
+                fieldset.find('tr.event-attachments').hide();
+              }
+              eventAttachmentsSelector.trigger('chosen:updated');
+              panelHolder.trigger('resize');
 
-            if (/* options.length */ eventAttach.length > 0) {
-              fieldset.find('tr.event-attachments').show();
-            } else {
-              fieldset.find('tr.event-attachments').hide();
+              break;
             }
-            eventAttachmentsSelector.trigger('chosen:updated');
-            panelHolder.trigger('resize');
-
-            break;
+            default:
+              postponeEnable = true;
+              Dialogs.alert(
+                t(appName, 'Unknown form element: {FormElement}', { FormElement: requestData.formElement }),
+                t(appName, 'Error'),
+                validateUnlock,
+                true, true);
+              break;
+            }
+            break; // element
           }
-          default:
-            postponeEnable = true;
-            Dialogs.alert(
-              t(appName, 'Unknown form element: {FormElement}', { FormElement: requestData.formElement }),
-              t(appName, 'Error'),
-              validateUnlock,
-              true, true);
-            break;
-          }
-          break;
+          break; // update
         case 'validateEmailRecipients':
           // already reported by the general error-handling functions
           break;
-        case 'setTemplate': {
-          const dataItem = fieldset.find('input[name="emailComposer[MessageDraftId]"]');
-          dataItem.val(-1);
-          currentTemplate.val(requestData.templateName);
-          WysiwygEditor.updateEditor(messageText, requestData.message);
-          fieldset.find('input.email-subject').val(requestData.subject);
-          CAFEVDB.selectMenuReset(storedEmailsSelector);
-          break;
-        }
-        case 'saveTemplate':
-          storedEmailsSelector.html(requestData.storedEmailOptions);
-          CAFEVDB.selectMenuReset(storedEmailsSelector);
-          break;
-        case 'deleteTemplate':
-          currentTemplate.val(requestData.templateName);
-          WysiwygEditor.updateEditor(messageText, requestData.message);
-          storedEmailsSelector.html(requestData.storedEmailOptions);
-          CAFEVDB.selectMenuReset(storedEmailsSelector);
-          break;
-        case 'saveDraft': {
-          // perhaps rather use data stuff in the future ...
-          storedEmailsSelector.html(requestData.storedEmailOptions);
-          CAFEVDB.selectMenuReset(storedEmailsSelector);
-          const dataItem = fieldset.find('input[name="emailComposer[MessageDraftId]"]');
-          dataItem.val(requestData.messageDraftId);
-          break;
-        }
-        case 'loadDraft': {
-          $.fn.cafevTooltip.remove();
-
-          // replace the entire composer tab
-          WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
-          panelHolder.html(requestData.composerForm);
-          fieldset = panelHolder.find('fieldset.email-composition.page');
-          emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
-
-          // replace the recipients tab as well ...
-          const rcptPanelHolder = dialogHolder.find('div#emailformrecipients');
-          rcptPanelHolder.html(requestData.recipientsForm);
-          const rcptFieldSet = form.find('fieldset.email-recipients.page');
-          emailFormRecipientsHandlers(rcptFieldSet, form, dialogHolder, rcptPanelHolder);
-
-          // adjust the title of the dialog
-          let dlgTitle = '';
-          if (requestData.ProjectId >= 0) {
-            dlgTitle = t(appName, 'Em@il Form for {ProjectName}', { ProjectName: requestData.ProjectName });
-          } else {
-            dlgTitle = t(appName, 'Em@il Form');
+        case 'load':
+          switch (topic) {
+          case 'template': {
+            const dataItem = fieldset.find('input[name="emailComposer[MessageDraftId]"]');
+            dataItem.val(-1);
+            currentTemplate.val(requestData.templateName);
+            WysiwygEditor.updateEditor(messageText, requestData.message);
+            fieldset.find('input.email-subject').val(requestData.subject);
+            break;
           }
-          dialogHolder.dialog('option', 'title', dlgTitle);
+          case 'draft': {
+            $.fn.cafevTooltip.remove();
 
-          // update the "global" project name and id
-          const formData = form.find('fieldset.form-data');
-          formData.find('input[name="ProjectId"]').val(requestData.ProjectId);
-          formData.find('input[name="ProjectName"]').val(requestData.ProjectName);
-          formData.find('input[name="DebitNoteId"]').val(requestData.DebitNoteId);
+            // replace the entire composer tab
+            WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
+            panelHolder.html(requestData.composerForm);
+            fieldset = panelHolder.find('fieldset.email-composition.page');
+            emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
 
-          // Make the debug output less verbose
-          delete requestData.composerForm;
-          delete requestData.recipientsForm;
+            // replace the recipients tab as well ...
+            const rcptPanelHolder = dialogHolder.find('div#emailformrecipients');
+            rcptPanelHolder.html(requestData.recipientsForm);
+            const rcptFieldSet = form.find('fieldset.email-recipients.page');
+            emailFormRecipientsHandlers(rcptFieldSet, form, dialogHolder, rcptPanelHolder);
 
+            // adjust the title of the dialog
+            let dlgTitle = '';
+            if (requestData.projectId >= 0) {
+              dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: requestData.projectName });
+            } else {
+              dlgTitle = t(appName, 'Em@il Form');
+            }
+            dialogHolder.dialog('option', 'title', dlgTitle);
+
+            // update the "global" project name and id
+            const formData = form.find('fieldset.form-data');
+            formData.find('input[name="projectId"]').val(requestData.projectId);
+            formData.find('input[name="projectName"]').val(requestData.projectName);
+            formData.find('input[name="debitNoteId"]').val(requestData.debitNoteId);
+
+            // Make the debug output less verbose
+            delete requestData.composerForm;
+            delete requestData.recipientsForm;
+
+            break;
+          }
+          }
           // deselect menu item
           CAFEVDB.selectMenuReset(storedEmailsSelector);
-
-          break;
-        }
-        case 'deleteDraft': {
-          const dataItem = fieldset.find('input[name="emailComposer[MessageDraftId]"]');
-          dataItem.val(-1);
+          break; // load
+        case 'save':
+          switch (topic) {
+          case 'template':
+            break;
+          case 'draft': {
+            // perhaps rather use data stuff in the future ...
+            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            dataItem.val(requestData.messageDraftId);
+            break;
+          }
+          }
           storedEmailsSelector.html(requestData.storedEmailOptions);
           CAFEVDB.selectMenuReset(storedEmailsSelector);
-          break;
-        }
+          break; // save
+        case 'delete':
+          switch (topic) {
+          case 'template':
+            currentTemplate.val(requestData.templateName);
+            WysiwygEditor.updateEditor(messageText, requestData.message);
+            break;
+          case 'draft': {
+            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            dataItem.val(-1);
+            break;
+          }
+          }
+          storedEmailsSelector.html(requestData.storedEmailOptions);
+          CAFEVDB.selectMenuReset(storedEmailsSelector);
+          break; // delete
         default:
           postponeEnable = true;
           data.message =
-            t(appName, 'Unknown request: {Request}', { Request: request });
+            t(appName, 'Unknown request: {operation} / {topic}', { operation, topic });
           data.caption = t(appName, 'Error');
           Dialogs.alert(data.message, data.caption, validateUnlock, true, true);
           break;
-        }
+        } // switch (operation)
 
         let debugText = '';
         if (typeof data.caption !== 'undefined') {
@@ -649,7 +668,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
-      event.stopImmediatePropagation();
 
       // try to provide status feed-back for large transfers or
       // sending to many recipients. To this end we poll a special
@@ -716,7 +734,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
           applyComposerControls.call(
             $this, event, {
-              request: 'send',
+              operation: 'send',
               progressToken,
               send: 'ThePointOfNoReturn',
               submitAll: true,
@@ -744,21 +762,18 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    *
    * Message export to html.
    */
-  fieldset.find('input.submit.message-export')
+  fieldset
+    .find('input.submit.message-export')
     .off('click')
     .on('click', function(event) {
 
-      let formPost = form.serialize();
-      const post = {};
-      post[$(this).attr('name')] = 'whatever';
-      formPost += '&' + $.param(post);
+      const post = form.serialize();
 
       Page.busyIcon(true);
 
-      $.post(
-        OC.filePath(appName, 'ajax/email', 'preview.php'),
-        formPost,
-        function(data) {
+      $.post(generateUrl('communication/email/outgoing/composer/preview'), post)
+        .fail(Ajax.handleError)
+        .done(function(data) {
           if (!Ajax.validateResponse(
             data, ['contents'], function() {
               Page.busyIcon(false);
@@ -773,8 +788,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           dialogHolder.tabs('option', 'active', 2);
 
           $.fn.cafevTooltip.remove();
-
-          return true;
         });
       return false;
     });
@@ -817,14 +830,14 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    * Close the dialog
    */
 
-  fieldset.find('input.submit.cancel')
+  fieldset
+    .find('input.submit.cancel')
     .off('click')
     .on('click', function(event) {
       applyComposerControls.call(this, event, {
-        Request: 'cancel',
-        Cancel: 'DoesNotMatter',
-        FormStatus: 'submitted',
-        SingleItem: true,
+        operation: 'cancel',
+        formStatus: 'submitted',
+        singleItem: true,
       });
       // Close the dialog in any case.
       dialogHolder.dialog('close');
@@ -844,14 +857,14 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return false;
     });
 
-  fieldset.find('input.submit.save-message')
+  fieldset
+    .find('input.submit.save-message')
     .off('click')
     .on('click', function(event) {
       const self = this;
 
-      event.preventDefault();
-
       if (saveAsTemplate.is(':checked')) {
+        const request = { operation: save, topic: 'template' };
         // We do a quick client-side validation and ask the user for ok
         // when a template with the same name is already present.
         const current = currentTemplate.val();
@@ -862,24 +875,28 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             t(appName, 'Overwrite existing template?'),
             function(confirmed) {
               if (confirmed) {
-                applyComposerControls.call(self, event, { Request: 'saveTemplate' });
+                applyComposerControls.call(self, event, request);
               }
             },
             true);
         } else {
-          applyComposerControls.call(self, event, { Request: 'saveTemplate' });
+          applyComposerControls.call(self, event, request);
         }
       } else {
-        applyComposerControls.call(self, event, { Request: 'saveDraft', SubmitAll: true });
+        applyComposerControls.call(self, event, {
+          operation: 'save',
+          topic: 'draft',
+          submitAll: true,
+        });
       }
       return false;
     });
 
-  fieldset.find('input.submit.delete-message')
+  fieldset
+    .find('input.submit.delete-message')
     .off('click')
     .on('click', function(event) {
       const self = this;
-      event.preventDefault();
 
       if (saveAsTemplate.is(':checked')) {
         // We do a quick client-side validation and ask the user for ok.
@@ -891,7 +908,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             t(appName, 'Really Delete Template?'),
             function(confirmed) {
               if (confirmed) {
-                applyComposerControls.call(self, event, { Request: 'deleteTemplate' });
+                applyComposerControls.call(self, event, {
+                  operation: 'delete',
+                  topic: 'template',
+                });
               }
             },
             true);
@@ -913,7 +933,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             function(confirmed) {
               if (confirmed) {
                 applyComposerControls.call(self, event, {
-                  Request: 'deleteDraft',
+                  operation: 'delete',
+                  topic: 'draft',
                   messageDraftId: draft,
                 });
               }
@@ -928,12 +949,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .off('change')
     .on('change', function(event) {
 
-      event.preventDefault();
-
       const choice = storedEmailsSelector.val();
       if (choice.match(/^__draft-[0-9]+$/)) {
         applyComposerControls.call(
-          this, event, { Request: 'loadDraft' },
+          this, event, {
+            operation: 'load',
+            topic: 'draft',
+          },
           function(lock) {
             if (lock) {
               dialogWidget.addClass('pme-table-dialog-blocked');
@@ -950,23 +972,22 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             CAFEVDB.selectMenuReset(storedEmailsSelector);
           });
       } else {
-        applyComposerControls.call(this, event, { Request: 'setTemplate' });
+        applyComposerControls.call(this, event, { operation: 'load', topic: 'template' });
       }
       return false;
     });
 
   /*************************************************************************
    *
-   * Subject and sender name. We simply trim the spaces away. Could also do this in JS.
+   * Subject and sender name. We simply trim the spaces away.
    */
   fieldset
     .off('blur', 'input.email-subject, input.sender-name')
     .on(
       'blur', 'input.email-subject, input.sender-name',
       function(event) {
-        event.stopImmediatePropagation();
-        const self = $(this);
-        self.val(self.val().trim());
+        const $self = $(this);
+        $self.val($self.val().trim());
         return false;
       });
 
@@ -980,20 +1001,19 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    * @returns {bool}
    */
   const carbonCopyBlur = function(event, header) {
-    const self = $(this);
-    event.stopImmediatePropagation();
+    const $self = $(this);
     const request = {
-      Request: 'validateEmailRecipients',
-      Recipients: $(this).val(),
-      Header: header,
-      SingleItem: true,
+      operation: 'validateEmailRecipients',
+      recipients: $self.val(),
+      header,
+      singleItem: true,
     };
     request[header] = request.Recipients; // remove duplicate later
     applyComposerControls.call(
       this, event, request,
       function(lock) {
         sendButton.prop('disabled', lock);
-        self.prop('disabled', lock);
+        $self.prop('disabled', lock);
         // if (lock) {
         //   self.off('blur');
         // } else {
@@ -1005,50 +1025,59 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     return false;
   };
 
-  fieldset.find('#carbon-copy').off('blur').on('blur', function(event) {
-    return carbonCopyBlur.call(this, event, 'CC');
-  });
-  fieldset.find('#blind-carbon-copy').off('blur').on('blur', function(event) {
-    return carbonCopyBlur.call(this, event, 'BCC');
-  });
+  fieldset
+    .find('#carbon-copy')
+    .off('blur')
+    .on('blur', function(event) {
+      return carbonCopyBlur.call(this, event, 'CC');
+    });
+  fieldset
+    .find('#blind-carbon-copy')
+    .off('blur')
+    .on('blur', function(event) {
+      return carbonCopyBlur.call(this, event, 'BCC');
+    });
 
   /*************************************************************************
    *
    * Project events attachments
    */
 
-  fieldset.find('button.attachment.events').off('click').on('click', function(event) {
-    const formData = form.find('fieldset.form-data');
-    const projectId = formData.find('input[name="ProjectId"]').val();
-    const projectName = formData.find('input[name="ProjectName"]').val();
-    let events = eventAttachmentsSelector.val();
-    if (!events) {
-      events = [];
-    }
-    Projects.eventsPopup(
-      {
-        ProjectId: projectId,
-        ProjectName: projectName,
-        EventSelect: events,
+  fieldset
+    .find('button.attachment.events')
+    .off('click')
+    .on('click', function(event) {
+      const formData = form.find('fieldset.form-data');
+      const projectId = formData.find('input[name="projectId"]').val();
+      const projectName = formData.find('input[name="projectName"]').val();
+      let events = eventAttachmentsSelector.val();
+      if (!events) {
+        events = [];
+      }
+      Projects.eventsPopup({
+        projectId,
+        projectName,
+        eventSelect: events,
       },
       false /* only move to top if already open */);
-    return false;
-  });
+      return false;
+    });
 
   // Update our selected events on request
   dialogHolder
     .off('cafevdb:events_changed')
     .on('cafevdb:events_changed', function(event, events) {
       const formData = form.find('fieldset.form-data');
-      const projectId = formData.find('input[name="ProjectId"]').val();
-      const projectName = formData.find('input[name="ProjectName"]').val();
+      const projectId = formData.find('input[name="projectId"]').val();
+      const projectName = formData.find('input[name="projectName"]').val();
       const requestData = {
-        Request: 'update',
-        FormElement: 'EventAttachments',
-        SingleItem: true,
-        ProjectId: projectId,
-        ProjectName: projectName,
-        AttachedEvents: events,
+        operation: 'update',
+        topic: 'element',
+        formElement: 'EventAttachments',
+        singleItem: true,
+        attachedEvents: events,
+        projectId,
+        projectName,
       };
       applyComposerControls.call(this, event, requestData);
       return false;
@@ -1103,10 +1132,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     const selectedAttachments = fileAttachmentsSelector.val();
 
     const requestData = {
-      Request: 'update',
+      operation: 'update',
+      SingleItem: true,
       FormElement: 'FileAttachments',
       FileAttach: fileAttach, // JSON data of all files
-      SingleItem: true,
       FormStatus: 'submitted',
     };
     if (selectedAttachments) {
@@ -1119,7 +1148,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   // Arguably, these should only be active if the
   // composer tab is active. Mmmh.
   FileUpload.init({
-    url: generateUrl('communication/email/outgoing/upload/attachment'),
+    url: generateUrl('communication/email/outgoing/attachment/upload'),
     doneCallback(json) {
       attachmentFromJSON(json, { origin: 'local' });
     },
@@ -1136,7 +1165,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       $('#attachment_upload_start').trigger('click');
     });
 
-  fieldset.find('.attachment.cloud')
+  fieldset
+    .find('.attachment.cloud')
     .off('click')
     .on('click', function() {
       Dialogs.filePicker(
@@ -1177,8 +1207,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    * We try to be nice with Cc: and Bcc: and even provide an
    * address-book connector
    */
-  const addressBookButton = fieldset.find('input.address-book-emails');
-  addressBookButton
+  fieldset
+    .find('input.address-book-emails')
     .off('click')
     .on('click', function(event) {
       event.preventDefault();
@@ -1192,17 +1222,14 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         input.trigger('blur');
       }
 
-      const post = { FreeFormRecipients: input.val() };
-      $.post(
-        OC.filePath(appName, 'ajax/email', 'addressbook.php'),
-        post,
-        function(data) {
-          if (!Ajax.validateResponse(data, [
-            'contents',
-          ])) {
-            return false;
+      const post = { freeFormRecipients: input.val() };
+      $.post(generateUrl('communication/outgoing/email/contacts/list'), post)
+        .fail(Ajax.handleError)
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['contents'])) {
+            return;
           }
-          CAFEVDB.chosenPopup(data.contents, {
+          chosenPopup(data.contents, {
             title: t(appName, 'Address Book'),
             saveText: t(appName, 'Accept'),
             buttons: [
@@ -1225,20 +1252,15 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                       text: self.text(),
                     };
                   });
-                  const innerPost = { AddressBookCandidates: selectedFreeForm };
-                  $.post(
-                    OC.filePath(appName, 'ajax/email', 'savecontacts.php'),
-                    innerPost,
-                    function(data) {
-                      if (!Ajax.validateResponse(data, [])) {
-                        return false;
-                      }
-                      $.post(
-                        OC.filePath(appName, 'ajax/email', 'addressbook.php'),
-                        post,
-                        function(data) {
+                  const innerPost = { addressBookCandidates: selectedFreeForm };
+                  $.post(generateUrl('communication/outgoing/email/contacts/save'), innerPost)
+                    .fail(Ajax.handleError)
+                    .done(function(data) {
+                      $.post(generateUrl('communication/outgoing/email/contacts/list'), post)
+                        .fail(Ajax.handleError)
+                        .done(function(data) {
                           if (!Ajax.validateResponse(data, ['contents'])) {
-                            return false;
+                            return;
                           }
                           const newOptions = $(data.contents).html();
                           selectElement.html(newOptions);
@@ -1247,9 +1269,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                             dialogHolder.dialog('widget')
                               .find('button.save-contacts').prop('disabled', true);
                           }
-                          return false;
                         });
-                      return false;
                     });
                 },
               },
@@ -1304,8 +1324,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
  * object. In principle post can be empty. For project emails the
  * following two fields are necessary:
  *
- * - ProjectId: the id
- * - ProjectName: the name of the project (obsolete: Project)
+ * - projectId: the id
+ * - projectName: the name of the project (obsolete: Project)
  *
  * Optional pre-selected ids for email recipients:
  *
@@ -1367,7 +1387,7 @@ function emailFormPopup(post, modal, single, afterInit) {
 
       let dlgTitle = '';
       if (data.projectId >= 0) {
-        dlgTitle = t(appName, 'Em@il Form for {ProjectName}', { ProjectName: data.projectName });
+        dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: data.projectName });
       } else {
         dlgTitle = t(appName, 'Em@il Form');
       }
@@ -1469,15 +1489,16 @@ function emailFormPopup(post, modal, single, afterInit) {
               // we better serialize the entire form here
               let post = emailForm.serialize();
               // place our update request
-              post += '&emailComposer[Request]=update&emailComposer[FormElement]=TO';
-              $.post(
-                OC.filePath(appName, 'ajax/email', 'composer.php'),
-                post,
-                function(data) {
+              post += '&emailComposer[request]=update&emailComposer[formElement]=TO';
+              const url = generateUrl(
+                'communication/email/outgoing/composer/update/element');
+              $.post(url, post)
+                .fail(Ajax.handleError)
+                .done(function(data) {
                   if (!Ajax.validateResponse(data, [
                     'projectId', 'projectName', 'request', 'requestData',
                   ])) {
-                    return false;
+                    return;
                   }
                   // could check whether formElement is indeed 'TO' ...
                   const toSpan = emailForm.find('span.email-recipients');
@@ -1491,7 +1512,6 @@ function emailFormPopup(post, modal, single, afterInit) {
                   toSpan.html(rcpts);
                   toSpan.attr('title', title);
                   toSpan.cafevTooltip();
-                  return false;
                 });
               return true;
             },

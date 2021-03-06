@@ -61,11 +61,12 @@ $routes = [
       'url' => '/',
       'verb' => 'GET',
     ],
-    // [
-    //   'name' => 'page#index',
-    //   'url' => '/',
-    //   'verb' => 'POST',
-    // ],
+    [
+      'name' => 'page#index',
+      'postfix' => 'post',
+      'url' => '/',
+      'verb' => 'POST',
+    ],
     [
       'name' => 'page#loader',
       'url' => '/page/loader/{renderAs}',
@@ -322,16 +323,40 @@ $routes = [
       'url' => '/communication/email/outgoing/recipients-filter',
       'verb' => 'POST',
     ],
+    /**
+     * Operations:
+     *
+     * - update
+     * - send
+     * - cancel
+     * - preview
+     * - save
+     * - delete
+     * - load
+     */
     [
       'name' => 'email_form#composer',
-      'url' => '/communication/email/outgoing/composer',
+      'url' => '/communication/email/outgoing/composer/{operation}/{topic}',
       'verb' => 'POST',
+      'default' => [
+        'operation' => 'update',
+        'topic' => null,
+      ],
+    ],
+    /**
+     * Attach a file by uploading it to the server (source = upload)
+     * or choosing one from the cloud file-space (source = cloud).
+     */
+    [
+      'name' => 'email_form#attachment',
+      'url' => '/communication/email/outgoing/attachment/{source}',
+      'verb' => 'POST',
+      'defaults' => [ 'source' => 'upload' ],
     ],
     [
-      'name' => 'email_form#upload',
-      'url' => '/communication/email/outgoing/upload/{object}',
+      'name' => 'email_form#contacts',
+      'url' => '/communication/email/outgoing/contacts/{operation}',
       'verb' => 'POST',
-      'defaults' => [ 'object' => 'attachment' ],
     ],
     /**
      * General validations ...

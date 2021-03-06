@@ -34,11 +34,15 @@ use OCA\CAFEVDB\Common\Util;
  * This is the mass-email composer class. We try to be somewhat
  * careful to have useful error reporting, and avoid sending garbled
  * messages or duplicates.
+ *
+ * @bug This is a mixture between a controller and service class and
+ * needs to be cleaned up.
  */
 class Composer
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  const DEFAULT_TEMPLATE_NAME = 'Default';
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
 <p>
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -217,14 +221,10 @@ DebitNotePurpose
     // form-submit data in $this->execute()
     $this->setDefaultTemplate();
 
-    $this->templateName = 'Default';
-
-    $this->messageContents = $this->initialTemplate;
-
     // cache the list of per-recipient variables
     $this->memberVariables = $this->emailMemberVariables();
 
-    $this->draftId = $this->cgiValue('MessageDraftId', -1);
+    $this->draftId = $this->cgiValue('messageDraftId', -1);
 
     // Set to false on error
     $this->executionStatus = true;
@@ -253,28 +253,14 @@ DebitNotePurpose
       'FailedCount' => 0
     );
 
-    $this->execute();
-  }
-
-  /**
-   * The email composer never goes without its recipients filter.
-   */
-  public function getRecipientsFilter()
-  {
-    return $this->recipientsFilter;
-  }
-
-  /** Parse the submitted form data and act accordinly */
-  private function execute()
-  {
     // Maybe should also check something else. If submitted is true,
     // then we use the form data, otherwise the defaults.
-    $this->submitted = $this->cgiValue('FormStatus', '') == 'submitted';
+    $this->submitted = $this->cgiValue('formStatus', '') == 'submitted';
 
     if (!$this->submitted) {
       // Leave everything at default state, except for an optional
       // initial template and subject
-      $initialTemplate = $this->cgiValue('StoredMessagesSelector', false);
+      $initialTemplate = $this->cgiValue('storedMessagesSelector', false);
       if ($initialTemplate !== false) {
         $this->templateName = $initialTemplate;
         $template = $this->fetchTemplate($initialTemplate);
@@ -283,7 +269,7 @@ DebitNotePurpose
         } else {
           // still leave the name as default in order to signal what was missing
           $this->cgiData['Subject'] =
-                                    $this->l->t('Unknown Template "%s"', array($initialTemplate));
+            $this->l->t('Unknown Template "%s"', array($initialTemplate));
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'));
           if ($template !== false) {
             $this->messageContents = $template;
@@ -293,67 +279,15 @@ DebitNotePurpose
       return;
     }
 
-    $this->messageContents = $this->cgiValue('MessageText', $this->initialTemplate);
+    $this->messageContents = $this->cgiValue('messageText', $this->initialTemplate);
+  }
 
-    if (($value = $this->cgiValue('StoredMessagesSelector', false))) {
-      if (preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
-        $this->draftId = $matches[1];
-        // TODO: actually read the message in ...
-      } else {
-        $this->templateName = $value;
-        $this->messageContents = $this->fetchTemplate($this->templateName);
-        $this->draftId = -1; // avoid accidental overwriting
-      }
-    } else if (($value = $this->cgiValue('DeleteMessage', false))) {
-      if (($value = $this->cgiValue('SaveAsTemplate', false))) {
-        $this->deleteTemplate($this->cgiValue('TemplateName'));
-        $this->setDefaultTemplate();
-        $this->messageContents = $this->initialTemplate;
-      } else {
-        $this->deleteDraft();
-      }
-    } else if (($value = $this->cgiValue('SaveMessage', false))) {
-      if (($value = $this->cgiValue('SaveAsTemplate', false))) {
-        if ($this->validateTemplate($this->messageContents)) {
-          $this->storeTemplate($this->cgiValue('TemplateName'),
-                               $this->subject(),
-                               $this->messageContents);
-        } else {
-          $this->executionStatus = false;
-        }
-      } else {
-        $this->storeDraft();
-      }
-    } else if ($this->cgiValue('Cancel', false)) {
-      // do some cleanup, i.e. remove temporay storage from file attachments
-      $this->cleanTemporaries();
-    } else if ($this->cgiValue('Send', false)) {
-      if (!$this->preComposeValidation()) {
-        return;
-      }
-
-      // Checks passed, let's see what happens. The mailer may throw
-      // any kind of "nasty" exceptions.
-      $this->sendMessages();
-      if (!$this->errorStatus()) {
-        // Hurray!!!
-        $this->diagnostics['caption'] = $this->l->t('Message(s) sent out successfully!');
-
-        // If sending out a draft, remove the draft.
-        $this->deleteDraft();
-      }
-    } else if ($this->cgiValue('MessageExport', false)) {
-      if (!$this->preComposeValidation()) {
-        return;
-      }
-
-      // Checks passed, let's see what happens. The mailer may throw
-      // any kind of "nasty" exceptions.
-      $this->exportMessages();
-      if (!$this->errorStatus()) {
-        $this->diagnostics['caption'] = $this->l->t('Message(s) exported successfully!');
-      }
-    }
+  /**
+   * The email composer never goes without its recipients filter.
+   */
+  public function getRecipientsFilter()
+  {
+    return $this->recipientsFilter;
   }
 
   /** Fetch a CGI-variable out of the form-select name-space */
@@ -496,6 +430,32 @@ DebitNotePurpose
   }
 
   /**
+   * Send out the messages with self::doSendMessages(), after checking
+   * them with self::preComposeValidation(). If successful a possibly
+   * pending "draft" message is deleted.
+   *
+   * @return bool Success (true) or failure (false).
+   */
+  public function sendMessages()
+  {
+    if (!$this->preComposeValidation()) {
+      return;
+    }
+
+    // Checks passed, let's see what happens. The mailer may throw
+    // any kind of "nasty" exceptions.
+    $this->doSendMessages();
+    if (!$this->errorStatus()) {
+      // Hurray!!!
+      $this->diagnostics['caption'] = $this->l->t('Message(s) sent out successfully!');
+
+      // If sending out a draft, remove the draft.
+      $this->deleteDraft();
+    }
+    return $this->executionStatus;
+  }
+
+  /**
    * Finally, send the beast out to all recipients, either in
    * single-email mode or as one message.
    *
@@ -517,7 +477,7 @@ DebitNotePurpose
    * - after variable substitution we need to reencode some
    *   special characters.
    */
-  private function sendMessages()
+  private function doSendMessages()
   {
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
@@ -825,8 +785,10 @@ DebitNotePurpose
       return false;
     }
 
-    return array('messageId' => $phpMailer->getLastMessageID(),
-                 'message' => $phpMailer->GetSentMIMEMessage());
+    return [
+      'messageId' => $phpMailer->getLastMessageID(),
+      'message' => $phpMailer->GetSentMIMEMessage(),
+    ];
   }
 
   /**
@@ -1072,20 +1034,20 @@ DebitNotePurpose
    * @param $EMails The recipient list
    *
    * @param $addCC If @c false, then additional CC and BCC recipients will
-   *                   not be added.
+   *               not be added.
    *
    * @return bool true or false.
    */
-  private function composeAndExport($strMessage, $EMails, $addCC = true)
+  private function composeAndExport($strMessage, $eMails, $addCC = true)
   {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
-    $singleAddress = count($EMails) == 1;
+    $singleAddress = count($eMails) == 1;
 
     // Construct an array for the data-base log
     $logMessage = new \stdClass;
-    $logMessage->recipients = $EMails;
+    $logMessage->recipients = $eMails;
     $logMessage->message = $strMessage;
 
     // First part: go through the composition part of PHPMailer in
@@ -1108,7 +1070,7 @@ DebitNotePurpose
       $phpMailer->SetFrom($senderEmail, $senderName);
 
       // Loop over all data-base records and add each recipient in turn
-      foreach ($EMails as $recipient) {
+      foreach ($eMails as $recipient) {
         if ($singleAddress) {
           $phpMailer->AddAddress($recipient['email'], $recipient['name']);
         } else if ($recipient['project'] < 0) {
@@ -1208,7 +1170,7 @@ DebitNotePurpose
                                                '): '.
                                                $exception->getMessage();
 
-      return false;
+      return null;
     }
 
     // Finally the point of no return. Send it out!!!
@@ -1217,29 +1179,58 @@ DebitNotePurpose
         // in principle this cannot happen as the mailer DOES use
         // exceptions ...
         $this->executionStatus = false;
-        $this->diagnostics['MailerErrors'][] = $phpMailer->ErrorInfo;
-        return false;
+        $this->diagnostics['mailerErrors'][] = $phpMailer->ErrorInfo;
+        return null;
       } else {
         // success, would log success if we really were sending
       }
     } catch (\Exception $exception) {
       $this->executionStatus = false;
-      $this->diagnostics['MailerExceptions'][] =
-                                               $exception->getFile().
-                                               '('.$exception->getLine().
-                                               '): '.
-                                               $exception->getMessage();
+      $this->diagnostics['mailerExceptions'][] =
+        $exception->getFile()
+       .'('.$exception->getLine()
+       .'): '.
+        $exception->getMessage();
 
-      return false;
+      return null;
     }
 
-    echo '<div class="email-header"><pre>'.htmlspecialchars($phpMailer->getMailHeaders()).'</pre></div>';
-    echo '<div class="email-body">';
-    echo $strMessage;
-    echo '</div>';
-    echo '<hr style="page-break-after:always;"/>';
+    return [
+      'headers' => $phpMailer->getMailHeaders(),
+      'body' => $strMessage,
+      // @todo perhaps also supply attachments as download links for easy checking.
+    ];
+  }
 
-    return true;
+  /**
+   * Generate a HTML message preview.
+   *
+   * @return array
+   * ```
+   * [
+   *   [
+   *     'headers' => HEADER_STRING,
+   *     'body' => BODY_STRING,
+   *   ],
+   *   ...
+   * ]
+   * ```
+   */
+  public function previewMessages()
+  {
+    if (!$this->preComposeValidation()) {
+      return null;
+    }
+
+    // Preliminary checks passed, let's see what happens. The mailer may throw
+    // any kind of "nasty" exceptions.
+    $preview = $this->exportMessages();
+
+    if (!empty($preview)) {
+      $this->diagnostics['caption'] = $this->l->t('Message(s) exported successfully!');
+    }
+
+    return $preview;
   }
 
   /**
@@ -1252,37 +1243,44 @@ DebitNotePurpose
   {
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
-    $message = $this->replaceGlobals();
+    $messageTemplate = $this->replaceGlobals();
 
-    if ($this->isMemberTemplateEmail($message)) {
+    if ($this->isMemberTemplateEmail($messageTemplate)) {
 
-      $this->diagnostics['TotalPayload'] = count($this->recipients)+1;
+      $this->diagnostics['totalPayload'] = count($this->recipients)+1;
 
       foreach ($this->recipients as $recipient) {
-        $strMessage = $this->replaceMemberVariables($message, $recipient['dbdata']);
-        ++$this->diagnostics['TotalCount'];
-        if (!$this->composeAndExport($strMessage, array($recipient), false)) {
-          ++$this->diagnostics['FailedCount'];
+        $strMessage = $this->replaceMemberVariables($messageTemplate, $recipient['dbdata']);
+        ++$this->diagnostics['totalCount'];
+        $message = $this->composeAndExport($strMessage, [ $recipient ], false);
+        if (empty($message)) {
+          ++$this->diagnostics['failedCount'];
+          return;
         }
+        yield $message;
       }
 
       // Finally send one message without template substitution (as
       // this makes no sense) to all Cc:, Bcc: recipients and the
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
-      ++$this->diagnostics['TotalCount'];
-      if (!$this->composeAndExport($message, array(), true)) {
-        ++$this->diagnostics['FailedCount'];
+      ++$this->diagnostics['totalCount'];
+      $message = $this->composeAndExport($messageTemplate, [], true);
+      if (empty($message)) {
+        ++$this->diagnostics['failedCount'];
+        return;
       }
+      yield $message;
     } else {
-      $this->diagnostics['TotalPayload'] = 1;
-      ++$this->diagnostics['TotalCount']; // this is ONE then ...
-      if (!$this->composeAndExport($message, $this->recipients)) {
-        ++$this->diagnostics['FailedCount'];
+      $this->diagnostics['totalPayload'] = 1;
+      ++$this->diagnostics['totalCount']; // this is ONE then ...
+      $message = $this->composeAndExport($messageTemplate, $this->recipients);
+      if (empty($message)) {
+        ++$this->diagnostics['failedCount'];
+        return;
       }
+      yield $message;
     }
-
-    return $this->executionStatus;
   }
 
   /**
@@ -1430,9 +1428,13 @@ DebitNotePurpose
    * substitute each known variable by a dummy value and then make
    * sure that no variable tag ${...} remains.
    */
-  public function validateTemplate($template)
+  public function validateTemplate($template = null)
   {
-    $templateError = array();
+    if (empty($template)) {
+      $template = $this->messageText();
+    }
+
+    $templateError = [];
 
     // Check for per-member stubstitutions
 
@@ -1517,12 +1519,14 @@ DebitNotePurpose
     // that as default text
     $this->initialTemplate = self::DEFAULT_TEMPLATE;
 
-    $dbTemplate = $this->fetchTemplate('Default');
+    $dbTemplate = $this->fetchTemplate(self::DEFAULT_TEMPLATE_NAME);
     if ($dbTemplate === false) {
-      $this->storeTemplate('Default', '', $this->initialTemplate);
+      $this->storeTemplate(self::DEFAULT_TEMPLATE_NAME, '', $this->initialTemplate);
     } else {
       $this->initialTemplate = $dbTemplate;
     }
+    $this->messageContents = $this->initialTemplate;
+    $this->templateName = self::DEFAULT_TEMPLATE_NAME;
   }
 
   private function setCatchAll()
@@ -1656,8 +1660,15 @@ DebitNotePurpose
    * EmailTemplates table with tag $templateName. An existing template
    * with the same tag will be replaced.
    */
-  private function storeTemplate($templateName, $subject, $contents)
+  private function storeTemplate($templateName, $subject = null, $contents = null)
   {
+    if (empty($subject)) {
+      $subject = $this->subject();
+    }
+    if (empty($contents)) {
+      $contents = $this->messageText();
+    }
+
     $handle = $this->dataBaseConnect();
 
     $contents = mySQL::escape($contents, $handle);
@@ -1680,6 +1691,19 @@ DebitNotePurpose
     mySQL::query($query, $handle);
   }
 
+  public function loadTemplate($templateName)
+  {
+    $contents = $this->fetchTemplate($templateName);
+    if ($contents === false) {
+      $this->executionStatus = false;
+      return false;
+    }
+    $this->templateName = $templateName;
+    $this->messageContents = $contents;
+    $this->draftId = -1; // avoid accidental overwriting
+    return true;
+  }
+
   /**
    * Fetch a specific template from the DB. Return false if that
    * template is not found
@@ -1699,7 +1723,7 @@ DebitNotePurpose
       return false;
     }
 
-    if ($templateName !== 'Default' && !empty($line['Subject'])) {
+    if ($templateName !== self::DEFAULT_TEMPLATE_NAME && !empty($line['Subject'])) {
       $this->cgiData['Subject'] = $line['Subject'];
     }
 
@@ -1758,7 +1782,7 @@ DebitNotePurpose
    * behaviour" is that the subject must not be empty. Otherwise in
    * any way incomplete messages may be stored as drafts.
    */
-  private function storeDraft()
+  public function storeDraft()
   {
     if ($this->subject() == '') {
       $this->diagnostics['SubjectValidation'] = $this->messageTag;
@@ -1768,15 +1792,17 @@ DebitNotePurpose
       $this->diagnostics['SubjectValidation'] = true;
     }
 
-    $draftData = array('ProjectId' => $_POST['ProjectId'],
-                       'ProjectName' => $_POST['ProjectName'],
-                       'DebitNoteId' => $_POST['DebitNoteId'],
-                       self::POST_TAG => $_POST[self::POST_TAG],
-                       EmailRecipientsFilter::POST_TAG => $_POST[EmailRecipientsFilter::POST_TAG]);
+    $draftData = [
+      'projectId' => $this->parameterService['projectId'],
+      'projectName' => $this->parameterService['projectName'],
+      'pebitNoteId' => $this->parameterService['debitNoteId'],
+      self::POST_TAG => $this->parameterService[self::POST_TAG],
+      EmailRecipientsFilter::POST_TAG => $this->parameterService[EmailRecipientsFilter::POST_TAG],
+    ];
 
-    unset($draftData[self::POST_TAG]['Request']);
-    unset($draftData[self::POST_TAG]['SubmitAll']);
-    unset($draftData[self::POST_TAG]['SaveMessage']);
+    unset($draftData[self::POST_TAG]['request']);
+    unset($draftData[self::POST_TAG]['submitAll']);
+    unset($draftData[self::POST_TAG]['saveMessage']);
 
     $dataJSON = json_encode($draftData);
     $subject = $this->subjectTag() . ' ' . $this->subject();
@@ -1812,36 +1838,48 @@ DebitNotePurpose
     foreach ($this->fileAttachments() as $attachment) {
       self::rememberTemporaryFile($attachment['tmp_name']);
     }
+
+    return $this->executionStatus;
   }
 
   /** Preliminary draft read-back. */
-  public function loadDraft()
+  public function loadDraft(?int $draftId = null)
   {
-    if ($this->draftId >= 0) {
-      $handle = $this->dataBaseConnect();
-
-      $data = mySQL::fetchRows('EmailDrafts', "`Id` = ".$this->draftId, null, $handle, null, null);
-
-      if (count($data) == 1) {
-        $draftData = json_decode($data[0]['Data'], true, 512, JSON_BIGINT_AS_STRING);
-
-        // undo request actions
-        unset($draftData[self::POST_TAG]['Request']);
-        unset($draftData[self::POST_TAG]['SubmitAll']);
-        unset($draftData[self::POST_TAG]['SaveMessage']);
-
-        if (empty($draftData['DebitNoteId'])) {
-          $draftData['DebitNoteId'] = -1;
-        }
-
-        return $draftData;
-      }
+    if ($draftId === null) {
+      $draftId = $this->draftId;
     }
-    return false;
+    if ($draftId <= 0) {
+      $this->diagnostics['caption'] = $this->l->t('Unable to load draft without id');
+      return $this->executionStatus = false;
+    }
+
+    $handle = $this->dataBaseConnect();
+
+    $data = mySQL::fetchRows('EmailDrafts', "`Id` = ".$draftId, null, $handle, null, null);
+
+    if (count($data) !== 1) {
+      $this->diagnostics['caption'] = $this->l->t('Draft %s could not be loaded', $draftId);
+      return $this->executionStatus = false;
+    }
+
+    $draftData = json_decode($data[0]['Data'], true, 512, JSON_BIGINT_AS_STRING);
+
+    // undo request actions
+    unset($draftData[self::POST_TAG]['request']);
+    unset($draftData[self::POST_TAG]['submitAll']);
+    unset($draftData[self::POST_TAG]['saveMessage']);
+
+    if (empty($draftData['debitNoteId'])) {
+      $draftData['debitNoteId'] = -1;
+    }
+
+    $this->draftId = $draftId;
+
+    return $this->executionStatus = true;
   }
 
   /** Delete the current message draft. */
-  private function deleteDraft()
+  public function deleteDraft()
   {
     if ($this->draftId >= 0 )  {
       $handle = $this->dataBaseConnect();
@@ -1868,7 +1906,7 @@ DebitNotePurpose
    *
    * @param $fileAttach List of files @b not to be removed.
    *
-   * @return bool Undefined.
+   * @return bool $this->executionStatus
    */
   public function cleanTemporaries($fileAttach = array())
   {
@@ -1880,8 +1918,8 @@ DebitNotePurpose
                                  $handle, false, true);
 
     if ($tmpFiles === false) {
-      $this->executionStatus = false;
-      return;
+      $this->diagnostics['caption'] = $this->l->t('Cleaning temporary files failed.');
+      return $this->executionStatus = false;
     }
 
     $toKeep = array();
@@ -1902,6 +1940,8 @@ DebitNotePurpose
         $this->forgetTemporaryFile($fileName);
       }
     }
+    $this->diagnostics['caption'] = $this->l->t('Cleaning temporary files succeeded.');
+    return $this->executionStatus = true;
   }
 
   /** Detach temporaries from a draft, i.e. after deleting the draft. */
@@ -2232,16 +2272,16 @@ DebitNotePurpose
     return $selectOptions;
   }
 
-  /** If a complete reload has to be done ... for now */
-  public function reloadState()
+  /** Return the dispatch status */
+  public function executionStatus()
   {
-    return true;
+    return $this->executionStatus;
   }
 
   /** Return the dispatch status. */
   public function errorStatus()
   {
-    return $this->executionStatus !== true;
+    return !$this->executionStatus();
   }
 
   /** Return possible diagnostics or not. Depending on operation. */

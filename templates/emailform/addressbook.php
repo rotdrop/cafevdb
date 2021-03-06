@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,12 +21,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Util;
-use CAFEVDB\Navigation;
-use CAFEVDB\Email;
+namespace OCA\CAFEVDB;
 
-CAFEVDB\Error::exceptions(true);
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 ?>
 
@@ -33,5 +31,5 @@ CAFEVDB\Error::exceptions(true);
         name="adressBookEmails[]"
         data-placeholder="<?php echo $l->t('Select Em@il Recipients'); ?>"
         multiple="multiple">
-  <?php echo Navigation::selectOptions($_['EmailOptions']); ?>
+  <?php echo PageNavigation::selectOptions($emailOptions); ?>
 </select>
