@@ -23,8 +23,26 @@
 import { appName } from './config.js';
 import * as ncRouter from '@nextcloud/router';
 
-const generateUrl = function(postFix) {
-  return ncRouter.generateUrl('/apps/' + appName + '/' + postFix);
+/**
+ * Generate an absolute URL for this app.
+ *
+ * @param {string} url The locate URL without app-prefix.
+ *
+ * @param {Object} urlParams Object holding url-parameters if url
+ * contains parameters.
+ *
+ * @param {Object} urlOptions Object with processing options
+ * ```
+ * {
+ *   escape: BOOL,
+ *   noRewrite: BOOL,
+ * }
+ * ```
+ *
+ * @returns {string}
+ */
+const generateUrl = function(url, urlParams, urlOptions) {
+  return ncRouter.generateUrl('/apps/' + appName + '/' + url, urlParams, urlOptions);
 };
 
 export default generateUrl;
