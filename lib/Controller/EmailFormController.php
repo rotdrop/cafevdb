@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -102,6 +103,7 @@ class EmailFormController extends Controller {
       },
       'urlGenerator' => $this->urlGenerator,
       'pageNavigation' => $this->pageNavigation,
+      'toolTips' => $this->appContainer->get(ToolTipsService::class),
       'emailComposer' => $composer,
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
@@ -212,7 +214,7 @@ class EmailFormController extends Controller {
 
     $defaultData = [
       'operation' => 'update',
-      'topic' => 'everything',
+      'topic' => 'undefined',
       'projectId' => $projectId,
       'projectName' => $projectName,
       'debitNoteId' => $debitNoteId,
@@ -222,14 +224,14 @@ class EmailFormController extends Controller {
     $projectName = $requestData['projectName'];
     $debitNoteId = $requestData['debitNoteId'];
 
-    $composer = null;
+    /** @var Composer */
+    $composer = $this->appContainer->get(Composer::class);
+    $recipientsFilter = $composer->getRecipientsFilter();
+    $recipients = $recipientsFilter->selectedRecipients();
     if (isset($requestData['singleItem'])) {
       $requestData['errorStatus'] = false;
       $requestData['diagnostics'] = '';
     } else {
-      $recipientsFilter = \OC::$server->query(RecipientsFilter::class);
-      $recipients = $recipientsFilter->selectedRecipients();
-      $composer = \OC::$server->query(Composer::class);
       $requestData['errorStatus'] = $composer->errorStatus();
       $requestData['diagnostics'] = $composer->statusDiagnostics();
     }
@@ -288,7 +290,7 @@ class EmailFormController extends Controller {
       case 'update':
         $composer = \OC::$server->query(Composer::class);
         switch ($topic) {
-          case 'everything':
+          case 'undefined':
             $templateParameters = [
               'projectName' => $projectName,
               'projectId' => $projectId,
@@ -508,21 +510,23 @@ class EmailFormController extends Controller {
         ],
         'blank'))->render();
       return self::grumble([
+        'operation' => $operation,
+        'topic' => $topic,
         'projectName' => $projectName,
         'projectId' => $projectId,
         'caption' => $caption,
         'message' => $messageText,
-        'operation' => $request,
         'requestData' => $requestData,
         'debug' => htmlspecialchars($debugText),
       ]);
     } else {
       return self::dataResponse([
+        'operation' => $operation,
+        'topic' => $topic,
         'projectName' => $projectName,
         'projectId' => $projectId,
         'caption' => $caption,
         'message' => $messageText,
-        'operation' => $request,
         'requestData' => $requestData,
         'debug' => htmlspecialchars($debugText),
       ]);

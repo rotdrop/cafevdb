@@ -50,12 +50,12 @@ class RecipientsFilter
 
   private const POST_TAG = 'emailRecipients';
   private const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
-  private const SESSION_HISTORY_KEY = 'FilterHistory';
+  private const SESSION_HISTORY_KEY = 'filterHistory';
   private const HISTORY_KEYS = [
-    'BasicRecipientsSet',
-    'MemberStatusFilter',
-    'InstrumentsFilter',
-    'SelectedRecipients'
+    'basicRecipientsSet',
+    'memberStatusFilter',
+    'instrumentsFilter',
+    'selectedRecipients'
   ];
   private const MUSICIANS_FROM_PROJECT = (1 << 0);
   private const MUSICIANS_EXCEPT_PROJECT = (1 << 1);
@@ -143,13 +143,15 @@ class RecipientsFilter
     $this->parameterService = $parameterService;
 
     // Fetch all data submitted by form
-    $this->cgiData = $this->parameterService->getPrefixParams(self::POST_TAG);
+    $this->cgiData = $this->parameterService->getParam(self::POST_TAG, []);
+
+    $this->logInfo('CGI DATA '.print_r($this->cgiData, true));
 
     // Quirk: the usual checkbox issue
-    $this->cgiData['BasicRecipientsSet']['FromProject'] =
-      isset($this->cgiData['BasicRecipientsSet']['FromProject']);
-    $this->cgiData['BasicRecipientsSet']['ExceptProject'] =
-      isset($this->cgiData['BasicRecipientsSet']['ExceptProject']);
+    $this->cgiData['basicRecipientsSet']['fromProject'] =
+      isset($this->cgiData['basicRecipientsSet']['fromProject']);
+    $this->cgiData['basicRecipientsSet']['exceptProject'] =
+      isset($this->cgiData['basicRecipientsSet']['exceptProject']);
 
     $this->projectId = $this->parameterService->getParam('projectId', -1);
     $this->projectName = $this->parameterService->getParam('projectName', '');
@@ -169,7 +171,7 @@ class RecipientsFilter
     $this->mtabKey   = $this->pme->cgiSysName('mtable');
     $this->emailRecs = []; // avoid null
 
-    $this->frozen = $this->cgiValue('FrozenRecipients', false);
+    $this->frozen = $this->cgiValue('frozenRecipients', false);
 
     $this->execute();
   }
@@ -189,7 +191,7 @@ class RecipientsFilter
   {
     // Maybe should also check something else. If submitted is true,
     // then we use the form data, otherwise the defaults.
-    $this->submitted = $this->cgiValue('FormStatus', '') === 'submitted';
+    $this->submitted = $this->cgiValue('formStatus', '') === 'submitted';
 
     // "sane" default setttings
     $this->emailRecs = $this->parameterService->getParam($this->emailKey, []);
@@ -353,14 +355,14 @@ class RecipientsFilter
     if (!$fastMode) {
       // exclude musicians deselected by the filter from the set of
       // selected recipients before recording the history
-      $filter['SelectedRecipients'] =
-                                    array_intersect($filter['SelectedRecipients'],
+      $filter['selectedRecipients'] =
+                                    array_intersect($filter['selectedRecipients'],
                                                     array_keys($this->eMailsDpy));
 
       // tweak: sort the selected recipients by key
     }
 
-    sort($filter['SelectedRecipients']);
+    sort($filter['selectedRecipients']);
     $md5 = md5(serialize($filter));
 
     /* Avoid pushing duplicate history entries. If the new
@@ -474,12 +476,14 @@ class RecipientsFilter
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
+    $this->logInfo("#MUS ".count($musicians));
+
     // use the mailer-class we are using later anyway in order to
     // validate email addresses syntactically now. Add broken
     // addresses to the "brokenEMail" list.
     $mailer = new PHPMailer(true);
 
-    foreach ($musicians as $musician) {
+    foreach ($musicians as $rec => $musician) {
 
       $displayName = $musician['displayName']?: $musician['firstName'].' '.$musician['surName'];
       if (!empty($musician['email'])) {
@@ -496,12 +500,12 @@ class RecipientsFilter
           } else {
             $this->eMails[$rec] = [
               'email'   => $emailVal,
-              'name'    => $name,
+              'name'    => $displayName,
               'status'  => $musician['memberStatus'],
               'project' => $projectId,
               'dbdata'  => $musican,
             ];
-            $this->eMailsDpy[$rec] = htmlspecialchars($name.' <'.$emailVal.'>');
+            $this->eMailsDpy[$rec] = htmlspecialchars($displayName.' <'.$emailVal.'>');
           }
         }
       } else {
@@ -509,27 +513,27 @@ class RecipientsFilter
       }
     }
 
-    $moneyKeys = [
-      'InsuranceFee',
-      'SurchargeFees',
-      'TotalFees',
-      'Anzahlung',
-      'Unkostenbeitrag',
-      'AmountPaid',
-      'AmountMissing',
-      'DebitNoteAmount'
-    ];
+    // $moneyKeys = [
+    //   'InsuranceFee',
+    //   'SurchargeFees',
+    //   'TotalFees',
+    //   'Anzahlung',
+    //   'Unkostenbeitrag',
+    //   'AmountPaid',
+    //   'AmountMissing',
+    //   'DebitNoteAmount'
+    // ];
 
-    // do this later when constructing the message
-    foreach($this->eMails as $key => $record) {
-      $dbdata = $record['dbdata'];
-      setlocale(LC_MONETARY, $this->getLocale());
-      foreach($moneyKeys as $moneyKey) {
-        $fee = money_format('%n', floatval($dbdata[$moneyKey]));
-        $dbdata[$moneyKey] = $fee;
-      }
-      $this->eMails[$key]['dbdata'] = $dbdata;
-    }
+    // // do this later when constructing the message
+    // foreach($this->eMails as $key => $record) {
+    //   $dbdata = $record['dbdata'];
+    //   setlocale(LC_MONETARY, $this->getLocale());
+    //   foreach($moneyKeys as $moneyKey) {
+    //     $fee = money_format('%n', floatval($dbdata[$moneyKey]));
+    //     $dbdata[$moneyKey] = $fee;
+    //   }
+    //   $this->eMails[$key]['dbdata'] = $dbdata;
+    // }
   }
 
   /* Fetch the list of musicians for the given context (project/global)
@@ -578,8 +582,8 @@ class RecipientsFilter
 
   private function fetchInstrumentsFilter()
   {
-    /* Remove instruments from the filter which are not known by the
-     * current list of musicians.
+    /* If in project mode: remove instruments which are not played by the
+     * project participants.
      */
     $filterInstruments = array_flip($this->cgiValue('instrumentsFilter', []));
     array_intersect_key($filterInstruments, $this->instruments);
@@ -613,21 +617,25 @@ class RecipientsFilter
     }
   }
 
-  /*Get the current filter. Default value, after form submission,
-   * initial setting otherwise.
+  /**
+   * Get the current filter. Default value, after form submission, initial
+   * setting otherwise.
    */
   private function initMemberStatusFilter()
   {
-    $this->memberFilter = $this->cgiValue('memberStatusFilter',
-                                          $this->defaultByStatus());
+    $this->memberFilter = $this->cgiValue(
+      'memberStatusFilter',
+      $this->submitted ? [] : $this->defaultByStatus());
+    $this->logInfo('MEMBER FILTER '.print_r($this->memberFilter, true));
   }
 
 
-  /**Form a SQL filter expression for the memeber status. */
+  /** Form a SQL filter expression for the member status. */
   private function memberStatusBlackList()
   {
     $allStatusFlags = array_keys($this->memberStatusNames);
     $statusBlackList = array_diff($allStatusFlags, $this->memberFilter);
+    $this->logInfo('MEMBER BLACKLIST '.print_r($statusBlackList, true));
     return $statusBlackList;
   }
 
@@ -638,8 +646,8 @@ class RecipientsFilter
   private function defaultUserBase()
   {
     return [
-      'FromProject' => $this->projectId >= 0,
-      'ExceptProject' => false,
+      'fromProject' => $this->projectId >= 0,
+      'exceptProject' => false,
     ];
   }
 
@@ -651,7 +659,7 @@ class RecipientsFilter
     if (!$this->submitted) {
       $this->userBase = $this->defaultUserBase();
     } else {
-      $this->userBase = $this->cgiValue('BasicRecipientsSet', false);
+      $this->userBase = $this->cgiValue('basicRecipientsSet', false);
       if ($this->userBase === false) {
         $this->userBase = $this->defaultUserBase();
       }
@@ -665,8 +673,8 @@ class RecipientsFilter
   {
     return [
       $this->emailKey => $this->emailRecs,
-      'FrozenRecipients' => $this->frozen,
-      'FormStatus' => 'submitted',
+      'frozenRecipients' => $this->frozen,
+      'formStatus' => 'submitted',
     ];
   }
 

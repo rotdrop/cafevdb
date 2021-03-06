@@ -29,6 +29,8 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -41,6 +43,7 @@ use OCA\CAFEVDB\Common\Util;
 class Composer
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const DEFAULT_TEMPLATE_NAME = 'Default';
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
@@ -166,11 +169,14 @@ DebitNotePurpose
     , RequestParameterService $parameterService
     , EventsService $eventsService
     , RecipientsFilter $recipientsFilter
+    , EntityManager $entityManager
     , ProgressStatusService $progressStatusService
   ) {
     $this->configService = $configService;
     $this->eventsService = $eventsService;
     $this->progressStatusService = $progressStatusService;
+    $this->entityManager = $entityManager;
+    $this->l = $this->l10N();
 
     $this->constructionMode = true; // Config::$opts['emailtestmode'] != 'off';
     $this->setCatchAll();
@@ -1908,21 +1914,19 @@ DebitNotePurpose
    *
    * @return bool $this->executionStatus
    */
-  public function cleanTemporaries($fileAttach = array())
+  public function cleanTemporaries($fileAttach = [])
   {
-    $handle = $this->dataBaseConnect();
-
-    $tmpFiles = mySQL::fetchRows("EmailAttachments",
-                                 "`User` LIKE '".$this->user."' AND `MessageId` = -1",
-                                 null,
-                                 $handle, false, true);
-
-    if ($tmpFiles === false) {
-      $this->diagnostics['caption'] = $this->l->t('Cleaning temporary files failed.');
+    try {
+      $tmpFiles = $this
+        ->getDatabaseRepository(Entities\EmailAttachment::class)
+        ->findBy([ 'user' => $this->userId(), 'draft' => null ]);
+    } catch (\Throwable $t) {
+      $this->diagnostics['caption'] = $this->l->t(
+        'Cleaning temporary files failed: %s', $t->getMessage());
       return $this->executionStatus = false;
     }
 
-    $toKeep = array();
+    $toKeep = [];
     foreach ($fileAttach as $files) {
       $tmp = $files['tmp_name'];
       if (is_file($tmp)) {
@@ -1931,7 +1935,7 @@ DebitNotePurpose
     }
 
     foreach ($tmpFiles as $tmpFile) {
-      $fileName = $tmpFile['FileName'];
+      $fileName = $tmpFile['fileName'];
       if (array_search($fileName, $toKeep) !== false) {
         continue;
       }
@@ -1947,14 +1951,21 @@ DebitNotePurpose
   /** Detach temporaries from a draft, i.e. after deleting the draft. */
   private function detachTemporaryFiles()
   {
-    $handle = $this->dataBaseConnect();
-
-    $query = "UPDATE `EmailAttachments` SET
-  `MessageId` = -1, `User` = '".$this->user."'
-  WHERE `MessageId` = ".$this->draftId;
-    if (mySQL::query($query, $handle, false, true) === false) {
-      $this->executionStatus = false;
+    try {
+      $this->queryBuilder()
+           ->update(Entities\EmailAttachment::class, 'ea')
+           ->set('ea.draft', null)
+           ->set('ea.user', ':user')
+           ->where($this->expr->eq('ea.draft', ':id'))
+           ->setParameter('user', $this->userId())
+           ->setParameter('id', $this->draftId)
+           ->getQuery()
+           ->execute();
+      $this->flush();
+    } catch (\Throwable $t) {
+      return $this->executionStatus = false;
     }
+    return $this->executionStatus = true;
   }
 
   /**
@@ -1964,29 +1975,43 @@ DebitNotePurpose
    */
   private function rememberTemporaryFile($tmpFile)
   {
-    $handle = $this->dataBaseConnect();
-
-    $tmpFile = mySQL::escape($tmpFile, $handle);
-    $query = "INSERT IGNORE INTO `EmailAttachments` (`MessageId`,`User`,`FileName`)
-  VALUES (".$this->draftId.",'".$this->user."','".$tmpFile."')
-  ON DUPLICATE KEY UPDATE
-    `MessageId` = ".$this->draftId.",
-    `User` = '".$this->user."'";
-    if (mySQL::query($query, $handle, false, true) === false) {
-      $this->executionStatus = false;
+    try {
+      $attachment = $this
+        ->getDatabaseRepository(Entities\EmailAttachment::class)
+        ->findOneBy([
+          'draft' => $this->draftId,
+          'fileName' => $tmpFile,
+          'user' => $this->userId(),
+        ]);
+      if (empty($attachment)) {
+        $attachment = (new Entities\EmailAttachment())
+          ->setFileName($tmpFile)
+          ->setDraft($this->draftId)
+          ->setUser($this->userId());
+        $this->persist($attachment);
+      }
+    } catch (\Throwable $t) {
+      return $this->executionStatus = false;
     }
+    return $this->executionStatus = true;
   }
 
   /** Forget a temporary file, i.e. purge it from the data-base. */
   private function forgetTemporaryFile($tmpFile)
   {
-    $handle = $this->dataBaseConnect();
-
-    $tmpFile = mySQL::escape($tmpFile, $handle);
-    $query = "DELETE FROM `EmailAttachments` WHERE `FileName` LIKE '".$tmpFile."'";
-    if (mySQL::query($query, $handle, false, true) === false) {
-      $this->executionStatus = false;
+    try {
+      if (is_string($tmpFile)) {
+        $tmpFile = $this
+          ->getDatabaseRepository(Entities\EmailAttachment::class)
+          ->findOneBy([ 'fileName' => $tmpFile ]);
+      }
+      $this->remove($tmpFile, true);
+    } catch (\Throwable $t) {
+      $this->diagnostics['caption'] = $this->l->t(
+        'Cleaning temporary files failed: %s', $t->getMessage());
+      return $this->executionStatus = false;
     }
+    return $this->executionStatus = true;
   }
 
   /**
