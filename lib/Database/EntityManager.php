@@ -351,9 +351,8 @@ class EntityManager extends EntityManagerDecorator
 
     // loggable
     //$loggableListener = new \Gedmo\Loggable\LoggableListener;
-    $userName = $this->userId;
     $remoteAddress = $this->request->getRemoteAddress();
-    $loggableListener = new Listeners\GedmoLoggableListener($userName, $remoteAddress);
+    $loggableListener = new Listeners\GedmoLoggableListener($this->userId, $remoteAddress);
     $loggableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($loggableListener);
 
@@ -365,10 +364,21 @@ class EntityManager extends EntityManagerDecorator
     // soft deletable
     $config->addFilter('soft-deleteable', '\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter');
 
+    // blameable
+    $blameableListener = new \Gedmo\Blameable\BlameableListener();
+    $blameableListener->setAnnotationReader($cachedAnnotationReader);
+    $blameableListener->setUserValue($this->userId);
+    $evm->addEventSubscriber($blameableListener);
+
+    // sluggable
+    $sluggableListener = new \Gedmo\Sluggable\SluggableListener();
+    $sluggableListener->setAnnotationReader($cachedAnnotationReader);
+    $evm->addEventSubscriber($sluggableListener);
+
     // sortable
-    $sortableListener = new \Gedmo\Sortable\SortableListener;
-    $sortableListener->setAnnotationReader($cachedAnnotationReader);
-    $evm->addEventSubscriber($sortableListener);
+    // $sortableListener = new \Gedmo\Sortable\SortableListener;
+    // $sortableListener->setAnnotationReader($cachedAnnotationReader);
+    // $evm->addEventSubscriber($sortableListener);
 
     // encryption
     $transformerPool = new Transformable\Transformer\TransformerPool();
