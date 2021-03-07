@@ -237,27 +237,34 @@ DebitNotePurpose
 
     // Error diagnostics, can be retrieved by
     // $this->statusDiagnostics()
-    $this->diagnostics = array(
+    $this->diagnostics = [
       'caption' => '',
-      'AddressValidation' => array('CC' => array(),
-                                   'BCC' => array(),
-                                   'Empty' => false),
-      'TemplateValidation' => array(),
+      'AddressValidation' => [
+        'CC' => [],
+        'BCC' => [],
+        'Empty' => false,
+      ],
+      'TemplateValidation' => [],
       'SubjectValidation' => true,
       'FromValidation' => true,
-      'AttachmentValidation' => array('Files' => array(),
-                                      'Events' => array()),
-      'MailerExceptions' => array(),
-      'MailerErrors' => array(),
-      'Duplicates' => array(),
-      'CopyToSent' => array(), // IMAP stuff
-      'Message' => array('Text' => '',
-                         'Files' => array(),
-                         'Events' => array()), // start of sent-messages for log window
+      'AttachmentValidation' => [
+        'Files' => [],
+        'Events' => [],
+      ],
+      'MailerExceptions' => [],
+      'MailerErrors' => [],
+      'Duplicates' => [],
+      'CopyToSent' => [], // IMAP stuff
+      'Message' => [
+        'Text' => '',
+        'Files' => [],
+        'Events' => [],
+      ],
+      // start of sent-messages for log window
       'TotalPayload' => 0,
       'TotalCount' => 0,
       'FailedCount' => 0
-    );
+    ];
 
     // Maybe should also check something else. If submitted is true,
     // then we use the form data, otherwise the defaults.
@@ -275,7 +282,7 @@ DebitNotePurpose
         } else {
           // still leave the name as default in order to signal what was missing
           $this->cgiData['Subject'] =
-            $this->l->t('Unknown Template "%s"', array($initialTemplate));
+            $this->l->t('Unknown Template "%s"', $initialTemplate);
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'));
           if ($template !== false) {
             $this->messageContents = $template;
@@ -497,7 +504,7 @@ DebitNotePurpose
         $dbdata = $recipient['dbdata'];
         $strMessage = $this->replaceMemberVariables($message, $dbdata);
         ++$this->diagnostics['TotalCount'];
-        $msg = $this->composeAndSend($strMessage, array($recipient), false);
+        $msg = $this->composeAndSend($strMessage, [ $recipient ], false);
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
           // Don't remember the individual emails, but for
@@ -505,7 +512,7 @@ DebitNotePurpose
           if ($this->debitNoteId > 0 && $dbdata['PaymentId'] > 0) {
             $messageId = $msg['messageId'];
             $where =  '`Id` = '.$dbdata['PaymentId'].' AND `DebitNoteId` = '.$this->debitNoteId;
-            mySQL::update('ProjectPayments', $where, array('DebitMessageId' => $messageId), $this->dbh);
+            mySQL::update('ProjectPayments', $where, [ 'DebitMessageId' => $messageId ], $this->dbh);
           }
         } else {
           ++$this->diagnostics['FailedCount'];
@@ -517,7 +524,7 @@ DebitNotePurpose
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
       ++$this->diagnostics['TotalCount'];
-      $mimeMsg = $this->composeAndSend($message, array(), true);
+      $mimeMsg = $this->composeAndSend($message, [], true);
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
         $this->recordMessageDiagnostics($mimeMsg['message']);
@@ -806,7 +813,7 @@ DebitNotePurpose
     // Positive diagnostics
     $this->diagnostics['Message']['Text'] = self::head($mimeMsg, 40);
 
-    $this->diagnostics['Message']['Files'] = array();
+    $this->diagnostics['Message']['Files'] = [];
     $attachments = $this->fileAttachments();
     foreach ($attachments as $attachment) {
       if ($attachment['status'] != 'selected') {
@@ -817,7 +824,7 @@ DebitNotePurpose
       $this->diagnostics['Message']['Files'][] = $name;
     }
 
-    $this->diagnostics['Message']['Events'] = array();
+    $this->diagnostics['Message']['Events'] = [];
     $events = $this->eventAttachments();
     $locale = $this->getLocale();
     $timezone = $this->getTimezone();
@@ -881,8 +888,10 @@ DebitNotePurpose
     }
     if ($ret1 !== true && $ret2 !== true) {
       $this->executionStatus = false;
-      $this->diagnostics['CopyToSent']['copy'] = array('Sent' => $ret1->toString(),
-                                                       'INBOX.Sent' => $ret2->toString());
+      $this->diagnostics['CopyToSent']['copy'] = [
+        'Sent' => $ret1->toString(),
+        'INBOX.Sent' => $ret2->toString(),
+      ];
       $imap->disconnect();
       return false;
     }
@@ -923,22 +932,24 @@ DebitNotePurpose
     $textMD5 = md5($textforMD5);
 
     // compute the MD5 stuff for the attachments
-    $attachLog = array();
+    $attachLog = [];
     foreach ($logMessage->fileAttach as $attachment) {
       if ($attachment['status'] != 'selected') {
         continue;
       }
       if ($attachment['name'] != "") {
         $md5val = md5_file($attachment['tmp_name']);
-        $attachLog[] = array('name' => $attachment['name'],
-                             'md5' => $md5val);
+        $attachLog[] = [
+          'name' => $attachment['name'],
+          'md5' => $md5val,
+        ];
       }
     }
     if (!empty($logMessage->events)) {
       sort($logMessage->events);
       $name = 'Events-'.implode('-', $logMessage->events);
       $md5 = md5($name);
-      $attachLog[] = array('name' => $name, 'md5' => $md5);
+      $attachLog[] = [ 'name' => $name, 'md5' => $md5, ];
     }
 
     // Now insert the stuff into the SentEmail table
@@ -1013,18 +1024,18 @@ DebitNotePurpose
 
       if ($loggedDates != '') {
         $this->executionStatus = false;
-        $shortRecipients = array();
+        $shortRecipients = [];
         foreach($logMessage->recipients as $recipient) {
           $shortRecipients[] = $recipient['name'].' <'.$recipient['email'].'>';
         }
-        $this->diagnostics['Duplicates'][] = array(
+        $this->diagnostics['Duplicates'][] = [
           'dates' => $loggedDates,
           'recipients' => $shortRecipients,
           'text' => $logMessage->message,
           'textMD5' => $textMD5,
           'bulkMD5' => $bulkMD5,
           'bulkRecipients' => $bulkRecipients
-        );
+        ];
         return false;
       }
     }
@@ -1325,10 +1336,9 @@ DebitNotePurpose
     $this->validateTemplate($this->messageContents);
 
     // Cc: and Bcc: validation
-    foreach(array('CC' => $this->carbonCopy(),
-                  'BCC' => $this->blindCarbonCopy()) as $key => $emails) {
-      $this->onLookers[$key] =
-                             $this->validateFreeFormAddresses($key, $emails);
+    foreach ([ 'CC' => $this->carbonCopy(),
+               'BCC' => $this->blindCarbonCopy(), ] as $key => $emails) {
+      $this->onLookers[$key] = $this->validateFreeFormAddresses($key, $emails);
     }
 
     // file attachments, check the selected ones for readability
@@ -1381,14 +1391,14 @@ DebitNotePurpose
    * @param $freeForm the value from the input field.
    *
    * @return bool false in case of error, otherwise a borken down list of
-   * recipients array(array('name' => '"Doe, John"', 'email' => 'john@doe.org'),...)
+   * recipients [ [ 'name' => '"Doe, John"', 'email' => 'john@doe.org', ], ... ]
    */
   public function validateFreeFormAddresses($header, $freeForm)
   {
     $phpMailer = new \PHPMailer(true);
     $parser = new \Mail_RFC822(null, null, null, false);
 
-    $brokenRecipients = array();
+    $brokenRecipients = [];
     $parsedRecipients = $parser->parseAddressList($freeForm);
     $parseError = $parser->parseError();
     if ($parseError !== false) {
@@ -1398,7 +1408,7 @@ DebitNotePurpose
       $brokenRecipients[] = $this->l->t($parseError['message'], $parseError['data']);
     } else {
       $this->logDebug("Parsed address list: ". print_r($parsedRecipients, true));
-      $recipients = array();
+      $recipients = [];
       foreach ($parsedRecipients as $emailRecord) {
         $email = $emailRecord->mailbox.'@'.$emailRecord->host;
         $name  = $emailRecord->personal;
@@ -1474,7 +1484,7 @@ DebitNotePurpose
     }
 
     // Now check for global substitutions
-    $globalTemplateLeftOver = array();
+    $globalTemplateLeftOver = [];
     if (preg_match('!([^$]|^)[$]{GLOBAL::[^}]+}!', $dummy)) {
       $variables = $this->emailGlobalVariables();
 
@@ -1503,7 +1513,7 @@ DebitNotePurpose
       $dummy = preg_replace('/([^$]|^)[$]{GLOBAL::[^}]*}/', '', $dummy);
     }
 
-    $spuriousTemplateLeftOver = array();
+    $spuriousTemplateLeftOver = [];
     // No substitutions should remain. Check for that.
     if (preg_match('!([^$]|^)[$]{[^}]+}?!', $dummy, $leftOver)) {
       $templateError[] = 'spurious';
@@ -1646,7 +1656,7 @@ DebitNotePurpose
       throw new \RuntimeException("\n".$this->l->t('Unable to fetch executive board contents from data-base.'.$query));
     }
 
-    $vorstand = array();
+    $vorstand = [];
     while ($line = mySQL::fetch($result)) {
       $vorstand[] = $line['Vorname'];
     }
@@ -1746,7 +1756,7 @@ DebitNotePurpose
 
     $query  = "SELECT `Tag` FROM `EmailTemplates` WHERE 1";
     $result = mySQL::query($query, $handle);
-    $names  = array();
+    $names  = [];
     while ($line = mySQL::fetch($result)) {
       $names[] = $line['Tag'];
     }
@@ -1768,7 +1778,7 @@ DebitNotePurpose
 
     $query = "SELECT Id, Subject, Created, Updated FROM EmailDrafts WHERE 1";
     $result = mySQL::query($query, $handle);
-    $drafts = array();
+    $drafts = [];
     while ($line = mySQL::fetch($result)) {
       $stamp = max(strtotime($line['Updated']),
                    strtotime($line['Created']));
@@ -2099,7 +2109,7 @@ DebitNotePurpose
    */
   public function toString()
   {
-    $toString = array();
+    $toString = [];
     foreach($this->recipients as $recipient) {
       $name = trim($recipient['name']);
       $email = trim($recipient['email']);
@@ -2187,10 +2197,10 @@ DebitNotePurpose
     // JSON encoded array
     $fileAttachJSON = $this->cgiValue('FileAttach', '{}');
     $fileAttach = json_decode($fileAttachJSON, true);
-    $selectedAttachments = $this->cgiValue('AttachedFiles', array());
+    $selectedAttachments = $this->cgiValue('AttachedFiles', []);
     $selectedAttachments = array_flip($selectedAttachments);
-    $localFileAttach = array();
-    $ocFileAttach = array();
+    $localFileAttach = [];
+    $ocFileAttach = [];
     foreach($fileAttach as $attachment) {
       if ($attachment['status'] == 'new') {
         $attachment['status'] = 'selected';
@@ -2223,7 +2233,7 @@ DebitNotePurpose
    */
   public function fileAttachmentOptions($fileAttach)
   {
-    $selectOptions = array();
+    $selectOptions = [];
     foreach($fileAttach as $attachment) {
       $value    = $attachment['tmp_name'];
       $size     = \OC_Helper::humanFileSize($attachment['size']);
@@ -2263,7 +2273,7 @@ DebitNotePurpose
   public function eventAttachmentOptions($projectId, $attachedEvents)
   {
     if ($projectId <= 0) {
-      return array();
+      return [];
     }
 
     // fetch all events for this project
@@ -2279,7 +2289,7 @@ DebitNotePurpose
     $attachedEvents = array_flip($attachedEvents);
 
     // build the select option control array
-    $selectOptions = array();
+    $selectOptions = [];
     foreach($eventMatrix as $eventGroup) {
       $group = $eventGroup['name'];
       foreach($eventGroup['events'] as $event) {
