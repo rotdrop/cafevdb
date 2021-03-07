@@ -372,29 +372,7 @@ class EntityManager extends EntityManagerDecorator
 
     // encryption
     $transformerPool = new Transformable\Transformer\TransformerPool();
-    $transformerPool['encrypt'] = new class($this->encryptionService) implements Transformable\Transformer\TransformerInterface {
-
-      private $encryptionKey;
-
-      private $encryptionService;
-
-      public function __construct($encryptionService)
-      {
-        $this->encryptionService = $encryptionService;
-        $this->encryptionKey = $this->encryptionService->getAppEncryptionKey();
-      }
-
-      public function transform($value)
-      {
-        return $this->encryptionService->encrypt($value, $this->encryptionKey);
-      }
-
-      public function reverseTransform($value)
-      {
-        return $this->encryptionService->decrypt($value, $this->encryptionKey);
-      }
-
-    };
+    $transformerPool['encrypt'] = new Listeners\Transformable\Encryption($this->encryptionService);
     $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
     $transformableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($transformableListener);
