@@ -100,17 +100,9 @@ function init(options) {
       // start the actual file upload
       const jqXHR = data.submit();
 
-      for (let k = 0; k < data.files.length; ++k) {
+      for (const file of data.files) {
         // remember jqXHR to show warning to user when he navigates away but an upload is still in progress
-        if (typeof data.context !== 'undefined' && data.context.data('type') === 'dir') {
-          const dirName = data.context.data('file');
-          if (typeof globalState.FileUpload.uploadingFiles[dirName] === 'undefined') {
-            globalState.FileUpload.uploadingFiles[dirName] = {};
-          }
-          globalState.FileUpload.uploadingFiles[dirName][data.files[k].name] = jqXHR;
-        } else {
-          globalState.FileUpload.uploadingFiles[data.files[k].name] = jqXHR;
-        }
+        globalState.FileUpload.uploadingFiles[file.name] = jqXHR;
       }
       // show cancel button
       if ($('html.lte9').length === 0 && data.dataType !== 'iframe') {
@@ -141,7 +133,6 @@ function init(options) {
       progressBar.fadeIn();
     },
     fail(event, data) {
-      console.info('FAIL', event, data);
       if (typeof data.textStatus !== 'undefined' && data.textStatus !== 'success') {
         if (data.textStatus === 'abort') {
           Notification.show(t(appName, 'Upload cancelled.'), { timeout: 15 });
@@ -183,36 +174,29 @@ function init(options) {
       if (!Array.isArray(result)) {
         errors.push(t(appName, 'Unknown error uploading files'));
       } else {
-        for (k = 0; k < result.length; ++k) {
-          if (typeof result[k] !== 'undefined' && result[k].status === 'success') {
-            const filename = result[k].data.originalname;
+        for (const upload of result) {
+          if (upload.error !== 0) {
+            errors.push(upload.str_error);
+            continue;
+          }
+          const filename = upload.original_name;
 
-            // delete jqXHR reference
-            if (typeof data.context !== 'undefined' && data.context.data('type') === 'dir') {
-              const dirName = data.context.data('file');
-              delete globalState.FileUpload.uploadingFiles[dirName][filename];
-              if ($.assocArraySize(globalState.FileUpload.uploadingFiles[dirName]) === 0) {
-                delete globalState.FileUpload.uploadingFiles[dirName];
-              }
-            } else {
-              delete globalState.FileUpload.uploadingFiles[filename];
-            }
+          // delete jqXHR reference
+          delete globalState.FileUpload.uploadingFiles[filename];
 
-            if (typeof options.doneCallback === 'function') {
-              options.doneCallback(result[k]);
-            }
-          } else {
-            errors.push(result[k].data.message);
+          if (typeof options.doneCallback === 'function') {
+            options.doneCallback(upload);
           }
         }
       }
 
+      // @todo Is this the "best" of all possibilities?
       if (errors.length > 0) {
         data.textStatus = 'servererror';
         data.errorThrown = '';
         if (errors.length > 1) {
-          for (k = 0; k < errors.length; ++k) {
-            data.errorThrown += t(appName, 'Error {NR}: ', { NR: k }) + errors[k] + '\n';
+          for (const error of errors) {
+            data.errorThrown += t(appName, ' Error: {error}.', { error });
           }
         } else {
           data.errorThrown += errors[0];
