@@ -767,6 +767,8 @@ class EmailFormController extends Controller {
 
   /**
    * @NoAdminRequired
+   *
+   * @todo Use IAppData for storage.
    */
   public function attachment($source)
   {
@@ -777,7 +779,7 @@ class EmailFormController extends Controller {
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
 
     switch ($source) {
-      case 'cloud':
+      case Composer::ATTACHMENT_ORIGIN_CLOUD:
         $paths = $this->parameterService['paths'];
         if (empty($paths)) {
           return self::grumble($this->l->t('Attachment file-names were not submitted'));
@@ -814,7 +816,7 @@ class EmailFormController extends Controller {
           $files[] = $fileRecord;
         }
         return self::dataResponse($files);
-      case 'upload':
+      case Composer::ATTACHMENT_ORIGIN_UPLOAD:
         $fileKey = 'files';
         if (empty($_FILES[$fileKey])) {
           // may be caused by PHP restrictions which are not caught by

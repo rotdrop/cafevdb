@@ -46,6 +46,11 @@ class Composer
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
 
+  const POST_TAG = 'emailComposer';
+
+  const ATTACHMENT_ORIGIN_CLOUD = 'cloud';
+  const ATTACHMENT_ORIGIN_UPLOAD = 'upload';
+
   const DEFAULT_TEMPLATE_NAME = 'Default';
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
 <p>
@@ -113,11 +118,6 @@ MandateAccountOwner
 DebitNoteAmount
 DebitNotePurpose
 ';
-  const POST_TAG = 'emailComposer';
-
-  private const ATTACHMENT_ORIGIN_CLOUD = 'cloud';
-  private const ATTACHMENT_ORIGIN_LOCAL = 'local';
-
   private $recipients; ///< The list of recipients.
   private $onLookers;  ///< Cc: and Bcc: recipients.
 
@@ -1878,6 +1878,8 @@ DebitNotePurpose
    * @param $fileAttach List of files @b not to be removed.
    *
    * @return bool $this->executionStatus
+   *
+   * @todo use cloud storage
    */
   public function cleanTemporaries($fileAttach = [])
   {

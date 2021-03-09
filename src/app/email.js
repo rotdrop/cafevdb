@@ -1164,7 +1164,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   FileUpload.init({
     url: generateUrl('attachment/upload'),
     doneCallback(json) {
-      attachmentFromJSON(json, { origin: 'local' });
+      attachmentFromJSON(json, { origin: 'upload' });
     },
     stopCallback: updateFileAttachments,
     dropZone: null, // initially disabled, enabled on tab-switch
