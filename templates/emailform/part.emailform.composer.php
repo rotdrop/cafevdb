@@ -296,9 +296,9 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
   <!-- various data fields ... -->
   <fieldset id="cafevdb-email-form-attachments" class="attachments">
     <input type="hidden"
-           name="emailComposer[fileAttach]"
+           name="emailComposer[fileAttachments]"
            value="<?php echo htmlspecialchars($fileAttachmentData); ?>"
-           id="file-attach"
-           class="file-attach">
+           id="file-attachments"
+           class="file-attachments">
   </fieldset>
 </fieldset>

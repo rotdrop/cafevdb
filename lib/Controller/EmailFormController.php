@@ -97,6 +97,11 @@ class EmailFormController extends Controller {
     $composer = $this->appContainer->query(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();
 
+    $fileAttachments = $composer->fileAttachments();
+    $eventAttachments = $composer->eventAttachments();
+
+    $this->logInfo('FILE ATTACH DATA '.json_encode($fileAttachments));
+
     $templateParameters = [
       'appName' => $this->appName(),
       'appPrefix' => function($id, $join = '-') {
@@ -139,8 +144,9 @@ class EmailFormController extends Controller {
       'message' => $composer->messageText(),
       'sender' => $composer->fromName(),
       'catchAllEmail' => $composer->fromAddress(),
-      'fileAttachments' => $composer->fileAttachments(),
-      'eventAttachments' => $composer->eventAttachments(),
+      'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
+      'fileAttachmentData' => json_encode($fileAttachments),
+      'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
       'composerFormData' => $composer->formData(),
       // Needed for the recipient selection
       'recipientsFormData' => $recipientsFilter->formData(),
@@ -293,9 +299,11 @@ class EmailFormController extends Controller {
         $composer->cleanTemporaries();
         break;
       case 'update':
-        $composer = \OC::$server->query(Composer::class);
         switch ($topic) {
           case 'undefined':
+            $fileAttachments = $composer->fileAttachments();
+            $eventAttachments = $composer->eventAttachments();
+
             $templateParameters = [
               'projectName' => $projectName,
               'projectId' => $projectId,
@@ -309,8 +317,9 @@ class EmailFormController extends Controller {
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
-              'fileAttachments' => $composer->fileAttachments(),
-              'eventAttachments' => $composer->eventAttachments(),
+              'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
+              'fileAttachmentData' => json_encode($fileAttachments),
+              'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
               'composerFormData' => $composer->formData(),
             ];
             $elementData = (new TemplateResponse(
@@ -326,17 +335,17 @@ class EmailFormController extends Controller {
                 $elementData = $composer->toString();
                 break;
               case 'fileAttachments':
-                $fileAttach = $composer->fileAttachments();
+                $fileAttachments = $composer->fileAttachments();
                 $elementData = [
-                  'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions($fileAttach)),
-                  'fileAttach' => $fileAttach,
+                  'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions($fileAttachments)),
+                  'attachments' => $fileAttachments,
                 ];
                 break;
               case 'eventAttachments':
-                $eventAttach = $composer->eventAttachments();
+                $eventAttachments = $composer->eventAttachments();
                 $elementData = [
-                  'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttach)),
-                  'eventAttach' => $eventAttach,
+                  'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttachments)),
+                  'attachments' => $eventAttachments,
                 ];
                 break;
               default:
@@ -397,6 +406,7 @@ class EmailFormController extends Controller {
             // Composer template
             $fileAttachments = $composer->fileAttachments();
             $eventAttachments = $composer->eventAttachments();
+
             $templateParameters = [
               'projectName' => $projectName,
               'projectId' => $projectId,
@@ -768,100 +778,96 @@ class EmailFormController extends Controller {
 
     switch ($source) {
       case 'cloud':
-        $path = $this->parameterService['path'];
-        if (empty($path)) {
-          return self::grumble($this->l->t('Attachment file-name was not submitted'));
+        $paths = $this->parameterService['paths'];
+        if (empty($paths)) {
+          return self::grumble($this->l->t('Attachment file-names were not submitted'));
         }
 
         // @todo find file in cloud
         $storage = $this->appContainer->query(UserStorage::class);
-        $node = $storage->get($path);
-        if (empty($node)) {
-          return self::grumble($this->l->t('File "%s" could not be found in cloud storage.', $path));
+        $files = [];
+        foreach ($paths as $path) {
+          $node = $storage->get($path);
+          if (empty($node)) {
+            return self::grumble($this->l->t('File "%s" could not be found in cloud storage.', $path));
+          }
+          if ($node->getType() != FileInfo::TYPE_FILE) {
+            return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.'));
+          }
+
+          // We emulate an uploaded file here:
+          $fileRecord = [
+            'name' => $path,
+            'error' => 0,
+            'tmp_name' => $node->getStorage()->getLocalFile($node->getInternalPath()),
+            'type' => $node->getMimetype(),
+            'size' => $node->getSize(),
+          ];
+
+          if ($composer->saveAttachment($fileRecord, false) === false) {
+            return self::grumble($this->l->t('Couldn\'t save temporary file for: %s', $fileRecord['name']));
+          }
+
+          $fileRecord['original_name']      = $fileRecord['name']; // clone
+          $fileRecord['upload_max_file_size'] = $maxUploadFileSize;
+          $fileRecord['max_human_file_size']  = $maxHumanFileSize;
+          $files[] = $fileRecord;
         }
-        if ($node->getType() != FileInfo::TYPE_FILE) {
-          return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.'));
-        }
-
-        // We emulate an uploaded file here:
-        $fileRecord = [
-          'name' => $path,
-          'error' => 0,
-          'tmp_name' => $node->getPath,
-          'type' => $node->getMimetype(),
-          'size' => $node->getSize(),
-        ];
-
-        $fileRecord = $composer->saveAttachment($fileRecord, false);
-
-        // Submit the file-record back to the java-script in order to add the
-        // data to the form.
-        if ($fileRecord === false) {
-          return self::grumble($this->l->t('Couldn\'t save temporary file for: %s', $fileRecord['name'][$i]));
-        }
-
-        $fileRecord['originalname']      = $fileRecord['name']; // clone
-        $fileRecord['uploadMaxFilesize'] = $maxUploadFileSize;
-        $fileRecord['maxHumanFilesize']  = $maxHumanFileSize;
-        return self::dataResponse($fileRecord);
+        return self::dataResponse($files);
       case 'upload':
         $fileKey = 'files';
-        if (!isset($_FILES[$fileKey])) {
+        if (empty($_FILES[$fileKey])) {
+          // may be caused by PHP restrictions which are not caught by
+          // error handlers.
+          $contentLength = $this->request->server['CONTENT_LENGTH'];
+          $limit = \OCP\Util::uploadLimit();
+          if ($contentLength > $limit) {
+            return self::grumble(
+              $this->l->t('Upload size %s exceeds limit %s, contact your server administrator.', [
+                \OCP\Util::humanFileSize($contentLength),
+                \OCP\Util::humanFileSize($limit),
+              ]));
+          }
+          $error = error_get_last();
+          if (!empty($error)) {
+            return self::grumble(
+              $this->l->t('No file was uploaded, error message was "%s".', $error['message']));
+          }
           return self::grumble($this->l->t('No file was uploaded. Unknown error'));
         }
 
-        foreach ($_FILES[$fileKey]['error'] as $error) {
-          if ($error != 0) {
-            $errors = [
-              UPLOAD_ERR_OK => $this->l->t('There is no error, the file uploaded with success'),
-              UPLOAD_ERR_INI_SIZE => $this->l->t('The uploaded file exceeds the upload_max_filesize directive in php.ini: %s',
-                                                 array(ini_get('upload_max_filesize'))),
-              UPLOAD_ERR_FORM_SIZE => $this->l->t('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'),
-              UPLOAD_ERR_PARTIAL => $this->l->t('The uploaded file was only partially uploaded'),
-              UPLOAD_ERR_NO_FILE => $this->l->t('No file was uploaded'),
-              UPLOAD_ERR_NO_TMP_DIR => $this->l->t('Missing a temporary folder'),
-              UPLOAD_ERR_CANT_WRITE => $this->l->t('Failed to write to disk'),
-            ];
-            return self::grumble($errors[$error]);
-          }
-        }
-        $files = $_FILES[$fileKey];
+        $files = Util::transposeArray($_FILES[$fileKey]);
 
         $totalSize = 0;
-        foreach ($files['size'] as $size) {
-          $totalSize += $size;
-        }
+        foreach ($files as &$file) {
 
-        if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
-          return self::grumble([
-            'message' => $this->l->t('Not enough storage available'),
-            'uploadMaxFilesize' => $maxUploadFileSize,
-            'maxHumanFilesize' => $maxHumanFileSize,
-          ]);
-        }
+          $totalSize += $file['size'];
 
-        $result = [];
-        $fileCount = count($files['name']);
-        for ($i = 0; $i < $fileCount; $i++) {
-          $fileRecord = [];
-          foreach ($files as $key => $values) {
-            $fileRecord[$key] = $values[$i];
+          if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
+            return self::grumble([
+              'message' => $this->l->t('Not enough storage available'),
+              'upload_max_file_size' => $maxUploadFileSize,
+              'max_human_file_size' => $maxHumanFileSize,
+            ]);
           }
+
+          $file['upload_max_file_size'] = $maxUploadFileSize;
+          $file['max_human_file_size']  = $maxHumanFileSize;
+          $file['original_name'] = $file['name']; // clone
+
+          $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
+          if ($file['error'] != UPLOAD_ERR_OK) {
+            continue;
+          }
+
           // Move the temporary files to locations where we can find them later.
-          $fileRecord = $composer->saveAttachment($fileRecord);
-
-          // Submit the file-record back to the java-script in order to add the
-          // data to the form.
-          if ($fileRecord === false) {
-            return self::grumble($this->l->t('Couldn\'t save temporary file for: %s', $files['name'][$i]));
-          } else {
-            $fileRecord['originalname']      = $fileRecord['name']; // clone
-            $fileRecord['uploadMaxFilesize'] = $maxUploadFileSize;
-            $fileRecord['maxHumanFilesize']  = $maxHumanFileSize;
-            $result[] = $fileRecord;
+          if ($composer->saveAttachment($file) === false) {
+            $file['error'] = 99;
+            $file['str_error'] = $this->l->t('Couldn\'t save temporary file for: %s', $file['name']);
+            continue;
           }
         }
-        return self::dataResponse($result);
+        return self::dataResponse($files);
     }
     return self::grumble($this->l->t('Unknown attachment source: "%s".', $source));
   }

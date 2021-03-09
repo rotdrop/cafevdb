@@ -58,8 +58,11 @@ function generateComposerUrl(operation, topic) {
 }
 
 function attachmentFromJSON(response, info) {
-  const fileAttachHolder = $('form.cafevdb-email-form fieldset.attachments input.file-attach');
-  if (fileAttachHolder === '') {
+
+  console.info('FROM JSON', response, info);
+
+  const fileAttachmentsHolder = $('form.cafevdb-email-form fieldset.attachments input.file-attachments');
+  if (fileAttachmentsHolder === '') {
     Dialogs.alert(t(appName, 'Not called from main email-form.'), t(appName, 'Error'));
     return;
   }
@@ -69,27 +72,26 @@ function attachmentFromJSON(response, info) {
   if (typeof info === 'object') {
     file = $.extend(file, info);
   }
-  let fileAttach = fileAttachHolder.val();
-  if (fileAttach === '') {
-    fileAttach = [file];
+  let fileAttachments = fileAttachmentsHolder.val();
+
+  if (fileAttachments === '') {
+    fileAttachments = [file];
   } else {
-    fileAttach = $.parseJSON(fileAttach);
-    fileAttach.push(file);
+    fileAttachments = $.parseJSON(fileAttachments);
+    fileAttachments.push(file);
   }
-  fileAttachHolder.val(JSON.stringify(fileAttach));
+  fileAttachmentsHolder.val(JSON.stringify(fileAttachments));
 }
 
-const cloudAttachment = function(path, callback) {
-  $.post(generateUrl('attachment/cloud'), { path })
+const cloudAttachment = function(paths, callback) {
+  $.post(generateUrl('attachment/cloud'), { paths })
     .fail(Ajax.handleError)
     .done(function(response) {
-      if (response !== undefined && response.status === 'success') {
-        attachmentFromJSON(response, { origin: 'cloud' });
-        if (typeof callback === 'function') {
-          callback();
-        }
-      } else {
-        Dialogs.alert(response.data.message, t(appName, 'Error'));
+      for (const attachment of response) {
+        attachmentFromJSON(attachment, { origin: 'cloud' });
+      }
+      if (typeof callback === 'function') {
+        callback();
       }
     });
 };
@@ -510,8 +512,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             case 'fileAttachments': {
               const options = requestData.elementData.options;
               // alert('options: '+JSON.stringify(options));
-              const fileAttach = requestData.elementData.fileAttach;
-              fieldset.find('input.file-attach').val(JSON.stringify(fileAttach));
+              const fileAttachments = requestData.elementData.attachments;
+              fieldset.find('input.file-attachments').val(JSON.stringify(fileAttachments));
               fileAttachmentsSelector.html(options);
               if (options.length > 0) {
                 fieldset.find('tr.file-attachments').show();
@@ -524,12 +526,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             }
             case 'eventAttachments': {
               const options = requestData.elementData.options;
-              const eventAttach = requestData.elementData.eventAttach;
+              const eventAttachments = requestData.elementData.attachments;
               // alert('options: '+JSON.stringify(options));
-              // alert('options: '+JSON.stringify(requestData.elementData.eventAttach));
+              // alert('options: '+JSON.stringify(requestData.elementData.eventAttachments));
               eventAttachmentsSelector.html(options);
 
-              if (/* options.length */ eventAttach.length > 0) {
+              if (/* options.length */ eventAttachments.length > 0) {
                 fieldset.find('tr.event-attachments').show();
               } else {
                 fieldset.find('tr.event-attachments').hide();
@@ -1139,7 +1141,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    */
 
   const updateFileAttachments = function() {
-    const fileAttach = fieldset.find('input.file-attach').val();
+    const fileAttachments = fieldset.find('input.file-attachments').val();
     const selectedAttachments = fileAttachmentsSelector.val();
 
     const requestData = {
@@ -1147,11 +1149,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       topic: 'element',
       singleItem: true,
       formElement: 'fileAttachments',
-      fileAttach, // JSON data of all files
+      fileAttachments, // JSON data of all files
       formStatus: 'submitted',
     };
     if (selectedAttachments) {
-      requestData.AttachedFiles = selectedAttachments;
+      requestData.attachedFiles = selectedAttachments;
     }
     applyComposerControls.call(this, $.Event('click'), requestData);
     return false;
@@ -1183,11 +1185,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .on('click', function() {
       Dialogs.filePicker(
         t(appName, 'Select Attachment'),
-        function(path) {
-          cloudAttachment(path, updateFileAttachments);
+        function(paths) {
+          cloudAttachment(paths, updateFileAttachments);
           return false;
         },
-        false, '', true);
+        true, '', true);
     });
 
   fieldset
@@ -1205,7 +1207,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             return false;
           }
           // simply void the attachment list and issue an update.
-          fieldset.find('input.file-attach').val('{}');
+          fieldset.find('input.file-attachments').val('{}');
           updateFileAttachments();
           return false;
         },

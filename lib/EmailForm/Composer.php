@@ -115,6 +115,9 @@ DebitNotePurpose
 ';
   const POST_TAG = 'emailComposer';
 
+  private const ATTACHMENT_ORIGIN_CLOUD = 'cloud';
+  private const ATTACHMENT_ORIGIN_LOCAL = 'local';
+
   private $recipients; ///< The list of recipients.
   private $onLookers;  ///< Cc: and Bcc: recipients.
 
@@ -1941,18 +1944,20 @@ DebitNotePurpose
       $attachment = $this
         ->getDatabaseRepository(Entities\EmailAttachment::class)
         ->findOneBy([
-          'draft' => $this->draftId,
           'fileName' => $tmpFile,
           'user' => $this->userId(),
         ]);
       if (empty($attachment)) {
         $attachment = (new Entities\EmailAttachment())
           ->setFileName($tmpFile)
-          ->setDraft($this->draftId)
           ->setUser($this->userId());
-        $this->persist($attachment);
       }
+      if ($this->draftId > 0) {
+        $attachment->setDraft($this->getReference(Entities\EmailDraft, $this->draftId));
+      }
+      $this->merge($attachment);
     } catch (\Throwable $t) {
+      $this->logException($t);
       return $this->executionStatus = false;
     }
     return $this->executionStatus = true;
@@ -1990,10 +1995,12 @@ DebitNotePurpose
    *
    * @return array Copy of $fileRecord with changed temporary file which
    * survives script-reload, or @c false on error.
+   *
+   * @todo Use IAppData and use temporaries in the cloud storage.
    */
-  public function saveAttachment($fileRecord, $local = false)
+  public function saveAttachment(&$fileRecord, $local = false)
   {
-    if ($fileRecord['name'] != '') {
+    if (!empty($fileRecord['name'])) {
       $tmpdir = ini_get('upload_tmp_dir');
       if ($tmpdir == '') {
         $tmpdir = sys_get_temp_dir();
@@ -2019,6 +2026,7 @@ DebitNotePurpose
         }
       } else {
         // Make a copy
+        $this->logInfo("TRY COPY ".$fileRecord['tmp_name']." -> ".$tmpFile);
         if (copy($fileRecord['tmp_name'], $tmpFile)) {
           // Sanitize permissions
           chmod($tmpFile, 0600);
@@ -2114,7 +2122,7 @@ DebitNotePurpose
    */
   public function fromName()
   {
-    return $this->cgiValue('FromName', $this->catchAllName);
+    return $this->cgiValue('fromName', $this->catchAllName);
   }
 
   /** Return the current From: addres. This is fixed and cannot be changed. */
@@ -2151,12 +2159,12 @@ DebitNotePurpose
   public function fileAttachments()
   {
     // JSON encoded array
-    $fileAttachJSON = $this->cgiValue('FileAttach', '{}');
+    $fileAttachJSON = $this->cgiValue('fileAttachments', '{}');
     $fileAttach = json_decode($fileAttachJSON, true);
-    $selectedAttachments = $this->cgiValue('AttachedFiles', []);
+    $selectedAttachments = $this->cgiValue('attachedFiles', []);
     $selectedAttachments = array_flip($selectedAttachments);
     $localFileAttach = [];
-    $ocFileAttach = [];
+    $cloudFileAttach = [];
     foreach($fileAttach as $attachment) {
       if ($attachment['status'] == 'new') {
         $attachment['status'] = 'selected';
@@ -2166,21 +2174,21 @@ DebitNotePurpose
         $attachment['status'] = 'inactive';
       }
       $attachment['name'] = basename($attachment['name']);
-      if($attachment['origin'] == 'owncloud') {
-        $ocFileAttach[] = $attachment;
+      if ($attachment['origin'] == self::ATTACHMENT_ORIGIN_CLOUD) {
+        $cloudFileAttach[] = $attachment;
       } else {
         $localFileAttach[] = $attachment;
       }
     }
 
-    usort($ocFileAttach, function($a, $b) {
+    usort($cloudFileAttach, function($a, $b) {
       return strcmp($a['name'], $b['name']);
     });
     usort($localFileAttach, function($a, $b) {
       return strcmp($a['name'], $b['name']);
     });
 
-    return array_merge($localFileAttach, $ocFileAttach);
+    return array_merge($localFileAttach, $cloudFileAttach);
   }
 
   /**
@@ -2194,12 +2202,14 @@ DebitNotePurpose
       $value    = $attachment['tmp_name'];
       $size     = \OC_Helper::humanFileSize($attachment['size']);
       $name     = $attachment['name'].' ('.$size.')';
-      $group    = $attachment['origin'] == 'owncloud' ? 'Owncloud' : $this->l->t('Local Filesystem');
+      $group    = $attachment['origin'] == self::ATTACHMENT_ORIGIN_CLOUD ? $this->l->t('Cloud') : $this->l->t('Local Filesystem');
       $selected = $attachment['status'] == 'selected';
-      $selectOptions[] = array('value' => $value,
-                               'name' => $name,
-                               'group' => $group,
-                               'flags' => $selected ? PageNavigation::SELECTED : 0);
+      $selectOptions[] = [
+        'value' => $value,
+        'name' => $name,
+        'group' => $group,
+        'flags' => $selected ? PageNavigation::SELECTED : 0,
+      ];
     }
     return $selectOptions;
   }

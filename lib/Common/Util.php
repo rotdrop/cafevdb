@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -266,6 +266,64 @@ __EOT__;
       return new \DateTimeImmutable($arg1, $arg2);
     }
     throw new \InvalidArgumentException('Unsupported arguments');
+  }
+
+  /**
+   * Turn a php $_FILES array of the form
+   * ```
+   * [
+   *   KEY => [
+   *     IDX => VALUE,
+   *   ],
+   * ]
+   * ```
+   * into
+   * ```
+   * [
+   *   IDX => [
+   *     KEY => VALUE,
+   *   ],
+   * ]
+   * ```
+   */
+  public static function transposeArray(array $files)
+  {
+    $result = [];
+    $fileKeys = array_keys($files);
+    foreach ($files as $key => $values) {
+      if (!is_array($values)) {
+        $values = [ $values ];
+      }
+      foreach ($values as $idx => $value) {
+        $result[$idx][$key] = $value;
+      }
+    }
+    return $result;
+  }
+
+  public static function fileUploadError(int $code, \OCP\IL10N $l)
+  {
+    switch ($code) {
+    case UPLOAD_ERR_OK:
+      return $l->t('There is no error, the file uploaded with success');
+    case UPLOAD_ERR_INI_SIZE:
+      return $l->t('The uploaded file exceeds the upload_max_filesize directive in php.ini: %s',
+                   ini_get('upload_max_filesize'));
+    case UPLOAD_ERR_FORM_SIZE:
+      return $l->t('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form');
+    case UPLOAD_ERR_PARTIAL:
+      return $l->t('The uploaded file was only partially uploaded');
+    case UPLOAD_ERR_NO_FILE:
+      return $l->t('No file was uploaded');
+    case UPLOAD_ERR_NO_TMP_DIR:
+      return $l->t('Missing a temporary folder');
+    case UPLOAD_ERR_CANT_WRITE:
+      return $l->t('Failed to write to disk');
+    case UPLOAD_ERR_EXTENSION:
+      return $l->t('A PHP extension stopped the file upload.');
+    default:
+      return $l->t('Unknown upload error');
+    }
   }
 
 }
