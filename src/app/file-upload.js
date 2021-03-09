@@ -176,24 +176,12 @@ function init(options) {
      * @param {Object} data TBD.
      */
     done(event, data) {
-      // handle different responses (json or body from iframe for ie)
-      let response;
-      if (typeof data.result === 'string') {
-        response = data.result;
-      } else {
-        // fetch response from iframe
-        response = data.result[0].body.innerText;
-      }
-      const result = $.parseJSON(response);
+      const result = data.result;
 
       let k;
       const errors = [];
-      if (typeof result.length === 'undefined') {
-        if (typeof result.status !== 'undefined') {
-          errors.push(result.data.message);
-        } else {
-          errors.push(t(appName, 'Unknown error uploading files'));
-        }
+      if (!Array.isArray(result)) {
+        errors.push(t(appName, 'Unknown error uploading files'));
       } else {
         for (k = 0; k < result.length; ++k) {
           if (typeof result[k] !== 'undefined' && result[k].status === 'success') {
@@ -213,7 +201,6 @@ function init(options) {
             if (typeof options.doneCallback === 'function') {
               options.doneCallback(result[k]);
             }
-
           } else {
             errors.push(result[k].data.message);
           }
