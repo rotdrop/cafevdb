@@ -326,7 +326,6 @@ class EmailFormController extends Controller {
                 $elementData = $composer->toString();
                 break;
               case 'fileAttachments':
-                $composer = new EmailComposer();
                 $fileAttach = $composer->fileAttachments();
                 $elementData = [
                   'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions($fileAttach)),
@@ -507,7 +506,6 @@ class EmailFormController extends Controller {
         $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
         break;
       case 'validateEmailRecipients':
-        $composer = new EmailComposer();
         $composer->validateFreeFormAddresses($requestData['Header'],
                                              $requestData['Recipients']);
         $requestData['errorStatus'] = $composer->errorStatus();
