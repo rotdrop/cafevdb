@@ -70,7 +70,7 @@ class TranslationService
       'file' => $file,
       'line' => $line ]);
     if (empty($location)) {
-      $this->logInfo('Empty location for key '.$translationKey->getId());
+      $this->logDebug('Empty location for key '.$translationKey->getId());
       $location = TranslationLocation::create()
                 ->setTranslationKey($translationKey)
                 ->setFile($file)
