@@ -87,27 +87,6 @@ const pmeInner = function(selector) {
   return container.children('div:first');
 };
 
-// /**
-//  * Notify the spectator about SQL errors.
-//  *
-//  * @param {Object} data TBD.
-//  */
-// const notifySqlError = function(data) {
-//   // PHPMyEdit echos mySQL-errors back.
-//   // console.info(data);
-//   if (data.sqlerror && data.sqlerror.error != 0) {
-//     $('#notification').text('MySQL Error: ' +
-//                             data.sqlerror.error +
-//                             ': ' +
-//                             data.sqlerror.message);
-//     $('#notification').fadeIn();
-//     // hide notification after 5 sec
-//     setTimeout(function() {
-//       $('#notification').fadeOut();
-//     }, 10000);
-//   }
-// };
-
 const pmeAddTableLoadCallback = function(template, cbObject) {
   if (typeof cbObject.context === 'undefined') {
     cbObject.context = this;
@@ -494,6 +473,7 @@ const tableDialogHandlers = function(options, changeCallback) {
 
           dialogWidget.addClass(pmeToken('table-dialog-blocked'));
 
+          // @todo Error handling is flaky
           pmePost(post, {
             fail(xhr, status, errorThrown) {
               console.info('cleanup');
@@ -506,15 +486,10 @@ const tableDialogHandlers = function(options, changeCallback) {
               if (op.length > 0 && (op.val() === 'add' || op.val() === 'delete')) {
                 // Some error occured. Stay in the given mode.
 
-                $('#notification').text('An error occurred.'
-                                        + ' The data has not been saved.'
-                                        + ' Unfortunately, no further information is available.'
-                                        + ' Sorry for that.');
-                $('#notification').fadeIn();
-                // hide notification after 5 sec
-                setTimeout(function() {
-                  $('#notification').fadeOut();
-                }, 10000);
+                Notification.show(t(appName, 'An error occurred.'
+                                    + ' The data has not been saved.'
+                                    + ' Unfortunately, no further information is available.'
+                                    + ' Sorry for that.'), { timeout: 15 });
                 tableDialogReplace(container, htmlContent, options, changeCallback);
                 return;
               }

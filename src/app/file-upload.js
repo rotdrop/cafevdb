@@ -23,6 +23,8 @@
 // @todo remove this file.
 
 import { globalState, appName, $ } from './globals.js';
+import * as Notification from './notification.js';
+import * as Ajax from './ajax.js';
 
 require('jquery-ui/ui/widgets/progressbar');
 require('blueimp-file-upload');
@@ -139,12 +141,12 @@ function init(options) {
       progressBar.fadeIn();
     },
     fail(event, data) {
+      console.info('FAIL', event, data);
       if (typeof data.textStatus !== 'undefined' && data.textStatus !== 'success') {
         if (data.textStatus === 'abort') {
-          $('#notification').text(t(appName, 'Upload cancelled.'));
+          Notification.show(t(appName, 'Upload cancelled.'), { timeout: 15 });
         } else {
-          // HTTP connection problem
-          $('#notification').text(data.errorThrown);
+          Ajax.handleError(data.jqXHR, data.textStatus, data.errorThrown);
         }
         $('#notification').fadeIn();
         // hide notification after 5 sec
@@ -286,7 +288,7 @@ function init(options) {
   // if (navigator.userAgent.search(/konqueror/i) === -1 || true) {
   fileUploadStart.attr('multiple', 'multiple');
   // }
-};
+}
 
 export {
   init,
