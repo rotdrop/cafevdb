@@ -281,8 +281,8 @@ trait FindLikeTrait
       $qb->addCriteria($criteria);
     }
 
-    $this->log('SQL '.$qb->getQuery()->getSql());
-    $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
+    // $this->log('SQL '.$qb->getQuery()->getSql());
+    // $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
 
     return $qb->getQuery()->getResult();
   }
