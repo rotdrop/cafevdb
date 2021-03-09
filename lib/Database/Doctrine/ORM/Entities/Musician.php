@@ -70,6 +70,13 @@ class Musician implements \ArrayAccess
   private $firstName;
 
   /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=128, nullable=true)
+   */
+  private $nickName;
+
+  /**
    * Display name, replaces default "$surName, $firstName"
    *
    * @var string
@@ -836,6 +843,30 @@ class Musician implements \ArrayAccess
   public function getDisplayName():?string
   {
     return $this->displayName;
+  }
+
+  /**
+   * Set nickName.
+   *
+   * @param string|null $nickName
+   *
+   * @return Musician
+   */
+  public function setNickName(?string $nickName):Musician
+  {
+    $this->nickName = $nickName;
+
+    return $this;
+  }
+
+  /**
+   * Get nickName.
+   *
+   * @return string
+   */
+  public function getNickName():?string
+  {
+    return $this->nickName;
   }
 
 }

@@ -354,11 +354,22 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
+    $opts['fdd']['nick_name'] = [
+      'tab'      => [ 'id' => 'tab-all' ],
+      'name'     => $this->l->t('Nickname'),
+      'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'input|LF' => 'H',
+      // 'options'  => 'AVCPD',
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true,
+    ];
+
     $opts['fdd']['display_name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Display-Name'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
-      'sql|LF'   => 'IFNULL($column, CONCAT($table.sur_name, \', \', $table.first_name))',
+      'sql|LF'   => 'IFNULL($column, CONCAT($table.sur_name, \', \', IFNULL($table.nick_name, $table.first_name)))',
       'maxlen'   => 256,
       'sort'     => true,
       'select'   => 'T',

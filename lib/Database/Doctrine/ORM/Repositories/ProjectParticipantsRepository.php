@@ -39,21 +39,36 @@ class ProjectParticipantsRepository extends EntityRepository
    *
    * @param int $projectId
    *
+   * @param array $orderBy
+   *
    * @return array
    */
-  public function fetchParticipantNames($projectId)
+  public function fetchParticipantNames($projectId, $orderBy = null)
   {
+    if (empty($orderBy)) {
+      $orderBy = [
+        'surName' => 'ASC',
+        'firstName' => 'ASC',
+      ];
+    }
     $qb = $this->createQueryBuilder('pp');
 
-    return $qb->leftJoin('pp.musician', 'm', null, null, 'm.id')
-              ->leftJoin('pp.project', 'p')
-              ->select('m.id as musicianId', 'm.firstName AS firstName', 'm.surName AS surName')
-              ->orderBy('m.surName', 'ASC')
-              ->addOrderBy('m.firstName', 'ASC')
-              ->where($qb->expr()->eq('p.id', ':projectId'))
-              ->setParameter('projectId', $projectId)
-              ->getQuery()
-              ->getResult();
+    $qb->leftJoin('pp.musician', 'm', null, null, 'm.id')
+      ->leftJoin('pp.project', 'p')
+      ->select(
+        'm.id as musicianId',
+        'm.firstName AS firstName',
+        'm.surName AS surName',
+        "COALESCE(m.displayName, CONCAT(m.surName, ', ', COALESCE(m.nickName, m.firstName))) AS displayName",
+        "COALESCE(m.nickName, m.firstName) AS nickName",
+      );
+    foreach ($orderBy as $field => $dir) {
+      $qb->addOrderBy('m.'.$field, $dir);
+    }
+    return $qb->where($qb->expr()->eq('p.id', ':projectId'))
+      ->setParameter('projectId', $projectId)
+      ->getQuery()
+      ->getResult();
   }
 
 }

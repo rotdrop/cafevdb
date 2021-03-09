@@ -277,8 +277,9 @@ class ProjectParticipants extends PMETableViewBase
       'voice',
       '-section_leader',
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
-      // $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
-      // $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
+      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
+      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
+      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
     ];
 
     // Options you wish to give the users
@@ -403,11 +404,20 @@ class ProjectParticipants extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'nick_name',
+      [
+        'name'     => $this->l->t('Name'),
+        'tab'      => [ 'id' => 'tab-all' ],
+        'input|LF' => 'H',
+        'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'display_name',
       [
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
-        'sql|LF'   => 'IFNULL($column, CONCAT($table.sur_name, \', \', $table.first_name))',
+        'sql|LF'   => 'IFNULL($column, CONCAT($table.sur_name, \', \', IFNULL($table.nick_name, $table.first_name)))',
         'maxlen'   => 384,
       ]);
 
