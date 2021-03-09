@@ -187,8 +187,8 @@ const myInit = function(lang) {
     selector: 'textarea.wysiwyg-editor',
     nonce,
   });
-  console.info('Try init tinymce');
-  console.info('tinymce: ', window.tinymce);
+  // console.info('Try init tinymce');
+  // console.info('tinymce: ', window.tinymce);
   window.tinymce.init(allconfig);
 };
 
