@@ -48,11 +48,10 @@ function generateUrl(url, urlParams, urlOptions) {
   return generateAppUrl('communication/email/outgoing/' + url, urlParams, urlOptions);
 }
 
-function generateComposerUrl(operation, topic)
-{
+function generateComposerUrl(operation, topic) {
   if (topic === undefined && operation.operation) {
-    operation = operation.operation;
     topic = operation.topic;
+    operation = operation.operation;
   }
   topic = topic || 'undefined';
   return generateUrl('composer/{operation}/{topic}', { operation, topic });
@@ -457,7 +456,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       post += '&' + $.param({ emailComposer: request });
     }
     $.post(url, post)
-      .fail(Ajax.handleError)
+      .fail(function(xhr, textStatus, errorThrown) {
+        Ajax.handleError(xhr, textStatus, errorThrown, validateUnlock);
+      })
       .done(function(data) {
         let postponeEnable = false;
         $.fn.cafevTooltip.remove();
@@ -556,7 +557,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         case 'load':
           switch (topic) {
           case 'template': {
-            const dataItem = fieldset.find('input[name="emailComposer[MessageDraftId]"]');
+            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
             dataItem.val(-1);
             currentTemplate.val(requestData.templateName);
             WysiwygEditor.updateEditor(messageText, requestData.message);
@@ -712,7 +713,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       ProgressStatus.create(0, 0)
         .fail(Ajax.handleError)
         .done(function(data) {
-          if (!Ajax.validateResponse(data, [ 'id' ])) {
+          if (!Ajax.validateResponse(data, ['id'])) {
             return;
           }
           const progressToken = data.id;
@@ -874,14 +875,14 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       const self = this;
 
       if (saveAsTemplate.is(':checked')) {
-        const request = { operation: save, topic: 'template' };
+        const request = { operation: 'save', topic: 'template', submitAll: true };
         // We do a quick client-side validation and ask the user for ok
         // when a template with the same name is already present.
         const current = currentTemplate.val();
         if (storedEmailsSelector.find('option[value="' + current + '"]').length > 0) {
           Dialogs.confirm(
-            t(appName, 'A template with the name `{TemplateName}\' already exists, '
-              + 'do you want to overwrite it?', { TemplateName: current }),
+            t(appName, 'A template with the name `{templateName}\' already exists, '
+              + 'do you want to overwrite it?', { templateName: current }),
             t(appName, 'Overwrite existing template?'),
             function(confirmed) {
               if (confirmed) {
@@ -911,10 +912,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       if (saveAsTemplate.is(':checked')) {
         // We do a quick client-side validation and ask the user for ok.
         const current = currentTemplate.val();
-        if (storedEmailsSelector.find('option[value="' + current + '"]').length > 0) {
+        if (storedEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
           Dialogs.confirm(
-            t(appName, 'Do you really want to delete the template with the name `{TemplateName}\'?',
-              { TemplateName: current }),
+            t(appName, 'Do you really want to delete the template with the name `{templateName}\'?',
+              { templateName: current }),
             t(appName, 'Really Delete Template?'),
             function(confirmed) {
               if (confirmed) {
@@ -927,18 +928,18 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             true);
         } else {
           Dialogs.alert(
-            t(appName, 'Cannot delete non-existing template `{TemplateName}\'',
-              { TemplateName: current }),
+            t(appName, 'Cannot delete non-existing template `{templateName}\'',
+              { templateName: current }),
             t(appName, 'Unknown Template'));
         }
       } else {
-        const draft = fieldset.find('input[name="emailComposer[MessageDraftId]"]').val();
+        const draft = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
 
         if (draft >= 0) {
           Dialogs.confirm(
             t(appName,
-              'Do you really want to delete the backup copy of the current message (id = {Id})?',
-              { Id: draft }),
+              'Do you really want to delete the backup copy of the current message (id = {id})?',
+              { id: draft }),
             t(appName, 'Really Delete Draft?'),
             function(confirmed) {
               if (confirmed) {
@@ -1557,7 +1558,7 @@ function emailFormPopup(post, modal, single, afterInit) {
       });
       return false;
     });
-};
+}
 
 const documentReady = function() {
 
@@ -1571,10 +1572,15 @@ const documentReady = function() {
     type.value = $(this).val();
     post.push(type);
     $('#dialog_holder').load(
-      OC.filePath('calendar', 'ajax/event', 'edit.form.php'),
-      post, function() {
-        $('input[name="delete"]').prop('disabled', true);
-        Legacy.Calendar.UI.startEventDialog();
+      generateAppUrl('legacy/events/forms/edit'),
+      post,
+      function(response, textStatus, xhr) {
+        if (textStatus === 'success') {
+          $('input[name="delete"]').prop('disabled', true);
+          Legacy.Calendar.UI.startEventDialog();
+          return;
+        }
+        Ajax.handleError(xhr, textStatus, xhr.status);
       });
 
     return false;

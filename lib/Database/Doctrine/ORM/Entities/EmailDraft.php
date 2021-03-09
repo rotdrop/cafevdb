@@ -33,13 +33,14 @@ use Doctrine\Common\Collections\ArrayCollection;
  * EmailDraft
  *
  * @ORM\Table(name="EmailDrafts")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EmailDraftsRepository")
  */
 class EmailDraft implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+  use \Gedmo\Blameable\Traits\BlameableEntity;
 
   /**
    * @var int
@@ -60,7 +61,7 @@ class EmailDraft implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="text", length=0, nullable=false, options={"comment"="Message Data Without Attachments"})
+   * @ORM\Column(type="json", nullable=false, options={"comment"="Message Data Without Attachments"})
    */
   private $data;
 
@@ -112,11 +113,11 @@ class EmailDraft implements \ArrayAccess
   /**
    * Set data.
    *
-   * @param string $data
+   * @param array $data
    *
    * @return EmailDrafts
    */
-  public function setData($data):EmailDraft
+  public function setData(array $data):EmailDraft
   {
     $this->data = $data;
 
@@ -126,9 +127,9 @@ class EmailDraft implements \ArrayAccess
   /**
    * Get data.
    *
-   * @return string
+   * @return array
    */
-  public function getData():string
+  public function getData():array
   {
     return $this->data;
   }

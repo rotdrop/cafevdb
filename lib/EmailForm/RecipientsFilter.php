@@ -48,7 +48,7 @@ class RecipientsFilter
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  private const POST_TAG = 'emailRecipients';
+  public const POST_TAG = 'emailRecipients';
   private const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
   private const SESSION_HISTORY_KEY = 'filterHistory';
   private const HISTORY_KEYS = [

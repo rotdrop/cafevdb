@@ -60,7 +60,7 @@ $frozen = $frozenRecipients;
 ?>
 
 <fieldset id="cafevdb-email-recipients-fieldset" class="email-recipients page">
-  <?php echo $pageNavigation->persistentCGI('emailRecipients', $recipientsFormData); ?>
+  <?php echo PageNavigation::persistentCGI('emailRecipients', $recipientsFormData); ?>
   <?php if ($projectId >= 0) { ?>
     <?php if ($frozen) { ?>
       <input type="hidden"

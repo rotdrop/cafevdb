@@ -58,7 +58,7 @@ $_['rowClass'] = $rowClass = $appPrefix('row');
     <form data-upload-id='1'
           id="attachment_upload_form"
           class="file_upload_form"
-          action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.email_form.upload', [ 'object' => 'attachment' ])); ?>"
+          action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.email_form.attachment', [ 'source' => 'upload' ])); ?>"
           method="post"
           enctype="multipart/form-data"
           target="attachment_upload_target_1">

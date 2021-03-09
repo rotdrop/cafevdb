@@ -44,6 +44,7 @@ class Composer
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\SloppyTrait;
 
   const DEFAULT_TEMPLATE_NAME = 'Default';
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
@@ -273,26 +274,23 @@ DebitNotePurpose
     if (!$this->submitted) {
       // Leave everything at default state, except for an optional
       // initial template and subject
-      $initialTemplate = $this->cgiValue('storedMessagesSelector', false);
-      if ($initialTemplate !== false) {
-        $this->templateName = $initialTemplate;
+      $initialTemplate = $this->cgiValue('storedMessagesSelector');
+      if (!empty($initialTemplate)) {
         $template = $this->fetchTemplate($initialTemplate);
-        if ($template !== false) {
-          $this->messageContents = $template;
-        } else {
-          // still leave the name as default in order to signal what was missing
-          $this->cgiData['Subject'] =
-            $this->l->t('Unknown Template "%s"', $initialTemplate);
+        if (empty($template)) {
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'));
-          if ($template !== false) {
-            $this->messageContents = $template;
-          }
+        }
+        if (!empty($template)) {
+          $this->messageContents = $template->getContents();
+          $this->templateName = $initialTemplate;
+        } else {
+          $this->cgiData['subject'] = $this->l->t('Unknown Template');
         }
       }
-      return;
+      $this->logInfo('MESSAGE '.$this->messageContents);
+    } else {
+      $this->messageContents = $this->cgiValue('messageText', $this->initialTemplate);
     }
-
-    $this->messageContents = $this->cgiValue('messageText', $this->initialTemplate);
   }
 
   /**
@@ -1376,7 +1374,7 @@ DebitNotePurpose
   private function setSubjectTag()
   {
     if ($this->projectId < 0 || $this->projectName == '') {
-      $this->messageTag = '[CAF-Musiker]';
+      $this->messageTag = '[CAF-'.ucfirst($this->l->t('musicians')).']';
     } else {
       $this->messageTag = '[CAF-'.$this->projectName.']';
     }
@@ -1529,17 +1527,17 @@ DebitNotePurpose
     return false;
   }
 
-  private function setDefaultTemplate()
+  public function setDefaultTemplate()
   {
     // Make sure that at least the default template exists and install
     // that as default text
     $this->initialTemplate = self::DEFAULT_TEMPLATE;
 
     $dbTemplate = $this->fetchTemplate(self::DEFAULT_TEMPLATE_NAME);
-    if ($dbTemplate === false) {
+    if (empty($dbTemplate)) {
       $this->storeTemplate(self::DEFAULT_TEMPLATE_NAME, '', $this->initialTemplate);
     } else {
-      $this->initialTemplate = $dbTemplate;
+      $this->initialTemplate = $dbTemplate->getContents();
     }
     $this->messageContents = $this->initialTemplate;
     $this->templateName = self::DEFAULT_TEMPLATE_NAME;
@@ -1631,7 +1629,7 @@ DebitNotePurpose
 
   private function bankAccount()
   {
-    $iban = new \IBAN($this->getConfigValue('bankAccountIBAN'));
+    $iban = new \PHP_IBAN\IBAN($this->getConfigValue('bankAccountIBAN'));
     return
       $this->getConfigValue('bankAccountOwner')."<br/>\n".
       "IBAN ".$iban->HumanFormat()." (".$iban->MachineFormat().")<br/>\n".
@@ -1644,31 +1642,18 @@ DebitNotePurpose
    */
   private function fetchExecutiveBoard()
   {
-    $executiveBoard = $this->getConfigValue('executiveBoardTable');
+    $executiveBoardId = $this->getConfigValue('executiveBoardProjectId');
 
-    $handle = $this->dataBaseConnect();
+    $executiveBoardNames = $this
+      ->getDatabaseRepository(Entities\ProjectParticipant::class)
+      ->fetchParticipantNames($executiveBoardId, [ 'nickName' => 'ASC' ]);
 
-    $query = "SELECT `Vorname` FROM `".$executiveBoard."View` ORDER BY `Sortierung`,`Voice`,`SectionLeader` DESC,`Vorname`";
-
-    $result = mySQL::query($query, $handle);
-
-    if ($result === false) {
-      throw new \RuntimeException("\n".$this->l->t('Unable to fetch executive board contents from data-base.'.$query));
+    $executiveBoardNickNames = [];
+    foreach ($executiveBoardNames as $names) {
+      $executiveBoardNickNames[] = $names['nickName'];
     }
 
-    $vorstand = [];
-    while ($line = mySQL::fetch($result)) {
-      $vorstand[] = $line['Vorname'];
-    }
-
-    $cnt = count($vorstand);
-    $text = $vorstand[0];
-    for ($i = 1; $i < $cnt-1; $i++) {
-      $text .= ', '.$vorstand[$i];
-    }
-    $text .= ' '.$this->l->t('and').' '.$vorstand[$cnt-1];
-
-    return $text;
+    return $this->implodeSloppy($executiveBoardNickNames);
   }
 
   /**
@@ -1676,7 +1661,7 @@ DebitNotePurpose
    * EmailTemplates table with tag $templateName. An existing template
    * with the same tag will be replaced.
    */
-  private function storeTemplate($templateName, $subject = null, $contents = null)
+  public function storeTemplate($templateName, $subject = null, $contents = null)
   {
     if (empty($subject)) {
       $subject = $this->subject();
@@ -1685,83 +1670,82 @@ DebitNotePurpose
       $contents = $this->messageText();
     }
 
-    $handle = $this->dataBaseConnect();
-
-    $contents = mySQL::escape($contents, $handle);
-
-    $query = "REPLACE INTO `EmailTemplates` (`Tag`,`Subject`,`Contents`)
-  VALUES ('".$templateName."','".$subject."','".$contents."')";
-
-    // Ignore the result at this point.
-    mySQL::query($query, $handle);
+    $template = $this
+      ->getDatabaseRepository(Entities\EmailTemplate::class)
+      ->findOneBy([ 'tag' => $templateName ]);
+    if (empty($template)) {
+      $template = Entities\EmailTemplate::create();
+    }
+    $template->setTag($templateName)
+      ->setSubject($subject)
+      ->setContents($contents);
+    $this->merge($template);
+    $this->flush();
   }
 
   /** Delete the named email template. */
-  private function deleteTemplate($templateName)
+  public function deleteTemplate($templateName)
   {
-    $handle = $this->dataBaseConnect();
-
-    $query = "DELETE FROM `EmailTemplates` WHERE `Tag` LIKE '".$templateName."'";
-
-    // Ignore the result at this point.
-    mySQL::query($query, $handle);
+    $template = $this
+      ->getDatabaseRepository(Entities\EmailTemplate::class)
+      ->findOneBy([ 'tag' => $templateName ]);
+    if (!empty($template)) {
+      $this->remove($template, true);
+    }
   }
 
-  public function loadTemplate($templateName)
+  public function loadTemplate($templateIdentifier)
   {
-    $contents = $this->fetchTemplate($templateName);
-    if ($contents === false) {
-      $this->executionStatus = false;
-      return false;
+    $template = $this->fetchTemplate($templateIdentifier);
+    if (empty($template)) {
+      return $this->executionStatus = false;
     }
-    $this->templateName = $templateName;
-    $this->messageContents = $contents;
+    $this->templateName = $template->getTag();
+    $this->messageContents = $template->getContents();
     $this->draftId = -1; // avoid accidental overwriting
-    return true;
+    return $this->executionStatus = true;
   }
 
   /**
-   * Fetch a specific template from the DB. Return false if that
+   * Fetch a specific template from the DB. Return null if that
    * template is not found
+   *
+   * @param int|string|Entities\EmailTemplate $templateIdentifier
+   *
+   * @return null|Entities\EmailTemplate
    */
-  private function fetchTemplate($templateName)
+  private function fetchTemplate($templateIdentifier):?Entities\EmailTemplate
   {
-    return '';
-
-    $handle = $this->dataBaseConnect();
-
-    $query   = "SELECT * FROM `EmailTemplates` WHERE `Tag` LIKE '".$templateName."'";
-    $result  = mySQL::query($query, $handle);
-    $line    = mySQL::fetch($result);
-    $numrows = mySQL::numRows($result);
-
-    if ($numrows !== 1) {
-      return false;
+    if (!($templateIdentifier instanceof Entities\EmailTemplate)) {
+      if (filter_var($templateIdentifier, FILTER_VALIDATE_INT) !== false) {
+        $template = $this
+          ->getDatabaseRepository(Entities\EmailTemplate::class)
+          ->find($templateIdentifier);
+      } else {
+        /** @var Entities\EmailTemplate */
+        $template = $this
+          ->getDatabaseRepository(Entities\EmailTemplate::class)
+          ->findOneBy([ 'tag' => $templateName ]);
+      }
     }
 
-    if ($templateName !== self::DEFAULT_TEMPLATE_NAME && !empty($line['Subject'])) {
-      $this->cgiData['Subject'] = $line['Subject'];
+    if (empty($template)) {
+      return null;
     }
 
-    return $line['Contents'];
+    $templateName = $template->getTag();
+
+    if ($templateName !== self::DEFAULT_TEMPLATE_NAME && !empty($template['subject'])) {
+      $this->cgiData['subject'] = $template['subject'];
+    }
+
+    return $template;
   }
 
   /** Return a flat array with all known template names. */
-  private function fetchTemplateNames()
+  private function fetchTemplatesList()
   {
-    return [];
-
-
-    $handle = $this->dataBaseConnect();
-
-    $query  = "SELECT `Tag` FROM `EmailTemplates` WHERE 1";
-    $result = mySQL::query($query, $handle);
-    $names  = [];
-    while ($line = mySQL::fetch($result)) {
-      $names[] = $line['Tag'];
-    }
-
-    return $names;
+    return $this->getDatabaseRepository(Entities\EmailTemplate::class)->list();
   }
 
   /**
@@ -1772,25 +1756,7 @@ DebitNotePurpose
    */
   private function fetchDraftsList()
   {
-    return [];
-
-    $handle = $this->dataBaseConnect();
-
-    $query = "SELECT Id, Subject, Created, Updated FROM EmailDrafts WHERE 1";
-    $result = mySQL::query($query, $handle);
-    $drafts = [];
-    while ($line = mySQL::fetch($result)) {
-      $stamp = max(strtotime($line['Updated']),
-                   strtotime($line['Created']));
-      $stamp = date('Y-m-d', $stamp);
-      $drafts[] = array('value' => $line['Id'],
-                        'name' => $stamp . ": " . $line['Subject']);
-    }
-    if (count($drafts) == 0) {
-      $drafts = array(array('value' => -1,
-                            'name' => $this->l->t('empty')));
-    }
-    return $drafts;
+    return $this->getDatabaseRepository(Entities\EmailDraft::class)->list();
   }
 
   /**
@@ -1802,8 +1768,7 @@ DebitNotePurpose
   {
     if ($this->subject() == '') {
       $this->diagnostics['SubjectValidation'] = $this->messageTag;
-      $this->executionStatus = false;
-      return;
+      return $this->executionStatus = false;
     } else {
       $this->diagnostics['SubjectValidation'] = true;
     }
@@ -1813,42 +1778,29 @@ DebitNotePurpose
       'projectName' => $this->parameterService['projectName'],
       'pebitNoteId' => $this->parameterService['debitNoteId'],
       self::POST_TAG => $this->parameterService[self::POST_TAG],
-      EmailRecipientsFilter::POST_TAG => $this->parameterService[EmailRecipientsFilter::POST_TAG],
+      RecipientsFilter::POST_TAG => $this->parameterService[RecipientsFilter::POST_TAG],
     ];
 
     unset($draftData[self::POST_TAG]['request']);
     unset($draftData[self::POST_TAG]['submitAll']);
     unset($draftData[self::POST_TAG]['saveMessage']);
 
-    $dataJSON = json_encode($draftData);
+    // $dataJSON = json_encode($draftData);
     $subject = $this->subjectTag() . ' ' . $this->subject();
 
-    $handle = $this->dataBaseConnect();
-    $dataJSON = mySQL::escape($dataJSON, $handle);
-    $subject = mySQL::escape($subject, $handle);
-
-    if ($this->draftId >= 0) {
-      $query = "INSERT INTO `EmailDrafts` (Id,Subject,Data,Created)
-  VALUES (".$this->draftId.",'".$subject."','".$dataJSON."',NOW())
-  ON DUPLICATE KEY UPDATE
-  Subject = '".$subject."', Data = '".$dataJSON."'";
-      if (mySQL::query($query, $handle, false, true) === false) {
-        $this->executionStatus = false;
-      }
+    if ($this->draftId > 0) {
+      $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
+        ->find($this->draftId)
+        ->setSubject($subject)
+        ->setData($draftData);
     } else {
-      $query = "INSERT INTO `EmailDrafts` (Subject,Data,Created)
-  VALUES ('".$subject."','".$dataJSON."',NOW())";
-      if (mySQL::query($query, $handle) === false) {
-        $this->executionStatus = false;
-      } else {
-        $newId = MySQL::newestIndex($handle);
-        if (!$newId) {
-          $this->executionStatus = false;
-        } else {
-          $this->draftId = $newId;
-        }
-      }
+      $draft = Entities\EmailDraft::create()
+        ->setSubject($subject)
+        ->setData($draftData);
+      $this->persist($draft);
     }
+    $this->flush();
+    $this->draftId = $draft->getId();
 
     // Update the list of attachments, if any
     foreach ($this->fileAttachments() as $attachment) {
@@ -1869,16 +1821,14 @@ DebitNotePurpose
       return $this->executionStatus = false;
     }
 
-    $handle = $this->dataBaseConnect();
-
-    $data = mySQL::fetchRows('EmailDrafts', "`Id` = ".$draftId, null, $handle, null, null);
-
-    if (count($data) !== 1) {
+    $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
+      ->find($draftId);
+    if (empty($draft)) {
       $this->diagnostics['caption'] = $this->l->t('Draft %s could not be loaded', $draftId);
       return $this->executionStatus = false;
     }
 
-    $draftData = json_decode($data[0]['Data'], true, 512, JSON_BIGINT_AS_STRING);
+    $draftData = $draft->getData();
 
     // undo request actions
     unset($draftData[self::POST_TAG]['request']);
@@ -1891,7 +1841,9 @@ DebitNotePurpose
 
     $this->draftId = $draftId;
 
-    return $this->executionStatus = true;
+    $this->executionStatus = true;
+
+    return $draftData;
   }
 
   /** Delete the current message draft. */
@@ -2092,8 +2044,8 @@ DebitNotePurpose
   /** General form data for hidden input elements.*/
   public function formData()
   {
-    return array('FormStatus' => 'submitted',
-                 'MessageDraftId' => $this->draftId);
+    return array('formStatus' => 'submitted',
+                 'messageDraftId' => $this->draftId);
   }
 
   /** Return the current catch-all email. */
@@ -2129,10 +2081,14 @@ DebitNotePurpose
   public function storedEmails()
   {
     $drafts = $this->fetchDraftsList();
-    $templates = $this->fetchTemplateNames();
+    $templates = $this->fetchTemplatesList();
 
-    return array('drafts' => $drafts,
-                 'templates' => $templates);
+    //$this->logInfo('EMAILS '.print_r($drafts, true).' / '.print_r($templates, true));
+
+    return [
+      'drafts' => $drafts,
+      'templates' => $templates,
+    ];
   }
 
   /**Export the currently selected template name. */
@@ -2188,7 +2144,7 @@ DebitNotePurpose
   /** Export Subject. */
   public function subject()
   {
-    return $this->cgiValue('Subject', '');
+    return $this->cgiValue('subject', '');
   }
 
   /** Return the file attachment data. */

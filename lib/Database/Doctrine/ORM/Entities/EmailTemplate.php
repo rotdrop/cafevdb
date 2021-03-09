@@ -32,9 +32,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * EmailTemplate
  *
  * @ORM\Table(name="EmailTemplates")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EmailTemplatesRepository")
  */
-class EmailTemplate
+class EmailTemplate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -148,7 +148,7 @@ class EmailTemplate
    *
    * @return string|null
    */
-  public function getContents()
+  public function getContents():?string
   {
     return $this->contents;
   }

@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -50,9 +51,8 @@
 
 namespace OCA\CAFEVDB;
 
-$admin = $roles->cloudAdminContact();
+//$cloudAdminContact = $roles->cloudAdminContact();
 
-$diagnostics = $_['Diagnostics'];
 $numTotal = $diagnostics['TotalCount'];
 $numFailed = $diagnostics['FailedCount'];
 
@@ -317,9 +317,9 @@ if (!empty($diagnostics['AttachmentValidation']['Events'])) {
   echo '
     </ul>
   </div>';
-  $mailto = $admin['email'].
+  $mailto = $cloudAdminContact['email'].
             '?subject='.rawurlencode('[CAFEVDB-InternalError] Event Attachments Do not Exist');
-  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$cloudAdminContact['name'].'</a></span>';
   $explanations = $l->t('This is probably an internal error. Please contact %s. '.
                         'It may be possible to simply click on the red, underlined text '.
                         'in order to compose a usefull message.',
@@ -358,7 +358,7 @@ if (!empty($diagnostics['MailerExceptions'])) {
   echo '
     </ul>
   </div>';
-  $mailto = $admin['email'].
+  $mailto = $cloudAdminContact['email'].
             '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
             '&body='.rawurlencode(implode("\r\n", $exceptions));
   $explanations = $l->t('This is an internal error. '.
@@ -367,7 +367,7 @@ if (!empty($diagnostics['MailerExceptions'])) {
                         'in order to compose a usefull message.',
                         array('<span class="error email">'.
                               '<a href="mailto:'.$mailto.'">'.
-                              $admin['name'].
+                              $cloutAdminContact['name'].
                               '</a>'.
                               '</span>'));
   echo '
@@ -406,7 +406,7 @@ if (!empty($diagnostics['MailerErrors'])) {
   echo '
     </ul>
   </div>';
-  $mailto = $admin['email'].
+  $mailto = $cloudAdminContact['email'].
             '?subject='.rawurlencode('[CAFEVDB-ImpossibleMailerErrors] Errors from Email-Form').
             '&body='.rawurlencode(implode("\r\n", $errors));
   $explanations = $l->t('This is an internal error. '.
@@ -415,7 +415,7 @@ if (!empty($diagnostics['MailerErrors'])) {
                         'in order to compose a usefull message.',
                         array('<span class="error email">'.
                               '<a href="mailto:'.$mailto.'">'.
-                              $admin['name'].
+                              $cloudAdminContact['name'].
                               '</a>'.
                               '</span>'));
   echo '
@@ -475,10 +475,10 @@ if (!empty($diagnostics['Duplicates'])) {
                   "Text-MD5:\n".$duplicate['textMD5']."\n".
                   "Text:\n".$duplicate['text'];
   }
-  $mailto = $admin['email'].
+  $mailto = $cloudAdminContact['email'].
             '?subject='.rawurlencode('[CAFEVDB-EmailDuplicate] Probably False Positive').
             '&body='.rawurlencode($errorBody);
-  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$cloudAdminContact['name'].'</a></span>';
   $explanations =
     $l->t('The email-form refuses to send email twice to the same recipients. '.
           'In order to send out your email you have either to change the subject '.
@@ -535,10 +535,10 @@ if (!empty($diagnostics['CopyToSent'])) {
   </div>';
     }
   }
-  $mailto = $admin['email'].
+  $mailto = $cloudAdminContact['email'].
             '?subject='.rawurlencode('[CAFEVDB-CopyToSent] IMAP Error').
             '&body='.rawurlencode($errorBody);
-  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$cloudAdminContact['name'].'</a></span>';
   $explanations =
     $l->t('If no other error messages are echoed on this page, then '.
           'the emails have probably been sent successfully. However, copying '.

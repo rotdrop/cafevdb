@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -129,7 +130,7 @@ class EmailFormController extends Controller {
       ],
       // Needed for the editor
       'emailTemplateName' => $composer->currentEmailTemplate(),
-      'storedEmails', $composer->storedEmails(),
+      'storedEmails' => $composer->storedEmails(),
       'TO' => $composer->toString(),
       'BCC' => $composer->blindCarbonCopy(),
       'CC' => $composer->carbonCopy(),
@@ -185,7 +186,7 @@ class EmailFormController extends Controller {
 ';
     foreach ($stored['drafts'] as $draft) {
       $options .= '
-              <option value="__draft-'.$draft['value'].'">'.$draft['name'].'</option>
+              <option value="__draft-'.$draft['id'].'">'.$draft['name'].'</option>
 ';
     }
     $options .= '
@@ -194,7 +195,7 @@ class EmailFormController extends Controller {
 ';
     foreach ($stored['templates'] as $template) {
       $options .= '
-              <option value="'.$template.'">'.$template.'</option>
+              <option value="'.$template['id'].'">'.$template['name'].'</option>
 ';
     }
     $options .= '
@@ -236,6 +237,8 @@ class EmailFormController extends Controller {
       $requestData['diagnostics'] = $composer->statusDiagnostics();
     }
 
+    //$this->logInfo('REQUEST DATA PRE '.print_r($requestData, true));
+
     switch ($operation) {
       case 'send':
         $composer->sendMessages();
@@ -245,6 +248,7 @@ class EmailFormController extends Controller {
           $diagnostics = $composer->statusDiagnostics();
           $caption = $diagnostics['caption'];
 
+          $roles = $this->appContainer->get(OrganizationalRolesService::class);
           $tmpl = new TemplateResponse(
             $this->appName,
             'emailform/part.emailform.statuspage',
@@ -252,13 +256,14 @@ class EmailFormController extends Controller {
               'projectName' => $projectName,
               'projectId' => $projectId,
               'diagnostics' => $diagnostics,
+              'cloudAdminContact' => $roles->cloudAdminContact(),
             ],
             'blank');
           $messageText = $tmpl->render();
 
           // Update list of drafts after sending the message (draft has
           // been deleted)
-          $requestData['storedEmailOptions'] = storedEmailOptions($composer);
+          $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
         }
         break;
       case 'preview':
@@ -340,7 +345,7 @@ class EmailFormController extends Controller {
             }
             break;
           default:
-            return self::grumble($this->l-t('Unknown request: "%s / %s".', [ $operation, $topic ]));
+            return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
         $requestData['formElement'] = $formElement;
         $requestData['elementData'] = $elementData;
@@ -349,7 +354,12 @@ class EmailFormController extends Controller {
         $value = $requestData['storedMessagesSelector'];
         switch ($topic) {
           case 'template':
-            $composer->loadTemplate($value);
+            if (!$composer->loadTemplate($value)) {
+              return self::grumble($this->l->t('Unable to load template "%s".', $value));
+            }
+            $requestData['templateName'] = $composer->currentEmailTemplate();
+            $requestData['message'] = $composer->messageText();
+            $requestData['subject'] = $composer->subject();
             break;
           case 'draft':
             if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
@@ -368,6 +378,9 @@ class EmailFormController extends Controller {
             $requestParameters = $this->parameterService->getParams();
             $requestParameters = Util::arrayMergeRecursive($requestParameters, $draftParameters);
 
+            $this->logInfo('DRAFT '.print_r($draftParameters, true));
+            $this->logInfo('REQUEST '.print_r($requestParameters, true));
+
             // Update project name and id
             $projectId = $requestData['projectId'] = $requestParameters['projectId'];
             $projectName = $requestData['projectName'] = $requestParameters['projectName'];
@@ -383,9 +396,12 @@ class EmailFormController extends Controller {
             $requestData['diagnostics'] = $composer->statusDiagnostics();
 
             // Composer template
+            $fileAttachments = $composer->fileAttachments();
+            $eventAttachments = $composer->eventAttachments();
             $templateParameters = [
               'projectName' => $projectName,
               'projectId' => $projectId,
+              'urlGenerator' => $this->urlGenerator,
               'templateName' => $composer->currentEmailTemplate(),
               'storedEmails' => $composer->storedEmails(),
               'TO' => $composer->toString(),
@@ -396,8 +412,9 @@ class EmailFormController extends Controller {
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
-              'fileAttachments' => $composer->fileAttachments(),
-              'eventAttachments' => $composer->eventAttachments(),
+              'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
+              'fileAttachmentData' => json_encode($fileAttachments),
+              'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
               'composerFormData' => $composer->formData(),
             ];
 
@@ -438,12 +455,16 @@ class EmailFormController extends Controller {
             }
             break;
           default:
-            return self::grumble($this->l-t('Unknown request: "%s / %s".', [ $operation, $topic ]));
+            return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
-        break;
+        break; // load
       case 'save':
         switch ($topic) {
           case 'template':
+            $templateName = Util::normalizeSpaces($requestData['templateName']);
+            if (empty($templateName)) {
+              return self::grumble($this->l->t('Email template name must not be empty'));
+            }
             if ($composer->validateTemplate()) {
               $composer->storeTemplate($requestData['templateName']);
             }
@@ -451,22 +472,25 @@ class EmailFormController extends Controller {
           case 'draft':
             if ($composer->storeDraft()) {
               $requestData['messageDraftId'] = $composer->messageDraftId();
+            } else {
+              $requestData['errorStatus'] = $composer->errorStatus();
+              $requestData['diagnostics'] = $composer->statusDiagnostics();
             }
             break;
           default:
-            return self::grumble($this->l-t('Unknown request: "%s / %s".', [ $operation, $topic ]));
+            return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
         if ($composer->errorStatus()) {
           $reqquestData['diagnostics']['caption'] =
             $this->l->t('%s could not be saved', ucfirst($topic));
         } else {
-          $requestData['storedEmailOptions'] = storedEmailOptions($composer);
+          $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
         }
         break;
       case 'delete':
         switch ($topic) {
           case 'template':
-            $composer->deleteTemplate();
+            $composer->deleteTemplate($requestData['templateName']);
             $composer->setDefaultTemplate();
             $requestData['templateName'] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
@@ -478,9 +502,9 @@ class EmailFormController extends Controller {
             $requestData['messageDraftId'] = -1;
             break;
           default:
-            return self::grumble($this->l-t('Unknown request: "%s / %s".', [ $operation, $topic ]));
+            return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
-        $requestData['storedEmailOptions'] = storedEmailOptions($composer);
+        $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
         break;
       case 'validateEmailRecipients':
         $composer = new EmailComposer();
@@ -497,9 +521,12 @@ class EmailFormController extends Controller {
         return self::grumble($this->l->t("Unknown request: `%s'.", $request));
     }
 
+    //$this->logInfo('REQUEST DATA POST '.print_r($requestData, true));
+
     if ($requestData['errorStatus']) {
       $caption = $requestData['diagnostics']['caption'];
 
+      $roles = $this->appContainer->get(OrganizationalRolesService::class);
       $messageText = (new TemplateResponse(
         $this->appName,
         'emailform/part.emailform.statuspage',
@@ -507,6 +534,7 @@ class EmailFormController extends Controller {
           'projectName' => $projectName,
           'projectId' => $projectId,
           'diagnostics' => $requestData['diagnostics'],
+          'cloudAdminContact' => $roles->cloudAdminContact(),
         ],
         'blank'))->render();
       return self::grumble([
