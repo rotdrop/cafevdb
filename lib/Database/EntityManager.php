@@ -205,6 +205,13 @@ class EntityManager extends EntityManagerDecorator
           $platform->registerDoctrineTypeMapping($sqlType, $typeName);
         }
       }
+
+      // Override datetime stuff
+      Type::overrideType('datetime', \Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetime_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
+      Type::overrideType('datetimetz', \Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetimetz_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
+
     } catch (\Throwable $t) {
       $this->logException($t);
     }
