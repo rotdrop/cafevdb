@@ -132,6 +132,22 @@ trait EntityManagerTrait {
   }
 
   /**
+   * Gets a reference to the entity identified by the given type and identifier
+   * without actually loading it, if the entity is not yet loaded.
+   *
+   * @param string $entityName The name of the entity type.
+   * @param mixed  $id         The entity identifier.
+   *
+   * @return object|null The entity reference.
+   *
+   * @throws ORMException
+   */
+  protected function getReference($entityClassName, $key)
+  {
+    return $this->entityManager->getReference($entityClassName, $key);
+  }
+
+  /**
    * Tells the EntityManager to make an instance managed and persistent.
    *
    * The entity will be entered into the database at or before transaction
