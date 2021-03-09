@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,8 +22,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Common\Util;
+use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 /**
  * Try to correct common human input "errors", respectively
@@ -37,15 +37,10 @@ class FuzzyInputService
   const HTML_PURIFY = 2;
   const HTML_ALL = ~0;
 
-  /** @var \OCA\CAFEVDB\Storage\UserStorage */
-  private $userStorage;
-
   public function __construct(
     ConfigService $config
-    , UserStorage $userStorage
   ) {
     $this->configService = $config;
-    $this->userStorage = $userStorage;
     $this->l = $this->l10n();
   }
 
@@ -248,10 +243,13 @@ class FuzzyInputService
   public function purifyHTML($dirtyHTML, $method = self::HTML_PURIFY)
   {
     $purifier = null;
+    $cacheDir = null;
     if ($method & self::HTML_PURIFY) {
-      $cacheDir = $this->userStorage->getCacheFolder('HTMLPurifier');
       $config = \HTMLPurifier_Config::createDefault();
-      $config->set('Cache.SerializerPath', $cacheDir);
+      // The following cannot work, we need a plain directory
+      // $cacheDir = $this->appStorage->getCacheFolder('HTMLPurifier');
+      $cacheDir = (new TemporaryDirectory())->create();
+      $config->set('Cache.SerializerPath', $cacheDir->path());
       $config->set('HTML.TargetBlank', true);
       // TODO: maybe add further options
       $purifier = new \HTMLPurifier($config);
@@ -277,6 +275,10 @@ class FuzzyInputService
 
     if (!empty($purifier)) {
       $dirtyHTML = $purifier->purify($dirtyHTML);
+    }
+
+    if (!empty($cacheDir)) {
+      $cacheDir->delete();
     }
 
     return $dirtyHTML;
