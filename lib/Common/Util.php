@@ -20,8 +20,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**CamerataDB namespace to prevent name-collisions.
- */
 namespace OCA\CAFEVDB\Common;
 
 class Util
