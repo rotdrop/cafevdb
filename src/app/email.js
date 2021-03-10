@@ -230,7 +230,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
           $.fn.cafevTooltip.remove();
           panelHolder.html(data.contents);
           fieldset = panelHolder.find('fieldset.email-recipients.page');
-          Email.emailFormRecipientsHandlers(fieldset, form, dialogHolder, panelHolder);
+          emailFormRecipientsHandlers(fieldset, form, dialogHolder, panelHolder);
         } else {
           // Here goes the real work
           // We only need to update the select-element and the list
