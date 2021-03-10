@@ -132,11 +132,11 @@ const removeEditor = function(selector) {
   if (!editorElement.length) {
     return;
   }
-  if (editorElement.ckeditor) {
+  try {
     editorElement.ckeditor().remove();
-  }
-  if (editorElement.tinymce) {
     editorElement.tinymce().remove();
+  } catch (e) {
+    console.info('EXCEPTION', e);
   }
 };
 

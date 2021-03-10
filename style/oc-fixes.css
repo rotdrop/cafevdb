@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -77,13 +77,20 @@ body.snapjs-left div.tox-fullscreen .tox-menubar {
 }
 
 /* leave ckeditor alone if used in our app */
-div[contenteditable="true"].ck.ck-content {
-  width:unset;
-  min-height:unset;
-  box-sizing:unset;
-  margin:unset;
-  font-size:unset;
-  outline:unset;
+div[contenteditable="true"].ck.ck-content, div[contenteditable="true"].ck.ck-content * {
+  width: revert;
+  min-height: revert;
+  box-sizing: revert;
+  margin: revert;
+  padding: revert;
+  list-style: revert;
+  font-size: revert;
+  outline: revert;
+  line-height: revert;
+}
+
+div.ck.ck-reset {
+    white-space: normal;
 }
 
 /* autocomplete is hidden by setting z-index = 1000 */
