@@ -88,7 +88,9 @@ class ContactsAddressBook implements IAddressBook
    * @inheritDoc
    */
   public function search($pattern, $searchProperties, $options) {
-    $this->logInfo('Pattern '.$pattern.' Properties '.print_r($searchProperties, true));
+    if (empty($pattern) && $pattern !== '') {
+      $pattern = '';
+    }
     // searchProperties are ignored as we follow search attributes
     // options worth considering: types
     $vCards = $this->cardBackend->searchCards($pattern, $searchProperties);
@@ -102,12 +104,11 @@ class ContactsAddressBook implements IAddressBook
     $result = [];
     foreach ($vCards as $card) {
       $record = $card->getData();
-      $this->logInfo('CARD DATA'.print_r($record, true));
       if (is_array($record['FN'])) {
         //FN field must be flattened for contacts menu
         $record['FN'] = array_pop($record['FN']);
       }
-      // prevents linking to contacts if UID is set
+      // prevents linking to contacts
       $record['isLocalSystemBook'] = true;
       $record[self::DAV_PROPERTY_SOURCE] = $this->cardBackend->getURI();
       $result[] = $record;

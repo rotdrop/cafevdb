@@ -130,11 +130,17 @@ class ContactsService
         $id = $contact['id'];
         $fn = $contact['FN'];
         $emails = $contact['EMAIL'];
+        if (empty($emails)) {
+          continue;
+        }
         if (!is_array($emails)) {
           $emails = [ $emails ];
         }
-        $theseContacts = array();
+        $theseContacts = [];
         foreach ($emails as $email) {
+          if (empty($email)) {
+            continue;
+          }
           $theseContacts[] = [
             'id'    => $id,
             'email' => $email,
@@ -165,7 +171,7 @@ class ContactsService
   public static function addEmailContact($emailContact, $addressBookKey = null)
   {
     if (empty($addressBookKey)) {
-      $addressBookKey = Config::getValue('addressbookid', false);
+      $addressBookKey = $this->getConfigValue('addressbookid', false);
       if (empty($addressBookKey)) {
         return null;
       }
@@ -413,7 +419,7 @@ class ContactsService
   public function export(Musician $musician, $version = self::VCARD_VERSION)
   {
     $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
-    $uuid = isset($musician['uuid']) ? $musician['uuid'] : $this->generateUUID();
+    $uuid = (string)(isset($musician['uuid']) ? $musician['uuid'] : $this->generateUUID());
     $categories = [ 'cafevdb' ];
     foreach ($musician['instruments'] as $musicianInstrument) {
       $categories[] = $musicianInstrument['instrument']['name'];

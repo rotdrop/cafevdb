@@ -90,13 +90,17 @@ class MusicianCardBackend implements ICardBackend
    */
   public function searchCards(string $pattern, array $properties): array
   {
-    $this->logInfo('Search Pattern "'.$pattern.'"');
-    $expr = self::criteriaExpr();
-    $musicians = $this->musiciansRepository->matching(
-      self::criteria()->where($expr->contains('displayName', $pattern))
-                      ->orWhere($expr->contains('firstName', $pattern))
-                      ->orWhere($expr->contains('surName', $pattern))
-    );
+    if (empty($pattern)) {
+      $musicians = $this->musiciansRepository->findAll();
+    } else {
+      $expr = self::criteriaExpr();
+      $musicians = $this->musiciansRepository->matching(
+        self::criteria()->where($expr->contains('displayName', $pattern))
+          ->orWhere($expr->contains('nickName', $pattern))
+          ->orWhere($expr->contains('firstName', $pattern))
+          ->orWhere($expr->contains('surName', $pattern))
+      );
+    }
     $vCards = [];
     foreach ($musicians as $musician) {
       $vCards[] = $this->entryToCard($musician);

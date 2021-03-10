@@ -69,7 +69,11 @@ class MusicianCard implements ICard {
    * Non-interface method, return the card as plain array.
    */
   public function getData(): array {
-    return $this->vCard->children();
+    $data = [];
+    foreach ($this->vCard->children() as $child) {
+      $data[$child->name] = $child->getValue();
+    }
+    return $data;
   }
 
   /**
