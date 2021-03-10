@@ -650,11 +650,11 @@ class EmailFormController extends Controller {
         // Convert the free-form input to an array (possibly)
         $parser = new \Mail_RFC822(null, null, null, false);
         $recipients = $parser->parseAddressList($freeForm);
-        $parseError = $parser->error;
-        if (!empty($parseError)) {
+        $parseError = $parser->parseError();
+        if ($parseError !== false) {
           return self::grumble(
-            $this->l->t('Unable to parse email-recipients "%s": "%s"',
-                        [ $freeForm, $parseError ]));
+            $this->l->t('Unable to parse email-recipients "%s".',
+                        vsprintf($parseError['message'], $parseError['data'])));
         }
         $freeForm = [];
         foreach ($recipients as $emailRecord) {

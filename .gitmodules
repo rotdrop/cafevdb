@@ -38,3 +38,6 @@
 [submodule "3rdparty/doctrine-orm"]
 	path = 3rdparty/doctrine-orm
 	url = git@github.com:rotdrop/orm.git
+[submodule "3rdparty/pear/mail"]
+	path = 3rdparty/pear/mail
+	url = git@github.com:rotdrop/Mail.git

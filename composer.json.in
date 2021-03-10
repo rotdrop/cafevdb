@@ -22,7 +22,7 @@
     "beberlei/doctrineextensions": "^1.2.0",
     "ezyang/htmlpurifier": "^4.13.0",
     "giggsey/libphonenumber-for-php": "^8.12",
-    "pear/mail": "^1.4",
+    "pear/mail": "dev-master",
     "gedmo/doctrine-extensions": "dev-production/cafevdb",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
     "knplabs/doctrine-behaviors": "^2.0",
@@ -70,6 +70,10 @@
     {
       "type": "path",
       "url": "3rdparty/gedmo-doctrine-extensions"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/pear/mail"
     }
   ],
   "minimum-stability": "dev",

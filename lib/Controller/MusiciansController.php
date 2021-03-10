@@ -176,10 +176,10 @@ class MusiciansController extends Controller {
       $parser = new \Mail_RFC822(null, null, null, false);
 
       $parsedEmail = $parser->parseAddressList($email);
-      $parseError = $parser->error;
+      $parseError = $parser->parseError();
 
-      if (!empty($parseError)) {
-        $message .= htmlspecialchars($this->l->t($parseError)).'. ';
+      if ($parseError !== false) {
+        $message .= htmlspecialchars($this->l->t($parseError['message'], $parseError['data'])).'. ';
       } else {
         $emailArray = [];
         foreach ($parsedEmail as $emailRecord) {

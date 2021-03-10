@@ -1407,9 +1407,8 @@ DebitNotePurpose
 
     $brokenRecipients = [];
     $parsedRecipients = $parser->parseAddressList($freeForm);
-    $parseError = $parser->error;
-    $this->logInfo(print_r($parseError, true));
-    if (!empty($parseError)) {
+    $parseError = $parser->parseError();
+    if ($parseError !== false) {
       $this->logDebug("Parse-error on email address list: ".
                       vsprintf($parseError['message'], $parseError['data']));
       // We report the entire string.
