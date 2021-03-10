@@ -584,7 +584,7 @@ class EmailFormController extends Controller {
       $missingEmailAddresses = '';
 
       $filterHistory = $recipientsFilter->filterHistory();
-      $templateData = [
+      $templateParameters = [
         'projectName' => $projectName,
         'projectId' => $projectId,
         'debitNoteId' => $debitNoteId,
