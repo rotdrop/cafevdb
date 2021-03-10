@@ -1082,6 +1082,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       const projectId = formData.find('input[name="projectId"]').val();
       const projectName = formData.find('input[name="projectName"]').val();
       let events = eventAttachmentsSelector.val();
+      console.info('EVENTS', events, eventAttachmentsSelector);
       if (!events) {
         events = [];
       }
@@ -1104,7 +1105,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       const requestData = {
         operation: 'update',
         topic: 'element',
-        formElement: 'EventAttachments',
+        formElement: 'eventAttachments',
         singleItem: true,
         attachedEvents: events,
         projectId,
@@ -1363,7 +1364,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
  *
  * - PME_sys_mrecs: array of ids of pre-selected musicians
  *
- * - EventSelect: array of ids of events to attach.
+ * - eventSelect: array of ids of events to attach.
  *
  * @param {bool} modal TBD.
  *

@@ -121,6 +121,7 @@ const wikiPopup = function(post, reopen) {
  * (the default). If false, only raise an existing dialog to top.
  */
 const eventsPopup = function(post, reopen) {
+  console.info('POST', post);
   if (typeof reopen === 'undefined') {
     reopen = false;
   }

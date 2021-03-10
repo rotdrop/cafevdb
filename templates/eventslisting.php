@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -85,7 +85,7 @@ __EOT__;
       </td>
       <td class="eventemail">
         <label class="email-check" for="email-check-$evtUri"  title="$title" >
-        <input class="email-check" title="" id="email-check-$evtUri" type="checkbox" name="EventSelect[]" value="$evtUri" $checked />
+        <input class="email-check" title="" id="email-check-$evtUri" type="checkbox" name="eventSelect[]" value="$evtUri" $checked />
         <div class="email-check" /></label>
       </td>
       <td class="eventdata brief tooltip-top tooltip-wide" id="brief-$evtUri" title="$description">$brief</td>

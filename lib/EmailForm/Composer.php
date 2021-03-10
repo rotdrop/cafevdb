@@ -2256,6 +2256,8 @@ DebitNotePurpose
     $dfltIds     = $this->eventsService->defaultCalendars();
     $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
 
+    $this->logInfo('EVENTMATRIX '.print_r($eventMatrix, true));
+
     // timezone, locale
     $locale = $this->getLocale();
     $timezone = $this->getTimezone();
@@ -2268,10 +2270,9 @@ DebitNotePurpose
     foreach($eventMatrix as $eventGroup) {
       $group = $eventGroup['name'];
       foreach($eventGroup['events'] as $event) {
-        $object = $event['object'];
-        $datestring = $this->eventsService->briefEventDate($object, $timezone, $locale);
-        $name = stripslashes($object['summary']).', '.$datestring;
-        $value = $event['EventId'];
+        $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
+        $name = stripslashes($event['summary']).', '.$datestring;
+        $value = $event['uri'];
         $selectOptions[] = array('value' => $value,
                                  'name' => $name,
                                  'group' => $group,

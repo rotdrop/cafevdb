@@ -34,7 +34,7 @@ require('events.css');
 const Events = globalState.Events = {
   projectId: -1,
   projectName: '',
-  Events: { /* nothing */ },
+  events: { /* nothing */ },
   confirmText: {
     delete: t(appName, 'Do you really want to delete this event?'),
     detach: t(appName, 'Do you really want to detach this event from the current project?'),
@@ -138,9 +138,9 @@ const init = function(htmlContent, textStatus, request) {
           $.post(
             generateUrl('projects/events/redisplay'),
             {
-              ProjectId: Events.projectId,
-              ProjectName: Events.projectName,
-              EventSelect: events,
+              projectId: Events.projectId,
+              projectName: Events.projectName,
+              eventSelect: events,
             })
             .fail(Ajax.handleError)
             .done(relist);
@@ -176,7 +176,7 @@ const updateEmailForm = function(post, emailFormDialog) {
     }
     const events = [];
     $.each(post, function(i, param) {
-      if (param.name === 'EventSelect[]') {
+      if (param.name === 'eventSelect[]') {
         events.push(param.value);
       }
     });

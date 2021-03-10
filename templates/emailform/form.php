@@ -46,7 +46,7 @@ $_['rowClass'] = $rowClass = $appPrefix('row');
         id="cafevdb-email-form"
         class="cafevdb-email-form">
     <fieldset id="cafevdb-email-form-data" class="form-data">
-      <?php echo PageNavigation::persistentCGI($_['FormData']); ?>
+      <?php echo PageNavigation::persistentCGI($formData); ?>
     </fieldset>
     <div id="emailformrecipients" class="resize-target"><?php echo $this->inc('emailform/part.emailform.recipients', $_); ?></div>
     <div id="emailformcomposer" class="resize-target"><?php echo $this->inc('emailform/part.emailform.composer', $_); ?></div>
@@ -64,12 +64,12 @@ $_['rowClass'] = $rowClass = $appPrefix('row');
           target="attachment_upload_target_1">
       <!-- at least some php-flavours (even 5.6, on Ubuntu) seem to have a 32bit bug with MAX_FILE_SIZE -->
       <!-- <input type="hidden" name="MAX_FILE_SIZE" id="max_upload"
-	     value="<?php p($_['uploadMaxFilesize']) ?>"> -->
+	     value="<?php p($uploadMaxFilesize) ?>"> -->
       <!-- Send the requesttoken, this is needed for older IE versions
       because they don't send the CSRF token via HTTP header in this case -->
-      <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']) ?>" id="requesttoken">
+      <input type="hidden" name="requesttoken" value="<?php p($requesttoken) ?>" id="requesttoken">
       <input type="hidden" class="max_human_file_size"
-	     value="(max <?php p($_['uploadMaxHumanFilesize']); ?>)">
+	     value="(max <?php p($uploadMaxHumanFilesize); ?>)">
       <input type="file" class="file_upload_start" id="attachment_upload_start" name="files[]" multiple="multiple">
     </form>
     <div class="uploadprogresswrapper">
