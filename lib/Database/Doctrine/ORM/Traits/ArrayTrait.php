@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -60,11 +60,11 @@ trait ArrayTrait
 
   public function offsetGet($offset) {
     if (!$this->offsetExists($offset)) {
-      throw new \Exception('Offset '.self::offsetNormalize($offset).' does not exist, keys '.print_r($this->keys, true));
+      throw new \Exception('Offset '.self::offsetNormalize($offset).' does not exist in '.__CLASS__.', keys '.print_r($this->keys, true));
     }
     $method = self::methodName('get', $offset);
     if (!method_exists($this, $method)) {
-      throw new \Exception('Method '.$method.' does not exist, please implement it.');
+      throw new \Exception('Method '.$method.' does not exist in '.__CLASS__.', please implement it.');
     }
     return $this->$method();
   }
@@ -72,7 +72,7 @@ trait ArrayTrait
   public function offsetSet($offset, $value):void
   {
     if (!$this->offsetExists($offset)) {
-      throw new \Exception('Offset '.self::offsetNormalize($offset).' does not exist, keys '.print_r($this->keys, true));
+      throw new \Exception('Offset '.self::offsetNormalize($offset).' does not exist in '.__CLASS__.', keys '.print_r($this->keys, true));
     }
     $method = self::methodName('set', $offset);
     if (!method_exists($this, $method)) {
