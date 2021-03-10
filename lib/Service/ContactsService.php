@@ -168,10 +168,10 @@ class ContactsService
    * entries to. Otherwise the @c addressbookid config-value will be
    * used. If none is set, return @c false.
    */
-  public static function addEmailContact($emailContact, $addressBookKey = null)
+  public function addEmailContact($emailContact, $addressBookKey = null)
   {
     if (empty($addressBookKey)) {
-      $addressBookKey = $this->getConfigValue('addressbookid', false);
+      $addressBookKey = $this->getConfigValue('generaladdressbookid', false);
       if (empty($addressBookKey)) {
         return null;
       }
