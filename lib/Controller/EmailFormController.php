@@ -274,7 +274,9 @@ class EmailFormController extends Controller {
         break;
       case 'preview':
         $previewMessages = $composer->previewMessages();
-        if (!$composer->errorStatus()) {
+        if ($composer->errorStatus()) {
+          $requestData['errorStatus'] = $composer->errorStatus();
+          $requestData['diagnostics'] = $composer->statusDiagnostics();
           break;
         }
         $templateParameters = [

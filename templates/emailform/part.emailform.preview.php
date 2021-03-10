@@ -32,7 +32,7 @@ namespace OCA\CAFEVDB;
   <?php foreach ($messages as $message) { ?>
     <div class="email-header"><pre><?php p($message['headers']); ?></pre></div>
     <div class="email-body">
-      <?php print_unquoted($message['body']); ?>
+      <?php echo $message['body']; ?>
     </div>
     <hr class="email-preview-separator"/>
   <?php } ?>

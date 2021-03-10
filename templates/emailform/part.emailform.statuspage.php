@@ -51,6 +51,8 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Common\Util;
+
 //$cloudAdminContact = $roles->cloudAdminContact();
 
 $numTotal = $diagnostics['TotalCount'];
@@ -210,7 +212,7 @@ if (!empty($addressDiag['CC']) || !empty($addressDiag['BCC'])) {
     }
   }
   $explanations =
-    Util::htmlEncode(
+    htmlentities(
       $l->t('No email will be sent out unless these errors are corrected. '.
             'Please separate individual emails by commas. '.
             'Please use standard-address notation '.
@@ -219,10 +221,10 @@ if (!empty($addressDiag['CC']) || !empty($addressDiag['BCC'])) {
             'real-name in quotes if it contains a comma. Some valid examples are:')).
     '
     <ul>
-      <li><span class="error code">'.Util::htmlEncode('"Doe, John" <john@doe.org>').'</span></li>
-      <li><span class="error code">'.Util::htmlEncode('John Doe <john@doe.org>').'</span></li>
-      <li><span class="error code">'.Util::htmlEncode('john@doe.org (John Doe)').'</span></li>
-      <li><span class="error code">'.Util::htmlEncode('john@doe.org').'</span></li>
+      <li><span class="error code">'.htmlentities('"Doe, John" <john@doe.org>').'</span></li>
+      <li><span class="error code">'.htmlentities('John Doe <john@doe.org>').'</span></li>
+      <li><span class="error code">'.htmlentities('john@doe.org (John Doe)').'</span></li>
+      <li><span class="error code">'.htmlentities('john@doe.org').'</span></li>
     </ul>';
   echo '
   <div class="error contents explanations">
@@ -459,7 +461,7 @@ if (!empty($diagnostics['Duplicates'])) {
     <ul>';
     foreach($duplicate['recipients'] as $address) {
       echo '
-      <li><span class="error item contents adresses">'.Util::htmlEncode($address).'</span></li>';
+      <li><span class="error item contents adresses">'.htmlentities($address).'</span></li>';
     }
     echo '
     </ul>
@@ -628,7 +630,7 @@ if ($diagnostics['Message']['Text'] != '') {
 <div class="emailform error group message text">
   <div class="error caption message text">'.$l->t('First Few Lines of Sent Message').'</div>
   <div class="error contents message text">
-    <pre>'.Util::htmlEncode($text).'</pre>
+    <pre>'.htmlentities($text).'</pre>
   </div>
 </div>';
 }

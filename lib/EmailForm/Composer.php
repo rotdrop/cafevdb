@@ -610,7 +610,7 @@ DebitNotePurpose
     // surrounding the actual sending of the message.
     try {
 
-      $phpMailer = new \PHPMailer(true);
+      $phpMailer = new \PHPMailer\PHPMailer\PHPMailer(true);
       $phpMailer->CharSet = 'utf-8';
       $phpMailer->SingleTo = false;
 
@@ -1073,7 +1073,7 @@ DebitNotePurpose
     // export the message text, with a short header.
     try {
 
-      $phpMailer = new \PHPMailer(true);
+      $phpMailer = new \PHPMailer\PHPMailer\PHPMailer(true);
       $phpMailer->CharSet = 'utf-8';
       $phpMailer->SingleTo = false;
 
@@ -1179,14 +1179,15 @@ DebitNotePurpose
       }
 
     } catch (\Exception $exception) {
+      $this->logException($exception);
       // popup an alert and abort the form-processing
 
       $this->executionStatus = false;
       $this->diagnostics['MailerExceptions'][] =
-                                               $exception->getFile().
-                                               '('.$exception->getLine().
-                                               '): '.
-                                               $exception->getMessage();
+        $exception->getFile().
+        '('.$exception->getLine().
+        '): '.
+        $exception->getMessage();
 
       return null;
     }
@@ -1203,6 +1204,7 @@ DebitNotePurpose
         // success, would log success if we really were sending
       }
     } catch (\Exception $exception) {
+      $this->logException($exception);
       $this->executionStatus = false;
       $this->diagnostics['mailerExceptions'][] =
         $exception->getFile()
@@ -1396,13 +1398,18 @@ DebitNotePurpose
    */
   public function validateFreeFormAddresses($header, $freeForm)
   {
-    $phpMailer = new \PHPMailer(true);
+    if (empty($freeForm)) {
+      return [];
+    }
+
+    $phpMailer = new \PHPMailer\PHPMailer\PHPMailer(true);
     $parser = new \Mail_RFC822(null, null, null, false);
 
     $brokenRecipients = [];
     $parsedRecipients = $parser->parseAddressList($freeForm);
-    $parseError = $parser->parseError();
-    if ($parseError !== false) {
+    $parseError = $parser->error;
+    $this->logInfo(print_r($parseError, true));
+    if (!empty($parseError)) {
       $this->logDebug("Parse-error on email address list: ".
                       vsprintf($parseError['message'], $parseError['data']));
       // We report the entire string.
@@ -1549,7 +1556,7 @@ DebitNotePurpose
   private function setCatchAll()
   {
     if ($this->constructionMode) {
-      $this->catchAllEmail = $this->getConfigValue('emailtestaddress');
+      $this->catchAllEmail = "foo@bar.com"; //$this->getConfigValue('emailtestaddress');
       $this->catchAllName  = 'Bilbo Baggins';
     } else {
       $this->catchAllEmail = $this->getConfigValue('emailfromaddress');

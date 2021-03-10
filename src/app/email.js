@@ -457,9 +457,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       // add the request itself as data
       post += '&' + $.param({ emailComposer: request });
     }
+    debugOutput.html('');
     $.post(url, post)
       .fail(function(xhr, textStatus, errorThrown) {
-        Ajax.handleError(xhr, textStatus, errorThrown, validateUnlock);
+        Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
+          let debugText = '';
+          if (typeof data.caption !== 'undefined') {
+            debugText += '<div class="error caption">' + data.caption + '</div>';
+          }
+          if (typeof data.message !== 'undefined') {
+            debugText += data.message;
+          }
+          debugOutput.html(debugText);
+          validateUnlock();
+        });
       })
       .done(function(data) {
         let postponeEnable = false;
@@ -785,7 +796,14 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       Page.busyIcon(true);
 
       $.post(generateComposerUrl('preview'), post)
-        .fail(Ajax.handleError)
+        .fail(function(xhr, textStatus, errorThrown) {
+          Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
+            Page.busyIcon(false);
+            if (data.message) {
+              debugOutput.html(data.message);
+            }
+          });
+        })
         .done(function(data) {
           if (!Ajax.validateResponse(
             data, ['contents'], function() {
