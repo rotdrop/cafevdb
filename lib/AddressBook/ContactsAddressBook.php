@@ -102,8 +102,11 @@ class ContactsAddressBook implements IAddressBook
     $result = [];
     foreach ($vCards as $card) {
       $record = $card->getData();
-      //FN field must be flattened for contacts menu
-      $record['FN'] = array_pop($record['FN']);
+      $this->logInfo('CARD DATA'.print_r($record, true));
+      if (is_array($record['FN'])) {
+        //FN field must be flattened for contacts menu
+        $record['FN'] = array_pop($record['FN']);
+      }
       // prevents linking to contacts if UID is set
       $record['isLocalSystemBook'] = true;
       $record[self::DAV_PROPERTY_SOURCE] = $this->cardBackend->getURI();

@@ -125,7 +125,7 @@ class ContactsService
     foreach ($addressBooks as $addressBook) {
       // @todo skip musicians address book
       $bookName = $addressBook->getDisplayName();
-      $contacts = $addressBook->search(null, [ 'FN', 'EMAIL' ]);
+      $contacts = $addressBook->search('', [ 'FN', 'EMAIL' ], [] /* options */);
       foreach ($contacts as $contact) {
         $id = $contact['id'];
         $fn = $contact['FN'];

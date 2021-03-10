@@ -723,7 +723,7 @@ class EmailFormController extends Controller {
           [ 'emailOptions' => $selectOptions ],
           'blank'))->render();
 
-        return self::dateResponse([ 'contents' => $html ]);
+        return self::dataResponse([ 'contents' => $html ]);
 
       case 'save':
         // Get some common post data, rest has to be handled by the
