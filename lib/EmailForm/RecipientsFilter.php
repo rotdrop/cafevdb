@@ -447,6 +447,12 @@ class RecipientsFilter
       $this->frozen = true; // restrict to initial set of recipients
 
       return;
+    } else if ($this->projectId > 0) {
+      $this->emailRecs = array_map(
+        function($keyRecord) {
+          return json_decode($keyRecord, true)['musician_id'];
+        },
+        $this->emailRecs);
     }
   }
 
@@ -475,7 +481,7 @@ class RecipientsFilter
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
-    $this->logInfo("#MUS ".count($musicians));
+    $this->logInfo("#MUS ".print_r(array_keys($musicians), true));
 
     // use the mailer-class we are using later anyway in order to
     // validate email addresses syntactically now. Add broken
@@ -644,10 +650,7 @@ class RecipientsFilter
    */
   private function defaultUserBase()
   {
-    return [
-      'fromProject' => $this->projectId >= 0,
-      'exceptProject' => false,
-    ];
+    return ($this->projectId >= 0) ? self::MUSICIANS_FROM_PROJECT : 0;
   }
 
   /**Decode the check-boxes which select the set of users we
@@ -751,6 +754,7 @@ class RecipientsFilter
     } else {
       $selectedRecipients = $this->emailRecs;
     }
+    $this->logInfo('EMAIL RECS '.print_r($this->emailRecs, true));
     $selectedRecipients = array_flip($selectedRecipients);
 
     $result = [];
