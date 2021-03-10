@@ -37,8 +37,8 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
-
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\PHPMailer;
 
 class MusiciansController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -172,7 +172,7 @@ class MusiciansController extends Controller {
         return self::dataResponse([ 'message' => '', 'email' => '' ]);
       }
 
-      $phpMailer = new \PHPMailer\PHPMailer\PHPMailer(true);
+      $phpMailer = new PHPMailer(true);
       $parser = new \Mail_RFC822(null, null, null, false);
 
       $parsedEmail = $parser->parseAddressList($email);

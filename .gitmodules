@@ -2,10 +2,6 @@
 	path = 3rdparty/bav
 	url = git@github.com:rotdrop/bav.git
 	branch = occonf
-[submodule "3rdparty/PHPMailer"]
-	path = 3rdparty/PHPMailer
-	url = https://github.com/rotdrop/PHPMailer-cafevdb.git
-	branch = cafevdb
 [submodule "3rdparty/html2text"]
 	path = 3rdparty/html2text
 	url = https://github.com/mtibben/html2text.git

@@ -29,6 +29,7 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 
@@ -610,7 +611,7 @@ DebitNotePurpose
     // surrounding the actual sending of the message.
     try {
 
-      $phpMailer = new \PHPMailer\PHPMailer\PHPMailer(true);
+      $phpMailer = new PHPMailer(true);
       $phpMailer->CharSet = 'utf-8';
       $phpMailer->SingleTo = false;
 
@@ -1073,7 +1074,7 @@ DebitNotePurpose
     // export the message text, with a short header.
     try {
 
-      $phpMailer = new \PHPMailer\PHPMailer\PHPMailer(true);
+      $phpMailer = new PHPMailer(true);
       $phpMailer->CharSet = 'utf-8';
       $phpMailer->SingleTo = false;
 
@@ -1402,7 +1403,7 @@ DebitNotePurpose
       return [];
     }
 
-    $phpMailer = new \PHPMailer\PHPMailer\PHPMailer(true);
+    $phpMailer = new PHPMailer(true);
     $parser = new \Mail_RFC822(null, null, null, false);
 
     $brokenRecipients = [];

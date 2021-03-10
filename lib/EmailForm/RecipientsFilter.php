@@ -23,8 +23,6 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
-use PHPMailer\PHPMailer\PHPMailer;
-
 use OCP\ISession;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -35,6 +33,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Common\PHPMailer;
 
 /**
  * Wrap the email filter form into a class to make things a little

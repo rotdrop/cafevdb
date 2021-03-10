@@ -715,7 +715,7 @@ class EmailFormController extends Controller {
           $selectOptions[] = $option;
         }
 
-        // $phpMailer = new \PHPMailer(true); could validate addresses here
+        // $phpMailer = new \OCA\CAFEVDB\CommonPHPMailer(true); could validate addresses here
 
         $html = (new TemplateResponse(
           $this->appName,
