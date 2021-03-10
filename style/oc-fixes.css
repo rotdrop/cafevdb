@@ -86,7 +86,7 @@ div[contenteditable="true"].ck.ck-content, div[contenteditable="true"].ck.ck-con
   list-style: revert;
   font-size: revert;
   outline: revert;
-  line-height: revert;
+  line-height: normal;
 }
 
 div.ck.ck-reset {

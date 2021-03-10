@@ -1,4 +1,5 @@
-/**Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -322,7 +323,7 @@ form#cafevdb-email-form td.stored-messages-storage span.save-as-template.button 
      max-height:15px;
      min-width:15px;
      min-height:15px; */
-  box-shadow:2px 2px 2px #080808;/*, 2px 2px 2px #cfc;*/
+  /*box-shadow:2px 2px 2px #080808;*//*, 2px 2px 2px #cfc;*/
 }
 
 form#cafevdb-email-form input[type=checkbox]:checked + label span.save-as-template.button {
