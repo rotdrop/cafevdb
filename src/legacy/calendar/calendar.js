@@ -1,6 +1,6 @@
 /**
  * Original copyright below, slight changes for cafevdb by
- * Copyright (c) 2013-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2013-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * Copyright (c) 2012 Georg Ehrke <ownclouddev at georgswebsite dot de>
  * Copyright (c) 2011 Bart Visscher <bartv@thisnet.nl>
@@ -14,6 +14,7 @@ import * as Ajax from '../../app/ajax.js';
 import * as CAFEVDB from '../../app/cafevdb.js';
 import * as Dialogs from '../../app/dialogs.js';
 import * as Events from '../../app/events.js';
+import * as DialogUtils from '../../app/dialog-utils.js';
 
 const Calendar={
   missing: {
@@ -220,7 +221,7 @@ const Calendar={
         dialogClass: 'cafevdb eventdlg',
         //draggable: false,
         open  : function() {
-          CAFEVDB.dialogToBackButton($(this));
+          DialogUtils.dialogToBackButton($(this));
         },
         close : function(event, ui) {
           $(this).dialog('destroy').remove();
