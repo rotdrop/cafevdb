@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -985,6 +986,23 @@ class PersonalSettingsController extends Controller {
       }
       $this->setUserValue($parameter, $realValue);
       return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
+      // @@@@@@ email settings
+    case 'smtpserver':
+    case 'imapserver':
+    case 'smptport':
+    case 'imapport':
+    case 'smtpsecure':
+    case 'imapsecure':
+    case 'emailuser':
+    case 'emailpassword':
+    case 'emaildistribute':
+    case 'emailfromname':
+    case 'emailfromaddress':
+    case 'emailtest':
+    case 'emailtestmode':
+    case 'emailtestaddress':
+      return self::grumble($this->l->t('Sorry, setting not yet implemented: "%s".', $parameter));
+      // @@@@@@ end email setttings
     case 'translation':
       if (empty($value['key']) || empty($value['language'])) {
         return self::grumble($this->l->t('Empty translation phrase or language'));
