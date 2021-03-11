@@ -28,6 +28,7 @@ import * as Ajax from './ajax.js';
 
 require('jquery-ui/ui/widgets/progressbar');
 require('blueimp-file-upload');
+require('blueimp-file-upload/js/jquery.iframe-transport');
 
 const FileUpload = globalState.FileUpload = {
   uploadingFiles: {},
@@ -59,6 +60,7 @@ function init(options) {
     dropZone: $(document),
     containerSelector: '#file_upload_wrapper',
     inputSelector: '#file_upload_start',
+    progressTemplate: 'Uploading {n} files, {percentage}%, {loaded} of {total} bytes at {rate} bytes/s',
   };
 
   options = $.extend({}, defaultOptions, options);
@@ -66,13 +68,17 @@ function init(options) {
   const container = $(options.containerSelector);
   const form = container.find('form.file_upload_form');
   const fileUploadStart = form.find(options.inputSelector);
+  const uploadProgressWrapper = container.find('div.uploadprogresswrapper');
+  const progressBar = uploadProgressWrapper.find('div.uploadprogressbar');
 
   const fileUploadParam = {
+    // forceIframeTransport: true,
+    initialIframeSrc: 'http://',
+    dataType: 'json',
     multipart: true,
     singleFileUploads: false,
-    sequentialUploads: true,
+    sequentialUploads: false,
     dropZone: options.dropZone, // restrict dropZone to content div
-    // singleFileUploads is on by default, so the data.files array will always have length 1
     add(e, data) {
       for (let k = 0; k < data.files.length; ++k) {
         if (data.files[k].type === '' && data.files[k].size === 4096) {
@@ -104,11 +110,11 @@ function init(options) {
         // remember jqXHR to show warning to user when he navigates away but an upload is still in progress
         globalState.FileUpload.uploadingFiles[file.name] = jqXHR;
       }
-      // show cancel button
-      if ($('html.lte9').length === 0 && data.dataType !== 'iframe') {
-        container.find('div.uploadprogresswrapper input.stop').show();
-      }
+
       return false;
+    },
+    send(event, data) {
+      console.info('SEND DATA', Object.assign({}, data));
     },
     /**
      * called after the first add, does NOT have the data param
@@ -123,14 +129,14 @@ function init(options) {
         }
         return false;
       });
-
-      // IE < 10 does not fire the necessary events for the progress bar.
-      if ($('html.lte9').length > 0) {
-        return;
+      if (!uploadProgressWrapper.hasClass('ui-dialog-content')) {
+        uploadProgressWrapper.cafevDialog({
+          width: '100vw',
+        });
       }
-      const progressBar = container.find('div.uploadprogressbar');
       progressBar.progressbar({ value: 0 });
       progressBar.fadeIn();
+      uploadProgressWrapper.find('input.stop').show();
     },
     fail(event, data) {
       if (typeof data.textStatus !== 'undefined' && data.textStatus !== 'success') {
@@ -149,15 +155,19 @@ function init(options) {
       $(window).off('beforeunload');
     },
     progress(e, data) {
+      const title = t(appName, options.progressTemplate, {
+        n: data.files.length,
+        percentage: ((data.loaded / data.total) * 100).toFixed(1),
+        loaded: data.loaded,
+        total: data.total,
+        rate: data.bitrate,
+      });
+      uploadProgressWrapper.cafevDialog('option', 'title', title);
     },
     progressall(e, data) {
-      // IE < 10 does not fire the necessary events for the progress bar.
-      if ($('html.lte9').length > 0) {
-        return;
-      }
-      // alert('total: '+ data.total+' loaded: '+data.loaded);
+      console.info('PROGRESSALL', data);
       const progress = (data.loaded / data.total) * 100;
-      container.find('div.uploadprogressbar').progressbar('value', progress);
+      progressBar.progressbar('value', progress);
     },
     /**
      * called for every successful upload
@@ -213,21 +223,16 @@ function init(options) {
      * @param {Object} data TBD.
      */
     stop(event, data) {
-      if (data.dataType !== 'iframe') {
-        container.find('div.uploadprogresswrapper input.stop').hide();
-      }
-
-      // IE < 10 does not fire the necessary events for the progress bar.
-      if ($('html.lte9').length > 0) {
-        return;
-      }
-
-      const progressBar = container.find('div.uploadprogressbar');
+      uploadProgressWrapper.find('input.stop').hide();
       progressBar.progressbar('value', 100);
       progressBar.fadeOut();
 
       if (typeof options.stopCallback === 'function') {
         options.stopCallback(event, data);
+      }
+
+      if (uploadProgressWrapper.hasClass('ui-dialog-content')) {
+        uploadProgressWrapper.cafevDialog('destroy');
       }
 
       $(window).off('beforeunload');
