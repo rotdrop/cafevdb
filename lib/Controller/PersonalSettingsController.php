@@ -776,16 +776,8 @@ class PersonalSettingsController extends Controller {
         foreach(['Id', 'UserId', 'GroupId'] as $postfix) {
           $official = $prefix.$postfix;
           if ($parameter === $official) {
-            $realValue = Util::normalizeSpaces($value);
-
             // @todo validate
-            if (empty($realValue)) {
-              $this->deleteConfigValue($official);
-              return self::response($this->l->t("Erased config value for parameter `%s'.", $official));
-            } else {
-              $this->setConfigValue($official, $realValue);
-              return self::response($this->l->t("Value for `%s' set to `%s'", [ $official, $realValue ]));
-            }
+            return $this->setSimpleConfigValue($parameter, $value);
           }
         }
       }
@@ -996,12 +988,13 @@ class PersonalSettingsController extends Controller {
     case 'emailuser':
     case 'emailpassword':
     case 'emaildistribute':
-    case 'emailfromname':
-    case 'emailfromaddress':
     case 'emailtest':
     case 'emailtestmode':
     case 'emailtestaddress':
       return self::grumble($this->l->t('Sorry, setting not yet implemented: "%s".', $parameter));
+    case 'emailfromaddress':
+    case 'emailfromname':
+      return $this->setSimpleConfigValue($parameter, $value);
       // @@@@@@ end email setttings
     case 'translation':
       if (empty($value['key']) || empty($value['language'])) {
@@ -1140,6 +1133,19 @@ class PersonalSettingsController extends Controller {
       break;
     }
     return self::grumble($this->l->t('Unknown Request'));
+  }
+
+  private function setSimpleConfigValue($key, $value)
+  {
+    $realValue = Util::normalizeSpaces($value);
+
+    if (empty($realValue)) {
+      $this->deleteConfigValue($key);
+      return self::response($this->l->t("Erased config value for parameter `%s'.", $key));
+    } else {
+      $this->setConfigValue($key, $realValue);
+      return self::response($this->l->t("Value for `%s' set to `%s'", [ $key, $realValue ]));
+    }
   }
 
 }
