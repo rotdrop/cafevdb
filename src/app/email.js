@@ -59,9 +59,6 @@ function generateComposerUrl(operation, topic) {
 }
 
 function attachmentFromJSON(response, info) {
-
-  console.info('FROM JSON', response, info);
-
   const fileAttachmentsHolder = $('form.cafevdb-email-form fieldset.attachments input.file-attachments');
   if (fileAttachmentsHolder === '') {
     Dialogs.alert(t(appName, 'Not called from main email-form.'), t(appName, 'Error'));
@@ -1454,6 +1451,7 @@ function emailFormPopup(post, modal, single, afterInit) {
         open() {
           $.fn.cafevTooltip.remove();
           DialogUtils.toBackButton(dialogHolder);
+          DialogUtils.fullScreenButton(dialogHolder);
           DialogUtils.customCloseButton(dialogHolder, function(event, container) {
             console.info('Custom Close Button');
             event.stopImmediatePropagation();
