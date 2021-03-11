@@ -76,6 +76,43 @@ function dialogToBackButton(dialogHolder) {
 }
 
 /**
+ * Add a to-back-button to the titlebar of a jQuery-UI dialog. The
+ * purpose is to be able to move the top-dialog to be bottom-most,
+ * juse above a potential "modal" window layer.
+ *
+ * @Param {jQuery} dialogHolder TBD.
+ */
+function dialogFullScreenButton(dialogHolder) {
+  const dialogWidget = dialogHolder.dialog('widget');
+  const parent = dialogWidget.parent();
+  const buttonTitle = t(
+    appName,
+    'Maximize this dialog to cover the entire browser window.');
+  const button = $('<button class="fullScreenButton customDialogHeaderButton" title="' + buttonTitle + '"></button>');
+  button.button({
+    label: '_',
+    icons: { primary: 'ui-icon-arrow-4-diag', secondary: null },
+    text: false,
+  });
+  dialogWidget.find('.ui-dialog-titlebar').append(button);
+  button.cafevTooltip({ placement: 'auto' });
+
+  button
+    .off('click')
+    .on('click', function() {
+      const $this = $(this);
+      $.fn.cafevTooltip.remove(); // remove any left-over items
+      if (dialogWidget.parent().is('body')) {
+        dialogWidget.detach().prependTo(parent);
+        dialogWidget.removeClass(appName + '-full-screen');
+      } else {
+        dialogWidget.detach().prependTo('body');
+        dialogWidget.addClass(appName + '-full-screen');
+      }
+    });
+}
+
+/**
  * jQuery UI just is not flexible enough. We want to be able to
  * completely intercept the things the close button initiates. I
  * just did not find any other way than to hide the close button
@@ -124,6 +161,7 @@ function dialogCustomCloseButton(dialogHolder, callback) {
 export {
   dialogToBackButton as toBackButton,
   dialogCustomCloseButton as customCloseButton,
+  dialogFullScreenButton as fullScreenButton,
 };
 
 // Local Variables: ***

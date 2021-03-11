@@ -757,9 +757,23 @@ a.ui-tabs-anchor.compact span.ui-icon {
   padding: 1px;
 }
 
+.ui-dialog .ui-dialog-titlebar .fullScreenButton,
+.ui-dialog.custom-close .ui-dialog-titlebar .fullScreenButton {
+  position: absolute;
+  top: 50%;
+  right: 4.7em;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0px 0px;
+  padding: 1px;
+}
 
 .ui-dialog.no-close .ui-dialog-titlebar .toBackButton {
   right: 0.3em;
+}
+
+.ui-dialog.no-close .ui-dialog-titlebar .fullScreenButton {
+  right: 2.5em;
 }
 
 .ui-dialog .ui-dialog-titlebar .customCloseButton {

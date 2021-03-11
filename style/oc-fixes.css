@@ -47,8 +47,7 @@
 }
 
 .cafevdb .ui-dialog-titlebar-close.ui-button,
-.cafevdb .toBackButton.ui-button,
-.cafevdb .customCloseButton.ui-button {
+.cafevdb .customDialogHeaderButton.ui-button {
   min-height: unset!important;
 }
 
