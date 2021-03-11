@@ -57,6 +57,9 @@ $missingText = $l->t('Musicians without or obviously broken email-address');
 
 $frozen = $frozenRecipients;
 
+$rowClass = $appName.'-'.'row';
+$containerClass = $appName.'-'.'container';
+
 ?>
 
 <fieldset id="cafevdb-email-recipients-fieldset" class="email-recipients page">

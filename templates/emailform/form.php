@@ -24,8 +24,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
-$_['containerClass'] = $containerClass = $appPrefix('container');
-$_['rowClass'] = $rowClass = $appPrefix('row');
+$rowClass = $appName.'-'.'row';
 
 ?>
 

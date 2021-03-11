@@ -24,6 +24,8 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
+$containerClass = $appName.'-'.'container';
+
 ?>
 
 <fieldset id="cafevdb-email-composition-fieldset" class="email-composition page">
