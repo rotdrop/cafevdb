@@ -32,6 +32,7 @@ import * as FileUpload from './file-upload.js';
 import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
+import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import print_r from './print-r.js';
 import chosenPopup from './chosen-popup.js';
@@ -274,8 +275,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
                            + $('<div></div>').text(data.recipientsOptions).html()
                            + '</pre>'
                            + data.missingEmailAddresses
-                           + '</br>'
-                           + $('<div></div>').text(CAFEVDB.urlDecode(post)).html());
+                           + '<br/>'
+                           + $('<div></div>').text(urlDecode(post)).html());
         }
         return false;
       });
