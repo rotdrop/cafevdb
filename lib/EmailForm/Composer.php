@@ -291,7 +291,7 @@ DebitNotePurpose
           $this->cgiData['subject'] = $this->l->t('Unknown Template');
         }
       }
-      $this->logInfo('MESSAGE '.$this->messageContents);
+      // $this->logInfo('MESSAGE '.$this->messageContents);
     } else {
       $this->messageContents = $this->cgiValue('messageText', $this->initialTemplate);
     }
@@ -2035,7 +2035,7 @@ DebitNotePurpose
         }
       } else {
         // Make a copy
-        $this->logInfo("TRY COPY ".$fileRecord['tmp_name']." -> ".$tmpFile);
+        // $this->logInfo("TRY COPY ".$fileRecord['tmp_name']." -> ".$tmpFile);
         if (copy($fileRecord['tmp_name'], $tmpFile)) {
           // Sanitize permissions
           chmod($tmpFile, 0600);
@@ -2256,7 +2256,7 @@ DebitNotePurpose
     $dfltIds     = $this->eventsService->defaultCalendars();
     $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
 
-    $this->logInfo('EVENTMATRIX '.print_r($eventMatrix, true));
+    // $this->logInfo('EVENTMATRIX '.print_r($eventMatrix, true));
 
     // timezone, locale
     $locale = $this->getLocale();
