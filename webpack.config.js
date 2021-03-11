@@ -71,6 +71,13 @@ module.exports = {
   module: {
     noParse: /(ckeditor.js|tinymce.min.js)/,
     rules: [
+      // {
+      //   test: /blueimp/,
+      //   parser: { amd: false },
+      // },
+      // {
+      //   parser: { amd: false },
+      // },
       {
         test: /\.xml$/i,
         use: 'xml-loader',
@@ -131,6 +138,8 @@ module.exports = {
       tinymce: path.resolve(__dirname, '3rdparty/tinymce/tinymce.min.js'),
       // 'jquery.tinymce': path.resolve(__dirname, '3rdparty/tinymce/jquery.tinymce.min.js'),
       'jquery.tinymce': path.resolve(__dirname, '3rdparty/tinymce/JqueryIntegration.js'),
+      // 'canvas-to-blob': 'blueimp-canvas-to-blob',
+      // 'load-image': 'blueimp-load-image',
     },
   },
   // externals: {
