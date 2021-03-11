@@ -22,8 +22,7 @@
 
 import { globalState, appName, $, jQuery } from './globals.js';
 import generateUrl from './generate-url.js';
-import { urlEncode, urlDecode } from './url-decode.js';
-import * as Dialogs from './dialogs.js';
+import { urlDecode } from './url-decode.js';
 
 require('cafevdb.css');
 
@@ -699,8 +698,6 @@ export {
   modalWaitNotification,
   textareaResize,
   stopRKey,
-  urlEncode,
-  urlDecode,
   queryData,
   selectMenuReset,
   chosenActive,
