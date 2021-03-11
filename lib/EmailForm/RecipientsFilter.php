@@ -59,6 +59,7 @@ class RecipientsFilter
   private const MUSICIANS_FROM_PROJECT = (1 << 0);
   private const MUSICIANS_EXCEPT_PROJECT = (1 << 1);
   private const ALL_MUSICIANS = self::MUSICIANS_FROM_PROJECT | self::MUSICIANS_EXCEPT_PROJECT;
+  private const NO_MUSICIANS = 0;
 
   /** @var null|Entities\Project */
   private $project;
@@ -144,8 +145,6 @@ class RecipientsFilter
     // Fetch all data submitted by form
     $this->cgiData = $this->parameterService->getParam(self::POST_TAG, []);
 
-    $this->logInfo('CGI DATA '.print_r($this->cgiData, true));
-
     // Quirk: the usual checkbox issue
     $this->cgiData['basicRecipientsSet']['fromProject'] =
       isset($this->cgiData['basicRecipientsSet']['fromProject']);
@@ -173,12 +172,6 @@ class RecipientsFilter
     $this->frozen = $this->cgiValue('frozenRecipients', false);
 
     $this->execute();
-  }
-
-  /** Store the history records to the session data. */
-  public function __destruct()
-  {
-    $this->storeHistory();
   }
 
   /**
@@ -216,6 +209,7 @@ class RecipientsFilter
         // everything else is undefined.
         $this->snapshot = true;
         $this->pushHistory(true);
+        $this->storeHistory();
         return;
       }
     }
@@ -238,6 +232,9 @@ class RecipientsFilter
       // will not alter the history.
       $this->pushHistory();
     }
+
+    $this->storeHistory();
+    $this->session->close();
   }
 
   /** Fetch a CGI-variable out of the form-select name-space. */
@@ -261,7 +258,7 @@ class RecipientsFilter
     $this->historySize = 1;
 
     $filter = [
-      'basicRecipientsSet' => $this->defaultUserBase(),
+      'basicRecipientsSet' => $this->basicRecipientsSet(),
       'memberStatusFilter' => $this->defaultByStatus(),
       'instrumentsFilter' => [],
       'selectedRecipients' => array_intersect($this->emailRecs,
@@ -276,7 +273,7 @@ class RecipientsFilter
     $this->filterHistory = [ [ 'md5' => $md5, 'data' => $data ], ];
   }
 
-  /**Store the history to somewhere, probably the session-data. */
+  /** Store the history to somewhere, probably the session-data. */
   private function storeHistory()
   {
     $storageValue = [
@@ -284,11 +281,10 @@ class RecipientsFilter
       'position' => $this->historyPosition,
       'records' => $this->filterHistory,
     ];
-    //throw new \Exception(print_r($storageValue, true));
     $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $storageValue);
   }
 
-  /**Load the history from the session data. */
+  /** Load the history from the session data. */
   private function loadHistory()
   {
     $loadHistory = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
@@ -299,11 +295,11 @@ class RecipientsFilter
     $this->historySize = $loadHistory['size'];
     $this->historyPosition = $loadHistory['position'];
     $this->filterHistory = $loadHistory['records'];
+    $this->logInfo('HISTORY '.print_r($loadHistory, true));
     return true;
   }
 
-  /**Validate the given history records, return false on error.
-   */
+  /** Validate the given history records, return false on error. */
   private function validateHistory($history)
   {
     if ($history === false ||
@@ -330,7 +326,7 @@ class RecipientsFilter
     return true;
   }
 
-  /**Validate all history records. */
+  /** Validate all history records. */
   private function validateHistoryRecords($history) {
     foreach ($history['records'] as $record) {
       if (!$this->validateHistoryRecord($record)) {
@@ -340,7 +336,8 @@ class RecipientsFilter
     return true;
   }
 
-  /**Push the current filter selection onto the undo-history
+  /**
+   * Push the current filter selection onto the undo-history
    * stack. Do nothing for dummy commits, i.e. only a changed filter
    * will be pushed onto the stack.
    */
@@ -355,8 +352,8 @@ class RecipientsFilter
       // exclude musicians deselected by the filter from the set of
       // selected recipients before recording the history
       $filter['selectedRecipients'] =
-                                    array_intersect($filter['selectedRecipients'],
-                                                    array_keys($this->eMailsDpy));
+        array_intersect($filter['selectedRecipients'],
+                        array_keys($this->eMailsDpy));
 
       // tweak: sort the selected recipients by key
     }
@@ -387,7 +384,8 @@ class RecipientsFilter
     }
   }
 
-  /**Relative move inside the history. The function will throw an
+  /**
+   * Relative move inside the history. The function will throw an
    * exception if emailform-debuggin is enabled and the requested
    * action would leave the history stack.
    */
@@ -448,11 +446,17 @@ class RecipientsFilter
 
       return;
     } else if ($this->projectId > 0) {
-      $this->emailRecs = array_map(
-        function($keyRecord) {
-          return json_decode($keyRecord, true)['musician_id'];
-        },
-        $this->emailRecs);
+      $this->emailRecs = array_filter(
+        array_map(
+          function($keyRecord) {
+            // @todo Quite inefficient
+            $musicianId = filter_var($keyRecord, FILTER_VALIDATE_INT);
+            if ($musicianId !== false) {
+              return $musicianId;
+            }
+            return json_decode($keyRecord, true)['musician_id'];
+          },
+          $this->emailRecs));
     }
   }
 
@@ -477,11 +481,7 @@ class RecipientsFilter
     }
     $criteria['!memberStatus'] = $this->memberStatusBlackList();
 
-    $this->logInfo('CRITERIA '.print_r($criteria, true));
-
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
-
-    $this->logInfo("#MUS ".print_r(array_keys($musicians), true));
 
     // use the mailer-class we are using later anyway in order to
     // validate email addresses syntactically now. Add broken
@@ -490,7 +490,7 @@ class RecipientsFilter
 
     foreach ($musicians as $rec => $musician) {
 
-      $displayName = $musician['displayName']?: $musician['firstName'].' '.$musician['surName'];
+      $displayName = $musician['displayName']?: ($musician['nickName']?:$musician['firstName']).' '.$musician['surName'];
       if (!empty($musician['email'])) {
         // We allow comma separated multiple addresses
         $musMail = explode(',', $musician['email']);
@@ -541,8 +541,7 @@ class RecipientsFilter
     // }
   }
 
-  /* Fetch the list of musicians for the given context (project/global)
-   */
+  /* Fetch the list of musicians for the given context (project/global) */
   private function getMusiciansFromDB()
   {
     $this->brokenEMail = [];
@@ -561,7 +560,8 @@ class RecipientsFilter
     asort($this->eMailsDpy);
   }
 
-  /* Fetch the list of instruments (either only for project or all)
+  /**
+   * Fetch the list of instruments (either only for project or all)
    *
    * Also: construct the filter by instrument.
    */
@@ -631,7 +631,6 @@ class RecipientsFilter
     $this->memberFilter = $this->cgiValue(
       'memberStatusFilter',
       $this->submitted ? [] : $this->defaultByStatus());
-    $this->logInfo('MEMBER FILTER '.print_r($this->memberFilter, true));
   }
 
 
@@ -640,11 +639,11 @@ class RecipientsFilter
   {
     $allStatusFlags = array_keys($this->memberStatusNames);
     $statusBlackList = array_diff($allStatusFlags, $this->memberFilter);
-    $this->logInfo('MEMBER BLACKLIST '.print_r($statusBlackList, true));
     return $statusBlackList;
   }
 
-  /**The default user base. Simple, but just keep the scheme in sync
+  /**
+   * The default user base. Simple, but just keep the scheme in sync
    * with the other two filters and provide a default....()
    * function.
    */
@@ -653,7 +652,8 @@ class RecipientsFilter
     return ($this->projectId >= 0) ? self::MUSICIANS_FROM_PROJECT : 0;
   }
 
-  /**Decode the check-boxes which select the set of users we
+  /**
+   * Decode the check-boxes which select the set of users we
    * consider basically.
    */
   private function getUserBase()
@@ -661,14 +661,23 @@ class RecipientsFilter
     if (!$this->submitted) {
       $this->userBase = $this->defaultUserBase();
     } else {
-      $this->userBase = $this->cgiValue('basicRecipientsSet', false);
-      if ($this->userBase === false) {
+      $userBase = $this->cgiValue('basicRecipientsSet', false);
+      if ($userBase === false) {
         $this->userBase = $this->defaultUserBase();
+      } else {
+        $this->userBase = self::NO_MUSICIANS;
+        if (!empty($userBase['fromProject'])) {
+          $this->userBase |= self::MUSICIANS_FROM_PROJECT;
+        }
+        if (!empty($userBase['exceptProject'])) {
+          $this->userBase |= self::MUSICIANS_EXCEPT_PROJECT;
+        }
       }
     }
   }
 
-  /**Return an array of values we want to maintain on form-submit,
+  /**
+   * Return an array of values we want to maintain on form-submit,
    * intentionally for wrapping into hidden input fields.
    */
   public function formData()
@@ -680,7 +689,8 @@ class RecipientsFilter
     ];
   }
 
-  /**Return the current filter history and the filter position as
+  /**
+   * Return the current filter history and the filter position as
    * JSON encoded string.
    */
   public function filterHistory()
@@ -691,7 +701,8 @@ class RecipientsFilter
     ];
   }
 
-  /**Return the current value of the member status filter or its
+  /**
+   * Return the current value of the member status filter or its
    * initial value.
    */
   public function memberStatusFilter()
@@ -710,8 +721,7 @@ class RecipientsFilter
     return $result;
   }
 
-  /**Return the user basic set for the email form template
-   */
+  /** Return the user basic set for the email form template */
   public function basicRecipientsSet()
   {
     return [
@@ -746,7 +756,7 @@ class RecipientsFilter
     return $result;
   }
 
-  /**Return the values for the recipient select box */
+  /** Return the values for the recipient select box */
   public function emailRecipientsChoices()
   {
     if ($this->submitted) {
@@ -754,7 +764,6 @@ class RecipientsFilter
     } else {
       $selectedRecipients = $this->emailRecs;
     }
-    $this->logInfo('EMAIL RECS '.print_r($this->emailRecs, true));
     $selectedRecipients = array_flip($selectedRecipients);
 
     $result = [];
@@ -772,7 +781,7 @@ class RecipientsFilter
     return $result;
   }
 
-  /**Return a list of musicians without email address, if any. */
+  /** Return a list of musicians without email address, if any. */
   public function missingEmailAddresses()
   {
     $result = [];
@@ -787,22 +796,23 @@ class RecipientsFilter
     return $result;
   }
 
-  /**Return true if in initial state */
+  /** Return true if in initial state */
   public function initialState() {
     return !$this->submitted;
   }
 
-  /**Return true if in reload state */
+  /** Return true if in reload state */
   public function reloadState() {
     return $this->reload;
   }
 
-  /**Return true when doing a mere history snapshot. */
+  /** Return true when doing a mere history snapshot. */
   public function snapshotState() {
     return $this->snapshot;
   }
 
-  /**Return the list of selected recipients. To have this method is
+  /**
+   * Return the list of selected recipients. To have this method is
    * in principle the goal of all the mess above ...
    */
   public function selectedRecipients()

@@ -91,6 +91,7 @@ class EmailFormController extends Controller {
 
   /**
    * @NoAdminRequired
+   * @UseSession
    */
   public function webForm($projectId = -1, $projectName = '', $debitNoteId = -1, $emailTemplate = null)
   {
@@ -100,13 +101,8 @@ class EmailFormController extends Controller {
     $fileAttachments = $composer->fileAttachments();
     $eventAttachments = $composer->eventAttachments();
 
-    $this->logInfo('FILE ATTACH DATA '.json_encode($fileAttachments));
-
     $templateParameters = [
       'appName' => $this->appName(),
-      'appPrefix' => function($id, $join = '-') {
-        return $this->appName() . $join . $id;
-      },
       'urlGenerator' => $this->urlGenerator,
       'pageNavigation' => $this->pageNavigation,
       'toolTips' => $this->appContainer->get(ToolTipsService::class),
@@ -212,6 +208,7 @@ class EmailFormController extends Controller {
 
   /**
    * @NoAdminRequired
+   * @UseSession
    */
   public function composer($operation, $topic, $projectId, $projectName, $debitNodeId)
   {
@@ -284,9 +281,6 @@ class EmailFormController extends Controller {
           'projectName' => $projectName,
           'projectId' => $projectId,
           'messages' => $previewMessages,
-          'appPrefix' => function($id, $join = '-') {
-            return $this->appName . $join . $id;
-          },
         ];
         $html = (new TemplateResponse(
           $this->appName,
@@ -388,9 +382,6 @@ class EmailFormController extends Controller {
             $requestParameters = $this->parameterService->getParams();
             $requestParameters = Util::arrayMergeRecursive($requestParameters, $draftParameters);
 
-            $this->logInfo('DRAFT '.print_r($draftParameters, true));
-            $this->logInfo('REQUEST '.print_r($requestParameters, true));
-
             // Update project name and id
             $projectId = $requestData['projectId'] = $requestParameters['projectId'];
             $projectName = $requestData['projectName'] = $requestParameters['projectName'];
@@ -410,6 +401,7 @@ class EmailFormController extends Controller {
             $eventAttachments = $composer->eventAttachments();
 
             $templateParameters = [
+              'appName' =>  $this->appName(),
               'projectName' => $projectName,
               'projectId' => $projectId,
               'urlGenerator' => $this->urlGenerator,
@@ -438,9 +430,9 @@ class EmailFormController extends Controller {
             // Recipients template
             $filterHistory = $recipientsFilter->filterHistory();
             $templateParameters = [
+              'appName' => $this->appName(),
               'projectName' => $projectName,
               'projectId' => $projectId,
-
               // Needed for the recipient selection
               'recipientsFormData' => $recipientsFilter->formData(),
               'filterHistory' => $filterHistory,
@@ -573,6 +565,7 @@ class EmailFormController extends Controller {
 
   /**
    * @NoAdminRequired
+   * @UseSession
    */
   public function recipientsFilter($projectId, $projectName, $debitNoteId)
   {
@@ -585,6 +578,7 @@ class EmailFormController extends Controller {
 
       $filterHistory = $recipientsFilter->filterHistory();
       $templateParameters = [
+        'appName' => $this->appName(),
         'projectName' => $projectName,
         'projectId' => $projectId,
         'debitNoteId' => $debitNoteId,
@@ -769,6 +763,7 @@ class EmailFormController extends Controller {
 
   /**
    * @NoAdminRequired
+   * @UseSession
    *
    * @todo Use IAppData for storage.
    */
