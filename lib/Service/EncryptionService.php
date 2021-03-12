@@ -386,7 +386,7 @@ class EncryptionService
 
     $encrypted = base64_encode($encrypted);
 
-    $this->setUserValue($this->userId, $key, $encrypted);
+    $this->setUserValue($userId, $key, $encrypted);
   }
 
   /**

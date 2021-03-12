@@ -94,8 +94,7 @@ const afterLoad = function(container) {
       return false;
     }
     $.post(
-      setPersonalUrl('encryptionkey'),
-      {
+      setPersonalUrl('encryptionkey'), {
         value: {
           encryptionkey: encryptionKey.val(),
           loginpassword: loginPassword.val(),
@@ -111,7 +110,8 @@ const afterLoad = function(container) {
         $('#userkey .changed').show();
       })
       .fail(function(xhr, status, errorThrown) {
-        $('#userkey .info').html(Ajax.failMessage(xhr, status, errorThrown));
+        const failData = Ajax.handleError(xhr, status, errorThrown);
+        $('#userkey .info').html(failData.message);
         $('#userkey .info').show();
         $('#userkey .error').show();
       });
@@ -260,10 +260,10 @@ const afterLoad = function(container) {
       const msg = form.find('fieldset.keydistribute .statusmessage');
       form.find('.statusmessage').hide();
       const name = $(this).attr('name');
-      $.post(
-        setAppUrl(name))
+      $.post(setAppUrl(name))
         .fail(function(xhr, status, errorThrown) {
-          msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+          const failData = Ajax.handleError(xhr, status, errorThrown);
+          msg.html(failData.message).show();
         })
         .done(function(data) {
           msg.html(data.message).show();
@@ -429,7 +429,6 @@ const afterLoad = function(container) {
       msg,
       {
         success($self, data, value, msgElement) {
-          console.info('Hello World', value, data);
           if (data.value.name && data.value.name !== value) {
             $self.val(data.value.name);
           }
@@ -693,9 +692,11 @@ const afterLoad = function(container) {
     // Set special members projects with create/rename/delete feedback
     const specialMemberProjects = $('input[type="text"].specialMemberProjects');
 
-    console.info('PROJECTS', specialMemberProjects.data('projects'));
-
-    let autocompleteProjects = specialMemberProjects.data('projects').map(v => v.name);
+    const projectsData = specialMemberProjects.data('projects');
+    console.info('PROJECTS', projectsData);
+    let autocompleteProjects = projectsData
+      ? specialMemberProjects.data('projects').map(v => v.name)
+      : [];
 
     specialMemberProjects.autocomplete({
       source: autocompleteProjects,

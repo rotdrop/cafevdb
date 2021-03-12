@@ -213,7 +213,7 @@ class PersonalSettingsController extends Controller {
       }
 
       // Then check whether the key is correct
-      if (!$this->encryptionKeyValid($encryptionkey) ) {
+      if (!$this->encryptionKeyValid($encryptionkey)) {
         return self::grumble($this->l->t('Invalid encryption key.'));
       }
 
@@ -1009,8 +1009,8 @@ class PersonalSettingsController extends Controller {
       $noKeyUsers = [];
       $fatalUsers = [];
       $modifiedUsers = [];
-      foreach ($this->group()->getUser() as $user)  {
-        $userId->getUID();
+      foreach ($this->group()->getUsers() as $user)  {
+        $userId = $user->getUID();
         try {
           $this->encryptionService()->setUserEncryptionKey($appEncryptionKey, $userId);
           $modifiedUsers[] = $userId;

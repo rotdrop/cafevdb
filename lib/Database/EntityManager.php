@@ -146,7 +146,12 @@ class EntityManager extends EntityManagerDecorator
     // }
   }
 
-  private function connected()
+  /**
+   * Check for a valid database connection.
+   *
+   * @return bool
+   */
+  public function connected():bool
   {
     $connection = $this->entityManager->getConnection();
     $params = $connection->getParams();

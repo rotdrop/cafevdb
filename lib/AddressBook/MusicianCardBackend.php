@@ -55,8 +55,10 @@ class MusicianCardBackend implements ICardBackend
     $this->configService = $configService;
     $this->l = $this->l10n();
     $this->entityManager = $entityManager;
-    $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
     $this->contactsService = $contactsService;
+    if ($this->entityManager->connected()) {
+      $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+    }
   }
 
   public function getURI(): string {

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -43,7 +43,7 @@ class UserLoggedInEventListener implements IEventListener
   /** @var string */
   private $appName;
 
-  /** @var \OCA\CAFEVDB\Service\AuthorizationService */
+  /** @var AuthorizationService */
   private $authorization;
 
   public function __construct(
@@ -69,12 +69,17 @@ class UserLoggedInEventListener implements IEventListener
       return;
     }
 
-    // in principle the constructor should do it all, i.e. generate
-    // any missing keys and check for the global encryption key
-    $encryptionService = \OC::$server->query(EncryptionService::class);
+    // the listener should not throw ...
+    try {
+      // in principle the constructor should do it all, i.e. generate
+      // any missing keys and check for the global encryption key
+      $encryptionService = \OC::$server->query(EncryptionService::class);
 
-    // but play safe
-    $encryptionService->bind($userId, $event->getPassword());
+      // but play safe
+      $encryptionService->bind($userId, $event->getPassword());
+    } catch (\Throwable $t) {
+      $this->logException($t, $this->l->t('Unable to bind encryption service for user "%s".', $userId));
+    }
   }
 }
 
