@@ -137,7 +137,6 @@ foreach (array('smtp', 'imap') as $proto) {
              class="checkbox"
              name="emailtestmode" <?php echo $_['emailtestmode'] == 'on' ? 'checked="checked"' : ''; ?>
              id="emailtestmode"
-             title="<?php echo $l->t('Email test-mode; send emails only to the email test-address.') ?>"
              />
       <label for="emailtestmode"
              title="<?php echo $l->t('Email test-mode; send emails only to the email test-address.') ?>">
