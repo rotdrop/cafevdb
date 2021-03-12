@@ -26,7 +26,7 @@ import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.js';
 import { toolTipsInit } from './cafevdb.js';
-import generateUrl from './generate-url.js';
+import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';
 import fileDownload from './file-download.js';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
@@ -94,7 +94,7 @@ const afterLoad = function(container) {
       return false;
     }
     $.post(
-      generateUrl('settings/personal/set/encryptionkey'),
+      setPersonalUrl('encryptionkey'),
       {
         value: {
           encryptionkey: encryptionKey.val(),
@@ -180,7 +180,7 @@ const afterLoad = function(container) {
         Notification.show(t(appName, 'Please standby, the operation will take some time!'));
 
         $.post(
-          generateUrl('settings/app/set/systemkey'),
+          setAppUrl('systemkey'),
           {
             value: {
               systemkey: keyInput.val(),
@@ -241,7 +241,7 @@ const afterLoad = function(container) {
       }
 
       $.post(
-        generateUrl('settings/get/passwordgenerate'))
+        getUrl('passwordgenerate'))
         .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
@@ -261,7 +261,7 @@ const afterLoad = function(container) {
       form.find('.statusmessage').hide();
       const name = $(this).attr('name');
       $.post(
-        generateUrl('settings/app/set/' + name))
+        setAppUrl(name))
         .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
@@ -397,7 +397,7 @@ const afterLoad = function(container) {
       }
 
       $.post(
-        generateUrl('settings/get/passwordgenerate'))
+        getUrl('passwordgenerate'))
         .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
@@ -525,7 +525,7 @@ const afterLoad = function(container) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-          generateUrl('settings/app/set/' + name), { value })
+          setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -547,7 +547,7 @@ const afterLoad = function(container) {
         const name = password.attr('name');
         if (value !== '') {
           $.post(
-            generateUrl('settings/app/set/' + name), { value })
+            setAppUrl(name), { value })
             .fail(function(xhr, status, errorThrown) {
               msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
             })
@@ -569,7 +569,7 @@ const afterLoad = function(container) {
         msg.hide();
         const name = $(this).attr('name');
         $.post(
-          generateUrl('settings/app/set/' + name))
+          setAppUrl(name))
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -589,7 +589,7 @@ const afterLoad = function(container) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-          generateUrl('settings/app/set/' + name), { value })
+          setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -604,7 +604,7 @@ const afterLoad = function(container) {
         msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
-        $.post(generateUrl('settings/app/set/' + name), { value })
+        $.post(setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -624,7 +624,7 @@ const afterLoad = function(container) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
-          generateUrl('settings/app/set/' + name), { value })
+          setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
@@ -732,7 +732,7 @@ const afterLoad = function(container) {
                   data.feedback = decision;
                   if (decision === true) {
                     $.post(
-                      generateUrl('settings/app/set/' + name + option), {
+                      setAppUrl(name + option), {
                         value: {
                           project: data.project,
                           projectId: data.projectId,
@@ -994,7 +994,7 @@ const afterLoad = function(container) {
     devLinkTests.on('click', function(event) {
       const target = $(this).attr('name');
       $.post(
-        generateUrl('settings/get/' + target))
+        getUrl(target))
         .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })

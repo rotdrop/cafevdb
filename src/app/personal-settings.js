@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,7 +20,7 @@
  */
 
 import { globalState, $ } from './globals.js';
-import generateUrl from './generate-url.js';
+import { setPersonalUrl } from './settings-urls.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme-selectors.js';
@@ -92,7 +92,7 @@ const documentReady = function() {
   container.on('change', '.tooltips', function(event) {
     const self = $(this);
     CAFEVDB.toolTipsOnOff(self.prop('checked'));
-    $.post(generateUrl('/settings/personal/set/tooltips'), { value: globalState.toolTipsEnabled })
+    $.post(setPersonalUrl('tooltips'), { value: globalState.toolTipsEnabled })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
@@ -113,7 +113,7 @@ const documentReady = function() {
   container.on('change', '.filtervisibility', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
-    $.post(generateUrl('/settings/personal/set/filtervisibility'), { value: checked })
+    $.post(setPersonalUrl('filtervisibility'), { value: checked })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
@@ -134,7 +134,7 @@ const documentReady = function() {
   container.on('change', '.directchange', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
-    $.post(generateUrl('/settings/personal/set/directchange'), { value: checked })
+    $.post(setPersonalUrl('directchange'), { value: checked })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
@@ -153,7 +153,7 @@ const documentReady = function() {
   container.on('change', '.showdisabled', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
-    $.post(generateUrl('/settings/personal/set/showdisabled'), { value: checked })
+    $.post(setPersonalUrl('showdisabled'), { value: checked })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
@@ -187,7 +187,7 @@ const documentReady = function() {
   container.on('change', '.expertmode', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
-    $.post(generateUrl('/settings/personal/set/expertmode'), { value: checked })
+    $.post(setPersonalUrl('expertmode'), { value: checked })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
@@ -217,7 +217,7 @@ const documentReady = function() {
   container.on('change', '.pagerows', function(event) {
     const $self = $(this);
     const value = $self.val();
-    $.post(generateUrl('/settings/personal/set/pagerows'), { value })
+    $.post(setPersonalUrl('pagerows'), { value })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
@@ -238,7 +238,7 @@ const documentReady = function() {
     const $self = $(this);
     const post = $self.serializeArray();
     console.log(post);
-    $.post(generateUrl('/settings/personal/set/debugmode'), { value: post })
+    $.post(setPersonalUrl('debugmode'), { value: post })
       .done(function(data) {
         msgElement.html(data.message).show();
         console.log(data);
@@ -259,7 +259,7 @@ const documentReady = function() {
   container.on('change', '.wysiwyg-editor', function(event) {
     const $self = $(this);
     const value = $self.val();
-    $.post(generateUrl('/settings/personal/set/wysiwygEditor'), { value })
+    $.post(setPersonalUrl('wysiwygEditor'), { value })
       .done(function(data) {
         msgElement.html(data.message).show();
         globalState.wysiwygEditor = value;

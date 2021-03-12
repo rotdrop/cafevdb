@@ -20,7 +20,7 @@
  */
 
 import { $ } from './globals.js';
-import generateUrl from './generate-url.js';
+import setAppUrl from './settings-urls.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 
@@ -43,7 +43,7 @@ import * as Notification from './notification.js';
 const simpleSetValueHandler = function(element, eventType, msgElement, userCallbacks) {
   const defaultCallbacks = {
     post(name, value) {
-      return $.post(generateUrl('settings/app/set/' + name), { value });
+      return $.post(setAppUrl(name), { value });
     },
     setup(/* empty */) {},
     success($self, data, value, msgElement) {},
@@ -124,8 +124,7 @@ const simpleSetHandler = function(element, eventType, msgElement) {
     const $self = $(this);
     msgElement.hide();
     const name = $self.attr('name');
-    $.post(
-      generateUrl('settings/app/set/' + name))
+    $.post(setAppUrl(name))
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown);
         msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
