@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,7 +28,6 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IL10N;
-
 use OCA\CAFEVDB\Service\EncryptionService;
 
 class PasswordUpdatedEventListener implements IEventListener
@@ -39,6 +38,9 @@ class PasswordUpdatedEventListener implements IEventListener
 
   /** @var ISubAdmin */
   private $groupManager;
+
+  /** @var EncryptionService */
+  private $encryptionService;
 
   public function __construct(
     $appName
@@ -59,19 +61,17 @@ class PasswordUpdatedEventListener implements IEventListener
       return;
     }
 
-    $this->logInfo('Hello PasswordUpdated: '.get_class($event));
-
-    return;
-
-    $groupIdf = Config::getAppValue('usergroup', '');
+    $groupId = $this->encryptionService->getConfigValue('usergroup');
     $user = $event->getUser();
     $userId = $user->getUID();
-    $password = $event->getPassword();
-    $recoveryPassword = $event->getRecoveryPassword();
-
-    if (!empty($groupId) && $this->groupManager->isInGroup($userId, $groupId)) {
-      Config::recryptEncryptionKey($userId, $password);
+    if (empty($groupId) || !$this->groupManager->isInGroup($userId, $groupId)) {
+      return;
     }
+    if ($userId != $this->encryptionService->getUserId()) {
+      $this->logError('Mismatching users: '.$userId.' / '.$this->encryptionService->getUserId());
+      return;
+    }
+    $this->encryptionService->recryptSharedPrivateValues($event->getPassword());
   }
 }
 

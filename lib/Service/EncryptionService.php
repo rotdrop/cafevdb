@@ -71,6 +71,12 @@ class EncryptionService
     'cspfailuretoken', // for public post route
   ];
 
+  const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
+
+  const SHARED_PRIVATE_VALUES = [
+    self::USER_ENCRYPTION_KEY_KEY,
+  ];
+
   /** @var string */
   private $appName;
 
@@ -279,6 +285,30 @@ class EncryptionService
   public function setUserEncryptionKey($key, ?string $userId = null)
   {
     return $this->setSharedPrivateValue('encryptionkey', $key, $userId);
+  }
+
+  /**
+   * Recrypt the user's shared private values, e.g. when the password
+   * was updated. We assume here that we still have access to the old
+   * values. We generate a new private/public SSL key pair and recrypt
+   * the values.
+   */
+  public function recryptSharedPrivateValues(string $newPassword)
+  {
+    $decrypted = [];
+    foreach (self::SHARED_PRIVATE_VALUES as $key) {
+      $value = $this->getSharedPrivateValue($key);
+      if (!empty($value)) {
+        $decrypted[$key] = $value;
+      } else {
+        $this->containerConfig->deleteUserValue($this->userId, $this->appName, $key);
+      }
+    }
+    $this->userPassword = $newPassword;
+    $this->initUserKeyPair(true);
+    foreach ($decrypted as $key => $value) {
+      $this->setSharedPrivateValue($key, $value);
+    }
   }
 
   /**
