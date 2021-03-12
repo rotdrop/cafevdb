@@ -41,7 +41,6 @@ require('bootstrap4-duallistbox');
 require('emailform.scss');
 
 const Email = globalState.Email = {
-  enabled: true,
   active: false,
 };
 
@@ -1371,13 +1370,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
  * @param {Function} afterInit TBD.
  */
 function emailFormPopup(post, modal, single, afterInit) {
-  const self = this;
 
-  if (this.active === true) {
+  if (Email.active === true) {
     return;
   }
 
-  this.active = true;
+  Email.active = true;
 
   if (modal === undefined) {
     modal = true;
@@ -1391,7 +1389,7 @@ function emailFormPopup(post, modal, single, afterInit) {
   $.post(generateUrl('form'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
-        self.active = false;
+        Email.active = false;
         afterInit(false);
       });
     })
@@ -1400,7 +1398,7 @@ function emailFormPopup(post, modal, single, afterInit) {
 
       if (!Ajax.validateResponse(
         data, ['contents'], function() {
-          self.active = false;
+          Email.active = false;
           afterInit(false);
         })) {
         return false;
@@ -1573,7 +1571,7 @@ function emailFormPopup(post, modal, single, afterInit) {
 
           // Also close all other open dialogs.
           CAFEVDB.modalizer(false);
-          self.active = false;
+          Email.active = false;
         },
       });
       return false;
