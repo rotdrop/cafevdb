@@ -37,6 +37,7 @@ use OCP\Files\FileInfo;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
+use OCA\CAFEVDB\Common\PHPMailer;
 
 /**Check for a usable configuration.
  */
@@ -217,7 +218,7 @@ class ConfigCheckService
   {
     $result = true;
 
-    $mail = new \PHPMailer(true);
+    $mail = new PHPMailer(true);
     $mail->CharSet = 'utf-8';
     $mail->SingleTo = false;
     $mail->IsSMTP();
