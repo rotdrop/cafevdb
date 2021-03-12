@@ -27,6 +27,7 @@ use OCP\IUser;
 use OCP\IConfig;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EncryptionService;
 
 trait ConfigTrait {
 
@@ -129,7 +130,10 @@ trait ConfigTrait {
     return $this->configService->deleteAppValue($key);
   }
 
-  protected function encryptionService()
+  /**
+   * return EncryptionService
+   */
+  protected function encryptionService():EncryptionService
   {
     return $this->configService->encryptionService();
   }
