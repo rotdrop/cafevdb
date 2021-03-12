@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,6 +20,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+namespace OCA\CAFEVDB;
+
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
   <form id="emailsettings">
@@ -42,13 +46,13 @@ foreach (array('smtp', 'imap') as $proto) {
     />
   <label for="'.$proto.'port">'.$upproto.' Port</label>
   <br/>
-  <label for="'.$proto.'secure" id="'.$proto.'securelabel">
-  <select name="'.$proto.'secure" id="'.$proto.'secure" '
+  <label for="'.$proto.'security" id="'.$proto.'securitylabel">
+  <select name="'.$proto.'security" id="'.$proto.'security" '
   .'data-placeholder="'.$upproto.' '.$l->t('security').'" >
     <option value=""></option>';
-  foreach (array('insecure', 'starttls', 'ssl') as $value) {
+  foreach (array('insecurity', 'starttls', 'ssl') as $value) {
     $upvalue = strtoupper($value);
-    $sel = ($_[$proto.'secure'] == $value) ? 'selected="selected"' : '';
+    $sel = ($_[$proto.'security'] == $value) ? 'selected="selected"' : '';
     echo '<option value="'.$value.'" '.$sel.'>'.$upvalue.'</option>'."\n";
   }
   echo '
