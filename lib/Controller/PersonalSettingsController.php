@@ -1035,7 +1035,7 @@ class PersonalSettingsController extends Controller {
       $status = empty($fatalUsers) && !empty($modifiedUsers)
         ? Http::STATUS_OK
               : Http::STATUS_BAD_REQUEST;
-      return self::dataResponse($messages, $status);
+      return self::dataResponse([ 'message' => $messages ], $status);
     case 'emaildistribute':
       // @todo USE SHARED FOLDERS!
       // $group         = Config::getAppValue('usergroup', '');

@@ -195,7 +195,12 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
         + '</span>';
     }
     if (failData.message) {
-      info += '<div class="' + appName + ' error toastify">' + failData.message + '</div>';
+      if (!Array.isArray(failData.message)) {
+        failData.message = [ failData.message ];
+      }
+      for (const msg of failData.message) {
+        info += '<div class="' + appName + ' error toastify">' + msg + '</div>';
+      }
     }
     info += '<div class="error toastify feedback-link">'
       + t(appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
