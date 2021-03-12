@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,8 +20,16 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+namespace OCA\CAFEVDB;
+
+function linkToolTip(string $tag, string $value)
+{
+  return empty($value) ? $toolTips[$tag] : $value;
+}
+
 ?>
-<div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin devel">
+<div id="tabs-<?php echo $tabNr; ?>" class="personalblock admin devel">
   <form id="develsettings">
     <fieldset id="devlinks"><legend><?php echo $l->t('Links');?></legend>
       <input type="button"
@@ -34,9 +43,9 @@
              id="phpmyadmin"
              name="phpmyadmin"
              placeholder="<?php echo $appName.'@phpmyadmin'; ?>"
-             value="<?php echo $_['phpmyadmin']; ?>"
-             title="<?php echo $toolTips['phpmyadmin-link']; ?>" />
-      <label for="phpmyadmin"><?php echo $l->t('Link to %s', array('phpMyAdmin')); ?></label>
+             value="<?php echo $phpmyadmin; ?>"
+             title="<?php p(linkToolTip('phpmyadmin-link', $phpmyadmin)); ?>" />
+      <label for="phpmyadmin"><?php echo $l->t('Link to %s', 'phpMyAdmin'); ?></label>
       <br/>
       <input type="button"
              class="devlinktest"
@@ -48,8 +57,8 @@
              id="phpmyadmincloud"
              name="phpmyadmincloud"
              placeholder="Owncloud@phpMyAdmin"
-             value="<?php echo $_['phpmyadmincloud']; ?>"
-             title="<?php echo $toolTips['phpmyadmincloud-link']; ?>" />
+             value="<?php echo $phpmyadmincloud; ?>"
+             title="<?php p(linkToolTip('phpmyadmincloud-link', $phpmyadmincloud)); ?>" />
       <label for="phpmyadmincloud"><?php echo $l->t('Link to Cloud@%s', array('phpMyAdmin')); ?></label>
       <br/>
       <input type="button"
@@ -62,8 +71,8 @@
              id="sourcecode"
              name="sourcecode"
              placeholder="<?php echo $l->t('Link to the source-code'); ?>"
-             value="<?php echo $_['sourcecode']; ?>"
-             title="<?php echo $toolTips['sourcecode-link']; ?>" />
+             value="<?php echo $sourcecode; ?>"
+             title="<?php p(linkToolTip('sourcecode-link', $sourcecode)); ?>" />
       <label for="phpmyadmin"><?php echo $l->t('Link to the source-code'); ?></label>
       <br/>
       <input type="button"
@@ -77,8 +86,8 @@
              id="sourcedocs"
              name="sourcedocs"
              placeholder="<?php echo $l->t('Link to the source-code documentation'); ?>"
-             value="<?php echo $_['sourcedocs']; ?>"
-             title="<?php echo $toolTips['sourcedocs-link']; ?>"/>
+             value="<?php echo $sourcedocs; ?>"
+             title="<?php p(linkToolTip('sourcedocs-link', $sourcedocs)); ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('Link to the source-code documentation'); ?></label>
       <br/>
       <input type="button"
@@ -91,8 +100,8 @@
              id="clouddev"
              name="clouddev"
              placeholder="<?php echo $l->t('Link to cloud Developer Information'); ?>"
-             value="<?php echo $_['clouddev']; ?>"
-             title="<?php echo $toolTips['clouddev-link']; ?>"/>
+             value="<?php echo $clouddev; ?>"
+             title="<?php p(linkToolTip('clouddev-link', $clouddev)); ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('Ambient cloud provider developer documentation'); ?></label>
       <br/>
       <input type="button"
@@ -105,8 +114,8 @@
              id="cspfailurereporting"
              name="cspfailurereporting"
              placeholder="<?php echo $l->t('Link for uploading CSP failure information'); ?>"
-             value="<?php echo $_['cspfailurereporting']; ?>"
-             title="<?php echo $toolTips['cspfailure-link']; ?>"/>
+             value="<?php echo $cspfailurereporting; ?>"
+             title="<?php p(linkToolTip('cspfailure-link', $cspfailurereporting)); ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('CSP-failure upload link'); ?></label>
     </fieldset>
     <span class="statusmessage" id="msg"></span>
