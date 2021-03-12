@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,6 +31,8 @@ use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\ILogger;
 use OCP\IL10N;
+
+use OCA\CAFEVDB\Exceptions;
 
 /**
  * This kludge is here as long as our slightly over-engineered
@@ -189,11 +192,13 @@ class EncryptionService
    *
    * @param bool $forceNewKeyPair Generate a new key pair even if an
    * old one is found.
+   *
+   * @throws Exceptions\EncryptionKeyException
    */
   public function initUserKeyPair($forceNewKeyPair = false)
   {
     if (empty($this->userId) || empty($this->userPassword)) {
-      throw new \Exception($this->l->t('Cannot initialize SSL key-pair without user and password'));
+      throw new Exceptions\EncryptionKeyException($this->l->t('Cannot initialize SSL key-pair without user and password'));
     }
 
     if (!$forceNewKeyPair) {
@@ -205,7 +210,7 @@ class EncryptionService
       // access to the data-base encryption key.
       $keys = $this->generateUserKeyPair($this->userId, $this->userPassword);
       if ($keys === false) {
-        throw new \Exception($this->l->t('Unable to generate SSL key pair for user "%s".', [ $this->userId ]));
+        throw new Exceptions\EncryptionKeyException($this->l->t('Unable to generate SSL key pair for user "%s".', [ $this->userId ]));
       }
       list($privKey, $pubKey) = $keys;
     }
@@ -215,7 +220,7 @@ class EncryptionService
     if ($privKey === false) {
       $this->userPrivateKey = null;
       $this->userPublicKey = null;
-      throw new \Exception($this->l->t('Unable to unlock private key for user "%s"', [ $this->userId ]));
+      throw new Exceptions\EncryptionKeyException($this->l->t('Unable to unlock private key for user "%s"', [ $this->userId ]));
     }
 
     $this->userPrivateKey = $privKey;
@@ -263,15 +268,29 @@ class EncryptionService
     return $this->getSharedPrivateValue('encryptionkey', null);
   }
 
-  public function setUserEncryptionKey($key)
+  /**
+   * Set the encryption key for the current or the given user.
+   *
+   * @param string $key Encryption key
+   *
+   * @param null|string $userId A potentially different than the
+   * currently logged in user.
+   */
+  public function setUserEncryptionKey($key, ?string $userId = null)
   {
-    return $this->setSharedPrivateValue('encryptionkey', $key);
+    return $this->setSharedPrivateValue('encryptionkey', $key, $userId);
   }
 
+  /**
+   * Initialize the global symmetric app encryption key used to
+   * encrypt shared data.
+   *
+   * @throws Exceptions\EncryptionKeyException
+   */
   public function initAppEncryptionKey()
   {
     if (!$this->bound()) {
-      throw new \Exception($this->l-t>('Cannot initialize global encryption key without bound user credentials.'));
+      throw new Exceptions\EncryptionKeyException($this->l-t>('Cannot initialize global encryption key without bound user credentials.'));
     }
 
     $usrdbkey = $this->getUserEncryptionKey();
@@ -289,7 +308,7 @@ class EncryptionService
     if ($sysdbkey != $usrdbkey) {
       // Failed
       $this->appEncryptionKey = null;
-      throw new \Exception($this->l->t('Stored keys for application and user do not match'));
+      throw new Exceptions\EncryptionKeyException($this->l->t('Stored keys for application and user do not match'));
     } else {
       $this->logDebug('Encryption keys validated'.(empty($usrdbkey) ? ' (no encryption)' : '').'.');
     }
@@ -302,11 +321,13 @@ class EncryptionService
    * to a user and password, see self::bind().
    *
    * @return string Decrypt config value.
+   *
+   * @throws Exceptions\EncryptionKeyException
    */
   public function getSharedPrivateValue($key, $default = null)
   {
     if (!$this->bound()) {
-      throw new \Exception($this->l->t('Cannot decrypt private values without bound user credentials'));
+      throw new Exceptions\EncryptionKeyException($this->l->t('Cannot decrypt private values without bound user credentials'));
     }
 
     // Fetch the encrypted "user" key from the preferences table
@@ -321,7 +342,7 @@ class EncryptionService
 
     // Try to decrypt the $usrdbkey
     if (openssl_private_decrypt($value, $value, $this->userPrivateKey) === false) {
-      throw new \Exception($this->l->t('Decryption of "%s" with private key of user "%s" failed.', [ $key, $this->userId ]));
+      throw new Exceptions\DecryptionFailedException($this->l->t('Decryption of "%s" with private key of user "%s" failed.', [ $key, $this->userId ]));
     }
 
     return $value;
@@ -329,15 +350,38 @@ class EncryptionService
 
   /**
    * Encrypt the given value with the user's public key.
+   *
+   * @param string $key Configuration key.
+   *
+   * @param mixed $value Value to be encrypted. Must be convertible to
+   * string.
+   *
+   * @param null|string $userId Potentitally different than logged in
+   * user id.
+   *
+   * @return string Encrypted value.
+   *
+   * @throws Exceptions\EncryptionKeyException
+   * @throws Exceptions\EncryptionFailedException
    */
-  public function setSharedPrivateValue($key, $value)
+  public function setSharedPrivateValue(string $key, $value, ?string $userId = null)
   {
-    if (!$this->bound()) {
-      throw new \Exception($this->l->t('Cannot encrypt private values without bound user credentials'));
+    if (empty($userId)) {
+      if (!$this->bound()) {
+        throw new Exceptions\EncryptionKeyException($this->l->t('Cannot encrypt private values without bound user credentials'));
+      }
+      $userId = $this->userId;
+      $userPublicKey = $this->userPublicKey;
+    } else {
+      // encrypt for different than bound user
+      $userPublicKey = $this->getUserValue($userId, 'publicSSLKey');
+      if (empty($userPublicKey)) {
+        throw new Exceptions\EncryptionKeyException($this->l->t('Cannot encrypt private values for user "%s" without public SSL key.', $userId));
+      }
     }
 
-    if (openssl_public_encrypt($value, $encrypted, $this->userPublicKey) === false) {
-      throw new \Exception($this->l->t('Encrypting value for key "%s" with public key of user "%s" failed.', [ $key, $this->userId ]));
+    if (openssl_public_encrypt($value, $encrypted, $userPublicKey) === false) {
+      throw new Exceptions\EncryptionFailedException($this->l->t('Encrypting value for key "%s" with public key of user "%s" failed.', [ $key, $userId ]));
     }
 
     $encrypted = base64_encode($encrypted);
@@ -352,11 +396,15 @@ class EncryptionService
    * key matches our key, then we accept the key.
    *
    * @param string $encrytionKey
+   *
+   * @return bool
+   *
+   * @throws Exceptions\EncryptionKeyException
    */
-  public function encryptionKeyValid($encryptionKey = null)
+  public function encryptionKeyValid(?string $encryptionKey = null):bool
   {
     if (!$this->bound()) {
-      throw new \Exception($this->l->t('Cannot validate app encryption key without bound user credentials'));
+      throw new Exceptions\EncryptionKeyException($this->l->t('Cannot validate app encryption key without bound user credentials'));
     }
 
     if (empty($encryptionKey)) {
@@ -415,7 +463,7 @@ class EncryptionService
 
     if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
       if ($this->appEncryptionKey === null) {
-        //throw new \Exception($this->l->t('Encryption requested but not configured, empty encryption key'));
+        //throw new Exceptions\EncryptionKeyException($this->l->t('Encryption requested but not configured, empty encryption key'));
         if (!empty($this->userId)) {
           $this->logError('Encryption requested but not configured for user "'.($this->userId).'", empty encryption key');
         }
@@ -424,7 +472,7 @@ class EncryptionService
       try {
         $value  = $this->decrypt($value, $this->appEncryptionKey);
       } catch (\Throwable $t) {
-        throw new \Exception($this->l->t('Unable to decrypt value "%s" for "%s"', [$value, $key]), $t->getCode(), $t);
+        throw new Exceptions\DecryptionFailedException($this->l->t('Unable to decrypt value "%s" for "%s"', [$value, $key]), $t->getCode(), $t);
       }
       //$this->logInfo("Decrypted value for $key: ".$value);
     }
@@ -443,7 +491,7 @@ class EncryptionService
   {
     if (!empty($this->appEncryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
       if ($this->appEncryptionKey === null) {
-        //throw new \Exception($this->l->t('Encryption requested but not configured, empty encryption key'));
+        //throw new Exceptions\EncryptionKeyException($this->l->t('Encryption requested but not configured, empty encryption key'));
         $this->logError($this->l->t('Encryption requested but not configured for user '.($this->userId).', empty encryption key'));
         return false;
       }
@@ -454,7 +502,8 @@ class EncryptionService
     return true;
   }
 
-  /**Encrypt the given value with the given encryption
+  /**
+   * Encrypt the given value with the given encryption
    * key. Internally, the first 4 bytes contain the length of $value
    * as string in hexadecimal notation, the following 32 bytes contain
    * the MD5 checksum of $value, starting at byte 36 follows the
@@ -466,8 +515,9 @@ class EncryptionService
    * @param $enckey The encrypt key.
    *
    * @return The encrypted and encoded data.
+   *
+   * @throws Exceptions\EncryptionFailedException
    */
-  //@@todo catch exceptions
   public function encrypt($value, $enckey)
   {
     // Store the size in the first 4 bytes in order not to have to
@@ -478,13 +528,14 @@ class EncryptionService
       try {
         $value = $this->crypto->encrypt($value, $enckey);
       } catch (\Throwable $t) {
-         throw new \Exception($this->l->t('Encrypt failed'), $t->getCode(), $t);
+         throw new Exceptions\EncryptionFailedException($this->l->t('Encrypt failed'), $t->getCode(), $t);
       }
     }
     return $value;
   }
 
-  /**Decrypt $value using the specified encryption key $enckey. If
+  /**
+   * Decrypt $value using the specified encryption key $enckey. If
    * $enckey is empty or unset, no decryption is attempted. This
    * function also checks against the internally stored MD5 sum.
    *
@@ -496,15 +547,16 @@ class EncryptionService
    * @return The decrypted data in case of success, or false
    * otherwise. If either @c $value or @c enckey is empty the return
    * value is just passed argument @c value.
+   *
+   * @throws Exceptions\DecryptionFailedException
    */
-  //@@todo catch exceptions
   public function decrypt($value, $enckey)
   {
     if (!empty($enckey) && !empty($value)) {
       try {
          $value = $this->crypto->decrypt($value, $enckey);
       } catch (\Throwable $t) {
-        throw new \Exception($this->l->t('Decrypt failed'), $t->getCode(), $t);
+        throw new Exceptions\DecryptionFailedException($this->l->t('Decrypt failed'), $t->getCode(), $t);
       }
     }
     return $value;
