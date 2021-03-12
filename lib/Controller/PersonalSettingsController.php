@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Exceptions;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
 class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -1037,19 +1038,39 @@ class PersonalSettingsController extends Controller {
               : Http::STATUS_BAD_REQUEST;
       return self::dataResponse([ 'message' => $messages ], $status);
     case 'emaildistribute':
-      // @todo USE SHARED FOLDERS!
-      // $group         = Config::getAppValue('usergroup', '');
-      // $users         = \OC_Group::usersInGroup($group);
-      // $emailUser     = Config::getValue('emailuser'); // CAFEVDB encKey
-      // $emailPassword = Config::getValue('emailpassword'); // CAFEVDB encKey
-
-      // $error = '';
-      // foreach ($users as $ocUser) {
-      //   if (!\OC_RoundCube_App::cryptEmailIdentity($ocUser, $emailUser, $emailPassword)) {
-      //     $error .= $ocUser.' ';
-      //   }
-      // }
-      return self::grumble($this->l->t('Sorry, setting not yet implemented: "%s".', $parameter));
+      $roundCubeConfig = $this->appContainer->get(RoundCubeConfig::class);
+      $emailUser = $this->getConfigValue('emailuser');
+      $emailPassword = $this->getConfigValue('emailpassword');
+      $noEmailUsers = [];
+      $fatalUsers = [];
+      $modifiedUsers = [];
+      foreach ($this->group()->getUsers() as $user)  {
+        $userId = $user->getUID();
+        try {
+          $roundCubeConfig->setEmailCredentials($userId, $emailUser, $emailPassword);
+          $modifiedUsers[] = $userId;
+        } catch (\Exception $e) {
+          $noEmailUsers[] = [ $userId => $e->getMessage() ];
+        } catch (\Throwable $t) {
+          $fatalUsers[] = [ $userId => $t->getMessage() ];
+        }
+      }
+      $messages = [];
+      if (!empty($modifiedUsers)) {
+        $messages[] = $this->l->t('Successfully distributed the email credentials for %s.', implode(', ', $modifiedUsers));
+      } else {
+        $messages[] = $this->l->t('Unable to distribute the email credentials to any user.');
+      }
+      if (!empty($noEmailUsers)) {
+        $messages[] = $this->l->t('Email credentials could not be set for %s.', implode(', ', $noKeyUsers));
+      }
+      foreach ($fatalUsers as $userId => $message) {
+        $messages[] = $this->l->t('Setting the email credentials for %s failed fatally: "%s".', [ $userId, $message ]);
+      }
+      $status = empty($fatalUsers) && !empty($modifiedUsers)
+        ? Http::STATUS_OK
+              : Http::STATUS_BAD_REQUEST;
+      return self::dataResponse([ 'message' => $messages ], $status);
     case 'emailtest':
       $user = $this->getConfigValue('emailuser');
       $password = $this->getConfigValue('emailpassword');
