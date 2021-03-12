@@ -27,6 +27,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
+use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\PHPMailer;
@@ -183,7 +184,7 @@ DebitNotePurpose
     $this->entityManager = $entityManager;
     $this->l = $this->l10N();
 
-    $this->constructionMode = true; // Config::$opts['emailtestmode'] != 'off';
+    $this->constructionMode = $this->getConfigValue('emailtestmode') !== 'off';
     $this->setCatchAll();
 
     $this->bind($parameterService, $recipientsFilter);

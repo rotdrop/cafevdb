@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
+use OCA\CAFEVDB\Exceptions;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -52,8 +53,26 @@ class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
+  private const EMAIL_PROTO = [ 'smtp', 'imap' ];
+  private const EMAIL_SECURITY = [ 'insecure', 'starttls', 'ssl' ];
+  private const EMAIL_PORTS = [
+    'smtp' => [
+      'insecure' => 587,
+      'starttls' => 587,
+      'ssl' => 465,
+    ],
+    'imap' => [
+      'insecure' => 143,
+      'starttls' => 143,
+      'ssl' => 993,
+    ],
+  ];
+
   /** @var Personal */
   private $personalSettings;
+
+  /** @var ConfigCheckService */
+  private $configCheckService;
 
   /** @var \OCA\CAFEVDB\Service\ParameterService */
   private $parameterService;
@@ -222,6 +241,8 @@ class PersonalSettingsController extends Controller {
    *
    * @NoAdminRequired
    * @SubAdminRequired
+   *
+   * @bug This function is too big.
    */
   public function setApp($parameter, $value) {
     switch ($parameter) {
@@ -978,24 +999,138 @@ class PersonalSettingsController extends Controller {
       }
       $this->setUserValue($parameter, $realValue);
       return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
-      // @@@@@@ email settings
+
+    case 'keydistribute':
+      /** @var \OCP\IUser $user */
+      if (!$this->encryptionKeyValid()) {
+        return self::grumble($this->l->t('App encryption key is invalid, will not distribute it.'));
+      }
+      $appEncryptionKey = $this->getAppEncryptionKey();
+      $noKeyUsers = [];
+      $fatalUsers = [];
+      $modifiedUsers = [];
+      foreach ($this->group()->getUser() as $user)  {
+        $userId->getUID();
+        try {
+          $this->encryptionService()->setUserEncryptionKey($appEncryptionKey, $userId);
+          $modifiedUsers[] = $userId;
+        } catch (Exceptions\EncryptionKeyException $e) {
+          $noKeyUsers[] = [ $userId => $e->getMessage() ];
+        } catch (\Throwable $t) {
+          $fatalUsers[] = [ $userId => $t->getMessage() ];
+        }
+      }
+      $messages = [];
+      if (!empty($modifiedUsers)) {
+        $messages[] = $this->l->t('Successfully distributed the app encryption key to %s.', implode(', ', $modifiedUsers));
+      } else {
+        $messages[] = $this->l->t('Unable to distribute the app encryptionkey to any user.');
+      }
+      if (!empty($noKeyUsers)) {
+        $messages[] = $this->l->t('Public SSL key missing for %s, key distribution failed.', implode(', ', $noKeyUsers));
+      }
+      foreach ($fatalUsers as $userId => $message) {
+        $messages[] = $this->l->t('Setting the app encryption key for %s failed fatally: "%s".', [ $userId, $message ]);
+      }
+      $status = empty($fatalUsers) && !empty($modifiedUsers)
+        ? Http::STATUS_OK
+              : Http::STATUS_BAD_REQUEST;
+      return self::dataResponse($messages, $status);
+    case 'emaildistribute':
+      // @todo USE SHARED FOLDERS!
+      // $group         = Config::getAppValue('usergroup', '');
+      // $users         = \OC_Group::usersInGroup($group);
+      // $emailUser     = Config::getValue('emailuser'); // CAFEVDB encKey
+      // $emailPassword = Config::getValue('emailpassword'); // CAFEVDB encKey
+
+      // $error = '';
+      // foreach ($users as $ocUser) {
+      //   if (!\OC_RoundCube_App::cryptEmailIdentity($ocUser, $emailUser, $emailPassword)) {
+      //     $error .= $ocUser.' ';
+      //   }
+      // }
+      return self::grumble($this->l->t('Sorry, setting not yet implemented: "%s".', $parameter));
+    case 'emailtest':
+      $user = $this->getConfigValue('emailuser');
+      $password = $this->getConfigValue('emailpassword');
+      $messages = [];
+      $check = [];
+      foreach (self::EMAIL_PROTO as $proto) {
+        $server = $this->getConfigValue($proto.'server');
+        $port = $this->getConfigValue($proto.'port');
+        $security = $this->getConfigValue($proto.'security');
+
+        $methdo = 'check'.ucfirst($proto).'Server';
+        $check[$proto] = $this->configCheckService->$method(
+          $server, $port, $security, $user, $password);
+        $message[$proto] = ($check[$proto] === true)
+          ? $this->l->t('%s connection seems functional.', strtoupper($proto))
+          : ($this->l->t('Unable to establish %s connection to %s@%s:%d',
+                         [ strtoupper($proto), $user, $server, $port ]));
+      }
+      $message = implode(' ', $messages);
+      if ($check['smtp'] === true  && $check['imap'] === true) {
+        return self::response($message);
+      } else {
+        return self::grumble($message);
+      }
     case 'smtpserver':
     case 'imapserver':
     case 'smptport':
     case 'imapport':
-    case 'smtpsecure':
-    case 'imapsecure':
+    case 'smtpsecurity':
+    case 'imapsecurity':
+      $realValue = Util::normalizeSpaces($value);
+      if (empty($realValue)) {
+        return $this->setSimpleConfigValue($parameter, $realValue);
+      }
+      $proto = substr($parameter, 0, 4);
+      $key = substr($parameter, 4);
+      switch ($key) {
+      case 'server':
+        if (!checkdnsrr($realValue, 'A') && !checkdnsrr($realValue, 'AAAA')) {
+          return self::grumble($this->l->t('Server name "%s" has neither an IPV4 nor an IPV6 address', $realValue));
+        }
+        return $this->setSimpleConfigValue($parameter, $realValue);
+      case 'port':
+        if (filter_var($realValue, FILTER_VALIDATE_INT, [ 'min_range' => 1, 'max_range' => 65535 ]) === false) {
+          return self::grumble($this->l->t('"%s" is not an integral number in the range [%d, %d]',
+                                           [ $realValue, 1, 65535 ]));
+        }
+        return $this->setSimpleConfigValue($parameter, $realValue);
+      case 'security':
+        if (array_search($realValue, self::EMAIL_SECURITY) === false) {
+          return self::grumble($this->l->t('Unknown transport security method: "%s".', $realValue));
+        }
+        $port = self::EMAIL_PORTS[$proto][$realValue];
+        $this->setConfigValue($parameter, $realValue);
+        $this->setConfigValue($proto.'port', $port);
+        return self::dataResponse([
+          'message' => $this->l->t('Using transport security "%s" for protocol "%s".',
+                                   [ $realValue, $proto ]),
+          'proto' => $proto,
+          'port' => $port,
+        ]);
+      }
+      break;
+    case 'emailtestmode':
+      $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      if ($realValue === null) {
+        return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
+      }
+      $stringValue = $realValue ? 'on' : 'off';
+      return $this->setSimpleConfigValue($parameter, $stringValue);
+    case 'emailtestaddress':
+    case 'emailfromaddress':
+      $realValue = Util::normalizeSpaces($value);
+      if (!empty($realValue) && filter_var($realValue, FILTER_VALIDATE_EMAIL) === false) {
+        return self::grumble($this->l->t('"%s" does not seem to be a valid email address', $value));
+      }
     case 'emailuser':
     case 'emailpassword':
-    case 'emaildistribute':
-    case 'emailtest':
-    case 'emailtestmode':
-    case 'emailtestaddress':
-      return self::grumble($this->l->t('Sorry, setting not yet implemented: "%s".', $parameter));
-    case 'emailfromaddress':
     case 'emailfromname':
       return $this->setSimpleConfigValue($parameter, $value);
-      // @@@@@@ end email setttings
+
     case 'translation':
       if (empty($value['key']) || empty($value['language'])) {
         return self::grumble($this->l->t('Empty translation phrase or language'));
