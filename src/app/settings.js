@@ -537,7 +537,7 @@ const afterLoad = function(container) {
       // Email-Password
       // 'show password' checkbox
       const password = container.find('#emailpassword');
-      // const passwordClone = showPassword(password);
+      showPassword(password);
       const passwordChange = container.find('#button');
 
       passwordChange.on('click', function() {
@@ -583,7 +583,7 @@ const afterLoad = function(container) {
       const container = form.find('fieldset.serversettings');
       // const msg = container.find('.statusmessage');
 
-      $('[id$=secure]:input').change(function(event) {
+      $('[id$=security]:input').change(function(event) {
         msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
@@ -593,13 +593,16 @@ const afterLoad = function(container) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
-            $('#' + data.proto + 'port').val(data.port);
+            if (data.port) {
+              $('#' + data.proto + 'port').val(data.port);
+            }
             msg.html(data.message).show();
           });
         return false;
       });
 
       container.find('#smtpport,#imapport,#smtpserver,#imapserver').blur(function(event) {
+        const $self = $(this);
         msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
@@ -608,6 +611,9 @@ const afterLoad = function(container) {
             msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
           })
           .done(function(data) {
+            if (data[name]) {
+              $self.val(data[name]);
+            }
             msg.html(data.message).show();
           });
         return false;
@@ -618,7 +624,7 @@ const afterLoad = function(container) {
       const container = form.find('fieldset.emailidentity');
       console.log('************', container);
 
-      container.find('#emailfromname', '#emailfromaddress').on('blur', function(event) {
+      container.find('#emailfromname,#emailfromaddress').on('blur', function(event) {
         msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
