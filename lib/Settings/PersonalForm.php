@@ -273,7 +273,7 @@ class PersonalForm {
         }
 
         foreach (['smtp', 'imap'] as $proto) {
-          foreach (['server', 'port', 'secure'] as $key) {
+          foreach (['server', 'port', 'security'] as $key) {
             $templateParameters[$proto.$key] =  $this->getConfigValue($proto.$key);
           }
         }

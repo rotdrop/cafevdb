@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Controller\PersonalSettingsController;
+
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
   <form id="emailsettings">
@@ -50,7 +52,7 @@ foreach (array('smtp', 'imap') as $proto) {
   <select name="'.$proto.'security" id="'.$proto.'security" '
   .'data-placeholder="'.$upproto.' '.$l->t('security').'" >
     <option value=""></option>';
-  foreach (array('insecurity', 'starttls', 'ssl') as $value) {
+  foreach (PersonalSettingsController::EMAIL_SECURITY as $value) {
     $upvalue = strtoupper($value);
     $sel = ($_[$proto.'security'] == $value) ? 'selected="selected"' : '';
     echo '<option value="'.$value.'" '.$sel.'>'.$upvalue.'</option>'."\n";

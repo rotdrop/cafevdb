@@ -54,8 +54,8 @@ class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
-  private const EMAIL_PROTO = [ 'smtp', 'imap' ];
-  private const EMAIL_SECURITY = [ 'insecure', 'starttls', 'ssl' ];
+  public const EMAIL_PROTO = [ 'smtp', 'imap' ];
+  public const EMAIL_SECURITY = [ 'insecure', 'starttls', 'ssl' ];
   private const EMAIL_PORTS = [
     'smtp' => [
       'insecure' => 587,
@@ -279,7 +279,6 @@ class PersonalSettingsController extends Controller {
         if (!isset($value[$key])) {
           return self::grumble($this->l->t("Missing parameter `%s'.", $key));
         }
-        $this->logInfo($key.' '.$value[$key]);
       }
 
       $oldKey = $value['oldkey'];
@@ -449,7 +448,6 @@ class PersonalSettingsController extends Controller {
         'bankAccountOwner' => $this->getConfigValue('bankAccountOwner'),
         'message' => '',
       ];
-      $this->logInfo('REAL '.$realValue.' / '.print_r($data, true));
       if (empty($realValue) && !empty($data[$parameter])) {
         // allow erasing
         $this->setConfigValue($parameter, $realValue);
@@ -1081,45 +1079,51 @@ class PersonalSettingsController extends Controller {
         $port = $this->getConfigValue($proto.'port');
         $security = $this->getConfigValue($proto.'security');
 
-        $methdo = 'check'.ucfirst($proto).'Server';
+        $method = 'check'.ucfirst($proto).'Server';
         $check[$proto] = $this->configCheckService->$method(
           $server, $port, $security, $user, $password);
-        $message[$proto] = ($check[$proto] === true)
+        $messages[$proto] = ($check[$proto] === true)
           ? $this->l->t('%s connection seems functional.', strtoupper($proto))
           : ($this->l->t('Unable to establish %s connection to %s@%s:%d',
                          [ strtoupper($proto), $user, $server, $port ]));
       }
       $message = implode(' ', $messages);
-      if ($check['smtp'] === true  && $check['imap'] === true) {
+      if ($check['smtp'] === true && $check['imap'] === true) {
         return self::response($message);
       } else {
         return self::grumble($message);
       }
     case 'smtpserver':
     case 'imapserver':
-    case 'smptport':
+    case 'smtpport':
     case 'imapport':
     case 'smtpsecurity':
     case 'imapsecurity':
       $realValue = Util::normalizeSpaces($value);
-      if (empty($realValue)) {
-        return $this->setSimpleConfigValue($parameter, $realValue);
-      }
       $proto = substr($parameter, 0, 4);
       $key = substr($parameter, 4);
       switch ($key) {
       case 'server':
-        if (!checkdnsrr($realValue, 'A') && !checkdnsrr($realValue, 'AAAA')) {
+        if (!empty($realValue) && !checkdnsrr($realValue, 'A') && !checkdnsrr($realValue, 'AAAA')) {
           return self::grumble($this->l->t('Server name "%s" has neither an IPV4 nor an IPV6 address', $realValue));
         }
         return $this->setSimpleConfigValue($parameter, $realValue);
       case 'port':
-        if (filter_var($realValue, FILTER_VALIDATE_INT, [ 'min_range' => 1, 'max_range' => 65535 ]) === false) {
+        if (empty($realValue)) {
+          $security = $this->getConfigValue($proto.'security');
+          if (!empty($security)) {
+            // just some port is needed
+            $realValue = self::EMAIL_PORTS[$proto][$security];
+          }
+        } else if (filter_var($realValue, FILTER_VALIDATE_INT, [ 'min_range' => 1, 'max_range' => 65535 ]) === false) {
           return self::grumble($this->l->t('"%s" is not an integral number in the range [%d, %d]',
                                            [ $realValue, 1, 65535 ]));
         }
         return $this->setSimpleConfigValue($parameter, $realValue);
       case 'security':
+        if (empty($realValue))  {
+          return $this->setSimpleConfigValue($parameter, $realValue);
+        }
         if (array_search($realValue, self::EMAIL_SECURITY) === false) {
           return self::grumble($this->l->t('Unknown transport security method: "%s".', $realValue));
         }
@@ -1267,7 +1271,6 @@ class PersonalSettingsController extends Controller {
    * @SubAdminRequired
    */
   public function getApp($parameter) {
-    $this->logInfo('PARAM '.$parameter);
     switch ($parameter) {
     case 'translation-templates':
       $pot = $this->translationService->generateCatalogueTemplates();
@@ -1297,10 +1300,16 @@ class PersonalSettingsController extends Controller {
 
     if (empty($realValue)) {
       $this->deleteConfigValue($key);
-      return self::response($this->l->t("Erased config value for parameter `%s'.", $key));
+      return self::dataResponse([
+        'message' => $this->l->t("Erased config value for parameter `%s'.", $key),
+        $key => $value,
+      ]);
     } else {
       $this->setConfigValue($key, $realValue);
-      return self::response($this->l->t("Value for `%s' set to `%s'", [ $key, $realValue ]));
+      return self::dataResponse([
+        'message' => $this->l->t("Value for `%s' set to `%s'", [ $key, $realValue ]),
+        $key => $value,
+      ]);
     }
   }
 
