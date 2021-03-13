@@ -37,3 +37,9 @@
 [submodule "3rdparty/pear/mail"]
 	path = 3rdparty/pear/mail
 	url = git@github.com:rotdrop/Mail.git
+[submodule "3rdparty/pear/Net_IMAP"]
+	path = 3rdparty/pear/Net_IMAP
+	url = git@github.com:rotdrop/Net_IMAP.git
+[submodule "3rdparty/pear/Net_Socket"]
+	path = 3rdparty/pear/Net_Socket
+	url = git@github.com:rotdrop/Net_Socket.git

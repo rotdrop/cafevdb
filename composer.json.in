@@ -23,6 +23,8 @@
     "ezyang/htmlpurifier": "^4.13.0",
     "giggsey/libphonenumber-for-php": "^8.12",
     "pear/mail": "dev-master",
+    "pear/net_imap": "dev-master",
+    "pear/auth_sasl": "dev-master",
     "gedmo/doctrine-extensions": "dev-production/cafevdb",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
     "knplabs/doctrine-behaviors": "^2.0",
@@ -70,6 +72,14 @@
     {
       "type": "path",
       "url": "3rdparty/pear/mail"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/pear/Net_IMAP"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/pear/Net_Socket"
     }
   ],
   "minimum-stability": "dev",
