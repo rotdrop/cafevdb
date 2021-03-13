@@ -202,14 +202,9 @@ class ConfigCheckService
 
   public function checkImapServer($host, $port, $secure, $user, $password)
   {
-    $oldReporting = ini_get('error_reporting');
-    ini_set('error_reporting', $oldReporting & ~E_STRICT);
-
     $imap = new \Net_IMAP($host, $port, $secure == 'starttls' ? true : false, 'UTF-8');
     $result = $imap->login($user, $password) === true;
     $imap->disconnect();
-
-    ini_set('error_reporting', $oldReporting);
 
     return $result;
   }
@@ -239,6 +234,7 @@ class ConfigCheckService
       $mail->SmtpConnect();
       $mail->SmtpClose();
     } catch (\Exception $exception) {
+      $this->logException($exception, 'Testing SMTP server '.$user.'@'.$host.':'.$port.' failed.');
       $result = false;
     }
 
