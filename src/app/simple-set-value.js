@@ -20,7 +20,7 @@
  */
 
 import { $ } from './globals.js';
-import setAppUrl from './settings-urls.js';
+import { setAppUrl } from './settings-urls.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 
