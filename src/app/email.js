@@ -896,7 +896,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         // We do a quick client-side validation and ask the user for ok
         // when a template with the same name is already present.
         const current = currentTemplate.val();
-        if (storedEmailsSelector.find('option[value="' + current + '"]').length > 0) {
+        if (storedEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
           Dialogs.confirm(
             t(appName, 'A template with the name `{templateName}\' already exists, '
               + 'do you want to overwrite it?', { templateName: current }),
