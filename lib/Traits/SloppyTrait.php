@@ -33,7 +33,7 @@ trait SloppyTrait
     if (empty($separators)) {
       $separators = [
         'ordinary' => ', ',
-        'last' => $this->l->t(' and '),
+        'last' => ' '.$this->l->t('and').' ',
       ];
     }
 
