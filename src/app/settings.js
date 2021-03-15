@@ -965,7 +965,13 @@ const afterLoad = function(container) {
         },
       });
 
-    simpleSetHandler(deleteRecorded, 'click', msg);
+    simpleSetHandler(deleteRecorded, 'click', msg, {
+      success($self, data, msgElement) {
+        translationKeys.html('');
+        translationKeys.trigger('chosen:updated');
+        translationKeys.trigger('change');
+      },
+    });
 
     downloadPoTemplates.on('click', function(event) {
 
