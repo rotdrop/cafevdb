@@ -118,19 +118,48 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
  *
  * @param {jQuery} msgElement TBD.
  */
-const simpleSetHandler = function(element, eventType, msgElement) {
+const simpleSetHandler = function(element, eventType, msgElement, userCallbacks) {
+  const defaultCallbacks = {
+    post(name) {
+      return $.post(setAppUrl(name));
+    },
+    setup(/* empty */) {},
+    success($self, data, msgElement) {},
+    fail(xhr, textStatus, errorThrown) {
+      Ajax.handleError(xhr, textStatus, errorThrown);
+    },
+    cleanup() {},
+  };
+  const callbacks = $.extend({}, defaultCallbacks);
+  if (typeof userCallbacks === 'function') {
+    callbacks.success = userCallbacks;
+  } else if (typeof userCallbacks === 'object') {
+    $.extend(callbacks, userCallbacks);
+  }
   // console.debug('simpleSetHandler', element, eventType);
   element.on(eventType, function(event) {
     const $self = $(this);
     msgElement.hide();
     const name = $self.attr('name');
-    $.post(setAppUrl(name))
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown);
-        msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+    callbacks.setup();
+    callbacks.post(name)
+      .fail(function(xhr, textStatus, errorThrown) {
+        msgElement.html(Ajax.failMessage(xhr, textStatus, errorThrown)).show();
+        callbacks.fail(xhr, textStatus, errorThrown);
+        callbacks.cleanup();
       })
       .done(function(data) {
-        msgElement.html(data.message).show();
+        if (data.message) {
+          if (!Array.isArray(data.message)) {
+            data.message = [data.message];
+          }
+          for (const msg of data.message) {
+            Notification.show(msg, { timeout: 15 });
+          }
+          msgElement.html(data.message.join('; ')).show();
+        }
+        callbacks.success($self, data, msgElement);
+        callbacks.cleanup();
       });
     return false;
   });
