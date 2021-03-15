@@ -34,6 +34,7 @@ use OCP\IURLGenerator;
 use OCP\L10N\IFactory as IL10NFactory;
 use OCP\IDateTimeZone;
 use OCP\Security\ISecureRandom;
+use OCP\AppFramework\IAppContainer;
 use \OCP\ILogger;
 
 /**
@@ -167,6 +168,9 @@ class ConfigService {
   /** @var ILogger */
   protected $logger;
 
+  /** @var IAppContainer */
+  private $appContainer;
+
   public function __construct(
     $appName,
     IConfig $containerConfig,
@@ -180,6 +184,7 @@ class ConfigService {
     IL10NFactory $l10NFactory,
     IDateTimeZone $dateTimeZone,
     ILogger $logger,
+    IAppContainer $appContainer,
     IL10N $l
   ) {
 
@@ -195,6 +200,7 @@ class ConfigService {
     $this->l10NFactory = $l10NFactory;
     $this->dateTimeZone = $dateTimeZone;
     $this->logger = $logger;
+    $this->appContainer = $appContainer;
     $this->l = $l;
 
     if (defined('OC_CONSOLE') && empty($userSession->getUser())) {
@@ -213,6 +219,11 @@ class ConfigService {
 
     // Cache encrypted config values in order to speed up things
     $this->encryptionCache = [];
+  }
+
+  public function getAppContainer():IAppContainer
+  {
+    return $this->appContainer;
   }
 
   public function getAppConfig()

@@ -61,6 +61,11 @@ trait ConfigTrait {
     return $this->configService->getL10N();
   }
 
+  protected function appContainer()
+  {
+    return $this->configService->getAppContainer();
+  }
+
   protected function appName()
   {
     return $this->configService->getAppName();
