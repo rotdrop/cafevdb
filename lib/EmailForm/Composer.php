@@ -102,19 +102,6 @@ Störung.';
     DEBIT_NOTE_AMOUNT,
     DEBIT_NOTE_PURPOSE,
   ];
-  const GLOBAL_VARIABLES = [
-    'ORGANIZER',
-    'CREDITORIDENTIFIER',
-    'ADDRESS',
-    'BANKACCOUNT',
-    'PROJECT',
-    'DEBITNOTEDUEDATE',
-    'DEBITNOTEDUEDAYS',
-    'DEBITNOTESUBMITDATE',
-    'DEBITNOTESUBMITDAYS',
-    'DEBITNOTEJOB',
-    'DATE',
-  ];
   private $recipients; ///< The list of recipients.
   private $onLookers;  ///< Cc: and Bcc: recipients.
 
@@ -431,13 +418,13 @@ Störung.';
 
     // @todo fill with real contents
     foreach (self::MEMBER_VARIABLES as $key) {
-      $this->substitutions[self::MEMBER_NAMESPACE][$key] = function($key) { return $key; };
+      $this->substitutions[self::MEMBER_NAMESPACE][$key] = function(array $key) { return $key[0]; };
     }
 
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
       foreach ($replacements as $key => $handler) {
-        $this->substitutions[$nameSpace][$this->l->t($key)] = function($key) use ($handler) { return $handler($key); };
+        $this->substitutions[$nameSpace][$this->l->t($key)] = function($keyArg) use ($handler) { return $handler($keyArg); };
       }
     }
   }
@@ -490,7 +477,6 @@ Störung.';
     return preg_replace_callback(
       '/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3([^}]+)}/',
       function($matches) use ($data, &$failures) {
-        $this->logInfo('MATCHES '.print_r($matches, true));
         $prefix = $matches[1];
         $nameSpace = $matches[2];
         $separator = $matches[3];
@@ -509,7 +495,6 @@ Störung.';
           return '';
         }
         try {
-          $this->logInfo('CALL HANDLER '.print_r($variable, true));
           return $prefix.call_user_func($handler, $variable, $data);
         } catch (\Throwable $t) {
           if (!is_array($failures)) {
@@ -1344,9 +1329,13 @@ Störung.';
   {
     $realRecipients = $this->recipients;
     if (empty($this->recipients)) {
+      /** @var Entities\Musician $dummy */
       $dummy = $this->appContainer()->get(InstrumentationService::class)->getDummyMusician();
+      $displayName = $dummy['displayName']?: ($dummy['nickName']?:$dummy['firstName']).' '.$dummy['surName'];
       $this->recipients = [
         $dummy->getId() => [
+          'email' => $dummy->getEmail(),
+          'name' => $displayName,
           'dbdata' => $dummy,
         ],
       ];
@@ -1356,13 +1345,9 @@ Störung.';
       return null;
     }
 
-    $this->logInfo('RECIPIENTS 1 '.count($this->recipients));
-
     // Preliminary checks passed, let's see what happens. The mailer may throw
     // any kind of "nasty" exceptions.
-    $preview = $this->exportMessages();
-
-    $this->logInfo('RECIPIENTS 2 '.count($this->recipients));
+    $preview = $this->exportMessages($this->recipients);
 
     if (!empty($preview)) {
       $this->diagnostics['caption'] = $this->l->t('Message(s) exported successfully!');
@@ -1379,7 +1364,7 @@ Störung.';
    * or to have hardcopies from debit note notifications and other
    * important emails.
    */
-  private function exportMessages()
+  private function exportMessages(?array $recipients = null)
   {
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
@@ -1387,11 +1372,11 @@ Störung.';
 
     if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
 
-      $this->diagnostics['totalPayload'] = count($this->recipients)+1;
+      $this->diagnostics['totalPayload'] = count($recipients)+1;
 
-      $this->logInfo('MEMBER SUBSTITUTIONS '.count($this->recipients));
+      $this->logInfo('RECIPIENTS '.count($recipients));
 
-      foreach ($this->recipients as $recipient) {
+      foreach ($recipients as $recipient) {
         /** @var Entities\Musician */
         $musician = $recipient['dbdata'];
         $this->logInfo('EXPORT MESSAGE FOR '.$musician->getEmail());
@@ -1422,7 +1407,7 @@ Störung.';
       $this->diagnostics['totalPayload'] = 1;
       ++$this->diagnostics['totalCount']; // this is ONE then ...
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
-      $message = $this->composeAndExport($messageTemplate, $this->recipients);
+      $message = $this->composeAndExport($messageTemplate, $recipients);
       if (empty($message)) {
         ++$this->diagnostics['failedCount'];
         return;
@@ -1719,18 +1704,42 @@ Störung.';
        *
        * @todo Revise concerning timezone and locale settings
        */
-      'DATE' => function(array $arg) {
+      'DATE' => function(array $arg) use ($formatter) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2];
+          $stamp = strtotime($dateString);
+          if (\array_search($dateFormat, ['full', 'long', 'medium', 'short']) !== false) {
+            return $formatter->formatDate($stamp, $dateFormat);
+          }
           $oldLocale = setlocale(LC_TIME, '0');
           setlocale(LC_TIME, $this->getLocale());
           $oldTimezone = \date_default_timezone_get();
           \date_default_timezone_set($this->getTimezone());
-          $result = strftime($dateFormat, strtotime($dateString));
+          $result = strftime($dateFormat, $stamp);
           \date_default_timezone_set($oldTimezone);
           setlocale(LC_TIME, $oldLocale);
           return $result;
+        } catch (\Throwable $t) {
+          throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
+        }
+      },
+      'TIME' => function(array $arg) use ($formatter) {
+        try {
+          $dateString = $arg[1];
+          $dateFormat = $arg[2];
+          $stamp = strtotime($dateString);
+          return $formatter->formatTime($stamp, $dateFormat);
+        } catch (\Throwable $t) {
+          throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
+        }
+      },
+      'DATETIME' => function(array $arg) use ($formatter) {
+        try {
+          $dateString = $arg[1];
+          $dateFormat = $arg[2];
+          $stamp = strtotime($dateString);
+          return $formatter->formatDateTime($stamp, $dateFormat);
         } catch (\Throwable $t) {
           throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
         }
