@@ -397,7 +397,7 @@ make sure that the musicians are also automatically added to the
     $fdd = [
       'name'        => $this->l->t('Instruments'),
       'tab'         => ['id' => 'orchestra'],
-      'css'         => ['postfix' => ' musician-instruments tooltip-top'],
+      'css'         => ['postfix' => ' musician-instruments tooltip-top no-chosen selectize drag-drop'],
       'display|LVF' => ['popup' => 'data'],
       'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.sort_order ASC)',
       'select'      => 'M',

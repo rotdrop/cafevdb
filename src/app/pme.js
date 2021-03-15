@@ -51,6 +51,9 @@ import {
   rec as pmeRec,
   container as pmeContainer,
 } from './pme-selectors.js';
+import 'jquery-ui/ui/widgets/sortable';
+import 'selectize';
+import 'selectize/dist/css/selectize.css';
 
 require('pme-table.css');
 
@@ -1091,6 +1094,35 @@ const installFilterChosen = function(containerSel) {
     .attr('title', PHPMyEdit.filterSelectChosenTitle);
 };
 
+function installInputSelectize(containerSel, onlyClass) {
+  const pmeInput = pmeToken('input');
+  const pmeValue = pmeToken('value');
+
+  const container = pmeContainer(containerSel);
+  if (onlyClass === undefined) {
+    onlyClass = 'selectize';
+  }
+
+  container.find('select.' + pmeInput + '.' + onlyClass).each(function(index) {
+    const $self = $(this);
+    const plugins = ['remove_button'];
+    if ($self.hasClass('drag-drop')) {
+      //plugins.push('drag_drop');
+    }
+    $self.selectize({
+      plugins,
+      delimiter: ',',
+      persist: false,
+      create: function(input) {
+        return {
+          value: input,
+          text: input,
+        };
+      },
+    });
+  });
+}
+
 const installInputChosen = function(containerSel, onlyClass) {
 
   if (!PHPMyEdit.selectChosen) {
@@ -1150,6 +1182,7 @@ const installInputChosen = function(containerSel, onlyClass) {
       $(this).attr('title', PHPMyEdit.inputSelectChosenTitle);
     });
 
+  installInputSelectize(containerSel);
 };
 
 const installTabHandler = function(containerSel, changeCallback) {
