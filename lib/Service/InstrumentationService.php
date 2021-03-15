@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -21,6 +22,8 @@
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use Ramsey\Uuid\Uuid;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -55,9 +58,38 @@ class InstrumentationService
   }
 
   /**
+   * Generate a dummy musician entity which can be used during
+   * (email-)form validation and similar things.
+   *
+   * The musician will be created as disabled or soft deleted.
+   *
+   * @return Entities\Musician
+   */
+  public function getDummyMusician():Entities\Musician
+  {
+    $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+    $dummy = $musiciansRepository->findOneBy([ 'uuid' => Uuid::NIL ]);
+    if (empty($dummy)) {
+      /** @var Entities\Musician */
+      $dummy = Entities\Musician::create()
+             ->setUuid(Uuid::NIL)
+             ->setSurName($this->l->t('Doe'))
+             ->setFirstName($this->l->t('John'))
+             ->setCountry('AQ')
+             ->setCity($this->l->t('Nowhere'))
+             ->setStreet($this->l->t('42, Undiscoverable'))
+             ->setPostalCode('Z-7')
+             ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
+             ->setDisabled(true);
+      $this->persist($dummy);
+      $this->flush();
+    }
+    return $dummy;
+  }
+
+  /**
    * @todo DetailedInstrumentationService? Maybe overkill
    */
-
   public function tableTabId($idOrName)
   {
     $dflt = $this->defaultTableTabs();
