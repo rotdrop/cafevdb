@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -43,7 +43,7 @@ trait UuidTrait
    *
    * @return Musiker
    */
-  public function setUuid($uuid)
+  public function setUuid($uuid):self
   {
     if (is_string($uuid)) {
       if (strlen($uuid) == 36) {
