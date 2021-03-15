@@ -127,24 +127,26 @@ if ($numTotal > 0 && $numFailed == 0) {
 $templateDiag = $diagnostics['TemplateValidation'];
 if (!empty($templateDiag)) {
   $output = true;
-  $leadIns = array('MemberErrors' => $l->t('Failed individual substitutions'),
-                   'GlobalErrors' => $l->t('Failed global substitutions'),
-                   'SpuriousErrors' => $l->t('Other failed substitutions'));
+  $leadIns = [
+    'MemberErrors' => $l->t('Failed individual substitutions'),
+    'GlobalErrors' => $l->t('Failed global substitutions'),
+    'SpuriousErrors' => $l->t('Other failed substitutions'),
+  ];
   echo '
 <div class="emailform error group substitutions">
   <span class="error caption substitutions">
   '.$l->t('The operation failed due to template validation errors. '.
           'The following template substitutions could not be resolved:').'
   </span>';
-  foreach($templateDiag as $key => $failed) {
-    $cssTag = Navigation::camelCaseToDashes($key);
+  foreach ($templateDiag as $key => $failed) {
+    $cssTag = Util::camelCaseToDashes($key);
     echo '
   <div class="error contents substitutions '.$cssTag.'">
     <span class="error heading">'.$leadIns[$key].'</span>
     <ul>';
-    foreach($failed as $failure) {
+    foreach ($failed as $failure) {
       echo '
-      <li><span class="error item contents substitutions">'.$failure.'</span></li>';
+      <li><span class="error item contents substitutions">'.print_r($failure, true).'</span></li>';
     }
     echo '
     </ul>
