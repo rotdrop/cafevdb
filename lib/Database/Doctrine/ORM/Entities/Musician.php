@@ -101,7 +101,7 @@ class Musician implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, nullable=true)
+   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_bin"})
    */
   private $country;
 
@@ -115,7 +115,7 @@ class Musician implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=128, nullable=true, options={"comment"="Und was es sonst noch so gibt ..."})
+   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_bin"})
    */
   private $language;
 
