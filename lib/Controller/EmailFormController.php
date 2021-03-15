@@ -30,6 +30,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IURLGenerator;
 use OCP\Files\FileInfo;
+use OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -104,6 +105,7 @@ class EmailFormController extends Controller {
     $templateParameters = [
       'appName' => $this->appName(),
       'urlGenerator' => $this->urlGenerator,
+      'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
       'pageNavigation' => $this->pageNavigation,
       'toolTips' => $this->appContainer->get(ToolTipsService::class),
       'emailComposer' => $composer,
@@ -316,6 +318,7 @@ class EmailFormController extends Controller {
               'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
               'fileAttachmentData' => json_encode($fileAttachments),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
+              'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
               'composerFormData' => $composer->formData(),
             ];
             $elementData = (new TemplateResponse(
@@ -405,6 +408,7 @@ class EmailFormController extends Controller {
               'projectName' => $projectName,
               'projectId' => $projectId,
               'urlGenerator' => $this->urlGenerator,
+              'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
               'templateName' => $composer->currentEmailTemplate(),
               'storedEmails' => $composer->storedEmails(),
               'TO' => $composer->toString(),

@@ -23,7 +23,10 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
+use OCP\IDateTimeFormatter;
+
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
@@ -33,6 +36,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -68,68 +72,74 @@ Camerata Academica Freiburg musiziert haben. Wenn wir Sie aus unserer Datenbank
 löschen sollen, teilen Sie uns das bitte kurz mit, indem Sie entsprechend
 auf diese Email antworten. Wir entschuldigen uns in diesem Fall für die
 Störung.';
-  const MEMBERVARIABLES = '
-VORNAME
-NAME
-EMAIL
-MOBILFUNK
-FESTNETZ
-STRASSE
-PLZ
-STADT
-LAND
-GEBURTSTAG
-UNKOSTENBEITRAG
-ANZAHLUNG
-GESAMTBEITRAG
-ZUSATZKOSTEN
-EXTRAS
-VERSICHERUNGSBEITRAG
-ZAHLUNGSEINGANG
-FEHLBETRAG
-SEPAMANDATSREFERENZ
-SEPAMANDATSIBAN
-SEPAMANDATSBIC
-SEPAMANDATSINHABER
-LASTSCHRIFTBETRAG
-LASTSCHRIFTZWECK
-';
-  const MEMBERCOLUMNS = '
-Vorname
-Name
-Email
-MobilePhone
-FixedLinePhone
-Strasse
-Postleitzahl
-Stadt
-Land
-Geburtstag
-Unkostenbeitrag
-Anzahlung
-TotalFees
-SurchargeFees
-Extras
-InsuranceFee
-AmountPaid
-AmountMissing
-MandateReference
-MandateIBAN
-MandateBIC
-MandateAccountOwner
-DebitNoteAmount
-DebitNotePurpose
-';
+  const GLOBAL_NAMESPACE = 'GLOBAL';
+  const MEMBER_NAMESPACE = 'MEMBER';
+  const MEMBER_VARIABLES = [
+    FIRST_NAME,
+    SUR_NAME,
+    NICK_NAME,
+    DISPLAY_NAME,
+    EMAIL,
+    MOBILE_PHONE,
+    FIXED_LINE_PHONE,
+    STREET,
+    POSTAL_CODE,
+    CITY,
+    COUNTRY,
+    BIRTHDAY,
+    SERVICE_FEE,
+    TOTAL_FEES,
+    SURCHARGE,
+    DEPOSIT,
+    EXTRAS,
+    INSURANCE_FEE,
+    PAYMENT_RECEIPT,
+    MISSING_AMOUNT,
+    SEPA_MANDATE_REFERENCE,
+    SEPA_MANDATE_IBAN,
+    SEPA_MANDATE_BIC,
+    SEPA_MANDATE_ACCOUNT_OWNER,
+    DEBIT_NOTE_AMOUNT,
+    DEBIT_NOTE_PURPOSE,
+  ];
+  const GLOBAL_VARIABLES = [
+    'ORGANIZER',
+    'CREDITORIDENTIFIER',
+    'ADDRESS',
+    'BANKACCOUNT',
+    'PROJECT',
+    'DEBITNOTEDUEDATE',
+    'DEBITNOTEDUEDAYS',
+    'DEBITNOTESUBMITDATE',
+    'DEBITNOTESUBMITDAYS',
+    'DEBITNOTEJOB',
+    'DATE',
+  ];
   private $recipients; ///< The list of recipients.
   private $onLookers;  ///< Cc: and Bcc: recipients.
 
+  /** @var array */
   private $cgiData;
+
+  /** @var bool */
   private $submitted;
 
+  /** @var int */
   private $projectId;
+
+  /** @var string */
   private $projectName;
+
+  /** @var Entities\Project */
+  private $project;
+
+  /** @var Entities\SepaDebitNote */
+  private $debitNote;
+
+  /** @var int */
   private $debitNoteId;
 
+  /** @var bool */
   private $constructionMode;
 
   private $catchAllEmail; ///< The fixed From: email address.
@@ -166,6 +176,9 @@ DebitNotePurpose
 
   /** @var int */
   private $progressToken;
+
+  /** @var array */
+  private $substitutions;
 
   /*
    * constructor
@@ -224,8 +237,17 @@ DebitNotePurpose
       'projectId', $this->parameterService->getParam('projectId', -1));
     $this->projectName = $this->cgiValue(
       'projectName', $this->parameterService->getParam('projectName', ''));
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)
+                            ->find($this->projectId);
+    }
+
     $this->debitNoteId = $this->cgiValue(
       'debitNoteId', $this->parameterService->getParam('debitNoteId', -1));
+    if ($this->debitNoteId > 0) {
+      $this->debitNote = $this->getDatabaseRepository(Entities\SepaDebitNote::class)
+                              ->find($this->debitNoteId);
+    }
 
     $this->setSubjectTag();
 
@@ -327,7 +349,7 @@ DebitNotePurpose
    */
   private function isMemberTemplateEmail($message)
   {
-    return preg_match('!([^$]|^)[$]{MEMBER::[^{]+}!', $message);
+    return preg_match('/([^$]|^)[$]{MEMBER::[^}]+}/', $message);
   }
 
   /**
@@ -401,48 +423,124 @@ DebitNotePurpose
   }
 
   /**
-   * Substitute any global variables into $this->messageContents.
-   *
-   * @return string HTML message with variable substitutions.
+   * Fill the $this->substitutions array.
    */
-  private function replaceGlobals()
+  private function generateSubstitutionHandlers()
   {
-    $message = $this->messageContents;
+    $this->generateGlobalSubstitutionHandlers();
 
-    if (preg_match('!([^$]|^)[$]{GLOBAL::[^{]+}!', $message)) {
-      $vars = $this->emailGlobalVariables();
-
-      // TODO: one call to preg_replace would be enough, but does
-      // not really matter as long as there is only one global
-      // variable.
-      foreach ($vars as $key => $value) {
-        $message = preg_replace('/([^$]|^)[$]{GLOBAL::'.$key.'}/', '${1}'.$value, $message);
-      }
-
-      // Support date substitutions. Format is
-      // ${GLOBAL::DATE:dateformat!datestring} where dateformat
-      // defaults to d.m.Y. datestring is everything understood by
-      // strtotime().
-      $oldLocale = setlocale(LC_TIME, '0');
-      setlocale(LC_TIME, $this->getLocale());
-      $message = preg_replace_callback(
-        '/([^$]|^)[$]{GLOBAL::DATE:([^!]*)!([^}]*)}/',
-        function($matches) use ($vars) {
-          $dateFormat = $matches[2];
-          $timeString = $matches[3];
-          // if one of the other global variables translates to a
-          // date, then it is also allowed as date-string.
-          if (array_key_exists($timeString, $vars)) {
-            $timeString = $vars[$timeString];
-          }
-          return $matches[1].strftime($dateFormat, strtotime($timeString));
-        },
-        $message
-      );
-      setlocale(LC_TIME, $oldLocale);
+    // @todo fill with real contents
+    foreach (self::MEMBER_VARIABLES as $key) {
+      $this->substitutions[self::MEMBER_NAMESPACE][$key] = function($key) { return $key; };
     }
 
-    return $message;
+    // Generate localized variable names
+    foreach ($this->substitutions as $nameSpace => $replacements) {
+      foreach ($replacements as $key => $handler) {
+        $this->substitutions[$nameSpace][$this->l->t($key)] = function($key) use ($handler) { return $handler($key); };
+      }
+    }
+  }
+
+  /**
+   * Return true if this email needs per-namespace
+   * substitutions. Substitutions have the form
+   * ```
+   * ${NAMESPACE::VARIABLE}
+   * ```
+   * For example ${MEMBER::FIRST_NAME}.
+   *
+   */
+  private function hasSubstitutionNamespace($nameSpace, $message = null)
+  {
+    if (empty($message)) {
+      $message = $this->messageContents;
+    }
+
+    return preg_match('/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3[^}]+}/', $message);
+  }
+
+  /**
+   * Replace all variables of the given namespace in
+   * $this->messageContents.
+   *
+   * @param string $nameSpace The variable prefix, e.g. MEMBER or one
+   * of its translations.
+   *
+   * @param mixed $data Context dependent data, likely Entities\Musician.
+   *
+   * @param null|string $message
+   *
+   * @param null|array $failures Optional failure array. If null then
+   * the method will throw an exception on errror.
+   *
+   * @return string Substituted message
+   * @throw Exceptions\SubstitutionException
+   */
+  private function replaceFormVariables(string $nameSpace, $data = null, ?string $message = null, ?array &$failures = null):string
+  {
+    if (empty($message)) {
+      $message = $this->messageContents;
+    }
+
+    if (empty($this->substitutions)) {
+      $this->generateSubstitutionHandlers();
+    }
+
+    return preg_replace_callback(
+      '/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3([^}]+)}/',
+      function($matches) use ($data, &$failures) {
+        $this->logInfo('MATCHES '.print_r($matches, true));
+        $prefix = $matches[1];
+        $nameSpace = $matches[2];
+        $separator = $matches[3];
+        $variable  = explode($separator, $matches[4]);
+        $handler = $this->substitutions[$nameSpace][$variable[0]];
+        if (empty($handler) || !is_callable($handler)) {
+          if (!is_array($failures)) {
+            throw new Exceptions\SubstitutionException($this->l->t('No substitution handler found for "%s%s%s".', [ $nameSpace, $separator.$separator, $variable[0] ]));
+          } else {
+            $failures[] = [
+              'namespace' => $nameSpace,
+              'variable' => $variable,
+              'error' => 'unknown',
+            ];
+          }
+          return '';
+        }
+        try {
+          $this->logInfo('CALL HANDLER '.print_r($variable, true));
+          return $prefix.call_user_func($handler, $variable, $data);
+        } catch (\Throwable $t) {
+          if (!is_array($failures)) {
+            throw $t;
+          }
+          $this->logException($t);
+          $failures[] = [
+            'namespace' => $nameSpace,
+            'variable' => $variable,
+            'error' => 'substitution',
+            'exception' => $t->getMessage(),
+          ];
+        }
+        return ''; // replace with empty string in case of error
+      },
+      $message);
+  }
+
+  /**
+   * Cleanup edge-cases. ATM this only replaces left-over '$$'
+   * occurences with a single $.
+   *
+   * @return string
+   */
+  private function finalizeSubstitutions($message = null)
+  {
+    if (empty($message)) {
+      $message = $this->messageContents;
+    }
+
+    return str_replace('$$', '$', $message);
   }
 
   /**
@@ -497,26 +595,30 @@ DebitNotePurpose
   {
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
-    $message = $this->replaceGlobals();
+    $messageTemplate = $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
-    if ($this->isMemberTemplateEmail($message)) {
+    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
 
       $this->diagnostics['TotalPayload'] = count($this->recipients)+1;
 
       foreach ($this->recipients as $recipient) {
-        $dbdata = $recipient['dbdata'];
-        $strMessage = $this->replaceMemberVariables($message, $dbdata);
+        /** @var Entities\Musician */
+        $musician = $recipient['dbdata'];
+        $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
+        $strMessage = $this->finalizeSubstitutions($strMessage);
         ++$this->diagnostics['TotalCount'];
         $msg = $this->composeAndSend($strMessage, [ $recipient ], false);
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
-          if ($this->debitNoteId > 0 && $dbdata['PaymentId'] > 0) {
-            $messageId = $msg['messageId'];
-            $where =  '`Id` = '.$dbdata['PaymentId'].' AND `DebitNoteId` = '.$this->debitNoteId;
-            mySQL::update('ProjectPayments', $where, [ 'DebitMessageId' => $messageId ], $this->dbh);
-          }
+
+          // BIG FAT TODO
+          // if ($this->debitNoteId > 0 && $dbdata['PaymentId'] > 0) {
+          //   $messageId = $msg['messageId'];
+          //   $where =  '`Id` = '.$dbdata['PaymentId'].' AND `DebitNoteId` = '.$this->debitNoteId;
+          //   mySQL::update('ProjectPayments', $where, [ 'DebitMessageId' => $messageId ], $this->dbh);
+          // }
         } else {
           ++$this->diagnostics['FailedCount'];
         }
@@ -1240,17 +1342,33 @@ DebitNotePurpose
    */
   public function previewMessages()
   {
+    $realRecipients = $this->recipients;
+    if (empty($this->recipients)) {
+      $dummy = $this->appContainer()->get(InstrumentationService::class)->getDummyMusician();
+      $this->recipients = [
+        $dummy->getId() => [
+          'dbdata' => $dummy,
+        ],
+      ];
+    }
     if (!$this->preComposeValidation()) {
+      $this->recipients = $realRecipients;
       return null;
     }
+
+    $this->logInfo('RECIPIENTS 1 '.count($this->recipients));
 
     // Preliminary checks passed, let's see what happens. The mailer may throw
     // any kind of "nasty" exceptions.
     $preview = $this->exportMessages();
 
+    $this->logInfo('RECIPIENTS 2 '.count($this->recipients));
+
     if (!empty($preview)) {
       $this->diagnostics['caption'] = $this->l->t('Message(s) exported successfully!');
     }
+
+    $this->recipients = $realRecipients;
 
     return $preview;
   }
@@ -1265,14 +1383,20 @@ DebitNotePurpose
   {
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
-    $messageTemplate = $this->replaceGlobals();
+    $messageTemplate = $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
-    if ($this->isMemberTemplateEmail($messageTemplate)) {
+    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
 
       $this->diagnostics['totalPayload'] = count($this->recipients)+1;
 
+      $this->logInfo('MEMBER SUBSTITUTIONS '.count($this->recipients));
+
       foreach ($this->recipients as $recipient) {
-        $strMessage = $this->replaceMemberVariables($messageTemplate, $recipient['dbdata']);
+        /** @var Entities\Musician */
+        $musician = $recipient['dbdata'];
+        $this->logInfo('EXPORT MESSAGE FOR '.$musician->getEmail());
+        $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
+        $strMessage = $this->finalizeSubstitutions($strMessage);
         ++$this->diagnostics['totalCount'];
         $message = $this->composeAndExport($strMessage, [ $recipient ], false);
         if (empty($message)) {
@@ -1286,6 +1410,7 @@ DebitNotePurpose
       // this makes no sense) to all Cc:, Bcc: recipients and the
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
+      $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
       ++$this->diagnostics['totalCount'];
       $message = $this->composeAndExport($messageTemplate, [], true);
       if (empty($message)) {
@@ -1296,6 +1421,7 @@ DebitNotePurpose
     } else {
       $this->diagnostics['totalPayload'] = 1;
       ++$this->diagnostics['totalCount']; // this is ONE then ...
+      $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
       $message = $this->composeAndExport($messageTemplate, $this->recipients);
       if (empty($message)) {
         ++$this->diagnostics['failedCount'];
@@ -1371,6 +1497,7 @@ DebitNotePurpose
     if (!$this->executionStatus) {
       $this->diagnostics['caption'] = $this->l->t('Pre-composition validation has failed!');
     }
+
     return $this->executionStatus;
   }
 
@@ -1462,64 +1589,38 @@ DebitNotePurpose
     $templateError = [];
 
     // Check for per-member stubstitutions
+    $this->generateSubstitutionHandlers();
 
     $dummy = $template;
 
-    if (preg_match('!([^$]|^)[$]{MEMBER::[^}]+}!', $dummy)) {
-      // Fine, we have substitutions. We should now verify that we
-      // only have _legal_ substitutions. There are probably more
-      // clever ways to do this, but at this point we simply
-      // substitute any legal variable by DUMMY and check that no
-      // unknown ${...} substitution tag remains. Mmmh.
-
-      $variables = $this->memberVariables;
-      foreach ($variables as $placeholder => $column) {
-        if ($placeholder === 'EXTRAS') {
-          $dummy = preg_replace(
-            '/([^$]|^)[$]{MEMBER::EXTRAS(:([^!}]+)!([^!}]+)!([^}]+))?}/',
-            '${1}'.$column, $dummy);
-          continue;
-        }
-        $dummy = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'[^}]*}/', '${1}'.$column, $dummy);
-      }
-
-      if (preg_match('!([^$]|^)[$]{MEMBER::[^}]+}?!', $dummy, $leftOver)) {
+    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $dummy)) {
+      $failures = [];
+      $dummy = $this->replaceFormVariables(self::MEMBER_NAMESPACE, null, $dummy, $failures);
+      if (!empty($failures)) {
         $templateError[] = 'member';
-        $this->diagnostics['TemplateValidation']['MemberErrors'] = $leftOver;
+        foreach ($failures as $failure) {
+          if ($failure['error'] == 'unknown') {
+            $this->diagnostics['TemplateValidation']['MemberErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+          } else {
+            $this->diagnostics['TemplateValidation']['MemberErrors'] = $failures;
+          }
+        }
       }
-
-      // Now remove all member variables, known or not
-      $dummy = preg_replace('/[$]{MEMBER::[^}]*}/', '', $dummy);
     }
 
-    // Now check for global substitutions
-    $globalTemplateLeftOver = [];
-    if (preg_match('!([^$]|^)[$]{GLOBAL::[^}]+}!', $dummy)) {
-      $variables = $this->emailGlobalVariables();
-
-      // dummy replace all "ordinary" global variables
-      foreach ($variables as $key => $value) {
-        $dummy = preg_replace('/([^$]|^)[$]{GLOBAL::'.$key.'}/', '${1}'.$value, $dummy);
-      }
-
-      // replace all date-strings, but give a damn on valid results. Grin 8-)
-      $dummy = preg_replace_callback(
-        '/([^$]|^)[$]{GLOBAL::DATE:([^!]*)!([^}]*)}/',
-        function($matches) {
-          $dateFormat = $matches[2];
-          $timeString = $matches[3];
-          return $matches[1].strftime($dateFormat, strtotime($timeString));
-        },
-        $dummy
-      );
-
-      if (preg_match('!([^$]|^)[$]{GLOBAL::[^}]+}?!', $dummy, $leftOver)) {
+    if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE)) {
+      $failures = [];
+      $dummy = $this->replaceFormVariables(self::GLOBAL_NAMESPACE, null, $dummy, $failures);
+      if (!empty($failures)) {
         $templateError[] = 'global';
-        $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver;
+        foreach ($failures as $failure) {
+          if ($failure['error'] == 'unknown') {
+            $this->diagnostics['TemplateValidation']['GlobalErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+          } else {
+            $this->diagnostics['TemplateValidation']['GlobalErrors'][] = $failure;
+          }
+        }
       }
-
-      // Now remove all global variables, known or not
-      $dummy = preg_replace('/([^$]|^)[$]{GLOBAL::[^}]*}/', '', $dummy);
     }
 
     $spuriousTemplateLeftOver = [];
@@ -1528,6 +1629,8 @@ DebitNotePurpose
       $templateError[] = 'spurious';
       $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver;
     }
+
+    $this->logInfo('VALIDATION '.print_r($this->diagnostics, true));
 
     if (empty($templateError)) {
       return true;
@@ -1571,9 +1674,89 @@ DebitNotePurpose
    */
   private function emailMemberVariables()
   {
-    $vars   = preg_split('/\s+/', trim(self::MEMBERVARIABLES));
-    $values = preg_split('/\s+/', trim(self::MEMBERCOLUMNS));
-    return array_combine($vars, $values);
+    //$vars   = preg_split('/\s+/', trim(self::MEMBER_VARIABLES));
+    //$values = preg_split('/\s+/', trim(self::MEMBERCOLUMNS));
+    //return array_combine($vars, $values);
+    return [];
+  }
+
+  /**
+   * Generate the substitutions for the global form variables.
+   *
+   * @todo unify timezone and date and time formatting.
+   */
+  private function generateGlobalSubstitutionHandlers()
+  {
+    /** @var IDateTimeFormatter */
+    $formatter = $this->appContainer()->get(IDateTimeFormatter::class);
+
+    $this->substitutions[self::GLOBAL_NAMESPACE] = [
+      'ORGANIZER' => function($key) {
+        return $this->fetchExecutiveBoard();
+      },
+      'CREDITORIDENTIFIER' => function($key) {
+        return $this->getConfigValue('bankAccountCreditorIdentifier');
+      },
+      'ADDRESS' => function($key) {
+        return $this->streetAddress();
+      },
+      'BANKACCOUNT' => function($key) {
+        return $this->bankAccount();
+      },
+      'PROJECT' => function($key) {
+        $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
+      },
+      'DEBITNOTEDUEDATE' => function($key) { return ''; },
+      'DEBITNOTEDUEDAYS' => function($key) { return ''; },
+      'DEBITNOTESUBMITDATE' => function($key) { return ''; },
+      'DEBITNOTESUBMITDAYS' => function($key) { return ''; },
+      'DEBITNOTEJOB' => function($key) { return ''; },
+      /**
+       * Support date substitutions. Format is
+       * ${GLOBAL::DATE:dateformat:datestring} where dateformat
+       * default to d.m.Y (see strftime) and datestring can be
+       * everything understood by strtotime.
+       *
+       * @todo Revise concerning timezone and locale settings
+       */
+      'DATE' => function(array $arg) {
+        try {
+          $dateString = $arg[1];
+          $dateFormat = $arg[2];
+          $oldLocale = setlocale(LC_TIME, '0');
+          setlocale(LC_TIME, $this->getLocale());
+          $oldTimezone = \date_default_timezone_get();
+          \date_default_timezone_set($this->getTimezone());
+          $result = strftime($dateFormat, strtotime($dateString));
+          \date_default_timezone_set($oldTimezone);
+          setlocale(LC_TIME, $oldLocale);
+          return $result;
+        } catch (\Throwable $t) {
+          throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
+        }
+      },
+    ];
+
+    if (!empty($this->debitNote)) {
+
+      $this->substitutions[self::GLOBAL_NAMESPACE] += [
+        'DEBITNOTEJOB' => function($key) {
+          return $this->l->t($this->debitNote['Job']);
+        },
+        'DEBITNOTEDUEDAYS' => function($key) {
+          return (new \DateTime())->diff($this->debitNote->getDueDate())->format('%r%a');
+        },
+        'DEBITNOTESUBMITDAYS' => function($key) {
+          return (new \DateTime())->diff($this->debitNote->getSubmissionDeadline())->format('%r%a');
+        },
+        'DEBITNOTEDUEDATE' => function($key) use ($formatter) {
+          return $formatter->formatDate($this->debitNote->getDueDate());
+        },
+        'DEBITNOTESUBMITDATE' => function($key) use ($formatter) {
+          return $formatter->formatDate($this->debitNote->getSubmissionDeadline());
+        },
+      ];
+    }
   }
 
   /**
