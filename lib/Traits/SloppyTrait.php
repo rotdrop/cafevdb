@@ -42,6 +42,6 @@ trait SloppyTrait
       $result .= $separators['ordinary'] . $values[$i];
     }
     $result .= $separators['last'] . $values[$i];
-    return result;
+    return $result;
   }
 }
