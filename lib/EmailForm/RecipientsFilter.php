@@ -74,6 +74,8 @@ class RecipientsFilter
 
   /** @var Entities\SepaDebitNote */
   private $debitNote;
+
+  /** @var int */
   private $debitNoteId;
 
   private $instruments; // List of instruments for filtering
