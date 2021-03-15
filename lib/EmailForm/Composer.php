@@ -86,6 +86,7 @@ Störung.';
     POSTAL_CODE,
     CITY,
     COUNTRY,
+    LANGUAGE,
     BIRTHDAY,
     SERVICE_FEE,
     TOTAL_FEES,
@@ -418,13 +419,71 @@ Störung.';
 
     // @todo fill with real contents
     foreach (self::MEMBER_VARIABLES as $key) {
-      $this->substitutions[self::MEMBER_NAMESPACE][$key] = function(array $key) { return $key[0]; };
+      $this->substitutions[self::MEMBER_NAMESPACE][$key] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+        $field = Util::dashesToCamelCase(strtolower($key), false, '_');
+        if (empty($musician) || !isset($musician[$field])) {
+          return $keyArg[0];
+        }
+        return $musician[$field];
+      };
     }
+
+    $this->substitutions[self::MEMBER_NAMESPACE]['NICK_NAME'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      return $musician['nickName']?:$musician['firstName'];
+    };
+
+    $this->substitutions[self::MEMBER_NAMESPACE]['DISPLAY_NAME'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      return $musician['displayName']?: ($musician['nickName']?:$musician['firstName']).' '.$musician['surName'];
+    };
+
+    $this->substitutions[self::MEMBER_NAMESPACE]['COUNTRY'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      $country = $musician['country'];
+      if (empty($country)) {
+        return '';
+      }
+      $language = substr($this->l->getLanguageCode(), 0, 2);
+      $locale = $language.'_'.$country;
+      return locale_get_display_region($language.'_'.$country, $language);
+    };
+
+    $this->substitutions[self::MEMBER_NAMESPACE]['LANGUAGE'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      $language = $musician['language'];
+      if (empty($language)) {
+        return '';
+      }
+      $displayLanguage = substr($this->l->getLanguageCode(), 0, 2);
+      return locale_get_display_language($language, $displayLanguage);
+    };
+
+    /** @var IDateTimeFormatter */
+    $formatter = $this->appContainer()->get(IDateTimeFormatter::class);
+    $this->substitutions[self::MEMBER_NAMESPACE]['BIRTHDAY'] = function(array $keyArg, ?Entities\Musician $musician) use ($key, $formatter) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      $date = $musician['birthday'];
+      if (empty($date)) {
+        return '';
+      }
+      return $formatter->formatDate($date, $keyArg[1]?:'full');
+    };
 
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
       foreach ($replacements as $key => $handler) {
-        $this->substitutions[$nameSpace][$this->l->t($key)] = function($keyArg) use ($handler) { return $handler($keyArg); };
+        $this->substitutions[$nameSpace][$this->l->t($key)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler) { return $handler($keyArg, $musician); };
       }
     }
   }
@@ -1707,7 +1766,7 @@ Störung.';
       'DATE' => function(array $arg) use ($formatter) {
         try {
           $dateString = $arg[1];
-          $dateFormat = $arg[2];
+          $dateFormat = $arg[2]?:'long';
           $stamp = strtotime($dateString);
           if (\array_search($dateFormat, ['full', 'long', 'medium', 'short']) !== false) {
             return $formatter->formatDate($stamp, $dateFormat);
@@ -1727,7 +1786,7 @@ Störung.';
       'TIME' => function(array $arg) use ($formatter) {
         try {
           $dateString = $arg[1];
-          $dateFormat = $arg[2];
+          $dateFormat = $arg[2]?:'long';
           $stamp = strtotime($dateString);
           return $formatter->formatTime($stamp, $dateFormat);
         } catch (\Throwable $t) {
@@ -1737,7 +1796,7 @@ Störung.';
       'DATETIME' => function(array $arg) use ($formatter) {
         try {
           $dateString = $arg[1];
-          $dateFormat = $arg[2];
+          $dateFormat = $arg[2]?:'long';
           $stamp = strtotime($dateString);
           return $formatter->formatDateTime($stamp, $dateFormat);
         } catch (\Throwable $t) {
