@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or1
  * modify it under th52 terms of the GNU GENERAL PUBLIC LICENSE
@@ -609,7 +609,8 @@ class GeoCodingService
     return true;
   }
 
-  /**Return an array of PHP-supported country-codes and localized
+  /**
+   * Return an array of PHP-supported country-codes and localized
    * names; this uses the PHP-internal locale support.
    *
    * @param $language The desired language for the returned country names.
@@ -637,7 +638,7 @@ class GeoCodingService
     return $countryCodes;
   }
 
-  /**Return the country-code for the requested or current locale. */
+  /** Return the country-code for the requested or current locale. */
   public function localeCountryName($locale = null)
   {
     if (!$locale) {
