@@ -110,6 +110,33 @@ class Util
     }
   }
 
+  /**
+   * Explode a string of the form
+   * ```
+   * A:B,C:D,...
+   * ```
+   * into an array of the shape
+   * ```
+   * [
+   *   A => B,
+   *   C => D,
+   *   D => $default,
+   *   ...
+   * ]
+   * ```
+   */
+  static public function explodeIndexed(?string $data, $default = null, string $delimiter = ',', string $keyDelimiter = ':'):array
+  {
+    $matrix = array_map(
+      function($row) use ($keyDelimiter) {
+        return self::explode($keyDelimiter, $row);
+      },
+      self::explode($delimiter, $data));
+    return array_combine(
+      array_column($matrix, 0),
+      array_pad(array_column($matrix, 1), count($matrix), $default));
+  }
+
   /**Return the maximum upload file size.*/
   public static function maxUploadSize($target = 'temporary')
   {
