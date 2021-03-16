@@ -399,10 +399,10 @@ make sure that the musicians are also automatically added to the
       'tab'         => ['id' => 'orchestra'],
       'css'         => ['postfix' => ' musician-instruments tooltip-top no-chosen selectize drag-drop'],
       'display|LVF' => ['popup' => 'data'],
-      // 'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.sort_order ASC)',
-      'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $join_table.sort_order ASC)',
+      'sql'         => ($expertMode
+                        ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'
+                        : 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.disabled, NULL, $join_col_fqn) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
       'select'      => 'M',
-      // 'filter'      => 'having', // need "HAVING" for group by stuff really ?
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
@@ -413,7 +413,7 @@ make sure that the musicians are also automatically added to the
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
-    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.Disabled = 0' ]);
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.disabled = 0' ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
@@ -432,6 +432,17 @@ make sure that the musicians are also automatically added to the
         'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
       ],
     ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'disabled', [
+        'name'    => $this->l->t('Disabled Instruments'),
+        'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
+        'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn, \$join_table.instrument_id, NULL))",
+        'default' => false,
+        'select'  => 'T',
+        'input'   => ($expertMode ? 'S' : 'SH'),
+        'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
+      ]);
 
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
