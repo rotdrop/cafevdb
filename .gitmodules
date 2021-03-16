@@ -43,3 +43,6 @@
 [submodule "3rdparty/pear/Net_Socket"]
 	path = 3rdparty/pear/Net_Socket
 	url = git@github.com:rotdrop/Net_Socket.git
+[submodule "3rdparty/selectize"]
+	path = 3rdparty/selectize
+	url = git@github.com:rotdrop/selectize.js.git
