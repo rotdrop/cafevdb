@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,6 +26,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * ProjectInstrumentationNumber
@@ -86,7 +87,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return ProjectInstrumentationNumber
    */
-  public function setInstrument($instrument)
+  public function setInstrument($instrument):ProjectInstrumentationNumber
   {
     $this->instrument = $instrument;
 
@@ -96,9 +97,9 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   /**
    * Get instrument.
    *
-   * @return int
+   * @return Instrument
    */
-  public function getInstrument()
+  public function getInstrument():Instrument
   {
     return $this->instrument;
   }
@@ -122,7 +123,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return int
    */
-  public function getProject()
+  public function getProject():Project
   {
     return $this->project;
   }
@@ -134,7 +135,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return ProjectInstrumentationNumber
    */
-  public function setVoice($voice)
+  public function setVoice(int $voice):ProjectInstrumentationNumber
   {
     $this->voice = $voice;
 
@@ -146,7 +147,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return int
    */
-  public function getVoice()
+  public function getVoice():int
   {
     return $this->voice;
   }
@@ -158,7 +159,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return ProjectInstrumentationNumber
    */
-  public function setQuantity($quantity)
+  public function setQuantity(int $quantity):ProjectInstrumentationNumber
   {
     $this->quantity = $quantity;
 
@@ -170,7 +171,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return int
    */
-  public function getQuantity()
+  public function getQuantity():int
   {
     return $this->quantity;
   }
@@ -182,7 +183,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return ProjectInstrumentationNumber
    */
-  public function setInstruments($instruments)
+  public function setInstruments(Collection $instruments):ProjectInstrumentationNumber
   {
     $this->instruments = $instruments;
 
@@ -194,7 +195,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return int
    */
-  public function getInstruments()
+  public function getInstruments():Collection
   {
     return $this->instruments;
   }
