@@ -54,7 +54,7 @@ class ProjectParticipants extends PMETableViewBase
   const PROJECTS_TABLE = 'Projects';
   const INSTRUMENTS_TABLE = 'Instruments';
   const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
-  const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
+  const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
   const EXTRA_FIELDS_TABLE = 'ProjectExtraFields';
@@ -94,12 +94,13 @@ class ProjectParticipants extends PMETableViewBase
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
         'instrument_id' => false,
+        //'voice' => [ 'self' => true ],
       ],
       'column' => 'instrument_id',
       'group_by' => true,
     ],
     [
-      'table' => self::MUSICIAN_INSTRUMENT_TABLE,
+      'table' => self::MUSICIAN_INSTRUMENTS_TABLE,
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
         'instrument_id' => false,
@@ -456,7 +457,7 @@ class ProjectParticipants extends PMETableViewBase
           'description' => 'name',
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
-          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENT_TABLE." mi WHERE \$record_id[project_id] = ".$projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
+          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENTS_TABLE." mi WHERE \$record_id[project_id] = ".$projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
         ],
         'values|LFV' => [
           'table'       => self::INSTRUMENTS_TABLE,
@@ -602,17 +603,18 @@ class ProjectParticipants extends PMETableViewBase
     $fdd = [
       'name'        => $this->l->t('All Instruments'),
       'tab'         => [ 'id' => [ 'musician', 'instrumentation' ] ],
-      'css'         => ['postfix' => ' musician-instruments tooltip-top'],
+      'css'         => ['postfix' => ' musician-instruments tooltip-top no-chosen selectize drag-drop'],
       'display|LVF' => ['popup' => 'data'],
-      'sql'         => 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENT_TABLE].'.disabled, NULL, $join_col_fqn) ORDER BY $order_by)',
+      'sql'         => ($expertMode
+                        ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'
+                        : 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.disabled, NULL, $join_col_fqn) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
       'select'      => 'M',
-      //'filter'      => 'having', // ?????? need "HAVING" for group by stuff
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
         'description' => 'name',
         'orderby'     => '$table.sort_order ASC',
-        'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
+        'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.instrument_id'
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -620,10 +622,10 @@ class ProjectParticipants extends PMETableViewBase
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.disabled = 0' ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENT_TABLE, 'instrument_id', $fdd);
+      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENT_TABLE, 'disabled', [
+      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'disabled', [
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
         'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn, \$join_table.instrument_id, NULL))",
