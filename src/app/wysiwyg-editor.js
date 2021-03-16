@@ -135,12 +135,12 @@ const removeEditor = function(selector) {
   try {
     editorElement.ckeditor().remove();
   } catch (e) {
-    console.info('EXCEPTION', e);
+    // console.info('EXCEPTION', e);
   }
   try {
     editorElement.tinymce().remove();
   } catch (e) {
-    console.info('EXCEPTION', e);
+    // console.info('EXCEPTION', e);
   }
 };
 
