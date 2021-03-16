@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -79,7 +79,7 @@ class ProjectsController extends Controller {
         $required = [
           'year' => $this->l->t("project-year"),
           'name' => $this->l->t("project-name"),
-          'temporal_type'  => $this->l->t("project-kind"),
+          'type'  => $this->l->t("project-kind"),
         ];
         foreach ($required as $key => $subject) {
           if (empty($projectValues[$key])) {
@@ -90,7 +90,7 @@ class ProjectsController extends Controller {
         $projectId = $this->pme->getCGIRecordId();
         $projectName = $projectValues['name'];
         $projectYear = $projectValues['year'];
-        $attachYear  = !empty($projectValues['temporal_type']) && $projectValues['temporal_type'] == 'temporary';
+        $attachYear  = !empty($projectValues['type']) && $projectValues['type'] == 'temporary';
 
         $infoMessage = "";
         switch ($control) {
