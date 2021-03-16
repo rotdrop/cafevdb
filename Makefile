@@ -73,12 +73,16 @@ composer-download:
 composer: stamp.composer-core-versions
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
+.PHONY: node-hacks
+node-hacks:
+	make -C $(ABSSRCDIR)/3rdparty/selectize
+
 .PHONY: npm-update
-npm-update:
+npm-update: node-hacks
 	npm update
 
 .PHONY: npm-init
-npm-init:
+npm-init: node-hacks
 	npm install
 
 # Installs npm dependencies
