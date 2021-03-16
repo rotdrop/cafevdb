@@ -53,7 +53,9 @@ import {
 } from './pme-selectors.js';
 import 'jquery-ui/ui/widgets/sortable';
 import 'selectize';
-import 'selectize/dist/css/selectize.css';
+import 'selectize/dist/css/selectize.bootstrap4.css';
+// import 'selectize/dist/css/selectize.css';
+require('cafevdb-selectize.css');
 
 require('pme-table.css');
 
@@ -1096,7 +1098,6 @@ const installFilterChosen = function(containerSel) {
 
 function installInputSelectize(containerSel, onlyClass) {
   const pmeInput = pmeToken('input');
-  const pmeValue = pmeToken('value');
 
   const container = pmeContainer(containerSel);
   if (onlyClass === undefined) {
@@ -1107,12 +1108,15 @@ function installInputSelectize(containerSel, onlyClass) {
     const $self = $(this);
     const plugins = ['remove_button'];
     if ($self.hasClass('drag-drop')) {
-      //plugins.push('drag_drop');
+      plugins.push('drag_drop');
     }
     $self.selectize({
       plugins,
       delimiter: ',',
       persist: false,
+      openOnFocus: false,
+      items: $self.data('initialValues'),
+      // closeAfterSelect: true,
       create: function(input) {
         return {
           value: input,

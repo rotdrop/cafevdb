@@ -900,7 +900,7 @@ class phpMyEdit
 			'groups' => $groups,
 			'titles' => $titles,
 			'data' => $data
-			];
+		];
 
 		//error_log(__METHOD__.' '.print_r($fdd['setvalues'], true));
 
@@ -2888,18 +2888,21 @@ class phpMyEdit
 	{
 		$ret = '<select class="'.htmlspecialchars($css).'" name="'.htmlspecialchars($name);
 		if ($multiple) {
-			$ret  .= '[]" multiple size="'.$this->multiple;
-			if (! is_array($selected) && $selected !== null) {
-				$selected = explode(',', $selected);
+			$ret  .= '[]" multiple size="'.$this->multiple.'"';
+			if (!is_array($selected)) {
+				$selected = empty($selected) ? [] : explode(',', $selected);
 			}
+			$ret .= " data-initial-values='".json_encode($selected, JSON_NUMERIC_CHECK)."'";
+		} else {
+			$ret .= '"';
 		}
 		if ($help) {
-			$ret .= '"'.' title="'.$this->enc($help).'" ';
+			$ret .= ' title="'.$this->enc($help).'"';
 		} else {
-			$ret .= '"'.$this->fetchToolTip($css, $name, $css.'select');
+			$ret .= ' '.$this->fetchToolTip($css, $name, $css.'select');
 		}
 		if ($readonly !== false) {
-			$ret .= ' disabled'; // readonly does not make sense
+			$ret .= ' disabled="disabled"'; // readonly does not make sense
 		}
 		$ret .= ' '.$js.">\n";
 		if (! is_array($selected)) {
@@ -4815,9 +4818,6 @@ class phpMyEdit
 				} else {
 					$query_oldrec .= ','.$query_part;
 				}
-				if ($this->col_has_multiple($k)) {
-					$multiple[$fd] = true;
-				}
 			}
 		}
 		//$query_newrec  = $query_oldrec.' FROM ' . $this->tb;
@@ -4856,7 +4856,8 @@ class phpMyEdit
 			} else if ($value != $oldvals[$fd]) {
 				//error_log('Changed '.$fd.' "'.$oldvals[$fd].'" "'.$value.'"');
 				//error_log($fd.' old: '.$oldvals[$fd].' '.$value);
-				if ($multiple[$fd]) {
+				$fdn = $this->fdn[$fd]; // $fdn == field number
+				if ($this->col_has_multiple($k) && !$this->skipped($fdn)) {
 					$tmpval1 = explode(',',$value);
 					sort($tmpval1);
 					$tmpval2 = explode(',',$oldvals[$fd]);
