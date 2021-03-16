@@ -116,9 +116,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $header = $this->shortTitle();
     $header .= "<p>".$this->l->t("The target instrumentation numbers can be filled into this table. ".
                           "The `have'-numbers are the numbers of the musicians ".
-                          "already registered for the project.".
-                          "In order to transfer the instruments of the already registerd musicions ".
-                          "into this table click the `Adjust Instrument' option from the `Actions' menu.");
+                          "already registered for the project.");
 
     return '<div class="'.$this->cssClass().'-header-text">'.$header.'</div>';
   }
@@ -181,15 +179,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'tabs'  => false,
       'navigation' => 'CDVP',
     ];
-
-    if ($projectMode) {
-      $adjustButton = array(
-        'name' => 'transfer_instruments',
-        'value' => $this->l->t('Transfer Instruments'),
-        'css' => 'transfer-registered-instruments'
-        );
-      $opts['buttons'] = $this->pageNavigation->prependTableButton($adjustButton, false, false);
-    }
 
     // field definitions
 

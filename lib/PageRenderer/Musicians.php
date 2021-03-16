@@ -788,33 +788,6 @@ make sure that the musicians are also automatically added to the
   }
 
   /**
-   * The ranking of the mussician's instruments is implicitly stored
-   * in the order of the instrument ids. Change the coressponding
-   * field to include the ranking explicitly.
-   */
-  public function extractInstrumentRanking($pme, $op, $step, &$oldValues, &$changed, &$newValues)
-  {
-    $keyField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
-    $rankingField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
-    foreach (['old', 'new'] as $dataSet) {
-      $keys = Util::explode(',', Util::removeSpaces(${$dataSet.'Values'}[$keyField ]));
-      $ranking = [];
-      foreach ($keys as $key) {
-        $ranking[] = $key.':'.(count($ranking)+1);
-      }
-      ${$dataSet.'Values'}[$rankingField] = implode(',', $ranking);
-    }
-
-    // as the ordering is implied by the ordering of keys the ranking
-    // changes whenever the keys change.
-    if (array_search($keyField, $changed) !== false) {
-      $changed[] = $rankingField;
-    }
-
-    return true;
-  }
-
-  /**
    * Instruments are stored in a separate pivot-table, hence we have
    * to take care of them from outside PME or use a view.
    *

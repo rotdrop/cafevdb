@@ -94,7 +94,7 @@ class ProjectParticipants extends PMETableViewBase
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
         'instrument_id' => false,
-        //'voice' => [ 'self' => true ],
+        'voice' => [ 'self' => true ],
       ],
       'column' => 'instrument_id',
       'group_by' => true,
@@ -1548,6 +1548,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     //////// END Field definitions
 
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateSanitizeExtraFields' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'extractInstrumentRanking' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
@@ -1696,6 +1698,45 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /**
+   * Make sure at least a dummy instrumentation number exists when
+   * adding people to project instruments.
+   */
+  public function beforeUpdateEnsureInstrumentationNumbers($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $voiceField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
+    $instrumentField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+
+    if (array_search($voiceField, $changes) === false && array_search($instrumentField, $changed) == false) {
+      // nothing to do
+      $this->logInfo('UNCHANGED INSTRUMENTS');
+      return true;
+    }
+
+    // only the new values should matter ...
+    $instrumentValues = Util::explodeIndexed($newValues[$instrumentField], 0);
+    $voiceValues = Util::explodeIndexed($newValues[$voiceField]);
+
+    $instrumentationNumbers = $this->project->getInstrumentationNumbers();
+    $voices = array_replace($voiceValues, $instrumentValues);
+    foreach ($voices as $instrumentId => $voice) {
+      if (!$instrumentationNumbers->exists(function($dummy, Entities\ProjectInstrumentationNumber $instrumentationNumber) use ($instrumentId, $voice) {
+        return ($instrumentationNumber->getInstrument()->getId() == $instrumentId
+                &&
+                $instrumentationNumber->getVoice() == $voice);
+      })) {
+        $instrumentationNumber = (new Entities\ProjectInstrumentationNumber)
+                               ->setProject($this->project)
+                               ->setInstrument($instrumentId)
+                               ->setVoice($voice)
+                               ->setQuantity(0);
+        $this->persist($instrumentationNumber);
+      }
+    }
+
+    return true;
   }
 
   /**

@@ -42,6 +42,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
   const JOIN_FIELD_NAME_SEPARATOR = ':';
   const VALUES_TABLE_SEP = '@';
 
@@ -212,6 +213,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     foreach ($this->memberStatus as $key => $tag) {
       if (!isset($this->memberStatusNames[$tag])) {
         $this->memberStatusNames[$tag] = $this->l->t('member status '.$tag);
+      }
+    }
+
+    $this->projectType = DBTypes\EnumProjectTemporalType::toArray();
+    foreach ($this->projectType as $key => $tag) {
+      if (!isset($this->projectTypeNames[$tag])) {
+        $this->projectTypeNames[$tag] = $this->l->t($tag);
       }
     }
 
@@ -575,6 +583,33 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   }
 
   /**
+   * The ranking of the mussician's instruments is implicitly stored
+   * in the order of the instrument ids. Change the coressponding
+   * field to include the ranking explicitly.
+   */
+  public function extractInstrumentRanking($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $keyField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
+    $rankingField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
+    foreach (['old', 'new'] as $dataSet) {
+      $keys = Util::explode(',', Util::removeSpaces(${$dataSet.'Values'}[$keyField ]));
+      $ranking = [];
+      foreach ($keys as $key) {
+        $ranking[] = $key.':'.(count($ranking)+1);
+      }
+      ${$dataSet.'Values'}[$rankingField] = implode(',', $ranking);
+    }
+
+    // as the ordering is implied by the ordering of keys the ranking
+    // changes whenever the keys change.
+    if (array_search($keyField, $changed) !== false) {
+      $changed[] = $rankingField;
+    }
+
+    return true;
+  }
+
+  /**
    * Before update-trigger which ideally should update all data such
    * that nothing remains to do for phpMyEdit.
    *
@@ -598,7 +633,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     Util::unsetValue($changed, 'updated');
 
     $logMethod = 'logDebug';
-    // $logMethod = 'logInfo';
+    //$logMethod = 'logInfo';
 
     $this->$logMethod('OLDVALS '.print_r($oldvals, true));
     $this->$logMethod('NEWVALS '.print_r($newvals, true));
@@ -633,10 +668,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $meta = $this->classMetadata($entityClass);
       //$this->$logMethod('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
 
+      $multiple = null;
       $identifier = [];
       $identifierColumns = $meta->getIdentifierColumnNames();
       foreach ($identifierColumns as $key) {
-        if (empty($joinInfo['identifier'][$key])) {
+        if ($joinInfo['identifier'][$key] === false) {
+          if (!empty($multiple)) {
+            throw new \RuntimeException($this->l->t('Missing identifier for field "%s" and grouping field "%s" already set.', [ $key, $multiple ]));
+          }
           // assume that the 'column' component contains the keys.
           $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = [
@@ -665,33 +704,68 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         } else if (is_array($joinInfo['identifier'][$key])) {
           if (!empty($joinInfo['identifier'][$key]['value'])) {
             $identifier[$key] = $joinInfo['identifier'][$key]['value'];
+          } else if (!empty($joinInfo['identifier'][$key]['self'])) {
+            // Key value has to come from another field, possibly
+            // defaulted if not yet known. This can only be used
+            // together with the 'multiple' case and must not
+            // introduce additional deletions and modifications.
+            $selfField = $this->joinTableFieldName($joinInfo, $key);
+            $identifier[$key] = [ 'self' => $selfField ];
           } else {
-            throw new \Exception($this->l->t('Nested multi-value join tables are not yet supported.'));
+            throw new \RunException($this->l->t('Nested multi-value join tables are not yet supported.'));
           }
         } else {
           $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
         }
       }
       if (!empty($multiple)) {
-        foreach ($identifier[$multiple]['old'] as $oldKey) {
-          $oldIdentifier[$oldKey] = $identifier;
-          $oldIdentifier[$oldKey][$multiple] = $oldKey;
-        }
-        foreach ($identifier[$multiple]['add'] as $addKey) {
-          $addIdentifier[$addKey] = $identifier;
-          $addIdentifier[$addKey][$multiple] = $addKey;
-        }
-        foreach ($identifier[$multiple]['rem'] as $remKey) {
-          $remIdentifier[$remKey] = $identifier;
-          $remIdentifier[$remKey][$multiple] = $remKey;
-        }
-
         $this->$logMethod('IDS '.print_r($identifier, true));
         $this->$logMethod('CHG '.print_r($changeSet, true));
 
+        $dataSets = [
+          'del' => 'old',
+          'add' => 'new',
+          'rem' => 'new', // could use both
+        ];
+        foreach ($dataSets as $operation => $dataSet) {
+          foreach ($identifier[$multiple][$operation] as $idKey) {
+            ${$operation.'Identifier'}[$idKey] = $identifier;
+            ${$operation.'Identifier'}[$idKey][$multiple] = $idKey;
+          }
+        }
+        foreach ($identifier as $selfKey => $value) {
+          if (empty($value['self'])) {
+            continue;
+          }
+          $selfField = $value['self'];
+          foreach ($dataSets as $operation => $dataSet) {
+            foreach (${$operation.Identifier} as $key => &$idValues) {
+              $idValues[$selfKey] = null;
+            }
+            $dataValues = ${$dataSet.'vals'};
+            foreach (Util::explodeIndexed($dataValues[$selfField]) as $key => $value) {
+              if (isset(${$operation.Identifier}[$key])) {
+                ${$operation.Identifier}[$key][$selfKey] = $value;
+              }
+            }
+            foreach (${$operation.Identifier} as $key => &$idValues) {
+              if (empty($idValues[$selfKey])) {
+                $idValues[$selfKey] = $pme->fdd[$selfField]['default'];
+              }
+              if ($idValues[$selfKey] === null) {
+                throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
+              }
+            }
+          }
+        }
+
+        $this->$logMethod('ADDIDS '.print_r($addIdentifier, true));
+        $this->$logMethod('REMIDS '.print_r($remIdentifier, true));
+        $this->$logMethod('DELIDS '.print_r($delIdentifier, true));
+
         // Delete removed entities
         foreach ($identifier[$multiple]['del'] as $del) {
-          $id = $oldIdentifier[$del];
+          $id = $delIdentifier[$del];
           $entityId = $this->extractKeyValues($meta, $id);
           $entity = $this->find($entityId);
           $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
@@ -709,6 +783,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
+        $multipleValues = [];
         foreach ($changeSet as $column => $field) {
           // convention for multiple change-sets:
           //
@@ -716,9 +791,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // - boolean false values are omitted
           // - optional values are omitted
           // - values are separated by a colon from the key
-          foreach (explode(',', $newvals[$field]) as $value) {
-            $keyVal = array_merge(explode(':', $value), [ true, true ]);
-            $multipleValues[$keyVal[0]][$column] = $keyVal[1];
+          foreach (Util::explodeIndexed($newvals[$field], true) as $key => $value) {
+            $multipleValues[$key][$column] = $value;
           }
           foreach ($identifier[$multiple]['new'] as $new) {
             if (!isset($multipleValues[$new][$column])) {
@@ -830,6 +904,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeInsertDoInsertAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
+    // $logMethod = 'logDebug';
+    $logMethod = 'logInfo';
+
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'created');
     Util::unsetValue($changed, 'updated');
@@ -840,7 +917,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $missingKeys[] = $key;
       }
     }
-    $this->logDebug('MISSING '.print_r($missingKeys, true));
+    $this->$logMethod('MISSING '.print_r($missingKeys, true));
     foreach ($this->joinStructure as $joinInfo) {
       if ($joinInfo['master']) {
         continue;
@@ -861,13 +938,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
     }
 
-    $this->logDebug('NEWVALS '.print_r($newvals, true));
+    $this->$logMethod('NEWVALS '.print_r($newvals, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
-    $this->logDebug('CHANGESETS: '.print_r($changeSets, true));
+    $this->$logMethod('CHANGESETS: '.print_r($changeSets, true));
 
     foreach ($this->joinStructure as $joinInfo) {
       $table = $joinInfo['table'];
@@ -889,11 +966,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // further care.
         // continue;
       }
-      $this->logDebug('CHANGESET '.$table.' '.print_r($changeSet, true));
+      $this->$logMethod('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
-      //$this->logDebug('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
+      //$this->$logMethod('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
 
       $identifier = [];
       $identifierColumns = $meta->getIdentifierColumnNames();
@@ -909,8 +986,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         } else if (is_array($joinInfo['identifier'][$key])) {
           if (!empty($joinInfo['identifier'][$key]['value'])) {
             $identifier[$key] = $joinInfo['identifier'][$key]['value'];
+          } else if (!empty($joinInfo['identifier'][$key]['self'])) {
+            // Key value has to come from another field, possibly
+            // defaulted if not yet known. This can only be used
+            // together with the 'multiple' case and must not
+            // introduce additional deletions and modifications.
+            $selfField = $this->joinTableFieldName($joinInfo, $key);
+            $identifier[$key] = [ 'self' => $selfField ];
           } else {
-            throw new \Exception($this->l->t('Nested multi-value join tables are not yet supported.'));
+            throw new \RuntimeException($this->l->t('Nested multi-value join tables are not yet supported.'));
           }
         } else {
           $idKey = $joinInfo['identifier'][$key];
@@ -924,10 +1008,33 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $addIdentifier[$addKey] = $identifier;
           $addIdentifier[$addKey][$multiple] = $addKey;
         }
+        foreach ($identifier as $selfKey => $value) {
+          if (empty($value['self'])) {
+            continue;
+          }
+          $selfField = $value['self'];
+          foreach ($addIdentifier as $key => &$idValues) {
+            $idValues[$selfKey] = null;
+          }
+          foreach (Util::explodeIndexd($newvals[$selfField]) as $key => $value) {
+            if (isset($addIdentifier[$key])) {
+              $addIdentifier[$key][$selfKey] = $value;
+            }
+          }
+          foreach ($addIdentifier as $key => &$idValues) {
+            if (empty($idValues[$selfKey])) {
+              $idValues[$selfKey] = $pme->fdd[$selfField]['default'];
+            }
+            if ($idValues[$selfKey] === null) {
+              throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
+            }
+          }
+        }
 
-        $this->logDebug('IDS '.print_r($identifier, true));
-        $this->logDebug('CHG '.print_r($changeSet, true));
+        $this->$logMethod('IDS '.print_r($identifier, true));
+        $this->$logMethod('CHG '.print_r($changeSet, true));
 
+        $multipleValues = [];
         foreach ($changeSet as $column => $field) {
           // convention for multiple change-sets:
           //
@@ -935,9 +1042,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // - boolean false values are omitted
           // - optional values are omitted
           // - values are separated by a colon from the key
-          foreach (explode(',', $newvals[$field]) as $value) {
-            $keyVal = array_merge(explode(':', $value), [ true, true ]);
-            $multipleValues[$keyVal[0]][$column] = $keyVal[1];
+          foreach (Util::explodeIndexed($newvals[$field], true) as $key => $value) {
+            $multipleValues[$key][$column] = $value;
           }
           foreach ($identifier[$multiple] as $new) {
             if (!isset($multipleValues[$new][$column])) {
@@ -947,11 +1053,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->logDebug('VAL '.print_r($multipleValues, true));
+        $this->$logMethod('VAL '.print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
-          $this->logDebug('TRY MOD '.$new);
+          $this->$logMethod('TRY MOD '.$new);
           $id = $addIdentifier[$new];
           $entityId = $this->extractKeyValues($meta, $id);
           $entity = $entityClass::create();
@@ -998,7 +1104,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->flush(); // flush everything to the data-base
 
-    $this->logDebug('BEFORE INS: '.print_r($changed, true));
+    $this->$logMethod('BEFORE INS: '.print_r($changed, true));
     if (!empty($changed)) {
       throw new \Exception(
         $this->l->t('Remaining change-set %s must be empty', print_r($changed, true)));
@@ -1014,12 +1120,37 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * Define a basic join-structure for phpMyEdit by using the
    * information from self::$joinStructure.
    *
+   * self::$joinStructure has the following structure:
+   * ```
+   * [
+   *   [
+   *     'table' => SQL_TABLE_NAME,
+   *     'entity' => ENTITY_CLASS_NAME,
+   *     'master' => BOOL,
+   *     'identifier' => [
+   *        COLUMN_NAME => ID_COLUMN_DESCRIPTION, // see below
+   *        ...
+   *     ],
+   *     'column' => COLUMN_TO_FETCH,
+   *     'group_by' => BOOL,
+   *   ],
+   *   ...
+   * ]
+   * ```
+   * ID_COLUMN_DESCRIPTION is one of the following
+   * - string OTHER_COLUMN Just another column name of the main-table
+   * - false  "incomplete" key for grouping
+   * - array
+   *
    * @param array $opts phpMyEdit options.
    *
    * @return array ```[ TABLE_NAME => phpMyEdit_alias ]```
    */
   protected function defineJoinStructure(array &$opts)
   {
+    $logMethod = 'logDebug';
+    //$logMethod = 'logInfo';
+
     if (!empty($opts['groupby_fields']) && !is_array($opts['groupby_fields'])) {
       $opts['groupby_fields'] = [ $opts['groupby_fields'], ];
     }
@@ -1067,6 +1198,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $joinCondition .= '= '.$joinTableValue['value'];
           } else if (!empty($joinTableValue['condition'])) {
             $joinCondition .= $joinTableValue['condition'];
+          } else if (!empty($joinTableValue['self'])) {
+            // use during update to determine key values, otherwise ignore
+            continue;
+          } else {
+            throw new \RuntimeException($this->l->t('Unknown column description: "%s"', print_r($jionTableValue, true)));
           }
         } else {
           $joinCondition .= '= $main_table.'.$joinTableValue;
@@ -1097,12 +1233,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // use simple field grouping for list and filter operation
         $opts['fdd'][$fieldName]['sql|FL'] = '$join_col_fqn';
       }
-      $this->logDebug('JOIN '.print_r($opts['fdd'][$fieldName], true));
+      $this->$logMethod('JOIN '.print_r($opts['fdd'][$fieldName], true));
     }
     if (!empty($opts['groupby_fields'])) {
       $keys = is_array($opts['key']) ? array_keys($opts['key']) : [ $opts['key'] ];
       $opts['groupby_fields'] = array_unique(array_merge($keys, $opts['groupby_fields']));
-      $this->logDebug('GROUP_BY '.print_r($opts['groupby_fields'], true));
+      $this->$logMethod('GROUP_BY '.print_r($opts['groupby_fields'], true));
     }
     return $joinTables;
   }
