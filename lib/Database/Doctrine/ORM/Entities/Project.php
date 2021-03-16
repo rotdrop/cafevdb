@@ -151,6 +151,18 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * Set id.
+   *
+   * @return Project
+   */
+  public function setId(int $id):Project
+  {
+    $this->id = $id;
+
+    return $this;
+  }
+
+  /**
    * Get id.
    *
    * @return int
