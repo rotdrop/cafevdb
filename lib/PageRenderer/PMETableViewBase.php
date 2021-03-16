@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -596,15 +597,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'updated');
 
-    $this->logDebug('OLDVALS '.print_r($oldvals, true));
-    $this->logDebug('NEWVALS '.print_r($newvals, true));
-    $this->logDebug('CHANGED '.print_r($changed, true));
+    $logMethod = 'logDebug';
+    // $logMethod = 'logInfo';
+
+    $this->$logMethod('OLDVALS '.print_r($oldvals, true));
+    $this->$logMethod('NEWVALS '.print_r($newvals, true));
+    $this->$logMethod('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
-    $this->logDebug('CHANGESETS: '.print_r($changeSets, true));
+    $this->$logMethod('CHANGESETS: '.print_r($changeSets, true));
 
     foreach ($this->joinStructure as $joinInfo) {
       if (!empty($joinInfo['read_only'])) {
@@ -623,11 +627,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // continue;
       }
       $changeSet = $changeSets[$table];
-      $this->logDebug('CHANGESET '.$table.' '.print_r($changeSet, true));
+      $this->$logMethod('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
-      //$this->logDebug('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
+      //$this->$logMethod('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
 
       $identifier = [];
       $identifierColumns = $meta->getIdentifierColumnNames();
@@ -682,8 +686,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $remIdentifier[$remKey][$multiple] = $remKey;
         }
 
-        $this->logDebug('IDS '.print_r($identifier, true));
-        $this->logDebug('CHG '.print_r($changeSet, true));
+        $this->$logMethod('IDS '.print_r($identifier, true));
+        $this->$logMethod('CHG '.print_r($changeSet, true));
 
         // Delete removed entities
         foreach ($identifier[$multiple]['del'] as $del) {
@@ -724,11 +728,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->logDebug('VAL '.print_r($multipleValues, true));
+        $this->$logMethod('VAL '.print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
-          $this->logDebug('TRY MOD '.$new);
+          $this->$logMethod('TRY MOD '.$new);
           if (isset($addIdentifier[$new])) {
             $id = $addIdentifier[$new];
             $entityId = $this->extractKeyValues($meta, $id);
@@ -790,7 +794,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $fieldInfo = $this->joinTableField($field);
       throw new \Exception($this->l->t('Change-set %s should be empty.', print_r($changed, true)));
     }
-    $this->logDebug('BEFORE UPD: '.print_r($changed, true));
+    $this->$logMethod('BEFORE UPD: '.print_r($changed, true));
 
     // all should be done
     $pme->setLogging(false);
