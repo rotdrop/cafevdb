@@ -49,7 +49,7 @@ class Musicians extends PMETableViewBase
   const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
   const TABLE = 'Musicians';
-  const MUSICIAN_INSTRUMENT_TABLE = 'MusicianInstrument';
+  const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
   const INSTRUMENTS_TABLE = 'Instruments';
   const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
   const PROJECTS_TABLE = 'Projects';
@@ -82,7 +82,7 @@ class Musicians extends PMETableViewBase
       'entity' => Entities\Musician::class,
     ],
     [
-      'table' => self::MUSICIAN_INSTRUMENT_TABLE,
+      'table' => self::MUSICIAN_INSTRUMENTS_TABLE,
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
         'instrument_id' => false,
@@ -399,7 +399,8 @@ make sure that the musicians are also automatically added to the
       'tab'         => ['id' => 'orchestra'],
       'css'         => ['postfix' => ' musician-instruments tooltip-top no-chosen selectize drag-drop'],
       'display|LVF' => ['popup' => 'data'],
-      'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.sort_order ASC)',
+      // 'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.sort_order ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $join_table.sort_order ASC)',
       'select'      => 'M',
       // 'filter'      => 'having', // need "HAVING" for group by stuff really ?
       'values' => [
@@ -407,7 +408,7 @@ make sure that the musicians are also automatically added to the
         'column'      => 'id',
         'description' => 'name',
         'orderby'     => '$table.sort_order ASC',
-        'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENT_TABLE].'.instrument_id'
+        'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.instrument_id'
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -415,7 +416,7 @@ make sure that the musicians are also automatically added to the
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.Disabled = 0' ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENT_TABLE, 'instrument_id', $fdd);
+      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
     $joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
     $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
@@ -622,7 +623,7 @@ make sure that the musicians are also automatically added to the
       'options' => 'ACPDV',
       'sql' => '`PMEtable0`.`id`',
       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
-        $this->logInfo('ROW: '.print_r($row, true));
+        // $this->logInfo('ROW: '.print_r($row, true));
         switch($action) {
         case 'change':
         case 'display':
@@ -707,7 +708,7 @@ make sure that the musicians are also automatically added to the
           "name" => $this->l->t("Created"),
           //"default" => date($this->defaultFDD['datetime']['datemask']),
           "nowrap" => true,
-          "options" => 'LFAVCPDR' // Set by update trigger.
+          "options" => 'LFAVCPDR' // Set by update trigger
         ]
       );
 
@@ -720,16 +721,13 @@ make sure that the musicians are also automatically added to the
       $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
     }
 
-    // @@todo This will have to get marrried with interleaved ORM stuff
+    $opts['triggers']['update']['before'][]  = [ $this, 'extractInstrumentRanking' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
+    $opts['triggers']['insert']['before'][]  = [ $this, 'extractInstrumentRanking' ];
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
 
-    // $opts['triggers']['insert']['before'][]  = [ __CLASS__, 'addUUIDTrigger' ];
-    // $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
-    // $opts['triggers']['insert']['after'][]  = [ $this, 'addOrChangeInstruments' ];
-
-//     $opts['triggers']['delete']['before'][]  = 'CAFEVDB\Musicians::beforeDeleteTrigger';
+    // $opts['triggers']['delete']['before'][]  = 'CAFEVDB\Musicians::beforeDeleteTrigger';
 
     $opts = $this->mergeDefaultOptions($opts);
 
@@ -779,6 +777,33 @@ make sure that the musicians are also automatically added to the
   }
 
   /**
+   * The ranking of the mussician's instruments is implicitly stored
+   * in the order of the instrument ids. Change the coressponding
+   * field to include the ranking explicitly.
+   */
+  public function extractInstrumentRanking($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $keyField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
+    $rankingField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
+    foreach (['old', 'new'] as $dataSet) {
+      $keys = Util::explode(',', Util::removeSpaces(${$dataSet.'Values'}[$keyField ]));
+      $ranking = [];
+      foreach ($keys as $key) {
+        $ranking[] = $key.':'.(count($ranking)+1);
+      }
+      ${$dataSet.'Values'}[$rankingField] = implode(',', $ranking);
+    }
+
+    // as the ordering is implied by the ordering of keys the ranking
+    // changes whenever the keys change.
+    if (array_search($keyField, $changed) !== false) {
+      $changed[] = $rankingField;
+    }
+
+    return true;
+  }
+
+  /**
    * Instruments are stored in a separate pivot-table, hence we have
    * to take care of them from outside PME or use a view.
    *
@@ -786,7 +811,7 @@ make sure that the musicians are also automatically added to the
    */
   public function addOrChangeInstruments($pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
-    $field = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENT_TABLE, 'instrument_id');
+    $field = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
     $changedSet  = [ $field ];
     $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, $changeSet, $newValues);
     Util::unsetValue($changed, $field);
