@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -32,7 +33,7 @@ namespace OCA\CAFEVDB;
  *
  * to be an array which contains informations about the public
  * web-pages. The elements of the array are supposed to be arrays
- * which at least carry a 'ArticleName' and a 'ArticleId'
+ * which at least carry a 'articleName' and a 'articleId'
  * field.
  *
  * The template also expects
@@ -47,7 +48,7 @@ namespace OCA\CAFEVDB;
  * $otherPages contains articles present in the CMS but
  * (not yet) linked to the project. We generate a select box in order
  * to add those to the project. Articles in this array have two
- * additional fields (besides ArticleName and ArticleId):
+ * additional fields (besides articleName and articleId):
  * CategoryName, which should be used to form optiongroup tags.
  *
  * $action should be one of 'add', 'display' or 'change' in order
@@ -63,7 +64,7 @@ echo '<div id="projectWebArticles">
 ';
 if ($cnt > 0) {
   foreach ($projectPages as $nr => $webPage) {
-    echo '    <li id="cmsarticle-tab-'.$nr.'"><a href="#projectArticle-'.$nr.'">'.$webPage['ArticleName'].'</a></li>
+    echo '    <li id="cmsarticle-tab-'.$nr.'"><a href="#projectArticle-'.$nr.'">'.$webPage['articleName'].'</a></li>
 ';
   }
 } else {
@@ -90,7 +91,7 @@ foreach ($projectPages as $nr => $webPage) {
   echo '
   <div id="projectArticle-'.$nr.'"
        class="cmsarticlecontainer cafev"
-       data-article-id="'.$webPage['ArticleId'].'"
+       data-article-id="'.$webPage['articleId'].'"
        data-article="'.htmlspecialchars(json_encode($webPage)).'"
        data-project-id="'.$projectId.'">
     <iframe '.($_['action'] != 'change' ? 'scrolling="no"' : 'scrolling="no"').'
@@ -142,8 +143,8 @@ if (count($otherPages) > 0) {
     }
     unset($webPage['CategoryName']);
     $option = [ 'type' => 'option',
-                'value' => $webPage['ArticleId'],
-                'name' => $webPage['ArticleName'],
+                'value' => $webPage['articleId'],
+                'name' => $webPage['articleName'],
                 'data' => [ 'article' => json_encode($webPage)] ];
     if ($webPage['Linked']) {
       // THIS IS UNUSED CODE; WAS ALREADY DISABLED IN OC VERSION

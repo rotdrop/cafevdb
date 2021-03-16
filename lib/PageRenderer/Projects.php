@@ -274,8 +274,7 @@ class Projects extends PMETableViewBase
       'options'  => 'LFAVCPD', // auto increment
       'maxlen'   => 11,
       'css'      => ['postfix' => ' tooltip-right'],
-      'values2'  => ['temporary' => $this->l->t('temporary'),
-                     'permanent' => $this->l->t('permanent')],
+      'values2'  => $this->projectTypeNames,
       'default'  => 'temporary',
       'sort'     => true,
       'tooltip' => $this->toolTipsService['project-kind'],
@@ -651,7 +650,7 @@ project without a flyer first.");
   public function projectProgram($projectId, $action)
   {
     $projectPages = $this->projectService->projectWebPages($projectId);
-    $urlTemplate = $this->projectService->webPageCMSURL('%ArticleId%', $action == 'change');
+    $urlTemplate = $this->projectService->webPageCMSURL('%articleId%', $action == 'change');
     if ($action != 'change') {
       $urlTemplate .= '&rex_version=1';
     }
