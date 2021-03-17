@@ -28,3 +28,4 @@ current-key
 dependencygraph.svg
 /*.html
 stats.json
+dev-scripts/composer.phar
