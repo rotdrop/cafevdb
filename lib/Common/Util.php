@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Common;
 class Util
 {
   const OMIT_EMPTY_FIELDS = 1;
+  const TRIM = 2;
 
   private static $externalScripts = [];
 
@@ -103,8 +104,10 @@ class Util
    */
   static public function explode($delim, $string, $flags = self::OMIT_EMPTY_FIELDS)
   {
-    if ($flags === self::OMIT_EMPTY_FIELDS) {
-      return preg_split('/'.preg_quote($delim, '/').'/', $string, -1, PREG_SPLIT_NO_EMPTY);
+    if (!empty($flags)) {
+      $pregFlags = ($falgs & self::OMIT_EMPTY_FIELDS) ? PREG_SPLIT_NO_EMPTY : 0;
+      $trimExpr = ($flags & self::TRIM) ? '\s*' : '';
+      return preg_split('/'.$trimExpr.preg_quote($delim, '/').$trimExpr.'/', $string, -1, $pregFlags);
     } else {
       return explode($delim, $string);
     }
