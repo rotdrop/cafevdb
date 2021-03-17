@@ -1,8 +1,8 @@
 "en","fr","de","it","ru","es"
 "Wind instruments",,,,,
 "Woodwind instruments",,,,,
-"wind instruments","instruments à vent","Blasinstrumente","strumenti a fiato","dukhovye instrumenty","instrumentos de viento"
-"woodwind instruments","les bois; instruments à vent en bois","Holzblasinstrumente","legno","dereviannye dukhovye instrumenty","instrumentos de madera"
+"wind;wind instruments","instruments à vent","Bläser;Blasinstrumente","strumenti a fiato","dukhovye instrumenty","instrumentos de viento"
+"woodwind;woodwind instruments","les bois; instruments à vent en bois","Holzbläser;Holzblasinstrumente","legno","dereviannye dukhovye instrumenty","instrumentos de madera"
 "reeds","anches",,,"trosti",
 "double reeds","anches doubles",,,"double reeds",
 "flute","flûte;grande flûte;flûte traversière","Flöte; Querflöte","flauto","fleita","flauta"
@@ -14,9 +14,9 @@
 "recorder","flûte à bec;flûte douce; flûte droite","Blockflöte","flauto dolce;dritto;a becco","blokfleita","flauta recta; flauta dulce; flauta de pico"
 "saxophone","saxophone","Saxophon","sassofono; saxofono","saksofon","saxofón; saxofóno"
 "piccolo","piccolo; flûte piccolo;petite flûte","Pikkoloflöte; Piccolo;kleine Flöte","ottavino;flauto piccolo","pikkolo; malaia fleita;fleita pikkolo","flautín; ottavino"
-"oboe d'amore","hautbois d'amore;hautbois d'amore","Liebesoboe","oboe d'amore","goboi d'amur","oboe de amor"
+"oboe d'amore","hautbois d'amore;hautbois d'amore","Oboe d’amore; Liebesoboe","oboe d'amore","goboi d'amur","oboe de amor"
 "Brass instruments",,,,,
-"brass instruments","instruments à vent de cuivre; cuivres","Blechblasinstrumente","ottone","mednye dukhovye instrumenty","instrumentos de metal; cobre; instrumentos de instrumentos de viento-metal; metales"
+"brass; brass instruments","instruments à vent de cuivre; cuivres","Blechbläser;Blech;Blechblasinstrumente","ottone","mednye dukhovye instrumenty","instrumentos de metal; cobre; instrumentos de instrumentos de viento-metal; metales"
 "horn","cor","Horn","corno","Gorn; rog; rozhok;valtorna","corno; corno francés;trompa;trompa da pistones; cuerno"
 "natural horn","cor simple","Waldhorn","corno naturale","valtorna","trompa natural"
 "trumpet","trompette","Trompete","tromba; clarino","truba","trompeta"
@@ -45,7 +45,7 @@
 "mandolin","mandoline","Mandoline","mandolino","mandolina","mandolina"
 "zither","cithare","Zither","cetra da tavolo","tsitra","cítara"
 "Keyboard instruments",,,,,
-"keyboard instruments","instruments à clavier","Tasteninstrumente","strumenti a tastiera","klavishnyi instrument","instrumentos de tecla"
+"keyboard;keyboard instruments","instruments à clavier","Tasteninstrumente","strumenti a tastiera","klavishnyi instrument","instrumentos de tecla"
 "accordion","accordéon","Akkordeon","fisarmonica","akkordeon","acordeón"
 "bayan",,"Bajan","bayan, fisarmonica bayan","baian",
 "celesta","célesta","Celesta","celesta","chelesta","celesta"
@@ -53,7 +53,8 @@
 "continuo;thorough-bass","basse continue","Generalbass;Basso continuo","basso continuo","basso kontinuo;general-bas","bajo continuo"
 "harpsichord","clavecin","Cembalo; Clavicembalo","clavicembalo","klavesin; chembalo","clavecémbalo; clavecín;clavicímbalo"
 "organ","orgue","Orgel","organo","organ","órgano"
-"piano","piano","Piano; Klavier","piano","fortep'iano","piano"
+"piano","piano","Piano; Klavier; Pianoforte","piano","fortep'iano","piano"
+"grand piano","piano à queue","Flügel",,,
 "Percussion instruments",,,,,
 "percussion instruments","instruments à percussion","Schlaginstrumente;Perkussionsinstrumente","strumenti a percussione","udarnye instrumenty","instrumentos de percusión"
 "bass drum","grosse caisse","Grosse Trommel","cassa; grancassa;gran cassa","bol'shoi baraban","bombo"
