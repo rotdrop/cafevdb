@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB;
 
-function linkToolTip(string $tag, string $value)
+function linkToolTip(string $tag, ?string $value)
 {
   return empty($value) ? $toolTips[$tag] : $value;
 }
