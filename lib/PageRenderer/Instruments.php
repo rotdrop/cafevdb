@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,15 +32,56 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
 
-/**Table generator for Instruments table. */
+/** Table generator for Instruments table. */
 class Instruments extends PMETableViewBase
 {
   const TEMPLATE = 'instruments';
   const TABLE = 'Instruments';
+  const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
+  private const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
+
+  /** @var BiDirectionalL10N */
+  private $musicL10n;
+
+  /**
+   * @var array
+   * @see PMETableViewBase::defineJoinStructure()
+   */
+  protected $joinStructure = [
+    [
+      'table' => self::TABLE,
+      'entity' => Entities\Instrument::class,
+      'master' => true,
+    ],
+    [
+      'table' => self::INSTRUMENT_FAMILIES_JOIN_TABLE,
+      'entity' => null,
+      'identifier' => [
+        'instrument_id' => 'id',
+        'instrument_family_id' => false,
+      ],
+      'column' => 'instrument_id',
+      'read_only' => true, // @todo add instruments to families?
+    ],
+    [
+      'table' => self::INSTRUMENT_FAMILIES_TABLE,
+      'entity' => Entities\InstrumentFamily::class,
+      'identifier' => [
+        'id' => [
+          'table' => self::INSTRUMENT_FAMILIES_JOIN_TABLE,
+          'column' => 'instrument_family_id',
+        ],
+      ],
+      'column' => 'id',
+      'read_only' => true,
+    ],
+  ];
 
   public function __construct(
     ConfigService $configService
@@ -48,9 +90,11 @@ class Instruments extends PMETableViewBase
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
+    , BiDirectionalL10N $musicL10n
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
+    $this->musicL10n = $musicL10n;
   }
 
   public function shortTitle()
@@ -139,8 +183,8 @@ class Instruments extends PMETableViewBase
     $opts['fdd']['id'] = [
       'name'      => 'id',
       'select'    => 'N',
-      'input|AP'  => 'RH',
-      'input'     => 'R',
+      //'input|AP'  => 'RH',
+      'input'     => 'RH',
       'maxlen'    => 11,
       'size'      => 5,
       'default'   => '0',  // auto increment
@@ -148,11 +192,39 @@ class Instruments extends PMETableViewBase
       'sort'      => true,
       ];
 
+    // Provide joins with MusicianInstruments, ProjectInstruments,
+    // ProjectInstrumentationNumbers in order to flag used instruments as
+    // undeletable, while allowing deletion for unused ones (more
+    // practical after adding new instruments)
+    $instrumentTables = [
+      'MusicianInstrument' => [ 'musician_id', 'instrument_id' ],
+      'ProjectInstruments' => [ 'project_id', 'instrument_id' ],
+      'ProjectInstrumentationNumbers' => [ 'project_id', 'instrument_id' ],
+    ];
+    foreach ($instrumentTables as $table => $columns) {
+      $this->joinStructure[] = [
+        'table' => $table,
+        'entity' => null,
+        'identifier' => [
+          $columns[0] => false,
+          $columns[1] => 'id'
+        ],
+        'column' => $columns[1],
+        'read_only' => true,
+      ];
+    }
+
+    // define join tables
+    $joinTables = $this->defineJoinStructure($opts);
+
     $opts['fdd']['name'] = [
       'name'     => $this->l->t('Instrument'),
       'select'   => 'T',
       'maxlen'   => 64,
       'sort'     => true,
+      'php|LVDF' => function($value) {
+        return $this->musicL10n->t($value);
+      },
     ];
 
     $opts['fdd']['sort_order'] = [
@@ -166,41 +238,33 @@ class Instruments extends PMETableViewBase
       'align'    => 'right',
       ];
 
-    $instFamIdx = count($opts['fdd']);
-    $opts['fdd']['instrument_family_join'] = [
-      'name'   => $this->l->t('Family Join Pseudo Field'),
-      'sql'    => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instFamIdx.'.instrument_family_id
-  ORDER BY PMEjoin'.$instFamIdx.'.instrument_family_id ASC)',
-      'input'  => 'VRH',
-      'filter' => 'having', // need "HAVING" for group by stuff
-      'values' => array(
-        'table'       => 'instrument_instrument_family',
-        'column'      => 'instrument_family_id',
-        'description' => [ 'columns' => 'instrument_family_id' ],
-        'join'        => '$join_table.instrument_id = $main_table.id',
-      )
-    ];
+    list(, $fieldName) = $this->makeJoinTableField(
+      $opts['fdd'], self::INSTRUMENT_FAMILIES_TABLE, 'id', [
+        'name'        => $this->l->t('Families'),
+        'css'         => [ 'postfix' => ' instrument-families' ],
+        'display|LVF' => [ 'popup' => 'data' ],
+        'sort'        => true,
+        'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'filter'      => 'having',
+        'select'      => 'M',
+        'php|LDF'     => function($value, $op, $field, $row, $recordId, $pme) {
+          if (empty($value)) {
+            return $value;
+          }
+          $parts = Util::explode(',', $value, Util::TRIM);
+          foreach ($parts as &$part) {
+            $part = $this->musicL10n->t($part);
+          }
+          return implode(',', $parts);
+        },
+        'values' => [
+          'description' => 'family',
+          'orderby'     => 'family ASC',
+        ],
+      ]);
 
-    $famIdx = count($opts['fdd']);
-    $opts['fdd']['families'] = [
-      'name'        => $this->l->t('Families'),
-      'css'         => [ 'postfix' => ' instrument-families' ],
-      'display|LVF' => [ 'popup' => 'data' ],
-      'input'       => 'S', // skip, handled by triggers
-      'sort'        => true,
-      'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$famIdx.'.id ORDER BY PMEjoin'.$famIdx.'.family ASC)',
-      'filter'      => 'having',
-      'select'      => 'M',
-      'values' => [
-        'table'       => 'InstrumentFamilies',
-        'column'      => 'id',
-        'description' => 'family',
-        'orderby'     => 'family',
-        'join'        => '$join_table.id = PMEjoin'.$instFamIdx.'.instrument_family_id'
-      ],
-    ];
-    $opts['fdd']['families']['values|ACP'] = array_merge(
-      $opts['fdd']['families']['values'],
+    $opts['fdd'][$fieldName]['values|ACP'] = array_merge(
+      $opts['fdd'][$fieldName]['values'],
       [ 'filters' => '$table.disabled = 0' ]);
 
     if ($this->showDisabled) {
@@ -220,32 +284,9 @@ class Instruments extends PMETableViewBase
       ];
     }
 
-    // Provide joins with MusicianInstruments, ProjectInstruments,
-    // ProjectInstrumentationNumbers in order to flag used instruments as
-    // undeletable, while allowing deletion for unused ones (more
-    // practical after adding new instruments)
-    $instrumentTables = [
-      'MusicianInstrument' => [ 'musician_id', 'instrument_id' ],
-      'ProjectInstruments' => [ 'project_id', 'instrument_id' ],
-      'ProjectInstrumentationNumbers' => [ 'project_id', 'instrument_id' ],
-    ];
-    $usageIdx = count($opts['fdd']);
-    foreach ($instrumentTables as $table => $indexes) {
-      $opts['fdd'][$table] = [
-        'input' => 'VRH',
-        'sql' => 'PMEtable0.id',
-        'values' => [
-          'table' => $table,
-          'column' => $table[1],
-          'description' => $indexes[1],
-          'join' => '$main_table.id = $join_table.'.$indexes[1],
-          ],
-        ];
-    }
-    $usageSQL = []; $i = 0;
-    foreach ($instrumentTables as $table => $indexes) {
-      $usageSQL[] = 'COUNT(DISTINCT PMEjoin'.($usageIdx+$i).'.'.($indexes[0]).')';
-      $i++;
+    $usageSQL = [];
+    foreach ($instrumentTables as $table => $columns) {
+      $usageSQL[] = 'COUNT(DISTINCT '.$joinTables[$table].'.'.($columns[0]).')';
     }
     $usageSQL = implode('+', $usageSQL);
     $usageIdx = count($opts['fdd']);
@@ -270,7 +311,7 @@ class Instruments extends PMETableViewBase
       'options' => 'LF',
       'sql'     => '`PMEtable0`.`id`',
       'php'   =>  function($value, $op, $field, $row, $recordId, $pme) use ($lang) {
-        $inst = $this->l->t($row['qf1']);
+        $inst = $this->musicL10n->t($row[$this->queryField('name', $pme->fdd)]);
         return '<a '
           .'href="http://'.$lang.'.wikipedia.org/wiki/'.$inst.'" '
           .'target="Wikipedia.'.$lang.'" '
@@ -285,14 +326,17 @@ class Instruments extends PMETableViewBase
 
     $opts['groupby_fields'] = [ 'id' ];
 
-    $opts['triggers']['update']['before'][]  = [ $this, 'updateFamilies' ];
-    $opts['triggers']['insert']['after'][]  = [ $this, 'updateFamilies' ];
+    //$opts['triggers']['update']['before'][]  = [ $this, 'updateFamilies' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+
+    //$opts['triggers']['insert']['after'][]  = [ $this, 'updateFamilies' ];
+    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
 
     $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
 
 
     $opts['triggers']['select']['data'][] =
-      function(&$pme, $op, $step, &$row) use ($opts, $usageIdx, $expertMode)  {
+      function(&$pme, $op, $step, &$row) use ($usageIdx, $expertMode)  {
         if (!$expertMode && !empty($row['qf'.$usageIdx])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
@@ -385,17 +429,14 @@ class Instruments extends PMETableViewBase
     $this->logInfo(__METHOD__.': families '.$families->count());
 
     foreach ($families->getIterator() as $i => $family) {
-      if (in_array($family->getid(), $removed)) {
+      if (in_array($family->getId(), $removed)) {
         $families->remove($i);
       }
     }
 
-    $familyRepository = $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class);
     foreach ($added as $id) {
-      $family = $familyRepository->find($id);
-      $families->add($family);
+      $families->add($this->getReference(Entities\InstrumentFamily::class, $id));
     }
-
     $entity->setFamilies($families);
 
     $this->flush();

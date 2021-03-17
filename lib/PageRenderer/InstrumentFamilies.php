@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/*
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,6 +32,8 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -39,6 +42,41 @@ class InstrumentFamilies extends PMETableViewBase
 {
   const TEMPLATE = 'instrument-families';
   const TABLE = 'InstrumentFamilies';
+  private const INSTRUMENTS_TABLE = 'Instruments';
+  private const INSTRUMENTS_JOIN_TABLE = 'instrument_instrument_family';
+
+  /** @var BiDirectionalL10N */
+  private $musicL10n;
+
+  protected $joinStructure = [
+    [
+      'table' => self::TABLE,
+      'entity' => Entities\InstrumentFamily::class,
+      'master' => true,
+    ],
+    [
+      'table' => self::INSTRUMENTS_JOIN_TABLE,
+      'entity' => null,
+      'identifier' => [
+        'instrument_family_id' => 'id',
+        'instrument_id' => false,
+      ],
+      'column' => 'instrument_family_id',
+      'read_only' => true, // @todo add instruments to families?
+    ],
+    [
+      'table' => self::INSTRUMENTS_TABLE,
+      'entity' => Entities\Instrument::class,
+      'identifier' => [
+        'id' => [
+          'table' => self::INSTRUMENTS_JOIN_TABLE,
+          'column' => 'instrument_id',
+        ],
+      ],
+      'column' => 'id',
+      'read_only' => true,
+    ],
+  ];
 
   public function __construct(
     ConfigService $configService
@@ -47,9 +85,11 @@ class InstrumentFamilies extends PMETableViewBase
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
+    , BiDirectionalL10N $musicL10n
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
+    $this->musicL10n = $musicL10n;
   }
 
   public function shortTitle()
@@ -86,7 +126,6 @@ class InstrumentFamilies extends PMETableViewBase
     $expertMode      = $this->expertMode;
 
     $opts            = [];
-
 
     $opts['css']['postfix'] = 'direct-change show-hide-disabled';
 
@@ -139,14 +178,16 @@ class InstrumentFamilies extends PMETableViewBase
     $opts['fdd']['id'] = [
       'name'      => 'id',
       'select'    => 'N',
-      'input|AP'  => 'RH',
-      'input'     => 'R',
+      //'input|AP'  => 'RH',
+      'input'     => 'RH',
       'maxlen'    => 11,
       'size'      => 5,
-      'default'   => '0',  // auto increment
       'align'     => 'right',
       'sort'      => true,
       ];
+
+    // define join tables
+    $joinTables = $this->defineJoinStructure($opts);
 
     $opts['fdd']['family'] = [
       'name'   => $this->l->t('Family'),
@@ -154,53 +195,34 @@ class InstrumentFamilies extends PMETableViewBase
       'maxlen' => 64,
       'sort'   => true,
       'php|LVDF'    => function($value) {
-        return $this->l->t($value);
+        return $this->musicL10n->t($value);
       },
     ];
 
-    $instFamIdx = count($opts['fdd']);
-    $opts['fdd']['instrument_join'] = [
-      'name' => 'InstrumentDummyJoin',
-      'input'    => 'VRH',
-      'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-      'input'  => 'VRH',
-      'filter' => 'having', // need "HAVING" for group by stuff
-      'values' => array(
-        'table'       => 'instrument_instrument_family',
-        'column'      => 'instrument_family_id',
-        'orderby'     => 'instrument_family_id ASC',
-        'description' => [ 'columns' => 'instrument_id' ],
-        'join'        => '$join_table.instrument_family_id = $main_table.id',
-      )
-    ];
-
-    $instIdx = count($opts['fdd']);
-    $opts['fdd']['instruments'] = [
-      'name'        => $this->l->t('Instruments'),
-      'input'       => 'VR',
-      'sort'        => true,
-      'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-      'filter'      => 'having',
-      'select'      => 'M',
-      'maxlen'      => 11,
-      'php'   =>  function($value, $op, $field, $row, $recordId, $pme) {
-        if (empty($value)) {
-          return $value;
-        }
-        $parts = explode(',', $value);
-        foreach ($parts as &$part) {
-          $part = $this->l->t($part);
-        }
-        return implode(',', $parts);
-      },
-      'values' => [
-        'table'       => 'Instruments',
-        'column'      => 'id',
-        'description' => 'name',
-        'orderby'     => 'name ASC',
-        'join'        => '$join_col_fqn = PMEjoin'.$instFamIdx.'.instrument_id'
-      ],
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::INSTRUMENTS_TABLE, 'id', [
+        'name'        => $this->l->t('Instruments'),
+        'input'       => 'VR',
+        'sort'        => true,
+        'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'filter'      => 'having',
+        'select'      => 'M',
+        'maxlen'      => 11,
+        'php'   =>  function($value, $op, $field, $row, $recordId, $pme) {
+          if (empty($value)) {
+            return $value;
+          }
+          $parts = Util::explode(',', $value, Util::TRIM);
+          foreach ($parts as &$part) {
+            $part = $this->musicL10n->t($part);
+          }
+          return implode(',', $parts);
+        },
+        'values' => [
+          'description' => 'name',
+          'orderby'     => 'name ASC',
+        ],
+      ]);
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
@@ -223,11 +245,15 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts['groupby_fields'] = [ 'id' ];
 
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+
+    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
+
     $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
 
     $opts['triggers']['select']['data'][] =
-      function(&$pme, $op, $step, &$row) use ($opts, $instIdx, $expertMode)  {
-        if (!$expertMode && !empty($row['qf'.$instIdx])) {
+      function(&$pme, $op, $step, &$row) use ($expertMode)  {
+        if (!$expertMode && !empty($row[$this->joinQueryField(self::INSTRUMENTS_TABLE, 'id', $pme->fdd)])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;
@@ -242,7 +268,8 @@ class InstrumentFamilies extends PMETableViewBase
     }
   }
 
-  /**This is the phpMyEdit before-delete trigger.
+  /**
+   * This is the phpMyEdit before-delete trigger.
    *
    * phpMyEdit calls the trigger (callback) with
    * the following arguments:
