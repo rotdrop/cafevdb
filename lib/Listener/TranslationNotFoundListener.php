@@ -28,7 +28,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OC\L10N\Events\TranslationNotFound as HandledEvent;
 
-use OCA\CAFEVDB\Service\TranslationService;
+use OCA\CAFEVDB\Service\L10N\TranslationService;
 
 class TranslationNotFoundListener implements IEventListener
 {

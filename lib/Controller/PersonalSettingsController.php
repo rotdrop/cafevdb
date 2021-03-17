@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Service\CalDavService;
-use OCA\CAFEVDB\Service\TranslationService;
+use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\FinanceService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -81,7 +81,7 @@ class PersonalSettingsController extends Controller {
   /** @var \OCA\CAFEVDB\Service\CalDavService */
   private $calDavService;
 
-  /** @var OCA\CAFEVDB\Service\TranslationService */
+  /** @var OCA\CAFEVDB\Service\L10N\TranslationService */
   private $translationService;
 
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */

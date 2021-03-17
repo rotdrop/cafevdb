@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ErrorService;
-use OCA\CAFEVDB\Service\TranslationService;
+use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
@@ -59,7 +59,7 @@ class PersonalForm {
   /** @var ErrorService */
   private $errorService;
 
-  /** @var OCA\CAFEVDB\Service\TranslationService */
+  /** @var OCA\CAFEVDB\Service\L10N\TranslationService */
   private $translationService;
 
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */

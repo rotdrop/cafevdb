@@ -21,7 +21,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Service;
+namespace OCA\CAFEVDB\Service\L10N;
 
 use OCP\ILogger;
 
@@ -33,6 +33,10 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationKey;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationLocation;
 use OCA\CAFEVDB\Common\Util;
 
+/**
+ * Runtime translation service for recording untranslated phrases in a
+ * database.
+ */
 class TranslationService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -203,6 +207,7 @@ class TranslationService
     $this->flush();
     return true;
   }
+
 
 }
 
