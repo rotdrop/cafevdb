@@ -224,5 +224,6 @@ test: composer
 	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.xml
 	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.integration.xml
 
+.PHONY: l10n
 l10n: translationfiles/update.sh translationfiles/templates/cafevdb.pot
 	translationfiles/update.sh

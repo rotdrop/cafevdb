@@ -1,26 +1,26 @@
-"English","French","German","Italian","Russian","Spanish"
+"en","fr","de","it","ru","es"
 "Wind instruments",,,,,
 "Woodwind instruments",,,,,
-"wind instruments","instruments à vent","Blasinstrumenten","strumenti a fiato","dukhovye instrumenty","instrumentos de viento"
+"wind instruments","instruments à vent","Blasinstrumente","strumenti a fiato","dukhovye instrumenty","instrumentos de viento"
 "woodwind instruments","les bois; instruments à vent en bois","Holzblasinstrumente","legno","dereviannye dukhovye instrumenty","instrumentos de madera"
 "reeds","anches",,,"trosti",
 "double reeds","anches doubles",,,"double reeds",
-"flute see also","flûte;grande flûte;flûte traversière","Flöte; Querflöte","flauto","fleita","flauta"
+"flute","flûte;grande flûte;flûte traversière","Flöte; Querflöte","flauto","fleita","flauta"
 "oboe","hautbois","Oboe","oboe","goboi","oboe"
 "clarinet","clarinette","Klarinette","clarinetto","klarnet","clarinete"
 "bass clarinet","clarinette basse","Bassklarinette","clarinetto basso","bass-klarnet","clarinete bajo"
-"bassoon","basson","Fagott","fagotto","fagot","fagot(e)"
-"English horn","cor anglais","Englischhorn","corno inglese","angliiskii rozhok","corno/cuerno inglés"
-"recorder","flûte à bec;flûte douce/droite","Blockflöte","flauto dolce;dritto;a becco","blokfleita","flauta recta/dulce/de pico"
+"bassoon","basson","Fagott","fagotto","fagot","fagot"
+"English horn","cor anglais","Englischhorn","corno inglese","angliiskii rozhok","corno inglés; cuerno inglés"
+"recorder","flûte à bec;flûte douce; flûte droite","Blockflöte","flauto dolce;dritto;a becco","blokfleita","flauta recta; flauta dulce; flauta de pico"
 "saxophone","saxophone","Saxophon","sassofono; saxofono","saksofon","saxofón; saxofóno"
 "piccolo","piccolo; flûte piccolo;petite flûte","Pikkoloflöte; Piccolo;kleine Flöte","ottavino;flauto piccolo","pikkolo; malaia fleita;fleita pikkolo","flautín; ottavino"
-"oboe d'amore","hautbois d'amore;hautbois d'amore;","Liebesoboe","oboe d'amore","goboi d'amur","oboe de amor"
+"oboe d'amore","hautbois d'amore;hautbois d'amore","Liebesoboe","oboe d'amore","goboi d'amur","oboe de amor"
 "Brass instruments",,,,,
-"brass instruments","instruments à vent de cuivre; cuivres","Blechblasinstrumente","ottone","mednye dukhovye instrumenty","instrumentos de metal/cobre; instrumentos de viento-metal; metales"
-"horn","cor","Horn","corno","Gorn; rog; rozhok;valtorna","corno; corno francés;trompa (da pistones); cuerno"
+"brass instruments","instruments à vent de cuivre; cuivres","Blechblasinstrumente","ottone","mednye dukhovye instrumenty","instrumentos de metal; cobre; instrumentos de instrumentos de viento-metal; metales"
+"horn","cor","Horn","corno","Gorn; rog; rozhok;valtorna","corno; corno francés;trompa;trompa da pistones; cuerno"
 "natural horn","cor simple","Waldhorn","corno naturale","valtorna","trompa natural"
 "trumpet","trompette","Trompete","tromba; clarino","truba","trompeta"
-"cornet","cornet (à pistons)","Kornett","cornetta","kornet","corneta"
+"cornet","cornet; cornet à pistons","Kornett","cornetta","kornet","corneta"
 "flugelhorn",,"Flügelhorn","flicorno","fliugel'gorn","fliscorno"
 "trombone","trombone","Posaune","trombone","trombon","trombón"
 "bass trombone","basse-trombone;trombone basse","Bass Posaune","trombono basso","bas trombon","trombón bajo"
@@ -28,10 +28,10 @@
 "baritone","baryton; bariton","Bariton","baritono","bariton","barítono"
 "euphonium","euphonium","Euphonium","eufonio","evfonium","euphonium"
 "Stringed instruments",,,,,
-"string instruments","instrument à cordes;instrument à cordes frottées","Saiteninstrumente","strumenti a corda;strumenti a corda;","strunnye instrumenty","instrumentos de cuerdas"
+"string instruments","instrument à cordes;instrument à cordes frottées","Saiteninstrumente","strumenti a corda;strumenti archi","strunnye instrumenty","instrumentos de cuerdas"
 "strings","cordes","Streicher","archi","struny","cuerdas"
 "violin","violon","Violine; Geige","violino","skripka","violín"
-"viola","alto","Viola; Viole; Bratsche","viola","viola","viola"
+"viola","alto","Viola; Bratsche","viola","viola","viola"
 "violoncello","violoncelle","Violoncello; Cello","violoncello","violonchel'","violoncelo; cello;violonchelo"
 "double bass; string bass","contrebasse","Kontrabass","contrabasso","kontrabas","contrabajo"
 "viola da gamba","viole de gambe;viola da gamba","Viola da gamba;Gambe","viola da gamba","viola da gamba;gamba","viola de gamba;viola da gamba"
@@ -45,7 +45,7 @@
 "mandolin","mandoline","Mandoline","mandolino","mandolina","mandolina"
 "zither","cithare","Zither","cetra da tavolo","tsitra","cítara"
 "Keyboard instruments",,,,,
-"keyboard instrument","instrument à clavier","Tasteninstrumente","strumenti a tastiera","klavishnyi instrument","instrumentos de tecla"
+"keyboard instruments","instruments à clavier","Tasteninstrumente","strumenti a tastiera","klavishnyi instrument","instrumentos de tecla"
 "accordion","accordéon","Akkordeon","fisarmonica","akkordeon","acordeón"
 "bayan",,"Bajan","bayan, fisarmonica bayan","baian",
 "celesta","célesta","Celesta","celesta","chelesta","celesta"
@@ -61,10 +61,10 @@
 "cowbells","cloches à vache",,,"caubel",
 "cymbals","cymbales","Becken","piatti","tarelki","cimbalos"
 "drum","tambour","Trommel","tamburo","baraban","tambor"
-"glockenspiel","glockenspiel; jeu de timbres","Glockenspiel","glockenspiel;metallofono; campanelli","kolokol'chiki","campanólogo; juego;de timbres/órgano de;campanas"
+"glockenspiel","glockenspiel; jeu de timbres","Glockenspiel","glockenspiel;metallofono; campanelli","kolokol'chiki","campanólogo; juego de timbres; órgano de campanas"
 "marimba","marimba","Marimbaphon","marimba","marimba","marimba"
 "rattle","crécelle","Ratsche, Knarre, Schnarre","raganella","treshchotka","carraca, matraca"
-"snare drum","caisse claire","Leinentrommel","tamburo rullante;tamburo militare;rullante","frantsuzskii baraban","tambor afinable/con tensores"
+"snare drum","caisse claire","Leinentrommel","tamburo rullante;tamburo militare;rullante","frantsuzskii baraban","tambor afinable; tambor con tensores"
 "tenor drum","caisse roulante","Rührtrommel;Wirbeltrommel;Tenortrommel","cassa rullante;tamburino","tsilindricheskii baraban","redoblante"
 "tambourine","tambourin","Tamburin","tamburello","buben","pandereta"
 "timpani","timbales","Pauken","timpano","litavra","timbal"
@@ -77,7 +77,7 @@
 "synthesizer","synthétiseur",,"sintetizzatore","sintezator",
 "tape","bande","Tonbande; Zuspielband","nastro","magnitofonnaia lenta","banda"
 "Other instruments",,,,,
-"dulcimer (hammered)",,"Hackbrett","salterio","tsimbaly","dulcema"
+"dulcimer; dulcimer hammered",,"Hackbrett","salterio","tsimbaly","dulcema"
 "harmonica","harmonica","Mundharmonika",,"gubnaia garmoshika",
 "Instrumental ensembles",,,,,
 "instrumental ensembles","ensembles instrumentaux",,,,
@@ -89,8 +89,8 @@
 "Voices",,,,,
 "voice","voix","Stimme","voce","golos","voz"
 "soprano","soprano, dessus","Sopran","soprano","soprano","soprano"
-"male alto/low soprano","bas-dessus",,,,
-"mezzo soprano","mezzo-soprano","Mezzosopran","mezzosoprano","metstsosoprano/metso-soprano","mezzo-soprano"
+"male alto;low soprano","bas-dessus",,,,
+"mezzo soprano","mezzo-soprano","Mezzosopran","mezzosoprano","metstsosoprano; metso-soprano","mezzo-soprano"
 "alto; contralto","alto; contralto","Alt","contralto","al't; kontral'to","contralto"
 "tenor","ténor, taille","Tenor","tenore","tenor","tenor"
 "baritone","baryton; bariton","Bariton","baritono","bariton","barítono"
@@ -103,8 +103,8 @@
 "Vocal ensembles",,,,,
 "vocal ensembles","ensembles vocaux",,,,
 "chorus","chœur","Chor","coro","khor","coro"
-"mixed voices","voix mixtes","Stimmen gemischte","voci miste","smeshannye golosa","voces mixtas"
+"mixed voices","voix mixtes","gemischte Stimmen","voci miste","smeshannye golosa","voces mixtas"
 "women's voices","chœur de femmes","Frauenchor;Frauenstimme","coro femminile","zhenskii khor","coro femenino"
 "men's voices","chœur d'hommes","Männerchor;Männerstimme","coro maschile","muzhskoi khor","coro masculino;choro de hombres"
 "children's voices","chœur d'enfants","Kinderchor","voci bianche","detskii khor","coro infantil;coro de niños"
-"equal voices","voix égales","Stimmen gleiche","voci pari","odnorodnye golosa","voces iguales"
+"equal voices","voix égales","gleiche Stimmen","voci pari","odnorodnye golosa","voces iguales"
