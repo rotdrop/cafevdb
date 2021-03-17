@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\Service\L10N;
 
+use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\Util;
@@ -32,6 +33,8 @@ use OCA\CAFEVDB\Common\Util;
  */
 class BiDirectionalL10N
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   private const FORWARD = 'forward';
   private const REVERSE = 'reverse';
 
@@ -49,10 +52,13 @@ class BiDirectionalL10N
 
   public function __construct(
     string $appName
+    , ILogger $logger
     , IL10N $l10n
     , string $keyLang = 'en'
   ) {
-    $this->l10n = $l10n;
+    $this->appName = $appName;
+    $this->logger = $logger;
+    $this->l = $l10n;
     $this->targetLang = locale_get_primary_language($l10n->getLanguageCode());
     $this->keyLang = $keyLang;
     $this->translations = [];
@@ -81,8 +87,8 @@ class BiDirectionalL10N
 
   protected function loadLanguageData()
   {
-    $dir = realpath('');
-    $appDir = substr($dir, 0, strrpos($dir, 'cafevdb')).'cafevdb';
+    $dir = realpath(__DIR__);
+    $appDir = substr($dir, 0, strrpos($dir, $this->appName)).$this->appName;
 
     foreach (glob($appDir.DIRECTORY_SEPARATOR.'l10n'.DIRECTORY_SEPARATOR.'*.csv') as $file) {
       $this->mergeCSV($file);
@@ -129,8 +135,8 @@ class BiDirectionalL10N
       }
     }
     return [
-      'forward' => $targetLookup,
-      'inverse' => $keyLookup,
+      self::FORWARD => $targetLookup,
+      self::REVERSE => $keyLookup,
     ];
   }
 
