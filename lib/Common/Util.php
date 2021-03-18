@@ -105,7 +105,7 @@ class Util
   static public function explode($delim, $string, $flags = self::OMIT_EMPTY_FIELDS)
   {
     if (!empty($flags)) {
-      $pregFlags = ($falgs & self::OMIT_EMPTY_FIELDS) ? PREG_SPLIT_NO_EMPTY : 0;
+      $pregFlags = ($flags & self::OMIT_EMPTY_FIELDS) ? PREG_SPLIT_NO_EMPTY : 0;
       $trimExpr = ($flags & self::TRIM) ? '\s*' : '';
       return preg_split('/'.$trimExpr.preg_quote($delim, '/').$trimExpr.'/', $string, -1, $pregFlags);
     } else {
