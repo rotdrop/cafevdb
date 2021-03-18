@@ -45,6 +45,16 @@ class GedmoTranslatableListener extends \Gedmo\Translatable\TranslatableListener
    */
   protected function getFallbackTranslation($originalValue)
   {
-    return $this->musicL10n->t($originalValue);
+    $translatedValue = $this->musicL10n->t($originalValue);
+    return ($translatedValue !== $originalValue) ? $translatedValue : null;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getFallbackUntranslation($translatedValue)
+  {
+    $originalValue = $this->musicL10n->backTranslate($translatedValue);
+    return ($translatedValue !== $originalValue) ? $originalValue : null;
   }
 }
