@@ -103,6 +103,8 @@ class InstrumentFamilies extends PMETableViewBase
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
     $this->musicL10n = $musicL10n;
+    $this->getDatabaseRepository(Entities\InstrumentFamily::class)->findAll();
+    $this->flush();
   }
 
   public function shortTitle()
