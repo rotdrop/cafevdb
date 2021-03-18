@@ -5902,9 +5902,13 @@ class phpMyEdit
 		 * override by operation query string.
 		 */
 		$querypart = '';
-		$this->rec	 = $this->get_sys_cgi_var('rec', []);
-		if (!empty($this->rec) && !is_array($this->rec)) {
-			$this->rec = [ array_keys($this->key)[0] => $this->rec ];
+		$this->rec = $this->get_sys_cgi_var('rec', []);
+		if (!is_array($this->rec)) {
+			if (!empty($this->rec)) {
+				$this->rec = [ array_keys($this->key)[0] => $this->rec ];
+			} else {
+				$this->rec = [];
+			}
 		}
 		$qpos = strpos($this->operation, '?');
 		if ($qpos !== false) {
