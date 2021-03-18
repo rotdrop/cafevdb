@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -32,6 +33,9 @@ use OCP\ILogger;
 
 /**
  * TranslationLocations
+ *
+ * Table to store source-code locations where the phrases stored in
+ * the TranslationKey entities are found.
  *
  * @ORM\Table(name="TranslationLocations")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationLocationsRepository")

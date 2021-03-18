@@ -90,6 +90,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var bool */
   private $debug;
 
+  /** @var IL10N */
+  private $l;
+
   // @@todo catch failures, allow construction without database for
   // initial setup.
   public function __construct(
@@ -410,6 +413,17 @@ class EntityManager extends EntityManagerDecorator
     $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
     $transformableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($transformableListener);
+
+    // translatable
+    $translatableListener = new \Gedmo\Translatable\TranslatableListener();
+    // current translation locale should be set from session or hook later into the listener
+    // most important, before entity manager is flushed
+    $translatableListener->setTranslatableLocale($this->l->getLanguageCode());
+    $translatableListener->setDefaultLocale('en_US');
+    $translatableListener->setTranslationFallback(true);
+    $translatableListener->setPersistDefaultLocaleTranslation(true);
+    $translatableListener->setAnnotationReader($cachedAnnotationReader);
+    $evm->addEventSubscriber($translatableListener);
 
     // handle extra foreign key constraints
     $foreignKeyListener = new CJH\ForeignKey\Listener($this);

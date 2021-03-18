@@ -27,17 +27,22 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Instrumente
  *
  * @ORM\Table(name="Instruments")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository")
+ * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  */
 class Instrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\DisabledTrait;
+  use CAFEVDB\Traits\TranslatableTrait;
 
   /**
    * @var int
@@ -46,28 +51,22 @@ class Instrument implements \ArrayAccess
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
+  private int $id;
 
   /**
    * @var string
    *
+   * @Gedmo\Translatable
    * @ORM\Column(type="string", length=128, nullable=false)
    */
-  private $name;
+  private string $name;
 
   /**
    * @var int
    *
    * @ORM\Column(type="smallint", nullable=false, options={"comment"="Orchestral Ordering"})
    */
-  private $sortOrder;
-
-  /**
-   * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
-   */
-  private $disabled = false;
+  private int $sortOrder;
 
   /**
    * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EXTRA_LAZY")
@@ -108,7 +107,7 @@ class Instrument implements \ArrayAccess
    *
    * @return Instrument
    */
-  public function setId($id):Instrument
+  public function setId(int $id):Instrument
   {
     $this->id = $id;
 
@@ -120,7 +119,7 @@ class Instrument implements \ArrayAccess
    *
    * @return int
    */
-  public function getId()
+  public function getId():int
   {
     return $this->id;
   }
@@ -130,9 +129,9 @@ class Instrument implements \ArrayAccess
    *
    * @param string $name
    *
-   * @return Name
+   * @return Instrument
    */
-  public function setName($name):Instrument
+  public function setName(string $name):Instrument
   {
     $this->name = $name;
 
@@ -144,7 +143,7 @@ class Instrument implements \ArrayAccess
    *
    * @return string
    */
-  public function getName()
+  public function getName():string
   {
     return $this->name;
   }
@@ -152,11 +151,11 @@ class Instrument implements \ArrayAccess
   /**
    * Set familie.
    *
-   * @param array $familie
+   * @param Collection $families
    *
-   * @return Instrumente
+   * @return Instrument
    */
-  public function setFamilies($families):Instrument
+  public function setFamilies(Collection $families):Instrument
   {
     $this->families = $families;
 
@@ -164,11 +163,11 @@ class Instrument implements \ArrayAccess
   }
 
   /**
-   * Get familie.
+   * Get families.
    *
-   * @return array
+   * @return Collection
    */
-  public function getFamilies()
+  public function getFamilies():Collection
   {
     return $this->families;
   }
@@ -178,7 +177,7 @@ class Instrument implements \ArrayAccess
    *
    * @param int $sortOrder
    *
-   * @return Instrumente
+   * @return Instrument
    */
   public function setSortOrder($sortOrder):Instrument
   {
@@ -192,33 +191,9 @@ class Instrument implements \ArrayAccess
    *
    * @return int
    */
-  public function getSortOrder()
+  public function getSortOrder():int
   {
     return $this->sortOrder;
-  }
-
-  /**
-   * Set disabled.
-   *
-   * @param bool $disabled
-   *
-   * @return Instrumente
-   */
-  public function setDisabled($disabled):Instrument
-  {
-    $this->disabled = $disabled;
-
-    return $this;
-  }
-
-  /**
-   * Get disabled.
-   *
-   * @return bool
-   */
-  public function getDisabled()
-  {
-    return $this->disabled;
   }
 
   /**
@@ -226,7 +201,7 @@ class Instrument implements \ArrayAccess
    *
    * @param bool $musicianInstruments
    *
-   * @return Instrumente
+   * @return Instrument
    */
   public function setMusicianInstruments($musicianInstruments):Instrument
   {
@@ -238,9 +213,9 @@ class Instrument implements \ArrayAccess
   /**
    * Get musicianInstruments.
    *
-   * @return bool
+   * @return Collection
    */
-  public function getMusicianInstruments()
+  public function getMusicianInstruments():Collection
   {
     return $this->musicianInstruments;
   }
@@ -248,11 +223,11 @@ class Instrument implements \ArrayAccess
   /**
    * Set projectInstruments.
    *
-   * @param bool $projectInstruments
+   * @param Collection $projectInstruments
    *
-   * @return Instrumente
+   * @return Instrument
    */
-  public function setProjectInstruments($projectInstruments):Instrument
+  public function setProjectInstruments(Collection $projectInstruments):Instrument
   {
     $this->projectInstruments = $projectInstruments;
 
@@ -262,9 +237,9 @@ class Instrument implements \ArrayAccess
   /**
    * Get projectInstruments.
    *
-   * @return bool
+   * @return Collection
    */
-  public function getProjectInstruments()
+  public function getProjectInstruments():Collection
   {
     return $this->projectInstruments;
   }
@@ -272,11 +247,11 @@ class Instrument implements \ArrayAccess
   /**
    * Set projectInstrumentationNumbers.
    *
-   * @param bool $projectInstrumentationNumbers
+   * @param Collection $projectInstrumentationNumbers
    *
    * @return Instrumente
    */
-  public function setProjectInstrumentationNumbers($projectInstrumentationNumbers):Instrument
+  public function setProjectInstrumentationNumbers(Collection $projectInstrumentationNumbers):Instrument
   {
     $this->projectInstrumentationNumbers = $projectInstrumentationNumbers;
 
@@ -286,14 +261,18 @@ class Instrument implements \ArrayAccess
   /**
    * Get projectInstrumentationNumbers.
    *
-   * @return bool
+   * @return Collection
    */
-  public function getProjectInstrumentationNumbers()
+  public function getProjectInstrumentationNumbers():Collection
   {
     return $this->projectInstrumentationNumbers;
   }
 
-  public function usage()
+  /**
+   * Get the usage count, i.e. the number of instruments which belong
+   * to this family.
+   */
+  public function usage():int
   {
     return $this->musicianInstruments->count()
       + $this->projectInstruments->count()

@@ -28,17 +28,21 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Instrumente
  *
  * @ORM\Table(name="InstrumentFamilies")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentFamiliesRepository")
+ * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  */
 class InstrumentFamily implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\DisabledTrait;
+  use CAFEVDB\Traits\TranslatableTrait;
 
   /**
    * @var int
@@ -47,21 +51,15 @@ class InstrumentFamily implements \ArrayAccess
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
+  private int $id;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=64, nullable=false, unique=true)
+   * @Gedmo\Translatable
+   * @ORM\Column(type="string", length=255, nullable=false, unique=true)
    */
-  private $family;
-
-  /**
-   * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
-   */
-  private $disabled = false;
+  private string $family;
 
   /**
    * @ORM\ManyToMany(targetEntity="Instrument", mappedBy="families", orphanRemoval=true, fetch="EXTRA_LAZY")
@@ -108,31 +106,7 @@ class InstrumentFamily implements \ArrayAccess
   }
 
   /**
-   * Set family.
-   *
-   * @param bool $disabled
-   *
-   * @return InstrumentFamily
-   */
-  public function setDisabled($disabled):InstrumentFamily
-  {
-    $this->disabled = $disabled;
-
-    return $this;
-  }
-
-  /**
-   * Get disabled.
-   *
-   * @return bool
-   */
-  public function getDisabled():bool
-  {
-    return $this->disabled;
-  }
-
-  /**
-   * Set family.
+   * Set instruments.
    *
    * @param bool $instruments
    *
@@ -155,6 +129,10 @@ class InstrumentFamily implements \ArrayAccess
     return $this->instruments;
   }
 
+  /**
+   * Get the usage count, i.e. the number of instruments which belong
+   * to this family.
+   */
   public function usage():int
   {
     return $this->instruments->count();
