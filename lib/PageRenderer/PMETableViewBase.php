@@ -43,6 +43,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
+  const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
   const JOIN_FIELD_NAME_SEPARATOR = ':';
   const VALUES_TABLE_SEP = '@';
 
@@ -1266,7 +1267,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       $table = $joinInfo['table'];
-      $valuesTable = explode(self::VALUES_TABLE_SEP, $table)[0];
+      $valuesTable = $joinInfo['sql']?
+                   : explode(self::VALUES_TABLE_SEP, $table)[0];
 
       $joinIndex[$table] = count($opts['fdd']);
       $joinTables[$table] = 'PMEjoin'.$joinIndex[$table];
@@ -1466,6 +1468,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $masterFieldName = $this->joinTableMasterFieldName($tableInfo);
       $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
       if ($joinIndex === false) {
+        $this->logInfo('FDD KEYS '.$masterFieldName.' '.print_r(array_keys($fieldDescriptionData), true));
         $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
         throw new \Exception($this->l->t("Master join-table field for %s not found.", $table));
       }
@@ -1545,6 +1548,38 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected function joinQueryField($tableInfo, $column, array $fdd)
   {
     return $this->queryField($this->joinTableFieldName($tableInfo, $column), $fdd);
+  }
+
+  protected function makeFieldTranslationsJoin(array $joinInfo, $fields)
+  {
+    if (!is_array($fields)) {
+      $fields = [ $fields ];
+    }
+    $l10nFields = [];
+    foreach ($fields as $field) {
+      $l10nFields[] = 'COALESCE(jt_'.$field.'.content, t.'.$field.') AS l10n_'.$field;
+    }
+    $entity = addslashes($joinInfo['entity']);
+    if (count($joinInfo['identifier']) > 1) {
+      throw new \RuntimeException($this->l->t('Composite keys are not yet supported for translated database table fields.'));
+    }
+    $id = array_keys($joinInfo['identifier'])[0];
+    $lang = $this->l10n()->getLanguageCode();
+    $l10nJoins = [];
+    foreach ($fields as $field) {
+      $jt = 'jt_'.$field;
+      $l10nJoins[] = "  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." $jt
+  ON $jt.locale = '$lang'
+    AND $jt.object_class = '$entity'
+    AND $jt.field = '$field'
+    AND $jt.foreign_key = t.$id
+";
+    }
+    $query = 'SELECT t.*, '.implode(', ', $l10nFields).'
+  FROM '.$joinInfo['table'].' t
+'.implode('', $l10nJoins);
+    $this->logInfo('TRANSLATION QUERY '.$query);
+    return $query;
   }
 
 }

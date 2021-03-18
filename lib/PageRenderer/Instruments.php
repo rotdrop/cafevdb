@@ -208,11 +208,17 @@ class Instruments extends PMETableViewBase
     ];
 
     // set the locale into the joinstructure
-    array_walk($this->joinStructure, function(&$value) {
-      if ($value['table'] !== self::TRANSLATIONS_TABLE) {
-        return;
-      }
-      $value['identifier']['locale']['value'] = $this->l10N()->getLanguageCode();
+    array_walk($this->joinStructure, function(&$joinInfo) {
+      switch ($joinInfo['table']) {
+      case self::TRANSLATIONS_TABLE:
+        $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLanguageCode();
+        break;
+      case self::INSTRUMENT_FAMILIES_TABLE:
+        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'family');
+        break;
+      default:
+        break;
+      };
     });
 
     // Provide joins with MusicianInstruments, ProjectInstruments,
@@ -268,19 +274,9 @@ class Instruments extends PMETableViewBase
         'sql'          => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
         'filter'       => 'having',
         'select'       => 'M',
-        'php|LVDF'     => function($value, $op, $field, $row, $recordId, $pme) {
-          if (empty($value)) {
-            return $value;
-          }
-          $parts = Util::explode(',', $value, Util::TRIM);
-          foreach ($parts as &$part) {
-            $part = $this->musicL10n->t($part);
-          }
-          return implode(',', $parts);
-        },
         'values' => [
-          'description' => 'family',
-          'orderby'     => 'family ASC',
+          'description' => 'l10n_family',
+          'orderby'     => '$description ASC',
         ],
       ]);
 
