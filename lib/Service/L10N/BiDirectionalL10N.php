@@ -82,7 +82,7 @@ class BiDirectionalL10N
       $this->loadLanguageData();
     }
 
-    return $this->translations[self::FORWARD][$translation]?:$translation;
+    return $this->translations[self::REVERSE][$translation]?:$translation;
   }
 
   protected function loadLanguageData()
