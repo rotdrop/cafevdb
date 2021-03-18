@@ -62,7 +62,7 @@ class InstrumentFamilies extends PMETableViewBase
         'instrument_id' => false,
       ],
       'column' => 'instrument_family_id',
-      'read_only' => true, // @todo add instruments to families?
+      'read_only' => true,
     ],
     [
       'table' => self::INSTRUMENTS_TABLE,
@@ -74,7 +74,7 @@ class InstrumentFamilies extends PMETableViewBase
         ],
       ],
       'column' => 'id',
-      'read_only' => true,
+      'association' => 'instruments',
     ],
   ];
 
@@ -199,16 +199,16 @@ class InstrumentFamilies extends PMETableViewBase
       },
     ];
 
-    $this->makeJoinTableField(
+    list(,$fieldName) = $this->makeJoinTableField(
       $opts['fdd'], self::INSTRUMENTS_TABLE, 'id', [
-        'name'        => $this->l->t('Instruments'),
-        'input'       => 'VR',
-        'sort'        => true,
-        'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-        'filter'      => 'having',
-        'select'      => 'M',
-        'maxlen'      => 11,
-        'php'   =>  function($value, $op, $field, $row, $recordId, $pme) {
+        'name'         => $this->l->t('Instruments'),
+        'css'          => [ 'postfix' => ' family-instruments' ],
+        'display|LVFD' => [ 'popup' => 'data' ],
+        'sort'         => true,
+        'sql'          => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'filter'       => 'having',
+        'select'       => 'M',
+        'php|LVDF'     =>  function($value, $op, $field, $row, $recordId, $pme) {
           if (empty($value)) {
             return $value;
           }
@@ -223,6 +223,10 @@ class InstrumentFamilies extends PMETableViewBase
           'orderby'     => 'name ASC',
         ],
       ]);
+
+    $opts['fdd'][$fieldName]['values|ACP'] = array_merge(
+      $opts['fdd'][$fieldName]['values'],
+      [ 'filters' => 'IFNULL($table.disabled,0) = 0' ]);
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
@@ -245,10 +249,22 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts['groupby_fields'] = [ 'id' ];
 
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts['triggers']['update']['before'][] =
+      $opts['triggers']['insert']['before'][] = function(&$pme, $op, $step, $oldValues, &$changed, &$newValues) {
+      $key = 'family';
+      $chg = array_search($key, $changed);
+      if ($chg === false) {
+        return true;
+      }
+      // a kludge "... did you mean celesta?"
+      $value = $newValues[$key];
+      $newValues[$key] = $this->musicL10n->backTranslate($value);
+      $this->logInfo('BACK TRANSLATE '.$value.' / '.$newValues[$key]);
+      return true;
+    };
 
-    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
-
+    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts['triggers']['insert']['before'][] = [ $this, 'beforeInsertDoInsertAll' ];
     $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
 
     $opts['triggers']['select']['data'][] =

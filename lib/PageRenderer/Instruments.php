@@ -67,7 +67,7 @@ class Instruments extends PMETableViewBase
         'instrument_family_id' => false,
       ],
       'column' => 'instrument_id',
-      'read_only' => true, // @todo add instruments to families?
+      'read_only' => true,
     ],
     [
       'table' => self::INSTRUMENT_FAMILIES_TABLE,
@@ -79,7 +79,7 @@ class Instruments extends PMETableViewBase
         ],
       ],
       'column' => 'id',
-      'read_only' => true,
+      'association' => 'families',
     ],
   ];
 
@@ -240,14 +240,14 @@ class Instruments extends PMETableViewBase
 
     list(, $fieldName) = $this->makeJoinTableField(
       $opts['fdd'], self::INSTRUMENT_FAMILIES_TABLE, 'id', [
-        'name'        => $this->l->t('Families'),
-        'css'         => [ 'postfix' => ' instrument-families' ],
-        'display|LVF' => [ 'popup' => 'data' ],
-        'sort'        => true,
-        'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-        'filter'      => 'having',
-        'select'      => 'M',
-        'php|LDF'     => function($value, $op, $field, $row, $recordId, $pme) {
+        'name'         => $this->l->t('Families'),
+        'css'          => [ 'postfix' => ' instrument-families' ],
+        'display|LVFD' => [ 'popup' => 'data' ],
+        'sort'         => true,
+        'sql'          => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'filter'       => 'having',
+        'select'       => 'M',
+        'php|LVDF'     => function($value, $op, $field, $row, $recordId, $pme) {
           if (empty($value)) {
             return $value;
           }
@@ -265,7 +265,7 @@ class Instruments extends PMETableViewBase
 
     $opts['fdd'][$fieldName]['values|ACP'] = array_merge(
       $opts['fdd'][$fieldName]['values'],
-      [ 'filters' => '$table.disabled = 0' ]);
+      [ 'filters' => 'IFNULL($table.disabled,0) = 0' ]);
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
@@ -322,16 +322,24 @@ class Instruments extends PMETableViewBase
       'nowrap' => true,
     ];
 
-    $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
+    $opts['filters'] = "IFNULL(PMEtable0.disabled, 0) <= ".intval($this->showDisabled);
 
     $opts['groupby_fields'] = [ 'id' ];
 
-    //$opts['triggers']['update']['before'][]  = [ $this, 'updateFamilies' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts['triggers']['update']['before'][] =
+      $opts['triggers']['insert']['before'][] = function(&$pme, $op, $step, $oldValues, &$changed, &$newValues) {
+      $key = 'name';
+      $chg = array_search($key, $changed);
+      if ($chg === false) {
+        return true;
+      }
+      // a kludge "... did you mean celesta?"
+      $newValues[$key] = $this->musicL10n->backTranslate($newValues[$key]);
+      return true;
+    };
 
-    //$opts['triggers']['insert']['after'][]  = [ $this, 'updateFamilies' ];
-    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
-
+    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts['triggers']['insert']['before'][] = [ $this, 'beforeInsertDoInsertAll' ];
     $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
 
 
@@ -392,57 +400,6 @@ class Instruments extends PMETableViewBase
       $this->flush();
       return false;
     }
-
-    return true;
-  }
-
-  /**
-   * Instrument families are store in a separated pivot-table, hence
-   * we have to use a view or a separate update statement.
-   *
-   * @copydoc beforeDeleteTrigger
-   */
-  public function updateFamilies($pme, $op, $step, &$oldValues, &$changed, &$newValues)
-  {
-    $this->logInfo(__METHOD__);
-
-    $field = 'families';
-    $key = array_search($field, $changed);
-
-    if ($key === false) {
-      return true;
-    }
-
-    $oldIds  = Util::explode(',', $oldValues[$field]);
-    $newIds  = Util::explode(',', $newValues[$field]);
-
-    $removed = array_diff($oldIds, $newIds);
-    $added   = array_diff($newIds, $oldIds);
-
-    $this->logInfo(__METHOD__.': oldIds: '.print_r($oldIds, true));
-    $this->logInfo(__METHOD__.': newIds: '.print_r($newIds, true));
-
-    $entity = $this->getDatabaseRepository(ORM\Entities\Instrument::class)->find($pme->rec);
-
-    $families = $entity->getFamilies();
-
-    $this->logInfo(__METHOD__.': families '.$families->count());
-
-    foreach ($families->getIterator() as $i => $family) {
-      if (in_array($family->getId(), $removed)) {
-        $families->remove($i);
-      }
-    }
-
-    foreach ($added as $id) {
-      $families->add($this->getReference(Entities\InstrumentFamily::class, $id));
-    }
-    $entity->setFamilies($families);
-
-    $this->flush();
-
-    unset($changed[$key]);
-    unset($newValues[$field]);
 
     return true;
   }

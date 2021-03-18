@@ -609,6 +609,23 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return true;
   }
 
+  private function isMultiValuedJoin(array $joinInfo, string $key)
+  {
+    $keyInfo = $joinInfo['identifier'][$key];
+    if ($keyInfo === false) {
+      return true;
+    }
+    if (!is_array($keyInfo) || empty($keyInfo['table'])) {
+      return false;
+    }
+    foreach ($this->joinStructure as $otherInfo) {
+      if ($otherInfo['table'] == $keyInfo['table']) {
+        return $this->isMultiValuedJoin($otherInfo, $keyInfo['column']);
+      }
+    }
+    throw \RuntimeException($this->l->t('Inconsisten join-structure'));
+  }
+
   /**
    * Before update-trigger which ideally should update all data such
    * that nothing remains to do for phpMyEdit.
@@ -626,14 +643,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * @param &$newvals Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
+   *
+   * @bug This function is too hackish and too long.
+   * @todo Cleanup. In particular, quite a bit of code is shared with
+   * $this->beforeInsertDoInsertAll().
    */
   public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'updated');
 
-    $logMethod = 'logDebug';
-    //$logMethod = 'logInfo';
+    // $logMethod = 'logDebug';
+    $logMethod = 'logInfo';
 
     $this->$logMethod('OLDVALS '.print_r($oldvals, true));
     $this->$logMethod('NEWVALS '.print_r($newvals, true));
@@ -645,6 +666,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->$logMethod('CHANGESETS: '.print_r($changeSets, true));
 
+    $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $joinInfo) {
       if (!empty($joinInfo['read_only'])) {
         continue;
@@ -654,12 +676,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       if ($joinInfo['master']) {
+        // fill the identifier keys as they are left out for
+        // convenience in $this->joinStructure
         foreach ($this->pme->key as $key => $type) {
           $joinInfo['identifier'][$key] = $key;
         }
-        // leave this to phpMyEdit, otherwise key-updates would need
-        // further care.
-        // continue;
       }
       $changeSet = $changeSets[$table];
       $this->$logMethod('CHANGESET '.$table.' '.print_r($changeSet, true));
@@ -672,7 +693,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $identifier = [];
       $identifierColumns = $meta->getIdentifierColumnNames();
       foreach ($identifierColumns as $key) {
-        if ($joinInfo['identifier'][$key] === false) {
+        if ($this->isMultiValuedJoin($joinInfo, $key)) {
           if (!empty($multiple)) {
             throw new \RuntimeException($this->l->t('Missing identifier for field "%s" and grouping field "%s" already set.', [ $key, $multiple ]));
           }
@@ -712,7 +733,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $selfField = $this->joinTableFieldName($joinInfo, $key);
             $identifier[$key] = [ 'self' => $selfField ];
           } else {
-            throw new \RunException($this->l->t('Nested multi-value join tables are not yet supported.'));
+            throw new \RuntimeException($this->l->t('Nested multi-value join tables are not yet supported: %s::%s.', [ $joinInfo['entity'], $key ]));
           }
         } else {
           $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
@@ -763,6 +784,46 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->$logMethod('REMIDS '.print_r($remIdentifier, true));
         $this->$logMethod('DELIDS '.print_r($delIdentifier, true));
 
+        if (!empty($joinInfo['association'])) {
+          // Many-to-many or similar through join table. We modify the
+          // join table indirectly by modifying the master entity's
+          // association.
+
+          if (empty($masterEntity)) {
+            $masterEntity = $this
+              ->getDatabaseRepository($this->joinStructure[0]['entity'])
+              ->find($pme->rec);
+            if (empty($masterEntity)) {
+              throw new \RuntimeException($this->l->t('Unmable to find master entity for key "%s".', print_r($pme->rec, true)));
+            }
+          }
+
+          $association = $masterEntity[$joinInfo['association']];
+          $this->$logMethod(get_class($association).': '.$association->count());
+
+          // Delete entities by cirteria matching Note: this needs
+          // that the entity implements the \ArrayAccess interface
+          foreach ($identifier[$multiple]['del'] as $del) {
+            $id = $delIdentifier[$del];
+            $entityId = $this->extractKeyValues($meta, $id);
+            foreach ($association->matching(self::criteriaWhere($entityId)) as $entity) {
+              $association->removeElement($entity);
+            }
+          }
+
+          // add entries by adding them to the association of the
+          // master entity
+          foreach ($identifier[$multiple]['add'] as $add) {
+            $id = $addIdentifier[$add];
+            $entityId = $this->extractKeyValues($meta, $id);
+            $association->add($this->getReference($entityClass, $entityId));
+          }
+
+          $masterEntity[$joinInfo['association']] = $association;
+
+          continue; // skip to next field
+        }
+
         // Delete removed entities
         foreach ($identifier[$multiple]['del'] as $del) {
           $id = $delIdentifier[$del];
@@ -806,8 +867,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
-          $this->$logMethod('TRY MOD '.$new);
           if (isset($addIdentifier[$new])) {
+            $this->$logMethod('TRY ADD '.$new);
             $id = $addIdentifier[$new];
             $entityId = $this->extractKeyValues($meta, $id);
             $entity = $entityClass::create();
@@ -815,6 +876,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $entity[$key] = $value;
             }
           } else if (isset($remIdentifier[$new]) && !empty($changeSet)) {
+            $this->$logMethod('TRY MOD '.$new);
             $id = $remIdentifier[$new];
             $entityId = $this->extractKeyValues($meta, $id);
             $entity = $this->find($entityId);
@@ -859,6 +921,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $field);
         }
         $this->persist($entity);
+        if ($joinInfo['master']) {
+          $masterEntity = $entity;
+        }
       }
     }
     $this->flush(); // flush everything to the data-base
@@ -946,6 +1011,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->$logMethod('CHANGESETS: '.print_r($changeSets, true));
 
+    $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $joinInfo) {
       $table = $joinInfo['table'];
       $changeSet = $changeSets[$table];
@@ -959,12 +1025,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         continue;
       }
       if ($joinInfo['master']) {
+        // fill the identifier keys as they are left out for
+        // convenience in $this->joinStructure
         foreach ($this->pme->key as $key => $type) {
           $joinInfo['identifier'][$key] = $key;
         }
-        // leave this to phpMyEdit, otherwise key-updates would need
-        // further care.
-        // continue;
       }
       $this->$logMethod('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
@@ -972,10 +1037,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $meta = $this->classMetadata($entityClass);
       //$this->$logMethod('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
 
+      $multiple = null;
       $identifier = [];
       $identifierColumns = $meta->getIdentifierColumnNames();
       foreach ($identifierColumns as $key) {
-        if (empty($joinInfo['identifier'][$key])) {
+        if ($this->isMultiValuedJoin($joinInfo, $key)) {
+          if (!empty($multiple)) {
+            throw new \RuntimeException($this->l->t('Missing identifier for field "%s" and grouping field "%s" already set.', [ $key, $multiple ]));
+          }
           // assume that the 'column' component contains the keys.
           $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = Util::explode(',', $newvals[$keyField]);
@@ -1004,6 +1073,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
       }
       if (!empty($multiple)) {
+        $this->$logMethod('IDS '.print_r($identifier, true));
+        $this->$logMethod('CHG '.print_r($changeSet, true));
+
         foreach ($identifier[$multiple] as $addKey) {
           $addIdentifier[$addKey] = $identifier;
           $addIdentifier[$addKey][$multiple] = $addKey;
@@ -1031,8 +1103,32 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->$logMethod('IDS '.print_r($identifier, true));
-        $this->$logMethod('CHG '.print_r($changeSet, true));
+        $this->$logMethod('ADDIDS '.print_r($addIdentifier, true));
+
+        if (!empty($joinInfo['association'])) {
+          // Many-to-many or similar through join table. We modify the
+          // join table indirectly by modifying the master entity's
+          // association.
+
+          if (empty($masterEntity)) {
+            throw new \RuntimeException($this->l->t('Master entity is unset.'));
+          }
+
+          $association = $masterEntity[$joinInfo['association']];
+          $this->$logMethod(get_class($association).': '.$association->count());
+
+          // add entries by adding them to the association of the
+          // master entity
+          foreach ($identifier[$multiple] as $add) {
+            $id = $addIdentifier[$add];
+            $entityId = $this->extractKeyValues($meta, $id);
+            $association->add($this->getReference($entityClass, $entityId));
+          }
+
+          $masterEntity[$joinInfo['association']] = $association;
+
+          continue; // skip to next field
+        }
 
         $multipleValues = [];
         foreach ($changeSet as $column => $field) {
@@ -1094,8 +1190,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // id and to insert the id(s) into the change-sets for the
         // joined entities which are yet to be inserted.
         if ($joinInfo['master']) {
-          $this->flush($entity);
-          $identifier = $this->getIdentifierColumnValues($entity, $meta);
+          $this->flush();
+          $masterEntity = $entity;
+          $identifier = $this->getIdentifierColumnValues($masterEntity, $meta);
           foreach (array_keys($this->pme->key) as $key) {
             $newvals[$key] = $identifier[$key];
           }
