@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database;
 use OCP\IRequest;
 use OCP\ILogger;
 use OCP\IL10N;
+use OCP\AppFramework\IAppContainer;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
@@ -87,6 +88,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var IUserSession */
   private $userSession;
 
+  /** @var IAppContainer */
+  private $appContainer;
+
   /** @var bool */
   private $debug;
 
@@ -97,6 +101,7 @@ class EntityManager extends EntityManagerDecorator
   // initial setup.
   public function __construct(
     EncryptionService $encryptionService
+    , IAppContainer $appContainer
     , CloudLogger $sqlLogger
     , IRequest $request
     , ILogger $logger
@@ -104,6 +109,7 @@ class EntityManager extends EntityManagerDecorator
   )
   {
     $this->encryptionService = $encryptionService;
+    $this->appContainer = $appContainer;
     $this->sqlLogger = $sqlLogger;
     $this->request = $request;
     $this->userSession = $userSession;
@@ -415,7 +421,7 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($transformableListener);
 
     // translatable
-    $translatableListener = new Listeners\GedmoTranslatableListener();
+    $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
     // current translation locale should be set from session or hook later into the listener
     // most important, before entity manager is flushed
     $translatableListener->setTranslatableLocale($this->l->getLanguageCode());

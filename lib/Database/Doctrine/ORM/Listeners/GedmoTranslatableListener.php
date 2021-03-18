@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
 
-use Doctrine\Common\EventArgs;
+use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 
 /**
  * Override the default listener to use a modified event subscriber
@@ -32,26 +32,19 @@ use Doctrine\Common\EventArgs;
  */
 class GedmoTranslatableListener extends \Gedmo\Translatable\TranslatableListener
 {
-  /** @var Translatable\EventDecorator */
-  private $adapter = null;
+  /** @var BiDirectionalL10N */
+  private $musicL10n;
+
+  public function __construct(BiDirectionalL10N $musicL10n)
+  {
+    $this->musicL10n = $musicL10n;
+  }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEventAdapter(EventArgs $args)
+  protected function getFallbackTranslation($originalValue)
   {
-    if (empty($adapter)) {
-      $adapter = new Translatable\EventDecorator(parent::getEventAdapter($args));
-    }
-    $adapter->setEventArgs($args);
-    return $adapter;
+    return $this->musicL10n->t($originalValue);
   }
-
-  // /**
-  //  * {@inheritdoc}
-  //  */
-  // protected function getNamespace()
-  // {
-  //   return __NAMESPACE__;
-  // }
 }
