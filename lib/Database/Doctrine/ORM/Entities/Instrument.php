@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,8 +27,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
-use OCP\ILogger;
 
 /**
  * Instrumente
@@ -105,11 +104,11 @@ class Instrument implements \ArrayAccess
   /**
    * Set id.
    *
-   * @param string $id
+   * @param int $id
    *
-   * @return Ide
+   * @return Instrument
    */
-  public function setId($id)
+  public function setId($id):Instrument
   {
     $this->id = $id;
 
@@ -119,7 +118,7 @@ class Instrument implements \ArrayAccess
   /**
    * Get id.
    *
-   * @return string
+   * @return int
    */
   public function getId()
   {
@@ -131,9 +130,9 @@ class Instrument implements \ArrayAccess
    *
    * @param string $name
    *
-   * @return Namee
+   * @return Name
    */
-  public function setName($name)
+  public function setName($name):Instrument
   {
     $this->name = $name;
 
@@ -157,7 +156,7 @@ class Instrument implements \ArrayAccess
    *
    * @return Instrumente
    */
-  public function setFamilies($families)
+  public function setFamilies($families):Instrument
   {
     $this->families = $families;
 
@@ -181,7 +180,7 @@ class Instrument implements \ArrayAccess
    *
    * @return Instrumente
    */
-  public function setSortOrder($sortOrder)
+  public function setSortOrder($sortOrder):Instrument
   {
     $this->sortOrder = $sortOrder;
 
@@ -205,7 +204,7 @@ class Instrument implements \ArrayAccess
    *
    * @return Instrumente
    */
-  public function setDisabled($disabled)
+  public function setDisabled($disabled):Instrument
   {
     $this->disabled = $disabled;
 
@@ -229,7 +228,7 @@ class Instrument implements \ArrayAccess
    *
    * @return Instrumente
    */
-  public function setMusicianInstruments($musicianInstruments)
+  public function setMusicianInstruments($musicianInstruments):Instrument
   {
     $this->musicianInstruments = $musicianInstruments;
 
@@ -253,7 +252,7 @@ class Instrument implements \ArrayAccess
    *
    * @return Instrumente
    */
-  public function setProjectInstruments($projectInstruments)
+  public function setProjectInstruments($projectInstruments):Instrument
   {
     $this->projectInstruments = $projectInstruments;
 
@@ -277,7 +276,7 @@ class Instrument implements \ArrayAccess
    *
    * @return Instrumente
    */
-  public function setProjectInstrumentationNumbers($projectInstrumentationNumbers)
+  public function setProjectInstrumentationNumbers($projectInstrumentationNumbers):Instrument
   {
     $this->projectInstrumentationNumbers = $projectInstrumentationNumbers;
 

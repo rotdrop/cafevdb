@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,6 +26,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Instrumente
@@ -85,9 +88,9 @@ class InstrumentFamily implements \ArrayAccess
    *
    * @param string $family
    *
-   * @return Familye
+   * @return InstrumentFamily
    */
-  public function setFamily($family)
+  public function setFamily(string $family):InstrumentFamily
   {
     $this->family = $family;
 
@@ -99,7 +102,7 @@ class InstrumentFamily implements \ArrayAccess
    *
    * @return string
    */
-  public function getFamily()
+  public function getFamily():string
   {
     return $this->family;
   }
@@ -111,7 +114,7 @@ class InstrumentFamily implements \ArrayAccess
    *
    * @return InstrumentFamily
    */
-  public function setDisabled($disabled)
+  public function setDisabled($disabled):InstrumentFamily
   {
     $this->disabled = $disabled;
 
@@ -135,7 +138,7 @@ class InstrumentFamily implements \ArrayAccess
    *
    * @return InstrumentFamily
    */
-  public function setInstruments($instruments)
+  public function setInstruments($instruments):InstrumentFamily
   {
     $this->instruments = $instruments;
 
@@ -145,14 +148,14 @@ class InstrumentFamily implements \ArrayAccess
   /**
    * Get instruments.
    *
-   * @return bool
+   * @return Collection
    */
-  public function getInstruments():bool
+  public function getInstruments():Collection
   {
     return $this->instruments;
   }
 
-  public function usage()
+  public function usage():int
   {
     return $this->instruments->count();
   }
