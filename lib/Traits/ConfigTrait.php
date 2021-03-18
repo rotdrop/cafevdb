@@ -25,6 +25,8 @@ namespace OCA\CAFEVDB\Traits;
 
 use OCP\IUser;
 use OCP\IConfig;
+use OCP\IL10N;
+use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -42,7 +44,7 @@ trait ConfigTrait {
    *
    * @return \OCA\CAFEVDB\Service\ConfigService
    */
-  public function configService()
+  public function configService():ConfigService
   {
     return $this->configService;
   }
@@ -51,22 +53,22 @@ trait ConfigTrait {
    * Return the stored config-service of the embedding cloud
    * container.
    */
-  public function cloudConfig()
+  public function cloudConfig():IConfig
   {
     return $this->configService->getCloudConfig();
   }
 
-  protected function l10N()
+  protected function l10N():IL10N
   {
     return $this->configService->getL10N();
   }
 
-  protected function appContainer()
+  protected function appContainer():IAppContainer
   {
     return $this->configService->getAppContainer();
   }
 
-  protected function appName()
+  protected function appName():string
   {
     return $this->configService->getAppName();
   }
