@@ -58,7 +58,7 @@ trait ConfigTrait {
     return $this->configService->getCloudConfig();
   }
 
-  protected function l10N():IL10N
+  protected function l10n():IL10N
   {
     return $this->configService->getL10N();
   }
