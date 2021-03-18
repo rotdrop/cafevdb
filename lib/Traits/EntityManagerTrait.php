@@ -262,6 +262,9 @@ trait EntityManagerTrait {
     return $this->getDatabaseRepository($entityClassName)->matching($criteria);
   }
 
+  /**
+   * Convenience function to generate Collections\Criteria
+   */
   protected static function criteria(): Collections\Criteria {
     return new Collections\Criteria();
   }
@@ -270,8 +273,32 @@ trait EntityManagerTrait {
     return self::criteriaExpr();
   }
 
+  /**
+   * Convenience function to generate Collections\ExpressionBuilder
+   */
   protected static function criteriaExpr(): Collections\ExpressionBuilder {
     return Collections\Criteria::expr();
+  }
+
+  /**
+   * Convenience function. Convert an array of criteria as accepted by
+   * self::findBy() to an instance of Collections\Criteria.
+   *
+   * @todo This could be made more elaborate like
+   * OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy().
+   */
+  protected static function criteriaWhere(array $arrayCriteria)
+  {
+    $criteria = self::criteria();
+    $expr = self::criteriaExpr();
+    foreach ($arrayCriteria as $key => $value) {
+      if (is_array($value)) {
+        $criteria->andWhere($expr->in($key, $value));
+      } else {
+        $criteria->andWhere($expr->eq($key, $value));
+      }
+    }
+    return $criteria;
   }
 
   protected function expr() {
