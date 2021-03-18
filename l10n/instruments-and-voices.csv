@@ -38,6 +38,7 @@
 "viola d'amore","viole d'amour","Viola d'amore;Liebesgeige","viola d'amore","viola d'amur","viola d'amore"
 "Plucked instruments",,,,,
 "plucked instruments","instruments à cordes pincées","Zupfinstrumente","strumenti a pizzico","shchipkovye instrumenty","instrumentos punteados"
+"plucked","à cordes pincées","Zupf","a pizzico","shchipkovye","punteados"
 "cimbalom","cymbalum","Zymbal",,,
 "guitar","guitare","Gitarre","chitarra","gitara","guitarra"
 "harp","harpe","Harfe","arpa","arfa","arpa"
@@ -45,7 +46,8 @@
 "mandolin","mandoline","Mandoline","mandolino","mandolina","mandolina"
 "zither","cithare","Zither","cetra da tavolo","tsitra","cítara"
 "Keyboard instruments",,,,,
-"keyboard;keyboard instruments","instruments à clavier","Tasteninstrumente","strumenti a tastiera","klavishnyi instrument","instrumentos de tecla"
+"keyboard instruments","instruments à clavier","Tasteninstrumente","strumenti a tastiera","klavishnyi instrument","instrumentos de tecla"
+"keyboard","à clavier","Tasten","a tastiera","klavishnyi","de tecla"
 "accordion","accordéon","Akkordeon","fisarmonica","akkordeon","acordeón"
 "bayan",,"Bajan","bayan, fisarmonica bayan","baian",
 "celesta","célesta","Celesta","celesta","chelesta","celesta"
@@ -57,6 +59,7 @@
 "grand piano","piano à queue","Flügel",,,
 "Percussion instruments",,,,,
 "percussion instruments","instruments à percussion","Schlaginstrumente;Perkussionsinstrumente","strumenti a percussione","udarnye instrumenty","instrumentos de percusión"
+"percussion","à percussion","Perkussion","a percussione","udarnye","de percusión"
 "bass drum","grosse caisse","Grosse Trommel","cassa; grancassa;gran cassa","bol'shoi baraban","bombo"
 "castenets","castagnettes","Kastagnetten","castagnette","kastan'ety","castañuelas"
 "cowbells","cloches à vache",,,"caubel",
