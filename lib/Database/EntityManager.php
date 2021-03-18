@@ -415,7 +415,7 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($transformableListener);
 
     // translatable
-    $translatableListener = new \Gedmo\Translatable\TranslatableListener();
+    $translatableListener = new Listeners\GedmoTranslatableListener();
     // current translation locale should be set from session or hook later into the listener
     // most important, before entity manager is flushed
     $translatableListener->setTranslatableLocale($this->l->getLanguageCode());
