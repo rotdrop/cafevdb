@@ -29,6 +29,8 @@ use OCP\IL10N;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
+use Doctrine\DBAL\Connection as DatabaseConnection;
+use Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Configuration;
@@ -111,6 +113,16 @@ class EntityManager extends EntityManagerDecorator
     if ($this->connected()) {
       $this->registerTypes();
     }
+  }
+
+  public function getConnection():DatabaseConnection
+  {
+    return $this->entityManager->getConnection();
+  }
+
+  public function getPlatform():DatabasePlatform
+  {
+    return $this->getConnection()->getDatabasePlatform();
   }
 
   public function suspendLogging()
@@ -584,11 +596,16 @@ class EntityManager extends EntityManagerDecorator
    *   ...
    * ]
    * ```
+   * @todo $columnValues sometimes contains raw data-base values as it
+   * is passed down here from code using the legacyx phpMyEdit
+   * stuff. ATM we hack around by converting string values to their
+   * proper PHP values, but this is an ugly hack.
    */
   public function extractKeyValues($meta, array $columnValues):array
   {
     $entityId = [];
     foreach ($meta->identifier as $field) {
+      $dbalType = null;
       if (isset($meta->associationMappings[$field])) {
         if (count($meta->associationMappings[$field]['joinColumns']) != 1) {
           throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
@@ -597,15 +614,20 @@ class EntityManager extends EntityManagerDecorator
       } else {
         $columnName = $meta->fieldMappings[$field]['columnName'];
         if (!isset($columnValues[$columnName])) {
+          // possibly an attempt to extract from non-existing field.
           if ($meta->usesIdGenerator()) {
-            // possibly an attempt to extract from non-existing field.
             continue;
           }
           throw new \Exception(
             $this->l->t('Missing value and no generator for identifier field: %s', $field));
         }
+        $dbalType = Type::getType($meta->fieldMappings[$field]['type']);
       }
-      $entityId[$field] = $columnValues[$columnName];
+      $value = $columnValues[$columnName];
+      if (!empty($dbalType) && is_string($value)) {
+        $value = $dbalType->convertToPHPValue($value, $this->getPlatform());
+      }
+      $entityId[$field] = $value;
     }
     return $entityId;
   }
