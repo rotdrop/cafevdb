@@ -120,11 +120,15 @@ trait FindLikeTrait
    *
    * - allow automatic filtering by association fields
    * - allow sorting by association fields
-   * - allow indexing by adding a 'INDEX' option to $orderBy.
+   * - allow indexing by adding an 'INDEX' option to $orderBy.
    * - allow wild-cards, uses "LIKE" in comparison. '*' and '%' are
-   *   allowed wild-cards, wher '*' is internally simply replaced by
+   *   allowed wild-cards, where '*' is internally simply replaced by
    *   '%'.
-   * - ```'!FIELD' => SOMETHING``` will just invert the criterion
+   * - allow the basic comparators =, <, >, ! in prefix notation,
+   *   e.g. ```!>FIELD => SOMETHING``` will be translated to the
+   *   expression ```!(FIELD > SOMETHING)```
+   * - in particulular ```'!FIELD' => SOMETHING``` will just negate
+   *   the criterion
    * - supports Collections\Criteria, these are applied at the end.
    *
    * In order to filter by empty collections a left-join with the
