@@ -28,6 +28,10 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
 use Gedmo\Sluggable\SluggableListener;
 
+/**
+ * Gedmo slug handler which simply computes a hash as slug. Currently
+ * simplistic MD5.
+ */
 class HashHandler implements SlugHandlerInterface
 {
   /**
