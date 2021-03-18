@@ -1292,7 +1292,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                      && $joinTableValue['value'] === null) {
             $joinCondition = '$join_table.'.$joinTableKey.' IS NULL';
           } else if (!empty($joinTableValue['value'])) {
-            $joinCondition .= '= '.$joinTableValue['value'];
+            $value = $joinTableValue['value'];
+            if (is_string($value)) {
+              $value = "'".addslashes($value)."'";
+            }
+            $joinCondition .= '= '.$value;
           } else if (!empty($joinTableValue['condition'])) {
             $joinCondition .= $joinTableValue['condition'];
           } else if (!empty($joinTableValue['self'])) {
