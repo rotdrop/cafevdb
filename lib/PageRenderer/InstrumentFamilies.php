@@ -44,6 +44,7 @@ class InstrumentFamilies extends PMETableViewBase
   const TABLE = 'InstrumentFamilies';
   private const INSTRUMENTS_TABLE = 'Instruments';
   private const INSTRUMENTS_JOIN_TABLE = 'instrument_instrument_family';
+  private const TRANSLATIONS_TABLE = 'TableFieldTranslations';
 
   /** @var BiDirectionalL10N */
   private $musicL10n;
@@ -53,6 +54,18 @@ class InstrumentFamilies extends PMETableViewBase
       'table' => self::TABLE,
       'entity' => Entities\InstrumentFamily::class,
       'master' => true,
+    ],
+    [
+      'table' => self::TRANSLATIONS_TABLE,
+      'entity' => null,
+      'read_only' => true,
+      'identifier' => [
+        'locale' => [ 'value' => null ], // to be set
+        'object_class' => [ 'value' => Entities\InstrumentFamily::class ],
+        'field' => [ 'value' => 'family' ],
+        'foreign_key' => 'id',
+      ],
+      'column' => 'content',
     ],
     [
       'table' => self::INSTRUMENTS_JOIN_TABLE,
@@ -178,25 +191,32 @@ class InstrumentFamilies extends PMETableViewBase
     $opts['fdd']['id'] = [
       'name'      => 'id',
       'select'    => 'N',
-      //'input|AP'  => 'RH',
       'input'     => 'RH',
+      'options'  => 'VCPDL',
       'maxlen'    => 11,
-      'size'      => 5,
+      'size'      => 11,
       'align'     => 'right',
       'sort'      => true,
+      'default'  => '0',  // auto increment
       ];
+
+    // set the locale into the joinstructure
+    array_walk($this->joinStructure, function(&$value) {
+      if ($value['table'] !== self::TRANSLATIONS_TABLE) {
+        return;
+      }
+      $value['identifier']['locale']['value'] = $this->l10N()->getLanguageCode();
+    });
 
     // define join tables
     $joinTables = $this->defineJoinStructure($opts);
 
     $opts['fdd']['family'] = [
       'name'   => $this->l->t('Family'),
+      'sql'    => 'IFNULL('.$joinTables[self::TRANSLATIONS_TABLE].'.content,$field_name)',
       'select' => 'T',
       'maxlen' => 64,
       'sort'   => true,
-      'php|LVDF'    => function($value) {
-        return $this->musicL10n->t($value);
-      },
     ];
 
     list(,$fieldName) = $this->makeJoinTableField(
@@ -245,23 +265,9 @@ class InstrumentFamilies extends PMETableViewBase
       ];
     }
 
-    $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
+    $opts['filters'] = "IFNULL(PMEtable0.disabled,0) <= ".intval($this->showDisabled);
 
     $opts['groupby_fields'] = [ 'id' ];
-
-    $opts['triggers']['update']['before'][] =
-      $opts['triggers']['insert']['before'][] = function(&$pme, $op, $step, $oldValues, &$changed, &$newValues) {
-      $key = 'family';
-      $chg = array_search($key, $changed);
-      if ($chg === false) {
-        return true;
-      }
-      // a kludge "... did you mean celesta?"
-      $value = $newValues[$key];
-      $newValues[$key] = $this->musicL10n->backTranslate($value);
-      $this->logInfo('BACK TRANSLATE '.$value.' / '.$newValues[$key]);
-      return true;
-    };
 
     $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts['triggers']['insert']['before'][] = [ $this, 'beforeInsertDoInsertAll' ];

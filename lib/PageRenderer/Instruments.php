@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCP\IL10N;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -43,8 +45,9 @@ class Instruments extends PMETableViewBase
 {
   const TEMPLATE = 'instruments';
   const TABLE = 'Instruments';
-  const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
+  private const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
   private const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
+  private const TRANSLATIONS_TABLE = 'TableFieldTranslations';
 
   /** @var BiDirectionalL10N */
   private $musicL10n;
@@ -58,6 +61,18 @@ class Instruments extends PMETableViewBase
       'table' => self::TABLE,
       'entity' => Entities\Instrument::class,
       'master' => true,
+    ],
+    [
+      'table' => self::TRANSLATIONS_TABLE,
+      'entity' => null,
+      'read_only' => true,
+      'identifier' => [
+        'locale' => [ 'value' => null ], // to be set
+        'object_class' => [ 'value' => Entities\Instrument::class ],
+        'field' => [ 'value' => 'name' ],
+        'foreign_key' => 'id',
+      ],
+      'column' => 'content',
     ],
     [
       'table' => self::INSTRUMENT_FAMILIES_JOIN_TABLE,
@@ -183,14 +198,22 @@ class Instruments extends PMETableViewBase
     $opts['fdd']['id'] = [
       'name'      => 'id',
       'select'    => 'N',
-      //'input|AP'  => 'RH',
       'input'     => 'RH',
+      'options'   => 'VCPDL',
       'maxlen'    => 11,
-      'size'      => 5,
-      'default'   => '0',  // auto increment
+      'size'      => 11,
       'align'     => 'right',
       'sort'      => true,
-      ];
+      'default'   => '0',  // auto increment
+    ];
+
+    // set the locale into the joinstructure
+    array_walk($this->joinStructure, function(&$value) {
+      if ($value['table'] !== self::TRANSLATIONS_TABLE) {
+        return;
+      }
+      $value['identifier']['locale']['value'] = $this->l10N()->getLanguageCode();
+    });
 
     // Provide joins with MusicianInstruments, ProjectInstruments,
     // ProjectInstrumentationNumbers in order to flag used instruments as
@@ -218,13 +241,11 @@ class Instruments extends PMETableViewBase
     $joinTables = $this->defineJoinStructure($opts);
 
     $opts['fdd']['name'] = [
-      'name'     => $this->l->t('Instrument'),
-      'select'   => 'T',
-      'maxlen'   => 64,
-      'sort'     => true,
-      'php|LVDF' => function($value) {
-        return $this->musicL10n->t($value);
-      },
+      'name'   => $this->l->t('Instrument'),
+      'sql'    => $joinTables[self::TRANSLATIONS_TABLE].'.content',
+      'select' => 'T',
+      'maxlen' => 64,
+      'sort'   => true,
     ];
 
     $opts['fdd']['sort_order'] = [
@@ -291,7 +312,7 @@ class Instruments extends PMETableViewBase
     $usageSQL = implode('+', $usageSQL);
     $usageIdx = count($opts['fdd']);
     $opts['fdd']['usage'] = [
-      'name'    => $this->l->t('Usage'),
+      'name'    => $this->l->t('#Usage'),
       'input'   => 'VR',
       'input|D' => 'VR',
       'sql'     => '('.$usageSQL.')',
@@ -311,7 +332,7 @@ class Instruments extends PMETableViewBase
       'options' => 'LF',
       'sql'     => '`PMEtable0`.`id`',
       'php'   =>  function($value, $op, $field, $row, $recordId, $pme) use ($lang) {
-        $inst = $this->musicL10n->t($row[$this->queryField('name', $pme->fdd)]);
+        $inst = $row[$this->queryField('name', $pme->fdd)];
         return '<a '
           .'href="http://'.$lang.'.wikipedia.org/wiki/'.$inst.'" '
           .'target="Wikipedia.'.$lang.'" '
@@ -325,18 +346,6 @@ class Instruments extends PMETableViewBase
     $opts['filters'] = "IFNULL(PMEtable0.disabled, 0) <= ".intval($this->showDisabled);
 
     $opts['groupby_fields'] = [ 'id' ];
-
-    $opts['triggers']['update']['before'][] =
-      $opts['triggers']['insert']['before'][] = function(&$pme, $op, $step, $oldValues, &$changed, &$newValues) {
-      $key = 'name';
-      $chg = array_search($key, $changed);
-      if ($chg === false) {
-        return true;
-      }
-      // a kludge "... did you mean celesta?"
-      $newValues[$key] = $this->musicL10n->backTranslate($newValues[$key]);
-      return true;
-    };
 
     $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts['triggers']['insert']['before'][] = [ $this, 'beforeInsertDoInsertAll' ];
