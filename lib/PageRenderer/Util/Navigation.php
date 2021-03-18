@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -613,7 +614,7 @@ and even edit the public web-pages for the project and other things.");
       break;
 
     case 'instruments':
-      $value = $this->l->t("Add Instruments");
+      $value = $this->l->t("Musical Instruments");
       $title = $this->l->t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
       $post = ['template' => 'instruments',
                'projectName' => $projectName,
