@@ -1578,7 +1578,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $query = 'SELECT t.*, '.implode(', ', $l10nFields).'
   FROM '.$joinInfo['table'].' t
 '.implode('', $l10nJoins);
-    $this->logInfo('TRANSLATION QUERY '.$query);
     return $query;
   }
 
