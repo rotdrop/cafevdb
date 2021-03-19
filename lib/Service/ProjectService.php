@@ -700,7 +700,7 @@ Whatever.',
    * Delete a web page. This is implemented by moving the page to the
    * Trashbin category, leaving the real cleanup to a human being.
    */
-  public function deleteProjectWebPage($projectId, $article)
+  public function deleteProjectWebPage($projectId, array $article)
   {
     $articleId = $article['articleId'];
     $categoryId = $article['categoryId'];

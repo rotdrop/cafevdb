@@ -56,6 +56,7 @@ class ProjectWebPagesController extends Controller {
 
   /**
    * @NoAdminRequired
+   * @UseSession
    */
   public function serviceSwitch($topic, $projectId = -1, $articleId = -1, $articleData = [])
   {
@@ -140,7 +141,7 @@ class ProjectWebPagesController extends Controller {
                     [ $articleData['articleName'], $articleId, $projectId ]));
     case 'delete':
       try {
-        $this->projectService->deleteProjectWebPage($projectId, $articleId);
+        $this->projectService->deleteProjectWebPage($projectId, $articleData);
       } catch (\Throwable $t) {
         return self::grumble($this->exceptionChainData($t));
       }
