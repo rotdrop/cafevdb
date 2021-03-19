@@ -580,7 +580,7 @@ Whatever.',
       $this->logDebug("Projects: ".$category['id']);
       if (is_array($pages)) {
         foreach ($pages as $idx => $article) {
-          $article['CategoryName'] = $category['name'];
+          $article['categoryName'] = $category['name'];
           if (isset($articleIds[$article['articleId']])) {
             $projectPages[] = $article;
           } else {
@@ -775,7 +775,7 @@ Whatever.',
       if ($result === false) {
         $this->logDebug("Failed moving ".$articleId." to ".$destinationCategory);
       } else {
-        $article['CategoryId'] = $destinationCategory;
+        $article['categoryId'] = $destinationCategory;
       }
     }
 

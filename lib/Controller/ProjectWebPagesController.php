@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -64,15 +65,15 @@ class ProjectWebPagesController extends Controller {
 
     if (count($articleData) > 0 &&
         $articleId >= 0 &&
-        $articleData['ArticleId'] != $articleId) {
+        $articleData['articleId'] != $articleId) {
       return self::grumble(
         $this->l->t("Submitted article id %d ".
                     "does not match the id %d stored in the article-data.",
-                    [ $articleId, $articleData['ArticleId'] ]));
+                    [ $articleId, $articleData['articleId'] ]));
     }
 
     if ($topic != 'add') {
-      // require both, ArticleId and ArticleData
+      // require both, articleId and articleData
       if ($articleId < 0) {
         return self::grumble($this->l->t("Invalid or unset article-id: `%s'", [ $articleId ]));
       }
@@ -94,14 +95,14 @@ class ProjectWebPagesController extends Controller {
       }
       $message = $this->l->t("Created a new public web page with name %s and id %d ".
                              "for the project with id %d.",
-                             [ $article['ArticleName'], $article['ArticleId'], $projectId ]);
+                             [ $article['articleName'], $article['articleId'], $projectId ]);
       // If there is no rehearsal page attached to the project, then attach one
       $rehearsalsCat = $this->getConfigValue('redaxoRehearsals');
       $rehearsal = null;
       try {
         $articles = $this->projectService->fetchProjectWebPages($projectId);
         foreach($articles as $article) {
-          if ($article['category_id'] == $rehearsalsCat) {
+          if ($article['categoryId'] == $rehearsalsCat) {
             $rehearsal = $article;
             break;
           }
@@ -127,7 +128,7 @@ class ProjectWebPagesController extends Controller {
       }
       return self::response(
         $this->l->t("Linked the existing public web-article %s (id %d) to the project with id %d",
-                    [ $articleData['ArticleName'], $articleId, $projectId ]));
+                    [ $articleData['articleName'], $articleId, $projectId ]));
     case 'unlink':
       try {
         $this->projectService->detachProjectWebPage($projectId, $articleId);
@@ -136,7 +137,7 @@ class ProjectWebPagesController extends Controller {
       }
       return self::response(
         $this->l->t("Detached the public web-article %s (id %d) from the project with id %d",
-                    [ $articleData['ArticleName'], $articleId, $projectId ]));
+                    [ $articleData['articleName'], $articleId, $projectId ]));
     case 'delete':
       try {
         $this->projectService->deleteProjectWebPage($projectId, $articleId);
@@ -145,7 +146,7 @@ class ProjectWebPagesController extends Controller {
       }
       return self::response(
         $this->l->t("Removed public web page %s (id %d) from the project with id %d.",
-                    [ $articleData['ArticleName'], $articleId, $projectId ]));
+                    [ $articleData['articleName'], $articleId, $projectId ]));
       break;
     }
 

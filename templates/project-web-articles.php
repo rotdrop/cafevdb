@@ -130,23 +130,23 @@ echo '
         data-project-id="'.$projectId.'">
   <option></option>';
 if (count($otherPages) > 0) {
-  $oldGroup = $otherPages[0]['CategoryName'];
+  $oldGroup = $otherPages[0]['categoryName'];
   echo '
   <optgroup label="'.$oldGroup.'">';
   foreach($otherPages as $webPage) {
-    $group = $webPage['CategoryName'];
+    $group = $webPage['categoryName'];
     if ($group != $oldGroup) {
       echo '
   </optgroup>
   <optgroup label="'.$group.'">';
         $oldGroup = $group;
     }
-    unset($webPage['CategoryName']);
+    unset($webPage['categoryName']);
     $option = [ 'type' => 'option',
                 'value' => $webPage['articleId'],
                 'name' => $webPage['articleName'],
                 'data' => [ 'article' => json_encode($webPage)] ];
-    if ($webPage['Linked']) {
+    if ($webPage['linked']) {
       // THIS IS UNUSED CODE; WAS ALREADY DISABLED IN OC VERSION
       // Idea was to provide all articles with the already linked
       // articles selected.
