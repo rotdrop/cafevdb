@@ -560,23 +560,21 @@ const pmeFormInit = function(containerSel) {
  */
 const projectWebPageRequest = function(post, container) {
 
-  Notification.hide(function() {
-    $.post(generateUrl('projects/webpages/' + post.action), post)
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown);
-      })
-      .done(function(data) {
-        if (data.message !== '') {
-          Notification.showHtml(data.message);
-        }
-        const form = container.find('table.pme-navigation');
-        const submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
-        submit.first().trigger('click');
-        setTimeout(function() {
-          Notification.hide();
-        }, 5000);
+  $.post(generateUrl('projects/webpages/' + post.action), post)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown);
+    })
+    .done(function(data) {
+      const form = container.find('table.pme-navigation');
+      const submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
+      submit.first().trigger('click', {
+        postOpen() {
+          if (data.message !== '') {
+            Notification.showHtml(data.message, { timeout: 10 });
+          }
+        },
       });
-  });
+    });
 };
 
 /**

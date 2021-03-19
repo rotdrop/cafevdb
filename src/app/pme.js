@@ -147,7 +147,7 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
 const pmeSubmitOuterForm = function(selector) {
   const outerSel = pmeSelector(selector);
 
-  // try a reload while saving data. This is in order to resolve
+  // try a reload while saving data. The purpose is to resolve
   // inter-table dependencies like changed instrument lists and so
   // on. Be careful not to trigger top and bottom buttons.
   const outerForm = $(outerSel + ' ' + pmeFormSelector());
@@ -194,7 +194,8 @@ const reloadDeferred = function(container) {
 };
 
 /**
- * Replace the content of the already opened dialog with the given HTML-data.
+ * Replace the content of the already opened dialog with the given
+ * HTML-data.
  *
  * @param {Object} container TBD.
  *
@@ -203,8 +204,11 @@ const reloadDeferred = function(container) {
  * @param {Object} options TBD.
  *
  * @param {Function} callback TBD.
+ *
+ * @param {Object} triggerData Additional data passed to the calling
+ * event handler after being triggered artifically.
  */
-const tableDialogReplace = function(container, content, options, callback) {
+const tableDialogReplace = function(container, content, options, callback, triggerData) {
 
   const containerSel = '#' + options.DialogHolderCSSId;
 
@@ -226,7 +230,7 @@ const tableDialogReplace = function(container, content, options, callback) {
   // container.dialog('option', 'position', popupPosition);
 
   // re-attach events
-  tableDialogHandlers(options, callback);
+  tableDialogHandlers(options, callback, triggerData);
 };
 
 const pmePost = function(post, callbacks) {
@@ -259,8 +263,11 @@ const pmePost = function(post, callbacks) {
  *
  * @param {Function} callback The application provided callback which is used
  * to shape the HTML after loading.
+ *
+ * @param {Object} triggerData Additional data passed to the calling
+ * event handler after being triggered artifically.
  */
-const tableDialogReload = function(options, callback) {
+const tableDialogReload = function(options, callback, triggerData) {
 
   const reloadName = options.ReloadName;
   const reloadValue = options.ReloadValue;
@@ -294,7 +301,7 @@ const tableDialogReload = function(options, callback) {
         container.find(pmeNavigationSelector('reload')).removeClass('loading');
       },
       done(htmlContent, historySize, historyPosition) {
-        tableDialogReplace(container, htmlContent, options, callback);
+        tableDialogReplace(container, htmlContent, options, callback, triggerData);
       },
     });
   });
@@ -311,11 +318,15 @@ const tableDialogReload = function(options, callback) {
  *
  * @param {Function} changeCallback Handler to call after dialog open
  * and tab change.
+ *
+ * @param {Object} triggerData Optional additonal data passed to an
+ * articifically triggered calling event handler. Will be passed on to
+ * the changeCallback.
  */
-const tableDialogHandlers = function(options, changeCallback) {
+const tableDialogHandlers = function(options, changeCallback, triggerData) {
 
   if (typeof changeCallback === 'undefined') {
-    changeCallback = function() { return false; };
+    changeCallback = function(options) { return false; };
   }
 
   const containerSel = '#' + options.DialogHolderCSSId;
@@ -338,8 +349,9 @@ const tableDialogHandlers = function(options, changeCallback) {
       const reloadSel = pmeClassSelector('input', 'reload');
       container.find(reloadSel)
         .off('click')
-        .on('click', function(event) {
-          tableDialogReload(options, changeCallback);
+        .on('click', function(event, triggerData) {
+          console.info('TRIGGER DATA', triggerData);
+          tableDialogReload(options, changeCallback, triggerData);
           return false;
         });
     };
@@ -360,8 +372,10 @@ const tableDialogHandlers = function(options, changeCallback) {
   // The easy one, but for changed content
   const cancelButton = $(container).find(pmeClassSelector('input', 'cancel'));
   cancelButton.off('click');
-  cancelButton.on('click', function(event) {
+  cancelButton.on('click', function(event, triggerData) {
     event.preventDefault();
+
+    console.info('TRIGGER DATA', triggerData);
 
     // When the initial dialog was in view-mode and we are not in
     // view-mode, then we return to view mode; for me "cancel" feels
@@ -373,7 +387,7 @@ const tableDialogHandlers = function(options, changeCallback) {
     if (options.InitialViewOperation && $(this).attr('name').indexOf('cancelview') < 0) {
       options.ReloadName = options.InitialName;
       options.ReloadValue = options.InitialValue;
-      tableDialogReload(options, changeCallback);
+      tableDialogReload(options, changeCallback, triggerData);
     } else {
       container.dialog('close');
     }
@@ -398,8 +412,10 @@ const tableDialogHandlers = function(options, changeCallback) {
     .on(
       'click',
       ReloadButtonSel,
-      function(event) {
+      function(event, triggerData) {
         event.preventDefault();
+
+        console.info('TRIGGER DATA', triggerData);
 
         const submitButton = $(this);
         const reloadName = submitButton.attr('name');
@@ -414,14 +430,14 @@ const tableDialogHandlers = function(options, changeCallback) {
           options.modified = true;
         }
         console.info(options);
-        tableDialogReload(options, changeCallback);
+        tableDialogReload(options, changeCallback, triggerData);
         // might be costly?
         // pmeSubmitOuterForm(options.ambientContainerSelector);
 
         return false;
       });
 
-  /** ************************************************************************
+  /**************************************************************************
    *
    * In "edit" mode submit the "more" action and reload the
    * surrounding form. When not in edit mode the base form must be the same
@@ -441,8 +457,10 @@ const tableDialogHandlers = function(options, changeCallback) {
 
   container
     .off('click', saveButtonSel)
-    .on('click', saveButtonSel, function(event) {
+    .on('click', saveButtonSel, function(event, triggerData) {
       event.preventDefault();
+
+      console.info('TRIGGER DATA', triggerData);
 
       container.find(pmeNavigationSelector('reload')).addClass('loading');
 
@@ -504,7 +522,7 @@ const tableDialogHandlers = function(options, changeCallback) {
                 dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
                 options.ReloadName = options.InitialName;
                 options.ReloadValue = options.InitialValue;
-                tableDialogReload(options, changeCallback);
+                tableDialogReload(options, changeCallback, triggerData);
               } else {
                 console.info('trigger close dialog');
                 if (container.hasClass('ui-dialog-content')) {
@@ -519,8 +537,12 @@ const tableDialogHandlers = function(options, changeCallback) {
       });
       return false;
     });
+
   // Finally do the styling ...
-  changeCallback({ reason: 'dialogOpen' });
+  changeCallback({
+    reason: 'dialogOpen',
+    triggerData,
+  });
 };
 
 /**
@@ -703,7 +725,13 @@ const pmeTableDialogOpen = function(tableOptions, post) {
           };
 
           tableDialogHandlers(tableOptions, function(parameters) {
-            parameters = $.extend({ reason: 'unknown' }, parameters);
+            const defaultParameters = {
+              reason: 'unknown',
+              triggerData: {
+                postOpen() {},
+              },
+            };
+            parameters = $.extend({}, defaultParameters, parameters);
             if (parameters.reason === 'unknown') {
               console.trace();
             }
@@ -726,6 +754,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
                 });
                 pmeTweaks(dialogHolder);
                 $.fn.cafevTooltip.remove();
+                parameters.triggerData.postOpen();
               });
               break;
             case 'tabChange':
@@ -791,7 +820,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
  * @param {String} selector The CSS selector corresponding to the
  * surrounding container (div element)
  *
- * @param {bool} resetFilter Bool, post a sw=Clear sting in addition,
+ * @param {bool} resetFilter Bool, post a sw=Clear string in addition,
  * causing PHPMyEdit to reset the filter.
  *
  * @returns {bool}
@@ -1353,6 +1382,9 @@ const pmeInit = function(containerSel) {
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
         const self = $(this);
+
+        console.info('DATA', event);
+
         if (!self.hasClass(pmeToken('custom'))) {
           event.preventDefault();
           event.stopImmediatePropagation();
@@ -1436,6 +1468,8 @@ const pmeInit = function(containerSel) {
   container
     .off('click', submitSel)
     .on('click', submitSel, function(event) {
+
+      console.info('DATA', event);
 
       event.preventDefault();
 
