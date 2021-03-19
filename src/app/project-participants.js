@@ -153,13 +153,13 @@ const validateInstrumentChoices = function(
         if (!Ajax.validateResponse(data, ['message'], errorCB)) {
           return;
         }
-        let timeout = 10000;
+        let timeout = 10;
 
         // Oops. Perhaps only submit on success.
         finalizeCB();
 
         if (data.notice !== '') {
-          timeout = 15000;
+          timeout = 15;
         }
         const info = (data.message + (data.notice ? ' ' + data.notice : '')).trim();
         if (info !== '') {

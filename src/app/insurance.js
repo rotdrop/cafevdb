@@ -125,7 +125,7 @@ const pmeFormInit = function(containerSel) {
                 data.message = [ data.message ];
               }
               for (const message of data.message) {
-                Notification.show(message, { timeout: 5000 });
+                Notification.show(message, { timeout: 10 });
               }
             }
             if (typeof textInputs[control] !== 'undefined') {

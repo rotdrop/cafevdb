@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -53,21 +53,15 @@ const ready = function(selector) {
             || PHPMyEdit.triggerSubmit('reloadlist', container);
         })
         .done(function(data) {
-          let timeout = 0;
           if (data.message !== '') {
-            Notification.show(data.message);
-            timeout = 5000;
+            Notification.show(data.message, { timeout: 10 });
           }
-          setTimeout(function() {
-            Notification.hide(function() {
-              // Anyhow, reload and see what happens. Hit
-              // either the save and continue or the reload
-              // button.
-              PHPMyEdit.triggerSubmit('morechange', container)
-                || PHPMyEdit.triggerSubmit('reloadview', container)
-                || PHPMyEdit.triggerSubmit('reloadlist', container);
-            });
-          }, timeout);
+          // Anyhow, reload and see what happens. Hit
+          // either the save and continue or the reload
+          // button.
+          PHPMyEdit.triggerSubmit('morechange', container)
+            || PHPMyEdit.triggerSubmit('reloadview', container)
+            || PHPMyEdit.triggerSubmit('reloadlist', container);
         });
     });
 
