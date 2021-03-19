@@ -58,7 +58,7 @@ pre-build:
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-build: pre-build composer npm
+build: pre-build composer npm cleanup
 .PHONY: build
 
 .PHONY: comoser-download
