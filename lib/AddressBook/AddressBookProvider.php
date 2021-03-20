@@ -75,7 +75,8 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function fetchAllForAddressBookHome(string $principalUri): array
   {
-    return [ $this->getAddressBookInAddressBookHome($principalUri, $this->addressBookUri()) ];
+    $addressBook = $this->getAddressBookInAddressBookHome($principalUri, $this->addressBookUri());
+    return empty($addressBook) ? [] : [ $addressBook ];
   }
 
   /**
@@ -105,6 +106,9 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function getAddressBookInAddressBookHome(string $principalUri, string $uri): ?ExternalAddressBook
   {
+    if (!$this->inGroup()) {
+      return null;
+    }
     if ($uri !== $this->addressBookUri()) {
       return null;
     }
@@ -123,8 +127,12 @@ class AddressBookProvider implements IAddressBookProvider
    * Return a cloud-address-book suitable for registration with the
   * \OCP\IContactsManager.
    */
-  public function getContactsAddressBook():ContactsAddressBook
+  public function getContactsAddressBook():?ContactsAddressBook
   {
+    if (!$this->inGroup()) {
+      // disallow access to non-group members
+      return null;
+    }
     if (empty(self::$contactsAddressBook)) {
       $addressBook = self::$addressBook?:(new AddressBook($this->configService, $this->cardBackend, ''));
       $uri = $addressBook->getName();

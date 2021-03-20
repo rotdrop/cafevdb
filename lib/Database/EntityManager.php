@@ -97,6 +97,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var IL10N */
   private $l;
 
+  /** @var bool */
+  private $typesBound;
+
   // @@todo catch failures, allow construction without database for
   // initial setup.
   public function __construct(
@@ -116,6 +119,9 @@ class EntityManager extends EntityManagerDecorator
     $this->logger = $logger;
     $this->l = $l10n;
     $this->userId = $this->encryptionService->getUserId()?:$this->l->t('unknown');
+    if (!$this->encryptionService->bound()) {
+      return;
+    }
     $this->debug = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
@@ -124,14 +130,18 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
-  public function getConnection():DatabaseConnection
+  public function getConnection():?DatabaseConnection
   {
+    if (empty($this->entityManager)) {
+      return null;
+    }
     return $this->entityManager->getConnection();
   }
 
-  public function getPlatform():DatabasePlatform
+  public function getPlatform():?DatabasePlatform
   {
-    return $this->getConnection()->getDatabasePlatform();
+    $connection = $this->getConnection();
+    return $connection ? $connection->getDatabasePlatform() : null;
   }
 
   public function suspendLogging()
@@ -159,12 +169,16 @@ class EntityManager extends EntityManagerDecorator
    */
   public function reopen()
   {
+    if (!$this->encryptionService->bound()) {
+      return;
+    }
     $this->close();
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
-    // if ($this->connected()) {
-    // $this->registerTypes();
-    // }
+    $this->debug = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
+    if ($this->connected()) {
+      $this->registerTypes();
+    }
   }
 
   /**
@@ -174,7 +188,10 @@ class EntityManager extends EntityManagerDecorator
    */
   public function connected():bool
   {
-    $connection = $this->entityManager->getConnection();
+    $connection = $this->getConnection();
+    if (empty($connection)) {
+      return false;
+    }
     $params = $connection->getParams();
     $impossible = false;
     foreach ([ 'host', 'user', 'password', 'dbname' ] as $key) {
@@ -197,6 +214,9 @@ class EntityManager extends EntityManagerDecorator
 
   private function registerTypes()
   {
+    if ($this->typesBound) {
+      return;
+    }
     $types = [
       Types\EnumExtraFieldDataType::class => 'enum',
       Types\EnumExtraFieldMultiplicity::class => 'enum',
@@ -237,7 +257,7 @@ class EntityManager extends EntityManagerDecorator
       Type::overrideType('datetime_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
       Type::overrideType('datetimetz', \Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('datetimetz_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
-
+      $this->typeBound = true;
     } catch (\Throwable $t) {
       $this->logException($t);
     }

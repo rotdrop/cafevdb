@@ -76,7 +76,10 @@ class Application extends App implements IBootstrap
     ) {
       $contactsManager->register(function() use ($contactsManager) {
         $provider = $this->getContainer()->query(AddressBookProvider::class);
-        $contactsManager->registerAddressBook($provider->getContactsAddressBook());
+        $addressBook = $provider->getContactsAddressBook();
+        if (!empty($addressBook)) {
+          $contactsManager->registerAddressBook($addressBook);
+        }
       });
     });
   }

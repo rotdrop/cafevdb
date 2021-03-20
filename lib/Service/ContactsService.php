@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Service;
 use Sabre\VObject\Component\VCard;
 use Doctrine\Common\Collections\Collection;
 
+use OCP\AppFramework\IAppContainer;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\Constants;
 
@@ -53,8 +54,8 @@ class ContactsService
 
   const VCARD_VERSION = '4.0';
 
-  /** @var GeoCodingService */
-  private $geoCodingService;
+  /** @var IAppContainer */
+  private $appContainer;
 
   /** @var IContactsManager */
   private $contactsManager;
@@ -62,13 +63,18 @@ class ContactsService
   public function __construct(
     ConfigService $configService
     , IContactsManager $contactsManager
+    , IAppContainer $appContainer
     , EntityManager $entityManager
-    , GeoCodingService $geoCodingService
   ) {
     $this->configService = $configService;
     $this->contactsManager = $contactsManager;
+    $this->appContainer = $appContainer;
     $this->entityManager = $entityManager;
-    $this->geoCodingService = $geoCodingService;
+  }
+
+  private function geoCodingService()
+  {
+    return $this->di(GeoCodingService::class);
   }
 
   /**
@@ -353,10 +359,12 @@ class ContactsService
               $entity[$fields[$idx]] = $value;
             }
           }
-          $languages = $this->geoCodingService->languages(true);
+
+          $geoCodingService = $this->geoCodingService();
+          $languages = $geoCodingService->languages(true);
           foreach($languages as $language) {
-            $countries = $this->geoCodingService->countryNames($language);
-            $iso = array_search($entity['Land'], $countries);
+            $countries = $geoCodingService->countryNames($language);
+            $iso = array_search($entity['countries'], $countries);
             if ($iso !== false) {
               $entity['Land'] = $iso;
             }
@@ -460,7 +468,7 @@ class ContactsService
     if ($musician['updated'] != 0) {
       $vcard->add('REV', (Util::dateTime($musician['updated']))->format(\DateTime::W3C));
     }
-    $countryNames = $this->geoCodingService->countryNames('en');
+    $countryNames = $this->geoCodingService()->countryNames('en');
     if (!isset($countryNames[$musician['country']])) {
       $country = null;
     } else {

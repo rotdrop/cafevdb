@@ -53,7 +53,10 @@ class CloudLogger implements SQLLogger
     $this->encryptionService = $encryptionService;
     $this->logger = $logger;
     $this->l = $l10n;
-    $this->enabled = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
+    $this->enabled = false;
+    if ($this->encryptionService->bound()) {
+      $this->enabled = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
+    }
   }
 
   /**
