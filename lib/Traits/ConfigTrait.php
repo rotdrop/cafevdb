@@ -68,6 +68,18 @@ trait ConfigTrait {
     return $this->configService->getAppContainer();
   }
 
+  /**
+   * Dependency injection of $className.
+   *
+   * @param string $className
+   *
+   * @return mixed
+   */
+  protected function di(string $className)
+  {
+    return $this->appContainer()->get($className);
+  }
+
   protected function appName():string
   {
     return $this->configService->getAppName();
