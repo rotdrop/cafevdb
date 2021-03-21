@@ -37,6 +37,9 @@ class HistoryService
   private $historyPosition;
   private $historySize;
 
+  /** @var ISession */
+  private $session;
+
   /**
    * Fetch any existing history from the session or initialize an
    * empty history if no history record is found.
