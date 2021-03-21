@@ -6,12 +6,13 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2020
+ * @copyright Claus-Justus Heine 2014-2021
  */
 
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\IRequest;
+use OCP\ISession;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
@@ -36,6 +37,9 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
+
+  /** @var ISession */
+  private $session;
 
   /** @var IL10N */
   protected $l;
@@ -73,10 +77,11 @@ class PageController extends Controller {
   public function __construct(
     $appName
     , IRequest $request
+    , ISession $session
     , IAppContainer $appContainer
     , ConfigService $configService
     , HistoryService $historyService
-    //, OrganizationalRolesService $organizationalRolesService
+    , OrganizationalRolesService $organizationalRolesService
     , RequestParameterService $parameterService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
@@ -87,6 +92,7 @@ class PageController extends Controller {
 
     parent::__construct($appName, $request);
 
+    $this->session = $session;
     $this->appContainer = $appContainer;
     $this->configService = $configService;
     $this->historyService = $historyService;
@@ -94,7 +100,7 @@ class PageController extends Controller {
     $this->toolTipsService = $toolTipsService;
     $this->pageNavigation = $pageNavigation;
     $this->initialStateService = $initialStateService;
-    $this->organizationalRolesService = new OrganizationalRolesService($configService);
+    $this->organizationalRolesService = $organizationalRolesService;
     $this->configCheckService = $configCheckService;
     $this->urlGenerator = $urlGenerator;
     $this->l = $this->l10N();
@@ -303,6 +309,7 @@ class PageController extends Controller {
       // log, but ignore otherwise
       $this->logException($t);
     }
+    $this->session->close();
 
     return $response;
   }
