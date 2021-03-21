@@ -56,7 +56,6 @@ class ProjectWebPagesController extends Controller {
 
   /**
    * @NoAdminRequired
-   * @UseSession
    */
   public function serviceSwitch($topic, $projectId = -1, $articleId = -1, $articleData = [])
   {

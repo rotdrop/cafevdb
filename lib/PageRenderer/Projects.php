@@ -673,9 +673,6 @@ project without a flyer first.");
       'blank'
     );
 
-    // in case the login at start did not work
-    $this->projectService->refreshCMSCookies();
-
     return $template->render();
   }
 

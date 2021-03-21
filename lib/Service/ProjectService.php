@@ -518,15 +518,6 @@ Whatever.',
   }
 
   /**
-   * Refresh the login cookies for the underlying CMS system for the
-   * public web-pages.
-   */
-  public function refreshCMSCookies()
-  {
-    $this->webPagesRPC->refreshCookies();
-  }
-
-  /**
    * Fetch fetch the article entities from the database
    *
    * @return ArrayCollection
