@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -44,6 +45,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
 use OCP\IUserSession;
 use OCP\IRequest;
+use OCP\ISession;
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\ITempManager;
@@ -59,6 +61,9 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 class PmeTableController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
+
+  /** @var ISession */
+  private $session;
 
   /** @var HistoryService */
   private $historyService;
@@ -90,6 +95,7 @@ class PmeTableController extends Controller {
   public function __construct(
     $appName
     , IRequest $request
+    , ISession $session
     , IAppContainer $appContainer
     , ConfigService $configService
     , HistoryService $historyService
@@ -103,6 +109,7 @@ class PmeTableController extends Controller {
   ) {
     parent::__construct($appName, $request);
 
+    $this->session = $session;
     $this->appContainer = $appContainer;
     $this->parameterService = $parameterService;
     $this->projectService = $projectService;
@@ -127,6 +134,7 @@ class PmeTableController extends Controller {
     case 'load':
       return $this->load();
     case 'export':
+      $this->session->close();
       return $this->export();
     }
     return self::grumble($this->l->t('Unknown Request: "%s".', $topic));
@@ -149,7 +157,9 @@ class PmeTableController extends Controller {
 
       $historySize = -1;
       $historyPosition = -1;
-      if (!$dialogMode && !$reloadAction) {
+      if ($dialogMode || $reloadAction) {
+        $this->session->close();
+      } else {
         $this->historyService->push($this->parameterService->getParams());
         $historySize = $this->historyService->size();
         $historyPosition = $this->historyService->position();
@@ -183,6 +193,7 @@ class PmeTableController extends Controller {
 
       if (!$dialogMode && !$reloadAction) {
         $this->historyService->store();
+        $this->session->close();
       }
 
       return $response;

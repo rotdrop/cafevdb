@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\IAppContainer;
 use OCP\IRequest;
+use OCP\ISession;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IURLGenerator;
@@ -50,16 +51,19 @@ class EmailFormController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var \OCA\CAFEVDB\Service\ParameterService */
+  /** @var ISession */
+  private $session;
+
+  /** @var ParameterService */
   private $parameterService;
 
-  /** @var \OCP\IURLGenerator */
+  /** @var IURLGenerator */
   private $urlGenerator;
 
-  /** @var \OCA\CAFEVDB\Service\ProjectService */
+  /** @var ProjectService */
   private $projectService;
 
-  /** @var OCA\CAFEVDB\PageRenderer\Util\Navigation */
+  /** @var PageNavigation */
   private $pageNavigation;
 
   /** @var PHPMyEdit */
@@ -71,6 +75,7 @@ class EmailFormController extends Controller {
   public function __construct(
     $appName
     , IRequest $request
+    , ISession $session
     , IAppContainer $appContainer
     , IURLGenerator $urlGenerator
     , RequestParameterService $parameterService
@@ -80,6 +85,7 @@ class EmailFormController extends Controller {
     , PHPMyEdit $pme
   ) {
     parent::__construct($appName, $request);
+    $this->session = $session;
     $this->appContainer = $appContainer;
     $this->urlGenerator = $urlGenerator;
     $this->parameterService = $parameterService;
@@ -157,19 +163,14 @@ class EmailFormController extends Controller {
       'frozenRecipients' => $recipientsFilter->frozenRecipients(),
     ];
 
+    // Close the session
+    $this->session->close();
+
     $html = (new TemplateResponse(
       $this->appName,
       'emailform/form',
       $templateParameters,
       'blank'))->render();
-
-    /**
-     * @todo supposedly this should call the destructor. This cannot
-     * work well with php. Either register an exit hook or call the
-     * things the DTOR is doing explicitly.
-     */
-    // unset($recipientsFilter);
-    // unset($composer);
 
     $responseData = [
       'contents' => $html,
@@ -211,6 +212,8 @@ class EmailFormController extends Controller {
   /**
    * @NoAdminRequired
    * @UseSession
+   *
+   * @todo Close the PHP session if no longer needed.
    */
   public function composer($operation, $topic, $projectId, $projectName, $debitNodeId)
   {
@@ -570,6 +573,8 @@ class EmailFormController extends Controller {
   /**
    * @NoAdminRequired
    * @UseSession
+   *
+   * @todo Close the PHP session if no longer needed.
    */
   public function recipientsFilter($projectId, $projectName, $debitNoteId)
   {
