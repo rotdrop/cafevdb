@@ -451,6 +451,19 @@ class EntityManager extends EntityManagerDecorator
     $translatableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($translatableListener);
 
+    $config->setDefaultQueryHint(
+      \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+      'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+    );
+    $config->setDefaultQueryHint(
+      \Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+      $this->l->getLanguageCode()
+    );
+    $config->setDefaultQueryHint(
+      \Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
+      1 // fallback to default values in case if record is not translated
+    );
+
     // handle extra foreign key constraints
     $foreignKeyListener = new CJH\ForeignKey\Listener($this);
     $foreignKeyListener->setAnnotationReader($cachedAnnotationReader);
