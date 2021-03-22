@@ -35,9 +35,9 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\FinanceService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
-use OCA\CAFEVDB\Service\InsuranceService;
+use OCA\CAFEVDB\Service\Finance\InsuranceService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -175,10 +175,10 @@ class ProjectParticipants extends PMETableViewBase
   /** @var \OCA\CAFEVDB\Service\PhoneNumberService */
   private $phoneNumberService;
 
-  /** @var \OCA\CAFEVDB\Service\FinanceService */
+  /** @var \OCA\CAFEVDB\Service\Finance\FinanceService */
   private $financeService;
 
-  /** @var \OCA\CAFEVDB\Service\InsuranceService */
+  /** @var \OCA\CAFEVDB\Service\Finance\InsuranceService */
   private $insuranceService;
 
   /** @var \OCA\CAFEVDB\Service\ProjectExtraFieldsService */

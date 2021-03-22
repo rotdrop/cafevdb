@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\InsuranceService;
+use OCA\CAFEVDB\Service\Finance\InsuranceService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -62,7 +62,7 @@ class Musicians extends PMETableViewBase
   /** @var OCA\CAFEVDB\Service\PhoneNumberService */
   private $phoneNumberService;
 
-  /** @var OCA\CAFEVDB\Service\InsuranceService */
+  /** @var OCA\CAFEVDB\Service\Finance\InsuranceService */
   private $insuranceService;
 
   /**

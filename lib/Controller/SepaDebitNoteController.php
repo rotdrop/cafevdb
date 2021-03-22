@@ -33,7 +33,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\FinanceService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 
 use OCA\CAFEVDB\Common\Util;
@@ -45,7 +45,7 @@ class SepaDebitNoteController extends Controller {
   /** @var \OCA\CAFEVDB\Service\ParameterService */
   private $parameterService;
 
-  /** @var \OCA\CAFEVDB\Service\FinanceService */
+  /** @var \OCA\CAFEVDB\Service\Finance\FinanceService */
   private $financeService;
 
   /** @var \OCA\CAFEVDB\Service\ProjectService */

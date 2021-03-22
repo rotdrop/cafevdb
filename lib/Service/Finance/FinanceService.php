@@ -21,7 +21,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Service;
+namespace OCA\CAFEVDB\Service\Finance;
 
 use \DateTimeImmutable AS DateTime;
 
@@ -29,6 +29,9 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Common\Util;
+
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EventsService;
 
 /** Finance and bank related stuff. */
 class FinanceService

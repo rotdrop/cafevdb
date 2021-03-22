@@ -24,7 +24,7 @@ namespace OCA\CAFEVDB\PageRenderer\Export;
 
 use PhpOffice\PhpSpreadsheet;
 
-use OCA\CAFEVDB\Service\InsuranceService;
+use OCA\CAFEVDB\Service\Finance\InsuranceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\PageRenderer;
 

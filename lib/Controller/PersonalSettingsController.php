@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\FinanceService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
