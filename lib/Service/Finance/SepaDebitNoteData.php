@@ -27,18 +27,70 @@ namespace OCA\CAFEVDB\Service\Finance;
  * Not a debit-node database row, just something to sort out what is
  * needed to export debit-notes for submission to a bank.
  */
-class SepaDebitNoteData
+class SepaDebitNoteData implements \ArrayAccess
 {
-  private $BIC;
-  private $IBAN;
+  private $keys;
+
+  private $bic;
+  private $iban;
   private $amount;
   private $bankAccountOwner;
   private $mandateReference;
   private $mandateDate;
-  private $bankAccountOwner;
-  // private $surName; // combine those two
-  // private $firstName;
+  private $mandateDebitorName;
+  private $mandateSequenceType;
   private $purpose;
+
+  public function __construct()
+  {
+    $this->keys = (new \ReflectionClass(__CLASS__))
+                ->getProperties(\ReflectionProperty::IS_PRIVATE|\ReflectionProperty::IS_PROTECTED);
+    unset($this->keys['keys']);
+    $this->keys = array_filter($this->keys);
+  }
+
+  public function __call($method, $args)
+  {
+    if (substr($method, 0, 3) === 'set') {
+      $property = lcfirst(substr($method, 3));
+      if (in_array($property, $this->keys) && count($args) == 1) {
+        $this->property = $args[0];
+        return $this;
+      }
+    } else if (substr($method, 0, 3) === 'get') {
+      $property = lcfirst(substr($method, 3));
+      if (in_array($property, $this->keys)) {
+        return $this->$property;
+      }
+    }
+    throw new \RuntimeException('Method '.$method.' does not exist.');
+  }
+
+  public function offsetExists($offset):bool
+  {
+    return in_array($offset, $this->keys);
+  }
+
+  public function offsetGet($offset)
+  {
+    if (!in_array($offset, $this->keys)) {
+      throw new \RuntimeException('Offset '.$offset.' does not exist.');
+    }
+    return $this->$offset;
+  }
+
+  public function offsetSet($offset, $value):void
+  {
+    if (!in_array($offset, $this->keys)) {
+      throw new \RuntimeException('Offset '.$offset.' does not exist.');
+    }
+    $this->$offset = $value;
+  }
+
+  public function offsetUnset($offset):void
+  {
+    $this->offsetSet($offset, null);
+  }
 }
 
 // Local Variables: ***
