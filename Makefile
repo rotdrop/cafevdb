@@ -73,9 +73,17 @@ composer-download:
 composer: stamp.composer-core-versions
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
-.PHONY: node-hacks
-node-hacks:
+.PHONY: selectize
+selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
+
+$(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js: $(shell find $(ABSSRCDIR)/3rdparty/selectize/src -name "*.js")
 	make -C $(ABSSRCDIR)/3rdparty/selectize
+
+$(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css): $(wildcard $(ABSSRCDIR)/3rdparty/selectize/src/scss/*.scss)
+	make -C $(ABSSRCDIR)/3rdparty/selectize
+
+.PHONY: node-hacks
+node-hacks: selectize
 
 .PHONY: npm-update
 npm-update: node-hacks
