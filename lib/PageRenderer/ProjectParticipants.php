@@ -407,9 +407,10 @@ class ProjectParticipants extends PMETableViewBase
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'nick_name',
       [
-        'name'     => $this->l->t('Name'),
+        'name'     => $this->l->t('Nickname'),
         'tab'      => [ 'id' => 'tab-all' ],
         'input|LF' => 'H',
+        'sql|LFVD' => 'IFNULL($column, $table.first_name)',
         'maxlen'   => 384,
       ]);
 
@@ -418,7 +419,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
-        'sql|LF'   => 'IFNULL($column, CONCAT($table.sur_name, \', \', IFNULL($table.nick_name, $table.first_name)))',
+        'sql|LFVD' => 'IFNULL($column, CONCAT($table.sur_name, \', \', IFNULL($table.nick_name, $table.first_name)))',
         'maxlen'   => 384,
       ]);
 
@@ -441,6 +442,12 @@ class ProjectParticipants extends PMETableViewBase
       ];
     }
 
+    $l10nInstrumentsTable = $this->makeFieldTranslationsJoin([
+      'table' => self::INSTRUMENTS_TABLE,
+      'entity' => Entities\Instrument::class,
+      'identifier' => [ 'id' => true ], // just need the key
+    ], 'name');
+
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id',
       [
@@ -450,19 +457,18 @@ class ProjectParticipants extends PMETableViewBase
         'display|LVF' => ['popup' => 'data'],
         'sql|VDCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
         'select'      => 'M',
-        //'filter'      => 'having', // need "HAVING" for group by stuff
         'values|VDPC' => [
-          'table'       => self::INSTRUMENTS_TABLE,
+          'table'       => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
           'column'      => 'id',
-          'description' => 'name',
+          'description' => 'l10n_name',
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
           'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENTS_TABLE." mi WHERE \$record_id[project_id] = ".$projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
         ],
         'values|LFV' => [
-          'table'       => self::INSTRUMENTS_TABLE,
+          'table'       => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
           'column'      => 'id',
-          'description' => 'name',
+          'description' => 'l10n_name',
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
           'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$projectId." = pi.project_id GROUP BY pi.project_id))",
@@ -507,6 +513,7 @@ class ProjectParticipants extends PMETableViewBase
   pi.musician_id,
   i.id AS instrument_id,
   i.name,
+  COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order,
   pin.quantity,
   n.n,
@@ -514,6 +521,11 @@ class ProjectParticipants extends PMETableViewBase
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
+  LEFT JOIN ".PMETableViewBase::FIELD_TRANSLATIONS_TABLE." ft
+    ON ft.locale = '".($this->l10n()->getLanguageCode())."'
+      AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
+      AND ft.field = 'name'
+      AND ft.foreign_key = i.id
   LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.instrument_id = pi.instrument_id
   JOIN numbers n
@@ -526,7 +538,7 @@ class ProjectParticipants extends PMETableViewBase
     i.sort_order ASC, n.n ASC",
           'column' => 'value',
           'description' => [
-            'columns' => [ 'name', 'n' ],
+            'columns' => [ 'l10n_name', 'n' ],
             'divs' => ' ',
           ],
           'orderby' => '$table.sort_order ASC, $table.n ASC',
@@ -551,7 +563,7 @@ class ProjectParticipants extends PMETableViewBase
        'sort' => true,
        'escape' => false,
        'sql|CAPDV' => "GROUP_CONCAT(
-  IF(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader = 1, ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id, 0) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+  IF(IFNULL(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader, 0) = 1, ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id, 0) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
        'display|LF' => [ 'popup' => function($data) {
          return $this->toolTipsService['section-leader-mark'];
        }],
@@ -561,14 +573,20 @@ class ProjectParticipants extends PMETableViewBase
   pi.musician_id,
   pi.instrument_id,
   i.name,
+  COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
+  LEFT JOIN ".PMETableViewBase::FIELD_TRANSLATIONS_TABLE." ft
+    ON ft.locale = '".($this->l10n()->getLanguageCode())."'
+      AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
+      AND ft.field = 'name'
+      AND ft.foreign_key = i.id
   WHERE
     pi.project_id = $projectId",
          'column' => "instrument_id",
-         'description' => "name",
+         'description' => "l10n_name",
          'orderby' => '$table.sort_order',
          'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
          'join' => '$join_table.project_id = $main_table.project_id AND $join_table.musician_id = $main_table.musician_id',
