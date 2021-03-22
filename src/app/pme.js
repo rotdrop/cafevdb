@@ -1572,6 +1572,19 @@ const pmeInit = function(containerSel) {
     return true;
   });
 
+  // Handle some special check-boxes disabling text-input fields
+  container.on(
+    'change', 'input[type="checkbox"].pme-input-disable',
+    function(event) {
+      const $this = $(this);
+      const checked = $this.prop('checked');
+      const $input = $this.prev();
+      $input.prop('readonly', !checked);
+      if (!checked) {
+        $input.val('');
+      }
+      return false;
+    });
 };
 
 const documentReady = function() {

@@ -387,18 +387,18 @@ class ProjectParticipants extends PMETableViewBase
     $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'first_name',
+      $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
       [
-        'name'     => $this->l->t('First Name'),
+        'name'     => $this->l->t('Name'),
         'tab'      => [ 'id' => 'tab-all' ],
         'input|LF' => 'H',
         'maxlen'   => 384,
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
+      $opts['fdd'], self::MUSICIANS_TABLE, 'first_name',
       [
-        'name'     => $this->l->t('Name'),
+        'name'     => $this->l->t('First Name'),
         'tab'      => [ 'id' => 'tab-all' ],
         'input|LF' => 'H',
         'maxlen'   => 384,
@@ -410,8 +410,25 @@ class ProjectParticipants extends PMETableViewBase
         'name'     => $this->l->t('Nickname'),
         'tab'      => [ 'id' => 'tab-all' ],
         'input|LF' => 'H',
-        'sql|LFVD' => 'IFNULL($column, $table.first_name)',
+        'sql|LFVD' => 'IF($column IS NULL OR $column = \'\', $table.first_name, $column)',
         'maxlen'   => 384,
+        'display|ACP' => [
+          'attributes' => function($op, $row, $k, $pme) {
+            $firstName = $row['qf'.($k-1)];
+            return [
+              'placeholder' => $firstName,
+                'readonly' => empty($row['qf'.$k]),
+            ];
+          },
+          'postfix' => function($op, $pos, $row, $k, $pme) {
+            $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+            return '<input id="pme-musician-nickname"
+  '.$checked.'
+  type="checkbox"
+  class="pme-input pme-input-disable"/>
+<label class="pme-input pme-input-disable" for="pme-musician-nickname"></label>';
+          },
+        ],
       ]);
 
     $this->makeJoinTableField(
@@ -419,8 +436,36 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
-        'sql|LFVD' => 'IFNULL($column, CONCAT($table.sur_name, \', \', IFNULL($table.nick_name, $table.first_name)))',
+        'sql|LFVD' => 'IF($column IS NULL OR $column = \'\',
+  CONCAT(
+    $table.sur_name,
+    \', \',
+    IF($table.nick_name IS NULL OR $table.nick_name = \'\',
+      $table.first_name,
+      $table.nick_name
+    )
+  ),
+  $column)',
         'maxlen'   => 384,
+        'display|ACP' => [
+          'attributes' => function($op, $row, $k, $pme) {
+            $surName = $row['qf'.($k-3)];
+            $firstName = $row['qf'.($k-2)];
+            $nickName = $row['qf'.($k-1)];
+            return [
+              'placeholder' => $surName.', '.($nickName?:$firstName),
+              'readonly' => empty($row['qf'.$k]),
+            ];
+          },
+          'postfix' => function($op, $pos, $row, $k, $pme) {
+            $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+            return '<input id="pme-musician-displayname"
+  type="checkbox"
+  '.$checked.'
+  class="pme-input pme-input-disable"
+/><label class="pme-input pme-input-disable" for="pme-musician-displayname"></label>';
+          },
+        ],
       ]);
 
     if ($this->showDisabled) {

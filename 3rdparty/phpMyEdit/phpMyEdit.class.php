@@ -2309,6 +2309,35 @@ class phpMyEdit
 			if ($help) {
 				echo ' title="'.$this->enc($help).'" ';
 			}
+			if (isset($this->fdd[$k]['display']['attributes'])) {
+				$attributes = $this->fdd[$k]['display']['attributes'];
+				if (is_callable($attributes)) {
+					$attributes = call_user_func($attributes, 'change', $row, $k, $this);
+				}
+				if (!is_array($attributes)) {
+					$attributes= [ $attributes ];
+				}
+				foreach ($attributes as $attributeKey => $attributeValue) {
+					switch ($attributeKey) {
+					case 'readonly':
+						if ($attributeValue === true) {
+							$readonly = $this->display['readonly'];
+						} else if ($attributeValue == false) {
+							$readonly = false;
+						}
+						break;
+					case 'disabled':
+						if ($attributeValue === true) {
+							echo ' '.$this->display['disabled'];
+						}
+						break;
+					default:
+						echo ' '.$attributeKey.'="'.$attributeValue.'"';
+						break;
+					}
+				}
+			}
+
 			echo ($readonly !== false ? ' '.$readonly : '');
 			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
 			if ($this->col_has_datemask($k)) {

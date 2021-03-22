@@ -1157,6 +1157,27 @@ table.pme-main tbody td.pme-navigation div.graphic-links input.hide-disabled:dis
   display:none;
 }
 
+/* Disable some inputs with a checkbox */
+
+/* Style checkbox with label and lock icon */
+input[type="checkbox"].pme-input.pme-input-disable + label.pme-input-disable {
+  position: absolute !important;
+  margin-top: 12px;
+  margin-left: -36px;
+  height: 14px;
+  width: 24px;
+  background-image: url('../img/lock.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.8;
+  text-indent: -10000em;
+}
+
+input[type="checkbox"].pme-input.pme-input-disable:checked + label.pme-input-disable {
+  background-image: url('../img/cafevdb-delete.svg');
+  opacity: 0.8;
+}
+
 /*
  * Local Variables: ***
  * css-indent-offset: 2 ***

@@ -348,7 +348,6 @@ make sure that the musicians are also automatically added to the
       'name'     => $this->l->t('Forename'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
       'input|LF' => 'H',
-      // 'options'  => 'AVCPD',
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true,
@@ -359,20 +358,65 @@ make sure that the musicians are also automatically added to the
       'name'     => $this->l->t('Nickname'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
       'input|LF' => 'H',
-      // 'options'  => 'AVCPD',
+      'sql|LFVD' => 'IF($column IS NULL OR $column = \'\', $table.first_name, $column)',
       'select'   => 'T',
-      'maxlen'   => 128,
+      'maxlen'   => 380,
       'sort'     => true,
+      'display|ACP' => [
+        'attributes' => function($op, $row, $k, $pme) {
+          $firstName = $row['qf'.($k-1)];
+          return [
+            'placeholder' => $firstName,
+            'readonly' => empty($row['qf'.$k]),
+          ];
+        },
+        'postfix' => function($op, $pos, $row, $k, $pme) {
+          $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+          return '<input id="pme-musician-nickname"
+  '.$checked.'
+  type="checkbox"
+  class="pme-input pme-input-disable"/>
+<label class="pme-input pme-input-disable" for="pme-musician-nickname"></label>';
+        },
+      ],
     ];
 
     $opts['fdd']['display_name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Display-Name'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
-      'sql|LF'   => 'IFNULL($column, CONCAT($table.sur_name, \', \', IFNULL($table.nick_name, $table.first_name)))',
-      'maxlen'   => 256,
+      'sql|LFVD' => 'IF($column IS NULL OR $column = \'\',
+  CONCAT(
+    $table.sur_name,
+    \', \',
+    IF($table.nick_name IS NULL OR $table.nick_name = \'\',
+      $table.first_name,
+      $table.nick_name
+    )
+  ),
+  $column)',
+      'maxlen'   => 384,
       'sort'     => true,
       'select'   => 'T',
+      'display|ACP' => [
+        'attributes' => function($op, $row, $k, $pme) {
+          $surName = $row['qf'.($k-3)];
+          $firstName = $row['qf'.($k-2)];
+          $nickName = $row['qf'.($k-1)];
+          return [
+            'placeholder' => $surName.', '.($nickName?:$firstName),
+            'readonly' => empty($row['qf'.$k]),
+          ];
+        },
+        'postfix' => function($op, $pos, $row, $k, $pme) {
+          $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+          return '<input id="pme-musician-displayname"
+  type="checkbox"
+  '.$checked.'
+  class="pme-input pme-input-disable"
+/><label class="pme-input pme-input-disable" for="pme-musician-displayname"></label>';
+        },
+      ],
     ];
 
     // @todo unify soft-delete
