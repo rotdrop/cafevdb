@@ -118,7 +118,10 @@ trait FindLikeTrait
   /**
    * Add some "missing" convenience stuff to findBy()
    *
-   * - allow automatic filtering by association fields
+   * - allow filtering by association fields. Association-fields are
+   *   simply accessed by dot-notation, e.g. 'musician.name' where
+   *   'musician' in this example is the name of the property in the
+   *   master entity.
    * - allow sorting by association fields
    * - allow indexing by adding an 'INDEX' option to $orderBy.
    * - allow wild-cards, uses "LIKE" in comparison. '*' and '%' are
@@ -138,6 +141,38 @@ trait FindLikeTrait
    */
   public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
   {
+    $queryParts = $this->prepareFindBy($criteria, $orderBy);
+
+    if (empty($queryParts['joinEntities'])
+        && empty($queryParts['indexBy'])
+        && empty($queryParts['modifiers'])
+        && empty($queryParts['collectionCriteria'])) {
+      // vanilla
+      return parent::findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    $qb = $this->generateFindBySelect($queryParts);
+
+    // joining may produce excessive extra columns, try to group by the primary keys.
+    foreach ($this->getClassMetadata()->identifier as $field) {
+      $qb->addGroupBy('mainTable.'.$field);
+    }
+
+    $this->generateFindByWhere($qb, $queryParts);
+
+    // $this->log('SQL '.$qb->getQuery()->getSql());
+    // $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
+
+    return $qb->getQuery()->getResult();
+  }
+
+  /**
+   * Parse the criteria
+   */
+  protected function prepareFindBy(array $criteria, ?array $orderBy = null)
+  {
+    $orderBy = $orderBy?:[];
+
     // filter out instances of criteria
     $collectionCriteria = [];
     foreach ($criteria as $key => $value) {
@@ -146,7 +181,7 @@ trait FindLikeTrait
         unset($criteria[$key]);
       }
     }
-    // find modifiers (only [ '!' => 'not' ] ATM)
+    // find modifiers, !=<>
     $modifiers = [];
     $comparators = [];
     foreach ($criteria as $key => $value) {
@@ -215,21 +250,52 @@ trait FindLikeTrait
       }
     }
 
-    // $this->log(print_r($joinEntities, true).' / '.print_r($indexBy, true));
+    // modify and also return
+    $queryParts = [
+      'criteria' => $criteria,
+      'orderBy' => $orderBy,
+      'joinEntities' => $joinEntities,
+      'indexBy' => $indexBy,
+      'modifiers' => $modifiers,
+      'comparators' => $comparators,
+      'collectionCriteria' => $collectionCriteria,
+    ];
 
-    if (empty($joinEntities) && empty($indexBy) && empty($modifiers)) {
-      // vanilla
-      return parent::findBy($criteria, $orderBy, $limit, $offset);
-    }
+    return $queryParts;
+  }
 
+  /**
+   * Compute the select-part of the findBy() query.
+   *
+   * @param array $queryParts As returned by prepareFindBy().
+   *
+   * @param array|null $select Non-default select. If not given the
+   * only the mainTable entity is selected.
+   *
+   * @return ORM\QueryBuilder The initialized query-builder.
+   */
+  protected function generateFindBySelect(array $queryParts, ?array $select = null)
+  {
     $qb = $this->createQueryBuilder('mainTable', $indexBy['mainTable']);
-    foreach (array_keys($joinEntities) as $association) {
-      $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$associaion]);
+    foreach (array_keys($queryParts['joinEntities']) as $association) {
+      $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$association]);
     }
+    if (!empty($select)) {
+      $qb->select($select);
+    }
+    return $qb;
+  }
 
-    // joining may produce excessive extra columns, try to group by the primary keys.
-    foreach ($this->getClassMetadata()->identifier as $field) {
-      $qb->groupBy('mainTable.'.$field);
+  /**
+   * Compute the where-part of a query. The query builder must have
+   * been initialized with the main table alias 'mainTable' and
+   * already contain the select part.
+   */
+  protected function generateFindByWhere(ORM\QueryBuilder $qb, array $queryParts)
+  {
+    // unpack parameter array
+    foreach ($queryParts as $key => $value) {
+      ${$key} = $value;
     }
 
     $andX = $qb->expr()->andX();
@@ -285,11 +351,9 @@ trait FindLikeTrait
       $qb->addCriteria($criteria);
     }
 
-    // $this->log('SQL '.$qb->getQuery()->getSql());
-    // $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
-
-    return $qb->getQuery()->getResult();
+    return $qb;
   }
+
 }
 
 // Local Variables: ***
