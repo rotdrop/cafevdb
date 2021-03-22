@@ -20,11 +20,12 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { $ } from './globals.js';
+import { $, appName } from './globals.js';
 import * as Page from './page.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Ajax from './ajax.js';
 import generateUrl from './generate-url.js';
+import fileDownload from './file-download.js';
 
 function documentReady() {
 
@@ -34,6 +35,15 @@ function documentReady() {
     console.info('Hello recheck');
     Page.loadPage({ template: 'configcheck' });
     return false;
+  });
+
+  $container.on('click', '.pdfletter-download', function(event) {
+    const post = {};
+    fileDownload(
+      'download/test/pdfletter',
+      post,
+      t(appName, 'Unable to download test-letter.')
+    );
   });
 
   $container.on('click', '.progress-status.button', function(event) {

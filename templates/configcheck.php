@@ -119,8 +119,11 @@ log-in again in order to be able to access the encrypted values.',
          <a href="#" class="geo-coding button">TestGeoCodingCache</a> -->
     <br/>
     <br/>
-    <a href="#" class="progress-status button">TestProgressStatus</a>
-    <span id="progress-status-info"></span>
+    <div class="<?php echo $css_pfx; ?>-playground">
+      <a href="#" class="progress-status button">TestProgressStatus</a>
+      <span id="progress-status-info"></span>
+      <a href="#" class="pdfletter-download button">TestPdfLetter</a>
+    </div>
   </form>
   <br/>
   <!-- <br/>

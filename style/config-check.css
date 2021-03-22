@@ -29,3 +29,21 @@ div.cafevdb-page-header.config-check {
 div.cafevdb-page-container.config-check {
   padding-top:19ex;
 }
+
+.cafevdb-page-container.config-check cafevdb-page-playground {
+  width: 60em;
+  max-width: 60em;
+}
+
+.cafevdb-page-container #progress-status-info {
+  margin-right: 1em;
+  display: inline-block;
+  min-width: 10em;
+  min-height: 24px;
+  text-align: right;
+}
+
+.cafevdb-page-container.config-check .progress-status.button,
+.cafevdb-page-container.config-check .pdfletter-download.button {
+  display: inline-block;
+}

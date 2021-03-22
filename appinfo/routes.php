@@ -187,8 +187,8 @@ $routes = [
     // various download stuff
     [
       'name' => 'downloads#fetch',
-      'url' => '/download/{path}',
-      'verb' => 'GET',
+      'url' => '/download/{section}/{object}',
+      'verb' => 'POST',
     ],
     /**
      * Image service out of database or OC file-space
