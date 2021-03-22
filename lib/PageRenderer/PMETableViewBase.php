@@ -654,8 +654,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'updated');
 
-    // $logMethod = 'logDebug';
-    $logMethod = 'logInfo';
+    $logMethod = 'logDebug';
+    // $logMethod = 'logInfo';
 
     $this->$logMethod('OLDVALS '.print_r($oldvals, true));
     $this->$logMethod('NEWVALS '.print_r($newvals, true));
@@ -970,8 +970,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeInsertDoInsertAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    // $logMethod = 'logDebug';
-    $logMethod = 'logInfo';
+    $logMethod = 'logDebug';
+    // $logMethod = 'logInfo';
 
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'created');
