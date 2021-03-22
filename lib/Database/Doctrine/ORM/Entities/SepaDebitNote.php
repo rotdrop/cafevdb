@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -62,35 +63,35 @@ class SepaDebitNote implements \ArrayAccess
   /**
    * @var \DateTime
    *
-   * @ORM\Column(type="datetime", nullable=false)
+   * @ORM\Column(type="date_immutable", nullable=false)
    */
   private $dateIssued;
 
   /**
    * @var \DateTime
    *
-   * @ORM\Column(type="date", nullable=false)
+   * @ORM\Column(type="date_immutable", nullable=false)
    */
   private $submissionDeadline;
 
   /**
    * @var \DateTime|null
    *
-   * @ORM\Column(type="date", nullable=true)
+   * @ORM\Column(type="date_immutable", nullable=true)
    */
   private $submitDate;
 
   /**
    * @var \DateTime
    *
-   * @ORM\Column(type="date", nullable=false)
+   * @ORM\Column(type="date_immutable", nullable=false)
    */
   private $dueDate;
 
   /**
-   * @var string
+   * @var Types\EnumDebitNoteJob
    *
-   * @ORM\Column(type="string", length=128, nullable=false)
+   * @ORM\Column(type="EnumDebitNoteJob", nullable=false)
    */
   private $job;
 

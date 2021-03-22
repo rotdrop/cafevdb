@@ -218,10 +218,11 @@ class EntityManager extends EntityManagerDecorator
       return;
     }
     $types = [
+      Types\EnumDebitNoteJob::class => 'enum',
       Types\EnumExtraFieldDataType::class => 'enum',
       Types\EnumExtraFieldMultiplicity::class => 'enum',
-      Types\EnumMemberStatus::class => 'enum',
       Types\EnumGeographicalScope::class => 'enum',
+      Types\EnumMemberStatus::class => 'enum',
       Types\EnumProjectTemporalType::class => 'enum',
       Types\EnumVCalendarType::class => 'enum',
       Ramsey\UuidType::class => null,
