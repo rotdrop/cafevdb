@@ -304,7 +304,7 @@ class ConfigService {
     return $oldUser;
   }
 
-  public function getL10N() {
+  public function getL10n() {
     return $this->l;
   }
 

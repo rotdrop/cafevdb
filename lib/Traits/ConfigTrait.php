@@ -60,7 +60,7 @@ trait ConfigTrait {
 
   protected function l10n():IL10N
   {
-    return $this->configService->getL10N();
+    return $this->configService->getL10n();
   }
 
   protected function appContainer():IAppContainer
