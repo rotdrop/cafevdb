@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,11 +27,11 @@ $buttons = [];
 $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
 $buttons['between'] = '</div><div>';
-$buttons['setupdb'] =
-  [ 'name' => $l->t('Provide Basic DB Layout'),
-    'title' => $l->t('Make sure the data-base layout corresponds to the state of the software.'),
-    'id' => 'setupdb',
-    'class' => 'setupdb operations expert button' ];
+// $buttons['setupdb'] =
+//   [ 'name' => $l->t('Provide Basic DB Layout'),
+//     'title' => $l->t('Make sure the data-base layout corresponds to the state of the software.'),
+//     'id' => 'setupdb',
+//     'class' => 'setupdb operations expert button' ];
 $buttons['syncevents'] =
   [ 'name' => $l->t('Synchronize Events'),
     'title' => $toolTips['syncevents'],
@@ -56,44 +57,44 @@ $buttons['geodata'] =
     'title' => $l->t('Update the internal cache of geographical data using some backend. We are currently only interested into ZIP codes, the respective name of the corresponding location and the country/continent name'),
     'id' => 'geodata',
     'class' => 'geodata operation expert button' ];
-$buttons['uuid'] =
-  [ 'name' => $l->t('Add missing UUIDs'),
-    'title' => $l->t('Ensure that each musicians is assigned a UUID for vCard export and similar stuff.'),
-    'id' => 'uuid',
-    'class' => 'uuid operator expert button' ];
-$buttons['imagemeta'] =
-  [ 'name' => $l->t('Update Image Meta-Data'),
-    'title' => $l->t('Update mime-type and MD5 hash for stored images.'),
-    'id' => 'imagemeta',
-    'class' => 'imagemeta operator expert button' ];
+// $buttons['uuid'] =
+//   [ 'name' => $l->t('Add missing UUIDs'),
+//     'title' => $l->t('Ensure that each musicians is assigned a UUID for vCard export and similar stuff.'),
+//     'id' => 'uuid',
+//     'class' => 'uuid operator expert button' ];
+// $buttons['imagemeta'] =
+//   [ 'name' => $l->t('Update Image Meta-Data'),
+//     'title' => $l->t('Update mime-type and MD5 hash for stored images.'),
+//     'id' => 'imagemeta',
+//     'class' => 'imagemeta operator expert button' ];
 $buttons['example'] =
   [ 'name' => $l->t('Example'),
     'title' => $l->t('Example Do-Nothing Button'),
     'id' => 'example',
     'class' => 'example operations example button' ];
 
-$links = [
-  'phpmyadmin' => [
-    'title' => $l->t('Open the login-window to the management portal for the data-base back-bone.'),
-    'text' => $l->t('Database musicians/projects'),
-  ],
-  'phpmyadmincloud' => [
-    'title' => $l->t('Open the login-window to the data-base back-bone for the Cloud WebUI.'),
-    'text' => $l->t('Database Cloud'),
-  ],
-  'sourcecode' => [
-    'text' => $l->t('Source-Code Archive'),
-    'title' => $l->t('View the git-repository holding all revision of this entire mess. Mostly useful for web-developers.'),
-  ],
-  'sourcedocs' => [
-    'text' => $l->t('Source-Code Documentation'),
-    'title' => $l->t('Internal documentation of the `CAFEV-App\', mostly useful for web-developers.'),
-  ],
-  'clouddev' => [
-    'text' => $l->t('Nextcloud Developer Documentation'),
-    'title' => $l->t('Nextcloud Developer Manual, mostly useful for web-developers.'),
-  ],
-];
+// $links = [
+//   'phpmyadmin' => [
+//     'title' => $l->t('Open the login-window to the management portal for the data-base back-bone.'),
+//     'text' => $l->t('Database musicians/projects'),
+//   ],
+//   'phpmyadmincloud' => [
+//     'title' => $l->t('Open the login-window to the data-base back-bone for the Cloud WebUI.'),
+//     'text' => $l->t('Database Cloud'),
+//   ],
+//   'sourcecode' => [
+//     'text' => $l->t('Source-Code Archive'),
+//     'title' => $l->t('View the git-repository holding all revision of this entire mess. Mostly useful for web-developers.'),
+//   ],
+//   'sourcedocs' => [
+//     'text' => $l->t('Source-Code Documentation'),
+//     'title' => $l->t('Internal documentation of the `CAFEV-App\', mostly useful for web-developers.'),
+//   ],
+//   'clouddev' => [
+//     'text' => $l->t('Nextcloud Developer Documentation'),
+//     'title' => $l->t('Nextcloud Developer Manual, mostly useful for web-developers.'),
+//   ],
+// ];
 
 ?>
 <div id="expertmode">

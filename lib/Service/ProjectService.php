@@ -828,10 +828,13 @@ Whatever.',
    * Search through the list of all projects and attach those with a
    * matching name. Something which should go to the "expert"
    * controls.
+   *
+   * @param int|Entities\Project $projectOrId
    */
-  public function attachMatchingWebPages($projectId)
+  public function attachMatchingWebPages($projectOrId)
   {
-    $project = $this->repository->find($projectId);
+    $project = $this->repository->ensureProject($projectOrId);
+    $projectId = $project->getId();
     $projectName = $project->getName();
 
     $previewCat    = $this->getConfigtValue('redaxoPreview');

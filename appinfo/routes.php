@@ -128,11 +128,11 @@ $routes = [
       'verb' => 'POST',
     ],
     // expert mode operations
-    [
-      'name' => 'expert_mode#form',
-      'url' => '/expertmode/form',
-      'verb' => 'GET',
-    ],
+    // [
+    //   'name' => 'expert_mode#form',
+    //   'url' => '/expertmode/form',
+    //   'verb' => 'GET',
+    // ],
     [
       'name' => 'expert_mode#action',
       'url' => '/expertmode/action/{operation}',

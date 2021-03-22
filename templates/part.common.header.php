@@ -134,7 +134,7 @@ $sideBarToolTipPos = 'auto';
     <div id="app-settings-header"
          class="tooltip-<?php echo $sideBarToolTipPos; ?>"
          title="<?php echo $toolTips['settings-button']; ?>">
-      <button class="settings-button" tabindex="0"></button>
+      <button class="settings-button" tabindex="0"><?php echo $l->t('Settings'); ?></button>
     </div>
     <div id="app-settings-content">
       <ul class="">
@@ -194,14 +194,6 @@ $sideBarToolTipPos = 'auto';
           </label>
         </li>
         <li>
-          <a id="app-settings-further-settings"
-             class="settings generalsettings tooltip-<?php echo $sideBarToolTipPos; ?>"
-             title="<?php echo $toolTips['further-settings']; ?>"
-             href="#">
-            <?php echo $l->t('Further Settings'); ?>
-          </a>
-        </li>
-        <li>
           <input id="app-settings-expertmode"
                  type="checkbox"
                  name="expertmode" <?php echo $expertMode == 'on' ? 'checked="checked"' : ''; ?>
@@ -225,18 +217,17 @@ $sideBarToolTipPos = 'auto';
             <?php echo $l->t('Show Disabled Data-Sets'); ?>
           </label>
         </li>
-        <li class="<?php echo $expertClass; ?> expertmode-container">
-          <a id="app-settings-expert-operations"
-             class="settings expertoperations tooltip-<?php echo $sideBarToolTipPos; ?>"
-             title="<?php echo $toolTips['expert-operations']; ?>"
-             href="#">
-            <?php echo $l->t('Expert Operations'); ?>
-          </a>
-        </li>
         <li class="<?php echo $expertClass; ?> expertmode-container chosen-dropup">
           <?php echo $this->inc('settings/part.debug-mode', [ 'toolTipsPos' => $sideBarToolTipPos ]); ?>
         </li>
-        <li><br/></li>
+        <li>
+          <a id="app-settings-further-settings"
+             class="settings generalsettings tooltip-<?php echo $sideBarToolTipPos; ?>"
+             title="<?php echo $toolTips['further-settings']; ?>"
+             href="#">
+            <?php echo $l->t('Further Settings'); ?>
+          </a>
+        </li>
       </ul>
     </div>
   </div>

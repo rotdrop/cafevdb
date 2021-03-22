@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -32,6 +33,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\CalDavService;
@@ -46,9 +48,6 @@ class ExpertModeController extends Controller
   const ERROR_TEMPLATE = "errorpage";
   const TEMPLATE = "expertmode";
 
-  /** @var IL10N */
-  private $l;
-
   /** @var ToolTipsService */
   private $toolTipsService;
 
@@ -60,6 +59,9 @@ class ExpertModeController extends Controller
 
   /** @var CalDavService */
   private $calDavService;
+
+  /** @var ProjectService */
+  private $projectService;
 
   /** @var InstrumentationService */
   private $instrumentationService;
@@ -73,6 +75,7 @@ class ExpertModeController extends Controller
     , ConfigService $configService
     , ToolTipsService $toolTipsService
     , GeoCodingService $geoCodingService
+    , ProjectService $projectService
     , EventsService $eventsService
     , CalDavService $calDavService
     , instrumentationService $instrumentationService
@@ -83,56 +86,12 @@ class ExpertModeController extends Controller
     $this->configService = $configService;
     $this->toolTipsService = $toolTipsService;
     $this->pageNavigation = $pageNavigation;
+    $this->projectService = $projectService;
     $this->geoCodingService = $geoCodingService;
     $this->eventsService = $eventsService;
     $this->calDavService = $calDavService;
     $this->instrumentationService = $instrumentationService;
     $this->l = $this->l10N();
-  }
-
-  /**
-   * Return settings form
-   *
-   * @NoAdminRequired
-   */
-  public function form() {
-    if (!$this->inGroup()) {
-      return new TemplateResponse(
-        $this->appName(),
-        self::ERROR_TEMPLATE,
-        [
-          'error' => 'notamember',
-          'userId' => $this->userId(),
-        ],
-      'blank');
-    };
-
-    // maybe restrict this to the group admins
-    $templateParameters = [
-      'appName' => $this->appName(),
-      'expertMode' => $this->getUserValue('expertmode', 'off'),
-      'showToolTips' => $this->getUserValue('tooltips', 'on'),
-      'toolTips' => $this->toolTipsService,
-      'pageNavigation' => $this->pageNavigation,
-    ];
-    $links = [
-      'phpmyadmin'
-      , 'phpmyadmincloud'
-      , 'sourcecode'
-      , 'sourcedocs'
-      , 'clouddev'
-      , 'cspfailure'
-    ];
-    foreach ($links as $link) {
-      $templateParameters[$link] = $this->getConfigValue($link);
-    }
-
-    return new TemplateResponse(
-      $this->appName(),
-      self::TEMPLATE,
-      $templateParameters,
-      'blank',
-    );
   }
 
   /**
@@ -164,16 +123,24 @@ class ExpertModeController extends Controller
         }
         return self::valueResponse($result, print_r($result, true));
       case 'wikiprojecttoc':
+        $this->projectService->generateWikiOverview();
+        break;
       case 'attachwebpages':
+        $projects = $this->projectService->fetchAll();
+        foreach ($projects as $project) {
+          $this->projectService->attachMatchingWebPages($project);
+        }
+        break;
       case 'sanitizephones':
         break;
       case 'setupdb':
         break;
       case 'geodata':
         $this->geoCodingService->updateCountries();
-        $this->geoCodingService->updatePostalCodes(null, 1, [
-          [ 'country' => 'de', 'postalCode' => '71229' ]
-        ]);
+        // $this->geoCodingService->updatePostalCodes(null, 1, [
+        //   [ 'country' => 'de', 'postalCode' => '71229' ]
+        // ]);
+        $this->geoCodingService->updatePostalCodes(null, 100);
         return self::response($this->l->t('Triggered GeoCoding update.'));
         break;
       case 'uuid':
