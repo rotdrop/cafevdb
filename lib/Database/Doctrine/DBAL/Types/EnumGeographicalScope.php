@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -26,12 +27,6 @@ use MyCLabs\Enum\Enum as EnumType;
 
 class EnumGeographicalScope extends EnumType
 {
-  // protected $name = 'enumgeographicalscope';
-  // protected $values = [
-  //   'Germany',
-  //   'Europe',
-  //   'World',
-  // ];
   const GERMANY = 'Germany';
   const EUROPE = 'Europe';
   const WORLD = 'World';

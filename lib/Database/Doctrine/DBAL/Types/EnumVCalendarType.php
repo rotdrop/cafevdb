@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -26,13 +27,6 @@ use MyCLabs\Enum\Enum as EnumType;
 
 class EnumVCalendarType extends EnumType
 {
-  // protected $name = 'enumvcalendartype';
-  // protected $values = [
-  //   'VEVENT',
-  //   'VTODO',
-  //   'VJOURNAL',
-  //   'VCARD',
-  // ];
   CONST VEVENT = 'VEVENT';
   CONST VTODO = 'VTODO';
   CONST VJOURNAL = 'VJOURNAL';

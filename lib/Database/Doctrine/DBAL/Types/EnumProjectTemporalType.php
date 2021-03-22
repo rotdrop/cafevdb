@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -26,12 +27,6 @@ use MyCLabs\Enum\Enum as EnumType;
 
 class EnumProjectTemporalType extends EnumType
 {
-  // protected $name = 'enumprojecttemporaltype';
-  // protected $values = [
-  //   'temporary',
-  //   'permanent',
-  //   'template',
-  // ];
   const TEMPORARY = 'temporary';
   const PERMANENT = 'permanent';
   const TEMPLATE = 'template';

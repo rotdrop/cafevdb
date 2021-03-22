@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -26,14 +27,6 @@ use MyCLabs\Enum\Enum as EnumType;
 
 class EnumMemberStatus extends EnumType
 {
-  // protected $name = 'enummemberstatus';
-  // protected $values = [
-  //   'regular',
-  //   'passive',
-  //   'soloist',
-  //   'conductor',
-  //   'temporary',
-  // ];
   const REGULAR = 'regular';
   const PASSIVE = 'passive';
   const SOLOIST = 'soloist';

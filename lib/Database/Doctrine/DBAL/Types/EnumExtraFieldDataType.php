@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -26,17 +27,6 @@ use MyCLabs\Enum\Enum as EnumType;
 
 class EnumExtraFieldDataType extends EnumType
 {
-  // protected $name = 'enumextrafielddatatype';
-  // protected $values = [
-  //   'text',
-  //   'html',
-  //   'boolean',
-  //   'integer',
-  //   'float',
-  //   'date',
-  //   'datetime',
-  //   'service-fee',
-  // ];
   const TEXT = 'text';
   const HTML = 'html';
   const BOOLEAN = 'boolean';
