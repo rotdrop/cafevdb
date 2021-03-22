@@ -56,7 +56,7 @@ class SepaDebitNote implements \ArrayAccess
   private $project;
 
   /**
-   * @ORM\OneToOne(targetEntity="SepaDebitNoteData", mappedBy="debitNote", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="SepaDebitNoteData", mappedBy="debitNote", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $debitNoteData;
 

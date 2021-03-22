@@ -25,7 +25,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 
 /**
  * SepaDebitNoteData
@@ -39,8 +41,11 @@ class SepaDebitNoteData implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
+   * @var SepaDebitNote
+   *
    * @ORM\OneToOne(targetEntity="SepaDebitNote", inversedBy="debitNoteData", fetch="EXTRA_LAZY")
    * @ORM\Id
+   * @ORM\JoinColumn(onDelete="CASCADE");
    */
   private $debitNote;
 
@@ -62,6 +67,7 @@ class SepaDebitNoteData implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="text", length=16777215, nullable=false)
+   * @MediaMonks\Transformable(name="encrypt")
    */
   private $data;
 
@@ -72,7 +78,7 @@ class SepaDebitNoteData implements \ArrayAccess
    *
    * @return SepaDebitNoteData
    */
-  public function setDebitNote($debitNote)
+  public function setDebitNote($debitNote):self
   {
     $this->debitNote = $debitNote;
 
@@ -96,7 +102,7 @@ class SepaDebitNoteData implements \ArrayAccess
    *
    * @return SepaDebitNoteData
    */
-  public function setFileName($fileName)
+  public function setFileName($fileName):self
   {
     $this->fileName = $fileName;
 
@@ -120,7 +126,7 @@ class SepaDebitNoteData implements \ArrayAccess
    *
    * @return SepaDebitNoteData
    */
-  public function setMimeType($mimeType)
+  public function setMimeType($mimeType):self
   {
     $this->mimeType = $mimeType;
 
@@ -144,7 +150,7 @@ class SepaDebitNoteData implements \ArrayAccess
    *
    * @return SepaDebitNoteData
    */
-  public function setData($data)
+  public function setData($data):self
   {
     $this->data = $data;
 
