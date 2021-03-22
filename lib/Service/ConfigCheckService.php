@@ -752,7 +752,7 @@ class ConfigCheckService
       $key = $addressBook->getKey();
       $uri = $addressBook->getUri();
       $shared = $addressBook->isShared();
-      $this->logInfo('AddressBook: '.print_r([
+      $this->logDebug('AddressBook: '.print_r([
         'DPY' => $displayName,
         'KEY' => $key,
         'URI' => $uri,
