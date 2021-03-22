@@ -23,66 +23,64 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Doctrine\ORM\Query;
+use Doctrine\ORM;
 use Doctrine\ORM\EntityRepository;
 
 class ProjectPaymentsRepository extends EntityRepository
 {
-  const ALIAS = 'pay';
-  const PARTICIPANT_ALIAS = 'part';
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
 
   /**
-   * Finds entities by a set of criteria. Criteria may include
-   * project-id and musician-id where internally a join-query is
-   * performed.
-   *
-   * @param array      $criteria
-   * @param array|null $orderBy
-   * @param int|null   $limit
-   * @param int|null   $offset
-   *
-   * @return array The objects.
-   *
-   * @todo Use FindLikeTrait
+   * Fetch all debit note payments and sum them up, grouped by musicianId and projectId.
    */
-  public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+  public function findTotals(array $criteria)
   {
-    if (isset($criteria['projectId']) || isset($citeria['musicianId'])) {
-      $qb = $this->createQueryBuilder(self::ALIAS)
-                 ->join(self::ALIAS.'.projectParticipant', 'part');
-      $andX = $qb->expr()->andX();
-      foreach (array_keys($criteria) as $key) {
-        $andX->add($qb->expr()->eq($this->fqcn($key), ':'.$key));
-      }
-      $qb->where($andX);
-      foreach ($criteria as $key => $value) {
-        $qb->setParameter($key, $value);
-      }
-      foreach ($orderBy as $key => $dir) {
-        $qb->addOrderBy($this->fqcn($key), $dir);
-      }
-      if (!empty($limit)) {
-        $qb->setMaxResults($limit);
-      }
-      if (!empty($offset)) {
-        $qb->setFirstResult($offset);
-      }
-      return $qb->getQuery()->execute();
-    } else {
-      return parent::findBy($criteria, $orderBy, $limit, $offset);
-    }
-  }
+    $queryParts = $this->prepareFindBy($criteria, [
+      'project.id' => 'ASC',
+      'musician.id' => 'ASC',
+    ]);
 
-  private function fqcn($column)
-  {
-    switch ($column) {
-    case 'projectId':
-    case 'musicianId':
-      return self::PARTICIPANT_ALIAS.'.'.$column;
-    default:
-      return self::ALIAS.'.'.$column;
-    }
+    /** @var ORM\QueryBuilder */
+    $qb = $this->generateFindBySelect($queryParts, [
+      'SUM(mainTable.amount) AS totalAmountPaid',
+      'project.id AS projectId',
+      'musician.id AS musicianId',
+    ]);
+
+    $qb->groupBy('project.id')
+       ->addGroupBy('musician.id');
+
+    $qb = $this->generateFindByWhere($qb, $queryParts);
+
+    return $qb->getQuery()->execute();
+
+  //     $query = "SELECT p.InstrumentationId, SUM(p.Amount) AS TotalAmountPaid
+  // FROM `".self::TABLE."` p
+  // LEFT JOIN `".self::DEBIT_NOTES."` d
+  //   ON p.DebitNoteId = d.Id
+  // WHERE d.Job = '".$debitJob."'";
+
+  //     if (!empty($startDate)) {
+  //       $query .= " AND p.DateOfReceipt >= '".$startDate."'";
+  //     }
+  //     if (!empty($endDate)) {
+  //       $query .= " AND p.DateOfReceipt <= '".$endDate."'";
+  //     }
+
+  //     $query .= " GROUP BY p.InstrumentationId";
+  //     $query .= " ORDER BY p.InstrumentationId ASC";
+
+  //     $result = false;
+  //     $qResult = mySQL::query($query, $handle);
+  //     if ($qResult !== false) {
+  //       $result = array();
+  //       while ($row = mySQL::fetch($qResult)) {
+  //         $result[$row['InstrumentationId']] = $row;
+  //       }
+  //     }
+
   }
 }
 
