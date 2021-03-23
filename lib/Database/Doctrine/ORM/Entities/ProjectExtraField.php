@@ -58,7 +58,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @ORM\Column(type="integer", nullable=true)
    */
-  private $displayOrder;
+  private $displayOrder = null;
 
   /**
    * @var string
@@ -86,49 +86,49 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @ORM\Column(type="json", nullable=true, options={"comment"="Set of allowed values for set and enumerations."})
    */
-  private $allowedValues;
+  private $allowedValues = null;
 
   /**
    * @var string
    *
    * @ORM\Column(type="text", length=16777215, nullable=true, options={"comment"="Default value."})
    */
-  private $defaultValue;
+  private $defaultValue = null;
 
   /**
    * @var string
    *
    * @ORM\Column(type="string", length=4096, nullable=true)
    */
-  private $toolTip;
+  private $toolTip = null;
 
   /**
    * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Tab to display the field in. If empty, then the projects tab is used."})
    */
-  private $tab;
+  private $tab = null;
 
   /**
    * @var bool|null
    *
    * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
    */
-  private $encrypted = '0';
+  private $encrypted = false;
 
   /**
    * @var string|null
    *
    * @ORM\Column(type="string", length=1024, nullable=true, options={"comment"="If non-empty restrict the visbility to this comma separated list of user-groups."})
    */
-  private $readers;
+  private $readers = null;
 
   /**
    * @var string|null
    *
    * @ORM\Column(type="string", length=1024, nullable=true, options={"comment"="Empty or comma separated list of groups allowed to change the field."})
    */
-  private $writers;
+  private $writers = null;
 
   /**
    * @var bool
@@ -158,27 +158,27 @@ class ProjectExtraField implements \ArrayAccess
   }
 
   /**
-   * Set projectId.
+   * Set project.
    *
-   * @param int $projectId
+   * @param Project $project
    *
    * @return ProjectExtraFields
    */
-  public function setProjectId($projectId)
+  public function setProject($project):ProjectExtraField
   {
-    $this->projectId = $projectId;
+    $this->project = $project;
 
     return $this;
   }
 
   /**
-   * Get projectId.
+   * Get project.
    *
-   * @return int
+   * @return Project
    */
-  public function getProjectId()
+  public function getProject()
   {
-    return $this->projectId;
+    return $this->project;
   }
 
   /**
@@ -186,9 +186,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param int|null $displayOrder
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
-  public function setDisplayOrder($displayOrder = null)
+  public function setDisplayOrder($displayOrder):ProjectExtraField
   {
     $this->displayOrder = $displayOrder;
 
@@ -210,9 +210,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string $name
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
-  public function setName($name)
+  public function setName($name):ProjectExtraField
   {
     $this->name = $name;
 
@@ -284,7 +284,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return ProjectExtraFields
    */
-  public function setAllowedValues($allowedValues = null)
+  public function setAllowedValues($allowedValues):ProjectExtraField
   {
     $this->allowedValues = $allowedValues;
 
@@ -308,7 +308,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return ProjectExtraFields
    */
-  public function setDefaultValue($defaultValue)
+  public function setDefaultValue($defaultValue):ProjectExtraField
   {
     $this->defaultValue = $defaultValue;
 
@@ -332,7 +332,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return ProjectExtraFields
    */
-  public function setToolTip($toolTip)
+  public function setToolTip($toolTip):ProjectExtraField
   {
     $this->toolTip = $toolTip;
 
@@ -356,7 +356,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return ProjectExtraFields
    */
-  public function setTab($tab)
+  public function setTab($tab):ProjectExtraField
   {
     $this->tab = $tab;
 
@@ -380,7 +380,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return ProjectExtraFields
    */
-  public function setEncrypted($encrypted = null)
+  public function setEncrypted($encrypted):ProjectExtraField
   {
     $this->encrypted = $encrypted;
 
@@ -404,7 +404,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return ProjectExtraFields
    */
-  public function setReaders($readers = null)
+  public function setReaders($readers):ProjectExtraField
   {
     $this->readers = $readers;
 
@@ -428,7 +428,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return ProjectExtraFields
    */
-  public function setWriters($writers = null)
+  public function setWriters($writers):ProjectExtraField
   {
     $this->writers = $writers;
 
@@ -452,7 +452,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return ProjectExtraFields
    */
-  public function setDisabled($disabled)
+  public function setDisabled($disabled):ProjectExtraField
   {
     $this->disabled = $disabled;
 
