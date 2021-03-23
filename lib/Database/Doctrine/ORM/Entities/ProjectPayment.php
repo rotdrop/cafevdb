@@ -54,8 +54,9 @@ class ProjectPayment implements \ArrayAccess
    * @var SepaDebitNote
    *
    * @ORM\ManyToOne(targetEntity="SepaDebitNote", inversedBy="projectPayments", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(onDelete="CASCADE")
    */
-  private $debitNote;
+  private $debitNote = null;
 
   /**
    * @var int
@@ -65,7 +66,7 @@ class ProjectPayment implements \ArrayAccess
    *
    * @ORM\Column(type="integer", nullable=true)
    */
-  private $mandate_sequence;
+  private $mandateSequence;
 
   /**
    * @ORM\ManyToOne(targetEntity="SepaDebitMandate",
@@ -122,27 +123,75 @@ class ProjectPayment implements \ArrayAccess
   }
 
   /**
-   * Set projectParticipantId.
+   * Set projectParticipant.
    *
-   * @param int $projectParticipantId
+   * @param int $projectParticipant
    *
-   * @return ProjectPayments
+   * @return ProjectPayment
    */
-  public function setProjectParticipantId($projectParticipantId)
+  public function setProjectParticipant($projectParticipant):ProjectPayment
   {
-    $this->projectParticipantId = $projectParticipantId;
+    $this->projectParticipant = $projectParticipant;
 
     return $this;
   }
 
   /**
-   * Get projectParticipantId.
+   * Get projectParticipant.
    *
-   * @return int
+   * @return ProjectParticipant
    */
-  public function getProjectParticipantId()
+  public function getProjectParticipant()
   {
-    return $this->projectParticipantId;
+    return $this->projectParticipant;
+  }
+
+  /**
+   * Set project.
+   *
+   * @param int $project
+   *
+   * @return ProjectPayment
+   */
+  public function setProject($project):ProjectPayment
+  {
+    $this->project = $project;
+
+    return $this;
+  }
+
+  /**
+   * Get project.
+   *
+   * @return Project
+   */
+  public function getProject()
+  {
+    return $this->project;
+  }
+
+  /**
+   * Set musician.
+   *
+   * @param int $musician
+   *
+   * @return ProjectPayment
+   */
+  public function setMusician($musician):ProjectPayment
+  {
+    $this->musician = $musician;
+
+    return $this;
+  }
+
+  /**
+   * Get musician.
+   *
+   * @return Musician
+   */
+  public function getMusician()
+  {
+    return $this->musician;
   }
 
   /**
@@ -150,9 +199,9 @@ class ProjectPayment implements \ArrayAccess
    *
    * @param string $amount
    *
-   * @return ProjectPayments
+   * @return ProjectPayment
    */
-  public function setAmount($amount)
+  public function setAmount($amount):ProjectPayment
   {
     $this->amount = $amount;
 
@@ -174,9 +223,9 @@ class ProjectPayment implements \ArrayAccess
    *
    * @param \DateTime|null $dateOfReceipt
    *
-   * @return ProjectPayments
+   * @return ProjectPayment
    */
-  public function setDateOfReceipt($dateOfReceipt = null)
+  public function setDateOfReceipt($dateOfReceipt = null):ProjectPayment
   {
     $this->dateOfReceipt = $dateOfReceipt;
 
@@ -198,9 +247,9 @@ class ProjectPayment implements \ArrayAccess
    *
    * @param string $subject
    *
-   * @return ProjectPayments
+   * @return ProjectPayment
    */
-  public function setSubject($subject)
+  public function setSubject($subject):ProjectPayment
   {
     $this->subject = $subject;
 
@@ -218,51 +267,51 @@ class ProjectPayment implements \ArrayAccess
   }
 
   /**
-   * Set debitNoteId.
+   * Set debitNote.
    *
-   * @param int|null $debitNoteId
+   * @param SepaDebitNote|null $debitNote
    *
-   * @return ProjectPayments
+   * @return ProjectPayment
    */
-  public function setDebitNoteId($debitNoteId = null)
+  public function setDebitNote($debitNote):ProjectPayment
   {
-    $this->debitNoteId = $debitNoteId;
+    $this->debitNote = $debitNote;
 
     return $this;
   }
 
   /**
-   * Get debitNoteId.
+   * Get debitNote.
    *
-   * @return int|null
+   * @return SepaDebitNote|null
    */
-  public function getDebitNoteId()
+  public function getDebitNote()
   {
-    return $this->debitNoteId;
+    return $this->debitNote;
   }
 
   /**
-   * Set mandateReference.
+   * Set sepaDebitMandate.
    *
-   * @param string|null $mandateReference
+   * @param string|null $sepaDebitMandate
    *
-   * @return ProjectPayments
+   * @return ProjectPayment
    */
-  public function setMandateReference($mandateReference = null)
+  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):ProjectPayment
   {
-    $this->mandateReference = $mandateReference;
+    $this->sepaDebitMandate = $sepaDebitMandate;
 
     return $this;
   }
 
   /**
-   * Get mandateReference.
+   * Get sepaDebitMandate.
    *
-   * @return string|null
+   * @return SepaDebitMandate|null
    */
-  public function getMandateReference()
+  public function getSepaDebitMandate():?SepaDebitMandate
   {
-    return $this->mandateReference;
+    return $this->sepaDebitMandate;
   }
 
   /**
@@ -270,9 +319,9 @@ class ProjectPayment implements \ArrayAccess
    *
    * @param string $debitMessageId
    *
-   * @return ProjectPayments
+   * @return ProjectPayment
    */
-  public function setDebitMessageId($debitMessageId)
+  public function setDebitMessageId($debitMessageId):ProjectPayment
   {
     $this->debitMessageId = $debitMessageId;
 
