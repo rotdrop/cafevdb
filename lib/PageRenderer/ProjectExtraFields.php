@@ -471,6 +471,7 @@ class ProjectExtraFields extends PMETableViewBase
       'sort' => true,
       'align' => 'right',
       'tooltip' => $this->toolTipsService['extra-fields-display-order'],
+      'display' => [ 'attributes' => [ 'min' => 1 ], ],
     ];
 
     $opts['fdd']['tab'] = [
