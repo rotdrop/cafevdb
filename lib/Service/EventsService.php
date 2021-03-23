@@ -60,11 +60,11 @@ class EventsService
   private $vCalendarService;
 
   public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager,
-    ProjectService $projectService,
-    CalDavService $calDavService,
-    VCalendarService $vCalendarService
+    ConfigService $configService
+    , EntityManager $entityManager
+    , ProjectService $projectService
+    , CalDavService $calDavService
+    , VCalendarService $vCalendarService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
