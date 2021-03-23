@@ -56,7 +56,7 @@ class SepaDebitNote implements \ArrayAccess
   private $project;
 
   /**
-   * @ORM\OneToOne(targetEntity="SepaDebitNoteData", mappedBy="debitNote", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="SepaDebitNoteData", mappedBy="debitNote", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $debitNoteData;
 
@@ -119,7 +119,7 @@ class SepaDebitNote implements \ArrayAccess
   /**
    * @var ArrayCollection
    *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="debitNote", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="debitNote", orphanRemoval=true, cascade={"all"}, fetch="EXTRA_LAZY")
    */
   private $projectPayments;
 
@@ -145,7 +145,7 @@ class SepaDebitNote implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setProject($project)
+  public function setProject($project):SepaDebitNote
   {
     $this->project = $project;
 
@@ -163,13 +163,37 @@ class SepaDebitNote implements \ArrayAccess
   }
 
   /**
+   * Set sepaDebitNoteData.
+   *
+   * @param int $sepaDebitNoteData
+   *
+   * @return SepaDebitNote
+   */
+  public function setSepaDebitNoteData($sepaDebitNoteData):SepaDebitNote
+  {
+    $this->sepaDebitNoteData = $sepaDebitNoteData;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaDebitNoteData.
+   *
+   * @return int
+   */
+  public function getSepaDebitNoteData()
+  {
+    return $this->sepaDebitNoteData;
+  }
+
+  /**
    * Set dateIssued.
    *
    * @param \DateTime $dateIssued
    *
    * @return SepaDebitNote
    */
-  public function setDateIssued($dateIssued)
+  public function setDateIssued($dateIssued):SepaDebitNote
   {
     $this->dateIssued = $dateIssued;
 
@@ -193,7 +217,7 @@ class SepaDebitNote implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setSubmissionDeadline($submissionDeadline)
+  public function setSubmissionDeadline($submissionDeadline):SepaDebitNote
   {
     $this->submissionDeadline = $submissionDeadline;
 
@@ -217,7 +241,7 @@ class SepaDebitNote implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setSubmitDate($submitDate = null)
+  public function setSubmitDate($submitDate = null):SepaDebitNote
   {
     $this->submitDate = $submitDate;
 
@@ -241,7 +265,7 @@ class SepaDebitNote implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setDueDate($dueDate)
+  public function setDueDate($dueDate):SepaDebitNote
   {
     $this->dueDate = $dueDate;
 
@@ -265,7 +289,7 @@ class SepaDebitNote implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setJob($job)
+  public function setJob($job):SepaDebitNote
   {
     $this->job = $job;
 
@@ -289,7 +313,7 @@ class SepaDebitNote implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setSubmissionEventUri($submissionEventUri)
+  public function setSubmissionEventUri($submissionEventUri):SepaDebitNote
   {
     $this->submissionEventUri = $submissionEventUri;
 
@@ -313,7 +337,7 @@ class SepaDebitNote implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setSubmissionTaskUri($submissionTaskUri)
+  public function setSubmissionTaskUri($submissionTaskUri):SepaDebitNote
   {
     $this->submissionTaskUri = $submissionTaskUri;
 
@@ -337,7 +361,7 @@ class SepaDebitNote implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setDueEventUri($dueEventUri)
+  public function setDueEventUri($dueEventUri):SepaDebitNote
   {
     $this->dueEventUri = $dueEventUri;
 

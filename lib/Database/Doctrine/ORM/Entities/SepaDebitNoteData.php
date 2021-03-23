@@ -78,7 +78,7 @@ class SepaDebitNoteData implements \ArrayAccess
    *
    * @return SepaDebitNoteData
    */
-  public function setDebitNote($debitNote):self
+  public function setDebitNote($debitNote):SepaDebitNoteData
   {
     $this->debitNote = $debitNote;
 
@@ -102,7 +102,7 @@ class SepaDebitNoteData implements \ArrayAccess
    *
    * @return SepaDebitNoteData
    */
-  public function setFileName($fileName):self
+  public function setFileName($fileName):SepaDebitNoteData
   {
     $this->fileName = $fileName;
 
@@ -126,7 +126,7 @@ class SepaDebitNoteData implements \ArrayAccess
    *
    * @return SepaDebitNoteData
    */
-  public function setMimeType($mimeType):self
+  public function setMimeType($mimeType):SepaDebitNoteData
   {
     $this->mimeType = $mimeType;
 
@@ -150,7 +150,7 @@ class SepaDebitNoteData implements \ArrayAccess
    *
    * @return SepaDebitNoteData
    */
-  public function setData($data):self
+  public function setData($data):SepaDebitNoteData
   {
     $this->data = $data;
 
