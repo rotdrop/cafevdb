@@ -2052,6 +2052,7 @@ class phpMyEdit
 				$len_props = '';
 				$maxlen = intval($this->fdd[$k]['maxlen']);
 				$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 40);
+
 				if ($size > 0) {
 					$len_props .= ' size="'.$size.'"';
 				}
@@ -2062,11 +2063,47 @@ class phpMyEdit
 				if ($helptip) {
 					echo 'title="'.$this->enc($helptip).'" ';
 				}
-				echo ($this->password($k) ? 'type="password"' : 'type="text"');
-				echo ($this->disabled($k) ? ' disabled' : '');
-				echo ($this->readonly($k) ? ' readonly' : '');
+
+				$type = $this->fdd[$k]['select'] == 'N' ? 'number' : 'text';
+				echo ($this->password($k) ? 'type="password"' : 'type="'.$type.'"');
 				echo ($this->mandatory($k) ? ' required' : '');
 
+				$readonly = $this->disabledTag($k);
+				if ($readonly === false && $vals) {
+					// force read-only if single value.
+					$readonly = $this->display['readonly'];
+				}
+
+				if (isset($this->fdd[$k]['display']['attributes'])) {
+					$attributes = $this->fdd[$k]['display']['attributes'];
+					if (is_callable($attributes)) {
+						$attributes = call_user_func($attributes, 'change', $row, $k, $this);
+					}
+					if (!is_array($attributes)) {
+						$attributes= [ $attributes ];
+					}
+					foreach ($attributes as $attributeKey => $attributeValue) {
+						switch ($attributeKey) {
+						case 'readonly':
+							if ($attributeValue === true) {
+								$readonly = $this->display['readonly'];
+							} else if ($attributeValue == false) {
+								$readonly = false;
+							}
+							break;
+						case 'disabled':
+							if ($attributeValue === true) {
+								echo ' '.$this->display['disabled'];
+							}
+							break;
+						default:
+							echo ' '.$attributeKey.'="'.$attributeValue.'"';
+							break;
+						}
+					}
+				}
+
+				echo ($readonly !== false ? ' '.$readonly : '');
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
 				echo $len_props,' value="';
 				echo $value;
@@ -2310,6 +2347,8 @@ class phpMyEdit
 			if ($help) {
 				echo ' title="'.$this->enc($help).'" ';
 			}
+			echo ($this->mandatory($k) ? ' required' : '');
+
 			if (isset($this->fdd[$k]['display']['attributes'])) {
 				$attributes = $this->fdd[$k]['display']['attributes'];
 				if (is_callable($attributes)) {
@@ -5177,7 +5216,7 @@ class phpMyEdit
 	} /* }}} */
 
 	/*
-	 * A callback called after date has been fetched, but before any
+	 * A callback called after data has been fetched, but before any
 	 * HTML has been generated.
 	 */
 	function exec_data_triggers($op, &$row)
@@ -5186,24 +5225,21 @@ class phpMyEdit
 		if (!isset($this->triggers[$op][$step])) {
 			return true;
 		}
-		$ret  = true;
 		$trig = $this->triggers[$op][$step];
 		if (is_array($trig)) {
 			ksort($trig);
-			for ($t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
+			for ($ret = true, $t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
 				if (is_callable($t)) {
-					$ret = call_user_func_array($t,
-												array(&$this, $op, $step, &$row));
+					$ret = call_user_func_array($t, array(&$this, $op, $step, &$row));
 				} else {
 					$ret = include($t);
 				}
 			}
 		} else {
 			if (is_callable($trig)) {
-				$ret = call_user_func_array($trig,
-											array(&$this, $op, $step, &$row));
+				call_user_func_array($trig, array(&$this, $op, $step, &$row));
 			} else {
-				$ret = include($trig);
+				include($trig);
 			}
 		}
 	} /* }}} */
