@@ -144,6 +144,23 @@ class ProjectExtraFieldsService
   }
 
   /**
+   * Return the row with the key matching the argument $key.
+   *
+   * @param sting $key Allowed values key to search for
+   *
+   * @param array $values Exploded allowed values data.
+   *
+   * @return null|array The matching row if found or null.
+   */
+  public static function findAllowedValue($key, array $values):?array
+  {
+    $rows = array_filter($values, function($row) use ($key) {
+      return $row['key'] === $key;
+    });
+    return count($rows) == 1 ? array_shift($rows) : null;
+  }
+
+  /**
    * Prototype for allowed values, i.e. multiple-value options.
    */
   public static function allowedValuesPrototype()
@@ -164,6 +181,10 @@ class ProjectExtraFieldsService
   public function explodeAllowedValues($values, $addProto = true, $trimInactive = false)
   {
     $options = empty($values) ? [] : (is_array($values) ? $values : json_decode($values, true));
+    if (is_string($options)) {
+      // perhaps double encoded, try ...
+      $options = json_decode($options, true);
+    }
     if (is_string($values) && !empty($values) && empty($options)) {
       $options = [
         array_merge(
@@ -172,7 +193,9 @@ class ProjectExtraFieldsService
       ];
     }
     if (isset($options[-1])) {
-      throw new \Exception($this->l->t('Option index -1 should not be present here, options: %s', print_r($options, true)));
+      throw new \Exception(
+        $this->l->t('Option index -1 should not be present here, options: %s',
+                    print_r($options, true)));
     }
     $options = array_values($options);
     $protoType = $this->allowedValuesPrototype();
