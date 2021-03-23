@@ -72,7 +72,7 @@ class ProjectParticipants extends PMETableViewBase
   protected $joinStructure = [
     [
       'table' => self::TABLE,
-      'master' => true,
+      'flags' => PMETableViewBase::JOIN_MASTER,
       'entity' => Entities\ProjectParticipant::class,
     ],
     [
@@ -90,6 +90,7 @@ class ProjectParticipants extends PMETableViewBase
     [
       'table' => self::PROJECT_INSTRUMENTS_TABLE,
       'entity' => Entities\ProjectInstrument::class,
+      'flags' => PMETableViewBase::JOIN_GROUP_BY,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
@@ -97,7 +98,6 @@ class ProjectParticipants extends PMETableViewBase
         'voice' => [ 'self' => true ],
       ],
       'column' => 'instrument_id',
-      'group_by' => true,
     ],
     [
       'table' => self::MUSICIAN_INSTRUMENTS_TABLE,
@@ -117,7 +117,7 @@ class ProjectParticipants extends PMETableViewBase
         'musician_id' => 'musician_id',
       ],
       'column' => 'project_id',
-      'read_only' => true,
+      'flags' => PMETableViewBase::JOIN_READONLY,
     ],
     [
       'table' => self::PROJECT_PAYMENTS_TABLE,
@@ -336,13 +336,13 @@ class ProjectParticipants extends PMETableViewBase
       $extraFieldJoinTable = [
         'table' => $tableName,
         'entity' => Entities\ProjectExtraFieldDatum::class,
-        'nullable' => true,
+        'flags' => PMETableViewBase::JOIN_REMOVE_EMPTY,
         'identifier' => [
           'project_id' => 'project_id',
           'musician_id' => 'musician_id',
           'field_id' => [ 'value' => $field['id'], ],
         ],
-        'column' => 'field_id',
+        'column' => 'field_value',
       ];
       $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
       $this->joinStructure[] = $extraFieldJoinTable;
@@ -1824,9 +1824,12 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
    */
   public function beforeUpdateSanitizeExtraFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
-    $this->logDebug('OLDVALUES '.print_r($oldValues, true));
-    $this->logDebug('NEWVALUES '.print_r($newValues, true));
-    $this->logDebug('CHANGED '.print_r($changed, true));
+    // $logMethod = 'logInfo';
+    $logMethod = 'logDebug';
+
+    $this->$logMethod('OLDVALUES '.print_r($oldValues, true));
+    $this->$logMethod('NEWVALUES '.print_r($newValues, true));
+    $this->$logMethod('CHANGED '.print_r($changed, true));
 
     foreach ($this->project['extra_fields'] as $extraField) {
       $fieldId = $extraField['id'];
@@ -1838,9 +1841,9 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       $fieldName = $this->joinTableFieldName($tableName, 'field_value');
       $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
 
-      $this->logDebug('FIELDNAMES '.$fieldName." / ".$groupFieldName);
+      $this->$logMethod('FIELDNAMES '.$fieldName." / ".$groupFieldName);
 
-      $this->logDebug("MULT ".$multiplicity);
+      $this->$logMethod("MULT ".$multiplicity);
       switch ($multiplicity) {
       case 'groupofpeople':
         if (array_search($groupFieldName, $changed) === false) {

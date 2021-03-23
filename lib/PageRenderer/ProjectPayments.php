@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -49,7 +49,7 @@ class ProjectPayments extends PMETableViewBase
   protected $joinStructure = [
     [
       'table' => self::TABLE,
-      'master' => true,
+      'flags' => PMETableViewBase::JOIN_MASTER,
       'entity' => Entities\ProjectPayment::class,
     ],
     [
@@ -60,7 +60,7 @@ class ProjectPayments extends PMETableViewBase
         'musician_id' => 'musician_id',
       ],
       'column' => 'musician_id',
-      'read_only' => true,
+      'flags' => PMETableViewBase::JOIN_READONLY,
     ],
     [
       'table' => self::MUSICIANS_TABLE,
@@ -69,7 +69,7 @@ class ProjectPayments extends PMETableViewBase
         'id' => 'musician_id',
       ],
       'column' => 'id',
-      'read_only' => true,
+      'flags' => PMETableViewBase::JOIN_READONLY,
     ],
     [
       'table' => self::SEPA_DEBIT_MANDATES_TABLE,
@@ -80,7 +80,7 @@ class ProjectPayments extends PMETableViewBase
         'sequence' => 'mandate_sequence',
       ],
       'column' => 'sequence',
-      'read_only' => true,
+      'flags' => PMETableViewBase::JOIN_READONLY,
     ],
     [
       'table' => self::DEBIT_NOTES_TABLE,
@@ -89,7 +89,7 @@ class ProjectPayments extends PMETableViewBase
         'id' => 'debit_note_id',
       ],
       'column' => 'id',
-      'read_only' => true,
+      'flags' => PMETableViewBase::JOIN_READONLY,
     ],
   ];
 

@@ -42,10 +42,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
+  const JOIN_MASTER = 0x01;
+  const JOIN_READONLY = 0x02;
+  const JOIN_GROUP_BY = 0x04;
+  const JOIN_REMOVE_EMPTY = 0x08;
+
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
+
   const JOIN_FIELD_NAME_SEPARATOR = ':';
   const VALUES_TABLE_SEP = '@';
+
+  /** @todo Perhaps create a table-name provider structure. */
+  private const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
 
   /** @var RequestParameterService */
   protected $requestParameters;
@@ -108,8 +116,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *   [
    *     'table' => SQL_TABLE_NAME,
    *     'entity' => DOCTRINE_ORM_ENTITY_CLASS_NAME,
-   *     'master' => bool optional master-table
-   *     'read_only' => bool optional not considered for update
+   *     'flags'  => self::JOIN_READONLY|self::JOIN_MASTER|self::JOIN_REMOVE_EMPTY|self::JOIN_GROUP_BY
    *     'column' => column used in select statements
    *     'identifier' => [
    *       TO_JOIN_TABLE_COLUMN => ALREADY_THERE_COLUMN_NAME,
@@ -669,14 +676,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $joinInfo) {
-      if (!empty($joinInfo['read_only'])) {
+      if ($joinInfo['flags'] & self::JOIN_READONLY) {
         continue;
       }
       $table = $joinInfo['table'];
       if (empty($changeSets[$table])) {
         continue;
       }
-      if ($joinInfo['master']) {
+      if ($joinInfo['flags'] & self::JOIN_MASTER) {
         // fill the identifier keys as they are left out for
         // convenience in $this->joinStructure
         foreach ($this->pme->key as $key => $type) {
@@ -921,8 +928,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $entity[$column] = $newvals[$field];
           Util::unsetValue($changed, $field);
         }
-        $this->persist($entity);
-        if ($joinInfo['master']) {
+        if (($joinInfo['flags'] & self::JOIN_REMOVE_EMPTY) && empty($entity[$joinInfo['column']])) {
+          // just delete the entity in this case
+          $this->remove($entity);
+        } else {
+          $this->persist($entity);
+        }
+        if ($joinInfo['flags'] & self::JOIN_MASTER) {
           $masterEntity = $entity;
         }
       }
@@ -985,7 +997,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->$logMethod('MISSING '.print_r($missingKeys, true));
     foreach ($this->joinStructure as $joinInfo) {
-      if ($joinInfo['master']) {
+      if ($joinInfo['flags'] & self::JOIN_MASTER) {
         continue;
       }
       foreach ($joinInfo['identifier'] as $joinColumn => $keyColumn) {
@@ -1016,7 +1028,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     foreach ($this->joinStructure as $joinInfo) {
       $table = $joinInfo['table'];
       $changeSet = $changeSets[$table];
-      if (!empty($joinInfo['read_only'])) {
+      if ($joinInfo['flags'] & self::JOIN_READONLY) {
         foreach ($changeSet as $column => $joinColumn) {
           Util::unsetValue($changed, $joinColumn);
         }
@@ -1025,7 +1037,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       if (empty($changeSets[$table])) {
         continue;
       }
-      if ($joinInfo['master']) {
+      if ($joinInfo['flags'] & self::JOIN_MASTER) {
         // fill the identifier keys as they are left out for
         // convenience in $this->joinStructure
         foreach ($this->pme->key as $key => $type) {
@@ -1185,12 +1197,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $entity[$column] = $newvals[$field];
           Util::unsetValue($changed, $field);
         }
-        $this->persist($entity);
+
+        if (!($joinInfo['flags'] & self::JOIN_REMOVE_EMPTY) || !empty($entity[$joinInfo['column']])) {
+          $this->persist($entity);
+        }
 
         // if this is the master table, then we need also to fetch the
         // id and to insert the id(s) into the change-sets for the
         // joined entities which are yet to be inserted.
-        if ($joinInfo['master']) {
+        if ($joinInfo['flags'] & self::JOIN_MASTER) {
           $this->flush();
           $masterEntity = $entity;
           $identifier = $this->getIdentifierColumnValues($masterEntity, $meta);
@@ -1224,13 +1239,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *   [
    *     'table' => SQL_TABLE_NAME,
    *     'entity' => ENTITY_CLASS_NAME,
-   *     'master' => BOOL,
+   *     'flags'  => self::JOIN_READONLY|self::JOIN_MASTER|self::JOIN_REMOVE_EMPTY|self::JOIN_GROUP_BY
    *     'identifier' => [
    *        COLUMN_NAME => ID_COLUMN_DESCRIPTION, // see below
    *        ...
    *     ],
    *     'column' => COLUMN_TO_FETCH,
-   *     'group_by' => BOOL,
    *   ],
    *   ...
    * ]
@@ -1255,7 +1269,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $grouped = [];
     $orderBy = [];
     foreach ($this->joinStructure as &$joinInfo) {
-      if (!empty($joinInfo['master'])) {
+      if ($joinInfo['flags'] & self::JOIN_MASTER) {
         if (is_array($opts['key'])) {
           foreach (array_keys($opts['key']) as $key) {
             $joinInfo['identifier'][$key] = $key;
@@ -1330,7 +1344,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           'join' => implode(' AND ', $joinData),
         ],
       ];
-      if (!empty($joinInfo['group_by'])) {
+      if ($joinInfo['flags'] & self::JOIN_GROUP_BY) {
         $opts['groupby_fields'][] = $fieldName;
 
         // use simple field grouping for list and filter operation
@@ -1368,13 +1382,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * The name of the field-descriptor for a join-table field
    * referencing a master-join-table.
    *
-   * @param string|array $table Table-description-data
+   * @param string|array $joinInfo Table-description-data
    * ```
    * [
    *   'table' => SQL_TABLE_NAME,
    *   'entity' => DOCTRINE_ORM_ENTITY_CLASS_NAME,
-   *   'master' => bool optional master-table
-   *   'read_only' => bool optional not considered for update
+   *   'flags'  => self::JOIN_READONLY|self::JOIN_MASTER|self::JOIN_REMOVE_EMPTY|self::JOIN_GROUP_BY
    *   'column' => column used in select statements
    *   'identifier' => [
    *     TO_JOIN_TABLE_COLUMN => ALREADY_THERE_COLUMN_NAME,
@@ -1384,21 +1397,21 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * ```
    *
    * @param string $column column to generate a query field for. This
-   * is another column different from $tableInfo['column'] in order to
+   * is another column different from $joinInfo['column'] in order to
    * generate further query fields from an existing join-table.
    *
-   * @return string Cooked field-name composed of $tableInfo and $column.
+   * @return string Cooked field-name composed of $joinInfo and $column.
    *
    */
-  protected function joinTableFieldName($tableInfo, string $column)
+  protected function joinTableFieldName($joinInfo, string $column)
   {
-    if (is_array($tableInfo)) {
-      if (!empty($tableInfo['master'])) {
+    if (is_array($joinInfo)) {
+      if ($joinInfo['flags'] & self::JOIN_MASTER) {
         return $column;
       }
-      $table = $tableInfo['table'];
+      $table = $joinInfo['table'];
     } else {
-      $table = $tableInfo;
+      $table = $joinInfo;
     }
     return $table.self::JOIN_FIELD_NAME_SEPARATOR.$column;
   }

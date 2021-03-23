@@ -46,7 +46,7 @@ class InsuranceRates extends PMETableViewBase
   protected $joinStructure = [
     [
       'table' => self::TABLE,
-      'master' => true,
+      'flags' => PMETableViewBase::JOIN_MASTER,
       'entity' => Entities\InsuranceRate::class,
     ],
   ];
