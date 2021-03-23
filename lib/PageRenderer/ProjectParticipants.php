@@ -356,7 +356,7 @@ class ProjectParticipants extends PMETableViewBase
         //'query' => true,
         'sort'  => true,
         'time'  => true,
-        'tabs' => $this->tableTabs($userExtraFields, $useFinanceTab),
+        'tabs' => $this->tableTabs($extraFields, $useFinanceTab),
         'navigation' => 'VCD',
     ]);
 
@@ -1985,12 +1985,12 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
   {
     $dfltTabs = $this->defaultTableTabs($useFinanceTab);
 
-    if (!is_array($extraFields)) {
+    if (!is_iterable($extraFields)) {
       return $dfltTabs;
     }
 
     $extraTabs = [];
-    foreach($extraFields as $field) {
+    foreach ($extraFields as $field) {
       if (empty($field['Tab'])) {
         continue;
       }

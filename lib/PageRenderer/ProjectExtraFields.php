@@ -490,21 +490,25 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-fields-tab'],
     ];
 
-    if ($recordMode) {
-      // In order to be able to add a new tab, the select box first
-      // has to be emptied (in order to avoid conflicts).
-      $opts['fdd']['new_tab'] = [
-        'name' => $this->l->t('New Tab Name'),
-        'options' => 'CPA',
-        'sql' => "''",
-        'css' => [ 'postfix' => ' new-tab' ],
-        'select' => 'T',
-        'maxlen' => 20,
-        'size' => 30,
-        'sort' => false,
-        'tooltip' => $this->toolTipsService['extra-fields-new-tab'],
-      ];
-    }
+    // In order to be able to add a new tab, the select box first
+    // has to be emptied (in order to avoid conflicts).
+    $opts['fdd']['new_tab'] = [
+      'name' => $this->l->t('New Tab Name'),
+      'input' => 'S',
+      'options' => 'CPA',
+      'sql' => "''",
+      'css' => [ 'postfix' => ' new-tab' ],
+      'select' => 'T',
+      'maxlen' => 20,
+      'size' => 30,
+      'sort' => false,
+      'tooltip' => $this->toolTipsService['extra-fields-new-tab'],
+      'display' => [
+        'attributes' => [
+          'placeholder' => $this->l->t('name of new tab'),
+        ],
+      ],
+    ];
 
     if ($expertMode) {
 
@@ -604,9 +608,12 @@ class ProjectExtraFields extends PMETableViewBase
    */
   public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $this->logDebug('BEFORE OLD '.print_r($oldvals, true));
-    $this->logDebug('BEFORE NEW '.print_r($newvals, true));
-    $this->logDebug('BEFORE CHG '.print_r($changed, true));
+    // $logMethod = 'logInfo';
+    $logMethod = 'logDebug';
+
+    $this->$logMethod('BEFORE OLD '.print_r($oldvals, true));
+    $this->$logMethod('BEFORE NEW '.print_r($newvals, true));
+    $this->$logMethod('BEFORE CHG '.print_r($changed, true));
 
     // make sure writer-acls are a subset of reader-acls
     $writers = preg_split('/\s*,\s*/', $newvals['writers'], -1, PREG_SPLIT_NO_EMPTY);
@@ -671,9 +678,9 @@ class ProjectExtraFields extends PMETableViewBase
       unset($changed[$key]);
     }
 
-    $this->logDebug('MAX OLD: '.print_r($oldvals['allowed_values'], true));
-    $this->logDebug('MAX NEW: '.print_r($newvals['allowed_values'], true));
-    $this->logDebug('MAX CHG: '.$changed['allowed_values']);
+    $this->$logMethod('MAX OLD: '.print_r($oldvals['allowed_values'], true));
+    $this->$logMethod('MAX NEW: '.print_r($newvals['allowed_values'], true));
+    $this->$logMethod('MAX CHG: '.$changed['allowed_values']);
 
     /************************************************************************
      *
@@ -737,9 +744,9 @@ class ProjectExtraFields extends PMETableViewBase
     }
 
 
-    $this->logDebug('AV OLD: '.print_r($oldvals['allowed_values'], true));
-    $this->logDebug('AV NEW: '.print_r($newvals['allowed_values'], true));
-    $this->logDebug('AV CHG: '.$changed['allowed_values']);
+    $this->$logMethod('AV OLD: '.print_r($oldvals['allowed_values'], true));
+    $this->$logMethod('AV NEW: '.print_r($newvals['allowed_values'], true));
+    $this->$logMethod('AV CHG: '.$changed['allowed_values']);
 
     /************************************************************************
      *
@@ -769,9 +776,9 @@ class ProjectExtraFields extends PMETableViewBase
       }
     }
 
-    $this->logDebug('AFTER OLD '.print_r($oldvals, true));
-    $this->logDebug('AFTER NEW '.print_r($newvals, true));
-    $this->logDebug('AFTER CHG '.print_r($changed, true));
+    $this->$logMethod('AFTER OLD '.print_r($oldvals, true));
+    $this->$logMethod('AFTER NEW '.print_r($newvals, true));
+    $this->$logMethod('AFTER CHG '.print_r($changed, true));
 
     return true;
   }
@@ -792,8 +799,6 @@ class ProjectExtraFields extends PMETableViewBase
    * @param &$newvals Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
-   *
-   * @todo Is this necessary? Just require the project-id not to be empty?
    */
   public function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
@@ -805,20 +810,6 @@ class ProjectExtraFields extends PMETableViewBase
     if (empty($projectId) || $projectId < 0) {
       return false;
     }
-
-    // Oh well. This is the only place this is used and presumably was
-    // purely cosmetic.
-
-    // // insert the beast with the next available field id
-    // $index = mySQL::selectFirstHoleFromTable(self::TABLE_NAME, 'FieldIndex',
-    //                                          "`project_id` = ".$projectId,
-    //                                          $pme->dbh);
-
-    // if ($index === false) {
-    //   return false;
-    // }
-
-    // $newvals['FieldIndex'] = $index;
 
     return true;
   }
