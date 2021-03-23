@@ -2197,8 +2197,9 @@ class phpMyEdit
 		 * multi-select stuff is at least confusing. Also, if there is
 		 * only one possible value, then this value must not be changed.
 		 */
+		$select = $this->fdd[$k]['select']?:null;
 		$multiValues = false;
-		if (empty($this->fdd[$k]['select']) || stristr("MCOD", $this->fdd[$k]['select']) !== false) {
+		if (empty($select) || stristr("MCOD", $select) !== false) {
 			$vals        = false;
 			$groups      = false;
 			$data        = false;
@@ -2244,8 +2245,7 @@ class phpMyEdit
 			} else if (file_exists($php)) {
 				echo include($php);
 			}
-		} elseif ($vals !== false &&
-				  (stristr("MCOD", $this->fdd[$k]['select']) !== false || $multiValues)) {
+		} elseif ($vals !== false && (stristr("MCOD", $select) !== false || $multiValues)) {
 			$multiple = $this->col_has_multiple($k);
 			$readonly = $this->disabledTag($k) || count($vals) == 0;
 			$selected = @$row["qf$k"];
@@ -2299,13 +2299,14 @@ class phpMyEdit
 			$len_props = '';
 			$maxlen = intval($this->fdd[$k]['maxlen']);
 			$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60);
+			$type = $select == 'N' ? 'number' : 'text';
 			if ($size > 0) {
 				$len_props .= ' size="'.$size.'"';
 			}
 			if ($maxlen > 0) {
 				$len_props .= ' maxlength="'.$maxlen.'"';
 			}
-			echo '<input class="',$css_class_name,'" type="text"';
+			echo '<input class="',$css_class_name,'" type="',$type,'"';
 			if ($help) {
 				echo ' title="'.$this->enc($help).'" ';
 			}
