@@ -56,8 +56,20 @@ class ProjectExtraFields extends PMETableViewBase
     [
       'table' => self::PROJECTS_TABLE,
       'entity' => Entities\Project::class,
+      'flags' => PMETableViewBase::JOIN_READONLY,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
+    ],
+    [
+      'table' => self::DATA_TABLE,
+      'entity' => Entities\ProjectExtraFieldDatum::class,
+      'flags' => PMETableViewBase::JOIN_READONLY,
+      'identifier' => [
+        'field_id' => 'id',
+        'project_id' => 'project_id',
+        'musician_id' => false,
+      ],
+      'column' => 'musician_id',
     ],
   ];
 
@@ -247,11 +259,24 @@ class ProjectExtraFields extends PMETableViewBase
       'tab'      => [ 'id' => 'tab-all' ],
       'name' => $this->l->t('Field-Name'),
       'css' => [ 'postfix' => ' field-name' ],
+      'input' => 'M',
       'select' => 'T',
       'maxlen' => 29,
       'size' => 30,
       'sort' => true,
       'tooltip' => $this->toolTipsService['extra-fields-field-name'],
+    ];
+
+    $opts['fdd']['usage'] = [
+      'tab' => [ 'id' => 'definition' ],
+      'name' => $this->l->t('Usage'),
+      'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
+      'css' => [ 'postfix' => ' extra-fields-usage', ],
+      'select' => 'N',
+      'align' => 'right',
+      'input' => 'V',
+      'sort' => true,
+      'tooltip' => $this->toolTipsService['extra-fields-usage'],
     ];
 
     if ($this->showDisabled) {
@@ -263,16 +288,16 @@ class ProjectExtraFields extends PMETableViewBase
         'maxlen'   => 1,
         'sort'     => true,
         'escape'   => false,
+        'align'    => 'center',
         'sqlw'     => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ 1 => '' ],
         'values2|LVFD' => [ 1 => $this->l->t('true'),
                             0 => $this->l->t('false') ],
         'default'  => false,
-        'tooltip'  => $this->toolTipsService['extra-fields-disabled']
+        'tooltip'  => $this->toolTipsService['extra-fields-disabled'],
       ];
     }
 
-    $multiplicityIndex = count($opts['fdd']);
     $opts['fdd']['multiplicity'] =[
       'name'    => $this->l->t('Multiplicity'),
       'select'  => 'D',
@@ -304,7 +329,6 @@ class ProjectExtraFields extends PMETableViewBase
       'css' => ['postfix' => ' allowed-values' ],
       'select' => 'T',
       'php' => function($value, $op, $field, $row, $recordId, $pme) {
-        //$this->logInfo('ALLOWED SHOW '.print_r($row, true));
         $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
         $dataType = $row[$this->queryField('data_type', $pme->fdd)];
         return $this->showAllowedValues($value, $op, $recordId, $multiplicity, $dataType);
@@ -312,7 +336,7 @@ class ProjectExtraFields extends PMETableViewBase
       'maxlen' => 1024,
       'size' => 30,
       'sort' => true,
-      'display|LF' => [ 'popup' => 'data' ],
+      'display|LF' => [ 'popup' => 'data', ],
       'tooltip' => $this->toolTipsService['extra-fields-allowed-values'],
     ];
 
@@ -325,13 +349,13 @@ class ProjectExtraFields extends PMETableViewBase
         $protoRecord = array_merge(
           $this->extraFieldsService->allowedValuesPrototype(),
           [
-            'key' => $recordId,
+            'key' => $recordId > 0 ? $recordId : false,
             'label' => $row['qf'.$nameIdx],
             'tooltip' => $row['qf'.$tooltipIdx]
           ]);
         return $this->showAllowedSingleValue($value, $op, $fdd[$field]['tooltip'], $protoRecord);
       },
-      'options' => 'ACDPV',
+      'options' => 'ACDPV', // but not in list-view
       'select' => 'T',
       'maxlen' => 29,
       'size' => 30,
@@ -378,6 +402,18 @@ class ProjectExtraFields extends PMETableViewBase
       'php|LFDV' => function($value, $op, $field, $row, $recordId, $pme) {
         $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
         $dataType = $row[$this->queryField('data_type', $pme->fdd)];
+        if ($multiplicity !== 'simple' && !empty($value)) {
+          // fetch the value from the allowed-values data
+          $allowed = $row[$this->queryField('allowed_values', $pme->fdd)];
+          $allowed = $this->extraFieldsService->explodeAllowedValues($allowed);
+          $defaultRow = $this->extraFieldsService->findAllowedValue($value, $allowed);
+          $this->logInfo('DEFAULT '.$value.' '.print_r($defaultRow, true));
+          if (!empty($defaultRow['data'])) {
+            $value = $defaultRow['data'];
+          } else {
+            $value = null;
+          }
+        }
         switch ($multiplicity) {
         case 'groupofpeople':
         case 'groupsofpeople':
@@ -386,10 +422,14 @@ class ProjectExtraFields extends PMETableViewBase
         default:
           switch ($dataType) {
           case 'boolean':
-            $value = $value ? $this->l->t('true') : $this->l->t('false');
+            $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
+            break;
           case 'deposit':
           case 'service-fee':
             $value = $this->moneyValue($value);
+            break;
+          default:
+            break;
           }
         }
         $html = '<span class="';
@@ -414,16 +454,16 @@ class ProjectExtraFields extends PMETableViewBase
       'values' => [
         'table' => "SELECT id AS field_id,
     JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key') AS 'key',
-    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.value') AS 'value',
+    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.data') AS 'data',
     JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.label') AS 'label',
     JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.flags') AS 'flags'
   FROM `ProjectExtraFields`
   JOIN `numbers` n
-    ON JSON_LENGTH(allowed_values) >= n.n",
-        'column' => 'value',
+    ON JSON_LENGTH(allowed_values) > n.n",
+        'column' => 'key',
         'description' => 'label',
-        'filters' => '$table.`field_id` = $record_id AND $table.`flags` = \'deleted\'',
-        'join' => '$join_table.$join_column = $main_table.`default_value`'
+        'filters' => '$table.`field_id` = $record_id AND NOT $table.`flags` = \'deleted\'',
+        'join' => '$join_table.$join_column = $main_table.`default_value`',
       ],
       'maxlen' => 29,
       'size' => 30,
@@ -435,12 +475,23 @@ class ProjectExtraFields extends PMETableViewBase
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'CPA',
-      'sql' => 'PMEtable0.`default_value`',
+      'sql' => 'IF($main_table.default_value IS NULL OR LENGTH($main_table.default_value) < 36, 0, $main_table.default_value)',
       'css' => [ 'postfix' => ' default-single-value' ],
       'select' => 'O',
-      'values2' => [ '0' => $this->l->t('false'),
-                     '1' => $this->l->t('true') ],
+      //'values2' => [ '0' => $this->l->t('false'), '1' => $this->l->t('true') ],
       'default' => '0',
+      'values' => [
+        'table' => "SELECT id AS field_id,
+    IFNULL(JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key'), 0) AS 'key',
+    IF(JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key') IS NULL, '".$this->l->t('no')."', '".$this->l->t('yes')."') AS 'label'
+  FROM `ProjectExtraFields`
+  JOIN `numbers` n
+    ON n.n < 2",
+        'column' => 'key',
+        'description' => 'label',
+        'filters' => '$table.`field_id` = $record_id',
+        'join' => '$join_table.$join_column = $main_table.`default_value`',
+      ],
       'maxlen' => 29,
       'size' => 30,
       'sort' => false,
@@ -566,20 +617,22 @@ class ProjectExtraFields extends PMETableViewBase
       $opts['filters'][] = 'PMEtable0.project_id = '.$this->projectId;
     }
 
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
+    $opts['triggers']['select']['data'][] =
+      $opts['triggers']['delete']['data'][] = function(&$pme, $op, $step, &$row) use ($opts) {
+        $km = $pme->fdn['multiplicity'];
+        $kd = $pme->fdn['data_type'];
+        $cssPostfix = 'multiplicity-'.$row['qf'.$km].' data-type-'.$row['qf'.$kd];
+        $pme->fdd[$km]['css']['postfix'] .= ' '.$cssPostfix;
+        return true;
+      };
 
-    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertTrigger' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
+    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
 
     $opts['triggers']['delete']['before'][]  = [ $this, 'beforeDeleteTrigger' ];
-
-    // $opts['triggers']['filter']['pre'][]  =
-    //   $opts['triggers']['update']['pre'][]  =
-    //   $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
-
-    // $opts['triggers']['insert']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
-    // $opts['triggers']['update']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
-    // $opts['triggers']['delete']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
@@ -591,6 +644,9 @@ class ProjectExtraFields extends PMETableViewBase
   }
 
   /**
+   * Cleanup "trigger" which relocates several virtual inputs to their
+   * proper destination columns.
+   *
    * phpMyEdit calls the trigger (callback) with the following arguments:
    *
    * @param $pme The phpMyEdit instance
@@ -659,6 +715,7 @@ class ProjectExtraFields extends PMETableViewBase
         $maxData = $newvals['allowed_values_single'][0];
         $maxData['limit'] = $max;
       } else {
+        // @todo ???
         $maxData = [
           'key' => 'max',
           'label' => 'group',
@@ -710,17 +767,15 @@ class ProjectExtraFields extends PMETableViewBase
 
     if (!is_array($newvals['allowed_values'])) {
       // textfield
-      $allowed = $this->extraFieldsService->explodeAllowedValues($newvals['allowed_values']);
+      $allowed = $this->extraFieldsService->explodeAllowedValues($newvals['allowed_values'], false);
     } else {
       $allowed = $newvals['allowed_values'];
       unset($allowed[-1]); // remove dummy data
     }
 
-    // make unused keys unique @todo make it a uuid
-    //self::allowedValuesUniqueKeys($allowed, $pme->rec);
-
-    //error_log('trigger '.print_r($allowed, true));
-    $newvals['allowed_values'] = $this->extraFieldsService->implodeAllowedValues($allowed);
+    $newvals['allowed_values'] =
+      $this->extraFieldsService->explodeAllowedValues(
+        $this->extraFieldsService->implodeAllowedValues($allowed), false);
     if ($oldvals['allowed_values'] !== $newvals['allowed_values']) {
       $changed[] = 'allowed_values';
     }
@@ -733,7 +788,8 @@ class ProjectExtraFields extends PMETableViewBase
      */
     $key = array_search('default_single_value', $changed);
     if ($newvals['multiplicity'] == 'single') {
-      $newvals['default_value'] = $newvals['default_single_value'];
+      $value = $newvals['default_single_value'];
+      $newvals['default_value'] = strlen($value) < 36 ? null : $value;
       if ($key !== false) {
         $changed[] = 'default_value';
       }
@@ -780,37 +836,6 @@ class ProjectExtraFields extends PMETableViewBase
     $this->$logMethod('AFTER OLD '.print_r($oldvals, true));
     $this->$logMethod('AFTER NEW '.print_r($newvals, true));
     $this->$logMethod('AFTER CHG '.print_r($changed, true));
-
-    return true;
-  }
-
-  /**
-   * phpMyEdit calls the trigger (callback) with the following arguments:
-   *
-   * @param $pme The phpMyEdit instance
-   *
-   * @param $op The operation, 'insert', 'update' etc.
-   *
-   * @param $step 'before' or 'after'
-   *
-   * @param $oldvals Self-explanatory.
-   *
-   * @param &$changed Set of changed fields, may be modified by the callback.
-   *
-   * @param &$newvals Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   */
-  public function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
-  {
-    $projectId = $newvals['project_id'];
-    if ($projectId <= 0) {
-      $projectId = $newvals['project_id'] = $this->projectId;
-    }
-
-    if (empty($projectId) || $projectId < 0) {
-      return false;
-    }
 
     return true;
   }
@@ -1027,9 +1052,26 @@ class ProjectExtraFields extends PMETableViewBase
   {
     $this->logDebug('OPTIONS so far: '.print_r($value, true));
     $allowed = $this->extraFieldsService->explodeAllowedValues($value);
-    if ($op === 'display' && count($allowed) == 1) {
-      // "1" means empty (headerline)
-      return '';
+    if ($op === 'display') {
+      if (count($allowed) == 1) {
+        // "1" means empty (headerline)
+        return '';
+      }
+      switch ($multiplicity) {
+        case 'simple':
+          return '';
+        case 'single':
+          switch ($dataType) {
+            case 'boolean':
+              return $this->l->t('true').' / '.$this->l->t('false');
+            case 'deposit':
+            case 'service-fee':
+              return $this->moneyValue(0).' / '.$this->moneyValue($allowed[0]['data']);
+              break;
+            default:
+              return '['.$this->l->t('empty').']'.' / '.$allowed[0]['data'];
+          }
+      }
     }
     $protoCount = count($this->extraFieldsService->allowedValuesPrototype());
     $maxColumns = 0;
