@@ -332,7 +332,13 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
           $columnValues[$columnName] = $value;
           // replace the value by a reference
           $reference = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
-          $this->metaData->setFieldValue($entity, $field, $reference);
+          // try the setter of the entity first
+          $method = 'set'.ucfirst($field);
+          if (is_callable([ $entity, $method ])) {
+            $entity->$method($reference);
+          } else {
+            $this->metaData->setFieldValue($entity, $field, $reference);
+          }
         }
       } else {
         $columnName = $this->metaData->fieldMappings[$field]['columnName'];
@@ -459,7 +465,13 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
         $value = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
       }
     }
-    $meta->setFieldValue($entity, $field, $value);
+    // try first the setter/getter of the entity
+    $method = 'set'.ucfirst($field);
+    if (is_callable([ $entity, $method ])) {
+      $entity->$method($value);
+    } else {
+      $meta->setFieldValue($entity, $field, $value);
+    }
   }
 
   /**
