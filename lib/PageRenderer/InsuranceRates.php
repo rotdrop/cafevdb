@@ -170,9 +170,7 @@ class InsuranceRates extends PMETableViewBase
       'sort'     => $sort,
     ];
 
-    $opts['fdd']['due_date'] = $this->defaultFDD['date'];
-    $opts['fdd']['due_date']['name'] = $this->l->t('Due Date');
-    $opts['fdd']['due_date']['sort'] = $sort;
+    $opts['fdd']['due_date'] = $this->defaultFDD['due_date'];
 
     $opts['fdd']['policy_number'] = [
       'name' => $this->l->t('Policy Number'),

@@ -269,6 +269,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     $opts['fdd']['usage'] = [
       'tab' => [ 'id' => 'definition' ],
+      'tab' => [ 'id' => 'advanced' ],
       'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
       'css' => [ 'postfix' => ' extra-fields-usage', ],
@@ -281,7 +282,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
-        'tab'      => [ 'id' => 'definition' ],
+        'tab' => [ 'id' => 'advanced' ],
         'name'     => $this->l->t('Disabled'),
         'css'      => [ 'postfix' => ' extra-field-disabled' ],
         'select'   => 'C',
@@ -300,6 +301,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     $opts['fdd']['multiplicity'] =[
       'name'    => $this->l->t('Multiplicity'),
+      'tab' => [ 'id' => 'definition' ],
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
@@ -501,6 +503,9 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-fields-default-single-value'],
     ];
 
+    $opts['fdd']['due_date'] = $this->defaultFDD['due_date'];
+    $opts['fdd']['due_date']['tab'] = [ 'id' => 'definition' ];
+
     $tooltipIdx = count($opts['fdd']);
     $opts['fdd']['tool_tip'] = [
       'tab'      => [ 'id' => 'display' ],
@@ -569,8 +574,9 @@ class ProjectExtraFields extends PMETableViewBase
 
       $opts['fdd']['encrypted'] = [
         'name' => $this->l->t('Encrypted'),
+        'tab' => [ 'id' => 'advanced' ],
         'css' => [ 'postfix' => ' encrypted' ],
-        'sqlw'     => 'IF($val_qas = "", 0, 1)',
+        'sqlw' => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
         'values2|LVFD' => [ 1 => $this->l->t('true'),
                             0 => $this->l->t('false') ],
@@ -585,6 +591,7 @@ class ProjectExtraFields extends PMETableViewBase
       $cloudGroups = $this->groupManager()->search('');
       $opts['fdd']['readers'] = [
         'name' => $this->l->t('Readers'),
+        'tab' => [ 'id' => 'advanced' ],
         'css' => [ 'postfix' => ' readers user-groups' ],
         'select' => 'M',
         'values' => $cloudGroups,
@@ -596,6 +603,7 @@ class ProjectExtraFields extends PMETableViewBase
 
       $opts['fdd']['writers'] = [
         'name' => $this->l->t('Writers'),
+        'tab' => [ 'id' => 'advanced' ],
         'css' => [ 'postfix' => ' writers chosen-dropup_ user-groups' ],
         'select' => 'M',
         'values' => $cloudGroups,

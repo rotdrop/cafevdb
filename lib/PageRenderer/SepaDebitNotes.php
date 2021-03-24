@@ -221,9 +221,8 @@ class SepaDebitNotes extends PMETableViewBase
       ]);
 
     $opts['fdd']['due_date'] = array_merge(
-      $this->defaultFDD['date'],
+      $this->defaultFDD['due_date'],
       [
-        'name' => $this->l->t('Due Date'),
         'input' => 'R',
         'tooltip' => $this->toolTipsService['debit-note-due-date'],
       ]);
