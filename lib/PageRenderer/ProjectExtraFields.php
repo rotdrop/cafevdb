@@ -409,7 +409,6 @@ class ProjectExtraFields extends PMETableViewBase
           $allowed = $row[$this->queryField('allowed_values', $pme->fdd)];
           $allowed = $this->extraFieldsService->explodeAllowedValues($allowed);
           $defaultRow = $this->extraFieldsService->findAllowedValue($value, $allowed);
-          $this->logInfo('DEFAULT '.$value.' '.print_r($defaultRow, true));
           if (!empty($defaultRow['data'])) {
             $value = $defaultRow['data'];
           } else if (!empty($defaultRow['label'])) {
