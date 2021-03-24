@@ -28,6 +28,7 @@ use OCP\IL10N;
 
 use Doctrine\ORM;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\DBAL\Types\Type;
 
 use OCA\CAFEVDB\Database\EntityManager;
 
