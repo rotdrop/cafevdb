@@ -180,8 +180,6 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use OCA\CAFEVDB\Database\EntityManager;
 
-$entityManager = \OC::$server->query(EntityManager::class);
-
 // use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 // use \Doctrine\Common\Collections\Criteria;
 
@@ -206,12 +204,15 @@ $entityManager = \OC::$server->query(EntityManager::class);
 //                               [ 'id' => 'indEX' ],
 //                            );
 
-
 // $blah = [];
 // foreach ($musicians as $musician) {
 //   $blah[] = $musician['surName'].', '.$musician['firstName'].' '.count($musician['projectParticipation']);
 // }
 
 // throw new \Exception('Blah '.print_r(array_keys($musicians), true).' '.implode(' / ', $blah));
+
+/** @var EntityManager */
+$entityManager = \OC::$server->query(EntityManager::class);
+$entityManager->decorateClassMetadata(false);
 
 return ConsoleRunner::createHelperSet($entityManager);

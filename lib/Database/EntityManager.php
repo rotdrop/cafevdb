@@ -106,6 +106,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var bool */
   private $typesBound;
 
+  /** @var bool */
+  private $decorateClassMetadata = true;
+
   // @@todo catch failures, allow construction without database for
   // initial setup.
   public function __construct(
@@ -134,6 +137,7 @@ class EntityManager extends EntityManagerDecorator
     if ($this->connected()) {
       $this->registerTypes();
     }
+    $this->decorateClassMetadata = true;
   }
 
   public function getConnection():?DatabaseConnection
@@ -592,11 +596,24 @@ class EntityManager extends EntityManagerDecorator
    */
   public function getClassMetadata($className)
   {
-    return new ClassMetadataDecorator(
-      $this->entityManager->getClassMetadata($className)
-      , $this
-      , $this->logger
-      , $this->l);
+    if ($this->decorateClassMetadata) {
+      return new ClassMetadataDecorator(
+        $this->entityManager->getClassMetadata($className)
+        , $this
+        , $this->logger
+        , $this->l);
+    } else {
+      return $this->entityManager->getClassMetadata($className);
+    }
+  }
+
+  /**
+   * Switch metadata-decoration on and off. A hack. The console
+   * application needs it switched off.
+   */
+  public function decorateClassMetadata(bool $onOff)
+  {
+    $this->decorateClassMetadata = $onOff;
   }
 
   private function createTableLookup()
