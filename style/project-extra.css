@@ -145,7 +145,8 @@ table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.allowed-
   display:none;
 }
 
-table.pme-main td.pme-cell span.align-right {
+table.pme-main td.pme-cell span.align-right,
+table.pme-main td.pme-value span.align-right {
   float:right;
 }
 
