@@ -269,7 +269,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     $opts['fdd']['usage'] = [
       'tab' => [ 'id' => 'definition' ],
-      'name' => $this->l->t('Usage'),
+      'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
       'css' => [ 'postfix' => ' extra-fields-usage', ],
       'select' => 'N',
