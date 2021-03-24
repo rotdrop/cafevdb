@@ -136,7 +136,7 @@ class Musician implements \ArrayAccess
   /**
    * @var \DateTime|null
    *
-   * @ORM\Column(type="date", nullable=true)
+   * @ORM\Column(type="date_immutable", nullable=true)
    */
   private $birthday;
 

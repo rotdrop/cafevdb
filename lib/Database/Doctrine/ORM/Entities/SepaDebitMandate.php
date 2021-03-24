@@ -218,7 +218,7 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get lastUsedDate.
    *
-   * @return \DateTime|null
+   * @return \DateTimeImmutable|null
    */
   public function getLastUsedDate():\DateTimeImmutable
   {
