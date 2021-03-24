@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-03-24 11:07+0100\n"
+"POT-Creation-Date: 2021-03-24 14:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1471,18 +1471,18 @@ msgstr ""
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:321
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:372
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:494
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:322
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:373
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:495
 msgid "Foreign keys as principle keys cannot be composite"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:383
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:384
 #, php-format
 msgid "Missing value and no generator for identifier field: %s"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:450
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:451
 msgid "Association is not simple."
 msgstr ""
 
@@ -6781,17 +6781,34 @@ msgstr ""
 msgid "Unable to download table in format \"{format}\" from \"{url}\": "
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:512
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:492
+msgid "invalid data \"{value}\""
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:497
+msgid ""
+"The following required fields are empty or contain otherwise invalid data:"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:501
+msgid "Please add the missing data!"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:502
+msgid "Missing Input Data"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:554
 msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1027
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1068
 msgid "#columns"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1036
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1077
 msgid "#rows"
 msgstr ""
 
@@ -8939,6 +8956,57 @@ msgstr ""
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/PhoneNumberService.php:74
 #, php-format
 msgid "toll free"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:85
+#, php-format
+msgid "archive"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:145
+#, php-format
+msgid "concert"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:243
+#, php-format
+msgid "extra field type boolean"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:243
+#, php-format
+msgid "extra field type deposit"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:85
+#, php-format
+msgid "preview"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:85
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:145
+#, php-format
+msgid "rehearsals"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:115
+#, php-format
+msgid "sub-page"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:230
+#, php-format
+msgid "template"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:230
+#, php-format
+msgid "temporary"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:85
+#, php-format
+msgid "trashbin"
 msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235

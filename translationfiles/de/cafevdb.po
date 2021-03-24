@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-03-24 11:05+0100\n"
-"PO-Revision-Date: 2021-03-24 11:05+0100\n"
+"POT-Creation-Date: 2021-03-24 13:59+0100\n"
+"PO-Revision-Date: 2021-03-24 14:00+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1551,18 +1551,18 @@ msgstr "SEPA-Lastschriftmandat aus der Datenbank gelöscht."
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr "Kann das SEPA-Lastschriftmandat nicht löschen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:321
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:372
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:494
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:322
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:373
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:495
 msgid "Foreign keys as principle keys cannot be composite"
 msgstr "Fremde Schlüssel as Primärschlüssel können nicht zusammengesetzt sein"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:383
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:384
 #, php-format
 msgid "Missing value and no generator for identifier field: %s"
 msgstr "Fehlender Wert oder Wert-Generator für Id-Feld: %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:450
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:451
 msgid "Association is not simple."
 msgstr "Die Verknüpfung ist nicht \"einfach\"."
 
@@ -7622,7 +7622,24 @@ msgstr "Randleiste mit Anwendungs- und Einstellungs-Menü einblenden."
 msgid "Unable to download table in format \"{format}\" from \"{url}\": "
 msgstr "Kann die Tabelle nicht als \"{format}\" von \"{url}\" laden: "
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:512
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:492
+msgid "invalid data \"{value}\""
+msgstr "ungültige Eingabedaten: \"{value}\""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:497
+msgid ""
+"The following required fields are empty or contain otherwise invalid data:"
+msgstr "Die folgenden erforderlichen Eingabefelder sind leer oder enthalten ungültige Eingabedaten:"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:501
+msgid "Please add the missing data!"
+msgstr "Bitte die fehlenden Daten ergänzen!"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:502
+msgid "Missing Input Data"
+msgstr "Fehlende Eingabedaten"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:554
 msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
@@ -7631,11 +7648,11 @@ msgstr ""
 "es keine spezifischeren Fehlermeldungen. Tut uns leid."
 
 # #Spalten
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1027
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1068
 msgid "#columns"
 msgstr "#Spalten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1036
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1077
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -9951,6 +9968,57 @@ msgstr "Aushilfe"
 msgid "toll free"
 msgstr "kostenlos"
 
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:85
+#, php-format
+msgid "archive"
+msgstr "Archiv"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:145
+#, php-format
+msgid "concert"
+msgstr "Konzert"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:243
+#, php-format
+msgid "extra field type boolean"
+msgstr "Wahrheitswert"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:243
+#, php-format
+msgid "extra field type deposit"
+msgstr "Anzahlung"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:85
+#, php-format
+msgid "preview"
+msgstr "Vorschau"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:85
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:145
+#, php-format
+msgid "rehearsals"
+msgstr "Proben"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:115
+#, php-format
+msgid "sub-page"
+msgstr "Unterseite"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:230
+#, php-format
+msgid "template"
+msgstr "Vorlage"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:230
+#, php-format
+msgid "temporary"
+msgstr "zeitweilig"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:85
+#, php-format
+msgid "trashbin"
+msgstr "Papierkorb"
+
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BIRTHDAY"
@@ -10182,9 +10250,6 @@ msgstr "ZUSATZKOSTEN"
 #~ msgid "passive"
 #~ msgstr "passiv"
 
-#~ msgid "temporary"
-#~ msgstr "zeitweilig"
-
 #, php-format
 #~ msgid "Unable to fetch musician's personal information for id %d"
 #~ msgstr "Kann die persönlichen Daten des Musiker zur Id %d nicht ermitteln."
@@ -10401,9 +10466,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "Encryption requested but not configured for user \""
 #~ msgstr "Verschlüsselung angefragt aber nicht konfiguriert für den Benutzer "
-
-#~ msgid "extra field type "
-#~ msgstr "Extra-Spalten-Typ"
 
 #~ msgid "Database maintenance succeeded"
 #~ msgstr "Datenbank-Wartung erfolgreich"
@@ -10696,29 +10758,14 @@ msgstr "ZUSATZKOSTEN"
 #~ msgid "Could not connect to data-base server `%s': %s"
 #~ msgstr "Konnte den Datenbank-Server `%s' nicht erreichen: %s"
 
-#~ msgid "preview"
-#~ msgstr "Vorschau"
-
 #~ msgid "Id of Redaxo Preview Category"
 #~ msgstr "Id der Redaxo Vorschau Kategorie"
-
-#~ msgid "archive"
-#~ msgstr "Archiv"
 
 #~ msgid "Id of Redaxo Archive Category"
 #~ msgstr "Id der Redaxo Archiv Kategorie"
 
-#~ msgid "rehearsals"
-#~ msgstr "Proben"
-
 #~ msgid "Id of Redaxo Rehearsals Category"
 #~ msgstr "Id der Redaxo Proben Kategorie"
-
-#~ msgid "trashbin"
-#~ msgstr "Papierkorb"
-
-#~ msgid "template"
-#~ msgstr "Vorlage"
 
 #~ msgid "Id of Redaxo Rehearsals-Module"
 #~ msgstr "Id des Redaxo Proben-Moduls"
