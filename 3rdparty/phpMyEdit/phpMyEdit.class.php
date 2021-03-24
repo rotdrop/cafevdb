@@ -2029,18 +2029,19 @@ class phpMyEdit
 				$selected	= $value;
 				$multiple	= $this->col_has_multiple($k);
 				$readonly	= $this->disabledTag($k);
+				$mandatory  = $this->mandatory($k);
 				$strip_tags = true;
 				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 					echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
 											   $css_class_name, $vals, $groups, $titles, $data,
 											   $selected,
-											   $multiple, $readonly,
+											   $multiple, $readonly, $mandatory,
 											   $strip_tags, $escape, NULL, $helptip);
 				} else {
 					echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
 										   $css_class_name, $vals, $groups, $titles, $data,
-										   $selected, $multiple, $readonly,
+										   $selected, $multiple, $readonly, $mandatory,
 										   $strip_tags, $escape, NULL, $helptip);
 				}
 			} elseif (isset ($this->fdd[$k]['textarea'])) {
@@ -2069,7 +2070,7 @@ class phpMyEdit
 				echo ($this->mandatory($k) ? ' required' : '');
 
 				$readonly = $this->disabledTag($k);
-				if ($readonly === false && $vals) {
+				if ($readonly === false && $this->col_has_values($k)) {
 					// force read-only if single value.
 					$readonly = $this->display['readonly'];
 				}
@@ -2285,6 +2286,7 @@ class phpMyEdit
 		} elseif ($vals !== false && (stristr("MCOD", $select) !== false || $multiValues)) {
 			$multiple = $this->col_has_multiple($k);
 			$readonly = $this->disabledTag($k) || count($vals) == 0;
+			$mandatory = $this->mandatory($k);
 			$selected = @$row["qf$k"];
 			if ($selected === null) {
 				$selected = @$this->fdd[$k]['default'];
@@ -2314,12 +2316,12 @@ class phpMyEdit
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
 										   $css_class_name, $vals, $groups, $titles, $data,
-										   $selected, $multiple, $readonly,
+										   $selected, $multiple, $readonly, $mandatory,
 										   $strip_tags, $escape, NULL, $help);
 			} else {
 				echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
 									   $css_class_name, $vals, $groups, $titles, $data,
-									   $selected, $multiple, $readonly,
+									   $selected, $multiple, $readonly, $mandatory,
 									   $strip_tags, $escape, NULL, $help);
 			}
 		} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
@@ -2940,6 +2942,7 @@ class phpMyEdit
 	 *						keys or multiple values separated by comma)
 	 * @param	multiple	bool for multiple selection
 	 * @param	readonly	boolean or 'readonly' or 'disabled'
+	 * @param	required	bool for required attribute
 	 * @param	strip_tags	bool for stripping tags from values
 	 * @param	escape		bool for HTML escaping values
 	 * @param	js		string to be in the <select >, ususally onchange='..';
@@ -2953,7 +2956,10 @@ class phpMyEdit
 						/* booleans: */
 						$multiple = false,
 						$readonly = false,
-						$strip_tags = false, $escape = true, $js = NULL, $help = NULL)
+						$required = false,
+						$strip_tags = false,
+						$escape = true,
+						$js = NULL, $help = NULL)
 	{
 		$ret = '<select class="'.htmlspecialchars($css).'" name="'.htmlspecialchars($name);
 		if ($multiple) {
@@ -2972,6 +2978,9 @@ class phpMyEdit
 		}
 		if ($readonly !== false) {
 			$ret .= ' disabled="disabled"'; // readonly does not make sense
+		}
+		if ($required !== false) {
+			$ret .= ' required';
 		}
 		$ret .= ' '.$js.">\n";
 		if (! is_array($selected)) {
@@ -3053,6 +3062,7 @@ class phpMyEdit
 	 *						keys or multiple values separated by comma)
 	 * @param	multiple	bool for multiple selection (checkboxes)
 	 * @param	readonly	boolean or 'readonly' or 'disabled'
+	 * @param	required	bool for required attribute
 	 * @param	strip_tags	bool for stripping tags from values
 	 * @param	escape		bool for HTML escaping values
 	 * @param	js		string to be in the <select >, ususally onchange='..';
@@ -3063,8 +3073,13 @@ class phpMyEdit
 							$kt_array = null,
 							$kd_array = null,
 							$selected = null, /* ...) {{{ */
-							/* booleans: */ $multiple = false, $readonly = false,
-							$strip_tags = false, $escape = true, $js = NULL, $help = NULL)
+							/* booleans: */
+							$multiple = false,
+							$readonly = false,
+							$required = false,
+							$strip_tags = false,
+							$escape = true,
+							$js = NULL, $help = NULL)
 	{
 		$ret = '';
 		if ($multiple) {
@@ -3109,6 +3124,9 @@ class phpMyEdit
 			if (!empty($readonly)) {
 				$ret .= ' disabled'; // readonly attribute not supported
 			}
+			if (!empty($required)) {
+				$ret .= ' required';
+			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = htmlspecialchars($value);
 			$ret .= '><span class="pme-label">'.$value.'</span></label>'.$br."\n";
@@ -3130,7 +3148,8 @@ class phpMyEdit
 		};
 		// mce mod end
 		$ret = '<textarea class="'.$css.'" name="'.$name.'"';
-		$ret .= ($this->disabled($k) ? ' disabled' : '');
+		$ret .= $this->disabled($k) ? ' disabled' : '';
+		$ret .= $this->mandatory($k) ? ' required' : '';
 		if (intval($this->fdd[$k]['textarea']['rows']) > 0) {
 			$ret .= ' rows="'.$this->fdd[$k]['textarea']['rows'].'"';
 		}
@@ -3657,7 +3676,7 @@ class phpMyEdit
 			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledgoto).'navfm'.$position,
 									 $this->getCSSclass('goto', $position).$listAllClass,
 									 $kv_array, null, null, null,
-									 (string)$this->fm, false, $disabledgoto,
+									 (string)$this->fm, false, $disabledgoto, false,
 									 false, true);
 		}
 		if ($name == 'goto') {
@@ -3697,7 +3716,7 @@ class phpMyEdit
 			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
 									 $this->getCSSclass('pagerows', $position),
 									 $kv_array, null, null, null,
-									 $selected, false, $disabled,
+									 $selected, false, $disabled, false,
 									 false, false);
 		}
 		if ($name == 'rows_per_page') {
@@ -3850,7 +3869,7 @@ class phpMyEdit
 				echo '</div><div class="'.$css_class_name.'">';
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx', $css_class_name,
 									   $vals, $groups, $titles, $data,
-									   $selected, $multiple || true, $readonly, $strip_tags, $escape);
+									   $selected, $multiple || true, $readonly, false, $strip_tags, $escape);
 				echo '</div>';
 			} elseif (($this->fdd[$fd]['select'] == 'N' ||
 					   $this->fdd[$fd]['select'] == 'T')) {
