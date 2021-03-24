@@ -13,24 +13,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Numbers
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $n;
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Id
+   */
+  private $n;
 
-
-
-    /**
-     * Get n.
-     *
-     * @return int
-     */
-    public function getN()
-    {
-        return $this->n;
-    }
+  /**
+   * Get n.
+   *
+   * @return int
+   */
+  public function getN()
+  {
+    return $this->n;
+  }
 }
