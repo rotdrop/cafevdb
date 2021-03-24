@@ -33,6 +33,7 @@ use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\DBAL\Connection as DatabaseConnection;
 use Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Configuration;
 
@@ -50,12 +51,17 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 
 use OCA\CAFEVDB\Common\Util;
 
-/**Use this as the actual EntityManager in order to be able to
+/**
+ * Use this as the actual EntityManager in order to be able to
  * construct it without a Factory and to define an extension point for
  * later.
+ *
+ * @todo Some of the methods should rather go to a meta-data
+ * decorator.
  */
 class EntityManager extends EntityManagerDecorator
 {
@@ -543,7 +549,7 @@ class EntityManager extends EntityManagerDecorator
   {
     $meta = $this->getClassMetadata(get_class($entity));
     if ($meta->containsForeignIdentifier) {
-      $columnValues = $this->getIdentifierColumnValues($entity, $meta);
+      $columnValues = $meta->getIdentifierColumnValues($entity);
 
       foreach ($meta->associationMappings as $property => $association) {
 
@@ -566,7 +572,7 @@ class EntityManager extends EntityManagerDecorator
           $targetEntity = $association['targetEntity'];
           $targetMeta = $this->getClassMetadata($targetEntity);
 
-          $targetEntityId = $this->extractKeyValues($targetMeta, $columnValues);
+          $targetEntityId = $targetMeta->extractKeyValues($columnValues);
           $reference = $this->getReference($targetEntity, $targetEntityId);
 
           $meta->setFieldValue($entity, $property, $reference);
@@ -581,142 +587,16 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * The related MetaData::getIdentifierValues() function does not
-   * handle recursion into associations. Extract the column values of
-   * primary foreign keys by recursing into the meta-data.
-   *
-   * @param mixed $entity The entity to extract the values from.
-   *
-   * @param \Doctrine\ORM\Mapping\ClassMetadata $meta The meta-data
-   * for the given $entity.
-   *
-   * @return array
-   * ```
-   * [ COLUMN1 => VALUE1, ... ]
-   * ```
-   * The array is indexed by the database column-names.
-   *
-   * @note As a side-effect, $entity is modified if a given foreign
-   * key is just a simple identifier value (like an int) and not en
-   * entity instance or reference.
+   * @todo Get rid of this function, the meta-data class is rather an
+   * internal data structure of Doctrine\ORM.
    */
-  public function getIdentifierColumnValues($entity, $meta)
+  public function getClassMetadata($className)
   {
-    $columnValues = [];
-    foreach ($meta->getIdentifierValues($entity) as $field => $value) {
-      if (isset($meta->associationMappings[$field])) {
-        $association = $meta->associationMappings[$field];
-        $targetEntity = $association['targetEntity'];
-        $targetMeta = $this->getClassMetadata($targetEntity);
-        if (count($association['joinColumns']) != 1) {
-          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
-        }
-        $joinInfo = $association['joinColumns'][0];
-        $columnName = $joinInfo['name'];
-        $targetColumn = $joinInfo['referencedColumnName'];
-        $targetField = $targetMeta->fieldNames[$targetColumn];
-        if ($value instanceof $targetEntity) {
-          $columnValues[$columnName] = $targetMeta->getFieldValue($value, $targetField);
-        } else {
-          // assume this is the column value, not the entity of the foreign key
-          $columnValues[$columnName] = $value;
-          // replace the value by a reference
-          $reference = $this->getReference($targetEntity, [ $targetField => $value ]);
-          $meta->setFieldValue($entity, $field, $reference);
-        }
-      } else {
-        $columnName = $meta->fieldMappings[$field]['columnName'];
-        $columnValues[$columnName] = $value;
-      }
-    }
-    return $columnValues;
-  }
-
-  /**
-   * Generate ids for use with find and self::persist() from database
-   * column values. $columnValues is allowed to contain excess data
-   * which comes in handy when recursing into associations.
-   *
-   * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Class-meta.
-   *
-   * @param array $columnValues The actual identifier values indexed by
-   * the database column names (read: not the entity-class-names, but
-   * the raw column names in the database).
-   *
-   * @return array
-   * ```
-   * [
-   *   PROPERTY => ELEMENTARY_FIELD_VALUE,
-   *   ...
-   * ]
-   * ```
-   * @todo $columnValues sometimes contains raw data-base values as it
-   * is passed down here from code using the legacyx phpMyEdit
-   * stuff. ATM we hack around by converting string values to their
-   * proper PHP values, but this is an ugly hack.
-   */
-  public function extractKeyValues($meta, array $columnValues):array
-  {
-    $entityId = [];
-    foreach ($meta->identifier as $field) {
-      $dbalType = null;
-      if (isset($meta->associationMappings[$field])) {
-        if (count($meta->associationMappings[$field]['joinColumns']) != 1) {
-          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
-        }
-        $columnName = $meta->associationMappings[$field]['joinColumns'][0]['name'];
-      } else {
-        $columnName = $meta->fieldMappings[$field]['columnName'];
-        if (!isset($columnValues[$columnName])) {
-          // possibly an attempt to extract from non-existing field.
-          if ($meta->usesIdGenerator()) {
-            continue;
-          }
-          throw new \Exception(
-            $this->l->t('Missing value and no generator for identifier field: %s', $field));
-        }
-        $dbalType = Type::getType($meta->fieldMappings[$field]['type']);
-      }
-      $value = $columnValues[$columnName];
-      if (!empty($dbalType) && is_string($value)) {
-        $value = $dbalType->convertToPHPValue($value, $this->getPlatform());
-      }
-      $entityId[$field] = $value;
-    }
-    return $entityId;
-  }
-
-  /**
-   * Compute the mapping between entity-properties ("field-name") and
-   * plain SQL column-names. This is somewhat complicated when foreign
-   * keys are used.
-   *
-   *
-   * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $meta Class-meta.
-   *
-   * @return array
-   * ```
-   * [
-   *   PROPERTY => SQL_COLUMN_NAME
-   *   ...
-   * ]
-   * ```
-   */
-  public function identifierColumns($meta):array
-  {
-    $entityId = [];
-    foreach ($meta->identifier as $field) {
-      if (isset($meta->associationMappings[$field])) {
-        if (count($meta->associationMappings[$field]['joinColumns']) != 1) {
-          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
-        }
-        $columnName = $meta->associationMappings[$field]['joinColumns'][0]['name'];
-      } else {
-        $columnName = $meta->fieldMappings[$field]['columnName'];
-      }
-      $entityId[$field] = $columnName;
-    }
-    return $entityId;
+    return new ClassMetadataDecorator(
+      $this->entityManager->getClassMetadata($className)
+      , $this
+      , $this->logger
+      , $this->l);
   }
 
   private function createTableLookup()

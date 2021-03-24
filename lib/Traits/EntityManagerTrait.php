@@ -24,7 +24,9 @@ namespace OCA\CAFEVDB\Traits;
 
 use Doctrine\Common\Collections;
 use Doctrine\ORM\EntityRepository;
+
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator as ClassMetadata;
 
 /**Database EntityManager short-cuts.
  *
@@ -360,7 +362,8 @@ trait EntityManagerTrait {
    *
    * @return array The class meta-data
    */
-  protected function classMetadata($entityClassName = null) {
+  protected function classMetadata(?string $entityClassName = null):ClassMetadata
+  {
     empty($entityClassName) && ($entityClassName = $this->entityClassName);
     if (empty($entityClassName)) {
       return null;
@@ -376,29 +379,6 @@ trait EntityManagerTrait {
     return $this->entityManager->property($columnName);
   }
 
-  /**
-   * @see \OCA\CAFEVDB\Database\EntityManager::extractKeyValues
-   */
-  public function extractKeyValues(\Doctrine\ORM\Mapping\ClassMetadata $meta, array $columnValues):array
-  {
-    return $this->entityManager->extractKeyValues($meta, $columnValues);
-  }
-
-  /**
-   * @see \OCA\CAFEVDB\Database\EntityManager::identifierColumns
-   */
-  public function identifierColumns(\Doctrine\ORM\Mapping\ClassMetadata $meta):array
-  {
-    return $this->entityManager->identifierColumns($meta);
-  }
-
-  /**
-   * @see \OCA\CAFEVDB\Database\EntityManager::getIdentifierColumnValues
-   */
-  public function getIdentifierColumnValues($entity, \Doctrine\ORM\Mapping\ClassMetadata $meta):array
-  {
-    return $this->entityManager->getIdentifierColumnValues($entity, $meta);
-  }
 }
 
 // Local Variables: ***
