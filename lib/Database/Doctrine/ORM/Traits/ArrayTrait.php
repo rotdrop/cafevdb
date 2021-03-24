@@ -76,7 +76,7 @@ trait ArrayTrait
     }
     $method = self::methodName('set', $offset);
     if (!method_exists($this, $method)) {
-      throw new \Exception('Method '.$method.' does not exist, please implement it.');
+      throw new \Exception('Method '.$method.' does not exist in '.__CLASS__.', please implement it.');
     }
     $this->$method($value);
   }
