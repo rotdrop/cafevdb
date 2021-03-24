@@ -327,6 +327,7 @@ class ProjectExtraFields extends PMETableViewBase
       'name' => $this->l->t('Allowed Values'),
       'css|LF' => [ 'postfix' => ' allowed-values hide-subsequent-lines' ],
       'css' => ['postfix' => ' allowed-values' ],
+      'css|VD' => [ 'postfix' => ' allowed-values allowed-values-single' ],
       'select' => 'T',
       'php' => function($value, $op, $field, $row, $recordId, $pme) {
         $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
@@ -355,7 +356,7 @@ class ProjectExtraFields extends PMETableViewBase
           ]);
         return $this->showAllowedSingleValue($value, $op, $fdd[$field]['tooltip'], $protoRecord);
       },
-      'options' => 'ACDPV', // but not in list-view
+      'options' => 'ACP', // but not in list-view
       'select' => 'T',
       'maxlen' => 29,
       'size' => 30,
@@ -394,6 +395,7 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['default_value'] = [
       'name' => $this->l->t('Default Value'),
       'css' => [ 'postfix' => ' default-value' ],
+      'css|VD' =>  [ 'postfix' => ' default-value default-single-value' ],
       'select' => 'T',
       'maxlen' => 29,
       'size' => 30,
@@ -410,6 +412,8 @@ class ProjectExtraFields extends PMETableViewBase
           $this->logInfo('DEFAULT '.$value.' '.print_r($defaultRow, true));
           if (!empty($defaultRow['data'])) {
             $value = $defaultRow['data'];
+          } else if (!empty($defaultRow['label'])) {
+            $value = $defaultRow['label'];
           } else {
             $value = null;
           }
@@ -448,7 +452,7 @@ class ProjectExtraFields extends PMETableViewBase
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'CPA',
-      'sql' => 'PMEtable0.`default_value`',
+      'sql' => '$main_table.default_value',
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D',
       'values' => [
@@ -474,7 +478,7 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['default_single_value'] = [
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
-      'options' => 'CPA',
+      'options' => 'ACP',
       'sql' => 'IF($main_table.default_value IS NULL OR LENGTH($main_table.default_value) < 36, 0, $main_table.default_value)',
       'css' => [ 'postfix' => ' default-single-value' ],
       'select' => 'O',
@@ -703,31 +707,16 @@ class ProjectExtraFields extends PMETableViewBase
 
     /************************************************************************
      *
-     * Move the data from MaximumGroupSize to
-     * allowed_values. Plural is "misleading" here, of course ;)
-     *
+     * Move the data from MaximumGroupSize to allowed_values and set
+     * the name of the field as allowed_values label.
      */
-    $tag = "maximum_group_size";
+    $tag = 'maximum_group_size';
     $key = array_search($tag, $changed);
     if ($newvals['multiplicity'] == 'groupofpeople') {
-      $max = $newvals[$tag];
-      if ($op == 'update' && !empty($newvals['allowed_values_single'][0])) {
-        $maxData = $newvals['allowed_values_single'][0];
-        $maxData['limit'] = $max;
-      } else {
-        // @todo ???
-        $maxData = [
-          'key' => 'max',
-          'label' => 'group',
-          'data' => null,
-          'tooltip' => null,
-          'flags' => 'active',
-          'limit' => $max,
-        ];
-      }
-      $newvals['allowed_values'] = [ $maxData ];
-      if ($key !== false) {
-        $changed[] = 'allowed_values';
+      $newvals['allowed_values_single'][0]['limit'] = $newvals[$tag];
+      $newvals['allowed_values_single'][0]['label'] = $newvals['name'];
+      if ($key !== false || array_search($changed['name']) !== false) {
+        $changed[] = 'allowed_values_single';
       }
     }
     unset($newvals[$tag]);
@@ -735,6 +724,7 @@ class ProjectExtraFields extends PMETableViewBase
     if ($key !== false) {
       unset($changed[$key]);
     }
+    $changed = array_values(array_unique($changed));
 
     $this->$logMethod('MAX OLD: '.print_r($oldvals['allowed_values'], true));
     $this->$logMethod('MAX NEW: '.print_r($newvals['allowed_values'], true));
@@ -747,7 +737,8 @@ class ProjectExtraFields extends PMETableViewBase
      *
      */
     $key = array_search('allowed_values_single', $changed);
-    if ($newvals['multiplicity'] === 'single') {
+    if ($newvals['multiplicity'] == 'single'
+        || $newvals['multiplicity'] == 'groupofpeople') {
       $newvals['allowed_values'] = $newvals['allowed_values_single'];
       if ($key !== false) {
         $changed[] = 'allowed_values';
@@ -758,6 +749,7 @@ class ProjectExtraFields extends PMETableViewBase
     if ($key !== false) {
       unset($changed[$key]);
     }
+    $changed = array_values(array_unique($changed));
 
     /************************************************************************
      *
@@ -779,6 +771,7 @@ class ProjectExtraFields extends PMETableViewBase
     if ($oldvals['allowed_values'] !== $newvals['allowed_values']) {
       $changed[] = 'allowed_values';
     }
+    $changed = array_values(array_unique($changed));
 
     /************************************************************************
      *
@@ -799,7 +792,7 @@ class ProjectExtraFields extends PMETableViewBase
     if ($key !== false) {
       unset($changed[$key]);
     }
-
+    $changed = array_values(array_unique($changed));
 
     $this->$logMethod('AV OLD: '.print_r($oldvals['allowed_values'], true));
     $this->$logMethod('AV NEW: '.print_r($newvals['allowed_values'], true));
@@ -820,6 +813,7 @@ class ProjectExtraFields extends PMETableViewBase
     if ($key !== false) {
       unset($changed[$key]);
     }
+    $changed = array_values(array_unique($changed));
 
     if (!empty($newvals['tool_tip'])) {
       $newvals['tool_tip'] = $this->fuzzyInput->purifyHTML($newvals['tool_tip']);
@@ -832,6 +826,7 @@ class ProjectExtraFields extends PMETableViewBase
         }
       }
     }
+    $changed = array_values(array_unique($changed));
 
     $this->$logMethod('AFTER OLD '.print_r($oldvals, true));
     $this->$logMethod('AFTER NEW '.print_r($newvals, true));
