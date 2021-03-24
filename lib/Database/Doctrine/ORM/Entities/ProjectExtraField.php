@@ -158,6 +158,20 @@ class ProjectExtraField implements \ArrayAccess
   }
 
   /**
+   * Set id.
+   *
+   * @param int $id
+   *
+   * @return ProjectExtraField
+   */
+  public function setId(int $id):ProjectExtraField
+  {
+    $this->id = $id;
+
+    return $this;
+  }
+
+  /**
    * Set project.
    *
    * @param Project $project
