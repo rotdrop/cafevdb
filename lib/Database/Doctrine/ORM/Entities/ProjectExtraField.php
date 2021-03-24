@@ -89,6 +89,13 @@ class ProjectExtraField implements \ArrayAccess
   private $allowedValues = null;
 
   /**
+   * @var \DateTimeImmutable
+   *
+   * @ORM\Column(type="date_immutable", nullable=true, options={"comment"="Due-date for financial fields."})
+   */
+  private $dueDate = null;
+
+  /**
    * @var string
    *
    * @ORM\Column(type="text", length=16777215, nullable=true, options={"comment"="Default value."})
@@ -176,7 +183,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param Project $project
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
   public function setProject($project):ProjectExtraField
   {
@@ -296,7 +303,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string|null $allowedValues
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
   public function setAllowedValues($allowedValues):ProjectExtraField
   {
@@ -316,11 +323,38 @@ class ProjectExtraField implements \ArrayAccess
   }
 
   /**
+   * Set dueDate.
+   *
+   * @param string|null|\DateTimeInterface $dueDate
+   *
+   * @return ProjectExtraField
+   */
+  public function setDueDate($dueDate):ProjectExtraField
+  {
+    if (is_string($dueDate)) {
+      $this->dueDate = new \DateTimeImmutable($dueDate);
+    } else {
+      $this->dueDate = \DateTimeImmutable::createFromInterface($dueDate);
+    }
+    return $this;
+  }
+
+  /**
+   * Get dueDate.
+   *
+   * @return \DateTimeImmutable|null
+   */
+  public function getDueDate():?\DateTimeImmutable
+  {
+    return $this->dueDate;
+  }
+
+  /**
    * Set defaultValue.
    *
    * @param string $defaultValue
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
   public function setDefaultValue($defaultValue):ProjectExtraField
   {
@@ -344,7 +378,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string $toolTip
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
   public function setToolTip($toolTip):ProjectExtraField
   {
@@ -368,7 +402,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string $tab
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
   public function setTab($tab):ProjectExtraField
   {
@@ -392,7 +426,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param bool|null $encrypted
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
   public function setEncrypted($encrypted):ProjectExtraField
   {
@@ -416,7 +450,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string|null $readers
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
   public function setReaders($readers):ProjectExtraField
   {
@@ -440,7 +474,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string|null $writers
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
   public function setWriters($writers):ProjectExtraField
   {
@@ -464,7 +498,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param bool $disabled
    *
-   * @return ProjectExtraFields
+   * @return ProjectExtraField
    */
   public function setDisabled($disabled):ProjectExtraField
   {
