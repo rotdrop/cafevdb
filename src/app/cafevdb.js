@@ -561,6 +561,10 @@ const toolTipsOnOff = function(onOff) {
   }
 };
 
+function toolTipsEnabled() {
+  return globalState.toolTipsEnabled;
+}
+
 const snapperClose = function() {
   // snapper will close on clicking navigation entries
   $('#navigation-list li.nav-heading a').trigger('click');
@@ -707,11 +711,12 @@ export {
   appSettings,
   iframeFormSubmit,
   modalizer,
+  snapperClose,
   attachToolTip,
   applyToolTips,
   toolTipsOnOff,
-  snapperClose,
   toolTipsInit,
+  toolTipsEnabled,
   selectValues,
 };
 
