@@ -23,11 +23,36 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use \DateTimeImmutable as DateTime;
+
+use OCP\ILogger;
+use OCP\IL10N;
+
+use Doctrine\ORM;
+
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNote as DebitNote;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNoteData as DataEntity;
+
 class SepaDebitNoteService
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  /** ORM\EntityRepository */
+  private $debitNoteRepository;
+
   public function __construct(
-    EntityManager
+    EntityManager $entityManager
+    , ILogger $logger
+    , IL10N $l10n
   ) {
+    $this->entityManager = $entityManager;
+    $this->logger = $logger;
+    $this->l = $l10n;
+
+    $this->debitNoteRepository = $this->getDatabaseRepository(DebitNote::class);
   }
 
   // public static function removeDebitNote(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
@@ -71,56 +96,90 @@ class SepaDebitNoteService
   //   return true;
   // }
 
-  /** Delete the data associated to a given debit-note */
-  private function deleteDebitNoteData($debitNoteId, $handle)
+  /** */
+  public function recordDebitNote($project, $job, $dateIssued, $submissionDeadline, $dueDate, $calObjIds):DebitNote
   {
-    $rows = mySQL::fetchRows(
-      self::DATA_TABLE, 'DebitNoteId = '.$debitNoteId, 'FileName ASC', $handle);
-    $failed = 0;
-    foreach($rows as $row) {
-      // remove the associated data
-      $query = "DELETE FROM `".self::DATA_TABLE."`
-  WHERE `Id` = ".$row['Id']." AND `DebitNoteId` = ".$debitNoteId;
-      if (mySQL::query($query, $handle) !== false) {
-        mySQL::logDelete(self::DATA_TABLE, 'Id', $row, $handle);
-      } else {
-        ++$failed;
-      }
-    }
-    return $failed === 0;
+    $debitNote = (new DebitNote)
+               ->setProject($project)
+               ->setJob($job)
+               ->setDateIssued($dateIssued)
+               ->setSubmissionDeadline($submissionDeadline)
+               ->setDueDate($dueDate)
+               ->setSubmissionEventUri($calObjIds[0])
+               ->setSubmissionTaskUri($calObjIds[1])
+               ->setDueEventUri($calObjIds[2]);
+    return $debitNote;
   }
 
-
-  /** Fetch the debit-note data identified by the debit-note's id */
-  public function debitNoteData($debitNoteId)
+  /**
+   * Generate the data-entity for the given debit-note
+   *
+   * @param DebitNote $debitNote
+   *
+   * @param string $fileName Download file-name.
+   *
+   * @param string $mimeType Download mime-type.
+   *
+   * @param string $exportData Download data.
+   *
+   * @return DebitNote
+   */
+  public function recordDebitNoteData(DebitNote $debitNote, $fileName, $mimeType, $exportData):DebitNote
   {
-    $rows = mySQL::fetchRows(
-      self::DATA_TABLE, 'DebitNoteId = '.$debitNoteId, 'FileName ASC', $handle);
+    /** @var DataEntity */
+    $debitNoteData = (new DataEntity)
+                   ->setDebitNote($debitNote)
+                   ->setFileName($fileName)
+                   ->setMimeType($mimeType)
+                   ->setData($exportData);
+    $debitNote->setSepaDebitNoteData($debitNoteData);
 
-    $encKey = Config::getEncryptionKey();
-    foreach($rows as &$row) {
-      $row['Data'] = Config::decrypt($row['Data'], $encKey);
-    }
-
-    return $rows;
+    return $debitNote;
   }
 
-  /**Return the name for the default email-template for the given job-type. */
-  public static function emailTemplate($debitNoteJob)
+  /**
+   * Generate the payment entities for the given debit-note
+   *
+   * @param DebitNote $debitNote
+   *
+   * @param array<int, SepaDebitNoteData> $payments Exported debit-note payments.
+   *
+   * @param DateTime $dueDate
+   *
+   * @return DebitNote
+   */
+  public function recordDebitNotePayments(DebitNote $debitNote, array $payments, DateTime $dueDate):DebitNote
   {
-    switcH($debitNoteJob) {
-      case 'remaining':
-        return L::t('DebitNoteAnnouncementProjectRemaining');
-        case 'amount':
-          return L::t('DebitNoteAnnouncementProjectAmount');
-          case 'deposit':
-            return L::t('DebitNoteAnnouncementProjectDeposit');
-            case 'insurance':
-              return L::t('DebitNoteAnnouncementInsurance');
-              case 'membership-fee':
-                return L::t('DebitNoteAnnouncementMembershipFee');
-                default:
-                  return L::t('DebitNoteAnnouncementUnknown');
+    foreach ($payments as $paymentData) {
+      $debitNotePayment = (new Entities\ProjectPayment)
+                        ->setProject($debitNote->getProject())
+                        ->setMusician($paymentData['musicianId'])
+                        ->setAmount($paymentData['amount'])
+                        ->setDateOfReceipt($dueDate)
+                        ->setSubject(implode("\n", $paymentData['purpose']))
+                        ->setDebitNote($debitNote)
+                        ->setMandateReference($paymentData['mandateReference']);
+      $debitNote->getProjectPayments()->add($debitNotePayment);
+    }
+    return $debitNote;
+  }
+
+  /** Return the name for the default email-template for the given job-type. */
+  public function emailTemplate($debitNoteJob)
+  {
+    switch($debitNoteJob) {
+    case 'remaining':
+      return $this->l->t('DebitNoteAnnouncementProjectRemaining');
+    case 'amount':
+      return $this->l->t('DebitNoteAnnouncementProjectAmount');
+    case 'deposit':
+      return $this->l->t('DebitNoteAnnouncementProjectDeposit');
+    case 'insurance':
+      return $this->l->t('DebitNoteAnnouncementInsurance');
+    case 'membership-fee':
+      return $this->l->t('DebitNoteAnnouncementMembershipFee');
+    default:
+      return $this->l->t('DebitNoteAnnouncementUnknown');
     }
   }
 
