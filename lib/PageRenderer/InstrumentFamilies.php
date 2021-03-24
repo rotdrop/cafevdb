@@ -263,7 +263,7 @@ class InstrumentFamilies extends PMETableViewBase
       ];
     }
 
-    $opts['filters'] = "IFNULL(PMEtable0.disabled,0) <= ".intval($this->showDisabled);
+    $opts['filters'] = "IFNULL($table.disabled, 0) <= ".intval($this->showDisabled);
 
     $opts['groupby_fields'] = [ 'id' ];
 

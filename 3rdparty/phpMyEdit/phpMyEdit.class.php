@@ -1467,9 +1467,21 @@ class phpMyEdit
 			}
 		}
 
+		// allow some basic substitutions
+		$subs = array(
+			'main_table'  => $this->tb,
+			'table' => self::MAIN_ALIAS,
+			'record_id'   => implode(',', $this->rec),
+		);
+		if (!empty($this->rec)) {
+			foreach ($this->rec as $recKey => $recValue) {
+				$subs['record_id['.$recKey.']'] = $recValue;
+			}
+		}
+
 		// Add any coder specified 'AND' filters
 		if (!$text && ($filter = $this->filters['AND'])) {
-			$where[] = $filter;
+			$where[] = $this->substituteVars($filter, $subs);
 		}
 
 		/* Join WHERE parts by AND */
@@ -1484,7 +1496,7 @@ class phpMyEdit
 		 * adding further "OR" filters does not make sense.
 		 */
 		if ($where !== '' && ($filter = $this->filters['OR'])) {
-			$where = '('.$where.') OR ('.$filter.')';
+			$where = '('.$where.') OR ('.$this->substituteVars($filter, $subs).')';
 		}
 
 		return $where;

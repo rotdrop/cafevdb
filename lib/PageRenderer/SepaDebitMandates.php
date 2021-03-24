@@ -695,19 +695,16 @@ received so far'),
 
     ///////////////
 
-    $junctor = '';
     if ($musicianId > 0) {
-      $opts['filters'] = $junctor."`PMEtable0`.`musicianId` = ".$musicianId;
-      $junctor = " AND ";
+      $opts['filters']['AND'] = '$table.musicianId = '.$musicianId;
     }
     if ($projectMode) {
-      $opts['filters'] = $junctor
-                       . "("
-                       . "PMEtable0.project_id = " . $projectId
-                       . " OR "
-                       . "PMEtable0.project_id = " . $memberProjectId
-                       . ")";
-      $junctor = " AND ";
+      $opts['filters']['AND'] =
+                              '('
+                              . '$table.project_id = ' . $projectId
+                              . ' OR '
+                              . '$table.project_id = ' . $memberProjectId
+                              . ')';
     }
 
     // redirect all updates through Doctrine\ORM.

@@ -250,8 +250,8 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     $opts['filters']['AND'] = [
-      "PMEtable0.project_id = $projectId",
-      "PMEtable0.disabled <= ".intval($this->showDisabled),
+      '$table.project_id = '.$projectId,
+      '$table.disabled <= '.intval($this->showDisabled),
     ];
 
     // Number of records to display on the screen
@@ -1405,7 +1405,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       'name' => $this->l->t('Photo'),
       'select' => 'T',
       'options' => 'APVCD',
-      'sql' => '`PMEtable0`.`musician_id`', // @todo: needed?
+      'sql' => '$main_table.musician_id', // @todo: needed?
       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
         $stampIdx = array_search('Updated', $pme->fds);
         $stamp = strtotime($row['qf'.$stampIdx]);
@@ -1422,7 +1422,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       'name' => 'VCard',
       'select' => 'T',
       'options' => 'ACPDV',
-      'sql' => '`PMEtable0`.`musician_id`',
+      'sql' => '$main_table.musician_id',
       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
         switch($action) {
         case 'change':

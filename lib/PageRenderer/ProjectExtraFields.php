@@ -346,7 +346,7 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['allowed_values_single'] = [
       'name' => $this->currencyLabel($this->l->t('Data')),
       'css' => [ 'postfix' => ' allowed-values-single' ],
-      'sql' => 'PMEtable0.allowed_values',
+      'sql' => '$main_table.allowed_values',
       'php' => function($value, $op, $field, $row, $recordId, $pme) use ($nameIdx, $tooltipIdx) {
         // provide defaults
         $protoRecord = array_merge(
@@ -380,8 +380,8 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['maximum_group_size'] = [
       'name' => $this->l->t('Maximum Size'),
       'css' => [ 'postfix' => ' no-search maximum-group-size' ],
-      //'sql' => "SUBSTRING_INDEX(PMEtable0.allowed_values, ':', -1)",
-      'sql' => "JSON_VALUE(PMEtable0.allowed_values, '\$[0].limit')",
+      //'sql' => "SUBSTRING_INDEX(\$main_table.allowed_values, ':', -1)",
+      'sql' => "JSON_VALUE(\$main_table.allowed_values, '\$[0].limit')",
       'input' => 'S',
       'input|DV' => 'V',
       'options' => 'ACDPV',
@@ -619,13 +619,13 @@ class ProjectExtraFields extends PMETableViewBase
 
     $opts['filters'] = [];
     if (!$this->showDisabled) {
-      $opts['filters'][] = 'NOT IFNULL($main_table.disabled, 0) = 1';
+      $opts['filters'][] = 'NOT IFNULL($table.disabled, 0) = 1';
       if ($projectMode === false) {
         $opts['filters'][] = 'NOT '.$joinTables[self::PROJECTS_TABLE].'.disabled = 1';
       }
     }
     if ($projectMode !== false) {
-      $opts['filters'][] = '$main_table.project_id = '.$this->projectId;
+      $opts['filters'][] = '$table.project_id = '.$this->projectId;
     }
 
     $opts['triggers']['select']['data'][] =

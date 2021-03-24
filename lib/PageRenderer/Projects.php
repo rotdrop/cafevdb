@@ -283,7 +283,7 @@ class Projects extends PMETableViewBase
     $opts['fdd']['actions'] = [
       'name'     => $this->l->t('Actions'),
       'input'    => 'RV',
-      'sql'      => '`PMEtable0`.`name`',
+      'sql'      => '$main_table.name',
       'php|VCLDF'    => function($value, $op, $field, $row, $recordId, $pme) {
         $projectId = $recordId;
         $projectName = $value;
@@ -326,7 +326,7 @@ class Projects extends PMETableViewBase
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => ['postfix' => ' projecttoolbox'],
-      'sql'      => '`PMEtable0`.`Name`',
+      'sql'      => '$main_table.name',
       'php|CV'   =>  function($value, $op, $field, $row, $recordId, $pme) {
         $projectName = $value;
         $projectId = $recordId;
@@ -378,7 +378,7 @@ __EOT__;
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => ['postfix' => ' projectprogram'],
-      'sql'      => '`PMEtable0`.`id`',
+      'sql'      => '$main_table.id',
       'php|CV'    => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId; // and also $value
         return $this->projectProgram($projectId, $action);
@@ -392,7 +392,7 @@ __EOT__;
       'name' => $this->l->t('Flyer'),
       'select' => 'T',
       'options' => 'VCD',
-      'sql'      => '`PMEtable0`.`Updated`',
+      'sql'      => '$main_table.updated',
       'php' => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId;
         $stamp = $value;
@@ -415,27 +415,15 @@ __EOT__;
         ]
       );
 
-    /* Table-level filter capability. If set, it is included in the WHERE clause
-       of any generated SELECT statement in SQL query. This gives you ability to
-       work only with subset of data from table.
-
-       $opts['filters'] = "column1 like '%11%' AND column2<17";
-       $opts['filters'] = "section_id = 9";
-       $opts['filters'] = "PMEtable0.sessions_count > 200";
-
-       $opts['filters']['OR'] = expression or array;
-       $opts['filters']['AND'] = expression or array;
-       $opts['filters'] = andexpression or [andexpression1, andexpression2);
-    */
     $opts['filters'] = [ 'OR' => [], 'AND' => [] ];
     if (!empty($this->parameterService[$this->pme->cgiSysName('qf'.$nameIdx.'_id')])) {
       // unset the year filter, as it does not make sense
       unset($_POST[$this->pme->cgiSysName('qf'.$yearIdx)]);
       unset($_GET[$this->pme->cgiSysName('qf'.$yearIdx)]);
     } else {
-      $opts['filters']['OR'][] = "`PMEtable0`.`type` = 'permanent'";
+      $opts['filters']['OR'][] = "\$table.type = 'permanent'";
     }
-    $opts['filters']['AND'][] = '`PMEtable0`.`disabled` <= '.intval($this->showDisabled);
+    $opts['filters']['AND'][] = '$table.disabled <= '.intval($this->showDisabled);
 
     // We could try to use 'before' triggers in order to verify the
     // data. However, at the moment the stuff does not work without JS

@@ -328,7 +328,7 @@ class Instruments extends PMETableViewBase
       'select'  => 'T',
       'input'   => 'VR',
       'options' => 'LF',
-      'sql'     => '`PMEtable0`.`id`',
+      'sql'     => '$main_table.id',
       'php'   =>  function($value, $op, $field, $row, $recordId, $pme) use ($lang) {
         $inst = $row[$this->queryField('name', $pme->fdd)];
         return '<a '
@@ -341,7 +341,7 @@ class Instruments extends PMETableViewBase
       'nowrap' => true,
     ];
 
-    $opts['filters'] = "IFNULL(PMEtable0.disabled, 0) <= ".intval($this->showDisabled);
+    $opts['filters'] = 'IFNULL($table.disabled, 0) <= '.intval($this->showDisabled);
 
     $opts['groupby_fields'] = [ 'id' ];
 

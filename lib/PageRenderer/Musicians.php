@@ -234,7 +234,7 @@ make sure that the musicians are also automatically added to the
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
 
-    $opts['filters'] = "IFNULL(PMEtable0.disabled,0) <= ".intval($this->showDisabled);
+    $opts['filters'] = 'IFNULL($table.disabled,0) <= '.intval($this->showDisabled);
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -308,7 +308,7 @@ make sure that the musicians are also automatically added to the
         'select' => 'T',
         'options' => 'VCLR',
         'input' => 'V',
-        'sql' => 'PMEtable0.id',
+        'sql' => '$main_table.id',
         'php' => function($musicianId, $action, $k, $row, $recordId, $pme)
           use($bval, $tip) {
             return '<div class="register-musician">'
@@ -657,7 +657,7 @@ make sure that the musicians are also automatically added to the
       'name' => $this->l->t('Photo'),
       'select' => 'T',
       'options' => 'APVCD',
-      'sql' => '`PMEtable0`.`id`',
+      'sql' => '$main_table.id',
       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
         $stampIdx = array_search('Updated', $pme->fds);
         $stamp = strtotime($row['qf'.$stampIdx]);
@@ -676,7 +676,7 @@ make sure that the musicians are also automatically added to the
       'name' => 'VCard',
       'select' => 'T',
       'options' => 'ACPDV',
-      'sql' => '`PMEtable0`.`id`',
+      'sql' => '$main_table.id',
       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
         // $this->logInfo('ROW: '.print_r($row, true));
         switch($action) {
@@ -736,7 +736,7 @@ make sure that the musicians are also automatically added to the
       //'options'  => 'AVCPDR',
       'input'    => 'R',
       'css'      => ['postfix' => ' musician-uuid'.' '.$addCSS],
-      'sql'      => 'BIN2UUID(`PMEtable0`.`uuid`)',
+      'sql'      => 'BIN2UUID($main_table.uuid)',
       'sqlw'     => 'UUID2BIN($val_qas)',
       'select'   => 'T',
       'maxlen'   => 32,

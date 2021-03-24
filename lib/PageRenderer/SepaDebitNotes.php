@@ -247,7 +247,7 @@ class SepaDebitNotes extends PMETableViewBase
       'name'  => $this->l->t('Actions'),
       'css'   => [ 'postfix' => ' debit-note-actions' ],
       'input' => 'VR',
-      'sql' => 'PMEtable0.id',
+      'sql' => '$main_table.id',
       'sort'  => false,
       'php' => function($value, $op, $field, $row, $recordId, $pme)
         use ($projectIdIdx, $jobIdx) {
@@ -293,7 +293,7 @@ __EOT__;
     ///////////////////////////////////////////////////////////////////////////
 
     if ($projectMode) {
-      $opts['filters'] = '`PMEtable0`.`project_id` = '.$projectId;
+      $opts['filters'] = '$table.project_id = '.$projectId;
     }
 
     // redirect all updates through Doctrine\ORM.

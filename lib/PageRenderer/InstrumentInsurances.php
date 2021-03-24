@@ -216,7 +216,7 @@ class InstrumentInsurances extends PMETableViewBase
     ];
 
     if ($musicianId > 0) {
-      $opts['filters'] = "PMEtable0.musician_id = ".$musicianId;
+      $opts['filters'] = "$table.musician_id = ".$musicianId;
     }
 
     $opts['groupby_fields'] = [ 'id' ];
