@@ -33,6 +33,7 @@ import * as Page from './page.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
+import * as Dialogs from './dialogs.js';
 import pmeTweaks from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import {
@@ -51,6 +52,7 @@ import {
   rec as pmeRec,
   container as pmeContainer,
 } from './pme-selectors.js';
+import 'jquery-ui/ui/effects/effect-highlight';
 import 'jquery-ui/ui/widgets/sortable';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
@@ -350,7 +352,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       container.find(reloadSel)
         .off('click')
         .on('click', function(event, triggerData) {
-          console.info('TRIGGER DATA', triggerData);
           tableDialogReload(options, changeCallback, triggerData);
           return false;
         });
@@ -371,29 +372,27 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
 
   // The easy one, but for changed content
   const cancelButton = $(container).find(pmeClassSelector('input', 'cancel'));
-  cancelButton.off('click');
-  cancelButton.on('click', function(event, triggerData) {
-    event.preventDefault();
+  cancelButton
+    .off('click')
+    .on('click', function(event, triggerData) {
 
-    console.info('TRIGGER DATA', triggerData);
+      // When the initial dialog was in view-mode and we are not in
+      // view-mode, then we return to view mode; for me "cancel" feels
+      // more natural when the GUI returns to the previous dialog
+      // instead of returning to the main table. We only have to look
+      // at the name of "this": if it ends with "cancelview" then we
+      // are cancelling a view and close the dialog, otherwise we
+      // return to view mode.
+      if (options.InitialViewOperation && $(this).attr('name').indexOf('cancelview') < 0) {
+        options.ReloadName = options.InitialName;
+        options.ReloadValue = options.InitialValue;
+        tableDialogReload(options, changeCallback, triggerData);
+      } else {
+        container.dialog('close');
+      }
 
-    // When the initial dialog was in view-mode and we are not in
-    // view-mode, then we return to view mode; for me "cancel" feels
-    // more natural when the GUI returns to the previous dialog
-    // instead of returning to the main table. We only have to look
-    // at the name of "this": if it ends with "cancelview" then we
-    // are cancelling a view and close the dialog, otherwise we
-    // return to view mode.
-    if (options.InitialViewOperation && $(this).attr('name').indexOf('cancelview') < 0) {
-      options.ReloadName = options.InitialName;
-      options.ReloadValue = options.InitialValue;
-      tableDialogReload(options, changeCallback, triggerData);
-    } else {
-      container.dialog('close');
-    }
-
-    return false;
-  });
+      return false;
+    });
 
   // The complicated ones. This reloads new data.
   const ReloadButtonSel = pmeClassSelectors(
@@ -413,9 +412,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       'click',
       ReloadButtonSel,
       function(event, triggerData) {
-        event.preventDefault();
-
-        console.info('TRIGGER DATA', triggerData);
 
         const submitButton = $(this);
         const reloadName = submitButton.attr('name');
@@ -458,11 +454,57 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
   container
     .off('click', saveButtonSel)
     .on('click', saveButtonSel, function(event, triggerData) {
-      event.preventDefault();
-
-      console.info('TRIGGER DATA', triggerData);
 
       container.find(pmeNavigationSelector('reload')).addClass('loading');
+
+      // Brief front-end-check for empty required fields.
+      const invalidInputs = container.find('form.pme-form :invalid');
+
+      if (invalidInputs.length !== 0) {
+        const highlightInvalid = function(afterDialog) {
+          for (const input of invalidInputs) {
+            let $input = $(input);
+            if (!$input.is(':visible') && $input.is('select')) {
+              $input = $input.next('.chosen-container');
+            }
+            if ($input.is(':visible')) {
+              $input.cafevTooltip('enable');
+              $input.cafevTooltip('show');
+              $input.effect(
+                'highlight',
+                {},
+                10000,
+                function() {
+                  if (afterDialog && !CAFEVDB.toolTipsEnabled()) {
+                    $input.cafevTooltip('disable');
+                  }
+                });
+            }
+          }
+        };
+        const invalidInfo = [];
+        for (const input of invalidInputs) {
+          const $input = $(input);
+          const label = $input.closest('tr').find('td.pme-key').html();
+          const value = $input.val();
+          invalidInfo.push('<li class="invalid-input">'
+                           + label
+                           + (value ? ', ' + t(appName, 'invalid data "{value}"', { value }) : '')
+                           + '</li>');
+        }
+        highlightInvalid();
+        Dialogs.alert(
+          t(appName, 'The following required fields are empty or contain otherwise invalid data:')
+            + '<ul>'
+            + invalidInfo.join('\n')
+            + '</ul>'
+            + t(appName, 'Please add the missing data!'),
+          t(appName, 'Missing Input Data'),
+          () => highlightInvalid(true),
+          true,
+          true);
+        return false;
+      }
 
       options.modified = true; // we are the save-button ...
 
@@ -697,7 +739,6 @@ const pmeTableDialogOpen = function(tableOptions, post) {
 
           DialogUtils.toBackButton(dialogHolder);
           DialogUtils.customCloseButton(dialogHolder, function(event, container) {
-            event.preventDefault();
             const cancelButton = container.find(pmeClassSelector('input', 'cancel')).first();
             if (cancelButton.length > 0) {
               event.stopImmediatePropagation();
@@ -1370,7 +1411,6 @@ const pmeInit = function(containerSel) {
   container
     .off('change', onChangeSel)
     .on('change', onChangeSel, function(event) {
-      event.preventDefault();
       return pseudoSubmit($(this.form), $(this), containerSel);
     });
 
@@ -1390,10 +1430,6 @@ const pmeInit = function(containerSel) {
           event.stopImmediatePropagation();
 
           tableDialog($(this.form), $(this), containerSel);
-
-          return false;
-        } else {
-          return true;
         }
       });
 
@@ -1410,27 +1446,31 @@ const pmeInit = function(containerSel) {
           // divs and spans which make it up to here will be ignored,
           // everything else results in the default action.
           if (target.is('.' + pmeToken('email-check'))) {
-            return true;
+            return;
           }
           if (target.is('.' + pmeToken('debit-note-check'))) {
-            return true;
+            return;
           }
           if (target.is('.' + pmeToken('bulkcommit-check'))) {
-            return true;
+            return;
           }
           if (target.is('.graphic-links')) {
-            return false;
+            event.preventDefault();
+            event.stopPropagation();
+            return;
           }
           if (target.hasClass('nav')) {
-            return true;
+            return;
           }
           if (!target.is('span') && !target.is('div')) {
-            return true;
+            return;
           }
         }
 
+        // @todo needed?
         event.preventDefault();
         event.stopImmediatePropagation();
+
         const recordId = $(this).parent().data(pmePrefix + '_sys_rec');
         const recordKey = pmeSys('rec');
         let recordQuery = [];
@@ -1459,7 +1499,6 @@ const pmeInit = function(containerSel) {
 
         console.info('about to open dialog');
         tableDialog(form, $(recordEl), containerSel);
-        return false;
       });
   }
 
@@ -1468,10 +1507,6 @@ const pmeInit = function(containerSel) {
   container
     .off('click', submitSel)
     .on('click', submitSel, function(event) {
-
-      console.info('DATA', event);
-
-      event.preventDefault();
 
       console.info('submit');
       return pseudoSubmit($(this.form), $(this), containerSel);
@@ -1511,7 +1546,6 @@ const pmeInit = function(containerSel) {
       pressedKey = event.keyCode;
     }
     if (pressedKey === 13) { // enter pressed
-      event.preventDefault();
       return pseudoSubmit($(this.form), $(this), containerSel);
     }
     return true; // other key pressed
