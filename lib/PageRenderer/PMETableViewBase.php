@@ -695,7 +695,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
-      //$this->$logMethod('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
 
       $multiple = null;
       $identifier = [];
@@ -813,7 +812,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // that the entity implements the \ArrayAccess interface
           foreach ($identifier[$multiple]['del'] as $del) {
             $id = $delIdentifier[$del];
-            $entityId = $this->extractKeyValues($meta, $id);
+            $entityId = $meta->extractKeyValues($id);
             foreach ($association->matching(self::criteriaWhere($entityId)) as $entity) {
               $association->removeElement($entity);
             }
@@ -823,7 +822,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // master entity
           foreach ($identifier[$multiple]['add'] as $add) {
             $id = $addIdentifier[$add];
-            $entityId = $this->extractKeyValues($meta, $id);
+            $entityId = $meta->extractKeyValues($id);
             $association->add($this->getReference($entityClass, $entityId));
           }
 
@@ -835,7 +834,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // Delete removed entities
         foreach ($identifier[$multiple]['del'] as $del) {
           $id = $delIdentifier[$del];
-          $entityId = $this->extractKeyValues($meta, $id);
+          $entityId = $meta->extractKeyValues($id);
           $entity = $this->find($entityId);
           $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
           if ($usage > 0) {
@@ -878,7 +877,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           if (isset($addIdentifier[$new])) {
             $this->$logMethod('TRY ADD '.$new);
             $id = $addIdentifier[$new];
-            $entityId = $this->extractKeyValues($meta, $id);
+            $entityId = $meta->extractKeyValues($id);
             $entity = $entityClass::create();
             foreach ($entityId as $key => $value) {
               $entity[$key] = $value;
@@ -886,7 +885,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           } else if (isset($remIdentifier[$new]) && !empty($changeSet)) {
             $this->$logMethod('TRY MOD '.$new);
             $id = $remIdentifier[$new];
-            $entityId = $this->extractKeyValues($meta, $id);
+            $entityId = $meta->extractKeyValues($id);
             $entity = $this->find($entityId);
             if (empty($entity)) {
               throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
@@ -902,7 +901,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
           // set further properties ...
           foreach ($multipleValues[$new] as $column => $value) {
-            $entity[$column] = $value;
+            $meta->setSimpleColumnValue($entity, $column, $value);
           }
 
           // persist
@@ -916,7 +915,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // however, in the long run the goal would be to switch to
         // Doctrine/ORM for everything. So we live with it for the
         // moment.
-        $entityId = $this->extractKeyValues($meta, $identifier);
+        $entityId = $meta->extractKeyValues($identifier);
         $entity = $this->find($entityId);
         if (empty($entity)) {
           $entity = $entityClass::create();
@@ -925,7 +924,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
         foreach ($changeSet as $column => $field) {
-          $entity[$column] = $newvals[$field];
+          $meta->setSimpleColumnValue($entity, $column, $newvals[$field]);
           Util::unsetValue($changed, $field);
         }
         if (($joinInfo['flags'] & self::JOIN_REMOVE_EMPTY) && empty($entity[$joinInfo['column']])) {
@@ -979,6 +978,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * terminated. We have to return 'true' in order not hinder further
    * callbacks and in order to update the primary identifier record of
    * $pme.
+   *
+   * @bug This method is too large.
    */
   public function beforeInsertDoInsertAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
@@ -1048,8 +1049,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
-      //$this->$logMethod('ASSOCIATIONMAPPINGS '.print_r($meta->associationMappings, true));
-
       $multiple = null;
       $identifier = [];
       $identifierColumns = $meta->getIdentifierColumnNames();
@@ -1134,7 +1133,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // master entity
           foreach ($identifier[$multiple] as $add) {
             $id = $addIdentifier[$add];
-            $entityId = $this->extractKeyValues($meta, $id);
+            $entityId = $meta->extractKeyValues($id);
             $association->add($this->getReference($entityClass, $entityId));
           }
 
@@ -1168,7 +1167,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($identifier[$multiple] as $new) {
           $this->$logMethod('TRY MOD '.$new);
           $id = $addIdentifier[$new];
-          $entityId = $this->extractKeyValues($meta, $id);
+          $entityId = $meta->extractKeyValues($id);
           $entity = $entityClass::create();
           foreach ($entityId as $key => $value) {
             $entity[$key] = $value;
@@ -1176,7 +1175,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
           // set further properties ...
           foreach ($multipleValues[$new] as $column => $value) {
-            $entity[$column] = $value;
+            $meta->setSimpleColumnValue($entity, $column, $value);
           }
 
           // persist
@@ -1188,13 +1187,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       } else {
         // !$multiple, simply insert. The "master-"table can only
         // "land" here
-        $entityId = $this->extractKeyValues($meta, $identifier);
+        $entityId = $meta->extractKeyValues($identifier);
         $entity = $entityClass::create();
         foreach ($entityId as $key => $value) {
           $entity[$key] = $value;
         }
         foreach ($changeSet as $column => $field) {
-          $entity[$column] = $newvals[$field];
+          $meta->setSimpleColumnValue($entity, $column, $newvals[$field]);
           Util::unsetValue($changed, $field);
         }
 
@@ -1208,7 +1207,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         if ($joinInfo['flags'] & self::JOIN_MASTER) {
           $this->flush();
           $masterEntity = $entity;
-          $identifier = $this->getIdentifierColumnValues($masterEntity, $meta);
+          $identifier = $meta->getIdentifierColumnValues($masterEntity);
           foreach (array_keys($this->pme->key) as $key) {
             $newvals[$key] = $identifier[$key];
           }
