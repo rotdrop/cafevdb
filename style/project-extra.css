@@ -1,4 +1,5 @@
-/**Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -25,6 +26,7 @@
  *
  */
 
+table.pme-main tr.multiplicity ~ tr.pme-row.due-date,
 table.pme-main tr.multiplicity ~ tr.pme-row.maximum-group-size,
 table.pme-main tr.multiplicity ~ tr.pme-row.allowed-values,
 table.pme-main tr.multiplicity ~ tr.pme-row.allowed-values-single,
@@ -34,6 +36,8 @@ table.pme-main tr.multiplicity ~ tr.pme-row.default-single-value, table.pme-main
     display:none;
 }
 
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row.due-date,
+table.pme-main tr.multiplicity.data-type-deposit ~ tr.pme-row.due-date,
 table.pme-main tr.multiplicity.multiplicity-groupofpeople ~ tr.pme-row.maximum-group-size,
 table.pme-main tr.multiplicity.multiplicity-groupofpeople.data-type-service-fee ~ tr.pme-row.allowed-values-single,
 table.pme-main tr.multiplicity.multiplicity-simple:not(.multiplicity-groupofpeople) ~ tr.pme-row.default-value,
