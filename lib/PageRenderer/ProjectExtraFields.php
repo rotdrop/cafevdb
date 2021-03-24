@@ -226,7 +226,7 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['project_id'] = [
       'tab'       => [ 'id' => 'tab-all' ],
       'name'      => $this->l->t('Project'),
-      'input'     => ($projectMode ? 'HR' : ''),
+      'input'     => ($projectMode ? 'HR' : 'M'),
       'css' => [ 'postfix' => ' project-instrument-project-name' ],
       'select|DV' => 'T', // delete, filter, list, view
       'select|ACPFL' => 'D',  // add, change, copy
@@ -611,13 +611,13 @@ class ProjectExtraFields extends PMETableViewBase
 
     $opts['filters'] = [];
     if (!$this->showDisabled) {
-      $opts['filters'][] = 'NOT `PMEtable0`.`disabled` = 1';
+      $opts['filters'][] = 'NOT IFNULL($main_table.disabled, 0) = 1';
       if ($projectMode === false) {
         $opts['filters'][] = 'NOT '.$joinTables[self::PROJECTS_TABLE].'.disabled = 1';
       }
     }
     if ($projectMode !== false) {
-      $opts['filters'][] = 'PMEtable0.project_id = '.$this->projectId;
+      $opts['filters'][] = '$main_table.project_id = '.$this->projectId;
     }
 
     $opts['triggers']['select']['data'][] =
