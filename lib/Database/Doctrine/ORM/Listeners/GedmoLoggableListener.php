@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -69,12 +70,14 @@ class GedmoLoggableListener extends \Gedmo\Loggable\LoggableListener
     if (!isset($config['loggable'])) {
       $config['loggable'] = $class != $config['logEntryClass'];
     }
-    if (isset($config['loggable'])) {
+    if (!empty($config['loggable'])) {
+      // make all fields versioned if not configured for the class.
       if (!isset($config['versioned'])) {
         $classMetadata = $objectManager->getClassMetadata($class);
         $config['versioned'] = $classMetadata->getFieldNames();
       }
     }
+
     return $config;
   }
 
