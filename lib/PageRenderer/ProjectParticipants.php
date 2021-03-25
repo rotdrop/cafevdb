@@ -986,7 +986,7 @@ class ProjectParticipants extends PMETableViewBase
             $fdd['css']['postfix'] .= ' set hide-subsequent-lines';
             $fdd['select'] = 'M';
           } else {
-            $fdd['css']['postfix'] .= ' enumeration allow-empty';
+            $fdd['css']['postfix'] .= ' enum allow-empty';
             $fdd['select'] = 'D';
           }
           $fdd['css']['postfix'] .= ' '.$dataType;
