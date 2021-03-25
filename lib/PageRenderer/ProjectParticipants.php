@@ -908,6 +908,19 @@ class ProjectParticipants extends PMETableViewBase
 
       switch ($multiplicity) {
       case 'simple':
+        $fdd['css']['postfix'] .= ' simple-valued '.$dataType;
+        switch ($dataType) {
+        case 'money':
+        case 'deposit':
+        case 'service-fee':
+          unset($fdd['mask']);
+          $fdd['php|VDLF'] = function($value) {
+            return $this->moneyValue($value);
+          };
+          break;
+        default:
+          break;
+        }
         break;
       case 'single':
         reset($values2); $key = key($values2);
@@ -923,6 +936,7 @@ class ProjectParticipants extends PMETableViewBase
         case 'boolean':
           break;
         case 'money':
+        case 'deposit':
         case 'service-fee':
           $money = $this->moneyValue(reset($valueData));
           $noMoney = $this->moneyValue(0);
@@ -930,9 +944,13 @@ class ProjectParticipants extends PMETableViewBase
           $fdd['values2|LVDF'] = [
             '' => '-,--',
             0 => $noMoney, //'-,--',
-            $key => $money
+            $key => $money,
           ];
           $fdd['values2|CAP'] = [ $key => $money, ];
+          unset($fdd['mask']);
+          $fdd['php|VDLF'] = function($value) {
+            return $this->moneyValue($value);
+          };
           break;
         default:
           $fdd['values2|CAP'] = [ $key => reset($valueData) ];
@@ -942,6 +960,7 @@ class ProjectParticipants extends PMETableViewBase
       case 'parallel':
       case 'multiple':
         switch ($dataType) {
+        case 'deposit':
         case 'service-fee':
           foreach ($allowed as $option) {
             $key = $option['key'];
@@ -949,13 +968,20 @@ class ProjectParticipants extends PMETableViewBase
             $data  = $option['data'];
             $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType, 'money');
           }
+          unset($fdd['mask']);
           $fdd['values2glue'] = "<br/>";
           $fdd['escape'] = false;
           // fall through
         default:
+          $fdd['sql'] = '$join_col_fqn';
           $fdd['values2'] = $values2;
           $fdd['valueTitles'] = $valueTitles;
           $fdd['valueData'] = $valueData;
+            $fdd['display|LF'] = [
+            'popup' => 'data',
+            'prefix' => '<div class="allowed-option-wrapper">',
+            'postfix' => '</div>',
+          ];
           if ($multiplicity == 'parallel') {
             $fdd['css']['postfix'] .= ' set hide-subsequent-lines';
             $fdd['select'] = 'M';
@@ -964,7 +990,6 @@ class ProjectParticipants extends PMETableViewBase
             $fdd['select'] = 'D';
           }
           $fdd['css']['postfix'] .= ' '.$dataType;
-          $fdd['display|LF'] = [ 'popup' => 'data' ];
           break;
         }
         break;
@@ -1058,9 +1083,9 @@ WHERE pp.project_id = $projectId",
           $fdd['display|LFVD'] = array_merge(
             $fdd['display'],
             [
-              'prefix' => '<span class="allowed-option-name money clip-long-text group">',
+              'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
               'postfix' => ('</span><span class="allowed-option-separator money">&nbsp;</span>'
-                            .'<span class="allowed-option-value money">'.$money.'</span>'),
+                            .'<span class="allowed-option-value money">'.$money.'</span></span>'),
             ]);
         }
 
@@ -1112,7 +1137,7 @@ WHERE pp.project_id = $projectId",
           $css[] = 'service-fee';
           foreach ($groupValues2 as $key => $value) {
             $groupValues2[$key] = $this->allowedOptionLabel(
-              $value, $groupValueData[$key], $dataType, 'money group clip-long-text');
+              $value, $groupValueData[$key], $dataType, 'money group');
           }
         }
 

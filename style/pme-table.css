@@ -771,7 +771,8 @@ td.negative {
   color:#FF0000;
 }
 
-td.align-right, td.pme-cell.align-right, td.pme-cell.money {
+td.align-right, td.pme-cell.align-right, td.pme-cell.money,
+form.pme-form:not(.pme-change) td.pme-value.money {
   text-align:right;
 }
 
@@ -835,12 +836,14 @@ div#project_flyer_upload {
   min-height:300px;
 }
 
+form.pme-form:not(.pme-change) td.pme-value.clip-long-text,
+form.pme-form:not(.pme-change) td.pme-value .clip-long-text,
 td.pme-cell.clip-long-text,
 td.pme-cell .clip-long-text,
 td.pme-cell.musician-instruments {
   /*width:12em;*/
   max-width:12em;
-  max-height:1em;
+  /*max-height:1em;*/
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -928,13 +931,13 @@ th.pme-header.mandate-project, td.pme-cell.mandate-project {
 /* Hide everything but the first line */
 table.pme-main td.pme-cell.remarks,
 table.pme-main td.pme-cell.hide-subsequent-lines {
-  font-size:25%;
+  /* font-size:25%;
   line-height:100%;
   max-width:20em;
   max-height:1em;
   white-space:nowrap;
   overflow:hidden;
-  text-overflow:ellipsis;
+  text-overflow:ellipsis;*/
 }
 
 /* Make all remarks shorter */
@@ -942,13 +945,13 @@ table.pme-main td.pme-cell.remarks::first-line,
 table.pme-main td.pme-cell.remarks p:nth-child(1)::first-line,
 table.pme-main td.pme-cell.hide-subsequent-lines::first-line,
 table.pme-main td.pme-cell.hide-subsequent-lines p:nth-child(1)::first-line {
-  font-size:400%; /* seems to be relative to !first-line */
-  line-height:100%;
+  /*font-size:400%;*/ /* seems to be relative to !first-line */
+  /* line-height:100%;
   max-width:20em;
   max-height:1em;
   white-space:nowrap;
   overflow:hidden;
-  text-overflow:ellipsis;
+  text-overflow:ellipsis;*/
 }
 
 table.pme-main td.pme-cell.hide-subsequent-lines .pme-cell-wrapper {

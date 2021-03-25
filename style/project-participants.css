@@ -26,6 +26,11 @@
  *
  */
 
+div.project-participants span.allowed-option {
+  display:inline-block;
+  width:100%;
+}
+
 div.project-participants form.pme-form:not(.pme-change) span.allowed-option-name:empty,
 div.project-participants form.pme-form:not(.pme-change) span.allowed-option-name:empty ~ span {
     display:none;
@@ -33,9 +38,11 @@ div.project-participants form.pme-form:not(.pme-change) span.allowed-option-name
 
 div.project-participants form.pme-form:not(.pme-change) td.groupofpeople,
 div.project-participants form.pme-form:not(.pme-change) td.groupofpeople-id,
+div.project-participants form.pme-form:not(.pme-change) td.deposit.set,
+div.project-participants form.pme-form:not(.pme-change) td.deposit.enum,
 div.project-participants form.pme-form:not(.pme-change) td.service-fee.set,
 div.project-participants form.pme-form:not(.pme-change) td.service-fee.enum {
-    min-width:10em;
+    min-width:11em;
 }
 
 div.project-participants form.pme-form:not(.pme-change) td.service-fee.enum {
@@ -43,12 +50,20 @@ div.project-participants form.pme-form:not(.pme-change) td.service-fee.enum {
 }
 
 div.project-participants form.pme-form:not(.pme-change) span.allowed-option-name {
-    max-width:5em;
-    float:left;
+  max-width:5em;
+  float:left;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+div.project-participants form.pme-form.pme-view span.allowed-option-name,
+div.project-participants form.pme-form.pme-delete span.allowed-option-name {
+  max-width:12em;
 }
 
 div.project-participants form.pme-form:not(.pme-change) span.allowed-option-value.money {
-    float:right;
+  font-family:monospace;
+  float:right;
 }
 
 div.project-participants form.pme-form:not(.pme-change) span.allowed-option.group {
@@ -59,7 +74,7 @@ div.project-participants form.pme-form.pme-view span.allowed-option-name,
 div.project-participants form.pme-form.pme-delete span.allowed-option-name,
 div.project-participants form.pme-form.pme-view span.allowed-option-value.money,
 div.project-participants form.pme-form.pme-delete span.allowed-option-value.money {
-    float:unset;
+  /* float:unset; */
 }
 
 div.project-participants form.pme-form.pme-view td.service-fee span.allowed-option-name:after,
@@ -75,37 +90,70 @@ div.project-participants form.pme-form.pme-delete td.service-fee.set {
     position:relative;
 }
 
+/* The following can be used to style the money labels. */
 div.project-participants form.pme-form.pme-change td.pme-key.service-fee.single-valued span.allowed-option-name.money,
 div.project-participants form.pme-form.pme-add td.pme-key.service-fee.single-valued span.allowed-option-name.money,
 div.project-participants form.pme-form.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-name.money {
-    margin-right:6em; /* leave room for absolute positioned money value */
+  /* margin-right:6em; */ /* leave room for absolute positioned money value */
 }
 
 div.project-participants form.pme-form.pme-change td.pme-key.service-fee.single-valued span.allowed-option-value.money,
 div.project-participants form.pme-form.pme-add td.pme-key.service-fee.single-valued span.allowed-option-value.money,
 div.project-participants form.pme-form.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-value.money {
-    position:absolute;
-    right:1em;
+    font-family:monospace;
+    float:right;
+    /* position:absolute; */
+    /* right:1em; */
 }
 
 div.project-participants form.pme-form.pme-view td.service-fee.set span.allowed-option-value.money,
 div.project-participants form.pme-form.pme-delete td.service-fee.set span.allowed-option-value.money {
     font-family:monospace;
-    font-size:120%;
-    position:absolute;
-    left:12em;
+    /* font-size:120%; */
+    /* position:absolute; */
+    /* left:12em; */
+    float:right;
+}
+
+div.project-participants form.pme-form:not(.pme-change) td.money.single-valued,
+div.project-participants form.pme-form:not(.pme-change) td.money.simple-valued {
+  font-family:monospace;
+}
+
+div.project-participants form.pme-form:not(.pme-change) td.money.single-valued.groupofpeople {
+  font-family:inherit;
 }
 
 div.project-participants span.allowed-option-name ~ span.allowed-option-value {
-    margin-left:1ex;
+  /* margin-left:1ex; */
 }
 
 div.project-participants label.groupofpeople.predefined span.allowed-option {
-  margin-left:1ex;
+  /* margin-left:1ex; */
   display:none;
 }
 
 div.project-participants label.groupofpeople.predefined span.allowed-option.selected {
   display:unset;
   font-weight:bold;
+}
+
+div.project-participants td.pme-value input.sepa-debit-mandate,
+div.project-participants td.pme-cell input.sepa-debit-mandate {
+  min-height:unset;
+  margin:0;
+  padding: 2px 12px 2px 12px;
+}
+
+div.project-participants td.pme-value div.allowed-option-wrapper,
+div.project-participants td.pme-cell div.allowed-option-wrapper {
+  max-height:24px;
+  line-height:12px;
+  overflow:hidden;
+}
+
+div.project-participants td.pme-value div.allowed-option-wrapper > *,
+div.project-participants td.pme-cell div.allowed-option-wrapper > *{
+  -moz-transform: scale(0.5);
+  zoom: 0.5;
 }
