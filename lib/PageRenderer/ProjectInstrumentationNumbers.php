@@ -311,9 +311,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'sort'   => $sort,
       'select' => 'N',
       'sql'    => "CONCAT(
-  COUNT(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".musician_id) - $main_table.quantity,
+  COUNT(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".musician_id) - \$main_table.quantity,
   ':',
-  COUNT(".$joinTables[self::PROJECT_PARTICIPANTS_TABLE].".musician_id) - $main_table.quantity
+  COUNT(".$joinTables[self::PROJECT_PARTICIPANTS_TABLE].".musician_id) - \$main_table.quantity
 )",
       'php' => function($balance, $op, $field, $row, $recordId, $pme) {
         $values = Util::explode(':', $balance);

@@ -299,26 +299,6 @@ class Projects extends PMETableViewBase
       'sort'     => false
     ];
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
-      [
-        'name' => $this->l->t('Instrumentation'),
-        'select' => 'M',
-        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-        'display|LF'  => ["popup" => 'data',
-                          "prefix" => '<div class="projectinstrumentation">',
-                          "postfix" => '</div>'],
-        'css'         => ['postfix' => ' projectinstrumentation tooltip-top'],
-        'values' => [
-          'column' => 'id',
-          'description' => 'name',
-          'orderby' => '$table.sort_order ASC',
-          'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
-        ],
-        'values2' => $this->instrumentInfo['byId'],
-        'valueGroups' => $this->instrumentInfo['idGroups'],
-      ]);
-
     $opts['fdd']['tools'] = [
       'name'     => $this->l->t('Toolbox'),
       'input'    => 'V',
@@ -337,13 +317,53 @@ class Projects extends PMETableViewBase
     ];
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
+      [
+        'name' => $this->l->t('Instrumentation'),
+        'select' => 'M',
+        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'display|LF'  => ["popup" => 'data',
+                          "prefix" => '<div class="projectinstrumentation">',
+                          "postfix" => '</div>'],
+        'css'         => ['postfix' => ' projectinstrumentation tooltip-top'],
+        'values' => [
+          'column' => 'id',
+          'description' => 'name',
+          'orderby' => '$table.sort_order ASC',
+          'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        ],
+        'values2' => $this->instrumentInfo['byId'],
+        'valueGroups' => $this->instrumentInfo['idGroups'],
+        'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
+          $post = [
+            'projectInstruments' => $value,
+            'template' => 'project-instrumentation-numbers',
+            'projectName' => $row[$this->queryField('name', $pme->fdd)],
+            'project_id' => $recordId,
+            'projectId' => $recordId,
+          ];
+          $json = json_encode($post);
+          $post = http_build_query($post, '', '&');
+          $title = $this->toolTipsService['project-action-project-instrumentation-numbers'];
+          $link =<<<__EOT__
+<li class="nav tooltip-top" title="$title">
+  <a class="nav" href="#" data-post="$post" data-json='$json'>
+$value
+  </a>
+</li>
+__EOT__;
+          return $link;
+        },
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::EXTRA_FIELDS_TABLE, 'name',
       [
         'name' => $this->l->t('Extra Member Data'),
         'options'  => 'FLCVD',
         'input'    => 'VR',
         'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \', \')',
-        'php|VCP'  => function($value, $op, $field, $row, $recordId, $pme) {
+        'php|VDCP'  => function($value, $op, $field, $row, $recordId, $pme) {
           $post = [
             'ProjectExtraFields' => $value,
             'template' => 'project-extra-fields',

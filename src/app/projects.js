@@ -1100,15 +1100,22 @@ const documentReady = function() {
           });
       }
 
-      const projectExtra = container.find('td.pme-value.projectextra a.nav');
-      projectExtra
-        .off('click')
-        .on('click', function(event) {
-          const data = projectExtra.data('json');
-          console.info('DATA', data, selector);
-          extraFieldsPopup(selector, data);
-          return false;
-        });
+      const linkPopups = {
+        projectextra: extraFieldsPopup,
+        projectinstrumentation: instrumentationNumbersPopup,
+      };
+
+      for (const [css, popup] of Object.entries(linkPopups)) {
+        const element = container.find('td.pme-value.' + css + ' a.nav');
+        element
+          .off('click')
+          .on('click', function(event) {
+            const data = $(this).data('json');
+            console.info('DATA', data, selector);
+            popup(selector, data);
+            return false;
+          });
+      }
 
       return false; // table load callback
     },
