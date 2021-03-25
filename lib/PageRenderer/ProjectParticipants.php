@@ -299,9 +299,9 @@ class ProjectParticipants extends PMETableViewBase
     // count number of finance fields
     $extraFinancial = 0;
     foreach ($extraFields as $field) {
-      $extraFinancial += $field['dataType'] == 'service-fee';
+      $extraFinancial += ($field['dataType'] == 'service-fee' || $field['dataType'] == 'deposit');
     }
-    if ($extraFinancial > 0 || $project['prePayment'] > 0) {
+    if ($extraFinancial > 0) {
       $useFinanceTab = true;
       $financeTab = 'finance';
     } else {
@@ -816,7 +816,7 @@ class ProjectParticipants extends PMETableViewBase
       }
 
       // set tab unless overridden by field definition
-      if ($field['data_type'] == 'service-fee') {
+      if ($field['data_type'] == 'service-fee' || $field['data_type'] == 'deposit') {
         $tab = [ 'id' => $financeTab ];
       } else {
         $tab = [ 'id' => 'project' ];
@@ -911,8 +911,8 @@ class ProjectParticipants extends PMETableViewBase
         $fdd['css']['postfix'] .= ' simple-valued '.$dataType;
         switch ($dataType) {
         case 'money':
-        case 'deposit':
         case 'service-fee':
+        case 'deposit':
           unset($fdd['mask']);
           $fdd['php|VDLF'] = function($value) {
             return $this->moneyValue($value);
@@ -936,8 +936,8 @@ class ProjectParticipants extends PMETableViewBase
         case 'boolean':
           break;
         case 'money':
-        case 'deposit':
         case 'service-fee':
+        case 'deposit':
           $money = $this->moneyValue(reset($valueData));
           $noMoney = $this->moneyValue(0);
           // just use the amount to pay as label
@@ -960,8 +960,8 @@ class ProjectParticipants extends PMETableViewBase
       case 'parallel':
       case 'multiple':
         switch ($dataType) {
-        case 'deposit':
         case 'service-fee':
+        case 'deposit':
           foreach ($allowed as $option) {
             $key = $option['key'];
             $label = $option['label'];
@@ -1075,8 +1075,8 @@ WHERE pp.project_id = $projectId",
 
         $fdd['css']['postfix'] .= ' '.implode(' ', $css);
 
-        if ($dataType == 'service-fee') {
-          $fdd['css']['postfix'] .= ' service-fee';
+        if ($dataType == 'service-fee' || $dataType == 'deposit') {
+          $fdd['css']['postfix'] .= ' money '.$dataType;
           $money = $this->moneyValue(reset($valueData));
           $fdd['name|LFVD'] = $fdd['name'];
           $fdd['name'] = $this->allowedOptionLabel($fdd['name'], reset($valueData), $dataType, 'money');
@@ -1118,7 +1118,7 @@ WHERE pp.project_id = $projectId",
         foreach($allowed as $key => $value) {
           $valueGroups[--$idx] = $value['label'];
           $data = $value['data'];
-          if ($dataType == 'service-fee') {
+          if ($dataType == 'service-fee' || $dataType == 'deposit') {
             $data = $this->moneyValue($data);
           }
           if (!empty($data)) {
@@ -1133,8 +1133,8 @@ WHERE pp.project_id = $projectId",
 
         $css[] = 'groupofpeople';
         $css[] = 'predefined';
-        if ($dataType === 'service-fee') {
-          $css[] = 'service-fee';
+        if ($dataType === 'service-fee' || $dataType === 'deposit') {
+          $css[] = ' money '.$dataType;
           foreach ($groupValues2 as $key => $value) {
             $groupValues2[$key] = $this->allowedOptionLabel(
               $value, $groupValueData[$key], $dataType, 'money group');
@@ -2057,8 +2057,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     }
     switch ($dataType) {
     case 'money':
-    case 'deposit':
     case 'service-fee':
+    case 'deposit':
       $value = $this->moneyValue($value);
       $innerCss .= ' money';
       break;
