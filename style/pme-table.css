@@ -883,7 +883,7 @@ td.pme-cell.projects {
 }
 
 td.pme-value.projects {
-  width:38em;
+  width:20em;
   max-width:38em;
   max-height:1em;
   white-space:nowrap;
@@ -900,10 +900,11 @@ td.pme-cell.user-groups {
   text-overflow:ellipsis;
 }
 
+td.pme-cell div.projectinstrumentation,
 td.pme-cell.projectextra {
-  width:15em;
-  max-width:15em;
-  max-height:1em;
+  width:12em;
+  max-width:12em;
+  /* max-height:1em; */
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -916,6 +917,21 @@ td.pme-value.projectextra {
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+}
+
+/* Something special for the instrumentation. */
+/* td.pme-cell div.projectinstrumentation {
+   font-size:50%;
+   line-height:100%;
+   max-width:64ex;
+   width:auto;
+   max-height:4em;
+   white-space:normal;
+   overflow:hidden;
+   }
+ */
+td.pme-value.projectinstrumentation {
+  white-space:normal;
 }
 
 th.pme-header.mandate-project, td.pme-cell.mandate-project {
@@ -968,21 +984,6 @@ table.pme-main td.pme-cell.hide-subsequent-lines .pme-cell-wrapper.halfed-sized 
 table.pme-main td.pme-cell.hide-subsequent-lines .pme-cell-wrapper.quarter-sized {
   max-height:8em;
   font-size:25%;
-}
-
-/* Something special for the instrumentation. */
-td.pme-cell div.projectinstrumentation {
-  font-size:50%;
-  line-height:100%;
-  max-width:64ex;
-  width:auto;
-  max-height:4em;
-  white-space:normal;
-  overflow:hidden;
-}
-
-td.pme-value.projectinstrumentation {
-  white-space:normal;
 }
 
 table.pme-main [class^="chosen"] {
