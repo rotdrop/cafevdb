@@ -26,6 +26,7 @@ use Ramsey\Uuid\Uuid;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * General support service, kind of inconsequent glue between
