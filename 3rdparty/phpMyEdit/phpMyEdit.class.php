@@ -79,6 +79,13 @@ class phpMyEdit
 	const TABLE_ALIAS = 'PMEalias';
 	const JOIN_ALIAS = 'PMEjoin';
 	const MAIN_ALIAS = 'PMEtable0';
+	const SQL_ENCODE = 'TO_BASE64';
+	const SQL_DECODE = 'FROM_BASE64';
+
+	const COOKED = 0x00;
+	const OMIT_DESC = 0x01;
+	const OMIT_SQL = 0x02;
+	const VANILLA = self::OMIT_DESC|self::OMIT_SQL;
 
 	// Class variables {{{
 
@@ -342,7 +349,7 @@ class phpMyEdit
 		foreach ($this->rec as $key => $rec) {
 			$delim = $this->key_delim[$key];
 			// no need for fqn. ?
-			//$wparts[] = $this->fqn($key, true).' = '.$delim.$rec.$delim;
+			//$wparts[] = $this->fqn($key, self::OMIT_DESC).' = '.$delim.$rec.$delim;
 			$wparts[] =
 				$this->sd.self::MAIN_ALIAS.$this->ed.'.'.$this->sd.$key.$this->ed.
 				' = '.
@@ -833,67 +840,30 @@ class phpMyEdit
 	 * the values that have been set (i.e. computed or feched from the
 	 * db).
 	 */
-	function set_values($field_num, $prepend = null, $append = null, $strict = false) /* {{{ */
+	function set_values($field_num, $strict = false) /* {{{ */
 	{
 		$fdd = &$this->fdd[$field_num]; // reference is important here
 		if (!empty($fdd['setvalues'])) {
 			return $fdd['setvalues']; // use cache.
 		}
 
+		// allow for unconditional override
+		$groups = (array)$fdd['valueGroups'];
+		$data = (array)$fdd['valueData'];
+		$titles = (array)$fdd['valueTitles'];
+		$values = (array)$fdd['values2'];
+
 		$valuesDef = $this->values_with_defaults($field_num);
 
-		$values = array();
-		$groups = null;
-		$data = null;
-		$titles = null;
-
-		// allow for unconditional override
-		if (isset($valuesDef['valueGroups'])) {
-			$groups = $valuesDef['valueGroups'];
-		} else if (isset($fdd['valueGroups'])) {
-			$groups = $fdd['valueGroups'];
-		}
-		if (isset($valuesDef['valueData'])) {
-			$data = $valuesDef['valueData'];
-		} else if (isset($fdd['valueData'])) {
-			$data = $fdd['valueData'];
-		}
-		if (isset($valuesDef['valueTitles'])) {
-			$titles = $valuesDef['valueTitles'];
-		} else if (isset($fdd['valueTitles'])) {
-			$titles = $fdd['valueTitles'];
-		}
-		if (isset($valuesDef['queryValues'])) {
-			$values = $valuesDef['queryValues'];
-		} else if (isset($valuesDef['table']) || $strict) {
+		if (!empty($valuesDef['table']) || $strict) {
 			$value_group_data = $this->set_values_from_table($field_num, $strict);
-			$groups = (array)$groups + (array)$value_group_data['groups'];
-			$data = (array)$data + (array)$value_group_data['data'];
-			$titles = (array)$titles + (array)$value_group_data['titles'];
-			$values = [];
-			if (!empty($fdd['values2'])) {
-				$values += $fdd['values2'];
-			}
-			if (!empty($value_group_data['values'])) {
-				$values += $value_group_data['values'];
-			}
-		} else {
-			$values = (array)$fdd['values2'];
+			$groups += $value_group_data['groups'];
+			$data += $value_group_data['data'];
+			$titles += $value_group_data['titles'];
+			$values += $value_group_data['values'];
 		}
 
-		$values = (array)$prepend + (array)$values + (array)$append;
-		foreach ($values as $key => $value) {
-			if ($key !== 0 && empty($key)) {
-				$this->logDebug('Empty values key: '. print_r($values, true));
-				unset($values[$key]);
-			}
-		}
-
-		//error_log('groups: '.print_r($groups, true));
-		//error_log('data: '.print_r($data, true));
-		//error_log('values: '.print_r($values, true));
-
-		$fdd['values2'] = $values;
+		$values = array_diff_key($values, [ null => true ]);
 
 		$fdd['setvalues'] = [
 			'values' => $values,
@@ -902,52 +872,53 @@ class phpMyEdit
 			'data' => $data
 		];
 
-		//error_log(__METHOD__.' '.print_r($fdd['setvalues'], true));
+		$fdd['values2'] = $fdd['setvalues']['values'];
 
 		if ($this->fds[$field_num]  == 'updated') {
 			throw new \Exception('blah');
 		}
 
-		//$this->logInfo('VALUES '.print_r($fdd['setvalues'], true));
+		// $this->logInfo('VALUES '.print_r($fdd['setvalues'], true));
 
 		return $fdd['setvalues'];
 	} /* }}} */
 
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
 	{
-		$db	   = &$this->fdd[$field_num]['values']['db'];
-		$table = $this->fdd[$field_num]['values']['table'];
+		$db	    = $this->fdd[$field_num]['values']['db'];
+		$table  = $this->fdd[$field_num]['values']['table'];
 		if (empty($table)) {
 			$table = $this->tb;
 		}
 		$valuesDef = $this->values_with_defaults($field_num);
 
-		$key      = $valuesDef['column'];
+		$column   = $valuesDef['column'];
 		$desc     = $valuesDef['description'];
 		$filters  = $valuesDef['filters'];
 		$orderby  = $valuesDef['orderby'];
 		$groups   = $valuesDef['groups'];
 		$data     = $valuesDef['data'];
 		$titles   = $valuesDef['titles'];
+		$binary   = $valuesDef['binary'];
+		$encode   = $valuesDef['encode'];
 		$dbp      = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 
 		$qparts['type'] = 'select';
 
 		$subquery = stripos($table, 'SELECT') !== false;
-		$table_name = $table;
+		$table_name = self::TABLE_ALIAS.$field_num;
 		if ($subquery) {
-			$table_name = self::TABLE_ALIAS.$field_num;
 			$from_table = '('.$table.') '.$table_name;
 		} else {
 			$table      = $this->sd.$table.$this->ed;
-			$from_table = $dbp.$table;
+			$from_table = $dbp.$table.' '.$table_name;
 		}
 
 		$subs = array(
 			'main_table'  => $this->tb,
 			'record_id'   => implode(',', $this->rec), // may be useful for change op.
 			'table'		  => $table_name,
-			'column'	  => $key,
+			'column'	  => $column,
 			'description' => $desc);
 		if (!empty($this->rec)) {
 			//$this->logInfo('REC '.print_r($this->rec, true));
@@ -957,7 +928,11 @@ class phpMyEdit
 		}
 		//$this->logInfo('SUBS '.print_r($subs, true));
 
-		$qparts['select'] = 'DISTINCT '.$table_name.'.'.$this->sd.$key.$this->ed;
+		$queryField = $table_name.'.'.$this->sd.$column.$this->ed;
+		if (!empty($encode)) {
+			$queryField = sprintf($encode, $queryField);
+		}
+		$qparts['select'] = 'DISTINCT '.$queryField;
 
 		if (!empty($desc)) {
 
@@ -979,13 +954,22 @@ class phpMyEdit
 				$qparts['select'] .= '"'.addslashes($desc['divs'][-1]).'",';
 			}
 			$selects = [];
-			foreach ($desc['columns'] as $key => $val) {
+			foreach ($desc['columns'] as $idx => $val) {
 				if ($val) {
-					$select = 'IFNULL(CAST('.$this->sd.$val.$this->ed.' AS CHAR),';
-					$null = empty($desc['ifnull'][$key]) ? '""' : $desc['ifnull'][$key];
+					if ($this->hasSubstitutions($val)) {
+						$descSubs = [
+							'table' => $table_name,
+							'column' => $column,
+						];
+						$val = $this->substituteVars($val, $descSubs);
+					} else {
+						$val = $this->sd.$val.$this->ed;
+					}
+					$select = 'IFNULL(CAST('.$val.' AS CHAR),';
+					$null = empty($desc['ifnull'][$idx]) ? '""' : $desc['ifnull'][$idx];
 					$select .= $null.')';
-					if (!empty($desc['divs'][$key]) && is_array($desc['divs'])) {
-						$select .= ',"'.addslashes($desc['divs'][$key]).'"';
+					if (!empty($desc['divs'][$idx]) && is_array($desc['divs'])) {
+						$select .= ',"'.addslashes($desc['divs'][$idx]).'"';
 					}
 					$selects[] = $select;
 				}
@@ -994,8 +978,8 @@ class phpMyEdit
 			$qparts['select'][strlen($qparts['select']) - 1] = ')';
 			$qparts['select'] .= ' AS '.$this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
 			$qparts['orderby'] = $this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
-		} else if ($key) {
-			$qparts['orderby'] = $this->sd.$key.$this->ed;
+		} else if ($column) {
+			$qparts['orderby'] = $this->sd.$column.$this->ed;
 		}
 		$qparts['from'] = $from_table;
 		if (!empty($filters)) {
@@ -1039,7 +1023,16 @@ class phpMyEdit
 			}
 		}
 
-		return array('values' => $values, 'groups' => $grps, 'data' => $dt, 'titles' => $ttls);
+		$result = [
+			'values' => $values,
+			'groups' => $grps,
+			'data' => $dt,
+			'titles' => $ttls,
+		];
+
+		// $this->logInfo('FROM TABLE '.print_r($result, true));
+
+		return $result;
 	} /* }}} */
 
 	protected function join_table_reference($fdd)
@@ -1086,24 +1079,27 @@ class phpMyEdit
 	 */
 	protected function values_with_defaults(int $field)
 	{
-		$fdd = $this->fdd[$field];
+		$values = $this->fdd[$field]['values']?:[];
+
+		$encode = $values['encode']?:'%s';
+
 		$join_table = $this->join_table_alias($field);
-		if (!isset($fdd['values']['column'])) {
+		if (!isset($values['column'])) {
 			$join_column = $this->fds[$field];
 		} else {
-			$join_column = $fdd['values']['column'];
+			$join_column = $values['column'];
 		}
 
-		if (!isset($fdd['values']['description'])) {
-			$join_desc = $join_column;
+		if (!isset($values['description'])) {
+			$join_desc = sprintf($encode, '$table.$column');
 		} else {
-			$join_desc = $fdd['values']['description'];
+			$join_desc = $values['description'];
 		}
 
-		if (!isset($fdd['values']['orderby'])) {
-			$orderBy = '$table.$column ASC';
+		if (!isset($values['orderby'])) {
+			$orderBy = sprintf($encode.' ASC', '$table.$column');
 		} else {
-			$orderBy = $sd.$fdd['values']['orderby'];
+			$orderBy = $values['orderby'];
 		}
 
 		return array_merge(
@@ -1112,8 +1108,10 @@ class phpMyEdit
 				'column' => $join_column,
 				'description' => $join_desc,
 				'orderby' => $orderBy,
+				'encode' => $encode,
+				'grouped' => false,
 			],
-			$fdd['values']?:[]
+			array_filter($values, function ($value) { return $value !== null; })
 		);
 	}
 
@@ -1126,8 +1124,10 @@ class phpMyEdit
 	 *
 	 * @param int $field Field number.
 	 *
+	 * @param bool $vanilla Return just the expression for the field.
+	 *
 	 */
-	protected function sql_field($field)
+	protected function sql_field($field, $vanilla = false)
 	{
 		$values = $this->values_with_defaults($field);
 
@@ -1135,19 +1135,30 @@ class phpMyEdit
 		$join_table = $this->sd.$values['join_table'].$this->ed;
 		$join_column = $this->sd.$values['column'].$this->ed;
 		$join_col_fqn = $join_table.'.'.$join_column;
+
+		if ($vanilla) {
+			return $join_col_fqn;
+		}
+
 		$join_desc = $this->sd.$values['description'].$this->ed;
 		$join_desc_fqn = $join_table.'.'.$join_desc;
 		$order_by = $values['orderby'];
 
 		$fdd = $this->fdd[$field];
-		if (isset($fdd['sql'])) {
+		$sql = $fdd['sql']?
+			 : ($values['grouped']
+				 ? 'GROUP_CONCAT(DISTINCT $join_col_enc ORDER BY $order_by)'
+				 : null);
+
+		if (!empty($sql)) {
 			return $this->substituteVars(
-				$fdd['sql'], array(
+				$sql, array(
 					'main_table' => $main_table,
 					'field_name' => $this->fds[$field],
 					'join_table' => $join_table,
 					'join_column' => $join_column,
 					'join_col_fqn' => $join_col_fqn,
+					'join_col_enc' => sprintf($values['encode'], $join_col_fqn),
 					'join_description' => $join_desc,
 					'join_desc_fqn' => $join_desc_fqn,
 					'table' => $join_table,
@@ -1160,12 +1171,24 @@ class phpMyEdit
 		}
 	}
 
-	function fqn($field, $dont_desc = false, $dont_cols = false) /* {{{ */
+	/**
+	 * Generate the query code for one field.
+	 *
+	 * @param int $field Field number or field-name
+	 *
+	 * @param int $flags Binary combination of self::OMIT_SQL and
+	 * self::OMIT_DESC:
+	 * - self::OMIT_DESC Omit the description fields defined by
+	 *   'values' part of fdd
+	 * - self::OMIT_SQL Omit sql part of fdd.
+	 */
+	function fqn($field, $flags = self::COOKED) /* {{{ */
 	{
+		$dont_desc = !!($flags & self::OMIT_DESC);
 		is_numeric($field) || $field = array_search($field, $this->fds);
 		// if read SQL expression exists use it
 		if ($this->col_has_sql($field) && (!$this->col_has_description($field) || $dont_desc)) {
-			return $this->sql_field($field);
+			return $this->sql_field($field, $flags & self::OMIT_SQL);
 		}
 		// on copy/change always use simple key retrieving, or given sql descriptor
 		if ($this->add_operation()
@@ -1173,13 +1196,14 @@ class phpMyEdit
 			|| $this->delete_operation()
 			|| $this->copy_operation()
 			|| $this->change_operation()) {
-			return $this->sql_field($field);
+			return $this->sql_field($field, $flags & self::OMIT_SQL);
 		} else {
 			$fdd = $this->fdd[$field];
 			if (isset($fdd['values']['description']) && ! $dont_desc) {
 
 				$join_table = $this->join_table_alias($field);
 
+				$column = $fdd['values']['column'];
 				$desc = $fdd['values']['description'];
 
 				// normalize $desc
@@ -1200,13 +1224,21 @@ class phpMyEdit
 					$ret .= '"'.addslashes($desc['divs'][-1]).'",';
 				}
 				$descFields = [];
-				foreach ($desc['columns'] as $key => $val) {
+				foreach ($desc['columns'] as $idx => $val) {
 					if ($val) {
-						$descField = 'IFNULL(CAST('.$this->sd.$join_table.$this->ed.'.'.$this->sd.$val.$this->ed.' AS CHAR),';
-						$null = empty($desc['ifnull'][$key]) ? '""' : $desc['ifnull'][$key];
+						$descSubs = [
+							'table' => $join_table,
+							'column' => $column,
+						];
+						if (!$this->hasSubstitutions($val)) {
+							$val = '$table.'.$this->sd.$val.$this->ed;
+						}
+						$val = $this->substituteVars($val, $descSubs);
+						$descField = 'IFNULL(CAST('.$val.' AS CHAR),';
+						$null = empty($desc['ifnull'][$idx]) ? '""' : $desc['ifnull'][$idx];
 						$descField .= $null.')';
-						if (!empty($desc['divs'][$key]) && is_array($desc['divs'])) {
-							$descField .= ',"'.addslashes($desc['divs'][$key]).'"';
+						if (!empty($desc['divs'][$idx]) && is_array($desc['divs'])) {
+							$descField .= ',"'.addslashes($desc['divs'][$idx]).'"';
 						}
 						$descFields[] = $descField;
 					}
@@ -1214,7 +1246,7 @@ class phpMyEdit
 				$ret .= implode(',', $descFields).',';
 				$ret[strlen($ret) - 1] = ')';
 			} else {
-				$ret = $this->sql_field($field);
+				$ret = $this->sql_field($field, $flags & self::OMIT_SQL);
 			}
 		}
 		return $ret;
@@ -1225,7 +1257,7 @@ class phpMyEdit
 		$fields = '';
 		if (!empty($this->groupby)) {
 			foreach($this->groupby as $field) {
-				$fields .= $this->fqn($field).',';
+				$fields .= $this->fqn($field, self::VANILLA).',';
 			}
 		}
 		return trim($fields, ',');
@@ -1347,7 +1379,7 @@ class phpMyEdit
 			}
 			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed;
 			if ($this->col_has_description($k)) {
-				$fields[] = $this->fqn($k, true).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
+				$fields[] = $this->fqn($k, self::OMIT_DESC).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
 			}
 			if ($this->col_has_datemask($k)) {
 				// Date functions of mysql are a nightmare. Leave the
@@ -1603,9 +1635,9 @@ class phpMyEdit
 			}
 
 			if (is_array($m) || is_array($mi)) {
-				$dont_desc = false;
+				$fqn_flags = self::COOKED;
 				if (is_array($mi)) {
-					$dont_desc = true;
+					$fqn_flags = self::OMIT_DESC;
 					$m = $mi;
 					$l = $li;
 				}
@@ -1623,7 +1655,7 @@ class phpMyEdit
 					foreach (array_keys($m) as $key) {
 						$m[$key] = addslashes($m[$key]);
 					}
-					$fqn = $this->fqn($k, $dont_desc);
+					$fqn = $this->fqn($k, $fqn_flags);
 					$qo[$fqn] = array('value' => $m);
 					if ($not) {
 						$qo[$fqn]['oper'] = 'NOT';
@@ -1641,17 +1673,8 @@ class phpMyEdit
 						}
 						$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l.'['.rawurlencode($key).']='.rawurlencode($m[$key]);
 					}
-					// XXX: $dont_desc and $dont_cols hack
-					// cH: what is this???
-					$dont_desc = isset($this->fdd[$k]['values']['description']);
-					if (isset($this->fdd[$k]['values']['queryValues']) ||
-						(isset($this->fdd[$k]['values']['forcedesc']) &&
-						 $this->fdd[$k]['values']['forcedesc'])) {
-						// override dont_desc hack, whatever that might be.
-						$dont_desc = false;
-					}
-					$dont_cols = isset($this->fdd[$k]['values']['column']);
-					$qo[$this->fqn($k, $dont_desc, $dont_cols)] =
+					$fqn_flags = isset($this->fdd[$k]['values']['description'])?self::OMIT_DESC:0;
+					$qo[$this->fqn($k, $fqn_flags)] =
 						array('oper'  => $qf_op, 'value' => "($qf_val)"); // )
 				}
 			} else if (isset($mi)) {
@@ -2557,6 +2580,14 @@ class phpMyEdit
 		}
 	} /* }}} */
 
+	/*
+	 * Check whether $str contains substitutions.
+	 */
+	function hasSubstitutions($str)
+	{
+		return strpos($str, '$') !== false;
+	}
+
 	/**
 	 * Substitutes variables in string
 	 * (this is very simple but secure eval() replacement)
@@ -3021,7 +3052,8 @@ class phpMyEdit
 				$lastGroup = $group;
 				$ret .= '<optgroup data-group-id="'.$groupId.'" label="'.$lastGroup.'">'."\n";
 			}
-			$ret .= '<option value="'.htmlspecialchars($key).'"';
+			$encodedKey = htmlspecialchars($key);
+			$ret .= '<option value="'.$encodedKey.'"';
 			if ((! $found || $multiple) && in_array((string)$key, $selected, 1)) {
 				//|| (count($selected) == 0 && ! $found && ! $multiple)) {
 				$ret  .= ' selected="selected"';
@@ -3858,8 +3890,8 @@ class phpMyEdit
 				// Multiple fields processing
 				// Default size is 2 and array required for values.
 				$from_table = ! $this->col_has_values($k) || isset($this->fdd[$k]['values']['table']);
-				$valgrp		= $this->set_values($k, array('*' => '*'), null, $from_table);
-				$vals		= $valgrp['values'];
+				$valgrp		= $this->set_values($k, $from_table);
+				$vals		= array('*' => '*') + $valgrp['values'];
 				$groups     = $valgrp['groups'];
 				$titles     = $valgrp['titles'];
 				$data       = $valgrp['data'];
@@ -4897,21 +4929,11 @@ class phpMyEdit
 				if (!$this->disabled($k) || $this->readonly($k)) {
 					// leave complictated arrays to the trigger hooks.
 					if (is_array($fn) && self::is_flat($fn)) {
-						//error_log($fd.' flat array '.print_r($fn, true));
 						$newvals[$fd] = join(',', $fn);
 					} else {
-						//error_log($fd.' unflat or no array '.print_r($fn, true));
 						$newvals[$fd] = $fn;
 					}
-					//error_log('new '.$fd.' value "'.$newvals[$fd].'"');
-				} else {
-					//error_log('skipping '.$fd.' value '.$fn);
 				}
-				// if ($this->col_has_sql($k)) {
-				// 	$query_part = $this->fdd[$k]['sql']." AS '".$fd."'";
-				// } else {
-				// 	$query_part = $this->sd.self::MAIN_ALIAS.$this->ed.'.'.$this->sd.$fd.$this->ed;
-				// }
 				$query_part = $this->sql_field($k)." AS '".$fd."'";
 				if ($query_oldrec == '') {
 					$query_oldrec = 'SELECT '.$query_part;
@@ -4973,7 +4995,7 @@ class phpMyEdit
 			}
 		}
 
-		//error_log("changed ".print_r($changed, true));
+
 		// Before trigger
 		if ($this->exec_triggers('update', 'before', $oldvals, $changed, $newvals) === false) {
 			return false;
@@ -5415,7 +5437,7 @@ class phpMyEdit
 				$this->fdd[$key]['values']['table'] = $this->fdd[$ref]['values']['table'];
 			}
 			if (is_array(@$this->fdd[$key]['values']) &&
-				!($this->fdd[$key]['values']['table'] || $this->fdd[$key]['values']['queryValues'])) {
+				empty($this->fdd[$key]['values']['table'])) {
 				foreach ($this->fdd[$key]['values'] as $val) {
 					$this->fdd[$key]['values2'][$val] = $val;
 				}
