@@ -455,7 +455,8 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     .off('click', saveButtonSel)
     .on('click', saveButtonSel, function(event, triggerData) {
 
-      container.find(pmeNavigationSelector('reload')).addClass('loading');
+      const reloadButton = container.find(pmeNavigationSelector('reload'));
+      reloadButton.addClass('loading');
 
       // Brief front-end-check for empty required fields.
       const invalidInputs = container.find('form.pme-form :invalid');
@@ -475,8 +476,12 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                 {},
                 10000,
                 function() {
-                  if (afterDialog && !CAFEVDB.toolTipsEnabled()) {
-                    $input.cafevTooltip('disable');
+                  if (afterDialog) {
+                    if (!CAFEVDB.toolTipsEnabled()) {
+                      $input.cafevTooltip('disable');
+                    }
+                    reloadButton.removeClass('loading');
+                    Page.busyIcon(false);
                   }
                 });
             }
@@ -543,7 +548,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             fail(xhr, status, errorThrown) {
               console.info('cleanup');
               dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
-              container.find(pmeNavigationSelector('reload')).removeClass('loading');
+              reloadButton.removeClass('loading');
               Page.busyIcon(false);
             },
             done(htmlContent, historySize, historyPosition) {
@@ -571,7 +576,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                   container.dialog('close');
                 }
               }
-              container.find(pmeNavigationSelector('reload')).removeClass('loading');
+              reloadButton.removeClass('loading');
               Page.busyIcon(false);
             },
           });
