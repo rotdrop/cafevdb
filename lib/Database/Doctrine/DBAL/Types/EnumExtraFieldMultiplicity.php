@@ -34,6 +34,7 @@ class EnumExtraFieldMultiplicity extends EnumType
   const SINGLE = 'single';
   const MULTIPLE = 'multiple';
   const PARALLEL = 'parallel';
+  const RECURRING = 'recurring';
   const GROUPOFPEOPLE = 'groupofpeople';
   const GROUPSOFPEOPLE = 'groupsofpeople';
 }
