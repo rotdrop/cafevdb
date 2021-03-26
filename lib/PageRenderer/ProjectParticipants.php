@@ -852,7 +852,7 @@ class ProjectParticipants extends PMETableViewBase
           ],
           'tooltip' => $field['tool_tip']?:null,
         ]);
-      $fdd = &$opts['fdd'][$fddName];
+      $keyFdd = &$opts['fdd'][$fddName];
 
       $allowed = $this->extraFieldsService->explodeAllowedValues($field['allowed_values'], false, true);
       $values2     = [];
@@ -876,28 +876,28 @@ class ProjectParticipants extends PMETableViewBase
         // default config
         break;
       case 'html':
-        $fdd['textarea'] = [
+        $keyFdd['textarea'] = [
           'css' => 'wysiwyg-editor',
           'rows' => 5,
           'cols' => 50,
         ];
-        $fdd['css']['postfix'] .= ' hide-subsequent-lines';
-        $fdd['display|LF'] = [ 'popup' => 'data' ];
-        $fdd['escape'] = false;
+        $keyFdd['css']['postfix'] .= ' hide-subsequent-lines';
+        $keyFdd['display|LF'] = [ 'popup' => 'data' ];
+        $keyFdd['escape'] = false;
         break;
       case 'boolean':
         // handled below
-        $fdd['align'] = 'right';
+        $keyFdd['align'] = 'right';
         break;
       case 'integer':
-        $fdd['select'] = 'N';
-        $fdd['mask'] = '%d';
-        $fdd['align'] = 'right';
+        $keyFdd['select'] = 'N';
+        $keyFdd['mask'] = '%d';
+        $keyFdd['align'] = 'right';
         break;
       case 'float':
-        $fdd['select'] = 'N';
-        $fdd['mask'] = '%g';
-        $fdd['align'] = 'right';
+        $keyFdd['select'] = 'N';
+        $keyFdd['mask'] = '%g';
+        $keyFdd['align'] = 'right';
         break;
       case 'date':
       case 'datetime':
@@ -909,20 +909,20 @@ class ProjectParticipants extends PMETableViewBase
           throw new \Exception($this->l->t('Not default style for "%s" available.', $dataType));
         }
         unset($style['name']);
-        $fdd = array_merge($fdd, $style);
-        $fdd['css']['postfix'] .= ' '.implode(' ', $css);
+        $keyFdd = array_merge($keyFdd, $style);
+        $keyFdd['css']['postfix'] .= ' '.implode(' ', $css);
         break;
       }
 
       switch ($multiplicity) {
       case 'simple':
-        $fdd['css']['postfix'] .= ' simple-valued '.$dataType;
+        $keyFdd['css']['postfix'] .= ' simple-valued '.$dataType;
         switch ($dataType) {
         case 'money':
         case 'service-fee':
         case 'deposit':
-          unset($fdd['mask']);
-          $fdd['php|VDLF'] = function($value) {
+          unset($keyFdd['mask']);
+          $keyFdd['php|VDLF'] = function($value) {
             return $this->moneyValue($value);
           };
           break;
@@ -932,14 +932,14 @@ class ProjectParticipants extends PMETableViewBase
         break;
       case 'single':
         reset($values2); $key = key($values2);
-        $fdd['values2|CAP'] = [ $key => '' ]; // empty label for simple checkbox
-        $fdd['values2|LVDF'] = [
+        $keyFdd['values2|CAP'] = [ $key => '' ]; // empty label for simple checkbox
+        $keyFdd['values2|LVDF'] = [
           0 => $this->l->t('false'),
           $key => $this->l->t('true'),
         ];
-        $fdd['select'] = 'C';
-        $fdd['default'] = (string)!!(int)$field['default_value'];
-        $fdd['css']['postfix'] .= ' boolean single-valued '.$dataType;
+        $keyFdd['select'] = 'C';
+        $keyFdd['default'] = (string)!!(int)$field['default_value'];
+        $keyFdd['css']['postfix'] .= ' boolean single-valued '.$dataType;
         switch ($dataType) {
         case 'boolean':
           break;
@@ -949,19 +949,19 @@ class ProjectParticipants extends PMETableViewBase
           $money = $this->moneyValue(reset($valueData));
           $noMoney = $this->moneyValue(0);
           // just use the amount to pay as label
-          $fdd['values2|LVDF'] = [
+          $keyFdd['values2|LVDF'] = [
             '' => '-,--',
             0 => $noMoney, //'-,--',
             $key => $money,
           ];
-          $fdd['values2|CAP'] = [ $key => $money, ];
-          unset($fdd['mask']);
-          $fdd['php|VDLF'] = function($value) {
+          $keyFdd['values2|CAP'] = [ $key => $money, ];
+          unset($keyFdd['mask']);
+          $keyFdd['php|VDLF'] = function($value) {
             return $this->moneyValue($value);
           };
           break;
         default:
-          $fdd['values2|CAP'] = [ $key => reset($valueData) ];
+          $keyFdd['values2|CAP'] = [ $key => reset($valueData) ];
           break;
         } // data-type switch
         break;
@@ -976,54 +976,49 @@ class ProjectParticipants extends PMETableViewBase
             $data  = $option['data'];
             $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType, 'money');
           }
-          unset($fdd['mask']);
-          $fdd['values2glue'] = "<br/>";
-          $fdd['escape'] = false;
+          unset($keyFdd['mask']);
+          $keyFdd['values2glue'] = "<br/>";
+          $keyFdd['escape'] = false;
           // fall through
         default:
-          $fdd['values2'] = $values2;
-          $fdd['valueTitles'] = $valueTitles;
-          $fdd['valueData'] = $valueData;
-          $fdd['display|LF'] = [
+          $keyFdd['values2'] = $values2;
+          $keyFdd['valueTitles'] = $valueTitles;
+          $keyFdd['valueData'] = $valueData;
+          $keyFdd['display|LF'] = [
             'popup' => 'data',
             'prefix' => '<div class="allowed-option-wrapper">',
             'postfix' => '</div>',
           ];
           if ($multiplicity == 'parallel') {
-            $fdd['css']['postfix'] .= ' set hide-subsequent-lines';
-            $fdd['select'] = 'M';
+            $keyFdd['css']['postfix'] .= ' set hide-subsequent-lines';
+            $keyFdd['select'] = 'M';
           } else {
-            $fdd['css']['postfix'] .= ' enum allow-empty';
-            $fdd['select'] = 'D';
+            $keyFdd['css']['postfix'] .= ' enum allow-empty';
+            $keyFdd['select'] = 'D';
           }
-          $fdd['css']['postfix'] .= ' '.$dataType;
+          $keyFdd['css']['postfix'] .= ' '.$dataType;
           break;
         }
         break;
       case 'groupofpeople':
         // old field, group selection
-        $fdd = array_merge(
-          $fdd,
-          [
-            'mask' => null,
-          ]);
+        $keyFdd = array_merge($keyFdd, [ 'mask' => null, ]);
 
         // generate a new group-definition field as yet another column
         list($curColIdx, $fddGroupMemberName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'musician_id', $fdd);
+          $opts['fdd'], $tableName, 'musician_id', $keyFdd);
 
         // hide value field and tweak for view displays.
         $css[] = 'groupofpeople';
         $css[] = 'single-valued';
-        $fdd = Util::arrayMergeRecursive(
-          $fdd,
-          [
+        $keyFdd = Util::arrayMergeRecursive(
+          $keyFdd, [
             'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
             'input' => 'VSRH',
           ]);
 
         // new field, member selection
-        $fdd = &$opts['fdd'][$fddGroupMemberName];
+        $groupMemberFdd = &$opts['fdd'][$fddGroupMemberName];
 
         // tweak the join-structure entry for the group field
         $joinInfo = &$this->joinStructure[$extraFieldJoinIndex[$tableName]];
@@ -1041,8 +1036,8 @@ class ProjectParticipants extends PMETableViewBase
 
         // define the group stuff
         $max = $allowed[0]['limit'];
-        $fdd = array_merge(
-          $fdd, [
+        $groupMemberFdd = array_merge(
+          $groupMemberFdd, [
             'select' => 'M',
             'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
             'display' => [ 'popup' => 'data' ],
@@ -1081,15 +1076,15 @@ WHERE pp.project_id = $projectId",
             'valueGroups' => [ -1 => $this->l->t('without group') ],
           ]);
 
-        $fdd['css']['postfix'] .= ' '.implode(' ', $css);
+        $groupMemberFdd['css']['postfix'] .= ' '.implode(' ', $css);
 
         if ($dataType == 'service-fee' || $dataType == 'deposit') {
-          $fdd['css']['postfix'] .= ' money '.$dataType;
+          $groupMemberFdd['css']['postfix'] .= ' money '.$dataType;
           $money = $this->moneyValue(reset($valueData));
-          $fdd['name|LFVD'] = $fdd['name'];
-          $fdd['name'] = $this->allowedOptionLabel($fdd['name'], reset($valueData), $dataType, 'money');
-          $fdd['display|LFVD'] = array_merge(
-            $fdd['display'],
+          $groupMemberFdd['name|LFVD'] = $groupMemberFdd['name'];
+          $groupMemberFdd['name'] = $this->allowedOptionLabel($groupMemberFdd['name'], reset($valueData), $dataType, 'money');
+          $groupMemberFdd['display|LFVD'] = array_merge(
+            $groupMemberFdd['display'],
             [
               'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
               'postfix' => ('</span><span class="allowed-option-separator money">&nbsp;</span>'
@@ -1098,8 +1093,8 @@ WHERE pp.project_id = $projectId",
         }
 
         // in filter mode mask out all non-group-members
-        $fdd['values|LF'] = array_merge(
-          $fdd['values'],
+        $groupMemberFdd['values|LF'] = array_merge(
+          $groupMemberFdd['values'],
           [ 'filters' => '$table.group_id IS NOT NULL' ]);
 
         break;
@@ -1107,8 +1102,7 @@ WHERE pp.project_id = $projectId",
         // tweak the join-structure entry for the group field
         $joinInfo = &$this->joinStructure[$extraFieldJoinIndex[$tableName]];
         $joinInfo = array_merge(
-          $joinInfo,
-          [
+          $joinInfo, [
             'identifier' => [
               'project_id' => 'project_id',
               'musician_id' => false,
@@ -1122,7 +1116,7 @@ WHERE pp.project_id = $projectId",
         $groupValues2   = $values2;
         $groupValueData = $valueData;
         $values2 = [];
-        $valueGroups = [ -1 => $this->l->t('without group') ];
+        $valueGroups = [ -1 => $this->l->t('without group'), ];
         $idx = -1;
         foreach($allowed as $key => $value) {
           $valueGroups[--$idx] = $value['label'];
@@ -1134,7 +1128,7 @@ WHERE pp.project_id = $projectId",
             $valueGroups[$idx] .= ':&nbsp;' . $data;
           }
           $values2[$idx] = $this->l->t('add to this group');
-          $valueData[$idx] = json_encode([ 'groupId' => $value['key'] ]);
+          $valueData[$idx] = json_encode([ 'groupId' => $value['key'], ]);
         }
 
         // make the field a select box for the predefined groups, like
@@ -1151,9 +1145,8 @@ WHERE pp.project_id = $projectId",
         }
 
         // old field, group selection
-        $fdd = array_merge(
-          $fdd,
-          [
+        $keyFdd = array_merge(
+          $keyFdd, [
             //'name' => $this->l->t('%s Group', $fieldName),
             'css'         => [ 'postfix' => ' '.implode(' ', $css) ],
             'select'      => 'D',
@@ -1164,25 +1157,24 @@ WHERE pp.project_id = $projectId",
             'mask' => null,
           ]);
 
-        $fddValue = Util::arrayMergeRecursive([], $fdd);
+        $fddBase = Util::arrayMergeRecursive([], $keyFdd);
 
         // hide value field
-        $fdd = Util::arrayMergeRecursive(
-          $fdd,
-          [
+        $keyFdd = Util::arrayMergeRecursive(
+          $keyFdd, [
             'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
             'input' => 'VSRH',
           ]);
 
         // generate a new group-definition field as yet another column
         list($curColIdx, $fddGroupMemberName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'musician_id', $fddValue);
+          $opts['fdd'], $tableName, 'musician_id', $fddBase);
 
         // new field, member selection
-        $fdd = &$opts['fdd'][$fddGroupMemberName];
+        $groupMemberFdd = &$opts['fdd'][$fddGroupMemberName];
 
-        $fdd = Util::arrayMergeRecursive(
-          $fdd, [
+        $groupMemberFdd = Util::arrayMergeRecursive(
+          $groupMemberFdd, [
             'select' => 'M',
             'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
             //'sql' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
@@ -1238,20 +1230,19 @@ WHERE pp.project_id = $projectId",
             ],
           ]);
 
-        $fdd['css']['postfix'] .= ' clip-long-text';
-        $fdd['css|LFVD']['postfix'] = $fdd['css']['postfix'].' view';
+        $groupMemberFdd['css']['postfix'] .= ' clip-long-text';
+        $groupMemberFdd['css|LFVD']['postfix'] = $groupMemberFdd['css']['postfix'].' view';
 
         // generate yet another field to define popup-data
         list($curColIdx, $fddMemberNameName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'musician_name', $fddValue);
+          $opts['fdd'], $tableName, 'musician_name', $fddBase);
 
         // new field, data-popup
-        $fdd = &$opts['fdd'][$fddMemberNameName];
+        $popupFdd = &$opts['fdd'][$fddMemberNameName];
 
         // data-popup field
-        $fdd = Util::arrayMergeRecursive(
-           $fdd,
-           [
+        $popupFdd = Util::arrayMergeRecursive(
+           $popupFdd, [
              'input' => 'VSRH',
              'css'   => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-popup' ],
              'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
