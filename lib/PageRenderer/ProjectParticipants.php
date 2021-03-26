@@ -834,9 +834,8 @@ class ProjectParticipants extends PMETableViewBase
       $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
 
       $css = [ 'extra-field', 'field-id-'.$fieldId, ];
-      list($curColIdx, $fddName) = $this->makeJoinTableField(
-        $opts['fdd'], $tableName, 'option_key',
-        [
+      list(, $fddName) = $this->makeJoinTableField(
+        $opts['fdd'], $tableName, 'option_key', [
           'name' => $this->l->t($fieldName),
           'tab' => $tab,
           'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
@@ -1005,7 +1004,7 @@ class ProjectParticipants extends PMETableViewBase
         $keyFdd = array_merge($keyFdd, [ 'mask' => null, ]);
 
         // generate a new group-definition field as yet another column
-        list($curColIdx, $fddGroupMemberName) = $this->makeJoinTableField(
+        list(, $fddGroupMemberName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $keyFdd);
 
         // hide value field and tweak for view displays.
@@ -1167,7 +1166,7 @@ WHERE pp.project_id = $projectId",
           ]);
 
         // generate a new group-definition field as yet another column
-        list($curColIdx, $fddGroupMemberName) = $this->makeJoinTableField(
+        list(, $fddGroupMemberName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $fddBase);
 
         // new field, member selection
@@ -1234,7 +1233,7 @@ WHERE pp.project_id = $projectId",
         $groupMemberFdd['css|LFVD']['postfix'] = $groupMemberFdd['css']['postfix'].' view';
 
         // generate yet another field to define popup-data
-        list($curColIdx, $fddMemberNameName) = $this->makeJoinTableField(
+        list(, $fddMemberNameName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_name', $fddBase);
 
         // new field, data-popup
