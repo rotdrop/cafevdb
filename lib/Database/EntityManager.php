@@ -235,9 +235,10 @@ class EntityManager extends EntityManagerDecorator
       Types\EnumMemberStatus::class => 'enum',
       Types\EnumProjectTemporalType::class => 'enum',
       Types\EnumVCalendarType::class => 'enum',
-      Ramsey\UuidType::class => null,
-      Ramsey\UuidBinaryType::class => 'binary',
-      Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
+      // Ramsey\UuidType::class => null,
+      // Ramsey\UuidBinaryType::class => 'binary',
+      // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
+      Types\UuidType::class => 'binary',
     ];
 
     $connection = $this->entityManager->getConnection();
