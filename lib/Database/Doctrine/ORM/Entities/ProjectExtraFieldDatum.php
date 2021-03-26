@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -21,6 +22,9 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
@@ -56,11 +60,19 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   private $musician;
 
   /**
+   * @var \Ramsey\Uuid\UuidInterface
+   *
+   * @ORM\Column(type="uuid_binary")
+   * @ORM\Id
+   */
+  private $optionKey;
+
+  /**
    * @var string
    *
-   * @ORM\Column(type="text", length=16777215, nullable=false)
+   * @ORM\Column(type="text", length=16777215, nullable=true, options={"default"=null})
    */
-  private $fieldValue;
+  private $optionValue = null;
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="extraFieldsData", fetch="EXTRA_LAZY")
@@ -82,7 +94,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    *
    * @return ProjectExtraProjectsData
    */
-  public function setProject($project)
+  public function setProject($project):ProjectExtraFieldDatum
   {
     $this->project = $project;
 
@@ -104,9 +116,9 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    *
    * @param int $musician
    *
-   * @return ProjectExtraFieldsData
+   * @return ProjectExtraFieldDatum
    */
-  public function setMusician($musician)
+  public function setMusician($musician):ProjectExtraFieldDatum
   {
     $this->musician = $musician;
 
@@ -128,9 +140,9 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    *
    * @param int $field
    *
-   * @return ProjectExtraFieldsData
+   * @return ProjectExtraFieldDatum
    */
-  public function setField($field)
+  public function setField($field):ProjectExtraFieldDatum
   {
     $this->field = $field;
 
@@ -148,26 +160,59 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   }
 
   /**
-   * Set fieldValue.
+   * Set optionValue.
    *
-   * @param string $fieldValue
+   * @param string $optionValue
    *
-   * @return ProjectExtraFieldsData
+   * @return ProjectExtraFieldDatum
    */
-  public function setFieldValue($fieldValue)
+  public function setOptionValue($optionValue):ProjectExtraFieldDatum
   {
-    $this->fieldValue = $fieldValue;
+    $this->optionValue = $optionValue;
 
     return $this;
   }
 
   /**
-   * Get fieldValue.
+   * Get optionValue.
    *
    * @return string
    */
-  public function getFieldValue()
+  public function getOptionValue()
   {
-    return $this->fieldValue;
+    return $this->optionValue;
+  }
+
+  /**
+   * Set optionKey.
+   *
+   * @param string|UuidInterface $optionKey
+   *
+   * @return ProjectExtraFieldDatum
+   */
+  public function setOptionKey($optionKey):ProjectExtraFieldDatum
+  {
+    if (is_string($optionKey)) {
+      if (strlen($optionKey) == 36) {
+        $optionKey = Uuid::fromString($optionKey);
+      } else if (strlen($optionKey) == 16) {
+        $optionKey = OptionKey::fromBytes($optionKey);
+      } else {
+        throw new \Exception("OPTIONKEY DATA: ".$optionKey);
+      }
+    }
+    $this->optionKey = $optionKey;
+
+    return $this;
+  }
+
+  /**
+   * Get optionKey.
+   *
+   * @return string
+   */
+  public function getOptionKey()
+  {
+    return $this->optionKey;
   }
 }

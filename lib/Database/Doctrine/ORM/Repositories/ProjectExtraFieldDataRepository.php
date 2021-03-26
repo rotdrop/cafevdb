@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -84,7 +85,22 @@ class ProjectExtraFieldDataRepository extends EntityRepository
   public function fieldValues($field)
   {
     $qb = $this->createQueryBuilder(self::ALIAS)
-               ->select(self::ALIAS.'.fieldValue')
+               ->select(self::ALIAS.'.optionValue')
+               ->where(self::ALIAS.'.field = :field')
+               ->setParameter('field', $field);
+    return $qb->getQuery()->getResult('COLUMN_HYDRATOR');
+  }
+
+  /**
+   * Fetch all values stored for the given extra-field, e.g. in order
+   * to recover or generate select boxes.
+   *
+   * @param int|Entities\ProjectExtraField
+   */
+  public function optionKeys($field)
+  {
+    $qb = $this->createQueryBuilder(self::ALIAS)
+               ->select(self::ALIAS.'.optionKey')
                ->where(self::ALIAS.'.field = :field')
                ->setParameter('field', $field);
     return $qb->getQuery()->getResult('COLUMN_HYDRATOR');

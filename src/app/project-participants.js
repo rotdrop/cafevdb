@@ -552,7 +552,7 @@ const myReady = function(selector, resizeCB) {
     const label = nameParts[0];
     const fieldId = nameParts[1];
     // const column = nameParts[2];
-    const groupFieldName = label + '@' + fieldId + ':' + 'field_value';
+    const groupFieldName = label + '@' + fieldId + ':' + 'option_key';
     console.log('group id name', groupFieldName);
     self.data('groupField', form.find('[name="' + groupFieldName + '"]'));
     self.data('fieldId', fieldId);

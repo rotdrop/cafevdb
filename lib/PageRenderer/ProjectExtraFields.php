@@ -352,7 +352,7 @@ class ProjectExtraFields extends PMETableViewBase
         $protoRecord = array_merge(
           $this->extraFieldsService->allowedValuesPrototype(),
           [
-            'key' => $recordId > 0 ? $recordId : false,
+            'key' => false,
             'label' => $row['qf'.$nameIdx],
             'tooltip' => $row['qf'.$tooltipIdx]
           ]);
@@ -455,7 +455,7 @@ class ProjectExtraFields extends PMETableViewBase
       'options' => 'CPA',
       'sql' => '$main_table.default_value',
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
-      'select' => 'D',
+      'select' => 'D', // @todo should be multi for "parallel".
       'values' => [
         'table' => "SELECT id AS field_id,
     JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key') AS 'key',
@@ -483,7 +483,7 @@ class ProjectExtraFields extends PMETableViewBase
       'sql' => 'IF($main_table.default_value IS NULL OR LENGTH($main_table.default_value) < 36, 0, $main_table.default_value)',
       'css' => [ 'postfix' => ' default-single-value' ],
       'select' => 'O',
-      //'values2' => [ '0' => $this->l->t('false'), '1' => $this->l->t('true') ],
+      'values2|A' => [ '0' => $this->l->t('no'), '1' => $this->l->t('yes') ],
       'default' => '0',
       'values' => [
         'table' => "SELECT id AS field_id,
@@ -629,11 +629,15 @@ class ProjectExtraFields extends PMETableViewBase
     }
 
     $opts['triggers']['select']['data'][] =
-      $opts['triggers']['delete']['data'][] = function(&$pme, $op, $step, &$row) use ($opts) {
+      $opts['triggers']['update']['data'][] =
+      $opts['triggers']['delete']['data'][] = function(&$pme, $op, $step, &$row) {
         $km = $pme->fdn['multiplicity'];
         $kd = $pme->fdn['data_type'];
-        $cssPostfix = 'multiplicity-'.$row['qf'.$km].' data-type-'.$row['qf'.$kd];
+        $multiplicity = $row['qf'.$km];
+        $dataType = $row['qf'.$kd];
+        $cssPostfix = 'multiplicity-'.$multiplicity.' data-type-'.$dataType;
         $pme->fdd[$km]['css']['postfix'] .= ' '.$cssPostfix;
+        $pme->fdd[$pme->fdn['default_value']]['select'] = ($dataType == 'service-fee' || $dataType == 'deposit') ? 'N' : 'T';
         return true;
       };
 
@@ -799,6 +803,12 @@ class ProjectExtraFields extends PMETableViewBase
     if ($key !== false) {
       unset($changed[$key]);
     }
+
+    if (empty($newvals['default_value']) && $newvals['default_value'] !== null) {
+      $newvals['default_value'] = null;
+      $changed[] = 'default_value';
+    }
+
     $changed = array_values(array_unique($changed));
 
     $this->$logMethod('AV OLD: '.print_r($oldvals['allowed_values'], true));
@@ -881,6 +891,12 @@ class ProjectExtraFields extends PMETableViewBase
   {
     return $this->getDatabaseRepository(Entities\ProjectExtraFieldDatum::class)
                 ->fieldValues($fieldId);
+  }
+
+  private function optionKeys($fieldId)
+  {
+    return $this->getDatabaseRepository(Entities\ProjectExtraFieldDatum::class)
+                ->optionKeys($fieldId);
   }
 
   private function disable($fieldId, $disable = true)
@@ -1198,10 +1214,7 @@ __EOT__;
         break;
       case 'add':
       case 'change':
-        $usedKeys = $this->fieldValues($recordId);
-        //error_log(print_r($usedKeys, true));
-        //$pfx = $this->pme->cgiDataName('allowed_values');
-        //$css = 'class="allowed-values"';
+        $usedKeys = $this->optionKeys($recordId);
         foreach ($allowed as $idx => $value) {
           if (!empty($value['key'])) {
             $key = $value['key'];

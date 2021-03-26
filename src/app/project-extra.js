@@ -80,6 +80,12 @@ const ready = function(selector, resizeCB) {
     setFieldTypeCssClass({ multiplicity, dataType });
     allowedHeaderVisibility();
     resizeCB();
+
+    if (dataType === 'service-fee' || dataType === 'deposit') {
+      container.find('td.pme-value.default-value input').attr('type', 'number');
+    } else {
+      container.find('td.pme-value.default-value input').attr('type', 'text');
+    }
     return false;
   });
 

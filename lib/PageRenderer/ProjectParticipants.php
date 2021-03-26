@@ -143,6 +143,7 @@ class ProjectParticipants extends PMETableViewBase
     [
       'table' => self::EXTRA_FIELDS_DATA_TABLE,
       'entity' => Entities\ProjectExtraFieldDatum::class,
+      'flags' => PMETableViewBase::JOIN_READONLY,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
@@ -150,8 +151,10 @@ class ProjectParticipants extends PMETableViewBase
           'table' => self::EXTRA_FIELDS_TABLE,
           'column' => 'id',
         ],
+        'option_key' => false,
       ],
-      'column' => 'field_id',
+      'column' => 'option_key',
+      'encode' => 'BIN2UUID(%s)',
     ],
     // Defined dynamically in render():
     // SepaDebitMandates
@@ -341,8 +344,10 @@ class ProjectParticipants extends PMETableViewBase
           'project_id' => 'project_id',
           'musician_id' => 'musician_id',
           'field_id' => [ 'value' => $field['id'], ],
+          'option_key' => false,
         ],
-        'column' => 'field_value',
+        'column' => 'option_key',
+        'encode' => 'BIN2UUID(%s)',
       ];
       $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
       $this->joinStructure[] = $extraFieldJoinTable;
@@ -751,7 +756,7 @@ class ProjectParticipants extends PMETableViewBase
             foreach ($monetary as $fieldId => $extraField) {
 
               $table = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
-              $label = $this->joinTableFieldName($table, 'field_value');
+              $label = $this->joinTableFieldName($table, 'option_key');
 
               if (!isset($pme->fdn[$label])) {
                 throw new \Exception($this->l->t('Data for monetary field "%s" not found', $label));
@@ -771,7 +776,7 @@ class ProjectParticipants extends PMETableViewBase
               }
               $allowed = $extraField['allowedValues'];
               $multiplicity = $extraField['multiplicity'];
-              $amountInvoiced += $this->extraFieldsService->extraFieldSurcharge($value, $allowed, $multiplicity);
+              $amountInvoiced += $this->extraFieldsService->extraFieldSurcharge($value, $value, $allowed, $multiplicity);
             }
 
             if ($projectId == $this->memberProjectId) {
@@ -830,14 +835,17 @@ class ProjectParticipants extends PMETableViewBase
 
       $css = [ 'extra-field', 'field-id-'.$fieldId, ];
       list($curColIdx, $fddName) = $this->makeJoinTableField(
-        $opts['fdd'], $tableName, 'field_value',
+        $opts['fdd'], $tableName, 'option_key',
         [
           'name' => $this->l->t($fieldName),
           'tab' => $tab,
           'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
-          'default'  => $field['default_value'],
+          'default|A'  => $field['default_value'],
+          'filter' => 'having',
           'values' => [
-            'column' => 'field_value',
+            'column' => 'option_key',
+            'encode' => 'BIN2UUID(%s)',
+            'grouped' => true,
             'filters' => ('$table.field_id = '.$fieldId
                           .' AND $table.project_id = '.$projectId
                           .' AND $table.musician_id = $record_id[musician_id]'),
@@ -973,11 +981,10 @@ class ProjectParticipants extends PMETableViewBase
           $fdd['escape'] = false;
           // fall through
         default:
-          $fdd['sql'] = '$join_col_fqn';
           $fdd['values2'] = $values2;
           $fdd['valueTitles'] = $valueTitles;
           $fdd['valueData'] = $valueData;
-            $fdd['display|LF'] = [
+          $fdd['display|LF'] = [
             'popup' => 'data',
             'prefix' => '<div class="allowed-option-wrapper">',
             'postfix' => '</div>',
@@ -1002,7 +1009,7 @@ class ProjectParticipants extends PMETableViewBase
           ]);
 
         // generate a new group-definition field as yet another column
-        list($curColIdx, $fddName) = $this->makeJoinTableField(
+        list($curColIdx, $fddGroupMemberName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $fdd);
 
         // hide value field and tweak for view displays.
@@ -1016,7 +1023,7 @@ class ProjectParticipants extends PMETableViewBase
           ]);
 
         // new field, member selection
-        $fdd = &$opts['fdd'][$fddName];
+        $fdd = &$opts['fdd'][$fddGroupMemberName];
 
         // tweak the join-structure entry for the group field
         $joinInfo = &$this->joinStructure[$extraFieldJoinIndex[$tableName]];
@@ -1027,6 +1034,7 @@ class ProjectParticipants extends PMETableViewBase
               'project_id' => 'project_id',
               'musician_id' => false,
               'field_id' => [ 'value' => $fieldId, ],
+              'option_key' => [ 'self' => true, ],
             ],
             'column' => 'musician_id',
           ]);
@@ -1046,7 +1054,7 @@ class ProjectParticipants extends PMETableViewBase
    CONCAT_WS(' ', m1.first_name, m1.sur_name) AS name,
    m1.sur_name AS sur_name,
    m1.first_name AS first_name,
-   fd.field_value AS group_id,
+   fd.option_key AS group_id,
    fdg.group_number AS group_Number
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m1
@@ -1054,13 +1062,13 @@ LEFT JOIN Musicians m1
 LEFT JOIN ProjectExtraFieldsData fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
 LEFT JOIN (SELECT
-    fd2.field_value AS group_id,
+    fd2.option_key AS group_id,
     ROW_NUMBER() OVER (ORDER BY fd2.field_id) AS group_number
     FROM ProjectExtraFieldsData fd2
     WHERE fd2.project_id = $projectId AND fd2.field_id = $fieldId
-    GROUP BY fd2.field_value
+    GROUP BY fd2.option_key
   ) fdg
-  ON fdg.group_id = fd.field_value
+  ON fdg.group_id = fd.option_key
 WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
@@ -1068,7 +1076,7 @@ WHERE pp.project_id = $projectId",
               'groups' => "CONCAT_WS(' ', '".$fieldName."',\$table.group_number)",
               'data' => "CONCAT('{\"limit\":".$max.",\"groupId\":\"',IFNULL(\$table.group_id,-1),'\"}')",
               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
+              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
             ],
             'valueGroups' => [ -1 => $this->l->t('without group') ],
           ]);
@@ -1105,6 +1113,7 @@ WHERE pp.project_id = $projectId",
               'project_id' => 'project_id',
               'musician_id' => false,
               'field_id' => [ 'value' => $fieldId, ],
+              'option_key' => [ 'self' => true, ],
             ],
             'column' => 'musician_id',
           ]);
@@ -1166,11 +1175,11 @@ WHERE pp.project_id = $projectId",
           ]);
 
         // generate a new group-definition field as yet another column
-        list($curColIdx, $fddName) = $this->makeJoinTableField(
+        list($curColIdx, $fddGroupMemberName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $fddValue);
 
         // new field, member selection
-        $fdd = &$opts['fdd'][$fddName];
+        $fdd = &$opts['fdd'][$fddGroupMemberName];
 
         $fdd = Util::arrayMergeRecursive(
           $fdd, [
@@ -1185,9 +1194,9 @@ WHERE pp.project_id = $projectId",
   CONCAT_WS(' ', m3.first_name, m3.sur_name) AS name,
   m3.sur_name AS sur_name,
   m3.first_name AS first_name,
-  fd.field_value AS group_id,
-  JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', fd.field_value)), 'key', 'label')) AS group_label,
-  JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', fd.field_value)), 'key', 'data')) AS group_data
+  fd.option_key AS group_id,
+  JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', BIN2UUID(fd.option_key))), 'key', 'label')) AS group_label,
+  JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', BIN2UUID(fd.option_key))), 'key', 'data')) AS group_data
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m3
   ON m3.id = pp.musician_id
@@ -1201,7 +1210,7 @@ WHERE pp.project_id = $projectId",
               'groups' => "CONCAT(\$table.group_label, ': ', \$table.group_data)",
               'data' => "CONCAT('{\"groupId\":\"',IFNULL(\$table.group_id, -1),'\"}')",
               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
+              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
               //'titles' => '$table.name',
             ],
             'valueGroups|ACP' => $valueGroups,
@@ -1233,11 +1242,11 @@ WHERE pp.project_id = $projectId",
         $fdd['css|LFVD']['postfix'] = $fdd['css']['postfix'].' view';
 
         // generate yet another field to define popup-data
-        list($curColIdx, $fddName) = $this->makeJoinTableField(
+        list($curColIdx, $fddMemberNameName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_name', $fddValue);
 
         // new field, data-popup
-        $fdd = &$opts['fdd'][$fddName];
+        $fdd = &$opts['fdd'][$fddMemberNameName];
 
         // data-popup field
         $fdd = Util::arrayMergeRecursive(
@@ -1252,7 +1261,7 @@ WHERE pp.project_id = $projectId",
   CONCAT_WS(' ', m2.first_name, m2.sur_name) AS name,
   m2.sur_name AS sur_name,
   m2.first_name AS first_name,
-  fd.field_value AS group_id
+  fd.option_key AS group_id
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m2
   ON m2.id = pp.musician_id
@@ -1261,7 +1270,7 @@ LEFT JOIN ProjectExtraFieldsData fd
 WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
               'column' => 'name',
               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.field_value',
+              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
             ],
            ]);
 
@@ -1849,8 +1858,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
    */
   public function beforeUpdateSanitizeExtraFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
-    // $logMethod = 'logInfo';
-    $logMethod = 'logDebug';
+    $logMethod = 'logInfo';
+    // $logMethod = 'logDebug';
 
     $this->$logMethod('OLDVALUES '.print_r($oldValues, true));
     $this->$logMethod('NEWVALUES '.print_r($newValues, true));
@@ -1863,7 +1872,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
       $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
 
-      $fieldName = $this->joinTableFieldName($tableName, 'field_value');
+      $fieldName = $this->joinTableFieldName($tableName, 'option_key');
       $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
 
       $this->$logMethod('FIELDNAMES '.$fieldName." / ".$groupFieldName);
@@ -1871,6 +1880,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       $this->$logMethod("MULT ".$multiplicity);
       switch ($multiplicity) {
       case 'groupofpeople':
+        // One type of group with a variable number of members, think
+        // of twin-room preferences, e.g.
         if (array_search($groupFieldName, $changed) === false) {
           continue 2;
         }
@@ -1898,6 +1909,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $changed[] = $fieldName;
         break;
       case 'groupsofpeople':
+        // Multiple predefined groups with a variable number of
+        // members. Think of distributing members to cars or rooms
         if (array_search($groupFieldName, $changed) === false
             && array_search($fieldName, $changed) === false) {
           continue 2;

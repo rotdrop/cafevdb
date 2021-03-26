@@ -39,6 +39,7 @@ class ProjectExtraFieldsService
     'single' => [],
     'multiple' => [ 'boolean', ],
     'parallel' => [ 'boolean', ],
+    'recurring' => [ 'boolean' ],
     'groupofpeople' => [], // like single
     'groupsofpeople' => [ 'boolean', ], // like multiple
   ];
@@ -83,7 +84,10 @@ class ProjectExtraFieldsService
    * Internal function: given a (multi-select) surcharge choice
    * compute the associated amount of money and return that as float.
    *
-   * @param string $value Value for the extra-fields table
+   * @key string $key Key from the extra-fields data table. $key may
+   * be a comma-separated list of keys.
+   *
+   * @param string $value Value form the extra-fields data table
    *
    * @param array $allowedValues Allowed-values array from the field
    * definition.
@@ -92,7 +96,7 @@ class ProjectExtraFieldsService
    * field-definition as defined in
    * OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity.
    */
-  public function extraFieldSurcharge($value, $allowedValues, $multiplicity)
+  public function extraFieldSurcharge($key, $value, $allowedValues, $multiplicity)
   {
     if (!is_array($allowedValues)) {
       $allowedValues = $this->explodeAllowedValues($allowedValues);
@@ -103,23 +107,48 @@ class ProjectExtraFieldsService
       return (float)$value;
     case 'groupofpeople':
     case 'single':
+      if (empty($key)) {
+        break;
+      }
       // Non empty value means "yes".
-      $key = $allowedValues[0]['key'];
-      if ($key !== $value) {
-        $this->logWarn('Stored value "'.$value.'" unequal to stored key "'.$key.'"');
+      if ($allowedValues[0]['key'] !== $key) {
+        $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$key.'"');
       }
       return (float)$allowedValues[0]['data'];
     case 'groupsofpeople':
     case 'multiple':
-      foreach($allowedValues as $item) {
-        if ($item['key'] === $value) {
+      if (empty($key)) {
+        break;
+      }
+      foreach ($allowedValues as $item) {
+        if ($item['key'] === $key) {
           return (float)$item['data'];
         }
       }
       $this->logError('No data item for multiple choice key "'.$value.'"');
       return 0.0;
     case 'parallel':
-      $keys = Util::explode(',', $value);
+      if (empty($key)) {
+        break;
+      }
+      $keys = Util::explode(',', $key);
+      $found = false;
+      $amount = 0.0;
+      foreach($allowedValues as $item) {
+        if (array_search($item['key'], $keys) !== false) {
+          $amount += (float)$item['data'];
+          $found = true;
+        }
+      }
+      if (!$found) {
+        $this->logError('No data item for parallel choice key "'.$value.'"');
+      }
+      return $amount;
+    case 'recurring':
+      if (empty($key)) {
+        break;
+      }
+      $keys = Util::explode(',', $key);
       $found = false;
       $amount = 0.0;
       foreach($allowedValues as $item) {
