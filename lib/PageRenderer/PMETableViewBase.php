@@ -1340,14 +1340,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'tab' => 'all',
         'name' => $fieldName,
         'input' => 'HV',
-        'sql' => ($group
-                  ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.implode(', ', $groupOrderBy).')'
-                  : '$join_col_fqn'),
         'options' => '',
         'sort' => true,
         'values' => [
           'table' => $valuesTable,
           'column' => $joinInfo['column'],
+          'order_by' => implode(', ', $groupOrderBy),
+          'grouped' => $group,
+          'encode' => $joinInfo['encode'],
           'join' => implode(' AND ', $joinData),
         ],
       ];
@@ -1488,7 +1488,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $masterFieldName = $this->joinTableMasterFieldName($tableInfo);
       $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
       if ($joinIndex === false) {
-        $this->logInfo('FDD KEYS '.$masterFieldName.' '.print_r(array_keys($fieldDescriptionData), true));
         $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
         throw new \Exception($this->l->t("Master join-table field for %s not found.", $table));
       }
