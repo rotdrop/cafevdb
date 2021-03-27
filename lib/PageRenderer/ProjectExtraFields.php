@@ -43,7 +43,7 @@ class ProjectExtraFields extends PMETableViewBase
 {
   const TEMPLATE = 'project-extra-fields';
   const TABLE = 'ProjectExtraFields';
-  //const OPTIONS_TABLE = 'ProjectExtraFieldValueOptions';
+  const OPTIONS_TABLE = 'ProjectExtraFieldsDataOptions';
   const DATA_TABLE = 'ProjectExtraFieldsData';
   const PROJECTS_TABLE = 'Projects';
 
@@ -52,6 +52,16 @@ class ProjectExtraFields extends PMETableViewBase
       'table' => self::TABLE,
       'flags' => PMETableViewBase::JOIN_MASTER,
       'entity' => Entities\ProjectExtraField::class,
+    ],
+    [
+      'table' => self::OPTIONS_TABLE,
+      'entity' => Entities\ProjectExtraFieldDataOption::class,
+      'identifier' => [
+        'field_id' => 'id',
+        'key' => false,
+      ],
+      'column' => 'key',
+      'encode' => 'BIN2UUID(%s)',
     ],
     [
       'table' => self::PROJECTS_TABLE,
