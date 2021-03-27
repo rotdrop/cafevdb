@@ -106,13 +106,17 @@ class ProjectExtraFieldsService
     case 'simple':
       return (float)$value;
     case 'groupofpeople':
+      if (empty($key)) {
+        break;
+      }
+      return (float)$allowedValues[0]['data'];
     case 'single':
       if (empty($key)) {
         break;
       }
       // Non empty value means "yes".
       if ($allowedValues[0]['key'] !== $key) {
-        $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$key.'"');
+        $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$allowedValues[0]['key'].'"');
       }
       return (float)$allowedValues[0]['data'];
     case 'groupsofpeople':

@@ -61,6 +61,7 @@ class ProjectParticipants extends PMETableViewBase
   const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
   const FIXED_COLUMN_SEP = parent::VALUES_TABLE_SEP;
+  const JOIN_KEY_SEP = parent::JOIN_KEY_SEP;
 
   /** @var int */
   private $memberProjectId;
@@ -556,7 +557,7 @@ class ProjectParticipants extends PMETableViewBase
             \$join_col_fqn),
      NULL)
   ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
-        'sql|CP' => "GROUP_CONCAT(DISTINCT CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".id,':',".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+        'sql|CP' => "GROUP_CONCAT(DISTINCT CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".id,'".self::JOIN_KEY_SEP."',".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
         'values|CP' => [
           'table' => "SELECT
   pi.project_id,
@@ -567,7 +568,7 @@ class ProjectParticipants extends PMETableViewBase
   i.sort_order,
   pin.quantity,
   n.n,
-  CONCAT(pi.instrument_id,':', n.n) AS value
+  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', n.n) AS value
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
@@ -756,27 +757,30 @@ class ProjectParticipants extends PMETableViewBase
             foreach ($monetary as $fieldId => $extraField) {
 
               $table = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
-              $label = $this->joinTableFieldName($table, 'option_key');
-
-              if (!isset($pme->fdn[$label])) {
-                throw new \Exception($this->l->t('Data for monetary field "%s" not found', $label));
+              $fieldValues = [ 'key' => null, 'value' => null ];
+              foreach ($fieldValues as $fieldName => &$fieldValue) {
+                $label = $this->joinTableFieldName($table, 'option_'.$fieldName);
+                if (!isset($pme->fdn[$label])) {
+                  throw new \Exception($this->l->t('Data for monetary field "%s" not found', $label));
+                }
+                $rowIndex = $pme->fdn[$label];
+                $qf = 'qf'.$rowIndex;
+                $qfIdx = $qf.'_idx';
+                if (isset($row[$qfIdx])) {
+                  $fieldValue = $row[$qfIdx];
+                } else {
+                  $fieldValue = $row[$qf];
+                }
               }
 
-              $rowIndex = $pme->fdn[$label];
+              if (empty($fieldValues['key']) && empty($fieldValues['value'])) {
+	        continue;
+              }
 
-              $qf = 'qf'.$rowIndex;
-              $qfIdx = $qf.'_idx';
-              if (isset($row[$qfIdx])) {
-                $value = $row[$qfIdx];
-              } else {
-                $value = $row[$qf];
-              }
-              if (empty($value)) {
-                continue;
-              }
               $allowed = $extraField['allowedValues'];
               $multiplicity = $extraField['multiplicity'];
-              $amountInvoiced += $this->extraFieldsService->extraFieldSurcharge($value, $value, $allowed, $multiplicity);
+              $amountInvoiced += $this->extraFieldsService->extraFieldSurcharge(
+                $fieldValues['key'], $fieldValues['value'], $allowed, $multiplicity);
             }
 
             if ($projectId == $this->memberProjectId) {
@@ -878,58 +882,62 @@ class ProjectParticipants extends PMETableViewBase
         $valueData[$key] = $value['data'];
       }
 
-      switch ($dataType) {
-      case 'text':
-        // default config
-        break;
-      case 'html':
-        $keyFdd['textarea'] = [
-          'css' => 'wysiwyg-editor',
-          'rows' => 5,
-          'cols' => 50,
-        ];
-        $keyFdd['css']['postfix'] .= ' hide-subsequent-lines';
-        $keyFdd['display|LF'] = [ 'popup' => 'data' ];
-        $keyFdd['escape'] = false;
-        break;
-      case 'boolean':
-        // handled below
-        $keyFdd['align'] = 'right';
-        break;
-      case 'integer':
-        $keyFdd['select'] = 'N';
-        $keyFdd['mask'] = '%d';
-        $keyFdd['align'] = 'right';
-        break;
-      case 'float':
-        $keyFdd['select'] = 'N';
-        $keyFdd['mask'] = '%g';
-        $keyFdd['align'] = 'right';
-        break;
-      case 'date':
-      case 'datetime':
-      case 'money':
-      case 'service-fee':
-      case 'deposit':
-        $style = $this->defaultFDD[$dataType];
-        if (empty($style)) {
-          throw new \Exception($this->l->t('Not default style for "%s" available.', $dataType));
+      foreach ([ &$keyFdd, &$valueFdd ] as &$fdd) {
+        switch ($dataType) {
+          case 'text':
+            // default config
+            break;
+          case 'html':
+            $fdd['textarea'] = [
+              'css' => 'wysiwyg-editor',
+              'rows' => 5,
+              'cols' => 50,
+            ];
+            $fdd['css']['postfix'] .= ' hide-subsequent-lines';
+            $fdd['display|LF'] = [ 'popup' => 'data' ];
+            $fdd['escape'] = false;
+            break;
+          case 'boolean':
+            // handled below
+            $fdd['align'] = 'right';
+            break;
+          case 'integer':
+            $fdd['select'] = 'N';
+            $fdd['mask'] = '%d';
+            $fdd['align'] = 'right';
+            break;
+          case 'float':
+            $fdd['select'] = 'N';
+            $fdd['mask'] = '%g';
+            $fdd['align'] = 'right';
+            break;
+          case 'date':
+          case 'datetime':
+          case 'money':
+          case 'service-fee':
+          case 'deposit':
+            $style = $this->defaultFDD[$dataType];
+            if (empty($style)) {
+              throw new \Exception($this->l->t('Not default style for "%s" available.', $dataType));
+            }
+            unset($style['name']);
+            $fdd = array_merge($fdd, $style);
+            $fdd['css']['postfix'] .= ' '.implode(' ', $css);
+            break;
         }
-        unset($style['name']);
-        $keyFdd = array_merge($keyFdd, $style);
-        $keyFdd['css']['postfix'] .= ' '.implode(' ', $css);
-        break;
       }
 
       switch ($multiplicity) {
       case 'simple':
-        $keyFdd['css']['postfix'] .= ' simple-valued '.$dataType;
+        $valueFdd['input'] = $keyFdd['input'];
+        $keyFdd['input'] = 'VSRH';
+        $valueFdd['css']['postfix'] .= ' simple-valued '.$dataType;
         switch ($dataType) {
         case 'money':
         case 'service-fee':
         case 'deposit':
-          unset($keyFdd['mask']);
-          $keyFdd['php|VDLF'] = function($value) {
+          unset($valueFdd['mask']);
+          $valueFdd['php|VDLF'] = function($value) {
             return $this->moneyValue($value);
           };
           break;
@@ -1872,12 +1880,33 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
 
       $fieldName = $this->joinTableFieldName($tableName, 'option_key');
+      $valueName = $this->joinTableFieldName($tableName, 'option_value');
       $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
 
       $this->$logMethod('FIELDNAMES '.$fieldName." / ".$groupFieldName);
 
       $this->$logMethod("MULT ".$multiplicity);
       switch ($multiplicity) {
+      case 'simple':
+        // We tweak a multi-selection field and set the user input as
+        // additional field value.
+        if (array_search($valueName, $changed) === false) {
+          continue 2;
+        }
+        $allowed = $this->extraFieldsService->explodeAllowedValues($extraField['allowed_values'], false, true);
+        $key = $allowed[0]['key'];
+        $oldKey = $oldValues[$fieldName]?:$key;
+        if ($oldKey !== $key) {
+          throw new \RuntimeException(
+            $this->l->t('Inconsistent field keys, old: "%s", new: "%s"',
+                        [ $key, $oldKey ]));
+        }
+        // tweak the option_key value
+        $newValues[$fieldName] = $key;
+        $changed[] = $fieldName;
+        // tweak the option value to have the desired form
+        $newValues[$valueName] = $key.self::JOIN_KEY_SEP.$newValues[$valueName];
+        break;
       case 'groupofpeople':
         // One type of group with a variable number of members, think
         // of twin-room preferences, e.g.
@@ -1901,7 +1930,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         }
 
         foreach ($members as &$member) {
-          $member .= ':'.$groupId;
+          $member .= self::JOIN_KEY_SEP.$groupId;
         }
         $newValues[$fieldName] = implode(',', $members);
 
@@ -1937,13 +1966,13 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         }
 
         foreach ($newMembers as &$member) {
-          $member .= ':'.$newGroupId;
+          $member .= self::JOIN_KEY_SEP.$newGroupId;
         }
         $newValues[$fieldName] = implode(',', $newMembers);
 
         $oldMembers = explode(',', $oldValues[$groupFieldName]);
         foreach ($newMembers as &$member) {
-          $member .= ':'.$oldGroupId;
+          $member .= self::JOIN_KEY_SEP.$oldGroupId;
         }
         $oldValues[$fieldName] = implode(',', $oldMembers);
 
@@ -1952,6 +1981,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         break;
       }
     }
+    $changed = array_values(array_unique($changed));
     return true;
   }
 
