@@ -143,7 +143,7 @@ div.project-participants span.allowed-option-name ~ span.allowed-option-value {
 }
 
 div.project-participants label.groupofpeople.predefined span.allowed-option {
-  /* margin-left:1ex; */
+  margin-left:1ex;
   display:none;
 }
 
