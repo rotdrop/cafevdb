@@ -90,7 +90,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   /**
    * Set project.
    *
-   * @param int $project
+   * @param Project $project
    *
    * @return ProjectExtraProjectsData
    */
@@ -104,7 +104,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   /**
    * Get project.
    *
-   * @return int
+   * @return Project
    */
   public function getProject()
   {
@@ -114,7 +114,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param Musician $musician
    *
    * @return ProjectExtraFieldDatum
    */
@@ -128,7 +128,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return int
+   * @return Musician
    */
   public function getMusician()
   {

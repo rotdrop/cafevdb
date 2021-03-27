@@ -89,6 +89,13 @@ class ProjectExtraField implements \ArrayAccess
   private $allowedValues = null;
 
   /**
+   * @var ProjectExtraFieldMetaDatum
+   *
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDataOption", mappedBy="field", fetch="EXTRA_LAZY")
+   */
+  private $dataOptions;
+
+  /**
    * @var \DateTimeImmutable
    *
    * @ORM\Column(type="date_immutable", nullable=true, options={"comment"="Due-date for financial fields."})
@@ -152,6 +159,7 @@ class ProjectExtraField implements \ArrayAccess
   public function __construct() {
     $this->arrayCTOR();
     $this->fieldData = new ArrayCollection();
+    $this->dataOptions = new ArrayCollection();
   }
 
   /**
@@ -200,6 +208,54 @@ class ProjectExtraField implements \ArrayAccess
   public function getProject()
   {
     return $this->project;
+  }
+
+  /**
+   * Set dataOption.
+   *
+   * @param Collection $dataOptions
+   *
+   * @return ProjectExtraField
+   */
+  public function setDataOptions($dataOptions):ProjectExtraField
+  {
+    $this->dataOptions = $dataOptions;
+
+    return $this;
+  }
+
+  /**
+   * Get dataOption.
+   *
+   * @return Collection
+   */
+  public function getDataOptions()
+  {
+    return $this->dataOptions;
+  }
+
+  /**
+   * Set fieldData.
+   *
+   * @param Collection $fieldData
+   *
+   * @return ProjectExtraField
+   */
+  public function setFieldData($fieldData):ProjectExtraField
+  {
+    $this->fieldData = $fieldData;
+
+    return $this;
+  }
+
+  /**
+   * Get fieldData.
+   *
+   * @return Collection
+   */
+  public function getFieldData()
+  {
+    return $this->fieldData;
   }
 
   /**
