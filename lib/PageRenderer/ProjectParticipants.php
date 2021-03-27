@@ -834,24 +834,32 @@ class ProjectParticipants extends PMETableViewBase
       $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
 
       $css = [ 'extra-field', 'field-id-'.$fieldId, ];
-      list(, $fddName) = $this->makeJoinTableField(
-        $opts['fdd'], $tableName, 'option_key', [
-          'name' => $this->l->t($fieldName),
-          'tab' => $tab,
-          'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
-          'default|A'  => $field['default_value'],
-          'filter' => 'having',
-          'values' => [
-            'column' => 'option_key',
-            'encode' => 'BIN2UUID(%s)',
-            'grouped' => true,
-            'filters' => ('$table.field_id = '.$fieldId
-                          .' AND $table.project_id = '.$projectId
-                          .' AND $table.musician_id = $record_id[musician_id]'),
-          ],
-          'tooltip' => $field['tool_tip']?:null,
-        ]);
-      $keyFdd = &$opts['fdd'][$fddName];
+      $extraFddBase = [
+        'name' => $this->l->t($fieldName),
+        'tab' => $tab,
+        'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
+        'default|A'  => $field['default_value'],
+        'filter' => 'having',
+        'values' => [
+          'grouped' => true,
+          'filters' => ('$table.field_id = '.$fieldId
+                        .' AND $table.project_id = '.$projectId
+                        .' AND $table.musician_id = $record_id[musician_id]'),
+        ],
+        'tooltip' => $field['tool_tip']?:null,
+      ];
+
+      list($keyFddIndex, $keyFddName) = $this->makeJoinTableField(
+        $opts['fdd'], $tableName, 'option_key',
+        Util::arrayMergeRecursive($extraFddBase, [ 'values' => ['encode' => 'BIN2UUID(%s)',], ])
+      );
+      $keyFdd = &$opts['fdd'][$keyFddName];
+
+      list($valueFddIndex, $valueFddName) = $this->makeJoinTableField(
+        $opts['fdd'], $tableName, 'option_value',
+        Util::arrayMergeRecursive($extraFddBase, [ 'input' => 'VSRH', ])
+      );
+      $valueFdd = &$opts['fdd'][$valueFddName];
 
       $allowed = $this->extraFieldsService->explodeAllowedValues($field['allowed_values'], false, true);
       $values2     = [];
@@ -1215,11 +1223,12 @@ WHERE pp.project_id = $projectId",
               'prefix' => function($op, $pos, $row, $k, $pme) use ($css) {
                 return '<label class="'.implode(' ', $css).'">';
               },
-              'postfix' => function($op, $pos, $row, $k, $pme) use ($allowed, $dataType) {
+              'postfix' => function($op, $pos, $row, $k, $pme) use ($allowed, $dataType, $keyFddIndex) {
+                $selectedKey = $row['qf'.$keyFddIndex];
                 $html = '';
                 foreach ($allowed as $idx => $option) {
                   $key = $option['key'];
-                  $active = $row['qf'.($k-1)] == $key ? 'selected' : null;
+                  $active = $selectedKey == $key ? 'selected' : null;
                   $html .= $this->allowedOptionLabel(
                     $option['label'], $option['data'], $dataType, $active, [ 'key' => $option['key'], ]);
                 }
