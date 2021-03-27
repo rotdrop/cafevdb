@@ -632,7 +632,7 @@ const myReady = function(selector, resizeCB) {
         console.log('key', recKey);
         const data = singleNewOption.data('data');
         console.log('option data', data);
-        if (data.groupId !== -1) {
+        if (+data.groupId !== -1) {
           console.log('group: ', data.groupId);
           selectGroup(self, data.groupId);
           CAFEVDB.selectValues(self.data('groupField'), data.groupId);
