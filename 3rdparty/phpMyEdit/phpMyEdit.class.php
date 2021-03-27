@@ -87,6 +87,29 @@ class phpMyEdit
 	const OMIT_SQL = 0x02;
 	const VANILLA = self::OMIT_DESC|self::OMIT_SQL;
 
+	const SQL_QUERY_SELECT = 'select';
+	const SQL_QUERY_INSERT = 'insert';
+	const SQL_QUERY_UPDATE = 'update';
+	const SQL_QUERY_DELETE = 'delete';
+
+	const QPARTS_TYPE = 'type';
+	const QPARTS_PROCEDURE = 'procedure';
+	const QPARTS_TABLE = 'table';
+	const QPARTS_FROM = 'from';
+	const QPARTS_SELECT = 'select';
+	const QPARTS_WHERE = 'where';
+	const QPARTS_HAVING = 'having';
+	const QPARTS_GROUPBY = 'groupby';
+	const QPARTS_ORDERBY = 'orderby';
+	const QPARTS_LIMIT = 'limit';
+	const QPARTS_FIELDS = 'fields';
+	const QPARTS_VALUES = 'values';
+
+	const SQL_SELECT = 'SELECT';
+
+	const FDD_SELECT = 'select';
+	const FDD_VALUES = 'values';
+
 	// Class variables {{{
 
 	// Database handling
@@ -236,10 +259,10 @@ class phpMyEdit
 	function col_has_sql($k)	{ return isset($this->fdd[$k]['sql']); }
 	function col_has_sqlw($k)	{ return isset($this->fdd[$k]['sqlw']) && !$this->virtual($k); }
 	function col_needs_having($k) { return @$this->fdd[$k]['filter'] == 'having'; }
-	function col_has_join($k) { return !empty($this->fdd[$k]['values']['join']); }
-	function col_has_description($k) { return !empty($this->fdd[$k]['values']['description']); }
+	function col_has_join($k) { return !empty($this->fdd[$k][self::FDD_VALUES]['join']); }
+	function col_has_description($k) { return !empty($this->fdd[$k][self::FDD_VALUES]['description']); }
 	function col_has_values($k) {
-		return (isset($this->fdd[$k]['values']) && !empty($this->fdd[$k]['values']['description']))
+		return (isset($this->fdd[$k][self::FDD_VALUES]) && !empty($this->fdd[$k][self::FDD_VALUES]['description']))
 			|| isset($this->fdd[$k]['values2']);
 	}
 	function col_has_php($k)	{ return isset($this->fdd[$k]['php']); }
@@ -248,11 +271,11 @@ class phpMyEdit
 	function col_has_multiple($k)
 	{ return $this->col_has_multiple_select($k) || $this->col_has_checkboxes($k); }
 	function col_has_multiple_select($k)
-	{ return $this->fdd[$k]['select'] == 'M' /*&& (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues'])*/; }
+	{ return $this->fdd[$k][self::FDD_SELECT] == 'M' /*&& (! @$this->fdd[$k][self::FDD_VALUES]['table'] || @$this->fdd[$k][self::FDD_VALUES]['queryvalues'])*/; }
 	function col_has_checkboxes($k)
-	{ return $this->fdd[$k]['select'] == 'C' /*&& (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues'])*/; }
+	{ return $this->fdd[$k][self::FDD_SELECT] == 'C' /*&& (! @$this->fdd[$k][self::FDD_VALUES]['table'] || @$this->fdd[$k][self::FDD_VALUES]['queryvalues'])*/; }
 	function col_has_radio_buttons($k)
-	{ return $this->fdd[$k]['select'] == 'O' /*&& (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues'])*/; }
+	{ return $this->fdd[$k][self::FDD_SELECT] == 'O' /*&& (! @$this->fdd[$k][self::FDD_VALUES]['table'] || @$this->fdd[$k][self::FDD_VALUES]['queryvalues'])*/; }
 	function col_has_datemask($k)
 	{ return isset($this->fdd[$k]['datemask']) || isset($this->fdd[$k]['strftimemask']); }
 
@@ -276,7 +299,7 @@ class phpMyEdit
 			return;
 		}
 		switch($operation) {
-		case 'insert':
+		case self::SQL_QUERY_INSERT:
 			$query = sprintf('INSERT INTO %s'
 							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
 							 .' VALUES (NOW(), "%s", "%s", "%s", "%s", "%s", "", "", "%s")',
@@ -288,7 +311,7 @@ class phpMyEdit
 							 addslashes(implode(',', $this->rec)),
 							 addslashes(serialize($newvals)));
 			break;
-		case 'update':
+		case self::SQL_QUERY_UPDATE:
 			$changeSetOld = [];
 			$changeSetNew = [];
 			foreach ($changed as $key) {
@@ -308,7 +331,7 @@ class phpMyEdit
 							 addslashes(serialize($changeSetOld)),
 							 addslashes(serialize($changeSetNew)));
 			break;
-		case 'delete':
+		case self::SQL_QUERY_DELETE:
 			$query = sprintf('INSERT INTO %s'
 							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
 							 .' VALUES (NOW(), "%s", "%s", "%s", "%s", "%s", "", "%s", "")',
@@ -458,7 +481,7 @@ class phpMyEdit
 	function copy_enabled()	  { return stristr($this->options, 'P') && $this->add_enabled(); }
 	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tabs) > 0; }
 	function hidden($k)		  { return stristr(@$this->fdd[$k]['input'],'H'); }
-	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S') /*|| isset($this->fdd[$k]['values']['join']['reference'])*/; }
+	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S') /*|| isset($this->fdd[$k][self::FDD_VALUES]['join']['reference'])*/; }
 	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
 	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R'); }
 	function mandatory($k)	  { return stristr(@$this->fdd[$k]['input'],'M'); }
@@ -531,7 +554,7 @@ class phpMyEdit
 	function is_values2($k, $val = 'X') /* {{{ */
 	{
 		return $val === null ||
-			(isset($this->fdd[$k]['values2']) && !isset($this->fdd[$k]['values']['table']));
+			(isset($this->fdd[$k]['values2']) && !isset($this->fdd[$k][self::FDD_VALUES]['table']));
 	} /* }}} */
 
 	function processed($k) /* {{{ */
@@ -879,14 +902,13 @@ class phpMyEdit
 		}
 
 		// $this->logInfo('VALUES '.print_r($fdd['setvalues'], true));
-
 		return $fdd['setvalues'];
 	} /* }}} */
 
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
 	{
-		$db	    = $this->fdd[$field_num]['values']['db'];
-		$table  = $this->fdd[$field_num]['values']['table'];
+		$db	    = $this->fdd[$field_num][self::FDD_VALUES]['db'];
+		$table  = $this->fdd[$field_num][self::FDD_VALUES]['table'];
 		if (empty($table)) {
 			$table = $this->tb;
 		}
@@ -903,9 +925,9 @@ class phpMyEdit
 		$encode   = $valuesDef['encode'];
 		$dbp      = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 
-		$qparts['type'] = 'select';
+		$qparts[self::QPARTS_TYPE] = self::QPARTS_SELECT;
 
-		$subquery = stripos($table, 'SELECT') !== false;
+		$subquery = stripos($table, self::SQL_SELECT) !== false;
 		$table_name = self::TABLE_ALIAS.$field_num;
 		if ($subquery) {
 			$from_table = '('.$table.') '.$table_name;
@@ -932,7 +954,7 @@ class phpMyEdit
 		if (!empty($encode)) {
 			$queryField = sprintf($encode, $queryField);
 		}
-		$qparts['select'] = 'DISTINCT '.$queryField;
+		$qparts[self::QPARTS_SELECT] = 'DISTINCT '.$queryField;
 
 		if (!empty($desc)) {
 
@@ -948,10 +970,10 @@ class phpMyEdit
 				}
 			}
 
-			$qparts['select'] .= ',CONCAT('; // )
+			$qparts[self::QPARTS_SELECT] .= ',CONCAT('; // )
 			$num_cols = sizeof($desc['columns']);
 			if (!empty($desc['divs'][-1]) && is_array($desc['divs'])) {
-				$qparts['select'] .= '"'.addslashes($desc['divs'][-1]).'",';
+				$qparts[self::QPARTS_SELECT] .= '"'.addslashes($desc['divs'][-1]).'",';
 			}
 			$selects = [];
 			foreach ($desc['columns'] as $idx => $val) {
@@ -974,33 +996,33 @@ class phpMyEdit
 					$selects[] = $select;
 				}
 			}
-			$qparts['select'] .= implode(',', $selects).',';
-			$qparts['select'][strlen($qparts['select']) - 1] = ')';
-			$qparts['select'] .= ' AS '.$this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
-			$qparts['orderby'] = $this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
+			$qparts[self::QPARTS_SELECT] .= implode(',', $selects).',';
+			$qparts[self::QPARTS_SELECT][strlen($qparts[self::QPARTS_SELECT]) - 1] = ')';
+			$qparts[self::QPARTS_SELECT] .= ' AS '.$this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
+			$qparts[self::QPARTS_ORDERBY] = $this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
 		} else if ($column) {
-			$qparts['orderby'] = $this->sd.$column.$this->ed;
+			$qparts[self::QPARTS_ORDERBY] = $this->sd.$column.$this->ed;
 		}
-		$qparts['from'] = $from_table;
+		$qparts[self::QPARTS_FROM] = $from_table;
 		if (!empty($filters)) {
-			$qparts['where'] = $this->substituteVars($filters, $subs);
+			$qparts[self::QPARTS_WHERE] = $this->substituteVars($filters, $subs);
 		}
 		!empty($groups) && $groups = $this->substituteVars($groups, $subs);
 		if (!empty($orderby)) {
-			$qparts['orderby'] = $this->substituteVars($orderby, $subs);
+			$qparts[self::QPARTS_ORDERBY] = $this->substituteVars($orderby, $subs);
 		} else if (!empty($groups)) {
-			$qparts['orderby'] = $groups.' ASC';
+			$qparts[self::QPARTS_ORDERBY] = $groups.' ASC';
 		}
 		if (!empty($groups)) {
-			$qparts['select'] .= ', '.$groups;
+			$qparts[self::QPARTS_SELECT] .= ', '.$groups;
 		}
 		if (!empty($data)) {
 			$data = $this->substituteVars($data, $subs);
-			$qparts['select'] .= ', '.$data;
+			$qparts[self::QPARTS_SELECT] .= ', '.$data;
 		}
 		if (!empty($titles)) {
 			$titles = $this->substituteVars($titles, $subs);
-			$qparts['select'] .= ', '.$titles;
+			$qparts[self::QPARTS_SELECT] .= ', '.$titles;
 		}
 
 		$res	= $this->myquery($this->get_SQL_query($qparts), __LINE__);
@@ -1037,10 +1059,10 @@ class phpMyEdit
 
 	protected function join_table_reference($fdd)
 	{
-		if (!isset($fdd['values']['join']['reference'])) {
+		if (!isset($fdd[self::FDD_VALUES]['join']['reference'])) {
 			return false;
 		}
-		$ref = $fdd['values']['join']['reference'];
+		$ref = $fdd[self::FDD_VALUES]['join']['reference'];
 		if (preg_match('/^(PMEjoin)?([0-9]+)$/', $ref, $matches)) {
 			return $matches[2];
 		}
@@ -1053,10 +1075,10 @@ class phpMyEdit
 	protected function join_table_index(int $field)
 	{
 		$fdd = $this->fdd[$field];
-		if (!isset($fdd['values']['join'])) {
+		if (!isset($fdd[self::FDD_VALUES]['join'])) {
 			return false;
 		}
-		if (!isset($fdd['values']['join']['reference'])) {
+		if (!isset($fdd[self::FDD_VALUES]['join']['reference'])) {
 			return $field;
 		}
 		return $this->join_table_reference($fdd);
@@ -1068,7 +1090,7 @@ class phpMyEdit
 	protected function join_table_alias(int $field)
 	{
 		$fdd = $this->fdd[$field];
-		if (!isset($fdd['values']['join'])) {
+		if (!isset($fdd[self::FDD_VALUES]['join'])) {
 			return self::MAIN_ALIAS;
 		}
 		return self::JOIN_ALIAS.$this->join_table_index($field);
@@ -1079,7 +1101,7 @@ class phpMyEdit
 	 */
 	protected function values_with_defaults(int $field)
 	{
-		$values = $this->fdd[$field]['values']?:[];
+		$values = $this->fdd[$field][self::FDD_VALUES]?:[];
 
 		$encode = $values['encode']?:'%s';
 
@@ -1199,12 +1221,12 @@ class phpMyEdit
 			return $this->sql_field($field, $flags & self::OMIT_SQL);
 		} else {
 			$fdd = $this->fdd[$field];
-			if (isset($fdd['values']['description']) && ! $dont_desc) {
+			if (isset($fdd[self::FDD_VALUES]['description']) && ! $dont_desc) {
 
 				$join_table = $this->join_table_alias($field);
 
-				$column = $fdd['values']['column'];
-				$desc = $fdd['values']['description'];
+				$column = $fdd[self::FDD_VALUES]['column'];
+				$desc = $fdd[self::FDD_VALUES]['description'];
 
 				// normalize $desc
 				if (!is_array($desc)) {
@@ -1268,18 +1290,18 @@ class phpMyEdit
 		/*
 		 * Prepare the SQL Query from the data definition file
 		 */
-		$qparts['type']	  = 'select';
-		$qparts['select'] = $this->get_SQL_column_list();
+		$qparts[self::QPARTS_TYPE]	  = self::QPARTS_SELECT;
+		$qparts[self::QPARTS_SELECT] = $this->get_SQL_column_list();
 		// Even if the key field isn't displayed, we still need its value
 		foreach (array_keys($this->key) as $key) {
 			if (!in_array ($key, $this->fds)) {
-				$qparts['select'] .= ','.$this->fqn($key);
+				$qparts[self::QPARTS_SELECT] .= ','.$this->fqn($key);
 			}
 		}
-		$qparts['from']	 = @$this->get_SQL_join_clause();
-		$qparts['where'] = $this->get_SQL_where_from_query_opts();
-		$qparts['groupby'] = $this->get_SQL_groupby_query_opts();
-		$qparts['having'] = $this->get_SQL_having_query_opts();
+		$qparts[self::QPARTS_FROM]	 = @$this->get_SQL_join_clause();
+		$qparts[self::QPARTS_WHERE] = $this->get_SQL_where_from_query_opts();
+		$qparts[self::QPARTS_GROUPBY] = $this->get_SQL_groupby_query_opts();
+		$qparts[self::QPARTS_HAVING] = $this->get_SQL_having_query_opts();
 		// build up the ORDER BY clause
 		if (isset($this->sfn) || isset($this->dfltsfn)) {
 			$sfn = array_merge($this->sfn, $this->dfltsfn);
@@ -1306,10 +1328,10 @@ class phpMyEdit
 				$sort_fields_w[] = $sort_field_w;
 			}
 			if (count($sort_fields) > 0) {
-				$qparts['orderby'] = join(',', $sort_fields);
+				$qparts[self::QPARTS_ORDERBY] = join(',', $sort_fields);
 			}
 		}
-		$qparts['limit'] = $this->listall() ? '' : $this->sql_limit($this->fm,$this->inc);
+		$qparts[self::QPARTS_LIMIT] = $this->listall() ? '' : $this->sql_limit($this->fm,$this->inc);
 		$this->sort_fields_w = $sort_fields_w; // due to display sorting sequence
 		return $qparts;
 	} /* }}} */
@@ -1324,44 +1346,44 @@ class phpMyEdit
 		foreach ($parts as $k => $v) {
 			$parts[$k] = trim($parts[$k]);
 		}
-		switch (strtoupper($parts['type'])) {
-		case 'SELECT':
+		switch (strtoupper($parts[self::QPARTS_TYPE])) {
+		case self::SQL_SELECT:
 			$ret  = 'SELECT ';
-			$ret .= $parts['select'];
-			$ret .= ' FROM '.$parts['from'];
-			if (strlen(@$parts['where']) > 0) {
-				$ret .= ' WHERE '.$parts['where'];
+			$ret .= $parts[self::QPARTS_SELECT];
+			$ret .= ' FROM '.$parts[self::QPARTS_FROM];
+			if (strlen(@$parts[self::QPARTS_WHERE]) > 0) {
+				$ret .= ' WHERE '.$parts[self::QPARTS_WHERE];
 			}
-			if (strlen(@$parts['groupby']) > 0) {
-				$ret .= ' GROUP BY '.$parts['groupby'];
+			if (strlen(@$parts[self::QPARTS_GROUPBY]) > 0) {
+				$ret .= ' GROUP BY '.$parts[self::QPARTS_GROUPBY];
 			}
-			if (strlen(@$parts['having']) > 0) {
-				$ret .= ' HAVING '.$parts['having'];
+			if (strlen(@$parts[self::QPARTS_HAVING]) > 0) {
+				$ret .= ' HAVING '.$parts[self::QPARTS_HAVING];
 			}
-			if (strlen(@$parts['orderby']) > 0) {
-				$ret .= ' ORDER BY '.$parts['orderby'];
+			if (strlen(@$parts[self::QPARTS_ORDERBY]) > 0) {
+				$ret .= ' ORDER BY '.$parts[self::QPARTS_ORDERBY];
 			}
-			if (strlen(@$parts['limit']) > 0) {
-				$ret .= ' '.$parts['limit'];
+			if (strlen(@$parts[self::QPARTS_LIMIT]) > 0) {
+				$ret .= ' '.$parts[self::QPARTS_LIMIT];
 			}
-			if (strlen(@$parts['procedure']) > 0) {
-				$ret .= ' PROCEDURE '.$parts['procedure'];
+			if (strlen(@$parts[self::QPARTS_PROCEDURE]) > 0) {
+				$ret .= ' PROCEDURE '.$parts[self::QPARTS_PROCEDURE];
 			}
 			break;
 		case 'UPDATE':
-			$ret  = 'UPDATE '.$parts['table'];
-			$ret .= ' SET '.$parts['fields'];
-			if ($parts['where'] != '')
-				$ret .= ' WHERE '.$parts['where'];
+			$ret  = 'UPDATE '.$parts[self::QPARTS_TABLE];
+			$ret .= ' SET '.$parts[self::QPARTS_FIELDS];
+			if ($parts[self::QPARTS_WHERE] != '')
+				$ret .= ' WHERE '.$parts[self::QPARTS_WHERE];
 			break;
 		case 'INSERT':
-			$ret  = 'INSERT INTO '.$parts['table'];
-			$ret .= ' VALUES '.$parts['values'];
+			$ret  = 'INSERT INTO '.$parts[self::QPARTS_TABLE];
+			$ret .= ' VALUES '.$parts[self::QPARTS_VALUES];
 			break;
 		case 'DELETE':
-			$ret  = 'DELETE FROM '.$parts['table'];
-			if ($parts['where'] != '')
-				$ret .= ' WHERE '.$parts['where'];
+			$ret  = 'DELETE FROM '.$parts[self::QPARTS_TABLE];
+			if ($parts[self::QPARTS_WHERE] != '')
+				$ret .= ' WHERE '.$parts[self::QPARTS_WHERE];
 			break;
 		default:
 			die('unknown query type');
@@ -1396,7 +1418,7 @@ class phpMyEdit
 		$join_clause = $this->sd.$this->tb.$this->ed." AS $main_table";
 		for ($k = 0, $numfds = sizeof($this->fds); $k < $numfds; $k++) {
 			$main_column = $this->fds[$k];
-			$join        = $this->fdd[$main_column]['values']['join'];
+			$join        = $this->fdd[$main_column][self::FDD_VALUES]['join'];
 			if (is_array($join)) {
 				if (isset($join['condition'])) {
 					$join = $join['condition'];
@@ -1408,21 +1430,21 @@ class phpMyEdit
 				// use this just for values definitions
 				continue;
 			}
-			if (isset($this->fdd[$main_column]['values']['db'])) {
-				$dbp = $this->sd.$this->fdd[$main_column]['values']['db'].$this->ed.'.';
+			if (isset($this->fdd[$main_column][self::FDD_VALUES]['db'])) {
+				$dbp = $this->sd.$this->fdd[$main_column][self::FDD_VALUES]['db'].$this->ed.'.';
 			} else {
 				//$dbp = $this->dbp; not needed
 			}
 
-			$join_column = $this->sd.$this->fdd[$main_column]['values']['column'].$this->ed;
-			$join_desc	 = $this->sd.$this->fdd[$main_column]['values']['description'].$this->ed;
+			$join_column = $this->sd.$this->fdd[$main_column][self::FDD_VALUES]['column'].$this->ed;
+			$join_desc	 = $this->sd.$this->fdd[$main_column][self::FDD_VALUES]['description'].$this->ed;
 			if ($join_desc == $this->sd.$this->ed) {
 				$join_desc = $join_column;
 			}
 			if ($join_column != $this->sd.$this->ed) {
 
-				$table = trim($this->fdd[$main_column]['values']['table']);
-				$subquery = stripos($table, 'SELECT') !== false;
+				$table = trim($this->fdd[$main_column][self::FDD_VALUES]['table']);
+				$subquery = stripos($table, self::SQL_SELECT) !== false;
 				if ($subquery) {
 					$table = '('.$table.')';
 				} else {
@@ -1673,7 +1695,7 @@ class phpMyEdit
 						}
 						$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l.'['.rawurlencode($key).']='.rawurlencode($m[$key]);
 					}
-					$fqn_flags = isset($this->fdd[$k]['values']['description'])?self::OMIT_DESC:0;
+					$fqn_flags = isset($this->fdd[$k][self::FDD_VALUES]['description'])?self::OMIT_DESC:0;
 					$qo[$this->fqn($k, $fqn_flags)] =
 						array('oper'  => $qf_op, 'value' => "($qf_val)"); // )
 				}
@@ -1681,9 +1703,9 @@ class phpMyEdit
 				if ($mi == '*') {
 					continue;
 				}
-				if ($this->fdd[$k]['select'] != 'C' &&
-					$this->fdd[$k]['select'] != 'M' &&
-					$this->fdd[$k]['select'] != 'D' && $mi == '') {
+				if ($this->fdd[$k][self::FDD_SELECT] != 'C' &&
+					$this->fdd[$k][self::FDD_SELECT] != 'M' &&
+					$this->fdd[$k][self::FDD_SELECT] != 'D' && $mi == '') {
 					continue;
 				}
 				$afilter = addslashes($mi);
@@ -1693,12 +1715,12 @@ class phpMyEdit
 				if ($m == '*') {
 					continue;
 				}
-				if ($this->fdd[$k]['select'] != 'C' &&
-					$this->fdd[$k]['select'] != 'M' &&
-					$this->fdd[$k]['select'] != 'D' && $m == '') {
+				if ($this->fdd[$k][self::FDD_SELECT] != 'C' &&
+					$this->fdd[$k][self::FDD_SELECT] != 'M' &&
+					$this->fdd[$k][self::FDD_SELECT] != 'D' && $m == '') {
 					continue;
 				}
-				if ($this->fdd[$k]['select'] == 'N') {
+				if ($this->fdd[$k][self::FDD_SELECT] == 'N') {
 					$afilter = addslashes($m);
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
 					$qo[$this->fqn($k)] = array('oper' => $mc, 'value' => "'$afilter'");
@@ -2100,7 +2122,7 @@ class phpMyEdit
 					echo 'title="'.$this->enc($helptip).'" ';
 				}
 
-				$type = $this->fdd[$k]['select'] == 'N' ? 'number' : 'text';
+				$type = $this->fdd[$k][self::FDD_SELECT] == 'N' ? 'number' : 'text';
 				echo ($this->password($k) ? 'type="password"' : 'type="'.$type.'"');
 				echo ($this->mandatory($k) ? ' required' : '');
 
@@ -2175,10 +2197,10 @@ class phpMyEdit
 				return;
 			}
 		} else {
-			$qparts['type']	  = 'select';
-			$qparts['select'] = @$this->get_SQL_column_list();
-			$qparts['from']	  = @$this->get_SQL_join_clause();
-			$qparts['where'] = $this->key_record_where();
+			$qparts[self::QPARTS_TYPE]	  = self::QPARTS_SELECT;
+			$qparts[self::QPARTS_SELECT] = @$this->get_SQL_column_list();
+			$qparts[self::QPARTS_FROM]	  = @$this->get_SQL_join_clause();
+			$qparts[self::QPARTS_WHERE] = $this->key_record_where();
 			//echo htmlspecialchars($this->rec.' '.$this->key);
 			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
 			if (! ($row = $this->sql_fetch($res))) {
@@ -2270,7 +2292,7 @@ class phpMyEdit
 		 * multi-select stuff is at least confusing. Also, if there is
 		 * only one possible value, then this value must not be changed.
 		 */
-		$select = $this->fdd[$k]['select']?:null;
+		$select = $this->fdd[$k][self::FDD_SELECT]?:null;
 		$multiValues = false;
 		if (empty($select) || stristr("MCOD", $select) !== false) {
 			$vals        = false;
@@ -3793,12 +3815,12 @@ class phpMyEdit
 	{
 		$groupBy = @$this->get_SQL_groupby_query_opts();
 		$count_parts = array(
-			'type'	 => 'SELECT',
-			'select' => 'COUNT(*)',
-			'from'	 => @$this->get_SQL_join_clause(),
-			'groupby' => $groupBy,
-			'where'	 => @$this->get_SQL_where_from_query_opts(),
-			'having' => $this->get_SQL_having_query_opts()
+			self::QPARTS_TYPE	 => self::SQL_SELECT,
+			self::QPARTS_SELECT => 'COUNT(*)',
+			self::QPARTS_FROM	 => @$this->get_SQL_join_clause(),
+			self::QPARTS_GROUPBY => $groupBy,
+			self::QPARTS_WHERE	 => @$this->get_SQL_where_from_query_opts(),
+			self::QPARTS_HAVING => $this->get_SQL_having_query_opts()
 			);
 		$query = $this->get_SQL_main_list_query($count_parts);
 		if (!empty($groupBy)) {
@@ -3825,7 +3847,7 @@ class phpMyEdit
 		/*$fields	  = false;
 		  $filter_row = array();//$row;
 		  if (! is_array($filter_row)) { echo 'tttt';
-		  unset($qparts['where']);
+		  unset($qparts[self::QPARTS_WHERE]);
 		  $query = $this->get_SQL_query($qparts);
 		  $res   = $this->myquery($query, __LINE__);
 		  if ($res == false) {
@@ -3883,13 +3905,13 @@ class phpMyEdit
 			echo '<td class="',$css_class_name,'">';
 			if ($this->password($k) || !$this->filtered($k)) {
 				echo '&nbsp;';
-			} else if ($this->fdd[$fd]['select'] == 'D' ||
-					   $this->fdd[$fd]['select'] == 'M' ||
-					   $this->fdd[$fd]['select'] == 'O' ||
-					   $this->fdd[$fd]['select'] == 'C') {
+			} else if ($this->fdd[$fd][self::FDD_SELECT] == 'D' ||
+					   $this->fdd[$fd][self::FDD_SELECT] == 'M' ||
+					   $this->fdd[$fd][self::FDD_SELECT] == 'O' ||
+					   $this->fdd[$fd][self::FDD_SELECT] == 'C') {
 				// Multiple fields processing
 				// Default size is 2 and array required for values.
-				$from_table = ! $this->col_has_values($k) || isset($this->fdd[$k]['values']['table']);
+				$from_table = ! $this->col_has_values($k) || isset($this->fdd[$k][self::FDD_VALUES]['table']);
 				$valgrp		= $this->set_values($k, $from_table);
 				$vals		= array('*' => '*') + $valgrp['values'];
 				$groups     = $valgrp['groups'];
@@ -3899,7 +3921,7 @@ class phpMyEdit
 				$negate     = count($selected) == 0 ? null : $mc; // reset if none selected
 				$negate_css_class_name = $this->getCSSclass('filter-negate', null, null, $css_postfix);
 				$multiple	= $this->col_has_multiple_select($k);
-				$multiple  |= $this->fdd[$fd]['select'] == 'M' || $this->fdd[$fd]['select'] == 'C';
+				$multiple  |= $this->fdd[$fd][self::FDD_SELECT] == 'M' || $this->fdd[$fd][self::FDD_SELECT] == 'C';
 				$readonly	= false;
 				$strip_tags = true;
 				//$escape	  = true;
@@ -3915,8 +3937,8 @@ class phpMyEdit
 									   $vals, $groups, $titles, $data,
 									   $selected, $multiple || true, $readonly, false, $strip_tags, $escape);
 				echo '</div>';
-			} elseif (($this->fdd[$fd]['select'] == 'N' ||
-					   $this->fdd[$fd]['select'] == 'T')) {
+			} elseif (($this->fdd[$fd][self::FDD_SELECT] == 'N' ||
+					   $this->fdd[$fd][self::FDD_SELECT] == 'T')) {
 				$len_props = '';
 				$maxlen = !empty($this->fdd[$k]['maxlen']) ? intval($this->fdd[$k]['maxlen']) : 0;
 				//$maxlen > 0 || $maxlen = intval($this->sql_field_len($res, $fields["qf$k"]));
@@ -3925,7 +3947,7 @@ class phpMyEdit
 					: ($maxlen < 30 ? min($maxlen, 8) : 12);
 				$len_props .= ' size="'.$size.'"';
 				$len_props .= ' maxlength="'.$maxlen.'"';
-				if ($this->fdd[$fd]['select'] == 'N') {
+				if ($this->fdd[$fd][self::FDD_SELECT] == 'N') {
 					$css_comp_class_name = $this->getCSSclass('comp-filter', null, null, $css_postfix);
 
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
@@ -4329,7 +4351,7 @@ class phpMyEdit
 		// filter
 		if ($this->filter_operation() || $this->display['query'] === 'always') $this->filter_heading();
 		// Display sorting sequence
-		if ($qparts['orderby'] && $this->display['sort']) $this->display_sorting_sequence();
+		if ($qparts[self::QPARTS_ORDERBY] && $this->display['sort']) $this->display_sorting_sequence();
 		// Display the current query
 		if ($this->display['query']) $this->display_current_query();
 
@@ -4381,7 +4403,7 @@ class phpMyEdit
 			}
 			//$key_rec[$key]   = $row['qf'.$key_num];
 
-			$this->exec_data_triggers('select', $row);
+			$this->exec_data_triggers(self::SQL_QUERY_SELECT, $row);
 
 			switch (count($key_rec)) {
 				case 0:
@@ -4586,10 +4608,10 @@ class phpMyEdit
 			// do the aggregate query if necessary
 			//if ($vars_to_total) {
 			$qp = array();
-			$qp['type'] = 'select';
-			$qp['select'] = $aggr_from_clause;
-			$qp['from']	  = @$this->get_SQL_join_clause();
-			$qp['where']  = @$this->get_SQL_where_from_query_opts();
+			$qp[self::QPARTS_TYPE] = self::QPARTS_SELECT;
+			$qp[self::QPARTS_SELECT] = $aggr_from_clause;
+			$qp[self::QPARTS_FROM]	  = @$this->get_SQL_join_clause();
+			$qp[self::QPARTS_WHERE]  = @$this->get_SQL_where_from_query_opts();
 			$tot_query	  = @$this->get_SQL_query($qp);
 			$totals_result = $this->myquery($tot_query,__LINE__);
 			$tot_row	   = $this->sql_fetch($totals_result);
@@ -4637,7 +4659,7 @@ class phpMyEdit
 		// PRE Triggers
 		$trigger = '';
 		if ($this->change_operation()) {
-			$trigger = 'update';
+			$trigger = self::SQL_QUERY_UPDATE;
 			$formCssClass = $this->getCSSclass('change', null, null, $postfix);
 			if (!$this->exec_triggers_simple($trigger, 'pre')) {
 				// if PRE update fails, then back to view operation
@@ -4650,15 +4672,15 @@ class phpMyEdit
 		} else {
 			if ($this->add_operation() || $this->copy_operation()) {
 				$formCssClass = $this->getCSSclass('copyadd', null, null, $postfix);
-				$trigger = 'insert';
+				$trigger = self::SQL_QUERY_INSERT;
 			}
 			if ($this->view_operation()) {
 				$formCssClass = $this->getCSSclass('view', null, null, $postfix);
-				$trigger = 'select';
+				$trigger = self::SQL_QUERY_SELECT;
 			}
 			if ($this->delete_operation()) {
 				$formCssClass = $this->getCSSclass('delete', null, null, $postfix);
-				$trigger = 'delete';
+				$trigger = self::SQL_QUERY_DELETE;
 			}
 			$ret = $this->exec_triggers_simple($trigger, 'pre');
 			// if PRE insert/view/delete fail, then back to the list
@@ -4672,10 +4694,10 @@ class phpMyEdit
 
 		$row = false;
 		if (!$this->add_operation()) {
-			$qparts['type']	  = 'select';
-			$qparts['select'] = @$this->get_SQL_column_list();
-			$qparts['from']	  = @$this->get_SQL_join_clause();
-			$qparts['where'] = $this->key_record_where();
+			$qparts[self::QPARTS_TYPE]	  = self::QPARTS_SELECT;
+			$qparts[self::QPARTS_SELECT] = @$this->get_SQL_column_list();
+			$qparts[self::QPARTS_FROM]	  = @$this->get_SQL_join_clause();
+			$qparts[self::QPARTS_WHERE] = $this->key_record_where();
 
 			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
 			if (! ($row = $this->sql_fetch($res))) {
@@ -4794,7 +4816,7 @@ class phpMyEdit
 		// Creating array of changed keys ($changed)
 		$changed = array_keys($newvals);
 		// Before trigger, newvals can be efectively changed
-		if ($this->exec_triggers('insert', 'before', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_INSERT, 'before', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 
@@ -4874,16 +4896,16 @@ class phpMyEdit
 			$this->rec = $key_col_val;
 		}
 		// Notify list
-		if (@$this->notify['insert'] || @$this->notify['all']) {
+		if (@$this->notify[self::SQL_QUERY_INSERT] || @$this->notify['all']) {
 			$this->email_notify(false, $newvals);
 		}
 		// Note change in log table
 		if ($this->logtable) {
-			$this->logQuery('insert', $oldvals, $changed, $newvals);
+			$this->logQuery(self::SQL_QUERY_INSERT, $oldvals, $changed, $newvals);
 		}
 		// After trigger
 		$changed = array_keys($newvals); // rebuild if reset by previous triggers.
-		if ($this->exec_triggers('insert', 'after', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_INSERT, 'after', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 		return true;
@@ -4997,7 +5019,7 @@ class phpMyEdit
 
 
 		// Before trigger
-		if ($this->exec_triggers('update', 'before', $oldvals, $changed, $newvals) === false) {
+		if ($this->exec_triggers(self::SQL_QUERY_UPDATE, 'before', $oldvals, $changed, $newvals) === false) {
 			return false;
 		}
 		//error_log("changed ".print_r($changed, true));
@@ -5132,17 +5154,17 @@ class phpMyEdit
 			}
 		}
 		// Notify list
-		if (@$this->notify['update'] || @$this->notify['all']) {
+		if (@$this->notify[self::SQL_QUERY_UPDATE] || @$this->notify['all']) {
 			if (count($changed) > 0) {
 				$this->email_notify($oldvals, $newvals);
 			}
 		}
 		// Note change in log table
 		if ($this->logtable) {
-			$this->logQuery('update', $oldvals, $changed, $newvals);
+			$this->logQuery(self::SQL_QUERY_UPDATE, $oldvals, $changed, $newvals);
 		}
 		// After trigger
-		if ($this->exec_triggers('update', 'after', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_UPDATE, 'after', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 		return $updateResult; // return error or success status of the update query
@@ -5162,7 +5184,7 @@ class phpMyEdit
 		$changed = is_array($oldvals) ? array_keys($oldvals) : array();
 		$newvals = array();
 		// Before trigger
-		if ($this->exec_triggers('delete', 'before', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_DELETE, 'before', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 		if (!empty($changed)) {
@@ -5185,15 +5207,15 @@ class phpMyEdit
 		}
 
 		// Notify list
-		if (@$this->notify['delete'] || @$this->notify['all']) {
+		if (@$this->notify[self::SQL_QUERY_DELETE] || @$this->notify['all']) {
 			$this->email_notify($oldvals, false);
 		}
 		// Note change in log table
 		if ($this->logtable) {
-			$this->logQuery('delete', $oldvals, $changed, null);
+			$this->logQuery(self::SQL_QUERY_DELETE, $oldvals, $changed, null);
 		}
 		// After trigger
-		if ($this->exec_triggers('delete', 'after', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_DELETE, 'after', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 		return true;
@@ -5205,7 +5227,7 @@ class phpMyEdit
 			return false;
 		}
 		if ($old_vals != false && $new_vals != false) {
-			$action	 = 'update';
+			$action	 = self::SQL_QUERY_UPDATE;
 			$subject = 'Record updated in';
 			$kparts = [];
 			foreach ($this->rec as $key => $rec) {
@@ -5215,12 +5237,12 @@ class phpMyEdit
 			$body	 = 'An item with '.implode(', ', $kparts).' was updated in';
 			$vals	 = $new_vals;
 		} elseif ($new_vals != false) {
-			$action	 = 'insert';
+			$action	 = self::SQL_QUERY_INSERT;
 			$subject = 'Record added to';
 			$body	 = 'A new item was added into';
 			$vals	 = $new_vals;
 		} elseif ($old_vals != false) {
-			$action	 = 'delete';
+			$action	 = self::SQL_QUERY_DELETE;
 			$subject = 'Record deleted from';
 			$body	 = 'An item was deleted from';
 			$vals	 = $old_vals;
@@ -5237,7 +5259,7 @@ class phpMyEdit
 		foreach ($vals as $k => $text) {
 			$name = isset($this->fdd[$k]['name~'])
 				? $this->fdd[$k]['name~'] : $this->fdd[$k]['name'];
-			if ($action == 'update') {
+			if ($action == self::SQL_QUERY_UPDATE) {
 				if ($old_vals[$k] == $new_vals[$k]) {
 					continue;
 				}
@@ -5433,15 +5455,15 @@ class phpMyEdit
 			}
 			$ref = $this->join_table_reference($this->fdd[$key]);
 			if ($ref !== false &&
-				!isset($this->fdd[$key]['values']['join']['table'])) {
-				$this->fdd[$key]['values']['table'] = $this->fdd[$ref]['values']['table'];
+				!isset($this->fdd[$key][self::FDD_VALUES]['join']['table'])) {
+				$this->fdd[$key][self::FDD_VALUES]['table'] = $this->fdd[$ref][self::FDD_VALUES]['table'];
 			}
-			if (is_array(@$this->fdd[$key]['values']) &&
-				empty($this->fdd[$key]['values']['table'])) {
-				foreach ($this->fdd[$key]['values'] as $val) {
+			if (is_array(@$this->fdd[$key][self::FDD_VALUES]) &&
+				empty($this->fdd[$key][self::FDD_VALUES]['table'])) {
+				foreach ($this->fdd[$key][self::FDD_VALUES] as $val) {
 					$this->fdd[$key]['values2'][$val] = $val;
 				}
-				unset($this->fdd[$key]['values']);
+				unset($this->fdd[$key][self::FDD_VALUES]);
 			}
 			isset($this->fdd[$key]['help']) && $this->guidance = true;
 
@@ -5643,16 +5665,16 @@ class phpMyEdit
 		 */
 		// Cancel button - Cancel Triggers
 		if ($this->add_canceled() || $this->copy_canceled()) {
-			$this->exec_triggers_simple('insert', 'cancel');
+			$this->exec_triggers_simple(self::SQL_QUERY_INSERT, 'cancel');
 		}
 		if ($this->view_canceled()) {
-			$this->exec_triggers_simple('select', 'cancel');
+			$this->exec_triggers_simple(self::SQL_QUERY_SELECT, 'cancel');
 		}
 		if ($this->change_canceled() || $this->change_reloaded()) {
-			$this->exec_triggers_simple('update', 'cancel');
+			$this->exec_triggers_simple(self::SQL_QUERY_UPDATE, 'cancel');
 		}
 		if ($this->delete_canceled()) {
-			$this->exec_triggers_simple('delete', 'cancel');
+			$this->exec_triggers_simple(self::SQL_QUERY_DELETE, 'cancel');
 		}
 		// Save/More Button - database operations
 		if ($this->label_cmp($this->saveadd, 'Save')
