@@ -50,6 +50,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
 
   const JOIN_FIELD_NAME_SEPARATOR = ':';
+  const JOIN_KEY_SEP = ':';
   const VALUES_TABLE_SEP = '@';
 
   /** @todo Perhaps create a table-name provider structure. */
@@ -611,7 +612,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $keys = Util::explode(',', Util::removeSpaces(${$dataSet.'Values'}[$keyField ]));
       $ranking = [];
       foreach ($keys as $key) {
-        $ranking[] = $key.':'.(count($ranking)+1);
+        $ranking[] = $key.self::JOIN_KEY_SEP.(count($ranking)+1);
       }
       ${$dataSet.'Values'}[$rankingField] = implode(',', $ranking);
     }
