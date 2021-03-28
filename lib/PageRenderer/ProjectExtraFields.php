@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -334,6 +335,13 @@ class ProjectExtraFields extends PMETableViewBase
       'valueTitles' => array_map(function($tag) { $this->toolTipsService['extra-field-data-type-'.$tag]; }, $this->extraFieldDataTypes),
       'tooltip' => $this->toolTipsService['extra-field-data-type'],
     ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::OPTIONS_TABLE, 'key',
+      [
+        'name' => $this->l->t('Allowed values from table.'),
+        'input' => 'H',
+      ]);
 
     $opts['fdd']['allowed_values'] = [
       'name' => $this->l->t('Allowed Values'),
