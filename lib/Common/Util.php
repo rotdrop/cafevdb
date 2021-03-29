@@ -132,12 +132,14 @@ class Util
   {
     $matrix = array_map(
       function($row) use ($keyDelimiter) {
-        return self::explode($keyDelimiter, $row);
+        $row = explode($keyDelimiter, $row);
+        if (!isset($row[1]) || $row[1] === '') {
+          $row[1] = $default;
+        }
+        return $row;
       },
       self::explode($delimiter, $data));
-    return array_combine(
-      array_column($matrix, 0),
-      array_pad(array_column($matrix, 1), count($matrix), $default));
+    return array_column($matrix, 1, 0);
   }
 
   /**Return the maximum upload file size.*/
