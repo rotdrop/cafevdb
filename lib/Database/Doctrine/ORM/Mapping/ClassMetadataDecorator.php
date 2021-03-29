@@ -446,7 +446,7 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
    * Convert the given value to a reference if $field is a "simple"
    * association field and set it in the entity.
    */
-  public function setSimpleFieldValue($entity, $field, $value)
+  public function setSimpleFieldValue($entity, string $field, $value)
   {
     $meta = $this->metaData;
     if (isset($meta->associationMappings[$field])) {
@@ -470,6 +470,7 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
     if (is_callable([ $entity, $method ])) {
       $entity->$method($value);
     } else {
+      $this->logWarn('Probably missing method "'.$method.'" on an entity '.get_class($entity));
       $meta->setFieldValue($entity, $field, $value);
     }
   }
@@ -478,9 +479,12 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
    * Convert the given value to a reference if $field is a "simple"
    * association field and set it in the entity.
    */
-  public function setSimpleColumnValue($entity, $column, $value)
+  public function setSimpleColumnValue($entity, string $column, $value)
   {
     $field = $this->simpleColumnMappings()[$column];
+    if (empty($field)) {
+      throw new \RuntimeException('Unable to find field for column "'.$column.'"');
+    }
     $this->setSimpleFieldValue($entity, $field, $value);
   }
 
