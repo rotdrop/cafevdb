@@ -110,6 +110,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected $changeSetSize = -1;
 
+  /** @var bool Debug web requests */
+  protected $debugRequests = false;
+
   /**
    * @var array
    * ```
@@ -154,6 +157,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pmeRecordId = $this->pme->getCGIRecordId();
     $this->showDisabled = $this->getUserValue('showdisabled', false) === 'on';
     $this->expertMode = $this->getUserValue('expertmode', false) === 'on';
+
+    $this->debugRequests = 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
 
     $this->defaultFDD = $this->createDefaultFDD();
 
@@ -478,7 +483,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'datemask' => 'd.m.Y',
       ],
       // Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity
-      'deleted_at' => [
+      'deleted' => [
         'name' => $this->l->t('Date Revoked'),
         'input' => 'R',
         'maxlen' => 10,
@@ -671,18 +676,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'updated');
 
-    $logMethod = 'logDebug';
-    // $logMethod = 'logInfo';
-
-    $this->$logMethod('OLDVALS '.print_r($oldvals, true));
-    $this->$logMethod('NEWVALS '.print_r($newvals, true));
-    $this->$logMethod('CHANGED '.print_r($changed, true));
+    $this->debug('OLDVALS '.print_r($oldvals, true));
+    $this->debug('NEWVALS '.print_r($newvals, true));
+    $this->debug('CHANGED '.print_r($changed, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
-    $this->$logMethod('CHANGESETS: '.print_r($changeSets, true));
+    $this->debug('CHANGESETS: '.print_r($changeSets, true));
 
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $joinInfo) {
@@ -701,7 +703,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
       }
       $changeSet = $changeSets[$table];
-      $this->$logMethod('CHANGESET '.$table.' '.print_r($changeSet, true));
+      $this->debug('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
@@ -757,8 +759,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
       }
       if (!empty($multiple)) {
-        $this->$logMethod('IDS '.print_r($identifier, true));
-        $this->$logMethod('CHG '.print_r($changeSet, true));
+        $this->debug('IDS '.print_r($identifier, true));
+        $this->debug('CHG '.print_r($changeSet, true));
 
         $dataSets = [
           'del' => 'old',
@@ -797,9 +799,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->$logMethod('ADDIDS '.print_r($addIdentifier, true));
-        $this->$logMethod('REMIDS '.print_r($remIdentifier, true));
-        $this->$logMethod('DELIDS '.print_r($delIdentifier, true));
+        $this->debug('ADDIDS '.print_r($addIdentifier, true));
+        $this->debug('REMIDS '.print_r($remIdentifier, true));
+        $this->debug('DELIDS '.print_r($delIdentifier, true));
 
         if (!empty($joinInfo['association'])) {
           // Many-to-many or similar through join table. We modify the
@@ -816,7 +818,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
 
           $association = $masterEntity[$joinInfo['association']];
-          $this->$logMethod(get_class($association).': '.$association->count());
+          $this->debug(get_class($association).': '.$association->count());
 
           // Delete entities by cirteria matching Note: this needs
           // that the entity implements the \ArrayAccess interface
@@ -878,12 +880,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->$logMethod('MULTIPLE VALUES '.print_r($multipleValues, true));
+        $this->debug('MULTIPLE VALUES '.print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
           if (isset($addIdentifier[$new])) {
-            $this->$logMethod('TRY ADD '.$new);
+            $this->debug('TRY ADD '.$new);
             $id = $addIdentifier[$new];
             $entityId = $meta->extractKeyValues($id);
             $entity = $entityClass::create();
@@ -891,7 +893,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $entity[$key] = $value;
             }
           } else if (isset($remIdentifier[$new]) && !empty($changeSet)) {
-            $this->$logMethod('TRY MOD '.$new);
+            $this->debug('TRY MOD '.$new);
             $id = $remIdentifier[$new];
             $entityId = $meta->extractKeyValues($id);
             $entity = $this->find($entityId);
@@ -949,9 +951,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->flush(); // flush everything to the data-base
 
 
-    $this->$logMethod('AFTER OLD '.print_r($oldvals, true));
-    $this->$logMethod('AFTER NEW '.print_r($newvals, true));
-    $this->$logMethod('AFTER CHG '.print_r($changed, true));
+    $this->debug('AFTER OLD '.print_r($oldvals, true));
+    $this->debug('AFTER NEW '.print_r($newvals, true));
+    $this->debug('AFTER CHG '.print_r($changed, true));
 
     if (!empty($changed)) {
       throw new \RuntimeException($this->l->t('Change-set %s should be empty.', print_r($changed, true)));
@@ -993,9 +995,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function beforeInsertDoInsertAll(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
-    // $logMethod = 'logDebug';
-    $logMethod = 'logInfo';
-
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'created');
     Util::unsetValue($changed, 'updated');
@@ -1006,7 +1005,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $missingKeys[] = $key;
       }
     }
-    $this->$logMethod('MISSING '.print_r($missingKeys, true));
+    $this->debug('MISSING '.print_r($missingKeys, true));
     foreach ($this->joinStructure as $joinInfo) {
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         continue;
@@ -1027,13 +1026,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
     }
 
-    $this->$logMethod('NEWVALS '.print_r($newvals, true));
+    $this->debug('NEWVALS '.print_r($newvals, true));
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
-    $this->$logMethod('CHANGESETS: '.print_r($changeSets, true));
+    $this->debug('CHANGESETS: '.print_r($changeSets, true));
 
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $joinInfo) {
@@ -1055,7 +1054,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $joinInfo['identifier'][$key] = $key;
         }
       }
-      $this->$logMethod('CHANGESET '.$table.' '.print_r($changeSet, true));
+      $this->debug('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
@@ -1095,8 +1094,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
       }
       if (!empty($multiple)) {
-        $this->$logMethod('IDS '.print_r($identifier, true));
-        $this->$logMethod('CHG '.print_r($changeSet, true));
+        $this->debug('IDS '.print_r($identifier, true));
+        $this->debug('CHG '.print_r($changeSet, true));
 
         foreach ($identifier[$multiple] as $addKey) {
           $addIdentifier[$addKey] = $identifier;
@@ -1125,7 +1124,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->$logMethod('ADDIDS '.print_r($addIdentifier, true));
+        $this->debug('ADDIDS '.print_r($addIdentifier, true));
 
         if (!empty($joinInfo['association'])) {
           // Many-to-many or similar through join table. We modify the
@@ -1137,7 +1136,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
 
           $association = $masterEntity[$joinInfo['association']];
-          $this->$logMethod(get_class($association).': '.$association->count());
+          $this->debug(get_class($association).': '.$association->count());
 
           // add entries by adding them to the association of the
           // master entity
@@ -1171,11 +1170,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->$logMethod('VAL '.print_r($multipleValues, true));
+        $this->debug('VAL '.print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
-          $this->$logMethod('TRY MOD '.$new);
+          $this->debug('TRY MOD '.$new);
           $id = $addIdentifier[$new];
           $entityId = $meta->extractKeyValues($id);
           $entity = $entityClass::create();
@@ -1226,7 +1225,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->flush(); // flush everything to the data-base
 
-    $this->$logMethod('BEFORE INS: '.print_r($changed, true));
+    $this->debug('BEFORE INS: '.print_r($changed, true));
 
     if (!empty($changed)) {
       throw new \Exception(
@@ -1270,9 +1269,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function defineJoinStructure(array &$opts)
   {
-    $logMethod = 'logDebug';
-    //$logMethod = 'logInfo';
-
     if (!empty($opts['groupby_fields']) && !is_array($opts['groupby_fields'])) {
       $opts['groupby_fields'] = [ $opts['groupby_fields'], ];
     }
@@ -1360,12 +1356,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // use simple field grouping for list and filter operation
         $opts['fdd'][$fieldName]['sql|FL'] = '$join_col_fqn';
       }
-      $this->$logMethod('JOIN '.print_r($opts['fdd'][$fieldName], true));
+      $this->debug('JOIN '.print_r($opts['fdd'][$fieldName], true));
     }
     if (!empty($opts['groupby_fields'])) {
       $keys = is_array($opts['key']) ? array_keys($opts['key']) : [ $opts['key'] ];
       $opts['groupby_fields'] = array_unique(array_merge($keys, $opts['groupby_fields']));
-      $this->$logMethod('GROUP_BY '.print_r($opts['groupby_fields'], true));
+      $this->debug('GROUP_BY '.print_r($opts['groupby_fields'], true));
     }
     return $joinTables;
   }
@@ -1603,6 +1599,20 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return $query;
   }
 
+  protected static function unsetRequestValue($tag, array &$oldValues, array &$changed, array &$newValues)
+  {
+    Util::unsetValue($changed, $tag);
+    unset($oldValues[$tag]);
+    unset($newValues[$tag]);
+  }
+
+  protected function debug(string $message, array $context = [], $shift = 2) {
+    if ($this->debugRequests) {
+      $this->logInfo($message, $context, $shift + 1);
+    } else {
+      $this->logDebug($message, $context, $shift + 1);
+    }
+  }
 }
 
 // Local Variables: ***
