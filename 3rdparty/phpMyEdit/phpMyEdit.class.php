@@ -2168,7 +2168,7 @@ class phpMyEdit
 				echo '" />';
 			}
 			if (isset($this->fdd[$k]['display']['postfix'])) {
-				$postfix = $this->fdd[$k]['display']['prefix'];
+				$postfix = $this->fdd[$k]['display']['postfix'];
 				if (is_callable($postfix)) {
 					echo call_user_func($postfix, 'add', 'postfix', $row, $k, $this);
 				} else {
@@ -4980,10 +4980,8 @@ class phpMyEdit
 			echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
 			if (isset($stamps[$fd])) {
 				$oldstamp = $oldvals[$fd] != "" ? strtotime($oldvals[$fd]) : false;
-				//error_log($fd." Stamp: '".$stamps[$fd]."' old Stamp: '".$oldstamp."' oldvals: '".$oldvals[$fd]."' value '".$value."'");
 				//$this->logInfo($fd." Stamp: '".$stamps[$fd]."' old Stamp: '".$oldstamp."' oldvals: '".$oldvals[$fd]."' value '".$value."'");
 				if ($oldstamp != $stamps[$fd]) {
-					//error_log('Changed '.$fd.' "'.$oldstamps.'" "'.$stamps[$fd].'"');
 					//$this->logInfo('Changed '.$fd.' "'.$oldstamps.'" "'.$stamps[$fd].'"');
 					$changed[] = $fd;
 				} else {
@@ -4993,7 +4991,7 @@ class phpMyEdit
 				if (intval($value) !== intval($oldvals[$fd])) {
 					// checkboxes, empty means unchecked, but the DB
 					// may as well store nothing or 0.
-					//error_log('Changed check '.$fd.' "'.intval($oldvals[$fd]).'" "'.intval($value));
+					// $this->logInfo('Changed check '.$fd.' "'.intval($oldvals[$fd]).'" "'.intval($value));
 					$changed[] = $fd;
 					$newvals[$fd] = $defaults[$fd];
 				}
@@ -5022,7 +5020,6 @@ class phpMyEdit
 		if ($this->exec_triggers(self::SQL_QUERY_UPDATE, 'before', $oldvals, $changed, $newvals) === false) {
 			return false;
 		}
-		//error_log("changed ".print_r($changed, true));
 
 		// Creatinng WHERE part for query groups, after the trigger as
 		// it may even have added things.
