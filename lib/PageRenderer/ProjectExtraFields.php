@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use \Carbon\Carbon as DateTime;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -340,7 +342,16 @@ class ProjectExtraFields extends PMETableViewBase
       $opts['fdd'], self::OPTIONS_TABLE, 'key',
       [
         'name' => $this->l->t('Allowed values from table.'),
-        'input' => 'H',
+        'input' => 'HR',
+        'sql'=> 'CONCAT("[",JSON_ARRAYAGG(
+  JSON_OBJECT(
+    "key", $join_table.key,
+    "label", $join_table.label,
+    "data", $join_table.data,
+    "tool_tip", $join_table.tool_tip,
+    "limit", $join_table.`limit`,
+    "flags", IF($join_table.deleted_at IS NULL, "active", "deleted")
+)),"]")',
       ]);
 
     $opts['fdd']['allowed_values'] = [
@@ -501,8 +512,8 @@ class ProjectExtraFields extends PMETableViewBase
       'sql' => 'IF($main_table.default_value IS NULL OR LENGTH($main_table.default_value) < 36, 0, $main_table.default_value)',
       'css' => [ 'postfix' => ' default-single-value' ],
       'select' => 'O',
-      'values2|A' => [ '0' => $this->l->t('no'), '1' => $this->l->t('yes') ],
-      'default' => '0',
+      'values2|A' => [ 0 => $this->l->t('no'), 1 => $this->l->t('yes') ],
+      'default' => false,
       'values' => [
         'table' => "SELECT id AS field_id,
     IFNULL(JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key'), 0) AS 'key',
@@ -696,7 +707,7 @@ class ProjectExtraFields extends PMETableViewBase
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
     // $logMethod = 'logInfo';
     $logMethod = 'logDebug';
@@ -797,10 +808,21 @@ class ProjectExtraFields extends PMETableViewBase
     $newvals['allowed_values'] =
       $this->extraFieldsService->explodeAllowedValues(
         $this->extraFieldsService->implodeAllowedValues($allowed), false);
+
+    if (!is_array($oldvals['allowed_values'])) {
+      $oldvals['allowed_values'] = $this->extraFieldsService->explodeAllowedValues($oldvals['allowed_values'], false);
+    }
+
     if ($oldvals['allowed_values'] !== $newvals['allowed_values']) {
       $changed[] = 'allowed_values';
+    } else {
+      Util::unsetValue($changed, 'allowed_values');
     }
     $changed = array_values(array_unique($changed));
+
+    $this->$logMethod('AV OLD: '.print_r($oldvals['allowed_values'], true));
+    $this->$logMethod('AV NEW: '.print_r($newvals['allowed_values'], true));
+    $this->$logMethod('AV CHG: '.$changed['allowed_values']);
 
     /************************************************************************
      *
@@ -822,16 +844,12 @@ class ProjectExtraFields extends PMETableViewBase
       unset($changed[$key]);
     }
 
-    if (empty($newvals['default_value']) && $newvals['default_value'] !== null) {
+    if (empty($newvals['default_value']) && strlen($newvals['default_value']) != 0) {
       $newvals['default_value'] = null;
       $changed[] = 'default_value';
     }
 
     $changed = array_values(array_unique($changed));
-
-    $this->$logMethod('AV OLD: '.print_r($oldvals['allowed_values'], true));
-    $this->$logMethod('AV NEW: '.print_r($newvals['allowed_values'], true));
-    $this->$logMethod('AV CHG: '.$changed['allowed_values']);
 
     /************************************************************************
      *
@@ -861,11 +879,55 @@ class ProjectExtraFields extends PMETableViewBase
         }
       }
     }
+
+    // convert allowed values from array to table format as understood
+    // our PME legacy join table stuff.
+    $fields = [];
+    foreach (['new', 'old'] as $set) {
+      $optionValues[$set] = [];
+      foreach (${$set.'vals'}['allowed_values'] as $allowedValue) {
+        $key = $allowedValue['key'];
+        $field = $this->joinTableFieldName(self::OPTIONS_TABLE, 'key');
+        $fields[] = $field;
+        $optionValues[$set][$field][] = $key;
+        foreach ($allowedValue as $field => $value) {
+          switch ($field) {
+          case 'key':
+            continue 2;
+          case 'flags':
+            $field = 'deleted_at';
+            if ($value === 'deleted') {
+              $this->logInfo('Delete entry for key '.$key);
+            }
+            $value = $value === 'deleted' ? (new DateTime())->getTimestamp() : null;
+            break;
+          case 'tooltip':
+            $field = 'tool_tip';
+            break;
+          }
+          $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
+          $fields[] = $field;
+          $optionValues[$set][$field][] = $key.PMETableViewBase::JOIN_KEY_SEP.$value;
+        }
+      }
+    }
+    Util::unsetValue($changed, $this->joinTableFieldName(self::OPTIONS_TABLE, 'key'));
+    $fields = array_values(array_unique($fields));
+    foreach ($fields as $field) {
+      $oldvals[$field] = implode(',', $optionValues['old'][$field]);
+      $newvals[$field] = implode(',', $optionValues['new'][$field]);
+      if ($oldvals[$field] != $newvals[$field]) {
+        $changed[] = $field;
+      }
+    }
+
     $changed = array_values(array_unique($changed));
 
     $this->$logMethod('AFTER OLD '.print_r($oldvals, true));
     $this->$logMethod('AFTER NEW '.print_r($newvals, true));
     $this->$logMethod('AFTER CHG '.print_r($changed, true));
+
+    $this->changeSetSize = count($changed);
 
     return true;
   }
