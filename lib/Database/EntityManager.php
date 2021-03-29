@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -321,6 +322,9 @@ class EntityManager extends EntityManagerDecorator
 
     $namingStrategy = new UnderscoreNamingStrategy(CASE_LOWER);
     $config->setNamingStrategy($namingStrategy);
+
+    $quoteStrategy = new ReservedWordQuoteStrategy();
+    $config->setQuoteStrategy($quoteStrategy);
 
     $config->setSQLLogger($this->sqlLogger);
 
