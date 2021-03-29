@@ -144,9 +144,9 @@ const ready = function(selector, resizeCB) {
     const row = self.closest('tr.allowed-values');
     let used = row.data('used');
     used = !(!used || used === 'unused');
-    if (row.data('flags') === 'deleted') {
+    if (row.data('deleted') !== '') {
       // undelete
-      row.data('flags', 'active');
+      row.data('deleted', '');
       row.switchClass('deleted', 'active');
       row.find('input.field-flags').val('active');
       row.find('input[type="text"], textarea').prop('readonly', false);

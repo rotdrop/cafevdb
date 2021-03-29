@@ -26,6 +26,7 @@ use Ramsey\Uuid\Uuid;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Common\Util;
 
 /**
@@ -81,88 +82,81 @@ class ProjectExtraFieldsService
   }
 
   /**
-   * Internal function: given a (multi-select) surcharge choice
-   * compute the associated amount of money and return that as float.
+   * Internal function: given a surcharge choice compute the
+   * associated amount of money and return that as float.
    *
-   * @key string $key Key from the extra-fields data table. $key may
+   * @key string|null $key Key from the extra-fields data table. $key may
    * be a comma-separated list of keys.
    *
-   * @param string $value Value form the extra-fields data table
+   * @param string|null $value Value form the extra-fields data table
    *
-   * @param array $allowedValues Allowed-values array from the field
-   * definition.
-   *
-   * @parma string $multiplicity Multiplicity value from the
-   * field-definition as defined in
-   * OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity.
+   * @param Entities\ProjectExtraField $extraField Field definition.
    */
-  public function extraFieldSurcharge($key, $value, $allowedValues, $multiplicity)
+  public function extraFieldSurcharge(?string $key, ?string $value, Entities\ProjectExtraField $extraField)
   {
-    if (!is_array($allowedValues)) {
-      $allowedValues = $this->explodeAllowedValues($allowedValues);
-    }
-    //error_log('value '.$value);
-    switch ($multiplicity) {
-    case 'simple':
+    switch ($extraField->getMultiplicity()) {
+    case Multiplicity::SIMPLE():
       return (float)$value;
-    case 'groupofpeople':
+    case Multiplicity::GROUPOFPEOPLE():
       if (empty($key)) {
         break;
       }
-      return (float)$allowedValues[0]['data'];
-    case 'single':
+      return (float)$extraField->getDataOptions()->first()['data'];
+    case Multiplicity::SINGLE():
       if (empty($key)) {
         break;
       }
+      /** @var Entities\ProjectExtraFieldDataOption */
+      $dataOption = $extraField->getDataOptions()->first();
       // Non empty value means "yes".
-      if ($allowedValues[0]['key'] !== $key) {
-        $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$allowedValues[0]['key'].'"');
+      if ((string)$dataOption['key'] != $key) {
+        $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$dataOption['key'].'"');
       }
-      return (float)$allowedValues[0]['data'];
-    case 'groupsofpeople':
-    case 'multiple':
+      return (float)$dataOption['data'];
+    case Multiplicity::GROUPSOFPEOPLE():
+    case Multiplicity::MULTIPLE():
       if (empty($key)) {
         break;
       }
-      foreach ($allowedValues as $item) {
-        if ($item['key'] === $key) {
-          return (float)$item['data'];
+      foreach ($extraField->getDataOptions() as $dataOption) {
+        if ((string)$dataOption['key'] == $key) {
+          return (float)$dataOption['data'];
         }
       }
-      $this->logError('No data item for multiple choice key "'.$value.'"');
+      $this->logError('No data item for multiple choice key "'.$key.'"');
       return 0.0;
-    case 'parallel':
+    case Multiplicity::PARALLEL():
       if (empty($key)) {
         break;
       }
       $keys = Util::explode(',', $key);
       $found = false;
       $amount = 0.0;
-      foreach($allowedValues as $item) {
-        if (array_search($item['key'], $keys) !== false) {
-          $amount += (float)$item['data'];
+      foreach($extraField->getDataOptions() as $dataOption) {
+        if (array_search((string)$dataOption['key'], $keys) !== false) {
+          $amount += (float)$dataOption['data'];
           $found = true;
         }
       }
       if (!$found) {
-        $this->logError('No data item for parallel choice key "'.$value.'"');
+        $this->logError('No data item for parallel choice key "'.$key.'"');
       }
       return $amount;
-    case 'recurring':
+    case Multiplicity::RECURRING():
       if (empty($key)) {
         break;
       }
       $keys = Util::explode(',', $key);
       $found = false;
       $amount = 0.0;
-      foreach($allowedValues as $item) {
-        if (array_search($item['key'], $keys) !== false) {
-          $amount += (float)$item['data'];
+      foreach($extraField->getDataOptions() as $dataOption) {
+        if (array_search((string)$dataOption['key'], $keys) !== false) {
+          $amount += (float)$dataOption['data'];
           $found = true;
         }
       }
       if (!$found) {
-        $this->logError('No data item for parallel choice key "'.$value.'"');
+        $this->logError('No data item for parallel choice key "'.$key.'"');
       }
       return $amount;
     }
@@ -204,8 +198,8 @@ class ProjectExtraFieldsService
       'label' => false,
       'data' => false,
       'tooltip' => false,
-      'flags' => 'active',
       'limit' => false,
+      'deleted' => false,
     ];
   }
 
@@ -281,22 +275,6 @@ class ProjectExtraFieldsService
       }
     }
     return json_encode($options);
-  }
-
-    /**
-     * Make keys unique for multi-choice fields.
-     *
-     * @param array Item as return by self::explodeAllowedValues.
-     *
-     * @param array $keys Existing keys.
-     *
-     * @return Something "close" to $key, but not contained in $keys.
-     *
-     * @note ATM we use UUIDs. This function is a no-op.
-     */
-  public function allowedValuesUniqueKey($item, $keys)
-  {
-    return $item['key'];
   }
 
 }

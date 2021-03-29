@@ -50,6 +50,8 @@ class ProjectExtraFields extends PMETableViewBase
   const DATA_TABLE = 'ProjectExtraFieldsData';
   const PROJECTS_TABLE = 'Projects';
 
+  const OPTION_FIELDS = [ 'key', 'label', 'data', 'tooltip', 'limit', 'deleted', ];
+
   protected $joinStructure = [
     [
       'table' => self::TABLE,
@@ -345,10 +347,13 @@ class ProjectExtraFields extends PMETableViewBase
      *
      */
 
-    foreach (['key', 'label', 'data', 'tool_tip', 'limit', 'deleted_at'] as $column) {
+    foreach (self::OPTION_FIELDS as $column) {
       $this->makeJoinTableField(
         $opts['fdd'], self::OPTIONS_TABLE, $column, [
           'input' => 'H',
+          'sql' => ($column == 'key')
+          ? "GROUP_CONCAT(DISTINCT BIN2UUID(\$join_col_fqn) ORDER BY \$join_col_fqn ASC)"
+          : "GROUP_CONCAT(DISTINCT CONCAT(BIN2UUID(\$join_table.key), '".parent::JOIN_KEY_SEP."', \$join_col_fqn) ORDER BY \$join_table.key ASC)",
       ]);
     }
 
@@ -359,7 +364,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     $opts['fdd']['allowed_values'] = [
       'name' => $this->l->t('Allowed Values'),
-      'input' => 'VSR',
+      'input' => 'SR',
       'css|LF' => [ 'postfix' => ' allowed-values hide-subsequent-lines' ],
       'css' => ['postfix' => ' allowed-values' ],
       'css|VD' => [ 'postfix' => ' allowed-values allowed-values-single' ],
@@ -372,8 +377,8 @@ class ProjectExtraFields extends PMETableViewBase
       //    "key", BIN2UUID($join_table.key),
       //    "label", $join_table.label,
       //    "data", $join_table.data,
-      //    "tool_tip", $join_table.tool_tip,
-      //    "flags", IF($join_table.deleted_at IS NULL, "active", "deleted"),
+      //    "tooltip", $join_table.tooltip,
+      //    "flags", IF($join_table.deleted IS NULL, "active", "deleted"),
       //    "limit", $join_table.`limit`
       //    ) ORDER BY $join_table.label),"]")',
       'sql'=> 'CONCAT("[",GROUP_CONCAT(DISTINCT
@@ -381,9 +386,9 @@ class ProjectExtraFields extends PMETableViewBase
     "key", BIN2UUID($join_table.key)
     , "label", $join_table.label
     , "data", $join_table.data
-    , "tooltip", $join_table.tool_tip
-    , "flags", IF($join_table.deleted_at IS NULL, "active", "deleted")
+    , "tooltip", $join_table.tooltip
     , "limit", $join_table.`limit`
+    , "deleted", $join_table.deleted
 ) ORDER BY $join_table.label),"]")',
       'values' => [
         'column' => 'key',
@@ -413,6 +418,7 @@ class ProjectExtraFields extends PMETableViewBase
           ]);
         return $this->showAllowedSingleValue($allowedValues, $op, $fdd[$field]['tooltip'], $protoRecord);
       },
+      'input' => 'SR',
       'options' => 'ACP', // but not in list/view/delete-view
       'select' => 'T',
       'maxlen' => 29,
@@ -435,8 +441,7 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['maximum_group_size'] = [
       'name' => $this->l->t('Maximum Size'),
       'css' => [ 'postfix' => ' no-search maximum-group-size' ],
-      //'sql' => "SUBSTRING_INDEX(\$main_table.allowed_values, ':', -1)",
-      'sql' => "JSON_VALUE(\$main_table.allowed_values, '\$[0].limit')",
+      'sql' => 'MAX(IF($join_table.deleted IS NULL, $join_table.limit, 0))',
       'input' => 'S',
       'input|DV' => 'V',
       'options' => 'ACDPV',
@@ -447,6 +452,10 @@ class ProjectExtraFields extends PMETableViewBase
       'default' => key($values2),
       'values2' => $values2,
       'tooltip' => $this->toolTipsService['extra-fields-maximum-group-size'],
+      'values' => [
+        'column' => 'key',
+        'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
+      ],
     ];
 
     $opts['fdd']['default_value'] = [
@@ -511,26 +520,12 @@ class ProjectExtraFields extends PMETableViewBase
       'sql' => '$main_table.default_value',
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D', // @todo should be multi for "parallel".
-  //     'values' => [
-  //       'table' => "SELECT id AS field_id,
-  //   JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key') AS 'key',
-  //   JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.data') AS 'data',
-  //   JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.label') AS 'label',
-  //   JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.flags') AS 'flags'
-  // FROM `ProjectExtraFields`
-  // JOIN `numbers` n
-  //   ON JSON_LENGTH(allowed_values) > n.n",
-  //       'column' => 'key',
-  //       'description' => 'label',
-  //       'filters' => '$table.`field_id` = $record_id AND NOT $table.`flags` = \'deleted\'',
-  //       'join' => '$join_table.$join_column = $main_table.`default_value`',
-  //     ],
       'values' => [
         'table' => self::OPTIONS_TABLE,
         'column' => 'key',
         'encode' => 'BIN2UUID(%s)',
         'description' => 'label',
-        'filters' => '$table.field_id = $record_id AND $table.deleted_at IS NULL',
+        'filters' => '$table.field_id = $record_id AND $table.deleted IS NULL',
         'join' => '$join_table.$join_column = $main_table.default_value',
       ],
       'maxlen' => 29,
@@ -543,22 +538,18 @@ class ProjectExtraFields extends PMETableViewBase
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'ACP',
-      'sql' => 'IF($main_table.default_value IS NULL OR LENGTH($main_table.default_value) < 36, 0, $main_table.default_value)',
+      'sql' => 'IF($main_table.default_value IS NULL OR LENGTH($main_table.default_value) < 36, NULL, $main_table.default_value)',
       'css' => [ 'postfix' => ' default-single-value' ],
       'select' => 'O',
       'values2|A' => [ 0 => $this->l->t('no'), 1 => $this->l->t('yes') ],
       'default' => false,
       'values' => [
-        'table' => "SELECT id AS field_id,
-    IFNULL(JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key'), 0) AS 'key',
-    IF(JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key') IS NULL, '".$this->l->t('no')."', '".$this->l->t('yes')."') AS 'label'
-  FROM `ProjectExtraFields`
-  JOIN `numbers` n
-    ON n.n < 2",
+        'table' => self::OPTIONS_TABLE,
         'column' => 'key',
-        'description' => 'label',
-        'filters' => '$table.`field_id` = $record_id',
-        'join' => '$join_table.$join_column = $main_table.`default_value`',
+        'encode' => 'BIN2UUID(%s)',
+        'description' => 'IFNULL($table.label, \''.$this->l->t('yes').'\')',
+        'filters' => '$table.field_id = $record_id AND $table.deleted IS NULL',
+        'join' => '$join_table.$join_column = $main_table.default_value',
       ],
       'maxlen' => 29,
       'size' => 30,
@@ -570,7 +561,7 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['due_date']['tab'] = [ 'id' => 'definition' ];
 
     $tooltipIdx = count($opts['fdd']);
-    $opts['fdd']['tool_tip'] = [
+    $opts['fdd']['tooltip'] = [
       'tab'      => [ 'id' => 'display' ],
       'name' => $this->l->t('Tooltip'),
       'css' => [ 'postfix' => ' extra-field-tooltip hide-subsequent-lines' ],
@@ -743,12 +734,9 @@ class ProjectExtraFields extends PMETableViewBase
    */
   public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
-    $logMethod = 'logInfo';
-    // $logMethod = 'logDebug';
-
-    $this->$logMethod('BEFORE OLD '.print_r($oldvals, true));
-    $this->$logMethod('BEFORE NEW '.print_r($newvals, true));
-    $this->$logMethod('BEFORE CHG '.print_r($changed, true));
+    $this->debug('BEFORE OLD '.print_r($oldvals, true));
+    $this->debug('BEFORE NEW '.print_r($newvals, true));
+    $this->debug('BEFORE CHG '.print_r($changed, true));
 
     // make sure writer-acls are a subset of reader-acls
     $writers = preg_split('/\s*,\s*/', $newvals['writers'], -1, PREG_SPLIT_NO_EMPTY);
@@ -761,23 +749,68 @@ class ProjectExtraFields extends PMETableViewBase
 
     /************************************************************************
      *
-     * Move the data from default_multi_value to default_value s.t. PME
-     * can do its work.
+     * Add the data from NewTab to Tab
      *
      */
-    $key = array_search('default_multi_value', $changed);
-    if ($newvals['multiplicity'] === 'multiple' ||
-        $newvals['multiplicity'] === 'parallel') {
-      $value = $newvals['default_multi_value'];
-      $newvals['default_value'] = strlen($value) < 36 ? null : $value;
-      if ($key !== false) {
-        $changed[] = 'default_value';
+
+    $tag = 'new_tab';
+    if (!empty($newvals[$tag]) && empty($newvals['tab'])) {
+      $newvals['tab'] = $newvals[$tag];
+      $changed[] = 'tab';
+    }
+    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+
+    /************************************************************************
+     *
+     * Sanitize tooltip.
+     *
+     */
+
+    $tag = 'tooltip';
+    if (!empty($newvals[$tag])) {
+      $newvals['tooltip'] = $this->fuzzyInput->purifyHTML($newvals[$tag]);
+      Util::unsetValue($changed, $tag);
+      if ($newvals[$tag] !== $oldvals[$tag]) {
+        $changed[] = $tag;
       }
     }
-    unset($newvals['default_multi_value']);
-    unset($oldvals['default_multi_value']);
-    if ($key !== false) {
-      unset($changed[$key]);
+
+    /************************************************************************
+     *
+     * Move the data from default_multi_value to default_value
+     *
+     */
+
+    $tag = 'default_multi_value';
+    if ($newvals['multiplicity'] === 'multiple' ||
+        $newvals['multiplicity'] === 'parallel') {
+      $value = $newvals[$tag];
+      $newvals['default_value'] = strlen($value) < 36 ? null : $value;
+    }
+    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+
+    /************************************************************************
+     *
+     * Move the data from default_single_value to default_value
+     *
+     */
+
+    $tag = 'default_single_value';
+    if ($newvals['multiplicity'] == 'single') {
+      $value = $newvals[$tag];
+      $newvals['default_value'] = strlen($value) < 36 ? null : $value;
+    }
+    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+
+    /************************************************************************
+     *
+     * Compute change status for default value
+     *
+     */
+
+    Util::unsetValue($changed, 'default_value');
+    if ($newvals['default_value'] !== $oldvals['default_value']) {
+      $changed[] = 'default_value';
     }
 
     /************************************************************************
@@ -785,46 +818,27 @@ class ProjectExtraFields extends PMETableViewBase
      * Move the data from MaximumGroupSize to allowed_values and set
      * the name of the field as allowed_values label.
      */
+
     $tag = 'maximum_group_size';
-    $key = array_search($tag, $changed);
     if ($newvals['multiplicity'] == 'groupofpeople') {
       $newvals['allowed_values_single'][0]['limit'] = $newvals[$tag];
       $newvals['allowed_values_single'][0]['label'] = $newvals['name'];
-      if ($key !== false || array_search($changed['name']) !== false) {
-        $changed[] = 'allowed_values_single';
-      }
     }
-    unset($newvals[$tag]);
-    unset($oldvals[$tag]);
-    if ($key !== false) {
-      unset($changed[$key]);
-    }
-    $changed = array_values(array_unique($changed));
-
-    $this->$logMethod('MAX OLD: '.print_r($oldvals['allowed_values'], true));
-    $this->$logMethod('MAX NEW: '.print_r($newvals['allowed_values'], true));
-    $this->$logMethod('MAX CHG: '.$changed['allowed_values']);
+    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
     /************************************************************************
      *
      * Move the data from allowed_values_single to
-     * allowed_values. Plural is "misleading" here, of course ;)
+     * allowed_values.
      *
      */
-    $key = array_search('allowed_values_single', $changed);
+
+    $tag = 'allowed_values_single';
     if ($newvals['multiplicity'] == 'single'
         || $newvals['multiplicity'] == 'groupofpeople') {
-      $newvals['allowed_values'] = $newvals['allowed_values_single'];
-      if ($key !== false) {
-        $changed[] = 'allowed_values';
-      }
+      $newvals['allowed_values'] = $newvals[$tag];
     }
-    unset($newvals['allowed_values_single']);
-    unset($oldvals['allowed_values_single']);
-    if ($key !== false) {
-      unset($changed[$key]);
-    }
-    $changed = array_values(array_unique($changed));
+    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
     /************************************************************************
      *
@@ -844,123 +858,39 @@ class ProjectExtraFields extends PMETableViewBase
       $this->extraFieldsService->explodeAllowedValues(
         $this->extraFieldsService->implodeAllowedValues($allowed), false);
 
-    if (!is_array($oldvals['allowed_values'])) {
-      $oldvals['allowed_values'] = $this->extraFieldsService->explodeAllowedValues($oldvals['allowed_values'], false);
-    }
+    Util::unsetValue($changed, 'allowed_values');
 
-    if ($oldvals['allowed_values'] !== $newvals['allowed_values']) {
-      $changed[] = 'allowed_values';
-    } else {
-      Util::unsetValue($changed, 'allowed_values');
-    }
-    $changed = array_values(array_unique($changed));
+    $this->debug('ALLOWED BEFORE RESHAPE '.print_r($newvals['allowed_values'], true));
 
-    $this->$logMethod('AV OLD: '.print_r($oldvals['allowed_values'], true));
-    $this->$logMethod('AV NEW: '.print_r($newvals['allowed_values'], true));
-    $this->$logMethod('AV CHG: '.$changed['allowed_values']);
-
-    /************************************************************************
-     *
-     * Move the data from default_single_value to default_value s.t. PME
-     * can do its work.
-     *
-     */
-    $key = array_search('default_single_value', $changed);
-    if ($newvals['multiplicity'] == 'single') {
-      $value = $newvals['default_single_value'];
-      $newvals['default_value'] = strlen($value) < 36 ? null : $value;
-      if ($key !== false) {
-        $changed[] = 'default_value';
-      }
-    }
-    unset($newvals['default_single_value']);
-    unset($oldvals['default_single_value']);
-    if ($key !== false) {
-      unset($changed[$key]);
-    }
-
-    if (empty($newvals['default_value']) && strlen($newvals['default_value']) != 0) {
-      $newvals['default_value'] = null;
-      $changed[] = 'default_value';
-    }
-
-    $changed = array_values(array_unique($changed));
-
-    /************************************************************************
-     *
-     * Add the data from NewTab to Tab s.t. PME can do its work.
-     *
-     */
-    $key = array_search('new_tab', $changed);
-    if (!empty($newvals['new_tab']) && empty($newvals['tab'])) {
-      $newvals['tab'] = $newvals['new_tab'];
-      $changed[] = 'tab';
-    }
-    unset($newvals['new_tab']);
-    unset($oldvals['new_tab']);
-    if ($key !== false) {
-      unset($changed[$key]);
-    }
-    $changed = array_values(array_unique($changed));
-
-    if (!empty($newvals['tool_tip'])) {
-      $newvals['tool_tip'] = $this->fuzzyInput->purifyHTML($newvals['tool_tip']);
-      if ($newvals['tool_tip'] !== $oldvals['tool_tip']) {
-        $changed[] = 'tool_tip';
-      } else {
-        $key = array_search('new_tab', $changed);
-        if ($key !== false) {
-          unset($changed[$key]);
-        }
-      }
-    }
 
     // convert allowed values from array to table format as understood
     // our PME legacy join table stuff.
-    $fields = [];
-    foreach (['new', 'old'] as $set) {
-      $optionValues[$set] = [];
-      foreach (${$set.'vals'}['allowed_values'] as $allowedValue) {
-        $key = $allowedValue['key'];
-        $field = $this->joinTableFieldName(self::OPTIONS_TABLE, 'key');
-        $fields[] = $field;
-        $optionValues[$set][$field][] = $key;
-        foreach ($allowedValue as $field => $value) {
-          switch ($field) {
-          case 'key':
-            continue 2;
-          case 'flags':
-            $field = 'deleted_at';
-            if ($value === 'deleted') {
-              $this->logInfo('Delete entry for key '.$key);
-            }
-            $value = $value === 'deleted' ? (new DateTime())->getTimestamp() : null;
-            break;
-          case 'tooltip':
-            $field = 'tool_tip';
-            break;
-          }
-          $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
-          $fields[] = $field;
-          $optionValues[$set][$field][] = $key.PMETableViewBase::JOIN_KEY_SEP.$value;
+    $optionValues = [];
+    foreach ($newvals['allowed_values'] as $allowedValue) {
+      $key = $allowedValue['key'];
+      $field = $this->joinTableFieldName(self::OPTIONS_TABLE, 'key');
+      $optionValues[$field][] = $key;
+      foreach ($allowedValue as $field => $value) {
+        if ($field == 'key') {
+          continue;
         }
+        $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
+        $optionValues[$field][] = $key.PMETableViewBase::JOIN_KEY_SEP.$value;
       }
     }
-    Util::unsetValue($changed, $this->joinTableFieldName(self::OPTIONS_TABLE, 'key'));
-    $fields = array_values(array_unique($fields));
-    foreach ($fields as $field) {
-      $oldvals[$field] = implode(',', $optionValues['old'][$field]);
-      $newvals[$field] = implode(',', $optionValues['new'][$field]);
+    foreach ($optionValues as $field => $fieldData) {
+      $newvals[$field] = implode(',', $fieldData);
       if ($oldvals[$field] != $newvals[$field]) {
         $changed[] = $field;
       }
     }
 
     $changed = array_values(array_unique($changed));
+    self::unsetRequestValue('allowed_values', $oldvals, $changed, $newvals);
 
-    $this->$logMethod('AFTER OLD '.print_r($oldvals, true));
-    $this->$logMethod('AFTER NEW '.print_r($newvals, true));
-    $this->$logMethod('AFTER CHG '.print_r($changed, true));
+    $this->debug('AFTER OLD '.print_r($oldvals, true));
+    $this->debug('AFTER NEW '.print_r($newvals, true));
+    $this->debug('AFTER CHG '.print_r($changed, true));
 
     $this->changeSetSize = count($changed);
 
@@ -1039,19 +969,18 @@ class ProjectExtraFields extends PMETableViewBase
     $pfx = $this->pme->cgiDataName('allowed_values');
     $key = $value['key'];
     $placeHolder = empty($key);
-    $deleted = $value['flags'] === 'deleted';
-    empty($value['flags']) && $value['flags'] = 'active';
+    $deleted = !empty($value['deleted']);
     $data = ''
           .' data-index="'.$index.'"' // real index
           .' data-used="'.($used ? 'used' : 'unused').'"'
-          .' data-flags="'.$value['flags'].'"';
+          .' data-deleted-at="'.$value['deleted'].'"';
     $html = '';
     $html .= '
     <tr'
     .' class="data-line'
     .' allowed-values'
     .($placeHolder ? ' placeholder' : '')
-    .' '.$value['flags']
+    .' '.($deleted ? 'deleted' : 'active')
     .'"'
     .' '.$data.'>';
     if (!$placeHolder) {
@@ -1096,9 +1025,9 @@ class ProjectExtraFields extends PMETableViewBase
             .'/>'
             .'<input'
             .' type="hidden"'
-            .' class="field-flags"'
-            .' name="'.$pfx.'['.$index.'][flags]"'
-            .' value="'.$value['flags'].'"'
+            .' class="field-deleted-at"'
+            .' name="'.$pfx.'['.$index.'][deleted]"'
+            .' value="'.$value['deleted'].'"'
             .'/>'
             .'</td>';
       // label
@@ -1142,21 +1071,6 @@ class ProjectExtraFields extends PMETableViewBase
             .$value[$prop]
             .'</textarea>'
             .'</td>';
-
-      // general further fields
-      for($i = 6; $i < count($value); ++$i) {
-        $prop = 'column'.$i;
-        $html .= '<td class="field-'.$prop.'"><input'
-              .($deleted ? ' readonly="readonly"' : '')
-              .' class="field-'.$prop.'"'
-              .' type="text"'
-              .' name="'.$pfx.'['.$index.']['.$prop.']"'
-              .' value="'.$value[$prop].'"'
-              .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
-              .' maxlength="8"'
-              .' size="9"'
-              .'/></td>';
-      }
 
     } else {
       $html .= '<td class="placeholder" colspan="6">'
@@ -1207,10 +1121,6 @@ class ProjectExtraFields extends PMETableViewBase
       }
     }
     $protoCount = count($this->extraFieldsService->allowedValuesPrototype());
-    $maxColumns = 0;
-    foreach($allowed as $value) {
-      $maxColumns = max(count($value), $maxColumns);
-    }
     $html = '<div class="pme-cell-wrapper quarter-sized">';
     if ($op === 'add' || $op === 'change') {
       $showDeletedLabel = $this->l->t("Show deleted items.");
@@ -1282,17 +1192,6 @@ __EOT__;
             .$value
             .'</th>';
     }
-    for ($i = $protoCount; $i < $maxColumns; ++$i) {
-      $key = 'column'.$i;
-      $value = $this->l->t('%dth column', [ $i ]);
-      $html .=
-            '<th'
-            .' class="field-'.$key.'"'
-            .' title="'.$this->toolTipsService('extra-fields-allowed-values:'.$key).'"'
-            .'>'
-            .$value
-            .'</th>';
-    }
     $html .= '
      </tr>
   </thead>
@@ -1300,7 +1199,7 @@ __EOT__;
     switch ($op) {
       case 'display':
         foreach ($allowed as $idx => $value) {
-          if (empty($value['key']) || $value['flags'] === 'deleted') {
+          if (empty($value['key']) || !empty($value['deleted'])) {
             continue;
           }
           $html .= '
@@ -1315,12 +1214,6 @@ __EOT__;
                   .($field === 'data'
                     ? $this->currencyValue($value[$field])
                     : $value[$field])
-                  .'</td>';
-          }
-          for ($i = $protoCount; $i < count($value); ++$i) {
-            $field = 'column'.$i;
-            $html .= '<td class="field-'.$field.'">'
-                  .$value[$field]
                   .'</td>';
           }
           $html .= '
@@ -1358,7 +1251,7 @@ __EOT__;
     // change) we just pick the first non-deleted.
     $entry = false;
     foreach($allowed as $idx => $item) {
-      if (empty($item['key']) || $item['flags'] === 'deleted') {
+      if (empty($item['key']) || !empty($item['deleted'])) {
         continue;
       } else {
         $entry = $item;
@@ -1387,18 +1280,7 @@ __EOT__;
        title="{$tip}"
 />
 __EOT__;
-    foreach (['key', 'label', 'limit', 'tooltip', 'flags'] as $field) {
-      $value = htmlspecialchars($entry[$field]);
-      $html .=<<<__EOT__
-<input class="pme-input allowed-values-single"
-       type="hidden"
-       value="{$value}"
-       name="{$name}[0][{$field}]"
-/>
-__EOT__;
-    }
-    for ($i = $protoCount; $i < count($entry); ++$i) {
-      $field = 'column'.$i;
+    foreach (['key', 'label', 'limit', 'tooltip', 'deleted'] as $field) {
       $value = htmlspecialchars($entry[$field]);
       $html .=<<<__EOT__
 <input class="pme-input allowed-values-single"
@@ -1413,19 +1295,8 @@ __EOT__;
     // Now emit all left-over values. Flag all items as deleted.
     foreach ($allowed as $idx => $item) {
       ++$idx; // shift ...
-      $item['flags'] = 'deleted';
-      foreach(['key', 'label', 'limit', 'data', 'tooltip', 'flags'] as $field) {
-        $value = htmlspecialchars($item[$field]);
-        $html .=<<<__EOT__
-<input class="pme-input allowed-values-single"
-       type="hidden"
-       value="{$value}"
-       name="{$name}[{$idx}][{$field}]"
-/>
-__EOT__;
-      }
-      for ($i = $protoCount; $i < count($item); ++$i) {
-        $field = 'column'.$i;
+      $item['deleted'] = (new DateTime)->getTimestamp();
+      foreach(['key', 'label', 'limit', 'data', 'tooltip', 'deleted'] as $field) {
         $value = htmlspecialchars($item[$field]);
         $html .=<<<__EOT__
 <input class="pme-input allowed-values-single"

@@ -59,6 +59,7 @@ class ProjectParticipants extends PMETableViewBase
   const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
   const EXTRA_FIELDS_TABLE = 'ProjectExtraFields';
   const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
+  const EXTRA_FIELDS_OPTIONS_TABLE = 'ProjectExtraFieldsDataOptions';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
   const FIXED_COLUMN_SEP = parent::VALUES_TABLE_SEP;
   const JOIN_KEY_SEP = parent::JOIN_KEY_SEP;
@@ -753,6 +754,7 @@ class ProjectParticipants extends PMETableViewBase
             $project_id = $recordId['project_id'];
             $musicianId = $recordId['musician_id'];
 
+            /** @var Entities\ProjectExtraField $extraField */
             $amountInvoiced = 0.0;
             foreach ($monetary as $fieldId => $extraField) {
 
@@ -774,13 +776,11 @@ class ProjectParticipants extends PMETableViewBase
               }
 
               if (empty($fieldValues['key']) && empty($fieldValues['value'])) {
-	        continue;
+                continue;
               }
 
-              $allowed = $extraField['allowedValues'];
-              $multiplicity = $extraField['multiplicity'];
               $amountInvoiced += $this->extraFieldsService->extraFieldSurcharge(
-                $fieldValues['key'], $fieldValues['value'], $allowed, $multiplicity);
+                $fieldValues['key'], $fieldValues['value'], $extraField);
             }
 
             if ($projectId == $this->memberProjectId) {
@@ -850,7 +850,7 @@ class ProjectParticipants extends PMETableViewBase
                         .' AND $table.project_id = '.$projectId
                         .' AND $table.musician_id = $record_id[musician_id]'),
         ],
-        'tooltip' => $field['tool_tip']?:null,
+        'tooltip' => $field['tooltip']?:null,
       ];
 
       list($keyFddIndex, $keyFddName) = $this->makeJoinTableField(
@@ -865,21 +865,23 @@ class ProjectParticipants extends PMETableViewBase
       );
       $valueFdd = &$opts['fdd'][$valueFddName];
 
-      $allowed = $this->extraFieldsService->explodeAllowedValues($field['allowed_values'], false, true);
+      /** @var Doctrine\Common\Collections\Collection */
+      $dataOptions = $field['dataOptions'];
       $values2     = [];
       $valueTitles = [];
       $valueData   = [];
-      foreach ($allowed as $idx => $value) {
-        $key = $value['key'];
+      /** @var Entities\ProjectExtraFieldDataOption $dataOption */
+      foreach ($dataOptions as $dataOption) {
+        $key = (string)$dataOption['key'];
         if (empty($key)) {
           continue;
         }
-        if ($value['flags'] === 'deleted') {
+        if ($dataOption->isDeleted()) {
           continue;
         }
-        $values2[$key] = $value['label'];
-        $valueTitles[$key] = $value['tooltip'];
-        $valueData[$key] = $value['data'];
+        $values2[$key] = $dataOption['label'];
+        $valueTitles[$key] = $dataOption['tooltip'];
+        $valueData[$key] = $dataOption['data'];
       }
 
       foreach ([ &$keyFdd, &$valueFdd ] as &$fdd) {
@@ -985,10 +987,10 @@ class ProjectParticipants extends PMETableViewBase
         switch ($dataType) {
         case 'service-fee':
         case 'deposit':
-          foreach ($allowed as $option) {
-            $key = $option['key'];
-            $label = $option['label'];
-            $data  = $option['data'];
+          foreach ($dataOptions as $dataOption) {
+            $key = $dataOption['key'];
+            $label = $dataOption['label'];
+            $data  = $dataOption['data'];
             $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType, 'money');
           }
           unset($keyFdd['mask']);
@@ -1050,7 +1052,7 @@ class ProjectParticipants extends PMETableViewBase
           ]);
 
         // define the group stuff
-        $max = $allowed[0]['limit'];
+        $max = $dataOptions->first()['limit'];
         $groupMemberFdd = array_merge(
           $groupMemberFdd, [
             'select' => 'M',
@@ -1133,9 +1135,9 @@ WHERE pp.project_id = $projectId",
         $values2 = [];
         $valueGroups = [ -1 => $this->l->t('without group'), ];
         $idx = -1;
-        foreach($allowed as $key => $value) {
-          $valueGroups[--$idx] = $value['label'];
-          $data = $value['data'];
+        foreach($dataOptions as $dataOption) {
+          $valueGroups[--$idx] = $dataOption['label'];
+          $data = $dataOptiosn['data'];
           if ($dataType == 'service-fee' || $dataType == 'deposit') {
             $data = $this->moneyValue($data);
           }
@@ -1143,7 +1145,7 @@ WHERE pp.project_id = $projectId",
             $valueGroups[$idx] .= ':&nbsp;' . $data;
           }
           $values2[$idx] = $this->l->t('add to this group');
-          $valueData[$idx] = json_encode([ 'groupId' => $value['key'], ]);
+          $valueData[$idx] = json_encode([ 'groupId' => $dataOption['key'], ]);
         }
 
         // make the field a select box for the predefined groups, like
@@ -1185,16 +1187,20 @@ WHERE pp.project_id = $projectId",
         list(, $fddGroupMemberName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $fddBase);
 
+        $dataOptionsData = json_encode(
+          array_map(function($value) {
+            return $value->toArray();
+          }, $dataOptions->getValues()));
+
         // new field, member selection
         $groupMemberFdd = &$opts['fdd'][$fddGroupMemberName];
-
         $groupMemberFdd = Util::arrayMergeRecursive(
           $groupMemberFdd, [
             'select' => 'M',
             'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
             //'sql' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
-            //'display' => [ 'popup' => 'data' ], // @todo
-            'colattrs' => [ 'data-groups' => json_encode($allowed), ],
+            //'display' => [ 'popup' => 'data' ],
+            'colattrs' => [ 'data-groups' => $dataOptionsData, ],
             'values|ACP' => [
               'table' => "SELECT
   m3.id AS musician_id,
@@ -1202,15 +1208,15 @@ WHERE pp.project_id = $projectId",
   m3.sur_name AS sur_name,
   m3.first_name AS first_name,
   fd.option_key AS group_id,
-  JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', BIN2UUID(fd.option_key))), 'key', 'label')) AS group_label,
-  JSON_VALUE(ef.allowed_values, REPLACE(JSON_UNQUOTE(JSON_SEARCH(ef.allowed_values, 'one', BIN2UUID(fd.option_key))), 'key', 'data')) AS group_data
-FROM ProjectParticipants pp
-LEFT JOIN Musicians m3
+  do.label AS group_label,
+  do.data AS group_data
+FROM ".self::TABLE." pp
+LEFT JOIN ".self::MUSICIANS_TABLE." m3
   ON m3.id = pp.musician_id
-LEFT JOIN ProjectExtraFieldsData fd
+LEFT JOIN ".self::EXTRA_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
-LEFT JOIN ProjectExtraFields ef
-  ON ef.project_id = $projectId AND ef.id = fd.field_id
+LEFT JOIN ".self::EXTRA_FIELDS_OPTIONS_TABLE." do
+  ON do.field_id = fd.field_id AND do.key = fd.option_key
 WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
@@ -1231,14 +1237,14 @@ WHERE pp.project_id = $projectId",
               'prefix' => function($op, $pos, $row, $k, $pme) use ($css) {
                 return '<label class="'.implode(' ', $css).'">';
               },
-              'postfix' => function($op, $pos, $row, $k, $pme) use ($allowed, $dataType, $keyFddIndex) {
+              'postfix' => function($op, $pos, $row, $k, $pme) use ($dataOptions, $dataType, $keyFddIndex) {
                 $selectedKey = $row['qf'.$keyFddIndex];
                 $html = '';
-                foreach ($allowed as $idx => $option) {
-                  $key = $option['key'];
+                foreach ($dataOptions  as $dataOption) {
+                  $key = $dataOption['key'];
                   $active = $selectedKey == $key ? 'selected' : null;
                   $html .= $this->allowedOptionLabel(
-                    $option['label'], $option['data'], $dataType, $active, [ 'key' => $option['key'], ]);
+                    $dataOption['label'], $dataOption['data'], $dataType, $active, [ 'key' => $dataOption['key'], ]);
                 }
                 $html .= '</label>';
                 return $html;
@@ -1269,10 +1275,10 @@ WHERE pp.project_id = $projectId",
   m2.sur_name AS sur_name,
   m2.first_name AS first_name,
   fd.option_key AS group_id
-FROM ProjectParticipants pp
-LEFT JOIN Musicians m2
+FROM ".self::TABLE." pp
+LEFT JOIN ".self::MUSICIANS_TABLE." m2
   ON m2.id = pp.musician_id
-LEFT JOIN ProjectExtraFieldsData fd
+LEFT JOIN ".self::EXTRA_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
 WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
               'column' => 'name',
@@ -1893,8 +1899,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         if (array_search($valueName, $changed) === false) {
           continue 2;
         }
-        $allowed = $this->extraFieldsService->explodeAllowedValues($extraField['allowed_values'], false, true);
-        $key = $allowed[0]['key'];
+        $dataOption = $extraField['dataOptions']->first();
+        $key = $dataOption['key'];
         $oldKey = $oldValues[$fieldName]?:$key;
         if ($oldKey !== $key) {
           throw new \RuntimeException(
@@ -1914,8 +1920,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           continue 2;
         }
 
-        $allowed = $this->extraFieldsService->explodeAllowedValues($extraField['allowed_values'], false, true);
-        $max = $allowed[0]['limit'];
+        $dataOption = $extraField['dataOptions']->first();
+        $max = $dataOption['limit'];
 
         // add the group id as data field in order to satisfy
         // PMETableViewBase::beforeUpdateDoUpdateAll().
@@ -1946,13 +1952,13 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $oldGroupId = $oldValues[$fieldName];
         $newGroupId = $newValues[$fieldName];
 
-        $allowed = $this->extraFieldsService->explodeAllowedValues($extraField['allowed_values'], false, true);
+        $dataOptions = $extraField['dataOptions'];
         $max = PHP_INT_MAX;
         $label = $this->l->t('unknown');
-        foreach ($allowed as $option) {
-          if ($option['key'] == $newGroupId) {
-            $max = $option['limit'];
-            $label = $option['label'];
+        foreach ($dataOptions as $dataOption) {
+          if ($dataOption['key'] == $newGroupId) {
+            $max = $dataOptions['limit'];
+            $label = $dataOption['label'];
             break;
           }
         }

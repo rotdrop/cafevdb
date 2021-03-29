@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -117,15 +118,11 @@ class ProjectExtraFieldsController extends Controller {
 
         $item = $allowed[0];
 
-        // potentially tweak key to be unique (and simpler) if not already in use.
-        if (!$used) {
-          $item['key'] = $this->extraFieldsService->allowedValuesUniqueKey($item, $keys);
-        }
-
         // remove dangerous html
         $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
 
         switch ($data['data-type']) {
+        case 'deposit':
         case 'service-fee':
         case 'money':
           // see that it is a valid decimal number ...
