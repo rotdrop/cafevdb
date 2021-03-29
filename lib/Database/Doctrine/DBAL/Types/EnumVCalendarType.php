@@ -25,10 +25,18 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use MyCLabs\Enum\Enum as EnumType;
 
+/**
+ * Some CalDAV related types.
+ *
+ * @method static EnumVCalendarType VEVENT()
+ * @method static EnumVCalendarType VTODO()
+ * @method static EnumVCalendarType VJOURNAL()
+ * @method static EnumVCalendarType VCARD()
+ */
 class EnumVCalendarType extends EnumType
 {
-  CONST VEVENT = 'VEVENT';
-  CONST VTODO = 'VTODO';
-  CONST VJOURNAL = 'VJOURNAL';
-  CONST VCARD = 'VCARD';
+  private const VEVENT = 'VEVENT';
+  private const VTODO = 'VTODO';
+  private const VJOURNAL = 'VJOURNAL';
+  private const VCARD = 'VCARD';
 }

@@ -27,14 +27,23 @@ use MyCLabs\Enum\Enum as EnumType;
 
 /**
  * Enum for "extra-field" multiplicity.
+ *
+ * @method static EnumExtraFieldMultiplicity SIMPLE()
+ * @method static EnumExtraFieldMultiplicity SINGLE()
+ * @method static EnumExtraFieldMultiplicity MULTIPLE()
+ * @method static EnumExtraFieldMultiplicity PARALLEL()
+ * @method static EnumExtraFieldMultiplicity RECURRING()
+ * @method static EnumExtraFieldMultiplicity GROUPOFPEOPLE()
+ * @method static EnumExtraFieldMultiplicity GROUPSOFPEOPLE()
+ *
  */
 class EnumExtraFieldMultiplicity extends EnumType
 {
-  const SIMPLE = 'simple';
-  const SINGLE = 'single';
-  const MULTIPLE = 'multiple';
-  const PARALLEL = 'parallel';
-  const RECURRING = 'recurring';
-  const GROUPOFPEOPLE = 'groupofpeople';
-  const GROUPSOFPEOPLE = 'groupsofpeople';
+  private const SIMPLE = 'simple';
+  private const SINGLE = 'single';
+  private const MULTIPLE = 'multiple';
+  private const PARALLEL = 'parallel';
+  private const RECURRING = 'recurring';
+  private const GROUPOFPEOPLE = 'groupofpeople';
+  private const GROUPSOFPEOPLE = 'groupsofpeople';
 }

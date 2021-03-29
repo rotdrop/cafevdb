@@ -25,15 +25,28 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use MyCLabs\Enum\Enum as EnumType;
 
+/**
+ * Enum for "extra-fields" data-type.
+ *
+ * @method static EnumExtraFieldDataType TEXT()
+ * @method static EnumExtraFieldDataType HTML()
+ * @method static EnumExtraFieldDataType BOOLEAN()
+ * @method static EnumExtraFieldDataType INTEGER()
+ * @method static EnumExtraFieldDataType FLOAT()
+ * @method static EnumExtraFieldDataType DATE()
+ * @method static EnumExtraFieldDataType DATETIME()
+ * @method static EnumExtraFieldDataType SERVICE_FEE()
+ * @method static EnumExtraFieldDataType DEPOSIT()
+ */
 class EnumExtraFieldDataType extends EnumType
 {
-  const TEXT = 'text';
-  const HTML = 'html';
-  const BOOLEAN = 'boolean';
-  const INTEGER = 'integer';
-  const FLOAT = 'float';
-  const DATE = 'date';
-  const DATETIME = 'datetime';
-  const SERVICE_FEE = 'service-fee';
-  const DEPOSIT = 'deposit';
+  private const TEXT = 'text';
+  private const HTML = 'html';
+  private const BOOLEAN = 'boolean';
+  private const INTEGER = 'integer';
+  private const FLOAT = 'float';
+  private const DATE = 'date';
+  private const DATETIME = 'datetime';
+  private const SERVICE_FEE = 'service-fee';
+  private const DEPOSIT = 'deposit';
 };

@@ -25,9 +25,16 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use MyCLabs\Enum\Enum as EnumType;
 
+/**
+ * Type of projects.
+ *
+ * @method static EnumProjectTemporalType TEMPORARY()
+ * @method static EnumProjectTemporalType PERMANENT()
+ * @method static EnumProjectTemporalType TEMPLATE()
+ */
 class EnumProjectTemporalType extends EnumType
 {
-  const TEMPORARY = 'temporary';
-  const PERMANENT = 'permanent';
-  const TEMPLATE = 'template';
+  private const TEMPORARY = 'temporary';
+  private const PERMANENT = 'permanent';
+  private const TEMPLATE = 'template';
 }

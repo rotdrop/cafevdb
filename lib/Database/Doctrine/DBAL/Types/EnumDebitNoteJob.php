@@ -25,10 +25,18 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use MyCLabs\Enum\Enum as EnumType;
 
+/**
+ * Enum for type of debit-node job.
+ *
+ * @method static EnumDebitNoteJob AMOUNT()
+ * @method static EnumDebitNoteJob DEPOSIT()
+ * @method static EnumDebitNoteJob INSURANCE()
+ * @method static EnumDebitNoteJob REMAINING()
+ */
 class EnumDebitNoteJob extends EnumType
 {
-  const AMOUNT = 'amount';
-  const DEPOSIT = 'deposit';
-  const INSURANCE = 'insurance';
-  const REMAINING = 'remaining';
+  private const AMOUNT = 'amount';
+  private const DEPOSIT = 'deposit';
+  private const INSURANCE = 'insurance';
+  private const REMAINING = 'remaining';
 }

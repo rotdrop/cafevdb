@@ -25,11 +25,22 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use MyCLabs\Enum\Enum as EnumType;
 
+/**
+ * Member status enum for musicians.
+ *
+ * @method static EnumMemberStatus REGULAR()
+ * @method static EnumMemberStatus PASSIVE()
+ * @method static EnumMemberStatus SOLOIST()
+ * @method static EnumMemberStatus CONDUCTOR()
+ * @method static EnumMemberStatus TEMPORARY()
+ *
+ * @todo This should rather be specified per project.
+ */
 class EnumMemberStatus extends EnumType
 {
-  const REGULAR = 'regular';
-  const PASSIVE = 'passive';
-  const SOLOIST = 'soloist';
-  const CONDUCTOR = 'conductor';
-  const TEMPORARY = 'temporary';
+  private const REGULAR = 'regular';
+  private const PASSIVE = 'passive';
+  private const SOLOIST = 'soloist';
+  private const CONDUCTOR = 'conductor';
+  private const TEMPORARY = 'temporary';
 }

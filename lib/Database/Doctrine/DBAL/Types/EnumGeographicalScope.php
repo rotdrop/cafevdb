@@ -25,9 +25,18 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use MyCLabs\Enum\Enum as EnumType;
 
+/**
+ * Geographical scope for insurances.
+ *
+ * @method static EnumGeographicalScope GERMANY()
+ * @method static EnumGeographicalScope EUROPE()
+ * @method static EnumGeographicalScope WORLD()
+ *
+ * @todo Perhaps should be renamed to "COUNTRY/CONTINENT/WORLD"
+ */
 class EnumGeographicalScope extends EnumType
 {
-  const GERMANY = 'Germany';
-  const EUROPE = 'Europe';
-  const WORLD = 'World';
+  private const GERMANY = 'Germany';
+  private const EUROPE = 'Europe';
+  private const WORLD = 'World';
 }
