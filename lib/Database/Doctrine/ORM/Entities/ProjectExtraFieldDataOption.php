@@ -81,7 +81,7 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
    *
    * @ORM\Column(type="string", length=1024, nullable=true)
    */
-  private $toolTip;
+  private $tooltip;
 
   /**
    * @ORM\Column(type="integer", nullable=true)

@@ -31,7 +31,7 @@ trait SoftDeleteableEntity
    *
    * @var DateTimeImmutable|null
    */
-  protected $deletedAt;
+  protected $deleted;
 
   /**
    * Set or clear the deleted at timestamp.
@@ -40,21 +40,21 @@ trait SoftDeleteableEntity
    *
    * @return self
    */
-  public function setDeletedAt($deletedAt = null)
+  public function setDeleted($deleted = null)
   {
-    if ($deletedAt === null) {
-      $this->deletedAt = null;
-    } else if (!($deletedAt instanceof \DateTimeInterface)) {
-      $timeStamp = filter_var($deletedAt, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
+    if ($deleted === null) {
+      $this->deleted = null;
+    } else if (!($deleted instanceof \DateTimeInterface)) {
+      $timeStamp = filter_var($deleted, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
       if ($timeStamp !== false) {
-        $this->deletedAt = (new \DateTimeImmutable())->setTimestamp($timeStamp);
-      } else if (is_string($deletedAt)) {
-        $this->deletedAt = new \DateTimeImmutable($deletedAt);
+        $this->deleted = (new \DateTimeImmutable())->setTimestamp($timeStamp);
+      } else if (is_string($deleted)) {
+        $this->deleted = new \DateTimeImmutable($deleted);
       } else {
         throw new \InvalidArgumentException('Cannot convert input to DateTime');
       }
     } else  {
-      $this->deletedAt = \DateTimeImmutable::createFromInterface($deletedAt);
+      $this->deleted = \DateTimeImmutable::createFromInterface($deleted);
     }
     return $this;
   }
@@ -65,9 +65,9 @@ trait SoftDeleteableEntity
    *
    * @return \DateTimeImmutable|null
    */
-  public function getDeletedAt()
+  public function getDeleted()
   {
-    return $this->deletedAt;
+    return $this->deleted;
   }
 
   /**
@@ -77,6 +77,6 @@ trait SoftDeleteableEntity
    */
   public function isDeleted()
   {
-    return null !== $this->deletedAt;
+    return null !== $this->deleted;
   }
 }

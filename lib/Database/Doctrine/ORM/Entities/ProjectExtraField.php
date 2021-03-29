@@ -82,13 +82,6 @@ class ProjectExtraField implements \ArrayAccess
   private $dataType = 'text';
 
   /**
-   * @var string|null
-   *
-   * @ORM\Column(type="json", nullable=true, options={"comment"="Set of allowed values for set and enumerations."})
-   */
-  private $allowedValues = null;
-
-  /**
    * @var ProjectExtraFieldMetaDatum
    *
    * @ORM\OneToMany(targetEntity="ProjectExtraFieldDataOption", mappedBy="field", fetch="EXTRA_LAZY")
@@ -114,7 +107,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @ORM\Column(type="string", length=4096, nullable=true)
    */
-  private $toolTip = null;
+  private $tooltip = null;
 
   /**
    * @var string
@@ -352,30 +345,6 @@ class ProjectExtraField implements \ArrayAccess
   public function getDataType():Types\EnumExtraFieldDataType
   {
     return $this->dataType;
-  }
-
-  /**
-   * Set allowedValues.
-   *
-   * @param string|null $allowedValues
-   *
-   * @return ProjectExtraField
-   */
-  public function setAllowedValues($allowedValues):ProjectExtraField
-  {
-    $this->allowedValues = $allowedValues;
-
-    return $this;
-  }
-
-  /**
-   * Get allowedValues.
-   *
-   * @return string|null
-   */
-  public function getAllowedValues()
-  {
-    return $this->allowedValues;
   }
 
   /**
