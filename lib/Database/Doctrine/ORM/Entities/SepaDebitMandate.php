@@ -42,7 +42,7 @@ class SepaDebitMandate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")

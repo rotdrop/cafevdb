@@ -44,7 +44,7 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
 
   /**
    * Link back to ProjectExtraField
@@ -129,9 +129,9 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
       if (strlen($key) == 36) {
         $key = Uuid::fromString($key);
       } else if (strlen($key) == 16) {
-        $key = Key::fromBytes($key);
+        $key = Uuid::fromBytes($key);
       } else {
-        throw new \Exception("KEY DATA: ".$key);
+        throw new \Exception("UUID DATA: ".$key);
       }
     }
     $this->key = $key;
