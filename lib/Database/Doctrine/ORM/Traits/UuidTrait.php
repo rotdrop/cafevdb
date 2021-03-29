@@ -50,6 +50,8 @@ trait UuidTrait
         $uuid = Uuid::fromString($uuid);
       } else if (strlen($uuid) == 16) {
         $uuid = Uuid::fromBytes($uuid);
+      } else if (empty($uuid)) {
+        $uuid = null;
       } else {
         throw new \Exception("UUID DATA: ".$uuid);
       }
