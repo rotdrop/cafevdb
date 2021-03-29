@@ -338,55 +338,72 @@ class ProjectExtraFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['extra-field-data-type'],
     ];
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::OPTIONS_TABLE, 'key',
-      [
-        'name' => $this->l->t('Allowed values from table.'),
-        'input' => 'HR',
-        /* 'sqlBug-as-of-mariadb-10.5.9'=> 'CONCAT("[",JSON_ARRAYAGG(
-           JSON_OBJECT(
-           "key", $join_table.key,
-           "label", $join_table.label,
-           "data", $join_table.data,
-           "tool_tip", $join_table.tool_tip,
-           "limit", $join_table.`limit`,
-           "flags", IF($join_table.deleted_at IS NULL, "active", "deleted")
-           )),"]")', */
-        'sql'=> 'CONCAT("[",GROUP_CONCAT(
-  JSON_OBJECT(
-    "key", $join_table.key,
-    "label", $join_table.label,
-    "data", $join_table.data,
-    "tool_tip", $join_table.tool_tip,
-    "limit", $join_table.`limit`,
-    "flags", IF($join_table.deleted_at IS NULL, "active", "deleted")
-)),"]")',
+    /**************************************************************************
+     *
+     * Define field for the option values table in order to fetch the
+     * old state automatically.
+     *
+     */
+
+    foreach (['key', 'label', 'data', 'tool_tip', 'limit', 'deleted_at'] as $column) {
+      $this->makeJoinTableField(
+        $opts['fdd'], self::OPTIONS_TABLE, $column, [
+          'input' => 'H',
       ]);
+    }
+
+    /*
+     *
+     *
+     *************************************************************************/
 
     $opts['fdd']['allowed_values'] = [
       'name' => $this->l->t('Allowed Values'),
+      'input' => 'VSR',
       'css|LF' => [ 'postfix' => ' allowed-values hide-subsequent-lines' ],
       'css' => ['postfix' => ' allowed-values' ],
       'css|VD' => [ 'postfix' => ' allowed-values allowed-values-single' ],
       'select' => 'T',
-      'php' => function($value, $op, $field, $row, $recordId, $pme) {
-        $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
-        $dataType = $row[$this->queryField('data_type', $pme->fdd)];
-        return $this->showAllowedValues($value, $op, $recordId, $multiplicity, $dataType);
-      },
-      'maxlen' => 1024,
-      'size' => 30,
       'sort' => true,
       'display|LF' => [ 'popup' => 'data', ],
       'tooltip' => $this->toolTipsService['extra-fields-allowed-values'],
+      // 'sqlBug-as-of-mariadb-10.5.9'=> 'CONCAT("[",JSON_ARRAYAGG(DISTINCT
+      //    JSON_OBJECT(
+      //    "key", BIN2UUID($join_table.key),
+      //    "label", $join_table.label,
+      //    "data", $join_table.data,
+      //    "tool_tip", $join_table.tool_tip,
+      //    "flags", IF($join_table.deleted_at IS NULL, "active", "deleted"),
+      //    "limit", $join_table.`limit`
+      //    ) ORDER BY $join_table.label),"]")',
+      'sql'=> 'CONCAT("[",GROUP_CONCAT(DISTINCT
+  JSON_OBJECT(
+    "key", BIN2UUID($join_table.key)
+    , "label", $join_table.label
+    , "data", $join_table.data
+    , "tooltip", $join_table.tool_tip
+    , "flags", IF($join_table.deleted_at IS NULL, "active", "deleted")
+    , "limit", $join_table.`limit`
+) ORDER BY $join_table.label),"]")',
+      'values' => [
+        'column' => 'key',
+        'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
+      ],
+      'php' => function($allowedValues, $op, $field, $row, $recordId, $pme) {
+        $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
+        $dataType = $row[$this->queryField('data_type', $pme->fdd)];
+        return $this->showAllowedValues($allowedValues, $op, $recordId, $multiplicity, $dataType);
+      },
     ];
 
     $opts['fdd']['allowed_values_single'] = [
       'name' => $this->currencyLabel($this->l->t('Data')),
       'css' => [ 'postfix' => ' allowed-values-single' ],
-      'sql' => '$main_table.allowed_values',
-      'php' => function($value, $op, $field, $row, $recordId, $pme) use ($nameIdx, $tooltipIdx) {
-        // provide defaults
+      'sql' => '$main_table.id',
+      'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($nameIdx, $tooltipIdx) {
+        // allowed values from virtual JSON aggregator field
+        $allowedValues = $row['qf'.$pme->fdn['allowed_values']];
+        // Provide defaults
         $protoRecord = array_merge(
           $this->extraFieldsService->allowedValuesPrototype(),
           [
@@ -394,9 +411,9 @@ class ProjectExtraFields extends PMETableViewBase
             'label' => $row['qf'.$nameIdx],
             'tooltip' => $row['qf'.$tooltipIdx]
           ]);
-        return $this->showAllowedSingleValue($value, $op, $fdd[$field]['tooltip'], $protoRecord);
+        return $this->showAllowedSingleValue($allowedValues, $op, $fdd[$field]['tooltip'], $protoRecord);
       },
-      'options' => 'ACP', // but not in list-view
+      'options' => 'ACP', // but not in list/view/delete-view
       'select' => 'T',
       'maxlen' => 29,
       'size' => 30,
@@ -494,19 +511,27 @@ class ProjectExtraFields extends PMETableViewBase
       'sql' => '$main_table.default_value',
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D', // @todo should be multi for "parallel".
+  //     'values' => [
+  //       'table' => "SELECT id AS field_id,
+  //   JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key') AS 'key',
+  //   JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.data') AS 'data',
+  //   JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.label') AS 'label',
+  //   JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.flags') AS 'flags'
+  // FROM `ProjectExtraFields`
+  // JOIN `numbers` n
+  //   ON JSON_LENGTH(allowed_values) > n.n",
+  //       'column' => 'key',
+  //       'description' => 'label',
+  //       'filters' => '$table.`field_id` = $record_id AND NOT $table.`flags` = \'deleted\'',
+  //       'join' => '$join_table.$join_column = $main_table.`default_value`',
+  //     ],
       'values' => [
-        'table' => "SELECT id AS field_id,
-    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.key') AS 'key',
-    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.data') AS 'data',
-    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.label') AS 'label',
-    JSON_VALUE(JSON_QUERY(allowed_values, CONCAT('$[', n.n, ']')),'$.flags') AS 'flags'
-  FROM `ProjectExtraFields`
-  JOIN `numbers` n
-    ON JSON_LENGTH(allowed_values) > n.n",
+        'table' => self::OPTIONS_TABLE,
         'column' => 'key',
+        'encode' => 'BIN2UUID(%s)',
         'description' => 'label',
-        'filters' => '$table.`field_id` = $record_id AND NOT $table.`flags` = \'deleted\'',
-        'join' => '$join_table.$join_column = $main_table.`default_value`',
+        'filters' => '$table.field_id = $record_id AND $table.deleted_at IS NULL',
+        'join' => '$join_table.$join_column = $main_table.default_value',
       ],
       'maxlen' => 29,
       'size' => 30,
@@ -718,8 +743,8 @@ class ProjectExtraFields extends PMETableViewBase
    */
   public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
-    // $logMethod = 'logInfo';
-    $logMethod = 'logDebug';
+    $logMethod = 'logInfo';
+    // $logMethod = 'logDebug';
 
     $this->$logMethod('BEFORE OLD '.print_r($oldvals, true));
     $this->$logMethod('BEFORE NEW '.print_r($newvals, true));
@@ -743,7 +768,8 @@ class ProjectExtraFields extends PMETableViewBase
     $key = array_search('default_multi_value', $changed);
     if ($newvals['multiplicity'] === 'multiple' ||
         $newvals['multiplicity'] === 'parallel') {
-      $newvals['default_value'] = $newvals['default_multi_value'];
+      $value = $newvals['default_multi_value'];
+      $newvals['default_value'] = strlen($value) < 36 ? null : $value;
       if ($key !== false) {
         $changed[] = 'default_value';
       }
