@@ -343,7 +343,16 @@ class ProjectExtraFields extends PMETableViewBase
       [
         'name' => $this->l->t('Allowed values from table.'),
         'input' => 'HR',
-        'sql'=> 'CONCAT("[",JSON_ARRAYAGG(
+        /* 'sqlBug-as-of-mariadb-10.5.9'=> 'CONCAT("[",JSON_ARRAYAGG(
+           JSON_OBJECT(
+           "key", $join_table.key,
+           "label", $join_table.label,
+           "data", $join_table.data,
+           "tool_tip", $join_table.tool_tip,
+           "limit", $join_table.`limit`,
+           "flags", IF($join_table.deleted_at IS NULL, "active", "deleted")
+           )),"]")', */
+        'sql'=> 'CONCAT("[",GROUP_CONCAT(
   JSON_OBJECT(
     "key", $join_table.key,
     "label", $join_table.label,
