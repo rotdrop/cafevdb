@@ -27,6 +27,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * ProjectExtraFields
@@ -160,7 +161,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return int
    */
-  public function getId()
+  public function getId():int
   {
     return $this->id;
   }
@@ -198,7 +199,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return Project
    */
-  public function getProject()
+  public function getProject():Project
   {
     return $this->project;
   }
@@ -222,7 +223,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getDataOptions()
+  public function getDataOptions():Collection
   {
     return $this->dataOptions;
   }
@@ -246,7 +247,7 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getFieldData()
+  public function getFieldData():Collection
   {
     return $this->fieldData;
   }
