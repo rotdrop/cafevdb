@@ -326,7 +326,7 @@ class EncryptionService
     $usrdbkey = $this->getUserEncryptionKey();
     if (empty($usrdbkey)) {
       // No key -> unencrypted
-      $this->logInfo("No Encryption Key, setting to empty string in order to disable encryption.");
+      $this->logDebug("No Encryption Key, setting to empty string in order to disable encryption.");
       $this->appEncryptionKey = ''; // not null, just empty
     } else {
       $this->appEncryptionKey = $usrdbkey;
