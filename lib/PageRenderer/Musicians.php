@@ -457,7 +457,7 @@ make sure that the musicians are also automatically added to the
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
-    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.disabled = 0' ]);
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => 'IFNULL($table.disabled, 0) = 0' ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
@@ -551,6 +551,7 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['email'] = $this->defaultFDD['email'];
     $opts['fdd']['email']['tab'] = ['id' => 'contact'];
+    $opts['fdd']['email']['input'] .= 'M';
 
     $opts['fdd']['street'] = [
       'tab'      => ['id' => 'contact'],
