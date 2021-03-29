@@ -199,7 +199,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
          };
 
     $this->pmeOptions['triggers']['update']['after'][] = function($pme) {
-      $pme->message = $this->l->t(
+      $pme->message = $this->l->n(
         '%n data field affected',
         '%n data fields affected',
         $this->changeSetSize);
@@ -581,7 +581,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $value = preg_replace('/\s*,\s*/', ',', $value);
       }
 
-      if ($pme->skipped($fdn) || $pme->readonly($fdn)) {
+      // @todo what is this
+      if ($op !== 'insert' && ($pme->skipped($fdn) || $pme->readonly($fdn))) {
         continue;
       }
 
@@ -665,7 +666,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * @todo Cleanup. In particular, quite a bit of code is shared with
    * $this->beforeInsertDoInsertAll().
    */
-  public function beforeUpdateDoUpdateAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function beforeUpdateDoUpdateAll(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'updated');
@@ -864,11 +865,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($changeSet as $column => $field) {
           // convention for multiple change-sets:
           //
-          // - the values start with the key
-          // - boolean false values are omitted
-          // - optional values are omitted
-          // - values are separated by a colon from the key
-          foreach (Util::explodeIndexed($newvals[$field], true) as $key => $value) {
+          // KEY0:VALUE0,KEY1:VALUE1,...
+          //
+          foreach (Util::explodeIndexed($newvals[$field], null) as $key => $value) {
             $multipleValues[$key][$column] = $value;
           }
           foreach ($identifier[$multiple]['new'] as $new) {
@@ -879,7 +878,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->$logMethod('VAL '.print_r($multipleValues, true));
+        $this->$logMethod('MULTIPLE VALUES '.print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
@@ -949,17 +948,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->flush(); // flush everything to the data-base
 
-    // debug
-    foreach ($changed as $field) {
-      $fieldInfo = $this->joinTableField($field);
-      throw new \Exception($this->l->t('Change-set %s should be empty.', print_r($changed, true)));
+
+    $this->$logMethod('AFTER OLD '.print_r($oldvals, true));
+    $this->$logMethod('AFTER NEW '.print_r($newvals, true));
+    $this->$logMethod('AFTER CHG '.print_r($changed, true));
+
+    if (!empty($changed)) {
+      throw new \RuntimeException($this->l->t('Change-set %s should be empty.', print_r($changed, true)));
     }
-    $this->$logMethod('BEFORE UPD: '.print_r($changed, true));
 
     // all should be done
     $pme->setLogging(false);
 
-    return true; //!empty($changed);
+    return true; // in order to update key-fields
   }
 
   /**
@@ -990,10 +991,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *
    * @bug This method is too large.
    */
-  public function beforeInsertDoInsertAll(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function beforeInsertDoInsertAll(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
-    $logMethod = 'logDebug';
-    // $logMethod = 'logInfo';
+    // $logMethod = 'logDebug';
+    $logMethod = 'logInfo';
 
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'created');
@@ -1226,6 +1227,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->flush(); // flush everything to the data-base
 
     $this->$logMethod('BEFORE INS: '.print_r($changed, true));
+
     if (!empty($changed)) {
       throw new \Exception(
         $this->l->t('Remaining change-set %s must be empty', print_r($changed, true)));
@@ -1234,7 +1236,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     // all should be done
     $pme->setLogging(false);
 
-    return true; //!empty($changed);
+    return true; // in order to update key-fields
   }
 
   /**
