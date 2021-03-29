@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\Mapping as ORM;
 
 class ImagesRepository extends EntityRepository
@@ -46,9 +46,6 @@ class ImagesRepository extends EntityRepository
    */
   public function findForEntity(string $joinTableEntity, int $ownerId, int $limit = -1): array
   {
-    $logger = new DebugStack();
-    $this->getEntityManager()->getConfiguration()->setSQLLogger($logger);
-
     $joinTableEntity = $this->resolveJoinTableEntity($joinTableEntity);
     $qb = $this->getEntityManager()->createQueryBuilder();
     $qb = $qb->select('jt.imageId')
@@ -74,8 +71,8 @@ class ImagesRepository extends EntityRepository
                  ->getQuery()
                  ->getResult();
 
-    self::log(print_r($logger->queries, true));
-    $this->getEntityManager()->getConfiguration()->setSQLLogger(null);
+    // self::log(print_r($logger->queries, true));
+    // $this->getEntityManager()->getConfiguration()->setSQLLogger(null);
 
     return $images;
   }
@@ -105,9 +102,6 @@ class ImagesRepository extends EntityRepository
   public function persistForEntity(string $joinTableEntity, int $ownerId, \OCP\Image $image):Entities\Image
   {
     $entityManager = $this->getEntityManager();
-
-    $logger = new DebugStack();
-    $entityManager->getConfiguration()->setSQLLogger($logger);
 
     // Get full class name
     $joinTableEntityClass = $this->resolveJoinTableEntity($joinTableEntity);
@@ -155,10 +149,7 @@ class ImagesRepository extends EntityRepository
     $dbImage = $joinTableEntity->getImage();
     $imageId = $dbImage->getId();
 
-    self::log("Stored image with id ".$imageId." mime ".$image->mimeType());
-
-    self::log(print_r($logger->queries, true));
-    $entityManager->getConfiguration()->setSQLLogger(null);
+    // self::log("Stored image with id ".$imageId." mime ".$image->mimeType());
 
     return $dbImage;
   }

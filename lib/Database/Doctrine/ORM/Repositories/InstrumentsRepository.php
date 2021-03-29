@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\DBAL\Logging\DebugStack;
 
 class InstrumentsRepository extends EntityRepository
 {
@@ -72,9 +71,6 @@ class InstrumentsRepository extends EntityRepository
   public function describeAll()
   {
     $byId = $byName = $nameGroups = $idGroups = $familyCollector = [];
-
-    $logger = new DebugStack();
-    $this->getEntityManager()->getConfiguration()->setSQLLogger($logger);
 
     $all = $this->findAll();
 
