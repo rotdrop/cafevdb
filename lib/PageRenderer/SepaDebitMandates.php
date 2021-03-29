@@ -507,7 +507,7 @@ received so far'),
       ]);
 
     // soft-deletion
-    $opts['fdd']['deleted_at'] = $this->defaultFDD['deleted_at'];
+    $opts['fdd']['deleted'] = $this->defaultFDD['deleted'];
 
     ///////////////
 

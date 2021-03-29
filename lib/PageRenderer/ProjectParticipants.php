@@ -167,7 +167,7 @@ class ProjectParticipants extends PMETableViewBase
     //     'project_id' => [
     //       'condition' => 'IN ($main_table.project_id, )',
     //     ],
-    //     'deleted_at' => [ 'value' => null ],
+    //     'deleted' => [ 'value' => null ],
     //   ],
     //   'column' => 'sequence',
     // ],
@@ -324,7 +324,7 @@ class ProjectParticipants extends PMETableViewBase
         'project_id' => [
           'condition' => 'IN ($main_table.project_id, '.$memberProjectId.')',
         ],
-        'deleted_at' => [ 'value' => null ],
+        'deleted' => [ 'value' => null ],
         'sequence' => false,
       ],
       'column' => 'sequence',
