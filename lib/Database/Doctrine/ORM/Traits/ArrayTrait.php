@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -49,6 +50,15 @@ trait ArrayTrait
 
     unset($this->keys['keys']);
     $this->keys = array_filter($this->keys);
+  }
+
+  public function toArray()
+  {
+    $result = [];
+    foreach ($this->keys as $key) {
+      $result[$key] = $this->offsetGet($key);
+    }
+    return $result;
   }
 
   public function offsetExists($offset):bool {
