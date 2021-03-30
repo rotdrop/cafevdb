@@ -1785,6 +1785,7 @@ OC.L10N.register(
     "template" : "Vorlage",
     "temporary" : "zeitweilig",
     "trashbin" : "Papierkorb",
+    "extra field recurring" : "Wiederholend (generiert)",
     "BIRTHDAY" : "GEBURTSTAG",
     "CITY" : "STADT",
     "COUNTRY" : "LAND",

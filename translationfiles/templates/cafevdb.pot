@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-03-30 11:16+0200\n"
+"POT-Creation-Date: 2021-03-30 11:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -9018,6 +9018,11 @@ msgstr ""
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/cms-settings.php:85
 #, php-format
 msgid "trashbin"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:243
+#, php-format
+msgid "extra field recurring"
 msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235

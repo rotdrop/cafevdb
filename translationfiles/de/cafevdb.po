@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-03-30 11:12+0200\n"
-"PO-Revision-Date: 2021-03-30 11:15+0200\n"
+"POT-Creation-Date: 2021-03-30 11:19+0200\n"
+"PO-Revision-Date: 2021-03-30 11:21+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -10030,6 +10030,11 @@ msgstr "zeitweilig"
 #, php-format
 msgid "trashbin"
 msgstr "Papierkorb"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:243
+#, fuzzy, php-format
+msgid "extra field recurring"
+msgstr "Wiederholend (generiert)"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format

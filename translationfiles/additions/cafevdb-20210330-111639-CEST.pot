@@ -1,0 +1,4 @@
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:243
+#, php-format
+msgid "extra field recurring"
+msgstr ""
