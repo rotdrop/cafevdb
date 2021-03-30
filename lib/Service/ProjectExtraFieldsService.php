@@ -29,6 +29,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Common\Util;
 
+use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
+
 /**
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
@@ -60,6 +62,20 @@ class ProjectExtraFieldsService
   }
 
   /**
+   * Just return a flat array with the class names of the implemented
+   * recurring receivables generators implementing
+   * OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator
+   *
+   * @return array
+   */
+  static public function recurringReceivablesGenerators()
+  {
+    return [
+      DoNothingReceivablesGenerator::class,
+    ];
+  }
+
+  /**
    * Fetch all monetary fields for the given project.
    *
    * @param $project
@@ -73,7 +89,6 @@ class ProjectExtraFieldsService
       switch ($field['dataType']) {
       case 'service-fee':
       case 'deposit':
-        //$allowed = $this->explodeAllowedValues($field['allowed_values'], false, true);
         $monetary[$field['id']] = $field;
         break;
       }

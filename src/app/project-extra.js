@@ -26,6 +26,9 @@ import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
 
+require('jquery-ui/ui/widgets/autocomplete');
+require('jquery-ui/themes/base/autocomplete.css');
+
 // NB: much of the visibility stuff is handled by CSS, e.g. which
 // input is shown for which multiplicity.
 require('project-extra.css');
@@ -416,6 +419,16 @@ const ready = function(selector, resizeCB) {
   setFieldTypeCssClass(fieldTypeData());
 
   allowedHeaderVisibility();
+
+  // set autocomplete for generator selection
+  const generatorRow = container.find('tr.allowed-values.generator');
+  const generators = generatorRow.data('generators');
+  generatorRow.find('input.field-data').autocomplete({
+    source: generators,
+    position: { my: 'left top', at: 'left bottom' },
+    minLength: 0,
+  });
+
   // synthesize resize events for textareas.
   CAFEVDB.textareaResize(container, 'textarea.field-tooltip, textarea.extra-field-tooltip');
 

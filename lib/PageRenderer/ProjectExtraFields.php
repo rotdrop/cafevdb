@@ -1121,9 +1121,10 @@ class ProjectExtraFields extends PMETableViewBase
     $html .= '
   </td>
 </tr>';
-    $generator = $generatorItem['label'];
+    $generator = $generatorItem['data'];
     $html .= '
-<tr class="data-line allowed-values generator active only-multiplicity-recurring">
+<tr class="data-line allowed-values generator active only-multiplicity-recurring"
+     data-generators=\''.json_encode(ProjectExtraFieldsService::recurringReceivablesGenerators()).'\'>
   <td class="operations">
     <input
       class="operation generator-run"
@@ -1134,10 +1135,10 @@ class ProjectExtraFields extends PMETableViewBase
   </td>
   <td class="generator" colspan="5">
     <input
-      class="field-label"
+      class="field-data"
       spellcheck="true"
       type="text"
-      name="'.$pfx.'[-1][label]"
+      name="'.$pfx.'[-1][data]"
       value="'.$generator.'"
       title="'.$this->toolTipsService['extra-fields-allowed-values:generator'].'"
       placeholder="'.$this->l->t('field generator').'"
@@ -1153,10 +1154,13 @@ class ProjectExtraFields extends PMETableViewBase
       '.(empty($generator) ? '' : 'checked="checked"').'
     />
     <label class="pme-input pme-input-lock-unlock" for="allowed-values-generator"></label>';
-    foreach (['key', 'limit', 'data', 'tooltip'] as $prop) {
+    foreach (['key', 'limit', 'label', 'tooltip'] as $prop) {
       $value = ($generatorItem[$prop]??'');
       if (empty($value) && $prop == 'key') {
         $value = Uuid::NIL;
+      }
+      if (empty($value) && $prop == 'label') {
+        $value = 'generator';
       }
       $html .= '
     <input
