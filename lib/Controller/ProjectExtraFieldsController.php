@@ -92,31 +92,28 @@ class ProjectExtraFieldsController extends Controller {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
       case 'allowed-values-option':
-        if (!isset($value['selected']) ||
-            !isset($value['data']) ||
-            !isset($value['keys'])) {
+        if (!isset($value['selected']) || !isset($value['data'])) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
         $selected = $value['selected'];
         $data  = $value['data'];
-        $keys  = $value['keys'] ? $value['keys'] : [];
         $index = $data['index'];
         $used  = $data['used'] === 'used';
-        $allowed = $projectValues['allowed_values'];
+        $dataOptions = $projectValues['allowed_values'];
 
-        $allowed = array_values($allowed);
+        $dataOptions = array_values($dataOptions);
 
         // sanitize and potentially add missing keys
-        $allowed = $this->extraFieldsService->explodeAllowedValues(
-          $this->extraFieldsService->implodeAllowedValues($allowed),
+        $dataOptions = $this->extraFieldsService->explodeAllowedValues(
+          $this->extraFieldsService->implodeAllowedValues($dataOptions),
           false);
 
-        if (count($allowed) !== 1) {
+        if (count($dataOptions) !== 1) {
           return self::grumble($this->l->t('No or too many items available: %s',
-                                           print_r($allowed, true) ));
+                                           print_r($dataOptions, true) ));
         }
 
-        $item = $allowed[0];
+        $item = $dataOptions[0];
 
         // remove dangerous html
         $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
@@ -151,9 +148,8 @@ class ProjectExtraFieldsController extends Controller {
 
         return self::dataResponse([
           'message' => $this->l->t("Request \"%s\" successful", $topic),
-          'AllowedValue' => $allowed,
-          'AllowedValueInput' => $input,
-          'AllowedValueOption' => $options,
+          'dataOptionFormInputs' => $input,
+          'dataOptionSelectOption' => $options,
         ]);
       default:
         break;

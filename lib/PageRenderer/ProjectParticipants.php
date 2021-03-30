@@ -24,7 +24,6 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 use chillerlan\QRCode\QRCode;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;

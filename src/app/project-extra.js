@@ -241,21 +241,6 @@ const ready = function(selector, resizeCB) {
     // associated data items
     const data = $.extend({}, fieldTypeData(), row.data());
 
-    // fetch all available keys, server validation will enforce
-    // unique keys.
-    const keys = [];
-    const tbody = self.closest('tbody');
-    let skipKey = placeHolder ? false : row.find('input.field-key').val().trim();
-    tbody.find('tr.data-line').not('.placeholder').each(function(index) {
-      const key = $(this).find('input.field-key').val().trim();
-      if (key === skipKey) {
-        skipKey = false; // skip once.
-      } else if (key !== '') {
-        keys.push(key);
-      }
-    });
-    console.log('keys', keys, typeof keys);
-
     const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
 
     const dflt = container.find('select.default-multi-value');
@@ -266,7 +251,6 @@ const ready = function(selector, resizeCB) {
       value: {
         selected: oldDflt,
         data,
-        keys: keys.length > 0 ? keys : 0,
       },
     };
 
@@ -290,13 +274,12 @@ const ready = function(selector, resizeCB) {
       .done(function(data) {
         if (!Ajax.validateResponse(
           data,
-          ['AllowedValueOption', 'AllowedValueInput', 'AllowedValue'],
+          ['dataOptionSelectOption', 'dataOptionFormInputs'],
           cleanup)) {
           return;
         }
-        const option = data.AllowedValueOption;
-        const input = data.AllowedValueInput;
-        // const value = data.AllowedValue; // sanitized
+        const option = data.dataOptionSelectOption;
+        const input = data.dataOptionFormInputs;
         $.fn.cafevTooltip.remove();
         if (placeHolder) {
           row.parents('table').find('thead').show();
