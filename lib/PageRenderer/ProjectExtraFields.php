@@ -991,9 +991,9 @@ class ProjectExtraFields extends PMETableViewBase
     .' '.($deleted ? 'deleted' : 'active')
     .'"'
     .' '.$data.'>';
-    $html .= '<td class="delete-undelete">'
+    $html .= '<td class="operations">'
           .'<input'
-          .' class="delete-undelete"'
+          .' class="delete-undelete not-multiplicity-recurring"'
           .' title="'.$this->toolTipsService['extra-fields-delete-undelete'].'"'
           .' type="button"/>'
           .'</td>';
@@ -1088,7 +1088,7 @@ class ProjectExtraFields extends PMETableViewBase
   {
     $pfx = $this->pme->cgiDataName('allowed_values');
     $html = '
-<tr class="data-line allowed-values placeholder active">
+<tr class="data-line allowed-values placeholder active not-multiplicity-recurring">
   <td class="placeholder" colspan="6">
     <input
       class="field-label"
@@ -1108,7 +1108,34 @@ class ProjectExtraFields extends PMETableViewBase
       type="hidden"
       name="'.$pfx.'[-1]['.$prop.']"
       value=""
-      />';
+    />';
+    }
+    $html .= '
+  </td>
+</tr>';
+    $html .= '
+<tr class="data-line allowed-values placeholder active only-multiplicity-recurring">
+  <td class="placeholder" colspan="6">
+    <input
+      class="field-label"
+      spellcheck="true"
+      type="text"
+      name="'.$pfx.'[-1][label]"
+      value="TODO FETCH FROM TABLE"
+      title="'.$this->toolTipsService['extra-fields-allowed-values:generator'].'"
+      placeholder="'.$this->l->t('field generator').'"
+      size="33"
+      maxlength="32"
+    />';
+    foreach (['key', 'limit', 'data', 'tooltip'] as $prop) {
+      $value = $prop == 'key' ? Uuid::NIL : '';
+      $html .= '
+    <input
+      class="field-'.$prop.'"
+      type="hidden"
+      name="'.$pfx.'[-1]['.$prop.']"
+      value="'.$value.'"
+    />';
     }
     $html .= '
   </td>
