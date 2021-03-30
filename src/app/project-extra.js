@@ -232,6 +232,7 @@ const ready = function(selector, resizeCB) {
     }
     const row = self.closest('tr.allowed-values');
     const placeHolder = row.hasClass('placeholder');
+    const generator = row.hasClass('generator');
     if (placeHolder && self.val().trim() === '') {
       // don't add empty fields (but of course allow to remove field data)
       self.val('');
@@ -287,6 +288,8 @@ const ready = function(selector, resizeCB) {
           self.val('');
           row.data('index', row.data('index') + 1); // next index
           resizeCB();
+        } else if (generator) {
+          alert('PLEASE IMPLEMENT ME!');
         } else {
           const next = row.next();
           row.replaceWith(input);

@@ -991,12 +991,16 @@ class ProjectExtraFields extends PMETableViewBase
     .' '.($deleted ? 'deleted' : 'active')
     .'"'
     .' '.$data.'>';
-    $html .= '<td class="operations">'
-          .'<input'
-          .' class="delete-undelete not-multiplicity-recurring"'
-          .' title="'.$this->toolTipsService['extra-fields-delete-undelete'].'"'
-          .' type="button"/>'
-          .'</td>';
+    $html .= '<td class="operations">
+  <input
+    class="operation delete-undelete not-multiplicity-recurring"
+    title="'.$this->toolTipsService['extra-fields-allowed-values:delete-undelete'].'"
+    type="button"/>
+  <input
+    class="operation regenerate only-multiplicity-recurring"
+    title="'.$this->toolTipsService['extra-fields-allowed-values:regenerate'].'"
+    type="button"/>
+    </td>';
     // label
     $prop = 'label';
     $label = ''
@@ -1114,8 +1118,14 @@ class ProjectExtraFields extends PMETableViewBase
   </td>
 </tr>';
     $html .= '
-<tr class="data-line allowed-values placeholder active only-multiplicity-recurring">
-  <td class="placeholder" colspan="6">
+<tr class="data-line allowed-values generator active only-multiplicity-recurring">
+  <td class="operations">
+    <input
+      class="operation generator-run"
+      title="'.$this->toolTipsService['extra-fields-allowed-values:generator-run'].'"
+      type="button"/>
+  </td>
+  <td class="generator" colspan="5">
     <input
       class="field-label"
       spellcheck="true"

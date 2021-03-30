@@ -65,14 +65,22 @@ table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.allowed-value
     min-width:50%;
 }
 
-.project-extra-fields table.pme-main tr.allowed-values input.delete-undelete {
+.project-extra-fields table.pme-main tr.allowed-values td.operations input.operation {
     background-repeat:no-repeat;
-    background-size: 28px 28px;
+    background-size: 24px 24px;
     background-position: center;
     width:28px;
     height:28px;
     vertical-align:middle;
     margin-right:1em;
+}
+
+.project-extra-fields table.pme-main tr.allowed-values.active input.regenerate {
+    background-image:url('../img/reload-solid.svg');
+}
+
+.project-extra-fields table.pme-main tr.allowed-values.active input.generator-run {
+    background-image:url('../../../core/img/actions/play.svg');
 }
 
 .project-extra-fields table.pme-main tr.allowed-values.active input.delete-undelete {

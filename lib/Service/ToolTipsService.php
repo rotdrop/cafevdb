@@ -330,7 +330,19 @@ different maximal number of people fitting in the group. Maybe this is completel
 
       'extra-field-surcharge-single' => $this->l->t('Simple yes-no choice which increases the project fees. Please fill also the "amount" field.'),
 
-      'extra-fields-allowed-values' => array(
+      'extra-fields-allowed-values' => [
+        'generator' => $this->l->t('Name of a the generator for this field. Can be be a fully-qualified PHP class-name or one of the known short-cuts.'),
+        'generator-run' => $this->l->t('Run the value generator. Depending on the generator this might result in new fields or just does nothing if all relevant fields are already there.'),
+        'regenerate' => $this->l->t('Recompute the values of this particular recurring field.'),
+        'delete-undelete' => $this->l->t('Hit this button to delete or undelete each item. Note that items that
+already have been associated with musicians in the data-base can no
+longer be "really" deleted. Instead, an attempt to delete them will
+just result in marking them as "inactive". Inactive items will be kept
+until the end of the world (or this data-base application, whatever
+happens to come earlier). Inactive buttons will no longer show up in
+the instrumentation table, but inactive items can be "undeleted", just
+but clicking this button again.'),
+
         'default' => $this->l->t('Table with all admissible values for this multiple choice option.'),
         'placeholder' => $this->l->t('In order to add a new option just enter its name here and hit enter or
 just click somewhere else. Further attributes can be changed later (data-base key, label, data, context help)'),
@@ -344,7 +356,7 @@ string. Please entry the surcharge amount for surcharge items here.'),
         'tooltip' => $this->l->t('An extra-tooltip which can be associated to this specific option. A
 help text in order to inform others what this option is about.'),
         'limit' => $this->l->t('The maximum allowed number of people in a "group of people" field'),
-      ),
+      ],
 
       'extra-fields-allowed-values-single' => $this->l->t('For a surcharge option, please enter here the surcharge amount
 associated with this option.'),
@@ -354,15 +366,6 @@ associated with this option.'),
       'extra-fields-default-single-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
       'extra-fields-default-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
-
-      'extra-fields-delete-undelete' => $this->l->t('Hit this button to delete or undelete each item. Note that items that
-already have been associated with musicians in the data-base can no
-longer be "really" deleted. Instead, an attempt to delete them will
-just result in marking them as "inactive". Inactive items will be kept
-until the end of the world (or this data-base application, whatever
-happens to come earlier). Inactive buttons will no longer show up in
-the instrumentation table, but inactive items can be "undeleted", just
-but clicking this button again.'),
 
       'extra-fields-disabled' => $this->l->t('Disable this extra field. This will not erase any data in the
 data-base, but simply mark the field as unused and hide it from sight.'),
