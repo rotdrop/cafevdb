@@ -270,10 +270,10 @@ form.pme-form table.pme-main.tab-9 td.tab-9 {
 .ui-dialog .pme-table-container tr.pme-navigation input.pme-reload {
   position: absolute;
   right: 0px;
-  width: 27px;
-  height: 27px;
+  width: 34px;
+  height: 34px;
   background-size: 24px 24px;
-  margin: 3px;
+  margin: 1px;
 }
 
 .ui-dialog #pme-table-container table.pme-navigation {
