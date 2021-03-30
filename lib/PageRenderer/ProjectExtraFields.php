@@ -1121,13 +1121,16 @@ class ProjectExtraFields extends PMETableViewBase
     $html .= '
   </td>
 </tr>';
+    $generator = $generatorItem['label'];
     $html .= '
 <tr class="data-line allowed-values generator active only-multiplicity-recurring">
   <td class="operations">
     <input
       class="operation generator-run"
       title="'.$this->toolTipsService['extra-fields-allowed-values:generator-run'].'"
-      type="button"/>
+      type="button"
+      '.(empty($generator) ? 'disabled="disabled"' : '').'
+    />
   </td>
   <td class="generator" colspan="5">
     <input
@@ -1135,17 +1138,21 @@ class ProjectExtraFields extends PMETableViewBase
       spellcheck="true"
       type="text"
       name="'.$pfx.'[-1][label]"
-      value="'.($generatorItem['label']??'').'"
+      value="'.$generator.'"
       title="'.$this->toolTipsService['extra-fields-allowed-values:generator'].'"
       placeholder="'.$this->l->t('field generator').'"
       required="required"
       size="33"
       maxlength="32"
-    />';
-    $inputDisable = empty($generatorItem['label']) ? '' : 'checked="checked"';
-    $html .= '
-    <input type="checkbox" id="allowed-values-generator" class="pme-input pme-input-disable" '.$checked.'/>
-    <label class="pme-iunput pme-input-disable" for="allowed-values-generator"></label>';
+      '.(empty($generator) ? '' : 'readonly="readonly"').'
+    />
+    <input
+      type="checkbox"
+      id="allowed-values-generator"
+      class="pme-input pme-input-lock-unlock"
+      '.(empty($generator) ? '' : 'checked="checked"').'
+    />
+    <label class="pme-input pme-input-lock-unlock" for="allowed-values-generator"></label>';
     foreach (['key', 'limit', 'data', 'tooltip'] as $prop) {
       $value = ($generatorItem[$prop]??'');
       if (empty($value) && $prop == 'key') {

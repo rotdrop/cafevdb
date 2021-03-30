@@ -56,7 +56,8 @@ class Navigation
     $this->pmeOptions = $pmeOptions;
   }
 
-  /**Emit select options
+  /**
+   * Emit select options
    *
    * @param $options Array with option tags:
    *
@@ -138,7 +139,7 @@ class Navigation
     return $result;
   }
 
-  /**Simple select option array from flat value array. */
+  /** Simple select option array from flat value array. */
   static public function simpleSelectOptions($options, $selected = null)
   {
     $optionDescription = [];
@@ -150,7 +151,8 @@ class Navigation
     return self::selectOptions($optionDescription);
   }
 
-  /**Recursively emit hidden input elements to represent the given
+  /**
+   * Recursively emit hidden input elements to represent the given
    * data. $value may be a nested array.
    */
   static public function persistentCGI($key, $value = false)
@@ -328,31 +330,6 @@ class Navigation
     return $result;
   }
 
-  /**Take any dashed lower-case string and convert to camel-acse.
-   *
-   * @param $string the string to convert.
-   *
-   * @param $capitalizeFirstCharacter self explaining.
-   */
-  private function dashesToCamelCase($string, $capitalizeFirstCharacter = false)
-  {
-    $str = str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
-
-    if (!$capitalizeFirstCharacter) {
-      $str[0] = strtolower($str[0]);
-    }
-
-    return $str;
-  }
-
-  /**Take an camel-case string and convert to lower-case with dashes
-   * between the words. First letter may or may not be upper case.
-   */
-  private function camelCaseToDashes($string)
-  {
-    return strtolower(preg_replace('/([A-Z])/', '-$1', lcfirst($string)));
-  }
-
   public function buttonsFromArray($buttons)
   {
     return self::htmlTagsFromArray($buttons);
@@ -395,7 +372,7 @@ class Navigation
           $dataArray = ['value' => $dataArray];
         }
         foreach ($dataArray as $key => $dataValue) {
-          $key = self::camelCaseToDashes($key);
+          $key = Util::camelCaseToDashes($key);
           $data .= ' data-'.$key.'="'.Util::htmlEscape($dataValue).'"';
         }
       }
@@ -476,7 +453,8 @@ class Navigation
     return $html;
   }
 
-  /**Generate a couple of standard buttons, identified by Ids.
+  /**
+   * Generate a couple of standard buttons, identified by Ids.
    *
    * @param string $id One of
    *   - an array; in this case buttonsFromArray() is called with the supplied data.

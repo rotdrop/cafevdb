@@ -76,18 +76,10 @@ table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.allowed-value
 }
 
 .project-extra-fields table.pme-main tr.allowed-values.active input.regenerate {
-    background-image:url('../img/lock.svg');
-}
-
-.project-extra-fields table.pme-main tr.allowed-values.active.unlocked input.regenerate {
     background-image:url('../img/reload-solid.svg');
 }
 
 .project-extra-fields table.pme-main tr.allowed-values.active input.generator-run {
-    background-image:url('../img/lock.svg');
-}
-
-.project-extra-fields table.pme-main tr.allowed-values.active.unlocked input.generator-run {
     background-image:url('../../../core/img/actions/play.svg');
 }
 

@@ -1164,11 +1164,11 @@ table.pme-main tbody td.pme-navigation div.graphic-links input.hide-disabled:dis
 /* Disable some inputs with a checkbox */
 
 /* Style checkbox with label and lock icon */
-input[type="checkbox"].pme-input.pme-input-disable + label.pme-input-disable {
+input[type="checkbox"].pme-input.pme-input-lock-empty + label.pme-input-lock-empty {
   position: absolute !important;
   margin-top: 12px;
   margin-left: -36px;
-  height: 14px;
+  height: 16px;
   width: 24px;
   background-image: url('../img/lock.svg');
   background-repeat: no-repeat;
@@ -1177,10 +1177,30 @@ input[type="checkbox"].pme-input.pme-input-disable + label.pme-input-disable {
   text-indent: -10000em;
 }
 
-input[type="checkbox"].pme-input.pme-input-disable:checked + label.pme-input-disable {
+input[type="checkbox"].pme-input.pme-input-lock-empty:checked + label.pme-input-lock-empty {
   background-image: url('../img/cafevdb-delete.svg');
   opacity: 0.8;
 }
+
+/* Style checkbox with label and lock icon */
+input[type="checkbox"].pme-input.pme-input-lock-unlock + label.pme-input-lock-unlock {
+  position: absolute !important;
+  margin-top: 12px;
+  margin-left: -36px;
+  height: 16px;
+  width: 24px;
+  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.8;
+  text-indent: -10000em;
+}
+
+input[type="checkbox"].pme-input.pme-input-lock-unlock:checked + label.pme-input-lock-unlock {
+  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
+  opacity: 0.8;
+}
+
 
 /*
  * Local Variables: ***

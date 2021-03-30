@@ -375,8 +375,8 @@ make sure that the musicians are also automatically added to the
           return '<input id="pme-musician-nickname"
   '.$checked.'
   type="checkbox"
-  class="pme-input pme-input-disable"/>
-<label class="pme-input pme-input-disable" for="pme-musician-nickname"></label>';
+  class="pme-input pme-input-lock-empty"/>
+<label class="pme-input pme-input-lock-empty" for="pme-musician-nickname"></label>';
         },
       ],
     ];
@@ -413,8 +413,8 @@ make sure that the musicians are also automatically added to the
           return '<input id="pme-musician-displayname"
   type="checkbox"
   '.$checked.'
-  class="pme-input pme-input-disable"
-/><label class="pme-input pme-input-disable" for="pme-musician-displayname"></label>';
+  class="pme-input pme-input-lock-empty"
+/><label class="pme-input pme-input-lock-empty" for="pme-musician-displayname"></label>';
         },
       ],
     ];

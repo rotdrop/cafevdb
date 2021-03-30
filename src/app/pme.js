@@ -1613,7 +1613,7 @@ const pmeInit = function(containerSel) {
 
   // Handle some special check-boxes disabling text-input fields
   container.on(
-    'change', 'input[type="checkbox"].pme-input-disable',
+    'change', 'input[type="checkbox"].pme-input-lock-empty',
     function(event) {
       const $this = $(this);
       const checked = $this.prop('checked');
@@ -1621,6 +1621,21 @@ const pmeInit = function(containerSel) {
       $input.prop('readonly', !checked);
       if (!checked) {
         $input.val('');
+      }
+      return false;
+    });
+
+  container.on(
+    'change', 'input[type="checkbox"].pme-input-lock-unlock',
+    function(event) {
+      const $this = $(this);
+      const checked = $this.prop('checked');
+      const $input = $this.prev();
+      $input.prop('readonly', checked);
+      if (checked) {
+        $input.addClass('readonly');
+      } else {
+        $input.removeClass('readonly');
       }
       return false;
     });

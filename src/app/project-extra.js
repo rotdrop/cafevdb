@@ -278,7 +278,9 @@ const ready = function(selector, resizeCB) {
     const submitDefer = PHPMyEdit.deferReload(container);
     allowed.prop('readonly', true);
     const cleanup = function() {
-      allowed.prop('readonly', false);
+      if (!allowed.hasClass('readonly')) {
+        allowed.prop('readonly', false);
+      }
       submitDefer.resolve();
     };
 
@@ -299,9 +301,15 @@ const ready = function(selector, resizeCB) {
         const input = data.dataOptionFormInputs;
         $.fn.cafevTooltip.remove();
         if (generator) {
-          if (self.val().trim() !== '') {
-            self.prop('disabled', true);
+          const empty = self.val().trim() === '';
+          if (empty) {
+            self.removeClass('readonly');
+          } else {
+            self.addClass('readonly');
           }
+          self.prop('readonly', !empty);
+          self.next().prop('checked', !empty);
+          row.find('.operation.generator-run').prop('disabled', empty);
         } else {
           if (placeHolder) {
             row.parents('table').find('thead').show();
