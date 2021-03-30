@@ -739,7 +739,7 @@ class ProjectParticipants extends PMETableViewBase
 
     if (!empty($monetary) || ($projectId == $this->memberProjectId)) {
 
-      $this->makeJoinTableField(
++      $this->makeJoinTableField(
         $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
         [
           'tab'      => array('id' => $financeTab),

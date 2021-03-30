@@ -1086,9 +1086,13 @@ class ProjectExtraFields extends PMETableViewBase
    * is one single text input for a new name which triggers creation
    * of a new input row from the JS change event.
    *
+   * @param null|array|Entities\ProjectExtraFieldDataOption $generatorItem
+   *     Special data item with key Uuid::NIL which holds
+   *     the data for auto-generated fields.
+   *
    * @return string HTML data for the generator button.
    */
-  private function dataOptionGeneratorHtml()
+  private function dataOptionGeneratorHtml($generatorItem)
   {
     $pfx = $this->pme->cgiDataName('allowed_values');
     $html = '
@@ -1131,14 +1135,22 @@ class ProjectExtraFields extends PMETableViewBase
       spellcheck="true"
       type="text"
       name="'.$pfx.'[-1][label]"
-      value="TODO FETCH FROM TABLE"
+      value="'.($generatorItem['label']??'').'"
       title="'.$this->toolTipsService['extra-fields-allowed-values:generator'].'"
       placeholder="'.$this->l->t('field generator').'"
+      required="required"
       size="33"
       maxlength="32"
     />';
+    $inputDisable = empty($generatorItem['label']) ? '' : 'checked="checked"';
+    $html .= '
+    <input type="checkbox" id="allowed-values-generator" class="pme-input pme-input-disable" '.$checked.'/>
+    <label class="pme-iunput pme-input-disable" for="allowed-values-generator"></label>';
     foreach (['key', 'limit', 'data', 'tooltip'] as $prop) {
-      $value = $prop == 'key' ? Uuid::NIL : '';
+      $value = ($generatorItem[$prop]??'');
+      if (empty($value) && $prop == 'key') {
+        $value = Uuid::NIL;
+      }
       $html .= '
     <input
       class="field-'.$prop.'"
@@ -1192,7 +1204,7 @@ class ProjectExtraFields extends PMETableViewBase
       $showDataLabel = $this->l->t("Show data-fields.");
       $showDataTip = $this->toolTipsService['extra-fields-show-data'];
       $html .=<<<__EOT__
-<div class="field-display-options">
+<div class="field-display-options not-multiplicity-recurring">
   <div class="show-deleted">
     <input type="checkbox"
            name="show-deleted"
@@ -1287,17 +1299,22 @@ __EOT__;
       case 'add':
       case 'change':
         $usedKeys = $this->optionKeys($recordId);
+        $generatorItem = null;
         $idx = 0;
         foreach ($allowed as $value) {
           $key = $value['key'];
-          if (empty($key) || $key == Uuid::NIL) {
+          if (empty($key)) {
+            continue;
+          }
+          if ($key == Uuid::NIL) {
+            $generatorData = $value;
             continue;
           }
           $used = array_search($key, $usedKeys) !== false;
           $html .= $this->dataOptionInputRowHtml($value, $idx, $used);
           $idx++;
         }
-        $html .= $this->dataOptionGeneratorHtml();
+        $html .= $this->dataOptionGeneratorHtml($generatorItem);
         break;
     }
     $html .= '

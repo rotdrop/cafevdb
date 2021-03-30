@@ -78,7 +78,22 @@ const ready = function(selector, resizeCB) {
   // Field-Type Selectors
   container.on('change', 'select.multiplicity, select.data-type', function(event) {
     const multiplicity = container.find('select.multiplicity').val();
-    const dataType = container.find('select.data-type').val();
+    const dataTypeSelect = container.find('select.data-type');
+    if (multiplicity === 'recurring') {
+      // only service-fees supported for recurring stuff
+      dataTypeSelect
+        .find('option')
+        .not('[value="service-fee"]')
+        .prop('disabled', true);
+      dataTypeSelect
+        .val('service-fee')
+        .trigger('chosen:updated');
+    } else {
+      // re-enable all options
+      dataTypeSelect.find('option').prop('disabled', false);
+      dataTypeSelect.trigger('chosen:updated');
+    }
+    const dataType = dataTypeSelect.val();
     setFieldTypeCssClass({ multiplicity, dataType });
     allowedHeaderVisibility();
     resizeCB();
@@ -90,6 +105,7 @@ const ready = function(selector, resizeCB) {
     }
     return false;
   });
+  container.find('select.multiplicity').trigger('change');
 
   container.on('keypress', 'tr.allowed-values input[type="text"]', function(event) {
     let pressedKey;
@@ -282,28 +298,32 @@ const ready = function(selector, resizeCB) {
         const option = data.dataOptionSelectOption;
         const input = data.dataOptionFormInputs;
         $.fn.cafevTooltip.remove();
-        if (placeHolder) {
-          row.parents('table').find('thead').show();
-          row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
-          self.val('');
-          row.data('index', row.data('index') + 1); // next index
-          resizeCB();
-        } else if (generator) {
-          alert('PLEASE IMPLEMENT ME!');
+        if (generator) {
+          if (self.val().trim() !== '') {
+            self.prop('disabled', true);
+          }
         } else {
-          const next = row.next();
-          row.replaceWith(input);
-          next.prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
+          if (placeHolder) {
+            row.parents('table').find('thead').show();
+            row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
+            self.val('');
+            row.data('index', row.data('index') + 1); // next index
+            resizeCB();
+          } else {
+            const next = row.next();
+            row.replaceWith(input);
+            next.prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
+          }
+          // get the key <-> value connection right for the default selector
+          const newValue = $(option).val();
+          const oldOption = dflt.find('option[value="' + newValue + '"]');
+          if (oldOption.length > 0) {
+            oldOption.replaceWith(option);
+          } else {
+            dflt.children('option').first().after(option);
+          }
+          dflt.trigger('chosen:updated');
         }
-        // get the key <-> value connection right for the default selector
-        const newValue = $(option).val();
-        const oldOption = dflt.find('option[value="' + newValue + '"]');
-        if (oldOption.length > 0) {
-          oldOption.replaceWith(option);
-        } else {
-          dflt.children('option').first().after(option);
-        }
-        dflt.trigger('chosen:updated');
 
         if (globalState.toolTipsEnabled) {
           $.fn.cafevTooltip.enable();
