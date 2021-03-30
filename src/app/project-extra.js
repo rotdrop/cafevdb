@@ -26,6 +26,8 @@ import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
 
+// NB: much of the visibility stuff is handled by CSS, e.g. which
+// input is shown for which multiplicity.
 require('project-extra.css');
 
 const ready = function(selector, resizeCB) {

@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Ramsey\Uuid\Uuid;
 use \Carbon\Carbon as DateTime;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -804,6 +805,15 @@ class ProjectExtraFields extends PMETableViewBase
 
     /************************************************************************
      *
+     * Recurring fields do not have a default value, the value is computed.
+     *
+     */
+    if ($newvals['multiplicity'] = 'recurring') {
+      unset($newvals['multiplicity']);
+    }
+
+    /************************************************************************
+     *
      * Compute change status for default value
      *
      */
@@ -964,35 +974,29 @@ class ProjectExtraFields extends PMETableViewBase
    *
    * @return string HTML data for one row.
    */
-  public function allowedValueInputRow($value, $index = -1, $used = false)
+  public function dataOptionInputRowHtml($value, $index, $used)
   {
     $pfx = $this->pme->cgiDataName('allowed_values');
     $key = $value['key'];
-    $placeHolder = empty($key);
     $deleted = !empty($value['deleted']);
     $data = ''
           .' data-index="'.$index.'"' // real index
           .' data-used="'.($used ? 'used' : 'unused').'"'
-          .' data-deleted-at="'.$value['deleted'].'"';
+          .' data-deleted="'.$value['deleted'].'"';
     $html = '';
     $html .= '
     <tr'
     .' class="data-line'
     .' allowed-values'
-    .($placeHolder ? ' placeholder' : '')
     .' '.($deleted ? 'deleted' : 'active')
     .'"'
     .' '.$data.'>';
-    if (!$placeHolder) {
-      $html .= '<td class="delete-undelete">'
-            .'<input'
-            .' class="delete-undelete"'
-            .' title="'.$this->toolTipsService['extra-fields-delete-undelete'].'"'
-            .' type="button"/>'
-            .'</td>';
-    } else {
-      $index = -1; // move out of the way
-    }
+    $html .= '<td class="delete-undelete">'
+          .'<input'
+          .' class="delete-undelete"'
+          .' title="'.$this->toolTipsService['extra-fields-delete-undelete'].'"'
+          .' type="button"/>'
+          .'</td>';
     // label
     $prop = 'label';
     $label = ''
@@ -1003,91 +1007,112 @@ class ProjectExtraFields extends PMETableViewBase
            .' type="text"'
            .' name="'.$pfx.'['.$index.']['.$prop.']"'
            .' value="'.$value[$prop].'"'
-           .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.($placeHolder ? 'placeholder' : $prop)].'"'
-           .' placeholder="'.($placeHolder ? $this->l->t('new option') : '').'"'
+           .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
            .' size="33"'
            .' maxlength="32"'
            .'/>';
-    if (!$placeHolder) {
-      // key
-      // TODO: use a UUID
-      $prop = 'key';
-      $html .= '<td class="field-'.$prop.' expert-mode-only">'
-            .'<input'
-            .($used || $deleted || true ? ' readonly="readonly"' : '')
-            .' type="text"'
-            .' class="field-key expert-mode-only"'
-            .' name="'.$pfx.'['.$index.']['.$prop.']"'
-            .' value="'.$value[$prop].'"'
-            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
-            .' size="9"'
-            .' maxlength="8"'
-            .'/>'
-            .'<input'
-            .' type="hidden"'
-            .' class="field-deleted-at"'
-            .' name="'.$pfx.'['.$index.'][deleted]"'
-            .' value="'.$value['deleted'].'"'
-            .'/>'
-            .'</td>';
-      // label
-      $prop = 'label';
-      $html .= '<td class="field-'.$prop.'">'.$label.'</td>';
-      // limit
-      $prop = 'limit';
-      $html .= '<td class="field-'.$prop.'"><input'
-            .($deleted ? ' readonly="readonly"' : '')
-            .' class="field-'.$prop.'"'
-            .' type="text"'
-            .' name="'.$pfx.'['.$index.']['.$prop.']"'
-            .' value="'.$value[$prop].'"'
-            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
-            .' maxlength="8"'
-            .' size="9"'
-            .'/></td>';
-      // data
-      $prop = 'data';
-      $html .= '<td class="field-'.$prop.'"><input'
-            .($deleted ? ' readonly="readonly"' : '')
-            .' class="field-'.$prop.'"'
-            .' type="text"'
-            .' name="'.$pfx.'['.$index.']['.$prop.']"'
-            .' value="'.$value[$prop].'"'
-            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
-            .' maxlength="8"'
-            .' size="9"'
-            .'/></td>';
-      // tooltip
-      $prop = 'tooltip';
-      $html .= '<td class="field-'.$prop.'">'
-            .'<textarea'
-            .($deleted ? ' readonly="readonly"' : '')
-            .' class="field-'.$prop.'"'
-            .' name="'.$pfx.'['.$index.']['.$prop.']"'
-            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
-            .' cols="32"'
-            .' rows="1"'
-            .'>'
-            .$value[$prop]
-            .'</textarea>'
-            .'</td>';
-
-    } else {
-      $html .= '<td class="placeholder" colspan="6">'
-            .$label;
-      foreach (['key', 'limit', 'data', 'tooltip'] as $prop) {
-        $html .= '<input'
-              .' class="field-'.$prop.'"'
-              .' type="hidden"'
-              .' name="'.$pfx.'['.$index.']['.$prop.']"'
-              .' value=""'
-              .'/>';
-      }
-      $html .= '</td>';
-    }
+    $prop = 'key';
+    $html .= '<td class="field-'.$prop.' expert-mode-only">'
+          .'<input'
+          .($used || $deleted || true ? ' readonly="readonly"' : '')
+          .' type="text"'
+          .' class="field-key expert-mode-only"'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' value="'.$value[$prop].'"'
+          .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+          .' size="9"'
+          .' maxlength="8"'
+          .'/>'
+          .'<input'
+          .' type="hidden"'
+          .' class="field-deleted"'
+          .' name="'.$pfx.'['.$index.'][deleted]"'
+          .' value="'.$value['deleted'].'"'
+          .'/>'
+          .'</td>';
+    // label
+    $prop = 'label';
+    $html .= '<td class="field-'.$prop.'">'.$label.'</td>';
+    // limit
+    $prop = 'limit';
+    $html .= '<td class="field-'.$prop.'"><input'
+          .($deleted ? ' readonly="readonly"' : '')
+          .' class="field-'.$prop.'"'
+          .' type="text"'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' value="'.$value[$prop].'"'
+          .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+          .' maxlength="8"'
+          .' size="9"'
+          .'/></td>';
+    // data
+    $prop = 'data';
+    $html .= '<td class="field-'.$prop.'"><input'
+          .($deleted ? ' readonly="readonly"' : '')
+          .' class="field-'.$prop.'"'
+          .' type="text"'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' value="'.$value[$prop].'"'
+          .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+          .' maxlength="8"'
+          .' size="9"'
+          .'/></td>';
+    // tooltip
+    $prop = 'tooltip';
+    $html .= '<td class="field-'.$prop.'">'
+          .'<textarea'
+          .($deleted ? ' readonly="readonly"' : '')
+          .' class="field-'.$prop.'"'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+          .' cols="32"'
+          .' rows="1"'
+          .'>'
+          .$value[$prop]
+          .'</textarea>'
+          .'</td>';
     // finis
     $html .= '
     </tr>';
+    return $html;
+  }
+
+  /**
+   * Create the generator field in order to add new input rows. This
+   * is one single text input for a new name which triggers creation
+   * of a new input row from the JS change event.
+   *
+   * @return string HTML data for the generator button.
+   */
+  private function dataOptionGeneratorHtml()
+  {
+    $pfx = $this->pme->cgiDataName('allowed_values');
+    $html = '
+<tr class="data-line allowed-values placeholder active">
+  <td class="placeholder" colspan="6">
+    <input
+      class="field-label"
+      spellcheck="true"
+      type="text"
+      name="'.$pfx.'[-1][label]"
+      value=""
+      title="'.$this->toolTipsService['extra-fields-allowed-values:placeholder'].'"
+      placeholder="'.$this->l->t('new option').'"
+      size="33"
+      maxlength="32"
+    />';
+    foreach (['key', 'limit', 'data', 'tooltip'] as $prop) {
+      $html .= '
+    <input
+      class="field-'.$prop.'"
+      type="hidden"
+      name="'.$pfx.'[-1]['.$prop.']"
+      value=""
+      />';
+    }
+    $html .= '
+  </td>
+</tr>';
     return $html;
   }
 
@@ -1123,6 +1148,8 @@ class ProjectExtraFields extends PMETableViewBase
     $protoCount = count($this->extraFieldsService->allowedValuesPrototype());
     $html = '<div class="pme-cell-wrapper quarter-sized">';
     if ($op === 'add' || $op === 'change') {
+      // controls for showing soft-deleted options or normally
+      // unneeded inputs
       $showDeletedLabel = $this->l->t("Show deleted items.");
       $showDeletedTip = $this->toolTipsService['extra-fields-show-deleted'];
       $showDataLabel = $this->l->t("Show data-fields.");
@@ -1223,15 +1250,17 @@ __EOT__;
       case 'add':
       case 'change':
         $usedKeys = $this->optionKeys($recordId);
-        foreach ($allowed as $idx => $value) {
-          if (!empty($value['key'])) {
-            $key = $value['key'];
-            $used = array_search($key, $usedKeys) !== false;
-          } else {
-            $used = false;
+        $idx = 0;
+        foreach ($allowed as $value) {
+          $key = $value['key'];
+          if (empty($key) || $key == Uuid::NIL) {
+            continue;
           }
-          $html .= $this->allowedValueInputRow($value, $idx, $used);
+          $used = array_search($key, $usedKeys) !== false;
+          $html .= $this->dataOptionInputRowHtml($value, $idx, $used);
+          $idx++;
         }
+        $html .= $this->dataOptionGeneratorHtml();
         break;
     }
     $html .= '

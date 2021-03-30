@@ -47,7 +47,8 @@ table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row.allowed-
 table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.allowed-values,
 table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.default-multi-value,
 table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.allowed-values,
-table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.default-multi-value {
+table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.default-multi-value,
+table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.allowed-values {
     display:table-row;
 }
 

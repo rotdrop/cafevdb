@@ -145,7 +145,7 @@ class ProjectExtraFieldsController extends Controller {
           $options[] = [ 'name' => $item['label'],
                          'value' => $key,
                          'flags' => ($selected === $key ? PageNavigation::SELECTED : 0) ];
-          $input = $this->renderer->allowedValueInputRow($item, $index, $used);
+          $input = $this->renderer->dataOptionInputRowHtml($item, $index, $used);
         }
         $options = PageNavigation::selectOptions($options);
 
