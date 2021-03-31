@@ -129,9 +129,8 @@ class ProjectExtraFieldsController extends Controller {
           return self::grumble($this->l->t('Generator "%s" could not be instantiated.', $item['data']));
         }
 
-        return self::grumble([
-          'options' => $dataOptions,
-          'message' => 'IMPLEMENT ME',
+        return self::dataResponse([
+          'message' => $this->l->t('Generator "%s" successfully validated.', $item['data']),
         ]);
       case 'allowed-values-option':
         if (empty($data)) {
