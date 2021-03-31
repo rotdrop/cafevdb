@@ -79,6 +79,11 @@ class ProjectService
       $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     } catch (\Throwable $t) {
       $this->logException($t);
+      $request = \OC::$server->query(OCP\IRequest::class);
+      $userId = $this->userId();
+      if ($request) {
+        $this->logError('User "'.$userId.'" request uri "'.$request->getRequestUri().'"');
+      }
       $this->repository = null;
     }
     $this->l = $this->l10n();
