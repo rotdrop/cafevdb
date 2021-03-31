@@ -49,7 +49,7 @@ class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
   /**
    * {@inheritdoc}
    */
-  public function updateReceivable(Entities\ProjectExtraFieldDataOption $receivable, ?Entities\Musician $musician = null):Entities\ProjectExtraFieldDataOption
+  public function updateReceivable(Entities\ProjectExtraFieldDataOption $receivable, ?Entities\ProjectParticipant $participant):Entities\ProjectExtraFieldDataOption
   {
     // This is the dummy implementation, just do nothing.
     return $receivable;

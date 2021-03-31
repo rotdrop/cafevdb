@@ -57,7 +57,7 @@ interface IRecurringReceivablesGenerator
    *   The musician to update the service claim for. If null, the
    *   values for all affected musicians have to be recomputed.
    */
-  public function updateReceivable(Entities\ProjectExtraFieldDataOption $receivable, ?Entities\Musician $musician = null):Entities\ProjectExtraFieldDataOption;
+  public function updateReceivable(Entities\ProjectExtraFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectExtraFieldDataOption;
 
   /**
    * Compute the amounts to invoice for all relevant musicians and

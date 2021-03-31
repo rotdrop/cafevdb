@@ -25,11 +25,13 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Besetzungen
+ * Entity for project participants.
+ *
  * @ORM\Table(name="ProjectParticipants")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantsRepository")
  * @Gedmo\Loggable
@@ -58,20 +60,6 @@ class ProjectParticipant implements \ArrayAccess
    * @ORM\Column(type="boolean", nullable=true, options={"default"="0", "comment"="Participant has confirmed the registration."})
    */
   private $registration = '0';
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00","comment"="Gagen negativ"})
-   */
-  private $serviceCharge = '0.00';
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
-   */
-  private $prePayment = '0.00';
 
   /**
    * @var bool
@@ -127,9 +115,9 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @param int $project
    *
-   * @return Besetzungen
+   * @return ProjectParticipant
    */
-  public function setProject($project)
+  public function setProject($project):ProjectParticipant
   {
     $this->project = $project;
 
@@ -151,9 +139,9 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @param int $musician
    *
-   * @return Besetzungen
+   * @return ProjectParticipant
    */
-  public function setMusician($musician)
+  public function setMusician($musician):ProjectParticipant
   {
     $this->musician = $musician;
 
@@ -163,7 +151,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return int
+   * @return Musician
    */
   public function getMusician()
   {
@@ -175,9 +163,9 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @param bool $registration
    *
-   * @return Besetzungen
+   * @return ProjectParticipant
    */
-  public function setRegistration($registration)
+  public function setRegistration($registration):ProjectParticipant
   {
     $this->registration = $registration;
 
@@ -195,61 +183,13 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Set serviceCharge.
-   *
-   * @param string $serviceCharge
-   *
-   * @return Besetzungen
-   */
-  public function setServiceCharge($serviceCharge)
-  {
-    $this->serviceCharge = $serviceCharge;
-
-    return $this;
-  }
-
-  /**
-   * Get serviceCharge.
-   *
-   * @return string
-   */
-  public function getServiceCharge()
-  {
-    return $this->serviceCharge;
-  }
-
-  /**
-   * Set prePayment.
-   *
-   * @param string $prePayment
-   *
-   * @return Besetzungen
-   */
-  public function setPrePayment($prePayment)
-  {
-    $this->prePayment = $prePayment;
-
-    return $this;
-  }
-
-  /**
-   * Get prePayment.
-   *
-   * @return string
-   */
-  public function getPrePayment()
-  {
-    return $this->prePayment;
-  }
-
-  /**
    * Set debitnote.
    *
    * @param bool $debitnote
    *
-   * @return Besetzungen
+   * @return ProjectParticipant
    */
-  public function setDebitnote($debitnote)
+  public function setDebitnote($debitnote):ProjectParticipant
   {
     $this->debitnote = $debitnote;
 
@@ -269,11 +209,11 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set remarks.
    *
-   * @param string $remarks
+   * @param null|string $remarks
    *
-   * @return Besetzungen
+   * @return ProjectParticipant
    */
-  public function setRemarks($remarks)
+  public function setRemarks($remarks):ProjectParticipant
   {
     $this->remarks = $remarks;
 
@@ -285,7 +225,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return string
    */
-  public function getRemarks()
+  public function getRemarks():?string
   {
     return $this->remarks;
   }
@@ -295,9 +235,9 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @param bool $disabled
    *
-   * @return Besetzungen
+   * @return ProjectParticipant
    */
-  public function setDisabled($disabled)
+  public function setDisabled($disabled):ProjectParticipant
   {
     $this->disabled = $disabled;
 
@@ -319,9 +259,9 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @param bool $projectInstruments
    *
-   * @return Besetzungen
+   * @return ProjectParticipant
    */
-  public function setProjectInstruments($projectInstruments)
+  public function setProjectInstruments($projectInstruments):ProjectParticipant
   {
     $this->projectInstruments = $projectInstruments;
 
@@ -331,9 +271,9 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Get projectInstruments.
    *
-   * @return bool
+   * @return Collection
    */
-  public function getProjectInstruments()
+  public function getProjectInstruments():Collection
   {
     return $this->projectInstruments;
   }
@@ -341,11 +281,11 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set extraFieldsData.
    *
-   * @param bool $extraFieldsData
+   * @param Collection $extraFieldsData
    *
-   * @return Besetzungen
+   * @return ProjectParticipant
    */
-  public function setExtraFieldsData($extraFieldsData)
+  public function setExtraFieldsData($extraFieldsData):ProjectParticipant
   {
     $this->extraFieldsData = $extraFieldsData;
 
@@ -355,9 +295,9 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Get extraFieldsData.
    *
-   * @return bool
+   * @return Collection
    */
-  public function getExtraFieldsData()
+  public function getExtraFieldsData():Collection
   {
     return $this->extraFieldsData;
   }
@@ -365,11 +305,11 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set payments.
    *
-   * @param bool $payments
+   * @param Collection $payments
    *
-   * @return Besetzungen
+   * @return ProjectParticipant
    */
-  public function setPayments($payments)
+  public function setPayments($payments):ProjectParticipant
   {
     $this->payments = $payments;
 
@@ -379,9 +319,9 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Get payments.
    *
-   * @return bool
+   * @return Collection
    */
-  public function getPayments()
+  public function getPayments():Collection
   {
     return $this->payments;
   }
