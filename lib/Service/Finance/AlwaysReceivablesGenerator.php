@@ -25,6 +25,9 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use Ramsey\Uuid\Uuid;
 
+use OCP\ILogger;
+use OCP\IL10N;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -34,11 +37,20 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   /** @var float */
   protected $amount;
 
-  public function __construct(EntityManager $entityManager) {
+  public function __construct(
+    EntityManager $entityManager
+    , ILogger $logger
+    , IL10N $l10n
+  ) {
     parent::__construct($entityManager);
+    $this->logger = $logger;
+    $this->l = $l10n;
+
     $this->amount = 1.0;
   }
 
@@ -51,7 +63,7 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
     $receivable = (new Entities\ProjectExtraFieldDataOption)
                 ->setField($this->serviceFeeField)
                 ->setKey(Uuid::uuid1())
-                ->setLabel($this->l->t('Option %d', $count+1))
+                ->setLabel($this->l->t('Option %d', $count))
                 ->setData($this->amount);
     $this->serviceFeeField->getDataOptions()->add($receivable);
     return $this->serviceFeeField->getDataOptions();
