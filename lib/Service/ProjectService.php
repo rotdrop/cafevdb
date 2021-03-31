@@ -83,6 +83,8 @@ class ProjectService
       $userId = $this->userId();
       if ($request) {
         $this->logError('User "'.$userId.'" request uri "'.$request->getRequestUri().'"');
+      } else {
+        $this->logError('User "'.$userId.'", no request?!');
       }
       $this->repository = null;
     }
