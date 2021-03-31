@@ -91,12 +91,14 @@ class ProjectExtraFieldsController extends Controller {
   {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
+      case 'allowed-values-generator':
+        break;
       case 'allowed-values-option':
-        if (!isset($value['selected']) || !isset($value['data'])) {
+        if (!isset($value['data'])) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
-        $selected = $value['selected'];
         $data  = $value['data'];
+        $default = $data['default'];
         $index = $data['index'];
         $used  = $data['used'] === 'used';
         $dataOptions = $projectValues['allowed_values'];
@@ -141,7 +143,7 @@ class ProjectExtraFieldsController extends Controller {
           $key = $item['key'];
           $options[] = [ 'name' => $item['label'],
                          'value' => $key,
-                         'flags' => ($selected === $key ? PageNavigation::SELECTED : 0) ];
+                         'flags' => ($default === $key ? PageNavigation::SELECTED : 0) ];
           $input = $this->renderer->dataOptionInputRowHtml($item, $index, $used);
         }
         $options = PageNavigation::selectOptions($options);

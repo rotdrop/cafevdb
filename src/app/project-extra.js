@@ -25,6 +25,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
+import textareaResize from './textarea-resize.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -207,7 +208,7 @@ const ready = function(selector, resizeCB) {
     'blur',
     'tr.multiplicity.data-type-service-fee ~ tr.allowed-values-single input[type="text"]'
       + ','
-      + 'tr.multiplicity.data-type-service-fee ~ tr.allowed-values input.field-data[type="text"]',
+      + 'tr.multiplicity.data-type-service-fee ~ tr.allowed-values tr.allowed-values:not(.generator) input.field-data[type="text"]',
     function(event) {
       const self = $(this);
       if (self.prop('readonly')) {
@@ -244,108 +245,119 @@ const ready = function(selector, resizeCB) {
     });
 
   // multi-field input matrix
-  container.on('blur', 'tr.allowed-values input[type="text"], tr.allowed-values textarea', function(event) {
-    const self = $(this);
-    if (self.prop('readonly')) {
-      return false;
-    }
-    const row = self.closest('tr.allowed-values');
-    const placeHolder = row.hasClass('placeholder');
-    const generator = row.hasClass('generator');
-    if (placeHolder && self.val().trim() === '') {
-      // don't add empty fields (but of course allow to remove field data)
-      self.val('');
-      return false;
-    }
-
-    // associated data items
-    const data = $.extend({}, fieldTypeData(), row.data());
-
-    const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
-
-    const dflt = container.find('select.default-multi-value');
-    const oldDflt = dflt.find(':selected').val();
-
-    let postData = {
-      request: 'allowed-values-option',
-      value: {
-        selected: oldDflt,
-        data,
-      },
-    };
-
-    postData = $.param(postData);
-    postData += '&' + allowed.serialize();
-
-    // defer submit until after validation.
-    const submitDefer = PHPMyEdit.deferReload(container);
-    allowed.prop('readonly', true);
-    const cleanup = function() {
-      if (!allowed.hasClass('readonly')) {
-        allowed.prop('readonly', false);
+  container.on(
+    'blur',
+    'tr.allowed-values tr.data-line input[type="text"]'
+      + ','
+      + 'tr.allowed-values tr.data-line textarea',
+    function(event) {
+      const self = $(this);
+      if (self.prop('readonly')) {
+        return false;
       }
-      submitDefer.resolve();
-    };
+      const row = self.closest('tr.allowed-values');
+      const placeHolder = row.hasClass('placeholder');
+      const generator = row.hasClass('generator');
+      if (placeHolder && self.val().trim() === '') {
+        // don't add empty fields (but of course allow to remove field data)
+        self.val('');
+        return false;
+      }
 
-    $.post(
-      generateUrl('projects/extra-fields/allowed-values-option'),
-      postData)
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown, cleanup);
-      })
-      .done(function(data) {
-        if (!Ajax.validateResponse(
+      // default data selector, if applicable
+      const dflt = container.find('select.default-multi-value');
+
+      // associated data items, if any
+      const data = $.extend(
+        {
+          default: dflt.val(),
+        },
+        fieldTypeData(),
+        row.data()
+      );
+
+      let postData = {
+        request: 'allowed-values-option',
+        value: {
+          selected: dflt.val(),
           data,
-          ['dataOptionSelectOption', 'dataOptionFormInputs'],
-          cleanup)) {
-          return;
-        }
-        const option = data.dataOptionSelectOption;
-        const input = data.dataOptionFormInputs;
-        $.fn.cafevTooltip.remove();
-        if (generator) {
-          const empty = self.val().trim() === '';
-          if (empty) {
-            self.removeClass('readonly');
-          } else {
-            self.addClass('readonly');
-          }
-          self.prop('readonly', !empty);
-          self.next().prop('checked', !empty);
-          row.find('.operation.generator-run').prop('disabled', empty);
-        } else {
-          if (placeHolder) {
-            row.parents('table').find('thead').show();
-            row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
-            self.val('');
-            row.data('index', row.data('index') + 1); // next index
-            resizeCB();
-          } else {
-            const next = row.next();
-            row.replaceWith(input);
-            next.prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
-          }
-          // get the key <-> value connection right for the default selector
-          const newValue = $(option).val();
-          const oldOption = dflt.find('option[value="' + newValue + '"]');
-          if (oldOption.length > 0) {
-            oldOption.replaceWith(option);
-          } else {
-            dflt.children('option').first().after(option);
-          }
-          dflt.trigger('chosen:updated');
-        }
+        },
+      };
 
-        if (globalState.toolTipsEnabled) {
-          $.fn.cafevTooltip.enable();
-        } else {
-          $.fn.cafevTooltip.disable();
-        }
+      const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
 
-        cleanup();
-      });
-    return false;
-  });
+      postData = $.param(postData);
+      postData += '&' + allowed.serialize();
+
+      // defer submit until after validation.
+      const submitDefer = PHPMyEdit.deferReload(container);
+      allowed.prop('readonly', true);
+      const cleanup = function() {
+        if (!allowed.hasClass('readonly')) {
+          allowed.prop('readonly', false);
+        }
+        submitDefer.resolve();
+      };
+
+      $.post(
+        generateUrl('projects/extra-fields/allowed-values-option'),
+        postData)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(
+            data,
+            ['dataOptionSelectOption', 'dataOptionFormInputs'],
+            cleanup)) {
+            return;
+          }
+          const option = data.dataOptionSelectOption;
+          const input = data.dataOptionFormInputs;
+          $.fn.cafevTooltip.remove();
+          if (generator) {
+            const empty = self.val().trim() === '';
+            if (empty) {
+              self.removeClass('readonly');
+            } else {
+              self.addClass('readonly');
+            }
+            self.prop('readonly', !empty);
+            self.next().prop('checked', !empty);
+            row.find('.operation.generator-run').prop('disabled', empty);
+          } else {
+            if (placeHolder) {
+              row.parents('table').find('thead').show();
+              row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
+              self.val('');
+              row.data('index', row.data('index') + 1); // next index
+              resizeCB();
+            } else {
+              const next = row.next();
+              row.replaceWith(input);
+              next.prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
+            }
+            // get the key <-> value connection right for the default selector
+            const newValue = $(option).val();
+            const oldOption = dflt.find('option[value="' + newValue + '"]');
+            if (oldOption.length > 0) {
+              oldOption.replaceWith(option);
+            } else {
+              dflt.children('option').first().after(option);
+            }
+            dflt.trigger('chosen:updated');
+          }
+
+          if (globalState.toolTipsEnabled) {
+            $.fn.cafevTooltip.enable();
+          } else {
+            $.fn.cafevTooltip.disable();
+          }
+
+          cleanup();
+        });
+      return false;
+    });
 
   // When a reader-group is removed, we also deselect it from the
   // writers. This -- of course -- only works if initially
@@ -430,7 +442,7 @@ const ready = function(selector, resizeCB) {
   });
 
   // synthesize resize events for textareas.
-  CAFEVDB.textareaResize(container, 'textarea.field-tooltip, textarea.extra-field-tooltip');
+  textareaResize(container, 'textarea.field-tooltip, textarea.extra-field-tooltip');
 
   console.info('before resizeCB');
   resizeCB();
