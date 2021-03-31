@@ -85,7 +85,8 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * @var ProjectExtraFieldMetaDatum
    *
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDataOption", mappedBy="field", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDataOption", mappedBy="field", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OrderBy({"label" = "ASC"})
    */
   private $dataOptions;
 
