@@ -1094,13 +1094,15 @@ class ProjectExtraFields extends PMETableViewBase
    * is one single text input for a new name which triggers creation
    * of a new input row from the JS change event.
    *
+   * @param int $fieldId Id of the current field in change mode.
+   *
    * @param null|array|Entities\ProjectExtraFieldDataOption $generatorItem
    *     Special data item with key Uuid::NIL which holds
    *     the data for auto-generated fields.
    *
    * @return string HTML data for the generator button.
    */
-  private function dataOptionGeneratorHtml($generatorItem)
+  private function dataOptionGeneratorHtml($fieldId, $generatorItem)
   {
     $pfx = $this->pme->cgiDataName('allowed_values');
     $html = '
@@ -1132,7 +1134,8 @@ class ProjectExtraFields extends PMETableViewBase
     $generator = $generatorItem['data'];
     $html .= '
 <tr class="data-line allowed-values generator active only-multiplicity-recurring"
-     data-generators=\''.json_encode(ProjectExtraFieldsService::recurringReceivablesGenerators()).'\'>
+     data-generators=\''.json_encode(ProjectExtraFieldsService::recurringReceivablesGenerators()).'\'
+     data-field-id="'.$fieldId.'">
   <td class="operations">
     <input
       class="operation generator-run"
@@ -1333,7 +1336,7 @@ __EOT__;
           $html .= $this->dataOptionInputRowHtml($value, $idx, $used);
           $idx++;
         }
-        $html .= $this->dataOptionGeneratorHtml($generatorItem);
+        $html .= $this->dataOptionGeneratorHtml($recordId, $generatorItem);
         break;
     }
     $html .= '
