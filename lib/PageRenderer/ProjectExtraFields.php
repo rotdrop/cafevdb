@@ -23,7 +23,6 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use Ramsey\Uuid\Uuid;
 use \Carbon\Carbon as DateTime;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -41,7 +40,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Navigation;
+use OCA\CAFEVDB\Common\Uuid;
 
 /**Table generator for Instruments table. */
 class ProjectExtraFields extends PMETableViewBase
@@ -809,7 +808,7 @@ class ProjectExtraFields extends PMETableViewBase
      * Recurring fields do not have a default value, the value is computed.
      *
      */
-    if ($newvals['multiplicity'] = 'recurring') {
+    if ($newvals['multiplicity'] == 'recurring') {
       unset($newvals['default_value']);
     }
 
@@ -826,12 +825,17 @@ class ProjectExtraFields extends PMETableViewBase
 
     /************************************************************************
      *
-     * Move the data from MaximumGroupSize to allowed_values and set
-     * the name of the field as allowed_values label.
+     * groupofpeople is an optional group with only one optional data
+     * item and a common maximum group size. A usage example would be
+     * the collection of twin-room preferences, where the data would
+     * be a potential service-fee for twin-room accomodation.
+     *
+     * We force the key to be the nil uuid in this case.
      */
 
     $tag = 'maximum_group_size';
     if ($newvals['multiplicity'] == 'groupofpeople') {
+      $newvals['allowed_values_single'][0]['key'] = Uuid::NIL;
       $newvals['allowed_values_single'][0]['limit'] = $newvals[$tag];
       $newvals['allowed_values_single'][0]['label'] = $newvals['name'];
     }
