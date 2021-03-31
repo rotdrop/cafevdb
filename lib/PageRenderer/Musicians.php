@@ -22,8 +22,6 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 use chillerlan\QRCode\QRCode;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -41,6 +39,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
 
 /**Table generator for Musicians table. */
 class Musicians extends PMETableViewBase
@@ -849,7 +848,7 @@ make sure that the musicians are also automatically added to the
 
   public static function addUUIDTrigger($pme, $op, $step, $oldvalues, &$changed, &$newvals)
   {
-    $uuid = Uuid::uuid4();
+    $uuid = Uuid::create();
 
     $key = 'uuid';
     $changed[] = $key;

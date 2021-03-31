@@ -23,14 +23,13 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use Ramsey\Uuid\Uuid;
-
 use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common\Uuid;
 
 /**
  * Always generate a new payment request.
@@ -62,7 +61,7 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
     $count = count($this->serviceFeeField->getDataOptions());
     $receivable = (new Entities\ProjectExtraFieldDataOption)
                 ->setField($this->serviceFeeField)
-                ->setKey(Uuid::uuid1())
+                ->setKey(Uuid::create())
                 ->setLabel($this->l->t('Option %d', $count))
                 ->setData($this->amount);
     $this->serviceFeeField->getDataOptions()->add($receivable);

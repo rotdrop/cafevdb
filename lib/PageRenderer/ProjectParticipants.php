@@ -23,7 +23,6 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use Ramsey\Uuid\Uuid;
 use chillerlan\QRCode\QRCode;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -43,6 +42,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
 
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
@@ -1924,7 +1924,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
         // add the group id as data field in order to satisfy
         // PMETableViewBase::beforeUpdateDoUpdateAll().
-        $groupId = $oldValues[$fieldName]?:Uuid::uuid1();
+        $groupId = $oldValues[$fieldName]?:Uuid::create();
 
         $members = explode(',', $newValues[$groupFieldName]);
 

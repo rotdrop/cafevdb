@@ -22,12 +22,11 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Ramsey\Uuid\Uuid;
-
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
 
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\AlwaysReceivablesGenerator;
@@ -234,7 +233,7 @@ class ProjectExtraFieldsService
       $options = [
         array_merge(
           $this->allowedValuesPrototype(),
-          [ 'key' => Uuid::uuid1(), 'label' => $values, ]),
+          [ 'key' => Uuid::create(), 'label' => $values, ]),
       ];
     }
     if (isset($options[-1])) {
@@ -288,7 +287,7 @@ class ProjectExtraFieldsService
     foreach ($options as &$option) {
       $option = array_merge($proto, $option);
       if (empty($option['key'])) {
-        $option['key'] = Uuid::uuid1();
+        $option['key'] = Uuid::create();
       }
     }
     return json_encode($options);

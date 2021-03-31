@@ -24,8 +24,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use OCA\CAFEVDB\Common\Uuid;
 
 trait UuidTrait
 {
@@ -86,7 +86,7 @@ trait UuidTrait
   private function ensureUuid()
   {
     if (empty($this->uuid)) {
-      $this->uuid = Uuid::uuid4();
+      $this->uuid = Uuid::create();
     }
   }
 }
