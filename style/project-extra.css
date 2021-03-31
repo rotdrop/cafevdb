@@ -160,6 +160,9 @@ table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.field-da
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.allowed-values-single {
     text-align:right;
 }
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row tr.generator input.field-data {
+  text-align:inherit;
+}
 
 /* list view */
 .pme-cell-wrapper table.operation-display.allowed-values th.field-data span.general,
