@@ -22,6 +22,7 @@
 
 import { globalState, appName, $ } from './globals.js';
 import generateUrl from './generate-url.js';
+import textareaResize from './textarea-resize.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
@@ -928,7 +929,7 @@ const documentReady = function() {
 
           const editArea = rexForm.find('textarea');
           if (editArea.length > 0) {
-            CAFEVDB.textareaResize(editArea);
+            textareaResize(editArea);
 
             rexForm
               .off('resize', 'textarea')

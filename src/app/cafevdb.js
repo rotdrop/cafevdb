@@ -116,68 +116,6 @@ const modalWaitNotification = function(message) {
   return dialogHolder;
 };
 
-/**
- * Unfortunately, the textare element does not fire a resize
- * event. This function emulates one.
- *
- * @param {Object} container selector or jQuery of container for event
- * delegation.
- *
- * @param {Object} textarea selector or jQuery
- *
- * @param {int} delay Optional, defaults to 50. If true, fire the event
- * immediately, if set, then this is a delay in ms.
- */
-const textareaResize = function(container, textarea, delay) {
-  if (typeof textarea === 'undefined' && typeof delay === 'undefined') {
-    // Variant with one argument, argument must be textarea.
-    textarea = container;
-    delay = textarea;
-    container = null;
-  } else if (delay === 'undefined' && $.isNumeric(textarea)) {
-    // Variant with two argument, argument must be textarea.
-    textarea = container;
-    delay = textarea;
-    container = null;
-  }
-
-  // otherwise first two arguments are container and textarea.
-  if (typeof delay === 'undefined') {
-    delay = 50; // ms
-  }
-
-  const handler = function(event) {
-    if (textarea.oldwidth === null) {
-      textarea.oldwidth = textarea.style.width;
-    }
-    if (textarea.oldheight === null) {
-      textarea.oldheight = textarea.style.height;
-    }
-    if (textarea.style.width !== textarea.oldwidth || textarea.style.height !== textarea.oldheight) {
-      const self = this;
-      if (delay > 0) {
-        if (textarea.resize_timeout) {
-          clearTimeout(textarea.resize_timeout);
-        }
-        textarea.resizeTimeout = setTimeout(function() {
-          $(self).resize();
-        }, delay);
-      } else {
-        $(this).resize();
-      }
-      textarea.oldwidth = textarea.style.width;
-      textarea.oldheight = textarea.style.height;
-    }
-    return true;
-  };
-  const events = 'mouseup mousemove';
-  if (container) {
-    $(container).off(events, textarea).on(events, textarea, handler);
-  } else {
-    $(textarea).off(events).on(events, handler);
-  }
-};
-
 const stopRKey = function(evt) {
   evt = evt || event;
   const node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
@@ -700,7 +638,6 @@ export {
   runReadyCallbacks,
   unfocus,
   modalWaitNotification,
-  textareaResize,
   stopRKey,
   queryData,
   selectMenuReset,
