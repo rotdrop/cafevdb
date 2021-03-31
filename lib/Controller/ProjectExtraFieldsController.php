@@ -94,6 +94,47 @@ class ProjectExtraFieldsController extends Controller {
   {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
+      case 'allowed-values-generator-run':
+        if (empty($data['fieldId'])) {
+          return self::grumble($this->l->t('Missing parameters in request %s', $topic));
+        }
+
+        // fetch the field
+        $fieldId = $data['fieldId'];
+        /** @var Entities\ProjectExtraField */
+        $field = $this->getDatabaseRepository(Entities\ProjectExtraField::class)->find($fieldId);
+        if (empty($field)) {
+          return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
+        }
+
+        // fetch the generator
+        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+        if (empty($generator)) {
+          return self::grumble($this->l->t('Unable to load generator for recurring receivables "%s".',
+                                           $field->getName()));
+        }
+
+        $this->entityManager->beginTransaction();
+        try {
+          $receivables = $generator->generateReceivables();
+          $this->flush();
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          if (!$this->entityManager->isTransactionActive()) {
+            $this->entityManager->close();
+            $this->entityManager->reopen();
+          }
+          return self::grumble($this->exceptionChainData($t));
+        }
+
+        // report back all options as HTML fragment
+
+        return self::dataResponse([
+          'message' => $this->l->t('UNIMPLEMENTED RUN REQUEST FOR ID "%s".', $fieldId),
+        ]);
+
       case 'allowed-values-generator':
         if (empty($data)) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
@@ -106,7 +147,7 @@ class ProjectExtraFieldsController extends Controller {
                                            print_r($dataOptions, true) ));
         }
         $item = $dataOptions[0];
-        if ($item['label'] != 'generator') {
+        if ($item['label'] != ReceivablesGeneratorFactory::GENERATOR_LABEL) {
           return self::grumble($this->l->t('Generator data must be tagged with "generator" label, got "%s".', $item['label']));
         }
         if ($item['key'] != Uuid::NIL) {

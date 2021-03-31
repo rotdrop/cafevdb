@@ -165,7 +165,26 @@ const ready = function(selector, resizeCB) {
   container.on('click', 'tr.allowed-values input.generator-run', function(event) {
     const self = $(this);
     const row = self.closest('tr.allowed-values');
-    alert('Hello World!');
+    const fieldId = row.data('fieldId');
+    const cleanup = function() {};
+    const request = 'allowed-values-generator-run';
+    $.post(
+      generateUrl('projects/extra-fields/' + request), {
+        data: {
+          fieldId,
+        }
+      })
+      .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown, cleanup);
+      })
+      .done(function(data) {
+        if (!Ajax.validateResponse(data, [], cleanup)) {
+          return;
+        }
+        // return should be a complete replace of the current options.
+        cleanup();
+        Notification.messages(data.message);
+      });
     return false;
   });
 
