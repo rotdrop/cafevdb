@@ -809,7 +809,7 @@ class ProjectExtraFields extends PMETableViewBase
      *
      */
     if ($newvals['multiplicity'] = 'recurring') {
-      unset($newvals['multiplicity']);
+      unset($newvals['default_value']);
     }
 
     /************************************************************************
@@ -871,6 +871,7 @@ class ProjectExtraFields extends PMETableViewBase
     }
 
     // @todo is this still necessary?
+    $this->debug('ALLOWED BEFORE REEXPLODE '.print_r($allowed, true));
     $newvals['allowed_values'] =
       $this->extraFieldsService->explodeAllowedValues(
         $this->extraFieldsService->implodeAllowedValues($allowed), false);
@@ -1325,7 +1326,7 @@ __EOT__;
             continue;
           }
           if ($key == Uuid::NIL) {
-            $generatorData = $value;
+            $generatorItem = $value;
             continue;
           }
           $used = array_search($key, $usedKeys) !== false;
