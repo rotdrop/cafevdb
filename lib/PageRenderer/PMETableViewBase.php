@@ -1599,13 +1599,28 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return $query;
   }
 
-  protected static function unsetRequestValue($tag, array &$oldValues, array &$changed, array &$newValues)
+  /**
+   * Unset a value in the input vars of legacy PME triggers.
+   *
+   * @param null|array $oldValues From database.
+   *
+   * @param array $changed Computed change-set form legacy PME.
+   *
+   * @param array $newvals New values from input form.
+   */
+  protected static function unsetRequestValue($tag, ?array &$oldValues, array &$changed, array &$newValues)
   {
     Util::unsetValue($changed, $tag);
-    unset($oldValues[$tag]);
+    if (!empty($oldValues)) {
+      unset($oldValues[$tag]);
+    }
     unset($newValues[$tag]);
   }
 
+  /**
+   * Be noisy if debugging is enabled. Debug can be switched on and
+   * off in the user interface if export-mode is enabled.
+   */
   protected function debug(string $message, array $context = [], $shift = 2) {
     if ($this->debugRequests) {
       $this->logInfo($message, $context, $shift + 1);
