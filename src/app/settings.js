@@ -751,12 +751,7 @@ const afterLoad = function(container) {
                       })
                       .done(function(data) {
                         if (data.message) {
-                          if (!Array.isArray(data.message)) {
-                            data.message = [data.message];
-                          }
-                          for (const msg of data.message) {
-                            Notification.show(msg, { timeout: 15 });
-                          }
+                          data.message = Notification.messages(data.message, { timeout: 15 });
                           msg.html(data.message.join('; ')).show();
                         }
                         if (data.suggestions) {

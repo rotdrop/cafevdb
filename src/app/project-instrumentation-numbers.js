@@ -53,9 +53,8 @@ const ready = function(selector) {
             || PHPMyEdit.triggerSubmit('reloadlist', container);
         })
         .done(function(data) {
-          if (data.message !== '') {
-            Notification.show(data.message, { timeout: 10 });
-          }
+          Notification.messages(data.message);
+
           // Anyhow, reload and see what happens. Hit
           // either the save and continue or the reload
           // button.

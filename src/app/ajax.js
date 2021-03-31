@@ -196,7 +196,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
     }
     if (failData.message) {
       if (!Array.isArray(failData.message)) {
-        failData.message = [ failData.message ];
+        failData.message = [failData.message];
       }
       for (const msg of failData.message) {
         info += '<div class="' + appName + ' error toastify">' + msg + '</div>';

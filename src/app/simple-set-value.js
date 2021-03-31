@@ -92,12 +92,7 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
         .done(function(data) {
           Notification.hide(function() {
             if (data.message) {
-              if (!Array.isArray(data.message)) {
-                data.message = [data.message];
-              }
-              for (const msg of data.message) {
-                Notification.show(msg, { timeout: 15 });
-              }
+              data.message = Notification.messages(data.message, { timeout: 15 });
               msgElement.html(data.message.join('; ')).show();
             }
             callbacks.success($self, data, value, msgElement);
@@ -150,12 +145,7 @@ const simpleSetHandler = function(element, eventType, msgElement, userCallbacks)
       })
       .done(function(data) {
         if (data.message) {
-          if (!Array.isArray(data.message)) {
-            data.message = [data.message];
-          }
-          for (const msg of data.message) {
-            Notification.show(msg, { timeout: 15 });
-          }
+          data.message = Notification.messages(data.message, { timeout: 15 });
           msgElement.html(data.message.join('; ')).show();
         }
         callbacks.success($self, data, msgElement);

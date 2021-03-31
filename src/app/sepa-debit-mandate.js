@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -470,12 +470,8 @@ const mandateValidate = function(event, validateLockCB) {
       if (data.reference) {
         $('span.reference').html(data.reference);
       }
-      if (!Array.isArray(data.message)) {
-        data.message = [data.message];
-      }
-      for (const msg of data.message) {
-        Notification.show(msg, { timeout: 15 });
-      }
+      Notification.messages(data.message, { timeout: 15 });
+
       if (data.suggestions !== '') {
         const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
             + ' '
@@ -654,7 +650,6 @@ const mandateValidatePME = function(event, validateLockCB) {
       //   console.info('DATA', data);
       //   $element.val(data.value);
       // }
-      console.info('DATA', data);
       if (data.iban !== undefined) {
         $('input[name="' + pmeData('iban') + '"]').val(data.iban);
       }
@@ -675,9 +670,7 @@ const mandateValidatePME = function(event, validateLockCB) {
       }
 
       Notification.hide();
-      for (const msg of data.message) {
-        Notification.show(msg, { timeout: 15 });
-      }
+      Notification.messages(data.message, { timeout: 15 });
 
       validateUnlock();
 

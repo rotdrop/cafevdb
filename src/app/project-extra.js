@@ -24,6 +24,7 @@ import { globalState, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
+import * as Notification from './notification.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
 
@@ -161,6 +162,13 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
+  container.on('click', 'tr.allowed-values input.generator-run', function(event) {
+    const self = $(this);
+    const row = self.closest('tr.allowed-values');
+    alert('Hello World!');
+    return false;
+  });
+
   container.on('click', 'tr.allowed-values input.delete-undelete', function(event) {
     const self = $(this);
     const row = self.closest('tr.allowed-values');
@@ -294,6 +302,8 @@ const ready = function(selector, resizeCB) {
           self.prop('readonly', !empty);
           self.next().prop('checked', !empty);
           row.find('.operation.generator-run').prop('disabled', empty);
+
+          Notification.messages(data.message);
 
           cleanup();
         });

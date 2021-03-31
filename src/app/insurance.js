@@ -120,14 +120,8 @@ const pmeFormInit = function(containerSel) {
               return;
             }
 
-            if (data.message !== undefined) {
-              if (!Array.isArray(data.message)) {
-                data.message = [ data.message ];
-              }
-              for (const message of data.message) {
-                Notification.show(message, { timeout: 10 });
-              }
-            }
+            Notification.messages(data.message);
+
             if (typeof textInputs[control] !== 'undefined') {
               textInputs[control].val(data[control]);
             }

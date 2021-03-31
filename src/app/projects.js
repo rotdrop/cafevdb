@@ -570,9 +570,7 @@ const projectWebPageRequest = function(post, container) {
       const submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
       submit.first().trigger('click', {
         postOpen() {
-          if (data.message !== '') {
-            Notification.showHtml(data.message, { timeout: 10 });
-          }
+          Notification.messages(data.message);
         },
       });
     });
