@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Ramsey\Uuid\Uuid;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -39,6 +41,7 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\ProjectExtraFields as Renderer;
 use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 
 class ProjectExtraFieldsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -87,17 +90,53 @@ class ProjectExtraFieldsController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic, $value = null)
+  public function serviceSwitch($topic, $data = null)
   {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
       case 'allowed-values-generator':
-        break;
-      case 'allowed-values-option':
-        if (!isset($value['data'])) {
+        if (empty($data)) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
-        $data  = $value['data'];
+        $used = $data['used'] === 'used';
+        $dataOptions = $projectValues['allowed_values'];
+        $dataOptions = array_values($dataOptions); // get rid of -1 index
+        if (count($dataOptions) !== 1) {
+          return self::grumble($this->l->t('No or too many items available: %s',
+                                           print_r($dataOptions, true) ));
+        }
+        $item = $dataOptions[0];
+        if ($item['label'] != 'generator') {
+          return self::grumble($this->l->t('Generator data must be tagged with "generator" label, got "%s".', $item['label']));
+        }
+        if ($item['key'] != Uuid::NIL) {
+          return self::grumble($this->l->t('Generator data must be tagged with NIL uuid, got "%s".', $item['key']));
+        }
+
+        // data should return a PHP class name
+        if (!preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/', $item['data'])) {
+          return self::grumble($this->l->t('Generator "%s" does not appear to be valid PHP class name.', $item['data']));
+        }
+
+        // check the generator can be found
+        $generator = null;
+        try {
+          $generator = $this->di($item['data']);
+        } catch (\Throwable $t) {
+          $this->logException($t);
+        }
+        if (empty($generator)) {
+          return self::grumble($this->l->t('Generator "%s" could not be instantiated.', $item['data']));
+        }
+
+        return self::grumble([
+          'options' => $dataOptions,
+          'message' => 'IMPLEMENT ME',
+        ]);
+      case 'allowed-values-option':
+        if (empty($data)) {
+          return self::grumble($this->l->t('Missing parameters in request %s', $topic));
+        }
         $default = $data['default'];
         $index = $data['index'];
         $used  = $data['used'] === 'used';
@@ -156,7 +195,7 @@ class ProjectExtraFieldsController extends Controller {
       default:
         break;
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    return self::grumble($this->l->t('Unknown Request "%s"', $topic));
   }
 
 }

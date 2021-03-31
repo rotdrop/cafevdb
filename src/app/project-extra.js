@@ -249,7 +249,54 @@ const ready = function(selector, resizeCB) {
     'blur',
     'tr.allowed-values tr.data-line.generator input[type="text"]',
     function(event) {
-      console.info('generator');
+      const self = $(this);
+      if (self.prop('readonly')) {
+        return false;
+      }
+      const row = self.closest('tr.allowed-values');
+
+      const request = 'allowed-values-generator';
+      const data = $.extend({}, fieldTypeData(), row.data());
+      const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
+      const postData = $.param({ request, data })
+            + '&' + allowed.serialize();
+
+      // defer submit until after validation.
+      const submitDefer = PHPMyEdit.deferReload(container);
+      allowed.prop('readonly', true);
+      const cleanup = function() {
+        if (!allowed.hasClass('readonly')) {
+          allowed.prop('readonly', false);
+        }
+        submitDefer.resolve();
+      };
+
+      $.post(
+        generateUrl('projects/extra-fields/' + request),
+        postData)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(
+            data,
+            [/* check for required fields */],
+            cleanup)) {
+            return;
+          }
+
+          const empty = self.val().trim() === '';
+          if (empty) {
+            self.removeClass('readonly');
+          } else {
+            self.addClass('readonly');
+          }
+          self.prop('readonly', !empty);
+          self.next().prop('checked', !empty);
+          row.find('.operation.generator-run').prop('disabled', empty);
+
+          cleanup();
+        });
       return false;
     });
 
@@ -266,7 +313,6 @@ const ready = function(selector, resizeCB) {
       }
       const row = self.closest('tr.allowed-values');
       const placeHolder = row.hasClass('placeholder');
-      const generator = row.hasClass('generator');
       if (placeHolder && self.val().trim() === '') {
         // don't add empty fields (but of course allow to remove field data)
         self.val('');
@@ -276,27 +322,11 @@ const ready = function(selector, resizeCB) {
       // default data selector, if applicable
       const dflt = container.find('select.default-multi-value');
 
-      // associated data items, if any
-      const data = $.extend(
-        {
-          default: dflt.val(),
-        },
-        fieldTypeData(),
-        row.data()
-      );
-
-      let postData = {
-        request: 'allowed-values-option',
-        value: {
-          selected: dflt.val(),
-          data,
-        },
-      };
-
+      const request = 'allowed-values-option';
+      const data = $.extend({ default: dflt.val() }, fieldTypeData(), row.data());
       const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
-
-      postData = $.param(postData);
-      postData += '&' + allowed.serialize();
+      const postData = $.param({ request, data })
+            + '&' + allowed.serialize();
 
       // defer submit until after validation.
       const submitDefer = PHPMyEdit.deferReload(container);
@@ -309,7 +339,7 @@ const ready = function(selector, resizeCB) {
       };
 
       $.post(
-        generateUrl('projects/extra-fields/allowed-values-option'),
+        generateUrl('projects/extra-fields/' + request),
         postData)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -324,38 +354,26 @@ const ready = function(selector, resizeCB) {
           const option = data.dataOptionSelectOption;
           const input = data.dataOptionFormInputs;
           $.fn.cafevTooltip.remove();
-          if (generator) {
-            const empty = self.val().trim() === '';
-            if (empty) {
-              self.removeClass('readonly');
-            } else {
-              self.addClass('readonly');
-            }
-            self.prop('readonly', !empty);
-            self.next().prop('checked', !empty);
-            row.find('.operation.generator-run').prop('disabled', empty);
+          if (placeHolder) {
+            row.parents('table').find('thead').show();
+            row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
+            self.val('');
+            row.data('index', row.data('index') + 1); // next index
+            resizeCB();
           } else {
-            if (placeHolder) {
-              row.parents('table').find('thead').show();
-              row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
-              self.val('');
-              row.data('index', row.data('index') + 1); // next index
-              resizeCB();
-            } else {
-              const next = row.next();
-              row.replaceWith(input);
-              next.prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
-            }
-            // get the key <-> value connection right for the default selector
-            const newValue = $(option).val();
-            const oldOption = dflt.find('option[value="' + newValue + '"]');
-            if (oldOption.length > 0) {
-              oldOption.replaceWith(option);
-            } else {
-              dflt.children('option').first().after(option);
-            }
-            dflt.trigger('chosen:updated');
+            const next = row.next();
+            row.replaceWith(input);
+            next.prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
           }
+          // get the key <-> value connection right for the default selector
+          const newValue = $(option).val();
+          const oldOption = dflt.find('option[value="' + newValue + '"]');
+          if (oldOption.length > 0) {
+            oldOption.replaceWith(option);
+          } else {
+            dflt.children('option').first().after(option);
+          }
+          dflt.trigger('chosen:updated');
 
           if (globalState.toolTipsEnabled) {
             $.fn.cafevTooltip.enable();

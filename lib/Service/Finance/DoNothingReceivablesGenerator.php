@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB\Service\Finance;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
@@ -33,7 +34,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
 {
   public function __construct(EntityManager $entityManager) {
-    parent::__construct($serviceFeeField, $entityManager);
+    parent::__construct($entityManager);
   }
 
   /**
@@ -48,7 +49,7 @@ class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
   /**
    * {@inheritdoc}
    */
-  public function updateReceivable(Entities\ProjectExtraFieldDataOption $receivable, ?Entities\Musician $musician = null)
+  public function updateReceivable(Entities\ProjectExtraFieldDataOption $receivable, ?Entities\Musician $musician = null):Entities\ProjectExtraFieldDataOption
   {
     // This is the dummy implementation, just do nothing.
     return $receivable;
