@@ -75,10 +75,19 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   private $optionValue = null;
 
   /**
+   * @ORM\ManyToOne(targetEntity="ProjectExtraFieldDataOption", inversedBy="fieldData", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id"),
+   *   @ORM\JoinColumn(name="option_key", referencedColumnName="key")
+   * )
+   */
+  private $dataOption;
+
+  /**
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="extraFieldsData", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id")
+   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id")
    * )
    */
   private $projectParticipant;

@@ -88,8 +88,14 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
    */
   private $limit;
 
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="dataOption", fetch="EXTRA_LAZY")
+   */
+  private $fieldData;
+
   public function __construct() {
     $this->arrayCTOR();
+    $this->fieldData = new ArrayCollection();
   }
 
   /**
@@ -243,5 +249,29 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
   public function getLimit()
   {
     return $this->limit;
+  }
+
+  /**
+   * Set fieldData.
+   *
+   * @param Collection $fieldData
+   *
+   * @return ProjectExtraFieldDataOption
+   */
+  public function setFieldData($fieldData):ProjectExtraFieldDataOption
+  {
+    $this->fieldData = $fieldData;
+
+    return $this;
+  }
+
+  /**
+   * Get fieldData.
+   *
+   * @return Collection
+   */
+  public function getFieldData():Collection
+  {
+    return $this->fieldData;
   }
 }
