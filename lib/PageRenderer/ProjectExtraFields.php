@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -1106,7 +1107,8 @@ class ProjectExtraFields extends PMETableViewBase
   {
     $pfx = $this->pme->cgiDataName('allowed_values');
     $html = '
-<tr class="data-line allowed-values placeholder active not-multiplicity-recurring">
+<tr class="data-line allowed-values placeholder active not-multiplicity-recurring"
+  data-field-id="'.$fieldId.'">
   <td class="placeholder" colspan="6">
     <input
       class="field-label"
@@ -1133,9 +1135,10 @@ class ProjectExtraFields extends PMETableViewBase
 </tr>';
     $generator = $generatorItem['data'];
     $html .= '
-<tr class="data-line allowed-values generator active only-multiplicity-recurring"
-     data-generators=\''.json_encode(ProjectExtraFieldsService::recurringReceivablesGenerators()).'\'
-     data-field-id="'.$fieldId.'">
+<tr
+  class="data-line allowed-values generator active only-multiplicity-recurring"
+  data-generators=\''.json_encode(ProjectExtraFieldsService::recurringReceivablesGenerators()).'\'
+  data-field-id="'.$fieldId.'">
   <td class="operations">
     <input
       class="operation generator-run"
@@ -1171,7 +1174,7 @@ class ProjectExtraFields extends PMETableViewBase
         $value = Uuid::NIL;
       }
       if (empty($value) && $prop == 'label') {
-        $value = 'generator';
+        $value = IRecurringReceivablesGenerator::GENERATOR_LABEL;
       }
       $html .= '
     <input
