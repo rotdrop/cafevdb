@@ -203,7 +203,7 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  // single-value toggle input for data (i.e. amount of money)
+  // validate monetary inputs
   container.on(
     'blur',
     'tr.multiplicity.data-type-service-fee ~ tr.allowed-values-single input[type="text"]'
@@ -244,10 +244,19 @@ const ready = function(selector, resizeCB) {
       return false;
     });
 
+  // generator input
+  container.on(
+    'blur',
+    'tr.allowed-values tr.data-line.generator input[type="text"]',
+    function(event) {
+      console.info('generator');
+      return false;
+    });
+
   // multi-field input matrix
   container.on(
     'blur',
-    'tr.allowed-values tr.data-line input[type="text"]'
+    'tr.allowed-values tr.data-line:not(.generator) input[type="text"]'
       + ','
       + 'tr.allowed-values tr.data-line textarea',
     function(event) {

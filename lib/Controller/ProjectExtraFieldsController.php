@@ -103,7 +103,7 @@ class ProjectExtraFieldsController extends Controller {
         $used  = $data['used'] === 'used';
         $dataOptions = $projectValues['allowed_values'];
 
-        $dataOptions = array_values($dataOptions);
+        $dataOptions = array_values($dataOptions); // get rid of -1 index
 
         // sanitize and potentially add missing keys
         $dataOptions = $this->extraFieldsService->explodeAllowedValues(

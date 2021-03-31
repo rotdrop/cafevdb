@@ -861,9 +861,16 @@ class ProjectExtraFields extends PMETableViewBase
       $allowed = $this->extraFieldsService->explodeAllowedValues($newvals['allowed_values'], false);
     } else {
       $allowed = $newvals['allowed_values'];
-      unset($allowed[-1]); // remove dummy data
+      if ($newvals['multiplicity'] == 'recurring') {
+        // index -1 holds the generator information, re-index
+        $allowed = array_values($allowed);
+      } else {
+        // remove dummy data
+        unset($allowed[-1]);
+      }
     }
 
+    // @todo is this still necessary?
     $newvals['allowed_values'] =
       $this->extraFieldsService->explodeAllowedValues(
         $this->extraFieldsService->implodeAllowedValues($allowed), false);
