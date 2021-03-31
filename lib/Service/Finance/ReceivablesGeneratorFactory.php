@@ -23,23 +23,28 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use Ramsey\Uuid\Uuid;
+
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use OCP\ILogger;
 
-use Ramsey\Uuid\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldDataType as FieldDataType;
 
 class ReceivablesGeneratorFactory
 {
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+
+  const GENERATOR_LABEL = IRecurringReceivablesGenerator::GENERATOR_LABEL;
 
   /** @var IAppContainer */
   private $appContainer;
 
-  public function __constructor(
+  public function __construct(
     IAppContainer $appContainer
     , ILogger $logger
     , IL10N $l10n
@@ -55,9 +60,11 @@ class ReceivablesGeneratorFactory
    *
    * @param Entities\ProjectExtraField $serviceFeeField
    *
+   * @return IRecurringReceivablesGenerator
+   *
    * @todo This is too complicated.
    */
-  public function getGenerator(Entities\ProjectExtraField $serviceFeeField)
+  public function getGenerator(Entities\ProjectExtraField $serviceFeeField):IRecurringReceivablesGenerator
   {
     if ($serviceFeeField->getMultiplicity() != Multiplicity::RECURRING()
         || $serviceFeeField->getDataType() != FieldDataType::SERVICE_FEE()) {
@@ -71,9 +78,9 @@ class ReceivablesGeneratorFactory
     }
 
     // the generator is coded in the data-option with nil-uuid
-    $nilOptions = $serviceFeeField->getDataOptions()->matching([
+    $nilOptions = $serviceFeeField->getDataOptions()->matching(self::criteriaWhere([
       'key' => Uuid::NIL,
-    ]);
+    ]));
     if (count($nilOptions) !== 1) {
       throw new \RuntimeException($this->l->t('Did not find exactly one data-option with nil-uuid.'));
     }
@@ -83,7 +90,7 @@ class ReceivablesGeneratorFactory
     // try to construct the generator
     $label = $generatorOption->getLabel();
     $class = $generatorOption->getData();
-    if ($label !== 'generator') {
+    if ($label !== self::GENERATOR_LABEL) {
       throw new \RuntimeException($this->l->t('Option label should be "generator", got "%s".', $label));
     }
 

@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity as Multi
 use OCA\CAFEVDB\Common\Util;
 
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\AlwaysReceivablesGenerator;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -72,6 +73,7 @@ class ProjectExtraFieldsService
   {
     return [
       DoNothingReceivablesGenerator::class,
+      AlwaysReceivablesGenerator::class,
     ];
   }
 

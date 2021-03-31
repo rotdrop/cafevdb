@@ -34,6 +34,8 @@ use \DateTimeImmutable as DateTime;
  */
 interface IRecurringReceivablesGenerator
 {
+  const GENERATOR_LABEL = '__generator__';
+
   /**
    * Update the list of receivables, for example by generating fields
    * up to the current date. The link to the actual
