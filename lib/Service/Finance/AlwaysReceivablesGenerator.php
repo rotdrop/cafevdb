@@ -64,7 +64,7 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
                 ->setKey(Uuid::create())
                 ->setLabel($this->l->t('Option %d', $count))
                 ->setData($this->amount);
-    $this->serviceFeeField->getDataOptions()->add($receivable);
+    $this->serviceFeeField->getDataOptions()->set($receivable->getKey()->getBytes(), $receivable);
     return $this->serviceFeeField->getDataOptions();
   }
 
@@ -94,7 +94,7 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
              ->setMusician($participant->getMusician())
              ->setOptionKey($receivable->getKey())
              ->setOptionValue($receivable->getData());
-      $extraFieldsData->add($datum);
+      $extraFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
     }
   }
 }
