@@ -43,13 +43,30 @@ trait UpdatedAt
   /**
    * Sets updated.
    *
-   * @param  \DateTimeImmutable $updated
-   * @return $this
+   * @param string|int|\DateTimeInterface $updated
+   *
+   * @return self
    */
-  public function setUpdated(\DateTimeImmutable $updated)
+  public function setUpdated($updated)
   {
-    $this->updated = $updated;
-
+    if ($updated === null) {
+      $this->updated = null;
+    } else if (!($updated instanceof \DateTimeInterface)) {
+      $timeStamp = filter_var($updated, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
+      if ($timeStamp !== false) {
+        $this->updated = (new \DateTimeImmutable())->setTimestamp($timeStamp);
+      } else if (is_string($updated)) {
+        $this->updated = new \DateTimeImmutable($updated);
+      } else {
+        throw new \InvalidArgumentException('Cannot convert input to DateTime.x');
+      }
+    } else if ($updated instanceof \DateTime) {
+      $this->updated = \DateTimeImmutable::createFromMutable($updated);
+    } else if ($update instanceof \DateTimeImmutable) {
+      $this->updated = $updated;
+    } else {
+      throw new \InvalidArgumentException('Unsupported date-time class.');
+    }
     return $this;
   }
 

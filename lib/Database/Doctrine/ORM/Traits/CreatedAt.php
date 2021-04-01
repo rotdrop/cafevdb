@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -43,13 +43,30 @@ trait CreatedAt
   /**
    * Sets created.
    *
-   * @param \DateTimeImmutable $created
-   * @return $this
+   * @param string|int|\DateTimeInterface $created
+   *
+   * @return self
    */
-  public function setCreated(\DateTimeImmutable $created)
+  public function setCreated($created)
   {
-    $this->created = $created;
-
+    if ($created === null) {
+      $this->created = null;
+    } else if (!($created instanceof \DateTimeInterface)) {
+      $timeStamp = filter_var($created, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
+      if ($timeStamp !== false) {
+        $this->deleted = (new \DateTimeImmutable())->setTimestamp($timeStamp);
+      } else if (is_string($created)) {
+        $this->deleted = new \DateTimeImmutable($created);
+      } else {
+        throw new \InvalidArgumentException('Cannot convert input to DateTime');
+      }
+    } else if ($created instanceof \DateTime) {
+      $this->created = \DateTimeImmutable::createFromMutable($created);
+    } else if ($update instanceof \DateTimeImmutable) {
+      $this->created = $created;
+    } else {
+      throw new \InvalidArgumentException('Unsupported date-time class.');
+    }
     return $this;
   }
 

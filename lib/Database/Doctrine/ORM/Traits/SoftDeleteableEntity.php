@@ -53,8 +53,12 @@ trait SoftDeleteableEntity
       } else {
         throw new \InvalidArgumentException('Cannot convert input to DateTime');
       }
-    } else  {
-      $this->deleted = \DateTimeImmutable::createFromInterface($deleted);
+    } else if ($deleted instanceof \DateTime) {
+      $this->deleted = \DateTimeImmutable::createFromMutable($deleted);
+    } else if ($update instanceof \DateTimeImmutable) {
+      $this->deleted = $deleted;
+    } else {
+      throw new \InvalidArgumentException('Unsupported date-time class.');
     }
     return $this;
   }
