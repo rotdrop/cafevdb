@@ -833,6 +833,7 @@ class ProjectParticipants extends PMETableViewBase
      */
 
     // Generate input fields for the extra columns
+    /** @var Entities\ProjectExtraField $field */
     foreach ($extraFields as $field) {
       $fieldName = $field['name'];
       $fieldId   = $field['id'];
@@ -887,7 +888,10 @@ class ProjectParticipants extends PMETableViewBase
       $valueFdd = &$opts['fdd'][$valueFddName];
 
       /** @var Doctrine\Common\Collections\Collection */
-      $dataOptions = $field['dataOptions'];
+      $dataOptions = $field['dataOptions']->filter(function(Entities\ProjectExtraFieldDataOption $option) {
+        // Filter out the generator option and soft-deleted options
+        return ((string)$option->getKey() != Uuid::NIL && empty($option->getDeleted()));
+      });
       $values2     = [];
       $valueTitles = [];
       $valueData   = [];
@@ -1039,6 +1043,9 @@ class ProjectParticipants extends PMETableViewBase
         }
         break;
       case 'groupofpeople':
+        // special option with Uuid::NIL holds the management information
+        $generatorOption = $field->getDataOption(Uuid::NIL);
+
         // old field, group selection
         $keyFdd = array_merge($keyFdd, [ 'mask' => null, ]);
 
@@ -1073,7 +1080,7 @@ class ProjectParticipants extends PMETableViewBase
           ]);
 
         // define the group stuff
-        $max = $dataOptions->first()['limit'];
+        $max = $generatorOption['limit'];
         $groupMemberFdd = array_merge(
           $groupMemberFdd, [
             'select' => 'M',
@@ -1118,9 +1125,10 @@ WHERE pp.project_id = $projectId",
 
         if ($dataType == 'service-fee' || $dataType == 'deposit') {
           $groupMemberFdd['css']['postfix'] .= ' money '.$dataType;
-          $money = $this->moneyValue(reset($valueData));
+          $fieldData = $generatorOption['data'];
+          $money = $this->moneyValue($fieldData);
           $groupMemberFdd['name|LFVD'] = $groupMemberFdd['name'];
-          $groupMemberFdd['name'] = $this->allowedOptionLabel($groupMemberFdd['name'], reset($valueData), $dataType, 'money');
+          $groupMemberFdd['name'] = $this->allowedOptionLabel($groupMemberFdd['name'], $fieldData, $dataType, 'money');
           $groupMemberFdd['display|LFVD'] = array_merge(
             $groupMemberFdd['display'],
             [
@@ -1917,7 +1925,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         if (array_search($valueName, $changed) === false) {
           continue 2;
         }
-        $dataOption = $extraField['dataOptions']->first();
+        $dataOption = $extraField['dataOptions']->first(); // the only one
         $key = $dataOption['key'];
         $oldKey = $oldValues[$fieldName]?:$key;
         if ($oldKey !== $key) {
@@ -1938,39 +1946,32 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           continue 2;
         }
 
+        $oldGroupId = $oldValues[$fieldName];
+        $newGroupId = $newValues[$fieldName]?:Uuid::create();
+
         /** @var Entities\ProjectExtraFieldDataOption */
-        $dataOption = $extraField->getDataOption(Uuid::NIL);
-        $max = $dataOption['limit'];
-        $this->debug('DESCRIPTION '.implode(', ', [
-          $dataOption['field']['id'],
-          $dataOption['key'],
-          $dataOption['limit'],
-          $dataOption['label'],
-        ]));
+        $generatorOption = $extraField->getDataOption(Uuid::NIL);
+        $max = $generatorOption['limit'];
 
-        // add the group id as data field in order to satisfy
-        // PMETableViewBase::beforeUpdateDoUpdateAll().
-        // @todo this looks flakey
-        $groupId = $oldValues[$fieldName]?:Uuid::create();
+        $newMembers = explode(',', $newValues[$groupFieldName]);
 
-        // managing option keys in the DataOption table???
-        //
-        // Could be done by joining in the data-options table in order
-        // to keep track of the musicians. If we remove a musician
-        // which is the last one then the key can be removed.
-
-        $members = explode(',', $newValues[$groupFieldName]);
-
-        if (count($members) > $max) {
+        if (count($newMembers) > $max) {
           throw new \Exception(
             $this->l->t('Number %d of requested participants for group %s is larger than the number %d of allowed participants.',
-                        [ count($members), $extraField['name'], $max ]));
+                        [ count($newMembers), $extraField['name'], $max ]));
         }
 
-        foreach ($members as &$member) {
-          $member .= self::JOIN_KEY_SEP.$groupId;
+        foreach ($newMembers as &$member) {
+          $member .= self::JOIN_KEY_SEP.$newGroupId;
         }
-        $newValues[$fieldName] = implode(',', $members);
+        $newValues[$fieldName] = implode(',', $newMembers);
+
+        $oldMembers = explode(',', $oldValues[$groupFieldName]);
+        foreach ($oldMembers as &$member) {
+          $member .= self::JOIN_KEY_SEP.$oldGroupId;
+        }
+        $oldValues[$fieldName] = implode(',', $oldMembers);
+
 
         $changed[] = $fieldName;
         break;
@@ -1987,13 +1988,9 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $dataOptions = $extraField['dataOptions'];
         $max = PHP_INT_MAX;
         $label = $this->l->t('unknown');
-        foreach ($dataOptions as $dataOption) {
-          if ($dataOption['key'] == $newGroupId) {
-            $max = $dataOptions['limit'];
-            $label = $dataOption['label'];
-            break;
-          }
-        }
+        $newDataOption = $extraField->getDataOption($newGroupId);
+        $max = $newDataOption['limit'];
+        $label = $newDataOption['label'];
 
         $newMembers = explode(',', $newValues[$groupFieldName]);
 
@@ -2009,7 +2006,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $newValues[$fieldName] = implode(',', $newMembers);
 
         $oldMembers = explode(',', $oldValues[$groupFieldName]);
-        foreach ($newMembers as &$member) {
+        foreach ($oldMembers as &$member) {
           $member .= self::JOIN_KEY_SEP.$oldGroupId;
         }
         $oldValues[$fieldName] = implode(',', $oldMembers);
