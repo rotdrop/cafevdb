@@ -334,6 +334,25 @@ class ProjectParticipants extends PMETableViewBase
     $extraFieldJoinIndex = [];
     foreach ($extraFields as $field) {
       $fieldId = $field['id'];
+
+      // Bad idea and really increases query time
+      //
+      // $tableName = self::EXTRA_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      // $extraFieldOptionJoinTable = [
+      //   'table' => $tableName,
+      //   'entity' => Entities\ProjectExtraFieldDataOption::class,
+      //   'flags' => self::JOIN_FLAGS_NONE,
+      //   'identifier' => [
+      //     'field_id' => [ 'value' => $fieldId, ],
+      //     'key' => false,
+      //   ],
+      //   'column' => 'key',
+      //   'encode' => 'BIN2UUID(%s)',
+      // ];
+
+      // $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
+      // $this->joinStructure[] = $extraFieldOptionJoinTable;
+
       $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
       $extraFieldJoinTable = [
         'table' => $tableName,
@@ -342,28 +361,12 @@ class ProjectParticipants extends PMETableViewBase
         'identifier' => [
           'project_id' => 'project_id',
           'musician_id' => 'musician_id',
-          'field_id' => [ 'value' => $field['id'], ],
+          'field_id' => [ 'value' => $fieldId, ],
           'option_key' => false,
         ],
         'column' => 'option_key',
         'encode' => 'BIN2UUID(%s)',
       ];
-      $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
-      $this->joinStructure[] = $extraFieldJoinTable;
-
-      $tableName = self::EXTRA_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
-      $extraFieldOptionJoinTable = [
-        'table' => $tableName,
-        'entity' => Entities\ProjectExtraFieldDataOption::class,
-        'flags' => self::JOIN_FLAGS_NONE,
-        'identifier' => [
-          'field_id' => [ 'value' => $field['id'] ],
-          'key' => false,
-        ],
-        'column' => 'key',
-        'encode' => 'BIN2UUID(%s)',
-      ];
-
       $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
       $this->joinStructure[] = $extraFieldJoinTable;
     }
