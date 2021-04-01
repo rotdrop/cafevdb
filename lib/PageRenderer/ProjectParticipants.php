@@ -557,9 +557,20 @@ class ProjectParticipants extends PMETableViewBase
             \$join_col_fqn),
      NULL)
   ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
-        'sql|CP' => "GROUP_CONCAT(DISTINCT CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".id,'".self::JOIN_KEY_SEP."',".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+        // copy/change only include non-zero voice
+        'sql|CP' => "GROUP_CONCAT(
+  DISTINCT
+  IF(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice > 0,
+    CONCAT_WS(
+      '".self::JOIN_KEY_SEP."',
+      ".$joinTables[self::INSTRUMENTS_TABLE].".id,
+      ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice),
+    NULL
+  )
+  ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
         'values|CP' => [
           'table' => "SELECT
+  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', n.n) AS value,
   pi.project_id,
   pi.musician_id,
   i.id AS instrument_id,
@@ -567,8 +578,7 @@ class ProjectParticipants extends PMETableViewBase
   COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order,
   pin.quantity,
-  n.n,
-  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', n.n) AS value
+  n.n
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
@@ -614,30 +624,42 @@ class ProjectParticipants extends PMETableViewBase
        'sort' => true,
        'escape' => false,
        'sql|CAPDV' => "GROUP_CONCAT(
-  IF(IFNULL(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader, 0) = 1, ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id, 0) ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+  DISTINCT
+  CONCAT_WS(
+    '".self::JOIN_KEY_SEP."',
+    ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
+    ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader)
+  ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
        'display|LF' => [ 'popup' => function($data) {
          return $this->toolTipsService['section-leader-mark'];
        }],
        'values|CAPDV' => [
          'table' => "SELECT
+  CONCAT_WS('".self::JOIN_KEY_SEP."', pi.instrument_id, 1) AS value,
   pi.project_id,
   pi.musician_id,
   pi.instrument_id,
+  pi.voice,
+  MAX(pin.voice) AS voices,
   i.name,
   COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
+  LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
+    ON pin.project_id = pi.project_id AND pin.instrument_id = pi.instrument_id
   LEFT JOIN ".PMETableViewBase::FIELD_TRANSLATIONS_TABLE." ft
     ON ft.locale = '".($this->l10n()->getLanguageCode())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
   WHERE
-    pi.project_id = $projectId",
-         'column' => "instrument_id",
-         'description' => "l10n_name",
+    pi.project_id = $projectId
+  GROUP BY pi.instrument_id
+  HAVING (MAX(pin.voice) = 0 OR pi.voice > 0)",
+         'column' => 'value',
+         'description' => [ 'l10n_name', 'IF($table.voice = 0, \'\', CONCAT(\' \', $table.voice))' ],
          'orderby' => '$table.sort_order',
          'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
          'join' => '$join_table.project_id = $main_table.project_id AND $join_table.musician_id = $main_table.musician_id',
@@ -739,7 +761,7 @@ class ProjectParticipants extends PMETableViewBase
 
     if (!empty($monetary) || ($projectId == $this->memberProjectId)) {
 
-+      $this->makeJoinTableField(
+      $this->makeJoinTableField(
         $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
         [
           'tab'      => array('id' => $financeTab),
@@ -1066,7 +1088,7 @@ class ProjectParticipants extends PMETableViewBase
    m1.sur_name AS sur_name,
    m1.first_name AS first_name,
    fd.option_key AS group_id,
-   fdg.group_number AS group_Number
+   fdg.group_number AS group_number
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m1
   ON m1.id = pp.musician_id
@@ -1870,12 +1892,9 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
    */
   public function beforeUpdateSanitizeExtraFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
-    $logMethod = 'logInfo';
-    // $logMethod = 'logDebug';
-
-    $this->$logMethod('OLDVALUES '.print_r($oldValues, true));
-    $this->$logMethod('NEWVALUES '.print_r($newValues, true));
-    $this->$logMethod('CHANGED '.print_r($changed, true));
+    $this->debug('OLDVALUES '.print_r($oldValues, true));
+    $this->debug('NEWVALUES '.print_r($newValues, true));
+    $this->debug('CHANGED '.print_r($changed, true));
 
     foreach ($this->project['extra_fields'] as $extraField) {
       $fieldId = $extraField['id'];
@@ -1888,9 +1907,9 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       $valueName = $this->joinTableFieldName($tableName, 'option_value');
       $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
 
-      $this->$logMethod('FIELDNAMES '.$fieldName." / ".$groupFieldName);
+      $this->debug('FIELDNAMES '.$fieldName." / ".$groupFieldName);
 
-      $this->$logMethod("MULT ".$multiplicity);
+      $this->debug("MULTIPLICITY ".$multiplicity);
       switch ($multiplicity) {
       case 'simple':
         // We tweak a multi-selection field and set the user input as
@@ -1919,19 +1938,33 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           continue 2;
         }
 
-        $dataOption = $extraField['dataOptions']->first();
+        /** @var Entities\ProjectExtraFieldDataOption */
+        $dataOption = $extraField->getDataOption(Uuid::NIL);
         $max = $dataOption['limit'];
+        $this->debug('DESCRIPTION '.implode(', ', [
+          $dataOption['field']['id'],
+          $dataOption['key'],
+          $dataOption['limit'],
+          $dataOption['label'],
+        ]));
 
         // add the group id as data field in order to satisfy
         // PMETableViewBase::beforeUpdateDoUpdateAll().
+        // @todo this looks flakey
         $groupId = $oldValues[$fieldName]?:Uuid::create();
+
+        // managing option keys in the DataOption table???
+        //
+        // Could be done by joining in the data-options table in order
+        // to keep track of the musicians. If we remove a musician
+        // which is the last one then the key can be removed.
 
         $members = explode(',', $newValues[$groupFieldName]);
 
         if (count($members) > $max) {
           throw new \Exception(
             $this->l->t('Number %d of requested participants for group %s is larger than the number %d of allowed participants.',
-                        [ $count($members), $extraField['name'], $max ]));
+                        [ count($members), $extraField['name'], $max ]));
         }
 
         foreach ($members as &$member) {
