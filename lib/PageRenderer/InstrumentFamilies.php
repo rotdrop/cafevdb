@@ -53,12 +53,12 @@ class InstrumentFamilies extends PMETableViewBase
     [
       'table' => self::TABLE,
       'entity' => Entities\InstrumentFamily::class,
-      'flags' => PMETableViewBase::JOIN_MASTER,
+      'flags' => self::JOIN_MASTER,
     ],
     [
       'table' => self::TRANSLATIONS_TABLE,
       'entity' => null,
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'locale' => [ 'value' => null ], // to be set
         'object_class' => [ 'value' => Entities\InstrumentFamily::class ],
@@ -75,7 +75,7 @@ class InstrumentFamilies extends PMETableViewBase
         'instrument_id' => false,
       ],
       'column' => 'instrument_family_id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
     [
       'table' => self::INSTRUMENTS_TABLE,

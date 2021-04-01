@@ -60,8 +60,6 @@ class ProjectParticipants extends PMETableViewBase
   const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
   const EXTRA_FIELDS_OPTIONS_TABLE = 'ProjectExtraFieldsDataOptions';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
-  const FIXED_COLUMN_SEP = parent::VALUES_TABLE_SEP;
-  const JOIN_KEY_SEP = parent::JOIN_KEY_SEP;
 
   /** @var int */
   private $memberProjectId;
@@ -73,7 +71,7 @@ class ProjectParticipants extends PMETableViewBase
   protected $joinStructure = [
     [
       'table' => self::TABLE,
-      'flags' => PMETableViewBase::JOIN_MASTER,
+      'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectParticipant::class,
     ],
     [
@@ -91,7 +89,7 @@ class ProjectParticipants extends PMETableViewBase
     [
       'table' => self::PROJECT_INSTRUMENTS_TABLE,
       'entity' => Entities\ProjectInstrument::class,
-      'flags' => PMETableViewBase::JOIN_GROUP_BY,
+      'flags' => self::JOIN_GROUP_BY,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
@@ -118,7 +116,7 @@ class ProjectParticipants extends PMETableViewBase
         'musician_id' => 'musician_id',
       ],
       'column' => 'project_id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
     [
       'table' => self::PROJECT_PAYMENTS_TABLE,
@@ -144,7 +142,7 @@ class ProjectParticipants extends PMETableViewBase
     [
       'table' => self::EXTRA_FIELDS_DATA_TABLE,
       'entity' => Entities\ProjectExtraFieldDatum::class,
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
@@ -336,11 +334,11 @@ class ProjectParticipants extends PMETableViewBase
     $extraFieldJoinIndex = [];
     foreach ($extraFields as $field) {
       $fieldId = $field['id'];
-      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
       $extraFieldJoinTable = [
         'table' => $tableName,
         'entity' => Entities\ProjectExtraFieldDatum::class,
-        'flags' => PMETableViewBase::JOIN_REMOVE_EMPTY,
+        'flags' => self::JOIN_REMOVE_EMPTY,
         'identifier' => [
           'project_id' => 'project_id',
           'musician_id' => 'musician_id',
@@ -350,6 +348,22 @@ class ProjectParticipants extends PMETableViewBase
         'column' => 'option_key',
         'encode' => 'BIN2UUID(%s)',
       ];
+      $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
+      $this->joinStructure[] = $extraFieldJoinTable;
+
+      $tableName = self::EXTRA_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      $extraFieldOptionJoinTable = [
+        'table' => $tableName,
+        'entity' => Entities\ProjectExtraFieldDataOption::class,
+        'flags' => self::JOIN_FLAGS_NONE,
+        'identifier' => [
+          'field_id' => [ 'value' => $field['id'] ],
+          'key' => false,
+        ],
+        'column' => 'key',
+        'encode' => 'BIN2UUID(%s)',
+      ];
+
       $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
       $this->joinStructure[] = $extraFieldJoinTable;
     }
@@ -582,7 +596,7 @@ class ProjectParticipants extends PMETableViewBase
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
-  LEFT JOIN ".PMETableViewBase::FIELD_TRANSLATIONS_TABLE." ft
+  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
     ON ft.locale = '".($this->l10n()->getLanguageCode())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
@@ -649,7 +663,7 @@ class ProjectParticipants extends PMETableViewBase
     ON i.id = pi.instrument_id
   LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.project_id = pi.project_id AND pin.instrument_id = pi.instrument_id
-  LEFT JOIN ".PMETableViewBase::FIELD_TRANSLATIONS_TABLE." ft
+  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
     ON ft.locale = '".($this->l10n()->getLanguageCode())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
@@ -779,7 +793,7 @@ class ProjectParticipants extends PMETableViewBase
             $amountInvoiced = 0.0;
             foreach ($monetary as $fieldId => $extraField) {
 
-              $table = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+              $table = self::EXTRA_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
               $fieldValues = [ 'key' => null, 'value' => null ];
               foreach ($fieldValues as $fieldName => &$fieldValue) {
                 $label = $this->joinTableFieldName($table, 'option_'.$fieldName);
@@ -857,7 +871,7 @@ class ProjectParticipants extends PMETableViewBase
         $tab = [ 'id' => $tabId ];
       }
 
-      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
 
       $css = [ 'extra-field', 'field-id-'.$fieldId, ];
       $extraFddBase = [
@@ -1850,7 +1864,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
     if (array_search($voiceField, $changes) === false && array_search($instrumentField, $changed) == false) {
       // nothing to do
-      $this->logInfo('UNCHANGED INSTRUMENTS');
+      $this->debug('UNCHANGED INSTRUMENTS');
       return true;
     }
 
@@ -1859,7 +1873,13 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     $voiceValues = Util::explodeIndexed($newValues[$voiceField]);
 
     $instrumentationNumbers = $this->project->getInstrumentationNumbers();
+
     $voices = array_replace($voiceValues, $instrumentValues);
+
+    $this->debug('INSTRUMENTS '.print_r($instrumentValues, true));
+    $this->debug('VOICE VALUES '.print_r($voiceValues, true));
+    $this->debug('VOICES '.print_r($voices, true));
+
     foreach ($voices as $instrumentId => $voice) {
       if (!$instrumentationNumbers->exists(function($dummy, Entities\ProjectInstrumentationNumber $instrumentationNumber) use ($instrumentId, $voice) {
         return ($instrumentationNumber->getInstrument()->getId() == $instrumentId
@@ -1909,7 +1929,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       $multiplicity = $extraField['multiplicity'];
       $dataType = $extraField['dataType'];
 
-      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
 
       $fieldName = $this->joinTableFieldName($tableName, 'option_key');
       $valueName = $this->joinTableFieldName($tableName, 'option_value');

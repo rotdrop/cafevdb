@@ -77,7 +77,7 @@ class Musicians extends PMETableViewBase
   protected $joinStructure = [
     [
       'table' => self::TABLE,
-      'flags' => PMETableViewBase::JOIN_MASTER,
+      'flags' => self::JOIN_MASTER,
       'entity' => Entities\Musician::class,
     ],
     [
@@ -97,7 +97,7 @@ class Musicians extends PMETableViewBase
         'musician_id' => 'id',
       ],
       'column' => 'project_id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
     // [
     //   'table' => self::PROJECTS_TABLE,
@@ -109,7 +109,7 @@ class Musicians extends PMETableViewBase
     //     ],
     //   ],
     //   'column' => 'name',
-    //   'flags' => PMETableViewBase::JOIN_READONLY,
+    //   'flags' => self::JOIN_READONLY,
     // ],
     [
       'table' => self::INSURANCES_TABLE,
@@ -119,7 +119,7 @@ class Musicians extends PMETableViewBase
         'instrument_holder_id' => 'id',
       ],
       'column' => 'bill_to_party_id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
   ];
 

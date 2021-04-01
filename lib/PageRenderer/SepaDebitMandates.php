@@ -53,7 +53,7 @@ class SepaDebitMandates extends PMETableViewBase
   protected $joinStructure = [
     [
       'table' => self::TABLE,
-      'flags' => PMETableViewBase::JOIN_MASTER,
+      'flags' => self::JOIN_MASTER,
       'entity' => Entities\SepaDebitMandate::class,
     ],
     [
@@ -64,21 +64,21 @@ class SepaDebitMandates extends PMETableViewBase
         'musician_id' => 'musician_id',
       ],
       'column' => 'musician_id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
     [
       'table' => self::PROJECTS_TABLE,
       'entity' => Entities\Project::class,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
     [
       'table' => self::MUSICIANS_TABLE,
       'entity' => Entities\Musician::class,
       'identifier' => [ 'id' => 'musician_id' ],
       'column' => 'id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
     [
       'table' => self::PAYMENTS_TABLE,
@@ -89,7 +89,7 @@ class SepaDebitMandates extends PMETableViewBase
         'mandate_sequence' => 'sequence',
       ],
       'column' => 'id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
   ];
 
@@ -332,7 +332,7 @@ received so far'),
         $extraFieldJoinTable = [
           'table' => $tableName,
           'entity' => Entities\ProjectExtraFieldDatum::class,
-          'flags' => PMETableViewBase::JOIN_READONLY,
+          'flags' => self::JOIN_READONLY,
           'identifier' => [
             'project_id' => 'project_id',
             'musician_id' => 'musician_id',

@@ -49,7 +49,7 @@ class ProjectPayments extends PMETableViewBase
   protected $joinStructure = [
     [
       'table' => self::TABLE,
-      'flags' => PMETableViewBase::JOIN_MASTER,
+      'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectPayment::class,
     ],
     [
@@ -60,7 +60,7 @@ class ProjectPayments extends PMETableViewBase
         'musician_id' => 'musician_id',
       ],
       'column' => 'musician_id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
     [
       'table' => self::MUSICIANS_TABLE,
@@ -69,7 +69,7 @@ class ProjectPayments extends PMETableViewBase
         'id' => 'musician_id',
       ],
       'column' => 'id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
     [
       'table' => self::SEPA_DEBIT_MANDATES_TABLE,
@@ -80,7 +80,7 @@ class ProjectPayments extends PMETableViewBase
         'sequence' => 'mandate_sequence',
       ],
       'column' => 'sequence',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
     [
       'table' => self::DEBIT_NOTES_TABLE,
@@ -89,7 +89,7 @@ class ProjectPayments extends PMETableViewBase
         'id' => 'debit_note_id',
       ],
       'column' => 'id',
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
     ],
   ];
 

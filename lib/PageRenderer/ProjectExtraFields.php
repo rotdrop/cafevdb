@@ -56,7 +56,7 @@ class ProjectExtraFields extends PMETableViewBase
   protected $joinStructure = [
     [
       'table' => self::TABLE,
-      'flags' => PMETableViewBase::JOIN_MASTER,
+      'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectExtraField::class,
     ],
     [
@@ -72,14 +72,14 @@ class ProjectExtraFields extends PMETableViewBase
     [
       'table' => self::PROJECTS_TABLE,
       'entity' => Entities\Project::class,
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
     ],
     [
       'table' => self::DATA_TABLE,
       'entity' => Entities\ProjectExtraFieldDatum::class,
-      'flags' => PMETableViewBase::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'field_id' => 'id',
         'project_id' => 'project_id',
@@ -898,7 +898,7 @@ class ProjectExtraFields extends PMETableViewBase
           continue;
         }
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
-        $optionValues[$field][] = $key.PMETableViewBase::JOIN_KEY_SEP.$value;
+        $optionValues[$field][] = $key.self::JOIN_KEY_SEP.$value;
       }
     }
     foreach ($optionValues as $field => $fieldData) {
