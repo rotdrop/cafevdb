@@ -132,7 +132,7 @@ class Util
   static public function explodeIndexed(?string $data, $default = null, string $delimiter = ',', string $keyDelimiter = ':'):array
   {
     $matrix = array_map(
-      function($row) use ($keyDelimiter) {
+      function($row) use ($keyDelimiter, $default) {
         $row = explode($keyDelimiter, $row, 2);
         if (!isset($row[1]) || $row[1] === '') {
           $row[1] = $default;
