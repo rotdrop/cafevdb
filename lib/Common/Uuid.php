@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use Ramsey\Uuid\UuidInterface;
+
 /**
  * Customize with some defaults, like a random node.
  */
@@ -31,12 +33,21 @@ class Uuid extends \Ramsey\Uuid\Uuid
   /** @var Ramsey\Uuid\Provider\NodeProviderInterface */
   private static $nodeProvider;
 
+  /**
+   * Create a default Uuid. Currently a version 1 uuid with random
+   * node.
+   *
+   * @return UuidInterface
+   */
   public static function create()
   {
     return self::uuid1();
   }
 
-  public static function uuid1($node = null, ?int $clockSeq = null): \Ramsey\Uuid\UuidInterface
+  /**
+   * {@inheritdoc}
+   */
+  public static function uuid1($node = null, ?int $clockSeq = null): UuidInterface
   {
     if (empty($node)) {
       $node = self::createNode();
@@ -44,6 +55,46 @@ class Uuid extends \Ramsey\Uuid\Uuid
     return parent::Uuid1($node, $clockSeq);
   }
 
+  /**
+   * Convert "anything" to a UuidInterface
+   *
+   * @return null|UuitInterface
+   */
+  public static function asUuid($data):?UuidInterface
+  {
+    if ($data instanceof UuidInterface) {
+      return $data;
+    }
+    if (is_string($data)) {
+      if (strlen($data) == 36) {
+        return self::fromString($data);
+      }
+      if (strlen($data) == 16) {
+        return self::fromBytes($data);
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Convert "anything" to a binary UUID representation.
+   *
+   * @return null|string Binary string of length 16
+   */
+  public static function uuidBytes($data):?string
+  {
+    $uuid = self::asUuid($data);
+    if (empty($uuid)) {
+      return null;
+    }
+    return $uuid->getBytes();
+  }
+
+  /**
+   * Internal helper function.
+   *
+   * @return string Node for Uuid generation.
+   */
   private static function createNode()
   {
     if (empty(self::$nodeProvider)) {
