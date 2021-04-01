@@ -962,6 +962,9 @@ class phpMyEdit
 			if (!is_array($desc)) {
 				$desc = [ 'columns' => [ $desc, ] ];
 			} else {
+				if (empty($desc['columns'])) {
+					$desc['columns'] = $desc;
+				}
 				if (!empty($desc['columns']) && !is_array($desc['columns'])) {
 					$desc['columns'] = [ $desc['columns'], ];
 				}
@@ -1232,6 +1235,9 @@ class phpMyEdit
 				if (!is_array($desc)) {
 					$desc = [ 'columns' => [ $desc, ] ];
 				} else {
+					if (empty($desc['columns'])) {
+						$desc['columns'] = $desc;
+					}
 					if (!empty($desc['columns']) && !is_array($desc['columns'])) {
 						$desc['columns'] = [ $desc['columns'], ];
 					}
