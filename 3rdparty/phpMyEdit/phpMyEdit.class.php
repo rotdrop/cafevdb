@@ -5577,16 +5577,18 @@ class phpMyEdit
 				if (!isset($this->fdd[$column]['input'])) {
 					$this->fdd[$column]['input'] = '';
 				}
-				strstr($this->fdd[$column]['options'], 'H') !== false && $this->fdd[$column]['input'] .= 'H';
-				strstr($this->fdd[$column]['options'], 'W') !== false && $this->fdd[$column]['input'] .= 'W';
-				strstr($this->fdd[$column]['options'], 'R') !== false && $this->fdd[$column]['input'] .= 'R';
-				strstr($this->fdd[$column]['options'], '0') !== false && $this->fdd[$column]['input'] .= 'D';
-				$this->fdd[$column]['options'] = preg_replace('/[HWR0]/', '', $this->fdd[$column]['options']);
-				// if options otherwise is empty, unset it
-				if (empty($this->fdd[$column]['options'])) {
-					// This is a bad idea as it triggers retrieving data
-					// unset($this->fdd[$column]['options']);
+				if (!empty($this->fdd[$column]['options'])) {
+					strstr($this->fdd[$column]['options'], 'H') !== false && $this->fdd[$column]['input'] .= 'H';
+					strstr($this->fdd[$column]['options'], 'W') !== false && $this->fdd[$column]['input'] .= 'W';
+					strstr($this->fdd[$column]['options'], 'R') !== false && $this->fdd[$column]['input'] .= 'R';
+					strstr($this->fdd[$column]['options'], '0') !== false && $this->fdd[$column]['input'] .= 'D';
+					$this->fdd[$column]['options'] = preg_replace('/[HWR0]/', '', $this->fdd[$column]['options']);
+					// if options otherwise is empty, unset it
+					if (empty($this->fdd[$column]['options'])) {
+						unset($this->fdd[$column]['options']);
+					}
 				}
+
 			}
 		}
 	} /* }}} */
