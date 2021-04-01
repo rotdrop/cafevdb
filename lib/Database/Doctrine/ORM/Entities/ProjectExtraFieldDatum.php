@@ -218,7 +218,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   /**
    * Get optionKey.
    *
-   * @return string
+   * @return UuidInterface
    */
   public function getOptionKey()
   {
