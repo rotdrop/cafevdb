@@ -1696,7 +1696,6 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       array_merge([
         'input' => 'VHR',
         'name' => 'internal data',
-        'options' => 'H',
         'select' => 'T',
         'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn DESC)',
       ]));
