@@ -22,6 +22,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Common\Uuid;
+use Ramsey\Uuid\UuidInterface;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
@@ -85,7 +88,7 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * @var ProjectExtraFieldMetaDatum
    *
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDataOption", mappedBy="field", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist"}, fetch="EXTRA_LAZY")
    * @ORM\OrderBy({"label" = "ASC"})
    */
   private $dataOptions;
@@ -227,6 +230,28 @@ class ProjectExtraField implements \ArrayAccess
   public function getDataOptions():Collection
   {
     return $this->dataOptions;
+  }
+
+  /**
+   * Get one specific option
+   *
+   * @return null|ProjectExtraFieldDataOption
+   */
+  public function getDataOption($key):?ProjectExtraFieldDataOption
+  {
+    if (empty($key = Uuid::uuidBytes($key))) {
+      return null;
+    }
+    $option = $this->dataOptions->get($key);
+    if (!empty($option)) {
+      return $option;
+    }
+    foreach ($this->dataOptions as $option) {
+      if ($option->getKey()->getBytes() == $key) {
+        return $option;
+      }
+    }
+    return null;
   }
 
   /**

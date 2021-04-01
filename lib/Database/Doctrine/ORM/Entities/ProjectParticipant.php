@@ -92,7 +92,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Link to extra fields data
    *
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="projectParticipant")
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", indexBy="option_key", mappedBy="projectParticipant")
    */
   private $extraFieldsData;
 
@@ -300,6 +300,28 @@ class ProjectParticipant implements \ArrayAccess
   public function getExtraFieldsData():Collection
   {
     return $this->extraFieldsData;
+  }
+
+  /**
+   * Get one specific extra-field datum indexed by its key
+   *
+   * @return null|ProjectExtraFieldDatum
+   */
+  public function getExtraFieldsDatum($key):?ProjectExtraFieldDatum
+  {
+    if (empty($key = Uuid::uuidBytes($key))) {
+      return null;
+    }
+    $datum = $this->extraFieldsData->get($key);
+    if (!empty($datum)) {
+      return $datum;
+    }
+    foreach ($this->extraFieldsData as $datum) {
+      if ($datum->getOptionKey()->getBytes() == $key) {
+        return $datum;
+      }
+    }
+    return null;
   }
 
   /**

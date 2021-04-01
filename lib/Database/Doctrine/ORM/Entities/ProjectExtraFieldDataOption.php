@@ -23,10 +23,10 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Common\Uuid;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
@@ -131,14 +131,8 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
    */
   public function setKey($key):ProjectExtraFieldDataOption
   {
-    if (is_string($key)) {
-      if (strlen($key) == 36) {
-        $key = Uuid::fromString($key);
-      } else if (strlen($key) == 16) {
-        $key = Uuid::fromBytes($key);
-      } else {
-        throw new \Exception("UUID DATA: ".$key);
-      }
+    if (empty($key = Uuid::asUuid($key))) {
+      throw new \Exception("UUID DATA: ".$key);
     }
     $this->key = $key;
 

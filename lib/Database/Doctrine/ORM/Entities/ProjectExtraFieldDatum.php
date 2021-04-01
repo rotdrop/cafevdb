@@ -23,9 +23,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
+use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -201,14 +201,8 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    */
   public function setOptionKey($optionKey):ProjectExtraFieldDatum
   {
-    if (is_string($optionKey)) {
-      if (strlen($optionKey) == 36) {
-        $optionKey = Uuid::fromString($optionKey);
-      } else if (strlen($optionKey) == 16) {
-        $optionKey = OptionKey::fromBytes($optionKey);
-      } else {
-        throw new \Exception("OPTIONKEY DATA: ".$optionKey);
-      }
+    if (empty($optionKey = Uuid::asUuid($optionKey))) {
+      throw new \Exception("OPTIONKEY DATA: ".$optionKey);
     }
     $this->optionKey = $optionKey;
 

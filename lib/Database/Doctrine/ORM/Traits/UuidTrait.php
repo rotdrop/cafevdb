@@ -45,16 +45,8 @@ trait UuidTrait
    */
   public function setUuid($uuid):self
   {
-    if (is_string($uuid)) {
-      if (strlen($uuid) == 36) {
-        $uuid = Uuid::fromString($uuid);
-      } else if (strlen($uuid) == 16) {
-        $uuid = Uuid::fromBytes($uuid);
-      } else if (empty($uuid)) {
-        $uuid = null;
-      } else {
-        throw new \Exception("UUID DATA: ".$uuid);
-      }
+    if ($uuid !== null && empty($uuid = Uuid::asUuid($uuid))) {
+      throw new \Exception("UUID DATA: ".$uuid);
     }
     $this->uuid = $uuid;
 
