@@ -42,10 +42,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const JOIN_MASTER = 0x01;
-  const JOIN_READONLY = 0x02;
-  const JOIN_GROUP_BY = 0x04;
-  const JOIN_REMOVE_EMPTY = 0x08;
+  protected const JOIN_FLAGS_NONE = 0x00;
+  protected const JOIN_MASTER = 0x01;
+  protected const JOIN_READONLY = 0x02;
+  protected const JOIN_GROUP_BY = 0x04;
+  protected const JOIN_REMOVE_EMPTY = 0x08;
 
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
 
