@@ -581,7 +581,19 @@ class EntityManager extends EntityManagerDecorator
           $targetEntity = $association['targetEntity'];
           $targetMeta = $this->getClassMetadata($targetEntity);
 
-          $targetEntityId = $targetMeta->extractKeyValues($columnValues);
+          // the actual keys may need remapping through join columns
+          $targetColumnValues = $columnValues;
+          foreach ($association['joinColumns'] as $joinColumn) {
+            $sourceColumn = $joinColumn['name'];
+            $targetColumn = $joinColumn['referencedColumnName'];
+            if (isset($targetColumnValues[$sourceColumn])) {
+              $value = $targetColumnValues[$sourceColumn];
+              unset($targetColumnValues[$sourceColumn]);
+              $targetColumnValues[$targetColumn] = $value;
+            }
+          }
+
+          $targetEntityId = $targetMeta->extractKeyValues($targetColumnValues);
           $reference = $this->getReference($targetEntity, $targetEntityId);
 
           $meta->setFieldValue($entity, $property, $reference);
