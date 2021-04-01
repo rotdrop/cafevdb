@@ -768,10 +768,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           'rem' => 'new', // could use both
         ];
         foreach ($dataSets as $operation => $dataSet) {
+          ${$operation.'Identifier'} = [];
           foreach ($identifier[$multiple][$operation] as $idKey) {
             ${$operation.'Identifier'}[$idKey] = $identifier;
             ${$operation.'Identifier'}[$idKey][$multiple] = $idKey;
           }
+          $this->debug('IDENTIFIER '.$operation.': '.print_r(${$operation.'Identifier'}, true));
         }
         foreach ($identifier as $selfKey => $value) {
           if (empty($value['self'])) {
@@ -1097,6 +1099,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->debug('IDS '.print_r($identifier, true));
         $this->debug('CHG '.print_r($changeSet, true));
 
+        $addIdentifier = [];
         foreach ($identifier[$multiple] as $addKey) {
           $addIdentifier[$addKey] = $identifier;
           $addIdentifier[$addKey][$multiple] = $addKey;
@@ -1159,7 +1162,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // - boolean false values are omitted
           // - optional values are omitted
           // - values are separated by a colon from the key
-          foreach (Util::explodeIndexed($newvals[$field], true) as $key => $value) {
+          foreach (Util::explodeIndexed($newvals[$field], null) as $key => $value) {
             $multipleValues[$key][$column] = $value;
           }
           foreach ($identifier[$multiple] as $new) {
