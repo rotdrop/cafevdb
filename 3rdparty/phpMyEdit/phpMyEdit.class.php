@@ -1402,7 +1402,7 @@ class phpMyEdit
 	{
 		$fields = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if (/*false*/! $this->displayed[$k] && !in_array($k, $this->key_num)) {
+			if (/*false*/ !$this->displayed[$k] && !in_array($k, $this->key_num)) {
 				continue;
 			}
 			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed;
@@ -5584,7 +5584,8 @@ class phpMyEdit
 				$this->fdd[$column]['options'] = preg_replace('/[HWR0]/', '', $this->fdd[$column]['options']);
 				// if options otherwise is empty, unset it
 				if (empty($this->fdd[$column]['options'])) {
-					unset($this->fdd[$column]['options']);
+					// This is a bad idea as it triggers retrieving data
+					// unset($this->fdd[$column]['options']);
 				}
 			}
 		}
