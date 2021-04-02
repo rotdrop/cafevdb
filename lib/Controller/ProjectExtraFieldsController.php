@@ -132,7 +132,7 @@ class ProjectExtraFieldsController extends Controller {
         // report back all options as HTML fragment
 
         return self::dataResponse([
-          'message' => $this->l->t('UNIMPLEMENTED RUN REQUEST FOR ID "%s".', $fieldId),
+          'message' => 'UNIMPLEMENTED RUN REQUEST FOR ID "'.$fieldId.'".',
         ]);
 
       case 'allowed-values-generator':
@@ -148,7 +148,8 @@ class ProjectExtraFieldsController extends Controller {
         }
         $item = $dataOptions[0];
         if ($item['label'] != ReceivablesGeneratorFactory::GENERATOR_LABEL) {
-          return self::grumble($this->l->t('Generator data must be tagged with "generator" label, got "%s".', $item['label']));
+          return self::grumble($this->l->t('Generator data must be tagged with "%s" label, got "%s".',
+                                           [ ReceivablesGeneratorFactory::GENERATOR_LABEL, $item['label'], ]));
         }
         if ($item['key'] != Uuid::NIL) {
           return self::grumble($this->l->t('Generator data must be tagged with NIL uuid, got "%s".', $item['key']));

@@ -70,7 +70,7 @@ class ReceivablesGeneratorFactory
         || $serviceFeeField->getDataType() != FieldDataType::SERVICE_FEE()) {
       throw new \RuntimeException(
         $this->l->t(
-          'Can only auto-generate receivables for recurring service-fee -entities, multiplicity/data-type = %s/%s',
+          'Can only auto-generate receivables for recurring service-fee entities, multiplicity/data-type = %s/%s',
           [
             (string)$serviceFeeField->getMultiplicity(),
             (string)$serviceFeeField->getDataType(),
@@ -91,7 +91,8 @@ class ReceivablesGeneratorFactory
     $label = $generatorOption->getLabel();
     $class = $generatorOption->getData();
     if ($label !== self::GENERATOR_LABEL) {
-      throw new \RuntimeException($this->l->t('Option label should be "generator", got "%s".', $label));
+      throw new \RuntimeException($this->l->t('Option label should be "%s", got "%s".',
+                                              [ self::GENERATOR_LABEL, $label, ]));
     }
 
     $generatorInstance = $this->appContainer->get($class);
