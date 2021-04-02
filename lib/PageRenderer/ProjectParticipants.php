@@ -1130,12 +1130,15 @@ WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
               //'groups' => "CONCAT_WS(' ', '".$fieldName."',\$table.group_number,\$table.group_id)",
-              'groups' => "CONCAT_WS(' ', '".$fieldName."',\$table.group_number)",
-              'data' => "CONCAT('{\"limit\":".$max.",\"groupId\":\"',IFNULL(\$table.group_id,-1),'\"}')",
+              //'groups' => "CONCAT_WS(' ', '".$fieldName."',IFNULL(\$table.group_number,'blah'))",
+              'groups' => "IF(
+  \$table.group_number IS NULL,
+  '".$this->l->t('without group')."',
+  CONCAT_WS(' ', '".$fieldName."', \$table.group_number))",
+              'data' => "CONCAT('{\"limit\":".$max.",\"groupId\":\"',IFNULL(BIN2UUID(\$table.group_id), -1),'\"}')",
               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
             ],
-            'valueGroups' => [ -1 => $this->l->t('without group') ],
           ]);
 
         $groupMemberFdd['css']['postfix'] .= ' '.implode(' ', $css);
@@ -1183,7 +1186,7 @@ WHERE pp.project_id = $projectId",
         $idx = -1;
         foreach($dataOptions as $dataOption) {
           $valueGroups[--$idx] = $dataOption['label'];
-          $data = $dataOptiosn['data'];
+          $data = $dataOption['data'];
           if ($dataType == 'service-fee' || $dataType == 'deposit') {
             $data = $this->moneyValue($data);
           }
