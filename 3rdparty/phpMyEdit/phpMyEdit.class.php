@@ -3078,7 +3078,12 @@ class phpMyEdit
 					$groupId++;
 				}
 				$lastGroup = $group;
-				$ret .= '<optgroup data-group-id="'.$groupId.'" label="'.$lastGroup.'">'."\n";
+				$groupData = [
+					'id' => $groupId,
+					'default' => $lastGroup === $dfltGroup,
+				];
+				$groupData = "data-group-info='".json_encode($groupData)."'";
+				$ret .= '<optgroup '.$groupData.' data-group-id="'.$groupId.'" label="'.$lastGroup.'">'."\n";
 			}
 			$encodedKey = htmlspecialchars($key);
 			$ret .= '<option value="'.$encodedKey.'"';
