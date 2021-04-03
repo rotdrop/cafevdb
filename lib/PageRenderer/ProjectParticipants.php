@@ -2026,10 +2026,12 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       case 'groupsofpeople':
         // Multiple predefined groups with a variable number of
         // members. Think of distributing members to cars or rooms
+
         if (array_search($groupFieldName, $changed) === false
             && array_search($fieldName, $changed) === false) {
           continue 2;
         }
+
         $oldGroupId = $oldValues[$fieldName];
         $newGroupId = $newValues[$fieldName];
 
@@ -2040,6 +2042,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $max = $newDataOption['limit'];
         $label = $newDataOption['label'];
 
+        $oldMembers = explode(',', $oldValues[$groupFieldName]);
         $newMembers = explode(',', $newValues[$groupFieldName]);
 
         if (count($newMembers) > $max) {
@@ -2048,17 +2051,34 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
                         [ count($newMembers), $label, $max ]));
         }
 
+        // In order to compute the changeset in
+        // PMETableViewBase::beforeUpdateDoUpdateAll() we need to
+        // include all musicians referencing the new group into the
+        // set of old members as well as all newMembers who already
+        // reference a group. This will result in deletion of all old
+        // members as well as deletion of references to other groups
+        // (group membership is single select).
+
+        $oldMemberships = []; // musician_id => option_key
+        foreach ($extraField->getFieldData() as $fieldDaum) {
+          $musicianId = $fieldDatum->getMusician()->getId();
+          $optionKey = $fieldDatum->getOptionKey();
+          if (array_search($musicianId, $newMembers) !== false || $optionKey == $newGroupId) {
+            $oldMemberships[$musicianId] = $musicianId.self::JOIN_KEY_SEP.$fieldDatum->getOptionKey();
+          }
+        }
+
+        // recompute the old set of relevant musicians
+        $oldValues[$groupFieldName] = array_keys($oldMemberships);
+        $oldValues[$fieldName] = array_values($oldMemberships);
+
+        // recompute the new set of relevant musicians
         foreach ($newMembers as &$member) {
           $member .= self::JOIN_KEY_SEP.$newGroupId;
         }
         $newValues[$fieldName] = implode(',', $newMembers);
 
-        $oldMembers = explode(',', $oldValues[$groupFieldName]);
-        foreach ($oldMembers as &$member) {
-          $member .= self::JOIN_KEY_SEP.$oldGroupId;
-        }
-        $oldValues[$fieldName] = implode(',', $oldMembers);
-
+        $changed[] = $groupFieldName;
         $changed[] = $fieldName;
       default:
         break;
