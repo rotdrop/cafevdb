@@ -349,8 +349,8 @@ const myReady = function(selector, resizeCB) {
   const selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
   const form = container.find(PHPMyEdit.classSelector('form', 'form'));
 
-  let recKey = form.find(PHPMyEdit.sysNameSelector('input', 'rec[musician_id]'));
-  recKey = recKey.length === 1 ? recKey.val() : -1;
+  let musicianId = form.find(PHPMyEdit.sysNameSelector('input', 'rec[musician_id]'));
+  musicianId = musicianId.length === 1 ? musicianId.val() : -1;
 
   const selectedVoices = selectVoices.val();
   selectVoices.data('selected', selectedVoices || []);
@@ -527,6 +527,7 @@ const myReady = function(selector, resizeCB) {
     });
   };
 
+  // select all options belonging to the same group
   const selectGroup = function(select, group, doSelect) {
     if (typeof doSelect === 'undefined') {
       doSelect = true;
@@ -540,12 +541,17 @@ const myReady = function(selector, resizeCB) {
     });
   };
 
+  // find an option by its value
+  const findOptionByValue = function(select, value) {
+    return select.find('option[value="' + value + '"]');
+  };
+
   // foreach group remember the current selection of people and the
   // group
   selectGroupOfPeople.each(function(idx) {
     const self = $(this);
-    const curSelected = self.val();
-    self.data('selected', curSelected || []);
+    const curSelected = self.val() || [];
+    self.data('selected', curSelected);
     const name = self.attr('name');
     const nameParts = name.split(/[@:]/);
     console.log('NAME PARTS', nameParts);
@@ -556,12 +562,12 @@ const myReady = function(selector, resizeCB) {
     console.log('group id name', groupFieldName);
     self.data('groupField', form.find('[name="' + groupFieldName + '"]'));
     self.data('fieldId', fieldId);
-    self.data('groupField').data('membersField', self).data('fieldId', fieldId);
-    console.log('#groupIdFields', self.data('groupField').length);
-    // console.log('groupField', self.data('groupField'));
+    self.data('groups', self.closest('td').data('groups'));
+    self.data('groupField')
+      .data('membersField', self)
+      .data('fieldId', fieldId);
 
-    if (self.hasClass('predefined') && recKey > 0
-        && (!curSelected || curSelected.indexOf(recKey) < 0)) {
+    if (self.hasClass('predefined') && curSelected.indexOf(musicianId) < 0) {
       maskUngrouped(self, true);
       self.trigger('chosen:updated');
     }
@@ -575,67 +581,47 @@ const myReady = function(selector, resizeCB) {
   selectGroupOfPeople.off('change').on('change', function(event) {
     const self = $(this); // just the current one
 
-    let selected = self.val();
-    if (!selected) {
-      selected = [];
-    }
+    let curSelected = self.val() || [];
     const prevSelected = self.data('selected');
-    const recPrev = prevSelected.indexOf(recKey) >= 0;
-    const recCur = selected.indexOf(recKey) >= 0;
+
+    const added = curSelected.filter(x => prevSelected.indexOf(x) < 0);
+    // const removed = prevSelected.filter(x => curSelected.indexOf(x) < 0);
+
+    const musicianSelectedCur = curSelected.indexOf(musicianId) >= 0;
+    const musicianSelectedPrev = prevSelected.indexOf(musicianId) >= 0;
 
     let changed = false;
 
     console.log('prevSelected', prevSelected);
-    console.log('selected', selected);
+    console.log('curSelected', curSelected);
 
-    let groupOption = null;
-    self.find('option:selected').each(function(index) {
-      const option = $(this);
-      if (option.val() < 0) {
-        groupOption = option;
-        return false;
-      }
-      return true;
-    });
-
-    if (recPrev && !recCur) {
+    if (musicianSelectedPrev && !musicianSelectedCur) {
       // just removed the current key from the group, undefine group
       // and empty select-box
       self.find('option:selected').prop('selected', false);
-      CAFEVDB.selectValues(self.data('groupField'), false);
+      self.data('groupField').val('');
       self.nextAll('span.allowed-option').removeClass('selected');
-      maskUngrouped(self, true);
+      if (self.hasClass('predefined')) {
+        maskUngrouped(self, true);
+      }
       changed = true;
     } else {
-      if (!recPrev && !recCur && selected.length > 0) {
+      if (!musicianSelectedPrev && !musicianSelectedCur && curSelected.length > 0) {
         // add current record
-        console.log('add record', recKey);
-        self.find('option[value="' + recKey + '"]').prop('selected', true);
-        selected.push(recKey);
+        console.log('add record', musicianId);
+        findOptionByValue(self, musicianId).prop('selected', true);
         changed = true;
       }
-      if (selected.length >= prevSelected.length
-          && (selected.length === 1 + (recCur === recPrev) || groupOption)) {
-        // single new item which is not the current one, potentially
-        // add the entire group.
-        console.log('single new item');
-        let singleNewOption = null;
-        self.find('option:selected').each(function(idx) {
-          const self = $(this);
-          if (self.val() !== recKey) {
-            singleNewOption = self;
-            return false;
-          }
-          return true;
-        });
+      if (added.length === 1) {
+        const singleNewOption = findOptionByValue(self, added[0]);
         console.log('other people group option', singleNewOption);
-        console.log('key', recKey);
+        console.log('key', musicianId);
         const data = singleNewOption.data('data');
         console.log('option data', data);
         if (+data.groupId !== -1) {
           console.log('group: ', data.groupId);
           selectGroup(self, data.groupId);
-          CAFEVDB.selectValues(self.data('groupField'), data.groupId);
+          self.data('groupField').val(data.groupId);
           self.nextAll('span.allowed-option').removeClass('selected');
           // @todo optimize
           self.nextAll('span.allowed-option[data-key="' + data.groupId + '"]').addClass('selected');
@@ -645,37 +631,20 @@ const myReady = function(selector, resizeCB) {
       }
     }
 
+    // deselect "add to group" options
     self.find('option:selected').each(function(index) {
       const option = $(this);
       if (option.val() < 0) {
-        console.log('deselect', option.val());
         option.prop('selected', false);
         changed = true;
       }
     });
 
-    let curSelected = self.val();
-    curSelected = curSelected || [];
+    curSelected = self.val() || [];
     self.data('selected', curSelected);
 
-    let limit = -1;
-    const groupData = self.closest('td').data('groups');
-    if (typeof groupData.Limit !== 'undefined') {
-      // emit a warning if the limit is exhausted.
-      limit = self.closest('td').data('groups');
-      limit = limit.Limit;
-    } else {
-      const groupId = CAFEVDB.selectValues(self.data('groupField'));
-      console.log('Id', groupId);
-      for (let i = 0; i < groupData.length; ++i) {
-        console.log('data', groupData[i]);
-        if (groupData[i].key === groupId) {
-          console.log('limit', limit);
-          limit = groupData[i].limit;
-        }
-      }
-    }
-
+    const groupId = self.data('groupField').val();
+    const limit = groupId ? self.data('groups')[groupId].limit : -1;
     if (limit > 0 && curSelected.length > limit) {
       Notification.showTemporary(
         t('cafevdb',

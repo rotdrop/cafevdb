@@ -1062,6 +1062,7 @@ class ProjectParticipants extends PMETableViewBase
       case 'groupofpeople':
         // special option with Uuid::NIL holds the management information
         $generatorOption = $field->getDataOption(Uuid::NIL);
+        $valueGroups = [ -1 => $this->l->t('without group'), ];
 
         // old field, group selection
         $keyFdd = array_merge($keyFdd, [ 'mask' => null, ]);
@@ -1079,8 +1080,6 @@ class ProjectParticipants extends PMETableViewBase
             'input' => 'VSRH',
           ]);
 
-        // new field, member selection
-        $groupMemberFdd = &$opts['fdd'][$fddGroupMemberName];
 
         // tweak the join-structure entry for the group field
         $joinInfo = &$this->joinStructure[$extraFieldJoinIndex[$tableName]];
@@ -1096,14 +1095,28 @@ class ProjectParticipants extends PMETableViewBase
             'column' => 'musician_id',
           ]);
 
-        // define the group stuff
+        // store the necessary group data compatible to the predefined groups stuff
         $max = $generatorOption['limit'];
+        $dataOptionsData = $dataOptions->map(function($value) use ($max) {
+          return [
+            'key' => (string)$value['key'],
+            'data' => [ 'limit' => $max, ],
+          ];
+        })->getValues();
+        array_unshift(
+          $dataOptionsData,
+          [ 'key' => $generatorOption['key'], 'data' => [ 'limit' => $max, ], ]
+        );
+        $dataOptionsData = json_encode(array_column($dataOptionsData, 'data', 'key'));
+
+        // new field, member selection
+        $groupMemberFdd = &$opts['fdd'][$fddGroupMemberName];
         $groupMemberFdd = array_merge(
           $groupMemberFdd, [
             'select' => 'M',
             'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
             'display' => [ 'popup' => 'data' ],
-            'colattrs' => [ 'data-groups' => json_encode([ 'limit' => $max ]), ],
+            'colattrs' => [ 'data-groups' => $dataOptionsData, ],
             'filter' => 'having',
             'values' => [
               'table' => "SELECT
@@ -1129,16 +1142,18 @@ LEFT JOIN (SELECT
 WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
-              //'groups' => "CONCAT_WS(' ', '".$fieldName."',\$table.group_number,\$table.group_id)",
-              //'groups' => "CONCAT_WS(' ', '".$fieldName."',IFNULL(\$table.group_number,'blah'))",
               'groups' => "IF(
   \$table.group_number IS NULL,
   '".$this->l->t('without group')."',
   CONCAT_WS(' ', '".$fieldName."', \$table.group_number))",
-              'data' => "CONCAT('{\"limit\":".$max.",\"groupId\":\"',IFNULL(BIN2UUID(\$table.group_id), -1),'\"}')",
+              'data' => 'JSON_OBJECT(
+  "groupId", IFNULL(BIN2UUID($table.group_id), -1),
+  "limit", '.$max.'
+)',
               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
             ],
+            'valueGroups|ACP' => $valueGroups,
           ]);
 
         $groupMemberFdd['css']['postfix'] .= ' '.implode(' ', $css);
@@ -1236,10 +1251,14 @@ WHERE pp.project_id = $projectId",
         list(, $fddGroupMemberName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'musician_id', $fddBase);
 
-        $dataOptionsData = json_encode(
-          array_map(function($value) {
-            return $value->toArray();
-          }, $dataOptions->getValues()));
+        // compute group limits per group
+        $dataOptionsData = $dataOptions->map(function($value) {
+          return [
+            'key' => (string)$value['key'],
+            'data' =>  [ 'limit' => $value['limit'], ],
+          ];
+        })->getValues();
+        $dataOptionsData = json_encode(array_column($dataOptionsData, 'data', 'key'));
 
         // new field, member selection
         $groupMemberFdd = &$opts['fdd'][$fddGroupMemberName];
@@ -1258,7 +1277,8 @@ WHERE pp.project_id = $projectId",
   m3.first_name AS first_name,
   fd.option_key AS group_id,
   do.label AS group_label,
-  do.data AS group_data
+  do.data AS group_data,
+  do.limit AS group_limit
 FROM ".self::TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m3
   ON m3.id = pp.musician_id
@@ -1270,7 +1290,10 @@ WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
               'description' => 'name',
               'groups' => "CONCAT(\$table.group_label, ': ', \$table.group_data)",
-              'data' => "CONCAT('{\"groupId\":\"',IFNULL(\$table.group_id, -1),'\"}')",
+              'data' => 'JSON_OBJECT(
+  "groupId", IFNULL(BIN2UUID($table.group_id), -1),
+  "limit", $table.group_limit
+)',
               'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
               'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
               //'titles' => '$table.name',
