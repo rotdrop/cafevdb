@@ -2015,17 +2015,16 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           $label = $newDataOption['label'];
         }
 
-        $oldMembers = explode(',', $oldValues[$groupFieldName]);
-        $newMembers = explode(',', $newValues[$groupFieldName]);
+        $oldMembers = Util::explode(',', $oldValues[$groupFieldName]);
+        $newMembers = Util::explode(',', $newValues[$groupFieldName]);
 
         if (count($newMembers) > $max) {
-          $this->logInfo('NEW MEMBERS '.'"'.$newValues[$groupFieldName].'" '.print_r($newMembers, true));
           throw new \Exception(
             $this->l->t('Number %d of requested participants for group %s is larger than the number %d of allowed participants.',
                         [ count($newMembers), $label, $max ]));
         }
 
-        if ($multiplicity == 'groupofpeople') {
+        if ($multiplicity == 'groupofpeople' && !empty($newMembers)) {
           // make sure that a group-option exists, clean up afterwards
           if (empty($newGroupId) || $newGroupId == Uuid::NIL) {
             $newGroupId = Uuid::create();
@@ -2048,7 +2047,10 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         foreach ($extraField->getFieldData() as $fieldDatum) {
           $musicianId = $fieldDatum->getMusician()->getId();
           $optionKey = $fieldDatum->getOptionKey();
-          if (array_search($musicianId, $newMembers) !== false || $optionKey == $newGroupId) {
+          if (array_search($musicianId, $newMembers) !== false
+              || $optionKey == $newGroupId
+              || $musicianId == $pme->rec['musician_id']
+          ) {
             $oldMemberships[$musicianId] = $musicianId.self::JOIN_KEY_SEP.$fieldDatum->getOptionKey();
           }
         }
