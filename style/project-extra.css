@@ -182,6 +182,7 @@ table.pme-main td.pme-value span.align-right {
 
 /******************/
 
+table.allowed-values.operation-display span.service-fee.currency-amount,
 table.pme-main span.service-fee.currency-amount {
   text-align:right;
   display:inline-block;
@@ -228,6 +229,10 @@ table.allowed-values.operation-display th,
 table.allowed-values.operation-display td {
   text-align:left;
   border:1px solid #004D9C;
+}
+
+table.allowed-values.operation-display td.field-limit {
+  text-align:center;
 }
 
 td.pme-value table.allowed-values.operation-display th,
