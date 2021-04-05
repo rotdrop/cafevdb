@@ -172,16 +172,23 @@ const ready = function(selector, resizeCB) {
       generateUrl('projects/extra-fields/' + request), {
         data: {
           fieldId,
-        }
+        },
       })
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, cleanup);
       })
       .done(function(data) {
-        if (!Ajax.validateResponse(data, [], cleanup)) {
+        if (!Ajax.validateResponse(data, ['dataOptionFormInputs'], cleanup)) {
           return;
         }
-        // return should be a complete replace of the current options.
+        const body = self.closest('tbody');
+        body.find('tr').not('.generator, .placeholder').remove();
+        body.parents('table').find('thead').show();
+        const tail = body.children().first();
+        for (const input of data.dataOptionFormInputs) {
+          tail.before(input);
+        }
+        resizeCB();
         cleanup();
         Notification.messages(data.message);
       });
@@ -197,13 +204,10 @@ const ready = function(selector, resizeCB) {
       // undelete
       row.data('deleted', '');
       row.switchClass('deleted', 'active');
-      row.find('input.field-flags').val('active');
-      row.find('input[type="text"], textarea').prop('readonly', false);
+      row.find('input.field-deleted').val('');
+      row.find('input[type="text"]:not(.field-key), textarea').prop('readonly', false);
       const key = row.find('input.field-key');
       const label = row.find('input.field-label');
-      if (used) {
-        key.prop('readonly', true);
-      }
       const dfltSelect = container.find('select.default-multi-value');
       const option = '<option value="' + key.val() + '">' + label.val() + '</option>';
       dfltSelect.children('option').first().after(option);
@@ -218,9 +222,9 @@ const ready = function(selector, resizeCB) {
         resizeCB();
       } else {
         // must not delete, mark as inactive
-        row.data('flags', 'deleted');
+        row.data('deleted', Date.now() / 1000.0);
         row.switchClass('active', 'deleted');
-        row.find('input.field-flags').val('deleted');
+        row.find('input.field-deleted').val(row.data('deleted'));
         row.find('input[type="text"], textarea').prop('readonly', true);
       }
       const dfltSelect = container.find('select.default-multi-value');

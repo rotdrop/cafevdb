@@ -101,7 +101,7 @@ class ProjectExtraFieldsController extends Controller {
 
         // fetch the field
         $fieldId = $data['fieldId'];
-        /** @var Entities\ProjectExtraField */
+        /** @var Entities\ProjectExtraField $field */
         $field = $this->getDatabaseRepository(Entities\ProjectExtraField::class)->find($fieldId);
         if (empty($field)) {
           return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
@@ -130,9 +130,17 @@ class ProjectExtraFieldsController extends Controller {
         }
 
         // report back all options as HTML fragment
+        $index = 0;
+        $inputRows = [];
+        foreach ($receivables as $receivable) {
+          $inputRows[] = $this->renderer->dataOptionInputRowHtml(
+            $receivable, $index++, $receivable->usage() > 0
+          );
+        }
 
         return self::dataResponse([
-          'message' => 'UNIMPLEMENTED RUN REQUEST FOR ID "'.$fieldId.'".',
+          'message' => $this->l->t("Request \"%s\" successful", $topic),
+          'dataOptionFormInputs' => $inputRows,
         ]);
 
       case 'allowed-values-generator':
