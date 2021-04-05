@@ -250,6 +250,31 @@ trait EntityManagerTrait {
   }
 
   /**
+   * Enable the given filter.
+   *
+   * @param string $filterName
+   *
+   * @return \Doctrine\ORM\Query\Filter\SQLFilter The enabled filter.
+   */
+  protected function enableFilter(string $filterName)
+  {
+    return $this->entityManager->getFilters()->enable($filterName);
+  }
+
+  /**
+   * Disable the given filter. In contrast to the upstream-method does
+   * not throw an exception if the filter is not enabled.
+   *
+   * @param string $filterName
+   */
+  protected function disableFilter(string $filterName)
+  {
+    if ($this->entityManager->getFilters()->isEnabled($filterName)) {
+      $this->entityManager->getFilters()->disable($filterName);
+    }
+  }
+
+  /**
    * Select all elements from a selectable that match the expression and
    * return a new collection containing these elements.
    *
@@ -332,6 +357,8 @@ trait EntityManagerTrait {
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
+   *
+   * @todo Remove, using merge is deprecated.
    */
   protected function merge($entity) {
     $entity = $this->entityManager->merge($entity);
