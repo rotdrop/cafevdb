@@ -198,10 +198,7 @@ class ProjectExtraFieldsService
    */
   public static function findAllowedValue($key, array $values):?array
   {
-    $rows = array_filter($values, function($row) use ($key) {
-      return $row['key'] === $key;
-    });
-    return count($rows) == 1 ? array_shift($rows) : null;
+    return $values[$key]?:null;
   }
 
   /**
@@ -244,7 +241,8 @@ class ProjectExtraFieldsService
     $options = array_values($options);
     $protoType = $this->allowedValuesPrototype();
     $protoKeys = array_keys($protoType);
-    foreach ($options as $index => &$option) {
+    $result = [];
+    foreach ($options as $option) {
       $keys = array_keys($option);
       if ($keys !== $protoKeys) {
         throw new \InvalidArgumentException(
@@ -252,14 +250,15 @@ class ProjectExtraFieldsService
                       [ implode(',', $protoKeys), implode(',', $keys) ])
         );
       }
-      if ($trimInactive && $option['disabled'] === true) { //  @todo check for string boolean conversion
-        unset($option);
+      if ($trimInactive && !empty($option['deleted'])) {
+        continue;
       }
+      $result[$option['key']] = $option;
     }
     if ($addProto) {
-      $options[] = $this->allowedValuesPrototype();
+      $result[$protoType['key']] = $protoType;
     }
-    return $options;
+    return $result;
   }
 
   /**
@@ -290,7 +289,7 @@ class ProjectExtraFieldsService
         $option['key'] = Uuid::create();
       }
     }
-    return json_encode($options);
+    return json_encode(array_values($options));
   }
 
 }
