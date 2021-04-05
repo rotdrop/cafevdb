@@ -860,7 +860,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
              *  select boxes of the user interface.
              */
             $entity->setDisabled(true); // should be persisted on flush
-            $this->flush($entity);
+            $this->flush();
           } else {
             $this->remove($entityId);
           }
