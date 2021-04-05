@@ -199,7 +199,7 @@ $.fn.cafevTooltip = function(argument) {
       cssclass: [],
       fallbackPlacement: 'flip',
       boundary: 'viewport',
-      //, delay: { 'show': 500, 'hide': 100000 }
+      // delay: { show: 500, hide: 100000 },
     };
     argument = $.extend(true, {}, options, argument);
     if (typeof argument.placement === 'string') {
