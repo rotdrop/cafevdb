@@ -38,7 +38,7 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\Table(name="ProjectExtraFieldsDataOptions")
  * @ORM\Entity
- * @Gedmo\SoftDeleteable
+ * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class ProjectExtraFieldDataOption implements \ArrayAccess
 {
@@ -267,5 +267,14 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
   public function getFieldData():Collection
   {
     return $this->fieldData;
+  }
+
+  /**
+   * Return the number of ProjectExtraFieldDatum entities attached to
+   * this option.
+   */
+  public function usage():int
+  {
+    return $this->getFieldData()->count();
   }
 }

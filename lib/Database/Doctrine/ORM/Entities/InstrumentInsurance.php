@@ -34,7 +34,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="InstrumentInsurances")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentInsurancesRepository")
- * @Gedmo\SoftDeleteable
+ * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class InstrumentInsurance implements \ArrayAccess
 {

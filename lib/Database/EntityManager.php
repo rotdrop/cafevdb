@@ -331,6 +331,8 @@ class EntityManager extends EntityManagerDecorator
     // obtaining the entity manager
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
 
+    $entityManager->getFilters()->enable('soft-deleteable');
+
     return $entityManager;
   }
 
@@ -431,6 +433,9 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($timestampableListener);
 
     // soft deletable
+    $softDeletableListener = new \Gedmo\SoftDeleteable\SoftDeleteableListener();
+    $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
+    $evm->addEventSubscriber($softDeletableListener);
     $config->addFilter('soft-deleteable', '\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter');
 
     // blameable

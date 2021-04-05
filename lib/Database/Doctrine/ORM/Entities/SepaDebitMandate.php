@@ -36,7 +36,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="SepaDebitMandates", uniqueConstraints={@ORM\UniqueConstraint(columns={"mandate_reference"})})
  * @ORM\Entity
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository")
- * @Gedmo\SoftDeleteable
+ * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class SepaDebitMandate implements \ArrayAccess
 {
