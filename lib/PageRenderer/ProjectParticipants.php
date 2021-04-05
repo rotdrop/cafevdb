@@ -2042,6 +2042,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         // reference a group. This will result in deletion of all old
         // members as well as deletion of references to other groups
         // (group membership is single select).
+        // The current musician must always remain
 
         $oldMemberships = []; // musician_id => option_key
         foreach ($extraField->getFieldData() as $fieldDatum) {
