@@ -1339,7 +1339,7 @@ __EOT__;
             $generatorItem = $value;
             continue;
           }
-          $used = array_search($key, $usedKeys) !== false;
+          $used = array_search(Uuid::uuidBytes($key), $usedKeys) !== false;
           $html .= $this->dataOptionInputRowHtml($value, $idx, $used);
           $idx++;
         }
