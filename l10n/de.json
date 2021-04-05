@@ -628,7 +628,7 @@
     "Inconsistent project-ids: %s / %s" : "Unsinnige oder fehlende Projekt-Ids: %s / %s",
     "Data inconsistency, mandates: \"%s\", projects: \"%s\"" : "Inkonsistente Daten, Mandate: \"%s\", Projekte: \"%s\"",
     "Inconsistent field keys, old: \"%s\", new: \"%s\"" : "Inkonsistente Feld-Schlüssel, alt \"%s\", new \"%s\"",
-    "Number %d of requested participants for group %s is larger than the number %d of allowed participants." : "Die Anzahl der eingestellten Teilnehmer für die Gruppe %s ist größer\nals dei zulässige Zahl %d von Teilnehmnern.",
+    "Number %d of requested participants for group %s is larger than the number %d of allowed participants." : "Die Anzahl der eingestellten Teilnehmer für die Gruppe %s ist größer\nals die zulässige Zahl %d von Teilnehmnern.",
     "Instrumentation related data" : "Besetzung",
     "Project related data" : "Projekt-Daten",
     "Finance related data" : "Finanz-Daten",
