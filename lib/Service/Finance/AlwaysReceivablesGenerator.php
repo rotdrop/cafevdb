@@ -65,7 +65,9 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
                 ->setLabel($this->l->t('Option %d', $count))
                 ->setData($this->amount);
     $this->serviceFeeField->getDataOptions()->set($receivable->getKey()->getBytes(), $receivable);
-    return $this->serviceFeeField->getDataOptions();
+    return $this->serviceFeeField->getDataOptions()->filter(function(Entities\ProjectExtraFieldDataOption $receivable) {
+      return (string)$receivable->getKey() != Uuid::NIL;
+    });
   }
 
   /**

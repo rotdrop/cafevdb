@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 use OCA\CAFEVDB\Database\EntityManager;
 use Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common\Uuid;
 
 /**
  * Do nothing implementation to have something implementing
@@ -43,7 +44,9 @@ class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
   public function generateReceivables():Collection
   {
     // This is the dummy implementation, just do nothing.
-    return $this->serviceFeeField->getDataOptions();
+    return $this->serviceFeeField->getDataOptions()->filter(function(Entities\ProjectExtraFieldDataOption $receivable) {
+      return (string)$receivable->getKey() != Uuid::NIL;
+    });
   }
 
   /**
