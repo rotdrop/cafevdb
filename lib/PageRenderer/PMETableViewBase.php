@@ -852,18 +852,27 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $entityId = $meta->extractKeyValues($id);
           $entity = $this->find($entityId);
           $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
+          $this->debug('Usage is '.$usage);
           if ($usage > 0) {
-            /** @todo needs more logic: disabled things would need to
-             *  be reenabled instead of adding new stuff. One
-             *  possibility would be to add disabled things as hidden
-             *  elements in order to keep them out of the way of the
-             *  select boxes of the user interface.
+            /**
+             * @todo needs more logic: disabled things would need to
+             * be reenabled instead of adding new stuff. One
+             * possibility would be to add disabled things as hidden
+             * elements in order to keep them out of the way of the
+             * select boxes of the user interface.
              */
-            $entity->setDisabled(true); // should be persisted on flush
-            $this->flush();
+            if (method_exists($entity, 'setDisabled')) {
+              $entity->setDisabled(true); // should be persisted on flush
+            } else {
+              $this->remove($entity);
+            }
           } else {
-            $this->remove($entityId);
+            if (method_exists($entity, 'setDeleted')) {
+              $this->remove($entity);
+            }
+            $this->remove($entity);
           }
+          $this->flush();
         }
 
         $multipleValues = [];
@@ -899,6 +908,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $this->debug('TRY MOD '.$new);
             $id = $remIdentifier[$new];
             $entityId = $meta->extractKeyValues($id);
+            $this->disableFilter('soft-deleteable');
             $entity = $this->find($entityId);
             if (empty($entity)) {
               throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
@@ -906,8 +916,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
             if (method_exists($entity, 'setDisabled')) {
               $entity['disabled'] = false; // reenable
+            } else if (method_exists($entity, 'setDeleted')) {
+              $entity['deleted'] = null;
+              $this->flush();
             }
-            $useMerge = true;
           } else {
             continue;
           }
