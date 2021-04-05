@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Service\Finance\InsuranceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
@@ -1732,6 +1733,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'extractInstrumentRanking' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'cleanupExtraFields' ];
 
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
@@ -1988,41 +1990,6 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $newValues[$valueName] = $key.self::JOIN_KEY_SEP.$newValues[$valueName];
         break;
       case 'groupofpeople':
-        // One type of group with a variable number of members, think
-        // of twin-room preferences, e.g.
-        if (array_search($groupFieldName, $changed) === false) {
-          continue 2;
-        }
-
-        $oldGroupId = $oldValues[$fieldName];
-        $newGroupId = $newValues[$fieldName]?:Uuid::create();
-
-        /** @var Entities\ProjectExtraFieldDataOption */
-        $generatorOption = $extraField->getDataOption(Uuid::NIL);
-        $max = $generatorOption['limit'];
-
-        $newMembers = explode(',', $newValues[$groupFieldName]);
-
-        if (count($newMembers) > $max) {
-          throw new \Exception(
-            $this->l->t('Number %d of requested participants for group %s is larger than the number %d of allowed participants.',
-                        [ count($newMembers), $extraField['name'], $max ]));
-        }
-
-        foreach ($newMembers as &$member) {
-          $member .= self::JOIN_KEY_SEP.$newGroupId;
-        }
-        $newValues[$fieldName] = implode(',', $newMembers);
-
-        $oldMembers = explode(',', $oldValues[$groupFieldName]);
-        foreach ($oldMembers as &$member) {
-          $member .= self::JOIN_KEY_SEP.$oldGroupId;
-        }
-        $oldValues[$fieldName] = implode(',', $oldMembers);
-
-
-        $changed[] = $fieldName;
-        break;
       case 'groupsofpeople':
         // Multiple predefined groups with a variable number of
         // members. Think of distributing members to cars or rooms
@@ -2035,20 +2002,38 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $oldGroupId = $oldValues[$fieldName];
         $newGroupId = $newValues[$fieldName];
 
-        $dataOptions = $extraField['dataOptions'];
         $max = PHP_INT_MAX;
         $label = $this->l->t('unknown');
-        $newDataOption = $extraField->getDataOption($newGroupId);
-        $max = $newDataOption['limit'];
-        $label = $newDataOption['label'];
+        if ($multiplicity == 'groupofpeople') {
+          /** @var Entities\ProjectExtraFieldDataOption */
+          $generatorOption = $extraField->getDataOption(Uuid::NIL);
+          $max = $generatorOption['limit'];
+          $label = $extraField['name'];
+        } else {
+          $newDataOption = $extraField->getDataOption($newGroupId);
+          $max = $newDataOption['limit'];
+          $label = $newDataOption['label'];
+        }
 
         $oldMembers = explode(',', $oldValues[$groupFieldName]);
         $newMembers = explode(',', $newValues[$groupFieldName]);
 
         if (count($newMembers) > $max) {
+          $this->logInfo('NEW MEMBERS '.'"'.$newValues[$groupFieldName].'" '.print_r($newMembers, true));
           throw new \Exception(
             $this->l->t('Number %d of requested participants for group %s is larger than the number %d of allowed participants.',
                         [ count($newMembers), $label, $max ]));
+        }
+
+        if ($multiplicity == 'groupofpeople') {
+          // make sure that a group-option exists, clean up afterwards
+          if (empty($newGroupId) || $newGroupId == Uuid::NIL) {
+            $newGroupId = Uuid::create();
+            $dataOption = (new Entities\ProjectExtraFieldDataOption)
+                        ->setField($extraField)
+                        ->setKey($newGroupId);
+            $this->persist($dataOption);
+          }
         }
 
         // In order to compute the changeset in
@@ -2060,7 +2045,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         // (group membership is single select).
 
         $oldMemberships = []; // musician_id => option_key
-        foreach ($extraField->getFieldData() as $fieldDaum) {
+        foreach ($extraField->getFieldData() as $fieldDatum) {
           $musicianId = $fieldDatum->getMusician()->getId();
           $optionKey = $fieldDatum->getOptionKey();
           if (array_search($musicianId, $newMembers) !== false || $optionKey == $newGroupId) {
@@ -2069,8 +2054,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         }
 
         // recompute the old set of relevant musicians
-        $oldValues[$groupFieldName] = array_keys($oldMemberships);
-        $oldValues[$fieldName] = array_values($oldMemberships);
+        $oldValues[$groupFieldName] = implode(',', array_keys($oldMemberships));
+        $oldValues[$fieldName] = implode(',', array_values($oldMemberships));
 
         // recompute the new set of relevant musicians
         foreach ($newMembers as &$member) {
@@ -2085,6 +2070,29 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       }
     }
     $changed = array_values(array_unique($changed));
+    return true;
+  }
+
+  /**
+   * In particular remove no longer needed groupofpeople options
+   */
+  public function cleanupExtraFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    /** @var Entities\ProjectExtraField $extraField */
+    foreach ($this->project['extra_fields'] as $extraField) {
+      if ($extraField->getMultiplicity() != Types\EnumExtraFieldMultiplicity::GROUPOFPEOPLE()) {
+        continue;
+      }
+      /** @var Entities\ProjEctExtraFieldDataOption $dataOption */
+      foreach ($extraField->getDataOptions() as $dataOption) {
+        if ((string)$dataOption->getKey() != Uuid::NIL
+            && count($dataOption->getFieldData()) == 0) {
+          $extraField->getDataOptions()->removeElement($dataOption);
+          $this->remove($dataOption);
+          $this->flush();
+        }
+      }
+    }
     return true;
   }
 
