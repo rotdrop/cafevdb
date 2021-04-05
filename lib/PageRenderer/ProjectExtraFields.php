@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
@@ -95,7 +96,7 @@ class ProjectExtraFields extends PMETableViewBase
   /** @var FuzzyInput */
   private $fuzzyInput;
 
-  /** @var ExtraFieldsService */
+  /** @var ProjectExtraFieldsService */
   private $extraFieldsService;
 
   public function __construct(
@@ -396,8 +397,8 @@ class ProjectExtraFields extends PMETableViewBase
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
       ],
       'php' => function($allowedValues, $op, $field, $row, $recordId, $pme) {
-        $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
-        $dataType = $row[$this->queryField('data_type', $pme->fdd)];
+        $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
+        $dataType = $row['qf'.$pme->fdn['data_type']];
         return $this->showAllowedValues($allowedValues, $op, $recordId, $multiplicity, $dataType);
       },
     ];
@@ -409,15 +410,9 @@ class ProjectExtraFields extends PMETableViewBase
       'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($nameIdx, $tooltipIdx) {
         // allowed values from virtual JSON aggregator field
         $allowedValues = $row['qf'.$pme->fdn['allowed_values']];
-        // Provide defaults
-        $protoRecord = array_merge(
-          $this->extraFieldsService->allowedValuesPrototype(),
-          [
-            'key' => false,
-            'label' => $row['qf'.$nameIdx],
-            'tooltip' => $row['qf'.$tooltipIdx]
-          ]);
-        return $this->showAllowedSingleValue($allowedValues, $op, $fdd[$field]['tooltip'], $protoRecord);
+        $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
+        $dataType = $row['qf'.$pme->fdn['data_type']];
+        return $this->showAllowedSingleValue($allowedValues, $op, $fdd[$field]['tooltip'], $multiplicity, $dataType);
       },
       'input' => 'SR',
       'options' => 'ACP', // but not in list/view/delete-view
@@ -835,9 +830,9 @@ class ProjectExtraFields extends PMETableViewBase
 
     $tag = 'maximum_group_size';
     if ($newvals['multiplicity'] == 'groupofpeople') {
-      $newvals['allowed_values_single'][0]['key'] = Uuid::NIL;
-      $newvals['allowed_values_single'][0]['limit'] = $newvals[$tag];
-      $newvals['allowed_values_single'][0]['label'] = $newvals['name'];
+      $first = array_key_first($newvals['allowed_values_single']);
+      $newvals['allowed_values_single'][$first]['key'] = Uuid::NIL;
+      $newvals['allowed_values_single'][$first]['limit'] = $newvals[$tag];
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
@@ -851,6 +846,9 @@ class ProjectExtraFields extends PMETableViewBase
     $tag = 'allowed_values_single';
     if ($newvals['multiplicity'] == 'single'
         || $newvals['multiplicity'] == 'groupofpeople') {
+      $first = array_key_first($newvals['allowed_values_single']);
+      $newvals[$tag][$first]['label'] = $newvals['name'];
+      $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
       $newvals['allowed_values'] = $newvals[$tag];
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
@@ -889,8 +887,7 @@ class ProjectExtraFields extends PMETableViewBase
     // convert allowed values from array to table format as understood
     // our PME legacy join table stuff.
     $optionValues = [];
-    foreach ($newvals['allowed_values'] as $allowedValue) {
-      $key = $allowedValue['key'];
+    foreach ($newvals['allowed_values'] as $key => $allowedValue) {
       $field = $this->joinTableFieldName(self::OPTIONS_TABLE, 'key');
       $optionValues[$field][] = $key;
       foreach ($allowedValue as $field => $value) {
@@ -1223,7 +1220,6 @@ class ProjectExtraFields extends PMETableViewBase
           }
       }
     }
-    $protoCount = count($this->extraFieldsService->allowedValuesPrototype());
     $html = '<div class="pme-cell-wrapper quarter-sized">';
     if ($op === 'add' || $op === 'change') {
       // controls for showing soft-deleted options or normally
@@ -1307,6 +1303,10 @@ __EOT__;
           if (empty($value['key']) || !empty($value['deleted'])) {
             continue;
           }
+          if (($multiplicity == 'groupofpeople' || $multiplicity == 'recurring')
+              && $value['key'] != Uuid::NIL) {
+            continue;
+          }
           $html .= '
     <tr>
       <td class="operations"></td>';
@@ -1324,7 +1324,7 @@ __EOT__;
           $html .= '
     </tr>';
         }
-        break;
+        break; // display
       case 'add':
       case 'change':
         $usedKeys = $this->optionKeys($recordId);
@@ -1353,31 +1353,31 @@ __EOT__;
   }
 
   /**
-   * Display the input stuff for a single-value choice, probably
-   * only for service-fee fields.
+   * Display the input stuff for a single-value choice.
    */
-  private function showAllowedSingleValue($value, $op, $toolTip, $protoRecord)
+  private function showAllowedSingleValue($value, $op, $toolTip, $multiplicity, $dataType)
   {
     $allowed = $this->extraFieldsService->explodeAllowedValues($value, false);
-    // if there are multiple options available (after a type
-    // change) we just pick the first non-deleted.
-    $entry = false;
-    foreach($allowed as $idx => $item) {
-      if (empty($item['key']) || !empty($item['deleted'])) {
+    $entry = null;
+    foreach ($allowed as $key => $option) {
+      if (!empty($item['deleted'])) {
         continue;
-      } else {
-        $entry = $item;
-        unset($allowed[$idx]);
-        break;
+      }
+      if ($option['key'] == Uuid::NIL && $multiplicity == 'groupofpeople') {
+        $entry = $option;
+      } else if (empty($entry)) {
+        $entry = $option;
       }
     }
-    $allowed = array_values($allowed); // compress index range
     $value = empty($entry) ? '' : $entry['data'];
     if ($op === 'display') {
       return $this->currencyValue($value);
     }
-    empty($entry) && $entry = $protoRecord;
-    $protoCount = count($protoRecord);
+    empty($entry) && $entry = $this->extraFieldsService->allowedValuesPrototype();
+    if ($multiplicity == 'groupofpeople') {
+      $entry['key'] = Uuid::NIL;
+    }
+    $key = $entry['key'];
     $name  = $this->pme->cgiDataName('allowed_values_single');
     $value = htmlspecialchars($entry['data']);
     $tip   = $toolTip;
@@ -1388,7 +1388,7 @@ __EOT__;
        maxlength="29"
        size="30"
        value="{$value}"
-       name="{$name}[0][data]"
+       name="{$name}[{$key}][data]"
        title="{$tip}"
 />
 __EOT__;
@@ -1398,23 +1398,28 @@ __EOT__;
 <input class="pme-input allowed-values-single"
        type="hidden"
        value="{$value}"
-       name="{$name}[0][{$field}]"
+       name="{$name}[{$key}][{$field}]"
 />
 __EOT__;
     }
     $html .= '</div>';
     $html .= '<div class="inactive-values">';
     // Now emit all left-over values. Flag all items as deleted.
-    foreach ($allowed as $idx => $item) {
-      ++$idx; // shift ...
-      $item['deleted'] = (new DateTime)->getTimestamp();
+    foreach ($allowed as $key => $option) {
+      $key = $option['key'];
+      if ($key == $entry['key']) {
+        continue;
+      }
+      if ($multiplicity != 'groupofpeople') {
+        $option['deleted'] = (new DateTime)->getTimestamp();
+      }
       foreach(['key', 'label', 'limit', 'data', 'tooltip', 'deleted'] as $field) {
-        $value = htmlspecialchars($item[$field]);
+        $value = htmlspecialchars($option[$field]);
         $html .=<<<__EOT__
 <input class="pme-input allowed-values-single"
        type="hidden"
        value="{$value}"
-       name="{$name}[{$idx}][{$field}]"
+       name="{$name}[{$key}][{$field}]"
 />
 __EOT__;
       }
