@@ -1031,7 +1031,7 @@ class ProjectParticipants extends PMETableViewBase
         case 'service-fee':
         case 'deposit':
           foreach ($dataOptions as $dataOption) {
-            $key = $dataOption['key'];
+            $key = (string)$dataOption['key'];
             $label = $dataOption['label'];
             $data  = $dataOption['data'];
             $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType, 'money');
@@ -1059,6 +1059,8 @@ class ProjectParticipants extends PMETableViewBase
           $keyFdd['css']['postfix'] .= ' '.$dataType;
           break;
         }
+        break;
+      case 'recurring':
         break;
       case 'groupofpeople':
         // special option with Uuid::NIL holds the management information
