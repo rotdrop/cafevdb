@@ -850,6 +850,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($identifier[$multiple]['del'] as $del) {
           $id = $delIdentifier[$del];
           $entityId = $meta->extractKeyValues($id);
+          $this->disableFilter('soft-deleteable');
           $entity = $this->find($entityId);
           $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
           $this->debug('Usage is '.$usage);
