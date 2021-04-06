@@ -1617,7 +1617,7 @@ const pmeInit = function(containerSel) {
     function(event) {
       const $this = $(this);
       const checked = $this.prop('checked');
-      const $input = $this.prev();
+      const $input = $this.hasClass('left-lock') ? $this.next().next() : $this.prev();
       $input.prop('readonly', !checked);
       if (!checked) {
         $input.val('');
@@ -1630,7 +1630,7 @@ const pmeInit = function(containerSel) {
     function(event) {
       const $this = $(this);
       const checked = $this.prop('checked');
-      const $input = $this.prev();
+      const $input = $this.hasClass('left-lock') ? $this.next().next() : $this.prev();
       $input.prop('readonly', checked);
       if (checked) {
         $input.addClass('readonly');
