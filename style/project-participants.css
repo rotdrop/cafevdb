@@ -79,6 +79,21 @@ div.project-participants form.pme-form:not(.pme-change) span.allowed-option-valu
   position:absolute;
   right:0;
 }
+.tooltip-inner span.allowed-option {
+  display:inline-block;
+  width:100%;
+}
+.tooltip-inner span.allowed-option-name {
+  font-style:italic;
+}
+.tooltip-inner span.allowed-option-separator {
+  display:inline-block;
+  width:1em;
+}
+.tooltip-inner span.allowed-option-value.money {
+  font-family:monospace;
+  float:right;
+}
 
 div.project-participants form.pme-form:not(.pme-change) span.allowed-option.group {
   width:100%;
