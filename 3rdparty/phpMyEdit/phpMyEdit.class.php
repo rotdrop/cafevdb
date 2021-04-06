@@ -943,12 +943,10 @@ class phpMyEdit
 			'column'	  => $column,
 			'description' => $desc);
 		if (!empty($this->rec)) {
-			//$this->logInfo('REC '.print_r($this->rec, true));
 			foreach ($this->rec as $recKey => $recValue) {
 				$subs['record_id['.$recKey.']'] = $recValue;
 			}
 		}
-		//$this->logInfo('SUBS '.print_r($subs, true));
 
 		$queryField = $table_name.'.'.$this->sd.$column.$this->ed;
 		if (!empty($encode)) {
@@ -2732,6 +2730,30 @@ class phpMyEdit
 		return $value;
 	}
 
+	function formatValue($value, $k, $css, $key_rec)
+	{
+		$original_value = $value;
+		if ($num_ar = @$this->fdd[$k]['number_format']) {
+			if (! is_array($num_ar)) {
+				$num_ar = array($num_ar);
+			}
+			if (count($num_ar) == 1) {
+				list($nbDec) = $num_ar;
+				$value = number_format($value, $nbDec);
+			} else if (count($num_ar) == 3) {
+				list($nbDec, $decPoint, $thSep) = $num_ar;
+				$value = number_format($value, $nbDec, $decPoint, $thSep);
+			}
+		}
+		if (@$this->fdd[$k]['mask']) {
+			$value = sprintf($this->fdd[$k]['mask'], $value);
+		}
+		if ($this->col_has_URL($k)) {
+			$value = $this->urlDisplay($k, $original_value, $value, $css, $key_rec);
+		}
+		return $value;
+	}
+
 	function cellDisplay($k, $row, $css = null) /* {{{ */
 	{
 		if ($this->password($k)) {
@@ -2774,7 +2796,7 @@ class phpMyEdit
 				$value_ar2 = array();
 				foreach ($value_ar as $value_key) {
 					if (isset($this->fdd[$k]['values2'][$value_key])) {
-						$value_ar2[$value_key] = $this->fdd[$k]['values2'][$value_key];
+						$value_ar2[$value_key] = $this->formatValue($this->fdd[$k]['values2'][$value_key], $k, $css, $key_rec);
 						$escape = false;
 					}
 				}
@@ -2786,35 +2808,19 @@ class phpMyEdit
 				$value = join($glue, $value_ar2);
 			} else {
 				if (isset($this->fdd[$k]['values2'][$value])) {
-					$value	= $this->fdd[$k]['values2'][$value];
+					$value	= $this->formatValue($this->fdd[$k]['values2'][$value], $k, $css, $key_rec);
 					$escape = false;
 				}
 			}
 		} else {
-			$value = $row["qf$k"];
+			$value = $this->formatValue($row["qf$k"], $k, $css, $key_rec);
 		}
-		$original_value = $value;
 		if (@$this->fdd[$k]['strip_tags']) {
 			$value = strip_tags($value);
-		}
-		if ($num_ar = @$this->fdd[$k]['number_format']) {
-			if (! is_array($num_ar)) {
-				$num_ar = array($num_ar);
-			}
-			if (count($num_ar) == 1) {
-				list($nbDec) = $num_ar;
-				$value = number_format($value, $nbDec);
-			} else if (count($num_ar) == 3) {
-				list($nbDec, $decPoint, $thSep) = $num_ar;
-				$value = number_format($value, $nbDec, $decPoint, $thSep);
-			}
 		}
 		if (intval(@$this->fdd[$k]['trimlen']) > 0 && strlen($value) > $this->fdd[$k]['trimlen']) {
 			$value = preg_replace("/[\r\n\t ]+/",' ',$value);
 			$value = substr($value, 0, $this->fdd[$k]['trimlen'] - 3).'...';
-		}
-		if (@$this->fdd[$k]['mask']) {
-			$value = sprintf($this->fdd[$k]['mask'], $value);
 		}
 		if (@$this->fdd[$k]['phpview']) {
 			$value = include($this->fdd[$k]['phpview']);
@@ -2830,11 +2836,8 @@ class phpMyEdit
 				return include($php);
 			}
 		}
-		if ($this->col_has_URL($k)) {
-			return $this->urlDisplay($k, $original_value, $value, $css, $key_rec);
-		}
 		if (strlen($value) <= 0) {
-			return $escape ? '&nbsp;' : '';
+			return $escape ? '&nbsp;' : ''; // ??? why
 		}
 		if ($escape) {
 			$value = htmlspecialchars($value);
