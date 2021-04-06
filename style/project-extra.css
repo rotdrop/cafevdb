@@ -75,7 +75,7 @@ table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.allowed-value
   margin-right:1em;
 }
 
-.project-extra-fields table.pme-main tr.allowed-values.active input.regenerate {
+.project-extra-fields table.pme-main tr.allowed-values input.regenerate {
   background-image:url('../img/reload-solid.svg');
 }
 
