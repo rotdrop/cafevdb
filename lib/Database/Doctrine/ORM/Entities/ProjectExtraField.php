@@ -235,6 +235,9 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Get one specific option
    *
+   * @param mixed $key Everything which can be converted to an UUID by
+   * Uuid::uuidBytes().
+   *
    * @return null|ProjectExtraFieldDataOption
    */
   public function getDataOption($key):?ProjectExtraFieldDataOption

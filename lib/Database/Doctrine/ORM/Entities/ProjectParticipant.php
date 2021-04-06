@@ -92,7 +92,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Link to extra fields data
    *
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", indexBy="option_key", mappedBy="projectParticipant")
+   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", indexBy="option_key", mappedBy="projectParticipant", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
   private $extraFieldsData;
 
@@ -127,7 +127,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Get project.
    *
-   * @return int
+   * @return Project
    */
   public function getProject()
   {
@@ -185,7 +185,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set debitnote.
    *
-   * @param bool $debitnote
+   * @param SepaDebitNote $debitnote
    *
    * @return ProjectParticipant
    */
@@ -199,7 +199,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Get debitnote.
    *
-   * @return bool
+   * @return SepaDebitNote
    */
   public function getDebitnote()
   {
