@@ -22,7 +22,7 @@
 
 /******************************************************************************
  *
- * extra-field stuff
+ * participant-field stuff
  *
  */
 
@@ -60,12 +60,12 @@ table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.allowed-value
   display:table-row;
 }
 
-.project-extra-fields table.pme-main tr:not(.pme-filter) .chosen-container {
+.project-participant-fields table.pme-main tr:not(.pme-filter) .chosen-container {
   box-sizing:border-box;
   min-width:50%;
 }
 
-.project-extra-fields table.pme-main tr.allowed-values td.operations input.operation {
+.project-participant-fields table.pme-main tr.allowed-values td.operations input.operation {
   background-repeat:no-repeat;
   background-size: 24px 24px;
   background-position: center;
@@ -75,19 +75,19 @@ table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.allowed-value
   margin-right:1em;
 }
 
-.project-extra-fields table.pme-main tr.allowed-values input.regenerate {
+.project-participant-fields table.pme-main tr.allowed-values input.regenerate {
   background-image:url('../img/reload-solid.svg');
 }
 
-.project-extra-fields table.pme-main tr.allowed-values.active input.generator-run {
+.project-participant-fields table.pme-main tr.allowed-values.active input.generator-run {
   background-image:url('../../../core/img/actions/play.svg');
 }
 
-.project-extra-fields table.pme-main tr.allowed-values.active input.delete-undelete {
+.project-participant-fields table.pme-main tr.allowed-values.active input.delete-undelete {
   background-image:url('../img/cafevdb-delete.svg');
 }
 
-.project-extra-fields table.pme-main tr.allowed-values.deleted input.delete-undelete {
+.project-participant-fields table.pme-main tr.allowed-values.deleted input.delete-undelete {
   background-image:url('../img/history.svg');
 }
 
@@ -180,7 +180,7 @@ table.pme-main td.pme-value span.align-right {
   float:right;
 }
 
-table.pme-main tr.extra-field.recurring td.pme-value td.operations input.operation {
+table.pme-main tr.participant-field.recurring td.pme-value td.operations input.operation {
   background-repeat:no-repeat;
   background-size: 24px 24px;
   background-position: center;
@@ -190,11 +190,11 @@ table.pme-main tr.extra-field.recurring td.pme-value td.operations input.operati
   margin-right:1em;
 }
 
-table.pme-main tr.extra-field.recurring td.pme-value td.operations input.regenerate {
+table.pme-main tr.participant-field.recurring td.pme-value td.operations input.regenerate {
   background-image:url('../img/reload-solid.svg');
 }
 
-table.pme-main tr.extra-field.recurring td.pme-value td.operations input.delete-undelete {
+table.pme-main tr.participant-field.recurring td.pme-value td.operations input.delete-undelete {
   background-image:url('../img/cafevdb-delete.svg');
 }
 
@@ -207,23 +207,23 @@ table.pme-main span.service-fee.currency-amount {
   width:100%;
 }
 
-.project-extra-fields table.pme-main textarea.field-tooltip,
-.project-extra-fields table.pme-main textarea.extra-field-tooltip {
+.project-participant-fields table.pme-main textarea.field-tooltip,
+.project-participant-fields table.pme-main textarea.participant-field-tooltip {
   overflow-x:hidden; /* fix FF extra-line bug */
 }
 
-.project-extra-fields table.pme-main td.allowed-values {
+.project-participant-fields table.pme-main td.allowed-values {
   position:relative;
   background-clip:padding-box;
 }
 
-.project-extra-fields table.pme-main td.allowed-values div.field-display-options {
+.project-participant-fields table.pme-main td.allowed-values div.field-display-options {
   position:absolute;
   bottom:0px;
   right:0px;
 }
 
-.project-extra-fields table.pme-main td.allowed-values td.placeholder {
+.project-participant-fields table.pme-main td.allowed-values td.placeholder {
   min-width:35em;
 }
 
@@ -263,29 +263,29 @@ td.pme-cell table.allowed-values.operation-display td {
   padding:1px;
 }
 
-td.pme-cell.extra-field-tooltip ul,
-td.pme-cell.extra-field-tooltip ol {
+td.pme-cell.participant-field-tooltip ul,
+td.pme-cell.participant-field-tooltip ol {
   list-style-position:inside!important;
   list-style-type:unset;
 }
 
-td.pme-cell.extra-field-tooltip dd {
+td.pme-cell.participant-field-tooltip dd {
   display: block;
   margin-left:1em;
 }
 
-td.pme-cell.extra-field-tooltip h1,
-td.pme-cell.extra-field-tooltip h2,
-td.pme-cell.extra-field-tooltip h3,
-td.pme-cell.extra-field-tooltip h4,
-td.pme-cell.extra-field-tooltip h5 {
+td.pme-cell.participant-field-tooltip h1,
+td.pme-cell.participant-field-tooltip h2,
+td.pme-cell.participant-field-tooltip h3,
+td.pme-cell.participant-field-tooltip h4,
+td.pme-cell.participant-field-tooltip h5 {
   font-weight:bold;
 }
 
-td.pme-cell.extra-field-tooltip em {
+td.pme-cell.participant-field-tooltip em {
   font-style:italic;
 }
 
-td.pme-cell.extra-field-tooltip b {
+td.pme-cell.participant-field-tooltip b {
   font-style:bold;
 }

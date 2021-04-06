@@ -510,11 +510,11 @@ class Navigation
       ];
       break;
 
-    case 'project-extra-fields':
-      $value = $this->l->t("Project Extra-Fields");
+    case 'project-participant-fields':
+      $value = $this->l->t("Project Participant-Fields");
       $title = $this->l->t("Add additional data-fields to the instrumenation table for the project.");
-      $post = ['projectExtraFields' => $value,
-               'template' => 'project-extra-fields',
+      $post = ['projectParticipantFields' => $value,
+               'template' => 'project-participant-fields',
                'showDisabledFields' => false,
                'projectName' => $projectName,
                'projectId' => $projectId];

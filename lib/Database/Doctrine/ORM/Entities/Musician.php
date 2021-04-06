@@ -191,9 +191,9 @@ class Musician implements \ArrayAccess
   private $projectInstruments;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="musician", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="musician", fetch="EXTRA_LAZY")
    */
-  private $projectExtraFieldsData;
+  private $projectParticipantFieldsData;
 
   /**
    * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="instrumentHolder", fetch="EXTRA_LAZY")
@@ -227,7 +227,7 @@ class Musician implements \ArrayAccess
     $this->instruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
-    $this->projectExtraFieldsData = new ArrayCollection();
+    $this->projectParticipantFieldsData = new ArrayCollection();
     $this->instrumentInsurances = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
@@ -702,27 +702,27 @@ class Musician implements \ArrayAccess
   }
 
   /**
-   * Set projectExtraFieldsData.
+   * Set projectParticipantFieldsData.
    *
-   * @param Collection $projectExtraFieldsData
+   * @param Collection $projectParticipantFieldsData
    *
    * @return Musician
    */
-  public function setProjectExtraFieldsData($projectExtraFieldsData):Musician
+  public function setProjectParticipantFieldsData($projectParticipantFieldsData):Musician
   {
-    $this->projectExtraFieldsData = $projectExtraFieldsData;
+    $this->projectParticipantFieldsData = $projectParticipantFieldsData;
 
     return $this;
   }
 
   /**
-   * Get projectExtraFieldsData.
+   * Get projectParticipantFieldsData.
    *
    * @return Collection
    */
-  public function getProjectExtraFieldsData():Collection
+  public function getProjectParticipantFieldsData():Collection
   {
-    return $this->projectExtraFieldsData;
+    return $this->projectParticipantFieldsData;
   }
 
   /**

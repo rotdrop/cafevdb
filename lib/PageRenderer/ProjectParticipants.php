@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\InsuranceService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -57,9 +57,9 @@ class ProjectParticipants extends PMETableViewBase
   const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
-  const EXTRA_FIELDS_TABLE = 'ProjectExtraFields';
-  const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
-  const EXTRA_FIELDS_OPTIONS_TABLE = 'ProjectExtraFieldsDataOptions';
+  const PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
+  const PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
+  const PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
 
   /** @var int */
@@ -131,8 +131,8 @@ class ProjectParticipants extends PMETableViewBase
     // extra input fields depending on the type of the project,
     // e.g. service fees etc.
     [
-      'table' => self::EXTRA_FIELDS_TABLE,
-      'entity' => Entities\ProjectExtraField::class,
+      'table' => self::PARTICIPANT_FIELDS_TABLE,
+      'entity' => Entities\ProjectParticipantField::class,
       'identifier' => [
         'project_id' => 'project_id',
         'id' => false,
@@ -141,14 +141,14 @@ class ProjectParticipants extends PMETableViewBase
     ],
     // the data for the extra input fields
     [
-      'table' => self::EXTRA_FIELDS_DATA_TABLE,
-      'entity' => Entities\ProjectExtraFieldDatum::class,
+      'table' => self::PARTICIPANT_FIELDS_DATA_TABLE,
+      'entity' => Entities\ProjectParticipantFieldDatum::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
         'field_id' => [
-          'table' => self::EXTRA_FIELDS_TABLE,
+          'table' => self::PARTICIPANT_FIELDS_TABLE,
           'column' => 'id',
         ],
         'option_key' => false,
@@ -184,8 +184,8 @@ class ProjectParticipants extends PMETableViewBase
   /** @var \OCA\CAFEVDB\Service\Finance\InsuranceService */
   private $insuranceService;
 
-  /** @var \OCA\CAFEVDB\Service\ProjectExtraFieldsService */
-  private $extraFieldsService;
+  /** @var \OCA\CAFEVDB\Service\ProjectParticipantFieldsService */
+  private $participantFieldsService;
 
   /** @var \OCA\CAFEVDB\PageRenderer\Musicians */
   private $musiciansRenderer;
@@ -205,7 +205,7 @@ class ProjectParticipants extends PMETableViewBase
     , PhoneNumberService $phoneNumberService
     , FinanceService $financeService
     , InsuranceService $insuranceService
-    , ProjectExtraFieldsService $extraFieldsService
+    , ProjectParticipantFieldsService $participantFieldsService
     , Musicians $musiciansRenderer
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
@@ -215,7 +215,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->financeService = $financeService;
     $this->insuranceService = $insuranceService;
     $this->musiciansRenderer = $musiciansRenderer;
-    $this->extraFieldsService = $extraFieldsService;
+    $this->participantFieldsService = $participantFieldsService;
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
   }
 
@@ -297,11 +297,11 @@ class ProjectParticipants extends PMETableViewBase
     $export = $this->pageNavigation->tableExportButton();
     $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
 
-    $extraFields = $this->project['extraFields'];
+    $participantFields = $this->project['participantFields'];
 
     // count number of finance fields
     $extraFinancial = 0;
-    foreach ($extraFields as $field) {
+    foreach ($participantFields as $field) {
       $extraFinancial += ($field['dataType'] == 'service-fee' || $field['dataType'] == 'deposit');
     }
     if ($extraFinancial > 0) {
@@ -332,16 +332,16 @@ class ProjectParticipants extends PMETableViewBase
     /* For each extra field add one dedicated join table entry
      * which is pinned to the respective field-id.
      */
-    $extraFieldJoinIndex = [];
-    foreach ($extraFields as $field) {
+    $participantFieldJoinIndex = [];
+    foreach ($participantFields as $field) {
       $fieldId = $field['id'];
 
       // Bad idea and really increases query time
       //
-      // $tableName = self::EXTRA_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
-      // $extraFieldOptionJoinTable = [
+      // $tableName = self::PARTICIPANT_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      // $participantFieldOptionJoinTable = [
       //   'table' => $tableName,
-      //   'entity' => Entities\ProjectExtraFieldDataOption::class,
+      //   'entity' => Entities\ProjectParticipantFieldDataOption::class,
       //   'flags' => self::JOIN_FLAGS_NONE,
       //   'identifier' => [
       //     'field_id' => [ 'value' => $fieldId, ],
@@ -351,13 +351,13 @@ class ProjectParticipants extends PMETableViewBase
       //   'encode' => 'BIN2UUID(%s)',
       // ];
 
-      // $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
-      // $this->joinStructure[] = $extraFieldOptionJoinTable;
+      // $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
+      // $this->joinStructure[] = $participantFieldOptionJoinTable;
 
-      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
-      $extraFieldJoinTable = [
+      $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      $participantFieldJoinTable = [
         'table' => $tableName,
-        'entity' => Entities\ProjectExtraFieldDatum::class,
+        'entity' => Entities\ProjectParticipantFieldDatum::class,
         'flags' => self::JOIN_REMOVE_EMPTY,
         'identifier' => [
           'project_id' => 'project_id',
@@ -368,8 +368,8 @@ class ProjectParticipants extends PMETableViewBase
         'column' => 'option_key',
         'encode' => 'BIN2UUID(%s)',
       ];
-      $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
-      $this->joinStructure[] = $extraFieldJoinTable;
+      $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
+      $this->joinStructure[] = $participantFieldJoinTable;
     }
 
     // Display special page elements
@@ -380,7 +380,7 @@ class ProjectParticipants extends PMETableViewBase
         //'query' => true,
         'sort'  => true,
         'time'  => true,
-        'tabs' => $this->tableTabs($extraFields, $useFinanceTab),
+        'tabs' => $this->tableTabs($participantFields, $useFinanceTab),
         'navigation' => 'VCD',
     ]);
 
@@ -775,7 +775,7 @@ class ProjectParticipants extends PMETableViewBase
      *
      */
 
-    $monetary = $this->extraFieldsService->monetaryFields($this->project);
+    $monetary = $this->participantFieldsService->monetaryFields($this->project);
 
     if (!empty($monetary) || ($projectId == $this->memberProjectId)) {
 
@@ -793,11 +793,11 @@ class ProjectParticipants extends PMETableViewBase
             $project_id = $recordId['project_id'];
             $musicianId = $recordId['musician_id'];
 
-            /** @var Entities\ProjectExtraField $extraField */
+            /** @var Entities\ProjectParticipantField $participantField */
             $amountInvoiced = 0.0;
-            foreach ($monetary as $fieldId => $extraField) {
+            foreach ($monetary as $fieldId => $participantField) {
 
-              $table = self::EXTRA_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+              $table = self::PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
               $fieldValues = [ 'key' => null, 'value' => null ];
               foreach ($fieldValues as $fieldName => &$fieldValue) {
                 $label = $this->joinTableFieldName($table, 'option_'.$fieldName);
@@ -818,8 +818,8 @@ class ProjectParticipants extends PMETableViewBase
                 continue;
               }
 
-              $amountInvoiced += $this->extraFieldsService->extraFieldSurcharge(
-                $fieldValues['key'], $fieldValues['value'], $extraField);
+              $amountInvoiced += $this->participantFieldsService->participantFieldSurcharge(
+                $fieldValues['key'], $fieldValues['value'], $participantField);
             }
 
             if ($projectId == $this->memberProjectId) {
@@ -851,14 +851,14 @@ class ProjectParticipants extends PMETableViewBase
      */
 
     // Generate input fields for the extra columns
-    /** @var Entities\ProjectExtraField $field */
-    foreach ($extraFields as $field) {
+    /** @var Entities\ProjectParticipantField $field */
+    foreach ($participantFields as $field) {
       $fieldName = $field['name'];
       $fieldId   = $field['id'];
       $multiplicity = $field['multiplicity'];
       $dataType = (string)$field['data_type'];
 
-      if (!$this->extraFieldsService->isSupportedType($multiplicity, $dataType)) {
+      if (!$this->participantFieldsService->isSupportedType($multiplicity, $dataType)) {
         throw new \Exception(
           $this->l->t('Unsupported multiplicity / data-type combination: %s / %s',
                       [ $multiplicity, $dataType ]));
@@ -875,9 +875,9 @@ class ProjectParticipants extends PMETableViewBase
         $tab = [ 'id' => $tabId ];
       }
 
-      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
 
-      $css = [ 'extra-field', 'field-id-'.$fieldId, ];
+      $css = [ 'participant-field', 'field-id-'.$fieldId, ];
       $extraFddBase = [
         'name' => $this->l->t($fieldName),
         'tab' => $tab,
@@ -906,14 +906,14 @@ class ProjectParticipants extends PMETableViewBase
       $valueFdd = &$opts['fdd'][$valueFddName];
 
       /** @var Doctrine\Common\Collections\Collection */
-      $dataOptions = $field['dataOptions']->filter(function(Entities\ProjectExtraFieldDataOption $option) {
+      $dataOptions = $field['dataOptions']->filter(function(Entities\ProjectParticipantFieldDataOption $option) {
         // Filter out the generator option and soft-deleted options
         return ((string)$option->getKey() != Uuid::NIL && empty($option->getDeleted()));
       });
       $values2     = [];
       $valueTitles = [];
       $valueData   = [];
-      /** @var Entities\ProjectExtraFieldDataOption $dataOption */
+      /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
       foreach ($dataOptions as $dataOption) {
         $key = (string)$dataOption['key'];
         if (empty($key)) {
@@ -1109,11 +1109,11 @@ class ProjectParticipants extends PMETableViewBase
   <td class="operations">
     <input
       class="operation delete-undelete"
-      title="'.$this->toolTipsService['extra-fields-recurring-data:delete-undelete'].'"
+      title="'.$this->toolTipsService['participant-fields-recurring-data:delete-undelete'].'"
       type="button"/>
     <input
       class="operation regenerate"
-      title="'.$this->toolTipsService['extra-fields-recurring-data:regenerate'].'"
+      title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate'].'"
       type="button"/>
   </td>
   <td class="label">
@@ -1155,7 +1155,7 @@ class ProjectParticipants extends PMETableViewBase
 
 
         // tweak the join-structure entry for the group field
-        $joinInfo = &$this->joinStructure[$extraFieldJoinIndex[$tableName]];
+        $joinInfo = &$this->joinStructure[$participantFieldJoinIndex[$tableName]];
         $joinInfo = array_merge(
           $joinInfo,
           [
@@ -1199,15 +1199,15 @@ class ProjectParticipants extends PMETableViewBase
    m1.first_name AS first_name,
    fd.option_key AS group_id,
    fdg.group_number AS group_number
-FROM ProjectParticipants pp
-LEFT JOIN Musicians m1
+FROM ".self::TABLE." pp
+LEFT JOIN ".self::MUSICIANS_TABLE." m1
   ON m1.id = pp.musician_id
-LEFT JOIN ProjectExtraFieldsData fd
+LEFT JOIN ".self::PARTICIPANT_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
 LEFT JOIN (SELECT
     fd2.option_key AS group_id,
     ROW_NUMBER() OVER (ORDER BY fd2.field_id) AS group_number
-    FROM ProjectExtraFieldsData fd2
+    FROM ".self::PARTICIPANT_FIELDS_DATA_TABLE." fd2
     WHERE fd2.project_id = $projectId AND fd2.field_id = $fieldId
     GROUP BY fd2.option_key
   ) fdg
@@ -1254,7 +1254,7 @@ WHERE pp.project_id = $projectId",
         break;
       case 'groupsofpeople':
         // tweak the join-structure entry for the group field
-        $joinInfo = &$this->joinStructure[$extraFieldJoinIndex[$tableName]];
+        $joinInfo = &$this->joinStructure[$participantFieldJoinIndex[$tableName]];
         $joinInfo = array_merge(
           $joinInfo, [
             'identifier' => [
@@ -1355,9 +1355,9 @@ WHERE pp.project_id = $projectId",
 FROM ".self::TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m3
   ON m3.id = pp.musician_id
-LEFT JOIN ".self::EXTRA_FIELDS_DATA_TABLE." fd
+LEFT JOIN ".self::PARTICIPANT_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
-LEFT JOIN ".self::EXTRA_FIELDS_OPTIONS_TABLE." do
+LEFT JOIN ".self::PARTICIPANT_FIELDS_OPTIONS_TABLE." do
   ON do.field_id = fd.field_id AND do.key = fd.option_key
 WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
@@ -1423,7 +1423,7 @@ WHERE pp.project_id = $projectId",
 FROM ".self::TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m2
   ON m2.id = pp.musician_id
-LEFT JOIN ".self::EXTRA_FIELDS_DATA_TABLE." fd
+LEFT JOIN ".self::PARTICIPANT_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
 WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
               'column' => 'name',
@@ -1801,11 +1801,11 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
     //////// END Field definitions
 
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateSanitizeExtraFields' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'extractInstrumentRanking' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'cleanupExtraFields' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'cleanupParticipantFields' ];
 
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
@@ -1841,7 +1841,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 //     if (Projects::needDebitMandates($projectId)) {
 
 //       $memberTableId = Config::getValue('memberTableId');
-//       $monetary = ProjectExtra::monetaryFields($userExtraFields, $fieldTypes);
+//       $monetary = ProjectParticipant::monetaryFields($userParticipantFields, $fieldTypes);
 
 //       $amountPaidIdx = count($opts['fdd']);
 //       $opts['fdd']['AmountPaid'] = array(
@@ -1881,7 +1881,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 //             $field   = $monetary[$label];
 //             $allowed = $field['AllowedValues'];
 //             $type    = $field['Type'];
-//             $amount += self::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+//             $amount += self::participantFieldSurcharge($value, $allowed, $type['Multiplicity']);
 //           }
 
 //           if ($projectId === $memberTableId) {
@@ -1918,7 +1918,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 //     // fill the numbers table
 //     $opts['triggers']['filter']['pre'][]  =
 //       $opts['triggers']['update']['pre'][]  =
-//       $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
+//       $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectParticipant::preTrigger';
 
 //     //$opts['triggers']['select']['data'][] =
 //     $opts['triggers']['update']['data'][] =
@@ -2020,18 +2020,18 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
    *
    * @bug Too long, just split into multiple "triggers" or call subroutines.
    */
-  public function beforeUpdateSanitizeExtraFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  public function beforeUpdateSanitizeParticipantFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
     $this->debug('OLDVALUES '.print_r($oldValues, true));
     $this->debug('NEWVALUES '.print_r($newValues, true));
     $this->debug('CHANGED '.print_r($changed, true));
 
-    foreach ($this->project['extra_fields'] as $extraField) {
-      $fieldId = $extraField['id'];
-      $multiplicity = $extraField['multiplicity'];
-      $dataType = $extraField['dataType'];
+    foreach ($this->project['extra_fields'] as $participantField) {
+      $fieldId = $participantField['id'];
+      $multiplicity = $participantField['multiplicity'];
+      $dataType = $participantField['dataType'];
 
-      $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
 
       $fieldName = $this->joinTableFieldName($tableName, 'option_key');
       $valueName = $this->joinTableFieldName($tableName, 'option_value');
@@ -2047,7 +2047,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         if (array_search($valueName, $changed) === false) {
           continue 2;
         }
-        $dataOption = $extraField['dataOptions']->first(); // the only one
+        $dataOption = $participantField['dataOptions']->first(); // the only one
         $key = $dataOption['key'];
         $oldKey = $oldValues[$fieldName]?:$key;
         if ($oldKey !== $key) {
@@ -2077,12 +2077,12 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $max = PHP_INT_MAX;
         $label = $this->l->t('unknown');
         if ($multiplicity == 'groupofpeople') {
-          /** @var Entities\ProjectExtraFieldDataOption */
-          $generatorOption = $extraField->getDataOption(Uuid::NIL);
+          /** @var Entities\ProjectParticipantFieldDataOption */
+          $generatorOption = $participantField->getDataOption(Uuid::NIL);
           $max = $generatorOption['limit'];
-          $label = $extraField['name'];
+          $label = $participantField['name'];
         } else {
-          $newDataOption = $extraField->getDataOption($newGroupId);
+          $newDataOption = $participantField->getDataOption($newGroupId);
           $max = $newDataOption['limit'];
           $label = $newDataOption['label'];
         }
@@ -2100,8 +2100,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           // make sure that a group-option exists, clean up afterwards
           if (empty($newGroupId) || $newGroupId == Uuid::NIL) {
             $newGroupId = Uuid::create();
-            $dataOption = (new Entities\ProjectExtraFieldDataOption)
-                        ->setField($extraField)
+            $dataOption = (new Entities\ProjectParticipantFieldDataOption)
+                        ->setField($participantField)
                         ->setKey($newGroupId);
             $this->persist($dataOption);
           }
@@ -2117,7 +2117,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         // The current musician must always remain
 
         $oldMemberships = []; // musician_id => option_key
-        foreach ($extraField->getFieldData() as $fieldDatum) {
+        foreach ($participantField->getFieldData() as $fieldDatum) {
           $musicianId = $fieldDatum->getMusician()->getId();
           $optionKey = $fieldDatum->getOptionKey();
           if (array_search($musicianId, $newMembers) !== false
@@ -2151,18 +2151,18 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
   /**
    * In particular remove no longer needed groupofpeople options
    */
-  public function cleanupExtraFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  public function cleanupParticipantFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
-    /** @var Entities\ProjectExtraField $extraField */
-    foreach ($this->project['extra_fields'] as $extraField) {
-      if ($extraField->getMultiplicity() != Types\EnumExtraFieldMultiplicity::GROUPOFPEOPLE()) {
+    /** @var Entities\ProjectParticipantField $participantField */
+    foreach ($this->project['extra_fields'] as $participantField) {
+      if ($participantField->getMultiplicity() != Types\EnumParticipantFieldMultiplicity::GROUPOFPEOPLE()) {
         continue;
       }
-      /** @var Entities\ProjEctExtraFieldDataOption $dataOption */
-      foreach ($extraField->getDataOptions() as $dataOption) {
+      /** @var Entities\ProjEctParticipantFieldDataOption $dataOption */
+      foreach ($participantField->getDataOptions() as $dataOption) {
         if ((string)$dataOption->getKey() != Uuid::NIL
             && count($dataOption->getFieldData()) == 0) {
-          $extraField->getDataOptions()->removeElement($dataOption);
+          $participantField->getDataOptions()->removeElement($dataOption);
           $this->remove($dataOption);
           $this->flush();
         }
@@ -2234,16 +2234,16 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
   /**
    * Export the description for the table tabs.
    */
-  private function tableTabs($extraFields = false, $useFinanceTab = false)
+  private function tableTabs($participantFields = false, $useFinanceTab = false)
   {
     $dfltTabs = $this->defaultTableTabs($useFinanceTab);
 
-    if (!is_iterable($extraFields)) {
+    if (!is_iterable($participantFields)) {
       return $dfltTabs;
     }
 
     $extraTabs = [];
-    foreach ($extraFields as $field) {
+    foreach ($participantFields as $field) {
       if (empty($field['Tab'])) {
         continue;
       }
@@ -2260,7 +2260,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $extraTabs[] = [
           'id' => $extraTab,
           'name' => $this->l->t($extraTab),
-          'tooltip' => $this->toolTipsService['extra-fields-extra-tab'],
+          'tooltip' => $this->toolTipsService['participant-fields-extra-tab'],
         ];
       }
     }

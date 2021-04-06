@@ -24,7 +24,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 
@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\Finance\AlwaysReceivablesGenerator;
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
  */
-class ProjectExtraFieldsService
+class ProjectParticipantFieldsService
 {
   const UNSUPPORTED = [
     'simple' => [ 'boolean', ],
@@ -83,10 +83,10 @@ class ProjectExtraFieldsService
    */
   public function monetaryFields(Entities\Project $project)
   {
-    $extraFields = $project['extraFields'];
+    $participantFields = $project['participantFields'];
 
     $monetary = [];
-    foreach ($extraFields as $field) {
+    foreach ($participantFields as $field) {
       switch ($field['dataType']) {
       case 'service-fee':
       case 'deposit':
@@ -101,29 +101,29 @@ class ProjectExtraFieldsService
    * Internal function: given a surcharge choice compute the
    * associated amount of money and return that as float.
    *
-   * @key string|null $key Key from the extra-fields data table. $key may
+   * @key string|null $key Key from the participant-fields data table. $key may
    * be a comma-separated list of keys.
    *
-   * @param string|null $value Value form the extra-fields data table
+   * @param string|null $value Value form the participant-fields data table
    *
-   * @param Entities\ProjectExtraField $extraField Field definition.
+   * @param Entities\ProjectParticipantField $participantField Field definition.
    */
-  public function extraFieldSurcharge(?string $key, ?string $value, Entities\ProjectExtraField $extraField)
+  public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField)
   {
-    switch ($extraField->getMultiplicity()) {
+    switch ($participantField->getMultiplicity()) {
     case Multiplicity::SIMPLE():
       return (float)$value;
     case Multiplicity::GROUPOFPEOPLE():
       if (empty($key)) {
         break;
       }
-      return (float)$extraField->getDataOptions()->first()['data'];
+      return (float)$participantField->getDataOptions()->first()['data'];
     case Multiplicity::SINGLE():
       if (empty($key)) {
         break;
       }
-      /** @var Entities\ProjectExtraFieldDataOption */
-      $dataOption = $extraField->getDataOptions()->first();
+      /** @var Entities\ProjectParticipantFieldDataOption */
+      $dataOption = $participantField->getDataOptions()->first();
       // Non empty value means "yes".
       if ((string)$dataOption['key'] != $key) {
         $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$dataOption['key'].'"');
@@ -134,7 +134,7 @@ class ProjectExtraFieldsService
       if (empty($key)) {
         break;
       }
-      foreach ($extraField->getDataOptions() as $dataOption) {
+      foreach ($participantField->getDataOptions() as $dataOption) {
         if ((string)$dataOption['key'] == $key) {
           return (float)$dataOption['data'];
         }
@@ -148,7 +148,7 @@ class ProjectExtraFieldsService
       $keys = Util::explode(',', $key);
       $found = false;
       $amount = 0.0;
-      foreach($extraField->getDataOptions() as $dataOption) {
+      foreach($participantField->getDataOptions() as $dataOption) {
         if (array_search((string)$dataOption['key'], $keys) !== false) {
           $amount += (float)$dataOption['data'];
           $found = true;
@@ -165,7 +165,7 @@ class ProjectExtraFieldsService
       $keys = Util::explode(',', $key);
       $found = false;
       $amount = 0.0;
-      foreach($extraField->getDataOptions() as $dataOption) {
+      foreach($participantField->getDataOptions() as $dataOption) {
         if (array_search((string)$dataOption['key'], $keys) !== false) {
           $amount += (float)$dataOption['data'];
           $found = true;

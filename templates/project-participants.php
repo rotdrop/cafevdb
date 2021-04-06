@@ -32,7 +32,7 @@ $projectId = $renderer->getProjectId();
 $nav = '';
 $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
-$nav .= $pageNavigation->pageControlElement('project-extra-fields', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
 if ($roles->inTreasurerGroup()) {
   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);

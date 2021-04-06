@@ -146,16 +146,16 @@ class InstrumentationService
   }
 
   /**Export the description for the table tabs. */
-  public function tableTabs($extraFields = false, $useFinanceTab = false)
+  public function tableTabs($participantFields = false, $useFinanceTab = false)
   {
     $dfltTabs = $this->defaultTableTabs($useFinanceTab);
 
-    if (!is_array($extraFields)) {
+    if (!is_array($participantFields)) {
       return $dfltTabs;
     }
 
     $extraTabs = array();
-    foreach ($extraFields as $field) {
+    foreach ($participantFields as $field) {
       if (empty($field['Tab'])) {
         continue;
       }
@@ -172,7 +172,7 @@ class InstrumentationService
         $extraTabs[] = [
           'id' => $extraTab,
           'name' => $this->l->t($extraTab),
-          'tooltip' => $this->toolTipsService['extra-fields-extra-tab'],
+          'tooltip' => $this->toolTipsService['participant-fields-extra-tab'],
         ];
       }
     }

@@ -30,7 +30,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  /** @var Entities\ProjectExtraField */
+  /** @var Entities\ProjectParticipantField */
   protected $serviceFeeField;
 
   public function __construct(EntityManager $entityManager) {
@@ -43,7 +43,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    * however, means that the DB entities must not be passed through
    * the constructor.
    */
-  public function bind(Entities\ProjectExtraField $serviceFeeField)
+  public function bind(Entities\ProjectParticipantField $serviceFeeField)
   {
     $this->serviceFeeField = $serviceFeeField;
   }

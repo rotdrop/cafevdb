@@ -33,12 +33,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * ProjectExtraFields
+ * ProjectParticipantFields
  *
- * @ORM\Table(name="ProjectExtraFields")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectExtraFieldsRepository")
+ * @ORM\Table(name="ProjectParticipantFields")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldsRepository")
  */
-class ProjectExtraField implements \ArrayAccess
+class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -53,7 +53,7 @@ class ProjectExtraField implements \ArrayAccess
   private $id = null;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="extraFields", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantFields", fetch="EXTRA_LAZY")
    */
   private $project;
 
@@ -72,23 +72,23 @@ class ProjectExtraField implements \ArrayAccess
   private $name;
 
   /**
-   * @var Types\EnumExtraFieldMultiplicity
+   * @var Types\EnumParticipantFieldMultiplicity
    *
-   * @ORM\Column(type="EnumExtraFieldMultiplicity", nullable=false)
+   * @ORM\Column(type="EnumParticipantFieldMultiplicity", nullable=false)
    */
   private $multiplicity;
 
   /**
-   * @var EnumExtraFieldDataType
+   * @var EnumParticipantFieldDataType
    *
-   * @ORM\Column(type="EnumExtraFieldDataType", nullable=false, options={"default"="text"})
+   * @ORM\Column(type="EnumParticipantFieldDataType", nullable=false, options={"default"="text"})
    */
   private $dataType = 'text';
 
   /**
-   * @var ProjectExtraFieldMetaDatum
+   * @var ProjectParticipantFieldMetaDatum
    *
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist"}, fetch="EXTRA_LAZY")
    * @ORM\OrderBy({"label" = "ASC"})
    */
   private $dataOptions;
@@ -150,7 +150,7 @@ class ProjectExtraField implements \ArrayAccess
   private $disabled = false;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="field", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="field", fetch="EXTRA_LAZY")
    */
   private $fieldData;
 
@@ -175,9 +175,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param int $id
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setId(int $id):ProjectExtraField
+  public function setId(int $id):ProjectParticipantField
   {
     $this->id = $id;
 
@@ -189,9 +189,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param Project $project
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setProject($project):ProjectExtraField
+  public function setProject($project):ProjectParticipantField
   {
     $this->project = $project;
 
@@ -213,9 +213,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param Collection $dataOptions
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setDataOptions($dataOptions):ProjectExtraField
+  public function setDataOptions($dataOptions):ProjectParticipantField
   {
     $this->dataOptions = $dataOptions;
 
@@ -238,9 +238,9 @@ class ProjectExtraField implements \ArrayAccess
    * @param mixed $key Everything which can be converted to an UUID by
    * Uuid::uuidBytes().
    *
-   * @return null|ProjectExtraFieldDataOption
+   * @return null|ProjectParticipantFieldDataOption
    */
-  public function getDataOption($key):?ProjectExtraFieldDataOption
+  public function getDataOption($key):?ProjectParticipantFieldDataOption
   {
     if (empty($key = Uuid::uuidBytes($key))) {
       return null;
@@ -262,9 +262,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param Collection $fieldData
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setFieldData($fieldData):ProjectExtraField
+  public function setFieldData($fieldData):ProjectParticipantField
   {
     $this->fieldData = $fieldData;
 
@@ -286,9 +286,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param int|null $displayOrder
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setDisplayOrder($displayOrder):ProjectExtraField
+  public function setDisplayOrder($displayOrder):ProjectParticipantField
   {
     $this->displayOrder = $displayOrder;
 
@@ -310,9 +310,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string $name
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setName($name):ProjectExtraField
+  public function setName($name):ProjectParticipantField
   {
     $this->name = $name;
 
@@ -332,13 +332,13 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Set multiplicity.
    *
-   * @param EnumExtraFieldMultiplicity|string $multiplicity
+   * @param EnumParticipantFieldMultiplicity|string $multiplicity
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setMultiplicity($multiplicity):ProjectExtraField
+  public function setMultiplicity($multiplicity):ProjectParticipantField
   {
-    $this->multiplicity = new Types\EnumExtraFieldMultiplicity($multiplicity);
+    $this->multiplicity = new Types\EnumParticipantFieldMultiplicity($multiplicity);
 
     return $this;
   }
@@ -346,9 +346,9 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Get multiplicity.
    *
-   * @return EnumExtraFieldMultiplicity
+   * @return EnumParticipantFieldMultiplicity
    */
-  public function getMultiplicity():Types\EnumExtraFieldMultiplicity
+  public function getMultiplicity():Types\EnumParticipantFieldMultiplicity
   {
     return $this->multiplicity;
   }
@@ -356,13 +356,13 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Set dataType.
    *
-   * @param EnumExtraFieldDataType|string $dataType
+   * @param EnumParticipantFieldDataType|string $dataType
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setDataType($dataType):ProjectExtraField
+  public function setDataType($dataType):ProjectParticipantField
   {
-    $this->dataType = new Types\EnumExtraFieldDataType($dataType);
+    $this->dataType = new Types\EnumParticipantFieldDataType($dataType);
 
     return $this;
   }
@@ -370,9 +370,9 @@ class ProjectExtraField implements \ArrayAccess
   /**
    * Get dataType.
    *
-   * @return EnumExtraFieldDataType
+   * @return EnumParticipantFieldDataType
    */
-  public function getDataType():Types\EnumExtraFieldDataType
+  public function getDataType():Types\EnumParticipantFieldDataType
   {
     return $this->dataType;
   }
@@ -382,9 +382,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string|null|\DateTimeInterface $dueDate
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setDueDate($dueDate):ProjectExtraField
+  public function setDueDate($dueDate):ProjectParticipantField
   {
     if (is_string($dueDate)) {
       $this->dueDate = new \DateTimeImmutable($dueDate);
@@ -409,9 +409,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string $defaultValue
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setDefaultValue($defaultValue):ProjectExtraField
+  public function setDefaultValue($defaultValue):ProjectParticipantField
   {
     $this->defaultValue = $defaultValue;
 
@@ -433,9 +433,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string $toolTip
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setToolTip($toolTip):ProjectExtraField
+  public function setToolTip($toolTip):ProjectParticipantField
   {
     $this->toolTip = $toolTip;
 
@@ -457,9 +457,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string $tab
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setTab($tab):ProjectExtraField
+  public function setTab($tab):ProjectParticipantField
   {
     $this->tab = $tab;
 
@@ -481,9 +481,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param bool|null $encrypted
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setEncrypted($encrypted):ProjectExtraField
+  public function setEncrypted($encrypted):ProjectParticipantField
   {
     $this->encrypted = $encrypted;
 
@@ -505,9 +505,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string|null $readers
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setReaders($readers):ProjectExtraField
+  public function setReaders($readers):ProjectParticipantField
   {
     $this->readers = $readers;
 
@@ -529,9 +529,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param string|null $writers
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setWriters($writers):ProjectExtraField
+  public function setWriters($writers):ProjectParticipantField
   {
     $this->writers = $writers;
 
@@ -553,9 +553,9 @@ class ProjectExtraField implements \ArrayAccess
    *
    * @param bool $disabled
    *
-   * @return ProjectExtraField
+   * @return ProjectParticipantField
    */
-  public function setDisabled($disabled):ProjectExtraField
+  public function setDisabled($disabled):ProjectParticipantField
   {
     $this->disabled = $disabled;
 

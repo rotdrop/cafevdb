@@ -31,8 +31,8 @@ use OCP\ILogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldMultiplicity as Multiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumExtraFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
 class ReceivablesGeneratorFactory
 {
@@ -58,13 +58,13 @@ class ReceivablesGeneratorFactory
    * Construct the generator for the given entity. The
    * generator class-name is stored in the data-option with Uuid::NIL.
    *
-   * @param Entities\ProjectExtraField $serviceFeeField
+   * @param Entities\ProjectParticipantField $serviceFeeField
    *
    * @return IRecurringReceivablesGenerator
    *
    * @todo This is too complicated.
    */
-  public function getGenerator(Entities\ProjectExtraField $serviceFeeField):IRecurringReceivablesGenerator
+  public function getGenerator(Entities\ProjectParticipantField $serviceFeeField):IRecurringReceivablesGenerator
   {
     if ($serviceFeeField->getMultiplicity() != Multiplicity::RECURRING()
         || $serviceFeeField->getDataType() != FieldDataType::SERVICE_FEE()) {
@@ -84,7 +84,7 @@ class ReceivablesGeneratorFactory
     if (count($nilOptions) !== 1) {
       throw new \RuntimeException($this->l->t('Did not find exactly one data-option with nil-uuid.'));
     }
-    /** @var Entities\ProjectExtraFieldDataOption */
+    /** @var Entities\ProjectParticipantFieldDataOption */
     $generatorOption = $nilOptions->first();
 
     // try to construct the generator

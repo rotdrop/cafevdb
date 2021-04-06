@@ -206,7 +206,7 @@ const instrumentationNumbersPopup = function(containerSel, post) {
 };
 
 /**
- * Generate a popup for the extra-fields setup
+ * Generate a popup for the participant-fields setup
  *
  * @param {String} containerSel The ambient element of the container
  * (i.e. the base page, or the div holding the dialog this one was
@@ -220,13 +220,13 @@ const extraFieldsPopup = function(containerSel, post) {
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
-  const template = 'project-extra-fields';
+  const template = 'project-participant-fields';
   const tableOptions = {
     AmbientContainerSelector: containerSel,
     DialogHolderCSSId: template + '-dialog',
     template,
     templateRenderer: Page.templateRenderer(template),
-    Table: 'ProjectExtraFields',
+    Table: 'ProjectParticipantFields',
     projectId: post.projectId,
     projectName: post.projectName,
     // Now special options for the dialog popup
@@ -314,7 +314,7 @@ const actions = function(select, containerSel) {
     // popup-box.
   case 'project-participants':
   case 'sepa-debit-mandates':
-  case 'project-extra-fields':
+  case 'project-participant-fields':
     // @TODO: this really could be a popup
     post.template = selectedValue;
     CAFEVDB.formSubmit('', $.param(post), 'post');

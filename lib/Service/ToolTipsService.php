@@ -304,33 +304,33 @@ invited to have a look, but please do not change anything unless you know what y
 
       'expert-operations' => $this->l->t('For those who know what they are doing, which essentially means: don\'t.'),
 
-      'extra-field-' => $this->l->t('placeholder'),
+      'participant-field-' => $this->l->t('placeholder'),
 
-      'extra-field-choices-groupofpeople' => $this->l->t('Group of people, e.g. to define room-mates.'),
+      'participant-field-choices-groupofpeople' => $this->l->t('Group of people, e.g. to define room-mates.'),
 
-      'extra-field-choices-groupsofpeople' => $this->l->t('Group of people with predefined group-names and a potentially
+      'participant-field-choices-groupsofpeople' => $this->l->t('Group of people with predefined group-names and a potentially
 different maximal number of people fitting in the group. For example to define room-mates.'),
 
-      'extra-field-choices-multiple' => $this->l->t('Multiple choices, excluding each other.'),
+      'participant-field-choices-multiple' => $this->l->t('Multiple choices, excluding each other.'),
 
-      'extra-field-choices-parallel' => $this->l->t('Multiple choices where, more than one option can be selected.'),
+      'participant-field-choices-parallel' => $this->l->t('Multiple choices where, more than one option can be selected.'),
 
-      'extra-field-choices-single' => $this->l->t('Simple yes-no choice.'),
+      'participant-field-choices-single' => $this->l->t('Simple yes-no choice.'),
 
-      'extra-field-general-simple' => $this->l->t('General date field with the respective meaning.'),
+      'participant-field-general-simple' => $this->l->t('General date field with the respective meaning.'),
 
-      'extra-field-surcharge-groupofpeople' => $this->l->t('E.g. to define double-room surcharges.'),
+      'participant-field-surcharge-groupofpeople' => $this->l->t('E.g. to define double-room surcharges.'),
 
-      'extra-field-surcharge-groupsofpeople' => $this->l->t('Surcharge-group of people with predefined group-names and a potentially
+      'participant-field-surcharge-groupsofpeople' => $this->l->t('Surcharge-group of people with predefined group-names and a potentially
 different maximal number of people fitting in the group. Maybe this is completely useless ...'),
 
-      'extra-field-surcharge-multiple' => $this->l->t('Multiple choices, excluding each other. For the individual choices a potentially different amount of money may be charged.'),
+      'participant-field-surcharge-multiple' => $this->l->t('Multiple choices, excluding each other. For the individual choices a potentially different amount of money may be charged.'),
 
-      'extra-field-surcharge-parallel' => $this->l->t('Multiple choice where more than one option can be selected. For the individual choices a potentially different amount of money may be charged.'),
+      'participant-field-surcharge-parallel' => $this->l->t('Multiple choice where more than one option can be selected. For the individual choices a potentially different amount of money may be charged.'),
 
-      'extra-field-surcharge-single' => $this->l->t('Simple yes-no choice which increases the project fees. Please fill also the "amount" field.'),
+      'participant-field-surcharge-single' => $this->l->t('Simple yes-no choice which increases the project fees. Please fill also the "amount" field.'),
 
-      'extra-fields-allowed-values' => [
+      'participant-fields-allowed-values' => [
         'generator' => $this->l->t('Name of a the generator for this field. Can be be a fully-qualified PHP class-name or one of the known short-cuts.'),
         'generator-run' => $this->l->t('Run the value generator. Depending on the generator this might result in new fields or just does nothing if all relevant fields are already there.'),
         'regenerate' => $this->l->t('Recompute the values of this particular recurring field.'),
@@ -358,68 +358,68 @@ help text in order to inform others what this option is about.'),
         'limit' => $this->l->t('The maximum allowed number of people in a "group of people" field'),
       ],
 
-      'extra-fields-allowed-values-single' => $this->l->t('For a surcharge option, please enter here the surcharge amount
+      'participant-fields-allowed-values-single' => $this->l->t('For a surcharge option, please enter here the surcharge amount
 associated with this option.'),
 
-      'extra-fields-default-multi-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
+      'participant-fields-default-multi-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
-      'extra-fields-default-single-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
+      'participant-fields-default-single-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
-      'extra-fields-default-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
+      'participant-fields-default-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
-      'extra-fields-disabled' => $this->l->t('Disable this extra field. This will not erase any data in the
+      'participant-fields-disabled' => $this->l->t('Disable this extra field. This will not erase any data in the
 data-base, but simply mark the field as unused and hide it from sight.'),
 
-      'extra-fields-display-order' => $this->l->t('Define the display priority. Larger values will move the item more to
+      'participant-fields-display-order' => $this->l->t('Define the display priority. Larger values will move the item more to
 the left or the top inside its table-tab.'),
 
-      'extra-fields-encrypted' => $this->l->t('Expert use: store encrypted values in the data-base. If unsure: <em>DON\'T</em>'),
+      'participant-fields-encrypted' => $this->l->t('Expert use: store encrypted values in the data-base. If unsure: <em>DON\'T</em>'),
 
-      'extra-fields-extra-tab' => $this->l->t('Extra-tab to group project-specific data which just didn\'t fit
+      'participant-fields-extra-tab' => $this->l->t('Extra-tab to group project-specific data which just didn\'t fit
 somewhere else.'),
 
-      'extra-fields-field-index' => $this->l->t('Backwards-compatibility link into extra-data stored together with old
+      'participant-fields-field-index' => $this->l->t('Backwards-compatibility link into extra-data stored together with old
 projects.'),
 
-      'extra-fields-field-name' => $this->l->t('Just the name for this option. Please keep the name as <em>short</em> as
+      'participant-fields-field-name' => $this->l->t('Just the name for this option. Please keep the name as <em>short</em> as
 possible, but try to be descriptive. If further explanations are
 needed, then please enter those in the <strong>Tooltip</strong> field in the
 <strong>Display</strong> tab.'),
 
-      'extra-fields-maximum-group-size' => $this->l->t('The maximum number of peopel allowed in the group.'),
+      'participant-fields-maximum-group-size' => $this->l->t('The maximum number of peopel allowed in the group.'),
 
-      'extra-fields-new-tab' => $this->l->t('Define a new table-tab. In order to do so, first deselect any
+      'participant-fields-new-tab' => $this->l->t('Define a new table-tab. In order to do so, first deselect any
 predefined tab in the select box above, then enter the new name. The
 new tab-name will also be available as tab-option for other fields.'),
 
-      'extra-fields-readers' => $this->l->t('Members of these Cloud user-groups are allowed to view the
+      'participant-fields-readers' => $this->l->t('Members of these Cloud user-groups are allowed to view the
 field. If left blank, every logged in user is allowed to view the
 field.'),
 
-      'extra-fields-show-data' => $this->l->t('Each option has an optional data-entry attached to it. Normally, this
+      'participant-fields-show-data' => $this->l->t('Each option has an optional data-entry attached to it. Normally, this
 is only useful for surcharge options, where the "data-entry" just is
 the extra-charge amount associated to the option. Still, if you feel a
 need to view the data-items also for non-surcharge options, then just
 click here.'),
 
-      'extra-fields-show-deleted' => $this->l->t('Options already attached to musicians can no longer be deleted in
+      'participant-fields-show-deleted' => $this->l->t('Options already attached to musicians can no longer be deleted in
 order to prevent data-loss in the underlying data-base. It is even
 possible to recover those options by checking this checkbox in order to make them visible and
 clicking the "recover" button to the left of each deleted entry.'),
 
-      'extra-fields-tab' => $this->l->t('Define the table-tab this entry should be grouped with. It is also
+      'participant-fields-tab' => $this->l->t('Define the table-tab this entry should be grouped with. It is also
 possible to define new table-tabs. In order to do so, first deselect
 any possible selected tab, and then enter the name of a new tab in the
 input box below.'),
 
-      'extra-fields-tooltip' => $this->l->t('Optionally define a tool-tip (context-help) for the field. The tooltip
+      'participant-fields-tooltip' => $this->l->t('Optionally define a tool-tip (context-help) for the field. The tooltip
 may contain HTML formatting.'),
 
-      'extra-fields-type' => $this->l->t('Data-type for the custom field. The most practical types are probably
+      'participant-fields-type' => $this->l->t('Data-type for the custom field. The most practical types are probably
 yes-no and multiple-choice options. Extra-charge options can also be
 defined, with the respective extra-charge amount tied to the option.'),
 
-      'extra-fields-writers' => $this->l->t('Members of these Cloud user-groups are allowed to change the
+      'participant-fields-writers' => $this->l->t('Members of these Cloud user-groups are allowed to change the
 field. If left blank, every logged in user is allowed to change this field.'),
 
       'file-attachments-select' => $this->l->t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
@@ -727,7 +727,7 @@ events associated to the project.
 Events can be added and modified
 as needed.'),
 
-      'project-action-extra-fields' => $this->l->t('Define extra-fields for the instrumentation table. E.g.: surcharge
+      'project-action-participant-fields' => $this->l->t('Define participant-fields for the instrumentation table. E.g.: surcharge
 fields for double-/single-room preference, room-mates and such.'),
 
       'project-action-files' => $this->l->t('Change to the folder with project related files.'),
@@ -745,7 +745,7 @@ to pages with the instrumentation, events, instrumentation numbers etc.'),
 
       'project-direct-debit-allowed' => $this->l->t('Some people gave us debit mandates but still want to pay by bank-transfer. Uncheck in order to exclude the person from direct debits transfers.'),
 
-      'project-extra-fee-summary' => $this->l->t('Sum of the fees for all booked etra items.'),
+      'project-participant-fee-summary' => $this->l->t('Sum of the fees for all booked etra items.'),
 
       'project-finance-tab' => $this->l->t('Everything related to project fees, surcharges, bank transfers, debit
 mandates.'),

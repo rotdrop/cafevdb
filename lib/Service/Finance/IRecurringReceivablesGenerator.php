@@ -29,7 +29,7 @@ use \DateTimeImmutable as DateTime;
 
 /**
  * Generate recurring receivables and manifest them as recurring
- * Entities\ProjectExtraField entity. The two prominent examples are
+ * Entities\ProjectParticipantField entity. The two prominent examples are
  * membership fees and instrument insurances.
  */
 interface IRecurringReceivablesGenerator
@@ -39,12 +39,12 @@ interface IRecurringReceivablesGenerator
   /**
    * Update the list of receivables, for example by generating fields
    * up to the current date. The link to the actual
-   * Entities\ProjectExtraField entity has to be implemented by other
+   * Entities\ProjectParticipantField entity has to be implemented by other
    * means, e.g. in the constructor. The generated receivables may not
    * yet have been persisted.
    *
    * @return Collection Collection of
-   * Entities\ProjectExtraFieldDataOption entities covering all
+   * Entities\ProjectParticipantFieldDataOption entities covering all
    * relevant receivables.
    */
   public function generateReceivables():Collection;
@@ -52,14 +52,14 @@ interface IRecurringReceivablesGenerator
   /**
    * Update the amount to invoice for the given receivable.
    *
-   * @param Entities\ProjectExtraFieldDataOption $receivable
+   * @param Entities\ProjectParticipantFieldDataOption $receivable
    *   The option to update/recompute.
    *
    * @param null|Entities\Musician $musician
    *   The musician to update the service claim for. If null, the
    *   values for all affected musicians have to be recomputed.
    */
-  public function updateReceivable(Entities\ProjectExtraFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectExtraFieldDataOption;
+  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectParticipantFieldDataOption;
 
   /**
    * Compute the amounts to invoice for all relevant musicians and

@@ -39,11 +39,11 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\ProjectExtraFields as Renderer;
-use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 
-class ProjectExtraFieldsController extends Controller {
+class ProjectParticipantFieldsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -57,8 +57,8 @@ class ProjectExtraFieldsController extends Controller {
   /** @var \OCA\CAFEVDB\Service\FuzzyInputService */
   private $fuzzyInput;
 
-  /** @var \OCA\CAFEVDB\Service\ProjectExtraFieldsService */
-  private $extraFieldsService;
+  /** @var \OCA\CAFEVDB\Service\ProjectParticipantFieldsService */
+  private $participantFieldsService;
 
   /** @var EntityManager */
   protected $entityManager;
@@ -72,7 +72,7 @@ class ProjectExtraFieldsController extends Controller {
     , Renderer $renderer
     , PHPMyEdit $phpMyEdit
     , FuzzyInputService $fuzzyInput
-    , ProjectExtraFieldsService $extraFieldsService
+    , ProjectParticipantFieldsService $participantFieldsService
   ) {
 
     parent::__construct($appName, $request);
@@ -83,7 +83,7 @@ class ProjectExtraFieldsController extends Controller {
     $this->renderer = $renderer;
     $this->pme = $phpMyEdit;
     $this->fuzzyInput = $fuzzyInput;
-    $this->extraFieldsService = $extraFieldsService;
+    $this->participantFieldsService = $participantFieldsService;
     $this->l = $this->l10N();
   }
 
@@ -244,8 +244,8 @@ class ProjectExtraFieldsController extends Controller {
         $dataOptions = array_values($dataOptions); // get rid of -1 index
 
         // sanitize and potentially add missing keys
-        $dataOptions = $this->extraFieldsService->explodeAllowedValues(
-          $this->extraFieldsService->implodeAllowedValues($dataOptions),
+        $dataOptions = $this->participantFieldsService->explodeAllowedValues(
+          $this->participantFieldsService->implodeAllowedValues($dataOptions),
           false);
 
         if (count($dataOptions) !== 1) {

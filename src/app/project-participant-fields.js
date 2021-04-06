@@ -33,7 +33,7 @@ require('jquery-ui/themes/base/autocomplete.css');
 
 // NB: much of the visibility stuff is handled by CSS, e.g. which
 // input is shown for which multiplicity.
-require('project-extra.css');
+require('project-participant-fields.css');
 
 const ready = function(selector, resizeCB) {
   const container = $(selector);
@@ -169,7 +169,7 @@ const ready = function(selector, resizeCB) {
     const cleanup = function() {};
     const request = 'allowed-value-regenerate';
     $.post(
-      generateUrl('projects/extra-fields/' + request), {
+      generateUrl('projects/participant-fields/' + request), {
         data: {
           fieldId: PHPMyEdit.rec(container),
           key,
@@ -195,7 +195,7 @@ const ready = function(selector, resizeCB) {
     const cleanup = function() {};
     const request = 'allowed-values-generator-run';
     $.post(
-      generateUrl('projects/extra-fields/' + request), {
+      generateUrl('projects/participant-fields/' + request), {
         data: {
           fieldId,
         },
@@ -331,7 +331,7 @@ const ready = function(selector, resizeCB) {
       };
 
       $.post(
-        generateUrl('projects/extra-fields/' + request),
+        generateUrl('projects/participant-fields/' + request),
         postData)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -400,7 +400,7 @@ const ready = function(selector, resizeCB) {
       };
 
       $.post(
-        generateUrl('projects/extra-fields/' + request),
+        generateUrl('projects/participant-fields/' + request),
         postData)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -530,7 +530,7 @@ const ready = function(selector, resizeCB) {
   });
 
   // synthesize resize events for textareas.
-  textareaResize(container, 'textarea.field-tooltip, textarea.extra-field-tooltip');
+  textareaResize(container, 'textarea.field-tooltip, textarea.participant-field-tooltip');
 
   console.info('before resizeCB');
   resizeCB();
@@ -540,7 +540,7 @@ const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
     // const container = PHPMyEdit.container();
-    // if (!container.hasClass('project-extra-fields')) {
+    // if (!container.hasClass('project-participant-fields')) {
     //   return; // not for us
     // }
     // ready(); // ????

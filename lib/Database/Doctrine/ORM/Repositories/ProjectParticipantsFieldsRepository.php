@@ -27,7 +27,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityRepository;
 
-class ProjectExtraFieldsRepository extends EntityRepository
+class ProjectParticipantFieldsRepository extends EntityRepository
 {
   const ALIAS = 'pexf';
 

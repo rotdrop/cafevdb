@@ -47,7 +47,7 @@ class Projects extends PMETableViewBase
   const ENTITY = Entities\Project::class;
   const INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const INSTRUMENTS_TABLE = 'Instruments';
-  const EXTRA_FIELDS_TABLE  = 'ProjectExtraFields';
+  const PARTICIPANT_FIELDS_TABLE  = 'ProjectParticipantFields';
   const NAME_LENGTH_MAX = 20;
   const POSTER_JOIN = 'ProjectPoster';
   const FLYER_JOIN = 'ProjectFlyer';
@@ -90,8 +90,8 @@ class Projects extends PMETableViewBase
       'column' => 'id',
     ],
     [
-      'table' => self::EXTRA_FIELDS_TABLE,
-      'entity' => Entities\ProjectExtraField::class,
+      'table' => self::PARTICIPANT_FIELDS_TABLE,
+      'entity' => Entities\ProjectParticipantField::class,
       'readonly' => true,
       'identifier' => [
         'project_id' => 'id',
@@ -264,7 +264,7 @@ class Projects extends PMETableViewBase
         'default'  => '0',
         'select'   => 'C',
         'sort'     => true,
-        'tooltip'  => $this->toolTipsService['extra-fields-disabled']
+        'tooltip'  => $this->toolTipsService['participant-fields-disabled']
       ];
     }
 
@@ -357,7 +357,7 @@ __EOT__;
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::EXTRA_FIELDS_TABLE, 'name',
+      $opts['fdd'], self::PARTICIPANT_FIELDS_TABLE, 'name',
       [
         'name' => $this->l->t('Extra Member Data'),
         'options'  => 'FLCVD',
@@ -365,15 +365,15 @@ __EOT__;
         'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \', \')',
         'php|VDCP'  => function($value, $op, $field, $row, $recordId, $pme) {
           $post = [
-            'ProjectExtraFields' => $value,
-            'template' => 'project-extra-fields',
+            'ProjectParticipantFields' => $value,
+            'template' => 'project-participant-fields',
             'projectName' => $row[$this->queryField('name', $pme->fdd)],
             'project_id' => $recordId,
             'projectId' => $recordId,
           ];
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
-          $title = $this->toolTipsService['project-action-extra-fields'];
+          $title = $this->toolTipsService['project-action-participant-fields'];
           $link =<<<__EOT__
 <li class="nav tooltip-top" title="$title">
   <a class="nav" href="#" data-post="$post" data-json='$json'>
@@ -549,8 +549,8 @@ project without a flyer first.");
                  'value' => 'project-instrumentation-numbers',
                  'name' => $this->l->t('Instrumentation Numbers') ],
                [ 'type' => 'option',
-                 'title' => $this->toolTipsService['project-action-extra-fields'],
-                 'value' => 'project-extra-fields',
+                 'title' => $this->toolTipsService['project-action-participant-fields'],
+                 'value' => 'project-participant-fields',
                  'name' => $this->l->t('Extra Member Data') ], ])
              .$this->pageNavigation->htmlTagsFromArray([
                'pre' => '<optgroup>',

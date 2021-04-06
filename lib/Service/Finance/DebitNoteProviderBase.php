@@ -45,7 +45,7 @@ abstract class DebitNoteProviderBase implements IDebitNoteProvider
 
 //       $memberProjectId = Config::getValue('memberTableId');
 //       empty($projectName) && $projectName = Projects::fetchName($projectId, $handle);
-//       $monetary = ProjectExtra::monetaryFields($projectId, $handle);
+//       $monetary = ProjectParticipant::monetaryFields($projectId, $handle);
 
 //       $projectTable = $projectName.'View';
 //       $mandateTable = 'SepaDebitMandates';
@@ -144,7 +144,7 @@ abstract class DebitNoteProviderBase implements IDebitNoteProvider
 //           }
 //           $allowed  = $fieldInfo['AllowedValues'];
 //           $type     = $fieldInfo['Type']['Multiplicity'];
-//           $amount  += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type);
+//           $amount  += DetailedInstrumentation::participantFieldSurcharge($value, $allowed, $type);
 //         }
 //         $row['SurchargeFees'] = $amount;
 //         $table[] = $row;

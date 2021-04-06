@@ -59,13 +59,13 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
   public function generateReceivables():Collection
   {
     $count = count($this->serviceFeeField->getDataOptions());
-    $receivable = (new Entities\ProjectExtraFieldDataOption)
+    $receivable = (new Entities\ProjectParticipantFieldDataOption)
                 ->setField($this->serviceFeeField)
                 ->setKey(Uuid::create())
                 ->setLabel($this->l->t('Option %d', $count))
                 ->setData($this->amount);
     $this->serviceFeeField->getDataOptions()->set($receivable->getKey()->getBytes(), $receivable);
-    return $this->serviceFeeField->getDataOptions()->filter(function(Entities\ProjectExtraFieldDataOption $receivable) {
+    return $this->serviceFeeField->getDataOptions()->filter(function(Entities\ProjectParticipantFieldDataOption $receivable) {
       return (string)$receivable->getKey() != Uuid::NIL;
     });
   }
@@ -73,7 +73,7 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
   /**
    * {@inheritdoc}
    */
-  public function updateReceivable(Entities\ProjectExtraFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectExtraFieldDataOption
+  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectParticipantFieldDataOption
   {
     // - fetch all project participants
     // - enter the payment option into the data table
@@ -87,21 +87,21 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
     return $receivable;
   }
 
-  private function updateParticipant(Entities\ProjectExtraFieldDataOption $receivable, Entities\ProjectParticipant $participant)
+  private function updateParticipant(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant)
   {
-    $extraFieldsData = $participant->getExtraFieldsData();
-    if ($extraFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]))->count() == 0) {
+    $participantFieldsData = $participant->getParticipantFieldsData();
+    if ($participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]))->count() == 0) {
       $this->logInfo('RECEIVABLE update of '.$participant->getMusician()->getFirstName());
-      $datum = (new Entities\ProjectExtraFieldDatum)
+      $datum = (new Entities\ProjectParticipantFieldDatum)
              ->setField($receivable->getField())
              ->setMusician($participant->getMusician())
              ->setProject($participant->getProject())
              ->setOptionKey($receivable->getKey())
              ->setOptionValue($receivable->getData());
-      $extraFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
+      $participantFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
       $receivable->getFieldData()->add($datum);
-      $participant->getMusician()->getProjectExtraFieldsData()->add($datum);
-      $participant->getProject()->getExtraFieldsData()->add($datum);
+      $participant->getMusician()->getProjectParticipantFieldsData()->add($datum);
+      $participant->getProject()->getParticipantFieldsData()->add($datum);
     }
   }
 }

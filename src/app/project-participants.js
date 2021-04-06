@@ -682,13 +682,13 @@ const myReady = function(selector, resizeCB) {
   }
 
   // Handle buttons to update or delete recurrent receivables
-  container.find('form.pme-form tr.extra-field.recurring td.operations input.regenerate')
+  container.find('form.pme-form tr.participant-field.recurring td.operations input.regenerate')
     .on('click', function(event) {
       alert('hello');
       return false;
     });
 
-  container.find('form.pme-form tr.extra-field.recurring td.operations input.delete-undelete')
+  container.find('form.pme-form tr.participant-field.recurring td.operations input.delete-undelete')
     .on('click', function(event) {
       alert('hello');
       return false;

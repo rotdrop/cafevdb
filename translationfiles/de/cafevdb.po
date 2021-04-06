@@ -288,7 +288,7 @@ msgid "Hello World!"
 msgstr "Also, `Hello World!' muss man nun wirklich nicht übersetzen ..."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ExpertModeController.php:152
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1222
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1222
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/expertmode.php:117
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/expertmode.php:118
 msgid "empty"
@@ -1238,69 +1238,69 @@ msgstr "Erlaubnis verwehrt"
 msgid "Project-id AND -name have to be specified (%s / %s)"
 msgstr "Projekt-Id und -Name müssen angegeben werden (%s / %s)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:99
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:140
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:179
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:99
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:140
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:179
 #, php-format
 msgid "Missing parameters in request %s"
 msgstr "Fehlender Anfrage-Parameter `%s'"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:107
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:107
 #, php-format
 msgid "Unable to fetch field with id \"%s\"."
 msgstr "Kann das Feld mit der Id \"%s\" nicht laden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:113
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:113
 #, php-format
 msgid "Unable to load generator for recurring receivables \"%s\"."
 msgstr ""
 "Kann den Generator für die regelmäßigen Unkostenbeiträge \"%s\" nicht laden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:146
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:194
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:146
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:194
 #, php-format
 msgid "No or too many items available: %s"
 msgstr "Keine oder zu viele Einträge vorhanden: %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:151
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:151
 #, php-format
 msgid "Generator data must be tagged with \"%s\" label, got \"%s\"."
 msgstr "Generator-Daten müssen die \"%s\" Markierung tragen, nicht \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:155
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:155
 #, php-format
 msgid "Generator data must be tagged with NIL uuid, got \"%s\"."
 msgstr ""
 "Generator-Daten müssen mit der NIL-UUID markiert sein, nicht mit \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:160
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:160
 #, php-format
 msgid "Generator \"%s\" does not appear to be valid PHP class name."
 msgstr ""
 "Beim Generator \"%s\" handelt es sich nicht um eine gültige PHP-Klasse."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:171
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:171
 #, php-format
 msgid "Generator \"%s\" could not be instantiated."
 msgstr "Der Generator \"%s\" konnte nicht instantiiert werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:175
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:175
 #, php-format
 msgid "Generator \"%s\" successfully validated."
 msgstr "Generator \"%s\" wurde erfolgreich validiert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:211
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:211
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ValidationController.php:71
 #, php-format
 msgid "Could not parse number: \"%s\""
 msgstr "Kann die Zahlangabe \"%s\" nicht interpretieren."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:232
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:232
 #, php-format
 msgid "Request \"%s\" successful"
 msgstr "Anfrage \"%s\" erfolgreich"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectExtraFieldsController.php:239
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:239
 #, php-format
 msgid "Unknown Request \"%s\""
 msgstr "Unbekannte Anfrage \"%s\""
@@ -1746,7 +1746,7 @@ msgstr "Id"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Finance/debit-notes.php:178
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Finance/sepa-debit-mandates.php:237
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Finance/sepa-debit-mandates.php:538
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:244
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:244
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectInstrumentationNumbers.php:188
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaDebitMandates.php:300
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaDebitMandates.php:397
@@ -1911,7 +1911,7 @@ msgstr "Versicherung"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Finance/sepa-debit-mandates.php:167
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Finance/sepa-debit-mandates.php:182
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Finance/sepa-debit-mandates.php:232
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1449
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1449
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:215
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaDebitMandates.php:224
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaDebitMandates.php:245
@@ -1976,7 +1976,7 @@ msgstr "Projekt-spezifische Informationen"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Finance/sepa-debit-mandates.php:241
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentInsurances.php:213
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:277
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:210
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:210
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:2147
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaDebitMandates.php:305
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:138
@@ -2350,10 +2350,10 @@ msgstr "Datum"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:209
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:124
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:434
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:312
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:495
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:637
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1216
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:312
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:495
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:637
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1216
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:997
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:263
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:271
@@ -2408,17 +2408,17 @@ msgid "Not Confirmed"
 msgstr "Nicht Bestätigt"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:119
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:545
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:551
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:545
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:551
 msgid "yes"
 msgstr "ja"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:120
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:434
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:311
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:495
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:636
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1216
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:311
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:495
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:636
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1216
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:998
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:262
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:270
@@ -2432,7 +2432,7 @@ msgid "true"
 msgstr "wahr"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:123
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:545
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:545
 msgid "no"
 msgstr "nein"
 
@@ -2473,7 +2473,7 @@ msgstr "Instrumente"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:251
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Instruments.php:291
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:424
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:302
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:302
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:497
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:259
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/detailed-instrumentation.php:267
@@ -2616,7 +2616,7 @@ msgid "Families"
 msgstr "Familien"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Instruments.php:313
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:289
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:289
 msgid "#Usage"
 msgstr "#Verwendungen"
 
@@ -3005,29 +3005,29 @@ msgstr ""
 "Zusammengesetzte Schlüssel-Felder werden für Übersetzungen von Datenbank-"
 "Tabellenfeldern noch nicht unterstützt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:121
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:121
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:83
 #, php-format
-msgid "Extra-Fields for Project %s"
+msgid "Participant-Fields for Project %s"
 msgstr "Extra-Felder für das Projekt %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:124
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:124
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:86
 msgid "Extra Fields for Projects"
 msgstr "Extra-Felder für alle Projekte"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:192
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:192
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:216
 msgid "Definition of name, type, allowed values, default values."
 msgstr ""
 "Definition von Name, Daten-Typ, zulässigen Werten, voreingestellten Werten."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:193
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:193
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:217
 msgid "Defintion"
 msgstr "Defintion"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:197
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:197
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:219
 msgid ""
 "Ordering, linking to and defining newe tabs, definition of tooltips (help "
@@ -3035,12 +3035,12 @@ msgid ""
 msgstr ""
 "Anordnung, Verknüpfung zu Daten-Reitern, neue Daten-REiter, Kontext-Hilfe."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:199
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:199
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:221
 msgid "Display"
 msgstr "Anzeige"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:203
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:203
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:223
 msgid ""
 "Advanced settings and information, restricted access, encryption, "
@@ -3050,129 +3050,129 @@ msgstr ""
 "Verschlüsselung, Informationen über die interne Indizierung der\n"
 "Einträge."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:205
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:205
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:225
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/legacy/calendar/part.eventform.php:98
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/legacy/calendar/part.showevent.php:123
 msgid "Advanced"
 msgstr "Erweitert"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:276
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:276
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:332
 msgid "Field-Name"
 msgstr "Feld-Name"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:319
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:319
 msgid "Multiplicity"
 msgstr "Vielfachheit"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:333
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:333
 msgid "Data-Type"
 msgstr "Datentyp"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:367
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:367
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:398
 msgid "Allowed Values"
 msgstr "Zulässige Werte"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:406
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1284
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:406
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1284
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:414
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:1577
 msgid "Data"
 msgstr "Daten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:443
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:443
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:447
 msgid "Maximum Size"
 msgstr "Maximale Anzahl"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:463
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:518
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:539
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:463
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:518
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:539
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:463
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:474
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:502
 msgid "Default Value"
 msgstr "Voreinstellung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:490
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:490
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectInstrumentationNumbers.php:265
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:628
 msgid "n/a"
 msgstr "n/a"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:567
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1285
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:567
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1285
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:520
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:1578
 msgid "Tooltip"
 msgstr "Kontext-Hilfe"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:581
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:581
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:534
 msgid "Display-Order"
 msgstr "Anzeige-Reihenfolge"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:592
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:592
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:544
 msgid "Table Tab"
 msgstr "Datenreiter"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:611
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:611
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:564
 msgid "New Tab Name"
 msgstr "Neuer Datenreiter"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:623
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:623
 msgid "name of new tab"
 msgstr "z.B. NeueKarte"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:631
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:631
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:607
 msgid "Encrypted"
 msgstr "Verschlüsselt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:648
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:648
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:621
 msgid "Readers"
 msgstr "Nur-Lesen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:660
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:660
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:632
 msgid "Writers"
 msgstr "Schreiben"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1124
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1124
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:1415
 msgid "new option"
 msgstr "neue Auswahloption"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1162
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1162
 msgid "field generator"
 msgstr "z.B. \\OCA\\CAFEVDB\\FieldGenerator"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1231
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1231
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:1532
 msgid "Show deleted items."
 msgstr "Gelöschte Einträge anzeigen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1233
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1233
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:1534
 msgid "Show data-fields."
 msgstr "Daten-Feld anzeigen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1281
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1281
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:1574
 msgid "Key"
 msgstr "Schlüssel"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1282
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1282
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:1575
 msgid "Label"
 msgstr "Bezeichnung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectExtraFields.php:1283
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1283
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/project-extra.php:1576
 msgid "Limit"
 msgstr "Obergrenze"
@@ -3594,7 +3594,7 @@ msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:514
-msgid "Project Extra-Fields"
+msgid "Project Participant-Fields"
 msgstr "Extra Mitspieler-Felder"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:515
@@ -4104,13 +4104,13 @@ msgstr "Zeitzone: %s"
 msgid "Provider: %s"
 msgstr "Anbieter: %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectExtraFieldsService.php:241
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectExtraFieldsService.php:284
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectParticipantFieldsService.php:241
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectParticipantFieldsService.php:284
 #, php-format
 msgid "Option index -1 should not be present here, options: %s"
 msgstr "Options-Index -1 sollte hier nicht auftauchen, Optionen: %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectExtraFieldsService.php:251
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectParticipantFieldsService.php:251
 #, php-format
 msgid "Prototype keys \"%s\" and options keys \"%s\" differ"
 msgstr ""
@@ -5805,7 +5805,7 @@ msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:730
 msgid ""
-"Define extra-fields for the instrumentation table. E.g.: surcharge\n"
+"Define participant-fields for the instrumentation table. E.g.: surcharge\n"
 "fields for double-/single-room preference, room-mates and such."
 msgstr ""
 "Extra-Felder für die Besetzungstabelle definieren, wie\n"

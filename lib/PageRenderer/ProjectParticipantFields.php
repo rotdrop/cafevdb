@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\InstrumentationService;
-use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -44,12 +44,12 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 
 /**Table generator for Instruments table. */
-class ProjectExtraFields extends PMETableViewBase
+class ProjectParticipantFields extends PMETableViewBase
 {
-  const TEMPLATE = 'project-extra-fields';
-  const TABLE = 'ProjectExtraFields';
-  const OPTIONS_TABLE = 'ProjectExtraFieldsDataOptions';
-  const DATA_TABLE = 'ProjectExtraFieldsData';
+  const TEMPLATE = 'project-participant-fields';
+  const TABLE = 'ProjectParticipantFields';
+  const OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
+  const DATA_TABLE = 'ProjectParticipantFieldsData';
   const PROJECTS_TABLE = 'Projects';
 
   const OPTION_FIELDS = [ 'key', 'label', 'data', 'tooltip', 'limit', 'deleted', ];
@@ -58,11 +58,11 @@ class ProjectExtraFields extends PMETableViewBase
     [
       'table' => self::TABLE,
       'flags' => self::JOIN_MASTER,
-      'entity' => Entities\ProjectExtraField::class,
+      'entity' => Entities\ProjectParticipantField::class,
     ],
     [
       'table' => self::OPTIONS_TABLE,
-      'entity' => Entities\ProjectExtraFieldDataOption::class,
+      'entity' => Entities\ProjectParticipantFieldDataOption::class,
       'identifier' => [
         'field_id' => 'id',
         'key' => false,
@@ -79,7 +79,7 @@ class ProjectExtraFields extends PMETableViewBase
     ],
     [
       'table' => self::DATA_TABLE,
-      'entity' => Entities\ProjectExtraFieldDatum::class,
+      'entity' => Entities\ProjectParticipantFieldDatum::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'field_id' => 'id',
@@ -96,8 +96,8 @@ class ProjectExtraFields extends PMETableViewBase
   /** @var FuzzyInput */
   private $fuzzyInput;
 
-  /** @var ProjectExtraFieldsService */
-  private $extraFieldsService;
+  /** @var ProjectParticipantFieldsService */
+  private $participantFieldsService;
 
   public function __construct(
     ConfigService $configService
@@ -108,18 +108,18 @@ class ProjectExtraFields extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , FuzzyInputService $fuzzyInput
-    , ProjectExtraFieldsService $extraFieldsService
+    , ProjectParticipantFieldsService $participantFieldsService
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->instrumentationService = $instrumentationService;
     $this->fuzzyInput = $fuzzyInput;
-    $this->extraFieldsService = $extraFieldsService;
+    $this->participantFieldsService = $participantFieldsService;
   }
 
   public function shortTitle()
   {
     if ($this->projectId > 0) {
-      return $this->l->t("Extra-Fields for Project %s",
+      return $this->l->t("Participant-Fields for Project %s",
                          array($this->projectName));
     } else {
       return $this->l->t("Extra Fields for Projects");
@@ -281,7 +281,7 @@ class ProjectExtraFields extends PMETableViewBase
       'maxlen' => 29,
       'size' => 30,
       'sort' => true,
-      'tooltip' => $this->toolTipsService['extra-fields-field-name'],
+      'tooltip' => $this->toolTipsService['participant-fields-field-name'],
     ];
 
     $opts['fdd']['usage'] = [
@@ -289,19 +289,19 @@ class ProjectExtraFields extends PMETableViewBase
       'tab' => [ 'id' => 'advanced' ],
       'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
-      'css' => [ 'postfix' => ' extra-fields-usage', ],
+      'css' => [ 'postfix' => ' participant-fields-usage', ],
       'select' => 'N',
       'align' => 'right',
       'input' => 'V',
       'sort' => true,
-      'tooltip' => $this->toolTipsService['extra-fields-usage'],
+      'tooltip' => $this->toolTipsService['participant-fields-usage'],
     ];
 
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
         'tab' => [ 'id' => 'advanced' ],
         'name'     => $this->l->t('Disabled'),
-        'css'      => [ 'postfix' => ' extra-field-disabled' ],
+        'css'      => [ 'postfix' => ' participant-field-disabled' ],
         'select'   => 'C',
         'maxlen'   => 1,
         'sort'     => true,
@@ -312,7 +312,7 @@ class ProjectExtraFields extends PMETableViewBase
         'values2|LVFD' => [ 1 => $this->l->t('true'),
                             0 => $this->l->t('false') ],
         'default'  => false,
-        'tooltip'  => $this->toolTipsService['extra-fields-disabled'],
+        'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
       ];
     }
 
@@ -324,9 +324,9 @@ class ProjectExtraFields extends PMETableViewBase
       'sort'    => true,
       'css'     => [ 'postfix' => ' multiplicity' ],
       'default' => 'simple',
-      'values2' => $this->extraFieldMultiplicityNames,
-      'valueTitles' => array_map(function($tag) { $this->toolTipsService['extra-field-multiplicity-'.$tag]; }, $this->extraFieldMultiplicities),
-      'tooltip' => $this->toolTipsService['extra-field-multiplicity'],
+      'values2' => $this->participantFieldMultiplicityNames,
+      'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-multiplicity-'.$tag]; }, $this->participantFieldMultiplicities),
+      'tooltip' => $this->toolTipsService['participant-field-multiplicity'],
     ];
 
     $dataTypeIndex = count($opts['fdd']);
@@ -337,9 +337,9 @@ class ProjectExtraFields extends PMETableViewBase
       'sort'    => true,
       'css'     => [ 'postfix' => ' data-type' ],
       'default' => 'text',
-      'values2' => $this->extraFieldDataTypeNames,
-      'valueTitles' => array_map(function($tag) { $this->toolTipsService['extra-field-data-type-'.$tag]; }, $this->extraFieldDataTypes),
-      'tooltip' => $this->toolTipsService['extra-field-data-type'],
+      'values2' => $this->participantFieldDataTypeNames,
+      'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-data-type-'.$tag]; }, $this->participantFieldDataTypes),
+      'tooltip' => $this->toolTipsService['participant-field-data-type'],
     ];
 
     /**************************************************************************
@@ -373,7 +373,7 @@ class ProjectExtraFields extends PMETableViewBase
       'select' => 'T',
       'sort' => true,
       'display|LF' => [ 'popup' => 'data', ],
-      'tooltip' => $this->toolTipsService['extra-fields-allowed-values'],
+      'tooltip' => $this->toolTipsService['participant-fields-allowed-values'],
       // 'sqlBug-as-of-mariadb-10.5.9'=> 'CONCAT("[",JSON_ARRAYAGG(DISTINCT
       //    JSON_OBJECT(
       //    "key", BIN2UUID($join_table.key),
@@ -420,7 +420,7 @@ class ProjectExtraFields extends PMETableViewBase
       'maxlen' => 29,
       'size' => 30,
       'sort' => true,
-      'tooltip' => $this->toolTipsService['extra-fields-allowed-values-single'],
+      'tooltip' => $this->toolTipsService['participant-fields-allowed-values-single'],
     ];
 
     // Provide "cooked" valus for up to 20 members. Perhaps the
@@ -447,7 +447,7 @@ class ProjectExtraFields extends PMETableViewBase
       'sort' => true,
       'default' => key($values2),
       'values2' => $values2,
-      'tooltip' => $this->toolTipsService['extra-fields-maximum-group-size'],
+      'tooltip' => $this->toolTipsService['participant-fields-maximum-group-size'],
       'values' => [
         'column' => 'key',
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
@@ -469,8 +469,8 @@ class ProjectExtraFields extends PMETableViewBase
         if ($multiplicity !== 'simple' && !empty($value)) {
           // fetch the value from the allowed-values data
           $allowed = $row[$this->queryField('allowed_values', $pme->fdd)];
-          $allowed = $this->extraFieldsService->explodeAllowedValues($allowed);
-          $defaultRow = $this->extraFieldsService->findAllowedValue($value, $allowed);
+          $allowed = $this->participantFieldsService->explodeAllowedValues($allowed);
+          $defaultRow = $this->participantFieldsService->findAllowedValue($value, $allowed);
           if (!empty($defaultRow['data'])) {
             $value = $defaultRow['data'];
           } else if (!empty($defaultRow['label'])) {
@@ -506,7 +506,7 @@ class ProjectExtraFields extends PMETableViewBase
         $html .= '</span>';
         return $html;
       },
-      'tooltip' => $this->toolTipsService['extra-fields-default-value'],
+      'tooltip' => $this->toolTipsService['participant-fields-default-value'],
     ];
 
     $opts['fdd']['default_multi_value'] = [
@@ -527,7 +527,7 @@ class ProjectExtraFields extends PMETableViewBase
       'maxlen' => 29,
       'size' => 30,
       'sort' => false,
-      'tooltip' => $this->toolTipsService['extra-fields-default-multi-value'],
+      'tooltip' => $this->toolTipsService['participant-fields-default-multi-value'],
     ];
 
     $opts['fdd']['default_single_value'] = [
@@ -550,7 +550,7 @@ class ProjectExtraFields extends PMETableViewBase
       'maxlen' => 29,
       'size' => 30,
       'sort' => false,
-      'tooltip' => $this->toolTipsService['extra-fields-default-single-value'],
+      'tooltip' => $this->toolTipsService['participant-fields-default-single-value'],
     ];
 
     $opts['fdd']['due_date'] = $this->defaultFDD['due_date'];
@@ -560,7 +560,7 @@ class ProjectExtraFields extends PMETableViewBase
     $opts['fdd']['tooltip'] = [
       'tab'      => [ 'id' => 'display' ],
       'name' => $this->l->t('Tooltip'),
-      'css' => [ 'postfix' => ' extra-field-tooltip hide-subsequent-lines' ],
+      'css' => [ 'postfix' => ' participant-field-tooltip hide-subsequent-lines' ],
       'select' => 'T',
       'textarea' => [ 'rows' => 5,
                       'cols' => 28 ],
@@ -569,7 +569,7 @@ class ProjectExtraFields extends PMETableViewBase
       'sort' => true,
       'escape' => false,
       'display|LF' => [ 'popup' => 'data' ],
-      'tooltip' => $this->toolTipsService['extra-fields-tooltip'],
+      'tooltip' => $this->toolTipsService['participant-fields-tooltip'],
     ];
 
     $opts['fdd']['display_order'] = [
@@ -579,7 +579,7 @@ class ProjectExtraFields extends PMETableViewBase
       'maxlen' => 5,
       'sort' => true,
       'align' => 'right',
-      'tooltip' => $this->toolTipsService['extra-fields-display-order'],
+      'tooltip' => $this->toolTipsService['participant-fields-display-order'],
       'display' => [ 'attributes' => [ 'min' => 1 ], ],
     ];
 
@@ -597,7 +597,7 @@ class ProjectExtraFields extends PMETableViewBase
       'maxlen' => 128,
       'size' => 30,
       'sort' => true,
-      'tooltip' => $this->toolTipsService['extra-fields-tab'],
+      'tooltip' => $this->toolTipsService['participant-fields-tab'],
     ];
 
     // In order to be able to add a new tab, the select box first
@@ -612,7 +612,7 @@ class ProjectExtraFields extends PMETableViewBase
       'maxlen' => 20,
       'size' => 30,
       'sort' => false,
-      'tooltip' => $this->toolTipsService['extra-fields-new-tab'],
+      'tooltip' => $this->toolTipsService['participant-fields-new-tab'],
       'display' => [
         'attributes' => [
           'placeholder' => $this->l->t('name of new tab'),
@@ -634,7 +634,7 @@ class ProjectExtraFields extends PMETableViewBase
         'select' => 'C',
         'maxlen' => 1,
         'sort' => true,
-        'tooltip' => $this->toolTipsService['extra-fields-encrypted'],
+        'tooltip' => $this->toolTipsService['participant-fields-encrypted'],
       ];
 
       // @todo wildcards?
@@ -648,7 +648,7 @@ class ProjectExtraFields extends PMETableViewBase
         'maxlen' => 10,
         'sort' => true,
         'display' => [ 'popup' => 'data' ],
-        'tooltip' => $this->toolTipsService['extra-fields-readers'],
+        'tooltip' => $this->toolTipsService['participant-fields-readers'],
       ];
 
       $opts['fdd']['writers'] = [
@@ -660,7 +660,7 @@ class ProjectExtraFields extends PMETableViewBase
         'maxlen' => 10,
         'sort' => true,
         'display' => [ 'popup' => 'data' ],
-        'tooltip' => $this->toolTipsService['extra-fields-writers'],
+        'tooltip' => $this->toolTipsService['participant-fields-writers'],
       ];
     }
 
@@ -861,7 +861,7 @@ class ProjectExtraFields extends PMETableViewBase
 
     if (!is_array($newvals['allowed_values'])) {
       // textfield
-      $allowed = $this->extraFieldsService->explodeAllowedValues($newvals['allowed_values'], false);
+      $allowed = $this->participantFieldsService->explodeAllowedValues($newvals['allowed_values'], false);
     } else {
       $allowed = $newvals['allowed_values'];
       if ($newvals['multiplicity'] == 'recurring') {
@@ -876,8 +876,8 @@ class ProjectExtraFields extends PMETableViewBase
     // @todo is this still necessary?
     $this->debug('ALLOWED BEFORE REEXPLODE '.print_r($allowed, true));
     $newvals['allowed_values'] =
-      $this->extraFieldsService->explodeAllowedValues(
-        $this->extraFieldsService->implodeAllowedValues($allowed), false);
+      $this->participantFieldsService->explodeAllowedValues(
+        $this->participantFieldsService->implodeAllowedValues($allowed), false);
 
     Util::unsetValue($changed, 'allowed_values');
 
@@ -948,25 +948,25 @@ class ProjectExtraFields extends PMETableViewBase
 
   private function usedFields($projectId = -1, $fieldId = -1)
   {
-    return $this->getDatabaseRepository(Entities\ProjectExtraFieldDatum::class)
+    return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)
                 ->usedFields($projectId, $fieldId);
   }
 
   private function fieldValues($fieldId)
   {
-    return $this->getDatabaseRepository(Entities\ProjectExtraFieldDatum::class)
+    return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)
                 ->fieldValues($fieldId);
   }
 
   private function optionKeys($fieldId)
   {
-    return $this->getDatabaseRepository(Entities\ProjectExtraFieldDatum::class)
+    return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)
                 ->optionKeys($fieldId);
   }
 
   private function disable($fieldId, $disable = true)
   {
-    $this->getDatabaseRepository(Entities\ProjectExtraField::class)
+    $this->getDatabaseRepository(Entities\ProjectParticipantField::class)
          ->disable($fieldId);
   }
 
@@ -1004,11 +1004,11 @@ class ProjectExtraFields extends PMETableViewBase
     $html .= '<td class="operations">
   <input
     class="operation delete-undelete notnot-multiplicity-recurring"
-    title="'.$this->toolTipsService['extra-fields-allowed-values:delete-undelete'].'"
+    title="'.$this->toolTipsService['participant-fields-allowed-values:delete-undelete'].'"
     type="button"/>
   <input
     class="operation regenerate only-multiplicity-recurring"
-    title="'.$this->toolTipsService['extra-fields-allowed-values:regenerate'].'"
+    title="'.$this->toolTipsService['participant-fields-allowed-values:regenerate'].'"
     '.($deleted ? ' disabled="disabled"' : '').'
     type="button"/>
     </td>';
@@ -1022,7 +1022,7 @@ class ProjectExtraFields extends PMETableViewBase
            .' type="text"'
            .' name="'.$pfx.'['.$index.']['.$prop.']"'
            .' value="'.$value[$prop].'"'
-           .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+           .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
            .' size="33"'
            .' maxlength="32"'
            .'/>';
@@ -1034,7 +1034,7 @@ class ProjectExtraFields extends PMETableViewBase
           .' class="field-key expert-mode-only"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
           .' size="9"'
           .' maxlength="8"'
           .'/>'
@@ -1056,7 +1056,7 @@ class ProjectExtraFields extends PMETableViewBase
           .' type="text"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
@@ -1068,7 +1068,7 @@ class ProjectExtraFields extends PMETableViewBase
           .' type="text"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
@@ -1079,7 +1079,7 @@ class ProjectExtraFields extends PMETableViewBase
           .($deleted ? ' readonly="readonly"' : '')
           .' class="field-'.$prop.'"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
           .' cols="32"'
           .' rows="1"'
           .'>'
@@ -1099,7 +1099,7 @@ class ProjectExtraFields extends PMETableViewBase
    *
    * @param int $fieldId Id of the current field in change mode.
    *
-   * @param null|array|Entities\ProjectExtraFieldDataOption $generatorItem
+   * @param null|array|Entities\ProjectParticipantFieldDataOption $generatorItem
    *     Special data item with key Uuid::NIL which holds
    *     the data for auto-generated fields.
    *
@@ -1118,7 +1118,7 @@ class ProjectExtraFields extends PMETableViewBase
       type="text"
       name="'.$pfx.'[-1][label]"
       value=""
-      title="'.$this->toolTipsService['extra-fields-allowed-values:placeholder'].'"
+      title="'.$this->toolTipsService['participant-fields-allowed-values:placeholder'].'"
       placeholder="'.$this->l->t('new option').'"
       size="33"
       maxlength="32"
@@ -1139,12 +1139,12 @@ class ProjectExtraFields extends PMETableViewBase
     $html .= '
 <tr
   class="data-line allowed-values generator active only-multiplicity-recurring"
-  data-generators=\''.json_encode(ProjectExtraFieldsService::recurringReceivablesGenerators()).'\'
+  data-generators=\''.json_encode(ProjectParticipantFieldsService::recurringReceivablesGenerators()).'\'
   data-field-id="'.$fieldId.'">
   <td class="operations">
     <input
       class="operation generator-run"
-      title="'.$this->toolTipsService['extra-fields-allowed-values:generator-run'].'"
+      title="'.$this->toolTipsService['participant-fields-allowed-values:generator-run'].'"
       type="button"
       '.(empty($generator) ? 'disabled="disabled"' : '').'
     />
@@ -1156,7 +1156,7 @@ class ProjectExtraFields extends PMETableViewBase
       type="text"
       name="'.$pfx.'[-1][data]"
       value="'.$generator.'"
-      title="'.$this->toolTipsService['extra-fields-allowed-values:generator'].'"
+      title="'.$this->toolTipsService['participant-fields-allowed-values:generator'].'"
       placeholder="'.$this->l->t('field generator').'"
       required="required"
       size="33"
@@ -1199,7 +1199,7 @@ class ProjectExtraFields extends PMETableViewBase
   private function showAllowedValues($value, $op, $recordId, $multiplicity = null, $dataType = null)
   {
     $this->logDebug('OPTIONS so far: '.print_r($value, true));
-    $allowed = $this->extraFieldsService->explodeAllowedValues($value);
+    $allowed = $this->participantFieldsService->explodeAllowedValues($value);
     if ($op === 'display') {
       if (count($allowed) == 1) {
         // "1" means empty (headerline)
@@ -1226,9 +1226,9 @@ class ProjectExtraFields extends PMETableViewBase
       // controls for showing soft-deleted options or normally
       // unneeded inputs
       $showDeletedLabel = $this->l->t("Show deleted items.");
-      $showDeletedTip = $this->toolTipsService['extra-fields-show-deleted'];
+      $showDeletedTip = $this->toolTipsService['participant-fields-show-deleted'];
       $showDataLabel = $this->l->t("Show data-fields.");
-      $showDataTip = $this->toolTipsService['extra-fields-show-data'];
+      $showDataTip = $this->toolTipsService['participant-fields-show-data'];
       $html .=<<<__EOT__
 <div class="field-display-options notnot-multiplicity-recurring">
   <div class="show-deleted">
@@ -1289,7 +1289,7 @@ __EOT__;
       $html .=
             '<th'
             .' class="'.$css.'"'
-            .' title="'.$this->toolTipsService['extra-fields-allowed-values:'.$key].'"'
+            .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$key].'"'
             .'>'
             .$value
             .'</th>';
@@ -1358,7 +1358,7 @@ __EOT__;
    */
   private function showAllowedSingleValue($value, $op, $toolTip, $multiplicity, $dataType)
   {
-    $allowed = $this->extraFieldsService->explodeAllowedValues($value, false);
+    $allowed = $this->participantFieldsService->explodeAllowedValues($value, false);
     $entry = null;
     foreach ($allowed as $key => $option) {
       if (!empty($item['deleted'])) {
@@ -1374,7 +1374,7 @@ __EOT__;
     if ($op === 'display') {
       return $this->currencyValue($value);
     }
-    empty($entry) && $entry = $this->extraFieldsService->allowedValuesPrototype();
+    empty($entry) && $entry = $this->participantFieldsService->allowedValuesPrototype();
     if ($multiplicity == 'groupofpeople') {
       $entry['key'] = Uuid::NIL;
     }

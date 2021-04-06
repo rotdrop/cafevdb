@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ProjectExtraFieldsService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -45,7 +45,7 @@ class SepaDebitMandates extends PMETableViewBase
   const MUSICIANS_TABLE = 'Musicians';
   const PARTICIPANTS_TABLE = 'ProjectParticipants';
   const PAYMENTS_TABLE = 'ProjectPayments';
-  const EXTRA_FIELDS_DATA_TABLE = 'ProjectExtraFieldsData';
+  const PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
   const FIXED_COLUMN_SEP = '@';
 
   protected $cssClass = 'sepa-debit-mandates';
@@ -93,8 +93,8 @@ class SepaDebitMandates extends PMETableViewBase
     ],
   ];
 
-  /** @var \OCA\CAFEVDB\Service\ProjectExtraFieldsService */
-  private $extraFieldsService;
+  /** @var \OCA\CAFEVDB\Service\ProjectParticipantFieldsService */
+  private $participantFieldsService;
 
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
   private $project = null;
@@ -106,10 +106,10 @@ class SepaDebitMandates extends PMETableViewBase
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
-    , ProjectExtraFieldsService $extraFieldsService
+    , ProjectParticipantFieldsService $participantFieldsService
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->extraFieldsService = $extraFieldsService;
+    $this->participantFieldsService = $participantFieldsService;
   }
 
   public function shortTitle()
@@ -320,18 +320,18 @@ received so far'),
       // Add the amount to debit
 
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-      $monetary = $this->extraFieldsService->monetaryFields($this->project);
+      $monetary = $this->participantFieldsService->monetaryFields($this->project);
 
       /* For each monetary extra field add one dedicated join table
        * entry which is pinned to the respective field-id.
        */
-      $extraFieldJoinIndex = [];
+      $participantFieldJoinIndex = [];
       foreach ($monetary as $name => $field) {
         $fieldId = $field['id'];
-        $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
-        $extraFieldJoinTable = [
+        $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+        $participantFieldJoinTable = [
           'table' => $tableName,
-          'entity' => Entities\ProjectExtraFieldDatum::class,
+          'entity' => Entities\ProjectParticipantFieldDatum::class,
           'flags' => self::JOIN_READONLY,
           'identifier' => [
             'project_id' => 'project_id',
@@ -340,8 +340,8 @@ received so far'),
           ],
           'column' => 'field_id',
         ];
-        $extraFieldJoinIndex[$tableName] = count($this->joinStructure);
-        $this->joinStructure[] = $extraFieldJoinTable;
+        $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
+        $this->joinStructure[] = $participantFieldJoinTable;
       }
     }
 
@@ -511,7 +511,7 @@ received so far'),
 
     ///////////////
 
-    // @todo EXTRA FIELD STUFF / PROJECT MODE
+    // @todo PARTICIPANT FIELD STUFF / PROJECT MODE
 
     if (!$this->addOperation() && $projectMode) {
       foreach ($monetary as $name => $field) {
@@ -520,9 +520,9 @@ received so far'),
         $multiplicity = $field['multiplicity'];
         $dataType = $field['data_type'];
 
-        $tableName = self::EXTRA_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+        $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
 
-        $css = [ 'extra-field', 'field-id-'.$fieldId, ];
+        $css = [ 'participant-field', 'field-id-'.$fieldId, ];
         list($curColIdx, $fddName) = $this->makeJoinTableField(
           $opts['fdd'], $tableName, 'field_value',
           [
@@ -580,7 +580,7 @@ received so far'),
     //             $field   = $monetary[$label];
     //             $allowed = $field['AllowedValues'];
     //             $type    = $field['Type'];
-    //             $amount += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+    //             $amount += DetailedInstrumentation::participantFieldSurcharge($value, $allowed, $type['Multiplicity']);
     //           }
     //           return Util::moneyValue($amount);
     //         },
@@ -625,7 +625,7 @@ received so far'),
     //           $field   = $monetary[$label];
     //           $allowed = $field['AllowedValues'];
     //           $type    = $field['Type'];
-    //           $amount += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+    //           $amount += DetailedInstrumentation::participantFieldSurcharge($value, $allowed, $type['Multiplicity']);
     //         }
     //         // display as TOTAL/PAID/REMAINDER
     //         $rest = $amount - $paid;

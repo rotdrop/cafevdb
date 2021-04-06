@@ -24,7 +24,7 @@ import * as CAFEVDB from './cafevdb.js';
 // import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
 import * as Photo from './inlineimage.js';
-import * as ProjectExtra from './project-extra.js';
+import * as ProjectExtra from './project-participant-fields.js';
 import * as DebitNotes from './debit-notes.js';
 import * as Musicians from './musicians.js';
 import * as Projects from './projects.js';
@@ -260,7 +260,7 @@ const documentReady = function() {
   PHPMyEdit.addTableLoadCallback('all-musicians', musiciansCallback);
   PHPMyEdit.addTableLoadCallback('add-musicians', musiciansCallback);
 
-  PHPMyEdit.addTableLoadCallback('project-extra-fields', {
+  PHPMyEdit.addTableLoadCallback('project-participant-fields', {
     callback(selector, parameters, resizeCB) {
 
       if (parameters.reason !== 'dialogOpen') {

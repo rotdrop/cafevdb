@@ -238,16 +238,16 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
     }
 
-    $this->extraFieldMultiplicities = DBTypes\EnumExtraFieldMultiplicity::toArray();
-    foreach ($this->extraFieldMultiplicities as $key => $tag) {
+    $this->participantFieldMultiplicities = DBTypes\EnumParticipantFieldMultiplicity::toArray();
+    foreach ($this->participantFieldMultiplicities as $key => $tag) {
       $slug = 'extra field '.$tag;
-      $this->extraFieldMultiplicityNames[$tag] = $this->l->t($slug);
+      $this->participantFieldMultiplicityNames[$tag] = $this->l->t($slug);
     }
 
-    $this->extraFieldDataTypes = DBTypes\EnumExtraFieldDataType::toArray();
-    foreach ($this->extraFieldDataTypes as $key => $tag) {
+    $this->participantFieldDataTypes = DBTypes\EnumParticipantFieldDataType::toArray();
+    foreach ($this->participantFieldDataTypes as $key => $tag) {
       $slug = 'extra field type '.$tag;
-      $this->extraFieldDataTypeNames[$tag] = $this->l->t($slug);
+      $this->participantFieldDataTypeNames[$tag] = $this->l->t($slug);
     }
   }
 

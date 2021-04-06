@@ -101,14 +101,14 @@ class Project implements \ArrayAccess
   private $webPages;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectExtraField", mappedBy="project", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantField", mappedBy="project", fetch="EXTRA_LAZY")
    */
-  private $extraFields;
+  private $participantFields;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="project", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="project", fetch="EXTRA_LAZY")
    */
-  private $extraFieldsData;
+  private $participantFieldsData;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project")
@@ -141,8 +141,8 @@ class Project implements \ArrayAccess
     $this->posters = new ArrayCollection();
     $this->flyers = new ArrayCollection();
     $this->webPages = new ArrayCollection();
-    $this->extraFields = new ArrayCollection();
-    $this->extraFieldsData = new ArrayCollection();
+    $this->participantFields = new ArrayCollection();
+    $this->participantFieldsData = new ArrayCollection();
     $this->participants = new ArrayCollection();
     $this->participantInstruments = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
@@ -413,51 +413,51 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set extraFields.
+   * Set participantFields.
    *
-   * @param ArrayCollection $extraFields
+   * @param ArrayCollection $participantFields
    *
    * @return Project
    */
-  public function setExtraFields($extraFields)
+  public function setParticipantFields($participantFields)
   {
-    $this->extraFields = $extraFields;
+    $this->participantFields = $participantFields;
 
     return $this;
   }
 
   /**
-   * Get extraFields.
+   * Get participantFields.
    *
    * @return ArrayCollection
    */
-  public function getExtraFields()
+  public function getParticipantFields()
   {
-    return $this->extraFields;
+    return $this->participantFields;
   }
 
   /**
-   * Set extraFieldsData.
+   * Set participantFieldsData.
    *
-   * @param ArrayCollection $extraFieldsData
+   * @param ArrayCollection $participantFieldsData
    *
    * @return Project
    */
-  public function setExtraFieldsData($extraFieldsData)
+  public function setParticipantFieldsData($participantFieldsData)
   {
-    $this->extraFieldsData = $extraFieldsData;
+    $this->participantFieldsData = $participantFieldsData;
 
     return $this;
   }
 
   /**
-   * Get extraFieldsData.
+   * Get participantFieldsData.
    *
    * @return ArrayCollection
    */
-  public function getExtraFieldsData()
+  public function getParticipantFieldsData()
   {
-    return $this->extraFieldsData;
+    return $this->participantFieldsData;
   }
 
   /**

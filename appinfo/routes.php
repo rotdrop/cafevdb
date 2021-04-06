@@ -237,8 +237,8 @@ $routes = [
       'verb' => 'POST',
     ],
     [
-      'name' => 'project_extra_fields#service_switch',
-      'url' => '/projects/extra-fields/{topic}',
+      'name' => 'project_participant_fields#service_switch',
+      'url' => '/projects/participant-fields/{topic}',
       'verb' => 'POST',
     ],
     /**

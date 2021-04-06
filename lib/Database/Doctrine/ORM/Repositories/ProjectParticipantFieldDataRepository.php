@@ -28,7 +28,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityRepository;
 
-class ProjectExtraFieldDataRepository extends EntityRepository
+class ProjectParticipantFieldDataRepository extends EntityRepository
 {
   const ALIAS = 'pexfd';
 
@@ -37,7 +37,7 @@ class ProjectExtraFieldDataRepository extends EntityRepository
    *
    * @param int|Entities\Project $project Project id or entity
    *
-   * @param int|Entities\ProjectExtrafield $field Project extra-field
+   * @param int|Entities\ProjectParticipantfield $field Project participant-field
    * entity or id.
    *
    * @return array Flat array of id's
@@ -77,10 +77,10 @@ class ProjectExtraFieldDataRepository extends EntityRepository
 
 
   /**
-   * Fetch all values stored for the given extra-field, e.g. in order
+   * Fetch all values stored for the given participant-field, e.g. in order
    * to recover or generate select boxes.
    *
-   * @param int|Entities\ProjectExtraField
+   * @param int|Entities\ProjectParticipantField
    */
   public function fieldValues($field)
   {
@@ -92,10 +92,10 @@ class ProjectExtraFieldDataRepository extends EntityRepository
   }
 
   /**
-   * Fetch all values stored for the given extra-field, e.g. in order
+   * Fetch all values stored for the given participant-field, e.g. in order
    * to recover or generate select boxes.
    *
-   * @param int|Entities\ProjectExtraField
+   * @param int|Entities\ProjectParticipantField
    */
   public function optionKeys($field)
   {

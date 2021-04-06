@@ -28,7 +28,7 @@ import personalSettings from './app/personal-settings.js';
 import exportMode from './app/expertmode.js';
 // import backgroundJobs from './app/backgroundjobs.js';
 import { documentReady as pageDocumentReady } from './app/page.js';
-import { documentReady as projectExtraDocumentReady } from './app/project-extra.js';
+import { documentReady as projectExtraDocumentReady } from './app/project-participant-fields.js';
 import { documentReady as debitNotesDocumentReady } from './app/debit-notes.js';
 import { documentReady as musiciansDocumentReady } from './app/musicians.js';
 import { documentReady as projectParticipantsDocumentReady } from './app/project-participants.js';

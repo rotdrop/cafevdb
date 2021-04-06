@@ -44,7 +44,7 @@ class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
   public function generateReceivables():Collection
   {
     // This is the dummy implementation, just do nothing.
-    return $this->serviceFeeField->getDataOptions()->filter(function(Entities\ProjectExtraFieldDataOption $receivable) {
+    return $this->serviceFeeField->getDataOptions()->filter(function(Entities\ProjectParticipantFieldDataOption $receivable) {
       return (string)$receivable->getKey() != Uuid::NIL;
     });
   }
@@ -52,7 +52,7 @@ class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
   /**
    * {@inheritdoc}
    */
-  public function updateReceivable(Entities\ProjectExtraFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = NULL):Entities\ProjectExtraFieldDataOption
+  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = NULL):Entities\ProjectParticipantFieldDataOption
   {
     // This is the dummy implementation, just do nothing.
     return $receivable;

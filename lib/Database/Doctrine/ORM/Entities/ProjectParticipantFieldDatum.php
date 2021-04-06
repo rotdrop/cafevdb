@@ -31,31 +31,31 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProjectExtraFieldsData
+ * ProjectParticipantFieldsData
  *
- * @ORM\Table(name="ProjectExtraFieldsData")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectExtraFieldDataRepository")
+ * @ORM\Table(name="ProjectParticipantFieldsData")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldDataRepository")
  */
-class ProjectExtraFieldDatum implements \ArrayAccess
+class ProjectParticipantFieldDatum implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectExtraField", inversedBy="fieldData", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="fieldData", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $field;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="extraFieldsData", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantFieldsData", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $project;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectExtraFieldsData", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectParticipantFieldsData", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $musician;
@@ -76,7 +76,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   private $optionValue = null;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectExtraFieldDataOption", inversedBy="fieldData", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="fieldData", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id"),
    *   @ORM\JoinColumn(name="option_key", referencedColumnName="key")
@@ -85,7 +85,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
   private $dataOption;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="extraFieldsData", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="participantFieldsData", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
    *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id")
@@ -102,9 +102,9 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    *
    * @param Project $project
    *
-   * @return ProjectExtraProjectsData
+   * @return ProjectParticipantProjectsData
    */
-  public function setProject($project):ProjectExtraFieldDatum
+  public function setProject($project):ProjectParticipantFieldDatum
   {
     $this->project = $project;
 
@@ -126,9 +126,9 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    *
    * @param Musician $musician
    *
-   * @return ProjectExtraFieldDatum
+   * @return ProjectParticipantFieldDatum
    */
-  public function setMusician($musician):ProjectExtraFieldDatum
+  public function setMusician($musician):ProjectParticipantFieldDatum
   {
     $this->musician = $musician;
 
@@ -150,9 +150,9 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    *
    * @param int $field
    *
-   * @return ProjectExtraFieldDatum
+   * @return ProjectParticipantFieldDatum
    */
-  public function setField($field):ProjectExtraFieldDatum
+  public function setField($field):ProjectParticipantFieldDatum
   {
     $this->field = $field;
 
@@ -174,9 +174,9 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    *
    * @param string $optionValue
    *
-   * @return ProjectExtraFieldDatum
+   * @return ProjectParticipantFieldDatum
    */
-  public function setOptionValue($optionValue):ProjectExtraFieldDatum
+  public function setOptionValue($optionValue):ProjectParticipantFieldDatum
   {
     $this->optionValue = $optionValue;
 
@@ -198,9 +198,9 @@ class ProjectExtraFieldDatum implements \ArrayAccess
    *
    * @param string|UuidInterface $optionKey
    *
-   * @return ProjectExtraFieldDatum
+   * @return ProjectParticipantFieldDatum
    */
-  public function setOptionKey($optionKey):ProjectExtraFieldDatum
+  public function setOptionKey($optionKey):ProjectParticipantFieldDatum
   {
     if (empty($optionKey = Uuid::asUuid($optionKey))) {
       throw new \Exception("OPTIONKEY DATA: ".$optionKey);

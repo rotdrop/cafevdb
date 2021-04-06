@@ -230,8 +230,8 @@ class EntityManager extends EntityManagerDecorator
     }
     $types = [
       Types\EnumDebitNoteJob::class => 'enum',
-      Types\EnumExtraFieldDataType::class => 'enum',
-      Types\EnumExtraFieldMultiplicity::class => 'enum',
+      Types\EnumParticipantFieldDataType::class => 'enum',
+      Types\EnumParticipantFieldMultiplicity::class => 'enum',
       Types\EnumGeographicalScope::class => 'enum',
       Types\EnumMemberStatus::class => 'enum',
       Types\EnumProjectTemporalType::class => 'enum',

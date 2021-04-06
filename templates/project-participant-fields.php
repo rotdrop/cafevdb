@@ -36,11 +36,11 @@ if (!empty($project)) {
   }
   $nav .= $pageNavigation->pageControlElement('projects');
   $nav .= $pageNavigation->pageControlElement('instruments', $project, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-extra-fields', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-participant-fields', $project, $projectId);
 } else {
   $nav .= $pageNavigation->pageControlElement('projects');
   $nav .= $pageNavigation->pageControlElement('instruments');
-  $nav .= $pageNavigation->pageControlElement('project-extra-fields');
+  $nav .= $pageNavigation->pageControlElement('project-participant-fields');
   $nav .= $pageNavigation->pageControlElement('all');
 }
 

@@ -1190,7 +1190,7 @@ Whatever.',
           Entities\ProjectParticipant::class,
           Entities\ProjectInstrument::class,
           Entities\ProjectWebPage::class,
-          Entities\ProjectExtraField::class, // needs cascading
+          Entities\ProjectParticipantField::class, // needs cascading
           // [ 'table' => 'ProjectEvents', 'column' => 'project_id' ], handled above
         ];
 

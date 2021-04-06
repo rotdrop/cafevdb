@@ -53,7 +53,7 @@ class Registration
     $context->registerServiceAlias('template:'.'sepa-debit-mandates', SepaDebitMandates::class);
     $context->registerServiceAlias('template:'.'sepa-debit-notes', SepaDebitNotes::class);
     $context->registerServiceAlias('template:'.'instrument-insurance', InstrumentInsurances::class);
-    $context->registerServiceAlias('template:'.'project-extra-fields', ProjectExtraFields::class);
+    $context->registerServiceAlias('template:'.'project-participant-fields', ProjectParticipantFields::class);
     $context->registerServiceAlias('template:'.'instruments', Instruments::class);
     $context->registerServiceAlias('template:'.'instrument-families', InstrumentFamilies::class);
     $context->registerServiceAlias('template:'.'insurance-brokers', InsuranceBrokers::class);

@@ -92,9 +92,9 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Link to extra fields data
    *
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", indexBy="option_key", mappedBy="projectParticipant", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", indexBy="option_key", mappedBy="projectParticipant", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
-  private $extraFieldsData;
+  private $participantFieldsData;
 
   /**
    * Link in the project instruments, may be more than one per participant.
@@ -106,7 +106,7 @@ class ProjectParticipant implements \ArrayAccess
   public function __construct() {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
-    $this->extraFieldsData = new ArrayCollection();
+    $this->participantFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
   }
 
@@ -279,44 +279,44 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Set extraFieldsData.
+   * Set participantFieldsData.
    *
-   * @param Collection $extraFieldsData
+   * @param Collection $participantFieldsData
    *
    * @return ProjectParticipant
    */
-  public function setExtraFieldsData($extraFieldsData):ProjectParticipant
+  public function setParticipantFieldsData($participantFieldsData):ProjectParticipant
   {
-    $this->extraFieldsData = $extraFieldsData;
+    $this->participantFieldsData = $participantFieldsData;
 
     return $this;
   }
 
   /**
-   * Get extraFieldsData.
+   * Get participantFieldsData.
    *
    * @return Collection
    */
-  public function getExtraFieldsData():Collection
+  public function getParticipantFieldsData():Collection
   {
-    return $this->extraFieldsData;
+    return $this->participantFieldsData;
   }
 
   /**
-   * Get one specific extra-field datum indexed by its key
+   * Get one specific participant-field datum indexed by its key
    *
-   * @return null|ProjectExtraFieldDatum
+   * @return null|ProjectParticipantFieldDatum
    */
-  public function getExtraFieldsDatum($key):?ProjectExtraFieldDatum
+  public function getParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
   {
     if (empty($key = Uuid::uuidBytes($key))) {
       return null;
     }
-    $datum = $this->extraFieldsData->get($key);
+    $datum = $this->participantFieldsData->get($key);
     if (!empty($datum)) {
       return $datum;
     }
-    foreach ($this->extraFieldsData as $datum) {
+    foreach ($this->participantFieldsData as $datum) {
       if ($datum->getOptionKey()->getBytes() == $key) {
         return $datum;
       }

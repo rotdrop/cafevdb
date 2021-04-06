@@ -34,13 +34,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * ProjectExtraFieldsDataOptions
+ * ProjectParticipantFieldsDataOptions
  *
- * @ORM\Table(name="ProjectExtraFieldsDataOptions")
+ * @ORM\Table(name="ProjectParticipantFieldsDataOptions")
  * @ORM\Entity
  * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
-class ProjectExtraFieldDataOption implements \ArrayAccess
+class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -48,9 +48,9 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
 
   /**
-   * Link back to ProjectExtraField
+   * Link back to ProjectParticipantField
    *
-   * @ORM\ManyToOne(targetEntity="ProjectExtraField", inversedBy="dataOptions", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="dataOptions", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $field;
@@ -90,7 +90,7 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
   private $limit;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectExtraFieldDatum", mappedBy="dataOption", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="dataOption", fetch="EXTRA_LAZY")
    */
   private $fieldData;
 
@@ -102,11 +102,11 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
   /**
    * Set field.
    *
-   * @param ProjectExtraField $field
+   * @param ProjectParticipantField $field
    *
-   * @return ProjectExtraFieldDataOption
+   * @return ProjectParticipantFieldDataOption
    */
-  public function setField($field):ProjectExtraFieldDataOption
+  public function setField($field):ProjectParticipantFieldDataOption
   {
     $this->field = $field;
 
@@ -128,9 +128,9 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
    *
    * @param string|UuidInterface $key
    *
-   * @return ProjectExtraFieldDataOption
+   * @return ProjectParticipantFieldDataOption
    */
-  public function setKey($key):ProjectExtraFieldDataOption
+  public function setKey($key):ProjectParticipantFieldDataOption
   {
     if (empty($key = Uuid::asUuid($key))) {
       throw new \Exception("UUID DATA: ".$key);
@@ -155,9 +155,9 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
    *
    * @param string $label
    *
-   * @return ProjectExtraFieldDataOption
+   * @return ProjectParticipantFieldDataOption
    */
-  public function setLabel($label):ProjectExtraFieldDataOption
+  public function setLabel($label):ProjectParticipantFieldDataOption
   {
     $this->label = $label;
 
@@ -179,9 +179,9 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
    *
    * @param string $data
    *
-   * @return ProjectExtraFieldDataOption
+   * @return ProjectParticipantFieldDataOption
    */
-  public function setData($data):ProjectExtraFieldDataOption
+  public function setData($data):ProjectParticipantFieldDataOption
   {
     $this->data = $data;
 
@@ -203,9 +203,9 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
    *
    * @param string|null $toolTip
    *
-   * @return ProjectExtraFieldDataOption
+   * @return ProjectParticipantFieldDataOption
    */
-  public function setToolTip($toolTip):ProjectExtraFieldDataOption
+  public function setToolTip($toolTip):ProjectParticipantFieldDataOption
   {
     $this->toolTip = $toolTip;
 
@@ -227,9 +227,9 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
    *
    * @param int $limit
    *
-   * @return ProjectExtraFieldDataOption
+   * @return ProjectParticipantFieldDataOption
    */
-  public function setLimit($limit):ProjectExtraFieldDataOption
+  public function setLimit($limit):ProjectParticipantFieldDataOption
   {
     $this->limit = $limit;
 
@@ -251,9 +251,9 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
    *
    * @param Collection $fieldData
    *
-   * @return ProjectExtraFieldDataOption
+   * @return ProjectParticipantFieldDataOption
    */
-  public function setFieldData($fieldData):ProjectExtraFieldDataOption
+  public function setFieldData($fieldData):ProjectParticipantFieldDataOption
   {
     $this->fieldData = $fieldData;
 
@@ -271,7 +271,7 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * Return the number of ProjectExtraFieldDatum entities attached to
+   * Return the number of ProjectParticipantFieldDatum entities attached to
    * this option.
    */
   public function usage():int

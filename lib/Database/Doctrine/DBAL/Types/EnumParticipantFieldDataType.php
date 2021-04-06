@@ -26,24 +26,27 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use MyCLabs\Enum\Enum as EnumType;
 
 /**
- * Enum for "extra-field" multiplicity.
+ * Enum for "participant-fields" data-type.
  *
- * @method static EnumExtraFieldMultiplicity SIMPLE()
- * @method static EnumExtraFieldMultiplicity SINGLE()
- * @method static EnumExtraFieldMultiplicity MULTIPLE()
- * @method static EnumExtraFieldMultiplicity PARALLEL()
- * @method static EnumExtraFieldMultiplicity RECURRING()
- * @method static EnumExtraFieldMultiplicity GROUPOFPEOPLE()
- * @method static EnumExtraFieldMultiplicity GROUPSOFPEOPLE()
- *
+ * @method static EnumParticipantFieldDataType TEXT()
+ * @method static EnumParticipantFieldDataType HTML()
+ * @method static EnumParticipantFieldDataType BOOLEAN()
+ * @method static EnumParticipantFieldDataType INTEGER()
+ * @method static EnumParticipantFieldDataType FLOAT()
+ * @method static EnumParticipantFieldDataType DATE()
+ * @method static EnumParticipantFieldDataType DATETIME()
+ * @method static EnumParticipantFieldDataType SERVICE_FEE()
+ * @method static EnumParticipantFieldDataType DEPOSIT()
  */
-class EnumExtraFieldMultiplicity extends EnumType
+class EnumParticipantFieldDataType extends EnumType
 {
-  private const SIMPLE = 'simple';
-  private const SINGLE = 'single';
-  private const MULTIPLE = 'multiple';
-  private const PARALLEL = 'parallel';
-  private const RECURRING = 'recurring';
-  private const GROUPOFPEOPLE = 'groupofpeople';
-  private const GROUPSOFPEOPLE = 'groupsofpeople';
-}
+  private const TEXT = 'text';
+  private const HTML = 'html';
+  private const BOOLEAN = 'boolean';
+  private const INTEGER = 'integer';
+  private const FLOAT = 'float';
+  private const DATE = 'date';
+  private const DATETIME = 'datetime';
+  private const SERVICE_FEE = 'service-fee';
+  private const DEPOSIT = 'deposit';
+};
