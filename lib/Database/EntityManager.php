@@ -186,7 +186,7 @@ class EntityManager extends EntityManagerDecorator
     $this->close();
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
-    $this->debug = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
+    $this->debug = 0 != ($this->encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
     if ($this->connected()) {
       $this->registerTypes();
     }
@@ -558,6 +558,10 @@ class EntityManager extends EntityManagerDecorator
    *   are available.
    *
    * Then just move the modified entity on to the ordinary persister.
+   *
+   * @todo This unfortunately does not hack similar problems with
+   * cascade="persist". There the "stock" persist operation seemingly
+   * still causes problems.
    */
   public function persist($entity)
   {
