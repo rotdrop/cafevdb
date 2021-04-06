@@ -180,6 +180,24 @@ table.pme-main td.pme-value span.align-right {
   float:right;
 }
 
+table.pme-main tr.extra-field.recurring td.pme-value td.operations input.operation {
+  background-repeat:no-repeat;
+  background-size: 24px 24px;
+  background-position: center;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  margin-right:1em;
+}
+
+table.pme-main tr.extra-field.recurring td.pme-value td.operations input.regenerate {
+  background-image:url('../img/reload-solid.svg');
+}
+
+table.pme-main tr.extra-field.recurring td.pme-value td.operations input.delete-undelete {
+  background-image:url('../img/cafevdb-delete.svg');
+}
+
 /******************/
 
 table.allowed-values.operation-display span.service-fee.currency-amount,

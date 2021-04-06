@@ -680,6 +680,19 @@ const myReady = function(selector, resizeCB) {
       return false;
     });
   }
+
+  // Handle buttons to update or delete recurrent receivables
+  container.find('form.pme-form tr.extra-field.recurring td.operations input.regenerate')
+    .on('click', function(event) {
+      alert('hello');
+      return false;
+    });
+
+  container.find('form.pme-form tr.extra-field.recurring td.operations input.delete-undelete')
+    .on('click', function(event) {
+      alert('hello');
+      return false;
+    });
 };
 
 const myDocumentReady = function() {

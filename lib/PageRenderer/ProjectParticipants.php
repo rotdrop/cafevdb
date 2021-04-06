@@ -1072,6 +1072,15 @@ class ProjectParticipants extends PMETableViewBase
               'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
               'divs' => ':',
             ],
+            'orderby' => '$table.created DESC',
+          ]);
+        $keyFdd['values|ACP'] = array_merge(
+          $keyFdd['values'], [
+            'description' => [
+              'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
+              'divs' => ':',
+            ],
+            'orderby' => '$table.created DESC',
           ]);
         $keyFdd['display'] = [ 'popup' => 'data' ];
         $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
@@ -1083,6 +1092,44 @@ class ProjectParticipants extends PMETableViewBase
             $html[] = $this->allowedOptionLabel($label, $value, $dataType);
           }
           return '<div class="allowed-option-wrapper">'.implode('<br/>', $html).'</div>';
+        };
+        $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType, $valueFddName) {
+          $values = Util::explodeIndexed($value);
+          $pfx = $this->pme->cgiDataName($valueFddName);
+          $html = '<table>
+  <thead>
+    <tr><th>'.$this->l->t('Actions').'</th><th>'.$this->l->t('Subject').'</th><th>'.$this->l->t('Value [%s]', $this->currencySymbol()).'</th></tr>
+  </thead>
+  <tbody>';
+          foreach ($values as $key => $value) {
+            $option =  $field->getDataOption($key);
+            $label = $option ? $option->getLabel() : '';
+            $html .= '
+<tr>
+  <td class="operations">
+    <input
+      class="operation delete-undelete"
+      title="'.$this->toolTipsService['extra-fields-recurring-data:delete-undelete'].'"
+      type="button"/>
+    <input
+      class="operation regenerate"
+      title="'.$this->toolTipsService['extra-fields-recurring-data:regenerate'].'"
+      type="button"/>
+  </td>
+  <td class="label">
+    '.$label.'
+  </td>
+  <td class="input">
+    <input id="receivable-input-'.$key.'" type=checkbox checked="checked" class="pme-input pme-input-lock-unlock left-lock"/>
+    <label class="pme-input pme-input-lock-unlock left-lock" for="receivable-input-'.$key.'"></label>
+    <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$pfx.'['.$key.']" value="'.$value.'"/>
+  </td>
+</tr>';
+          }
+          $html .= '
+  </tbody>
+</table>';
+          return $html;
         };
         break;
       case 'groupofpeople':
