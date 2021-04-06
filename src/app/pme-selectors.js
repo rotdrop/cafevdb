@@ -248,7 +248,7 @@ const pmeRec = function(selector, options) {
   let result = {};
   for (const rec of records) {
     const key = rec.name.match(/[^[]+\[([^\]]+)\]/);
-    if (key.length === 2) {
+    if (key && key.length === 2) {
       result[munge(key[1])] = rec.value;
     } else {
       result = rec.value;
