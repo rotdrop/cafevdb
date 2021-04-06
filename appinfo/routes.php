@@ -236,9 +236,15 @@ $routes = [
       'url' => '/validate/projects/{topic}',
       'verb' => 'POST',
     ],
+    /**
+     *  options/define
+     *  options/regenerate
+     *  generator/define
+     *  generator/run
+     */
     [
       'name' => 'project_participant_fields#service_switch',
-      'url' => '/projects/participant-fields/{topic}',
+      'url' => '/projects/participant-fields/{topic}/{subTopic}',
       'verb' => 'POST',
     ],
     /**

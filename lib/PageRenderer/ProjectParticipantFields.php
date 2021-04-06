@@ -364,8 +364,8 @@ class ProjectParticipantFields extends PMETableViewBase
      *
      *************************************************************************/
 
-    $opts['fdd']['allowed_values'] = [
-      'name' => $this->l->t('Allowed Values'),
+    $opts['fdd']['data_options'] = [
+      'name' => $this->l->t('Data Options'),
       'input' => 'SR',
       'css|LF' => [ 'postfix' => ' data-options hide-subsequent-lines' ],
       'css' => ['postfix' => ' data-options' ],
@@ -403,13 +403,13 @@ class ProjectParticipantFields extends PMETableViewBase
       },
     ];
 
-    $opts['fdd']['allowed_values_single'] = [
+    $opts['fdd']['data_options_single'] = [
       'name' => $this->currencyLabel($this->l->t('Data')),
       'css' => [ 'postfix' => ' data-options-single' ],
       'sql' => '$main_table.id',
       'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($nameIdx, $tooltipIdx) {
         // allowed values from virtual JSON aggregator field
-        $dataOptions = $row['qf'.$pme->fdn['allowed_values']];
+        $dataOptions = $row['qf'.$pme->fdn['data_options']];
         $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
         $dataType = $row['qf'.$pme->fdn['data_type']];
         return $this->showAllowedSingleValue($dataOptions, $op, $fdd[$field]['tooltip'], $multiplicity, $dataType);
@@ -468,7 +468,7 @@ class ProjectParticipantFields extends PMETableViewBase
         $dataType = $row[$this->queryField('data_type', $pme->fdd)];
         if ($multiplicity !== 'simple' && !empty($value)) {
           // fetch the value from the data-options data
-          $allowed = $row[$this->queryField('allowed_values', $pme->fdd)];
+          $allowed = $row[$this->queryField('data_options', $pme->fdd)];
           $allowed = $this->participantFieldsService->explodeDataOptions($allowed);
           $defaultRow = $this->participantFieldsService->findDataOption($value, $allowed);
           if (!empty($defaultRow['data'])) {
@@ -830,40 +830,40 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $tag = 'maximum_group_size';
     if ($newvals['multiplicity'] == 'groupofpeople') {
-      $first = array_key_first($newvals['allowed_values_single']);
-      $newvals['allowed_values_single'][$first]['key'] = Uuid::NIL;
-      $newvals['allowed_values_single'][$first]['limit'] = $newvals[$tag];
+      $first = array_key_first($newvals['data_options_single']);
+      $newvals['data_options_single'][$first]['key'] = Uuid::NIL;
+      $newvals['data_options_single'][$first]['limit'] = $newvals[$tag];
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
     /************************************************************************
      *
-     * Move the data from allowed_values_single to
-     * allowed_values.
+     * Move the data from data_options_single to
+     * data_options.
      *
      */
 
-    $tag = 'allowed_values_single';
+    $tag = 'data_options_single';
     if ($newvals['multiplicity'] == 'single'
         || $newvals['multiplicity'] == 'groupofpeople') {
-      $first = array_key_first($newvals['allowed_values_single']);
+      $first = array_key_first($newvals['data_options_single']);
       $newvals[$tag][$first]['label'] = $newvals['name'];
       $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
-      $newvals['allowed_values'] = $newvals[$tag];
+      $newvals['data_options'] = $newvals[$tag];
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
     /************************************************************************
      *
-     * Sanitize allowed_values
+     * Sanitize data_options
      *
      */
 
-    if (!is_array($newvals['allowed_values'])) {
+    if (!is_array($newvals['data_options'])) {
       // textfield
-      $allowed = $this->participantFieldsService->explodeDataOptions($newvals['allowed_values'], false);
+      $allowed = $this->participantFieldsService->explodeDataOptions($newvals['data_options'], false);
     } else {
-      $allowed = $newvals['allowed_values'];
+      $allowed = $newvals['data_options'];
       if ($newvals['multiplicity'] == 'recurring') {
         // index -1 holds the generator information, re-index
         $allowed = array_values($allowed);
@@ -875,19 +875,19 @@ class ProjectParticipantFields extends PMETableViewBase
 
     // @todo is this still necessary?
     $this->debug('ALLOWED BEFORE REEXPLODE '.print_r($allowed, true));
-    $newvals['allowed_values'] =
+    $newvals['data_options'] =
       $this->participantFieldsService->explodeDataOptions(
         $this->participantFieldsService->implodeDataOptions($allowed), false);
 
-    Util::unsetValue($changed, 'allowed_values');
+    Util::unsetValue($changed, 'data_options');
 
-    $this->debug('ALLOWED BEFORE RESHAPE '.print_r($newvals['allowed_values'], true));
+    $this->debug('ALLOWED BEFORE RESHAPE '.print_r($newvals['data_options'], true));
 
 
     // convert allowed values from array to table format as understood
     // our PME legacy join table stuff.
     $optionValues = [];
-    foreach ($newvals['allowed_values'] as $key => $allowedValue) {
+    foreach ($newvals['data_options'] as $key => $allowedValue) {
       $field = $this->joinTableFieldName(self::OPTIONS_TABLE, 'key');
       $optionValues[$field][] = $key;
       foreach ($allowedValue as $field => $value) {
@@ -906,7 +906,7 @@ class ProjectParticipantFields extends PMETableViewBase
     }
 
     $changed = array_values(array_unique($changed));
-    self::unsetRequestValue('allowed_values', $oldvals, $changed, $newvals);
+    self::unsetRequestValue('data_options', $oldvals, $changed, $newvals);
 
     $this->debug('AFTER OLD '.print_r($oldvals, true));
     $this->debug('AFTER NEW '.print_r($newvals, true));
@@ -986,7 +986,7 @@ class ProjectParticipantFields extends PMETableViewBase
    */
   public function dataOptionInputRowHtml($value, $index, $used)
   {
-    $pfx = $this->pme->cgiDataName('allowed_values');
+    $pfx = $this->pme->cgiDataName('data_options');
     $key = $value['key'];
     $deleted = !empty($value['deleted']);
     $data = ''
@@ -1107,7 +1107,7 @@ class ProjectParticipantFields extends PMETableViewBase
    */
   private function dataOptionGeneratorHtml($fieldId, $generatorItem)
   {
-    $pfx = $this->pme->cgiDataName('allowed_values');
+    $pfx = $this->pme->cgiDataName('data_options');
     $html = '
 <tr class="data-line data-options placeholder active not-multiplicity-recurring"
   data-field-id="'.$fieldId.'">
@@ -1379,7 +1379,7 @@ __EOT__;
       $entry['key'] = Uuid::NIL;
     }
     $key = $entry['key'];
-    $name  = $this->pme->cgiDataName('allowed_values_single');
+    $name  = $this->pme->cgiDataName('data_options_single');
     $value = htmlspecialchars($entry['data']);
     $tip   = $toolTip;
     $html  = '<div class="active-value">';

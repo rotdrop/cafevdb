@@ -167,7 +167,7 @@ const ready = function(selector, resizeCB) {
     const row = self.closest('tr.data-options');
     const key = row.find('input.field-key').val();
     const cleanup = function() {};
-    const request = 'data-option-regenerate';
+    const request = 'option/regenerate';
     $.post(
       generateUrl('projects/participant-fields/' + request), {
         data: {
@@ -193,7 +193,7 @@ const ready = function(selector, resizeCB) {
     const row = self.closest('tr.data-options');
     const fieldId = row.data('fieldId');
     const cleanup = function() {};
-    const request = 'data-options-generator-run';
+    const request = 'generator/run';
     $.post(
       generateUrl('projects/participant-fields/' + request), {
         data: {
@@ -314,7 +314,7 @@ const ready = function(selector, resizeCB) {
       }
       const row = self.closest('tr.data-options');
 
-      const request = 'data-options-generator';
+      const request = 'generator/define';
       const data = $.extend({}, fieldTypeData(), row.data());
       const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
       const postData = $.param({ request, data })
@@ -383,7 +383,7 @@ const ready = function(selector, resizeCB) {
       // default data selector, if applicable
       const dflt = container.find('select.default-multi-value');
 
-      const request = 'data-options-option';
+      const request = 'option/define';
       const data = $.extend({ default: dflt.val() }, fieldTypeData(), row.data());
       const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
       const postData = $.param({ request, data })

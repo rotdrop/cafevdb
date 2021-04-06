@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\PageRenderer\ProjectExtraFields as Renderer;
+use OCA\CAFEVDB\PageRenderer\ProjectParticipantFields as Renderer;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
@@ -90,61 +90,52 @@ class ProjectParticipantFieldsController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic, $data = null)
+  public function serviceSwitch($topic, $subTopic, $data = null)
   {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
-      case 'data-option-regenerate':
-        if (empty($data['fieldId']) || empty($data['key'])) {
+    case 'generator':
+      switch ($subTopic) {
+      case 'define':
+        if (empty($data)) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
-
-        $fieldId = $data['fieldId'];
-        /** @var Entities\ProjectExtraField $field */
-        $field = $this->getDatabaseRepository(Entities\ProjectExtraField::class)->find($fieldId);
-        if (empty($field)) {
-          return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
+        $used = $data['used'] === 'used';
+        $dataOptions = $projectValues['data_options'];
+        $dataOptions = array_values($dataOptions); // get rid of -1 index
+        if (count($dataOptions) !== 1) {
+          return self::grumble($this->l->t('No or too many items available: %s',
+                                           print_r($dataOptions, true) ));
+        }
+        $item = $dataOptions[0];
+        if ($item['label'] != ReceivablesGeneratorFactory::GENERATOR_LABEL) {
+          return self::grumble($this->l->t('Generator data must be tagged with "%s" label, got "%s".',
+                                           [ ReceivablesGeneratorFactory::GENERATOR_LABEL, $item['label'], ]));
+        }
+        if ($item['key'] != Uuid::NIL) {
+          return self::grumble($this->l->t('Generator data must be tagged with NIL uuid, got "%s".', $item['key']));
         }
 
-        $receivable = $field->getDataOption($data['key']);
-        if (empty($receivable)) {
-          return self::grumble($this->l->t('Unable to fetch receivable with key "%s".', $data['key']));
+        // data should return a PHP class name
+        if (!preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/', $item['data'])) {
+          return self::grumble($this->l->t('Generator "%s" does not appear to be valid PHP class name.', $item['data']));
         }
 
-        /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
-        if (empty($generator)) {
-          return self::grumble($this->l->t('Unable to load generator for recurring receivables "%s".',
-                                           $field->getName()));
-        }
-
-        $this->entityManager->beginTransaction();
+        // check the generator can be found
+        $generator = null;
         try {
-          $receivable = $generator->updateReceivable($receivable);
-          foreach ($receivable->getFieldData() as $receivableDatum) {
-            // unfortunately cascade does not work with multiple
-            // "complicated" associations.
-            $this->persist($receivableDatum);
-          }
-          $this->flush();
-          $this->entityManager->commit();
+          $generator = $this->di($item['data']);
         } catch (\Throwable $t) {
           $this->logException($t);
-          $this->entityManager->rollback();
-          if (!$this->entityManager->isTransactionActive()) {
-            $this->entityManager->close();
-            $this->entityManager->reopen();
-          }
-          return self::grumble($this->exceptionChainData($t));
+        }
+        if (empty($generator)) {
+          return self::grumble($this->l->t('Generator "%s" could not be instantiated.', $item['data']));
         }
 
-        /** @todo report back some numbers */
         return self::dataResponse([
-          'message' => $this->l->t("Request \"%s\" successful", $topic),
+          'message' => $this->l->t('Generator "%s" successfully validated.', $item['data']),
         ]);
-
-        break;
-      case 'data-options-generator-run':
+      case 'run':
         if (empty($data['fieldId'])) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
@@ -189,57 +180,23 @@ class ProjectParticipantFieldsController extends Controller {
         }
 
         return self::dataResponse([
-          'message' => $this->l->t("Request \"%s\" successful", $topic),
+          'message' => $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]),
           'dataOptionFormInputs' => $inputRows,
         ]);
-
-      case 'data-options-generator':
-        if (empty($data)) {
-          return self::grumble($this->l->t('Missing parameters in request %s', $topic));
-        }
-        $used = $data['used'] === 'used';
-        $dataOptions = $projectValues['allowed_values'];
-        $dataOptions = array_values($dataOptions); // get rid of -1 index
-        if (count($dataOptions) !== 1) {
-          return self::grumble($this->l->t('No or too many items available: %s',
-                                           print_r($dataOptions, true) ));
-        }
-        $item = $dataOptions[0];
-        if ($item['label'] != ReceivablesGeneratorFactory::GENERATOR_LABEL) {
-          return self::grumble($this->l->t('Generator data must be tagged with "%s" label, got "%s".',
-                                           [ ReceivablesGeneratorFactory::GENERATOR_LABEL, $item['label'], ]));
-        }
-        if ($item['key'] != Uuid::NIL) {
-          return self::grumble($this->l->t('Generator data must be tagged with NIL uuid, got "%s".', $item['key']));
-        }
-
-        // data should return a PHP class name
-        if (!preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/', $item['data'])) {
-          return self::grumble($this->l->t('Generator "%s" does not appear to be valid PHP class name.', $item['data']));
-        }
-
-        // check the generator can be found
-        $generator = null;
-        try {
-          $generator = $this->di($item['data']);
-        } catch (\Throwable $t) {
-          $this->logException($t);
-        }
-        if (empty($generator)) {
-          return self::grumble($this->l->t('Generator "%s" could not be instantiated.', $item['data']));
-        }
-
-        return self::dataResponse([
-          'message' => $this->l->t('Generator "%s" successfully validated.', $item['data']),
-        ]);
-      case 'data-options-option':
+      default:
+        break;
+      }
+      break;
+    case 'option':
+      switch ($subTopic) {
+      case 'define':
         if (empty($data)) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
         $default = $data['default'];
         $index = $data['index'];
         $used  = $data['used'] === 'used';
-        $dataOptions = $projectValues['allowed_values'];
+        $dataOptions = $projectValues['data_options'];
 
         $dataOptions = array_values($dataOptions); // get rid of -1 index
 
@@ -253,7 +210,9 @@ class ProjectParticipantFieldsController extends Controller {
                                            print_r($dataOptions, true) ));
         }
 
-        $item = $dataOptions[0];
+        $this->logInfo('OPTIONS '.print_r($dataOptions, true));
+
+        $item = array_shift($dataOptions);
 
         // remove dangerous html
         $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
@@ -287,14 +246,78 @@ class ProjectParticipantFieldsController extends Controller {
         $options = PageNavigation::selectOptions($options);
 
         return self::dataResponse([
-          'message' => $this->l->t("Request \"%s\" successful", $topic),
+          'message' => $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]),
           'dataOptionFormInputs' => $input,
           'dataOptionSelectOption' => $options,
         ]);
+      case 'regenerate':
+        if (empty($data['fieldId']) || empty($data['key'])) {
+          return self::grumble($this->l->t('Missing parameters in request %s', $topic));
+        }
+
+        $fieldId = $data['fieldId'];
+        /** @var Entities\ProjectExtraField $field */
+        $field = $this->getDatabaseRepository(Entities\ProjectExtraField::class)->find($fieldId);
+        if (empty($field)) {
+          return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
+        }
+
+        $receivable = $field->getDataOption($data['key']);
+        if (empty($receivable)) {
+          return self::grumble($this->l->t('Unable to fetch receivable with key "%s".', $data['key']));
+        }
+
+        $participant = null;
+        if (!empty($data['musicianId']) && $data['musicianId'] > 0) {
+          $participant = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->find([
+            'project' => $field->getProject(),
+            'musician' => $data['musicianId'],
+          ]);
+          if (empty($participant)) {
+            return self::grumble($this->l->t('Unable to find musician with id "%d" in project "%s".',
+                                             [ $data['musicianId'], $field->getProject()->getName(), ]));
+          }
+        }
+
+        /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
+        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+        if (empty($generator)) {
+          return self::grumble($this->l->t('Unable to load generator for recurring receivables "%s".',
+                                           $field->getName()));
+        }
+
+        $this->entityManager->beginTransaction();
+        try {
+          $receivable = $generator->updateReceivable($receivable, $participant);
+          foreach ($receivable->getFieldData() as $receivableDatum) {
+            // unfortunately cascade does not work with multiple
+            // "complicated" associations.
+            $this->persist($receivableDatum);
+          }
+          $this->flush();
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          if (!$this->entityManager->isTransactionActive()) {
+            $this->entityManager->close();
+            $this->entityManager->reopen();
+          }
+          return self::grumble($this->exceptionChainData($t));
+        }
+
+        /** @todo report back some numbers */
+        return self::dataResponse([
+          'message' => $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]),
+        ]);
       default:
         break;
+      }
+      break;
+    default:
+      break;
     }
-    return self::grumble($this->l->t('Unknown Request "%s"', $topic));
+    return self::grumble($this->l->t('Unknown Request "%s/%s"', [ $topic, $subTopic ]));
   }
 
 }
