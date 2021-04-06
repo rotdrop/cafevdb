@@ -163,7 +163,29 @@ const ready = function(selector, resizeCB) {
   });
 
   container.on('click', 'tr.allowed-values input.regenerate', function(event) {
-    Notification.messages('IMPLEMENT ME');
+    const self = $(this);
+    const row = self.closest('tr.allowed-values');
+    const key = row.find('input.field-key').val();
+    const cleanup = function() {};
+    const request = 'allowed-value-regenerate';
+    $.post(
+      generateUrl('projects/extra-fields/' + request), {
+        data: {
+          fieldId: PHPMyEdit.rec(container),
+          key,
+        },
+      })
+      .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown, cleanup);
+      })
+      .done(function(data) {
+        if (!Ajax.validateResponse(data, [], cleanup)) {
+          return;
+        }
+        cleanup();
+        Notification.messages(data.message);
+      });
+    return false;
   });
 
   container.on('click', 'tr.allowed-values input.generator-run', function(event) {

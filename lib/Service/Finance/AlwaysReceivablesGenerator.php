@@ -90,13 +90,18 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
   private function updateParticipant(Entities\ProjectExtraFieldDataOption $receivable, Entities\ProjectParticipant $participant)
   {
     $extraFieldsData = $participant->getExtraFieldsData();
-    if (empty($extraFieldsData->matching(self::criteriaWhere(['key' => $receivable->getKey()])))) {
+    if ($extraFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]))->count() == 0) {
+      $this->logInfo('RECEIVABLE update of '.$participant->getMusician()->getFirstName());
       $datum = (new Entities\ProjectExtraFieldDatum)
              ->setField($receivable->getField())
              ->setMusician($participant->getMusician())
+             ->setProject($participant->getProject())
              ->setOptionKey($receivable->getKey())
              ->setOptionValue($receivable->getData());
       $extraFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
+      $receivable->getFieldData()->add($datum);
+      $participant->getMusician()->getProjectExtraFieldsData()->add($datum);
+      $participant->getProject()->getExtraFieldsData()->add($datum);
     }
   }
 }

@@ -94,6 +94,56 @@ class ProjectExtraFieldsController extends Controller {
   {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
+      case 'allowed-value-regenerate':
+        if (empty($data['fieldId']) || empty($data['key'])) {
+          return self::grumble($this->l->t('Missing parameters in request %s', $topic));
+        }
+
+        $fieldId = $data['fieldId'];
+        /** @var Entities\ProjectExtraField $field */
+        $field = $this->getDatabaseRepository(Entities\ProjectExtraField::class)->find($fieldId);
+        if (empty($field)) {
+          return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
+        }
+
+        $receivable = $field->getDataOption($data['key']);
+        if (empty($receivable)) {
+          return self::grumble($this->l->t('Unable to fetch receivable with key "%s".', $data['key']));
+        }
+
+        /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
+        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+        if (empty($generator)) {
+          return self::grumble($this->l->t('Unable to load generator for recurring receivables "%s".',
+                                           $field->getName()));
+        }
+
+        $this->entityManager->beginTransaction();
+        try {
+          $receivable = $generator->updateReceivable($receivable);
+          foreach ($receivable->getFieldData() as $receivableDatum) {
+            // unfortunately cascade does not work with multiple
+            // "complicated" associations.
+            $this->persist($receivableDatum);
+          }
+          $this->flush();
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          if (!$this->entityManager->isTransactionActive()) {
+            $this->entityManager->close();
+            $this->entityManager->reopen();
+          }
+          return self::grumble($this->exceptionChainData($t));
+        }
+
+        /** @todo report back some numbers */
+        return self::dataResponse([
+          'message' => $this->l->t("Request \"%s\" successful", $topic),
+        ]);
+
+        break;
       case 'allowed-values-generator-run':
         if (empty($data['fieldId'])) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
@@ -107,7 +157,7 @@ class ProjectExtraFieldsController extends Controller {
           return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
         }
 
-        // fetch the generator
+        /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
         $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
         if (empty($generator)) {
           return self::grumble($this->l->t('Unable to load generator for recurring receivables "%s".',
