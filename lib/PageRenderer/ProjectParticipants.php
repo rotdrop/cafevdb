@@ -1061,6 +1061,29 @@ class ProjectParticipants extends PMETableViewBase
         }
         break;
       case 'recurring':
+        $keyFdd['css']['postfix'] .= ' recurring generated '.$dataType;
+        unset($keyFdd['mask']);
+        $keyFdd['select'] = 'M';
+        $keyFdd['values|LF'] = array_merge(
+          $keyFdd['values'], [
+            'filters' => ('$table.field_id = '.$fieldId
+                          .' AND $table.project_id = '.$projectId),
+            'description' => [
+              'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
+              'divs' => ':',
+            ],
+          ]);
+        $keyFdd['display'] = [ 'popup' => 'data' ];
+        $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
+          $values = Util::explodeIndexed($value);
+          $html = [];
+          foreach ($values as $key => $value) {
+            $option =  $field->getDataOption($key);
+            $label = $option ? $option->getLabel() : '';
+            $html[] = $this->allowedOptionLabel($label, $value, $dataType);
+          }
+          return '<div class="allowed-option-wrapper">'.implode('<br/>', $html).'</div>';
+        };
         break;
       case 'groupofpeople':
         // special option with Uuid::NIL holds the management information
