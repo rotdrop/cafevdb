@@ -32,7 +32,10 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Uuid;
 
 /**
- * Always generate a new payment request.
+ * Always generate a new payment request. This is just a dummy
+ * nonsense proof-of-concept implementation. It will always generate
+ * new receivables, and calling updateReceivable() will also always
+ * just change the amount to pay.
  */
 class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
 {
@@ -75,22 +78,24 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
    */
   public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectParticipantFieldDataOption
   {
-    // - fetch all project participants
-    // - enter the payment option into the data table
-
-    $participants = $receivable->getField()->getProject()->getParticipants();
-
-    /** @var Entities\ProjectParticipant $participant */
-    foreach ($participants as $participant) {
+    if (!empty($participant)) {
       $this->updateParticipant($receivable, $participant);
+    } else {
+      $participants = $receivable->getField()->getProject()->getParticipants();
+      /** @var Entities\ProjectParticipant $participant */
+      foreach ($participants as $participant) {
+        $this->updateParticipant($receivable, $participant);
+      }
     }
+
     return $receivable;
   }
 
   private function updateParticipant(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant)
   {
     $participantFieldsData = $participant->getParticipantFieldsData();
-    if ($participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]))->count() == 0) {
+    $existingReceivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
+    if ($existingReceivableData->count() == 0) {
       $this->logInfo('RECEIVABLE update of '.$participant->getMusician()->getFirstName());
       $datum = (new Entities\ProjectParticipantFieldDatum)
              ->setField($receivable->getField())
@@ -102,6 +107,11 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
       $receivable->getFieldData()->add($datum);
       $participant->getMusician()->getProjectParticipantFieldsData()->add($datum);
       $participant->getProject()->getParticipantFieldsData()->add($datum);
+    } else {
+      // there is at most one ...
+      /** @var Entities\ProjectParticipantFieldDatum $datum */
+      $datum = $existingReceivableData->first();
+      $datum->setOptionValue((float)$datum->getOptionValue()+0.01);
     }
   }
 }
