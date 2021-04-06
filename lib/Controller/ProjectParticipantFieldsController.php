@@ -142,8 +142,8 @@ class ProjectParticipantFieldsController extends Controller {
 
         // fetch the field
         $fieldId = $data['fieldId'];
-        /** @var Entities\ProjectExtraField $field */
-        $field = $this->getDatabaseRepository(Entities\ProjectExtraField::class)->find($fieldId);
+        /** @var Entities\ProjectParticipantField $field */
+        $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
         if (empty($field)) {
           return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
         }
@@ -252,12 +252,13 @@ class ProjectParticipantFieldsController extends Controller {
         ]);
       case 'regenerate':
         if (empty($data['fieldId']) || empty($data['key'])) {
-          return self::grumble($this->l->t('Missing parameters in request %s', $topic));
+          return self::grumble($this->l->t('Missing parameters in request "%s/%s"',
+                                           [ $topic, $subTopic, ]));
         }
 
         $fieldId = $data['fieldId'];
-        /** @var Entities\ProjectExtraField $field */
-        $field = $this->getDatabaseRepository(Entities\ProjectExtraField::class)->find($fieldId);
+        /** @var Entities\ProjectParticipantField $field */
+        $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
         if (empty($field)) {
           return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
         }
@@ -267,6 +268,7 @@ class ProjectParticipantFieldsController extends Controller {
           return self::grumble($this->l->t('Unable to fetch receivable with key "%s".', $data['key']));
         }
 
+        /** @var Entities\ProjectParticipant $participant */
         $participant = null;
         if (!empty($data['musicianId']) && $data['musicianId'] > 0) {
           $participant = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->find([
@@ -306,9 +308,21 @@ class ProjectParticipantFieldsController extends Controller {
           return self::grumble($this->exceptionChainData($t));
         }
 
-        /** @todo report back some numbers */
+        $receivableAmounts = [];
+        if (!empty($participant)) {
+          $participantFieldsData = $participant->getParticipantFieldsData();
+          $receivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
+          $receivableAmounts[$participant->getMusician()->getId()] = $receivableData->first()->getOptionValue();
+        } else {
+          /** @var Entities\ProjectParticipantFieldDatum $datum */
+          foreach ($receivable->getFieldData() as $datum) {
+            $receivableAmounts[$datum->getMusician()->getId()] = $datum->getOptionValue();
+          }
+        }
+
         return self::dataResponse([
           'message' => $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]),
+          'amounts' => $receivableAmounts,
         ]);
       default:
         break;

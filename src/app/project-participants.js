@@ -665,7 +665,8 @@ const myReady = function(selector, resizeCB) {
     return false;
   });
 
-  container.find('form.pme-form input.pme-add')
+  container
+    .find('form.pme-form input.pme-add')
     .addClass('pme-custom').prop('disabled', false)
     .off('click').on('click', function(event) {
 
@@ -682,13 +683,41 @@ const myReady = function(selector, resizeCB) {
   }
 
   // Handle buttons to update or delete recurrent receivables
-  container.find('form.pme-form tr.participant-field.recurring td.operations input.regenerate')
+  container
+    .find('form.pme-form tr.participant-field.recurring td.operations input.regenerate')
     .on('click', function(event) {
-      alert('hello');
+      const $this = $(this);
+      const row = $this.closest('tr');
+      const fieldId = row.data('fieldId');
+      const optionKey = row.data('optionKey');
+      const cleanup = function() {};
+      const request = 'option/regenerate';
+      $.post(
+        generateUrl('projects/participant-fields/' + request), {
+          data: {
+            fieldId,
+            key: optionKey,
+            musicianId,
+          },
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['amounts'], cleanup)) {
+            return;
+          }
+          if (data.amounts[musicianId]) {
+            row.find('input.pme-input.service-fee').val(data.amounts[musicianId]);
+          }
+          cleanup();
+          Notification.messages(data.message);
+        });
       return false;
     });
 
-  container.find('form.pme-form tr.participant-field.recurring td.operations input.delete-undelete')
+  container
+    .find('form.pme-form tr.participant-field.recurring td.operations input.delete-undelete')
     .on('click', function(event) {
       alert('hello');
       return false;

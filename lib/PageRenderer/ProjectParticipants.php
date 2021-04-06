@@ -1105,7 +1105,7 @@ class ProjectParticipants extends PMETableViewBase
             $option =  $field->getDataOption($key);
             $label = $option ? $option->getLabel() : '';
             $html .= '
-<tr>
+<tr data-option-key="'.$key.'" data-field-id="'.$field['id'].'">
   <td class="operations">
     <input
       class="operation delete-undelete"
@@ -2026,7 +2026,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     $this->debug('NEWVALUES '.print_r($newValues, true));
     $this->debug('CHANGED '.print_r($changed, true));
 
-    foreach ($this->project['extra_fields'] as $participantField) {
+    foreach ($this->project['participantFields'] as $participantField) {
       $fieldId = $participantField['id'];
       $multiplicity = $participantField['multiplicity'];
       $dataType = $participantField['dataType'];
@@ -2154,7 +2154,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
   public function cleanupParticipantFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
     /** @var Entities\ProjectParticipantField $participantField */
-    foreach ($this->project['extra_fields'] as $participantField) {
+    foreach ($this->project['participantFields'] as $participantField) {
       if ($participantField->getMultiplicity() != Types\EnumParticipantFieldMultiplicity::GROUPOFPEOPLE()) {
         continue;
       }
