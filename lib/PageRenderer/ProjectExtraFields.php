@@ -1003,12 +1003,13 @@ class ProjectExtraFields extends PMETableViewBase
     .' '.$data.'>';
     $html .= '<td class="operations">
   <input
-    class="operation delete-undelete not-multiplicity-recurring"
+    class="operation delete-undelete notnot-multiplicity-recurring"
     title="'.$this->toolTipsService['extra-fields-allowed-values:delete-undelete'].'"
     type="button"/>
   <input
     class="operation regenerate only-multiplicity-recurring"
     title="'.$this->toolTipsService['extra-fields-allowed-values:regenerate'].'"
+    '.($deleted ? ' disabled="disabled"' : '').'
     type="button"/>
     </td>';
     // label
@@ -1229,7 +1230,7 @@ class ProjectExtraFields extends PMETableViewBase
       $showDataLabel = $this->l->t("Show data-fields.");
       $showDataTip = $this->toolTipsService['extra-fields-show-data'];
       $html .=<<<__EOT__
-<div class="field-display-options not-multiplicity-recurring">
+<div class="field-display-options notnot-multiplicity-recurring">
   <div class="show-deleted">
     <input type="checkbox"
            name="show-deleted"

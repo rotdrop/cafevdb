@@ -162,6 +162,10 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
+  container.on('click', 'tr.allowed-values input.regenerate', function(event) {
+    Notification.messages('IMPLEMENT ME');
+  });
+
   container.on('click', 'tr.allowed-values input.generator-run', function(event) {
     const self = $(this);
     const row = self.closest('tr.allowed-values');
@@ -206,6 +210,7 @@ const ready = function(selector, resizeCB) {
       row.switchClass('deleted', 'active');
       row.find('input.field-deleted').val('');
       row.find('input[type="text"]:not(.field-key), textarea').prop('readonly', false);
+      row.find('input.operation').prop('disabled', false);
       const key = row.find('input.field-key');
       const label = row.find('input.field-label');
       const dfltSelect = container.find('select.default-multi-value');
@@ -226,6 +231,7 @@ const ready = function(selector, resizeCB) {
         row.switchClass('active', 'deleted');
         row.find('input.field-deleted').val(row.data('deleted'));
         row.find('input[type="text"], textarea').prop('readonly', true);
+        row.find('input.operation.regenerate').prop('disabled', true);
       }
       const dfltSelect = container.find('select.default-multi-value');
       dfltSelect.find('option[value="' + key + '"]').remove();
