@@ -139,7 +139,7 @@ class Util
         }
         return $row;
       },
-      self::explode($delimiter, $data));
+      self::explode($delimiter, $data, self::TRIM|self::OMIT_EMPTY_FIELDS));
     return array_column($matrix, 1, 0);
   }
 
