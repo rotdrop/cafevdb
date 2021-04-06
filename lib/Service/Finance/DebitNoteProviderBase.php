@@ -142,7 +142,7 @@ abstract class DebitNoteProviderBase implements IDebitNoteProvider
 //           if (empty($value)) {
 //             continue;
 //           }
-//           $allowed  = $fieldInfo['AllowedValues'];
+//           $allowed  = $fieldInfo['DataOptions'];
 //           $type     = $fieldInfo['Type']['Multiplicity'];
 //           $amount  += DetailedInstrumentation::participantFieldSurcharge($value, $allowed, $type);
 //         }

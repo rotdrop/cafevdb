@@ -72,7 +72,7 @@ const ready = function(selector, resizeCB) {
   };
 
   const allowedHeaderVisibility = function() {
-    const allowedValuesTable = container.find('table.allowed-values');
+    const allowedValuesTable = container.find('table.data-options');
     if (allowedValuesTable.find('tbody tr:visible').length >= 2) {
       allowedValuesTable.find('thead').show();
     } else {
@@ -112,7 +112,7 @@ const ready = function(selector, resizeCB) {
   });
   container.find('select.multiplicity').trigger('change');
 
-  container.on('keypress', 'tr.allowed-values input[type="text"]', function(event) {
+  container.on('keypress', 'tr.data-options input[type="text"]', function(event) {
     let pressedKey;
     if (event.which) {
       pressedKey = event.which;
@@ -127,22 +127,22 @@ const ready = function(selector, resizeCB) {
     return true; // other key pressed
   });
 
-  container.on('change', '#allowed-values-show-deleted', function(event) {
+  container.on('change', '#data-options-show-deleted', function(event) {
     if ($(this).prop('checked')) {
-      container.find('table.allowed-values').addClass('show-deleted');
+      container.find('table.data-options').addClass('show-deleted');
     } else {
-      container.find('table.allowed-values').removeClass('show-deleted');
+      container.find('table.data-options').removeClass('show-deleted');
     }
     $.fn.cafevTooltip.remove();
     allowedHeaderVisibility();
     resizeCB();
   });
 
-  container.on('change', '#allowed-values-show-data', function(event) {
+  container.on('change', '#data-options-show-data', function(event) {
     if ($(this).prop('checked')) {
-      container.find('table.allowed-values').addClass('show-data');
+      container.find('table.data-options').addClass('show-data');
     } else {
-      container.find('table.allowed-values').removeClass('show-data');
+      container.find('table.data-options').removeClass('show-data');
     }
     $.fn.cafevTooltip.remove();
     resizeCB();
@@ -162,12 +162,12 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  container.on('click', 'tr.allowed-values input.regenerate', function(event) {
+  container.on('click', 'tr.data-options input.regenerate', function(event) {
     const self = $(this);
-    const row = self.closest('tr.allowed-values');
+    const row = self.closest('tr.data-options');
     const key = row.find('input.field-key').val();
     const cleanup = function() {};
-    const request = 'allowed-value-regenerate';
+    const request = 'data-option-regenerate';
     $.post(
       generateUrl('projects/participant-fields/' + request), {
         data: {
@@ -188,12 +188,12 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  container.on('click', 'tr.allowed-values input.generator-run', function(event) {
+  container.on('click', 'tr.data-options input.generator-run', function(event) {
     const self = $(this);
-    const row = self.closest('tr.allowed-values');
+    const row = self.closest('tr.data-options');
     const fieldId = row.data('fieldId');
     const cleanup = function() {};
-    const request = 'allowed-values-generator-run';
+    const request = 'data-options-generator-run';
     $.post(
       generateUrl('projects/participant-fields/' + request), {
         data: {
@@ -221,9 +221,9 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  container.on('click', 'tr.allowed-values input.delete-undelete', function(event) {
+  container.on('click', 'tr.data-options input.delete-undelete', function(event) {
     const self = $(this);
-    const row = self.closest('tr.allowed-values');
+    const row = self.closest('tr.data-options');
     let used = row.data('used');
     used = !(!used || used === 'unused');
     if (row.data('deleted') !== '') {
@@ -265,9 +265,9 @@ const ready = function(selector, resizeCB) {
   // validate monetary inputs
   container.on(
     'blur',
-    'tr.multiplicity.data-type-service-fee ~ tr.allowed-values-single input[type="text"]'
+    'tr.multiplicity.data-type-service-fee ~ tr.data-options-single input[type="text"]'
       + ','
-      + 'tr.multiplicity.data-type-service-fee ~ tr.allowed-values tr.allowed-values:not(.generator) input.field-data[type="text"]',
+      + 'tr.multiplicity.data-type-service-fee ~ tr.data-options tr.data-options:not(.generator) input.field-data[type="text"]',
     function(event) {
       const self = $(this);
       if (self.prop('readonly')) {
@@ -306,15 +306,15 @@ const ready = function(selector, resizeCB) {
   // generator input
   container.on(
     'blur',
-    'tr.allowed-values tr.data-line.generator input[type="text"]',
+    'tr.data-options tr.data-line.generator input[type="text"]',
     function(event) {
       const self = $(this);
       if (self.prop('readonly')) {
         return false;
       }
-      const row = self.closest('tr.allowed-values');
+      const row = self.closest('tr.data-options');
 
-      const request = 'allowed-values-generator';
+      const request = 'data-options-generator';
       const data = $.extend({}, fieldTypeData(), row.data());
       const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
       const postData = $.param({ request, data })
@@ -364,15 +364,15 @@ const ready = function(selector, resizeCB) {
   // multi-field input matrix
   container.on(
     'blur',
-    'tr.allowed-values tr.data-line:not(.generator) input[type="text"]'
+    'tr.data-options tr.data-line:not(.generator) input[type="text"]'
       + ','
-      + 'tr.allowed-values tr.data-line textarea',
+      + 'tr.data-options tr.data-line textarea',
     function(event) {
       const self = $(this);
       if (self.prop('readonly')) {
         return false;
       }
-      const row = self.closest('tr.allowed-values');
+      const row = self.closest('tr.data-options');
       const placeHolder = row.hasClass('placeholder');
       if (placeHolder && self.val().trim() === '') {
         // don't add empty fields (but of course allow to remove field data)
@@ -383,7 +383,7 @@ const ready = function(selector, resizeCB) {
       // default data selector, if applicable
       const dflt = container.find('select.default-multi-value');
 
-      const request = 'allowed-values-option';
+      const request = 'data-options-option';
       const data = $.extend({ default: dflt.val() }, fieldTypeData(), row.data());
       const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
       const postData = $.param({ request, data })
@@ -521,7 +521,7 @@ const ready = function(selector, resizeCB) {
   allowedHeaderVisibility();
 
   // set autocomplete for generator selection
-  const generatorRow = container.find('tr.allowed-values.generator');
+  const generatorRow = container.find('tr.data-options.generator');
   const generators = generatorRow.data('generators');
   generatorRow.find('input.field-data').autocomplete({
     source: generators,

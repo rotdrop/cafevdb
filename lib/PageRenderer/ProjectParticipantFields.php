@@ -367,13 +367,13 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['fdd']['allowed_values'] = [
       'name' => $this->l->t('Allowed Values'),
       'input' => 'SR',
-      'css|LF' => [ 'postfix' => ' allowed-values hide-subsequent-lines' ],
-      'css' => ['postfix' => ' allowed-values' ],
-      'css|VD' => [ 'postfix' => ' allowed-values allowed-values-single' ],
+      'css|LF' => [ 'postfix' => ' data-options hide-subsequent-lines' ],
+      'css' => ['postfix' => ' data-options' ],
+      'css|VD' => [ 'postfix' => ' data-options data-options-single' ],
       'select' => 'T',
       'sort' => true,
       'display|LF' => [ 'popup' => 'data', ],
-      'tooltip' => $this->toolTipsService['participant-fields-allowed-values'],
+      'tooltip' => $this->toolTipsService['participant-fields-data-options'],
       // 'sqlBug-as-of-mariadb-10.5.9'=> 'CONCAT("[",JSON_ARRAYAGG(DISTINCT
       //    JSON_OBJECT(
       //    "key", BIN2UUID($join_table.key),
@@ -396,23 +396,23 @@ class ProjectParticipantFields extends PMETableViewBase
         'column' => 'key',
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
       ],
-      'php' => function($allowedValues, $op, $field, $row, $recordId, $pme) {
+      'php' => function($dataOptions, $op, $field, $row, $recordId, $pme) {
         $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
         $dataType = $row['qf'.$pme->fdn['data_type']];
-        return $this->showAllowedValues($allowedValues, $op, $recordId, $multiplicity, $dataType);
+        return $this->showDataOptions($dataOptions, $op, $recordId, $multiplicity, $dataType);
       },
     ];
 
     $opts['fdd']['allowed_values_single'] = [
       'name' => $this->currencyLabel($this->l->t('Data')),
-      'css' => [ 'postfix' => ' allowed-values-single' ],
+      'css' => [ 'postfix' => ' data-options-single' ],
       'sql' => '$main_table.id',
       'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($nameIdx, $tooltipIdx) {
         // allowed values from virtual JSON aggregator field
-        $allowedValues = $row['qf'.$pme->fdn['allowed_values']];
+        $dataOptions = $row['qf'.$pme->fdn['allowed_values']];
         $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
         $dataType = $row['qf'.$pme->fdn['data_type']];
-        return $this->showAllowedSingleValue($allowedValues, $op, $fdd[$field]['tooltip'], $multiplicity, $dataType);
+        return $this->showAllowedSingleValue($dataOptions, $op, $fdd[$field]['tooltip'], $multiplicity, $dataType);
       },
       'input' => 'SR',
       'options' => 'ACP', // but not in list/view/delete-view
@@ -420,7 +420,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'maxlen' => 29,
       'size' => 30,
       'sort' => true,
-      'tooltip' => $this->toolTipsService['participant-fields-allowed-values-single'],
+      'tooltip' => $this->toolTipsService['participant-fields-data-options-single'],
     ];
 
     // Provide "cooked" valus for up to 20 members. Perhaps the
@@ -467,10 +467,10 @@ class ProjectParticipantFields extends PMETableViewBase
         $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
         $dataType = $row[$this->queryField('data_type', $pme->fdd)];
         if ($multiplicity !== 'simple' && !empty($value)) {
-          // fetch the value from the allowed-values data
+          // fetch the value from the data-options data
           $allowed = $row[$this->queryField('allowed_values', $pme->fdd)];
-          $allowed = $this->participantFieldsService->explodeAllowedValues($allowed);
-          $defaultRow = $this->participantFieldsService->findAllowedValue($value, $allowed);
+          $allowed = $this->participantFieldsService->explodeDataOptions($allowed);
+          $defaultRow = $this->participantFieldsService->findDataOption($value, $allowed);
           if (!empty($defaultRow['data'])) {
             $value = $defaultRow['data'];
           } else if (!empty($defaultRow['label'])) {
@@ -861,7 +861,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     if (!is_array($newvals['allowed_values'])) {
       // textfield
-      $allowed = $this->participantFieldsService->explodeAllowedValues($newvals['allowed_values'], false);
+      $allowed = $this->participantFieldsService->explodeDataOptions($newvals['allowed_values'], false);
     } else {
       $allowed = $newvals['allowed_values'];
       if ($newvals['multiplicity'] == 'recurring') {
@@ -876,8 +876,8 @@ class ProjectParticipantFields extends PMETableViewBase
     // @todo is this still necessary?
     $this->debug('ALLOWED BEFORE REEXPLODE '.print_r($allowed, true));
     $newvals['allowed_values'] =
-      $this->participantFieldsService->explodeAllowedValues(
-        $this->participantFieldsService->implodeAllowedValues($allowed), false);
+      $this->participantFieldsService->explodeDataOptions(
+        $this->participantFieldsService->implodeDataOptions($allowed), false);
 
     Util::unsetValue($changed, 'allowed_values');
 
@@ -975,7 +975,7 @@ class ProjectParticipantFields extends PMETableViewBase
    * corresponding to the multi-choice fields.
    *
    * @param array $value One row of the form as returned form
-   * self::explodeAllowedValues()
+   * self::explodeDataOptions()
    *
    * @param integer $index A unique row number.
    *
@@ -997,18 +997,18 @@ class ProjectParticipantFields extends PMETableViewBase
     $html .= '
     <tr'
     .' class="data-line'
-    .' allowed-values'
+    .' data-options'
     .' '.($deleted ? 'deleted' : 'active')
     .'"'
     .' '.$data.'>';
     $html .= '<td class="operations">
   <input
     class="operation delete-undelete notnot-multiplicity-recurring"
-    title="'.$this->toolTipsService['participant-fields-allowed-values:delete-undelete'].'"
+    title="'.$this->toolTipsService['participant-fields-data-options:delete-undelete'].'"
     type="button"/>
   <input
     class="operation regenerate only-multiplicity-recurring"
-    title="'.$this->toolTipsService['participant-fields-allowed-values:regenerate'].'"
+    title="'.$this->toolTipsService['participant-fields-data-options:regenerate'].'"
     '.($deleted ? ' disabled="disabled"' : '').'
     type="button"/>
     </td>';
@@ -1022,7 +1022,7 @@ class ProjectParticipantFields extends PMETableViewBase
            .' type="text"'
            .' name="'.$pfx.'['.$index.']['.$prop.']"'
            .' value="'.$value[$prop].'"'
-           .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
+           .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
            .' size="33"'
            .' maxlength="32"'
            .'/>';
@@ -1034,7 +1034,7 @@ class ProjectParticipantFields extends PMETableViewBase
           .' class="field-key expert-mode-only"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
           .' size="9"'
           .' maxlength="8"'
           .'/>'
@@ -1056,7 +1056,7 @@ class ProjectParticipantFields extends PMETableViewBase
           .' type="text"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
@@ -1068,7 +1068,7 @@ class ProjectParticipantFields extends PMETableViewBase
           .' type="text"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
@@ -1079,7 +1079,7 @@ class ProjectParticipantFields extends PMETableViewBase
           .($deleted ? ' readonly="readonly"' : '')
           .' class="field-'.$prop.'"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
           .' cols="32"'
           .' rows="1"'
           .'>'
@@ -1109,7 +1109,7 @@ class ProjectParticipantFields extends PMETableViewBase
   {
     $pfx = $this->pme->cgiDataName('allowed_values');
     $html = '
-<tr class="data-line allowed-values placeholder active not-multiplicity-recurring"
+<tr class="data-line data-options placeholder active not-multiplicity-recurring"
   data-field-id="'.$fieldId.'">
   <td class="placeholder" colspan="6">
     <input
@@ -1118,7 +1118,7 @@ class ProjectParticipantFields extends PMETableViewBase
       type="text"
       name="'.$pfx.'[-1][label]"
       value=""
-      title="'.$this->toolTipsService['participant-fields-allowed-values:placeholder'].'"
+      title="'.$this->toolTipsService['participant-fields-data-options:placeholder'].'"
       placeholder="'.$this->l->t('new option').'"
       size="33"
       maxlength="32"
@@ -1138,13 +1138,13 @@ class ProjectParticipantFields extends PMETableViewBase
     $generator = $generatorItem['data'];
     $html .= '
 <tr
-  class="data-line allowed-values generator active only-multiplicity-recurring"
+  class="data-line data-options generator active only-multiplicity-recurring"
   data-generators=\''.json_encode(ProjectParticipantFieldsService::recurringReceivablesGenerators()).'\'
   data-field-id="'.$fieldId.'">
   <td class="operations">
     <input
       class="operation generator-run"
-      title="'.$this->toolTipsService['participant-fields-allowed-values:generator-run'].'"
+      title="'.$this->toolTipsService['participant-fields-data-options:generator-run'].'"
       type="button"
       '.(empty($generator) ? 'disabled="disabled"' : '').'
     />
@@ -1156,7 +1156,7 @@ class ProjectParticipantFields extends PMETableViewBase
       type="text"
       name="'.$pfx.'[-1][data]"
       value="'.$generator.'"
-      title="'.$this->toolTipsService['participant-fields-allowed-values:generator'].'"
+      title="'.$this->toolTipsService['participant-fields-data-options:generator'].'"
       placeholder="'.$this->l->t('field generator').'"
       required="required"
       size="33"
@@ -1165,11 +1165,11 @@ class ProjectParticipantFields extends PMETableViewBase
     />
     <input
       type="checkbox"
-      id="allowed-values-generator"
+      id="data-options-generator"
       class="pme-input pme-input-lock-unlock"
       '.(empty($generator) ? '' : 'checked="checked"').'
     />
-    <label class="pme-input pme-input-lock-unlock" for="allowed-values-generator"></label>';
+    <label class="pme-input pme-input-lock-unlock" for="data-options-generator"></label>';
     foreach (['key', 'limit', 'label', 'tooltip'] as $prop) {
       $value = ($generatorItem[$prop]??'');
       if (empty($value) && $prop == 'key') {
@@ -1196,10 +1196,10 @@ class ProjectParticipantFields extends PMETableViewBase
    * Generate a table in order to define field-valus for
    * multi-select stuff.
    */
-  private function showAllowedValues($value, $op, $recordId, $multiplicity = null, $dataType = null)
+  private function showDataOptions($value, $op, $recordId, $multiplicity = null, $dataType = null)
   {
     $this->logDebug('OPTIONS so far: '.print_r($value, true));
-    $allowed = $this->participantFieldsService->explodeAllowedValues($value);
+    $allowed = $this->participantFieldsService->explodeDataOptions($value);
     if ($op === 'display') {
       if (count($allowed) == 1) {
         // "1" means empty (headerline)
@@ -1236,10 +1236,10 @@ class ProjectParticipantFields extends PMETableViewBase
            name="show-deleted"
            class="show-deleted checkbox"
            value="show"
-           id="allowed-values-show-deleted"
+           id="data-options-show-deleted"
            />
     <label class="show-deleted"
-           for="allowed-values-show-deleted"
+           for="data-options-show-deleted"
            title="$showDeletedTip"
            >
       $showDeletedLabel
@@ -1250,10 +1250,10 @@ class ProjectParticipantFields extends PMETableViewBase
            name="show-data"
            class="show-data checkbox"
            value="show"
-           id="allowed-values-show-data"
+           id="data-options-show-data"
            />
     <label class="show-data"
-           for="allowed-values-show-data"
+           for="data-options-show-data"
            title="$showDataTip"
            >
       $showDataLabel
@@ -1263,7 +1263,7 @@ class ProjectParticipantFields extends PMETableViewBase
 __EOT__;
     }
 
-    $cssClass = 'operation-'.$op.' allowed-values';
+    $cssClass = 'operation-'.$op.' data-options';
     if (!empty($multiplicity)) {
       $cssClass .= ' multiplicity-'.$multiplicity;
     }
@@ -1289,7 +1289,7 @@ __EOT__;
       $html .=
             '<th'
             .' class="'.$css.'"'
-            .' title="'.$this->toolTipsService['participant-fields-allowed-values:'.$key].'"'
+            .' title="'.$this->toolTipsService['participant-fields-data-options:'.$key].'"'
             .'>'
             .$value
             .'</th>';
@@ -1358,7 +1358,7 @@ __EOT__;
    */
   private function showAllowedSingleValue($value, $op, $toolTip, $multiplicity, $dataType)
   {
-    $allowed = $this->participantFieldsService->explodeAllowedValues($value, false);
+    $allowed = $this->participantFieldsService->explodeDataOptions($value, false);
     $entry = null;
     foreach ($allowed as $key => $option) {
       if (!empty($item['deleted'])) {
@@ -1374,7 +1374,7 @@ __EOT__;
     if ($op === 'display') {
       return $this->currencyValue($value);
     }
-    empty($entry) && $entry = $this->participantFieldsService->allowedValuesPrototype();
+    empty($entry) && $entry = $this->participantFieldsService->dataOptionPrototype();
     if ($multiplicity == 'groupofpeople') {
       $entry['key'] = Uuid::NIL;
     }
@@ -1384,7 +1384,7 @@ __EOT__;
     $tip   = $toolTip;
     $html  = '<div class="active-value">';
     $html  .=<<<__EOT__
-<input class="pme-input allowed-values-single"
+<input class="pme-input data-options-single"
        type="text"
        maxlength="29"
        size="30"
@@ -1396,7 +1396,7 @@ __EOT__;
     foreach (['key', 'label', 'limit', 'tooltip', 'deleted'] as $field) {
       $value = htmlspecialchars($entry[$field]);
       $html .=<<<__EOT__
-<input class="pme-input allowed-values-single"
+<input class="pme-input data-options-single"
        type="hidden"
        value="{$value}"
        name="{$name}[{$key}][{$field}]"
@@ -1417,7 +1417,7 @@ __EOT__;
       foreach(['key', 'label', 'limit', 'data', 'tooltip', 'deleted'] as $field) {
         $value = htmlspecialchars($option[$field]);
         $html .=<<<__EOT__
-<input class="pme-input allowed-values-single"
+<input class="pme-input data-options-single"
        type="hidden"
        value="{$value}"
        name="{$name}[{$key}][{$field}]"

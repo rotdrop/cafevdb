@@ -196,7 +196,7 @@ class ProjectParticipantFieldsService
    *
    * @return null|array The matching row if found or null.
    */
-  public static function findAllowedValue($key, array $values):?array
+  public static function findDataOption($key, array $values):?array
   {
     return $values[$key]?:null;
   }
@@ -204,7 +204,7 @@ class ProjectParticipantFieldsService
   /**
    * Prototype for allowed values, i.e. multiple-value options.
    */
-  public static function allowedValuesPrototype()
+  public static function dataOptionPrototype()
   {
     return [
       'key' => false,
@@ -219,7 +219,7 @@ class ProjectParticipantFieldsService
   /**
    * Explode the given json encoded string into a PHP array.
    */
-  public function explodeAllowedValues($values, $addProto = true, $trimInactive = false)
+  public function explodeDataOptions($values, $addProto = true, $trimInactive = false)
   {
     $options = empty($values) ? [] : (is_array($values) ? $values : json_decode($values, true));
     if (is_string($options)) {
@@ -229,7 +229,7 @@ class ProjectParticipantFieldsService
     if (is_string($values) && !empty($values) && empty($options)) {
       $options = [
         array_merge(
-          $this->allowedValuesPrototype(),
+          $this->dataOptionPrototype(),
           [ 'key' => Uuid::create(), 'label' => $values, ]),
       ];
     }
@@ -239,7 +239,7 @@ class ProjectParticipantFieldsService
                     print_r($options, true)));
     }
     $options = array_values($options);
-    $protoType = $this->allowedValuesPrototype();
+    $protoType = $this->dataOptionPrototype();
     $protoKeys = array_keys($protoType);
     $result = [];
     foreach ($options as $option) {
@@ -277,12 +277,12 @@ class ProjectParticipantFieldsService
    *
    * @return string JSON encoded data.
    */
-  public function implodeAllowedValues($options)
+  public function implodeDataOptions($options)
   {
     if (isset($options[-1])) {
       throw new \Exception($this->l->t('Option index -1 should not be present here, options: %s', print_r($options, true)));
     }
-    $proto = $this->allowedValuesPrototype();
+    $proto = $this->dataOptionPrototype();
     foreach ($options as &$option) {
       $option = array_merge($proto, $option);
       if (empty($option['key'])) {

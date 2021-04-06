@@ -330,7 +330,7 @@ different maximal number of people fitting in the group. Maybe this is completel
 
       'participant-field-surcharge-single' => $this->l->t('Simple yes-no choice which increases the project fees. Please fill also the "amount" field.'),
 
-      'participant-fields-allowed-values' => [
+      'participant-fields-data-options' => [
         'generator' => $this->l->t('Name of a the generator for this field. Can be be a fully-qualified PHP class-name or one of the known short-cuts.'),
         'generator-run' => $this->l->t('Run the value generator. Depending on the generator this might result in new fields or just does nothing if all relevant fields are already there.'),
         'regenerate' => $this->l->t('Recompute the values of this particular recurring field.'),
@@ -358,7 +358,7 @@ help text in order to inform others what this option is about.'),
         'limit' => $this->l->t('The maximum allowed number of people in a "group of people" field'),
       ],
 
-      'participant-fields-allowed-values-single' => $this->l->t('For a surcharge option, please enter here the surcharge amount
+      'participant-fields-data-options-single' => $this->l->t('For a surcharge option, please enter here the surcharge amount
 associated with this option.'),
 
       'participant-fields-default-multi-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),

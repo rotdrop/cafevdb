@@ -28,9 +28,9 @@
 
 table.pme-main tr.multiplicity ~ tr.pme-row.due-date,
 table.pme-main tr.multiplicity ~ tr.pme-row.maximum-group-size,
-table.pme-main tr.multiplicity ~ tr.pme-row.allowed-values,
-table.pme-main tr.multiplicity ~ tr.pme-row.allowed-values-single,
-table.pme-main tr.multiplicity.multiplicity-single.data-type-boolean ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.multiplicity ~ tr.pme-row.data-options,
+table.pme-main tr.multiplicity ~ tr.pme-row.data-options-single,
+table.pme-main tr.multiplicity.multiplicity-single.data-type-boolean ~ tr.pme-row.data-options-single,
 table.pme-main tr.multiplicity ~ tr.pme-row.default-value,
 table.pme-main tr.multiplicity ~ tr.pme-row.default-single-value, table.pme-main tr.multiplicity ~ tr.pme-row.default-multi-value {
   display:none;
@@ -47,16 +47,16 @@ table.pme-main tr.multiplicity:not(.multiplicity-recurring) ~ tr.pme-row .only-m
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row.due-date,
 table.pme-main tr.multiplicity.data-type-deposit ~ tr.pme-row.due-date,
 table.pme-main tr.multiplicity.multiplicity-groupofpeople ~ tr.pme-row.maximum-group-size,
-table.pme-main tr.multiplicity.multiplicity-groupofpeople.data-type-service-fee ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.multiplicity.multiplicity-groupofpeople.data-type-service-fee ~ tr.pme-row.data-options-single,
 table.pme-main tr.multiplicity.multiplicity-simple:not(.multiplicity-groupofpeople) ~ tr.pme-row.default-value,
 table.pme-main tr.multiplicity.multiplicity-single ~ tr.pme-row.default-single-value,
-table.pme-main tr.multiplicity.multiplicity-single ~ tr.pme-row.allowed-values-single,
-table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row.allowed-values,
-table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.allowed-values,
+table.pme-main tr.multiplicity.multiplicity-single ~ tr.pme-row.data-options-single,
+table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row.data-options,
+table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.data-options,
 table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.default-multi-value,
-table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.allowed-values,
+table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.data-options,
 table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.default-multi-value,
-table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.allowed-values {
+table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.data-options {
   display:table-row;
 }
 
@@ -65,7 +65,7 @@ table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.allowed-value
   min-width:50%;
 }
 
-.project-participant-fields table.pme-main tr.allowed-values td.operations input.operation {
+.project-participant-fields table.pme-main tr.data-options td.operations input.operation {
   background-repeat:no-repeat;
   background-size: 24px 24px;
   background-position: center;
@@ -75,19 +75,19 @@ table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.allowed-value
   margin-right:1em;
 }
 
-.project-participant-fields table.pme-main tr.allowed-values input.regenerate {
+.project-participant-fields table.pme-main tr.data-options input.regenerate {
   background-image:url('../img/reload-solid.svg');
 }
 
-.project-participant-fields table.pme-main tr.allowed-values.active input.generator-run {
+.project-participant-fields table.pme-main tr.data-options.active input.generator-run {
   background-image:url('../../../core/img/actions/play.svg');
 }
 
-.project-participant-fields table.pme-main tr.allowed-values.active input.delete-undelete {
+.project-participant-fields table.pme-main tr.data-options.active input.delete-undelete {
   background-image:url('../img/cafevdb-delete.svg');
 }
 
-.project-participant-fields table.pme-main tr.allowed-values.deleted input.delete-undelete {
+.project-participant-fields table.pme-main tr.data-options.deleted input.delete-undelete {
   background-image:url('../img/history.svg');
 }
 
@@ -95,11 +95,11 @@ form.pme-form.pme-copyadd .show-deleted {
   display:none;
 }
 
-tr.allowed-values.deleted {
+tr.data-options.deleted {
   display:none;
 }
 
-table.allowed-values.show-deleted tr.allowed-values.deleted {
+table.data-options.show-deleted tr.data-options.deleted {
   display:table-row;
 }
 
@@ -113,14 +113,14 @@ th.field-limit {
   display:none!important;
 }
 
-table.allowed-values.operation-display td.field-data,
-table.allowed-values.operation-display th.field-data,
-table.allowed-values.show-data td.field-data,
-table.allowed-values.show-data th.field-data,
-table.allowed-values.operation-display td.field-limit,
-table.allowed-values.operation-display th.field-limit,
-table.allowed-values.show-data td.field-limit,
-table.allowed-values.show-data th.field-limit {
+table.data-options.operation-display td.field-data,
+table.data-options.operation-display th.field-data,
+table.data-options.show-data td.field-data,
+table.data-options.show-data th.field-data,
+table.data-options.operation-display td.field-limit,
+table.data-options.operation-display th.field-limit,
+table.data-options.show-data td.field-limit,
+table.data-options.show-data th.field-limit {
   display:table-cell!important;
 }
 
@@ -152,12 +152,12 @@ table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row span.service-f
   display:inline-block;
 }
 
-table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row.allowed-values td.pme-value div.show-data {
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row.data-options td.pme-value div.show-data {
   display:none;
 }
 
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.field-data,
-table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.allowed-values-single {
+table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.data-options-single {
   text-align:right;
 }
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row tr.generator input.field-data {
@@ -165,13 +165,13 @@ table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row tr.generator i
 }
 
 /* list view */
-.pme-cell-wrapper table.operation-display.allowed-values th.field-data span.general,
-.pme-cell-wrapper table.operation-display.allowed-values.data-type-service-fee .field-data span.service-fee {
+.pme-cell-wrapper table.operation-display.data-options th.field-data span.general,
+.pme-cell-wrapper table.operation-display.data-options.data-type-service-fee .field-data span.service-fee {
   display:inline-block;
 }
 
-.pme-cell-wrapper table.operation-display.allowed-values.data-type-service-fee .field-data span.general,
-.pme-cell-wrapper table.operation-display.allowed-values .field-data span.service-fee {
+.pme-cell-wrapper table.operation-display.data-options.data-type-service-fee .field-data span.general,
+.pme-cell-wrapper table.operation-display.data-options .field-data span.service-fee {
   display:none;
 }
 
@@ -200,7 +200,7 @@ table.pme-main tr.participant-field.recurring td.pme-value td.operations input.d
 
 /******************/
 
-table.allowed-values.operation-display span.service-fee.currency-amount,
+table.data-options.operation-display span.service-fee.currency-amount,
 table.pme-main span.service-fee.currency-amount {
   text-align:right;
   display:inline-block;
@@ -212,54 +212,54 @@ table.pme-main span.service-fee.currency-amount {
   overflow-x:hidden; /* fix FF extra-line bug */
 }
 
-.project-participant-fields table.pme-main td.allowed-values {
+.project-participant-fields table.pme-main td.data-options {
   position:relative;
   background-clip:padding-box;
 }
 
-.project-participant-fields table.pme-main td.allowed-values div.field-display-options {
+.project-participant-fields table.pme-main td.data-options div.field-display-options {
   position:absolute;
   bottom:0px;
   right:0px;
 }
 
-.project-participant-fields table.pme-main td.allowed-values td.placeholder {
+.project-participant-fields table.pme-main td.data-options td.placeholder {
   min-width:35em;
 }
 
-table.allowed-values.operation-display th.operations,
-table.allowed-values.operation-display th.field-key,
-table.allowed-values.operation-display td.operations,
-table.allowed-values.operation-display td.field-key {
+table.data-options.operation-display th.operations,
+table.data-options.operation-display th.field-key,
+table.data-options.operation-display td.operations,
+table.data-options.operation-display td.field-key {
   display:none!important;
 }
 
-table.allowed-values {
+table.data-options {
   border-collapse:collapse;
   border-spacing:1px;
 }
 
-table.allowed-values th {
+table.data-options th {
   font-style:italic;
 }
 
-table.allowed-values.operation-display th,
-table.allowed-values.operation-display td {
+table.data-options.operation-display th,
+table.data-options.operation-display td {
   text-align:left;
   border:1px solid #004D9C;
 }
 
-table.allowed-values.operation-display td.field-limit {
+table.data-options.operation-display td.field-limit {
   text-align:center;
 }
 
-td.pme-value table.allowed-values.operation-display th,
-td.pme-value table.allowed-values.operation-display td {
+td.pme-value table.data-options.operation-display th,
+td.pme-value table.data-options.operation-display td {
   padding:3px;
 }
 
-td.pme-cell table.allowed-values.operation-display th,
-td.pme-cell table.allowed-values.operation-display td {
+td.pme-cell table.data-options.operation-display th,
+td.pme-cell table.data-options.operation-display td {
   padding:1px;
 }
 

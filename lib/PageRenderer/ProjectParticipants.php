@@ -1879,7 +1879,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 //               continue;
 //             }
 //             $field   = $monetary[$label];
-//             $allowed = $field['AllowedValues'];
+//             $allowed = $field['DataOptions'];
 //             $type    = $field['Type'];
 //             $amount += self::participantFieldSurcharge($value, $allowed, $type['Multiplicity']);
 //           }

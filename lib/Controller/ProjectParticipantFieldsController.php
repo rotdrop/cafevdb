@@ -94,7 +94,7 @@ class ProjectParticipantFieldsController extends Controller {
   {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
-      case 'allowed-value-regenerate':
+      case 'data-option-regenerate':
         if (empty($data['fieldId']) || empty($data['key'])) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
@@ -144,7 +144,7 @@ class ProjectParticipantFieldsController extends Controller {
         ]);
 
         break;
-      case 'allowed-values-generator-run':
+      case 'data-options-generator-run':
         if (empty($data['fieldId'])) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
@@ -193,7 +193,7 @@ class ProjectParticipantFieldsController extends Controller {
           'dataOptionFormInputs' => $inputRows,
         ]);
 
-      case 'allowed-values-generator':
+      case 'data-options-generator':
         if (empty($data)) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
@@ -232,7 +232,7 @@ class ProjectParticipantFieldsController extends Controller {
         return self::dataResponse([
           'message' => $this->l->t('Generator "%s" successfully validated.', $item['data']),
         ]);
-      case 'allowed-values-option':
+      case 'data-options-option':
         if (empty($data)) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
@@ -244,8 +244,8 @@ class ProjectParticipantFieldsController extends Controller {
         $dataOptions = array_values($dataOptions); // get rid of -1 index
 
         // sanitize and potentially add missing keys
-        $dataOptions = $this->participantFieldsService->explodeAllowedValues(
-          $this->participantFieldsService->implodeAllowedValues($dataOptions),
+        $dataOptions = $this->participantFieldsService->explodeDataOptions(
+          $this->participantFieldsService->implodeDataOptions($dataOptions),
           false);
 
         if (count($dataOptions) !== 1) {

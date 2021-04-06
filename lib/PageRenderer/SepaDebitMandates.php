@@ -578,7 +578,7 @@ received so far'),
     //               continue;
     //             }
     //             $field   = $monetary[$label];
-    //             $allowed = $field['AllowedValues'];
+    //             $allowed = $field['DataOptions'];
     //             $type    = $field['Type'];
     //             $amount += DetailedInstrumentation::participantFieldSurcharge($value, $allowed, $type['Multiplicity']);
     //           }
@@ -623,7 +623,7 @@ received so far'),
     //             continue;
     //           }
     //           $field   = $monetary[$label];
-    //           $allowed = $field['AllowedValues'];
+    //           $allowed = $field['DataOptions'];
     //           $type    = $field['Type'];
     //           $amount += DetailedInstrumentation::participantFieldSurcharge($value, $allowed, $type['Multiplicity']);
     //         }
