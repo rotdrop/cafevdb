@@ -45,6 +45,7 @@ class ProjectExtraFieldDataOption implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
    * Link back to ProjectExtraField

@@ -40,6 +40,7 @@ class ProjectExtraFieldDatum implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectExtraField", inversedBy="fieldData", fetch="EXTRA_LAZY")
