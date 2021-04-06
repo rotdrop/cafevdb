@@ -46,6 +46,20 @@ class UuidType extends UuidBinaryType
     }
     return parent::convertToPHPValue($value, $platform);
   }
+
+  /** {@inheritdoc} */
+  public function convertToDatabaseValue($value, AbstractPlatform $platform)
+  {
+    if (is_string($value) && strlen($value) == 16) {
+      try {
+        return Uuid::fromBytes($value)->getBytes();
+      } catch (\InvalidArgumentException $e) {
+        // pass through
+      }
+    }
+    return parent::convertToDatabaseValue($value, $platform);
+  }
+
 }
 
 // Local Variables: ***
