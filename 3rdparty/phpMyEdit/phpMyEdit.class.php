@@ -1222,12 +1222,19 @@ class phpMyEdit
 			return $this->sql_field($field, $flags & self::OMIT_SQL);
 		} else {
 			$fdd = $this->fdd[$field];
-			if (isset($fdd[self::FDD_VALUES]['description']) && ! $dont_desc) {
+			$values = $fdd[self::FDD_VALUES];
+			if (isset($values['description']) && ! $dont_desc) {
 
 				$join_table = $this->join_table_alias($field);
 
-				$column = $fdd[self::FDD_VALUES]['column'];
-				$desc = $fdd[self::FDD_VALUES]['description'];
+				$column = $values['column'];
+				$desc = $values['description'];
+				$grouped = $values['grouped'];
+				$orderBy = $values['orderby'];
+				$descSubs = [
+					'table' => $join_table,
+					'column' => $column,
+				];
 
 				// normalize $desc
 				if (!is_array($desc)) {
@@ -1244,7 +1251,8 @@ class phpMyEdit
 					}
 				}
 
-				$ret	  = 'CONCAT('; // )
+				$ret = $grouped ? 'GROUP_CONCAT(DISTINCT ' : ''; // )
+				$ret .= 'CONCAT('; // )
 				$num_cols = sizeof($desc['columns']);
 				if (!empty($desc['divs'][-1]) && is_array($desc['divs'])) {
 					$ret .= '"'.addslashes($desc['divs'][-1]).'",';
@@ -1252,10 +1260,6 @@ class phpMyEdit
 				$descFields = [];
 				foreach ($desc['columns'] as $idx => $val) {
 					if ($val) {
-						$descSubs = [
-							'table' => $join_table,
-							'column' => $column,
-						];
 						if (!$this->hasSubstitutions($val)) {
 							$val = '$table.'.$this->sd.$val.$this->ed;
 						}
@@ -1271,6 +1275,10 @@ class phpMyEdit
 				}
 				$ret .= implode(',', $descFields).',';
 				$ret[strlen($ret) - 1] = ')';
+				if ($grouped) {
+					$orderBy = $this->substituteVars($orderBy, $descSubs);
+					$ret .= ' ORDER BY '.$orderBy.')';
+				}
 			} else {
 				$ret = $this->sql_field($field, $flags & self::OMIT_SQL);
 			}
