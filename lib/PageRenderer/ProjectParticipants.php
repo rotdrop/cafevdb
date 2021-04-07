@@ -1088,11 +1088,13 @@ class ProjectParticipants extends PMETableViewBase
           $fdd['select'] = 'M';
           $fdd['values'] = array_merge(
             $fdd['values'], [
+              'column' => 'option_key',
               'description' => [
                 'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
                 'divs' => ':',
               ],
               'orderby' => '$table.created DESC',
+              'encode' => 'BIN2UUID(%s)',
             ]);
         }
 
@@ -1125,6 +1127,7 @@ class ProjectParticipants extends PMETableViewBase
         // For a useful add/change/copy view we should use the value fdd.
         $valueFdd['input|ACP'] = $keyFdd['input'];
         $keyFdd['input|ACP'] = 'VSRH';
+
 
         $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType, $keyFddName, $valueFddName) {
           $this->logInfo('VALUE '.$k.': '.$value);
@@ -2056,24 +2059,10 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
   }
 
   /**
-   * phpMyEdit calls the trigger (callback) with
-   * the following arguments:
-   *
-   * @param $pme The phpMyEdit instance
-   *
-   * @param $op The operation, 'insert', 'update' etc.
-   *
-   * @param $step 'before' or 'after'
-   *
-   * @param $oldValues Self-explanatory.
-   *
-   * @param &$changed Set of changed fields, may be modified by the callback.
-   *
-   * @param &$newValues Set of new values, which may also be modified.
-   *
-   * @return boolean  If returning @c false the operation will be terminated
-   *
-   * @bug Too long, just split into multiple "triggers" or call subroutines.
+   * Tweak the submitted data for the somewhat complicate "participant
+   * fields" -- i.e. the personal data collected for the project
+   * participants -- into a form understood by
+   * beforeUpdataDoUpdateAll() and beforeInsertDoInsertAll().
    */
   public function beforeUpdateSanitizeParticipantFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
@@ -2088,33 +2077,57 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
       $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
 
-      $fieldName = $this->joinTableFieldName($tableName, 'option_key');
+      $keyName = $this->joinTableFieldName($tableName, 'option_key');
       $valueName = $this->joinTableFieldName($tableName, 'option_value');
       $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
 
-      $this->debug('FIELDNAMES '.$fieldName." / ".$groupFieldName);
+      $this->debug('FIELDNAMES '.$keyName." / ".$groupFieldName);
 
       $this->debug("MULTIPLICITY ".$multiplicity);
       switch ($multiplicity) {
       case 'simple':
-        // We tweak a multi-selection field and set the user input as
+        // We fake a multi-selection field and set the user input as
         // additional field value.
         if (array_search($valueName, $changed) === false) {
           continue 2;
         }
         $dataOption = $participantField['dataOptions']->first(); // the only one
         $key = $dataOption['key'];
-        $oldKey = $oldValues[$fieldName]?:$key;
+        $oldKey = $oldValues[$keyName]?:$key;
         if ($oldKey !== $key) {
           throw new \RuntimeException(
             $this->l->t('Inconsistent field keys, old: "%s", new: "%s"',
                         [ $key, $oldKey ]));
         }
         // tweak the option_key value
-        $newValues[$fieldName] = $key;
-        $changed[] = $fieldName;
+        $newValues[$keyName] = $key;
+        $changed[] = $keyName;
         // tweak the option value to have the desired form
         $newValues[$valueName] = $key.self::JOIN_KEY_SEP.$newValues[$valueName];
+        break;
+      case 'recurring':
+        if (array_search($valueName, $changed) === false
+            && array_search($keyName, $changed) === false) {
+          continue 2;
+        }
+
+        // just convert to KEY:VALUE notation for the following trigger functions
+        foreach ([&$oldValues, &$newValues] as &$dataSet) {
+          $keys = Util::explode(',', $dataSet[$keyName]);
+          $amounts = Util::explode(',', $dataSet[$valueName]);
+          $values = [];
+          foreach (array_combine($keys, $amounts) as $key => $amount) {
+            $values[] = $key.self::JOIN_KEY_SEP.$amount;
+          }
+          $dataSet[$valueName] = implode(',', $values);
+        }
+
+        // mark both as changed
+        foreach ([$keyName, $valueName] as $fieldName) {
+          if ($oldValues[$fieldName] != $newValues[$fieldName]) {
+            $changed[] = $fieldName;
+          }
+        }
         break;
       case 'groupofpeople':
       case 'groupsofpeople':
@@ -2122,12 +2135,12 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         // members. Think of distributing members to cars or rooms
 
         if (array_search($groupFieldName, $changed) === false
-            && array_search($fieldName, $changed) === false) {
+            && array_search($keyName, $changed) === false) {
           continue 2;
         }
 
-        $oldGroupId = $oldValues[$fieldName];
-        $newGroupId = $newValues[$fieldName];
+        $oldGroupId = $oldValues[$keyName];
+        $newGroupId = $newValues[$keyName];
 
         $max = PHP_INT_MAX;
         $label = $this->l->t('unknown');
@@ -2185,16 +2198,16 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
         // recompute the old set of relevant musicians
         $oldValues[$groupFieldName] = implode(',', array_keys($oldMemberships));
-        $oldValues[$fieldName] = implode(',', array_values($oldMemberships));
+        $oldValues[$keyName] = implode(',', array_values($oldMemberships));
 
         // recompute the new set of relevant musicians
         foreach ($newMembers as &$member) {
           $member .= self::JOIN_KEY_SEP.$newGroupId;
         }
-        $newValues[$fieldName] = implode(',', $newMembers);
+        $newValues[$keyName] = implode(',', $newMembers);
 
         $changed[] = $groupFieldName;
-        $changed[] = $fieldName;
+        $changed[] = $keyName;
       default:
         break;
       }
