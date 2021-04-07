@@ -1162,6 +1162,18 @@ table.pme-main tbody td.pme-navigation {
   cursor:pointer;
 }
 
+/* cursor as pointer for clickable data rows, compare the rowSelector
+ * in pme.js around line 1442
+ */
+form.pme-form td.pme-cell:not(.control),
+form.pme-form td.pme-navigation {
+  cursor:pointer;
+}
+form.pme-form td.pme-cell:not(.control) *,
+form.pme-form td.pme-navigation * {
+  cursor:inherit;
+}
+
 table.pme-main tbody td.pme-navigation div.graphic-links input.hide-disabled:disabled {
   display:none;
 }
