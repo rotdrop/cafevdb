@@ -1373,12 +1373,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // use simple field grouping for list and filter operation
         $opts['fdd'][$fieldName]['sql|FL'] = '$join_col_fqn';
       }
-      $this->debug('JOIN '.print_r($opts['fdd'][$fieldName], true));
+      //$this->debug('JOIN '.print_r($opts['fdd'][$fieldName], true));
     }
     if (!empty($opts['groupby_fields'])) {
       $keys = is_array($opts['key']) ? array_keys($opts['key']) : [ $opts['key'] ];
       $opts['groupby_fields'] = array_unique(array_merge($keys, $opts['groupby_fields']));
-      $this->debug('GROUP_BY '.print_r($opts['groupby_fields'], true));
+      // $this->debug('GROUP_BY '.print_r($opts['groupby_fields'], true));
     }
     return $joinTables;
   }
