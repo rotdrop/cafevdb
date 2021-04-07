@@ -1114,6 +1114,10 @@ class ProjectParticipants extends PMETableViewBase
           // come from the filter's $value2 array. The actual values
           // we need are in the description fields which are passed
           // through the 'qf'.$k field in $row.
+          $this->logInfo('VALUE '.$k.': '.$value);
+          $this->logInfo('QF'.$k.': '.$row['qf'.$k]);
+          $this->logInfo('QF'.$k.'_IDX: '.$row['qf'.$k.'_idx']);
+
           $values = Util::explodeIndexed($row['qf'.$k]);
           $html = [];
           foreach ($values as $key => $value) {
@@ -1128,12 +1132,21 @@ class ProjectParticipants extends PMETableViewBase
         $valueFdd['input|ACP'] = $keyFdd['input'];
         $keyFdd['input|ACP'] = 'VSRH';
 
+        $valueFdd['sql|ACP'] = 'GROUP_CONCAT(
+  DISTINCT
+  CONCAT_WS(
+    \''.self::JOIN_KEY_SEP.'\',
+    BIN2UUID($join_table.option_key),
+    $join_table.option_value
+  )
+  ORDER BY $order_by)';
 
         $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType, $keyFddName, $valueFddName) {
           $this->logInfo('VALUE '.$k.': '.$value);
           $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
           $this->logInfo('ROW IDX '.$k.': '.$row['qf'.$k.'_idx']);
 
+          $value = $row['qf'.$k];
           $values = Util::explodeIndexed($value);
           $valueName = $this->pme->cgiDataName($valueFddName);
           $keyName = $this->pme->cgiDataName($keyFddName);
@@ -1142,6 +1155,7 @@ class ProjectParticipants extends PMETableViewBase
     <tr><th>'.$this->l->t('Actions').'</th><th>'.$this->l->t('Subject').'</th><th>'.$this->l->t('Value [%s]', $this->currencySymbol()).'</th></tr>
   </thead>
   <tbody>';
+          $idx = 0;
           foreach ($values as $key => $value) {
             $option =  $field->getDataOption($key);
             $label = $option ? $option->getLabel() : '';
@@ -1163,10 +1177,11 @@ class ProjectParticipants extends PMETableViewBase
   <td class="input">
     <input id="receivable-input-'.$key.'" type=checkbox checked="checked" class="pme-input pme-input-lock-unlock left-lock"/>
     <label class="pme-input pme-input-lock-unlock left-lock" for="receivable-input-'.$key.'"></label>
-    <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$valueName.'['.$key.']" value="'.$value.'"/>
-    <!-- <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'[]" value="'.$key.'"/> -->
+    <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$valueName.'['.$idx.']" value="'.$value.'"/>
+     <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
   </td>
 </tr>';
+            $idx++;
           }
           $html .= '
   </tbody>
@@ -2112,7 +2127,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         }
 
         // just convert to KEY:VALUE notation for the following trigger functions
-        foreach ([&$oldValues, &$newValues] as &$dataSet) {
+        // $oldValues ATM already has this format
+        foreach ([&$newValues] as &$dataSet) {
           $keys = Util::explode(',', $dataSet[$keyName]);
           $amounts = Util::explode(',', $dataSet[$valueName]);
           $values = [];
@@ -2124,6 +2140,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
         // mark both as changed
         foreach ([$keyName, $valueName] as $fieldName) {
+          Util::unsetValue($changed, $fieldName);
           if ($oldValues[$fieldName] != $newValues[$fieldName]) {
             $changed[] = $fieldName;
           }
