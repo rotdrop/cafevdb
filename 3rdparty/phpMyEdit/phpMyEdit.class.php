@@ -1474,7 +1474,7 @@ class phpMyEdit
 					'join_description' => $join_desc,
 					'join_desc_fqn'    => $join_table.'.'.$join_desc,
 				);
-				$join_clause .= " LEFT OUTER JOIN ".$table." AS $join_table ON (";
+				$join_clause .= " LEFT JOIN ".$table." AS $join_table ON (";
 				$join_clause .= !empty($join)
 					? $this->substituteVars($join, $ar)
 					: "$join_table.$join_column = $main_table.".$this->sd.$main_column.$this->ed;
@@ -2235,7 +2235,15 @@ class phpMyEdit
 					if (!in_array($k, $this->key_num) || $this->change_operation()) {
 						$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 						$css_class_name = $this->getCSSclass('input', null, false, $css_postfix);
-						echo $this->htmlHiddenData($this->fds[$k], $row["qf$k"], $css_class_name);
+						if ($this->col_has_multiple($k)) {
+							$hiddenValues = empty($row["qf$k"]) ? [] : explode(',', $row["qf$k"]);
+							$idx = 0;
+							foreach ($hiddenValues as $value) {
+								echo $this->htmlHiddenData($this->fds[$k].'['.($idx++).']', $value, $css_class_name);
+							}
+						} else {
+							echo $this->htmlHiddenData($this->fds[$k], $row["qf$k"], $css_class_name);
+						}
 					}
 					continue;
 				}
@@ -2366,12 +2374,9 @@ class phpMyEdit
 			// requested we emit a hidden input (or hidden inputs, if
 			// multiple) with all the selected values.
 			if ($this->readonly($k)) {
-				$hiddenValues = $selected;
-				if (!is_array($hiddenValues) && !empty($hiddenValues)) {
-					$hiddenValues = explode(',', $hiddenValues);
-				}
+				$hiddenValues = trim($selected);
 				if (!is_array($hiddenValues)) {
-					$hiddenValues = empty($hiddenValues) ? array() : array($hiddenValues);
+					$hiddenValues = empty($hiddenValues) ? [] : explode(',', $hiddenValues);
 				}
 				$array = $multiple ? '[]' : '';
 				if (empty($hiddenValues)) {
