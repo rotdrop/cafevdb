@@ -719,7 +719,17 @@ const myReady = function(selector, resizeCB) {
   container
     .find('form.pme-form tr.participant-field.recurring td.operations input.delete-undelete')
     .on('click', function(event) {
-      alert('hello');
+      const $this = $(this);
+      const row = $this.closest('tr');
+      // const fieldId = row.data('fieldId');
+      const optionKey = row.data('optionKey');
+
+      // could also search for name with field-id
+      const optionKeyInput = container.closest('input[value="' + optionKey + '"]');
+      const optionValueInput = row.find('input.pme-input.service-fee');
+
+      console.info('OPTION KEY VALUE', optionKeyInput, optionValueInput);
+      // alert('hello');
       return false;
     });
 };
