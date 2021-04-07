@@ -974,6 +974,11 @@ class ProjectParticipants extends PMETableViewBase
 
       switch ($multiplicity) {
       case 'simple':
+        /**********************************************************************
+         *
+         * Simple input field.
+         *
+         */
         $valueFdd['input'] = $keyFdd['input'];
         $keyFdd['input'] = 'VSRH';
         $valueFdd['css']['postfix'] .= ' simple-valued '.$dataType;
@@ -991,6 +996,11 @@ class ProjectParticipants extends PMETableViewBase
         }
         break;
       case 'single':
+        /**********************************************************************
+         *
+         * Single choice field, yes/no
+         *
+         */
         reset($values2); $key = key($values2);
         $keyFdd['values2|CAP'] = [ $key => '' ]; // empty label for simple checkbox
         $keyFdd['values2|LVDF'] = [
@@ -1027,6 +1037,11 @@ class ProjectParticipants extends PMETableViewBase
         break;
       case 'parallel':
       case 'multiple':
+        /**********************************************************************
+         *
+         * Multiple or single choices from a set of predefined choices.
+         *
+         */
         switch ($dataType) {
         case 'service-fee':
         case 'deposit':
@@ -1061,30 +1076,43 @@ class ProjectParticipants extends PMETableViewBase
         }
         break;
       case 'recurring':
-        $keyFdd['css']['postfix'] .= ' recurring generated '.$dataType;
-        unset($keyFdd['mask']);
-        $keyFdd['select'] = 'M';
-        $keyFdd['values|LF'] = array_merge(
+        /**********************************************************************
+         *
+         * Recurring auto-generated fields
+         *
+         */
+
+        foreach ([&$keyFdd, &$valueFdd] as &$fdd) {
+          $fdd['css']['postfix'] .= ' recurring generated '.$dataType;
+          unset($fdd['mask']);
+          $fdd['select'] = 'M';
+          $fdd['values'] = array_merge(
+            $fdd['values'], [
+              'description' => [
+                'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
+                'divs' => ':',
+              ],
+              'orderby' => '$table.created DESC',
+            ]);
+        }
+
+        foreach ($dataOptions as $dataOption) {
+          $values2[(string)$dataOption['key']] = $dataOption['label'];
+        }
+        $keyFdd['values2|LF'] = $values2;
+
+        $keyFdd['values|FL'] = array_merge(
           $keyFdd['values'], [
             'filters' => ('$table.field_id = '.$fieldId
                           .' AND $table.project_id = '.$projectId),
-            'description' => [
-              'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
-              'divs' => ':',
-            ],
-            'orderby' => '$table.created DESC',
           ]);
-        $keyFdd['values|ACP'] = array_merge(
-          $keyFdd['values'], [
-            'description' => [
-              'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
-              'divs' => ':',
-            ],
-            'orderby' => '$table.created DESC',
-          ]);
-        $keyFdd['display'] = [ 'popup' => 'data' ];
+        $keyFdd['display|LF'] = [ 'popup' => 'data' ];
         $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
-          $values = Util::explodeIndexed($value);
+          // LF are actually both the same. $value will always just
+          // come from the filter's $value2 array. The actual values
+          // we need are in the description fields which are passed
+          // through the 'qf'.$k field in $row.
+          $values = Util::explodeIndexed($row['qf'.$k]);
           $html = [];
           foreach ($values as $key => $value) {
             $option =  $field->getDataOption($key);
@@ -1093,9 +1121,19 @@ class ProjectParticipants extends PMETableViewBase
           }
           return '<div class="allowed-option-wrapper">'.implode('<br/>', $html).'</div>';
         };
-        $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType, $valueFddName) {
+
+        // For a useful add/change/copy view we should use the value fdd.
+        $valueFdd['input|ACP'] = $keyFdd['input'];
+        $keyFdd['input|ACP'] = 'VSRH';
+
+        $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType, $keyFddName, $valueFddName) {
+          $this->logInfo('VALUE '.$k.': '.$value);
+          $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
+          $this->logInfo('ROW IDX '.$k.': '.$row['qf'.$k.'_idx']);
+
           $values = Util::explodeIndexed($value);
-          $pfx = $this->pme->cgiDataName($valueFddName);
+          $valueName = $this->pme->cgiDataName($valueFddName);
+          $keyName = $this->pme->cgiDataName($keyFddName);
           $html = '<table>
   <thead>
     <tr><th>'.$this->l->t('Actions').'</th><th>'.$this->l->t('Subject').'</th><th>'.$this->l->t('Value [%s]', $this->currencySymbol()).'</th></tr>
@@ -1122,7 +1160,8 @@ class ProjectParticipants extends PMETableViewBase
   <td class="input">
     <input id="receivable-input-'.$key.'" type=checkbox checked="checked" class="pme-input pme-input-lock-unlock left-lock"/>
     <label class="pme-input pme-input-lock-unlock left-lock" for="receivable-input-'.$key.'"></label>
-    <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$pfx.'['.$key.']" value="'.$value.'"/>
+    <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$valueName.'['.$key.']" value="'.$value.'"/>
+    <!-- <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'[]" value="'.$key.'"/> -->
   </td>
 </tr>';
           }
@@ -1132,7 +1171,17 @@ class ProjectParticipants extends PMETableViewBase
           return $html;
         };
         break;
+        /*
+         * end of 'recurring'
+         *
+         *********************************************************************/
       case 'groupofpeople':
+        /**********************************************************************
+         *
+         * Grouping with variable number of groups, e.g. "room-mates".
+         *
+         */
+
         // special option with Uuid::NIL holds the management information
         $generatorOption = $field->getDataOption(Uuid::NIL);
         $valueGroups = [ -1 => $this->l->t('without group'), ];
@@ -1253,6 +1302,12 @@ WHERE pp.project_id = $projectId",
 
         break;
       case 'groupsofpeople':
+        /**********************************************************************
+         *
+         * Grouping with predefined group names, e.g. for car-sharing
+         * or excursions.
+         *
+         */
         // tweak the join-structure entry for the group field
         $joinInfo = &$this->joinStructure[$participantFieldJoinIndex[$tableName]];
         $joinInfo = array_merge(
