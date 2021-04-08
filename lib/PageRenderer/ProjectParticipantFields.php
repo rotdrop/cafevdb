@@ -40,6 +40,9 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
+
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 
@@ -323,10 +326,14 @@ class ProjectParticipantFields extends PMETableViewBase
       'maxlen'  => 128,
       'sort'    => true,
       'css'     => [ 'postfix' => ' multiplicity' ],
-      'default' => 'simple',
-      'values2' => $this->participantFieldMultiplicityNames,
-      'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-multiplicity-'.$tag]; }, $this->participantFieldMultiplicities),
+      'default' => Multiplicity::SIMPLE,
+      'values2' => $this->participantFieldMultiplicityNames(),
+      'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-multiplicity-'.$tag]; }, Multiplicity::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-multiplicity'],
+      // 'display' => [
+      //   'attributes' => [ 'data-typemask' => $this->participantFieldsService->multiplicityTypeMask(), ],
+      // ],
+      'valueData' => array_map(json_encode, $this->participantFieldsService->multiplicityTypeMask()),
     ];
 
     $dataTypeIndex = count($opts['fdd']);
@@ -466,7 +473,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'php|LFDV' => function($value, $op, $field, $row, $recordId, $pme) {
         $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
         $dataType = $row[$this->queryField('data_type', $pme->fdd)];
-        if ($multiplicity !== 'simple' && !empty($value)) {
+        if ($multiplicity !== Multiplicity::SIMPLE && !empty($value)) {
           // fetch the value from the data-options data
           $allowed = $row[$this->queryField('data_options', $pme->fdd)];
           $allowed = $this->participantFieldsService->explodeDataOptions($allowed);
@@ -480,17 +487,17 @@ class ProjectParticipantFields extends PMETableViewBase
           }
         }
         switch ($multiplicity) {
-        case 'groupofpeople':
-        case 'groupsofpeople':
+        case Multiplicity::GROUPOFPEOPLE:
+        case Multiplicity::GROUPSOFPEOPLE:
           $value = $this->l->t('n/a');
           break;
         default:
           switch ($dataType) {
-          case 'boolean':
+          case DataType::BOOLEAN:
             $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
             break;
-          case 'deposit':
-          case 'service-fee':
+          case DataType::DEPOSIT:
+          case DataType::SERVICE_FEE:
             $value = $this->moneyValue($value);
             break;
           default:
@@ -638,7 +645,12 @@ class ProjectParticipantFields extends PMETableViewBase
       ];
 
       // @todo wildcards?
-      $cloudGroups = $this->groupManager()->search('');
+      $cloudGroups = [];
+      /** @var \OCP\IGROUP $group */
+      foreach ($this->groupManager()->search('') as $group) {
+        $cloudGroups[$group->getGID()] = $group->getDisplayName();
+      }
+
       $opts['fdd']['readers'] = [
         'name' => $this->l->t('Readers'),
         'tab' => [ 'id' => 'advanced' ],
@@ -654,7 +666,7 @@ class ProjectParticipantFields extends PMETableViewBase
       $opts['fdd']['writers'] = [
         'name' => $this->l->t('Writers'),
         'tab' => [ 'id' => 'advanced' ],
-        'css' => [ 'postfix' => ' writers chosen-dropup_ user-groups' ],
+        'css' => [ 'postfix' => ' writers chosen-dropup user-groups' ],
         'select' => 'M',
         'values' => $cloudGroups,
         'maxlen' => 10,
@@ -687,7 +699,7 @@ class ProjectParticipantFields extends PMETableViewBase
         $dataType = $row['qf'.$kd];
         $cssPostfix = 'multiplicity-'.$multiplicity.' data-type-'.$dataType;
         $pme->fdd[$km]['css']['postfix'] .= ' '.$cssPostfix;
-        $pme->fdd[$pme->fdn['default_value']]['select'] = ($dataType == 'service-fee' || $dataType == 'deposit') ? 'N' : 'T';
+        $pme->fdd[$pme->fdn['default_value']]['select'] = ($dataType == DataType::SERVICE_FEE || $dataType == DataType::DEPOSIT) ? 'N' : 'T';
         return true;
       };
 
@@ -792,7 +804,7 @@ class ProjectParticipantFields extends PMETableViewBase
      */
 
     $tag = 'default_single_value';
-    if ($newvals['multiplicity'] == 'single') {
+    if ($newvals['multiplicity'] == Multiplicity::SINGLE) {
       $value = $newvals[$tag];
       $newvals['default_value'] = strlen($value) < 36 ? null : $value;
     }
@@ -803,7 +815,7 @@ class ProjectParticipantFields extends PMETableViewBase
      * Recurring fields do not have a default value, the value is computed.
      *
      */
-    if ($newvals['multiplicity'] == 'recurring') {
+    if ($newvals['multiplicity'] == Multiplicity::RECURRING) {
       unset($newvals['default_value']);
     }
 
@@ -829,7 +841,7 @@ class ProjectParticipantFields extends PMETableViewBase
      */
 
     $tag = 'maximum_group_size';
-    if ($newvals['multiplicity'] == 'groupofpeople') {
+    if ($newvals['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
       $first = array_key_first($newvals['data_options_single']);
       $newvals['data_options_single'][$first]['key'] = Uuid::NIL;
       $newvals['data_options_single'][$first]['limit'] = $newvals[$tag];
@@ -844,8 +856,8 @@ class ProjectParticipantFields extends PMETableViewBase
      */
 
     $tag = 'data_options_single';
-    if ($newvals['multiplicity'] == 'single'
-        || $newvals['multiplicity'] == 'groupofpeople') {
+    if ($newvals['multiplicity'] == Multiplicity::SINGLE
+        || $newvals['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
       $first = array_key_first($newvals['data_options_single']);
       $newvals[$tag][$first]['label'] = $newvals['name'];
       $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
@@ -864,7 +876,7 @@ class ProjectParticipantFields extends PMETableViewBase
       $allowed = $this->participantFieldsService->explodeDataOptions($newvals['data_options'], false);
     } else {
       $allowed = $newvals['data_options'];
-      if ($newvals['multiplicity'] == 'recurring') {
+      if ($newvals['multiplicity'] == Multiplicity::RECURRING) {
         // index -1 holds the generator information, re-index
         $allowed = array_values($allowed);
       } else {
@@ -1206,14 +1218,14 @@ class ProjectParticipantFields extends PMETableViewBase
         return '';
       }
       switch ($multiplicity) {
-        case 'simple':
+        case Multiplicity::SIMPLE:
           return '';
-        case 'single':
+        case Multiplicity::SINGLE:
           switch ($dataType) {
-            case 'boolean':
+            case DataType::BOOLEAN:
               return $this->l->t('true').' / '.$this->l->t('false');
-            case 'deposit':
-            case 'service-fee':
+            case DataType::DEPOSIT:
+            case DataType::SERVICE_FEE:
               return $this->moneyValue(0).' / '.$this->moneyValue($allowed[0]['data']);
               break;
             default:
@@ -1304,7 +1316,7 @@ __EOT__;
           if (empty($value['key']) || !empty($value['deleted'])) {
             continue;
           }
-          if (($multiplicity == 'groupofpeople' || $multiplicity == 'recurring')
+          if (($multiplicity == Multiplicity::GROUPOFPEOPLE || $multiplicity == Multiplicity::RECURRING)
               && $value['key'] != Uuid::NIL) {
             continue;
           }
@@ -1364,7 +1376,7 @@ __EOT__;
       if (!empty($item['deleted'])) {
         continue;
       }
-      if ($option['key'] == Uuid::NIL && $multiplicity == 'groupofpeople') {
+      if ($option['key'] == Uuid::NIL && $multiplicity == Multiplicity::GROUPOFPEOPLE) {
         $entry = $option;
       } else if (empty($entry)) {
         $entry = $option;
@@ -1375,7 +1387,7 @@ __EOT__;
       return $this->currencyValue($value);
     }
     empty($entry) && $entry = $this->participantFieldsService->dataOptionPrototype();
-    if ($multiplicity == 'groupofpeople') {
+    if ($multiplicity == Multiplicity::GROUPOFPEOPLE) {
       $entry['key'] = Uuid::NIL;
     }
     $key = $entry['key'];
@@ -1411,7 +1423,7 @@ __EOT__;
       if ($key == $entry['key']) {
         continue;
       }
-      if ($multiplicity != 'groupofpeople') {
+      if ($multiplicity != Multiplicity::GROUPOFPEOPLE) {
         $option['deleted'] = (new DateTime)->getTimestamp();
       }
       foreach(['key', 'label', 'limit', 'data', 'tooltip', 'deleted'] as $field) {

@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 
@@ -37,17 +38,50 @@ use OCA\CAFEVDB\Service\Finance\AlwaysReceivablesGenerator;
  */
 class ProjectParticipantFieldsService
 {
-  const UNSUPPORTED = [
-    'simple' => [ 'boolean', ],
-    'single' => [],
-    'multiple' => [ 'boolean', ],
-    'parallel' => [ 'boolean', ],
-    'recurring' => [ 'boolean' ],
-    'groupofpeople' => [], // like single
-    'groupsofpeople' => [ 'boolean', ], // like multiple
-  ];
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  /** Matrix of unsupported data-types. */
+  private const UNSUPPORTED = [
+    Multiplicity::SIMPLE => [
+      DataType::BOOLEAN,
+      DataType::FILE_DATA,
+      DataType::UPLOAD_AREA,
+    ],
+    Multiplicity::SINGLE => [
+      DataType::UPLOAD_AREA,
+    ],
+    Multiplicity::MULTIPLE => [
+      DataType::BOOLEAN,
+      DataType::UPLOAD_AREA,
+    ],
+    Multiplicity::PARALLEL => [
+      DataType::BOOLEAN,
+      DataType::UPLOAD_AREA,
+    ],
+    Multiplicity::RECURRING => [
+      DataType::BOOLEAN,
+      DataType::TEXT,
+      DataType::HTML,
+      DataType::INTEGER,
+      DataType::FLOAT,
+      DataType::DATE,
+      DataType::DATETIME,
+      DataType::DEPOSIT,
+      DataType::FILE_DATA,
+      DataType::UPLOAD_AREA,
+    ],
+    Multiplicity::GROUPOFPEOPLE => [
+      DataType::BOOLEAN,
+      DataType::FILE_DATA,
+      DataType::UPLOAD_AREA,
+    ],
+    Multiplicity::GROUPSOFPEOPLE => [
+      DataType::BOOLEAN,
+      DataType::FILE_DATA,
+      DataType::UPLOAD_AREA,
+    ],
+  ];
 
   /** @var EntityManager */
   protected $entityManager;
@@ -185,6 +219,17 @@ class ProjectParticipantFieldsService
   public static function isSupportedType(string $multiplicity, string $type):bool
   {
     return isset(self::UNSUPPORTED[$multiplicity]) && empty(self::UNSUPPORTED[$multiplicity][$type]);
+  }
+
+  /**
+   * Return an array MULTIPLICITY => [ DATATYPES, ... ] of unsupported
+   * combinations.
+   *
+   * @return array
+   */
+  public static function multiplicityTypeMask()
+  {
+    return self::UNSUPPORTED;
   }
 
   /**

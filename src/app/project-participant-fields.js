@@ -25,6 +25,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
+import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
 
@@ -82,23 +83,34 @@ const ready = function(selector, resizeCB) {
 
   // Field-Type Selectors
   container.on('change', 'select.multiplicity, select.data-type', function(event) {
-    const multiplicity = container.find('select.multiplicity').val();
+    const multiplicitySelect = container.find('select.multiplicity');
     const dataTypeSelect = container.find('select.data-type');
-    if (multiplicity === 'recurring') {
-      // only service-fees supported for recurring stuff
-      dataTypeSelect
-        .find('option')
-        .not('[value="service-fee"]')
-        .prop('disabled', true);
-      dataTypeSelect
-        .val('service-fee')
-        .trigger('chosen:updated');
-    } else {
-      // re-enable all options
-      dataTypeSelect.find('option').prop('disabled', false);
-      dataTypeSelect.trigger('chosen:updated');
+    const multiplicity = multiplicitySelect.val();
+    const dataTypeMask = SelectUtils.optionByValue(multiplicitySelect, multiplicity).data('data');
+    let dataType = dataTypeSelect.val();
+    const enabledTypes = [];
+    dataTypeSelect.find('option').each(function(index) {
+      const $option = $(this);
+      const value = $option.val();
+      if (value === '') {
+        return;
+      }
+      const enabled = dataTypeMask.indexOf(value) === -1;
+      if (enabled) {
+        enabledTypes.push(value);
+      }
+      $option.prop('disabled', !enabled);
+    });
+    if (enabledTypes.indexOf(dataType) === -1) {
+      if (enabledTypes.length > 0) {
+        dataType = enabledTypes[0];
+        dataTypeSelect.val(dataType);
+      } else {
+        dataType = '';
+        console.error('no data types left to enable');
+      }
     }
-    const dataType = dataTypeSelect.val();
+    dataTypeSelect.trigger('chosen:updated');
     setFieldTypeCssClass({ multiplicity, dataType });
     allowedHeaderVisibility();
     resizeCB();
