@@ -161,6 +161,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $this->debugRequests = 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
 
+    // this is done by the legacy code itself.
+    $this->disableFilter('soft-deleteable');
+
     $this->defaultFDD = $this->createDefaultFDD();
 
     $cgiDefault = [
@@ -499,6 +502,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'sort' => true,
         'css' => [ 'postfix' => ' revocation-date date' ],
         'datemask' => 'd.m.Y',
+        'default' => null,
       ],
     ];
     $fdd['birthday'] = $fdd['date'];
@@ -858,7 +862,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($identifier[$multiple]['del'] as $del) {
           $id = $delIdentifier[$del];
           $entityId = $meta->extractKeyValues($id);
-          $this->disableFilter('soft-deleteable');
           $entity = $this->find($entityId);
           $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
           $this->debug('Usage is '.$usage);
@@ -917,7 +920,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $this->debug('TRY MOD '.$new);
             $id = $remIdentifier[$new];
             $entityId = $meta->extractKeyValues($id);
-            $this->disableFilter('soft-deleteable');
             $entity = $this->find($entityId);
             if (empty($entity)) {
               throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
