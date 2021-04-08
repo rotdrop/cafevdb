@@ -68,30 +68,13 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
                 ->setLabel($this->l->t('Option %d', $count))
                 ->setData($this->amount);
     $this->serviceFeeField->getDataOptions()->set($receivable->getKey()->getBytes(), $receivable);
-    return $this->serviceFeeField->getDataOptions()->filter(function(Entities\ProjectParticipantFieldDataOption $receivable) {
-      return (string)$receivable->getKey() != Uuid::NIL;
-    });
+    return $this->serviceFeeField->getSelectableOptions();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectParticipantFieldDataOption
-  {
-    if (!empty($participant)) {
-      $this->updateParticipant($receivable, $participant);
-    } else {
-      $participants = $receivable->getField()->getProject()->getParticipants();
-      /** @var Entities\ProjectParticipant $participant */
-      foreach ($participants as $participant) {
-        $this->updateParticipant($receivable, $participant);
-      }
-    }
-
-    return $receivable;
-  }
-
-  private function updateParticipant(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant)
+  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant)
   {
     $participantFieldsData = $participant->getParticipantFieldsData();
     $existingReceivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));

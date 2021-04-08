@@ -53,8 +53,56 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    */
   public function updateAll()
   {
-    foreach ($this->serviceFeeField->dataOptions as $receivable) {
+    foreach ($this->serviceFeeField->getDataOptions() as $receivable) {
       $this->updateReceivable($receivable);
     }
   }
+
+  /**
+   * Update just the given receivable and participant.
+   *
+   * @param Entities\ProjectParticipantFieldDataOption $receivable
+   *   The option to update/recompute.
+   *
+   * @param Entities\ProjectParticipant $participant
+   *   The musician to update the service claim for. If null, the
+   *   values for all affected musicians have to be recomputed.
+   *
+   */
+  protected abstract function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant);
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectParticipantFieldDataOption
+  {
+    if (!empty($participant)) {
+      $this->updateOne($receivable, $participant);
+    } else {
+      $participants = $receivable->getField()->getProject()->getParticipants();
+      /** @var Entities\ProjectParticipant $participant */
+      foreach ($participants as $participant) {
+        $this->updateOne($receivable, $participant);
+      }
+    }
+
+    return $receivable;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable):Entities\ProjectParticipant
+  {
+    if (!empty($receivable)) {
+      $this->updateOne($receivable, $participant);
+    } else {
+      foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
+        $this->updateOne($receivable, $participant);
+      }
+    }
+
+    return $participant;
+  }
+
 }

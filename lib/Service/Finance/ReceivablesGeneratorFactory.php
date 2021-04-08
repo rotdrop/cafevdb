@@ -78,14 +78,11 @@ class ReceivablesGeneratorFactory
     }
 
     // the generator is coded in the data-option with nil-uuid
-    $nilOptions = $serviceFeeField->getDataOptions()->matching(self::criteriaWhere([
-      'key' => Uuid::NIL,
-    ]));
-    if (count($nilOptions) !== 1) {
-      throw new \RuntimeException($this->l->t('Did not find exactly one data-option with nil-uuid.'));
+    /** @var Entities\ProjectParticipantFieldDataOption $generatorOption */
+    $generatorOption = $serviceFeeField->getManagementOption();
+    if (empty($generatorOption)) {
+      throw new \RuntimeException($this->l->t('Unable to find the management option.'));
     }
-    /** @var Entities\ProjectParticipantFieldDataOption */
-    $generatorOption = $nilOptions->first();
 
     // try to construct the generator
     $label = $generatorOption->getLabel();

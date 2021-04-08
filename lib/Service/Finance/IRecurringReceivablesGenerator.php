@@ -55,11 +55,28 @@ interface IRecurringReceivablesGenerator
    * @param Entities\ProjectParticipantFieldDataOption $receivable
    *   The option to update/recompute.
    *
-   * @param null|Entities\Musician $musician
+   * @param null|Entities\ProjectParticipant $participant
    *   The musician to update the service claim for. If null, the
    *   values for all affected musicians have to be recomputed.
+   *
+   * @return Entities\ProjectParticipantFieldDataOption The updated
+   * receivable.
    */
   public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectParticipantFieldDataOption;
+
+  /**
+   * Update the amount to invoice for the given receivable.
+   *
+   * @param Entities\ProjectParticipant $participant
+   *   The musician to update the service claim for. If null, the
+   *   values for all affected musicians have to be recomputed.
+   *
+   * @param Entities\ProjectParticipantFieldDataOption $receivable
+   *   The option to update/recompute.
+   *
+   * @return Entities\ProjectParticipant The update participant.
+   */
+  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable):Entities\ProjectParticipant;
 
   /**
    * Compute the amounts to invoice for all relevant musicians and

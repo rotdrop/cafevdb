@@ -44,17 +44,14 @@ class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
   public function generateReceivables():Collection
   {
     // This is the dummy implementation, just do nothing.
-    return $this->serviceFeeField->getDataOptions()->filter(function(Entities\ProjectParticipantFieldDataOption $receivable) {
-      return (string)$receivable->getKey() != Uuid::NIL;
-    });
+    return $this->serviceFeeField->getSelectableOptions();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = NULL):Entities\ProjectParticipantFieldDataOption
+  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant)
   {
-    // This is the dummy implementation, just do nothing.
-    return $receivable;
+    // Do nothing
   }
 }
