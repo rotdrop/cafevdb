@@ -29,6 +29,8 @@ use OCP\EventDispatcher\IEventListener;
 use OC\L10N\Events\TranslationNotFound as HandledEvent;
 
 use OCA\CAFEVDB\Service\L10N\TranslationService;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\ConfigService;
 
 class TranslationNotFoundListener implements IEventListener
 {
@@ -61,6 +63,16 @@ class TranslationNotFoundListener implements IEventListener
       return;
     }
     if (empty($this->user)) {
+      return;
+    }
+    $debugMode = ConfigService::DEBUG_NONE;
+    try {
+      $debugMode = \OC::$server->query(EncryptionService::class)->getConfigValue('debugmode', ConfigService::DEBUG_NONE);
+    } catch (\Throwable $t) {
+      // just ignore
+    }
+    if (($debugMode & ConfigService::DEBUG_L10N) == 0) {
+      $this->logDebug('Debugging L10N is not enabled, bailing out');
       return;
     }
     $phrase = $event->getPhrase();

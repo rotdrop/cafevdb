@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -35,6 +36,7 @@ $debugModes = [
   ConfigService::DEBUG_GENERAL => $l->t('General Information'),
   ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
   ConfigService::DEBUG_CSP => $l->t('CSP Violations'),
+  ConfigService::DEBUG_L10N => $l->t('L10N'),
   ConfigService::DEBUG_REQUEST => $l->t('HTTP Requests'),
   ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
   ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form'),
