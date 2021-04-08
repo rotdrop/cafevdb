@@ -74,7 +74,7 @@ class DownloadsController extends Controller {
     case 'test':
       switch ($object) {
       case 'pdfletter':
-        /** @var \OCA\CAFEVDB\Documents\PDFLetter */
+        /** @var \OCA\CAFEVDB\Documents\PDFLetter $letterGenerator */
         $letterGenerator = $this->di(\OCA\CAFEVDB\Documents\PDFLetter::class);
         $fileName = 'cafevdb-test-letter.pdf';
         $letter = $letterGenerator->testLetter($fileName, 'S');

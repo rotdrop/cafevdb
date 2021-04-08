@@ -49,6 +49,8 @@ foreach ($tokens as $token) {
             break;
           }
         }
+      } else if (preg_match('#@method\s+[^\$]*$#ms', $text)) {
+        echo str_replace('@method', '@fn', $text);
       } else {
         echo $text;
       }

@@ -306,7 +306,7 @@ class InstrumentFamilies extends PMETableViewBase
    *
    * @param &$newValues Set of new values, which may also be modified.
    *
-   * @return boolean. If returning @c false the operation will be terminated
+   * @return boolean If returning @c false the operation will be terminated
    */
   public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {

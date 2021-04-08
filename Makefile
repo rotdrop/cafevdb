@@ -26,7 +26,8 @@ COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--no-dev --prefer-dist
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
-PHPDOC_TEMPLATE=--template=clean
+PHPDOC_TEMPLATE=
+#--template=clean
 #--template=clean --template=xml
 
 #--template=responsive-twig
@@ -153,9 +154,15 @@ phpdoc: $(PHPDOC)
  --sourcecode \
  --defaultpackagename $(app_name) \
  -d $(ABSSRCDIR)/lib -d $(ABSSRCDIR)/appinfo \
+ -i Finance \
+ -i detailed-instrumentation.php \
+ -i instrument-insurance.php \
+ -i musicians.php \
+ -i project-extra.php \
+ -i project-payments.php \
  --setting graphs.enabled=true \
  --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
- -t $(DOC_BUILD_DIR)/phpdoc
+ -t $(DOC_BUILD_DIR)/phpdoc/
 
 #--setting guides.enabled=true \
 #

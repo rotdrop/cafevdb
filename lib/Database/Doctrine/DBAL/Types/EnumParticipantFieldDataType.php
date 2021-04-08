@@ -26,17 +26,43 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use MyCLabs\Enum\Enum as EnumType;
 
 /**
- * Enum for "participant-fields" data-type.
+ * Enum for "participant-fields" data-types.
+ *
+ * @see \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField
  *
  * @method static EnumParticipantFieldDataType TEXT()
+ *   Plain UTF-8 text field.
  * @method static EnumParticipantFieldDataType HTML()
+ *   HTML text field.
  * @method static EnumParticipantFieldDataType BOOLEAN()
+ *   Yes/no value.
  * @method static EnumParticipantFieldDataType INTEGER()
+ *   Integral number.
  * @method static EnumParticipantFieldDataType FLOAT()
+ *   Floating point number.
  * @method static EnumParticipantFieldDataType DATE()
+ *   A date without time.
  * @method static EnumParticipantFieldDataType DATETIME()
+ *   A date with time information.
+ *
  * @method static EnumParticipantFieldDataType SERVICE_FEE()
+ * A service-fee value with the convention that positive values denote
+ * receivables and negative values denote liabilities (from the view
+ * of the orchestra.
+ *
  * @method static EnumParticipantFieldDataType DEPOSIT()
+ * A financial deposit which may be charged in advance to the total
+ * amount of receivables.
+ *
+ * @method static EnumParticipantFieldDataType FILE_DATA()
+ * Single-file upload data which is stored as inline URI in the
+ * database. The total encoded size is limited by the used database
+ * backend and its associated data-type.
+ *
+ * @method static self UPLOAD_AREA()
+ * A file-upload area. Files can be uploaded to a dedicated file-space
+ * in the cloud which is tagged by the participants UUID and the UUID
+ * of the field.
  */
 class EnumParticipantFieldDataType extends EnumType
 {
@@ -49,4 +75,10 @@ class EnumParticipantFieldDataType extends EnumType
   private const DATETIME = 'datetime';
   private const SERVICE_FEE = 'service-fee';
   private const DEPOSIT = 'deposit';
+  private const FILE_DATA = 'file-data';
+
+  /**
+   * {@see EnumParticipantFieldDataType::UPLOAD_AREA()}
+   */
+  private const UPLOAD_AREA = 'upload-area';
 };
