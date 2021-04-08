@@ -49,11 +49,11 @@ class ProjectParticipantFieldsService
       DataType::UPLOAD_AREA,
     ],
     Multiplicity::SINGLE => [
-      DataType::UPLOAD_AREA,
     ],
     Multiplicity::MULTIPLE => [
       DataType::BOOLEAN,
       DataType::UPLOAD_AREA,
+      DataType::FILE_DATA,
     ],
     Multiplicity::PARALLEL => [
       DataType::BOOLEAN,
