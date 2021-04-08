@@ -76,9 +76,5 @@ class EnumParticipantFieldDataType extends EnumType
   public const SERVICE_FEE = 'service-fee';
   public const DEPOSIT = 'deposit';
   public const FILE_DATA = 'file-data';
-
-  /**
-   * {@see EnumParticipantFieldDataType::UPLOAD_AREA()}
-   */
   public const UPLOAD_AREA = 'upload-area';
 };
