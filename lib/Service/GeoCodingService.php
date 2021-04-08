@@ -827,8 +827,7 @@ class GeoCodingService
 
     // sort s.t. the fallback-language comes first and is overwritten
     // later by the correct translation.
-    $criteria = self::criteria()
-              ->where(self::cExpr()->in('target', ['en', $language]))
+    $criteria = self::criteriaWhere(['target' => ['en', $language]])
               ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
 
     foreach ($this->matching($criteria, GeoContinent::class) as $translation) {
@@ -863,9 +862,9 @@ class GeoCodingService
     $countries = [];
     $continents = [];
 
-    $criteria = self::criteria()
-              ->where(self::cExpr()->in('target', [self::CONTINENT_TARGET, 'en', $language]))
+    $criteria = self::criteriaWhere(['target' => [self::CONTINENT_TARGET, 'en', $language] ])
               ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
+
     foreach ($this->matching($criteria, GeoCountry::class) as $country) {
       $iso = $country->getIso();
       $target = $country->getTarget();

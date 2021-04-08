@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -27,9 +28,10 @@ use Doctrine\ORM\EntityRepository;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator as ClassMetadata;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
-/**Database EntityManager short-cuts.
- *
+/**
+ * Database EntityManager short-cuts.
  */
 trait EntityManagerTrait {
 
@@ -293,39 +295,22 @@ trait EntityManagerTrait {
    * Convenience function to generate Collections\Criteria
    */
   protected static function criteria(): Collections\Criteria {
-    return new Collections\Criteria();
-  }
-
-  protected static function cExpr() {
-    return self::criteriaExpr();
+    return DBUtil::criteria();
   }
 
   /**
    * Convenience function to generate Collections\ExpressionBuilder
    */
   protected static function criteriaExpr(): Collections\ExpressionBuilder {
-    return Collections\Criteria::expr();
+    return DBUtil::criteriaExpr();
   }
 
   /**
-   * Convenience function. Convert an array of criteria as accepted by
-   * self::findBy() to an instance of Collections\Criteria.
-   *
-   * @todo This could be made more elaborate like
-   * OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy().
+   * @see DBUtil::criteriaWhere()
    */
   protected static function criteriaWhere(array $arrayCriteria)
   {
-    $criteria = self::criteria();
-    $expr = self::criteriaExpr();
-    foreach ($arrayCriteria as $key => $value) {
-      if (is_array($value)) {
-        $criteria->andWhere($expr->in($key, $value));
-      } else {
-        $criteria->andWhere($expr->eq($key, $value));
-      }
-    }
-    return $criteria;
+    return DBUtil::criteriaWhere($arrayCriteria);
   }
 
   protected function expr() {
