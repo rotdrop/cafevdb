@@ -102,6 +102,7 @@ class Project implements \ArrayAccess
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipantField", mappedBy="project", fetch="EXTRA_LAZY")
+   * @ORM\OrderBy({"displayOrder" = "DESC"})
    */
   private $participantFields;
 

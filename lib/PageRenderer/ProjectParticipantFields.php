@@ -173,7 +173,7 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'project_id', 'display_order', 'name' ];
+    $opts['sort_field'] = [ 'project_id', '-display_order', 'name' ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,

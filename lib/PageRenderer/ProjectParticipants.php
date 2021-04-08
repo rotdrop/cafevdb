@@ -377,6 +377,14 @@ class ProjectParticipants extends PMETableViewBase
       $this->joinStructure[] = $participantFieldJoinTable;
     }
 
+    /*
+     *
+     **************************************************************************
+     *
+     * General display options
+     *
+     */
+
     // Display special page elements
     $opts['display'] =  Util::arrayMergeRecursive(
       $opts['display'],
@@ -388,6 +396,14 @@ class ProjectParticipants extends PMETableViewBase
         'tabs' => $this->tableTabs($participantFields, $useFinanceTab),
         'navigation' => 'VCD',
     ]);
+
+    /*
+     *
+     **************************************************************************
+     *
+     * Field descriptions
+     *
+     */
 
     $opts['fdd']['project_id'] = [
       'tab'      => [ 'id' => 'miscinfo' ],
@@ -2274,6 +2290,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     return true;
   }
 
+  // ??????
   private function tableTabId($idOrName)
   {
     $dflt = $this->defaultTableTabs();
@@ -2286,9 +2303,11 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
   }
 
   /**
-   * Export the default tabs family.
+   * Export the default tabs family. Extra-tabs are inserted after the
+   * personal data and before the misc-tab. The finance tab comes
+   * before the personal data.
    */
-  private function defaultTableTabs($useFinanceTab = false)
+  private function defaultTableTabs($useFinanceTab = false, $extraTabs = [])
   {
     $pre = [
       [
@@ -2310,12 +2329,14 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         'name' => $this->l->t('Finance related data'),
       ],
     ];
-    $post = [
+    $personal = [
       [
         'id' => 'musician',
         'tooltip' => $this->toolTipsService['project-personaldata-tab'],
         'name' => $this->l->t('Personal data'),
       ],
+    ];
+    $post = [
       [
         'id' => 'miscinfo',
         'tooltip' => $this->toolTipsService['project-personalmisc-tab'],
@@ -2328,9 +2349,9 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       ],
     ];
     if ($useFinanceTab) {
-      return array_merge($pre, $finance, $post);
+      return array_merge($pre, $finance, $personal, $extraTabs, $post);
     } else {
-      return array_merge($pre, $post);
+      return array_merge($pre, $personal, $extraTabs, $post);
     }
   }
 
@@ -2368,7 +2389,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       }
     }
 
-    return array_merge($dfltTabs, $extraTabs);
+    return $this->defaultTableTabs($useFinanceTab, $extraTabs);
   }
 
   private function allowedOptionLabel($label, $value, $dataType, $css = null, $data = null)
