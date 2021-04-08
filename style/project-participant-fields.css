@@ -60,6 +60,15 @@ table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.data-options 
   display:table-row;
 }
 
+table.pme-main tr.multiplicity.data-type-file-data ~ tr.pme-row.default-value,
+table.pme-main tr.multiplicity.data-type-file-data ~ tr.pme-row.default-multi-value,
+table.pme-main tr.multiplicity.data-type-file-data ~ tr.pme-row.default-single-value,
+table.pme-main tr.multiplicity.data-type-upload-area ~ tr.pme-row.default-value,
+table.pme-main tr.multiplicity.data-type-upload-area ~ tr.pme-row.default-multi-value,
+table.pme-main tr.multiplicity.data-type-upload-area ~ tr.pme-row.default-single-value {
+  display:none!important;
+}
+
 .project-participant-fields table.pme-main tr:not(.pme-filter) .chosen-container {
   box-sizing:border-box;
   min-width:50%;

@@ -52,11 +52,20 @@ const ready = function(selector, resizeCB) {
       return;
     }
 
+    const multiplicityClass = 'multiplicity-' + data.multiplicity;
+    const dataTypeClass = 'data-type-' + data.dataType;
     container.find('tr.multiplicity')
       .removeClass(function(index, className) {
         return (className.match(/\b(multiplicity|data-type)-\S+/g) || []).join(' ');
       })
-      .addClass('multiplicity-' + data.multiplicity + ' ' + 'data-type-' + data.dataType);
+      .addClass(multiplicityClass + ' ' + dataTypeClass);
+    container.find('[class*="-multiplicity-required"], [class*="-data-type-required"]').each(function(index) {
+      const $this = $(this);
+      $this.prop(
+        'required',
+        $this.hasClass(data.multiplicity + '-multiplicity-required')
+        || $this.hasClass(data.dataType + '-data-type-required'));
+    });
   };
 
   const fieldTypeData = function() {
@@ -342,6 +351,8 @@ const ready = function(selector, resizeCB) {
         submitDefer.resolve();
       };
 
+      console.info('NEW OPTION POST DATA', postData);
+
       $.post(
         generateUrl('projects/participant-fields/' + request),
         postData)
@@ -431,7 +442,7 @@ const ready = function(selector, resizeCB) {
             row.parents('table').find('thead').show();
             row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
             self.val('');
-            row.data('index', row.data('index') + 1); // next index
+            row.data('index', +row.data('index') + 1); // next index
             resizeCB();
           } else {
             const next = row.next();
@@ -503,23 +514,26 @@ const ready = function(selector, resizeCB) {
   });
 
   const tableContainerId = PHPMyEdit.idSelector('table-container');
+
+  // TODO: check whether these are still necessary
   container.on('chosen:showing_dropdown', tableContainerId + ' select', function(event) {
     console.log('chosen:showing_dropdown');
-    const widget = container.cafevDialog('widget');
-    const tableContainer = container.find(tableContainerId);
-    widget.css('overflow', 'visible');
-    container.css('overflow', 'visible');
-    tableContainer.css('overflow', 'visible');
+    // const widget = container.cafevDialog('widget');
+    // const tableContainer = container.find(tableContainerId);
+    // widget.css('overflow', 'visible');
+    // container.css('overflow', 'visible');
+    // tableContainer.css('overflow', 'visible');
     return true;
   });
 
+  // TODO: check whether these are still necessary
   container.on('chosen:hiding_dropdown', tableContainerId + ' select', function(event) {
     console.log('chosen:hiding_dropdown');
-    const widget = container.cafevDialog('widget');
-    const tableContainer = container.find(tableContainerId);
-    tableContainer.css('overflow', '');
-    container.css('overflow', '');
-    widget.css('overflow', '');
+    // const widget = container.cafevDialog('widget');
+    // const tableContainer = container.find(tableContainerId);
+    // tableContainer.css('overflow', '');
+    // container.css('overflow', '');
+    // widget.css('overflow', '');
     return true;
   });
 
