@@ -344,8 +344,8 @@ class ProjectParticipantFields extends PMETableViewBase
       'sort'    => true,
       'css'     => [ 'postfix' => ' data-type' ],
       'default' => 'text',
-      'values2' => $this->participantFieldDataTypeNames,
-      'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-data-type-'.$tag]; }, $this->participantFieldDataTypes),
+      'values2' => $this->participantFieldDataTypeNames(),
+      'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-data-type-'.$tag]; }, DataType::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-data-type'],
     ];
 

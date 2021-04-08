@@ -237,19 +237,24 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->projectTypeNames[$tag] = $this->l->t($tag);
       }
     }
-
-    $this->participantFieldDataTypes = DBTypes\EnumParticipantFieldDataType::toArray();
-    foreach ($this->participantFieldDataTypes as $key => $tag) {
-      $slug = 'extra field type '.$tag;
-      $this->participantFieldDataTypeNames[$tag] = $this->l->t($slug);
-    }
   }
 
   protected function participantFieldMultiplicityNames()
   {
     $multiplicities = array_values(DBTypes\EnumParticipantFieldMultiplicity::toArray());
     foreach ($multiplicities as $tag) {
-      $result[$tag] = $this->l->t('extra field '.$tag);
+      $slug = 'extra field '.$tag;
+      $result[$tag] = $this->l->t($slug);
+    }
+    return $result;
+  }
+
+  protected function participantFieldDataTypeNames()
+  {
+    $dataTypes = array_values(DBTypes\EnumParticipantFieldDataType::toArray());
+    foreach ($dataTypes as $tag) {
+      $slug = 'extra field type '.$tag;
+      $result[$tag] = $this->l->t($slug);
     }
     return $result;
   }
