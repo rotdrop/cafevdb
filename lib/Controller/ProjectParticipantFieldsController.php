@@ -210,8 +210,6 @@ class ProjectParticipantFieldsController extends Controller {
                                            print_r($dataOptions, true) ));
         }
 
-        $this->logInfo('OPTIONS '.print_r($dataOptions, true));
-
         $item = array_shift($dataOptions);
 
         // remove dangerous html

@@ -489,10 +489,15 @@ class ProjectParticipantFields extends PMETableViewBase
         switch ($multiplicity) {
         case Multiplicity::GROUPOFPEOPLE:
         case Multiplicity::GROUPSOFPEOPLE:
+        case Multiplicity::RECURRING:
           $value = $this->l->t('n/a');
           break;
         default:
           switch ($dataType) {
+          case DataType::FILE_DATA:
+          case DataType::UPLOAD_AREA:
+            $value = $this->l->t('n/a');
+            break;
           case DataType::BOOLEAN:
             $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
             break;
@@ -1122,7 +1127,7 @@ class ProjectParticipantFields extends PMETableViewBase
     $pfx = $this->pme->cgiDataName('data_options');
     $html = '
 <tr class="data-line data-options placeholder active not-multiplicity-recurring"
-  data-field-id="'.$fieldId.'">
+  data-field-id="'.$fieldId.'" data-index="0">
   <td class="placeholder" colspan="6">
     <input
       class="field-label"
@@ -1163,14 +1168,13 @@ class ProjectParticipantFields extends PMETableViewBase
   </td>
   <td class="generator" colspan="5">
     <input
-      class="field-data"
+      class="field-data recurring-multiplicity-required"
       spellcheck="true"
       type="text"
       name="'.$pfx.'[-1][data]"
       value="'.$generator.'"
       title="'.$this->toolTipsService['participant-fields-data-options:generator'].'"
       placeholder="'.$this->l->t('field generator').'"
-      required="required"
       size="33"
       maxlength="32"
       '.(empty($generator) ? '' : 'readonly="readonly"').'
