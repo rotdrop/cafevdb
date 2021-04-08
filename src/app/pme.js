@@ -309,6 +309,68 @@ const tableDialogReload = function(options, callback, triggerData) {
   });
 };
 
+function checkInvalidInputs(container, cleanup) {
+  if (typeof cleanup !== 'function') {
+    cleanup = function() {};
+  }
+
+  // Brief front-end-check for empty required fields.
+  const invalidInputs = container.find('form.pme-form :invalid');
+
+  if (invalidInputs.length !== 0) {
+    console.info('INVALID INPUTS', invalidInputs);
+    const highlightInvalid = function(afterDialog) {
+      for (const input of invalidInputs) {
+        let $input = $(input);
+        if (!$input.is(':visible') && $input.is('select')) {
+          $input = $input.next('.chosen-container');
+        }
+        if ($input.is(':visible')) {
+          $input.cafevTooltip('enable');
+          if (afterDialog) {
+            $input.cafevTooltip('show');
+          }
+          $input.effect(
+            'highlight',
+            {},
+            10000,
+            function() {
+              if (afterDialog) {
+                if (!CAFEVDB.toolTipsEnabled()) {
+                  $input.cafevTooltip('disable');
+                }
+                cleanup();
+              }
+            });
+        }
+      }
+    };
+    const invalidInfo = [];
+    for (const input of invalidInputs) {
+      const $input = $(input);
+      const label = $input.closest('tr').find('td.pme-key').html() || $input.attr('placeholder');
+      const value = $input.val();
+      invalidInfo.push('<li class="invalid-input">'
+                       + label
+                       + (value ? ', ' + t(appName, 'invalid data "{value}"', { value }) : '')
+                       + '</li>');
+    }
+    highlightInvalid();
+    Dialogs.alert(
+      t(appName, 'The following required fields are empty or contain otherwise invalid data:')
+        + '<ul>'
+        + invalidInfo.join('\n')
+        + '</ul>'
+        + t(appName, 'Please add the missing data!'),
+      t(appName, 'Missing Input Data'),
+      () => highlightInvalid(true),
+      true,
+      true);
+    return false;
+  }
+  return true;
+}
+
 /**
  * Overload the PHPMyEdit submit buttons in order to be able to
  * display the single data-set display, edit, add and copy form in a
@@ -412,8 +474,8 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       'click',
       ReloadButtonSel,
       function(event, triggerData) {
-
         const submitButton = $(this);
+
         const reloadName = submitButton.attr('name');
         const reloadValue = submitButton.val();
         options.ReloadName = reloadName;
@@ -423,6 +485,11 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             && !submitButton.hasClass(pmeToken('copy'))
             && !submitButton.hasClass(pmeToken('reload'))) {
           // so this is pme-more, morechange
+
+          if (!checkInvalidInputs(container)) {
+            return false;
+          }
+
           options.modified = true;
         }
         console.info(options);
@@ -459,55 +526,11 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       reloadButton.addClass('loading');
 
       // Brief front-end-check for empty required fields.
-      const invalidInputs = container.find('form.pme-form :invalid');
-
-      if (invalidInputs.length !== 0) {
-        const highlightInvalid = function(afterDialog) {
-          for (const input of invalidInputs) {
-            let $input = $(input);
-            if (!$input.is(':visible') && $input.is('select')) {
-              $input = $input.next('.chosen-container');
-            }
-            if ($input.is(':visible')) {
-              $input.cafevTooltip('enable');
-              $input.cafevTooltip('show');
-              $input.effect(
-                'highlight',
-                {},
-                10000,
-                function() {
-                  if (afterDialog) {
-                    if (!CAFEVDB.toolTipsEnabled()) {
-                      $input.cafevTooltip('disable');
-                    }
-                    reloadButton.removeClass('loading');
-                    Page.busyIcon(false);
-                  }
-                });
-            }
-          }
-        };
-        const invalidInfo = [];
-        for (const input of invalidInputs) {
-          const $input = $(input);
-          const label = $input.closest('tr').find('td.pme-key').html();
-          const value = $input.val();
-          invalidInfo.push('<li class="invalid-input">'
-                           + label
-                           + (value ? ', ' + t(appName, 'invalid data "{value}"', { value }) : '')
-                           + '</li>');
-        }
-        highlightInvalid();
-        Dialogs.alert(
-          t(appName, 'The following required fields are empty or contain otherwise invalid data:')
-            + '<ul>'
-            + invalidInfo.join('\n')
-            + '</ul>'
-            + t(appName, 'Please add the missing data!'),
-          t(appName, 'Missing Input Data'),
-          () => highlightInvalid(true),
-          true,
-          true);
+      if (!checkInvalidInputs(
+        container, function() {
+          reloadButton.removeClass('loading');
+          Page.busyIcon(false);
+        })) {
         return false;
       }
 
