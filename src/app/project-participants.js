@@ -30,6 +30,7 @@ import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
+import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 
@@ -541,11 +542,6 @@ const myReady = function(selector, resizeCB) {
     });
   };
 
-  // find an option by its value
-  const findOptionByValue = function(select, value) {
-    return select.find('option[value="' + value + '"]');
-  };
-
   // foreach group remember the current selection of people and the
   // group
   selectGroupOfPeople.each(function(idx) {
@@ -609,11 +605,11 @@ const myReady = function(selector, resizeCB) {
       if (!musicianSelectedPrev && !musicianSelectedCur && curSelected.length > 0) {
         // add current record
         console.log('add record', musicianId);
-        findOptionByValue(self, musicianId).prop('selected', true);
+        SelectUtils.optionByValue(self, musicianId).prop('selected', true);
         changed = true;
       }
       if (added.length === 1) {
-        const singleNewOption = findOptionByValue(self, added[0]);
+        const singleNewOption = SelectUtils.optionByValue(self, added[0]);
         console.log('other people group option', singleNewOption);
         console.log('key', musicianId);
         const data = singleNewOption.data('data');
