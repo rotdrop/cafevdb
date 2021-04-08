@@ -36,7 +36,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="Musicians")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository")
- * @ORM\HasLifecycleCallbacks
  */
 class Musician implements \ArrayAccess
 {
@@ -83,6 +82,12 @@ class Musician implements \ArrayAccess
    * @ORM\Column(type="string", length=256, nullable=true)
    */
   private $displayName;
+
+  // /**
+  //  * @ORM\Column(type="string", length=256, unique=true)
+  //  * @Gedmo\Slug(fields={"firstName", "surName"}, separator=".", unique=true)
+  //  */
+  // private $slug;
 
   /**
    * @var string
