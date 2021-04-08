@@ -110,6 +110,13 @@ class phpMyEdit
 	const FDD_SELECT = 'select';
 	const FDD_VALUES = 'values';
 
+	const TRIGGER_BEFORE = 'before';
+	const TRIGGER_AFTER = 'after';
+	const TRIGGER_PRE = 'pre';
+	const TRIGGER_CANCEL = 'cancel';
+
+	const OPERATION_FILTER = 'filter';
+
 	// Class variables {{{
 
 	// Database handling
@@ -3872,7 +3879,7 @@ class phpMyEdit
 	{
 		// in case the filters need some setup, but ignore the return
 		// value.
-		$this->exec_triggers_simple('filter', 'pre');
+		$this->exec_triggers_simple(self::OPERATION_FILTER, self::TRIGGER_PRE);
 
 		/* FILTER {{{
 		 *
@@ -4698,7 +4705,7 @@ class phpMyEdit
 		if ($this->change_operation()) {
 			$trigger = self::SQL_QUERY_UPDATE;
 			$formCssClass = $this->getCSSclass('change', null, null, $postfix);
-			if (!$this->exec_triggers_simple($trigger, 'pre')) {
+			if (!$this->exec_triggers_simple($trigger, self::TRIGGER_PRE)) {
 				// if PRE update fails, then back to view operation
 				// @TODO: why? Just emit an error?
 				$this->operation = $this->labels['View'];
@@ -4719,7 +4726,7 @@ class phpMyEdit
 				$formCssClass = $this->getCSSclass('delete', null, null, $postfix);
 				$trigger = self::SQL_QUERY_DELETE;
 			}
-			$ret = $this->exec_triggers_simple($trigger, 'pre');
+			$ret = $this->exec_triggers_simple($trigger, self::TRIGGER_PRE);
 			// if PRE insert/view/delete fail, then back to the list
 			if ($ret == false) {
 				// @TODO: this may be located in another window
@@ -4853,7 +4860,7 @@ class phpMyEdit
 		// Creating array of changed keys ($changed)
 		$changed = array_keys($newvals);
 		// Before trigger, newvals can be efectively changed
-		if ($this->exec_triggers(self::SQL_QUERY_INSERT, 'before', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_INSERT, self::TRIGGER_BEFORE, $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 
@@ -4942,7 +4949,7 @@ class phpMyEdit
 		}
 		// After trigger
 		$changed = array_keys($newvals); // rebuild if reset by previous triggers.
-		if ($this->exec_triggers(self::SQL_QUERY_INSERT, 'after', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_INSERT, self::TRIGGER_AFTER, $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 		return true;
@@ -5054,7 +5061,7 @@ class phpMyEdit
 
 
 		// Before trigger
-		if ($this->exec_triggers(self::SQL_QUERY_UPDATE, 'before', $oldvals, $changed, $newvals) === false) {
+		if ($this->exec_triggers(self::SQL_QUERY_UPDATE, self::TRIGGER_BEFORE, $oldvals, $changed, $newvals) === false) {
 			return false;
 		}
 
@@ -5198,7 +5205,7 @@ class phpMyEdit
 			$this->logQuery(self::SQL_QUERY_UPDATE, $oldvals, $changed, $newvals);
 		}
 		// After trigger
-		if ($this->exec_triggers(self::SQL_QUERY_UPDATE, 'after', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_UPDATE, self::TRIGGER_AFTER, $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 		return $updateResult; // return error or success status of the update query
@@ -5218,7 +5225,7 @@ class phpMyEdit
 		$changed = is_array($oldvals) ? array_keys($oldvals) : array();
 		$newvals = array();
 		// Before trigger
-		if ($this->exec_triggers(self::SQL_QUERY_DELETE, 'before', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_DELETE, self::TRIGGER_BEFORE, $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 		if (!empty($changed)) {
@@ -5249,7 +5256,7 @@ class phpMyEdit
 			$this->logQuery(self::SQL_QUERY_DELETE, $oldvals, $changed, null);
 		}
 		// After trigger
-		if ($this->exec_triggers(self::SQL_QUERY_DELETE, 'after', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers(self::SQL_QUERY_DELETE, self::TRIGGER_AFTER, $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
 		return true;
@@ -5702,16 +5709,16 @@ class phpMyEdit
 		 */
 		// Cancel button - Cancel Triggers
 		if ($this->add_canceled() || $this->copy_canceled()) {
-			$this->exec_triggers_simple(self::SQL_QUERY_INSERT, 'cancel');
+			$this->exec_triggers_simple(self::SQL_QUERY_INSERT, self::TRIGGER_CANCEL);
 		}
 		if ($this->view_canceled()) {
-			$this->exec_triggers_simple(self::SQL_QUERY_SELECT, 'cancel');
+			$this->exec_triggers_simple(self::SQL_QUERY_SELECT, self::TRIGGER_CANCEL);
 		}
 		if ($this->change_canceled() || $this->change_reloaded()) {
-			$this->exec_triggers_simple(self::SQL_QUERY_UPDATE, 'cancel');
+			$this->exec_triggers_simple(self::SQL_QUERY_UPDATE, self::TRIGGER_CANCEL);
 		}
 		if ($this->delete_canceled()) {
-			$this->exec_triggers_simple(self::SQL_QUERY_DELETE, 'cancel');
+			$this->exec_triggers_simple(self::SQL_QUERY_DELETE, self::TRIGGER_CANCEL);
 		}
 		// Save/More Button - database operations
 		if ($this->label_cmp($this->saveadd, 'Save')
