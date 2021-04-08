@@ -28,6 +28,7 @@ use Ramsey\Uuid\UuidInterface;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -38,11 +39,13 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\Table(name="ProjectParticipantFields")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldsRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
 
   /**
    * @var int
@@ -89,8 +92,8 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var ProjectParticipantFieldMetaDatum
    *
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist"}, fetch="EXTRA_LAZY")
-   * @ORM\OrderBy({"label" = "ASC"})
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist","remove"}, orphanRemoval=true)
+   * @ ORM\OrderBy({"label" = "ASC"})
    */
   private $dataOptions;
 
@@ -142,13 +145,6 @@ class ProjectParticipantField implements \ArrayAccess
    * @ORM\Column(type="string", length=1024, nullable=true, options={"comment"="Empty or comma separated list of groups allowed to change the field."})
    */
   private $writers = null;
-
-  /**
-   * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
-   */
-  private $disabled = false;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="field", fetch="EXTRA_LAZY")
@@ -305,6 +301,16 @@ class ProjectParticipantField implements \ArrayAccess
   public function getFieldData():Collection
   {
     return $this->fieldData;
+  }
+
+  /**
+   * Return the number of data items associated with this field.
+   *
+   * @return int
+   */
+  public function usage():int
+  {
+    return $this->fieldData->count();
   }
 
   /**
@@ -572,29 +578,5 @@ class ProjectParticipantField implements \ArrayAccess
   public function getWriters()
   {
     return $this->writers;
-  }
-
-  /**
-   * Set disabled.
-   *
-   * @param bool $disabled
-   *
-   * @return ProjectParticipantField
-   */
-  public function setDisabled($disabled):ProjectParticipantField
-  {
-    $this->disabled = $disabled;
-
-    return $this;
-  }
-
-  /**
-   * Get disabled.
-   *
-   * @return bool
-   */
-  public function getDisabled()
-  {
-    return $this->disabled;
   }
 }

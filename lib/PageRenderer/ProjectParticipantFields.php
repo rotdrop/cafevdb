@@ -300,24 +300,14 @@ class ProjectParticipantFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['participant-fields-usage'],
     ];
 
-    if ($this->showDisabled) {
-      $opts['fdd']['disabled'] = [
+    $opts['fdd']['deleted'] = array_merge(
+      $this->defaultFDD['deleted'], [
         'tab' => [ 'id' => 'advanced' ],
-        'name'     => $this->l->t('Disabled'),
+        'name' => $this->l->t('Deleted'),
         'css'      => [ 'postfix' => ' participant-field-disabled' ],
-        'select'   => 'C',
-        'maxlen'   => 1,
-        'sort'     => true,
-        'escape'   => false,
-        'align'    => 'center',
-        'sqlw'     => 'IF($val_qas = "", 0, 1)',
-        'values2|CAP' => [ 1 => '' ],
-        'values2|LVFD' => [ 1 => $this->l->t('true'),
-                            0 => $this->l->t('false') ],
-        'default'  => false,
         'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
-      ];
-    }
+        'input' => ($this->showDisabled) ? 'R' : 'RH',
+    ]);
 
     $opts['fdd']['multiplicity'] =[
       'name'    => $this->l->t('Multiplicity'),
@@ -954,13 +944,33 @@ class ProjectParticipantFields extends PMETableViewBase
    */
   public function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $used = $this->usedFields(-1, $pme->rec);
+    /** @var Entities\ProjectParticipantField $field */
+    $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($pme->rec);
 
-    if (count($used) === 1 && $used[0] == $pme->rec) {
-      $this->disable($pme->rec);
-      return false;
+    if (empty($field)) {
+      throw new \RuntimeException($this->l->t('Unable to find participant field for id "%s"', $pme->rec));
     }
-    return true;
+    if (!$field->isDeleted()) {
+      $this->remove($field, true); // this should be soft-delete
+    }
+    // Gedmo\SoftDeleteable does not cascade by itself, unfortunately,
+    // so we need to do this by ourselves. Make sure all options are
+    // also soft-deleted.
+    foreach ($field->getDataOptions() as $dataOption) {
+      if (!$dataOption->isDeleted()) {
+        $this->remove($dataOption);
+      }
+    }
+    // if the field is no long in use then it is safe to delete it and
+    // all its associated options.
+    if ($field->usage() == 0) {
+      $this->remove($field, true); // this should be hard-delete and cascade
+    }
+    $this->flush();
+
+    $changed = []; // disable PME delete query
+
+    return true; // but run further triggers if appropriate
   }
 
   private function usedFields($projectId = -1, $fieldId = -1)

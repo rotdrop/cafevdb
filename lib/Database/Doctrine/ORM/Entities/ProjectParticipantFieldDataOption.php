@@ -39,6 +39,8 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\Table(name="ProjectParticipantFieldsDataOptions")
  * @ORM\Entity
  * @Gedmo\SoftDeleteable(fieldName="deleted")
+ *
+ * @todo Check whether soft-deletion is really necessary here.
  */
 class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
@@ -50,7 +52,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Link back to ProjectParticipantField
    *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="dataOptions", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="dataOptions")
    * @ORM\Id
    */
   private $field;
