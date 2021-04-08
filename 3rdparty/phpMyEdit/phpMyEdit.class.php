@@ -857,7 +857,8 @@ class phpMyEdit
 		return $ret;
 	} /* }}} */
 
-    /**Compute meta-data to translate data-base values etc. to display
+    /**
+	 * Compute meta-data to translate data-base values etc. to display
 	 * values, compute groups for select boxes, tooltips and the
 	 * like. Remember the results in $this->fdd[$k]['set_values'] as
 	 * the values that have been set (i.e. computed or feched from the
@@ -1213,10 +1214,10 @@ class phpMyEdit
 		if ($this->col_has_sql($field) && (!$this->col_has_description($field) || $dont_desc)) {
 			return $this->sql_field($field, $flags & self::OMIT_SQL);
 		}
-		// on copy/change always use simple key retrieving, or given sql descriptor
+		// on copy/change/add always use simple key retrieving, or given sql descriptor
 		if ($this->add_operation()
-			|| $this->view_operation()
-			|| $this->delete_operation()
+			// || $this->view_operation()
+			// || $this->delete_operation()
 			|| $this->copy_operation()
 			|| $this->change_operation()) {
 			return $this->sql_field($field, $flags & self::OMIT_SQL);
