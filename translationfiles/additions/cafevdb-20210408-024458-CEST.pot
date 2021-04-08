@@ -1,0 +1,14 @@
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:244
+#, php-format
+msgid "extra field type file-data"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:244
+#, php-format
+msgid "extra field type upload-area"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/part.debug-mode.php:39
+#, php-format
+msgid "L10N"
+msgstr ""
