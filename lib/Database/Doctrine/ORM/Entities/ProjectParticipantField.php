@@ -27,6 +27,7 @@ use Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -233,6 +234,26 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
+   * Get the options without UUID zero
+   *
+   * @return Collection
+   */
+  public function getSelectableOptions():Collection
+  {
+    return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL ]));
+  }
+
+  /**
+   * Get the special option holding management data if present.
+   *
+   * @return null|ProjectParticipantFieldDataOption
+   */
+  public function getManagementOption():?ProjectParticipantFieldDataOption
+  {
+    return $this->getDataOption(Uuid::NIL);
+  }
+
+  /**
    * Get one specific option
    *
    * @param mixed $key Everything which can be converted to an UUID by
@@ -242,18 +263,23 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function getDataOption($key):?ProjectParticipantFieldDataOption
   {
-    if (empty($key = Uuid::uuidBytes($key))) {
+    if (empty($key = Uuid::asUuid($key))) {
       return null;
     }
-    $option = $this->dataOptions->get($key);
+    $bytes = $key->getBytes();
+    $option = $this->dataOptions->get($bytes);
     if (!empty($option)) {
       return $option;
     }
-    foreach ($this->dataOptions as $option) {
-      if ($option->getKey()->getBytes() == $key) {
-        return $option;
-      }
+    $matching = $this->dataOptions->matching(DBUtil::criteriaWhere(['key' => $key]));
+    if ($matching->count() == 1) {
+      return $matching->first();
     }
+    // foreach ($this->dataOptions as $option) {
+    //   if ($option->getKey()->getBytes() == $bytes) {
+    //     return $option;
+    //   }
+    // }
     return null;
   }
 
