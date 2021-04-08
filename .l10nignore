@@ -8,3 +8,9 @@ js/
 css/
 report.html
 visualizer-stats.html
+lib/instrument-insurance.php
+lib/project-extra.php
+lib/project-payments.php
+lib/musicians.php
+lib/detailed-instrumentation.php
+lib/Finance/
