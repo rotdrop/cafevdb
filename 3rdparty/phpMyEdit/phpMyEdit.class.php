@@ -2168,7 +2168,11 @@ class phpMyEdit
 							}
 							break;
 						default:
-							echo ' '.$attributeKey.'="'.$attributeValue.'"';
+							if (!is_string($attributeValue)) {
+								echo ' '.$attributeKey.'='."'".json_encode($attributeValue)."'";
+							} else {
+								echo ' '.$attributeKey.'="'.$attributeValue.'"';
+							}
 							break;
 						}
 					}
@@ -2449,7 +2453,11 @@ class phpMyEdit
 						}
 						break;
 					default:
-						echo ' '.$attributeKey.'="'.$attributeValue.'"';
+						if (!is_string($attributeValue)) {
+							echo ' '.$attributeKey.'='."'".json_encode($attributeValue)."'";
+						} else {
+							echo ' '.$attributeKey.'="'.$attributeValue.'"';
+						}
 						break;
 					}
 				}
@@ -3070,6 +3078,7 @@ class phpMyEdit
 		if ($required !== false) {
 			$ret .= ' required';
 		}
+
 		$ret .= ' '.$js.">\n";
 		if (! is_array($selected)) {
 			$selected = $selected === null ? array() : array((string)$selected);
