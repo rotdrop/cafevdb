@@ -51,17 +51,19 @@ const addEditor = function(selector, initCallback, initialHeight) {
     console.debug('attach ckeditor');
     import('@ckeditor/ckeditor5-build-classic')
       .then(({ default: ClassicEditor }) => {
-        ClassicEditor
-          .create(editorElement.get(0))
-          .then(editor => {
-            console.debug('ckeditor promise');
-            editorElement.data('ckeditor', editor);
-            initCallback();
-          })
-          .catch(error => {
-            console.debug('There was a problem initializing the editor.', error);
-            initCallback();
-          });
+        editorElement.each(function(index) {
+          ClassicEditor
+            .create(this)
+            .then(editor => {
+              console.debug('ckeditor promise');
+              editorElement.data('ckeditor', editor);
+              initCallback();
+            })
+            .catch(error => {
+              console.debug('There was a problem initializing the editor.', error);
+              initCallback();
+            });
+        });
       })
       .catch(error => {
         console.error('There was a problem initializing the editor.', error);
