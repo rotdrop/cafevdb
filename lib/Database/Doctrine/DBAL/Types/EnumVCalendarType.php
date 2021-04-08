@@ -35,8 +35,8 @@ use MyCLabs\Enum\Enum as EnumType;
  */
 class EnumVCalendarType extends EnumType
 {
-  private const VEVENT = 'VEVENT';
-  private const VTODO = 'VTODO';
-  private const VJOURNAL = 'VJOURNAL';
-  private const VCARD = 'VCARD';
+  public const VEVENT = 'VEVENT';
+  public const VTODO = 'VTODO';
+  public const VJOURNAL = 'VJOURNAL';
+  public const VCARD = 'VCARD';
 }

@@ -35,8 +35,8 @@ use MyCLabs\Enum\Enum as EnumType;
  */
 class EnumDebitNoteJob extends EnumType
 {
-  private const AMOUNT = 'amount';
-  private const DEPOSIT = 'deposit';
-  private const INSURANCE = 'insurance';
-  private const REMAINING = 'remaining';
+  public const AMOUNT = 'amount';
+  public const DEPOSIT = 'deposit';
+  public const INSURANCE = 'insurance';
+  public const REMAINING = 'remaining';
 }

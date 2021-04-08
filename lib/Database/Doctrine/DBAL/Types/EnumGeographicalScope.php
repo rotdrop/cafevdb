@@ -36,7 +36,7 @@ use MyCLabs\Enum\Enum as EnumType;
  */
 class EnumGeographicalScope extends EnumType
 {
-  private const GERMANY = 'Germany';
-  private const EUROPE = 'Europe';
-  private const WORLD = 'World';
+  public const GERMANY = 'Germany';
+  public const EUROPE = 'Europe';
+  public const WORLD = 'World';
 }

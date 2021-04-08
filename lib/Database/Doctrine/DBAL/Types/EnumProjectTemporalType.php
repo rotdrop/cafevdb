@@ -34,7 +34,7 @@ use MyCLabs\Enum\Enum as EnumType;
  */
 class EnumProjectTemporalType extends EnumType
 {
-  private const TEMPORARY = 'temporary';
-  private const PERMANENT = 'permanent';
-  private const TEMPLATE = 'template';
+  public const TEMPORARY = 'temporary';
+  public const PERMANENT = 'permanent';
+  public const TEMPLATE = 'template';
 }

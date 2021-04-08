@@ -66,19 +66,19 @@ use MyCLabs\Enum\Enum as EnumType;
  */
 class EnumParticipantFieldDataType extends EnumType
 {
-  private const TEXT = 'text';
-  private const HTML = 'html';
-  private const BOOLEAN = 'boolean';
-  private const INTEGER = 'integer';
-  private const FLOAT = 'float';
-  private const DATE = 'date';
-  private const DATETIME = 'datetime';
-  private const SERVICE_FEE = 'service-fee';
-  private const DEPOSIT = 'deposit';
-  private const FILE_DATA = 'file-data';
+  public const TEXT = 'text';
+  public const HTML = 'html';
+  public const BOOLEAN = 'boolean';
+  public const INTEGER = 'integer';
+  public const FLOAT = 'float';
+  public const DATE = 'date';
+  public const DATETIME = 'datetime';
+  public const SERVICE_FEE = 'service-fee';
+  public const DEPOSIT = 'deposit';
+  public const FILE_DATA = 'file-data';
 
   /**
    * {@see EnumParticipantFieldDataType::UPLOAD_AREA()}
    */
-  private const UPLOAD_AREA = 'upload-area';
+  public const UPLOAD_AREA = 'upload-area';
 };

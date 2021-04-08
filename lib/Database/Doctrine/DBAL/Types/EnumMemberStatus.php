@@ -38,9 +38,9 @@ use MyCLabs\Enum\Enum as EnumType;
  */
 class EnumMemberStatus extends EnumType
 {
-  private const REGULAR = 'regular';
-  private const PASSIVE = 'passive';
-  private const SOLOIST = 'soloist';
-  private const CONDUCTOR = 'conductor';
-  private const TEMPORARY = 'temporary';
+  public const REGULAR = 'regular';
+  public const PASSIVE = 'passive';
+  public const SOLOIST = 'soloist';
+  public const CONDUCTOR = 'conductor';
+  public const TEMPORARY = 'temporary';
 }

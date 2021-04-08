@@ -39,11 +39,11 @@ use MyCLabs\Enum\Enum as EnumType;
  */
 class EnumParticipantFieldMultiplicity extends EnumType
 {
-  private const SIMPLE = 'simple';
-  private const SINGLE = 'single';
-  private const MULTIPLE = 'multiple';
-  private const PARALLEL = 'parallel';
-  private const RECURRING = 'recurring';
-  private const GROUPOFPEOPLE = 'groupofpeople';
-  private const GROUPSOFPEOPLE = 'groupsofpeople';
+  public const SIMPLE = 'simple';
+  public const SINGLE = 'single';
+  public const MULTIPLE = 'multiple';
+  public const PARALLEL = 'parallel';
+  public const RECURRING = 'recurring';
+  public const GROUPOFPEOPLE = 'groupofpeople';
+  public const GROUPSOFPEOPLE = 'groupsofpeople';
 }
