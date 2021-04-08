@@ -82,7 +82,7 @@ class ProjectParticipantsController extends Controller {
    */
   public function addMusicians($projectId, $projectName, $musicianId = null)
   {
-    $this->logInfo($projectId.' '.$projectName.' '.$musicianId);
+    $this->logInfo($projectId.' '.$projectName.' '.$muicianId);
 
     // Multi-mode:
     // projectId: ID

@@ -358,6 +358,12 @@ help text in order to inform others what this option is about.'),
         'limit' => $this->l->t('The maximum allowed number of people in a "group of people" field'),
       ],
 
+      'participant-fields-recurring-data' => [
+        'delete-undelete' => $this->l->t('Delete or undelete the receivable for this musician. The data will only be deleted when hitting the "save"-button of the form. Undelete is only possible until the "save"-button has been clicked.'),
+        'regenerate' => $this->l->t('Recompute the values of this particular recurring field. The action will be performed immediately.'),
+        'regenerate-all' => $this->l->t('Recompute all receivables for the musician. Note that this will reload the input-form discarding all changes which have not been saved yet.'),
+      ],
+
       'participant-fields-data-options-single' => $this->l->t('For a surcharge option, please enter here the surcharge amount
 associated with this option.'),
 
@@ -669,6 +675,8 @@ Suchkriterien zu verstecken.'),
       ),
 
       'pme-instrumentation-actions' => $this->l->t('Some usefull convenience actions (click me for details!)'),
+
+      'pme-lock-unlock' => $this->l->t('Lock and unlock the underlying input-field.'),
 
       'pme-more' => array(
         'moreadd' => $this->l->t('Saves the current values and start to generate another new data-set.'),

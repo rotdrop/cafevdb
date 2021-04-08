@@ -329,8 +329,13 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'sequence',
     ];
 
-    /* For each extra field add one dedicated join table entry
+    /**
+     * For each extra field add one dedicated join table entry
      * which is pinned to the respective field-id.
+     *
+     * @todo Joining many tables with multiple rows per join key is a
+     * performance hit. Maybe all those joins should be replaced by
+     * only a single one by using IF-clauses inside the GROUP_CONCAT().
      */
     $participantFieldJoinIndex = [];
     foreach ($participantFields as $field) {
@@ -1076,6 +1081,7 @@ class ProjectParticipants extends PMETableViewBase
         }
         break;
       case 'recurring':
+
         /**********************************************************************
          *
          * Recurring auto-generated fields
@@ -1101,7 +1107,7 @@ class ProjectParticipants extends PMETableViewBase
         foreach ($dataOptions as $dataOption) {
           $values2[(string)$dataOption['key']] = $dataOption['label'];
         }
-        $keyFdd['values2|LF'] = $values2;
+        $keyFdd['values2|LFVD'] = $values2;
 
         $keyFdd['values|FL'] = array_merge(
           $keyFdd['values'], [
@@ -1114,9 +1120,9 @@ class ProjectParticipants extends PMETableViewBase
           // come from the filter's $value2 array. The actual values
           // we need are in the description fields which are passed
           // through the 'qf'.$k field in $row.
-          $this->logInfo('VALUE '.$k.': '.$value);
-          $this->logInfo('QF'.$k.': '.$row['qf'.$k]);
-          $this->logInfo('QF'.$k.'_IDX: '.$row['qf'.$k.'_idx']);
+          $this->logInfo('VALUE '.$op.' '.$k.': '.$value);
+          $this->logInfo('QF '.$op.' '.$k.': '.$row['qf'.$k]);
+          $this->logInfo('QF '.$op.' '.$k.'_IDX: '.$row['qf'.$k.'_idx']);
 
           $values = Util::explodeIndexed($row['qf'.$k]);
           $html = [];
@@ -1150,7 +1156,7 @@ class ProjectParticipants extends PMETableViewBase
           $values = Util::explodeIndexed($value);
           $valueName = $this->pme->cgiDataName($valueFddName);
           $keyName = $this->pme->cgiDataName($keyFddName);
-          $html = '<table>
+          $html = '<table class="row-count-'.count($values).'">
   <thead>
     <tr><th>'.$this->l->t('Actions').'</th><th>'.$this->l->t('Subject').'</th><th>'.$this->l->t('Value [%s]', $this->currencySymbol()).'</th></tr>
   </thead>
@@ -1176,7 +1182,7 @@ class ProjectParticipants extends PMETableViewBase
   </td>
   <td class="input">
     <input id="receivable-input-'.$key.'" type=checkbox checked="checked" class="pme-input pme-input-lock-unlock left-lock"/>
-    <label class="pme-input pme-input-lock-unlock left-lock" for="receivable-input-'.$key.'"></label>
+    <label class="pme-input pme-input-lock-unlock left-lock" title="'.$this->toolTipsService['pme-lock-unlock'].'" for="receivable-input-'.$key.'"></label>
     <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$valueName.'['.$idx.']" value="'.$value.'"/>
      <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
   </td>
@@ -1184,6 +1190,17 @@ class ProjectParticipants extends PMETableViewBase
             $idx++;
           }
           $html .= '
+    <tr data-field-id="'.$field['id'].'">
+      <td class="operations" colspan="3">
+        <input
+          class="operation regenerate-all"
+          title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all'].'"
+          type="button"
+          value="'.$this->l->t('Recompute all Receivables').'"
+          title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all'].'"
+        />
+      </td>
+    </tr>
   </tbody>
 </table>';
           return $html;
@@ -1201,7 +1218,7 @@ class ProjectParticipants extends PMETableViewBase
          */
 
         // special option with Uuid::NIL holds the management information
-        $generatorOption = $field->getDataOption(Uuid::NIL);
+        $generatorOption = $field->getManagementOption();
         $valueGroups = [ -1 => $this->l->t('without group'), ];
 
         // old field, group selection
@@ -2085,6 +2102,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     $this->debug('NEWVALUES '.print_r($newValues, true));
     $this->debug('CHANGED '.print_r($changed, true));
 
+    /** @var Entities\ProjectParticipantField $participantField */
     foreach ($this->project['participantFields'] as $participantField) {
       $fieldId = $participantField['id'];
       $multiplicity = $participantField['multiplicity'];
@@ -2162,8 +2180,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         $max = PHP_INT_MAX;
         $label = $this->l->t('unknown');
         if ($multiplicity == 'groupofpeople') {
-          /** @var Entities\ProjectParticipantFieldDataOption */
-          $generatorOption = $participantField->getDataOption(Uuid::NIL);
+          /** @var Entities\ProjectParticipantFieldDataOption $generatorOption */
+          $generatorOption = $participantField->getManagementOption();
           $max = $generatorOption['limit'];
           $label = $participantField['name'];
         } else {

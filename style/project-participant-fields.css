@@ -198,6 +198,14 @@ table.pme-main tr.participant-field.recurring td.pme-value td.operations input.d
   background-image:url('../img/cafevdb-delete.svg');
 }
 
+table.pme-main tr.participant-field.recurring td.pme-value tr.deleted td.operations input.delete-undelete {
+  background-image:url('../img/history.svg');
+}
+
+table.pme-main tr.participant-field.recurring td.pme-value tr.deleted td.input * {
+  opacity:0.5;
+}
+
 /******************/
 
 table.data-options.operation-display span.service-fee.currency-amount,

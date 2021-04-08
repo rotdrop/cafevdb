@@ -251,7 +251,7 @@ class ProjectParticipantFieldsController extends Controller {
           'dataOptionSelectOption' => $options,
         ]);
       case 'regenerate':
-        if (empty($data['fieldId']) || empty($data['key'])) {
+        if (empty($data['fieldId']) || (empty($data['key']) && empty($data['musicianId']))) {
           return self::grumble($this->l->t('Missing parameters in request "%s/%s"',
                                            [ $topic, $subTopic, ]));
         }
@@ -261,11 +261,6 @@ class ProjectParticipantFieldsController extends Controller {
         $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
         if (empty($field)) {
           return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
-        }
-
-        $receivable = $field->getDataOption($data['key']);
-        if (empty($receivable)) {
-          return self::grumble($this->l->t('Unable to fetch receivable with key "%s".', $data['key']));
         }
 
         /** @var Entities\ProjectParticipant $participant */
@@ -281,6 +276,14 @@ class ProjectParticipantFieldsController extends Controller {
           }
         }
 
+        $receivable = null;
+        if (!empty($data['key'])) {
+          $receivable = $field->getDataOption($data['key']);
+          if (empty($receivable)) {
+            return self::grumble($this->l->t('Unable to fetch receivable with key "%s".', $data['key']));
+          }
+        }
+
         /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
         $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
         if (empty($generator)) {
@@ -290,11 +293,21 @@ class ProjectParticipantFieldsController extends Controller {
 
         $this->entityManager->beginTransaction();
         try {
-          $receivable = $generator->updateReceivable($receivable, $participant);
-          foreach ($receivable->getFieldData() as $receivableDatum) {
-            // unfortunately cascade does not work with multiple
-            // "complicated" associations.
-            $this->persist($receivableDatum);
+          if (!empty($receivable)) {
+            $receivable = $generator->updateReceivable($receivable, $participant);
+            foreach ($receivable->getFieldData() as $receivableDatum) {
+              // unfortunately cascade does not work with multiple
+              // "complicated" associations.
+              $this->persist($receivableDatum);
+            }
+          } else {
+            $participant = $generator->updateParticipant($participant, $receivable);
+            /** @var Entities\ProjectParticipantFieldDatum $datum */
+            foreach ($participant->getParticipantFieldsData() as $datum) {
+              if ($datum->getField()->getId() == $fieldId) {
+                $this->persist($datum);
+              }
+            }
           }
           $this->flush();
           $this->entityManager->commit();
@@ -309,11 +322,11 @@ class ProjectParticipantFieldsController extends Controller {
         }
 
         $receivableAmounts = [];
-        if (!empty($participant)) {
+        if (!empty($participant) && !empty($receivable)) {
           $participantFieldsData = $participant->getParticipantFieldsData();
           $receivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
           $receivableAmounts[$participant->getMusician()->getId()] = $receivableData->first()->getOptionValue();
-        } else {
+        } else if (!empty($receivable)) {
           /** @var Entities\ProjectParticipantFieldDatum $datum */
           foreach ($receivable->getFieldData() as $datum) {
             $receivableAmounts[$datum->getMusician()->getId()] = $datum->getOptionValue();

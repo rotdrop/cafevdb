@@ -725,11 +725,48 @@ const myReady = function(selector, resizeCB) {
       const optionKey = row.data('optionKey');
 
       // could also search for name with field-id
-      const optionKeyInput = container.closest('input[value="' + optionKey + '"]');
-      const optionValueInput = row.find('input.pme-input.service-fee');
+      const inputs = container
+        .find('input[value="' + optionKey + '"]')
+        .add(row.find('.pme-input, .operation.regenerate'));
 
-      console.info('OPTION KEY VALUE', optionKeyInput, optionValueInput);
-      // alert('hello');
+      if (row.hasClass('deleted')) {
+        inputs.prop('disabled', false);
+        row.removeClass('deleted');
+      } else {
+        inputs.prop('disabled', true);
+        row.addClass('deleted');
+      }
+
+      return false;
+    });
+
+  container
+    .find('form.pme-form tr.participant-field.recurring td.operations input.regenerate-all')
+    .on('click', function(event) {
+      const $this = $(this);
+      const row = $this.closest('tr');
+      const fieldId = row.data('fieldId');
+      const cleanup = function() {};
+      const request = 'option/regenerate';
+      $.post(
+        generateUrl('projects/participant-fields/' + request), {
+          data: {
+            fieldId,
+            musicianId,
+          },
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, [], cleanup)) {
+            return;
+          }
+          // just trigger reload
+          container.find('form.pme-form input.pme-reload').first().trigger('click');
+          cleanup();
+          Notification.messages(data.message);
+        });
       return false;
     });
 };

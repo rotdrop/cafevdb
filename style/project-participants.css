@@ -55,6 +55,11 @@ div.project-participants form.pme-form:not(.pme-change,.pme-list) td.service-fee
   width:32em;
 }
 
+div.project-participants form.pme-form tr.recurring td.pme-value td.label {
+  padding-left:0.5em;
+  padding-right:0.5em;
+}
+
 div.project-participants form.pme-form:not(.pme-change) td.service-fee.enum {
     font-family:inherit;
 }
@@ -174,8 +179,11 @@ div.project-participants td.pme-cell input.sepa-debit-mandate {
   padding: 2px 12px 2px 12px;
 }
 
-div.project-participants td.pme-value div.allowed-option-wrapper,
-div.project-participants td.pme-cell div.allowed-option-wrapper {
+/**
+ * Style first and subsequence lines in list-view
+ */
+div.project-participants form.pme-list td.pme-value div.allowed-option-wrapper,
+div.project-participants form.pme-list td.pme-cell div.allowed-option-wrapper {
   max-height:24px; /* hard restriction on table row height */
   /* line-height:12px; */
   line-height:7px;
@@ -184,14 +192,25 @@ div.project-participants td.pme-cell div.allowed-option-wrapper {
   position:relative;
 }
 
-div.project-participants td.pme-value div.allowed-option-wrapper::first-line,
-div.project-participants td.pme-cell div.allowed-option-wrapper::first-line {
+div.project-participants form.pme-list td.pme-value div.allowed-option-wrapper::first-line,
+div.project-participants form.pme-list td.pme-cell div.allowed-option-wrapper::first-line {
   line-height:12px;
   font-size:150%; /* this is relative to the 2/3 above */
 }
 
-div.project-participants td.pme-value div.allowed-option-wrapper > *,
-div.project-participants td.pme-cell div.allowed-option-wrapper > *{
+div.project-participants form.pme-list td.pme-value div.allowed-option-wrapper > *,
+div.project-participants form.pme-list td.pme-cell div.allowed-option-wrapper > *{
   /* -moz-transform: scale(0.5);
      zoom: 0.5; */
+}
+
+div.project-participants tr.participant-field.recurring td.pme-value td.operations input.operation.regenerate-all {
+  width:100%;
+  height:unset;
+  min-height:unset;
+  margin-right:unset;
+}
+
+div.project-participants tr.participant-field.recurring table.row-count-0 thead  {
+  display:none;
 }
