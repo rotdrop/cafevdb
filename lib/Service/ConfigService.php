@@ -288,7 +288,8 @@ class ConfigService {
     return $this->setUser($this->getUser($userId));
   }
 
-  /**Install a new user.
+  /**
+   * Install a new user.
    *
    * @parm IUser $user
    *
