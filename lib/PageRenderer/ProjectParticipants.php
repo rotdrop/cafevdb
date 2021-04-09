@@ -1136,10 +1136,6 @@ class ProjectParticipants extends PMETableViewBase
           // come from the filter's $value2 array. The actual values
           // we need are in the description fields which are passed
           // through the 'qf'.$k field in $row.
-          $this->logInfo('VALUE '.$op.' '.$k.': '.$value);
-          $this->logInfo('QF '.$op.' '.$k.': '.$row['qf'.$k]);
-          $this->logInfo('QF '.$op.' '.$k.'_IDX: '.$row['qf'.$k.'_idx']);
-
           $values = Util::explodeIndexed($row['qf'.$k]);
           $html = [];
           foreach ($values as $key => $value) {
@@ -2368,24 +2364,25 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
     $extraTabs = [];
     foreach ($participantFields as $field) {
-      if (empty($field['Tab'])) {
+      if (empty($field['tab'])) {
         continue;
       }
 
-      $extraTab = $field['Tab'];
-      foreach($dfltTabs as $tab) {
-        if ($extraTab === $tab['id'] ||
-            $extraTab === (string)$tab['name']) {
-          $extraTab = false;
+      $extraTab = $field['tab'];
+      foreach ($dfltTabs as $tab) {
+        if ($extraTab === $tab['id'] || $extraTab === (string)$tab['name']) {
+          $extraTab = null;
           break;
         }
       }
-      if ($extraTab !== false) {
-        $extraTabs[] = [
+      if (!empty($extraTab)) {
+        $newTab = [
           'id' => $extraTab,
           'name' => $this->l->t($extraTab),
           'tooltip' => $this->toolTipsService['participant-fields-extra-tab'],
         ];
+        $dfltTabs[] = $newTab;
+        $extraTabs[] = $newTab;
       }
     }
 
