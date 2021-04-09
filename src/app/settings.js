@@ -33,6 +33,8 @@ require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-file-download');
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
+require('jquery-ui/ui/widgets/accordion');
+require('jquery-ui/ui/widgets/tabs');
 
 require('settings.css');
 require('about.css');
@@ -423,6 +425,10 @@ const afterLoad = function(container) {
      *
      *************************************************************************/
 
+    $('div#sharing-settings').accordion({
+      heightStyle: 'content',
+    });
+
     simpleSetValueHandler(
       container.find('#calendars :input, #contacts :input'),
       'blur',
@@ -436,60 +442,58 @@ const afterLoad = function(container) {
       }
     );
 
-    const sharedFolder =
-          function(cssBase, callback) {
-            const form = container.find('#' + cssBase + '-form');
-            const css = cssBase;
-            const cssSaved = cssBase + '-saved';
-            const cssForce = cssBase + '-force';
-            const cssCheck = cssBase + '-check';
-            const sharedObject = container.find('#' + css);
-            const sharedObjectSaved = container.find('#' + cssSaved);
-            const sharedObjectForce = container.find('#' + cssForce);
-            const sharedObjectCheck = container.find('#' + cssCheck);
+    container.find('#sharedfolder-form').submit(function() { return false; }); // @@TODO ???
 
-            form.submit(function() { return false; }); // @@TODO ???
+    const sharedFolder = function(cssBase, callback) {
+      const css = cssBase;
+      const cssSaved = cssBase + '-saved';
+      const cssForce = cssBase + '-force';
+      const cssCheck = cssBase + '-check';
+      const sharedObject = container.find('#' + css);
+      const sharedObjectSaved = container.find('#' + cssSaved);
+      const sharedObjectForce = container.find('#' + cssForce);
+      const sharedObjectCheck = container.find('#' + cssCheck);
 
-            sharedObjectForce.blur(function(event) { // @@TODO ???
-              return false;
-            });
+      sharedObjectForce.blur(function(event) { // @@TODO ???
+        return false;
+      });
 
-            sharedObjectForce.click(function(event) {
-              msg.hide();
-              if (!sharedObjectForce.is(':checked') && sharedObjectSaved.val() !== '') {
-                sharedObject.val(sharedObjectSaved.val());
-                sharedObject.prop('disabled', true);
-              } else {
-                sharedObject.prop('disabled', false);
-              }
-            });
+      sharedObjectForce.click(function(event) {
+        msg.hide();
+        if (!sharedObjectForce.is(':checked') && sharedObjectSaved.val() !== '') {
+          sharedObject.val(sharedObjectSaved.val());
+          sharedObject.prop('disabled', true);
+        } else {
+          sharedObject.prop('disabled', false);
+        }
+      });
 
-            simpleSetValueHandler(
-              sharedObjectCheck, 'click', msg, {
-                success(element, data, value, msg) { // done
-                  // value is just the thing submitted to the AJAX call
-                  sharedObject.val(data.value);
-                  sharedObjectSaved.val(data.value);
-                  if (value !== '') {
-                    sharedObject.prop('disabled', true);
-                    sharedObjectForce.prop('checked', false);
-                  }
-                  if (callback !== undefined) {
-                    callback(element, data, value, msg);
-                  }
-                },
-                getValue(element, msg) { // getValue
-                  return {
-                    name: css,
-                    value: {
-                      [css]: sharedObject.val(),
-                      [cssSaved]: sharedObjectSaved.val(),
-                      [cssForce]: sharedObjectForce.is(':checked'),
-                    },
-                  };
-                },
-              });
-          };
+      simpleSetValueHandler(
+        sharedObjectCheck, 'click', msg, {
+          success(element, data, value, msg) { // done
+            // value is just the thing submitted to the AJAX call
+            sharedObject.val(data.value);
+            sharedObjectSaved.val(data.value);
+            if (value !== '') {
+              sharedObject.prop('disabled', true);
+              sharedObjectForce.prop('checked', false);
+            }
+            if (callback !== undefined) {
+              callback(element, data, value, msg);
+            }
+          },
+          getValue(element, msg) { // getValue
+            return {
+              name: css,
+              value: {
+                [css]: sharedObject.val(),
+                [cssSaved]: sharedObjectSaved.val(),
+                [cssForce]: sharedObjectForce.is(':checked'),
+              },
+            };
+          },
+        });
+    };
 
     /**************************************************************************
      *
@@ -497,10 +501,15 @@ const afterLoad = function(container) {
      *
      *************************************************************************/
 
-    sharedFolder('sharedfolder');
-    sharedFolder('projectsfolder', function(element, data, value, msg) {
-      $('#projectsbalancefolderform fieldset').prop('disabled', value === '');
+    sharedFolder('sharedfolder', function(element, data, value, msg) {
+      $('div#sharing-settings span.sharedfolder').html(value); // update
     });
+    sharedFolder('projectsfolder', function(element, data, value, msg) {
+      $('#projectsbalancefolder-fieldset').prop('disabled', value === '');
+      $('#projectparticipantsfolder-fieldset').prop('disabled', value === '');
+      $('div#sharing-settings span.projectsfolder').html(value); // update
+    });
+    sharedFolder('projectparticipantsfolder');
     sharedFolder('projectsbalancefolder');
 
   } // shared objects
@@ -659,6 +668,10 @@ const afterLoad = function(container) {
         });
     }
   }
+
+  $('form#orchestra').accordion({
+    heightStyle: 'content',
+  });
 
   {
     /**************************************************************************
@@ -1041,15 +1054,19 @@ const documentReady = function(container) {
     container = $(containerSelector);
   }
 
-  container.on('tabsselect', tabsSelector, function(event, ui) {
+  container.on('tabsbeforeactivate', container.is(tabsSelector) ? null : tabsSelector, function(event, ui) {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
   });
 
-  container.on('tabsshow', tabsSelector, function(event, ui) {
-    if (ui.index === 3) {
+  container.on('tabsactivate', container.is(tabsSelector) ? null : tabsSelector, function(event, ui) {
+    if (ui.newPanel[0].id === 'tabs-5') {
       $('#smtpsecure').chosen({ disable_search_threshold: 10 });
       $('#imapsecure').chosen({ disable_search_threshold: 10 });
+    } else if (ui.newPanel[0].id === 'tabs-4') {
+      $('div#sharing-settings').accordion('refresh');
+    } else if (ui.newPanel[0].id === 'tabs-3') {
+      $('form#orchestra').accordion('refresh');
     } else {
       // $('#smtpsecure').chosen().remove();
       // $('#imapsecure').chosen().remove();

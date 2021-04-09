@@ -96,3 +96,8 @@ div.ck.ck-reset {
 ul.ui-autocomplete.ui-widget.ui-front {
   z-index:10000;
 }
+
+span.ui-accordion-header-icon {
+  margin:unset;
+  float:unset;
+}

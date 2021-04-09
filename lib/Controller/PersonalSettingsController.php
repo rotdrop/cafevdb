@@ -242,6 +242,7 @@ class PersonalSettingsController extends Controller {
    *
    * @NoAdminRequired
    * @SubAdminRequired
+   * @UseSession
    *
    * @bug This function is too big.
    */
@@ -827,8 +828,6 @@ class PersonalSettingsController extends Controller {
       return self::response($this->l->t('Successfully changed passsword for `%s\'.', [$shareOwnerUid]));
 
     case 'sharedfolder':
-      $this->calDavService->createCalendar('TestTestTest');
-
       $appGroup = $this->getConfigValue('usergroup');
       if (empty($appGroup)) {
         return self::grumble($this->l->t('App user-group is not set.'));
@@ -874,6 +873,7 @@ class PersonalSettingsController extends Controller {
                       [$real, $e->getMessage()]));
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
+    case 'projectparticipantsfolder':
     case 'projectsbalancefolder':
     case 'projectsfolder':
       $appGroup = $this->getConfigValue('usergroup');
@@ -903,9 +903,13 @@ class PersonalSettingsController extends Controller {
       if ($actual != $saved) {
         return self::grumble($this->l->t('Submitted `%s\' != `%s\' (stored)', [$saved, $actual]));
       }
+      // shortcut for participants folder
+      if ($parameter == 'projectparticipantsfolder') {
+        $this->setConfigValue($parameter, $real);
+        return self::valueResponse($real, $this->l->t('Participants-folder set to "%s".', $real));
+      }
       try {
         if (empty($saved) || $force) {
-
           if ($this->configCheckService->checkProjectFolder($real)) {
             $this->setConfigValue($parameter, $real);
             return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'.', [$real]));

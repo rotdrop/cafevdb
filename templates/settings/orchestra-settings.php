@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -37,8 +38,9 @@ foreach ($localeCountryNames as $country => $name) {
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin">
   <form id="orchestra">
+    <h4><?php echo $l->t('Street Address'); ?></h4>
     <fieldset <?php echo $off; ?> >
-      <legend><?php echo $l->t('Street Address'); ?></legend>
+      <!-- <legend><?php echo $l->t('Street Address'); ?></legend> -->
       <input class="streetAddressName" type="text"
              id="streetAddressName01"
              name="streetAddressName01"
@@ -90,8 +92,9 @@ foreach ($localeCountryNames as $country => $name) {
              title="<?php echo $l->t('Phone number in international format, e.g. +49-761-123456.'); ?>"
              placeholder="<?php echo $l->t('phone'); ?>"><br/>
     </fieldset>
+    <h4><?php echo $l->t('Bank Account'); ?></h4>
     <fieldset <?php echo $off; ?> >
-      <legend><?php echo $l->t('Bank Account'); ?></legend>
+      <!-- <legend><?php echo $l->t('Bank Account'); ?></legend> -->
       <input class="bankAccountOwner" type="text"
              id="bankAccountOwner"
              name="bankAccountOwner"
@@ -123,8 +126,9 @@ foreach ($localeCountryNames as $country => $name) {
              title="<?php echo $l->t('Creditor identifier of the orchestra'); ?>"
              placeholder="<?php echo $l->t('orchestra\'s CI'); ?>"/><br/>
     </fieldset>
+    <h4><?php echo $l->t('Executive board and club members'); ?></h4>
     <fieldset <?php echo $off; ?> class="chosen-dropup">
-      <legend><?php echo $l->t('Executive board and club members'); ?></legend>
+      <!-- <legend><?php echo $l->t('Executive board and club members'); ?></legend> -->
       <input class="specialMemberProjects"
              type="button"
              name="memberProjectCreate"
@@ -253,10 +257,10 @@ foreach ($localeCountryNames as $country => $name) {
       </select>
       <br/>
     </fieldset>
-    <div class="statuscontainer">
-      <span class="statusmessage" id="msg"></span>
-      <span class="statusmessage" id="suggestion"></span>
-      &nbsp;
-    </div>
   </form>
+  <div class="statuscontainer">
+    <span class="statusmessage" id="msg"></span>
+    <span class="statusmessage" id="suggestion"></span>
+    &nbsp;
+  </div>
 </div>

@@ -259,6 +259,7 @@ class PersonalForm {
 
             'sharedfolder' => $this->getConfigValue('sharedfolder',''),
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),
+            'projectparticipantsfolder' => $this->getConfigValue('projectparticipantsfolder',''),
             'projectsbalancefolder' => $this->getConfigValue('projectsbalancefolder',''),
 
             'translations' => $this->translationService->getTranslations(),
