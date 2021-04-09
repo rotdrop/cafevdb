@@ -83,11 +83,30 @@ class Musician implements \ArrayAccess
    */
   private $displayName;
 
-  // /**
-  //  * @ORM\Column(type="string", length=256, unique=true)
-  //  * @Gedmo\Slug(fields={"firstName", "surName"}, separator=".", unique=true)
-  //  */
-  // private $slug;
+  /**
+   * This should look like a suitable user id, e.g.
+   *
+   * "official":  firstName.surName, nickName.surName
+   * "personal":  firstName or firstname-FIRSTLETER_OF_SURNAME, e.g kathap, kathid
+   *
+   * We use the semi-official nickName.surName, e.g. katha.puff. This
+   * is achieved by passing the firstName as well as the nickName to
+   * the slug generator. It will just remove empty fields.
+   *
+   * @ORM\Column(type="string", length=256, unique=true, nullable=true, options={"collation"="ascii_bin"})
+   * @Gedmo\Slug(
+   *   fields={"firstName", "nickName", "surName"},
+   *   separator=".", unique=true, updatable=true,
+   *   handlers={
+   *     @Gedmo\SlugHandler(
+   *       class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler",
+   *       options={
+   *         @Gedmo\SlugHandlerOption(name="separator", value="-"),
+   *         @Gedmo\SlugHandlerOption(name="preferred", value={1,2})
+   *       })
+   *   })
+   */
+  private $userIdSlug;
 
   /**
    * @var string
@@ -874,4 +893,27 @@ class Musician implements \ArrayAccess
     return $this->nickName;
   }
 
+  /**
+   * Set userIdSlug.
+   *
+   * @param string|null $userIdSlug
+   *
+   * @return Musician
+   */
+  public function setUserIdSlug(?string $userIdSlug):Musician
+  {
+    $this->userIdSlug = $userIdSlug;
+
+    return $this;
+  }
+
+  /**
+   * Get userIdSlug.
+   *
+   * @return string
+   */
+  public function getUserIdSlug():?string
+  {
+    return $this->userIdSlug;
+  }
 }

@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use chillerlan\QRCode\QRCode;
+use Behat\Transliterator\Transliterator;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
@@ -418,6 +419,39 @@ make sure that the musicians are also automatically added to the
       ],
     ];
 
+    $opts['fdd']['user_id_slug'] = [
+      'tab'      => [ 'id' => 'tab-all' ],
+      'name'     => $this->l->t('User Id'),
+      'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'input|LF' => 'H',
+      // 'options'  => 'AVCPD',
+      'select'   => 'T',
+      'maxlen'   => 256,
+      'sort'     => true,
+      'display|ACP' => [
+        'attributes' => function($op, $row, $k, $pme) {
+          $surName = $row['qf'.($k-4)];
+          $firstName = $row['qf'.($k-3)];
+          $nickName = $row['qf'.($k-2)];
+          $placeHolder = Transliterator::transliterate($nickName?:$firstName, '-')
+                       .'.'
+                       . Transliterator::transliterate($surName, '-');
+          return [
+            'placeholder' => $placeHolder,
+            'readonly' => true,
+          ];
+        },
+        'postfix' => function($op, $pos, $row, $k, $pme) {
+          $checked = 'checked="checked" ';
+          return '<input id="pme-musician-user-id-slug"
+  type="checkbox"
+  '.$checked.'
+  class="pme-input pme-input-lock-unlock"
+/><label class="pme-input pme-input-lock-unlock" for="pme-musician-user-id-slug"></label>';
+        },
+      ],
+    ];
+
     // @todo unify soft-delete
     if ($this->showDisabled) {
       $opts['fdd']['disabled'] = [
@@ -776,6 +810,7 @@ make sure that the musicians are also automatically added to the
       $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
     }
 
+    $opts['triggers']['update']['before'][]  = [ $this, 'ensureUserIdSlug' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'extractInstrumentRanking' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
@@ -793,6 +828,9 @@ make sure that the musicians are also automatically added to the
     }
   }
 
+  /**
+   * Geneate code for a HTML-link for an optional photo.
+   */
   public function photoImageLink($musicianId, $action = 'display', $timeStamp = '')
   {
     switch ($action) {
@@ -829,6 +867,30 @@ make sure that the musicians are also automatically added to the
     default:
       return $this->l->t("Internal error, don't know what to do concerning photos in the given context.");
     }
+  }
+
+  /**
+   * Instruments are stored in a separate pivot-table, hence we have
+   * to take care of them from outside PME or use a view.
+   *
+   * @copydoc beforeTriggerSetTimestamp
+   */
+  public function ensureUserIdSlug($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $tag = 'user_id_slug';
+
+    // accept override
+    if (array_search($tag, $changed) !== false && !empty($newValues[$tag])) {
+      return true;
+    }
+
+    // force regeneration by setting the slug to a "magic" value.
+    if (empty($newValues[$tag])) {
+      $newValues[$tag] = \Gedmo\Sluggable\SluggableListener::PLACEHOLDER_SLUG;
+      $changed[] = $tag;
+    }
+
+    return true;
   }
 
   /**
