@@ -28,12 +28,14 @@ import * as Musicians from './musicians.js';
 import * as Notification from './notification.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
+import * as FileUpload from './file-upload.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 
+require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participants.css');
 
 /**
@@ -765,6 +767,44 @@ const myReady = function(selector, resizeCB) {
         });
       return false;
     });
+
+  const fileUploadTemplate = $('#fileUploadTemplate');
+  container
+    .find('form.pme-form tr.participant-field.file-data td.pme-value .file-upload-wrapper')
+    .each(function(index) {
+      const $this = $(this);
+      const optionKey = $this.data('optionKey');
+      const widgetId = 'file-upload-' + optionKey;
+      const uploadUi = fileUploadTemplate.octemplate({
+        wrapperId: widgetId,
+        formClass: 'file-upload-form',
+        accept: '*',
+        uploadName: 'files[' + optionKey + ']',
+      });
+      if ($('#' + widgetId).length === 0) {
+        $('body').append(uploadUi);
+      }
+      FileUpload.init({
+        url: generateUrl('projects/participants/upload'),
+        // doneCallback(json) {
+        //   console.info('JSON', json);
+        //   //attachmentFromJSON(json, { origin: 'upload' });
+        // },
+        stopCallback: null,
+        dropZone: null,
+        containerSelector: '#' + widgetId,
+        inputSelector: 'input[type="file"]',
+      });
+
+      $this.find('a')
+        .on('click', function(event) {
+          const $fileUpload = $('#' + widgetId + ' input[type="file"]');
+          console.info('UPLOAD', $fileUpload);
+          $fileUpload.trigger('click');
+          return false;
+        });
+    });
+
 };
 
 const myDocumentReady = function() {

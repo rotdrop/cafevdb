@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -56,7 +56,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
         src="about:blank"></iframe>
 
 <!-- image file upload support with drag'n drop -->
-<form class="float hidden" id="file_upload_form" enctype="multipart/form-data">
+<form class="float hidden" id="file-upload-form" enctype="multipart/form-data">
     <input type="hidden" name="ownerId" value="-1"/>
     <input type="hidden" name="joinTable" value=""/>
     <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>
@@ -87,4 +87,19 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
       <input type="hidden" id="h" name="h" value="" />
     </fieldset>
   </form>
+</script>
+
+<!-- generic file upload support with drag'n drop -->
+<script id="fileUploadTemplate" type="text/template">
+  <div class="file-upload-wrapper" id="{wrapperId}">
+    <form class="float hidden {formClass}" enctype="multipart/form-data">
+      <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>
+      <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize']; ?>"/>
+      <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>"/>
+      <input class="file-upload-start" type="file" accept="{accept}" name="{uploadName}" />
+    </form>
+    <div class="uploadprogresswrapper">
+      <div class="uploadprogressbar"></div>
+    </div>
+  </div>
 </script>

@@ -1179,8 +1179,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   // composer tab is active. Mmmh.
   FileUpload.init({
     url: generateUrl('attachment/upload'),
-    doneCallback(json) {
-      attachmentFromJSON(json, { origin: 'upload' });
+    doneCallback(json, index, container) {
+      attachmentFromJSON(json, { origin: 'upload', index });
     },
     stopCallback: updateFileAttachments,
     dropZone: null, // initially disabled, enabled on tab-switch
@@ -1193,6 +1193,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .off('click')
     .on('click', function() {
       $('#attachment_upload_start').trigger('click');
+      return false;
     });
 
   fieldset

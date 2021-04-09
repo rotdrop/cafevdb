@@ -37,6 +37,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 
+use OCA\CAFEVDB\Common\Util;
+
 class ProjectParticipantsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -283,7 +285,82 @@ class ProjectParticipantsController extends Controller {
       return self::response($this->l->t('Validation not yet implemented'));
       break;
     }
-    return self::grumble($this->l->t('Unknown Request %s'), $context);
+    return self::grumble($this->l->t('Unknown Request %s', $context));
+  }
+
+  /**
+   * @NoAdminRequired
+   *
+   * @param string $topic
+   *
+   * @todo There should be an upload support class handling this stuff
+   */
+  public function upload($source)
+  {
+    $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
+    $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
+    $maxUploadFileSize = min($upload_max_filesize, $post_max_size);
+    $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
+
+    switch ($source) {
+    case 'upload':
+      $fileKey = 'files';
+      if (empty($_FILES[$fileKey])) {
+        // may be caused by PHP restrictions which are not caught by
+        // error handlers.
+        $contentLength = $this->request->server['CONTENT_LENGTH'];
+        $limit = \OCP\Util::uploadLimit();
+        if ($contentLength > $limit) {
+          return self::grumble(
+            $this->l->t('Upload size %s exceeds limit %s, contact your server administrator.', [
+              \OCP\Util::humanFileSize($contentLength),
+              \OCP\Util::humanFileSize($limit),
+            ]));
+        }
+        $error = error_get_last();
+        if (!empty($error)) {
+          return self::grumble(
+            $this->l->t('No file was uploaded, error message was "%s".', $error['message']));
+        }
+        return self::grumble($this->l->t('No file was uploaded. Unknown error'));
+      }
+
+      $files = Util::transposeArray($_FILES[$fileKey]);
+
+      $totalSize = 0;
+      foreach ($files as &$file) {
+
+        $totalSize += $file['size'];
+
+        if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
+          return self::grumble([
+            'message' => $this->l->t('Not enough storage available'),
+            'upload_max_file_size' => $maxUploadFileSize,
+            'max_human_file_size' => $maxHumanFileSize,
+          ]);
+        }
+
+        $file['upload_max_file_size'] = $maxUploadFileSize;
+        $file['max_human_file_size']  = $maxHumanFileSize;
+        $file['original_name'] = $file['name']; // clone
+
+        $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
+        if ($file['error'] != UPLOAD_ERR_OK) {
+          continue;
+        }
+
+        // // Move the temporary files to locations where we can find them later.
+        // if ($composer->saveAttachment($file) === false) {
+        //   $file['error'] = 99;
+        //   $file['str_error'] = $this->l->t('Couldn\'t save temporary file for: %s', $file['name']);
+        //   continue;
+        // }
+      }
+      return self::dataResponse($files);
+    default:
+      break;
+    }
+    return self::grumble($this->l->t('Unknown Request %s', $source));
   }
 
 }

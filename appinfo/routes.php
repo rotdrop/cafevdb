@@ -277,6 +277,12 @@ $routes = [
       'url' => '/projects/participants/add-musicians',
       'verb' => 'POST',
     ],
+    [
+      'name' => 'project_participants#upload',
+      'url' => '/projects/participants/upload/{source}',
+      'verb' => 'POST',
+      'defaults' => [ 'source' => 'upload' ],
+    ],
     /**
      * Musicians
      */

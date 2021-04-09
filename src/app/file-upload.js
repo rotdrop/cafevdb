@@ -48,6 +48,14 @@ const cancelUploads = function() {
   });
 };
 
+function defaultDoneCallback(file, index, container) {
+  file.status = 'new';
+  file.index = index;
+  container.data('files') || container.data('files', []);
+  container.data('files').push(file);
+  console.info(container.data('files'));
+}
+
 /**
  * To be called at some other document-ready invocation, as required.
  *
@@ -55,7 +63,7 @@ const cancelUploads = function() {
  */
 function init(options) {
   const defaultOptions = {
-    doneCallback: null,
+    doneCallback: defaultDoneCallback,
     stopCallback: null,
     dropZone: $(document),
     containerSelector: '#file_upload_wrapper',
@@ -66,10 +74,12 @@ function init(options) {
   options = $.extend({}, defaultOptions, options);
 
   const container = $(options.containerSelector);
-  const form = container.find('form.file_upload_form');
+  const form = container.find('form.file-upload-form');
   const fileUploadStart = form.find(options.inputSelector);
   const uploadProgressWrapper = container.find('div.uploadprogresswrapper');
   const progressBar = uploadProgressWrapper.find('div.uploadprogressbar');
+
+  console.info('ELEMENTS', container, form, fileUploadStart, uploadProgressWrapper);
 
   const fileUploadParam = {
     // forceIframeTransport: true,
@@ -139,6 +149,7 @@ function init(options) {
       uploadProgressWrapper.find('input.stop').show();
     },
     fail(event, data) {
+      console.info('FAIL HANDLER');
       if (typeof data.textStatus !== 'undefined' && data.textStatus !== 'success') {
         if (data.textStatus === 'abort') {
           Notification.show(t(appName, 'Upload cancelled.'), { timeout: 15 });
@@ -177,27 +188,39 @@ function init(options) {
      * @param {Object} data TBD.
      */
     done(event, data) {
+
+      console.info('DONE', data);
+
       const result = data.result;
 
-      let k;
       const errors = [];
-      if (!Array.isArray(result)) {
-        errors.push(t(appName, 'Unknown error uploading files'));
-      } else {
-        for (const upload of result) {
-          if (upload.error !== 0) {
-            errors.push(upload.str_error);
-            continue;
-          }
-          const filename = upload.original_name;
 
-          // delete jqXHR reference
-          delete globalState.FileUpload.uploadingFiles[filename];
+      const processUpload = function(upload, index) {
 
-          if (typeof options.doneCallback === 'function') {
-            options.doneCallback(upload);
-          }
+        console.info('UPLOAD ENTRY', upload, index);
+
+        if (upload.error !== 0) {
+          errors.push(upload.str_error);
+          return;
         }
+        if (!upload.original_name) {
+          errors.push(t(appName, 'Property "{property}" is missing.', { property: 'original_name' }));
+          return;
+        }
+        const filename = upload.original_name;
+
+        // delete jqXHR reference
+        delete globalState.FileUpload.uploadingFiles[filename];
+
+        if (typeof options.doneCallback === 'function') {
+          options.doneCallback(upload, index, container);
+        }
+      };
+
+      if (Array.isArray(result)) {
+        result.forEach(processUpload);
+      } else {
+        Object.entries(result).forEach(([key, value]) => processUpload(value, key));
       }
 
       // @todo Is this the "best" of all possibilities?

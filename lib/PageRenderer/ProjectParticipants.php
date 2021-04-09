@@ -41,6 +41,8 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
@@ -254,8 +256,10 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts['filters']['AND'] = [
       '$table.project_id = '.$projectId,
-      '$table.disabled <= '.intval($this->showDisabled),
     ];
+    if ($this->showDisabled) {
+      $opts['filters']['AND'][] = '$table.deleted IS NULL';
+    }
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -302,7 +306,7 @@ class ProjectParticipants extends PMETableViewBase
     // count number of finance fields
     $extraFinancial = 0;
     foreach ($participantFields as $field) {
-      $extraFinancial += ($field['dataType'] == 'service-fee' || $field['dataType'] == 'deposit');
+      $extraFinancial += ($field['dataType'] == FieldType::SERVICE_FEE || $field['dataType'] == FieldType::DEPOSIT);
     }
     if ($extraFinancial > 0) {
       $useFinanceTab = true;
@@ -886,7 +890,7 @@ class ProjectParticipants extends PMETableViewBase
       }
 
       // set tab unless overridden by field definition
-      if ($field['data_type'] == 'service-fee' || $field['data_type'] == 'deposit') {
+      if ($field['data_type'] == FieldType::SERVICE_FEE || $field['data_type'] == FieldType::DEPOSIT) {
         $tab = [ 'id' => $financeTab ];
       } else {
         $tab = [ 'id' => 'project' ];
@@ -950,10 +954,10 @@ class ProjectParticipants extends PMETableViewBase
 
       foreach ([ &$keyFdd, &$valueFdd ] as &$fdd) {
         switch ($dataType) {
-          case 'text':
+          case FieldType::TEXT:
             // default config
             break;
-          case 'html':
+          case FieldType::HTML:
             $fdd['textarea'] = [
               'css' => 'wysiwyg-editor',
               'rows' => 5,
@@ -963,25 +967,24 @@ class ProjectParticipants extends PMETableViewBase
             $fdd['display|LF'] = [ 'popup' => 'data' ];
             $fdd['escape'] = false;
             break;
-          case 'boolean':
+          case FieldType::BOOLEAN:
             // handled below
             $fdd['align'] = 'right';
             break;
-          case 'integer':
+          case FieldType::INTEGER:
             $fdd['select'] = 'N';
             $fdd['mask'] = '%d';
             $fdd['align'] = 'right';
             break;
-          case 'float':
+          case FieldType::FLOAT:
             $fdd['select'] = 'N';
             $fdd['mask'] = '%g';
             $fdd['align'] = 'right';
             break;
-          case 'date':
-          case 'datetime':
-          case 'money':
-          case 'service-fee':
-          case 'deposit':
+          case FieldType::DATE:
+          case FieldType::DATETIME:
+          case FieldType::SERVICE_FEE:
+          case FieldType::DEPOSIT:
             $style = $this->defaultFDD[$dataType];
             if (empty($style)) {
               throw new \Exception($this->l->t('Not default style for "%s" available.', $dataType));
@@ -994,7 +997,7 @@ class ProjectParticipants extends PMETableViewBase
       }
 
       switch ($multiplicity) {
-      case 'simple':
+      case FieldMultiplicity::SIMPLE:
         /**********************************************************************
          *
          * Simple input field.
@@ -1004,19 +1007,26 @@ class ProjectParticipants extends PMETableViewBase
         $keyFdd['input'] = 'VSRH';
         $valueFdd['css']['postfix'] .= ' simple-valued '.$dataType;
         switch ($dataType) {
-        case 'money':
-        case 'service-fee':
-        case 'deposit':
+        case FieldType::SERVICE_FEE:
+        case FieldType::DEPOSIT:
           unset($valueFdd['mask']);
           $valueFdd['php|VDLF'] = function($value) {
             return $this->moneyValue($value);
+          };
+          break;
+        case FieldType::FILE_DATA:
+          $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $key = $field->getDataOptions()->first()->getKey();
+            return '<div class="file-upload-wrapper" data-option-key="'.$key.'">
+  <a href="#">Blah</a>
+</div>';
           };
           break;
         default:
           break;
         }
         break;
-      case 'single':
+      case FieldMultiplicity::SINGLE:
         /**********************************************************************
          *
          * Single choice field, yes/no
@@ -1032,11 +1042,11 @@ class ProjectParticipants extends PMETableViewBase
         $keyFdd['default'] = (string)!!(int)$field['default_value'];
         $keyFdd['css']['postfix'] .= ' boolean single-valued '.$dataType;
         switch ($dataType) {
-        case 'boolean':
+        case FieldType::BOOLEAN:
           break;
         case 'money':
-        case 'service-fee':
-        case 'deposit':
+        case FieldType::SERVICE_FEE:
+        case FieldType::DEPOSIT:
           $money = $this->moneyValue(reset($valueData));
           $noMoney = $this->moneyValue(0);
           // just use the amount to pay as label
@@ -1056,16 +1066,16 @@ class ProjectParticipants extends PMETableViewBase
           break;
         } // data-type switch
         break;
-      case 'parallel':
-      case 'multiple':
+      case FieldMultiplicity::PARALLEL:
+      case FieldMultiplicity::MULTIPLE:
         /**********************************************************************
          *
          * Multiple or single choices from a set of predefined choices.
          *
          */
         switch ($dataType) {
-        case 'service-fee':
-        case 'deposit':
+        case FieldType::SERVICE_FEE:
+        case FieldType::DEPOSIT:
           foreach ($dataOptions as $dataOption) {
             $key = (string)$dataOption['key'];
             $label = $dataOption['label'];
@@ -1085,7 +1095,7 @@ class ProjectParticipants extends PMETableViewBase
             'prefix' => '<div class="allowed-option-wrapper">',
             'postfix' => '</div>',
           ];
-          if ($multiplicity == 'parallel') {
+          if ($multiplicity == FieldMultiplicity::PARALLEL) {
             $keyFdd['css']['postfix'] .= ' set hide-subsequent-lines';
             $keyFdd['select'] = 'M';
           } else {
@@ -1096,7 +1106,7 @@ class ProjectParticipants extends PMETableViewBase
           break;
         }
         break;
-      case 'recurring':
+      case FieldMultiplicity::RECURRING:
 
         /**********************************************************************
          *
@@ -1219,10 +1229,10 @@ class ProjectParticipants extends PMETableViewBase
         };
         break;
         /*
-         * end of 'recurring'
+         * end of FieldMultiplicity::RECURRING
          *
          *********************************************************************/
-      case 'groupofpeople':
+      case FieldMultiplicity::GROUPOFPEOPLE:
         /**********************************************************************
          *
          * Grouping with variable number of groups, e.g. "room-mates".
@@ -1241,7 +1251,7 @@ class ProjectParticipants extends PMETableViewBase
           $opts['fdd'], $tableName, 'musician_id', $keyFdd);
 
         // hide value field and tweak for view displays.
-        $css[] = 'groupofpeople';
+        $css[] = FieldMultiplicity::GROUPOFPEOPLE;
         $css[] = 'single-valued';
         $keyFdd = Util::arrayMergeRecursive(
           $keyFdd, [
@@ -1327,7 +1337,7 @@ WHERE pp.project_id = $projectId",
 
         $groupMemberFdd['css']['postfix'] .= ' '.implode(' ', $css);
 
-        if ($dataType == 'service-fee' || $dataType == 'deposit') {
+        if ($dataType == FieldType::SERVICE_FEE || $dataType == FieldType::DEPOSIT) {
           $groupMemberFdd['css']['postfix'] .= ' money '.$dataType;
           $fieldData = $generatorOption['data'];
           $money = $this->moneyValue($fieldData);
@@ -1348,7 +1358,7 @@ WHERE pp.project_id = $projectId",
           [ 'filters' => '$table.group_id IS NOT NULL' ]);
 
         break;
-      case 'groupsofpeople':
+      case FieldMultiplicity::GROUPSOFPEOPLE:
         /**********************************************************************
          *
          * Grouping with predefined group names, e.g. for car-sharing
@@ -1377,7 +1387,7 @@ WHERE pp.project_id = $projectId",
         foreach($dataOptions as $dataOption) {
           $valueGroups[--$idx] = $dataOption['label'];
           $data = $dataOption['data'];
-          if ($dataType == 'service-fee' || $dataType == 'deposit') {
+          if ($dataType == FieldType::SERVICE_FEE || $dataType == FieldType::DEPOSIT) {
             $data = $this->moneyValue($data);
           }
           if (!empty($data)) {
@@ -1390,9 +1400,9 @@ WHERE pp.project_id = $projectId",
         // make the field a select box for the predefined groups, like
         // for the "multiple" stuff.
 
-        $css[] = 'groupofpeople';
+        $css[] = FieldMultiplicity::GROUPOFPEOPLE;
         $css[] = 'predefined';
-        if ($dataType === 'service-fee' || $dataType === 'deposit') {
+        if ($dataType === FieldType::SERVICE_FEE || $dataType === FieldType::DEPOSIT) {
           $css[] = ' money '.$dataType;
           foreach ($groupValues2 as $key => $value) {
             $groupValues2[$key] = $this->allowedOptionLabel(
@@ -2130,7 +2140,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
       $this->debug("MULTIPLICITY ".$multiplicity);
       switch ($multiplicity) {
-      case 'simple':
+      case FieldMultiplicity::SIMPLE:
         // We fake a multi-selection field and set the user input as
         // additional field value.
         if (array_search($valueName, $changed) === false) {
@@ -2150,7 +2160,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         // tweak the option value to have the desired form
         $newValues[$valueName] = $key.self::JOIN_KEY_SEP.$newValues[$valueName];
         break;
-      case 'recurring':
+      case FieldMultiplicity::RECURRING:
         if (array_search($valueName, $changed) === false
             && array_search($keyName, $changed) === false) {
           continue 2;
@@ -2176,8 +2186,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           }
         }
         break;
-      case 'groupofpeople':
-      case 'groupsofpeople':
+      case FieldMultiplicity::GROUPOFPEOPLE:
+      case FieldMultiplicity::GROUPSOFPEOPLE:
         // Multiple predefined groups with a variable number of
         // members. Think of distributing members to cars or rooms
 
@@ -2191,7 +2201,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
         $max = PHP_INT_MAX;
         $label = $this->l->t('unknown');
-        if ($multiplicity == 'groupofpeople') {
+        if ($multiplicity == FieldMultiplicity::GROUPOFPEOPLE) {
           /** @var Entities\ProjectParticipantFieldDataOption $generatorOption */
           $generatorOption = $participantField->getManagementOption();
           $max = $generatorOption['limit'];
@@ -2211,7 +2221,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
                         [ count($newMembers), $label, $max ]));
         }
 
-        if ($multiplicity == 'groupofpeople' && !empty($newMembers)) {
+        if ($multiplicity == FieldMultiplicity::GROUPOFPEOPLE && !empty($newMembers)) {
           // make sure that a group-option exists, clean up afterwards
           if (empty($newGroupId) || $newGroupId == Uuid::NIL) {
             $newGroupId = Uuid::create();
@@ -2406,8 +2416,8 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     }
     switch ($dataType) {
     case 'money':
-    case 'service-fee':
-    case 'deposit':
+    case FieldType::SERVICE_FEE:
+    case FieldType::DEPOSIT:
       $value = $this->moneyValue($value);
       $innerCss .= ' money';
       break;
