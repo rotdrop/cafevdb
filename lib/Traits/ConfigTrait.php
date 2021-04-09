@@ -316,19 +316,25 @@ trait ConfigTrait {
     return $this->configService->findAvailableLocales();
   }
 
-  /**Return the currency symbol for the locale. */
+  /** Transliterate the given string to the given or default locale */
+  public function transliterate(string $string, $locate = null):string
+  {
+    return $this->configService->transliterate($string, $localte);
+  }
+
+  /** Return the currency symbol for the locale. */
   public function currencySymbol($locale = null)
   {
     return $this->configService->currencySymbol($locale);
   }
 
-  //!Just display the given value
+  /** Convert $value to a currency value in the given or default locale */
   public function moneyValue($value, $locale = null)
   {
     return $this->configService->moneyValue($value, $locale);
   }
 
-  //!Just display the given value
+  /** Convert a float value in the given or default locale */
   public function floatValue($value, $locale = null)
   {
     return $this->configService->floatValue($value, $locale);

@@ -615,7 +615,18 @@ class ConfigService {
     return $this->l10NFactory->findAvailableLocales();
   }
 
-  /**Return the currency symbol for the locale. */
+  /** Transliterate the given string to the given or default locale */
+  public function transliterate(string $string, $locate = null):string
+  {
+    $oldlocale = setlocale(LC_CTYPE, '0');
+    empty($locale) && $locale = $this->getLocale();
+    setlocale(LC_CTYPE, $locale);
+    $result = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+    setlocale(LC_CTYPE, $oldlocale);
+    return $result;
+  }
+
+  /** Return the currency symbol for the locale. */
   public function currencySymbol($locale = null)
   {
     if (empty($locale)) {
@@ -625,7 +636,7 @@ class ConfigService {
     return $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
   }
 
-  //!Just display the given value
+  /** Convert $value to a currency value in the given or default locale */
   public function moneyValue($value, $locale = null)
   {
     $oldlocale = setlocale(LC_MONETARY, '0');
@@ -636,7 +647,7 @@ class ConfigService {
     return $result;
   }
 
-  //! Display a float value in the given or default locale
+  /** Convert a float value in the given or default locale */
   public function floatValue($value, $locale = null)
   {
     $oldlocale = setlocale(LC_NUMERIC, '0');
