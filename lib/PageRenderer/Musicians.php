@@ -433,9 +433,9 @@ make sure that the musicians are also automatically added to the
           $surName = $row['qf'.($k-4)];
           $firstName = $row['qf'.($k-3)];
           $nickName = $row['qf'.($k-2)];
-          $placeHolder = Transliterator::transliterate($nickName?:$firstName, '-')
+          $placeHolder = Transliterator::transliterate($this->transliterate($nickName?:$firstName), '-')
                        .'.'
-                       . Transliterator::transliterate($surName, '-');
+                       . Transliterator::transliterate($this->transliterate($surName), '-');
           return [
             'placeholder' => $placeHolder,
             'readonly' => true,
