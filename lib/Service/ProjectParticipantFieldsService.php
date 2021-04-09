@@ -45,10 +45,10 @@ class ProjectParticipantFieldsService
   private const UNSUPPORTED = [
     Multiplicity::SIMPLE => [
       DataType::BOOLEAN,
-      DataType::FILE_DATA,
-      DataType::UPLOAD_AREA,
     ],
     Multiplicity::SINGLE => [
+      DataType::FILE_DATA,
+      DataType::UPLOAD_AREA,
     ],
     Multiplicity::MULTIPLE => [
       DataType::BOOLEAN,
