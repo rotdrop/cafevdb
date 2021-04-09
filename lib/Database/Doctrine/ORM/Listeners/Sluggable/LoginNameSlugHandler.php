@@ -30,12 +30,18 @@ use Gedmo\Sluggable\SluggableListener;
 use Gedmo\Sluggable\Util\Urlizer as Transliterator;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Service\ConfigService;
 
 /**
- * Gedmo slug-handler which converts
+ * Gedmo slug-handler which converts.
+ *
+ * @todo: use a more lightweight transliterator than pulling in all
+ * this ConfigService stuff.
  */
 class LoginNameSlugHandler implements SlugHandlerInterface
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+
   /**
    * @var SluggableListener
    */
@@ -47,6 +53,8 @@ class LoginNameSlugHandler implements SlugHandlerInterface
   public function __construct(SluggableListener $sluggable)
   {
     $this->sluggable = $sluggable;
+
+    $this->configService = \OC::$server->query(ConfigService::class);
 
     // disable transliteration, done in postSlugBuild()
     $this->sluggable->setTransliterator(function($slug) { return $slug; });
@@ -88,7 +96,6 @@ class LoginNameSlugHandler implements SlugHandlerInterface
     // prefer a set of components if all are non empty
     if (is_array(options['preferred'])) {
       $preferred = array_filter(array_intersect_key($slugs, array_flip($options['preferred'])));
-
       // use preferred fields if all are non empty
       if (count($preferred) == count($options['preferred'])) {
         $slugs = $preferred;
@@ -100,6 +107,10 @@ class LoginNameSlugHandler implements SlugHandlerInterface
 
     // transliterate them separately, again using $config['separator']
     $slugs = array_map(function($slugPart) use ($innerSeparator) {
+      // use iconv for transliteration first place
+      $slugPart = $this->transliterate($slugPart);
+
+      // then pass down and replace other "inconvenient" characters
       return Transliterator::transliterate($slugPart, $innerSeparator);
     }, $slugs);
 
