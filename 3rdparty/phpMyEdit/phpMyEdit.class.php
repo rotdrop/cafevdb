@@ -5377,26 +5377,18 @@ class phpMyEdit
 			return true;
 		}
 		$ret  = true;
-		if (is_array($trig)) {
-			ksort($trig);
-			for ($t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
-				if (is_callable($t)) {
-					$ret = call_user_func_array($t,
-												array(&$this,
-													  $op, $step, &$oldvals,
-													  &$changed, &$newvals));
-				} else {
-					$ret = include($t);
-				}
-			}
-		} else {
-			if (is_callable($trig)) {
-				$ret = call_user_func_array($trig,
+		if (!is_array($trig) && !is_callable($trig)) {
+			$trig = array($trig);
+		}
+		ksort($trig);
+		for ($t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
+			if (is_callable($t)) {
+				$ret = call_user_func_array($t,
 											array(&$this,
 												  $op, $step, &$oldvals,
 												  &$changed, &$newvals));
 			} else {
-				$ret = include($trig);
+				$ret = include($t);
 			}
 		}
 
