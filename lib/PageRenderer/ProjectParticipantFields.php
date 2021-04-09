@@ -676,7 +676,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $opts['filters'] = [];
     if (!$this->showDisabled) {
-      $opts['filters'][] = 'NOT IFNULL($table.disabled, 0) = 1';
+      $opts['filters'][] = '$table.deleted IS NULL';
       if ($projectMode === false) {
         $opts['filters'][] = 'NOT '.$joinTables[self::PROJECTS_TABLE].'.disabled = 1';
       }
