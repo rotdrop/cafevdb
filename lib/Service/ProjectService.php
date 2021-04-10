@@ -43,10 +43,7 @@ class ProjectService
 
   const DBTABLE = 'Projects';
 
-  /**
-   * @var OCA\CAFEVDB\Storage\UserStorage
-   * This is an explanation.
-   */
+  /** @var UserStorage */
   private $userStorage;
 
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
@@ -257,7 +254,7 @@ class ProjectService
    * @return array Array of created folders.
    *
    */
-  public function ensureProjectFolders($projectOrId, $projectName = null, $only = false)
+  public function ensureProjectFolders($projectOrId, $projectName = null, $only = null)
   {
     $project = $this->repository->ensureProject($projectOrId);
     if (empty($projectName)) {
@@ -268,24 +265,49 @@ class ProjectService
 
     $sharedFolder   = $this->getConfigValue('sharedfolder');
     $projectsFolder = $this->getConfigValue('projectsfolder');
+    $participantsFolder = $this->getConfigValue('projectparticipantsfolder');
     $balanceFolder  = $this->getConfigValue('projectsbalancefolder');
 
-    $paths = [ 'project' => '/'.$sharedFolder.'/'.$projectsFolder,
-               'balance' => '/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder ];
+    $projectPaths = [
+      'project' => [
+        $sharedFolder,
+        $projectsFolder,
+        $project['year'],
+        $project['name'],
+      ],
+      'balance' => [
+        $sharedFolder,
+        $balanceFolder,
+        $projectsFolder,
+        $project['year'],
+        $project['name'],
+      ],
+      'participants' => [
+        $sharedFolder,
+        $projectsFolder,
+        $project['year'],
+        $project['name'],
+        $participantsFolder,
+      ],
+    ];
     $returnPaths = [];
-    foreach ($paths as $key => $path) {
-      if ($only && $key != $only) {
+    foreach ($paths as $key => $chain) {
+      if (!empty($only) && $key != $only) {
         continue;
       }
       try {
-        $this->userStorage->ensureFolder($path);
-        $path .= "/".$project['year'];
-        $this->userStorage->ensureFolder($path);
-        $path .= "/".$project['name'];
-        $this->userStorage->ensureFolder($path);
-        $returnPaths[$key] = $path;
+        $this->userStorage->ensureFolderChain($chain);
+        $returnPaths[$key] = UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain);
       } catch (\Throwable $t) {
-        $this->logException($t);
+        if (!empty($only)) {
+          throw \Exception(
+            $this->l->t('Unable to ensure existence of folder "%s".',
+                        UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain)),
+            $t->getCode(),
+            $t);
+        } else {
+          $this->logException($t);
+        }
       }
     }
     return $returnPaths;
@@ -300,19 +322,22 @@ class ProjectService
    */
   public function removeProjectFolders($oldProject)
   {
-    $sharedFolder   = $this->getConfigValue('sharedfolder');
-    $projectsFolder = $this->getConfigValue('projectsfolder');
-    $balanceFolder  = $this->getConfigValue('projectsbalancefolder');
+    $pathSep = UserStorage::PATH_SEP;
+    $yearName = $pathSep.$oldProject['year'].$pathSep.$oldProject['name'];
 
-    $prefixPath = [
-      'project' => '/'.$sharedFolder.'/'.$projectsFolder.'/',
-      'balance' => '/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
+    $sharedFolder   = $pathSep.$this->getConfigValue('sharedfolder');
+    $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue('projectsfolder').$yearName;
+    $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue('projectparticipantsfolder');
+    $balanceFolder  = $sharedFolder.$pathSep.$this->getConfigValue('projectsbalancefolder').$yearName;
+
+    $projectPaths = [
+      'participants' => $participantsFolder,
+      'project' => $projectsFolder,
+      'balance' => $balanceFolder,
     ];
 
-    foreach($prefixPath as $key => $prefix) {
-
-      $oldPath = $prefix.$oldProject['year']."/".$oldProject['name'];
-      $this->userStorage->delete($oldPath);
+    foreach($projectPaths as $key => $path) {
+      $this->userStorage->delete($path);
     }
 
     return true;
@@ -363,14 +388,23 @@ class ProjectService
         $this->userStorage->rename($oldPath, $newPath);
         $returnPaths[$key] = $newPath;
       } else {
-        // Otherwise there is nothing to move; we simply create the new directory.
-        $returnPaths = array_merge(
-          $returnPaths,
-          $this->ensureProjectFolders($newProject, null, $key /* only */));
+        try {
+          // Otherwise there is nothing to move; we simply create the new directory.
+          $returnPaths = array_merge(
+            $returnPaths,
+            $this->ensureProjectFolders($newProject, null, $key /* only */));
+        } catch (\Throwable $t) {
+          $this->logException($t);
+        }
       }
     }
 
     return $returnPaths;
+  }
+
+  public function ensureParticipantFolder(Entities\Project $project, Entities\Musician $musician)
+  {
+    $parentPath = $this->ensureProjectFolders($project, null, 'participants')[0];
   }
 
   public function projectWikiLink($pageName)
