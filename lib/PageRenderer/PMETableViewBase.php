@@ -34,6 +34,11 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\UndoableRunQueue;
+use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Common\IUndoable;
+use OCA\CAFEVDB\Common\UndoableFolderRename;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 /** Base for phpMyEdit based table-views. */
@@ -114,6 +119,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** @var bool Debug web requests */
   protected $debugRequests = false;
 
+  /** @var UndoableRunQueue */
+  protected $preCommitActions;
+
   /**
    * @var array
    * ```
@@ -160,6 +168,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->expertMode = $this->getUserValue('expertmode', false) === 'on';
 
     $this->debugRequests = 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
+
+    $this->preCommitActions = new UndoableRunQueue($this->logger(), $this->l10n());
 
     // this is done by the legacy code itself.
     $this->disableFilter('soft-deleteable');
@@ -287,15 +297,55 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pmeBare = !$enable;
   }
 
+
+  /**
+   * Register a pre-commit action and optionally an associated
+   * undo-action. The actions are run after all data-base operation
+   * have completed just before the final commit step. If the action
+   * succeeds, then its $undoAction will be registered for the case
+   * that the final commit throws an exception. In this case all
+   * undo-actions will be executed in reverse order.
+   *
+   * In case of an error $action must throw an \Exception, its return
+   * value is ignored.
+   *
+   * The callables need to run "stand-alone" without parameters.
+   *
+   * @param mixed $action
+   *
+   * @param Callable $undo The associated undo-action.
+   */
+  public function registerPreCommitAction($action, ?Callable $undo = null)
+  {
+    if (is_callable($action)) {
+      $this->preCommitActions->register(new GenericUndoable($action, $undo));
+    } else if ($action instanceof IUndoable) {
+      $this->preCommitActions->register($action);
+    } else  {
+      throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+    }
+  }
+
+  /**
+   * Common case of pre-commit action: rename a folder or file to
+   * reflect changes in the data-base.
+   */
+  public function registerPreCommitRename(string $oldNode, string $newNode)
+  {
+    $this->registerPreCommitAction(new UndoableFolderRename($oldNode, $newNode));
+  }
+
   /** Run underlying table-manager (phpMyEdit for now). */
   public function execute($opts = [])
   {
     $this->pme->beginTransaction();
     try {
       $this->pme->execute($opts);
+      $this->preCommitActions->executeActions();
       $this->pme->commit();
     } catch (\Throwable $t) {
       $this->logError("Rolling back SQL transaction ...");
+      $this->preCommitActions->executeUndo();
       $this->pme->rollBack();
       throw new \Exception($this->l->t("SQL Transaction failed."), $t->getCode(), $t);
     }
