@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Traits;
 use OCP\IUser;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\ILogger;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -61,6 +62,11 @@ trait ConfigTrait {
   protected function l10n():IL10N
   {
     return $this->configService->getL10n();
+  }
+
+  protected function logger():ILogger
+  {
+    return $this->configService->logger();
   }
 
   protected function appContainer():IAppContainer
