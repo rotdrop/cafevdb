@@ -43,6 +43,12 @@ class ProjectService
 
   const DBTABLE = 'Projects';
 
+  const PROJECT_FOLDER_KEYS = [
+    ConfigService::PROJECTS_FOLDER,
+    ConfigService::PROJECT_PARTICIPANTS_FOLDER,
+    ConfigService::PROJECT_BALANCE_FOLDER,
+  ];
+
   /** @var UserStorage */
   private $userStorage;
 
@@ -237,8 +243,50 @@ class ProjectService
     return $project->getName();
   }
 
+  /**
+   * Just return the collection of all projects.
+   */
   public function fetchAll() {
     return $this->repository->findAll();
+  }
+
+  /**
+   * Get the configured name of the all or the specified folder.
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @param string|null $only Get the name of only this folder if not
+   * null. $only can be one of the PROJECTS_..._FOLDER constants of
+   * the ConfigService class, @see ConfigService.
+   *
+   * @return mixed Either the array of all paths or the path requested by $only.
+   */
+  public function getProjectFolder($projectOrId, ?string $only = null)
+  {
+    $project = $this->repository->ensureProject($projectOrId);
+    $pathSep = UserStorage::PATH_SEP;
+    $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
+    $sharedFolder = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $folders = $only ? [ $only ] : self::PROJECT_FOLDER_KEYS;
+
+    $paths = [];
+    foreach ($folders as $key) {
+      switch ($key) {
+      case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
+        $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
+      case ConfigService::PROJECTS_FOLDER:
+        if ($key == ConfigService::PROJECTS_FOLDER) {
+          $paths[$key] = $projectsFolder;
+          break;
+        }
+        $paths[$key] = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_PARTICIPANTS_FOLDER);
+        break;
+      case ConfigService::PROJECT_BALANCE_FOLDER:
+        $paths[$key] = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_BALANCE_FOLDER).$yearName;
+        break;
+      }
+    }
+    return empty($only) ? $paths : $paths[$only];
   }
 
   /**
@@ -263,10 +311,10 @@ class ProjectService
       return false;
     }
 
-    $sharedFolder   = $this->getConfigValue('sharedfolder');
-    $projectsFolder = $this->getConfigValue('projectsfolder');
-    $participantsFolder = $this->getConfigValue('projectparticipantsfolder');
-    $balanceFolder  = $this->getConfigValue('projectsbalancefolder');
+    $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
+    $participantsFolder = $this->getConfigValue(ConfigService::PROJECTS_PARTICIPANTS_FOLDER);
+    $balanceFolder  = $this->getConfigValue(ConfigService::PROJECTS_BALANCE_FOLDER);
 
     $projectPaths = [
       'project' => [
@@ -325,10 +373,10 @@ class ProjectService
     $pathSep = UserStorage::PATH_SEP;
     $yearName = $pathSep.$oldProject['year'].$pathSep.$oldProject['name'];
 
-    $sharedFolder   = $pathSep.$this->getConfigValue('sharedfolder');
-    $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue('projectsfolder').$yearName;
-    $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue('projectparticipantsfolder');
-    $balanceFolder  = $sharedFolder.$pathSep.$this->getConfigValue('projectsbalancefolder').$yearName;
+    $sharedFolder   = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
+    $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_PARTICIPANTS_FOLDER);
+    $balanceFolder  = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_BALANCE_FOLDER).$yearName;
 
     $projectPaths = [
       'participants' => $participantsFolder,
@@ -363,9 +411,9 @@ class ProjectService
       $newProject['year'] = $oldProject['year'];
     }
 
-    $sharedFolder   = $this->getConfigValue('sharedfolder');
-    $projectsFolder = $this->getConfigValue('projectsfolder');
-    $balanceFolder  = $this->getConfigValue('projectsbalancefolder');
+    $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
+    $balanceFolder  = $this->getConfigValue(ConfigService::PROJECTS_BALANCE_FOLDER);
 
     $prefixPath = [
       'project' => '/'.$sharedFolder.'/'.$projectsFolder.'/',
@@ -1141,6 +1189,15 @@ Whatever.',
     $this->createProjectWebPage($projectId, 'rehearsals');
   }
 
+  /**
+   * Create a new project with the given name and optional year.
+   *
+   * @param string $name The name of the new project.
+   *
+   * @param int|null $year Optional year for "temporary" projects.
+   *
+   * @param mixed $type Type of the project, @see Types\EnumProjectTemporalType
+   */
   public function createProject(string $name, ?int $year = null, $type = Types\EnumProjectTemporalType::TEMPORARY):?Entities\Project
   {
     $project = null;
@@ -1154,7 +1211,6 @@ Whatever.',
                ->setName($name)
                ->setYear($year)
                ->setType($type);
-
 
       $this->persist($project);
 

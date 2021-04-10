@@ -70,6 +70,11 @@ class ConfigService {
    * Some configuration constants
    *
    */
+  const SHARED_FOLDER = 'sharedfolder';
+  const PROJECTS_FOLDER = 'projectsfolder';
+  const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';
+  const PROJECT_BALANCE_FOLDER = 'projectbalancefolder';
+
   const CMS_CATEGORIES = [
     'preview',
     'archive',

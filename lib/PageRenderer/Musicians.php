@@ -1,5 +1,6 @@
-<?php // Hey, Emacs, we are -*- php -*- mode!
-/* Orchestra member, musician and project management application.
+<?php
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -34,6 +35,8 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\InsuranceService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -810,12 +813,13 @@ make sure that the musicians are also automatically added to the
       $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
     }
 
-    $opts['triggers']['update']['before'][]  = [ $this, 'ensureUserIdSlug' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'extractInstrumentRanking' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'ensureUserIdSlug' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'extractInstrumentRanking' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'renameProjectParticipantFolders' ];
 
-    $opts['triggers']['insert']['before'][]  = [ $this, 'extractInstrumentRanking' ];
-    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
+    $opts['triggers']['insert']['before'][] = [ $this, 'extractInstrumentRanking' ];
+    $opts['triggers']['insert']['before'][] = [ $this, 'beforeInsertDoInsertAll' ];
 
     // $opts['triggers']['delete']['before'][]  = 'CAFEVDB\Musicians::beforeDeleteTrigger';
 
@@ -870,8 +874,7 @@ make sure that the musicians are also automatically added to the
   }
 
   /**
-   * Instruments are stored in a separate pivot-table, hence we have
-   * to take care of them from outside PME or use a view.
+   * Possibly regenerate the user-id slug.
    *
    * @copydoc beforeTriggerSetTimestamp
    */
@@ -879,45 +882,67 @@ make sure that the musicians are also automatically added to the
   {
     $tag = 'user_id_slug';
 
-    // accept override
-    if (array_search($tag, $changed) !== false && !empty($newValues[$tag])) {
-      return true;
-    }
-
-    // force regeneration by setting the slug to a "magic" value.
     if (empty($newValues[$tag])) {
+      // force regeneration by setting the slug to a "magic" value.
       $newValues[$tag] = \Gedmo\Sluggable\SluggableListener::PLACEHOLDER_SLUG;
       $changed[] = $tag;
+      $changed = array_values(array_unique($changed));
     }
 
     return true;
   }
 
-  /**
-   * Instruments are stored in a separate pivot-table, hence we have
-   * to take care of them from outside PME or use a view.
-   *
-   * @copydoc beforeTriggerSetTimestamp
-   */
-  public function addOrChangeInstruments($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  public function renameProjectParticipantFolders($pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
-    $field = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
-    $changedSet  = [ $field ];
-    $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, $changeSet, $newValues);
-    Util::unsetValue($changed, $field);
+    if ($op != 'update') {
+      return true; // safeguard
+    }
+
+    $tag = 'user_id_slug';
+
+    $newUserIdSlug = $newValues[$tag];
+    $oldUserIdSlug = $oldValues[$tag];
+
+    if (empty($newUserIdSlug) && empty($oldUserIdSlug)) {
+      return true; // safeguard
+    }
+
+    if (empty($newUserIdSlug)) {
+      throw new \RuntimeException($this->l->t('New suggested user-id is but must not be empty, old id was "%s".',
+                                              $oldUserIdSlug));
+    }
+
+    if ($newUserIdSlug == $oldUserIdSlug) {
+      return true; // nothing to do
+    }
+
+    // register a pre-commit callback to rename the user folder
+
+    /** @var Entities\Musician $musician */
+    $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($pme->rec);
+    if (empty($musician)) {
+      throw new \RuntimeException(
+        $this->l->t('Unable to retrieve musician for id "%s" from database.', $pme->rec));
+    }
+
+    /** @var Entities\ProjectParticipant $projectParticipant */
+    foreach ($musician->getProjectParticipation() as $projectParticipant) {
+      $project = $projectParticipant->getProject();
+
+      /** @var ProjectService $projectService */
+      $projectService = $this->di(ProjectService::class);
+
+      $participantsFolder = $projectService->getProjectFolder($project, ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+
+      $oldName = $oldUserIdSlug ? $participantsFolder.UserStorage::PATH_SEP.$oldUserIdSlug : null;
+      $newName = $participantsFolder.UserStorage::PATH_SEP.$newUserIdSlug;
+
+      $this->registerPreCommitRename($oldName, $newName);
+    }
+
     return true;
   }
 
-  public static function addUUIDTrigger($pme, $op, $step, $oldvalues, &$changed, &$newvals)
-  {
-    $uuid = Uuid::create();
-
-    $key = 'uuid';
-    $changed[] = $key;
-    $newvals[$key] = $uuid;
-
-    return true;
-  }
 }
 
 // Local Variables: ***
