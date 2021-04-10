@@ -37,7 +37,8 @@ class UserStorage
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const CACHE_DIRECTORY = '/cache';
+  const PATH_SEP = '/';
+  const CACHE_DIRECTORY = self::PATH_SEP.'cache';
 
   /** @var string */
   protected $userId;
@@ -103,7 +104,11 @@ class UserStorage
     }
   }
 
-  public function rename($oldPath, $newPath)
+  /**
+   * Rename $oldPath to $newPath which are interpreted as paths
+   * relative to the user's folder.
+   */
+  public function rename(string $oldPath, string $newPath)
   {
     try {
       $newPath = $this->userFolder->getFullPath($newPath);
@@ -142,6 +147,31 @@ class UserStorage
   }
 
   /**
+   * Make sure the all components of the given array exists where each
+   * following component is chained to the previous one. So the final
+   * path to construct is
+   * ```
+   * '/'.implode('/', $chain)
+   * ```
+   *
+   * @param array $chain Path components
+   *
+   * @return \OCP\Files\Folder The folder object pointing to the
+   * resulting path.
+   *
+   * @throws \Exception
+   */
+  public function ensureFolderChain(array $chain)
+  {
+    $path = '';
+    foreach ($chain as $component) {
+      $path .= self::PATH_SEP.$component;
+      $node = $this->ensureFolder($path);
+    }
+    return $node;
+  }
+
+  /**
    * @param string $subDirectory Folder name inside cache
    * subdirectory.
    *
@@ -149,7 +179,7 @@ class UserStorage
    */
   public function getCacheFolder(string $subDirectory)
   {
-    return $this->ensureFolder(self::CACHE_DIRECTORY.'/'.$subDirectory);
+    return $this->ensureFolder(self::CACHE_DIRECTORY.self::PATH_SEP.$subDirectory);
   }
 
 }
