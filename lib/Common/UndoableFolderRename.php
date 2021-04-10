@@ -29,6 +29,9 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * Rename the given paths. The target path will be created if it does
  * not exist. If the source path is empty the target folder will be
  * created as empty folder.
+ *
+ * If the target folder is empty, then the source folder will be
+ * deleted if it is empty. Non empty folders will bot be deleted.
  */
 class UndoableFolderRename implements IUndoable
 {
@@ -55,6 +58,13 @@ class UndoableFolderRename implements IUndoable
       UserStorage::PATH_SEP);
   }
 
+  /**
+   * Rename $from to $to with the following conventions:
+   *
+   * - if empty($from) then just create $to
+   * - if empty($to) then just delete $from
+   * - if both are non empty, then rename
+   */
   protected function rename($from, $to)
   {
     $toComponents = explode(UserStorage::PATH_SEP, $to);
@@ -72,7 +82,12 @@ class UndoableFolderRename implements IUndoable
       }
     }
 
-    if (!empty($fromDir)) {
+    if (empty($to)) {
+      // remove the $from folder
+      if (!empty($fromDir)) {
+        $fromDir->delete();
+      }
+    } else if (!empty($fromDir)) {
       $this->userStorage->rename($from, $to);
     } else {
       // otherwise just create the new folder.
