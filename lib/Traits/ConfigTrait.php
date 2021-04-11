@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+use Behat\Transliterator\Transliterator;
+
 use OCP\IUser;
 use OCP\IConfig;
 use OCP\IL10N;
@@ -288,6 +290,13 @@ trait ConfigTrait {
     return $this->configService->isSubAdminOfGroup($userId, $groupId);
   }
 
+  public function defaultUserIdSlug(?string $surName, ?string $firstName, ?string $nickName)
+  {
+    return Transliterator::transliterate($this->transliterate($nickName?:$firstName), '-')
+      .'.'
+      . Transliterator::transliterate($this->transliterate($surName), '-');
+  }
+
   public function getIcon() {
     return $this->configService->getIcon();
   }
@@ -323,9 +332,9 @@ trait ConfigTrait {
   }
 
   /** Transliterate the given string to the given or default locale */
-  public function transliterate(string $string, $locate = null):string
+  public function transliterate(string $string, $locale = null):string
   {
-    return $this->configService->transliterate($string, $localte);
+    return $this->configService->transliterate($string, $locale);
   }
 
   /** Return the currency symbol for the locale. */
