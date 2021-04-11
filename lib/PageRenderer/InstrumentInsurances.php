@@ -42,7 +42,6 @@ class InstrumentInsurances extends PMETableViewBase
 {
   const TEMPLATE = 'instrument-insurance';
   const TABLE = 'InstrumentInsurances';
-  const MUSICIANS_TABLE = 'Musicians';
   const BROKER_TABLE = 'InsuranceBrokers';
   const RATES_TABLE = 'InsuranceRates';
 

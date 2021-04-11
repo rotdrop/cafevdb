@@ -24,7 +24,6 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use chillerlan\QRCode\QRCode;
-use Behat\Transliterator\Transliterator;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
@@ -436,9 +435,7 @@ make sure that the musicians are also automatically added to the
           $surName = $row['qf'.($k-4)];
           $firstName = $row['qf'.($k-3)];
           $nickName = $row['qf'.($k-2)];
-          $placeHolder = Transliterator::transliterate($this->transliterate($nickName?:$firstName), '-')
-                       .'.'
-                       . Transliterator::transliterate($this->transliterate($surName), '-');
+          $placeHolder = $this->defaultUserIdSlug($surName, $firstName, $nickName);
           return [
             'placeholder' => $placeHolder,
             'readonly' => true,
@@ -719,37 +716,7 @@ make sure that the musicians are also automatically added to the
         switch($action) {
         case 'change':
         case 'display':
-          $data = [];
-          foreach($pme->fds as $idx => $label) {
-            $data[$label] = $row['qf'.$idx];
-          }
-          $categories = [];
-          $musician = new Entities\Musician();
-          foreach ($data as $key => $value) {
-            // In order to support "categories" the same way as the
-            // AddressBook-integration we need to feed the
-            // Musician-entity with more data:
-            switch ($key) {
-            case 'projects':
-              $categories = array_merge($categories, explode(',', Util::removeSpaces($value)));
-              break;
-            case 'MusicianInstrument:instrument_id':
-              foreach (explode(',', Util::removeSpaces($value)) as $instrumentId) {
-                $categories[] = $this->instrumentInfo['byId'][$instrumentId];
-              }
-              break;
-            default:
-              try {
-                $musician[$key] = $value;
-              } catch (\Throwable $t) {
-                // Don't care, we know virtual stuff is not there
-                // $this->logException($t);
-                // $this->logInfo("Cannot set key ".$key.' / value '.$value);
-              }
-              break;
-            }
-
-          }
+          list('musician' => $musician, 'categories' => $categories) = $this->musicianFromRow($row, $pme);
           $vcard = $this->contactsService->export($musician);
           unset($vcard->PHOTO); // too much information
           $categories = array_merge($categories, $vcard->CATEGORIES->getParts());

@@ -42,7 +42,6 @@ class SepaDebitMandates extends PMETableViewBase
   const TEMPLATE = 'sepa-debit-mandates';
   const TABLE = 'SepaDebitMandates';
   const PROJECTS_TABLE = 'Projects';
-  const MUSICIANS_TABLE = 'Musicians';
   const PARTICIPANTS_TABLE = 'ProjectParticipants';
   const PAYMENTS_TABLE = 'ProjectPayments';
   const PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';

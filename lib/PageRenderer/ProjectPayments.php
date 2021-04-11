@@ -41,7 +41,6 @@ class ProjectPayments extends PMETableViewBase
   const TEMPLATE = 'project-payments';
   const TABLE = 'ProjectPayments';
   const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
-  const MUSICIANS_TABLE = 'Musicians';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
   const DEBIT_NOTES_TABLE = 'SepaDebitNotes';
   const DEBIT_NOTE_DATA = 'SepaDebitNoteData';
