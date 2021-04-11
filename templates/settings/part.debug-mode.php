@@ -44,7 +44,7 @@ $debugModes = [
 
 ?>
 
-<select <?php echo ($expertMode != 'on' ? 'disabled="disabled"' : '') ?>
+<select <?php echo ($expertMode != 'on' ? 'disabled' : '') ?>
             id="app-settings-debugmode"
             multiple
             name="debugmode"

@@ -98,7 +98,7 @@ $containerClass = $appName.'-'.'container';
                type="text"
                class="tooltip-bottom"
                id="emailCurrentTemplate"
-               disabled="disabled">
+               disabled>
         <span class="inner vmiddle <?php p($containerClass); ?> save-as-template">
           <input type="checkbox"
                  id="check-save-as-template"

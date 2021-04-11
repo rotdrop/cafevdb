@@ -96,7 +96,7 @@ class Navigation
     foreach($options as $option) {
       $value = $option['value'];
       $flags = isset($option['flags']) ? $option['flags'] : 0;
-      $disabled = $flags & self::DISABLED ? ' disabled="disabled"' : '';
+      $disabled = $flags & self::DISABLED ? ' disabled' : '';
       if (($flags & self::SELECTED) || in_array($value, $selectedValues)) {
         $selected = ' selected="selected"';
       } else {
@@ -364,7 +364,7 @@ class Navigation
       $title = ' title="'.(isset($tag['title']) ? $tag['title'] : $name).'"';
       $id    = isset($tag['id']) ? ' id="'.$tag['id'].'"' : '';
       $class = ' class="'.$tag['class'].'"';
-      $disabled = (isset($tag['disabled']) && $tag['disabled']) ? ' disabled="disabled"' : '';
+      $disabled = (isset($tag['disabled']) && $tag['disabled']) ? ' disabled' : '';
       $data = '';
       if (isset($tag['data'])) {
         $dataArray = $tag['data'];

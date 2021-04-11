@@ -88,7 +88,7 @@ namespace OCA\CAFEVDB;
               title="<?php echo $toolTips['wysiwyg-editor']; ?>">
         <?php
         foreach ($wysiwygOptions as $key => $value) {
-          $disabled = $value['enabled'] ? '' : ' disabled="disabled" ';
+          $disabled = $value['enabled'] ? '' : ' disabled ';
           echo '<option value="'.$key.'" '.$disabled.($wysiwygEditor == $key ? 'selected="selected"' : '').'>'.$value['name'].'</option>'."\n";
         }
         ?>

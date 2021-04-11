@@ -74,11 +74,11 @@ if(is_array($sharedwithByEvent)) {
 		<span class="shareactions">
 			<input class="update" type="checkbox"
 				<?php p(($sharee['permissions'] & OCP\PERMISSION_UPDATE?'checked="checked"':''))?>
-				disabled="disabled">
+				disabled>
 			<label><?php p($l->t('can edit')); ?></label>
 			<input class="share" type="checkbox"
 				<?php p(($sharee['permissions'] & OCP\PERMISSION_SHARE?'checked="checked"':''))?>
-				disabled="disabled">
+				disabled>
 			<label><?php p($l->t('can share')); ?></label>
 		</span>
 	</li>

@@ -57,7 +57,7 @@
 		<tr>
 			<th width="75px"></th>
 			<td>
-				<input type="checkbox"<?php if($_['allday']) {print_unescaped('checked="checked"');} ?> id="allday_checkbox" name="allday" disabled="disabled">
+				<input type="checkbox"<?php if($_['allday']) {print_unescaped('checked="checked"');} ?> id="allday_checkbox" name="allday" disabled>
 				<?php p($l->t("All Day Event"));?>
 			</td>
 		</tr>

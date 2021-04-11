@@ -1036,7 +1036,7 @@ class ProjectParticipantFields extends PMETableViewBase
   <input
     class="operation regenerate only-multiplicity-recurring"
     title="'.$this->toolTipsService['participant-fields-data-options:regenerate'].'"
-    '.($deleted ? ' disabled="disabled"' : '').'
+    '.($deleted ? ' disabled' : '').'
     type="button"/>
     </td>';
     // label
@@ -1173,7 +1173,7 @@ class ProjectParticipantFields extends PMETableViewBase
       class="operation generator-run"
       title="'.$this->toolTipsService['participant-fields-data-options:generator-run'].'"
       type="button"
-      '.(empty($generator) ? 'disabled="disabled"' : '').'
+      '.(empty($generator) ? 'disabled' : '').'
     />
   </td>
   <td class="generator" colspan="5">

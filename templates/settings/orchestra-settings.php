@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB;
 
 use \OCA\CAFEVDB\PageRenderer\Util\Navigation;
 
-$off = $orchestra == '' ? 'disabled="disabled"' : '';
+$off = $orchestra == '' ? 'disabled' : '';
 $countries = [];
 foreach ($localeCountryNames as $country => $name) {
   $option = ['name' => $name, 'value' => $country];
@@ -134,7 +134,7 @@ foreach ($localeCountryNames as $country => $name) {
              name="memberProjectCreate"
              value="+"
              title="<?php echo $l->t("Create club-members project if it does not exist yet."); ?>"
-             <?php if ($memberProjectId > 0 || empty($memberProject)) { echo('disabled="disabled"'); } ?>
+             <?php if ($memberProjectId > 0 || empty($memberProject)) { echo('disabled'); } ?>
       />
       <input class="specialMemberProjects" type="text"
              id="memberProject"
@@ -154,7 +154,7 @@ foreach ($localeCountryNames as $country => $name) {
              name="executiveBoardProjectCreate"
              value="+"
              title="<?php echo $l->t("Create executive-board project if it does not exist yet."); ?>"
-             <?php if ($executiveBoardProjectId > 0 || empty($executiveBoardProject)) { echo('disabled="disabled"'); } ?>
+             <?php if ($executiveBoardProjectId > 0 || empty($executiveBoardProject)) { echo('disabled'); } ?>
       />
       <input class="specialMemberProjects" type="text"
              id="executiveBoardProject"

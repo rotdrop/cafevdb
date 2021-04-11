@@ -210,14 +210,14 @@ $containerClass = $appName.'-'.'container';
              value="<?php echo $l->t('Undo Filter'); ?>"
              class="instruments-filter-controls undo"
              title="<?php echo $toolTips['email-recipients-filter-undo']; ?>"
-             disabled="disabled"
+             disabled
              name="emailRecipients[undoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-redo"
              value="<?php echo $l->t('Redo Filter'); ?>"
              class="instruments-filter-controls redo"
              title="<?php echo $toolTips['email-recipients-filter-redo']; ?>"
-             disabled="disabled"
+             disabled
              name="emailRecipients[redoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-reset"

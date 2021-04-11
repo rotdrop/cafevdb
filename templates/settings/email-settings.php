@@ -145,7 +145,7 @@ foreach (array('smtp', 'imap') as $proto) {
         <?php echo $l->t('Test-Mode'); ?>
       </label>
       <input type="text" name="emailtestaddress" id="emailtestaddress"
-      <?php echo $_['emailtestmode'] == 'on' ? '' : 'disabled="disabled"' ?>
+      <?php echo $_['emailtestmode'] == 'on' ? '' : 'disabled' ?>
              value="<?php echo $_['emailtestaddress']; ?>"
              placeholder="<?php echo $l->t('Test Email Adress');?>"
              />

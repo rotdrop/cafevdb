@@ -67,7 +67,7 @@
                        <?php if ($protectCategories & 2) { p('class="reallyhidden"'); } ?>
                        name="categories"
                        type="text"
-                       <?php if ($protectCategories & 1) { p('disabled="disabled"'); } ?>
+                       <?php if ($protectCategories & 1) { p('disabled'); } ?>
 		       placeholder="<?php p($l->t('Categories (separate by comma)')); ?>"
 		       value="<?php p(isset($_['categories']) ? $_['categories'] : '') ?>"
                        >

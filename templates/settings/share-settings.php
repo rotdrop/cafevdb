@@ -21,8 +21,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$alloff = $_['orchestra'] == '' ? $alloff = 'disabled="disabled"' : '';
-$off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
+$alloff = $_['orchestra'] == '' ? $alloff = 'disabled' : '';
+$off = $_['shareowner'] == '' ? 'disabled' : $alloff;
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin sharing">
@@ -33,7 +33,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
     <form id="shareownerform"><!-- <legend><?php echo $l->t('Share owner') ; ?></legend> -->
       <fieldset id="shareowner" <?php echo $alloff; ?> >
         <input type="hidden" id="user-saved" name="shareowner-saved" value="<?php echo $_['shareowner']; ?>" />
-        <input <?php echo $_['shareowner'] != '' ? 'disabled="disabled"' : ''; ?> type="text" id="user" name="shareowner" placeholder="<?php echo $l->t('shareowner');?>" value="<?php echo $_['shareowner']; ?>" />
+        <input <?php echo $_['shareowner'] != '' ? 'disabled' : ''; ?> type="text" id="user" name="shareowner" placeholder="<?php echo $l->t('shareowner');?>" value="<?php echo $_['shareowner']; ?>" />
         <input type="checkbox" id="shareowner-force" name="shareowner-force" class="checkbox"/>
            <label for="shareowner-force" title="<?php echo $toolTips['shareowner-force']; ?>"  class="tooltip-auto">
              <?php echo $l->t('force');?>
@@ -92,7 +92,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
     <form id="sharedfolder-form">
       <fieldset id="sharedfolder-fieldset" <?php echo $off; ?> ><!-- <legend><?php echo $l->t('Shared folder'); ?></legend> -->
         <input type="hidden" id="sharedfolder-saved" name="sharedfolder-saved" value="<?php echo $_['sharedfolder']; ?>" />
-        <input <?php echo $_['sharedfolder'] != '' ? 'disabled="disabled"' : ''; ?>
+        <input <?php echo $_['sharedfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
           id="sharedfolder"
           name="sharedfolder"
@@ -108,7 +108,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
         <span><b>/</b></span>
         <input type="hidden" id="projectsfolder-saved" name="projectsfolder-saved" value="<?php echo $_['projectsfolder']; ?>" />
-        <input <?php echo $_['projectsfolder'] != '' ? 'disabled="disabled"' : ''; ?>
+        <input <?php echo $_['projectsfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
           id="projectsfolder"
           name="projectsfolder"
@@ -129,7 +129,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span>
         <span><b>/</b></span>
         <input type="hidden" id="projectparticipantsfolder-saved" name="projectparticipantsfolder-saved" value="<?php echo $_['projectparticipantsfolder']; ?>" />
-        <input <?php echo $_['projectparticipantsfolder'] != '' ? 'disabled="disabled"' : ''; ?>
+        <input <?php echo $_['projectparticipantsfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
           id="projectparticipantsfolder"
           name="projectparticipantsfolder"
@@ -145,7 +145,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
       <fieldset id="projectsbalancefolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
         <input type="hidden" id="projectsbalancefolder-saved" name="projectsbalancefolder-saved" value="<?php echo $_['projectsbalancefolder']; ?>" />
-        <input <?php echo $_['projectsbalancefolder'] != '' ? 'disabled="disabled"' : ''; ?>
+        <input <?php echo $_['projectsbalancefolder'] != '' ? 'disabled' : ''; ?>
           type="text"
           id="projectsbalancefolder"
           name="projectsbalancefolder"

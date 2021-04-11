@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
+$off = $_['orchestra'] == '' ? 'disabled' : '';
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin">
