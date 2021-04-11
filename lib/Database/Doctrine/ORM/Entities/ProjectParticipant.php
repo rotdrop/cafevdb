@@ -35,12 +35,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="ProjectParticipants")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantsRepository")
  * @Gedmo\Loggable
+ * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class ProjectParticipant implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants", fetch="EXTRA_LAZY")
@@ -74,13 +76,6 @@ class ProjectParticipant implements \ArrayAccess
    * @ORM\Column(type="text", length=65535, nullable=true, options={"comment"="Allgemeine Bermerkungen"})
    */
   private $remarks;
-
-  /**
-   * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
-   */
-  private $disabled = false;
 
   /**
    * Link to payments
@@ -228,30 +223,6 @@ class ProjectParticipant implements \ArrayAccess
   public function getRemarks():?string
   {
     return $this->remarks;
-  }
-
-  /**
-   * Set disabled.
-   *
-   * @param bool $disabled
-   *
-   * @return ProjectParticipant
-   */
-  public function setDisabled($disabled):ProjectParticipant
-  {
-    $this->disabled = $disabled;
-
-    return $this;
-  }
-
-  /**
-   * Get disabled.
-   *
-   * @return bool
-   */
-  public function getDisabled()
-  {
-    return $this->disabled;
   }
 
   /**
