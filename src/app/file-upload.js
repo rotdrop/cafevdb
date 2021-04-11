@@ -69,6 +69,7 @@ function init(options) {
     containerSelector: '#file_upload_wrapper',
     inputSelector: '#file_upload_start',
     progressTemplate: 'Uploading {n} files, {percentage}%, {loaded} of {total} bytes at {rate} bytes/s',
+    multiple: true,
   };
 
   options = $.extend({}, defaultOptions, options);
@@ -142,6 +143,9 @@ function init(options) {
       if (!uploadProgressWrapper.hasClass('ui-dialog-content')) {
         uploadProgressWrapper.cafevDialog({
           width: '100vw',
+          height: 'auto',
+          minHeight: '50px',
+          resizable: false,
         });
       }
       progressBar.progressbar({ value: 0 });
@@ -285,7 +289,7 @@ function init(options) {
 
   // add multiply file upload attribute to all browsers except konqueror (which crashes when it's used)
   // if (navigator.userAgent.search(/konqueror/i) === -1 || true) {
-  fileUploadStart.attr('multiple', 'multiple');
+  fileUploadStart.prop('multiple', options.multiple);
   // }
 }
 
