@@ -475,7 +475,8 @@ class ProjectService
   public function ensureParticipantFolder(Entities\Project $project, $musician, bool $dry = false)
   {
     $parentPath = array_shift($this->ensureProjectFolders($project, null, 'participants', $dry));
-    $participantFolder = $parentPath.UserStorage::PATH_SEP.$musician['userIdSlug'];
+    $userIdSlug = $this->ensureMusicianUserIdSlug($musician);
+    $participantFolder = $parentPath.UserStorage::PATH_SEP.$userIdSlug;
     if (!$dry) {
       $this->userStorage->ensureFolder($participantFolder);
     }
@@ -488,8 +489,25 @@ class ProjectService
    */
   public function participantFilename(string $base, $project, $musician)
   {
-    $userIdSlug = $musician['userIdSlug']?:$this->defaultUserIdSlug($musician['surName'], $musician['firstName'], $musician['nickName']);
+    $userIdSlug = $this->ensureMusicianUserIdSlug($musician);
     return $base.'-'.Util::dashesToCamelCase($userIdSlug, true, '_-.');
+  }
+
+  /**
+   * Ensure that the musicain indeed has a user-id-slug. In principle
+   * this should never happen when the app runs in production mode ...
+   *
+   * @return string The user-id slug.
+   */
+  public function ensureMusicianUserIdSlug(Entities\Musician $musician)
+  {
+    if (empty($musician->getUserIdSlug())) {
+      $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musician['id']);
+      $musician->setUserIdSlug(\Gedmo\Sluggable\SluggableListener::PLACEHOLDER_SLUG);
+      $this->persist($musician);
+      $this->flush();
+    }
+    return $musician->getUserIdSlug();
   }
 
   public function projectWikiLink($pageName)

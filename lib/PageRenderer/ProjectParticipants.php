@@ -1965,11 +1965,13 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
     //////// END Field definitions
 
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'extractInstrumentRanking' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'cleanupParticipantFields' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'ensureUserIdSlug' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'extractInstrumentRanking' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'cleanupParticipantFields' ];
+    $opts['triggers']['update']['before'][] = [ $this, 'renameProjectParticipantFolders' ];
 
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
 //     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
@@ -2121,8 +2123,13 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
   private function fileUploadRowHtml($value, $fieldId, $key, $subDir, $fileBase, $musician)
   {
-    $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, true);
+    $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
+    /** @var UserStorage $userStorage */
     $userStorage = $this->di(UserStorage::class);
+    // make sure $subDir exists
+    if (!empty($subDir)) {
+      $userStorage->ensureFolder($participantFolder.UserStorage::PATH_SEP.$subDir);
+    }
     if (!empty($value)) {
       $filePath = $participantFolder.UserStorage::PATH_SEP.$value;
       $downloadLink = $userStorage->getDownloadLink($filePath);

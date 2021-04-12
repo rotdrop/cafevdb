@@ -1709,6 +1709,88 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   }
 
   /**
+   * Possibly regenerate the user-id slug.
+   *
+   * @copydoc beforeTriggerSetTimestamp
+   *
+   * @todo This would rather belong to some service class.
+   */
+  public function ensureUserIdSlug($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $tag = 'user_id_slug';
+    if (!empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
+      $tag = $this->joinTableFieldName(self::MUSICIANS_TABLE, $tag);
+    }
+    if (empty($newValues[$tag])) {
+      // force regeneration by setting the slug to a "magic" value.
+      $newValues[$tag] = \Gedmo\Sluggable\SluggableListener::PLACEHOLDER_SLUG;
+      $changed[] = $tag;
+      $changed = array_values(array_unique($changed));
+    }
+
+    return true;
+  }
+
+  /**
+   * Rename the file-system folders if the user-id slug has changed.
+   *
+   * @todo This would rather belong to some service class.
+   */
+  public function renameProjectParticipantFolders($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    if ($op != 'update') {
+      return true; // safeguard
+    }
+
+    $tag = 'user_id_slug';
+    if (!empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
+      $tag = $this->joinTableFieldName(self::MUSICIANS_TABLE, $tag);
+    }
+
+    $newUserIdSlug = $newValues[$tag];
+    $oldUserIdSlug = $oldValues[$tag];
+
+    if (empty($newUserIdSlug) && empty($oldUserIdSlug)) {
+      return true; // safeguard
+    }
+
+    if (empty($newUserIdSlug)) {
+      throw new \RuntimeException($this->l->t('New suggested user-id is but must not be empty, old id was "%s".',
+                                              $oldUserIdSlug));
+    }
+
+    if ($newUserIdSlug == $oldUserIdSlug) {
+      return true; // nothing to do
+    }
+
+    // register a pre-commit callback to rename the user folder
+
+    /** @var Entities\Musician $musician */
+    $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($pme->rec);
+    if (empty($musician)) {
+      throw new \RuntimeException(
+        $this->l->t('Unable to retrieve musician for id "%s" from database.', $pme->rec));
+    }
+
+    /** @var Entities\ProjectParticipant $projectParticipant */
+    foreach ($musician->getProjectParticipation() as $projectParticipant) {
+      $project = $projectParticipant->getProject();
+
+      /** @var ProjectService $projectService */
+      $projectService = $this->di(ProjectService::class);
+
+      $participantsFolder = $projectService->getProjectFolder($project, ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+
+      $oldName = $oldUserIdSlug ? $participantsFolder.UserStorage::PATH_SEP.$oldUserIdSlug : null;
+      $newName = $participantsFolder.UserStorage::PATH_SEP.$newUserIdSlug;
+
+      $this->registerPreCommitRename($oldName, $newName);
+    }
+
+    return true;
+  }
+
+  /**
    * Fill an instance of Entities\Musician with the data from a legacy
    * PHPMyEdit query.
    *
@@ -1731,6 +1813,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $categories = [];
     $musician = new Entities\Musician();
+    if ($joinTable) {
+      // make sure to fetch the id-record
+      foreach ($this->joinStructure as $joinInfo) {
+        if ($joinInfo['table'] == self::MUSICIANS_TABLE) {
+          $idColumn = $joinInfo['identifier']['id'];
+          $id = $row['qf'.($pme->fdn[$idColumn])];
+          $musician->setId($id);
+          break;
+        }
+      }
+    }
+    $this->logInfo('MUSID: '.$musician->getId());
     foreach ($data as $key => $value) {
       // In order to support "categories" the same way as the
       // AddressBook-integration we need to feed the
