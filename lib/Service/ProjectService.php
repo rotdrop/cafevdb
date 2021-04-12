@@ -301,12 +301,16 @@ class ProjectService
    *
    * @param string $projectName Name of the project.
    *
-   * @param bool|string If a string create only this folder.
+   * @param null|string $only If a string create only this folder, can
+   * be one of 'project', 'balance', 'participants'
+   *
+   * @parm bool $dry Just create the name, but do not perform any
+   * file-system operations.
    *
    * @return array Array of created folders.
    *
    */
-  public function ensureProjectFolders($projectOrId, $projectName = null, $only = null)
+  public function ensureProjectFolders($projectOrId, $projectName = null, $only = null, $dry= false)
   {
     $project = $this->repository->ensureProject($projectOrId);
     if (empty($projectName)) {
@@ -349,7 +353,9 @@ class ProjectService
         continue;
       }
       try {
-        $this->userStorage->ensureFolderChain($chain);
+        if (!$dry) {
+          $this->userStorage->ensureFolderChain($chain);
+        }
         $returnPaths[$key] = UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain);
       } catch (\Throwable $t) {
         if (!empty($only)) {
@@ -455,11 +461,24 @@ class ProjectService
     return $returnPaths;
   }
 
-  public function ensureParticipantFolder(Entities\Project $project, $musician)
+  /**
+   * Make sure the per-project per-participant folder exists for the
+   * given project and musician.
+   *
+   * @param Entities\Project $project
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param bool $dry If true then just create the name, do not
+   * perform any file-system operations.
+   */
+  public function ensureParticipantFolder(Entities\Project $project, $musician, bool $dry = false)
   {
-    $parentPath = array_shift($this->ensureProjectFolders($project, null, 'participants'));
+    $parentPath = array_shift($this->ensureProjectFolders($project, null, 'participants', $dry));
     $participantFolder = $parentPath.UserStorage::PATH_SEP.$musician['userIdSlug'];
-    $this->userStorage->ensureFolder($participantFolder);
+    if (!$dry) {
+      $this->userStorage->ensureFolder($participantFolder);
+    }
     return $participantFolder;
   }
 
