@@ -324,8 +324,6 @@ class ProjectParticipantsController extends Controller {
       $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, true);
       $filePath = $prefixPath . UserStorage::PATH_SEP. $fieldDatum->getOptionValue();
 
-      $this->logInfo('PATH TO REMOVE '.$filePath);
-
       $fileRemoved = false;
       $this->entityManager->beginTransaction();
       try {
