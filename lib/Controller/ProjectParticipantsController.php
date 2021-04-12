@@ -400,6 +400,7 @@ class ProjectParticipantsController extends Controller {
           'projectId' => $projectId,
           'pathChain' => $pathChain,
           'extension' => $extension,
+          'download' => $userStorage->getDownloadLink($filePath),
         ];
       }
       return self::dataResponse([ $file ]);
