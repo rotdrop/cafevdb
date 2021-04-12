@@ -1824,7 +1824,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
       }
     }
-    $this->logInfo('MUSID: '.$musician->getId());
     foreach ($data as $key => $value) {
       // In order to support "categories" the same way as the
       // AddressBook-integration we need to feed the
