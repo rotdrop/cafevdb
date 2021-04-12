@@ -165,7 +165,6 @@ class UserStorage
     $path = '';
     foreach ($chain as $component) {
       $path .= self::PATH_SEP.$component;
-      $this->logInfo('Try ensure '.$path);
       $node = $this->ensureFolder($path);
     }
     return $node;
@@ -225,6 +224,8 @@ class UserStorage
    *
    * https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/remote.php/webdav/camerata/projects/2020/Test2020/participants/claus-justus.heine/DateiUpload-ClausJustusHeine.zip?downloadStartSecret=uwq0q4j24sb
    *
+   * @param string|\OCP\Files\Node $pathOrNode The file-system path or node.
+   *
    * @return null|string The download URL or null.
    */
   public function getDownloadLink($pathOrNode):?string
@@ -248,6 +249,39 @@ class UserStorage
 
     return $webDAVRoot.$nodePath;
   }
+
+  /**
+   * Generate a link to the files-app pointing to the parent folder if
+   * $pathOrNode is a file, or the node itself if it is a folder.
+   *
+   * https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/index.php/apps/files?dir=/camerata/projects/2020/Test2020/participants/claus-justus.heine
+   *
+   * @param string|\OCP\Files\Node $pathOrNode The file-system path or node.
+   *
+   * @return string|null URL to the files app.
+   */
+  public function getFilesAppLink($pathOrNode):?string
+  {
+    if (is_string($pathOrNode)) {
+      $node = $this->userFolder->get($pathOrNode);
+    } else if ($pathOrNode instanceof \OCP\Files\Node) {
+      $node = $pathOrNode;
+    } else {
+      throw new \InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
+    }
+    if ($node->getType() != FileInfo::TYPE_FOLDER) {
+      $node = $node->getParent();
+    }
+
+    $nodePath = substr(strchr($node->getPath(), '/files/'), strlen('/files'));
+
+    $filesUrl = \OCP\Util::linkToAbsolute('files', '', [ 'dir' => $nodePath ]);
+
+    $this->logInfo('FILESURL '.$filesUrl);
+
+    return $filesUrl;
+  }
+
 
 }
 
