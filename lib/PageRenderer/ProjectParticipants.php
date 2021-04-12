@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\InsuranceService;
+use OCA\CAFEVDB\Service\ProjectService;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -52,7 +53,6 @@ class ProjectParticipants extends PMETableViewBase
 {
   const TEMPLATE = 'project-participants';
   const TABLE = 'ProjectParticipants';
-  const MUSICIANS_TABLE = 'Musicians';
   const PROJECTS_TABLE = 'Projects';
   const INSTRUMENTS_TABLE = 'Instruments';
   const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
@@ -174,20 +174,23 @@ class ProjectParticipants extends PMETableViewBase
     // ],
   ];
 
-  /** @var \OCA\CAFEVDB\Service\GeoCodingService */
+  /** @var GeoCodingService */
   private $geoCodingService;
 
-  /** @var \OCA\CAFEVDB\Service\PhoneNumberService */
+  /** @var PhoneNumberService */
   private $phoneNumberService;
 
-  /** @var \OCA\CAFEVDB\Service\Finance\FinanceService */
+  /** @var FinanceService */
   private $financeService;
 
-  /** @var \OCA\CAFEVDB\Service\Finance\InsuranceService */
+  /** @var InsuranceService */
   private $insuranceService;
 
-  /** @var \OCA\CAFEVDB\Service\ProjectParticipantFieldsService */
+  /** @var ProjectParticipantFieldsService */
   private $participantFieldsService;
+
+  /** @var ProjectService */
+  private $projectService;
 
   /** @var \OCA\CAFEVDB\PageRenderer\Musicians */
   private $musiciansRenderer;
@@ -208,6 +211,7 @@ class ProjectParticipants extends PMETableViewBase
     , FinanceService $financeService
     , InsuranceService $insuranceService
     , ProjectParticipantFieldsService $participantFieldsService
+    , ProjectService $projectService
     , Musicians $musiciansRenderer
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
@@ -218,6 +222,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->insuranceService = $insuranceService;
     $this->musiciansRenderer = $musiciansRenderer;
     $this->participantFieldsService = $participantFieldsService;
+    $this->projectService = $projectService;
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
   }
 
@@ -481,8 +486,7 @@ class ProjectParticipants extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'display_name',
-      [
+      $opts['fdd'], self::MUSICIANS_TABLE, 'display_name', [
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
         'sql|LFVD' => 'IF($column IS NULL OR $column = \'\',
@@ -517,23 +521,63 @@ class ProjectParticipants extends PMETableViewBase
         ],
       ]);
 
-    if ($this->showDisabled) {
-      $opts['fdd']['disabled'] = [
-        'name'     => $this->l->t('Disabled'),
-        'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
-        'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
-        'input'    => $expertMode ? '' : 'R',
-        'select'   => 'C',
-        'maxlen'   => 1,
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
+        'tab'      => [ 'id' => 'tab-all' ],
+        'name'     => $this->l->t('User Id'),
+        'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+        'input|LF' => 'H',
+        // 'options'  => 'AVCPD',
+        'select'   => 'T',
+        'maxlen'   => 256,
         'sort'     => true,
-        'escape'   => false,
-        'sql'      => 'IFNULL($main_table.$field_name, 0)',
-        'sqlw'     => 'IF($val_qas = "", 0, 1)',
-        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
-        'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
-        'tooltip'  => $this->toolTipsService['musician-disabled'],
-        'css'      => [ 'postfix' => ' musician-disabled' ],
-      ];
+        'display|ACP' => [
+          'attributes' => function($op, $row, $k, $pme) {
+            $surName = $row['qf'.($k-4)];
+            $firstName = $row['qf'.($k-3)];
+            $nickName = $row['qf'.($k-2)];
+            $placeHolder = $this->projectService->defaultUserIdSlug($surName, $firstName, $nickName);
+            return [
+              'placeholder' => $placeHolder,
+              'readonly' => true,
+            ];
+          },
+          'postfix' => function($op, $pos, $row, $k, $pme) {
+            $checked = 'checked="checked" ';
+            return '<input id="pme-musician-user-id-slug"
+  type="checkbox"
+  '.$checked.'
+  class="pme-input pme-input-lock-unlock"
+/><label class="pme-input pme-input-lock-unlock" for="pme-musician-user-id-slug"></label>';
+          },
+        ],
+      ]);
+
+    if ($this->showDisabled) {
+      // $opts['fdd']['disabled'] = [
+      //   'name'     => $this->l->t('Disabled'),
+      //   'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
+      //   'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
+      //   'input'    => $expertMode ? '' : 'R',
+      //   'select'   => 'C',
+      //   'maxlen'   => 1,
+      //   'sort'     => true,
+      //   'escape'   => false,
+      //   'sql'      => 'IFNULL($main_table.$field_name, 0)',
+      //   'sqlw'     => 'IF($val_qas = "", 0, 1)',
+      //   'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
+      //   'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+      //   'tooltip'  => $this->toolTipsService['musician-disabled'],
+      //   'css'      => [ 'postfix' => ' musician-disabled' ],
+      // ];
+
+      // soft-deletion
+      $opts['fdd']['deleted'] = array_merge(
+        $this->defaultFDD['deleted'], [
+          'name' => $this->l->t('Deleted'),
+        ]
+      );
+
     }
 
     $l10nInstrumentsTable = $this->makeFieldTranslationsJoin([
@@ -1017,8 +1061,13 @@ class ProjectParticipants extends PMETableViewBase
         case FieldType::FILE_DATA:
           $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
             $key = $field->getDataOptions()->first()->getKey();
+            $fileBase = $field['name'];
+            $subDir = null;
+            list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
             return '<div class="file-upload-wrapper" data-option-key="'.$key.'">
-  <a href="#">Blah</a>
+  <table class="file-upload">'
+            .$this->fileUploadRowHtml($value, $key, $subDir, $fileBase, $musician).'
+  </table>
 </div>';
           };
           break;
@@ -1731,40 +1780,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         switch($action) {
         case 'change':
         case 'display':
-          $data = [];
-          foreach($pme->fds as $idx => $label) {
-            $data[$label] = $row['qf'.$idx];
-          }
-          $categories = [];
-          $musician = new Entities\Musician();
-          foreach ($data as $key => $value) {
-            switch ($key) {
-            case 'all_projects':
-              $categories = array_merge($categories, explode(',', Util::removeSpaces($value)));
-              break;
-            case 'MusicianInstrument:instrument_id':
-              foreach (explode(',', Util::removeSpaces($value)) as $instrumentId) {
-                $categories[] = $this->instrumentInfo['byId'][$instrumentId];
-              }
-              break;
-            default:
-              $fieldInfo = $this->joinTableField($key);
-              if ($fieldInfo['table'] != self::MUSICIANS_TABLE) {
-                continue 2;
-              }
-              $column = $fieldInfo['column'];
-              // In order to support "categories" the same way as the
-              // AddressBook-integration we need to feed the
-              // Musician-entity with more data:
-              try {
-                $musician[$column] = $value;
-              } catch (\Throwable $t) {
-                // Don't care, we know virtual stuff is not there
-                // $this->logException($t);
-              }
-              break;
-            }
-          }
+          list('musician' => $musician, 'categories' => $categories) = $this->musicianFromRow($row, $pme);
           $vcard = $this->contactsService->export($musician);
           unset($vcard->PHOTO); // too much information
           $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
@@ -2065,6 +2081,25 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  private function fileUploadRowHtml($value, $key, $subDir, $fileBase, $musician)
+  {
+    $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+    $placeHolder = $this->l->t('Load %s', $fileName);
+    $deleteDisabled = empty($value) ? ' disabled' : '';
+    $html = '
+  <tr class="file-upload-row" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" >
+    <td class="operations">
+      <input type="button"'.$deleteDisabled.' class="operation delete-undelete"/>
+      <input type="button" class="operation upload-replace"/>
+    </td>
+    <td class="file-data">
+      <a class="download-link" href="'.$value.'">'.$value.'</a>
+      <input class="upload-placeholder" placeholder="'.$placeHolder.'" type="text"/>
+    </td>
+  </tr>';
+    return $html;
   }
 
   /**
