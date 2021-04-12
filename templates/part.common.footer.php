@@ -95,6 +95,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
     <form class="float hidden {formClass}" enctype="multipart/form-data">
       <input type="hidden" name="projectId" value="{projectId}" />
       <input type="hidden" name="musicianId" value="{musicianId}" />
+      <input type="hidden" name="data" value='{uploadData}' />
       <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>
       <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize']; ?>"/>
       <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>"/>
