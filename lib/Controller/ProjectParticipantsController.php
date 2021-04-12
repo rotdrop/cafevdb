@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -295,12 +296,32 @@ class ProjectParticipantsController extends Controller {
    *
    * @todo There should be an upload support class handling this stuff
    */
-  public function upload($source)
+  public function upload($source, $musicianId, $projectId, $data)
   {
     $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     $maxUploadFileSize = min($upload_max_filesize, $post_max_size);
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
+
+    /** @var Entities\ProjectParticipant $participant */
+    $participant = $this->getDatabaseRepository(Entities\ProjectParticipant::class)
+                        ->find(['project' => $projectId, 'musician' => $musicianId]);
+    $project = $participant->getProject();
+    $musician = $participant->getMusician();
+
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    $uploadData = json_decode($data, true);
+    $optionKey = $uploadData['optionKey'];
+
+    $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician), ];
+    $subDir = $uploadData['subDir'];
+    if ($subDir) {
+      $pathChain[] = $subDir;
+    }
+    $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
+    $filePath = implode(UserStorage::PATH_SEP, $pathChain);
 
     switch ($source) {
     case 'upload':
@@ -325,10 +346,20 @@ class ProjectParticipantsController extends Controller {
         return self::grumble($this->l->t('No file was uploaded. Unknown error'));
       }
 
+      $this->logInfo('PARAMETERS '.print_r($this->parameterService->getParams(), true));
+
       $files = Util::transposeArray($_FILES[$fileKey]);
 
+      if (count($files) !== 1) {
+        return self::grumble($this->l->t('Only single file uploads are supported here, number of submitted uploads is %d.', count($files)));
+      }
+      if (empty($files[$optionKey])) {
+        return self::grumble($this->l->t('Invalid file index, expected the option key "%s", got "%s".', [ $optionKey, array_keys($files)[0] ]));
+      }
+
       $totalSize = 0;
-      foreach ($files as &$file) {
+      foreach ($files as $key => &$file) {
+        // single file loop
 
         $totalSize += $file['size'];
 
@@ -349,14 +380,29 @@ class ProjectParticipantsController extends Controller {
           continue;
         }
 
-        // // Move the temporary files to locations where we can find them later.
-        // if ($composer->saveAttachment($file) === false) {
-        //   $file['error'] = 99;
-        //   $file['str_error'] = $this->l->t('Couldn\'t save temporary file for: %s', $file['name']);
-        //   continue;
-        // }
+        // upload successful now try to move the file to its proper
+        // location, just append the file extension to our destination
+        // path and go.
+        $this->logInfo('FILE '.print_r($file, true));
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filePath = $filePath . '.' .$extension;
+        $userStorage->putContent(
+          $filePath,
+          file_get_contents($file['tmp_name']));
+        unlink($file['tmp_name']);
+
+        unset($file['tmp_name']);
+        $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
+                                       [ $file['name'], $filePath ]);
+        $file['name'] = $filePath;
+        $file['meta'] = [
+          'musicianId' => $musicianId,
+          'projectId' => $projectId,
+          'pathChain' => $pathChain,
+          'extension' => $extension,
+        ];
       }
-      return self::dataResponse($files);
+      return self::dataResponse([ $file ]);
     default:
       break;
     }

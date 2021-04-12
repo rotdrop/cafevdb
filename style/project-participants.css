@@ -214,3 +214,43 @@ div.project-participants tr.participant-field.recurring td.pme-value td.operatio
 div.project-participants tr.participant-field.recurring table.row-count-0 thead  {
   display:none;
 }
+
+div.project-participants form.pme-form td.pme-value.file-data table.file-upload {
+  width:100%;
+}
+
+div.project-participants form.pme-form tr.file-upload-row td.file-data {
+  width:100%;
+  padding-right:3px;
+}
+
+div.project-participants form.pme-form tr.file-upload-row td.operations input.operation {
+  background-repeat:no-repeat;
+  background-size: 24px 24px;
+  background-position: center;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  margin-right:1em;
+}
+
+div.project-participants form.pme-form tr.file-upload-row input.delete-undelete {
+  background-image:url('../img/cafevdb-delete.svg');
+}
+
+div.project-participants form.pme-form tr.file-upload-row input.upload-replace {
+  background-image:url('../../../core/img/actions/upload.svg');
+}
+
+div.project-participants form.pme-form tr.file-upload-row a[href=""] {
+  display:none;
+}
+
+div.project-participants form.pme-form tr.file-upload-row a ~ .upload-placeholder {
+  display:none;
+}
+
+div.project-participants form.pme-form tr.file-upload-row a[href=""] ~ .upload-placeholder {
+  display:inline-block;
+  width:100%;
+}

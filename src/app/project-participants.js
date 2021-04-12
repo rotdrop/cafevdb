@@ -355,6 +355,9 @@ const myReady = function(selector, resizeCB) {
   let musicianId = form.find(PHPMyEdit.sysNameSelector('input', 'rec[musician_id]'));
   musicianId = musicianId.length === 1 ? musicianId.val() : -1;
 
+  let projectId = form.find(PHPMyEdit.sysNameSelector('input', 'rec[project_id]'));
+  projectId = projectId.length === 1 ? projectId.val() : -1;
+
   const selectedVoices = selectVoices.val();
   selectVoices.data('selected', selectedVoices || []);
 
@@ -770,18 +773,27 @@ const myReady = function(selector, resizeCB) {
 
   const fileUploadTemplate = $('#fileUploadTemplate');
   container
-    .find('form.pme-form tr.participant-field.file-data td.pme-value .file-upload-wrapper')
+    .find('form.pme-form tr.participant-field.file-data td.pme-value .file-upload-row')
     .each(function(index) {
       const $this = $(this);
       const optionKey = $this.data('optionKey');
+      const fileBase = $this.data('fileBase');
+      const subDir = $this.data('subDir');
       const widgetId = 'file-upload-' + optionKey;
-      const uploadUi = fileUploadTemplate.octemplate({
-        wrapperId: widgetId,
-        formClass: 'file-upload-form',
-        accept: '*',
-        uploadName: 'files[' + optionKey + ']',
-      });
       if ($('#' + widgetId).length === 0) {
+        const uploadUi = fileUploadTemplate.octemplate({
+          wrapperId: widgetId,
+          formClass: 'file-upload-form',
+          accept: '*',
+          uploadName: 'files[' + optionKey + ']',
+          projectId,
+          musicianId,
+          uploadData: JSON.stringify({
+            optionKey,
+            subDir,
+            fileBase,
+          }),
+        });
         $('body').append(uploadUi);
       }
       FileUpload.init({
@@ -791,15 +803,16 @@ const myReady = function(selector, resizeCB) {
         //   //attachmentFromJSON(json, { origin: 'upload' });
         // },
         stopCallback: null,
-        dropZone: null,
+        dropZone: $this,
         containerSelector: '#' + widgetId,
         inputSelector: 'input[type="file"]',
+        multiple: false,
       });
 
-      $this.find('a')
+      $this.find('input.delete-undelete').prop('disabled', $this.find('a.download-link').attr('href') === '');
+      $this.find('input.upload-placeholder, input.upload-replace')
         .on('click', function(event) {
           const $fileUpload = $('#' + widgetId + ' input[type="file"]');
-          console.info('UPLOAD', $fileUpload);
           $fileUpload.trigger('click');
           return false;
         });
