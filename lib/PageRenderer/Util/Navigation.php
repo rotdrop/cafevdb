@@ -68,12 +68,13 @@ class Navigation
    * label => optional label
    * group => optional option group
    * groupClass => optional css, only taken into account on group-change
+   * groupData => optional data array, only taken into account on group-change
    * data => optional data for option data attributes
    *
    * Optional fields need not be present.
    *
    * @param $selectedValues Optional. Set Navigation::SELECTED for the
-   * given values. $selectedValues may be a single value of an array of
+   * given values. $selectedValues may be a single value or an array of
    * values.
    */
   static public function selectOptions($options, $selectedValues = [])
@@ -124,7 +125,8 @@ class Navigation
         $indent = '';
         if ($group) {
           $groupClass = isset($option['groupClass']) ? ' class="'.$option['groupClass'].'"' : '';
-          $result .= '<optgroup label="'.$group.'"'.$groupClass.'>
+          $groupData = isset($option['groupData']) ? " data-group='".json_encode($option['groupData'], JSON_FORCE_OBJECT)."'" : '';
+          $result .= '<optgroup label="'.$group.'"'.$groupClass.$groupData.'>
           ';
           $indent = '  ';
         }
