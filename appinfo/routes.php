@@ -278,10 +278,9 @@ $routes = [
       'verb' => 'POST',
     ],
     [
-      'name' => 'project_participants#upload',
-      'url' => '/projects/participants/upload/{source}',
+      'name' => 'project_participants#files',
+      'url' => '/projects/participants/files/{operation}',
       'verb' => 'POST',
-      'defaults' => [ 'source' => 'upload' ],
     ],
     /**
      * Musicians

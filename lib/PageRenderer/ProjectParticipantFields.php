@@ -485,7 +485,6 @@ class ProjectParticipantFields extends PMETableViewBase
         default:
           switch ($dataType) {
           case DataType::FILE_DATA:
-          case DataType::UPLOAD_AREA:
             $value = $this->l->t('n/a');
             break;
           case DataType::BOOLEAN:

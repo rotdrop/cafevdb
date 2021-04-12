@@ -58,11 +58,6 @@ use MyCLabs\Enum\Enum as EnumType;
  * Single-file upload data which is stored as inline URI in the
  * database. The total encoded size is limited by the used database
  * backend and its associated data-type.
- *
- * @method static self UPLOAD_AREA()
- * A file-upload area. Files can be uploaded to a dedicated file-space
- * in the cloud which is tagged by the participants UUID and the UUID
- * of the field.
  */
 class EnumParticipantFieldDataType extends EnumType
 {
@@ -76,5 +71,4 @@ class EnumParticipantFieldDataType extends EnumType
   public const SERVICE_FEE = 'service-fee';
   public const DEPOSIT = 'deposit';
   public const FILE_DATA = 'file-data';
-  public const UPLOAD_AREA = 'upload-area';
 };

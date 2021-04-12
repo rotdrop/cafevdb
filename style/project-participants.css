@@ -224,22 +224,27 @@ div.project-participants form.pme-form tr.file-upload-row td.file-data {
   padding-right:3px;
 }
 
-div.project-participants form.pme-form tr.file-upload-row td.operations input.operation {
+div.project-participants form.pme-form tr.file-upload-row td.operations .operation {
+  display:inline-block;
   background-repeat:no-repeat;
   background-size: 24px 24px;
   background-position: center;
   width:28px;
   height:28px;
   vertical-align:middle;
-  margin-right:1em;
+  margin-right:0.5em;
 }
 
-div.project-participants form.pme-form tr.file-upload-row input.delete-undelete {
+div.project-participants form.pme-form tr.file-upload-row .operation.delete-undelete {
   background-image:url('../img/cafevdb-delete.svg');
 }
 
-div.project-participants form.pme-form tr.file-upload-row input.upload-replace {
+div.project-participants form.pme-form tr.file-upload-row .operation.upload-replace {
   background-image:url('../../../core/img/actions/upload.svg');
+}
+
+div.project-participants form.pme-form tr.file-upload-row .operation.open-parent {
+  background-image:url('../../../core/img/filetypes/folder-external.svg');
 }
 
 div.project-participants form.pme-form tr.file-upload-row a[href=""] {

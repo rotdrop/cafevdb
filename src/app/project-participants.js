@@ -776,6 +776,7 @@ const myReady = function(selector, resizeCB) {
     .find('form.pme-form tr.participant-field.file-data td.pme-value .file-upload-row')
     .each(function(index) {
       const $this = $(this);
+      const fieldId = $this.data('fieldId');
       const optionKey = $this.data('optionKey');
       const fileBase = $this.data('fileBase');
       const subDir = $this.data('subDir');
@@ -789,6 +790,7 @@ const myReady = function(selector, resizeCB) {
           projectId,
           musicianId,
           uploadData: JSON.stringify({
+            fieldId,
             optionKey,
             subDir,
             fileBase,
@@ -796,12 +798,20 @@ const myReady = function(selector, resizeCB) {
         });
         $('body').append(uploadUi);
       }
+
+      const $parentFolder = $this.find('.operation.open-parent');
+      const $deleteUndelete = $this.find('.operation.delete-undelete');
+      const $downloadLink = $this.find('a.download-link');
+
       FileUpload.init({
-        url: generateUrl('projects/participants/upload'),
-        // doneCallback(json) {
-        //   console.info('JSON', json);
-        //   //attachmentFromJSON(json, { origin: 'upload' });
-        // },
+        url: generateUrl('projects/participants/files/upload'),
+        doneCallback(file, index, container) {
+          console.info('DONE', file, index, container);
+          $downloadLink.attr('href', file.meta.download);
+          $downloadLink.html(file.meta.baseName);
+          $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
+          $parentFolder.prop('disabled', $downloadLink.attr('href') === '');
+        },
         stopCallback: null,
         dropZone: $this,
         containerSelector: '#' + widgetId,
@@ -809,13 +819,45 @@ const myReady = function(selector, resizeCB) {
         multiple: false,
       });
 
-      $this.find('input.delete-undelete').prop('disabled', $this.find('a.download-link').attr('href') === '');
+      $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
+      $parentFolder.prop('disabled', $downloadLink.attr('href') === '');
       $this.find('input.upload-placeholder, input.upload-replace')
         .on('click', function(event) {
           const $fileUpload = $('#' + widgetId + ' input[type="file"]');
           $fileUpload.trigger('click');
           return false;
         });
+
+      $deleteUndelete.on('click', function(event) {
+        const cleanup = function() {
+          Page.busyIcon(false);
+          CAFEVDB.modalizer(false);
+        };
+
+        CAFEVDB.modalizer(true);
+        Page.busyIcon(true);
+
+        $.post(
+          generateUrl('projects/participants/files/delete'), {
+            musicianId,
+            projectId,
+            fieldId,
+            optionKey,
+          })
+          .fail(function(xhr, status, errorThrown) {
+            Ajax.handleError(xhr, status, errorThrown, cleanup);
+          })
+          .done(function(data) {
+            if (!Ajax.validateResponse(data, ['message'], cleanup)) {
+              return;
+            }
+            $downloadLink.attr('href', '');
+            $downloadLink.html('');
+            $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
+            Notification.messages(data.message);
+            cleanup();
+          });
+      });
     });
 
 };

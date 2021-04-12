@@ -304,6 +304,16 @@ invited to have a look, but please do not change anything unless you know what y
 
       'expert-operations' => $this->l->t('For those who know what they are doing, which essentially means: don\'t.'),
 
+      'participant-attachment-delete' => $this->l->t('Delete this file attachment. Undelete may be possible using the file-app of the cloud-software.'),
+
+      'participant-attachment-upload-replace' => $this->l->t('Upload a new attachment. The old attachment possibly may be restore using hte file-app of the cloud-software.'),
+
+      'participant-attachment-upload' => $this->l->t('Click to upload the relevant file or use drag and drop anywhere in this data-row.'),
+
+      'participant-attachment-download' => $this->l->t('Click to download this file.'),
+
+      'participant-attachment-open-parent' => $this->l->t('Open the containing folder using the file-app of the cloud.'),
+
       'participant-field-' => $this->l->t('placeholder'),
 
       'participant-field-choices-groupofpeople' => $this->l->t('Group of people, e.g. to define room-mates.'),

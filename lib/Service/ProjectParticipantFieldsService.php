@@ -48,16 +48,13 @@ class ProjectParticipantFieldsService
     ],
     Multiplicity::SINGLE => [
       DataType::FILE_DATA,
-      DataType::UPLOAD_AREA,
     ],
     Multiplicity::MULTIPLE => [
       DataType::BOOLEAN,
-      DataType::UPLOAD_AREA,
       DataType::FILE_DATA,
     ],
     Multiplicity::PARALLEL => [
       DataType::BOOLEAN,
-      DataType::UPLOAD_AREA,
     ],
     Multiplicity::RECURRING => [
       DataType::BOOLEAN,
@@ -69,17 +66,14 @@ class ProjectParticipantFieldsService
       DataType::DATETIME,
       DataType::DEPOSIT,
       DataType::FILE_DATA,
-      DataType::UPLOAD_AREA,
     ],
     Multiplicity::GROUPOFPEOPLE => [
       DataType::BOOLEAN,
       DataType::FILE_DATA,
-      DataType::UPLOAD_AREA,
     ],
     Multiplicity::GROUPSOFPEOPLE => [
       DataType::BOOLEAN,
       DataType::FILE_DATA,
-      DataType::UPLOAD_AREA,
     ],
   ];
 

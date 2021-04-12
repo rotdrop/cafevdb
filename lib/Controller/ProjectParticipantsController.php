@@ -292,11 +292,11 @@ class ProjectParticipantsController extends Controller {
   /**
    * @NoAdminRequired
    *
-   * @param string $topic
+   * @param string $operation
    *
    * @todo There should be an upload support class handling this stuff
    */
-  public function upload($source, $musicianId, $projectId, $data)
+  public function files($operation, $musicianId, $projectId, $fieldId, $optionKey, $data)
   {
     $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
@@ -312,19 +312,51 @@ class ProjectParticipantsController extends Controller {
     /** @var UserStorage $userStorage */
     $userStorage = $this->di(UserStorage::class);
 
-    $uploadData = json_decode($data, true);
-    $optionKey = $uploadData['optionKey'];
+    switch ($operation) {
+    case 'delete':
+      $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
+      // @todo validate inputs
+      $fieldDatum = $participant->getParticipantFieldsDatum($optionKey);
+      if (empty($fieldDatum)) {
+        return self::grumble($this->l->t('Unable to find data for option key "%s".', $optionKey));
+      }
 
-    $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician), ];
-    $subDir = $uploadData['subDir'];
-    if ($subDir) {
-      $pathChain[] = $subDir;
-    }
-    $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
-    $filePath = implode(UserStorage::PATH_SEP, $pathChain);
+      $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, true);
+      $filePath = $prefixPath . UserStorage::PATH_SEP. $fieldDatum->getOptionValue();
 
-    switch ($source) {
+      $this->logInfo('PATH TO REMOVE '.$filePath);
+
+      $fileRemoved = false;
+      $this->entityManager->beginTransaction();
+      try {
+        $userStorage->delete($filePath);
+        $this->remove($fieldDatum);
+        $this->flush();
+        $this->entityManager->commit();
+      } catch (\Throwable $t) {
+        $this->entityManager->rollback();
+        throw new \RuntimeException($this->l->t('Unable to delete file "%S".', $filePath), $t->getCode(), $t);
+      }
+      return self::response($this->l->t('Successfully removed file "%s".', $filePath));
+      break;
     case 'upload':
+
+      $uploadData = json_decode($data, true);
+      $fieldId = $uploadData['fieldId'];
+      $optionKey = $uploadData['optionKey'];
+
+      $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
+
+      $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician, true), ];
+      $subDir = $uploadData['subDir'];
+      if ($subDir) {
+        $pathChain[] = $subDir;
+        $subDir .= UserStorage::PATH_SEP;
+      }
+      $userStorage->ensureFolderChain($pathChain);
+      $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
+      $filePath = implode(UserStorage::PATH_SEP, $pathChain);
+
       $fileKey = 'files';
       if (empty($_FILES[$fileKey])) {
         // may be caused by PHP restrictions which are not caught by
@@ -381,33 +413,67 @@ class ProjectParticipantsController extends Controller {
         }
 
         // upload successful now try to move the file to its proper
-        // location, just append the file extension to our destination
-        // path and go.
-        $this->logInfo('FILE '.print_r($file, true));
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $filePath = $filePath . '.' .$extension;
-        $userStorage->putContent(
-          $filePath,
-          file_get_contents($file['tmp_name']));
-        unlink($file['tmp_name']);
+        // location and store it in the data-base.
 
-        unset($file['tmp_name']);
-        $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
-                                       [ $file['name'], $filePath ]);
-        $file['name'] = $filePath;
-        $file['meta'] = [
-          'musicianId' => $musicianId,
-          'projectId' => $projectId,
-          'pathChain' => $pathChain,
-          'extension' => $extension,
-          'download' => $userStorage->getDownloadLink($filePath),
-        ];
+        $this->logInfo('FILE '.print_r($file, true));
+
+        $fileCopied = false;
+        $this->entityManager->beginTransaction();
+        try {
+          $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+          $filePath = $filePath . '.' .$extension;
+
+          $pathInfo = pathinfo($filePath);
+
+          $fieldData = $participant->getParticipantFieldsDatum($optionKey);
+          if (empty($fieldData)) {
+            $fieldData = (new Entities\ProjectParticipantFieldDatum)
+                       ->setField($field)
+                       ->setProject($project)
+                       ->setMusician($musician)
+                       ->setOptionKey($optionKey);
+          }
+          $fieldData->setOptionValue($subDir.$pathInfo['basename']);
+          $this->persist($fieldData);
+
+          $userStorage->putContent(
+            $filePath,
+            file_get_contents($file['tmp_name']));
+          $fileCopied = true;
+          unlink($file['tmp_name']);
+
+          unset($file['tmp_name']);
+          $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
+                                         [ $file['name'], $filePath ]);
+          $file['name'] = $filePath;
+
+          $file['meta'] = [
+            'musicianId' => $musicianId,
+            'projectId' => $projectId,
+            'pathChain' => $pathChain,
+            'dirName' => $pathInfo['dirname'],
+            'baseName' => $pathInfo['basename'],
+            'extension' =>  $pathInfo['extension']?:'',
+            'fileName' => $pathInfo['filename'],
+            'download' => $userStorage->getDownloadLink($filePath),
+          ];
+
+          $this->flush();
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->entityManager->rollback();
+          if ($fileCopied) {
+            // unlink the new file
+            $userStorage->delete($filePath);
+          }
+          throw new \RuntimeException($this->l->t('Unable to store uploaded data'), $t->getCode(), $t);
+        }
       }
       return self::dataResponse([ $file ]);
     default:
       break;
     }
-    return self::grumble($this->l->t('Unknown Request %s', $source));
+    return self::grumble($this->l->t('Unknown Request: "%s"', $operation));
   }
 
 }

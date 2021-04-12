@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\InsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -1060,13 +1061,14 @@ class ProjectParticipants extends PMETableViewBase
           break;
         case FieldType::FILE_DATA:
           $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $fieldId = $field->getId();
             $key = $field->getDataOptions()->first()->getKey();
             $fileBase = $field['name'];
             $subDir = null;
             list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
             return '<div class="file-upload-wrapper" data-option-key="'.$key.'">
   <table class="file-upload">'
-            .$this->fileUploadRowHtml($value, $key, $subDir, $fileBase, $musician).'
+              .$this->fileUploadRowHtml($value, $fieldId, $key, $subDir, $fileBase, $musician).'
   </table>
 </div>';
           };
@@ -1123,6 +1125,40 @@ class ProjectParticipants extends PMETableViewBase
          *
          */
         switch ($dataType) {
+        case FieldType::FILE_DATA:
+          $keyFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
+            $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+            $values = array_combine($optionKeys, $optionValues);
+            $this->logInfo('VALUES '.print_r($values, true));
+            $fieldId = $field->getId();
+            $subDir = $field->getName();
+            list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+            /** @var Entities\ProjectParticipantFieldDataOption $option */
+            $html = '<div class="file-upload-wrapper" data-option-key="'.$key.'">
+  <table class="file-upload">';
+            foreach ($field->getSelectableOptions() as $option) {
+              $optionKey = (string)$option->getKey();
+              $fileBase = $option->getLabel();
+              $html .= $this->fileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, $fileBase, $musician);
+            }
+            $html .= '
+  </table>
+</div>';
+            return $html;
+          };
+          $keyFdd['values2'] = $values2;
+          $keyFdd['valueTitles'] = $valueTitles;
+          $keyFdd['valueData'] = $valueData;
+          $keyFdd['display|LF'] = [
+            'popup' => 'data',
+            'prefix' => '<div class="allowed-option-wrapper">',
+            'postfix' => '</div>',
+          ];
+          $keyFdd['css']['postfix'] .= ' set hide-subsequent-lines';
+          $keyFdd['select'] = 'M';
+          $keyFdd['css']['postfix'] .= ' '.$dataType;
+          break;
         case FieldType::SERVICE_FEE:
         case FieldType::DEPOSIT:
           foreach ($dataOptions as $dataOption) {
@@ -1219,9 +1255,9 @@ class ProjectParticipants extends PMETableViewBase
   ORDER BY $order_by)';
 
         $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType, $keyFddName, $valueFddName) {
-          $this->logInfo('VALUE '.$k.': '.$value);
-          $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
-          $this->logInfo('ROW IDX '.$k.': '.$row['qf'.$k.'_idx']);
+          // $this->logInfo('VALUE '.$k.': '.$value);
+          // $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
+          // $this->logInfo('ROW IDX '.$k.': '.$row['qf'.$k.'_idx']);
 
           $value = $row['qf'.$k];
           $values = Util::explodeIndexed($value);
@@ -2083,20 +2119,35 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     }
   }
 
-  private function fileUploadRowHtml($value, $key, $subDir, $fileBase, $musician)
+  private function fileUploadRowHtml($value, $fieldId, $key, $subDir, $fileBase, $musician)
   {
+    $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, true);
+    $userStorage = $this->di(UserStorage::class);
+    if (!empty($value)) {
+      $filePath = $participantFolder.UserStorage::PATH_SEP.$value;
+      $downloadLink = $userStorage->getDownloadLink($filePath);
+      $filesAppLink = $userStorage->getFilesAppLink($filePath);
+      if (!empty($subDir)) {
+        $value = str_replace($subDir.UserStorage::PATH_SEP, '', $value);
+      }
+    } else {
+      $downloadLink = '';
+      $filesAppLink = $userStorage->getFilesAppLink($participantFolder.($subDir ? UserStorage::PATH_SEP.$subDir : ''));
+    }
+    $filesAppTarget = md5($filesAppLink);
     $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
     $placeHolder = $this->l->t('Load %s', $fileName);
-    $deleteDisabled = empty($value) ? ' disabled' : '';
+    $emptyDisabled = empty($value) ? ' disabled' : '';
     $html = '
-  <tr class="file-upload-row" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" >
+  <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" >
     <td class="operations">
-      <input type="button"'.$deleteDisabled.' class="operation delete-undelete"/>
-      <input type="button" class="operation upload-replace"/>
+      <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
+      <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-replace'].'" class="operation upload-replace"/>
+      <a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent"></a>
     </td>
     <td class="file-data">
-      <a class="download-link" href="'.$value.'">'.$value.'</a>
-      <input class="upload-placeholder" placeholder="'.$placeHolder.'" type="text"/>
+      <a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$value.'</a>
+      <input class="upload-placeholder" title="'.$this->toolTipsService['participant-attachment-upload'].'" placeholder="'.$placeHolder.'" type="text"/>
     </td>
   </tr>';
     return $html;
