@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Behat\Transliterator\Transliterator;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -31,6 +33,8 @@ use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -279,10 +283,10 @@ class ProjectService
           $paths[$key] = $projectsFolder;
           break;
         }
-        $paths[$key] = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_PARTICIPANTS_FOLDER);
+        $paths[$key] = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
         break;
       case ConfigService::PROJECT_BALANCE_FOLDER:
-        $paths[$key] = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_BALANCE_FOLDER).$yearName;
+        $paths[$key] = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER).$yearName;
         break;
       }
     }
@@ -304,6 +308,7 @@ class ProjectService
    */
   public function ensureProjectFolders($projectOrId, $projectName = null, $only = null)
   {
+    $this->logInfo('HELLO: '.$only);
     $project = $this->repository->ensureProject($projectOrId);
     if (empty($projectName)) {
       $projectName = $project['name'];
@@ -313,8 +318,8 @@ class ProjectService
 
     $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
-    $participantsFolder = $this->getConfigValue(ConfigService::PROJECTS_PARTICIPANTS_FOLDER);
-    $balanceFolder  = $this->getConfigValue(ConfigService::PROJECTS_BALANCE_FOLDER);
+    $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+    $balanceFolder  = $this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER);
 
     $projectPaths = [
       'project' => [
@@ -338,8 +343,9 @@ class ProjectService
         $participantsFolder,
       ],
     ];
+
     $returnPaths = [];
-    foreach ($paths as $key => $chain) {
+    foreach ($projectPaths as $key => $chain) {
       if (!empty($only) && $key != $only) {
         continue;
       }
@@ -375,8 +381,8 @@ class ProjectService
 
     $sharedFolder   = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
-    $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_PARTICIPANTS_FOLDER);
-    $balanceFolder  = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_BALANCE_FOLDER).$yearName;
+    $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+    $balanceFolder  = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER).$yearName;
 
     $projectPaths = [
       'participants' => $participantsFolder,
@@ -413,7 +419,7 @@ class ProjectService
 
     $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
-    $balanceFolder  = $this->getConfigValue(ConfigService::PROJECTS_BALANCE_FOLDER);
+    $balanceFolder  = $this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER);
 
     $prefixPath = [
       'project' => '/'.$sharedFolder.'/'.$projectsFolder.'/',
@@ -450,9 +456,22 @@ class ProjectService
     return $returnPaths;
   }
 
-  public function ensureParticipantFolder(Entities\Project $project, Entities\Musician $musician)
+  public function ensureParticipantFolder(Entities\Project $project, $musician)
   {
-    $parentPath = $this->ensureProjectFolders($project, null, 'participants')[0];
+    $parentPath = array_shift($this->ensureProjectFolders($project, null, 'participants'));
+    $participantFolder = $parentPath.UserStorage::PATH_SEP.$musician['userIdSlug'];
+    $this->userStorage->ensureFolder($participantFolder);
+    return $participantFolder;
+  }
+
+  /**
+   * e.g. passport-clausjustusheine.pdf
+   * e.g. passport-claus-justus-heine.pdf
+   */
+  public function participantFilename(string $base, $project, $musician)
+  {
+    $userIdSlug = $musician['userIdSlug']?:$this->defaultUserIdSlug($musician['surName'], $musician['firstName'], $musician['nickName']);
+    return $base.'-'.Util::dashesToCamelCase($userIdSlug, true, '_-.');
   }
 
   public function projectWikiLink($pageName)
