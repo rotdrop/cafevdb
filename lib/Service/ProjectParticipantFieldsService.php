@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\AlwaysReceivablesGenerator;
@@ -111,18 +112,67 @@ class ProjectParticipantFieldsService
    */
   public function monetaryFields(Entities\Project $project)
   {
-    $participantFields = $project['participantFields'];
+    // $participantFields = $project['participantFields'];
 
-    $monetary = [];
-    foreach ($participantFields as $field) {
-      switch ($field['dataType']) {
-      case 'service-fee':
-      case 'deposit':
-        $monetary[$field['id']] = $field;
+    // $monetary = [];
+    // foreach ($participantFields as $field) {
+    //   switch ($field['dataType']) {
+    //   case DataType::SERVICE_FEE:
+    //   case DataType::DEPOSIT:
+    //     $monetary[$field['id']] = $field;
+    //     break;
+    //   }
+    // }
+    return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
+      'dataType' => [ DataType::SERVICE_FEE, DataType::DEPOSIT ],
+    ]));
+  }
+
+  /**
+   * Generate a drop-down select for service-fees to be used when
+   * generating debit notes. Only recurring fees are split into single
+   * items (we think hear of recurring fees on a yearly basis), which
+   * all other sub-options can only be charged together.
+   *
+   *
+   */
+  public function monetarySelectOptions(Entities\Project $project)
+  {
+    $nonRecurringGroup = $this->l->t('One-time Receivables');
+    $selectOptions = [];
+    /** @var Entities\ProjectParticipantField $field */
+    foreach ($this->monetaryFields($project) as $field) {
+      switch ($field->getMultiplicity()) {
+      case Multiplicity::SIMPLE:
+      case Multiplicity::SINGLE:
+      case Multiplicity::MULTIPLE:
+      case Multiplicity::GROUPOFPEOPLE:
+      case Multiplicity::GROUPSOFPEOPLE:
+      case Multiplicity::PARALLEL:
+        $selectionOptions[] = [
+          'group' => $nonRecurringGroup,
+          'name' => $field->getName(),
+          'value' => '', // list of keys?
+          'data' => [], // relevant data from field definition
+        ];
+        // only a single option
+        break;
+      case Multiplicity::RECURRING:
+        // option groups with multiple options
+        $group = $field->getName();
+        /** @var Entities\ProjectParticipantFieldDataOption $option */
+        foreach ($field->getSelectableOptions() as $option) {
+          $selectionOptions[] = [
+            'group' => $group,
+            'name' => $option->getLabel(),
+            'value' => $option->getKey(),
+            'data' => [], // ? needed ?
+            'groupData' => [], // relevant data from field definition
+          ];
+        }
         break;
       }
     }
-    return $monetary;
   }
 
   /**
