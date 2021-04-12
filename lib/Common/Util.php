@@ -25,8 +25,8 @@ namespace OCA\CAFEVDB\Common;
 
 class Util
 {
-  const OMIT_EMPTY_FIELDS = 1;
-  const TRIM = 2;
+  public const OMIT_EMPTY_FIELDS = 1;
+  public const TRIM = 2;
 
   private static $externalScripts = [];
 
