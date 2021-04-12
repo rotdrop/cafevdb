@@ -308,7 +308,6 @@ class ProjectService
    */
   public function ensureProjectFolders($projectOrId, $projectName = null, $only = null)
   {
-    $this->logInfo('HELLO: '.$only);
     $project = $this->repository->ensureProject($projectOrId);
     if (empty($projectName)) {
       $projectName = $project['name'];
