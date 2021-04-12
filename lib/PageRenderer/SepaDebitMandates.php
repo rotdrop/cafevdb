@@ -177,7 +177,13 @@ class SepaDebitMandates extends PMETableViewBase
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
     $opts['options'] = 'ACPVDF';
-    $sort = false; // too few entries
+
+    if ($projectMode) {
+      $opts['options'] .= 'M';
+    }
+    $opts['misc']['css']['major'] = 'debit-note';
+    $opts['misc']['css']['minor'] = 'debit-note tooltip-bottom';
+    $opts['labels']['Misc'] = $this->l->t('Debit');
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
@@ -210,19 +216,19 @@ class SepaDebitMandates extends PMETableViewBase
             'value' => 'membership-fee',
             'name' => $this->l->t('Membership Fee'),
             'titile' => $this->toolTipsService['debit-note-job-option-membership-fee'],
-            'flags' => ($debitJob === 'membership-fee' ? Navigation::SELECTED : 0),
+            'flags' => ($debitJob === 'membership-fee' ? PageNavigation::SELECTED : 0),
           ],
           [
             'value' => 'insurance',
             'name' => $this->l->t('Insurance'),
             'titile' => $this->toolTipsService['debit-note-job-option-insurance'],
-            'flags' => ($debitJob === 'insurance' ? Navigation::SELECTED : 0),
+            'flags' => ($debitJob === 'insurance' ? PageNavigation::SELECTED : 0),
           ],
           [
             'value' => 'amount',
             'name' => $this->l->t('Amount'),
             'titile' => $this->toolTipsService['debit-note-job-option-amount'],
-            'flags' => ($debitJob === 'amount' ? Navigation::SELECTED : 0),
+            'flags' => ($debitJob === 'amount' ? PageNavigation::SELECTED : 0),
           ]
         ];
       } else {
@@ -231,19 +237,19 @@ class SepaDebitMandates extends PMETableViewBase
             'value' => 'deposit',
             'name' => $this->l->t('Deposit'),
             'titile' => $this->toolTipsService['debit-note-job-option-deposit'],
-            'flags' => ($debitJob === 'deposit' ? Navigation::SELECTED : 0),
+            'flags' => ($debitJob === 'deposit' ? PageNavigation::SELECTED : 0),
           ],
           [
             'value' => 'remaining',
             'name' => $this->l->t('Remaining'),
             'titile' => $this->toolTipsService['debit-note-job-option-remaining'],
-            'flags' => ($debitJob === 'remaining' ? Navigation::SELECTED : 0),
+            'flags' => ($debitJob === 'remaining' ? PageNavigation::SELECTED : 0),
           ],
           [
             'value' => 'amount',
             'name' => $this->l->t('Amount'),
             'titile' => $this->toolTipsService['debit-note-job-option-amount'],
-            'flags' => ($debitJob === 'amount' ? Navigation::SELECTED : 0),
+            'flags' => ($debitJob === 'amount' ? PageNavigation::SELECTED : 0),
           ],
         ];
       }
@@ -309,7 +315,7 @@ received so far'),
     }
     $opts['display']['tabs'][] = $allTab;
 
-    if ($this->addOperation()) {
+    if ($this->addOperation()){
       $opts['display']['tabs'] = false;
     }
 
@@ -530,12 +536,12 @@ received so far'),
             'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
             'default'  => $field['default_value'],
             'values' => [
-              'column' => 'field_value',
+              'column' => 'option_value',
               'filters' => ('$table.field_id = '.$fieldId
                             .' AND $table.project_id = '.$projectId
                             .' AND $table.musician_id = $record_id[musician_id]'),
             ],
-            'tooltip' => $field['tool_tip']?:null,
+            'tooltip' => $field['tooltip']?:null,
             'php' => function($value, $op, $field, $row, $recordId, $pme) {
               $amount = 0.0;
 
