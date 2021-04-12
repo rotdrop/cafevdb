@@ -80,8 +80,6 @@ function init(options) {
   const uploadProgressWrapper = container.find('div.uploadprogresswrapper');
   const progressBar = uploadProgressWrapper.find('div.uploadprogressbar');
 
-  console.info('ELEMENTS', container, form, fileUploadStart, uploadProgressWrapper);
-
   const fileUploadParam = {
     // forceIframeTransport: true,
     initialIframeSrc: 'http://',
@@ -153,7 +151,6 @@ function init(options) {
       uploadProgressWrapper.find('input.stop').show();
     },
     fail(event, data) {
-      console.info('FAIL HANDLER');
       if (typeof data.textStatus !== 'undefined' && data.textStatus !== 'success') {
         if (data.textStatus === 'abort') {
           Notification.show(t(appName, 'Upload cancelled.'), { timeout: 15 });
@@ -180,7 +177,6 @@ function init(options) {
       uploadProgressWrapper.cafevDialog('option', 'title', title);
     },
     progressall(e, data) {
-      console.info('PROGRESSALL', data);
       const progress = (data.loaded / data.total) * 100;
       progressBar.progressbar('value', progress);
     },
@@ -193,17 +189,13 @@ function init(options) {
      */
     done(event, data) {
 
-      console.info('DONE', data);
-
       const result = data.result;
 
       const errors = [];
 
       const processUpload = function(upload, index) {
 
-        console.info('UPLOAD ENTRY', upload, index);
-
-        if (upload.error !== 0) {
+        if (+upload.error !== 0) {
           errors.push(upload.str_error);
           return;
         }
