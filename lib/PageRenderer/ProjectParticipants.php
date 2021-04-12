@@ -193,11 +193,14 @@ class ProjectParticipants extends PMETableViewBase
   /** @var ProjectService */
   private $projectService;
 
-  /** @var \OCA\CAFEVDB\PageRenderer\Musicians */
+  /** @var Musicians */
   private $musiciansRenderer;
 
-  /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
+  /** @var Entities\Project */
   private $project;
+
+  /** @var UserStorage */
+  private $userStorage;
 
   public function __construct(
     ConfigService $configService
@@ -214,6 +217,7 @@ class ProjectParticipants extends PMETableViewBase
     , ProjectParticipantFieldsService $participantFieldsService
     , ProjectService $projectService
     , Musicians $musiciansRenderer
+    , UserStorage $userStorage
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
@@ -224,6 +228,8 @@ class ProjectParticipants extends PMETableViewBase
     $this->musiciansRenderer = $musiciansRenderer;
     $this->participantFieldsService = $participantFieldsService;
     $this->projectService = $projectService;
+    $this->userStorage = $userStorage;
+
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
   }
 
@@ -1073,6 +1079,18 @@ class ProjectParticipants extends PMETableViewBase
   </table>
 </div>';
           };
+          $valueFdd['php|LFDV'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            if (!empty($value)) {
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
+              $filePath = $participantFolder.UserStorage::PATH_SEP.$value;
+              $downloadLink = $this->userStorage->getDownloadLink($filePath);
+              $fileBase = $field['name'];
+              return '<a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileBase.'</a>';
+            }
+            return null;
+          };
+
           break;
         default:
           break;
@@ -1131,7 +1149,7 @@ class ProjectParticipants extends PMETableViewBase
             $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
             $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
             $values = array_combine($optionKeys, $optionValues);
-            $this->logInfo('VALUES '.print_r($values, true));
+            $this->debug('VALUES '.print_r($values, true));
             $fieldId = $field->getId();
             $policy = $field->getDefaultValue()?:'rename';
             $subDir = $field->getName();
@@ -1149,15 +1167,23 @@ class ProjectParticipants extends PMETableViewBase
 </div>';
             return $html;
           };
+          $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            if (!empty($value)) {
+              $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
+              $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+              $values = array_combine($optionKeys, $optionValues);
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
+              $filePath = $participantFolder.UserStorage::PATH_SEP.array_shift($values);
+              $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
+              $filesAppTarget = md5($filesAppLink);
+              return '<a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="open-parent">'.$value.'</a>';
+            }
+            return null;
+          };
           $keyFdd['values2'] = $values2;
           $keyFdd['valueTitles'] = $valueTitles;
           $keyFdd['valueData'] = $valueData;
-          $keyFdd['display|LF'] = [
-            'popup' => 'data',
-            'prefix' => '<div class="allowed-option-wrapper">',
-            'postfix' => '</div>',
-          ];
-          $keyFdd['css']['postfix'] .= ' set hide-subsequent-lines';
           $keyFdd['select'] = 'M';
           $keyFdd['css']['postfix'] .= ' '.$dataType;
           break;
@@ -2126,22 +2152,20 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
   private function fileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician)
   {
     $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-    /** @var UserStorage $userStorage */
-    $userStorage = $this->di(UserStorage::class);
     // make sure $subDir exists
     if (!empty($subDir)) {
-      $userStorage->ensureFolder($participantFolder.UserStorage::PATH_SEP.$subDir);
+      $this->userStorage->ensureFolder($participantFolder.UserStorage::PATH_SEP.$subDir);
     }
     if (!empty($value)) {
       $filePath = $participantFolder.UserStorage::PATH_SEP.$value;
-      $downloadLink = $userStorage->getDownloadLink($filePath);
-      $filesAppLink = $userStorage->getFilesAppLink($filePath);
+      $downloadLink = $this->userStorage->getDownloadLink($filePath);
+      $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
       if (!empty($subDir)) {
         $value = str_replace($subDir.UserStorage::PATH_SEP, '', $value);
       }
     } else {
       $downloadLink = '';
-      $filesAppLink = $userStorage->getFilesAppLink($participantFolder.($subDir ? UserStorage::PATH_SEP.$subDir : ''));
+      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder.($subDir ? UserStorage::PATH_SEP.$subDir : ''));
     }
     $filesAppTarget = md5($filesAppLink);
     $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
