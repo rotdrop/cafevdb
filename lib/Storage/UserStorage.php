@@ -218,6 +218,37 @@ class UserStorage
     }
   }
 
+  /**
+   * Generate a DAV download-link for the given node or path-name.
+   *
+   * The resulting node should look like
+   *
+   * https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/remote.php/webdav/camerata/projects/2020/Test2020/participants/claus-justus.heine/DateiUpload-ClausJustusHeine.zip?downloadStartSecret=uwq0q4j24sb
+   *
+   * @return null|string The download URL or null.
+   */
+  public function getDownloadLink($pathOrNode):?string
+  {
+    if (is_string($pathOrNode)) {
+      $node = $this->userFolder->get($pathOrNode);
+    } else if ($pathOrNode instanceof \OCP\Files\Node) {
+      $node = $pathOrNode;
+    } else {
+      throw new \InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
+    }
+    $this->logDebug('NODE '.$node->getPath().' '.$node->getInternalPath());
+
+    // Internal path is mount-point specific and in particular
+    // relative to the share-root if sharing a folder. getPath()
+    // containers the /USERID/files/ prefix. We use that for the
+    // moment ...
+
+    $webDAVRoot = \OCP\Util::linkToRemote('webdav/');
+    $nodePath = substr(strchr($node->getPath(), 'files/'), strlen('files/'));
+
+    return $webDAVRoot.$nodePath;
+  }
+
 }
 
 // Local Variables: ***
