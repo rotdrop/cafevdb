@@ -82,7 +82,6 @@ class UserStorage
     try {
       return empty($path) ? $this->userFolder : $this->userFolder->get($path);
     } catch (\OCP\Files\NotFoundException $t) {
-      $this->logInfo('File not found: '.$path);
       return null;
     }
   }
@@ -166,6 +165,7 @@ class UserStorage
     $path = '';
     foreach ($chain as $component) {
       $path .= self::PATH_SEP.$component;
+      $this->logInfo('Try ensure '.$path);
       $node = $this->ensureFolder($path);
     }
     return $node;
@@ -180,6 +180,42 @@ class UserStorage
   public function getCacheFolder(string $subDirectory)
   {
     return $this->ensureFolder(self::CACHE_DIRECTORY.self::PATH_SEP.$subDirectory);
+  }
+
+  /**
+   * Put file content by path. Create $path if it does not exists,
+   * otherwise replace its contents by the given data.
+   */
+  public function putContent($path, $content)
+  {
+    try {
+      try {
+        $file = $this->userFolder->get($path);
+        $file->putContent($content);
+      } catch(\OCP\Files\NotFoundException $e) {
+        $this->userFolder->newFile($path, $content);
+      }
+    } catch (\Throwable $t) {
+      throw new \RuntimeException($this->l->t('Unable to set content of file "%s".', $path), $t->getCode(), $t);
+    }
+  }
+
+  /**
+   * Get file content by path.
+   */
+  public function getContent($path)
+  {
+    // check if file exists and read from it if possible
+    try {
+      $file = $userFolder->get($path);
+      if($file instanceof \OCP\Files\File) {
+        return $file->getContent();
+      } else {
+        throw new \RuntimeException($this->l->t('Cannot read from folder "%s".', $path));
+      }
+    } catch(\Throwable $t) {
+      throw new \RuntimeException($this->l->t('Unable to get content of file "%s".', $path), $t->getCode() , $t);
+    }
   }
 
 }
