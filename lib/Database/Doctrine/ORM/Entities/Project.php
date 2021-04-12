@@ -101,7 +101,7 @@ class Project implements \ArrayAccess
   private $webPages;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantField", mappedBy="project", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantField", mappedBy="project", indexBy="id", fetch="EXTRA_LAZY")
    * @ORM\OrderBy({"displayOrder" = "DESC"})
    */
   private $participantFields;
@@ -420,7 +420,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setParticipantFields($participantFields)
+  public function setParticipantFields($participantFields):Project
   {
     $this->participantFields = $participantFields;
 
@@ -430,9 +430,9 @@ class Project implements \ArrayAccess
   /**
    * Get participantFields.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
-  public function getParticipantFields()
+  public function getParticipantFields():Collection
   {
     return $this->participantFields;
   }
@@ -444,7 +444,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setParticipantFieldsData($participantFieldsData)
+  public function setParticipantFieldsData($participantFieldsData):Project
   {
     $this->participantFieldsData = $participantFieldsData;
 
@@ -454,9 +454,9 @@ class Project implements \ArrayAccess
   /**
    * Get participantFieldsData.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
-  public function getParticipantFieldsData()
+  public function getParticipantFieldsData():Collection
   {
     return $this->participantFieldsData;
   }
@@ -468,7 +468,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setParticipants($participants)
+  public function setParticipants($participants):Project
   {
     $this->participants = $participants;
 
@@ -478,9 +478,9 @@ class Project implements \ArrayAccess
   /**
    * Get participants.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
-  public function getParticipants()
+  public function getParticipants():Collection
   {
     return $this->participants;
   }
