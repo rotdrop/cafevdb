@@ -56,6 +56,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const MUSICIANS_TABLE = 'Musicians';
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
 
+  const VALUES_SEP = ',';
   const JOIN_FIELD_NAME_SEPARATOR = ':';
   const JOIN_KEY_SEP = ':';
   const VALUES_TABLE_SEP = '@';
@@ -679,7 +680,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $keyField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
     $rankingField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
     foreach (['old', 'new'] as $dataSet) {
-      $keys = Util::explode(',', Util::removeSpaces(${$dataSet.'Values'}[$keyField ]));
+      $keys = Util::explode(self::VALUES_SEP, Util::removeSpaces(${$dataSet.'Values'}[$keyField ]));
       $ranking = [];
       foreach ($keys as $key) {
         $ranking[] = $key.self::JOIN_KEY_SEP.(count($ranking)+1);
