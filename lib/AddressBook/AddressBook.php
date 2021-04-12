@@ -125,13 +125,13 @@ class AddressBook extends ExternalAddressBook
    * @inheritDoc
    */
   function getProperties($properties) {
-    $lastModified = $this->getLastModified();
+    $eTag = md5((string)$this->getLastModified());
     $props = [
       '{' . Plugin::NS_OWNCLOUD . '}principaluri' => $this->principalUri,
       '{DAV:}displayname' => $this->cardBackend->getDisplayName(),
       '{' . Plugin::NS_OWNCLOUD . '}read-only' => true,
-      '{http://calendarserver.org/ns/}getctag' => $lastModified,
-      '{DAV:}getetag' => $lastModified,
+      '{http://calendarserver.org/ns/}getctag' => $eTag,
+      '{DAV:}getetag' => $eTag,
     ];
     $this->logInfo('PROPERTIES '.print_r($props, true), [], 2);
     return $props;

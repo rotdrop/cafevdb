@@ -94,7 +94,7 @@ class MusicianCard implements ICard {
    * @inheritDoc
    */
   public function getETag() {
-    return $this->getLastModified();
+    return md5((string)$this->getLastModified());
   }
 
   /**
