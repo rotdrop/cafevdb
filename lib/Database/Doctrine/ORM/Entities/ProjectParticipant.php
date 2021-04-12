@@ -24,6 +24,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
+use OCA\CAFEVDB\Common\Uuid;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
