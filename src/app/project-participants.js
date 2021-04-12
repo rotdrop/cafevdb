@@ -450,7 +450,6 @@ const myReady = function(selector, resizeCB) {
         for (let i = 0; i < oldInstruments.length; ++i) {
           selected[oldInstruments[i]] = true;
         }
-        console.info('OLD INSTRUMENTS', oldInstruments, selected);
         self.find('option').each(function(idx) {
           const self = $(this);
           if (typeof selected[self.val()] !== 'undefined') {
@@ -503,7 +502,6 @@ const myReady = function(selector, resizeCB) {
         for (let i = 0; i < oldInstruments.length; ++i) {
           selected[oldInstruments[i]] = true;
         }
-        console.info('OLD INSTRUMENTS', oldInstruments, selected);
         self.find('option').each(function(idx) {
           const self = $(this);
           if (typeof selected[self.val()] !== 'undefined') {
@@ -778,25 +776,31 @@ const myReady = function(selector, resizeCB) {
       const $this = $(this);
       const fieldId = $this.data('fieldId');
       const optionKey = $this.data('optionKey');
+      const uploadPolicy = $this.data('uploadPolicy');
       const fileBase = $this.data('fileBase');
       const subDir = $this.data('subDir');
       const widgetId = 'file-upload-' + optionKey;
-      if ($('#' + widgetId).length === 0) {
-        const uploadUi = fileUploadTemplate.octemplate({
-          wrapperId: widgetId,
-          formClass: 'file-upload-form',
-          accept: '*',
-          uploadName: 'files[' + optionKey + ']',
-          projectId,
-          musicianId,
-          uploadData: JSON.stringify({
-            fieldId,
-            optionKey,
-            subDir,
-            fileBase,
-          }),
-        });
+      const uploadUi = fileUploadTemplate.octemplate({
+        wrapperId: widgetId,
+        formClass: 'file-upload-form',
+        accept: '*',
+        uploadName: 'files[' + optionKey + ']',
+        projectId,
+        musicianId,
+        uploadData: JSON.stringify({
+          fieldId,
+          optionKey,
+          uploadPolicy,
+          subDir,
+          fileBase,
+        }),
+      });
+      const $oldUploadForm = $('#' + widgetId);
+      if ($oldUploadForm.length === 0) {
         $('body').append(uploadUi);
+      } else {
+        $oldUploadForm.replaceWith(uploadUi);
+        // uploadUi.replaceAll($oldUploadForm);
       }
 
       const $parentFolder = $this.find('.operation.open-parent');
@@ -806,7 +810,6 @@ const myReady = function(selector, resizeCB) {
       FileUpload.init({
         url: generateUrl('projects/participants/files/upload'),
         doneCallback(file, index, container) {
-          console.info('DONE', file, index, container);
           $downloadLink.attr('href', file.meta.download);
           $downloadLink.html(file.meta.baseName);
           $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
@@ -867,7 +870,6 @@ const myDocumentReady = function() {
   PHPMyEdit.addTableLoadCallback('project-participants', {
     callback(selector, parameters, resizeCB) {
 
-      console.info('PME DATA', pmeData, PHPMyEdit.data, PHPMyEdit);
       if (parameters.reason === 'tabChange') {
         resizeCB();
         return;

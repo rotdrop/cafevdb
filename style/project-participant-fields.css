@@ -32,7 +32,9 @@ table.pme-main tr.multiplicity ~ tr.pme-row.data-options,
 table.pme-main tr.multiplicity ~ tr.pme-row.data-options-single,
 table.pme-main tr.multiplicity.multiplicity-single.data-type-boolean ~ tr.pme-row.data-options-single,
 table.pme-main tr.multiplicity ~ tr.pme-row.default-value,
-table.pme-main tr.multiplicity ~ tr.pme-row.default-single-value, table.pme-main tr.multiplicity ~ tr.pme-row.default-multi-value {
+table.pme-main tr.multiplicity ~ tr.pme-row.default-single-value,
+table.pme-main tr.multiplicity ~ tr.pme-row.default-file-data-value,
+table.pme-main tr.multiplicity ~ tr.pme-row.default-multi-value {
   display:none;
 }
 
@@ -62,11 +64,12 @@ table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.data-options 
 
 table.pme-main tr.multiplicity.data-type-file-data ~ tr.pme-row.default-value,
 table.pme-main tr.multiplicity.data-type-file-data ~ tr.pme-row.default-multi-value,
-table.pme-main tr.multiplicity.data-type-file-data ~ tr.pme-row.default-single-value,
-table.pme-main tr.multiplicity.data-type-upload-area ~ tr.pme-row.default-value,
-table.pme-main tr.multiplicity.data-type-upload-area ~ tr.pme-row.default-multi-value,
-table.pme-main tr.multiplicity.data-type-upload-area ~ tr.pme-row.default-single-value {
+table.pme-main tr.multiplicity.data-type-file-data ~ tr.pme-row.default-single-value {
   display:none!important;
+}
+
+table.pme-main tr.multiplicity.data-type-file-data ~ tr.pme-row.default-file-data-value {
+  display:table-row;
 }
 
 .project-participant-fields table.pme-main tr:not(.pme-filter) .chosen-container {

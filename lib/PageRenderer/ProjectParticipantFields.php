@@ -485,7 +485,7 @@ class ProjectParticipantFields extends PMETableViewBase
         default:
           switch ($dataType) {
           case DataType::FILE_DATA:
-            $value = $this->l->t('n/a');
+            $value = $value?:$this->l->t('rename');
             break;
           case DataType::BOOLEAN:
             $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
@@ -552,6 +552,21 @@ class ProjectParticipantFields extends PMETableViewBase
       'size' => 30,
       'sort' => false,
       'tooltip' => $this->toolTipsService['participant-fields-default-single-value'],
+    ];
+
+    $opts['fdd']['default_file_data_value'] = [
+      'name' => $this->l->t('Upload Policy'),
+      // 'input' => 'V', // not virtual, update handled by trigger
+      'options' => 'ACPVD',
+      'sql' => 'IF($main_table.default_value IS NULL OR $main_table.default_value = \'\', \'rename\', $main_table.default_value)',
+      'css' => [ 'postfix' => ' default-file-data-value' ],
+      'select' => 'D',
+      'values2|ACP' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
+      'default' => 'rename',
+      'maxlen' => 29,
+      'size' => 30,
+      'sort' => false,
+      'tooltip' => $this->toolTipsService['participant-fields-default-file-data-value'],
     ];
 
     $opts['fdd']['due_date'] = $this->defaultFDD['due_date'];
@@ -801,6 +816,19 @@ class ProjectParticipantFields extends PMETableViewBase
     if ($newvals['multiplicity'] == Multiplicity::SINGLE) {
       $value = $newvals[$tag];
       $newvals['default_value'] = strlen($value) < 36 ? null : $value;
+    }
+    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+
+    /************************************************************************
+     *
+     * Move the data from default_file_data_value to default_value
+     *
+     */
+
+    $tag = 'default_file_data_value';
+    if ($newvals['data_type'] == DataType::FILE_DATA) {
+      $value = $newvals[$tag];
+      $newvals['default_value'] = $value?:'rename';
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 

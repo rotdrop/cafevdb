@@ -1062,13 +1062,14 @@ class ProjectParticipants extends PMETableViewBase
         case FieldType::FILE_DATA:
           $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
             $fieldId = $field->getId();
+            $policy = $field->getDefaultValue()?:'rename';
             $key = $field->getDataOptions()->first()->getKey();
             $fileBase = $field['name'];
             $subDir = null;
             list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
             return '<div class="file-upload-wrapper" data-option-key="'.$key.'">
   <table class="file-upload">'
-              .$this->fileUploadRowHtml($value, $fieldId, $key, $subDir, $fileBase, $musician).'
+              .$this->fileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician).'
   </table>
 </div>';
           };
@@ -1132,6 +1133,7 @@ class ProjectParticipants extends PMETableViewBase
             $values = array_combine($optionKeys, $optionValues);
             $this->logInfo('VALUES '.print_r($values, true));
             $fieldId = $field->getId();
+            $policy = $field->getDefaultValue()?:'rename';
             $subDir = $field->getName();
             list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
             /** @var Entities\ProjectParticipantFieldDataOption $option */
@@ -1140,7 +1142,7 @@ class ProjectParticipants extends PMETableViewBase
             foreach ($field->getSelectableOptions() as $option) {
               $optionKey = (string)$option->getKey();
               $fileBase = $option->getLabel();
-              $html .= $this->fileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, $fileBase, $musician);
+  $html .= $this->fileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
             }
             $html .= '
   </table>
@@ -2121,7 +2123,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     }
   }
 
-  private function fileUploadRowHtml($value, $fieldId, $key, $subDir, $fileBase, $musician)
+  private function fileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician)
   {
     $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
     /** @var UserStorage $userStorage */
@@ -2146,10 +2148,10 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     $placeHolder = $this->l->t('Load %s', $fileName);
     $emptyDisabled = empty($value) ? ' disabled' : '';
     $html = '
-  <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" >
+  <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" data-upload-policy="'.$policy.'">
     <td class="operations">
       <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
-      <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-replace'].'" class="operation upload-replace"/>
+      <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-'.$policy].'" class="operation upload-replace"/>
       <a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent"></a>
     </td>
     <td class="file-data">

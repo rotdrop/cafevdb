@@ -344,6 +344,7 @@ class ProjectParticipantsController extends Controller {
       $uploadData = json_decode($data, true);
       $fieldId = $uploadData['fieldId'];
       $optionKey = $uploadData['optionKey'];
+      $uploadPolicy = $uploadData['uploadPolicy'];
 
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
 
@@ -389,86 +390,96 @@ class ProjectParticipantsController extends Controller {
         return self::grumble($this->l->t('Invalid file index, expected the option key "%s", got "%s".', [ $optionKey, array_keys($files)[0] ]));
       }
 
-      $totalSize = 0;
-      foreach ($files as $key => &$file) {
-        // single file loop
+      $file = $files[$optionKey];
 
-        $totalSize += $file['size'];
-
-        if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
-          return self::grumble([
-            'message' => $this->l->t('Not enough storage available'),
-            'upload_max_file_size' => $maxUploadFileSize,
-            'max_human_file_size' => $maxHumanFileSize,
-          ]);
-        }
-
-        $file['upload_max_file_size'] = $maxUploadFileSize;
-        $file['max_human_file_size']  = $maxHumanFileSize;
-        $file['original_name'] = $file['name']; // clone
-
-        $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
-        if ($file['error'] != UPLOAD_ERR_OK) {
-          continue;
-        }
-
-        // upload successful now try to move the file to its proper
-        // location and store it in the data-base.
-
-        $this->logInfo('FILE '.print_r($file, true));
-
-        $fileCopied = false;
-        $this->entityManager->beginTransaction();
-        try {
-          $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-          $filePath = $filePath . '.' .$extension;
-
-          $pathInfo = pathinfo($filePath);
-
-          $fieldData = $participant->getParticipantFieldsDatum($optionKey);
-          if (empty($fieldData)) {
-            $fieldData = (new Entities\ProjectParticipantFieldDatum)
-                       ->setField($field)
-                       ->setProject($project)
-                       ->setMusician($musician)
-                       ->setOptionKey($optionKey);
-          }
-          $fieldData->setOptionValue($subDir.$pathInfo['basename']);
-          $this->persist($fieldData);
-
-          $userStorage->putContent(
-            $filePath,
-            file_get_contents($file['tmp_name']));
-          $fileCopied = true;
-          unlink($file['tmp_name']);
-
-          unset($file['tmp_name']);
-          $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
-                                         [ $file['name'], $filePath ]);
-          $file['name'] = $filePath;
-
-          $file['meta'] = [
-            'musicianId' => $musicianId,
-            'projectId' => $projectId,
-            'pathChain' => $pathChain,
-            'dirName' => $pathInfo['dirname'],
-            'baseName' => $pathInfo['basename'],
-            'extension' =>  $pathInfo['extension']?:'',
-            'fileName' => $pathInfo['filename'],
-            'download' => $userStorage->getDownloadLink($filePath),
-          ];
-
-          $this->flush();
-          $this->entityManager->commit();
-        } catch (\Throwable $t) {
-          $this->entityManager->rollback();
-          if ($fileCopied) {
-            // unlink the new file
-            $userStorage->delete($filePath);
-          }
-          throw new \RuntimeException($this->l->t('Unable to store uploaded data'), $t->getCode(), $t);
-        }
+      if ($maxUploadFileSize >= 0 and $file['size'] > $maxUploadFileSize) {
+        return self::grumble([
+          'message' => $this->l->t('Not enough storage available'),
+          'upload_max_file_size' => $maxUploadFileSize,
+          'max_human_file_size' => $maxHumanFileSize,
+        ]);
       }
+
+      $file['upload_max_file_size'] = $maxUploadFileSize;
+      $file['max_human_file_size']  = $maxHumanFileSize;
+      $file['original_name'] = $file['name']; // clone
+
+      $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
+      if ($file['error'] != UPLOAD_ERR_OK) {
+        return self::grumble($this->l->t('Unable to upload file "%s", error: $s.',
+                                         [ $file['name'], $file['str_error'] ]));
+      }
+
+      // upload successful now try to move the file to its proper
+      // location and store it in the data-base.
+
+      $this->logInfo('FILE '.print_r($file, true));
+
+      $fileCopied = false;
+      $this->entityManager->beginTransaction();
+      try {
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filePath = $filePath . '.' .$extension;
+
+        $pathInfo = pathinfo($filePath);
+
+        $fieldData = $participant->getParticipantFieldsDatum($optionKey);
+        if (empty($fieldData)) {
+          $this->logInfo('EMPTY OLD FILE');
+          $fieldData = (new Entities\ProjectParticipantFieldDatum)
+                     ->setField($field)
+                     ->setProject($project)
+                     ->setMusician($musician)
+                     ->setOptionKey($optionKey);
+        } else if ($uploadPolicy == 'rename') {
+          // Ok, we have to move the old file.
+          $oldName = $fieldData->getOptionValue();
+          $timeStamp = $this->timeStamp();
+          $oldExtension = pathInfo($oldName, PATHINFO_EXTENSION);
+          $backupName = $pathInfo['filename'].'-'.$timeStamp;
+          if (!empty($oldExtension)) {
+            $backupName .= '.'.$oldExtension;
+          }
+          $backupPath = $pathInfo['dirname'].UserStorage::PATH_SEP.$backupName;
+          $oldPath = $pathChain[0].UserStorage::PATH_SEP.$oldName;
+          $userStorage->rename($oldPath, $backupPath);
+        }
+        $fieldData->setOptionValue($subDir.$pathInfo['basename']);
+        $this->persist($fieldData);
+
+        $userStorage->putContent(
+          $filePath,
+          file_get_contents($file['tmp_name']));
+        $fileCopied = true;
+        unlink($file['tmp_name']);
+
+        unset($file['tmp_name']);
+        $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
+                                         [ $file['name'], $filePath ]);
+        $file['name'] = $filePath;
+
+        $file['meta'] = [
+          'musicianId' => $musicianId,
+          'projectId' => $projectId,
+          'pathChain' => $pathChain,
+          'dirName' => $pathInfo['dirname'],
+          'baseName' => $pathInfo['basename'],
+          'extension' =>  $pathInfo['extension']?:'',
+          'fileName' => $pathInfo['filename'],
+          'download' => $userStorage->getDownloadLink($filePath),
+        ];
+
+        $this->flush();
+        $this->entityManager->commit();
+      } catch (\Throwable $t) {
+        $this->entityManager->rollback();
+        if ($fileCopied) {
+          // unlink the new file
+          $userStorage->delete($filePath);
+        }
+        throw new \RuntimeException($this->l->t('Unable to store uploaded data'), $t->getCode(), $t);
+      }
+
       return self::dataResponse([ $file ]);
     default:
       break;

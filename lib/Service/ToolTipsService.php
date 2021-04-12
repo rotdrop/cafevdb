@@ -306,7 +306,9 @@ invited to have a look, but please do not change anything unless you know what y
 
       'participant-attachment-delete' => $this->l->t('Delete this file attachment. Undelete may be possible using the file-app of the cloud-software.'),
 
-      'participant-attachment-upload-replace' => $this->l->t('Upload a new attachment. The old attachment possibly may be restore using hte file-app of the cloud-software.'),
+      'participant-attachment-upload-replace' => $this->l->t('Upload a new attachment. The old file will be overwritten but possibly may be restored using hte file-app of the cloud-software.'),
+
+      'participant-attachment-upload-rename' => $this->l->t('Upload a new attachment. The old file will be renamed by attaching the current time to its name.'),
 
       'participant-attachment-upload' => $this->l->t('Click to upload the relevant file or use drag and drop anywhere in this data-row.'),
 
@@ -380,6 +382,8 @@ associated with this option.'),
       'participant-fields-default-multi-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
       'participant-fields-default-single-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
+
+      'participant-fields-default-file-data-value' => $this->l->t('Default policy when replacing files with new uploads. Default is to rename the old file by attaching a time-stamp. "replace" will just overwrite the old  data. Note that independent of this setting the file-app of the cloud may provide undelete operations and versioning of overwritten files.'),
 
       'participant-fields-default-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
