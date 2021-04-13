@@ -48,20 +48,20 @@ class ProjectParticipantFieldsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
+  /** @var PHPMyEdit */
   protected $pme;
+
+  /** @var EntityManager */
+  protected $entityManager;
 
   /** @var RequestParameterService */
   private $parameterService;
 
-  /** @var \OCA\CAFEVDB\Service\FuzzyInputService */
+  /** @var FuzzyInputService */
   private $fuzzyInput;
 
-  /** @var \OCA\CAFEVDB\Service\ProjectParticipantFieldsService */
+  /** @var ProjectParticipantFieldsService */
   private $participantFieldsService;
-
-  /** @var EntityManager */
-  protected $entityManager;
 
   public function __construct(
     $appName
