@@ -133,6 +133,25 @@ class SepaDebitNotesController extends Controller {
       $this->logInfo('RECEIVABLE '.$receivable->getKey().' / '.$receivable->getLabel().' / '.$receivable->getData());
     }
 
+    // Ok, we now need for each debit-mandate a list of receivables
+    //
+    // Mandate, [ [ AMOUNT, FieldDatum, ], ... ]
+    //
+    // In principle one could implement a method amount() and
+    // subject() on the Entities\ProjectParticipantFieldDatum as it
+    // has all necessary associations, including the link to the
+    // payments table. More efficient would perhaps be a direct
+    // join-query to the dataBase ...
+    //
+    // One plan: implement
+    //
+    // FieldDatum::amount()
+    // FieldDatum::subject()
+    // FieldDatum::paid()
+    //
+    // In principle this should then suffice to generate the
+    // debit-notes.
+
     return self::grumble($this->l->t('Unknown Request: "%s".', $topic));
   }
 
