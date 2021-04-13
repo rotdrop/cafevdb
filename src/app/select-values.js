@@ -65,7 +65,7 @@ const selectValues = function(select, optionValues) {
       // $self.trigger('chosen:updated'); // in case ...
     }
   });
-  $select.trigger('change'); // ???
+  // $select.trigger('change'); // ???
   return optionValues;
 };
 
