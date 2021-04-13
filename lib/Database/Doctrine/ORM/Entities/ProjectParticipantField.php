@@ -93,7 +93,7 @@ class ProjectParticipantField implements \ArrayAccess
    * @var ProjectParticipantFieldMetaDatum
    *
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist","remove"}, orphanRemoval=true)
-   * @ ORM\OrderBy({"label" = "ASC"})
+   * @ORM\OrderBy({"label" = "ASC"})
    */
   private $dataOptions;
 
