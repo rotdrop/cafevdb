@@ -37,8 +37,10 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
 
 class SepaDebitNotesController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -88,11 +90,49 @@ class SepaDebitNotesController extends Controller {
     // PME_sys_mrecs[] = "{\"project_id\":\"67\",\"musician_id\":\"1\",\"sequence\":\"1\"}"
     $mandateRecords = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);
 
-    $mandateRecords = array_map(function($value) { return json_decode($value, true); }, $mandateRecords);
+    // decode all mandate ids and fetch the mandates from the data-base
+    $mandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
+    $mandateRecords = array_map(
+      function($value) use ($mandatesRepository) {
+        $mandateId = json_decode($value, true);
+        return $mandatesRepository->find([
+          'project' => $mandateId['project_id'],
+          'musician' => $mandateId['musician_id'],
+          'sequence' => $mandateId['sequence'],
+        ]);
+      },
+      $mandateRecords);
 
-    $this->logInfo('MANDATE RECORDS '.print_r($mandateRecords, true));
+    // Fetch all desired field options. We have two cases: for most
+    // field-types all options are charged at once, but for recurring
+    // service-fees only the selected options are taken into account.
+    $debitJobs = array_unique($this->parameterService->getParam('debitJobs', []));
 
-    $this->logInfo('PARAMS '.print_r($this->parameterService->getParams(), true));
+    $fieldRepository = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
+    $receivablesRepository = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDataOption::class);
+    $receivables = [];
+    foreach ($debitJobs as $debitJob) {
+      $fieldId = filter_var($debitJob, FILTER_VALIDATE_INT, ['min_range' => 1]);
+      if ($fieldId !== false) {
+        // all options from this field
+        /** @var Entities\ProjectParticipantField $field */
+        $field = $fieldRepository->find($fieldId);
+        foreach ($field->getSelectableOptions() as $receivable) {
+          $receivables[] = $receivable;
+        }
+      } else if (Uuid::isValid($debitJob)) {
+        // just this option, should be a recurring receivable
+        $receivable = $receivablesRepository->findOneBy(['key' => Uuid::asUuid($debitJob) ]);
+        $receivables[] = $receivable;
+      } else {
+        return self::grumble($this->l->t('Submitted debit-job id "%s" is neither a participant field nor a field-option uuid.', $debitJob));
+      }
+    }
+
+    foreach ($receivables as $receivable) {
+      $this->logInfo('RECEIVABLE '.$receivable->getKey().' / '.$receivable->getLabel().' / '.$receivable->getData());
+    }
+
     return self::grumble($this->l->t('Unknown Request: "%s".', $topic));
   }
 
