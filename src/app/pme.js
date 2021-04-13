@@ -1351,8 +1351,8 @@ const pmeInit = function(containerSel) {
 
   containerSel = pmeSelector(containerSel);
   const container = pmeContainer(containerSel);
-  console.info('pmeInit(): container selector: ', containerSel);
-  console.info('pmeInit(): container found: ', container.length);
+  console.debug('pmeInit(): container selector: ', containerSel);
+  console.debug('pmeInit(): container found: ', container.length);
 
   const tableSel = 'table.' + pmeToken('main');
   const formSel = 'form.' + pmeToken('form');

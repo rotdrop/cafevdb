@@ -68,7 +68,7 @@ if (window.CAFEFDB === undefined) {
 const globalState = window.CAFEVDB;
 const nonce = globalState.nonce;
 
-console.info('INITIAL GLOBAL STATE', globalState);
+console.debug('INITIAL GLOBAL STATE', globalState);
 
 export {
   globalState,

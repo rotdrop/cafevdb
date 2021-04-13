@@ -1050,7 +1050,7 @@ const afterLoad = function(container) {
 const documentReady = function(container) {
 
   if (container === undefined) {
-    console.log('default container');
+    console.debug('default container');
     container = $(containerSelector);
   }
 
@@ -1074,15 +1074,15 @@ const documentReady = function(container) {
   });
 
   container.on('cafevdb:content-update', function(event) {
-    console.log('S content-update');
+    console.debug('Settings content-update');
     if (event.target === this) {
-      console.log('S trigger PS content-update');
+      console.debug('Settings trigger PS content-update');
       if (!container.hasClass('personal-settings')) {
         $('.personal-settings').trigger('cafevdb:content-update');
       }
       afterLoad($(this));
     } else {
-      console.log('S ignore update on ', $(this));
+      console.debug('Settings ignore update on ', $(this));
     }
   });
 

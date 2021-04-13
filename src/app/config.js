@@ -33,19 +33,19 @@ const initialState = {
 try {
   const state = OCP.InitialState.loadState(appName, 'CAFEVDB');
   initialState.CAFEVDB = state;
-  console.log('CAFEVDB INITIAL STATE', initialState.CAFEVDB);
+  console.debug('CAFEVDB INITIAL STATE', initialState.CAFEVDB);
   if (appName !== initialState.CAFEVDB.appName) {
     throw new Error('appName / CAFEVDB.appName are different: ' + appName + ' / ' + initialState.CAFEVDB.appName);
   }
 } catch (error) {
-  console.info('Failed to load initial state for CAFEVDB', error);
+  console.error('Failed to load initial state for CAFEVDB', error);
 }
 try {
   const state = OCP.InitialState.loadState(appName, 'PHPMyEdit');
   initialState.PHPMyEdit = state;
-  console.log('PHPMyEdit INITIAL STATE', initialState.PHPMyEdit);
+  console.debug('PHPMyEdit INITIAL STATE', initialState.PHPMyEdit);
 } catch (error) {
-  console.info('Failed to load initial state for PHPMyEdit', error);
+  console.error('Failed to load initial state for PHPMyEdit', error);
 }
 
 const PHPMyEdit = initialState.PHPMyEdit;

@@ -305,10 +305,10 @@ const documentReady = function() {
 
   globalState.creditsTimer = setInterval(function() {
     if ($('div.cafevdb.about div.product.credits.list:visible').length > 0) {
-      console.info('Updating credits.');
+      console.log('Updating credits.');
       updateCredits();
     } else {
-      console.log('Clearing credits timer.');
+      console.debug('Clearing credits timer.');
       clearInterval(globalState.creditsTimer);
     }
   }, 30000);
