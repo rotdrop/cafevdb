@@ -294,22 +294,22 @@ $routes = [
      * Finance and stuff
      */
     [
-      'name' => 'sepa_debit_note#mandate_validate',
+      'name' => 'sepa_debit_mandates#mandate_validate',
       'url' => '/finance/sepa/debit-notes/mandates/validate',
       'verb' => 'POST',
     ],
     [
-      'name' => 'sepa_debit_note#mandate_form',
+      'name' => 'sepa_debit_mandates#mandate_form',
       'url' => '/finance/sepa/debit-notes/mandates/dialog',
       'verb' => 'POST',
     ],
     [
-      'name' => 'sepa_debit_note#mandate_store',
+      'name' => 'sepa_debit_mandates#mandate_store',
       'url' => '/finance/sepa/debit-notes/mandates/store',
       'verb' => 'POST',
     ],
     [
-      'name' => 'sepa_debit_note#mandate_delete',
+      'name' => 'sepa_debit_mandates#mandate_delete',
       'url' => '/finance/sepa/debit-notes/mandates/delete',
       'verb' => 'POST',
     ],

@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 
 use OCA\CAFEVDB\Common\Util;
 
-class SepaDebitNoteController extends Controller {
+class SepaDebitMandatesController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
