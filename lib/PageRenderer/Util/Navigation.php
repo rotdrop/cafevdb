@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB\PageRenderer\Util;
 
 use OCP\IL10N;
+use OCP\ILogger;
 
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Database\Legacy\PME\IOptions as PMEOptions;
@@ -33,6 +34,8 @@ use OCA\CAFEVDB\Common\Util;
  */
 class Navigation
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   const DISABLED = 1;
   const SELECTED = 2;
 
@@ -48,10 +51,12 @@ class Navigation
   public function __construct(
     $appName
     , IL10N $l10n
+    , ILogger $logger
     , ToolTipsService $toolTipsService
     , PMEOptions $pmeOptions
   ) {
     $this->l = $l10n;
+    $this->logger = $logger;
     $this->toolTipsService = $toolTipsService;
     $this->pmeOptions = $pmeOptions;
   }
@@ -309,11 +314,13 @@ class Navigation
       foreach ($value as $oneButton) {
         if ($oneButton === 'placeholder') {
           foreach ($buttons as $button) {
-            if (isset($button['code'])) {
+            if (isset($button['code'])) { // 'code' is a magic PME thing
               $buttonUp = preg_replace('/id="([^"]*)"/', 'id="$1-up"', $button);
               $buttonDown = preg_replace('/id="([^"]*)"/', 'id="$1-down"', $button);
               $buttonUp = preg_replace('/class="([^"]*)"/', 'class="$1 top"', $buttonUp);
               $buttonDown = preg_replace('/class="([^"]*)"/', 'class="$1 bottom"', $buttonDown);
+              $buttonUp = str_replace('{POSITION}', 'top', $buttonUp);
+              $buttonDown = str_replace('{POSITION}', 'bottom', $buttonDown);
               $upValue[] = $buttonUp;
               $downValue[] = $buttonDown;
             } else {

@@ -210,7 +210,7 @@ class SepaDebitMandates extends PMETableViewBase
   <select multiple data-placeholder="'.$this->l->t('Debit Job').'"
           class="pme-debit-note-job'.' '.($debitJob === 'amount' ? 'custom' : 'predefined').'"
           title="'.$this->toolTipsService['debit-note-job-choice'].'"
-          name="debit-job">
+          name="debitJobs[{POSITION}][]">
     <option value=""></option>';
 
       if ($projectId === $memberProjectId) {

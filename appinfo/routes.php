@@ -295,22 +295,27 @@ $routes = [
      */
     [
       'name' => 'sepa_debit_mandates#mandate_validate',
-      'url' => '/finance/sepa/debit-notes/mandates/validate',
+      'url' => '/finance/sepa/debit-mandates/validate',
       'verb' => 'POST',
     ],
     [
       'name' => 'sepa_debit_mandates#mandate_form',
-      'url' => '/finance/sepa/debit-notes/mandates/dialog',
+      'url' => '/finance/sepa/debit-mandates/dialog',
       'verb' => 'POST',
     ],
     [
       'name' => 'sepa_debit_mandates#mandate_store',
-      'url' => '/finance/sepa/debit-notes/mandates/store',
+      'url' => '/finance/sepa/debit-mandates/store',
       'verb' => 'POST',
     ],
     [
       'name' => 'sepa_debit_mandates#mandate_delete',
-      'url' => '/finance/sepa/debit-notes/mandates/delete',
+      'url' => '/finance/sepa/debit-mandates/delete',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'sepa_debit_notes#service_switch',
+      'url' => '/finance/sepa/debit-notes/{topic}',
       'verb' => 'POST',
     ],
     /**

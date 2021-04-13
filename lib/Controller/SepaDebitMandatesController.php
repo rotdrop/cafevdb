@@ -42,16 +42,16 @@ class SepaDebitMandatesController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var \OCA\CAFEVDB\Service\ParameterService */
+  /** @var ReqeuestParameterService */
   private $parameterService;
 
-  /** @var \OCA\CAFEVDB\Service\Finance\FinanceService */
+  /** @var FinanceService */
   private $financeService;
 
-  /** @var \OCA\CAFEVDB\Service\ProjectService */
+  /** @var ProjectService */
   private $projectService;
 
-  /** @var \OCA\CAFEVDB\Service\FuzzyInputService */
+  /** @var FuzzyInputService */
   private $fuzzyInputService;
 
   public function __construct(
@@ -101,7 +101,7 @@ class SepaDebitMandatesController extends Controller {
     $nonRecurring = $this->parameterService['nonRecurring'];
     $nonRecurring = filter_var($nonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
-    $this->logInfo('NON RECUR '.$nonRecurring.' '.(!!$nonRecurring));
+    $this->logDebug('NON RECUR '.$nonRecurring.' '.(!!$nonRecurring));
 
     $memberProjectId = $this->getConfigValue('memberProjectId', -1);
     $sequenceType = 'permanent';

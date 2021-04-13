@@ -323,7 +323,7 @@ const mandateStore = function(callbackOk) {
   // "submit" the entire form
   const post = $('#sepa-debit-mandate-form').serialize();
 
-  $.post(generateUrl('finance/sepa/debit-notes/mandates/store'), post)
+  $.post(generateUrl('finance/sepa/debit-mandates/store'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {});
     })
@@ -346,7 +346,7 @@ const mandateDelete = function(callbackOk) {
   // "submit" the entire form
   const post = $('#sepa-debit-mandate-form').serialize();
 
-  $.post(generateUrl('finance/sepa/debit-notes/mandates/delete'), post)
+  $.post(generateUrl('finance/sepa/debit-mandates/delete'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {});
     })
@@ -415,7 +415,7 @@ const mandateValidate = function(event, validateLockCB) {
   // until end of validation
   validateLock();
 
-  $.post(generateUrl('finance/sepa/debit-notes/mandates/validate'), post)
+  $.post(generateUrl('finance/sepa/debit-mandates/validate'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, {
         cleanup: validateUnlock,
@@ -618,7 +618,7 @@ const mandateValidatePME = function(event, validateLockCB) {
 
   // console.info('POST', post);
 
-  $.post(generateUrl('finance/sepa/debit-notes/mandates/validate'), post)
+  $.post(generateUrl('finance/sepa/debit-mandates/validate'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, {
         cleanup: validateErrorUnlock,
@@ -702,7 +702,7 @@ const mandatePopupInit = function(selector) {
         const values = $(this).data('debitMandate');
         // alert('data: ' + CAFEVDB.print_r(values, true));
         // alert('data: '+(typeof values.MandateExpired));
-        $.post(generateUrl('finance/sepa/debit-notes/mandates/dialog'), values)
+        $.post(generateUrl('finance/sepa/debit-mandates/dialog'), values)
           .fail(function(xhr, status, errorThrown) {
             Ajax.handleError(xhr, status, errorThrown);
           })
@@ -735,72 +735,79 @@ const mandateExportHandler = function(event) {
   };
 
   const formPost = form.serialize();
-  $.post(
-    OC.filePath(appName, 'ajax/finance', 'sepa-debit-export.php'),
-    formPost,
-    function(data) {
-      if (!Ajax.validateResponse(
-        data,
-        ['message', 'debitnote'],
-        clearBusyState)) {
-        return false;
-      }
-
-      // Everything worked out, from here we now trigger the
-      // download and the mail dialog
-
-      console.log('debitnote', data.debitnote);
-
-      const debitNote = data.debitnote;
-
-      // custom post
-      const postItems = [
-        'requesttoken',
-        'projectId',
-        'projectName',
-        // 'Table', ?? @TODO not needed?
-        'musicianId',
-      ];
-      const post = {};
-      for (let i = 0; i < postItems.length; ++i) {
-        post[postItems[i]] = form.find('input[name="' + postItems[i] + '"]').val();
-      }
-      post.DebitNoteId = debitNote.Id;
-      post.EmailTemplate = data.emailtemplate;
-
-      const action = 'ajax/finance/debit-note-download.php';
-      fileDownload(
-        action,
-        post, {
-          errorMessage(data, url) {
-            return t(appName, 'Unable to export debit notes.');
-          },
-          fail(data) {
-            clearBusyState();
-          },
-          done(url) {
-            // if insurance, then also epxort the invoice PDFs
-            if (debitNote.Job === 'insurance') {
-              const action = 'ajax/insurance/instrument-insurance-export.php';
-              fileDownload(
-                action,
-                formPost, {
-                  done(url) {
-                    Email.emailFormPopup($.param(post), true, false, clearBusyState);
-                  },
-                  errorMessage(data, url) {
-                    return t(appName, 'Unable to export insurance overviews.');
-                  },
-                  fail: clearBusyState,
-                });
-            } else {
-              Email.emailFormPopup($.param(post), true, false, clearBusyState);
-            }
-          },
-        });
-
-      return true;
+  $.post(generateUrl('finance/sepa/debit-notes/create'), formPost)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, clearBusyState);
+    })
+    .done(function(data) {
+      console.info(data);
+      clearBusyState();
     });
+
+  // formPost,
+  // function(data) {
+  //   if (!Ajax.validateResponse(
+  //     data,
+  //     ['message', 'debitnote'],
+  //     clearBusyState)) {
+  //     return false;
+  //   }
+
+  //   // Everything worked out, from here we now trigger the
+  //   // download and the mail dialog
+
+  //   console.log('debitnote', data.debitnote);
+
+  //   const debitNote = data.debitnote;
+
+  //   // custom post
+  //   const postItems = [
+  //     'requesttoken',
+  //     'projectId',
+  //     'projectName',
+  //     // 'Table', ?? @TODO not needed?
+  //     'musicianId',
+  //   ];
+  //   const post = {};
+  //   for (let i = 0; i < postItems.length; ++i) {
+  //     post[postItems[i]] = form.find('input[name="' + postItems[i] + '"]').val();
+  //   }
+  //   post.DebitNoteId = debitNote.Id;
+  //   post.EmailTemplate = data.emailtemplate;
+
+  //   const action = 'ajax/finance/debit-note-download.php';
+  //   fileDownload(
+  //     action,
+  //     post, {
+  //       errorMessage(data, url) {
+  //         return t(appName, 'Unable to export debit notes.');
+  //       },
+  //       fail(data) {
+  //         clearBusyState();
+  //       },
+  //       done(url) {
+  //         // if insurance, then also epxort the invoice PDFs
+  //         if (debitNote.Job === 'insurance') {
+  //           const action = 'ajax/insurance/instrument-insurance-export.php';
+  //           fileDownload(
+  //             action,
+  //             formPost, {
+  //               done(url) {
+  //                 Email.emailFormPopup($.param(post), true, false, clearBusyState);
+  //               },
+  //               errorMessage(data, url) {
+  //                 return t(appName, 'Unable to export insurance overviews.');
+  //               },
+  //               fail: clearBusyState,
+  //             });
+  //         } else {
+  //           Email.emailFormPopup($.param(post), true, false, clearBusyState);
+  //         }
+  //       },
+  //     });
+
+  //   return true;
+  // });
 
   return false;
 };
