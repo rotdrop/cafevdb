@@ -51,6 +51,17 @@ class ProjectPayment implements \ArrayAccess
   private $subject;
 
   /**
+   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDatum", inversedBy="payment")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
+   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
+   *   @ORM\JoinColumn(name="receivable_key", referencedColumnName="option_key", nullable=false)
+   * )
+   */
+  private $receivable;
+
+  /**
    * @var SepaDebitNote
    *
    * @ORM\ManyToOne(targetEntity="SepaDebitNote", inversedBy="projectPayments", fetch="EXTRA_LAZY")

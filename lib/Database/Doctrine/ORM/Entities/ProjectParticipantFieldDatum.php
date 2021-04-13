@@ -93,6 +93,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   private $projectParticipant;
 
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="receivable")
+   */
+  private $payment;
+
   public function __construct() {
     $this->arrayCTOR();
   }
