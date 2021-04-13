@@ -32,6 +32,7 @@ import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
+import selectValues from './select-values.js';
 
 require('sepa-debit-mandate.css');
 
@@ -829,16 +830,11 @@ const mandateReady = function(selector) {
   directDebitChooser
     .off('change')
     .on('change', function(event) {
-      const self = $(this);
-      // not much to be done ...
-      const selected = self.find(':selected').val();
-      directDebitChooser.find('option[value="' + selected + '"]').prop('selected', true);
-      directDebitChooser.trigger('chosen:updated');
-      if (selected === 'amount') {
-        directDebitChooser.switchClass('predefined', 'custom');
-      } else {
-        directDebitChooser.switchClass('custom', 'predefined');
-      }
+      const $self = $(this);
+      const otherClass = $self.hasClass('top') ? '.bottom' : '.top';
+      const $other = directDebitChooser.filter(otherClass);
+      selectValues($other, selectValues($self));
+      $other.trigger('chosen:updated');
       $.fn.cafevTooltip.remove();
       return false;
     });
@@ -849,16 +845,16 @@ const mandateReady = function(selector) {
       container.find('#pme-debit-note-job-up input.' + classValue)
         .off('blur')
         .on('blur', function(event) {
-          const self = $(this);
-          container.find('#pme-debit-note-job-down input.' + classValue).val(self.val());
+          const $self = $(this);
+          container.find('#pme-debit-note-job-down input.' + classValue).val($self.val());
           return false;
         });
 
       container.find('#pme-debit-note-job-down input.' + classValue)
         .off('blur')
         .on('blur', function(event) {
-          const self = $(this);
-          container.find('#pme-debit-note-job-up input.' + classValue).val(self.val());
+          const $self = $(this);
+          container.find('#pme-debit-note-job-up input.' + classValue).val($self.val());
           return false;
         });
     });
