@@ -582,54 +582,6 @@ const toolTipsInit = function(containerSel) {
   }
 };
 
-/**
- * Get or set the option value(s) of a select box.
- *
- * @param {jQuery} select The select element. If it is an ordinary input
- * element, then in "set" mode its value is set to optionValues.
- *
- * @param {Object} optionValues Single option value or array of option
- * values to set.
- *
- * @returns {bool|Array}
- */
-const selectValues = function(select, optionValues) {
-  select = $(select);
-  const multiple = select.prop('multiple');
-  if (typeof optionValues === 'undefined') {
-    console.debug('selectValues read = ', select.val());
-    let result = select.val();
-    if (multiple && !result) {
-      result = [];
-    }
-    return result;
-  }
-  if (!(optionValues instanceof Array)) {
-    optionValues = [optionValues];
-  }
-  if (!multiple && optionValues.length > 1) {
-    optionValues = [optionValues[0]];
-  }
-  // setter has to use foreach
-  select.each(function(idx) {
-    const self = $(this);
-    if (!self.is('select')) {
-      // graceful degrade for non selects
-      self.val(optionValues[0] ? optionValues[0] : '');
-      self.trigger('change');
-      return true;
-    }
-    self.find('option').each(function(idx) {
-      const option = $(this);
-      option.prop('selected', optionValues.indexOf(option.val()) >= 0);
-    });
-    console.debug('selectValues', 'update chosen');
-    self.trigger('chosen:updated'); // in case ...
-    return true;
-  });
-  return true;
-};
-
 export {
   appName,
   globalState,
@@ -654,7 +606,6 @@ export {
   toolTipsOnOff,
   toolTipsInit,
   toolTipsEnabled,
-  selectValues,
 };
 
 // Local Variables: ***

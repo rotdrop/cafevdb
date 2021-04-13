@@ -34,6 +34,7 @@ import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
+import selectValues from './select-values.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participants.css');
@@ -653,7 +654,7 @@ const myReady = function(selector, resizeCB) {
         { isHTML: true, timeout: 30 }
       );
       console.log('exceeding limit');
-      CAFEVDB.selectValues(self, prevSelected);
+      selectValues(self, prevSelected);
     } else {
       Notification.hide();
     }

@@ -24,6 +24,7 @@ import { setPersonalUrl } from './settings-urls.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme-selectors.js';
+import selectValues from './select-values.js';
 
 console.info('JQUERY ', $.fn.jquery);
 
@@ -228,7 +229,7 @@ const documentReady = function() {
       });
     $('.personal-settings select.pagerows').each(function(index) {
       if (this !== $self[0]) {
-        CAFEVDB.selectValues(this, CAFEVDB.selectValues($self));
+        selectValues(this, selectValues($self));
       }
     });
     return false;
@@ -250,7 +251,7 @@ const documentReady = function() {
       });
     $('.personal-settings select.debugmode').each(function(index) {
       if (this !== $self[0]) {
-        CAFEVDB.selectValues(this, CAFEVDB.selectValues($self));
+        selectValues(this, selectValues($self));
       }
     });
     return false;
@@ -271,7 +272,7 @@ const documentReady = function() {
       });
     $('.personal-settings select.wysiwyg-editor').each(function(index) {
       if (this !== $self[0]) {
-        CAFEVDB.selectValues(this, CAFEVDB.selectValues($self));
+        selectValues(this, selectValues($self));
       }
     });
     return false;
