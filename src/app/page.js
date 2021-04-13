@@ -26,10 +26,7 @@ import * as Notification from './notification.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 
-globalState.Page = {
-  historyPosition: 0,
-  historySize: 1,
-};
+globalState.Page = globalState.Page || { historyPosition: 0, historySize: 1 };
 
 // overrides from PHP, see config.js
 $.extend(globalState.Page, initialState.CAFEVDB.Page);
@@ -72,33 +69,18 @@ const loadPage = function(post, afterLoadCallback) {
       // reset the history
       if (action === 'recall') {
         if (errorData.history !== undefined) {
-          globalState.Page.historyPosition = errorData.history.position;
-          globalState.Page.historySize = errorData.history.size;
+          updateHistoryControls(errorData.history.position, errorData.history.size);
         } else {
-          globalState.Page.historyPosition = 0;
-          globalState.Page.historySize = 0;
+          updateHistoryControls(0, 0);
         }
-        updateHistoryControls();
       }
       CAFEVDB.modalizer(false);
       busyIcon(false);
     })
     .done(function(htmlContent, textStatus, request) {
       // console.log(data);
-      const historySize = request.getResponseHeader('X-' + appName + '-history-size');
-      const historyPosition = request.getResponseHeader('X-' + appName + '-history-position');
-
-      // if (!CAFEVDB.Ajax.validateResponse(data, [ 'contents', 'history' ])) {
-      //   // re-enable inputs on error
-      //   if (false) {
-      //     container.find('input').prop('disabled', false);
-      //     container.find('select').prop('disabled', false);
-      //     container.find('select').trigger('chosen:updated');
-      //   }
-      //   CAFEVDB.modalizer(false),
-      //   Page.busyIcon(false);
-      //   return false;
-      // }
+      const historySize = parseInt(request.getResponseHeader('X-' + appName + '-history-size'));
+      const historyPosition = parseInt(request.getResponseHeader('X-' + appName + '-history-position'));
 
       // Remove pending dialog when moving away from the page
       $('.ui-dialog-content').dialog('destroy').remove();
@@ -139,15 +121,22 @@ const loadPage = function(post, afterLoadCallback) {
     });
 };
 
-const updateHistoryControls = function() {
+const updateHistoryControls = function(historyPosition, historySize) {
   const redo = $('#personalsettings .navigation.redo');
   const undo = $('#personalsettings .navigation.undo');
 
-  // console.info(undo);
+  if (historyPosition !== undefined && historySize !== undefined) {
+    globalState.Page.historyPosition = historyPosition;
+    globalState.Page.historySize = historySize;
+  } else {
+    historyPosition = globalState.Page.historyPosition;
+    historySize = globalState.Page.historySize;
+  }
 
-  // alert('history: '+CAFEVDB.Page.historyPosition+' size '+CAFEVDB.Page.historySize);
-  redo.prop('disabled', globalState.Page.historyPosition === 0);
-  undo.prop('disabled', globalState.Page.historySize - globalState.Page.historyPosition <= 1);
+  console.debug('UPDATE HISTORY CONTROLS', globalState.Page);
+
+  redo.prop('disabled', historyPosition === 0);
+  undo.prop('disabled', historySize - historyPosition <= 1);
 };
 
 /**

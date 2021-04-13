@@ -249,8 +249,8 @@ const pmePost = function(post, callbacks) {
     })
   // HTTP response
     .done(function(htmlContent, textStatus, request) {
-      const historySize = request.getResponseHeader('X-' + appName + '-history-size');
-      const historyPosition = request.getResponseHeader('X-' + appName + '-history-position');
+      const historySize = parseInt(request.getResponseHeader('X-' + appName + '-history-size'));
+      const historyPosition = parseInt(request.getResponseHeader('X-' + appName + '-history-position'));
       callbacks.done(htmlContent, historySize, historyPosition);
     });
 };
@@ -945,9 +945,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
     done(htmlContent, historySize, historyPosition) {
 
       if (historySize > 0) {
-        globalState.Page.historySize = historySize;
-        globalState.Page.historyPosition = historyPosition;
-        Page.updateHistoryControls();
+        Page.updateHistoryControls(historyPosition, historySize);
       }
       $.fn.cafevTooltip.remove();
 

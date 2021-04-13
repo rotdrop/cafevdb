@@ -45,7 +45,7 @@ const Events = globalState.Events = {
 
 const init = function(htmlContent, textStatus, request) {
 
-  globalState.Events.projectId = request.getResponseHeader('X-' + appName + '-project-id');
+  globalState.Events.projectId = parseInt(request.getResponseHeader('X-' + appName + '-project-id'));
   globalState.Events.projectName = request.getResponseHeader('X-' + appName + '-project-name');
 
   // var popup = $('#events').cafevDialog({
@@ -214,7 +214,7 @@ const updateEmailForm = function(post, emailFormDialog) {
 
 const relist = function(htmlContent, textStatus, xhr) {
 
-  // globalState.Events.projectId = xhr.getResponseHeader('X-' + appName + '-project-id');
+  // globalState.Events.projectId = parseInt(xhr.getResponseHeader('X-' + appName + '-project-id'));
   // globalState.Events.projectName = xhr.getResponseHeader('X-' + appName + '-project-name');
 
   const events = $('#events');
