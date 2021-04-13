@@ -35,6 +35,12 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="ProjectParticipantFieldsData")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldDataRepository")
+ *
+ * In principle something like single-table-inheritance would be nice
+ * for service-fee data, but the discriminator column would be part of
+ * the foreigen key entity ProjectParticipantField, which for one is
+ * not possible inside Doctrine/ORM and OTOH also collides with the
+ * keep-it-simple-and-efficient idea of single-table inheritance.
  */
 class ProjectParticipantFieldDatum implements \ArrayAccess
 {
@@ -224,4 +230,6 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   {
     return $this->optionKey;
   }
+
+
 }
