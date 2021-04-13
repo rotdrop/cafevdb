@@ -149,20 +149,20 @@ class ProjectParticipantFieldsService
       case Multiplicity::GROUPOFPEOPLE:
       case Multiplicity::GROUPSOFPEOPLE:
       case Multiplicity::PARALLEL:
-        $selectionOptions[] = [
+        $selectOptions[] = [
           'group' => $nonRecurringGroup,
           'name' => $field->getName(),
-          'value' => '', // list of keys?
+          'value' => $field->getId(), // list of keys?
           'data' => [], // relevant data from field definition
         ];
         // only a single option
         break;
       case Multiplicity::RECURRING:
         // option groups with multiple options
-        $group = $field->getName();
+        $group = $this->l->t('Recurring "%s"', $field->getName());
         /** @var Entities\ProjectParticipantFieldDataOption $option */
         foreach ($field->getSelectableOptions() as $option) {
-          $selectionOptions[] = [
+          $selectOptions[] = [
             'group' => $group,
             'name' => $option->getLabel(),
             'value' => $option->getKey(),
@@ -173,6 +173,7 @@ class ProjectParticipantFieldsService
         break;
       }
     }
+    return $selectOptions;
   }
 
   /**

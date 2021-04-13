@@ -144,6 +144,9 @@ class SepaDebitMandates extends PMETableViewBase
     $memberProjectId = $this->getConfigValue('memberProjectId', -1);
 
     $projectMode = $projectId > 0 && !empty($projectName);
+    if ($projectMode)  {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    }
 
     $opts            = [];
 
@@ -204,7 +207,7 @@ class SepaDebitMandates extends PMETableViewBase
 
       $debitJobs = '
 <span id="pme-debit-note-job" class="pme-debit-note-job pme-menu-block">
-  <select data-placeholder="'.$this->l->t('Debit Job').'"
+  <select multiple data-placeholder="'.$this->l->t('Debit Job').'"
           class="pme-debit-note-job'.' '.($debitJob === 'amount' ? 'custom' : 'predefined').'"
           title="'.$this->toolTipsService['debit-note-job-choice'].'"
           name="debit-job">
@@ -253,6 +256,9 @@ class SepaDebitMandates extends PMETableViewBase
           ],
         ];
       }
+
+      $jobOptions = $this->participantFieldsService->monetarySelectOptions($this->project);
+
       $debitJobs .= $this->pageNavigation->selectOptions($jobOptions);
       $debitJobs .= '
   </select>
