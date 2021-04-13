@@ -499,7 +499,7 @@ class SepaDebitMandatesController extends Controller {
         'bankAccountOwner' => $this->financeService->sepaTranslit($musicianName),
       ];
     } else {
-      $usage = $this->financeService->mandateReferenceUsage($mandate['reference'], true);
+      $usage = $this->financeService->mandateReferenceUsage($mandate['mandateReference'], true);
       !empty($usage['lastUsed']) && $mandate['lastUsedDate'] = $usage['lastUsed'];
     }
 
@@ -533,12 +533,12 @@ class SepaDebitMandatesController extends Controller {
 
       'cssClass', 'sepadebitmandate',
 
-      'mandateId' => $mandate['id'],
+      'mandateSequence' => $mandate['sequence'],
       'mandateReference' => $mandate['mandateReference'],
       'mandateExpired' => $mandateExpired,
       'mandateDate' => date('d.m.Y', strtotime($mandate['mandateDate'])),
       'lastUsedDate' => $lastUsedData,
-      'sequenceType' => $mandate['sequenceType'], // @todo will not work
+      'sequenceType' => $mandate['nonRecurring'] ? 'once' : 'permanent', // @todo will not work
 
       'bankAccountOwner' => $mandate['bankAccountOwner'],
 
@@ -558,8 +558,8 @@ class SepaDebitMandatesController extends Controller {
       'projectName' => $projectName,
       'musicianId' => $musicianId,
       'musicianName' => $musicianName,
+      'mandateSequence' => $mandate['sequence'],
       'mandateReference' => $mandate['mandateReference'],
-      'mandateId' => $mandate['id'],
     ];
 
     return self::dataResponse($responseData);

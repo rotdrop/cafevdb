@@ -381,7 +381,7 @@ class FinanceService
 
     if (isset($newMandate['sequenceType'])) {
       $sequenceType = $newMandate['sequenceType'];
-      $newMandate['nonrecurring'] = $sequenceType == 'once';
+      $newMandate['nonRecurring'] = $sequenceType == 'once';
       unset($newMandate['sequenceType']);
     }
 
@@ -414,25 +414,47 @@ class FinanceService
     if (!empty($mandate)) {
       // Sanity checks
       if (!isset($mandate['mandateReference']) ||
-          !isset($mandate['musicianId']) ||
-          !isset($mandate['projectId']) ||
+          !isset($mandate['musician']) ||
+          !isset($mandate['project']) ||
           $mandate['mandateReference'] != $ref ||
-          $mandate['musicianId'] != $mus ||
-          $mandate['projectId'] != $prj) {
+          $mandate['musician']['id'] != $mus ||
+          $mandate['project']['id'] != $prj) {
         return null;
       }
       // passed: issue an update query
       foreach ($newMandate as $key => $value) {
+        switch ($key) {
+        case 'musicianId':
+          $targetKey = 'musician';
+          break;
+        case 'projectId':
+          $targetKey = 'project';
+          break;
+        default:
+          $targetKey = $key;
+          break;
+        }
         if (empty($value) && $key != 'lastUsedDate') {
           unset($newMandate[$key]);
           $value = null;
         }
-        $mandate[$key] = $value; // @todo check date and time-stamps.
+        $mandate[$targetKey] = $value; // @todo check date and time-stamps.
       }
     } else {
       $mandate = Entities\SepaDebitMandate::create();
       foreach ($newMandate as $key => $value) {
-        $mandate[$key] = $value; // @todo check date and time-stamps.
+        switch ($key) {
+        case 'musicianId':
+          $targetKey = 'musician';
+          break;
+        case 'projectId':
+          $targetKey = 'project';
+          break;
+        default:
+          $targetKey = $key;
+          break;
+        }
+        $mandate[$targetKey] = $value; // @todo check date and time-stamps.
       }
       $this->persist($mandate);
     }
@@ -645,7 +667,7 @@ class FinanceService
     $BLZ  = $mandate['BLZ'];
     $BIC  = $mandate['BIC'];
 
-    $iban = new \IBAN($IBAN);
+    $iban = new \PHP_IBAN\IBAN($IBAN);
     if (!$iban->Verify()) {
       throw new \InvalidArgumentException(
         $nl.

@@ -1961,7 +1961,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
                 $musicianId, $musician,
                 $projectId, $projectName);
             } else {
-              $mandateProjectName = Projects::fetchName($mandateProject);
+              $mandateProjectName = $this->projectService->fetchName($mandateProject);
               $html[] = $this->sepaDebitMandateButton(
                 $mandate, $expired,
                 $musicianId, $musician,

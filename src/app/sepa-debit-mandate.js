@@ -41,7 +41,7 @@ const SepaDebitMandate = globalState.SepaDebitMandate = {
   projectName: '',
   musicianId: -1,
   musicianName: '',
-  mandateId: -1,
+  mandateSequence: -1,
   mandateReference: '',
   instantValidation: true,
   validationRunning: false,
@@ -67,7 +67,7 @@ const mandatesInit = function(data, reloadCB) {
     'contents',
     'projectId', 'projectName',
     'musicianId', 'musicianName',
-    'mandateId', 'mandateReference',
+    'mandateSequence', 'mandateReference',
   ])) {
     return false;
   }
@@ -80,7 +80,7 @@ const mandatesInit = function(data, reloadCB) {
   self.projectName = data.projectName;
   self.musicianId = data.musicianId;
   self.musicianName = data.musicianName;
-  self.mandateId = data.mandateId;
+  self.mandateSequence = data.mandateSequence;
   self.mandateReference = data.mandateReference;
 
   Dialogs.debugPopup(data);
@@ -196,7 +196,7 @@ const mandatesInit = function(data, reloadCB) {
         change: widget.find('button.change'),
       };
 
-      if (self.mandateId > 0) {
+      if (self.mandateSequence > 0) {
         // If we are about to display an existing mandate, first
         // disable all inputs and leave only the "close" and
         // "change" buttons enabled.
@@ -471,6 +471,13 @@ const mandateValidate = function(event, validateLockCB) {
       if (data.reference) {
         $('span.reference').html(data.reference);
       }
+      if (data.nonRecurring !== undefined) {
+        if (data.nonRecurring) {
+          $('#sepa-debit-mandate-dialog .debitRecurringInfo').removeClass('permanent').addClass('once');
+        } else {
+          $('#sepa-debit-mandate-dialog .debitRecurringInfo').removeClass('once').addClass('permanent');
+        }
+      }
       Notification.messages(data.message, { timeout: 15 });
 
       if (data.suggestions !== '') {
@@ -560,7 +567,7 @@ const mandateValidatePME = function(event, validateLockCB) {
   const inputMapping = {
     [pmeData('last_used_date')]: 'lastUsedDate',
     [pmeData('mandate_date')]: 'mandateDate',
-    [pmeData('non_recurring')]: 'mandateDate',
+    [pmeData('mandate_reference')]: 'mandateReference',
     [pmeData('bank_account_owner')]: 'bankAccountOwner',
     [pmeData('iban')]: 'bankAccountIBAN',
     [pmeData('bic')]: 'bankAccountBIC',

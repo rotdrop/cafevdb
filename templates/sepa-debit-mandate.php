@@ -100,7 +100,7 @@ $recurring = $l->t('Type: ').($sequenceType == 'once' ? $l->t('once') : $l->t('p
            title="<?php echo $l->t('Date of mandate grant'); ?>"
            placeholder="<?php echo $l->t('mandate date'); ?>"/>
 <?php if ($sequenceType == 'once') { ?>
-    <input type="hidden" name="lastUsedDate" value="<?php echo $lastUsedDate; ?>"/>
+    <input type="hidden" name="lastUsedDate" class="lastUsedDate" value="<?php echo $lastUsedDate; ?>"/>
 <?php } else { ?>
     <label for="lastUsedDate"><?php echo $l->t("Date of last usage:"); ?>
       <input class="lastUsedDate" type="text"
@@ -112,7 +112,12 @@ $recurring = $l->t('Type: ').($sequenceType == 'once' ? $l->t('once') : $l->t('p
              placeholder="<?php echo $l->t('last used date'); ?>"/>
     </label>
 <?php } ?><br/>
-    <span id="debitRecurringInfo"><?php echo $recurring; ?></span>
+    <span id="debitRecurringInfo" class="debitRecurringInfo <?php echo $sequenceType; ?>">
+      <span class="label"><?php echo $l->t('Type:'); ?></span>
+      <span class="space">&nbsp;</span>
+      <span class="type once"><?php echo $l->t('once'); ?></span>
+      <span class="type permanent"><?php echo $l->t('permanent'); ?></span>
+    </span>
     <label class="sepa-validation-toggle"
            for="sepa-validation-toggle"
            title="<?php echo $toolTips['sepa-instant-validation']; ?>">
