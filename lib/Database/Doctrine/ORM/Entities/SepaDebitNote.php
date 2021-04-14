@@ -89,13 +89,6 @@ class SepaDebitNote implements \ArrayAccess
   private $dueDate;
 
   /**
-   * @var Types\EnumDebitNoteJob
-   *
-   * @ORM\Column(type="EnumDebitNoteJob", nullable=false)
-   */
-  private $job;
-
-  /**
    * @var int
    *
    * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
