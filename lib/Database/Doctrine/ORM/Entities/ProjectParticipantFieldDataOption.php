@@ -40,7 +40,8 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\Entity
  * @Gedmo\SoftDeleteable(fieldName="deleted")
  *
- * @todo Check whether soft-deletion is really necessary here.
+ * Soft deletion is necessary in case the ProjectPayments table
+ * already contains entries.
  */
 class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
@@ -96,9 +97,17 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    */
   private $fieldData;
 
+  /**
+   * @var ProjectPayment
+   *
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="receivableOption")
+   */
+  private $payments;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->fieldData = new ArrayCollection();
+    $this->payments = new ArrayCollection();
   }
 
   /**
@@ -273,11 +282,12 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * Return the number of ProjectParticipantFieldDatum entities attached to
-   * this option.
+   * Return the number of ProjectParticipantFieldDatum entities and
+   * ProjectPayment entities attatched to this option.
    */
   public function usage():int
   {
-    return $this->getFieldData()->count();
+    return $this->fieldData->count()
+      + $this->payments->count();
   }
 }

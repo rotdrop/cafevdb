@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +40,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="ProjectParticipantFieldsData")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldDataRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deleted")
+ *
+ * Soft deletion is necessary in case the ProjectPayments table
+ * already contains entries.
  *
  * In principle something like single-table-inheritance would be nice
  * for service-fee data, but the discriminator column would be part of
@@ -51,6 +56,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
 
   /**
    * @var ProjectParticipantField
@@ -331,4 +337,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     return $fieldName.' - '.$optionLabel;
   }
 
+  /**
+   * Return the number of linke ProjectPayment entities.
+   */
+  public function usage():int
+  {
+    return $this->payments->count();
+  }
 }
