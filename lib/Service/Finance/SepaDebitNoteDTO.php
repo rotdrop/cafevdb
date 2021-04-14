@@ -26,8 +26,10 @@ namespace OCA\CAFEVDB\Service\Finance;
 /**
  * Not a debit-node database row, just something to sort out what is
  * needed to export debit-notes for submission to a bank.
+ *
+ * DTO == DataTransferObject
  */
-class SepaDebitNoteData implements \ArrayAccess
+class SepaDebitNoteDTO implements \ArrayAccess
 {
   private $keys;
 

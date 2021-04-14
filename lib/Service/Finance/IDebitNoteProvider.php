@@ -30,7 +30,7 @@ interface IDebitNoteProvider
   /**
    * Generate a set of debit-notes for export and submission to the bank.
    *
-   * @return array<int, SepaDebitNoteData>
+   * @return array<int, SepaDebitNoteDTO>
    */
   public function generate():array;
 }
