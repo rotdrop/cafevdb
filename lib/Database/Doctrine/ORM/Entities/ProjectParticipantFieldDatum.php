@@ -24,9 +24,13 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Ramsey\Uuid\UuidInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -49,18 +53,24 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
 
   /**
+   * @var ProjectParticipantField
+   *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="fieldData", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $field;
 
   /**
+   * @var Project
+   *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantFieldsData", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $project;
 
   /**
+   * @var Musician
+   *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectParticipantFieldsData", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
@@ -82,6 +92,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   private $optionValue = null;
 
   /**
+   * @var ProjectParticipantFieldDataOption
+   *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="fieldData", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id"),
@@ -91,6 +103,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   private $dataOption;
 
   /**
+   * @var ProjectParticipant
+   *
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="participantFieldsData", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
@@ -100,12 +114,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   private $projectParticipant;
 
   /**
+   * @var ProjectPayment
+   *
    * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="receivable")
    */
-  private $payment;
+  private $payments;
 
   public function __construct() {
     $this->arrayCTOR();
+    $this->payments = new ArrayCollection();
   }
 
   /**
@@ -231,5 +248,87 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     return $this->optionKey;
   }
 
+  /**
+   * The amount to pay for this service-fee option.
+   *
+   * Only meaningful if
+   * ProjectParticipantFieldDatum::getField()::getDataType() is
+   * 'service-fee'.
+   */
+  public function amountPayable():float
+  {
+    switch ($this->field->getMultiplicity()) {
+    case Multiplicity::SINGLE():
+    case Multiplicity::MULTIPLE():
+    case Multiplicity::PARALLEL():
+    case Multiplicity::GROUPSOFPEOPLE():
+      $value = filter_var($this->dataOption->getData(), FILTER_VALIDATE_FLOAT);
+      if ($value === false) {
+        throw new \RuntimeException('Stored value cannot be converted to float.');
+      }
+      return $value;
+    case Multiplicity::GROUPOFPEOPLE():
+      // value in management option of $field
+      $managementOption = $this->field->getManagementOption();
+      if ($managementOption) {
+        throw new \RuntimeException('Unable to access management option for obtaining the field value.');
+      }
+      $value = filter_var($managementOption->getData(), FILTER_VALIDATE_FLOAT);
+      if ($value === false) {
+        throw new \RuntimeException('Stored value cannot be converted to float.');
+      }
+      return $value;
+    case Multiplicity::SIMPLE():
+    case Multiplicity::RECURRING():
+      $value = filter_var($this->optionValue, FILTER_VALIDATE_FLOAT);
+      if ($value === false) {
+        throw new \RuntimeException('Stored value cannot be converted to float.');
+      }
+      return $value;
+    default:
+      throw new \RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
+    }
+  }
+
+  /**
+   * The amount already paid as stored in the ProjectPayment entities.
+   *
+   * Only meaningful if
+   * ProjectParticipantFieldDatum::getField()::getDataType() is
+   * 'service-fee'.
+   *
+   */
+  public function amountPaid():float
+  {
+    // sum up the values of all related payments
+    $amount = 0.0;
+    /** @var ProjectPayment $payment */
+    foreach ($this->payments as $payment) {
+      $amount += $payment->getAmount();
+    }
+    return $amount;
+  }
+
+  /**
+   * Suggestion for a reference field for debit notes or money
+   * transfers. Constructed from the labels of the associated
+   * ProjectParticipantField and ProjectParticipantFieldDataOption
+   * entities.
+   */
+  public function paymentReference():string
+  {
+    // construct something nice from the various label fields:
+    // - name of ProjectParticipantField
+    // - label of ProjectParticipantFieldDataOption
+    $fieldName = $this->field->getName();
+    $optionLabel = $this->dataOption->getLabel();
+    if (empty($fieldName)) {
+      return $optionLabel;
+    }
+    if (empty($optionLabel)) {
+      return $fieldName;
+    }
+    return $fieldName.' - '.$optionLabel;
+  }
 
 }

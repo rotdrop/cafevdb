@@ -51,7 +51,7 @@ class ProjectPayment implements \ArrayAccess
   private $subject;
 
   /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDatum", inversedBy="payment")
+   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDatum", inversedBy="payments")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
