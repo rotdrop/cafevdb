@@ -23,8 +23,6 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use \DateTimeImmutable as DateTime;
-
 interface IDebitNoteProvider
 {
   /**
