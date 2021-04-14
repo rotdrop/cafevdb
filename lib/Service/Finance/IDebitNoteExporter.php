@@ -36,11 +36,11 @@ interface IDebitNoteExporter
    * Export the given data-set into another format, filling the
    * missing field like CI etc.
    *
-   * @param DebitNoteData $debitNoteData
+   * @param SepaDebitNoteDTO $debitNoteData
    *
    * @param DateTime $executionDate
    */
-  public function exportRow(DebitNoteData $debitNoteData, DateTime $executionDate, bool $columnHeadings = false):array;
+  public function exportRow(SepaDebitNoteDTO $debitNoteData, DateTime $executionDate, bool $columnHeadings = false):array;
 }
 
 // Local Variables: ***

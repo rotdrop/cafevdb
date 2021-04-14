@@ -85,11 +85,11 @@ class AqDebitNoteExporter implements IDebitNoteExporter
    * Export the given data-set into another format, filling the
    * missing field like CI etc.
    *
-   * @param DebitNoteData $debitNoteData
+   * @param SepaDebitNoteDTO $debitNoteData
    *
    * @param DateTime $executionDate
    */
-  public function exportRow(DebitNoteData $debitNoteData, DateTime $executionDate):array
+  public function exportRow(SepaDebitNoteDTO $debitNoteData, DateTime $executionDate):array
   {
     $executionDate = $executionDate->format('Y/m/d');
 
