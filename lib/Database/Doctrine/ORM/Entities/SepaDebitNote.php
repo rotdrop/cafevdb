@@ -394,4 +394,12 @@ class SepaDebitNote implements \ArrayAccess
   {
     return $this->projectPayments;
   }
+
+  /**
+   * Return the number of related ProjectPayment entities.
+   */
+  public function usage():int
+  {
+    return $this->projectPayments->count();
+  }
 }
