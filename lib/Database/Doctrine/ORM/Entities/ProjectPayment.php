@@ -62,6 +62,15 @@ class ProjectPayment implements \ArrayAccess
   private $receivable;
 
   /**
+   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="payments")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
+   *   @ORM\JoinColumn(name="receivable_key", referencedColumnName="key", nullable=false)
+   * )
+   */
+  private $receivableOption;
+
+  /**
    * @var SepaDebitNote
    *
    * @ORM\ManyToOne(targetEntity="SepaDebitNote", inversedBy="projectPayments", fetch="EXTRA_LAZY")
@@ -72,8 +81,8 @@ class ProjectPayment implements \ArrayAccess
   /**
    * @var int
    *
-   * This needs to be here, otherwise the nullable stuff from the
-   * association does not work.
+   * This needs to be here, otherwise the default=1 of the referenced
+   * column prevents the column to be nullable.
    *
    * @ORM\Column(type="integer", nullable=true)
    */
@@ -84,7 +93,7 @@ class ProjectPayment implements \ArrayAccess
    *                inversedBy="projectPayments",
    *                fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
+   *   @ORM\JoinColumn(name="mandate_project_id", referencedColumnName="project_id", nullable=true),
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
    *   @ORM\JoinColumn(name="mandate_sequence", referencedColumnName="sequence", nullable=true)
    * )
