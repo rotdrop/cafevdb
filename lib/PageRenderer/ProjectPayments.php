@@ -75,7 +75,7 @@ class ProjectPayments extends PMETableViewBase
       'entity' => Entities\SepaDebitMandate::class,
       'identifier' => [
         'musician_id' => 'musician_id',
-        'project_id' => 'project_id',
+        'project_id' => 'mandate_project_id',
         'sequence' => 'mandate_sequence',
       ],
       'column' => 'sequence',
@@ -207,7 +207,7 @@ class ProjectPayments extends PMETableViewBase
       [
         'name'     => $this->l->t('Musician'),
         'css'      => [ 'postfix' => ' instrumentation-id' ],
-        'css' => 'CONCAT($join_table.id, \': \', $join_table.first_name, \' \', $join_table.sur_name)',
+        'sql' => 'CONCAT($join_table.id, \': \', $join_table.first_name, \' \', $join_table.sur_name)',
       ]);
 
     $opts['fdd']['amount'] = $this->defaultFDD['money'];
