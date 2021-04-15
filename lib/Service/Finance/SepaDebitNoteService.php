@@ -29,6 +29,7 @@ use OCP\ILogger;
 use OCP\IL10N;
 
 use Doctrine\ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -53,6 +54,43 @@ class SepaDebitNoteService
     $this->l = $l10n;
 
     $this->debitNoteRepository = $this->getDatabaseRepository(DebitNote::class);
+  }
+
+  /**
+   * Generate the payments for the specified service-fee options
+   */
+  public function generateMandatePayments(Entities\SepaDebitMandate $mandate, array $receivableOptions):ArrayCollection
+  {
+    $payments = new ArrayCollection();
+    if (empty($receivableOptions)) {
+      return $payments;
+    }
+    $musician = $mandate->getMusician();
+
+    /** @var Entities\ProjectParticipantFieldDataOption $receivableOption */
+    foreach ($receivableOptions as $receivableOption) {
+      $project = $receivableOption->getField()->getProject();
+      /** @var Entities\ProjectParticipantFieldDatum $receivable */
+      foreach ($receivableOption->getMusicianFieldData($musician) as $receivable) {
+        $payableAmount = $receivable->amountPayable();
+        $paidAmount = $receivable->amountPaid();
+        $debitAmount = round($payableAmount - $paidAmount, 2);
+        if ($debitAmount == 0.0) {
+          continue; // no need to debit empty amounts
+        }
+        $payment = (new Entities\ProjectPayment)
+                 ->setProject($project)
+                 ->setMusician($musician)
+                 ->setAmount($debitAmount)
+                 ->setSepaDebitMandate($sepaDebitMandate)
+                 ->setSubject($receivable->paymentReference());
+        // the following are set later:
+        // ->setDateOfReceipt() set to due-date of debit note
+        // ->setDebitNote($debitNote)
+        // ->setDebitMessageId($debitMessageId)
+        $payments->add($payment);
+      }
+    }
   }
 
   // public static function removeDebitNote(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
@@ -96,92 +134,92 @@ class SepaDebitNoteService
   //   return true;
   // }
 
-  /** */
-  public function recordDebitNote($project, $job, $dateIssued, $submissionDeadline, $dueDate, $calObjIds):DebitNote
-  {
-    $debitNote = (new DebitNote)
-               ->setProject($project)
-               ->setJob($job)
-               ->setDateIssued($dateIssued)
-               ->setSubmissionDeadline($submissionDeadline)
-               ->setDueDate($dueDate)
-               ->setSubmissionEventUri($calObjIds[0])
-               ->setSubmissionTaskUri($calObjIds[1])
-               ->setDueEventUri($calObjIds[2]);
-    return $debitNote;
-  }
+  // /** */
+  // public function recordDebitNote($project, $job, $dateIssued, $submissionDeadline, $dueDate, $calObjIds):DebitNote
+  // {
+  //   $debitNote = (new DebitNote)
+  //              ->setProject($project)
+  //              ->setJob($job)
+  //              ->setDateIssued($dateIssued)
+  //              ->setSubmissionDeadline($submissionDeadline)
+  //              ->setDueDate($dueDate)
+  //              ->setSubmissionEventUri($calObjIds[0])
+  //              ->setSubmissionTaskUri($calObjIds[1])
+  //              ->setDueEventUri($calObjIds[2]);
+  //   return $debitNote;
+  // }
 
-  /**
-   * Generate the data-entity for the given debit-note
-   *
-   * @param DebitNote $debitNote
-   *
-   * @param string $fileName Download file-name.
-   *
-   * @param string $mimeType Download mime-type.
-   *
-   * @param string $exportData Download data.
-   *
-   * @return DebitNote
-   */
-  public function recordDebitNoteData(DebitNote $debitNote, $fileName, $mimeType, $exportData):DebitNote
-  {
-    /** @var DataEntity */
-    $debitNoteData = (new DataEntity)
-                   ->setDebitNote($debitNote)
-                   ->setFileName($fileName)
-                   ->setMimeType($mimeType)
-                   ->setData($exportData);
-    $debitNote->setSepaDebitNoteData($debitNoteData);
+  // /**
+  //  * Generate the data-entity for the given debit-note
+  //  *
+  //  * @param DebitNote $debitNote
+  //  *
+  //  * @param string $fileName Download file-name.
+  //  *
+  //  * @param string $mimeType Download mime-type.
+  //  *
+  //  * @param string $exportData Download data.
+  //  *
+  //  * @return DebitNote
+  //  */
+  // public function recordDebitNoteData(DebitNote $debitNote, $fileName, $mimeType, $exportData):DebitNote
+  // {
+  //   /** @var DataEntity */
+  //   $debitNoteData = (new DataEntity)
+  //                  ->setDebitNote($debitNote)
+  //                  ->setFileName($fileName)
+  //                  ->setMimeType($mimeType)
+  //                  ->setData($exportData);
+  //   $debitNote->setSepaDebitNoteData($debitNoteData);
 
-    return $debitNote;
-  }
+  //   return $debitNote;
+  // }
 
-  /**
-   * Generate the payment entities for the given debit-note
-   *
-   * @param DebitNote $debitNote
-   *
-   * @param array<int, SepaDebitNoteData> $payments Exported debit-note payments.
-   *
-   * @param DateTime $dueDate
-   *
-   * @return DebitNote
-   */
-  public function recordDebitNotePayments(DebitNote $debitNote, array $payments, DateTime $dueDate):DebitNote
-  {
-    foreach ($payments as $paymentData) {
-      $debitNotePayment = (new Entities\ProjectPayment)
-                        ->setProject($debitNote->getProject())
-                        ->setMusician($paymentData['musicianId'])
-                        ->setAmount($paymentData['amount'])
-                        ->setDateOfReceipt($dueDate)
-                        ->setSubject(implode("\n", $paymentData['purpose']))
-                        ->setDebitNote($debitNote)
-                        ->setMandateReference($paymentData['mandateReference']);
-      $debitNote->getProjectPayments()->add($debitNotePayment);
-    }
-    return $debitNote;
-  }
+  // /**
+  //  * Generate the payment entities for the given debit-note
+  //  *
+  //  * @param DebitNote $debitNote
+  //  *
+  //  * @param array<int, SepaDebitNoteData> $payments Exported debit-note payments.
+  //  *
+  //  * @param DateTime $dueDate
+  //  *
+  //  * @return DebitNote
+  //  */
+  // public function recordDebitNotePayments(DebitNote $debitNote, array $payments, DateTime $dueDate):DebitNote
+  // {
+  //   foreach ($payments as $paymentData) {
+  //     $debitNotePayment = (new Entities\ProjectPayment)
+  //                       ->setProject($debitNote->getProject())
+  //                       ->setMusician($paymentData['musicianId'])
+  //                       ->setAmount($paymentData['amount'])
+  //                       ->setDateOfReceipt($dueDate)
+  //                       ->setSubject(implode("\n", $paymentData['purpose']))
+  //                       ->setDebitNote($debitNote)
+  //                       ->setMandateReference($paymentData['mandateReference']);
+  //     $debitNote->getProjectPayments()->add($debitNotePayment);
+  //   }
+  //   return $debitNote;
+  // }
 
-  /** Return the name for the default email-template for the given job-type. */
-  public function emailTemplate($debitNoteJob)
-  {
-    switch($debitNoteJob) {
-    case 'remaining':
-      return $this->l->t('DebitNoteAnnouncementProjectRemaining');
-    case 'amount':
-      return $this->l->t('DebitNoteAnnouncementProjectAmount');
-    case 'deposit':
-      return $this->l->t('DebitNoteAnnouncementProjectDeposit');
-    case 'insurance':
-      return $this->l->t('DebitNoteAnnouncementInsurance');
-    case 'membership-fee':
-      return $this->l->t('DebitNoteAnnouncementMembershipFee');
-    default:
-      return $this->l->t('DebitNoteAnnouncementUnknown');
-    }
-  }
+  // /** Return the name for the default email-template for the given job-type. */
+  // public function emailTemplate($debitNoteJob)
+  // {
+  //   switch($debitNoteJob) {
+  //   case 'remaining':
+  //     return $this->l->t('DebitNoteAnnouncementProjectRemaining');
+  //   case 'amount':
+  //     return $this->l->t('DebitNoteAnnouncementProjectAmount');
+  //   case 'deposit':
+  //     return $this->l->t('DebitNoteAnnouncementProjectDeposit');
+  //   case 'insurance':
+  //     return $this->l->t('DebitNoteAnnouncementInsurance');
+  //   case 'membership-fee':
+  //     return $this->l->t('DebitNoteAnnouncementMembershipFee');
+  //   default:
+  //     return $this->l->t('DebitNoteAnnouncementUnknown');
+  //   }
+  // }
 
 };
 
