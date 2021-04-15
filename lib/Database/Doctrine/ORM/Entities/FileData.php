@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * FileData
@@ -33,6 +34,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Simple data table for image blobs.
  *
  * @ORM\Table(name="FileData")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="transformation", type="EnumDataTransformation")
+ * @ORM\DiscriminatorMap({"identity"="FileData","encrypted"="EncryptedFileData"})
  * @ORM\Entity
  */
 class FileData implements \ArrayAccess
@@ -47,6 +51,23 @@ class FileData implements \ArrayAccess
    * @ORM\OneToOne(targetEntity="File", inversedBy="fileData", cascade="all")
    */
   private $file;
+
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true})
+   * @Gedmo\Slug(fields={"data"}, updatable=true, handlers={
+   *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler"),
+   *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
+   *     @Gedmo\SlugHandlerOption(name="relationClass", value="OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File"),
+   *     @Gedmo\SlugHandlerOption(name="mappedBy", value="fileData"),
+   *     @Gedmo\SlugHandlerOption(name="inverseSlugField", value="fileDataHash")
+   *   })
+   * })
+   *
+   */
+  private $dataHash;
 
   /**
    * @var string|null
@@ -66,9 +87,18 @@ class FileData implements \ArrayAccess
    *
    * @return FileData
    */
-  public function setData($data)
+  public function setData($data, string $format = 'binary')
   {
-    $this->data = $data;
+    switch ($format) {
+      case 'base64':
+        $this->data = base64_decode($data);
+      default:
+      case 'resource':
+      case 'binary':
+        $this->data = $data;
+        break;
+    }
+
     return $this;
   }
 
@@ -77,10 +107,19 @@ class FileData implements \ArrayAccess
    *
    * @return string|null
    */
-  public function getData()
+  public function getData(string $format = 'binary')
   {
     rewind($this->data);
-    return $this->data;
+    switch ($format) {
+    case 'base64':
+      return base64_encode(stream_get_contents($this->data));
+    case 'resource':
+      return $this->data;
+    case 'binary':
+      return stream_get_contents($this->data);
+    default:
+      return $this->data;
+    }
   }
 
   /**

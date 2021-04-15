@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * An entity which modesl a file-system file. While it is not always
@@ -33,6 +34,9 @@ use Doctrine\ORM\Mapping as ORM;
  * nevertheless for selected small files.
  *
  * @ORM\Table(name="Files")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="transformation", type="EnumDataTransformation")
+ * @ORM\DiscriminatorMap({"identity"="File","encrypted"="EncryptedFile"})
  * @ORM\Entity
  */
 class File implements \ArrayAccess
@@ -69,8 +73,17 @@ class File implements \ArrayAccess
    * @var string|null
    *
    * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true})
+   * @Gedmo\Slug(fields={"id"}, updatable=true, handlers={
+   *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\RelativeSlugHandler", options={
+   *     @Gedmo\SlugHandlerOption(name="relationField", value="fileData"),
+   *     @Gedmo\SlugHandlerOption(name="relationSlugField", value="dataHash"),
+   *     @Gedmo\SlugHandlerOption(name="separator", value="/"),
+   *     @Gedmo\SlugHandlerOption(name="urilize", value=false)
+   *   }),
+   *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler")
+   * })
    */
-  private $md5;
+  private $fileDataHash;
 
   /**
    * @var FileData
