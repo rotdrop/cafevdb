@@ -34,6 +34,12 @@ use Gedmo\Sluggable\SluggableListener;
  */
 class HashHandler implements SlugHandlerInterface
 {
+  const HASH_LENGTH = 32;
+  /**
+   * @var string
+   */
+  private $hashAlgorithm;
+
   /**
    * @var SluggableListener
    */
@@ -45,6 +51,8 @@ class HashHandler implements SlugHandlerInterface
   public function __construct(SluggableListener $sluggable)
   {
     $this->sluggable = $sluggable;
+    $this->hashAlgorithm = 'md5';
+    $this->sluggable->setTransliterator(function($slug) { return $slug; });
   }
 
   /**
@@ -73,7 +81,7 @@ class HashHandler implements SlugHandlerInterface
    */
   public function postSlugBuild(SluggableAdapter $ea, array &$config, $object, &$slug)
   {
-    $slug = md5($slug);
+    $slug = substr(hash($this->hashAlgorithm, $slug), 0, self::HASH_LENGTH);
   }
 
   /**
