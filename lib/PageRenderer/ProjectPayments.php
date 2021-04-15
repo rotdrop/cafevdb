@@ -40,8 +40,7 @@ class ProjectPayments extends PMETableViewBase
 {
   const TEMPLATE = 'project-payments';
   const TABLE = self::PROJECT_PAYMENTS_TABLE;
-  const DEBIT_NOTES_TABLE = 'SepaDebitNotes';
-  const DEBIT_NOTE_DATA = 'SepaDebitNoteData';
+  const DEBIT_NOTES_TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
 
   protected $joinStructure = [
     [

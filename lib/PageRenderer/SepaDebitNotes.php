@@ -40,8 +40,8 @@ use OCA\CAFEVDB\Common\Util;
 class SepaDebitNotes extends PMETableViewBase
 {
   const TEMPLATE = 'sepa-debit-notes';
-  const TABLE = 'SepaDebitNotes';
-  const DATA_TABLE = 'SepaDebitNoteData';
+  const TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
+  const DATA_TABLE = self::SEPA_BULK_TRANSACTIONS_DATA_TABLE;
 
   protected $cssClass = 'sepa-debit-notes';
 
@@ -54,8 +54,8 @@ class SepaDebitNotes extends PMETableViewBase
     [
       'table' => self::DATA_TABLE,
       'entity' => Entities\SepaDebitNoteData::class,
-      'identifier' => [ 'debit_note_id' => 'id' ],
-      'column' => 'debit_note_id',
+      'identifier' => [ 'sepa_bulk_transaction_id' => 'id' ],
+      'column' => 'sepa_bulk_transaction_id',
     ],
     [
       'table' => self::PROJECTS_TABLE,
@@ -226,21 +226,22 @@ class SepaDebitNotes extends PMETableViewBase
         'tooltip' => $this->toolTipsService['debit-note-due-date'],
       ]);
 
-    $jobIdx = count($opts['fdd']);
-    $opts['fdd']['job'] = [
-      'name' => $this->l->t('Kind'),
-      'css'  => [ 'postfix' => ' debit-note-job' ],
-      'input' => 'R',
-      'select' => 'D',
-      'sort' => true,
-      'values2' => [
-        'deposit' => $this->l->t('deposit'),
-        'remaining' => $this->l->t('remaining'),
-        'amount' => $this->l->t('amount'),
-        'insurance' => $this->l->t('insurance'),
-        'membership-fee' => $this->l->t('membership-fee'),
-      ],
-    ];
+    // @todo replace by list of participant field-options
+    // $jobIdx = count($opts['fdd']);
+    // $opts['fdd']['job'] = [
+    //   'name' => $this->l->t('Kind'),
+    //   'css'  => [ 'postfix' => ' debit-note-job' ],
+    //   'input' => 'R',
+    //   'select' => 'D',
+    //   'sort' => true,
+    //   'values2' => [
+    //     'deposit' => $this->l->t('deposit'),
+    //     'remaining' => $this->l->t('remaining'),
+    //     'amount' => $this->l->t('amount'),
+    //     'insurance' => $this->l->t('insurance'),
+    //     'membership-fee' => $this->l->t('membership-fee'),
+    //   ],
+    // ];
 
     $opts['fdd']['actions'] = [
       'name'  => $this->l->t('Actions'),

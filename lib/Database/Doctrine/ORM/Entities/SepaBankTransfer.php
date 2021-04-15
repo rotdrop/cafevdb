@@ -25,14 +25,17 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Debit notes from destination accounts.
+ * Ordinary bank transfer to destination account. This actually models
+ * a scheduled bank transfer although the backend may choose to
+ * generate just a simple transfer in order to relax missed submission
+ * dead-lines.
  *
  * @ORM\Entity
  */
-class SepaDebitNote extends SepaBulkTransaction
+class SepaBankTransfer extends SepaBulkTransaction
 {
   /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="debitNotes", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="bankTransfers", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(nullable=false)
    */
   private $project;

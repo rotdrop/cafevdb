@@ -71,12 +71,12 @@ class ProjectPayment implements \ArrayAccess
   private $receivableOption;
 
   /**
-   * @var SepaDebitNote
+   * @var SepaBulkTransaction
    *
-   * @ORM\ManyToOne(targetEntity="SepaDebitNote", inversedBy="projectPayments", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="SepaBulkTransaction", inversedBy="projectPayments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(onDelete="CASCADE")
    */
-  private $debitNote = null;
+  private $sepaTransaction = null;
 
   /**
    * @var int

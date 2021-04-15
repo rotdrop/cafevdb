@@ -66,13 +66,6 @@ class ProjectParticipant implements \ArrayAccess
   private $registration = '0';
 
   /**
-   * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=false, options={"default"="1"})
-   */
-  private $debitnote = '1';
-
-  /**
    * @var string
    *
    * @ORM\Column(type="text", length=65535, nullable=true, options={"comment"="Allgemeine Bermerkungen"})
@@ -177,30 +170,6 @@ class ProjectParticipant implements \ArrayAccess
   public function getRegistration()
   {
     return $this->registration;
-  }
-
-  /**
-   * Set debitnote.
-   *
-   * @param SepaDebitNote $debitnote
-   *
-   * @return ProjectParticipant
-   */
-  public function setDebitnote($debitnote):ProjectParticipant
-  {
-    $this->debitnote = $debitnote;
-
-    return $this;
-  }
-
-  /**
-   * Get debitnote.
-   *
-   * @return SepaDebitNote
-   */
-  public function getDebitnote()
-  {
-    return $this->debitnote;
   }
 
   /**

@@ -154,7 +154,7 @@ class SepaDebitMandatesRepository extends EntityRepository
     $qb = $this->createQueryBuilder('m')
                ->select(implode(',', $selects))
                ->leftJoin('m.projectPayments', 'p')
-               ->leftJoin('p.debitNote', 'd')
+               ->leftJoin('p.sepaTransaction', 'd')
                ->groupBy('m.mandateReference');
 
     // the where part ...

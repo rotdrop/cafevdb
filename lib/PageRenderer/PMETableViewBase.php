@@ -57,6 +57,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const PROJECTS_TABLE = 'Projects';
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaBankAccounts';
+  const SEPA_TRANSFER_ACCOUNTS_TABLE = 'SepaBankAccounts';
+  const SEPA_BULK_TRANSACTIONS_TABLE = 'SepaBulkTransactions';
+  const SEPA_BULK_TRANSACTIONS_DATA_TABLE = 'SepaBulkTransactionData';
   const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
   const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
   const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';

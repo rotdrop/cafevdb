@@ -127,6 +127,11 @@ class Project implements \ArrayAccess
   private $debitNotes;
 
   /**
+   * @ORM\OneToMany(targetEntity="SepaBankTransfer", mappedBy="project")
+   */
+  private $bankTransfers;
+
+  /**
    * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="project")
    */
   private $payments;
@@ -148,6 +153,7 @@ class Project implements \ArrayAccess
     $this->participantInstruments = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->debitNotes = new ArrayCollection();
+    $this->bankTransfers = new ArrayCollection();
     $this->payments = new ArrayCollection();
   }
 
