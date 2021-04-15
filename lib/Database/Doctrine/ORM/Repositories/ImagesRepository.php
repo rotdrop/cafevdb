@@ -95,16 +95,16 @@ class ImagesRepository extends EntityRepository
    * (i.e. OneToOne or OneToMany) the image will replace an existing
    * image or just added the collection of images.
    *
-   * @param string Possibly partial join-table entity class.
+   * @param string $joinTableEntityClass Possibly partial join-table entity class.
    *
    *
    */
-  public function persistForEntity(string $joinTableEntity, int $ownerId, \OCP\Image $image):Entities\Image
+  public function persistForEntity(string $joinTableEntityClass, int $ownerId, \OCP\Image $image):Entities\Image
   {
     $entityManager = $this->getEntityManager();
 
     // Get full class name
-    $joinTableEntityClass = $this->resolveJoinTableEntity($joinTableEntity);
+    $joinTableEntityClass = $this->resolveJoinTableEntity($joinTableEntityClass);
 
     // Get meta-data of owner mapping
     $mapping = $entityManager->getClassMetadata($joinTableEntityClass)->getAssociationMapping('owner');
@@ -117,17 +117,17 @@ class ImagesRepository extends EntityRepository
 
     // data entity
     $imageData = $image->data();
-    $dbImageData = Entities\ImageData::create()
+    $dbImageData = Entities\FileData::create()
                  ->setData($imageData, 'binary');
 
     // image entity
     $dbImage = Entities\Image::create()
+             ->setSize()
              ->setWidth($image->width())
              ->setHeight($image->height())
              ->setMimeType($image->mimeType())
-             ->setMd5(md5($imageData))
-             ->setImageData($dbImageData);
-    $dbImageData->setImage($dbImage);
+             ->setFileData($dbImageData);
+    $dbImageData->setFile($dbImage);
 
     if ($uniqueImage) {
       $joinTableRepository = $entityManager->getRepository($joinTableEntityClass);
@@ -137,11 +137,9 @@ class ImagesRepository extends EntityRepository
       // owner reference with just the id
       $owner = $entityManager->getReference($ownerEntityClass, [ 'id' => $ownerId ]);
       $joinTableEntity = $joinTableEntityClass::create()->setOwner($owner);
-      //self::log("OwnerEntityId: ".$owner->getId());
-      $entityManager->persist($joinTableEntity); // why is this necessary?
+      $entityManager->persist($joinTableEntity);
     }
     $joinTableEntity->setImage($dbImage);
-    $joinTableEntity = $entityManager->merge($joinTableEntity);
 
     // flush in order to get the last insert id
     $entityManager->flush();

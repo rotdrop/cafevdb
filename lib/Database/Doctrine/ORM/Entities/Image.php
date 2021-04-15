@@ -32,31 +32,11 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * The actual image data is stored in ImageData for performance reasons.
  *
- * @ORM\Table(name="Images")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ImagesRepository")
  */
-class Image implements \ArrayAccess
+class Image extends File
 {
-  use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\UpdatedAt;
-  use CAFEVDB\Traits\CreatedAtEntity;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
-   */
-  private $id;
-
-  /**
-   * @var string|null
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
-   */
-  private $mimeType;
 
   /**
    * @var int
@@ -71,92 +51,6 @@ class Image implements \ArrayAccess
    * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
   private $height;
-
-  /**
-   * @var string|null
-   *
-   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed"=true})
-   */
-  private $md5;
-
-  /**
-   * @var ImageData
-   * This is "toMany" only for the sake of lazy loading.
-   *
-   * owning side
-   *
-   * @ORM\OneToOne(targetEntity="ImageData", mappedBy="image", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY")
-   */
-  private $imageData;
-
-  /**
-   * @var \DateTimeImmutable
-   * @Gedmo\Timestampable(on={"update","change"}, field={"imageData.data"})
-   * @ORM\Column(type="datetime_immutable", nullable=true)
-   */
-  private $updated;
-
-  public function __construct() {
-    $this->arrayCTOR();
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
-
-  /**
-   * Set mimeType.
-   *
-   * @param string|null $mimeType
-   *
-   * @return Image
-   */
-  public function setMimeType($mimeType = null)
-  {
-    $this->mimeType = $mimeType;
-
-    return $this;
-  }
-
-  /**
-   * Get mimeType.
-   *
-   * @return string|null
-   */
-  public function getMimeType()
-  {
-    return $this->mimeType;
-  }
-
-  /**
-   * Set md5.
-   *
-   * @param string|null $md5
-   *
-   * @return Image
-   */
-  public function setMd5($md5 = null)
-  {
-    $this->md5 = $md5;
-
-    return $this;
-  }
-
-  /**
-   * Get md5.
-   *
-   * @return string|null
-   */
-  public function getMd5()
-  {
-    return $this->md5;
-  }
 
   /**
    * Set $width.
@@ -204,53 +98,5 @@ class Image implements \ArrayAccess
   public function getHeight():int
   {
     return $this->height;
-  }
-
-  /**
-   * Set $imageDataId.
-   *
-   * @param int $imageData
-   *
-   * @return Image
-   */
-  public function setImageDataId(int $imageData = -1)
-  {
-    $this->imageDataId = $imageDataId;
-
-    return $this;
-  }
-
-  /**
-   * Get $imageDataId.
-   *
-   * @return int
-   */
-  public function getImageDataId():int
-  {
-    return $this->imageDataId;
-  }
-
-  /**
-   * Set ImageData.
-   *
-   * @param ImageData|null $data
-   *
-   * @return Image
-   */
-  public function setImageData($imageData = null)
-  {
-    $this->imageData = $imageData;
-
-    return $this;
-  }
-
-  /**
-   * Get ImageData.
-   *
-   * @return ImageData|null
-   */
-  public function getImageData()
-  {
-    return $this->imageData;
   }
 }

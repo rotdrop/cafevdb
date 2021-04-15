@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -140,7 +140,7 @@ class ImagesController extends Controller {
             'ownerId' => $ownerId,
             'imageId' => $dbImage->getId(),
             'mimeType' => $dbImage->getMimeType(),
-            'md5' => $dbImage->getMd5(),
+            'hash' => $dbImage->getFileDataHash(),
             'width' => $dbImage->getWidth(),
             'height' => $dbImage->getHeight(),
           ]);
@@ -149,7 +149,7 @@ class ImagesController extends Controller {
         // otherwise return image blob as download
 
         $imageMimeType = $dbImage->getMimeType();
-        $imageData = $dbImage->getImageData()->getData('binary');
+        $imageData = $dbImage->getFileData()->getData('binary');
 
         $image = new \OCP\Image();
         $image->loadFromData($imageData);
@@ -356,14 +356,14 @@ class ImagesController extends Controller {
 
         $dbImage = $joinTableEntity->getImage();
         $imageId = $dbImage->getId();
-        $imageData = $dbImage->getImageData()->getData('binary');
+        $imageData = $dbImage->getFileData()->getData('binary');
 
         $image = new \OCP\Image();
         if (!$image->loadFromData($imageData)) {
           return self::grumble($this->l->t("Unable to create temporary image for %s@%s", [$ownerId, $joinTable]));
         }
 
-        $tmpKey = $this->appName().'-inline-image-'.$joinTable.'-'.$ownerId.'-'.$imageId.'-'.$dbImage->getMd5();
+        $tmpKey = $this->appName().'-inline-image-'.$joinTable.'-'.$ownerId.'-'.$imageId.'-'.$dbImage->getFileDataHash();
 
         if (!$this->cacheTemporaryImage($tmpKey, $image, $imageSize)) {
         return self::grumble($this->l->t(

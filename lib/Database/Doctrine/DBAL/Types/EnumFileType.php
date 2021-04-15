@@ -5,9 +5,9 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
+ * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or any later version.
@@ -21,13 +21,22 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
+namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-trait FactoryTrait {
+use MyCLabs\Enum\Enum as EnumType;
 
-  public static function create()
-  {
-    $name = __CLASS__;
-    return new $name();
-  }
+/**
+ * Enum for data transformations.
+ *
+ * @method static EnumFileType GENERY()
+ * @method static EnumFileType IMAGE()
+ * @method static EnumFileType ENCRYPTED()
+ *
+ * @todo This should rather be specified per project.
+ */
+class EnumFileType extends EnumType
+{
+  public const GENERIC = 'generic';
+  public const IMAGE = 'image';
+  public const ENCRYPTED = 'encrypted';
 }
