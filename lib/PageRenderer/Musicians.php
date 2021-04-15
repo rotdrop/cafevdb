@@ -50,12 +50,7 @@ class Musicians extends PMETableViewBase
   const ALL_TEMPLATE = 'all-musicians';
   const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
-  const TABLE = 'Musicians';
-  const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
-  const INSTRUMENTS_TABLE = 'Instruments';
-  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
-  const PROJECTS_TABLE = 'Projects';
-  const INSURANCES_TABLE = 'InstrumentInsurances';
+  const TABLE = self::MUSICIANS_TABLE;
   const PHOTO_JOIN = 'MusicianPhoto';
 
   /** @var GeoCodingService */
@@ -115,7 +110,7 @@ class Musicians extends PMETableViewBase
     //   'flags' => self::JOIN_READONLY,
     // ],
     [
-      'table' => self::INSURANCES_TABLE,
+      'table' => self::INSTRUMENT_INSURANCES_TABLE,
       'entity' => Entities\InstrumentInsurance::class,
       'identifier' => [
         'id' => false,
@@ -656,7 +651,7 @@ make sure that the musicians are also automatically added to the
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::INSURANCES_TABLE, 'insurance_amount', [
+      $opts['fdd'], self::INSTRUMENT_INSURANCES_TABLE, 'insurance_amount', [
        'tab'      => ['id' => 'miscinfo'],
        'input' => 'V',
        'name' => $this->l->t('Instrument Insurance'),

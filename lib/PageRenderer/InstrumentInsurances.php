@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Common\Util;
 class InstrumentInsurances extends PMETableViewBase
 {
   const TEMPLATE = 'instrument-insurance';
-  const TABLE = 'InstrumentInsurances';
+  const TABLE = self::INSTRUMENT_INSURANCES_TABLE;
   const BROKER_TABLE = 'InsuranceBrokers';
   const RATES_TABLE = 'InsuranceRates';
 

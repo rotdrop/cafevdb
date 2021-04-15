@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Common\Navigation;
 class Instruments extends PMETableViewBase
 {
   const TEMPLATE = 'instruments';
-  const TABLE = 'Instruments';
+  const TABLE = self::INSTRUMENTS_TABLE;
   private const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
   private const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
   private const TRANSLATIONS_TABLE = 'TableFieldTranslations';
@@ -228,9 +228,9 @@ class Instruments extends PMETableViewBase
     // undeletable, while allowing deletion for unused ones (more
     // practical after adding new instruments)
     $instrumentTables = [
-      'MusicianInstrument' => [ 'musician_id', 'instrument_id' ],
-      'ProjectInstruments' => [ 'project_id', 'instrument_id' ],
-      'ProjectInstrumentationNumbers' => [ 'project_id', 'instrument_id' ],
+      self::MUSICIAN_INSTRUMENTS_TABLE => [ 'musician_id', 'instrument_id' ],
+      self::PROJECT_INSTRUMENTS_TABLE => [ 'project_id', 'instrument_id' ],
+      self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE => [ 'project_id', 'instrument_id' ],
     ];
     foreach ($instrumentTables as $table => $columns) {
       $this->joinStructure[] = [

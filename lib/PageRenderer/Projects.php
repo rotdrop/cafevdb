@@ -43,11 +43,8 @@ use OCA\CAFEVDB\Common\Util;
 class Projects extends PMETableViewBase
 {
   const TEMPLATE = 'projects';
-  const TABLE = 'Projects';
+  const TABLE = self::PROJECTS_TABLE;
   const ENTITY = Entities\Project::class;
-  const INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
-  const INSTRUMENTS_TABLE = 'Instruments';
-  const PARTICIPANT_FIELDS_TABLE  = 'ProjectParticipantFields';
   const NAME_LENGTH_MAX = 20;
   const POSTER_JOIN = 'ProjectPoster';
   const FLYER_JOIN = 'ProjectFlyer';
@@ -65,10 +62,10 @@ class Projects extends PMETableViewBase
     [
       'table' => self::TABLE,
       'flags' => self::JOIN_MASTER,
-      'entity' => Entities\Project::class,
+      'entity' => self::ENTITY,
     ],
     [
-      'table' => self::INSTRUMENTATION_NUMBERS_TABLE,
+      'table' => self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
       'entity' => Entities\ProjectInstrumentationNumber::class,
       'identifier' => [
         'project_id' => 'id',
@@ -83,14 +80,14 @@ class Projects extends PMETableViewBase
       'readonly' => true,
       'identifier' => [
         'id' => [
-          'table' => self::INSTRUMENTATION_NUMBERS_TABLE,
+          'table' => self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
           'column' => 'instrument_id',
         ],
       ],
       'column' => 'id',
     ],
     [
-      'table' => self::PARTICIPANT_FIELDS_TABLE,
+      'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
       'entity' => Entities\ProjectParticipantField::class,
       'readonly' => true,
       'identifier' => [
@@ -317,7 +314,7 @@ class Projects extends PMETableViewBase
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
+      $opts['fdd'], self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
       [
         'name' => $this->l->t('Instrumentation'),
         'select' => 'M',
@@ -357,7 +354,7 @@ __EOT__;
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PARTICIPANT_FIELDS_TABLE, 'name',
+      $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'name',
       [
         'name' => $this->l->t('Extra Member Data'),
         'options'  => 'FLCVD',

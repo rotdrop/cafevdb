@@ -40,12 +40,8 @@ use OCA\CAFEVDB\Common\Util;
 class SepaDebitMandates extends PMETableViewBase
 {
   const TEMPLATE = 'sepa-debit-mandates';
-  const TABLE = 'SepaDebitMandates';
-  const PROJECTS_TABLE = 'Projects';
-  const PARTICIPANTS_TABLE = 'ProjectParticipants';
-  const PAYMENTS_TABLE = 'ProjectPayments';
-  const PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
-  const FIXED_COLUMN_SEP = '@';
+  const TABLE = self::SEPA_DEBIT_MANDATES_TABLE;
+  const FIXED_COLUMN_SEP = self::VALUES_TABLE_SEP;
 
   protected $cssClass = 'sepa-debit-mandates';
 
@@ -56,7 +52,7 @@ class SepaDebitMandates extends PMETableViewBase
       'entity' => Entities\SepaDebitMandate::class,
     ],
     [
-      'table' => self::PARTICIPANTS_TABLE,
+      'table' => self::PROJECT_PARTICIPANTS_TABLE,
       'entity' => Entities\ProjectParticipants::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -80,7 +76,7 @@ class SepaDebitMandates extends PMETableViewBase
       'flags' => self::JOIN_READONLY,
     ],
     [
-      'table' => self::PAYMENTS_TABLE,
+      'table' => self::PROJECT_PAYMENTS_TABLE,
       'entity' => Entities\ProjectPayment::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -339,7 +335,7 @@ received so far'),
       $participantFieldJoinIndex = [];
       foreach ($monetary as $name => $field) {
         $fieldId = $field['id'];
-        $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+        $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
         $participantFieldJoinTable = [
           'table' => $tableName,
           'entity' => Entities\ProjectParticipantFieldDatum::class,
@@ -458,7 +454,7 @@ received so far'),
                         ? null
                         : "FIND_IN_SET(id,
   (SELECT GROUP_CONCAT(pp.musician_id)
-    FROM ".self::PARTICIPANTS_TABLE." pp
+    FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
     WHERE pp.project_id = ".$projectId."
     GROUP BY pp.project_id))"),
         ],
@@ -498,7 +494,7 @@ received so far'),
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PAYMENTS_TABLE, 'date_of_receipt',
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'date_of_receipt',
       [
         'name'     => $this->l->t('Last-Used Date'),
         'input'    => 'VR',
@@ -531,7 +527,7 @@ received so far'),
         $multiplicity = $field['multiplicity'];
         $dataType = $field['data_type'];
 
-        $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
+        $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
 
         $css = [ 'participant-field', 'field-id-'.$fieldId, ];
         list($curColIdx, $fddName) = $this->makeJoinTableField(

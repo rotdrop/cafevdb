@@ -53,17 +53,7 @@ use OCA\CAFEVDB\Common\Uuid;
 class ProjectParticipants extends PMETableViewBase
 {
   const TEMPLATE = 'project-participants';
-  const TABLE = 'ProjectParticipants';
-  const PROJECTS_TABLE = 'Projects';
-  const INSTRUMENTS_TABLE = 'Instruments';
-  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
-  const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
-  const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
-  const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
-  const PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
-  const PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
-  const PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
-  const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
+  const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
 
   /** @var int */
   private $memberProjectId;
@@ -134,7 +124,7 @@ class ProjectParticipants extends PMETableViewBase
     // extra input fields depending on the type of the project,
     // e.g. service fees etc.
     [
-      'table' => self::PARTICIPANT_FIELDS_TABLE,
+      'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
       'entity' => Entities\ProjectParticipantField::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -144,14 +134,14 @@ class ProjectParticipants extends PMETableViewBase
     ],
     // the data for the extra input fields
     [
-      'table' => self::PARTICIPANT_FIELDS_DATA_TABLE,
+      'table' => self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
       'entity' => Entities\ProjectParticipantFieldDatum::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
         'field_id' => [
-          'table' => self::PARTICIPANT_FIELDS_TABLE,
+          'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
           'column' => 'id',
         ],
         'option_key' => false,
@@ -359,7 +349,7 @@ class ProjectParticipants extends PMETableViewBase
 
       // Bad idea and really increases query time
       //
-      // $tableName = self::PARTICIPANT_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      // $tableName = self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
       // $participantFieldOptionJoinTable = [
       //   'table' => $tableName,
       //   'entity' => Entities\ProjectParticipantFieldDataOption::class,
@@ -375,7 +365,7 @@ class ProjectParticipants extends PMETableViewBase
       // $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
       // $this->joinStructure[] = $participantFieldOptionJoinTable;
 
-      $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
       $participantFieldJoinTable = [
         'table' => $tableName,
         'entity' => Entities\ProjectParticipantFieldDatum::class,
@@ -873,7 +863,7 @@ class ProjectParticipants extends PMETableViewBase
             $amountInvoiced = 0.0;
             foreach ($monetary as $fieldId => $participantField) {
 
-              $table = self::PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+              $table = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
               $fieldValues = [ 'key' => null, 'value' => null ];
               foreach ($fieldValues as $fieldName => &$fieldValue) {
                 $label = $this->joinTableFieldName($table, 'option_'.$fieldName);
@@ -951,7 +941,7 @@ class ProjectParticipants extends PMETableViewBase
         $tab = [ 'id' => $tabId ];
       }
 
-      $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
 
       $css = [ 'participant-field', 'field-id-'.$fieldId, ];
       $extraFddBase = [
@@ -1421,12 +1411,12 @@ class ProjectParticipants extends PMETableViewBase
 FROM ".self::TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m1
   ON m1.id = pp.musician_id
-LEFT JOIN ".self::PARTICIPANT_FIELDS_DATA_TABLE." fd
+LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
 LEFT JOIN (SELECT
     fd2.option_key AS group_id,
     ROW_NUMBER() OVER (ORDER BY fd2.field_id) AS group_number
-    FROM ".self::PARTICIPANT_FIELDS_DATA_TABLE." fd2
+    FROM ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd2
     WHERE fd2.project_id = $projectId AND fd2.field_id = $fieldId
     GROUP BY fd2.option_key
   ) fdg
@@ -1580,9 +1570,9 @@ WHERE pp.project_id = $projectId",
 FROM ".self::TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m3
   ON m3.id = pp.musician_id
-LEFT JOIN ".self::PARTICIPANT_FIELDS_DATA_TABLE." fd
+LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
-LEFT JOIN ".self::PARTICIPANT_FIELDS_OPTIONS_TABLE." do
+LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
   ON do.field_id = fd.field_id AND do.key = fd.option_key
 WHERE pp.project_id = $projectId",
               'column' => 'musician_id',
@@ -1648,7 +1638,7 @@ WHERE pp.project_id = $projectId",
 FROM ".self::TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m2
   ON m2.id = pp.musician_id
-LEFT JOIN ".self::PARTICIPANT_FIELDS_DATA_TABLE." fd
+LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
 WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
               'column' => 'name',
@@ -2249,7 +2239,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       $multiplicity = $participantField['multiplicity'];
       $dataType = $participantField['dataType'];
 
-      $tableName = self::PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
 
       $keyName = $this->joinTableFieldName($tableName, 'option_key');
       $valueName = $this->joinTableFieldName($tableName, 'option_value');

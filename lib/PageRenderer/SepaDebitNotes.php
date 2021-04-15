@@ -42,7 +42,6 @@ class SepaDebitNotes extends PMETableViewBase
   const TEMPLATE = 'sepa-debit-notes';
   const TABLE = 'SepaDebitNotes';
   const DATA_TABLE = 'SepaDebitNoteData';
-  const PROJECTS_TABLE = 'Projects';
 
   protected $cssClass = 'sepa-debit-notes';
 

@@ -39,11 +39,7 @@ use OCA\CAFEVDB\Common\Navigation;
 class ProjectInstrumentationNumbers extends PMETableViewBase
 {
   const TEMPLATE = 'project-instrumentation-numbers';
-  const TABLE = 'ProjectInstrumentationNumbers';
-  const PROJECTS_TABLE = 'Projects';
-  const INSTRUMENTS_TABLE = 'Instruments';
-  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
-  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
+  const TABLE = self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE;
 
   // Projects Instruments ProjectInstruments
   protected $joinStructure = [

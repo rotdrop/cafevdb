@@ -54,15 +54,24 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected const JOIN_REMOVE_EMPTY = 0x08;
 
   const MUSICIANS_TABLE = 'Musicians';
+  const PROJECTS_TABLE = 'Projects';
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
+  const SEPA_DEBIT_MANDATES_TABLE = 'SepaBankAccounts';
+  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
+  const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
+  const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
+  const PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
+  const INSTRUMENTS_TABLE = 'Instruments';
+  const INSTRUMENT_INSURANCES_TABLE = 'InstrumentInsurances';
+  const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
+  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
+  const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
+  const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstruments';
 
   const VALUES_SEP = ',';
   const JOIN_FIELD_NAME_SEPARATOR = ':';
   const JOIN_KEY_SEP = ':';
   const VALUES_TABLE_SEP = '@';
-
-  /** @todo Perhaps create a table-name provider structure. */
-  private const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstrument';
 
   /** @var RequestParameterService */
   protected $requestParameters;

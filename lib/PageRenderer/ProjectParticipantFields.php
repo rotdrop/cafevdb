@@ -50,10 +50,9 @@ use OCA\CAFEVDB\Common\Uuid;
 class ProjectParticipantFields extends PMETableViewBase
 {
   const TEMPLATE = 'project-participant-fields';
-  const TABLE = 'ProjectParticipantFields';
-  const OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
-  const DATA_TABLE = 'ProjectParticipantFieldsData';
-  const PROJECTS_TABLE = 'Projects';
+  const TABLE = self::PROJECT_PARTICIPANT_FIELDS_TABLE;
+  const OPTIONS_TABLE = self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE;
+  const DATA_TABLE = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE;
 
   const OPTION_FIELDS = [ 'key', 'label', 'data', 'tooltip', 'limit', 'deleted', ];
 
