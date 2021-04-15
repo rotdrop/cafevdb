@@ -229,6 +229,7 @@ class EntityManager extends EntityManagerDecorator
       return;
     }
     $types = [
+      Types\EnumSepaTransaction::class => 'enum',
       Types\EnumParticipantFieldDataType::class => 'enum',
       Types\EnumParticipantFieldMultiplicity::class => 'enum',
       Types\EnumGeographicalScope::class => 'enum',

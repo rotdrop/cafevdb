@@ -89,16 +89,15 @@ class ProjectPayment implements \ArrayAccess
   private $mandateSequence;
 
   /**
-   * @ORM\ManyToOne(targetEntity="SepaDebitMandate",
+   * @ORM\ManyToOne(targetEntity="SepaBankAccount",
    *                inversedBy="projectPayments",
    *                fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="mandate_project_id", referencedColumnName="project_id", nullable=true),
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
    *   @ORM\JoinColumn(name="mandate_sequence", referencedColumnName="sequence", nullable=true)
    * )
    */
-  private $sepaDebitMandate;
+  private $sepaBankAccount;
 
   /**
    * @var string
@@ -311,27 +310,27 @@ class ProjectPayment implements \ArrayAccess
   }
 
   /**
-   * Set sepaDebitMandate.
+   * Set sepaBankAccount.
    *
-   * @param string|null $sepaDebitMandate
+   * @param string|null $sepaBankAccount
    *
    * @return ProjectPayment
    */
-  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):ProjectPayment
+  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount):ProjectPayment
   {
-    $this->sepaDebitMandate = $sepaDebitMandate;
+    $this->sepaBankAccount = $sepaBankAccount;
 
     return $this;
   }
 
   /**
-   * Get sepaDebitMandate.
+   * Get sepaBankAccount.
    *
-   * @return SepaDebitMandate|null
+   * @return SepaBankAccount|null
    */
-  public function getSepaDebitMandate():?SepaDebitMandate
+  public function getSepaBankAccount():?SepaBankAccount
   {
-    return $this->sepaDebitMandate;
+    return $this->sepaBankAccount;
   }
 
   /**

@@ -33,42 +33,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * SepaDebitMandate
  *
- * @ORM\Table(name="SepaDebitMandates", uniqueConstraints={@ORM\UniqueConstraint(columns={"mandate_reference"})})
- * @ORM\Entity
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository")
- * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
-class SepaDebitMandate implements \ArrayAccess
+class SepaDebitMandate extends SepaBankAccount
 {
-  use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\SoftDeleteableEntity;
-
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
-   * @ORM\Id
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+   * )
    */
   private $project;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
-   * @ORM\Id
-   */
-  private $musician;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", options={"default"="1"})
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="NONE")
-   */
-  private $sequence = 1;
-
-  /**
    * @var string
    *
-   * @ORM\Column(type="string", length=35, nullable=false)
+   * @ORM\Column(type="string", length=35)
    */
   private $mandateReference;
 
@@ -82,70 +62,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * @var \DateTimeImmutable
    *
-   * @ORM\Column(type="date_immutable", nullable=false)
-   */
-  private $mandateDate;
-
-  /**
-   * @var \DateTimeImmutable|null
-   *
    * @ORM\Column(type="date_immutable", nullable=true)
    */
-  private $lastUsedDate;
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=false)
-   * @MediaMonks\Transformable(name="encrypt")
-   */
-  private $iban;
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=false)
-   * @MediaMonks\Transformable(name="encrypt")
-   */
-  private $bic;
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=false)
-   * @MediaMonks\Transformable(name="encrypt")
-   */
-  private $blz;
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=512, nullable=false)
-   * @MediaMonks\Transformable(name="encrypt")
-   */
-  private $bankAccountOwner;
-
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectPayment",
-   *                mappedBy="sepaDebitMandate",
-   *                fetch="EXTRA_LAZY")
-   */
-  private $projectPayments;
-
-  public function __construct() {
-    $this->arrayCTOR();
-    $this->projectPayments = new ArrayCollection();
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
+  private $mandateDate;
 
   /**
    * Set mandateReference.
@@ -169,6 +88,44 @@ class SepaDebitMandate implements \ArrayAccess
   public function getMandateReference()
   {
     return $this->mandateReference;
+  }
+
+  /**
+   * Set project.
+   *
+   * @param Project|null $project
+   *
+   * @return SepaDebitMandate
+   */
+  public function setProject($project = null):SepaDebitMandate
+  {
+    $this->project = $project;
+
+    return $this;
+  }
+
+  /**
+   * Get project.
+   *
+   * @return Project|null
+   */
+  public function getProject()
+  {
+    return $this->project;
+  }
+
+  /**
+   * Set nonRecurring.
+   *
+   * @param bool $nonRecurring
+   *
+   * @return SepaDebitMandate
+   */
+  public function setNonRecurring($nonRecurring):SepaDebitMandate
+  {
+    $this->nonRecurring = $nonRecurring;
+
+    return $this;
   }
 
   /**
@@ -199,47 +156,6 @@ class SepaDebitMandate implements \ArrayAccess
   }
 
   /**
-   * Set lastUsedDate.
-   *
-   * @param null|string|\DateTimeInterface $lastUsedDate
-   *
-   * @return SepaDebitMandate
-   */
-  public function setLastUsedDate($lastUsedDate = null):SepaDebitMandate
-  {
-    if (is_string($lastUsedDate)) {
-      $this->lastUsedDate = new \DateTimeImmutable($lastUsedDate);
-    } else {
-      $this->lastUsedDate = \DateTimeImmutable::createFromInterface($lastUsedDate);
-    }
-    return $this;
-  }
-
-  /**
-   * Get lastUsedDate.
-   *
-   * @return \DateTimeImmutable|null
-   */
-  public function getLastUsedDate():?\DateTimeImmutable
-  {
-    return $this->lastUsedDate;
-  }
-
-  /**
-   * Set nonRecurring.
-   *
-   * @param bool $nonRecurring
-   *
-   * @return SepaDebitMandate
-   */
-  public function setNonRecurring($nonRecurring):SepaDebitMandate
-  {
-    $this->nonRecurring = $nonRecurring;
-
-    return $this;
-  }
-
-  /**
    * Get nonRecurring.
    *
    * @return bool
@@ -247,173 +163,5 @@ class SepaDebitMandate implements \ArrayAccess
   public function getNonRecurring()
   {
     return $this->nonRecurring;
-  }
-
-  /**
-   * Set iban.
-   *
-   * @param string $iban
-   *
-   * @return SepaDebitMandate
-   */
-  public function setIban($iban):SepaDebitMandate
-  {
-    $this->iban = $iban;
-
-    return $this;
-  }
-
-  /**
-   * Get iban.
-   *
-   * @return string
-   */
-  public function getIban()
-  {
-    return $this->iban;
-  }
-
-  /**
-   * Set bic.
-   *
-   * @param string $bic
-   *
-   * @return SepaDebitMandate
-   */
-  public function setBic($bic):SepaDebitMandate
-  {
-    $this->bic = $bic;
-
-    return $this;
-  }
-
-  /**
-   * Get bic.
-   *
-   * @return string
-   */
-  public function getBic()
-  {
-    return $this->bic;
-  }
-
-  /**
-   * Set blz.
-   *
-   * @param string $blz
-   *
-   * @return SepaDebitMandate
-   */
-  public function setBlz($blz):SepaDebitMandate
-  {
-    $this->blz = $blz;
-
-    return $this;
-  }
-
-  /**
-   * Get blz.
-   *
-   * @return string
-   */
-  public function getBlz()
-  {
-    return $this->blz;
-  }
-
-  /**
-   * Set bankAccountOwner.
-   *
-   * @param string $bankAccountOwner
-   *
-   * @return SepaDebitMandate
-   */
-  public function setBankAccountOwner($bankAccountOwner):SepaDebitMandate
-  {
-    $this->bankAccountOwner = $bankAccountOwner;
-
-    return $this;
-  }
-
-  /**
-   * Get bankAccountOwner.
-   *
-   * @return string
-   */
-  public function getBankAccountOwner():string
-  {
-    return $this->bankAccountOwner;
-  }
-
-  /**
-   * Set project.
-   *
-   * @param Project|null $project
-   *
-   * @return SepaDebitMandate
-   */
-  public function setProject($project = null):SepaDebitMandate
-  {
-    $this->project = $project;
-
-    return $this;
-  }
-
-  /**
-   * Get project.
-   *
-   * @return Project|null
-   */
-  public function getProject()
-  {
-    return $this->project;
-  }
-
-  /**
-   * Set musician.
-   *
-   * @param Musician|null $musician
-   *
-   * @return SepaDebitMandate
-   */
-  public function setMusician($musician = null):SepaDebitMandate
-  {
-    $this->musician = $musician;
-
-    return $this;
-  }
-
-  /**
-   * Get musician.
-   *
-   * @return Musician|null
-   */
-  public function getMusician()
-  {
-    return $this->musician;
-  }
-
-  /**
-   * Set sequence.
-   *
-   * @param int $sequence
-   *
-   * @return SepaDebitMandate
-   */
-  public function setSequence(int $sequence = 1):SepaDebitMandate
-  {
-    $this->sequence = $sequence;
-
-    return $this;
-  }
-
-  /**
-   * Get sequence.
-   *
-   * @return Sequence|null
-   */
-  public function getSequence():int
-  {
-    return $this->sequence;
   }
 }

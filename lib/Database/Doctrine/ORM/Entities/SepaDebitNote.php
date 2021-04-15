@@ -32,6 +32,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * SepaDebitNote
  *
+ * This actually models a batch collection
+ *
  * @ORM\Table(name="SepaDebitNotes")
  * @ORM\Entity
  */
@@ -273,30 +275,6 @@ class SepaDebitNote implements \ArrayAccess
   public function getDueDate()
   {
     return $this->dueDate;
-  }
-
-  /**
-   * Set job.
-   *
-   * @param string $job
-   *
-   * @return SepaDebitNote
-   */
-  public function setJob($job):SepaDebitNote
-  {
-    $this->job = $job;
-
-    return $this;
-  }
-
-  /**
-   * Get job.
-   *
-   * @return string
-   */
-  public function getJob()
-  {
-    return $this->job;
   }
 
   /**

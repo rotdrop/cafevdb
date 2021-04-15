@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,14 +31,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * MusicianInstrument
+ * MusicianInstruments
  *
  * This is almost only a pivot table (i.e. a join table between
  * instruments and musicians) but for the "ranking" column which codes
  * a loose ranking like "primary instrument", i.e. the preference of
  * instruments of the given musician.
  *
- * @ORM\Table(name="MusicianInstrument", options={"comment":"Join-table Musicians -> Instruments"})
+ * @ORM\Table(name="MusicianInstruments", options={"comment":"Join-table Musicians -> Instruments"})
  * @ORM\Entity
  */
 class MusicianInstrument implements \ArrayAccess

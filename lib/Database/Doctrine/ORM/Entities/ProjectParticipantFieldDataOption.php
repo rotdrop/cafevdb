@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Uuid;
 
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -127,7 +128,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Get field.
    *
-   * @return int
+   * @return ProjectParticipantField
    */
   public function getField()
   {
@@ -279,6 +280,18 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function getFieldData():Collection
   {
     return $this->fieldData;
+  }
+
+  /**
+   * Filter field-data by musician
+   *
+   * @param Musician $musician
+   */
+  public function getMusicianFieldData(Musician $musician):Collection
+  {
+    return $this->fieldData->matching(
+      DBUtil::criteriaWhere([ 'musician' => $musician ])
+    );
   }
 
   /**

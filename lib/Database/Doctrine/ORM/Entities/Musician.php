@@ -230,9 +230,9 @@ class Musician implements \ArrayAccess
   private $payableInsurances;
 
   /**
-   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="musician", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="SepaBankAccount", mappedBy="musician", fetch="EXTRA_LAZY")
    */
-  private $sepaDebitMandates;
+  private $sepaBankAccounts;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="musician", fetch="EXTRA_LAZY")
@@ -253,7 +253,7 @@ class Musician implements \ArrayAccess
     $this->projectParticipation = new ArrayCollection();
     $this->projectParticipantFieldsData = new ArrayCollection();
     $this->instrumentInsurances = new ArrayCollection();
-    $this->sepaDebitMandates = new ArrayCollection();
+    $this->sepaBankAccounts = new ArrayCollection();
     $this->payments = new ArrayCollection();
 
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
@@ -822,27 +822,27 @@ class Musician implements \ArrayAccess
   }
 
   /**
-   * Set sepaDebitMandates.
+   * Set sepaBankAccounts.
    *
-   * @param Collection $sepaDebitMandates
+   * @param Collection $sepaBankAccounts
    *
    * @return Musician
    */
-  public function setSepaDebitMandates(Collection $sepaDebitMandates):Musician
+  public function setSepaBankAccounts(Collection $sepaBankAccounts):Musician
   {
-    $this->sepaDebitMandates = $sepaDebitMandates;
+    $this->sepaBankAccounts = $sepaBankAccounts;
 
     return $this;
   }
 
   /**
-   * Get sepaDebitMandates.
+   * Get sepaBankAccounts.
    *
    * @return Collection
    */
-  public function getSepaDebitMandates():Collection
+  public function getSepaBankAccounts():Collection
   {
-    return $this->sepaDebitMandates;
+    return $this->sepaBankAccounts;
   }
 
   /**
