@@ -484,7 +484,7 @@ __EOT__;
 
   }
 
-  public function flyerImageLink($projectId, $action = 'display', $imageId = null)
+  public function flyerImageLink($projectId, $action = 'display', $imageId = -1)
   {
     switch ($action) {
       case 'add':
@@ -506,8 +506,8 @@ project without a flyer first.");
         return $div;
       case 'change':
         $imagearea = ''
-          .'<div id="project_flyer_upload">
-  <div class="tip project_flyer propertycontainer" id="cafevdb_inline_image_wrapper" title="'
+          .'<div class="project_flyer_upload">
+  <div data-image-id="'.((int)$imageId > 0 ? $imageId : -1).'" class="tip project_flyer propertycontainer cafevdb_inline_image_wrapper" title="'
         .$this->l->t("Drop image to upload (max %s)", [\OCP\Util::humanFileSize(Util::maxUploadSize())]).'"'
         .' data-element="PHOTO">
     <ul id="phototools" class="transparent hidden contacts_property">

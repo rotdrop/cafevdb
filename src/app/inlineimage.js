@@ -31,7 +31,6 @@ require('inlineimage.css');
 
 globalState.Photo = {
   ownerId: -1,
-  imageItmTable: '',
   imageSize: 400,
   data: { PHOTO: false },
   photo: {},
@@ -100,7 +99,7 @@ const photoCloudSelected = function(path) {
     });
 };
 
-const photoLoad = function(ownerId, joinTable, imageSize, callback) {
+const photoLoad = function(ownerId, imageId, joinTable, imageSize, callback) {
   const self = globalState.Photo;
   if (typeof ownerId !== 'undefined') {
     self.ownerId = ownerId;
@@ -113,7 +112,7 @@ const photoLoad = function(ownerId, joinTable, imageSize, callback) {
   }
   // first determine if there is a photo ...
   $.get(
-    generateUrl('image/' + self.joinTable + '/' + self.ownerId), { metaData: true })
+    generateUrl('image/' + self.joinTable + '/' + self.ownerId), { imageId, metaData: true })
     .fail(function(xhr, status, errorThrown) {
       if (xhr.status !== Ajax.httpStatus.NOT_FOUND) { // ok, no photo yet
         Ajax.handleError(xhr, status, errorThrown);
@@ -127,7 +126,7 @@ const photoLoad = function(ownerId, joinTable, imageSize, callback) {
     })
     .always(function() {
       $('#phototools li a').cafevTooltip('hide');
-      const wrapper = $('#cafevdb_inline_image_wrapper');
+      const wrapper = $('.cafevdb_inline_image_wrapper');
       wrapper.addClass('loading').addClass('wait');
       delete self.photo;
       self.photo = new Image();
@@ -175,7 +174,7 @@ const photoLoad = function(ownerId, joinTable, imageSize, callback) {
 
 const photoEditCurrent = function() {
   const self = globalState.Photo;
-  const wrapper = $('#cafevdb_inline_image_wrapper');
+  const wrapper = $('.cafevdb_inline_image_wrapper');
   $.post(generateUrl('image/edit'), {
     ownerId: self.ownerId,
     joinTable: self.joinTable,
@@ -311,7 +310,7 @@ const savePhoto = function($dlg) {
 
 const deletePhoto = function() {
   const self = globalState.Photo;
-  const wrapper = $('#cafevdb_inline_image_wrapper');
+  const wrapper = $('.cafevdb_inline_image_wrapper');
   wrapper.addClass('wait');
   $.post(generateUrl('image/delete'), {
     joinTable: self.joinTable,
@@ -332,7 +331,7 @@ const loadHandlers = function() {
   $('#phototools li a').click(function() {
     $(this).cafevTooltip('hide');
   });
-  $('#cafevdb_inline_image_wrapper').hover(
+  $('.cafevdb_inline_image_wrapper').hover(
     function() {
       phototools.slideDown(200);
     },
@@ -378,15 +377,15 @@ const loadHandlers = function() {
   $('#file_upload_start').on('change', function() {
     photoUpload(this.files);
   });
-  $('#cafevdb_inline_image_wrapper').bind('dragover', function(event) {
+  $('.cafevdb_inline_image_wrapper').bind('dragover', function(event) {
     $(event.target).addClass('droppable');
     event.stopPropagation();
     event.preventDefault();
   });
-  $('#cafevdb_inline_image_wrapper').bind('dragleave', function(event) {
+  $('.cafevdb_inline_image_wrapper').bind('dragleave', function(event) {
     $(event.target).removeClass('droppable');
   });
-  $('#cafevdb_inline_image_wrapper').bind('drop', function(event) {
+  $('.cafevdb_inline_image_wrapper').bind('drop', function(event) {
     event.stopPropagation();
     event.preventDefault();
     $(event.target).removeClass('droppable');
@@ -463,7 +462,7 @@ const photoUploadDragDrop = function() {
  *
  * @param {Function} callback TBD.
  */
-const photoReady = function(ownerId, joinTable, callback) {
+const photoReady = function(ownerId, imageId, joinTable, callback) {
   const ownerIdField = $('#file_upload_form input[name="ownerId"]');
   const joinTableField = $('#file_upload_form input[name="joinTable"]');
   if (ownerId === undefined) {
@@ -482,7 +481,7 @@ const photoReady = function(ownerId, joinTable, callback) {
       imageSize = 400;
     }
     loadHandlers();
-    photoLoad(ownerId, joinTable, imageSize, callback);
+    photoLoad(ownerId, imageId, joinTable, imageSize, callback);
   } else {
     // still run the callback
     callback();

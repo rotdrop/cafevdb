@@ -882,7 +882,7 @@ const myDocumentReady = function() {
 
       myReady(selector, resizeCB);
 
-      container.find('div.photo, #cafevdb_inline_image_wrapper')
+      container.find('div.photo, .cafevdb_inline_image_wrapper')
         .off('click', 'img.zoomable')
         .on('click', 'img.zoomable', function(event) {
           event.preventDefault();
@@ -907,7 +907,8 @@ const myDocumentReady = function() {
         if (idField.length > 0) {
           recordId = idField.val();
         }
-        Photo.ready(recordId, 'MusicianPhoto', resizeCB);
+        const imageId = -1;
+        Photo.ready(recordId, imageId, 'MusicianPhoto', resizeCB);
       } else {
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);
       }

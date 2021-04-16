@@ -225,7 +225,7 @@ const documentReady = function() {
       const container = $(selector);
       pmeExportMenu(selector);
 
-      container.find('div.photo, #cafevdb_inline_image_wrapper')
+      container.find('div.photo, .cafevdb_inline_image_wrapper')
         .off('click', 'img.zoomable')
         .on('click', 'img.zoomable', function(event) {
           event.preventDefault();
@@ -247,7 +247,8 @@ const documentReady = function() {
           recordId = idField.val();
         }
         console.info('Run photo.ready');
-        Photo.ready(recordId, 'MusicianPhoto', resizeCB);
+        const imageId = -1;
+        Photo.ready(recordId, imageId, 'MusicianPhoto', resizeCB);
       } else {
         console.info('Call imagesLoaded');
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);

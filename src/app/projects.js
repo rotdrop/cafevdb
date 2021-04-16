@@ -684,13 +684,14 @@ const documentReady = function() {
         }
       };
 
-      if (container.find('#project_flyer_upload').length > 0) {
+      if (container.find('.project_flyer_upload').length > 0) {
         const idField = container.find('input[name="' + pmeData('id') + '"]');
         let recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();
         }
-        Photo.ready(recordId, 'ProjectFlyer', function() {
+        const imageId = -1;
+        Photo.ready(recordId, imageId, 'ProjectFlyer', function() {
           imagesReady = true;
         });
       } else {
@@ -1012,7 +1013,7 @@ const documentReady = function() {
         });
       }
 
-      container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
+      container.find('div.photo, .cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
         event.preventDefault();
         Photo.popup(this);
         return false;
