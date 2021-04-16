@@ -35,8 +35,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="Files")
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="transformation", type="EnumDataTransformation")
- * @ORM\DiscriminatorMap({"identity"="File","encrypted"="EncryptedFile"})
+ * @ORM\DiscriminatorColumn(name="type", type="EnumFileType")
+ * @ORM\DiscriminatorMap({"generic"="File","encrypted"="EncryptedFile","image"="Image"})
  * @ORM\Entity
  */
 class File implements \ArrayAccess
@@ -65,9 +65,9 @@ class File implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=0})
+   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
-  private $size;
+  private $size = -1;
 
   /**
    * @var FileData
