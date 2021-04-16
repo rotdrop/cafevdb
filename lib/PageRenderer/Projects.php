@@ -516,7 +516,7 @@ project without a flyer first.");
   <div data-image-info=\''.$imageInfo.'\' class="tip project_flyer propertycontainer cafevdb_inline_image_wrapper" title="'
         .$this->l->t("Drop image to upload (max %s)", [\OCP\Util::humanFileSize(Util::maxUploadSize())]).'"'
         .' data-element="PHOTO">
-    <ul class="phototools" class="transparent hidden contacts_property">
+    <ul class="phototools transparent hidden contacts_property">
       <li><a class="svg delete" title="'.$this->l->t("Delete current flyer").'"></a></li>
       <li><a class="svg edit" title="'.$this->l->t("Edit current flyer").'"></a></li>
       <li><a class="svg upload" title="'.$this->l->t("Upload new flyer").'"></a></li>

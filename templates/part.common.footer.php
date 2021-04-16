@@ -57,7 +57,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
 
 <!-- image file upload support with drag'n drop -->
 <script id="imageUploadTemplate" type="text/template">
-  <form id="" class="float hidden" enctype="multipart/form-data">
+  <form id="{formId}" class="float hidden" enctype="multipart/form-data">
     <input type="hidden" name="ownerId" value="{ownerId}"/>
     <input type="hidden" name="imageId" value="{imageId}"/>
     <input type="hidden" name="joinTable" value="{joinTable}"/>

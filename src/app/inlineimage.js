@@ -70,6 +70,7 @@ const photoUpload = function(wrapper, filelist) {
  */
 const photoLoadHandlers = function(wrapper) {
   const phototools = wrapper.find('.phototools');
+  console.info('WRAPPERDATA', wrapper.data());
   if (wrapper.data('PHOTO')) {
     phototools.find('.delete').show();
     phototools.find('.edit').show();
