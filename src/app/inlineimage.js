@@ -182,7 +182,7 @@ const photoEditCurrent = function(wrapper) {
       wrapper.removeClass('wait');
     })
     .done(function(data) {
-      if (!Ajax.validateResponse(data, [ 'tmpKey' ])) {
+      if (!Ajax.validateResponse(data, ['tmpKey'])) {
         return;
       }
       editPhoto(wrapper, data.tmpKey);
@@ -324,6 +324,7 @@ const deletePhoto = function(wrapper) {
  */
 const attachHandlers = function(wrapper) {
   const phototools = wrapper.find('.phototools');
+  console.info('PHOTOTOOLS', phototools);
   phototools.find('li a').click(function() {
     $(this).cafevTooltip('hide');
   });
