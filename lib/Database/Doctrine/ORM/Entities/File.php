@@ -70,27 +70,18 @@ class File implements \ArrayAccess
   private $size;
 
   /**
-   * @var string|null
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true})
-   * @Gedmo\Slug(fields={"id"}, updatable=true, handlers={
-   *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\RelativeSlugHandler", options={
-   *     @Gedmo\SlugHandlerOption(name="relationField", value="fileData"),
-   *     @Gedmo\SlugHandlerOption(name="relationSlugField", value="dataHash"),
-   *     @Gedmo\SlugHandlerOption(name="separator", value="/"),
-   *     @Gedmo\SlugHandlerOption(name="urilize", value=false)
-   *   }),
-   *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler")
-   * })
-   */
-  private $fileDataHash;
-
-  /**
    * @var FileData
    *
-   * @ORM\OneToOne(targetEntity="FileData", mappedBy="file", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="FileData", mappedBy="file", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY", cascade="all")
    */
   private $fileData;
+
+  /**
+   * @var string|null
+   *
+   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed"=true})
+   */
+  private $dataHash;
 
   /**
    * @var \DateTimeImmutable
@@ -138,27 +129,27 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set md5.
+   * Set dataHash.
    *
-   * @param string|null $md5
+   * @param string|null $dataHash
    *
    * @return File
    */
-  public function setMd5($md5 = null):File
+  public function setDataHash($dataHash = null):File
   {
-    $this->md5 = $md5;
+    $this->dataHash = $dataHash;
 
     return $this;
   }
 
   /**
-   * Get md5.
+   * Get dataHash.
    *
    * @return string|null
    */
-  public function getMd5()
+  public function getDataHash()
   {
-    return $this->md5;
+    return $this->dataHash;
   }
 
   /**

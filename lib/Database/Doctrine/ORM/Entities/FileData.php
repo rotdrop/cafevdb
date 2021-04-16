@@ -38,6 +38,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\DiscriminatorColumn(name="transformation", type="EnumDataTransformation")
  * @ORM\DiscriminatorMap({"identity"="FileData","encrypted"="EncryptedFileData"})
  * @ORM\Entity
+ * @Gedmo\Loggable(enabled=false)
  */
 class FileData implements \ArrayAccess
 {
@@ -59,11 +60,11 @@ class FileData implements \ArrayAccess
    * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true})
    * @Gedmo\Slug(fields={"data"}, updatable=true, handlers={
    *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler"),
-   *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
-   *     @Gedmo\SlugHandlerOption(name="relationClass", value="OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File"),
-   *     @Gedmo\SlugHandlerOption(name="mappedBy", value="fileData"),
-   *     @Gedmo\SlugHandlerOption(name="inverseSlugField", value="fileDataHash")
-   *   })
+   *   @Gedmo\SlugHandler(
+   *     class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\AssociationSlugHandler",
+   *     options={
+   *       @Gedmo\SlugHandlerOption(name="associationSlug", value="file.dataHash")
+   *     })
    * })
    *
    */
