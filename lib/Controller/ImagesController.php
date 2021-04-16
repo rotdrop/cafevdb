@@ -140,7 +140,7 @@ class ImagesController extends Controller {
             'ownerId' => $ownerId,
             'imageId' => $dbImage->getId(),
             'mimeType' => $dbImage->getMimeType(),
-            'hash' => $dbImage->getFileDataHash(),
+            'hash' => $dbImage->getDataHash(),
             'width' => $dbImage->getWidth(),
             'height' => $dbImage->getHeight(),
           ]);
@@ -363,7 +363,7 @@ class ImagesController extends Controller {
           return self::grumble($this->l->t("Unable to create temporary image for %s@%s", [$ownerId, $joinTable]));
         }
 
-        $tmpKey = $this->appName().'-inline-image-'.$joinTable.'-'.$ownerId.'-'.$imageId.'-'.$dbImage->getFileDataHash();
+        $tmpKey = $this->appName().'-inline-image-'.$joinTable.'-'.$ownerId.'-'.$imageId.'-'.$dbImage->getDataHash();
 
         if (!$this->cacheTemporaryImage($tmpKey, $image, $imageSize)) {
         return self::grumble($this->l->t(
