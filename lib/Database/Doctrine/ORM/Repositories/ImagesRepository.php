@@ -93,7 +93,7 @@ class ImagesRepository extends EntityRepository
    * Persist the given image for the given owner.  Depending on the
    * association type between the owner and the join table
    * (i.e. OneToOne or OneToMany) the image will replace an existing
-   * image or just added the collection of images.
+   * image or just be added the collection of images.
    *
    * @param string $joinTableEntityClass Possibly partial join-table entity class.
    *
