@@ -116,7 +116,7 @@ class ImagesController extends Controller {
       $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
       $findBy =  [ 'ownerId' => $ownerId ];
       if ($imageId > 0) {
-        $findBy['imageId'] = $imageId;
+        $findBy['image'] = $imageId;
       }
 
       try {

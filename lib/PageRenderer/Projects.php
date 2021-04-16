@@ -46,8 +46,8 @@ class Projects extends PMETableViewBase
   const TABLE = self::PROJECTS_TABLE;
   const ENTITY = Entities\Project::class;
   const NAME_LENGTH_MAX = 20;
-  const POSTER_JOIN = 'ProjectPoster';
-  const FLYER_JOIN = 'ProjectFlyer';
+  const POSTER_JOIN_TABLE = 'ProjectPoster';
+  const FLYER_JOIN_TABLE = 'ProjectFlyer';
 
   /** @var OCA\CAFEVDB\Service\ProjectService */
   private $projectService;
@@ -95,6 +95,16 @@ class Projects extends PMETableViewBase
         'id' => false,
       ],
       'column' => 'id',
+    ],
+    [
+      'table' => self::FLYER_JOIN_TABLE,
+      'entity' => Entities\ProjectFlyer::class,
+      'readonly' => true,
+      'identifier' => [
+        'owner_id' => 'id',
+        'image_id' => false,
+      ],
+      'column' => 'image_id',
     ],
   ];
 
@@ -404,21 +414,28 @@ __EOT__;
       'escape' => false
     ];
 
-    $opts['fdd']['flyer'] = [
-      'input' => 'V',
-      'name' => $this->l->t('Flyer'),
-      'select' => 'T',
-      'options' => 'VCD',
-      'sql'      => '$main_table.updated',
-      'php' => function($value, $action, $field, $row, $recordId, $pme) {
-        $projectId = $recordId;
-        $stamp = $value;
-        return $this->flyerImageLink($projectId, $action, $stamp);
-      },
-      'css' => ['postfix' => ' projectflyer'],
-      'default' => '',
-      'sort' => false,
-    ];
+    $this->makeJoinTableField(
+      $opts['fdd'], self::FLYER_JOIN_TABLE, 'image_id', [
+        'input' => 'V',
+        'name' => $this->l->t('Flyer'),
+        'select' => 'T',
+        'options' => 'VCD',
+        'php' => function($value, $action, $field, $row, $recordId, $pme) {
+          $projectId = $recordId;
+          $stamp = $value;
+          if (empty($value)) {
+            return $this->flyerImageLink($projectId, $action, null);
+          } else {
+            return implode('', array_map(function($imageId) use ($projectId, $action) {
+              return $this->flyerImageLink($projectId, $action, $imageId);
+            }, Util::explode(',', $value)));
+          }
+        },
+        'values' => [ 'grouped' => true, ],
+        'css' => ['postfix' => ' projectflyer'],
+        'default' => '',
+        'sort' => false,
+      ]);
 
     $opts['fdd']['updated'] =
       array_merge(
@@ -467,7 +484,7 @@ __EOT__;
 
   }
 
-  public function flyerImageLink($projectId, $action = 'display', $timeStamp = '')
+  public function flyerImageLink($projectId, $action = 'display', $imageId = null)
   {
     switch ($action) {
       case 'add':
@@ -476,9 +493,12 @@ project without a flyer first.");
       case 'display':
         $url = $this->urlGenerator()->linkToRoute(
           'cafevdb.images.get',
-          [ 'joinTable' => self::FLYER_JOIN,
-            'ownerId' => $projectId ]);
-        $url .= '?imageSize=1200&timeStamp='.$timeStamp;
+          [ 'joinTable' => self::FLYER_JOIN_TABLE,
+            'ownerId' => $projectId, ]);
+        $url .= '?imageSize=1200&timeStamp='.time();
+        if (!empty($imageId) && $imageId > 0) {
+          $url .= '&imageId='.$imageId;
+        }
         $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
         $div = ''
              .'<div class="photo"><img class="cafevdb_inline_image flyer zoomable" src="'.$url.'" '
