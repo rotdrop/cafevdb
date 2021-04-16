@@ -58,7 +58,7 @@ class FileData implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true})
-   * @Gedmo\Slug(fields={"data"}, updatable=true, handlers={
+   * @Gedmo\Slug(fields={"data"}, updatable=true, unique=false, handlers={
    *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler"),
    *   @Gedmo\SlugHandler(
    *     class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\AssociationSlugHandler",
