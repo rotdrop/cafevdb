@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, $ } from './globals.js';
+import { appName, $ } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as Dialogs from './dialogs.js';
 import * as Ajax from './ajax.js';
@@ -29,14 +29,7 @@ require('jquery-jcrop');
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('inlineimage.css');
 
-globalState.Photo = {
-  ownerId: -1,
-  imageSize: 400,
-  data: { PHOTO: false },
-  photo: {},
-};
-
-const photoUpload = function(filelist) {
+const photoUpload = function(wrapper, filelist) {
   if (!filelist) {
     Dialogs.alert(t(appName, 'No files selected for upload.'), t(appName, 'Error'));
     return;
@@ -62,16 +55,22 @@ const photoUpload = function(filelist) {
       Ajax.handleError(xhr, status, errorThrown);
     })
     .done(function(data) {
-      if (!Ajax.validateResponse(data, ['ownerId', 'tmpKey'])) {
+      if (!Ajax.validateResponse(data, ['tmpKey'])) {
         return;
       }
-      editPhoto(data.ownerId, data.tmpKey);
+      editPhoto(wrapper, data.tmpKey);
     });
 };
 
-const photoLoadHandlers = function() {
-  const phototools = $('#phototools');
-  if (globalState.Photo.data.PHOTO) {
+/**
+ * Hide or show edit and delete buttons depending on whether there is
+ * a real image.
+ *
+ * @param {Object} wrapper jQuery object for the wrapper-div.
+ */
+const photoLoadHandlers = function(wrapper) {
+  const phototools = wrapper.find('.phototools');
+  if (wrapper.data('PHOTO')) {
     phototools.find('.delete').show();
     phototools.find('.edit').show();
   } else {
@@ -80,120 +79,119 @@ const photoLoadHandlers = function() {
   }
 };
 
-const photoCloudSelected = function(path) {
-  const self = globalState.Photo;
-  $.post(generateUrl('image/cloud'), {
-    path,
-    ownerId: self.ownerId,
-    joinTable: self.joinTable,
-    imageSize: self.imageSize,
-  })
+const photoCloudSelected = function(wrapper, path) {
+  const imageInfo = wrapper.data('imageInfo');
+  $.post(generateUrl('image/cloud'), $.extend({ path }, imageInfo))
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
     })
     .done(function(data) {
-      if (!Ajax.validateResponse(data, ['ownerId', 'tmpKey'])) {
+      if (!Ajax.validateResponse(data, ['tmpKey'])) {
         return;
       }
-      editPhoto(data.ownerId, data.tmpKey);
+      editPhoto(wrapper, data.tmpKey);
     });
 };
 
-const photoLoad = function(ownerId, imageId, joinTable, imageSize, callback) {
-  const self = globalState.Photo;
-  if (typeof ownerId !== 'undefined') {
-    self.ownerId = ownerId;
-  }
-  if (typeof joinTable !== 'undefined') {
-    self.joinTable = joinTable;
-  }
-  if (typeof imageSize !== 'undefined') {
-    self.imageSize = imageSize;
-  }
+/**
+ * Install the special upload and crop buttons inside the given
+ * container.
+ *
+ * @param {jQuery} wrapper jQuery object containing image and
+ * controls.
+ *
+ * @param {Function} callback TBD.
+ */
+const photoLoad = function(wrapper, callback) {
+  const phototools = wrapper.find('.phototools');
+  const imageInfo = wrapper.data('imageInfo');
+  console.info('IMAGEINFO', imageInfo);
+  const ownerId = imageInfo.ownerId;
+  const imageId = imageInfo.imageId;
+  const joinTable = imageInfo.joinTable;
+  const imageSize = imageInfo.imageSize;
   // first determine if there is a photo ...
   $.get(
-    generateUrl('image/' + self.joinTable + '/' + self.ownerId), { imageId, metaData: true })
+    generateUrl('image/' + joinTable + '/' + ownerId, {
+      imageId,
+      metaData: true,
+    }))
     .fail(function(xhr, status, errorThrown) {
       if (xhr.status !== Ajax.httpStatus.NOT_FOUND) { // ok, no photo yet
         Ajax.handleError(xhr, status, errorThrown);
       }
-      self.data.PHOTO = false;
-      photoLoadHandlers();
+      wrapper.data('PHOTO', false);
+      photoLoadHandlers(wrapper);
     })
     .done(function(data) {
-      self.data.PHOTO = true;
-      photoLoadHandlers();
+      wrapper.data('PHOTO', true);
+      photoLoadHandlers(wrapper);
     })
     .always(function() {
-      $('#phototools li a').cafevTooltip('hide');
-      const wrapper = $('.cafevdb_inline_image_wrapper');
+      phototools.find('li a').cafevTooltip('hide');
       wrapper.addClass('loading').addClass('wait');
-      delete self.photo;
-      self.photo = new Image();
+      wrapper.removeData('image');
+      const image = $(new Image());
+      wrapper.data('image', image);
 
-      const requestParams =
-            '?metaData=false'
-            + '&imageSize=' + imageSize
-            + '&refresh=' + Math.random() // disable browser-caching
-            + '&requesttoken=' + encodeURIComponent(OC.requestToken);
-      $(self.photo)
+      let requestParams = '?metaData=false';
+      if (+imageId > 0) {
+        requestParams += '&imageId=' + imageId;
+      }
+      requestParams += '&imageSize=' + imageSize
+        + '&refresh=' + Math.random() // disable browser-caching
+        + '&requesttoken=' + encodeURIComponent(OC.requestToken);
+      image
         .on('load', function() {
-          $('img.cafevdb_inline_image').remove();
-          $(this).addClass('cafevdb_inline_image');
-          $(this).addClass('zoomable');
-          $(this).insertAfter($('#phototools'));
+          console.info('LOAD');
+          wrapper.find('img.' + appName + '_inline_image').remove();
+          image.addClass(appName + '_inline_image');
+          image.addClass('zoomable');
+          image.insertAfter(phototools);
           wrapper.css('width', $(this).get(0).width + 10);
           wrapper.removeClass('loading').removeClass('wait');
-          $(this).fadeIn(function() {
-            if (typeof callback === 'function') {
-              callback();
-            }
-          });
+          image.fadeIn(callback);
         })
         .on('error', function(event) {
+          console.info('ERROR');
 
           // BIG FAT NOTE: the "event" data passed to this error handler
           // just does not contain any information about the error-data
           // returned by the server. So only information is "there was an
           // error".
 
-          Dialogs.alert(
-            t(appName, 'Could not open image.'), t(appName, 'Error'),
-            function() {
-              if (typeof callback === 'function') {
-                // Still the callback needs to run ...
-                callback();
-              }
-            });
-          // self.notify({message:t(appName, 'Error loading image.')});
+          Dialogs.alert(t(appName, 'Could not open image.'), t(appName, 'Error'), callback);
         })
-        .attr('src', generateUrl('image/' + self.joinTable + '/' + self.ownerId + requestParams));
-      photoLoadHandlers();
+        .attr('src', generateUrl('image/' + joinTable + '/' + ownerId + requestParams));
+      console.info('IMAGESRC', image.attr('src'));
+      photoLoadHandlers(wrapper);
     });
 };
 
-const photoEditCurrent = function() {
-  const self = globalState.Photo;
-  const wrapper = $('.cafevdb_inline_image_wrapper');
-  $.post(generateUrl('image/edit'), {
-    ownerId: self.ownerId,
-    joinTable: self.joinTable,
-    imageSize: self.imageSize,
-  })
+/**
+ * Edit (crop) the current photo.
+ *
+ * @param {Object} wrapper jQuery object containing image and
+ * controls.
+ */
+const photoEditCurrent = function(wrapper) {
+  const imageInfo = wrapper.data('imageInfo');
+  $.post(generateUrl('image/edit'), imageInfo)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
       wrapper.removeClass('wait');
     })
     .done(function(data) {
-      if (!Ajax.validateResponse(data, ['ownerId', 'tmpKey'])) {
+      if (!Ajax.validateResponse(data, [ 'tmpKey' ])) {
         return;
       }
-      editPhoto(data.ownerId, data.tmpKey);
+      editPhoto(wrapper, data.tmpKey);
     });
 };
 
-const editPhoto = function(ownerId, tmpKey) {
-  // console.log('editPhoto', ownerId, tmpKey);
+const editPhoto = function(wrapper, tmpKey) {
+  const imageInfo = wrapper.data('imageInfo');
+
   $.fn.cafevTooltip.remove();
   // Simple event handler, called from onChange and onSelect
   // event handlers, as per the Jcrop invocation above
@@ -210,20 +208,10 @@ const editPhoto = function(ownerId, tmpKey) {
     $('#coords input').val('');
   };
 
-  const self = globalState.Photo;
-  if (!self.$cropBoxTmpl) {
-    self.$cropBoxTmpl = $('#cropBoxTemplate');
-  }
+  const $cropBoxTmpl = $('#cropBoxTemplate');
   $('body').append('<div id="edit_photo_dialog"></div>');
-  const $dlg = self.$cropBoxTmpl.octemplate({
-    ownerId,
-    joinTable: self.joinTable,
-    imageSize: self.imageSize,
-    tmpKey,
-  });
-
-  const cropphoto = new Image();
-  $(cropphoto)
+  const $cropBoxForm = $cropBoxTmpl.octemplate($.extend({ tmpKey }, imageInfo))
+  $(new Image())
     .on('load', function() {
       // var x = 5, y = 5, w = this.width-10, h = this.height-10;
       const x = 0;
@@ -231,11 +219,9 @@ const editPhoto = function(ownerId, tmpKey) {
       const w = this.width;
       const h = this.height;
       $(this).attr('id', 'cropbox');
-      $(this).prependTo($dlg).fadeIn();
-      // const photoDlg = $('#edit_photo_dialog');
-
-      const boxW = Math.min(self.imageSize, window.innerWidth * 0.95);
-      const boxH = Math.min(self.imageSize, window.innerHeight * 0.80);
+      $(this).prependTo($cropBoxForm).fadeIn();
+      const boxW = Math.min(imageInfo.imageSize, window.innerWidth * 0.95);
+      const boxH = Math.min(imageInfo.imageSize, window.innerHeight * 0.80);
 
       $(this).Jcrop({
         onChange: showCoords,
@@ -249,7 +235,7 @@ const editPhoto = function(ownerId, tmpKey) {
         setSelect: [x + w, y + h, x, y],
         // aspectRatio: 0.8
       });
-      $('#edit_photo_dialog').html($dlg).cafevDialog({
+      $('#edit_photo_dialog').html($cropBoxForm).cafevDialog({
         modal: true,
         closeOnEscape: true,
         title: t(appName, 'Edit inline image'),
@@ -261,7 +247,7 @@ const editPhoto = function(ownerId, tmpKey) {
           {
             text: t(appName, 'Ok'),
             click() {
-              savePhoto($(this));
+              savePhoto(wrapper, $(this));
               $(this).dialog('close');
             },
           },
@@ -291,47 +277,57 @@ const editPhoto = function(ownerId, tmpKey) {
           + encodeURIComponent(OC.requestToken)));
 };
 
-const savePhoto = function($dlg) {
-  const self = globalState.Photo;
-  const form = $dlg.find('#cropform');
+const savePhoto = function(wrapper, $dlg) {
+  const form = $dlg.find('.cropform');
   const q = form.serialize();
   console.log('savePhoto', q);
   $.post(generateUrl('image/save'), q)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
-      self.data.PHOTO = false;
+      wrapper.data('PHOTO', false);
     })
     .done(function(data) {
-      console.log(data); // unused
-      photoLoad();
-      self.data.PHOTO = true;
+      if (!Ajax.validateResponse(data, ['imageId'])) {
+        return;
+      }
+      const imageInfo = wrapper.data('imageInfo');
+      imageInfo.imageId = data.imageId;
+      createImageUploadForm(imageInfo);
+      photoLoad(wrapper);
+      wrapper.data('PHOTO', true);
     });
 };
 
-const deletePhoto = function() {
-  const self = globalState.Photo;
-  const wrapper = $('.cafevdb_inline_image_wrapper');
+const deletePhoto = function(wrapper) {
+  const imageInfo = wrapper.data('imageInfo');
   wrapper.addClass('wait');
-  $.post(generateUrl('image/delete'), {
-    joinTable: self.joinTable,
-    ownerId: self.ownerId,
-  })
+  $.post(generateUrl('image/delete'), imageInfo)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
       wrapper.removeClass('wait');
     })
     .done(function(data) {
-      photoLoad();
+      imageInfo.imageId = -1;
+      createImageUploadForm(imageInfo);
+      photoLoad(wrapper);
+      wrapper.data('PHOTO', false);
+      wrapper.removeClass('wait');
     });
 };
 
-const loadHandlers = function() {
-  // const self = globalState.Photo;
-  const phototools = $('#phototools');
-  $('#phototools li a').click(function() {
+/**
+ * Install the special upload and crop buttons inside the given
+ * container.
+ *
+ * @param {Object} wrapper jQuery object containing image and
+ * controls.
+ */
+const attachHandlers = function(wrapper) {
+  const phototools = wrapper.find('.phototools');
+  phototools.find('li a').click(function() {
     $(this).cafevTooltip('hide');
   });
-  $('.cafevdb_inline_image_wrapper').hover(
+  wrapper.hover(
     function() {
       phototools.slideDown(200);
     },
@@ -353,20 +349,28 @@ const loadHandlers = function() {
     return false;
   });
   phototools.find('.cloud').on('click', function(event) {
-    Dialogs.filePicker(t(appName, 'Select image'), photoCloudSelected, false, ['image\\/.*'], true);
+    Dialogs.filePicker(
+      t(appName, 'Select image'),
+      function(path) {
+        photoCloudSelected(wrapper, path);
+      },
+      false,
+      ['image\\/.*'],
+      true);
     event.stopImmediatePropagation();
     return false;
   });
   phototools.find('.delete').on('click', function(event) {
-    $(this).cafevTooltip('hide');
-    deletePhoto();
-    $(this).hide();
+    const $self = $(this);
+    $self.cafevTooltip('hide');
+    deletePhoto(wrapper);
+    $self.hide();
     event.stopImmediatePropagation();
     return false;
   });
   phototools.find('.edit').on('click', function(event) {
     $(this).cafevTooltip('hide');
-    photoEditCurrent();
+    photoEditCurrent(wrapper);
     event.stopImmediatePropagation();
     return false;
   });
@@ -377,78 +381,100 @@ const loadHandlers = function() {
   $('#file_upload_start').on('change', function() {
     photoUpload(this.files);
   });
-  $('.cafevdb_inline_image_wrapper').bind('dragover', function(event) {
+  wrapper.bind('dragover', function(event) {
     $(event.target).addClass('droppable');
     event.stopPropagation();
     event.preventDefault();
   });
-  $('.cafevdb_inline_image_wrapper').bind('dragleave', function(event) {
+  wrapper.bind('dragleave', function(event) {
     $(event.target).removeClass('droppable');
   });
-  $('.cafevdb_inline_image_wrapper').bind('drop', function(event) {
+  wrapper.bind('drop', function(event) {
     event.stopPropagation();
     event.preventDefault();
     $(event.target).removeClass('droppable');
-    $.fileUpload(event.originalEvent.dataTransfer.files);
+    photoUploadDragDrop(wrapper, event.originalEvent.dataTransfer.files);
   });
 };
 
-const photoUploadDragDrop = function() {
-  // Upload function for dropped images
-  $.fileUpload = function(files) {
-    if (files.length < 1) {
-      return;
-    }
-    const file = files[0];
-    if (file.size > $('#max_upload').val()) {
-      Dialogs.alert(t(appName, 'The file you are trying to upload exceed the maximum size for file uploads on this server.'), t(appName, 'Upload too large'));
-      return;
-    }
-    if (file.type.indexOf('image') !== 0) {
-      Dialogs.alert(t(appName, 'Only image files can be used as profile picture.'), t(appName, 'Wrong file type'));
-      return;
-    }
-    const xhr = new XMLHttpRequest();
+/**
+ * Upload images with drag'n drop
+ *
+ * @param {Object} wrapper Wrapping div with data.
+ *
+ * @param {Array} files Files to be uploaded.
+ */
+const photoUploadDragDrop = function(wrapper, files) {
+  const imageInfo = wrapper.data('imageInfo');
+  if (files.length < 1) {
+    return;
+  }
+  const file = files[0];
+  if (file.size > $('#max_upload').val()) {
+    Dialogs.alert(t(appName, 'The file you are trying to upload exceed the maximum size for file uploads on this server.'), t(appName, 'Upload too large'));
+    return;
+  }
+  if (file.type.indexOf('image') !== 0) {
+    Dialogs.alert(t(appName, 'Only image files can be used as profile picture.'), t(appName, 'Wrong file type'));
+    return;
+  }
+  const xhr = new XMLHttpRequest();
 
-    if (!xhr.upload) {
-      Dialogs.alert(t(appName, 'Your browser doesn\'t support AJAX upload. Please click on the profile picture to select a photo to upload.'), t(appName, 'Error'));
-    }
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) { // done
-        const response = $.parseJSON(xhr.responseText);
-        if (xhr.status === Ajax.httpStatus.OK) {
-          editPhoto(response.ownerId, response.tmpKey);
-        } else {
-          Ajax.handleError(xhr, xhr.status, Ajax.httpStatus[xhr.status]);
+  if (!xhr.upload) {
+    Dialogs.alert(t(appName, 'Your browser doesn\'t support AJAX upload. Please click on the profile picture to select a photo to upload.'), t(appName, 'Error'));
+  }
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) { // done
+      const data = $.parseJSON(xhr.responseText);
+      if (xhr.status === Ajax.httpStatus.OK) {
+        if (!Ajax.validateResponse(data, ['tmpKey'])) {
+          return;
         }
+        editPhoto(wrapper, data.tmpKey);
+      } else {
+        Ajax.handleError(xhr, xhr.status, Ajax.httpStatus[xhr.status]);
       }
-    };
-
-    xhr.upload.onprogress = function(e) {
-      if (e.lengthComputable) {
-        // const progress = Math.round((e.loaded * 100) / e.total);
-        // if (_progress != 100){
-        // }
-      }
-    };
-
-    xhr.open(
-      'POST',
-      generateUrl(
-        'image/dragndrop'
-          + '?ownerId=' + globalState.Photo.ownerId
-          + '&joinTable=' + globalState.Photo.joinTable
-          + '&imageSize=' + globalState.Photo.imageSize
-          + '&requesttoken=' + encodeURIComponent(OC.requestToken)
-          + '&imageFile=' + encodeURIComponent(file.name)),
-      true);
-    xhr.setRequestHeader('Cache-Control', 'no-cache');
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.setRequestHeader('X-File-Name', encodeURIComponent(file.name));
-    xhr.setRequestHeader('X-File-Size', file.size);
-    xhr.setRequestHeader('Content-Type', file.type);
-    xhr.send(file);
+    }
   };
+
+  xhr.upload.onprogress = function(e) {
+    if (e.lengthComputable) {
+      // const progress = Math.round((e.loaded * 100) / e.total);
+      // if (_progress != 100){
+      // }
+    }
+  };
+
+  xhr.open(
+    'POST',
+    generateUrl('image/dragndrop', {
+      ownerId: wrapper.data('ownerId'),
+      imageId: wrapper.data('imageId'),
+      joinTable: wrapper.data('joinTable'),
+      imageSize: wrapper.data('imageSize'),
+      requesttoken: encodeURIComponent(OC.requestToken),
+      imageFile: encodeURIComponent(file.name),
+    }),
+    true);
+  xhr.setRequestHeader('Cache-Control', 'no-cache');
+  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  xhr.setRequestHeader('X-File-Name', encodeURIComponent(file.name));
+  xhr.setRequestHeader('X-File-Size', file.size);
+  xhr.setRequestHeader('Content-Type', file.type);
+  xhr.send(file);
+};
+
+const uploadFormId = function(imageInfo) {
+  return 'image-upload-form-' + imageInfo.ownerId + '-' + imageInfo.imageId;
+};
+
+const createImageUploadForm = function(imageInfo) {
+  $('#' + imageInfo.formId).remove();
+  imageInfo.formId = uploadFormId(imageInfo);
+  $('#' + imageInfo.formId).remove();
+  const $imageUploadTemplate = $('#imageUploadTemplate');
+  const $imageUploadForm = $imageUploadTemplate.octemplate(imageInfo);
+  $('body').append($imageUploadForm);
 };
 
 /**
@@ -456,37 +482,31 @@ const photoUploadDragDrop = function() {
  * dynamically injecting html that needs the image upload
  * functionality.
  *
- * @param {String} ownerId TBD.
- *
- * @param {String} joinTable TBD.
+ * @param {Object} container jQuery object containing the
+ * photo-wrapper div.
  *
  * @param {Function} callback TBD.
  */
-const photoReady = function(ownerId, imageId, joinTable, callback) {
-  const ownerIdField = $('#file_upload_form input[name="ownerId"]');
-  const joinTableField = $('#file_upload_form input[name="joinTable"]');
-  if (ownerId === undefined) {
-    ownerId = ownerIdField.val();
-  } else {
-    ownerIdField.val(ownerId);
-  }
-  if (joinTable === undefined) {
-    joinTable = joinTableField.val();
-  } else {
-    joinTableField.val(joinTable);
-  }
-  if (ownerId !== undefined && joinTable !== undefined && ownerId >= 0) {
-    let imageSize = $('input[name="imageSize"]').val();
-    if (typeof imageSize === 'undefined') {
-      imageSize = 400;
-    }
-    loadHandlers();
-    photoLoad(ownerId, imageId, joinTable, imageSize, callback);
-  } else {
+const photoReady = function(container, callback) {
+  const wrapper = container.find('.' + appName + '_inline_image_wrapper');
+  const imageInfo = wrapper.data('imageInfo');
+  callback = callback || function() {};
+  if (imageInfo.joinTable === undefined
+      || imageInfo.ownerId === undefined
+      || +imageInfo.ownerId <= 0) {
     // still run the callback
     callback();
+    return;
   }
-  photoUploadDragDrop(); // @TODO what is this? double ready?
+  if (+imageInfo.imageSize <= 0) {
+    imageInfo.imageSize = 400;
+  }
+  if (+imageInfo.imageId <= 0) {
+    imageInfo.imageId = -1;
+  }
+  createImageUploadForm(imageInfo);
+  photoLoad(wrapper, callback);
+  attachHandlers(wrapper);
 };
 
 const photoPopup = function(image) {

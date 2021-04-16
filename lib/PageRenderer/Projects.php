@@ -505,12 +505,18 @@ project without a flyer first.");
              .'title="Flyer, if available" /></div>';
         return $div;
       case 'change':
+        $imageInfo = json_encode([
+          'ownerId' => $projectId,
+          'imageId' => $imageId,
+          'joinTable' => self::FLYER_JOIN_TABLE,
+          'imageSize' => 400,
+        ]);
         $imagearea = ''
           .'<div class="project_flyer_upload">
-  <div data-image-id="'.((int)$imageId > 0 ? $imageId : -1).'" class="tip project_flyer propertycontainer cafevdb_inline_image_wrapper" title="'
+  <div data-image-info=\''.$imageInfo.'\' class="tip project_flyer propertycontainer cafevdb_inline_image_wrapper" title="'
         .$this->l->t("Drop image to upload (max %s)", [\OCP\Util::humanFileSize(Util::maxUploadSize())]).'"'
         .' data-element="PHOTO">
-    <ul id="phototools" class="transparent hidden contacts_property">
+    <ul class="phototools" class="transparent hidden contacts_property">
       <li><a class="svg delete" title="'.$this->l->t("Delete current flyer").'"></a></li>
       <li><a class="svg edit" title="'.$this->l->t("Edit current flyer").'"></a></li>
       <li><a class="svg upload" title="'.$this->l->t("Upload new flyer").'"></a></li>

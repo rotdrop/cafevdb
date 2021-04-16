@@ -815,11 +815,11 @@ make sure that the musicians are also automatically added to the
       return $div;
     case 'change':
       $photoarea = ''
-        .'<div id="contact_photo_upload">
-  <div class="tip portrait propertycontainer tooltip-top" id="cafevdb_inline_image_wrapper" title="'
+        .'<div class="contact_photo_upload">
+  <div class="tip portrait propertycontainer tooltip-top cafevdb_inline_image_wrapper" title="'
       .$this->l->t("Drop photo to upload (max %s)", [ \OCP\Util::humanFileSize(Util::maxUploadSize()) ]).'"'
         .' data-element="PHOTO">
-    <ul id="phototools" class="transparent hidden contacts_property">
+    <ul class="phototools" class="transparent hidden contacts_property">
       <li><a class="svg delete" title="'.$this->l->t("Delete current photo").'"></a></li>
       <li><a class="svg edit" title="'.$this->l->t("Edit current photo").'"></a></li>
       <li><a class="svg upload" title="'.$this->l->t("Upload new photo").'"></a></li>

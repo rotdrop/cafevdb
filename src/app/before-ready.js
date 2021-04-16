@@ -240,15 +240,17 @@ const documentReady = function() {
         return false;
       });
 
-      if (container.find('#contact_photo_upload').length > 0) {
+      const photoContainer = container.find('.contact_photo_upload');
+      if (photoContainer.length > 0) {
         const idField = container.find('input[name="' + pmeData('id') + '"]');
         let recordId = -1;
         if (idField.length > 0) {
           recordId = idField.val();
         }
         console.info('Run photo.ready');
-        const imageId = -1;
-        Photo.ready(recordId, imageId, 'MusicianPhoto', resizeCB);
+        photoContainer.each(function(index) {
+          Photo.ready($(this), recordId, 'MusicianPhoto', resizeCB);
+        });
       } else {
         console.info('Call imagesLoaded');
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);
