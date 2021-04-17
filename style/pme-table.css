@@ -829,6 +829,7 @@ td.projectposter div.image-wrapper {
 
 td.projectposter .image-wrapper img,
 td.projectposter .image-wrapper.full img {
+  object-fit:contain;
   height:512px;
   max-width:512px;
   max-height:512px;

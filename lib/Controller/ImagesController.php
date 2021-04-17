@@ -188,7 +188,10 @@ class ImagesController extends Controller {
       return self::grumble($this->l->t("Image owner not given"));
     }
 
+    $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
     $joinTable = Util::dashesToCamelCase($joinTable, true);
+    $joinTableClass = $imagesRepository->joinTableClass($joinTable);
+    $joinTableRepository =$this->getDatabaseRepository($joinTableClass);
 
     // response data skeleton, augmented by sub-topics.
     $responseData = [
@@ -325,8 +328,18 @@ class ImagesController extends Controller {
       }
 
       try {
-        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-        $dbImage = $imagesRepository->persistForEntity($joinTable, $ownerId, $image);
+
+        if ($imageId > self::IMAGE_ID_PLACEHOLDER) {
+          $findBy = [ 'ownerId' => $ownerId, 'imageId' => $imageId, ];
+          $joinTableEntity = $joinTableRepository->findOneBy($findBy);
+          /** @var Entities\Image $dbImage */
+          $dbImage = $joinTableEntity->getImage();
+          $dbImage->getFileData()->setData($image->data(), 'binary');
+          $this->flush();
+        } else  {
+          $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+          $dbImage = $imagesRepository->persistForEntity($joinTable, $ownerId, $image);
+        }
       } catch (\Throwable $t) {
         $this->logException($t);
         return self::grumble($this->exceptionChainData($t));
@@ -338,14 +351,6 @@ class ImagesController extends Controller {
     case 'edit':
       // fetch the image, create a temporary copy and return a link to it
 
-      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-
-      // ownername_imagename
-      $joinTable = Util::dashesToCamelCase($joinTable, true);
-      $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-      $this->logDebug("cooked table: ".$joinTableClass);
-
-      $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
       $findBy =  [ 'ownerId' => $ownerId ];
       if ($imageId > 0) {
         $findBy['imageId'] = $imageId;
@@ -386,10 +391,6 @@ class ImagesController extends Controller {
       // if ownerId only is given, delete all images, if ownerId and
       // imageId is given (not yet used), delete only the given image
       // and join-table entry.
-
-      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-      $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-      $joinTableRepository =$this->getDatabaseRepository($joinTableClass);
 
       $findBy =  [ 'ownerId' => $ownerId ];
       if ($imageId > 0) {

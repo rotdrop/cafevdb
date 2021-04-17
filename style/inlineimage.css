@@ -61,7 +61,8 @@
   min-height: 100px;
 }
 
-.cafevdb_inline_image_wrapper.wait {
+.cafevdb_inline_image_wrapper.wait,
+.cafevdb_inline_image_wrapper.loading {
   opacity: 0.6;
   filter:alpha(opacity=0.6);
   z-index:1000;
@@ -72,11 +73,14 @@
 .cafevdb_inline_image {
   border-radius: 0.5em;
   border: thin solid #bbb;
-  background: url('../../../core/img/loading.gif') no-repeat center center; -moz-box-shadow: 0 1px 3px #777;
   webkit-box-shadow: 0 1px 3px #777;
   box-shadow: 0 1px 3px #777;
   opacity: 1;
   position:relative;
+}
+
+.cafevdb_inline_image_wrapper.loading {
+  background: url('../../../core/img/loading.gif') no-repeat center center; -moz-box-shadow: 0 1px 3px #777;
 }
 
 div#photooverlay .cafevdb_inline_image {

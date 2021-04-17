@@ -49,16 +49,16 @@ const generatePostUrl = function(operation) {
 };
 
 const photoUpload = function(wrapper, filelist) {
+  const imageInfo = wrapper.data('imageInfo');
   if (!filelist) {
     Dialogs.alert(t(appName, 'No files selected for upload.'), t(appName, 'Error'));
     return;
   }
   const file = filelist[0];
-  // var target = $('#file_upload_target');
-  const form = $('#file_upload_form');
+  const form = $('#' + imageInfo.formId);
   // var totalSize=0;
-  if (file.size > $('#max_upload').val()) {
-    Dialogs.alert(t(appName, 'The file you are trying to upload exceed the maximum size of {max} for file uploads on this server.', { max: $('#max_upload_human').val() }), t(appName, 'Error'));
+  if (file.size > form.find('.max_upload').val()) {
+    Dialogs.alert(t(appName, 'The file you are trying to upload exceed the maximum size of {max} for file uploads on this server.', { max: form.find('.max_upload_human').val() }), t(appName, 'Error'));
     return;
   }
 
@@ -125,9 +125,6 @@ const photoCloudSelected = function(wrapper, path) {
 const photoLoad = function(wrapper, callback) {
   const phototools = wrapper.find('.phototools');
   const imageInfo = wrapper.data('imageInfo');
-  console.info('IMAGEINFO', imageInfo);
-  // first determine if there is a photo ...
-  console.info('IMAGE URL', generateGetUrl($.extend({ metaData: true }, imageInfo)));
   $.get(
     generateGetUrl($.extend({ metaData: true }, imageInfo)))
     .fail(function(xhr, status, errorThrown) {
@@ -141,7 +138,7 @@ const photoLoad = function(wrapper, callback) {
     })
     .always(function() {
       phototools.find('li a').cafevTooltip('hide');
-      wrapper.addClass('loading').addClass('wait');
+      wrapper.addClass(['loading', 'wait']);
       wrapper.removeData('image');
       const image = $(new Image());
       wrapper.data('image', image);
@@ -154,18 +151,17 @@ const photoLoad = function(wrapper, callback) {
 
       image
         .on('load', function() {
-          console.info('LOAD');
           wrapper.find('img.' + appName + '_inline_image').remove();
           image.addClass(appName + '_inline_image');
           image.addClass('zoomable');
           image.insertAfter(phototools);
           // wrapper.css('width', image.get(0).width + 10);
-          wrapper.removeClass('loading').removeClass('wait');
-          image.fadeIn(callback);
+          image.fadeIn(function() {
+            wrapper.removeClass(['loading', 'wait']);
+            callback();
+          });
         })
         .on('error', function(event) {
-          console.info('ERROR');
-
           // BIG FAT NOTE: the "event" data passed to this error handler
           // just does not contain any information about the error-data
           // returned by the server. So only information is "there was an
@@ -174,7 +170,6 @@ const photoLoad = function(wrapper, callback) {
           Dialogs.alert(t(appName, 'Could not open image.'), t(appName, 'Error'), callback);
         })
         .attr('src', imageUrl);
-      console.info('IMAGESRC', image.attr('src'));
       photoLoadHandlers(wrapper);
     });
 };
@@ -238,7 +233,7 @@ const editPhoto = function(wrapper, tmpKey) {
         onChange: showCoords,
         onSelect: showCoords,
         onRelease: clearCoords,
-        maxSize: [window.innerWidth, window.innerHeight],
+        maxSize: [this.width, this.height], // max is just original image size
         bgColor: 'black',
         bgOpacity: 0.4,
         boxWidth: boxW,
@@ -250,8 +245,7 @@ const editPhoto = function(wrapper, tmpKey) {
         modal: true,
         closeOnEscape: true,
         title: t(appName, 'Edit inline image'),
-        resizable: 'true',
-        resize: 'auto',
+        resizable: true,
         height: 'auto',
         width: 'auto',
         buttons: [
@@ -300,17 +294,19 @@ const savePhoto = function(wrapper, $dlg) {
       if (!Ajax.validateResponse(data, ['imageId'])) {
         return;
       }
-      if (wrapper.hasClass('multi')) {
-        const newWrapper = wrapper.clone(true, false);
-        newWrapper.data('imageInfo', $.extend({}, wrapper.data('imageInfo')));
-        wrapper.before(newWrapper);
-        attachHandlers(newWrapper);
-        wrapper = newWrapper;
-      }
       const imageInfo = wrapper.data('imageInfo');
-      imageInfo.imageId = data.imageId;
-      createImageUploadForm(imageInfo);
-      photoLoad(wrapper);
+      if (imageInfo.imageId <= IMAGE_ID_PLACEHOLDER && wrapper.hasClass('multi')) {
+        const newWrapper = wrapper.clone(true, false);
+        const newImageInfo = $.extend({}, wrapper.data('imageInfo'));
+        newImageInfo.imageId = data.imageId;
+        newWrapper.data('imageInfo', newImageInfo);
+        photoReady(newWrapper);
+        wrapper.before(newWrapper);
+      } else {
+        imageInfo.imageId = data.imageId;
+        createImageUploadForm(imageInfo);
+        photoLoad(wrapper);
+      }
     });
 };
 
@@ -342,8 +338,9 @@ const deletePhoto = function(wrapper) {
  * controls.
  */
 const attachHandlers = function(wrapper) {
+  const uploadStart = $('#' + wrapper.data('imageInfo').formId).find('.file_upload_start');
   const phototools = wrapper.find('.phototools');
-  console.info('PHOTOTOOLS', phototools);
+
   phototools.find('li a').click(function() {
     $(this).cafevTooltip('hide');
   });
@@ -364,7 +361,7 @@ const attachHandlers = function(wrapper) {
     }
   );
   phototools.find('.upload').on('click', function(event) {
-    $('#file_upload_start').trigger('click');
+    uploadStart.trigger('click');
     event.stopImmediatePropagation();
     return false;
   });
@@ -398,8 +395,8 @@ const attachHandlers = function(wrapper) {
 
   // Profile image upload handling
   // New profile image selected
-  $('#file_upload_start').on('change', function() {
-    photoUpload(this.files);
+  uploadStart.on('change', function() {
+    photoUpload(wrapper, this.files);
   });
   wrapper.bind('dragover', function(event) {
     $(event.target).addClass('droppable');
@@ -510,7 +507,6 @@ const photoReady = function(container, callback) {
   const wrapper = container.is(wrapperSelector)
     ? container
     : container.find(wrapperSelector);
-  console.info('WRAPPER', wrapperSelector, wrapper);
   const imageInfo = wrapper.data('imageInfo');
   callback = callback || function() {};
   if (imageInfo.joinTable === undefined
