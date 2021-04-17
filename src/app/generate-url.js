@@ -29,7 +29,8 @@ import * as ncRouter from '@nextcloud/router';
  * @param {string} url The locate URL without app-prefix.
  *
  * @param {Object} urlParams Object holding url-parameters if url
- * contains parameters.
+ * contains parameters. "Excess" parameters will be appended as query
+ * parameters to the URL.
  *
  * @param {Object} urlOptions Object with processing options
  * ```
@@ -42,7 +43,20 @@ import * as ncRouter from '@nextcloud/router';
  * @returns {string}
  */
 const generateUrl = function(url, urlParams, urlOptions) {
-  return ncRouter.generateUrl('/apps/' + appName + '/' + url, urlParams, urlOptions);
+  // const str = '/image/{joinTable}/{ownerId}';
+  let generated = ncRouter.generateUrl('/apps/' + appName + '/' + url, urlParams, urlOptions);
+  const queryParams = { ...urlParams };
+  for (const urlParam of url.matchAll(/{([^{}]*)}/g)) {
+    delete queryParams[urlParam[1]];
+  }
+  const queryArray = [];
+  for (const [key, value] of Object.entries(queryParams)) {
+    queryArray.push(key + '=' + encodeURIComponent(value.toString()));
+  }
+  if (queryArray.length > 0) {
+    generated += '?' + queryArray.join('&');
+  }
+  return generated;
 };
 
 export default generateUrl;
