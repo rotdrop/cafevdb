@@ -123,6 +123,7 @@ const photoCloudSelected = function(wrapper, path) {
  * @param {Function} callback TBD.
  */
 const photoLoad = function(wrapper, callback) {
+  callback = callback || function() {};
   const phototools = wrapper.find('.phototools');
   const imageInfo = wrapper.data('imageInfo');
   $.get(
