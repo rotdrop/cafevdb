@@ -765,11 +765,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $joinInfo) {
-      if ($joinInfo['flags'] & self::JOIN_READONLY) {
+      $table = $joinInfo['table'];
+      $changeSet = $changeSets[$table];
+      if (empty($changeSet)) {
         continue;
       }
-      $table = $joinInfo['table'];
-      if (empty($changeSets[$table])) {
+      if ($joinInfo['flags'] & self::JOIN_READONLY) {
+        foreach ($changeSet as $column => $field) {
+          Util::unsetValue($changed, $field);
+        }
         continue;
       }
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
@@ -779,7 +783,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $joinInfo['identifier'][$key] = $key;
         }
       }
-      $changeSet = $changeSets[$table];
       $this->debug('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
