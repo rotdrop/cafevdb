@@ -79,7 +79,7 @@ class Projects extends PMETableViewBase
     [
       'table' => self::INSTRUMENTS_TABLE,
       'entity' => Entities\Instrument::class,
-      'readonly' => true,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'id' => [
           'table' => self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
@@ -91,7 +91,7 @@ class Projects extends PMETableViewBase
     [
       'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
       'entity' => Entities\ProjectParticipantField::class,
-      'readonly' => true,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'project_id' => 'id',
         'id' => false,
@@ -101,7 +101,7 @@ class Projects extends PMETableViewBase
     [
       'table' => self::POSTER_JOIN_TABLE,
       'entity' => Entities\ProjectPoster::class,
-      'readonly' => true,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'owner_id' => 'id',
         'image_id' => false,
@@ -418,7 +418,7 @@ __EOT__;
 
     $this->makeJoinTableField(
       $opts['fdd'], self::POSTER_JOIN_TABLE, 'image_id', [
-        'input' => 'V',
+        'input' => 'RSV',
         'name' => $this->l->t('Poster'),
         'select' => 'T',
         'options' => 'VCD',
