@@ -240,19 +240,13 @@ const documentReady = function() {
         return false;
       });
 
-      const photoContainer = container.find('.contact_photo_upload');
+      const photoContainer = container.find('.musician-portrait');
       if (photoContainer.length > 0) {
-        const idField = container.find('input[name="' + pmeData('id') + '"]');
-        let recordId = -1;
-        if (idField.length > 0) {
-          recordId = idField.val();
-        }
-        console.info('Run photo.ready');
         photoContainer.each(function(index) {
-          Photo.ready($(this), recordId, 'MusicianPhoto', resizeCB);
+          console.info('CALL PHOTO READY');
+          Photo.ready($(this), resizeCB);
         });
       } else {
-        console.info('Call imagesLoaded');
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);
       }
     },

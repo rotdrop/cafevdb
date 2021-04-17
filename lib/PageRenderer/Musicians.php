@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\InsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Controller\ImagesController;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -51,7 +52,7 @@ class Musicians extends PMETableViewBase
   const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
   const TABLE = self::MUSICIANS_TABLE;
-  const PHOTO_JOIN = 'MusicianPhoto';
+  const PHOTO_JOIN_TABLE = 'MusicianPhoto';
 
   /** @var GeoCodingService */
   private $geoCodingService;
@@ -118,6 +119,16 @@ class Musicians extends PMETableViewBase
       ],
       'column' => 'bill_to_party_id',
       'flags' => self::JOIN_READONLY,
+    ],
+    [
+      'table' => self::PHOTO_JOIN_TABLE,
+      'entity' => Entities\MusicianPhoto::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'owner_id' => 'id',
+        'image_id' => false,
+      ],
+      'column' => 'image_id',
     ],
   ];
 
@@ -680,22 +691,21 @@ make sure that the musicians are also automatically added to the
        }
       ]);
 
-    $opts['fdd']['photo'] = [
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PHOTO_JOIN_TABLE, 'image_id', [
       'tab'      => ['id' => 'miscinfo'],
-      'input' => 'V',
+      'input' => 'VRS',
       'name' => $this->l->t('Photo'),
       'select' => 'T',
       'options' => 'APVCD',
-      'sql' => '$main_table.id',
-      'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
-        $stampIdx = array_search('Updated', $pme->fds);
-        $stamp = strtotime($row['qf'.$stampIdx]);
-        return $this->photoImageLink($musicianId, $action, $stamp);
+      'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
+        $musicianId = $recordId;
+        return $this->photoImageLink($musicianId, $action, $imageId);
       },
       'css' => ['postfix' => ' photo'],
       'default' => '',
       'sort' => false
-    ];
+    ]);
 
 //     ///////////////////// Test
 
@@ -797,35 +807,43 @@ make sure that the musicians are also automatically added to the
   /**
    * Geneate code for a HTML-link for an optional photo.
    */
-  public function photoImageLink($musicianId, $action = 'display', $timeStamp = '')
+  public function photoImageLink($musicianId, $action = 'display', $imageId)
   {
+    if (empty($imageId)) {
+      $imageId = ImagesController::IMAGE_ID_ANY;
+    }
     switch ($action) {
     case 'add':
       return $this->l->t("Photos or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
     case 'display':
       $url = $this->urlGenerator()->linkToRoute(
         'cafevdb.images.get',
-        [ 'joinTable' => self::PHOTO_JOIN,
+        [ 'joinTable' => self::PHOTO_JOIN_TABLE,
           'ownerId' => $musicianId ]);
-      $url .= '?imageSize=1200&timoeStamp='.$timeStamp;
+      $url .= '?timeStamp='.time();
+      $url .= '&imageId='.$imageId;
       $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
       $div = ''
-        .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tooltip-top" src="'.$url.'" '
+        .'<div class="photo image-wrapper single full"><img class="cafevdb_inline_image portrait zoomable" src="'.$url.'" '
         .'title="'.$this->l->t("Photo, if available").'" /></div>';
       return $div;
     case 'change':
+      $imageInfo = json_encode([
+        'ownerId' => $musicianId,
+        'imageId' => $imageId,
+        'joinTable' => self::PHOTO_JOIN_TABLE,
+        'imageSize' => -1,
+      ]);
       $photoarea = ''
-        .'<div class="contact_photo_upload">
-  <div class="tip portrait propertycontainer tooltip-top cafevdb_inline_image_wrapper" title="'
+        .'<div  data-image-info=\''.$imageInfo.'\' class="tip musician-portrait portrait propertycontainer tooltip-top cafevdb_inline_image_wrapper image-wrapper single full" title="'
       .$this->l->t("Drop photo to upload (max %s)", [ \OCP\Util::humanFileSize(Util::maxUploadSize()) ]).'"'
         .' data-element="PHOTO">
-    <ul class="phototools" class="transparent hidden contacts_property">
-      <li><a class="svg delete" title="'.$this->l->t("Delete current photo").'"></a></li>
-      <li><a class="svg edit" title="'.$this->l->t("Edit current photo").'"></a></li>
-      <li><a class="svg upload" title="'.$this->l->t("Upload new photo").'"></a></li>
-      <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select photo from Cloud").'"></a></li>
-    </ul>
-  </div>
+  <ul class="phototools" class="transparent hidden contacts_property">
+    <li><a class="svg delete" title="'.$this->l->t("Delete current photo").'"></a></li>
+    <li><a class="svg edit" title="'.$this->l->t("Edit current photo").'"></a></li>
+    <li><a class="svg upload" title="'.$this->l->t("Upload new photo").'"></a></li>
+    <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select photo from Cloud").'"></a></li>
+  </ul>
 </div> <!-- contact_photo -->
 ';
 
