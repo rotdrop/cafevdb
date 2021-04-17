@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common\Util;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -167,6 +168,12 @@ class ImagesRepository extends EntityRepository
 
   private function resolveJoinTableEntity(string $joinTableEntity):string
   {
+    // ownername_imagename
+    $joinTableEntity = Util::dashesToCamelCase($joinTableEntity, true);
+
+    // strip a plural s from the end if present
+    $joinTableEntity = rtrim($joinTableEntity, 's');
+
     $backSlashPos = strrpos($joinTableEntity, '\\');
     if ($backSlashPos === false) {
       // compute class prefix

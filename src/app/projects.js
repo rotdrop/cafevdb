@@ -684,10 +684,10 @@ const documentReady = function() {
         }
       };
 
-      const flyerContainer = container.find('.project_flyer_upload');
-      if (flyerContainer.length > 0) {
-        let readyCountDown = flyerContainer.length;
-        flyerContainer.each(function(index) {
+      const posterContainer = container.find('.project-poster');
+      if (posterContainer.length > 0) {
+        let readyCountDown = posterContainer.length;
+        posterContainer.each(function(index) {
           Photo.ready($(this), function() {
             imagesReady = --readyCountDown <= 0;
             console.info('COUNTDOWN', readyCountDown, imagesReady);

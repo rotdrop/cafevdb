@@ -57,10 +57,6 @@
   width: auto;
 }
 
-.cafevdb_inline_image_wrapper.project_flyer {
-  min-height: 300px;
-}
-
 .cafevdb_inline_image_wrapper.portrait {
   min-height: 100px;
 }
@@ -76,13 +72,16 @@
 .cafevdb_inline_image {
   border-radius: 0.5em;
   border: thin solid #bbb;
-  margin: 0.3em;
   background: url('../../../core/img/loading.gif') no-repeat center center; -moz-box-shadow: 0 1px 3px #777;
   webkit-box-shadow: 0 1px 3px #777;
   box-shadow: 0 1px 3px #777;
   opacity: 1;
   position:relative;
-  top:3px; /* for FF */
+}
+
+div#photooverlay .cafevdb_inline_image {
+  top:3px;
+  margin:0.3em;
 }
 
 .cafevdb_inline_image:hover {

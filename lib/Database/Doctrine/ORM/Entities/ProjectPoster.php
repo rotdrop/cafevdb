@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectPoster
  *
- * @ORM\Table(name="ProjectPoster", uniqueConstraints={@ORM\UniqueConstraint(columns={"owner_id", "image_id"})})
+ * @ORM\Table(name="ProjectPosters", uniqueConstraints={@ORM\UniqueConstraint(columns={"owner_id", "image_id"})})
  * @ORM\Entity
  */
 class ProjectPoster
@@ -83,7 +83,7 @@ class ProjectPoster
    *
    * @return ProjectPoster
    */
-  public function setOwnerId($ownerId):self
+  public function setOwnerId($ownerId):ProjectPoster
   {
     $this->ownerId = $ownerId;
 
@@ -107,7 +107,7 @@ class ProjectPoster
    *
    * @return ProjectPoster
    */
-  public function setImageId($imageId):self
+  public function setImageId($imageId):ProjectPoster
   {
     $this->imageId = $imageId;
 
@@ -129,9 +129,9 @@ class ProjectPoster
    *
    * @param int $owner
    *
-   * @return OwnerPoster
+   * @return ProjectPoster
    */
-  public function setOwner($owner):self
+  public function setOwner($owner):ProjectPoster
   {
     $this->owner = $owner;
 
@@ -143,7 +143,7 @@ class ProjectPoster
    *
    * @return Muscian
    */
-  public function getOwner():Owner
+  public function getOwner():Musician
   {
     return $this->owner;
   }
@@ -153,9 +153,9 @@ class ProjectPoster
    *
    * @param int $image
    *
-   * @return OwnerPoster
+   * @return ProjectPoster
    */
-  public function setImage($image):self
+  public function setImage($image):ProjectPoster
   {
     $this->image = $image;
 

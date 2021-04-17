@@ -90,11 +90,6 @@ class Project implements \ArrayAccess
   private $posters;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectFlyer", mappedBy="owner", fetch="EXTRA_LAZY")
-   */
-  private $flyers;
-
-  /**
    * @ORM\OneToMany(targetEntity="ProjectWebPage", mappedBy="project", fetch="EXTRA_LAZY")
    * @todo this should cascade deletes
    */
@@ -145,7 +140,6 @@ class Project implements \ArrayAccess
     $this->arrayCTOR();
     $this->instrumentationNumbers = new ArrayCollection();
     $this->posters = new ArrayCollection();
-    $this->flyers = new ArrayCollection();
     $this->webPages = new ArrayCollection();
     $this->participantFields = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
@@ -354,7 +348,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setPosters($posters)
+  public function setPosters($posters):Project
   {
     $this->posters = $posters;
 
@@ -366,33 +360,9 @@ class Project implements \ArrayAccess
    *
    * @return ArrayCollection
    */
-  public function getPosters()
+  public function getPosters():Collection
   {
     return $this->posters;
-  }
-
-  /**
-   * Set flyers.
-   *
-   * @param ArrayCollection $flyers
-   *
-   * @return Project
-   */
-  public function setFlyers($flyers)
-  {
-    $this->flyers = $flyers;
-
-    return $this;
-  }
-
-  /**
-   * Get flyers.
-   *
-   * @return ArrayCollection
-   */
-  public function getFlyers()
-  {
-    return $this->flyers;
   }
 
   /**

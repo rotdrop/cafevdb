@@ -43,6 +43,9 @@ class ImagesController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  const IMAGE_ID_ANY = -1;
+  const IMAGE_ID_PLACEHOLDER = 0;
+
   const UPLOAD_NAME = 'imagefile';
 
   /** @var RequestParameterService */
@@ -83,7 +86,7 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function get($joinTable, $ownerId, $imageId = -1, $metaData = false, $imageSize = 400)
+  public function get($joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY, $metaData = false, $imageSize = -1)
   {
     $this->logDebug("table: ".$joinTable.", owner: ".$ownerId. ", image: ".$imageId);
     $imageFileName = "image";
@@ -108,15 +111,16 @@ class ImagesController extends Controller {
 
       $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
 
-      // ownername_imagename
-      $joinTable = Util::dashesToCamelCase($joinTable, true);
       $joinTableClass = $imagesRepository->joinTableClass($joinTable);
       $this->logDebug("cooked table: ".$joinTableClass);
 
       $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
       $findBy =  [ 'ownerId' => $ownerId ];
-      if ($imageId > 0) {
+      if ($imageId > self::IMAGE_ID_PLACEHOLDER) {
         $findBy['image'] = $imageId;
+      } else if ($imageId == self::IMAGE_ID_PLACEHOLDER) {
+        // placeholder reguested
+        return $this->getPlaceHolder($joinTable, $imageSize);
       }
 
       try {
@@ -174,7 +178,7 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function post($operation, $joinTable, $ownerId, $imageId = -1, $imageSize = 400)
+  public function post($operation, $joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY, $imageSize = -1)
   {
     if (empty($joinTable)) {
       return self::grumble($this->l->t("Relation between image and object missing"));
@@ -314,7 +318,7 @@ class ImagesController extends Controller {
                       [ $tmpKey, $x1, $y1, $x1 + $w - 1, $y1 + $h -1 ]));
       }
 
-      if ($image->width() > $imageSize || $image->height() > $imageHeight) {
+      if ($imageSize > 0 && ($image->width() > $imageSize || $image->height() > $imageHeight)) {
         if (!$image->resize($imageSize)) {
           return self::grumble($this->l->t('Unable to resize temporary image %s to size %s', [$tmpKey, $imageSize]));
         }
@@ -400,6 +404,7 @@ class ImagesController extends Controller {
             $this->l->t("Unable to find image link for ownerId %s in join-table %s",
                         [ $ownerId, $joinTable ]));
         }
+        $this->logInfo('FOUND IMAGES '.print_r($findBy, true).' / '.count($joinTableEntities));
         foreach ($joinTableEntities as $joinTableEntity) {
           $this->remove($joinTableEntity);
         }
@@ -438,7 +443,7 @@ class ImagesController extends Controller {
 
   private function fallbackPlaceholder($imageSize)
   {
-    if (empty($imageSize)) {
+    if (empty($imageSize) || $imageSize < 0) {
       $imageSize = '240pt';
     } else {
       $imageSize .= 'px';
@@ -475,7 +480,7 @@ EOT;
 
   private function cacheTemporaryImage(string $tmpKey, \OCP\Image $image, int $imageSize):bool
   {
-    if($image->width() > $imageSize || $image->height() > $imageSize) {
+    if($imageSize > 0 && ($image->width() > $imageSize || $image->height() > $imageSize)) {
       $image->resize($imageSize); // Prettier resizing than with browser and saves bandwidth.
     }
     if(!$image->fixOrientation()) { // No fatal error so we don't bail out.

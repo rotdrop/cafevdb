@@ -21,13 +21,32 @@
  */
 
 import { appName, $ } from './globals.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import * as Dialogs from './dialogs.js';
 import * as Ajax from './ajax.js';
 
 require('jquery-jcrop');
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('inlineimage.css');
+
+const IMAGE_ID_ANY = -1;
+const IMAGE_ID_PLACEHOLDER = 0;
+
+const generateUrl = function(urlComponent, urlParams, urlOptions) {
+  let url = 'image';
+  if (urlComponent) {
+    url += '/' + urlComponent;
+  }
+  return generateAppUrl(url, urlParams, urlOptions);
+};
+
+const generateGetUrl = function(parameters) {
+  return generateUrl('{joinTable}/{ownerId}', parameters);
+};
+
+const generatePostUrl = function(operation) {
+  return generateUrl(operation);
+};
 
 const photoUpload = function(wrapper, filelist) {
   if (!filelist) {
@@ -45,7 +64,7 @@ const photoUpload = function(wrapper, filelist) {
 
   const uploadData = new FormData(form[0]);
   $.ajax({
-    url: generateUrl('image/fileupload'),
+    url: generatePostUrl('fileupload'),
     data: uploadData,
     type: 'POST',
     processData: false,
@@ -69,9 +88,9 @@ const photoUpload = function(wrapper, filelist) {
  * @param {Object} wrapper jQuery object for the wrapper-div.
  */
 const photoLoadHandlers = function(wrapper) {
+  const imageInfo = wrapper.data('imageInfo');
   const phototools = wrapper.find('.phototools');
-  console.info('WRAPPERDATA', wrapper.data());
-  if (wrapper.data('PHOTO')) {
+  if (imageInfo.imageId > IMAGE_ID_PLACEHOLDER) {
     phototools.find('.delete').show();
     phototools.find('.edit').show();
   } else {
@@ -82,7 +101,7 @@ const photoLoadHandlers = function(wrapper) {
 
 const photoCloudSelected = function(wrapper, path) {
   const imageInfo = wrapper.data('imageInfo');
-  $.post(generateUrl('image/cloud'), $.extend({ path }, imageInfo))
+  $.post(generatePostUrl('cloud'), $.extend({ path }, imageInfo))
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
     })
@@ -107,25 +126,17 @@ const photoLoad = function(wrapper, callback) {
   const phototools = wrapper.find('.phototools');
   const imageInfo = wrapper.data('imageInfo');
   console.info('IMAGEINFO', imageInfo);
-  const ownerId = imageInfo.ownerId;
-  const imageId = imageInfo.imageId;
-  const joinTable = imageInfo.joinTable;
-  const imageSize = imageInfo.imageSize;
   // first determine if there is a photo ...
+  console.info('IMAGE URL', generateGetUrl($.extend({ metaData: true }, imageInfo)));
   $.get(
-    generateUrl('image/' + joinTable + '/' + ownerId, {
-      imageId,
-      metaData: true,
-    }))
+    generateGetUrl($.extend({ metaData: true }, imageInfo)))
     .fail(function(xhr, status, errorThrown) {
       if (xhr.status !== Ajax.httpStatus.NOT_FOUND) { // ok, no photo yet
         Ajax.handleError(xhr, status, errorThrown);
       }
-      wrapper.data('PHOTO', false);
       photoLoadHandlers(wrapper);
     })
     .done(function(data) {
-      wrapper.data('PHOTO', true);
       photoLoadHandlers(wrapper);
     })
     .always(function() {
@@ -135,13 +146,12 @@ const photoLoad = function(wrapper, callback) {
       const image = $(new Image());
       wrapper.data('image', image);
 
-      let requestParams = '?metaData=false';
-      if (+imageId > 0) {
-        requestParams += '&imageId=' + imageId;
-      }
-      requestParams += '&imageSize=' + imageSize
-        + '&refresh=' + Math.random() // disable browser-caching
-        + '&requesttoken=' + encodeURIComponent(OC.requestToken);
+      const imageUrl = generateGetUrl($.extend({
+        metaData: false,
+        refresh: Math.random(), // disable browser-caching
+        requesttoken: OC.requestToken,
+      }, imageInfo));
+
       image
         .on('load', function() {
           console.info('LOAD');
@@ -149,7 +159,7 @@ const photoLoad = function(wrapper, callback) {
           image.addClass(appName + '_inline_image');
           image.addClass('zoomable');
           image.insertAfter(phototools);
-          wrapper.css('width', $(this).get(0).width + 10);
+          // wrapper.css('width', image.get(0).width + 10);
           wrapper.removeClass('loading').removeClass('wait');
           image.fadeIn(callback);
         })
@@ -163,7 +173,7 @@ const photoLoad = function(wrapper, callback) {
 
           Dialogs.alert(t(appName, 'Could not open image.'), t(appName, 'Error'), callback);
         })
-        .attr('src', generateUrl('image/' + joinTable + '/' + ownerId + requestParams));
+        .attr('src', imageUrl);
       console.info('IMAGESRC', image.attr('src'));
       photoLoadHandlers(wrapper);
     });
@@ -177,7 +187,7 @@ const photoLoad = function(wrapper, callback) {
  */
 const photoEditCurrent = function(wrapper) {
   const imageInfo = wrapper.data('imageInfo');
-  $.post(generateUrl('image/edit'), imageInfo)
+  $.post(generatePostUrl('edit'), imageInfo)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
       wrapper.removeClass('wait');
@@ -271,47 +281,55 @@ const editPhoto = function(wrapper, tmpKey) {
       OC.notify({ message: t(appName, 'Error loading inline image.') });
     })
     .attr(
-      'src', generateUrl(
-        'image/cache/'
-	  + tmpKey
-	  + '?requesttoken='
-          + encodeURIComponent(OC.requestToken)));
+      'src', generateGetUrl({
+        joinTable: 'cache',
+        ownerId: tmpKey,
+        requesttoken: OC.requestToken,
+      }));
 };
 
 const savePhoto = function(wrapper, $dlg) {
   const form = $dlg.find('.cropform');
   const q = form.serialize();
   console.log('savePhoto', q);
-  $.post(generateUrl('image/save'), q)
+  $.post(generatePostUrl('save'), q)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
-      wrapper.data('PHOTO', false);
     })
     .done(function(data) {
       if (!Ajax.validateResponse(data, ['imageId'])) {
         return;
       }
+      if (wrapper.hasClass('multi')) {
+        const newWrapper = wrapper.clone(true, false);
+        newWrapper.data('imageInfo', $.extend({}, wrapper.data('imageInfo')));
+        wrapper.before(newWrapper);
+        attachHandlers(newWrapper);
+        wrapper = newWrapper;
+      }
       const imageInfo = wrapper.data('imageInfo');
       imageInfo.imageId = data.imageId;
       createImageUploadForm(imageInfo);
       photoLoad(wrapper);
-      wrapper.data('PHOTO', true);
     });
 };
 
 const deletePhoto = function(wrapper) {
   const imageInfo = wrapper.data('imageInfo');
   wrapper.addClass('wait');
-  $.post(generateUrl('image/delete'), imageInfo)
+  $.post(generatePostUrl('delete'), imageInfo)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
       wrapper.removeClass('wait');
     })
     .done(function(data) {
-      imageInfo.imageId = -1;
+      if (wrapper.hasClass('multi')) {
+        wrapper.remove();
+        return;
+      }
+      imageInfo.imageId = IMAGE_ID_PLACEHOLDER;
       createImageUploadForm(imageInfo);
       photoLoad(wrapper);
-      wrapper.data('PHOTO', false);
       wrapper.removeClass('wait');
     });
 };
@@ -449,14 +467,12 @@ const photoUploadDragDrop = function(wrapper, files) {
 
   xhr.open(
     'POST',
-    generateUrl('image/dragndrop', {
-      ownerId: wrapper.data('ownerId'),
-      imageId: wrapper.data('imageId'),
-      joinTable: wrapper.data('joinTable'),
-      imageSize: wrapper.data('imageSize'),
-      requesttoken: encodeURIComponent(OC.requestToken),
-      imageFile: encodeURIComponent(file.name),
-    }),
+    generatePostUrl('dragndrop')
+      + '?'
+      + $.param($.extend({
+        requesttoken: OC.requestToken,
+        imageFile: file.name,
+      }, imageInfo)),
     true);
   xhr.setRequestHeader('Cache-Control', 'no-cache');
   xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -490,7 +506,11 @@ const createImageUploadForm = function(imageInfo) {
  * @param {Function} callback TBD.
  */
 const photoReady = function(container, callback) {
-  const wrapper = container.find('.' + appName + '_inline_image_wrapper');
+  const wrapperSelector = '.' + appName + '_inline_image_wrapper';
+  const wrapper = container.is(wrapperSelector)
+    ? container
+    : container.find(wrapperSelector);
+  console.info('WRAPPER', wrapperSelector, wrapper);
   const imageInfo = wrapper.data('imageInfo');
   callback = callback || function() {};
   if (imageInfo.joinTable === undefined
@@ -500,11 +520,8 @@ const photoReady = function(container, callback) {
     callback();
     return;
   }
-  if (+imageInfo.imageSize <= 0) {
-    imageInfo.imageSize = 400;
-  }
-  if (+imageInfo.imageId <= 0) {
-    imageInfo.imageId = -1;
+  if (imageInfo.imageId === undefined || +imageInfo.imageId < 0) {
+    imageInfo.imageId = IMAGE_ID_ANY;
   }
   createImageUploadForm(imageInfo);
   photoLoad(wrapper, callback);

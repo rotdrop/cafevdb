@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Controller\ImagesController;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -46,8 +47,9 @@ class Projects extends PMETableViewBase
   const TABLE = self::PROJECTS_TABLE;
   const ENTITY = Entities\Project::class;
   const NAME_LENGTH_MAX = 20;
-  const POSTER_JOIN_TABLE = 'ProjectPoster';
-  const FLYER_JOIN_TABLE = 'ProjectFlyer';
+  const POSTER_JOIN_TABLE = 'ProjectPosters';
+
+  private const MAX_POSTER_COLUMNS = 4;
 
   /** @var OCA\CAFEVDB\Service\ProjectService */
   private $projectService;
@@ -97,8 +99,8 @@ class Projects extends PMETableViewBase
       'column' => 'id',
     ],
     [
-      'table' => self::FLYER_JOIN_TABLE,
-      'entity' => Entities\ProjectFlyer::class,
+      'table' => self::POSTER_JOIN_TABLE,
+      'entity' => Entities\ProjectPoster::class,
       'readonly' => true,
       'identifier' => [
         'owner_id' => 'id',
@@ -415,24 +417,28 @@ __EOT__;
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::FLYER_JOIN_TABLE, 'image_id', [
+      $opts['fdd'], self::POSTER_JOIN_TABLE, 'image_id', [
         'input' => 'V',
-        'name' => $this->l->t('Flyer'),
+        'name' => $this->l->t('Poster'),
         'select' => 'T',
         'options' => 'VCD',
         'php' => function($value, $action, $field, $row, $recordId, $pme) {
           $projectId = $recordId;
-          $stamp = $value;
-          if (empty($value)) {
-            return $this->flyerImageLink($projectId, $action, null);
-          } else {
-            return implode('', array_map(function($imageId) use ($projectId, $action) {
-              return $this->flyerImageLink($projectId, $action, $imageId);
-            }, Util::explode(',', $value)));
+          $imageIds = Util::explode(',', $value);
+          if (empty($imageIds) || ($action != 'display')) {
+            $imageIds[] = ImagesController::IMAGE_ID_PLACEHOLDER;
           }
+          $numImages = count($imageIds);
+          $rows = ($numImages + self::MAX_POSTER_COLUMNS - 1) / self::MAX_POSTER_COLUMNS;
+          $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
+          $html = '';
+          for ($i = 0; $i < $numImages; ++$i) {
+            $html .= $this->posterImageLink($projectId, $action, $columns, $imageIds[$i]);
+          }
+          return $html;
         },
         'values' => [ 'grouped' => true, ],
-        'css' => ['postfix' => ' projectflyer'],
+        'css' => ['postfix' => ' projectposter'],
         'default' => '',
         'sort' => false,
       ]);
@@ -484,50 +490,55 @@ __EOT__;
 
   }
 
-  public function flyerImageLink($projectId, $action = 'display', $imageId = -1)
+  public function posterImageLink($projectId, $action = 'display', $imageColumns = 4, $imageId = -1)
   {
+    if ($imageColumns <= 1) {
+      $sizeCss = 'full';
+    } else if ($imageColumns <= 2) {
+      $sizeCss = 'half';
+    } else {
+      $sizeCss = 'quarter';
+    }
     switch ($action) {
       case 'add':
-        return $this->l->t("Flyers can only be added to existing projects, please add the new
-project without a flyer first.");
+        return $this->l->t("Posters can only be added to existing projects, please add the new
+project without a poster first.");
       case 'display':
         $url = $this->urlGenerator()->linkToRoute(
           'cafevdb.images.get',
-          [ 'joinTable' => self::FLYER_JOIN_TABLE,
+          [ 'joinTable' => self::POSTER_JOIN_TABLE,
             'ownerId' => $projectId, ]);
-        $url .= '?imageSize=1200&timeStamp='.time();
-        if (!empty($imageId) && $imageId > 0) {
+        $url .= '?timeStamp='.time();
+        if ((int)$imageId >= ImagesController::IMAGE_ID_PLACEHOLDER) {
           $url .= '&imageId='.$imageId;
         }
         $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
         $div = ''
-             .'<div class="photo"><img class="cafevdb_inline_image flyer zoomable" src="'.$url.'" '
-             .'title="Flyer, if available" /></div>';
+             .'<div class="photo image-wrapper multi '.$sizeCss.'"><img class="cafevdb_inline_image poster zoomable" src="'.$url.'" '
+             .'title="Poster, if available" /></div>';
         return $div;
       case 'change':
         $imageInfo = json_encode([
           'ownerId' => $projectId,
           'imageId' => $imageId,
-          'joinTable' => self::FLYER_JOIN_TABLE,
-          'imageSize' => 400,
+          'joinTable' => self::POSTER_JOIN_TABLE,
+          'imageSize' => -1,
         ]);
         $imagearea = ''
-          .'<div class="project_flyer_upload">
-  <div data-image-info=\''.$imageInfo.'\' class="tip project_flyer propertycontainer cafevdb_inline_image_wrapper" title="'
+          .'<div data-image-info=\''.$imageInfo.'\' class="tip project-poster propertycontainer cafevdb_inline_image_wrapper image-wrapper multi '.$sizeCss.'" title="'
         .$this->l->t("Drop image to upload (max %s)", [\OCP\Util::humanFileSize(Util::maxUploadSize())]).'"'
         .' data-element="PHOTO">
-    <ul class="phototools transparent hidden contacts_property">
-      <li><a class="svg delete" title="'.$this->l->t("Delete current flyer").'"></a></li>
-      <li><a class="svg edit" title="'.$this->l->t("Edit current flyer").'"></a></li>
-      <li><a class="svg upload" title="'.$this->l->t("Upload new flyer").'"></a></li>
-      <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select image from Cloud").'"></a></li>
-    </ul>
-  </div>
-</div> <!-- project_flyer -->
+  <ul class="phototools transparent hidden contacts_property">
+    <li><a class="svg delete" title="'.$this->l->t("Delete current poster").'"></a></li>
+    <li><a class="svg edit" title="'.$this->l->t("Edit current poster").'"></a></li>
+    <li><a class="svg upload" title="'.$this->l->t("Upload new poster").'"></a></li>
+    <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select image from Cloud").'"></a></li>
+  </ul>
+</div> <!-- project-poster -->
 ';
         return $imagearea;
       default:
-        return $this->l->t("Internal error, don't know what to do concerning project-flyers in the given context.");
+        return $this->l->t("Internal error, don't know what to do concerning project-posters in the given context.");
     }
   }
 
