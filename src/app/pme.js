@@ -110,8 +110,6 @@ const pmeAddTableLoadCallback = function(template, cbObject) {
 const tableLoadCallback = function(template, selector, parameters, resizeReadyCB) {
   let cbHandle;
 
-  console.info('PME STATE ', PHPMyEdit);
-
   if (typeof PHPMyEdit.tableLoadCallbacks[template] !== 'undefined') {
     cbHandle = PHPMyEdit.tableLoadCallbacks[template];
   } else {
@@ -136,7 +134,7 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
   const args = [selector, parameters, resizeReadyCB];
   $.merge(args, cbHandle.parameters);
 
-  console.info('Run table load callback for ' + template, callback);
+  console.debug('Run table load callback for ' + template, callback);
   return callback.apply(context, args);
 };
 
@@ -165,10 +163,8 @@ const pmeSubmitOuterForm = function(selector) {
 
   const button = $(outerForm).find(pmeSysNameSelectors('input', submitNames)).first();
   if (button.length > 0) {
-    console.info('submit outer form by trigger click');
     button.trigger('click');
   } else {
-    console.info('submit outer form "hard"');
     // submit the outer form
     // outerForm.submit();
     pseudoSubmit(outerForm, $(), outerSel, 'pme');
@@ -295,7 +291,6 @@ const tableDialogReload = function(options, callback, triggerData) {
 
     pmePost(post, {
       fail(xhr, status, errorThrown) {
-        console.info('cleanup');
         const dialogWidget = container.dialog('widget');
 
         Page.busyIcon(false);
@@ -318,7 +313,6 @@ function checkInvalidInputs(container, cleanup) {
   const invalidInputs = container.find('form.pme-form :invalid');
 
   if (invalidInputs.length !== 0) {
-    console.info('INVALID INPUTS', invalidInputs);
     const highlightInvalid = function(afterDialog) {
       for (const input of invalidInputs) {
         let $input = $(input);
@@ -408,7 +402,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
   if (container.find(pmeClassSelector('form', 'list')).length) {
     // main list view, just leave as is.
     const resize = function(reason) {
-      console.info('resize callback');
       changeCallback({ reason });
       const reloadSel = pmeClassSelector('input', 'reload');
       container.find(reloadSel)
@@ -420,7 +413,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     };
     resize('dialogOpen');
     container.on('pmetable:layoutchange', function(event) {
-      console.info('layout change');
       resize(null);
     });
     return;
@@ -492,7 +484,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
 
           options.modified = true;
         }
-        console.info(options);
         tableDialogReload(options, changeCallback, triggerData);
         // might be costly?
         // pmeSubmitOuterForm(options.ambientContainerSelector);
@@ -569,7 +560,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
           // @todo Error handling is flaky
           pmePost(post, {
             fail(xhr, status, errorThrown) {
-              console.info('cleanup');
               dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
               reloadButton.removeClass('loading');
               Page.busyIcon(false);
@@ -594,7 +584,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                 options.ReloadValue = options.InitialValue;
                 tableDialogReload(options, changeCallback, triggerData);
               } else {
-                console.info('trigger close dialog');
                 if (container.hasClass('ui-dialog-content')) {
                   container.dialog('close');
                 }
@@ -638,7 +627,6 @@ const tableDialog = function(form, element, containerSel) {
   let templateRenderer = form.find('input[name="templateRenderer"]');
 
   if (templateRenderer.length === 0) {
-    console.info('no template renderer');
     // This just does not work.
     return false;
   }
@@ -665,7 +653,6 @@ const tableDialog = function(form, element, containerSel) {
   let dialogCSSId = PHPMyEdit.dialogCSSId;
   if (containerSel !== pmeDefaultSelector) {
     dialogCSSId = containerSel.substring(1) + '-' + dialogCSSId;
-    console.info('parent selector', containerSel, 'dialog selector', dialogCSSId);
   }
 
   const tableOptions = {
@@ -706,7 +693,6 @@ const pmeTableDialogOpen = function(tableOptions, post) {
   const template = Page.templateFromRenderer(
     tableOptions.templateRenderer);
 
-  console.info(containerCSSId, pmeOpenDialogs);
   if (pmeOpenDialogs[containerCSSId]) {
     return false;
   }
@@ -724,7 +710,6 @@ const pmeTableDialogOpen = function(tableOptions, post) {
   }
   pmePost(post, {
     fail(xhr, status, errorThrown) {
-      console.info('cleanup');
       Page.busyIcon(false);
       pmeOpenDialogs[containerCSSId] = false;
     },
@@ -781,10 +766,8 @@ const pmeTableDialogOpen = function(tableOptions, post) {
 
           // general styling
           pmeInit(containerSel);
-          console.info(containerSel);
 
           const resizeHandler = function(parameters) {
-            console.info('pme-resize');
             dialogHolder.dialog('option', 'height', 'auto');
             dialogHolder.dialog('option', 'width', 'auto');
             let newHeight = dialogWidget.height()
@@ -808,11 +791,9 @@ const pmeTableDialogOpen = function(tableOptions, post) {
             switch (parameters.reason) {
             case 'dialogOpen':
               WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), function() {
-                console.info('addEditor');
                 transposeReady(containerSel);
                 tableLoadCallback(template, containerSel, parameters, function() {
                   // console.trace();
-                  console.info('tableLoadCallback');
                   // installInputChosen(containerSel);
                   resizeHandler(parameters);
                   dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
@@ -828,7 +809,6 @@ const pmeTableDialogOpen = function(tableOptions, post) {
               break;
             case 'tabChange':
               installInputChosen(containerSel, 'chosen-invisible');
-              console.info('tab change');
               resizeHandler(parameters);
               break;
             }
@@ -837,7 +817,6 @@ const pmeTableDialogOpen = function(tableOptions, post) {
           // install delegate handlers on the widget s.t. we
           // can call .off() on the container
           dialogWidget.on('resize', containerSel, function(event) {
-            console.info('pme dialog resize handler');
             resizeHandler(event);
           });
           dialogWidget.on('pmedialog:changed', containerSel, function(event) {
@@ -914,7 +893,6 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
           + 'name="' + element.attr('name') + '" '
           + 'value="' + element.val() + '"/>');
     }
-    console.info('hard pseudo submit');
     form.submit();
     return false;
   }
@@ -938,7 +916,6 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
 
   pmePost(post, {
     fail(xhr, status, errorThrown) {
-      console.info('cleanup');
       Page.busyIcon(false);
       CAFEVDB.modalizer(false);
     },
@@ -952,7 +929,6 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
       pmeInner(container).html(htmlContent);
       pmeInit(selector);
-      console.info('Attaching editors');
       WysiwygEditor.addEditor(container.find('textarea.wysiwyg-editor'), function() {
         transposeReady(selector);
         tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
@@ -1261,7 +1237,6 @@ const installInputChosen = function(containerSel, onlyClass) {
     };
     if (self.hasClass('allow-empty')) {
       chosenOptions.width = (this.offsetWidth + PHPMyEdit.singleDeselectOffset) + 'px';
-      console.info(self, 'chosen width', 'width', this.offsetWidth, self.outerWidth(), self.outerWidth(true));
       if (!self.is(':visible')) {
         self.addClass('chosen-invisible'); // kludge, correct later
       } else {
@@ -1307,8 +1282,6 @@ const installTabHandler = function(containerSel, changeCallback) {
       const oldTabClass = form.find('li.table-tabs.selected a').attr('href').substring(1);
       const tabClass = $(this).find('a').attr('href').substring(1);
 
-      console.info('old tab: ' + oldTabClass + ' new tab: ' + tabClass);
-
       // Inject the display triggers ...
       table.removeClass(oldTabClass).addClass(tabClass);
 
@@ -1332,7 +1305,6 @@ const installTabHandler = function(containerSel, changeCallback) {
         }
       });
       if (reattachChosen) {
-        console.info('reattach chosen');
         installFilterChosen(container);
         installInputChosen(container);
       }
@@ -1393,7 +1365,6 @@ const pmeInit = function(containerSel) {
   // Show search fields
   container.on('click', tableSel + ' input.' + pmeSearch, function(event) {
     event.stopImmediatePropagation(); // don't submit, not necessary
-    console.info('show search');
 
     const table = container.find(tableSel);
     const form = container.find(formSel);
@@ -1448,8 +1419,6 @@ const pmeInit = function(containerSel) {
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
         const self = $(this);
-
-        console.info('DATA', event);
 
         if (!self.hasClass(pmeToken('custom'))) {
           event.preventDefault();
@@ -1523,7 +1492,6 @@ const pmeInit = function(containerSel) {
             + ' name="' + pmeSys('operation') + '" />';
         }
 
-        console.info('about to open dialog');
         tableDialog(form, $(recordEl), containerSel);
       });
   }
@@ -1534,7 +1502,6 @@ const pmeInit = function(containerSel) {
     .off('click', submitSel)
     .on('click', submitSel, function(event) {
 
-      console.info('submit');
       return pseudoSubmit($(this.form), $(this), containerSel);
     });
 
