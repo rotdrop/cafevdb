@@ -31,6 +31,8 @@ import * as CAFEVDB from './cafevdb.js';
 import 'bootstrap/js/dist/tooltip';
 
 require('tooltips.css');
+require('jquery-ui/ui/widgets/dialog');
+require('jquery-ui/ui/widgets/resizable');
 
 console.log('jquery-extensions');
 
