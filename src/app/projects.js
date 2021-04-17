@@ -690,7 +690,6 @@ const documentReady = function() {
         posterContainer.each(function(index) {
           Photo.ready($(this), function() {
             imagesReady = --readyCountDown <= 0;
-            console.info('COUNTDOWN', readyCountDown, imagesReady);
           });
         });
       } else {
