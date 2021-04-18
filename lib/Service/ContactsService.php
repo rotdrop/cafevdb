@@ -491,7 +491,7 @@ class ContactsService
       if ($musician['photo'] instanceof Entities\MusicianPhoto) {
         $image = $musician['photo']->getImage(); //  ['image'];
         $photo = [
-          'data' => $image->getImageData()->getData('base64'),
+          'data' => $image->getFileData()->getData('base64'),
           'mimeType' => $image->getMimeType(), //['mimeType'],
         ];
 
