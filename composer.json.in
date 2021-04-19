@@ -15,7 +15,7 @@
     "ioncube/php-openssl-cryptor": "dev-master",
     "components/jquery": "^2.2.0",
     "components/jquery-migrate": "^3.0.0",
-    "doctrine/orm": "^2.6.0",
+    "doctrine/orm": "dev-production/cafevdb",
     "oro/doctrine-extensions": "dev-master",
     "ramsey/uuid-doctrine": "^1.6",
     "chillerlan/php-qrcode": "^4.2",
@@ -27,7 +27,6 @@
     "pear/auth_sasl": "dev-master",
     "gedmo/doctrine-extensions": "dev-production/cafevdb",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
-    "knplabs/doctrine-behaviors": "^2.0",
     "acelaya/doctrine-enum-type": "^2.5",
     "cjh/doctrine-on-update-extension": "dev-master",
     "phpoffice/phpspreadsheet": "^1.16",
@@ -57,6 +56,10 @@
     {
       "type": "path",
       "url": "3rdparty/php-openssl-cryptor"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/doctrine-orm"
     },
     {
       "type": "path",
