@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNote as DebitNote;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNoteData as DataEntity;
 
-class SepaDebitNoteService
+class SepaBulkTransactionService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -59,13 +59,15 @@ class SepaDebitNoteService
   /**
    * Generate the payments for the specified service-fee options
    */
-  public function generateMandatePayments(Entities\SepaDebitMandate $mandate, array $receivableOptions):ArrayCollection
+  public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions):ArrayCollection
   {
     $payments = new ArrayCollection();
     if (empty($receivableOptions)) {
       return $payments;
     }
-    $musician = $mandate->getMusician();
+    $bankAccount = $participant->getSepaBankAccount();
+    $project = $participant->getProject();
+    $musician = $participant->getMusician();
 
     /** @var Entities\ProjectParticipantFieldDataOption $receivableOption */
     foreach ($receivableOptions as $receivableOption) {
