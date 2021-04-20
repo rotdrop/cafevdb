@@ -117,6 +117,9 @@ class phpMyEdit
 
 	const OPERATION_FILTER = 'filter';
 
+	const TRIVIAL_ENCODE = '%s';
+	const TRIVIAL_DESCRIPION = '$table.$column';
+
 	// Class variables {{{
 
 	// Database handling
@@ -612,10 +615,13 @@ class phpMyEdit
 		if (is_numeric($k)) {
 			$k = $this->fds[$k];
 		}
-		if (!empty($this->fdd[$k]['encryption'])) {
+		$fdd = $this->fdd[$k];
+		if (!empty($fdd['encryption'])
+			&& !$this->col_has_values($k)
+			&& stripos('MCOD', $fdd[self::FDD_SELECT]) === false) {
 			return false;
 		}
-		$options = @$this->fdd[$k]['options'];
+		$options = @$fdd['options'];
 		if (! isset($options)) {
 			return true;
 		}
@@ -915,8 +921,9 @@ class phpMyEdit
 
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
 	{
-		$db	    = $this->fdd[$field_num][self::FDD_VALUES]['db'];
-		$table  = $this->fdd[$field_num][self::FDD_VALUES]['table'];
+		$fdd    = $this->fdd[$field_num];
+		$db	    = $fdd[self::FDD_VALUES]['db'];
+		$table  = $fdd[self::FDD_VALUES]['table'];
 		if (empty($table)) {
 			$table = $this->tb;
 		}
@@ -929,9 +936,15 @@ class phpMyEdit
 		$groups   = $valuesDef['groups'];
 		$data     = $valuesDef['data'];
 		$titles   = $valuesDef['titles'];
-		$binary   = $valuesDef['binary'];
 		$encode   = $valuesDef['encode'];
 		$dbp      = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
+
+		if ($encode == self::TRIVIAL_ENCODE) {
+			unset($encode);
+		}
+		if ($desc == self::TRIVIAL_DESCRIPION) {
+			unset($desc);
+		}
 
 		$qparts[self::QPARTS_TYPE] = self::QPARTS_SELECT;
 
@@ -1040,9 +1053,17 @@ class phpMyEdit
 		$dt     = array();
 		$ttls   = array();
 		$idx    = $desc ? 1 : 0;
+		if ($idx == 0 && is_callable($fdd['encryption']['decrypt'])) {
+			$decrypt = $fdd['encryption']['decrypt'];
+			$decode = function($value) use ($decrypt) {
+				return call_user_func($decrypt, $value);
+			};
+		} else {
+			$decode = function($value) { return $value; };
+		}
 		while ($row = $this->sql_fetch($res, 'n')) {
 			$colIdx = $idx;
-			$values[$row[0]] = $row[$colIdx++];
+			$values[$row[0]] = $decode($row[$colIdx++]);
 			if (!empty($groups)) {
 				$grps[$row[0]] = $row[$colIdx++];
 			}
@@ -1112,7 +1133,7 @@ class phpMyEdit
 	{
 		$values = $this->fdd[$field][self::FDD_VALUES]?:[];
 
-		$encode = $values['encode']?:'%s';
+		$encode = $values['encode']?:self::TRIVIAL_ENCODE;
 
 		$join_table = $this->join_table_alias($field);
 		if (!isset($values['column'])) {
@@ -1122,13 +1143,13 @@ class phpMyEdit
 		}
 
 		if (!isset($values['description'])) {
-			$join_desc = sprintf($encode, '$table.$column');
+			$join_desc = sprintf($encode, self::TRIVIAL_DESCRIPION);
 		} else {
 			$join_desc = $values['description'];
 		}
 
 		if (!isset($values['orderby'])) {
-			$orderBy = sprintf($encode.' ASC', '$table.$column');
+			$orderBy = sprintf($encode.' ASC', self::TRIVIAL_DESCRIPION);
 		} else {
 			$orderBy = $values['orderby'];
 		}
@@ -2237,10 +2258,10 @@ class phpMyEdit
 			}
 			$helptip = $this->fetchCellPopup($k, $row);
 			if (!empty($this->fdd[$k]['encryption'])) {
-				if (!isset($row["qf$k"."encrypted"])) {
-					$row["qf$k"."encrypted"] = $row["qf$k"];
+				if (!isset($row["qf${k}_encrypted"])) {
+					$row["qf${k}_encrypted"] = $row["qf$k"];
 				}
-				$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf$k"."encrypted"]);
+				$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf${k}_encrypted"]);
 			}
 			if ($this->copy_operation() || $this->change_operation()) {
 				if ($this->hidden($k)) {
@@ -2340,6 +2361,10 @@ class phpMyEdit
 				$data   = $valgrp['data'];
 				$multiValues = count($vals) > 1;
 			}
+		}
+
+		if ($this->fds[$k] == "SepaBankAccounts:iban") {
+			$this->logInfo('HELLO: '.$this->col_has_values($k));
 		}
 
 		/* If multi is not requested and the value-array has only one
@@ -2797,10 +2822,10 @@ class phpMyEdit
 			$escape = false;
 		}
 		if (!empty($this->fdd[$k]['encryption'])) {
-			if (!isset($row["qf$k"."encrypted"])) {
-				$row["qf$k"."encrypted"] = $row["qf$k"];
+			if (!isset($row["qf${k}_encrypted"])) {
+				$row["qf${k}_encrypted"] = $row["qf$k"];
 			}
-			$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf$k"."encrypted"]);
+			$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf${k}_encrypted"]);
 		}
 		foreach ($this->key_num as $key => $key_num) {
 			if ($this->col_has_description($key_num)) {
@@ -2810,13 +2835,15 @@ class phpMyEdit
 			}
 		}
 		$key_rec = $this->key_record($key_rec);
-		// @TODO check
+
 		$this->col_has_values($k) && $this->set_values($k);
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
 		} else if (isset($this->fdd[$k]['values2'])) {
 			if (isset($row['qf'.$k.'_idx'])) {
 				$value = $row['qf'.$k.'_idx'];
+			} else if (isset($row["qf${k}_encrypted"])) {
+				$value = $row["qf${k}_encrypted"];
 			} else {
 				$value = $row["qf$k"];
 			}
@@ -4337,7 +4364,7 @@ class phpMyEdit
 			$css_sort_class = $this->getCSSclass('sortfield');
 			$css_nosort_class = $this->getCSSclass('nosort');
 			$fdn = $this->fdd[$fd]['name'];
-			if (!empty($this->fdd[$k]['encryption']) ||
+			if (/* !empty($this->fdd[$k]['encryption']) || */
 				empty($this->fdd[$k]['sort']) ||
 				$this->password($k)) {
 				echo '<th class="',$css_class_name,' ',$css_nosort_class,'"';
