@@ -713,6 +713,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts['triggers']['update']['before'][]  = [ $this, 'cleanupOptionData' ];
 
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
@@ -916,8 +917,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $this->debug('ALLOWED BEFORE RESHAPE '.print_r($newvals['data_options'], true));
 
-
-    // convert allowed values from array to table format as understood
+    // convert allowed values from array to table format as understood by
     // our PME legacy join table stuff.
     $optionValues = [];
     foreach ($newvals['data_options'] as $key => $allowedValue) {
@@ -929,6 +929,12 @@ class ProjectParticipantFields extends PMETableViewBase
         }
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
         $optionValues[$field][] = $key.self::JOIN_KEY_SEP.$value;
+      }
+      if (($newvals['multiplicity'] == Multiplicity::SIMPLE
+           || $newvals['multiplicity'] == Multiplicity::SINGLE)
+          && $key != Uuid::NIL
+          && empty($allowedValue['deleted'])) {
+        break;
       }
     }
     foreach ($optionValues as $field => $fieldData) {
@@ -946,6 +952,52 @@ class ProjectParticipantFields extends PMETableViewBase
     $this->debug('AFTER CHG '.print_r($changed, true));
 
     $this->changeSetSize = count($changed);
+
+    return true;
+  }
+
+  /**
+   * When switching multiplicities of field-data there may remain
+   * data-options left behind. We cleanup using soft-deletion s.t. the
+   * user may undo the change.
+   *
+   * @todo invent a means to report this back to the user.
+   */
+  public function cleanupOptionData(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  {
+    $this->debug('BEFORE OLD '.print_r($oldvals, true));
+    $this->debug('BEFORE NEW '.print_r($newvals, true));
+    $this->debug('BEFORE CHG '.print_r($changed, true));
+
+    if ($oldvals['multiplicity'] != $newvals['multiplicity']
+        && ($newvals['multiplicity'] == Multiplicity::SIMPLE
+         || $newvals['multiplicity'] == Multiplicity::SINGLE)) {
+
+      /** @var Entities\ProjectParticipantField $field */
+      $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($pme->rec);
+
+      if (empty($field)) {
+        throw new \RuntimeException($this->l->t('Unable to find participant field for id "%s"', $pme->rec));
+      }
+
+      /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
+      foreach ($field->getDataOptions() as $dataOption) {
+        if (!$dataOption->isDeleted()) {
+          continue;
+        }
+
+        // loop over all participant data for the option and soft-delete it
+
+        /** @var Entities\ProjectParticipantFieldDatum $datum */
+        foreach ($dataOption->getFieldData() as $datum) {
+          if (!$datum->isDeleted()) {
+            $this->remove($datum); // soft
+          }
+        }
+      }
+
+      $this->flush();
+    }
 
     return true;
   }
@@ -979,12 +1031,41 @@ class ProjectParticipantFields extends PMETableViewBase
     if (!$field->isDeleted()) {
       $this->remove($field, true); // this should be soft-delete
     }
+
     // Gedmo\SoftDeleteable does not cascade by itself, unfortunately,
     // so we need to do this by ourselves. Make sure all options are
-    // also soft-deleted.
-    foreach ($field->getDataOptions() as $dataOption) {
+    // also soft- or hard deleted.
+    //
+    // There should also be some feed-back to the user about remaining
+    // soft-deleted options. We actually can walk down the entire
+    // hierarchy until we find project-payment entries at which point
+    // we deny deleting those options.
+
+    /** @var Doctrine\Common\Collections\Collection $dataOptions */
+    $dataOptions = $field->getDataOptions();
+
+    /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
+    foreach ($dataOptions as $dataOption) {
       if (!$dataOption->isDeleted()) {
-        $this->remove($dataOption);
+        $this->remove($dataOption); // soft
+      }
+
+      /** @var Doctrine\Common\Collections\Collection $fieldData */
+      $fieldData = $dataOption->getFieldData();
+
+      /** @var Entities\ProjectParticipantFieldDatum $datum */
+      foreach ($fieldData as $datum) {
+        if (!$datum->isDeleted()) {
+          $this->remove($datum); // soft
+        }
+        if ($datum->usage() == 0) {
+          $this->remove($datum); // hard
+          $fieldData->removeElement($datum);
+        }
+      }
+      if ($dataOption->usage() == 0) {
+        $this->remove($dataOption); // hard
+        $dataOptions->removeElement($dataOption);
       }
     }
     // if the field is no long in use then it is safe to delete it and
