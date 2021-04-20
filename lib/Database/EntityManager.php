@@ -459,6 +459,10 @@ class EntityManager extends EntityManagerDecorator
     // encryption
     $transformerPool = new Transformable\Transformer\TransformerPool();
     $transformerPool['encrypt'] = new Listeners\Transformable\Encryption($this->encryptionService);
+    $transformerPool['hash'] = new Transformable\Transformer\PhpHashTransformer([
+      'algorithm' => 'sha256',
+      'binary' => false,
+    ]);
     $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
     $transformableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($transformableListener);
@@ -491,6 +495,31 @@ class EntityManager extends EntityManagerDecorator
     $foreignKeyListener = new CJH\ForeignKey\Listener($this);
     $foreignKeyListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($foreignKeyListener);
+
+    $evm->addEventSubscriber((new class($this->logger) implements \Doctrine\Common\EventSubscriber {
+      use \OCA\CAFEVDB\Traits\LoggerTrait;
+
+      public function __construct(ILogger $logger) {
+        $this->logger = $logger;
+      }
+
+      public function getSubscribedEvents() {
+        return [
+          \Gedmo\SoftDeleteable\SoftDeleteableListener::POST_SOFT_UNDELETE,
+        ];
+      }
+
+      public function postSoftUndelete(\Doctrine\Persistence\Event\LifecycleEventArgs $args) {
+        $entityManager = $args->getObjectManager();
+        $entity = $args->getObject();
+        $this->logInfo('CALLED FOR CLASS '.get_class($entity));
+
+        // if (method_exists($entity, '')) {
+        // }
+      }
+
+
+    }));
 
     return [ $config, $evm ];
   }
@@ -610,7 +639,8 @@ class EntityManager extends EntityManagerDecorator
           $meta->setFieldValue($entity, $property, $reference);
 
         } catch (\Throwable $t) {
-          $this->logException($t);
+          // can happen if the relation is allowed to be null
+          // $this->logException($t);
         }
       }
 
