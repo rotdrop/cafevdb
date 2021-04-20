@@ -387,7 +387,7 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
             continue;
           }
           throw new \Exception(
-            $this->l->t('Missing value and no generator for identifier field: %s', $field));
+            $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]));
         }
         $dbalType = Type::getType($this->metaData->fieldMappings[$field]['type']);
       }
