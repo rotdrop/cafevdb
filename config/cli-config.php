@@ -178,7 +178,10 @@ $encryptionService->initAppEncryptionKey();
 require_once __DIR__ . "/../vendor/autoload.php";
 
 // otherwise Redaxo4Embedded's InstalledVersions is pulled in by autoload
-require_once __DIR__ . "/../vendor/composer/InstalledVersions.php";
+$installedVersions = __DIR__ . "/../vendor/composer/InstalledVersions.php";
+if (file_exists($installedVersions)) {
+  require_once $installedVersions;
+}
 
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use OCA\CAFEVDB\Database\EntityManager;
