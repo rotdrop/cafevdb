@@ -277,8 +277,6 @@ class UserStorage
 
     $filesUrl = \OCP\Util::linkToAbsolute('files', '', [ 'dir' => $nodePath ]);
 
-    $this->logInfo('FILESURL '.$filesUrl);
-
     return $filesUrl;
   }
 
