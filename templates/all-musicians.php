@@ -31,7 +31,7 @@ $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('instruments');
 if ($roles->inTreasurerGroup()) {
   $nav .= $pageNavigation->pageControlElement('insurances');
-  $nav .= $pageNavigation->pageControlElement('sepa-debit-mandates');
+  $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts');
 }
 $nav .= $pageNavigation->pageControlElement('blog');
 $nav .= $pageNavigation->pageControlElement('instruments');

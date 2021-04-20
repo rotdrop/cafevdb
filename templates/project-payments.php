@@ -31,7 +31,7 @@ if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('sepa-debit-mandates', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('sepa-debit-notes', $projectName, $projectId);
   if ($projectId === $appConfig->getConfigValue('memberProjectId', false)) {

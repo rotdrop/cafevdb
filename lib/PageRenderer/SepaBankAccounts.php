@@ -37,54 +37,66 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 
 /** TBD. */
-class SepaDebitMandates extends PMETableViewBase
+class SepaBankAccounts extends PMETableViewBase
 {
-  const TEMPLATE = 'sepa-debit-mandates';
+  const TEMPLATE = 'sepa-bank-accounts';
   const TABLE = self::SEPA_DEBIT_MANDATES_TABLE;
   const FIXED_COLUMN_SEP = self::VALUES_TABLE_SEP;
 
-  protected $cssClass = 'sepa-debit-mandates';
+  protected $cssClass = 'sepa-bank-accounts';
 
   protected $joinStructure = [
     [
       'table' => self::TABLE,
       'flags' => self::JOIN_MASTER,
-      'entity' => Entities\SepaDebitMandate::class,
-    ],
-    [
-      'table' => self::PROJECT_PARTICIPANTS_TABLE,
-      'entity' => Entities\ProjectParticipants::class,
-      'identifier' => [
-        'project_id' => 'project_id',
-        'musician_id' => 'musician_id',
-      ],
-      'column' => 'musician_id',
-      'flags' => self::JOIN_READONLY,
-    ],
-    [
-      'table' => self::PROJECTS_TABLE,
-      'entity' => Entities\Project::class,
-      'identifier' => [ 'id' => 'project_id' ],
-      'column' => 'id',
-      'flags' => self::JOIN_READONLY,
+      'entity' => Entities\SepaBankAccount::class,
     ],
     [
       'table' => self::MUSICIANS_TABLE,
       'entity' => Entities\Musician::class,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [ 'id' => 'musician_id' ],
       'column' => 'id',
-      'flags' => self::JOIN_READONLY,
     ],
+    [
+      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+      'entity' => Entities\SepaDebitMandate::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'bank_account_sequence' => 'sequence',
+        'sequence' => false,
+      ],
+    ],
+    [
+      'table' => self::PROJECT_PARTICIPANTS_TABLE,
+      'entity' => Entities\ProjectParticipants::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'bank_account_sequence' => 'sequence',
+        // || sepa-mandate->bank_account_sequence == sequence
+        'project_id' => false,
+      ],
+      'column' => 'project_id',
+    ],
+    // [
+    //   'table' => self::PROJECTS_TABLE,
+    //   'entity' => Entities\Project::class,
+    //   'identifier' => [ 'id' => 'project_id' ],
+    //   'column' => 'id',
+    //   'flags' => self::JOIN_READONLY,
+    // ],
     [
       'table' => self::PROJECT_PAYMENTS_TABLE,
       'entity' => Entities\ProjectPayment::class,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
-        'project_id' => 'project_id',
         'musician_id' => 'musician_id',
-        'mandate_sequence' => 'sequence',
+        'bank_account_sequence' => 'sequence',
+        'project_id' => false,
       ],
       'column' => 'id',
-      'flags' => self::JOIN_READONLY,
     ],
   ];
 
@@ -110,21 +122,21 @@ class SepaDebitMandates extends PMETableViewBase
   public function shortTitle()
   {
     if ($this->deleteOperation()) {
-      return $this->l->t('Remove this Debit-Mandate?');
+      return $this->l->t('Remove this Bank-Account?');
     } else if ($this->viewOperation()) {
       if ($this->projectId > 0 && $this->projectName != '') {
-        return $this->l->t('Debit-Mandate for %s', array($this->projectName));
+        return $this->l->t('Bank-Account for %s', array($this->projectName));
       } else {
-        return $this->l->t('Debit-Mandate');
+        return $this->l->t('Bank-Account');
       }
     } else if ($this->changeOperation()) {
-      return $this->l->t('Change this Debit-Mandate');
+      return $this->l->t('Change this Bank-Account');
     }
     if ($this->projectId > 0 && $this->projectName != '') {
-      return $this->l->t('Overview over all SEPA Debit Mandates for %s',
+      return $this->l->t('Overview over all SEPA Bank Accounts for %s',
                   array($this->projectName));
     } else {
-      return $this->l->t('Overview over all SEPA Debit Mandates');
+      return $this->l->t('Overview over all SEPA Bank Accounts');
     }
   }
 
@@ -209,50 +221,6 @@ class SepaDebitMandates extends PMETableViewBase
           name="debitJobs[]">
     <option value=""></option>';
 
-      if ($projectId === $memberProjectId) {
-        $jobOptions = [
-          [
-            'value' => 'membership-fee',
-            'name' => $this->l->t('Membership Fee'),
-            'titile' => $this->toolTipsService['debit-note-job-option-membership-fee'],
-            'flags' => ($debitJob === 'membership-fee' ? PageNavigation::SELECTED : 0),
-          ],
-          [
-            'value' => 'insurance',
-            'name' => $this->l->t('Insurance'),
-            'titile' => $this->toolTipsService['debit-note-job-option-insurance'],
-            'flags' => ($debitJob === 'insurance' ? PageNavigation::SELECTED : 0),
-          ],
-          [
-            'value' => 'amount',
-            'name' => $this->l->t('Amount'),
-            'titile' => $this->toolTipsService['debit-note-job-option-amount'],
-            'flags' => ($debitJob === 'amount' ? PageNavigation::SELECTED : 0),
-          ]
-        ];
-      } else {
-        $jobOptions = [
-          [
-            'value' => 'deposit',
-            'name' => $this->l->t('Deposit'),
-            'titile' => $this->toolTipsService['debit-note-job-option-deposit'],
-            'flags' => ($debitJob === 'deposit' ? PageNavigation::SELECTED : 0),
-          ],
-          [
-            'value' => 'remaining',
-            'name' => $this->l->t('Remaining'),
-            'titile' => $this->toolTipsService['debit-note-job-option-remaining'],
-            'flags' => ($debitJob === 'remaining' ? PageNavigation::SELECTED : 0),
-          ],
-          [
-            'value' => 'amount',
-            'name' => $this->l->t('Amount'),
-            'titile' => $this->toolTipsService['debit-note-job-option-amount'],
-            'flags' => ($debitJob === 'amount' ? PageNavigation::SELECTED : 0),
-          ],
-        ];
-      }
-
       $jobOptions = $this->participantFieldsService->monetarySelectOptions($this->project);
 
       $debitJobs .= $this->pageNavigation->selectOptions($jobOptions);
@@ -283,14 +251,14 @@ class SepaDebitMandates extends PMETableViewBase
       'time'  => true,
       'tabs'  => [
         [
-          'id' => 'mandate',
-          'tooltip' => $this->l->t('Debit mandate, mandate-id, last used date, recurrence'),
-          'name' => $this->l->t('Mandate'),
-        ],
-        [
           'id' => 'account',
           'tooltip' => $this->l->t('Bank account associated to this debit mandate.'),
           'name' => $this->l->t('Bank Account'),
+        ],
+        [
+          'id' => 'mandate',
+          'tooltip' => $this->l->t('Debit mandate, mandate-id, last used date, recurrence'),
+          'name' => $this->l->t('Mandate'),
         ],
       ],
       'navigation' => 'VCD', // 'VCPD',
@@ -472,7 +440,7 @@ received so far'),
     ];
 
     $opts['fdd']['non_recurring'] = [
-      'tab' => array('id' => 'mandate'),
+      'tab' => [ 'id' => 'mandate' ],
       'name' => $this->l->t('Non-Recurring'),
       'select' => 'C',
       'maxlen' => '1',
@@ -534,7 +502,7 @@ received so far'),
           $opts['fdd'], $tableName, 'field_value',
           [
             'name' => $this->l->t($fieldName),
-            'tab' => $tab,
+            'tab' => [ 'id' => 'amount' ],
             'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
             'default'  => $field['default_value'],
             'values' => [

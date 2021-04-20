@@ -29,7 +29,7 @@ $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('all');
 $nav .= $pageNavigation->pageControlElement('insurances');
 $nav .= $pageNavigation->pageControlElement('insurance-brokers');
-$nav .= $pageNavigation->pageControlElement('sepa-debit-mandates');
+$nav .= $pageNavigation->pageControlElement('sepa-bank-accounts');
 
 echo $this->inc('part.common.header', [
   'css-prefix' => $css_pfx,

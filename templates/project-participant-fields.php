@@ -32,7 +32,7 @@ if (!empty($project)) {
   $nav .= $pageNavigation->pageControlElement('detailed', $project, $projectId);
   if ($roles->inTreasurerGroup()) {
     $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
-    $nav .= $pageNavigation->pageControlElement('sepa-debit-mandates', $table->projectName, $table->projectId);
+    $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $table->projectName, $table->projectId);
   }
   $nav .= $pageNavigation->pageControlElement('projects');
   $nav .= $pageNavigation->pageControlElement('instruments', $project, $projectId);

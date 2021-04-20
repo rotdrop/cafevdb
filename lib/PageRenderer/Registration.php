@@ -50,7 +50,7 @@ class Registration
     $context->registerServiceAlias('template:'.'project-participants', ProjectParticipants::class);
     $context->registerServiceAlias('template:'.'project-instrumentation-numbers', ProjectInstrumentationNumbers::class);
     $context->registerServiceAlias('template:'.'project-payments', ProjectPayments::class);
-    $context->registerServiceAlias('template:'.'sepa-debit-mandates', SepaDebitMandates::class);
+    $context->registerServiceAlias('template:'.'sepa-bank-accounts', SepaBankAccounts::class);
     $context->registerServiceAlias('template:'.'sepa-debit-notes', SepaDebitNotes::class);
     $context->registerServiceAlias('template:'.'instrument-insurance', InstrumentInsurances::class);
     $context->registerServiceAlias('template:'.'project-participant-fields', ProjectParticipantFields::class);
@@ -73,8 +73,8 @@ class Registration
       return new Export\PMETableSpreadsheetExporter($renderer, $projectService);
     });
 
-    $context->registerService('export:'.'sepa-debit-mandates', function($c) {
-      $renderer = $c->query('template:'.'sepa-debit-mandates');
+    $context->registerService('export:'.'sepa-bank-accounts', function($c) {
+      $renderer = $c->query('template:'.'sepa-bank-accounts');
       return new Export\PMETableSpreadsheetExporter($renderer);
     });
 

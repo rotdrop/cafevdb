@@ -149,6 +149,23 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'option_key',
       'encode' => 'BIN2UUID(%s)',
     ],
+    [
+      'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+      'entity' => Entities\SepaBankAccount::class,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'sequence' => 'bank_account_sequence',
+      ],
+      'column' => 'sequence',
+    ],
+    [
+      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+      'entitiy' => Entities\SepaDebitMandate::class,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'sequence' => 'debit_note_sequence',
+      ],
+    ],
     // Defined dynamically in render():
     // SepaDebitMandates
     // [
@@ -320,20 +337,20 @@ class ProjectParticipants extends PMETableViewBase
 
     /* Tweak the join-structure with dynamic data
      */
-    $this->joinStructure[] = [
-      // SepaDebitMandates
-      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
-      'entity' => Entities\SepaDebitMandate::class,
-      'identifier' => [
-        'musician_id' => 'musician_id',
-        'project_id' => [
-          'condition' => 'IN ($main_table.project_id, '.$memberProjectId.')',
-        ],
-        'deleted' => [ 'value' => null ],
-        'sequence' => false,
-      ],
-      'column' => 'sequence',
-    ];
+    // $this->joinStructure[] = [
+    //   // SepaDebitMandates
+    //   'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+    //   'entity' => Entities\SepaDebitMandate::class,
+    //   'identifier' => [
+    //     'musician_id' => 'musician_id',
+    //     'project_id' => [
+    //       'condition' => 'IN ($main_table.project_id, '.$memberProjectId.')',
+    //     ],
+    //     'deleted' => [ 'value' => null ],
+    //     'sequence' => false,
+    //   ],
+    //   'column' => 'sequence',
+    // ];
 
     /**
      * For each extra field add one dedicated join table entry
@@ -972,22 +989,13 @@ class ProjectParticipants extends PMETableViewBase
       $valueFdd = &$opts['fdd'][$valueFddName];
 
       /** @var Doctrine\Common\Collections\Collection */
-      $dataOptions = $field['dataOptions']->filter(function(Entities\ProjectParticipantFieldDataOption $option) {
-        // Filter out the generator option and soft-deleted options
-        return ((string)$option->getKey() != Uuid::NIL && empty($option->getDeleted()));
-      });
+      $dataOptions = $field->getSelectableOptions();
       $values2     = [];
       $valueTitles = [];
       $valueData   = [];
       /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
       foreach ($dataOptions as $dataOption) {
         $key = (string)$dataOption['key'];
-        if (empty($key)) {
-          continue;
-        }
-        if ($dataOption->isDeleted()) {
-          continue;
-        }
         $values2[$key] = $dataOption['label'];
         $valueTitles[$key] = $dataOption['tooltip'];
         $valueData[$key] = $dataOption['data'];
@@ -1047,6 +1055,12 @@ class ProjectParticipants extends PMETableViewBase
         $valueFdd['input'] = $keyFdd['input'];
         $keyFdd['input'] = 'VSRH';
         $valueFdd['css']['postfix'] .= ' simple-valued '.$dataType;
+
+        // disable deleted entries
+        $valueFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
+        $keyFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
+        $valueFdd['sql'] = 'IF($table.deleted IS NULL, $join_col_fqn, NULL)';
+
         switch ($dataType) {
         case FieldType::SERVICE_FEE:
         case FieldType::DEPOSIT:
@@ -1056,10 +1070,10 @@ class ProjectParticipants extends PMETableViewBase
           };
           break;
         case FieldType::FILE_DATA:
-          $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+          $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
             $fieldId = $field->getId();
             $policy = $field->getDefaultValue()?:'rename';
-            $key = $field->getDataOptions()->first()->getKey();
+            $key = $dataOptions->first()->getKey();
             $fileBase = $field['name'];
             $subDir = null;
             list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
@@ -1898,6 +1912,53 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
 
     //       $mandateIdx = count($opts['fdd']);
     //       $mandateAlias = "`PMEjoin".$mandateIdx."`";
+
+    // list(, $blah) = $this->makeJoinTableField(
+    //   $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
+    //     'name' => $this->l->t('SEPA Bank Account'),
+    //     'input' => 'S',
+    //     'input|ACP' => 'H',
+    //     'tab' => [ 'id' => $financeTab ],
+    //     'encryption' => [
+    //       'encrypt' => function($value) { return $this->encrypt($value); },
+    //       'decrypt' => function($value) { return $this->decrypt($value); },
+    //     ],
+    //     'sort' => true,
+    //     'select' => 'D',
+    //     'values' => [
+    //       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+    //       // description needs to be there in order to trigger drop-down on change
+    //       'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+    //     ],
+    // ]);
+
+    // list(, $blah) = $this->makeJoinTableField(
+    //   $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'sequence', [
+    //     'name' => $this->l->t('SEPA Bank Account'),
+    //     'input' => 'S',
+    //     'input|LFDV' => 'H',
+    //     'select' => 'D',
+    //     'values' => [
+    //       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+    //       // description needs to be there in order to trigger drop-down on change
+    //       'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+    //     ],
+    //     'php' => function($value, $op, $k, $row, $recordId, $pme) {
+    //       $this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
+    //       $valInfo = $pme->set_values($k-1);
+    //       $this->logInfo('VALINFO '.print_r($valInfo, true));
+    //       return 'blah';
+    //     },
+    // ]);
+
+    $opts['fdd']['bank_account_sequence'] = [
+      'name' => $this->l->t('SEPA Bank Account'),
+      'tab' => [ 'id' => $financeTab ],
+      'sort' => true,
+      'select' => 'N',
+    ];
+
+    if (false)     {
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
       array_merge([
@@ -1980,7 +2041,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         'select' => 'T',
         'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn DESC)',
       ]));
-
+}
     //////// END Field definitions
 
     $opts['triggers']['update']['before'][] = [ $this, 'ensureUserIdSlug' ];
@@ -2255,13 +2316,18 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         if (array_search($valueName, $changed) === false) {
           continue 2;
         }
-        $dataOption = $participantField['dataOptions']->first(); // the only one
+        $dataOption = $participantField->getSelectableOptions()->first(); // the only one
         $key = $dataOption['key'];
         $oldKey = $oldValues[$keyName]?:$key;
         if ($oldKey !== $key) {
           throw new \RuntimeException(
-            $this->l->t('Inconsistent field keys, old: "%s", new: "%s"',
-                        [ $key, $oldKey ]));
+            $this->l->t('Inconsistent field keys for "%s", field-id %d, should: "%s", old: "%s", new: "%s"', [
+              $participantField->getName(),
+              $participantField->getId(),
+              $key,
+              $oldKey,
+              $newValues[$keyName],
+            ]));
         }
         // tweak the option_key value
         $newValues[$keyName] = $key;

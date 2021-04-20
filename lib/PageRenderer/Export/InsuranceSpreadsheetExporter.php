@@ -67,7 +67,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
    *
    * - template all-musicians, class PageRenderer\Musicians
    * - template project-participants, class PageRenderer\ProjectParticipants
-   * - template sepa-debit-mandates, class PageRenderer\SepaDebitMandates
+   * - template sepa-bank-accounts, class PageRenderer\SepaBankAccounts
    *
    * All other renderers are rejected by throwing an exception,
    * although a couple of other tables should also work out of the box.

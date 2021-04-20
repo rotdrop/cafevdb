@@ -313,7 +313,7 @@ const actions = function(select, containerSel) {
     // The next 5 actions cannot reasonably loaded in a
     // popup-box.
   case 'project-participants':
-  case 'sepa-debit-mandates':
+  case 'sepa-bank-accounts':
   case 'project-participant-fields':
     // @TODO: this really could be a popup
     post.template = selectedValue;

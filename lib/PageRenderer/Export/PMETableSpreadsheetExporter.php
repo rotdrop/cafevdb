@@ -60,7 +60,7 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
    *
    * - template all-musicians, class PageRenderer\Musicians
    * - template project-participants, class PageRenderer\ProjectParticipants
-   * - template sepa-debit-mandates, class PageRenderer\SepaDebitMandates
+   * - template sepa-bank-accounts, class PageRenderer\SepaBankAccounts
    *
    * All other renderers are rejected by throwing an exception,
    * although a couple of other tables should also work out of the box.
@@ -102,8 +102,8 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
       $instrumentLabel = $this->l->t('Instrument');
       $instrumentCol = true;
       break;
-    case 'sepa-debit-mandates':
-      $name = $this->l->t('SEPA debit mandates');
+    case 'sepa-bank-accounts':
+      $name = $this->l->t('SEPA bank accounts');
       break;
     default:
       throw new \InvalidArgumentException($this->l->t('Table export for table "%s" not yet implemented.', $template));

@@ -619,7 +619,7 @@ project without a poster first.");
               'post' => '</optgroup>',
               [ 'type' => 'option',
                 'title' => $this->toolTipsService['project-action-debit-mandates'],
-                'value' => 'sepa-debit-mandates',
+                'value' => 'sepa-bank-accounts',
                 'disabled' => false, // @todo !Config::isTreasurer(),
                 'name' => $this->l->t('Debit Mandates')
               ],

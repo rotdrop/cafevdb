@@ -965,7 +965,7 @@ const mandateReady = function(selector) {
 const mandatesDocumentReady = function() {
 
   PHPMyEdit.addTableLoadCallback(
-    'sepa-debit-mandates',
+    'sepa-bank-accounts',
     {
       callback(selector, parameters, resizeCB) {
         mandateReady(selector);
