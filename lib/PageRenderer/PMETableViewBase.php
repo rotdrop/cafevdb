@@ -56,8 +56,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const MUSICIANS_TABLE = 'Musicians';
   const PROJECTS_TABLE = 'Projects';
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
-  const SEPA_DEBIT_MANDATES_TABLE = 'SepaBankAccounts';
-  const SEPA_TRANSFER_ACCOUNTS_TABLE = 'SepaBankAccounts';
+  const SEPA_BANK_ACCOUNTS_TABLE = 'SepaBankAccounts';
+  const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
   const SEPA_BULK_TRANSACTIONS_TABLE = 'SepaBulkTransactions';
   const SEPA_BULK_TRANSACTIONS_DATA_TABLE = 'SepaBulkTransactionData';
   const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
@@ -902,7 +902,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $association = $masterEntity[$joinInfo['association']];
           $this->debug(get_class($association).': '.$association->count());
 
-          // Delete entities by cirteria matching Note: this needs
+          // Delete entities by criteria matching Note: this needs
           // that the entity implements the \ArrayAccess interface
           foreach ($identifier[$multiple]['del'] as $del) {
             $id = $delIdentifier[$del];
@@ -932,6 +932,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $entity = $this->find($entityId);
           $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
           $this->debug('Usage is '.$usage);
+          $softDeleteable = method_exists($entity, 'isDeleted')
+                         && method_exists($entity, 'setDeleted');
           if ($usage > 0) {
             /**
              * @todo needs more logic: disabled things would need to
@@ -942,14 +944,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
              */
             if (method_exists($entity, 'setDisabled')) {
               $entity->setDisabled(true); // should be persisted on flush
-            } else {
+            } else if ($softDeleteable && !$entity->isDeleted()) {
               $this->remove($entity);
             }
           } else {
-            if (method_exists($entity, 'setDeleted')) {
-              $this->remove($entity);
+            if ($softDeleteable && !$entity->isDeleted()) {
+              $this->remove($entity); // soft
             }
-            $this->remove($entity);
+            $this->remove($entity); // hard
           }
           $this->flush();
         }
