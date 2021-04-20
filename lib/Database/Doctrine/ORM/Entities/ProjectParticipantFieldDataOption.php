@@ -95,6 +95,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="dataOption", fetch="EXTRA_LAZY")
+   * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
    */
   private $fieldData;
 

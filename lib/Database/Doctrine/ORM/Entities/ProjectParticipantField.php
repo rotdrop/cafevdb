@@ -90,10 +90,11 @@ class ProjectParticipantField implements \ArrayAccess
   private $dataType = 'text';
 
   /**
-   * @var ProjectParticipantFieldMetaDatum
+   * @var ProjectParticipantFieldDataOption
    *
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist","remove"}, orphanRemoval=true)
    * @ORM\OrderBy({"key" = "ASC", "label" = "ASC"})
+   * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
    */
   private $dataOptions;
 
