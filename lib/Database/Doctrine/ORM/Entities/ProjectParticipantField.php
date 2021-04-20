@@ -93,7 +93,7 @@ class ProjectParticipantField implements \ArrayAccess
    * @var ProjectParticipantFieldMetaDatum
    *
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist","remove"}, orphanRemoval=true)
-   * @ORM\OrderBy({"label" = "ASC"})
+   * @ORM\OrderBy({"key" = "ASC", "label" = "ASC"})
    */
   private $dataOptions;
 
@@ -236,7 +236,7 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function getSelectableOptions():Collection
   {
-    return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL ]));
+    return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL, 'deleted' => null, ]));
   }
 
   /**

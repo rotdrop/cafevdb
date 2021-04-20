@@ -33,22 +33,48 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * SepaDebitMandate
  *
+ * @ORM\Table(name="SepaDebitMandates", uniqueConstraints={@ORM\UniqueConstraint(columns={"mandate_reference"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
-class SepaDebitMandate extends SepaBankAccount
+class SepaDebitMandate
 {
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
+
   /**
+   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
+   * @ORM\Id
+   */
+  private $musician;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", options={"default"="1"})
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="NONE")
+   */
+  private $sequence = 1;
+
+  /**
+   * Optional project this mandate is tied to. If null then the
+   * mandate does not belong to a specific project but may be used for
+   * all receivables.
+   *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=true)
    * )
    */
-  private $project;
+  private $project = null;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=35)
+   * @ORM\Column(type="string", length=35, options={"collation"="ascii_general_ci"})
    */
   private $mandateReference;
 
@@ -65,6 +91,50 @@ class SepaDebitMandate extends SepaBankAccount
    * @ORM\Column(type="date_immutable", nullable=true)
    */
   private $mandateDate;
+
+  /**
+   * @var \DateTimeImmutable|null
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $lastUsedDate;
+
+  /**
+   * @var EncryptedFile
+   *
+   * @ORM\OneToOne(targetEntity="EncryptedFile")
+   */
+  private $writtenMandate;
+
+  /**
+   * @var SepaBankAccount
+   *
+   * Debit-mandates can expire, so many debit-mandates may refer the
+   * same bank-account.
+   *
+   * @ORM\ManyToOne(targetEntity="SepaBankAccount", inversedBy="sepaDebitMandates")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
+   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=false)
+   * )
+   */
+  private $sepaBankAccount;
+
+  /**
+   * @var ProjectPayment
+   *
+   * Linke to the payments table.
+   *
+   * @ORM\OneToMany(targetEntity="ProjectPayment",
+   *                mappedBy="sepaDebitMandate",
+   *                fetch="EXTRA_LAZY")
+   */
+  private $projectPayments;
+
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->projectPayments = new ArrayCollection();
+  }
 
   /**
    * Set mandateReference.

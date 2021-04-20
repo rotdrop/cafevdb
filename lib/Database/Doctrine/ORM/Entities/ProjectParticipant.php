@@ -93,6 +93,30 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $projectInstruments;
 
+  /**
+   * Optional link to a bank account for this project. The account can
+   * but need not belong to a debit-mandate. This is the account used
+   * for this project.
+   *
+   * @ORM\ManyToOne(targetEntity="SepaBankAccount")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id"),
+   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=true)
+   * )
+   */
+  private $sepaBankAccount = null;
+
+  /**
+   * Optional link to a SEPA debit-mandate used for this project.
+   *
+   * @ORM\ManyToOne(targetEntity="SepaDebitMandate")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id"),
+   *   @ORM\JoinColumn(name="debit_mandate_sequence", referencedColumnName="sequence", nullable=true)
+   * )
+   */
+  private $sepaDebitMandate = null;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
@@ -290,4 +314,27 @@ class ProjectParticipant implements \ArrayAccess
     return $this->payments;
   }
 
+  /**
+   * Set sepaBankAccount.
+   *
+   * @param SepaBankAccount|null sepaBankAccount
+   *
+   * @return ProjectParticipant
+   */
+  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount):ProjectParticipant
+  {
+    $this->sepaBankAccount = $sepaBankAccount;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaBankAccount.
+   *
+   * @return SepaBankAccount|null
+   */
+  public function getSepaBankAccount():?SepaBankAccount
+  {
+    return $this->sepaBankAccount;
+  }
 }

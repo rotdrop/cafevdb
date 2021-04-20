@@ -31,18 +31,16 @@ use MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * SepaBankAccount
+ * SepaBankAccount.
  *
- * This is the base class for both transfer-only and "debit-note +
- * transfer" accounts. It should never be used, actually, but in order
- * to satisfy the ORM framework we have to give it a name; "disabled"
- * says it all ...
+ * In principle the IBAN field would be a perfect ID-field. However,
+ * it is stored salted and encrypted and thus cannot be used for
+ * queries. Instead, we use a simple integer sequence which is unique
+ * in connection with the musician id.
  *
- * @ORM\Table(name="SepaBankAccounts", uniqueConstraints={@ORM\UniqueConstraint(columns={"mandate_reference"})})
+ * @ORM\Table(name="SepaBankAccounts")
+ *
  * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="sepa_transaction", type="EnumSepaTransaction")
- * @ORM\DiscriminatorMap({null="SepaBankAccount","debit_note"="SepaDebitMandate", "bank_transfer"="SepaTransferAccount"})
  * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class SepaBankAccount implements \ArrayAccess
@@ -50,6 +48,7 @@ class SepaBankAccount implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaBankAccounts", fetch="EXTRA_LAZY")
@@ -67,6 +66,8 @@ class SepaBankAccount implements \ArrayAccess
   private $sequence = 1;
 
   /**
+   * Date of last usage for generated bulk transactions.
+   *
    * @var \DateTimeImmutable|null
    *
    * @ORM\Column(type="date_immutable", nullable=true)
@@ -76,7 +77,7 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false)
+   * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
    * @MediaMonks\Transformable(name="encrypt")
    */
   private $iban;
@@ -84,7 +85,7 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false)
+   * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
    * @MediaMonks\Transformable(name="encrypt")
    */
   private $bic;
@@ -92,7 +93,7 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false)
+   * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
    * @MediaMonks\Transformable(name="encrypt")
    */
   private $blz;
@@ -100,12 +101,26 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=512, nullable=false)
+   * @ORM\Column(type="string", length=512, nullable=false, options={"collation"="ascii_bin"})
    * @MediaMonks\Transformable(name="encrypt")
    */
   private $bankAccountOwner;
 
   /**
+   * @var Collection
+   *
+   * Link to the attached debit mandates. Can be more than one at a
+   * given time, even more than one active.
+   *
+   * @ORM\OneToMany(targetEntity="SepaDebitMandate",
+   *                mappedBy="sepaBankAccount",
+   *                fetch="EXTRA_LAZY")
+   */
+  private $sepaDebitMandates;
+
+  /**
+   * @var Collection
+   *
    * @ORM\OneToMany(targetEntity="ProjectPayment",
    *                mappedBy="sepaBankAccount",
    *                fetch="EXTRA_LAZY")
@@ -114,6 +129,7 @@ class SepaBankAccount implements \ArrayAccess
 
   public function __construct() {
     $this->arrayCTOR();
+    $this->sepaDebitMandates = new ArrayCollection();
     $this->projectPayments = new ArrayCollection();
   }
 

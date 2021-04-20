@@ -79,25 +79,26 @@ class ProjectPayment implements \ArrayAccess
   private $sepaTransaction = null;
 
   /**
-   * @var int
-   *
-   * This needs to be here, otherwise the default=1 of the referenced
-   * column prevents the column to be nullable.
-   *
-   * @ORM\Column(type="integer", nullable=true)
-   */
-  private $mandateSequence;
-
-  /**
    * @ORM\ManyToOne(targetEntity="SepaBankAccount",
    *                inversedBy="projectPayments",
    *                fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="mandate_sequence", referencedColumnName="sequence", nullable=true)
+   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=true)
    * )
    */
   private $sepaBankAccount;
+
+  /**
+   * @ORM\ManyToOne(targetEntity="SepaDebitMandate",
+   *                inversedBy="projectPayments",
+   *                fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
+   *   @ORM\JoinColumn(name="debit_mandate_sequence", referencedColumnName="sequence", nullable=true)
+   * )
+   */
+  private $sepaDebitMandate;
 
   /**
    * @var string
