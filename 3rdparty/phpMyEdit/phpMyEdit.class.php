@@ -1305,7 +1305,11 @@ class phpMyEdit
 				$ret .= implode(',', $descFields).',';
 				$ret[strlen($ret) - 1] = ')';
 				if ($grouped) {
-					$orderBy = $this->substituteVars($orderBy, $descSubs);
+					if (empty($orderBy)) {
+						$orderBy = $join_table.'.'.$column.' ASC';
+					} else {
+						$orderBy = $this->substituteVars($orderBy, $descSubs);
+					}
 					$ret .= ' ORDER BY '.$orderBy.')';
 				}
 			} else {
