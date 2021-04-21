@@ -1059,7 +1059,7 @@ class ProjectParticipants extends PMETableViewBase
         // disable deleted entries
         $valueFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
         $keyFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
-        $valueFdd['sql'] = 'IF($table.deleted IS NULL, $join_col_fqn, NULL)';
+        $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.deleted IS NULL, $join_col_fqn, null))';
 
         switch ($dataType) {
         case FieldType::SERVICE_FEE:
