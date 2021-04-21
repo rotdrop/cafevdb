@@ -200,27 +200,27 @@ class Musician implements \ArrayAccess
   /**
    * Inverse side.
    *
-   * @ORM\OneToOne(targetEntity="MusicianPhoto", mappedBy="owner")
+   * @ORM\OneToOne(targetEntity="MusicianPhoto", mappedBy="owner", orphanRemoval=true)
    */
   private $photo;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $projectParticipation;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musician", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $projectInstruments;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="musician", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $projectParticipantFieldsData;
 
   /**
-   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="instrumentHolder", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="instrumentHolder", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $instrumentInsurances;
 
@@ -230,17 +230,17 @@ class Musician implements \ArrayAccess
   private $payableInsurances;
 
   /**
-   * @ORM\OneToMany(targetEntity="SepaBankAccount", mappedBy="musician", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="SepaBankAccount", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $sepaBankAccounts;
 
   /**
-   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="musician", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $sepaDebitMandates;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="musician", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $payments;
 
