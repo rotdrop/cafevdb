@@ -496,31 +496,6 @@ class EntityManager extends EntityManagerDecorator
     $foreignKeyListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($foreignKeyListener);
 
-    $evm->addEventSubscriber((new class($this->logger) implements \Doctrine\Common\EventSubscriber {
-      use \OCA\CAFEVDB\Traits\LoggerTrait;
-
-      public function __construct(ILogger $logger) {
-        $this->logger = $logger;
-      }
-
-      public function getSubscribedEvents() {
-        return [
-          \Gedmo\SoftDeleteable\SoftDeleteableListener::POST_SOFT_UNDELETE,
-        ];
-      }
-
-      public function postSoftUndelete(\Doctrine\Persistence\Event\LifecycleEventArgs $args) {
-        $entityManager = $args->getObjectManager();
-        $entity = $args->getObject();
-        $this->logInfo('CALLED FOR CLASS '.get_class($entity));
-
-        // if (method_exists($entity, '')) {
-        // }
-      }
-
-
-    }));
-
     return [ $config, $evm ];
   }
 
