@@ -89,6 +89,15 @@ class Musicians extends PMETableViewBase
       'column' => 'instrument_id',
     ],
     [
+      'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+      'entity' => Entities\SepaBankAccount::class,
+      'identifier' => [
+        'musician_id' => 'id',
+        'sequence' => false,
+      ],
+      'column' => 'sequence',
+    ],
+    [
       'table' => self::PROJECT_PARTICIPANTS_TABLE,
       'entity' => Entities\ProjectParticipant::class,
       'identifier' => [
@@ -653,6 +662,65 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
       'values2'  => $this->findAvailableLanguages(),
     ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
+        'name' => $this->l->t('SEPA Bank Accounts'),
+        'input' => 'S',
+        'input|ACP' => 'H',
+        'tab' => [ 'id' => 'contact' ],
+        'encryption' => [
+          'encrypt' => function($value) {
+            $values = Util::explode(',', $value);
+            foreach ($values as &$value) {
+              $value = $this->encrypt($value);
+            }
+            return implode(',', $values);
+          },
+          'decrypt' => function($value) {
+            // value may be "multi" valued, comma-separated
+            $values = Util::explode(',', $value);
+            foreach ($values as &$value) {
+              $value = $this->decrypt($value);
+            }
+            return implode(',', $values);
+          },
+        ],
+        //'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
+        'filter' => 'having',
+        'display|LFDV' => ['popup' => 'data'],
+        'sort' => true,
+        'select' => 'M',
+        'values' => [
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+          // description needs to be there in order to trigger drop-down on change
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+          'grouped' => true,
+          //'orderby' => PHPMyEdit::TRIVIAL_DESCRIPION.' ASC',
+        ],
+        'values2glue' => '<br/>',
+        'css' => [ 'postfix' => ' hide-subsequent-lines' ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'sequence', [
+        'name' => $this->l->t('SEPA Bank Accounts'),
+        'input' => 'S',
+        'input|LFDV' => 'H',
+        'select' => 'D',
+        'values' => [
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+          // description needs to be there in order to trigger drop-down on change
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+          'grouped' => true,
+        ],
+        'php' => function($value, $op, $k, $row, $recordId, $pme) {
+          $this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
+          $valInfo = $pme->set_values($k-1);
+          $this->logInfo('VALINFO '.print_r($valInfo, true));
+          return 'blah';
+        },
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::INSTRUMENT_INSURANCES_TABLE, 'insurance_amount', [
