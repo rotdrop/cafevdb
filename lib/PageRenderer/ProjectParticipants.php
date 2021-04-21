@@ -1183,7 +1183,7 @@ class ProjectParticipants extends PMETableViewBase
             $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType, 'money');
           }
           unset($keyFdd['mask']);
-          $keyFdd['values2glue'] = "<br/>";
+          $keyFdd['values2glue'] = '<br/>';
           $keyFdd['escape'] = false;
           // fall through
         default:
