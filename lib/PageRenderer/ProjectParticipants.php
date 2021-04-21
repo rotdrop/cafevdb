@@ -782,7 +782,7 @@ class ProjectParticipants extends PMETableViewBase
       'display|LVF' => ['popup' => 'data'],
       'sql'         => ($expertMode
                         ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'
-                        : 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.disabled, NULL, $join_col_fqn) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
+                        : 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
       'select'      => 'M',
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
@@ -794,16 +794,16 @@ class ProjectParticipants extends PMETableViewBase
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
-    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.disabled = 0' ]);
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'disabled', [
+      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
-        'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn, \$join_table.instrument_id, NULL))",
+        'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn IS NULL, NULL, \$join_table.instrument_id))",
         'default' => false,
         'select'  => 'T',
         'input'   => ($expertMode ? 'R' : 'RH'),

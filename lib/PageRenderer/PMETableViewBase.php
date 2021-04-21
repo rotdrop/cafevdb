@@ -802,16 +802,16 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             'old' => Util::explode(',', Util::removeSpaces($oldvals[$keyField])),
             'new' => Util::explode(',', Util::removeSpaces($newvals[$keyField])),
           ];
-          // handle "disabled" information if present
-          $disabledField = $this->joinTableFieldName($joinInfo, 'disabled');
-          if (!empty($oldvals[$disabledField])) {
-            $disabledKeys = Util::explode(',', $oldvals[$disabledField]);
-            foreach (array_intersect($disabledKeys, $identifier[$key]['new']) as $disabledKey) {
-              $identifier[$key]['old'][] = $disabledKey;
-              $changeSet['disabled'] = $disabledField;
+          // handle "deleted" information if present. This is meant for disabled instruments and the like
+          $deletedField = $this->joinTableFieldName($joinInfo, 'deleted');
+          if (!empty($oldvals[$deletedField])) {
+            $deletedKeys = Util::explode(',', $oldvals[$deletedField]);
+            foreach (array_intersect($deletedKeys, $identifier[$key]['new']) as $deletedKey) {
+              $identifier[$key]['old'][] = $deletedKey;
+              $changeSet['deleted'] = $deletedField;
             }
             $identifier[$key]['old'] = array_values(array_unique($identifier[$key]['old']));
-            $newvals[$disabledField] = implode(',', array_diff($disabledKeys, $identifier[$key]['new']));
+            $newvals[$deletedField] = implode(',', array_diff($deletedKeys, $identifier[$key]['new']));
           }
 
           $identifier[$key]['del'] = array_diff($identifier[$key]['old'], $identifier[$key]['new']);
@@ -942,9 +942,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
              * elements in order to keep them out of the way of the
              * select boxes of the user interface.
              */
-            if (method_exists($entity, 'setDisabled')) {
-              $entity->setDisabled(true); // should be persisted on flush
-            } else if ($softDeleteable && !$entity->isDeleted()) {
+            if ($softDeleteable && !$entity->isDeleted()) {
               $this->remove($entity);
             }
           } else {
@@ -994,9 +992,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
                                                [ $table, print_r($entityId, true) ]));
             }
-            if (method_exists($entity, 'setDisabled')) {
-              $entity['disabled'] = false; // reenable
-            } else if (method_exists($entity, 'setDeleted')) {
+            if (method_exists($entity, 'setDeleted')) {
               $entity['deleted'] = null;
               $this->flush();
             }

@@ -133,27 +133,6 @@ class ProjectsRepository extends EntityRepository
            ->getResult();
     return $range[0]; // ????
   }
-
-  /**
-   * Disable the given entity by settings its "disable" flag.
-   *
-   * @param mixed $entityOrId The entity or entity id.
-   *
-   * @param bool $disable Whether to enable or disable
-   */
-  public function disable($entityOrId, bool $disable = true)
-  {
-    $project = $this->ensureProject($entityOrId);
-    if (!$project->isDeleted()) {
-      // Gedmo soft-delete.
-      $this->getEntityManager()->remove($project);
-    }
-  }
-
-  public function enable(bool $enable = true)
-  {
-    return $this->disabled(!$enable);
-  }
 }
 
 // Local Variables: ***

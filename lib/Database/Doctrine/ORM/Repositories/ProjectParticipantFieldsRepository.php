@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -29,37 +29,6 @@ use Doctrine\ORM\EntityRepository;
 
 class ProjectParticipantFieldsRepository extends EntityRepository
 {
-  const ALIAS = 'pexf';
-
-  /**
-   * Disable the given field by settings its "disable" flag.
-   *
-   * @param mixed $fieldOrId The field or fieldId to disable.
-   *
-   * @param bool $disable Whether to enable or disable
-   */
-  public function disable($fieldOrId, bool $disable = true)
-  {
-    $entityManager = $this->getEntityManager();
-    if ($fieldOrId instanceof Entities\Field) {
-      $field = $fieldOrId;
-      $field->setDisabled($disabled);
-      $getEntityManager()->flush();
-    } else {
-      $fieldId = $fieldOrId;
-      $qb = $entityManager->createQueryBuilder()
-                          ->update($this->getEntityName(), self::ALIAS)
-                          ->set(self::ALIAS.'.disabled', true)
-                          ->where(self::ALIAS.'.id = :fieldId')
-                          ->setParameter('fieldId', $fieldId);
-      $qb->getQuery()->execute();
-    }
-  }
-
-  public function enable(bool $enable = true)
-  {
-    return $this->disabled(!$enable);
-  }
 }
 
 // Local Variables: ***

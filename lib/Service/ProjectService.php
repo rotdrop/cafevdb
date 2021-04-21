@@ -1013,22 +1013,6 @@ Whatever.',
   }
 
   /**
-   * Soft delete this project.
-   */
-  public function disable($projectId, $disable = true)
-  {
-    $this->repository->disable($projectId);
-  }
-
-  /**
-   * Undo soft-deletion.
-   */
-  public function enable($projectId, $disable = true)
-  {
-    $this->repository->enable($projectId);
-  }
-
-  /**
    * Add the given musicians to the project.
    *
    * @param array $musicianIds Flat array of the data-base keys for Entities\Musician.
@@ -1324,8 +1308,9 @@ Whatever.',
       }
 
       if ($softDelete) {
-        $this->repository->disable($project);
-        $this->persistProject($project);
+        if (!$project->isDeleted()) {
+          $this->remove($project, true);
+        }
       } else {
 
         $this->remove($project, true);

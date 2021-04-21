@@ -477,7 +477,7 @@ make sure that the musicians are also automatically added to the
       'display|LVF' => ['popup' => 'data'],
       'sql'         => ($expertMode
                         ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'
-                        : 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.disabled, NULL, $join_col_fqn) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
+                        : 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
       'select'      => 'M',
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
@@ -510,10 +510,10 @@ make sure that the musicians are also automatically added to the
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'disabled', [
+      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
-        'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn, \$join_table.instrument_id, NULL))",
+        'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn IS NULL, NULL, \$join_table.instrument_id))",
         'default' => false,
         'select'  => 'T',
         'input'   => ($expertMode ? 'S' : 'SH'),

@@ -981,52 +981,8 @@ class ProjectParticipantFields extends PMETableViewBase
     if (empty($field)) {
       throw new \RuntimeException($this->l->t('Unable to find participant field for id "%s"', $pme->rec));
     }
-    if (!$field->isDeleted()) {
-      $this->remove($field, true); // this should be soft-delete
-    }
 
-    // Gedmo\SoftDeleteable does not cascade by itself, unfortunately,
-    // so we need to do this by ourselves. Make sure all options are
-    // also soft- or hard deleted.
-    //
-    // There should also be some feed-back to the user about remaining
-    // soft-deleted options. We actually can walk down the entire
-    // hierarchy until we find project-payment entries at which point
-    // we deny deleting those options.
-
-    /** @var Doctrine\Common\Collections\Collection $dataOptions */
-    $dataOptions = $field->getDataOptions();
-
-    /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
-    foreach ($dataOptions as $dataOption) {
-      if (!$dataOption->isDeleted()) {
-        $this->remove($dataOption); // soft
-      }
-
-      /** @var Doctrine\Common\Collections\Collection $fieldData */
-      $fieldData = $dataOption->getFieldData();
-
-      /** @var Entities\ProjectParticipantFieldDatum $datum */
-      foreach ($fieldData as $datum) {
-        if (!$datum->isDeleted()) {
-          $this->remove($datum); // soft
-        }
-        if ($datum->usage() == 0) {
-          $this->remove($datum); // hard
-          $fieldData->removeElement($datum);
-        }
-      }
-      if ($dataOption->usage() == 0) {
-        $this->remove($dataOption); // hard
-        $dataOptions->removeElement($dataOption);
-      }
-    }
-    // if the field is no long in use then it is safe to delete it and
-    // all its associated options.
-    if ($field->usage() == 0) {
-      $this->remove($field, true); // this should be hard-delete and cascade
-    }
-    $this->flush();
+    $this->remove($field, true); // this should be soft-delete
 
     $changed = []; // disable PME delete query
 
@@ -1049,12 +1005,6 @@ class ProjectParticipantFields extends PMETableViewBase
   {
     return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)
                 ->optionKeys($fieldId);
-  }
-
-  private function disable($fieldId, $disable = true)
-  {
-    $this->getDatabaseRepository(Entities\ProjectParticipantField::class)
-         ->disable($fieldId);
   }
 
   /**

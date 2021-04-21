@@ -36,13 +36,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="Instruments")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository")
  * @Gedmo\TranslationEntity(class="TableFieldTranslation")
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
  */
 class Instrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\DisabledTrait;
   use CAFEVDB\Traits\TranslatableTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * @var int

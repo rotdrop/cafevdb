@@ -40,12 +40,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="MusicianInstruments", options={"comment":"Join-table Musicians -> Instruments"})
  * @ORM\Entity
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
  */
 class MusicianInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * @var Musician
@@ -72,12 +78,6 @@ class MusicianInstrument implements \ArrayAccess
    * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Ranking of the instrument w.r.t. to the given musician (lower is better)"})
    */
   private $ranking = 1;
-
-  /**
-   * @var bool
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
-   */
-  private $disabled = false;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -157,30 +157,6 @@ class MusicianInstrument implements \ArrayAccess
   }
 
   /**
-   * Set disabled.
-   *
-   * @param bool $disabled
-   *
-   * @return Instrumente
-   */
-  public function setDisabled($disabled)
-  {
-    $this->disabled = $disabled;
-
-    return $this;
-  }
-
-  /**
-   * Get disabled.
-   *
-   * @return bool
-   */
-  public function getDisabled()
-  {
-    return $this->disabled;
-  }
-
-  /**
    * Set projectInstruments.
    *
    * @param bool $projectInstruments
@@ -204,6 +180,10 @@ class MusicianInstrument implements \ArrayAccess
     return $this->projectInstruments;
   }
 
+  /**
+   * Return the number of project instrumentation slots the associated
+   * musician is registered with.
+   */
   public function usage()
   {
     return $this->projectInstruments->count();

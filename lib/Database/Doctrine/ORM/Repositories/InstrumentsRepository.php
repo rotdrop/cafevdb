@@ -48,7 +48,7 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findAll()
   {
-    return $this->findBy(['disabled' => false], [ 'sortOrder' => 'ASC']);
+    return $this->findBy(['deleted' => null], [ 'sortOrder' => 'ASC']);
   }
 
   /**

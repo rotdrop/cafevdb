@@ -243,26 +243,21 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts['fdd'][$fieldName]['values|ACP'] = array_merge(
       $opts['fdd'][$fieldName]['values'],
-      [ 'filters' => 'IFNULL($table.disabled,0) = 0' ]);
+      [ 'filters' => '$table.deleted IS NULL' ]);
 
     if ($this->showDisabled) {
-      $opts['fdd']['disabled'] = [
-        'name'     => $this->l->t('Disabled'),
-        'options' => $expertMode ? 'LAVCPDF' : 'LAVCPDF',
-        'input'    => $expertMode ? '' : 'R',
-        'select'   => 'C',
-        'maxlen'   => 1,
-        'sort'     => true,
-        'escape'   => false,
-        'sqlw'     => 'IF($val_qas = "", 0, 1)',
-        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' ],
-        'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
-        'tooltip'  => $this->toolTipsService['instrument-family-disabled'],
-        'css'      => [ 'postfix' => ' instrument-family-disabled' ],
-      ];
+      // soft-deletion
+      $opts['fdd']['deleted'] = array_merge(
+        $this->defaultFDD['deleted'], [
+          'name' => $this->l->t('Deleted'),
+          //'datemask' => 'd.m.Y H:i:s',
+        ]
+      );
     }
 
-    $opts['filters'] = "IFNULL($table.disabled, 0) <= ".intval($this->showDisabled);
+    if (!$this->showDisabled) {
+      $opts['filters']['AND'][] = '$table.deleted IS NULL';
+    }
 
     $opts['groupby_fields'] = [ 'id' ];
 
@@ -309,17 +304,12 @@ class InstrumentFamilies extends PMETableViewBase
    */
   public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
-    // $this->logInfo("Record key is ".print_r($pme->rec, true));
-    // $entity = $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->find($pme->rec);
+    $entity = $this->getDatabaseRepository($this->joinStructure[0]['entity'])
+                   ->find($pme->rec);
+    $this->remove($entity, true);
 
-    // if (false && $entity->usage() > 0) {
-    //   $this->logInfo("Soft-delete entity ".print_r($pme->rec));
-    //   $entity->setDisabled(true);
-    //   $this->persist($entity);
-    //   $this->flush();
-    //   return false;
-    // }
+    $changed = []; // disable PME delete query
 
-    return true;
+    return true; // but run further triggers if appropriate
   }
 }
