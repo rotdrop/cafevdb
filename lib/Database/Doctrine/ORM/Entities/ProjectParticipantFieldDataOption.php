@@ -39,7 +39,10 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\Table(name="ProjectParticipantFieldsDataOptions")
  * @ORM\Entity
- * @Gedmo\SoftDeleteable(fieldName="deleted")
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
  *
  * Soft deletion is necessary in case the ProjectPayments table
  * already contains entries.
@@ -50,6 +53,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * Link back to ProjectParticipantField
@@ -94,8 +98,8 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $limit;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="dataOption", fetch="EXTRA_LAZY")
-   * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="dataOption", cascade={"persist"}, orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @Gedmo\SoftDeleteableCascade(delete=false, undelete=true)
    */
   private $fieldData;
 

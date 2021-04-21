@@ -39,13 +39,18 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\Table(name="ProjectParticipantFields")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldsRepository")
- * @Gedmo\SoftDeleteable(fieldName="deleted")
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
+ *
  */
 class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * @var int
@@ -92,7 +97,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var ProjectParticipantFieldDataOption
    *
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist","remove"}, orphanRemoval=true)
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist"}, orphanRemoval=true)
    * @ORM\OrderBy({"key" = "ASC", "label" = "ASC"})
    * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
    */
@@ -311,7 +316,7 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->fieldData->count();
+    return $this->dataOptions->count();
   }
 
   /**
