@@ -275,7 +275,8 @@ class UserStorage
 
     $nodePath = substr(strchr($node->getPath(), '/files/'), strlen('/files'));
 
-    $filesUrl = \OCP\Util::linkToAbsolute('files', '', [ 'dir' => $nodePath ]);
+    $urlGenerator = \OC::$server->getURLGenerator();
+    $filesUrl = $urlGenerator->linkToRoute('files.view.index', [ 'dir' => $nodePath ]);
 
     return $filesUrl;
   }
