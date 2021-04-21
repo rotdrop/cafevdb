@@ -35,12 +35,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="Projects", uniqueConstraints={@ORM\UniqueConstraint(columns={"name"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository")
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
  */
 class Project implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * @var int
@@ -71,13 +77,6 @@ class Project implements \ArrayAccess
    * @ORM\Column(type="EnumProjectTemporalType", nullable=false, options={"default"="temporary"})
    */
   private $type = 'temporary';
-
-  /**
-   * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
-   */
-  private $disabled = false;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
@@ -318,30 +317,6 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set disabled.
-   *
-   * @param bool $disabled
-   *
-   * @return Project
-   */
-  public function setDisabled($disabled)
-  {
-    $this->disabled = $disabled;
-
-    return $this;
-  }
-
-  /**
-   * Get disabled.
-   *
-   * @return bool
-   */
-  public function getDisabled()
-  {
-    return $this->disabled;
-  }
-
-  /**
    * Set posters.
    *
    * @param ArrayCollection $posters
@@ -531,5 +506,15 @@ class Project implements \ArrayAccess
   public function getParticipantInstruments():Collection
   {
     return $this->participantInstruments;
+  }
+
+  /**
+   * Return the number of "serious" items which "use" this entity. For
+   * project participant this is (for now) the number of payments. In
+   * the long run: only open payments/receivables should count.
+   */
+  public function usage():int
+  {
+    return $this->payments->count();
   }
 }

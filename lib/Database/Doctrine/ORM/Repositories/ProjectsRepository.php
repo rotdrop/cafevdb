@@ -56,7 +56,7 @@ class ProjectsRepository extends EntityRepository
     }
     return $this->findOneBy([
       'id' => $projectId,
-      'disabled' => false,
+      'deleted' => null,
     ]);
   }
 
@@ -69,7 +69,7 @@ class ProjectsRepository extends EntityRepository
    *
    * @return null|Entities\Project
    */
-  public function ensureProject($projectOrId):? Entities\Project
+  public function ensureProject($projectOrId):?Entities\Project
   {
     if (!($projectOrId instanceof Entities\Project)) {
       //return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
@@ -143,19 +143,10 @@ class ProjectsRepository extends EntityRepository
    */
   public function disable($entityOrId, bool $disable = true)
   {
-    $entityManager = $this->getEntityManager();
-    if ($entityOrId instanceof Entities\Project) {
-      $entity = $entityOrId;
-      $entity->setDisabled($disabled);
-      $getEntityManager()->flush();
-    } else {
-      $entityId = $entityOrId;
-      $qb = $entitiyManager->createQueryBuilder()
-                           ->update($this->getEntityName(), self::ALIAS)
-                           ->set(self::ALIAS.'.disabled', true)
-                           ->where(self::ALIAS.'.id = :entityId')
-                           ->setParameter('entityId', $fieldId);
-      $qb->getQuery()->execute();
+    $project = $this->ensureProject($entityOrId);
+    if (!$project->isDeleted()) {
+      // Gedmo soft-delete.
+      $this->getEntityManager()->remove($project);
     }
   }
 

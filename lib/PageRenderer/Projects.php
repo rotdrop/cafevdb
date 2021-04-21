@@ -264,17 +264,13 @@ class Projects extends PMETableViewBase
     ];
 
     if ($this->showDisabled) {
-      $opts['fdd']['disabled'] = [
-        'name'     => $this->l->t('Disabled'),
-        'css'      => ['postfix' => ' project-disabled'],
-        'values2|CAP' => [1 => '' ],
-        'values2|LVFD' => [1 => $this->l->t('true'),
-                           0 => $this->l->t('false')],
-        'default'  => '0',
-        'select'   => 'C',
-        'sort'     => true,
-        'tooltip'  => $this->toolTipsService['participant-fields-disabled']
-      ];
+      // soft-deletion
+      $opts['fdd']['deleted'] = array_merge(
+        $this->defaultFDD['deleted'], [
+          'name' => $this->l->t('Deleted'),
+          //'datemask' => 'd.m.Y H:i:s',
+        ]
+      );
     }
 
     $opts['fdd']['type'] = [
@@ -463,7 +459,9 @@ __EOT__;
     } else {
       $opts['filters']['OR'][] = "\$table.type = 'permanent'";
     }
-    $opts['filters']['AND'][] = '$table.disabled <= '.intval($this->showDisabled);
+    if (!$this->showDisabled) {
+      $opts['filters']['AND'][] = '$table.deleted IS NULL';
+    }
 
     // We could try to use 'before' triggers in order to verify the
     // data. However, at the moment the stuff does not work without JS
@@ -574,28 +572,33 @@ project without a poster first.");
              .$this->pageNavigation->htmlTagsFromArray([
                'pre' => '<optgroup>',
                'post' => '</optgroup>',
-               [ 'type' => 'option',
+               [
+                 'type' => 'option',
                  'title' => $this->toolTipsService['project-action-project-participants'],
                  'value' => 'project-participants',
                  'name' => $this->l->t('Participants') ],
-               [ 'type' => 'option',
+               [
+                 'type' => 'option',
                  'title' => $this->toolTipsService['project-action-project-instrumentation-numbers'],
                  'value' => 'project-instrumentation-numbers',
                  'name' => $this->l->t('Instrumentation Numbers') ],
-               [ 'type' => 'option',
+               [
+                 'type' => 'option',
                  'title' => $this->toolTipsService['project-action-participant-fields'],
                  'value' => 'project-participant-fields',
                  'name' => $this->l->t('Extra Member Data') ], ])
              .$this->pageNavigation->htmlTagsFromArray([
                'pre' => '<optgroup>',
                'post' => '</optgroup>',
-               [ 'type' => 'option',
+               [
+                 'type' => 'option',
                  'title' => $this->toolTipsService['project-action-files'],
                  'value' => 'project-files',
                  'data' => [ 'projectFiles' => $projectPaths['project'] ],
                  'name' => $this->l->t('Project Files')
                ],
-               [ 'type' => 'option',
+               [
+                 'type' => 'option',
                  'title' => $this->toolTipsService['project-action-wiki'],
                  'value' => 'project-wiki',
                  'data' => [
@@ -604,12 +607,14 @@ project without a poster first.");
                  ],
                  'name' => $this->l->t('Project Notes')
                ],
-               [ 'type' => 'option',
+               [
+                 'type' => 'option',
                  'title' => $this->toolTipsService['project-action-events'],
                  'value' => 'events',
                  'name' => $this->l->t('Events')
                ],
-               [ 'type' => 'option',
+               [
+                 'type' => 'option',
                  'title' => $this->toolTipsService['project-action-email'],
                  'value' => 'project-email',
                  'name' => $this->l->t('Em@il')
@@ -617,13 +622,15 @@ project without a poster first.");
             .$this->pageNavigation->htmlTagsFromArray([
               'pre' => '<optgroup>',
               'post' => '</optgroup>',
-              [ 'type' => 'option',
+              [
+                'type' => 'option',
                 'title' => $this->toolTipsService['project-action-debit-mandates'],
                 'value' => 'sepa-bank-accounts',
                 'disabled' => false, // @todo !Config::isTreasurer(),
                 'name' => $this->l->t('Debit Mandates')
               ],
-              [ 'type' => 'option',
+              [
+                'type' => 'option',
                 'title' => $this->toolTipsService['project-action-financial-balance'],
                 'value' => 'profit-and-loss',
                 'data' => [ 'projectFiles' => $projectPaths['balance'] ],

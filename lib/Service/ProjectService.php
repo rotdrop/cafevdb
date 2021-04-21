@@ -225,7 +225,7 @@ class ProjectService
   {
     return $this->repository->findOneBy([
       'name' => $projectName,
-      'disabled' => false,
+      'deleted' => null,
     ]);
   }
 
@@ -1324,7 +1324,7 @@ Whatever.',
       }
 
       if ($softDelete) {
-        $project['disabled'] = true;
+        $this->repository->disable($project);
         $this->persistProject($project);
       } else {
 

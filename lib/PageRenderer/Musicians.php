@@ -460,7 +460,6 @@ make sure that the musicians are also automatically added to the
       ],
     ];
 
-    // @todo unify soft-delete
     if ($this->showDisabled) {
       // soft-deletion
       $opts['fdd']['deleted'] = array_merge(
