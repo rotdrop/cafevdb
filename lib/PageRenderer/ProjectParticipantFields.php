@@ -713,7 +713,6 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
-    $opts['triggers']['update']['before'][]  = [ $this, 'cleanupOptionData' ];
 
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
@@ -952,52 +951,6 @@ class ProjectParticipantFields extends PMETableViewBase
     $this->debug('AFTER CHG '.print_r($changed, true));
 
     $this->changeSetSize = count($changed);
-
-    return true;
-  }
-
-  /**
-   * When switching multiplicities of field-data there may remain
-   * data-options left behind. We cleanup using soft-deletion s.t. the
-   * user may undo the change.
-   *
-   * @todo invent a means to report this back to the user.
-   */
-  public function cleanupOptionData(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
-  {
-    $this->debug('BEFORE OLD '.print_r($oldvals, true));
-    $this->debug('BEFORE NEW '.print_r($newvals, true));
-    $this->debug('BEFORE CHG '.print_r($changed, true));
-
-    if ($oldvals['multiplicity'] != $newvals['multiplicity']
-        && ($newvals['multiplicity'] == Multiplicity::SIMPLE
-         || $newvals['multiplicity'] == Multiplicity::SINGLE)) {
-
-      /** @var Entities\ProjectParticipantField $field */
-      $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($pme->rec);
-
-      if (empty($field)) {
-        throw new \RuntimeException($this->l->t('Unable to find participant field for id "%s"', $pme->rec));
-      }
-
-      /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
-      foreach ($field->getDataOptions() as $dataOption) {
-        if (!$dataOption->isDeleted()) {
-          continue;
-        }
-
-        // loop over all participant data for the option and soft-delete it
-
-        /** @var Entities\ProjectParticipantFieldDatum $datum */
-        foreach ($dataOption->getFieldData() as $datum) {
-          if (!$datum->isDeleted()) {
-            $this->remove($datum); // soft
-          }
-        }
-      }
-
-      $this->flush();
-    }
 
     return true;
   }
