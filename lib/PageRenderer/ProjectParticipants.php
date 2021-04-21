@@ -276,7 +276,7 @@ class ProjectParticipants extends PMETableViewBase
     $opts['filters']['AND'] = [
       '$table.project_id = '.$projectId,
     ];
-    if ($this->showDisabled) {
+    if (!$this->showDisabled) {
       $opts['filters']['AND'][] = '$table.deleted IS NULL';
     }
 
@@ -568,30 +568,13 @@ class ProjectParticipants extends PMETableViewBase
       ]);
 
     if ($this->showDisabled) {
-      // $opts['fdd']['disabled'] = [
-      //   'name'     => $this->l->t('Disabled'),
-      //   'tab'      => [ 'id' => 'tab-all' ], // display on all tabs, or just give -1
-      //   'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
-      //   'input'    => $expertMode ? '' : 'R',
-      //   'select'   => 'C',
-      //   'maxlen'   => 1,
-      //   'sort'     => true,
-      //   'escape'   => false,
-      //   'sql'      => 'IFNULL($main_table.$field_name, 0)',
-      //   'sqlw'     => 'IF($val_qas = "", 0, 1)',
-      //   'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
-      //   'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
-      //   'tooltip'  => $this->toolTipsService['musician-disabled'],
-      //   'css'      => [ 'postfix' => ' musician-disabled' ],
-      // ];
-
       // soft-deletion
       $opts['fdd']['deleted'] = array_merge(
         $this->defaultFDD['deleted'], [
           'name' => $this->l->t('Deleted'),
+          //'datemask' => 'd.m.Y H:i:s',
         ]
       );
-
     }
 
     $l10nInstrumentsTable = $this->makeFieldTranslationsJoin([

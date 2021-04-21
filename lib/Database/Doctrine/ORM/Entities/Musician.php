@@ -36,6 +36,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="Musicians")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository")
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
  */
 class Musician implements \ArrayAccess
 {
@@ -44,6 +48,8 @@ class Musician implements \ArrayAccess
   use CAFEVDB\Traits\UuidTrait;
   use CAFEVDB\Traits\UpdatedAt;
   use CAFEVDB\Traits\CreatedAtEntity;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * @var int
@@ -186,13 +192,6 @@ class Musician implements \ArrayAccess
   private $remarks;
 
   /**
-   * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
-   */
-  private $disabled = false;
-
-  /**
    * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", orphanRemoval=true)
    */
   private $instruments;
@@ -205,7 +204,8 @@ class Musician implements \ArrayAccess
   private $photo;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", indexBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
    */
   private $projectParticipation;
 
@@ -611,30 +611,6 @@ class Musician implements \ArrayAccess
   }
 
   /**
-   * Set disabled.
-   *
-   * @param bool|null $disabled
-   *
-   * @return Musician
-   */
-  public function setDisabled(?bool $disabled):Musician
-  {
-    $this->disabled = $disabled;
-
-    return $this;
-  }
-
-  /**
-   * Get disabled.
-   *
-   * @return bool|null
-   */
-  public function getDisabled():?bool
-  {
-    return $this->disabled;
-  }
-
-  /**
    * Set instruments.
    *
    * @param Collection $instruments
@@ -920,5 +896,15 @@ class Musician implements \ArrayAccess
   public function getUserIdSlug():?string
   {
     return $this->userIdSlug;
+  }
+
+  /**
+   * Return the number of "serious" items which "use" this entity. For
+   * project participant this is (for now) the number of payments. In
+   * the long run: only open payments/receivables should count.
+   */
+  public function usage():int
+  {
+    return $this->payments->count();
   }
 }

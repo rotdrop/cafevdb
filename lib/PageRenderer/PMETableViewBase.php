@@ -561,7 +561,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       // Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity
       'deleted' => [
         'name' => $this->l->t('Date Revoked'),
-        'input' => 'R',
+        'input' => $this->expertMode ? '' : 'R',
         'maxlen' => 10,
         'sort' => true,
         'css' => [ 'postfix' => ' revocation-date date' ],

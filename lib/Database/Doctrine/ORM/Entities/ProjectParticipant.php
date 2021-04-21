@@ -36,8 +36,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="ProjectParticipants")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantsRepository")
- * @Gedmo\Loggable
- * @Gedmo\SoftDeleteable(fieldName="deleted")
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
  */
 class ProjectParticipant implements \ArrayAccess
 {
@@ -45,6 +47,7 @@ class ProjectParticipant implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants", fetch="EXTRA_LAZY")
@@ -336,5 +339,15 @@ class ProjectParticipant implements \ArrayAccess
   public function getSepaBankAccount():?SepaBankAccount
   {
     return $this->sepaBankAccount;
+  }
+
+  /**
+   * Return the number of "serious" items which "use" this entity. For
+   * project participant this is (for now) the number of payments. In
+   * the long run: only open payments/receivables should count.
+   */
+  public function usage():int
+  {
+    return $this->payments->count();
   }
 }

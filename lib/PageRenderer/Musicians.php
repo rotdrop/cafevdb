@@ -242,7 +242,9 @@ make sure that the musicians are also automatically added to the
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
 
-    $opts['filters'] = 'IFNULL($table.disabled,0) <= '.intval($this->showDisabled);
+    if (!$this->showDisabled) {
+      $opts['filters']['AND'][] = '$table.deleted IS NULL';
+    }
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -460,21 +462,13 @@ make sure that the musicians are also automatically added to the
 
     // @todo unify soft-delete
     if ($this->showDisabled) {
-      $opts['fdd']['disabled'] = [
-        'name'     => $this->l->t('Disabled'),
-        'options' => $expertMode ? 'LAVCPDF' : 'LVCPDF',
-        'input'    => $expertMode ? '' : 'R',
-        'select'   => 'C',
-        'maxlen'   => 1,
-        'sort'     => true,
-        'escape'   => false,
-        'sql'      => 'IFNULL($main_table.$field_name, 0)',
-        'sqlw'     => 'IF($val_qas = "", 0, 1)',
-        'values2|CAP' => [ 1 => '' ],
-        'values2|LVFD' => [ $this->l->t('false'), $this->l->t('true') ],
-        'tooltip'  => $this->toolTipsService['musician-disabled'],
-        'css'      => [ 'postfix' => ' musician-disabled' ],
-      ];
+      // soft-deletion
+      $opts['fdd']['deleted'] = array_merge(
+        $this->defaultFDD['deleted'], [
+          'name' => $this->l->t('Deleted'),
+          //'datemask' => 'd.m.Y H:i:s',
+        ]
+      );
     }
 
     $fdd = [
@@ -496,7 +490,7 @@ make sure that the musicians are also automatically added to the
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
-    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => 'IFNULL($table.disabled, 0) = 0' ]);
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
