@@ -89,11 +89,14 @@ class Musicians extends PMETableViewBase
       'column' => 'instrument_id',
     ],
     [
-      // join all bank-accounts for this musician
+      // join all bank-accounts for this musician duplicating lines
+      // for all SEPA-mandates.
       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
       'sql' => 'SELECT
+  CONCAT_WS(\''.self::COMP_KEY_SEP.'\', sba.musician_id, sba.sequence, IFNULL(sdm.sequence, 0)) as sepa_id,
   sba.*,
   sdm.sequence AS debit_mandate_sequence,
+  sdm.mandate_reference AS debit_mandate_reference,
   sdm.deleted AS debit_mandate_deleted
   FROM '.self::SEPA_BANK_ACCOUNTS_TABLE.' sba
   LEFT JOIN '.self::SEPA_DEBIT_MANDATES_TABLE.' sdm
@@ -104,9 +107,9 @@ class Musicians extends PMETableViewBase
       'entity' => Entities\SepaBankAccount::class,
       'identifier' => [
         'musician_id' => 'id',
-        'sequence' => false,
+        'sepa_id' => false,
       ],
-      'column' => 'sequence',
+      'column' => 'sepa_id',
     ],
     [
       'table' => self::SEPA_DEBIT_MANDATES_TABLE,
@@ -696,20 +699,40 @@ make sure that the musicians are also automatically added to the
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_sequence', [
-        'name' => $this->l->t('SEPA Debit Mandate Sequence'),
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_reference', [
+        'name' => $this->l->t('SEPA Debit Mandate Reference'),
         'input' => 'H',
         'tab' => [ 'id' => 'contact' ],
+        'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
+        'filter' => 'having',
+        'sort' => true,
         'select' => 'M',
-        'sql' => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, CONCAT_WS(\':\', $join_table.sequence, $join_col_fqn)) ORDER BY $order_by)',
         'values' => [
           'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
           // description needs to be there in order to trigger drop-down on change
           'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
           'grouped' => true,
-          'orderby' => '$table.sequence ASC',
+          'orderby' => '$table.sepa_id ASC',
         ],
-    ]);
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_deleted', [
+        'name' => $this->l->t('SEPA Debit Mandate Deleted'),
+        'input' => 'H',
+        'tab' => [ 'id' => 'contact' ],
+        'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
+        'filter' => 'having',
+        'sort' => true,
+        'select' => 'M',
+        'values' => [
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+          // description needs to be there in order to trigger drop-down on change
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+          'grouped' => true,
+          'orderby' => '$table.sepa_id ASC',
+        ],
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
@@ -749,7 +772,7 @@ make sure that the musicians are also automatically added to the
             return implode(',', $values);
           },
         ],
-        'sql|ACP' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sequence, $join_col_fqn) ORDER BY $order_by)',
+        'sql|ACP' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
         'filter' => 'having',
         'display|LFDV' => ['popup' => 'data'],
         'sort' => true,
@@ -759,17 +782,17 @@ make sure that the musicians are also automatically added to the
           // description needs to be there in order to trigger drop-down on change
           'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
           'grouped' => true,
-          'orderby' => '$table.sequence ASC',
+          'orderby' => '$table.sepa_id ASC',
         ],
         'values2glue' => '<br/>',
         'css' => [ 'postfix' => ' hide-subsequent-lines' ],
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'sequence', [
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'sepa_id', [
         'name' => $this->l->t('SEPA Bank Accounts'),
-        'input' => 'S',
-        'input|LFDV' => 'H',
+        'input' => 'VS',
+        'input|LFDV' => 'VH',
         'select' => 'D',
         'css' => [ 'postfix' => ' sepa-bank-accounts' ],
         'values' => [
@@ -783,13 +806,16 @@ make sure that the musicians are also automatically added to the
           $valInfo = $pme->set_values($k-1);
           $this->logInfo('VALINFO '.print_r($valInfo, true));
 
-          $sequences = Util::explode(',', $value);
+          // more efficient would perhaps be JSON
+          $sepaIds = Util::explode(',', $value);
           $ibans = Util::explodeIndexed($row['qf'.($k-1)]);
+          $deleted = Util::explodeIndexed($row['qf'.($k-2)]);
+          $references = Util::explodeIndexed($row['qf'.($k-3)]);
           $html = '<table class="row-count-'.count($ibans).'">
   <tbody>';
-          foreach ($ibans as $sequence => $iban) {
+          foreach ($ibans as $sepaId => $iban) {
             $html .= '
-    <tr class="bank-account-data" data-sequence="'.$sequence.'">
+    <tr class="bank-account-data" data-sepa-id="'.$sepaId.'">
       <td class="operations">
         <input
           class="operation delete-undelete"

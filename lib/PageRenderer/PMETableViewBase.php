@@ -74,6 +74,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const VALUES_SEP = ',';
   const JOIN_FIELD_NAME_SEPARATOR = ':';
   const JOIN_KEY_SEP = ':';
+  const COMP_KEY_SEP = '-';
   const VALUES_TABLE_SEP = '@';
   const COL_QUOTE = '`';
 
