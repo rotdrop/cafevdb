@@ -695,7 +695,7 @@ make sure that the musicians are also automatically added to the
         'name' => $this->l->t('SEPA Debit Mandate Reference'),
         'input' => 'H',
         'tab' => [ 'id' => 'contact' ],
-        'sql|ACP' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sequence, $join_col_fqn) ORDER BY $order_by)',
+        'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sequence, $join_col_fqn) ORDER BY $order_by)',
         'values' => [
           'table' => self::SEPA_DEBIT_MANDATES_TABLE,
           // description needs to be there in order to trigger drop-down on change
