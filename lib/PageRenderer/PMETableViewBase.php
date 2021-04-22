@@ -75,6 +75,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const JOIN_FIELD_NAME_SEPARATOR = ':';
   const JOIN_KEY_SEP = ':';
   const VALUES_TABLE_SEP = '@';
+  const COL_QUOTE = '`';
 
   /** @var RequestParameterService */
   protected $requestParameters;
@@ -1395,16 +1396,16 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $groupOrderBy[] = $joinTables[$table].'.'.$joinInfo['column'].' ASC';
           continue;
         }
-        $joinCondition = '$join_table.'.$joinTableKey.' ';
+        $joinCondition = '$join_table.'.self::COL_QUOTE.$joinTableKey.self::COL_QUOTE.' ';
         if (is_array($joinTableValue)) {
           if (!empty($joinTableValue['table'])) {
             $mainTableColumn = $joinTableValue['column']?: 'id';
-            $joinCondition .= '= '.$joinTables[$joinTableValue['table']].'.'.$mainTableColumn;
+            $joinCondition .= '= '.$joinTables[$joinTableValue['table']].'.'.self::COL_QUOTE.$mainTableColumn.self::COL_QUOTE;
             $group = $grouped[$joinTableValue['table']];
             $groupOrderBy = array_merge($groupOrderBy, $orderBy[$joinTableValue['table']]);
           } else if (array_key_exists('value', $joinTableValue)
                      && $joinTableValue['value'] === null) {
-            $joinCondition = '$join_table.'.$joinTableKey.' IS NULL';
+            $joinCondition = '$join_table.'.self::COL_QUOTE.$joinTableKey.self::COL_QUOTE.' IS NULL';
           } else if (!empty($joinTableValue['value'])) {
             $value = $joinTableValue['value'];
             if (is_string($value)) {
