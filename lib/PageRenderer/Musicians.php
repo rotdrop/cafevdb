@@ -93,7 +93,7 @@ class Musicians extends PMETableViewBase
       // for all SEPA-mandates.
       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
       'sql' => 'SELECT
-  CONCAT_WS(\''.self::COMP_KEY_SEP.'\', sba.musician_id, sba.sequence, IFNULL(sdm.sequence, 0)) as sepa_id,
+  JSON_OBJECT("musician_id", sba.musician_id, "account_sequence", sba.sequence, "mandate_sequence", sdm.sequence) AS sepa_id,
   sba.*,
   sdm.sequence AS debit_mandate_sequence,
   sdm.mandate_reference AS debit_mandate_reference,
