@@ -2817,7 +2817,7 @@ class phpMyEdit
 		if ($this->password($k)) {
 			return $this->labels['hidden'];
 		}
-		$escape	 = isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
+		$escape	 = !empty($this->fdd[$k]['escape']) && !$this->col_has_URL($k);
 		if (empty($css)) {
 			$css_postfix = @$this->fdd[$k]['css']['postfix'];
 			$css = $this->getCSSclass('cell', null, true, $css_postfix);
