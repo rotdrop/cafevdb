@@ -395,7 +395,10 @@ make sure that the musicians are also automatically added to the
   '.$checked.'
   type="checkbox"
   class="pme-input pme-input-lock-empty"/>
-<label class="pme-input pme-input-lock-empty" for="pme-musician-nickname"></label>';
+<label
+   class="pme-input pme-input-lock-empty"
+   title="'.$this->toolTipsService['pme-input-lock-empty'].'"
+   for="pme-musician-nickname"></label>';
         },
       ],
     ];
@@ -433,7 +436,10 @@ make sure that the musicians are also automatically added to the
   type="checkbox"
   '.$checked.'
   class="pme-input pme-input-lock-empty"
-/><label class="pme-input pme-input-lock-empty" for="pme-musician-displayname"></label>';
+/><label
+    class="pme-input pme-input-lock-empty"
+    title="'.$this->toolTipsService['pme-input-lock-empty'].'"
+    for="pme-musician-displayname"></label>';
         },
       ],
     ];
@@ -464,7 +470,10 @@ make sure that the musicians are also automatically added to the
   type="checkbox"
   '.$checked.'
   class="pme-input pme-input-lock-unlock"
-/><label class="pme-input pme-input-lock-unlock" for="pme-musician-user-id-slug"></label>';
+/><label
+    class="pme-input pme-input-lock-unlock"
+    title="'.$this->toolTipsService['pme-input-lock-unlock'].'"
+    for="pme-musician-user-id-slug"></label>';
         },
       ],
     ];

@@ -688,6 +688,10 @@ It is also possible to match empty fields, in particular:
 Suchkriterien zu verstecken.'),
       ),
 
+      'pme-input-lock-empty' => $this->l->t('Click to unlock if the field is empty, click again to clear the field if the field contains data.'),
+
+      'pme-input-lock-unlock' => $this->l->t('Click to lock and unlock this input field.'),
+
       'pme-instrumentation-actions' => $this->l->t('Some usefull convenience actions (click me for details!)'),
 
       'pme-lock-unlock' => $this->l->t('Lock and unlock the underlying input-field.'),
