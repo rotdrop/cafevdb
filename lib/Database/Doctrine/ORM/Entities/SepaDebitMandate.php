@@ -60,6 +60,20 @@ class SepaDebitMandate
   private $sequence = 1;
 
   /**
+   * @var SepaBankAccount
+   *
+   * Debit-mandates can expire, so many debit-mandates may refer the
+   * same bank-account.
+   *
+   * @ORM\ManyToOne(targetEntity="SepaBankAccount", inversedBy="sepaDebitMandates")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
+   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=false)
+   * )
+   */
+  private $sepaBankAccount;
+
+  /**
    * Optional project this mandate is tied to. If null then the
    * mandate does not belong to a specific project but may be used for
    * all receivables.
@@ -105,20 +119,6 @@ class SepaDebitMandate
    * @ORM\OneToOne(targetEntity="EncryptedFile")
    */
   private $writtenMandate;
-
-  /**
-   * @var SepaBankAccount
-   *
-   * Debit-mandates can expire, so many debit-mandates may refer the
-   * same bank-account.
-   *
-   * @ORM\ManyToOne(targetEntity="SepaBankAccount", inversedBy="sepaDebitMandates")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=false)
-   * )
-   */
-  private $sepaBankAccount;
 
   /**
    * @var ProjectPayment
