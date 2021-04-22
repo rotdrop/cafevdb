@@ -678,7 +678,6 @@ make sure that the musicians are also automatically added to the
             return implode(',', $values);
           },
           'decrypt' => function($value) {
-            // value may be "multi" valued, comma-separated
             $values = Util::explode(',', $value);
             foreach ($values as &$value) {
               $value = $this->decrypt($value);
@@ -686,7 +685,23 @@ make sure that the musicians are also automatically added to the
             return implode(',', $values);
           },
         ],
-        //'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
+        'encryption|ACP' => [
+          'encrypt' => function($value) {
+            $values = Util::explodeIndexed($value);
+            foreach ($values as $key => $value) {
+              $values[$key] = $key.self::JOIN_KEY_SEP.$this->encrypt($value);
+            }
+            return implode(',', $values);
+          },
+          'decrypt' => function($value) {
+            $values = Util::explodeIndexed($value);
+            foreach ($values as $key => $value) {
+              $values[$key] = $key.self::JOIN_KEY_SEP.$this->decrypt($value);
+            }
+            return implode(',', $values);
+          },
+        ],
+        'sql|ACP' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sequence, $join_col_fqn) ORDER BY $order_by)',
         'filter' => 'having',
         'display|LFDV' => ['popup' => 'data'],
         'sort' => true,
@@ -696,7 +711,7 @@ make sure that the musicians are also automatically added to the
           // description needs to be there in order to trigger drop-down on change
           'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
           'grouped' => true,
-          //'orderby' => PHPMyEdit::TRIVIAL_DESCRIPION.' ASC',
+          'orderby' => '$table.sequence ASC',
         ],
         'values2glue' => '<br/>',
         'css' => [ 'postfix' => ' hide-subsequent-lines' ],
@@ -708,6 +723,7 @@ make sure that the musicians are also automatically added to the
         'input' => 'S',
         'input|LFDV' => 'H',
         'select' => 'D',
+        'css' => [ 'postfix' => ' sepa-bank-accounts' ],
         'values' => [
           'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
           // description needs to be there in order to trigger drop-down on change
@@ -718,7 +734,64 @@ make sure that the musicians are also automatically added to the
           $this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
           $valInfo = $pme->set_values($k-1);
           $this->logInfo('VALINFO '.print_r($valInfo, true));
-          return 'blah';
+
+          $sequences = Util::explode(',', $value);
+          $ibans = Util::explodeIndexed($row['qf'.($k-1)]);
+          $html = '<table class="row-count-'.count($ibans).'">
+  <tbody>';
+          foreach ($ibans as $sequence => $iban) {
+            $html .= '
+    <tr class="bank-account-data" data-sequence="'.$sequence.'">
+      <td class="operations">
+        <input
+          class="operation delete-undelete"
+          title="'.$this->toolTipsService['sepa-bank-account:delete-undelete'].'"
+          type="button"/>
+        <input
+          class="operation info"
+          title="'.$this->toolTipsService['sepa-bank-account:info'].'"
+          type="button"/>
+      </td>
+      <td class="iban">
+        <input
+          class="bank-account-data"
+          type="text"
+          value="'.$iban.'"
+          readonly
+        />
+      </td>
+    </tr>';
+          }
+          $html .= '
+    <tr class="placeholder">
+      <td colspan="2" class="operation">
+        <input
+          class="operation add"
+          title="'.$this->toolTipsService['sepa-bank-account:add'].'"
+          type="button"
+          value="'.$this->l->t('Add a new bank account').'"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="display-options">
+  <div class="show-deleted">
+    <input type="checkbox"
+           name="show-deleted"
+           class="show-deleted checkbox"
+           value="show"
+           id="sepa-bank-accounts-show-deleted"
+           />
+    <label class="show-deleted"
+           for="sepa-bank-accounts-show-deleted"
+           title="'.$this->toolTipsService['sepa-bank-acocunt:show-deleted'].'"
+           >
+    '.$this->l->t('Show deleted.').'
+    </label>
+  </div>
+</div>';
+          return $html;
         },
       ]);
 

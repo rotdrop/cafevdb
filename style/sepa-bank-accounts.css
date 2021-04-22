@@ -1,0 +1,91 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+table.pme-main td.pme-value.sepa-bank-accounts table {
+  width:100%;
+}
+
+table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data td.iban,
+table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data td.iban input {
+  width:100%;
+}
+
+table.pme-main td.pme-value.sepa-bank-accounts td.operations input.operation {
+  background-repeat:no-repeat;
+  background-size: 24px 24px;
+  background-position: center;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  margin-right:1em;
+}
+
+table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data input.info {
+  background-image:url('../../../core/img/actions/info.svg');
+}
+
+table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data input.delete-undelete {
+  background-image:url('../img/cafevdb-delete.svg');
+}
+
+table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data.deleted input.delete-undelete {
+  background-image:url('../img/history.svg');
+}
+
+table.pme-main td.pme-value.sepa-bank-accounts .operation.add {
+  width:calc(100% - 10em); /* leave room for show-deleted check */
+  background-image:url('../../../core/img/actions/add.svg');
+  background-origin:content-box;
+  background-repeat:no-repeat;
+  background-position-x:-31px;
+  background-size: 24px 24px;
+  clear:unset;
+  padding-left:34px;
+}
+
+form.pme-form.pme-copyadd .show-deleted {
+  display:none;
+}
+
+tr.sepa-bank-accounts.deleted {
+  display:none;
+}
+
+table.sepa-bank-accounts.show-deleted tr.sepa-bank-accounts.deleted {
+  display:table-row;
+}
+
+table.pme-main td.pme-value.sepa-bank-accounts {
+  position:relative;
+}
+
+table.pme-main td.pme-value.sepa-bank-accounts div.display-options {
+  position:absolute;
+  bottom:0px;
+  right:0px;
+}
+
+/*
+ * Local Variables: ***
+ * mode: web ***
+ * End: ***
+ */
