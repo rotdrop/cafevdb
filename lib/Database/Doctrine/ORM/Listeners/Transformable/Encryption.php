@@ -32,6 +32,9 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   /** @var string */
   private $encryptionKey;
 
+  /** @var string */
+  private $decryptionKey;
+
   /** @var EncryptionService */
   private $encryptionService;
 
@@ -39,6 +42,27 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   {
     $this->encryptionService = $encryptionService;
     $this->encryptionKey = $this->encryptionService->getAppEncryptionKey();
+    $this->decryptionKey = $this->encryptionKey;
+  }
+
+  /**
+   * @param string encryptionKey The new encryption-key
+   */
+  public function setEncryptionKey(string $encryptionKey)
+  {
+    $oldKey = $this->encryptionKey;
+    $this->encryptionKey = $encryptionKey;
+    return $oldKey;
+  }
+
+  /**
+   * @param string encryptionKey The new decryption-key
+   */
+  public function setDecryptionKey(string $decryptionKey)
+  {
+    $oldKey = $this->decryptionKey;
+    $this->decryptionKey = $decryptionKey;
+    return $oldKey;
   }
 
   /**
@@ -58,6 +82,6 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    */
   public function reverseTransform($value)
   {
-    return $this->encryptionService->decrypt($value, $this->encryptionKey);
+    return $this->encryptionService->decrypt($value, $this->decryptionKey);
   }
 };

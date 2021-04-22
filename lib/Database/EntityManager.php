@@ -28,6 +28,7 @@ use OCP\ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 
+use Doctrine\Common\Annotations\Reader as AnnotationReader;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\DBAL\Connection as DatabaseConnection;
@@ -86,6 +87,20 @@ class EntityManager extends EntityManagerDecorator
   /** @var array Cache of entity names indexed by table names. */
   private $entityNames = null;
 
+  /** @var array Cache of entity names indexed by class annotation */
+  private $annotationEntites = [];
+
+  /**
+   * @var array Cache of property names indexed by class annotation.
+   * ```
+   * [
+   *   'entity' => CLASSNAME,
+   *   'properties' => [ PROP1, PROP2, ... ],
+   * ]
+   * ```
+   */
+  private $annotationProperties = [];
+
   /** @var string */
   private $userId;
 
@@ -110,7 +125,12 @@ class EntityManager extends EntityManagerDecorator
   /** @var bool */
   private $decorateClassMetadata = true;
 
-  // @@todo catch failures, allow construction without database for
+  /** @var AnnotationReader */
+  private $annotationReader;
+
+  /** @var Transformable\Transformer\TransformerPool */
+  private $transformerPool;
+
   // initial setup.
   public function __construct(
     EncryptionService $encryptionService
@@ -137,6 +157,8 @@ class EntityManager extends EntityManagerDecorator
     $this->entityManager = $this->wrapped;
     if ($this->connected()) {
       $this->registerTypes();
+
+      $this->logInfo('ENCRYPTED '.print_r($this->propertiesByAnnotation(\MediaMonks\Doctrine\Mapping\Annotation\Transformable::class), true));
     }
     $this->decorateClassMetadata = true;
   }
@@ -304,8 +326,9 @@ class EntityManager extends EntityManagerDecorator
   private function getEntityManager($params = null)
   {
     list($config, $eventManager) = $this->createSimpleConfiguration();
-    //list($config, $eventManager) = $this->createKnpConfiguration($config, $eventManager);
-    list($config, $eventManager) = $this->createGedmoConfiguration($config, $eventManager);
+    list($config, $eventManager, $annotationReader) = $this->createGedmoConfiguration($config, $eventManager);
+
+    $this->annotationReader = $annotationReader;
 
     // mysql set names UTF-8 if required
     $eventManager->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
@@ -354,20 +377,6 @@ class EntityManager extends EntityManagerDecorator
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
     return [ $config, new \Doctrine\Common\EventManager(), ];
-  }
-
-  private function createKnpConfiguration($config, $evm)
-  {
-    //$loggable = new \Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber($this->psrLogger);
-    //$evm->addEventSubscriber($loggable);
-
-    $timeStampable = new \Knp\DoctrineBehaviors\EventSubscriber\TimestampableSubscriber('datetime');
-    $evm->addEventSubscriber($timeStampable);
-
-    $softDeletable = new \Knp\DoctrineBehaviors\EventSubscriber\SoftDeletableSubscriber;
-    $evm->addEventSubscriber($softDeletable);
-
-    return [ $config, $evm, ];
   }
 
   private function createGedmoConfiguration($config, $evm)
@@ -463,6 +472,7 @@ class EntityManager extends EntityManagerDecorator
       'algorithm' => 'sha256',
       'binary' => false,
     ]);
+    $this->transformerPol = $transformerPool;
     $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
     $transformableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($transformableListener);
@@ -496,7 +506,7 @@ class EntityManager extends EntityManagerDecorator
     $foreignKeyListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($foreignKeyListener);
 
-    return [ $config, $evm ];
+    return [ $config, $evm, $annotationReader ];
   }
 
   /**
@@ -665,6 +675,54 @@ class EntityManager extends EntityManagerDecorator
       $this->createTableLookup();
     }
     return $this->entityNames[$table]?:null;
+  }
+
+  /**
+   * Return a list of entities tagged by the given annotation.
+   */
+  public function entitiesByAnnotation(string $annotationClass)
+  {
+    if (is_array($this->annotationsEntites[$annotationClass])) {
+      return $this->annotationsEntites[$annotationClass];
+    }
+    $this->annotationEntites[$annotationClass] = [];
+    $classNames = $this->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
+    foreach ($classNames as $className) {
+      //$classMetaData = $this->getClassMetadata($className);
+      if (!empty($this->annotationReader->getClassAnnotation($className, $annotationClass))) {
+        $this->annotationEntities[$annotationClass][] = $className;
+      }
+    }
+    return $this->annotationEntites[$annotationClass];
+  }
+
+  /**
+   * Return a list of properties tagged by the given annotation.
+   */
+  public function propertiesByAnnotation(string $annotationClass)
+  {
+    if (is_array($this->annotationsProperties[$annotationClass])) {
+      return $this->annotationsProperties[$annotationClass];
+    }
+    $this->annotationProperties[$annotationClass] = [];
+    $classNames = $this->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
+    foreach ($classNames as $className) {
+      $classMetaData = $this->getClassMetadata($className);
+      $reflClass = $classMetaData->getReflectionClass();
+      $properties = [];
+      foreach ($reflClass->getProperties() as $property) {
+        if (!empty($this->annotationReader->getPropertyAnnotation($property, $annotationClass))) {
+          $properties[] = $property->getName();
+        }
+      }
+      if (!empty($properties)) {
+        $this->annotationProperties[$annotationClass][] = [
+          'entity' => $className,
+          'properties' => $properties,
+        ];
+      }
+    }
+    return $this->annotationProperties[$annotationClass];
   }
 
 }
