@@ -91,6 +91,16 @@ class Musicians extends PMETableViewBase
     [
       // join all bank-accounts for this musician
       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+      'sql' => 'SELECT
+  sba.*,
+  sdm.sequence AS debit_mandate_sequence,
+  sdm.deleted AS debit_mandate_deleted
+  FROM '.self::SEPA_BANK_ACCOUNTS_TABLE.' sba
+  LEFT JOIN '.self::SEPA_DEBIT_MANDATES_TABLE.' sdm
+    ON (sba.musician_id = sdm.musician_id
+        AND sba.sequence = sdm.bank_account_sequence
+        AND sdm.project_id IS NULL)
+  GROUP BY sba.musician_id, sba.sequence, sdm.sequence',
       'entity' => Entities\SepaBankAccount::class,
       'identifier' => [
         'musician_id' => 'id',
@@ -99,18 +109,13 @@ class Musicians extends PMETableViewBase
       'column' => 'sequence',
     ],
     [
-      // join all general debit-mandates
       'table' => self::SEPA_DEBIT_MANDATES_TABLE,
       'entity' => Entities\SepaDebitMandate::class,
       'identifier' => [
         'musician_id' => 'id',
-        'project_id' => [
-          'value' => null,
-        ],
-        'sequence' => false,
-        'bank_account_sequence' => [
+        'sequence' => [
           'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
-          'column' => 'sequence',
+          'column' => 'debit_mandate_sequence',
         ],
       ],
       'column' => 'sequence',
@@ -691,33 +696,20 @@ make sure that the musicians are also automatically added to the
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference', [
-        'name' => $this->l->t('SEPA Debit Mandate Reference'),
-        'input' => 'H',
-        'tab' => [ 'id' => 'contact' ],
-        'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sequence, $join_col_fqn) ORDER BY $order_by)',
-        'values' => [
-          'table' => self::SEPA_DEBIT_MANDATES_TABLE,
-          // description needs to be there in order to trigger drop-down on change
-          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
-          'grouped' => true,
-          'orderby' => '$table.sequence ASC',
-        ],
-      ]);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'sequence', [
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_sequence', [
         'name' => $this->l->t('SEPA Debit Mandate Sequence'),
         'input' => 'H',
         'tab' => [ 'id' => 'contact' ],
+        'select' => 'M',
+        'sql' => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, CONCAT_WS(\':\', $join_table.sequence, $join_col_fqn)) ORDER BY $order_by)',
         'values' => [
-          'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
           // description needs to be there in order to trigger drop-down on change
           'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
           'grouped' => true,
           'orderby' => '$table.sequence ASC',
         ],
-      ]);
+    ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
