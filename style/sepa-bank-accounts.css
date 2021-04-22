@@ -52,7 +52,7 @@ table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data.deleted inpu
 }
 
 table.pme-main td.pme-value.sepa-bank-accounts .operation.add {
-  width:calc(100% - 10em); /* leave room for show-deleted check */
+  width:calc(100% - 16em); /* leave room for show-deleted check */
   background-image:url('../../../core/img/actions/add.svg');
   background-origin:content-box;
   background-repeat:no-repeat;
