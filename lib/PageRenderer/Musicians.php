@@ -89,11 +89,29 @@ class Musicians extends PMETableViewBase
       'column' => 'instrument_id',
     ],
     [
+      // join all bank-accounts for this musician
       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
       'entity' => Entities\SepaBankAccount::class,
       'identifier' => [
         'musician_id' => 'id',
         'sequence' => false,
+      ],
+      'column' => 'sequence',
+    ],
+    [
+      // join all general debit-mandates
+      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+      'entity' => Entities\SepaDebitMandate::class,
+      'identifier' => [
+        'musician_id' => 'id',
+        'project_id' => [
+          'value' => null,
+        ],
+        'sequence' => false,
+        'bank_account_sequence' => [
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+          'column' => 'sequence',
+        ],
       ],
       'column' => 'sequence',
     ],
@@ -673,6 +691,35 @@ make sure that the musicians are also automatically added to the
     ];
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference', [
+        'name' => $this->l->t('SEPA Debit Mandate Reference'),
+        'input' => 'H',
+        'tab' => [ 'id' => 'contact' ],
+        'sql|ACP' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sequence, $join_col_fqn) ORDER BY $order_by)',
+        'values' => [
+          'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+          // description needs to be there in order to trigger drop-down on change
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+          'grouped' => true,
+          'orderby' => '$table.sequence ASC',
+        ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'sequence', [
+        'name' => $this->l->t('SEPA Debit Mandate Sequence'),
+        'input' => 'H',
+        'tab' => [ 'id' => 'contact' ],
+        'values' => [
+          'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+          // description needs to be there in order to trigger drop-down on change
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+          'grouped' => true,
+          'orderby' => '$table.sequence ASC',
+        ],
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
         'name' => $this->l->t('SEPA Bank Accounts'),
         'input' => 'S',
@@ -764,6 +811,7 @@ make sure that the musicians are also automatically added to the
       <td class="iban">
         <input
           class="bank-account-data"
+          title="'.$this->toolTipsService['sepa-bank-account:info'].'"
           type="text"
           value="'.$iban.'"
           readonly
