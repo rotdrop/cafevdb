@@ -925,6 +925,13 @@ recipients. Please think thrice about it. In case of an error
 additional diagnostic messages may (or may not ...) be available in
 the `Debug\' tab'),
 
+      'sepa-bank-account' => [
+        'delete-undelete' => $this->l->t('Delete the given account. If the account has been used for payments then the bank-account will just be marked disabled, but not removed from the data-base.'),
+        'info' => $this->l->t('Add a new dialog with detailed information about the bank-account.'),
+        'add' => $this->l->t('Add a new dialog for defining a new bank-account.'),
+        'show-deleted' => $this->l->t('Show also the disabled bank accounts, if any.'),
+      ],
+
       'sepa-debit-mandate-active' => $this->l->t('Used SEPA mandates are not deleted from the DB, but just flagged as
 "inactive" if they expire or are manually pseudo-deleted.'),
 
