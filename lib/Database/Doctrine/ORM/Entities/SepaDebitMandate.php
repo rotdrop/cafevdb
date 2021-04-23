@@ -75,13 +75,19 @@ class SepaDebitMandate
   private $sepaBankAccount;
 
   /**
-   * Optional project this mandate is tied to. If null then the
-   * mandate does not belong to a specific project but may be used for
-   * all receivables.
+   * All debit-mandates are tied to a specific project. The convention
+   * is that debit-mandates tied to the member's project are permanent
+   * and can be used for all other projects as well. We do not make
+   * this field an id as the sequence-id is a running index per
+   * musician and joins are more difficult to define.
+   *
+   * The ProjectPayment entity, e.g., has to reference either a
+   * mandate for its own project or a mandate from the member's
+   * project.
    *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=true)
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
    * )
    */
   private $project = null;
