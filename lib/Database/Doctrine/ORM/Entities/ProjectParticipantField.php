@@ -51,6 +51,7 @@ class ProjectParticipantField implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * @var int
@@ -424,11 +425,7 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function setDueDate($dueDate):ProjectParticipantField
   {
-    if (is_string($dueDate)) {
-      $this->dueDate = new \DateTimeImmutable($dueDate);
-    } else {
-      $this->dueDate = \DateTimeImmutable::createFromInterface($dueDate);
-    }
+    $this->dueDate = self::convertToDateTime($dueDate);
     return $this;
   }
 

@@ -27,6 +27,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait SoftDeleteableEntity
 {
+  use DateTimeTrait;
+
   /**
    * @ORM\Column(type="datetime_immutable", nullable=true)
    *
@@ -43,24 +45,7 @@ trait SoftDeleteableEntity
    */
   public function setDeleted($deleted = null)
   {
-    if ($deleted === null) {
-      $this->deleted = null;
-    } else if (!($deleted instanceof \DateTimeInterface)) {
-      $timeStamp = filter_var($deleted, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
-      if ($timeStamp !== false) {
-        $this->deleted = (new \DateTimeImmutable())->setTimestamp($timeStamp);
-      } else if (is_string($deleted)) {
-        $this->deleted = new \DateTimeImmutable($deleted);
-      } else {
-        throw new \InvalidArgumentException('Cannot convert input to DateTime');
-      }
-    } else if ($deleted instanceof \DateTime) {
-      $this->deleted = \DateTimeImmutable::createFromMutable($deleted);
-    } else if ($update instanceof \DateTimeImmutable) {
-      $this->deleted = $deleted;
-    } else {
-      throw new \InvalidArgumentException('Unsupported date-time class.');
-    }
+    $this->deleted = self::convertToDateTime($deleted);
     return $this;
   }
 

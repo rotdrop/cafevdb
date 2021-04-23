@@ -20,48 +20,38 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * Based on, with "At" removed from the names, i.e. updatedAt replaced
- * by updated etc.
- *
- * Timestampable Trait, usable with PHP >= 5.4
- *
- * @author Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
- */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
-use Gedmo\Mapping\Annotation as Gedmo;
 
-trait CreatedAt
+trait DateTimeTrait
 {
-  use DateTimeTrait;
-
   /**
-   * @var \DateTimeImmutable
-   */
-  private $created;
-
-  /**
-   * Sets created.
+   * Set
    *
-   * @param string|int|\DateTimeInterface $created
+   * @param string|int|\DateTimeInterface $dateTime
    *
-   * @return self
+   * @return null|\DateTimeImmutable
    */
-  public function setCreated($created)
+  static protected function convertToDateTime($dateTime)
   {
-    $this->created = self::convertToDateTime($created);
-    return $this;
-  }
-
-  /**
-   * Returns created.
-   *
-   * @return \DateTimeImmutable
-   */
-  public function getCreated()
-  {
-    return $this->created;
+    if ($dateTime === null) {
+      return null;
+    } else if (!($dateTime instanceof \DateTimeInterface)) {
+      $timeStamp = filter_var($dateTime, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
+      if ($timeStamp !== false) {
+        return (new \DateTimeImmutable())->setTimestamp($timeStamp);
+      } else if (is_string($dateTime)) {
+        return new \DateTimeImmutable($dateTime);
+      } else {
+        throw new \InvalidArgumentException('Cannot convert input to DateTime.x');
+      }
+    } else if ($dateTime instanceof \DateTime) {
+      return \DateTimeImmutable::createFromMutable($dateTime);
+    } else if ($dateTime instanceof \DateTimeImmutable) {
+      return $dateTime;
+    } else {
+      throw new \InvalidArgumentException('Unsupported date-time class: '.get_class($dateTime));
+    }
+    return null; // not reached
   }
 }

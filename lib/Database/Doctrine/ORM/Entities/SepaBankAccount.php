@@ -49,6 +49,7 @@ class SepaBankAccount implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaBankAccounts", fetch="EXTRA_LAZY")
@@ -142,11 +143,7 @@ class SepaBankAccount implements \ArrayAccess
    */
   public function setLastUsedDate($lastUsedDate = null):SepaDebitMandate
   {
-    if (is_string($lastUsedDate)) {
-      $this->lastUsedDate = new \DateTimeImmutable($lastUsedDate);
-    } else {
-      $this->lastUsedDate = \DateTimeImmutable::createFromInterface($lastUsedDate);
-    }
+    $this->lastUsedDate = self::convertToDateTime($lastUsedDate);
     return $this;
   }
 

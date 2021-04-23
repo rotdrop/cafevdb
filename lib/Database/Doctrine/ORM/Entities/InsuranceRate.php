@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -38,6 +39,7 @@ class InsuranceRate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="insuranceRates", cascade={"persist", "merge"}, fetch="EXTRA_LAZY")
@@ -161,12 +163,7 @@ class InsuranceRate implements \ArrayAccess
    */
   public function setDueDate($dueDate):InsuranceRate
   {
-    if (is_string($dueDate)) {
-      $this->dueDate = new \DateTimeImmutable($dueDate);
-    } else {
-      $this->dueDate = \DateTimeImmutable::createFromInterface($dueDate);
-    }
-
+    $this->dueDate = self::convertToDateTime($dueDate);
     return $this;
   }
 

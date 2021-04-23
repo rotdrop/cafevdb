@@ -35,6 +35,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 trait UpdatedAt
 {
+  use DateTimeTrait;
+
   /**
    * @var \DateTimeImmutable
    */
@@ -49,24 +51,7 @@ trait UpdatedAt
    */
   public function setUpdated($updated)
   {
-    if ($updated === null) {
-      $this->updated = null;
-    } else if (!($updated instanceof \DateTimeInterface)) {
-      $timeStamp = filter_var($updated, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
-      if ($timeStamp !== false) {
-        $this->updated = (new \DateTimeImmutable())->setTimestamp($timeStamp);
-      } else if (is_string($updated)) {
-        $this->updated = new \DateTimeImmutable($updated);
-      } else {
-        throw new \InvalidArgumentException('Cannot convert input to DateTime.x');
-      }
-    } else if ($updated instanceof \DateTime) {
-      $this->updated = \DateTimeImmutable::createFromMutable($updated);
-    } else if ($update instanceof \DateTimeImmutable) {
-      $this->updated = $updated;
-    } else {
-      throw new \InvalidArgumentException('Unsupported date-time class.');
-    }
+    $this->updated = self::convertToDateTime($updated);
     return $this;
   }
 

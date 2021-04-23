@@ -41,6 +41,7 @@ class SepaDebitMandate
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
 
@@ -137,6 +138,78 @@ class SepaDebitMandate
   }
 
   /**
+   * Set sequence
+   *
+   * @param int
+   *
+   * @return SepaDebitMandate
+   */
+  public function setSequence($sequence):SepaDebitMandate
+  {
+    $this->sequence = $sequence;
+
+    return $this;
+  }
+
+  /**
+   * Get sequence.
+   *
+   * @return int
+   */
+  public function getSequence()
+  {
+    return $this->sequence;
+  }
+
+  /**
+   * Set musician.
+   *
+   * @param Musician $musician
+   *
+   * @return SepaDebitMandate
+   */
+  public function setMusician($musician):SepaDebitMandate
+  {
+    $this->musician = $musician;
+
+    return $this;
+  }
+
+  /**
+   * Get musician.
+   *
+   * @return Musician
+   */
+  public function getMusician()
+  {
+    return $this->musician;
+  }
+
+  /**
+   * Set sepaBankAccount.
+   *
+   * @param SepaBankAccount $sepaBankAccount
+   *
+   * @return SepaDebitMandate
+   */
+  public function setSepaBankAccount($sepaBankAccount):SepaDebitMandate
+  {
+    $this->sepaBankAccount = $sepaBankAccount;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaBankAccount.
+   *
+   * @return SepaBankAccount
+   */
+  public function getSepaBankAccount()
+  {
+    return $this->sepaBankAccount;
+  }
+
+  /**
    * Set mandateReference.
    *
    * @param string $mandateReference
@@ -185,20 +258,6 @@ class SepaDebitMandate
   }
 
   /**
-   * Set nonRecurring.
-   *
-   * @param bool $nonRecurring
-   *
-   * @return SepaDebitMandate
-   */
-  public function setNonRecurring($nonRecurring):SepaDebitMandate
-  {
-    $this->nonRecurring = $nonRecurring;
-
-    return $this;
-  }
-
-  /**
    * Set mandateDate.
    *
    * @param string|\DateTimeInterface $mandateDate
@@ -207,11 +266,7 @@ class SepaDebitMandate
    */
   public function setMandateDate($mandateDate):SepaDebitMandate
   {
-    if (is_string($mandateDate)) {
-      $this->mandateDate = new \DateTimeImmutable($mandateDate);
-    } else {
-      $this->mandateDate = \DateTimeImmutable::createFromInterface($mandateDate);
-    }
+    $this->mandateDate = self::convertToDateTime($mandateDate);
     return $this;
   }
 
@@ -223,6 +278,43 @@ class SepaDebitMandate
   public function getMandateDate()
   {
     return $this->mandateDate;
+  }
+
+  /**
+   * Set lastUsedDate.
+   *
+   * @param string|\DateTimeInterface $lastUsedDate
+   *
+   * @return SepaDebitMandate
+   */
+  public function setLastUsedDate($lastUsedDate):SepaDebitMandate
+  {
+    $this->lastUsedDate = self::convertToDateTime($lastUsedDate);
+    return $this;
+  }
+
+  /**
+   * Get lastUsedDate.
+   *
+   * @return \DateTime
+   */
+  public function getLastUsedDate()
+  {
+    return $this->lastUsedDate;
+  }
+
+  /**
+   * Set nonRecurring.
+   *
+   * @param bool $nonRecurring
+   *
+   * @return SepaDebitMandate
+   */
+  public function setNonRecurring($nonRecurring):SepaDebitMandate
+  {
+    $this->nonRecurring = $nonRecurring;
+
+    return $this;
   }
 
   /**

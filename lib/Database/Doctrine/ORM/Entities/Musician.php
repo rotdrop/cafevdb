@@ -874,6 +874,20 @@ class Musician implements \ArrayAccess
     return $this->nickName;
   }
 
+
+  /**
+   * Get the cooked display-name, taking nick-name into account and
+   * just using $displayName if set.
+   */
+  public function getPublicName()
+  {
+    if (!empty($this->displayName)) {
+      return $this->displayName;
+    }
+    $firstName = empty($this->nickName) ? $this->firstName : $this->nickName;
+    return $this->surName.', '.$firstName;
+  }
+
   /**
    * Set userIdSlug.
    *
