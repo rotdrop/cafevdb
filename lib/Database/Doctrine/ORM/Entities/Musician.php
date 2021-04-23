@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -704,6 +705,47 @@ class Musician implements \ArrayAccess
   public function getProjectParticipation():Collection
   {
     return $this->projectParticipation;
+  }
+
+  /**
+   * Check whether the given project is contained in projectParticipation.
+   *
+   * @param int|Project $projectOrId
+   *
+   * @return bool
+   */
+  public function isMemberOf($projectOrId):bool
+  {
+    $projectId = ($projectOrId instanceof Project) ? $projectOrId->getId() : $projectOrId;
+    if (!empty($this->projectParticipation->get($projectId))) {
+      return true;
+    }
+    return 0 < $this->projectParticipation->matching(DBUtil::criteriaWhere([
+      'project' => $projectId,
+    ]))->count();
+  }
+
+  /**
+   * Return the project-participant entity for the given project or null
+   *
+   * @param int|Project $projectOrId
+   *
+   * @return null|ProjectParticipant
+   */
+  public function getProjectParticipantOf($projectOrId)
+  {
+    $projectId = ($projectOrId instanceof Project) ? $projectOrId->getId() : $projectOrId;
+    $participant = $this->projectParticipation->get($projectId);
+    if (!empty($participant)) {
+      return $participant;
+    }
+    $matching = $this->projectParticipation->matching(DBUtil::criteriaWhere([
+      'project' => $projectId,
+    ]));
+    if ($matching->count() == 1) {
+      return $matching->first();
+    }
+    return null;
   }
 
   /**
