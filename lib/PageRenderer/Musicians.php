@@ -96,13 +96,13 @@ class Musicians extends PMETableViewBase
   CONCAT_WS(\''.self::COMP_KEY_SEP.'\', sba.musician_id, sba.sequence, IFNULL(sdm.sequence,0)) AS sepa_id,
   sba.*,
   sdm.sequence AS debit_mandate_sequence,
+  sdm.project_id AS debit_mandate_project_id,
   sdm.mandate_reference AS debit_mandate_reference,
   sdm.deleted AS debit_mandate_deleted
   FROM '.self::SEPA_BANK_ACCOUNTS_TABLE.' sba
   LEFT JOIN '.self::SEPA_DEBIT_MANDATES_TABLE.' sdm
     ON (sba.musician_id = sdm.musician_id
-        AND sba.sequence = sdm.bank_account_sequence
-        AND sdm.project_id IS NULL)
+        AND sba.sequence = sdm.bank_account_sequence)
   GROUP BY sba.musician_id, sba.sequence, sdm.sequence',
       'entity' => Entities\SepaBankAccount::class,
       'identifier' => [
@@ -816,10 +816,10 @@ make sure that the musicians are also automatically added to the
           foreach ($ibans as $sepaId => $iban) {
             list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode('-', $sepaId);
             $sepaData = json_encode([
+              'projectId' => 0,
               'musicianId' => $musicianId,
-              'projectId' => -1,
               'bankAccountSequence' => $bankAccountSequence,
-              'mandateSequeuce' => $mandateSequence,
+              'mandateSequence' => $mandateSequence,
             ]);
             $html .= '
     <tr class="bank-account-data" data-sepa-id="'.$sepaId.'">
