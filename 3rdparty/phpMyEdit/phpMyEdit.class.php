@@ -1185,8 +1185,8 @@ class phpMyEdit
 
 		$main_table = $this->sd.self::MAIN_ALIAS.$this->ed;
 		$join_table = $this->sd.$values['join_table'].$this->ed;
-		$join_column = $this->sd.$values['column'].$this->ed;
-		$join_col_fqn = $join_table.'.'.$join_column;
+		$join_column = $values['column'];
+		$join_col_fqn = $join_table.'.'.$this->sd.$join_column.$this->ed;
 
 		if ($vanilla) {
 			return $join_col_fqn;
