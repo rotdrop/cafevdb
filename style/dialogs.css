@@ -44,6 +44,10 @@
   overflow:hidden !important;
 }
 
+.ui-widget.cafevdb .ui-dialog-buttonset .hidden {
+  display:none;
+}
+
 .ui-widget.cafev {
   /*box-sizing: border-box !important;*/
 }
