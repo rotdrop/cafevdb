@@ -496,6 +496,7 @@ const ready = function(container) {
       addMusicians(form);
       return false;
     });
+
 };
 
 const documentReady = function() {

@@ -35,12 +35,15 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 
 class SepaDebitMandatesController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var ReqeuestParameterService */
   private $parameterService;
@@ -59,6 +62,7 @@ class SepaDebitMandatesController extends Controller {
     , IRequest $request
     , RequestParameterService $parameterService
     , ConfigService $configService
+    , EntityManager $entityManager
     , FinanceService $financeService
     , ProjectService $projectService
     , FuzzyInputService $fuzzyInputService
@@ -66,6 +70,7 @@ class SepaDebitMandatesController extends Controller {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
     $this->configService = $configService;
+    $this->entityManager = $entityManager;
     $this->financeService = $financeService;
     $this->projectService = $projectService;
     $this->fuzzyInputService = $fuzzyInputService;
@@ -466,47 +471,61 @@ class SepaDebitMandatesController extends Controller {
    * @NoAdminRequired
    */
   public function mandateForm(
-    $mandateReference
-    , $mandateExpired
+    $musicianId
     , $projectId
-    , $mandateProjectId
-    , $musicianId
-    , $projectName
-    , $mandateProjectName
-    , $musicianName
+    , $bankAccountSequence
+    , $mandateSequence
     ) {
 
-    $mandateExpired = filter_var($mandateExpired, FILTER_VALIDATE_BOOLEAN);
+    if (empty($musicianId)) {
+      return self::grumble($this->l->t('Parameter musicianId must be set, but is empty.'));
+    }
 
-     // check for an existing mandate, otherwise generate a new Id.
-    $mandate = $this->financeService->fetchSepaMandate($mandateProjectId, $musicianId, $mandateExpired);
+    /** @var Entities\Musician $musician */
+    $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musicianId);
+
+    if (!empty($projectId) && $projectId > 0) {
+      /** @var Entities\Project $project */
+      $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    }
+
+    if (!empty($mandateSequence)) {
+      /** @var Entities\SepaDebitMandate $mandate */
+      $mandate = $this->getDatabaseRepository(Entities\SepaDebitMandate::class)->find([
+        'musician' => $musicianId,
+        'sequence' => $mandateSequence,
+      ]);
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $mandate->getSepaBankAccount();
+    } else if (!empty($bankAccountSequence)) {
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $this->getDatabaseRepository(Entities\SepaBankAccount::class)->find([
+        'musician' => $musicianId,
+        'sequence' => $bankAccountSequence,
+      ]);
+      $mandate = null;
+    } else {
+      $bankAccount = null;
+      $mandate = null;
+    }
 
     if (empty($mandate)) {
       $ref = $this->financeService->generateSepaMandateReference($projectId, $musicianId);
-      $memberProjectId = $this->getConfigValue('memberProjectId', -1);
-      // @todo check
-      $sequenceType = $projectNameId !== $memberProjectId ? 'once' : 'permanent';
-      $mandate = [
-        'projectId' => $mandateProjectId,
-        'musicianId' => $musicianId,
-        'sequenceType' => $sequenceType,
-        'mandateReference' => $ref,
-        'mandateDate' => '01-'.date('m-Y'),
-        'lastUsedDate' =>'',
-        'IBAN' => '',
-        'BIC' => '',
-        'BLZ' => '',
-        'bankAccountOwner' => $this->financeService->sepaTranslit($musicianName),
-      ];
-    } else {
-      $usage = $this->financeService->mandateReferenceUsage($mandate['mandateReference'], true);
-      !empty($usage['lastUsed']) && $mandate['lastUsedDate'] = $usage['lastUsed'];
+
+      $mandate = (new Entities\SepaDebitMandate)
+               ->setNonRecurring(!empty($project))
+               ->setMandateReference($ref)
+               ->setMandateDate(new \DateTimeImmutable);
+
+      if (empty($bankAccount)) {
+        $bankAccount = (new Entities\SepaBankAccount);
+      }
     }
 
     // If we have a valid IBAN, compute BLZ and BIC
-    $iban = $mandate['IBAN'];
+    $iban = $bankAccount->getIban();
     $blz  = '';
-    $bic  = $mandate['BIC'];
+    $bic  = $bankAccount->getBic();
 
     $ibanValidator = new IBAN($iban);
     if ($ibanValidator->Verify()) {
@@ -518,35 +537,36 @@ class SepaDebitMandatesController extends Controller {
       $iban = $ibanValidator->MachineFormat();
     }
 
-    if ($mandate['lastUsedDate']) {
-      $lastUsedDate = date('d.m.Y', strtotime($mandate['lastUsedDate']));
-    } else {
-      $lastUsedDate = '';
-    }
-
     $templateParameters = [
-      'projectName' => $projectName,
-      'projectId' => $projectId,
-      'mandateProjectId' => $mandateProjectId,
-      'musicianName' => $musicianName,
+      'projectName' => $project ? $project->getName() : null,
+      'projectId' => $projectId, // current project
+      'musicianName' => $musician->getPublicName(),
       'musicianId' => $musicianId,
+
+      'mandateProjectId' => $mandate->getProject(),
+      'mandateProjectName' => !empty($mandate->getProject()) ? $mandate->getProject()->getName() : null,
+
+      // members are not allowed to give per-project mandates
+      'memberProjectId' => $this->getConfigValue('memberProjectId', -1),
 
       'cssClass', 'sepadebitmandate',
 
-      'mandateSequence' => $mandate['sequence'],
-      'mandateReference' => $mandate['mandateReference'],
+      'mandateSequence' => $mandate->getSequence(),
+      'mandateReference' => $mandate->getMandateReference(),
       'mandateExpired' => $mandateExpired,
-      'mandateDate' => date('d.m.Y', strtotime($mandate['mandateDate'])),
-      'lastUsedDate' => $lastUsedData,
-      'sequenceType' => $mandate['nonRecurring'] ? 'once' : 'permanent', // @todo will not work
+      'mandateDate' => $mandate->getMandateDate(),
+      'lastUsedDate' => $mandate->getLastUsedDate(),
+      'sequenceType' => $mandate->getNonRecurring() ? 'once' : 'permanent',
+      'nonRecurring' => $mandate->getNonRecurring(),
 
-      'bankAccountOwner' => $mandate['bankAccountOwner'],
+      'bankAccountSequence' => $bankAccount->getSequence(),
+      'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
 
       'bankAccountIBAN' => $iban,
       'bankAccountBLZ' => $blz,
       'bankAccountBIC' => $bic,
 
-      'memberProjectId' => $memberProjectId,
+      'dateTimeFormatter' => \OC::$server->query(\OCP\IDateTimeFormatter::class),
     ];
 
     $tmpl = new TemplateResponse($this->appName, 'sepa-debit-mandate', $templateParameters, 'blank');
@@ -555,11 +575,10 @@ class SepaDebitMandatesController extends Controller {
     $responseData = [
       'contents' => $html,
       'projectId' => $projectId,
-      'projectName' => $projectName,
       'musicianId' => $musicianId,
-      'musicianName' => $musicianName,
-      'mandateSequence' => $mandate['sequence'],
-      'mandateReference' => $mandate['mandateReference'],
+      'bankAccountSequence' => $bankAccount->getSequence(),
+      'mandateSequence' => $mandate->getSequence(),
+      'mandateReference' => $mandate->getMandateReference(),
     ];
 
     return self::dataResponse($responseData);

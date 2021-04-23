@@ -38,9 +38,7 @@ require('sepa-debit-mandate.css');
 
 const SepaDebitMandate = globalState.SepaDebitMandate = {
   projectId: -1,
-  projectName: '',
   musicianId: -1,
-  musicianName: '',
   mandateSequence: -1,
   mandateReference: '',
   instantValidation: true,
@@ -65,9 +63,11 @@ const mandatesInit = function(data, reloadCB) {
 
   if (!Ajax.validateResponse(data, [
     'contents',
-    'projectId', 'projectName',
-    'musicianId', 'musicianName',
-    'mandateSequence', 'mandateReference',
+    'projectId',
+    'musicianId',
+    'bankAccountSequence',
+    'mandateSequence',
+    'mandateReference',
   ])) {
     return false;
   }
@@ -77,9 +77,8 @@ const mandatesInit = function(data, reloadCB) {
   }
 
   self.projectId = data.projectId;
-  self.projectName = data.projectName;
   self.musicianId = data.musicianId;
-  self.musicianName = data.musicianName;
+  self.bankAccountSequence = data.bankAccountSequence;
   self.mandateSequence = data.mandateSequence;
   self.mandateReference = data.mandateReference;
 
@@ -96,7 +95,7 @@ const mandatesInit = function(data, reloadCB) {
       at: 'middle top',
       of: '#app-content',
     },
-    width: 550,
+    width: 'auto', // 550,
     height: 'auto',
     modal: true,
     resizable: false,
@@ -691,17 +690,14 @@ const mandatePopupInit = function(selector) {
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
   const pmeReload = container.find('form.pme-form input.pme-reload').first();
-  container.find(':button.sepa-debit-mandate')
+  container.find(':button.sepa-debit-mandate, input.dialog.sepa-debit-mandate')
     .off('click')
     .on('click', function(event) {
-      event.preventDefault();
       if (container.find('#sepa-debit-mandate-dialog').dialog('isOpen') === true) {
         container.find('#sepa-debit-mandate-dialog').dialog('close').remove();
       } else {
         // We store the values in the data attribute.
         const values = $(this).data('debitMandate');
-        // alert('data: ' + CAFEVDB.print_r(values, true));
-        // alert('data: '+(typeof values.MandateExpired));
         $.post(generateUrl('finance/sepa/debit-mandates/dialog'), values)
           .fail(function(xhr, status, errorThrown) {
             Ajax.handleError(xhr, status, errorThrown);

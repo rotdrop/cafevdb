@@ -248,9 +248,13 @@ class FinanceService
    */
   public function generateSepaMandateReference($project, $musician, int $sequence = 1):string
   {
-    $project = $this->ensureProject($project);
-    $projectId = $project['id'];
-    $projectName = $this->sepaTranslit($project['name']);
+    if (empty($project) || (int)$project <= 0) {
+      $projectName = $this->getConfigValue('orchestra');
+    } else {
+      $project = $this->ensureProject($project);
+      $projectId = $project['id'];
+      $projectName = $this->sepaTranslit($project['name']);
+    }
 
     $musician = $this->ensureMusician($musician);
     $musicianId = $musician['id'];

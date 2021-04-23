@@ -33,6 +33,10 @@ div.sepastatusblock {
   display:inline-block;
 }
 
+#sepa-debit-mandate-dialog label.lastUsedDate {
+  float:right;
+}
+
 input.sepa-debit-mandate.missing-data {
   ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
   filter: alpha(opacity=30);
@@ -45,6 +49,7 @@ form#sepa-debit-mandate-form :disabled {
 
 form#sepa-debit-mandate-form label.sepa-validation-toggle {
   float:right;
+  margin-right:3px;
 }
 
 form#sepa-debit-mandate-form input.sepa-validation-toggle {
@@ -151,6 +156,11 @@ input.pme-debit-note[type=submit] {
 
 .oc-dialog div.sepa-mandate-expire-notice {
   max-width:30em;
+}
+
+#sepa-debit-mandate-dialog .debitRecurringInfo {
+  float:right;
+  margin-right:3px;
 }
 
 #sepa-debit-mandate-dialog .debitRecurringInfo .type {

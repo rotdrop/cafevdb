@@ -93,7 +93,7 @@ class Musicians extends PMETableViewBase
       // for all SEPA-mandates.
       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
       'sql' => 'SELECT
-  JSON_OBJECT("musician_id", sba.musician_id, "account_sequence", sba.sequence, "mandate_sequence", sdm.sequence) AS sepa_id,
+  CONCAT_WS(\''.self::COMP_KEY_SEP.'\', sba.musician_id, sba.sequence, IFNULL(sdm.sequence,0)) AS sepa_id,
   sba.*,
   sdm.sequence AS debit_mandate_sequence,
   sdm.mandate_reference AS debit_mandate_reference,
@@ -814,24 +814,33 @@ make sure that the musicians are also automatically added to the
           $html = '<table class="row-count-'.count($ibans).'">
   <tbody>';
           foreach ($ibans as $sepaId => $iban) {
+            list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode('-', $sepaId);
+            $sepaData = json_encode([
+              'musicianId' => $musicianId,
+              'projectId' => -1,
+              'bankAccountSequence' => $bankAccountSequence,
+              'mandateSequeuce' => $mandateSequence,
+            ]);
             $html .= '
     <tr class="bank-account-data" data-sepa-id="'.$sepaId.'">
       <td class="operations">
-        <input
+        <!-- <input
           class="operation delete-undelete"
           title="'.$this->toolTipsService['sepa-bank-account:delete-undelete'].'"
-          type="button"/>
+          type="button"/> -->
         <input
-          class="operation info"
+          class="operation info sepa-debit-mandate"
           title="'.$this->toolTipsService['sepa-bank-account:info'].'"
+          data-debit-mandate=\''.$sepaData.'\'
           type="button"/>
       </td>
       <td class="iban">
         <input
-          class="bank-account-data"
+          class="bank-account-data dialog sepa-debit-mandate"
           title="'.$this->toolTipsService['sepa-bank-account:info'].'"
           type="text"
           value="'.$iban.'"
+          data-debit-mandate=\''.$sepaData.'\'
           readonly
         />
       </td>
@@ -841,7 +850,7 @@ make sure that the musicians are also automatically added to the
     <tr class="placeholder">
       <td colspan="2" class="operation">
         <input
-          class="operation add"
+          class="operation add sepa-debit-mandate"
           title="'.$this->toolTipsService['sepa-bank-account:add'].'"
           type="button"
           value="'.$this->l->t('Add a new bank account').'"

@@ -26,6 +26,7 @@ import * as Page from './page.js';
 import * as Photo from './inlineimage.js';
 import * as ProjectExtra from './project-participant-fields.js';
 import * as DebitNotes from './debit-notes.js';
+import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Musicians from './musicians.js';
 import * as Projects from './projects.js';
 import { data as pmeData } from './pme-selectors.js';
@@ -224,6 +225,7 @@ const documentReady = function() {
 
       const container = $(selector);
       pmeExportMenu(selector);
+      SepaDebitMandate.popupInit(selector);
 
       container.find('div.photo, .cafevdb_inline_image_wrapper')
         .off('click', 'img.zoomable')
