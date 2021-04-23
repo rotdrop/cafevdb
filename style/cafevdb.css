@@ -1010,6 +1010,12 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
   display:none !important;
 }
 
+.cafevdb .inline-block.hidden,
+.cafevdb .inline.hidden,
+.cafevdb .block.hidden {
+  display:none;
+}
+
 .cafevdb .inline-block {
   display:inline-block;
 }
