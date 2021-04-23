@@ -43,9 +43,9 @@ input.sepa-debit-mandate.missing-data {
   opacity: .3;
 }
 
-form#sepa-debit-mandate-form :disabled {
-  opacity:1.0;
-}
+/* form#sepa-debit-mandate-form :disabled {
+   opacity:1.0;
+   } */
 
 form#sepa-debit-mandate-form .bank-account-identifier {
   font-family:monospace;
@@ -231,6 +231,24 @@ input.pme-debit-note[type=submit] {
 
 #sepa-debit-mandate-dialog .debit-mandate-register .upload-placeholder {
   width:20em;
+}
+
+#sepa-debit-mandate-dialog .debit-mandate-register .operations .operation {
+  background-repeat:no-repeat;
+  background-size: 24px 24px;
+  background-position: center;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  margin-right:1em;
+}
+
+#sepa-debit-mandate-dialog .debit-mandate-register .operations .operation.delete-undelete {
+  background-image:url('../img/cafevdb-delete.svg');
+}
+
+#sepa-debit-mandate-dialog .debit-mandate-register .operations .operation.upload-replace {
+  background-image:url('../../../core/img/actions/upload.svg');
 }
 
 /******************************************************************************

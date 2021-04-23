@@ -82,7 +82,8 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
   self.mandateSequence = data.mandateSequence;
   self.mandateReference = data.mandateReference;
 
-  Dialogs.debugPopup(data);
+  console.info('DATA', data);
+  console.info('SELF', self);
 
   const popup = $(data.contents);
   const mandateForm = popup.find('#sepa-debit-mandate-form');
@@ -221,22 +222,25 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
         apply: $widget.find('button.apply'),
         delete: $widget.find('button.delete'),
         change: $widget.find('button.change'),
+        reload: $widget.find('button.reload'),
       };
 
-      if (self.mandateSequence > 0) {
+      if (self.mandateSequence > 0 || self.bankAccountSequence > 0) {
         // If we are about to display an existing mandate, first
         // disableall inputs and leave only the "close" and
         // "change" buttons enabled.
         buttons.save.prop('disabled', true);
         buttons.apply.prop('disabled', true);
         buttons.delete.prop('disabled', true);
+        buttons.reload.prop('disabled', true);
         mandateForm.find('input.bankAccount').prop('disabled', true);
         mandateForm.find('input.mandateDate').prop('disabled', true);
         mandateForm.find('input.lastUsedDate').prop('disabled', true);
       } else {
-        buttons.save.prop('disabled', !self.instantValidation);
-        buttons.apply.prop('disabled', !self.instantValidation);
-        buttons.change.prop('disabled', true);
+        buttons.save.prop('disabled', !self.instantValidation).show();
+        buttons.apply.prop('disabled', !self.instantValidation).show();
+        buttons.reload.prop('disabled', !self.instantValidation).show();
+        buttons.change.prop('disabled', true).hide();
       }
 
       $widget.find('button, input, label, [class*="tooltip"]').cafevTooltip({ placement: 'auto bottom' });

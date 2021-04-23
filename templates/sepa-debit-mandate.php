@@ -20,6 +20,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNaviation;
+
 $title = $l->t("SEPA Debit Mandate of %s", $musicianName);
 
 $expiredTip = $toolTips['sepa-mandate-expired'];
@@ -115,7 +119,7 @@ $hidden = [
       </label>
       <div class="statusmessage suggestions"></div>
     </fieldset>
-    <fieldset class="debit-mandate <?php empty($haveMandate) && p('no-mandate'); ?> <?php empty($writtenMandate) && p('no-written-mandate'); ?>">
+    <fieldset class="debit-mandate <?php empty($haveMandate) && p('no-mandate'); ?> <?php empty($writtenMandate) && p('no-written-mandate'); ?> <?php !empty($isClubMember) && p('club-member'); ?>">
       <input id="sepa-debit-mandate-upload-later"
              class="bankAccount projectMandate checkbox inline-block <?php p($hidden['writtenMandate']); ?>"
              type="checkbox"
@@ -151,6 +155,9 @@ $hidden = [
              title="<?php echo  $toolTips['sepa-debit-mandate-only-for-project']; ?>"
                  class="tooltip-right">
             <?php echo $l->t('only for "%s"', $memberProjectName); ?>
+            <select>
+              <?php echo PageNaviation::selectOptions($projectOptions); ?>
+            </select>
           </label>
         </span>
         <span class="debit-mandate-binding <?php p($hidden['haveMandate']); ?>">

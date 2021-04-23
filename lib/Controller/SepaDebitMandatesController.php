@@ -583,7 +583,7 @@ class SepaDebitMandatesController extends Controller {
 
       // members are not allowed to give per-project mandates
       'memberProjectId' => $memberProjectId,
-      'isClubMember' => $isClubMember,
+      'isClubMember' => !empty($clubMember),
 
       'projectOptions' => $projectOptions,
 
