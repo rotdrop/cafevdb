@@ -739,9 +739,23 @@ class Musician implements \ArrayAccess
     if (!empty($participant)) {
       return $participant;
     }
-    $matching = $this->projectParticipation->matching(DBUtil::criteriaWhere([
-      'project' => $projectId,
-    ]));
+    // $matching = $this->projectParticipation->matching(DBUtil::criteriaWhere([
+    //   'project' => $projectId,
+    // ]));
+    //
+    // The infamous
+    //
+    // Cannot match on
+    // OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::project
+    // with a non-object value. Matching objects by id is not
+    // compatible with matching on an in-memory collection, which
+    // compares objects by reference.
+    //
+    // Oh no.
+
+    $matching = $this->projectParticipation->filter(function($participant) use ($projectId) {
+      return $participant->getProject()->getId() == $projectId;
+    });
     if ($matching->count() == 1) {
       return $matching->first();
     }
