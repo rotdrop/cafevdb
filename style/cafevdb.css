@@ -1005,8 +1005,21 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
   text-indent: -10000em;
 }
 
+.really.hidden,
 .reallyhidden {
   display:none !important;
+}
+
+.cafevdb .inline-block {
+  display:inline-block;
+}
+
+.cafevdb .inline {
+  display:inline;
+}
+
+.cafevdb .block {
+  display:block;
 }
 
 @keyframes busyfading {
