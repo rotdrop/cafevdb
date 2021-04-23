@@ -471,8 +471,8 @@ class SepaDebitMandatesController extends Controller {
    * @NoAdminRequired
    */
   public function mandateForm(
-    $musicianId
-    , $projectId
+    $projectId
+    , $musicianId
     , $bankAccountSequence
     , $mandateSequence
     ) {
@@ -484,10 +484,12 @@ class SepaDebitMandatesController extends Controller {
     /** @var Entities\Musician $musician */
     $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musicianId);
 
-    if (!empty($projectId) && $projectId > 0) {
+    if ($projectId > 0) {
       /** @var Entities\Project $project */
       $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     }
+
+    $this->logInfo('CALLED WITH '.print_r([$projectId, $musicianId, $bankAccountSequence, $mandateSequence], true));
 
     if (!empty($mandateSequence)) {
       /** @var Entities\SepaDebitMandate $mandate */
@@ -495,6 +497,12 @@ class SepaDebitMandatesController extends Controller {
         'musician' => $musicianId,
         'sequence' => $mandateSequence,
       ]);
+
+      if (empty($mandate)) {
+        return self::grumble($this->l->t('Unable to load SEPA debit mandate for musician %s/%d, sequence count %d',
+                                         [$musician->getPublicName(), $musician->getId(), $mandateSequence]));
+      }
+
       /** @var Entities\SepaBankAccount $bankAccount */
       $bankAccount = $mandate->getSepaBankAccount();
     } else if (!empty($bankAccountSequence)) {
@@ -510,11 +518,8 @@ class SepaDebitMandatesController extends Controller {
     }
 
     if (empty($mandate)) {
-      $ref = $this->financeService->generateSepaMandateReference($projectId, $musicianId);
-
       $mandate = (new Entities\SepaDebitMandate)
                ->setNonRecurring(!empty($project))
-               ->setMandateReference($ref)
                ->setMandateDate(new \DateTimeImmutable)
                ->setSequence(0);
 
@@ -540,19 +545,49 @@ class SepaDebitMandatesController extends Controller {
       $iban = $ibanValidator->MachineFormat();
     }
 
-    $templateParameters = [
-      'projectName' => $project ? $project->getName() : null,
-      'projectId' => $projectId, // current project
-      'musicianName' => $musician->getPublicName(),
-      'musicianId' => $musicianId,
+    $memberProjectId = $this->getConfigValue('memberProjectId', 0);
+    if ($memberProjectid != $projectId) {
+      // otherwise $musician IS a club member
+      $clubMember = $musician->getProjectParticipantOf($memberProjectId);
+    }
 
-      'mandateProjectId' => $mandate->getProject(),
-      'mandateProjectName' => !empty($mandate->getProject()) ? $mandate->getProject()->getName() : null,
+    if (!empty($project)) {
+      // only member's project and current project are allowed
+      $projectOptions = [
+        $projectId => [
+          'value' => $projectId,
+          'name' => $project->getName(),
+        ],
+      ];
+      if (!empty($clubMember)) {
+        $projectOptions[$memberProjectId] = [
+          'value' => $memberProjectId,
+          'name' => $clubMember->getProject()->getName(),
+        ];
+      }
+    } else {
+      // Generate options for all projects.
+      // @todo Limit to active projects.
+      $projectOptions = $this->projectService->projectOptions();
+    }
+
+    $templateParameters = [
+      'projectId' => $projectId,
+      'projectName' => $project ? $project->getName() : null,
+
+      'musicianId' => $musicianId,
+      'musicianName' => $musician->getPublicName(),
+
+      'mandateProjectId' => $mandate->getProject() ? $mandate->getProject()->getId() : 0,
+      'mandateProjectName' => $mandate->getProject() ? $mandate->getProject()->getName() : null,
 
       // members are not allowed to give per-project mandates
-      'memberProjectId' => $this->getConfigValue('memberProjectId', -1),
+      'memberProjectId' => $memberProjectId,
+      'isClubMember' => $isClubMember,
 
-      'cssClass', 'sepadebitmandate',
+      'projectOptions' => $projectOptions,
+
+      'cssClass' => 'sepadebitmandate',
 
       'mandateSequence' => $mandate->getSequence(),
       'mandateReference' => $mandate->getMandateReference(),

@@ -49,13 +49,16 @@ const SepaDebitMandate = globalState.SepaDebitMandate = {
  * Initialize the mess with contents. The "mess" is a dialog window
  * with the input form element for the bank account data.
  *
- * @param {Object} data TBD.
+ * @param {Object} data Data returned by the AJAX call.
  *
- * @param {Function} reloadCB TBD.
+ * @param {Object} sepaBankData Copy of the data submitted to the AJAX call.
+ *
+ * @param {Function} onChangeCallback function called after
+ * submitting data to the database.
  *
  * @returns {bool}
  */
-const mandatesInit = function(data, reloadCB) {
+const mandatesInit = function(data, sepaBankData, onChangeCallback) {
   const self = SepaDebitMandate;
 
   if (!Ajax.validateResponse(data, [
@@ -69,8 +72,8 @@ const mandatesInit = function(data, reloadCB) {
     return false;
   }
 
-  if (typeof reloadCB !== 'function') {
-    reloadCB = function() {};
+  if (typeof onChangeCallback !== 'function') {
+    onChangeCallback = function() {};
   }
 
   self.projectId = data.projectId;
@@ -105,11 +108,13 @@ const mandatesInit = function(data, reloadCB) {
         text: t(appName, 'Change'),
         title: t(appName, 'Change the SEPA mandate. Note that the SEPA mandate-reference is automatically computed and cannot be changed.'),
         click() {
+          const $dlg = $(this);
           // enable the form, disable the change button
-          $(this).dialog('widget').find('button.save').prop('disabled', !self.instantValidation);
-          $(this).dialog('widget').find('button.apply').prop('disabled', !self.instantValidation);
-          $(this).dialog('widget').find('button.delete').prop('disabled', false);
-          $(this).dialog('widget').find('button.change').prop('disabled', true);
+          $dlg.dialog('widget').find('button.save').show().prop('disabled', !self.instantValidation);
+          $dlg.dialog('widget').find('button.apply').show().prop('disabled', !self.instantValidation);
+          $dlg.dialog('widget').find('button.delete').show().prop('disabled', false);
+          $dlg.dialog('widget').find('button.reload').show().prop('disabled', false);
+          $dlg.dialog('widget').find('button.change').hide();
           if (lastUsedDate.val().trim() === '') {
             mandateForm.find('input.bankAccount').prop('disabled', false);
             mandateForm.find('input.mandateDate').prop('disabled', false);
@@ -119,53 +124,79 @@ const mandatesInit = function(data, reloadCB) {
         },
       },
       {
-        class: 'save',
-        id: 'sepaMandateSave',
-        text: t(appName, 'Save'),
-        title: t(appName, 'Close the form and save the data in the underlying data-base storage.'),
+        class: 'reload hidden',
+        id: 'sepaMandateReload',
+        text: t(appName, 'Reload'),
+        title: t(appName, 'Reload the form and locks it. Unsaved changes are lost.'),
         click() {
-          const dlg = this;
-          mandateStore(function() {
+          const $dlg = $(this);
+          mandateReload(function() {
             $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(self.mandateReference);
-            $(dlg).dialog('close');
-            reloadCB();
+            // Disable everything and enable the change button
+            // If we are about to display an existing mandate, first
+            // disable all inputs and leave only the "close" and
+            // "change" buttons enabled, and the lastUsed date.
+            $dlg.dialog('widget').find('button.save').hide().prop('disabled', true);
+            $dlg.dialog('widget').find('button.apply').hide().prop('disabled', true);
+            $dlg.dialog('widget').find('button.delete').hide().prop('disabled', true);
+            $dlg.dialog('widget').find('button.reload').hide().prop('disabled', true);
+            $dlg.dialog('widget').find('button.change').show().prop('disabled', false);
+            mandateForm.find('input.bankAccount').prop('disabled', true);
+            mandateForm.find('input.mandateDate').prop('disabled', true);
+            mandateForm.find('input.lastUsedDate').prop('disabled', true);
+            $.fn.cafevTooltip.remove(); // clean up left-over balloons
           });
         },
       },
       {
-        class: 'apply',
+        class: 'save hidden',
+        id: 'sepaMandateSave',
+        text: t(appName, 'Save'),
+        title: t(appName, 'Close the form and save the data in the underlying data-base storage.'),
+        click() {
+          const $dlg = $(this);
+          mandateStore(function() {
+            $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(self.mandateReference);
+            $dlg.dialog('close');
+            onChangeCallback();
+          });
+        },
+      },
+      {
+        class: 'apply hidden',
         text: t(appName, 'Apply'),
         title: t(appName, 'Save the data in the underlying data-base storage. Keep the form open.'),
         click(event) {
-          const dlg = this;
+          const $dlg = $(this);
           mandateStore(function() {
             $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(self.mandateReference);
             // Disable everything and enable the change button
             // If we are about to display an existing mandate, first
             // disable all inputs and leave only the "close" and
             // "change" buttons enabled, and the lastUsed date.
-            $(dlg).dialog('widget').find('button.save').prop('disabled', true);
-            $(dlg).dialog('widget').find('button.apply').prop('disabled', true);
-            $(dlg).dialog('widget').find('button.delete').prop('disabled', true);
-            $(dlg).dialog('widget').find('button.change').prop('disabled', false);
+            $dlg.dialog('widget').find('button.save').hide().prop('disabled', true);
+            $dlg.dialog('widget').find('button.apply').hide().prop('disabled', true);
+            $dlg.dialog('widget').find('button.delete').hide().prop('disabled', true);
+            $dlg.dialog('widget').find('button.reload').hide().prop('disabled', true);
+            $dlg.dialog('widget').find('button.change').show().prop('disabled', false);
             mandateForm.find('input.bankAccount').prop('disabled', true);
             mandateForm.find('input.mandateDate').prop('disabled', true);
             mandateForm.find('input.lastUsedDate').prop('disabled', true);
             $.fn.cafevTooltip.remove(); // clean up left-over balloons
-            reloadCB();
+            onChangeCallback();
           });
         },
       },
       {
-        class: 'delete',
+        class: 'delete hidden',
         text: t(appName, 'Delete'),
         title: t(appName, 'Delete this mandate from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
         click() {
-          const dlg = this;
+          const $dlg = $(this);
           mandateDelete(function() {
             $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(t(appName, 'SEPA Debit Mandate'));
-            $(dlg).dialog('close');
-            reloadCB();
+            $dlg.dialog('close');
+            onChangeCallback();
           });
         },
       },
@@ -180,21 +211,21 @@ const mandatesInit = function(data, reloadCB) {
       },
     ],
     open() {
-      const dlg = $(this);
-      const widget = dlg.dialog('widget');
+      const $dlg = $(this);
+      const $widget = $dlg.dialog('widget');
       // $.fn.cafevTooltip.remove(); // remove tooltip form "open-button"
-      widget.find('button.close').focus();
+      $widget.find('button.close').focus();
 
       const buttons = {
-        save: widget.find('button.save'),
-        apply: widget.find('button.apply'),
-        delete: widget.find('button.delete'),
-        change: widget.find('button.change'),
+        save: $widget.find('button.save'),
+        apply: $widget.find('button.apply'),
+        delete: $widget.find('button.delete'),
+        change: $widget.find('button.change'),
       };
 
       if (self.mandateSequence > 0) {
         // If we are about to display an existing mandate, first
-        // disable all inputs and leave only the "close" and
+        // disableall inputs and leave only the "close" and
         // "change" buttons enabled.
         buttons.save.prop('disabled', true);
         buttons.apply.prop('disabled', true);
@@ -208,7 +239,7 @@ const mandatesInit = function(data, reloadCB) {
         buttons.change.prop('disabled', true);
       }
 
-      widget.find('button, input, label, [class*="tooltip"]').cafevTooltip({ placement: 'auto bottom' });
+      $widget.find('button, input, label, [class*="tooltip"]').cafevTooltip({ placement: 'auto bottom' });
 
       if (globalState.toolTipsEnabled) {
         $.fn.cafevTooltip.enable();
@@ -216,7 +247,7 @@ const mandatesInit = function(data, reloadCB) {
         $.fn.cafevTooltip.disable();
       }
 
-      const expiredDiv = dlg.find('#mandate-expired-notice.active');
+      const expiredDiv = $dlg.find('#mandate-expired-notice.active');
       if (expiredDiv.length > 0) {
         let notice = expiredDiv.attr('title');
         if (!notice) {
@@ -308,6 +339,13 @@ const mandatesInit = function(data, reloadCB) {
   return false;
 };
 
+const mandateReload = function(doneCallback) {
+  alert('NOT YET');
+  if (typeof doneCallback === 'function') {
+    doneCallback();
+  }
+};
+
 // Store the form data. We assume that validation already has been
 // done
 const mandateStore = function(callbackOk) {
@@ -327,6 +365,7 @@ const mandateStore = function(callbackOk) {
       if (!Ajax.validateResponse(data, ['message'])) {
         return false;
       }
+      // @todo update the id-tuples in order to be able to reload
       $(dialogId + ' #msg').html(data.message);
       $(dialogId + ' #msg').show();
     });
@@ -698,7 +737,7 @@ const mandatePopupInit = function(selector) {
             Ajax.handleError(xhr, status, errorThrown);
           })
           .done(function(data) {
-            mandatesInit(data, function() {
+            mandatesInit(data, values, function() {
               if (pmeReload.length > 0) {
                 pmeReload.trigger('click');
               }

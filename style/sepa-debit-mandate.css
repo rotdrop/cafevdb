@@ -185,7 +185,8 @@ input.pme-debit-note[type=submit] {
  *
  */
 #sepa-debit-mandate-dialog fieldset.debit-mandate {
-  position:relativev;
+  position:relative;
+  width:100%
 }
 
 #sepa-debit-mandate-dialog fieldset.debit-mandate #sepa-debit-mandate-upload-later + label {
@@ -215,6 +216,10 @@ input.pme-debit-note[type=submit] {
 #sepa-debit-mandate-dialog fieldset.debit-mandate legend .registration-for-label,
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-mandate legend .reference-label {
   display:none;
+}
+
+#sepa-debit-mandate-dialog fieldset.debit-mandate .debit-mandate-details {
+  width:100%;
 }
 
 #sepa-debit-mandate-dialog #sepa-debit-mandate-upload-later:checked ~ .debit-mandate-details.hidden {

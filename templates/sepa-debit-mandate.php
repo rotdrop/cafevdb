@@ -138,8 +138,8 @@ $hidden = [
           <?php p($l->t('Mandate-Reference: %s', $mandateReference)); ?>
         </span>
       </legend>
-      <div class="debit-mandate-details <?php echo (!$haveMandate ? ' hidden' : '');?>">
-        <span class="debit-mandate-binding <?php p($hidden['noProject']); ?>">
+      <div class="debit-mandate-details inline-block <?php p($hidden['noMandate']);?>">
+        <span class="debit-mandate-binding <?php p($hidden['haveMandate']); ?>">
           <input id="sepa-debit-mandate-only-for-project"
                  class="bankAccount projectMandate checkbox"
                  type="radio"
@@ -153,49 +153,52 @@ $hidden = [
             <?php echo $l->t('only for "%s"', $memberProjectName); ?>
           </label>
         </span>
-      <span class="debit-mandate-binding">
-        <input id="sepa-debit-mandate-for-all-receivables"
-               class="bankAccount projectMandate checkbox"
-               type="radio"
-               name="debitMandateBinding"
-               value="all-receivables"
-               <?php echo $mandateBinding == 'all-receivables' ? 'checked' : ''; ?>
-        />
-        <label for="sepa-debit-mandate-for-all-receivables"
-               title="<?php echo  $toolTips['sepa-debit-mandate-for-all-receivables']; ?>"
-               class="tooltip-right">
-        <?php echo $l->t('for all receivables'); ?>
+        <span class="debit-mandate-binding <?php p($hidden['haveMandate']); ?>">
+          <input id="sepa-debit-mandate-for-all-receivables"
+                 class="bankAccount projectMandate checkbox"
+                 type="radio"
+                 name="debitMandateBinding"
+                 value="all-receivables"
+                 <?php echo $mandateBinding == 'all-receivables' ? 'checked' : ''; ?>
+          />
+          <label for="sepa-debit-mandate-for-all-receivables"
+                 title="<?php echo  $toolTips['sepa-debit-mandate-for-all-receivables']; ?>"
+                 class="tooltip-right">
+            <?php echo $l->t('for all receivables'); ?>
+          </label>
+        </span>
+        <span class="debit-mandate-binding <?php p($hidden['noMandate']); ?>">
+          <span class="debit-mandate-binding label">
+            <?php p($l->t('Project-binding:')); ?>
+          </span>
+          <span class="debit-mandate-binding value">
+            <?php p($l->t($mandateBinding)); ?>
+          </span>
+        </span>
+        <span id="debitRecurringInfo" class="debitRecurringInfo <?php echo $sequenceType; ?>">
+          <span class="label"><?php echo $l->t('Reusable:'); ?></span>
+          <span class="type once"><?php echo $l->t('once'); ?></span>
+          <span class="type permanent"><?php echo $l->t('permanent'); ?></span>
+        </span>
+        <br/>
+        <label class="mandateDate" for="mandateDate"><?php echo $l->t("Date issued:"); ?>
+          <input class="mandateDate" type="text"
+                 id="mandateDate"
+                 name="mandateDate"
+                 required="required"
+                 value="<?php echo $dateTimeFormatter->formatDate($mandateDate, 'medium'); ?>"
+                 title="<?php echo $l->t('Date of mandate grant'); ?>"
+                 placeholder="<?php echo $l->t('mandate date'); ?>"/>
         </label>
-      </span>
-      <span id="debitRecurringInfo" class="debitRecurringInfo <?php echo $sequenceType; ?>">
-        <span class="label"><?php echo $l->t('Type:'); ?></span>
-        <span class="space">&nbsp;</span>
-        <span class="type once"><?php echo $l->t('once'); ?></span>
-        <span class="type permanent"><?php echo $l->t('permanent'); ?></span>
-      </span>
-      <br/>
-      <label class="mandateDate" for="mandateDate"><?php echo $l->t("Date issued:"); ?>
-        <input class="mandateDate" type="text"
-               id="mandateDate"
-               name="mandateDate"
-               required="required"
-               value="<?php echo $dateTimeFormatter->formatDate($mandateDate, 'medium'); ?>"
-               title="<?php echo $l->t('Date of mandate grant'); ?>"
-               placeholder="<?php echo $l->t('mandate date'); ?>"/>
-      </label>
-      <?php if ($sequenceType == 'once') { ?>
-      <input type="hidden" name="lastUsedDate" class="lastUsedDate" value="<?php echo $lastUsedDate; ?>"/>
-      <?php } else { ?>
-      <label class="lastUsedDate" for="lastUsedDate"><?php echo $l->t("Date of last usage:"); ?>
-        <input class="lastUsedDate" type="text"
-               id="lastUsedDate"
-               <?php echo $sequenceType == 'once' ? 'disabled' : '' ?>
-               name="lastUsedDate"
-               value="<?php echo $lastUsedDate; ?>"
-               title="<?php echo $l->t('Date of last usage of debit-mandate'); ?>"
-               placeholder="<?php echo $l->t('last used date'); ?>"/>
-      </label>
-      <?php } ?>
+        <label class="lastUsedDate" for="lastUsedDate"><?php echo $l->t("Date of last usage:"); ?>
+          <input class="lastUsedDate" type="text"
+                 id="lastUsedDate"
+                 <?php echo $sequenceType == 'once' ? 'disabled' : '' ?>
+                 name="lastUsedDate"
+                 value="<?php echo $lastUsedDate; ?>"
+                 title="<?php echo $l->t('Date of last usage of debit-mandate'); ?>"
+                 placeholder="<?php echo $l->t('last used date'); ?>"/>
+        </label>
       </div>
       <div></div>
       <div class="debit-mandate-register inline-block">
