@@ -62,6 +62,7 @@ if ($haveMandate) {
     <input type="hidden" name="mandateReference" value="<?php echo $mandateReference; ?>" />
     <input type="hidden" name="sequenceType" value="<?php echo $sequenceType; ?>" />
     <input type="hidden" name="nonRecurring" value="<?php echo $nonRecurring; ?>" />
+    <input type="hidden" name="writtenMandate" value="<?php echo $writtenMandate; ?>"
     <fieldset>
       <legend>
         <?php echo $l->t('Bank Account'); ?>
@@ -105,13 +106,20 @@ if ($haveMandate) {
       </label>
       <div class="statusmessage suggestions"></div>
     </fieldset>
-    <input type="button"
-           class="debit-mandate-register <?php echo ($haveMandate ? ' hidden' : '');?>"
-           name="registerDebitMandate"
-           value="<?php echo $l->t('Register SEPA Debit-Mandate'); ?>"
-           title="<?php $toolTipsService['sepa-mandate-form:register-mandate']; ?>"
-    />
-    <fieldset class="debit-mandater <?php echo (!$haveMandate ? ' hidden' : '');?>">
+    <div class="debit-mandate-register">
+      <div class="operations inline-block">
+        <input type="button"
+               <?php empty($writtenMandate) && p('disabled'); ?>
+               title="'.$this->toolTipsService['participant-attachment-delete'].'"
+               class="operation delete-undelete"/>
+        <input type="button" title="<?php echo $this->toolTipsService['sepa-bank-data-form:upload-replace-written-mandate']; ?>" class="operation upload-replace"/>
+      </div>
+      <div class="file-data inline-block">
+        <a class="download-link <?php empty($writtenMandate) && p('hidden'); ?>" title="<?php echo $this->toolTipsService['sepa-bank-data-form:download-written-mandate']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php echo $writtenMandateFileName; ?></a>
+        <input class="upload-placeholder <?php !empty($writtenMandate) && p('hidden'); ?>" title="<?php echo $this->toolTipsService['sepa-bank-data-form:upload-written-mandate']; ?>" placeholder="<?php echo $l->t('Upload filled SEPA debit mandate.');  ?>" type="text"/>
+      </div>
+    </div>
+    <fieldset class="debit-mandate <?php echo (!$haveMandate ? ' hidden' : '');?>">
       <legend class="mandateCaption">
         <?php echo $l->t('Mandate-Reference: '); ?>
         <span class="reference">
