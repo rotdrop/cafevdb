@@ -38,6 +38,13 @@ if ($haveMandate) {
     : 'all-receivables');
 }
 
+$hidden = [
+  'haveMandate' => ($haveMandate ? ' hidden ' : ''),
+  'noMandate' => ($haveMandate ? '' : ' hidden '),
+  'writtenMandate' => (!empty($writtenMandate) ? ' hidden ' : ''),
+  'noWrittenMandate' => (!empty($writtenMandate) ? '' : ' hidden '),
+];
+
 ?>
 <div id="sepa-debit-mandate-dialog" title="<?php echo $title;?>">
   <div style="display:none;"
@@ -106,45 +113,30 @@ if ($haveMandate) {
       </label>
       <div class="statusmessage suggestions"></div>
     </fieldset>
-    <fieldset class="debit-mandate">
-      <input id="sepa-debit-mandate-upload-later"
-             class="bankAccount projectMandate checkbox inline-block"
+    <fieldset class="debit-mandate <?php empty($haveMandate) && p('no-mandate'); ?> <?php empty($writtenMandate) && p('no-written-mandate'); ?>">
+      <input id="sepa-debit-mandate-upload-later <?php p($hidden['writtenMandate']); ?>"
+             class="bankAccount projectMandate checkbox inline-block "
              type="checkbox"
              name="uploadLater"
              value="uploadLater"
       />
       <label for="sepa-debit-mandate-upload-later"
              title="<?php echo $toolTips['sepa-bank-data-form:upload-written-mandate-later']; ?>"
-             class="tooltip-right inline-block">
+             class="tooltip-right inline-block <?php p($hidden['writtenMandate']); ?>">
             <?php echo $l->t('upload later'); ?>
       </label>
       <legend class="mandateCaption inline-block">
-        <span class="register">
+        <span class="registration-label <?php p($hidden['haveMandate']); ?>">
           <?php p($l->t('Mandate-Registration')); ?>
         </span>
-        <span class="reference <?php echo (!$haveMandate ? ' hidden' : '');?>">
-          <span class="label">
-            <?php echo $l->t('Mandate-Reference: '); ?>
-          </span>
-          <span class="data">
-            <?php echo $mandateReference; ?>
-          </span>
+        <span class="registration-for-label hidden">
+          <?php p($l->t('Mandate-Registration for %s', $mandateReference)); ?>
+        </span>
+        <span class="reference-label <?php p($hidden['noMandate']); ?>">
+          <?php p($l->t('Mandate-Reference: %s', $mandateReference)); ?>
         </span>
       </legend>
       <br/>
-      <div class="debit-mandate-register inline-block">
-        <div class="operations inline-block">
-          <input type="button"
-                 <?php empty($writtenMandate) && p('disabled'); ?>
-                 title="<?php echo $toolTipsService['participant-attachment-delete']; ?>"
-                 class="operation delete-undelete"/>
-          <input type="button" title="<?php echo $toolTipsService['sepa-bank-data-form:upload-replace-written-mandate']; ?>" class="operation upload-replace"/>
-        </div>
-        <div class="file-data inline-block">
-          <a class="download-link <?php empty($writtenMandate) && p('hidden'); ?>" title="<?php echo $toolTipsService['sepa-bank-data-form:download-written-mandate']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php echo $writtenMandateFileName; ?></a>
-          <input class="upload-placeholder <?php !empty($writtenMandate) && p('hidden'); ?>" title="<?php echo $toolTipsService['sepa-bank-data-form:upload-written-mandate']; ?>" placeholder="<?php echo $l->t('Upload filled SEPA debit mandate');  ?>" type="text"/>
-        </div>
-      </div>
       <div class="debit-mandate-details <?php echo (!$haveMandate ? ' hidden' : '');?>">
       <?php if (true || (int)$projectId > 0) { ?>
         <span class="debit-mandate-binding">
@@ -205,6 +197,20 @@ if ($haveMandate) {
                placeholder="<?php echo $l->t('last used date'); ?>"/>
       </label>
       <?php } ?>
+      </div>
+      <div></div>
+      <div class="debit-mandate-register inline-block">
+        <div class="operations inline-block">
+          <input type="button"
+                 <?php empty($writtenMandate) && p('disabled'); ?>
+                 title="<?php echo $toolTipsService['participant-attachment-delete']; ?>"
+                 class="operation delete-undelete"/>
+          <input type="button" title="<?php echo $toolTipsService['sepa-bank-data-form:upload-replace-written-mandate']; ?>" class="operation upload-replace"/>
+        </div>
+        <div class="file-data inline-block">
+          <a class="download-link <?php empty($writtenMandate) && p('hidden'); ?>" title="<?php echo $toolTipsService['sepa-bank-data-form:download-written-mandate']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php echo $writtenMandateFileName; ?></a>
+          <input class="upload-placeholder <?php !empty($writtenMandate) && p('hidden'); ?>" title="<?php echo $toolTipsService['sepa-bank-data-form:upload-written-mandate']; ?>" placeholder="<?php echo $l->t('Upload filled SEPA debit mandate');  ?>" type="text"/>
+        </div>
       </div>
     </fieldset>
   </form>
