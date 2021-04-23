@@ -133,7 +133,7 @@ class AddressBook extends ExternalAddressBook
       '{http://calendarserver.org/ns/}getctag' => $eTag,
       '{DAV:}getetag' => $eTag,
     ];
-    $this->logInfo('PROPERTIES '.print_r($props, true), [], 2);
+    $this->logDebug('PROPERTIES '.print_r($props, true), [], 2);
     return $props;
   }
 }
