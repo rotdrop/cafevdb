@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
 
@@ -78,7 +79,7 @@ class EntityManager extends EntityManagerDecorator
   /** @var \Doctrine\ORM\EntityManager */
   private $entityManager;
 
-  /** @var \OCA\CAFEVDB\Service\EncryptionService */
+  /** @var EncryptionService */
   private $encryptionService;
 
   /** @var CloudLogger */
@@ -158,7 +159,13 @@ class EntityManager extends EntityManagerDecorator
     if ($this->connected()) {
       $this->registerTypes();
 
-      $this->logInfo('ENCRYPTED '.print_r($this->propertiesByAnnotation(\MediaMonks\Doctrine\Mapping\Annotation\Transformable::class), true));
+      // $encryptionKey = $this->encryptionService->getAppEncryptionKey();
+      // $this->recryptEncryptedProperties('blah');
+      // $this->recryptEncryptedProperties($encryptionKey);
+
+
+
+
     }
     $this->decorateClassMetadata = true;
   }
@@ -472,7 +479,7 @@ class EntityManager extends EntityManagerDecorator
       'algorithm' => 'sha256',
       'binary' => false,
     ]);
-    $this->transformerPol = $transformerPool;
+    $this->transformerPool = $transformerPool;
     $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
     $transformableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($transformableListener);
@@ -688,9 +695,8 @@ class EntityManager extends EntityManagerDecorator
     $this->annotationEntites[$annotationClass] = [];
     $classNames = $this->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
     foreach ($classNames as $className) {
-      //$classMetaData = $this->getClassMetadata($className);
-      if (!empty($this->annotationReader->getClassAnnotation($className, $annotationClass))) {
-        $this->annotationEntities[$annotationClass][] = $className;
+      if (!empty($annotation = $this->annotationReader->getClassAnnotation($className, $annotationClass))) {
+        $this->annotationEntities[$annotationClass][$className] = $annotation;
       }
     }
     return $this->annotationEntites[$annotationClass];
@@ -711,8 +717,8 @@ class EntityManager extends EntityManagerDecorator
       $reflClass = $classMetaData->getReflectionClass();
       $properties = [];
       foreach ($reflClass->getProperties() as $property) {
-        if (!empty($this->annotationReader->getPropertyAnnotation($property, $annotationClass))) {
-          $properties[] = $property->getName();
+        if (!empty($annotation = $this->annotationReader->getPropertyAnnotation($property, $annotationClass))) {
+          $properties[$property->getName()] = $annotation;
         }
       }
       if (!empty($properties)) {
@@ -725,6 +731,69 @@ class EntityManager extends EntityManagerDecorator
     return $this->annotationProperties[$annotationClass];
   }
 
+  /**
+   * In order to change the encryption key the encrypted data has to
+   * be decrypted with the old key and re-encrypted with the new key.
+   *
+   * @bug This function does not seem to belong here ...
+   * @todo Find out where this function belongs to ...
+   */
+  public function recryptEncryptedProperties(string $newEncryptionKey)
+  {
+    if (!$this->connected()) {
+      throw new \RuntimeException($this->l->t('EntityManager is not connected to database.'));
+    }
+    $annotationClass = \MediaMonks\Doctrine\Mapping\Annotation\Transformable::class;
+    $transformables = $this->propertiesByAnnotation($annotationClass);
+
+    /** @var Doctrine\ORM\UnitOfWork $unitOfWork */
+    $unitOfWork = $this->getUnitOfWork();
+
+    /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
+    $transformer = $this->transformerPool['encrypt'];
+
+    $oldEncryptionKey = $transformer->setEncryptionKey($newEncryptionKey);
+
+    $encryptedEntities = [];
+    $this->beginTransaction();
+    try {
+      foreach ($transformables as $annotationInfo) {
+        $encryptedProperties = false;
+        foreach ($annotationInfo['properties'] as $field => $transformable) {
+          if ($transformable->name == 'encrypt') {
+            $encryptedProperties = true;
+            $encryptedEntities[] = $annotationInfo['entity'];
+            break;
+          }
+        }
+      }
+
+      foreach ($encryptedEntities as $entityClass) {
+        foreach ($this->getRepository($entityClass)->findAll() as $entity) {
+          $unitOfWork->scheduleForUpdate($entity);
+        }
+      }
+      $this->flush();
+
+      $transformer->setDecryptionKey($newEncryptionKey);
+      foreach ($encryptedEntities as $entityClass) {
+        foreach ($this->getRepository($entityClass)->findAll() as $entity) {
+          $this->refresh($entity);
+        }
+      }
+
+      $this->commit();
+    } catch (\Throwable $t) {
+      // $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
+      $this->rollback();
+      $transformer->setEncryptionKey($oldEncryptionKey);
+      $transformer->setDecryptionKey($oldEncryptionKey);
+      $this->reopen();
+      throw new \RuntimeException(
+        $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),
+        $t->getCode(), $t);
+    }
+  }
 }
 
 // Local Variables: ***
