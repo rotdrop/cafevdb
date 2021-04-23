@@ -184,13 +184,23 @@ input.pme-debit-note[type=submit] {
  * Registration controls
  *
  */
+#sepa-debit-mandate-dialog fieldset.debit-mandate {
+  position:relativev;
+}
+
+#sepa-debit-mandate-dialog fieldset.debit-mandate #sepa-debit-mandate-upload-later + label {
+  position:absolute;
+  right:0;
+  bottom:0;
+  margin-right:3px;
+}
 
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-mandate legend .registration-for-label {
-  display:hidden;
+  display:none;
 }
 
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-mandate #sepa-debit-mandate-upload-later:checked ~ legend .registration-label {
-  display:hidden;
+  display:none;
 }
 
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-mandate #sepa-debit-mandate-upload-later:checked ~ legend .registration-for-label {
@@ -204,7 +214,7 @@ input.pme-debit-note[type=submit] {
 #sepa-debit-mandate-dialog fieldset.debit-mandate legend .registraion-label,
 #sepa-debit-mandate-dialog fieldset.debit-mandate legend .registration-for-label,
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-mandate legend .reference-label {
-  display:hidden;
+  display:none;
 }
 
 #sepa-debit-mandate-dialog #sepa-debit-mandate-upload-later:checked ~ .debit-mandate-details.hidden {

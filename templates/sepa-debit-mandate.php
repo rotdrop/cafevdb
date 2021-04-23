@@ -39,10 +39,12 @@ if ($haveMandate) {
 }
 
 $hidden = [
-  'haveMandate' => ($haveMandate ? ' hidden ' : ''),
-  'noMandate' => ($haveMandate ? '' : ' hidden '),
-  'writtenMandate' => (!empty($writtenMandate) ? ' hidden ' : ''),
-  'noWrittenMandate' => (!empty($writtenMandate) ? '' : ' hidden '),
+  'haveMandate' => ($haveMandate ? 'hidden' : ''),
+  'noMandate' => (!$haveMandate ? 'hidden' : ''),
+  'writtenMandate' => (!empty($writtenMandate) ? 'hidden' : ''),
+  'noWrittenMandate' => (empty($writtenMandate) ? 'hidden' : ''),
+  'project' => ((int)$projectId > 0 ? 'hidden' : ''),
+  'noProject' => ((int)$projectId <= 0 ? 'hidden' : ''),
 ];
 
 ?>
@@ -114,8 +116,8 @@ $hidden = [
       <div class="statusmessage suggestions"></div>
     </fieldset>
     <fieldset class="debit-mandate <?php empty($haveMandate) && p('no-mandate'); ?> <?php empty($writtenMandate) && p('no-written-mandate'); ?>">
-      <input id="sepa-debit-mandate-upload-later <?php p($hidden['writtenMandate']); ?>"
-             class="bankAccount projectMandate checkbox inline-block "
+      <input id="sepa-debit-mandate-upload-later"
+             class="bankAccount projectMandate checkbox inline-block <?php p($hidden['writtenMandate']); ?>"
              type="checkbox"
              name="uploadLater"
              value="uploadLater"
@@ -136,10 +138,8 @@ $hidden = [
           <?php p($l->t('Mandate-Reference: %s', $mandateReference)); ?>
         </span>
       </legend>
-      <br/>
       <div class="debit-mandate-details <?php echo (!$haveMandate ? ' hidden' : '');?>">
-      <?php if (true || (int)$projectId > 0) { ?>
-        <span class="debit-mandate-binding">
+        <span class="debit-mandate-binding <?php p($hidden['noProject']); ?>">
           <input id="sepa-debit-mandate-only-for-project"
                  class="bankAccount projectMandate checkbox"
                  type="radio"
@@ -153,7 +153,6 @@ $hidden = [
             <?php echo $l->t('only for "%s"', $memberProjectName); ?>
           </label>
         </span>
-      <?php } ?>
       <span class="debit-mandate-binding">
         <input id="sepa-debit-mandate-for-all-receivables"
                class="bankAccount projectMandate checkbox"
