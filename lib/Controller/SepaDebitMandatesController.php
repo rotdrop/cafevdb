@@ -515,10 +515,13 @@ class SepaDebitMandatesController extends Controller {
       $mandate = (new Entities\SepaDebitMandate)
                ->setNonRecurring(!empty($project))
                ->setMandateReference($ref)
-               ->setMandateDate(new \DateTimeImmutable);
+               ->setMandateDate(new \DateTimeImmutable)
+               ->setSequence(0);
 
       if (empty($bankAccount)) {
-        $bankAccount = (new Entities\SepaBankAccount);
+        $bankAccount = (new Entities\SepaBankAccount)
+                     ->setBankAccountOwner($musician->getPublicName())
+                     ->setSequence(0);
       }
     }
 

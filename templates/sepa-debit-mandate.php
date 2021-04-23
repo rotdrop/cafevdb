@@ -26,8 +26,11 @@ $expiredTip = $toolTips['sepa-mandate-expired'];
 
 $recurring = $l->t('Type: ').($sequenceType == 'once' ? $l->t('once') : $l->t('permanent'));
 
+// do we have a mandate?
+$haveMandate = (int)$mandateSequence > 0;
+
 // compute current or default value for mandate binding
-if ($mandateSequence > 0) {
+if ($haveMandate) {
   $mandateBinding = $mandateProjectId > 0 ? 'only-project' : 'all-receivables';
 } else {
   $mandateBinding = ((int)$projectId > 0
@@ -59,7 +62,56 @@ if ($mandateSequence > 0) {
     <input type="hidden" name="mandateReference" value="<?php echo $mandateReference; ?>" />
     <input type="hidden" name="sequenceType" value="<?php echo $sequenceType; ?>" />
     <input type="hidden" name="nonRecurring" value="<?php echo $nonRecurring; ?>" />
-    <fieldset class="debit-mandate">
+    <fieldset>
+      <legend>
+        <?php echo $l->t('Bank Account'); ?>
+      </legend>
+      <input class="bankAccount bankAccountOwner" type="text"
+             id="bankAccountOwner"
+             name="bankAccountOwner"
+             value="<?php echo $bankAccountOwner; ?>"
+             title="<?php echo $l->t('owner of the bank account, probably same as musician'); ?>"
+             placeholder="<?php echo $l->t('owner of bank account'); ?>"/><br/>
+      <div class="bank-account-identifier">
+        <input class="bankAccount bankAccountBLZ" type="text"
+               id="bankAccountBLZ"
+               name="bankAccountBLZ"
+               value="<?php echo $bankAccountBLZ; ?>"
+               title="<?php echo $l->t('Optional BLZ of the musician\'s bank account'); ?>"
+               placeholder="<?php echo $l->t('BLZ of bank account'); ?>"/>
+        <input class="bankAccount bankAccountIBAN" type="text"
+               id="bankAccountIBAN"
+               name="bankAccountIBAN"
+               value="<?php echo $bankAccountIBAN; ?>"
+               title="<?php echo $l->t('IBAN or number of the bank account. If this is a account number, then please first enter the BLZ'); ?>"
+               placeholder="<?php echo $l->t('IBAN or no. of bank account'); ?>"/>
+        <input class="bankAccount bankAccountBIC" type="text"
+               id="bankAccountBIC"
+               name="bankAccountBIC"
+               value="<?php echo $bankAccountBIC; ?>"
+               title="<?php echo $l->t('Optionally the BIC of the account; will be computed automatically if left blank.'); ?>"
+               placeholder="<?php echo $l->t('BIC of bank account'); ?>"/>
+      </div>
+      <label class="sepa-validation-toggle"
+             for="sepa-validation-toggle"
+             title="<?php echo $toolTips['sepa-instant-validation']; ?>">
+        <?php echo $l->t('Instant IBAN Validation:'); ?>
+        <input type="checkbox"
+               checked="checked"
+               class="sepa-validation-toggle"
+               name="sepa-validation-toggle"
+               id="sepa-validation-toggle"/>
+        <div class="sepa-validation-toggle"></div>
+      </label>
+      <div class="statusmessage suggestions"></div>
+    </fieldset>
+    <input type="button"
+           class="debit-mandate-register <?php echo ($haveMandate ? ' hidden' : '');?>"
+           name="registerDebitMandate"
+           value="<?php echo $l->t('Register SEPA Debit-Mandate'); ?>"
+           title="<?php $toolTipsService['sepa-mandate-form:register-mandate']; ?>"
+    />
+    <fieldset class="debit-mandater <?php echo (!$haveMandate ? ' hidden' : '');?>">
       <legend class="mandateCaption">
         <?php echo $l->t('Mandate-Reference: '); ?>
         <span class="reference">
@@ -125,51 +177,6 @@ if ($mandateSequence > 0) {
       </label>
       <?php } ?>
     </fieldset>
-    <fieldset>
-      <legend>
-        <?php echo $l->t('Bank Account'); ?>
-      </legend>
-      <input class="bankAccount bankAccountOwner" type="text"
-             id="bankAccountOwner"
-             name="bankAccountOwner"
-             value="<?php echo $bankAccountOwner; ?>"
-             title="<?php echo $l->t('owner of the bank account, probably same as musician'); ?>"
-             placeholder="<?php echo $l->t('owner of bank account'); ?>"/><br/>
-      <input class="bankAccount bankAccountBLZ" type="text"
-             id="bankAccountBLZ"
-             name="bankAccountBLZ"
-             value="<?php echo $bankAccountBLZ; ?>"
-             title="<?php echo $l->t('Optional BLZ of the musician\'s bank account'); ?>"
-             placeholder="<?php echo $l->t('BLZ of bank account'); ?>"/>
-      <input class="bankAccount bankAccountIBAN" type="text"
-             id="bankAccountIBAN"
-             name="bankAccountIBAN"
-             value="<?php echo $bankAccountIBAN; ?>"
-             title="<?php echo $l->t('IBAN or number of the bank account. If this is a account number, then please first enter the BLZ'); ?>"
-             placeholder="<?php echo $l->t('IBAN or no. of bank account'); ?>"/>
-      <input class="bankAccount bankAccountBIC" type="text"
-             id="bankAccountBIC"
-             name="bankAccountBIC"
-             value="<?php echo $bankAccountBIC; ?>"
-             title="<?php echo $l->t('Optionally the BIC of the account; will be computed automatically if left blank.'); ?>"
-             placeholder="<?php echo $l->t('BIC of bank account'); ?>"/>
-      <br/>
-      <label class="sepa-validation-toggle"
-             for="sepa-validation-toggle"
-             title="<?php echo $toolTips['sepa-instant-validation']; ?>">
-        <?php echo $l->t('Instant IBAN Validation:'); ?>
-        <input type="checkbox"
-               checked="checked"
-               class="sepa-validation-toggle"
-               name="sepa-validation-toggle"
-               id="sepa-validation-toggle"/>
-        <div class="sepa-validation-toggle"></div>
-      </label>
-    </fieldset>
   </form>
-  <div class="sepastatusblock">
-    <span class="statusmessage" style="display:inline-block;" id="msg"></span>
-    <span class="statusmessage" style="display:inline-block;" id="suggestions"></span>
-    <div id="debug"></div>
-  </div>
+  <div class="statusmessage messagte"></div>
 </div>

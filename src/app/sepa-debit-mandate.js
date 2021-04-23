@@ -49,10 +49,7 @@ const SepaDebitMandate = globalState.SepaDebitMandate = {
  * Initialize the mess with contents. The "mess" is a dialog window
  * with the input form element for the bank account data.
  *
- * @param {Object} data JSON response with the fields data.status,
- *   data.data.contents, data.data.message is place in an error-popup
- *   if status != 'success' data.data.debug. data.data.debug is placed
- *   inside the '#debug' div.
+ * @param {Object} data TBD.
  *
  * @param {Function} reloadCB TBD.
  *
@@ -394,7 +391,7 @@ const mandateValidate = function(event, validateLockCB) {
     if (data) {
       const hints = makeSuggestions(data);
       if (hints) {
-        $(dialogId + ' #suggestions').html(hints).show();
+        $(dialogId + ' .suggestions').html(hints).show();
       }
     }
     validateLockCB(false);
@@ -485,11 +482,9 @@ const mandateValidate = function(event, validateLockCB) {
             + data.suggestions
             + '. '
             + t(appName, 'Please do not accept these alternatives lightly!');
-        $(dialogId + ' #suggestions').html(hints);
-        $(dialogId + ' #suggestions').show();
+        $(dialogId + ' .suggestions').html(hints).show();
       } else {
-        $(dialogId + ' #suggestions').html('');
-        $(dialogId + ' #suggestions').hide();
+        $(dialogId + ' .suggestions').html('').hide();
       }
 
       validateUnlock();

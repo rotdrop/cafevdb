@@ -47,6 +47,10 @@ form#sepa-debit-mandate-form :disabled {
   opacity:1.0;
 }
 
+form#sepa-debit-mandate-form .bank-account-identifier {
+  font-family:monospace;
+}
+
 form#sepa-debit-mandate-form label.sepa-validation-toggle {
   float:right;
   margin-right:3px;
