@@ -181,6 +181,20 @@ input.pme-debit-note[type=submit] {
 
 /******************************************************************************
  *
+ * Registration controls
+ *
+ */
+
+#sepa-debit-mandate-dialog #sepa-debit-mandate-upload-later:checked ~ .debit-mandate-details.hidden {
+  display:unset;
+}
+
+#sepa-debit-mandate-dialog .debit-mandate-register .upload-placeholder {
+  width:20em;
+}
+
+/******************************************************************************
+ *
  * debit job choices.
  *
  */
