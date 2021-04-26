@@ -33,6 +33,10 @@ import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
+import 'selectize';
+import 'selectize/dist/css/selectize.bootstrap4.css';
+// import 'selectize/dist/css/selectize.css';
+require('cafevdb-selectize.css');
 
 require('sepa-debit-mandate.css');
 
@@ -87,8 +91,43 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
 
   const popup = $(data.contents);
   const mandateForm = popup.find('#sepa-debit-mandate-form');
+  const fieldsets = mandateForm.find('fieldset');
+  const accountFieldset = mandateForm.find('.bank-account');
+  const mandateFieldset = mandateForm.find('.debit-mandate');
+
   self.instantValidation = mandateForm.find('#sepa-validation-toggle').prop('checked');
   const lastUsedDate = mandateForm.find('input.lastUsedDate');
+
+  const conservativeAllowChange = function(writable, fieldSet) {
+    fieldSet.each(function(index) {
+      const $self = $(this);
+      if ($self.hasClass('no-data') || $self.hasClass('unused')) {
+        // just allow all, there is no point to disallow anything
+        if ($self.hasClass('no-data')) {
+          $self.find('input, select').prop('readonly', false).prop('disabled', false);
+        }
+      } else {
+        // only allow editing of EMPTY input fields. Radio-buttons
+        // stay disabled.
+        //
+        // Non-empty inputs are armed with locking-checkboxes which
+        // can be used to re-enable input fields if necessary.
+        if (writable) {
+          $self.find('input:text, input:number').each(function(index) {
+            $self = $(this);
+            $self.prop('readonly', $self.val() !== '');
+          });
+          $self.find('select').each(function(index) {
+            $self = $(this);
+            $self.prop('disabled', $self.val() !== '');
+          });
+        } else {
+          $self.find('input:text, input:number').prop('readonly', true);
+          $self.find('input:radio, input:button, select').prop('disabled', true);
+        }
+      };
+    });
+  };
 
   popup.cafevDialog({
     position: {
@@ -116,11 +155,7 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
           $dlg.dialog('widget').find('button.delete').show().prop('disabled', false);
           $dlg.dialog('widget').find('button.reload').show().prop('disabled', false);
           $dlg.dialog('widget').find('button.change').hide();
-          if (lastUsedDate.val().trim() === '') {
-            mandateForm.find('input.bankAccount').prop('disabled', false);
-            mandateForm.find('input.mandateDate').prop('disabled', false);
-            lastUsedDate.prop('disabled', false);
-          }
+          conservativeAllowChange(true, fieldsets);
           $.fn.cafevTooltip.remove(); // clean up left-over balloons
         },
       },
@@ -142,9 +177,7 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
             $dlg.dialog('widget').find('button.delete').hide().prop('disabled', true);
             $dlg.dialog('widget').find('button.reload').hide().prop('disabled', true);
             $dlg.dialog('widget').find('button.change').show().prop('disabled', false);
-            mandateForm.find('input.bankAccount').prop('disabled', true);
-            mandateForm.find('input.mandateDate').prop('disabled', true);
-            mandateForm.find('input.lastUsedDate').prop('disabled', true);
+            conservativeAllowChange(false, fieldsets);
             $.fn.cafevTooltip.remove(); // clean up left-over balloons
           });
         },
@@ -225,6 +258,20 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
         reload: $widget.find('button.reload'),
       };
 
+      mandateFieldset.find('select.debitMandateProjectId.selectize').selectize({
+        plugins: ['remove_button'],
+        openOnFocus: false,
+        closeAfterSelect: true,
+      });
+      mandateFieldset.find('select.debitMandateProjectId.chosen').chosen({
+        allow_single_deselect: true,
+        inherit_select_classes: true,
+        disable_search_threshold: 8,
+      });
+
+      conservativeAllowChange(false, fieldsets);
+
+
       if (self.mandateSequence > 0 || self.bankAccountSequence > 0) {
         // If we are about to display an existing mandate, first
         // disableall inputs and leave only the "close" and
@@ -233,9 +280,6 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
         buttons.apply.prop('disabled', true);
         buttons.delete.prop('disabled', true);
         buttons.reload.prop('disabled', true);
-        mandateForm.find('input.bankAccount').prop('disabled', true);
-        mandateForm.find('input.mandateDate').prop('disabled', true);
-        mandateForm.find('input.lastUsedDate').prop('disabled', true);
       } else {
         buttons.save.prop('disabled', !self.instantValidation).show();
         buttons.apply.prop('disabled', !self.instantValidation).show();

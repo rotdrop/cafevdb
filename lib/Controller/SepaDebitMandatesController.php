@@ -37,6 +37,8 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -546,29 +548,37 @@ class SepaDebitMandatesController extends Controller {
     }
 
     $memberProjectId = $this->getConfigValue('memberProjectId', 0);
-    if ($memberProjectid != $projectId) {
-      // otherwise $musician IS a club member
-      $clubMember = $musician->getProjectParticipantOf($memberProjectId);
-    }
+    $isClubMember = ($memberProjectid == $projectId) || $musician->isMemberOf($memberProjectId);
 
-    if (!empty($project)) {
-      // only member's project and current project are allowed
-      $projectOptions = [
-        $projectId => [
-          'value' => $projectId,
-          'name' => $project->getName(),
-        ],
-      ];
-      if (!empty($clubMember)) {
-        $projectOptions[$memberProjectId] = [
-          'value' => $memberProjectId,
-          'name' => $clubMember->getProject()->getName(),
-        ];
+    $projectOptions = [];
+    if (empty($project)) {
+      /** @var Entities\ProjectParticipant $participant */
+      foreach ($musician->getProjectParticipation() as $participant) {
+        $participantProject = $participant->getProject();
+        $tempory = Types\EnumProjectTemporalType::TEMPORARY();
+        if ($participantProject->getType() == $tempory) {
+          $name = $participantProject['name'];
+          $year = $participantProject['year'];
+          $shortName = str_replace($year, '', $name);
+          $projectOptions[] = [
+            'value' => $participantProject['id'],
+            'name' => $name,
+            'label' => $shortName,
+            'group' => $year,
+          ];
+        }
       }
-    } else {
-      // Generate options for all projects.
-      // @todo Limit to active projects.
-      $projectOptions = $this->projectService->projectOptions();
+      if (count($projectOptions) <= 5) {
+        foreach ($projectOptions as &$option) {
+          unset($option['label']);
+          unset($option['group']);
+        }
+      }
+    } else if ($projectId != $memberProjectId) {
+      $projectOptions[] = [
+        'value' => $projectId,
+        'name' => $project->getName(),
+      ];
     }
 
     $templateParameters = [
@@ -596,6 +606,7 @@ class SepaDebitMandatesController extends Controller {
       'lastUsedDate' => $mandate->getLastUsedDate(),
       'sequenceType' => $mandate->getNonRecurring() ? 'once' : 'permanent',
       'nonRecurring' => $mandate->getNonRecurring(),
+      'mandateInUse' => $mandate->inUse(),
 
       'bankAccountSequence' => $bankAccount->getSequence(),
       'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
@@ -603,6 +614,7 @@ class SepaDebitMandatesController extends Controller {
       'bankAccountIBAN' => $iban,
       'bankAccountBLZ' => $blz,
       'bankAccountBIC' => $bic,
+      'bankAccountInUse' => $bankAccount->inUse(),
 
       'dateTimeFormatter' => \OC::$server->query(\OCP\IDateTimeFormatter::class),
     ];
