@@ -61,7 +61,7 @@ $hidden = [
       <?php echo ($mandateExpired ? $l->t('expired') : ''); ?>
     </div>
   </div>
-  <form id="sepa-debit-mandate-form" class="sepa-bank-data <?php echo $cssClass; ?>" >
+  <form id="sepa-debit-mandate-form" class="sepa-debit-mandate-form sepa-bank-data <?php echo $cssClass; ?>" >
     <!-- <input type="hidden" autofocus="autofocus" /> -->
     <!-- @todo perhaps better use a JSON data-field for this mess -->
     <input type="hidden" name="mandateProjectId" value="<?php echo $mandateProjectId; ?>" />
@@ -140,7 +140,7 @@ $hidden = [
         <?php if (count($projectOptions) > 0) { ?>
           <span class="debit-mandate-binding <?php p($hidden['haveMandate']); ?>">
             <input id="sepa-debit-mandate-only-for-project"
-                   class="bankAccount projectMandate checkbox"
+                   class="only-for-project bankAccount projectMandate checkbox"
                    type="radio"
                    name="debitMandateBinding"
                    value="only-project"
@@ -169,7 +169,7 @@ $hidden = [
         <?php } ?>
         <span class="debit-mandate-binding <?php p($hidden['haveMandate']); ?>">
           <input id="sepa-debit-mandate-for-all-receivables"
-                 class="bankAccount projectMandate checkbox"
+                 class="all-receivables bankAccount projectMandate checkbox"
                  type="radio"
                  name="debitMandateBinding"
                  value="all-receivables"
