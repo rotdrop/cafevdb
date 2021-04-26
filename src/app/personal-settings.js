@@ -206,12 +206,15 @@ const documentReady = function() {
       });
     if (checked) {
       $('.expertmode-container').removeClass('hidden');
+      $('body').addClass('cafevdb-expert-mode');
     } else {
       $('.expertmode-container').addClass('hidden');
+      $('body').removeClass('cafevdb-expert-mode');
     }
     $('.personal-settings input[type="checkbox"].expertmode').prop('checked', checked);
     $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
     $.fn.cafevTooltip.remove(); // remove any left-over items.
+    globalState.expertMode = checked;
     return false;
   });
 
