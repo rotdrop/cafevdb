@@ -1457,9 +1457,9 @@ const pmeInit = function(containerSel) {
           if (target.hasClass('nav')) {
             return;
           }
-          if (!target.is('span') && !target.is('div')) {
-            return;
-          }
+          // if (!target.is('span') && !target.is('div')) {
+          //   return;
+          // }
         }
 
         // @todo needed?
