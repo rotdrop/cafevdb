@@ -119,7 +119,11 @@ $hidden = [
       </label>
       <div class="statusmessage suggestions"></div>
     </fieldset>
-    <fieldset class="debit-mandate <?php empty($haveMandate) && p('no-data'); ?> <?php empty($mandateInUse) && p('unused'); ?><?php empty($writtenMandate) && p('no-written-mandate'); ?> <?php !empty($isClubMember) && p('club-member'); ?>">
+    <fieldset class="debit-mandate
+                     <?php empty($haveMandate) && p('no-data'); ?>
+                     <?php empty($mandateInUse) && p('unused'); ?>
+                     <?php empty($writtenMandate) && p('no-written-mandate'); ?>
+                     <?php !empty($isClubMember) && p('club-member'); ?>">
       <legend class="mandateCaption inline-block <?php p($hidden['noMandate']); ?>">
         <span class="reference-label">
           <?php p($l->t('Mandate-Reference: %s', $mandateReference)); ?>
