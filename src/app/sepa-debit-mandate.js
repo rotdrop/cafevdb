@@ -70,7 +70,7 @@ const mandatesInit = function(data, onChangeCallback) {
   const popup = $(data.contents);
 
   popup.data('instantvalidation', true);
-  popup.data('reloadState', {
+  popup.data('sepaId', {
     projectId: data.projectId,
     musicianId: data.musicianId,
     bankAccountSequence: data.bankAccountSequence,
@@ -159,9 +159,8 @@ const mandatesInit = function(data, onChangeCallback) {
       const $self = $(this);
       if ($self.hasClass('no-data') || $self.hasClass('unused')) {
         // just allow all, there is no point to disallow anything
-        if ($self.hasClass('no-data')) {
-          $self.find('input, select').prop('readonly', false).prop('disabled', false);
-        }
+        $self.find('input, select').prop('readonly', false).prop('disabled', false);
+
       } else {
         // only allow editing of EMPTY input fields. Radio-buttons
         // stay disabled.
@@ -213,16 +212,18 @@ const mandatesInit = function(data, onChangeCallback) {
       disable_search_threshold: 8,
     });
 
+
     conservativeAllowChange(false, fieldsets);
 
-    if (self.mandateSequence > 0 || self.bankAccountSequence > 0) {
+    if (data.sepaId.mandateSequence > 0 || data.sepaId.bankAccountSequence > 0) {
       // If we are about to display an existing mandate, first
       // disableall inputs and leave only the "close" and
       // "change" buttons enabled.
       buttons.save.prop('disabled', true);
       buttons.apply.prop('disabled', true);
       buttons.delete.prop('disabled', true);
-      buttons.reload.prop('disabled', true);
+      buttons.revoke.prop('disabled', true);
+      buttons.reload.prop('disabled', false);
     } else {
       buttons.save.prop('disabled', !data.instantValidation).show();
       buttons.apply.prop('disabled', !data.instantValidation).show();
@@ -327,7 +328,7 @@ const mandatesInit = function(data, onChangeCallback) {
           buttons.change.show().prop('disabled', false);
 
           mandateLoad(
-            data.reloadState,
+            data.sepaId,
             // redefine reload-state with response
             function(data) {
               popup.data('instantvalidation', true);
