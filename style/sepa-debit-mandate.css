@@ -192,44 +192,10 @@ input.pme-debit-note[type=submit] {
   max-width:10rem;
 }
 
-#sepa-debit-mandate-dialog  .selectize-control.single .selectize-input {
-  white-space:nowrap;
-  overflow:hidden;
-}
-
 #sepa-debit-mandate-dialog  .selectize-control.single .selectize-dropdown {
   width:auto!important;
   min-width:10rem;
   max-width:30rem;
-}
-
-#sepa-debit-mandate-dialog  .selectize-control.single .selectize-input > span {
-  width:100%;
-}
-
-/**
- * Restyle s.t. in a narrow environment the arrow drop-down control
- * is visible.
- */
-#sepa-debit-mandate-dialog .selectize-control.single .selectize-input input[type="select-one"] {
-  width:100%;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  vertical-align:middle;
-}
-
-/**
- * Restyle s.t. in a narrow environment the remove and arrow controls
- * are visible.
- */
-#sepa-debit-mandate-dialog .selectize-control.single .selectize-input .item {
-  width:100%;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  vertical-align:middle;
-  display:inline-block;
-  padding-right:10px!important;
 }
 
 /******************/
