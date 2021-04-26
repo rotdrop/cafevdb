@@ -35,7 +35,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="SepaDebitMandates", uniqueConstraints={@ORM\UniqueConstraint(columns={"mandate_reference"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository")
- * @Gedmo\SoftDeleteable(fieldName="deleted")
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
  */
 class SepaDebitMandate
 {
@@ -44,6 +47,7 @@ class SepaDebitMandate
   use CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
@@ -331,5 +335,15 @@ class SepaDebitMandate
   public function getNonRecurring()
   {
     return $this->nonRecurring;
+  }
+
+  /**
+   * Return the number of payments attached to this entity.
+   *
+   * @return int
+   */
+  public function usage():int
+  {
+    return $this->projectPayments->count();
   }
 }

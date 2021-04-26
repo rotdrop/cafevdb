@@ -41,7 +41,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="SepaBankAccounts")
  *
  * @ORM\Entity
- * @Gedmo\SoftDeleteable(fieldName="deleted")
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
  */
 class SepaBankAccount implements \ArrayAccess
 {
@@ -50,6 +53,7 @@ class SepaBankAccount implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaBankAccounts", fetch="EXTRA_LAZY")
@@ -299,5 +303,18 @@ class SepaBankAccount implements \ArrayAccess
   public function getSequence():int
   {
     return $this->sequence;
+  }
+
+  /**
+   * Return the usage count. The bank-account is used and thus
+   * undeleteable and unchangeable (up to less important data like
+   * typos in the bank-account-owner) if there are recorded payments
+   * or debit-mandates.
+   *
+   * @return int
+   */
+  public function usage():int
+  {
+    return $this->projectPayments->count() + $this->sepaDebitMandates->count();
   }
 }
