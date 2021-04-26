@@ -716,13 +716,7 @@ class Musician implements \ArrayAccess
    */
   public function isMemberOf($projectOrId):bool
   {
-    $projectId = ($projectOrId instanceof Project) ? $projectOrId->getId() : $projectOrId;
-    if (!empty($this->projectParticipation->get($projectId))) {
-      return true;
-    }
-    return 0 < $this->projectParticipation->matching(DBUtil::criteriaWhere([
-      'project' => $projectId,
-    ]))->count();
+    return !empty($this->getProjectParticipantOf($projectOrId));
   }
 
   /**
