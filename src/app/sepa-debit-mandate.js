@@ -55,41 +55,27 @@ const SepaDebitMandate = globalState.SepaDebitMandate = {
  *
  * @param {Object} data Data returned by the AJAX call.
  *
- * @param {Object} sepaBankData Copy of the data submitted to the AJAX call.
- *
  * @param {Function} onChangeCallback function called after
  * submitting data to the database.
  *
  * @returns {bool}
  */
-const mandatesInit = function(data, sepaBankData, onChangeCallback) {
+const mandatesInit = function(data, onChangeCallback) {
   const self = SepaDebitMandate;
-
-  if (!Ajax.validateResponse(data, [
-    'contents',
-    'projectId',
-    'musicianId',
-    'bankAccountSequence',
-    'mandateSequence',
-    'mandateReference',
-  ])) {
-    return false;
-  }
 
   if (typeof onChangeCallback !== 'function') {
     onChangeCallback = function() {};
   }
 
-  self.projectId = data.projectId;
-  self.musicianId = data.musicianId;
-  self.bankAccountSequence = data.bankAccountSequence;
-  self.mandateSequence = data.mandateSequence;
-  self.mandateReference = data.mandateReference;
-
-  console.info('DATA', data);
-  console.info('SELF', self);
-
   const popup = $(data.contents);
+
+  popup.data('instantvalidation', true);
+  popup.data('reloadState', {
+    projectId: data.projectId,
+    musicianId: data.musicianId,
+    bankAccountSequence: data.bankAccountSequence,
+    mandateSequence: data.mandateSequence,
+  });
 
   const mandateFormSelector = 'form.sepa-debit-mandate-form';
   const projectSelectSelector = 'select.debitMandateProjectId';
@@ -201,7 +187,8 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
 
   const initializeDialogHandlers = function($dlg) {
     const $widget = $dlg.dialog('widget');
-    const buttons = $dlg.data('buttons');
+    const data = $dlg.data();
+    const buttons = data.buttons;
 
     $.fn.cafevTooltip.remove();
 
@@ -210,7 +197,7 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
     // const accountFieldset = mandateForm.find('fieldset.bank-account');
     const mandateFieldset = mandateForm.find('fieldset.debit-mandate');
 
-    $dlg.data('fieldsets', fieldsets);
+    data.fieldsets = fieldsets;
 
     // $.fn.cafevTooltip.remove(); // remove tooltip form "open-button"
     $widget.find('button.close').focus();
@@ -237,9 +224,9 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
       buttons.delete.prop('disabled', true);
       buttons.reload.prop('disabled', true);
     } else {
-      buttons.save.prop('disabled', !self.instantValidation).show();
-      buttons.apply.prop('disabled', !self.instantValidation).show();
-      buttons.reload.prop('disabled', !self.instantValidation).show();
+      buttons.save.prop('disabled', !data.instantValidation).show();
+      buttons.apply.prop('disabled', !data.instantValidation).show();
+      buttons.reload.prop('disabled', !data.instantValidation).show();
       buttons.change.prop('disabled', true).hide();
     }
 
@@ -307,14 +294,18 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
         title: t(appName, 'Change the SEPA mandate. Note that the SEPA mandate-reference is automatically computed and cannot be changed.'),
         click() {
           const $dlg = $(this);
-          const buttons = $dlg.data('buttons');
+          const data = $dlg.data();
+          const buttons = data('buttons');
           // enable the form, disable the change button
-          buttons.save.show().prop('disabled', !self.instantValidation);
-          buttons.apply.show().prop('disabled', !self.instantValidation);
+          buttons.save.show().prop('disabled', !data.instantValidation);
+          buttons.apply.show().prop('disabled', !data.instantValidation);
           buttons.delete.show().prop('disabled', false);
+          buttons.revoke.show().prop('disabled', false); // todo depend on mandate
           buttons.reload.show().prop('disabled', false);
-          buttons.change.hide();
-          conservativeAllowChange(true, $dlg.data('fieldsets'));
+          buttons.change.hide().prop('disabled', true);
+
+          conservativeAllowChange(true, data.fieldsets);
+
           $.fn.cafevTooltip.remove(); // clean up left-over balloons
         },
       },
@@ -325,21 +316,25 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
         title: t(appName, 'Reload the form and locks it. Unsaved changes are lost.'),
         click() {
           const $dlg = $(this);
-          const buttons = $dlg.data('buttons');
-          mandateReload(function() {
-            $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(self.mandateReference);
-            // Disable everything and enable the change button
-            // If we are about to display an existing mandate, first
-            // disable all inputs and leave only the "close" and
-            // "change" buttons enabled, and the lastUsed date.
-            buttons.save.hide().prop('disabled', true);
-            buttons.apply.hide().prop('disabled', true);
-            buttons.delete.hide().prop('disabled', true);
-            buttons.reload.hide().prop('disabled', true);
-            buttons.change.show().prop('disabled', false);
-            conservativeAllowChange(false, $dlg.data('fieldsets'));
-            $.fn.cafevTooltip.remove(); // clean up left-over balloons
-          });
+          const data = $dlg.data();
+          const buttons = data('buttons');
+
+          buttons.save.hide().prop('disabled', true);
+          buttons.apply.hide().prop('disabled', true);
+          buttons.delete.hide().prop('disabled', true);
+          buttons.reload.hide().prop('disabled', true);
+          buttons.revoke.hide().prop('disabled', true);
+          buttons.change.show().prop('disabled', false);
+
+          mandateLoad(
+            data.reloadState,
+            // redefine reload-state with response
+            function(data) {
+              popup.data('instantvalidation', true);
+              $dlg.html($(data.contents).html());
+              initializeDialogHandlers($dlg);
+            },
+            function() {});
         },
       },
       {
@@ -362,8 +357,9 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
         title: t(appName, 'Save the data in the underlying data-base storage. Keep the form open.'),
         click(event) {
           const $dlg = $(this);
-          const buttons = $dlg.data('buttons');
-          const $fieldsets = $dlg.data('fieldsets');
+          const data = $dlg.data();
+          const buttons = data.buttons;
+
           mandateStore(function() {
             // TODO
             $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(self.mandateReference);
@@ -376,9 +372,9 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
             buttons.delete.hide().prop('disabled', true);
             buttons.reload.hide().prop('disabled', true);
             buttons.change.show().prop('disabled', false);
-            $fieldsets.find('input.bankAccount').prop('disabled', true);
-            $fieldsets.find('input.mandateDate').prop('disabled', true);
-            $fieldsets.find('input.lastUsedDate').prop('disabled', true);
+
+            conservativeAllowChange(false, data.fieldsets);
+
             $.fn.cafevTooltip.remove(); // clean up left-over balloons
             onChangeCallback();
           });
@@ -441,11 +437,27 @@ const mandatesInit = function(data, sepaBankData, onChangeCallback) {
   return false;
 };
 
-const mandateReload = function(doneCallback) {
-  alert('NOT YET');
-  if (typeof doneCallback === 'function') {
-    doneCallback();
-  }
+const mandateLoad = function(sepaId, doneCallback, failCallback) {
+  doneCallback = doneCallback || function(data) {};
+  failCallback = failCallback || function() {};
+
+  $.post(generateUrl('finance/sepa/debit-mandates/dialog'), sepaId)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, failCallback);
+    })
+    .done(function(data) {
+      if (!Ajax.validateResponse(data, [
+        'contents',
+        'projectId',
+        'musicianId',
+        'bankAccountSequence',
+        'mandateSequence',
+        'mandateReference',
+      ])) {
+        return false;
+      }
+      doneCallback(data);
+    });
 };
 
 // Store the form data. We assume that validation already has been
@@ -834,18 +846,14 @@ const mandatePopupInit = function(selector) {
       } else {
         // We store the values in the data attribute.
         const values = $(this).data('debitMandate');
-        $.post(generateUrl('finance/sepa/debit-mandates/dialog'), values)
-          .fail(function(xhr, status, errorThrown) {
-            Ajax.handleError(xhr, status, errorThrown);
-          })
-          .done(function(data) {
-            mandatesInit(data, values, function() {
-              if (pmeReload.length > 0) {
-                pmeReload.trigger('click');
-              }
-            });
-          },
-          'json');
+
+        mandateLoad(values, function(data) {
+          mandatesInit(data, function() {
+            if (pmeReload.length > 0) {
+              pmeReload.trigger('click');
+            }
+          });
+        });
       }
       return false;
     });
