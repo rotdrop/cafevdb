@@ -25,7 +25,7 @@
  * General PME table stuff, popup-handling.
  */
 
-import { globalState, $, jQuery } from './globals.js';
+import { $, jQuery } from './globals.js';
 import * as PMEState from './pme-state.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -34,6 +34,7 @@ import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as Dialogs from './dialogs.js';
+import checkInvalidInputs from './check-invalid-inputs.js';
 import pmeTweaks from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import {
@@ -303,67 +304,6 @@ const tableDialogReload = function(options, callback, triggerData) {
     });
   });
 };
-
-function checkInvalidInputs(container, cleanup) {
-  if (typeof cleanup !== 'function') {
-    cleanup = function() {};
-  }
-
-  // Brief front-end-check for empty required fields.
-  const invalidInputs = container.find('form.pme-form :invalid');
-
-  if (invalidInputs.length !== 0) {
-    const highlightInvalid = function(afterDialog) {
-      for (const input of invalidInputs) {
-        let $input = $(input);
-        if (!$input.is(':visible') && $input.is('select')) {
-          $input = $input.next('.chosen-container');
-        }
-        if ($input.is(':visible')) {
-          $input.cafevTooltip('enable');
-          if (afterDialog) {
-            $input.cafevTooltip('show');
-          }
-          $input.effect(
-            'highlight',
-            {},
-            10000,
-            function() {
-              if (afterDialog) {
-                if (!CAFEVDB.toolTipsEnabled()) {
-                  $input.cafevTooltip('disable');
-                }
-                cleanup();
-              }
-            });
-        }
-      }
-    };
-    const invalidInfo = [];
-    for (const input of invalidInputs) {
-      const $input = $(input);
-      const label = $input.closest('tr').find('td.pme-key').html() || $input.attr('placeholder');
-      const value = $input.val();
-      invalidInfo.push('<li class="invalid-input">'
-                       + label
-                       + (value ? ', ' + t(appName, 'invalid data "{value}"', { value }) : '')
-                       + '</li>');
-    }
-    highlightInvalid();
-    Dialogs.alert(
-      t(appName, 'The following required fields are empty or contain otherwise invalid data:')
-        + '<ul>'
-        + invalidInfo.join('\n')
-        + '</ul>'
-        + t(appName, 'Please add the missing data!'),
-      t(appName, 'Missing Input Data'),
-      () => highlightInvalid(true),
-      true,
-      true);
-    return false;
-  }
-  return true;
-}
 
 /**
  * Overload the PHPMyEdit submit buttons in order to be able to
@@ -1601,7 +1541,7 @@ const pmeInit = function(containerSel) {
 
   // Handle some special check-boxes disabling text-input fields
   container.on(
-    'change', 'input[type="checkbox"].pme-input-lock-empty',
+    'change', 'input[type="checkbox"].' + pmeToken('input-lock-empty'),
     function(event) {
       const $this = $(this);
       const checked = $this.prop('checked');
@@ -1614,7 +1554,7 @@ const pmeInit = function(containerSel) {
     });
 
   container.on(
-    'change', 'input[type="checkbox"].pme-input-lock-unlock',
+    'change', 'input[type="checkbox"].' + pmeToken('input-lock-unlock'),
     function(event) {
       const $this = $(this);
       const checked = $this.prop('checked');

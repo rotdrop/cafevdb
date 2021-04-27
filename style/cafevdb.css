@@ -1053,6 +1053,16 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
   left: -100000px !important;
 }
 
+div.cafevdb.invalid-form-input {
+  margin-left:30px;
+}
+
+div.cafevdb.invalid-form-input ul {
+  list-style-type:circle;
+  list-style-image:url('../img/listitems/info1.svg');
+  list-style-position:inside;
+}
+
 /*
  * Local Variables: ***
  * css-indent-offset: 2 ***
