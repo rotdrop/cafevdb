@@ -38,11 +38,11 @@ $haveMandate = (int)$mandateSequence > 0;
 
 // compute current or default value for mandate binding
 if ($haveMandate) {
-  $mandateBinding = $mandateProjectId > 0 ? 'only-project' : 'all-receivables';
+  $mandateBinding = $mandateProjectId > 0 ? 'only-for-project' : 'for-all-receivables';
 } else {
   $mandateBinding = ((int)$projectId > 0
-    ? ($projectId == $memberProjectId ? 'all-receivables' : 'only-project')
-    : 'all-receivables');
+    ? ($projectId == $memberProjectId ? 'for-all-receivables' : 'only-for-project')
+    : 'for-all-receivables');
 }
 
 $hidden = [
@@ -163,8 +163,8 @@ $accountCss = 'bank-account'
                    class="only-for-project bankAccount projectMandate checkbox"
                    type="radio"
                    name="debitMandateBinding"
-                   value="only-project"
-                   <?php echo $mandateBinding == 'only-project' ? 'checked' : ''; ?>
+                   value="only-for-project"
+                   <?php echo $mandateBinding == 'only-for-project' ? 'checked' : ''; ?>
             />
             <label for="sepa-debit-mandate-only-for-project"
                    title="<?php echo  $toolTips['sepa-debit-mandate-only-for-project']; ?>"
@@ -173,27 +173,41 @@ $accountCss = 'bank-account'
             </label>
             <?php if (count($projectOptions) > 1) { ?>
               <select name="debitMandateProjectId"
-                      class="debitMandateProjectId selectize"
-                      placeholder="<?php p($l->t('Select a Project')); ?>">
+                      class="debitMandateProjectId only-for-project selectize"
+                      placeholder="<?php p($l->t('Select a Project')); ?>"
+                      <?php ($mandateBinding == 'for-all-receivables') && p('disabled'); ?>
+                      <?php ($mandateBinding == 'only-for-project') && p('required'); ?>
+              >
                 <option value=""></option>
                 <?php echo PageNaviation::selectOptions($projectOptions); ?>
               </select>
             <?php } else {
               $projectOption = reset($projectOptions); ?>
               <span class="debit-mandate-project">
-                <input type="hidden" name="debitMandateProjectId" value="<?php p($projectOption['value']); ?>"/>
+                <input type="hidden"
+                       class="debitMandateProjectId only-for-project"
+                       name="debitMandateProjectId"
+                       <?php ($mandateBinding == 'for-all-receivables') && p('disabled'); ?>
+                       value="<?php p($projectOption['value']); ?>"
+                />
                 <?php p($projectOption['name']); ?>
               </span>
             <?php } ?>
           </span>
         <?php } ?>
         <span class="debit-mandate-binding <?php p($hidden['haveMandate']); ?>">
+          <input type="hidden"
+                 class="debitMandateProjectId for-all-receivables"
+                 name="debitMandateProjectId"
+                 value="<?php p($memberProjectId); ?>"
+                 <?php ($mandateBinding == 'only-for-project') && p('disabled'); ?>
+          />
           <input id="sepa-debit-mandate-for-all-receivables"
-                 class="all-receivables bankAccount projectMandate checkbox"
+                 class="for-all-receivables bankAccount projectMandate checkbox"
                  type="radio"
                  name="debitMandateBinding"
-                 value="all-receivables"
-                 <?php echo $mandateBinding == 'all-receivables' ? 'checked' : ''; ?>
+                 value="for-all-receivables"
+                 <?php ($mandateBinding == 'for-all-receivables') && p('checked'); ?>
           />
           <label for="sepa-debit-mandate-for-all-receivables"
                  title="<?php echo  $toolTips['sepa-debit-mandate-for-all-receivables']; ?>"

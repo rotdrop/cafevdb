@@ -90,7 +90,9 @@ const mandatesInit = function(data, onChangeCallback) {
 
   const mandateFormSelector = 'form.sepa-debit-mandate-form';
   const projectSelectSelector = 'select.debitMandateProjectId';
-  const allReceivablesSelector = 'input.all-receivables';
+  const projectIdOnlySelector = '.debitMandateProjectId.only-for-project';
+  const projectIdAllSelector = '.debitMandateProjectId.for-all-receivables';
+  const allReceivablesSelector = 'input.for-all-receivables';
   const onlyProjectSelector = 'input.only-for-project';
   const instantValidationSelector = 'input.sepa-validation-toggle';
   const mandateRegistrationSelector = 'input.debit-mandate-registration';
@@ -174,16 +176,36 @@ const mandatesInit = function(data, onChangeCallback) {
     const projectSelect = popup.data('fieldsets').find(projectSelectSelector);
     projectSelect.val('');
     projectSelect.trigger('change');
+    projectSelect
+      .prop('disabled', true)
+      .prop('required', false);
     if (projectSelect[0].selectize) {
       projectSelect[0].selectize.clear();
+      projectSelect[0].selectize.lock();
+      projectSelect.next().find('.selectize-input input').prop('disabled', true);
     }
-    projectSelect.prop('required', false);
+
+    // further inputs
+    popup.data('fieldsets').find(projectIdOnlySelector).prop('disabled', true);
+    popup.data('fieldsets').find(projectIdAllSelector).prop('disabled', false);
+
     return false;
   });
 
   popup.on('change', mandateFormSelector + ' ' + onlyProjectSelector, function(event) {
     const projectSelect = popup.data('fieldsets').find(projectSelectSelector);
-    projectSelect.prop('required', true);
+    projectSelect
+      .prop('disabled', false)
+      .prop('required', true);
+    if (projectSelect[0].selectize) {
+      projectSelect[0].selectize.unlock();
+      projectSelect.next().find('.selectize-input input').prop('disabled', false);
+    }
+
+    // further inputs
+    popup.data('fieldsets').find(projectIdOnlySelector).prop('disabled', false);
+    popup.data('fieldsets').find(projectIdAllSelector).prop('disabled', true);
+
     return false;
   });
 
@@ -239,15 +261,36 @@ const mandatesInit = function(data, onChangeCallback) {
     // $.fn.cafevTooltip.remove(); // remove tooltip form "open-button"
     $widget.find('button.close').focus();
 
-    mandateFieldset.find('select.debitMandateProjectId.selectize').selectize({
-      plugins: ['remove_button'],
-      openOnFocus: true,
-      closeAfterSelect: true,
+    mandateFieldset.find('select.selectize').each(function(index) {
+      const $self = $(this);
+      const disabled = $self.prop('disabled');
+      $self
+        .prop('disabled', false)
+        .selectize({
+          plugins: ['remove_button'],
+          openOnFocus: true,
+          closeAfterSelect: true,
+        });
+      if (disabled) {
+        $self.prop('disabled', true);
+        $self[0].selectize.lock();
+        $self.next().find('.selectize-input input').prop('disabled', true);
+      }
     });
-    mandateFieldset.find('select.debitMandateProjectId.chosen').chosen({
-      allow_single_deselect: true,
-      inherit_select_classes: true,
-      disable_search_threshold: 8,
+
+    mandateFieldset.find('select.chosen').each(function(index) {
+      const $self = $(this);
+      const disabled = $self.prop('disabled');
+      $self
+        .prop('disabled', false)
+        .chosen({
+          allow_single_deselect: true,
+          inherit_select_classes: true,
+          disable_search_threshold: 8,
+        });
+      if (disabled) {
+        $self.prop('disabled', true);
+      }
     });
 
     const accountOwnerInput = accountFieldset.find(accountOwnerSelector);
@@ -391,6 +434,8 @@ const mandatesInit = function(data, onChangeCallback) {
         text: t(appName, 'Apply'),
         title: t(appName, 'Save the data in the underlying data-base storage. Keep the form open.'),
         click(event) {
+          console.info('CHANGE');
+
           const $dlg = $(this);
           const $form = $dlg.find(mandateFormSelector);
           const data = $dlg.data();
