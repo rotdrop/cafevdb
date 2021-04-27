@@ -24,11 +24,14 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNaviation;
 
-$title = $l->t("SEPA Debit Mandate of %s", $musicianName);
+$title = $l->t("SEPA Bank Information for %s", $musicianName);
 
 $expiredTip = $toolTips['sepa-mandate-expired'];
 
 $recurring = $l->t('Type: ').($sequenceType == 'once' ? $l->t('once') : $l->t('permanent'));
+
+// do we have a bankAccount?
+$haveAccount = (int)$bankAccountSequence > 0;
 
 // do we have a mandate?
 $haveMandate = (int)$mandateSequence > 0;
@@ -49,7 +52,18 @@ $hidden = [
   'noWrittenMandate' => (empty($writtenMandate) ? 'hidden' : ''),
   'project' => ((int)$projectId > 0 ? 'hidden' : ''),
   'noProject' => ((int)$projectId <= 0 ? 'hidden' : ''),
+
 ];
+
+$mandateCss = 'debit-mandate'
+            .(empty($haveMandate) ? ' no-data' : '')
+            .(empty($mandateInUse) ? ' unused' : '')
+            .(empty($writtenMandate) ? ' no-written-mandate' : '')
+            .(!empty($isClubMember) ? ' club-member' :'');
+
+$accountCss = 'bank-account'
+             .(!empty($bankaccountsequence) ? ' no-data' : '')
+             .(!empty($bankAccountInUse) ? ' unused' : '');
 
 ?>
 <div id="sepa-debit-mandate-dialog" title="<?php echo $title;?>">
@@ -62,7 +76,7 @@ $hidden = [
     </div>
   </div>
   <form id="sepa-debit-mandate-form" class="sepa-debit-mandate-form sepa-bank-data <?php echo $cssClass; ?>" >
-    <!-- <input type="hidden" autofocus="autofocus" /> -->
+    <input type="hidden" autofocus="autofocus" />
     <!-- @todo perhaps better use a JSON data-field for this mess -->
     <input type="hidden" name="mandateProjectId" value="<?php echo $mandateProjectId; ?>" />
     <input type="hidden" name="mandateProjectName" value="<?php echo $mandateProjectName; ?>" />
@@ -76,32 +90,38 @@ $hidden = [
     <input type="hidden" name="sequenceType" value="<?php echo $sequenceType; ?>" />
     <input type="hidden" name="nonRecurring" value="<?php echo $nonRecurring; ?>" />
     <input type="hidden" name="writtenMandate" value="<?php echo $writtenMandate; ?>" />
-    <fieldset class="bank-account <?php !empty($bankaccountsequence) && p('no-data'); ?> <?php empty($bankAccountInUse) && p('unused'); ?>">
+    <fieldset class="<?php p($accountCss); ?>">
       <legend>
         <?php echo $l->t('Bank Account'); ?>
       </legend>
       <input class="bankAccount bankAccountOwner" type="text"
              id="bankAccountOwner"
              name="bankAccountOwner"
+             required
              value="<?php echo $bankAccountOwner; ?>"
              title="<?php echo $l->t('owner of the bank account, probably same as musician'); ?>"
+             data-autocomplete='<?php echo json_encode([$musicianName]); ?>'
+             autocomplete="name"
              placeholder="<?php echo $l->t('owner of bank account'); ?>"/><br/>
       <div class="bank-account-identifier">
         <input class="bankAccount bankAccountBLZ" type="text"
                id="bankAccountBLZ"
                name="bankAccountBLZ"
+               required
                value="<?php echo $bankAccountBLZ; ?>"
                title="<?php echo $l->t('Optional BLZ of the musician\'s bank account'); ?>"
                placeholder="<?php echo $l->t('BLZ of bank account'); ?>"/>
         <input class="bankAccount bankAccountIBAN" type="text"
                id="bankAccountIBAN"
                name="bankAccountIBAN"
+               required
                value="<?php echo $bankAccountIBAN; ?>"
                title="<?php echo $l->t('IBAN or number of the bank account. If this is a account number, then please first enter the BLZ'); ?>"
                placeholder="<?php echo $l->t('IBAN or no. of bank account'); ?>"/>
         <input class="bankAccount bankAccountBIC" type="text"
                id="bankAccountBIC"
                name="bankAccountBIC"
+               required
                value="<?php echo $bankAccountBIC; ?>"
                title="<?php echo $l->t('Optionally the BIC of the account; will be computed automatically if left blank.'); ?>"
                placeholder="<?php echo $l->t('BIC of bank account'); ?>"/>
@@ -119,12 +139,8 @@ $hidden = [
       </label>
       <div class="statusmessage suggestions"></div>
     </fieldset>
-    <fieldset class="debit-mandate
-                     <?php empty($haveMandate) && p('no-data'); ?>
-                     <?php empty($mandateInUse) && p('unused'); ?>
-                     <?php empty($writtenMandate) && p('no-written-mandate'); ?>
-                     <?php !empty($isClubMember) && p('club-member'); ?>">
-      <legend class="mandateCaption inline-block <?php p($hidden['noMandate']); ?>">
+    <fieldset class="<?php p($mandateCss); ?>">
+      <legend>
         <span class="reference-label">
           <?php p($l->t('Mandate-Reference: %s', $mandateReference)); ?>
         </span>
@@ -219,10 +235,10 @@ $hidden = [
         </label>
         <div class="debit-mandate-upload block">
           <div class="operations inline-block">
-            <input type="button"
+            <!-- <input type="button"
                    <?php empty($writtenMandate) && p('disabled'); ?>
                    title="<?php echo $toolTipsService['participant-attachment-delete']; ?>"
-                   class="operation delete-undelete"/>
+                   class="operation delete-undelete"/> -->
             <input type="button" title="<?php echo $toolTipsService['sepa-bank-data-form:upload-replace-written-mandate']; ?>" class="operation upload-replace"/>
           </div>
           <div class="file-data inline-block">

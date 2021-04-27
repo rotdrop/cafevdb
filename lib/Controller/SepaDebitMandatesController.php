@@ -89,6 +89,8 @@ class SepaDebitMandatesController extends Controller {
       'projectId',
       'musicianId',
       'mandateReference',
+      'bankAccountSequence',
+      'mandateSequence',
     ];
     foreach ($requiredKeys as $required) {
       $missing = [];
