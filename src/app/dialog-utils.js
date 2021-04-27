@@ -76,9 +76,7 @@ function dialogToBackButton(dialogHolder) {
 }
 
 /**
- * Add a to-back-button to the titlebar of a jQuery-UI dialog. The
- * purpose is to be able to move the top-dialog to be bottom-most,
- * juse above a potential "modal" window layer.
+ * Add a full-screen-button to the titlebar of a jQuery-UI dialog.
  *
  * @Param {jQuery} dialogHolder TBD.
  */
