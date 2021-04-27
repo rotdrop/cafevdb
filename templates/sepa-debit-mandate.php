@@ -146,6 +146,7 @@ $accountCss = 'bank-account'
         </span>
       </legend>
       <input id="debit-mandate-registration"
+             name="mandateRegistration"
              class="checkbox debit-mandate-registration"
              type="checkbox" />
       <label for="debit-mandate-registration" class="debit-mandate-registration block">
@@ -162,7 +163,7 @@ $accountCss = 'bank-account'
             <input id="sepa-debit-mandate-only-for-project"
                    class="only-for-project bankAccount projectMandate checkbox"
                    type="radio"
-                   name="debitMandateBinding"
+                   name="mandateBinding"
                    value="only-for-project"
                    <?php echo $mandateBinding == 'only-for-project' ? 'checked' : ''; ?>
             />
@@ -205,7 +206,7 @@ $accountCss = 'bank-account'
           <input id="sepa-debit-mandate-for-all-receivables"
                  class="for-all-receivables bankAccount projectMandate checkbox"
                  type="radio"
-                 name="debitMandateBinding"
+                 name="mandateBinding"
                  value="for-all-receivables"
                  <?php ($mandateBinding == 'for-all-receivables') && p('checked'); ?>
           />

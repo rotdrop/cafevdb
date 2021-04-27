@@ -653,7 +653,7 @@ class SepaDebitMandatesController extends Controller {
     , $bankAccountOwner
   )
   {
-    $requiredKeys = ['mandateProjectId', 'projectId', 'musicianId', 'mandateReference'];
+    $requiredKeys = ['mandateProjectId', 'musicianId',];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
         return self::grumble($this->l->t("Required information `%s' not provided.", $required));
