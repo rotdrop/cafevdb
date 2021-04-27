@@ -1,0 +1,66 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+input[type="checkbox"].cafevdb-lock-input-widget + label.cafevdb-lock-input-widget {
+  position: absolute !important;
+  height: 16px;
+  width: 24px;
+  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.2;
+  text-indent: -10000em;
+  z-index:1;
+}
+
+input[type="checkbox"].cafevdb-lock-input-widget.disabled + label.cafevdb-lock-input-widget {
+  display:none!important;
+}
+
+/* default is top-left */
+input[type="checkbox"].cafevdb-lock-input-widget + label.cafevdb-lock-input-widget {
+  margin-top: 4px;
+  margin-left: -24px;
+}
+
+input[type="checkbox"].cafevdb-lock-input-widget + label.cafevdb-lock-input-widget.middle-padlock {
+  margin-top: 12px;
+  margin-left: -28px;
+}
+
+input[type="checkbox"].cafevdb-lock-input-widget + label.cafevdb-lock-input-widget.top-padlock {
+  margin-top: 4px;
+}
+
+input[type="checkbox"].cafevdb-lock-input-widget + label.cafevdb-lock-input-widget.bottom-padlock {
+  margin-top: 20px;
+}
+
+input[type="checkbox"].cafevdb-lock-input-widget:checked + label.cafevdb-lock-input-widget.lock-unlock {
+  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
+  opacity: 0.2;
+}
+
+input[type="checkbox"].cafevdb-lock-input-widget:checked:disabled + label.cafevdb-lock-input-widget.lock-unlock {
+  background-image: url('../img/dontred.svg');
+  background-size: 16px 16px;
+}
