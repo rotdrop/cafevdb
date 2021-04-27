@@ -43,6 +43,14 @@ importAll(require.context('jquery-ui/ui/i18n/', true, /^datepicker-.*\.js$/));
 require('chosen/public/chosen.jquery.js');
 require('chosen/public/chosen.css');
 
+$.datepicker.setDefaults({
+  beforeShow(i) {
+    if ($(i).prop('readonly')) {
+      return false;
+    }
+  },
+});
+
 const ImagesLoaded = require('imagesloaded');
 ImagesLoaded.makeJQueryPlugin(jQuery);
 
