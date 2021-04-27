@@ -78,7 +78,7 @@ $accountCss = 'bank-account'
   <form id="sepa-debit-mandate-form" class="sepa-debit-mandate-form sepa-bank-data <?php echo $cssClass; ?>" >
     <input type="hidden" autofocus="autofocus" />
     <!-- @todo perhaps better use a JSON data-field for this mess -->
-    <input type="hidden" name="mandateProjectId" value="<?php echo $mandateProjectId; ?>" />
+    <!-- <input type="hidden" name="mandateProjectId" value="<?php echo $mandateProjectId; ?>" /> -->
     <input type="hidden" name="mandateProjectName" value="<?php echo $mandateProjectName; ?>" />
     <input type="hidden" name="projectId" value="<?php echo $projectId; ?>" />
     <input type="hidden" name="projectName" value="<?php echo $projectName; ?>" />
@@ -172,8 +172,8 @@ $accountCss = 'bank-account'
               <?php echo $l->t('only for'); ?>
             </label>
             <?php if (count($projectOptions) > 1) { ?>
-              <select name="debitMandateProjectId"
-                      class="debitMandateProjectId only-for-project selectize"
+              <select name="mandateProjectId"
+                      class="mandateProjectId only-for-project selectize"
                       placeholder="<?php p($l->t('Select a Project')); ?>"
                       <?php ($mandateBinding == 'for-all-receivables') && p('disabled'); ?>
                       <?php ($mandateBinding == 'only-for-project') && p('required'); ?>
@@ -185,8 +185,8 @@ $accountCss = 'bank-account'
               $projectOption = reset($projectOptions); ?>
               <span class="debit-mandate-project">
                 <input type="hidden"
-                       class="debitMandateProjectId only-for-project"
-                       name="debitMandateProjectId"
+                       class="mandateProjectId only-for-project"
+                       name="mandateProjectId"
                        <?php ($mandateBinding == 'for-all-receivables') && p('disabled'); ?>
                        value="<?php p($projectOption['value']); ?>"
                 />
@@ -197,8 +197,8 @@ $accountCss = 'bank-account'
         <?php } ?>
         <span class="debit-mandate-binding <?php p($hidden['haveMandate']); ?>">
           <input type="hidden"
-                 class="debitMandateProjectId for-all-receivables"
-                 name="debitMandateProjectId"
+                 class="mandateProjectId for-all-receivables"
+                 name="mandateProjectId"
                  value="<?php p($memberProjectId); ?>"
                  <?php ($mandateBinding == 'only-for-project') && p('disabled'); ?>
           />

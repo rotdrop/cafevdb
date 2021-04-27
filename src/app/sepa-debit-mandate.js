@@ -89,9 +89,9 @@ const mandatesInit = function(data, onChangeCallback) {
   makeSepaId(data);
 
   const mandateFormSelector = 'form.sepa-debit-mandate-form';
-  const projectSelectSelector = 'select.debitMandateProjectId';
-  const projectIdOnlySelector = '.debitMandateProjectId.only-for-project';
-  const projectIdAllSelector = '.debitMandateProjectId.for-all-receivables';
+  const projectSelectSelector = 'select.mandateProjectId';
+  const projectIdOnlySelector = '.mandateProjectId.only-for-project';
+  const projectIdAllSelector = '.mandateProjectId.for-all-receivables';
   const allReceivablesSelector = 'input.for-all-receivables';
   const onlyProjectSelector = 'input.only-for-project';
   const instantValidationSelector = 'input.sepa-validation-toggle';
