@@ -184,6 +184,13 @@ $routes = [
       'verb' => 'POST',
       'defaults' => [ 'operation' => 'report' ],
     ],
+    // generic upload end-point supporting multiple files and also to
+    // old cloud-filepicker.
+    [
+      'name' => 'uploads#stash',
+      'url' => '/upload',
+      'verb' => 'POST',
+    ],
     // various download stuff
     [
       'name' => 'downloads#fetch',

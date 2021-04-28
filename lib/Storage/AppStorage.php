@@ -30,14 +30,26 @@ use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
-use Spatie\TemporaryDirectory\TemporaryDirectory;
+use Spatie\TemporaryDirectory\TemporaryDirectory; // for ordinary file-system temporaries
+
+use OCA\CAFEVDB\Common\Uuid;
 
 class AppStorage
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const PATH_SEP = '/';
+  public const UPLOAD_FOLDER = 'uploads';
+  public const DRAFTS_FOLDER = 'drafts';
+
   /** @var IAppData */
   private $appData;
+
+  /** @var IFolder */
+  private $uploadFolder;
+
+  /** @var IFolder */
+  private $draftsFolder;
 
   public function __construct(
     IAppData $appData
@@ -47,9 +59,86 @@ class AppStorage
     $this->appData = $appData;
     $this->logger = $logger;
     $this->l = $l10n;
-    if (!empty($this->userId)) {
-      $this->userFolder = $this->rootFolder->getUserFolder($this->userId);
+    try {
+      $this->uploadFolder = $this->ensureFolder(self::UPLOAD_FOLDER);
+      $this->draftsFolder = $this->ensureFolder(self::DRAFTS_FOLDER);
+    } catch (\Throwable $t) {
+      $this->logException($t);
     }
+  }
+
+  public function ensureFolder($name): ISimpleFolder
+  {
+    try {
+      $folder = $this->getFolder($name);
+    } catch (NotFoundException $e) {
+      $folder = $this->newFolder($name);
+    }
+    return $folder;
+  }
+
+  public function newTemporaryFile(string $folderName):ISimpleFile
+  {
+    $name = Uuid::create();
+    switch ($folderName) {
+    case self::UPLOAD_FOLDER:
+      $folder = $this->uploadFolder;
+      break;
+    case self::DRAFTS_FOLDER:
+      $folder = $this->draftsFolder;
+      break;
+    default:
+      $folder = $this->ensureFolder($folderName);
+      break;
+    }
+    return $folder->newFile($name);
+  }
+
+  public function newUploadFile():ISimpleFile
+  {
+    $name = Uuid::create();
+    return $this->uploadFolder->newFile($name);
+  }
+
+  public function newDraftsFile():ISimpleFile
+  {
+    $name = Uuid::create();
+    return $this->draftsFolder->newFile($name);
+  }
+
+  /**
+   * Remove all files in $folder older than $age according to their
+   * mtime.
+   */
+  public function purgeFolder(ISimpleFolder $folder, $age)
+  {
+    $now = time();
+    /** @var ISimpleFile $file */
+    foreach ($folder->getDirectoryListing() as $file) {
+      $mtime = $file->getMTime();
+      if ($now - $mtime > $age) {
+        $file->delete();
+      }
+    }
+  }
+
+  /**
+   * Move the contents of a "real" file to the given app-folder.
+   */
+  public function moveFileSystemFile(string $srcFile, ISimpleFile $dstFile):ISimpleFile
+  {
+    $dstFile->putContent(file_get_contents($srcFile));
+    unlink($srcFile);
+    return $dstFile;
+  }
+
+  /**
+   * Move the contents of a "real" file to the given app-folder.
+   */
+  public function copyFileSystemFile(string $srcFile, ISimpleFile $dstFile):ISimpleFile
+  {
+    $dstFile->putContent(file_get_contents($srcFile));
+    return $dstFile;
   }
 
   /**
