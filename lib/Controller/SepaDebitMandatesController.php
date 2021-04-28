@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB\Controller;
 
 use \PHP_IBAN\IBAN;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
@@ -37,6 +38,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
@@ -107,13 +109,13 @@ class SepaDebitMandatesController extends Controller {
     $musicianId = $this->parameterService['musicianId'];
     $reference  = $this->parameterService['mandateReference'];
     $mandateProjectId  = $this->parameterService['mandateProjectId'];
-    $nonRecurring = $this->parameterService['nonRecurring'];
-    $nonRecurring = filter_var($nonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+    $mandateNonRecurring = $this->parameterService['mandateNonRecurring'];
+    $mandateNonRecurring = filter_var($mandateNonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
-    $this->logDebug('NON RECUR '.$nonRecurring.' '.(!!$nonRecurring));
+    $this->logDebug('NON RECUR '.$mandateNonRecurring.' '.(!!$mandateNonRecurring));
 
     $memberProjectId = $this->getConfigValue('memberProjectId', -1);
-    $sequenceType = 'permanent';
+    $mandateSequenceType = 'permanent';
 
 
     $IBAN = $this->parameterService['bankAccountIBAN'];
@@ -170,7 +172,7 @@ class SepaDebitMandatesController extends Controller {
         }
         $mandateProjectId = $newProject;
         $newValidations[] = [
-          'changed' => 'nonRecurring',
+          'changed' => 'mandateNonRecurring',
           'value' => $value != 'member',
         ];
         break;
@@ -188,8 +190,8 @@ class SepaDebitMandatesController extends Controller {
               $this->l->t('Failed setting `%s\' to `%s\'.', [ $changed, $value, ]));
           }
         }
-      case 'nonRecurring':
-        $nonRecurring = $value;
+      case 'mandateNonRecurring':
+        $mandateNonRecurring = $value;
         break;
       case 'mandateDate':
         // Whatever the user likes ;)
@@ -465,7 +467,7 @@ class SepaDebitMandatesController extends Controller {
           'bic' => $BIC,
           'owner' => $owner,
           'feedback' => $feedback,
-          'nonRecurring' => $nonRecurring,
+          'mandateNonRecurring' => $mandateNonRecurring,
         ]);
 
     } // validation loop
@@ -606,8 +608,7 @@ class SepaDebitMandatesController extends Controller {
       'mandateExpired' => $mandateExpired,
       'mandateDate' => $mandate->getMandateDate(),
       'lastUsedDate' => $mandate->getLastUsedDate(),
-      'sequenceType' => $mandate->getNonRecurring() ? 'once' : 'permanent',
-      'nonRecurring' => $mandate->getNonRecurring(),
+      'mandateNonRecurring' => $mandate->getNonRecurring(),
       'mandateInUse' => $mandate->inUse(),
 
       'bankAccountSequence' => $bankAccount->getSequence(),
@@ -640,39 +641,192 @@ class SepaDebitMandatesController extends Controller {
    * @NoAdminRequired
    */
   public function mandateStore(
-    $mandateReference
-    , $sequenceType
+    $projectId
+    // SEPA "id"
     , $musicianId
-    , $projectId
-    , $mandateProjectId
-    , $mandateDate
-    , $lastUsedDate
+    , $bankAccountSequence
+    , $mandateSequence
+    // Bank account data
     , $bankAccountIBAN
     , $bankAccountBIC
     , $bankAccountBLZ
     , $bankAccountOwner
+    // debit-mandate data
+    , $mandateRegistration
+    , $mandateBinding
+    , $mandateProjectId
+    , $mandateNonRecurring
+    , $mandateDate
+    , $mandateLastUsedDate
+    , $writtenMandateId
+    , $mandateUploadLater
   )
   {
-    $requiredKeys = ['mandateProjectId', 'musicianId',];
+    $requiredKeys = [
+      'musicianId',
+      'bankAccountIBAN',
+      'bankAccountBLZ', // @todo maybe get rid of it
+      'bankAccountBIC', // @todo maybe get rid of it
+      'bankAccountOwner',
+    ];
+
+    if (!empty($mandateSequence) || !empty($mandateRegistration)) {
+      $requiredKeys = array_merge(
+        $requiredKeys, [
+          'mandateBinding',
+          'mandateProjectId',
+          'mandateDate',
+        ]);
+
+      $mandateNonRecurring = filter_var($mandateNonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      if ($mandateNonRecurring === null) {
+        $requiredKeys[] = 'mandateNonRecurring';
+      }
+    }
+
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
         return self::grumble($this->l->t("Required information `%s' not provided.", $required));
       }
     }
 
-    // Compose the mandate
-    $mandate = [
-      'mandateReference' => $mandateReference,
-      'sequenceType' => $sequenceType,
-      'musicianId' => $musicianId,
-      'projectId' => $mandateProjectId,
-      'mandateDate' => $mandateDate,
-      'lastUsedDate' => $lastUsedDate,
-      'IBAN' => $bankAccountIBAN,
-      'BIC' => $bankAccountBIC,
-      'BLZ' => $bankAccountBLZ,
-      'bankAccountOwner' => $bankAccountOwner,
-    ];
+    // Aquire data-base Entities
+
+    /** @var Repositories/SepaBankAccountsRepository $bankAccountsRepository */
+    $bankAccountsRepository = $this->getDatabaseRepository(
+      Entities\SepaBankAccount::class);
+
+    // First check the bank-account
+    if (!empty($bankAccountSequence)) {
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $bankAccountsRepository->find([
+        'musician' => $musicianId,
+        'sequence' => $bankAccountSequence,
+      ]);
+      $musician = $bankAccount->getMusician();
+
+    } else {
+      $bankAccount = (new Entities\SepaBankAccount)
+                   ->setMusician($musicianId);
+    }
+
+    if ($bankAccount->inUse() && $bankAccount->getIban() !== $bankAccountIBAN) {
+      return self::grumble($this->l->t('The current bank account has already been used for payments or is bound to debit-mandates. Therefore the IBAN must not be changed. Please create a new account; you may disable the current account, at you option.'));
+    }
+
+    // set the new values
+    $bankAccount->setIban($bankAccountIBAN)
+                ->setBlz($bankAccountBLZ)
+                ->setBic($bankAccountBIC)
+                ->setBankAccountOwner($bankAccountOwner);
+
+    try {
+      $this->financeService->validateSepaAccount($bankAccount); // throws on error
+    } catch (\InvalidArgumentException $e) {
+      return self::grumble($this->l->t('Bank-account failed to validate: %s.', $e->getMessage()));
+    }
+
+    if ($bankAccount->getSequence() == null) {
+      // as a unique constraint on IBAN and owner on the data-base level
+      // is not possible (the data is stored encrypted), we check for
+      // duplicates here. As there are not so many bank accounts per
+      // musician this should be fairly fast. Of course, this does not
+      // hack the problem when two different operators enter the same
+      // account at the same time through the web-interface.
+
+      $existingAccounts = $bankAccountsRepository->findBy([ 'musician' => $musicianId ]);
+      /** @var Entities\SepaBankAccount $oldAccount */
+      foreach ($existingAccounts as $oldAccount) {
+        if ($oldAccount->getIban() == $bankAccountIBAN) {
+          return self::grumble($this->l->t(
+            'The IBAN %s, account-owner %s, has already been recorded for the musician %s.',
+            [
+              $bankAccountIBAN,
+              $oldAccount->getBankAccountOwner(),
+              $oldAccount->getMusician()->getPublicName(),
+            ]));
+        }
+      }
+    }
+
+    while (true) {
+      try {
+        // try persist with increasing sequence until we succeed
+        $bankAccountsRepository->persist($bankAccount);
+      } catch (UniqueConstraintViolationException $e) {
+        $this->entityManager->reopen();
+        $bankAccount->setSequence(null);
+      }
+    }
+
+    if (empty($mandateRegistration)) {
+
+      $responseData = [
+        'message' => $this->l->t('Successfully stored the bank account with IBAN "%s" and owner "%s"',
+                                 [ $bankAccount->getIban(), $bankAccount->getBankAccountOwner()]),
+        'projectId' => $projectId,
+        'musicianId' => $musicianId,
+        'bankAccountSequence' => $bankAccount->getSequence(),
+        'mandateSequence' => $mandateSequence,
+      ];
+
+      return self::dataResponse($responseData);
+    }
+
+    return self::grumble($this->l->t('Unable to store SEPA debit mandate in data-base.'));
+
+    /** @var Repositories/SepaDebitMandatesRepostory $debitMandatesRepository */
+    $debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
+
+    // Check for the debit-mandate.
+    if (!empty($mandateSequence)) {
+      /** @var Entities\SepaDebitMandate $debitMandate */
+      $debitMandate = $bankAccountsRepository->find([
+        'musician' => $musicianId,
+        'sequence' => $mandateSequence,
+      ]);
+
+      if ($debitMandate->getSepaBankAccount() != $bankAccount) {
+        // would be allowable if not in use, but does not fit the
+        // layout of the UI: this cannot happen unless things are
+        // garbled.
+        return self::grumble(
+          $this->l->t('The bank-account with IBAN %s bound to the existing mandate does not match the submitted bank-account with IBAN %s.', [
+            $debitMandate->getSepaBankAccount()->getIban(),
+            $bankAccountIBAN,
+          ]));
+      }
+      $musician = $debitMandate->getMusician();
+    } else {
+      $debitMandate = (new Entities\SepaBankDebitMandate)
+                    ->setMusician($musicianId);
+    }
+
+    $mandateDate = Util::dateTime($mandateDate); // @todo check if this works as expected
+    if ($debitMandate->inUse()) {
+      if ($debitMandate->getMandateDate() != $mandateDate) {
+        return self::grumble($this->l->t('The current debit-mandate already has been used for payments. Therefore the date of the debit-mandate must not be changed. Please create a new debit-mandate; you may disable the current mandate, at you option.'));
+      }
+      if ($debitMandate->getNonRecurring() != $mandateNonRecurring
+          && $mandateNonRecurring && $debitMandate->usage() > 1) {
+        return self::grumble($this->l->t('The current debit-mandate already has been used for more than a single payment. Therefore it can non longer be changed from "recurring" to "non-recurring".'));
+      }
+      if ($debitMandate->getProject()->getId() != $mandateProjectId) {
+        return self::grumble($this->l->t('The current debit-mandate already has been used for payments. Therefore the project-binding can no longer be changed.'));
+      }
+      if ($debitMandate->getWrittenMandate() != null && (int)$writtenMandateId <= 0) {
+        return self::grumble($this->l->t('The current debit-mandate alrady has been used for payments. Therefore the stored copy of the written mandate cannot be deleted.'));
+      }
+    }
+
+    // set the new values
+    $debitMandate->setSepaBankAccount($bankAccount)
+                 ->setMandateDate($mandateDate)
+                 ->setNonRecurring($mandateNonRecurring)
+                 ->setMandateReference($mandateReference)
+                 ->setProject($mandateProject)
+                 ->setLastUsedDate($mandateLastUsedDate)
+                 ->setWrittenMandate($writtenMandate);
 
     // this will throw on error
     $this->financeService->validateSepaMandate($mandate);
@@ -680,7 +834,7 @@ class SepaDebitMandatesController extends Controller {
     $mandate = $this->financeService->storeSepaMandate($mandate);
 
     if (empty($mandate)) {
-      return self::grumble($this->l_>t('Unable to store SEPA debit mandate in data-base.'));
+      return self::grumble($this->l->t('Unable to store SEPA debit mandate in data-base.'));
     }
 
     return self::response($this->l->t('SEPA debit mandate stored in data-base.'));

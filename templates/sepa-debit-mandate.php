@@ -28,7 +28,7 @@ $title = $l->t("SEPA Bank Information for %s", $musicianName);
 
 $expiredTip = $toolTips['sepa-mandate-expired'];
 
-$recurring = $l->t('Type: ').($sequenceType == 'once' ? $l->t('once') : $l->t('permanent'));
+$mandateSequenceType = $mandateNonRecurring ? 'once' : 'permanent';
 
 // do we have a bankAccount?
 $haveAccount = (int)$bankAccountSequence > 0;
@@ -62,8 +62,8 @@ $mandateCss = 'debit-mandate'
             .(!empty($isClubMember) ? ' club-member' :'');
 
 $accountCss = 'bank-account'
-             .(!empty($bankaccountsequence) ? ' no-data' : '')
-             .(!empty($bankAccountInUse) ? ' unused' : '');
+             .(empty($haveMandate) ? ' no-data' : '')
+             .(empty($bankAccountInUse) ? ' unused' : '');
 
 ?>
 <div id="sepa-debit-mandate-dialog" title="<?php echo $title;?>">
@@ -87,8 +87,7 @@ $accountCss = 'bank-account'
     <input type="hidden" name="bankAccountSequence" value="<?php echo $bankAccountSequence; ?>" />
     <input type="hidden" name="mandateSequence" value="<?php echo $mandateSequence; ?>" />
     <input type="hidden" name="mandateReference" value="<?php echo $mandateReference; ?>" />
-    <input type="hidden" name="sequenceType" value="<?php echo $sequenceType; ?>" />
-    <input type="hidden" name="nonRecurring" value="<?php echo $nonRecurring; ?>" />
+    <input type="hidden" name="mandateNonRecurring" value="<?php p((int)$mandateNonRecurring); ?>" />
     <input type="hidden" name="writtenMandate" value="<?php echo $writtenMandate; ?>" />
     <fieldset class="<?php p($accountCss); ?>">
       <legend>
@@ -107,7 +106,6 @@ $accountCss = 'bank-account'
         <input class="bankAccount bankAccountBLZ" type="text"
                id="bankAccountBLZ"
                name="bankAccountBLZ"
-               required
                value="<?php echo $bankAccountBLZ; ?>"
                title="<?php echo $l->t('Optional BLZ of the musician\'s bank account'); ?>"
                placeholder="<?php echo $l->t('BLZ of bank account'); ?>"/>
@@ -121,7 +119,6 @@ $accountCss = 'bank-account'
         <input class="bankAccount bankAccountBIC" type="text"
                id="bankAccountBIC"
                name="bankAccountBIC"
-               required
                value="<?php echo $bankAccountBIC; ?>"
                title="<?php echo $l->t('Optionally the BIC of the account; will be computed automatically if left blank.'); ?>"
                placeholder="<?php echo $l->t('BIC of bank account'); ?>"/>
@@ -224,7 +221,7 @@ $accountCss = 'bank-account'
             <?php p($l->t($mandateBinding)); ?>
           </span>
         </span>
-        <span id="debitRecurringInfo" class="debitRecurringInfo <?php echo $sequenceType; ?>">
+        <span id="debitRecurringInfo" class="debitRecurringInfo <?php echo $mandateSequenceType; ?>">
           <span class="label"><?php echo $l->t('Reusable:'); ?></span>
           <span class="type once"><?php echo $l->t('once'); ?></span>
           <span class="type permanent"><?php echo $l->t('permanent'); ?></span>
@@ -242,7 +239,7 @@ $accountCss = 'bank-account'
         <label class="lastUsedDate" for="lastUsedDate"><?php echo $l->t("Date of last usage:"); ?>
           <input class="lastUsedDate" type="text"
                  id="lastUsedDate"
-                 <?php echo $sequenceType == 'once' ? 'disabled' : '' ?>
+                 <?php echo $mandateNonRecurring ? 'disabled' : '' ?>
                  name="lastUsedDate"
                  value="<?php echo $lastUsedDate; ?>"
                  title="<?php echo $l->t('Date of last usage of debit-mandate'); ?>"
@@ -258,13 +255,17 @@ $accountCss = 'bank-account'
           </div>
           <div class="file-data inline-block">
             <a class="download-link <?php empty($writtenMandate) && p('hidden'); ?>" title="<?php echo $toolTipsService['sepa-bank-data-form:download-written-mandate']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php echo $writtenMandateFileName; ?></a>
-            <input class="upload-placeholder <?php !empty($writtenMandate) && p('hidden'); ?>" title="<?php echo $toolTipsService['sepa-bank-data-form:upload-written-mandate']; ?>" placeholder="<?php echo $l->t('Upload filled SEPA debit mandate');  ?>" type="text"/>
+            <input class="upload-placeholder no-validation <?php !empty($writtenMandate) && p('hidden'); ?>"
+                   title="<?php echo $toolTipsService['sepa-bank-data-form:upload-written-mandate']; ?>"
+                   placeholder="<?php echo $l->t('Upload filled SEPA debit mandate');  ?>" type="text"
+                   name="uploadPlaceholder"
+            />
           </div>
           <input id="sepa-debit-mandate-upload-later"
                  class="bankAccount projectMandate checkbox inline-block <?php p($hidden['writtenMandate']); ?>"
                  type="checkbox"
-                 name="uploadLater"
-                 value="uploadLater"
+                 name="mandateUploadLater"
+                 value="mandateUploadLater"
           />
           <label for="sepa-debit-mandate-upload-later"
                  title="<?php echo $toolTips['sepa-bank-data-form:upload-written-mandate-later']; ?>"

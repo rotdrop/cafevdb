@@ -32,6 +32,7 @@ import checkInvalidInputs from './check-invalid-inputs.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
+import * as FileUpload from './file-upload.js';
 // import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
@@ -78,15 +79,15 @@ const mandatesInit = function(data, onChangeCallback) {
   const popup = $(data.contents);
 
   const makeSepaId = function(data) {
-    popup.data('sepaId', {
-      projectId: data.projectId,
-      musicianId: data.musicianId,
-      bankAccountSequence: data.bankAccountSequence,
-      mandateSequence: data.mandateSequence,
-    });
+    return {
+      projectId: parseInt(data.projectId),
+      musicianId: parseInt(data.musicianId),
+      bankAccountSequence: parseInt(data.bankAccountSequence),
+      mandateSequence: parseInt(data.mandateSequence),
+    };
   };
 
-  makeSepaId(data);
+  popup.data('sepaId', makeSepaId(data));
 
   const mandateFormSelector = 'form.sepa-debit-mandate-form';
   const projectSelectSelector = 'select.mandateProjectId';
@@ -149,7 +150,7 @@ const mandatesInit = function(data, onChangeCallback) {
     }
   });
 
-  popup.on('blur', mandateFormSelector + ' ' + 'input[type="text"]', validateInput);
+  popup.on('blur', mandateFormSelector + ' ' + 'input[type="text"]:not(.no-validation)', validateInput);
 
   // on request disable instant validation while editing, but apply
   // and save buttons stay disabled until validation is reenabled.
@@ -215,6 +216,25 @@ const mandatesInit = function(data, onChangeCallback) {
     const onlyProject = popup.data('fieldsets').find(onlyProjectSelector);
     allReceivables.prop('checked', $self.val() === '');
     onlyProject.prop('checked', !allReceivables.prop('checked'));
+    return false;
+  });
+
+  const fileUploadTemplate = $('#fileUploadTemplate');
+  const uploadWrapperId = appName + 'written-mandate-upload-wrapper';
+  const uploadUi = fileUploadTemplate.octemplate({
+    wrapperId: uploadWrapperId,
+    formClass: 'file-upload-form',
+    accept: '*',
+    uploadName: 'files',
+  });
+  if ($('#' + uploadWrapperId).length === 0) {
+    $('body').append(uploadUi);
+  } else {
+    $('+' + uploadWrapperId).replaceWith(uploadUi);
+  }
+
+  popup.on('click', mandateFormSelector + ' ' + 'input.upload-placeholder', function(event) {
+    $('#' + uploadWrapperId + ' input[type="file"]').trigger('click');
     return false;
   });
 
@@ -309,13 +329,29 @@ const mandatesInit = function(data, onChangeCallback) {
 
     conservativeAllowChange(fieldsets);
 
-    if (!data.sepaId.bankAccountSequence > 0) {
+    const accountUsed = !accountFieldset.hasClass('unused');
+    const mandateUsed = !mandateFieldset.hasClass('unused');
+
+    console.info('SEPA ID', data.sepaId);
+
+    if (!(data.sepaId.bankAccountSequence > 0)) {
+      // no account, so nothing to delete or disable
+      buttons.disable.prop('disabled', true).hide();
       buttons.delete.prop('disabled', true).hide();
-    } else if (!data.sepaId.mandateSequence > 0) {
-      buttons.revoke.prop('disabled', true).hide();
-      buttons.delete.prop('disabled', false).show();
+    } else if (!(data.sepaId.mandateSequence > 0)) {
+      if (accountUsed) {
+        console.info('account is used');
+        // allow only "disable"
+        buttons.disable.prop('disabled', false).show();
+        buttons.delete.prop('disabled', true).hide();
+      } else {
+        // unused, safe to delete
+        buttons.disable.prop('disabled', true).hide();
+        buttons.delete.prop('disabled', false).show();
+      }
     } else {
-      buttons.revoke.prop('disabled', false).show();
+      // mandates may not be deleted.
+      buttons.disable.prop('disabled', false).show();
       buttons.delete.prop('disabled', true).hide();
     }
 
@@ -344,7 +380,7 @@ const mandatesInit = function(data, onChangeCallback) {
     //   }
     // }
 
-    $('#sepa-debit-mandate-form input[class$="Date"]').datepicker({
+    mandateForm.find('input[class$="Date"]').datepicker({
       dateFormat: 'dd.mm.yy', // this is 4-digit year
       minDate: '01.01.1990',
       beforeShow(input) {
@@ -374,6 +410,22 @@ const mandatesInit = function(data, onChangeCallback) {
         $input.removeClass('no-validation');
         $input.lockUnlock('enable');
       },
+    });
+
+    FileUpload.init({
+      url: generateUrl('upload'),
+      doneCallback(file, index, container) {
+        // $downloadLink.attr('href', file.meta.download);
+        // $downloadLink.html(file.meta.baseName);
+        // $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
+        // $parentFolder.prop('disabled', $downloadLink.attr('href') === '');
+        console.info('UPLOAD DONE', file, index, container);
+      },
+      stopCallback: null,
+      dropZone: mandateFieldset.find('.file-data'),
+      containerSelector: '#' + uploadWrapperId,
+      inputSelector: 'input[type="file"]',
+      multiple: false,
     });
   };
 
@@ -419,13 +471,16 @@ const mandatesInit = function(data, onChangeCallback) {
         click() {
           const $dlg = $(this);
           const $form = $dlg.find(mandateFormSelector);
-          mandateStore($form, function(data) {
 
-            makeSepaId(data);
+          disableButtons();
 
-            $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(self.mandateReference);
-            $dlg.dialog('close');
-            onChangeCallback();
+          mandateStore({
+            form: $form,
+            always: enableButtons,
+            done(data) {
+              $dlg.dialog('close');
+              onChangeCallback();
+            },
           });
         },
       },
@@ -438,7 +493,6 @@ const mandatesInit = function(data, onChangeCallback) {
 
           const $dlg = $(this);
           const $form = $dlg.find(mandateFormSelector);
-          const data = $dlg.data();
 
           disableButtons();
 
@@ -448,12 +502,12 @@ const mandatesInit = function(data, onChangeCallback) {
             done(data) {
 
               // update ids
-              makeSepaId(data);
+              $dlg.data('sepaId', makeSepaId(data));
 
               // the simplest thing is just to reload the form instead
               // of updating all form elements from JS.
               mandateLoad({
-                sepaId: data.sepaId,
+                sepaId: $dlg.data('sepaId'),
                 done(data) {
                   popup.data('instantvalidation', true);
                   $dlg.html($(data.contents).html());
@@ -478,9 +532,11 @@ const mandatesInit = function(data, onChangeCallback) {
         },
       },
       {
-        class: 'revoke',
-        text: t(appName, 'Revoke'),
-        title: t(appName, 'Revoke the debit-mandate in case the bank account changed or on request of the participant.'),
+        class: 'disable',
+        text: t(appName, 'Disable'),
+        title: t(appName, 'Disable the debit-mandate or bank-account in case the bank account has'
+                 + ' changed, or on request of the participant. The bank account can only'
+                 + ' be disabled after disabling all bound debit-mandates.'),
         click() {
           // const $dlg = $(this);
           alert('NOT YET');
@@ -489,7 +545,7 @@ const mandatesInit = function(data, onChangeCallback) {
       {
         class: 'close',
         text: t(appName, 'Close'),
-        title: t(appName, 'Discard all filled-in data and close the form. Note that this will not undo any changes previously stored in the data-base by pressing the `Apply\' button.'),
+        title: t(appName, 'Discard all filled-in data and close the form. Note that this will not undo any changes previously stored in the data-base by pressing the "Apply" button.'),
         click() {
           $(this).dialog('close');
           // $('form.pme-form').submit();
@@ -507,7 +563,7 @@ const mandatesInit = function(data, onChangeCallback) {
         save: $widget.find('button.save'),
         apply: $widget.find('button.apply'),
         delete: $widget.find('button.delete'),
-        revoke: $widget.find('button.revoke'),
+        disable: $widget.find('button.disable'),
         reload: $widget.find('button.reload'),
       };
 
@@ -595,6 +651,7 @@ const mandateStore = function(options) {
         options.fail();
         options.always();
       } else {
+        Notification.messages(data.message, { timeout: 15 });
         options.done(data);
         options.always();
       }

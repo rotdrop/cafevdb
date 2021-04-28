@@ -39,16 +39,7 @@ class FinanceService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  private $useEncryption = true;
-
   const ENTITY = Entities\SepaDebitMandate::class;
-  const DATA_BASE_INFO = [
-    'table' => 'SepaDebitMandates',
-    'key' => 'id',
-    'encryptedColumns' => [
-      'IBAN', 'BIC', 'BLZ', 'bankAccountOwner',
-    ],
-  ];
   const SEPA_CHARSET = "a-zA-Z0-9 \/?:().,'+-";
   const SEPA_PURPOSE_LENGTH = 35;
   const SEPA_MANDATE_LENGTH = 35; ///< Maximum length of mandate reference.
@@ -161,13 +152,12 @@ class FinanceService
    * some banks were at least very restrictive concerning the allowed
    * characters.
    */
-  public function sepaTranslit($string)
+  public function sepaTranslit($string, $language = null)
   {
-    $oldLocale = setlocale(LC_ALL, '0');
-    setlocale(LC_ALL, 'de_DE.UTF8'); // after all, this is just for German banks.
-    $result = iconv("utf-8","ascii//TRANSLIT", $string);
-    setlocale(LC_ALL, $oldLocale);
-    return $result;
+    if (!empty($language)) {
+      $locale = strtolower($language).'_'.strtoupper($language).'UTF-8';
+    }
+    return $this->transliterate($string, $locale);
   }
 
   /**
@@ -332,40 +322,6 @@ class FinanceService
     return false;
   }
 
-  /** Given a mandate with plain text columns, encrypt them. */
-  public function encryptSepaMandate(&$mandate)
-  {
-    if (is_array($mandate) && $this->$useEncryption) {
-      $enckey = $this->getAppEncryptionKey();
-      foreach ($this->DATA_BASE_INFO['encryptedColumns'] as $column) {
-        if (isset($mandate[$column])) {
-          $value = $this->encrypt($mandate[$column], $enckey);
-          if ($value === false) {
-            return false;
-          }
-          $mandate[$column] = $value;
-        }
-      }
-    }
-    return true;
-  }
-
-  /** Given a mandate with encrypted columns, decrypt them. */
-  public function decryptSepaMandate(&$mandate)
-  {
-    if (is_array($mandate) && $this->$useEncryption) {
-      $enckey = $this->getAppEncryptionKey();
-      foreach ($this->DATA_BASE_INFO['encryptedColumns'] as $column) {
-        $value = $this->decrypt($mandate[$column], $enckey);
-        if ($value === false) {
-          return false;
-        }
-        $mandate[$column] = $value;
-      }
-    }
-    return true;
-  }
-
   /**
    * Store a SEPA-mandate, possibly with only partial
    * information. mandateReference, musicianId and projectId are
@@ -408,8 +364,6 @@ class FinanceService
         unset($newMandate[$date]);
       }
     }
-
-    $this->encryptSepaMandate($newMandate);
 
     $table = $this->DATA_BASE_INFO['table'];
 
@@ -538,6 +492,62 @@ class FinanceService
   }
 
   /**
+   * Validate the given SEPA bank account. It is assumed that
+   * transliteration etc. already has been performed during the
+   * validation of user input, so this need not be very user-friendly.
+   *
+   * @param Entities\SepaBankAccount $account
+   * @throws \InvalidArgumentException
+   */
+  public function validateSepaAccount(Entities\SepaBankAccount $account)
+  {
+
+    // Verify that bankAccountOwner conforms to the brain-damaged
+    // SEPA charset. Thank you so much. Banks.
+    if (!$this->validateSepaString($account->getBankAccountOwner())) {
+      throw new \InvalidArgumentException($this->l->t('Illegal characters in bank account owner field.'));
+    }
+
+    // Check IBAN and BIC: extract the bank and bank account id,
+    // check both with BAV, regenerate the BIC
+    $IBAN = $account->getIban();
+    $BLZ  = $account->getBlz();
+    $BIC  = $account->getBic();
+
+    $iban = new \PHP_IBAN\IBAN($IBAN);
+    if (!$iban->Verify()) {
+      throw new \InvalidArgumentException($this->l->t('Invalid IBAN: %s', $IBAN));
+    }
+
+    if ($iban->Country() == 'DE') {
+      // otherwise: not implemented yet
+      $ibanBLZ = $iban->Bank();
+      $ibanKTO = $iban->Account();
+
+      if ($BLZ != $ibanBLZ) {
+        throw new \InvalidArgumentException($this->l->t('BLZ and IBAN do not match: %s != %s', [ $BLZ, $ibanBLZ, ]));
+      }
+
+      $bav = new \malkusch\bav\BAV;
+
+      if (!$bav->isValidBank($ibanBLZ)) {
+        throw new \InvalidArgumentException($this->l->t('Invalid German BLZ: %s.', $BLZ));
+      }
+
+      if (!$bav->isValidAccount($ibanKTO)) {
+        throw new \InvalidArgumentException($this->l->t('Invalid German bank account: %s @ %s.', [ $ibanKTO, $BLZ, ]));
+      }
+
+      $blzBIC = $bav->getMainAgency($ibanBLZ)->getBIC();
+      if ($blzBIC != $BIC) {
+        throw new \InvalidArgumentException($this->l->t('Probably invalid BIC: %s. Computed: %s. ', [ $BIC, $blzBIC, ]));
+      }
+    }
+
+    return true;
+  }
+
+  /**
    * Verify the given mandate, throw an
    * InvalidArgumentException. The sequence type may or may not
    * already have been converted to the actual type based on the
@@ -550,7 +560,7 @@ class FinanceService
       'mandateReference',
       'mandateDate',
       /*'lastUsedDate', may be null */
-                  'musicianId',
+      'musicianId',
       'projectId',
       'sequenceType',
       'IBAN',
