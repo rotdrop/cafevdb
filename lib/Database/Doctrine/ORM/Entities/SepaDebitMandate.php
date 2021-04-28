@@ -127,7 +127,7 @@ class SepaDebitMandate
   /**
    * @var EncryptedFile
    *
-   * @ORM\OneToOne(targetEntity="EncryptedFile")
+   * @ORM\OneToOne(targetEntity="EncryptedFile", cascade={"persist"}, orphanRemoval=true)
    */
   private $writtenMandate;
 
