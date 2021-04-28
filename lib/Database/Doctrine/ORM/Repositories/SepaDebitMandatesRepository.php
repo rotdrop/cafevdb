@@ -30,6 +30,8 @@ use Doctrine\ORM\EntityRepository;
 
 class SepaDebitMandatesRepository extends EntityRepository
 {
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait;
+
   /**
    * Fetch the mandate reference for the mandate with the highest
    * sequence number.
@@ -62,6 +64,17 @@ class SepaDebitMandatesRepository extends EntityRepository
     } else {
       return null;
     }
+  }
+
+  /**
+   * Try to persist the given bank-account by first fetching the
+   * current sequence for its musician and then increasing it.
+   *
+   * @throws Doctrine\DBAL\Exception\UniqueConstraintViolationException
+   */
+  public function persist(Entities\SepaDebitMandate $mandate):Entities\SepaDebitMandate
+  {
+    return $this->persistEntity($mandate);
   }
 
   /**
@@ -121,7 +134,6 @@ class SepaDebitMandatesRepository extends EntityRepository
       [ 'project' => $project, 'musician' => $musician ],
       [ 'sequence' => 'DESC', ]);
   }
-
 
   /**
    * Fetch usage information about the given identifier.

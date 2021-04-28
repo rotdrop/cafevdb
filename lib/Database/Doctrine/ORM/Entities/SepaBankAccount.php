@@ -38,9 +38,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  * queries. Instead, we use a simple integer sequence which is unique
  * in connection with the musician id.
  *
+ * Note that a unique constraint is not possible as long as we store
+ * the personal data encrypted in the data base.
+ *
  * @ORM\Table(name="SepaBankAccounts")
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBankAccountsRepository")
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
@@ -64,20 +67,11 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(type="integer", options={"default"="1"})
+   * @ORM\Column(type="integer")
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="NONE")
    */
-  private $sequence = 1;
-
-  /**
-   * Date of last usage for generated bulk transactions.
-   *
-   * @var \DateTimeImmutable|null
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
-   */
-  private $lastUsedDate;
+  private $sequence;
 
   /**
    * @var string
@@ -139,36 +133,13 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
-   * Set lastUsedDate.
-   *
-   * @param null|string|\DateTimeInterface $lastUsedDate
-   *
-   * @return SepaDebitMandate
-   */
-  public function setLastUsedDate($lastUsedDate = null):SepaDebitMandate
-  {
-    $this->lastUsedDate = self::convertToDateTime($lastUsedDate);
-    return $this;
-  }
-
-  /**
-   * Get lastUsedDate.
-   *
-   * @return \DateTimeImmutable|null
-   */
-  public function getLastUsedDate():?\DateTimeImmutable
-  {
-    return $this->lastUsedDate;
-  }
-
-  /**
    * Set iban.
    *
    * @param string $iban
    *
-   * @return SepaDebitMandate
+   * @return SepaBankAccount
    */
-  public function setIban($iban):SepaDebitMandate
+  public function setIban($iban):SepaBankAccount
   {
     $this->iban = $iban;
 
@@ -190,9 +161,9 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @param string $bic
    *
-   * @return SepaDebitMandate
+   * @return SepaBankAccount
    */
-  public function setBic($bic):SepaDebitMandate
+  public function setBic($bic):SepaBankAccount
   {
     $this->bic = $bic;
 
@@ -214,9 +185,9 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @param string $blz
    *
-   * @return SepaDebitMandate
+   * @return SepaBankAccount
    */
-  public function setBlz($blz):SepaDebitMandate
+  public function setBlz($blz):SepaBankAccount
   {
     $this->blz = $blz;
 
@@ -238,9 +209,9 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @param string $bankAccountOwner
    *
-   * @return SepaDebitMandate
+   * @return SepaBankAccount
    */
-  public function setBankAccountOwner($bankAccountOwner):SepaDebitMandate
+  public function setBankAccountOwner($bankAccountOwner):SepaBankAccount
   {
     $this->bankAccountOwner = $bankAccountOwner;
 
@@ -262,9 +233,9 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @param Musician|null $musician
    *
-   * @return SepaDebitMandate
+   * @return SepaBankAccount
    */
-  public function setMusician($musician = null):SepaDebitMandate
+  public function setMusician($musician = null):SepaBankAccount
   {
     $this->musician = $musician;
 
@@ -286,9 +257,9 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @param int $sequence
    *
-   * @return SepaDebitMandate
+   * @return SepaBankAccount
    */
-  public function setSequence(int $sequence = 1):SepaDebitMandate
+  public function setSequence(?int $sequence = null):SepaBankAccount
   {
     $this->sequence = $sequence;
 
@@ -298,9 +269,9 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Get sequence.
    *
-   * @return Sequence|null
+   * @return int|null
    */
-  public function getSequence():int
+  public function getSequence():?int
   {
     return $this->sequence;
   }

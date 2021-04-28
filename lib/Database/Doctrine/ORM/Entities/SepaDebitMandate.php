@@ -58,11 +58,11 @@ class SepaDebitMandate
   /**
    * @var int
    *
-   * @ORM\Column(type="integer", options={"default"="1"})
+   * @ORM\Column(type="integer")
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="NONE")
    */
-  private $sequence = 1;
+  private $sequence;
 
   /**
    * @var SepaBankAccount
@@ -150,11 +150,11 @@ class SepaDebitMandate
   /**
    * Set sequence
    *
-   * @param int
+   * @param null|int
    *
    * @return SepaDebitMandate
    */
-  public function setSequence($sequence):SepaDebitMandate
+  public function setSequence(?int $sequence):SepaDebitMandate
   {
     $this->sequence = $sequence;
 
@@ -164,9 +164,9 @@ class SepaDebitMandate
   /**
    * Get sequence.
    *
-   * @return int
+   * @return null|int
    */
-  public function getSequence()
+  public function getSequence():?int
   {
     return $this->sequence;
   }
@@ -335,6 +335,30 @@ class SepaDebitMandate
   public function getNonRecurring()
   {
     return $this->nonRecurring;
+  }
+
+  /**
+   * Set writtenMandate.
+   *
+   * @param null|EncryptedFile $writtenMandate
+   *
+   * @return SepaDebitMandate
+   */
+  public function setWrittenMandate(?EncryptedFile $writtenMandate):SepaDebitMandate
+  {
+    $this->writtenMandate = $writtenMandate;
+
+    return $this;
+  }
+
+  /**
+   * Get writtenMandate.
+   *
+   * @return null|EncryptedFile
+   */
+  public function getWrittenMandate():?EncryptedFile
+  {
+    return $this->writtenMandate;
   }
 
   /**
