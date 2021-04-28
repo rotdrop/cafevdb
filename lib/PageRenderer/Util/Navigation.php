@@ -90,7 +90,7 @@ class Navigation
       return $result;
     }
     if (!is_array($selectedValues)) {
-      $selectedValues = [];
+      $selectedValues = [ $selectedValues ];
     }
     $oldGroup = isset($options[0]['group']) ? Util::htmlEscape($options[0]['group']) : false;
     if ($oldGroup) {
