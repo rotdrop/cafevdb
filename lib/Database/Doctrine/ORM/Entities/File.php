@@ -195,7 +195,7 @@ class File implements \ArrayAccess
    *
    * @return FileData|null
    */
-  public function getFileData()
+  public function getFileData():?FileData
   {
     return $this->fileData;
   }
