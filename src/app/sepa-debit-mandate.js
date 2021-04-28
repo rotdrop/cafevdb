@@ -172,40 +172,40 @@ const mandatesInit = function(data, onChangeCallback) {
     return false;
   });
 
+  const configureProjectBindings = function(onlyProject) {
+    const projectSelect = popup.data('fieldsets').find(projectSelectSelector);
+
+    projectSelect
+      .prop('disabled', !onlyProject)
+      .prop('required', onlyProject);
+    if (projectSelect[0].selectize) {
+      if (onlyProject) {
+        projectSelect[0].selectize.unlock();
+      } else {
+        projectSelect[0].selectize.clear();
+        projectSelect[0].selectize.lock();
+      }
+      projectSelect.next().find('.selectize-input input').prop('disabled', !onlyProject);
+    }
+
+    // further inputs
+    popup.data('fieldsets').find(projectIdOnlySelector).prop('disabled', !onlyProject);
+    popup.data('fieldsets').find(projectIdAllSelector).prop('disabled', onlyProject);
+  };
+
   popup.on('change', mandateFormSelector + ' ' + allReceivablesSelector, function(event) {
     const projectSelect = popup.data('fieldsets').find(projectSelectSelector);
     projectSelect.val('');
     projectSelect.trigger('change');
-    projectSelect
-      .prop('disabled', true)
-      .prop('required', false);
-    if (projectSelect[0].selectize) {
-      projectSelect[0].selectize.clear();
-      projectSelect[0].selectize.lock();
-      projectSelect.next().find('.selectize-input input').prop('disabled', true);
-    }
 
-    // further inputs
-    popup.data('fieldsets').find(projectIdOnlySelector).prop('disabled', true);
-    popup.data('fieldsets').find(projectIdAllSelector).prop('disabled', false);
-
+    const onlyProject = false;
+    configureProjectBindings(onlyProject);
     return false;
   });
 
   popup.on('change', mandateFormSelector + ' ' + onlyProjectSelector, function(event) {
-    const projectSelect = popup.data('fieldsets').find(projectSelectSelector);
-    projectSelect
-      .prop('disabled', false)
-      .prop('required', true);
-    if (projectSelect[0].selectize) {
-      projectSelect[0].selectize.unlock();
-      projectSelect.next().find('.selectize-input input').prop('disabled', false);
-    }
-
-    // further inputs
-    popup.data('fieldsets').find(projectIdOnlySelector).prop('disabled', false);
-    popup.data('fieldsets').find(projectIdAllSelector).prop('disabled', true);
-
+    const onlyProject = true;
+    configureProjectBindings(onlyProject);
     return false;
   });
 
@@ -215,6 +215,9 @@ const mandatesInit = function(data, onChangeCallback) {
     const onlyProject = popup.data('fieldsets').find(onlyProjectSelector);
     allReceivables.prop('checked', $self.val() === '');
     onlyProject.prop('checked', !allReceivables.prop('checked'));
+    if ($self.val() === '') {
+      configureProjectBindings(false);
+    }
     return false;
   });
 
