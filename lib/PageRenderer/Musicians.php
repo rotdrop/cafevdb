@@ -836,6 +836,11 @@ make sure that the musicians are also automatically added to the
               'bankAccountSequence' => $bankAccountSequence,
               'mandateSequence' => $mandateSequence,
             ]);
+            $fakeValue = $iban;
+            $reference = $references[$sepaId];
+            if (!empty($reference)) {
+              $fakeValue .= ' -- ' . $reference;
+            }
             $html .= '
     <tr class="bank-account-data" data-sepa-id="'.$sepaId.'">
       <td class="operations">
@@ -854,7 +859,7 @@ make sure that the musicians are also automatically added to the
           class="bank-account-data dialog sepa-debit-mandate"
           title="'.$this->toolTipsService['sepa-bank-account:info'].'"
           type="text"
-          value="'.$iban.'"
+          value="'.$fakeValue.'"
           data-debit-mandate=\''.$sepaData.'\'
           readonly
         />
