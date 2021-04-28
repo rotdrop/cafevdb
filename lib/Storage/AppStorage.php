@@ -100,10 +100,20 @@ class AppStorage
     return $this->uploadFolder->newFile($name);
   }
 
+  public function getUploadFile($name):ISimpleFile
+  {
+    return $this->uploadFolder->getFile($name);
+  }
+
   public function newDraftsFile():ISimpleFile
   {
     $name = Uuid::create();
     return $this->draftsFolder->newFile($name);
+  }
+
+  public function getDraftsFile($name):ISimpleFile
+  {
+    return $this->draftsFolder->getFile($name);
   }
 
   /**
