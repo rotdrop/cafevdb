@@ -816,9 +816,10 @@ make sure that the musicians are also automatically added to the
           'grouped' => true,
         ],
         'php' => function($value, $op, $k, $row, $recordId, $pme) {
-          $this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
           $valInfo = $pme->set_values($k-1);
-          $this->logInfo('VALINFO '.print_r($valInfo, true));
+
+          //$this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
+          //$this->logInfo('VALINFO '.print_r($valInfo, true));
 
           // more efficient would perhaps be JSON
           $sepaIds = Util::explode(',', $value);
