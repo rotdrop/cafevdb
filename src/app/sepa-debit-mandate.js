@@ -530,6 +530,7 @@ const mandatesInit = function(data, onChangeCallback) {
                   popup.data('instantvalidation', true);
                   $dlg.html($(data.contents).html());
                   initializeDialogHandlers($dlg);
+                  onChangeCallback();
                 },
               });
             },
