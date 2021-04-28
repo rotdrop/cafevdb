@@ -179,8 +179,11 @@ class FinanceService
    *
    * @return null|Entities\Project
    */
-  private function ensureProject($projectOrId):? Entities\Project
+  private function ensureProject($projectOrId):?Entities\Project
   {
+    if (empty($projectOrId) || (int)$projectOrId < 0) {
+      return null;
+    }
     if (!($projectOrId instanceof Entities\Project)) {
       return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
     } else {
@@ -196,8 +199,11 @@ class FinanceService
    *
    * @return null|Entities\Musician
    */
-  private function ensureMusician($musicianOrId):? Entities\Musician
+  private function ensureMusician($musicianOrId):?Entities\Musician
   {
+    if (empty($musicianOrId) || (int)$musicianOrId < 0) {
+        return null;
+    }
     if (!($musicianOrId instanceof Entities\Musician)) {
       return $this->entityManager->getReference(Entities\Musician::class, [ 'id' => $musicianOrId, ]);
     } else {
@@ -227,59 +233,61 @@ class FinanceService
    *
    * XXXX-YYYY-IN-PROJECTYEAR+SEQ
    *
-   * @param int|Entities\Project $project
+   * @param Entities\SepaDebitMandate $mandate The mandate the
+   * generate the reference for.
    *
-   * @param int|Entities\Musician $musician
-   *
-   * @param int $sequence
-   *
-   * @return string New mandate id
+   * @return string New mandate reference.
    *
    */
-  public function generateSepaMandateReference($project, $musician, int $sequence = 1):string
+  public function generateSepaMandateReference(Entities\SepaDebitMandate $mandate):string
   {
-    if (empty($project) || (int)$project <= 0) {
-      $projectName = $this->getConfigValue('orchestra');
+    $project = $this->ensureProject($mandate->getProject());
+    if (empty($project)) {
+      throw new \InvalidArgumentException($this->l->t('The given mandate does not contain a valid project-id.'));
+    }
+    $mandate->setProject($project);
+
+    $projectId = $project['id'];
+    $projectName = $this->sepaTranslit($project['name']);
+
+    $projectYear = substr($projectName, -4);
+    if (is_numeric($year)) {
+      $projectName = substr($projectName, 0, -4);
     } else {
-      $project = $this->ensureProject($project);
-      $projectId = $project['id'];
-      $projectName = $this->sepaTranslit($project['name']);
+      $projectYear = null;
     }
 
-    $musician = $this->ensureMusician($musician);
+    $musician = $this->ensureMusician($mandate->getMusician());
+    if (empty($musician)) {
+      throw new \InvalidArgumentException($this->l->t('The given mandate does not contain a valid musician-id.'));
+    }
+    $mandate->setMusician($musician);
+
+    $sequence = $mandate->getSequence();
+
     $musicianId = $musician['id'];
     $firstName = $this->sepaTranslit($musician['firstName']);
     $surName = $this->sepaTranslit($musician['surName']);
 
-    $firstName .= 'X';
-    $surName .= 'X';
-    $initials = $firstName[0].$surName[0];
+    $format = empty($projectYear)
+            ? '%04d-%04d-%\'X1.1s%\'X1.1s-%-\'X19.19s%.0s+%02d'
+            : '%04d-%04d-%\'X1.1s%\'X1.1s-%-\'X15.15s%04d+%02d';
 
-    $prjId = substr("0000".$projectId, -4);
-    $musId = substr("0000".$musicianId, -4);
+    $ref = sprintf($format,
+                   $projectId, $musicianId,
+                   $firstName, $surName,
+                   $projectName, $projectYear,
+                   (int)$sequence);
 
-    $ref = $prjId.'-'.$musId.'-'.$initials.'-';
-    // $this->logInfo('REF 0: '.$ref);
+    $ref = strtoupper(Util::normalizeSpaces($ref, 'X'));
 
-    $tail = '+'.sprintf("%02d", intval($sequence));
-
-    $year = substr($projectName, -4);
-    if (is_numeric($year)) {
-      $projectName = substr($projectName, 0, -4);
-      $tail = $year.$tail;
+    if (strlen($ref) != self::SEPA_MANDATE_LENGTH) {
+      throw new \RuntimeException(
+        $this->l->t('SEPA mandate-reference "%s" is too long (%d > %d).',
+                    [ $ref, strlen($ref), self::SEPA_MANDATE_LENGTH]));
     }
 
-    // $this->logInfo('REF 0: '.$ref.' / '.$tail.' / '.$projectName);
-
-    $tailLength = strlen($tail);
-    $trimLength = self::SEPA_MANDATE_LENGTH - $tailLength;
-    $ref = substr($ref.$projectName, 0, $trimLength).$tail;
-
-    // $this->logInfo('REF 0: '.$ref.' / '.$tail.' / '.$projectName.' / '.$tailLength.' / '.$trimLength);
-
-    $ref = preg_replace('/\s+/', 'X', $ref); // replace space by X
-
-    return strtoupper($ref);
+    return $ref;
   }
 
   /**
@@ -542,204 +550,6 @@ class FinanceService
       if ($blzBIC != $BIC) {
         throw new \InvalidArgumentException($this->l->t('Probably invalid BIC: %s. Computed: %s. ', [ $BIC, $blzBIC, ]));
       }
-    }
-
-    return true;
-  }
-
-  /**
-   * Verify the given mandate, throw an
-   * InvalidArgumentException. The sequence type may or may not
-   * already have been converted to the actual type based on the
-   * lastUsedDate.
-   */
-  public function validateSepaMandate($mandate)
-  {
-    $nl = "\n";
-    $keys = [
-      'mandateReference',
-      'mandateDate',
-      /*'lastUsedDate', may be null */
-      'musicianId',
-      'projectId',
-      'sequenceType',
-      'IBAN',
-      'BLZ',
-      'bankAccountOwner',
-    ];
-    $names = [
-      'mandateReference' => $this->l->t('mandate reference'),
-      'mandateDate' => $this->l->t('date of issue'),
-      'lastUsedDate' => $this->l->t('date of last usage'),
-      'musicianId' => $this->l->t('musician id'),
-      'projectId' => $this->l->t('project id'),
-      'sequenceType' => $this->l->t('sequence type'),
-      'IBAN' => 'IBAN',
-      'BLZ' => $this->l->t('bank code'),
-      'bankAccountOwner' => $this->l->t('bank account owner'),
-    ];
-
-    ////////////////////////////////////////////////////////////////
-    //
-    // Compat hack: we store "nonrecurring", but later want to have
-    // "sequenceType". Also, the sequence type still may be simply
-    // 'permanent'.
-    if (!isset($mandate['sequenceType'])) {
-      $mandate['sequenceType'] = $this->sepaMandateSequenceType($mandate);
-    }
-    //
-    ////////////////////////////////////////////////////////////////
-
-    foreach($keys as $key) {
-      if (!isset($mandate[$key])) {
-        throw new \InvalidArgumentException(
-          $nl.
-          $this->l->t('Missing fields in debit mandate: %s (%s).', [ $key, $names[$key], ]).
-          $nl.
-          $this->l->t('Full data record:').
-          $nl.
-          print_r($mandate, true));
-      }
-      if ((string)$mandate[$key] == '') {
-        if ($key == 'lastUsedDate') {
-          continue;
-        }
-        throw new \InvalidArgumentException(
-          $nl.
-          $this->l->t('Empty fields in debit mandate: %s (%s).', [ $key, $names[$key], ]).
-          $nl.
-          $this->l->t('Full data record:').
-          $nl.
-          print_r($mandate, true));
-
-      }
-    }
-
-    // Verify that bankAccountOwner conforms to the brain-damaged
-    // SEPA charset. Thank you so much. Banks.
-    if (!$this->validateSepaString($mandate['bankAccountOwner'])) {
-      throw new \InvalidArgumentException(
-        $nl.
-        $this->l->t('Illegal characters in bank account owner field').
-        $nl.
-        $this->l->t('Full data record:').
-        $nl.
-        print_r($mandate, true));
-    }
-
-    // Verify that the dates are not in the future, and that the
-    // mandateDate is set (last used maybe 0)
-    //
-    // lastUsedDate should be the date of the actual debit, so it
-    // can very well refer to a transaction in the future.
-    foreach([ 'mandateDate'/*, 'lastUsedDate',*/ ] as $dateKey) {
-      $date = $mandate[$dateKey];
-      if ($date == '0000-00-00' || $date == '1970-01-01') {
-        continue;
-      }
-      $stamp = strtotime($date);
-      $now = time();
-      if ($now < $stamp) {
-        throw new \InvalidArgumentException(
-          $nl.
-          $this->l->t('Mandate issued in the future: %s????', $date).
-          $nl.
-          $this->l->t('Full data record:').
-          $nl.
-          print_r($mandate, true));
-      }
-    }
-    $dateIssued = $mandate['mandateDate'];
-    if ($dateIssued == '0000-00-00') {
-      throw new \InvalidArgumentException(
-        $nl.
-        $this->l->t('Missing mandate date').
-        $nl.
-        $nl.
-        $this->l->t('Full data record:').
-        $nl.
-        print_r($mandate, true));
-    }
-
-    $sequenceType = $this->sepaMandateSequenceType($mandate);
-    $allowedTypes = [ 'once', 'permanent', 'first', 'following', ];
-    if (array_search($sequenceType, $allowedTypes) === false) {
-      throw new \InvalidArgumentException(
-        $nl.
-        $this->l->t("Invalid sequence type `%s', should be one of %s",
-                    [ $sequenceType, implode(',', $allowedTypes), ]).
-        $nl.
-        $nl.
-        $this->l->t('Full data record:').
-        $nl.
-        print_r($mandate, true));
-    }
-
-    // Check IBAN and BIC: extract the bank and bank account id,
-    // check both with BAV, regenerate the BIC
-    $IBAN = $mandate['IBAN'];
-    $BLZ  = $mandate['BLZ'];
-    $BIC  = $mandate['BIC'];
-
-    $iban = new \PHP_IBAN\IBAN($IBAN);
-    if (!$iban->Verify()) {
-      throw new \InvalidArgumentException(
-        $nl.
-        $this->l->t('Invalid IBAN: %s', $IBAN).
-        $nl.
-        $this->l->t('Full data record:').
-        $nl.
-        print_r($mandate, true));
-    }
-
-    if ($iban->Country() == 'DE') {
-      // otherwise: not implemented yet
-      $ibanBLZ = $iban->Bank();
-      $ibanKTO = $iban->Account();
-
-      if ($BLZ != $ibanBLZ) {
-        throw new \InvalidArgumentException(
-          $nl.
-          $this->l->t('BLZ and IBAN do not match: %s != %s', [ $BLZ, $ibanBLZ, ]).
-          $nl.
-          $this->l->t('Full data record:').
-          $nl.
-          print_r($mandate, true));
-      }
-
-      $bav = new \malkusch\bav\BAV;
-
-      if (!$bav->isValidBank($ibanBLZ)) {
-        throw new \InvalidArgumentException(
-          $nl.
-          $this->l->t('Invalid German BLZ: %s.', $BLZ).
-          $nl.
-          $this->l->t('Full data record:').
-          $nl.
-          print_r($mandate, true));
-      }
-
-      if (!$bav->isValidAccount($ibanKTO)) {
-        throw new \InvalidArgumentException(
-          $nl.
-          $this->l->t('Invalid German bank account: %s @ %s.', [ $ibanKTO, $BLZ, ]).
-          $nl.
-          $this->l->t('Full data record:').
-          $nl.
-          print_r($mandate, true));
-      }
-
-      $blzBIC = $bav->getMainAgency($ibanBLZ)->getBIC();
-      if ($blzBIC != $BIC) {
-        throw new \InvalidArgumentException(
-          $nl.
-          $this->l->t('Probably invalid BIC: %s. Computed: %s. ', [ $BIC, $blzBIC, ]).
-          $nl.
-          $this->l->t('Full data record:').
-          $nl.
-          print_r($mandate, true));
-      }
-
     }
 
     return true;

@@ -28,14 +28,34 @@ class Util
   public const OMIT_EMPTY_FIELDS = 1;
   public const TRIM = 2;
 
-  private static $externalScripts = [];
+  public const FILE_EXTENSIONS_BY_MIME_TYPE = [
+    'image/png' => 'png',
+    'image/jpeg' => 'jpg',
+    'image/gif' => 'gif',
+    'image/vnd.microsoft.icon' => 'ico',
+    'application/pdf' => 'pdf',
+  ];
+
+  public static function fileExtensionFromMimeType($mimeType)
+  {
+    if (!empty(self::FILE_EXTENSIONS_BY_MIME_TYPE[$mimeType])) {
+      return self::FILE_EXTENSIONS_BY_MIME_TYPE[$mimeType];
+    }
+    // as a wild guess we return anything after the slash if it is at
+    // most 4 characters.
+    list($first, $second) = explode('/', $mimeType);
+    if (strlen($second) <= 4) {
+      return $second;
+    }
+    return null;
+  }
 
   /**
    * Merge $arrays recursively where later arguments in the list
    * override the values of previous arguments and numeric keys are
    * just appended.
    *
-   * @param mixed ...$arrays
+   * @param mxied ...$arrays
    *
    * @return array
    */
@@ -157,33 +177,6 @@ class Util
       $maxUploadFilesize = min($maxUploadFilesize, $freeSpace);
     }
     return $maxUploadFilesize;
-  }
-
-  /**Add some java-script external code (e.g. Google maps). Emit it
-   * with emitExternalScripts().
-   */
-  public static function addExternalScript($script = '')
-  {
-    self::$externalScripts[] = $script;
-  }
-
-  /**Dump all external java-script scripts previously added with
-   * addExternalScript(). Each inline-script is wrapped into a separate
-   * @<script@>@</script@> element to make debugging easier.
-   */
-  public static function emitExternalScripts()
-  {
-    $nonce = \OC::$server->getContentSecurityPolicyNonceManager()->getNonce();
-    $scripts = '';
-    foreach(self::$externalScripts as $script) {
-      $scripts .=<<<__EOT__
-<script nonce="$nonce" type="text/javascript" src="$script" defer></script>
-
-__EOT__;
-    }
-    self::$externalScripts = array(); // don't dump twice.
-
-    return $scripts;
   }
 
   /**Format the right way (tm). */

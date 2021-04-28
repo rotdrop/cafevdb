@@ -23,7 +23,7 @@
 import { globalState, appName, webRoot, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
-// import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.js';
 // import * as DialogUtils from './dialog-utils.js';
 import * as Page from './page.js';
 import * as Email from './email.js';
@@ -233,10 +233,24 @@ const mandatesInit = function(data, onChangeCallback) {
     $('+' + uploadWrapperId).replaceWith(uploadUi);
   }
 
-  popup.on('click', mandateFormSelector + ' ' + 'input.upload-placeholder', function(event) {
-    $('#' + uploadWrapperId + ' input[type="file"]').trigger('click');
-    return false;
-  });
+  popup.on(
+    'click',
+    mandateFormSelector + ' ' + 'input.upload-placeholder'
+      + ', '
+      + mandateFormSelector + ' ' + 'input.upload-replace',
+    function(event) {
+      $('#' + uploadWrapperId + ' input[type="file"]').trigger('click');
+      return false;
+    });
+
+  popup.on(
+    'change',
+    mandateFormSelector + ' ' + 'input.upload-written-mandate-later',
+    function(event) {
+      $(mandateFormSelector + ' ' + 'input.upload-placeholder')
+        .prop('required', !$(this).prop('checked'));
+      return false;
+    })
 
   // Render some inputs as disabled to prevent accidental overwrite
   const conservativeAllowChange = function(fieldSet) {
@@ -250,7 +264,8 @@ const mandatesInit = function(data, onChangeCallback) {
 
       $self.find('input[type="text"], input[type="number"]').each(function(index) {
         const $input = $(this);
-        const lockOptions = $input.val() === '' ? {} : defaultLockUnlock;
+        const lockOptions = $input.val() === '' ? { locked: $input.hasClass('locked') } : defaultLockUnlock;
+        console.info($input.attr('name'), lockOptions);
         $input.lockUnlock(lockOptions);
       });
 
@@ -419,10 +434,14 @@ const mandatesInit = function(data, onChangeCallback) {
         // $downloadLink.html(file.meta.baseName);
         // $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
         // $parentFolder.prop('disabled', $downloadLink.attr('href') === '');
-        console.info('UPLOAD DONE', file, index, container);
+        console.info('UPLOAD DONE');
+        mandateFieldset.find('input.written-mandate-file-upload').val(file.name);
+        mandateFieldset.find('input.upload-placeholder')
+          .val(file.original_name)
+          .lockUnlock('lock', true);
       },
       stopCallback: null,
-      dropZone: mandateFieldset.find('.file-data'),
+      dropZone: mandateFieldset.find('.written-mandate-upload'),
       containerSelector: '#' + uploadWrapperId,
       inputSelector: 'input[type="file"]',
       multiple: false,
@@ -437,7 +456,7 @@ const mandatesInit = function(data, onChangeCallback) {
     },
     width: 'auto', // 550,
     height: 'auto',
-    modal: true,
+    modal: false,
     resizable: false,
     buttons: [
       {
@@ -630,8 +649,19 @@ const mandateStore = function(options) {
     return;
   }
 
+  const $form = $(options.form);
+  const $mandateFieldset = $form.find('fieldset.debit-mandate');
+  if ($mandateFieldset.hasClass('no-written-mandate')
+      && !$mandateFieldset.find('input.upload-written-mandate-later').prop('checked')
+      && $mandateFieldset.find('input.written-mandate-file-upload').val() === '') {
+    Dialogs.alert(t(appName, 'Please either upload a copy of the written and signed debit-mandate or at least check the "upload later" option'), t(appName, 'Missing Data'));
+    options.fail();
+    options.always();
+    return;
+  }
+
   // "submit" the entire form
-  const post = $(options.form).serialize();
+  const post = $form.serialize();
 
   $.post(generateUrl('finance/sepa/debit-mandates/store'), post)
     .fail(function(xhr, status, errorThrown) {

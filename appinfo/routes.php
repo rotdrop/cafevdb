@@ -197,6 +197,11 @@ $routes = [
       'url' => '/download/{section}/{object}',
       'verb' => 'POST',
     ],
+    [
+      'name' => 'downloads#get',
+      'url' => '/download/{section}/{object}',
+      'verb' => 'GET',
+    ],
     /**
      * Image service out of database or OC file-space
      *

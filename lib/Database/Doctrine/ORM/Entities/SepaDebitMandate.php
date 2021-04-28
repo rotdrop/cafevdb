@@ -153,10 +153,20 @@ class SepaDebitMandate
    * @param null|int
    *
    * @return SepaDebitMandate
+   *
+   * @todo Detangle mandate reference generation from setting
+   * sequences here. Perhaps a slug-handler ...
    */
   public function setSequence(?int $sequence):SepaDebitMandate
   {
     $this->sequence = $sequence;
+
+    if ($sequence !== null && $this->mandateReference !== null) {
+      $this->mandateReference = preg_replace(
+        '/[+][0-9]{2}$/',
+        sprintf('+%02d', $sequence),
+        $this->mandateReference);
+    }
 
     return $this;
   }

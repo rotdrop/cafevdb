@@ -497,6 +497,7 @@ class SepaDebitMandatesController extends Controller {
 
     $this->logInfo('CALLED WITH '.print_r([$projectId, $musicianId, $bankAccountSequence, $mandateSequence], true));
 
+    $mandateProjectId = null;
     if (!empty($mandateSequence)) {
       /** @var Entities\SepaDebitMandate $mandate */
       $mandate = $this->getDatabaseRepository(Entities\SepaDebitMandate::class)->find([
@@ -508,6 +509,8 @@ class SepaDebitMandatesController extends Controller {
         return self::grumble($this->l->t('Unable to load SEPA debit mandate for musician %s/%d, sequence count %d',
                                          [$musician->getPublicName(), $musician->getId(), $mandateSequence]));
       }
+
+      $mandateProjectId = $mandate->getProject()->getId();
 
       /** @var Entities\SepaBankAccount $bankAccount */
       $bankAccount = $mandate->getSepaBankAccount();
@@ -525,7 +528,7 @@ class SepaDebitMandatesController extends Controller {
 
     if (empty($mandate)) {
       $mandate = (new Entities\SepaDebitMandate)
-               ->setNonRecurring(!empty($project))
+               ->setNonRecurring(false /* !empty($project) */)
                ->setMandateDate(new \DateTimeImmutable)
                ->setSequence(0);
 
@@ -585,6 +588,21 @@ class SepaDebitMandatesController extends Controller {
       ];
     }
 
+    /** @var Entities\EncryptedFile $writtenMandate */
+    if (!empty($writtenMandate = $mandate->getWrittenMandate())) {
+      $writtenMandateId = $writtenMandate->getId();
+      $writtenMandateDownloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
+        'section' => 'database',
+        'object' => $writtenMandateId,
+      ]);
+      $writtenMandateFileName = $mandate->getMandateReference()
+                . '.'
+                . Util::fileExtensionFromMimeType($writtenMandate->getMimeType());
+      $writtenMandateDownloadLink = $writtenMandateDownloadLink
+        . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
+                           . '&fileName=' . urlencode($writtenMandateFileName);
+    }
+
     $templateParameters = [
       'projectId' => $projectId,
       'projectName' => $project ? $project->getName() : null,
@@ -618,6 +636,10 @@ class SepaDebitMandatesController extends Controller {
       'bankAccountBLZ' => $blz,
       'bankAccountBIC' => $bic,
       'bankAccountInUse' => $bankAccount->inUse(),
+
+      'writtenMandateId' => $writtenMandateId,
+      'writtenMandateDownloadLink' => $writtenMandateDownloadLink,
+      'writtenMandateFileName' => $writtenMandateFileName,
 
       'dateTimeFormatter' => \OC::$server->query(\OCP\IDateTimeFormatter::class),
     ];
@@ -659,9 +681,12 @@ class SepaDebitMandatesController extends Controller {
     , $mandateDate
     , $mandateLastUsedDate
     , $writtenMandateId
+    , $writtenMandateUpload
     , $mandateUploadLater
   )
   {
+    $this->logInfo('HELLO1');
+
     $requiredKeys = [
       'musicianId',
       'bankAccountIBAN',
@@ -749,17 +774,21 @@ class SepaDebitMandatesController extends Controller {
       }
     }
 
-    while (true) {
+    do {
       try {
         // try persist with increasing sequence until we succeed
         $bankAccountsRepository->persist($bankAccount);
       } catch (UniqueConstraintViolationException $e) {
+        if ($bankAccount->inUse()) {
+          $this->logException($e);
+          return self::grumble($this->l->t('Unable to modify already used bank-account.'));
+        }
         $this->entityManager->reopen();
         $bankAccount->setSequence(null);
       }
-    }
+    } while ($bankAccount->getSequence() === null);
 
-    if (empty($mandateRegistration)) {
+    if (empty($mandateRegistration) && empty($mandateSequence)) {
 
       $responseData = [
         'message' => $this->l->t('Successfully stored the bank account with IBAN "%s" and owner "%s"',
@@ -773,15 +802,13 @@ class SepaDebitMandatesController extends Controller {
       return self::dataResponse($responseData);
     }
 
-    return self::grumble($this->l->t('Unable to store SEPA debit mandate in data-base.'));
-
     /** @var Repositories/SepaDebitMandatesRepostory $debitMandatesRepository */
     $debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
 
     // Check for the debit-mandate.
     if (!empty($mandateSequence)) {
       /** @var Entities\SepaDebitMandate $debitMandate */
-      $debitMandate = $bankAccountsRepository->find([
+      $debitMandate = $debitMandatesRepository->find([
         'musician' => $musicianId,
         'sequence' => $mandateSequence,
       ]);
@@ -797,12 +824,16 @@ class SepaDebitMandatesController extends Controller {
           ]));
       }
       $musician = $debitMandate->getMusician();
+      // $mandateProject = $debitMandate->getProject();
     } else {
-      $debitMandate = (new Entities\SepaBankDebitMandate)
+      $debitMandate = (new Entities\SepaDebitMandate)
                     ->setMusician($musicianId);
     }
 
-    $mandateDate = Util::dateTime($mandateDate); // @todo check if this works as expected
+    // @todo check if this works as expected
+    // @todo validate, check for date-in-the-future
+    $mandateDate = Util::dateTime($mandateDate);
+
     if ($debitMandate->inUse()) {
       if ($debitMandate->getMandateDate() != $mandateDate) {
         return self::grumble($this->l->t('The current debit-mandate already has been used for payments. Therefore the date of the debit-mandate must not be changed. Please create a new debit-mandate; you may disable the current mandate, at you option.'));
@@ -817,6 +848,11 @@ class SepaDebitMandatesController extends Controller {
       if ($debitMandate->getWrittenMandate() != null && (int)$writtenMandateId <= 0) {
         return self::grumble($this->l->t('The current debit-mandate alrady has been used for payments. Therefore the stored copy of the written mandate cannot be deleted.'));
       }
+      // just make sure it does not change.
+      $mandateReference = $debitMandate->getMandateReference();
+    } else {
+      $debitMandate->setProject($mandateProjectId);
+      $mandateReference = $this->financeService->generateSepaMandateReference($debitMandate);
     }
 
     // set the new values
@@ -824,20 +860,38 @@ class SepaDebitMandatesController extends Controller {
                  ->setMandateDate($mandateDate)
                  ->setNonRecurring($mandateNonRecurring)
                  ->setMandateReference($mandateReference)
-                 ->setProject($mandateProject)
                  ->setLastUsedDate($mandateLastUsedDate)
                  ->setWrittenMandate($writtenMandate);
 
-    // this will throw on error
-    $this->financeService->validateSepaMandate($mandate);
+    do {
+      try {
+        // try persist with increasing sequence until we succeed
+        $debitMandatesRepository->persist($debitMandate);
+      } catch (UniqueConstraintViolationException $e) {
+        if ($debitMandate->inUse()) {
+          $this->logException($e);
+          return self::grumble($this->l->t('Unable to modify already used debit-mandate.'));
+        }
+        $this->entityManager->reopen();
+        $debitMandate->setSequence(null);
+      }
+    } while ($debitMandate->getSequence() === null);
 
-    $mandate = $this->financeService->storeSepaMandate($mandate);
+    $responseData = [
+      'message' => [
+        $this->l->t('Successfully stored the bank-account with IBAN "%s" and owner "%s"',
+                    [ $bankAccount->getIban(), $bankAccount->getBankAccountOwner()]),
+        $this->l->t('Successfully stored the debit-mandate with reference "%s" for the IBAN "%s".',
+                    [ $debitMandate->getMandateReference(), $bankAccount->getIban()]),
+      ],
+      'projectId' => $projectId,
+      'musicianId' => $musicianId,
+      'bankAccountSequence' => $bankAccount->getSequence(),
+      'mandateSequence' => $debitMandate->getSequence(),
+      'mandateReference' => $debitMandate->getMandateReference(),
+    ];
 
-    if (empty($mandate)) {
-      return self::grumble($this->l->t('Unable to store SEPA debit mandate in data-base.'));
-    }
-
-    return self::response($this->l->t('SEPA debit mandate stored in data-base.'));
+    return self::dataResponse($responseData);
   }
 
   /**

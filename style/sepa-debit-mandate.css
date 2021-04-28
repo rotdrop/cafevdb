@@ -190,9 +190,21 @@ input.pme-debit-note[type=submit] {
  *
  */
 
+/* visibility control */
+
+#sepa-debit-mandate-dialog fieldset.have-data.unused .hidden-have-data-unused,
+#sepa-debit-mandate-dialog fieldset.no-written-mandate .hidden-no-written-mandate,
+#sepa-debit-mandate-dialog fieldset.have-written-mandate .hidden-have-written-mandate,
+#sepa-debit-mandate-dialog fieldset.used .hidden-used,
+#sepa-debit-mandate-dialog fieldset.unused .hidden-unused,
+#sepa-debit-mandate-dialog fieldset.have-data .hidden-have-data,
+#sepa-debit-mandate-dialog fieldset.no-data .hidden-no-data {
+  display:none!important;
+}
+
 /* selectize stuff */
 
-#sepa-debit-mandate-dialog .selectize-control.debitMandateProjectId {
+#sepa-debit-mandate-dialog .selectize-control.mandateProjectId {
   min-width:10rem;
   max-width:10rem;
 }
@@ -257,7 +269,7 @@ input.pme-debit-note[type=submit] {
   display:none;
 }
 
-#sepa-debit-mandate-dialog fieldset.debit-mandate #sepa-debit-mandate-upload-later + label {
+#sepa-debit-mandate-dialog fieldset.debit-mandate #upload-written-mandate-later + label {
   position:absolute;
   right:0;
   bottom:0;
@@ -266,14 +278,6 @@ input.pme-debit-note[type=submit] {
 
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-data legend .registration-for-label {
   display:none;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data #sepa-debit-mandate-upload-later:checked ~ legend .registration-label {
-  display:none;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data #sepa-debit-mandate-upload-later:checked ~ legend .registration-for-label {
-  display:inline-block;
 }
 
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-data legend .registration-label {
@@ -290,18 +294,11 @@ input.pme-debit-note[type=submit] {
   width:100%;
 }
 
-#sepa-debit-mandate-dialog #sepa-debit-mandate-upload-later:checked ~ .debit-mandate-details.hidden {
-  display:unset;
-}
-
-#sepa-debit-mandate-dialog #sepa-debit-mandate-upload-later:checked ~ .reference.hidden {
-}
-
-#sepa-debit-mandate-dialog .debit-mandate-upload .upload-placeholder {
+#sepa-debit-mandate-dialog .written-mandate-upload .upload-placeholder {
   width:20em;
 }
 
-#sepa-debit-mandate-dialog .debit-mandate-upload .operations .operation {
+#sepa-debit-mandate-dialog .written-mandate-upload .operations .operation {
   background-repeat:no-repeat;
   background-size: 24px 24px;
   background-position: center;
@@ -311,11 +308,11 @@ input.pme-debit-note[type=submit] {
   margin-right:1em;
 }
 
-#sepa-debit-mandate-dialog .debit-mandate-upload .operations .operation.delete-undelete {
+#sepa-debit-mandate-dialog .written-mandate-upload .operations .operation.delete-undelete {
   background-image:url('../img/cafevdb-delete.svg');
 }
 
-#sepa-debit-mandate-dialog .debit-mandate-upload .operations .operation.upload-replace {
+#sepa-debit-mandate-dialog .written-mandate-upload .operations .operation.upload-replace {
   background-image:url('../../../core/img/actions/upload.svg');
                                                                                          }
 

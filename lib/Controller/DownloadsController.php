@@ -31,28 +31,28 @@ use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Common\Util;
 
 class DownloadsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
-
-  /** @var CalDavService */
-  private $calDavService;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public function __construct(
     $appName
     , IRequest $request
     , ConfigService $configService
-    , CalDavService $calDavService
+    , EntityManager $entityManager
   ) {
 
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
-    $this->calDavService = $calDavService;
+    $this->entityManager = $entityManager;
     $this->l = $this->l10N();
   }
 
@@ -81,9 +81,41 @@ class DownloadsController extends Controller {
         return new DataDownloadResponse($letter, $fileName, 'application/pdf');
       }
       break;
+    case 'database':
+      $fileId = $object;
+      /** @var Entities\File $file */
+      $file = $this->getDatabaseRepository(Entities\File::class)->find($fileId);
+      if (empty($file)) {
+        return self::grumble($this->l->t('File width id %d not found in database-storage.', $fileId));
+      }
+      $this->logInfo('GOT FILE '.(empty($file) ? 'none' : get_class($file)));
+      $mimeType = $file->getMimeType();
+      $fileName = $this->request->getParam('fileName');
+      if (empty($fileName)) {
+        $fileName = $this->appName() . '-' . 'download' . $fileId;
+      }
+      return new DataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
     }
     return self::grumble($this->l->t('Unknown Request'));
   }
+
+  /**
+   * Fetch something and return it as download.
+   *
+   * @param string $section Cosmetics, for grouping purposes
+   *
+   * @param sting $object Something identifying the object in the
+   * context of $section.
+   *
+   * @return mixed \OCP\Response Something derived from \OCP\Response
+   *
+   * @NoAdminRequired
+   */
+  public function get($section, $object)
+  {
+    return $this->fetch($section, $object);
+  }
+
 }
 
 // Local Variables: ***
