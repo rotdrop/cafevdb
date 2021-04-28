@@ -30,6 +30,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\AppFramework\IAppContainer;
+use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -108,7 +109,10 @@ trait ConfigTrait {
     return $this->configService->getUserSession();
   }
 
-  protected function urlGenerator()
+  /**
+   * @return IURLGenerator
+   */
+  protected function urlGenerator():IURLGenerator
   {
     return $this->configService->getUrlGenerator();
   }
