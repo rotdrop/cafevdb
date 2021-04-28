@@ -32,6 +32,7 @@ input[type="checkbox"].cafevdb-lock-input-widget + label.cafevdb-lock-input-widg
   z-index:1;
 }
 
+.cafevdb-lock-unlock-victim.hidden + input[type="checkbox"].cafevdb-lock-input-widget + label.cafevdb-lock-input-widget,
 input[type="checkbox"].cafevdb-lock-input-widget.disabled + label.cafevdb-lock-input-widget {
   display:none!important;
 }

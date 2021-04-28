@@ -76,7 +76,8 @@ $.fn.lockUnlock = function(argument) {
             + '>'
             + '</label>'
         )
-        .data(appName + 'LockUnlockId', id);
+        .data(appName + 'LockUnlockId', id)
+        .addClass(appName + '-lock-unlock-victim');
       $('#' + id)
         .data('input', this)
         .data('options', options);
@@ -123,7 +124,9 @@ $.fn.lockUnlock = function(argument) {
       break;
     }
     case 'destroy':
-      $self.removeData(appName + 'LockUnlockId');
+      $self
+        .removeData(appName + 'LockUnlockId')
+        .removeClass(appName + '-lock-unlock-victim');
       $('#' + id).remove();
       $('#' + id + '-label').remove();
       return this;
