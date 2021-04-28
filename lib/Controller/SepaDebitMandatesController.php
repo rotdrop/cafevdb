@@ -41,6 +41,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Storage\AppStorage;
+use OCP\Files\SimpleFS\ISimpleFile;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -595,9 +597,11 @@ class SepaDebitMandatesController extends Controller {
         'section' => 'database',
         'object' => $writtenMandateId,
       ]);
-      $writtenMandateFileName = $mandate->getMandateReference()
-                . '.'
-                . Util::fileExtensionFromMimeType($writtenMandate->getMimeType());
+      $writtenMandateFileName = $mandate->getMandateReference();
+      $extension = Util::fileExtensionFromMimeType($writtenMandate->getMimeType());
+      if (!empty($extension)) {
+        $writtenMandateFileName .= '.' . $extension;
+      }
       $writtenMandateDownloadLink = $writtenMandateDownloadLink
         . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
                            . '&fileName=' . urlencode($writtenMandateFileName);
@@ -681,12 +685,10 @@ class SepaDebitMandatesController extends Controller {
     , $mandateDate
     , $mandateLastUsedDate
     , $writtenMandateId
-    , $writtenMandateUpload
+    , $writtenMandateFileUpload
     , $mandateUploadLater
   )
   {
-    $this->logInfo('HELLO1');
-
     $requiredKeys = [
       'musicianId',
       'bankAccountIBAN',
@@ -853,6 +855,33 @@ class SepaDebitMandatesController extends Controller {
     } else {
       $debitMandate->setProject($mandateProjectId);
       $mandateReference = $this->financeService->generateSepaMandateReference($debitMandate);
+    }
+
+    $writtenMandate = $debitMandate->getWrittenMandate();
+    if (!empty($writtenMandateFileUpload)) {
+      /** @var AppStorage $appStorage */
+      $appStorage = $this->di(AppStorage::class);
+      /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+      $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+
+      /** @var ISimpleFile $uploadFile */
+      $uploadFile = $appStorage->getUploadFile($writtenMandateFileUpload);
+
+      if (empty($writtenMandate)) {
+        $writtenMandate = new Entities\EncryptedFile;
+        $fileData = new Entities\EncryptedFileData;
+        $fileData->setFile($writtenMandate);
+        $writtenMandate->setFileData($fileData);
+      } else {
+        $fileData = $writtenMandate->getFileData();
+      }
+
+      $fileContents = $uploadFile->getContent();
+      $mimeType = $mimeTypeDetector->detectString($fileContents);
+      $fileData->setData($fileContents);
+      $writtenMandate->setMimeType($mimeType)
+                     ->setSize($uploadFile->getSize());
+      $uploadFile->delete();
     }
 
     // set the new values

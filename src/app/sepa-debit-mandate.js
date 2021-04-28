@@ -99,6 +99,7 @@ const mandatesInit = function(data, onChangeCallback) {
   const mandateRegistrationSelector = 'input.debit-mandate-registration';
   const mandateDateSelector = 'input.mandateDate';
   const accountOwnerSelector = 'input.bankAccountOwner';
+  const uploadPlaceholderSelector = 'input.upload-placeholder';
 
   const disableButtons = function(disable) {
     const buttons = popup.data('buttons');
@@ -142,12 +143,10 @@ const mandatesInit = function(data, onChangeCallback) {
 
   popup.on('change', mandateFormSelector + ' ' + mandateRegistrationSelector, function(event) {
     const $self = $(this);
-    const $mandateDate = $(mandateFormSelector + ' ' + mandateDateSelector);
-    if ($self.prop('checked)')) {
-      $mandateDate.prop('required', true);
-    } else {
-      $mandateDate.prop('required', false);
-    }
+    const checked = $self.prop('checked');
+    $(mandateFormSelector + ' ' + mandateDateSelector).prop('required', checked);
+    $(mandateFormSelector + ' ' + uploadPlaceholderSelector).prop('required', checked);
+    return false;
   });
 
   popup.on('blur', mandateFormSelector + ' ' + 'input[type="text"]:not(.no-validation)', validateInput);
@@ -235,7 +234,7 @@ const mandatesInit = function(data, onChangeCallback) {
 
   popup.on(
     'click',
-    mandateFormSelector + ' ' + 'input.upload-placeholder'
+    mandateFormSelector + ' ' + uploadPlaceholderSelector
       + ', '
       + mandateFormSelector + ' ' + 'input.upload-replace',
     function(event) {
@@ -247,10 +246,10 @@ const mandatesInit = function(data, onChangeCallback) {
     'change',
     mandateFormSelector + ' ' + 'input.upload-written-mandate-later',
     function(event) {
-      $(mandateFormSelector + ' ' + 'input.upload-placeholder')
+      $(mandateFormSelector + ' ' + uploadPlaceholderSelector)
         .prop('required', !$(this).prop('checked'));
       return false;
-    })
+    });
 
   // Render some inputs as disabled to prevent accidental overwrite
   const conservativeAllowChange = function(fieldSet) {
@@ -265,7 +264,6 @@ const mandatesInit = function(data, onChangeCallback) {
       $self.find('input[type="text"], input[type="number"]').each(function(index) {
         const $input = $(this);
         const lockOptions = $input.val() === '' ? { locked: $input.hasClass('locked') } : defaultLockUnlock;
-        console.info($input.attr('name'), lockOptions);
         $input.lockUnlock(lockOptions);
       });
 
@@ -347,15 +345,12 @@ const mandatesInit = function(data, onChangeCallback) {
     const accountUsed = !accountFieldset.hasClass('unused');
     const mandateUsed = !mandateFieldset.hasClass('unused');
 
-    console.info('SEPA ID', data.sepaId);
-
     if (!(data.sepaId.bankAccountSequence > 0)) {
       // no account, so nothing to delete or disable
       buttons.disable.prop('disabled', true).hide();
       buttons.delete.prop('disabled', true).hide();
     } else if (!(data.sepaId.mandateSequence > 0)) {
       if (accountUsed) {
-        console.info('account is used');
         // allow only "disable"
         buttons.disable.prop('disabled', false).show();
         buttons.delete.prop('disabled', true).hide();
@@ -365,9 +360,14 @@ const mandatesInit = function(data, onChangeCallback) {
         buttons.delete.prop('disabled', false).show();
       }
     } else {
-      // mandates may not be deleted.
-      buttons.disable.prop('disabled', false).show();
-      buttons.delete.prop('disabled', true).hide();
+      if (mandateUsed) {
+        buttons.disable.prop('disabled', false).show();
+        buttons.delete.prop('disabled', true).hide();
+      } else {
+        // unused, safe to delete
+        buttons.disable.prop('disabled', true).hide();
+        buttons.delete.prop('disabled', false).show();
+      }
     }
 
     $widget.find('button, input, label, [class*="tooltip"]').cafevTooltip({ placement: 'auto bottom' });
@@ -430,15 +430,12 @@ const mandatesInit = function(data, onChangeCallback) {
     FileUpload.init({
       url: generateUrl('upload'),
       doneCallback(file, index, container) {
-        // $downloadLink.attr('href', file.meta.download);
-        // $downloadLink.html(file.meta.baseName);
-        // $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
-        // $parentFolder.prop('disabled', $downloadLink.attr('href') === '');
-        console.info('UPLOAD DONE');
         mandateFieldset.find('input.written-mandate-file-upload').val(file.name);
         mandateFieldset.find('input.upload-placeholder')
           .val(file.original_name)
           .lockUnlock('lock', true);
+        // we now should pretend that we have no written mandate in order to get the styling right
+        mandateFieldset.removeClass('have-written-mandate').addClass('no-written-mandate');
       },
       stopCallback: null,
       dropZone: mandateFieldset.find('.written-mandate-upload'),
@@ -508,7 +505,6 @@ const mandatesInit = function(data, onChangeCallback) {
         text: t(appName, 'Apply'),
         title: t(appName, 'Save the data in the underlying data-base storage. Keep the form open.'),
         click(event) {
-          console.info('CHANGE');
 
           const $dlg = $(this);
           const $form = $dlg.find(mandateFormSelector);
@@ -652,6 +648,7 @@ const mandateStore = function(options) {
   const $form = $(options.form);
   const $mandateFieldset = $form.find('fieldset.debit-mandate');
   if ($mandateFieldset.hasClass('no-written-mandate')
+      && (!$mandateFieldset.hasClass('no-data') || $form.find('input.debit-mandate-registration').prop('checked'))
       && !$mandateFieldset.find('input.upload-written-mandate-later').prop('checked')
       && $mandateFieldset.find('input.written-mandate-file-upload').val() === '') {
     Dialogs.alert(t(appName, 'Please either upload a copy of the written and signed debit-mandate or at least check the "upload later" option'), t(appName, 'Missing Data'));
@@ -1076,7 +1073,6 @@ const mandateExportHandler = function(event) {
       Ajax.handleError(xhr, status, errorThrown, clearBusyState);
     })
     .done(function(data) {
-      console.info(data);
       clearBusyState();
     });
 

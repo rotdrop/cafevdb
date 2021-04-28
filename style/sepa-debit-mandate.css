@@ -194,12 +194,51 @@ input.pme-debit-note[type=submit] {
 
 #sepa-debit-mandate-dialog fieldset.have-data.unused .hidden-have-data-unused,
 #sepa-debit-mandate-dialog fieldset.no-written-mandate .hidden-no-written-mandate,
+#sepa-debit-mandate-dialog fieldset.no-written-mandate .hidden-no-written-mandate + input[type="checkbox"] + label,
 #sepa-debit-mandate-dialog fieldset.have-written-mandate .hidden-have-written-mandate,
+#sepa-debit-mandate-dialog fieldset.have-written-mandate .hidden-have-written-mandate + input[type="checkbox"] + label,
 #sepa-debit-mandate-dialog fieldset.used .hidden-used,
 #sepa-debit-mandate-dialog fieldset.unused .hidden-unused,
 #sepa-debit-mandate-dialog fieldset.have-data .hidden-have-data,
 #sepa-debit-mandate-dialog fieldset.no-data .hidden-no-data {
   display:none!important;
+}
+
+/* lock/unlock the project binding if we have a mandate */
+#sepa-debit-mandate-dialog input.debit-mandate-binding-lock ~ label.debit-mandate-binding-lock {
+  height: 16px;
+  width: 16px;
+  position: relative;
+  vertical-align: top;
+  top: 0;
+  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.2;
+  text-indent: -10000em;
+  z-index:1;
+}
+
+#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:checked ~ label.debit-mandate-binding-lock {
+  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
+  opacity: 0.2;
+}
+
+#sepa-debit-mandate-dialog fieldset.used input.debit-mandate-binding-lock ~ label.debit-mandate-binding-lock {
+  background-image: url('../img/dontred.svg');
+  background-size: 16px 16px;
+}
+
+#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:not(:checked) ~ .debit-mandate-binding.hidden-if-unlocked,
+#sepa-debit-mandate-dialog fieldset.used input.debit-mandate-binding-lock ~ .debit-mandate-binding.hidden-if-locked,
+#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:checked ~ .debit-mandate-binding.hidden-if-locked {
+  display:none!important;
+}
+
+#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:checked ~ .debit-mandate-binding.hidden-if-unlocked,
+#sepa-debit-mandate-dialog fieldset.used input.debit-mandate-binding-lock ~ .debit-mandate-binding.hidden-if-unlocked,
+#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:not(:checked) ~ .debit-mandate-binding.hidden-if-locked {
+  display:inline-block!important;
 }
 
 /* selectize stuff */
@@ -313,10 +352,27 @@ input.pme-debit-note[type=submit] {
 }
 
 #sepa-debit-mandate-dialog .written-mandate-upload .operations .operation.upload-replace {
-  background-image:url('../../../core/img/actions/upload.svg');
-                                                                                         }
+  background-image:url('../../../core/img/actions/upload.svg');                                                                                         }
 
+/* Style links in a more ordinary fashion. Grin. */
+#sepa-debit-mandate-dialog a.download-link:link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
 
+#sepa-debit-mandate-dialog a.download-link:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+
+#sepa-debit-mandate-dialog a.download-link:hover {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
 
 /******************************************************************************
  *

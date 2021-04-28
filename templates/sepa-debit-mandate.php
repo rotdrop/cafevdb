@@ -45,11 +45,22 @@ if ($haveMandate) {
     : 'for-all-receivables');
 }
 
+$bindingText = [
+  'only-for-project' => [
+    $l->t('only for'),
+    $l->t('only for "%s"', $mandateProjectName),
+  ],
+  'for-all-receivables' => [
+    $l->t('for all receivables'),
+    $l->t('for all receivables'),
+  ],
+];
+
 $mandateCss = implode(' ', [
   'debit-mandate',
   (empty($haveMandate) ? ' no-data' : 'have-data'),
   (empty($mandateInUse) ? 'unused' : 'used'),
-  (empty($writtenMandate) ? 'no-written-mandate' : 'have-written-mandate'),
+  (empty($writtenMandateId) ? 'no-written-mandate' : 'have-written-mandate'),
   (!empty($isClubMember) ? ' club-member' : null),
 ]);
 
@@ -150,8 +161,15 @@ $accountCss = implode(' ', [
       <div></div>
       <div class="debit-mandate-details inline-block">
         <div class="ui-widget-overlay debit-mandate-blocker hidden-have-data"></div>
+
+        <input type="checkbox"
+               id="debit-mandate-binding-lock"
+               class="checkbox hidden-no-data debit-mandate-binding-lock"
+               <?php !empty($haveMandate) && p('checked'); ?>
+        />
+
         <?php if (count($projectOptions) > 0) { ?>
-          <span class="debit-mandate-binding hidden-used">
+          <span class="debit-mandate-binding hidden-have-data hidden-if-locked">
             <input id="sepa-debit-mandate-only-for-project"
                    class="only-for-project bankAccount projectMandate checkbox"
                    type="radio"
@@ -162,7 +180,7 @@ $accountCss = implode(' ', [
             <label for="sepa-debit-mandate-only-for-project"
                    title="<?php echo  $toolTips['sepa-debit-mandate-only-for-project']; ?>"
                    class="tooltip-right">
-              <?php echo $l->t('only for'); ?>
+              <?php p($bindingText['only-for-project'][0]); ?>
             </label>
             <?php if (count($projectOptions) > 1) { ?>
               <select name="mandateProjectId"
@@ -188,7 +206,7 @@ $accountCss = implode(' ', [
             <?php } ?>
           </span>
         <?php } ?>
-        <span class="debit-mandate-binding hidden-used">
+        <span class="debit-mandate-binding hidden-have-data hidden-if-locked">
           <input type="hidden"
                  class="mandateProjectId for-all-receivables"
                  name="mandateProjectId"
@@ -205,17 +223,20 @@ $accountCss = implode(' ', [
           <label for="sepa-debit-mandate-for-all-receivables"
                  title="<?php echo  $toolTips['sepa-debit-mandate-for-all-receivables']; ?>"
                  class="tooltip-right">
-            <?php echo $l->t('for all receivables'); ?>
+            <?php p($bindingText['for-all-receivables'][0]); ?>
           </label>
         </span>
-        <span class="debit-mandate-binding hidden-unused">
+        <span class="debit-mandate-binding hidden-no-data  hidden-if-unlocked">
           <span class="debit-mandate-binding label">
             <?php p($l->t('Project-binding:')); ?>
           </span>
           <span class="debit-mandate-binding value">
-            <?php p($l->t($mandateBinding)); ?>
+            <?php p($bindingText[$mandateBinding][1]); ?>
           </span>
         </span>
+
+        <label for="debit-mandate-binding-lock" class="hidden-no-data debit-mandate-binding-lock"></label>
+
         <span id="debitRecurringInfo" class="debitRecurringInfo <?php echo $mandateSequenceType; ?>">
           <span class="label"><?php echo $l->t('Reusable:'); ?></span>
           <span class="type once"><?php echo $l->t('once'); ?></span>
@@ -250,13 +271,14 @@ $accountCss = implode(' ', [
             <input type="button" title="<?php echo $toolTipsService['sepa-bank-data-form:upload-replace-written-mandate']; ?>" class="operation upload-replace"/>
           </div>
           <div class="file-data inline-block">
-            <a class="download-link hidden-no-written-mandate" title="<?php echo $toolTipsService['sepa-bank-data-form:download-written-mandate']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php echo $writtenMandateFileName; ?></a>
+            <a class="download-link hidden-no-written-mandate" title="<?php echo $toolTipsService['sepa-bank-data-form:download-written-mandate']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php p($writtenMandateFileName); ?></a>
             <input class="upload-placeholder no-validation hidden-have-written-mandate"
                    title="<?php echo $toolTipsService['sepa-bank-data-form:upload-written-mandate']; ?>"
                    placeholder="<?php echo $l->t('Upload filled SEPA debit mandate');  ?>"
                    type="text"
                    name="uploadPlaceholder"
-                   required
+                   value="<?php p($writtenMandateFileName); ?>"
+                   <?php !empty($haveMandate) && p('required'); ?>
             />
             <input type="hidden" name="writtenMandateFileUpload" class="written-mandate-file-upload" value=""/>
           </div>
