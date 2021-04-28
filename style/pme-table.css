@@ -970,6 +970,36 @@ th.pme-header.mandate-project, td.pme-cell.mandate-project {
   text-overflow:ellipsis;
 }
 
+table.pme-main td.pme-cell.restrict-height .pme-cell-wrapper,
+table.pme-main td.pme-cell.squeeze-subsequent-lines .pme-cell-wrapper {
+  display:block;
+  max-height:24px;
+}
+
+/* Restrict height of buttons in list view */
+table.pme-main td.pme-cell.restrict-height .pme-cell-wrapper input {
+  min-height:24px;
+  max-height:24px;
+  margin-top:0;
+  margin-bottom:0;
+  padding-top:0;
+  padding-bottom:0;
+}
+
+table.pme-main td.pme-cell.squeeze-subsequent-lines .pme-cell-squeezer {
+  display:inline-block;
+  max-height:24px;
+  line-height:7px;
+  font-size:66.67%;
+  overflow:hidden;
+  position:relative;
+}
+
+table.pme-main td.pme-cell.squeeze-subsequent-lines .pme-cell-squeezer::first-line {
+  line-height:12px;
+  font-size:150%; /* this is relative to the 2/3 above */
+}
+
 /* Hide everything but the first line */
 table.pme-main td.pme-cell.remarks,
 table.pme-main td.pme-cell.hide-subsequent-lines {

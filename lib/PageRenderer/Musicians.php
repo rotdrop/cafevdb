@@ -315,6 +315,9 @@ make sure that the musicians are also automatically added to the
         [ 'id' => 'contact',
           'tooltip' => $this->toolTipsService['musican-contact-tab'],
           'name' => $this->l->t('Contact Information') ],
+        [ 'id' => 'finance',
+          'tooltip' => $this->toolTipsService['musician-finance-tab'],
+          'name' => $this->l->t('Financial Topics') ],
         [ 'id' => 'miscinfo',
           'tooltip' => $this->toolTipsService['musician-miscinfo-tab'],
           'name' => $this->l->t('Miscellaneous Data') ],
@@ -701,6 +704,7 @@ make sure that the musicians are also automatically added to the
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_reference', [
         'name' => $this->l->t('SEPA Debit Mandate Reference'),
+        'tab' => ['id' => 'finance'],
         'input' => 'H',
         'tab' => [ 'id' => 'contact' ],
         'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
@@ -719,6 +723,7 @@ make sure that the musicians are also automatically added to the
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_deleted', [
         'name' => $this->l->t('SEPA Debit Mandate Deleted'),
+        'tab' => ['id' => 'finance'],
         'input' => 'H',
         'tab' => [ 'id' => 'contact' ],
         'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
@@ -737,9 +742,9 @@ make sure that the musicians are also automatically added to the
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
         'name' => $this->l->t('SEPA Bank Accounts'),
+        'tab' => ['id' => 'finance'],
         'input' => 'S',
         'input|ACP' => 'H',
-        'tab' => [ 'id' => 'contact' ],
         'encryption' => [
           'encrypt' => function($value) {
             $values = Util::explode(',', $value);
@@ -774,7 +779,15 @@ make sure that the musicians are also automatically added to the
         ],
         'sql|ACP' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
         'filter' => 'having',
-        'display|LFDV' => ['popup' => 'data'],
+        'display|LFDV' => [
+          'popup' => 'data',
+          // For an unknown reason we need two divs. Otherwise the
+          // subsequent lines gets squeezed but somehow their overflow
+          // still enters at least partly into the calculation of the
+          // height of the table cell.
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+        ],
         'sort' => true,
         'select' => 'M',
         'values' => [
@@ -785,12 +798,13 @@ make sure that the musicians are also automatically added to the
           'orderby' => '$table.sepa_id ASC',
         ],
         'values2glue' => '<br/>',
-        'css' => [ 'postfix' => ' hide-subsequent-lines' ],
+        'css' => [ 'postfix' => ' squeeze-subsequent-lines' ],
       ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'sepa_id', [
         'name' => $this->l->t('SEPA Bank Accounts'),
+        'tab' => ['id' => 'finance'],
         'input' => 'VS',
         'input|LFDV' => 'VH',
         'select' => 'D',
@@ -846,6 +860,12 @@ make sure that the musicians are also automatically added to the
       </td>
     </tr>';
           }
+          $sepaData = json_encode([
+            'projectId' => 0,
+            'musicianId' => $musicianId,
+            'bankAccountSequence' => 0,
+            'mandateSequence' => 0,
+          ]);
           $html .= '
     <tr class="placeholder">
       <td colspan="2" class="operation">
@@ -854,6 +874,7 @@ make sure that the musicians are also automatically added to the
           title="'.$this->toolTipsService['sepa-bank-account:add'].'"
           type="button"
           value="'.$this->l->t('Add a new bank account').'"
+          data-debit-mandate=\''.$sepaData.'\'
         />
       </td>
     </tr>
@@ -881,22 +902,23 @@ make sure that the musicians are also automatically added to the
 
     $this->makeJoinTableField(
       $opts['fdd'], self::INSTRUMENT_INSURANCES_TABLE, 'insurance_amount', [
-       'tab'      => ['id' => 'miscinfo'],
+       'tab' => ['id' => 'finance'],
        'input' => 'V',
        'name' => $this->l->t('Instrument Insurance'),
        'select' => 'T',
-       'options' => 'CDV',
+       'options' => 'LFCDV',
        'sql' => 'SUM($join_col_fqn)',
        'escape' => false,
        'nowrap' => true,
        'sort' =>false,
+       'css' => [ 'postfix' => ' restrict-height', ],
        'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
          $musicianId = $recordId['musician_id'];
          $annualFee = $this->insuranceService->insuranceFee($musicianId, null, true);
          $bval = $this->l->t(
            'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
          $tip = $this->toolTipsService['musician-instrument-insurance'];
-         $button = "<div class=\"musician-instrument-insurance\">"
+         $button = "<div class=\"pme-cell-wrapper musician-instrument-insurance\">"
                  ."<input type=\"button\" "
                  ."value=\"$bval\" "
                  ."title=\"$tip\" "
