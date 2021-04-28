@@ -274,7 +274,7 @@ __EOT__;
    *
    * @return \DateTimeImmutable TBD.
    */
-  public static function dateTime($arg1 = "now", $arg2 = null, $arg3 = null)
+  public static function dateTime($arg1 = "now", $arg2 = null, $arg3 = null):\DateTimeImmutable
   {
     if ($arg1 instanceof \DateTimeImmutable) {
       if ($arg2 !== null || $arg3 !== null) {
@@ -296,6 +296,13 @@ __EOT__;
     }
     if (is_string($arg1) && is_string($arg2)) {
       return \DateTimeImmutable::createFromFormat($arg1, $arg2, $arg3);
+    } else if ($arg2 === null && $arg3 === null) {
+      $timeStamp = filter_var($arg1, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
+      if ($timeStamp !== false) {
+        return (new \DateTimeImmutable())->setTimestamp($timeStamp);
+      } else if (is_string($arg1)) {
+         return new \DateTimeImmutable($arg1);
+      }
     } else if ($arg3 === null) {
       return new \DateTimeImmutable($arg1, $arg2);
     }
