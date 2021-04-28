@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping\ClassMetadata as ORMMetaData;
 use Doctrine\ORM\UnitOfWork;
 
 /**
+ * Simple slug-handler which updates a field of an associated
+ * entity. Inspired by:
+ *
  * Sluggable handler which should be used for inversed relation mapping
  * used together with RelativeSlugHandler. Updates back related slug on
  * relation changes
