@@ -622,7 +622,7 @@ class ConfigService {
   }
 
   /** Transliterate the given string to the given or default locale */
-  public function transliterate(string $string, $locate = null):string
+  public function transliterate(string $string, $locale = null):string
   {
     $oldlocale = setlocale(LC_CTYPE, '0');
     empty($locale) && $locale = $this->getLocale();
