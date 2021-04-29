@@ -27,6 +27,7 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
+use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\FileInfo;
 
@@ -77,13 +78,27 @@ class UserStorage
    *
    * @return \OCP\Files\Folder The user-folder or the given sub-folder
    */
-  public function get(?string $path):?Node
+  public function get(?string $path, $type = null):?Node
   {
     try {
-      return empty($path) ? $this->userFolder : $this->userFolder->get($path);
+      $node = empty($path) ? $this->userFolder : $this->userFolder->get($path);
+      if (!empty($type) && $node->getType() != $type) {
+        return null;
+      }
+      return $node;
     } catch (\OCP\Files\NotFoundException $t) {
       return null;
     }
+  }
+
+  public function getFile(string $path):?File
+  {
+    return $this->get($path, FileInfo::TYPE_FILE);
+  }
+
+  public function getFolder(string $path):?Folder
+  {
+    return $this->get($path, FileInfo::TYPE_FOLDER);
   }
 
   /**
@@ -280,7 +295,6 @@ class UserStorage
 
     return $filesUrl;
   }
-
 
 }
 
