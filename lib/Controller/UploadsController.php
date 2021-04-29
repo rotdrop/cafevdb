@@ -30,7 +30,9 @@ use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
+use OCP\Files\FileInfo;
 
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Common\Util;
@@ -65,6 +67,26 @@ class UploadsController extends Controller {
   /**
    * @NoAdminRequired
    */
+  public function move($stashedFile, $destinationPath, $appDirectory = AppStorage::UPLOAD_FOLDER)
+  {
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+    $appFile = $this->appStorage->getFile($appDirectory, $stashedFile);
+
+    $userStorage->putContent($destinationPath, $appFile->getContent());
+    $downloadLink = $userStorage->getFilesAppLink($destinationPath);
+    $appFile->delete();
+
+    return self::dataResponse([
+      'message' => $this->l->t('Moved "%s" to "%s".', [ $stashedFile, $destinationPath ]),
+      'fileName' => basename($destinationPath),
+      'downloadLink' => $downloadLink,
+    ]);
+  }
+
+  /**
+   * @NoAdminRequired
+   */
   public function stash($cloudPaths = [], $appDirectory = AppStorage::UPLOAD_FOLDER)
   {
     $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
@@ -76,38 +98,37 @@ class UploadsController extends Controller {
     if (!empty($cloudPaths)) {
       foreach ($cloudPaths as $path) {
         /** @var UserStorage $storage */
-        $storage = $this->appContainer->query(UserStorage::class);
+        $storage = $this->di(UserStorage::class);
         $files = [];
-        foreach ($paths as $path) {
-          /** @var OCP\Files\File $cloudFile */
-          $cloudFile = $storage->get($path);
-          if (empty($cloudFile)) {
-            return self::grumble($this->l->t('File "%s" could not be found in cloud storage.', $path));
-          }
-          if ($cloudFile->getType() != FileInfo::TYPE_FILE) {
-            return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.'));
-          }
 
-          try {
-            $uploadFile = $this->appStorage->newTemporaryFile($appDirectory);
-            $uploadFile->putContent($cloudFile->getContent());
-          } catch (\Throwable $t) {
-            return self::grumble($this->l->t('Could copy cloud file to upload storage.'));
-          }
-
-          // We emulate an uploaded file here:
-          $fileRecord = [
-            'name' => $path,
-            'original_name' => $path,
-            'error' => 0,
-            'tmp_name' => $uploadFile->getName(),
-            'type' => $cloudFile->getMimetype(),
-            'size' => $cloudFile->getSize(),
-            'upload_max_file_size' => $maxUploadFileSize,
-            'max_human_file_size'  => $maxHumanFileSize,
-          ];
-          $uploads[] = $fileRecord;
+        /** @var OCP\Files\File $cloudFile */
+        $cloudFile = $storage->get($path);
+        if (empty($cloudFile)) {
+          return self::grumble($this->l->t('File "%s" could not be found in cloud storage.', $path));
         }
+        if ($cloudFile->getType() != FileInfo::TYPE_FILE) {
+          return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.'));
+          }
+
+        try {
+          $uploadFile = $this->appStorage->newTemporaryFile($appDirectory);
+          $uploadFile->putContent($cloudFile->getContent());
+        } catch (\Throwable $t) {
+          return self::grumble($this->l->t('Could copy cloud file to upload storage.'));
+        }
+
+        // We emulate an uploaded file here:
+        $fileRecord = [
+          'name' => $uploadFile->getName(),
+          'original_name' => $path,
+          'error' => 0,
+          'tmp_name' => $uploadFile->getName(),
+          'type' => $cloudFile->getMimetype(),
+          'size' => $cloudFile->getSize(),
+          'upload_max_file_size' => $maxUploadFileSize,
+          'max_human_file_size'  => $maxHumanFileSize,
+        ];
+        $uploads[] = $fileRecord;
       }
     } else {
       $files = $this->request->files[self::UPLOAD_KEY];

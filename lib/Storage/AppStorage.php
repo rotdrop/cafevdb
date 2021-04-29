@@ -32,6 +32,7 @@ use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use Spatie\TemporaryDirectory\TemporaryDirectory; // for ordinary file-system temporaries
 
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 
 class AppStorage
@@ -92,6 +93,20 @@ class AppStorage
       break;
     }
     return $folder->newFile($name);
+  }
+
+  public function getFile($dirName, $fileName = null):ISimpleFile
+  {
+    if (empty($fileName)) {
+      $components = array_filter(Util::explode(self::PATH_SEP, $dirName));
+      if (count($components) != 2) {
+        throw new \InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
+      }
+      list($dirName, $fileName) = $components;
+    }
+    /** @var ISimpleFolder $folder */
+    $folder = $this->getFolder($dirName);
+    return $folder->getFile($fileName);
   }
 
   public function newUploadFile():ISimpleFile

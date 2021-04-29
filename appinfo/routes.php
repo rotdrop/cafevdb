@@ -186,9 +186,18 @@ $routes = [
     ],
     // generic upload end-point supporting multiple files and also to
     // old cloud-filepicker.
+    //
+    // Currently /upload/stash to move uploaded files to a app-storage
+    // directory and /upload/move to move a stashed file to a cloud
+    // directory.
     [
       'name' => 'uploads#stash',
-      'url' => '/upload',
+      'url' => '/upload/stash',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'uploads#move',
+      'url' => '/upload/move',
       'verb' => 'POST',
     ],
     // various download stuff
