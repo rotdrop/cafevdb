@@ -97,12 +97,31 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           id="sharedfolder"
           name="sharedfolder"
           placeholder="<?php echo $l->t('shared folder'); ?>"
-          value="<?php echo $_['sharedfolder']; ?>" />
+          value="<?php echo $_['sharedfolder']; ?>"
+          title="<?php echo $toolTips['sharedfolder']; ?>"
+        />
         <input type="checkbox" id="sharedfolder-force" name="sharedfolder-force" class="checkbox"/>
         <label for="sharedfolder-force" title="<?php echo $toolTips['sharedfolder-force']; ?>" >
           <?php echo $l->t('force');?>
         </label>
         <input name="sharedfolder-check" id="sharedfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+      </fieldset>
+      <fieldset id="documenttemplatesfolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
+        <input type="hidden" id="documenttemplatesfolder-saved" name="documenttemplatesfolder-saved" value="<?php echo $_['documenttemplatesfolder']; ?>" />
+        <input <?php echo $_['documenttemplatesfolder'] != '' ? 'disabled' : ''; ?>
+          type="text"
+          id="documenttemplatesfolder"
+          name="documenttemplatesfolder"
+          placeholder="<?php echo $l->t('Document templates folder'); ?>"
+          value="<?php echo $_['documenttemplatesfolder']; ?>"
+          title="<?php echo $toolTips['documenttemplatesfolder']; ?>"
+        />
+        <input type="checkbox" id="documenttemplatesfolder-force" name="documenttemplatesfolder-force" class="checkbox"/>
+        <label for="documenttemplatesfolder-force" title="<?php echo $toolTips['documenttemplatesfolder-force']; ?>" >
+          <?php echo $l->t('force');?>
+        </label>
+        <input name="documenttemplatesfolder-check" id="documenttemplatesfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
       <fieldset id="projectsfolder-fieldset" <?php echo $off; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
@@ -113,7 +132,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           id="projectsfolder"
           name="projectsfolder"
           placeholder="<?php echo $l->t('Project folder'); ?>"
-          value="<?php echo $_['projectsfolder']; ?>" />
+          value="<?php echo $_['projectsfolder']; ?>"
+          title="<?php echo $toolTips['projectsfolder']; ?>"
+        />
         <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
         <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span><span><b>/</b></span>
         <input type="checkbox" id="projectsfolder-force" name="projectsfolder-force" class="checkbox"/>
@@ -134,7 +155,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           id="projectparticipantsfolder"
           name="projectparticipantsfolder"
           placeholder="<?php echo $l->t('Participants Folder'); ?>"
-          value="<?php echo $_['projectparticipantsfolder']; ?>" />
+          value="<?php echo $_['projectparticipantsfolder']; ?>"
+          title="<?php echo $toolTips['projectparticipantsfolder']; ?>"
+        />
         <span><b>/</b></span><span><?php echo $l->t('john.doe'); ?></span><span><b>/</b></span>
         <input type="checkbox" id="projectparticipantsfolder-force" name="projectparticipantsfolder-force" class="checkbox"/>
         <label for="projectparticipantsfolder-force" title="<?php echo $toolTips['projectparticipantsfolder-force']; ?>" >
@@ -150,7 +173,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           id="projectsbalancefolder"
           name="projectsbalancefolder"
           placeholder="<?php echo $l->t('Financial balance folder'); ?>"
-          value="<?php echo $_['projectsbalancefolder']; ?>" />
+          value="<?php echo $_['projectsbalancefolder']; ?>"
+          title="<?php echo $toolTips['projectsbalancefolder']; ?>"
+        />
         <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder'];?></span>
         <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
         <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span><span><b>/</b></span>

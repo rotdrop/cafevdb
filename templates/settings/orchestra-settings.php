@@ -126,6 +126,23 @@ foreach ($localeCountryNames as $country => $name) {
              title="<?php echo $l->t('Creditor identifier of the orchestra'); ?>"
              placeholder="<?php echo $l->t('orchestra\'s CI'); ?>"/><br/>
     </fieldset>
+    <h4><?php echo $l->t('Document templates'); ?></h4>
+    <fieldset <?php echo $off; ?> class="chosen-dropup document-template">
+      <!-- <legend><?php echo $l->t('Document templates'); ?></legend> -->
+      <?php foreach ($documentTemplates as $documentTemplate => $placeholder) { ?>
+        <div class="template-upload">
+          <input type="button" title="<?php p($toolTipsService['templates:' . $documentTemplate . '-cloud']); ?>" class="operation select-cloud document-template operation <?php p($documentTemplate); ?>"/>
+          <input type="button" title="<?php p($toolTipsService['templates:' . $documentTemplate . '-upload']); ?>" class="operation upload-replace document-template operation <?php p($documentTemplate); ?>"/>
+          <input class="<?php p($documentTemplate); ?> document-template upload-placeholder" type="text"
+                 id="<?php p($documentTemplate); ?>"
+                 name="<?php p($documentTemplate); ?>"
+                 value="<?php p(${$documentTemplate}); ?>"
+                 title="<?php echo $toolTipsService['templates:' . $documentTemplate]; ?>"
+                 placeholder="<?php p($l->t($placeholder) . ' - ' . $l->t('drop or click')); ?>"/>
+          <a class="document-template downloadlink hidden" target="<?php p($appName . '-document-templates'); ?>" href="<?php echo ${$documentTemplate . 'DownloadLink'}; ?>"><?php p(${$documentTemplate . 'FileName'}); ?></a>
+        </div>
+      <?php } ?>
+    </fieldset>
     <h4><?php echo $l->t('Executive board and club members'); ?></h4>
     <fieldset <?php echo $off; ?> class="chosen-dropup">
       <!-- <legend><?php echo $l->t('Executive board and club members'); ?></legend> -->
@@ -262,5 +279,17 @@ foreach ($localeCountryNames as $country => $name) {
     <span class="statusmessage" id="msg"></span>
     <span class="statusmessage" id="suggestion"></span>
     &nbsp;
+  </div>
+  <div class="document-template-upload-wrapper hidden" id="document-template-upload-wrapper">
+    <form id="document-template-upload-form" class="file-upload-form document-template-upload-form" enctype="multipart/form-data">
+      <input class="file-upload-start" type="file" accept="*" name="files"/>
+      <input type="hidden" name="uploadName" value="files"/>
+      <input type="hidden" name="requesttoken" value="<?php p($requesttoken); ?>"/>
+      <input type="hidden" name="MAX_FILE_SIZE" value="<?php p($uploadMaxFilesize); ?>"/>
+      <input type="hidden" class="max_human_file_size" value="<?php p($uploadMaxHumanFilesize); ?>"/>
+    </form>
+    <div class="uploadprogresswrapper">
+      <div class="uploadprogressbar"></div>
+    </div>
   </div>
 </div>

@@ -873,6 +873,7 @@ class PersonalSettingsController extends Controller {
                       [$real, $e->getMessage()]));
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
+    case 'documenttemplatesfolder':
     case 'projectparticipantsfolder':
     case 'projectsbalancefolder':
     case 'projectsfolder':

@@ -38,6 +38,8 @@ use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
+use OCA\CAFEVDB\Common\Util;
+
 /**
  * Simple helper class in order to avoid instantiation of a bunch of
  * helper classes just for the sake of creating the menu entry in the
@@ -258,12 +260,25 @@ class PersonalForm {
             'musiciansaddressbook' => $musiciansAddressBookName,
 
             'sharedfolder' => $this->getConfigValue('sharedfolder',''),
+            'documenttemplatesfolder' => $this->getConfigValue('documenttemplatesfolder', ''),
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),
             'projectparticipantsfolder' => $this->getConfigValue('projectparticipantsfolder',''),
             'projectsbalancefolder' => $this->getConfigValue('projectsbalancefolder',''),
 
             'translations' => $this->translationService->getTranslations(),
+
+            'documentTemplates' => ConfigService::DOCUMENT_TEMPLATES,
+
+            'uploadMaxFilesize' => Util::maxUploadSize(),
+            'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
+
+            'requesttoken' => \OCP\Util::callRegister(),
           ]);
+
+        // document templates
+        foreach (ConfigService::DOCUMENT_TEMPLATES as $documentTemplate) {
+          $templateParameters[$documentTemplate] = $this->getConfigValue($documentTemplate, '');
+        }
 
         // musician ids of the officials
         foreach (['president', 'secretary', 'treasurer'] as $prefix) {

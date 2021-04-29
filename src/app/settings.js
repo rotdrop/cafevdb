@@ -24,6 +24,8 @@ import { appName, $ } from './globals.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
+import * as FileUpload from './file-upload.js';
+import generateUrl from './generate-url.js';
 import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.js';
 import { toolTipsInit } from './cafevdb.js';
 import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';
@@ -474,12 +476,12 @@ const afterLoad = function(container) {
             // value is just the thing submitted to the AJAX call
             sharedObject.val(data.value);
             sharedObjectSaved.val(data.value);
-            if (value !== '') {
+            if (value[css] !== '') {
               sharedObject.prop('disabled', true);
               sharedObjectForce.prop('checked', false);
             }
             if (callback !== undefined) {
-              callback(element, data, value, msg);
+              callback(element, css, data, value, msg);
             }
           },
           getValue(element, msg) { // getValue
@@ -501,16 +503,19 @@ const afterLoad = function(container) {
      *
      *************************************************************************/
 
-    sharedFolder('sharedfolder', function(element, data, value, msg) {
-      $('div#sharing-settings span.sharedfolder').html(value); // update
+    sharedFolder('sharedfolder', function(element, css, data, value, msg) {
+      $('div#sharing-settings span.sharedfolder').html(value[css]); // update
     });
-    sharedFolder('projectsfolder', function(element, data, value, msg) {
-      $('#projectsbalancefolder-fieldset').prop('disabled', value === '');
-      $('#projectparticipantsfolder-fieldset').prop('disabled', value === '');
-      $('div#sharing-settings span.projectsfolder').html(value); // update
+    sharedFolder('projectsfolder', function(element, css, data, value, msg) {
+      $('#projectsbalancefolder-fieldset').prop('disabled', value[css] === '');
+      $('#projectparticipantsfolder-fieldset').prop('disabled', value[css] === '');
+      $('div#sharing-settings span.projectsfolder').html(value[css]); // update
     });
     sharedFolder('projectparticipantsfolder');
     sharedFolder('projectsbalancefolder');
+    sharedFolder('documenttemplatesfolder', function(element, css, data, value, msg) {
+      $('fieldset.document-template input').prop('disabled', value[css] !== '');
+    });
 
   } // shared objects
 
@@ -857,6 +862,104 @@ const afterLoad = function(container) {
         fail: Ajax.handleError,
       },
     );
+  }
+
+  {
+    /**************************************************************************
+     *
+     * document template uploads
+     *
+     *************************************************************************/
+
+    const $fieldset = $('fieldset.document-template');
+    const $uploaders = $fieldset.find('input.upload-placeholder, input.upload-replace');
+    const $cloudSelectors = $fieldset.find('input.select-cloud');
+
+    if ($('#documenttemplatesfolder').val() === '' || $('#sharedfolder').val() === '') {
+      $fieldset.find('input').prop('disabled', true);
+    }
+
+    const moveInPlace = function(file, $container) {
+      const destinationPath =
+            '/' + $('#sharedfolder').val()
+            + '/' + $('#documenttemplatesfolder').val()
+            + '/' + file.original_name;
+
+      $.post(
+        generateUrl('upload/move'), {
+          stashedFile: file.name,
+          destinationPath,
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['message', 'fileName', 'downloadLink'])) {
+            return;
+          }
+          $container.find('.upload-placeholder').val(data.fileName).hide();
+          $container.find('.downloadlink')
+            .attr('href', data.downloadLink)
+            .html(data.fileName)
+            .show();
+          Notification.messages(data.message);
+          console.info(data);
+        });
+    };
+
+    $uploaders.on('click', function(event) {
+      const $this = $(this);
+      const $container = $this.parent();
+
+      console.info('CONTAINER', $this, $container, $('.document-template-upload-wrapper'));
+
+      FileUpload.init({
+        url: generateUrl('upload/stash'),
+        doneCallback(file, index, container) {
+          console.info('FILE', file, container);
+          moveInPlace(file, $container);
+        },
+        stopCallback: null,
+        dropZone: $container,
+        containerSelector: '.document-template-upload-wrapper',
+        inputSelector: 'input[type="file"]',
+        multiple: false,
+      });
+
+      $('.document-template-upload-wrapper input[type="file"]').trigger('click');
+      return false;
+    });
+
+    $cloudSelectors.on('click', function(event) {
+      const $this = $(this);
+      const $container = $this.closest('.template-upload');
+
+      Dialogs.filePicker(
+        t(appName, 'Select a Debit-Mandate Form'),
+        function(path) {
+          if (!path) {
+            Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
+            return;
+          }
+          $.post(generateUrl('upload/stash'), { cloudPaths: [path] })
+            .fail(function(xhr, status, errorThrown) {
+              Ajax.handleError(xhr, status, errorThrown);
+            })
+            .done(function(files) {
+              console.info('FILES', files);
+              if (!Array.isArray(files) || files.length !== 1) {
+                Dialogs.alert(
+                  t(appName, 'Unable to copy selected file {file}.', { file: paths[0] }),
+                  t(appName, 'Error'));
+              }
+              moveInPlace(files[0], $container);
+            });
+        },
+        false, // multi-select
+        '', // sub-directory
+        [] // options
+      );
+    });
   }
 
   {

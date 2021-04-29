@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -125,9 +125,32 @@ input.bankAccountCreditorIdentifier {
   width: 40em;
 }
 
+input.document-template.operation {
+  background-repeat:no-repeat;
+  background-size: 24px 24px;
+  background-position: center;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  margin-right:1em;
+}
+
+input.upload-replace {
+  background-image:url('../../../core/img/actions/upload.svg');
+}
+
+input.select-cloud {
+  background-image:url('../img/cloud-icon.svg');
+}
+
+input.document-template.upload-placeholder {
+  width:22em;
+}
+
 input.memberTable, input.executiveBoardTable {
   width: 20em;
 }
+
 
 input.randompassword {
   width: 22em;

@@ -100,6 +100,10 @@ class ConfigService {
     [ 'uri' => 'management', 'public' => false ],
     [ 'uri' => 'finance', 'public' => false ],
   ];
+  const DOCUMENT_TEMPLATES = [
+    'projectDebitNoteMandateForm' => 'project debit-note mandate',
+    'generalDebitNoteMandateForm' => 'general debit-note mandate',
+  ];
 
   /** @var array */
   protected $encryptionCache;
