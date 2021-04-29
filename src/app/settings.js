@@ -514,7 +514,7 @@ const afterLoad = function(container) {
     sharedFolder('projectparticipantsfolder');
     sharedFolder('projectsbalancefolder');
     sharedFolder('documenttemplatesfolder', function(element, css, data, value, msg) {
-      $('fieldset.document-template input').prop('disabled', value[css] !== '');
+      $('fieldset.document-template input').prop('disabled', value[css] === '');
     });
 
   } // shared objects
@@ -897,13 +897,26 @@ const afterLoad = function(container) {
           if (!Ajax.validateResponse(data, ['message', 'fileName', 'downloadLink'])) {
             return;
           }
-          $container.find('.upload-placeholder').val(data.fileName).hide();
-          $container.find('.downloadlink')
-            .attr('href', data.downloadLink)
-            .html(data.fileName)
-            .show();
           Notification.messages(data.message);
-          console.info(data);
+          const fileName = data.fileName;
+          const downloadLink = data.downloadLink;
+          $.post(
+            setAppUrl($container.data('documentTemplate')), { value: fileName })
+            .fail(function(xhr, status, errorThrown) {
+              Ajax.handleError(xhr, status, errorThrown);
+            })
+            .done(function(data) {
+              if (!Ajax.validateResponse(data, ['message'])) {
+                return;
+              }
+              Notification.messages(data.message);
+              $container.find('.upload-placeholder').val(fileName).hide();
+              $container.find('.downloadlink')
+                .attr('href', downloadLink)
+                .html(fileName)
+                .show();
+              console.info(data);
+            });
         });
     };
 

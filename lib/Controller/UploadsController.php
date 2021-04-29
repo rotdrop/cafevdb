@@ -74,7 +74,7 @@ class UploadsController extends Controller {
     $appFile = $this->appStorage->getFile($appDirectory, $stashedFile);
 
     $userStorage->putContent($destinationPath, $appFile->getContent());
-    $downloadLink = $userStorage->getFilesAppLink($destinationPath);
+    $downloadLink = $userStorage->getDownloadLink($destinationPath);
     $appFile->delete();
 
     return self::dataResponse([
@@ -120,7 +120,7 @@ class UploadsController extends Controller {
         // We emulate an uploaded file here:
         $fileRecord = [
           'name' => $uploadFile->getName(),
-          'original_name' => $path,
+          'original_name' => basename($path),
           'error' => 0,
           'tmp_name' => $uploadFile->getName(),
           'type' => $cloudFile->getMimetype(),

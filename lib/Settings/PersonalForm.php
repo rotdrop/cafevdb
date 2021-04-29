@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ErrorService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -73,6 +74,9 @@ class PersonalForm {
   /** @var AddressBookProvider */
   private $addressBookProvider;
 
+  /** @var UserStorage */
+  private $userStorage;
+
   public function __construct(
     ConfigService $configService
     , ProjectService $projectService
@@ -83,6 +87,7 @@ class PersonalForm {
     , WikiRPC $wikiRPC
     , WebPagesRPC $webPagesRPC
     , AddressBookProvider $addressBookProvider
+    , UserStorage $userStorage
   ) {
     $this->configService = $configService;
     $this->projectService = $projectService;
@@ -93,6 +98,7 @@ class PersonalForm {
     $this->wikiRPC = $wikiRPC;
     $this->webPagesRPC = $webPagesRPC;
     $this->addressBookProvider = $addressBookProvider;
+    $this->userStorage = $userStorage;
     $this->l = $this->l10N();
   }
 
@@ -212,6 +218,9 @@ class PersonalForm {
           ->getContactsAddressBook()
           ->getDisplayName();
 
+        $sharedFolder = $this->getConfigValue('sharedfolder');
+        $documentTemplatesFolder = $this->getConfigValue('documenttemplatesfolder');
+
         $templateParameters = array_merge(
           $templateParameters,
           [
@@ -259,8 +268,8 @@ class PersonalForm {
             'generaladdressbook' => $this->getConfigValue('generaladdressbook', $this->l->t('Miscellaneous')),
             'musiciansaddressbook' => $musiciansAddressBookName,
 
-            'sharedfolder' => $this->getConfigValue('sharedfolder',''),
-            'documenttemplatesfolder' => $this->getConfigValue('documenttemplatesfolder', ''),
+            'sharedfolder' => $sharedFolder,
+            'documenttemplatesfolder' => $documentTemplatesFolder,
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),
             'projectparticipantsfolder' => $this->getConfigValue('projectparticipantsfolder',''),
             'projectsbalancefolder' => $this->getConfigValue('projectsbalancefolder',''),
@@ -276,8 +285,18 @@ class PersonalForm {
           ]);
 
         // document templates
-        foreach (ConfigService::DOCUMENT_TEMPLATES as $documentTemplate) {
-          $templateParameters[$documentTemplate] = $this->getConfigValue($documentTemplate, '');
+        if (!empty($documentTemplatesFolder) && !empty($sharedFolder)) {
+          $folder = UserStorage::PATH_SEP
+                  . $sharedFolder . UserStorage::PATH_SEP
+                  . $documentTemplatesFolder . UserStorage::PATH_SEP;
+          foreach (array_keys(ConfigService::DOCUMENT_TEMPLATES) as $documentTemplate) {
+            $fileName = $this->getConfigValue($documentTemplate);
+            $this->logInfo('TEMPLATE '.$documentTemplate.': '.$folder.$fileName);
+            if (!empty($fileName)) {
+              $templateParameters[$documentTemplate . 'FileName'] = $fileName;
+              $templateParameters[$documentTemplate . 'DownloadLink'] = $this->userStorage->getDownloadLink($folder . $fileName);
+            }
+          }
         }
 
         // musician ids of the officials

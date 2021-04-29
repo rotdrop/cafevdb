@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -873,6 +874,54 @@ class PersonalSettingsController extends Controller {
                       [$real, $e->getMessage()]));
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
+    case 'projectDebitNoteMandateForm':
+    case 'generalDebitNoteMandateForm':
+      $oldFileName = $this->getConfigValue($parameter);
+      if (empty($value)) {
+        $this->deleteConfigValue($parameter);
+        $messages[] = $this->l->t(
+          'Removed setting for document-template "%s".', $parameter);
+      } else {
+        $sharedFolder = $this->getConfigValue('sharedfolder');
+        if (empty($sharedFolder)) {
+          return self::grumble($this->l->t(
+            'Shared folder is not configured, cannot store templates.'));
+        }
+        $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+        if (empty($templatesFolder)) {
+          return self::grumble($this->l->t(
+            'Document template folder is not configured, cannot store templates.'));
+        }
+        $templatesFolder = UserStorage::PATH_SEP
+                         . $sharedFolder . UserStorage::PATH_SEP
+                         . $templatesFolder . UserStorage::PATH_SEP;
+        try {
+          /** @var UserStorage $userStorage */
+          $userStorage = $this->di(UserStorage::class);
+          $userStorage->get($templatesFolder . $value);
+        } catch (\Throwable $t) {
+          return self::grumble($this->l->t('Unable to find file "%s".', $value));
+        }
+        $this->setConfigValue($parameter, $value);
+        $messages[] = $this->l->t(
+          'Document-template "%s" successfully set to "%s".', [ $parameter, $value ]);
+      }
+      if (!empty($oldFileName) && $oldFileName != $value) {
+        $this->logInfo('OLD FILE '.$oldFileName);
+        try {
+          /** @var \OCP\Files\File $oldFile */
+          if (!empty($oldFile = $userStorage->getFile($templatesFolder . $oldFileName))) {
+            $oldFile->delete();
+            $messages[] = $this->l->t(
+              'Successfully deleted old document-template "%s".', [ $oldFileName ]);
+          }
+        } catch (\Throwable $t) {
+          $this->logException($t);
+        }
+      }
+      return self::dataResponse([
+        'message' => $messages,
+      ]);
     case 'documenttemplatesfolder':
     case 'projectparticipantsfolder':
     case 'projectsbalancefolder':
