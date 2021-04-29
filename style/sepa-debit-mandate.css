@@ -352,7 +352,12 @@ input.pme-debit-note[type=submit] {
 }
 
 #sepa-debit-mandate-dialog .written-mandate-upload .operations .operation.upload-replace {
-  background-image:url('../../../core/img/actions/upload.svg');                                                                                         }
+  background-image:url('../../../core/img/actions/upload.svg');
+}
+
+#sepa-debit-mandate-dialog .written-mandate-upload .operations .operation.download-mandate-form {
+  background-image:url('../../../core/img/actions/download.svg');
+}
 
 /* Style links in a more ordinary fashion. Grin. */
 #sepa-debit-mandate-dialog a.download-link:link {

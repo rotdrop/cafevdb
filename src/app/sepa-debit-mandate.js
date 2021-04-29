@@ -431,7 +431,7 @@ const mandatesInit = function(data, onChangeCallback) {
     });
 
     FileUpload.init({
-      url: generateUrl('upload'),
+      url: generateUrl('upload/stash'),
       doneCallback(file, index, container) {
         mandateFieldset.find('input.written-mandate-file-upload').val(file.name);
         mandateFieldset.find('input.upload-placeholder')

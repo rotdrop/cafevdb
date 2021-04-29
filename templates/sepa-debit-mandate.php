@@ -264,10 +264,7 @@ $accountCss = implode(' ', [
         </label>
         <div class="written-mandate-upload block">
           <div class="operations inline-block">
-            <!-- <input type="button"
-                   <?php empty($writtenMandateId) && p('disabled'); ?>
-                   title="<?php echo $toolTipsService['participant-attachment-delete']; ?>"
-                   class="operation delete-undelete"/> -->
+            <input type="button" title="<?php echo $toolTipsService['sepa-bank-data-form:download-mandate-form']; ?>" class="operation download-mandate-form"/>
             <input type="button" title="<?php echo $toolTipsService['sepa-bank-data-form:upload-replace-written-mandate']; ?>" class="operation upload-replace"/>
           </div>
           <div class="file-data inline-block">
