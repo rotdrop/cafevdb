@@ -219,6 +219,13 @@ class PersonalForm {
           ->getDisplayName();
 
         $sharedFolder = $this->getConfigValue('sharedfolder');
+        try {
+          if (!empty($sharedFolder)) {
+            $sharedFolderLink = $this->userStorage->getFilesAppLink($sharedFolder);
+          }
+        } catch (\Throwable $t) {
+          // don't care
+        }
         $documentTemplatesFolder = $this->getConfigValue('documenttemplatesfolder');
 
         $templateParameters = array_merge(
@@ -269,6 +276,7 @@ class PersonalForm {
             'musiciansaddressbook' => $musiciansAddressBookName,
 
             'sharedfolder' => $sharedFolder,
+            'sharedFolderLink' => $sharedFolderLink,
             'documenttemplatesfolder' => $documentTemplatesFolder,
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),
             'projectparticipantsfolder' => $this->getConfigValue('projectparticipantsfolder',''),

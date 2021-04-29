@@ -105,6 +105,10 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           <?php echo $l->t('force');?>
         </label>
         <input name="sharedfolder-check" id="sharedfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+        <a name="sharedfolder-view"
+           href="<?php p($sharedFolderLink); ?>"
+           target="<?php p($appName . '-sharedfolder-view'); ?>"
+           class="sharedfolder-view button<?php empty($sharedFolderLink) && p(' hidden'); ?>"></a>
       </fieldset>
       <fieldset id="documenttemplatesfolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>

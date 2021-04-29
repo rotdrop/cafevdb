@@ -103,6 +103,9 @@ class PersonalSettingsController extends Controller {
   /** @var IAppContainer */
   private $appContainer;
 
+  /** @var UserStorage */
+  private $userStorage;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -116,6 +119,7 @@ class PersonalSettingsController extends Controller {
     , ProjectService $projectService
     , CalDavService $calDavService
     , TranslationService $translationService
+    , UserStorage $userStorage
     , WikiRPC $wikiRPC
     , WebPagesRPC $webPagesRPC
   ) {
@@ -131,6 +135,7 @@ class PersonalSettingsController extends Controller {
     $this->projectService = $projectService;
     $this->calDavService = $calDavService;
     $this->translationService = $translationService;
+    $this->userStorage = $userStorage;
     $this->wikiRPC = $wikiRPC;
     $this->webPagesRPC = $webPagesRPC;
     $this->l = $this->l10N();
@@ -204,14 +209,14 @@ class PersonalSettingsController extends Controller {
     case 'encryptionkey':
       // Get data
       if (!is_array($value) || !isset($value['encryptionkey']) || !isset($value['loginpassword'])) {
-        return self::grumble($this->l->t('Invalid request data: `%s\'.',[print_r($value, true)]));
+        return self::grumble($this->l->t('Invalid request data: "%s".',[print_r($value, true)]));
       }
       $password = $value['loginpassword'];
       $encryptionkey = $value['encryptionkey'];
 
       // Re-validate the user
       if ($this->userManager()->checkPassword($this->userId(), $password) === false) {
-        return self::grumble($this->l->t('Invalid password for `%s\'.', [$this->userId()]));
+        return self::grumble($this->l->t('Invalid password for "%s".', [$this->userId()]));
       }
 
       // Then check whether the key is correct
@@ -255,7 +260,7 @@ class PersonalSettingsController extends Controller {
     case 'dbuser':
       $realValue = trim($value);
       $this->setConfigValue($parameter, $realValue);
-      return self::valueResponse($realValue, $this->l->t('`%s\' set to `%s\'.', [$parameter,$realValue]));
+      return self::valueResponse($realValue, $this->l->t('"%s" set to "%s".', [$parameter,$realValue]));
     case 'dbpassword':
       try {
         if (!empty($value)) {
@@ -274,12 +279,12 @@ class PersonalSettingsController extends Controller {
           }
         }
       } catch(\Exception $e) {
-        return self::grumble($this->l->t('DB-test failed with exception `%s\'.', [$e->getMessage()]));
+        return self::grumble($this->l->t('DB-test failed with exception "%s".', [$e->getMessage()]));
       }
     case 'systemkey':
       foreach (['systemkey', 'oldkey'] as $key) {
         if (!isset($value[$key])) {
-          return self::grumble($this->l->t("Missing parameter `%s'.", $key));
+          return self::grumble($this->l->t('Missing parameter "%s".', $key));
         }
       }
 
@@ -378,7 +383,7 @@ class PersonalSettingsController extends Controller {
     case 'streetAddressCountry':
       $realValue = trim($value);
       $this->setConfigValue($parameter, $realValue);
-      return self::valueResponse($realValue, $this->l->t(' `%s\' set to `%s\'.', [$parameter, $realValue]));
+      return self::valueResponse($realValue, $this->l->t(' "%s" set to "%s".', [$parameter, $realValue]));
       break;
     case 'shareowner':
       if (!isset($value['shareowner'])
@@ -393,7 +398,7 @@ class PersonalSettingsController extends Controller {
       // first check consistency of $savedUid with stored UID.
       $confUid = $this->getConfigValue('shareowner', '');
       if ($confUid != $savedUid) {
-        return self::grumble($this->l->t('Submitted `%s\' != `%s\' (stored)',
+        return self::grumble($this->l->t('Submitted "%s" != "%s" (stored)',
                                          [$savedUid, $confUid]));
       }
       if (empty($uid)) {
@@ -402,19 +407,19 @@ class PersonalSettingsController extends Controller {
       if (empty($savedUid) || $force) {
         if ($this->configCheckService->checkShareOwner($uid)) {
           $this->setConfigValue($parameter, $uid);
-          return self::valueResponse($uid, $this->l->t('New share-owner `%s\'.', [$uid]));
+          return self::valueResponse($uid, $this->l->t('New share-owner "%s".', [$uid]));
         } else {
-          return self::grumble($this->l->t('Failure creating account for user-id `%s\'.', [$uid]));
+          return self::grumble($this->l->t('Failure creating account for user-id "%s".', [$uid]));
         }
       } else if ($savedUid != $uid) {
         return self::grumble($savedUid . ' != ' . $uid);
       }
 
       if (!$this->configCheckService->checkShareOwner($uid)) {
-        return self::grumble($this->l->t('Failure checking account for user-id `%s\'.', [$uid]));
+        return self::grumble($this->l->t('Failure checking account for user-id "%s".', [$uid]));
       }
 
-      return self::response($this->l->t('Share-owner user `%s\' ok.', [$uid]));
+      return self::response($this->l->t('Share-owner user "%s" ok.', [$uid]));
 
     case 'phoneNumber':
       $realValue = Util::normalizeSpaces($value);
@@ -454,7 +459,7 @@ class PersonalSettingsController extends Controller {
         // allow erasing
         $this->setConfigValue($parameter, $realValue);
         $data[$parameter] = $realValue;
-        $data['message'] = $this->l->t("Erased config value for parameter `%s'.", $parameter);
+        $data['message'] = $this->l->t('Erased config value for parameter "%s".', $parameter);
         return self::dataResponse($data);
       }
       switch ($parameter) {
@@ -466,7 +471,7 @@ class PersonalSettingsController extends Controller {
         if (!empty($realValue)) {
           $this->setConfigValue($parameter, $realValue);
           $data[$parameter] = $realValue;
-          $data['message'] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+          $data['message'] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
         }
         return self::dataResponse($data);
       case 'bankAccountCreditorIdentifier':
@@ -476,7 +481,7 @@ class PersonalSettingsController extends Controller {
         if ($this->financeService->testCI($realValue)) {
           $this->setConfigValue($parameter, $realValue);
           $data[$parameter] = $realValue;
-          $data['message'] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+          $data['message'] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
           return self::dataResponse($data);
         }
         break;
@@ -500,7 +505,7 @@ class PersonalSettingsController extends Controller {
           $realValue = $iban->MachineFormat();
           $this->setConfigValue($parameter, $realValue);
           if ($data[$parameter] != $realValue) {
-            $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+            $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
           }
           $data[$parameter] = $realValue;
 
@@ -512,7 +517,7 @@ class PersonalSettingsController extends Controller {
             $parameter = 'bankAccountBLZ';
             $this->setConfigValue($parameter, $realValue);
             if ($data[$parameter] != $realValue) {
-              $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+              $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
             }
             $data[$parameter] = $realValue;
 
@@ -521,7 +526,7 @@ class PersonalSettingsController extends Controller {
             $parameter = 'bankAccountBIC';
             $this->setConfigValue($parameter, $realValue);
             if ($data[$parameter] != $realValue) {
-              $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+              $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
             }
             $data[$parameter] = $realValue;
           } else {
@@ -530,7 +535,7 @@ class PersonalSettingsController extends Controller {
           }
           return self::dataResponse($data);
         } else {
-          $data['message'] = $this->l->t("Invalid IBAN: `%s'.", [ $value ]);
+          $data['message'] = $this->l->t('Invalid IBAN: "%s".', [ $value ]);
           $suggestion = '';
           $suggestions = $iban->MistranscriptionSuggestions();
           $data['suggestions'] = [];
@@ -554,7 +559,7 @@ class PersonalSettingsController extends Controller {
           $data['message'] = [];
           $this->setConfigValue($parameter, $realValue);
           if ($data[$parameter] != $realValue) {
-            $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+            $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
           }
           $data[$parameter] = $realValue;
 
@@ -566,7 +571,7 @@ class PersonalSettingsController extends Controller {
             $realValue = $bic;
             $this->setConfigValue($parameter, $realValue);
             if ($data[$parameter] != $realValue) {
-              $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+              $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
             }
             $data[$parameter] = $realValue;
           } else {
@@ -587,7 +592,7 @@ class PersonalSettingsController extends Controller {
             $parameter = 'bankAccountBLZ';
             $this->setConfigValue($parameter, $realValue);
             if ($data[$parameter] != $realValue) {
-              $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+              $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
             }
             $data[$parameter] = $realValue;
             $agency = $bav->getMainAgency($realValue);
@@ -602,14 +607,14 @@ class PersonalSettingsController extends Controller {
           $parameter = 'bankAccountBIC';
           $this->setConfigValue($parameter, $realValue);
           if ($data[$parameter] != $realValue) {
-            $data['message'][] = $this->l->t("Value for `%s' set to `%s'.", [ $parameter, $realValue ]);
+            $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
           }
           $data[$parameter] = $realValue;
           return self::dataResponse($data);
         }
         break; // error
       }
-      $data['message'] = $this->l->t("Value for `%s' invalid: `%s'.", [ $parameter, $value ]);
+      $data['message'] = $this->l->t('Value for "%s" invalid: "%s".', [ $parameter, $value ]);
       return self::grumble($data);
     }
     case 'memberProject':
@@ -630,7 +635,7 @@ class PersonalSettingsController extends Controller {
         // erase current setting
         $this->deleteConfigValue($parameter);
         $this->deleteConfigValue($parameter.'Id');
-        $data['message'][] = $this->l->t("Erased config value for parameter `%s'.", $parameter);
+        $data['message'][] = $this->l->t('Erased config value for parameter "%s".', $parameter);
 
         // ask to also remove the project if applicable
         if ($currentProjectId != -1
@@ -664,7 +669,7 @@ class PersonalSettingsController extends Controller {
       if ($newName !== $currentProjectName) {
         $this->setConfigValue($parameter, $newName);
         $data['message'][] = $this->l->t(
-          '`%s\' set to `%s\'.', [$parameter, $newName]);
+          '"%s" set to "%s".', [$parameter, $newName]);
       }
 
       if (empty($newProject)) {
@@ -687,7 +692,7 @@ class PersonalSettingsController extends Controller {
         $data['project'] = $newName;
         $data['projectId'] = $newProject['id'];
         $this->data['message'][] = $this->l->t(
-          '`%s\' set to `%s\'.', [$parameter.'Id', $newProject['id'] ]);
+          '"%s" set to "%s".', [$parameter.'Id', $newProject['id'] ]);
         $this->setConfigValue($parameter.'Id', $newProject['id']);
         if ($newProject['type'] != Types\EnumProjectTemporalType::PERMANENT) {
           $newProject['type'] = Types\EnumProjectTemporalType::PERMANENT();
@@ -823,57 +828,11 @@ class PersonalSettingsController extends Controller {
         return self::grumble($this->l->t('Password must not be empty'));
       }
       if (!$shareOwner->setPassword($realValue)) {
-        return self::grumble($this->l->t('Unable to set password for `%s\'.', [$shareOwnerUid]));
+        return self::grumble($this->l->t('Unable to set password for "%s".', [$shareOwnerUid]));
       }
       $this->setConfigValue($parameter, $realValue); // remember for remote API perhaps
-      return self::response($this->l->t('Successfully changed passsword for `%s\'.', [$shareOwnerUid]));
+      return self::response($this->l->t('Successfully changed passsword for "%s".', [$shareOwnerUid]));
 
-    case 'sharedfolder':
-      $appGroup = $this->getConfigValue('usergroup');
-      if (empty($appGroup)) {
-        return self::grumble($this->l->t('App user-group is not set.'));
-      }
-      $shareOwner = $this->getConfigValue('shareowner');
-      if (empty($shareOwner)) {
-        return self::grumble($this->l->t('Share-owner is not set.'));
-      }
-      if (!isset($value[$parameter])
-          || !isset($value[$parameter.'-saved'])
-          || !isset($value[$parameter.'-force'])) {
-        return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
-      }
-      $real = trim($value[$parameter]);
-      $saved = $value[$parameter.'-saved'];
-      $force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
-      $actual = $this->getConfigValue($parameter);
-      if (empty($real)) {
-        return self::grumble($this->l->t('Folder must not be empty.'));
-      }
-      if ($actual != $saved) {
-        return self::grumble($this->l->t('Submitted `%s\' != `%s\' (stored)', [$saved, $actual]));
-      }
-      try {
-        if (empty($saved) || $force) {
-
-          if ($this->configCheckService->checkSharedFolder($real)) {
-            $this->setConfigValue($parameter, $real);
-            return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'.', [$real]));
-          } else {
-            return self::grumble($this->l->t('Failed to create new shared folder`%s\'.', [$real]));
-          }
-        } else if ($real != $saved) {
-          return self::grumble($saved . ' != ' . $real);
-        } else if ($this->configCheckService->checkSharedFolder($actual)) {
-          return self::valueResponse($actual, $this->l->t('`%s\' which is configured as `%s\' exists and is usable.', [$parameter, $actual]));
-        } else {
-          return self::grumble($this->l->t('`%s\' does not exist or is unaccessible.', [$actual]));
-        }
-      } catch(\Exception $e) {
-        return self::grumble(
-          $this->l->t('Failure checking folder `%s\', caught an exception `%s\'.',
-                      [$real, $e->getMessage()]));
-      }
-      // return self::valueResponse('hello', print_r($value, true)); unreached
     case 'projectDebitNoteMandateForm':
     case 'generalDebitNoteMandateForm':
       $oldFileName = $this->getConfigValue($parameter);
@@ -896,9 +855,7 @@ class PersonalSettingsController extends Controller {
                          . $sharedFolder . UserStorage::PATH_SEP
                          . $templatesFolder . UserStorage::PATH_SEP;
         try {
-          /** @var UserStorage $userStorage */
-          $userStorage = $this->di(UserStorage::class);
-          $userStorage->get($templatesFolder . $value);
+          $this->userStorage->get($templatesFolder . $value);
         } catch (\Throwable $t) {
           return self::grumble($this->l->t('Unable to find file "%s".', $value));
         }
@@ -910,7 +867,7 @@ class PersonalSettingsController extends Controller {
         $this->logInfo('OLD FILE '.$oldFileName);
         try {
           /** @var \OCP\Files\File $oldFile */
-          if (!empty($oldFile = $userStorage->getFile($templatesFolder . $oldFileName))) {
+          if (!empty($oldFile = $this->userStorage->getFile($templatesFolder . $oldFileName))) {
             $oldFile->delete();
             $messages[] = $this->l->t(
               'Successfully deleted old document-template "%s".', [ $oldFileName ]);
@@ -922,6 +879,70 @@ class PersonalSettingsController extends Controller {
       return self::dataResponse([
         'message' => $messages,
       ]);
+    case 'sharedfolder':
+      $appGroup = $this->getConfigValue('usergroup');
+      if (empty($appGroup)) {
+        return self::grumble($this->l->t('App user-group is not set.'));
+      }
+      $shareOwner = $this->getConfigValue('shareowner');
+      if (empty($shareOwner)) {
+        return self::grumble($this->l->t('Share-owner is not set.'));
+      }
+      if (!isset($value[$parameter])
+          || !isset($value[$parameter.'-saved'])
+          || !isset($value[$parameter.'-force'])) {
+        return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
+      }
+      $real = trim($value[$parameter]);
+      $saved = $value[$parameter.'-saved'];
+      $force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      $actual = $this->getConfigValue($parameter);
+      if (empty($real)) {
+        return self::grumble($this->l->t('Folder must not be empty.'));
+      }
+      if ($actual != $saved) {
+        return self::grumble($this->l->t('Submitted "%s" != "%s" (stored)', [$saved, $actual]));
+      }
+      try {
+        if (empty($saved) || $force) {
+
+          if ($this->configCheckService->checkSharedFolder($real)) {
+            $this->setConfigValue($parameter, $real);
+            try {
+              $folderLink = $this->userStorage->getFilesAppLink($real);
+            } catch (\Throwable $t) {
+              // don't care
+            }
+            return self::dataResponse([
+              'value' => $real,
+              'message' => $this->l->t('Created and shared new folder "%s".', [$real]),
+              'folderLink' => $folderLink,
+            ]);
+          } else {
+            return self::grumble($this->l->t('Failed to create new shared folder"%s".', [$real]));
+          }
+        } else if ($real != $saved) {
+          return self::grumble($saved . ' != ' . $real);
+        } else if ($this->configCheckService->checkSharedFolder($actual)) {
+          try {
+            $folderLink = $this->userStorage->getFilesAppLink($real);
+          } catch (\Throwable $t) {
+            // don't care
+          }
+          return self::dataResponse([
+            'value' => $actual,
+            'message' => $this->l->t('"%s" which is configured as "%s" exists and is usable.', [$parameter, $actual]),
+            'folderLink' => $folderLink,
+            ]);
+        } else {
+          return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', [$actual]));
+        }
+      } catch(\Exception $e) {
+        return self::grumble(
+          $this->l->t('Failure checking folder "%s", caught an exception "%s".',
+                      [$real, $e->getMessage()]));
+      }
+      // return self::valueResponse('hello', print_r($value, true)); unreached
     case 'documenttemplatesfolder':
     case 'projectparticipantsfolder':
     case 'projectsbalancefolder':
@@ -951,9 +972,9 @@ class PersonalSettingsController extends Controller {
         return self::grumble($this->l->t('Folder must not be empty.'));
       }
       if ($actual != $saved) {
-        return self::grumble($this->l->t('Submitted `%s\' != `%s\' (stored)', [$saved, $actual]));
+        return self::grumble($this->l->t('Submitted "%s" != "%s" (stored)', [$saved, $actual]));
       }
-      // shortcut for participants folder
+      // shortcut for participants folder, which does not exist
       if ($parameter == 'projectparticipantsfolder') {
         $this->setConfigValue($parameter, $real);
         return self::valueResponse($real, $this->l->t('Participants-folder set to "%s".', $real));
@@ -962,21 +983,39 @@ class PersonalSettingsController extends Controller {
         if (empty($saved) || $force) {
           if ($this->configCheckService->checkProjectFolder($real)) {
             $this->setConfigValue($parameter, $real);
-            return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'.', [$real]));
+            try {
+              $folderLink = $this->userStorage->getFilesAppLink($real);
+            } catch (\Throwable $t) {
+              // don't care
+            }
+            return self::dataResponse([
+              'value' => $real,
+              'message' => $this->l->t('Created and shared new folder "%s".', [$real]),
+              'folderLink' => $folderLink,
+            ]);
           } else {
-            return self::grumble($this->l->t('Failed to create new shared folder `%s\'.', [$real]));
+            return self::grumble($this->l->t('Failed to create new shared folder "%s".', [$real]));
           }
         } else if ($real != $saved) {
           return self::grumble($saved . ' != ' . $real);
         } else if ($this->configCheckService->checkSharedFolder($actual)) {
-          return self::valueResponse($actual, $this->l->t('`%s\' which is configured as `%s\' exists and is usable.', [$parameter, $actual]));
+          try {
+            $folderLink = $this->userStorage->getFilesAppLink($real);
+          } catch (\Throwable $t) {
+            // don't care
+          }
+          return self::dataResponse([
+            'value' => $actual,
+            'message' => $this->l->t('"%s" which is configured as "%s" exists and is usable.', [$parameter, $actual]),
+            'folderLink' => $folderLink,
+            ]);
         } else {
-          return self::grumble($this->l->t('`%s\' does not exist or is unaccessible.', [$actual]));
+          return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', [$actual]));
         }
       } catch(\Exception $e) {
         $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
         return self::grumble(
-          $this->l->t('Failure checking folder `%s\', caught an exception `%s\'.',
+          $this->l->t('Failure checking folder "%s", caught an exception "%s".',
                       [$real, $e->getMessage()]));
       }
     case 'concertscalendar':
@@ -996,14 +1035,14 @@ class PersonalSettingsController extends Controller {
           $this->setConfigValue($parameter.'id', $newId);
           return self::valueResponse(
             ['name' => $real, 'id' => $newId],
-            $this->l->t('Created and shared new calendar `%s\'.', [$real]));
+            $this->l->t('Created and shared new calendar "%s".', [$real]));
         } else {
-          return self::grumble($this->l->t('Failed to create new shared calendar `%s\'.', [$real]));
+          return self::grumble($this->l->t('Failed to create new shared calendar "%s".', [$real]));
         }
       } catch(\Exception $e) {
         $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
         return self::grumble(
-          $this->l->t('Failure checking calendar `%s\', caught an exception `%s\'.',
+          $this->l->t('Failure checking calendar "%s", caught an exception "%s".',
                       [$real, $e->getMessage()]));
       }
     case 'generaladdressbook':
@@ -1015,17 +1054,17 @@ class PersonalSettingsController extends Controller {
       $actualId = $this->getConfigValue($parameter.'id');
       try {
         if (($newId = $this->configCheckService->checkSharedAddressBook($uri, $real, $actualId)) <= 0) {
-          return self::grumble($this->l->t('Failed to create new shared address book `%s\'.', [$real]));
+          return self::grumble($this->l->t('Failed to create new shared address book "%s".', [$real]));
         }
         $this->setConfigValue($parameter, $real);
         $this->setConfigValue($parameter.'id', $newId);
         return self::valueResponse(
           ['name' => $real, 'id' => $newId],
-          $this->l->t('Created and shared new address book `%s\'.', $real));
+          $this->l->t('Created and shared new address book "%s".', $real));
       } catch(\Exception $e) {
         $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
         return self::grumble(
-          $this->l->t('Failure checking address book `%s\', caught an exception `%s\'.',
+          $this->l->t('Failure checking address book "%s", caught an exception "%s".',
                       [$real, $e->getMessage()]));
       }
     case 'musiciansaddressbook':
@@ -1229,7 +1268,7 @@ class PersonalSettingsController extends Controller {
       if (!$this->translationService->recordTranslation($key, $translation, $language)) {
         return self::grumble($this->l->t('Recording the translation failed'));
       }
-      return self::response($this->l->t("Successfully recorded the given translation for the language `%s'", $language));
+      return self::response($this->l->t('Successfully recorded the given translation for the language "%s"', $language));
     case 'erase-translations':
       if (!$this->translationService->eraseTranslationKeys('*')) {
         return self::grumble($this->l->t('Failed to erase all recorded translations.'));
@@ -1256,7 +1295,7 @@ class PersonalSettingsController extends Controller {
       $this->setConfigValue($parameter, $realValue);
       $key = $parameter;
       $this->logDebug($key . ' => ' . $this->getConfigValue($key));
-      return self::valueResponse($realValue, $this->l->t(' `%s\' set to `%s\'.', [$parameter, $realValue]));
+      return self::valueResponse($realValue, $this->l->t(' "%s" set to "%s".', [$parameter, $realValue]));
     // link to CMS, currently Redaxo4
     case 'redaxo'.str_replace('redaxo', '', $parameter):
       $redaxoKeys = [
@@ -1279,7 +1318,7 @@ class PersonalSettingsController extends Controller {
       $this->setConfigValue($parameter, $realValue);
       return self::valueResponse(
         $realvalue,
-        $this->l->t("Redaxo categorie Id for `%s' set to %s", [ $key, $realValue ])
+        $this->l->t('Redaxo categorie Id for "%s" set to "%s".', [ $key, $realValue ])
       );
     default:
     }
@@ -1355,13 +1394,13 @@ class PersonalSettingsController extends Controller {
     if (empty($realValue)) {
       $this->deleteConfigValue($key);
       return self::dataResponse([
-        'message' => $this->l->t("Erased config value for parameter `%s'.", $key),
+        'message' => $this->l->t('Erased config value for parameter "%s".', $key),
         $key => $value,
       ]);
     } else {
       $this->setConfigValue($key, $realValue);
       return self::dataResponse([
-        'message' => $this->l->t("Value for `%s' set to `%s'", [ $key, $realValue ]),
+        'message' => $this->l->t('Value for "%s" set to "%s"', [ $key, $realValue ]),
         $key => $value,
       ]);
     }

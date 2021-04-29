@@ -504,7 +504,14 @@ const afterLoad = function(container) {
      *************************************************************************/
 
     sharedFolder('sharedfolder', function(element, css, data, value, msg) {
-      $('div#sharing-settings span.sharedfolder').html(value[css]); // update
+      $('div#sharing-settings span.sharedfolder').html(value[css]); // update display
+      const $folderView = $('#sharedfolder-fieldset').find('a.sharedfolder-view');
+      $folderView.attr('href', data.folderLink || '');
+      if (data.folderLink) {
+        $folderView.removeClass('hidden');
+      } else {
+        $folderView.addClass('hidden');
+      }
     });
     sharedFolder('projectsfolder', function(element, css, data, value, msg) {
       $('#projectsbalancefolder-fieldset').prop('disabled', value[css] === '');

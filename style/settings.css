@@ -143,6 +143,18 @@ input.select-cloud {
   background-image:url('../img/cloud-icon.svg');
 }
 
+a.sharedfolder-view {
+  display:inline-block;
+  background-repeat:no-repeat;
+  background-size: 24px 24px;
+  background-position: center;
+  width:28px;
+  min-height:34px;
+  vertical-align:middle;
+  background-image:url('../../../core/img/filetypes/folder-external.svg');
+}
+
+
 input.document-template.upload-placeholder {
   width:22em;
 }
