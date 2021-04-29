@@ -35,7 +35,8 @@
     "dompdf/dompdf": "^1.0",
     "mpdf/mpdf": "^8.0",
     "nesbot/carbon": "^2.46",
-      "spatie/temporary-directory": "^1.3",
+    "spatie/temporary-directory": "^1.3",
+    "tmw/fpdm": "^2.9",
     "behat/transliterator": "^1.3.0"
   },
   "require-dev": {
