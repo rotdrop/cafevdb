@@ -924,6 +924,18 @@ class SepaDebitMandatesController extends Controller {
   }
 
   /**
+   * Pre-fill the configured PDF-form with the values of the
+   * form-element.
+   *
+   * @NoAdminRequired
+   */
+  public function personalizedWrittenMandateForm(
+    $musicianId
+    , $mandateSequence
+    ) {
+  }
+
+  /**
    * @NoAdminRequired
    */
   public function mandateDelete($musicianId, $projectId, $mandateReference)
