@@ -149,7 +149,6 @@ class SepaBankAccounts extends PMETableViewBase
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
-    $memberProjectId = $this->getConfigValue('memberProjectId', -1);
 
     $projectMode = $projectId > 0 && !empty($projectName);
     if ($projectMode)  {
@@ -279,7 +278,7 @@ received so far'),
       'tooltip' => $this->toolTipsService['pme-showall-tab'],
       'name' => $this->l->t('Display all columns'),
     ];
-    if ($projectMode && $projectId !== $memberProjectId) {
+    if ($projectMode && $projectId !== $this->membersProjectId) {
       $opts['display']['tabs'][] = $projectTab;
       $opts['display']['tabs'][] = $amountTab;
     }
@@ -387,8 +386,8 @@ received so far'),
         ],
         $projectMode
         ? array_merge(
-          [ 'values' => [ 'filters' => '$table.id in ('.$projectId.','.$memberProjectId.')' ],],
-          ($projectId === $memberProjectId)
+          [ 'values' => [ 'filters' => '$table.id in ('.$projectId.','.$this->membersProjectId.')' ],],
+          ($projectId === $this->membersProjectId)
           ? [
             'select' => 'T',
             'sort' => false,
@@ -678,7 +677,7 @@ received so far'),
                               '('
                               . '$table.project_id = ' . $projectId
                               . ' OR '
-                              . '$table.project_id = ' . $memberProjectId
+                              . '$table.project_id = ' . $this->membersProjectId
                               . ')';
     }
 

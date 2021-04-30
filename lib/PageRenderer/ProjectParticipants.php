@@ -55,9 +55,6 @@ class ProjectParticipants extends PMETableViewBase
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
 
-  /** @var int */
-  private $memberProjectId;
-
   /**
    * Join table structure. All update are handled in
    * parent::beforeUpdateDoUpdateAll().
@@ -265,7 +262,6 @@ class ProjectParticipants extends PMETableViewBase
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
-    $memberProjectId = $this->getConfigValue('memberProjectId', -1);
 
     $opts            = [];
 
@@ -344,7 +340,7 @@ class ProjectParticipants extends PMETableViewBase
     //   'identifier' => [
     //     'musician_id' => 'musician_id',
     //     'project_id' => [
-    //       'condition' => 'IN ($main_table.project_id, '.$memberProjectId.')',
+    //       'condition' => 'IN ($main_table.project_id, '.$this->membersProjectId.')',
     //     ],
     //     'deleted' => [ 'value' => null ],
     //     'sequence' => false,
@@ -843,7 +839,7 @@ class ProjectParticipants extends PMETableViewBase
 
     $monetary = $this->participantFieldsService->monetaryFields($this->project);
 
-    if (!empty($monetary) || ($projectId == $this->memberProjectId)) {
+    if (!empty($monetary) || ($projectId == $this->membersProjectId)) {
 
       $this->makeJoinTableField(
         $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
@@ -888,7 +884,7 @@ class ProjectParticipants extends PMETableViewBase
                 $fieldValues['key'], $fieldValues['value'], $participantField);
             }
 
-            if ($projectId == $this->memberProjectId) {
+            if ($projectId == $this->membersProjectId) {
               $amountInvoiced += $this->insuranceService->insuranceFee($musicianId, new \DateTime(), true);
             }
 

@@ -93,7 +93,6 @@ class SepaDebitNotes extends PMETableViewBase
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
-    $memberProjectId = $this->getConfigValue('memberProjectId', -1);
 
     $projectMode = $projectId > 0 && !empty($projectName);
 

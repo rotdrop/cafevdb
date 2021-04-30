@@ -114,6 +114,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** @var ?string */
   protected $projectName;
 
+  /** @var int */
+  protected $membersProjectId;
+
   /** @var string */
   protected $template;
 
@@ -186,6 +189,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->debugRequests = 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
 
     $this->preCommitActions = new UndoableRunQueue($this->logger(), $this->l10n());
+
+    $this->membersProjectId = $this->getClubMembersProjectId();
 
     // this is done by the legacy code itself.
     $this->disableFilter('soft-deleteable');

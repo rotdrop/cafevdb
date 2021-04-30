@@ -112,8 +112,8 @@ class InstrumentInsurances extends PMETableViewBase
 
     $this->insuranceService = $insuranceService;
 
-    $this->projectName = $this->getConfigValue('memberProject');
-    $this->projectId = $this->getConfigValue('memberProjectId');
+    $this->projectName = $this->getClubMembersProject();
+    $this->projectId = $this->getClubMembersProjectId();
 
     $scopes = array_values(Types\EnumGeographicalScope::toArray());
 
