@@ -306,6 +306,11 @@ trait ConfigTrait {
     return (int)$this->getConfigValue('memberProjectId', 0);
   }
 
+  protected function getClubMembersProjectName():string
+  {
+    return (int)$this->getConfigValue('memberProject', '');
+  }
+
   protected function getSharedFolderPath()
   {
     return $this->getConfigValue('sharedfolder', null);
