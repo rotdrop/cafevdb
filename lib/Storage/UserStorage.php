@@ -101,6 +101,21 @@ class UserStorage
     return $this->get($path, FileInfo::TYPE_FOLDER);
   }
 
+  static public function pathCat($first, $second = null):string
+  {
+    if (is_array($first)) {
+      $first = implode(self::PATH_SEP, $first);
+    }
+    if (is_array($second)) {
+      $second = implode(self::PATH_SEP, $second);
+    }
+    if (empty($second)) {
+      return self::PATH_SEP . (string)$first;
+    } else {
+      return self::PATH_SEP . (string)$first . self::PATH_SEP . $second;
+    }
+  }
+
   /**
    * @return \OCP\Files\Folder The root-folder
    */
