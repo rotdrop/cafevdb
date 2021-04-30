@@ -25,6 +25,10 @@ namespace OCA\CAFEVDB\Traits;
 
 trait SloppyTrait
 {
+  /**
+   * Implodes an array assuming it is a list of words. The last word
+   * will be joined with the translation of 'and'.
+   */
   protected function implodeSloppy(array $values, ?array $separators = null):string
   {
     if (empty($values)) {
@@ -43,5 +47,19 @@ trait SloppyTrait
     }
     $result .= $separators['last'] . $values[$i];
     return $result;
+  }
+
+  /**
+   * Truncate the first word with an ellipsis '...' such that both
+   * words fit into a comma separated string.
+   */
+  protected function ellipsizeFirst($first, $second, $length, $separator = ', '):string
+  {
+    $ellipsis = '...';
+    $excess = strlen($first) + strlen($second) + strlen($separator) - $length;
+    if ($excess > 0) {
+      $first = substr($first, 0, -$excess - strlen($ellipsis)) . $ellipsis;
+    }
+    return $first . $separator . $second;
   }
 }
