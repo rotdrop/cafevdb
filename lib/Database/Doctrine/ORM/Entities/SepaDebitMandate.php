@@ -224,7 +224,7 @@ class SepaDebitMandate
    *
    * @return SepaBankAccount
    */
-  public function getSepaBankAccount()
+  public function getSepaBankAccount():?SepaBankAccount
   {
     return $this->sepaBankAccount;
   }
