@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -56,13 +56,19 @@ const download = function(url, post, options) {
   if (typeof options === 'string') { // error message
     const errorMessage = options;
     options = {
-      errorMessage(data, url) { return errorMessage; }
+      errorMessage(data, url) { return errorMessage; },
     };
   }
   options = $.extend({}, defaultOptions, options);
 
   if (post === undefined) {
     post = [];
+  } else if (!Array.isArray(post) && typeof post === 'object') {
+    const newPost = [];
+    for (const [name, value] of Object.entries(post)) {
+      newPost.push({ name, value });
+    }
+    post = newPost;
   }
   const cookieValue = generateId();
   const cookieName = appName + '_' + url.replace(/\W+/g, '_') + '_' + 'download';
@@ -72,7 +78,7 @@ const download = function(url, post, options) {
   cookiePost.push({ name: 'requesttoken', value: OC.requestToken });
 
   if (Array.isArray(post)) {
-    post = post.concat(cookiePost)
+    post = post.concat(cookiePost);
   } else if (typeof post === 'string') {
     post += '&' + $.param(cookiePost, false);
   } else if (typeof post === 'object') {
@@ -133,9 +139,16 @@ const download = function(url, post, options) {
         }
       }
 
-      data.error = Ajax.httpStatus[data.status];
+      if (!data.status) {
+        // this is an error, after all ...
+        data.status = Ajax.httpStatus.BAD_REQUEST;
+      }
 
-      data.message = options.errorMessage(data, url) + data.message;
+      if (!data.error) {
+        data.error = Ajax.httpStatus[data.status];
+      }
+
+      data.message = options.errorMessage(data, url) + ' ' + data.message;
 
       Ajax.handleError(data, data.error, data.status /* ? */, data.fail);
 
