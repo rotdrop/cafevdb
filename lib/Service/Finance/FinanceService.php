@@ -77,7 +77,7 @@ class FinanceService
     $projectId = ($projectOrId instanceof Entities\Project)
                ? $projectOrId->getId()
                : $projectOrId;
-    return (int)$projectId === $this->getClubMembersProjectid();
+    return (int)$projectId === $this->getClubMembersProjectId();
   }
 
   public function isClubMember($musicianOrId):bool
@@ -86,7 +86,7 @@ class FinanceService
     if (empty($musician)) {
       return false;
     }
-    return $musician->isMemberOf($this->getClubMembersProjectid());
+    return $musician->isMemberOf($this->getClubMembersProjectId());
   }
 
   public function prefilledDebitMandateForm($projectOrId, $musicianOrId, $accountSequence)
@@ -98,7 +98,7 @@ class FinanceService
     }
 
     if ($this->isClubMember($musician)) {
-      $project = $this->ensureProject($this->getClubMembersProjectid());
+      $project = $this->ensureProject($this->getClubMembersProjectId());
     } else {
       $project = $this->ensureProject($projectOrId);
     }

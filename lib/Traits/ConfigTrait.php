@@ -301,7 +301,7 @@ trait ConfigTrait {
       . Transliterator::transliterate($this->transliterate($surName), '-');
   }
 
-  protected function getClubMembersProjectid():int
+  protected function getClubMembersProjectId():int
   {
     return (int)$this->getConfigValue('memberProjectId', 0);
   }
