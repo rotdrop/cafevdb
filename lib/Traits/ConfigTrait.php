@@ -301,6 +301,32 @@ trait ConfigTrait {
       . Transliterator::transliterate($this->transliterate($surName), '-');
   }
 
+  protected function getClubMembersProjectid():int
+  {
+    return (int)$this->getConfigValue('memberProjectId', 0);
+  }
+
+  protected function getSharedFolderPath()
+  {
+    return $this->getConfigValue('sharedfolder', null);
+  }
+
+  /**
+   * Return the full path to the document templates folder.
+   */
+  protected function getDocumentTemplatesPath()
+  {
+    $sharedFolder = $this->getSharedFolderPath();
+    if (empty($sharedFolder)) {
+      return null;
+    }
+    $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+    if (empty($templatesFolder)) {
+      return null;
+    }
+    return '/' . $sharedFolder . '/' . $templatesFolder;
+  }
+
   public function getIcon() {
     return $this->configService->getIcon();
   }
