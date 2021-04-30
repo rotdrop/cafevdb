@@ -146,37 +146,6 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'option_key',
       'encode' => 'BIN2UUID(%s)',
     ],
-    [
-      'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
-      'entity' => Entities\SepaBankAccount::class,
-      'identifier' => [
-        'musician_id' => 'musician_id',
-        'sequence' => 'bank_account_sequence',
-      ],
-      'column' => 'sequence',
-    ],
-    [
-      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
-      'entitiy' => Entities\SepaDebitMandate::class,
-      'identifier' => [
-        'musician_id' => 'musician_id',
-        'sequence' => 'debit_note_sequence',
-      ],
-    ],
-    // Defined dynamically in render():
-    // SepaDebitMandates
-    // [
-    //   'table' => self::SEPA_DEBIT_MANDATES_TABLE,
-    //   'entity' => Entities\SepaDebitMandate::class,
-    //   'identifier' => [
-    //     'musician_id' => 'musician_id',
-    //     'project_id' => [
-    //       'condition' => 'IN ($main_table.project_id, )',
-    //     ],
-    //     'deleted' => [ 'value' => null ],
-    //   ],
-    //   'column' => 'sequence',
-    // ],
   ];
 
   /** @var GeoCodingService */
@@ -333,20 +302,47 @@ class ProjectParticipants extends PMETableViewBase
 
     /* Tweak the join-structure with dynamic data
      */
-    // $this->joinStructure[] = [
-    //   // SepaDebitMandates
-    //   'table' => self::SEPA_DEBIT_MANDATES_TABLE,
-    //   'entity' => Entities\SepaDebitMandate::class,
-    //   'identifier' => [
-    //     'musician_id' => 'musician_id',
-    //     'project_id' => [
-    //       'condition' => 'IN ($main_table.project_id, '.$this->membersProjectId.')',
-    //     ],
-    //     'deleted' => [ 'value' => null ],
-    //     'sequence' => false,
-    //   ],
-    //   'column' => 'sequence',
-    // ];
+
+    $this->joinStructure[] = [
+      // join all bank-accounts for this musician duplicating lines
+      // for all SEPA-mandates. Only project-specific or general
+      // SEPA debit mandates are taken into account.
+      'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+      'sql' => 'SELECT
+  CONCAT_WS(\''.self::COMP_KEY_SEP.'\', sba.musician_id, sba.sequence, IFNULL(sdm.sequence,0)) AS sepa_id,
+  sba.*,
+  sdm.sequence AS debit_mandate_sequence,
+  sdm.project_id AS debit_mandate_project_id,
+  sdm.mandate_reference AS debit_mandate_reference,
+  sdm.deleted AS debit_mandate_deleted
+  FROM '.self::SEPA_BANK_ACCOUNTS_TABLE.' sba
+  LEFT JOIN '.self::SEPA_DEBIT_MANDATES_TABLE.' sdm
+    ON (sba.musician_id = sdm.musician_id
+        AND sba.sequence = sdm.bank_account_sequence
+        AND (sdm.project_id = '.$projectId.'
+             OR sdm.project_id = '.$this->membersProjectId.')
+        )
+  GROUP BY sba.musician_id, sba.sequence, sdm.sequence',
+      'entity' => Entities\SepaBankAccount::class,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'sepa_id' => false,
+      ],
+      'column' => 'sepa_id',
+    ];
+
+    $this->joinStructure[] = [
+      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+      'entity' => Entities\SepaDebitMandate::class,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'sequence' => [
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+          'column' => 'debit_mandate_sequence',
+        ],
+      ],
+      'column' => 'sequence',
+    ];
 
     /**
      * For each extra field add one dedicated join table entry
@@ -1881,147 +1877,227 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           "options" => 'LFAVCPDR',
         ]));
 
-    ///////////////////////////////////////////////////////////////////////////
+    /*
+     *
+     **************************************************************************
+     *
+     * SEPA information
+     *
+     */
 
-    // One virtual field in order to be able to manage SEPA debit
-    // mandates. Note that in rare circumstances there may be two
-    // debit mandates: one for general and one for the project. We
-    // fetch both with the same sort-order and leave it to the calling
-    // code to do THE RIGHT THING (tm).
-
-    //       $mandateIdx = count($opts['fdd']);
-    //       $mandateAlias = "`PMEjoin".$mandateIdx."`";
-
-    // list(, $blah) = $this->makeJoinTableField(
-    //   $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
-    //     'name' => $this->l->t('SEPA Bank Account'),
-    //     'input' => 'S',
-    //     'input|ACP' => 'H',
-    //     'tab' => [ 'id' => $financeTab ],
-    //     'encryption' => [
-    //       'encrypt' => function($value) { return $this->encrypt($value); },
-    //       'decrypt' => function($value) { return $this->decrypt($value); },
-    //     ],
-    //     'sort' => true,
-    //     'select' => 'D',
-    //     'values' => [
-    //       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
-    //       // description needs to be there in order to trigger drop-down on change
-    //       'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
-    //     ],
-    // ]);
-
-    // list(, $blah) = $this->makeJoinTableField(
-    //   $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'sequence', [
-    //     'name' => $this->l->t('SEPA Bank Account'),
-    //     'input' => 'S',
-    //     'input|LFDV' => 'H',
-    //     'select' => 'D',
-    //     'values' => [
-    //       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
-    //       // description needs to be there in order to trigger drop-down on change
-    //       'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
-    //     ],
-    //     'php' => function($value, $op, $k, $row, $recordId, $pme) {
-    //       $this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
-    //       $valInfo = $pme->set_values($k-1);
-    //       $this->logInfo('VALINFO '.print_r($valInfo, true));
-    //       return 'blah';
-    //     },
-    // ]);
-
-    $opts['fdd']['bank_account_sequence'] = [
-      'name' => $this->l->t('SEPA Bank Account'),
-      'tab' => [ 'id' => $financeTab ],
-      'sort' => true,
-      'select' => 'N',
-    ];
-
-    if (false)     {
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
-      array_merge([
-        'name' => $this->l->t('SEPA Debit Mandate'),
-        'input' => 'VR',
-        'tab' => array('id' => $financeTab),
-        'select' => 'M',
-        'options' => 'LFACPDV',
-        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.project_id DESC)',
-        'nowrap' => true,
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_reference', [
+        'name' => $this->l->t('SEPA Debit Mandate Reference'),
+        'tab' => ['id' => 'finance'],
+        'input' => 'H',
+        'tab' => [ 'id' => 'contact' ],
+        'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
+        'filter' => 'having',
         'sort' => true,
-        'php' => function($mandates, $action, $k, $row, $recordId, $pme) {
-           if ($this->pmeBare) {
-             return $mandates;
-           }
-           $projectId = $this->projectId;
-           $projectName = $this->projectName;
-
-           if ($projectId != $recordId['project_id']) {
-             throw new \Exception($this->l->t('Inconsistent project-ids: %s / %s', [ $projectId, $recordId['project_id'] ]));
-           }
-
-           // can be multi-valued (i.e.: 2 for member table and project table)
-           $mandateProjects = $row['qf'.($k+1)];
-           $mandates = Util::explode(',', $mandates);
-           $mandateProjects = Util::explode(',', $mandateProjects);
-           if (count($mandates) !== count($mandateProjects)) {
-             throw new \RuntimeException(
-               $this->l->t('Data inconsistency, mandates: "%s", projects: "%s"',
-                           [ implode(',', $mandates),
-                             implode(',', $mandateProjects) ])
-             );
-           }
-
-           // Careful: this changes when rearranging the sort-order of the display
-           $musicianId        = $row[$this->queryField('musician_id', $pme->fdd)];
-           $musicianFirstName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'first_name', $pme->fdd)];
-           $musicianSurName  = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'sur_name', $pme->fdd)];
-           $musician = $musicianSurName.', '.$musicianFirstName;
-
-           $html = [];
-           foreach($mandates as $key => $mandate) {
-             if (empty($mandate)) {
-               continue;
-             }
-             $expired = $this->financeService->mandateIsExpired($mandate);
-             $mandateProject = $mandateProjects[$key];
-             if ($mandateProject === $projectId) {
-               $html[] = $this->sepaDebitMandateButton(
-                $mandate, $expired,
-                $musicianId, $musician,
-                $projectId, $projectName);
-            } else {
-              $mandateProjectName = $this->projectService->fetchName($mandateProject);
-              $html[] = $this->sepaDebitMandateButton(
-                $mandate, $expired,
-                $musicianId, $musician,
-                $projectId, $projectName,
-                $mandateProject, $mandateProjectName);
-            }
-          }
-          if (empty($html)) {
-            // Empty default knob
-            $html = [
-              $this->sepaDebitMandateButton(
-                $this->l->t("SEPA Debit Mandate"), false,
-                $musicianId, $musician,
-                $projectId, $projectName),
-            ];
-          }
-          return implode("\n", $html);
-        },
-      ]));
+        'select' => 'M',
+        'values' => [
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+          // description needs to be there in order to trigger drop-down on change
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+          'grouped' => true,
+          'orderby' => '$table.sepa_id ASC',
+        ],
+      ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'project_id',
-      array_merge([
-        'input' => 'VHR',
-        'name' => 'internal data',
-        'select' => 'T',
-        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn DESC)',
-      ]));
-}
-    //////// END Field definitions
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_deleted', [
+        'name' => $this->l->t('SEPA Debit Mandate Deleted'),
+        'tab' => ['id' => 'finance'],
+        'input' => 'H',
+        'tab' => [ 'id' => 'contact' ],
+        'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
+        'filter' => 'having',
+        'sort' => true,
+        'select' => 'M',
+        'values' => [
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+          // description needs to be there in order to trigger drop-down on change
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+          'grouped' => true,
+          'orderby' => '$table.sepa_id ASC',
+        ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
+        'name' => $this->l->t('SEPA Bank Accounts'),
+        'tab' => ['id' => 'finance'],
+        'input' => 'S',
+        'input|ACP' => 'H',
+        'encryption' => [
+          'encrypt' => function($value) {
+            $values = Util::explode(',', $value);
+            foreach ($values as &$value) {
+              $value = $this->encrypt($value);
+            }
+            return implode(',', $values);
+          },
+          'decrypt' => function($value) {
+            $values = Util::explode(',', $value);
+            foreach ($values as &$value) {
+              $value = $this->decrypt($value);
+            }
+            return implode(',', $values);
+          },
+        ],
+        'encryption|ACP' => [
+          'encrypt' => function($value) {
+            $values = Util::explodeIndexed($value);
+            foreach ($values as $key => $value) {
+              $values[$key] = $key.self::JOIN_KEY_SEP.$this->encrypt($value);
+            }
+            return implode(',', $values);
+          },
+          'decrypt' => function($value) {
+            $values = Util::explodeIndexed($value);
+            foreach ($values as $key => $value) {
+              $values[$key] = $key.self::JOIN_KEY_SEP.$this->decrypt($value);
+            }
+            return implode(',', $values);
+          },
+        ],
+        'sql|ACP' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
+        'filter' => 'having',
+        'display|LFDV' => [
+          'popup' => 'data',
+          // For an unknown reason we need two divs. Otherwise the
+          // subsequent lines gets squeezed but somehow their overflow
+          // still enters at least partly into the calculation of the
+          // height of the table cell.
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+        ],
+        'sort' => true,
+        'select' => 'M',
+        'values' => [
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+          // description needs to be there in order to trigger drop-down on change
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+          'grouped' => true,
+          'orderby' => '$table.sepa_id ASC',
+        ],
+        'values2glue' => '<br/>',
+        'css' => [ 'postfix' => ' squeeze-subsequent-lines' ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'sepa_id', [
+        'name' => $this->l->t('SEPA Bank Accounts'),
+        'tab' => ['id' => 'finance'],
+        'input' => 'VS',
+        'input|LFDV' => 'VH',
+        'select' => 'D',
+        'css' => [ 'postfix' => ' sepa-bank-accounts' ],
+        'values' => [
+          'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+          // description needs to be there in order to trigger drop-down on change
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+          'grouped' => true,
+        ],
+        'php' => function($value, $op, $k, $row, $recordId, $pme) {
+          $valInfo = $pme->set_values($k-1);
+
+          //$this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
+          //$this->logInfo('VALINFO '.print_r($valInfo, true));
+
+          // more efficient would perhaps be JSON
+          $sepaIds = Util::explode(',', $value);
+          $ibans = Util::explodeIndexed($row['qf'.($k-1)]);
+          $deleted = Util::explodeIndexed($row['qf'.($k-2)]);
+          $references = Util::explodeIndexed($row['qf'.($k-3)]);
+          $html = '<table class="row-count-'.count($ibans).'">
+  <tbody>';
+          foreach ($ibans as $sepaId => $iban) {
+            list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode('-', $sepaId);
+            $sepaData = json_encode([
+              'projectId' => 0,
+              'musicianId' => $musicianId,
+              'bankAccountSequence' => $bankAccountSequence,
+              'mandateSequence' => $mandateSequence,
+            ]);
+            $fakeValue = $iban;
+            $reference = $references[$sepaId];
+            if (!empty($reference)) {
+              $fakeValue .= ' -- ' . $reference;
+            }
+            $html .= '
+    <tr class="bank-account-data" data-sepa-id="'.$sepaId.'">
+      <td class="operations">
+        <!-- <input
+          class="operation delete-undelete"
+          title="'.$this->toolTipsService['sepa-bank-account:delete-undelete'].'"
+          type="button"/> -->
+        <input
+          class="operation info sepa-debit-mandate"
+          title="'.$this->toolTipsService['sepa-bank-account:info'].'"
+          data-debit-mandate=\''.$sepaData.'\'
+          type="button"/>
+      </td>
+      <td class="iban">
+        <input
+          class="bank-account-data dialog sepa-debit-mandate"
+          title="'.$this->toolTipsService['sepa-bank-account:info'].'"
+          type="text"
+          value="'.$fakeValue.'"
+          data-debit-mandate=\''.$sepaData.'\'
+          readonly
+        />
+      </td>
+    </tr>';
+          }
+          $sepaData = json_encode([
+            'projectId' => $projectId,
+            'musicianId' => $musicianId,
+            'bankAccountSequence' => 0,
+            'mandateSequence' => 0,
+          ]);
+          $html .= '
+    <tr class="placeholder">
+      <td colspan="2" class="operation">
+        <input
+          class="operation add sepa-debit-mandate"
+          title="'.$this->toolTipsService['sepa-bank-account:add'].'"
+          type="button"
+          value="'.$this->l->t('Add a new bank account').'"
+          data-debit-mandate=\''.$sepaData.'\'
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="display-options">
+  <div class="show-deleted">
+    <input type="checkbox"
+           name="show-deleted"
+           class="show-deleted checkbox"
+           value="show"
+           id="sepa-bank-accounts-show-deleted"
+           />
+    <label class="show-deleted"
+           for="sepa-bank-accounts-show-deleted"
+           title="'.$this->toolTipsService['sepa-bank-acocunt:show-deleted'].'"
+           >
+    '.$this->l->t('Show deleted.').'
+    </label>
+  </div>
+</div>';
+          return $html;
+        },
+      ]);
+
+    /*
+     *
+     *
+     **************************************************************************
+     *
+     * End field definitions.
+     *
+     */
 
     $opts['triggers']['update']['before'][] = [ $this, 'ensureUserIdSlug' ];
     $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
@@ -2030,145 +2106,6 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts['triggers']['update']['before'][] = [ $this, 'cleanupParticipantFields' ];
     $opts['triggers']['update']['before'][] = [ $this, 'renameProjectParticipantFolders' ];
-
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
-
-    ///@@@@@@@@@@@@@@@@@@@@@
-
-//     $feeIdx = count($opts['fdd']);
-//     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
-//     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
-//     $opts['fdd']['Unkostenbeitrag']['default'] = $project['Unkostenbeitrag'];
-//     $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' fee';
-//     $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => $financeTab);
-
-//     if ($project['Anzahlung'] > 0) {
-//       // only include if configured in project
-//       $opts['fdd']['Anzahlung'] = Config::$opts['money'];
-//       $opts['fdd']['Anzahlung']['name'] = "Anzahlung";
-//       $opts['fdd']['Anzahlung']['default'] = $project['Anzahlung'];
-//       $opts['fdd']['Anzahlung']['css']['postfix'] .= ' deposit';
-//       $opts['fdd']['Anzahlung']['tab'] = array('id' => $financeTab);
-//     }
-
-//     $needDebitMandates = Projects::needDebitMandates($projectId);
-//     $paymentStatusValues2 = array(
-//       'outstanding' => '&empty;',
-//       'awaitingdepositdebit' => '&#9972;',
-//       'deposited' => '&#9684;',
-//       'awaitingdebit' => '&#9951;',
-//       'payed' => '&#10004;'
-//       );
-
-//     if (Projects::needDebitMandates($projectId)) {
-
-//       $memberTableId = Config::getValue('memberTableId');
-//       $monetary = ProjectParticipant::monetaryFields($userParticipantFields, $fieldTypes);
-
-//       $amountPaidIdx = count($opts['fdd']);
-//       $opts['fdd']['AmountPaid'] = array(
-//         'input' => 'HR',
-//         );
-
-//       $paidCurrentYearIdx = count($opts['fdd']);
-//       $opts['fdd']['PaidCurrentYear'] = array(
-//         'input' => 'HR',
-//         );
-
-//       $opts['fdd']['TotalProjectFees'] = array(
-//         'tab'      => array('id' => $financeTab),
-//         'name'     => $this->l->t('Total Charges'),
-//         'css'      => array('postfix' => ' total-project-fees money'),
-//         'sort'    => false,
-//         'options' => 'VDLF', // wrong in change mode
-//         'input' => 'VR',
-//         'sql' => '`PMEtable0`.`Unkostenbeitrag`',
-//         'php' => function($amount, $op, $field, $row, $recordId, $pme)
-//         use ($monetary, $amountPaidIdx, $paidCurrentYearIdx, $projectId, $memberTableId, $musIdIdx)
-//         {
-//           foreach($pme->fds as $key => $label) {
-//             if (!isset($monetary[$label])) {
-//               continue;
-//             }
-//             $qf    = "qf{$key}";
-//             $qfidx = $qf.'_idx';
-//             if (isset($row[$qfidx])) {
-//               $value = $row[$qfidx];
-//             } else {
-//               $value = $row[$qf];
-//             }
-//             if (empty($value)) {
-//               continue;
-//             }
-//             $field   = $monetary[$label];
-//             $allowed = $field['DataOptions'];
-//             $type    = $field['Type'];
-//             $amount += self::participantFieldSurcharge($value, $allowed, $type['Multiplicity']);
-//           }
-
-//           if ($projectId === $memberTableId) {
-//             $amount += InstrumentInsurance::annualFee($row['qf'.$musIdIdx]);
-//             $paid = $row['qf'.$paidCurrentYearIdx];
-//           } else {
-//             $paid = $row['qf'.$amountPaidIdx];
-//           }
-
-//           // display as TOTAL/PAID/REMAINDER
-//           $rest = $amount - $paid;
-
-//           $amount = $this->moneyValue($amount);
-//           $paid = $this->moneyValue($paid);
-//           $rest = $this->moneyValue($rest);
-//           return ('<span class="totals finance-state">'.$amount.'</span>'
-//                   .'<span class="received finance-state">'.$paid.'</span>'
-//                   .'<span class="outstanding finance-state">'.$rest.'</span>');
-//         },
-//         'tooltip'  => Config::toolTips('project-total-fee-summary'),
-//         'display|LFVD' => array('popup' => 'tooltip'),
-//         );
-
-//     }
-
-//     $opts['triggers']['update']['before'] = [];
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
-//     $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
-
-//     // that one has to be adjusted further ...
-//     $opts['triggers']['delete']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeDeleteTrigger';
-
-//     // fill the numbers table
-//     $opts['triggers']['filter']['pre'][]  =
-//       $opts['triggers']['update']['pre'][]  =
-//       $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectParticipant::preTrigger';
-
-//     //$opts['triggers']['select']['data'][] =
-//     $opts['triggers']['update']['data'][] =
-//       function(&$pme, $op, $step, &$row) {
-//       $prInstIdx        = $pme->fdn['ProjectInstrumentId'];
-//       $voiceIdx         = $pme->fdn['Voice'];
-//       $sectionLeaderIdx = $pme->fdn['SectionLeader'];
-//       $instruments = Util::explode(',', $row["qf{$prInstIdx}_idx"]);
-//       //error_log('data '.print_r($row, true));
-//       switch (count($instruments)) {
-//       case 0:
-//         $pme->fdd[$voiceIdx]['input'] = 'R';
-//         $pme->fdd[$sectionLeaderIdx]['input'] = 'R';
-//         break;
-//       case 1:
-//         unset($pme->fdd[$voiceIdx]['values']['groups']);
-//         //error_log('data '.print_r($pme->fdd[$voiceIdx], true));
-//         $pme->fdd[$voiceIdx]['select'] = 'D';
-//         break;
-//       default:
-//         break;
-//       }
-//       return true;
-//     };
-
-    ///@@@@@@@@@@@@@@@@@@@@@
 
     $opts = $this->mergeDefaultOptions($opts);
 
@@ -2584,6 +2521,9 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     $value = '<span class="allowed-option-value '.$innerCss.'">'.$value.'</span>';
     return '<span class="allowed-option '.$css.'"'.$htmlData.'>'.$label.$sep.$value.'</span>';
   }
+
+
+
 
   /**
    * Generate a clickable form element which finally will display the
