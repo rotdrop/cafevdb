@@ -30,6 +30,7 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\DataDownloadResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -929,10 +930,20 @@ class SepaDebitMandatesController extends Controller {
    *
    * @NoAdminRequired
    */
-  public function personalizedWrittenMandateForm(
-    $musicianId
-    , $mandateSequence
-    ) {
+  public function prefilledMandateForm(
+    $projectId
+    , $musicianId
+    , $bankAccountSequence
+  ) {
+
+    list($formData, $mimeType, $filename) = $this->financeService->prefilledDebitMandateForm(
+      $projectId, $musicianId, $bankAccountSequence);
+
+    if (empty($formData)) {
+      return self::grumble($this->l->t('Unable to find fillable debit mandate form.'));
+    }
+
+    return new DataDownloadResponse($formData, $fileName, $mimeType);
   }
 
   /**

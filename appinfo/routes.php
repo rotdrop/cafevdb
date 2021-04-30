@@ -335,6 +335,11 @@ $routes = [
       'verb' => 'POST',
     ],
     [
+      'name' => 'sepa_debit_mandates#prefilled_mandate_form',
+      'url' => '/finance/sepa/debit-mandates/prefilled',
+      'verb' => 'POST',
+    ],
+    [
       'name' => 'sepa_debit_notes#service_switch',
       'url' => '/finance/sepa/debit-notes/{topic}',
       'verb' => 'POST',

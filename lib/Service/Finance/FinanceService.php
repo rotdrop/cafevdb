@@ -33,17 +33,22 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
 
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Documents\PDFFormFiller;
+
 /** Finance and bank related stuff. */
 class FinanceService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\SloppyTrait;
 
   const ENTITY = Entities\SepaDebitMandate::class;
   const SEPA_CHARSET = "a-zA-Z0-9 \/?:().,'+-";
   const SEPA_PURPOSE_LENGTH = 35;
   const SEPA_MANDATE_LENGTH = 35; ///< Maximum length of mandate reference.
   const SEPA_MANDATE_EXPIRE_MONTHS = 36; ///< Unused mandates expire after this time.
+  const BANK_NAME_MAX = 32; // for pretty-printing
 
   /** @var EventsService */
   private $eventsService;
@@ -62,6 +67,110 @@ class FinanceService
     $this->l = $this->l10n();
 
     $this->mandatesRepository = $this->getDatabaseRepository(self::ENTITY);
+  }
+
+  public function isClubMembersProject($projectOrId):bool
+  {
+    if (empty($projectOrId)) {
+      return false;
+    }
+    $projectId = ($projectOrId instanceof Entities\Project)
+               ? $projectOrId->getId()
+               : $projectOrId;
+    return (int)$projectId === $this->getClubMembersProjectid();
+  }
+
+  public function isClubMember($musicianOrId):bool
+  {
+    $musician = $this->ensureMusician($musicianOrId);
+    if (empty($musician)) {
+      return false;
+    }
+    return $musician->isMemberOf($this->getClubMembersProjectid());
+  }
+
+  public function prefilledDebitMandateForm($projectOrId, $musicianOrId, $accountSequence)
+  {
+    $musician = $this->ensureMusician($musicianOrId);
+
+    if (empty($musician)) {
+      return [];
+    }
+
+    if ($this->isClubMember($musician)) {
+      $project = $this->ensureProject($this->getClubMembersProjectid());
+    } else {
+      $project = $this->ensureProject($projectOrId);
+    }
+
+    if (empty($project)) {
+      return [];
+    }
+
+    if ($this->isClubMembersProject($project)) {
+      $formFileName = $this->getConfigValue('generalDebitNoteMandateForm');
+    } else {
+      $formFileName = $this->getConfigValue('projectDebitNoteMandateForm');
+    }
+
+    if (empty($formFileName)) {
+      return [];
+    }
+
+    $templatesFolder = $this->getDocumentTemplatesPath();
+    if (empty($templatesFolder)) {
+      return  [];
+    }
+    $formFileName = UserStorage::pathCat($templatesFolder, $formFileName);
+
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    $formFile = $userStorage->getFile($formFileName);
+    if (empty($formFile)) {
+      return [];
+    }
+
+    if (empty(strrchr($formFile->getMimeType(), 'pdf'))) {
+      return [ $formFile->getContent(), $formFile->getMimeType(), $formFile->getName() ];
+    }
+
+    $formData = [
+      'projectName' => $project->getName(),
+      'bankAccountOwner' => $musician->getPublicName(),
+      'projectParticipant' => $musician->getPublicName(),
+    ];
+
+    if (!($accountSequence instanceof Entities\SepaBankAccount)) {
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $this->getDatabaseRepository(Entities\SepaBankAccount::class)
+                          ->find([ 'musician' => $musician, 'sequence' => $accountSequence ]);
+    } else {
+      $bankAccount = $accountSequence;
+    }
+
+    if (!empty($bankAccount)) {
+      $info = $this->getIbanInfo($bankAccount->getIban());
+      $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
+
+      $formData = array_merge($formData, [
+        'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
+        'bankAccountIBAN' => $bankAccount->getIban(),
+        'bankAccountBIC' => $bankAccount->getBic(),
+        'bank' => $bank,
+      ]);
+    }
+
+    $formFiller = (new PDFFormFiller($formFile))->fill($formData);
+
+    $fileParts = [
+      $this->timeStamp('Ymd'),
+      basename($formFile->getName()),
+      $musician->getUserIdSlug(),
+    ];
+    $fileName = implode('-') . '.pdf';
+
+    return [ $formFiller->getContent(), 'application/pdf', $fileName ];
   }
 
   /**
@@ -497,6 +606,69 @@ class FinanceService
   public function deleteSepaMandate($mandateReference)
   {
     return !empty($this->mandatesRepository->remove($mandateReference));
+  }
+
+
+  /**
+   * Decode the information of an IBAN in to an array.
+   *
+   * @param string $iban
+   *
+   * @return array
+   * ```
+   * [
+   *   'iban' => $iban,
+   *   'bic' => BIC,
+   *   'blz' => BLZ,
+   *   'account' => BANK_ACCOUNT_NR,
+   *   'bank' => NAME_OF_BANK,
+   * ]
+   * ```
+   */
+  public function getIbanInfo(string $iban)
+  {
+    $result = [ 'iban' => $iban ];
+
+    $this->logInfo('IBAN '.print_r($result, true));
+
+    $iban = new \PHP_IBAN\IBAN($iban);
+    if (!$iban->Verify()) {
+      $this->logInfo('VERIFY');
+      return null;
+    }
+
+    $result['country'] = $iban->Country();
+
+    if ($iban->Country() == 'DE') {
+      // otherwise: not implemented yet
+      $ibanBLZ = $iban->Bank();
+      $ibanKTO = $iban->Account();
+
+      $bav = new \malkusch\bav\BAV;
+
+      if (!$bav->isValidBank($ibanBLZ)) {
+      $this->logInfo('INVALID');
+        return null;
+      }
+
+      if (!$bav->isValidAccount($ibanKTO)) {
+      $this->logInfo('INVALID ACCOUNT');
+        return null;
+      }
+
+      $agency = $bav->getMainAgency($ibanBLZ);
+      $blzBIC = $agency->getBIC();
+      $bankName = $agency->getName();
+      $bankCity = $agency->getCity();
+      $result = array_merge($result, [
+        'bic' => $blzBIC,
+        'blz' => $ibanBLZ,
+        'account' => $ibanKTO,
+        'bank' => $bankName,
+        'city' => $bankCity,
+      ]);
+    }
+    return $result;
   }
 
   /**

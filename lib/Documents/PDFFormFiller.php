@@ -44,16 +44,25 @@ class PDFFormFiller
       ->setStdIn($pdfData->getContent());
   }
 
-  public function fill($fields)
+  /**
+   * Fill in the given fields.
+   *
+   * @param array $fields Array of simple KEY => VALUE pairs.
+   *
+   * @return PDFFormFiller
+   */
+  public function fill($fields):PDFFormFiller
   {
     $this->pdfTk
       ->fillForm($fields)
       ->needAppearances()
       ->execute();
+    return $this;
   }
 
   public function getContent()
   {
-    return file_get_contents((string)$pdf->getTmpFile());
+    $this->pdfTk->execute();
+    return file_get_contents((string)$this->pdfTk->getTmpFile());
   }
 }

@@ -33,7 +33,7 @@ import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
 import * as FileUpload from './file-upload.js';
-// import fileDownload from './file-download.js';
+import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
 import './lock-input.js';
@@ -100,6 +100,7 @@ const mandatesInit = function(data, onChangeCallback) {
   const mandateDateSelector = 'input.mandateDate';
   const accountOwnerSelector = 'input.bankAccountOwner';
   const uploadPlaceholderSelector = 'input.upload-placeholder';
+  const downloadPrefilledSelector = 'input.download-mandate-form';
 
   const disableButtons = function(disable) {
     const buttons = popup.data('buttons');
@@ -169,6 +170,15 @@ const mandatesInit = function(data, onChangeCallback) {
     buttons.save.prop('disabled', !instantValidation);
     buttons.apply.prop('disabled', !instantValidation);
 
+    return false;
+  });
+
+  popup.on('click', mandateFormSelector + ' ' + downloadPrefilledSelector, function(event) {
+    fileDownload(
+      'finance/sepa/debit-mandates/prefilled',
+      popup.data('sepaId'),
+      t(appName, 'Unable to download pre-filled mandate form.')
+    );
     return false;
   });
 
