@@ -29,6 +29,9 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
+/**
+ * @method Entities\SepaBankAccount find($id)
+ */
 class SepaBankAccountsRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;

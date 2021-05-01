@@ -28,6 +28,9 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @method Entities\SepaDebitMandate find($id)
+ */
 class SepaDebitMandatesRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait;
