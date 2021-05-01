@@ -1355,6 +1355,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *        COLUMN_NAME => ID_COLUMN_DESCRIPTION, // see below
    *        ...
    *     ],
+   *     'filter' => [
+   *        COLUMN_NAME => ID_COLUMN_DESCRIPTION, // see below
+   *        ...
+   *     ],
    *     'column' => COLUMN_TO_FETCH,
    *   ],
    *   ...
@@ -1364,6 +1368,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * - string OTHER_COLUMN Just another column name of the main-table
    * - false  "incomplete" key for grouping
    * - array
+   *    - ```[ 'value' => VALUE ]``` where VALUE may be again an array of
+   *      values which are sued to form an IN condition, false or null
+   *      for "IS NULL", true for "IS NOT NULL". Any other value as string
+   *      or number depending on its value. Strings are properly escaped.
+   *    - ```[
+   *        'table' => OTHER_TABLE,
+   *        'column' => COLUMN_IN_OTHER_TABLE,
+   *      ]```
+   *
+   * The difference between 'filter' and 'identifier' is that the
+   * 'identifier' section is also used to update entities, while the
+   * 'filter' section simply defines further join restrictions.
    *
    * @param array $opts phpMyEdit options.
    *
@@ -1399,40 +1415,46 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $group = false;
       $groupOrderBy = [];
       $joinData = [];
-      foreach ($joinInfo['identifier'] as $joinTableKey => $joinTableValue) {
-        if (empty($joinTableValue)) {
-          $group = true;
-          $groupOrderBy[] = $joinTables[$table].'.'.$joinInfo['column'].' ASC';
-          continue;
-        }
-        $joinCondition = '$join_table.'.self::COL_QUOTE.$joinTableKey.self::COL_QUOTE.' ';
-        if (is_array($joinTableValue)) {
-          if (!empty($joinTableValue['table'])) {
-            $mainTableColumn = $joinTableValue['column']?: 'id';
-            $joinCondition .= '= '.$joinTables[$joinTableValue['table']].'.'.self::COL_QUOTE.$mainTableColumn.self::COL_QUOTE;
-            $group = $grouped[$joinTableValue['table']];
-            $groupOrderBy = array_merge($groupOrderBy, $orderBy[$joinTableValue['table']]);
-          } else if (array_key_exists('value', $joinTableValue)
-                     && $joinTableValue['value'] === null) {
-            $joinCondition = '$join_table.'.self::COL_QUOTE.$joinTableKey.self::COL_QUOTE.' IS NULL';
-          } else if (!empty($joinTableValue['value'])) {
-            $values = $joinTableValue['value'];
-            $values = array_map(function($value) {
-              return is_numeric($value) ? $value : "'".addslashes($value)."'";
-            }, is_array($values) ? $values : [ $values ]);
-            $joinCondition .= 'IN (' . implode(',', $values) . ')';
-          } else if (!empty($joinTableValue['condition'])) {
-            $joinCondition .= $joinTableValue['condition'];
-          } else if (!empty($joinTableValue['self'])) {
-            // use during update to determine key values, otherwise ignore
+      foreach (['identifier', 'filter'] as $columnRestriction) {
+        foreach ($joinInfo[$columnRestriction] as $joinTableKey => $joinTableValue) {
+          if (empty($joinTableValue)) {
+            $group = true;
+            $groupOrderBy[] = $joinTables[$table].'.'.$joinInfo['column'].' ASC';
             continue;
-          } else {
-            throw new \RuntimeException($this->l->t('Unknown column description: "%s"', print_r($jionTableValue, true)));
           }
-        } else {
-          $joinCondition .= '= $main_table.'.$joinTableValue;
+          $joinColumn =  '$join_table.' . self::COL_QUOTE . $joinTableKey . self::COL_QUOTE;
+          $joinCondition = $joinColumn . ' ';
+          if (is_array($joinTableValue)) {
+            if (!empty($joinTableValue['table'])) {
+              $mainTableColumn = $joinTableValue['column']?: 'id';
+              $joinCondition .= '= '.$joinTables[$joinTableValue['table']].'.'.self::COL_QUOTE.$mainTableColumn.self::COL_QUOTE;
+              $group = $grouped[$joinTableValue['table']];
+              $groupOrderBy = array_merge($groupOrderBy, $orderBy[$joinTableValue['table']]);
+            } else if (array_key_exists('value', $joinTableValue)
+                       && ($joinTableValue['value'] === null || $joinTableValue['value'] === false)) {
+              $joinCondition = $joinColumn . ' IS NULL';
+            } else if (array_key_exists('value', $joinTableValue)
+                       && $joinTableValue['value'] === true) {
+              $joinCondition = $joinColumn . ' IS NOT NULL';
+            } else if (!empty($joinTableValue['value'])) {
+              $values = $joinTableValue['value'];
+              $values = array_map(function($value) {
+                return is_numeric($value) ? $value : "'".addslashes($value)."'";
+              }, is_array($values) ? $values : [ $values ]);
+              $joinCondition .= 'IN (' . implode(',', $values) . ')';
+            } else if (!empty($joinTableValue['condition'])) {
+              $joinCondition .= $joinTableValue['condition'];
+            } else if (!empty($joinTableValue['self'])) {
+              // use during update to determine key values, otherwise ignore
+              continue;
+            } else {
+              throw new \RuntimeException($this->l->t('Unknown column description: "%s"', print_r($jionTableValue, true)));
+            }
+          } else {
+            $joinCondition .= '= $main_table.'.$joinTableValue;
+          }
+          $joinData[] = $joinCondition;
         }
-        $joinData[] = $joinCondition;
       }
       $grouped[$table] = $group;
       $orderBy[$table] = $groupOrderBy;
