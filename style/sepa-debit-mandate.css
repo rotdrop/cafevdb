@@ -275,6 +275,7 @@ input.pme-debit-note[type=submit] {
   width:100%
 }
 
+#sepa-debit-mandate-dialog form.sepa-bank-data .form-blocker,
 #sepa-debit-mandate-dialog fieldset.debit-mandate .debit-mandate-blocker {
   display:none;
   position:absolute;
@@ -285,6 +286,10 @@ input.pme-debit-note[type=submit] {
   width:100%;
   height:100%;
   z-index:10;
+}
+
+#sepa-debit-mandate-dialog form.sepa-bank-data.bank-account-deleted .form-blocker {
+  display:block;
 }
 
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-data input.debit-mandate-registration + label > *,
@@ -302,6 +307,10 @@ input.pme-debit-note[type=submit] {
 
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-data .debit-mandate-blocker {
   display:block;
+}
+
+#sepa-debit-mandate-dialog fieldset.debit-mandate.deleted .debit-mandate-blocker {
+  display:block!important;
 }
 
 #sepa-debit-mandate-dialog fieldset.debit-mandate.no-data input.debit-mandate-registration:checked ~ .debit-mandate-details .debit-mandate-blocker {
@@ -377,6 +386,16 @@ input.pme-debit-note[type=submit] {
   text-decoration:underline;
   font-style:italic;
   font-weight:bold;
+}
+
+/******************************************************************************
+ *
+ * show-hide deleted in pme-table
+ *
+ */
+
+table.pme-main td.pme-value.sepa-bank-accounts table.hide-deleted tr.deleted {
+  display:none;
 }
 
 /******************************************************************************

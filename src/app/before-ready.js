@@ -226,6 +226,16 @@ const documentReady = function() {
       const container = $(selector);
       pmeExportMenu(selector);
       SepaDebitMandate.popupInit(selector);
+      container.find('#sepa-bank-accounts-show-deleted').on('change', function(event) {
+        const $sepaTable = container.find('td.pme-value.sepa-bank-accounts table');
+        if ($(this).prop('checked')) {
+          $sepaTable.addClass('show-deleted').removeClass('hide-deleted');
+        } else {
+          $sepaTable.removeClass('show-deleted').addClass('hide-deleted');
+        }
+        resizeCB();
+        return false;
+      });
 
       container.find('div.photo, .cafevdb_inline_image_wrapper')
         .off('click', 'img.zoomable')

@@ -210,7 +210,9 @@ make sure that the musicians are also automatically added to the
 
     $opts['tb'] = self::TABLE;
 
-    $opts['css']['postfix'] = ' show-hide-disabled';
+    $opts['css']['postfix'] = [
+      'show-hide-disabled',
+    ];
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -324,7 +326,7 @@ make sure that the musicians are also automatically added to the
     $tip  = strval($this->toolTipsService['register-musician']);
     if ($this->projectMode) {
       $opts['fdd']['add_musicians'] = [
-        'tab' => [ 'id' => 'orchestra' ],
+        'tab' => [ 'id' => 'tab-all' ],
         'name' => $this->l->t('Add Musicians'),
         'css' => [ 'postfix' => ' register-musician' ],
         'select' => 'T',
@@ -890,13 +892,17 @@ make sure that the musicians are also automatically added to the
   /**
    * Generate join-structure and field-descriptions for the SEPA information.
    */
-  public function renderSepaAccounts()
+  public function renderSepaAccounts($musicianIdField = 'id', $projectRestrictions = [], $financeTab = 'finance')
   {
+    if (!empty($projectRestrictions)) {
+      $projectWhere = " AND sdm.project_id IN ('".implode("','", $projectRestrictions)."')";
+    }
     $joinStructure = [
       [
         // join all bank-accounts for this musician duplicating lines
         // for all SEPA-mandates.
         'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+        'flags' => self::JOIN_READONLY,
         'sql' => 'SELECT
   CONCAT_WS(\''.self::COMP_KEY_SEP.'\', sba.musician_id, sba.sequence, IFNULL(sdm.sequence,0)) AS sepa_id,
   sba.*,
@@ -907,11 +913,12 @@ make sure that the musicians are also automatically added to the
   FROM '.self::SEPA_BANK_ACCOUNTS_TABLE.' sba
   LEFT JOIN '.self::SEPA_DEBIT_MANDATES_TABLE.' sdm
     ON (sba.musician_id = sdm.musician_id
-        AND sba.sequence = sdm.bank_account_sequence)
+        AND sba.sequence = sdm.bank_account_sequence'
+        .$projectWhere.')
   GROUP BY sba.musician_id, sba.sequence, sdm.sequence',
         'entity' => Entities\SepaBankAccount::class,
         'identifier' => [
-          'musician_id' => 'id',
+          'musician_id' => $musicianIdField,
           'sepa_id' => false,
         ],
         'column' => 'sepa_id',
@@ -919,8 +926,9 @@ make sure that the musicians are also automatically added to the
       [
         'table' => self::SEPA_DEBIT_MANDATES_TABLE,
         'entity' => Entities\SepaDebitMandate::class,
+        'flags' => self::JOIN_READONLY,
         'identifier' => [
-          'musician_id' => 'id',
+          'musician_id' => $musicianIdField,
           'sequence' => [
             'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
             'column' => 'debit_mandate_sequence',
@@ -930,11 +938,11 @@ make sure that the musicians are also automatically added to the
       ],
     ];
 
-    $generator = function(&$fdd) {
+    $generator = function(&$fdd) use ($musicianIdField, $financeTab) {
       $this->makeJoinTableField(
         $fdd, self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_reference', [
           'name' => $this->l->t('SEPA Debit Mandate Reference'),
-          'tab' => ['id' => 'finance'],
+          'tab' => ['id' => $financeTab],
           'input' => 'H',
           'tab' => [ 'id' => 'contact' ],
           'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
@@ -953,7 +961,7 @@ make sure that the musicians are also automatically added to the
       $this->makeJoinTableField(
         $fdd, self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_deleted', [
           'name' => $this->l->t('SEPA Debit Mandate Deleted'),
-          'tab' => ['id' => 'finance'],
+          'tab' => ['id' => $financeTab],
           'input' => 'H',
           'tab' => [ 'id' => 'contact' ],
           'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
@@ -972,7 +980,7 @@ make sure that the musicians are also automatically added to the
       $this->makeJoinTableField(
         $fdd, self::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
           'name' => $this->l->t('SEPA Bank Accounts'),
-          'tab' => ['id' => 'finance'],
+          'tab' => ['id' => $financeTab],
           'input' => 'S',
           'input|ACP' => 'H',
           'encryption' => [
@@ -1034,7 +1042,7 @@ make sure that the musicians are also automatically added to the
       $this->makeJoinTableField(
         $fdd, self::SEPA_BANK_ACCOUNTS_TABLE, 'sepa_id', [
           'name' => $this->l->t('SEPA Bank Accounts'),
-          'tab' => ['id' => 'finance'],
+          'tab' => ['id' => $financeTab],
           'input' => 'VS',
           'input|LFDV' => 'VH',
           'select' => 'D',
@@ -1045,7 +1053,9 @@ make sure that the musicians are also automatically added to the
             'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
             'grouped' => true,
           ],
-          'php' => function($value, $op, $k, $row, $recordId, $pme) {
+          'php' => function($value, $op, $k, $row, $recordId, $pme) use ($musicianIdField) {
+            $this->logInfo('RECORD ID '.$recordId.' PME REC '.print_r($pme->rec, true));
+
             $valInfo = $pme->set_values($k-1);
 
             //$this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
@@ -1056,7 +1066,7 @@ make sure that the musicians are also automatically added to the
             $ibans = Util::explodeIndexed($row['qf'.($k-1)]);
             $deleted = Util::explodeIndexed($row['qf'.($k-2)]);
             $references = Util::explodeIndexed($row['qf'.($k-3)]);
-            $html = '<table class="row-count-'.count($ibans).'">
+            $html = '<table class="hide-deleted row-count-'.count($ibans).'">
   <tbody>';
             foreach ($ibans as $sepaId => $iban) {
               list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode('-', $sepaId);
@@ -1068,11 +1078,12 @@ make sure that the musicians are also automatically added to the
               ]);
               $fakeValue = $iban;
               $reference = $references[$sepaId];
+              $inactive = $deleted[$sepaId];
               if (!empty($reference)) {
                 $fakeValue .= ' -- ' . $reference;
               }
               $html .= '
-    <tr class="bank-account-data" data-sepa-id="'.$sepaId.'">
+    <tr class="bank-account-data'.($inactive ? ' deleted' : '').'" data-sepa-id="'.$sepaId.'">
       <td class="operations">
         <!-- <input
           class="operation delete-undelete"
@@ -1097,8 +1108,8 @@ make sure that the musicians are also automatically added to the
     </tr>';
             }
             $sepaData = json_encode([
-              'projectId' => 0,
-              'musicianId' => $musicianId,
+              'projectId' => (empty($projectRestrictions) ? 0 : $projectRestrictions[0]),
+              'musicianId' => $pme->rec[$musicianIdField],
               'bankAccountSequence' => 0,
               'mandateSequence' => 0,
             ]);

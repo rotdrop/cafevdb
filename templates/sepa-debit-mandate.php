@@ -58,16 +58,25 @@ $bindingText = [
 
 $mandateCss = implode(' ', [
   'debit-mandate',
-  (empty($haveMandate) ? ' no-data' : 'have-data'),
+  (empty($haveMandate) ? 'no-data' : 'have-data'),
   (empty($mandateInUse) ? 'unused' : 'used'),
   (empty($writtenMandateId) ? 'no-written-mandate' : 'have-written-mandate'),
-  (!empty($isClubMember) ? ' club-member' : null),
+  (!empty($isClubMember) ? 'club-member' : null),
+  (empty($mandateDeleted) ? null : 'deleted'),
 ]);
 
 $accountCss = implode(' ', [
   'bank-account',
   (empty($haveMandate) ? 'no-data' : 'have-data'),
   (empty($bankAccountInUse) ? 'unused' : 'used'),
+  (empty($bankAccountDeleted) ? null : 'deleted'),
+]);
+
+$formCss = implode(' ', [
+  'sepa-debit-mandate-form',
+  'sepa-bank-data',
+  (empty($bankAccountDeleted) ? null : 'bank-account-deleted'),
+  (empty($mandateDeleted) ? null : 'debit-mandate-deleted'),
 ]);
 
 ?>
@@ -80,7 +89,8 @@ $accountCss = implode(' ', [
       <?php echo ($mandateExpired ? $l->t('expired') : ''); ?>
     </div>
   </div>
-  <form id="sepa-debit-mandate-form" class="sepa-debit-mandate-form sepa-bank-data <?php echo $cssClass; ?>" >
+  <form id="sepa-debit-mandate-form" class="<?php p($formCss); ?>">
+    <div class="ui-widget-overlay form-blocker hidden-no-data"></div>
     <input type="hidden" autofocus="autofocus" />
     <!-- @todo perhaps better use a JSON data-field for this mess -->
     <!-- <input type="hidden" name="mandateProjectId" value="<?php echo $mandateProjectId; ?>" /> -->

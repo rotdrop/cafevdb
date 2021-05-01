@@ -554,7 +554,6 @@ const mandatesInit = function(data, onChangeCallback) {
         click() {
           const $dlg = $(this);
           mandateDelete(function() {
-            $('#sepa-debit-mandate-' + self.musicianId + '-' + self.projectId).val(t(appName, 'SEPA Debit Mandate'));
             $dlg.dialog('close');
             onChangeCallback();
           });
@@ -701,10 +700,6 @@ const mandateStore = function(options) {
 
 // Delete a mandate
 const mandateDelete = function(callbackOk) {
-  const dialogId = '#sepa-debit-mandate-dialog';
-
-  $('div.statusmessage').hide();
-  $('span.statusmessage').hide();
 
   // "submit" the entire form
   const post = $('#sepa-debit-mandate-form').serialize();
@@ -717,8 +712,7 @@ const mandateDelete = function(callbackOk) {
       if (!Ajax.validateResponse(data, ['message'])) {
         return false;
       }
-      $(dialogId + ' #msg').html(data.message);
-      $(dialogId + ' #msg').show();
+      Notification.messages(data.message);
     });
 };
 

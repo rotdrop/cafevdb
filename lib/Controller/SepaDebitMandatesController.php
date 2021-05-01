@@ -64,6 +64,12 @@ class SepaDebitMandatesController extends Controller {
   /** @var FuzzyInputService */
   private $fuzzyInputService;
 
+  /** @var Repositories\SepaBankAccountsRepository */
+  private $bankAccountsRepository;
+
+  /** @var Repositories\SepaDebitMandatesRepository */
+  private $debitMandatesRepository;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -82,6 +88,9 @@ class SepaDebitMandatesController extends Controller {
     $this->projectService = $projectService;
     $this->fuzzyInputService = $fuzzyInputService;
     $this->l = $this->l10N();
+
+    $this->bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+    $this->debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
   }
 
   /**
@@ -490,6 +499,9 @@ class SepaDebitMandatesController extends Controller {
       return self::grumble($this->l->t('Parameter musicianId must be set, but is empty.'));
     }
 
+    // disable soft-deletion filter as we are fetching specific data.
+    $this->disableFilter('soft-deleteable');
+
     /** @var Entities\Musician $musician */
     $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musicianId);
 
@@ -503,7 +515,7 @@ class SepaDebitMandatesController extends Controller {
     $mandateProjectId = null;
     if (!empty($mandateSequence)) {
       /** @var Entities\SepaDebitMandate $mandate */
-      $mandate = $this->getDatabaseRepository(Entities\SepaDebitMandate::class)->find([
+      $mandate = $this->debitMandatesRepository->find([
         'musician' => $musicianId,
         'sequence' => $mandateSequence,
       ]);
@@ -519,7 +531,7 @@ class SepaDebitMandatesController extends Controller {
       $bankAccount = $mandate->getSepaBankAccount();
     } else if (!empty($bankAccountSequence)) {
       /** @var Entities\SepaBankAccount $bankAccount */
-      $bankAccount = $this->getDatabaseRepository(Entities\SepaBankAccount::class)->find([
+      $bankAccount = $this->bankAccountsRepository->find([
         'musician' => $musicianId,
         'sequence' => $bankAccountSequence,
       ]);
@@ -628,11 +640,12 @@ class SepaDebitMandatesController extends Controller {
 
       'mandateSequence' => $mandate->getSequence(),
       'mandateReference' => $mandate->getMandateReference(),
-      'mandateExpired' => $mandateExpired,
+      'mandateExpired' => $mandateExpired, // @todo
       'mandateDate' => $mandate->getMandateDate(),
       'lastUsedDate' => $mandate->getLastUsedDate(),
       'mandateNonRecurring' => $mandate->getNonRecurring(),
       'mandateInUse' => $mandate->inUse(),
+      'mandateDeleted' => $mandate->getDeleted(),
 
       'bankAccountSequence' => $bankAccount->getSequence(),
       'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
@@ -641,6 +654,7 @@ class SepaDebitMandatesController extends Controller {
       'bankAccountBLZ' => $blz,
       'bankAccountBIC' => $bic,
       'bankAccountInUse' => $bankAccount->inUse(),
+      'bankAccountDeleted' => $bankAccount->getDeleted(),
 
       'writtenMandateId' => $writtenMandateId,
       'writtenMandateDownloadLink' => $writtenMandateDownloadLink,
@@ -720,14 +734,10 @@ class SepaDebitMandatesController extends Controller {
 
     // Aquire data-base Entities
 
-    /** @var Repositories/SepaBankAccountsRepository $bankAccountsRepository */
-    $bankAccountsRepository = $this->getDatabaseRepository(
-      Entities\SepaBankAccount::class);
-
     // First check the bank-account
     if (!empty($bankAccountSequence)) {
       /** @var Entities\SepaBankAccount $bankAccount */
-      $bankAccount = $bankAccountsRepository->find([
+      $bankAccount = $this->bankAccountsRepository->find([
         'musician' => $musicianId,
         'sequence' => $bankAccountSequence,
       ]);
@@ -762,7 +772,7 @@ class SepaDebitMandatesController extends Controller {
       // hack the problem when two different operators enter the same
       // account at the same time through the web-interface.
 
-      $existingAccounts = $bankAccountsRepository->findBy([ 'musician' => $musicianId ]);
+      $existingAccounts = $this->bankAccountsRepository->findBy([ 'musician' => $musicianId ]);
       /** @var Entities\SepaBankAccount $oldAccount */
       foreach ($existingAccounts as $oldAccount) {
         if ($oldAccount->getIban() == $bankAccountIBAN) {
@@ -780,7 +790,7 @@ class SepaDebitMandatesController extends Controller {
     do {
       try {
         // try persist with increasing sequence until we succeed
-        $bankAccountsRepository->persist($bankAccount);
+        $this->bankAccountsRepository->persist($bankAccount);
       } catch (UniqueConstraintViolationException $e) {
         if ($bankAccount->inUse()) {
           $this->logException($e);
@@ -805,13 +815,10 @@ class SepaDebitMandatesController extends Controller {
       return self::dataResponse($responseData);
     }
 
-    /** @var Repositories/SepaDebitMandatesRepostory $debitMandatesRepository */
-    $debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
-
     // Check for the debit-mandate.
     if (!empty($mandateSequence)) {
       /** @var Entities\SepaDebitMandate $debitMandate */
-      $debitMandate = $debitMandatesRepository->find([
+      $debitMandate = $this->debitMandatesRepository->find([
         'musician' => $musicianId,
         'sequence' => $mandateSequence,
       ]);
@@ -896,7 +903,7 @@ class SepaDebitMandatesController extends Controller {
     do {
       try {
         // try persist with increasing sequence until we succeed
-        $debitMandatesRepository->persist($debitMandate);
+        $this->debitMandatesRepository->persist($debitMandate);
       } catch (UniqueConstraintViolationException $e) {
         if ($debitMandate->inUse()) {
           $this->logException($e);
@@ -949,20 +956,26 @@ class SepaDebitMandatesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function mandateDelete($musicianId, $projectId, $mandateReference)
+  public function mandateDelete($musicianId, $mandateSequence)
   {
-    $requiredKeys = [ 'projectId', 'musicianId', 'mandateReference' ];
+    $requiredKeys = [ 'musicianId', 'mandateSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
         return self::grumble($this->l->t("Required information `%s' not provided.", $required));
       }
     }
 
-    if ($this->financeService->deleteSepaMandate($reference)) {
-      return self::response($this->l->t('SEPA debit mandate deleted from data-base.'));
+    $mandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
+    $reference = $mandate->getMandateReference();
+    $this->remove($mandate, true);
+
+    if ($this->entityManager->contains($mandate)) {
+      $message = $this->l->t('SEPA debit mandate with reference "%s" has been invalidated.', $reference);
     } else {
-      return self::grumble($this->l->t('Unable to delete SEPA debit mandate from data-base.'));
+      $message = $this->l->t('SEPA debit mandate with rererence "%s" has been deleted.', $reference);
     }
+
+    return self::response($message);
   }
 
 }
