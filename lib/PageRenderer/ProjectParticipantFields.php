@@ -57,13 +57,11 @@ class ProjectParticipantFields extends PMETableViewBase
   const OPTION_FIELDS = [ 'key', 'label', 'data', 'tooltip', 'limit', 'deleted', ];
 
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectParticipantField::class,
     ],
-    [
-      'table' => self::OPTIONS_TABLE,
+    self::OPTIONS_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDataOption::class,
       'identifier' => [
         'field_id' => 'id',
@@ -72,15 +70,13 @@ class ProjectParticipantFields extends PMETableViewBase
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
     ],
-    [
-      'table' => self::PROJECTS_TABLE,
+    self::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
     ],
-    [
-      'table' => self::DATA_TABLE,
+    self::DATA_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDatum::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [

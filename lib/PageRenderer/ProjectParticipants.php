@@ -60,25 +60,21 @@ class ProjectParticipants extends PMETableViewBase
    * parent::beforeUpdateDoUpdateAll().
    */
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectParticipant::class,
     ],
-    [
-      'table' => self::MUSICIANS_TABLE,
+    self::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
       'identifier' => [ 'id' => 'musician_id' ],
       'column' => 'id',
     ],
-    [
-      'table' => self::PROJECTS_TABLE,
+    self::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
     ],
-    [
-      'table' => self::PROJECT_INSTRUMENTS_TABLE,
+    self::PROJECT_INSTRUMENTS_TABLE => [
       'entity' => Entities\ProjectInstrument::class,
       'flags' => self::JOIN_GROUP_BY,
       'identifier' => [
@@ -89,8 +85,7 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'column' => 'instrument_id',
     ],
-    [
-      'table' => self::MUSICIAN_INSTRUMENTS_TABLE,
+    self::MUSICIAN_INSTRUMENTS_TABLE => [
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
         'instrument_id' => false,
@@ -99,8 +94,7 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'instrument_id',
     ],
     // in order to get the participation in all projects
-    [
-      'table' => self::TABLE,
+    self::TABLE . self::VALUES_TABLE_SEP . 'allProjects' => [
       'entity' => Entities\ProjectParticipant::class,
       'identifier' => [
         'project_id' => false,
@@ -109,8 +103,7 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'project_id',
       'flags' => self::JOIN_READONLY,
     ],
-    [
-      'table' => self::PROJECT_PAYMENTS_TABLE,
+    self::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -120,8 +113,7 @@ class ProjectParticipants extends PMETableViewBase
     ],
     // extra input fields depending on the type of the project,
     // e.g. service fees etc.
-    [
-      'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
+    self::PROJECT_PARTICIPANT_FIELDS_TABLE => [
       'entity' => Entities\ProjectParticipantField::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -130,8 +122,7 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'id',
     ],
     // the data for the extra input fields
-    [
-      'table' => self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
+    self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDatum::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -338,8 +329,8 @@ class ProjectParticipants extends PMETableViewBase
       // $this->joinStructure[] = $participantFieldOptionJoinTable;
 
       $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
-      $participantFieldJoinTable = [
-        'table' => $tableName,
+      $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
+      $this->joinStructure[$tableName] = [
         'entity' => Entities\ProjectParticipantFieldDatum::class,
         'flags' => self::JOIN_REMOVE_EMPTY,
         'identifier' => [
@@ -351,8 +342,6 @@ class ProjectParticipants extends PMETableViewBase
         'column' => 'option_key',
         'encode' => 'BIN2UUID(%s)',
       ];
-      $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
-      $this->joinStructure[] = $participantFieldJoinTable;
     }
 
     /*
@@ -2329,5 +2318,53 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
             .'</div>';
     return $button;
   }
+
+  public function renderParticipantFields($participantFields)
+  {
+    $joinStructure = [];
+
+    foreach ($participantFields as $field) {
+      $fieldId = $field['id'];
+
+      // Bad idea and really increases query time
+      //
+      // $tableName = self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      // $participantFieldOptionJoinTable = [
+      //   'table' => $tableName,
+      //   'entity' => Entities\ProjectParticipantFieldDataOption::class,
+      //   'flags' => self::JOIN_FLAGS_NONE,
+      //   'identifier' => [
+      //     'field_id' => [ 'value' => $fieldId, ],
+      //     'key' => false,
+      //   ],
+      //   'column' => 'key',
+      //   'encode' => 'BIN2UUID(%s)',
+      // ];
+
+      // $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
+      // $this->joinStructure[] = $participantFieldOptionJoinTable;
+
+      $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
+      $this->joinStructure[$tableName] = [
+        'entity' => Entities\ProjectParticipantFieldDatum::class,
+        'flags' => self::JOIN_REMOVE_EMPTY,
+        'identifier' => [
+          'project_id' => 'project_id',
+          'musician_id' => 'musician_id',
+          'field_id' => [ 'value' => $fieldId, ],
+          'option_key' => false,
+        ],
+        'column' => 'option_key',
+        'encode' => 'BIN2UUID(%s)',
+      ];
+    }
+
+    $generator = function(&$fdd) {
+    };
+
+    return [ $joinStructure, $generator ];
+  }
+
 
 }

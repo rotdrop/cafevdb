@@ -42,8 +42,7 @@ class InsuranceBrokers extends PMETableViewBase
   const TABLE = 'InsuranceBrokers';
 
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\InsuranceBroker::class,
     ],

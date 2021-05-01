@@ -49,13 +49,11 @@ class InstrumentFamilies extends PMETableViewBase
   private $musicL10n;
 
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'entity' => Entities\InstrumentFamily::class,
       'flags' => self::JOIN_MASTER,
     ],
-    [
-      'table' => self::TRANSLATIONS_TABLE,
+    self::TRANSLATIONS_TABLE => [
       'entity' => null,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -66,8 +64,7 @@ class InstrumentFamilies extends PMETableViewBase
       ],
       'column' => 'content',
     ],
-    [
-      'table' => self::INSTRUMENTS_JOIN_TABLE,
+    self::INSTRUMENTS_JOIN_TABLE => [
       'entity' => null,
       'identifier' => [
         'instrument_family_id' => 'id',
@@ -76,8 +73,7 @@ class InstrumentFamilies extends PMETableViewBase
       'column' => 'instrument_family_id',
       'flags' => self::JOIN_READONLY,
     ],
-    [
-      'table' => self::INSTRUMENTS_TABLE,
+    self::INSTRUMENTS_TABLE => [
       'entity' => Entities\Instrument::class,
       'identifier' => [
         'id' => [
@@ -204,9 +200,9 @@ class InstrumentFamilies extends PMETableViewBase
       'default'  => '0',  // auto increment
       ];
 
-    // set the locale into the joinstructure
-    array_walk($this->joinStructure, function(&$joinInfo) {
-      switch ($joinInfo['table']) {
+    // set the locale into the join-structure
+    array_walk($this->joinStructure, function(&$joinInfo, $table) {
+      switch ($table) {
       case self::TRANSLATIONS_TABLE:
         $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLanguageCode();
         break;
@@ -307,7 +303,7 @@ class InstrumentFamilies extends PMETableViewBase
    */
   public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
-    $entity = $this->getDatabaseRepository($this->joinStructure[0]['entity'])
+    $entity = $this->getDatabaseRepository($this->joinStructure[self::TABLE]['entity'])
                    ->find($pme->rec);
     $this->remove($entity, true);
 

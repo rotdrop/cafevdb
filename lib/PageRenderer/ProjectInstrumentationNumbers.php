@@ -43,19 +43,16 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
   // Projects Instruments ProjectInstruments
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectInstrumentationNumber::class,
     ],
-    [
-      'table' => self::PROJECTS_TABLE,
+    self::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
     ],
-    [
-      'table' => self::PROJECT_INSTRUMENTS_TABLE,
+    self::PROJECT_INSTRUMENTS_TABLE => [
       'entity' => Entities\ProjectInstrument::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -65,8 +62,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       ],
       'column' => 'musician_id',
     ],
-    [
-      'table' => self::INSTRUMENTS_TABLE,
+    self::INSTRUMENTS_TABLE => [
       'entity' => Entities\Instrument::class,
       'identifier' => [
         'id' => 'instrument_id',

@@ -47,20 +47,17 @@ class SepaBankAccounts extends PMETableViewBase
   protected $cssClass = 'sepa-bank-accounts';
 
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\SepaBankAccount::class,
     ],
-    [
-      'table' => self::MUSICIANS_TABLE,
+    self::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [ 'id' => 'musician_id' ],
       'column' => 'id',
     ],
-    [
-      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+    self::SEPA_DEBIT_MANDATES_TABLE => [
       'entity' => Entities\SepaDebitMandate::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -70,8 +67,7 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'column' => 'sequence',
     ],
-    [
-      'table' => self::PROJECT_PARTICIPANTS_TABLE,
+    self::PROJECT_PARTICIPANTS_TABLE => [
       'entity' => Entities\ProjectParticipants::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -80,8 +76,7 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'column' => 'project_id',
     ],
-    [
-      'table' => self::PROJECTS_TABLE,
+    self::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -92,8 +87,7 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'column' => 'id',
     ],
-    [
-      'table' => self::PROJECT_PAYMENTS_TABLE,
+    self::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -315,8 +309,8 @@ received so far'),
       foreach ($monetary as $name => $field) {
         $fieldId = $field['id'];
         $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
-        $participantFieldJoinTable = [
-          'table' => $tableName,
+        $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
+        $this->joinStructure[$tableName] = [
           'entity' => Entities\ProjectParticipantFieldDatum::class,
           'flags' => self::JOIN_READONLY,
           'identifier' => [
@@ -329,8 +323,6 @@ received so far'),
           ],
           'column' => 'field_id',
         ];
-        $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
-        $this->joinStructure[] = $participantFieldJoinTable;
       }
     }
 
@@ -361,36 +353,45 @@ received so far'),
       'sort'     => true,
     ];
 
-    if ($projectMode) {
-      array_walk($this->joinStructure, function(&$joinInfo) {
-        switch ($joinInfo['table']) {
-        case self::PROJECT_PARTICIPANTS_TABLE:
+    // Define some further join-restrictions
+    array_walk($this->joinStructure, function(&$joinInfo, $table) {
+      switch ($table) {
+      case self::PROJECT_PARTICIPANTS_TABLE:
+        if ($projectMode) {
           $joinInfo['identifier']['project_id'] = [
             'value' => $this->project->getId(),
           ];
-          break;
-        case self::SEPA_DEBIT_MANDATES_TABLE:
-          $joinInfo['identifier']['project_id'] = [
+        }
+        break;
+      case self::SEPA_DEBIT_MANDATES_TABLE:
+        if ($projectMode) {
+          $joinInfo['filter']['project_id'] = [
             'value' => [ $this->project->getId(), $this->membersProjectId ],
           ];
-          break;
-        default:
-          break;
         }
-      });
-    }
+        if (!$this->showDisabled) {
+          $joinInfo['filter']['deleted'] = [
+            'value' => null,
+          ];
+        }
+        break;
+      default:
+        break;
+      }
+    });
     $joinTables = $this->defineJoinStructure($opts);
 
     // field definitions
 
     ///////////////////////////////////////////////////////////////////////////
 
+    // This is the project from the mandate
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECTS_TABLE, 'id',
       Util::arrayMergeRecursive(
         [
           'tab' => [ 'id' => 'mandate' ],
-          'name'     => $this->l->t('Project'),
+          'name'     => $this->l->t('Mandate Project'),
           'input'    => 'R',
           'input|A'  => $projectMode ? 'R' : null,
           'select'   => 'D',
@@ -604,6 +605,7 @@ received so far'),
               // TODO fill with data
 
               $money = $this->moneyValue($amount);
+              return 'IMPLEMENT ME';
             },
           ]);
         $fdd = &$opts['fdd'][$fddName];
@@ -712,6 +714,9 @@ received so far'),
     if ($projectMode) {
       $opts['filters']['AND'][] =
         $joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id = '.$projectId;
+    }
+    if (!$this->showDisabled) {
+      $opts['filters']['AND'][] = '$table.deleted IS NULL';
     }
 
     // redirect all updates through Doctrine\ORM.

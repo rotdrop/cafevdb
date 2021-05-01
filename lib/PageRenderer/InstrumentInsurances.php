@@ -46,8 +46,7 @@ class InstrumentInsurances extends PMETableViewBase
   const RATES_TABLE = 'InsuranceRates';
 
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\InstrumentInsurance::class,
     ],
@@ -69,8 +68,7 @@ class InstrumentInsurances extends PMETableViewBase
     //   'identifier' => [ 'short_name' => 'broker_id' ],
     //   'column' => 'short_name',
     // ],
-    [
-      'table' => self::RATES_TABLE,
+    self::RATES_TABLE => [
       'entity' => Entities\InsuranceRate::class,
       'identifier' => [
         'broker_id' => 'broker_id',
@@ -79,8 +77,7 @@ class InstrumentInsurances extends PMETableViewBase
       'column' => 'rate',
     ],
     // for summing stuff up
-    [
-      'table' => self::TABLE,
+    self::TABLE . self::VALUES_TABLE_SEP . 'allItems' => [
       'entity' => Entities\InstrumentInsurance::class,
       'identifier' => [
         'instrument_holder_id' => 'instrument_holder_id',

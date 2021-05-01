@@ -46,19 +46,16 @@ class SepaDebitNotes extends PMETableViewBase
   protected $cssClass = 'sepa-debit-notes';
 
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\SepaDebitNote::class,
     ],
-    [
-      'table' => self::DATA_TABLE,
+    self::DATA_TABLE => [
       'entity' => Entities\SepaDebitNoteData::class,
       'identifier' => [ 'sepa_bulk_transaction_id' => 'id' ],
       'column' => 'sepa_bulk_transaction_id',
     ],
-    [
-      'table' => self::PROJECTS_TABLE,
+    self::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',

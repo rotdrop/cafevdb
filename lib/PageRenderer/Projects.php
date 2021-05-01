@@ -61,13 +61,11 @@ class Projects extends PMETableViewBase
   private $eventDispatcher;
 
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => self::ENTITY,
     ],
-    [
-      'table' => self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
+    self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE => [
       'entity' => Entities\ProjectInstrumentationNumber::class,
       'identifier' => [
         'project_id' => 'id',
@@ -76,8 +74,7 @@ class Projects extends PMETableViewBase
       ],
       'column' => 'instrument_id',
     ],
-    [
-      'table' => self::INSTRUMENTS_TABLE,
+    self::INSTRUMENTS_TABLE => [
       'entity' => Entities\Instrument::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -88,8 +85,7 @@ class Projects extends PMETableViewBase
       ],
       'column' => 'id',
     ],
-    [
-      'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
+    self::PROJECT_PARTICIPANT_FIELDS_TABLE => [
       'entity' => Entities\ProjectParticipantField::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -98,8 +94,7 @@ class Projects extends PMETableViewBase
       ],
       'column' => 'id',
     ],
-    [
-      'table' => self::POSTER_JOIN_TABLE,
+    self::POSTER_JOIN_TABLE => [
       'entity' => Entities\ProjectPoster::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [

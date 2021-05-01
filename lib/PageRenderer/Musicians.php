@@ -74,13 +74,11 @@ class Musicians extends PMETableViewBase
    * parent::beforeUpdateDoUpdateAll().
    */
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\Musician::class,
     ],
-    [
-      'table' => self::MUSICIAN_INSTRUMENTS_TABLE,
+    self::MUSICIAN_INSTRUMENTS_TABLE => [
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
         'instrument_id' => false,
@@ -100,8 +98,7 @@ class Musicians extends PMETableViewBase
     //   'column' => 'name',
     //   'flags' => self::JOIN_READONLY,
     // ],
-    [
-      'table' => self::INSTRUMENT_INSURANCES_TABLE,
+    self::INSTRUMENT_INSURANCES_TABLE => [
       'entity' => Entities\InstrumentInsurance::class,
       'identifier' => [
         'id' => false,
@@ -110,8 +107,7 @@ class Musicians extends PMETableViewBase
       'column' => 'bill_to_party_id',
       'flags' => self::JOIN_READONLY,
     ],
-    [
-      'table' => self::PHOTO_JOIN_TABLE,
+    self::PHOTO_JOIN_TABLE => [
       'entity' => Entities\MusicianPhoto::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -120,8 +116,7 @@ class Musicians extends PMETableViewBase
       ],
       'column' => 'image_id',
     ],
-    [
-      'table' => self::PROJECT_PARTICIPANTS_TABLE,
+    self::PROJECT_PARTICIPANTS_TABLE => [
       'entity' => Entities\ProjectParticipant::class,
       'identifier' => [
         'project_id' => false,
@@ -898,10 +893,9 @@ make sure that the musicians are also automatically added to the
       $projectWhere = " AND sdm.project_id IN ('".implode("','", $projectRestrictions)."')";
     }
     $joinStructure = [
-      [
+      self::SEPA_BANK_ACCOUNTS_TABLE => [
         // join all bank-accounts for this musician duplicating lines
         // for all SEPA-mandates.
-        'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
         'flags' => self::JOIN_READONLY,
         'sql' => 'SELECT
   CONCAT_WS(\''.self::COMP_KEY_SEP.'\', sba.musician_id, sba.sequence, IFNULL(sdm.sequence,0)) AS sepa_id,
@@ -923,8 +917,7 @@ make sure that the musicians are also automatically added to the
         ],
         'column' => 'sepa_id',
       ],
-      [
-        'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+      self::SEPA_DEBIT_MANDATES_TABLE => [
         'entity' => Entities\SepaDebitMandate::class,
         'flags' => self::JOIN_READONLY,
         'identifier' => [

@@ -43,13 +43,11 @@ class ProjectPayments extends PMETableViewBase
   const DEBIT_NOTES_TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
 
   protected $joinStructure = [
-    [
-      'table' => self::TABLE,
+    self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectPayment::class,
     ],
-    [
-      'table' => self::PROJECT_PARTICIPANTS_TABLE,
+    self::PROJECT_PARTICIPANTS_TABLE => [
       'entity' => Entities\ProjectParticipant::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -58,8 +56,7 @@ class ProjectPayments extends PMETableViewBase
       'column' => 'musician_id',
       'flags' => self::JOIN_READONLY,
     ],
-    [
-      'table' => self::MUSICIANS_TABLE,
+    self::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
       'identifier' => [
         'id' => 'musician_id',
@@ -67,8 +64,7 @@ class ProjectPayments extends PMETableViewBase
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    [
-      'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+    self::SEPA_DEBIT_MANDATES_TABLE => [
       'entity' => Entities\SepaDebitMandate::class,
       'identifier' => [
         'musician_id' => 'musician_id',
@@ -78,8 +74,7 @@ class ProjectPayments extends PMETableViewBase
       'column' => 'sequence',
       'flags' => self::JOIN_READONLY,
     ],
-    [
-      'table' => self::DEBIT_NOTES_TABLE,
+    self::DEBIT_NOTES_TABLE => [
       'entity' => Entities\DebitNote::class,
       'identifier' => [
         'id' => 'debit_note_id',

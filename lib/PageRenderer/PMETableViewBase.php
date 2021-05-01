@@ -773,9 +773,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->debug('CHANGESETS: '.print_r($changeSets, true));
 
+    $masterTable = null;
     $masterEntity = null; // cache for a reference to the master entity
-    foreach ($this->joinStructure as $joinInfo) {
-      $table = $joinInfo['table'];
+    foreach ($this->joinStructure as $table => $joinInfo) {
       $changeSet = $changeSets[$table];
       if (empty($changeSet)) {
         continue;
@@ -792,6 +792,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($this->pme->key as $key => $type) {
           $joinInfo['identifier'][$key] = $key;
         }
+        $masterTable = $table;
       }
       $this->debug('CHANGESET '.$table.' '.print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
@@ -902,7 +903,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
           if (empty($masterEntity)) {
             $masterEntity = $this
-              ->getDatabaseRepository($this->joinStructure[0]['entity'])
+              ->getDatabaseRepository($this->joinStructure[$masterTable]['entity'])
               ->find($pme->rec);
             if (empty($masterEntity)) {
               throw new \RuntimeException($this->l->t('Unmable to find master entity for key "%s".', print_r($pme->rec, true)));
@@ -1136,8 +1137,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->debug('CHANGESETS: '.print_r($changeSets, true));
 
     $masterEntity = null; // cache for a reference to the master entity
-    foreach ($this->joinStructure as $joinInfo) {
-      $table = $joinInfo['table'];
+    foreach ($this->joinStructure as $table => $joinInfo) {
       $changeSet = $changeSets[$table];
       if ($joinInfo['flags'] & self::JOIN_READONLY) {
         foreach ($changeSet as $column => $joinColumn) {
@@ -1347,8 +1347,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * self::$joinStructure has the following structure:
    * ```
    * [
-   *   [
-   *     'table' => SQL_TABLE_NAME,
+   *   SQL_TABLE_NAME = [
+   *     'table' => SQL_TABLE_NAME, // optional, will be added if not present
    *     'entity' => ENTITY_CLASS_NAME,
    *     'flags'  => self::JOIN_READONLY|self::JOIN_MASTER|self::JOIN_REMOVE_EMPTY|self::JOIN_GROUP_BY
    *     'identifier' => [
@@ -1387,12 +1387,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function defineJoinStructure(array &$opts)
   {
+    $joinTables = [];
     if (!empty($opts['groupby_fields']) && !is_array($opts['groupby_fields'])) {
       $opts['groupby_fields'] = [ $opts['groupby_fields'], ];
     }
     $grouped = [];
     $orderBy = [];
-    foreach ($this->joinStructure as &$joinInfo) {
+    foreach ($this->joinStructure as $table => &$joinInfo) {
+      $joinInfo['table'] = $table;
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         if (is_array($opts['key'])) {
           foreach (array_keys($opts['key']) as $key) {
@@ -1401,10 +1403,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         } else {
           $joinInfo['identifier'][$opts['key']] = $opts['key'];
         }
-        $joinTables[$joinInfo['table']] = 'PMEtable0';
+        $joinTables[$table] = 'PMEtable0';
         continue;
       }
-      $table = $joinInfo['table'];
       $valuesTable = $joinInfo['sql']?
                    : explode(self::VALUES_TABLE_SEP, $table)[0];
 
