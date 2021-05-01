@@ -2617,13 +2617,14 @@ class phpMyEdit
 			}
 			$elements[] = $div_idx;
 		}
-		if ($postfix && $postfix[0] != ' ') {
+		if (!empty($postfix) && is_string($postfix) && $postfix[0] != ' ') {
 			$elements[] = $postfix;
+			$postfix = null;
 		}
 		$css = $pfx.join($this->css['separator'].$pfx, $elements);
 
-		if ($postfix && $postfix[0] == ' ') {
-			$css .= $postfix;
+		if (!empty($postfix)) {
+			$css .= ' '.implode(' ', array_unique(array_map(trim, is_array($postfix) ? $postfix : [ $postfix ])));
 		}
 		return $css;
 	} /* }}} */
