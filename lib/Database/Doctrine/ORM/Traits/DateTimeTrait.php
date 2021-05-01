@@ -34,7 +34,7 @@ trait DateTimeTrait
    */
   static protected function convertToDateTime($dateTime)
   {
-    if ($dateTime === null) {
+    if ($dateTime === null || $dateTime === '') {
       return null;
     } else if (!($dateTime instanceof \DateTimeInterface)) {
       $timeStamp = filter_var($dateTime, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
@@ -43,7 +43,7 @@ trait DateTimeTrait
       } else if (is_string($dateTime)) {
         return new \DateTimeImmutable($dateTime);
       } else {
-        throw new \InvalidArgumentException('Cannot convert input to DateTime.x');
+        throw new \InvalidArgumentException('Cannot convert input to DateTime.');
       }
     } else if ($dateTime instanceof \DateTime) {
       return \DateTimeImmutable::createFromMutable($dateTime);
