@@ -35,12 +35,13 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Functions;
 
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
 {
   const TEMPLATE = 'sepa-bank-accounts';
-  const TABLE = self::SEPA_DEBIT_MANDATES_TABLE;
+  const TABLE = self::SEPA_BANK_ACCOUNTS_TABLE;
   const FIXED_COLUMN_SEP = self::VALUES_TABLE_SEP;
 
   protected $cssClass = 'sepa-bank-accounts';
@@ -67,6 +68,7 @@ class SepaBankAccounts extends PMETableViewBase
         'bank_account_sequence' => 'sequence',
         'sequence' => false,
       ],
+      'column' => 'sequence',
     ],
     [
       'table' => self::PROJECT_PARTICIPANTS_TABLE,
@@ -74,19 +76,22 @@ class SepaBankAccounts extends PMETableViewBase
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'musician_id' => 'musician_id',
-        'bank_account_sequence' => 'sequence',
-        // || sepa-mandate->bank_account_sequence == sequence
         'project_id' => false,
       ],
       'column' => 'project_id',
     ],
-    // [
-    //   'table' => self::PROJECTS_TABLE,
-    //   'entity' => Entities\Project::class,
-    //   'identifier' => [ 'id' => 'project_id' ],
-    //   'column' => 'id',
-    //   'flags' => self::JOIN_READONLY,
-    // ],
+    [
+      'table' => self::PROJECTS_TABLE,
+      'entity' => Entities\Project::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'id' => [
+          'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+          'column' => 'project_id',
+        ],
+      ],
+      'column' => 'id',
+    ],
     [
       'table' => self::PROJECT_PAYMENTS_TABLE,
       'entity' => Entities\ProjectPayment::class,
@@ -94,7 +99,10 @@ class SepaBankAccounts extends PMETableViewBase
       'identifier' => [
         'musician_id' => 'musician_id',
         'bank_account_sequence' => 'sequence',
-        'project_id' => false,
+        'project_id' => [
+          'table' => self::PROJECT_PARTICIPANTS_TABLE,
+          'column' => 'project_id',
+        ],
       ],
       'column' => 'id',
     ],
@@ -150,14 +158,18 @@ class SepaBankAccounts extends PMETableViewBase
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
-    $projectMode = $projectId > 0 && !empty($projectName);
+    $projectMode = $projectId > 0;
     if ($projectMode)  {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+      $this->projectId = $projectId;
     }
 
     $opts            = [];
 
-    $opts['css']['postfix'] = 'direct-change show-hide-disabled';
+    $opts['css']['postfix'] = [
+      'direct-change',
+      'show-hide-disabled',
+    ];
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -175,10 +187,10 @@ class SepaBankAccounts extends PMETableViewBase
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = [ 'project_id' => 'int', 'musician_id' => 'int', 'sequence' => 'int' ];
+    $opts['key'] = [ 'musician_id' => 'int', 'sequence' => 'int' ];
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'musician_id', 'project_id', 'sequence' ];
+    $opts['sort_field'] = [ 'musician_id', 'sequence' ];
 
     // Group by for to-many joins
     $opts['groupby_fields'] = $opts['sort_field'];
@@ -308,7 +320,10 @@ received so far'),
           'entity' => Entities\ProjectParticipantFieldDatum::class,
           'flags' => self::JOIN_READONLY,
           'identifier' => [
-            'project_id' => 'project_id',
+            'project_id' => [
+              'table' => self::PROJECT_PARTICIPANTS_TABLE,
+              'column' => 'project_id',
+            ],
             'musician_id' => 'musician_id',
             'field_id' => [ 'value' => $field['id'], ],
           ],
@@ -323,17 +338,6 @@ received so far'),
     //
     // Add the id-columns of the main-table
     //
-
-    $opts['fdd']['project_id'] = [
-      'name'     => $this->l->t('Project-Id'),
-      'input'    => 'H',
-      'select'   => 'N',
-      'options'  => 'LACPDV',
-      'maxlen'   => 5,
-      'align'    => 'right',
-      'default'  => $projectMode ? $projectId : null,
-      'sort'     => true,
-      ];
 
     $opts['fdd']['musician_id'] = [
       'name'     => $this->l->t('Musician-Id'),
@@ -357,6 +361,24 @@ received so far'),
       'sort'     => true,
     ];
 
+    if ($projectMode) {
+      array_walk($this->joinStructure, function(&$joinInfo) {
+        switch ($joinInfo['table']) {
+        case self::PROJECT_PARTICIPANTS_TABLE:
+          $joinInfo['identifier']['project_id'] = [
+            'value' => $this->project->getId(),
+          ];
+          break;
+        case self::SEPA_DEBIT_MANDATES_TABLE:
+          $joinInfo['identifier']['project_id'] = [
+            'value' => [ $this->project->getId(), $this->membersProjectId ],
+          ];
+          break;
+        default:
+          break;
+        }
+      });
+    }
     $joinTables = $this->defineJoinStructure($opts);
 
     // field definitions
@@ -374,8 +396,6 @@ received so far'),
           'select'   => 'D',
           'maxlen'   => 11,
           'sort'     => true,
-          //'options'  => 'LFADV', // no change allowed
-          'default' => $projectMode ? $projectId : -1,
           'css'      => [ 'postfix' => ' mandate-project allow-empty' ],
           'values' => [
             'description' => [
@@ -427,42 +447,112 @@ received so far'),
         ],
       ]);
 
-    ///////////////////////////////////////////////////////////////////////////
 
-    $opts['fdd']['mandate_reference'] = [
-      'tab'    => [ 'id' => 'mandate' ],
-      'name'   => $this->l->t('Mandate Reference'),
-      'input'  => 'R',
+    ///////////////
+
+    // couple of "easy" fields
+
+    // soft-deletion
+    $opts['fdd']['deleted'] = Util::arrayMergeRecursive(
+      $this->defaultFDD['deleted'], [
+      ]);
+
+    $opts['fdd']['bank_account_owner'] = [
+      'tab' => [ 'id' => 'account' ],
+      'name'   => $this->l->t('Bank Account Owner'),
+      'input' => 'M',
+      'select' => 'T',
+      'maxlen' => 80,
+      'encryption' => [
+        'encrypt' => function($value) { return $this->encrypt($value); },
+        'decrypt' => function($value) { return $this->decrypt($value); },
+      ],
+    ];
+
+    $opts['fdd']['iban'] = [
+      'tab' => [ 'id' => 'account' ],
+      'name'   => 'IBAN',
+      'input' => 'M',
+      'options' => 'LACPDV',
       'select' => 'T',
       'maxlen' => 35,
-      'sort'   => true,
+      'encryption' => [
+        'encrypt' => function($value) { return $this->encrypt($value); },
+        'decrypt' => function($value) { return $this->decrypt($value); },
+      ],
     ];
 
-    $opts['fdd']['non_recurring'] = [
-      'tab' => [ 'id' => 'mandate' ],
-      'name' => $this->l->t('Non-Recurring'),
-      'select' => 'C',
-      'maxlen' => '1',
-      'sort' => true,
-      'escape' => false,
-      'sqlw' => 'IF($val_qas = "", 0, 1)',
-      'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
-      'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+    $opts['fdd']['blz'] = [
+      'name'   => $this->l->t('Bank Code'),
+      'select' => 'T',
+      'maxlen' => 12,
+      'encryption' => [
+        'encrypt' => function($value) { return $this->encrypt($value); },
+        'decrypt' => function($value) { return $this->decrypt($value); },
+      ],
     ];
 
-    $opts['fdd']['mandate_date'] = [
-      'name'     => $this->l->t('Date Issued'),
-      'input' => 'M',
-      'select'   => 'T',
-      'maxlen'   => 10,
-      'sort'     => true,
-      'css'      => [ 'postfix' => ' sepadate' ],
-      'datemask' => 'd.m.Y',
+    $opts['fdd']['bic'] = [
+      'name'   => 'BIC',
+      'select' => 'T',
+      'maxlen' => 35,
+      'encryption' => [
+        'encrypt' => function($value) { return $this->encrypt($value); },
+        'decrypt' => function($value) { return $this->decrypt($value); },
+      ],
     ];
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
+      [
+        'tab'    => [ 'id' => 'mandate' ],
+        'name'   => $this->l->t('Mandate Reference'),
+        'input'  => 'R',
+        'select' => 'T',
+        'maxlen' => 35,
+        'sort'   => true,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring',
+      [
+        'tab' => [ 'id' => 'mandate' ],
+        'name' => $this->l->t('Non-Recurring'),
+        'select' => 'C',
+        'maxlen' => '1',
+        'sort' => true,
+        'escape' => false,
+        'sqlw' => 'IF($val_qas = "", 0, 1)',
+        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
+        'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'deleted',
+      array_merge($this->defaultFDD['deleted'], [
+        'tab'    => [ 'id' => 'mandate' ],
+        'name'   => $this->l->t('Mandate Revoked'),
+      ]));
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_date',
+      [
+        'tab' => [ 'id' => 'mandate' ],
+        'name'     => $this->l->t('Date Issued'),
+        'input' => 'M',
+        'select'   => 'T',
+        'maxlen'   => 10,
+        'sort'     => true,
+        'css'      => [ 'postfix' => ' sepadate' ],
+        'datemask' => 'd.m.Y',
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'date_of_receipt',
       [
+        'tab' => [ 'id' => [ 'account', 'mandate' ] ],
         'name'     => $this->l->t('Last-Used Date'),
         'input'    => 'VR',
         'input|A'  => 'VRH',
@@ -479,9 +569,6 @@ received so far'),
         'css'      => [ 'postfix' => ' last-used-date' ],
         'datemask' => 'd.m.Y'
       ]);
-
-    // soft-deletion
-    $opts['fdd']['deleted'] = $this->defaultFDD['deleted'];
 
     ///////////////
 
@@ -617,68 +704,14 @@ received so far'),
 
     }
 
-
-
-    ///////////////
-
-    // couple of "easy" fields
-
-    $opts['fdd']['iban'] = [
-      'tab' => array('id' => 'account'),
-      'name'   => 'IBAN',
-      'input' => 'M',
-      'options' => 'LACPDV',
-      'select' => 'T',
-      'maxlen' => 35,
-      'encryption' => [
-        'encrypt' => function($value) { return $this->encrypt($value); },
-        'decrypt' => function($value) { return $this->decrypt($value); },
-      ],
-    ];
-
-    $opts['fdd']['blz'] = [
-      'name'   => $this->l->t('Bank Code'),
-      'select' => 'T',
-      'maxlen' => 12,
-      'encryption' => [
-        'encrypt' => function($value) { return $this->encrypt($value); },
-        'decrypt' => function($value) { return $this->decrypt($value); },
-      ],
-    ];
-
-    $opts['fdd']['bic'] = [
-      'name'   => 'BIC',
-      'select' => 'T',
-      'maxlen' => 35,
-      'encryption' => [
-        'encrypt' => function($value) { return $this->encrypt($value); },
-        'decrypt' => function($value) { return $this->decrypt($value); },
-      ],
-    ];
-
-    $opts['fdd']['bank_account_owner'] = [
-      'name'   => $this->l->t('Bank Account Owner'),
-      'input' => 'M',
-      'select' => 'T',
-      'maxlen' => 80,
-      'encryption' => [
-        'encrypt' => function($value) { return $this->encrypt($value); },
-        'decrypt' => function($value) { return $this->decrypt($value); },
-      ],
-    ];
-
     ///////////////
 
     if ($musicianId > 0) {
-      $opts['filters']['AND'] = '$table.musicianId = '.$musicianId;
+      $opts['filters']['AND'][] = '$table.musicianId = '.$musicianId;
     }
     if ($projectMode) {
-      $opts['filters']['AND'] =
-                              '('
-                              . '$table.project_id = ' . $projectId
-                              . ' OR '
-                              . '$table.project_id = ' . $this->membersProjectId
-                              . ')';
+      $opts['filters']['AND'][] =
+        $joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id = '.$projectId;
     }
 
     // redirect all updates through Doctrine\ORM.
@@ -686,6 +719,10 @@ received so far'),
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+
+    $this->logInfo('FILTERS '.Functions\dump($opts['filters']));
+    $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
+    $this->logInfo('SORT '.Functions\dump($opts['sort_field']));
 
     if ($execute) {
       $this->execute($opts);

@@ -141,7 +141,10 @@ class InstrumentInsurances extends PMETableViewBase
 
     $opts            = [];
 
-    $opts['css']['postfix'] = 'direct-change show-hide-disabled';
+    $opts['css']['postfix'] = [
+      'direct-change',
+      'show-hide-disabled',
+    ];
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table

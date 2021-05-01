@@ -170,6 +170,11 @@ const documentReady = function() {
                           + ' value="Clear"/>');
               reload.trigger('click');
             }
+            if (checked) {
+              form.addClass('show-disabled').removeClass('hide-disabled');
+            } else {
+              form.removeClass('show-disabled').addClass('hide-disabled');
+            }
           });
         }
         return false;

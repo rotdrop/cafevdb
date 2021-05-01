@@ -158,7 +158,9 @@ class Projects extends PMETableViewBase
 
     $opts['tb'] = self::TABLE;
 
-    $opts['css']['postfix'] = ' show-hide-disabled';
+    $opts['css']['postfix'] = [
+      'show-hide-disabled',
+    ];
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table

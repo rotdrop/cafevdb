@@ -157,7 +157,9 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $opts['tb'] = self::TABLE;
 
-    $opts['css']['postfix'] = ' show-hide-disabled';
+    $opts['css']['postfix'] = [
+      'show-hide-disabled',
+    ];
 
     $opts['cgi']['persist'] = [
       'template' => $template,

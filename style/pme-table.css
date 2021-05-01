@@ -1276,6 +1276,16 @@ input[type="checkbox"].pme-input.pme-input-lock-unlock:checked + label.pme-input
   opacity: 0.8;
 }
 
+/* show/hide deleted data */
+form.pme-form.hide-disabled table.pme-main > thead > tr > .hide-disabled-hidden,
+form.pme-form.hide-disabled table.pme-main > tbody > tr > .hide-disabled-hidden {
+  display:none!important;
+}
+
+form.pme-form.show-disabled table.pme-main > thead > tr > .show-disabled-hidden,
+form.pme-form.show-disabled table.pme-main > tbody > tr > .show-disabled-hidden {
+  display:none!important;
+}
 
 /*
  * Local Variables: ***

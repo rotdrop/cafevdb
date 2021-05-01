@@ -208,7 +208,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pmeOptions = [
       'cgi' => [ 'persist' => [] ],
       'display' => [],
+      'css' => [ 'postfix' => [], ],
     ];
+    $this->pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
+
     foreach ($cgiDefault as $key => $default) {
       $this->pmeOptions['cgi']['persist'][$key] =
         $this->{lcFirst($key)} =
@@ -567,11 +570,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       ],
       // Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity
       'deleted' => [
-        'name' => $this->l->t('Date Revoked'),
+        'name' => $this->l->t('Revoked'),
         'input' => $this->expertMode ? '' : 'R',
         'maxlen' => 10,
         'sort' => true,
-        'css' => [ 'postfix' => ' revocation-date date' ],
+        'css' => [ 'postfix' => ' revocation-date date show-disabled-shown hide-disabled-hidden' ],
         'datemask' => 'd.m.Y',
         'default' => null,
       ],
@@ -1413,11 +1416,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                      && $joinTableValue['value'] === null) {
             $joinCondition = '$join_table.'.self::COL_QUOTE.$joinTableKey.self::COL_QUOTE.' IS NULL';
           } else if (!empty($joinTableValue['value'])) {
-            $value = $joinTableValue['value'];
-            if (is_string($value)) {
-              $value = "'".addslashes($value)."'";
-            }
-            $joinCondition .= '= '.$value;
+            $values = $joinTableValue['value'];
+            $values = array_map(function($value) {
+              return is_numeric($value) ? $value : "'".addslashes($value)."'";
+            }, is_array($values) ? $values : [ $values ]);
+            $joinCondition .= 'IN (' . implode(',', $values) . ')';
           } else if (!empty($joinTableValue['condition'])) {
             $joinCondition .= $joinTableValue['condition'];
           } else if (!empty($joinTableValue['self'])) {
