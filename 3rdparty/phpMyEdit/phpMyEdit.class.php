@@ -3233,6 +3233,21 @@ class phpMyEdit
 			$selected = $selected === null ? array() : array($selected);
 		}
 
+		// special hack for 2 value radio with empty value/description as checkbox
+		if  (count($kv_array) == 2 && !$multiple) {
+			foreach ($kv_array as $key => $value) {
+				if (empty($key)
+					&& empty($value)
+					&& !isset($kt_array[$key])
+					&& !isset($kd_array[$key])) {
+					unset($kv_array[$key]);
+					if ($sel = array_search($key, $selected)) {
+						unset($selected[$sel]);
+					}
+				}
+			}
+		}
+
 		if (count($kv_array) == 1 || $multiple) {
 			$type = 'checkbox';
 		} else {
