@@ -34,7 +34,7 @@ require('jquery-ui/themes/base/autocomplete.css');
 
 // NB: much of the visibility stuff is handled by CSS, e.g. which
 // input is shown for which multiplicity.
-require('project-participant-fields.css');
+require('project-participant-fields.scss');
 
 const ready = function(selector, resizeCB) {
   const container = $(selector);

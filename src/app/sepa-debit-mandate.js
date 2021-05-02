@@ -46,7 +46,7 @@ require('cafevdb-selectize.css');
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 
-require('sepa-debit-mandate.css');
+require('sepa-debit-mandate.scss');
 require('lock-input.css');
 
 const SepaDebitMandate = globalState.SepaDebitMandate = {

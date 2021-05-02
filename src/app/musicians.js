@@ -30,7 +30,7 @@ import * as PHPMyEdit from './pme.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
-require('sepa-bank-accounts.css');
+require('sepa-bank-accounts.scss');
 
 const addMusicians = function(form, post) {
   const projectId = form.find('input[name="projectId"]').val();

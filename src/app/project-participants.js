@@ -37,7 +37,7 @@ import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
-require('project-participants.css');
+require('project-participants.scss');
 
 /**
  * Open a dialog in order to edit the personal reccords of one
