@@ -59,6 +59,11 @@ class PHPMyEdit extends \phpMyEdit
 
   private $disabledLogTable;
 
+  /** @var array
+   * Overrides for the translation table.
+   */
+  private $labelOverride;
+
   /**
    * Override constructor, delay most of the actual work to the
    * execute() method.
@@ -98,6 +103,7 @@ class PHPMyEdit extends \phpMyEdit
       'language' => locale_get_primary_language($this->l->getLanguageCode()),
     ];
     $this->setOptions($options->getArrayCopy());
+    $this->labelOverride = [];
   }
 
   public function setOptions(array $options)
@@ -189,6 +195,16 @@ class PHPMyEdit extends \phpMyEdit
   }
 
   /**
+   * Override the given label text with the provided override
+   * label. The given override will be translated by the standard
+   * cloud translator.
+   */
+  public function overrideLabel($label, $override)
+  {
+    $this->labelOverride[$label] = $this->l->t($override);
+  }
+
+  /**
    * Call phpMyEdit::execute() with the given options. This function
    * actually calls the constructor of the base-class and overrides
    * its options with the given argument.
@@ -204,6 +220,7 @@ class PHPMyEdit extends \phpMyEdit
       $this->debug = $opts['debug'];
     }
     parent::__construct($opts); // oh oh
+    $this->labels = array_merge($this->labels, $this->labelOverride);
     parent::execute();
   }
 
