@@ -50,15 +50,6 @@ require('sepa-debit-mandate.scss');
 require('project-participant-fields-display.scss');
 require('lock-input.css');
 
-const SepaDebitMandate = globalState.SepaDebitMandate = {
-  projectId: -1,
-  musicianId: -1,
-  mandateSequence: -1,
-  mandateReference: '',
-  instantValidation: true,
-  validationRunning: false,
-};
-
 /**
  * Initialize the mess with contents. The "mess" is a dialog window
  * with the input form element for the bank account data.
@@ -71,7 +62,6 @@ const SepaDebitMandate = globalState.SepaDebitMandate = {
  * @returns {bool}
  */
 const mandatesInit = function(data, onChangeCallback) {
-  const self = SepaDebitMandate;
 
   if (typeof onChangeCallback !== 'function') {
     onChangeCallback = function() {};
@@ -882,13 +872,11 @@ const mandateValidatePME = function(event, validateLockCB) {
   }
 
   const validateLock = function() {
-    globalState.SepaDebitMandate.validationRunning = true;
     validateLockCB(true, null);
   };
 
   const validateUnlock = function() {
     validateLockCB(false, true);
-    globalState.SepaDebitMandate.validationRunning = false;
   };
 
   const validateErrorUnlock = function(responseData) {
@@ -901,7 +889,6 @@ const mandateValidatePME = function(event, validateLockCB) {
       }
     }
     validateLockCB(false, false);
-    globalState.SepaDebitMandate.validationRunning = false;
     $.fn.cafevTooltip.hide();
   };
 
