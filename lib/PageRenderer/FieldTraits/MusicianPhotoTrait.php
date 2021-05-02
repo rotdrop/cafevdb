@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use OCA\CAFEVDB\Controller\ImagesController;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
@@ -43,7 +44,7 @@ trait MusicianPhotoTrait
     case 'display':
       $url = $this->urlGenerator()->linkToRoute(
         'cafevdb.images.get',
-        [ 'joinTable' => self::PHOTO_JOIN_TABLE,
+        [ 'joinTable' => self::MUSICIAN_PHOTO_JOIN_TABLE,
           'ownerId' => $musicianId ]);
       $url .= '?timeStamp='.time();
       $url .= '&imageId='.$imageId;
@@ -56,7 +57,7 @@ trait MusicianPhotoTrait
       $imageInfo = json_encode([
         'ownerId' => $musicianId,
         'imageId' => $imageId,
-        'joinTable' => self::PHOTO_JOIN_TABLE,
+        'joinTable' => self::MUSICIAN_PHOTO_JOIN_TABLE,
         'imageSize' => -1,
       ]);
       $photoarea = ''

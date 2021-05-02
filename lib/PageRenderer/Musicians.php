@@ -55,7 +55,6 @@ class Musicians extends PMETableViewBase
   const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
   const TABLE = self::MUSICIANS_TABLE;
-  const PHOTO_JOIN_TABLE = 'MusicianPhoto';
 
   /** @var GeoCodingService */
   private $geoCodingService;
@@ -110,7 +109,7 @@ class Musicians extends PMETableViewBase
       'column' => 'bill_to_party_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::PHOTO_JOIN_TABLE => [
+    self::MUSICIAN_PHOTO_JOIN_TABLE => [
       'entity' => Entities\MusicianPhoto::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -725,7 +724,7 @@ make sure that the musicians are also automatically added to the
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PHOTO_JOIN_TABLE, 'image_id', [
+      $opts['fdd'], self::MUSICIAN_PHOTO_JOIN_TABLE, 'image_id', [
       'tab'      => ['id' => 'miscinfo'],
       'input' => 'VRS',
       'name' => $this->l->t('Photo'),
