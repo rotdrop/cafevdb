@@ -40,6 +40,8 @@ use OCA\CAFEVDB\Common\Functions;
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
 {
+  use FieldTraits\ParticipantFieldsTrait;
+
   const TEMPLATE = 'sepa-bank-accounts';
   const TABLE = self::SEPA_BANK_ACCOUNTS_TABLE;
   const FIXED_COLUMN_SEP = self::VALUES_TABLE_SEP;
@@ -108,9 +110,6 @@ class SepaBankAccounts extends PMETableViewBase
   /** @var Entities\Project */
   private $project = null;
 
-  /** @var ProjectParticipants */
-  private $participantsRenderer;
-
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
@@ -119,11 +118,9 @@ class SepaBankAccounts extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , ProjectParticipantFieldsService $participantFieldsService
-    , ProjectParticipants $participantsRenderer
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->participantFieldsService = $participantFieldsService;
-    $this->participantsRenderer = $participantsRenderer;
   }
 
   public function shortTitle()
@@ -358,7 +355,7 @@ received so far'),
       $monetary = $this->participantFieldsService->monetaryFields($this->project);
 
       list($participantFieldsJoin, $participantFieldsGenerator) =
-        $this->participantsRenderer->renderParticipantFields(
+        $this->renderParticipantFields(
           $monetary, [
             'table' => self::PROJECT_PARTICIPANTS_TABLE,
             'column' => 'project_id',
@@ -366,13 +363,8 @@ received so far'),
           'amount');
       $this->joinStructure = array_merge($this->joinStructure, $participantFieldsJoin);
     }
-    $this->logInfo('COUNT MONETARY '.$monetary->count());
-    $this->logInfo('ADDON JOIN STRUCUTRE '.Functions\dump($participantFieldsJoin));
-    $this->logInfo('JOIN STRUCUTRE '.Functions\dump($this->joinStructure));
 
     $this->defineJoinStructure($opts);
-
-    $this->logInfo('FDD '.Functions\dump($opts['fdd']));
 
     // field definitions
 
@@ -569,6 +561,9 @@ received so far'),
     // @todo PARTICIPANT FIELD STUFF / PROJECT MODE
 
     if (!$this->addOperation() && $projectMode) {
+      if (true) {
+        $participantFieldsGenerator($opts['fdd']);
+      } else
       foreach ($monetary as $name => $field) {
         $fieldName = $field['name'];
         $fieldId   = $field['id'];
