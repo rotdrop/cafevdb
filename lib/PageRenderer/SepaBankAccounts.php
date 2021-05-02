@@ -159,11 +159,12 @@ class SepaBankAccounts extends PMETableViewBase
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
     }
 
-    $opts            = [];
+    $opts = [];
 
     $opts['css']['postfix'] = [
-      'direct-change',
-      'show-hide-disabled',
+      self::CSS_TAG_DIRECT_CHANGE,
+      self::CSS_TAG_SHOW_HIDE_DISABLED,
+      self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS,
     ];
 
     // Number of records to display on the screen

@@ -47,6 +47,7 @@ require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 
 require('sepa-debit-mandate.scss');
+require('project-participant-fields-display.scss');
 require('lock-input.css');
 
 const SepaDebitMandate = globalState.SepaDebitMandate = {

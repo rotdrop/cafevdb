@@ -78,6 +78,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const VALUES_TABLE_SEP = '@';
   const COL_QUOTE = '`';
 
+  /** CSS tag for displaying participant fields */
+  const CSS_TAG_PROJECT_PARTICIPANT_FIELDS = 'project-participant-fields';
+  const CSS_TAG_SHOW_HIDE_DISABLED = 'show-hide-disabled';
+  const CSS_TAG_DIRECT_CHANGE = 'direct-change';
+
   /** @var RequestParameterService */
   protected $requestParameters;
 
