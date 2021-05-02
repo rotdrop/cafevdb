@@ -225,12 +225,12 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts            = [];
 
-    if (empty($projectName) || empty($projectId)) {
-      throw new \InvalidArgumentException('Project-id and/or -name must be given ('.$projectName.' / '.$projectId.').');
+    if (empty($projectName) || empty($this->projectId)) {
+      throw new \InvalidArgumentException('Project-id and/or -name must be given ('.$projectName.' / '.$this->projectId.').');
     }
 
     $opts['filters']['AND'] = [
-      '$table.project_id = '.$projectId,
+      '$table.project_id = '.$this->projectId,
     ];
     if (!$this->showDisabled) {
       $opts['filters']['AND'][] = '$table.deleted IS NULL';
@@ -294,11 +294,11 @@ class ProjectParticipants extends PMETableViewBase
     // Tweak the join-structure with dynamic data.
 
     list($sepaJoin, $sepaFieldGenerator) = $this->musiciansRenderer->renderSepaAccounts(
-      'musician_id', [ $projectId, $this->membersProjectId ], $financeTab);
+      'musician_id', [ $this->projectId, $this->membersProjectId ], $financeTab);
     $this->joinStructure = array_merge($this->joinStructure, $sepaJoin);
 
-    list($participantFieldsJoin, $participantFieldGenerator) =
-      $this->renderParticipantFields($participantFields);
+    list($participantFieldsJoin, $participantFieldsGenerator) =
+      $this->renderParticipantFields($participantFields, $financeTab);
     $this->joinStructrue = array_merge($this->joinStructure, $participantFieldsJoin);
 
     /*
@@ -498,21 +498,21 @@ class ProjectParticipants extends PMETableViewBase
           'column'      => 'id',
           'description' => 'l10n_name',
           'orderby'     => '$table.sort_order ASC',
-          'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
-          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENTS_TABLE." mi WHERE \$record_id[project_id] = ".$projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
+          'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
+          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENTS_TABLE." mi WHERE \$record_id[project_id] = ".$this->projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
         ],
         'values|LFV' => [
           'table'       => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
           'column'      => 'id',
           'description' => 'l10n_name',
           'orderby'     => '$table.sort_order ASC',
-          'join'        => '$join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
-          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$projectId." = pi.project_id GROUP BY pi.project_id))",
+          'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
+          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$this->projectId." = pi.project_id GROUP BY pi.project_id))",
         ],
         //'values2' => $this->instrumentInfo['byId'],
         'valueGroups' => $this->instrumentInfo['idGroups'],
       ]);
-    $joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
+    $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
     $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
@@ -523,7 +523,7 @@ class ProjectParticipants extends PMETableViewBase
       'values' => [
         'column' =>  'sort_order',
         'orderby' => '$table.sort_order ASC',
-        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
       ],
     ];
 
@@ -537,22 +537,22 @@ class ProjectParticipants extends PMETableViewBase
         'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT
   IF(\$join_col_fqn > 0,
-     CONCAT(".$joinTables[self::INSTRUMENTS_TABLE].".name,
+     CONCAT(".$this->joinTables[self::INSTRUMENTS_TABLE].".name,
             ' ',
             \$join_col_fqn),
      NULL)
-  ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+  ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
         // copy/change only include non-zero voice
         'sql|CP' => "GROUP_CONCAT(
   DISTINCT
-  IF(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice > 0,
+  IF(".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice > 0,
     CONCAT_WS(
       '".self::JOIN_KEY_SEP."',
-      ".$joinTables[self::INSTRUMENTS_TABLE].".id,
-      ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice),
+      ".$this->joinTables[self::INSTRUMENTS_TABLE].".id,
+      ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice),
     NULL
   )
-  ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+  ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
         'values|CP' => [
           'table' => "SELECT
   CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', n.n) AS value,
@@ -577,7 +577,7 @@ class ProjectParticipants extends PMETableViewBase
   JOIN numbers n
     ON n.n <= pin.voice AND n.n >= 1
   WHERE
-    pi.project_id = $projectId
+    pi.project_id = $this->projectId
   GROUP BY
     project_id, musician_id, instrument_id, n
   ORDER BY
@@ -612,9 +612,9 @@ class ProjectParticipants extends PMETableViewBase
   DISTINCT
   CONCAT_WS(
     '".self::JOIN_KEY_SEP."',
-    ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
-    ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader)
-  ORDER BY ".$joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+    ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
+    ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader)
+  ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
        'display|LF' => [ 'popup' => function($data) {
          return $this->toolTipsService['section-leader-mark'];
        }],
@@ -640,7 +640,7 @@ class ProjectParticipants extends PMETableViewBase
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
   WHERE
-    pi.project_id = $projectId
+    pi.project_id = $this->projectId
   GROUP BY pi.instrument_id
   HAVING (MAX(pin.voice) = 0 OR pi.voice > 0)",
          'column' => 'value',
@@ -682,15 +682,15 @@ class ProjectParticipants extends PMETableViewBase
       'css'         => ['postfix' => ' musician-instruments tooltip-top no-chosen selectize drag-drop'],
       'display|LVF' => ['popup' => 'data'],
       'sql'         => ($expertMode
-                        ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'
-                        : 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
+                        ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'
+                        : 'GROUP_CONCAT(DISTINCT IF('.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
       'select'      => 'M',
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
         'description' => 'name',
         'orderby'     => '$table.sort_order ASC',
-        'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.instrument_id'
+        'join'        => '$join_col_fqn = '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.instrument_id'
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -744,7 +744,7 @@ class ProjectParticipants extends PMETableViewBase
 
     $monetary = $this->participantFieldsService->monetaryFields($this->project);
 
-    if (!empty($monetary) || ($projectId == $this->membersProjectId)) {
+    if (!empty($monetary) || ($this->projectId == $this->membersProjectId)) {
 
       $this->makeJoinTableField(
         $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
@@ -789,7 +789,7 @@ class ProjectParticipants extends PMETableViewBase
                 $fieldValues['key'], $fieldValues['value'], $participantField);
             }
 
-            if ($projectId == $this->membersProjectId) {
+            if ($this->projectId == $this->membersProjectId) {
               $amountInvoiced += $this->insuranceService->insuranceFee($musicianId, new \DateTime(), true);
             }
 
@@ -818,737 +818,7 @@ class ProjectParticipants extends PMETableViewBase
      */
 
     // Generate input fields for the extra columns
-    /** @var Entities\ProjectParticipantField $field */
-    foreach ($participantFields as $field) {
-      $fieldName = $field['name'];
-      $fieldId   = $field['id'];
-      $multiplicity = $field['multiplicity'];
-      $dataType = (string)$field['data_type'];
-
-      if (!$this->participantFieldsService->isSupportedType($multiplicity, $dataType)) {
-        throw new \Exception(
-          $this->l->t('Unsupported multiplicity / data-type combination: %s / %s',
-                      [ $multiplicity, $dataType ]));
-      }
-
-      // set tab unless overridden by field definition
-      if ($field['data_type'] == FieldType::SERVICE_FEE || $field['data_type'] == FieldType::DEPOSIT) {
-        $tab = [ 'id' => $financeTab ];
-      } else {
-        $tab = [ 'id' => 'project' ];
-      }
-      if (!empty($field['tab'])) {
-        $tabId = $this->tableTabId($field['tab']);
-        $tab = [ 'id' => $tabId ];
-      }
-
-      $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
-
-      $css = [ 'participant-field', 'field-id-'.$fieldId, ];
-      $extraFddBase = [
-        'name' => $this->l->t($fieldName),
-        'tab' => $tab,
-        'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
-        'default|A'  => $field['default_value'],
-        'filter' => 'having',
-        'values' => [
-          'grouped' => true,
-          'filters' => ('$table.field_id = '.$fieldId
-                        .' AND $table.project_id = '.$projectId
-                        .' AND $table.musician_id = $record_id[musician_id]'),
-        ],
-        'tooltip' => $field['tooltip']?:null,
-      ];
-
-      list($keyFddIndex, $keyFddName) = $this->makeJoinTableField(
-        $opts['fdd'], $tableName, 'option_key',
-        Util::arrayMergeRecursive($extraFddBase, [ 'values' => ['encode' => 'BIN2UUID(%s)',], ])
-      );
-      $keyFdd = &$opts['fdd'][$keyFddName];
-
-      list($valueFddIndex, $valueFddName) = $this->makeJoinTableField(
-        $opts['fdd'], $tableName, 'option_value',
-        Util::arrayMergeRecursive($extraFddBase, [ 'input' => 'VSRH', ])
-      );
-      $valueFdd = &$opts['fdd'][$valueFddName];
-
-      /** @var Doctrine\Common\Collections\Collection */
-      $dataOptions = $field->getSelectableOptions();
-      $values2     = [];
-      $valueTitles = [];
-      $valueData   = [];
-      /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
-      foreach ($dataOptions as $dataOption) {
-        $key = (string)$dataOption['key'];
-        $values2[$key] = $dataOption['label'];
-        $valueTitles[$key] = $dataOption['tooltip'];
-        $valueData[$key] = $dataOption['data'];
-      }
-
-      foreach ([ &$keyFdd, &$valueFdd ] as &$fdd) {
-        switch ($dataType) {
-          case FieldType::TEXT:
-            // default config
-            break;
-          case FieldType::HTML:
-            $fdd['textarea'] = [
-              'css' => 'wysiwyg-editor',
-              'rows' => 5,
-              'cols' => 50,
-            ];
-            $fdd['css']['postfix'] .= ' hide-subsequent-lines';
-            $fdd['display|LF'] = [ 'popup' => 'data' ];
-            $fdd['escape'] = false;
-            break;
-          case FieldType::BOOLEAN:
-            // handled below
-            $fdd['align'] = 'right';
-            break;
-          case FieldType::INTEGER:
-            $fdd['select'] = 'N';
-            $fdd['mask'] = '%d';
-            $fdd['align'] = 'right';
-            break;
-          case FieldType::FLOAT:
-            $fdd['select'] = 'N';
-            $fdd['mask'] = '%g';
-            $fdd['align'] = 'right';
-            break;
-          case FieldType::DATE:
-          case FieldType::DATETIME:
-          case FieldType::SERVICE_FEE:
-          case FieldType::DEPOSIT:
-            $style = $this->defaultFDD[$dataType];
-            if (empty($style)) {
-              throw new \Exception($this->l->t('Not default style for "%s" available.', $dataType));
-            }
-            unset($style['name']);
-            $fdd = array_merge($fdd, $style);
-            $fdd['css']['postfix'] .= ' '.implode(' ', $css);
-            break;
-        }
-      }
-
-      switch ($multiplicity) {
-      case FieldMultiplicity::SIMPLE:
-        /**********************************************************************
-         *
-         * Simple input field.
-         *
-         */
-        $valueFdd['input'] = $keyFdd['input'];
-        $keyFdd['input'] = 'VSRH';
-        $valueFdd['css']['postfix'] .= ' simple-valued '.$dataType;
-
-        // disable deleted entries
-        $valueFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
-        $keyFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
-        $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.deleted IS NULL, $join_col_fqn, null))';
-
-        switch ($dataType) {
-        case FieldType::SERVICE_FEE:
-        case FieldType::DEPOSIT:
-          unset($valueFdd['mask']);
-          $valueFdd['php|VDLF'] = function($value) {
-            return $this->moneyValue($value);
-          };
-          break;
-        case FieldType::FILE_DATA:
-          $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
-            $fieldId = $field->getId();
-            $policy = $field->getDefaultValue()?:'rename';
-            $key = $dataOptions->first()->getKey();
-            $fileBase = $field['name'];
-            $subDir = null;
-            list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-            return '<div class="file-upload-wrapper" data-option-key="'.$key.'">
-  <table class="file-upload">'
-              .$this->fileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician).'
-  </table>
-</div>';
-          };
-          $valueFdd['php|LFDV'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-            if (!empty($value)) {
-              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-              $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-              $filePath = $participantFolder.UserStorage::PATH_SEP.$value;
-              $downloadLink = $this->userStorage->getDownloadLink($filePath);
-              $fileBase = $field['name'];
-              return '<a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileBase.'</a>';
-            }
-            return null;
-          };
-
-          break;
-        default:
-          break;
-        }
-        break;
-      case FieldMultiplicity::SINGLE:
-        /**********************************************************************
-         *
-         * Single choice field, yes/no
-         *
-         */
-        reset($values2); $key = key($values2);
-        $keyFdd['values2|CAP'] = [ $key => '' ]; // empty label for simple checkbox
-        $keyFdd['values2|LVDF'] = [
-          0 => $this->l->t('false'),
-          $key => $this->l->t('true'),
-        ];
-        $keyFdd['select'] = 'C';
-        $keyFdd['default'] = (string)!!(int)$field['default_value'];
-        $keyFdd['css']['postfix'] .= ' boolean single-valued '.$dataType;
-        switch ($dataType) {
-        case FieldType::BOOLEAN:
-          break;
-        case 'money':
-        case FieldType::SERVICE_FEE:
-        case FieldType::DEPOSIT:
-          $money = $this->moneyValue(reset($valueData));
-          $noMoney = $this->moneyValue(0);
-          // just use the amount to pay as label
-          $keyFdd['values2|LVDF'] = [
-            '' => '-,--',
-            0 => $noMoney, //'-,--',
-            $key => $money,
-          ];
-          $keyFdd['values2|CAP'] = [ $key => $money, ];
-          unset($keyFdd['mask']);
-          $keyFdd['php|VDLF'] = function($value) {
-            return $this->moneyValue($value);
-          };
-          break;
-        default:
-          $keyFdd['values2|CAP'] = [ $key => reset($valueData) ];
-          break;
-        } // data-type switch
-        break;
-      case FieldMultiplicity::PARALLEL:
-      case FieldMultiplicity::MULTIPLE:
-        /**********************************************************************
-         *
-         * Multiple or single choices from a set of predefined choices.
-         *
-         */
-        switch ($dataType) {
-        case FieldType::FILE_DATA:
-          $keyFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-            $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-            $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
-            $values = array_combine($optionKeys, $optionValues);
-            $this->debug('VALUES '.print_r($values, true));
-            $fieldId = $field->getId();
-            $policy = $field->getDefaultValue()?:'rename';
-            $subDir = $field->getName();
-            list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-            /** @var Entities\ProjectParticipantFieldDataOption $option */
-            $html = '<div class="file-upload-wrapper" data-option-key="'.$key.'">
-  <table class="file-upload">';
-            foreach ($field->getSelectableOptions() as $option) {
-              $optionKey = (string)$option->getKey();
-              $fileBase = $option->getLabel();
-  $html .= $this->fileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
-            }
-            $html .= '
-  </table>
-</div>';
-            return $html;
-          };
-          $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-            if (!empty($value)) {
-              $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-              $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
-              $values = array_combine($optionKeys, $optionValues);
-              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-              $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-              $filePath = $participantFolder.UserStorage::PATH_SEP.array_shift($values);
-              $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
-              $filesAppTarget = md5($filesAppLink);
-              return '<a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="open-parent">'.$value.'</a>';
-            }
-            return null;
-          };
-          $keyFdd['values2'] = $values2;
-          $keyFdd['valueTitles'] = $valueTitles;
-          $keyFdd['valueData'] = $valueData;
-          $keyFdd['select'] = 'M';
-          $keyFdd['css']['postfix'] .= ' '.$dataType;
-          break;
-        case FieldType::SERVICE_FEE:
-        case FieldType::DEPOSIT:
-          foreach ($dataOptions as $dataOption) {
-            $key = (string)$dataOption['key'];
-            $label = $dataOption['label'];
-            $data  = $dataOption['data'];
-            $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType, 'money');
-          }
-          unset($keyFdd['mask']);
-          $keyFdd['values2glue'] = '<br/>';
-          $keyFdd['escape'] = false;
-          // fall through
-        default:
-          $keyFdd['values2'] = $values2;
-          $keyFdd['valueTitles'] = $valueTitles;
-          $keyFdd['valueData'] = $valueData;
-          $keyFdd['display|LF'] = [
-            'popup' => 'data',
-            'prefix' => '<div class="allowed-option-wrapper">',
-            'postfix' => '</div>',
-          ];
-          if ($multiplicity == FieldMultiplicity::PARALLEL) {
-            $keyFdd['css']['postfix'] .= ' set hide-subsequent-lines';
-            $keyFdd['select'] = 'M';
-          } else {
-            $keyFdd['css']['postfix'] .= ' enum allow-empty';
-            $keyFdd['select'] = 'D';
-          }
-          $keyFdd['css']['postfix'] .= ' '.$dataType;
-          break;
-        }
-        break;
-      case FieldMultiplicity::RECURRING:
-
-        /**********************************************************************
-         *
-         * Recurring auto-generated fields
-         *
-         */
-
-        foreach ([&$keyFdd, &$valueFdd] as &$fdd) {
-          $fdd['css']['postfix'] .= ' recurring generated '.$dataType;
-          unset($fdd['mask']);
-          $fdd['select'] = 'M';
-          $fdd['values'] = array_merge(
-            $fdd['values'], [
-              'column' => 'option_key',
-              'description' => [
-                'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
-                'divs' => ':',
-              ],
-              'orderby' => '$table.created DESC',
-              'encode' => 'BIN2UUID(%s)',
-            ]);
-        }
-
-        foreach ($dataOptions as $dataOption) {
-          $values2[(string)$dataOption['key']] = $dataOption['label'];
-        }
-        $keyFdd['values2|LFVD'] = $values2;
-
-        $keyFdd['values|FL'] = array_merge(
-          $keyFdd['values'], [
-            'filters' => ('$table.field_id = '.$fieldId
-                          .' AND $table.project_id = '.$projectId),
-          ]);
-        $keyFdd['display|LF'] = [ 'popup' => 'data' ];
-        $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
-          // LF are actually both the same. $value will always just
-          // come from the filter's $value2 array. The actual values
-          // we need are in the description fields which are passed
-          // through the 'qf'.$k field in $row.
-          $values = Util::explodeIndexed($row['qf'.$k]);
-          $html = [];
-          foreach ($values as $key => $value) {
-            $option =  $field->getDataOption($key);
-            $label = $option ? $option->getLabel() : '';
-            $html[] = $this->allowedOptionLabel($label, $value, $dataType);
-          }
-          return '<div class="allowed-option-wrapper">'.implode('<br/>', $html).'</div>';
-        };
-
-        // For a useful add/change/copy view we should use the value fdd.
-        $valueFdd['input|ACP'] = $keyFdd['input'];
-        $keyFdd['input|ACP'] = 'VSRH';
-
-        $valueFdd['sql|ACP'] = 'GROUP_CONCAT(
-  DISTINCT
-  CONCAT_WS(
-    \''.self::JOIN_KEY_SEP.'\',
-    BIN2UUID($join_table.option_key),
-    $join_table.option_value
-  )
-  ORDER BY $order_by)';
-
-        $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType, $keyFddName, $valueFddName) {
-          // $this->logInfo('VALUE '.$k.': '.$value);
-          // $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
-          // $this->logInfo('ROW IDX '.$k.': '.$row['qf'.$k.'_idx']);
-
-          $value = $row['qf'.$k];
-          $values = Util::explodeIndexed($value);
-          $valueName = $this->pme->cgiDataName($valueFddName);
-          $keyName = $this->pme->cgiDataName($keyFddName);
-          $html = '<table class="row-count-'.count($values).'">
-  <thead>
-    <tr><th>'.$this->l->t('Actions').'</th><th>'.$this->l->t('Subject').'</th><th>'.$this->l->t('Value [%s]', $this->currencySymbol()).'</th></tr>
-  </thead>
-  <tbody>';
-          $idx = 0;
-          foreach ($values as $key => $value) {
-            $option =  $field->getDataOption($key);
-            $label = $option ? $option->getLabel() : '';
-            $html .= '
-<tr data-option-key="'.$key.'" data-field-id="'.$field['id'].'">
-  <td class="operations">
-    <input
-      class="operation delete-undelete"
-      title="'.$this->toolTipsService['participant-fields-recurring-data:delete-undelete'].'"
-      type="button"/>
-    <input
-      class="operation regenerate"
-      title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate'].'"
-      type="button"/>
-  </td>
-  <td class="label">
-    '.$label.'
-  </td>
-  <td class="input">
-    <input id="receivable-input-'.$key.'" type=checkbox checked="checked" class="pme-input pme-input-lock-unlock left-lock"/>
-    <label class="pme-input pme-input-lock-unlock left-lock" title="'.$this->toolTipsService['pme-lock-unlock'].'" for="receivable-input-'.$key.'"></label>
-    <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$valueName.'['.$idx.']" value="'.$value.'"/>
-     <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
-  </td>
-</tr>';
-            $idx++;
-          }
-          $html .= '
-    <tr data-field-id="'.$field['id'].'">
-      <td class="operations" colspan="3">
-        <input
-          class="operation regenerate-all"
-          title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all'].'"
-          type="button"
-          value="'.$this->l->t('Recompute all Receivables').'"
-          title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all'].'"
-        />
-      </td>
-    </tr>
-  </tbody>
-</table>';
-          return $html;
-        };
-        break;
-        /*
-         * end of FieldMultiplicity::RECURRING
-         *
-         *********************************************************************/
-      case FieldMultiplicity::GROUPOFPEOPLE:
-        /**********************************************************************
-         *
-         * Grouping with variable number of groups, e.g. "room-mates".
-         *
-         */
-
-        // special option with Uuid::NIL holds the management information
-        $generatorOption = $field->getManagementOption();
-        $valueGroups = [ -1 => $this->l->t('without group'), ];
-
-        // old field, group selection
-        $keyFdd = array_merge($keyFdd, [ 'mask' => null, ]);
-
-        // generate a new group-definition field as yet another column
-        list(, $fddGroupMemberName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'musician_id', $keyFdd);
-
-        // hide value field and tweak for view displays.
-        $css[] = FieldMultiplicity::GROUPOFPEOPLE;
-        $css[] = 'single-valued';
-        $keyFdd = Util::arrayMergeRecursive(
-          $keyFdd, [
-            'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
-            'input' => 'VSRH',
-          ]);
-
-
-        // tweak the join-structure entry for the group field
-        $joinInfo = &$this->joinStructure[$tableName];
-        $joinInfo = array_merge(
-          $joinInfo,
-          [
-            'identifier' => [
-              'project_id' => 'project_id',
-              'musician_id' => false,
-              'field_id' => [ 'value' => $fieldId, ],
-              'option_key' => [ 'self' => true, ],
-            ],
-            'column' => 'musician_id',
-          ]);
-
-        // store the necessary group data compatible to the predefined groups stuff
-        $max = $generatorOption['limit'];
-        $dataOptionsData = $dataOptions->map(function($value) use ($max) {
-          return [
-            'key' => (string)$value['key'],
-            'data' => [ 'limit' => $max, ],
-          ];
-        })->getValues();
-        array_unshift(
-          $dataOptionsData,
-          [ 'key' => $generatorOption['key'], 'data' => [ 'limit' => $max, ], ]
-        );
-        $dataOptionsData = json_encode(array_column($dataOptionsData, 'data', 'key'));
-
-        // new field, member selection
-        $groupMemberFdd = &$opts['fdd'][$fddGroupMemberName];
-        $groupMemberFdd = array_merge(
-          $groupMemberFdd, [
-            'select' => 'M',
-            'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
-            'display' => [ 'popup' => 'data' ],
-            'colattrs' => [ 'data-groups' => $dataOptionsData, ],
-            'filter' => 'having',
-            'values' => [
-              'table' => "SELECT
-   m1.id AS musician_id,
-   CONCAT_WS(' ', m1.first_name, m1.sur_name) AS name,
-   m1.sur_name AS sur_name,
-   m1.first_name AS first_name,
-   fd.option_key AS group_id,
-   fdg.group_number AS group_number
-FROM ".self::TABLE." pp
-LEFT JOIN ".self::MUSICIANS_TABLE." m1
-  ON m1.id = pp.musician_id
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
-LEFT JOIN (SELECT
-    fd2.option_key AS group_id,
-    ROW_NUMBER() OVER (ORDER BY fd2.field_id) AS group_number
-    FROM ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd2
-    WHERE fd2.project_id = $projectId AND fd2.field_id = $fieldId
-    GROUP BY fd2.option_key
-  ) fdg
-  ON fdg.group_id = fd.option_key
-WHERE pp.project_id = $projectId",
-              'column' => 'musician_id',
-              'description' => 'name',
-              'groups' => "IF(
-  \$table.group_number IS NULL,
-  '".$this->l->t('without group')."',
-  CONCAT_WS(' ', '".$fieldName."', \$table.group_number))",
-              'data' => 'JSON_OBJECT(
-  "groupId", IFNULL(BIN2UUID($table.group_id), -1),
-  "limit", '.$max.'
-)',
-              'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
-            ],
-            'valueGroups|ACP' => $valueGroups,
-          ]);
-
-        $groupMemberFdd['css']['postfix'] .= ' '.implode(' ', $css);
-
-        if ($dataType == FieldType::SERVICE_FEE || $dataType == FieldType::DEPOSIT) {
-          $groupMemberFdd['css']['postfix'] .= ' money '.$dataType;
-          $fieldData = $generatorOption['data'];
-          $money = $this->moneyValue($fieldData);
-          $groupMemberFdd['name|LFVD'] = $groupMemberFdd['name'];
-          $groupMemberFdd['name'] = $this->allowedOptionLabel($groupMemberFdd['name'], $fieldData, $dataType, 'money');
-          $groupMemberFdd['display|LFVD'] = array_merge(
-            $groupMemberFdd['display'],
-            [
-              'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
-              'postfix' => ('</span><span class="allowed-option-separator money">&nbsp;</span>'
-                            .'<span class="allowed-option-value money">'.$money.'</span></span>'),
-            ]);
-        }
-
-        // in filter mode mask out all non-group-members
-        $groupMemberFdd['values|LF'] = array_merge(
-          $groupMemberFdd['values'],
-          [ 'filters' => '$table.group_id IS NOT NULL' ]);
-
-        break;
-      case FieldMultiplicity::GROUPSOFPEOPLE:
-        /**********************************************************************
-         *
-         * Grouping with predefined group names, e.g. for car-sharing
-         * or excursions.
-         *
-         */
-        // tweak the join-structure entry for the group field
-        $joinInfo = &$this->joinStructure[$tableName];
-        $joinInfo = array_merge(
-          $joinInfo, [
-            'identifier' => [
-              'project_id' => 'project_id',
-              'musician_id' => false,
-              'field_id' => [ 'value' => $fieldId, ],
-              'option_key' => [ 'self' => true, ],
-            ],
-            'column' => 'musician_id',
-          ]);
-
-        // define the group stuff
-        $groupValues2   = $values2;
-        $groupValueData = $valueData;
-        $values2 = [];
-        $valueGroups = [ -1 => $this->l->t('without group'), ];
-        $idx = -1;
-        foreach($dataOptions as $dataOption) {
-          $valueGroups[--$idx] = $dataOption['label'];
-          $data = $dataOption['data'];
-          if ($dataType == FieldType::SERVICE_FEE || $dataType == FieldType::DEPOSIT) {
-            $data = $this->moneyValue($data);
-          }
-          if (!empty($data)) {
-            $valueGroups[$idx] .= ':&nbsp;' . $data;
-          }
-          $values2[$idx] = $this->l->t('add to this group');
-          $valueData[$idx] = json_encode([ 'groupId' => $dataOption['key'], ]);
-        }
-
-        // make the field a select box for the predefined groups, like
-        // for the "multiple" stuff.
-
-        $css[] = FieldMultiplicity::GROUPOFPEOPLE;
-        $css[] = 'predefined';
-        if ($dataType === FieldType::SERVICE_FEE || $dataType === FieldType::DEPOSIT) {
-          $css[] = ' money '.$dataType;
-          foreach ($groupValues2 as $key => $value) {
-            $groupValues2[$key] = $this->allowedOptionLabel(
-              $value, $groupValueData[$key], $dataType, 'money group');
-          }
-        }
-
-        // old field, group selection
-        $keyFdd = array_merge(
-          $keyFdd, [
-            //'name' => $this->l->t('%s Group', $fieldName),
-            'css'         => [ 'postfix' => ' '.implode(' ', $css) ],
-            'select'      => 'D',
-            'values2'     => $groupValues2,
-            'display'     => [ 'popup' => 'data' ],
-            'sort'        => true,
-            'escape'      => false,
-            'mask' => null,
-          ]);
-
-        $fddBase = Util::arrayMergeRecursive([], $keyFdd);
-
-        // hide value field
-        $keyFdd = Util::arrayMergeRecursive(
-          $keyFdd, [
-            'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
-            'input' => 'VSRH',
-          ]);
-
-        // generate a new group-definition field as yet another column
-        list(, $fddGroupMemberName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'musician_id', $fddBase);
-
-        // compute group limits per group
-        $dataOptionsData = $dataOptions->map(function($value) {
-          return [
-            'key' => (string)$value['key'],
-            'data' =>  [ 'limit' => $value['limit'], ],
-          ];
-        })->getValues();
-        $dataOptionsData = json_encode(array_column($dataOptionsData, 'data', 'key'));
-
-        // new field, member selection
-        $groupMemberFdd = &$opts['fdd'][$fddGroupMemberName];
-        $groupMemberFdd = Util::arrayMergeRecursive(
-          $groupMemberFdd, [
-            'select' => 'M',
-            'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
-            //'sql' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
-            //'display' => [ 'popup' => 'data' ],
-            'colattrs' => [ 'data-groups' => $dataOptionsData, ],
-            'values|ACP' => [
-              'table' => "SELECT
-  m3.id AS musician_id,
-  CONCAT_WS(' ', m3.first_name, m3.sur_name) AS name,
-  m3.sur_name AS sur_name,
-  m3.first_name AS first_name,
-  fd.option_key AS group_id,
-  do.label AS group_label,
-  do.data AS group_data,
-  do.limit AS group_limit
-FROM ".self::TABLE." pp
-LEFT JOIN ".self::MUSICIANS_TABLE." m3
-  ON m3.id = pp.musician_id
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
-  ON do.field_id = fd.field_id AND do.key = fd.option_key
-WHERE pp.project_id = $projectId",
-              'column' => 'musician_id',
-              'description' => 'name',
-              'groups' => "CONCAT(\$table.group_label, ': ', \$table.group_data)",
-              'data' => 'JSON_OBJECT(
-  "groupId", IFNULL(BIN2UUID($table.group_id), -1),
-  "limit", $table.group_limit
-)',
-              'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
-              //'titles' => '$table.name',
-            ],
-            'valueGroups|ACP' => $valueGroups,
-            'valueData|ACP' => $valueData,
-            'values2|ACP' => $values2,
-            'mask' => null,
-            'display|LDV' => [
-              'popup' => 'data:next',
-            ],
-            'display|ACP' => [
-              'prefix' => function($op, $pos, $row, $k, $pme) use ($css) {
-                return '<label class="'.implode(' ', $css).'">';
-              },
-              'postfix' => function($op, $pos, $row, $k, $pme) use ($dataOptions, $dataType, $keyFddIndex) {
-                $selectedKey = $row['qf'.$keyFddIndex];
-                $html = '';
-                foreach ($dataOptions  as $dataOption) {
-                  $key = $dataOption['key'];
-                  $active = $selectedKey == $key ? 'selected' : null;
-                  $html .= $this->allowedOptionLabel(
-                    $dataOption['label'], $dataOption['data'], $dataType, $active, [ 'key' => $dataOption['key'], ]);
-                }
-                $html .= '</label>';
-                return $html;
-              },
-            ],
-          ]);
-
-        $groupMemberFdd['css']['postfix'] .= ' clip-long-text';
-        $groupMemberFdd['css|LFVD']['postfix'] = $groupMemberFdd['css']['postfix'].' view';
-
-        // generate yet another field to define popup-data
-        list(, $fddMemberNameName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'musician_name', $fddBase);
-
-        // new field, data-popup
-        $popupFdd = &$opts['fdd'][$fddMemberNameName];
-
-        // data-popup field
-        $popupFdd = Util::arrayMergeRecursive(
-           $popupFdd, [
-             'input' => 'VSRH',
-             'css'   => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-popup' ],
-             'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
-            'values|LFDV' => [
-              'table' => "SELECT
-  m2.id AS musician_id,
-  CONCAT_WS(' ', m2.first_name, m2.sur_name) AS name,
-  m2.sur_name AS sur_name,
-  m2.first_name AS first_name,
-  fd.option_key AS group_id
-FROM ".self::TABLE." pp
-LEFT JOIN ".self::MUSICIANS_TABLE." m2
-  ON m2.id = pp.musician_id
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
-WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
-              'column' => 'name',
-              'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-              'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
-            ],
-           ]);
-
-        break;
-      }
-
-    }
+    $participantFieldsGenerator($opts['fdd']);
 
     /*
      *
@@ -1592,7 +862,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
         //'description' => 'name',
         'orderby' => '$table.year ASC, $table.name ASC',
         'groups' => 'year',
-        'join' => '$join_table.id = '.$joinTables[self::TABLE].'.project_id'
+        'join' => '$join_table.id = '.$this->joinTables[self::TABLE].'.project_id'
       ],
     ];
 
@@ -2228,9 +1498,6 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
     return '<span class="allowed-option '.$css.'"'.$htmlData.'>'.$label.$sep.$value.'</span>';
   }
 
-
-
-
   /**
    * Generate a clickable form element which finally will display the
    * debit-mandate dialog, i.e. load some template stuff by means of
@@ -2284,10 +1551,11 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
    * performance hit. Maybe all those joins should be replaced by
    * only a single one by using IF-clauses inside the GROUP_CONCAT().
    */
-  public function renderParticipantFields($participantFields)
+  public function renderParticipantFields($participantFields, $financeTab)
   {
     $joinStructure = [];
 
+    /** @var Entities\ProjectParticipantField $field */
     foreach ($participantFields as $field) {
       $fieldId = $field['id'];
 
@@ -2323,7 +1591,9 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
       ];
     }
 
-    $generator = function(&$fieldDescData) {
+    $generator = function(&$fieldDescData) use ($participantFields, $financeTab) {
+
+      /** @var Entities\ProjectParticipantField $field */
       foreach ($participantFields as $field) {
         $fieldName = $field['name'];
         $fieldId   = $field['id'];
@@ -2359,7 +1629,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           'values' => [
             'grouped' => true,
             'filters' => ('$table.field_id = '.$fieldId
-                          .' AND $table.project_id = '.$projectId
+                          .' AND $table.project_id = '.$this->projectId
                           .' AND $table.musician_id = $record_id[musician_id]'),
           ],
           'tooltip' => $field['tooltip']?:null,
@@ -2644,7 +1914,7 @@ WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
           $keyFdd['values|FL'] = array_merge(
             $keyFdd['values'], [
               'filters' => ('$table.field_id = '.$fieldId
-                            .' AND $table.project_id = '.$projectId),
+                            .' AND $table.project_id = '.$this->projectId),
             ]);
           $keyFdd['display|LF'] = [ 'popup' => 'data' ];
           $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
@@ -2815,16 +2085,16 @@ FROM ".self::TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m1
   ON m1.id = pp.musician_id
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
+  ON fd.musician_id = pp.musician_id AND fd.project_id = $this->projectId AND fd.field_id = $fieldId
 LEFT JOIN (SELECT
     fd2.option_key AS group_id,
     ROW_NUMBER() OVER (ORDER BY fd2.field_id) AS group_number
     FROM ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd2
-    WHERE fd2.project_id = $projectId AND fd2.field_id = $fieldId
+    WHERE fd2.project_id = $this->projectId AND fd2.field_id = $fieldId
     GROUP BY fd2.option_key
   ) fdg
   ON fdg.group_id = fd.option_key
-WHERE pp.project_id = $projectId",
+WHERE pp.project_id = $this->projectId",
                 'column' => 'musician_id',
                 'description' => 'name',
                 'groups' => "IF(
@@ -2836,7 +2106,7 @@ WHERE pp.project_id = $projectId",
   "limit", '.$max.'
 )',
                 'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-                'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
+                'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
               ],
               'valueGroups|ACP' => $valueGroups,
             ]);
@@ -2974,10 +2244,10 @@ FROM ".self::TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m3
   ON m3.id = pp.musician_id
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = $projectId AND fd.field_id = $fieldId
+  ON fd.musician_id = pp.musician_id AND fd.project_id = $this->projectId AND fd.field_id = $fieldId
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
   ON do.field_id = fd.field_id AND do.key = fd.option_key
-WHERE pp.project_id = $projectId",
+WHERE pp.project_id = $this->projectId",
                 'column' => 'musician_id',
                 'description' => 'name',
                 'groups' => "CONCAT(\$table.group_label, ': ', \$table.group_data)",
@@ -2986,7 +2256,7 @@ WHERE pp.project_id = $projectId",
   "limit", $table.group_limit
 )',
                 'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-                'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
+                'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
                 //'titles' => '$table.name',
               ],
               'valueGroups|ACP' => $valueGroups,
@@ -3043,10 +2313,10 @@ LEFT JOIN ".self::MUSICIANS_TABLE." m2
   ON m2.id = pp.musician_id
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
-WHERE pp.project_id = $projectId AND fd.field_id = $fieldId",
+WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                 'column' => 'name',
                 'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
-                'join' => '$join_table.group_id = '.$joinTables[$tableName].'.option_key',
+                'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
               ],
             ]);
 
