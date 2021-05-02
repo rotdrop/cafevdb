@@ -276,18 +276,12 @@ class SepaBankAccounts extends PMETableViewBase
 received so far'),
       'name' => $this->l->t('Amount')
     ];
-    $projectTab = [
-      'id' => 'project',
-      'tooltip' => $this->l->t('Show project specific data'),
-      'name' => $this->l->t('Project'),
-    ];
     $allTab = [
       'id' => 'tab-all',
       'tooltip' => $this->toolTipsService['pme-showall-tab'],
       'name' => $this->l->t('Display all columns'),
     ];
     if ($projectMode && $projectId !== $this->membersProjectId) {
-      $opts['display']['tabs'][] = $projectTab;
       $opts['display']['tabs'][] = $amountTab;
     }
     $opts['display']['tabs'][] = $allTab;
@@ -507,13 +501,12 @@ received so far'),
       [
         'tab' => [ 'id' => 'mandate' ],
         'name' => $this->l->t('Non-Recurring'),
-        'select' => 'C',
+        'select' => 'O',
         'maxlen' => '1',
         'sort' => true,
         'escape' => false,
         'sqlw' => 'IF($val_qas = "", 0, 1)',
-        'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
-        'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+        'values2' => [ 0 => '', 1 => '&#10004;' ],
       ]);
 
     $this->makeJoinTableField(

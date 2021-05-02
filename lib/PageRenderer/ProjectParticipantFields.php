@@ -644,7 +644,7 @@ class ProjectParticipantFields extends PMETableViewBase
         'values2|LVFD' => [ 1 => $this->l->t('true'),
                             0 => $this->l->t('false') ],
         'default' => false,
-        'select' => 'C',
+        'select' => 'O',
         'maxlen' => 1,
         'sort' => true,
         'tooltip' => $this->toolTipsService['participant-fields-encrypted'],

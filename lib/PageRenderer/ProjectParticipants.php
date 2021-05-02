@@ -194,6 +194,8 @@ class ProjectParticipants extends PMETableViewBase
     $this->userStorage = $userStorage;
 
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+
+    $this->pme->overrideLabel('Add', 'Add Musician');
   }
 
   public function shortTitle()
@@ -592,6 +594,7 @@ class ProjectParticipants extends PMETableViewBase
           'join' => false,
         ],
         'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+        'align|LF' => 'center',
       ]);
 
     $this->makeJoinTableField(
@@ -648,7 +651,8 @@ class ProjectParticipants extends PMETableViewBase
          'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
          'join' => '$join_table.project_id = $main_table.project_id AND $join_table.musician_id = $main_table.musician_id',
        ],
-       'values2|LF' => [ '0' => '&nbsp;', '1' => '&alpha;' ],
+       'values2|LF' => [ 0 => '', 1 => '&alpha;' ],
+       'align|LF' => 'center',
        'tooltip' => $this->l->t("Set to `%s' in order to mark the section leader",
                                 [ "&alpha;" ]),
       ]);
@@ -658,13 +662,12 @@ class ProjectParticipants extends PMETableViewBase
       'name|CAPDV' => $this->l->t("Registration"),
       'tab' => [ 'id' => [ 'project', 'instrumentation' ] ],
       'options'  => 'LAVCPDF',
-      'select' => 'C',
+      'select' => 'O',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
       'sqlw' => 'IF($val_qas = "", 0, 1)',
-      'values2|CAP' => [ '1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */ ],
-      'values2|LVDF' => [ '0' => '&nbsp;', '1' => '&#10004;' ],
+      'values2' => [ 0 => '', 1 => '&#10004;' ],
       'tooltip' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
                                [ "&#10004;" ]),
       'display|LF' => [
@@ -672,7 +675,7 @@ class ProjectParticipants extends PMETableViewBase
           return $this->toolTipsService['registration-mark'];
         },
       ],
-      'css'      => [ 'postfix' => ' registration tooltip-top' ],
+      'css'      => [ 'postfix' => ' registration tooltip-top align-center' ],
     ];
 
     $fdd = [
