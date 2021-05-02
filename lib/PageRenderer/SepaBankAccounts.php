@@ -102,11 +102,14 @@ class SepaBankAccounts extends PMETableViewBase
     ],
   ];
 
-  /** @var \OCA\CAFEVDB\Service\ProjectParticipantFieldsService */
+  /** @var ProjectParticipantFieldsService */
   private $participantFieldsService;
 
-  /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
+  /** @var Entities\Project */
   private $project = null;
+
+  /** @var ProjectParticipants */
+  private $participantsRenderer;
 
   public function __construct(
     ConfigService $configService
@@ -116,9 +119,11 @@ class SepaBankAccounts extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , ProjectParticipantFieldsService $participantFieldsService
+    , ProjectParticipants $participantsRenderer
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->participantFieldsService = $participantFieldsService;
+    $this->participantsRenderer = $participantsRenderer;
   }
 
   public function shortTitle()
@@ -152,10 +157,9 @@ class SepaBankAccounts extends PMETableViewBase
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
-    $projectMode = $projectId > 0;
+    $projectMode = $this->projectId > 0;
     if ($projectMode)  {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
-      $this->projectId = $projectId;
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
     }
 
     $opts            = [];
@@ -294,38 +298,6 @@ received so far'),
       $opts['display']['tabs'] = false;
     }
 
-    //////////////////////////////////////////////////////
-
-    if ($projectMode) {
-      // Add the amount to debit
-
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-      $monetary = $this->participantFieldsService->monetaryFields($this->project);
-
-      /* For each monetary extra field add one dedicated join table
-       * entry which is pinned to the respective field-id.
-       */
-      $participantFieldJoinIndex = [];
-      foreach ($monetary as $name => $field) {
-        $fieldId = $field['id'];
-        $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
-        $participantFieldJoinIndex[$tableName] = count($this->joinStructure);
-        $this->joinStructure[$tableName] = [
-          'entity' => Entities\ProjectParticipantFieldDatum::class,
-          'flags' => self::JOIN_READONLY,
-          'identifier' => [
-            'project_id' => [
-              'table' => self::PROJECT_PARTICIPANTS_TABLE,
-              'column' => 'project_id',
-            ],
-            'musician_id' => 'musician_id',
-            'field_id' => [ 'value' => $field['id'], ],
-          ],
-          'column' => 'field_id',
-        ];
-      }
-    }
-
     ////////////////////////////////////////////////////////////////&&&&&&&&&&&
     //
     // Add the id-columns of the main-table
@@ -379,7 +351,28 @@ received so far'),
         break;
       }
     });
-    $joinTables = $this->defineJoinStructure($opts);
+
+
+    // add participant fields-data, if in project-mode
+    if ($projectMode) {
+      $monetary = $this->participantFieldsService->monetaryFields($this->project);
+
+      list($participantFieldsJoin, $participantFieldsGenerator) =
+        $this->participantsRenderer->renderParticipantFields(
+          $monetary, [
+            'table' => self::PROJECT_PARTICIPANTS_TABLE,
+            'column' => 'project_id',
+          ],
+          'amount');
+      $this->joinStructure = array_merge($this->joinStructure, $participantFieldsJoin);
+    }
+    $this->logInfo('COUNT MONETARY '.$monetary->count());
+    $this->logInfo('ADDON JOIN STRUCUTRE '.Functions\dump($participantFieldsJoin));
+    $this->logInfo('JOIN STRUCUTRE '.Functions\dump($this->joinStructure));
+
+    $this->defineJoinStructure($opts);
+
+    $this->logInfo('FDD '.Functions\dump($opts['fdd']));
 
     // field definitions
 
@@ -713,7 +706,7 @@ received so far'),
     }
     if ($projectMode) {
       $opts['filters']['AND'][] =
-        $joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id = '.$projectId;
+        $this->joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id = '.$projectId;
     }
     if (!$this->showDisabled) {
       $opts['filters']['AND'][] = '$table.deleted IS NULL';
@@ -725,9 +718,9 @@ received so far'),
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
-    $this->logInfo('FILTERS '.Functions\dump($opts['filters']));
-    $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
-    $this->logInfo('SORT '.Functions\dump($opts['sort_field']));
+    // $this->logInfo('FILTERS '.Functions\dump($opts['filters']));
+    // $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
+    // $this->logInfo('SORT '.Functions\dump($opts['sort_field']));
 
     if ($execute) {
       $this->execute($opts);

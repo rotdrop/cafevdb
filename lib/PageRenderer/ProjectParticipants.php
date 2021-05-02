@@ -298,7 +298,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->joinStructure = array_merge($this->joinStructure, $sepaJoin);
 
     list($participantFieldsJoin, $participantFieldsGenerator) =
-      $this->renderParticipantFields($participantFields, $financeTab);
+      $this->renderParticipantFields($participantFields, 'project_id', $financeTab);
     $this->joinStructrue = array_merge($this->joinStructure, $participantFieldsJoin);
 
     /*
@@ -1499,51 +1499,6 @@ class ProjectParticipants extends PMETableViewBase
   }
 
   /**
-   * Generate a clickable form element which finally will display the
-   * debit-mandate dialog, i.e. load some template stuff by means of
-   * some java-script and ajax blah.
-   */
-  public function sepaDebitMandateButton(
-    $reference
-    , $expired
-    , $musicianId
-    , $musician
-    , $projectId
-    , $projectName
-    , $mandateProjectId = null
-    , $mandateProjectName = null)
-  {
-    empty($mandateProjectId) && $mandateProjectId = $projectId;
-    empty($mandateProjectName) && $mandateProjectName = $projectName;
-    $data = [
-      'mandateReference' => $reference,
-      'mandateExpired' => $expired,
-      'musicianId' => $musicianId,
-      'musicianName' => $musician,
-      'projectId' => $projectId,
-      'projectName' => $projectName,
-      'mandateProjectId' => $mandateProjectId,
-      'mandateProjectName' => $mandateProjectName,
-    ];
-
-    $data = htmlspecialchars(json_encode($data, JSON_NUMERIC_CHECK));
-    //$data = json_encode($data, JSON_NUMERIC_CHECK);
-
-    $css= ($reference == ($this->l->t("SEPA Debit Mandate")) ? "missing-data " : "")."sepa-debit-mandate";
-    $button = '<div class="sepa-debit-mandate tooltip-left">'
-            .'<input type="button" '
-            .'       id="sepa-debit-mandate-'.$musicianId.'-'.$projectId.'"'
-            .'       class="'.$css.' tooltip-left" '
-            .'       value="'.$reference.'" '
-            .'       title="'.$this->l->t("Click to enter details of a potential SEPA debit mandate").' " '
-            .'       name="SepaDebitMandate" '
-            .'       data-debit-mandate=\''.$data.'\' '
-            .'/>'
-            .'</div>';
-    return $button;
-  }
-
-  /**
    * For each extra field add one dedicated join table entry
    * which is pinned to the respective field-id.
    *
@@ -1551,7 +1506,7 @@ class ProjectParticipants extends PMETableViewBase
    * performance hit. Maybe all those joins should be replaced by
    * only a single one by using IF-clauses inside the GROUP_CONCAT().
    */
-  public function renderParticipantFields($participantFields, $financeTab)
+  public function renderParticipantFields($participantFields, $projectIdField = 'project_id', $financeTab = 'finance')
   {
     $joinStructure = [];
 
@@ -1577,11 +1532,11 @@ class ProjectParticipants extends PMETableViewBase
       // $this->joinStructure[] = $participantFieldOptionJoinTable;
 
       $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
-      $this->joinStructure[$tableName] = [
+      $joinStructure[$tableName] = [
         'entity' => Entities\ProjectParticipantFieldDatum::class,
         'flags' => self::JOIN_REMOVE_EMPTY,
         'identifier' => [
-          'project_id' => 'project_id',
+          'project_id' => $projectIdField,
           'musician_id' => 'musician_id',
           'field_id' => [ 'value' => $fieldId, ],
           'option_key' => false,
