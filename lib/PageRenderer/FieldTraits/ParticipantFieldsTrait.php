@@ -425,6 +425,9 @@ trait ParticipantFieldsTrait
             $html = [];
             foreach ($values as $key => $value) {
               $option =  $field->getDataOption($key);
+              if (empty($option)) {
+                continue;
+              }
               $label = $option ? $option->getLabel() : '';
               $html[] = $this->allowedOptionLabel($label, $value, $dataType);
             }
