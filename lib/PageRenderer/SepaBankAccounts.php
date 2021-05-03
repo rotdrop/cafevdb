@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -61,7 +62,7 @@ class SepaBankAccounts extends PMETableViewBase
     ],
     self::SEPA_DEBIT_MANDATES_TABLE => [
       'entity' => Entities\SepaDebitMandate::class,
-      'flags' => self::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY|self::JOIN_GROUP_BY,
       'identifier' => [
         'musician_id' => 'musician_id',
         'bank_account_sequence' => 'sequence',
@@ -107,6 +108,9 @@ class SepaBankAccounts extends PMETableViewBase
   /** @var ProjectParticipantFieldsService */
   private $participantFieldsService;
 
+  /** @var FinanceService */
+  private $financeService;
+
   /** @var Entities\Project */
   private $project = null;
 
@@ -118,9 +122,11 @@ class SepaBankAccounts extends PMETableViewBase
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
     , ProjectParticipantFieldsService $participantFieldsService
+    , FinanceService $financeService
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->participantFieldsService = $participantFieldsService;
+    $this->financeService = $financeService;
   }
 
   public function shortTitle()
@@ -359,7 +365,7 @@ received so far'),
         [
           'tab' => [ 'id' => 'mandate' ],
           'name'     => $this->l->t('Mandate Project'),
-          'input'    => 'R',
+          'input'    => 'RH',
           'input|A'  => $projectMode ? 'R' : null,
           'select'   => 'D',
           'maxlen'   => 11,
@@ -367,8 +373,8 @@ received so far'),
           'css'      => [ 'postfix' => ' mandate-project allow-empty' ],
           'values' => [
             'description' => [
-              'columns' => [ 'year' => 'year', 'name' => 'name' ],
-              'divs' => [ 'year' => ': ' ]
+              'columns' => [ 'year' => "CONCAT(\$table.year, IF(\$table.year IS NULL, '', ': '))", 'name' => 'name' ],
+              //'divs' => [ 'year' => ': ' ]
             ],
           ],
         ],
@@ -429,30 +435,67 @@ received so far'),
       'tab' => [ 'id' => 'account' ],
       'name'   => $this->l->t('Bank Account Owner'),
       'input' => 'M',
+      'options' => 'LFACPDV',
       'select' => 'T',
+      'select|LF' => 'D',
       'maxlen' => 80,
       'encryption' => [
         'encrypt' => function($value) { return $this->encrypt($value); },
         'decrypt' => function($value) { return $this->decrypt($value); },
       ],
+      'values'  => [
+        'table' => self::TABLE,
+        'column' => 'bank_account_owner',
+        'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+        'filters' => (!$projectMode
+                     ? null
+                     : '$table.musician_id IN
+  (SELECT musician_id
+   FROM '.self::PROJECT_PARTICIPANTS_TABLE.' ppblah
+   WHERE ppblah.project_id = '.$this->projectId.')'),
+      ],
     ];
 
     $opts['fdd']['iban'] = [
-      'tab' => [ 'id' => 'account' ],
+      'tab' => [ 'id' => [ 'account', 'mandate' ] ],
       'name'   => 'IBAN',
-      'input' => 'M',
-      'options' => 'LACPDV',
+      //'input' => 'M',
+      'options' => 'LFACPDV',
       'select' => 'T',
+      'select|LF' => 'D',
       'maxlen' => 35,
       'encryption' => [
         'encrypt' => function($value) { return $this->encrypt($value); },
         'decrypt' => function($value) { return $this->decrypt($value); },
       ],
+      'values' => [
+        'table' => self::TABLE,
+        'column' => 'iban',
+        'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+        'filters' => (!$projectMode
+                     ? null
+                     : '$table.musician_id IN
+  (SELECT musician_id
+   FROM '.self::PROJECT_PARTICIPANTS_TABLE.' ppblah
+   WHERE ppblah.project_id = '.$this->projectId.')'),
+      ],
+      'display' => [
+        'popup' => function($data) {
+          $info  = $this->financeService->getIbanInfo($data);
+          $result = '';
+          foreach ($info as $key => $value) {
+            $result .= $this->l->t($key).': '.$value.'<br/>';
+          }
+          return $result;
+        },
+      ],
     ];
 
     $opts['fdd']['blz'] = [
+      'tab' => [ 'id' => 'account' ],
       'name'   => $this->l->t('Bank Code'),
       'select' => 'T',
+      'input|LF' => 'H',
       'maxlen' => 12,
       'encryption' => [
         'encrypt' => function($value) { return $this->encrypt($value); },
@@ -462,6 +505,7 @@ received so far'),
 
     $opts['fdd']['bic'] = [
       'name'   => 'BIC',
+      'input|LF' => 'H',
       'select' => 'T',
       'maxlen' => 35,
       'encryption' => [
@@ -494,6 +538,7 @@ received so far'),
         'escape' => false,
         'sqlw' => 'IF($val_qas = "", 0, 1)',
         'values2' => [ 0 => '', 1 => '&#10004;' ],
+        'values2|CAP' => [ 0 => '', 1 => '' ],
       ]);
 
     $this->makeJoinTableField(
@@ -695,7 +740,7 @@ received so far'),
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     // $this->logInfo('FILTERS '.Functions\dump($opts['filters']));
-    // $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
+    $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
     // $this->logInfo('SORT '.Functions\dump($opts['sort_field']));
 
     if ($execute) {
