@@ -114,7 +114,7 @@ class UploadsController extends Controller {
           $uploadFile = $this->appStorage->newTemporaryFile($appDirectory);
           $uploadFile->putContent($cloudFile->getContent());
         } catch (\Throwable $t) {
-          return self::grumble($this->l->t('Could copy cloud file to upload storage.'));
+          return self::grumble($this->l->t('Could not copy cloud file to upload storage.'));
         }
 
         // We emulate an uploaded file here:
