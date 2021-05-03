@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
 
 /** Participant-fields. */
 trait ParticipantFieldsTrait
@@ -1068,7 +1069,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
   {
     /** @var Entities\ProjectParticipantField $participantField */
     foreach ($this->project['participantFields'] as $participantField) {
-      if ($participantField->getMultiplicity() != Types\EnumParticipantFieldMultiplicity::GROUPOFPEOPLE()) {
+      if ($participantField->getMultiplicity() != FieldMultiplicity::GROUPOFPEOPLE()) {
         continue;
       }
       /** @var Entities\ProjEctParticipantFieldDataOption $dataOption */
