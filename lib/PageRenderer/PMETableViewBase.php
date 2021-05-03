@@ -1496,7 +1496,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     if (!empty($opts['groupby_fields'])) {
       $keys = is_array($opts['key']) ? array_keys($opts['key']) : [ $opts['key'] ];
-      $opts['groupby_fields'] = array_unique(array_merge($keys, $opts['groupby_fields']));
+      $opts['groupby_fields'] = array_values(array_unique(array_merge($keys, $opts['groupby_fields'])));
       // $this->debug('GROUP_BY '.print_r($opts['groupby_fields'], true));
     }
     $this->joinTables = new \ArrayObject($joinTables);
