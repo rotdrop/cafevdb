@@ -147,8 +147,8 @@ const init = function(htmlContent, textStatus, request) {
           return false;
         });
       dialogHolder
-        .off('change', 'input.email-check')
-        .on('change', 'input.email-check', function(event) {
+        .off('change', 'input.email.pme-misc-check')
+        .on('change', 'input.email.pme-misc-check', function(event) {
           updateEmailForm();
           return false;
         });

@@ -37,6 +37,11 @@ import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
 import './lock-input.js';
+import {
+  formSelector as pmeFormSelector,
+  token as pmeToken,
+  classSelectors as pmeClassSelectors,
+} from './pme-selectors.js';
 
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
@@ -1023,7 +1028,7 @@ const mandateValidatePME = function(event, validateLockCB) {
 const mandatePopupInit = function(selector) {
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
-  const pmeReload = container.find('form.pme-form input.pme-reload').first();
+  const pmeReload = container.find(pmeFormSelector() + ' input.' + pmeToken('reload')).first();
   container.find(':button.sepa-debit-mandate, input.dialog.sepa-debit-mandate')
     .off('click')
     .on('click', function(event) {
@@ -1144,11 +1149,9 @@ const mandateInsuranceReady = function(selector) {
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
 
-  container.find('input.debit-note.pme-misc')
+  container.find('input.debit-note.' + pmeToken('misc'))
     .off('click')
     .on('click', mandateExportHandler);
-
-  return true;
 };
 
 const mandateReady = function(selector) {
@@ -1157,13 +1160,14 @@ const mandateReady = function(selector) {
   const container = PHPMyEdit.container(containerSel);
 
   // bail out if not for us.
-  const form = container.find('form.pme-form');
+  const form = container.find(pmeFormSelector());
   let dbTable = form.find('input[value="InstrumentInsurance"]');
   if (dbTable.length > 0) {
-    return mandateInsuranceReady(selector);
+    mandateInsuranceReady(selector);
+    return;
   }
 
-  const directDebitChooser = container.find('select.pme-debit-note-job');
+  const directDebitChooser = container.find('select.' + pmeToken('debit-note-job'));
   console.info('CHOOSER CHOSEN');
   directDebitChooser.chosen({
     disable_search: true,
@@ -1184,12 +1188,23 @@ const mandateReady = function(selector) {
   console.info('EXPORT MENU');
   pmeExportMenu(containerSel);
 
-  dbTable = form.find('input[value="SepaDebitMandates"]');
+  dbTable = form.find('input[value="SepaBankAccounts"]');
   if (dbTable.length === 0) {
     console.info('EXIT EARLY');
-    return true;
+    return;
   }
-  const table = form.find('table[summary="SepaDebitMandates"]');
+
+  console.info('DEBIT NOTE SUBMIT', container.find('input.debit-note.' + pmeToken('misc')));
+
+  container.find('input.debit-note.' + pmeToken('misc'))
+    .off('click')
+    .on('click', mandateExportHandler);
+
+  if (form.is(pmeClassSelectors('', ['list', 'view', 'delete']))) {
+    return;
+  }
+
+  const table = form.find('table[summary="SepaBankAccounts"]');
 
   const validateInput = function(event) {
     const input = $(this);
@@ -1198,19 +1213,19 @@ const mandateReady = function(selector) {
     });
   };
 
-  table.find('input[type="text"]').not('tr.pme-filter input')
+  table.find('input[type="text"]').not('tr.' + pmeToken('filter') + ' input')
     .off('blur')
     .on('blur', validateInput);
 
-  table.find('select').not('tr.pme-filter select')
+  table.find('select').not('tr.' + pmeToken('filter') + ' select')
     .off('change')
     .on('change', validateInput);
 
-  table.find('input[type="checkbox"]').not('tr.pme-filter input')
+  table.find('input[type="checkbox"]').not('tr.' + pmeToken('filter') + ' input')
     .off('change')
     .on('change', validateInput);
 
-  const submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
+  const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
   let submitActive = false;
   form
     .off('click', submitSel)
@@ -1264,12 +1279,6 @@ const mandateReady = function(selector) {
       $(this).trigger('blur');
     },
   });
-
-  container.find('input.debit-note.pme-misc')
-    .off('click')
-    .on('click', mandateExportHandler);
-
-  return true;
 };
 
 const mandatesDocumentReady = function() {
