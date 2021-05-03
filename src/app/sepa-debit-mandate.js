@@ -1144,7 +1144,7 @@ const mandateInsuranceReady = function(selector) {
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
 
-  container.find('input.pme-debit-note')
+  container.find('input.debit-note.pme-misc')
     .off('click')
     .on('click', mandateExportHandler);
 
@@ -1183,26 +1183,6 @@ const mandateReady = function(selector) {
     });
   console.info('EXPORT MENU');
   pmeExportMenu(containerSel);
-
-  $.each(
-    ['debit-note-amount', 'debit-note-subject'],
-    function(index, classValue) {
-      container.find('#pme-debit-note-job-up input.' + classValue)
-        .off('blur')
-        .on('blur', function(event) {
-          const $self = $(this);
-          container.find('#pme-debit-note-job-down input.' + classValue).val($self.val());
-          return false;
-        });
-
-      container.find('#pme-debit-note-job-down input.' + classValue)
-        .off('blur')
-        .on('blur', function(event) {
-          const $self = $(this);
-          container.find('#pme-debit-note-job-up input.' + classValue).val($self.val());
-          return false;
-        });
-    });
 
   dbTable = form.find('input[value="SepaDebitMandates"]');
   if (dbTable.length === 0) {
@@ -1285,7 +1265,7 @@ const mandateReady = function(selector) {
     },
   });
 
-  container.find('input.pme-debit-note')
+  container.find('input.debit-note.pme-misc')
     .off('click')
     .on('click', mandateExportHandler);
 

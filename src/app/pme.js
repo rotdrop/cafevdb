@@ -1380,13 +1380,13 @@ const pmeInit = function(containerSel) {
           const target = $(event.target);
           // divs and spans which make it up to here will be ignored,
           // everything else results in the default action.
-          if (target.is('.' + pmeToken('email-check'))) {
+          if (target.is('.' + pmeToken('misc-check') + '.email')) {
             return;
           }
-          if (target.is('.' + pmeToken('debit-note-check'))) {
+          if (target.is('.' + pmeToken('misc-check') + '.debit-note')) {
             return;
           }
-          if (target.is('.' + pmeToken('bulkcommit-check'))) {
+          if (target.is('.' + pmeToken('misc-check') + '.bulkcommit')) {
             return;
           }
           if (target.is('.graphic-links')) {

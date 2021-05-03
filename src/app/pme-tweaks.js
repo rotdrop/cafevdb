@@ -46,7 +46,7 @@ const pmeTweaks = function(container) {
     return $.trim($(this).text()).indexOf('-') === 0;
   }).addClass('negative');
 
-  $(globalState.PHPMyEdit.defaultSelector + ' input.pme-email')
+  $(globalState.PHPMyEdit.defaultSelector + ' input.email.pme-misc')
     .off('click')
     .on('click', function(event) {
       event.stopImmediatePropagation();

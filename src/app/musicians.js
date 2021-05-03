@@ -484,9 +484,9 @@ const ready = function(container) {
       return false;
     });
 
-  // container.find('input.pme-bulkcommit').addClass('formsubmit');
+  // container.find('input.bulkcommit.pme-misc').addClass('formsubmit');
   container
-    .find('input.pme-bulkcommit')
+    .find('input.bulkcommit.pme-misc')
     .addClass('pme-custom')
     .prop('disabled', false)
     .off('click')

@@ -209,8 +209,6 @@ class SepaBankAccounts extends PMETableViewBase
     $buttons = [];
     if ($projectMode) {
       $debitJob = $this->requestParameters->getParam('debit-job', '');
-      $debitAmount = $this->requestParameters->getParam('debit-note-amount', 0);
-      $debitSubject = $this->requestParameters->getParam('debit-note-subject', '');
 
       $debitJobs = '
 <span id="pme-debit-note-job" class="pme-debit-note-job pme-menu-block">
