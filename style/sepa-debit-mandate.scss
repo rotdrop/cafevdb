@@ -78,55 +78,28 @@ form#sepa-debit-mandate-form input.sepa-validation-toggle:checked ~ div.sepa-val
   background:url(../img/letsdoit.png);
 }
 
-input.pme-debit-note-[type=submit] {
+/******************************************************************************
+ *
+ * "misc" check-boxes and buttons
+ *
+ */
+
+input.debit-note.pme-misc-[type=submit] {
   background-image:url('../img/euro-x.png');
-  background-repeat:no-repeat;
-  width:28px;
-  height:28px;
-  font-size:0pt;
-  vertical-align:middle;
-  margin-top: 0px;
 }
-input.pme-debit-note+[type=submit] {
+input.debit-note.pme-misc+[type=submit] {
   background-image:url('../img/euro-yes.png');
-  background-repeat:no-repeat;
-  width:28px;
-  height:28px;
-  font-size:0pt;
-  vertical-align:middle;
-  margin-top: 0px;
 }
-input.pme-debit-note[type=submit] {
+input.debit-note.pme-misc[type=submit] {
   background-image:url('../img/euro.png');
-  background-repeat:no-repeat;
-  background-position:0px;
-  padding-left:24px;
-  /*padding-top:0px;*/
-  min-height:28px;
-  vertical-align:middle;
-  /* border-radius:4px; */
-  margin-top: 0px;
 }
 
-:not(.lt-ie9) input.pme-debit-note-check[type=checkbox] {
-  display:none;
-  /* visibility:hidden; */
-  /* position:fixed; */
-  /* left:0px; */
-  /* top:0px; */
-}
-:not(.lt-ie9) div.pme-debit-note-check {
-  width:24px;
-  height:24px;
+/* row check-boxes */
+:not(.lt-ie9) div.debit-note.pme-misc-check {
   background:url(../img/euro.png);
-  cursor:pointer;
-  vertical-align:middle;
 }
-:not(.lt-ie9) input.pme-debit-note-check[type=checkbox]:checked ~ div.pme-debit-note-check {
-  width:24px;
-  height:24px;
+:not(.lt-ie9) input.debit-note.pme-misc-check[type=checkbox]:checked ~ div.debit-note.pme-misc-check {
   background:url(../img/euro-yes.png);
-  vertical-align:middle;
 }
 
 /******************************************************************************
@@ -390,35 +363,27 @@ input.pme-debit-note[type=submit] {
 
 /******************************************************************************
  *
+ * control in list-view for the selection of the topics to charge.
+ *
+ */
+form.pme-form .pme-debit-note-job {
+  display:block;
+  width:100%;
+}
+
+form.pme-form .pme-debit-note-job .chosen-container.pme-debit-note-job {
+  width:100%!important;
+  height:auto!important;
+}
+
+/******************************************************************************
+ *
  * show-hide deleted in pme-table
  *
  */
 
 table.pme-main td.pme-value.sepa-bank-accounts table.hide-deleted tr.deleted {
   display:none;
-}
-
-/******************************************************************************
- *
- * debit job choices.
- *
- */
-
-/* blend out amount and subject for predefined debit transfers. */
-.pme-debit-note-job input.debit-note-amount,
-.pme-debit-note-job input.debit-note-subject {
-  display:none;
-}
-
-/* blend out amount and subject for predefined debit transfers. */
-.pme-debit-note-job.custom ~ input.debit-note-amount,
-.pme-debit-note-job.custom ~ input.debit-note-subject {
-  display:inline-block;
-}
-
-.pme-debit-note-job input.debit-note-amount,
-.pme-debit-note-job input.debit-note-subject {
-  margin-top:0;
 }
 
 /******************************************************************************

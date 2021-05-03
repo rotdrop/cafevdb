@@ -226,6 +226,12 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts            = [];
 
+    $opts['css']['postfix'] = [
+      self::CSS_TAG_DIRECT_CHANGE,
+      self::CSS_TAG_SHOW_HIDE_DISABLED,
+      self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS,
+    ];
+
     if (empty($projectName) || empty($this->projectId)) {
       throw new \InvalidArgumentException('Project-id and/or -name must be given ('.$projectName.' / '.$this->projectId.').');
     }
@@ -269,7 +275,8 @@ class ProjectParticipants extends PMETableViewBase
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'CPVDFM';
+    $opts['options'] = 'CPVDF';
+    $opts['options'] .= 'M'; // misc
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';

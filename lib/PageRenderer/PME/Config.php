@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -38,6 +38,7 @@ class Config extends DefaultOptions
     IURLGenerator $urlGenerator
   ) {
     $this->configService = $configService;
+    $this->l = $this->l10n();
 
     $options = [
       'language' => locale_get_primary_language($this->l10n()->getLanguageCode()),
@@ -49,8 +50,9 @@ class Config extends DefaultOptions
       'inc' => $this->getUserValue('pagerows', 20),
       'debug' => 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY),
       'misc' => [
-        'css' => [ 'minor' => 'pme-misc' ],
+        'css' => [ 'minor' => 'email tooltip-bottom' ],
       ],
+      'labels' => [ 'Misc' => $this->l->t('Em@il') ],
     ];
     parent::__construct($options);
   }

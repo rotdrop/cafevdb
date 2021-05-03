@@ -199,20 +199,12 @@ class SepaBankAccounts extends PMETableViewBase
     if ($projectMode) {
       $opts['options'] .= 'M';
     }
-    $opts['misc']['css']['major'] = 'debit-note';
+    $opts['misc']['css']['major'] = 'misc';
     $opts['misc']['css']['minor'] = 'debit-note tooltip-bottom';
     $opts['labels']['Misc'] = $this->l->t('Debit');
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
-
-    // Navigation style: B - buttons (default), T - text links, G - graphic links
-    // Buttons position: U - up, D - down (default)
-    //$opts['navigation'] = 'UG';
-
-    // Navigation style: B - buttons (default), T - text links, G - graphic links
-    // Buttons position: U - up, D - down (default)
-    //$opts['navigation'] = 'DB';
 
     $buttons = [];
     if ($projectMode) {
@@ -223,7 +215,7 @@ class SepaBankAccounts extends PMETableViewBase
       $debitJobs = '
 <span id="pme-debit-note-job" class="pme-debit-note-job pme-menu-block">
   <select multiple data-placeholder="'.$this->l->t('Debit Job').'"
-          class="pme-debit-note-job'.' '.($debitJob === 'amount' ? 'custom' : 'predefined').'"
+          class="pme-debit-note-job"
           title="'.$this->toolTipsService['debit-note-job-choice'].'"
           name="debitJobs[]">
     <option value=""></option>';
@@ -233,22 +225,19 @@ class SepaBankAccounts extends PMETableViewBase
       $debitJobs .= $this->pageNavigation->selectOptions($jobOptions);
       $debitJobs .= '
   </select>
-  <input type="text"
-         class="debit-note-amount"
-         value="'.$debitAmount.'"
-         name="debit-note-amount"
-         placeholder="'.$this->l->t('amount').'"/>
-  <input type="text"
-         class="debit-note-subject"
-         value="'.$debitSubject.'"
-         name="debit-note-subject"
-         placeholder="'.$this->l->t('subject').'"/>
 </span>';
-      $buttons[] = [ 'code' =>  $debitJobs ];
+      $buttons[] = [ 'code' =>  $debitJobs, 'name' => 'debit-jobs' ];
     }
-    $buttons[] = $this->pageNavigation->tableExportButton();
 
-    $opts['buttons'] = $this->pageNavigation->prependTableButtons($buttons, true);
+    $button = $this->pageNavigation->tableExportButton();
+    $button['name'] = 'export';
+    $buttons[] = $button;
+
+    $opts['buttons'] = $this->pageNavigation->prependTableButtons(
+      $buttons, [
+        'up' => [ 'left' => [ 'debit-jobs', 'misc', 'export' ] ],
+        'down' => [ 'left' => [ 'misc', 'export' ], 'right' => [ 'debit-jobs' ] ]
+      ]);
 
     // Display special page elements
     $opts['display'] = [

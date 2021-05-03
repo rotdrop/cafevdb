@@ -1164,6 +1164,7 @@ const mandateReady = function(selector) {
   }
 
   const directDebitChooser = container.find('select.pme-debit-note-job');
+  console.info('CHOOSER CHOSEN');
   directDebitChooser.chosen({
     disable_search: true,
     inherit_select_classes: true,
@@ -1180,6 +1181,8 @@ const mandateReady = function(selector) {
       $.fn.cafevTooltip.remove();
       return false;
     });
+  console.info('EXPORT MENU');
+  pmeExportMenu(containerSel);
 
   $.each(
     ['debit-note-amount', 'debit-note-subject'],
@@ -1203,6 +1206,7 @@ const mandateReady = function(selector) {
 
   dbTable = form.find('input[value="SepaDebitMandates"]');
   if (dbTable.length === 0) {
+    console.info('EXIT EARLY');
     return true;
   }
   const table = form.find('table[summary="SepaDebitMandates"]');
@@ -1267,8 +1271,6 @@ const mandateReady = function(selector) {
 
       return false;
     });
-
-  pmeExportMenu(containerSel);
 
   table.find('input.sepadate').datepicker({
     dateFormat: 'dd.mm.yy', // this is 4-digit year

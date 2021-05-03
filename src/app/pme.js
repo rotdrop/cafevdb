@@ -1275,6 +1275,8 @@ const pmeInit = function(containerSel) {
   const pmeGoto = pmeToken('goto');
   const pmePageRows = pmeToken('pagerows');
 
+  container.find('tr.' + pmeToken('navigation') + '.' + pmeToken('down')).find('select, select + .chosen-container').addClass('chosen-dropup');
+
   // Disable page-rows and goto submits, just not necessary
   container.find('input.' + pmePageRows).on('click', function(event) {
     event.stopImmediatePropagation();
@@ -1369,9 +1371,7 @@ const pmeInit = function(containerSel) {
       });
 
     // Trigger view or change "operation" when clicking on a data-row.
-    const rowSelector = formSel + ' td.' + pmeToken('cell') + ':not(.control)'
-          + ','
-          + formSel + ' td.' + pmeToken('navigation');
+    const rowSelector = formSel + ' td.' + pmeToken('cell') + ':not(.control)';
     container
       .off('click', rowSelector)
       .on('click', rowSelector, function(event) {

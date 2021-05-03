@@ -189,8 +189,7 @@ class Navigation
   public function tableExportButton()
   {
     $data = ''
-          .'<span id="pme-export-block" class="pme-export-block">'
-          .'<label>'
+          .'<span id="pme-export-block" class="pme-export-block pme-button-container">'
           .'<select '
           .'data-placeholder="'.$this->l->t('Export Table').'" '
           .'class="pme-export-choice" '
@@ -213,7 +212,7 @@ class Navigation
   <option '
     .'title="'.$this->toolTipsService['pme-export-html'].'" '
     .'value="HTML">'.$this->l->t('HTML Export').'</option>
-</select></label></span>';
+</select></span>';
 
     $button = ['code' => $data];
 
@@ -251,91 +250,87 @@ class Navigation
    *
    * @return Array suitable to be plugged in $opts['buttons'].
    */
-  public function prependTableButtons($buttons, $misc = false, $all = false)
+  public function prependTableButtons($buttons, $misc = false)
   {
-    // Cloned from phpMyEdit class:
-    if (!$misc) {
-      $default_buttons_no_B = array(
-        'L' => [
-          'placeholder', 'add',
-          '<<', '<',
-          'goto',
-          '>', '>>',
-          'rows_per_page',
-          'reload',
-        ],
-        'F' => [
-          'placeholder', 'add',
-          '<<', '<',
-          'goto',
-          '>', '>>',
-          'rows_per_page',
-          'reload',
-        ],
-        'A' => ['save', 'apply', 'more', 'cancel'],
-        'C' => ['save', 'more', 'cancel', 'reload'],
-        'P' => ['save', 'apply', 'cancel'],
-        'D' => ['save', 'cancel'],
-        'V' => ['change', 'copy', 'delete', 'cancel', 'reload']
-      );
-    } else {
-      $default_buttons_no_B = array(
-        'L' => [
-          'misc', 'placeholder', 'add',
-          '<<','<',
-          'goto',
-          '>','>>',
-          'rows_per_page',
-          'reload',
-        ],
-        'F' => [
-          'misc', 'placeholder', 'add',
-          '<<','<',
-          'goto',
-          '>','>>',
-          'rows_per_page',
-          'reload',
-        ],
-        'A' => ['save', 'apply', 'more', 'cancel'],
-        'C' => ['save', 'more', 'cancel', 'reload'],
-        'P' => ['save', 'apply', 'cancel'],
-        'D' => ['save', 'cancel'],
-        'V' => ['change', 'copy', 'delete', 'cancel', 'reload']
-      );
+    $defaultButtonsNoB = [
+      'L' => [
+        'add',
+        '<<', '<',
+        'goto',
+        '>', '>>',
+        'rows_per_page',
+        'reload',
+      ],
+      'F' => [
+        'add',
+        '<<', '<',
+        'goto',
+        '>', '>>',
+        'rows_per_page',
+        'reload',
+      ],
+      'A' => ['save', 'apply', 'more', 'cancel'],
+      'C' => ['save', 'more', 'cancel', 'reload'],
+      'P' => ['save', 'apply', 'cancel'],
+      'D' => ['save', 'cancel'],
+      'V' => ['change', 'copy', 'delete', 'cancel', 'reload']
+    ];
+
+    if ($misc === true) {
+      $misc = [ 'misc', 'placeholder' ];
+      foreach ($buttons as &$modButton) {
+        $modButton['name'] = 'placeholder';
+      }
+    } else if ($misc === false) {
+      $misc = [ 'placeholder' ];
+      foreach ($buttons as &$modButton) {
+        $modButton['name'] = 'placeholder';
+      }
+    } else if (!is_array($misc)) {
+      $misc = [];
+    }
+
+    if (!isset($misc['up']) && !isset($misc['down'])) {
+      $misc = [ 'up' => $misc, 'down' => $misc ];
+    }
+    $misc = array_merge([ 'up' => [], 'down' => [] ], $misc);
+    foreach ($misc as $vPos => &$miscDef) {
+      if (!isset($miscDef['left']) && !isset($miscDef['right'])) {
+        $miscDef = [ 'left' => $miscDef, 'right' => [] ];
+      }
+      $miscDef = array_merge([ 'left' => [], 'right' => [] ], $miscDef);
     }
 
     $result = [];
-    foreach ($default_buttons_no_B as $key => $value) {
-      if ($all && stristr("ACPDV", $key) !== false) {
-        array_unshift($value, $button);
-      }
-      $upValue = [];
-      $downValue = [];
-      foreach ($value as $oneButton) {
-        if ($oneButton === 'placeholder') {
+    $cssPositions = [ 'up' => 'top', 'down' => 'bottom' ];
+    foreach (['up', 'down'] as $verticalPosition) {
+      $miscVPos = $misc[$verticalPosition];
+      $defaultButtons = $defaultButtonsNoB;
+      $defaultButtons[L] = array_merge($miscVPos['left'], $defaultButtons[L], $miscVPos['right']);
+      $defaultButtons[F] = array_merge($miscVPos['left'], $defaultButtons[F], $miscVPos['right']);
+
+      foreach ($defaultButtons as $key => $value) {
+        $positionValue = [];
+        foreach ($value as $oneButton) {
+          $replacement = false;
           foreach ($buttons as $button) {
-            if (isset($button['code'])) { // 'code' is a magic PME thing
-              $buttonUp = preg_replace('/id="([^"]*)"/', 'id="$1-up"', $button);
-              $buttonDown = preg_replace('/id="([^"]*)"/', 'id="$1-down"', $button);
-              $buttonUp = preg_replace('/class="([^"]*)"/', 'class="$1 top"', $buttonUp);
-              $buttonDown = preg_replace('/class="([^"]*)"/', 'class="$1 bottom"', $buttonDown);
-              $buttonUp = str_replace('{POSITION}', 'top', $buttonUp);
-              $buttonDown = str_replace('{POSITION}', 'bottom', $buttonDown);
-              $upValue[] = $buttonUp;
-              $downValue[] = $buttonDown;
-            } else {
-              $upValue[]   = $button;
-              $downValue[] = $button;
+            if ($button['name'] == $oneButton) {
+              $replacement = true;
+              if (isset($button['code'])) { // 'code' is a magic PME thing
+                $button = preg_replace('/id="([^"]*)"/', 'id="$1-'.$verticalPosition.'"', $button);
+                $button = preg_replace('/class="([^"]*)"/', 'class="$1 '.$cssPositions[$verticalposition].'"', $button);
+                $button = str_replace('{POSITION}', $cssPositions[$verticalPosition], $button);
+              }
+              $positionValue[] = $button;
             }
           }
-        } else {
-          $upValue[]   = $oneButton;
-          $downValue[] = $oneButton;
+          if (!$replacement) {
+            $positionValue[] = $oneButton;
+          }
         }
+        $result[$key][$verticalPosition] = $positionValue;
       }
-      $result[$key] = ['up' => $upValue, 'down' => $downValue];
     }
-
     return $result;
   }
 
