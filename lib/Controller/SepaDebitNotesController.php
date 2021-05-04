@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -49,6 +50,9 @@ class SepaDebitNotesController extends Controller {
 
   /** @var RequestParameterService */
   private $parameterService;
+
+  /** @var SepaBulkTransactionService */
+  private $bulkTransactionService;
 
   /** @var FinanceService */
   private $financeService;
@@ -69,6 +73,7 @@ class SepaDebitNotesController extends Controller {
     , ConfigService $configService
     , FinanceService $financeService
     , ProjectService $projectService
+    , SepaBulkTransactionService $bulkTransactionService
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
   ) {
@@ -77,6 +82,7 @@ class SepaDebitNotesController extends Controller {
     $this->configService = $configService;
     $this->financeService = $financeService;
     $this->projectService = $projectService;
+    $this->bulkTransactionService = $bulkTransactionService;
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
     $this->l = $this->l10N();
@@ -85,47 +91,103 @@ class SepaDebitNotesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic)
+  public function serviceSwitch($topic, $projectId = 0, $sepaBulkTransactions = [])
   {
-    // PME_sys_mrecs[] = "{\"project_id\":\"67\",\"musician_id\":\"1\",\"sequence\":\"1\"}"
-    $mandateRecords = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);
+    switch ($topic) {
+    case 'create':
+    return $this->generateBulkTransactions(
+      $projectId,
+      // PME_sys_mrecs[] = "{\"musician_id\":\"1\",\"sequence\":\"1\"}"
+      $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []),
+      $sepaBulkTransactions);
+    default:
+      break;
+    }
+    return self::grumble($this->l->t('Unknown Request: "%s".', $topic));
+  }
 
-    // decode all mandate ids and fetch the mandates from the data-base
-    $mandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
-    $mandateRecords = array_map(
-      function($value) use ($mandatesRepository) {
-        $mandateId = json_decode($value, true);
-        return $mandatesRepository->find([
-          'project' => $mandateId['project_id'],
-          'musician' => $mandateId['musician_id'],
-          'sequence' => $mandateId['sequence'],
-        ]);
-      },
-      $mandateRecords);
+  private function generateBulkTransactions($projectId, $bankAccountRecords, $bulkTransactions)
+  {
+    /** @var Entities\Project $project */
+    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    if (empty($project)) {
+      return self::grumble($this->l->t('Unable to retrieve project with id %d from data-base.', $projectId));
+    }
+
+    // Decode all mandate ids and fetch the mandates from the
+    // data-base.  The data-base transactions could be optimized and
+    // retrieve all in a single query.
+    $accountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+    $participantsRepository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
+    $bankAccounts = [];
+    $participants = [];
+    foreach ($bankAccountRecords as $accountRecord) {
+      $accountId = json_decode($accountRecord, true);
+      $musicianId = $accountId['musician_id'];
+      $sequence = $accountId['sequence'];
+      /** @var Entities\SepaBankAccount $account */
+      $account = $accountsRepository->find([
+        'musician' => $musicianId,
+        'sequence' => $sequence,
+      ]);
+      if (empty($account)) {
+        return self::grumble($this->l->t('Bank account for musician-id %d, sequence %d not found.',
+                                         [ $musicianId, $sequence ]));
+      }
+      if (!empty($bankAccounts[$musicianId])) {
+        return self::grumble(
+          $this->l->t('More than one bank account submitted for musician %s, multiple IBANs %s, %s.',
+                      [
+                        $bankAccounts[$musicianId]->getMusician()->getPublicName(),
+                        $bankAccounts[$musicianId]->getIban(),
+                        $account->getIban(),
+                      ]));
+      }
+      $bankAccounts[$musicianId] = $account;
+      $participant = $participantsRepository->find(['project' => $project, 'musician' => $musicianId]);
+      if (empty($participant)) {
+        return self::grumble(
+          $this->l->t('Musician "%s" does not seem to belong to project "%s".', [
+            $account->getMusician()->getPublicName(), $project->getName()
+          ]));
+      }
+      $participants[$musicianId] = $participant;
+    }
+    foreach ($bankAccounts as $musicianId => $account) {
+      $this->logInfo('ACCOUNT: '.$account->getBankAccountOwner().' '.$account->getIban());
+    }
 
     // Fetch all desired field options. We have two cases: for most
     // field-types all options are charged at once, but for recurring
     // service-fees only the selected options are taken into account.
-    $debitJobs = array_unique($this->parameterService->getParam('debitJobs', []));
 
     $fieldRepository = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
     $receivablesRepository = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDataOption::class);
     $receivables = [];
-    foreach ($debitJobs as $debitJob) {
-      $fieldId = filter_var($debitJob, FILTER_VALIDATE_INT, ['min_range' => 1]);
+    foreach ($bulkTransactions as $bulkTransaction) {
+      $fieldId = filter_var($bulkTransaction, FILTER_VALIDATE_INT, ['min_range' => 1]);
       if ($fieldId !== false) {
         // all options from this field
         /** @var Entities\ProjectParticipantField $field */
         $field = $fieldRepository->find($fieldId);
+        if ($field->getProject() != $project) {
+          return self::grumble($this->l->t('Internal data inconsistency, field-project "%s" does not match current project "%s".',
+                                           [ $project->getName(), $field->getProject()->getName() ]));
+        }
         foreach ($field->getSelectableOptions() as $receivable) {
           $receivables[] = $receivable;
         }
-      } else if (Uuid::isValid($debitJob)) {
+      } else if (Uuid::isValid($bulkTransaction)) {
         // just this option, should be a recurring receivable
-        $receivable = $receivablesRepository->findOneBy(['key' => Uuid::asUuid($debitJob) ]);
+        /** @var Entities\ProjectParticipantFieldDataOption $receivable */
+        $receivable = $receivablesRepository->findOneBy(['key' => Uuid::asUuid($bulkTransaction) ]);
+        if ($receivable->getField()->getProject() != $project) {
+          return self::grumble($this->l->t('Internal data inconsistency, field-project "%s" does not match current project "%s".',
+                                           [ $project->getName(), $receivable->getField()->getProject()->getName() ]));
+        }
         $receivables[] = $receivable;
       } else {
-        return self::grumble($this->l->t('Submitted debit-job id "%s" is neither a participant field nor a field-option uuid.', $debitJob));
+        return self::grumble($this->l->t('Submitted debit-job id "%s" is neither a participant field nor a field-option uuid.', $bulkTransaction));
       }
     }
 
@@ -133,26 +195,13 @@ class SepaDebitNotesController extends Controller {
       $this->logInfo('RECEIVABLE '.$receivable->getKey().' / '.$receivable->getLabel().' / '.$receivable->getData());
     }
 
-    // Ok, we now need for each debit-mandate a list of receivables
-    //
-    // Mandate, [ [ AMOUNT, FieldDatum, ], ... ]
-    //
-    // In principle one could implement a method amount() and
-    // subject() on the Entities\ProjectParticipantFieldDatum as it
-    // has all necessary associations, including the link to the
-    // payments table. More efficient would perhaps be a direct
-    // join-query to the dataBase ...
-    //
-    // One plan: implement
-    //
-    // FieldDatum::amount()
-    // FieldDatum::subject()
-    // FieldDatum::paid()
-    //
-    // In principle this should then suffice to generate the
-    // debit-notes.
+    /** @var Entities\ProjectParticipant $participant */
+    foreach ($participants as $musicianId => $participant) {
+      $payments = $this->bulkTransactionService->generateProjectPayments($participant, $receivables);
+      $this->logInfo('PAYMENTS FOR '.$participant->getMusician()->getPublicName().' '.$payments->count());
+    }
 
-    return self::grumble($this->l->t('Unknown Request: "%s".', $topic));
+    return self::grumble($this->l->t('IMPLEMENT ME!'));
   }
 
 }

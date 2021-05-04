@@ -71,7 +71,13 @@ class SepaBulkTransactionService
 
     /** @var Entities\ProjectParticipantFieldDataOption $receivableOption */
     foreach ($receivableOptions as $receivableOption) {
-      $project = $receivableOption->getField()->getProject();
+      if ($project != $receivableOption->getField()->getProject()) {
+        throw new \RuntimeException(
+          $this->l->t('Refusing to generate payments for mismatching projects, current is "%s", but the receivable belongs to project "%s".', [
+            $project->getName(),
+            $receivableOption->getField()->getProject()->getName(),
+          ]));
+      }
       /** @var Entities\ProjectParticipantFieldDatum $receivable */
       foreach ($receivableOption->getMusicianFieldData($musician) as $receivable) {
         $payableAmount = $receivable->amountPayable();
@@ -93,6 +99,7 @@ class SepaBulkTransactionService
         $payments->add($payment);
       }
     }
+    return $payments;
   }
 
   // public static function removeDebitNote(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
