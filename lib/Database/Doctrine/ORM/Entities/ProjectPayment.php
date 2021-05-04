@@ -335,6 +335,30 @@ class ProjectPayment implements \ArrayAccess
   }
 
   /**
+   * Set sepaDebitMandate.
+   *
+   * @param string|null $sepaDebitMandate
+   *
+   * @return ProjectPayment
+   */
+  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):ProjectPayment
+  {
+    $this->sepaDebitMandate = $sepaDebitMandate;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaDebitMandate.
+   *
+   * @return SepaDebitMandate|null
+   */
+  public function getSepaDebitMandate():?SepaDebitMandate
+  {
+    return $this->sepaDebitMandate;
+  }
+
+  /**
    * Set debitMessageId.
    *
    * @param string $debitMessageId
