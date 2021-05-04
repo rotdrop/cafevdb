@@ -1167,19 +1167,19 @@ const mandateReady = function(selector) {
     return;
   }
 
-  const directDebitChooser = container.find('select.' + pmeToken('debit-note-job'));
+  const bulkTransactionChooser = container.find('select.sepa-bulk-transactions');
   console.info('CHOOSER CHOSEN');
-  directDebitChooser.chosen({
+  bulkTransactionChooser.chosen({
     disable_search: true,
     inherit_select_classes: true,
     allow_single_deselect: true,
   });
-  directDebitChooser
+  bulkTransactionChooser
     .off('change')
     .on('change', function(event) {
       const $self = $(this);
       const otherClass = $self.hasClass('top') ? '.bottom' : '.top';
-      const $other = directDebitChooser.filter(otherClass);
+      const $other = bulkTransactionChooser.filter(otherClass);
       selectValues($other, selectValues($self));
       $other.trigger('chosen:updated');
       $.fn.cafevTooltip.remove();

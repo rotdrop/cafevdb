@@ -202,13 +202,13 @@ account.'),
 
       'debit-note-email-message-id' => $this->l->t('Email message-id header of the notification email for this debit-note.'),
 
-      'debit-note-job-choice' => $this->l->t('Select here which kind of debit note you would like to
-issue. Basically, besides the special instrument insureance and
-member-fee debits there are the choices of an arbitrary amount, the
-project fee deposit are the remaining (are all, if there was no
-deposit) project fees. In any case the data-base application will take
-care not to draw to much money, based on the payments stored in the
-data-base.'),
+      'sepa-bulk-transactions-choice' => $this->l->t('Select which kind of bulk-transactions should be generated.
+On submit the requested transactions are stored in the data-base and appropriate
+export files are generated which are suitable for use with a local
+banking application. The banking appliation has then to be fed with the export
+sets on your local computer in order to actually transfer the data to the bank.
+At the time of this writing the only supported banking
+application is AQBanking.'),
 
       'debit-note-job-option-amount' => $this->l->t('Draw an arbitrary amount from the debitor. However, the amount is
 automatically limited not to exceed the outstanding debts of the

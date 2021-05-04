@@ -366,12 +366,12 @@ input.debit-note.pme-misc[type=submit] {
  * control in list-view for the selection of the topics to charge.
  *
  */
-form.pme-form .pme-debit-note-job {
+form.pme-form .sepa-bulk-transactions {
   display:block;
   width:100%;
 }
 
-form.pme-form .pme-debit-note-job .chosen-container.pme-debit-note-job {
+form.pme-form .sepa-bulk-transactions .chosen-container.sepa-bulk-transactions {
   width:100%!important;
   height:auto!important;
 }

@@ -214,23 +214,23 @@ class SepaBankAccounts extends PMETableViewBase
 
     $buttons = [];
     if ($projectMode) {
-      $debitJob = $this->requestParameters->getParam('debit-job', '');
+      $cgiBulkTransactions = $this->requestParameters->getParam('sepaBulkTransactions', '');
 
-      $debitJobs = '
-<span id="pme-debit-note-job" class="pme-debit-note-job pme-menu-block">
-  <select multiple data-placeholder="'.$this->l->t('Debit Job').'"
-          class="pme-debit-note-job"
-          title="'.$this->toolTipsService['debit-note-job-choice'].'"
-          name="debitJobs[]">
+      $sepaBulkTransactions = '
+<span id="sepa-bulk-transactions" class="sepa-bulk-transactions pme-menu-block">
+  <select multiple data-placeholder="'.$this->l->t('SEPA Bulk Transactions').'"
+          class="sepa-bulk-transactions"
+          title="'.$this->toolTipsService['sepa-bulk-transactions-choice'].'"
+          name="sepaBulkTransactions[]">
     <option value=""></option>';
 
       $jobOptions = $this->participantFieldsService->monetarySelectOptions($this->project);
 
-      $debitJobs .= $this->pageNavigation->selectOptions($jobOptions);
-      $debitJobs .= '
+      $sepaBulkTransactions .= $this->pageNavigation->selectOptions($jobOptions, $cgiBulkTransactions);
+      $sepaBulkTransactions .= '
   </select>
 </span>';
-      $buttons[] = [ 'code' =>  $debitJobs, 'name' => 'debit-jobs' ];
+      $buttons[] = [ 'code' =>  $sepaBulkTransactions, 'name' => 'bulk-transactions' ];
     }
 
     $button = $this->pageNavigation->tableExportButton();
@@ -239,8 +239,8 @@ class SepaBankAccounts extends PMETableViewBase
 
     $opts['buttons'] = $this->pageNavigation->prependTableButtons(
       $buttons, [
-        'up' => [ 'left' => [ 'debit-jobs', 'misc', 'export' ] ],
-        'down' => [ 'left' => [ 'misc', 'export' ], 'right' => [ 'debit-jobs' ] ]
+        'up' => [ 'left' => [ 'bulk-transactions', 'misc', 'export' ] ],
+        'down' => [ 'left' => [ 'misc', 'export' ], 'right' => [ 'bulk-transactions' ] ]
       ]);
 
     // Display special page elements
