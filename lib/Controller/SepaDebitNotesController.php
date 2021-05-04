@@ -118,13 +118,18 @@ class SepaDebitNotesController extends Controller {
     // data-base.  The data-base transactions could be optimized and
     // retrieve all in a single query.
     $accountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+    $debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
     $participantsRepository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
+
     $bankAccounts = [];
+    $debitMandates = [];
     $participants = [];
     foreach ($bankAccountRecords as $accountRecord) {
       $accountId = json_decode($accountRecord, true);
       $musicianId = $accountId['musician_id'];
       $sequence = $accountId['sequence'];
+      $mandateSequence = $accountId['SepaDebitMandate_key'];
+
       /** @var Entities\SepaBankAccount $account */
       $account = $accountsRepository->find([
         'musician' => $musicianId,
@@ -144,6 +149,7 @@ class SepaDebitNotesController extends Controller {
                       ]));
       }
       $bankAccounts[$musicianId] = $account;
+
       $participant = $participantsRepository->find(['project' => $project, 'musician' => $musicianId]);
       if (empty($participant)) {
         return self::grumble(
@@ -152,6 +158,35 @@ class SepaDebitNotesController extends Controller {
           ]));
       }
       $participants[$musicianId] = $participant;
+
+
+      if (!empty($mandateSequence)) {
+        /** @var Entities\SepaDebitMandate $mandate */
+        $mandate = $debitMandatesRepository->find([
+          'musician' => $musicianId,
+          'sequence' => $mandateSequence,
+        ]);
+        if (empty($mandate)) {
+        return self::grumble($this->l->t('Debit-mandate for musician-id %d, sequence %d not found.',
+                                         [ $musicianId, $mandateSequence ]));
+        }
+        if (!empty($debitMandates[$musicianId])) {
+          return self::grumble(
+            $this->l->t('More than one debit-mandate submitted for musician %s, multiple references %s, %s.',
+                        [
+                          $mandate[$musicianId]->getMusician()->getPublicName(),
+                          $debitMandates[$musicianId]->getMandateReference(),
+                          $mandate->getMandateReference(),
+                        ]));
+        }
+        if ($mandate->getSepaBankAccount() != $account) {
+          return self::grumble(
+            $this->l->t('Debit-mandate is for bank-account "%s", but the current bank-account is "%s".', [
+              $mandate->getSepaBankAccount()->getIban(), $account->getIban()
+            ]));
+        }
+        $debitMandates[$musicianId] = $mandate;
+      }
     }
     foreach ($bankAccounts as $musicianId => $account) {
       $this->logInfo('ACCOUNT: '.$account->getBankAccountOwner().' '.$account->getIban());

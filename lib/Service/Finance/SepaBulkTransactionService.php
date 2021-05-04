@@ -57,7 +57,14 @@ class SepaBulkTransactionService
   }
 
   /**
-   * Generate the payments for the specified service-fee options
+   * Generate the payments for the specified service-fee options. The
+   * payments are returned unpersisted.
+   *
+   * @param Entities\ProjectParticipant $participant
+   *
+   * @param array<int, Entities\ProjectParticipantFieldDataOption> $receivableOptions
+   *
+   * @return array
    */
   public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions):ArrayCollection
   {
@@ -65,7 +72,6 @@ class SepaBulkTransactionService
     if (empty($receivableOptions)) {
       return $payments;
     }
-    $bankAccount = $participant->getSepaBankAccount();
     $project = $participant->getProject();
     $musician = $participant->getMusician();
 
@@ -84,13 +90,14 @@ class SepaBulkTransactionService
         $paidAmount = $receivable->amountPaid();
         $debitAmount = round($payableAmount - $paidAmount, 2);
         if ($debitAmount == 0.0) {
-          continue; // no need to debit empty amounts
+          // No need to debit empty amounts
+          // FIXME. Perhaps empty amounts should also be recorded.
+          continue;
         }
         $payment = (new Entities\ProjectPayment)
                  ->setProject($project)
                  ->setMusician($musician)
                  ->setAmount($debitAmount)
-                 ->setSepaDebitMandate($sepaDebitMandate)
                  ->setSubject($receivable->paymentReference());
         // the following are set later:
         // ->setDateOfReceipt() set to due-date of debit note
