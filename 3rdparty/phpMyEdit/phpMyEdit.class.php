@@ -135,11 +135,13 @@ class phpMyEdit
 
 	// Record manipulation
 	var $key;		// name of field which is the unique key
-	var $key_num;	// number of field which is the unique key
+	var $key_num;	// array of field-numbers which are the unique keys
 	var $key_type;	// type of key field (int/real/string/date etc.)
 	var $key_delim;	// character used for key value quoting
-	var $groupby;   // array of fields for groupby clause, or false
 	var $rec;		// number of record selected for editing
+	var $groupby;   // array of fields for groupby clause, or empty
+	var $groupby_num; // field numbers of groupby fields
+	var $groupby_rec; // values of the group-by fields
 	var $mrecs;     // array of custom-multi records selected
 	var $inc;		// number of records to display
 	var $fm;		// first record to display
@@ -1343,6 +1345,14 @@ class phpMyEdit
 				$qparts[self::QPARTS_SELECT] .= ','.$this->fqn($key);
 			}
 		}
+		// Do the same for group-by fields if "mrecs" are requested.
+		if ($this->misc_enabled()) {
+			foreach ($this->groupby as $key) {
+				if (!in_array ($key, $this->fds)) {
+					$qparts[self::QPARTS_SELECT] .= ','.$this->fqn($key);
+				}
+			}
+		}
 		$qparts[self::QPARTS_FROM]	 = @$this->get_SQL_join_clause();
 		$qparts[self::QPARTS_WHERE] = $this->get_SQL_where_from_query_opts();
 		$qparts[self::QPARTS_GROUPBY] = $this->get_SQL_groupby_query_opts();
@@ -1441,7 +1451,7 @@ class phpMyEdit
 	{
 		$fields = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if (/*false*/ !$this->displayed[$k] && !in_array($k, $this->key_num)) {
+			if (/*false*/ !$this->displayed[$k] && !in_array($k, $this->key_num) && !in_array($k, $this->groupby_num)) {
 				continue;
 			}
 			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed;
@@ -2365,10 +2375,6 @@ class phpMyEdit
 				$data   = $valgrp['data'];
 				$multiValues = count($vals) > 1;
 			}
-		}
-
-		if ($this->fds[$k] == "SepaBankAccounts:iban") {
-			$this->logInfo('HELLO: '.$this->col_has_values($k));
 		}
 
 		/* If multi is not requested and the value-array has only one
@@ -4485,6 +4491,7 @@ class phpMyEdit
 		while ((!$fetched && ($row = $this->sql_fetch($res)) != false)
 			   || ($fetched && $row != false)) {
 			$fetched = false;
+			$key_rec = [];
 			foreach ($this->key_num as $key => $key_num) {
 				if ($this->col_has_description($key_num)) {
 					$key_rec[$key] = $row['qf'.$key_num.'_idx'];
@@ -4492,8 +4499,6 @@ class phpMyEdit
 					$key_rec[$key] = $row['qf'.$key_num];
 				}
 			}
-			//$key_rec[$key]   = $row['qf'.$key_num];
-
 			$this->exec_data_triggers(self::SQL_QUERY_SELECT, $row);
 
 			switch (count($key_rec)) {
@@ -4508,6 +4513,21 @@ class phpMyEdit
 					break;
 			}
 			$recordQueryData = $this->key_record_query_data($key_rec);
+
+			$groupby_rec = [];
+			if (!empty($this->groupby)) {
+				foreach ($this->groupby_num as $key => $key_num) {
+					if ($this->col_has_description($key_num)) {
+						$groupby_rec[$key] = $row['qf'.$key_num.'_idx'];
+					} else {
+						$groupby_rec[$key] = $row['qf'.$key_num];
+					}
+				}
+				$mrecRecordData = json_encode($groupby_rec);
+			} else {
+				$mrecRecordData = $recordData;
+			}
+
 			echo
 				'<tr class="'.$this->getCSSclass('row', null, 'next').'"'.
 				'    data-'.$this->cgi['prefix']['sys']."rec='".$recordData."'\n".'>'."\n";
@@ -4621,16 +4641,16 @@ class phpMyEdit
 
 						echo '<td class="'.$css_class_name.' '.$misccss.'">'
 							.'<label class="'.$css
-							.'" for="'.$namebase.'-'.htmlspecialchars($recordData)
+							.'" for="'.$namebase.'-'.htmlspecialchars($mrecRecordData)
 							.'" '.$ttip.'>'
 							.'<input class="'.$css
 							.'" '.$ttip
-							.'id="'.$namebase.'-'.htmlspecialchars($recordData)
+							.'id="'.$namebase.'-'.htmlspecialchars($mrecRecordData)
 							.'" type="checkbox" name="'.$namebase.'[]'
-							.'" value="',htmlspecialchars($recordData),'"';
+							.'" value="',htmlspecialchars($mrecRecordData),'"';
 						// Set all members of $this->mrecs as checked, or add the current file
 						// result
-						$mrecs_key = array_search($recordData, $this->mrecs);
+						$mrecs_key = array_search($mrecRecordData, $this->mrecs);
 						if (($this->operation != '-' && $mrecs_key !== false)
 							||
 							($this->operation == '+')) {
@@ -4645,7 +4665,7 @@ class phpMyEdit
 
 						// remove all displayed misc records as these
 						// are handled by the check-boxes.
-						while (($mrecs_key = array_search($recordData, $this->mrecs)) !== false) {
+						while (($mrecs_key = array_search($mrecRecordData, $this->mrecs)) !== false) {
 							unset($this->mrecs[$mrecs_key]);
 						}
 					}
@@ -5553,8 +5573,14 @@ class phpMyEdit
 		$this->num_fds				= $field_num;
 		$this->num_fields_displayed = $num_fields_displayed;
 		foreach (array_keys($this->key) as $key) {
-			$this->key_num[$key] = array_search($key, $this->fds);
+			$this->key_num[$key] = $this->fdn[$key];
 		}
+		foreach ($this->groupby as $key) {
+			$field_num = $this->fdn[$key];
+			$this->groupby_num[$key] = $field_num;
+			$this->fdd[$field_num]['options'] .= 'LF';
+		}
+
 		/* Adds first displayed column into sorting fields by replacing last
 		   array entry. Also remove duplicite values and change column names to
 		   their particular field numbers.
@@ -5900,9 +5926,13 @@ class phpMyEdit
 			$this->key = [ $this->key => $opts['key_type'] ];
 		}
 		$this->groupby   = @$opts['groupby_fields'];
-		if ($this->groupby && !is_array($this->groupby)) {
-			$this->groupby = array($this->groupby);
+		if ($this->groupby) {
+			if (!is_array($this->groupby)) {
+				$this->groupby = array($this->groupby);
+			}
+			$this->groupby = array_values(array_unique(array_merge(array_keys($this->key), $this->groupby)));
 		}
+
 		$this->inc		 = $opts['inc'];
 		$this->options	 = $opts['options'];
 		$this->fdd		 = $opts['fdd'];
