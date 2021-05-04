@@ -629,11 +629,8 @@ class FinanceService
   {
     $result = [ 'iban' => $iban ];
 
-    $this->logInfo('IBAN '.print_r($result, true));
-
     $iban = new \PHP_IBAN\IBAN($iban);
     if (!$iban->Verify()) {
-      $this->logInfo('VERIFY');
       return null;
     }
 
@@ -647,12 +644,10 @@ class FinanceService
       $bav = new \malkusch\bav\BAV;
 
       if (!$bav->isValidBank($ibanBLZ)) {
-      $this->logInfo('INVALID');
         return null;
       }
 
       if (!$bav->isValidAccount($ibanKTO)) {
-      $this->logInfo('INVALID ACCOUNT');
         return null;
       }
 
