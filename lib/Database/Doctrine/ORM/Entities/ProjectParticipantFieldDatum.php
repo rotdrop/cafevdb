@@ -274,7 +274,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     case Multiplicity::GROUPOFPEOPLE():
       // value in management option of $field
       $managementOption = $this->field->getManagementOption();
-      if ($managementOption) {
+      if (empty($managementOption)) {
         throw new \RuntimeException('Unable to access management option for obtaining the field value.');
       }
       $value = filter_var($managementOption->getData(), FILTER_VALIDATE_FLOAT);
