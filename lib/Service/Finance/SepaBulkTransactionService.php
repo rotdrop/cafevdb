@@ -42,11 +42,13 @@ class SepaBulkTransactionService
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   // ordinary submission and notification deadlines
-  const DEBIT_NOTE_SUBMISSION_DEADLINE = 3;
+  const DEBIT_NOTE_SUBMISSION_DEADLINE = 1;
   const DEBIT_NOTE_NOTIFICATION_DEADLINE = 14;
 
   // fancy, just to have some reminders and a deadline on the task-list
-  const BANK_TRANSFER_SUBMISSION_DEADLINE = 2; // 1 should be enough ...
+  const BANK_TRANSFER_SUBMISSION_DEADLINE = 1; // 1 should be enough ...
+
+  const BULK_TRANSACTION_REMINDER_SECONDS = 24 * 60 * 60; /* alert one day in advance */
 
   /** ORM\EntityRepository */
   private $debitNoteRepository;
@@ -108,6 +110,8 @@ class SepaBulkTransactionService
         $payment = (new Entities\ProjectPayment)
                  ->setProject($project)
                  ->setMusician($musician)
+                 ->setReceivable($receivable)
+                 ->setReceivableOption($receivableOption)
                  ->setAmount($debitAmount)
                  ->setSubject($receivable->paymentReference());
         // the following are set later:

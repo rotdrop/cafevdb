@@ -25,6 +25,10 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use \DateTimeImmutable AS DateTime;
 
+use Cmixin\BusinessDay;
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -50,6 +54,16 @@ class FinanceService
   const SEPA_MANDATE_EXPIRE_MONTHS = 36; ///< Unused mandates expire after this time.
   const BANK_NAME_MAX = 32; // for pretty-printing
 
+  const TARGET2_HOLIDAYS = [
+    'new-year'                => '01-01',
+    'easter-2'                => '= easter -2',
+    'easter'                  => '= easter',
+    'easter-p1'               => '= easter 1',
+    'labor-day'               => '05-01',
+    'christmas'               => '12-25',
+    'christmas-next-day'      => '12-26',
+  ];
+
   /** @var EventsService */
   private $eventsService;
 
@@ -67,6 +81,61 @@ class FinanceService
     $this->l = $this->l10n();
 
     $this->mandatesRepository = $this->getDatabaseRepository(self::ENTITY);
+
+    BusinessDay::enable([
+      Carbon::class,
+      CarbonImmutable::class,
+    ]);
+    CarbonImmutable::setHolidays('target2', $targetHolidays);
+  }
+
+  /**
+   * Add the given offset of days to the given $fromDate. If
+   * $calendarOffset is non-empty, then the resulting absolute
+   * distance from $fromDate will be the maxium of both offsets. The
+   * offsets must not have different signs.
+   *
+   * Business-days are relative to the SEPA TARGET2 calendar,
+   * {@see https://en.wikipedia.org/wiki/TARGET2#Holidays}
+   *
+   * @param int $businessOffset Offset in TARGET2 business days.
+   *
+   * @param int|null $calendarOffset Offset in calendar days.
+   *
+   * @param \DateTimeInterface|null $fromDate The pivot-date.
+   */
+  public function targetDeadline(int $businessOffset, ?int $calendarOffset = null, ?\DateTimeInterface $fromDate = null):\DateTimeInterface
+  {
+    /** @var CarbonImmutable $fromDate */
+    if (empty($fromDate)) {
+      $fromDate = new CarbonImmutable('now', $this->getDateTimeZone());
+    } else {
+      $fromDate = (new CarbonImmutable)
+                ->setTimezone($fromDate->getTimezone())
+                ->setTimestamp($fromDate->getTimestamp());
+    }
+
+    if (!empty($calendarOffset) && $businessOffset*$calendarOffset < 0) {
+      throw new \RuntimeException(
+        $this->l->t('The business-day and calendar-day offset must have the same sign (%d / %d)', [
+          $businessOffset, $calendarOffset
+        ]));
+    }
+
+    CarbonImmutable::setHolidaysRegion('target2');
+    $businessDeadline = $fromDate->addBusinessDays($businessOffset);
+    if (!empty($calendarOffset)) {
+      $calendarDeadline = $fromDate->addDays($calendarOffset);
+
+      $businessInterval = $fromDate->diff($businessDeadline, true);
+      $calendarInterval = $fromDate->diff($calendarDeadline, true);
+
+      if ($calendarInterval->days > $businessInterval->days) {
+        return $calendarDeadline;
+      }
+    }
+
+    return $businessDeadline;
   }
 
   public function isClubMembersProject($projectOrId):bool
@@ -177,21 +246,21 @@ class FinanceService
    * Add an event to the finance calendar, possibly including a
    * reminder.
    *
-   * @param $title
-   * @param $description (may be empty)
-   * @param $projectName (may be empty)
-   * @param $timeStamp
-   * @param $alarm (maybe <= 0 for no alarm)
+   * @param string $title
+   * @param string $description (may be empty)
+   * @param null|Entities\Project $projectName (may be empty)
+   * @param \DateTimeInterface $timeStamp
+   * @param int $alarm (maybe <= 0 for no alarm)
    *
    * @return null|string new event uri
    */
-  public function financeEvent($title, $description, $projectName, $timeStamp, $alarm = false): ?string
+  public function financeEvent($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?string
   {
     $eventKind = 'finance';
     $categories = '';
     if ($projectName) {
       // This triggers adding the event to the respective project when added
-      $categories .= $projectName.',';
+      $categories .= $project->getName().',';
     }
     $categories .= $this->l->t('finance');
     $calKey       = $eventKind.'calendar';
@@ -200,8 +269,8 @@ class FinanceService
 
     $eventData = [
       'summary' => $title,
-      'from' => date('d-m-Y', $timeStamp),
-      'to' => date('d-m-Y', $timeStamp),
+      'from' => $time->format('d-m-Y'),
+      'to' => $time->format('d-m-Y'),
       'allday' => 'on',
       'location' => 'Cyber-Space',
       'categories' => $categories,
@@ -218,21 +287,21 @@ class FinanceService
    * Add a task to the finance calendar, possibly including a
    * reminder.
    *
-   * @param $title
-   * @param $description (may be empty)
-   * @param $projectName (may be empty)
-   * @param $timeStamp
-   * @param $alarm (maybe <= 0 for no alarm)
+   * @param string $title
+   * @param string $description (may be empty)
+   * @param null|Entities\Project $project (may be empty)
+   * @param \DateTimeInterface $time
+   * @param int $alarm (maybe <= 0 for no alarm)
    *
    * @return null|string new event uri
    */
-  public function financeTask($title, $description, $projectName, $timeStamp, $alarm = false): ?string
+  public function financeTask($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?string
   {
     $taskKind = 'finance';
     $categories = '';
     if ($projectName) {
       // This triggers adding the task to the respective project when added
-      $categories .= $projectName.',';
+      $categories .= $project->getName().',';
     }
     $categories .= $this->l->t('finance');
     $calKey       = $taskKind.'calendar';
@@ -241,8 +310,8 @@ class FinanceService
 
     $taskData = [
       'summary' => $title,
-      'due' => date('d-m-Y', $timeStamp),
-      'start' => date('d-m-Y'),
+      'due' => $time->format('d-m-Y'),
+      'start' => $time->format('d-m-Y'),
       'location' => 'Cyber-Space',
       'categories' => $categories,
       'description' => $description,
@@ -252,6 +321,17 @@ class FinanceService
     ];
 
     return $this->eventsService->newTask($taskData);
+  }
+
+  /**
+   * Delete an entry from the finance calendar.
+   */
+  public function deleteFinanceCalendarEntry($localUri)
+  {
+    $taskKind = 'finance';
+    $calKey = $taskKind.'calendar';
+    $calendarId = $this->getConfigValue($calKey.'id', false);
+    $this->eventsService->deleteCalendarEntry($calendarId, $localUri);
   }
 
   /**
