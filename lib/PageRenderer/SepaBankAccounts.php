@@ -90,16 +90,12 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'column' => 'id',
     ],
-    self::PROJECT_PAYMENTS_TABLE => [
-      'entity' => Entities\ProjectPayment::class,
+    self::COMPOSITE_PAYMENTS_TABLE => [
+      'entity' => Entities\CompositePayment::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'musician_id' => 'musician_id',
         'bank_account_sequence' => 'sequence',
-        'project_id' => [
-          'table' => self::PROJECT_PARTICIPANTS_TABLE,
-          'column' => 'project_id',
-        ],
       ],
       'column' => 'id',
     ],
@@ -562,7 +558,7 @@ received so far'),
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'date_of_receipt',
+      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt',
       [
         'tab' => [ 'id' => [ 'account', 'mandate' ] ],
         'name'     => $this->l->t('Last-Used Date'),

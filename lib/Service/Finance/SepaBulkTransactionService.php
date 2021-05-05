@@ -41,6 +41,13 @@ class SepaBulkTransactionService
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  // ordinary submission and notification deadlines
+  const DEBIT_NOTE_SUBMISSION_DEADLINE = 3;
+  const DEBIT_NOTE_NOTIFICATION_DEADLINE = 14;
+
+  // fancy, just to have some reminders and a deadline on the task-list
+  const BANK_TRANSFER_SUBMISSION_DEADLINE = 2; // 1 should be enough ...
+
   /** ORM\EntityRepository */
   private $debitNoteRepository;
 
@@ -64,13 +71,16 @@ class SepaBulkTransactionService
    *
    * @param array<int, Entities\ProjectParticipantFieldDataOption> $receivableOptions
    *
-   * @return array
+   * @return Entities\CompositePayment
    */
-  public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions):ArrayCollection
+  public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions):Entities\CompositePayment
   {
     $payments = new ArrayCollection();
+    $totalAmount = 0.0;
+    $subject = [];
+
     if (empty($receivableOptions)) {
-      return $payments;
+      return [ $payments, $totalAmount ];
     }
     $project = $participant->getProject();
     $musician = $participant->getMusician();
@@ -94,6 +104,7 @@ class SepaBulkTransactionService
           // FIXME. Perhaps empty amounts should also be recorded.
           continue;
         }
+        /** @var Entities\ProjectPayment $payment */
         $payment = (new Entities\ProjectPayment)
                  ->setProject($project)
                  ->setMusician($musician)
@@ -104,9 +115,17 @@ class SepaBulkTransactionService
         // ->setDebitNote($debitNote)
         // ->setDebitMessageId($debitMessageId)
         $payments->add($payment);
+        $totalAmount += $debitAmount;
+        $subject[] = $payment->getSubject();
       }
     }
-    return $payments;
+    $compositePayment = (new Entities\CompositePayment)
+                      ->setMusician($participant->getMusician())
+                      ->setProjectPayments($payments)
+                      ->setAmount($totalAmount)
+                      ->setSubject(implode('; ', $subject));
+
+    return $compositePayment;
   }
 
   // public static function removeDebitNote(&$pme, $op, $step, $oldvals, &$changed, &$newvals)

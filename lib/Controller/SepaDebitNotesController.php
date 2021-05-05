@@ -108,6 +108,8 @@ class SepaDebitNotesController extends Controller {
 
   private function generateBulkTransactions($projectId, $bankAccountRecords, $bulkTransactions)
   {
+    $bulkTransactions = array_values(array_unique($bulkTransactions));
+
     /** @var Entities\Project $project */
     $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     if (empty($project)) {
@@ -230,11 +232,45 @@ class SepaDebitNotesController extends Controller {
       $this->logInfo('RECEIVABLE '.$receivable->getKey().' / '.$receivable->getLabel().' / '.$receivable->getData());
     }
 
+
+    // At this point the submitted data should be consistent, start to generate the payments.
+
+    $debitNote = new Entities\SepaDebitNote;
+    $bankTransfer = new Entities\SepaBankTransfer;
+
     /** @var Entities\ProjectParticipant $participant */
     foreach ($participants as $musicianId => $participant) {
-      $payments = $this->bulkTransactionService->generateProjectPayments($participant, $receivables);
-      $this->logInfo('PAYMENTS FOR '.$participant->getMusician()->getPublicName().' '.$payments->count());
+      /** @var Entities\CompositePayment $compositePayment */
+      $compositePayment = $this->bulkTransactionService->generateProjectPayments($participant, $receivables);
+      $this->logInfo('PAYMENTS FOR '
+                     . $participant->getMusician()->getPublicName()
+                     . ' ' . $compositePayment->getProjectPayments()->count()
+                     . ' ' . $compositePayment->getAmout());
+
+      if ($compositePayment->getAmount() == 0.0) {
+        // @todo Check whether this should be communicated to the musician anyway
+        continue;
+      }
+      $compositePayment->setSepaBankAccount($bankAccounts[$musicianId]);
+      if ($compositePayment->getAmount() > 0.0) {
+        // payment, try debit note, bail out if there is none.
+        // @todo We could relay this and just send a reminder to the musician.
+        if (empty($debitMandates[$musicianId])) {
+          return self::grumble(
+            $this->l->t('Musician "%s" has to pay an amount of "%f", but there is no debit-note-mandate for the musician.', [
+              $participant->getMusician()->getPublicName(), $compositePayment->getAmount(),
+            ]));
+        }
+        $compositePayment->setSepaDebitMandate($debitMandates[$musicianId]);
+        $compositePayment->setSepaTransaction($debitNote);
+        $debitNote->getPayments()->add($compositePayment);
+      } else {
+        $compositePayment->setSepaTransaction($bankTransfer);
+        $bankTransfer->getPayments()->add($compositePayment);
+      }
     }
+
+    // TODO: generate deadlines and so on
 
     return self::grumble($this->l->t('IMPLEMENT ME!'));
   }

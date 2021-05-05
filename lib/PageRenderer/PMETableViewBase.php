@@ -67,6 +67,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const INSTRUMENTS_TABLE = 'Instruments';
   const INSTRUMENT_INSURANCES_TABLE = 'InstrumentInsurances';
   const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
+  const COMPOSITE_PAYMENTS_TABLE = 'CompositePayments';
   const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstruments';
