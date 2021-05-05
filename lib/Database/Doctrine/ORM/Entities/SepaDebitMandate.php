@@ -118,6 +118,25 @@ class SepaDebitMandate
   private $mandateDate;
 
   /**
+   * @var int
+   *
+   * Pre-notification dead-line in calendar days. Normally 14, may be
+   * shorter, e.g. 7 calendar days but at least 5 business days.
+   *
+   * @ORM\Column(type="integer", options={"default"="14"})
+   */
+  private $preNotificiationCalendarDays = 14;
+
+  /**
+   * @var int
+   *
+   * Pre-notification dead-line in TARGET2 days. Normally unset.
+   *
+   * @ORM\Column(type="integer", nullable=true)
+   */
+  private $preNotificiationBusinessDays = null;
+
+  /**
    * @var \DateTimeImmutable|null
    *
    * @ORM\Column(type="date_immutable", nullable=true)
