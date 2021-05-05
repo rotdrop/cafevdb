@@ -125,7 +125,7 @@ class SepaDebitMandate
    *
    * @ORM\Column(type="integer", options={"default"="14"})
    */
-  private $preNotificiationCalendarDays = 14;
+  private $preNotificationCalendarDays = 14;
 
   /**
    * @var int
@@ -134,7 +134,7 @@ class SepaDebitMandate
    *
    * @ORM\Column(type="integer", nullable=true)
    */
-  private $preNotificiationBusinessDays = null;
+  private $preNotificationBusinessDays = null;
 
   /**
    * @var \DateTimeImmutable|null
@@ -312,11 +312,58 @@ class SepaDebitMandate
   /**
    * Get mandateDate.
    *
-   * @return \DateTime
+   * @return \DateTimeInterface
    */
   public function getMandateDate()
   {
     return $this->mandateDate;
+  }
+
+  /**
+   * Set preNotificationCalendarDays.
+   *
+   * @param int $preNotificationCalendarDays
+   *
+   * @return SepaDebitMandate
+   */
+  public function setPreNotificationCalendarDays(int $preNotificationCalendarDays):SepaDebitMandate
+  {
+    $this->preNotificationCalendarDays = $preNotificationCalendarDays;
+    return $this;
+  }
+
+  /**
+   * Get preNotificationCalendarDays.
+   *
+   * @return int
+   */
+  public function getPreNotificationCalendarDays():int
+  {
+    return $this->preNotificationCalendarDays;
+  }
+
+  /**
+   * Set preNotificationBusinessDays.
+   *
+   * @param int|null $preNotificationBusinessDays
+   *
+   * @return SepaDebitMandate
+   */
+  public function setPreNotificationBusinessDays(?int $preNotificationBusinessDays):SepaDebitMandate
+  {
+    $this->preNotificationBusinessDays = $preNotificationBusinessDays;
+
+    return $this;
+  }
+
+  /**
+   * Get preNotificationBusinessDays.
+   *
+   * @return int|null
+   */
+  public function getPreNotificationBusinessDays():?int
+  {
+    return $this->preNotificationBusinessDays;
   }
 
   /**

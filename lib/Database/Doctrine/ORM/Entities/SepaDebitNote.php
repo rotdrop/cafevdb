@@ -31,4 +31,98 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SepaDebitNote extends SepaBulkTransaction
 {
+  /**
+   * @var \DateTimeImmutable
+   *
+   * Latest date for the pre-notification of the debitors
+   *
+   * @ORM\Column(type="date_immutable", nullable=false)
+   */
+  private $preNotificationDeadline;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
+   */
+  private $preNotificationEventUri;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
+   */
+  private $preNotificationTaskUri;
+
+  /**
+   * Set preNotificationDeadline.
+   *
+   * @param mixed $preNotificationDeadline
+   *
+   * @return SepaDebitNote
+   */
+  public function setPreNotificationDeadline($preNotificationDeadline):SepaDebitNote
+  {
+    $this->preNotificationDeadline = self::convertToDateTime($preNotificationDeadline);
+
+    return $this;
+  }
+
+  /**
+   * Get preNotificationDeadline.
+   *
+   * @return \DateTimeInterface|null
+   */
+  public function getPreNotificationDeadline():?\DateTimeInterface
+  {
+    return $this->preNotificationDeadline;
+  }
+
+  /**
+   * Set preNotificationEventUri.
+   *
+   * @param int $preNotificationEventUri
+   *
+   * @return SepaDebitNote
+   */
+  public function setPreNotificationEventUri($preNotificationEventUri):SepaBulkTransaction
+  {
+    $this->preNotificationEventUri = $preNotificationEventUri;
+
+    return $this;
+  }
+
+  /**
+   * Get preNotificationEventUri.
+   *
+   * @return string
+   */
+  public function getPreNotificationEventUri()
+  {
+    return $this->preNotificationEventUri;
+  }
+
+  /**
+   * Set preNotificationTaskUri.
+   *
+   * @param int $preNotificationTaskUri
+   *
+   * @return SepaDebitNote
+   */
+  public function setPreNotificationTaskUri($preNotificationTaskUri):SepaBulkTransaction
+  {
+    $this->preNotificationTaskUri = $preNotificationTaskUri;
+
+    return $this;
+  }
+
+  /**
+   * Get preNotificationTaskUri.
+   *
+   * @return string
+   */
+  public function getPreNotificationTaskUri()
+  {
+    return $this->preNotificationTaskUri;
+  }
 }

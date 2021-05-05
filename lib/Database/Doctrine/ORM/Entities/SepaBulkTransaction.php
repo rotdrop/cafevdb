@@ -45,6 +45,7 @@ class SepaBulkTransaction implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
    * @var int
@@ -70,13 +71,6 @@ class SepaBulkTransaction implements \ArrayAccess
 
   /**
    * @var \DateTimeImmutable
-   *
-   * @ORM\Column(type="date_immutable", nullable=false)
-   */
-  private $dateIssued;
-
-  /**
-   * @var \DateTime
    *
    * Latest date before which the debit notes have to be submitted to
    * the bank in order to match the $dueDate.
@@ -125,7 +119,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var ArrayCollection
    *
-   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="sepaTransaction", orphanRemoval=true, cascade={"all"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="CompositePayment", indexBy="musician", mappedBy="sepaTransaction", orphanRemoval=true, cascade={"all"}, fetch="EXTRA_LAZY")
    */
   private $payments;
 
@@ -152,7 +146,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setSepaTransactionData($sepaTransactionData):SepaDebitNote
+  public function setSepaTransactionData($sepaTransactionData):SepaBulkTransaction
   {
     $this->sepaTransactionData = $sepaTransactionData;
 
@@ -170,37 +164,13 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
-   * Set dateIssued.
-   *
-   * @param mixed $dateIssued
-   *
-   * @return SepaDebitNote
-   */
-  public function setDateIssued($dateIssued):SepaDebitNote
-  {
-    $this->dateIssued = self::convertToDateTime($mandateDate);
-
-    return $this;
-  }
-
-  /**
-   * Get dateIssued.
-   *
-   * @return \DateTimeImmutable
-   */
-  public function getDateIssued()
-  {
-    return $this->dateIssued;
-  }
-
-  /**
    * Set submissionDeadline.
    *
    * @param \DateTime $submissionDeadline
    *
    * @return SepaDebitNote
    */
-  public function setSubmissionDeadline($submissionDeadline):SepaDebitNote
+  public function setSubmissionDeadline($submissionDeadline):SepaBulkTransaction
   {
     $this->submissionDeadline = $submissionDeadline;
 
@@ -224,9 +194,9 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setSubmitDate($submitDate):SepaDebitNote
+  public function setSubmitDate($submitDate):SepaBulkTransaction
   {
-    $this->submitDate = self::convertToDateTime($mandateDate);
+    $this->submitDate = self::convertToDateTime($submitDate);
 
     return $this;
   }
@@ -236,7 +206,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return \DateTime|null
    */
-  public function getSubmitDate():?\DateTimeImmutable
+  public function getSubmitDate():?\DateTimeInterface
   {
     return $this->submitDate;
   }
@@ -248,9 +218,9 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setDueDate($dueDate):SepaDebitNote
+  public function setDueDate($dueDate):SepaBulkTransaction
   {
-    $this->dueDate = self::convertToDateTime($mandateDate);
+    $this->dueDate = self::convertToDateTime($dueDate);
 
     return $this;
   }
@@ -260,7 +230,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return \DateTime
    */
-  public function getDueDate():?DateTimeImmutable
+  public function getDueDate():?\DateTimeInterface
   {
     return $this->dueDate;
   }
@@ -272,7 +242,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setSubmissionEventUri($submissionEventUri):SepaDebitNote
+  public function setSubmissionEventUri($submissionEventUri):SepaBulkTransaction
   {
     $this->submissionEventUri = $submissionEventUri;
 
@@ -282,7 +252,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get submissionEventUri.
    *
-   * @return int
+   * @return string
    */
   public function getSubmissionEventUri()
   {
@@ -296,7 +266,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setSubmissionTaskUri($submissionTaskUri):SepaDebitNote
+  public function setSubmissionTaskUri($submissionTaskUri):SepaBulkTransaction
   {
     $this->submissionTaskUri = $submissionTaskUri;
 
@@ -306,7 +276,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get submissionTaskUri.
    *
-   * @return int
+   * @return string
    */
   public function getSubmissionTaskUri()
   {
@@ -320,7 +290,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setDueEventUri($dueEventUri):SepaDebitNote
+  public function setDueEventUri($dueEventUri):SepaBulkTransaction
   {
     $this->dueEventUri = $dueEventUri;
 
@@ -330,7 +300,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get dueEventUri.
    *
-   * @return int
+   * @return string
    */
   public function getDueEventUri()
   {
@@ -344,7 +314,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setPayments(Collection $payments):SepaDebitNote
+  public function setPayments(Collection $payments):SepaBulkTransaction
   {
     $this->payments = $payments;
 

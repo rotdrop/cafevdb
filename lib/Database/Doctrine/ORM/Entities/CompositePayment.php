@@ -23,6 +23,7 @@ class CompositePayment implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
    * @var int
@@ -62,7 +63,7 @@ class CompositePayment implements \ArrayAccess
   /**
    * @var Collection
    *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="compositePayment", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="compositePayment", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
   private $projectPayments;
 
@@ -217,7 +218,7 @@ class CompositePayment implements \ArrayAccess
    */
   public function setDateOfReceipt($dateOfReceipt = null):CompositePayment
   {
-    $this->dateOfReceipt = self::convertToDateTime($mandateDate);
+    $this->dateOfReceipt = self::convertToDateTime($dateOfReceipt);
 
     return $this;
   }
@@ -335,7 +336,7 @@ class CompositePayment implements \ArrayAccess
    *
    * @return CompositePayment
    */
-  public function setSepaTransaction(?SepaTransaction $sepaTransaction):CompositePayment
+  public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction):CompositePayment
   {
     $this->sepaTransaction = $sepaTransaction;
 
@@ -347,7 +348,7 @@ class CompositePayment implements \ArrayAccess
    *
    * @return SepaTransaction|null
    */
-  public function getSepaTransaction():?SepaTransaction
+  public function getSepaTransaction():?SepaBulkTransaction
   {
     return $this->sepaTransaction;
   }
