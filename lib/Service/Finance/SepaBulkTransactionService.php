@@ -80,12 +80,18 @@ class SepaBulkTransactionService
     $payments = new ArrayCollection();
     $totalAmount = 0.0;
     $subject = [];
+    $project = $participant->getProject();
+    $musician = $participant->getMusician();
+
+    $compositePayment = (new Entities\CompositePayment)
+                      ->setMusician($musician)
+                      ->setProjectPayments($payments)
+                      ->setAmount($totalAmount)
+                      ->setSubject(implode('; ', $subject));
 
     if (empty($receivableOptions)) {
       return [ $payments, $totalAmount ];
     }
-    $project = $participant->getProject();
-    $musician = $participant->getMusician();
 
     /** @var Entities\ProjectParticipantFieldDataOption $receivableOption */
     foreach ($receivableOptions as $receivableOption) {
@@ -113,21 +119,17 @@ class SepaBulkTransactionService
                  ->setReceivable($receivable)
                  ->setReceivableOption($receivableOption)
                  ->setAmount($debitAmount)
+                 ->setCompositePayment($compositePayment)
                  ->setSubject($receivable->paymentReference());
-        // the following are set later:
-        // ->setDateOfReceipt() set to due-date of debit note
-        // ->setDebitNote($debitNote)
-        // ->setDebitMessageId($debitMessageId)
+
         $payments->add($payment);
         $totalAmount += $debitAmount;
         $subject[] = $payment->getSubject();
       }
     }
-    $compositePayment = (new Entities\CompositePayment)
-                      ->setMusician($participant->getMusician())
-                      ->setProjectPayments($payments)
-                      ->setAmount($totalAmount)
-                      ->setSubject(implode('; ', $subject));
+    $compositePayment->setMusician($participant->getMusician())
+                     ->setAmount($totalAmount)
+                     ->setSubject(implode('; ', $subject));
 
     return $compositePayment;
   }
