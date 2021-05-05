@@ -571,11 +571,16 @@ class ConfigService {
    *
    */
 
-  public function getDateTimeZone($timeStamp = null) {
+  /**
+   * Get the current timezone
+   */
+  public function getDateTimeZone($timeStamp = null):\DateTimeZone
+  {
     return $this->dateTimeZone->getTimeZone($timeStamp);
   }
 
-  /**Return the locale as string, e.g. de_DE.UTF-8.
+  /**
+   * Return the locale as string, e.g. de_DE.UTF-8.
    */
   public function getLocale($lang = null)
   {

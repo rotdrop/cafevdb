@@ -588,7 +588,7 @@ class EventsService
     return $result;
   }
 
-  /**Return the IDs of the default calendars. */
+  /** Return the IDs of the default calendars. */
   public function defaultCalendars($public = false)
   {
     $result = [];
@@ -601,25 +601,25 @@ class EventsService
     return $result;
   }
 
-  /**Return the configured calendar id. */
+  /** Return the configured calendar id. */
   private function getCalendarId($uri)
   {
     return $this->getConfigValue($uri.'calendar'.'id');
   }
 
-  /**Delete the configured calendar id. */
+  /** Delete the configured calendar id. */
   private function deleteCalendarId($uri)
   {
     return $this->deleteConfigValue($uri.'calendar'.'id');
   }
 
-  /**Return the configured calendar display name. */
+  /** Return the configured calendar display name. */
   private function getCalendarDisplayName($uri)
   {
     return $this->getConfigValue($uri.'calendar');
   }
 
-  /**Return the configured calendar display name. */
+  /** Return the configured calendar display name. */
   private function setCalendarDisplayName($uri, $displayName)
   {
     return $this->setConfigValue($uri.'calendar', $displayName);
@@ -812,7 +812,7 @@ class EventsService
     if (empty($vCalendar)) {
       return null;
     }
-    return $this->calDavService->createCalendarObject($taskData['calendar'], $vCalendar);
+    return $this->calDavService->createCalendarObject($taskData['calendar'], null, $vCalendar);
   }
 
   /**
@@ -849,7 +849,12 @@ class EventsService
     if (empty($vCalendar)) {
       return null;
     }
-    return $this->calDavService->createCalendarObject($eventData['calendar'], $vCalendar);
+    return $this->calDavService->createCalendarObject($eventData['calendar'], null, $vCalendar);
+  }
+
+  public function deleteCalendarEntry($calId, $objectUri)
+  {
+    return $this->calDavService->deleteCalendarObject($calId, $objectUri);
   }
 
   public function playground() {

@@ -36,7 +36,7 @@ use OCP\Constants;
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\Calendar;
 
-use OCA\Common\Uuid;
+use OCA\CAFEVDB\Common\Uuid;
 
 class CalDavService
 {
@@ -275,8 +275,12 @@ class CalDavService
     return $calendars;
   }
 
-  /** Create an entry in the given calendar from either a VCalendar
-   ** blob or a Sabre VCalendar object.
+  /**
+   * Create an entry in the given calendar from either a VCalendar
+   * blob or a Sabre VCalendar object.
+   *
+   * @return string local URI of the calendar object, relative to the
+   * calendar's URI.
    *
    * @bug This function uses internal APIs.
    */
