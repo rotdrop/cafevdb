@@ -9,10 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectPayments
  *
- * @ORM\Table(
- *    name="ProjectPayments",
- *    uniqueConstraints={@ORM\UniqueConstraint(columns={"debit_message_id"})}
- * )
+ * @ORM\Table(name="ProjectPayments")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectPaymentsRepository")
  */
 class ProjectPayment implements \ArrayAccess
@@ -35,13 +32,6 @@ class ProjectPayment implements \ArrayAccess
    * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
    */
   private $amount = '0.00';
-
-  /**
-   * @var \DateTime|null
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
-   */
-  private $dateOfReceipt;
 
   /**
    * @var string
@@ -71,43 +61,9 @@ class ProjectPayment implements \ArrayAccess
   private $receivableOption;
 
   /**
-   * @var SepaBulkTransaction
-   *
-   * @ORM\ManyToOne(targetEntity="SepaBulkTransaction", inversedBy="projectPayments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(onDelete="CASCADE")
+   * @ORM\ManyToOne(targetEntity="CompositePayment", inversedBy="projectPayments", fetch="EXTRA_LAZY")
    */
-  private $sepaTransaction = null;
-
-  /**
-   * @ORM\ManyToOne(targetEntity="SepaBankAccount",
-   *                inversedBy="projectPayments",
-   *                fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=true)
-   * )
-   */
-  private $sepaBankAccount;
-
-  /**
-   * @ORM\ManyToOne(targetEntity="SepaDebitMandate",
-   *                inversedBy="projectPayments",
-   *                fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="debit_mandate_sequence", referencedColumnName="sequence", nullable=true)
-   * )
-   */
-  private $sepaDebitMandate;
-
-  /**
-   * @var string
-   *
-   * This is the unique message id from the email sent to the payees.
-   *
-   * @ORM\Column(type="string", length=512, nullable=true)
-   */
-  private $debitMessageId;
+  private $compositePayment;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="payments", fetch="EXTRA_LAZY")
@@ -217,11 +173,11 @@ class ProjectPayment implements \ArrayAccess
   /**
    * Set amount.
    *
-   * @param string $amount
+   * @param float|null $amount
    *
    * @return ProjectPayment
    */
-  public function setAmount($amount):ProjectPayment
+  public function setAmount(?float $amount):ProjectPayment
   {
     $this->amount = $amount;
 
@@ -231,35 +187,11 @@ class ProjectPayment implements \ArrayAccess
   /**
    * Get amount.
    *
-   * @return string
+   * @return float
    */
-  public function getAmount()
+  public function getAmount():float
   {
     return $this->amount;
-  }
-
-  /**
-   * Set dateOfReceipt.
-   *
-   * @param \DateTime|null $dateOfReceipt
-   *
-   * @return ProjectPayment
-   */
-  public function setDateOfReceipt($dateOfReceipt = null):ProjectPayment
-  {
-    $this->dateOfReceipt = $dateOfReceipt;
-
-    return $this;
-  }
-
-  /**
-   * Get dateOfReceipt.
-   *
-   * @return \DateTime|null
-   */
-  public function getDateOfReceipt()
-  {
-    return $this->dateOfReceipt;
   }
 
   /**
@@ -287,98 +219,50 @@ class ProjectPayment implements \ArrayAccess
   }
 
   /**
-   * Set debitNote.
+   * Set receivable.
    *
-   * @param SepaDebitNote|null $debitNote
+   * @param string $receivable
    *
    * @return ProjectPayment
    */
-  public function setDebitNote($debitNote):ProjectPayment
+  public function setReceivable($receivable):ProjectPayment
   {
-    $this->debitNote = $debitNote;
+    $this->receivable = $receivable;
 
     return $this;
   }
 
   /**
-   * Get debitNote.
-   *
-   * @return SepaDebitNote|null
-   */
-  public function getDebitNote()
-  {
-    return $this->debitNote;
-  }
-
-  /**
-   * Set sepaBankAccount.
-   *
-   * @param string|null $sepaBankAccount
-   *
-   * @return ProjectPayment
-   */
-  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount):ProjectPayment
-  {
-    $this->sepaBankAccount = $sepaBankAccount;
-
-    return $this;
-  }
-
-  /**
-   * Get sepaBankAccount.
-   *
-   * @return SepaBankAccount|null
-   */
-  public function getSepaBankAccount():?SepaBankAccount
-  {
-    return $this->sepaBankAccount;
-  }
-
-  /**
-   * Set sepaDebitMandate.
-   *
-   * @param string|null $sepaDebitMandate
-   *
-   * @return ProjectPayment
-   */
-  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):ProjectPayment
-  {
-    $this->sepaDebitMandate = $sepaDebitMandate;
-
-    return $this;
-  }
-
-  /**
-   * Get sepaDebitMandate.
-   *
-   * @return SepaDebitMandate|null
-   */
-  public function getSepaDebitMandate():?SepaDebitMandate
-  {
-    return $this->sepaDebitMandate;
-  }
-
-  /**
-   * Set debitMessageId.
-   *
-   * @param string $debitMessageId
-   *
-   * @return ProjectPayment
-   */
-  public function setDebitMessageId($debitMessageId):ProjectPayment
-  {
-    $this->debitMessageId = $debitMessageId;
-
-    return $this;
-  }
-
-  /**
-   * Get debitMessageId.
+   * Get receivable.
    *
    * @return string
    */
-  public function getDebitMessageId()
+  public function getReceivable()
   {
-    return $this->debitMessageId;
+    return $this->receivable;
+  }
+
+  /**
+   * Set receivableOption.
+   *
+   * @param string $receivableOption
+   *
+   * @return ProjectPayment
+   */
+  public function setReceivableOption($receivableOption):ProjectPayment
+  {
+    $this->receivableOption = $receivableOption;
+
+    return $this;
+  }
+
+  /**
+   * Get receivableOption.
+   *
+   * @return string
+   */
+  public function getReceivableOption()
+  {
+    return $this->receivableOption;
   }
 }

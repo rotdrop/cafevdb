@@ -34,9 +34,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SepaBankTransfer extends SepaBulkTransaction
 {
-  /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="bankTransfers", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
-   */
-  private $project;
 }

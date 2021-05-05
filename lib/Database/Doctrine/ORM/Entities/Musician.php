@@ -241,7 +241,7 @@ class Musician implements \ArrayAccess
   private $sepaDebitMandates;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $payments;
 

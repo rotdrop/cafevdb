@@ -136,15 +136,15 @@ class SepaDebitMandate
    *
    * Linke to the payments table.
    *
-   * @ORM\OneToMany(targetEntity="ProjectPayment",
+   * @ORM\OneToMany(targetEntity="CompositePayment",
    *                mappedBy="sepaDebitMandate",
    *                fetch="EXTRA_LAZY")
    */
-  private $projectPayments;
+  private $payments;
 
   public function __construct() {
     $this->arrayCTOR();
-    $this->projectPayments = new ArrayCollection();
+    $this->payments = new ArrayCollection();
   }
 
   /**
@@ -378,6 +378,6 @@ class SepaDebitMandate
    */
   public function usage():int
   {
-    return $this->projectPayments->count();
+    return $this->payments->count();
   }
 }

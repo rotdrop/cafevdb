@@ -44,6 +44,7 @@ class SepaBulkTransaction implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * @var int
@@ -124,13 +125,14 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var ArrayCollection
    *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="sepaTransaction", orphanRemoval=true, cascade={"all"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="sepaTransaction", orphanRemoval=true, cascade={"all"}, fetch="EXTRA_LAZY")
    */
-  private $projectPayments;
+  private $payments;
 
   public function __construct() {
     $this->arrayCTOR();
-    $this->projectPayments = new ArrayCollection();
+    $this->sepaTransactionData = new ArrayCollection();
+    $this->payments = new ArrayCollection();
   }
 
   /**
@@ -141,30 +143,6 @@ class SepaBulkTransaction implements \ArrayAccess
   public function getId()
   {
     return $this->id;
-  }
-
-  /**
-   * Set project.
-   *
-   * @param int $project
-   *
-   * @return SepaDebitNote
-   */
-  public function setProject($project):SepaDebitNote
-  {
-    $this->project = $project;
-
-    return $this;
-  }
-
-  /**
-   * Get project.
-   *
-   * @return int
-   */
-  public function getProject()
-  {
-    return $this->project;
   }
 
   /**
@@ -184,9 +162,9 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get sepaTransactionData.
    *
-   * @return int
+   * @return Collection
    */
-  public function getSepaTransactionData()
+  public function getSepaTransactionData():Collection
   {
     return $this->sepaTransactionData;
   }
@@ -194,13 +172,13 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set dateIssued.
    *
-   * @param \DateTime $dateIssued
+   * @param mixed $dateIssued
    *
    * @return SepaDebitNote
    */
   public function setDateIssued($dateIssued):SepaDebitNote
   {
-    $this->dateIssued = $dateIssued;
+    $this->dateIssued = self::convertToDateTime($mandateDate);
 
     return $this;
   }
@@ -208,7 +186,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get dateIssued.
    *
-   * @return \DateTime
+   * @return \DateTimeImmutable
    */
   public function getDateIssued()
   {
@@ -246,9 +224,9 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaDebitNote
    */
-  public function setSubmitDate($submitDate = null):SepaDebitNote
+  public function setSubmitDate($submitDate):SepaDebitNote
   {
-    $this->submitDate = $submitDate;
+    $this->submitDate = self::convertToDateTime($mandateDate);
 
     return $this;
   }
@@ -258,7 +236,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return \DateTime|null
    */
-  public function getSubmitDate()
+  public function getSubmitDate():?\DateTimeImmutable
   {
     return $this->submitDate;
   }
@@ -272,7 +250,7 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   public function setDueDate($dueDate):SepaDebitNote
   {
-    $this->dueDate = $dueDate;
+    $this->dueDate = self::convertToDateTime($mandateDate);
 
     return $this;
   }
@@ -282,7 +260,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return \DateTime
    */
-  public function getDueDate()
+  public function getDueDate():?DateTimeImmutable
   {
     return $this->dueDate;
   }
@@ -360,27 +338,27 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
-   * Set projectPayments.
+   * Set payments.
    *
-   * @param Collection $projectPayments
+   * @param Collection $payments
    *
    * @return SepaDebitNote
    */
-  public function setProjectPayments(Collection $projectPayments):SepaDebitNote
+  public function setPayments(Collection $payments):SepaDebitNote
   {
-    $this->projectPayments = $projectPayments;
+    $this->payments = $payments;
 
     return $this;
   }
 
   /**
-   * Get projectPayments.
+   * Get payments.
    *
    * @return Collection
    */
-  public function getProjectPayments():Collection
+  public function getPayments():Collection
   {
-    return $this->projectPayments;
+    return $this->payments;
   }
 
   /**
@@ -388,6 +366,6 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->projectPayments->count();
+    return $this->payments->count();
   }
 }

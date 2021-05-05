@@ -120,16 +120,16 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * @var Collection
    *
-   * @ORM\OneToMany(targetEntity="ProjectPayment",
+   * @ORM\OneToMany(targetEntity="CompositePayment",
    *                mappedBy="sepaBankAccount",
    *                fetch="EXTRA_LAZY")
    */
-  private $projectPayments;
+  private $payments;
 
   public function __construct() {
     $this->arrayCTOR();
     $this->sepaDebitMandates = new ArrayCollection();
-    $this->projectPayments = new ArrayCollection();
+    $this->payments = new ArrayCollection();
   }
 
   /**
@@ -277,6 +277,30 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
+   * Set payments.
+   *
+   * @param int $payments
+   *
+   * @return SepaBankAccount
+   */
+  public function setPayments(Collection $payments):SepaBankAccount
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return Collection
+   */
+  public function getPayments():Collection
+  {
+    return $this->payments;
+  }
+
+  /**
    * Return the usage count. The bank-account is used and thus
    * undeleteable and unchangeable (up to less important data like
    * typos in the bank-account-owner) if there are recorded payments
@@ -286,6 +310,6 @@ class SepaBankAccount implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->projectPayments->count() + $this->sepaDebitMandates->count();
+    return $this->payments->count() + $this->sepaDebitMandates->count();
   }
 }
