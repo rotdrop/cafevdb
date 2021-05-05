@@ -66,7 +66,7 @@ class ProjectPayment implements \ArrayAccess
   private $compositePayment;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="payments", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="payments", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
   private $project;
 
@@ -96,6 +96,30 @@ class ProjectPayment implements \ArrayAccess
   public function getId()
   {
     return $this->id;
+  }
+
+  /**
+   * Set compositePayment.
+   *
+   * @param int $compositePayment
+   *
+   * @return ProjectPayment
+   */
+  public function setCompositePayment($compositePayment):ProjectPayment
+  {
+    $this->compositePayment = $compositePayment;
+
+    return $this;
+  }
+
+  /**
+   * Get compositePayment.
+   *
+   * @return CompositePayment
+   */
+  public function getCompositePayment()
+  {
+    return $this->compositePayment;
   }
 
   /**

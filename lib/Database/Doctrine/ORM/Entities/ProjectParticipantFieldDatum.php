@@ -329,7 +329,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     if (empty($fieldName)) {
       return $optionLabel;
     }
-    if (empty($optionLabel)) {
+    if (empty($optionLabel) || $optionLabel === 'null') {
       return $fieldName;
     }
     return $fieldName.' - '.$optionLabel;
