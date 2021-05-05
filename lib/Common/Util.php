@@ -360,6 +360,22 @@ class Util
     }
   }
 
+  static public function getEasterSunday($year = null, ?\DateTimeZone $timeZone = null)
+  {
+    if (empty($year)) {
+      $year = date('Y');
+    }
+    if (empty($timeZone)) {
+      $timeZone = new \DateTimeZone('UTC');
+    }
+    $base = new \DateTimeImmutable($year . '-03-21', $timeZone);
+    $days = easter_days($year);
+
+    $easterSunday = $base->add(new \DateInterval("P{$days}D"));
+
+    return $easterSunday;
+  }
+
 }
 
 // Local Variables: ***
