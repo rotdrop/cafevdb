@@ -1,7 +1,7 @@
 #! /usr/bin/php
 <?php
 
-
+// https://www.hettwer-beratung.de/sepa-spezialwissen/sepa-rechtsgrundlagen/sepa-gesch%C3%A4ftstage-target2-kalender/
 $tzGMT = new \DateTimeZone('GMT');
 $tzBRL = new \DateTimeZone('Europe/Berlin');
 
