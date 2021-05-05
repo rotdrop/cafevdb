@@ -36,7 +36,7 @@ class UndoableRunQueue
   /** @var array */
   protected $actionQueue = [];
 
-  /** @var array */
+  /** @var array|null */
   protected $undoStack = null;
 
   public function __construct(
@@ -73,7 +73,11 @@ class UndoableRunQueue
         array_unshift($this->undoStack, $action); // at front
       };
     } catch (\Throwable $t) {
-      throw new \Exception('Exception during execution of run-queue; number of successful actions: '.count($this->undStack));
+      throw new \Exception(
+        $this->l->t(
+          'Exception during execution of run-queue; number of successful actions: %d.', count($this->undoStack)),
+        $t->getCode(),
+        $t);
     }
   }
 

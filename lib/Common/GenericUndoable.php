@@ -30,22 +30,32 @@ namespace OCA\CAFEVDB\Common;
 class GenericUndoable implements IUndoable
 {
   /** @var Callable */
-  protected $do;
+  protected $doCallback;
 
-  /** @var Callabled|null */
-  protected $undo = null;
+  /** @var Callable|null */
+  protected $undoCallback = null;
+
+  /** @var mixed */
+  protected $done;
 
   public function __construct(Callable $do, ?Callable $undo = null)
   {
-    $this->do = $do;
-    $this->undo = $undo;
+    $this->doCallback = $do;
+    $this->undoCallback = $undo;
   }
 
   /** {@inheritdoc} */
-  public function do() { $this->do(); }
+  public function do() {
+    $this->done = call_user_func($this->doCallback);
+  }
 
   /** {@inheritdoc} */
-  public function undo() { $this->undo(); }
+  public function undo() {
+    if (!empty($this->undoCallback)) {
+      call_user_func($this->undoCallback, $this->done);
+    }
+    $this->done = null;
+  }
 }
 
 // Local Variables: ***
