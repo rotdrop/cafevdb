@@ -489,9 +489,33 @@ class SepaDebitNotesController extends Controller {
       $this->entityManager->rollback();
       $this->entityManager->reopen();
       $this->logException($t);
+
+      return self::grumble($this->exceptionChainData($t));
     }
 
-    return self::grumble($this->l->t('IMPLEMENT ME!'));
+    // report back the generated bulk-transactions, as these are the
+    // (at most) two top-level objects.
+
+    $messages = [];
+    if (!empty($bankTransfer)) {
+      $messages[] = $this->l->t('Scheduled %d bank-transfers, due on %s', [
+        $bankTransfer->getPayments()->count(),
+        $this->dateTimeFormatter($bankTransfer->getDueDate(), 'long'),
+      ]);
+    }
+    if (!empty($debitNote)) {
+      $messages[] = $this->l->t('Scheduled %d debit-notes, due on %s', [
+        $debitNote->getPayments()->count(),
+        $this->dateTimeFormatter($debitNote->getDueDate(), 'long'),
+      ]);
+    }
+
+    $responseData = [
+      'message' => $messages,
+      'bankTransferId' => empty($bankTransfer) ? 0 : $bankTransfer->getId(),
+      'debitMandateId' => empty($debitMandate) ? 0 : $debitMandate->getId(),
+    ];
+    return self::dataResponse($responseData);
   }
 
 }
