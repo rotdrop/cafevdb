@@ -107,3 +107,4 @@ $now = new CarbonImmutable;
 
 echo $now->format('Y-m-d').PHP_EOL;
 echo $now->addBusinessDays(5)->format('Y-m-d').PHP_EOL;
+echo $now->addBusinessDays(-5)->format('Y-m-d').PHP_EOL;
