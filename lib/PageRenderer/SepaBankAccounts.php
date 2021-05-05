@@ -208,10 +208,20 @@ class SepaBankAccounts extends PMETableViewBase
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
 
+    /*
+     * End general options.
+     *
+     **************************************************************************
+     *
+     * Extra-buttons for initiating bank transfers
+     *
+     */
+
     $buttons = [];
     if ($projectMode) {
-      $cgiBulkTransactions = $this->requestParameters->getParam('sepaBulkTransactions', '');
 
+      // Control to select what we want to debit
+      $cgiBulkTransactions = $this->requestParameters->getParam('sepaBulkTransactions');
       $sepaBulkTransactions = '
 <span id="sepa-bulk-transactions" class="sepa-bulk-transactions pme-menu-block">
   <select multiple data-placeholder="'.$this->l->t('SEPA Bulk Transactions').'"
@@ -227,6 +237,20 @@ class SepaBankAccounts extends PMETableViewBase
   </select>
 </span>';
       $buttons[] = [ 'code' =>  $sepaBulkTransactions, 'name' => 'bulk-transactions' ];
+
+      // Control to select when we want to have the money (or to have spent the money)
+      $cgiDueDeadline = $this->requestParameters->getParam('sepaDueDeadline');
+      $sepaDueDeadline = '
+<span id="sepa-due-deadline" class="sepa-due-deadline">
+  <input type="text"
+         size="10"
+         maxlength="10"
+         name="sepaDueDeadline"
+         placeholder="'.$this->l->t('SEPA due date').'"
+         title="'.$this->toolTipsService['sepa-due-deadline'].'"
+         class="date sepa-due-deadline"/>
+</span>';
+      $buttons[] = [ 'code' => $sepaDueDeadline, 'name' => 'due-deadline' ];
     }
 
     $button = $this->pageNavigation->tableExportButton();
@@ -235,9 +259,19 @@ class SepaBankAccounts extends PMETableViewBase
 
     $opts['buttons'] = $this->pageNavigation->prependTableButtons(
       $buttons, [
-        'up' => [ 'left' => [ 'bulk-transactions', 'misc', 'export' ] ],
-        'down' => [ 'left' => [ 'misc', 'export' ], 'right' => [ 'bulk-transactions' ] ]
+        'up' => [ 'left' => [ 'bulk-transactions', 'due-deadline', 'misc', 'export' ] ],
+        'down' => [ 'left' => [ 'due-deadline', 'misc', 'export' ], 'right' => [ 'bulk-transactions' ] ]
       ]);
+
+    /*
+     *
+     *
+     *
+     **************************************************************************
+     *
+     * ... more general options
+     *
+     */
 
     // Display special page elements
     $opts['display'] = [
@@ -279,10 +313,14 @@ received so far'),
       $opts['display']['tabs'] = false;
     }
 
-    ////////////////////////////////////////////////////////////////&&&&&&&&&&&
-    //
-    // Add the id-columns of the main-table
-    //
+    /*
+     * End options.
+     *
+     **************************************************************************
+     *
+     * Field definition data.
+     *
+     */
 
     $opts['fdd']['musician_id'] = [
       'name'     => $this->l->t('Musician-Id'),

@@ -1168,7 +1168,6 @@ const mandateReady = function(selector) {
   }
 
   const bulkTransactionChooser = container.find('select.sepa-bulk-transactions');
-  console.info('CHOOSER CHOSEN');
   bulkTransactionChooser.chosen({
     disable_search: true,
     inherit_select_classes: true,
@@ -1185,7 +1184,18 @@ const mandateReady = function(selector) {
       $.fn.cafevTooltip.remove();
       return false;
     });
-  console.info('EXPORT MENU');
+
+  const bulkDueDeadline = container.find('input.sepa-due-deadline');
+  bulkDueDeadline
+    .off('change')
+    .on('change', function(event) {
+      const $self = $(this);
+      const otherClass = $self.hasClass('top') ? '.bottom' : '.top';
+      const $other = bulkDueDeadline.filter(otherClass);
+      $other.val($self.val());
+      return false;
+    });
+
   pmeExportMenu(containerSel);
 
   dbTable = form.find('input[value="SepaBankAccounts"]');

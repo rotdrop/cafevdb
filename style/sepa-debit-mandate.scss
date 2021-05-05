@@ -397,6 +397,17 @@ table.pme-main li.nav.inline-block > a.nav {
   line-height:unset;
 }
 
+/******************************************************************************
+*
+* due-dead-line, restrict height
+*
+*/
+
+form.pme-form input.sepa-due-deadline {
+  min-height:unset;
+  height:28px;
+}
+
 /*
  * Local Variables: ***
  * css-indent-offset: 2 ***

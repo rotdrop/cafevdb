@@ -101,17 +101,24 @@ class SepaDebitNotesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic, $projectId = 0, $sepaBulkTransactions = [])
+  public function serviceSwitch($topic, $projectId = 0, $sepaBulkTransactions = [], $sepaDueDeadline = null)
   {
     switch ($topic) {
     case 'create':
       $sepaBulkTransactions = array_values(array_unique($sepaBulkTransactions));
       // PME_sys_mrecs[] = "{\"musician_id\":\"1\",\"sequence\":\"1\"}"
       $bankAccountRecords = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);
+      if (!empty($sepaDueDeadline)) {
+        // kludgy, but should work
+        $sepaDueDeadline = (new \DateTimeImmutable)
+                         ->setTimezone($this->getDateTimeZone())
+                         ->setTimestamp(strtotime($sepaDueDeadline));
+      }
       return $this->generateBulkTransactions(
         $projectId,
         $bankAccountRecords,
-        $sepaBulkTransactions);
+        $sepaBulkTransactions,
+        $sepaDueDeadline);
     default:
       break;
     }
