@@ -39,22 +39,13 @@ use OCA\CAFEVDB\Common\Navigation;
 class ProjectPayments extends PMETableViewBase
 {
   const TEMPLATE = 'project-payments';
-  const TABLE = self::PROJECT_PAYMENTS_TABLE;
+  const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
   const DEBIT_NOTES_TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
 
   protected $joinStructure = [
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
-      'entity' => Entities\ProjectPayment::class,
-    ],
-    self::PROJECT_PARTICIPANTS_TABLE => [
-      'entity' => Entities\ProjectParticipant::class,
-      'identifier' => [
-        'project_id' => 'project_id',
-        'musician_id' => 'musician_id',
-      ],
-      'column' => 'musician_id',
-      'flags' => self::JOIN_READONLY,
+      'entity' => Entities\CompositePayment::class,
     ],
     self::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
@@ -64,20 +55,39 @@ class ProjectPayments extends PMETableViewBase
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::SEPA_DEBIT_MANDATES_TABLE => [
-      'entity' => Entities\SepaDebitMandate::class,
+    self::SEPA_BANK_ACCOUNTS_TABLE => [
+      'entity' => Entities\SepaBankAccount::class,
       'identifier' => [
         'musician_id' => 'musician_id',
-        'project_id' => 'mandate_project_id',
-        'sequence' => 'mandate_sequence',
+        'sequence' => 'bank_account_sequence',
       ],
       'column' => 'sequence',
       'flags' => self::JOIN_READONLY,
     ],
-    self::DEBIT_NOTES_TABLE => [
-      'entity' => Entities\DebitNote::class,
+    self::SEPA_DEBIT_MANDATES_TABLE => [
+      'entity' => Entities\SepaDebitMandate::class,
       'identifier' => [
-        'id' => 'debit_note_id',
+        'musician_id' => 'musician_id',
+        'sequence' => 'debit_mandate_sequence',
+      ],
+      'column' => 'sequence',
+      'flags' => self::JOIN_READONLY,
+    ],
+    self::SEPA_BULK_TRANSACTIONS_TABLE => [
+      'entity' => Entities\SepaBulkTransactions::class,
+      'identifier' => [
+        'id' => 'sepa_transaction_id',
+      ],
+      'column' => 'id',
+      'flags' => self::JOIN_READONLY,
+    ],
+    self::PROJECT_PAYMENTS_TABLE => [
+      'entity' => Entities\ProjectPayments::class,
+      'identifier' => [
+        'id' => false,
+      ],
+      'filter' => [
+        'composite_payment_id' => 'id',
       ],
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
@@ -137,7 +147,11 @@ class ProjectPayments extends PMETableViewBase
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = [ '-date_of_receipt', 'debit_note_id', 'project_id', 'musician_id' ];
+    $opts['sort_field'] = [
+      '-date_of_receipt',
+      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id'),
+      'musician_id',
+    ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -169,17 +183,6 @@ class ProjectPayments extends PMETableViewBase
       'default'  => '0',
       'sort'     => true,
     ];
-
-    $opts['fdd']['project_id'] = [
-      'name'     => $this->l->t('Project-Id'),
-      'input'    => 'RH',
-      'select'   => 'T',
-      'options'  => 'LACPDV',
-      'maxlen'   => 5,
-      'align'    => 'right',
-      'default'  => '0',
-      'sort'     => true,
-      ];
 
     $opts['fdd']['musician_id'] = [
       'name'     => $this->l->t('Musician-Id'),
@@ -225,21 +228,6 @@ class ProjectPayments extends PMETableViewBase
       'sort' => true
     );
 
-    $opts['fdd']['debit_note_id'] = [
-      'name' => $this->l->t('Direct Debit Id'),
-      'input'  => 'H',
-    ];
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::DEBIT_NOTES_TABLE, 'date_issued',
-      array_merge(
-        $this->defaultFDD['datetime'],
-        [
-          'name' => $this->l->t('Direct Debit Date'),
-          'input' => 'R',
-          'input|C' => 'H',
-        ]));
-
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
       [
@@ -249,7 +237,7 @@ class ProjectPayments extends PMETableViewBase
         'css'  => [ 'postfix' => ' mandate-reference' ],
       ]);
 
-    $opts['fdd']['debit_message_id'] = [
+    $opts['fdd']['notification_message_id'] = [
       'name' => $this->l->t('Message-ID'),
       'input'  => 'R',
       'options' => 'LFVD',
@@ -279,7 +267,7 @@ class ProjectPayments extends PMETableViewBase
       };
     $opts['triggers']['update']['data'] = $opts['triggers']['select']['data'];
 
-    $opts['filters'] = $joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id = '.$projectId;
+    $opts['filters'] = $joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id = '.$projectId;
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
