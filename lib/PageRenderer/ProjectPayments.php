@@ -90,7 +90,7 @@ class ProjectPayments extends PMETableViewBase
         'composite_payment_id' => 'id',
       ],
       'column' => 'id',
-      'flags' => self::JOIN_READONLY,
+      'flags' => self::JOIN_READONLY|self::JOIN_GROUP_BY,
     ],
   ];
 
@@ -149,9 +149,12 @@ class ProjectPayments extends PMETableViewBase
     // Sorting field(s)
     $opts['sort_field'] = [
       '-date_of_receipt',
+      'id',
       $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id'),
       'musician_id',
     ];
+
+    $opts['groupby_fields'] = [ 'id' ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -178,7 +181,7 @@ class ProjectPayments extends PMETableViewBase
       'select'   => 'T',
       'input'    => 'R',
       'input|AP' => 'RH',
-      'options'  => 'AVCPD', // auto increment
+      'options'  => 'LFAVCPD', // auto increment
       'maxlen'   => 11,
       'default'  => '0',
       'sort'     => true,
