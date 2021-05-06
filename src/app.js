@@ -40,6 +40,7 @@ import { documentReady as emailDocumentReady } from './app/email.js';
 import { documentReady as insurancesDocumentReady } from './app/insurance.js';
 import { documentReady as phpMyEditDocumentReady } from './app/pme.js';
 import { documentReady as configCheckDocumentReady } from './app/configcheck.js';
+import { documentReady as projectPaymentsReady } from './app/project-payments.js';
 import beforeReady from './app/before-ready.js';
 import './app/jquery-extensions.js';
 
@@ -64,6 +65,7 @@ $(function() {
   debitNotesDocumentReady();
   sepaDebitMandatesDocumentReady();
   insurancesDocumentReady();
+  projectParticipantsDocumentReady();
   phpMyEditDocumentReady();
   // backgroundJobs();
   settings();

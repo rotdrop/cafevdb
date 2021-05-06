@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\Entities;
 
+use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
 
@@ -146,15 +147,53 @@ class ProjectPayments extends PMETableViewBase
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
 
-    // Sorting field(s)
+    // Sorting field(s). 'id' and self::PROJECT_PAYMENTS_TABLE.id must
+    // be there in order to group the fields correctly, as we "blow"
+    // up the table by joining self::PROJECT_PAYMENTS_TABLE.
     $opts['sort_field'] = [
       '-date_of_receipt',
-      'id',
       $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id'),
       'musician_id',
+      'id',
+      $this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE),
     ];
 
     $opts['groupby_fields'] = [ 'id' ];
+
+    $opts['css']['postfix'] = [
+      'project-payments',
+      'direct-change',
+      'show-hide-disabled',
+    ];
+
+    // in order to be able to collapse payment details:
+    $opts['css']['row'] = function($name, $position, $divider, $row, $pme) {
+      static $evenOdd = [ 'even', 'odd' ];
+      static $lastCompositeId = -1;
+      static $oddProjectPayment = true;
+      static $oddCompositePayment = false;
+
+      $compositePaymentId = $row['qf'.$pme->fdn['id']];
+      $projectPaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
+
+      $cssClasses = [];
+      if ($lastCompositeId != $compositePaymentId) {
+        $cssClasses[] = 'composite-payment-first';
+        $cssClasses[] = 'following-hidden';
+        $lastCompositeId = $compositePaymentId;
+        $oddProjectPayment = true;
+        $oddCompositePayment = !$oddCompositePayment;
+      } else {
+        $cssClasses[] = 'composite-payment-following';
+        $oddProjectPayment = !$oddProjectPayment;
+      }
+
+      $cssClasses[] = 'project-payment-' . $evenOdd[(int)$oddProjectPayment];
+      $cssClasses[] = 'composite-payment-' . $evenOdd[(int)$oddCompositePayment];
+
+      $this->logInfo('CSS CALLBACK COMPOSITE/PROJECT '.$compositePaymentId.' / '.$projectPaymentId);
+      return $cssClasses;
+    };
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -273,6 +312,8 @@ class ProjectPayments extends PMETableViewBase
     $opts['filters'] = $joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id = '.$projectId;
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+
+    $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
 
     if ($execute) {
       $this->execute($opts);

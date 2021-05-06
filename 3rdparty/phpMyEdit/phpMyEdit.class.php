@@ -2596,7 +2596,7 @@ class phpMyEdit
 	/**
 	 * Returns CSS class name
 	 */
-	function getCSSclass($name, $position  = null, $divider = null, $postfix = null) /* {{{ */
+	function getCSSclass($name, $position  = null, $divider = null, $postfix = null, $postfix_data = null) /* {{{ */
 	{
 		static $div_idx = -1;
 		$pfx = '';
@@ -2629,6 +2629,9 @@ class phpMyEdit
 		}
 		$css = $pfx.join($this->css['separator'].$pfx, $elements);
 
+		if (is_callable($postfix)) {
+			$postfix = call_user_func($postfix, $name, $position, $divider, $postfix_data, $this);
+		}
 		if (!empty($postfix)) {
 			$css .= ' '.implode(' ', array_unique(array_map(trim, is_array($postfix) ? $postfix : [ $postfix ])));
 		}
@@ -4529,7 +4532,7 @@ class phpMyEdit
 			}
 
 			echo
-				'<tr class="'.$this->getCSSclass('row', null, 'next').'"'.
+				'<tr class="'.$this->getCSSclass('row', null, 'next', $this->css['row'], $row).'"'.
 				'    data-'.$this->cgi['prefix']['sys']."rec='".$recordData."'\n".'>'."\n";
 			if ($this->sys_cols) { /* {{{ */
 				$css_class_name = $this->getCSSclass('navigation', null, true);
@@ -6049,13 +6052,14 @@ class phpMyEdit
 		isset($opts['url']['images']) && $this->url['images'] = $opts['url']['images'];
 		// CSS classes policy
 		$this->css = @$opts['css'];
-		!isset($this->css['textarea'])  && $this->css['textarea'] = '';
+		!isset($this->css['textarea'])  && $this->css['textarea']  = '';
 		!isset($this->css['separator']) && $this->css['separator'] = '-';
 		!isset($this->css['prefix'])	&& $this->css['prefix']	   = 'pme';
 		!isset($this->css['postfix'])	&& $this->css['postfix']   = '';
 		!isset($this->css['page_type']) && $this->css['page_type'] = false;
 		!isset($this->css['position'])	&& $this->css['position']  = false;
 		!isset($this->css['divider'])	&& $this->css['divider']   = 2;
+		!isset($this->css['row'])   	&& $this->css['row']       = '';
 		$this->css['divider'] = intval(@$this->css['divider']);
 		// JS overall configuration
 		$this->js = @$opts['js'];
