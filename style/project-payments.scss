@@ -1,4 +1,5 @@
-/**Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -19,13 +20,13 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pme-form.pme-list {
+.pme-form.pme-list.project-payments {
 
-  tr.pme-row.composite-payment-odd.following-hidden td {
+  tr.pme-row.composite-payment-odd.following-hidden:not(:hover) td {
     background:#B7CEEC;
   }
 
-  tr.pme-row.composite-payment-even.following-hidden td {
+  tr.pme-row.composite-payment-even.following-hidden:not(:hover) td {
     background:#C6DEFF;
   }
 
@@ -37,13 +38,14 @@
     display:table-row;
   }
 
-  tr.pme-row.project-payment-odd td {
+  tr.pme-row.project-payment-odd:not(:hover) td {
     background:#bfdeb9;
   }
 
-  tr.pme-row.project-payment-even td {
+  tr.pme-row.project-payment-even:not(:hover) td {
     background:#f6ffda;
   }
+
 }
 
 /* GnuCash dark green #bfdeb9 */

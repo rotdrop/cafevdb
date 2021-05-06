@@ -65,7 +65,7 @@ $(function() {
   debitNotesDocumentReady();
   sepaDebitMandatesDocumentReady();
   insurancesDocumentReady();
-  projectParticipantsDocumentReady();
+  projectPaymentsReady();
   phpMyEditDocumentReady();
   // backgroundJobs();
   settings();

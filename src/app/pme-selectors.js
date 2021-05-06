@@ -179,8 +179,18 @@ const pmeTableSelector = function() {
  * @returns {Strring}
  */
 const pmeSelector = function(selector) {
-  if (typeof selector === 'undefined') {
+  if (typeof selector === 'undefined' || $(selector).is(pmeDefaultSelector)) {
     selector = pmeDefaultSelector;
+  } else if (selector instanceof jQuery) {
+    const id = selector.attr('id');
+    const cssClass = selector.attr('class');
+    selector = '';
+    if (id) {
+      selector = '#' + id;
+    }
+    if (cssClass) {
+      selector += '.' + cssClass.split(' ').join('.');
+    }
   }
   return selector;
 };

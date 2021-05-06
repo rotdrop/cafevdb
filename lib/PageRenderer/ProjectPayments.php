@@ -83,6 +83,20 @@ class ProjectPayments extends PMETableViewBase
       'flags' => self::JOIN_READONLY,
     ],
     self::PROJECT_PAYMENTS_TABLE => [
+      // not elegant, but should add an additional row in front of the
+      // collection of project-payments.
+      'sql' => "SELECT
+  CONCAT_WS(';', __t1.composite_payment_id, GROUP_CONCAT(__t1.id)) AS row_tag,
+  0 AS sort_key,
+  __t1.*
+FROM ".self::PROJECT_PAYMENTS_TABLE." __t1
+GROUP BY __t1.composite_payment_id
+UNION
+SELECT
+  __t2.id AS row_tag,
+  __t2.id AS sort_key,
+  __t2.*
+FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'entity' => Entities\ProjectPayments::class,
       'identifier' => [
         'id' => false,
@@ -90,7 +104,7 @@ class ProjectPayments extends PMETableViewBase
       'filter' => [
         'composite_payment_id' => 'id',
       ],
-      'column' => 'id',
+      'column' => 'row_tag',
       'flags' => self::JOIN_READONLY|self::JOIN_GROUP_BY,
     ],
   ];
@@ -155,7 +169,7 @@ class ProjectPayments extends PMETableViewBase
       $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id'),
       'musician_id',
       'id',
-      $this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE),
+      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'sort_key'),
     ];
 
     $opts['groupby_fields'] = [ 'id' ];
@@ -178,18 +192,17 @@ class ProjectPayments extends PMETableViewBase
 
       $cssClasses = [];
       if ($lastCompositeId != $compositePaymentId) {
-        $cssClasses[] = 'composite-payment-first';
-        $cssClasses[] = 'following-hidden';
         $lastCompositeId = $compositePaymentId;
         $oddProjectPayment = true;
+        $cssClasses[] = 'composite-payment-first';
+        $cssClasses[] = 'following-hidden';
+        $cssClasses[] = 'composite-payment-' . $evenOdd[(int)$oddCompositePayment];
         $oddCompositePayment = !$oddCompositePayment;
       } else {
         $cssClasses[] = 'composite-payment-following';
+        $cssClasses[] = 'project-payment-' . $evenOdd[(int)$oddProjectPayment];
         $oddProjectPayment = !$oddProjectPayment;
       }
-
-      $cssClasses[] = 'project-payment-' . $evenOdd[(int)$oddProjectPayment];
-      $cssClasses[] = 'composite-payment-' . $evenOdd[(int)$oddCompositePayment];
 
       $this->logInfo('CSS CALLBACK COMPOSITE/PROJECT '.$compositePaymentId.' / '.$projectPaymentId);
       return $cssClasses;

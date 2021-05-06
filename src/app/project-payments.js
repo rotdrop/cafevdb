@@ -26,19 +26,41 @@ import * as PHPMyEdit from './pme.js';
 
 require('project-payments.scss');
 
+const ready = function(selector, resizeCB) {
+
+  const container = $(selector);
+
+  console.info('PAYMENTS ROW DELEGATE', container);
+  container
+    .on('click', 'table.pme-main tr.composite-payment-first td', function(event) {
+      event.stopImmediatePropagation();
+      console.info('TOGGLE following-hidden');
+      $(this).closest('tr.composite-payment-first').toggleClass('following-hidden');
+      return false;
+    });
+
+  resizeCB();
+};
+
 const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
+
     const container = PHPMyEdit.container();
+
+    console.info('PROJECT PAYMENTS READY');
+
     if (!container.hasClass('project-payments')) {
       return;
     }
 
+    ready(container, function() {});
   });
 
 };
 
 export {
+  ready,
   documentReady,
 };
 

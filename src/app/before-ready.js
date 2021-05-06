@@ -29,6 +29,7 @@ import * as DebitNotes from './debit-notes.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Musicians from './musicians.js';
 import * as Projects from './projects.js';
+import * as ProjectPayments from './project-payments.js';
 import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as Dialogs from './dialogs.js';
@@ -301,7 +302,12 @@ const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback('project-payments', {
     callback(selector, parameters, resizeCB) {
-      resizeCB();
+
+      if (parameters.reason !== 'dialogOpen') {
+        resizeCB();
+      }
+
+      ProjectPayments.ready(selector, resizeCB);
     },
     context: CAFEVDB,
     parameters: [],

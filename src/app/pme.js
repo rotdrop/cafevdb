@@ -591,12 +591,13 @@ const tableDialog = function(form, element, containerSel) {
   }
 
   let dialogCSSId = PHPMyEdit.dialogCSSId;
+  containerSel = pmeSelector(containerSel);
   if (containerSel !== pmeDefaultSelector) {
     dialogCSSId = containerSel.substring(1) + '-' + dialogCSSId;
   }
 
   const tableOptions = {
-    ambientContainerSelector: pmeSelector(containerSel),
+    ambientContainerSelector: containerSel,
     DialogHolderCSSId: dialogCSSId,
     templateRenderer,
     InitialViewOperation: viewOperation,
@@ -1257,7 +1258,73 @@ const installTabHandler = function(containerSel, changeCallback) {
     });
 };
 
+const pmeOpenRowDialog = function(element, event, container) {
+
+  console.info('CONTAINER', container);
+
+  if (event.target !== element) {
+    const target = $(event.target);
+    // divs and spans which make it up to here will be ignored,
+    // everything else results in the default action.
+    if (target.is('.' + pmeToken('misc-check') + '.email')) {
+      return;
+    }
+    if (target.is('.' + pmeToken('misc-check') + '.debit-note')) {
+      return;
+    }
+    if (target.is('.' + pmeToken('misc-check') + '.bulkcommit')) {
+      return;
+    }
+    if (target.is('.graphic-links')) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    if (target.hasClass('nav')) {
+      return;
+    }
+    // if (!target.is('span') && !target.is('div')) {
+    //   return;
+    // }
+  }
+
+  // @todo needed?
+  event.preventDefault();
+  event.stopImmediatePropagation();
+
+  const recordId = $(element).parent().data(pmePrefix + '_sys_rec');
+  const recordKey = pmeSys('rec');
+  let recordQuery = [];
+  if (typeof recordId === 'object' && recordId !== null) {
+    for (const property in recordId) {
+      recordQuery.push(recordKey + '[' + property + ']=' + recordId[property]);
+    }
+  } else {
+    recordQuery.push(recordKey + '=' + recordId);
+  }
+  recordQuery = recordQuery.join('&');
+
+  // @TODO The following is a real ugly kludge
+  // "element" does not necessarily has a form attribute
+  const formSel = 'form.' + pmeToken('form');
+  const form = container.find(formSel);
+  let recordEl;
+  if (form.hasClass(pmeToken('direct-change')) || PHPMyEdit.directChange) {
+    recordEl = '<input type="hidden" class="' + pmeToken('change-navigation') + '"'
+      + ' value="Change?' + recordQuery + '"'
+      + ' name="' + pmeSys('operation') + '" />';
+  } else {
+    recordEl = '<input type="hidden" class="' + pmeToken('view-navigation') + '"'
+      + ' value="View?' + recordQuery + '"'
+      + ' name="' + pmeSys('operation') + '" />';
+  }
+
+  tableDialog(form, $(recordEl), container);
+};
+
 const pmeInit = function(containerSel) {
+
+  console.info('INIT SELECTOR', containerSel);
 
   containerSel = pmeSelector(containerSel);
   const container = pmeContainer(containerSel);
@@ -1371,68 +1438,12 @@ const pmeInit = function(containerSel) {
       });
 
     // Trigger view or change "operation" when clicking on a data-row.
+    console.info('GENERAL ROW DELEGATE');
     const rowSelector = formSel + ' td.' + pmeToken('cell') + ':not(.control)';
     container
       .off('click', rowSelector)
       .on('click', rowSelector, function(event) {
-
-        if (event.target !== this) {
-          const target = $(event.target);
-          // divs and spans which make it up to here will be ignored,
-          // everything else results in the default action.
-          if (target.is('.' + pmeToken('misc-check') + '.email')) {
-            return;
-          }
-          if (target.is('.' + pmeToken('misc-check') + '.debit-note')) {
-            return;
-          }
-          if (target.is('.' + pmeToken('misc-check') + '.bulkcommit')) {
-            return;
-          }
-          if (target.is('.graphic-links')) {
-            event.preventDefault();
-            event.stopPropagation();
-            return;
-          }
-          if (target.hasClass('nav')) {
-            return;
-          }
-          // if (!target.is('span') && !target.is('div')) {
-          //   return;
-          // }
-        }
-
-        // @todo needed?
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const recordId = $(this).parent().data(pmePrefix + '_sys_rec');
-        const recordKey = pmeSys('rec');
-        let recordQuery = [];
-        if (typeof recordId === 'object' && recordId !== null) {
-          for (const property in recordId) {
-            recordQuery.push(recordKey + '[' + property + ']=' + recordId[property]);
-          }
-        } else {
-          recordQuery.push(recordKey + '=' + recordId);
-        }
-        recordQuery = recordQuery.join('&');
-
-        // @TODO The following is a real ugly kludge
-        // "this" does not necessarily has a form attribute
-        const form = container.find(formSel);
-        let recordEl;
-        if (form.hasClass(pmeToken('direct-change')) || PHPMyEdit.directChange) {
-          recordEl = '<input type="hidden" class="' + pmeToken('change-navigation') + '"'
-            + ' value="Change?' + recordQuery + '"'
-            + ' name="' + pmeSys('operation') + '" />';
-        } else {
-          recordEl = '<input type="hidden" class="' + pmeToken('view-navigation') + '"'
-            + ' value="View?' + recordQuery + '"'
-            + ' name="' + pmeSys('operation') + '" />';
-        }
-
-        tableDialog(form, $(recordEl), containerSel);
+        pmeOpenRowDialog(this, event, container);
       });
   }
 
@@ -1596,6 +1607,7 @@ export {
   pmeSysNameSelector as sysNameSelector,
   pmeSubmitOuterForm as submitOuterForm,
   pmeClassSelectors as classSelectors,
+  pmeOpenRowDialog as openRowDialog,
 };
 
 // Local Variables: ***
