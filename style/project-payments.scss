@@ -30,11 +30,15 @@
     background:#C6DEFF;
   }
 
+  tr.pme-row.composite-payment-first ~ tr.pme-row.composite-payment-following {
+    display:none;
+  }
+
   tr.pme-row.composite-payment-first.following-hidden ~ tr.pme-row.composite-payment-following {
     display:none;
   }
 
-  tr.pme-row.composite-payment-first:not(.following-hidden) ~ tr.pme-row.composite-payment-following {
+  tr.pme-row.composite-payment-first.following-visible ~ tr.pme-row.composite-payment-following {
     display:table-row;
   }
 

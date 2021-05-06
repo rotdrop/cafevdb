@@ -507,13 +507,13 @@ class SepaDebitNotesController extends Controller {
     if (!empty($bankTransfer)) {
       $messages[] = $this->l->t('Scheduled %d bank-transfers, due on %s', [
         $bankTransfer->getPayments()->count(),
-        $this->dateTimeFormatter($bankTransfer->getDueDate(), 'long'),
+        $this->dateTimeFormatter->formatDate($bankTransfer->getDueDate(), 'long'),
       ]);
     }
     if (!empty($debitNote)) {
       $messages[] = $this->l->t('Scheduled %d debit-notes, due on %s', [
         $debitNote->getPayments()->count(),
-        $this->dateTimeFormatter($debitNote->getDueDate(), 'long'),
+        $this->dateTimeFormatter->formatDate($debitNote->getDueDate(), 'long'),
       ]);
     }
 

@@ -208,6 +208,25 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       return $cssClasses;
     };
 
+    // wrap the composite groups into tbody elements, otherwise the
+    // groups cannot be hidden individually.
+    $opts['triggers']['select']['data'][] = function($pme, $op, $step, $row) {
+      $this->logInfo('DATA TRIGGER '.$op.' '.$step.' '.print_r($row, true));
+      static $lastCompositeId = -1;
+
+      $compositePaymentId = $row['qf'.$pme->fdn['id']];
+      $projectPaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
+
+      if ($lastCompositeId != $compositePaymentId) {
+        if ($lastCompositeId > 0) {
+          echo '</tbody>
+<tbody>';
+        }
+        $lastCompositeId = $compositePaymentId;
+      }
+      return true;
+    };
+
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
@@ -257,31 +276,62 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       [
         'name'     => $this->l->t('Musician'),
         'css'      => [ 'postfix' => ' instrumentation-id' ],
-        'sql' => 'CONCAT($join_table.id, \': \', $join_table.first_name, \' \', $join_table.sur_name)',
+        'sql' => 'CONCAT($join_table.id, \': \',
+ IF($join_table.display_name IS NULL OR $join_table.display_name = \'\',
+  CONCAT(
+    $join_table.sur_name,
+    \', \',
+    IF($join_table.nick_name IS NULL OR $join_table.nick_name = \'\',
+      $join_table.first_name,
+      $join_table.nick_name
+    )
+  ),
+  $join_table.display_name))',
       ]);
 
-    $opts['fdd']['amount'] = $this->defaultFDD['money'];
-    $opts['fdd']['amount']['name'] = $this->l->t('Amount');
+    $opts['fdd']['amount'] = array_merge(
+      $this->defaultFDD['money'], [
+        'name' => $this->l->t('Amount'),
+        'input' => 'H',
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
+      array_merge(
+        $this->defaultFDD['money'], [
+        'sql|LFVD' => 'IF($join_table.sort_key = 0, $main_table.amount, $join_col_fqn)',
+          'name' => $this->l->t('Amount'),
+        ]));
 
     $receiptIdx = count($opts['fdd']);
     $opts['fdd']['date_of_receipt'] = array_merge(
-      $this->defaultFDD['date'],
-      [
+      $this->defaultFDD['date'], [
         'name' => $this->l->t('Date of Receipt'),
-      ]
-    );
+      ]);
 
     $opts['fdd']['subject'] = array(
       'name' => $this->l->t('Subject'),
-      'css'  => [ 'postfix' => ' subject hide-subsequent-lines' ],
+      'css'  => [ 'postfix' => ' subject squeeze-subsequent-lines' ],
+      'input' => 'H',
       'select' => 'T',
-      'textarea' => [ 'css' => ' subject-text',
-                      'rows' => 4,
-                      'cols' => 32 ],
       'display|LF' => [ 'popup' => 'data' ],
       'escape' => true,
       'sort' => true
     );
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'subject',
+      [
+        'name' => $this->l->t('Subject'),
+        'input'  => 'R',
+        'css'  => [ 'postfix' => ' subject squeeze-subsequent-lines' ],
+        'sql|LFVD' => 'IF($join_table.sort_key = 0, REPLACE($main_table.subject, \'; \', \'<br/>\'), $join_col_fqn)',
+        'options' => 'LFVD',
+        'display' => [
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+        ],
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
