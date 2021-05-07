@@ -49,7 +49,7 @@ class FinanceService
 
   const ENTITY = Entities\SepaDebitMandate::class;
   const SEPA_CHARSET = "a-zA-Z0-9 \/?:().,'+-";
-  const SEPA_PURPOSE_LENGTH = 35;
+  const SEPA_PURPOSE_LENGTH = 4*35;
   const SEPA_MANDATE_LENGTH = 35; ///< Maximum length of mandate reference.
   const SEPA_MANDATE_EXPIRE_MONTHS = 36; ///< Unused mandates expire after this time.
   const BANK_NAME_MAX = 32; // for pretty-printing
