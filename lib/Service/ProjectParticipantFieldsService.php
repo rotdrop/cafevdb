@@ -134,9 +134,13 @@ class ProjectParticipantFieldsService
    * items (we think hear of recurring fees on a yearly basis), which
    * all other sub-options can only be charged together.
    *
+   * @param Entities\Project $project
    *
+   * @param bool $distinct Split multi-select options into grouped
+   * parts. Note that options with Multiplicity::RECURRING are always
+   * split.
    */
-  public function monetarySelectOptions(Entities\Project $project)
+  public function monetarySelectOptions(Entities\Project $project, bool $distinct = false)
   {
     $nonRecurringGroup = $this->l->t('One-time Receivables');
     $selectOptions = [];
@@ -145,17 +149,40 @@ class ProjectParticipantFieldsService
       switch ($field->getMultiplicity()) {
       case Multiplicity::SIMPLE:
       case Multiplicity::SINGLE:
-      case Multiplicity::MULTIPLE:
-      case Multiplicity::GROUPOFPEOPLE:
-      case Multiplicity::GROUPSOFPEOPLE:
-      case Multiplicity::PARALLEL:
+        // always only a single option
         $selectOptions[] = [
           'group' => $nonRecurringGroup,
           'name' => $field->getName(),
           'value' => $field->getId(), // list of keys?
           'data' => [], // relevant data from field definition
         ];
-        // only a single option
+        break;
+      case Multiplicity::MULTIPLE:
+      case Multiplicity::GROUPOFPEOPLE:
+      case Multiplicity::GROUPSOFPEOPLE:
+      case Multiplicity::PARALLEL:
+        if (!$distinct) {
+          // only a single option
+          $selectOptions[] = [
+            'group' => $nonRecurringGroup,
+            'name' => $field->getName(),
+            'value' => $field->getId(), // list of keys?
+            'data' => [], // relevant data from field definition
+          ];
+        } else {
+          // option groups with multiple options
+          $group = sprintf('%s "%s"', $this->l->t($field->getMultiplicity()->getValue()), $field->getName());
+          /** @var Entities\ProjectParticipantFieldDataOption $option */
+          foreach ($field->getSelectableOptions() as $option) {
+            $selectOptions[] = [
+              'group' => $group,
+              'name' => $option->getLabel(),
+              'value' => $option->getKey(),
+              'data' => [], // ? needed ?
+              'groupData' => [], // relevant data from field definition
+            ];
+          }
+        }
         break;
       case Multiplicity::RECURRING:
         // option groups with multiple options
