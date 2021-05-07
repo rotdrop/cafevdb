@@ -573,21 +573,18 @@ const tableDialog = function(form, element, containerSel) {
   templateRenderer = templateRenderer.val();
 
   let viewOperation = false;
-  let initialName;
-  let initialValue;
-  if (element.attr) {
-    initialName = element.attr('name');
-    if (initialName) {
-      initialValue = element.val();
-      const obj = {};
-      obj[initialName] = initialValue;
-      post += '&' + $.param(obj);
-    }
 
-    const cssClass = element.attr('class');
-    if (cssClass) {
-      viewOperation = cssClass.indexOf(pmeToken('view')) > -1;
-    }
+  const initialName = element.attr('name');
+  const initialValue = element.val();
+  if (initialName) {
+    const obj = {};
+    obj[initialName] = initialValue;
+    post += '&' + $.param(obj);
+  }
+
+  const cssClass = element.attr('class');
+  if (cssClass) {
+    viewOperation = cssClass.indexOf(pmeToken('view')) > -1;
   }
 
   let dialogCSSId = PHPMyEdit.dialogCSSId;
@@ -1292,9 +1289,11 @@ const pmeOpenRowDialog = function(element, event, container) {
   event.preventDefault();
   event.stopImmediatePropagation();
 
-  const recordId = $(element).parent().data(pmePrefix + '_sys_rec');
-  const recordKey = pmeSys('rec');
   let recordQuery = [];
+
+  const $row = $(element).closest('tr.' + pmeToken('row'));
+  const recordId = $row.data(pmePrefix + '_sys_rec');
+  const recordKey = pmeSys('rec');
   if (typeof recordId === 'object' && recordId !== null) {
     for (const property in recordId) {
       recordQuery.push(recordKey + '[' + property + ']=' + recordId[property]);
@@ -1302,6 +1301,15 @@ const pmeOpenRowDialog = function(element, event, container) {
   } else {
     recordQuery.push(recordKey + '=' + recordId);
   }
+
+  const groupByRecordId = $row.data(pmePrefix + '_sys_groupby_rec');
+  const groupByRecordKey = pmeSys('groupby_rec');
+  if (typeof groupByRecordId === 'object' && groupByRecordId !== null) {
+    for (const property in groupByRecordId) {
+      recordQuery.push(groupByRecordKey + '[' + property + ']=' + groupByRecordId[property]);
+    }
+  }
+
   recordQuery = recordQuery.join('&');
 
   // @TODO The following is a real ugly kludge
@@ -1309,17 +1317,20 @@ const pmeOpenRowDialog = function(element, event, container) {
   const formSel = 'form.' + pmeToken('form');
   const form = container.find(formSel);
   let recordEl;
-  if (form.hasClass(pmeToken('direct-change')) || PHPMyEdit.directChange) {
+  if ($row.hasClass(pmeToken('change-enabled'))
+      && (form.hasClass(pmeToken('direct-change')) || PHPMyEdit.directChange)) {
     recordEl = '<input type="hidden" class="' + pmeToken('change-navigation') + '"'
       + ' value="Change?' + recordQuery + '"'
       + ' name="' + pmeSys('operation') + '" />';
-  } else {
+  } else if ($row.hasClass(pmeToken('view-enabled'))) {
     recordEl = '<input type="hidden" class="' + pmeToken('view-navigation') + '"'
       + ' value="View?' + recordQuery + '"'
       + ' name="' + pmeSys('operation') + '" />';
   }
 
-  tableDialog(form, $(recordEl), container);
+  if (recordEl) {
+    tableDialog(form, $(recordEl), container);
+  }
 };
 
 const pmeInit = function(containerSel) {
