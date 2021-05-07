@@ -142,6 +142,7 @@ class phpMyEdit
 	var $groupby;   // array of fields for groupby clause, or empty
 	var $groupby_num; // field numbers of groupby fields
 	var $groupby_rec; // values of the group-by fields
+	var $groupby_where; // whether to use groupby field in single record retrieval
 	var $mrecs;     // array of custom-multi records selected
 	var $inc;		// number of records to display
 	var $fm;		// first record to display
@@ -380,35 +381,37 @@ class phpMyEdit
 
 	private function key_record_where()
 	{
+		if (!empty($this->groupby_rec && $this->checkOperationOption($this->groupby_where))) {
+			$keyRecord = $this->groupby_rec;
+		} else {
+			$keyRecord = $this->rec;
+		}
 		$wparts = [];
-		foreach ($this->rec as $key => $rec) {
-			$delim = $this->key_delim[$key];
+		foreach ($keyRecord as $key => $rec) {
+			$delim = isset($this->key_delim[$key]) ? $this->key_delim[$key] : "'";
 			// no need for fqn. ?
-			//$wparts[] = $this->fqn($key, self::OMIT_DESC).' = '.$delim.$rec.$delim;
-			$wparts[] =
-				$this->sd.self::MAIN_ALIAS.$this->ed.'.'.$this->sd.$key.$this->ed.
-				' = '.
-				$delim.$rec.$delim;
+			$wparts[] = $this->fqn($key, self::VANILLA).' = '.$delim.$rec.$delim;
 		}
 		return '('.implode(' AND ', $wparts).')';
 	}
 
-	private function key_record_query_data($key_rec)
+	private function key_record_query_data($key_rec, $force_array = false, $sysName = 'rec')
 	{
 		if (empty($key_record)) {
 			$key_record = $this->rec;
 		}
+		$count = $force_array ? -1 : count($key_rec);
 		switch (count($key_rec)) {
 		case 0:
-			$recordQueryData = $this->cgi['prefix']['sys'].'rec'.'=""';
+			$recordQueryData = $this->cgi['prefix']['sys'].$sysName.'=""';
 			break;
 		case 1:
-			$recordQueryData = $this->cgi['prefix']['sys'].'rec'.'='.array_values($key_rec)[0];
+			$recordQueryData = $this->cgi['prefix']['sys'].$sysName.'='.array_values($key_rec)[0];
 			break;
 		default:
 			$data = [];
 			foreach ($key_rec as $key => $value) {
-				$data[] = $this->cgi['prefix']['sys'].'rec['.$key.']'.'='.$value;
+				$data[] = $this->cgi['prefix']['sys'].$sysName.'['.$key.']'.'='.$value;
 			}
 			$recordQueryData = implode('&', $data);
 			break;
@@ -589,15 +592,8 @@ class phpMyEdit
 			($this->label_cmp($this->savedelete, 'Save')  && stristr($options, 'D'));
 	} /* }}} */
 
-	function displayed($k) /* {{{ */
+	function checkOperationOption($options)
 	{
-		if (is_numeric($k)) {
-			$k = $this->fds[$k];
-		}
-		$options = @$this->fdd[$k]['options'];
-		if (! isset($options)) {
-			return true;
-		}
 		return
 			($this->add_operation()	   && stristr($options, 'A')) ||
 			($this->view_operation()   && stristr($options, 'V')) ||
@@ -607,6 +603,18 @@ class phpMyEdit
 			($this->misc_operation()   && stristr($options, 'M')) ||
 			($this->filter_operation() && stristr($options, 'F')) ||
 			($this->list_operation()   && stristr($options, 'L'));
+	}
+
+	function displayed($k) /* {{{ */
+	{
+		if (is_numeric($k)) {
+			$k = $this->fds[$k];
+		}
+		$options = @$this->fdd[$k]['options'];
+		if (! isset($options)) {
+			return true;
+		}
+		return $this->checkOperationOption($options);
 	} /* }}} */
 
 	function filtered($k) /* {{{ */
@@ -3322,6 +3330,9 @@ class phpMyEdit
 		if (intval($this->fdd[$k]['textarea']['cols']) > 0) {
 			$ret .= ' cols="'.$this->fdd[$k]['textarea']['cols'].'"';
 		}
+		if (intval($this->fdd[$k]['maxlen']) > 0) {
+			$ret .= ' maxlength="'.$this->fdd[$k]['maxlen'].'"';
+		}
 		if (isset($this->fdd[$k]['textarea']['wrap'])) {
 			$ret .= ' wrap="'.$this->fdd[$k]['textarea']['wrap'].'"';
 		} else {
@@ -4517,8 +4528,8 @@ class phpMyEdit
 			}
 			$recordQueryData = $this->key_record_query_data($key_rec);
 
-			$groupby_rec = [];
 			if (!empty($this->groupby)) {
+				$groupby_rec = [];
 				foreach ($this->groupby_num as $key => $key_num) {
 					if ($this->col_has_description($key_num)) {
 						$groupby_rec[$key] = $row['qf'.$key_num.'_idx'];
@@ -4528,12 +4539,37 @@ class phpMyEdit
 				}
 				$mrecRecordData = json_encode($groupby_rec);
 			} else {
+				$groupby_rec = $key_rec;
 				$mrecRecordData = $recordData;
 			}
+			$mrecRecordQueryData = $this->key_record_query_data($groupby_rec, true, 'groupby_rec');
+
+			$operationCss = [];
+			if ($this->view_enabled()) {
+				$operationCss[] = 'view';
+			}
+			if ($this->change_enabled()) {
+				$operationCss[] = 'change';
+			}
+			if ($this->copy_enabled()) {
+				$operationCss[] = 'copy';
+			}
+			if ($this->delete_enabled()) {
+				$operationCss[] = 'delete';
+			}
+			$operationCss = implode(
+				' ',
+				array_map(
+					function($value) { return $this->css['prefix'].'-'.$value.'-enabled'; },
+					$operationCss)
+			);
 
 			echo
-				'<tr class="'.$this->getCSSclass('row', null, 'next', $this->css['row'], $row).'"'.
-				'    data-'.$this->cgi['prefix']['sys']."rec='".$recordData."'\n".'>'."\n";
+				'<tr class="'.$this->getCSSclass('row', null, 'next', $this->css['row'], $row).' '.$operationCss.'"'."\n".
+				'    data-'.$this->css['prefix'].'-options="'.$this->options.'"'."\n".
+				'    data-'.$this->cgi['prefix']['sys']."rec='".$recordData."'"."\n".
+				'    data-'.$this->cgi['prefix']['sys']."groupby_rec='".$mrecRecordData."'"."\n".
+				'>';
 			if ($this->sys_cols) { /* {{{ */
 				$css_class_name = $this->getCSSclass('navigation', null, true);
 				if ($select_recs) {
@@ -4541,7 +4577,9 @@ class phpMyEdit
 						echo '<td class="',$css_class_name,'">';
 					}
 					if ($this->nav_text_links() || $this->nav_graphic_links()) {
-						$queryAppend = htmlspecialchars($recordQueryData);
+						$queryAppend = '&' .
+									 htmlspecialchars($recordQueryData) . '&' .
+									 htmlspecialchars($mrecRecordQueryData);
 						$viewQuery	 = $qpviewStr	. $queryAppend;
 						$copyQuery	 = $qpcopyStr	. $queryAppend;
 						$changeQuery = $qpchangeStr . $queryAppend;
@@ -4564,7 +4602,7 @@ class phpMyEdit
 						if ($this->view_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
 								'operation',
-								$viewTitle.'?'.$recordQueryData,
+								$viewTitle.'?'.$recordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('view-navigation'),
 								$this->view_enabled() == false,
 								sprintf($imgstyle, 'pme-view.png'));
@@ -4572,7 +4610,7 @@ class phpMyEdit
 						if ($this->change_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
 								'operation',
-								$changeTitle.'?'.$recordQueryData,
+								$changeTitle.'?'.$recordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('change-navigation'),
 								$this->change_enabled() == false,
 								sprintf($imgstyle, 'pme-change.png'));
@@ -4580,7 +4618,7 @@ class phpMyEdit
 						if ($this->copy_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
 								'operation',
-								$copyTitle.'?'.$recordQueryData,
+								$copyTitle.'?'.$recordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('copy-navigation'),
 								$this->copy_enabled() == false,
 								sprintf($imgstyle, 'pme-copy.png'));
@@ -4588,7 +4626,7 @@ class phpMyEdit
 						if ($this->delete_nav_displayed()) {
 							$navButtons[] =$this->htmlSubmit(
 								'operation',
-								$deleteTitle.'?'.$recordQueryData,
+								$deleteTitle.'?'.$recordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('delete-navigation'),
 								$this->delete_enabled() == false,
 								sprintf($imgstyle, 'pme-delete.png'));
@@ -4812,6 +4850,8 @@ class phpMyEdit
 			$qparts[self::QPARTS_SELECT] = @$this->get_SQL_column_list();
 			$qparts[self::QPARTS_FROM]	  = @$this->get_SQL_join_clause();
 			$qparts[self::QPARTS_WHERE] = $this->key_record_where();
+			//$qparts[self::QPARTS_GROUPBY] = $this->get_SQL_groupby_query_opts();
+			//$qparts[self::QPARTS_HAVING] = $this->get_SQL_having_query_opts();
 
 			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
 			if (! ($row = $this->sql_fetch($res))) {
@@ -4857,6 +4897,11 @@ class phpMyEdit
 		} else {
 			foreach ($this->rec as $key => $value) {
 				echo $this->htmlHiddenSys('rec['.$key.']', $value);
+			}
+		}
+		if (!empty($this->groupby_rec)) {
+			foreach ($this->groupby_rec as $key => $value) {
+				echo $this->htmlHiddenSys('groupby_rec['.$key.']', $value);
 			}
 		}
 		echo $this->htmlHiddenSys('fm', $this->fm);
@@ -5934,6 +5979,10 @@ class phpMyEdit
 				$this->groupby = array($this->groupby);
 			}
 			$this->groupby = array_values(array_unique(array_merge(array_keys($this->key), $this->groupby)));
+			$this->groupby_where = @$opts['groupby_where'];
+			if ($this->groupby_where === true) {
+				$this->groupby_where = 'ACDPV'; // any single record view
+			}
 		}
 
 		$this->inc		 = $opts['inc'];
@@ -6159,7 +6208,6 @@ class phpMyEdit
 		/* First get any hard-coded record, then possibly
 		 * override by operation query string.
 		 */
-		$querypart = '';
 		$this->rec = $this->get_sys_cgi_var('rec', []);
 		if (!is_array($this->rec)) {
 			if (!empty($this->rec)) {
@@ -6168,26 +6216,15 @@ class phpMyEdit
 				$this->rec = [];
 			}
 		}
+		$this->groupby_rec = $this->get_sys_cgi_var('groupby_rec', []);
+
+		$querypart = '';
 		$qpos = strpos($this->operation, '?');
 		if ($qpos !== false) {
 			$querypart = substr($this->operation, $qpos);
 			$this->operation = substr($this->operation, 0, $qpos);
 		}
-		if (false) {
-			echo '<PRE>';
-			echo "$this->operation\n";
-			echo "q: $querypart\n";
-			echo "pos: $qpos\n";
-			echo '</PRE>';
-		}
-
 		$opreq = parse_url('fake://pme/operation'.$querypart);
-		if (false) {
-			echo '<PRE>';
-			print_r($opreq);
-			echo "$this->operation\n";
-			echo '</PRE>';
-		}
 		$opquery = array();
 		if (isset($opreq['query'])) {
 			parse_str($opreq['query'], $opquery);
@@ -6196,8 +6233,8 @@ class phpMyEdit
 		 * we only expect the record here, so only check for
 		 * that.
 		 */
-		if (count($opquery) > 1) {
-			die("Too many faked _GET parameters.");
+		if (count($opquery) > 2) {
+			$this->logWarn('Too many faked _GET parameters: '.print_r($opquery, true));
 		}
 		$key = $this->cgi['prefix']['sys'].'rec';
 		if (isset($opquery[$key])) {
@@ -6206,6 +6243,12 @@ class phpMyEdit
 		if (!empty($this->rec) && !is_array($this->rec)) {
 			$this->rec = [ array_keys($this->key)[0] => $this->rec ];
 		}
+		$key = $this->cgi['prefix']['sys'].'groupby_rec';
+		if (isset($opquery[$key])) {
+			$this->groupby_rec = $opquery[$key];
+		}
+
+
 		/* echo '<PRE>'; */
 		/* print_r($opquery); */
 		/* echo "\nkey: ".$key."\n"; */
@@ -6318,7 +6361,7 @@ class phpMyEdit
 				$this->rec[$key] = intval($this->rec[$key]);
 				$this->key_delim[$key] = '';
 			} else {
-				$this->key_delim[$key] = '"';
+				$this->key_delim[$key] = "'";
 				// $this->rec remains unmodified
 			}
 		}
