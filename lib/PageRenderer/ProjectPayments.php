@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -28,13 +29,16 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 
 /**Table generator for Instruments table. */
 class ProjectPayments extends PMETableViewBase
@@ -86,8 +90,9 @@ class ProjectPayments extends PMETableViewBase
       // not elegant, but should add an additional row in front of the
       // collection of project-payments.
       'sql' => "SELECT
-  CONCAT_WS(';', __t1.composite_payment_id, GROUP_CONCAT(__t1.id)) AS row_tag,
+  CONCAT_WS(';', __t1.composite_payment_id, GROUP_CONCAT(__t1.id ORDER BY __t1.id)) AS row_tag,
   0 AS sort_key,
+  GROUP_CONCAT(BIN2UUID(__t1.receivable_key ) ORDER BY __t1.id) AS receivable_key_string,
   __t1.*
 FROM ".self::PROJECT_PAYMENTS_TABLE." __t1
 GROUP BY __t1.composite_payment_id
@@ -95,6 +100,7 @@ UNION
 SELECT
   __t2.id AS row_tag,
   __t2.id AS sort_key,
+  BIN2UUID(__t2.receivable_key) AS receivable_string_key,
   __t2.*
 FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'entity' => Entities\ProjectPayments::class,
@@ -106,6 +112,47 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       ],
       'column' => 'row_tag',
       'flags' => self::JOIN_READONLY|self::JOIN_GROUP_BY,
+    ],
+    self::PROJECTS_TABLE => [
+      'entity' => Entities\Project::class,
+      'identifier' => [
+        'id' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'project_id',
+        ],
+      ],
+      'column' => 'id',
+      'flags' => self::JOIN_READONLY,
+    ],
+    self::PROJECT_PARTICIPANT_FIELDS_TABLE => [
+      'entity' => Entities\ProjectParticipantField::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'id' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'field_id',
+        ],
+        'project_id' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'project_id',
+        ]
+      ],
+    ],
+    self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE => [
+      'entity' => Entities\ProjectParticipantFieldDataOption::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'field_id' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'field_id',
+        ],
+        'key' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'receivable_key',
+        ],
+      ],
+      'column' => 'key',
+      'encode' => 'BIN2UUID(%s)',
     ],
   ];
 
@@ -134,11 +181,15 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
 
-    $opts            = [];
-
-    if (empty($projectName) || empty($projectId)) {
+    $projectMode = $this->projectId > 0;
+    if ($projectMode)  {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+    }
+    if (!$projectMode) {
       throw new \InvalidArgumentException('Project-id and/or -name must be given.');
     }
+
+    $opts            = [];
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -173,6 +224,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     ];
 
     $opts['groupby_fields'] = [ 'id' ];
+    $opts['groupby_where'] = true;
 
     $opts['css']['postfix'] = [
       'project-payments',
@@ -190,28 +242,28 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $compositePaymentId = $row['qf'.$pme->fdn['id']];
       $projectPaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
 
-      $cssClasses = [];
+      $cssClasses = ['composite-payment'];
       if ($lastCompositeId != $compositePaymentId) {
         $lastCompositeId = $compositePaymentId;
         $oddProjectPayment = true;
-        $cssClasses[] = 'composite-payment-first';
+        $cssClasses[] = 'first';
         $cssClasses[] = 'following-hidden';
-        $cssClasses[] = 'composite-payment-' . $evenOdd[(int)$oddCompositePayment];
+        $cssClasses[] = $evenOdd[(int)$oddCompositePayment];
         $oddCompositePayment = !$oddCompositePayment;
       } else {
-        $cssClasses[] = 'composite-payment-following';
-        $cssClasses[] = 'project-payment-' . $evenOdd[(int)$oddProjectPayment];
+        $cssClasses[] = 'following';
+        $cssClasses[] = 'project-payment';
+        $cssClasses[] = $evenOdd[(int)$oddProjectPayment];
         $oddProjectPayment = !$oddProjectPayment;
       }
 
-      $this->logInfo('CSS CALLBACK COMPOSITE/PROJECT '.$compositePaymentId.' / '.$projectPaymentId);
       return $cssClasses;
     };
 
     // wrap the composite groups into tbody elements, otherwise the
     // groups cannot be hidden individually.
     $opts['triggers']['select']['data'][] = function($pme, $op, $step, $row) {
-      $this->logInfo('DATA TRIGGER '.$op.' '.$step.' '.print_r($row, true));
+      // $this->logInfo('DATA TRIGGER '.$op.' '.$step.' '.print_r($row, true));
       static $lastCompositeId = -1;
 
       $compositePaymentId = $row['qf'.$pme->fdn['id']];
@@ -237,22 +289,37 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     // Display special page elements
     $opts['display'] =  Util::arrayMergeRecursive(
-      $opts['display'],
-      [
+      $opts['display'], [
         'form'  => true,
-        //'query' => true,
         'sort'  => true,
         'time'  => true,
-        'tabs'  => false
+        'tabs'  => [
+          [
+            'id' => 'booking',
+            'tooltip' => $this->l->t('General accounting data'),
+            'name' => $this->l->t('Booking Entry'),
+          ], [
+            'id' => 'transaction',
+            'tooltip' => $this->l->t('Bulk-transaction data'),
+            'name' => $this->l->t('Bank Transaction'),
+          ], [
+            'id' => 'tab-all',
+            'tooltip' => $this->toolTipsService['pme-showall-tab'],
+            'name' => $this->l->t('Display all columns'),
+          ],
+        ],
     ]);
+    if ($this->addOperation()){
+      $opts['display']['tabs'] = false;
+    }
 
-    $idIdx = 0;
     $opts['fdd']['id'] = [
+      'tab' => [ 'id' => 'tab-all', ],
       'name'     => 'id',
       'select'   => 'T',
       'input'    => 'R',
       'input|AP' => 'RH',
-      'options'  => 'LFAVCPD', // auto increment
+      'options'  => 'LFAVCPD',
       'maxlen'   => 11,
       'default'  => '0',
       'sort'     => true,
@@ -269,24 +336,50 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'sort'     => true,
     ];
 
+    $opts['fdd']['sepa_transaction_id'] = [
+      'name'     => $this->l->t('Bulk-Transaction Id'),
+      'input'    => 'RH',
+      'options'  => 'LFAVCPD',
+    ];
+
     $joinTables = $this->defineJoinStructure($opts);
+    $projectPaymentsJoin = $joinTables[self::PROJECT_PAYMENTS_TABLE];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'row_tag', [ 'input' => 'SRH' ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'sort_key', [ 'input' => 'SRH' ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'id',
       [
         'name'     => $this->l->t('Musician'),
         'css'      => [ 'postfix' => ' instrumentation-id' ],
-        'sql' => 'CONCAT($join_table.id, \': \',
- IF($join_table.display_name IS NULL OR $join_table.display_name = \'\',
-  CONCAT(
-    $join_table.sur_name,
-    \', \',
-    IF($join_table.nick_name IS NULL OR $join_table.nick_name = \'\',
-      $join_table.first_name,
-      $join_table.nick_name
+        'select' => 'D',
+        'values' => [
+          'description' => 'CONCAT($table.id, \': \',
+    IF($table.display_name IS NULL OR $table.display_name = \'\',
+      CONCAT(
+        $table.sur_name,
+        \', \',
+        IF($table.nick_name IS NULL OR $table.nick_name = \'\',
+          $table.first_name,
+          $table.nick_name
+        )
+      ),
+      $table.display_name
     )
-  ),
-  $join_table.display_name))',
+  )',
+          'filters' => (!$projectMode
+                        ? null
+                        : "FIND_IN_SET(id,
+  (SELECT GROUP_CONCAT(pp.musician_id)
+    FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
+    WHERE pp.project_id = ".$projectId."
+    GROUP BY pp.project_id))"),
+        ],
+        'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
     $opts['fdd']['amount'] = array_merge(
@@ -299,13 +392,13 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
       array_merge(
         $this->defaultFDD['money'], [
-        'sql|LFVD' => 'IF($join_table.sort_key = 0, $main_table.amount, $join_col_fqn)',
+        'sql' => 'IF($join_table.sort_key = 0, $main_table.amount, $join_col_fqn)',
           'name' => $this->l->t('Amount'),
         ]));
 
-    $receiptIdx = count($opts['fdd']);
     $opts['fdd']['date_of_receipt'] = array_merge(
       $this->defaultFDD['date'], [
+        'tab' => [ 'id' => 'booking' ],
         'name' => $this->l->t('Date of Receipt'),
       ]);
 
@@ -322,15 +415,120 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'subject',
       [
+        'tab' => [ 'id' => 'booking' ],
         'name' => $this->l->t('Subject'),
         'input'  => 'R',
         'css'  => [ 'postfix' => ' subject squeeze-subsequent-lines' ],
         'sql|LFVD' => 'IF($join_table.sort_key = 0, REPLACE($main_table.subject, \'; \', \'<br/>\'), $join_col_fqn)',
-        'options' => 'LFVD',
+        'sql|ACP' => 'IF($join_table.sort_key = 0, $main_table.subject, $join_col_fqn)',
         'display' => [
           'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
           'postfix' => '</div></div>',
+          'popup' => 'data',
         ],
+        'maxlen' => FinanceService::SEPA_PURPOSE_LENGTH,
+        'textarea|ACP' => [
+          'css' => 'constrained',
+          'rows' => 4,
+          'cols' => 35,
+        ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'key',
+      [
+        'tab' => [ 'id' => [ 'booking', 'transaction' ] ],
+        'name' => $this->l->t('Receivable'),
+        'select' => 'M',
+        'css'  => [ 'postfix' => ' receivable squeeze-subsequent-lines' ],
+        'sql' => $this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.receivable_key_string',
+  //       'sql' => 'IF('.$this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.sort_key = 0,
+  // \'A\',
+  // $join_col_enc)',
+        'values' => [
+          'table' => 'SELECT
+  IF(ppfo.label IS NOT NULL, ppfo.field_id, -1) AS sort_field,
+  ppfo.*,
+  IF(ppf.multiplicity IN ("'.
+          FieldMultiplicity::SIMPLE.'","'.
+          FieldMultiplicity::SINGLE.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE.'"),
+     ppf.name,
+     CONCAT_WS(\' - \', ppf.name, ppfo.label)
+  ) AS display_label,
+  ppf.name AS field_name,
+  ppf.project_id AS project_id,
+  ppf.data_type AS data_type,
+  ppf.multiplicity AS multiplicity
+  FROM '.self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.' ppfo
+  LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
+  ON ppfo.field_id = ppf.id',
+          'encode' => 'BIN2UUID(%s)',
+          'description' => '$table.display_label',
+          'join' => ('$join_table.field_id = '
+                     .$this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.field_id'
+                     .' AND $join_table.key = '
+                     .$this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.receivable_key'
+                     .' AND $join_table.project_id = '
+                     .$this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id'),
+          'groups' => 'IF($table.multiplicity IN ("'.
+          FieldMultiplicity::SIMPLE.'","'.
+          FieldMultiplicity::SINGLE.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE.'"),
+  "'.$this->l->t('Single Options').'",
+  $table.field_name)',
+          'orderby' => '$table.sort_field ASC, $table.display_label ASC',
+          'filters' => ('$table.deleted IS NULL'
+                        .' AND $table.data_type = \''.FieldType::SERVICE_FEE."'"
+                        .' AND NOT $table.key = CAST(\'\0\' AS BINARY(16))'),
+        ],
+        'values2glue' => '<br/>',
+        'display' => [
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+          'popup' => 'data',
+        ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'created',
+      array_merge(
+        $this->defaultFDD['date'], [
+          'tab' => [ 'id' => [ 'transaction' ] ],
+          'name' => $this->l->t('Bulk Transaction'),
+          'input' => 'R',
+          'options' => 'LFVD',
+          'css'  => [ 'postfix' => ' bulk-transaction' ],
+          'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
+            $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
+            if (!empty($bulkTransactionId)) {
+              $value = sprintf('%04d: %s', $bulkTransactionId, $value);
+            }
+            return $this->compositeRowOnly($value, $action, $k, $row, $recordId, $pme);
+          },
+      ]),
+    );
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'submit_date',
+      array_merge(
+        $this->defaultFDD['date'], [
+          'name' => $this->l->t('Filing Date'),
+          'input' => 'R',
+          'options' => 'LFVD',
+          'css'  => [ 'postfix' => ' date-of-submission' ],
+          'php|LF' => [$this, 'compositeRowOnly'],
+        ]),
+    );
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_BANK_ACCOUNTS_TABLE, 'iban',
+      [
+        'name' => $this->l->t('IBAN'),
+        'input'  => 'R',
+        'options' => 'LFVD',
+        'css'  => [ 'postfix' => ' bank-account-iban' ],
+        'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
     $this->makeJoinTableField(
@@ -340,6 +538,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'input'  => 'R',
         'options' => 'LFVD',
         'css'  => [ 'postfix' => ' mandate-reference' ],
+        // 'sql' => 'IF(NOT '.$projectPaymentsJoin.'.sort_key = 0, NULL, $join_col_fqn)',
+        'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
     $opts['fdd']['notification_message_id'] = [
@@ -357,9 +557,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     $opts['triggers']['select']['data'][] =
       function(&$pme, $op, $step, &$row) use ($opts) {
-        //error_log('called '.$op.' '.$debitIdIdx);
-        //error_log('called '.print_r($row, true));
-        if (!empty($row[$this->queryField('debit_note_id', $pme->fdd)])) {
+
+        $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
+        if (!empty($bulkTransactionId)) {
           $pme->options = 'LVF';
           if ($op !== 'select' ) {
             throw new \BadFunctionCallException(
@@ -376,7 +576,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
-    $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
+    // $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
 
     if ($execute) {
       $this->execute($opts);
@@ -385,4 +585,18 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     }
   }
 
+  /**
+   * Print only the values for the composite row.
+   *
+   * @todo: if the search results (e.g. for the amount) do not contain
+   * the composite row, then them issing data should also be printed.
+   */
+  public function compositeRowOnly($value, $action, $k, $row, $recordId, $pme) {
+    $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
+    if (strstr($rowTag, ';') !== false) {
+      return $value;
+    } else {
+      return '';
+    }
+  }
 }

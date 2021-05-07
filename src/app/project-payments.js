@@ -32,10 +32,10 @@ const ready = function(selector, resizeCB) {
 
   console.info('PAYMENTS ROW DELEGATE', container);
   container
-    .on('click', 'table.pme-main tr.composite-payment-first td', function(event) {
+    .on('click', 'table.pme-main tr.composite-payment.first td', function(event) {
       event.stopImmediatePropagation();
       console.info('TOGGLE following-hidden');
-      $(this).closest('tr.composite-payment-first').toggleClass('following-hidden');
+      $(this).closest('tr.composite-payment.first').toggleClass('following-hidden');
       return false;
     });
 
