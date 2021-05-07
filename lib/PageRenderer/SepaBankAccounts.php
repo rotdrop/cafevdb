@@ -276,7 +276,6 @@ class SepaBankAccounts extends PMETableViewBase
     // Display special page elements
     $opts['display'] = [
       'form'  => true,
-      //'query' => true,
       'sort'  => true,
       'time'  => true,
       'tabs'  => [
@@ -441,10 +440,19 @@ received so far'),
         'maxlen'   => 11,
         'sort'     => true,
         'values' => [
-          'description' => [
-            'columns' => [ 'sur_name', 'first_name', ],
-            'divs' => ', ',
-          ],
+          'description' => 'CONCAT($table.id, \': \',
+    IF($table.display_name IS NULL OR $table.display_name = \'\',
+      CONCAT(
+        $table.sur_name,
+        \', \',
+        IF($table.nick_name IS NULL OR $table.nick_name = \'\',
+          $table.first_name,
+          $table.nick_name
+        )
+      ),
+      $table.display_name
+    )
+  )',
           'filters' => (!$projectMode
                         ? null
                         : "FIND_IN_SET(id,
