@@ -763,13 +763,12 @@ td.pme-sortinfo, td.pme-queryinfo {
 form.pme-form .tab-all {
   /* display:none; */
 }
-
 td.negative {
   color:#FF0000;
 }
 
 td.align-right, td.pme-cell.align-right, td.pme-cell.money,
-form.pme-form:not(.pme-change) td.pme-value.money {
+form.pme-form:not(.pme-change,.pme-add,.pme-copyadd) td.pme-value.money {
   text-align:right;
 }
 
@@ -865,8 +864,8 @@ div#contact_photo_upload {
   min-height:100px;
 }
 
-form.pme-form:not(.pme-change) td.pme-value.clip-long-text,
-form.pme-form:not(.pme-change) td.pme-value .clip-long-text,
+form.pme-form:not(.pme-change,.pme-add,.pme-copyadd) td.pme-value.clip-long-text,
+form.pme-form:not(.pme-change,.pme-add,.pme-copyadd) td.pme-value .clip-long-text,
 td.pme-cell.clip-long-text,
 td.pme-cell .clip-long-text,
 td.pme-cell.musician-instruments {
