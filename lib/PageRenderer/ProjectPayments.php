@@ -47,6 +47,9 @@ class ProjectPayments extends PMETableViewBase
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
   const DEBIT_NOTES_TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
 
+  /** @var FinanceService */
+  private $financeService;
+
   protected $joinStructure = [
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
@@ -158,13 +161,15 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
   public function __construct(
     ConfigService $configService
-  , RequestParameterService $requestParameters
-  , EntityManager $entityManager
-  , PHPMyEdit $phpMyEdit
-  , ToolTipsService $toolTipsService
-  , PageNavigation $pageNavigation
+    , RequestParameterService $requestParameters
+    , EntityManager $entityManager
+    , PHPMyEdit $phpMyEdit
+    , FinanceService $financeService
+    , ToolTipsService $toolTipsService
+    , PageNavigation $pageNavigation
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    $this->financeService = $financeService;
   }
 
   public function shortTitle()
@@ -529,6 +534,20 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'options' => 'LFVD',
         'css'  => [ 'postfix' => ' bank-account-iban' ],
         'php|LF' => [$this, 'compositeRowOnly'],
+        'encryption' => [
+          'encrypt' => function($value) { return $this->encrypt($value); },
+          'decrypt' => function($value) { return $this->decrypt($value); },
+        ],
+        'display' => [
+          'popup' => function($data) {
+            $info  = $this->financeService->getIbanInfo($data);
+            $result = '';
+            foreach ($info as $key => $value) {
+              $result .= $this->l->t($key).': '.$value.'<br/>';
+            }
+            return $result;
+          },
+        ],
       ]);
 
     $this->makeJoinTableField(
