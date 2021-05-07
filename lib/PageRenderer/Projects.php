@@ -628,6 +628,13 @@ project without a poster first.");
               ],
               [
                 'type' => 'option',
+                'title' => $this->toolTipsService['project-action-payments'],
+                'value' => 'project-payments',
+                'disabled' => false, // @todo !Config::isTreasurer(),
+                'name' => $this->l->t('Payments')
+              ],
+              [
+                'type' => 'option',
                 'title' => $this->toolTipsService['project-action-financial-balance'],
                 'value' => 'profit-and-loss',
                 'data' => [ 'projectFiles' => $projectPaths['balance'] ],

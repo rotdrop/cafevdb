@@ -314,6 +314,7 @@ const actions = function(select, containerSel) {
     // popup-box.
   case 'project-participants':
   case 'sepa-bank-accounts':
+  case 'project-payments':
   case 'project-participant-fields':
     // @TODO: this really could be a popup
     post.template = selectedValue;
