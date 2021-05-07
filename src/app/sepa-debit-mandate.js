@@ -1069,7 +1069,7 @@ const mandateExportHandler = function(event) {
   };
 
   const formPost = form.serialize();
-  $.post(generateUrl('finance/sepa/debit-notes/create'), formPost)
+  $.post(generateUrl('finance/sepa/bulk-transactions/create'), formPost)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, clearBusyState);
     })

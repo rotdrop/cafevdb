@@ -534,12 +534,12 @@ class Navigation
                'projectId' => $projectId];
       break;
 
-    case 'sepa-debit-notes':
+    case 'sepa-bulk-transactions':
       $value = $this->l->t("Debit Notes");
       $title = $this->l->t("A table holding all debit notes issued from the orchestra-software.");
       $controlclass = 'finance';
       $post = ['debitNotes' => $value,
-               'template' => 'sepa-debit-notes',
+               'template' => 'sepa-bulk-transactions',
                'projectName' => $projectName,
                'projectId' => $projectId];
       break;

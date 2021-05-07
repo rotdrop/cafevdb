@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -34,7 +34,7 @@ $nav .= $pageNavigation->pageControlElement('insurance-rates');
 $nav .= $pageNavigation->pageControlElement('insurance-brokers');
 $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $projectName, $projectId);
-$nav .= $pageNavigation->pageControlElement('sepa-debit-notes', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('sepa-bulk-transactions', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('all');
 

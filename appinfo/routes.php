@@ -340,8 +340,8 @@ $routes = [
       'verb' => 'POST',
     ],
     [
-      'name' => 'sepa_debit_notes#service_switch',
-      'url' => '/finance/sepa/debit-notes/{topic}',
+      'name' => 'sepa_bulk_transactions#service_switch',
+      'url' => '/finance/sepa/bulk-transactions/{topic}',
       'verb' => 'POST',
     ],
     /**

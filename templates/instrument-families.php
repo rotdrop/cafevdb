@@ -35,7 +35,7 @@ if ($projectId >= 0) {
   if ($roles->inTreasurerGroup()) { // @@TODO
     $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
     $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $project, $projectId);
-    $nav .= $pageNavigation->pageControlElement('sepa-debit-notes', $project, $projectId);
+    $nav .= $pageNavigation->pageControlElement('sepa-bulk-transactions', $project, $projectId);
     if ($projectId == $appConifg->getConfigValue('memberProjectId', false)) {
       $nav .= $pageNavigation->pageControlElement('insurances');
     }

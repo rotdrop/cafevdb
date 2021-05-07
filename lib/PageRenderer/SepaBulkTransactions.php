@@ -37,13 +37,13 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 
 /** TBD. */
-class SepaDebitNotes extends PMETableViewBase
+class SepaBulkTransactions extends PMETableViewBase
 {
-  const TEMPLATE = 'sepa-debit-notes';
+  const TEMPLATE = 'sepa-bulk-transactions';
   const TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
   const DATA_TABLE = self::SEPA_BULK_TRANSACTIONS_DATA_TABLE;
 
-  protected $cssClass = 'sepa-debit-notes';
+  protected $cssClass = 'sepa-bulk-transactions';
 
   protected $joinStructure = [
     self::TABLE => [
