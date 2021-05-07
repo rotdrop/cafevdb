@@ -268,7 +268,7 @@ form.pme-form table.pme-main.tab-9 td.tab-9 {
   width: 34px;
   height: 34px;
   background-size: 24px 24px;
-  margin: 1px;
+  margin: 0px;
 }
 
 .ui-dialog #pme-table-container table.pme-navigation {
@@ -451,6 +451,18 @@ td.select-hidden select {
 form.pme-form textarea:not(.wysiwyg-editor) {
   overflow-x:hidden; /* fix FF extra-line bug */
   width:unset;
+}
+
+form.pme-form textarea.constrained {
+  resize: none;
+}
+
+form.pme-form textarea.constrained-width {
+  resize: vertical;
+}
+
+form.pme-form textarea.constrained-height {
+  resize: horizontal;
 }
 
 form.pme-form {
@@ -965,6 +977,7 @@ table.pme-main td.pme-cell.restrict-height .pme-cell-wrapper,
 table.pme-main td.pme-cell.squeeze-subsequent-lines .pme-cell-wrapper {
   display:block;
   max-height:24px;
+  overflow:hidden;
 }
 
 /* Restrict height of buttons in list view */
@@ -982,7 +995,7 @@ table.pme-main td.pme-cell.squeeze-subsequent-lines .pme-cell-squeezer {
   max-height:24px;
   line-height:7px;
   font-size:66.67%;
-  overflow:hidden;
+  /* overflow:hidden; */
   position:relative;
 }
 
