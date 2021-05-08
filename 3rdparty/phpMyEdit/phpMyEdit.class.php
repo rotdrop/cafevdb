@@ -4287,6 +4287,7 @@ class phpMyEdit
 		 */
 		$formCssClass = $this->getCSSclass('list', null, null, $this->css['postfix']);
 		$this->form_begin($formCssClass);
+		echo '<div class="'.$this->getCSSclass('navigation-container', 'up').'">'."\n";
 		if ($this->display['form']) {
 			//echo $this->get_origvars_html($this->get_sfn_cgi_vars());
 			// Display buttons at top and/or bottom of page.
@@ -4310,6 +4311,7 @@ class phpMyEdit
 			echo $this->htmlHiddenSys('translations', $this->translations);
 			echo $this->htmlHiddenSys('cur_tab', $this->cur_tab);
 		}
+		echo '</div>'."\n";
 
 		if ($this->tabs_enabled()) {
 			$tab_class = $this->cur_tab < 0 ? ' tab-all' : ' tab-'.$this->cur_tab;
@@ -4317,7 +4319,7 @@ class phpMyEdit
 			$tab_class = '';
 		}
 
-		echo '<div class="'.$this->getCSSclass('main').'-container">'."\n";
+		echo '<div class="'.$this->getCSSclass('main-container').'">'."\n";
 		echo '<table class="',$this->getCSSclass('main'),$tab_class,'" summary="',$this->tb,'">',"\n";
 		echo '<thead><tr class="',$this->getCSSclass('header'),'">',"\n";
 		/*
@@ -4791,11 +4793,16 @@ class phpMyEdit
 		}
 		echo '</tbody></table>',"\n"; // end of table rows listing
 		echo '</div>'."\n"; // end of scroll container
+		echo '<div class="'.$this->getCSSclass('navigation-container', 'down').'">'."\n";
 		$this->display_list_table_buttons('down');
 		// Finally add some more hidden stuff ...
 		if ($this->misc_enabled()) {
 			$this->emit_misc_recs();
 		}
+		if ($this->display['time'] && $this->timer != null) {
+			echo '<span class="'.$this->getCSSclass('time').'">'.$this->timer->end().' miliseconds'.'</span>';
+		}
+		echo '</div>'."\n";
 		$this->form_end();
 	} /* }}} */
 
@@ -4856,10 +4863,8 @@ class phpMyEdit
 			$this->exec_data_triggers($trigger, $row);
 		}
 
-		/* echo '<PRE>'; */
-		/* $this->print_vars(); */
-		/* echo '</PRE>'; */
 		$this->form_begin($formCssClass);
+		echo '<div class="'.$this->getCSSclass('navigation-container', 'up').'">'."\n";
 		if ($this->cgi['persist'] != '') {
 			echo $this->get_origvars_html($this->cgi['persist']);
 		}
@@ -4906,6 +4911,7 @@ class phpMyEdit
 		echo $this->htmlHiddenSys('fl', $this->fl);
 		echo $this->htmlHiddenSys('op_name', $this->operationName());
 		$this->display_record_buttons('up');
+		echo '</div>'."\n";
 
 		if ($this->tabs_enabled()) {
 			$tab_class = $this->cur_tab < 0 ? ' tab-all' : ' tab-'.$this->cur_tab;
@@ -4920,8 +4926,12 @@ class phpMyEdit
 			$this->display_copy_change_delete_record($row);
 		}
 		echo '</tbody></table>',"\n";
+		echo '<div class="'.$this->getCSSclass('navigation-container', 'down').'">'."\n";
 		$this->display_record_buttons('down');
-
+		if ($this->display['time'] && $this->timer != null) {
+			echo '<span class="'.$this->getCSSclass('time').'">'.$this->timer->end().' miliseconds'.'</span>';
+		}
+		echo '</div>'."\n";
 		$this->form_end();
 	} /* }}} */
 
@@ -5937,9 +5947,6 @@ class phpMyEdit
 		}
 
 		$this->sql_disconnect();
-		if ($this->display['time'] && $this->timer != null) {
-			echo '<span>'.$this->timer->end().' miliseconds'.'</span>';
-		}
 	} /* }}} */
 
 	/*
