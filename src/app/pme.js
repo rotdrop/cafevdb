@@ -60,7 +60,7 @@ import 'selectize/dist/css/selectize.bootstrap4.css';
 // import 'selectize/dist/css/selectize.css';
 require('cafevdb-selectize.css');
 
-require('pme-table.css');
+require('pme-table.scss');
 
 const popupPosition = {
   my: 'left top',

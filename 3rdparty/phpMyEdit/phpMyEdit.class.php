@@ -4274,13 +4274,7 @@ class phpMyEdit
 		}
 		// If sort sequence has changed, restart listing
 		$this->qfn != $this->prev_qfn && $this->fm = 0;
-		if (0) { // DEBUG
-			echo 'qfn vs. prev_qfn comparsion ';
-			echo '[<b>',htmlspecialchars($this->qfn),'</b>]';
-			echo '[<b>',htmlspecialchars($this->prev_qfn),'</b>]<br />';
-			echo 'comparsion <u>',($this->qfn == $this->prev_qfn ? 'proved' : 'failed'),'</u>';
-			echo '<hr size="1" />';
-		}
+
 		/*
 		 * If user is allowed to Change/Delete records, we need an extra column
 		 * to allow users to select a record
@@ -4323,6 +4317,7 @@ class phpMyEdit
 			$tab_class = '';
 		}
 
+		echo '<div class="'.$this->getCSSclass('main').'-container">'."\n";
 		echo '<table class="',$this->getCSSclass('main'),$tab_class,'" summary="',$this->tb,'">',"\n";
 		echo '<thead><tr class="',$this->getCSSclass('header'),'">',"\n";
 		/*
@@ -4795,6 +4790,7 @@ class phpMyEdit
 			echo '</tr>',"\n";
 		}
 		echo '</tbody></table>',"\n"; // end of table rows listing
+		echo '</div>'."\n"; // end of scroll container
 		$this->display_list_table_buttons('down');
 		// Finally add some more hidden stuff ...
 		if ($this->misc_enabled()) {

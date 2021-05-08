@@ -465,10 +465,24 @@ form.pme-form textarea.constrained-height {
   resize: horizontal;
 }
 
+$pme-form-padding-left: 1ex;
+
 form.pme-form {
-  padding-left:1ex;
+  padding-left:$pme-form-padding-left;
   background-color:#f2f8ff;
   width:auto;
+}
+
+/** @todo provide nicer scrolling facilities */
+form.pme-form.pme-list {
+  width:100%;
+  overflow:hidden;
+}
+
+form.pme-form.pme-list .pme-main-container {
+  width:100%;
+  overflow:auto;
+  scrollbar-width:auto;
 }
 
 form.pme-form input[type=text] {
