@@ -535,7 +535,7 @@ class Navigation
       break;
 
     case 'sepa-bulk-transactions':
-      $value = $this->l->t("Debit Notes");
+      $value = $this->l->t("Bulk Transactions");
       $title = $this->l->t("A table holding all debit notes issued from the orchestra-software.");
       $controlclass = 'finance';
       $post = ['debitNotes' => $value,
