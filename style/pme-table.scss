@@ -448,6 +448,10 @@ td.select-hidden select {
  *
  */
 
+.pme-table-container {
+  height:100%;
+}
+
 form.pme-form textarea:not(.wysiwyg-editor) {
   overflow-x:hidden; /* fix FF extra-line bug */
   width:unset;
