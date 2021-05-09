@@ -85,15 +85,18 @@ class ProjectService
     try {
       $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     } catch (\Throwable $t) {
-      $this->logException($t);
-      $request = \OC::$server->query(OCP\IRequest::class);
+      $this->logError('HELLO');
+      $request = \OC::$server->query(\OCP\IRequest::class);
+      $this->logError('HELLO2');
       $userId = $this->userId();
       if ($request) {
         $this->logError('User "'.$userId.'" request uri "'.$request->getRequestUri().'"');
       } else {
         $this->logError('User "'.$userId.'", no request?!');
       }
+      $this->logError('SERVER '.print_r($_SERVER, true));
       $this->repository = null;
+      $this->logException($t);
     }
     $this->l = $this->l10n();
   }
