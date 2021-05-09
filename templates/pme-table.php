@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -46,7 +47,8 @@ try {
   throw new \Exception("Renderer failed", $t->getCode(), $t);
 }
 
-echo '<div id="pme-table-container" class="pme-table-container '.$css.'" style="height:auto;">';
+//echo '<div id="pme-table-container" class="pme-table-container '.$css.'" style="height:auto;">';
+echo '<div id="pme-table-container" class="pme-table-container '.$css.'">';
 //$renderer->render();
 echo $pmeTable;
 echo '</div>';
