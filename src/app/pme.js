@@ -1257,8 +1257,6 @@ const installTabHandler = function(containerSel, changeCallback) {
 
 const pmeOpenRowDialog = function(element, event, container) {
 
-  console.info('CONTAINER', container);
-
   if (event.target !== element) {
     const target = $(event.target);
     // divs and spans which make it up to here will be ignored,
@@ -1334,8 +1332,6 @@ const pmeOpenRowDialog = function(element, event, container) {
 };
 
 const pmeInit = function(containerSel) {
-
-  console.info('INIT SELECTOR', containerSel);
 
   containerSel = pmeSelector(containerSel);
   const container = pmeContainer(containerSel);
@@ -1449,7 +1445,6 @@ const pmeInit = function(containerSel) {
       });
 
     // Trigger view or change "operation" when clicking on a data-row.
-    console.info('GENERAL ROW DELEGATE');
     const rowSelector = formSel + ' td.' + pmeToken('cell') + ':not(.control)';
     container
       .off('click', rowSelector)
