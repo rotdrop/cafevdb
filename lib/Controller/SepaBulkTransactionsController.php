@@ -48,7 +48,7 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
 
-class SepaBulkTransactionController extends Controller {
+class SepaBulkTransactionsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -520,7 +520,7 @@ class SepaBulkTransactionController extends Controller {
     $responseData = [
       'message' => $messages,
       'bankTransferId' => empty($bankTransfer) ? 0 : $bankTransfer->getId(),
-      'debitMandateId' => empty($debitMandate) ? 0 : $debitMandate->getId(),
+      'debitMandateId' => empty($debitNote) ? 0 : $debitNote->getId(),
     ];
     return self::dataResponse($responseData);
   }
