@@ -29,7 +29,7 @@ import exportMode from './app/expertmode.js';
 // import backgroundJobs from './app/backgroundjobs.js';
 import { documentReady as pageDocumentReady } from './app/page.js';
 import { documentReady as projectExtraDocumentReady } from './app/project-participant-fields.js';
-import { documentReady as debitNotesDocumentReady } from './app/debit-notes.js';
+import { documentReady as sepaBulkTransactionsDocumentReady } from './app/sepa-bulk-transactions.js';
 import { documentReady as musiciansDocumentReady } from './app/musicians.js';
 import { documentReady as projectParticipantsDocumentReady } from './app/project-participants.js';
 import { documentReady as sepaDebitMandatesDocumentReady } from './app/sepa-debit-mandate.js';
@@ -62,7 +62,7 @@ $(function() {
   projectsDocumentReady();
   projectExtraDocumentReady();
   projectInstrumentationNumbersDocumentReady();
-  debitNotesDocumentReady();
+  sepaBulkTransactionsDocumentReady();
   sepaDebitMandatesDocumentReady();
   insurancesDocumentReady();
   projectPaymentsReady();

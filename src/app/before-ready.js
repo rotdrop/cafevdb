@@ -25,7 +25,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Page from './page.js';
 import * as Photo from './inlineimage.js';
 import * as ProjectExtra from './project-participant-fields.js';
-import * as DebitNotes from './debit-notes.js';
+import * as SepaBulkTransactions from './sepa-bulk-transactions.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Musicians from './musicians.js';
 import * as Projects from './projects.js';
@@ -313,7 +313,7 @@ const documentReady = function() {
     parameters: [],
   });
 
-  PHPMyEdit.addTableLoadCallback('debit-notes', {
+  PHPMyEdit.addTableLoadCallback('sepa-bulk-transactions', {
     callback(selector, parameters, resizeCB) {
 
       if (parameters.reason !== 'dialogOpen') {
@@ -321,7 +321,7 @@ const documentReady = function() {
         return;
       }
 
-      DebitNotes.ready(selector, resizeCB);
+      SepaBulkTransactions.ready(selector, resizeCB);
     },
     context: CAFEVDB,
     parameters: [],

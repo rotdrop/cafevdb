@@ -1,0 +1,59 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.pme-form.pme-list.sepa-bulk-transactions {
+
+  tr.pme-row.bulk-transaction:not(.following-hidden,.composite-payment) td {
+    font-weight:bold;
+  }
+
+  tr.pme-row.bulk-transaction.odd.following-hidden:not(:hover) td {
+    background:#B7CEEC;
+  }
+
+  tr.pme-row.bulk-transaction.even.following-hidden:not(:hover) td {
+    background:#C6DEFF;
+  }
+
+  tr.pme-row.bulk-transaction.first.following-hidden ~ tr.pme-row.bulk-transaction.following {
+    display:none;
+  }
+
+  tr.pme-row.composite-payment.odd:not(:hover) td {
+    background:#bfdeb9;
+  }
+
+  tr.pme-row.composite-payment.even:not(:hover) td {
+    background:#f6ffda;
+  }
+
+  tr.pme-row.composite-payment:hover td {
+    background:#96b183;
+  }
+
+}
+
+/* GnuCash dark green #bfdeb9 */
+/* GnuCash light green #f6ffda */
+/* GnuCash open split (yellow?) #ffef98 */
+/* GnuCash header dark green #96b183 */
+/* GnuCash splits in open transaction #ede7d3 */

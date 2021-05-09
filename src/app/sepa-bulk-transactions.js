@@ -1,9 +1,10 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,10 +28,19 @@ import * as Dialogs from './dialogs.js';
 import * as PHPMyEdit from './pme.js';
 import fileDownload from './file-download.js';
 
+require('sepa-bulk-transactions.scss');
+
 const ready = function(container, resizeCB) {
 
   // sanitize
   container = PHPMyEdit.container(container);
+
+  container
+    .on('click', 'table.pme-main tr.bulk-transaction.first td', function(event) {
+      event.stopImmediatePropagation();
+      $(this).closest('tr.bulk-transaction.first').toggleClass('following-hidden');
+      return false;
+    });
 
   container
     .off('click', '.debit-note-actions a.announce')
@@ -74,23 +84,28 @@ const ready = function(container, resizeCB) {
       return false;
     });
 
-  if (typeof resizeCB === 'function') {
-    resizeCB();
-  }
+  resizeCB();
 };
 
 const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
 
-    if ($('div#cafevdb-page-body.debit-notes').length > 0) {
-      ready();
+    const container = PHPMyEdit.container();
+
+    if (!container.hasClass('sepa-bulk-transactions')) {
+      return;
     }
+
+    ready(container, function() {});
   });
 
 };
 
-export { documentReady, ready };
+export {
+  documentReady,
+  ready
+};
 
 // Local Variables: ***
 // js-indent-level: 2 ***
