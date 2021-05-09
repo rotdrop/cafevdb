@@ -348,7 +348,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     ];
 
     $joinTables = $this->defineJoinStructure($opts);
-    $projectPaymentsJoin = $joinTables[self::PROJECT_PAYMENTS_TABLE];
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'row_tag', [ 'input' => 'SRH' ]);
@@ -397,7 +396,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
       array_merge(
         $this->defaultFDD['money'], [
-        'sql' => 'IF($join_table.sort_key = 0, $main_table.amount, $join_col_fqn)',
+          'sql' => 'IF($join_table.sort_key = 0, $main_table.amount, $join_col_fqn)',
           'name' => $this->l->t('Amount'),
         ]));
 
@@ -557,7 +556,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'input'  => 'R',
         'options' => 'LFVD',
         'css'  => [ 'postfix' => ' mandate-reference' ],
-        // 'sql' => 'IF(NOT '.$projectPaymentsJoin.'.sort_key = 0, NULL, $join_col_fqn)',
         'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
@@ -608,7 +606,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    * Print only the values for the composite row.
    *
    * @todo: if the search results (e.g. for the amount) do not contain
-   * the composite row, then them issing data should also be printed.
+   * the composite row, then the missing data should also be printed.
    */
   public function compositeRowOnly($value, $action, $k, $row, $recordId, $pme) {
     $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
