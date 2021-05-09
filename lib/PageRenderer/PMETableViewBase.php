@@ -59,7 +59,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const SEPA_BANK_ACCOUNTS_TABLE = 'SepaBankAccounts';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
   const SEPA_BULK_TRANSACTIONS_TABLE = 'SepaBulkTransactions';
-  const SEPA_BULK_TRANSACTIONS_DATA_TABLE = 'SepaBulkTransactionData';
+  const SEPA_BULK_TRANSACTION_DATA_TABLE = 'SepaBulkTransactionData';
   const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
   const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
   const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
@@ -72,6 +72,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstruments';
   const MUSICIAN_PHOTO_JOIN_TABLE = 'MusicianPhoto';
+  const FILES_TABLE = 'Files';
 
   const VALUES_SEP = ',';
   const JOIN_FIELD_NAME_SEPARATOR = ':';
