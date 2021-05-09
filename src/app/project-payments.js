@@ -30,7 +30,6 @@ const ready = function(selector, resizeCB) {
 
   const container = $(selector);
 
-  console.info('PAYMENTS ROW DELEGATE', container);
   container
     .on('click', 'table.pme-main tr.composite-payment.first td', function(event) {
       event.stopImmediatePropagation();
@@ -47,8 +46,6 @@ const documentReady = function() {
   CAFEVDB.addReadyCallback(function() {
 
     const container = PHPMyEdit.container();
-
-    console.info('PROJECT PAYMENTS READY');
 
     if (!container.hasClass('project-payments')) {
       return;
