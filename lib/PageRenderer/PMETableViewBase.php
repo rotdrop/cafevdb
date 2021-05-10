@@ -1633,18 +1633,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       ];
     } else {
       $masterFieldName = $this->joinTableMasterFieldName($tableInfo);
-      $this->logInfo('MASTER '.$masterFieldName.' ??? '.print_r($tableInfo, true));
       $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
       if ($joinIndex === false) {
         $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
         throw new \Exception($this->l->t("Master join-table field for %s not found.", $table));
       }
-      $this->logInfo('FDD MASTER '.print_r($fieldDescriptionData[$masterFieldName], true));
       if (isset($fieldDescriptionData[$masterFieldName]['values']['join']['reference'])) {
         $joinIndex = $fieldDescriptionData[$masterFieldName]['values']['join']['reference'];
-        $this->logInfo('REFERENCE  '.$joinIndex);
-      } else {
-        $this->logInfo('BLAHREFERENCE  '.$joinIndex);
       }
       $defaultFDD = [
         'select' => 'T',
