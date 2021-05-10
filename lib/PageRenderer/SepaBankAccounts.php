@@ -99,6 +99,39 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'column' => 'id',
     ],
+    // extra input fields depending on the type of the project,
+    // e.g. service fees etc.
+    self::PROJECT_PARTICIPANT_FIELDS_TABLE => [
+      'entity' => Entities\ProjectParticipantField::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'project_id' => [
+          'table' => self::PROJECT_PARTICIPANTS_TABLE,
+          'column' => 'project_id',
+        ],
+        'id' => false,
+      ],
+      'column' => 'id',
+    ],
+    // the data for the extra input fields
+    self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE => [
+      'entity' => Entities\ProjectParticipantFieldDatum::class,
+      'flags' => self::JOIN_REMOVE_EMPTY,
+      'identifier' => [
+        'project_id' => [
+          'table' => self::PROJECT_PARTICIPANTS_TABLE,
+          'column' => 'project_id',
+        ],
+        'musician_id' => 'musician_id',
+        'field_id' => [
+          'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
+          'column' => 'id',
+        ],
+        'option_key' => false,
+      ],
+      'column' => 'option_key',
+      'encode' => 'BIN2UUID(%s)',
+    ],
   ];
 
   /** @var ProjectParticipantFieldsService */

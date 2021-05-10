@@ -33,7 +33,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * SepaDebitMandate
  *
- * @ORM\Table(name="SepaDebitMandates", uniqueConstraints={@ORM\UniqueConstraint(columns={"mandate_reference"})})
+ * @ORM\Table(
+ *   name="SepaDebitMandates",
+ *   uniqueConstraints={
+ *     @ORM\UniqueConstraint(columns={"mandate_reference"}),
+ *     @ORM\UniqueConstraint(columns={"musician_id", "sequence", "project_id"})
+ *   },
+ *   indexes={
+ *     @ORM\Index(columns={"musician_id", "bank_account_sequence", "project_id"}),
+ *   },
+ * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository")
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",
