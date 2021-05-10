@@ -1462,14 +1462,19 @@ class phpMyEdit
 			if (/*false*/ !$this->displayed[$k] && !in_array($k, $this->key_num) && !in_array($k, $this->groupby_num)) {
 				continue;
 			}
-			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed;
+			$flags = 0;
+			if (isset($this->fdd[$k][self::FDD_VALUES]['join'])
+				&& $this->fdd[$k][self::FDD_VALUES]['join'] === false) {
+				$flags = self::OMIT_DESC;
+			}
+			$fields[] = $this->fqn($k, $flags).' AS '.$this->sd.'qf'.$k.$this->ed;
 			if ($this->col_has_description($k)) {
 				$fields[] = $this->fqn($k, self::OMIT_DESC).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
 			}
 			if ($this->col_has_datemask($k)) {
 				// Date functions of mysql are a nightmare. Leave the
 				// conversion to PHP further below.
-				$fields[] = ($this->fqn($k)." AS ".$this->sd."qf".$k."_timestamp".$this->ed);
+				$fields[] = ($this->fqn($k, $flags)." AS ".$this->sd."qf".$k."_timestamp".$this->ed);
 			}
 		}
 		return join(',', $fields);
