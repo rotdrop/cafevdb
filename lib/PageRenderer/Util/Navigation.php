@@ -626,8 +626,8 @@ and even edit the public web-pages for the project and other things.");
       break;
 
     case 'sepa-bank-accounts':
-      $value = $this->l->t('Debit Mandates');
-      $title = $this->l->t('Display a table with the SEPA debit mandates related to the project.');
+      $value = $this->l->t('Bank Accounts');
+      $title = $this->l->t('Display a table with the SEPA bank accounts of the project participants.');
       $controlclass = 'finance';
       $post = ['template' => 'sepa-bank-accounts',
                'projectName' => $projectName,
