@@ -1470,6 +1470,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $joinData[] = $joinCondition;
         }
       }
+      if (!empty($joinInfo['reference'])) {
+        $reference = $joinTables[$joinInfo['reference']];
+        $joinData = [ 'reference' => $reference, ];
+        $valuesTable = null;
+        $joinTables[$table] = $reference;
+      } else {
+        $joinData = implode(' AND ', $joinData);
+      }
       $grouped[$table] = $group;
       $orderBy[$table] = $groupOrderBy;
       $fieldName = $this->joinTableMasterFieldName($table);
@@ -1485,7 +1493,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           'order_by' => implode(', ', $groupOrderBy),
           'grouped' => $group,
           'encode' => $joinInfo['encode'],
-          'join' => implode(' AND ', $joinData),
+          'join' => $joinData,
         ],
       ];
       if ($joinInfo['flags'] & self::JOIN_GROUP_BY) {
@@ -1625,10 +1633,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       ];
     } else {
       $masterFieldName = $this->joinTableMasterFieldName($tableInfo);
+      $this->logInfo('MASTER '.$masterFieldName.' ??? '.print_r($tableInfo, true));
       $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
       if ($joinIndex === false) {
         $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
         throw new \Exception($this->l->t("Master join-table field for %s not found.", $table));
+      }
+      $this->logInfo('FDD MASTER '.print_r($fieldDescriptionData[$masterFieldName], true));
+      if (isset($fieldDescriptionData[$masterFieldName]['values']['join']['reference'])) {
+        $joinIndex = $fieldDescriptionData[$masterFieldName]['values']['join']['reference'];
+        $this->logInfo('REFERENCE  '.$joinIndex);
+      } else {
+        $this->logInfo('BLAHREFERENCE  '.$joinIndex);
       }
       $defaultFDD = [
         'select' => 'T',

@@ -83,6 +83,7 @@ trait ParticipantFieldsTrait
           'field_id' => [ 'value' => $fieldId, ],
           'option_key' => false,
         ],
+        'reference' => self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
         'column' => 'option_key',
         'encode' => 'BIN2UUID(%s)',
       ];
@@ -125,6 +126,9 @@ trait ParticipantFieldsTrait
           'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
           'default|A'  => $field['default_value'],
           'filter' => 'having',
+          'sql' => 'GROUP_CONCAT(DISTINCT
+  IF($join_table.field_id = '.$fieldId.', $join_col_enc, NULL)
+  ORDER BY $order_by)',
           'values' => [
             'grouped' => true,
             'filters' => ('$table.field_id = '.$fieldId
@@ -217,7 +221,7 @@ trait ParticipantFieldsTrait
           // disable deleted entries
           $valueFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
           $keyFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
-          $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.deleted IS NULL, $join_col_fqn, null))';
+            $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.' AND $join_table.deleted IS NULL, $join_col_fqn, NULL))';
 
           switch ($dataType) {
           case FieldType::SERVICE_FEE:
@@ -440,10 +444,14 @@ trait ParticipantFieldsTrait
 
           $valueFdd['sql|ACP'] = 'GROUP_CONCAT(
   DISTINCT
-  CONCAT_WS(
-    \''.self::JOIN_KEY_SEP.'\',
-    BIN2UUID($join_table.option_key),
-    $join_table.option_value
+  IF(
+    NOT $join_table.field_id = '.$fieldId.',
+    NULL,
+    CONCAT_WS(
+      \''.self::JOIN_KEY_SEP.'\',
+      BIN2UUID($join_table.option_key),
+      $join_table.option_value
+    )
   )
   ORDER BY $order_by)';
 

@@ -119,6 +119,7 @@ class ProjectParticipants extends PMETableViewBase
     // e.g. service fees etc.
     self::PROJECT_PARTICIPANT_FIELDS_TABLE => [
       'entity' => Entities\ProjectParticipantField::class,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'project_id' => 'project_id',
         'id' => false,
@@ -128,7 +129,7 @@ class ProjectParticipants extends PMETableViewBase
     // the data for the extra input fields
     self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDatum::class,
-      'flags' => self::JOIN_READONLY,
+      'flags' => self::JOIN_REMOVE_EMPTY,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
