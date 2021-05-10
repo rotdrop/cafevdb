@@ -45,79 +45,83 @@ trait SepaAccountsTrait
     }
     $joinStructure = [
       self::SEPA_BANK_ACCOUNTS_TABLE => [
-        // join all bank-accounts for this musician duplicating lines
-        // for all SEPA-mandates.
-        'flags' => self::JOIN_READONLY,
-        'sql' => 'SELECT
-  CONCAT_WS(\''.self::COMP_KEY_SEP.'\', sba.musician_id, sba.sequence, IFNULL(sdm.sequence,0)) AS sepa_id,
-  sba.*,
-  sdm.sequence AS debit_mandate_sequence,
-  sdm.project_id AS debit_mandate_project_id,
-  sdm.mandate_reference AS debit_mandate_reference,
-  sdm.deleted AS debit_mandate_deleted
-  FROM '.self::SEPA_BANK_ACCOUNTS_TABLE.' sba
-  LEFT JOIN '.self::SEPA_DEBIT_MANDATES_TABLE.' sdm
-    ON (sba.musician_id = sdm.musician_id
-        AND sba.sequence = sdm.bank_account_sequence'
-        .$projectWhere.')',
-        //GROUP BY sba.musician_id, sba.sequence, sdm.sequence',
         'entity' => Entities\SepaBankAccount::class,
+        'flags' => self::JOIN_READONLY,
         'identifier' => [
           'musician_id' => $musicianIdField,
-          'sepa_id' => false,
+          'sequence' => false,
         ],
-        'column' => 'sepa_id',
+        'column' => 'sequence',
       ],
-      // self::SEPA_DEBIT_MANDATES_TABLE => [
-      //   'entity' => Entities\SepaDebitMandate::class,
-      //   'flags' => self::JOIN_READONLY,
-      //   'identifier' => [
-      //     'musician_id' => $musicianIdField,
-      //     'sequence' => [
-      //       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
-      //       'column' => 'debit_mandate_sequence',
-      //     ],
-      //   ],
-      //   'column' => 'sequence',
-      // ],
+      self::SEPA_DEBIT_MANDATES_TABLE => [
+        'entity' => Entities\SepaDebitMandate::class,
+        'flags' => self::JOIN_READONLY,
+        'identifier' => [
+          'musician_id' => $musicianIdField,
+          'sequence' => false,
+        ],
+        'filter' => [
+          'bank_account_sequence' => [
+            'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+            'column' => 'sequence',
+          ],
+        ],
+        'column' => 'sequence',
+      ],
     ];
 
     $generator = function(&$fdd) use ($musicianIdField, $financeTab) {
       $this->makeJoinTableField(
-        $fdd, self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_reference', [
+        $fdd, self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference', [
           'name' => $this->l->t('SEPA Debit Mandate Reference'),
           'tab' => ['id' => $financeTab],
           'input' => 'H',
           'tab' => [ 'id' => 'contact' ],
-          'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
+          'sql' => 'GROUP_CONCAT(
+  DISTINCT
+  CONCAT_WS(
+    "'.self::JOIN_KEY_SEP.'",
+    CONCAT_WS(
+      "'.self::COMP_KEY_SEP.'",
+      $join_table.musician_id,
+      $join_table.bank_account_sequence,
+      $join_table.sequence),
+    $join_col_fqn)
+  ORDER BY $order_by)',
           'filter' => 'having',
           'sort' => true,
           'select' => 'M',
           'values' => [
-            'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
-            // description needs to be there in order to trigger drop-down on change
             'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
             'grouped' => true,
-            'orderby' => '$table.sepa_id ASC',
+            'orderby' => '$table.musician_id ASC, $table.bank_account_sequence ASC, $table.sequence ASC',
           ],
       ]);
 
       $this->makeJoinTableField(
-        $fdd, self::SEPA_BANK_ACCOUNTS_TABLE, 'debit_mandate_deleted', [
+        $fdd, self::SEPA_DEBIT_MANDATES_TABLE, 'deleted', [
           'name' => $this->l->t('SEPA Debit Mandate Deleted'),
           'tab' => ['id' => $financeTab],
           'input' => 'H',
           'tab' => [ 'id' => 'contact' ],
-          'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
+          'sql' => 'GROUP_CONCAT(
+  DISTINCT
+  CONCAT_WS(
+    "'.self::JOIN_KEY_SEP.'",
+    CONCAT_WS(
+      "'.self::COMP_KEY_SEP.'",
+      $join_table.musician_id,
+      $join_table.bank_account_sequence,
+      $join_table.sequence),
+    $join_col_fqn)
+  ORDER BY $order_by)',
           'filter' => 'having',
           'sort' => true,
           'select' => 'M',
           'values' => [
-            'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
-            // description needs to be there in order to trigger drop-down on change
             'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
             'grouped' => true,
-            'orderby' => '$table.sepa_id ASC',
+            'orderby' => '$table.musician_id ASC, $table.bank_account_sequence ASC, $table.sequence ASC',
           ],
       ]);
 
@@ -159,7 +163,17 @@ trait SepaAccountsTrait
               return implode(',', $values);
             },
           ],
-          'sql|ACP' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\':\', $join_table.sepa_id, $join_col_fqn) ORDER BY $order_by)',
+          'sql|ACP' => 'GROUP_CONCAT(
+  DISTINCT
+  CONCAT_WS(
+    "'.self::JOIN_KEY_SEP.'",
+    CONCAT_WS(
+      "'.self::COMP_KEY_SEP.'",
+      $join_table.musician_id,
+      $join_table.sequence,
+      '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence),
+    $join_col_fqn)
+  ORDER BY $order_by, '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence ASC)',
           'filter' => 'having',
           'display|LFDV' => [
             'popup' => 'data',
@@ -173,11 +187,10 @@ trait SepaAccountsTrait
           'sort' => true,
           'select' => 'M',
           'values' => [
-            'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
             // description needs to be there in order to trigger drop-down on change
             'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
             'grouped' => true,
-            'orderby' => '$table.sepa_id ASC',
+            'orderby' => '$table.musician_id ASC, $table.sequence ASC',
           ],
           'values2glue' => '<br/>',
           'css' => [ 'postfix' => ' squeeze-subsequent-lines' ],
@@ -191,11 +204,19 @@ trait SepaAccountsTrait
           'input|LFDV' => 'VH',
           'select' => 'D',
           'css' => [ 'postfix' => ' sepa-bank-accounts' ],
+          'sql|ACP' => 'GROUP_CONCAT(
+  DISTINCT
+  CONCAT_WS(
+    "'.self::COMP_KEY_SEP.'",
+    $join_table.musician_id,
+    $join_table.sequence,
+    '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence)
+  ORDER BY $order_by, '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence ASC)',
           'values' => [
-            'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
-            // description needs to be there in order to trigger drop-down on change
+            'column' => 'sequence',
             'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
             'grouped' => true,
+            'orderby' => '$table.musician_id ASC, $table.sequence ASC',
           ],
           'php' => function($value, $op, $k, $row, $recordId, $pme) use ($musicianIdField) {
             $this->logInfo('RECORD ID '.$recordId.' PME REC '.print_r($pme->rec, true));
@@ -213,7 +234,7 @@ trait SepaAccountsTrait
             $html = '<table class="hide-deleted row-count-'.count($ibans).'">
   <tbody>';
             foreach ($ibans as $sepaId => $iban) {
-              list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode('-', $sepaId);
+              list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode(self::COMP_KEY_SEP, $sepaId);
               $sepaData = json_encode([
                 'projectId' => 0,
                 'musicianId' => $musicianId,
