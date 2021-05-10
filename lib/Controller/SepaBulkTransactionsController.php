@@ -273,6 +273,8 @@ class SepaBulkTransactionsController extends Controller {
     /** @var Entities\SepaBankTransfer $bankTransfer */
     $bankTransfer = new Entities\SepaBankTransfer;
 
+    $nonRecurring = null;
+
     /** @var Entities\ProjectParticipant $participant */
     foreach ($participants as $musicianId => $participant) {
       /** @var Entities\CompositePayment $compositePayment */
@@ -299,6 +301,21 @@ class SepaBulkTransactionsController extends Controller {
               $participant->getMusician()->getPublicName(), $compositePayment->getAmount(),
             ]));
         }
+
+        // In general we do not use non-recurring, but play
+        // safe. Mixing recurring and non-recurring debit-notes may
+        // lead to errors when submitting the data to the bank.
+        if ($nonRecurring !== null && $debitMandate->getNonRecurring() != $nonRecurring) {
+          return self::grumble(
+            $this->l->t('The debit-mandate for a bulk-transaction must either be all recurring or all one-time-only. The conflicting mandate of musician "%s", mandate-reference "%s" is %s, the previous mandates were %s.', [
+              $participant->getMusician()->getPublicName(),
+              $mandate->getMandateReference(),
+              ($nonRecurring ? $this->l->t('recurring') : $this->l->t('non-recurring')),
+              ($nonRecurring ? $this->l->t('non-recurring') : $this->l->t('recurring')),
+            ]));
+        }
+        $nonRecurring = $debitMandate->nonRecurring;
+
         $compositePayment->setSepaDebitMandate($debitMandate);
         $compositePayment->setSepaTransaction($debitNote);
         $debitNote->getPayments()->set($musicianId, $compositePayment);
