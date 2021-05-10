@@ -59,8 +59,8 @@ trait SepaAccountsTrait
   LEFT JOIN '.self::SEPA_DEBIT_MANDATES_TABLE.' sdm
     ON (sba.musician_id = sdm.musician_id
         AND sba.sequence = sdm.bank_account_sequence'
-        .$projectWhere.')
-  GROUP BY sba.musician_id, sba.sequence, sdm.sequence',
+        .$projectWhere.')',
+        //GROUP BY sba.musician_id, sba.sequence, sdm.sequence',
         'entity' => Entities\SepaBankAccount::class,
         'identifier' => [
           'musician_id' => $musicianIdField,
