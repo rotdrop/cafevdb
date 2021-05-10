@@ -68,18 +68,18 @@ trait SepaAccountsTrait
         ],
         'column' => 'sepa_id',
       ],
-      self::SEPA_DEBIT_MANDATES_TABLE => [
-        'entity' => Entities\SepaDebitMandate::class,
-        'flags' => self::JOIN_READONLY,
-        'identifier' => [
-          'musician_id' => $musicianIdField,
-          'sequence' => [
-            'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
-            'column' => 'debit_mandate_sequence',
-          ],
-        ],
-        'column' => 'sequence',
-      ],
+      // self::SEPA_DEBIT_MANDATES_TABLE => [
+      //   'entity' => Entities\SepaDebitMandate::class,
+      //   'flags' => self::JOIN_READONLY,
+      //   'identifier' => [
+      //     'musician_id' => $musicianIdField,
+      //     'sequence' => [
+      //       'table' => self::SEPA_BANK_ACCOUNTS_TABLE,
+      //       'column' => 'debit_mandate_sequence',
+      //     ],
+      //   ],
+      //   'column' => 'sequence',
+      // ],
     ];
 
     $generator = function(&$fdd) use ($musicianIdField, $financeTab) {
