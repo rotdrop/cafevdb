@@ -513,7 +513,7 @@ class ProjectParticipants extends PMETableViewBase
         'values|LFV' => [
           'table'       => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
           'column'      => 'id',
-          'description' => 'l10n_name',
+          'description' => '$table.l10n_name',
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
           'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$this->projectId." = pi.project_id GROUP BY pi.project_id))",
@@ -522,19 +522,6 @@ class ProjectParticipants extends PMETableViewBase
         'valueGroups' => $this->instrumentInfo['idGroups'],
       ]);
     $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
-
-    $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
-      'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
-      'name'        => $this->l->t('Instrument Sort Order'),
-      'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-      'input'       => 'HRS',
-      'sort'        => true,
-      'values' => [
-        'column' =>  'sort_order',
-        'orderby' => '$table.sort_order ASC',
-        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
-      ],
-    ];
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'voice',
@@ -546,7 +533,7 @@ class ProjectParticipants extends PMETableViewBase
         'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT
   IF(\$join_col_fqn > 0,
-     CONCAT(".$this->joinTables[self::INSTRUMENTS_TABLE].".name,
+     CONCAT(".$this->joinTables[self::INSTRUMENTS_TABLE].".l10n_name,
             ' ',
             \$join_col_fqn),
      NULL)
@@ -657,7 +644,7 @@ class ProjectParticipants extends PMETableViewBase
          'description' => [ 'l10n_name', 'IF($table.voice = 0, \'\', CONCAT(\' \', $table.voice))' ],
          'orderby' => '$table.sort_order',
          'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
-         'join' => '$join_table.project_id = $main_table.project_id AND $join_table.musician_id = $main_table.musician_id',
+         'join' => false, //'$join_table.project_id = $main_table.project_id AND $join_table.musician_id = $main_table.musician_id',
        ],
        'values2|LF' => [ 0 => '', 1 => '&alpha;' ],
        'align|LF' => 'center',
