@@ -1074,6 +1074,10 @@ const mandateExportHandler = function(event) {
       Ajax.handleError(xhr, status, errorThrown, clearBusyState);
     })
     .done(function(data) {
+      if (!Ajax.validateResponse(['message','bankTransferId', 'debitMandateId'], clearBusyState)) {
+        return;
+      }
+      Notification.messages(data.message);
       clearBusyState();
     });
 

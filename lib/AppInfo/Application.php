@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Listener\TranslationNotFoundListener;
 
 use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
 use OCA\CAFEVDB\PageRenderer\Registration as PageRendererRegistration;
+use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
@@ -112,6 +113,9 @@ class Application extends App implements IBootstrap
 
     // Register PageRenderer stuff
     PageRendererRegistration::register($context);
+
+    // Register Service stuff
+    ServiceRegistration::register($context);
   }
 
 }

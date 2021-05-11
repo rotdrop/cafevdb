@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
+use OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -101,7 +102,7 @@ class SepaBulkTransactionsController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic, $projectId = 0, $sepaBulkTransactions = [], $sepaDueDeadline = null)
+  public function serviceSwitch($topic, $projectId = 0, $sepaBulkTransactions = [], $sepaDueDeadline = null, $bulkTransactionId = 0)
   {
     switch ($topic) {
     case 'create':
@@ -119,6 +120,8 @@ class SepaBulkTransactionsController extends Controller {
         $bankAccountRecords,
         $sepaBulkTransactions,
         $sepaDueDeadline);
+    case 'export':
+      return $this->exportBulkTransaction($bulkTransactionId);
     default:
       break;
     }
@@ -128,6 +131,14 @@ class SepaBulkTransactionsController extends Controller {
   /**
    * Generate the SEPA-bulk-transactions as requested by the submitted
    * parameters.
+   *
+   * @param int $projectId
+   *
+   * @param string $bankAccoutRecords JSON-data with musician_id,
+   * sequence and debit-mandate sequence as SepaDebitMandates_key
+   *
+   * @param array $bulkTransactions Actually the options from
+   * Entities\ProjectParticipantFieldDataOption to take into account.
    *
    * @bug This function is too long.
    */
@@ -540,6 +551,72 @@ class SepaBulkTransactionsController extends Controller {
       'debitMandateId' => empty($debitNote) ? 0 : $debitNote->getId(),
     ];
     return self::dataResponse($responseData);
+  }
+
+  /**
+   * Generate export-sets for the given bulk-transaction.
+   *
+   * $param int $bulkTransactionId
+   */
+  private function exportBulkTransaction($bulkTransactionId, $format = SepaBulkTransactionService::EXPORT_AQBANKING)
+  {
+    $id = filter_var($bulkTransactionId, FILTER_VALIDATE_INT, ['min_range' => 1]);
+    if ($id === false) {
+      return self::grumble(
+        $this->l->t('Submitted value "%s" is not a positive integer.',
+                    $bulkTransactionId));
+    }
+
+    /** @var Entities\SepaBulkTransaction $bulkTransaction */
+    $bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
+                            ->find($id);
+    if (empty($bulkTransaction)) {
+      return self::grumble($this->l->t('Unable to find bulk-transaction with id %d.', $id));
+    }
+
+    $transcationData = $bulkTransaction->getSepaTransactionData();
+    /** @var Entities\EncryptedFile $exportFile */
+    foreach ($transcationData as $exportFile) {
+      if (strpos($exportFile->getFileName(), $format) !== false) {
+        break;
+      }
+      $exportFile = null;
+    }
+    if (empty($exportFile) || $bulkTransaction->getUpdated() > $exportFile->getUpdated()) {
+      if (empty($exportFile)) {
+        $exportFile = new Entities\EncryptedFile;
+        $exportFile->setFileData(new Entities\EncryptedFileData);
+        $exportFile->getFileData()->setFile($exportFile);
+      }
+      /** @var IBulkTransactionExporter $exporter */
+      $exporter = $this->bulkTransactionService->getTransactionExporter($format);
+      if (empty($exporter)) {
+        return self::grumble($this->l->t('Unable to find exporter for format "%s".', $format));
+      }
+      if ($bulkTransaction instanceof Entities\SepaBankTransfer) {
+        $transactionType = 'banktransfer';
+      } else if ($bulkTransaction instanceof Entities\SepaDebitNote) {
+        $transactionType = 'debitnote';
+      }
+      $fileName = $this->timeStamp() . '-' . $transactionType . '-' . $format . '.' . $exporter->fileExtension();
+      $exportFile->setFileName($fileName);
+      $fileData = $exporter->fileData($bulkTransaction);
+      $exportFile->getFileData()->setData($fileData);
+      $exportFile->setMimeType($exporter->mimeType($bulkTransaction));
+      $exportFile->setSize(strlen($fileData));
+
+      try {
+      } catch (\Throwabled $t) {
+      }
+      // @todo persist, get id
+    }
+
+    return new RedirectResponse(
+      $this->urlGenerator()->linkToRoute($this->appName().'.download.get', [
+        'section' => 'database', 'object' => $exportFile->getId()
+      ])
+      . '?fileName=' . $exportFile->getFileName()
+    );
   }
 
 }

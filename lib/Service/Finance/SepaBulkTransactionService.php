@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use \DateTimeImmutable as DateTime;
 
+use OCP\AppFramework\IAppContainer;
 use OCP\ILogger;
 use OCP\IL10N;
 
@@ -50,19 +51,30 @@ class SepaBulkTransactionService
 
   const BULK_TRANSACTION_REMINDER_SECONDS = 24 * 60 * 60; /* alert one day in advance */
 
-  /** ORM\EntityRepository */
-  private $debitNoteRepository;
+  const EXPORT_AQBANKING = 'aqbanking';
+
+  /** @var IAppContainer */
+  private $appContainer;
 
   public function __construct(
     EntityManager $entityManager
+    , IAppContainer $appContainer
     , ILogger $logger
     , IL10N $l10n
   ) {
     $this->entityManager = $entityManager;
+    $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
+  }
 
-    $this->debitNoteRepository = $this->getDatabaseRepository(DebitNote::class);
+  /**
+   * @return IBulkTransactionExporter
+   */
+  public function getTransactionExporter($format):?IBulkTransactionExporter
+  {
+    $serviceName = 'export:' . 'bank-bulk-transactions:' . $format;
+    return $this->appContainer->get($serviceName);
   }
 
   /**
