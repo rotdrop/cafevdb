@@ -23,24 +23,42 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use \DateTimeImmutable as DateTime;
 
+/**
+ * Extremely generic debit-note exporter. The purpose of this class is
+ * to generate the export data-sets for a given banking
+ * application. The only input is a Entities\SepaBulkTransaction
+ * entity, in either of its specializations as
+ * Entities\SepaBankTransfer or Entities\SepaDebitNote.
+ *
+ * The idea is to generate mime-type, file-extension and the actual
+ * file data and leave the file-name to the calling higher-level
+ * controller code.
+ */
 interface IDebitNoteExporter
 {
   /**
-   * Generate the headings for the table export.
+   * Generate the mime-type for the given bulk-transaction.
+   *
+   * @param Entities\SepaBulkTransaction $transaction
    */
-  public function columnHeadings():array;
+  public function mimeType(Entities\SepaBulkTransaction $transaction):string;
 
   /**
-   * Export the given data-set into another format, filling the
-   * missing field like CI etc.
+   * Generate the file-extension for the given bulk-transaction, with out the dot.
    *
-   * @param SepaDebitNoteDTO $debitNoteData
-   *
-   * @param DateTime $executionDate
+   * @param Entities\SepaBulkTransaction $transaction
    */
-  public function exportRow(SepaDebitNoteDTO $debitNoteData, DateTime $executionDate, bool $columnHeadings = false):array;
+  public function fileExtension(Entities\SepaBulkTransaction $transaction):string;
+
+  /**
+   * Generate the actual file-data for the given bulk-transaction.
+   *
+   * @param Entities\SepaBulkTransaction $transaction
+   */
+  public function fileData(Entities\SepaBulkTransaction $transaction):string;
 }
 
 // Local Variables: ***
