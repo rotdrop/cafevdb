@@ -60,7 +60,7 @@ trait UpdatedAt
    *
    * @return \DateTimeImmutable
    */
-  public function getUpdated()
+  public function getUpdated():?\DateTimeInterface
   {
     return $this->updated;
   }
