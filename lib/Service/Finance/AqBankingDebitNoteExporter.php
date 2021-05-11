@@ -141,7 +141,7 @@ class AqDebitNoteExporter implements IDebitNoteExporter
       5 => 'remoteIban',
       6 => 'remoteName', // max 70
 
-      5 => 'date',
+      5 => 'executionDate', // NOT date, leave free for non-dated transfers
       6 => 'value/value',
       7 => 'value/currency',
 
