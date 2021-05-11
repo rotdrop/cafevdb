@@ -93,7 +93,41 @@ class AqDebitNoteExporter implements IDebitNoteExporter
 
   private function bankTransferFileData(Entities\SepaBulkTransaction $transaction):string
   {
-    return '';
+    $transactionTable = [];
+    $transactionTable[] = $this->bankTransferColumnHeadings();
+
+    /** @var Entities\CompositePayment $compositePayment */
+    foreach ($transaction->getPayments() as $compositePayment) {
+
+      $subject = $compositePayment->getSubject();
+      $purpose = [];
+      for  ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
+        $purpose[] = substr($subject, $i, self::PURPOSE_LINE_LENGTH);
+      }
+
+      $transactionTable[] = [
+        'localBic' => $this->bic,
+        'localIBan' => $this->iban,
+        'localName' => $this->owner,
+
+        'remoteBic' => $compositePayment->getSepaBankAccount()->getBic(),
+        'remoteIban' => $compositePayment->getSepaBankAccount()->getIban(),
+        'remoteName' => $compositePayment->getSepaBankAccount()->getBankAccountOwner(),
+
+        'date' => $transaction->getDueDate()->format(self::DUE_DATE_FORMAT),
+        'value/value' => $compositePayment->getAmount(),
+        'value/currency' => self::CURRENCY,
+
+        'purpose[0]' => $purpose[0],
+        'purpose[1]' => $purpose[1],
+        'purpose[2]' => $purpose[2],
+        'purpose[3]' => $purpose[3],
+      ];
+    }
+
+    return implode("\n", array_walk($transactionTable, function($value) {
+      return implode(self::CSV_DELIMITER, $value);
+    }));
   }
 
   private function bankTransferColumnHeadings():array
@@ -105,13 +139,13 @@ class AqDebitNoteExporter implements IDebitNoteExporter
 
       4 => 'remoteBic', // not needed AQB 6.3.0
       5 => 'remoteIban',
-      6 => 'remoteName',
+      6 => 'remoteName', // max 70
 
       5 => 'date',
       6 => 'value/value',
       7 => 'value/currency',
 
-      8 => 'purpose[0]',
+      8 => 'purpose[0]', // max 35
       9 => 'purpose[1]',
       10 => 'purpose[2]',
       11 => 'purpose[3]',
