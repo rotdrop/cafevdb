@@ -33,7 +33,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * advisable to store file-system data in a data-base, we do so
  * nevertheless for selected small files.
  *
- * @ORM\Table(name="Files")
+ * @ORM\Table(name="Files",
+ *   indexes={
+ *     @ORM\Index(columns={"file_name"}),
+ *   })
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="EnumFileType")
  * @ORM\DiscriminatorMap({"generic"="File","encrypted"="EncryptedFile","image"="Image"})
@@ -54,6 +57,13 @@ class File implements \ArrayAccess
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
   private $id;
+
+  /**
+   * @var string|null
+   *
+   * @ORM\Column(type="string", length=512, nullable=true)
+   */
+  private $fileName;
 
   /**
    * @var string|null
@@ -126,6 +136,30 @@ class File implements \ArrayAccess
   public function getMimeType()
   {
     return $this->mimeType;
+  }
+
+  /**
+   * Set fileName.
+   *
+   * @param string|null $fileName
+   *
+   * @return File
+   */
+  public function setFileName($fileName = null):File
+  {
+    $this->fileName = $fileName;
+
+    return $this;
+  }
+
+  /**
+   * Get fileName.
+   *
+   * @return string|null
+   */
+  public function getFileName()
+  {
+    return $this->fileName;
   }
 
   /**

@@ -88,11 +88,13 @@ class DownloadsController extends Controller {
       if (empty($file)) {
         return self::grumble($this->l->t('File width id %d not found in database-storage.', $fileId));
       }
-      $this->logInfo('GOT FILE '.(empty($file) ? 'none' : get_class($file)));
       $mimeType = $file->getMimeType();
       $fileName = $this->request->getParam('fileName');
       if (empty($fileName)) {
-        $fileName = $this->appName() . '-' . 'download' . $fileId;
+        $fileName = $file->getFileName();
+        if (empty($fileName)) {
+          $fileName = $this->appName() . '-' . 'download' . $fileId;
+        }
       }
       return new DataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
     }
