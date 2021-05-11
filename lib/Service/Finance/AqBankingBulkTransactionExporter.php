@@ -28,9 +28,11 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use \DateTimeImmutable as DateTime;
 
-class AqDebitNoteExporter implements IDebitNoteExporter
+class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  const IDENTIFIER = 'aqbanking';
 
   const CSV_DELIMITER = ';';
   const PURPOSE_LINE_LENGTH = FinanceService::SEPA_PURPOSE_LENGTH / 4;
@@ -57,6 +59,14 @@ class AqDebitNoteExporter implements IDebitNoteExporter
     $this->bic = $this->getConfigValue('bankAccountBIC');
     $this->owner = $this->getConfigValue('bankAccountOwner');
     $this->ci = $this->getConfigValue('bankAccountCreditorIdentifier');
+  }
+
+  /**
+   * @inheritdoc
+   */
+  static public function identifier():string
+  {
+    return self::IDENTIFIER;
   }
 
   /**

@@ -37,8 +37,13 @@ use \DateTimeImmutable as DateTime;
  * file data and leave the file-name to the calling higher-level
  * controller code.
  */
-interface IDebitNoteExporter
+interface IBulkTransactionExporter
 {
+  /**
+   * Return a name to construct slugs etc.
+   */
+  static public function identifier():string;
+
   /**
    * Generate the mime-type for the given bulk-transaction.
    *
