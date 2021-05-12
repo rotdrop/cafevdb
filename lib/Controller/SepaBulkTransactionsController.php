@@ -291,11 +291,6 @@ class SepaBulkTransactionsController extends Controller {
     foreach ($participants as $musicianId => $participant) {
       /** @var Entities\CompositePayment $compositePayment */
       $compositePayment = $this->bulkTransactionService->generateProjectPayments($participant, $receivables);
-      $this->logInfo('PAYMENTS FOR '
-                     . $participant->getMusician()->getPublicName()
-                     . ' ' . $compositePayment->getProjectPayments()->count()
-                     . ' ' . $compositePayment->getAmount());
-
       if ($compositePayment->getAmount() == 0.0) {
         // @todo Check whether this should be communicated to the musician anyway
         continue;
