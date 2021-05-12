@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-05-10 16:46+0200\n"
-"PO-Revision-Date: 2021-05-10 16:57+0200\n"
+"POT-Creation-Date: 2021-05-12 14:00+0200\n"
+"PO-Revision-Date: 2021-05-12 14:06+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -89,7 +89,7 @@ msgstr "Setze den Wiki-Namensraum auf `%s'"
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/AdminSettingsController.php:100
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/BlogController.php:228
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/CspViolationController.php:64
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/DownloadsController.php:99
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/DownloadsController.php:101
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/ExpertModeController.php:155
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/ImagesController.php:424
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/InstrumentInsuranceController.php:298
@@ -1242,7 +1242,7 @@ msgid "Value for \"%s\" set to \"%s\""
 msgstr "Wert für \"%s\" auf \"%s\" gesetzt."
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PmeTableController.php:140
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:125
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:129
 #, php-format
 msgid "Unknown Request: \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
@@ -1635,19 +1635,19 @@ msgstr ""
 "Ein Projekt mit dem Namen ``%s'' gibt es bereits für das Jahr %s. Bitte "
 "wählen Sie einen anderen Namen oder ein anderes Jahr."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:139
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:151
 #, php-format
 msgid "Unable to retrieve project with id %d from data-base."
 msgstr "Konnte das Projekt mit der Id %d nicht aus der Datenbank laden."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:164
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:176
 #, php-format
 msgid "Bank account for musician-id %d, sequence %d not found."
 msgstr ""
 "Die Bankverbindung für den Musiker mit Id %d, lfd. Nr. %d, wurde nicht "
 "gefunden."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:169
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:181
 #, php-format
 msgid ""
 "More than one bank account submitted for musician %s, multiple IBANs %s, %s."
@@ -1655,19 +1655,19 @@ msgstr ""
 "Mehrere Bankverbindungen des Musikers %s wurden übermittelt, insbesondere "
 "%s, %s."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:181
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:193
 #, php-format
 msgid "Musician \"%s\" does not seem to belong to project \"%s\"."
 msgstr "Die Person \"%s\" scheint nicht zum Projekt \"%s\" zu gehören."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:194
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:206
 #, php-format
 msgid "Debit-mandate for musician-id %d, sequence %d not found."
 msgstr ""
 "Lastschrift-Mandat für die Person %d, lfd. Nr. %d konnte nicht gefunden "
 "werden."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:199
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:211
 #, php-format
 msgid ""
 "More than one debit-mandate submitted for musician %s, multiple references "
@@ -1676,7 +1676,7 @@ msgstr ""
 "Mehrere Lastschriftmandate des Musiker %s wurden übermittelt, insbesondere "
 "%s, %s."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:208
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:220
 #, php-format
 msgid ""
 "Debit-mandate is for bank-account \"%s\", but the current bank-account is "
@@ -1685,8 +1685,8 @@ msgstr ""
 "Das Lastschriftmandat ist an die Bankverbindung \"%s\" gebunden, aber\n"
 "die aktulle Bankverbindung lautet \"%s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:235
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:246
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:247
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:258
 #, php-format
 msgid ""
 "Internal data inconsistency, field-project \"%s\" does not match current "
@@ -1695,7 +1695,7 @@ msgstr ""
 "Interner Fehler, inkonsistente Daten, das Datenfeld-Projekt \"%s\"\n"
 "unterscheidet sich vom aktuellen Projekt \"%s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:251
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:263
 #, php-format
 msgid ""
 "Submitted debit-job id \"%s\" is neither a participant field nor a field-"
@@ -1703,7 +1703,7 @@ msgid ""
 msgstr ""
 "Die übermittelte Lastschrift-Id \"%s\" gehört zu keinem bekannten Daten-Feld."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:300
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:312
 #, php-format
 msgid ""
 "Musician \"%s\" has to pay an amount of \"%f\", but there is no debit-note-"
@@ -1712,17 +1712,17 @@ msgstr ""
 "Die Person \"%s\" muss einen Betrag von \"%f\" EUR bezahlen, uns liegt aber "
 "kein Lastschriftmandat vor."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:313
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:314
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:325
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:326
 msgid "recurring"
 msgstr "wiederkehrend"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:313
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:314
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:325
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:326
 msgid "non-recurring"
 msgstr "einmalig"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:310
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:322
 #, php-format
 msgid ""
 "The debit-mandate for a bulk-transaction must either be all recurring or all "
@@ -1731,9 +1731,10 @@ msgid ""
 msgstr ""
 "Das Lastschriftmandats für den Sammelauftag müssen entweder all\n"
 "mehrfach verwendbar oder alle einmalig sein. Das kollidierende Mandat\n"
-"des Musikers \"%s\", Mandatsreferenz \"%s\", ist %s, die bislang verarbeiteten Mandate waren %s.;\n"
+"des Musikers \"%s\", Mandatsreferenz \"%s\", ist %s, die bislang "
+"verarbeiteten Mandate waren %s.;\n"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:340
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:352
 #, php-format
 msgid ""
 "Due-deadline %s conflicts with the pre-notification dead-line %s for the "
@@ -1742,56 +1743,71 @@ msgstr ""
 "Fälligkeitsdatum %s kollidiert mit der Vorab-Informations-Frist %s des "
 "Lastschriftmandates \"%s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:393
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:405
 #, php-format
 msgid "Debit notes submission deadline for %s"
 msgstr "Lastschrift-Einreichungsfrist für %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:394
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:406
 #, php-format
 msgid "Debit notes due for %s"
 msgstr "Lastschriften fällig für %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:395
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:407
 #, php-format
 msgid "Debit notes pre-notification deadline for %s"
 msgstr "Lastschrift-Vorab-Informations-Frist für %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:398
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:410
 #, php-format
 msgid "Bank transfers submission deadline for %s"
 msgstr "Bankauftragseinreichungsausschlußdatum für %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:399
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:411
 #, php-format
 msgid "Bank transfers due for %s"
 msgstr "Fälligkeit Überweisungen für %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:410
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:426
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:422
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:438
 #, php-format
 msgid "Due date: %s"
 msgstr "Fälligkeitstermin: %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:442
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:454
 msgid "TODO: add more information like the list of export-files, totals etc."
 msgstr ""
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:461
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:479
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:473
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:491
 #, php-format
 msgid "Submission-deadline: %s, due date: %s."
 msgstr "Einreichungsdatum: %s, Fälligkeitsdatum: %s."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:525
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:537
 #, php-format
 msgid "Scheduled %d bank-transfers, due on %s"
 msgstr "Es wurden %d Überweisungen geplant, die am %s fälllig sind."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:531
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:543
 #, php-format
 msgid "Scheduled %d debit-notes, due on %s"
 msgstr "Es wurden %d Lastschriften geplant, di am %s fällig sind."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:567
+#, php-format
+msgid "Submitted value \"%s\" is not a positive integer."
+msgstr "Der übermittelte Wert \"%s\" ist keine positive Ganzzahl."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:575
+#, php-format
+msgid "Unable to find bulk-transaction with id %d."
+msgstr "Kann den Sammelauftrag mit Id %d nicht finden."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:595
+#, php-format
+msgid "Unable to find exporter for format \"%s\"."
+msgstr "Export in das Format \"%s\" ist nicht implementiert."
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/SepaDebitMandatesController.php:116
 #, php-format
@@ -2365,7 +2381,7 @@ msgstr ""
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentInsurances.php:245
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:361
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:468
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:353
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:352
 msgid "Musician"
 msgstr "Musiker"
 
@@ -2543,7 +2559,7 @@ msgstr "Kein Voreinstellungs-Stil für \"%s\" vorhanden."
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:469
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:286
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:293
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:505
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:504
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -3104,26 +3120,26 @@ msgstr "Unbekannte Spalten-Beschreibung: \"%s\"."
 msgid "Table-name not specified"
 msgstr "Tabellen-Name wurde nicht angegeben"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1640
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1639
 #, php-format
 msgid "Master join-table field for %s not found."
 msgstr "Haupt-Verknüpfungstabelle für %s konnte nicht gefunden werden."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1738
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1733
 msgid ""
 "Composite keys are not yet supported for translated database table fields."
 msgstr ""
 "Zusammengesetzte Schlüssel-Felder werden für Übersetzungen von Datenbank-"
 "Tabellenfeldern noch nicht unterstützt."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1835
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1830
 #, php-format
 msgid "New suggested user-id is but must not be empty, old id was \"%s\"."
 msgstr ""
 "Die neue vorgeschlagene Benutzerkennung ist leer, darf es jedoch nicht sein. "
 "Die alte Kennung war \"%s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1849
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1844
 #, php-format
 msgid "Unable to retrieve musician for id \"%s\" from database."
 msgstr "Kann das Musizierende \"%s\" nicht aus der Datenbank laden."
@@ -3151,7 +3167,7 @@ msgstr ""
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectInstrumentationNumbers.php:180
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:245
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:327
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:326
 msgid "Project"
 msgstr "Projekt"
 
@@ -3348,7 +3364,7 @@ msgstr "Obergrenze"
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:391
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:400
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:332
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:346
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:345
 msgid "Amount"
 msgstr "Betrag"
 
@@ -3494,13 +3510,13 @@ msgid "Filing Date"
 msgstr "Einreichungsdatum"
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:531
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:393
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:392
 msgid "IBAN"
 msgstr "IBAN"
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:555
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:598
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:425
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:424
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
@@ -3725,8 +3741,8 @@ msgstr "Letzte Verwendung"
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:154
 #, php-format
-msgid "Debit-notes for project \"%s\""
-msgstr "Lastschriften für das Projekt \"%s\""
+msgid "Bulk-transactions for project \"%s\""
+msgstr "Sammelaufträge für das Projekt \"%s\""
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:234
 msgid "Transaction"
@@ -3744,19 +3760,19 @@ msgstr "Buchungen"
 msgid "Id"
 msgstr "Id"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:450
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:449
 msgid "Time Created"
 msgstr "Erstellungszeit"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:460
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:459
 msgid "Submission Deadline"
 msgstr "Einreichungsfrist"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:471
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:470
 msgid "Date of Submission"
 msgstr "Einreichungsdatum"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:527
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:525
 msgid "download"
 msgstr "herunterladen"
 
@@ -4068,6 +4084,11 @@ msgstr "Weitere Kalender"
 msgid "Option %d"
 msgstr "Option %d"
 
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/Finance/AqBankingBulkTransactionExporter.php:99
+#, php-format
+msgid "Unsupported bulk-transaction class: \"%s\"."
+msgstr "Nicht unterstützte Sammelauftrags-Klasse: \"%s\"."
+
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/Finance/FinanceService.php:120
 #, php-format
 msgid ""
@@ -4146,7 +4167,7 @@ msgstr "Options-Markierung sollte \"%s\" sein, gefunden wurde \"%s\"."
 msgid "Unable to construct generator class \"%s\"."
 msgstr "Kann den Generatorklasse \"%s\" nicht erzeugen."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/Finance/SepaBulkTransactionService.php:100
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/Finance/SepaBulkTransactionService.php:112
 #, php-format
 msgid ""
 "Refusing to generate payments for mismatching projects, current is \"%s\", "
@@ -4611,10 +4632,8 @@ msgstr ""
 "lassen, falls dies nicht der Fall ist."
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:195
-msgid "The time when the debit note data was created."
-msgstr ""
-"Der Zeitpunkt, an dem die Lastschriftdaten aus der Datenbank exportiert "
-"wurden."
+msgid "The time when the bulk-transactionx data was created."
+msgstr "Der Zeitpunkt, an dem der Sammelauftrag angelegt wurde."
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:197
 msgid ""
@@ -4707,11 +4726,9 @@ msgstr ""
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:233
 msgid ""
-"Download the data-set of this debit-note for transferal to our bank\n"
+"Download the data-set of this bulk-transaction for transferal to our bank\n"
 "institute."
-msgstr ""
-"Den Datensatz dieser Lastschrift zwecks Einreichung bei der Bank "
-"herunterladen."
+msgstr "Den Datensatz dieses Sammelauftrags zwecks Einreichung bei der Bank herunterladen."
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:236
 msgid ""
@@ -7172,7 +7189,7 @@ msgid "Unknown JSON error response to AJAX call: {status} / {error}"
 msgstr "Unbekannte JSON Fehler-Antwort auf AJAX-Anfrage: {status} / {error}"
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/src/app/ajax.js:355
-#: /var/www/html/nextcloud-git/apps/cafevdb/src/app/file-download.js:128
+#: /var/www/html/nextcloud-git/apps/cafevdb/src/app/file-download.js:189
 msgid "HTTP error response to AJAX call: {code} / {error}"
 msgstr "HTTP Fehler-Antwort auf AJAX-Anfrage: {code} / {error}"
 
@@ -7779,7 +7796,7 @@ msgstr "Web-Seite mit Id {ArticleId} löschen?"
 msgid "No values match"
 msgstr "Kein Wert passt."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/src/app/sepa-bulk-transactions.js:79
+#: /var/www/html/nextcloud-git/apps/cafevdb/src/app/sepa-bulk-transactions.js:77
 msgid "Unable to download debit notes."
 msgstr "Kann die Lastschriften nicht laden."
 
@@ -10359,6 +10376,9 @@ msgstr "NACHNAME"
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
 
+#~ msgid "Debit-notes for project \"%s\""
+#~ msgstr "Lastschriften für das Projekt \"%s\""
+
 #~ msgid "Direct Debit Id"
 #~ msgstr "Lastschrift-Id"
 
@@ -11167,9 +11187,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "Geo-Data testing caught an error"
 #~ msgstr "Geo-Daten-Tests fehlgeschlagen"
-
-#~ msgid "Unsupported data type: \"%s\""
-#~ msgstr "Nicht unterstützter Daten-Typ: \"%s\""
 
 #~ msgid "Encryption requested but not configured for user \""
 #~ msgstr "Verschlüsselung angefragt aber nicht konfiguriert für den Benutzer "
