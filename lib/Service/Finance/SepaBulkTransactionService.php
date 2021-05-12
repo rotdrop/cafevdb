@@ -37,6 +37,8 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNote as DebitNote;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNoteData as DataEntity;
 
+use OCA\CAFEVDB\Common\Util;
+
 class SepaBulkTransactionService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -52,6 +54,10 @@ class SepaBulkTransactionService
   const BULK_TRANSACTION_REMINDER_SECONDS = 24 * 60 * 60; /* alert one day in advance */
 
   const EXPORT_AQBANKING = 'aqbanking';
+
+  const SUBJECT_GROUP_SEPARATOR = '; ';
+  const SUBJECT_ITEM_SEPARATOR = ', ';
+  const SUBJECT_OPTION_SEPARATOR = Entities\ProjectParticipantFieldDatum::PAYMENT_REFRENCE_SEPARATOR;
 
   /** @var IAppContainer */
   private $appContainer;
@@ -91,7 +97,7 @@ class SepaBulkTransactionService
   {
     $payments = new ArrayCollection();
     $totalAmount = 0.0;
-    $subject = [];
+    $subjects = [];
     $project = $participant->getProject();
     $musician = $participant->getMusician();
 
@@ -99,7 +105,7 @@ class SepaBulkTransactionService
                       ->setMusician($musician)
                       ->setProjectPayments($payments)
                       ->setAmount($totalAmount)
-                      ->setSubject(implode('; ', $subject));
+                      ->setSubject(implode('; ', $subjects));
 
     if (empty($receivableOptions)) {
       return [ $payments, $totalAmount ];
@@ -136,14 +142,51 @@ class SepaBulkTransactionService
 
         $payments->add($payment);
         $totalAmount += $debitAmount;
-        $subject[] = $payment->getSubject();
+        $subjects[] = $payment->getSubject();
       }
     }
+    // try to compact the subject ...
+    $purpose = self::generateCompositeSubject($subjects);
+
     $compositePayment->setMusician($participant->getMusician())
                      ->setAmount($totalAmount)
-                     ->setSubject(implode('; ', $subject));
+                     ->setSubject($purpose);
 
     return $compositePayment;
+  }
+
+  static public function generateCompositeSubjet(array $subjects)
+  {
+    natsort($subjects);
+    $oldPrefix = false;
+    $postfix = [];
+    $purpose = '';
+    foreach ($subjects as $subject) {
+      $parts = Util::explode(self::SUBJECT_OPTION_SEPARATOR, $subject);
+      $prefix = $parts[0];
+      if (count($parts) < 2 || $oldPrefix != $prefix) {
+        $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
+        if (strlen($purpose) > 0) {
+          $purpose .= self::SUBJECT_GROUP_SEPARATOR;
+        }
+        $purpose .= $prefix;
+        if (count($parts) >= 2) {
+          $purpose .= self::SUBJECT_OPTION_SEPARATOR;
+          $oldPrefix = $prefix;
+        } else {
+          $oldPrefix = false;
+        }
+        $postfix = [];
+      }
+      if (count($parts) >= 2) {
+        $postfix = array_merge($postfix, array_splice($parts, 1));
+      }
+    }
+    if (!empty($postfix)) {
+      $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
+    }
+
+    return $purpose;
   }
 
   // public static function removeDebitNote(&$pme, $op, $step, $oldvals, &$changed, &$newvals)

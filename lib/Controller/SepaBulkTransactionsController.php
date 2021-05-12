@@ -122,7 +122,7 @@ class SepaBulkTransactionsController extends Controller {
         $sepaBulkTransactions,
         $sepaDueDeadline);
     case 'export':
-      return $this->exportBulkTransaction($bulkTransactionId);
+      return $this->exportBulkTransaction($bulkTransactionId, $projectId);
     default:
       break;
     }
@@ -559,13 +559,18 @@ class SepaBulkTransactionsController extends Controller {
    *
    * $param int $bulkTransactionId
    */
-  private function exportBulkTransaction($bulkTransactionId, $format = SepaBulkTransactionService::EXPORT_AQBANKING)
+  private function exportBulkTransaction($bulkTransactionId, $projectId = 0, $format = SepaBulkTransactionService::EXPORT_AQBANKING)
   {
     $id = filter_var($bulkTransactionId, FILTER_VALIDATE_INT, ['min_range' => 1]);
     if ($id === false) {
       return self::grumble(
         $this->l->t('Submitted value "%s" is not a positive integer.',
                     $bulkTransactionId));
+    }
+
+    if ((int)$projectId > 0) {
+      /** @var Entities\Project $project */
+      $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     }
 
     /** @var Entities\SepaBulkTransaction $bulkTransaction */
@@ -599,7 +604,12 @@ class SepaBulkTransactionsController extends Controller {
       } else if ($bulkTransaction instanceof Entities\SepaDebitNote) {
         $transactionType = 'debitnote';
       }
-      $fileName = $this->timeStamp() . '-' . $transactionType . '-' . $format . '.' . $exporter->fileExtension($bulkTransaction);
+      $fileName = implode('-', array_filter([
+        $this->timeStamp(),
+        $transactionType,
+        !empty($project) ? $project->getName() : null,
+        $format,
+      ])) . '.' . $exporter->fileExtension($bulkTransaction);
       $exportFile->setFileName($fileName);
       $fileData = $exporter->fileData($bulkTransaction);
       $exportFile->getFileData()->setData($fileData);

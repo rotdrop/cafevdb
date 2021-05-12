@@ -23,10 +23,11 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use \DateTimeImmutable as DateTime;
+
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
-use \DateTimeImmutable as DateTime;
+use OCA\CAFEVDB\Common\Util;
 
 class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
 {
@@ -109,11 +110,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($transaction->getPayments() as $compositePayment) {
 
-      $subject = $compositePayment->getSubject();
-      $purpose = [];
-      for  ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
-        $purpose[] = substr($subject, $i, self::PURPOSE_LINE_LENGTH);
-      }
+      $purpose = self::generatePurpose($compositePayment->getSubject());
 
       $transactionTable[] = [
         'localBic' => $this->bic,
@@ -153,14 +150,14 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
       5 => 'remoteIban',
       6 => 'remoteName', // max 70
 
-      5 => 'executionDate', // NOT date, leave free for non-dated transfers
-      6 => 'value/value',
-      7 => 'value/currency',
+      7 => 'executionDate', // NOT date, leave free for non-dated transfers
+      8 => 'value/value',
+      9 => 'value/currency',
 
-      8 => 'purpose[0]', // max 35
-      9 => 'purpose[1]',
-      10 => 'purpose[2]',
-      11 => 'purpose[3]',
+     10 => 'purpose[0]', // max 35
+     11 => 'purpose[1]',
+     12 => 'purpose[2]',
+     13 => 'purpose[3]',
     ];
   }
 
@@ -172,11 +169,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($transaction->getPayments() as $compositePayment) {
 
-      $subject = $compositePayment->getSubject();
-      $purpose = [];
-      for  ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
-        $purpose[] = substr($subject, $i, self::PURPOSE_LINE_LENGTH);
-      }
+      $purpose = self::generatePurpose($compositePayment->getSubject());
 
       $transactionTable[] = [
         'localBic' => $this->bic,
@@ -230,6 +223,22 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
       18 => 'purpose[3]',
     ];
   }
+
+  static private function generatePurpose($subject):array
+  {
+    $subjects = Util::explode(SepaBulkTransactionService::SUBJECT_GROUP_SEPARATOR, $subject);
+    $subject = SepaBulkTransactionService::generateCompositeSubjet($subjects);
+
+    if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
+      $subject = Util::removeSpaces($subject);
+    }
+    $purpose = [];
+    for  ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
+      $purpose[] = '"' . substr($subject, $i, self::PURPOSE_LINE_LENGTH) . '"';
+    }
+    return $purpose;
+  }
+
 }
 
 // Local Variables: ***
