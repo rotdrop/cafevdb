@@ -56,6 +56,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
+  const PAYMENT_REFRENCE_SEPARATOR = ': ';
+
   /**
    * @var ProjectParticipantField
    *
@@ -332,7 +334,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     if (empty($optionLabel) || $optionLabel === 'null') {
       return $fieldName;
     }
-    return $fieldName.' - '.$optionLabel;
+    return $fieldName.self::PAYMENT_REFERENCE_SEPARATOR.$optionLabel;
   }
 
   /**
