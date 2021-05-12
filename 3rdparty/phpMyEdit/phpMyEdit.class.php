@@ -3296,7 +3296,7 @@ class phpMyEdit
 			}
 			// $ret .= $inputhelp;
 			if ((! $found || $multiple) && in_array((string) $key, $selected, 1)
-				|| (count($selected) == 0 && ! $found && ! $multiple)) {
+				|| (count($kv_array) > 1 && count($selected) == 0 && ! $found && ! $multiple)) {
 				$ret  .= ' checked';
 				$found = true;
 			}
