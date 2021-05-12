@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Common\Functions;
 class SepaBankAccounts extends PMETableViewBase
 {
   use FieldTraits\ParticipantFieldsTrait;
+  use FieldTraits\ParticipantTotalFeesTrait;
 
   const TEMPLATE = 'sepa-bank-accounts';
   const TABLE = self::SEPA_BANK_ACCOUNTS_TABLE;
@@ -131,6 +132,17 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'column' => 'option_key',
       'encode' => 'BIN2UUID(%s)',
+    ],
+    self::PROJECT_PAYMENTS_TABLE => [
+      'entity' => Entities\ProjectPayment::class,
+      'identifier' => [
+        'project_id' => [
+          'table' => self::PROJECT_PARTICIPANTS_TABLE,
+          'column' => 'project_id',
+        ],
+        'musician_id' => 'musician_id',
+      ],
+      'column' => 'id',
     ],
   ];
 
@@ -414,7 +426,7 @@ received so far'),
             'table' => self::PROJECT_PARTICIPANTS_TABLE,
             'column' => 'project_id',
           ],
-          'amount');
+          $amountTab['id']);
       $this->joinStructure = array_merge($this->joinStructure, $participantFieldsJoin);
     }
 
@@ -662,137 +674,10 @@ received so far'),
     // @todo PARTICIPANT FIELD STUFF / PROJECT MODE
 
     if (!$this->addOperation() && $projectMode) {
-      if (true) {
-        $participantFieldsGenerator($opts['fdd']);
-      } else
-      foreach ($monetary as $name => $field) {
-        $fieldName = $field['name'];
-        $fieldId   = $field['id'];
-        $multiplicity = $field['multiplicity'];
-        $dataType = $field['data_type'];
-
-        $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::FIXED_COLUMN_SEP.$fieldId;
-
-        $css = [ 'participant-field', 'field-id-'.$fieldId, ];
-        list($curColIdx, $fddName) = $this->makeJoinTableField(
-          $opts['fdd'], $tableName, 'field_value',
-          [
-            'name' => $this->l->t($fieldName),
-            'tab' => [ 'id' => 'amount' ],
-            'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
-            'default'  => $field['default_value'],
-            'values' => [
-              'column' => 'option_value',
-              'filters' => ('$table.field_id = '.$fieldId
-                            .' AND $table.project_id = '.$projectId
-                            .' AND $table.musician_id = $record_id[musician_id]'),
-            ],
-            'tooltip' => $field['tooltip']?:null,
-            'php' => function($value, $op, $field, $row, $recordId, $pme) {
-              $amount = 0.0;
-
-              // TODO fill with data
-
-              $money = $this->moneyValue($amount);
-              return 'IMPLEMENT ME';
-            },
-          ]);
-        $fdd = &$opts['fdd'][$fddName];
-
-        // TODO accumulate to total amount
-
-        // TODO define join for amountPaid
-
-        // TODO display overview field (also needed for participants table
+      if (!empty($monetary)) {
+        $this->makeTotalFeesField($opts['fdd'], $monetary, $amountTab['id']);
       }
-
-    //   $extraIdx = count($opts['fdd']);
-    //   $opts['fdd']['ExtraProjectFees'] = array_merge(
-    //     Config::$opts['money'],
-    //     array(
-    //       //'tab'      => array('id' => $financeTab),
-    //       'name'     => L::t('Extra Charges'),
-    //       'css'      => array('postfix' => ' extra-project-fees money'),
-    //       'sort'    => false,
-    //       'options' => 'VDL', // wrong in change mode
-    //       'input' => 'VR',
-    //       'sql' => $projectAlias.'.Unkostenbeitrag',
-    //       'php' => function($amount, $op, $field, $row, $recordId, $pme)
-    //         use ($monetary)
-    //         {
-    //           $amount = 0.0;
-    //           foreach($pme->fds as $key => $label) {
-    //             if (!isset($monetary[$label])) {
-    //               continue;
-    //             }
-    //             $value = $row['qf'.$key];
-    //             if (empty($value)) {
-    //               continue;
-    //             }
-    //             $field   = $monetary[$label];
-    //             $allowed = $field['DataOptions'];
-    //             $type    = $field['Type'];
-    //             $amount += DetailedInstrumentation::participantFieldSurcharge($value, $allowed, $type['Multiplicity']);
-    //           }
-    //           return Util::moneyValue($amount);
-    //         },
-    //       'sort' => true,
-    //       'tooltip'  => $this->toolTipsService['project-extra-fee-summary'],
-    //       'display|LFVD' => array('popup' => 'tooltip'),
-    //     )
-    //   );
-
-    //   $amountPaidIdx = count($opts['fdd']);
-    //   $opts['fdd']['AmountPaid'] = array_merge(
-    //     Config::$opts['money'],
-    //     array(
-    //       'name' => L::t('Amount Paid'),
-    //       'input' => 'VR',
-    //       'sql' => $projectAlias.'.AmountPaid',
-    //       'sort' => 1
-    //     )
-    //   );
-
-    //   $totalsIdx = count($opts['fdd']);
-    //   $opts['fdd']['TotalProjectFees'] = array(
-    //     //'tab'      => array('id' => $financeTab),
-    //     'name'     => L::t('Total Charges'),
-    //     'css'      => array('postfix' => ' total-project-fees money'),
-    //     'sort'    => false,
-    //     'options' => 'VDLF', // wrong in change mode
-    //     'input' => 'VR',
-    //     'sql' => $projectAlias.'.Unkostenbeitrag',
-    //     'php' => function($amount, $op, $field, $row, $recordId, $pme)
-    //       use ($monetary, $amountPaidIdx)
-    //       {
-    //         $paid = $row['qf'.$amountPaidIdx];
-    //         foreach($pme->fds as $key => $label) {
-    //           if (!isset($monetary[$label])) {
-    //             continue;
-    //           }
-    //           $value = $row['qf'.$key];
-    //           if (empty($value)) {
-    //             continue;
-    //           }
-    //           $field   = $monetary[$label];
-    //           $allowed = $field['DataOptions'];
-    //           $type    = $field['Type'];
-    //           $amount += DetailedInstrumentation::participantFieldSurcharge($value, $allowed, $type['Multiplicity']);
-    //         }
-    //         // display as TOTAL/PAID/REMAINDER
-    //         $rest = $amount - $paid;
-
-    //         $amount = Util::moneyValue($amount);
-    //         $paid = Util::moneyValue($paid);
-    //         $rest = Util::moneyValue($rest);
-    //         return ('<span class="totals finance-state">'.$amount.'</span>'
-    //                 .'<span class="received finance-state">'.$paid.'</span>'
-    //                 .'<span class="outstanding finance-state">'.$rest.'</span>');
-    //       },
-    //     'tooltip'  => $this->toolTipsService['project-total-fee-summary'],
-    //     'display|LFVD' => array('popup' => 'tooltip'),
-    //   );
-
+      $participantFieldsGenerator($opts['fdd']);
     }
 
     ///////////////

@@ -55,6 +55,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\MusicianPhotoTrait;
+  use FieldTraits\ParticipantTotalFeesTrait;
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
@@ -740,71 +741,9 @@ class ProjectParticipants extends PMETableViewBase
      */
 
     $monetary = $this->participantFieldsService->monetaryFields($this->project);
-
     if (!empty($monetary) || ($this->projectId == $this->membersProjectId)) {
-
-      $this->makeJoinTableField(
-        $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
-        [
-          'tab'      => array('id' => $financeTab),
-          'name'     => $this->l->t('Total Charges'),
-          'css'      => [ 'postfix' => ' total-project-fees money' ],
-          'sort'    => false,
-          'options' => 'VDLF', // wrong in change mode
-          'input' => 'VR',
-          'sql' => 'IFNULL(SUM($join_col_fqn), 0.0)',
-          'php' => function($amountPaid, $op, $k, $row, $recordId, $pme) use ($monetary) {
-            $project_id = $recordId['project_id'];
-            $musicianId = $recordId['musician_id'];
-
-            /** @var Entities\ProjectParticipantField $participantField */
-            $amountInvoiced = 0.0;
-            foreach ($monetary as $fieldId => $participantField) {
-
-              $table = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
-              $fieldValues = [ 'key' => null, 'value' => null ];
-              foreach ($fieldValues as $fieldName => &$fieldValue) {
-                $label = $this->joinTableFieldName($table, 'option_'.$fieldName);
-                if (!isset($pme->fdn[$label])) {
-                  throw new \Exception($this->l->t('Data for monetary field "%s" not found', $label));
-                }
-                $rowIndex = $pme->fdn[$label];
-                $qf = 'qf'.$rowIndex;
-                $qfIdx = $qf.'_idx';
-                if (isset($row[$qfIdx])) {
-                  $fieldValue = $row[$qfIdx];
-                } else {
-                  $fieldValue = $row[$qf];
-                }
-              }
-
-              if (empty($fieldValues['key']) && empty($fieldValues['value'])) {
-                continue;
-              }
-
-              $amountInvoiced += $this->participantFieldsService->participantFieldSurcharge(
-                $fieldValues['key'], $fieldValues['value'], $participantField);
-            }
-
-            if ($this->projectId == $this->membersProjectId) {
-              $amountInvoiced += $this->insuranceService->insuranceFee($musicianId, new \DateTime(), true);
-            }
-
-            // display as TOTAL/PAID/REMAINDER
-            $rest = $amountInvoiced - $amountPaid;
-
-            $amountInvoiced = $this->moneyValue($amountInvoiced);
-            $amountPaid = $this->moneyValue($amountPaid);
-            $rest = $this->moneyValue($rest);
-            return ('<span class="totals finance-state">'.$amountInvoiced.'</span>'
-                    .'<span class="received finance-state">'.$amountPaid.'</span>'
-                    .'<span class="outstanding finance-state">'.$rest.'</span>');
-          },
-        'tooltip'  => $this->toolTipsService['project-total-fee-summary'],
-        'display|LFVD' => [ 'popup' => 'tooltip' ],
-        ]);
-
-    } // have monetary fields
+      $this->makeTotalFeesField($opts['fdd'], $monetary, $financeTab);
+    }
 
     /*
      *
