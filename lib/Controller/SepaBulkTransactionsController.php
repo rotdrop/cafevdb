@@ -29,6 +29,7 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\RedirectResponse;
 use OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -598,24 +599,31 @@ class SepaBulkTransactionsController extends Controller {
       } else if ($bulkTransaction instanceof Entities\SepaDebitNote) {
         $transactionType = 'debitnote';
       }
-      $fileName = $this->timeStamp() . '-' . $transactionType . '-' . $format . '.' . $exporter->fileExtension();
+      $fileName = $this->timeStamp() . '-' . $transactionType . '-' . $format . '.' . $exporter->fileExtension($bulkTransaction);
       $exportFile->setFileName($fileName);
       $fileData = $exporter->fileData($bulkTransaction);
       $exportFile->getFileData()->setData($fileData);
       $exportFile->setMimeType($exporter->mimeType($bulkTransaction));
       $exportFile->setSize(strlen($fileData));
 
+      $this->entityManager->beginTransaction();
       try {
+        $this->persist($exportFile);
+        $this->flush();
+        $this->entityManager->commit();
       } catch (\Throwabled $t) {
+        $this->entityManager->rollback();
+        $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
       }
-      // @todo persist, get id
     }
 
     return new RedirectResponse(
-      $this->urlGenerator()->linkToRoute($this->appName().'.download.get', [
+      $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
         'section' => 'database', 'object' => $exportFile->getId()
       ])
-      . '?fileName=' . $exportFile->getFileName()
+      . '?fileName=' . urlencode($exportFile->getFileName())
+      . '&requesttoken=' . urlencode(\OCP\Util::callRegister())
     );
   }
 

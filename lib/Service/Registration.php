@@ -30,7 +30,8 @@ class Registration
   static public function register($context)
   {
     $context->registerServiceAlias(
-      'export:'.'bank-bulk-transactions'.':',Finance\AqBankingBulkTransactionExporter::class);
+      'export:bank-bulk-transactions:aqbanking',
+      Finance\AqBankingBulkTransactionExporter::class);
   }
 }
 

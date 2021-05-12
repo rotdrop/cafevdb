@@ -151,7 +151,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
 
   public function shortTitle()
   {
-    return $this->l->t('Debit-notes for project "%s"', array($this->projectName));
+    return $this->l->t('Bulk-transactions for project "%s"', array($this->projectName));
   }
 
   /** Show the underlying table. */
@@ -319,7 +319,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $this->makeJoinTableField(
       $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'sort_key', [ 'input' => 'SRH' ]);
 
-    $projectIdIdx = count($opts['fdd']);
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECTS_TABLE, 'id',
       Util::arrayMergeRecursive(
@@ -459,7 +458,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'tab' => [ 'id' => 'transaction' ],
         'name' => $this->l->t('Submission Deadline'),
         'input' => 'R',
-        'tooltip' => $this->toolTipsService['debit-note-submission-deadline'],
+        'tooltip' => $this->toolTipsService['bulk-transaction-submission-deadline'],
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
       ]);
 
@@ -469,7 +468,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       [
         'tab' => [ 'id' => 'transaction' ],
         'name' => $this->l->t('Date of Submission'),
-        'tooltip' => $this->toolTipsService['debit-note-date-of-submission'],
+        'tooltip' => $this->toolTipsService['bulk-transaction-date-of-submission'],
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
       ]);
 
@@ -478,7 +477,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       [
         'tab' => [ 'id' => 'transaction' ],
         'input' => 'R',
-        'tooltip' => $this->toolTipsService['debit-note-due-date'],
+        'tooltip' => $this->toolTipsService['bulk-transaction-due-date'],
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
       ]);
 
@@ -503,21 +502,20 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'tab' => [ 'id' => 'transaction' ],
       //'php|LF' => [$this, 'bulkTransactionRowOnly'],
       'name'  => $this->l->t('Actions'),
-      'css'   => [ 'postfix' => ' debit-note-actions' ],
+      'css'   => [ 'postfix' => ' bulk-transaction-actions' ],
       'input' => 'VR',
       'sql' => '$main_table.id',
       'sort'  => false,
-      'php' => function($value, $op, $field, $row, $recordId, $pme)
-        use ($projectIdIdx, $jobIdx) {
+      'php' => function($value, $op, $field, $row, $recordId, $pme) {
           $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
           if (strstr($rowTag, ';') === false) {
             return '';
           }
           $post = [
-            'debitNoteId' => $recordId,
+            'bulkTransactionId' => $recordId,
             'requesttoken' => \OCP\Util::callRegister(),
-            'projectId' => $row['qf'.$projectIdIdx.'_idx'],
-            'projectName' => $row['qf'.$projectIdIdx]
+            'projectId' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
+            'projectName' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
           ];
           // $postEmail = [
           //   'emailTemplate' => self::emailTemplate($row['qf'.$jobIdx])
@@ -526,7 +524,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
             'download' => [
               'label' =>  $this->l->t('download'),
               'post' => json_encode($post),
-              'title' => $this->toolTipsService['debit-notes-download'],
+              'title' => $this->toolTipsService['bulk-transaction-download'],
             ],
             // 'announce' => [
             //   'label' => $this->l->t('announce'),

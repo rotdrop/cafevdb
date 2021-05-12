@@ -192,12 +192,12 @@ same effect as clicking the close button on top of the dialog-window. No email w
       'debit-mandate-orchestra-member' => $this->l->t('Please check this box if this musician is a club-member. Otherwise
 please leave it unchecked.'),
 
-      'debit-note-creation-time' => $this->l->t('The time when the debit note data was created.'),
+      'bulk-transaction-creation-time' => $this->l->t('The time when the bulk-transactionx data was created.'),
 
-      'debit-note-date-of-submission' => $this->l->t('The date when the debit note records were actually transferred to the
+      'bulk-transaction-date-of-submission' => $this->l->t('The date when the debit note records were actually transferred to the
 bank.'),
 
-      'debit-note-due-date' => $this->l->t('The date when (hopefully) the amount debited will reach our own bank
+      'bulk-transacxtion-due-date' => $this->l->t('The date when (hopefully) the amount debited will reach our own bank
 account.'),
 
       'debit-note-email-message-id' => $this->l->t('Email message-id header of the notification email for this debit-note.'),
@@ -225,12 +225,12 @@ then nothing is debited.'),
       'debit-note-job-option-remaining' => $this->l->t('Issue a debit-note over the remaining debts of the musician, taking
 into account how much already has been paid.'),
 
-      'debit-note-submission-deadline' => $this->l->t('Date of latest submission of the debit note to our own bank.'),
+      'bulk-transaction-submission-deadline' => $this->l->t('Date of latest submission of the debit note to our own bank.'),
 
       'debit-notes-announce' => $this->l->t('Inform all debitors of this debit-note by email; an email dialog is
 opened.'),
 
-      'debit-notes-download' => $this->l->t('Download the data-set of this debit-note for transferal to our bank
+      'bulk-transaction-download' => $this->l->t('Download the data-set of this bulk-transaction for transferal to our bank
 institute.'),
 
       'debug-mode' => $this->l->t('Amount of debug output. Keep this disabled for normal use. Debug output can be found in the log-file.'),

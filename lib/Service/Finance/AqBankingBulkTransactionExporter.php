@@ -54,7 +54,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     $this->configService = $configService;
     $this->financeService = $financeService;
 
-    $iban = new \IBAN($this->getConfigValue('bankAccountIBAN'));
+    $iban = new \PHP_IBAN\IBAN($this->getConfigValue('bankAccountIBAN'));
     $this->iban = $iban->MachineFormat();
     $this->bic = $this->getConfigValue('bankAccountBIC');
     $this->owner = $this->getConfigValue('bankAccountOwner');
@@ -88,7 +88,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   /**
    * @inheritdoc
    */
-  private function fileData(Entities\SepaBulkTransaction $transaction):string
+  public function fileData(Entities\SepaBulkTransaction $transaction):string
   {
     if ($transaction instanceof Entities\SepaDebitNote) {
       return $this->debitNoteFileData($transaction);
@@ -135,9 +135,11 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
       ];
     }
 
-    return implode("\n", array_walk($transactionTable, function($value) {
-      return implode(self::CSV_DELIMITER, $value);
-    }));
+    return implode("\n", array_map(
+      function($value) {
+        return implode(self::CSV_DELIMITER, $value);
+      },
+      $transactionTable));
   }
 
   private function bankTransferColumnHeadings():array
@@ -190,7 +192,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
         'mandateId' => $compositePayment->getSepaDebitMandate()->getMandateReference(),
         'mandateDate/dateString' => $compositePayment->getSepaDebitMandate()->getMandateDate()->format(self::MANDATE_DATE_FORMAT),
         'mandateDebitorName' => $compositePayment->getSepaDebitMandate()->getMusician()->getPublicName(),
-        'sequence' => self::NON_RECURRING[$compositePaymen->getSepaDebitMandate()->getNonRecurring()],
+        'sequence' => self::NON_RECURRING[$compositePayment->getSepaDebitMandate()->getNonRecurring()],
         'purpose[0]' => $purpose[0],
         'purpose[1]' => $purpose[1],
         'purpose[2]' => $purpose[2],
@@ -198,9 +200,11 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
       ];
     }
 
-    return implode("\n", array_walk($transactionTable, function($value) {
-      return implode(self::CSV_DELIMITER, $value);
-    }));
+    return implode("\n", array_map(
+      function($value) {
+        return implode(self::CSV_DELIMITER, $value);
+      },
+      $transactionTable));
   }
 
   private function debitNoteColumnHeadings():array

@@ -54,26 +54,24 @@ const ready = function(container, resizeCB) {
     });
 
   container
-    .off('click', '.debit-note-actions a.download')
-    .on('click', '.debit-note-actions a.download', function(event) {
+    .off('click', '.bulk-transaction-actions a.download')
+    .on('click', '.bulk-transaction-actions a.download', function(event) {
       const self = $(this);
 
       CAFEVDB.modalizer(true);
       Page.busyIcon(true);
 
       const clearBusyState = function() {
+        console.info('CLEANUP');
         CAFEVDB.modalizer(false);
         Page.busyIcon(false);
         return true;
       };
 
-      const post = self.data('post');
-      post.DownloadCookie = generateId();
-
-      const action = 'ajax/finance/debit-note-download.php';
       fileDownload(
-        action,
-        post, {
+        'finance/sepa/bulk-transactions/export',
+        self.data('post'),
+        {
           done: clearBusyState,
           errorMessage(data, url) {
             return t(appName, 'Unable to download debit notes.');
