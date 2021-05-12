@@ -87,73 +87,136 @@ const download = function(url, post, options) {
     }
   }
 
-  console.info('DOWNLOAD POST', post);
-
-  $.fileDownload(
-    generateUrl(url), {
-      httpMethod: 'POST',
+  // eslint-disable-next-line no-constant-condition
+  if (true) {
+    const downloadUrl = generateUrl(url);
+    $.ajax({
+      url: downloadUrl,
+      method: 'POST',
+      cache: false,
       data: post,
-      cookieName,
-      cookieValue,
-      cookiePath: webRoot,
-    })
-    .fail(function(responseHtml, url) {
-      // responseHtml may be wrapped into a pre-tag
-      const pre = '<pre>';
-      const erp = '</pre>';
-      let response;
-      if (responseHtml.substring(0, pre.length) === pre
-          && responseHtml.substring(responseHtml.length - erp.length) === erp) {
-        response = responseHtml.substring(pre.length, responseHtml.length - erp.length);
-      } else {
-        response = responseHtml;
-      }
-
-      let data = {};
-      try {
-        data = JSON.parse(response);
-        data.parsed = true;
-        console.info('JSON DATA', data);
-      } catch (e) {
-        console.info('ERROR', e);
-        try {
-          data.info = $(response).find('main').html();
-          if (!data.info) {
-            throw Error('no html');
+      xhr: function() {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 2) {
+            if (xhr.status === 200) {
+              xhr.responseType = 'blob';
+            } else {
+              xhr.responseType = 'text';
+            }
           }
-          data.status = 500;
-          data.error = Ajax.httpStatus[data.status];
-          data.message = t(
-            appName,
-            'HTTP error response to AJAX call: {code} / {error}',
-            { code: data.status, error: data.error });
+        };
+        return xhr;
+      },
+    })
+      .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown, options.fail);
+      })
+      .done(function(data, textStatus, xhr) {
+        let fileName = 'download';
+        const contentDisposition = xhr.getResponseHeader('Content-Disposition');
+        if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
+          const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          const matches = filenameRegex.exec(contentDisposition);
+          if (matches != null && matches[1]) {
+            fileName = matches[1].replace(/['"]/g, '');
+          }
+        }
+        let contentType = xhr.getResponseHeader('Content-Type');
+        if (contentType) {
+          contentType = contentType.split(';')[0];
+          console.info('CONTENT TYPE', contentType);
+        } else {
+          contentType ='application/octetstream';
+        }
+
+        // Convert the Byte Data to BLOB object.
+        const blob = new Blob([data], { type: contentType });
+
+        // Check the Browser type and download the File.
+        const isIE = false || !!document.documentMode;
+        if (isIE) {
+          window.navigator.msSaveBlob(blob, fileName);
+        } else {
+          // eslint-disable-next-line node/no-unsupported-features/node-builtins
+          const url = window.URL || window.webkitURL;
+          const link = url.createObjectURL(blob);
+          const a = $('<a />');
+          a.attr('download', fileName);
+          a.attr('href', link);
+          $('body').append(a);
+          a[0].click();
+          $('body').remove(a);
+          options.done(downloadUrl, data);
+        }
+      });
+
+  } else {
+    $.fileDownload(
+      generateUrl(url), {
+        httpMethod: 'POST',
+        data: post,
+        cookieName,
+        cookieValue,
+        cookiePath: webRoot,
+      })
+      .fail(function(responseHtml, url) {
+        // responseHtml may be wrapped into a pre-tag
+        const pre = '<pre>';
+        const erp = '</pre>';
+        let response;
+        if (responseHtml.substring(0, pre.length) === pre
+            && responseHtml.substring(responseHtml.length - erp.length) === erp) {
+          response = responseHtml.substring(pre.length, responseHtml.length - erp.length);
+        } else {
+          response = responseHtml;
+        }
+
+        let data = {};
+        try {
+          data = JSON.parse(response);
           data.parsed = true;
         } catch (e) {
-          console.info('ERROR', e);
-          data = {
-            error: Ajax.httpStatus[500],
-            status: 500,
-            message: responseHtml,
-            parsed: false,
-          };
+          try {
+            data.info = $(response).find('main').html();
+            if (!data.info) {
+              throw Error('no html');
+            }
+            data.status = 500;
+            data.error = Ajax.httpStatus[data.status];
+            data.message = t(
+              appName,
+              'HTTP error response to AJAX call: {code} / {error}',
+              { code: data.status, error: data.error });
+            data.parsed = true;
+          } catch (e) {
+            data = {
+              error: Ajax.httpStatus[500],
+              status: 500,
+              message: responseHtml,
+              parsed: false,
+            };
+          }
         }
-      }
 
-      if (!data.status) {
-        // this is an error, after all ...
-        data.status = Ajax.httpStatus.BAD_REQUEST;
-      }
+        if (!data.status) {
+          // this is an error, after all ...
+          data.status = Ajax.httpStatus.BAD_REQUEST;
+        }
 
-      if (!data.error) {
-        data.error = Ajax.httpStatus[data.status];
-      }
+        if (!data.error) {
+          data.error = Ajax.httpStatus[data.status];
+        }
 
-      data.message = options.errorMessage(data, url) + ' ' + data.message;
+        data.message = options.errorMessage(data, url) + ' ' + data.message;
 
-      Ajax.handleError(data, data.error, data.status /* ? */, data.fail);
+        Ajax.handleError(data, data.error, data.status /* ? */, options.fail);
 
-    })
-    .done(options.done);
+      })
+      .done(function(url) {
+        options.done(url);
+      });
+  }
 };
 
 export default download;
