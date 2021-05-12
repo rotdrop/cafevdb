@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Common\Functions;
 
 /** Participant-fields. */
 trait ParticipantFieldsTrait
@@ -715,7 +716,7 @@ WHERE pp.project_id = $this->projectId",
           $keyFdd = Util::arrayMergeRecursive(
             $keyFdd, [
               'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
-              'input' => 'VSRH',
+              'input' => 'RH',
             ]);
 
           // generate a new group-definition field as yet another column
@@ -1010,6 +1011,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           $newDataOption = $participantField->getDataOption($newGroupId);
           $max = $newDataOption['limit'];
           $label = $newDataOption['label'];
+          //$this->logInfo('OPTION: '.$newGroupId.' '.Functions\dump($newDataOption));
         }
 
         $oldMembers = Util::explode(',', $oldValues[$groupFieldName]);
