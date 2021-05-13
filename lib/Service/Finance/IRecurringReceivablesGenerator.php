@@ -37,11 +37,19 @@ interface IRecurringReceivablesGenerator
   const GENERATOR_LABEL = '__generator__';
 
   /**
-   * Update the list of receivables, for example by generating fields
-   * up to the current date. The link to the actual
-   * Entities\ProjectParticipantField entity has to be implemented by other
-   * means, e.g. in the constructor. The generated receivables may not
-   * yet have been persisted.
+   * Bind this instance to the given entity. The idea is to have a
+   * constructor which allowes for dependency injection. This,
+   * however, means that the DB entities must not be passed through
+   * the constructor.
+   */
+  public function bind(Entities\ProjectParticipantField $serviceFeeField);
+
+  /**
+   * Update the list of receivables for the bound service-fee field,
+   * for example by generating fields up to the current date. The link
+   * to the actual Entities\ProjectParticipantField entity is
+   * established by a prior call to $this->bind($serviceFeeField).
+   * The generated receivables may not yet have been persisted.
    *
    * @return Collection Collection of
    * Entities\ProjectParticipantFieldDataOption entities covering all
@@ -50,7 +58,7 @@ interface IRecurringReceivablesGenerator
   public function generateReceivables():Collection;
 
   /**
-   * Update the amount to invoice for the given receivable.
+   * Update the amount to invoice for bound service-fee field.
    *
    * @param Entities\ProjectParticipantFieldDataOption $receivable
    *   The option to update/recompute.
@@ -65,7 +73,7 @@ interface IRecurringReceivablesGenerator
   public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectParticipantFieldDataOption;
 
   /**
-   * Update the amount to invoice for the given receivable.
+   * Update the amount to invoice for the bound service-fee field.
    *
    * @param Entities\ProjectParticipant $participant
    *   The musician to update the service claim for. If null, the

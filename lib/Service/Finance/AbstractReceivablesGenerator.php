@@ -38,10 +38,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   }
 
   /**
-   * Bind this instance to the given entity. The idea is to have a
-   * constructor which allowes for dependency injection. This,
-   * however, means that the DB entities must not be passed through
-   * the constructor.
+   * {@inheritdoc}
    */
   public function bind(Entities\ProjectParticipantField $serviceFeeField)
   {
