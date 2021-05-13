@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\Finance\InsuranceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -93,7 +93,7 @@ class InstrumentInsurances extends PMETableViewBase
   /** @var array<Types\EnumGeographicalScope> */
   private $geographicalScopes;
 
-  /** @var InsuranceService */
+  /** @var InstrumentInsuranceService */
   private $insuranceService;
 
   public function __construct(
@@ -101,7 +101,7 @@ class InstrumentInsurances extends PMETableViewBase
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
-    , InsuranceService $insuranceService
+    , InstrumentInsuranceService $insuranceService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
@@ -378,7 +378,7 @@ class InstrumentInsurances extends PMETableViewBase
       'options' => 'LFACPDV',
       'sql' => 'ROUND($table.insurance_amount
  * '.$joinTables[self::RATES_TABLE].'.rate
- * (1+'.floatval(InsuranceService::TAXES).'), 2)',
+ * (1+'.floatval(InstrumentInsuranceService::TAXES).'), 2)',
       'php' => [ $this, 'moneyValue' ],
     ];
 

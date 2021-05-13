@@ -39,7 +39,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
   public function __construct(
     ConfigService $configService
-    , InsuranceService $insuranceService
+    , InstrumentInsuranceService $insuranceService
     , EntityManager $entityManager) {
     parent::__construct($entityManager);
 

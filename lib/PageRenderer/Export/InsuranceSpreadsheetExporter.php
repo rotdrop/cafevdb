@@ -24,7 +24,7 @@ namespace OCA\CAFEVDB\PageRenderer\Export;
 
 use PhpOffice\PhpSpreadsheet;
 
-use OCA\CAFEVDB\Service\Finance\InsuranceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\PageRenderer;
 
@@ -35,7 +35,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   /** @var PageRenderer\PMETableViewBase */
   protected $renderer;
 
-  /** @var InsuranceService */
+  /** @var InstrumentInsuranceService */
   protected $insuranceService;
 
   /** @var FuzzyInputService */
@@ -47,13 +47,13 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
    * @param PageRenderer\PMETableViewBase $renderer
    * Underlying renderer, see self::fillSheet()
    *
-   * @param InsuranceService $insuranceService
+   * @param InstrumentInsuranceService $insuranceService
    *
    * @param FuzzyInputService $fuzzyInputService
    */
   public function __construct(
     PageRenderer\InstrumentInsurances $renderer
-    , InsuranceService $insuranceService
+    , InstrumentInsuranceService $insuranceService
     , FuzzyInputService $fuzzyInputService
   ) {
     parent::__construct($renderer->configService());

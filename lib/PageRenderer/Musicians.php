@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\Finance\InsuranceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Controller\ImagesController;
@@ -62,7 +62,7 @@ class Musicians extends PMETableViewBase
   /** @var OCA\CAFEVDB\Service\PhoneNumberService */
   private $phoneNumberService;
 
-  /** @var OCA\CAFEVDB\Service\Finance\InsuranceService */
+  /** @var OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService */
   private $insuranceService;
 
   /**
@@ -139,7 +139,7 @@ class Musicians extends PMETableViewBase
     , GeoCodingService $geoCodingService
     , ContactsService $contactsService
     , PhoneNumberService $phoneNumberService
-    , InsuranceService $insuranceService
+    , InstrumentInsuranceService $insuranceService
   ) {
     parent::__construct(self::ALL_TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;

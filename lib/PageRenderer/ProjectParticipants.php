@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\Finance\InsuranceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
@@ -154,7 +154,7 @@ class ProjectParticipants extends PMETableViewBase
   /** @var FinanceService */
   private $financeService;
 
-  /** @var InsuranceService */
+  /** @var InstrumentInsuranceService */
   private $insuranceService;
 
   /** @var ProjectParticipantFieldsService */
@@ -180,7 +180,7 @@ class ProjectParticipants extends PMETableViewBase
     , ContactsService $contactsService
     , PhoneNumberService $phoneNumberService
     , FinanceService $financeService
-    , InsuranceService $insuranceService
+    , InstrumentInsuranceService $insuranceService
     , ProjectParticipantFieldsService $participantFieldsService
     , ProjectService $projectService
     , UserStorage $userStorage
