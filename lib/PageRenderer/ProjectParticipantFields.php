@@ -896,7 +896,12 @@ class ProjectParticipantFields extends PMETableViewBase
     } else {
       $allowed = $newvals['data_options'];
       if ($newvals['multiplicity'] == Multiplicity::RECURRING) {
-        // index -1 holds the generator information, re-index
+        // index -1 holds the generator information
+
+        // sanitize
+        $allowed[-1]['data'] = $this->participantFieldsService->resolveReceivableGenerator($allowed[-1]['data']);
+
+        // re-index
         $allowed = array_values($allowed);
       } else {
         // remove dummy data
@@ -1174,7 +1179,12 @@ class ProjectParticipantFields extends PMETableViewBase
     $html .= '
 <tr
   class="data-line data-options generator active only-multiplicity-recurring"
-  data-generators=\''.json_encode(ProjectParticipantFieldsService::recurringReceivablesGenerators()).'\'
+  data-generators=\''.json_encode(
+    array_merge(
+      array_map([ $this->l, 't' ], array_keys(ProjectParticipantFieldsService::recurringReceivablesGenerators())),
+      array_values(ProjectParticipantFieldsService::recurringReceivablesGenerators())
+    )
+  ).'\'
   data-field-id="'.$fieldId.'">
   <td class="operations">
     <input

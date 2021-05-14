@@ -32,6 +32,8 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\AlwaysReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -100,9 +102,32 @@ class ProjectParticipantFieldsService
   static public function recurringReceivablesGenerators()
   {
     return [
-      DoNothingReceivablesGenerator::class,
-      AlwaysReceivablesGenerator::class,
+      'nothing' => DoNothingReceivablesGenerator::class,
+      'dummy' => AlwaysReceivablesGenerator::class,
+      'insurance' => InstrumentInsuranceReceivablesGenerator::class,
+      // 'membership' => MembershipFeesReceivablesGenerator::class, not yet
     ];
+  }
+
+  public function resolveReceivableGenerator($value)
+  {
+    $generators = self::recurringReceivablesGenerators();
+    if (!empty($generators[$value])) {
+      $value = $generators[$value];
+    } else {
+      foreach ($generators as $key => $generator) {
+        if (strtolower($value) == strtolower((string)$this->l->t($key))) {
+          $value = $generator;
+          break;
+        }
+      }
+    }
+    if (!preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/', $value)) {
+      throw new \RuntimeException($this->l->t('Generator "%s" does not appear to be valid PHP class name.', $value));
+    }
+    $this->di($value); // try to actually find it
+
+    return $value; // return resolved class-name if we made it until here
   }
 
   /**

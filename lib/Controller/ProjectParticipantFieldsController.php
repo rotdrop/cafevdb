@@ -116,24 +116,19 @@ class ProjectParticipantFieldsController extends Controller {
           return self::grumble($this->l->t('Generator data must be tagged with NIL uuid, got "%s".', $item['key']));
         }
 
-        // data should return a PHP class name
-        if (!preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/', $item['data'])) {
-          return self::grumble($this->l->t('Generator "%s" does not appear to be valid PHP class name.', $item['data']));
-        }
-
-        // check the generator can be found
-        $generator = null;
+        $generatorClass = null;
         try {
-          $generator = $this->di($item['data']);
+          $generatorClass = $this->participantFieldsService->resolveReceivableGenerator($item['data']);
         } catch (\Throwable $t) {
           $this->logException($t);
         }
-        if (empty($generator)) {
+        if (empty($generatorClass)) {
           return self::grumble($this->l->t('Generator "%s" could not be instantiated.', $item['data']));
         }
 
         return self::dataResponse([
-          'message' => $this->l->t('Generator "%s" successfully validated.', $item['data']),
+          'message' => $this->l->t('Generator "%s" successfully mapped to PHP-class "%s".', [ $item['data'], $generatorClass, ]),
+          'value' => $generatorClass,
         ]);
       case 'run':
         if (empty($data['fieldId'])) {

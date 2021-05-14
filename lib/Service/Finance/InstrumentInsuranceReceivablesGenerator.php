@@ -66,7 +66,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $this->l = $this->l10n();
     $this->toolTipsService = $toolTipsService;
 
-    $this->insurancesRepository = $this->getDatabaseRepository(Repositories\InstrumentInsurancesRepository::class);
+    $this->insurancesRepository = $this->getDatabaseRepository(Entities\InstrumentInsurance::class);
     $this->timeZone = $this->getDateTimeZone();
   }
 
