@@ -131,19 +131,23 @@ foreach ($localeCountryNames as $country => $name) {
       <!-- <legend><?php echo $l->t('Document templates'); ?></legend> -->
       <?php foreach ($documentTemplates as $documentTemplate => $placeholder) { ?>
         <div class="template-upload" data-document-template="<?php p($documentTemplate); ?>">
-          <input type="button" title="<?php p($toolTipsService['templates:' . $documentTemplate . '-cloud']); ?>" class="operation select-cloud document-template operation <?php p($documentTemplate); ?>"/>
-          <input type="button" title="<?php p($toolTipsService['templates:' . $documentTemplate . '-upload']); ?>" class="operation upload-replace document-template operation <?php p($documentTemplate); ?>"/>
+          <input type="button" title="<?php p($toolTips['templates:' . $documentTemplate . '-cloud']); ?>" class="operation select-cloud document-template operation <?php p($documentTemplate); ?>"/>
+          <input type="button" title="<?php p($toolTips['templates:' . $documentTemplate . '-upload']); ?>" class="operation upload-replace document-template operation <?php p($documentTemplate); ?>"/>
           <input class="<?php p($documentTemplate); ?> document-template upload-placeholder<?php !empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
                  type="text"
                  id="<?php p($documentTemplate); ?>"
                  name="<?php p($documentTemplate); ?>"
                  value="<?php p(${$documentTemplate}); ?>"
-                 title="<?php echo $toolTipsService['templates:' . $documentTemplate]; ?>"
+                 title="<?php echo $toolTips['templates:' . $documentTemplate]; ?>"
                  placeholder="<?php p($l->t($placeholder) . ' - ' . $l->t('drop or click')); ?>"
           />
-          <a class="document-template downloadlink<?php empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
+          <a class="tooltip-auto document-template downloadlink<?php empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
              download="<?php p(${$documentTemplate . 'FileName'}); ?>"
-             href="<?php echo ${$documentTemplate . 'DownloadLink'}; ?>"><?php p(${$documentTemplate . 'FileName'}); ?></a>
+             href="<?php echo ${$documentTemplate . 'DownloadLink'}; ?>"
+             title="<?php echo $toolTips['templates:' . $documentTemplate]; ?>"
+          >
+            <?php p(${$documentTemplate . 'FileName'}); ?>"
+          </a>
         </div>
       <?php } ?>
     </fieldset>
