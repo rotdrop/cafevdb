@@ -41,6 +41,8 @@ class InstrumentInsurance implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * @var int
@@ -98,9 +100,9 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * @var array
    *
-   * @ORM\Column(type="simple_array", length=0, nullable=false, options={"default"="false"})
+   * @ORM\Column(type="boolean", nullable=true, options={"default"=false})
    */
-  private $accessory = 'false';
+  private $accessory = false;
 
   /**
    * @var string
@@ -132,6 +134,20 @@ class InstrumentInsurance implements \ArrayAccess
 
   public function __construct() {
     $this->arrayCTOR();
+  }
+
+  /**
+   * Set id.
+   *
+   * @param int $id
+   *
+   * @return InstrumentInsurance
+   */
+  public function setId($id)
+  {
+    $this->id = $id;
+
+    return $this;
   }
 
   /**
@@ -363,13 +379,13 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set startOfInsurance.
    *
-   * @param \DateTime $startOfInsurance
+   * @param string|\DateTimeInterface $submitDate
    *
    * @return InstrumentInsurance
    */
-  public function setStartOfInsurance($startOfInsurance)
+  public function setStartOfInsurance($startOfInsurance):InstrumentInsurance
   {
-    $this->startOfInsurance = $startOfInsurance;
+    $this->startOfInsurance = self::convertToDateTime($startOfInsurance);
 
     return $this;
   }
@@ -377,9 +393,9 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Get startOfInsurance.
    *
-   * @return \DateTime
+   * @return \DateTimeInterface
    */
-  public function getStartOfInsurance()
+  public function getStartOfInsurance():?\DateTimeInterface
   {
     return $this->startOfInsurance;
   }

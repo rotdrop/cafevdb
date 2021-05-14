@@ -70,6 +70,7 @@ class InstrumentInsurances extends PMETableViewBase
     // ],
     self::RATES_TABLE => [
       'entity' => Entities\InsuranceRate::class,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'broker_id' => 'broker_id',
         'geographical_scope' => 'geographical_scope',
@@ -109,7 +110,7 @@ class InstrumentInsurances extends PMETableViewBase
 
     $this->insuranceService = $insuranceService;
 
-    $this->projectName = $this->getClubMembersProject();
+    $this->projectName = $this->getClubMembersProjectName();
     $this->projectId = $this->getClubMembersProjectId();
 
     $scopes = array_values(Types\EnumGeographicalScope::toArray());
@@ -323,11 +324,12 @@ class InstrumentInsurances extends PMETableViewBase
       'tab'      => [ 'id' => 'item' ],
       'name'     => $this->l->t('Accessory'),
       'css'      => [ 'postfix' => ' accessory' ],
-      'select'   => 'D',
-      'maxlen'   => 384,
+      'select'   => 'O',
       'sort'     => true,
-      'default' => 'false',
-      'values2'  => $this->accessoryNames,
+      'default' => false,
+      'sqlw' => 'IF($val_qas = "", 0, 1)',
+      'values2' => [ 0 => '', 1 => '&#10004;' ],
+      'values2|CAP' => [ 0 => '', 1 => '' ],
     ];
 
     $opts['fdd']['manufacturer'] = [
@@ -366,7 +368,7 @@ class InstrumentInsurances extends PMETableViewBase
         'options' => 'LFACPDV',
         'sql' => '$join_table.rate',
         'php' => function($rate) {
-          return $this->floatValue($rate*100.0).' %';
+          return $this->floatValue((float)$rate*100.0).' %';
         }
       ]);
 
@@ -382,34 +384,35 @@ class InstrumentInsurances extends PMETableViewBase
       'php' => [ $this, 'moneyValue' ],
     ];
 
+    $allItemsTable = self::TABLE . self::VALUES_TABLE_SEP . 'allItems';
     $this->makeJoinTableField(
-      $opts['fdd'], self::TABLE, 'insurance_amount', [
-        'tab'  => [ 'id' => 'finance' ],
-        'input' => 'V',
-        'name' => $this->l->t('Total Insurance'),
-        'select' => 'T',
-        'options' => 'CDV',
-        'sql' => 'SUM($join_col_fqn)',
-        'escape' => false,
-        'nowrap' => true,
-        'sort' =>false,
-        'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
-          $musicianId = $row[$this->queryField('instrument_holder_id', $pme->fdd)];
-          $annualFee = $this->insuranceService->insuranceFee($musicianId, null, true);
-          $bval = $this->l->t(
-            'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
-          $tip = $this->toolTipsService['musician-instrument-insurance'];
-          $button = "<div class=\"musician-instrument-insurance\">"
-                  ."<input type=\"button\" "
-                  ."value=\"$bval\" "
-                  ."title=\"$tip\" "
-                  ."name=\""
-                  ."Template=instrument-insurance&amp;"
-                  ."MusicianId=".$musicianId."\" "
-                  ."class=\"musician-instrument-insurance\" />"
-                  ."</div>";
-          return $button;
-        }
+      $opts['fdd'], $allItemsTable, 'insurance_amount', [
+      'tab'  => [ 'id' => 'finance' ],
+      'input' => 'V',
+      'name' => $this->l->t('Total Insurance'),
+      'select' => 'T',
+      'options' => 'CDV',
+      'sql' => 'SUM($join_col_fqn)',
+      'escape' => false,
+      'nowrap' => true,
+      'sort' =>false,
+      'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
+        $musicianId = $row[$this->queryField('instrument_holder_id', $pme->fdd)];
+        $annualFee = $this->insuranceService->insuranceFee($musicianId, null, true);
+        $bval = $this->l->t(
+          'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
+        $tip = $this->toolTipsService['musician-instrument-insurance'];
+        $button = "<div class=\"musician-instrument-insurance\">"
+                ."<input type=\"button\" "
+                ."value=\"$bval\" "
+                ."title=\"$tip\" "
+                ."name=\""
+                ."Template=instrument-insurance&amp;"
+                ."MusicianId=".$musicianId."\" "
+                ."class=\"musician-instrument-insurance\" />"
+                ."</div>";
+        return $button;
+      }
       ]);
 
     $opts['fdd']['start_of_insurance'] = array_merge(

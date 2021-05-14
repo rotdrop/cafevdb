@@ -33,7 +33,7 @@ class InstrumentInsurancesRepository extends EntityRepository
    *
    * @return \DateTimeInterface
    */
-  public function startOfInsurances():\DateTimeInterface
+  public function startOfInsurances():?\DateTimeInterface
   {
     return $this->createQueryBuilder('i')
                 ->select('MIN(i.startOfInsurance) AS start')

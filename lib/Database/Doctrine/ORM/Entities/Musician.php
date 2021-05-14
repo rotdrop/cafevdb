@@ -273,7 +273,7 @@ class Musician implements \ArrayAccess
    *
    * @return Musician
    */
-  public function setId($id)
+  public function setId($id):Musician
   {
     $this->id = $id;
 

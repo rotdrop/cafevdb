@@ -211,7 +211,7 @@ class InstrumentInsuranceController extends Controller {
           break;
         }
       case 'broker-select':
-        $value = $values['broker-select'];
+        $value = $values['brokerSelect'];
         if (empty($value)) {
           // must not be empty
           $errorMessage[] = $this->l->t('Insurance broker is missing.');
@@ -220,7 +220,7 @@ class InstrumentInsuranceController extends Controller {
           break;
         }
       case 'scope-select':
-        $value = $values['scope-select'];
+        $value = $values['scopeSelect'];
         if (empty($value)) {
           // must not be empty
           $errorMessage[] = $this->l->t('Geographical scope for the insurance is missing.');
@@ -228,8 +228,9 @@ class InstrumentInsuranceController extends Controller {
         if ($control != 'submit') {
           break;
         }
+      case 'insuredItem':
       case 'insured-item':
-        $value = $values['insured-item'];
+        $value = $values['insuredItem'];
         if (empty($value)) {
           $errorMessage[] = $this->l->t('Insured object has not been specified.');
         }
@@ -255,6 +256,7 @@ class InstrumentInsuranceController extends Controller {
         if ($control != 'submit') {
           break;
         }
+      case 'constructionYear':
       case 'construction-year':
         $value = $values['constructionYear'];
         if (empty($value) || $value === (string)$this->l->t('unknown')) {
@@ -268,7 +270,7 @@ class InstrumentInsuranceController extends Controller {
           break;
         }
       case 'amount':
-        $value = $this->fuzzyInputService->currenyValue($values['amount']);
+        $value = $this->fuzzyInputService->currencyValue($values['amount']);
         if (empty($value)) {
           $errorMessage[] = $this->l->t('The insurance amount is missing.');
         } else {
@@ -284,7 +286,7 @@ class InstrumentInsuranceController extends Controller {
         }
         break; // break at last item
       default:
-        $errorMessage[] = $this->l->t("Internal error: unknown request.");
+        $errorMessage[] = $this->l->t('Unknown Request: "%s / %s".', [ $control, $template ]);
         break;
       }
 
@@ -293,9 +295,9 @@ class InstrumentInsuranceController extends Controller {
       }
 
       $values['message'] = $message;
-      return self::dataRespose($values);
+      return self::dataResponse($values);
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    return self::grumble($this->l->t('Unknown Request: "%s / %s".', [ $control, $template ]));
   }
 
 }

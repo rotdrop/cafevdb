@@ -109,7 +109,7 @@ class InstrumentInsuranceService
    * @return Fraction
    *
    */
-  private static function yearFraction($insuranceStart, $dueDate, bool $currentYearOnly = false)
+  private function yearFraction($insuranceStart, $dueDate, bool $currentYearOnly = false)
   {
     $timeZone = $this->getDateTimeZone($dateStamp);
     $startDate = Util::dateTime($insuranceStart)->setTimezone($timeZone);
@@ -225,16 +225,19 @@ class InstrumentInsuranceService
     /** @var Entities\InstrumentInsurance $insurance */
     foreach ($payables as $insurance) {
       $insuranceStart = $insurance->getStartOfInsurance()->setTimezone($timeZone);
-      $insuranceEnd = $insurance->getDeleted()->setTimezone($timeZone);
+      $insuranceEnd = $insurance->getDeleted();
+      if (!empty($insuranceEnd)) {
+        $insuranceEnd = $insuranceEnd->setTimezone($timeZone);
+      }
 
+      /** @var Entities\InsuranceRate $rate */
+      $rate = $insurance->getInsuranceRate();
       $dueDate = $this->dueDate($rate->getDueDate(), $date);
-      if ($dueDate > $insuranceEnd) {
+      if (!empty($insuranceEnd) && $dueDate > $insuranceEnd) {
         continue;
       }
 
       $amount = $insurance->getInsuranceAmount();
-      /** @var Entities\InsuranceRate $rate */
-      $rate = $insurance->getInsuranceRate();
       $annualFee = $amount * $rate->getRate();
       $annualFee *= $this->yearFraction($insuranceStart, $dueDate, $currentYearOnly);
       $fee += $annualFee * self::TAXES;

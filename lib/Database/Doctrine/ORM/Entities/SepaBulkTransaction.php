@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * SepaDebitNote
+ * SepaBulkTransaction
  *
  * This actually models a batch collection
  *
@@ -144,7 +144,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @param int $sepaTransactionData
    *
-   * @return SepaDebitNote
+   * @return SepaBulkTransaction
    */
   public function setSepaTransactionData($sepaTransactionData):SepaBulkTransaction
   {
@@ -168,7 +168,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @param \DateTime $submissionDeadline
    *
-   * @return SepaDebitNote
+   * @return SepaBulkTransaction
    */
   public function setSubmissionDeadline($submissionDeadline):SepaBulkTransaction
   {
@@ -190,9 +190,9 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set submitDate.
    *
-   * @param \DateTime|null $submitDate
+   * @param string|\DateTimeInterface $submitDate
    *
-   * @return SepaDebitNote
+   * @return SepaBulkTransaction
    */
   public function setSubmitDate($submitDate):SepaBulkTransaction
   {
@@ -204,7 +204,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get submitDate.
    *
-   * @return \DateTime|null
+   * @return \DateTimeInterface|null
    */
   public function getSubmitDate():?\DateTimeInterface
   {
@@ -216,7 +216,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @param \DateTime $dueDate
    *
-   * @return SepaDebitNote
+   * @return SepaBulkTransaction
    */
   public function setDueDate($dueDate):SepaBulkTransaction
   {
@@ -240,7 +240,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @param int $submissionEventUri
    *
-   * @return SepaDebitNote
+   * @return SepaBulkTransaction
    */
   public function setSubmissionEventUri($submissionEventUri):SepaBulkTransaction
   {
@@ -264,7 +264,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @param int $submissionTaskUri
    *
-   * @return SepaDebitNote
+   * @return SepaBulkTransaction
    */
   public function setSubmissionTaskUri($submissionTaskUri):SepaBulkTransaction
   {
@@ -288,7 +288,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @param int $dueEventUri
    *
-   * @return SepaDebitNote
+   * @return SepaBulkTransaction
    */
   public function setDueEventUri($dueEventUri):SepaBulkTransaction
   {
@@ -312,7 +312,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @param Collection $payments
    *
-   * @return SepaDebitNote
+   * @return SepaBulkTransaction
    */
   public function setPayments(Collection $payments):SepaBulkTransaction
   {
