@@ -90,7 +90,7 @@ class GeoCodingService
       $response = file_get_contents($url);
       if ($response !== false) {
         $json = json_decode($response, true, 512, JSON_BIGINT_AS_STRING);
-        //$this->logDebug(print_r($json, true));
+        $this->logDebug(print_r($json, true));
         return $json;
       }
     }
@@ -101,7 +101,7 @@ class GeoCodingService
   {
     // ignore complete street address with number
     if (preg_match('/\s+[0-9]+[a-z]?$/i', $partialStreet)) {
-      $this->logInfo('Ignoring complete address');
+      $this->logDebug('Ignoring complete address');
       return [ $partialStreet ];
     }
 
@@ -113,7 +113,7 @@ class GeoCodingService
       $queryUrl .= '&postalcode='.urlencode($postalCode);
     }
     $queryUrl .= '&format=jsonv2';
-    $this->logInfo($queryUrl);
+    $this->logDebug($queryUrl);
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $queryUrl);
@@ -141,10 +141,10 @@ class GeoCodingService
       if (empty($info)) {
         continue;
       }
-      $this->logInfo(print_r($info, true));
+      $this->logDebug(print_r($info, true));
       $results[] = $info[0];
     }
-    $this->logInfo(print_r($results, true));
+    $this->logDebug(print_r($results, true));
     return $results;
   }
 
@@ -490,7 +490,8 @@ class GeoCodingService
                  Join::WITH,
                  'gpc.country = m.country AND gpc.postalCode = m.postalCode'
                )
-               ->where('TIMESTAMPDIFF(MONTH, gpc.updated, CURRENT_TIMESTAMP()) > 1')
+               ->where('gpc.updated IS NULL')
+               ->orWhere('TIMESTAMPDIFF(MONTH, gpc.updated, CURRENT_TIMESTAMP()) > 1')
                ->orderBy('gpc.updated', 'ASC')
                ->setMaxResults($limit);
     $this->logDebug($qb->getDql());
@@ -503,6 +504,8 @@ class GeoCodingService
       ];
     }
     $zipCodes = array_merge($zipCodes, $forcedZipCodes);
+
+    $this->logDebug('ZIP CODES '.print_r($zipCodes, true));
 
     $numChanged = 0;
     $numTotal = 0;
@@ -761,7 +764,7 @@ class GeoCodingService
   public function languages($extraLang = null)
   {
     $languages = $this->languages;
-    if (empty($languages) == 0) {
+    if (empty($languages)) {
       // get all languages
       $languages = $this->queryBuilder()
                         ->select('gpct.target')
@@ -769,6 +772,7 @@ class GeoCodingService
                         ->distinct(true)
                         ->getQuery()
                         ->execute();
+      $this->logDebug('LANGUAGES '.print_r($languages, true));
       $languages = array_map(function($value) { return $value['target'];}, $languages);
       $languages = array_filter($languages, function($value) { return $value !== '=>'; });
     }
