@@ -2203,7 +2203,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k]['display']['attributes'])) {
 					$attributes = $this->fdd[$k]['display']['attributes'];
 					if (is_callable($attributes)) {
-						$attributes = call_user_func($attributes, 'change', $row, $k, $this);
+						$attributes = call_user_func($attributes, 'add', $row, $k, $this);
 					}
 					if (!is_array($attributes)) {
 						$attributes= [ $attributes ];
