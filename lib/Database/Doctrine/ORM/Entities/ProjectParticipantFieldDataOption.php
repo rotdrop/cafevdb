@@ -98,7 +98,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $limit;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="dataOption", cascade={"persist"}, orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="dataOption", indexBy="musician_id", cascade={"persist"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    * @Gedmo\SoftDeleteableCascade(delete=false, undelete=true)
    */
   private $fieldData;

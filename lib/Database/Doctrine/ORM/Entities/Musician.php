@@ -51,6 +51,7 @@ class Musician implements \ArrayAccess
   use CAFEVDB\Traits\CreatedAtEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
+  use CAFEVDB\Traits\GetByUuidTrait;
 
   /**
    * @var int
@@ -132,21 +133,21 @@ class Musician implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_bin"})
+   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
    */
   private $country;
 
   /**
    * @var int|null
    *
-   * @ORM\Column(type="string", length=32, nullable=true)
+   * @ORM\Column(type="string", length=32, nullable=true, options={"collation"="ascii_general_ci"})
    */
   private $postalCode;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_bin"})
+   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
    */
   private $language;
 
@@ -216,7 +217,7 @@ class Musician implements \ArrayAccess
   private $projectInstruments;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="musician", indexBy="option_key", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $projectParticipantFieldsData;
 
@@ -778,6 +779,19 @@ class Musician implements \ArrayAccess
   public function getProjectParticipantFieldsData():Collection
   {
     return $this->projectParticipantFieldsData;
+  }
+
+  /**
+   * Get one specific participant-field datum indexed by its key
+   *
+   * @param mixed $key Everything which can be converted to an UUID by
+   * Uuid::asUuid().
+   *
+   * @return null|ProjectParticipantFieldDatum
+   */
+  public function getProjectParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
+  {
+    return $this->getByUuid($this->projectParticipantFieldsData, $key, 'optionKey');
   }
 
   /**

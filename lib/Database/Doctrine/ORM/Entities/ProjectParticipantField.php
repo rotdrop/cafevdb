@@ -52,6 +52,7 @@ class ProjectParticipantField implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
   use CAFEVDB\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\GetByUuidTrait;
 
   /**
    * @var int
@@ -99,7 +100,7 @@ class ProjectParticipantField implements \ArrayAccess
    * @var ProjectParticipantFieldDataOption
    *
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist"}, orphanRemoval=true)
-   * @ORM\OrderBy({"key" = "ASC", "label" = "ASC"})
+   * @ORM\OrderBy({"label" = "ASC", "key" = "ASC"})
    * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
    */
   private $dataOptions;
@@ -260,30 +261,13 @@ class ProjectParticipantField implements \ArrayAccess
    * Get one specific option
    *
    * @param mixed $key Everything which can be converted to an UUID by
-   * Uuid::uuidBytes().
+   * Uuid::asUuid().
    *
    * @return null|ProjectParticipantFieldDataOption
    */
   public function getDataOption($key):?ProjectParticipantFieldDataOption
   {
-    if (empty($key = Uuid::asUuid($key))) {
-      return null;
-    }
-    $bytes = $key->getBytes();
-    $option = $this->dataOptions->get($bytes);
-    if (!empty($option)) {
-      return $option;
-    }
-    $matching = $this->dataOptions->matching(DBUtil::criteriaWhere(['key' => $key]));
-    if ($matching->count() == 1) {
-      return $matching->first();
-    }
-    // foreach ($this->dataOptions as $option) {
-    //   if ($option->getKey()->getBytes() == $bytes) {
-    //     return $option;
-    //   }
-    // }
-    return null;
+    return $this->getByUuid($this->dataOptions, $key, 'key');
   }
 
   /**

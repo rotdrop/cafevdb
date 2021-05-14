@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -48,6 +49,7 @@ class ProjectParticipant implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
+  use CAFEVDB\Traits\GetByUuidTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants", fetch="EXTRA_LAZY")
@@ -274,23 +276,14 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Get one specific participant-field datum indexed by its key
    *
+   * @param mixed $key Everything which can be converted to an UUID by
+   * Uuid::asUuid().
+   *
    * @return null|ProjectParticipantFieldDatum
    */
   public function getParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
   {
-    if (empty($key = Uuid::uuidBytes($key))) {
-      return null;
-    }
-    $datum = $this->participantFieldsData->get($key);
-    if (!empty($datum)) {
-      return $datum;
-    }
-    foreach ($this->participantFieldsData as $datum) {
-      if ($datum->getOptionKey()->getBytes() == $key) {
-        return $datum;
-      }
-    }
-    return null;
+    return $this->getByUuid($this->participantFieldsData, $key, 'optionKey');
   }
 
   /**

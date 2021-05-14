@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -49,7 +49,7 @@ class GeoPostalCodeTranslation implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, options={"fixed" = true})
+   * @ORM\Column(type="string", length=2, options={"fixed" = true, "collation"="ascii_general_ci"})
    * @ORM\Id
    */
   private $target;
