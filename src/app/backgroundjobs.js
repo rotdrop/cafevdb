@@ -1,9 +1,10 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -34,7 +35,8 @@ const runner = function() {
   if (cloudUser) {
     console.info('Triggered background jobs.');
     $.get(url).always(function() {
-      self.timer = setTimeout(self.runner, self.interval * 1000);
+      self.timer = setTimeout(runner, self.interval * 1000);
+      console.info('Restarted background jobs.');
     });
   } else if (self.timer !== false) {
     clearTimeout(self.timer);
