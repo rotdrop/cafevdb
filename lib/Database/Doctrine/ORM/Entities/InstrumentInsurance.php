@@ -64,7 +64,7 @@ class InstrumentInsurance implements \ArrayAccess
    * insurance fees.
    *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payableInsurances", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
+   * @ORM\JoinColumn(nullable=true)
    */
   private $billToParty;
 
