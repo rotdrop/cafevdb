@@ -181,6 +181,7 @@ foreach ($argv as $key => $value) {
   if (strpos($value, '-p') === 0
       || strpos($value, '--pass') === 0)  {
     unset($argv[$key]);
+    unset($_SERVER['argv'][$key]);
   }
 }
 
