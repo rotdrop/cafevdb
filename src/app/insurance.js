@@ -27,6 +27,7 @@ import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.js';
+// import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
@@ -160,6 +161,25 @@ const pmeFormInit = function(containerSel) {
           return false;
         });
     }
+
+    // restrict rate-selections based on what is supported by the broker
+    const scopeSelect = form.find('select.scope-select');
+    const brokerSelect = form.find('select.broker-select');
+    brokerSelect.on('change', function(event) {
+      const $this = $(this);
+      const $broker = $this.find('option:selected');
+      if ($broker.length == 0) {
+        return;
+      }
+      const rates = $broker.data('data').split(',');
+      console.info('RATES', rates);
+      scopeSelect.find('option').each(function(idx) {
+        const $option = $(this);
+        $option.prop('disabled', rates.find(rate => rate === $option.val()) === undefined);
+        console.info('OPTION', rates.find(rate => rate === $option.val()), $option.val());
+      });
+      scopeSelect.trigger('chosen:updated');
+    });
 
     // intercept form-submit until validated
 
