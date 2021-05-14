@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,7 +27,20 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Doctrine\ORM\EntityRepository;
 
 class InstrumentInsurancesRepository extends EntityRepository
-{}
+{
+  /**
+   * Get the very first start date over all insurances.
+   *
+   * @return \DateTimeInterface
+   */
+  public function startOfInsurances():\DateTimeInterface
+  {
+    return $this->createQueryBuilder('i')
+                ->select('MIN(i.startOfInsurance) AS start')
+                ->getQuery()
+                ->getSingleScalarResult();
+  }
+}
 
 // Local Variables: ***
 // c-basic-offset: 2 ***

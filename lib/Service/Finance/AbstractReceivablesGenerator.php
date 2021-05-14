@@ -62,9 +62,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    *   The option to update/recompute.
    *
    * @param Entities\ProjectParticipant $participant
-   *   The musician to update the service claim for. If null, the
-   *   values for all affected musicians have to be recomputed.
-   *
+   *   The musician to update the service fee claim for.
    */
   protected abstract function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant);
 

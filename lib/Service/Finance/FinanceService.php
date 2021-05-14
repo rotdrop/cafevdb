@@ -24,7 +24,6 @@
 namespace OCA\CAFEVDB\Service\Finance;
 
 use \DateTimeImmutable AS DateTime;
-
 use Cmixin\BusinessDay;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;

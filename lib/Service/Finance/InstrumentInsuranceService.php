@@ -30,6 +30,8 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use OCA\CAFEVDB\Common\Util;
+
 /** Collective instrument insurance. */
 class InstrumentInsuranceService
 {
@@ -53,44 +55,36 @@ class InstrumentInsuranceService
   }
 
   /**
-   * Compute the next due date. The insurance contracts "always" last
-   * for one year and are payed in advance, so it is always the next
-   * due-date in the future.
+   * Compute the next due date.
    *
-   * @param DateTime|string $dueDate Start of the insurance contract.
+   * The fees for the given year are always for the following
+   * insurance year in advance. If the insurance-year starts at
+   * December 30., then the fees charged in year Y are for the
+   * insurance period Y/12/30 - (Y+1)/12/29. If the insurance-year
+   * starts at January 2nd, then the fees charged in year Y are for
+   * Y/01/02 - (Y+1)/01/01.
    *
-   * @param int $priorMonths Shift $data this many months to the
-   * future, e.g. to prepare debit notes one months before the actual
-   * new insurance year.
+   * @param string|\DateTimeInterface $dueDate Start of the insurance
+   * contract. The year portion is ignored.
    *
-   * @param $date The point in time we are looking at. If
-   * unspecified then this is the current date.
+   * @param string|\DateTimeInterface $date The point in time we are
+   * looking at. If unspecified then this is the current date.
+   *
+   * @todo Perhaps use the timezone at the location of the orchestra
+   * or insurance agency.
    */
-  public function dueDate($dueDate, $priorMonths = 0, $date = null)
+  public function dueDate($dueDate, $date = null)
   {
-    $oldTZ = date_default_timezone_get();
-    //$tz = $this->getTimezone();
-    $tz = 'Europe/Berlin';
-    date_default_timezone_set($tz);
-
-    if (!$date) {
-      $dateStamp = time();
-    } else {
-      $dateStamp = strtotime($date);
+    $timeZone = $this->getDateTimeZone($dateStamp);
+    if (empty($date)) {
+      $date = new \DateTimeImmutable();
     }
+    $date = Util::dateTime($date)->setTimezone($timeZone);
+    $year = $date->format('Y');
 
-    $date = new DateTime();
-    $date->setTimestamp($dateStamp);
-    $data->modify("+ ".$priorMonths." months");
-
-    $dueDate = new DateTime($dueDate);
-
-    $distance = $dueDate->diff($date);
-    $years = 1 + $distance->format('%y');
-
-    $dueDate->modify("+ ".$years." years");
-
-    date_default_timezone_set($oldTZ);
+    $dueDate = Util::dateTime($dueDate)
+             ->setTimezone($timeZone)
+             ->modify('+'.($year - $dueDate->format('Y') + 1).' years');
 
     return $dueDate;
   }
@@ -102,12 +96,11 @@ class InstrumentInsuranceService
    *
    * The time slots or rounded down to full-months.
    *
-   * @param $insuranceStart The start-date of the instrument
-   * insurance. A string suitable to initialize a PHP
-   * DateTime-object.
+   * @param string|\DateTimeInterface $insuranceStart The start-date
+   * of the instrument insurance.
    *
-   * @param $dueDate The start of the insurance year for this
-   * contract. This should be a PHP DateTime-object.
+   * @param string|\DateTimeInterface $dueDate The start of the
+   * insurance year for this contract.
    *
    * @param bool $currentYearOnly Only take the current insurance-year
    * into account, yielding a fraction of 1 for all year safe the
@@ -118,11 +111,10 @@ class InstrumentInsuranceService
    */
   private static function yearFraction($insuranceStart, $dueDate, bool $currentYearOnly = false)
   {
-    if (is_string($dueDate)) {
-      $dueDate = new DateTime($dueDate);
-    }
+    $timeZone = $this->getDateTimeZone($dateStamp);
+    $startDate = Util::dateTime($insuranceStart)->setTimezone($timeZone);
+    $dueDate = Util::dateTime($dueDate)->setTimezone($timeZone);
 
-    $startDate = new DateTime($insuranceStart);
     $distance = $startDate->diff($dueDate);
 
     // $dueDate is before $insuranceStart
@@ -143,30 +135,108 @@ class InstrumentInsuranceService
   }
 
   /**
-   * Compute the annual insurance fee for the respective musician up
-   * to the given date.
+   * Compute a sparse list of insurance fees per year for the given
+   * musician. Years with an amount of 0 are skipped.
    *
-   * @param int $musicianId
+   * The fees for the given year are always for the following
+   * insurance year in advance. If the insurance-year starts at
+   * December 30., then the fees charged in year Y are for the
+   * insurance period Y/12/30 - (Y+1)/12/29. If the insurance-year
+   * starts at January 2nd, then the fees charged in year Y are for
+   * Y/01/02 - (Y+1)/01/01.
+   *
+   * @param int|Entities\Musician $musicianOrId
+   *
+   * @param mixed string|\DateTimeInterface $date Compute until this
+   * date. Only the calendar-year of $date according to the timezone
+   *
+   * @return array<int, float>
+   * ```[ YEAR => VALUE ]```
+   *
+   * @todo What happens if the rates change? The rates should have a
+   * validity time-range.
+   */
+  public function insuranceFeesYearly($musicianOrId, $date = null)
+  {
+    $timeZone = $this->getDateTimeZone($dateStamp);
+    if (empty($date)) {
+      $date = new DateTime();
+    }
+    $yearUntil = $date->setTimezone($timeZone)->format('Y');
+
+    $result = [];
+
+    $insurances = $this->insurancesRepository->findBy([ 'billToParty' => $musicianOrId ]);
+    /** @var Entities\InstrumentInsurance $insurance */
+    foreach ($insurances as $insurance) {
+      $amount = $insurance->getInsuranceAmount();
+      /** @var Entities\InsuranceRate $rate */
+      $rate = $insurance->getInsuranceRate();
+      $annualFee = $amount * $rate->getRate();
+
+      $insuranceStart = $insurance->getStartOfInsurance()->setTimezone($timeZone);
+      $insuranceEnd = $insurance->getDeleted()->setTimezone($timeZone);
+      $startYear = $insuranceStart->format('Y');
+
+      for ($year = $startYear - 1; $year <= $currentYear; ++$year) {
+        $dueDate = $this->dueDate($rate->getDueDate(), $year.'-06-01');
+        if ($dueDate > $insuranceEnd) {
+          continue;
+        }
+        $yearFraction = $this->yearFraction($insuranceStart, $dueDate, true);
+        if ($yearFraction == 0.0) {
+          continue;
+        }
+        $fee = $yearFraction * $annualFee * self::TAXES;
+        $result[$year] = ($result[$year] ?? 0.0) + $fee;
+      }
+    }
+    return $result;
+  }
+
+  /**
+   * Compute the annual insurance fee for the respective musician up
+   * to the year containing the given date.
+   *
+   * The fees for any given year are always for the following
+   * insurance year in advance. If the insurance-year starts at
+   * December 30., then the fees charged in year Y are for the
+   * insurance period Y/12/30 - (Y+1)/12/29. If the insurance-year
+   * starts at January 2nd, then the fees charged in year Y are for
+   * Y/01/02 - (Y+1)/01/01.
+   *
+    * @param int $musicianId
    *
    * @param string|DateTime $date
    *
    * @param bool $currentYearOnly
    */
-  public function insuranceFee($musicianId, $date, bool $currentYearOnly = true)
+  public function insuranceFee($musicianId, $date = null, bool $currentYearOnly = true)
   {
+    $timeZone = $this->getDateTimeZone($dateStamp);
     if (empty($date)) {
       $date = new DateTime();
     }
+    $date = $date->setTimezone($timeZone);
 
     $payables = $this->insurancesRepository->findBy([ 'billToParty' => $musicianId ]);
 
     $fee = 0.0;
+    /** @var Entities\InstrumentInsurance $insurance */
     foreach ($payables as $insurance) {
-      $amount = $insurance['insuranceAmount'];
-      $rate = $insurance['insuranceRate'];
-      $dueDate = $this->dueDate($rate['dueDate']);
-      $annualFee = $amount * $rate['$rate'];
-      $annualFee *= $this->yearFraction($insurance['startOfInsurance'], $date, $currentYearOnly);
+      $insuranceStart = $insurance->getStartOfInsurance()->setTimezone($timeZone);
+      $insuranceEnd = $insurance->getDeleted()->setTimezone($timeZone);
+
+      $dueDate = $this->dueDate($rate->getDueDate(), $date);
+      if ($dueDate > $insuranceEnd) {
+        continue;
+      }
+
+      $amount = $insurance->getInsuranceAmount();
+      /** @var Entities\InsuranceRate $rate */
+      $rate = $insurance->getInsuranceRate();
+      $annualFee = $amount * $rate->getRate();
+      $annualFee *= $this->yearFraction($insuranceStart, $dueDate, $currentYearOnly);
       $fee += $annualFee * self::TAXES;
     }
     return round($fee, 2);

@@ -23,11 +23,15 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use \DateTimeImmutable as DateTime;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**
  * Do nothing implementation to have something implementing
@@ -37,14 +41,33 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  /** @var InstrumentInsuranceService */
+  private $insuranceService;
+
+  /** @var Repositories\InstrumentInsurancesRepository */
+  private $insurancesRepository;
+
+  /** @var ToolTipsService */
+  private $toolTipsService;
+
+  /** @var \DateTimeZone */
+  private $timeZone;
+
   public function __construct(
     ConfigService $configService
     , InstrumentInsuranceService $insuranceService
-    , EntityManager $entityManager) {
+    , ToolTipsService $toolTipsService
+    , EntityManager $entityManager
+  ) {
     parent::__construct($entityManager);
 
+    $this->insuranceService = $insuranceService;
     $this->configService = $configService;
     $this->l = $this->l10n();
+    $this->toolTipsService = $toolTipsService;
+
+    $this->insurancesRepository = $this->getDatabaseRepository(Repositories\InstrumentInsurancesRepository::class);
+    $this->timeZone = $this->getDateTimeZone();
   }
 
   /**
@@ -52,7 +75,27 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
    */
   public function generateReceivables():Collection
   {
-    // This is the dummy implementation, just do nothing.
+    $receivableOptions = $this->serviceFeeField->getDataOptions();
+
+    $startingDate = $this->insurancesRepository->startOfInsurances()
+                                               ->setTimezone($this->timeZone);
+    $startingYear = $startingDate->format('Y');
+    $endingYear   = (new DateTime)->setTimezone($this->timeZone)->format('Y');
+
+    for ($year = $startingYear; $year <= $endingYear; ++$year) {
+      if ($receivableOptions->matching(self::criteriaWhere(['limit' => $year]))->count() == 0) {
+        // add a new option
+        $receivable = (new Entities\ProjectParticipantFieldDataOption)
+                    ->setField($this->serviceFeeField)
+                    ->setKey(Uuid::create())
+                    ->setLabel($this->l->t('Insurance Fee %d', $year))
+                    ->setToolTip($this->toolTipsService['instrument-insurance-annual-service-fee'])
+                    ->setLimit($year) // may change in the future
+                    ->setData(null); // may change in the future
+        $receivableOptions->set($receivable->getKey()->getBytes(), $receivable);
+      }
+    }
+
     return $this->serviceFeeField->getSelectableOptions();
   }
 
@@ -61,6 +104,47 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
    */
   protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant)
   {
-    // Do nothing
+    // @todo
+    // * find list of insurance years
+    // * walk years from start until now
+    //   - add missing items if insurance fee != 0
+    //   - remove items without payment when insurance fee == 0
+    //   - update all existing items with newly computed insurance sum
+
+    $year = $receivable->getLimit();
+    /** @var Entities\Musician $musician */
+    $musician = $participant->getMusician();
+    /** @var Entities\Project $project */
+    $project = $participant->getProject();
+    $fee = $this->insuranceService->insuranceFee($musician, new \DateTimeImmutable($year.'-06-01'));
+
+    $participantFieldsData = $participant->getParticipantFieldsData();
+    $optionKey = $receivable->getKey();
+    $datum = $participant->getParticipantFieldsDatum($optionKey);
+    if (empty($datum) && $fee != 0.0) {
+      // add a new option
+      /** @var Entities\ProjectParticipantFieldDatum $datum */
+      $datum = (new Entities\ProjectParticipantFieldDatum)
+             ->setField($receivable->getField())
+             ->setMusician($musician)
+             ->setProject($participant->getProject())
+             ->setOptionKey($receivable->getKey())
+             ->setOptionValue($fee);
+      // @todo Too much connectivity
+      $participantFieldsData->set($option->getBytes(), $datum);
+      $musician->getProjectParticipantFieldsData()->set($optionKey->getBytes(), $datum);
+      $receivable->getFieldData()->set($musician->getId(), $datum);
+      $project->getParticipantFieldsData()->add($datum);
+    } else if (!empty($datum) && $fee == 0.0) {
+      // remove current option
+      $this->remove($datum);
+      $participantFieldsData->removeElement($datum);
+      $musician->getProjectParticipantFieldsData()->removeElement($datum);
+      $receivable->getFieldData()->removeElement($datum);
+      $project->getParticipantFieldsData()->removeElement($datum);
+    } else {
+      // just update current data to the computed value
+      $datum->setOptionValue($fee);
+    }
   }
 }
