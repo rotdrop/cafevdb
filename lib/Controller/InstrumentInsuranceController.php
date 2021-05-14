@@ -239,8 +239,8 @@ class InstrumentInsuranceController extends Controller {
         }
       case 'accessory':
         $value = $values['accessory'];
-        if (empty($value)) {
-          // must not be empty
+        if (false && empty($value)) {
+          // checkbox, may be empty.
           $errorMessage[] = $this->l->t('Object classification (instrument, accessory) is missing.');
         }
         if ($control != 'submit') {
