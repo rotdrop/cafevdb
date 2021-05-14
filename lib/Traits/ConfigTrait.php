@@ -296,6 +296,9 @@ trait ConfigTrait {
 
   public function defaultUserIdSlug(?string $surName, ?string $firstName, ?string $nickName)
   {
+    if (empty($firstName) && empty($nickName)) {
+      return '';
+    }
     return Transliterator::transliterate($this->transliterate($nickName?:$firstName), '-')
       .'.'
       . Transliterator::transliterate($this->transliterate($surName), '-');
@@ -308,7 +311,7 @@ trait ConfigTrait {
 
   protected function getClubMembersProjectName():string
   {
-    return (int)$this->getConfigValue('memberProject', '');
+    return $this->getConfigValue('memberProject', '');
   }
 
   protected function getSharedFolderPath()
