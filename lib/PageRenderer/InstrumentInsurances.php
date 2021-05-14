@@ -245,38 +245,34 @@ class InstrumentInsurances extends PMETableViewBase
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Musician'),
       'css'      => [ 'postfix' => ' musician-id' ],
-      'select'   => 'T',
+      'select'   => 'D',
       'maxlen'   => 11,
       'sort'     => true,
       'default' => 0,
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => [
-          'columns' => [ 'sur_name', 'first_name' ],
-          'divs' => ', ',
-        ],
+        'description' => parent::musicianPublicNameSql(),
         'join' => ' $join_col_fqn = $main_table.instrument_holder_id',
+        'filters' => parent::musicianInProjectSql($this->projectId),
       ],
     ];
 
-    $joinTables[self::MUSICIANS_TABLE.parent::VALUES_TABLE_SEP.'BilltToParty'] = 'PMEjoin'.count($opts['fdd']);
+    $joinTables[self::MUSICIANS_TABLE.parent::VALUES_TABLE_SEP.'BillToParty'] = 'PMEjoin'.count($opts['fdd']);
     $opts['fdd']['bill_to_party_id'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Bill-to Party'),
       'css'      => [ 'postfix' => ' bill-to-party allow-empty' ],
-      'select'   => 'T',
+      'select'   => 'D',
       'maxlen'   => 11,
       'sort'     => true,
       'default' => 0,
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => [
-          'columns' => [ 'sur_name', 'first_name' ],
-          'divs' => ', ',
-        ],
+        'description' => parent::musicianPublicNameSql(),
         'join' => ' $join_col_fqn = $main_table.bill_to_party_id',
+        'filters' => parent::musicianInProjectSql($this->projectId),
       ],
     ];
 
@@ -290,13 +286,20 @@ class InstrumentInsurances extends PMETableViewBase
       'sort'     => true,
       'default'  => '',
       'values' => [
-        'table' => self::BROKER_TABLE,
+        'table' => 'SELECT
+  b.*,
+  GROUP_CONCAT(DISTINCT r.geographical_scope ORDER BY r.geographical_scope ASC) AS geographical_scopes
+FROM '.self::BROKER_TABLE.' b
+LEFT JOIN '.self::RATES_TABLE.' r
+  ON r.broker_id = b.short_name
+GROUP BY b.short_name',
         'column' => 'short_name',
         'description' => [
           'columns' => [ 'long_name', 'address' ],
           'divs' => ' / ',
         ],
         'join' => '$join_col_fqn = $main_table.broker_id',
+        'data' => '$table.geographical_scopes',
       ],
     ];
 

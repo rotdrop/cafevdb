@@ -170,6 +170,11 @@ class InsuranceRates extends PMETableViewBase
       'maxlen'   => 11,
       'default'  => 0.0,
       'sort'     => $sort,
+      'display' => [
+        'attributes' => [
+          'step' => '0.0001',
+        ],
+      ],
     ];
 
     $opts['fdd']['due_date'] = $this->defaultFDD['due_date'];

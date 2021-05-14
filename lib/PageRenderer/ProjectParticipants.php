@@ -414,16 +414,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'display_name', [
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
-        'sql|LFVD' => 'IF($column IS NULL OR $column = \'\',
-  CONCAT(
-    $table.sur_name,
-    \', \',
-    IF($table.nick_name IS NULL OR $table.nick_name = \'\',
-      $table.first_name,
-      $table.nick_name
-    )
-  ),
-  $column)',
+        'sql|LFVD' => parent::musicianPublicNameSql(),
         'maxlen'   => 384,
         'display|ACP' => [
           'attributes' => function($op, $row, $k, $pme) {
@@ -509,15 +500,17 @@ class ProjectParticipants extends PMETableViewBase
           'description' => 'l10n_name',
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
-          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENTS_TABLE." mi WHERE \$record_id[project_id] = ".$this->projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
-        ],
+          //          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENTS_TABLE." mi WHERE \$record_id[project_id] = ".$this->projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
+          'filters'     => '$table.id IN (SELECT DISTINCT instrument_id FROM ".self::MUSICIAN_INSTRUMENTS_TABLE." mi WHERE \$record_id[project_id] = ".$this->projectId." AND \$record_id[musician_id] = mi.musician_id)',
+       ],
         'values|LFV' => [
           'table'       => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
           'column'      => 'id',
           'description' => '$table.l10n_name',
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
-          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$this->projectId." = pi.project_id GROUP BY pi.project_id))",
+          //'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$this->projectId." = pi.project_id GROUP BY pi.project_id))",
+          'filters'     => '$table.id IN (SELECT DISTINCT instrument_id FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$this->projectId." = pi.project_id)',
         ],
         //'values2' => $this->instrumentInfo['byId'],
         'valueGroups' => $this->instrumentInfo['idGroups'],

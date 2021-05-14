@@ -362,26 +362,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'css'      => [ 'postfix' => ' instrumentation-id' ],
         'select' => 'D',
         'values' => [
-          'description' => 'CONCAT($table.id, \': \',
-    IF($table.display_name IS NULL OR $table.display_name = \'\',
-      CONCAT(
-        $table.sur_name,
-        \', \',
-        IF($table.nick_name IS NULL OR $table.nick_name = \'\',
-          $table.first_name,
-          $table.nick_name
-        )
-      ),
-      $table.display_name
-    )
-  )',
+          'description' => 'CONCAT($table.id, \': \', '.parent::musicianPublicNameSql().')',
           'filters' => (!$projectMode
                         ? null
-                        : "FIND_IN_SET(id,
-  (SELECT GROUP_CONCAT(pp.musician_id)
-    FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
-    WHERE pp.project_id = ".$projectId."
-    GROUP BY pp.project_id))"),
+                        : parent::musicianInProjectSql($this->projectId)),
         ],
         'php|LF' => [$this, 'compositeRowOnly'],
       ]);

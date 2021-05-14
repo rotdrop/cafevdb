@@ -387,7 +387,7 @@ make sure that the musicians are also automatically added to the
         'attributes' => function($op, $row, $k, $pme) {
           $firstName = $row['qf'.($k-1)];
           return [
-            'placeholder' => $firstName,
+            'placeholder' => $firstName ?: '',
             'readonly' => empty($row['qf'.$k]),
           ];
         },
@@ -409,26 +409,18 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Display-Name'),
       'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
-      'sql|LFVD' => 'IF($column IS NULL OR $column = \'\',
-  CONCAT(
-    $table.sur_name,
-    \', \',
-    IF($table.nick_name IS NULL OR $table.nick_name = \'\',
-      $table.first_name,
-      $table.nick_name
-    )
-  ),
-  $column)',
+      'sql|LFVD' => parent::musicianPublicNameSql(),
       'maxlen'   => 384,
       'sort'     => true,
       'select'   => 'T',
       'display|ACP' => [
         'attributes' => function($op, $row, $k, $pme) {
+          $this->logInfo('OP '.$op);
           $surName = $row['qf'.($k-3)];
           $firstName = $row['qf'.($k-2)];
           $nickName = $row['qf'.($k-1)];
           return [
-            'placeholder' => $surName.', '.($nickName?:$firstName),
+            'placeholder' => $op == 'add' ? '' : $surName.', '.($nickName?:$firstName),
             'readonly' => empty($row['qf'.$k]),
           ];
         },
@@ -462,7 +454,7 @@ make sure that the musicians are also automatically added to the
           $nickName = $row['qf'.($k-2)];
           $placeHolder = $this->defaultUserIdSlug($surName, $firstName, $nickName);
           return [
-            'placeholder' => $placeHolder,
+            'placeholder' => $op == 'add' ? '' : $placeHolder,
             'readonly' => true,
           ];
         },

@@ -1930,6 +1930,40 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     return [ 'musician' => $musician, 'categories' => $categories ];
   }
+
+  /**
+   * Generate an SQL fragment which composes a display name from the
+   * available name-parts sur_name, first_name, nick_name,
+   * display_name.
+   *
+   * @param string $tableAlias Table to refer to, refers to
+   * placeholder '$table'.
+   */
+  static public function musicianPublicNameSql($tableAlias = '$table')
+  {
+    return "IF($tableAlias.display_name IS NULL OR $tableAlias.display_name = '',
+      CONCAT(
+        $tableAlias.sur_name,
+        ', ',
+        IF($tableAlias.nick_name IS NULL OR $tableAlias.nick_name = '',
+          $tableAlias.first_name,
+          $tableAlias.nick_name
+        )
+      ),
+      $tableAlias.display_name
+    )";
+  }
+
+  /**
+   * Return an SQL filter fragment to ensure that a musician-id is
+   * only in the request project.
+   */
+  static public function musicianInProjectSql($projectIdSql, $musicianId = 'id', $tableAlias = '$table')
+  {
+    return "$tableAlias.$musicianId IN (SELECT pp.musician_id
+  FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
+  WHERE pp.project_id = $projectIdSql)";
+  }
 }
 
 // Local Variables: ***
