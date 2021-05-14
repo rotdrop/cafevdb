@@ -73,10 +73,10 @@ try {
 
 	$oldWorkingDir = getcwd();
 	if ($oldWorkingDir === false) {
-		echo "This script can be run from the Nextcloud root directory only." . PHP_EOL;
+		echo "This script can be run from the CAFeV-DB root directory only." . PHP_EOL;
 		echo "Can't determine current working dir - the script will continue to work but be aware of the above fact." . PHP_EOL;
 	} elseif ($oldWorkingDir !== __DIR__ && !chdir(__DIR__)) {
-		echo "This script can be run from the Nextcloud root directory only." . PHP_EOL;
+		echo "This script can be run from the CAFeV-DB root directory only." . PHP_EOL;
 		echo "Can't change to Nextcloud root directory." . PHP_EOL;
 		exit(1);
 	}
@@ -97,6 +97,8 @@ try {
 } catch (Exception $ex) {
 	exceptionHandler($ex);
 } catch (Error $ex) {
+	exceptionHandler($ex);
+} catch (Throwable $ex) {
 	exceptionHandler($ex);
 }
 
@@ -159,9 +161,44 @@ if (isset($_ENV['CAFEVDB_USER'])) {
     $cafevDbUser = $user['name'];
 }
 $GLOBALS['cafevdb-user'] = $cafevDbUser;
-$cafevDbPassword = file_get_contents($appDir . '/.clipassword');
+
+$authenticated = false;
+$passwordMethod = 'file';
+
+$options = getopt('hp::', [ 'help', 'password::' ]);
+
+// first run over options to get the password
+foreach($options as $option => $value) {
+  switch ($option) {
+  case 'p':
+  case 'password':
+    $passwordMethod = $value ?: 'console';
+    break;
+  }
+}
+
+foreach ($argv as $key => $value) {
+  if (strpos($value, '-p') === 0
+      || strpos($value, '--pass') === 0)  {
+    unset($argv[$key]);
+  }
+}
+
+switch ($passwordMethod) {
+case 'file':
+  $cafevDbPassword = file_get_contents($appDir . '/.clipassword');
+  break;
+case 'stdin':
+  $cafevDbPassword = trim(fgets(fopen('php://stdin', 'r')));
+  break;
+case 'console':
+  $cafevDbPassword = getPassword("Password for " . $cafevDbUser . ": ", true);
+  break;
+}
+
 if (empty($cafevDbPassword)) {
-    $cafevDbPassword = getPassword("Password for " . $cafevDbUser . ": ", true);
+  echo "Unable to obtain database credentials with method $passwordMethod." . PHP_EOL;
+  exit(1);
 }
 
 $encryptionService = \OC::$server->query(EncryptionService::class);
@@ -185,37 +222,6 @@ if (file_exists($installedVersions)) {
 
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use OCA\CAFEVDB\Database\EntityManager;
-
-// use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-// use \Doctrine\Common\Collections\Criteria;
-
-//$musicians = $entityManager->getRepository(Entities\Musician::class)->findAll();
-
-// $musicians = $entityManager->getRepository(Entities\Musician::class)
-//                            ->findByInstruments([ 3, 5, 7 ]);
-
-// $criteria = new Criteria();
-// $criteria->where(Criteria::expr()->neq('mainTable.id', 1));
-
-// $musicians = $entityManager->getRepository(Entities\Musician::class)
-//                            ->findBy(
-//                              // [ 'id' => [ 1, 2 ] ],
-                             // [ '>instruments.instrument' => [ 3, 5, 7 ] ],
-//                  [ '!>instruments.instrument' => 3 ],
-//                              // [ '!instruments.instrument' => null ],
-//                             [ '!instruments.instrument' => null, $criteria ],
-//                              // [ 'instruments.ranking' => '*' ],
-//                              // [ 'instruments.instrument' => '*' ],
-//                              // [ 'id' => '2' ],
-//                               [ 'id' => 'indEX' ],
-//                            );
-
-// $blah = [];
-// foreach ($musicians as $musician) {
-//   $blah[] = $musician['surName'].', '.$musician['firstName'].' '.count($musician['projectParticipation']);
-// }
-
-// throw new \Exception('Blah '.print_r(array_keys($musicians), true).' '.implode(' / ', $blah));
 
 /** @var EntityManager */
 $entityManager = \OC::$server->query(EntityManager::class);
