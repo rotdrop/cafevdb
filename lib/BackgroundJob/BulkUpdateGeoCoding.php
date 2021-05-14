@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -24,8 +25,8 @@ namespace OCA\CAFEVDB\BackgroundJob;
 
 use OCP\BackgroundJob\TimedJob;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig as ICloudConfig;
 
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 
 class BulkUpdateGeoCoding extends LazyUpdateGeoCoding
@@ -34,13 +35,13 @@ class BulkUpdateGeoCoding extends LazyUpdateGeoCoding
   private $geoCodingService;
 
   public function __construct(
-    ITimeFactory $time,
-    ConfigService $configService,
-    GeoCodingService $geoCodingService
+    $appName
+    , ITimeFactory $time
+    , ICloudConfig $cloudConfig
+    , GeoCodingService $geoCodingService
   ) {
-    parent::__construct($time, $configService, $geoCodingService);
-
-    $this->setInterval($configService->getValue('geocoding.refresh.bulk', 24*3600));
+    parent::__construct($appName, $time, $cloudConfig, $geoCodingService);
+    $this->setInterval($cloudConfig->getAppValue($appName, 'geocoding.refresh.bulk', 24*3600));
   }
 
   /**
