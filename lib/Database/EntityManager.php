@@ -151,6 +151,7 @@ class EntityManager extends EntityManagerDecorator
     $this->l = $l10n;
     $this->userId = $this->encryptionService->getUserId()?:$this->l->t('unknown');
     if (!$this->encryptionService->bound()) {
+      // @todo: try to bind to unencrypted service account
       return;
     }
     $this->debug = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
