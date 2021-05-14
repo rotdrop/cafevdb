@@ -158,14 +158,6 @@ class EntityManager extends EntityManagerDecorator
     $this->entityManager = $this->wrapped;
     if ($this->connected()) {
       $this->registerTypes();
-
-      // $encryptionKey = $this->encryptionService->getAppEncryptionKey();
-      // $this->recryptEncryptedProperties('blah');
-      // $this->recryptEncryptedProperties($encryptionKey);
-
-
-
-
     }
     $this->decorateClassMetadata = true;
   }
