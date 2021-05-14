@@ -663,12 +663,12 @@ class ConfigService {
   }
 
   /** Convert a float value in the given or default locale */
-  public function floatValue($value, $locale = null)
+  public function floatValue($value, $decimals = 4, $locale = null)
   {
     $oldlocale = setlocale(LC_NUMERIC, '0');
     empty($locale) && $locale = $this->getLocale();
     setlocale(LC_NUMERIC, $locale);
-    $result = number_format((float)$value);
+    $result = number_format((float)$value, $decimals);
     setlocale(LC_NUMERIC, $oldlocale);
     return $result;
   }

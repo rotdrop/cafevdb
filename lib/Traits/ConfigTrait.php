@@ -385,9 +385,9 @@ trait ConfigTrait {
   }
 
   /** Convert a float value in the given or default locale */
-  public function floatValue($value, $locale = null)
+  public function floatValue($value, $decimals = 2, $locale = null)
   {
-    return $this->configService->floatValue($value, $locale);
+    return $this->configService->floatValue($value, $decimals, $locale);
   }
 
   /** Return the current time as short time-stamp (textual). */
