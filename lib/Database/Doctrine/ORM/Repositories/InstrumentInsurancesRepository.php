@@ -28,6 +28,8 @@ use Doctrine\ORM\EntityRepository;
 
 class InstrumentInsurancesRepository extends EntityRepository
 {
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+
   /**
    * Get the very first start date over all insurances.
    *
@@ -35,10 +37,11 @@ class InstrumentInsurancesRepository extends EntityRepository
    */
   public function startOfInsurances():?\DateTimeInterface
   {
-    return $this->createQueryBuilder('i')
-                ->select('MIN(i.startOfInsurance) AS start')
-                ->getQuery()
-                ->getSingleScalarResult();
+    return self::convertToDateTime(
+      $this->createQueryBuilder('i')
+           ->select('MIN(i.startOfInsurance) AS start')
+           ->getQuery()
+           ->getSingleScalarResult());
   }
 }
 

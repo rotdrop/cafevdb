@@ -27,7 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait SoftDeleteableEntity
 {
-  use DateTimeTrait;
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * @ORM\Column(type="datetime_immutable", nullable=true)

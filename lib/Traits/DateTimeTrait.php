@@ -21,8 +21,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
+namespace OCA\CAFEVDB\Traits;
 
+/** Support traits for date-time stuff */
 trait DateTimeTrait
 {
   /**

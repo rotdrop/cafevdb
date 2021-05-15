@@ -51,7 +51,7 @@ class ProjectParticipantField implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
-  use CAFEVDB\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
 
   /**

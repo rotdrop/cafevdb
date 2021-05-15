@@ -35,7 +35,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 trait UpdatedAt
 {
-  use DateTimeTrait;
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * @var \DateTimeImmutable
