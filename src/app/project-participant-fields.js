@@ -28,6 +28,7 @@ import * as Notification from './notification.js';
 import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
+import './lock-input.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -325,9 +326,15 @@ const ready = function(selector, resizeCB) {
     });
 
   // generator input
+  const generatorSelector = 'tr.data-options tr.data-line.generator input[type="text"]';
+  const generator = container.find(generatorSelector);
+  generator.lockUnlock({
+    locked: generator.val().trim() !== '',
+  });
+
   container.on(
     'blur',
-    'tr.data-options tr.data-line.generator input[type="text"]',
+    generatorSelector,
     function(event) {
       const self = $(this);
       if (self.prop('readonly')) {
@@ -373,8 +380,7 @@ const ready = function(selector, resizeCB) {
           } else {
             self.addClass('readonly');
           }
-          self.prop('readonly', !empty);
-          self.next().prop('checked', !empty);
+          self.lockUnlock('lock', !empty);
           row.find('.operation.generator-run').prop('disabled', empty);
 
           Notification.messages(data.message);

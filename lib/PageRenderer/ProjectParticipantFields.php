@@ -1206,14 +1206,7 @@ class ProjectParticipantFields extends PMETableViewBase
       size="33"
       maxlength="32"
       '.(empty($generator) ? '' : 'readonly="readonly"').'
-    />
-    <input
-      type="checkbox"
-      id="data-options-generator"
-      class="pme-input pme-input-lock-unlock"
-      '.(empty($generator) ? '' : 'checked="checked"').'
-    />
-    <label class="pme-input pme-input-lock-unlock" for="data-options-generator"></label>';
+    />';
     foreach (['key', 'limit', 'label', 'tooltip'] as $prop) {
       $value = ($generatorItem[$prop]??'');
       if (empty($value) && $prop == 'key') {
