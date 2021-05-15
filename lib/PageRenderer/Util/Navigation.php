@@ -535,8 +535,8 @@ class Navigation
       break;
 
     case 'sepa-bulk-transactions':
-      $value = $this->l->t("Bulk Transactions");
-      $title = $this->l->t("A table holding all debit notes issued from the orchestra-software.");
+      $value = $this->l->t("Issued Bulk Transactions");
+      $title = $this->l->t("A table holding all bulk bank-transactions issued from the orchestra-software.");
       $controlclass = 'finance';
       $post = ['debitNotes' => $value,
                'template' => 'sepa-bulk-transactions',
@@ -626,8 +626,10 @@ and even edit the public web-pages for the project and other things.");
       break;
 
     case 'sepa-bank-accounts':
-      $value = $this->l->t('Bank Accounts');
-      $title = $this->l->t('Display a table with the SEPA bank accounts of the project participants.');
+      $value = $this->l->t('Create Bulk Transactions');
+      $title = $this->l->t('Display a table with the bank accounts of the project participants,
+with the possibility to issued money transfers as well as debit-notes
+to and from the registered bank accounts.');
       $controlclass = 'finance';
       $post = ['template' => 'sepa-bank-accounts',
                'projectName' => $projectName,
