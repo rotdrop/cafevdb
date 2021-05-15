@@ -169,9 +169,6 @@ class InstrumentInsurances extends PMETableViewBase
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
     $opts['options'] = 'ACVDFM';
-    $opts['misc']['css']['major'] = 'debit-note';
-    $opts['misc']['css']['minor'] = 'debit-note insurance tooltip-bottom';
-    $opts['labels']['Misc'] = $this->l->t('Debit');
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
@@ -296,7 +293,7 @@ GROUP BY b.short_name',
         'column' => 'short_name',
         'description' => [
           'columns' => [ 'long_name', 'address' ],
-          'divs' => ' / ',
+          'divs' => '; ',
         ],
         'join' => '$join_col_fqn = $main_table.broker_id',
         'data' => '$table.geographical_scopes',
