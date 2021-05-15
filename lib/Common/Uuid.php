@@ -76,6 +76,11 @@ class Uuid extends \Ramsey\Uuid\Uuid
     return null;
   }
 
+  public static function nil():UuidInterface
+  {
+    return self::fromString(self::NIL);
+  }
+
   /**
    * Convert "anything" to a binary UUID representation.
    *
