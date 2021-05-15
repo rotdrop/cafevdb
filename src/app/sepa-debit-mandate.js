@@ -29,7 +29,6 @@ import * as Page from './page.js';
 import * as Email from './email.js';
 import * as Notification from './notification.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
-import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
 import * as FileUpload from './file-upload.js';
@@ -38,6 +37,7 @@ import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
 import './lock-input.js';
 import {
+  data as pmeData,
   formSelector as pmeFormSelector,
   token as pmeToken,
   classSelectors as pmeClassSelectors,
