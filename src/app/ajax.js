@@ -302,11 +302,9 @@ const ajaxValidateResponse = function(data, required, errorCB) {
   if (missing.length > 0) {
     let info = '';
     if (typeof data.message !== 'undefined') {
-      info += data.message;
+      info += data.message + ' ';
     }
-    if (missing.length > 0) {
-      info += t(appName, 'Missing data');
-    }
+    info += t(appName, 'Missing data');
     // Add missing fields only if no exception or setup-error was
     // caught as in this case no regular data-fields have been
     // constructed
