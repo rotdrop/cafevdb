@@ -33,7 +33,6 @@ import * as Page from './page.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
-import * as Dialogs from './dialogs.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import pmeTweaks from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
