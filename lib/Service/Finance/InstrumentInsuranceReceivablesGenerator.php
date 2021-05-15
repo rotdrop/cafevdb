@@ -82,7 +82,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
     $startingDate = $this->insurancesRepository->startOfInsurances()
                                                ->setTimezone($this->timeZone);
-    $startingYear = $startingDate->format('Y');
+    $startingYear = (int)$startingDate->format('Y');
     $endingYear   = (new DateTime)->setTimezone($this->timeZone)->format('Y');
 
     for ($year = $startingYear; $year <= $endingYear; ++$year) {
