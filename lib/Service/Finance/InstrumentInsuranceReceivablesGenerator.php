@@ -82,19 +82,19 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
     $startingDate = $this->insurancesRepository->startOfInsurances()
                                                ->setTimezone($this->timeZone);
-    $startingYear = (int)$startingDate->format('Y');
+    $startingYear = $startingDate->format('Y');
     $endingYear   = (new DateTime)->setTimezone($this->timeZone)->format('Y');
 
     for ($year = $startingYear; $year <= $endingYear; ++$year) {
-      if ($receivableOptions->matching(self::criteriaWhere(['limit' => $year]))->count() == 0) {
+      if ($receivableOptions->matching(self::criteriaWhere(['data' => $year]))->count() == 0) {
         // add a new option
         $receivable = (new Entities\ProjectParticipantFieldDataOption)
                     ->setField($this->serviceFeeField)
                     ->setKey(Uuid::create())
                     ->setLabel($this->l->t('Insurance Fee %d', $year))
                     ->setToolTip($this->toolTipsService['instrument-insurance-annual-service-fee'])
-                    ->setLimit($year) // may change in the future
-                    ->setData(null); // may change in the future
+                    ->setData($year) // may change in the future
+                    ->setLimit(null); // may change in the future
         $receivableOptions->set($receivable->getKey()->getBytes(), $receivable);
       }
     }

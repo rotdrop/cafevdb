@@ -325,16 +325,43 @@ const ready = function(selector, resizeCB) {
       return false;
     });
 
+  // generated options
+  const generatedSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.data-options:not(.generator)';
+  const generated = container.find(generatedSelector).find('input[type="text"], textarea');
+  generated.each(function(index) {
+    const $this = $(this);
+    if (!$this.hasClass('expert-mode-only')) {
+      $this.lockUnlock({
+        locked: $this.val().trim() !== '',
+      });
+    }
+  });
+
   // generator input
-  const generatorSelector = 'tr.data-options tr.data-line.generator input[type="text"]';
+  const generatorSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.generator input[type="text"]';
   const generator = container.find(generatorSelector);
-  generator.lockUnlock({
-    locked: generator.val().trim() !== '',
+  generator.each(function(index) {
+    const $this = $(this);
+    $this.lockUnlock({
+      locked: $this.val().trim() !== '',
+    });
+    if ($this.is('.field-limit')) {
+      $this.datepicker({
+        dateFormat: 'dd.mm.yy', // this is 4-digit year
+        minDate: '01.01.2000',
+      });
+    }
+  });
+
+  // generated due date
+  const dueDate = container.find('tr.multiplicity-recurring ~ tr.due-date td.pme-value input[type="text"]');
+  dueDate.lockUnlock({
+    locked: dueDate.val().trim() !== '',
   });
 
   container.on(
     'blur',
-    generatorSelector,
+    generatorSelector + '.field-data',
     function(event) {
       const self = $(this);
       if (self.prop('readonly')) {
@@ -350,11 +377,17 @@ const ready = function(selector, resizeCB) {
 
       // defer submit until after validation.
       const submitDefer = PHPMyEdit.deferReload(container);
-      allowed.prop('readonly', true);
+      allowed.each(function(index) {
+        const $this = $(this);
+        $this.data('readonly-saved', $this.prop('readonly'));
+        $this.prop('readonly', true);
+      });
       const cleanup = function() {
-        if (!allowed.hasClass('readonly')) {
-          allowed.prop('readonly', false);
-        }
+        allowed.each(function(index) {
+          const $this = $(this);
+          $this.prop('readonly', $this.data('readonly-saved') || $this.hasClass('readonly'));
+          $this.removeData('readonly-saved');
+        });
         submitDefer.resolve();
       };
 

@@ -1215,13 +1215,27 @@ class ProjectParticipantFields extends PMETableViewBase
       if (empty($value) && $prop == 'label') {
         $value = IRecurringReceivablesGenerator::GENERATOR_LABEL;
       }
-      $html .= '
+      if ($prop == 'limit') {
+        $html .= '
+    <input
+      class="field-'.$prop.'"
+      type="text"
+      name="'.$pfx.'[-1]['.$prop.']"
+      value="'.$value.'"
+      title="'.$this->toolTipsService['participant-fields-data-options:generator-startdate'].'"
+      placeholder="'.$this->l->t('start date').'"
+      size="10"
+      maxlength="10"
+    />';
+      } else {
+        $html .= '
     <input
       class="field-'.$prop.'"
       type="hidden"
       name="'.$pfx.'[-1]['.$prop.']"
       value="'.$value.'"
     />';
+      }
     }
     $html .= '
   </td>
