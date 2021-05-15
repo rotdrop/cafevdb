@@ -1216,6 +1216,9 @@ class ProjectParticipantFields extends PMETableViewBase
         $value = IRecurringReceivablesGenerator::GENERATOR_LABEL;
       }
       if ($prop == 'limit') {
+        // $value is stored as Unix time-stamp, convert it to locate
+        // date.
+        $value = $this->dateTimeFormatter()->formatDate($value, 'medium');
         $html .= '
     <input
       class="field-'.$prop.'"

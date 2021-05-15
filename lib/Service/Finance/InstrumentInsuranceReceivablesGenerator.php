@@ -29,9 +29,10 @@ use OCA\CAFEVDB\Database\EntityManager;
 use Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Common\Util;
 
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -80,8 +81,30 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   {
     $receivableOptions = $this->serviceFeeField->getDataOptions();
 
-    $startingDate = $this->insurancesRepository->startOfInsurances()
-                                               ->setTimezone($this->timeZone);
+    /** @var Entities\ProjectParticipantFieldDataOption $managementOption */
+    $managementOption = $this->serviceFeeField->getManagementOption();
+    if (empty($managementOption)) {
+      throw new \RuntimeException(
+        $this->l->t(
+          'Unable to find management option for participant field "%s".',
+          $this->serviceFeeField->getName()
+        ));
+    }
+    $startingDate = $this->insurancesRepository->startOfInsurances();
+    $managementDate = Util::convertToDateTime($managementOption->getLimit());
+
+    if (!empty($managementDate) && !empty($startingDate)) {
+      if ($managementDate->getTimestamp() < $startingDate->getTimestamp()) {
+        $startingDate = $managementDate;
+      }
+    } else if (!empty($managementDate)) {
+      $startingDate = $managementDate;
+    } else if (empty($startingDate)) {
+      $startingDate = new \DateTimeImmutable;
+    }
+    $startingDate = $startingDate->setTimezone($this->timeZone);
+    $managementOption->setLimit($startingDate->getTimestamp());
+
     $startingYear = $startingDate->format('Y');
     $endingYear   = (new DateTime)->setTimezone($this->timeZone)->format('Y');
 

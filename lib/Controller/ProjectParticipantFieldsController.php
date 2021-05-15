@@ -42,6 +42,7 @@ use OCA\CAFEVDB\PageRenderer\ProjectParticipantFields as Renderer;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
+use OCA\CAFEVDB\Common\Util;
 
 class ProjectParticipantFieldsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -98,13 +99,13 @@ class ProjectParticipantFieldsController extends Controller {
       switch ($subTopic) {
       case 'define':
         if (empty($data)) {
-          return self::grumble($this->l->t('Missing parameters in request %s', $topic));
+          return self::grumble($this->l->t('Missing parameters in request "%s".', $topic));
         }
         $used = $data['used'] === 'used';
         $dataOptions = $projectValues['data_options'];
         $dataOptions = array_values($dataOptions); // get rid of -1 index
         if (count($dataOptions) !== 1) {
-          return self::grumble($this->l->t('No or too many items available: %s',
+          return self::grumble($this->l->t('No or too many items available: "%s".',
                                            print_r($dataOptions, true) ));
         }
         $item = $dataOptions[0];
@@ -131,8 +132,11 @@ class ProjectParticipantFieldsController extends Controller {
           'value' => $generatorClass,
         ]);
       case 'run':
-        if (empty($data['fieldId'])) {
-          return self::grumble($this->l->t('Missing parameters in request %s', $topic));
+        foreach (['fieldId', 'startDate'] as $parameter) {
+          if (empty($data[$parameter])) {
+            return self::grumble($this->l->t('Missing parameters in request "%s": "%s".',
+                                             [ $topic, $parameter ]));
+          }
         }
 
         // fetch the field
@@ -140,14 +144,31 @@ class ProjectParticipantFieldsController extends Controller {
         /** @var Entities\ProjectParticipantField $field */
         $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
         if (empty($field)) {
-          return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
+          return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
+        }
+
+        /** @var Entities\ProjectParticipantFieldDataOption $managementOption */
+        $managementOption = $field->getManagementOption();
+        if (empty($managementOption)) {
+          return self::grumble(
+            $this->l->t('No management option in field "%s".', $field->getName()));
+        }
+
+        // if we have a start date, then set it as time-stampe into
+        // the limit-field of the management option
+        if (!empty($data['startDate'])) {
+          /** @var \DateTimeInterface $managementDate */
+          $managementDate = Util::convertToDateTime($data['startDate']);
+          $this->logInfo('DATE '.$managementDate->format('Y-m-d'));
+          $managementOption->setLimit($managementDate->getTimestamp());
         }
 
         /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
         $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
         if (empty($generator)) {
-          return self::grumble($this->l->t('Unable to load generator for recurring receivables "%s".',
-                                           $field->getName()));
+          return self::grumble(
+            $this->l->t('Unable to load generator for recurring receivables "%s".',
+                        $field->getName()));
         }
 
         $this->entityManager->beginTransaction();
@@ -176,6 +197,8 @@ class ProjectParticipantFieldsController extends Controller {
 
         return self::dataResponse([
           'message' => $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]),
+          'startDate' => $this->dateTimeFormatter()->formatDate(
+            $managementOption->getLimit(), 'medium'),
           'dataOptionFormInputs' => $inputRows,
         ]);
       default:

@@ -216,17 +216,19 @@ const ready = function(selector, resizeCB) {
     const fieldId = row.data('fieldId');
     const cleanup = function() {};
     const request = 'generator/run';
+    const startDate = self.closest('tr').find('.field-limit');
     $.post(
       generateUrl('projects/participant-fields/' + request), {
         data: {
           fieldId,
+          startDate: startDate.val(),
         },
       })
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, cleanup);
       })
       .done(function(data) {
-        if (!Ajax.validateResponse(data, ['dataOptionFormInputs'], cleanup)) {
+        if (!Ajax.validateResponse(data, ['startDate', 'dataOptionFormInputs'], cleanup)) {
           return;
         }
         const body = self.closest('tbody');
@@ -236,6 +238,8 @@ const ready = function(selector, resizeCB) {
         for (const input of data.dataOptionFormInputs) {
           tail.before(input);
         }
+        lockGeneratedValues(container);
+        startDate.val(data.startDate);
         resizeCB();
         cleanup();
         Notification.messages(data.message);
@@ -325,17 +329,21 @@ const ready = function(selector, resizeCB) {
       return false;
     });
 
-  // generated options
-  const generatedSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.data-options:not(.generator)';
-  const generated = container.find(generatedSelector).find('input[type="text"], textarea');
-  generated.each(function(index) {
-    const $this = $(this);
-    if (!$this.hasClass('expert-mode-only')) {
-      $this.lockUnlock({
-        locked: $this.val().trim() !== '',
-      });
-    }
-  });
+  const lockGeneratedValues = function(container) {
+    // generated options
+    const generatedSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.data-options:not(.generator)';
+    const generated = container.find(generatedSelector).find('input[type="text"], textarea');
+    generated.each(function(index) {
+      const $this = $(this);
+      if (!$this.hasClass('expert-mode-only')) {
+        $this.lockUnlock({
+          locked: $this.val().trim() !== '',
+        });
+      }
+    });
+  };
+
+  lockGeneratedValues(container);
 
   // generator input
   const generatorSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.generator input[type="text"]';
@@ -390,8 +398,6 @@ const ready = function(selector, resizeCB) {
         });
         submitDefer.resolve();
       };
-
-      console.info('NEW OPTION POST DATA', postData);
 
       $.post(
         generateUrl('projects/participant-fields/' + request),

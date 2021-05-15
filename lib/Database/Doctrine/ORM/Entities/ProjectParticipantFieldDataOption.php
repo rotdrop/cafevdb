@@ -93,7 +93,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $tooltip;
 
   /**
-   * @ORM\Column(type="integer", nullable=true)
+   * @ORM\Column(type="bigint", nullable=true)
    */
   private $limit;
 
