@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Ramsey\Uuid\UuidInterface;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 /**
  * Select or search an element by its uuid
@@ -59,15 +60,21 @@ trait GetByUuidTrait
     if (!empty($datum)) {
       return $datum;
     }
-    $matching = $collection->matching(DBUtil::criteriaWhere([$keyField => $key]));
-    if ($matching->count() == 1) {
-      return $matching->first();
-    }
-    // foreach ($collection as $datum) {
-    //   if ($datum[$keyField]->getBytes() == $key) {
-    //     return $datum;
-    //   }
+
+    // Unfortunately, the "Selectable" interface is ***really***
+    // inmature and unstable and does not work reliably. Don't use it
+    // anymore.
+    // $matching = $collection->matching(DBUtil::criteriaWhere([$keyField => $key]));
+    // if ($matching->count() == 1) {
+    //   return $matching->first();
     // }
+
+    foreach ($collection as $datum) {
+      if ($datum[$keyField]->getBytes() == $bytes) {
+        return $datum;
+      }
+    }
+
     return null;
   }
 }

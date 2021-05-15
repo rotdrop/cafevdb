@@ -244,7 +244,12 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function getSelectableOptions():Collection
   {
-    return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL, 'deleted' => null, ]));
+    // this unfortunately just does not work.
+    // return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL, 'deleted' => null, ]));
+    return $this->dataOptions->filter(function($option) {
+      /** @var ProjectParticipantFieldDataOption $option */
+      return empty($option->getDeleted()) && $option->getKey() != Uuid::nil();
+    });
   }
 
   /**
