@@ -33,6 +33,9 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
+use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+
 /**
  * Do nothing implementation to have something implementing
  * the interface. Would rather belong to a test-suite.
@@ -131,7 +134,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
              ->setOptionKey($receivable->getKey())
              ->setOptionValue($fee);
       // @todo Too much connectivity
-      $participantFieldsData->set($option->getBytes(), $datum);
+      $participantFieldsData->set($optionKey->getBytes(), $datum);
       $musician->getProjectParticipantFieldsData()->set($optionKey->getBytes(), $datum);
       $receivable->getFieldData()->set($musician->getId(), $datum);
       $project->getParticipantFieldsData()->add($datum);
