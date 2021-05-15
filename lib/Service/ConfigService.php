@@ -35,7 +35,8 @@ use OCP\L10N\IFactory as IL10NFactory;
 use OCP\IDateTimeZone;
 use OCP\Security\ISecureRandom;
 use OCP\AppFramework\IAppContainer;
-use \OCP\ILogger;
+use OCP\IDateTimeFormatter;
+use OCP\ILogger;
 
 /**
  * Configuration do-it-all class.
@@ -178,24 +179,28 @@ class ConfigService {
   /** @var ILogger */
   protected $logger;
 
+  /** @var IDateTimeFormatter */
+  protected $dateTimeFormatter;
+
   /** @var IAppContainer */
   private $appContainer;
 
   public function __construct(
-    $appName,
-    IConfig $containerConfig,
-    IUserSession $userSession,
-    IUserManager $userManager,
-    IGroupManager $groupManager,
-    ISubAdmin $groupSubAdmin,
-    EncryptionService $encryptionService,
-    ISecureRandom $secureRandom,
-    IURLGenerator $urlGenerator,
-    IL10NFactory $l10NFactory,
-    IDateTimeZone $dateTimeZone,
-    ILogger $logger,
-    IAppContainer $appContainer,
-    IL10N $l
+    $appName
+    , IConfig $containerConfig
+    , IUserSession $userSession
+    , IUserManager $userManager
+    , IGroupManager $groupManager
+    , ISubAdmin $groupSubAdmin
+    , EncryptionService $encryptionService
+    , ISecureRandom $secureRandom
+    , IURLGenerator $urlGenerator
+    , IL10NFactory $l10NFactory
+    , IDateTimeZone $dateTimeZone
+    , ILogger $logger
+    , IDateTimeFormatter $dateTimeFormatter
+    , IAppContainer $appContainer
+    , IL10N $l
   ) {
 
     $this->appName = $appName;
@@ -210,6 +215,7 @@ class ConfigService {
     $this->l10NFactory = $l10NFactory;
     $this->dateTimeZone = $dateTimeZone;
     $this->logger = $logger;
+    $this->dateTimeFormatter = $dateTimeFormatter;
     $this->appContainer = $appContainer;
     $this->l = $l;
 
@@ -570,6 +576,11 @@ class ConfigService {
    * date time timezone locale
    *
    */
+
+  public function dateTimeFormatter():IDateTimeFormatter
+  {
+    return $this->dateTimeFormatter;
+  }
 
   /**
    * Get the current timezone

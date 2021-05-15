@@ -31,6 +31,7 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\AppFramework\IAppContainer;
 use OCP\IURLGenerator;
+use OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -350,6 +351,14 @@ trait ConfigTrait {
     }
     $zoneName = $timeZone->getName();
     return empty($zoneName) ? 'UTC' : $zoneName;
+  }
+
+  /**
+   * @return IDateTimeFormatter
+   */
+  protected function dateTimeFormatter():IDateTimeFormatter
+  {
+    return $this->configService->dateTimeFormatter();
   }
 
   /**Return the locale. */

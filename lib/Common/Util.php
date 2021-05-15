@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB\Common;
 
 class Util
 {
-  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Traits\DateTimeTrait { convertToDateTime as public; }
 
   public const OMIT_EMPTY_FIELDS = 1;
   public const TRIM = 2;

@@ -33,7 +33,7 @@ trait DateTimeTrait
    *
    * @return null|\DateTimeImmutable
    */
-  static protected function convertToDateTime($dateTime)
+  static public function convertToDateTime($dateTime):?\DateTimeImmutable
   {
     if ($dateTime === null || $dateTime === '') {
       return null;
