@@ -1329,7 +1329,7 @@ OC.L10N.register(
     "Location not found:" : "Ort nicht gefunden:",
     "No location specified." : "Kein Ort angegeben.",
     "Unknown location" : "Unbekannter Ort.",
-    "Lock or unlock this widget. Under certain circumstances the unlock-functionality is disabled or only available in expert mode." : "Einstellmögliche sperren oder entsperren. Manche Einstellungen können\nnicht entsperrt werden, oder eine Entsprerrung ist nur im\n\"Expertenmodus\" möglich.",
+    "Lock or unlock this widget. Under certain circumstances the unlock-functionality is disabled or only available in expert mode." : "Einstellmöglichkeit sperren oder entsperren. Manche Einstellungen können\nnicht entsperrt werden, oder eine Entsprerrung ist nur im\nExpertenmodus möglich.",
     "{command} expects an argument, but none was specified" : "{command} erwartet genau ein Argument, es wurde aber keines angegeben",
     "Phone Number Validation" : "Rufnummernvalidierung",
     "Email Validation" : "Em@il-Validierung",

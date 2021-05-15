@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-05-15 12:37+0200\n"
-"PO-Revision-Date: 2021-05-15 12:39+0200\n"
+"POT-Creation-Date: 2021-05-15 17:42+0200\n"
+"PO-Revision-Date: 2021-05-15 17:41+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -28,11 +28,11 @@ msgstr ""
 "Fehler während beim Ausführen der geplanten Aufgaben, Anzahl der "
 "ausgeführten Aktionen: %d."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:342
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:344
 msgid "There is no error, the file uploaded with success"
 msgstr "Datei erfolgreich hochgeladen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:344
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:346
 #, php-format
 msgid ""
 "The uploaded file exceeds the upload_max_filesize directive in php.ini: %s"
@@ -40,7 +40,7 @@ msgstr ""
 "Dis Datei ist zu groß und kann deshalb nicht hochgeladen werden (Einstellung "
 "`upload_max_filesize' in `php.ini': %s)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:347
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:349
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
@@ -48,27 +48,27 @@ msgstr ""
 "Dis Datei ist zu groß und kann deshalb nicht hochgeladen werden (Einstellung "
 "im HTML-Formular)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:349
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:351
 msgid "The uploaded file was only partially uploaded"
 msgstr "Die Datei konnte nur teilweise hochgeladen werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:351
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:353
 msgid "No file was uploaded"
 msgstr "Es wurde keine Datei hochgeladen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:353
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:355
 msgid "Missing a temporary folder"
 msgstr "Temporäres Verzeichnis nicht vorhanden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:355
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:357
 msgid "Failed to write to disk"
 msgstr "Kann nicht auf den Massenspeicher schreiben"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:357
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:359
 msgid "A PHP extension stopped the file upload."
 msgstr "Eine PHP-Erweiterung hat das Laden der Datei beendet."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:359
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:361
 msgid "Unknown upload error"
 msgstr "Irgendein Hochlade-Fehler"
 
@@ -7735,9 +7735,9 @@ msgid ""
 "Lock or unlock this widget. Under certain circumstances the unlock-"
 "functionality is disabled or only available in expert mode."
 msgstr ""
-"Einstellmögliche sperren oder entsperren. Manche Einstellungen können\n"
+"Einstellmöglichkeit sperren oder entsperren. Manche Einstellungen können\n"
 "nicht entsperrt werden, oder eine Entsprerrung ist nur im\n"
-"\"Expertenmodus\" möglich."
+"Expertenmodus möglich."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/lock-input.js:110
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/lock-input.js:118

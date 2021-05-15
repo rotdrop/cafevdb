@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-05-15 12:37+0200\n"
+"POT-Creation-Date: 2021-05-15 17:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,43 +29,43 @@ msgid ""
 "Exception during execution of run-queue; number of successful actions: %d."
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:342
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:344
 msgid "There is no error, the file uploaded with success"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:344
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:346
 #, php-format
 msgid ""
 "The uploaded file exceeds the upload_max_filesize directive in php.ini: %s"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:347
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:349
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:349
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:351
 msgid "The uploaded file was only partially uploaded"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:351
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:353
 msgid "No file was uploaded"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:353
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:355
 msgid "Missing a temporary folder"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:355
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:357
 msgid "Failed to write to disk"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:357
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:359
 msgid "A PHP extension stopped the file upload."
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:359
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/Util.php:361
 msgid "Unknown upload error"
 msgstr ""
 
