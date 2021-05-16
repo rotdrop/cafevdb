@@ -84,6 +84,13 @@ table.pme-main td.pme-value.sepa-bank-accounts div.display-options {
   right:0px;
 }
 
+.sepa-bank-accounts .pme-navigation input.regenerate-receivables {
+  background-image:url('../img/actions/compute-red.svg');
+  background-size:24px;
+  background-position: 4px center;
+  padding-left:32px;
+}
+
 /*
  * Local Variables: ***
  * mode: web ***

@@ -34,6 +34,8 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Functions;
@@ -264,6 +266,13 @@ class SepaBankAccounts extends PMETableViewBase
 
     $buttons = [];
     if ($projectMode) {
+      // check whether we have fields with generated receivables
+      $monetary = $this->participantFieldsService->monetaryFields($this->project);
+      /** @var Entities\ProjectParticipantField $field */
+      $haveGenerators = $monetary->exists(function($key, $field) {
+        return $field->getMultiplicity() == FieldMultiplicity::RECURRING();
+      });
+      $this->logInfo('HAVE GENERATORS: '.(int)$haveGenerators);
 
       // Control to select what we want to debit
       $cgiBulkTransactions = $this->requestParameters->getParam('sepaBulkTransactions');
@@ -296,6 +305,44 @@ class SepaBankAccounts extends PMETableViewBase
          class="date sepa-due-deadline"/>
 </span>';
       $buttons[] = [ 'code' => $sepaDueDeadline, 'name' => 'due-deadline' ];
+
+      $regenerateReceivables = '
+<span id="regenerate-receivables" class="'.(!$haveGenerators ? 'hidden ' : '').'regenerate-receivables">
+  <input type="button"
+         value="'.$this->l->t('Recompute').'"
+         title="'.$this->toolTipsService['bulk-transactions-regenerate-receivables'].'"
+         class="regenerate-receivables"
+  />
+</span>';
+      $buttons[] = [ 'code' => $regenerateReceivables, 'name' => 'regenerate-receivables' ];
+
+      $buttonPositions = [
+        'up' => [
+          'left' => [
+            'bulk-transactions',
+            'due-deadline',
+            'regenerate-receivables',
+            'misc',
+            'export',
+          ],
+        ],
+        'down' => [
+          'left' => [
+            'due-deadline',
+            'regenerate-receivables',
+            'misc',
+            'export',
+          ],
+          'right' => [
+            'bulk-transactions',
+          ],
+        ]
+      ];
+    } else {
+      $buttonPositions = [
+        'up' => [ 'left' => [ 'misc', 'export' ], ],
+        'down' => [ 'left' => [ 'misc', 'export' ], ]
+      ];
     }
 
     $button = $this->pageNavigation->tableExportButton();
@@ -303,10 +350,7 @@ class SepaBankAccounts extends PMETableViewBase
     $buttons[] = $button;
 
     $opts['buttons'] = $this->pageNavigation->prependTableButtons(
-      $buttons, [
-        'up' => [ 'left' => [ 'bulk-transactions', 'due-deadline', 'misc', 'export' ] ],
-        'down' => [ 'left' => [ 'due-deadline', 'misc', 'export' ], 'right' => [ 'bulk-transactions' ] ]
-      ]);
+      $buttons, $buttonPositions);
 
     /*
      *
@@ -418,8 +462,6 @@ received so far'),
 
     // add participant fields-data, if in project-mode
     if ($projectMode) {
-      $monetary = $this->participantFieldsService->monetaryFields($this->project);
-
       list($participantFieldsJoin, $participantFieldsGenerator) =
         $this->renderParticipantFields(
           $monetary, [
@@ -522,8 +564,8 @@ received so far'),
                      ? null
                      : '$table.musician_id IN
   (SELECT musician_id
-   FROM '.self::PROJECT_PARTICIPANTS_TABLE.' ppblah
-   WHERE ppblah.project_id = '.$this->projectId.')'),
+   FROM '.self::PROJECT_PARTICIPANTS_TABLE.' pp
+   WHERE pp.project_id = '.$this->projectId.')'),
       ],
     ];
 
@@ -547,8 +589,8 @@ received so far'),
                      ? null
                      : '$table.musician_id IN
   (SELECT musician_id
-   FROM '.self::PROJECT_PARTICIPANTS_TABLE.' ppblah
-   WHERE ppblah.project_id = '.$this->projectId.')'),
+   FROM '.self::PROJECT_PARTICIPANTS_TABLE.' pp
+   WHERE pp.project_id = '.$this->projectId.')'),
       ],
       'display' => [
         'popup' => function($data) {

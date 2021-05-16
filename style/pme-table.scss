@@ -633,12 +633,14 @@ input.register-musician {
   margin:0px;
 }
 
-.pme-navigation .pme-buttons input[type=submit] {
-  min-height:unset;
-  background-repeat:no-repeat;
-  height:28px;
-  vertical-align:middle;
-  /*margin-top: 0px;*/
+.pme-navigation .pme-buttons {
+  input[type=text], input[type=submit]:not(.pme-reload), input[type=button]:not(.pme-reload) {
+    min-height:unset;
+    background-repeat:no-repeat;
+    height:28px!important;
+    vertical-align:middle;
+    /*margin-top: 0px;*/
+  }
 }
 
 /******************************************/

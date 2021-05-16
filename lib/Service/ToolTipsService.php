@@ -202,13 +202,16 @@ account.'),
 
       'debit-note-email-message-id' => $this->l->t('Email message-id header of the notification email for this debit-note.'),
 
-      'sepa-bulk-transactions-choice' => $this->l->t('Select which kind of bulk-transactions should be generated.
-On submit the requested transactions are stored in the data-base and appropriate
+      'sepa-bulk-transactions-choice' => $this->l->t('Select the receivables to generate bulk-transactions for. On submit the requested transactions are stored in the data-base and appropriate
 export files are generated which are suitable for use with a local
 banking application. The banking appliation has then to be fed with the export
 sets on your local computer in order to actually transfer the data to the bank.
 At the time of this writing the only supported banking
 application is AQBanking.'),
+
+      'bulk-transactions-regenerate-receivables' => $this->l->t('Recompute the amounts for all automatically computed receivables.'),
+
+      'sepa-due-deadline' => $this->l->t('Select the due-date for the generated bulk-transactions. If left empty, then the earliest possible due-date is chosen, based on the legal regulations for bank-payments and the negotiated debit-mandates. Depending on the banking-software used to actually submit the bulk-transactions to the bank (currently AqBanking) the due-date is ignored for bank-transfers.'),
 
       'debit-note-job-option-amount' => $this->l->t('Draw an arbitrary amount from the debitor. However, the amount is
 automatically limited not to exceed the outstanding debts of the
