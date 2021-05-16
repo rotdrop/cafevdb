@@ -170,7 +170,22 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       $project->getParticipantFieldsData()->removeElement($datum);
     } else {
       // just update current data to the computed value
-      $datum->setOptionValue($fee);
+      switch ($updateStrategy) {
+      case self::UPDATE_STRATEGY_REPLACE:
+        $datum->setOptionValue($fee);
+        break;
+      case self::UPDATE_STRATEGY_EXCEPTION:
+        if ($fee != $datum->getOptionValue()) {
+          throw new \RuntimeException(
+            $this->l->t('Data inconsistency, old fee %f, new fee %f.',
+                        [ (float)$datum_>getOptionValue(), $fee ]));
+        }
+        break;
+      default:
+        throw new \RuntimeException($this->l->t('Unknonw update strategy: "%s".', $updateStrategy));
+        break;
+      }
     }
+
   }
 }
