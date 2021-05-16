@@ -391,6 +391,7 @@ class ProjectParticipantFields extends PMETableViewBase
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
       ],
       'php' => function($dataOptions, $op, $field, $row, $recordId, $pme) {
+        $this->logInfo('OPTIONS '.print_r($dataOptions, true));
         $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
         $dataType = $row['qf'.$pme->fdn['data_type']];
         return $this->showDataOptions($dataOptions, $op, $recordId, $multiplicity, $dataType);
@@ -1328,13 +1329,23 @@ __EOT__;
   <thead>
      <tr>';
     $html .= '<th class="operations"></th>';
-    $headers = [
-      'key' => $this->l->t('Key'),
-      'label' => $this->l->t('Label'),
-      'limit' => $this->l->t('Limit'),
-      'data' => $this->currencyLabel($this->l->t('Data')),
-      'tooltip' => $this->l->t('Tooltip'),
-    ];
+    if ($multiplicity == Multiplicity::RECURRING) {
+      $headers = [
+        'key' => $this->l->t('Key'),
+        'label' => $this->l->t('Label'),
+        'limit' => $this->l->t('Start Date'),
+        'data' => $this->l->t('Data'),
+        'tooltip' => $this->l->t('Tooltip'),
+      ];
+    } else {
+      $headers = [
+        'key' => $this->l->t('Key'),
+        'label' => $this->l->t('Label'),
+        'limit' => $this->l->t('Limit'),
+        'data' => $this->currencyLabel($this->l->t('Data')),
+        'tooltip' => $this->l->t('Tooltip'),
+      ];
+    }
     foreach ($headers as $key => $value) {
       $css = 'field-'.$key;
       if ($key == 'key') {
@@ -1358,8 +1369,7 @@ __EOT__;
           if (empty($value['key']) || !empty($value['deleted'])) {
             continue;
           }
-          if (($multiplicity == Multiplicity::GROUPOFPEOPLE || $multiplicity == Multiplicity::RECURRING)
-              && $value['key'] != Uuid::NIL) {
+          if ($multiplicity == Multiplicity::GROUPOFPEOPLE && $value['key'] != Uuid::NIL) {
             continue;
           }
           $html .= '
@@ -1370,11 +1380,19 @@ __EOT__;
             if ($field == 'key') {
               $css .= ' expert-mode-only';
             }
-            $html .= '<td class="'.$css.'">'
-                  .($field === 'data'
-                    ? $this->currencyValue($value[$field])
-                    : $value[$field])
-                  .'</td>';
+            $fieldValue = $value[$field];
+            if ($multiplicity == Multiplicity::RECURRING) {
+              if ($field == 'limit' && !empty($fieldValue)) {
+                $fieldValue = $this->dateTimeFormatter()->formatDate(
+                  Util::convertToDateTime($fieldValue),
+                  'medium');
+              }
+            } else {
+              if ($field == 'data') {
+                $fieldValue = $this->currencyValue($fieldValue);
+              }
+            }
+            $html .= '<td class="'.$css.'">'.$fieldValue.'</td>';
           }
           $html .= '
     </tr>';

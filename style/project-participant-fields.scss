@@ -131,15 +131,21 @@ th.field-limit {
   display:none!important;
 }
 
-table.data-options.operation-display td.field-data,
-table.data-options.operation-display th.field-data,
-table.data-options.show-data td.field-data,
-table.data-options.show-data th.field-data,
-table.data-options.operation-display td.field-limit,
-table.data-options.operation-display th.field-limit,
-table.data-options.show-data td.field-limit,
-table.data-options.show-data th.field-limit {
-  display:table-cell!important;
+table.data-options.operation-display, table.data-options.show-data {
+  td.field-data, th.field-data,
+  td.field-limit, th.field-limit {
+    display:table-cell!important;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+}
+
+form.pme-form.pme-list {
+  table.data-options.operation-display {
+    td.field-data, th.field-data {
+      max-width:8em;
+    }
+  }
 }
 
 /* Show field-data for service-fee fields, because it holds the amount to pay. */
@@ -334,4 +340,12 @@ td.pme-cell.participant-field-tooltip em {
 
 td.pme-cell.participant-field-tooltip b {
   font-style:bold;
+}
+
+.tooltip-inner .pme-cell-wrapper table.data-options {
+  th.field-data, td.field-data, th.field-tooltip, td.field-tooltip {
+    max-width:8em;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
 }
