@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
-use OCA\CAFEVDB\Service\Finance\AlwaysReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
 
@@ -103,7 +103,7 @@ class ProjectParticipantFieldsService
   {
     return [
       'nothing' => DoNothingReceivablesGenerator::class,
-      'dummy' => AlwaysReceivablesGenerator::class,
+      'daily' => PeriodicReceivablesGenerator::class,
       'insurance' => InstrumentInsuranceReceivablesGenerator::class,
       // 'membership' => MembershipFeesReceivablesGenerator::class, not yet
     ];

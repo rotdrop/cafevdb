@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * Always generate a new payment request. This is just a dummy
@@ -37,23 +38,42 @@ use OCA\CAFEVDB\Common\Uuid;
  * new receivables, and calling updateReceivable() will also always
  * just change the amount to pay.
  */
-class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
+class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var float */
   protected $amount;
 
+  /** @var ToolTipsService */
+  private $toolTipsService;
+
+  /** @var \DateTimeZone */
+  private $timeZone;
+
+  /** @var int */
+  private $intervalSeconds;
+
   public function __construct(
     EntityManager $entityManager
+    , ToolTipsService $toolTipsService
     , ILogger $logger
     , IL10N $l10n
+    , ?\DateInterval $interval = null
   ) {
     parent::__construct($entityManager);
     $this->logger = $logger;
     $this->l = $l10n;
 
     $this->amount = 1.0;
+
+    if (empty($interval)) {
+      $interval = new \DateInterval('PT1D');
+    }
+    // Horner's scheme, leap years not taken into account
+    $intervalSeconds = $interval->s + 60 * ($interval->i + 60 * ($interval->h + 24 * ($interval->d + 12 * $interval->m + 365 * $interval->y)));
+
+    $this->timeZone = $this->getDateTimeZone();
   }
 
   /**
@@ -61,13 +81,45 @@ class AlwaysReceivablesGenerator extends AbstractReceivablesGenerator
    */
   public function generateReceivables():Collection
   {
-    $count = count($this->serviceFeeField->getDataOptions());
-    $receivable = (new Entities\ProjectParticipantFieldDataOption)
-                ->setField($this->serviceFeeField)
-                ->setKey(Uuid::create())
-                ->setLabel($this->l->t('Option %d', $count))
-                ->setData($this->amount);
-    $this->serviceFeeField->getDataOptions()->set($receivable->getKey()->getBytes(), $receivable);
+    $receivableOptions = $this->serviceFeeField->getDataOptions();
+
+    /** @var Entities\ProjectParticipantFieldDataOption $managementOption */
+    $managementOption = $this->serviceFeeField->getManagementOption();
+    if (empty($managementOption)) {
+      throw new \RuntimeException(
+        $this->l->t(
+          'Unable to find management option for participant field "%s".',
+          $this->serviceFeeField->getName()
+        ));
+    }
+    $managementDate = Util::convertToDateTime($managementOption->getLimit());
+    if (empty($managementDate)) {
+      $startingDate = new \DateTimeImmutable;
+    } else {
+      $startingDate = $managementDate;
+    }
+
+    /** @var \DateTimeImmutable $startingDate */
+    $startingDate = $startingDate->setTimezone($this->timeZone);
+    $seconds = ($startingDate->getTimestamp() + $this->intervalSeconds - 1)
+             / $this->intervalSeconds * $this->intervalSeconds;
+    $startingDate = $startingDate->setTimestamp($seconds);
+    $managementOption->setLimit($startingDate->getTimestamp());
+    $endingSeconds = (new \DateTimeImmutable)->getTimestamp();
+
+    for (; $seconds <= $endingSeconds; $seconds += $this->intervalSeconds) {
+      if ($receivableOptions->matching(self::criteriaWhere(['data' => (string)$seconds]))->count() == 0) {
+        // add a new option
+        $receivable = (new Entities\ProjectParticipantFieldDataOption)
+                    ->setField($this->serviceFeeField)
+                    ->setKey(Uuid::create())
+                    ->setLabel($this->l->t('Option %d', $seconds))
+                    ->setToolTip($this->toolTipsService['periodic-recurring-receivable-option'])
+                    ->setData($seconds) // may change in the future
+                    ->setLimit(null); // may change in the future
+        $receivableOptions->set($receivable->getKey()->getBytes(), $receivable);
+      }
+    }
     return $this->serviceFeeField->getSelectableOptions();
   }
 
