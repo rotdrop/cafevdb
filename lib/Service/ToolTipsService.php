@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCP\ILogger;
 use OCP\IL10N;
 
 /** Tool-tips management with translations.
@@ -31,6 +32,8 @@ use OCP\IL10N;
  */
 class ToolTipsService implements \ArrayAccess, \Countable
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   /** @var IL10N */
   private $l;
 
@@ -40,7 +43,8 @@ class ToolTipsService implements \ArrayAccess, \Countable
   /** @var bool */
   private $debug = false;
 
-  public function __construct(IL10N $l) {
+  public function __construct(IL10N $l, ILogger $logger) {
+    $this->logger = $logger;
     $this->l = $l;
     $this->toolTipsData = [];
   }
@@ -106,6 +110,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
    */
   private function fetch($key)
   {
+    $origKey = $key;
     $this->makeToolTips();
 
     $keys = explode(':', $key);
@@ -611,7 +616,7 @@ weiteren Bestätigung. Trotzdem:
 VORSICHT!.'),
       ),
 
-      'pme-email' => $this->l->t('  Klick mich, um eine Em@il an die ausgewählten
+      'pme-misc-email' => $this->l->t('Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
 `ausgewält\' bedeutet: nicht
@@ -620,7 +625,7 @@ Anzeige-Seite, sondern
 alle, die den Such-Kriterien
 entsprechen.'),
 
-      'pme-email+' => $this->l->t('  Klick mich, um alle gerade
+      'pme-misc+-email' => $this->l->t('Klick mich, um alle gerade
 angezeigten Musiker zu der
 Em@il-Auswahl hinzuzufügen.
 `angezeigt\' bedeutet: nicht
@@ -629,15 +634,23 @@ Anzeige-Seite, sondern
 alle, die den Such-Kriterien
 entsprechen.'),
 
-      'pme-email-' => $this->l->t('  Klick mich, um alle gerade
+      'pme-misc--email' => $this->l->t('Klick mich, um alle gerade
 angezeigten Musiker von der
 Em@il-Auswahl zu entfernen'),
 
-      'pme-email-check' => $this->l->t('  Adressaten in potentielle
+      'pme-misc-check-email' => $this->l->t('Adressaten in potentielle
 Massenmail Adressliste aufnehmen.
 Die Adressaten kann man
 vor dem Senden der Em@il noch
 korrigieren.'),
+
+      'pme-misc-debit-note' => $this->l->t('Click to generate bulk-transactions for the selected musicians and receivables.'),
+
+      'pme-misc+-debit-note' => $this->l->t('Click to select all displayed participants for bulk-transaction generation.'),
+
+      'pme-misc--debit-note' => $this->l->t('Click to deselect all displayed participants from the bulk-transaction generation.'),
+
+      'pme-misc-check-debit-note' => $this->l->t('Select and deselect this participant and bank-acccount to and from bulk-transaction generation.'),
 
       'pme-export-choice' => $this->l->t('Export the visible part of the data-base to an office-format. The `Excel\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
 

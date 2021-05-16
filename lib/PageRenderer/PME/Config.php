@@ -50,7 +50,7 @@ class Config extends DefaultOptions
       'inc' => $this->getUserValue('pagerows', 20),
       'debug' => 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY),
       'misc' => [
-        'css' => [ 'minor' => 'email tooltip-bottom' ],
+        'css' => [ 'minor' => 'email tooltip-right' ],
       ],
       'labels' => [ 'Misc' => $this->l->t('Em@il') ],
     ];

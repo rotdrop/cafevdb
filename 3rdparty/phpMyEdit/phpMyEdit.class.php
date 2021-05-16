@@ -2993,6 +2993,13 @@ class phpMyEdit
 		// First clean the CSS-class, it may consist of more than one
 		// class.
 		$css_classes = preg_split('/\s+/', $css_class_name);
+		$first_css = array_shift($css_classes);
+		$css_classes = array_merge(
+			array_map(
+				function($class) use ($first_css) { return $first_css.'-'.$class; },
+				$css_classes),
+			$css_classes);
+		array_unshift($css_classes, $first_css);
 		foreach ($css_classes as $css_class_name) {
 			// If we have an array for the class, use it.
 			if (isset($this->tooltips[$css_class_name])

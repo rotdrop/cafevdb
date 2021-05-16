@@ -249,7 +249,7 @@ class SepaBankAccounts extends PMETableViewBase
       $opts['options'] .= 'M';
     }
     $opts['misc']['css']['major'] = 'misc';
-    $opts['misc']['css']['minor'] = 'debit-note tooltip-bottom';
+    $opts['misc']['css']['minor'] = 'debit-note tooltip-right';
     $opts['labels']['Misc'] = $this->l->t('Debit');
 
     // Number of lines to display on multiple selection filters
@@ -321,16 +321,16 @@ class SepaBankAccounts extends PMETableViewBase
           'left' => [
             'bulk-transactions',
             'due-deadline',
-            'regenerate-receivables',
             'misc',
+            'regenerate-receivables',
             'export',
           ],
         ],
         'down' => [
           'left' => [
             'due-deadline',
-            'regenerate-receivables',
             'misc',
+            'regenerate-receivables',
             'export',
           ],
           'right' => [
