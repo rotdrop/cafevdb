@@ -48,7 +48,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   /**
    * {@inheritdoc}
    */
-  public function updateAll()
+  public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION)
   {
     foreach ($this->serviceFeeField->getDataOptions() as $receivable) {
       $this->updateReceivable($receivable);
@@ -64,20 +64,20 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    * @param Entities\ProjectParticipant $participant
    *   The musician to update the service fee claim for.
    */
-  protected abstract function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant);
+  protected abstract function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION);
 
   /**
    * {@inheritdoc}
    */
-  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectParticipantFieldDataOption
+  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):Entities\ProjectParticipantFieldDataOption
   {
     if (!empty($participant)) {
-      $this->updateOne($receivable, $participant);
+      $this->updateOne($receivable, $participant, $updateStrategy);
     } else {
       $participants = $receivable->getField()->getProject()->getParticipants();
       /** @var Entities\ProjectParticipant $participant */
       foreach ($participants as $participant) {
-        $this->updateOne($receivable, $participant);
+        $this->updateOne($receivable, $participant, $updateStrategy);
       }
     }
 
@@ -87,13 +87,13 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   /**
    * {@inheritdoc}
    */
-  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable):Entities\ProjectParticipant
+  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):Entities\ProjectParticipant
   {
     if (!empty($receivable)) {
-      $this->updateOne($receivable, $participant);
+      $this->updateOne($receivable, $participant, $updateStrategy);
     } else {
       foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
-        $this->updateOne($receivable, $participant);
+        $this->updateOne($receivable, $participant, $updateStrategy);
       }
     }
 

@@ -37,6 +37,19 @@ interface IRecurringReceivablesGenerator
   const GENERATOR_LABEL = '__generator__';
 
   /**
+   * @var During update of receivables just replace any old value by the
+   * newly computed value.
+   */
+  const UPDATE_STRATEGY_REPLACE = 'replace';
+
+  /**
+   * @var During update of receivables compare with the newly computed
+   * value and throw an exception if the values differ. This is the
+   * default.
+   */
+  const UPDATE_STRATEGY_EXCEPTION = 'exception';
+
+  /**
    * Bind this instance to the given entity. The idea is to have a
    * constructor which allowes for dependency injection. This,
    * however, means that the DB entities must not be passed through
@@ -70,25 +83,24 @@ interface IRecurringReceivablesGenerator
    * @return Entities\ProjectParticipantFieldDataOption The updated
    * receivable.
    */
-  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null):Entities\ProjectParticipantFieldDataOption;
+  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):Entities\ProjectParticipantFieldDataOption;
 
   /**
    * Update the amount to invoice for the bound service-fee field.
    *
    * @param Entities\ProjectParticipant $participant
-   *   The musician to update the service claim for. If null, the
-   *   values for all affected musicians have to be recomputed.
+   *   The musician to update the service claim for.
    *
-   * @param Entities\ProjectParticipantFieldDataOption $receivable
-   *   The option to update/recompute.
+   * @param null|Entities\ProjectParticipantFieldDataOption $receivable
+   *   The option to update/recompute. If null all options have to be updated.
    *
    * @return Entities\ProjectParticipant The update participant.
    */
-  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable):Entities\ProjectParticipant;
+  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):Entities\ProjectParticipant;
 
   /**
    * Compute the amounts to invoice for all relevant musicians and
    * existing receivables. New receivables are not added.
    */
-  public function updateAll();
+  public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION);
 }

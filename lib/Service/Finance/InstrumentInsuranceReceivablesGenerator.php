@@ -128,7 +128,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   /**
    * {@inheritdoc}
    */
-  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant)
+  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION)
   {
     // @todo
     // * find list of insurance years
