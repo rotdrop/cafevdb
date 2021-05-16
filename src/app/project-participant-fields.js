@@ -363,9 +363,11 @@ const ready = function(selector, resizeCB) {
 
   // generated due date
   const dueDate = container.find('tr.multiplicity-recurring ~ tr.due-date td.pme-value input[type="text"]');
-  dueDate.lockUnlock({
-    locked: dueDate.val().trim() !== '',
-  });
+  if (dueDate.length > 0) {
+    dueDate.lockUnlock({
+      locked: dueDate.val().trim() !== '',
+    });
+  }
 
   container.on(
     'blur',
