@@ -160,7 +160,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return int
    */
-  public function getId()
+  public function getId():int
   {
     return $this->id;
   }
@@ -182,9 +182,9 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Get instrumentHolder.
    *
-   * @return int
+   * @return Musician
    */
-  public function getInstrumentHolder()
+  public function getInstrumentHolder():Musician
   {
     return $this->instrumentHolder;
   }
@@ -196,7 +196,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setBroker($broker)
+  public function setBroker($broker):InstrumentInsurance
   {
     $this->broker = $broker;
 
@@ -206,9 +206,9 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Get broker.
    *
-   * @return string
+   * @return InsuranceBroker
    */
-  public function getBroker()
+  public function getBroker():InsuranceBroker
   {
     return $this->broker;
   }
@@ -230,7 +230,7 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Get geographicalScope.
    *
-   * @return string
+   * @return Types\EnumGeographicalScope
    */
   public function getGeographicalScope():Types\EnumGeographicalScope
   {
@@ -256,7 +256,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return string
    */
-  public function getObject()
+  public function getObject():string
   {
     return $this->object;
   }
@@ -304,7 +304,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return string
    */
-  public function getManufacturer()
+  public function getManufacturer():string
   {
     return $this->manufacturer;
   }
@@ -352,7 +352,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return int
    */
-  public function getInsuranceAmount()
+  public function getInsuranceAmount():int
   {
     return $this->insuranceAmount;
   }
@@ -374,9 +374,9 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Get billToParty.
    *
-   * @return int
+   * @return Musician
    */
-  public function getBillToParty()
+  public function getBillToParty():Musician
   {
     return $this->billToParty;
   }
@@ -436,7 +436,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InsuranceRate
    */
-  public function getInsuranceRate()
+  public function getInsuranceRate():InsuranceRate
   {
     return $this->insuranceRate;
   }
