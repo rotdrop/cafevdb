@@ -126,6 +126,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   private $payments;
 
+  /**
+   * @var EncryptedFile
+   *
+   * Optional. ATM only used for particular auto-generated monetary fields.
+   *
+   * @ORM\OneToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY")
+   */
+  private $supportingDocument;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
@@ -338,7 +347,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
-   * Return the number of linke ProjectPayment entities.
+   * Return the number of linked ProjectPayment entities.
    */
   public function usage():int
   {
