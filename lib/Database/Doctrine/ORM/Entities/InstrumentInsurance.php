@@ -35,6 +35,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="InstrumentInsurances")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentInsurancesRepository")
  * @Gedmo\SoftDeleteable(fieldName="deleted")
+ * @ORM\HasLifecycleCallbacks
  */
 class InstrumentInsurance implements \ArrayAccess
 {
@@ -54,17 +55,21 @@ class InstrumentInsurance implements \ArrayAccess
   private $id;
 
   /**
+   * @var Musician
+   *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(nullable=false)
    */
   private $instrumentHolder;
 
   /**
+   * @var Musician
+   *
    * A possibly different person which is responsible for paying the
    * insurance fees.
    *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payableInsurances", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=true)
+   * @ORM\JoinColumn(nullable=false)
    */
   private $billToParty;
 
@@ -143,7 +148,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setId($id)
+  public function setId($id):InstrumentInsurance
   {
     $this->id = $id;
 
@@ -161,27 +166,27 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set musicianId.
+   * Set instrumentHolder.
    *
-   * @param int $musicianId
+   * @param int $instrumentHolder
    *
    * @return InstrumentInsurance
    */
-  public function setMusicianId($musicianId)
+  public function setInstrumentHolder($instrumentHolder):InstrumentInsurance
   {
-    $this->musicianId = $musicianId;
+    $this->instrumentHolder = $instrumentHolder;
 
     return $this;
   }
 
   /**
-   * Get musicianId.
+   * Get instrumentHolder.
    *
    * @return int
    */
-  public function getMusicianId()
+  public function getInstrumentHolder()
   {
-    return $this->musicianId;
+    return $this->instrumentHolder;
   }
 
   /**
@@ -239,7 +244,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setObject($object)
+  public function setObject($object):InstrumentInsurance
   {
     $this->object = $object;
 
@@ -259,11 +264,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set accessory.
    *
-   * @param array $accessory
+   * @param bool $accessory
    *
    * @return InstrumentInsurance
    */
-  public function setAccessory($accessory)
+  public function setAccessory($accessory):InstrumentInsurance
   {
     $this->accessory = $accessory;
 
@@ -273,9 +278,9 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Get accessory.
    *
-   * @return array
+   * @return bool
    */
-  public function getAccessory()
+  public function getAccessory():bool
   {
     return $this->accessory;
   }
@@ -287,7 +292,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setManufacturer($manufacturer)
+  public function setManufacturer($manufacturer):InstrumentInsurance
   {
     $this->manufacturer = $manufacturer;
 
@@ -311,7 +316,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setYearOfConstruction($yearOfConstruction)
+  public function setYearOfConstruction($yearOfConstruction):InstrumentInsurance
   {
     $this->yearOfConstruction = $yearOfConstruction;
 
@@ -335,7 +340,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setInsuranceAmount($insuranceAmount)
+  public function setInsuranceAmount($insuranceAmount):InstrumentInsurance
   {
     $this->insuranceAmount = $insuranceAmount;
 
@@ -359,7 +364,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setBillToParty($billToParty)
+  public function setBillToParty($billToParty):InstrumentInsurance
   {
     $this->billToParty = $billToParty;
 
@@ -374,6 +379,18 @@ class InstrumentInsurance implements \ArrayAccess
   public function getBillToParty()
   {
     return $this->billToParty;
+  }
+
+  /**
+   * @ORM\PrePersist
+   * @ORM\PreUpdate
+   * @ORM\PreFlush
+   */
+  public function ensureBillToParty()
+  {
+    if (empty($this->billToParty) && !empty($this->instrumentHolder)) {
+      $this->billToParty = $this->instrumentHolder;
+    }
   }
 
   /**
@@ -407,7 +424,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setInsuranceRate($insuranceRate)
+  public function setInsuranceRate($insuranceRate):InstrumentInsurance
   {
     $this->insuranceRate = $insuranceRate;
 
