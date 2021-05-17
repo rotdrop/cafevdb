@@ -35,7 +35,7 @@ if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('sepa-bulk-transactions', $projectName, $projectId);
-  if ($projectId === $appConfig->getConfigValue('memberProjectId', false)) {
+  if ($projectId === $appConfig->getConfigValue('memberProjectId')) {
     $nav .= $pageNavigation->pageControlElement('insurances');
   }
   $nav .= $pageNavigation->pageControlElement('projects');
