@@ -128,7 +128,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   /**
    * {@inheritdoc}
    */
-  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION)
+  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
     // @todo
     // * find list of insurance years
@@ -144,48 +144,60 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $project = $participant->getProject();
     $fee = $this->insuranceService->insuranceFee($musician, new \DateTimeImmutable($year.'-06-01'));
 
+    $remove = 0;
+    $added = 0;
+    $changed = 0;
+
     $participantFieldsData = $participant->getParticipantFieldsData();
     $optionKey = $receivable->getKey();
     $datum = $participant->getParticipantFieldsDatum($optionKey);
-    if (empty($datum) && $fee != 0.0) {
-      // add a new option
-      /** @var Entities\ProjectParticipantFieldDatum $datum */
-      $datum = (new Entities\ProjectParticipantFieldDatum)
-             ->setField($receivable->getField())
-             ->setMusician($musician)
-             ->setProject($participant->getProject())
-             ->setOptionKey($receivable->getKey())
-             ->setOptionValue($fee);
-      // @todo Too much connectivity
-      $participantFieldsData->set($optionKey->getBytes(), $datum);
-      $musician->getProjectParticipantFieldsData()->set($optionKey->getBytes(), $datum);
-      $receivable->getFieldData()->set($musician->getId(), $datum);
-      $project->getParticipantFieldsData()->add($datum);
-    } else if (!empty($datum) && $fee == 0.0) {
-      // remove current option
-      $this->remove($datum);
-      $participantFieldsData->removeElement($datum);
-      $musician->getProjectParticipantFieldsData()->removeElement($datum);
-      $receivable->getFieldData()->removeElement($datum);
-      $project->getParticipantFieldsData()->removeElement($datum);
-    } else {
-      // just update current data to the computed value
-      switch ($updateStrategy) {
-      case self::UPDATE_STRATEGY_REPLACE:
-        $datum->setOptionValue($fee);
-        break;
-      case self::UPDATE_STRATEGY_EXCEPTION:
-        if ($fee != $datum->getOptionValue()) {
+    if (empty($datum)) {
+      if ($fee != 0.0) {
+        // add a new option
+        /** @var Entities\ProjectParticipantFieldDatum $datum */
+        $datum = (new Entities\ProjectParticipantFieldDatum)
+               ->setField($receivable->getField())
+               ->setMusician($musician)
+               ->setProject($participant->getProject())
+               ->setOptionKey($receivable->getKey())
+               ->setOptionValue($fee);
+        // @todo Too much connectivity
+        $participantFieldsData->set($optionKey->getBytes(), $datum);
+        $musician->getProjectParticipantFieldsData()->set($optionKey->getBytes(), $datum);
+        $receivable->getFieldData()->set($musician->getId(), $datum);
+        $project->getParticipantFieldsData()->add($datum);
+        ++$added;
+      }
+    } else { // !empty($datum)
+      if ($fee != $datum->getOptionValue()) {
+        switch ($updateStrategy) {
+        case self::UPDATE_STRATEGY_REPLACE:
+          break;
+        case self::UPDATE_STRATEGY_EXCEPTION:
           throw new \RuntimeException(
             $this->l->t('Data inconsistency, old fee %f, new fee %f.',
                         [ (float)$datum_>getOptionValue(), $fee ]));
+          break;
+        default:
+          throw new \RuntimeException($this->l->t('Unknonw update strategy: "%s".', $updateStrategy));
         }
-        break;
-      default:
-        throw new \RuntimeException($this->l->t('Unknonw update strategy: "%s".', $updateStrategy));
-        break;
+      }
+      if ($fee == 0.0) {
+        // remove current option
+        $this->remove($datum);
+        $participantFieldsData->removeElement($datum);
+        $musician->getProjectParticipantFieldsData()->removeElement($datum);
+        $receivable->getFieldData()->removeElement($datum);
+        $project->getParticipantFieldsData()->removeElement($datum);
+        ++$removed;
+      } else {
+        // just update current data to the computed value
+        if ($fee != $datum->getOptionValue()) {
+          $datum->setOptionValue($fee);
+          ++$changed;
+        }
       }
     }
-
+    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
   }
 }

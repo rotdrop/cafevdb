@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGenerator;
 
 class ProjectParticipantFieldsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -201,6 +202,70 @@ class ProjectParticipantFieldsController extends Controller {
             $managementOption->getLimit(), 'medium'),
           'dataOptionFormInputs' => $inputRows,
         ]);
+      case 'run-all':
+        // for the given project (re-)generate all generated receivables
+        foreach (['projectId'] as $parameter) {
+          if (empty($data[$parameter])) {
+            return self::grumble($this->l->t('Missing parameters in request "%s": "%s".',
+                                             [ $topic, $parameter ]));
+          }
+        }
+
+        /**  @var Entities\Project $project */
+        $projectId = $data['projectId'];
+        $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+        if (empty($project)) {
+          return self::grumble($this->l->t('Unable to find a project with id %d.', $projectId));
+        }
+        $generatedFields = $this->participantFieldsService->generatedFields($project);
+        if ($generatedFields->count() == 0) {
+          return self::response(
+            $this->l->t('Project "%s" has no generated fields.', $project->getName()));
+        }
+
+        $fieldsAffected = 0;
+        $messages = [];
+        $this->entityManager->beginTransaction();
+        try {
+          foreach ($generatedFields as $field) {
+
+            /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
+            $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+            if (empty($generator)) {
+              throw new \RuntimeException(
+                $this->l->t('Unable to load generator for recurring receivables "%s".',
+                            $field->getName()));
+            }
+
+            $generator->generateReceivables();
+            $this->flush();
+
+            /** @todo Make strategy selectable from UI */
+            list('added' => $added, 'removed' => $removed, 'changed' => $changed) =
+                         $generator->updateAll(ReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION);
+            $this->flush();
+
+            $messages[] = $this->l->t(
+              'Field "%s", options addded/removed/changed: %d/%d/%d.',
+              [ $field->getName(), $added, $removed, $changed ]);
+            $fieldsAffected += $added + $removed + $changed;
+          }
+
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          if (!$this->entityManager->isTransactionActive()) {
+            $this->entityManager->close();
+            $this->entityManager->reopen();
+          }
+          return self::grumble($this->exceptionChainData($t));
+        }
+
+        return self::dataResponse([
+          'message' => $messages,
+          'fieldsAffected' => $fieldsAffected,
+        ]);
       default:
         break;
       }
@@ -310,14 +375,14 @@ class ProjectParticipantFieldsController extends Controller {
         $this->entityManager->beginTransaction();
         try {
           if (!empty($receivable)) {
-            $receivable = $generator->updateReceivable($receivable, $participant);
+            $generator->updateReceivable($receivable, $participant);
             foreach ($receivable->getFieldData() as $receivableDatum) {
               // unfortunately cascade does not work with multiple
               // "complicated" associations.
               $this->persist($receivableDatum);
             }
           } else {
-            $participant = $generator->updateParticipant($participant, $receivable);
+            $generator->updateParticipant($participant, $receivable);
             /** @var Entities\ProjectParticipantFieldDatum $datum */
             foreach ($participant->getParticipantFieldsData() as $datum) {
               if ($datum->getField()->getId() == $fieldId) {

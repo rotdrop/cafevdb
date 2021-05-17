@@ -312,6 +312,7 @@ class SepaBankAccounts extends PMETableViewBase
          value="'.$this->l->t('Recompute').'"
          title="'.$this->toolTipsService['bulk-transactions-regenerate-receivables'].'"
          class="regenerate-receivables"
+         data-project-id="'.$this->projectId.'"
   />
 </span>';
       $buttons[] = [ 'code' => $regenerateReceivables, 'name' => 'regenerate-receivables' ];

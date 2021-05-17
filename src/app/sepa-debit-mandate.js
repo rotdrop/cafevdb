@@ -26,7 +26,7 @@ import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 // import * as DialogUtils from './dialog-utils.js';
 import * as Page from './page.js';
-import * as Email from './email.js';
+// import * as Email from './email.js';
 import * as Notification from './notification.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import * as PHPMyEdit from './pme.js';
@@ -1029,6 +1029,7 @@ const mandatePopupInit = function(selector) {
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
   const pmeReload = container.find(pmeFormSelector() + ' input.' + pmeToken('reload')).first();
+
   container.find(':button.sepa-debit-mandate, input.dialog.sepa-debit-mandate')
     .off('click')
     .on('click', function(event) {
@@ -1162,6 +1163,7 @@ const mandateReady = function(selector) {
 
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
+  const pmeReload = container.find(pmeFormSelector() + ' input.' + pmeToken('reload')).first();
 
   // bail out if not for us.
   const form = container.find(pmeFormSelector());
@@ -1200,15 +1202,58 @@ const mandateReady = function(selector) {
       return false;
     });
 
+  container.find('input.regenerate-receivables')
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+
+      const cleanup = function() {
+        Page.busyIcon(false);
+        CAFEVDB.modalizer(false);
+      };
+
+      Page.busyIcon(true);
+      CAFEVDB.modalizer(true);
+
+      const request = 'generator/run-all';
+      const projectId = $this.data('projectId');
+      $.post(
+        generateUrl('projects/participant-fields/' + request), {
+          request,
+          data: { projectId },
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(
+            data,
+            ['fieldsAffected'],
+            cleanup)) {
+            return;
+          }
+
+          Notification.messages(data.message);
+          cleanup();
+
+          if (data.fieldsAffected > 0) {
+            // reload surrounding form
+            if (pmeReload.length > 0) {
+              pmeReload.trigger('click');
+            }
+          }
+        });
+
+      return false;
+    });
+
   pmeExportMenu(containerSel);
 
   dbTable = form.find('input[value="SepaBankAccounts"]');
   if (dbTable.length === 0) {
-    console.info('EXIT EARLY');
+    // console.info('EXIT EARLY');
     return;
   }
-
-  console.info('DEBIT NOTE SUBMIT', container.find('input.debit-note.' + pmeToken('misc')));
 
   container.find('input.debit-note.' + pmeToken('misc'))
     .off('click')
@@ -1293,6 +1338,7 @@ const mandateReady = function(selector) {
       $(this).trigger('blur');
     },
   });
+
 };
 
 const mandatesDocumentReady = function() {
@@ -1303,7 +1349,6 @@ const mandatesDocumentReady = function() {
       callback(selector, parameters, resizeCB) {
         mandateReady(selector);
         resizeCB();
-        // alert("Here I am: "+selector);
       },
       context: globalState.SepaDebitMandate,
       parameters: [],

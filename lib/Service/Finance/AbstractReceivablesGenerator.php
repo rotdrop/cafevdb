@@ -48,11 +48,17 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   /**
    * {@inheritdoc}
    */
-  public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION)
+  public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
-    foreach ($this->serviceFeeField->getDataOptions() as $receivable) {
-      $this->updateReceivable($receivable);
+    $added = $removed = $changed = 0;
+    foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
+      list('added' => $a, 'removed' => $r, 'changed' => $c) =
+                   $this->updateReceivable($receivable);
+      $added += $a;
+      $removed += $r;
+      $changed += $c;
     }
+    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
   }
 
   /**
@@ -63,41 +69,59 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    *
    * @param Entities\ProjectParticipant $participant
    *   The musician to update the service fee claim for.
+   *
+   * @return array<string, int>
+   * ```
+   * [ 'added' => #ADDED, 'removed' => #REMOVED, 'changed' => #CHANGED ]
+   * ```
+   * where of course each component is either 0 or 1.
+   *
+   * @throws \RuntimeException depending on $updateStrategy.
    */
-  protected abstract function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION);
+  protected abstract function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
 
   /**
    * {@inheritdoc}
    */
-  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):Entities\ProjectParticipantFieldDataOption
+  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
     if (!empty($participant)) {
-      $this->updateOne($receivable, $participant, $updateStrategy);
+      list('added' => $added, 'removed' => $removed, 'changed' => $changed) =
+                   $this->updateOne($receivable, $participant, $updateStrategy);
     } else {
       $participants = $receivable->getField()->getProject()->getParticipants();
+      $added = $removed = $changed = 0;
       /** @var Entities\ProjectParticipant $participant */
       foreach ($participants as $participant) {
-        $this->updateOne($receivable, $participant, $updateStrategy);
+        list('added' => $a, 'removed' => $r, 'changed' => $c) =
+                     $this->updateOne($receivable, $participant, $updateStrategy);
+        $added += $a;
+        $removed += $r;
+        $changed += $c;
       }
     }
-
-    return $receivable;
+    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):Entities\ProjectParticipant
+  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
     if (!empty($receivable)) {
-      $this->updateOne($receivable, $participant, $updateStrategy);
+      list('added' => $added, 'removed' => $removed, 'changed' => $changed) =
+                   $this->updateOne($receivable, $participant, $updateStrategy);
     } else {
+      $added = $removed = $changed = 0;
       foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
-        $this->updateOne($receivable, $participant, $updateStrategy);
+        list('added' => $a, 'removed' => $r, 'changed' => $c) =
+                     $this->updateOne($receivable, $participant, $updateStrategy);
+        $added += $a;
+        $removed += $r;
+        $changed += $c;
       }
     }
-
-    return $participant;
+    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
   }
 
 }

@@ -126,10 +126,11 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
   /**
    * {@inheritdoc}
    */
-  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION)
+  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
     $participantFieldsData = $participant->getParticipantFieldsData();
     $existingReceivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
+    $added = $removed = $changed = 0;
     if ($existingReceivableData->count() == 0) {
       $this->logInfo('RECEIVABLE update of '.$participant->getMusician()->getFirstName());
       $datum = (new Entities\ProjectParticipantFieldDatum)
@@ -142,11 +143,14 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
       $receivable->getFieldData()->add($datum);
       $participant->getMusician()->getProjectParticipantFieldsData()->add($datum);
       $participant->getProject()->getParticipantFieldsData()->add($datum);
+      ++$added;
     } else {
       // there is at most one ...
       /** @var Entities\ProjectParticipantFieldDatum $datum */
       $datum = $existingReceivableData->first();
       $datum->setOptionValue((float)$datum->getOptionValue()+0.01);
+      ++$changed;
     }
+    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
   }
 }

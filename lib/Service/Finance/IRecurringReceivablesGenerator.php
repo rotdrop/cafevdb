@@ -80,10 +80,14 @@ interface IRecurringReceivablesGenerator
    *   The musician to update the service claim for. If null, the
    *   values for all affected musicians have to be recomputed.
    *
-   * @return Entities\ProjectParticipantFieldDataOption The updated
-   * receivable.
+   * @return array<string, int>
+   * ```
+   * [ 'added' => #ADDED, 'removed' => #REMOVED, 'changed' => #CHANGED ]
+   * ```
+   * where the numbers reflect the respective actions performed on the
+   * field-data for the given option.
    */
-  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):Entities\ProjectParticipantFieldDataOption;
+  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
 
   /**
    * Update the amount to invoice for the bound service-fee field.
@@ -94,13 +98,25 @@ interface IRecurringReceivablesGenerator
    * @param null|Entities\ProjectParticipantFieldDataOption $receivable
    *   The option to update/recompute. If null all options have to be updated.
    *
-   * @return Entities\ProjectParticipant The update participant.
+   * @return array<string, int>
+   * ```
+   * [ 'added' => #ADDED, 'removed' => #REMOVED, 'changed' => #CHANGED ]
+   * ```
+   * where the numbers reflect the respective actions performed on the
+   * field-data for the participant.
    */
-  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):Entities\ProjectParticipant;
+  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
 
   /**
    * Compute the amounts to invoice for all relevant musicians and
    * existing receivables. New receivables are not added.
+   *
+   * @return array<string, int>
+   * ```
+   * [ 'added' => #ADDED, 'removed' => #REMOVED, 'changed' => #CHANGED ]
+   * ```
+   * where the number reflect the respective actions performed on the
+   * field-data for all participants.
    */
-  public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION);
+  public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
 }

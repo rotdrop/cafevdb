@@ -317,7 +317,7 @@ class Navigation
             if ($button['name'] == $oneButton) {
               $replacement = true;
               if (isset($button['code'])) { // 'code' is a magic PME thing
-                $button = preg_replace('/id="([^"]*)"/', 'id="$1-'.$verticalPosition.'"', $button);
+                $button = preg_replace('/\sid="([^"]*)"/', ' id="$1-'.$verticalPosition.'"', $button);
                 $button = preg_replace('/class="([^"]*)"/', 'class="$1 '.$cssPositions[$verticalPosition].' '.$verticalPosition.'"', $button);
                 $button = str_replace('{POSITION}', $cssPositions[$verticalPosition], $button);
               }
@@ -626,14 +626,21 @@ and even edit the public web-pages for the project and other things.");
       break;
 
     case 'sepa-bank-accounts':
-      $value = $this->l->t('Create Bulk Transactions');
-      $title = $this->l->t('Display a table with the bank accounts of the project participants,
+      if ($projectId > 0) {
+        $value = $this->l->t('Create Bulk Transactions');
+        $title = $this->l->t('Display a table with the bank accounts of the project participants,
 with the possibility to issued money transfers as well as debit-notes
 to and from the registered bank accounts.');
+      } else {
+        $value = $this->l->t('Bank Accounts');
+        $title = $this->l->t('Display a table with the bank accounts -- including debit-mandates, if any -- of all participants for all projects.');
+      }
       $controlclass = 'finance';
-      $post = ['template' => 'sepa-bank-accounts',
-               'projectName' => $projectName,
-               'projectId' => $projectId];
+      $post = [
+        'template' => 'sepa-bank-accounts',
+        'projectName' => $projectName,
+        'projectId' => $projectId,
+      ];
       break;
 
     case 'insurances':

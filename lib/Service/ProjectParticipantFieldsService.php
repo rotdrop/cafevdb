@@ -154,6 +154,18 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Fetch all generator fields for the given project.
+   *
+   * @param $project
+   */
+  public function generatedFields(Entities\Project $project)
+  {
+    return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
+      'multiplicity' => Multiplicity::RECURRING
+    ]));
+  }
+
+  /**
    * Generate a drop-down select for service-fees to be used when
    * generating debit notes. Only recurring fees are split into single
    * items (we think hear of recurring fees on a yearly basis), which
