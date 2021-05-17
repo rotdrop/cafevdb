@@ -302,20 +302,15 @@ class ProjectParticipantFieldsService
       }
       return $amount;
     case Multiplicity::RECURRING():
-      if (empty($key)) {
+      if (empty($key) || empty($value)) {
         break;
       }
-      $keys = Util::explode(',', $key);
-      $found = false;
+      // $keys = Util::explode(',', $key);
+      $values = Util::explodeIndexed($value);
+
       $amount = 0.0;
-      foreach($participantField->getDataOptions() as $dataOption) {
-        if (array_search((string)$dataOption['key'], $keys) !== false) {
-          $amount += (float)$dataOption['data'];
-          $found = true;
-        }
-      }
-      if (!$found) {
-        $this->logError('No data item for parallel choice key "'.$key.'"');
+      foreach ($values as $key => $value) {
+        $amount += $value;
       }
       return $amount;
     }

@@ -443,7 +443,7 @@ trait ParticipantFieldsTrait
           $valueFdd['input|ACP'] = $keyFdd['input'];
           $keyFdd['input|ACP'] = 'VSRH';
 
-          $valueFdd['sql|ACP'] = 'GROUP_CONCAT(
+          $valueFdd['sql'] = 'GROUP_CONCAT(
   DISTINCT
   IF(
     NOT $join_table.field_id = '.$fieldId.',
