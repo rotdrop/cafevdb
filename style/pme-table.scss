@@ -489,6 +489,7 @@ form.pme-form.pme-list {
 form.pme-form.pme-list .pme-navigation-container {
   position:sticky;
   left:0;
+  overflow:hidden; /* otherwise the scroll-region extends indefinitely */
 }
 
 form.pme-form input[type=text] {
