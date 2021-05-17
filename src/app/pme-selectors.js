@@ -237,40 +237,9 @@ const pmeContainer = function(selector) {
 //   return container.children('div:first');
 // };
 
-/**
- * Find the record id inside the given selector or jQuery collection.
- *
- * @param {String} selector TBD.
- *
- * @param {Object} options TBD.
- *
- * @returns {Object}
- */
-const pmeRec = function(selector, options) {
-  options = options || { pascalCase: false };
-  let munge;
-  if (options.camelCase === false) {
-    munge = function(key) { return key; };
-  } else {
-    munge = function(key) { return camelCase(key, options); };
-  }
-  const records = $(selector).find('input[name^="' + pmeSys('rec') + '"]').serializeArray();
-  let result = {};
-  for (const rec of records) {
-    const key = rec.name.match(/[^[]+\[([^\]]+)\]/);
-    if (key && key.length === 2) {
-      result[munge(key[1])] = rec.value;
-    } else {
-      result = rec.value;
-    }
-  }
-  return result;
-};
-
 export {
   PHPMyEdit,
   pmeContainer as container,
-  pmeRec as rec,
   pmeSys as sys,
   pmeData as data,
   pmeToken as token,

@@ -29,7 +29,9 @@ import * as Notification from './notification.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
 import * as FileUpload from './file-upload.js';
+import * as RecurringReceivables from './recurring-receivables.js';
 import { data as pmeData } from './pme-selectors.js';
+import { recordValue as pmeRecordValue } from './pme-record-id.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
@@ -353,11 +355,8 @@ const myReady = function(selector, resizeCB) {
   const selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
   const form = container.find(PHPMyEdit.classSelector('form', 'form'));
 
-  let musicianId = form.find(PHPMyEdit.sysNameSelector('input', 'rec[musician_id]'));
-  musicianId = musicianId.length === 1 ? musicianId.val() : -1;
-
-  let projectId = form.find(PHPMyEdit.sysNameSelector('input', 'rec[project_id]'));
-  projectId = projectId.length === 1 ? projectId.val() : -1;
+  const musicianId = pmeRecordValue(form, 'musicianId');
+  const projectId = pmeRecordValue(form, 'projectId');
 
   const selectedVoices = selectVoices.val();
   selectVoices.data('selected', selectedVoices || []);
@@ -682,93 +681,7 @@ const myReady = function(selector, resizeCB) {
     });
   }
 
-  // Handle buttons to update or delete recurrent receivables
-  container
-    .find('form.pme-form tr.participant-field.recurring td.operations input.regenerate')
-    .on('click', function(event) {
-      const $this = $(this);
-      const row = $this.closest('tr');
-      const fieldId = row.data('fieldId');
-      const optionKey = row.data('optionKey');
-      const cleanup = function() {};
-      const request = 'option/regenerate';
-      $.post(
-        generateUrl('projects/participant-fields/' + request), {
-          data: {
-            fieldId,
-            key: optionKey,
-            musicianId,
-          },
-        })
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, cleanup);
-        })
-        .done(function(data) {
-          if (!Ajax.validateResponse(data, ['amounts'], cleanup)) {
-            return;
-          }
-          if (data.amounts[musicianId]) {
-            row.find('input.pme-input.service-fee').val(data.amounts[musicianId]);
-          }
-          cleanup();
-          Notification.messages(data.message);
-        });
-      return false;
-    });
-
-  container
-    .find('form.pme-form tr.participant-field.recurring td.operations input.delete-undelete')
-    .on('click', function(event) {
-      const $this = $(this);
-      const row = $this.closest('tr');
-      // const fieldId = row.data('fieldId');
-      const optionKey = row.data('optionKey');
-
-      // could also search for name with field-id
-      const inputs = container
-        .find('input[value="' + optionKey + '"]')
-        .add(row.find('.pme-input, .operation.regenerate'));
-
-      if (row.hasClass('deleted')) {
-        inputs.prop('disabled', false);
-        row.removeClass('deleted');
-      } else {
-        inputs.prop('disabled', true);
-        row.addClass('deleted');
-      }
-
-      return false;
-    });
-
-  container
-    .find('form.pme-form tr.participant-field.recurring td.operations input.regenerate-all')
-    .on('click', function(event) {
-      const $this = $(this);
-      const row = $this.closest('tr');
-      const fieldId = row.data('fieldId');
-      const cleanup = function() {};
-      const request = 'option/regenerate';
-      $.post(
-        generateUrl('projects/participant-fields/' + request), {
-          data: {
-            fieldId,
-            musicianId,
-          },
-        })
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, cleanup);
-        })
-        .done(function(data) {
-          if (!Ajax.validateResponse(data, [], cleanup)) {
-            return;
-          }
-          // just trigger reload
-          container.find('form.pme-form input.pme-reload').first().trigger('click');
-          cleanup();
-          Notification.messages(data.message);
-        });
-      return false;
-    });
+  RecurringReceivables.participantOptionHandlers(container, musicianId);
 
   const fileUploadTemplate = $('#fileUploadTemplate');
   container

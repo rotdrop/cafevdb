@@ -49,7 +49,6 @@ import {
   formSelector as pmeFormSelector,
   tableSelector as pmeTableSelector,
   selector as pmeSelector,
-  rec as pmeRec,
   container as pmeContainer,
 } from './pme-selectors.js';
 import 'jquery-ui/ui/effects/effect-highlight';
@@ -1608,7 +1607,6 @@ export {
   pmeIdSelector as idSelector,
   pmeTriggerSubmit as triggerSubmit,
   pmeTableDialogOpen as tableDialogOpen,
-  pmeRec as rec,
   pmeSysNameSelector as sysNameSelector,
   pmeSubmitOuterForm as submitOuterForm,
   pmeClassSelectors as classSelectors,
