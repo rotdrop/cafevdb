@@ -619,7 +619,11 @@ class EntityManager extends EntityManagerDecorator
           }
 
           $targetEntityId = $targetMeta->extractKeyValues($targetColumnValues);
-          $reference = $this->getReference($targetEntity, $targetEntityId);
+          if (empty($targetEntityId)) {
+            $reference = null;
+          } else {
+            $reference = $this->getReference($targetEntity, $targetEntityId);
+          }
 
           $meta->setFieldValue($entity, $property, $reference);
 

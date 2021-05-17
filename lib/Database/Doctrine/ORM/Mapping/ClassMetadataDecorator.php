@@ -328,10 +328,14 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
         if ($value instanceof $targetEntity) {
           $columnValues[$columnName] = $targetMeta->getFieldValue($value, $targetField);
         } else {
-          // assume this is the column value, not the entity of the foreign key
-          $columnValues[$columnName] = $value;
-          // replace the value by a reference
-          $reference = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
+          // avoid references with empty identifiers
+          if (empty($value)) {
+            $value = null;
+            $reference = null;
+          } else {
+            // replace the value by a reference
+            $reference = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
+          }
           // try the setter of the entity first
           $method = 'set'.ucfirst($field);
           if (is_callable([ $entity, $method ])) {
@@ -339,6 +343,8 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
           } else {
             $this->metaData->setFieldValue($entity, $field, $reference);
           }
+          // assume this is the column value, not the entity of the foreign key
+          $columnValues[$columnName] = $value;
         }
       } else {
         $columnName = $this->metaData->fieldMappings[$field]['columnName'];
@@ -461,8 +467,13 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
       $targetColumn = $joinInfo['referencedColumnName'];
       $targetField = $targetMeta->fieldNames[$targetColumn];
       if (!($value instanceof $targetEntity)) {
-        // replace the value by a reference
-        $value = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
+        if (empty($value)) {
+          // avoid generating references with empty identifiers
+          $value = null;
+        } else {
+          // replace the value by a reference
+          $value = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
+        }
       }
     }
     // try first the setter/getter of the entity
