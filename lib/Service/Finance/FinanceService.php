@@ -44,6 +44,7 @@ class FinanceService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
 
   const ENTITY = Entities\SepaDebitMandate::class;
@@ -357,46 +358,6 @@ class FinanceService
   public function validateSepaString($string)
   {
     return !preg_match('@[^'.self::SEPA_CHARSET.']@', $string);
-  }
-
-  /**
-   * Just return the argument if it is already a project entity,
-   * otherwise fetch the project, repectively generate a reference.
-   *
-   * @param int|Entities\Project $projectOrId
-   *
-   * @return null|Entities\Project
-   */
-  private function ensureProject($projectOrId):?Entities\Project
-  {
-    if (empty($projectOrId) || (int)$projectOrId < 0) {
-      return null;
-    }
-    if (!($projectOrId instanceof Entities\Project)) {
-      return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
-    } else {
-      return $projectOrId;
-    }
-  }
-
-  /**
-   * Just return the argument if it is already a musician entity,
-   * otherwise fetch the musician, repectively generate a reference.
-   *
-   * @param int|Entities\Musician $musicianOrId
-   *
-   * @return null|Entities\Musician
-   */
-  private function ensureMusician($musicianOrId):?Entities\Musician
-  {
-    if (empty($musicianOrId) || (int)$musicianOrId < 0) {
-        return null;
-    }
-    if (!($musicianOrId instanceof Entities\Musician)) {
-      return $this->entityManager->getReference(Entities\Musician::class, [ 'id' => $musicianOrId, ]);
-    } else {
-      return $musicianOrId;
-    }
   }
 
   /**
