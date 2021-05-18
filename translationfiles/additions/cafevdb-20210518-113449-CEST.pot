@@ -1,0 +1,39 @@
+#: :-1
+#, php-format
+msgid "daily"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:307
+#, php-format
+msgid "extra field type cloud-file"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:307
+#, php-format
+msgid "extra field type db-file"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1164
+#, php-format
+msgid "file-attachments"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:142
+#, php-format
+msgid "general debit-note mandate"
+msgstr ""
+
+#: :-1
+#, php-format
+msgid "insurance"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:142
+#, php-format
+msgid "project debit-note mandate"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:108
+#, php-format
+msgid "signature"
+msgstr ""
