@@ -1750,6 +1750,30 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return $query;
   }
 
+  protected function makeFieldTranslationFddValues(array $joinInfo, $field)
+  {
+    if (empty($joinInfo['identifier'])) {
+      $id = 'id';
+    } else {
+      $id = array_keys($joinInfo['identifier'])[0];
+    }
+    $lang = $this->l10n()->getLanguageCode();
+    return [
+      'sql' => 'COALESCE($join_col_fqn, $main_table.$field_name)',
+      'values' => [
+        'table' => self::FIELD_TRANSLATIONS_TABLE,
+        'column' => 'content',
+        'join' => '$join_table.field = "'.$field.'"
+  AND $join_table.foreign_key = $main_table.'.$id.'
+  AND $join_table.object_class = "'.addslashes($joinInfo['entity']).'"
+  AND $join_table.locale = "'.$lang.'"',
+        'filters' => '$table.field = "'.$field.'"
+  AND $table.locale = "'.$lang.'
+  AND $table.object_class = "'.addslashes($joinInfo['entity']).'"',
+      ],
+    ];
+  }
+
   /**
    * Unset a value in the input vars of legacy PME triggers.
    *
