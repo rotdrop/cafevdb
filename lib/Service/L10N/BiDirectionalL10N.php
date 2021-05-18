@@ -66,6 +66,10 @@ class BiDirectionalL10N
 
   public function t($phrase)
   {
+    if (empty($phrase)) {
+      return $phrase;
+    }
+
     if (empty($this->translations)) {
       $this->loadLanguageData();
     }
@@ -81,8 +85,21 @@ class BiDirectionalL10N
     if (empty($this->translations)) {
       $this->loadLanguageData();
     }
+    $this->logInfo('SEARCHING BACK TRANSLATION FOR '.$translation);
 
-    return $this->translations[self::REVERSE][$translation]?:$translation;
+    $backTranslation = $this->translations[self::REVERSE][$translation];
+    if (!empty($backTranslation)) {
+      return $backTranslation;
+    }
+
+    if (method_exists($this->l, 'getTranslations')) {
+      $this->logInfo('SEARCHING CLOUD TRANSLATIONS');
+      $cloudTranslations = $this->l->getTranslations();
+      $backTranslation = array_search($translation, $cloudTranslations);
+      $this->logInfo('GOT '.$backTranslation);
+    }
+
+    return $backTranslation ? $backTranslation : $translation;
   }
 
   protected function loadLanguageData()
