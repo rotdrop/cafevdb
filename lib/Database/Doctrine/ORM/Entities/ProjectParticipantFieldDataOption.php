@@ -39,6 +39,7 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\Table(name="ProjectParticipantFieldsDataOptions")
  * @ORM\Entity
+ * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
@@ -51,6 +52,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UnusedTrait;
@@ -74,6 +76,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * @var string
    *
+   * @Gedmo\Translatable
    * @ORM\Column(type="string", length=128, nullable=true)
    */
   private $label;
@@ -88,6 +91,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * @var string
    *
+   * @Gedmo\Translatable
    * @ORM\Column(type="string", length=4096, nullable=true)
    */
   private $tooltip;
