@@ -869,6 +869,7 @@ class SepaDebitMandatesController extends Controller {
     if (!empty($writtenMandateFileUpload)) {
       /** @var AppStorage $appStorage */
       $appStorage = $this->di(AppStorage::class);
+
       /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
       $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
 
