@@ -88,7 +88,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=1024, nullable=true)
+   * @ORM\Column(type="string", length=4096, nullable=true)
    */
   private $tooltip;
 
