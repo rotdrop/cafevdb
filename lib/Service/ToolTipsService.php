@@ -392,7 +392,7 @@ associated with this option.'),
 
       'participant-fields-default-single-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
-      'participant-fields-default-file-data-value' => $this->l->t('Default policy when replacing files with new uploads. Default is to rename the old file by attaching a time-stamp. "replace" will just overwrite the old  data. Note that independent of this setting the file-app of the cloud may provide undelete operations and versioning of overwritten files.'),
+      'participant-fields-default-cloud-file-value' => $this->l->t('Default policy when replacing files with new uploads. Default is to rename the old file by attaching a time-stamp. "replace" will just overwrite the old  data. Note that independent of this setting the file-app of the cloud may provide undelete operations and versioning of overwritten files.'),
 
       'participant-fields-default-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
 

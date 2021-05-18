@@ -57,23 +57,6 @@ trait ParticipantFieldsTrait
     foreach ($participantFields as $field) {
       $fieldId = $field['id'];
 
-      // Bad idea and really increases query time
-      //
-      // $tableName = self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
-      // $participantFieldOptionJoinTable = [
-      //   'table' => $tableName,
-      //   'entity' => Entities\ProjectParticipantFieldDataOption::class,
-      //   'flags' => self::JOIN_FLAGS_NONE,
-      //   'identifier' => [
-      //     'field_id' => [ 'value' => $fieldId, ],
-      //     'key' => false,
-      //   ],
-      //   'column' => 'key',
-      //   'encode' => 'BIN2UUID(%s)',
-      // ];
-
-      // $this->joinStructure[] = $participantFieldOptionJoinTable;
-
       $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
       $joinStructure[$tableName] = [
         'entity' => Entities\ProjectParticipantFieldDatum::class,
@@ -232,7 +215,7 @@ trait ParticipantFieldsTrait
               return $this->moneyValue($value);
             };
             break;
-          case FieldType::FILE_DATA:
+          case FieldType::DB_FILE:
             $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $policy = $field->getDefaultValue()?:'rename';
@@ -242,7 +225,22 @@ trait ParticipantFieldsTrait
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               return '<div class="file-upload-wrapper" data-option-key="'.$key.'">
   <table class="file-upload">'
-              .$this->fileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician).'
+              .$this->dbFileUploadRowHtml($value, $fieldId, $key, $fileBase, $musician).'
+  </table>
+</div>';
+            };
+            break;
+          case FieldType::CLOUD_FILE:
+            $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
+              $fieldId = $field->getId();
+              $policy = $field->getDefaultValue()?:'rename';
+              $key = $dataOptions->first()->getKey();
+              $fileBase = $field['name'];
+              $subDir = null;
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              return '<div class="file-upload-wrapper" data-option-key="'.$key.'">
+  <table class="file-upload">'
+              .$this->cloudFileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician).'
   </table>
 </div>';
             };
@@ -311,7 +309,7 @@ trait ParticipantFieldsTrait
            *
            */
           switch ($dataType) {
-          case FieldType::FILE_DATA:
+          case FieldType::CLOUD_FILE:
             $keyFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
               $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
               $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
@@ -327,7 +325,7 @@ trait ParticipantFieldsTrait
                     foreach ($field->getSelectableOptions() as $option) {
                       $optionKey = (string)$option->getKey();
                       $fileBase = $option->getLabel();
-                      $html .= $this->fileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
+                      $html .= $this->cloudFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
                     }
                     $html .= '
   </table>
@@ -871,7 +869,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     return '<span class="allowed-option '.$css.'"'.$htmlData.'>'.$label.$sep.$value.'</span>';
   }
 
-  protected function fileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician)
+  protected function cloudFileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician)
   {
     $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
     // make sure $subDir exists
@@ -894,14 +892,47 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     $placeHolder = $this->l->t('Load %s', $fileName);
     $emptyDisabled = empty($value) ? ' disabled' : '';
     $html = '
-  <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" data-upload-policy="'.$policy.'">
+  <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" data-upload-policy="'.$policy.'" data-storage="cloud">
     <td class="operations">
       <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
       <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-'.$policy].'" class="operation upload-replace"/>
       <a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent"></a>
     </td>
-    <td class="file-data">
+    <td class="cloud-file">
       <a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$value.'</a>
+      <input class="upload-placeholder" title="'.$this->toolTipsService['participant-attachment-upload'].'" placeholder="'.$placeHolder.'" type="text"/>
+    </td>
+  </tr>';
+    return $html;
+  }
+
+  protected function dbFileUploadRowHtml($value, $fieldId, $key, $fileBase, $musician)
+  {
+    if (!empty($value)) {
+      $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
+        'section' => 'database',
+        'object' => $value,
+      ])
+      . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
+    }
+    $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+    $placeHolder = $this->l->t('Load %s', $fileName);
+    $emptyDisabled = empty($value) ? ' disabled' : '';
+    $html = '
+  <tr class="file-upload-row"
+      data-field-id="'.$fieldId.'"
+      data-option-key="'.$key.'"
+      data-file-base="'.$fileBase.'"
+      data-upload-policy="replace"
+      data-storage="db"
+      data-sub-dir=""
+    >
+    <td class="operations">
+      <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
+      <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-replace'].'" class="operation upload-replace"/>
+    </td>
+    <td class="db-file">
+      <a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>
       <input class="upload-placeholder" title="'.$this->toolTipsService['participant-attachment-upload'].'" placeholder="'.$placeHolder.'" type="text"/>
     </td>
   </tr>';
@@ -933,8 +964,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
 
       $this->debug('FIELDNAMES '.$keyName." / ".$groupFieldName);
-
-      $this->debug("MULTIPLICITY ".$multiplicity);
+      $this->debug("MULTIPLICITY / DATATYPE ".$multiplicity.' / '.$dataType);
       switch ($multiplicity) {
       case FieldMultiplicity::SIMPLE:
         // We fake a multi-selection field and set the user input as

@@ -54,7 +54,7 @@ use MyCLabs\Enum\Enum as EnumType;
  * A financial deposit which may be charged in advance to the total
  * amount of receivables.
  *
- * @method static EnumParticipantFieldDataType FILE_DATA()
+ * @method static EnumParticipantFieldDataType CLOUD_FILE()
  * Single-file upload data which is stored as inline URI in the
  * database. The total encoded size is limited by the used database
  * backend and its associated data-type.
@@ -70,5 +70,6 @@ class EnumParticipantFieldDataType extends EnumType
   public const DATETIME = 'datetime';
   public const SERVICE_FEE = 'service-fee';
   public const DEPOSIT = 'deposit';
-  public const FILE_DATA = 'file-data';
+  public const CLOUD_FILE = 'cloud-file';
+  public const DB_FILE = 'db-file';
 };

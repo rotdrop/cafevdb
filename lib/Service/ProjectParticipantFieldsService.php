@@ -50,11 +50,13 @@ class ProjectParticipantFieldsService
       DataType::BOOLEAN,
     ],
     Multiplicity::SINGLE => [
-      DataType::FILE_DATA,
+      DataType::CLOUD_FILE,
+      DataType::DB_FILE,
     ],
     Multiplicity::MULTIPLE => [
       DataType::BOOLEAN,
-      DataType::FILE_DATA,
+      DataType::CLOUD_FILE,
+      DataType::DB_FILE,
     ],
     Multiplicity::PARALLEL => [
       DataType::BOOLEAN,
@@ -68,15 +70,18 @@ class ProjectParticipantFieldsService
       DataType::DATE,
       DataType::DATETIME,
       DataType::DEPOSIT,
-      DataType::FILE_DATA,
+      DataType::CLOUD_FILE,
+      DataType::DB_FILE,
     ],
     Multiplicity::GROUPOFPEOPLE => [
       DataType::BOOLEAN,
-      DataType::FILE_DATA,
+      DataType::CLOUD_FILE,
+      DataType::DB_FILE,
     ],
     Multiplicity::GROUPSOFPEOPLE => [
       DataType::BOOLEAN,
-      DataType::FILE_DATA,
+      DataType::CLOUD_FILE,
+      DataType::DB_FILE,
     ],
   ];
 

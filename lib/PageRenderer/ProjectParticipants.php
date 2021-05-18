@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Common\Functions;
 
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
@@ -734,7 +735,7 @@ class ProjectParticipants extends PMETableViewBase
      */
 
     $monetary = $this->participantFieldsService->monetaryFields($this->project);
-    if (!empty($monetary) || ($this->projectId == $this->membersProjectId)) {
+    if ($monetary->count() > 0 || ($this->projectId == $this->membersProjectId)) {
       $this->makeTotalFeesField($opts['fdd'], $monetary, $financeTab);
     }
 
@@ -993,7 +994,9 @@ class ProjectParticipants extends PMETableViewBase
      *
      */
 
-    $sepaFieldGenerator($opts['fdd']);
+    if ($monetary->count() > 0 || $this->membersProjectId == $this->projectId) {
+      $sepaFieldGenerator($opts['fdd']);
+    }
 
     /*
      *

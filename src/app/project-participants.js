@@ -685,7 +685,9 @@ const myReady = function(selector, resizeCB) {
 
   const fileUploadTemplate = $('#fileUploadTemplate');
   container
-    .find('form.pme-form tr.participant-field.file-data td.pme-value .file-upload-row')
+    .find('form.pme-form')
+    .find('tr.participant-field.cloud-file, tr.participant-field.db-file')
+    .find('td.pme-value .file-upload-row')
     .each(function(index) {
       const $this = $(this);
       const fieldId = $this.data('fieldId');
@@ -693,6 +695,7 @@ const myReady = function(selector, resizeCB) {
       const uploadPolicy = $this.data('uploadPolicy');
       const fileBase = $this.data('fileBase');
       const subDir = $this.data('subDir');
+      const storage = $this.data('storage');
       const widgetId = 'file-upload-' + optionKey;
       const uploadUi = fileUploadTemplate.octemplate({
         wrapperId: widgetId,
@@ -707,6 +710,7 @@ const myReady = function(selector, resizeCB) {
           uploadPolicy,
           subDir,
           fileBase,
+          storage,
         }),
       });
       const $oldUploadForm = $('#' + widgetId);

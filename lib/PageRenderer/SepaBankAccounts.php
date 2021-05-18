@@ -701,7 +701,7 @@ received so far'),
     // @todo PARTICIPANT FIELD STUFF / PROJECT MODE
 
     if (!$this->addOperation() && $projectMode) {
-      if (!empty($monetary)) {
+      if ($monetary->count() > 0) {
         $this->makeTotalFeesField($opts['fdd'], $monetary, $amountTab['id']);
       }
       $participantFieldsGenerator($opts['fdd']);
@@ -727,7 +727,7 @@ received so far'),
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     // $this->logInfo('FILTERS '.Functions\dump($opts['filters']));
-    $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
+    // $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
     // $this->logInfo('SORT '.Functions\dump($opts['sort_field']));
 
     if ($execute) {

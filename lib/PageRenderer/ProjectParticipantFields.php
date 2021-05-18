@@ -391,7 +391,7 @@ class ProjectParticipantFields extends PMETableViewBase
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
       ],
       'php' => function($dataOptions, $op, $field, $row, $recordId, $pme) {
-        $this->logInfo('OPTIONS '.print_r($dataOptions, true));
+        // $this->logInfo('OPTIONS '.print_r($dataOptions, true));
         $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
         $dataType = $row['qf'.$pme->fdn['data_type']];
         return $this->showDataOptions($dataOptions, $op, $recordId, $multiplicity, $dataType);
@@ -482,7 +482,8 @@ class ProjectParticipantFields extends PMETableViewBase
           break;
         default:
           switch ($dataType) {
-          case DataType::FILE_DATA:
+          case DataType::CLOUD_FILE:
+          case DataType::DB_FILE:
             $value = $value?:$this->l->t('rename');
             break;
           case DataType::BOOLEAN:
@@ -557,14 +558,14 @@ class ProjectParticipantFields extends PMETableViewBase
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'ACPVD',
       'sql' => 'IF($main_table.default_value IS NULL OR $main_table.default_value = \'\', \'rename\', $main_table.default_value)',
-      'css' => [ 'postfix' => ' default-file-data-value' ],
+      'css' => [ 'postfix' => ' default-cloud-file-value' ],
       'select' => 'D',
       'values2|ACP' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
       'default' => 'rename',
       'maxlen' => 29,
       'size' => 30,
       'sort' => false,
-      'tooltip' => $this->toolTipsService['participant-fields-default-file-data-value'],
+      'tooltip' => $this->toolTipsService['participant-fields-default-cloud-file-value'],
     ];
 
     $opts['fdd']['due_date'] = $this->defaultFDD['due_date'];
@@ -824,9 +825,28 @@ class ProjectParticipantFields extends PMETableViewBase
      */
 
     $tag = 'default_file_data_value';
-    if ($newvals['data_type'] == DataType::FILE_DATA) {
+    if ($newvals['data_type'] == DataType::CLOUD_FILE) {
       $value = $newvals[$tag];
       $newvals['default_value'] = $value?:'rename';
+      if ($op == PHPMyEdit::SQL_QUERY_INSERT && empty($newvals['tab'])) {
+        $newvals['tab'] = 'file-attachments';
+        $changed[] = 'tab';
+      }
+    }
+    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+
+    /************************************************************************
+     *
+     * DB-files do not have a default value, they are always just replaced.
+     *
+     */
+    if ($newvals['data_type'] == DataType::DB_FILE) {
+      $value = $newvals[$tag];
+      $newvals['default_value'] = 'rename';
+      if ($op == PHPMyEdit::SQL_QUERY_INSERT && empty($newvals['tab'])) {
+        $newvals['tab'] = 'file-attachments';
+        $changed[] = 'tab';
+      }
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
@@ -877,6 +897,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $tag = 'data_options_single';
     if ($newvals['multiplicity'] == Multiplicity::SINGLE
+        || $newvals['multiplicity'] == Multiplicity::SIMPLE
         || $newvals['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
       $first = array_key_first($newvals['data_options_single']);
       $newvals[$tag][$first]['label'] = $newvals['name'];
