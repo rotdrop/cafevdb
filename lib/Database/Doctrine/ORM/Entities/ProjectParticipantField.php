@@ -39,6 +39,7 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\Table(name="ProjectParticipantFields")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldsRepository")
+ * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
@@ -49,6 +50,7 @@ class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
@@ -78,6 +80,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var string
    *
+   * @Gedmo\Translatable
    * @ORM\Column(type="string", length=128, nullable=false)
    */
   private $name;
@@ -122,6 +125,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var string
    *
+   * @Gedmo\Translatable
    * @ORM\Column(type="string", length=4096, nullable=true)
    */
   private $tooltip = null;
@@ -129,7 +133,8 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Tab to display the field in. If empty, then the projects tab is used."})
+   * @Gedmo\Translatable
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Tab to display the field in. If empty, then the project tab is used."})
    */
   private $tab = null;
 
@@ -453,27 +458,27 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set toolTip.
+   * Set tooltip.
    *
-   * @param string $toolTip
+   * @param string $tooltip
    *
    * @return ProjectParticipantField
    */
-  public function setToolTip($toolTip):ProjectParticipantField
+  public function setTooltip($tooltip):ProjectParticipantField
   {
-    $this->toolTip = $toolTip;
+    $this->tooltip = $tooltip;
 
     return $this;
   }
 
   /**
-   * Get toolTip.
+   * Get tooltip.
    *
    * @return string
    */
-  public function getToolTip()
+  public function getTooltip()
   {
-    return $this->toolTip;
+    return $this->tooltip;
   }
 
   /**

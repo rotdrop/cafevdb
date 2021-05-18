@@ -60,6 +60,7 @@ class ProjectParticipantFields extends PMETableViewBase
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectParticipantField::class,
+      'identifier' => [ 'id' => 'id' ],
     ],
     self::OPTIONS_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDataOption::class,
@@ -270,19 +271,20 @@ class ProjectParticipantFields extends PMETableViewBase
     ];
     $this->addSlug('project', $opts['fdd']['project_id']);
 
-    $tooltipIdx = -1;
-    $nameIdx = count($opts['fdd']);
-    $opts['fdd']['name'] = [
-      'tab'      => [ 'id' => 'tab-all' ],
-      'name' => $this->l->t('Field-Name'),
-      'css' => [ 'postfix' => ' field-name' ],
-      'input' => 'M',
-      'select' => 'T',
-      'maxlen' => 29,
-      'size' => 30,
-      'sort' => true,
-      'tooltip' => $this->toolTipsService['participant-fields-field-name'],
-    ];
+    $opts['fdd']['name'] = array_merge(
+      [
+        'tab'      => [ 'id' => 'tab-all' ],
+        'name' => $this->l->t('Field-Name'),
+        'css' => [ 'postfix' => ' field-name' ],
+        'input' => 'M',
+        'select' => 'T',
+        'maxlen' => 29,
+        'size' => 30,
+        'sort' => true,
+        'tooltip' => $this->toolTipsService['participant-fields-field-name'],
+      ],
+      $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name')
+    );
 
     $opts['fdd']['usage'] = [
       'tab' => [ 'id' => 'definition' ],
@@ -402,7 +404,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'name' => $this->currencyLabel($this->l->t('Data')),
       'css' => [ 'postfix' => ' data-options-single' ],
       'sql' => '$main_table.id',
-      'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($nameIdx, $tooltipIdx) {
+      'php' => function($dummy, $op, $field, $row, $recordId, $pme) {
         // allowed values from virtual JSON aggregator field
         $dataOptions = $row['qf'.$pme->fdn['data_options']];
         $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
@@ -571,21 +573,23 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['fdd']['due_date'] = $this->defaultFDD['due_date'];
     $opts['fdd']['due_date']['tab'] = [ 'id' => 'definition' ];
 
-    $tooltipIdx = count($opts['fdd']);
-    $opts['fdd']['tooltip'] = [
-      'tab'      => [ 'id' => 'display' ],
-      'name' => $this->l->t('Tooltip'),
-      'css' => [ 'postfix' => ' participant-field-tooltip hide-subsequent-lines' ],
-      'select' => 'T',
-      'textarea' => [ 'rows' => 5,
-                      'cols' => 28 ],
-      'maxlen' => 1024,
-      'size' => 30,
-      'sort' => true,
-      'escape' => false,
-      'display|LF' => [ 'popup' => 'data' ],
-      'tooltip' => $this->toolTipsService['participant-fields-tooltip'],
-    ];
+    $opts['fdd']['tooltip'] = array_merge(
+      [
+        'tab'      => [ 'id' => 'display' ],
+        'name' => $this->l->t('Tooltip'),
+        'css' => [ 'postfix' => ' participant-field-tooltip hide-subsequent-lines' ],
+        'select' => 'T',
+        'textarea' => [ 'rows' => 5,
+                        'cols' => 28 ],
+        'maxlen' => 1024,
+        'size' => 30,
+        'sort' => true,
+        'escape' => false,
+        'display|LF' => [ 'popup' => 'data' ],
+        'tooltip' => $this->toolTipsService['participant-fields-tooltip'],
+      ],
+      $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'tooltip')
+    );
 
     $opts['fdd']['display_order'] = [
       'name' => $this->l->t('Display-Order'),
@@ -595,7 +599,8 @@ class ProjectParticipantFields extends PMETableViewBase
       'sort' => true,
       'align' => 'right',
       'tooltip' => $this->toolTipsService['participant-fields-display-order'],
-      'display' => [ 'attributes' => [ 'min' => 1 ], ],
+      'display' => [ 'attributes' => [ 'min' => 0 ], ],
+      'default' => null,
     ];
 
     $opts['fdd']['tab'] = [
@@ -603,9 +608,9 @@ class ProjectParticipantFields extends PMETableViewBase
       'css' => [ 'postfix' => ' tab allow-empty' ],
       'select' => 'D',
       'values' => [
-        'table' => self::TABLE,
-        'column' => 'tab',
-        'description' => 'tab',
+        'table' => $this->makeFieldTranslationsJoin($this->joinStructure[self::TABLE], [ 'tab' ]),
+        'column' => 'l10n_tab',
+        'join' => '$join_table.id = $main_table.id',
       ],
       'values2' => $tableTabValues2,
       'default' => -1,
@@ -768,6 +773,20 @@ class ProjectParticipantFields extends PMETableViewBase
      * Add the data from NewTab to Tab
      *
      */
+    $tag = 'display_order';
+    if (empty($newvals[$tag])) {
+      $newvals[$tag] = null;
+      Util::unsetValue($changed, $tag);
+      if ($newvals[$tag] !== $oldvals[$tag]) {
+        $changed[] = $tag;
+      }
+    }
+
+    /************************************************************************
+     *
+     * Add the data from NewTab to Tab
+     *
+     */
 
     $tag = 'new_tab';
     if (!empty($newvals[$tag]) && empty($newvals['tab'])) {
@@ -775,6 +794,11 @@ class ProjectParticipantFields extends PMETableViewBase
       $changed[] = 'tab';
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+
+    if (empty($newvals['tab']) && $newvals['tab'] !== null) {
+      $newvals['tab'] = null;
+      $changed[] = 'tab';
+    }
 
     /************************************************************************
      *
@@ -784,7 +808,13 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $tag = 'tooltip';
     if (!empty($newvals[$tag])) {
-      $newvals['tooltip'] = $this->fuzzyInput->purifyHTML($newvals[$tag]);
+      $purified = $this->fuzzyInput->purifyHTML($newvals[$tag]);
+      if (empty($purified)) {
+        $this->logInfo('ORIG: '.$newvals[$tag].' PURIFIED '.$purified);
+      } else {
+        $this->logInfo('PURIFIED '.$purified);
+      }
+      $newvals[$tag] = $purified;
       Util::unsetValue($changed, $tag);
       if ($newvals[$tag] !== $oldvals[$tag]) {
         $changed[] = $tag;
@@ -829,7 +859,7 @@ class ProjectParticipantFields extends PMETableViewBase
       $value = $newvals[$tag];
       $newvals['default_value'] = $value?:'rename';
       if ($op == PHPMyEdit::SQL_QUERY_INSERT && empty($newvals['tab'])) {
-        $newvals['tab'] = 'file-attachments';
+        $newvals['tab'] = $this->l->t('file-attachments');
         $changed[] = 'tab';
       }
     }
@@ -844,8 +874,14 @@ class ProjectParticipantFields extends PMETableViewBase
       $value = $newvals[$tag];
       $newvals['default_value'] = 'rename';
       if ($op == PHPMyEdit::SQL_QUERY_INSERT && empty($newvals['tab'])) {
-        $newvals['tab'] = 'file-attachments';
+        $newvals['tab'] = $this->l->t('file-attachments');
         $changed[] = 'tab';
+      }
+      if (empty($newvals['encrypted'])) {
+        $newvals['encrypted'] = true;
+        if (empty($oldvals['encrypted'])) {
+          $changed[] = 'encrypted';
+        }
       }
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
@@ -997,6 +1033,9 @@ class ProjectParticipantFields extends PMETableViewBase
    *
    * @return bool If returning @c false the operation will be terminated
    *
+   * @todo Check whether something needs to be done with the ORM-cascade
+   * stuff.
+   *
    */
   public function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
@@ -1007,6 +1046,12 @@ class ProjectParticipantFields extends PMETableViewBase
       throw new \RuntimeException($this->l->t('Unable to find participant field for id "%s"', $pme->rec));
     }
 
+    foreach ($field->getDataOptions() as $option) {
+      $this->remove($option, true);
+      $this->remove($option, true);
+    }
+
+    $this->remove($field, true); // this should be soft-delete
     $this->remove($field, true); // this should be soft-delete
 
     $changed = []; // disable PME delete query

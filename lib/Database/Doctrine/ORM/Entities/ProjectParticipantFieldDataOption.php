@@ -216,27 +216,27 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * Set toolTip.
+   * Set tooltip.
    *
-   * @param string|null $toolTip
+   * @param string|null $tooltip
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setToolTip($toolTip):ProjectParticipantFieldDataOption
+  public function setTooltip($tooltip):ProjectParticipantFieldDataOption
   {
-    $this->toolTip = $toolTip;
+    $this->tooltip = $tooltip;
 
     return $this;
   }
 
   /**
-   * Get toolTip.
+   * Get tooltip.
    *
    * @return string
    */
-  public function getToolTip()
+  public function getTooltip()
   {
-    return $this->toolTip;
+    return $this->tooltip;
   }
 
   /**
