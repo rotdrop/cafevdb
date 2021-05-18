@@ -79,10 +79,11 @@ trait ParticipantFieldsTrait
 
       /** @var Entities\ProjectParticipantField $field */
       foreach ($participantFields as $field) {
-        $fieldName = $field['name'];
-        $fieldId   = $field['id'];
-        $multiplicity = $field['multiplicity'];
-        $dataType = (string)$field['data_type'];
+        $fieldName = $field->getName();
+        $fieldId   = $field->getId();
+        $multiplicity = $field->getMultiplicity();
+        $dataType = (string)$field->getDataType();
+        $deleted = !empty($field->getDeleted());
 
         if (!$this->participantFieldsService->isSupportedType($multiplicity, $dataType)) {
           throw new \Exception(
@@ -121,6 +122,9 @@ trait ParticipantFieldsTrait
           ],
           'tooltip' => $field['tooltip']?:null,
         ];
+        if ($deleted && !$this->showDisabled) {
+          $extraFddBase['input'] = 'VSRH';
+        }
 
         list($keyFddIndex, $keyFddName) = $this->makeJoinTableField(
           $fieldDescData, $tableName, 'option_key',
