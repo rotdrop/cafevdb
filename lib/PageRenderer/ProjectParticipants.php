@@ -198,7 +198,7 @@ class ProjectParticipants extends PMETableViewBase
 
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
 
-    $this->pme->overrideLabel('Add', 'Add Musician');
+    $this->pme->overrideLabel('Add', $this->l->t('Add Musician'));
   }
 
   public function shortTitle()
