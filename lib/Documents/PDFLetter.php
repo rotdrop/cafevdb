@@ -248,7 +248,7 @@ class PDFLetter extends \TCPDF
     $this->Cell($textWidth, $this->fontSize(), $startFormula, 0, false, 'L');
   }
 
-  public function letterClose($endFormula, $signature, $signatureImage = false)
+  public function letterClose($endFormula, $signature, ?\OCP\Image $signatureImage = null)
   {
     $this->startTransaction();
     $startPage = $this->getPage();
@@ -260,8 +260,8 @@ class PDFLetter extends \TCPDF
                          self::LEFT_TEXT_MARGIN, $this->GetY() + $this->fontSize(),
                          $endFormula, '', 1);
     $y = $this->GetY();
-    if ($signatureImage !== false /*&& file_exists($signatureImage)*/) {
-      $this->Image($signatureImage,
+    if (!empty($signatureImage) && $signatureImage->valid()) {
+      $this->Image('@'.$signatureImage->data(),
                    self::LEFT_TEXT_MARGIN+10,
                    $this->GetY()+1*$this->fontSize(),
                    0, 4*$this->fontSize());
