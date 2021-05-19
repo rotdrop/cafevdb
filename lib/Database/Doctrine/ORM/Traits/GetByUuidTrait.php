@@ -62,7 +62,7 @@ trait GetByUuidTrait
     }
 
     // Unfortunately, the "Selectable" interface is ***really***
-    // inmature and unstable and does not work reliably. Don't use it
+    // immature and unstable and does not work reliably. Don't use it
     // anymore.
     // $matching = $collection->matching(DBUtil::criteriaWhere([$keyField => $key]));
     // if ($matching->count() == 1) {
