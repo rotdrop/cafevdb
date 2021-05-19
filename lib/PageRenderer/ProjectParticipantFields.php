@@ -1046,13 +1046,22 @@ class ProjectParticipantFields extends PMETableViewBase
       throw new \RuntimeException($this->l->t('Unable to find participant field for id "%s"', $pme->rec));
     }
 
+    $used = false;
+
+    /** @var Entities\ProjectParticipantFieldDataOption $option */
     foreach ($field->getDataOptions() as $option) {
       $this->remove($option, true);
-      $this->remove($option, true);
+      if ($option->unused()) {
+        $this->remove($option, true);
+      } else {
+        $used = true;
+      }
     }
 
     $this->remove($field, true); // this should be soft-delete
-    $this->remove($field, true); // this should be soft-delete
+    if (!$used && $field->unused()) {
+      $this->remove($field, true); // this should be soft-delete
+    }
 
     $changed = []; // disable PME delete query
 
