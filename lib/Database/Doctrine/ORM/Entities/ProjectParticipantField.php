@@ -245,15 +245,18 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get the options without UUID zero
    *
+   * @param bool $includeDeleted Whether or not to include soft-deleted options.
+   *
    * @return Collection
    */
-  public function getSelectableOptions():Collection
+  public function getSelectableOptions($includeDeleted = false):Collection
   {
     // this unfortunately just does not work.
     // return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL, 'deleted' => null, ]));
     return $this->dataOptions->filter(function($option) {
       /** @var ProjectParticipantFieldDataOption $option */
-      return empty($option->getDeleted()) && $option->getKey() != Uuid::nil();
+      return (!$includeDeleted || empty($option->getDeleted()))
+        && $option->getKey() != Uuid::nil();
     });
   }
 

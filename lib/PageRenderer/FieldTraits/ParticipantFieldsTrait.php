@@ -139,7 +139,7 @@ trait ParticipantFieldsTrait
         $valueFdd = &$fieldDescData[$valueFddName];
 
         /** @var Doctrine\Common\Collections\Collection */
-        $dataOptions = $field->getSelectableOptions();
+        $dataOptions = $field->getSelectableOptions($this->showDisabled);
         $values2     = [];
         $valueTitles = [];
         $valueData   = [];
@@ -207,9 +207,13 @@ trait ParticipantFieldsTrait
           $valueFdd['css']['postfix'] .= ' simple-valued '.$dataType;
 
           // disable deleted entries
-          $valueFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
-          $keyFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
+          if (!$this->showDisabled) {
+            $valueFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
+            $keyFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
             $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.' AND $join_table.deleted IS NULL, $join_col_fqn, NULL))';
+          } else {
+            $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.', $join_col_fqn, NULL))';
+          }
 
           switch ($dataType) {
           case FieldType::SERVICE_FEE:
@@ -232,6 +236,21 @@ trait ParticipantFieldsTrait
               .$this->dbFileUploadRowHtml($value, $fieldId, $key, $fileBase, $musician).'
   </table>
 </div>';
+            };
+            $valueFdd['php|LFDV'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+              if (!empty($value)) {
+                $downloadLink = $this->urlGenerator()
+                                     ->linkToRoute($this->appName().'.downloads.get', [
+                                       'section' => 'database',
+                                       'object' => $value,
+                                     ])
+                              . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
+                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                $fileBase = $field->getName();
+                $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+                return '<a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>';
+              }
+              return null;
             };
             break;
           case FieldType::CLOUD_FILE:
@@ -259,7 +278,6 @@ trait ParticipantFieldsTrait
               }
               return null;
             };
-
             break;
           default:
             break;
