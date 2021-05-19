@@ -27,6 +27,7 @@ use OCP\IGroupManager;
 use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IL10N;
+use OCP\Image;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
@@ -127,7 +128,7 @@ class OrganizationalRolesService
       return null;
     }
     $image = new \OCP\Image();
-    $image->loadFromData($signatureFile->getFileData());
+    $image->loadFromData($signatureFile->getFileData()->getData());
 
     return $image;
   }
