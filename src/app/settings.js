@@ -38,8 +38,8 @@ require('jquery-ui/themes/base/autocomplete.css');
 require('jquery-ui/ui/widgets/accordion');
 require('jquery-ui/ui/widgets/tabs');
 
-require('settings.css');
-require('about.css');
+require('settings.scss');
+require('about.scss');
 
 /**
  * Permanent DOM element holding the dynamically injected settings
@@ -818,7 +818,7 @@ const afterLoad = function(container) {
       disable_search_threshold: 10,
       allow_single_deselect: true,
       inherit_select_classes: true,
-      width: '30%',
+      width: '100%',
     });
     simpleSetValueHandler(executiveBoardIds, 'change', msg);
 

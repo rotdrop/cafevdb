@@ -37,7 +37,7 @@ foreach ($localeCountryNames as $country => $name) {
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin">
-  <form id="orchestra">
+  <form id="orchestra" class="orchestra">
     <h4><?php echo $l->t('Street Address'); ?></h4>
     <fieldset <?php echo $off; ?> >
       <!-- <legend><?php echo $l->t('Street Address'); ?></legend> -->
@@ -194,93 +194,113 @@ foreach ($localeCountryNames as $country => $name) {
         <?php echo $l->t('Executive Board Project'); ?>
       </label>
       <br/>
-      <select id="presidentSelect"
-              data-placeholder="<?php echo $l->t('Select the President'); ?>"
-              title="<?php echo $l->t('President of the orchestra'); ?>"
-              name="presidentId"
-              class="executive-board-ids tooltip-left">
-        <option></option>
-        <?php echo Navigation::selectOptions($executiveBoardMembers, $presidentId); ?>
-      </select>
-      <select id="secretarySelect"
-              data-placeholder="<?php echo $l->t('Select the Secretary'); ?>"
-              title="<?php echo $l->t('Secretary of the orchestra'); ?>"
-              name="secretaryId"
-              class="executive-board-ids tooltip-left">
-        <option></option>
-        <?php echo Navigation::selectOptions($executiveBoardMembers, $secretaryId); ?>
-      </select>
-      <select id="treasurerSelect"
-              data-placeholder="<?php echo $l->t('Select the Treasurer'); ?>"
-              title="<?php echo $l->t('Treasurer of the orchestra'); ?>"
-              name="treasurerId"
-              class="executive-board-ids tooltip-left">
-        <option></option>
-        <?php echo Navigation::selectOptions($executiveBoardMembers, $treasurerId); ?>
-      </select>
-      <br/>
-      <select id="presidentUserSelect"
-              data-placeholder="<?php echo $l->t('Cloud President-User'); ?>"
-              title="<?php echo $l->t('Cloud user-id of the president of the orchestra'); ?>"
-              name="presidentUserId"
-              class="executive-board-ids tooltip-left">
-        <option></option>
-        <?php
-         echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['presidentUserId']);
-         ?>
-      </select>
-      <select id="secretaryUserSelect"
-              data-placeholder="<?php echo $l->t('Cloud Secretary-User'); ?>"
-              title="<?php echo $l->t('Cloud user-id of the secretary of the orchestra'); ?>"
-              name="secretaryUserId"
-              class="executive-board-ids tooltip-left">
-        <option></option>
-        <?php
-         echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['secretaryUserId']);
-         ?>
-      </select>
-      <select id="treasurerUserSelect"
-              data-placeholder="<?php echo $l->t('Cloud Treasurer-User'); ?>"
-              title="<?php echo $l->t('Cloud user-id of the treasurer of the orchestra'); ?>"
-              name="treasurerUserId"
-              class="executive-board-ids tooltip-left">
-        <option></option>
-        <?php
-         echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['treasurerUserId']);
-         ?>
-      </select>
-      <br/>
-      <select id="presidentGroupSelect"
-              data-placeholder="<?php echo $l->t('Cloud President-Group'); ?>"
-              title="<?php echo $l->t('Cloud group-id of the president of the orchestra'); ?>"
-              name="presidentGroupId"
-              class="executive-board-ids tooltip-left">
-        <option></option>
-        <?php
-         echo Navigation::simpleSelectOptions($_['userGroups'], $_['presidentGroupId']);
-         ?>
-      </select>
-      <select id="secretaryGroupSelect"
-              data-placeholder="<?php echo $l->t('Cloud Secretary-Group'); ?>"
-              title="<?php echo $l->t('Cloud group-id of the secretary of the orchestra'); ?>"
-              name="secretaryGroupId"
-              class="executive-board-ids tooltip-left">
-        <option></option>
-        <?php
-         echo Navigation::simpleSelectOptions($_['userGroups'], $_['secretaryGroupId']);
-         ?>
-      </select>
-      <select id="treasurerGroupSelect"
-              data-placeholder="<?php echo $l->t('Cloud Treasurer-Group'); ?>"
-              title="<?php echo $l->t('Cloud group-id of the treasurer of the orchestra'); ?>"
-              name="treasurerGroupId"
-              class="executive-board-ids tooltip-left">
-        <option></option>
-        <?php
-         echo Navigation::simpleSelectOptions($_['userGroups'], $_['treasurerGroupId']);
-         ?>
-      </select>
-      <br/>
+      <table class="executive-board-members">
+        <thead>
+          <tr>
+            <th><?php p($l->t('President')); ?></th>
+            <th><?php p($l->t('Secretary')); ?></th>
+            <th><?php p($l->t('Treasurer')); ?></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <select id="presidentSelect"
+                      data-placeholder="<?php echo $l->t('Select the President'); ?>"
+                      title="<?php echo $l->t('President of the orchestra'); ?>"
+                      name="presidentId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo Navigation::selectOptions($executiveBoardMembers, $presidentId); ?>
+              </select>
+            </td>
+            <td>
+              <select id="secretarySelect"
+                      data-placeholder="<?php echo $l->t('Select the Secretary'); ?>"
+                      title="<?php echo $l->t('Secretary of the orchestra'); ?>"
+                      name="secretaryId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo Navigation::selectOptions($executiveBoardMembers, $secretaryId); ?>
+              </select>
+            </td>
+            <td>
+              <select id="treasurerSelect"
+                      data-placeholder="<?php echo $l->t('Select the Treasurer'); ?>"
+                      title="<?php echo $l->t('Treasurer of the orchestra'); ?>"
+                      name="treasurerId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo Navigation::selectOptions($executiveBoardMembers, $treasurerId); ?>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="presidentUserSelect"
+                      data-placeholder="<?php echo $l->t('Cloud President-User'); ?>"
+                      title="<?php echo $l->t('Cloud user-id of the president of the orchestra'); ?>"
+                      name="presidentUserId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['presidentUserId']); ?>
+              </select>
+            </td>
+            <td>
+              <select id="secretaryUserSelect"
+                      data-placeholder="<?php echo $l->t('Cloud Secretary-User'); ?>"
+                      title="<?php echo $l->t('Cloud user-id of the secretary of the orchestra'); ?>"
+                      name="secretaryUserId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['secretaryUserId']); ?>
+              </select>
+            </td>
+            <td>
+              <select id="treasurerUserSelect"
+                      data-placeholder="<?php echo $l->t('Cloud Treasurer-User'); ?>"
+                      title="<?php echo $l->t('Cloud user-id of the treasurer of the orchestra'); ?>"
+                      name="treasurerUserId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['treasurerUserId']); ?>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="presidentGroupSelect"
+                      data-placeholder="<?php echo $l->t('Cloud President-Group'); ?>"
+                      title="<?php echo $l->t('Cloud group-id of the president of the orchestra'); ?>"
+                  name="presidentGroupId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo Navigation::simpleSelectOptions($_['userGroups'], $_['presidentGroupId']); ?>
+              </select>
+            </td>
+            <td>
+              <select id="secretaryGroupSelect"
+                      data-placeholder="<?php echo $l->t('Cloud Secretary-Group'); ?>"
+                      title="<?php echo $l->t('Cloud group-id of the secretary of the orchestra'); ?>"
+                      name="secretaryGroupId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo Navigation::simpleSelectOptions($_['userGroups'], $_['secretaryGroupId']); ?>
+              </select>
+            </td>
+            <td>
+              <select id="treasurerGroupSelect"
+                      data-placeholder="<?php echo $l->t('Cloud Treasurer-Group'); ?>"
+                      title="<?php echo $l->t('Cloud group-id of the treasurer of the orchestra'); ?>"
+                      name="treasurerGroupId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo Navigation::simpleSelectOptions($_['userGroups'], $_['treasurerGroupId']); ?>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </fieldset>
   </form>
   <div class="statuscontainer">

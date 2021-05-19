@@ -160,7 +160,7 @@ input.document-template.upload-placeholder {
   width:22em;
 }
 
-input.memberTable, input.executiveBoardTable {
+input.specialMemberProjects {
   width: 20em;
 }
 
@@ -313,4 +313,9 @@ input.randomkey {
   text-indent:-100000em;
   width:34px;
   height:34px;
+}
+
+form.orchestra table.executive-board-members {
+  margin-top:1ex;
+  width:100%;
 }
