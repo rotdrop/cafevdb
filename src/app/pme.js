@@ -1257,8 +1257,12 @@ const pmeOpenRowDialog = function(element, event, container) {
 
   if (event.target !== element) {
     const target = $(event.target);
-    // divs and spans which make it up to here will be ignored,
-    // everything else results in the default action.
+
+    // skip active elements, they probably want to do their own stuff
+    if (target.is('a') || target.is('input') || target.is('button')) {
+      return;
+    }
+
     if (target.is('.' + pmeToken('misc-check') + '.email')) {
       return;
     }
