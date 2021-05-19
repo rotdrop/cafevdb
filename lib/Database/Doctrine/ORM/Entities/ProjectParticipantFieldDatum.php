@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
@@ -213,6 +214,30 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * Set dataOption.
+   *
+   * @param int $dataOption
+   *
+   * @return ProjectParticipantFieldDatum
+   */
+  public function setDataOption($dataOption):ProjectParticipantFieldDatum
+  {
+    $this->dataOption = $dataOption;
+
+    return $this;
+  }
+
+  /**
+   * Get dataOption.
+   *
+   * @return int
+   */
+  public function getDataOption()
+  {
+    return $this->dataOption;
+  }
+
+  /**
    * Set optionValue.
    *
    * @param string $optionValue
@@ -353,4 +378,36 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   {
     return $this->payments->count();
   }
+
+  /**
+   * Return the effective option value, either by fetching it from the
+   * option or from the own value field.
+   *
+   * @return string
+   */
+  public function getEffectiveValue()
+  {
+    switch ($this->field->getMultiplicity()) {
+    case Multiplicity::SIMPLE():
+    case Multiplicity::RECURRING():
+      return $this->optionValue;
+      break;
+    case Multiplicity::GROUPOFPEOPLE():
+    case Multiplicity::GROUPSOFPEOPLE():
+    case Multiplicity::MULTIPLE():
+    case Multiplicity::SINGLE():
+      return $this->dataOption->getData();
+      break;
+    case Multiplicity::PARALLEL():
+      if ($this->field->getDataType() == DataType::CLOUD_FILE) {
+        return $this->optionValue;
+      } else {
+        return $this->dataOption->getData();
+      }
+      break;
+    }
+    // perhaps this should throw ...
+    return null;
+  }
+
 }

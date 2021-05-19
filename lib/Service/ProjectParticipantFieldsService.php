@@ -22,12 +22,16 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use \Doctrine\Common\Collections;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
@@ -342,6 +346,46 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Return the effective value of the given datum. In particular
+   * referenced files are returned as cloud file-node or DB
+   * file-entity. Dates are converted to \DateTimeImmutable. Float
+   * values to float, int to int, boolean to boolean.
+   *
+   * @return mixed
+   */
+  public function getEffectiveFieldDatum(Entities\ProjectParticipantFieldDatum $datum)
+  {
+    $value = $datum->getEffectiveValue();
+
+    /** @var Entities\ProjectParticipantField $field */
+    $field = $datum->getField();
+
+    switch ($field->getDataType()) {
+    case DataType::BOOLEAN:
+      return boolval($value);
+    case DataType::DATE:
+    case DataType::DATETIME:
+      return Util::convertToDateTime($value);
+    case DataType::FLOAT:
+    case DataType::DEPOSIT:
+    case DataType::SERVICE_FEE:
+      return floatval($value);
+    case DataType::INTEGER:
+      return intval($value);
+    case DataType::CLOUD_FILE:
+      /** @var UserStorage $userStorage */
+      $userStorage = $this->di(UserStorage::class);
+      return $userStorage->getFile($value);
+    case DataType::DB_FILE:
+      return $this->getDatabaseRepository(Entities\EncryptedFile::class)->find($value);
+    case DataType::TEXT:
+    case DataType::HTML:
+    default:
+      return $value;
+    }
+  }
+
+  /**
    * Return the row with the key matching the argument $key.
    *
    * @param sting $key Allowed values key to search for
@@ -446,6 +490,101 @@ class ProjectParticipantFieldsService
     return json_encode(array_values($options));
   }
 
+  /**
+   * Just forward to Repositories\ProjectParticipantFieldsRepository
+   */
+  public function find($id):?Entities\ProjectParticipantField
+  {
+    return $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($id);
+  }
+
+  /**
+   * Just forward to Repositories\ProjectParticipantFieldsRepository
+   */
+  public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null):Collection
+  {
+    return $this->getDatabaseRepository(Entities\ProjectParticipantField::class)
+                ->findBy($criteria, $orderBy, $lmit, $offset);
+  }
+
+  /**
+   * Select a fields with matching names from a collection of fields
+   */
+  public function filterByFieldName(Collections\Collection $things, string $fieldName, $singleResult = true)
+  {
+    if (empty($things)) {
+      return $singleResult ? null :  new Collections\ArrayCollection;
+    }
+    $fieldNames = $this->translationVariants($fieldName);
+    $remaining = new Collections\ArrayCollection;
+    if ($things->first() instanceof Entities\ProjectParticipantField) {
+      /** @var Entities\ProjectParticipantField $field */
+      $remaining = $things->filter(function($key, $field) use ($fieldNames) {
+        $fieldName = strtolower($field->getName());
+        foreach ($fieldNames as $searchItem) {
+          if ($fieldName == $searchItem) {
+            return true;
+          }
+        }
+        return false;
+      });
+    } else if ($things->first() instanceof Entities\ProjectParticipantFieldDataOption) {
+      /** @var Entities\ProjectParticipantFieldDataOption $option */
+      $remaining = $things->filter(function($key, $option) use ($fieldNames) {
+        $field = $option->getField();
+        foreach ($fieldNames as $searchItem) {
+          if ($fieldName == $searchItem) {
+            return true;
+          }
+        }
+        return false;
+      });
+    } else if ($things->first() instanceof Entities\ProjectParticipantFieldDatum) {
+      /** @var Entities\ProjectParticipantFieldDatum $datum */
+      $remaining = $things->filter(function($key, $datum) {
+        $field = $datum->getField();
+        foreach ($fieldNames as $searchItem) {
+          if ($fieldName == $searchItem) {
+            return true;
+          }
+        }
+        return false;
+      });
+    } else {
+      throw new \RuntimeException($this->l->t('Only "field" collections can be filtered.'));
+    }
+    if ($singleResult) {
+      if ($remaining->count() == 1) {
+        return $remaining->first();
+      } else if ($remaining->count() == 0) {
+        return null;
+      }
+    }
+    return $remaining;
+  }
+
+  /**
+   * Create a field with given name and type. The field returned is not yet persisted.
+   */
+  public function createField($name, Multiplicity $multiplicity, DataType $dataType, $tooltip = null):?Entities\ProjectParticipantField
+  {
+    if ($multiplicity != Multiplicity::SIMPLE) {
+      return null;
+    }
+
+    /** @var Entities\ProjectParticipantField $field */
+    $field = (new Entities\ProjectParticipantField)
+           ->setName($name)
+           ->setMultiplicity($multiplicity)
+           ->setDataType($dataType)
+           ->setTooltip($tooltip);
+    /** @var Entities\ProjectParticipantFieldDataOption $option */
+    $option = (new Entities\ProjectParticipantFieldDataOption)
+            ->setLabel($name)
+            ->setTooltip($tooltip)
+            ->setField($field);
+    $field->getDataOptions()->set($option->getKey(), $option);
+  }
 }
 
 // Local Variables: ***
