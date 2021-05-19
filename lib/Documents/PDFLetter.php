@@ -50,7 +50,7 @@ class PDFLetter extends \TCPDF
   const FONT_HEADER = 10;
   const FONT_RECIPIENT = 12;
   const FOOTER_HEIGHT = 20;
-  const FIRST_FOOTER_HEIGHT = 28;
+  const FIRST_FOOTER_HEIGHT = 20;
   const PT = 0.3527777777777777;
 
   /** IL10N */
