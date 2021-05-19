@@ -1,4 +1,5 @@
-/**Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -303,4 +304,13 @@ input.randomkey {
 
 .personal-settings .debugmode-container {
   max-width: 40ex;
+}
+
+.specialMemberProjects.validate {
+  background-image:url('../img/reload-solid.svg');
+  background-repeat:no-repeat;
+  background-position:center;
+  text-indent:-100000em;
+  width:34px;
+  height:34px;
 }

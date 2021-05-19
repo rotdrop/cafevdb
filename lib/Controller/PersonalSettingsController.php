@@ -41,11 +41,13 @@ use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -710,31 +712,63 @@ class PersonalSettingsController extends Controller {
         return self::dataResponse($data);
       }
       break;
-    case 'memberProjectCreate':
-    case 'executiveBoardProjectCreate':
-      $projectName = '';
-      try {
-        $projectName = $value['newName'];
-        $project = $this->projectService->createProject($projectName, null, Types\EnumProjectTemporalType::PERMANENT);
-        if (!empty($project)) {
-          $projectParameter = preg_replace('/Create$/', '', $parameter);
-          $this->setConfigValue($projectParameter, $project['name']);
-          $this->setConfigValue($projectParameter.'Id', $project['id']);
-        }
-      } catch (\Throwable $t) {
-        throw new \Exception($this->l->t(
-          'Unable to create project with name "%s".', $projectName), $t->getCode(), $t);
+    case 'memberProjectValidate':
+    case 'executiveBoardProjectValidate':
+      $projectName = $value['projectName'];
+      $projectId = $value['projectId'];
+      $newProjectName = $value['newProjectName'];
+
+      $projectParameter = preg_replace('/Validate$/', '', $parameter);
+
+      $currentProjectName = $this->getConfigValue($projectParameter, '');
+      $currentProjectId = $this->getConfigValue($projectParameter.'Id', 0);
+
+      $data = [ 'message' => [] ];
+
+      if ((int)$currentProjectId != (int)$projectId) {
+        return self::grumble($this->l->t('Configured project-id %d and submitted project id %d differ, please reload the page.',
+                                         [ $currentProjectId, $projectId ]));
       }
-      $data = [
-        'message' => $this->l->t('Created Project "%s" with id "%d".',
-                                [ $project['name'], $project['id'] ]),
-        'suggestions' => $this->projectService->projectOptions([ 'type' => 'permanent' ]),
-      ];
+
+      if ((int)$projectId <= 0) {
+        try {
+          $projectName = $value['newProjectName'];
+          $project = $this->projectService->createProject($projectName, null, Types\EnumProjectTemporalType::PERMANENT);
+          if (!empty($project)) {
+            $this->setConfigValue($projectParameter, $project['name']);
+            $this->setConfigValue($projectParameter.'Id', $project['id']);
+          }
+        } catch (\Throwable $t) {
+          throw new \Exception($this->l->t(
+            'Unable to create project with name "%s".', $projectName), $t->getCode(), $t);
+        }
+
+        $data = [
+          'message' => [ $this->l->t('Created Project "%s" with id "%d".',
+                                     [ $project['name'], $project['id'] ]) ],
+          'suggestions' => $this->projectService->projectOptions([ 'type' => 'permanent' ]),
+        ];
+
+      } else {
+
+        $project = $this->projectService->findById($projectId);
+
+        if (empty($project)) {
+          return self::grumble($this->l->t('Unable to find project with id %d.', $projectId));
+        }
+
+        try {
+          $this->projectService->sanitizeProject($project);
+        } catch (\Throwable $t) {
+          return self::grumble($this->exceptionChainData($t));
+        }
+
+        $data['message'][] = $this->l->t('Project "%s" successfully validated.', $project->getName());
+      }
+
       return self::dataResponse($data);
     case 'memberProjectDelete':
     case 'executiveBoardProjectDelete':
-      $projectId = -1;
-      $projectName = '';
       try {
         $projectId = $value['projectId'];
         $projectName = $value['project'];

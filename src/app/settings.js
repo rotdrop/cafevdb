@@ -805,8 +805,9 @@ const afterLoad = function(container) {
           return {
             name,
             value: {
-              project: $self.next().val(),
-              projectId: -1,
+              newProjectName: $self.next().val(),
+              projectId: $self.data('projectId'),
+              projectName: $self.data('projectName'),
             },
           };
         },

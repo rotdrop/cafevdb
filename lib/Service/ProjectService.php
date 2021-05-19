@@ -28,7 +28,10 @@ use Behat\Transliterator\Transliterator;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
@@ -56,6 +59,9 @@ class ProjectService
   /** @var UserStorage */
   private $userStorage;
 
+  /** @var ProjectParticipantFieldsService */
+  private $participantFieldsService;
+
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
   private $wikiRPC;
 
@@ -69,12 +75,14 @@ class ProjectService
     ConfigService $configService
     , EntityManager $entityManager
     , UserStorage $userStorage
+    , ProjectParticipantFieldsService $participantFieldsService
     , WikiRPC $wikiRPC
     , WebPagesRPC $webPagesRPC
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->userStorage = $userStorage;
+
     $this->wikiRPC = $wikiRPC;
     $this->wikiRPC->errorReporting(WikiRPC::ON_ERROR_THROW);
     $this->webPagesRPC = $webPagesRPC;
@@ -215,6 +223,18 @@ class ProjectService
       }
     }
     return $balance;
+  }
+
+  /**
+   * Find a project by its id.
+   *
+   * @param int $projectId
+   *
+   * @return null|Entities\Project
+   */
+  public function findById(int $projectId):?Entities\Project
+  {
+    return $this->repository->find($projectId);
   }
 
   /**
@@ -1521,6 +1541,66 @@ Whatever.',
     }
     return $projectName;
   }
+
+  /*
+   * Sanitize the given project, i.e. make sure its infrastructure is
+   * up-to-date.
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @param string|null $only Get the name of only this folder if not
+   * null. $only can be one of the PROJECTS_..._FOLDER constants of
+   * the ConfigService class, @see ConfigService.
+   *
+   * @throws \Exception is something goes wrong
+   *
+   * @todo This is not really implemented yet.
+   */
+  public function sanitizeProject($projectOrId)
+  {
+    $project = $this->repository->ensureProject($projectOrId);
+    if (empty($project)) {
+      throw new  \RuntimeException($this->l->t('Project not found.'));
+    }
+    $projectId = $project->getId();
+
+    // do general stuff here
+
+    if ($projectId == $this->getClubMembersProjectId()) {
+      // do stuff here ?
+    } else if ($projectId == $this->getExecutiveBoardProjectId()) {
+      // ensure the signature field
+
+      $participantFields = $project->getParticipantFields();
+
+      $signatureNames = $this->translationVariants(ConfigService::SIGNATURE_FIELD_NAME);
+
+      /** @var Entities\ProjectParticipantField $field */
+      $signatureFound = $participantFields->exists(function($id, $field) use  ($signatureNames) {
+        $fieldName = strtolower($field->getName());
+        foreach ($signatureNames as $searchItem) {
+          if ($fieldName == $searchItem
+              && $field->getMultiplicity() == FieldMultiplicity::SIMPLE
+              && $field->getDataType() == FieldDataType::DB_FILE) {
+            return true;
+          }
+        }
+        return false;
+      });
+      if (!$signatureFound) {
+        $signatureField = $this->participantFieldsService->createField(
+          $this->l->t(ucfirst(ConfigService::SIGNATURE_FIELD_NAME)),
+          FieldMultiplicity::SIMPLE,
+          FieldDataType::DB_FILE,
+          $this->l->t('Upload an image with the personal signature to simplify the generation of "official" mails. Preferably the image should have a transparent background and a resolution of 600 DPI or more.'));
+        $this->persist($signatureField);
+        $this->flush();
+      }
+    } else {
+      throw new \RuntimeException($this->l->t('Validation of projects not yet implemented.'));
+    }
+  }
+
 }
 
 // Local Variables: ***

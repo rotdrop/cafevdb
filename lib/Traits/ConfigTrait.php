@@ -315,6 +315,16 @@ trait ConfigTrait {
     return $this->getConfigValue('memberProject', '');
   }
 
+  protected function getExecutiveBoardProjectId():int
+  {
+    return (int)$this->getConfigValue('executiveBoardProjectId', 0);
+  }
+
+  protected function getExcutiveBoardProjectName():string
+  {
+    return $this->getConfigValue('executiveBoardProject', '');
+  }
+
   protected function getSharedFolderPath()
   {
     return $this->getConfigValue('sharedfolder', null);
@@ -410,6 +420,18 @@ trait ConfigTrait {
 
   protected function generateUUID() {
     \Sabre\VObject\UUIDUtil::getUUID();
+  }
+
+  protected function translationVariants(string $name) {
+    $lcName = strtolower($name);
+    $variants = array_unique([
+      $name, $lcName, ucfirst($lcName), strtoupper($name)
+    ]);
+    $variants = array_map(
+      function($value) { return strtolower($this->l->t($value)); },
+      $variants);
+    array_unshift($variants, $lcName);
+    return array_unique($variant);
   }
 
   /****************************************************************************

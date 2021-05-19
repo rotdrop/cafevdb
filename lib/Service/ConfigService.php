@@ -106,6 +106,8 @@ class ConfigService {
     'generalDebitNoteMandateForm' => 'general debit-note mandate',
   ];
 
+  const SIGNATURE_FIELD_NAME = 'signature';
+
   /** @var array */
   protected $encryptionCache;
 
