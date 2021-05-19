@@ -305,8 +305,8 @@ class ProjectParticipantFields extends PMETableViewBase
         'name' => $this->l->t('Deleted'),
         'css'      => [ 'postfix' => ' participant-field-disabled' ],
         'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
-        'input' => ($this->showDisabled) ? 'R' : 'RH',
-    ]);
+        'input' => ($this->showDisabled) ? 'T' : 'RH',
+      ]);
 
     $opts['fdd']['multiplicity'] =[
       'name'    => $this->l->t('Multiplicity'),
