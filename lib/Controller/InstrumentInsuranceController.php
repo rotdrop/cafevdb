@@ -300,6 +300,15 @@ class InstrumentInsuranceController extends Controller {
     return self::grumble($this->l->t('Unknown Request: "%s / %s".', [ $control, $template ]));
   }
 
+  /**
+   * @NoAdminRequired
+   */
+  public function download()
+  {
+    return self::response('HELLO');
+    return self::grumble($this->l->t('UNIMPLEMENTED'));
+  }
+
 }
 
 // Local Variables: ***

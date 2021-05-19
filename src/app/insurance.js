@@ -203,7 +203,7 @@ const pmeFormInit = function(containerSel) {
     .on('click', '.instrument-insurance-bill a.bill', function(event) {
       const self = $(this);
       const post = self.data('post');
-      const action = 'ajax/insurance/instrument-insurance-export.php';
+      const action = 'insurance/download';
 
       Page.busyIcon(true);
 

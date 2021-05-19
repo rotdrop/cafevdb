@@ -352,6 +352,11 @@ $routes = [
       'url' => '/insurance/validate/{control}',
       'verb' => 'POST',
     ],
+    [
+      'name' => 'instrument_insurance#download',
+      'url' => '/insurance/download',
+      'verb' => 'POST',
+    ],
     /**
      * Email form, mass email sending
      */
