@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-05-19 22:05+0200\n"
-"PO-Revision-Date: 2021-05-19 22:07+0200\n"
+"POT-Creation-Date: 2021-05-19 22:43+0200\n"
+"PO-Revision-Date: 2021-05-19 22:46+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2723,40 +2723,40 @@ msgstr "Neue Bankverbindung"
 msgid "Show deleted."
 msgstr "Deaktivierte anzeigen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:108
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:109
 msgid "Delete Instrument-Family"
 msgstr "Instrumenten-Familie löschen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:110
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:111
 msgid "View Instrument-Family"
 msgstr "Instrumenten-Familie anzeigen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:112
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:113
 msgid "Change Instrument-Family"
 msgstr "Instrumenten-Familie ändern"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:114
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:115
 msgid "Add Instrument-Family"
 msgstr "Instrumenten-Familie hinzufügen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:116
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:117
 msgid "Copy Instrument-Family"
 msgstr "Instrument-Familie kopieren"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:118
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:119
 msgid "Instrument-Families"
 msgstr "Instrumenten-Familien"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:221
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:222
 msgid "Family"
 msgstr "Familie"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:230
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:231
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:486
 msgid "Instruments"
 msgstr "Instrumente"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:251
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentFamilies.php:252
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Instruments.php:292
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:479
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:305
@@ -4385,7 +4385,7 @@ msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/Finance/InstrumentInsuranceService.php:602
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:202
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:209
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
@@ -4605,7 +4605,9 @@ msgstr ""
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectParticipantFieldsService.php:558
 #, php-format
 msgid "Only \"field\" collections can be filtered, not instances of \"%s\"."
-msgstr "Nur Sammlungen von Teilnehmenden-Feldern können gefiltert werden, nicht aber \"%s\"-Klassen."
+msgstr ""
+"Nur Sammlungen von Teilnehmenden-Feldern können gefiltert werden, nicht aber "
+"\"%s\"-Klassen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:386
 #, php-format
@@ -7082,11 +7084,21 @@ msgstr ""
 "werden. Vorausgefüllte Mandate können aus der Musizierenden- und\n"
 "Vereinsmitglieds-Ansicht heraus herunter geladen werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:994
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:993
+msgid ""
+"An office document with variable substitutions \"[PLACEHOLDER]\" used to "
+"communicate the\n"
+"yearly insurance fees to the club-members."
+msgstr ""
+"Ein Textverarbeitungs-Dokument (Libreoffice etc.) with Variablen-Ersetzungen "
+"im Stil \"[PLATZHALTER]\" um die jährlichen Versicherungsbeiträge an die "
+"betreffenden Personen zu kommunizieren."
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:997
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:996
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:999
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -7096,7 +7108,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1000
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1003
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -7104,7 +7116,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1002
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1005
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
@@ -7112,7 +7124,7 @@ msgstr ""
 "Gesamtsumme, die der Teilnehmer zahlen muss.. Ggf. wird außerdem noch\n"
 "die Höhe der Außenstände angegeben."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1004
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1007
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -7120,7 +7132,7 @@ msgstr ""
 "Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle "
 "eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1006
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1009
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -7128,7 +7140,7 @@ msgstr ""
 "Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, "
 "sobald die Nachricht versendet wurde."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1008
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1011
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
@@ -7539,8 +7551,8 @@ msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:61
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:171
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:442
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:962
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:974
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:960
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:972
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/legacy/calendar/calendar.js:303
 msgid "Error"
 msgstr "Fehler"
@@ -8320,19 +8332,15 @@ msgstr "Leeres Password, versuche gespeicherte Anmeldedaten zu verwenden."
 msgid "Password field must not be empty"
 msgstr "Das Passwort-feld darf nicht leer sein"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:959
-msgid "Select a Debit-Mandate Form"
-msgstr "Lastschrift-Formular auswählen"
-
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:962
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:960
 msgid "Empty response from file selection!"
 msgstr "Keine Antwort vom Datei-Auswahldialog!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:973
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:971
 msgid "Unable to copy selected file {file}."
 msgstr "Kann die ausgwählte Datei {file} nicht kopieren."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1114
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1112
 msgid "Unable to download translation templates."
 msgstr "Kann die Übersetzungen nicht laden."
 
@@ -10108,15 +10116,19 @@ msgstr "Orchester CI"
 msgid "Document templates"
 msgstr "Dokumentenvorlagen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:142
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:137
+msgid "Select "
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:149
 msgid "drop or click"
 msgstr "Ablegen oder anklicken"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:154
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:161
 msgid "Executive board and club members"
 msgstr "Vorstands- und Vereinsmitglieder"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:162
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:169
 msgid ""
 "Ensure that the club-member's project and the necessary infrastructure "
 "exists."
@@ -10124,15 +10136,15 @@ msgstr ""
 "Stelle sicher, dass das Vereinsmitglieder-Projekt existiert und die\n"
 "nötige Infrastruktur besitzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:169
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:176
 msgid "club members project"
 msgstr "Vereinsmitglieder-Pseudo-Projekt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:174
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:181
 msgid "Club Member Project"
 msgstr "Vereinsmitglieder-Pseudo-Projekt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:182
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:189
 msgid ""
 "Ensure that the executive-board project and the necessary infrastructure "
 "exists."
@@ -10140,93 +10152,95 @@ msgstr ""
 "Stelle sicher, dass das Vorstands-Projekt existiert und die nötige\n"
 "Infrastruktur besitzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:189
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:196
 msgid "executive board project"
 msgstr "Vorstands-Pseudo-Projekt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:194
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:201
 msgid "Executive Board Project"
 msgstr "Vorstands-Pseudo-Projekt"
 
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:207
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:200
 #, php-format
 msgid "President"
 msgstr "Vorsitz"
 
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:208
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:201
 #, php-format
 msgid "Secretary"
 msgstr "Schriftführung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:209
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:216
 msgid "Select the President"
 msgstr "Vorsitzende(n) auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:210
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:217
 msgid "President of the orchestra"
 msgstr "Vorsitzende(r) des Orchesters"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:219
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:226
 msgid "Select the Secretary"
 msgstr "Schriftführer(in) auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:220
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:227
 msgid "Secretary of the orchestra"
 msgstr "Schriftführer(in) des Orchesters"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:229
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:236
 msgid "Select the Treasurer"
 msgstr "Schatzmeister(in) auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:230
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:237
 msgid "Treasurer of the orchestra"
 msgstr "Schatzmeister des Orchesters"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:241
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:248
 msgid "Cloud President-User"
 msgstr "Cloud-Benutzer für Vorstandsvorsitz"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:242
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:249
 msgid "Cloud user-id of the president of the orchestra"
 msgstr "Cloud-Benutzername für den/die Vorsitzende(r) des Orchesters"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:251
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:258
 msgid "Cloud Secretary-User"
 msgstr "Cloud-Benutzer für Schriftführer"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:252
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:259
 msgid "Cloud user-id of the secretary of the orchestra"
 msgstr "Cloud-Benutzername für den/die Schriftführer(in) des Orchesters"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:261
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:268
 msgid "Cloud Treasurer-User"
 msgstr "Cloud-Benutzer für Schatzmeister"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:262
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:269
 msgid "Cloud user-id of the treasurer of the orchestra"
 msgstr "Cloud-Benutzername für den/die Schatzmeister/in des Orchesters"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:273
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:280
 msgid "Cloud President-Group"
 msgstr "Cloud Vorstandsvorsitz-Gruppe"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:274
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:281
 msgid "Cloud group-id of the president of the orchestra"
 msgstr "Cloud-Gruppe für den/die Vorsitzende(r) des Orchesters"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:283
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:290
 msgid "Cloud Secretary-Group"
 msgstr "Cloud Schriftführer-Gruppe"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:284
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:291
 msgid "Cloud group-id of the secretary of the orchestra"
 msgstr "Cloud-Gruppe für den/die Schriftführer(in) des Orchesters"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:293
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:300
 msgid "Cloud Treasurer-Group"
 msgstr "Cloud Schatzmeister-Gruppe"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:294
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:301
 msgid "Cloud group-id of the treasurer of the orchestra"
 msgstr "Cloud-Gruppe für den/die Schatzmeister/in des Orchesters"
 
@@ -10701,6 +10715,64 @@ msgstr "Unterschrift"
 msgid "instrument insurance record template"
 msgstr "Vorlage Versicherungsaufstellung"
 
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:601
+#, php-format
+msgid "account"
+msgstr "Konto"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:601
+#, php-format
+msgid "bank"
+msgstr "Bank"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:601
+#, php-format
+msgid "bic"
+msgstr "BIC"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:601
+#, php-format
+msgid "blz"
+msgstr "BLZ"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentInsurances.php:120
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InsuranceRates.php:67
+#, php-format
+msgid "Europe"
+msgstr "Europa"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentInsurances.php:120
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InsuranceRates.php:67
+#, php-format
+msgid "Germany"
+msgstr "Deutschland"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:601
+#, php-format
+msgid "iban"
+msgstr "IBAN"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:137
+#, php-format
+msgid "Select general debit-note mandate"
+msgstr "Allgemeines Lastschriftmandat auswählen"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:137
+#, php-format
+msgid "Select instrument insurance record template"
+msgstr "Vorlage Versicherungsaufstellung auswählen"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:137
+#, php-format
+msgid "Select project debit-note mandate"
+msgstr "Projekt-Lastschriftmandat auswählen"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentInsurances.php:120
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InsuranceRates.php:67
+#, php-format
+msgid "World"
+msgstr "Welt"
+
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BIRTHDAY"
@@ -10836,6 +10908,9 @@ msgstr "NACHNAME"
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
 
+#~ msgid "Select a Debit-Mandate Form"
+#~ msgstr "Lastschrift-Formular auswählen"
+
 #~ msgid "Annual insurance fee for all insured items of all musicians"
 #~ msgstr "Jahresbeitrag für alle versicherten Gegenstände"
 
@@ -10903,9 +10978,6 @@ msgstr "ZUSATZKOSTEN"
 #~ "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat "
 #~ "einzutragen"
 
-#~ msgid "amount"
-#~ msgstr "Betrag"
-
 #~ msgid "subject"
 #~ msgstr "Betreff"
 
@@ -10929,9 +11001,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "sequence type"
 #~ msgstr "Wiederholungsart"
-
-#~ msgid "bank code"
-#~ msgstr "BLZ"
 
 #~ msgid "bank account owner"
 #~ msgstr "Kontoinhaber"
@@ -11089,15 +11158,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "Preferred Language"
 #~ msgstr "Sprachpräferenz"
-
-#~ msgid "Germany"
-#~ msgstr "Deutschland"
-
-#~ msgid "Europe"
-#~ msgstr "Europa"
-
-#~ msgid "World"
-#~ msgstr "Welt"
 
 #~ msgid ""
 #~ "Start and end of the regular insurance period is as\n"
