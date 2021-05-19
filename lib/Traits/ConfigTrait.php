@@ -431,7 +431,7 @@ trait ConfigTrait {
       function($value) { return strtolower($this->l->t($value)); },
       $variants);
     array_unshift($variants, $lcName);
-    return array_unique($variant);
+    return array_unique($variants);
   }
 
   /****************************************************************************
