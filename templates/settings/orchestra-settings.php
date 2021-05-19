@@ -131,8 +131,15 @@ foreach ($localeCountryNames as $country => $name) {
       <!-- <legend><?php echo $l->t('Document templates'); ?></legend> -->
       <?php foreach ($documentTemplates as $documentTemplate => $placeholder) { ?>
         <div class="template-upload" data-document-template="<?php p($documentTemplate); ?>">
-          <input type="button" title="<?php p($toolTips['templates:' . $documentTemplate . '-cloud']); ?>" class="operation select-cloud document-template operation <?php p($documentTemplate); ?>"/>
-          <input type="button" title="<?php p($toolTips['templates:' . $documentTemplate . '-upload']); ?>" class="operation upload-replace document-template operation <?php p($documentTemplate); ?>"/>
+          <input type="button"
+                 title="<?php p($toolTips['templates:' . $documentTemplate . '-cloud']); ?>"
+                 class="operation select-cloud document-template operation <?php p($documentTemplate); ?>"
+                 data-placeholder="<?php p($l->t('Select '.$placeholder)); ?>"
+          />
+          <input type="button"
+                 title="<?php p($toolTips['templates:' . $documentTemplate . '-upload']); ?>"
+                 class="operation upload-replace document-template operation <?php p($documentTemplate); ?>"
+          />
           <input class="<?php p($documentTemplate); ?> document-template upload-placeholder<?php !empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
                  type="text"
                  id="<?php p($documentTemplate); ?>"

@@ -932,8 +932,6 @@ const afterLoad = function(container) {
       const $this = $(this);
       const $container = $this.parent();
 
-      console.info('CONTAINER', $this, $container, $('.document-template-upload-wrapper'));
-
       FileUpload.init({
         url: generateUrl('upload/stash'),
         doneCallback(file, index, container) {
@@ -956,7 +954,7 @@ const afterLoad = function(container) {
       const $container = $this.closest('.template-upload');
 
       Dialogs.filePicker(
-        t(appName, 'Select a Debit-Mandate Form'),
+        $this.data('placeholder'),
         function(path) {
           if (!path) {
             Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
