@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 use \DateTimeImmutable as DateTime;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -46,12 +47,17 @@ class InstrumentInsuranceService
   /** @var Repositories\InstrumentInsurancesRepository */
   private $insurancesRepository;
 
+  /** @var OrganizationalRolesService */
+  private $orgaRolesService;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
+    , OrganizationalRolesService $orgaRolesService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
+    $this->orgaRolesService = $orgaRolesService;
     $this->l = $this->l10n();
     $this->insurancesRepository = $this->getDatabaseRepository(self::ENTITY);
   }
@@ -429,9 +435,9 @@ class InstrumentInsuranceService
   public function musicianOverviewLetter($overview, $name = 'dummy.pdf', $dest = 'S')
   {
     // Find the the treasurer
-    /** @var Entities\Musician $treasurer */
-    $treasurer = $this->getDatabaseRepository(Entities\Musician::class)
-                      ->find($this->getConfigValue('treasurerId'));
+
+    /** @var Entities\Participant $treasurer */
+    $treasurer = $this->orgaRolesService->getTreasurer()->getMusician();
 
     // Some styling, however TCPDF does not support all of these. In
     // particular padding and min-width are ignored at all.
@@ -497,7 +503,7 @@ class InstrumentInsuranceService
       'c/o '.$treasurer->getPublicName().'<br>'.
       $treasurer->getStreet().'<br>'.
       $treasurer->getPostalCode().' '.$treasurer->getCity().'<br>'.
-      'Phone: '.$treasurer['phone'].'<br>'.
+      'Phone: '.$treasurer->getPhone.'<br>'.
       'EM@il: '.$this->l->t('treasurer').strstr($this->getConfigValue('emailfromaddress'), '@')
     );
 
@@ -594,8 +600,7 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
     $signature = __DIR__.'/../img/'.'treasurer-signature.png'; // @todo make it configurable
     $pdf->letterClose($closing,
                       $treasurer->getPublicName().' ('.$this->l->t('Treasurer').')',
-                      $signature);
-
+                      $this->orgaRolesService->treasurerSignature());
 
     // Slightly smaller for table
     $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10);
