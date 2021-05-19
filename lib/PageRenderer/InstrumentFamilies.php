@@ -74,6 +74,7 @@ class InstrumentFamilies extends PMETableViewBase
       'flags' => self::JOIN_READONLY,
     ],
     self::INSTRUMENTS_TABLE => [
+      'table' => self::INSTRUMENTS_TABLE,
       'entity' => Entities\Instrument::class,
       'identifier' => [
         'id' => [
