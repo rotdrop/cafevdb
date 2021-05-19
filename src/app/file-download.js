@@ -95,9 +95,10 @@ const download = function(url, post, options) {
       method: 'POST',
       cache: false,
       data: post,
+      dataType: 'binary', // vital, otherwise jQuery annoyingly tries to parse the response
       xhr: function() {
         const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
+        xhr.onreadystatechange = function() {
           if (xhr.readyState === 2) {
             if (xhr.status === 200) {
               xhr.responseType = 'blob';
@@ -125,11 +126,10 @@ const download = function(url, post, options) {
         let contentType = xhr.getResponseHeader('Content-Type');
         if (contentType) {
           contentType = contentType.split(';')[0];
-          console.info('CONTENT TYPE', contentType);
         } else {
           contentType ='application/octetstream';
         }
-
+        console.info('DATA', data);
         // Convert the Byte Data to BLOB object.
         const blob = new Blob([data], { type: contentType });
 
