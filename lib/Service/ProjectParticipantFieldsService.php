@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Common\Functions;
 
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
@@ -512,14 +513,14 @@ class ProjectParticipantFieldsService
    */
   public function filterByFieldName(Collections\Collection $things, string $fieldName, $singleResult = true)
   {
-    if (empty($things)) {
+    if ($things->count() == 0) {
       return $singleResult ? null :  new Collections\ArrayCollection;
     }
     $fieldNames = $this->translationVariants($fieldName);
     $remaining = new Collections\ArrayCollection;
     if ($things->first() instanceof Entities\ProjectParticipantField) {
       /** @var Entities\ProjectParticipantField $field */
-      $remaining = $things->filter(function($key, $field) use ($fieldNames) {
+      $remaining = $things->filter(function($field) use ($fieldNames) {
         $fieldName = strtolower($field->getName());
         foreach ($fieldNames as $searchItem) {
           if ($fieldName == $searchItem) {
@@ -530,8 +531,9 @@ class ProjectParticipantFieldsService
       });
     } else if ($things->first() instanceof Entities\ProjectParticipantFieldDataOption) {
       /** @var Entities\ProjectParticipantFieldDataOption $option */
-      $remaining = $things->filter(function($key, $option) use ($fieldNames) {
+      $remaining = $things->filter(function($option) use ($fieldNames) {
         $field = $option->getField();
+        $fieldName = strtolower($field->getName());
         foreach ($fieldNames as $searchItem) {
           if ($fieldName == $searchItem) {
             return true;
@@ -540,9 +542,11 @@ class ProjectParticipantFieldsService
         return false;
       });
     } else if ($things->first() instanceof Entities\ProjectParticipantFieldDatum) {
+
       /** @var Entities\ProjectParticipantFieldDatum $datum */
-      $remaining = $things->filter(function($key, $datum) {
+      $remaining = $things->filter(function($datum) use ($fieldNames) {
         $field = $datum->getField();
+        $fieldName = strtolower($field->getName());
         foreach ($fieldNames as $searchItem) {
           if ($fieldName == $searchItem) {
             return true;
@@ -551,7 +555,7 @@ class ProjectParticipantFieldsService
         return false;
       });
     } else {
-      throw new \RuntimeException($this->l->t('Only "field" collections can be filtered.'));
+      throw new \RuntimeException($this->l->t('Only "field" collections can be filtered, not instances of "%s".', get_class($things->first())));
     }
     if ($singleResult) {
       if ($remaining->count() == 1) {

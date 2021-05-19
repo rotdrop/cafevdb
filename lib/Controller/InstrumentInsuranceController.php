@@ -29,11 +29,13 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\DataDownloadResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 
 use OCA\CAFEVDB\Common\Util;
@@ -42,14 +44,17 @@ class InstrumentInsuranceController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var \OCA\CAFEVDB\Service\ParameterService */
+  /** @var ParameterService */
   private $parameterService;
 
-  /** @var \OCA\CAFEVDB\Service\FuzzyInputService */
+  /** @var FuzzyInputService */
   private $fuzzyInputService;
 
-  /** @var \OCA\CAFEVDB\Service\ProjectService */
+  /** @var ProjectService */
   private $projectService;
+
+  /** @var InstrumentInsuranceService */
+  private $insuranceService;
 
   /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
   protected $pme;
@@ -59,6 +64,7 @@ class InstrumentInsuranceController extends Controller {
     , IRequest $request
     , RequestParameterService $parameterService
     , ConfigService $configService
+    , InstrumentInsuranceService $insuranceService
     , ProjectService $projectService
     , FuzzyInputService $fuzzyInputService
     , PHPMyEdit $phpMyEdit
@@ -66,6 +72,7 @@ class InstrumentInsuranceController extends Controller {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
     $this->configService = $configService;
+    $this->insuranceService = $insuranceService;
     $this->projectService = $projectService;
     $this->fuzzyInputService = $fuzzyInputService;
     $this->pme = $phpMyEdit;
@@ -303,10 +310,11 @@ class InstrumentInsuranceController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function download()
+  public function download($musicianId, $insuranceId)
   {
-    return self::response('HELLO');
-    return self::grumble($this->l->t('UNIMPLEMENTED'));
+    $overview = $this->insuranceService->musicianOverview($musicianId);
+    $data = $this->insuranceService->musicianOverviewLetter($overview);
+    return new DataDownloadResponse($data, 'dummy.pdf', 'application/pdf');
   }
 
 }

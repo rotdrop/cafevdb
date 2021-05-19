@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Documents\PDFLetter;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Functions;
 
 /** Collective instrument insurance. */
 class InstrumentInsuranceService
@@ -337,7 +338,7 @@ class InstrumentInsuranceService
    * ]
    * ```
    */
-  public static function musicianOverview($musicianOrId, $date = null)
+  public function musicianOverview($musicianOrId, $date = null)
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
@@ -384,7 +385,7 @@ class InstrumentInsuranceService
       $annualFee *= $fraction;
 
       $instrumentHolder = $insurance->getInstrumentHolder();
-      $instruemntHolderId = $instrumentHolder->getId();
+      $instrumentHolderId = $instrumentHolder->getId();
       if (empty($insuranceOverview['musicians'][$instrumentHolderId])) {
         $insuranceOverview['musicians'][$instrumentHolderId] = [
           'name' => $instrumentHolder->getPublicName(),
@@ -407,7 +408,7 @@ class InstrumentInsuranceService
         'fraction' => $fraction,
       ];
 
-      $insuranceOverview['musicians'][$instruemntHolderId]['items'][] = $itemInfo;
+      $insuranceOverview['musicians'][$instrumentHolderId]['items'][] = $itemInfo;
     }
 
     $annual     = 0.0;
@@ -543,7 +544,7 @@ your insured items at any time. Just ask.'), '', 1);
 
     $html = '
 <H3>'.
-          $this->l->t('Total Insurance Fees').'
+          $this->l->t('Total Insurance Fees %s', $year).'
 </H3>';
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
@@ -551,13 +552,11 @@ your insured items at any time. Just ask.'), '', 1);
                         $style.$html, '', 1);
 
     $totals = $overview['annual'];
-    $taxRate = floatval(InstrumentInsurance::TAXES);
+    $taxRate = floatval(self::TAXES);
     $taxes = $totals * $taxRate;
     $html = '';
     $html .= '
-<p>'.
-    $this->l->t('Annual insurance fee for all insured items of all musicians').'
-</p>
+<p>
 <table class="totals no-page-break">
   <tr>
     <td width="220" class="summary">'.$this->l->t('Annual amount excluding taxes:').'</td>
@@ -579,7 +578,7 @@ your insured items at any time. Just ask.'), '', 1);
                         $style.$html, '', 1);
 
     $totals = $overview['totals'];
-    $taxRate = floatval(InstrumentInsurance::TAXES);
+    $taxRate = floatval(self::TAXES);
     $taxes = $totals * $taxRate;
     $html = '';
     $html .= '
@@ -594,11 +593,12 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
 
     $html = $this->l->t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit at least 14 days in advance of the bank transaction.');
 
-    $html .= '<p>'.$this->l->t('Best wishes,');
-    $closing = $html;
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                        10,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
+                        $style.$html, '', 1);
 
-    $signature = __DIR__.'/../img/'.'treasurer-signature.png'; // @todo make it configurable
-    $pdf->letterClose($closing,
+    $pdf->letterClose($this->l->t('Best wishes,'),
                       $treasurer->getPublicName().' ('.$this->l->t('Treasurer').')',
                       $this->orgaRolesService->treasurerSignature());
 
@@ -615,7 +615,7 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
     <th width="70">'.$this->l->t('Vendor').'</th>
     <th width="60">'.$this->l->t('Scope').'</th>
     <th width="80">'.$this->l->t('Object').'</th>
-    <th>'.$this->l->t('Manufacturer').'</th>
+    <th width="70">'.$this->l->t('Manufacturer').'</th>
     <th width="60">'.$this->l->t('Amount').'</th>
     <th width="45">'.$this->l->t('Rate').'</th>
     <th width="60">'.$this->l->t('Start').'</th>
@@ -633,17 +633,16 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
     <td class="text">'.$item['manufacturer'].'</td>
     <td class="money">'.money_format('%n', $item['amount']).'</td>
     <td class="percentage">'.($item['rate']*100.0).' %'.'</td>
-    <td class="date">'.$this->dateTimeFormatter()->formatDate($item['start'], 'medium').'</td>
-    <td class="date">'.$this->dateTimeFormatter()->formatDate($item['due'], 'medium').'</td>
+    <td class="date">'.$this->dateTimeFormatter()->formatDate($item['start']->getTimestamp(), 'medium').'</td>
+    <td class="date">'.$this->dateTimeFormatter()->formatDate($item['due']->getTimestamp(), 'medium').'</td>
     <td class="text">'.$item['fraction']*12.0.'</td>
     <td class="money">'.money_format('%n', $item['fee']).'</td>
   </tr>';
       } // end insured items
       $html .= '
   <tr>
-    <td class="summary" colspan="6">'.
-      $this->l->t('Sub-totals (excluding taxes)',
-           array(InstrumentInsurance::TAXES)).'
+    <td class="summary" colspan="9">'.
+      $this->l->t('Sub-totals (excluding taxes)', [ self::TAXES ]).'
     </td>
     <td class="money">'.money_format('%n', $insurance['subTotals']).'</td>
   </tr>
@@ -653,7 +652,7 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
       $pdf->startTransaction();
       $startPage = $pdf->getPage();
 
-      $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+      $pdf->writeHtmlCell(PDFLetter::PAGE_HEIGHT,//-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                           10,
                           PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
                           $style.$html, '', 1);
@@ -661,9 +660,9 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
       $endPage = $pdf->getPage();
       if ($startPage != $endPage) {
         $pdf->rollbackTransaction(true);
-        $pdf->addPage();
+        $pdf->addPage('L');
         // Do it again on a new page
-        $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+        $pdf->writeHtmlCell(PDFLetter::PAGE_HEIGHT, // WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                             10,
                             PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
                             $style.$html, '', 1);
