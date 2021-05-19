@@ -104,6 +104,7 @@ class ConfigService {
   const DOCUMENT_TEMPLATES = [
     'projectDebitNoteMandateForm' => 'project debit-note mandate',
     'generalDebitNoteMandateForm' => 'general debit-note mandate',
+    'instrumentInsuranceRecord' => 'instrument insurance record template',
   ];
 
   const SIGNATURE_FIELD_NAME = 'signature';

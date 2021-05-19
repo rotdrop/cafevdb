@@ -989,6 +989,9 @@ the individual table views.'),
         'projectDebitNoteMandateForm' => $this->l->t('A fillable PDF form for debit-mandates bound to special projects. The app is able to auto-fill form-fields with the names "projectName", "bankAccountOwner", "projectParticipant", "bankAccountIBAN", "bankAccountBIC", "bank". The fields in the PDF-form are identified by these names. Auto-filled mandates can be downloaed from the musician and project-participant views.'),
 
         'generalDebitNoteMandateForm' => $this->l->t('A fillable PDF form for debit-mandates not bound to special projects. The app is able to auto-fill form-fields with the names "bankAccountOwner", "projectParticipant", "bankAccountIBAN", "bankAccountBIC", "bank". The fields in the PDF-form are identified by these names. Auto-filled mandates can be downloaed from the musician and member\'s project view.'),
+
+        'instrumentInsuranceRecord' => $this->l->t('An office document with variable substitutions "[PLACEHOLDER]" used to communicate the
+yearly insurance fees to the club-members.'),
       ],
 
       'test-cafevdb_dbpassword' => $this->l->t('Test data-base passphrase.'),
