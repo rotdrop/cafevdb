@@ -29,8 +29,8 @@ use Doctrine\ORM\EntityRepository;
 
 class ProjectParticipantFieldsRepository extends EntityRepository
 {
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
 }
-
 // Local Variables: ***
 // c-basic-offset: 2 ***
 // indent-tabs-mode: nil ***
