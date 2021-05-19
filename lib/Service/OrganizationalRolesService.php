@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or1
  * modify it under th52 terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,6 +28,8 @@ use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
 /**
  * Check for authorization and supply contact information for several
  * administrative roles.
@@ -36,13 +38,20 @@ class OrganizationalRolesService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  const CLOUD_ADMIN_ROLE = 'cloudAdmin';
+  const GROUP_ADMIN_ROLE = 'groupAdmin';
+  const TREASURER_ROLE = 'treasurer';
+  const SECRETARY_ROLE = 'secretary';
+  const PRESIDENT_ROLE = 'president';
+  const BOARD_MEMBER_ROLE = 'boardMember';
+
   const ROLES = [
-    'cloudAdmin',
-    'groupAdmin',
-    'president',
-    'secretary',
-    'treasurer',
-    'boardMember',
+    self::CLOUD_ADMIN_ROLE,
+    self::GROUP_ADMIN_ROLE,
+    self::PRESIDENT_ROLE,
+    self::SECRETARY_ROLE,
+    self::TREASURER_ROLE,
+    self::BOARD_MEMBER_ROLE,
   ];
 
   public function __construct(
@@ -65,6 +74,92 @@ class OrganizationalRolesService
       $email = $user->getEMailAddress();
       return [ 'name' => $name, 'email' => $email ];
     }
+  }
+
+  private function executiveBoardProject():?Entities\Project
+  {
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    return $projectService->findById($this->getExecutiveBoardProjectId());
+  }
+
+  private function dedicatedBoardMemberParticipant(string $role):?Entities\ProjectParticipant
+  {
+    $musicianId = $this->getConfigValue($role.'Id', 0);
+    if ($musicianId == -1) {
+      return null;
+    }
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    return $projectService->findParticipant(
+      $this->getExecutiveBoardProjectId(), $musicianId);
+  }
+
+  /**
+   * Fetch the signature image for the given musician from the
+   * executive-board table.
+   *
+   * @param in
+   */
+  private function dedicatedBoardMemberSignature(string $role)
+  {
+    $project = $this->executiveBoardProject();
+    if (empty($project)) {
+      return null;
+    }
+    $participant = $this->dedicatedBoardMemberParticipant($role);
+    if (empty($participant)) {
+      return null;
+    }
+    /** @var ProjectParticipantFieldsService $fieldsService */
+    $fieldsService = $this->di(ProjectParticipantFieldsService::class);
+
+    /** @var Entities\ProjectParticipantFieldDatum */
+    $signatureData = $fieldsService->filterByFieldName(
+      $participant->getParticipantFieldsData(),
+      ConfigService::SIGNATURE_FIELD_NAME);
+    if (!($signatureData instanceof Entities\ProjectParticipantFieldDatum)) {
+      // did not work out
+      return null;
+    }
+    $signatureFile = $fieldsService->getEffectiveFieldDatum($signatureData);
+    if (!$signatureFile instanceof Entities\EncryptedFile) {
+      return null;
+    }
+    $image = new \OCP\Image();
+    $image->loadFromData($signatureFile->getFileData());
+
+    return $image;
+  }
+
+  public function treasurerSignature():?Image
+  {
+    return $this->dedicatedBoardMemberSignature(self::TREASURER_ROLE);
+  }
+
+  public function secretarySignature():?Image
+  {
+    return $this->dedicatedBoardMemberSignature(self::SECRETARY_ROLE);
+  }
+
+  public function presidentSignature():?Image
+  {
+    return $this->dedicatedBoardMemberSignature(self::PRESIDENT_ROLE);
+  }
+
+  public function getTreasurer():?Entities\ProjectParticipant
+  {
+    return $this->dedicatedBoardMemberParticipant(self::TREASURER_ROLE);
+  }
+
+  public function getSecretary():?Entities\ProjectParticipant
+  {
+    return $this->dedicatedBoardMemberParticipant(self::SECRETARY_ROLE);
+  }
+
+  public function getPresident():?Entities\ProjectParticipant
+  {
+    return $this->dedicatedBoardMemberParticipant(self::PRESIDENT_ROLE);
   }
 
   /**
@@ -95,7 +190,7 @@ class OrganizationalRolesService
    */
   public function isTreasurer($uid = null, $allowGroupAccess = false)
   {
-    return $this->isDedicatedBoardMember('treasurer', $uid, $allowGroupAccess);
+    return $this->isDedicatedBoardMember(self::TREASURER_ROLE, $uid, $allowGroupAccess);
   }
 
   /**
@@ -103,7 +198,7 @@ class OrganizationalRolesService
    */
   public function isSecretary($uid = null, $allowGroupAccess = false)
   {
-    return isDedicatedBoardMember('secretary', $uid, $allowGroupAccess);
+    return isDedicatedBoardMember(self::SECRETARY_ROLE, $uid, $allowGroupAccess);
   }
 
   /**
@@ -111,7 +206,7 @@ class OrganizationalRolesService
    */
   public function isPresident($uid = null, $allowGroupAccess = false)
   {
-    return isDedicatedBoardMember('president', $uid, $allowGroupAccess);
+    return isDedicatedBoardMember(self::PRESIDENT_ROLE, $uid, $allowGroupAccess);
   }
 
   /**
@@ -145,7 +240,7 @@ class OrganizationalRolesService
    */
   public function treasurerContact()
   {
-    return $this->dedicatedBoardMemberContact('treasurer');
+    return $this->dedicatedBoardMemberContact(self::TREASURER_ROLE);
   }
 
   /**
@@ -155,7 +250,7 @@ class OrganizationalRolesService
    */
   public function secretaryContact()
   {
-    return $this->dedicatedBoardMemberContact('secretary');
+    return $this->dedicatedBoardMemberContact(self::SECRETARY_ROLE);
   }
 
   /**
@@ -165,7 +260,7 @@ class OrganizationalRolesService
    */
   public function presidentContact()
   {
-    return $this->dedicatedBoardMemberContact('president');
+    return $this->dedicatedBoardMemberContact(self::PRESIDENT_ROLE);
   }
 
   /**
