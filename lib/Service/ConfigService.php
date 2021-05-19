@@ -102,6 +102,7 @@ class ConfigService {
     [ 'uri' => 'finance', 'public' => false ],
   ];
   const DOCUMENT_TEMPLATES = [
+    'logo' => 'orchestra logo',
     'projectDebitNoteMandateForm' => 'project debit-note mandate',
     'generalDebitNoteMandateForm' => 'general debit-note mandate',
     'instrumentInsuranceRecord' => 'instrument insurance record template',

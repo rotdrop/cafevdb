@@ -867,8 +867,7 @@ class PersonalSettingsController extends Controller {
       $this->setConfigValue($parameter, $realValue); // remember for remote API perhaps
       return self::response($this->l->t('Successfully changed passsword for "%s".', [$shareOwnerUid]));
 
-    case 'projectDebitNoteMandateForm':
-    case 'generalDebitNoteMandateForm':
+    case (!empty(ConfigService::DOCUMENT_TEMPLATES[$parameter]) ? $parameter : null):
       $oldFileName = $this->getConfigValue($parameter);
       if (empty($value)) {
         $this->deleteConfigValue($parameter);
