@@ -46,7 +46,8 @@ class EncryptedFile extends File
       $fileData = new EncryptedFileData;
       $fileData->setData($data);
       $fileData->setFile($this);
-      $this->setFileData($fileData);
+      $this->setFileData($fileData)
+           ->setSize(strlen($data));
     }
   }
 }

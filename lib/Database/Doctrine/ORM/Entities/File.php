@@ -108,7 +108,8 @@ class File implements \ArrayAccess
       $fileData = new FileData;
       $fileData->setData($data);
       $fileData->setFile($this);
-      $this->setFileData($fileData);
+      $this->setFileData($fileData)
+           ->setSize(strlen($data));
     }
   }
 
