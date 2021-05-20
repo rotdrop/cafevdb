@@ -297,8 +297,7 @@ class PersonalForm {
           $folder = UserStorage::PATH_SEP
                   . $sharedFolder . UserStorage::PATH_SEP
                   . $documentTemplatesFolder . UserStorage::PATH_SEP;
-          foreach (array_keys(ConfigService::DOCUMENT_TEMPLATES) as $templateInfo) {
-            $documentTemplate = $templateInfo['name'];
+          foreach (array_keys(ConfigService::DOCUMENT_TEMPLATES) as $documentTemplate) {
             $fileName = $this->getConfigValue($documentTemplate);
             $this->logInfo('TEMPLATE '.$documentTemplate.': '.$folder.$fileName);
             if (!empty($fileName)) {
