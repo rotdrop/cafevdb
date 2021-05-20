@@ -70,12 +70,15 @@ const download = function(url, post, options) {
     }
     post = newPost;
   }
-  const cookieValue = generateId();
-  const cookieName = appName + '_' + url.replace(/\W+/g, '_') + '_' + 'download';
   const cookiePost = [];
-  cookiePost.push({ name: 'DownloadCookieName', value: cookieName });
-  cookiePost.push({ name: 'DownloadCookieValue', value: cookieValue });
-  cookiePost.push({ name: 'requesttoken', value: OC.requestToken });
+  // eslint-disable-next-line no-constant-condition
+  if (false) {
+    const cookieValue = generateId();
+    const cookieName = appName + '_' + url.replace(/\W+/g, '_') + '_' + 'download';
+    cookiePost.push({ name: 'DownloadCookieName', value: cookieName });
+    cookiePost.push({ name: 'DownloadCookieValue', value: cookieValue });
+    cookiePost.push({ name: 'requesttoken', value: OC.requestToken });
+  }
 
   if (Array.isArray(post)) {
     post = post.concat(cookiePost);
