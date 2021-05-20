@@ -434,11 +434,6 @@ class InstrumentInsuranceService
    */
   public function musicianOverviewFileName($overview)
   {
-    // We also remove the most common special characters, is just more
-    // handy in file-names.
-    $firstName = Finance::sepaTranslit($overview['payer']['firstName']);
-    $surName = Finance::sepaTranslit($overview['billToParty']['surName']);
-
     /** @var Entities\Musician $billToParty */
     $billToParty = $overview['billToParty'];
 
