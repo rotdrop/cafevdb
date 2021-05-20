@@ -255,7 +255,7 @@ class ProjectParticipantField implements \ArrayAccess
     // return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL, 'deleted' => null, ]));
     return $this->dataOptions->filter(function($option) {
       /** @var ProjectParticipantFieldDataOption $option */
-      return (!$includeDeleted || empty($option->getDeleted()))
+      return ($includeDeleted || empty($option->getDeleted()))
         && $option->getKey() != Uuid::nil();
     });
   }
