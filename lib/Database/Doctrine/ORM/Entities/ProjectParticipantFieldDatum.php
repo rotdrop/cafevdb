@@ -132,7 +132,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Optional. ATM only used for particular auto-generated monetary fields.
    *
-   * @ORM\OneToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="EncryptedFile", cascade="all", fetch="EXTRA_LAZY")
    */
   private $supportingDocument;
 
@@ -286,6 +286,30 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   public function getOptionKey()
   {
     return $this->optionKey;
+  }
+
+  /**
+   * Set supportingDocument.
+   *
+   * @param null|EncryptedFile $supportingDocument
+   *
+   * @return ProjectParticipantFieldDatum
+   */
+  public function setSupportingDocument(?EncryptedFile $supportingDocument):ProjectParticipantFieldDatum
+  {
+    $this->supportingDocument = $supportingDocument;
+
+    return $this;
+  }
+
+  /**
+   * Get supportingDocument.
+   *
+   * @return null|EncryptedFile
+   */
+  public function getSupportingDocument():?EncryptedFile
+  {
+    return $this->supportingDocument;
   }
 
   /**
