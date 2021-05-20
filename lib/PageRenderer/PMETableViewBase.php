@@ -732,21 +732,23 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return true;
   }
 
-  private function isMultiValuedJoin(array $joinInfo, string $key)
+  /**
+   * Find the recursion end-point for a nested join description.
+   *
+   * @return Just the value of the pivot column.
+   */
+  private function findJoinColumnPivot(array $joinInfo, string $key)
   {
     $keyInfo = $joinInfo['identifier'][$key];
-    if ($keyInfo === false) {
-      return true;
+    if (!empty($keyInfo['table'])) {
+      return $this->findJoinColumnPivot(
+        $this->joinStructure[$keyInfo['table']], $keyInfo['column']);
     }
-    if (!is_array($keyInfo) || empty($keyInfo['table'])) {
-      return false;
-    }
-    foreach ($this->joinStructure as $otherInfo) {
-      if ($otherInfo['table'] == $keyInfo['table']) {
-        return $this->isMultiValuedJoin($otherInfo, $keyInfo['column']);
-      }
-    }
-    throw \RuntimeException($this->l->t('Inconsisten join-structure'));
+    // Remaining possibilities:
+    // - main-table column
+    // - value false
+    // - [ 'value' => VALUE ]
+    return $keyInfo;
   }
 
   /**
@@ -816,9 +818,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $identifier = [];
       $identifierColumns = $meta->getIdentifierColumnNames();
       foreach ($identifierColumns as $key) {
-        if ($this->isMultiValuedJoin($joinInfo, $key)) {
+        $pivotColumn = $this->findJoinColumnPivot($joinInfo, $key);
+        if ($pivotColumn === false) {
           if (!empty($multiple)) {
-            throw new \RuntimeException($this->l->t('Missing identifier for field "%s" and grouping field "%s" already set.', [ $key, $multiple ]));
+            throw new \RuntimeException($this->l->t('Tabs "%s": missing identifier for field "%s" and grouping field "%s" already set.', [ $table, $key, $multiple ]));
           }
           // assume that the 'column' component contains the keys.
           $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
@@ -845,10 +848,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
           unset($changeSet[$joinInfo['column']]);
           $multiple = $key;
-        } else if (is_array($joinInfo['identifier'][$key])) {
-          if (!empty($joinInfo['identifier'][$key]['value'])) {
-            $identifier[$key] = $joinInfo['identifier'][$key]['value'];
-          } else if (!empty($joinInfo['identifier'][$key]['self'])) {
+        } else {
+          if (!is_array($pivotColumn)) {
+            $identifier[$key] = $oldvals[$pivotColumn];
+          } else if (!empty($pivotColumn['value'])){
+            $identifier[$key] = $pivotColumn['value'];
+          } else if (!empty($pivotColumn['self'])) {
             // Key value has to come from another field, possibly
             // defaulted if not yet known. This can only be used
             // together with the 'multiple' case and must not
@@ -856,10 +861,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $selfField = $this->joinTableFieldName($joinInfo, $key);
             $identifier[$key] = [ 'self' => $selfField ];
           } else {
-            throw new \RuntimeException($this->l->t('Nested multi-value join tables are not yet supported: %s::%s.', [ $joinInfo['entity'], $key ]));
+            throw new \RuntimeException($this->l->t('Field "%s.%s": nested multi-value join tables with unexpected pivot-column: %s.', [ $table, $key, print_r($pivotColumn, true), ]));
           }
-        } else {
-          $identifier[$key] = $oldvals[$joinInfo['identifier'][$key]];
         }
       }
       if (!empty($multiple)) {
@@ -1176,7 +1179,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $identifier = [];
       $identifierColumns = $meta->getIdentifierColumnNames();
       foreach ($identifierColumns as $key) {
-        if ($this->isMultiValuedJoin($joinInfo, $key)) {
+        $pivotColumn = $this->findJoinColumnPivot($joinInfo, $key);
+        if ($pivotColumn === false) {
           if (!empty($multiple)) {
             throw new \RuntimeException($this->l->t('Missing identifier for field "%s" and grouping field "%s" already set.', [ $key, $multiple ]));
           }
@@ -1187,10 +1191,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
           unset($changeSet[$joinInfo['column']]);
           $multiple = $key;
-        } else if (is_array($joinInfo['identifier'][$key])) {
-          if (!empty($joinInfo['identifier'][$key]['value'])) {
-            $identifier[$key] = $joinInfo['identifier'][$key]['value'];
-          } else if (!empty($joinInfo['identifier'][$key]['self'])) {
+        } else {
+          if (!is_array($pivotColumn)) {
+            $idKey = $pivotColumn;
+            $identifier[$key] = $newvals[$idKey];
+            unset($changeSet[$idKey]);
+            Util::unsetValue($changed, $idKey);
+          } else if (!empty($pivotColumn['value'])) {
+            $identifier[$key] = $pivotColumn['value'];
+          } else if (!empty($pivotColumn['self'])) {
             // Key value has to come from another field, possibly
             // defaulted if not yet known. This can only be used
             // together with the 'multiple' case and must not
@@ -1198,13 +1207,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $selfField = $this->joinTableFieldName($joinInfo, $key);
             $identifier[$key] = [ 'self' => $selfField ];
           } else {
-            throw new \RuntimeException($this->l->t('Nested multi-value join tables are not yet supported.'));
+            throw new \RuntimeException($this->l->t('Field "%s.%s": nested multi-value join tables with unexpected pivot-column: %s.', [ $table, $key, print_r($pivotColumn, true), ]));
           }
-        } else {
-          $idKey = $joinInfo['identifier'][$key];
-          $identifier[$key] = $newvals[$idKey];
-          unset($changeSet[$idKey]);
-          Util::unsetValue($changed, $idKey);
         }
       }
       if (!empty($multiple)) {
