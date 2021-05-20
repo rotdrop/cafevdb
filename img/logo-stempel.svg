@@ -14,9 +14,7 @@
    id="svg2"
    height="42mm"
    width="42mm"
-   inkscape:export-filename="/home/claus/camerata/logo/logo-contour-1200.png"
-   inkscape:export-xdpi="1759.41"
-   inkscape:export-ydpi="1759.41">
+  >
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -43,25 +41,6 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0">
-    <sodipodi:guide
-       id="guide3773"
-       orientation="0,250"
-       position="0.35625001,-9.7854409" />
-    <sodipodi:guide
-       id="guide3775"
-       orientation="-250,0"
-       position="267.02291,-9.7854409" />
-    <sodipodi:guide
-       id="guide3777"
-       orientation="0,-250"
-       position="267.02291,256.88123" />
-    <sodipodi:guide
-       id="guide3779"
-       orientation="250,0"
-       position="0.35625001,256.88123" />
-    <inkscape:grid
-       type="xygrid"
-       id="grid940" />
   </sodipodi:namedview>
   <defs
      id="defs4" />
@@ -136,17 +115,6 @@
         </g>
       </g>
     </g>
-    <text
-       xml:space="preserve"
-       style="line-height:0%;font-family:'Courier New';-inkscape-font-specification:'Courier New, Normal'"
-       x="-84.243446"
-       y="1029.7607"
-       id="text866"><tspan
-         sodipodi:role="line"
-         id="tspan864"
-         x="-84.243446"
-         y="1029.7607"
-         style="font-size:40px;line-height:1"> </tspan></text>
     <text
        xml:space="preserve"
        style="font-weight:bold;font-size:16px;line-height:1;font-family:Arial;-inkscape-font-specification:'Arial, Bold'"
