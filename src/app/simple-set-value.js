@@ -125,6 +125,7 @@ const simpleSetHandler = function(element, eventType, msgElement, userCallbacks)
     },
     cleanup() {},
   };
+  msgElement = msgElement || $();
   const callbacks = $.extend({}, defaultCallbacks);
   if (typeof userCallbacks === 'function') {
     callbacks.success = userCallbacks;

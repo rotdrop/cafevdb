@@ -132,6 +132,13 @@ foreach ($localeCountryNames as $country => $name) {
       <?php foreach ($documentTemplates as $documentTemplate => $placeholder) { ?>
         <div class="template-upload" data-document-template="<?php p($documentTemplate); ?>">
           <input type="button"
+                 name="<?php p($documentTemplate); ?>Delete"
+                 title="<?php p($toolTips['templates:delete']); ?>"
+                 class="operation delete document-template operation <?php p($documentTemplate); ?>"
+                 data-placeholder="<?php p($l->t('Select '.$placeholder)); ?>"
+                 <?php empty(${$documentTemplate . 'FileName'}) && p('disabled'); ?>
+          />
+          <input type="button"
                  title="<?php p($toolTips['templates:' . $documentTemplate . '-cloud']); ?>"
                  class="operation select-cloud document-template operation <?php p($documentTemplate); ?>"
                  data-placeholder="<?php p($l->t('Select '.$placeholder)); ?>"
@@ -153,7 +160,7 @@ foreach ($localeCountryNames as $country => $name) {
              href="<?php echo ${$documentTemplate . 'DownloadLink'}; ?>"
              title="<?php echo $toolTips['templates:' . $documentTemplate]; ?>"
           >
-            <?php p(${$documentTemplate . 'FileName'}); ?>"
+            <?php p(${$documentTemplate . 'FileName'}); ?>
           </a>
         </div>
       <?php } ?>

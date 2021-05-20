@@ -866,27 +866,35 @@ class PersonalSettingsController extends Controller {
       }
       $this->setConfigValue($parameter, $realValue); // remember for remote API perhaps
       return self::response($this->l->t('Successfully changed passsword for "%s".', [$shareOwnerUid]));
+    case (!empty(ConfigService::DOCUMENT_TEMPLATES[substr($parameter, 0, -strlen('Delete'))]) ? $parameter : null):
+      // Delete config value and file. The file can be undeleted in the cloud, if necessary.
 
+      // Bit unclean, as a relict of previous implementation the
+      // "setter" code also handles deletion, so we can just fall
+      // through to it.
+      $parameter = substr($parameter, 0, -strlen('Delete'));
+      $value = '';
+      // fallthrough
     case (!empty(ConfigService::DOCUMENT_TEMPLATES[$parameter]) ? $parameter : null):
       $oldFileName = $this->getConfigValue($parameter);
+      $sharedFolder = $this->getConfigValue('sharedfolder');
+      if (empty($sharedFolder)) {
+        return self::grumble($this->l->t(
+          'Shared folder is not configured, cannot store templates.'));
+      }
+      $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+      if (empty($templatesFolder)) {
+        return self::grumble($this->l->t(
+          'Document template folder is not configured, cannot store templates.'));
+      }
+      $templatesFolder = UserStorage::PATH_SEP
+                       . $sharedFolder . UserStorage::PATH_SEP
+                       . $templatesFolder . UserStorage::PATH_SEP;
       if (empty($value)) {
         $this->deleteConfigValue($parameter);
         $messages[] = $this->l->t(
           'Removed setting for document-template "%s".', $parameter);
       } else {
-        $sharedFolder = $this->getConfigValue('sharedfolder');
-        if (empty($sharedFolder)) {
-          return self::grumble($this->l->t(
-            'Shared folder is not configured, cannot store templates.'));
-        }
-        $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
-        if (empty($templatesFolder)) {
-          return self::grumble($this->l->t(
-            'Document template folder is not configured, cannot store templates.'));
-        }
-        $templatesFolder = UserStorage::PATH_SEP
-                         . $sharedFolder . UserStorage::PATH_SEP
-                         . $templatesFolder . UserStorage::PATH_SEP;
         try {
           $this->userStorage->get($templatesFolder . $value);
         } catch (\Throwable $t) {
@@ -897,7 +905,7 @@ class PersonalSettingsController extends Controller {
           'Document-template "%s" successfully set to "%s".', [ $parameter, $value ]);
       }
       if (!empty($oldFileName) && $oldFileName != $value) {
-        $this->logInfo('OLD FILE '.$oldFileName);
+        $this->logInfo('TRY DELETED OLD '.$templatesFolder . $oldFileName);
         try {
           /** @var \OCP\Files\File $oldFile */
           if (!empty($oldFile = $this->userStorage->getFile($templatesFolder . $oldFileName))) {

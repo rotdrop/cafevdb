@@ -136,6 +136,10 @@ input.document-template.operation {
   margin-right:1em;
 }
 
+input.delete {
+  background-image:url('../../../core/img/actions/delete.svg');
+}
+
 input.upload-replace {
   background-image:url('../../../core/img/actions/upload.svg');
 }

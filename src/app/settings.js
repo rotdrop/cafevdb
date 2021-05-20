@@ -882,6 +882,7 @@ const afterLoad = function(container) {
     const $fieldset = $('fieldset.document-template');
     const $uploaders = $fieldset.find('input.upload-placeholder, input.upload-replace');
     const $cloudSelectors = $fieldset.find('input.select-cloud');
+    const $deleters = $fieldset.find('input.delete');
 
     if ($('#documenttemplatesfolder').val() === '' || $('#sharedfolder').val() === '') {
       $fieldset.find('input').prop('disabled', true);
@@ -923,10 +924,22 @@ const afterLoad = function(container) {
                 .attr('href', downloadLink)
                 .html(fileName)
                 .show();
+              $container.find('.delete').prop('disabled', false);
               console.info(data);
             });
         });
     };
+
+    simpleSetHandler($deleters, 'click', undefined, {
+      success($self, data, msgElement) {
+        $self.prop('disabled', true);
+        $self.nextAll('input.upload-placeholder').val('').show();
+        $self.nextAll('a.downloadlink')
+          .attr('href', '')
+          .html('')
+          .hide();
+      },
+    });
 
     $uploaders.on('click', function(event) {
       const $this = $(this);
