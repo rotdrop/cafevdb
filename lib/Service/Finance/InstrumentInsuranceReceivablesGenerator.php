@@ -142,7 +142,17 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $musician = $participant->getMusician();
     /** @var Entities\Project $project */
     $project = $participant->getProject();
-    $fee = $this->insuranceService->insuranceFee($musician, new \DateTimeImmutable($year.'-06-01'));
+
+    // "now" should in principle just do ...
+    $referenceDate = new \DateTimeImmutable(); // $year.'-06-01');
+
+    // Compute the actual fee
+    $fee = $this->insuranceService->insuranceFee($musician, $referenceDate);
+
+    // Generate the overview letter as supporting document
+    $overview = $this->insuranceService->musicianOverview($musician, $referenceDate);
+    $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
+    $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview, $overviewFilename);
 
     $remove = 0;
     $added = 0;
@@ -161,6 +171,12 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
                ->setProject($participant->getProject())
                ->setOptionKey($receivable->getKey())
                ->setOptionValue($fee);
+
+        // create overview letter
+        $supportingDocument = new Entities\EncryptedFile(
+          $overviewFilename, $overviewLetter, 'application/pdf');
+        $datum->setSupportingDocument($supportingDocument);
+
         // @todo Too much connectivity
         $participantFieldsData->set($optionKey->getBytes(), $datum);
         $musician->getProjectParticipantFieldsData()->set($optionKey->getBytes(), $datum);
@@ -170,6 +186,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       }
     } else { // !empty($datum)
       if ($fee != $datum->getOptionValue()) {
+        // @todo also change overview letter
         switch ($updateStrategy) {
         case self::UPDATE_STRATEGY_REPLACE:
           break;
@@ -194,6 +211,18 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         // just update current data to the computed value
         if ($fee != $datum->getOptionValue()) {
           $datum->setOptionValue($fee);
+          /** @var Entities\EncryptedFile $supportingDocument */
+          $supportingDocument = $datum->getSupportingDocument();
+          if (empty($supportingDocument)) {
+            // create overview letter
+            $supportingDocument = new Entities\EncryptedFile(
+              $overviewFilename, $overviewLetter, 'application/pdf');
+            $datum->setSupportingDocument($supportingDocument);
+          } else {
+            $supportingDocument->getFileData()->setData($overviewLetter);
+            $supportingDocument->setFileName($overviewFilename);
+            $supportingDocument->setMimeType('application/pdf');
+          }
           ++$changed;
         }
       }

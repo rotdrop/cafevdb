@@ -428,12 +428,37 @@ class InstrumentInsuranceService
     return $insuranceOverview;
   }
 
-  /**Take the data provided by self::musicianOverview() to generate a
+  /**
+   *Small support function in order to generate a consistent
+   * file-name for the exported PDFs.
+   */
+  public function musicianOverviewFileName($overview)
+  {
+    // We also remove the most common special characters, is just more
+    // handy in file-names.
+    $firstName = Finance::sepaTranslit($overview['payer']['firstName']);
+    $surName = Finance::sepaTranslit($overview['billToParty']['surName']);
+
+    /** @var Entities\Musician $billToParty */
+    $billToParty = $overview['billToParty'];
+
+    $components = [
+      $this->timeStamp(),
+      $billToParty->getId(),
+      Util::removeSpaces($this->transliterate($billToParty->getPublicName())),
+      $this->l->t('insurance'),
+    ];
+
+    return implode('-', $components) . '.pdf';
+  }
+
+  /**
+   * Take the data provided by self::musicianOverview() to generate a
    * PDF with a DIN-letter in order to send the overview to the
    * respective musician by SnailMail. The resulting letter will be
    * returned as string.
    */
-  public function musicianOverviewLetter($overview, $name = 'dummy.pdf', $dest = 'S')
+  public function musicianOverviewLetter($overview, $name = null, $dest = 'S')
   {
     // Find the the treasurer
 
@@ -675,6 +700,7 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
     $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE);
 
     //Close and output PDF document
+    $name = $name ?? $this->musicianOverviewFileName($overview);
     return $pdf->Output($name, $dest);
   }
 
