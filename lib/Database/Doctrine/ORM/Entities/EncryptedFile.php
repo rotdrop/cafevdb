@@ -39,4 +39,14 @@ class EncryptedFile extends File
    * @ORM\OneToOne(targetEntity="EncryptedFileData", mappedBy="file", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $fileData;
+
+  public function __construct($fileName = null, $data = null, $mimeType = null) {
+    parent::__construct($fileName, null, $mimeType);
+    if (!empty($data)) {
+      $fileData = new EncryptedFileData;
+      $fileData->setData($data);
+      $fileData->setFile($this);
+      $this->setFileData($fileData);
+    }
+  }
 }

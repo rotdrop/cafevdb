@@ -100,8 +100,16 @@ class File implements \ArrayAccess
    */
   private $updated;
 
-  public function __construct() {
+  public function __construct($fileName = null, $data = null, $mimeType = null) {
     $this->arrayCTOR();
+    $this->setFileName($fileName);
+    $this->setMimeType($mimeType);
+    if (!empty($data)) {
+      $fileData = new FileData;
+      $fileData->setData($data);
+      $fileData->setFile($this);
+      $this->setFileData($fileData);
+    }
   }
 
   /**
