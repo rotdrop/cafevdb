@@ -1409,12 +1409,6 @@ class PersonalSettingsController extends Controller {
     switch ($parameter) {
     case 'translation-templates':
       $pot = $this->translationService->generateCatalogueTemplates();
-      $cookieName = $this->parameterService['DownloadCookieName'];
-      $cookieValue = $this->parameterService['DownloadCookieValue'];
-
-      if (empty($cookieName) || empty($cookieValue)) {
-        return self::grumble($this->l->t('Download-cookies have not been submitted'));
-      }
 
       $fileName = $this->appName().'-'.$this->timeStamp().'.pot';
 
