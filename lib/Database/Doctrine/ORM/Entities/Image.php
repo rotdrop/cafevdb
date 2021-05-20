@@ -30,7 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Image -- Meta data for images stored in the data-base.
  *
- * The actual image data is stored in ImageData for performance reasons.
+ * The actual image data is stored in FileData for performance reasons.
  *
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ImagesRepository")
  */
