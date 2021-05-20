@@ -423,7 +423,7 @@ received so far'),
     ];
 
     $opts['fdd']['sequence'] = [
-      'name'     => $this->l->t('Mandate-Sequence'),
+      'name'     => $this->l->t('Bank-Account-Sequence'),
       'input'    => 'H',
       'select'   => 'N',
       'options'  => 'LACPDV',
@@ -434,7 +434,7 @@ received so far'),
     ];
 
     // Define some further join-restrictions
-    array_walk($this->joinStructure, function(&$joinInfo, $table) {
+    array_walk($this->joinStructure, function(&$joinInfo, $table) use ($projectMode) {
       switch ($table) {
       case self::PROJECT_PARTICIPANTS_TABLE:
         if ($projectMode) {
@@ -631,6 +631,17 @@ received so far'),
     ///////////////////////////////////////////////////////////////////////////
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'sequence',
+      [
+        'tab'    => [ 'id' => 'mandate' ],
+        'name'   => $this->l->t('Mandate Sequence'),
+        'input'  => 'R',
+        'select' => 'N',
+        'maxlen' => 3,
+        'sort'   => true,
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
       [
         'tab'    => [ 'id' => 'mandate' ],
@@ -720,8 +731,9 @@ received so far'),
       $opts['filters']['AND'][] = '$table.deleted IS NULL';
     }
 
-    // redirect all updates through Doctrine\ORM.
+    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
     $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+    // redirect all updates through Doctrine\ORM.
     $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);

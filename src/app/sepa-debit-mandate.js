@@ -916,12 +916,14 @@ const mandateValidatePME = function(event, validateLockCB) {
     [pmeData('last_used_date')]: 'lastUsedDate',
     [pmeData('mandate_date')]: 'mandateDate',
     [pmeData('mandate_reference')]: 'mandateReference',
+    [pmeData('SepaDebitMandates:sequence')]: 'mandateSequence',
     [pmeData('bank_account_owner')]: 'bankAccountOwner',
     [pmeData('iban')]: 'bankAccountIBAN',
     [pmeData('bic')]: 'bankAccountBIC',
     [pmeData('blz')]: 'bankAccountBLZ',
     [pmeData('Projects:id')]: 'projectId',
-    [pmeData('Musicians:id')]: 'musicianId',
+    [pmeData('musician_id')]: 'musicianId',
+    [pmeData('sequence')]: 'bankAccountSequence',
     [pmeData('non_recurring[]')]: 'nonRecurring',
   };
   let changed = $element.attr('name');
@@ -933,7 +935,7 @@ const mandateValidatePME = function(event, validateLockCB) {
   // }
   const projectId = projectElem.val();
 
-  const musicianElem = $('[name="' + pmeData('Musicians:id') + '"]');
+  const musicianElem = $('[name="' + pmeData('musician_id') + '"]');
   // if (!musicianElem.is('input')) {
   //   musicianElem = musicianElem.find('option[selected="selected"]');
   // }
@@ -942,9 +944,11 @@ const mandateValidatePME = function(event, validateLockCB) {
   const mandateData = {
     mandateReference: $('input[name="' + pmeData('mandate_reference') + '"]').val(),
     mandateDate: $('input[name="' + pmeData('mandate_date') + '"]').val(),
+    mandateSequence: $('input[name="' + pmeData('SepaDebitMandates:sequence') + '"]').val(),
     bankAccountOwner: $('input[name="' + pmeData('bank_account_owner') + '"]').val(),
     lastUsedDate: $('input[name="' + pmeData('last_used_date') + '"]').val(),
     musicianId,
+    bankAccountSequence: $('input[name="' + pmeData('sequence') + '"]').val(),
     projectId,
     mandateProjectId: projectId,
     bankAccountIBAN: $('input[name="' + pmeData('iban') + '"]').val(),
@@ -1277,7 +1281,7 @@ const mandateReady = function(selector) {
     });
   };
 
-  table.find('input[type="text"]').not('tr.' + pmeToken('filter') + ' input')
+  table.find('input[type="text"]').not('.revocation-date, tr.' + pmeToken('filter') + ' input')
     .off('blur')
     .on('blur', validateInput);
 
