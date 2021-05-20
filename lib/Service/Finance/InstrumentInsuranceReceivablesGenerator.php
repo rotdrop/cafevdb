@@ -185,7 +185,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         ++$added;
       }
     } else { // !empty($datum)
-      if ($fee != $datum->getOptionValue()) {
+      if (!$datum->isDeleted() && $fee != $datum->getOptionValue()) {
         // @todo also change overview letter
         switch ($updateStrategy) {
         case self::UPDATE_STRATEGY_REPLACE:
@@ -202,27 +202,33 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       if ($fee == 0.0) {
         // remove current option
         $this->remove($datum);
+        $this->remove($datum);
         $participantFieldsData->removeElement($datum);
         $musician->getProjectParticipantFieldsData()->removeElement($datum);
         $receivable->getFieldData()->removeElement($datum);
         $project->getParticipantFieldsData()->removeElement($datum);
         ++$removed;
       } else {
+        /** @var Entities\EncryptedFile $supportingDocument */
+        $supportingDocument = $datum->getSupportingDocument();
+        if (empty($supportingDocument)) {
+          // create overview letter
+          $supportingDocument = new Entities\EncryptedFile(
+            $overviewFilename, $overviewLetter, 'application/pdf');
+          $datum->setSupportingDocument($supportingDocument);
+        } else if ($fee != $datum->getOptionValue()) {
+          $supportingDocument->setFileName($overviewFilename)
+                             ->setMimeType('application/pdf')
+                             ->setSize(strlen($overviewLetter))
+                             ->getFileData()->setData($overviewLetter);
+        }
         // just update current data to the computed value
-        if ($fee != $datum->getOptionValue()) {
+        if ($datum->isDeleted()) {
+          $datum->setDeleted(null);
           $datum->setOptionValue($fee);
-          /** @var Entities\EncryptedFile $supportingDocument */
-          $supportingDocument = $datum->getSupportingDocument();
-          if (empty($supportingDocument)) {
-            // create overview letter
-            $supportingDocument = new Entities\EncryptedFile(
-              $overviewFilename, $overviewLetter, 'application/pdf');
-            $datum->setSupportingDocument($supportingDocument);
-          } else {
-            $supportingDocument->getFileData()->setData($overviewLetter);
-            $supportingDocument->setFileName($overviewFilename);
-            $supportingDocument->setMimeType('application/pdf');
-          }
+          ++$added;
+        } else if ($fee != $datum->getOptionValue()) {
+          $datum->setOptionValue($fee);
           ++$changed;
         }
       }
