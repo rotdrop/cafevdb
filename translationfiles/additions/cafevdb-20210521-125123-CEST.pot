@@ -1,0 +1,9 @@
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:159
+#, php-format
+msgid "orchestra seal"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:147
+#, php-format
+msgid "Select orchestra seal"
+msgstr ""

@@ -1,0 +1,15 @@
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:989
+#, php-format
+msgid "An image file with the orchestra logo -- preferably in SVG format. The logo is substituted into document templates using the \"[LOGO]\" placeholder."
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:156
+#, php-format
+msgid "orchestra logo"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:138
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:144
+#, php-format
+msgid "Select orchestra logo"
+msgstr ""

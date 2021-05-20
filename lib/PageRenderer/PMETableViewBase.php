@@ -821,7 +821,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $pivotColumn = $this->findJoinColumnPivot($joinInfo, $key);
         if ($pivotColumn === false) {
           if (!empty($multiple)) {
-            throw new \RuntimeException($this->l->t('Tabs "%s": missing identifier for field "%s" and grouping field "%s" already set.', [ $table, $key, $multiple ]));
+            throw new \RuntimeException($this->l->t('Table "%s": missing identifier for field "%s" and grouping field "%s" already set.', [ $table, $key, $multiple ]));
           }
           // assume that the 'column' component contains the keys.
           $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
