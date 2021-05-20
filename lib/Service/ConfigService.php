@@ -75,6 +75,7 @@ class ConfigService {
   const PROJECTS_FOLDER = 'projectsfolder';
   const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';
   const PROJECT_BALANCE_FOLDER = 'projectbalancefolder';
+  const DOCUMENT_TEMPLATES_FOLDER = 'documenttemplatesfolder';
 
   const CMS_CATEGORIES = [
     'preview',
@@ -101,11 +102,32 @@ class ConfigService {
     [ 'uri' => 'management', 'public' => false ],
     [ 'uri' => 'finance', 'public' => false ],
   ];
+
+  const DOCUMENT_TYPE_CONSTANT = 'constant';
+  const DOCUMENT_TYPE_TEMPLATE = 'template';
+
+  /** @var Dedicated document-templates used in various places. */
   const DOCUMENT_TEMPLATES = [
-    'logo' => 'orchestra logo',
-    'projectDebitNoteMandateForm' => 'project debit-note mandate',
-    'generalDebitNoteMandateForm' => 'general debit-note mandate',
-    'instrumentInsuranceRecord' => 'instrument insurance record template',
+    'logo' => [
+      'name' => 'orchestra logo',
+      'type' => self::DOCUMENT_TYPE_CONSTANT,
+    ],
+    'seal' => [
+      'name' => 'orchestra seal',
+      'type' => self::DOCUMENT_TYPE_CONSTANT,
+    ],
+    'projectDebitNoteMandateForm' => [
+      'name' => 'project debit-note mandate',
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+    ],
+    'generalDebitNoteMandateForm' => [
+      'name' => 'general debit-note mandate',
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+    ],
+    'instrumentInsuranceRecord' => [
+      'name' => 'instrument insurance record template',
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+    ],
   ];
 
   const SIGNATURE_FIELD_NAME = 'signature';

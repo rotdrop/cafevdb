@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -78,19 +79,19 @@ class PersonalSettingsController extends Controller {
   /** @var ConfigCheckService */
   private $configCheckService;
 
-  /** @var \OCA\CAFEVDB\Service\ParameterService */
+  /** @var RequestParameterService */
   private $parameterService;
 
-  /** @var \OCA\CAFEVDB\Service\CalDavService */
+  /** @var CalDavService */
   private $calDavService;
 
-  /** @var OCA\CAFEVDB\Service\L10N\TranslationService */
+  /** @var TranslationService */
   private $translationService;
 
-  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
+  /** @var WikiRPC */
   private $wikiRPC;
 
-  /** @var OCA\Redaxo4Embedded\Service\RPC */
+  /** @var WebPagesRPC */
   private $webPagesRPC;
 
   /** @var PhoneNumberService */
@@ -1422,10 +1423,47 @@ class PersonalSettingsController extends Controller {
       $response->addCookie($cookieName, $cookieValue);
 
       return $response;
+    case 'auto-fill-test':
+      $templateName = $this->parameterService->getParam('documentTemplate');
+      if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
+          ||ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE ) {
+        return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
+      }
+      /** @var InstrumentationService $instrumentationService */
+      $instrumentationService = $this->di(InstrumentationService::class);
+      $musician = $instrumentationService->getDummyMusician();
+
+      $fileName = implode('-', [ $this->timeStamp(), $templateName, 'auto-fill-test' ]);
+
+      switch ($templateName) {
+      case 'projectDebitNoteMandateForm':
+        list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
+          $musician->getSepaBankAccounts()->first(),
+          $this->getExecutiveBoardProjectId());
+        break;
+      case 'generalDebitNoteMandateForm':
+        list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
+          $musician->getSepaBankAccounts()->first(),
+          $this->getClubMembersProjectId());
+        break;
+      default:
+        return self::grumble(
+          $this->l->t('Auto-fill test for template "%s: not yet implemented, sorry.',
+                      $templateName));
+      }
+
+      $pathInfo = pathinfo($fileName);
+      $fileName = implode('-', [
+        $this->timeStamp(),
+        $pathInfo['filename'],
+        'auto-fill-test',
+      ]) . '.' . $pathInfo['extension'];
+
+      return new DataDownloadResponse($fileData, $fileName, $mimeType);
     default:
       break;
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    return self::grumble($this->l->t('Unknown Request: "%s".', $parameter));
   }
 
   private function setSimpleConfigValue($key, $value)

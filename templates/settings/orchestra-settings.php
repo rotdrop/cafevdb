@@ -23,14 +23,15 @@
 
 namespace OCA\CAFEVDB;
 
-use \OCA\CAFEVDB\PageRenderer\Util\Navigation;
+use \OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use \OCA\CAFEVDB\Service\ConfigService;
 
 $off = $orchestra == '' ? 'disabled' : '';
 $countries = [];
 foreach ($localeCountryNames as $country => $name) {
   $option = ['name' => $name, 'value' => $country];
   if ($country === $streetAddressCountry) {
-    $option['flags'] = Navigation::SELECTED;
+    $option['flags'] = PageNavigation::SELECTED;
   }
   $countries[] = $option;
 }
@@ -83,7 +84,7 @@ foreach ($localeCountryNames as $country => $name) {
               title="<?php echo $l->t('country part of address of orchestra'); ?>"
               placeholder="<?php echo $l->t('country'); ?>">
         <option></option>
-        <?php echo Navigation::selectOptions($countries); ?>
+        <?php echo PageNavigation::selectOptions($countries); ?>
       </select><br/>
       <input class="phoneNumber" type="text"
              id="phoneNumber"
@@ -129,23 +130,25 @@ foreach ($localeCountryNames as $country => $name) {
     <h4><?php echo $l->t('Document templates'); ?></h4>
     <fieldset <?php echo $off; ?> class="chosen-dropup document-template">
       <!-- <legend><?php echo $l->t('Document templates'); ?></legend> -->
-      <?php foreach ($documentTemplates as $documentTemplate => $placeholder) { ?>
+      <?php foreach ($documentTemplates as $documentTemplate => $templateInfo) {
+        $placeholder = $templateInfo['name'];
+        $type = $templateInfo['type'];
+      ?>
         <div class="template-upload" data-document-template="<?php p($documentTemplate); ?>">
           <input type="button"
                  name="<?php p($documentTemplate); ?>Delete"
                  title="<?php p($toolTips['templates:delete']); ?>"
-                 class="operation delete document-template operation <?php p($documentTemplate); ?>"
-                 data-placeholder="<?php p($l->t('Select '.$placeholder)); ?>"
+                 class="operation delete document-template <?php p($documentTemplate); ?>"
                  <?php empty(${$documentTemplate . 'FileName'}) && p('disabled'); ?>
           />
           <input type="button"
                  title="<?php p($toolTips['templates:' . $documentTemplate . '-cloud']); ?>"
-                 class="operation select-cloud document-template operation <?php p($documentTemplate); ?>"
+                 class="operation select-cloud document-template <?php p($documentTemplate); ?>"
                  data-placeholder="<?php p($l->t('Select '.$placeholder)); ?>"
           />
           <input type="button"
                  title="<?php p($toolTips['templates:' . $documentTemplate . '-upload']); ?>"
-                 class="operation upload-replace document-template operation <?php p($documentTemplate); ?>"
+                 class="operation upload-replace document-template <?php p($documentTemplate); ?>"
           />
           <input class="<?php p($documentTemplate); ?> document-template upload-placeholder<?php !empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
                  type="text"
@@ -162,6 +165,15 @@ foreach ($localeCountryNames as $country => $name) {
           >
             <?php p(${$documentTemplate . 'FileName'}); ?>
           </a>
+          <?php if ($type == ConfigService::DOCUMENT_TYPE_TEMPLATE) {  ?>
+            <input type="button"
+                   name="<?php p($documentTemplate); ?>AutoFillTest"
+                   data-template="<?php p($documentTemplate); ?>"
+                   title="<?php p($toolTips['templates:auto-fill-test']); ?>"
+                   class="operation auto-fill-test document-template <?php p($documentTemplate); ?><?php empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
+                   <?php empty(${$documentTemplate . 'FileName'}) && p('disabled'); ?>
+            />
+          <?php } ?>
         </div>
       <?php } ?>
     </fieldset>
@@ -225,7 +237,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="presidentId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo Navigation::selectOptions($executiveBoardMembers, $presidentId); ?>
+                <?php echo PageNavigation::selectOptions($executiveBoardMembers, $presidentId); ?>
               </select>
             </td>
             <td>
@@ -235,7 +247,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="secretaryId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo Navigation::selectOptions($executiveBoardMembers, $secretaryId); ?>
+                <?php echo PageNavigation::selectOptions($executiveBoardMembers, $secretaryId); ?>
               </select>
             </td>
             <td>
@@ -245,7 +257,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="treasurerId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo Navigation::selectOptions($executiveBoardMembers, $treasurerId); ?>
+                <?php echo PageNavigation::selectOptions($executiveBoardMembers, $treasurerId); ?>
               </select>
             </td>
           </tr>
@@ -257,7 +269,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="presidentUserId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['presidentUserId']); ?>
+                <?php echo PageNavigation::simpleSelectOptions($_['userGroupMembers'], $_['presidentUserId']); ?>
               </select>
             </td>
             <td>
@@ -267,7 +279,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="secretaryUserId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['secretaryUserId']); ?>
+                <?php echo PageNavigation::simpleSelectOptions($_['userGroupMembers'], $_['secretaryUserId']); ?>
               </select>
             </td>
             <td>
@@ -277,7 +289,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="treasurerUserId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['treasurerUserId']); ?>
+                <?php echo PageNavigation::simpleSelectOptions($_['userGroupMembers'], $_['treasurerUserId']); ?>
               </select>
             </td>
           </tr>
@@ -289,7 +301,7 @@ foreach ($localeCountryNames as $country => $name) {
                   name="presidentGroupId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo Navigation::simpleSelectOptions($_['userGroups'], $_['presidentGroupId']); ?>
+                <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['presidentGroupId']); ?>
               </select>
             </td>
             <td>
@@ -299,7 +311,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="secretaryGroupId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo Navigation::simpleSelectOptions($_['userGroups'], $_['secretaryGroupId']); ?>
+                <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['secretaryGroupId']); ?>
               </select>
             </td>
             <td>
@@ -309,7 +321,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="treasurerGroupId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo Navigation::simpleSelectOptions($_['userGroups'], $_['treasurerGroupId']); ?>
+                <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['treasurerGroupId']); ?>
               </select>
             </td>
           </tr>

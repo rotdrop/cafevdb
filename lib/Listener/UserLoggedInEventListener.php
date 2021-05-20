@@ -59,7 +59,7 @@ class UserLoggedInEventListener implements IEventListener
   }
 
   public function handle(Event $event): void {
-    if (!($event instanceOf Event1 && !($event instanceOf Event2))) {
+    if (!($event instanceOf Event1) && !($event instanceOf Event2)) {
       return;
     }
 

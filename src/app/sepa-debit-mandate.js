@@ -173,7 +173,7 @@ const mandatesInit = function(data, onChangeCallback) {
 
   popup.on('click', mandateFormSelector + ' ' + downloadPrefilledSelector, function(event) {
     fileDownload(
-      'finance/sepa/debit-mandates/prefilled',
+      'finance/sepa/debit-mandates/pre-filled',
       popup.data('sepaId'),
       t(appName, 'Unable to download pre-filled mandate form.')
     );

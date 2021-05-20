@@ -335,8 +335,8 @@ $routes = [
       'verb' => 'POST',
     ],
     [
-      'name' => 'sepa_debit_mandates#prefilled_mandate_form',
-      'url' => '/finance/sepa/debit-mandates/prefilled',
+      'name' => 'sepa_debit_mandates#pre_filled_mandate_form',
+      'url' => '/finance/sepa/debit-mandates/pre-filled',
       'verb' => 'POST',
     ],
     [

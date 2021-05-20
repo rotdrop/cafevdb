@@ -67,10 +67,13 @@ class InstrumentationService
    */
   public function getDummyMusician():Entities\Musician
   {
+    // disable "deleted" filter
+    $this->disableFilter('soft-deleteable');
+
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+    /** @var Entities\Musician $dummy */
     $dummy = $musiciansRepository->findOneBy([ 'uuid' => Uuid::NIL ]);
     if (empty($dummy)) {
-      /** @var Entities\Musician */
       $dummy = Entities\Musician::create()
              ->setUuid(Uuid::NIL)
              ->setSurName($this->l->t('Doe'))
@@ -80,10 +83,24 @@ class InstrumentationService
              ->setStreet($this->l->t('42, Undiscoverable'))
              ->setPostalCode('Z-7')
              ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
-             ->setDisabled(true);
+             ->setDeleted(new \DateTimeImmutable);
       $this->persist($dummy);
-      $this->flush();
     }
+    if ($dummy->getSepaBankAccounts()->count() == 0) {
+      // also generate a dummy bank account
+      $bankAccount = (new Entities\SepaBankAccount)
+                   ->setMusician($dummy)
+                   ->setIban('DE02700100800030876808')
+                   ->setBic('PBNKDEFF')
+                   ->setBlz('70010080')
+                   ->setBankAccountOwner($dummy->getPublicName())
+                   ->setSequence(1)
+                   ->setDeleted(new \DateTimeImmutable);
+      $dummy->getSepaBankAccounts()->add($bankAccount);
+      $this->persist($bankAccount);
+    }
+    $this->flush();
+
     return $dummy;
   }
 

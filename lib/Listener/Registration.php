@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -39,6 +40,7 @@ class Registration
     self::registerListener($context, UserLoggedInEventListener::class);
     self::registerListener($context, UserLoggedOutEventListener::class);
     self::registerListener($context, TranslationNotFoundListener::class);
+    self::registerListener($context, FileNodeListener::class);
   }
 
   private static function registerListener(IRegistrationContext $context, $class) {

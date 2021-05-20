@@ -158,15 +158,36 @@ class FinanceService
     return $musician->isMemberOf($this->getClubMembersProjectId());
   }
 
-  public function prefilledDebitMandateForm($projectOrId, $musicianOrId, $accountSequence)
+  /**
+   *
+   */
+  public function preFilledDebitMandateForm($accountSequenceOrAccount, $projectOrId, $musicianOrId = null)
   {
-    $musician = $this->ensureMusician($musicianOrId);
+    /** @var Entities\Musician $musician */
+    if (!($accountSequenceOrAccount instanceof Entities\SepaBankAccount)) {
+      $musician = $this->ensureMusician($musicianOrId);
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $this->getDatabaseRepository(Entities\SepaBankAccount::class)
+                          ->find([ 'musician' => $musician, 'sequence' => $accountSequenceOrAccount ]);
+    } else {
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $accountSequenceOrAccount;
+
+      $musician = $bankAccount->getMusician();
+      if (!empty($musicianOrId)
+          && $musician->getId() != $this->ensureMusician($musicianOrId)->getId()) {
+        throw new \InvalidArgumentException(
+          $this->l->t('Bankaccount belongs to musician "%s", but specified musician is "%s".',
+                      [ $musician->getPublicName(), $this->ensureMusician($musicianOrId)->getPublicName() ]));
+      }
+    }
 
     if (empty($musician)) {
       return [];
     }
 
     if ($this->isClubMember($musician)) {
+      // force general debit mandate
       $project = $this->ensureProject($this->getClubMembersProjectId());
     } else {
       $project = $this->ensureProject($projectOrId);
@@ -210,14 +231,6 @@ class FinanceService
       'projectParticipant' => $musician->getPublicName(),
     ];
 
-    if (!($accountSequence instanceof Entities\SepaBankAccount)) {
-      /** @var Entities\SepaBankAccount $bankAccount */
-      $bankAccount = $this->getDatabaseRepository(Entities\SepaBankAccount::class)
-                          ->find([ 'musician' => $musician, 'sequence' => $accountSequence ]);
-    } else {
-      $bankAccount = $accountSequence;
-    }
-
     if (!empty($bankAccount)) {
       $info = $this->getIbanInfo($bankAccount->getIban());
       $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
@@ -235,9 +248,9 @@ class FinanceService
     $fileParts = [
       $this->timeStamp('Ymd'),
       basename($formFile->getName()),
-      $musician->getUserIdSlug(),
+      str_replace('.', '-', $musician->getUserIdSlug()),
     ];
-    $fileName = implode('-') . '.pdf';
+    $fileName = implode('-', $fileParts) . '.pdf';
 
     return [ $formFiller->getContent(), 'application/pdf', $fileName ];
   }

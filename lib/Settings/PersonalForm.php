@@ -218,7 +218,7 @@ class PersonalForm {
           ->getContactsAddressBook()
           ->getDisplayName();
 
-        $sharedFolder = $this->getConfigValue('sharedfolder');
+        $sharedFolder = $this->getConfigValue(ConfigService::SHARED_FOLDER);
         try {
           if (!empty($sharedFolder)) {
             $sharedFolderLink = $this->userStorage->getFilesAppLink($sharedFolder);
@@ -226,7 +226,7 @@ class PersonalForm {
         } catch (\Throwable $t) {
           // don't care
         }
-        $documentTemplatesFolder = $this->getConfigValue('documenttemplatesfolder');
+        $documentTemplatesFolder = $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER);
 
         $templateParameters = array_merge(
           $templateParameters,
@@ -297,12 +297,17 @@ class PersonalForm {
           $folder = UserStorage::PATH_SEP
                   . $sharedFolder . UserStorage::PATH_SEP
                   . $documentTemplatesFolder . UserStorage::PATH_SEP;
-          foreach (array_keys(ConfigService::DOCUMENT_TEMPLATES) as $documentTemplate) {
+          foreach (array_keys(ConfigService::DOCUMENT_TEMPLATES) as $templateInfo) {
+            $documentTemplate = $templateInfo['name'];
             $fileName = $this->getConfigValue($documentTemplate);
             $this->logInfo('TEMPLATE '.$documentTemplate.': '.$folder.$fileName);
             if (!empty($fileName)) {
               $templateParameters[$documentTemplate . 'FileName'] = $fileName;
-              $templateParameters[$documentTemplate . 'DownloadLink'] = $this->userStorage->getDownloadLink($folder . $fileName);
+              try {
+                $templateParameters[$documentTemplate . 'DownloadLink'] = $this->userStorage->getDownloadLink($folder . $fileName);
+              } catch (\Throwable $t) {
+                $this->logException($t);
+              }
             }
           }
         }

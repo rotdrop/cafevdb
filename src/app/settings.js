@@ -883,6 +883,7 @@ const afterLoad = function(container) {
     const $uploaders = $fieldset.find('input.upload-placeholder, input.upload-replace');
     const $cloudSelectors = $fieldset.find('input.select-cloud');
     const $deleters = $fieldset.find('input.delete');
+    const $autofillers = $fieldset.find('input.auto-fill-test');
 
     if ($('#documenttemplatesfolder').val() === '' || $('#sharedfolder').val() === '') {
       $fieldset.find('input').prop('disabled', true);
@@ -922,8 +923,10 @@ const afterLoad = function(container) {
               $container.find('.upload-placeholder').val(fileName).hide();
               $container.find('.downloadlink')
                 .attr('href', downloadLink)
+                .attr('download', fileName)
                 .html(fileName)
                 .show();
+              $container.find('.auto-fill-test').prop('disabled', false).show();
               $container.find('.delete').prop('disabled', false);
               console.info(data);
             });
@@ -938,7 +941,23 @@ const afterLoad = function(container) {
           .attr('href', '')
           .html('')
           .hide();
+        $self.nextAll('.auto-fill-test').hide().prop('disabled', true);
       },
+    });
+
+    $autofillers.on('click', function(event) {
+      const $self = $(this);
+
+      fileDownload(
+        'settings/app/get/auto-fill-test', {
+          documentTemplate: $self.data('template'),
+        }, {
+          errorMessage(data, url) {
+            return t(appName, 'Unable to download auto-fill result.');
+          },
+        });
+
+      return false;
     });
 
     $uploaders.on('click', function(event) {
