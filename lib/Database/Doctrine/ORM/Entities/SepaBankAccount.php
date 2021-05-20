@@ -248,7 +248,7 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @return Musician|null
    */
-  public function getMusician()
+  public function getMusician():?Musician
   {
     return $this->musician;
   }
