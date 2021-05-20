@@ -461,12 +461,16 @@ trait ParticipantFieldsTrait
 
           // For a useful add/change/copy view we should use the value fdd.
           $valueFdd['input|ACP'] = $keyFdd['input'];
-          $keyFdd['input|ACP'] = 'VSRH';
+          $keyFdd['input|ACP'] = 'SRH';
+
+          if (!$this->showDisabled) {
+            $deletedFilter = ' OR $join_table.deleted IS NOT NULL';
+          }
 
           $valueFdd['sql'] = 'GROUP_CONCAT(
   DISTINCT
   IF(
-    NOT $join_table.field_id = '.$fieldId.',
+    NOT $join_table.field_id = '.$fieldId.$deletedFilter.',
     NULL,
     CONCAT_WS(
       \''.self::JOIN_KEY_SEP.'\',
@@ -475,6 +479,25 @@ trait ParticipantFieldsTrait
     )
   )
   ORDER BY $order_by)';
+
+          // yet another field for the supporting documents
+          list($invoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
+            $fieldDescData, $tableName, 'supporting_document_id', [
+              'input' => 'SRH',
+              'sql' => 'GROUP_CONCAT(
+  DISTINCT
+  IF(
+    NOT $join_table.field_id = '.$fieldId.$deletedFilter.',
+    NULL,
+    CONCAT_WS(
+      \''.self::JOIN_KEY_SEP.'\',
+      BIN2UUID($join_table.option_key),
+      $join_col_fqn
+    )
+  )
+  ORDER BY $order_by)',
+            ]);
+          $invoiceFdd = &$fieldDescData[$invoiceFddName];
 
           $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType, $keyFddName, $valueFddName) {
             // $this->logInfo('VALUE '.$k.': '.$value);
@@ -485,15 +508,29 @@ trait ParticipantFieldsTrait
             $values = Util::explodeIndexed($value);
             $valueName = $this->pme->cgiDataName($valueFddName);
             $keyName = $this->pme->cgiDataName($keyFddName);
+            $invoices = Util::explodeIndexed($row['qf'.($k+1)]);
             $html = '<table class="row-count-'.count($values).'">
   <thead>
-    <tr><th>'.$this->l->t('Actions').'</th><th>'.$this->l->t('Subject').'</th><th>'.$this->l->t('Value [%s]', $this->currencySymbol()).'</th></tr>
+    <tr>
+      <th>'.$this->l->t('Actions').'</th>
+      <th>'.$this->l->t('Subject').'</th>
+      <th>'.$this->l->t('Value [%s]', $this->currencySymbol()).'</th>
+      <th>'.$this->l->t('Invoice').'</th>
+    </tr>
   </thead>
   <tbody>';
             $idx = 0;
             foreach ($values as $key => $value) {
               $option =  $field->getDataOption($key);
               $label = $option ? $option->getLabel() : '';
+              if (!empty($invoices[$key])) {
+                $downloadLink = $this->urlGenerator()
+                                     ->linkToRoute($this->appName().'.downloads.get', [
+                                       'section' => 'database',
+                                       'object' => $invoices[$key],
+                                     ])
+                              . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
+              }
               $html .= '
 <tr data-option-key="'.$key.'" data-field-id="'.$field['id'].'">
   <td class="operations">
@@ -515,12 +552,18 @@ trait ParticipantFieldsTrait
     <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$valueName.'['.$idx.']" value="'.$value.'"/>
      <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
   </td>
+  <td>
+     <a class="download-link'.(empty($downloadLink) ? ' hidden' : '').'"
+        href="'.$downloadLink.'">
+       '.$this->l->t('download').'
+     </a>
+ </td>
 </tr>';
               $idx++;
             }
             $html .= '
     <tr data-field-id="'.$field['id'].'">
-      <td class="operations" colspan="3">
+      <td class="operations" colspan="2">
         <input
           class="operation regenerate-all"
           title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all'].'"
