@@ -645,7 +645,12 @@ class ConfigService {
     return $this->l10NFactory->findAvailableLocales();
   }
 
-  /** Transliterate the given string to the given or default locale */
+  /**
+   * Transliterate the given string to the given or default locale.
+   *
+   * @todo We should define a user-independent locale based on the
+   * location of the orchestra.
+   */
   public function transliterate(string $string, $locale = null):string
   {
     $oldlocale = setlocale(LC_CTYPE, '0');
