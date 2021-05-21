@@ -34,20 +34,35 @@ use \DateTimeImmutable as DateTime;
  */
 interface IRecurringReceivablesGenerator
 {
+  /**
+   * @var string
+   *
+   * Label for the "generator option", i.e. the
+   * participant-field-option which stores the generator class.
+   */
   const GENERATOR_LABEL = '__generator__';
 
   /**
-   * @var During update of receivables just replace any old value by the
+   * @var string
+   *
+   * During update of receivables just replace any old value by the
    * newly computed value.
    */
   const UPDATE_STRATEGY_REPLACE = 'replace';
 
   /**
-   * @var During update of receivables compare with the newly computed
+   * @var string
+   *
+   * During update of receivables compare with the newly computed
    * value and throw an exception if the values differ. This is the
    * default.
    */
   const UPDATE_STRATEGY_EXCEPTION = 'exception';
+
+  /**
+   * A unique short slug which can be used to identify the generator.
+   */
+  static public function slug():string;
 
   /**
    * Bind this instance to the given entity. The idea is to have a

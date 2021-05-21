@@ -37,6 +37,9 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNote as DebitNote;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNoteData as DataEntity;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+
 use OCA\CAFEVDB\Common\Util;
 
 class SepaBulkTransactionService
@@ -81,6 +84,47 @@ class SepaBulkTransactionService
   {
     $serviceName = 'export:' . 'bank-bulk-transactions:' . $format;
     return $this->appContainer->get($serviceName);
+  }
+
+  /**
+   * @return A slug for the given bulk-transaction which can for
+   * example be used to tag email-templates.
+   *
+   * The strategy is to return the string 'banktransfer' for
+   * bank-transfers and 'debitnote-UNIQUEOPTIONSLUG' if the
+   * bulk-transaction refers to a single payment kind (e.g. only
+   * insurance fees) and otherwise just 'debitnote'.
+   */
+  public function getBulkTransactionSlug(Entities\SepaBulkTransaction $transaction)
+  {
+    if ($transaction instanceof Entities\SepaBankTransfer) {
+      return 'banktransfer';
+    }
+    $slugParts = [ 'debitnote' => true ];
+
+    /** @var Entities\CompositePayment $compositePayment */
+    foreach ($transaction->getPayments() as $compositePayment) {
+      /** @var Entities\ProjectPayment $projectPayment */
+      foreach ($compositePayment->getProjectPayments() as $projectPayment) {
+        /** @var Entities\ProjectParticipantField $field */
+        $field = $projectPayment->getReceivable()->getField();
+
+        if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
+          $generator = $field->getManagementOption()->getData();
+          $optionSlug = method_exists($generator, 'slug')
+                      ? $generator::slug() : $field->getName();
+        } else {
+          $optionSlug = $field->getName();
+        }
+        $slugParts[$optionSlug] = true;
+      }
+    }
+    $slugParts = array_keys($slugParts);
+    if (count($slugParts) > 2) {
+      return $slugParts[0];
+    } else {
+      return implode('-', $slugParts);
+    }
   }
 
   /**

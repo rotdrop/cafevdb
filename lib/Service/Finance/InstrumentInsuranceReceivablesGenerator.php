@@ -77,6 +77,14 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   /**
    * {@inheritdoc}
    */
+  static public function slug():string
+  {
+    return 'insurance';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function generateReceivables():Collection
   {
     $receivableOptions = $this->serviceFeeField->getDataOptions();

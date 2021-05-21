@@ -41,6 +41,14 @@ class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
   /**
    * {@inheritdoc}
    */
+  static public function slug():string
+  {
+    return 'nothing';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function generateReceivables():Collection
   {
     // This is the dummy implementation, just do nothing.

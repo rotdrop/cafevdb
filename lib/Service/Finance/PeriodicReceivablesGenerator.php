@@ -79,6 +79,14 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
   /**
    * {@inheritdoc}
    */
+  static public function slug():string
+  {
+    return 'periodic';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function generateReceivables():Collection
   {
     $receivableOptions = $this->serviceFeeField->getDataOptions();
