@@ -313,8 +313,14 @@ class InstrumentInsuranceController extends Controller {
   public function download($musicianId, $insuranceId)
   {
     $overview = $this->insuranceService->musicianOverview($musicianId);
-    $data = $this->insuranceService->musicianOverviewLetter($overview);
-    return new DataDownloadResponse($data, 'dummy.pdf', 'application/pdf');
+    $fileData = $this->insuranceService->musicianOverviewLetter($overview);
+    $fileName = $this->insuranceService->musicianOverviewFileName($overview);
+
+    /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+    $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+    $mimeType = $mimeTypeDetector->detectString($fileData);
+
+    return new DataDownloadResponse($fileData, $fileName, $mimeType);
   }
 
 }
