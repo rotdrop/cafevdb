@@ -38,6 +38,9 @@
     <personal>OCA\CAFEVDB\Settings\Personal</personal>
     <personal-section>OCA\CAFEVDB\Settings\PersonalSection</personal-section>
   </settings>
+  <commands>
+    <command>OCA\CAFEVDB\Command\HelloWorld</command>
+  </commands>
   <!--
       This cannot work as some stuff needs authenticated users.
       <background-jobs>
