@@ -446,7 +446,7 @@ GROUP BY b.short_name',
         foreach ($actions as $key => $action) {
           $html .=<<<__EOT__
 <li class="nav tooltip-left inline-block ">
-  <a class="nav {$key}"
+  <a class="nav {$key} tooltip-auto"
      href="#"
      data-post='{$action['post']}'
      {$action['properties']}

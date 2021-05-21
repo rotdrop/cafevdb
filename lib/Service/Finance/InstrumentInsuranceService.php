@@ -387,7 +387,7 @@ class InstrumentInsuranceService
       $instrumentHolderId = $instrumentHolder->getId();
       if (empty($insuranceOverview['musicians'][$instrumentHolderId])) {
         $insuranceOverview['musicians'][$instrumentHolderId] = [
-          'name' => $instrumentHolder->getPublicName(),
+          'name' => $instrumentHolder->getPublicName(true),
           'subTotals' => 0.0,
           'items' => [],
         ];
@@ -437,7 +437,7 @@ class InstrumentInsuranceService
     /** @var Entities\Musician $billToParty */
     $billToParty = $overview['billToParty'];
 
-    // $nameBase = $billToParty->getPublicName();
+    // $nameBase = $billToParty->getPublicName(true);
     $userName = $billToParty->getUserIdSlug();
     $userName = str_replace('.', '-', $userName);
 
@@ -469,6 +469,7 @@ class InstrumentInsuranceService
     // particular padding and min-width are ignored at all.
     $year = $overview['date']->format('Y');
     $css = "insurance-overview-table";
+    $parSkip = 0.7;
     $style = '<style>
   .no-page-break {
     page-break-inside:avoid;
@@ -532,9 +533,9 @@ class InstrumentInsuranceService
 
     // set document (meta) information
     $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor($treasurer->getPublicName());
+    $pdf->SetAuthor($treasurer->getPublicName(true));
     $pdf->SetTitle($this->l->t('Annual Insurance Fees for %s, %d. %s',
-                               [ $overview['billToParty']->getPublicName(),
+                               [ $overview['billToParty']->getPublicName(true),
                                  $year,
                                  $this->getConfigValue('streetAddressName01'), ]));
     $pdf->SetSubject($this->l->t('Overview over insured instruments and insurance fee details and summary'));
@@ -548,7 +549,7 @@ class InstrumentInsuranceService
 
     // Address record
     $pdf->frontHeader(
-      'c/o '.$treasurer->getPublicName().'<br>'.
+      'c/o '.$treasurer->getPublicName(true).'<br>'.
       $treasurer->getStreet().'<br>'.
       $treasurer->getPostalCode().' '.$treasurer->getCity().'<br>'.
       'Phone: '.$treasurer->getPhone.'<br>'.
@@ -567,7 +568,7 @@ class InstrumentInsuranceService
                              $treasurer->getPostalCode().' '.
                              $treasurer->getCity());
     $pdf->addressFieldRecipient(
-      $overview['billToParty']->getPublicName().'
+      $overview['billToParty']->getPublicName(true).'
 '.$overview['billToParty']->getStreet().'
 '.$overview['billToParty']->getPostalCode().' '.$overview['billToParty']->getCity()
     );
@@ -575,7 +576,7 @@ class InstrumentInsuranceService
     $pdf->date($this->dateTimeFormatter()->formatDate($overview['date'], 'medium'));
 
     $pdf->subject($this->l->t("Annular insurance fees for %d", $year));
-    $pdf->letterOpen($this->l->t('Dear %s,', $overview['billToParty']->getPublicName()));
+    $pdf->letterOpen($this->l->t('Dear %s,', $overview['billToParty']->getPublicName(true)));
 
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
@@ -586,16 +587,12 @@ machine-generated; in case of any inconsistencies or other questions
 please contact us as soon as possible in order to avoid any further
 misunderstandings. Please keep a copy of this letter in a safe
 place; further insurance-charts may only be sent automatically to you
-if something changes. Of course, you may request the information about
-your insured items at any time. Just ask.'), '', 1);
+if something changes.'), '', 1);
 
-    $html = '
-<H3>'.
-          $this->l->t('Total Insurance Fees %s', $year).'
-</H3>';
+    $html = '<h4>'.$this->l->t('Total Insurance Fees %s', $year).'</h4>';
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+2*$pdf->fontSize(),
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+$parSkip*$pdf->fontSize(),
                         $style.$html, '', 1);
 
     $totals = $overview['annual'];
@@ -603,7 +600,6 @@ your insured items at any time. Just ask.'), '', 1);
     $taxes = $totals * $taxRate;
     $html = '';
     $html .= '
-<p>
 <table class="totals no-page-break">
   <tr>
     <td width="220" class="summary">'.$this->l->t('Annual amount excluding taxes:').'</td>
@@ -623,25 +619,33 @@ your insured items at any time. Just ask.'), '', 1);
                         10,
                         PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0*$pdf->fontSize(),
                         $style.$html, '', 1);
-    $html = '
-<p>'.
-    $this->l->t('The amount to pay for newly insured items can be smaller than the regular annual
-fee. Partial insurance years are rounded up to full months. This is detailed in the table on the following page.');
+    $html = implode(' ', [
+      $this->l->t('The insurance fee is always paid in advance for the next insurance period.'),
+      $this->l->t('The amount to pay for newly insured items can be smaller than the regular annual
+fee. Partial insurance years are rounded up to full months.'),
+      $this->l->t('This is detailed in the table on the following page.'),
+    ]);
 
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+$parSkip*$pdf->fontSize(),
+                        $style.$html, '', 1);
+
+    $html = $this->l->t('The insurance always rolls over to the next year unless explicitly terminated by you.');
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                        10,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+$parSkip*$pdf->fontSize(),
                         $style.$html, '', 1);
 
     $html = $this->l->t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit in good time in advance of the bank transaction.');
 
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+$parSkip*$pdf->fontSize(),
                         $style.$html, '', 1);
 
     $pdf->letterClose($this->l->t('Best wishes,'),
-                      $treasurer->getPublicName().' ('.$this->l->t('Treasurer').')',
+                      $treasurer->getPublicName(true).' ('.$this->l->t('Treasurer').')',
                       $this->orgaRolesService->treasurerSignature());
 
     // Slightly smaller for table
@@ -677,7 +681,7 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
     <td class="header">'.$this->l->t('Amount').'</td>
     <td class="header">'.$this->l->t('Rate').'</td>
     <td class="header">'.$this->l->t('Start').'</td>
-    <td class="header">'.$this->l->t('Until').'</td>
+    <td class="header">'.$this->l->t('Valid until').'</td>
     <td class="header">'.$this->l->t('Months').'</td>
     <td class="header">'.$this->l->t('Fee').'</td>
   </tr>
@@ -710,6 +714,7 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
     <td class="money">'.$this->moneyValue($insurance['subTotals']).'</td>
   </tr>';
     } // end loop over insured musicians
+
     $html .= '
   <tr class="separator"><td colspan="10"></td></tr>
   <tr>
@@ -733,27 +738,11 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
   </tr>
 </table>';
 
-    // We do not want to split the table across pages
-    $pdf->startTransaction();
-    $startPage = $pdf->getPage();
-
+    $pdf->addPage('L');
     $pdf->writeHtmlCell(PDFLetter::PAGE_HEIGHT,//-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
                         PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
                         $style.$html, '', 1);
-
-    $endPage = $pdf->getPage();
-    if ($startPage != $endPage) {
-      $pdf->rollbackTransaction(true);
-      $pdf->addPage('L');
-      // Do it again on a new page
-      $pdf->writeHtmlCell(PDFLetter::PAGE_HEIGHT, // WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
-                          10,
-                          PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
-                          $style.$html, '', 1);
-    } else {
-      $pdf->commitTransaction();
-    }
 
     // Restore font size
     $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE);
