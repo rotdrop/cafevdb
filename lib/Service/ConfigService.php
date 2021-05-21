@@ -696,22 +696,18 @@ class ConfigService {
   /** Convert $value to a currency value in the given or default locale */
   public function moneyValue($value, $locale = null)
   {
-    $oldlocale = setlocale(LC_MONETARY, '0');
-    empty($locale) && $locale = $this->getLocale();
-    setlocale(LC_MONETARY, $locale);
-    $result = money_format('%n', (float)$value);
-    setlocale(LC_MONETARY, $oldlocale);
+    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+    $result = $fmt->format((float)$value);
+
     return $result;
   }
 
   /** Convert a float value in the given or default locale */
   public function floatValue($value, $decimals = 4, $locale = null)
   {
-    $oldlocale = setlocale(LC_NUMERIC, '0');
     empty($locale) && $locale = $this->getLocale();
-    setlocale(LC_NUMERIC, $locale);
-    $result = number_format((float)$value, $decimals);
-    setlocale(LC_NUMERIC, $oldlocale);
+    $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+    $result = $fmt->format((float)$value);
     return $result;
   }
 
