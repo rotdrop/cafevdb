@@ -356,7 +356,7 @@ GROUP BY b.short_name',
         'tab'  => [ 'id' => 'finance' ],
         'name' => $this->l->t('Insurance Amount'),
         'css'  => [ 'postfix' => ' amount align-right' ],
-        'php|LFPDV' => [$this, 'moneyValue' ],
+        'php|LFPDV' => function($value) { return $this->moneyValue($value); },
       ]);
 
     $this->makeJoinTableField(
@@ -381,7 +381,7 @@ GROUP BY b.short_name',
       'sql' => 'ROUND($table.insurance_amount
  * '.$joinTables[self::RATES_TABLE].'.rate
  * (1+'.floatval(InstrumentInsuranceService::TAXES).'), 2)',
-      'php' => [ $this, 'moneyValue' ],
+      'php' => function($value) { return $this->moneyValue($value); },
     ];
 
     $allItemsTable = self::TABLE . self::VALUES_TABLE_SEP . 'allItems';
