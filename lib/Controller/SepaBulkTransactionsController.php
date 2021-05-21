@@ -584,11 +584,6 @@ class SepaBulkTransactionsController extends Controller {
       $exportFile = null;
     }
     if (empty($exportFile) || $bulkTransaction->getUpdated() > $exportFile->getUpdated()) {
-      if (empty($exportFile)) {
-        $exportFile = new Entities\EncryptedFile;
-        $exportFile->setFileData(new Entities\EncryptedFileData);
-        $exportFile->getFileData()->setFile($exportFile);
-      }
       /** @var IBulkTransactionExporter $exporter */
       $exporter = $this->bulkTransactionService->getTransactionExporter($format);
       if (empty($exporter)) {
@@ -605,11 +600,18 @@ class SepaBulkTransactionsController extends Controller {
         !empty($project) ? $project->getName() : null,
         $format,
       ])) . '.' . $exporter->fileExtension($bulkTransaction);
-      $exportFile->setFileName($fileName);
+
       $fileData = $exporter->fileData($bulkTransaction);
-      $exportFile->getFileData()->setData($fileData);
-      $exportFile->setMimeType($exporter->mimeType($bulkTransaction));
-      $exportFile->setSize(strlen($fileData));
+
+      if (empty($exportFile)) {
+        $exportFile = new Entities\EncryptedFile($fileName, $fileData, $exporter->mimeType($bulkTransaction));
+        $bulkTransaction->getSepaTransactionData()->add($exportFile);
+      } else {
+        $exportFile->setFileName($fileName)
+                   ->setMimeType($exporter->mimeType($bulkTransaction))
+                   ->setSize(strlen($fileData));
+        $exportFile->getFileData()->setData($fileData);
+      }
 
       $this->entityManager->beginTransaction();
       try {
