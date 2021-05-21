@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Command;
 
+use OCP\IL10N;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,6 +32,21 @@ use Symfony\Component\Console\Input\InputOption;
 
 class HelloWorld extends Command
 {
+  /** @var IL10N */
+  private $l;
+
+  public function __construct(
+    $appName
+    , IL10N $l10n
+  ) {
+    parent::__construct();
+    $this->l = $l10n;
+    $this->appName = $appName;
+    if (empty($l10n)) {
+      throw new \RuntimeException('No IL10N :(');
+    }
+  }
+
   protected function configure()
   {
     $this
@@ -39,7 +56,7 @@ class HelloWorld extends Command
         'only-hello',
         'o',
         InputOption::VALUE_NONE,
-        'outputs hello, not world'
+        'outputs hello, not world',
       )
       ;
   }
@@ -47,9 +64,9 @@ class HelloWorld extends Command
   protected function execute(InputInterface $input, OutputInterface $output): int
   {
     if ($input->getOption('only-hello')) {
-      $output->writeln('Hello!');
+      $output->writeln($this->l->t('Hello!'));
     } else {
-      $output->writeln('Hello World!');
+      $output->writeln($this->l->t('Hello World!'));
     }
     return 0;
   }

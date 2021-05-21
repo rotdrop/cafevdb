@@ -2,6 +2,10 @@ OC.L10N.register(
     "cafevdb",
     {
     "%s Musicians" : "%s Musiker",
+    "Say \"Hello!\" to the world!" : "Sag \"Hallo!\" zur Welt!",
+    "outputs hello, not world" : "nur \"Hello\" ausgeben, ohne \"Welt\"",
+    "Hello!" : "Hallo!",
+    "Hello World!" : "Hallo Welt!",
     "Exception during execution of run-queue; number of successful actions: %d." : "Fehler während beim Ausführen der geplanten Aufgaben, Anzahl der ausgeführten Aktionen: %d.",
     "There is no error, the file uploaded with success" : "Datei erfolgreich hochgeladen.",
     "The uploaded file exceeds the upload_max_filesize directive in php.ini: %s" : "Dis Datei ist zu groß und kann deshalb nicht hochgeladen werden (Einstellung `upload_max_filesize' in `php.ini': %s)",
@@ -52,7 +56,6 @@ OC.L10N.register(
     "Unknown attachment source: \"%s\"." : "Unbekannte Quelle für Anhänge: \"%s\".",
     "Triggered GeoCoding update." : "Geo-Daten-Aktualisierung initiiert.",
     "TO BE IMPLEMENTED" : "MUSS NOCH IMPLEMENTIERT WERDEN",
-    "Hello World!" : "Also, `Hello World!' muss man nun wirklich nicht übersetzen ...",
     "empty" : "leer",
     "Owner-ID is missing" : "Besitzer-ID fehlt",
     "Relation between image and object missing" : "Beziehung zwischen Bild und Objekt nicht angegeben",

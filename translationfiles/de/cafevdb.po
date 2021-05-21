@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-05-21 11:43+0200\n"
-"PO-Revision-Date: 2021-05-21 11:24+0200\n"
+"POT-Creation-Date: 2021-05-21 13:13+0200\n"
+"PO-Revision-Date: 2021-05-21 13:15+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -19,6 +19,23 @@ msgstr ""
 #, php-format
 msgid "%s Musicians"
 msgstr "%s Musiker"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Command/HelloWorld.php:48
+msgid "Say \"Hello!\" to the world!"
+msgstr "Sag \"Hallo!\" zur Welt!"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Command/HelloWorld.php:53
+msgid "outputs hello, not world"
+msgstr "nur \"Hello\" ausgeben, ohne \"Welt\""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Command/HelloWorld.php:61
+msgid "Hello!"
+msgstr "Hallo!"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Command/HelloWorld.php:63
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ExpertModeController.php:150
+msgid "Hello World!"
+msgstr "Hallo Welt!"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/UndoableRunQueue.php:78
 #, php-format
@@ -303,10 +320,6 @@ msgstr "Geo-Daten-Aktualisierung initiiert."
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ExpertModeController.php:148
 msgid "TO BE IMPLEMENTED"
 msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
-
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ExpertModeController.php:150
-msgid "Hello World!"
-msgstr "Also, `Hello World!' muss man nun wirklich nicht übersetzen ..."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ExpertModeController.php:152
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1350
