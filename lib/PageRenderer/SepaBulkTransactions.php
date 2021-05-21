@@ -80,6 +80,7 @@ class SepaBulkTransactions extends PMETableViewBase
   __t1.sepa_transaction_id AS sepa_transaction_id,
   GROUP_CONCAT(DISTINCT __t1.id ORDER BY __t1.id) AS id,
   GROUP_CONCAT(DISTINCT __t1.musician_id ORDER BY __t1.id) AS musician_id,
+  GROUP_CONCAT(DISTINCT __t1.subject ORDER BY __t1.id) AS subject,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.musician_id, __t1.bank_account_sequence) ORDER BY __t1.id) AS bank_account_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.musician_id, __t1.debit_mandate_sequence) ORDER BY __t1.id) AS debit_mandate_id,
   SUM(__t1.amount) AS amount
@@ -92,6 +93,7 @@ SELECT
   __t2.sepa_transaction_id AS sepa_transaction_id,
   __t2.id AS id,
   __t2.musician_id AS musician_id,
+  __t2.subject AS subject,
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t2.musician_id, __t2.bank_account_sequence) AS bank_account_id,
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t2.musician_id, __t2.debit_mandate_sequence) AS debit_mandate_id,
   __t2.amount AS amount
@@ -328,7 +330,9 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'select'   => 'D',
           'sort'     => true,
           'values' => [
-            'description' => [
+            'description' => $projectMode
+            ? 'name'
+            : [
               'columns' => [ 'year' => 'year', 'name' => 'name' ],
               'divs' => [ 'year' => ': ' ]
             ],
@@ -343,6 +347,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         $this->defaultFDD['money'], [
           'tab' => [ 'id' => 'tab-all', ],
           'name' => $this->l->t('Amount'),
+          'input' => 'R',
         ]));
 
     $this->makeJoinTableField(
@@ -352,6 +357,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'name'     => $this->l->t('Musician'),
         'css'      => [ 'postfix' => ' musician-id squeeze-subsequent-lines' ],
         'select' => 'M',
+        'input' => 'R',
         'sql' => $this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
         'values' => [
           'table' => self::MUSICIANS_TABLE,
@@ -389,9 +395,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'php' => function($value, $op, $field, $row, $recordId, $pme) {
           $values = Util::explode(',', $value, Util::TRIM);
           foreach ($values as &$value) {
-            $this->logInfo('VALUE "'.$value.'"');
-            $blah = $this->decrypt($value);
-            $value = $blah;
+            $value = $this->decrypt($value);
           }
           return implode('<br/>', $values);
         },
@@ -408,6 +412,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'name'     => $this->l->t('Mandate Reference'),
         'css'      => [ 'postfix' => ' mandate-reference squeeze-subsequent-lines' ],
         'select' => 'M',
+        'input' => 'R',
         'sql' => $this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.debit_mandate_id',
         'values' => [
           'table' => "SELECT
@@ -423,6 +428,28 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
           'postfix' => '</div></div>',
           'popup' => 'data',
+          'attributes' => [ 'readonly', ],
+        ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'subject', [
+        'tab' => [ 'id' => [ 'bookings', ], ],
+        'name' => $this->l->t('Subject'),
+        'input' => 'RD',
+        'css' => [ 'postfix' => ' subject squeeze-subsequent-lines', ],
+        'sql|LFVD' => 'REPLACE($join_col_fqn, \'; \', \'<br/>\')',
+        'sql|ACP' => '$join_col_fqn',
+        'display' => [
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+          'popup' => 'data',
+        ],
+        'maxlen' => FinanceService::SEPA_PURPOSE_LENGTH,
+        'textarea|ACP' => [
+          'css' => 'constrained',
+          'rows' => 4,
+          'cols' => 35,
         ],
       ]);
 
@@ -465,23 +492,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
       ]);
 
-    // @todo replace by list of participant field-options
-    // $jobIdx = count($opts['fdd']);
-    // $opts['fdd']['job'] = [
-    //   'name' => $this->l->t('Kind'),
-    //   'css'  => [ 'postfix' => ' debit-note-job' ],
-    //   'input' => 'R',
-    //   'select' => 'D',
-    //   'sort' => true,
-    //   'values2' => [
-    //     'deposit' => $this->l->t('deposit'),
-    //     'remaining' => $this->l->t('remaining'),
-    //     'amount' => $this->l->t('amount'),
-    //     'insurance' => $this->l->t('insurance'),
-    //     'membership-fee' => $this->l->t('membership-fee'),
-    //   ],
-    // ];
-
     $opts['fdd']['actions'] = [
       'tab' => [ 'id' => 'transaction' ],
       //'php|LF' => [$this, 'bulkTransactionRowOnly'],
@@ -495,32 +505,29 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           if (strstr($rowTag, ';') === false) {
             return '';
           }
-          $post = [
+          $post = json_encode([
             'bulkTransactionId' => $recordId,
             'requesttoken' => \OCP\Util::callRegister(),
             'projectId' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
             'projectName' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
-          ];
-          // $postEmail = [
-          //   'emailTemplate' => self::emailTemplate($row['qf'.$jobIdx])
-          // ];
+          ]);
           $actions = [
             'download' => [
               'label' =>  $this->l->t('download'),
-              'post' => json_encode($post),
+              'post' => $post,
               'title' => $this->toolTipsService['bulk-transaction-download'],
             ],
-            // 'announce' => [
-            //   'label' => $this->l->t('announce'),
-            //   'post'  => json_encode(array_merge($post, $postEmail)),
-            //   'title' => $this->toolTipsService['debit-notes-announce'],
-            // ],
+            'announce' => [
+              'label' => $this->l->t('announce'),
+              'post'  => $post,
+              'title' => $this->toolTipsService['bulk-transaction-announce'],
+            ],
           ];
           $html = '';
           foreach($actions as $key => $action) {
             $html .=<<<__EOT__
-<li class="nav tooltip-left inline-block ">
-  <a class="nav {$key}"
+<li class="nav tooltip-left inline-block tooltip-auto">
+  <a class="nav {$key} tooltip-auto"
      href="#"
      data-post='{$action['post']}'
      title="{$action['title']}">

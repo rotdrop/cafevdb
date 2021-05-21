@@ -43,8 +43,8 @@ const ready = function(container, resizeCB) {
     });
 
   container
-    .off('click', '.debit-note-actions a.announce')
-    .on('click', '.debit-note-actions a.announce', function(event) {
+    .off('click', '.bulk-transaction-actions a.announce')
+    .on('click', '.bulk-transaction-actions a.announce', function(event) {
       const self = $(this);
       const post = self.data('post');
 
