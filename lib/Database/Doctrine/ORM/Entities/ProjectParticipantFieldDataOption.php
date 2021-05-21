@@ -139,7 +139,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantField
    */
-  public function getField()
+  public function getField():ProjectParticipantField
   {
     return $this->field;
   }

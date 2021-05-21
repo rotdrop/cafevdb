@@ -254,7 +254,7 @@ class ProjectPayment implements \ArrayAccess
   /**
    * Set receivable.
    *
-   * @param string $receivable
+   * @param ProjectParticipantFieldDatum $receivable
    *
    * @return ProjectPayment
    */
@@ -268,7 +268,7 @@ class ProjectPayment implements \ArrayAccess
   /**
    * Get receivable.
    *
-   * @return string
+   * @return ProjectParticipantFieldDatum
    */
   public function getReceivable()
   {
@@ -278,7 +278,7 @@ class ProjectPayment implements \ArrayAccess
   /**
    * Set receivableOption.
    *
-   * @param string $receivableOption
+   * @param ProjectParticipantFieldDataOption $receivableOption
    *
    * @return ProjectPayment
    */
@@ -292,7 +292,7 @@ class ProjectPayment implements \ArrayAccess
   /**
    * Get receivableOption.
    *
-   * @return string
+   * @return ProjectParticipantFieldDataOption
    */
   public function getReceivableOption()
   {

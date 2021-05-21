@@ -160,7 +160,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * @return Project
    */
-  public function getProject()
+  public function getProject():Project
   {
     return $this->project;
   }
@@ -184,7 +184,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * @return Musician
    */
-  public function getMusician()
+  public function getMusician():Musician
   {
     return $this->musician;
   }
@@ -206,9 +206,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get field.
    *
-   * @return int
+   * @return ProjectParticipantField
    */
-  public function getField()
+  public function getField():ProjectParticipantField
   {
     return $this->field;
   }
@@ -216,7 +216,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set dataOption.
    *
-   * @param int $dataOption
+   * @param ProjectParticipantFieldDataOption $dataOption
    *
    * @return ProjectParticipantFieldDatum
    */
@@ -230,9 +230,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get dataOption.
    *
-   * @return int
+   * @return ProjectParticipantFieldDataOption
    */
-  public function getDataOption()
+  public function getDataOption():ProjectParticipantFieldDataOption
   {
     return $this->dataOption;
   }
@@ -240,11 +240,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set optionValue.
    *
-   * @param string $optionValue
+   * @param null|string $optionValue
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function setOptionValue($optionValue):ProjectParticipantFieldDatum
+  public function setOptionValue(?string $optionValue):ProjectParticipantFieldDatum
   {
     $this->optionValue = $optionValue;
 
@@ -254,9 +254,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get optionValue.
    *
-   * @return string
+   * @return null|string
    */
-  public function getOptionValue()
+  public function getOptionValue():?string
   {
     return $this->optionValue;
   }
