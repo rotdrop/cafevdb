@@ -696,6 +696,9 @@ class ConfigService {
   /** Convert $value to a currency value in the given or default locale */
   public function moneyValue($value, $locale = null)
   {
+    if (empty($locale)) {
+      $locale = $this->getLocale();
+    }
     $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
     $result = $fmt->format((float)$value);
 
