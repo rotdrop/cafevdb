@@ -432,14 +432,14 @@ Störung.';
       if (empty($musician)) {
         return $keyArg[0];
       }
-      return $musician['nickName']?:$musician['firstName'];
+      return $musician->getNickName()?:$musician->getFirstName();
     };
 
     $this->substitutions[self::MEMBER_NAMESPACE]['DISPLAY_NAME'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
       if (empty($musician)) {
         return $keyArg[0];
       }
-      return $musician['displayName']?: ($musician['nickName']?:$musician['firstName']).' '.$musician['surName'];
+      return $musician->getPublicName(true); // rather firstName lastName than last, first
     };
 
     $this->substitutions[self::MEMBER_NAMESPACE]['COUNTRY'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
