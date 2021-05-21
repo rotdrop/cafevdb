@@ -382,7 +382,6 @@ class InstrumentInsuranceService
       $amount = $insurance->getInsuranceAmount();
       $fraction = $this->yearFraction($insuranceStart, $dueDate, true);
       $annualFee = $amount * $rate->getRate();
-      $annualFee *= $fraction;
 
       $instrumentHolder = $insurance->getInstrumentHolder();
       $instrumentHolderId = $instrumentHolder->getId();
@@ -404,8 +403,9 @@ class InstrumentInsuranceService
         'lastDue' => $lastDueDate,
         'due' => $dueDate,
         'start' => $insuranceStart,
-        'fee' => $annualFee,
+        'fullFee' => $annualFee,
         'fraction' => $fraction,
+        'fee' => $annualFee * $fraction,
       ];
 
       $insuranceOverview['musicians'][$instrumentHolderId]['items'][] = $itemInfo;
@@ -415,13 +415,13 @@ class InstrumentInsuranceService
     $fractional = 0.0;
     foreach($insuranceOverview['musicians'] as $id => $info) {
       // ordinary annular fees
-      $subtotals = 0.0;
+      $subTotals = 0.0;
       foreach($info['items'] as $itemInfo) {
-        $subtotals += $itemInfo['fee'];
+        $subTotals += $itemInfo['fee'];
       }
-      $insurances['musicians'][$id]['subTotals'] = $subtotals;
-
-      $annual += $subtotals;
+      $insuranceOverview['musicians'][$id]['subTotals'] = $subTotals;
+      $this->logInfo('SUBTOTALS '.$subTotals);
+      $annual += $subTotals;
     }
     $insuranceOverview['annual'] = $annual;
 
@@ -437,11 +437,15 @@ class InstrumentInsuranceService
     /** @var Entities\Musician $billToParty */
     $billToParty = $overview['billToParty'];
 
+    // $nameBase = $billToParty->getPublicName();
+    $userName = $billToParty->getUserIdSlug();
+    $userName = str_replace('.', '-', $userName);
+
     $components = [
       $this->timeStamp(),
       $billToParty->getId(),
-      Util::removeSpaces($this->transliterate($billToParty->getPublicName())),
-      $this->l->t('insurance'),
+      $userName,
+      strtolower($this->l->t('insurance')),
     ];
 
     return implode('-', $components) . '.pdf';
@@ -455,8 +459,9 @@ class InstrumentInsuranceService
    */
   public function musicianOverviewLetter($overview, $name = null, $dest = 'S')
   {
-    // Find the the treasurer
+    // $this->logInfo(Functions\dump($overview));
 
+    // Find the the treasurer
     /** @var Entities\Participant $treasurer */
     $treasurer = $this->orgaRolesService->getTreasurer()->getMusician();
 
@@ -469,17 +474,31 @@ class InstrumentInsuranceService
     page-break-inside:avoid;
   }
   table.'.$css.' {
-    border: 0.3mm solid #000;
+    border: 0 solid #000;
     border-collapse:collapse;
-    border-spacing:0px;
-    /*width:auto; not with tcpdf ... */
+    border-spacing:0;
+  }
+  table.'.$css.' tr.separator, table.'.$css.' tr.separator td {
+    line-height:0;
+    padding:0;
+    margin:0
+  }
+  table.'.$css.' tr.hidden, table.'.$css.' tr.hidden td {
+    color:#FFF;
+    text-color:#FFF;
+    border-color:#FFF;
+    border: 0 solid #FFF;
+    padding:0;
+    margin:0;
+    line-height:0;
+    border-bottom: 0.3mm solid #000;
   }
   table.'.$css.' td {
     border: 0.3mm solid #000;
     min-width:5em;
     padding: 0.1em 0.5em 0.1em 0.5em;
   }
-  table.'.$css.' th {
+  table.'.$css.' th, table.'.$css.' td.header {
     border: 0.3mm solid #000;
     min-width:5em;
     padding: 0.1em 0.5em 0.1em 0.5em;
@@ -487,13 +506,21 @@ class InstrumentInsuranceService
     font-weight:bold;
     font-style:italic;
   }
+  table.'.$css.' td.musician-head {
+    font-weight:bold;
+    font-style:italic;
+    padding: 0.1em 0.5em 0.1em 0.5em;
+  }
   table.'.$css.' td.summary {
     text-align:right;
   }
-  td.money, td.percentage, td.date {
+  td.tag {
+    text-align:center;
+  }
+  td.money, td.percentage, td.date, td.number {
     text-align:right;
   }
-  table.totals {
+  table.totals, tr.totals {
     font-weight:bold;
   }
 </style>';
@@ -558,7 +585,7 @@ we are maintaining for you on your behalf. This letter is
 machine-generated; in case of any inconsistencies or other questions
 please contact us as soon as possible in order to avoid any further
 misunderstandings. Please keep a copy of this letter in a safe
-place; further insurance-charts will only be sent automatically to you
+place; further insurance-charts may only be sent automatically to you
 if something changes. Of course, you may request the information about
 your insured items at any time. Just ask.'), '', 1);
 
@@ -580,15 +607,15 @@ your insured items at any time. Just ask.'), '', 1);
 <table class="totals no-page-break">
   <tr>
     <td width="220" class="summary">'.$this->l->t('Annual amount excluding taxes:').'</td>
-    <td width="80" class="money">'.money_format('%n', $totals).'</td>
+    <td width="80" class="money">'.$this->moneyValue($totals).'</td>
   </tr>
   <tr>
-    <td class="summary">'.$this->l->t('%0.2f %% insurance taxes:', array($taxRate*100.0)).'</td>
-    <td class="money">'.money_format('%n', $taxes).'</td>
+    <td class="summary">'.$this->l->t('%s %% insurance taxes:', $this->floatValue($taxRate*100.0)).'</td>
+    <td class="money">'.$this->moneyValue($taxes).'</td>
   </tr>
   <tr>
     <td class="summary">'.$this->l->t('Total amount to pay:').'</td>
-    <td class="money">'.money_format('%n', $totals+$taxes).'</td>
+    <td class="money">'.$this->moneyValue($totals+$taxes).'</td>
   </tr>
 </table>'
                                                           ;
@@ -596,12 +623,7 @@ your insured items at any time. Just ask.'), '', 1);
                         10,
                         PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0*$pdf->fontSize(),
                         $style.$html, '', 1);
-
-    $totals = $overview['totals'];
-    $taxRate = floatval(self::TAXES);
-    $taxes = $totals * $taxRate;
-    $html = '';
-    $html .= '
+    $html = '
 <p>'.
     $this->l->t('The amount to pay for newly insured items can be smaller than the regular annual
 fee. Partial insurance years are rounded up to full months. This is detailed in the table on the following page.');
@@ -611,7 +633,7 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
                         PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
                         $style.$html, '', 1);
 
-    $html = $this->l->t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit at least 14 days in advance of the bank transaction.');
+    $html = $this->l->t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit in good time in advance of the bank transaction.');
 
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
@@ -625,71 +647,113 @@ fee. Partial insurance years are rounded up to full months. This is detailed in 
     // Slightly smaller for table
     $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10);
 
+    $html = '<table class="no-page-break" cellpadding="2" class="'.$css.'">
+  <tr class="hidden collapsed">
+    <td class="header" widtd="70"></td>
+    <td class="header" width="50"></td>
+    <td class="header" width="100"></td>
+    <td class="header" width="100"></td>
+    <td class="header" width="60"></td>
+    <td class="header" width="45"></td>
+    <td class="header" width="60"></td>
+    <td class="header" width="60"></td>
+    <td class="header" width="45"></td>
+    <td class="header" width="50"></td>
+  </tr>
+';
     foreach($overview['musicians'] as $id => $insurance) {
-      $html = '';
-      //<div class="no-page-break">
+      $this->logInfo(Functions\dump($insurance));
+      // <div class="no-page-break">
+      // <h3>'.$this->l->t('Insured Person: %s', array($insurance['name'])).'</h3>
       $html .= '
-<h3>'.$this->l->t('Insured Person: %s', array($insurance['name'])).'</h3>
-<table class="no-page-break" cellpadding="2" class="'.$css.'">
   <tr>
-    <th width="70">'.$this->l->t('Vendor').'</th>
-    <th width="60">'.$this->l->t('Scope').'</th>
-    <th width="80">'.$this->l->t('Object').'</th>
-    <th width="70">'.$this->l->t('Manufacturer').'</th>
-    <th width="60">'.$this->l->t('Amount').'</th>
-    <th width="45">'.$this->l->t('Rate').'</th>
-    <th width="60">'.$this->l->t('Start').'</th>
-    <th width="60">'.$this->l->t('Due').'</th>
-    <th width="45">'.$this->l->t('Months').'</th>
-    <th width="50">'.$this->l->t('Fee').'</th>
-  </tr>';
+    <td colspan="10" class="musician-head">'.$this->l->t('Insured Person: %s', array($insurance['name'])).'</td>
+  </tr>
+  <tr>
+    <td class="header">'.$this->l->t('Vendor').'</td>
+    <td class="header">'.$this->l->t('Scope').'</td>
+    <td class="header">'.$this->l->t('Object').'</td>
+    <td class="header">'.$this->l->t('Manufacturer').'</td>
+    <td class="header">'.$this->l->t('Amount').'</td>
+    <td class="header">'.$this->l->t('Rate').'</td>
+    <td class="header">'.$this->l->t('Start').'</td>
+    <td class="header">'.$this->l->t('Until').'</td>
+    <td class="header">'.$this->l->t('Months').'</td>
+    <td class="header">'.$this->l->t('Fee').'</td>
+  </tr>
+';
       foreach($insurance['items'] as $item) {
         // regular annual fee
         $html .= '
   <tr>
     <td class="text">'.$item['broker'].'</td>
-    <td class="text">'.$this->l->t($item['scope']).'</td>
+    <td class="tag">'.$this->l->t($item['scope']).'</td>
     <td class="text">'.$item['object'].'</td>
     <td class="text">'.$item['manufacturer'].'</td>
     <td class="money">'.money_format('%n', $item['amount']).'</td>
     <td class="percentage">'.($item['rate']*100.0).' %'.'</td>
     <td class="date">'.$this->dateTimeFormatter()->formatDate($item['start']->getTimestamp(), 'medium').'</td>
     <td class="date">'.$this->dateTimeFormatter()->formatDate($item['due']->getTimestamp(), 'medium').'</td>
-    <td class="text">'.$item['fraction']*12.0.'</td>
-    <td class="money">'.money_format('%n', $item['fee']).'</td>
+    <td class="number">'.$item['fraction']*12.0.'</td>
+    <td class="money">'
+        . $this->moneyValue($item['fee'])
+        . ($item['fraction'] != 1.0 ? '<br>('.$this->moneyValue($item['fullFee']).')' : '')
+        .'
+    </td>
   </tr>';
       } // end insured items
       $html .= '
   <tr>
     <td class="summary" colspan="9">'.
-      $this->l->t('Sub-totals (excluding taxes)', [ self::TAXES ]).'
+      $this->l->t('Sub-totals (excluding taxes)').'
     </td>
-    <td class="money">'.money_format('%n', $insurance['subTotals']).'</td>
+    <td class="money">'.$this->moneyValue($insurance['subTotals']).'</td>
+  </tr>';
+    } // end loop over insured musicians
+    $html .= '
+  <tr class="separator"><td colspan="10"></td></tr>
+  <tr>
+    <td class="summary" colspan="9">'.
+      $this->l->t('Totals excluding taxes').'
+    </td>
+    <td class="money">'.$this->moneyValue($totals).'</td>
+  </tr>
+  <tr>
+    <td class="summary" colspan="9">'.
+      $this->l->t('%s %% insurance taxes', $this->floatValue($taxRate*100.0)).'
+    </td>
+    <td class="money">'.$this->moneyValue($taxes).'</td>
+  </tr>
+  <tr class="separator"><td colspan="10"></td></tr>
+  <tr class="totals">
+    <td class="summary" colspan="9">'.
+      $this->l->t('Totals including taxes').'
+    </td>
+    <td class="money">'.$this->moneyValue((float)$totals+(float)$taxes).'</td>
   </tr>
 </table>';
 
-      // We do not want to split the table across pages
-      $pdf->startTransaction();
-      $startPage = $pdf->getPage();
+    // We do not want to split the table across pages
+    $pdf->startTransaction();
+    $startPage = $pdf->getPage();
 
-      $pdf->writeHtmlCell(PDFLetter::PAGE_HEIGHT,//-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+    $pdf->writeHtmlCell(PDFLetter::PAGE_HEIGHT,//-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                        10,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
+                        $style.$html, '', 1);
+
+    $endPage = $pdf->getPage();
+    if ($startPage != $endPage) {
+      $pdf->rollbackTransaction(true);
+      $pdf->addPage('L');
+      // Do it again on a new page
+      $pdf->writeHtmlCell(PDFLetter::PAGE_HEIGHT, // WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                           10,
                           PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
                           $style.$html, '', 1);
-
-      $endPage = $pdf->getPage();
-      if ($startPage != $endPage) {
-        $pdf->rollbackTransaction(true);
-        $pdf->addPage('L');
-        // Do it again on a new page
-        $pdf->writeHtmlCell(PDFLetter::PAGE_HEIGHT, // WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
-                            10,
-                            PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
-                            $style.$html, '', 1);
-      } else {
-        $pdf->commitTransaction();
-      }
-    } // end loop over insured musicians
+    } else {
+      $pdf->commitTransaction();
+    }
 
     // Restore font size
     $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE);
