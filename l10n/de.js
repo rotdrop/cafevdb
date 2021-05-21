@@ -2,8 +2,6 @@ OC.L10N.register(
     "cafevdb",
     {
     "%s Musicians" : "%s Musiker",
-    "Say \"Hello!\" to the world!" : "Sag \"Hallo!\" zur Welt!",
-    "outputs hello, not world" : "nur \"Hello\" ausgeben, ohne \"Welt\"",
     "Hello!" : "Hallo!",
     "Hello World!" : "Hallo Welt!",
     "Exception during execution of run-queue; number of successful actions: %d." : "Fehler während beim Ausführen der geplanten Aufgaben, Anzahl der ausgeführten Aktionen: %d.",
@@ -759,6 +757,7 @@ OC.L10N.register(
     "Time Created" : "Erstellungszeit",
     "Submission Deadline" : "Einreichungsfrist",
     "Date of Submission" : "Einreichungsdatum",
+    "announce" : "ankündigen",
     "Export Table" : "Exportieren",
     "LibreOffice Export" : "ODS Export",
     "Excel Export" : "`Excel' Export",
