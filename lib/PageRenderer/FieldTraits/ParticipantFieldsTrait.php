@@ -138,6 +138,28 @@ trait ParticipantFieldsTrait
         );
         $valueFdd = &$fieldDescData[$valueFddName];
 
+        // @todo this would need more care.
+        list($deletedFddIndex, $deletedFddName) = $this->makeJoinTableField(
+          $fieldDescData, $tableName, 'deleted',
+          Util::arrayMergeRecursive($extraFddBase, [
+            'name' => $this->l->t('Deleted'),
+            'input' => 'SRH', // ($this->showDisabled ? 'SR' : 'SRH'),
+            'sql' => 'GROUP_CONCAT(
+  DISTINCT
+  IF(
+    NOT $join_table.field_id = '.$fieldId.' OR $join_col_fqn IS NULL,
+    NULL,
+    CONCAT_WS(
+      \''.self::JOIN_KEY_SEP.'\',
+      BIN2UUID($join_table.option_key),
+      $join_col_fqn
+    )
+  )
+  ORDER BY $order_by)',
+          ])
+        );
+        $deletedFdd = &$fieldDescData[$deletedFddName];
+
         /** @var Doctrine\Common\Collections\Collection */
         $dataOptions = $field->getSelectableOptions($this->showDisabled);
         $values2     = [];
