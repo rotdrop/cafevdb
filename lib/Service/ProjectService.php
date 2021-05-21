@@ -103,6 +103,7 @@ class ProjectService
         $this->logError('User "'.$userId.'", no request?!');
       }
       $this->logError('SERVER '.print_r($_SERVER, true));
+      $this->logError('POST '.print_r($_REQUEST, true));
       $this->repository = null;
       $this->logException($t);
     }
