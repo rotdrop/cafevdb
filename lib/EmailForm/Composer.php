@@ -121,11 +121,11 @@ Störung.';
   /** @var Entities\Project */
   private $project;
 
-  /** @var Entities\SepaDebitNote */
-  private $debitNote;
+  /** @var Entities\SepaBulkTransaction */
+  private $bulkTransaction;
 
   /** @var int */
-  private $debitNoteId;
+  private $bulkTransactionId;
 
   /** @var bool */
   private $constructionMode;
@@ -230,11 +230,11 @@ Störung.';
                             ->find($this->projectId);
     }
 
-    $this->debitNoteId = $this->cgiValue(
-      'debitNoteId', $this->parameterService->getParam('debitNoteId', -1));
-    if ($this->debitNoteId > 0) {
-      $this->debitNote = $this->getDatabaseRepository(Entities\SepaDebitNote::class)
-                              ->find($this->debitNoteId);
+    $this->bulkTransactionId = $this->cgiValue(
+      'bulkTransactionId', $this->parameterService->getParam('bulkTransactionId', -1));
+    if ($this->bulkTransactionId > 0) {
+      $this->bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
+                                    ->find($this->bulkTransactionId);
     }
 
     $this->setSubjectTag();
@@ -468,7 +468,7 @@ Störung.';
     };
 
     /** @var IDateTimeFormatter */
-    $formatter = $this->appContainer()->get(IDateTimeFormatter::class);
+    $formatter = $this->di(IDateTimeFormatter::class);
     $this->substitutions[self::MEMBER_NAMESPACE]['BIRTHDAY'] = function(array $keyArg, ?Entities\Musician $musician) use ($key, $formatter) {
       if (empty($musician)) {
         return $keyArg[0];
@@ -658,9 +658,9 @@ Störung.';
           // debit-mandates record the message id, ignore errors.
 
           // BIG FAT TODO
-          // if ($this->debitNoteId > 0 && $dbdata['PaymentId'] > 0) {
+          // if ($this->bulkTransactionId > 0 && $dbdata['PaymentId'] > 0) {
           //   $messageId = $msg['messageId'];
-          //   $where =  '`Id` = '.$dbdata['PaymentId'].' AND `DebitNoteId` = '.$this->debitNoteId;
+          //   $where =  '`Id` = '.$dbdata['PaymentId'].' AND `BulkTransactionId` = '.$this->bulkTransactionId;
           //   mySQL::update('ProjectPayments', $where, [ 'DebitMessageId' => $messageId ], $this->dbh);
           // }
         } else {
@@ -1750,11 +1750,11 @@ Störung.';
       'PROJECT' => function($key) {
         $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
-      'DEBITNOTEDUEDATE' => function($key) { return ''; },
-      'DEBITNOTEDUEDAYS' => function($key) { return ''; },
-      'DEBITNOTESUBMITDATE' => function($key) { return ''; },
-      'DEBITNOTESUBMITDAYS' => function($key) { return ''; },
-      'DEBITNOTEJOB' => function($key) { return ''; },
+      'BULKTRANSACTIONDUEDATE' => function($key) { return ''; },
+      'BULKTRANSACTIONDUEDAYS' => function($key) { return ''; },
+      'BULKTRANSACTIONSUBMITDATE' => function($key) { return ''; },
+      'BULKTRANSACTIONSUBMITDAYS' => function($key) { return ''; },
+      'BULKTRANSACTIONJOB' => function($key) { return ''; },
       /**
        * Support date substitutions. Format is
        * ${GLOBAL::DATE:dateformat:datestring} where dateformat
@@ -1805,77 +1805,26 @@ Störung.';
       },
     ];
 
-    if (!empty($this->debitNote)) {
+    if (!empty($this->bulkTransaction)) {
 
       $this->substitutions[self::GLOBAL_NAMESPACE] += [
-        'DEBITNOTEJOB' => function($key) {
-          return $this->l->t($this->debitNote['Job']);
+        'BULKTRANSACTIONJOB' => function($key) {
+          return $this->l->t($this->bulkTransaction['Job']);
         },
-        'DEBITNOTEDUEDAYS' => function($key) {
-          return (new \DateTime())->diff($this->debitNote->getDueDate())->format('%r%a');
+        'BULKTRANSACTIONDUEDAYS' => function($key) {
+          return (new \DateTime())->diff($this->bulkTransaction->getDueDate())->format('%r%a');
         },
-        'DEBITNOTESUBMITDAYS' => function($key) {
-          return (new \DateTime())->diff($this->debitNote->getSubmissionDeadline())->format('%r%a');
+        'BULKTRANSACTIONSUBMITDAYS' => function($key) {
+          return (new \DateTime())->diff($this->bulkTransaction->getSubmissionDeadline())->format('%r%a');
         },
-        'DEBITNOTEDUEDATE' => function($key) use ($formatter) {
-          return $formatter->formatDate($this->debitNote->getDueDate());
+        'BULKTRANSACTIONDUEDATE' => function($key) use ($formatter) {
+          return $formatter->formatDate($this->bulkTransaction->getDueDate());
         },
-        'DEBITNOTESUBMITDATE' => function($key) use ($formatter) {
-          return $formatter->formatDate($this->debitNote->getSubmissionDeadline());
+        'BULKTRANSACTIONSUBMITDATE' => function($key) use ($formatter) {
+          return $formatter->formatDate($this->bulkTransaction->getSubmissionDeadline());
         },
       ];
     }
-  }
-
-  /**
-   * Compose an associative array with keys and values for global
-   * variables which do not depend on the specific recipient.
-   */
-  private function emailGlobalVariables()
-  {
-    static $globalVars = false;
-    if ($globalVars === false) {
-      $globalVars = array(
-        'ORGANIZER' => $this->fetchExecutiveBoard(),
-        'CREDITORIDENTIFIER' => $this->getConfigValue('bankAccountCreditorIdentifier'),
-        'ADDRESS' => $this->streetAddress(),
-        'BANKACCOUNT' => $this->bankAccount(),
-        'PROJECT' => $this->projectName != '' ? $this->projectName : $this->l->t('no project involved'),
-        'DEBITNOTEDUEDATE' => '',
-        'DEBITNOTEDUEDAYS' => '',
-        'DEBITNOTESUBMITDATE' => '',
-        'DEBITNOTESUBMITDAYS' => '',
-        'DEBITNOTEJOB' => '',
-      );
-
-      if ($this->debitNoteId > 0) {
-        $debitNote = DebitNotes::debitNote($this->debitNoteId, $this->dbh);
-
-        $globalVars['DEBITNOTEJOB'] = $this->l->t($debitNote['Job']);
-
-        $oldLocale = setlocale(LC_TIME, '0');
-        setlocale(LC_TIME, $this->getLocale());
-
-        $oldTZ = date_default_timezone_get();
-        $tz = $this->getTimezone();
-        date_default_timezone_set($tz);
-
-        $nowDate = new \DateTime(strftime('%Y-%m-%d'));
-        $dueDate = new \DateTime($debitNote['DueDate']);
-        $subDate = new \DateTime($debitNote['SubmissionDeadline']);
-
-        $globalVars['DEBITNOTEDUEDAYS'] = $nowDate->diff($dueDate)->format('%r%a');
-        $globalVars['DEBITNOTESUBMITDAYS'] =  $nowDate->diff($subDate)->format('%r%a');
-
-        $globalVars['DEBITNOTEDUEDATE'] = strftime('%x', strtotime($debitNote['DueDate']));
-        $globalVars['DEBITNOTESUBMITDATE'] = strftime('%x', strtotime($debitNote['SubmissionDeadline']));
-
-        date_default_timezone_set($oldTZ);
-
-        setlocale(LC_TIME, $oldLocale);
-      }
-    }
-    return $globalVars;
   }
 
   private function streetAddress()
@@ -1904,7 +1853,7 @@ Störung.';
    */
   private function fetchExecutiveBoard()
   {
-    $executiveBoardId = $this->getConfigValue('executiveBoardProjectId');
+    $executiveBoardId = $this->getExecutiveBoardProjectId();
 
     $executiveBoardNames = $this
       ->getDatabaseRepository(Entities\ProjectParticipant::class)
@@ -2038,7 +1987,7 @@ Störung.';
     $draftData = [
       'projectId' => $this->parameterService['projectId'],
       'projectName' => $this->parameterService['projectName'],
-      'pebitNoteId' => $this->parameterService['debitNoteId'],
+      'pebitNoteId' => $this->parameterService['bulkTransactionId'],
       self::POST_TAG => $this->parameterService[self::POST_TAG],
       RecipientsFilter::POST_TAG => $this->parameterService[RecipientsFilter::POST_TAG],
     ];
@@ -2097,8 +2046,8 @@ Störung.';
     unset($draftData[self::POST_TAG]['submitAll']);
     unset($draftData[self::POST_TAG]['saveMessage']);
 
-    if (empty($draftData['debitNoteId'])) {
-      $draftData['debitNoteId'] = -1;
+    if (empty($draftData['bulkTransactionId'])) {
+      $draftData['bulkTransactionId'] = -1;
     }
 
     $this->draftId = $draftId;
