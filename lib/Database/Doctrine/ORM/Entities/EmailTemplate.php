@@ -32,6 +32,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * EmailTemplate
  *
  * @ORM\Table(name="EmailTemplates")
+ * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EmailTemplatesRepository")
  */
 class EmailTemplate implements \ArrayAccess
@@ -40,6 +41,7 @@ class EmailTemplate implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
   use \Gedmo\Blameable\Traits\BlameableEntity;
+  use CAFEVDB\Traits\TranslatableTrait;
 
   /**
    * @var int
@@ -53,6 +55,7 @@ class EmailTemplate implements \ArrayAccess
   /**
    * @var string
    *
+   * @Gedmo\Translatable
    * @ORM\Column(type="string", length=128, unique=true, nullable=false)
    */
   private $tag;
