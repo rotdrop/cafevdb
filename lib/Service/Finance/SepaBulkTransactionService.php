@@ -60,7 +60,7 @@ class SepaBulkTransactionService
 
   const SUBJECT_GROUP_SEPARATOR = '; ';
   const SUBJECT_ITEM_SEPARATOR = ', ';
-  const SUBJECT_OPTION_SEPARATOR = Entities\ProjectParticipantFieldDatum::PAYMENT_REFRENCE_SEPARATOR;
+  const SUBJECT_OPTION_SEPARATOR = Entities\ProjectParticipantFieldDatum::PAYMENT_REFERENCE_SEPARATOR;
 
   /** @var IAppContainer */
   private $appContainer;
@@ -199,7 +199,7 @@ class SepaBulkTransactionService
     return $compositePayment;
   }
 
-  static public function generateCompositeSubjet(array $subjects)
+  static public function generateCompositeSubject(array $subjects)
   {
     natsort($subjects);
     $oldPrefix = false;

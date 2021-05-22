@@ -49,7 +49,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
  */
-class SepaDebitMandate
+class SepaDebitMandate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;

@@ -304,8 +304,8 @@ class SepaBulkTransactionsController extends Controller {
         // @todo We could relay this and just send a reminder to the musician.
         if (empty($debitMandate)) {
           return self::grumble(
-            $this->l->t('Musician "%s" has to pay an amount of "%f", but there is no debit-note-mandate for the musician.', [
-              $participant->getMusician()->getPublicName(), $compositePayment->getAmount(),
+            $this->l->t('Musician "%s" has to pay an amount of %s, but there is no debit-note-mandate for the musician.', [
+              $participant->getMusician()->getPublicName(), $this->moneyValue($compositePayment->getAmount()),
             ]));
         }
 
@@ -321,7 +321,7 @@ class SepaBulkTransactionsController extends Controller {
               ($nonRecurring ? $this->l->t('non-recurring') : $this->l->t('recurring')),
             ]));
         }
-        $nonRecurring = $debitMandate->nonRecurring;
+        $nonRecurring = $debitMandate->getNonRecurring();
 
         $compositePayment->setSepaDebitMandate($debitMandate);
         $compositePayment->setSepaTransaction($debitNote);

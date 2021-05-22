@@ -227,7 +227,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   static private function generatePurpose($subject):array
   {
     $subjects = Util::explode(SepaBulkTransactionService::SUBJECT_GROUP_SEPARATOR, $subject);
-    $subject = SepaBulkTransactionService::generateCompositeSubjet($subjects);
+    $subject = SepaBulkTransactionService::generateCompositeSubject($subjects);
 
     if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
       $subject = Util::removeSpaces($subject);

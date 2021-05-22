@@ -65,7 +65,7 @@ class SepaBankAccounts extends PMETableViewBase
     ],
     self::SEPA_DEBIT_MANDATES_TABLE => [
       'entity' => Entities\SepaDebitMandate::class,
-      'flags' => self::JOIN_READONLY|self::JOIN_GROUP_BY,
+      'flags' => self::JOIN_GROUP_BY,
       'identifier' => [
         'musician_id' => 'musician_id',
         'bank_account_sequence' => 'sequence',
@@ -659,6 +659,7 @@ received so far'),
         'name' => $this->l->t('Non-Recurring'),
         'select' => 'O',
         'maxlen' => '1',
+        'default' => 0,
         'sort' => true,
         'escape' => false,
         'sqlw' => 'IF($val_qas = "", 0, 1)',
