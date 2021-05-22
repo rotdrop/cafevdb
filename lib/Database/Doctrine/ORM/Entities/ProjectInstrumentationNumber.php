@@ -71,7 +71,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   private $quantity = '1';
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="instrumentationNumber", fetch="EXTRA_LAZY", indexBy="musician")
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="instrumentationNumber", fetch="EXTRA_LAZY", indexBy="musician_id")
    */
   private $instruments;
 

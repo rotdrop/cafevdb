@@ -206,7 +206,7 @@ class Musician implements \ArrayAccess
   private $photo;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", indexBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", indexBy="project_id", orphanRemoval=true, fetch="EXTRA_LAZY")
    * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
    */
   private $projectParticipation;

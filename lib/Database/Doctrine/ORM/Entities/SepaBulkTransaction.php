@@ -119,7 +119,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var ArrayCollection
    *
-   * @ORM\OneToMany(targetEntity="CompositePayment", indexBy="musician", mappedBy="sepaTransaction", orphanRemoval=true, cascade={"all"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="CompositePayment", indexBy="musician_id", mappedBy="sepaTransaction", orphanRemoval=true, cascade={"all"}, fetch="EXTRA_LAZY")
    */
   private $payments;
 
