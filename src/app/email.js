@@ -603,7 +603,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             const formData = form.find('fieldset.form-data');
             formData.find('input[name="projectId"]').val(requestData.projectId);
             formData.find('input[name="projectName"]').val(requestData.projectName);
-            formData.find('input[name="debitNoteId"]').val(requestData.debitNoteId);
+            formData.find('input[name="bulkTransactionId"]').val(requestData.bulkTransactionId);
 
             // Make the debug output less verbose
             delete requestData.composerForm;

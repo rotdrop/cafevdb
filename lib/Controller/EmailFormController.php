@@ -100,7 +100,7 @@ class EmailFormController extends Controller {
    * @NoAdminRequired
    * @UseSession
    */
-  public function webForm($projectId = -1, $projectName = '', $debitNoteId = -1, $emailTemplate = null)
+  public function webForm($projectId = -1, $projectName = '', $bulkTransactionId = -1, $emailTemplate = null)
   {
     $composer = $this->appContainer->query(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();
@@ -121,7 +121,7 @@ class EmailFormController extends Controller {
       'csrfToken' => \OCP\Util::callRegister(), // @todo: check
       'projectName' => $projectName,
       'projectId' => $projectId,
-      'debitNoteId' => $debitNoteId,
+      'bulkTransactionId' => $bulkTransactionId,
       // Provide enough data s.t. a form-reload will bump the user to the
       // form the email-dialog was opened from. Ideally, we intercept the
       // form submit in javascript and simply close the dialog. Most of
@@ -131,7 +131,7 @@ class EmailFormController extends Controller {
         'projectId' => $projectId,
         'template' => $this->parameterService['template'],
         // 'renderer' => ???? @todo check
-        'debitNoteId' => $debitNoteId,
+        'bulkTransactionId' => $bulkTransactionId,
         'requesttoken' => \OCP\Util::callRegister(), // @todo: check
         'csrfToken' => \OCP\Util::callRegister(), // @todo: check
         $emailKey => $this->pme->cgiSysName('mrecs'),
@@ -226,12 +226,12 @@ class EmailFormController extends Controller {
       'topic' => 'undefined',
       'projectId' => $projectId,
       'projectName' => $projectName,
-      'debitNoteId' => $debitNoteId,
+      'bulkTransactionId' => $bulkTransactionId,
     ];
     $requestData = array_merge($defaultData, $this->parameterService->getParam('emailComposer', []));
     $projectId   = $requestData['projectId'];
     $projectName = $requestData['projectName'];
-    $debitNoteId = $requestData['debitNoteId'];
+    $bulkTransactionId = $requestData['bulkTransactionId'];
 
     /** @var Composer */
     $composer = $this->appContainer->get(Composer::class);
@@ -391,7 +391,7 @@ class EmailFormController extends Controller {
             // Update project name and id
             $projectId = $requestData['projectId'] = $requestParameters['projectId'];
             $projectName = $requestData['projectName'] = $requestParameters['projectName'];
-            $debitNoteId = $requestData['debitNoteId'] = $requestParameters['debitNoteId'];
+            $bulkTransactionId = $requestData['bulkTransactionId'] = $requestParameters['bulkTransactionId'];
 
             // install new request parameters
             $this->parameterService->setParams($requestParameters);
@@ -576,7 +576,7 @@ class EmailFormController extends Controller {
    *
    * @todo Close the PHP session if no longer needed.
    */
-  public function recipientsFilter($projectId, $projectName, $debitNoteId)
+  public function recipientsFilter($projectId, $projectName, $bulkTransactionId)
   {
     $recipientsFilter = $this->appContainer->query(RecipientsFilter::class);
 
@@ -590,7 +590,7 @@ class EmailFormController extends Controller {
         'appName' => $this->appName(),
         'projectName' => $projectName,
         'projectId' => $projectId,
-        'debitNoteId' => $debitNoteId,
+        'bulkTransactionId' => $bulkTransactionId,
         // Needed for the recipient selection
         'recipientsFormData' => $recipientsFilter->formData(),
         'filterHistory' => $filterHistory,
