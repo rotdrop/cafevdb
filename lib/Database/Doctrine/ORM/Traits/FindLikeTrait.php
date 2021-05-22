@@ -300,6 +300,7 @@ trait FindLikeTrait
 
     $andX = $qb->expr()->andX();
     foreach ($criteria as $key => &$value) {
+      $literal[$key] = false;
       $dotPos = strpos($key, '.');
       if ($dotPos !== false) {
         $tableAlias = substr($key, 0, $dotPos);
@@ -311,9 +312,20 @@ trait FindLikeTrait
       $param = str_replace('.', '_', $field);
       $comparator = $comparators[$key]?:'eq';
       if ($value === null) {
+        $literal[$key] = true;
         $expr = $qb->expr()->isNull($field);
       } else if (is_array($value)) {
-        $expr = $qb->expr()->in($field, ':'.$param);
+        // special case empty array:
+        // - in principle always FALSE (nothing is in an empty set)
+        // - FIELD == NULL ? NULL in any given set would be FALSE, we
+        //   keep it that way, even if the set is empty
+        if (empty($value)) {
+          $literal[$key] = true;
+          // unfortunately, a literal 0 just cannot be modelled with the query builder
+          $expr = $qb->expr()->eq(1, 0);
+        } else {
+          $expr = $qb->expr()->in($field, ':'.$param);
+        }
       } else if (is_string($value)) {
         $value = str_replace('*', '%', $value);
         if (strpos($value, '%') !== false) {
@@ -330,8 +342,11 @@ trait FindLikeTrait
       $andX->add($expr);
     }
     $qb->where($andX);
+
+    unset($value); // break reference
+
     foreach ($criteria as $key => $value) {
-      if ($value === null)  {
+      if ($literal[$key])  {
         continue;
       }
       $dotPos = strpos($key, '.');
