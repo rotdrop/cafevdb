@@ -36,6 +36,7 @@ import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import print_r from './print-r.js';
 import chosenPopup from './chosen-popup.js';
+import queryData from './query-data.js';
 
 require('bootstrap4-duallistbox');
 require('emailform.scss');
@@ -665,7 +666,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         }
         if (debugText !== '') {
           let addOn;
-          addOn = print_r(CAFEVDB.queryData(post, true), true);
+          addOn = print_r(queryData(post, true), true);
           addOn = $('<div></div>').text(addOn).html();
           debugText += '<pre>post = ' + addOn + '</pre>';
           addOn = print_r(requestData, true);

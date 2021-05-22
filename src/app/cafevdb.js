@@ -125,74 +125,6 @@ const stopRKey = function(evt) {
   return true;
 };
 
-/**
- * QueryData.js
- *
- * A function to parse data from a query string
- *
- * Created by Stephen Morley - http://code.stephenmorley.org/ - and released under
- * the terms of the CC0 1.0 Universal legal code:
- *
- * http://creativecommons.org/publicdomain/zero/1.0/legalcode
- *
- * Creates an object containing data parsed from the specified query string. The
- * parameters are:
- *
- * @param {String} queryString The query string to parse. The query
- *     string may start with a question mark, spaces may be encoded
- *     either as plus signs or the escape sequence '%20', and both
- *     ampersands and semicolons are permitted as separators.  This
- *     optional parameter defaults to query string from the page URL.
- * @param {bool} preserveDuplicates true if duplicate values should be
- *     preserved by storing an array of values, and false if
- *     duplicates should overwrite earler occurrences. This optional
- *     parameter defaults to false.
- *
- * @returns {Object}
- */
-const queryData = function(queryString, preserveDuplicates) {
-
-  const result = {};
-
-  // if a query string wasn't specified, use the query string from the URL
-  if (queryString === undefined) {
-    queryString = location.search ? location.search : '';
-  }
-
-  // remove the leading question mark from the query string if it is present
-  if (queryString.charAt(0) === '?') queryString = queryString.substring(1);
-
-  // check whether the query string is empty
-  if (queryString.length > 0) {
-
-    // replace plus signs in the query string with spaces
-    queryString = queryString.replace(/\+/g, ' ');
-
-    // split the query string around ampersands and semicolons
-    const queryComponents = queryString.split(/[&;]/g);
-
-    // loop over the query string components
-    for (let index = 0; index < queryComponents.length; index++) {
-      // extract this component's key-value pair
-      const keyValuePair = queryComponents[index].split('=');
-      const key = decodeURIComponent(keyValuePair[0]);
-      const value = keyValuePair.length > 1
-        ? decodeURIComponent(keyValuePair[1])
-        : '';
-      // check whether duplicates should be preserved
-      if (preserveDuplicates) {
-        // create the value array if necessary and store the value
-        if (!(key in result)) result[key] = [];
-        result[key].push(value);
-      } else {
-        // store the value
-        result[key] = value;
-      }
-    }
-  }
-  return result;
-};
-
 const selectMenuReset = function(select) {
   // deselect menu item
   select.find('option').prop('selected', false);
@@ -245,27 +177,6 @@ const formSubmit = function(url, values, method) {
   form.submit();
 };
 
-const objectToHiddenInput = function(value, namePrefix) {
-  if (typeof namePrefix === 'undefined') {
-    namePrefix = '';
-  }
-  if (typeof value !== 'object') {
-    return '<input type="hidden" name="' + namePrefix + '" value="' + value + '"/>' + '\n';
-  }
-  let result = '';
-  if (value.constructor === Array) {
-    for (let idx = 0; idx < value.length; ++idx) {
-      result += objectToHiddenInput(value[idx], namePrefix + '[' + idx + ']');
-    }
-  } else {
-    for (const property of Object.keys(value)) {
-      result += objectToHiddenInput(
-        value[property], namePrefix === '' ? property : namePrefix + '[' + property + ']');
-    }
-  }
-  return result;
-};
-
 /**
  * A variant of the old fashioned appsettings with a callback
  * instead of script loading
@@ -305,33 +216,6 @@ const appSettings = function(route, callback) {
         console.log(data);
       });
   }
-};
-
-/**
- * Generate a form with given values, inject action (URL) and target
- * (iframe, ..), add to document, submit, remove from document.
- *
- * @param {String} action URL
- *
- * @param {String} target IFRAME
- *
- * @param {Object} values An object, either like created by serializeArray()
- * orby serialize().
- *
- */
-const iframeFormSubmit = function(action, target, values) {
-  const form = $('<form method="post" action="' + action + '" target="' + target + '"></form>');
-  if (values.constructor === Array) {
-    // serializeArray() stuff
-    for (let idx = 0; idx < values.length; ++idx) {
-      form.append('<input type="hidden" name="' + values[idx].name + '" value="' + values[idx].value + '"/>');
-    }
-  } else {
-    // object with { name: value }
-    form.append(objectToHiddenInput(values));
-  }
-  $('body').append(form);
-  form.submit().remove();
 };
 
 /**
@@ -505,6 +389,7 @@ function toolTipsEnabled() {
 
 const snapperClose = function() {
   // snapper will close on clicking navigation entries
+  console.info('SNAPPER CLOSE');
   $('#navigation-list li.nav-heading a').trigger('click');
 };
 
@@ -591,14 +476,11 @@ export {
   unfocus,
   modalWaitNotification,
   stopRKey,
-  queryData,
   selectMenuReset,
   chosenActive,
   fixupNoChosenMenu,
   formSubmit,
-  objectToHiddenInput,
   appSettings,
-  iframeFormSubmit,
   modalizer,
   snapperClose,
   attachToolTip,

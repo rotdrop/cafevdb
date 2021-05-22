@@ -22,6 +22,7 @@
 import { globalState, appName, cloudWebRoot, $ } from './globals.js';
 import print_r from './print-r.js';
 import * as Dialogs from './dialogs.js';
+import { isPlainObject } from 'is-plain-object';
 
 const ajaxHttpStatus = {
   200: t(appName, 'OK'),
@@ -309,6 +310,29 @@ const ajaxValidateResponse = function(data, required, errorCB) {
     // caught as in this case no regular data-fields have been
     // constructed
     info += '<div class="missing error">' + missing + '</div>';
+
+    if (!isPlainObject(data)) {
+      let caption = 'Error';
+      switch (typeof data) {
+      case 'string':
+        info += t(
+          appName,
+          'The submitted data "{stringValue}" seems to be a plain string, '
+            + 'but we need an object where the data is provided through above listed properties.',
+          { stringValue: data.substring(0, 32) + '...' });
+        caption = t(appName, 'Error: plain string received');
+        break;
+      default:
+        info += t(
+          appName,
+          'The submitted data is not a plain object, '
+            + 'and does not provide the properties listed above.',
+          { stringValue: data.substring(0, 32) + '...' });
+        caption = t(appName, 'Error: not a plain object');
+        break;
+      }
+      data = { caption, data };
+    }
 
     // Display additional debug info if any
     Dialogs.debugPopup(data);

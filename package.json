@@ -46,6 +46,7 @@
     "eslint-import-resolver-webpack": "^0.13.0",
     "eslint-plugin-node": "^11.1.0",
     "imagesloaded": "^4.1.4",
+    "is-plain-object": "^5.0.0",
     "jquery": "^3.5.1",
     "jquery-file-download": "^1.4.6",
     "jquery-jcrop": "^0.9.15",
