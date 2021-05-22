@@ -276,6 +276,7 @@ trait FindLikeTrait
    */
   protected function generateFindBySelect(array $queryParts, ?array $select = null)
   {
+    $indexBy = $queryParts['indexBy']?:[];
     $qb = $this->createQueryBuilder('mainTable', $indexBy['mainTable']);
     foreach (array_keys($queryParts['joinEntities']) as $association) {
       $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$association]);
