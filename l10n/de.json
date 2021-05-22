@@ -324,7 +324,7 @@
     "Debit-mandate is for bank-account \"%s\", but the current bank-account is \"%s\"." : "Das Lastschriftmandat ist an die Bankverbindung \"%s\" gebunden, aber\ndie aktulle Bankverbindung lautet \"%s\".",
     "Internal data inconsistency, field-project \"%s\" does not match current project \"%s\"." : "Interner Fehler, inkonsistente Daten, das Datenfeld-Projekt \"%s\"\nunterscheidet sich vom aktuellen Projekt \"%s\".",
     "Submitted debit-job id \"%s\" is neither a participant field nor a field-option uuid." : "Die übermittelte Lastschrift-Id \"%s\" gehört zu keinem bekannten Daten-Feld.",
-    "Musician \"%s\" has to pay an amount of \"%f\", but there is no debit-note-mandate for the musician." : "Die Person \"%s\" muss einen Betrag von \"%f\" EUR bezahlen, uns liegt aber kein Lastschriftmandat vor.",
+    "Musician \"%s\" has to pay an amount of %s, but there is no debit-note-mandate for the musician." : "Die Person \"%s\" muss einen Betrag von \"%f\" EUR bezahlen, uns liegt aber kein Lastschriftmandat vor.",
     "recurring" : "wiederkehrend",
     "non-recurring" : "einmalig",
     "The debit-mandate for a bulk-transaction must either be all recurring or all one-time-only. The conflicting mandate of musician \"%s\", mandate-reference \"%s\" is %s, the previous mandates were %s." : "Das Lastschriftmandats für den Sammelauftag müssen entweder all\nmehrfach verwendbar oder alle einmalig sein. Das kollidierende Mandat\ndes Musikers \"%s\", Mandatsreferenz \"%s\", ist %s, die bislang verarbeiteten Mandate waren %s.;\n",
