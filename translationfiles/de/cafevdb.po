@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-05-21 20:35+0200\n"
-"PO-Revision-Date: 2021-05-21 21:18+0200\n"
+"POT-Creation-Date: 2021-05-22 21:52+0200\n"
+"PO-Revision-Date: 2021-05-22 21:52+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1803,7 +1803,9 @@ msgstr ""
 msgid ""
 "Musician \"%s\" has to pay an amount of %s, but there is no debit-note-"
 "mandate for the musician."
-msgstr "Die Person \"%s\" muss einen Betrag von %s bezahlen, uns liegt aber kein Lastschriftmandat vor."
+msgstr ""
+"Die Person \"%s\" muss einen Betrag von %s bezahlen, uns liegt aber kein "
+"Lastschriftmandat vor."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:320
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:321
@@ -2175,78 +2177,77 @@ msgstr "Grußformel"
 msgid "Signature"
 msgstr "Unterschrift"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:296
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:304
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:302
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:950
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:310
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:951
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:546
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:554
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:608
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:616
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1412
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1423
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1542
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1551
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1555
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1564
 msgid "musicians"
 msgstr "Musiker"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1647
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1662
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1656
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1671
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1751
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1843
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1760
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1783
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1793
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1803
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1792
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1802
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1812
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2082
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2080
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2089
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2087
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2151
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2239
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2149
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2237
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2173
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2171
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2466
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2464
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2466
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2464
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
@@ -2255,17 +2256,12 @@ msgstr "Lokale Dateien"
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:427
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:428
 #, php-format
-msgid "Debit note does not belong to the given project (%d <-> %d)"
-msgstr "Die Lastschrift gehört nicht zum aktuellen Projekt (%d <-> %d)"
+msgid "No payments for bulk-transaction id %d."
+msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:440
-#, php-format
-msgid "No payments for debit-note id %d."
-msgstr "Umsätze zur Lastschrift mit der Id %d liegen nicht vor."
-
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:622
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:617
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:280
 msgid "member status "
 msgstr "Mitglieds-Status"
@@ -3115,7 +3111,7 @@ msgstr "Letzte Aktualisierung"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:796
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:983
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:28
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:29
 msgid "Created"
 msgstr "Erzeugt"
 
@@ -7356,268 +7352,268 @@ msgstr "CafevDB"
 msgid "Orchestra Management Application."
 msgstr "Orchester-Verwaltungs-Anwendung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:27
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:28
 msgid "OK"
 msgstr "Fein"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:29
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:30
 msgid "Accepted"
 msgstr "Akzeptiert"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:30
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:31
 msgid "Non-Authoritative Information"
 msgstr "Unverbindliche Information"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:31
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:32
 msgid "No Content"
 msgstr "Antwort enthält keine Daten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:32
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:33
 msgid "Reset Content"
 msgstr "Inhalt zurückgesetzt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:33
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:34
 msgid "Partial Content"
 msgstr "Unvollständige Antwort"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:34
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:35
 msgid "Multi-Status (WebDAV)"
 msgstr "Multi-Status (WebDAV)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:35
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:36
 msgid "Already Reported (WebDAV)"
 msgstr "Bereits berichtet (WebDAV)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:36
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:37
 msgid "IM Used"
 msgstr "IM verwendet"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:37
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:38
 msgid "Multiple Choices"
 msgstr "Mehrere Wahlmöglichkeiten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:38
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:39
 msgid "Moved Permanently"
 msgstr "Permanent verschoben"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:39
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:40
 msgid "Found"
 msgstr "Gefunden"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:40
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:41
 msgid "See Other"
 msgstr "Siehe andere Web-Adresse"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:41
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:42
 msgid "Not Modified"
 msgstr "Unverändert"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:42
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:43
 msgid "Use Proxy"
 msgstr "Benutze einen Proxy"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:43
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:44
 msgid "(Unused)"
 msgstr "(Unbenutzt)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:44
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:45
 msgid "Temporary Redirect"
 msgstr "Zeitweilige Umleitung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:45
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:46
 msgid "Permanent Redirect (experimental)"
 msgstr "Permanente Umleitung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:46
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:47
 msgid "Bad Request"
 msgstr "Ungültige Anfrage"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:47
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:48
 msgid "Unauthorized"
 msgstr "Nicht autorisiert"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:48
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:49
 msgid "Payment Required"
 msgstr "Bezahlung erforderlich"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:49
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:50
 msgid "Forbidden"
 msgstr "Verboten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:50
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:51
 msgid "Not Found"
 msgstr "Unauffindbar"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:51
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:52
 msgid "Method Not Allowed"
 msgstr "Anfragemethode nicht zulässig"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:52
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:53
 msgid "Not Acceptable"
 msgstr "Nicht akzeptabel"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:53
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:54
 msgid "Proxy Authentication Required"
 msgstr "Proxy-Authentifizierung erforderlich"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:54
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:55
 msgid "Request Timeout"
 msgstr "Anfrage-Zeitüberschreitung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:55
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:56
 msgid "Conflict"
 msgstr "Konflikt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:56
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:57
 msgid "Gone"
 msgstr "Weg"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:57
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:58
 msgid "Length Required"
 msgstr "Länge benötigt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:58
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:59
 msgid "Precondition Failed"
 msgstr "Vorbedingung nicht erfüllt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:59
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:60
 msgid "Request Entity Too Large"
 msgstr "Anfrage-Daten zu groß"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:60
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:61
 msgid "Request-URI Too Long"
 msgstr "Anfrage-URI zu lang"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:61
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:62
 msgid "Unsupported Media Type"
 msgstr "Nicht unterstützter Medien-Typ"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:62
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:63
 msgid "Requested Range Not Satisfiable"
 msgstr "Angeforderter Bereich nicht möglich"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:63
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:64
 msgid "Expectation Failed"
 msgstr "Erwartete Operation Fehlgeschlagen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:64
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:65
 msgid "I'm a teapot (RFC 2324)"
 msgstr "Ich bin eine Teekanne (RFC 2324)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:65
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:66
 msgid "Enhance Your Calm (Twitter)"
 msgstr "Verstärke Deine Ruhe (Twitter)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:66
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:67
 msgid "Unprocessable Entity (WebDAV)"
 msgstr "Nicht-verarbeitbarer Entrag (WebDAV)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:67
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:68
 msgid "Locked (WebDAV)"
 msgstr "Gesperrt (WebDAV)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:68
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:69
 msgid "Failed Dependency (WebDAV)"
 msgstr "Abhängigkeit fehlgeschlagen (WebDAV)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:69
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:70
 msgid "Reserved for WebDAV"
 msgstr "Reserviert für WebDAV"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:70
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:71
 msgid "Upgrade Required"
 msgstr "Aufwertung benötigt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:71
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:72
 msgid "Precondition Required"
 msgstr "Vorbedingung erforderlich"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:72
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:73
 msgid "Too Many Requests"
 msgstr "Zu viele Anfragen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:73
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:74
 msgid "Request Header Fields Too Large"
 msgstr "Anfrage-Kopfzeilen zu lang"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:74
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:75
 msgid "No Response (Nginx)"
 msgstr "Keine Antwort (Nginx)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:75
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:76
 msgid "Retry With (Microsoft)"
 msgstr "Wiederholen mit (Microsoft)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:76
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:77
 msgid "Blocked by Windows Parental Controls (Microsoft)"
 msgstr "Blockiert von Windows-Kindersicherung (Microsoft)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:77
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:78
 msgid "Unavailable For Legal Reasons"
 msgstr "Nicht verfügbar aus rechtlichen Gründen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:78
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:79
 msgid "Client Closed Request (Nginx)"
 msgstr "Anwender-Programm hat die Anfrage beendet (Nginx)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:79
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:80
 msgid "Internal Server Error"
 msgstr "Interner Server-Fehler"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:80
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:81
 msgid "Not Implemented"
 msgstr "Nicht implementiert"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:81
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:82
 msgid "Bad Gateway"
 msgstr "Schlechte Netzübergangseinheit"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:82
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:83
 msgid "Service Unavailable"
 msgstr "Dienst nicht verfügbar"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:83
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:84
 msgid "Gateway Timeout"
 msgstr "Zeitüberschreitung bei der Netzübergangseinheit"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:84
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:85
 msgid "HTTP Version Not Supported"
 msgstr "HTTP-Version nicht unterstützt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:85
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:86
 msgid "Variant Also Negotiates (Experimental)"
 msgstr "Variante handelt außerdem aus (Experimenmtell)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:86
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:87
 msgid "Insufficient Storage (WebDAV)"
 msgstr "Zu wenig Speicherplatz (WebDAV)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:87
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:88
 msgid "Loop Detected (WebDAV)"
 msgstr "Zirkel entdeckt (WebDAV)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:88
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:89
 msgid "Bandwidth Limit Exceeded (Apache)"
 msgstr "Bandbreiten-Beschränkung überschritten (Apache)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:89
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:90
 msgid "Not Extended"
 msgstr "Nicht erweitert"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:90
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:91
 msgid "Network Authentication Required"
 msgstr "Netzwerk-Authentifizierung erforderlich"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:91
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:92
 msgid "Network read timeout error"
 msgstr "Netzwerk Lese-Zeitüberschreitung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:92
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:93
 msgid "Network connect timeout error"
 msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:156
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:318
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:157
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:342
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/blog.js:180
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/blog.js:228
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/blog.js:278
@@ -7626,9 +7622,9 @@ msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/blog.js:336
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/blog.js:362
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/blog.js:385
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:63
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:556
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:651
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:64
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:557
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:652
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:54
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:61
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:171
@@ -7639,19 +7635,19 @@ msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 msgid "Error"
 msgstr "Fehler"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:181
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:182
 msgid "System Administrator"
 msgstr "System-Administrator"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:206
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:207
 msgid "Feedback email: {AutoReport}"
 msgstr "Rückmeldung per Email: {AutoReport}"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:234
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:235
 msgid "Something went wrong."
 msgstr "Irgendetwas ist schief gelaufen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:236
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:237
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
@@ -7660,7 +7656,7 @@ msgstr ""
 "Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu\n"
 "interagieren, dann ist das der Grund für den Fehler."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:241
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:242
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
@@ -7669,7 +7665,7 @@ msgstr ""
 "ab- und wieder an zu melden und den Vorgang zu wiederholen. Wenn Du\n"
 "dieses Fenster schließt, wirst Du zur Login-Seite weiter geleitet."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:289
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:290
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
@@ -7677,23 +7673,49 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:291
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:292
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:298
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:299
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:307
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:308
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:346
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:320
+msgid ""
+"The submitted data \"{stringValue}\" seems to be a plain string, but we need "
+"an object where the data is provided through above listed properties."
+msgstr ""
+"Die übermittelten Daten \"{stringValue}\" scheinen eine einfache "
+"Zeichenkette zu sein, benötigt wird jedoch ein JavaScript-Obekt, das die "
+"Daten über die oben aufgeführten (fehlenden) Objekt-Eigenschaften zu "
+"Verfügung stellt."
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:323
+msgid "Error: plain string received"
+msgstr "Fehler: einfache Zeichenkette empfangen"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:328
+msgid ""
+"The submitted data is not a plain object, and does not provide the "
+"properties listed above."
+msgstr ""
+"Die übermittelten DAten sind kein einfaches Objekt und beinhalteten nicht "
+"die oben aufgeführten benötigten Eigentschaften."
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:331
+msgid "Error: not a plain object"
+msgstr "Fehler: kein einfaches Objekt"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:370
 msgid "Unknown JSON error response to AJAX call: {status} / {error}"
 msgstr "Unbekannte JSON Fehler-Antwort auf AJAX-Anfrage: {status} / {error}"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:353
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:377
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/file-download.js:192
 msgid "HTTP error response to AJAX call: {code} / {error}"
 msgstr "HTTP Fehler-Antwort auf AJAX-Anfrage: {code} / {error}"
@@ -7737,7 +7759,7 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr "Den Beitrag wirklich löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/cafevdb.js:294
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/cafevdb.js:205
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/part.common.header.php:137
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/email-settings.php:38
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings.php:60
@@ -7837,92 +7859,92 @@ msgstr ""
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:63
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:64
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:144
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:145
 msgid "Move all"
 msgstr "Alle auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:145
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:146
 msgid "Move selected"
 msgstr "Ausgewählte verschieben"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:146
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:147
 msgid "Remove selected"
 msgstr "Ausgewählte entfernen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:147
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:148
 msgid "Remove all"
 msgstr "Alle entfernen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:148
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:149
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:149
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:150
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:152
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:153
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:154
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:155
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/legacy/calendar/part.eventform.php:38
 msgid "from"
 msgstr "aus"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:156
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:157
 msgid "Empty list"
 msgstr "Leere Liste"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:157
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:158
 msgid "Filter"
 msgstr "Suchbegriff"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:158
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:159
 msgid "show all"
 msgstr "alle anzeigen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:165
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:166
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
 "Kasten zu schieben."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:555
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:556
 msgid "Unknown form element: {FormElement}"
 msgstr "Unbekanntes Formularfeld: {FormElement}"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:595
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1420
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:596
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1421
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:597
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1422
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:598
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1423
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:650
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:651
 msgid "Unknown request: {operation} / {topic}"
 msgstr "Unbekannte Anfrage: {operation} / {topic}"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:708
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:709
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht %d von %d"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:710
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:711
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:733
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:734
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:766
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:767
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -7930,7 +7952,7 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:901
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:902
 msgid ""
 "A template with the name `{templateName}' already exists, do you want to "
 "overwrite it?"
@@ -7938,27 +7960,27 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{templateName}'; soll die "
 "überschrieben werden?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:903
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:904
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:934
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:935
 msgid ""
 "Do you really want to delete the template with the name `{templateName}'?"
 msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {templateName} wirklich löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:936
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:937
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:948
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:949
 msgid "Cannot delete non-existing template `{templateName}'"
 msgstr ""
 "Die Vorlage {templateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:958
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:959
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -7966,65 +7988,65 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:960
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:961
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:997
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:998
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:998
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:999
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1123
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1124
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1124
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1221
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1125
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1222
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1204
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1205
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1220
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1221
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1264
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1265
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:152
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:170
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1265
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1266
 msgid "Accept"
 msgstr "Übernehmen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1268
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1269
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1271
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1272
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1431
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1432
 msgid "Email will be sent with an open recipients list!"
 msgstr "Email wird mit einer offenen (Cc:) Adressaten-Liste gesendet!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1433
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1434
 msgid "Email will be sent with a hidden recipients list!"
 msgstr "Email wird mit versteckter (Bcc:) Adressaten-Liste gesendet!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1435
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1436
 msgid "Notice"
 msgstr "Notiz"
 
@@ -10875,6 +10897,23 @@ msgstr "Orchester-Stempel"
 msgid "Select orchestra seal"
 msgstr "Orchester-Stempel auswählen"
 
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1948
+#, fuzzy, php-format
+msgid "debitnote"
+msgstr "Lastschrift"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1942
+#, php-format
+msgid "DebitnoteInsurance"
+msgstr "LastschriftVersicherung"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1942
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1948
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/L10N/BiDirectionalL10N.php:80
+#, php-format
+msgid "Default"
+msgstr "Voreinstellung"
+
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BIRTHDAY"
@@ -11010,6 +11049,15 @@ msgstr "NACHNAME"
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
 
+#, fuzzy, php-format
+#~| msgid "field generator"
+#~ msgid "__generator__"
+#~ msgstr "z.B. \\OCA\\CAFEVDB\\FieldGenerator"
+
+#, php-format
+#~ msgid "Debit note does not belong to the given project (%d <-> %d)"
+#~ msgstr "Die Lastschrift gehört nicht zum aktuellen Projekt (%d <-> %d)"
+
 #~ msgid "Say \"Hello!\" to the world!"
 #~ msgstr "Sag \"Hallo!\" zur Welt!"
 
@@ -11056,9 +11104,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "Direct Debit Date"
 #~ msgstr "Lastschrift-Datum"
-
-#~ msgid "Debit Notes"
-#~ msgstr "Lastschriften"
 
 #~ msgid "Debit Job"
 #~ msgstr "Umsatz-Art"
@@ -11202,9 +11247,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "DebitNoteAnnouncementProjectDeposit"
 #~ msgstr "LastschriftAnkuendigungProjektAnzahlung"
-
-#~ msgid "DebitNoteAnnouncementInsurance"
-#~ msgstr "LastschriftAnkuendigungVersicherung"
 
 #~ msgid "DebitNoteAnnouncementMembershipFee"
 #~ msgstr "ProjektLastschriftAnkuendigung"

@@ -1,0 +1,16 @@
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1948
+#, php-format
+msgid "debitnote"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1942
+#, php-format
+msgid "DebitnoteInsurance"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1942
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1948
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/L10N/BiDirectionalL10N.php:80
+#, php-format
+msgid "Default"
+msgstr ""
