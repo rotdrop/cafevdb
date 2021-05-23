@@ -371,6 +371,44 @@ trait ConfigTrait {
     return $this->configService->dateTimeFormatter();
   }
 
+  /**
+   * Work around NC annoyingly not accepting \DateTimeInterface
+   *
+   * @param int|\DateTimeInterface $timestamp
+   */
+  protected function formatDate($timestamp, $format = 'long', \DateTimeZone $timeZone = null, IL10N $l = null)
+  {
+    if ($timestamp instanceof \DateTimeInterface
+        && !($timestamp instanceof \DateTime)) {
+      // fix NC misfeature
+      $date = new \DateTime();
+      $date->setTimestamp($timestamp->getTimestamp());
+      $date->setTimezone($timestamp->getTimezone());
+      $timestamp = $date;
+    }
+    return $this->dateTimeFormatter()->formatDate(
+      $timestamp, $format, $timeZone, $$l);
+  }
+
+  /**
+   * Work around NC annoyingly not accepting \DateTimeInterface
+   *
+   * @param int|\DateTimeInterface $timestamp
+   */
+  protected function formatDateTime($timestamp, $formatDate = 'long', $formatTime = 'medium', \DateTimeZone $timeZone = null, \OCP\IL10N $l = null)
+  {
+    if ($timestamp instanceof \DateTimeInterface
+        && !($timestamp instanceof \DateTime)) {
+      // fix NC misfeature
+      $date = new \DateTime();
+      $date->setTimestamp($timestamp->getTimestamp());
+      $date->setTimezone($timestamp->getTimezone());
+      $timestamp = $date;
+    }
+    return $this->dateTimeFormatter()->formatDateTime(
+      $timestamp, $formatDate, $formatTime, $timeZone, $$l);
+  }
+
   /**Return the locale. */
   protected function getLocale($lang = null) {
     return $this->configService->getLocale($lang);
