@@ -32,8 +32,10 @@ import * as FileUpload from './file-upload.js';
 import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
+import * as Notification from './notification.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
+import { setPersonalUrl } from './settings-urls.js';
 import print_r from './print-r.js';
 import chosenPopup from './chosen-popup.js';
 import queryData from './query-data.js';
@@ -43,6 +45,7 @@ require('emailform.scss');
 
 const Email = globalState.Email = {
   active: false,
+  autoSaveTimer: null,
 };
 
 function generateUrl(url, urlParams, urlOptions) {
@@ -404,6 +407,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   const storedEmailsSelector = fieldset.find('select.stored-messages-selector');
   const currentTemplate = fieldset.find('#emailCurrentTemplate');
   const saveAsTemplate = fieldset.find('#check-save-as-template');
+  const draftAutoSave = fieldset.find('#check-draft-auto-save');
   const messageText = fieldset.find('textarea');
   const eventAttachmentsSelector = fieldset.find('select.event-attachments');
   const fileAttachmentsSelector = fieldset.find('select.file-attachments');
@@ -412,7 +416,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
   // Event dispatcher, so to say
   const applyComposerControls = function(event, request, validateLockCB) {
-    event.preventDefault();
 
     if (request === undefined) {
       throw Error('Request is undefined');
@@ -570,7 +573,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           case 'template': {
             const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
             dataItem.val(-1);
-            currentTemplate.val(requestData.templateName);
+            currentTemplate.val(requestData.emailTemplateName);
             WysiwygEditor.updateEditor(messageText, requestData.message);
             fieldset.find('input.email-subject').val(requestData.subject);
             break;
@@ -632,12 +635,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         case 'delete':
           switch (topic) {
           case 'template':
-            currentTemplate.val(requestData.templateName);
+            currentTemplate.val(requestData.emailTemplateName);
             WysiwygEditor.updateEditor(messageText, requestData.message);
             break;
           case 'draft': {
             const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
-            dataItem.val(-1);
+            dataItem.val('');
             break;
           }
           }
@@ -878,10 +881,69 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    * Template handling (save, delete, load)
    */
 
+  const autoSaveSeconds = draftAutoSave.data('auto-save-interval') || 300;
+  const autoSaveTimeout = autoSaveSeconds * 1000;
+
+  const autoSaveHandler = function() {
+    if (Email.autoSaveTimer) {
+      clearTimeout(Email.autoSaveTimer);
+    }
+    Email.autoSaveTimer = null;
+    console.info('ATTEMPT AUTOSAVE');
+    applyComposerControls(
+      null, {
+        operation: 'save',
+        topic: 'draft',
+        submitAll: true,
+      },
+      function(lock) {
+        if (!lock) {
+          // restart timer when ready
+          if (Email.autoSaveTimer) {
+            return;
+          }
+          Email.autoSaveTimer = setTimeout(autoSaveHandler, autoSaveTimeout);
+        }
+      });
+  };
+
+  const startDraftAutoSave = function($element) {
+    if (Email.autoSaveTimer) {
+      clearTimeout(Email.autoSaveTimer);
+      Email.autoSaveTimer = null;
+    }
+    if ($element.prop('checked')) {
+      // perhaps add a popup to set the auto-save timeout
+      Email.autoSaveTimer = setTimeout(autoSaveHandler, autoSaveTimeout);
+      console.debug('STARTED AUTOSAVE', autoSaveTimeout);
+    }
+  };
+
+  draftAutoSave
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+      startDraftAutoSave($this);
+      $.post(setPersonalUrl('email-draft-auto-save'), {
+        value: $this.prop('checked') ? autoSaveSeconds : 0,
+      })
+        .fail(function() {})
+        .done(function(data) {
+          if (data.message) {
+            const message = $this.prop('checked')
+              ? t(appName, 'Draft-auto-save interval set to {seconds} seconds.', { seconds: autoSaveSeconds })
+              : t(appName, 'Draft-auto-save switched off');
+            Notification.show(message, { timeout: 15 });
+          }
+        });
+      return false;
+    });
+
+  startDraftAutoSave(draftAutoSave);
+
   saveAsTemplate
     .off('change')
     .on('change', function(event) {
-      event.preventDefault();
       currentTemplate.prop('disabled', !saveAsTemplate.is(':checked'));
       return false;
     });
@@ -899,8 +961,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         const current = currentTemplate.val();
         if (storedEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
           Dialogs.confirm(
-            t(appName, 'A template with the name `{templateName}\' already exists, '
-              + 'do you want to overwrite it?', { templateName: current }),
+            t(appName, 'A template with the name `{emailTemplateName}\' already exists, '
+              + 'do you want to overwrite it?', { emailTemplateName: current }),
             t(appName, 'Overwrite existing template?'),
             function(confirmed) {
               if (confirmed) {
@@ -932,8 +994,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         const current = currentTemplate.val();
         if (storedEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
           Dialogs.confirm(
-            t(appName, 'Do you really want to delete the template with the name `{templateName}\'?',
-              { templateName: current }),
+            t(appName, 'Do you really want to delete the template with the name `{emailTemplateName}\'?',
+              { emailTemplateName: current }),
             t(appName, 'Really Delete Template?'),
             function(confirmed) {
               if (confirmed) {
@@ -946,8 +1008,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             true);
         } else {
           Dialogs.alert(
-            t(appName, 'Cannot delete non-existing template `{templateName}\'',
-              { templateName: current }),
+            t(appName, 'Cannot delete non-existing template `{emailTemplateName}\'',
+              { emailTemplateName: current }),
             t(appName, 'Unknown Template'));
         }
       } else {
@@ -1433,7 +1495,9 @@ function emailFormPopup(post, modal, single, afterInit) {
       } else {
         recipientsAlertText = t(appName, 'Email will be sent with a hidden recipients list!');
       }
-      Dialogs.alert(recipientsAlertText, t(appName, 'Notice'), undefined, true);
+      // Dialogs.alert(recipientsAlertText, t(appName, 'Notice'), undefined, true);
+      Notification.hide();
+      Notification.show(recipientsAlertText, { timeout: 30 });
 
       dialogHolder.cafevDialog({
         title: dlgTitle,

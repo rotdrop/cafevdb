@@ -91,15 +91,16 @@ $containerClass = $appName.'-'.'container';
         </label>
       </td>
       <td class="stored-messages-storage stored-messages">
-        <input size="20" placeholder="<?php echo $l->t('New Template Name'); ?>"
-        <?php echo ($templateName != '' ? 'value="'.$templateName.'"' : ''); ?>
+        <input size="20"
+               placeholder="<?php echo $l->t('New Template Name'); ?>"
+               value="<?php p($emailTemplateName); ?>"
                title="<?php echo $toolTips['new-email-template']; ?>"
-               name="emailComposer[templateName]"
+               name="emailComposer[emailTemplateName]"
                type="text"
                class="tooltip-bottom"
                id="emailCurrentTemplate"
                disabled>
-        <span class="inner vmiddle <?php p($containerClass); ?> save-as-template">
+        <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button save-as-template">
           <input type="checkbox"
                  id="check-save-as-template"
                  class="save-as-template tooltip-wide tooltip-bottom"
@@ -115,6 +116,19 @@ $containerClass = $appName.'-'.'container';
                class="submit save-message tooltip-wide tooltip-bottom"
                name="emailComposer[saveMessage]"
                value="<?php echo $l->t('Save Message'); ?>"/>
+        <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button draft-auto-save">
+          <input type="checkbox"
+                 id="check-draft-auto-save"
+                 class="draft-auto-save tooltip-auto"
+                 data-auto-save-interval="<?php p((int)$emailDraftAutoSave); ?>"
+                 <?php !empty($emailDraftAutoSave) && p('checked'); ?>
+                 name="emailComposer[draftAutoSave]"/>
+          <label for="check-draft-auto-save"
+                 class="draft-auto-save"
+                 title="<?php p($toolTips['draft-auto-save']); ?>">
+            <span class="draft-auto-save button"></span>
+          </label>
+        </span>
         <input title="<?php echo $toolTips['delete-saved-message']; ?>"
                type="submit"
                class="submit delete-message tooltip-bottom"

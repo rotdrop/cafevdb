@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\PHPMailer;
@@ -88,20 +89,15 @@ Störung.';
     COUNTRY,
     LANGUAGE,
     BIRTHDAY,
-    SERVICE_FEE,
     TOTAL_FEES,
-    SURCHARGE,
-    DEPOSIT,
-    EXTRAS,
-    INSURANCE_FEE,
-    PAYMENT_RECEIPT,
     MISSING_AMOUNT,
     SEPA_MANDATE_REFERENCE,
-    SEPA_MANDATE_IBAN,
-    SEPA_MANDATE_BIC,
-    SEPA_MANDATE_ACCOUNT_OWNER,
-    DEBIT_NOTE_AMOUNT,
-    DEBIT_NOTE_PURPOSE,
+    BANK_ACCOUNT_IBAN,
+    BANK_ACCOUNT_BIC,
+    BANK_ACCOUNT_OWNER,
+    BANK_TRANSACTION_AMOUNT,
+    BANK_TRANSACTION_PURPOSE,
+    DATE,
   ];
   private $recipients; ///< The list of recipients.
   private $onLookers;  ///< Cc: and Bcc: recipients.
@@ -217,12 +213,8 @@ Störung.';
 
     $this->cgiData = $this->parameterService->getParam(self::POST_TAG, []);
 
-    if (!empty($template)) {
-      $this->cgiData['storedMessagesSelector'] = $template;
-    }
-
     $this->projectId   = $this->cgiValue(
-      'projectId', $this->parameterService->getParam('projectId', -1));
+      'projectId', $this->parameterService->getParam('projectId', 0));
     $this->projectName = $this->cgiValue(
       'projectName', $this->parameterService->getParam('projectName', ''));
     if ($this->projectId > 0) {
@@ -231,10 +223,19 @@ Störung.';
     }
 
     $this->bulkTransactionId = $this->cgiValue(
-      'bulkTransactionId', $this->parameterService->getParam('bulkTransactionId', -1));
+      'bulkTransactionId', $this->parameterService->getParam('bulkTransactionId', 0));
     if ($this->bulkTransactionId > 0) {
       $this->bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
                                     ->find($this->bulkTransactionId);
+      if (!empty($this->bulkTransaction) && empty($template)) {
+        $bulkTransactionService = $this->di(SepaBulkTransactionService::class);
+        $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
+        list($template,) = $this->normalizeTemplateName($template);
+      }
+    }
+
+    if (!empty($template)) {
+      $this->cgiData['storedMessagesSelector'] = $template;
     }
 
     $this->setSubjectTag();
@@ -243,10 +244,7 @@ Störung.';
     // form-submit data in $this->execute()
     $this->setDefaultTemplate();
 
-    // cache the list of per-recipient variables
-    $this->memberVariables = $this->emailMemberVariables();
-
-    $this->draftId = $this->cgiValue('messageDraftId', -1);
+    $this->draftId = $this->cgiValue('messageDraftId', 0);
 
     // Set to false on error
     $this->executionStatus = true;
@@ -302,7 +300,6 @@ Störung.';
           $this->cgiData['subject'] = $this->l->t('Unknown Template');
         }
       }
-      // $this->logInfo('MESSAGE '.$this->messageContents);
     } else {
       $this->messageContents = $this->cgiValue('messageText', $this->initialTemplate);
     }
@@ -393,13 +390,6 @@ Störung.';
     //       },
     //       $strMessage);
     //     continue;
-    //   } else if ($placeholder === 'SEPAMANDATSIBAN' ||
-    //              $placeholder === 'SEPAMANDATSBIC' ||
-    //              $placeholder === 'SEPAMANDATSINHABER') {
-    //     $dbdata[$column] = Config::decrypt($dbdata[$column], $enckey);
-    //     if ($placeholder === 'SEPAMANDATSIBAN') {
-    //       $dbdata[$column] = substr($dbdata[$column], 0, 6).'...'.substr($dbdata[$column], -4, 4);
-    //     }
     //   }
     //   // replace all remaining stuff
     //   $strMessage = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/',
@@ -428,21 +418,21 @@ Störung.';
       };
     }
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['NICK_NAME'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+    $this->substitutions[self::MEMBER_NAMESPACE]['NICK_NAME'] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getNickName()?:$musician->getFirstName();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['DISPLAY_NAME'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+    $this->substitutions[self::MEMBER_NAMESPACE]['DISPLAY_NAME'] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getPublicName(true); // rather firstName lastName than last, first
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['COUNTRY'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+    $this->substitutions[self::MEMBER_NAMESPACE]['COUNTRY'] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -455,7 +445,7 @@ Störung.';
       return locale_get_display_region($language.'_'.$country, $language);
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['LANGUAGE'] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+    $this->substitutions[self::MEMBER_NAMESPACE]['LANGUAGE'] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -467,18 +457,130 @@ Störung.';
       return locale_get_display_language($language, $displayLanguage);
     };
 
-    /** @var IDateTimeFormatter */
-    $formatter = $this->di(IDateTimeFormatter::class);
-    $this->substitutions[self::MEMBER_NAMESPACE]['BIRTHDAY'] = function(array $keyArg, ?Entities\Musician $musician) use ($key, $formatter) {
+    $this->substitutions[self::MEMBER_NAMESPACE]['BIRTHDAY'] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
-      $date = $musician['birthday'];
+      $date = $musician->getBirthday();
       if (empty($date)) {
         return '';
       }
-      return $formatter->formatDate($date, $keyArg[1]?:'full');
+      $result = $this->formatDate($date, $keyArg[1]?:'full');
+
+      return $result;
     };
+
+    $this->substitutions[self::MEMBER_NAMESPACE]['DATE'] =  function(array $keyArg, ?Entities\Musician $musician) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      return $this->dateSubstitution($keyArg, self::MEMBER_NAMESPACE, $musician);
+    };
+
+
+    if (!empty($this->bulkTransaction)) {
+
+      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          $amount = $compositePayment->getAmount();
+          return $this->moneyValue($amount);
+        }
+
+        return $keyArg[0];
+      };
+
+      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_PURPOSE'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          return $compositePayment->getSubject();
+        }
+
+        return $keyArg[0];
+      };
+
+      $this->substitutions[self::MEMBER_NAMESPACE]['SEPA_MANDATE_REFERENCE'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          /** @var Entities\SepaDebitMandate $debitMandate */
+          $debitMandate = $compositePayment->getSepaDebitMandate();
+          if (!empty($debitMandate)) {
+            return $debitMandate->getMandateReference();
+          }
+        }
+
+        return $keyArg[0];
+      };
+
+      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_IBAN'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          /** @var Entities\SepaBankAccount $bankAccount */
+          $bankAccount = $compositePayment->getSepaBankAccount();
+          if (!empty($bankAccount)) {
+            return $bankAccount->getIban();
+          }
+        }
+
+        return $keyArg[0];
+      };
+
+      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_BIC'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          /** @var Entities\SepaBankAccount $bankAccount */
+          $bankAccount = $compositePayment->getSepaBankAccount();
+          if (!empty($bankAccount)) {
+            return $bankAccount->getBic();
+          }
+        }
+
+        return $keyArg[0];
+      };
+
+      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_OWNER'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          /** @var Entities\SepaBankAccount $bankAccount */
+          $bankAccount = $compositePayment->getSepaBankAccount();
+          if (!empty($bankAccount)) {
+            return $bankAccount->getBankAccountOwner();
+          }
+        }
+
+        return $keyArg[0];
+      };
+    }
 
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
@@ -534,12 +636,14 @@ Störung.';
     }
 
     return preg_replace_callback(
-      '/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3([^}]+)}/',
+      '/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3([^}]+)}/u',
       function($matches) use ($data, &$failures) {
-        $prefix = $matches[1];
-        $nameSpace = $matches[2];
+        $prefix = $matches[1]; // in order not to substitute $$
+        $nameSpace = html_entity_decode($matches[2], ENT_HTML5, 'UTF-8');
         $separator = $matches[3];
-        $variable  = explode($separator, $matches[4]);
+        $variable  = array_map(function($value) {
+          return html_entity_decode($value, ENT_HTML5, 'UTF-8');
+        }, explode($separator, $matches[4]));
         $handler = $this->substitutions[$nameSpace][$variable[0]];
         if (empty($handler) || !is_callable($handler)) {
           if (!is_array($failures)) {
@@ -1386,12 +1490,12 @@ Störung.';
    */
   public function previewMessages()
   {
-    $realRecipients = $this->recipients;
-    if (empty($this->recipients)) {
+    $previewRecipients = $this->recipients;
+    if (empty($previewRecipients)) {
       /** @var Entities\Musician $dummy */
       $dummy = $this->appContainer()->get(InstrumentationService::class)->getDummyMusician();
       $displayName = $dummy['displayName']?: ($dummy['nickName']?:$dummy['firstName']).' '.$dummy['surName'];
-      $this->recipients = [
+      $previewRecipients = [
         $dummy->getId() => [
           'email' => $dummy->getEmail(),
           'name' => $displayName,
@@ -1399,6 +1503,8 @@ Störung.';
         ],
       ];
     }
+    $realRecipients = $this->recipients;
+    $this->recipients = $previewRecipients;
     if (!$this->preComposeValidation()) {
       $this->recipients = $realRecipients;
       return null;
@@ -1406,13 +1512,11 @@ Störung.';
 
     // Preliminary checks passed, let's see what happens. The mailer may throw
     // any kind of "nasty" exceptions.
-    $preview = $this->exportMessages($this->recipients);
+    $preview = $this->exportMessages($previewRecipients);
 
     if (!empty($preview)) {
       $this->diagnostics['caption'] = $this->l->t('Message(s) exported successfully!');
     }
-
-    $this->recipients = $realRecipients;
 
     return $preview;
   }
@@ -1433,12 +1537,10 @@ Störung.';
 
       $this->diagnostics['totalPayload'] = count($recipients)+1;
 
-      $this->logInfo('RECIPIENTS '.count($recipients));
 
       foreach ($recipients as $recipient) {
         /** @var Entities\Musician */
         $musician = $recipient['dbdata'];
-        $this->logInfo('EXPORT MESSAGE FOR '.$musician->getEmail());
         $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
         ++$this->diagnostics['totalCount'];
@@ -1674,8 +1776,6 @@ Störung.';
       $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver;
     }
 
-    $this->logInfo('VALIDATION '.print_r($this->diagnostics, true));
-
     if (empty($templateError)) {
       return true;
     }
@@ -1712,16 +1812,35 @@ Störung.';
     }
   }
 
-  /**
-   * Return an associative array with keys and column names for the
-   * values (Name, Stadt etc.) for substituting per-member data.
-   */
-  private function emailMemberVariables()
+  private function dateSubstitution(array $arg, string $nameSpace, $data = null)
   {
-    //$vars   = preg_split('/\s+/', trim(self::MEMBER_VARIABLES));
-    //$values = preg_split('/\s+/', trim(self::MEMBERCOLUMNS));
-    //return array_combine($vars, $values);
-    return [];
+    try {
+      $dateString = $arg[1];
+      $dateFormat = $arg[2]?:'long';
+
+      // allow other global replacement variables as date-time source
+      if (!empty($this->substitutions[$nameSpace][$dateString])) {
+        $dateString = call_user_func(
+          $this->substitutions[$nameSpace][$dateString],
+          [ $dateString, 'medium' ],
+          $data);
+      }
+
+      $stamp = strtotime($dateString);
+      if (\array_search($dateFormat, ['full', 'long', 'medium', 'short']) !== false) {
+        return $this->formatDate($stamp, $dateFormat);
+      }
+      $oldLocale = setlocale(LC_TIME, '0');
+      setlocale(LC_TIME, $this->getLocale());
+      $oldTimezone = \date_default_timezone_get();
+      \date_default_timezone_set($this->getTimezone());
+      $result = strftime($dateFormat, $stamp);
+      \date_default_timezone_set($oldTimezone);
+      setlocale(LC_TIME, $oldLocale);
+      return $result;
+    } catch (\Throwable $t) {
+      throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
+    }
   }
 
   /**
@@ -1738,23 +1857,23 @@ Störung.';
       'ORGANIZER' => function($key) {
         return $this->fetchExecutiveBoard();
       },
-      'CREDITORIDENTIFIER' => function($key) {
+      'CREDITOR_IDENTIFIER' => function($key) {
         return $this->getConfigValue('bankAccountCreditorIdentifier');
       },
       'ADDRESS' => function($key) {
         return $this->streetAddress();
       },
-      'BANKACCOUNT' => function($key) {
+      'BANK_ACCOUNT' => function($key) {
         return $this->bankAccount();
       },
       'PROJECT' => function($key) {
         $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
-      'BULKTRANSACTIONDUEDATE' => function($key) { return ''; },
-      'BULKTRANSACTIONDUEDAYS' => function($key) { return ''; },
-      'BULKTRANSACTIONSUBMITDATE' => function($key) { return ''; },
-      'BULKTRANSACTIONSUBMITDAYS' => function($key) { return ''; },
-      'BULKTRANSACTIONJOB' => function($key) { return ''; },
+      'BANK_TRANSACTION_DUE_DATE' => function($key) { return ''; },
+      'BANK_TRANSACTION_DUE_DAYS' => function($key) { return ''; },
+      'BANK_TRANSACTION_SUBMIT_DATE' => function($key) { return ''; },
+      'BANK_TRANSACTION_SUBMIT_DAYS' => function($key) { return ''; },
+
       /**
        * Support date substitutions. Format is
        * ${GLOBAL::DATE:dateformat:datestring} where dateformat
@@ -1763,25 +1882,8 @@ Störung.';
        *
        * @todo Revise concerning timezone and locale settings
        */
-      'DATE' => function(array $arg) use ($formatter) {
-        try {
-          $dateString = $arg[1];
-          $dateFormat = $arg[2]?:'long';
-          $stamp = strtotime($dateString);
-          if (\array_search($dateFormat, ['full', 'long', 'medium', 'short']) !== false) {
-            return $formatter->formatDate($stamp, $dateFormat);
-          }
-          $oldLocale = setlocale(LC_TIME, '0');
-          setlocale(LC_TIME, $this->getLocale());
-          $oldTimezone = \date_default_timezone_get();
-          \date_default_timezone_set($this->getTimezone());
-          $result = strftime($dateFormat, $stamp);
-          \date_default_timezone_set($oldTimezone);
-          setlocale(LC_TIME, $oldLocale);
-          return $result;
-        } catch (\Throwable $t) {
-          throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
-        }
+      'DATE' => function(array $arg) {
+        return $this->dateSubstitution($arg, self::GLOBAL_NAMESPACE);
       },
       'TIME' => function(array $arg) use ($formatter) {
         try {
@@ -1793,12 +1895,12 @@ Störung.';
           throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
         }
       },
-      'DATETIME' => function(array $arg) use ($formatter) {
+      'DATETIME' => function(array $arg) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2]?:'long';
           $stamp = strtotime($dateString);
-          return $formatter->formatDateTime($stamp, $dateFormat);
+          return $this->formatDateTime($stamp, $dateFormat);
         } catch (\Throwable $t) {
           throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
         }
@@ -1807,23 +1909,21 @@ Störung.';
 
     if (!empty($this->bulkTransaction)) {
 
-      $this->substitutions[self::GLOBAL_NAMESPACE] += [
-        'BULKTRANSACTIONJOB' => function($key) {
-          return $this->l->t($this->bulkTransaction['Job']);
-        },
-        'BULKTRANSACTIONDUEDAYS' => function($key) {
-          return (new \DateTime())->diff($this->bulkTransaction->getDueDate())->format('%r%a');
-        },
-        'BULKTRANSACTIONSUBMITDAYS' => function($key) {
-          return (new \DateTime())->diff($this->bulkTransaction->getSubmissionDeadline())->format('%r%a');
-        },
-        'BULKTRANSACTIONDUEDATE' => function($key) use ($formatter) {
-          return $formatter->formatDate($this->bulkTransaction->getDueDate());
-        },
-        'BULKTRANSACTIONSUBMITDATE' => function($key) use ($formatter) {
-          return $formatter->formatDate($this->bulkTransaction->getSubmissionDeadline());
-        },
-      ];
+      $this->substitutions[self::GLOBAL_NAMESPACE] = array_merge(
+        $this->substitutions[self::GLOBAL_NAMESPACE], [
+          'BANK_TRANSACTION_DUE_DAYS' => function($key) {
+            return (new \DateTime())->diff($this->bulkTransaction->getDueDate())->format('%r%a');
+          },
+          'BANK_TRANSACTION_SUBMIT_DAYS' => function($key) {
+            return (new \DateTime())->diff($this->bulkTransaction->getSubmissionDeadline())->format('%r%a');
+          },
+          'BANK_TRANSACTION_DUE_DATE' => function($key) {
+            return $this->formatDate($this->bulkTransaction->getDueDate(), 'medium');
+          },
+          'BANK_TRANSACTION_SUBMIT_DATE' => function($key) {
+            return $this->formatDate($this->bulkTransaction->getSubmissionDeadline(), 'medium');
+          },
+        ]);
     }
   }
 
@@ -1913,15 +2013,51 @@ Störung.';
     }
     $this->templateName = $template->getTag();
     $this->messageContents = $template->getContents();
-    $this->draftId = -1; // avoid accidental overwriting
+    $this->draftId = 0; // avoid accidental overwriting
     return $this->executionStatus = true;
+  }
+
+  /**
+   * Normalize the given template-name: CamelCase, not spaces, no
+   * dashes.
+   *
+   * @return array<int, string> First element is the normalized
+   * version, second element a translation of the normalized version,
+   * if it differs from the non-translated version.
+   */
+  private function normalizeTemplateName($templateName)
+  {
+    $normalizedName = Util::dashesToCamelCase(
+      Util::normalizeSpaces($templateName), true, '_- ');
+    $result = [ $normalizedName ];
+    $translation = (string)$this->l->t($normalizedName);
+    if ($translation != $normalizedName) {
+      array_unshift($result, $translation);
+    } else {
+      $words = [];
+      foreach (explode(' ', Util::camelCaseToDashes($normalizedName, ' ')) as $word) {
+        $translatedWord = $this->l->t($word);
+        if ($translatedWord == $word) {
+          $words = null;
+          break;
+        }
+        $words[] = $translatedWord;
+      }
+      if (!empty($words)) {
+        $translation = Util::dashesToCamelCase(implode(' ', $words), true, ' ');
+        array_unshift($result, $translation);
+      }
+    }
+    return $result;
   }
 
   /**
    * Fetch a specific template from the DB. Return null if that
    * template is not found
    *
-   * @param int|string|Entities\EmailTemplate $templateIdentifier
+   * @param int|string|Entities\EmailTemplate $templateIdentifier If a
+   * string then it will first be normalized (CamelCase, not spaces,
+   * no dashes) and translated.
    *
    * @return null|Entities\EmailTemplate
    */
@@ -1933,10 +2069,12 @@ Störung.';
           ->getDatabaseRepository(Entities\EmailTemplate::class)
           ->find($templateIdentifier);
       } else {
+        $templateNames = $this->normalizeTemplateName($templateIdentifier);
+
         /** @var Entities\EmailTemplate */
         $template = $this
           ->getDatabaseRepository(Entities\EmailTemplate::class)
-          ->findOneBy([ 'tag' => $templateName ]);
+          ->findOneBy([ 'tag' => $templateNames ]);
       }
     }
 
@@ -2001,13 +2139,14 @@ Störung.';
 
     if ($this->draftId > 0) {
       $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
-        ->find($this->draftId)
-        ->setSubject($subject)
-        ->setData($draftData);
-    } else {
+                    ->find($this->draftId)
+                    ->setSubject($subject)
+                    ->setData($draftData);
+    }
+    if (empty($draft)) {
       $draft = Entities\EmailDraft::create()
-        ->setSubject($subject)
-        ->setData($draftData);
+             ->setSubject($subject)
+             ->setData($draftData);
       $this->persist($draft);
     }
     $this->flush();
@@ -2060,13 +2199,14 @@ Störung.';
   /** Delete the current message draft. */
   public function deleteDraft()
   {
-    if ($this->draftId >= 0 )  {
-      $handle = $this->dataBaseConnect();
-
-      $query = "DELETE FROM `EmailDrafts` WHERE `Id` = ".$this->draftId;
-
-      // Ignore the result at this point.
-      mySQL::query($query, $handle);
+    if ($this->draftId > 0 )  {
+      try {
+        $this->setDatabaseRepository(Entities\EmailDraft::class);
+        $this->remove($this->draftId, true);
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        $this->entityManager->reopen();
+      }
 
       // detach any attachnments for later clean-up
       $this->detachTemporaryFiles();
@@ -2236,7 +2376,6 @@ Störung.';
         }
       } else {
         // Make a copy
-        // $this->logInfo("TRY COPY ".$fileRecord['tmp_name']." -> ".$tmpFile);
         if (copy($fileRecord['tmp_name'], $tmpFile)) {
           // Sanitize permissions
           chmod($tmpFile, 0600);
@@ -2300,8 +2439,6 @@ Störung.';
   {
     $drafts = $this->fetchDraftsList();
     $templates = $this->fetchTemplatesList();
-
-    //$this->logInfo('EMAILS '.print_r($drafts, true).' / '.print_r($templates, true));
 
     return [
       'drafts' => $drafts,
@@ -2457,8 +2594,6 @@ Störung.';
     $dfltIds     = $this->eventsService->defaultCalendars();
     $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
 
-    // $this->logInfo('EVENTMATRIX '.print_r($eventMatrix, true));
-
     // timezone, locale
     $locale = $this->getLocale();
     $timezone = $this->getTimezone();
@@ -2474,11 +2609,12 @@ Störung.';
         $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
         $name = stripslashes($event['summary']).', '.$datestring;
         $value = $event['uri'];
-        $selectOptions[] = array('value' => $value,
-                                 'name' => $name,
-                                 'group' => $group,
-                                 'flags' => isset($attachedEvents[$value]) ? PageNavigation::SELECTED : 0
-        );
+        $selectOptions[] = [
+          'value' => $value,
+          'name' => $name,
+          'group' => $group,
+          'flags' => isset($attachedEvents[$value]) ? PageNavigation::SELECTED : 0
+        ];
       }
     }
     return $selectOptions;

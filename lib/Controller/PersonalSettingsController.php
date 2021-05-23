@@ -241,6 +241,20 @@ class PersonalSettingsController extends Controller {
         return self::grumble($this->exceptionChainData($t));
       }
       return self::response($this->l->t('Encryption key stored.'));
+    case 'email-draft-auto-save':
+      $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
+      if ($realValue === false) {
+        $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+        if ($realValue === true) {
+          $realValue = ConfigService::DEFAULT_AUTOSAVE_INTERVAL;
+        } else if ($realValue === false) {
+          $realValue = 0;
+        } else {
+          return self::grumble($this->l->t('Value "%1$s" for set "%2$s" must be a non-negative integer or false.', [$value, $parameter]));
+        }
+      }
+      $this->setUserValue($parameter, $realValue);
+      return self::response($this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]));
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));

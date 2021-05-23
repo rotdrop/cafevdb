@@ -132,6 +132,8 @@ class ConfigService {
 
   const SIGNATURE_FIELD_NAME = 'signature';
 
+  const DEFAULT_AUTOSAVE_INTERVAL = 300; // seconds
+
   /** @var array */
   protected $encryptionCache;
 

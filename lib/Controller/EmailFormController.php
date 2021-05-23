@@ -96,6 +96,11 @@ class EmailFormController extends Controller {
     $this->l = $this->l10N();
   }
 
+  private function getEmailDraftAutoSave()
+  {
+    return $this->getUserValue('email-draft-auto-save', 300);
+  }
+
   /**
    * @NoAdminRequired
    * @UseSession
@@ -107,6 +112,8 @@ class EmailFormController extends Controller {
 
     $fileAttachments = $composer->fileAttachments();
     $eventAttachments = $composer->eventAttachments();
+
+    $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
     $templateParameters = [
       'appName' => $this->appName(),
@@ -137,6 +144,7 @@ class EmailFormController extends Controller {
         $emailKey => $this->pme->cgiSysName('mrecs'),
 
       ],
+      'emailDraftAutoSave' => $emailDraftAutoSave,
       // Needed for the editor
       'emailTemplateName' => $composer->currentEmailTemplate(),
       'storedEmails' => $composer->storedEmails(),
@@ -236,6 +244,11 @@ class EmailFormController extends Controller {
     /** @var Composer */
     $composer = $this->appContainer->get(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();
+
+    if ($operation != 'load') {
+      $this->session->close();
+    }
+
     $recipients = $recipientsFilter->selectedRecipients();
     if (isset($requestData['singleItem'])) {
       $requestData['errorStatus'] = false;
@@ -244,8 +257,6 @@ class EmailFormController extends Controller {
       $requestData['errorStatus'] = $composer->errorStatus();
       $requestData['diagnostics'] = $composer->statusDiagnostics();
     }
-
-    //$this->logInfo('REQUEST DATA PRE '.print_r($requestData, true));
 
     switch ($operation) {
     case 'send':
@@ -305,6 +316,8 @@ class EmailFormController extends Controller {
         $fileAttachments = $composer->fileAttachments();
         $eventAttachments = $composer->eventAttachments();
 
+        $emailDraftAutoSave = $this->getEmailDraftAutoSave();
+
         $templateParameters = [
           'projectName' => $projectName,
           'projectId' => $projectId,
@@ -323,6 +336,7 @@ class EmailFormController extends Controller {
           'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
           'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
           'composerFormData' => $composer->formData(),
+          'emailDraftAutoSave' => $emailDraftAutoSave,
         ];
         $elementData = (new TemplateResponse(
           $this->appName,
@@ -383,7 +397,7 @@ class EmailFormController extends Controller {
           break;
         }
         $draftParameters[Composer::POST_TAG]['messageDraftId'] =
-                                                               $requestData['messageDraftId'] = $draftId;
+           $requestData['messageDraftId'] = $draftId;
 
         $requestParameters = $this->parameterService->getParams();
         $requestParameters = Util::arrayMergeRecursive($requestParameters, $draftParameters);
@@ -399,12 +413,16 @@ class EmailFormController extends Controller {
         // "reload" the composer and recipients filter
         $composer->bind($this->parameterService);
 
+        $this->session->close();
+
         $requestData['errorStatus'] = $composer->errorStatus();
         $requestData['diagnostics'] = $composer->statusDiagnostics();
 
         // Composer template
         $fileAttachments = $composer->fileAttachments();
         $eventAttachments = $composer->eventAttachments();
+
+        $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
         $templateParameters = [
           'appName' =>  $this->appName(),
@@ -426,6 +444,7 @@ class EmailFormController extends Controller {
           'fileAttachmentData' => json_encode($fileAttachments),
           'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
           'composerFormData' => $composer->formData(),
+          'emailDraftAutoSave' => $emailDraftAutoSave,
         ];
 
         $msgData = (new TemplateResponse(
@@ -476,7 +495,10 @@ class EmailFormController extends Controller {
           return self::grumble($this->l->t('Email template name must not be empty'));
         }
         if ($composer->validateTemplate()) {
-          $composer->storeTemplate($requestData['emailTemplateName']);
+          $composer->storeTemplate($emailTemplateName);
+        } else {
+          $requestData['errorStatus'] = $composer->errorStatus();
+          $requestData['diagnostics'] = $composer->statusDiagnostics();
         }
         break;
       case 'draft':
@@ -509,7 +531,7 @@ class EmailFormController extends Controller {
       case 'draft':
         $composer->deleteDraft();
         $debugText .= $this->l->t("Deleted draft message with id %d", $requestData['messageDraftId']);
-        $requestData['messageDraftId'] = -1;
+        $requestData['messageDraftId'] = 0;
         break;
       default:
         return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
@@ -579,6 +601,8 @@ class EmailFormController extends Controller {
   public function recipientsFilter($projectId, $projectName, $bulkTransactionId)
   {
     $recipientsFilter = $this->appContainer->query(RecipientsFilter::class);
+
+    $this->session->close();
 
     if ($recipientsFilter->reloadState()) {
       // Rebuild the entire page
@@ -783,6 +807,8 @@ class EmailFormController extends Controller {
     $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     $maxUploadFileSize = min($upload_max_filesize, $post_max_size);
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
+
+    $this->session->close();
 
     switch ($source) {
     case Composer::ATTACHMENT_ORIGIN_CLOUD:

@@ -141,374 +141,374 @@ fieldset.email-composition.page {
   margin-bottom:1em;
 }
 
-form#cafevdb-email-form fieldset.page {
-  max-width:65em;
-  padding-right:1.2em;
-}
-form#cafevdb-email-form tr.attachments td {
-  vertical-align:middle;
-}
-form#cafevdb-email-form tr.attachments button {
-  background-color:#C6DEFF;
-  vertical-align:middle;
-  height:28px;
-  width:34px;
-  padding:5px;
-  border-style:outset;
-}
-form#cafevdb-email-form tr.attachments button.cloud {
-  padding:5px 0px 5px 0px;
-}
-form#cafevdb-email-form tr.attachments button.cloud img {
-  width:26px;
-}
-form#cafevdb-email-form tr.attachments button.events {
-  padding:0px;
-}
-form#cafevdb-email-form tr.attachments button.events img  {
-  vertical-align:top;
-  height:26px;
-}
-form#cafevdb-email-form tr.eventattachments img {
-  height:10px;
-  vertical-align:top;
-}
-form#cafevdb-email-form tr.eventattachments button {
-  background-color:#C6DEFF;
-  vertical-align:middle;
-  height:20px;
-  padding:5px;
-  border-style:outset;
-  vertical-align:middle;
-}
+form#cafevdb-email-form {
 
-/* File attachments selector and friends */
+  fieldset.page {
+    max-width:65em;
+    padding-right:1.2em;
+  }
+  tr.attachments td {
+    vertical-align:middle;
+  }
+  tr.attachments button {
+    background-color:#C6DEFF;
+    vertical-align:middle;
+    height:28px;
+    width:34px;
+    padding:5px;
+    border-style:outset;
+  }
+  tr.attachments button.cloud {
+    padding:5px 0px 5px 0px;
+  }
+  tr.attachments button.cloud img {
+    width:26px;
+  }
+  tr.attachments button.events {
+    padding:0px;
+  }
+  tr.attachments button.events img  {
+    vertical-align:top;
+    height:26px;
+  }
+  tr.eventattachments img {
+    height:10px;
+    vertical-align:top;
+  }
+  tr.eventattachments button {
+    background-color:#C6DEFF;
+    vertical-align:middle;
+    height:20px;
+    padding:5px;
+    border-style:outset;
+    vertical-align:middle;
+  }
 
-form#cafevdb-email-form td.file-attachments .chosen-container {
-  min-width:90%;
-  max-width:90%;
-  float:left;
-}
+  /* File attachments selector and friends */
 
-form#cafevdb-email-form td.file-attachments .chosen-container.chosen-with-drop .chosen-drop {
-  position:relative;
-  top:100%;
-  margin-bottom:1em;
-}
+  td.file-attachments {
+    .chosen-container {
+      min-width:90%;
+      max-width:90%;
+      float:left;
+    }
 
-form#cafevdb-email-form td.file-attachments .chosen-container .chosen-drop {
-  position:absolute;
-  top:-99999px;
-}
+    .chosen-container.chosen-with-drop .chosen-drop {
+      position:relative;
+      top:100%;
+      margin-bottom:1em;
+    }
 
-form#cafevdb-email-form td.file-attachments input.delete-all-file-attachments {
-  background-image:url('../img/cafevdb-delete.svg');
-  float:right;
-  background-repeat:no-repeat;
-  background-size: 24px 24px;
-  background-position: center;
-  width:34px;
-  height:34px;
-  font-size:0pt;
-  vertical-align:middle;
-}
+    .chosen-container .chosen-drop {
+      position:absolute;
+      top:-99999px;
+    }
 
-/* Event attachments selector and friends */
+    input.delete-all-file-attachments {
+      background-image:url('../img/cafevdb-delete.svg');
+      float:right;
+      background-repeat:no-repeat;
+      background-size: 24px 24px;
+      background-position: center;
+      width:34px;
+      height:34px;
+      font-size:0pt;
+      vertical-align:middle;
+    }
+  } /* td.file-attachment */
 
-form#cafevdb-email-form td.event-attachments .chosen-container {
-  min-width:90%;
-  max-width:90%;
-  float:left;
-}
+  /* Event attachments selector and friends */
 
-form#cafevdb-email-form td.event-attachments .chosen-container.chosen-with-drop .chosen-drop {
-  position:relative;
-  top:100%;
-  margin-bottom:1em;
-}
+  td.event-attachments {
+    .chosen-container {
+      min-width:90%;
+      max-width:90%;
+      float:left;
+    }
 
-form#cafevdb-email-form td.event-attachments .chosen-container .chosen-drop {
-  position:absolute;
-  top:-99999px;
-}
+    .chosen-container.chosen-with-drop .chosen-drop {
+      position:relative;
+      top:100%;
+      margin-bottom:1em;
+    }
 
-form#cafevdb-email-form td.event-attachments input.delete-all-event-attachments {
-  background-image:url('../img/cafevdb-delete.svg');
-  float:right;
-  background-repeat:no-repeat;
-  background-size: 24px 24px;
-  background-position: center;
-  width:27px;
-  height:27px;
-  font-size:0pt;
-  vertical-align:middle;
-}
+    .chosen-container .chosen-drop {
+      position:absolute;
+      top:-99999px;
+    }
 
-/**************************/
+    input.delete-all-event-attachments {
+      background-image:url('../img/cafevdb-delete.svg');
+      float:right;
+      background-repeat:no-repeat;
+      background-size: 24px 24px;
+      background-position: center;
+      width:27px;
+      height:27px;
+      font-size:0pt;
+      vertical-align:middle;
+    }
+  } /* td.event-attachments */
 
-form#cafevdb-email-form tr.submit td {
-  padding-top:0.5em;
-  margin:0;
-}
-form#cafevdb-email-form tr.submit td.send {
-   width:auto;
-   text-align:full;
-}
-form#cafevdb-email-form tr.submit td.cancel {
-   width:auto;
-   text-align:right;
-}
-form#cafevdb-email-form td.cancel input {
-  margin-right:0;
-}
+  /**************************/
 
-form#cafevdb-email-form tr,
-form#cafevdb-email-form tr:hover,
-form#cafevdb-email-form tr:active {
-  background-color:inherit;
-}
+  tr.submit td {
+    padding-top:0.5em;
+    margin:0;
+  }
+  tr.submit td.send {
+    width:auto;
+    text-align:full;
+  }
+  tr.submit td.cancel {
+    width:auto;
+    text-align:right;
+  }
+  td.cancel input {
+    margin-right:0;
+  }
 
-form#cafevdb-email-form td.body,
-form#cafevdb-email-form td.caption {
-  vertical-align:top;
-}
-form#cafevdb-email-form tr.submit td.addresses input {
-   width:auto;
- }
-form#cafevdb-email-form tr.submit td.addresses {
-   width:auto;
-   text-align:full;
-   padding:0;
-   margin:0;
-}
+  tr, tr:hover, tr:active {
+    background-color:inherit;
+  }
 
-form#cafevdb-email-form tr.stored-messages td {
-  border-bottom:1px solid #808080;
-  padding-bottom:0.5em;
-}
+  td.body, td.caption {
+    vertical-align:top;
+  }
+  tr.submit td.addresses input {
+    width:auto;
+  }
+  tr.submit td.addresses {
+    width:auto;
+    text-align:full;
+    padding:0;
+    margin:0;
+  }
 
-form#cafevdb-email-form td.stored-messages-storage {
-  text-align:right;
-}
+  tr.stored-messages td {
+    border-bottom:1px solid #808080;
+    padding-bottom:0.5em;
+  }
 
-form#cafevdb-email-form td.stored-messages-storage input {
-  padding-top:5px;
-}
+  td.email-address.input input.address-book-emails,
+  td.stored-messages-storage input.submit {
+    background-repeat:no-repeat;
+    background-size: 24px 24px;
+    background-position: center;
+    width:27px;
+    height:27px;
+    font-size:0pt;
+    vertical-align:middle;
+  }
 
-form#cafevdb-email-form td.email-address.input input.address-book-emails,
-form#cafevdb-email-form td.stored-messages-storage input.submit {
-  background-repeat:no-repeat;
-  background-size: 24px 24px;
-  background-position: center;
-  width:27px;
-  height:27px;
-  font-size:0pt;
-  vertical-align:middle;
-}
+  td.stored-messages-storage {
+    text-align:right;
 
-form#cafevdb-email-form td.stored-messages-storage span.save-as-template.#{$cssPrefix}container {
-  position:relative;
-  vertical-align:middle;
-}
+    input {
+      padding-top:5px;
+    }
 
-form#cafevdb-email-form td.stored-messages-storage span.save-as-template.button {
-  background-image: url('../img/template.svg');
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:22px 22px;
-  display:inline-block;
-  width:34px;
-  /* height:15px;
-     max-width:15px;
-     max-height:15px;
-     min-width:15px;
-     min-height:15px; */
-  /*box-shadow:2px 2px 2px #080808;*//*, 2px 2px 2px #cfc;*/
-}
+    span.checkbox-button.#{$cssPrefix}container {
+      position:relative;
+      vertical-align:middle;
 
-form#cafevdb-email-form input[type=checkbox]:checked + label span.save-as-template.button {
-  background-color:red !important;
-  /*background-color:LightSteelBlue !important;*/
-  box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
-}
+      span.button.save-as-template {
+        background-image: url('../img/template.svg');
+      }
 
-form#cafevdb-email-form td.stored-messages-storage input[type="checkbox"].save-as-template {
-  position: absolute;
-  left:-10000px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
+      span.button.draft-auto-save {
+        background-image: url('../img/autosave.svg');
+      }
 
-form#cafevdb-email-form td.stored-messages-storage input.save-message {
-  background-image:url('../img/save.svg');
-}
+      span.button {
+        background-repeat:no-repeat;
+        background-position:center;
+        background-size:22px 22px;
+        display:inline-block;
+        width:27px;
+      }
 
-form#cafevdb-email-form td.stored-messages-storage input.delete-message {
-  background-image:url('../img/cafevdb-delete.svg');
-}
+      input[type=checkbox]:checked + label span.button {
+        background-color:red !important;
+        box-shadow:2px 2px 2px #080808 inset;
+      }
 
-form#cafevdb-email-form td.email-address.input input.address-book-emails {
-  background-image:url('../img/contacts-dark.svg');
-/*  background-color:#000;*/
-  float:right;
-}
+      input[type="checkbox"] {
+        position: absolute;
+        left:-10000px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+    }
 
-form#cafevdb-email-form .stored-messages-choose .chosen-container {
-  width:20em !important;
-}
+    input.save-message {
+      background-image:url('../img/save.svg');
+    }
 
-form#cafevdb-email-form .chosen-container .chosen-default {
-  color:#000;
-  font-weight:bold;
-}
+    input.delete-message {
+      background-image:url('../img/cafevdb-delete.svg');
+    }
+  } /* td.stored-messages-storage */
 
-form#cafevdb-email-form #emailCurrentTemplate {
+  td.email-address.input input.address-book-emails {
+    background-image:url('../img/contacts-dark.svg');
+    /*  background-color:#000;*/
+    float:right;
+  }
+
+  .stored-messages-choose .chosen-container {
+    width:20em !important;
+  }
+
+  .chosen-container .chosen-default {
+    color:#000;
+    font-weight:bold;
+  }
+
+  #emailCurrentTemplate {
     width:16em;
     margin-left:1em;
     vertical-align:middle;
+  }
+
+  #emailCurrentTemplate:disabled {
+    opacity:1;
+  }
+
+  td.email-recipients {
+    padding-top:1em;
+  }
+
+  td.email-address.input {
+    width:100%;
+    /*padding: 0 1em 0 0;*/
+  }
+  td.email-address.input input {
+    width:90%;
+    float:left;
+  }
+
+  td.email-address.display {
+    width:100%;
+    overflow:hidden;
 }
 
-form#cafevdb-email-form #emailCurrentTemplate:disabled {
-  opacity:1;
-}
+  td.email-address.display span {
+    display:inline-block;
+    max-width:45em;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
 
-form#cafevdb-email-form td.email-recipients {
-  padding-top:1em;
-}
+  td.subject.input  span.subject.tag {
+    font-family:monospace;
+    font-size:100%;
+    width:auto;
+    max-width:30%;
+    text-align:right;
+    font-weight:bold;
+    display:inline-block;
+    float:left;
+    line-height:2.5em;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
 
-form#cafevdb-email-form td.email-address.input {
-  width:100%;
-  /*padding: 0 1em 0 0;*/
-}
-form#cafevdb-email-form td.email-address.input input {
-  width:90%;
-  float:left;
-}
+  td.subject.input span.subject.input {
+    width:67%;
+    /* padding: 0 1em 0 0; */
+    display:inline-block;
+    line-height:2.5em;
+    float:right;
+  }
 
-form#cafevdb-email-form td.email-address.display {
-  width:100%;
-  overflow:hidden;
-}
+  td.subject.input input {
+    width:100%;
+  }
 
-form#cafevdb-email-form td.email-address.display span {
-  display:inline-block;
-  max-width:45em;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-/*
-form#cafevdb-email-form td.email-address.display span {
-form#cafevdb-email-form td.email-address.display {
-*/
+  td.messagetext {
+    padding: 0.5em 0;
+  }
 
+  /*****************************************************************************
+   *
+   * email recipients selection
+   *
+   */
+  div.#{$cssPrefix}row {
+    width:100%;
+  }
 
-form#cafevdb-email-form td.subject.input  span.subject.tag {
-  font-family:monospace;
-  font-size:100%;
-  width:auto;
-  max-width:30%;
-  text-align:right;
-  font-weight:bold;
-  display:inline-block;
-  float:left;
-  line-height:2.5em;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+  div.#{$cssPrefix}row:after {
+    content:" ";
+    display:block;
+    height:0;
+    clear: both;
+  }
 
-form#cafevdb-email-form td.subject.input span.subject.input {
-  width:67%;
-  /* padding: 0 1em 0 0; */
-  display:inline-block;
-  line-height:2.5em;
-  float:right;
-}
+  span.#{$cssPrefix}container {
+    display:inline-block;
+  }
 
-form#cafevdb-email-form td.subject.input input {
-  width:100%;
-}
+  .#{$cssPrefix}container.left {
+    float:left;
+  }
 
-form#cafevdb-email-form td.messagetext {
-  padding: 0.5em 0;
-}
+  .#{$cssPrefix}container.right {
+    float:right;
+    text-align:right;
+  }
 
-/*****************************************************************************
- *
- * email recipients selection
- *
- */
-form#cafevdb-email-form div.#{$cssPrefix}row {
-  width:100%;
-}
+  .label {
+    font-weight:bold;
+  }
 
-form#cafevdb-email-form div.#{$cssPrefix}row:after {
-  content:" ";
-  display:block;
-  height:0;
-  clear: both;
-}
+  .label.top {
+    display:block;
+  }
 
-form#cafevdb-email-form span.#{$cssPrefix}container {
-  display:inline-block;
-}
+  .label.left {
+    display:inline-block;
+    float:left;
+    padding-right:0.5em;
+  }
 
-form#cafevdb-email-form .#{$cssPrefix}container.left {
-  float:left;
-}
+  .label.right {
+    display:inline-block;
+    float:right;
+    padding-left:0.5em;
+  }
 
-form#cafevdb-email-form .#{$cssPrefix}container.right {
-  float:right;
-  text-align:right;
-}
+  .spacer {
+    width:100%;
+    height:3px;
+    margin: 0.5em 0 1em 0;
+    text-align:center;
+    line-height:3px;
+  }
 
-form#cafevdb-email-form .label {
-  font-weight:bold;
-}
+  .spacer .ruler {
+    display:inline-block;
+    width:100%;
+    background-color:#000;
+    height:1px;
+    vertical-align:middle;
+    padding:0;
+  }
 
-form#cafevdb-email-form .label.top {
-  display:block;
-}
+  .vmiddle {
+    vertical-align:middle;
+  }
 
-form#cafevdb-email-form .label.left {
-  display:inline-block;
-  float:left;
-  padding-right:0.5em;
-}
+  .vmiddle * {
+    vertical-align:middle;
+  }
 
-form#cafevdb-email-form .label.right {
-  display:inline-block;
-  float:right;
-  padding-left:0.5em;
-}
+} /* form#cafevdb-email-form */
 
-form#cafevdb-email-form .spacer {
-  width:100%;
-  height:3px;
-  margin: 0.5em 0 1em 0;
-  text-align:center;
-  line-height:3px;
-}
-
-form#cafevdb-email-form .spacer .ruler {
-  display:inline-block;
-  width:100%;
-  background-color:#000;
-  height:1px;
-  vertical-align:middle;
-  padding:0;
-}
-
-form#cafevdb-email-form .vmiddle {
-  vertical-align:middle;
-}
-
-form#cafevdb-email-form .vmiddle * {
-  vertical-align:middle;
-}
-
-/* special elements */
+  /* special elements */
 
 div#sendingprogresswrapper {
   display:none;

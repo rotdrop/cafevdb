@@ -72,11 +72,11 @@ class RecipientsFilter
   private $emailRecs;   // Copy of email records from CGI env
   private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
-  /** @var Entities\SepaDebitNote */
-  private $debitNote;
+  /** @var Entities\SepaBulkTransaction */
+  private $bulkTransaction;
 
   /** @var int */
-  private $debitNoteId;
+  private $bulkTransactionId;
 
   private $instruments; // List of instruments for filtering
   private $instrumentGroups; // mapping of instruments to groups.
@@ -160,10 +160,10 @@ class RecipientsFilter
                             ->find($this->projectId);
     }
 
-    $this->debitNoteId = $this->parameterService->getParam('DebitNoteId', -1);
-    if ($this->debitNoteId > 0) {
-      $this->debitNote = $this->getDatabaseRepository(Entities\SepaDebitNote::class)
-                              ->find($this->debitNoteId);
+    $this->bulkTransactionId = $this->parameterService->getParam('bulkTransactionId', 0);
+    if ($this->bulkTransactionId > 0) {
+      $this->bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
+                                    ->find($this->bulkTransactionId);
     }
 
     // See wether we were passed specific variables ...
@@ -236,7 +236,6 @@ class RecipientsFilter
     }
 
     $this->storeHistory();
-    $this->session->close();
   }
 
   /** Fetch a CGI-variable out of the form-select name-space. */
@@ -297,7 +296,7 @@ class RecipientsFilter
     $this->historySize = $loadHistory['size'];
     $this->historyPosition = $loadHistory['position'];
     $this->filterHistory = $loadHistory['records'];
-    $this->logInfo('HISTORY '.print_r($loadHistory, true));
+    // $this->logInfo('HISTORY '.print_r($loadHistory, true));
     return true;
   }
 
@@ -420,24 +419,12 @@ class RecipientsFilter
    */
   private function remapEmailRecords()
   {
-    if ($this->debitNoteId > 0) {
-      $debitNote = $this->getDatabaseRepository(Entities\SepaDebitNote::class)
-                        ->find($this->debitNoteId);
-      if ($this->projectId > 0 && $debitNote['project']['id'] !== $this->projectId) {
-        throw new \InvalidArgumentException($this->l->t('Debit note does not belong to the given project (%d <-> %d)',
-                                                        [ $this->projectId, $debitNote['project']['id'] ]));
-      }
-      if (empty($this->project)) {
-        $this->project = $debitNote['project'];
-      }
-      if (empty($this->projectName)) {
-        $this->projectName = $this->project['name'];
-      }
+    if (!empty($this->bulkTransaction)) {
 
-      $payments = $this->debitNote->getProjectPayments();
+      $payments = $this->bulkTransaction->getPayments();
       if (empty($payments)) {
         throw new \RuntimeException(
-          $this->l->t('No payments for debit-note id %d.', [ $debitNoteId ]));
+          $this->l->t('No payments for bulk-transaction id %d.', [ $bulkTransactionId ]));
       }
       $this->emailRecs = [];
       foreach($payments as $payment) {
@@ -478,10 +465,12 @@ class RecipientsFilter
     if (!empty($this->instrumentsFilter)) {
       $criteria['instruments.instrument'] = $this->instrumentsFilter;
     }
-    if ($this->frozen && $projectId > 0) {
+    if ($this->frozen && $this->projectId > 0) {
       $criteria['id'] = $this->emailRecs;
     }
     $criteria['!memberStatus'] = $this->memberStatusBlackList();
+
+    // $this->logInfo('CRITERIA '.print_r($criteria, true));
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
@@ -490,12 +479,13 @@ class RecipientsFilter
     // addresses to the "brokenEMail" list.
     $mailer = new PHPMailer(true);
 
+    /** @var Entities\Musician $musician */
     foreach ($musicians as $rec => $musician) {
 
-      $displayName = $musician['displayName']?: ($musician['nickName']?:$musician['firstName']).' '.$musician['surName'];
-      if (!empty($musician['email'])) {
+      $displayName = $musician->getPublicName(true);
+      if (!empty($musician->getEmail())) {
         // We allow comma separated multiple addresses
-        $musMail = explode(',', $musician['email']);
+        $musMail = explode(',', $musician->getEmail());
         foreach ($musMail as $emailVal) {
           if (!$mailer->validateAddress($emailVal)) {
             $bad = htmlspecialchars($displayName.' <'.$emailVal.'>');
@@ -510,7 +500,7 @@ class RecipientsFilter
               'name'    => $displayName,
               'status'  => $musician['memberStatus'],
               'project' => $projectId,
-              'dbdata'  => $musican,
+              'dbdata'  => $musician,
             ];
             $this->eMailsDpy[$rec] = htmlspecialchars($displayName.' <'.$emailVal.'>');
           }
@@ -528,7 +518,7 @@ class RecipientsFilter
     //   'Unkostenbeitrag',
     //   'AmountPaid',
     //   'AmountMissing',
-    //   'DebitNoteAmount'
+    //   'BulkTransactionAmount'
     // ];
 
     // // do this later when constructing the message
