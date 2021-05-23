@@ -26,12 +26,9 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use Doctrine\ORM;
-use Doctrine\ORM\EntityRepository;
 
 class ProjectPaymentsRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
-
   /**
    * Fetch all debit note payments and sum them up, grouped by musicianId and projectId.
    */

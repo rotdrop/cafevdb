@@ -25,8 +25,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use Doctrine\ORM\EntityRepository;
-
 class InstrumentsRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;

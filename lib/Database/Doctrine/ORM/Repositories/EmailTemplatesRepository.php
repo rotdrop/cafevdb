@@ -25,12 +25,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use Doctrine\ORM\EntityRepository;
-
 class EmailTemplatesRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
-
   public function list()
   {
     return $this->createQueryBuilder('et')

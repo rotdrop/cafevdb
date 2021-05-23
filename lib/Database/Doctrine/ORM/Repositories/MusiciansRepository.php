@@ -25,11 +25,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
 
 class MusiciansRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
 
   /**

@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\Query;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /**
@@ -34,7 +33,6 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
  */
 class SepaBankAccountsRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait;
 
   /**

@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -22,11 +23,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
-class MusicianPhotosRepository extends EntityRepository
+class EntityRepository extends \Doctrine\ORM\EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
+  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
 }
 
 // Local Variables: ***

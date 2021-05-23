@@ -26,11 +26,9 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVBD\Common\Util;
 
 use Doctrine\ORM\Query;
-use Doctrine\ORM\EntityRepository;
 
 class ProjectParticipantsRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
 
   /**

@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Doctrine\ORM\Query;
-use Doctrine\ORM\EntityRepository;
 
 class ProjectParticipantFieldDataRepository extends EntityRepository
 {
