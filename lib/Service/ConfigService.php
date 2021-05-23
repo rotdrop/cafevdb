@@ -661,6 +661,38 @@ class ConfigService {
     return $countryCodes;
   }
 
+  /**Return an array of supported languages indexed by language code*/
+  public function localeLanguageNames($locale = null)
+  {
+    if (empty($locale)) {
+      $locale = $this->getLocale();
+    }
+    $displayLanguage = substr($locale, 0, 2);
+    $languages = $this->findAvailableLanguages();
+    $result = [];
+    if (method_exists($this->l10NFactory, 'getLanguages')) {
+      $cloudLanguages = $this->l10NFactory->getLanguages();
+
+      $otherLanguages = array_column($cloudLanguages['languages'], 'name', 'code');
+      $commonLanguages = array_column($cloudLanguages['commonlanguages'], 'name', 'code');
+      $cloudLanguages = array_merge($otherLanguages, $commonLanguages);
+      ksort($cloudLanguages);
+    }
+
+    foreach ($languages as $language) {
+      if (strlen($language) > 5) {
+        continue;
+      }
+      if (!empty($cloudLanguages[$language])) {
+        $result[$language] = $cloudLanguages[$language];
+      } else {
+        $result[$language] = locale_get_display_language($language, $displayLanguage);
+        $result[$language] .= ' (' . $language . ')';
+      }
+    }
+    return $result;
+  }
+
   public function findAvailableLanguages($app = 'core') {
     return $this->l10NFactory->findAvailableLanguages($app);
   }

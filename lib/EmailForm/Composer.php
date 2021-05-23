@@ -436,16 +436,17 @@ Störung.';
       if (empty($musician)) {
         return $keyArg[0];
       }
-      $country = $musician['country'];
+      $country = $musician->getCountry();
       if (empty($country)) {
         return '';
       }
       $language = substr($this->l->getLanguageCode(), 0, 2);
       $locale = $language.'_'.$country;
-      return locale_get_display_region($language.'_'.$country, $language);
+      return locale_get_display_region($locale, $language);
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['LANGUAGE'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $languageNames = $this->localeLanguageNames();
+    $this->substitutions[self::MEMBER_NAMESPACE]['LANGUAGE'] = function(array $keyArg, ?Entities\Musician $musician) use ($languageNames) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -453,8 +454,7 @@ Störung.';
       if (empty($language)) {
         return '';
       }
-      $displayLanguage = substr($this->l->getLanguageCode(), 0, 2);
-      return locale_get_display_language($language, $displayLanguage);
+      return $languageNames[$language] ?? $language;
     };
 
     $this->substitutions[self::MEMBER_NAMESPACE]['BIRTHDAY'] = function(array $keyArg, ?Entities\Musician $musician) {

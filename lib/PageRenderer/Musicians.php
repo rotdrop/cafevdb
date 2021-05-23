@@ -663,7 +663,7 @@ make sure that the musicians are also automatically added to the
       'maxlen'   => 128,
       'default'  => 'Deutschland',
       'sort'     => true,
-      'values2'  => $this->findAvailableLanguages(),
+      'values2'  => $this->localeLanguageNames(),
     ];
 
     /*

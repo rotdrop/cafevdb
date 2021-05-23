@@ -418,6 +418,10 @@ trait ConfigTrait {
     return $this->configService->localeCountryNames($locale);
   }
 
+  protected function localeLanguageNames($locale = null) {
+    return $this->configService->localeLanguageNames($locale);
+  }
+
   public function findAvailableLanguages($app = 'core') {
     return $this->configService->findAvailableLanguages($app);
   }

@@ -901,7 +901,7 @@ class ProjectParticipants extends PMETableViewBase
         'select'   => 'D',
         'maxlen'   => 128,
         'default'  => 'Deutschland',
-        'values2'  => $this->findAvailableLanguages(),
+        'values2'  => $this->localeLanguageNames(),
       ]);
 
     $opts['fdd']['photo'] = [
