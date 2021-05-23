@@ -43,7 +43,6 @@ const ready = function(container, resizeCB) {
     });
 
   container
-    .off('click', '.bulk-transaction-actions a.announce')
     .on('click', '.bulk-transaction-actions a.announce', function(event) {
       const self = $(this);
       const post = self.data('post');
@@ -54,7 +53,6 @@ const ready = function(container, resizeCB) {
     });
 
   container
-    .off('click', '.bulk-transaction-actions a.download')
     .on('click', '.bulk-transaction-actions a.download', function(event) {
       const self = $(this);
 
