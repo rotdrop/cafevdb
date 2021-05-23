@@ -143,7 +143,10 @@ trait FindLikeTrait
   {
     $queryParts = $this->prepareFindBy($criteria, $orderBy);
 
-    if (empty($queryParts['joinEntities'])
+    // The stock findBy() / findOneBy() functions do not use query-hints, see
+    // https://github.com/doctrine/orm/issues/6751
+    if (empty($this->getEntityManager()->getConfiguration()->getDefaultQueryHints())
+        && empty($queryParts['joinEntities'])
         && empty($queryParts['indexBy'])
         && empty($queryParts['modifiers'])
         && empty($queryParts['collectionCriteria'])) {
@@ -164,6 +167,13 @@ trait FindLikeTrait
     // $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
 
     return $qb->getQuery()->getResult();
+  }
+
+
+  public function findOneBy(array $criteria, ?array $orderBy = null)
+  {
+    list($result,) = $this->findBy($criteria, $orderBy, 1, 0);
+    return $result;
   }
 
   /**
@@ -299,52 +309,53 @@ trait FindLikeTrait
       ${$key} = $value;
     }
 
-    $andX = $qb->expr()->andX();
-    foreach ($criteria as $key => &$value) {
-      $literal[$key] = false;
-      $dotPos = strpos($key, '.');
-      if ($dotPos !== false) {
-        $tableAlias = substr($key, 0, $dotPos);
-        $field = $key;
-      } else {
-        $tableAlias = 'mainTable';
-        $field = $tableAlias.'.'.$key;
-      }
-      $param = str_replace('.', '_', $field);
-      $comparator = $comparators[$key]?:'eq';
-      if ($value === null) {
-        $literal[$key] = true;
-        $expr = $qb->expr()->isNull($field);
-      } else if (is_array($value)) {
-        // special case empty array:
-        // - in principle always FALSE (nothing is in an empty set)
-        // - FIELD == NULL ? NULL in any given set would be FALSE, we
-        //   keep it that way, even if the set is empty
-        if (empty($value)) {
-          $literal[$key] = true;
-          // unfortunately, a literal 0 just cannot be modelled with the query builder
-          $expr = $qb->expr()->eq(1, 0);
+    if (!empty($criteria)) {
+      $andX = $qb->expr()->andX();
+      foreach ($criteria as $key => &$value) {
+        $literal[$key] = false;
+        $dotPos = strpos($key, '.');
+        if ($dotPos !== false) {
+          $tableAlias = substr($key, 0, $dotPos);
+          $field = $key;
         } else {
-          $expr = $qb->expr()->in($field, ':'.$param);
+          $tableAlias = 'mainTable';
+          $field = $tableAlias.'.'.$key;
         }
-      } else if (is_string($value)) {
-        $value = str_replace('*', '%', $value);
-        if (strpos($value, '%') !== false) {
-          $expr = $qb->expr()->like($field, ':'.$param);
+        $param = str_replace('.', '_', $field);
+        $comparator = $comparators[$key]?:'eq';
+        if ($value === null) {
+          $literal[$key] = true;
+          $expr = $qb->expr()->isNull($field);
+        } else if (is_array($value)) {
+          // special case empty array:
+          // - in principle always FALSE (nothing is in an empty set)
+          // - FIELD == NULL ? NULL in any given set would be FALSE, we
+          //   keep it that way, even if the set is empty
+          if (empty($value)) {
+            $literal[$key] = true;
+            // unfortunately, a literal 0 just cannot be modelled with the query builder
+            $expr = $qb->expr()->eq(1, 0);
+          } else {
+            $expr = $qb->expr()->in($field, ':'.$param);
+          }
+        } else if (is_string($value)) {
+          $value = str_replace('*', '%', $value);
+          if (strpos($value, '%') !== false) {
+            $expr = $qb->expr()->like($field, ':'.$param);
+          } else {
+            $expr = $qb->expr()->$comparator($field, ':'.$param);
+          }
         } else {
           $expr = $qb->expr()->$comparator($field, ':'.$param);
         }
-      } else {
-        $expr = $qb->expr()->$comparator($field, ':'.$param);
+        foreach ($modifiers[$key] as $modifier) {
+          $expr = $qb->expr()->$modifier($expr);
+        }
+        $andX->add($expr);
       }
-      foreach ($modifiers[$key] as $modifier) {
-        $expr = $qb->expr()->$modifier($expr);
-      }
-      $andX->add($expr);
+      $qb->where($andX);
+      unset($value); // break reference
     }
-    $qb->where($andX);
-
-    unset($value); // break reference
 
     foreach ($criteria as $key => $value) {
       if ($literal[$key])  {
@@ -363,8 +374,8 @@ trait FindLikeTrait
     }
     self::addOrderBy($qb, $orderBy, $limit, $offset, 'mainTable');
 
-    foreach ($collectionCriteria as $criteria) {
-      $qb->addCriteria($criteria);
+    foreach ($collectionCriteria as $selectableCriteria) {
+      $qb->addCriteria($selectableCriteria);
     }
 
     return $qb;
