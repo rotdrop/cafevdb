@@ -248,286 +248,286 @@ class EmailFormController extends Controller {
     //$this->logInfo('REQUEST DATA PRE '.print_r($requestData, true));
 
     switch ($operation) {
-      case 'send':
-        $composer->sendMessages();
-        if (!$composer->errorStatus()) {
-          // Echo something back on success, error diagnostics are handled
-          // in a unified way at the end of this script.
-          $diagnostics = $composer->statusDiagnostics();
-          $caption = $diagnostics['caption'];
+    case 'send':
+      $composer->sendMessages();
+      if (!$composer->errorStatus()) {
+        // Echo something back on success, error diagnostics are handled
+        // in a unified way at the end of this script.
+        $diagnostics = $composer->statusDiagnostics();
+        $caption = $diagnostics['caption'];
 
-          $roles = $this->appContainer->get(OrganizationalRolesService::class);
-          $tmpl = new TemplateResponse(
-            $this->appName,
-            'emailform/part.emailform.statuspage',
-            [
-              'projectName' => $projectName,
-              'projectId' => $projectId,
-              'diagnostics' => $diagnostics,
-              'cloudAdminContact' => $roles->cloudAdminContact(),
-            ],
-            'blank');
-          $messageText = $tmpl->render();
+        $roles = $this->appContainer->get(OrganizationalRolesService::class);
+        $tmpl = new TemplateResponse(
+          $this->appName,
+          'emailform/part.emailform.statuspage',
+          [
+            'projectName' => $projectName,
+            'projectId' => $projectId,
+            'diagnostics' => $diagnostics,
+            'cloudAdminContact' => $roles->cloudAdminContact(),
+          ],
+          'blank');
+        $messageText = $tmpl->render();
 
-          // Update list of drafts after sending the message (draft has
-          // been deleted)
-          $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+        // Update list of drafts after sending the message (draft has
+        // been deleted)
+        $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+      }
+      break;
+    case 'preview':
+      $previewMessages = $composer->previewMessages();
+      if ($composer->errorStatus()) {
+        $requestData['errorStatus'] = $composer->errorStatus();
+        $requestData['diagnostics'] = $composer->statusDiagnostics();
+        break;
+      }
+      $templateParameters = [
+        'appName' => $this->appName,
+        'projectName' => $projectName,
+        'projectId' => $projectId,
+        'messages' => $previewMessages,
+      ];
+      $html = (new TemplateResponse(
+        $this->appName,
+        'emailform/part.emailform.preview',
+        $templateParameters,
+        'blank'))->render();
+      return self::dataResponse([
+        'message' => $this->l->t('Preview generation successful.'),
+        'contents' => $html,
+      ]);
+    case 'cancel':
+      $composer->cleanTemporaries();
+      break;
+    case 'update':
+      switch ($topic) {
+      case 'undefined':
+        $fileAttachments = $composer->fileAttachments();
+        $eventAttachments = $composer->eventAttachments();
+
+        $templateParameters = [
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+          'emailTemplateName' => $composer->currentEmailTemplate(),
+          'storedEmails' => $composer->storedEmails(),
+          'TO' => $composer->toString(),
+          'BCC' => $composer->blindCarbonCopy(),
+          'CC' => $composer->carbonCopy(),
+          'mailTag' => $composer->subjectTag(),
+          'subject' => $composer->subject(),
+          'message' => $composer->messageText(),
+          'sender' => $composer->fromName(),
+          'catchAllEmail' => $composer->fromAddress(),
+          'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
+          'fileAttachmentData' => json_encode($fileAttachments),
+          'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
+          'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
+          'composerFormData' => $composer->formData(),
+        ];
+        $elementData = (new TemplateResponse(
+          $this->appName,
+          'emailform/part.emailform.composer',
+          $templateParameters,
+          'blank'))->render();
+        break;
+      case 'element':
+        $formElement = $requestData['formElement'];
+        switch ($formElement) {
+        case 'TO':
+          $elementData = $composer->toString();
+          break;
+        case 'fileAttachments':
+          $fileAttachments = $composer->fileAttachments();
+          $elementData = [
+            'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions($fileAttachments)),
+            'attachments' => $fileAttachments,
+          ];
+          break;
+        case 'eventAttachments':
+          $eventAttachments = $composer->eventAttachments();
+          $elementData = [
+            'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttachments)),
+            'attachments' => $eventAttachments,
+          ];
+          break;
+        default:
+          return self::grumble($this->l->t("Unknown form element: `%s'.", $formElement));
         }
         break;
-      case 'preview':
-        $previewMessages = $composer->previewMessages();
+      default:
+        return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
+      }
+      $requestData['formElement'] = $formElement;
+      $requestData['elementData'] = $elementData;
+      break;
+    case 'load':
+      $value = $requestData['storedMessagesSelector'];
+      switch ($topic) {
+      case 'template':
+        if (!$composer->loadTemplate($value)) {
+          return self::grumble($this->l->t('Unable to load template "%s".', $value));
+        }
+        $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
+        $requestData['message'] = $composer->messageText();
+        $requestData['subject'] = $composer->subject();
+        break;
+      case 'draft':
+        if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
+          return self::grumble($this->l->t('Invalid draft name "%s".', $value));
+        }
+        $draftId = $matches[1];
+        $draftParameters = $composer->loadDraft($draftId);
         if ($composer->errorStatus()) {
           $requestData['errorStatus'] = $composer->errorStatus();
           $requestData['diagnostics'] = $composer->statusDiagnostics();
           break;
         }
-        $templateParameters = [
-          'appName' => $this->appName,
-          'projectName' => $projectName,
-          'projectId' => $projectId,
-          'messages' => $previewMessages,
-        ];
-        $html = (new TemplateResponse(
-          $this->appName,
-          'emailform/part.emailform.preview',
-          $templateParameters,
-          'blank'))->render();
-        return self::dataResponse([
-          'message' => $this->l->t('Preview generation successful.'),
-          'contents' => $html,
-        ]);
-      case 'cancel':
-        $composer->cleanTemporaries();
-        break;
-      case 'update':
-        switch ($topic) {
-          case 'undefined':
-            $fileAttachments = $composer->fileAttachments();
-            $eventAttachments = $composer->eventAttachments();
+        $draftParameters[Composer::POST_TAG]['messageDraftId'] =
+                                                               $requestData['messageDraftId'] = $draftId;
 
-            $templateParameters = [
-              'projectName' => $projectName,
-              'projectId' => $projectId,
-              'emailTemplateName' => $composer->currentEmailTemplate(),
-              'storedEmails' => $composer->storedEmails(),
-              'TO' => $composer->toString(),
-              'BCC' => $composer->blindCarbonCopy(),
-              'CC' => $composer->carbonCopy(),
-              'mailTag' => $composer->subjectTag(),
-              'subject' => $composer->subject(),
-              'message' => $composer->messageText(),
-              'sender' => $composer->fromName(),
-              'catchAllEmail' => $composer->fromAddress(),
-              'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
-              'fileAttachmentData' => json_encode($fileAttachments),
-              'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
-              'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
-              'composerFormData' => $composer->formData(),
-            ];
-            $elementData = (new TemplateResponse(
-              $this->appName,
-              'emailform/part.emailform.composer',
-              $templateParameters,
-              'blank'))->render();
-            break;
-          case 'element':
-            $formElement = $requestData['formElement'];
-            switch ($formElement) {
-              case 'TO':
-                $elementData = $composer->toString();
-                break;
-              case 'fileAttachments':
-                $fileAttachments = $composer->fileAttachments();
-                $elementData = [
-                  'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions($fileAttachments)),
-                  'attachments' => $fileAttachments,
-                ];
-                break;
-              case 'eventAttachments':
-                $eventAttachments = $composer->eventAttachments();
-                $elementData = [
-                  'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttachments)),
-                  'attachments' => $eventAttachments,
-                ];
-                break;
-              default:
-                return self::grumble($this->l->t("Unknown form element: `%s'.", $formElement));
-            }
-            break;
-          default:
-            return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
-        }
-        $requestData['formElement'] = $formElement;
-        $requestData['elementData'] = $elementData;
-        break;
-      case 'load':
-        $value = $requestData['storedMessagesSelector'];
-        switch ($topic) {
-          case 'template':
-            if (!$composer->loadTemplate($value)) {
-              return self::grumble($this->l->t('Unable to load template "%s".', $value));
-            }
-            $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
-            $requestData['message'] = $composer->messageText();
-            $requestData['subject'] = $composer->subject();
-            break;
-          case 'draft':
-            if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
-              return self::grumble($this->l->t('Invalid draft name "%s".', $value));
-            }
-            $draftId = $matches[1];
-            $draftParameters = $composer->loadDraft($draftId);
-            if ($composer->errorStatus()) {
-              $requestData['errorStatus'] = $composer->errorStatus();
-              $requestData['diagnostics'] = $composer->statusDiagnostics();
-              break;
-            }
-            $draftParameters[Composer::POST_TAG]['messageDraftId'] =
-              $requestData['messageDraftId'] = $draftId;
+        $requestParameters = $this->parameterService->getParams();
+        $requestParameters = Util::arrayMergeRecursive($requestParameters, $draftParameters);
 
-            $requestParameters = $this->parameterService->getParams();
-            $requestParameters = Util::arrayMergeRecursive($requestParameters, $draftParameters);
+        // Update project name and id
+        $projectId = $requestData['projectId'] = $requestParameters['projectId'];
+        $projectName = $requestData['projectName'] = $requestParameters['projectName'];
+        $bulkTransactionId = $requestData['bulkTransactionId'] = $requestParameters['bulkTransactionId'];
 
-            // Update project name and id
-            $projectId = $requestData['projectId'] = $requestParameters['projectId'];
-            $projectName = $requestData['projectName'] = $requestParameters['projectName'];
-            $bulkTransactionId = $requestData['bulkTransactionId'] = $requestParameters['bulkTransactionId'];
+        // install new request parameters
+        $this->parameterService->setParams($requestParameters);
 
-            // install new request parameters
-            $this->parameterService->setParams($requestParameters);
+        // "reload" the composer and recipients filter
+        $composer->bind($this->parameterService);
 
-            // "reload" the composer and recipients filter
-            $composer->bind($this->parameterService);
-
-            $requestData['errorStatus'] = $composer->errorStatus();
-            $requestData['diagnostics'] = $composer->statusDiagnostics();
-
-            // Composer template
-            $fileAttachments = $composer->fileAttachments();
-            $eventAttachments = $composer->eventAttachments();
-
-            $templateParameters = [
-              'appName' =>  $this->appName(),
-              'projectName' => $projectName,
-              'projectId' => $projectId,
-              'urlGenerator' => $this->urlGenerator,
-              'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
-              'emailTemplateName' => $composer->currentEmailTemplate(),
-              'storedEmails' => $composer->storedEmails(),
-              'TO' => $composer->toString(),
-              'BCC' => $composer->blindCarbonCopy(),
-              'CC' => $composer->carbonCopy(),
-              'mailTag' => $composer->subjectTag(),
-              'subject' => $composer->subject(),
-              'message' => $composer->messageText(),
-              'sender' => $composer->fromName(),
-              'catchAllEmail' => $composer->fromAddress(),
-              'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
-              'fileAttachmentData' => json_encode($fileAttachments),
-              'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
-              'composerFormData' => $composer->formData(),
-            ];
-
-            $msgData = (new TemplateResponse(
-              $this->appName,
-              'emailform/part.emailform.composer',
-              $templateParameters,
-              'blank'))->render();
-
-            // Recipients template
-            $filterHistory = $recipientsFilter->filterHistory();
-            $templateParameters = [
-              'appName' => $this->appName(),
-              'projectName' => $projectName,
-              'projectId' => $projectId,
-              // Needed for the recipient selection
-              'recipientsFormData' => $recipientsFilter->formData(),
-              'filterHistory' => $filterHistory,
-              'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
-              'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
-              'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
-              'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
-              'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
-              'frozenRecipients' => $recipientsFilter->frozenRecipients(),
-            ];
-
-            $rcptData = (new TemplateResponse(
-              $this->appName,
-              'emailform/part.emailform.recipients',
-              $templateParameters,
-              'blank'))->render();
-
-            $requestData['composerForm'] = $msgData;
-            $requestData['recipientsForm'] = $rcptData;
-
-            if (!$composer->errorStatus()) {
-              $debugText .= $this->l->t("Loaded draft message with id %d", $requestData['messageDraftId']);
-            }
-            break;
-          default:
-            return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
-        }
-        break; // load
-      case 'save':
-        switch ($topic) {
-          case 'template':
-            $emailTemplateName = Util::normalizeSpaces($requestData['emailTemplateName']);
-            if (empty($emailTemplateName)) {
-              return self::grumble($this->l->t('Email template name must not be empty'));
-            }
-            if ($composer->validateTemplate()) {
-              $composer->storeTemplate($requestData['emailTemplateName']);
-            }
-            break;
-          case 'draft':
-            if ($composer->storeDraft()) {
-              $requestData['messageDraftId'] = $composer->messageDraftId();
-            } else {
-              $requestData['errorStatus'] = $composer->errorStatus();
-              $requestData['diagnostics'] = $composer->statusDiagnostics();
-            }
-            break;
-          default:
-            return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
-        }
-        if ($composer->errorStatus()) {
-          $reqquestData['diagnostics']['caption'] =
-            $this->l->t('%s could not be saved', ucfirst($topic));
-        } else {
-          $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
-        }
-        break;
-      case 'delete':
-        switch ($topic) {
-          case 'template':
-            $composer->deleteTemplate($requestData['emailTemplateName']);
-            $composer->setDefaultTemplate();
-            $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
-            $requestData['message'] = $composer->messageText();
-            $requestData['subject'] = $composer->subject();
-            break;
-          case 'draft':
-            $composer->deleteDraft();
-            $debugText .= $this->l->t("Deleted draft message with id %d", $requestData['messageDraftId']);
-            $requestData['messageDraftId'] = -1;
-            break;
-          default:
-            return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
-        }
-        $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
-        break;
-      case 'validateEmailRecipients':
-        $composer->validateFreeFormAddresses($requestData['Header'],
-                                             $requestData['Recipients']);
         $requestData['errorStatus'] = $composer->errorStatus();
         $requestData['diagnostics'] = $composer->statusDiagnostics();
-        if ($requestData['errorStatus']) {
-          $requestData['diagnostics']['caption'] =
-            $this->l->t('Email Address Validation Failed');
+
+        // Composer template
+        $fileAttachments = $composer->fileAttachments();
+        $eventAttachments = $composer->eventAttachments();
+
+        $templateParameters = [
+          'appName' =>  $this->appName(),
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+          'urlGenerator' => $this->urlGenerator,
+          'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
+          'emailTemplateName' => $composer->currentEmailTemplate(),
+          'storedEmails' => $composer->storedEmails(),
+          'TO' => $composer->toString(),
+          'BCC' => $composer->blindCarbonCopy(),
+          'CC' => $composer->carbonCopy(),
+          'mailTag' => $composer->subjectTag(),
+          'subject' => $composer->subject(),
+          'message' => $composer->messageText(),
+          'sender' => $composer->fromName(),
+          'catchAllEmail' => $composer->fromAddress(),
+          'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
+          'fileAttachmentData' => json_encode($fileAttachments),
+          'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
+          'composerFormData' => $composer->formData(),
+        ];
+
+        $msgData = (new TemplateResponse(
+          $this->appName,
+          'emailform/part.emailform.composer',
+          $templateParameters,
+          'blank'))->render();
+
+        // Recipients template
+        $filterHistory = $recipientsFilter->filterHistory();
+        $templateParameters = [
+          'appName' => $this->appName(),
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+          // Needed for the recipient selection
+          'recipientsFormData' => $recipientsFilter->formData(),
+          'filterHistory' => $filterHistory,
+          'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+          'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
+          'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
+          'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
+          'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
+          'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+        ];
+
+        $rcptData = (new TemplateResponse(
+          $this->appName,
+          'emailform/part.emailform.recipients',
+          $templateParameters,
+          'blank'))->render();
+
+        $requestData['composerForm'] = $msgData;
+        $requestData['recipientsForm'] = $rcptData;
+
+        if (!$composer->errorStatus()) {
+          $debugText .= $this->l->t("Loaded draft message with id %d", $requestData['messageDraftId']);
         }
         break;
       default:
-        return self::grumble($this->l->t("Unknown request: `%s'.", $request));
+        return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
+      }
+      break; // load
+    case 'save':
+      switch ($topic) {
+      case 'template':
+        $emailTemplateName = Util::normalizeSpaces($requestData['emailTemplateName']);
+        if (empty($emailTemplateName)) {
+          return self::grumble($this->l->t('Email template name must not be empty'));
+        }
+        if ($composer->validateTemplate()) {
+          $composer->storeTemplate($requestData['emailTemplateName']);
+        }
+        break;
+      case 'draft':
+        if ($composer->storeDraft()) {
+          $requestData['messageDraftId'] = $composer->messageDraftId();
+        } else {
+          $requestData['errorStatus'] = $composer->errorStatus();
+          $requestData['diagnostics'] = $composer->statusDiagnostics();
+        }
+        break;
+      default:
+        return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
+      }
+      if ($composer->errorStatus()) {
+        $reqquestData['diagnostics']['caption'] =
+                                                $this->l->t('%s could not be saved', ucfirst($topic));
+      } else {
+        $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+      }
+      break;
+    case 'delete':
+      switch ($topic) {
+      case 'template':
+        $composer->deleteTemplate($requestData['emailTemplateName']);
+        $composer->setDefaultTemplate();
+        $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
+        $requestData['message'] = $composer->messageText();
+        $requestData['subject'] = $composer->subject();
+        break;
+      case 'draft':
+        $composer->deleteDraft();
+        $debugText .= $this->l->t("Deleted draft message with id %d", $requestData['messageDraftId']);
+        $requestData['messageDraftId'] = -1;
+        break;
+      default:
+        return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
+      }
+      $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+      break;
+    case 'validateEmailRecipients':
+      $composer->validateFreeFormAddresses($requestData['Header'],
+                                           $requestData['Recipients']);
+      $requestData['errorStatus'] = $composer->errorStatus();
+      $requestData['diagnostics'] = $composer->statusDiagnostics();
+      if ($requestData['errorStatus']) {
+        $requestData['diagnostics']['caption'] =
+                                               $this->l->t('Email Address Validation Failed');
+      }
+      break;
+    default:
+      return self::grumble($this->l->t("Unknown request: `%s'.", $request));
     }
 
     //$this->logInfo('REQUEST DATA POST '.print_r($requestData, true));
@@ -646,126 +646,126 @@ class EmailFormController extends Controller {
     /** @var ContactsService */
     $contactsService = $this->appContainer->query(ContactsService::class);
     switch ($operation) {
-      case 'list':
-        // Free-form recipients from Cc: or Bcc:
-        $freeForm  = $this->parameterService->getParam('freeFormRecipients', '');
+    case 'list':
+      // Free-form recipients from Cc: or Bcc:
+      $freeForm  = $this->parameterService->getParam('freeFormRecipients', '');
 
-        // Convert the free-form input to an array (possibly)
-        $parser = new \Mail_RFC822(null, null, null, false);
-        $recipients = $parser->parseAddressList($freeForm);
-        $parseError = $parser->parseError();
-        if ($parseError !== false) {
-          return self::grumble(
-            $this->l->t('Unable to parse email-recipients "%s".',
-                        vsprintf($parseError['message'], $parseError['data'])));
+      // Convert the free-form input to an array (possibly)
+      $parser = new \Mail_RFC822(null, null, null, false);
+      $recipients = $parser->parseAddressList($freeForm);
+      $parseError = $parser->parseError();
+      if ($parseError !== false) {
+        return self::grumble(
+          $this->l->t('Unable to parse email-recipients "%s".',
+                      vsprintf($parseError['message'], $parseError['data'])));
+      }
+      $freeForm = [];
+      foreach ($recipients as $emailRecord) {
+        $email = $emailRecord->mailbox.'@'.$emailRecord->host;
+        $name  = $emailRecord->personal;
+        $freeForm[$email] = $name;
+      }
+
+      // Fetch all known address-book contacts with email
+      $bookContacts = $contactsService->emailContacts();
+
+      $addressBookEmails = [];
+      foreach ($bookContacts as $entry) {
+        $addressBookEmails[$entry['email']] = $entry['name'];
+      }
+
+      // Convert the free-form input in "book-format", but exclude those
+      // contacts already present in the address-book in order not to list
+      // contacts twice.
+      $formContacts = [];
+      foreach ($freeForm as $email => $name) {
+        if (isset($addressBookEmails[$email]) /* && $addressBookEmails[$email] == $name*/) {
+          // skip free-form if already listed in address-book
+          continue;
         }
-        $freeForm = [];
-        foreach ($recipients as $emailRecord) {
-          $email = $emailRecord->mailbox.'@'.$emailRecord->host;
-          $name  = $emailRecord->personal;
-          $freeForm[$email] = $name;
-        }
+        $formContacts[] = [
+          'email' => $email,
+          'name' => $name,
+          'addressBook' => $this->l->t('Form Input'),
+          'class' => 'free-form'
+        ];
+      }
 
-        // Fetch all known address-book contacts with email
-        $bookContacts = $contactsService->emailContacts();
+      // The total options list is the union of the (remaining) free-form
+      // addresses and the address-book entries
+      $emailOptions = array_merge($formContacts, $bookContacts);
 
-        $addressBookEmails = [];
-        foreach ($bookContacts as $entry) {
-          $addressBookEmails[$entry['email']] = $entry['name'];
-        }
-
-        // Convert the free-form input in "book-format", but exclude those
-        // contacts already present in the address-book in order not to list
-        // contacts twice.
-        $formContacts = [];
-        foreach ($freeForm as $email => $name) {
-          if (isset($addressBookEmails[$email]) /* && $addressBookEmails[$email] == $name*/) {
-            // skip free-form if already listed in address-book
-            continue;
-          }
-          $formContacts[] = [
-            'email' => $email,
-            'name' => $name,
-            'addressBook' => $this->l->t('Form Input'),
-            'class' => 'free-form'
-          ];
-        }
-
-        // The total options list is the union of the (remaining) free-form
-        // addresses and the address-book entries
-        $emailOptions = array_merge($formContacts, $bookContacts);
-
-        // Now convert it into a form Navigation::selectOptions()
-        // understands
-        $selectOptions = [];
-        foreach ($emailOptions as $entry) {
-          $email = $entry['email'];
-          if ($entry['name'] == '') {
-            $displayName = $email;
-          } else {
-            $displayName = $entry['name'].' <'.$email.'>';
-          }
-
-          $option = [
-            'value' => $email,
-            'name' => $displayName,
-            'flags' => isset($freeForm[$email]) ? PageNavigation::SELECTED : 0,
-            'group' => $entry['addressBook'],
-          ];
-          if (isset($entry['class'])) {
-            $option['groupClass'] = $entry['class'];
-          }
-          $selectOptions[] = $option;
+      // Now convert it into a form Navigation::selectOptions()
+      // understands
+      $selectOptions = [];
+      foreach ($emailOptions as $entry) {
+        $email = $entry['email'];
+        if ($entry['name'] == '') {
+          $displayName = $email;
+        } else {
+          $displayName = $entry['name'].' <'.$email.'>';
         }
 
-        // $phpMailer = new \OCA\CAFEVDB\CommonPHPMailer(true); could validate addresses here
-
-        $html = (new TemplateResponse(
-          $this->appName,
-          'emailform/addressbook',
-          [ 'emailOptions' => $selectOptions ],
-          'blank'))->render();
-
-        return self::dataResponse([ 'contents' => $html ]);
-
-      case 'save':
-        // Get some common post data, rest has to be handled by the
-        // recipients and the sender class.
-        $addressBookCandidates = $this->parameterService->getParam('addressBookCandidates', []);
-
-        $formContacts = [];
-        foreach ($addressBookCandidates as $record) {
-          // This is already pre-parsed. If there is a natural name for the
-          // person, then it is the thing until the first occurence of '<'.
-          $text = $record['text']; // use html?
-          $name = strchr($text, '<', true);
-          if ($name !== false) {
-            $name = Util::normalizeSpaces($name);
-          } else {
-            $name = '';
-          }
-          $email = $record['value'];
-          $formContacts[] = [
-            'email' => $email,
-            'name' => $name,
-            'display' => htmlspecialchars($name.' <'.$email.'>')
-          ];
+        $option = [
+          'value' => $email,
+          'name' => $displayName,
+          'flags' => isset($freeForm[$email]) ? PageNavigation::SELECTED : 0,
+          'group' => $entry['addressBook'],
+        ];
+        if (isset($entry['class'])) {
+          $option['groupClass'] = $entry['class'];
         }
-        $failedContacts = [];
-        foreach($formContacts as $contact) {
-          if ($contactsService->addEmailContact($contact) === false) {
-            $failedContacts[] = $contact['display'];
-          }
-        }
+        $selectOptions[] = $option;
+      }
 
-        if (count($failedContacts) > 0) {
-          return self::grumble(
-            $this->l->t(
-              'The following contacts could not be stored: %s',
-              implode(', ', $failedContacts)));
-        }
+      // $phpMailer = new \OCA\CAFEVDB\CommonPHPMailer(true); could validate addresses here
 
-        return self::response('');
+      $html = (new TemplateResponse(
+        $this->appName,
+        'emailform/addressbook',
+        [ 'emailOptions' => $selectOptions ],
+        'blank'))->render();
+
+      return self::dataResponse([ 'contents' => $html ]);
+
+    case 'save':
+      // Get some common post data, rest has to be handled by the
+      // recipients and the sender class.
+      $addressBookCandidates = $this->parameterService->getParam('addressBookCandidates', []);
+
+      $formContacts = [];
+      foreach ($addressBookCandidates as $record) {
+        // This is already pre-parsed. If there is a natural name for the
+        // person, then it is the thing until the first occurence of '<'.
+        $text = $record['text']; // use html?
+        $name = strchr($text, '<', true);
+        if ($name !== false) {
+          $name = Util::normalizeSpaces($name);
+        } else {
+          $name = '';
+        }
+        $email = $record['value'];
+        $formContacts[] = [
+          'email' => $email,
+          'name' => $name,
+          'display' => htmlspecialchars($name.' <'.$email.'>')
+        ];
+      }
+      $failedContacts = [];
+      foreach($formContacts as $contact) {
+        if ($contactsService->addEmailContact($contact) === false) {
+          $failedContacts[] = $contact['display'];
+        }
+      }
+
+      if (count($failedContacts) > 0) {
+        return self::grumble(
+          $this->l->t(
+            'The following contacts could not be stored: %s',
+            implode(', ', $failedContacts)));
+      }
+
+      return self::response('');
     }
     return self::grumble($this->l->t('UNIMPLEMENTED'));
   }
@@ -785,97 +785,97 @@ class EmailFormController extends Controller {
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
 
     switch ($source) {
-      case Composer::ATTACHMENT_ORIGIN_CLOUD:
-        $paths = $this->parameterService['paths'];
-        if (empty($paths)) {
-          return self::grumble($this->l->t('Attachment file-names were not submitted'));
+    case Composer::ATTACHMENT_ORIGIN_CLOUD:
+      $paths = $this->parameterService['paths'];
+      if (empty($paths)) {
+        return self::grumble($this->l->t('Attachment file-names were not submitted'));
+      }
+
+      // @todo find file in cloud
+      $storage = $this->appContainer->query(UserStorage::class);
+      $files = [];
+      foreach ($paths as $path) {
+        $node = $storage->get($path);
+        if (empty($node)) {
+          return self::grumble($this->l->t('File "%s" could not be found in cloud storage.', $path));
+        }
+        if ($node->getType() != FileInfo::TYPE_FILE) {
+          return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.'));
         }
 
-        // @todo find file in cloud
-        $storage = $this->appContainer->query(UserStorage::class);
-        $files = [];
-        foreach ($paths as $path) {
-          $node = $storage->get($path);
-          if (empty($node)) {
-            return self::grumble($this->l->t('File "%s" could not be found in cloud storage.', $path));
-          }
-          if ($node->getType() != FileInfo::TYPE_FILE) {
-            return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.'));
-          }
+        // We emulate an uploaded file here:
+        $fileRecord = [
+          'name' => $path,
+          'error' => 0,
+          'tmp_name' => $node->getStorage()->getLocalFile($node->getInternalPath()),
+          'type' => $node->getMimetype(),
+          'size' => $node->getSize(),
+        ];
 
-          // We emulate an uploaded file here:
-          $fileRecord = [
-            'name' => $path,
-            'error' => 0,
-            'tmp_name' => $node->getStorage()->getLocalFile($node->getInternalPath()),
-            'type' => $node->getMimetype(),
-            'size' => $node->getSize(),
-          ];
-
-          if ($composer->saveAttachment($fileRecord, false) === false) {
-            return self::grumble($this->l->t('Couldn\'t save temporary file for: %s', $fileRecord['name']));
-          }
-
-          $fileRecord['original_name']      = $fileRecord['name']; // clone
-          $fileRecord['upload_max_file_size'] = $maxUploadFileSize;
-          $fileRecord['max_human_file_size']  = $maxHumanFileSize;
-          $files[] = $fileRecord;
-        }
-        return self::dataResponse($files);
-      case Composer::ATTACHMENT_ORIGIN_UPLOAD:
-        $fileKey = 'files';
-        if (empty($_FILES[$fileKey])) {
-          // may be caused by PHP restrictions which are not caught by
-          // error handlers.
-          $contentLength = $this->request->server['CONTENT_LENGTH'];
-          $limit = \OCP\Util::uploadLimit();
-          if ($contentLength > $limit) {
-            return self::grumble(
-              $this->l->t('Upload size %s exceeds limit %s, contact your server administrator.', [
-                \OCP\Util::humanFileSize($contentLength),
-                \OCP\Util::humanFileSize($limit),
-              ]));
-          }
-          $error = error_get_last();
-          if (!empty($error)) {
-            return self::grumble(
-              $this->l->t('No file was uploaded, error message was "%s".', $error['message']));
-          }
-          return self::grumble($this->l->t('No file was uploaded. Unknown error'));
+        if ($composer->saveAttachment($fileRecord, false) === false) {
+          return self::grumble($this->l->t('Couldn\'t save temporary file for: %s', $fileRecord['name']));
         }
 
-        $files = Util::transposeArray($_FILES[$fileKey]);
-
-        $totalSize = 0;
-        foreach ($files as &$file) {
-
-          $totalSize += $file['size'];
-
-          if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
-            return self::grumble([
-              'message' => $this->l->t('Not enough storage available'),
-              'upload_max_file_size' => $maxUploadFileSize,
-              'max_human_file_size' => $maxHumanFileSize,
-            ]);
-          }
-
-          $file['upload_max_file_size'] = $maxUploadFileSize;
-          $file['max_human_file_size']  = $maxHumanFileSize;
-          $file['original_name'] = $file['name']; // clone
-
-          $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
-          if ($file['error'] != UPLOAD_ERR_OK) {
-            continue;
-          }
-
-          // Move the temporary files to locations where we can find them later.
-          if ($composer->saveAttachment($file) === false) {
-            $file['error'] = 99;
-            $file['str_error'] = $this->l->t('Couldn\'t save temporary file for: %s', $file['name']);
-            continue;
-          }
+        $fileRecord['original_name']      = $fileRecord['name']; // clone
+        $fileRecord['upload_max_file_size'] = $maxUploadFileSize;
+        $fileRecord['max_human_file_size']  = $maxHumanFileSize;
+        $files[] = $fileRecord;
+      }
+      return self::dataResponse($files);
+    case Composer::ATTACHMENT_ORIGIN_UPLOAD:
+      $fileKey = 'files';
+      if (empty($_FILES[$fileKey])) {
+        // may be caused by PHP restrictions which are not caught by
+        // error handlers.
+        $contentLength = $this->request->server['CONTENT_LENGTH'];
+        $limit = \OCP\Util::uploadLimit();
+        if ($contentLength > $limit) {
+          return self::grumble(
+            $this->l->t('Upload size %s exceeds limit %s, contact your server administrator.', [
+              \OCP\Util::humanFileSize($contentLength),
+              \OCP\Util::humanFileSize($limit),
+            ]));
         }
-        return self::dataResponse($files);
+        $error = error_get_last();
+        if (!empty($error)) {
+          return self::grumble(
+            $this->l->t('No file was uploaded, error message was "%s".', $error['message']));
+        }
+        return self::grumble($this->l->t('No file was uploaded. Unknown error'));
+      }
+
+      $files = Util::transposeArray($_FILES[$fileKey]);
+
+      $totalSize = 0;
+      foreach ($files as &$file) {
+
+        $totalSize += $file['size'];
+
+        if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
+          return self::grumble([
+            'message' => $this->l->t('Not enough storage available'),
+            'upload_max_file_size' => $maxUploadFileSize,
+            'max_human_file_size' => $maxHumanFileSize,
+          ]);
+        }
+
+        $file['upload_max_file_size'] = $maxUploadFileSize;
+        $file['max_human_file_size']  = $maxHumanFileSize;
+        $file['original_name'] = $file['name']; // clone
+
+        $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
+        if ($file['error'] != UPLOAD_ERR_OK) {
+          continue;
+        }
+
+        // Move the temporary files to locations where we can find them later.
+        if ($composer->saveAttachment($file) === false) {
+          $file['error'] = 99;
+          $file['str_error'] = $this->l->t('Couldn\'t save temporary file for: %s', $file['name']);
+          continue;
+        }
+      }
+      return self::dataResponse($files);
     }
     return self::grumble($this->l->t('Unknown attachment source: "%s".', $source));
   }
