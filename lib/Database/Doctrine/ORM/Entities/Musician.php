@@ -52,6 +52,7 @@ class Musician implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * @var int
@@ -509,23 +510,13 @@ class Musician implements \ArrayAccess
   /**
    * Set birthday.
    *
-   * @param \DateTime|string|null $birthday If a string is passed it
-   *        has to be in a format understood by the constructor of
-   *        \DateTime.
-   *
+   * @param string|int|\DateTimeInterface $birthday
    *
    * @return Musician
    */
-  public function setBirthday($birthday = null)
+  public function setBirthday($birthday)
   {
-    if (is_string($birthday)) {
-      try {
-        $birthday = new \DateTime($birthday);
-      } catch (\Throwable $t) {
-        throw new \Exception("Could not convert `$birthday' to DateTime-object", $t->getCode(), $t);
-      }
-    }
-    $this->birthday = $birthday;
+    $this->birthday = self::convertToDateTime($birthday);
 
     return $this;
   }
@@ -533,9 +524,9 @@ class Musician implements \ArrayAccess
   /**
    * Get birthday.
    *
-   * @return \DateTime|null
+   * @return \DateTimeInterface|null
    */
-  public function getBirthday()
+  public function getBirthday():?\DateTimeInterface
   {
     return $this->birthday;
   }
