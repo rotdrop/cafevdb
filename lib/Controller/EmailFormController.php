@@ -367,7 +367,7 @@ class EmailFormController extends Controller {
             if (!$composer->loadTemplate($value)) {
               return self::grumble($this->l->t('Unable to load template "%s".', $value));
             }
-            $requestData['templateName'] = $composer->currentEmailTemplate();
+            $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
             $requestData['subject'] = $composer->subject();
             break;
@@ -412,7 +412,7 @@ class EmailFormController extends Controller {
               'projectId' => $projectId,
               'urlGenerator' => $this->urlGenerator,
               'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
-              'templateName' => $composer->currentEmailTemplate(),
+              'emailTemplateName' => $composer->currentEmailTemplate(),
               'storedEmails' => $composer->storedEmails(),
               'TO' => $composer->toString(),
               'BCC' => $composer->blindCarbonCopy(),
@@ -471,12 +471,12 @@ class EmailFormController extends Controller {
       case 'save':
         switch ($topic) {
           case 'template':
-            $templateName = Util::normalizeSpaces($requestData['templateName']);
-            if (empty($templateName)) {
+            $emailTemplateName = Util::normalizeSpaces($requestData['emailTemplateName']);
+            if (empty($emailTemplateName)) {
               return self::grumble($this->l->t('Email template name must not be empty'));
             }
             if ($composer->validateTemplate()) {
-              $composer->storeTemplate($requestData['templateName']);
+              $composer->storeTemplate($requestData['emailTemplateName']);
             }
             break;
           case 'draft':
@@ -500,9 +500,9 @@ class EmailFormController extends Controller {
       case 'delete':
         switch ($topic) {
           case 'template':
-            $composer->deleteTemplate($requestData['templateName']);
+            $composer->deleteTemplate($requestData['emailTemplateName']);
             $composer->setDefaultTemplate();
-            $requestData['templateName'] = $composer->currentEmailTemplate();
+            $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
             $requestData['subject'] = $composer->subject();
             break;
