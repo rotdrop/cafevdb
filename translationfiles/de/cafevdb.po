@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-05-22 21:52+0200\n"
-"PO-Revision-Date: 2021-05-22 21:52+0200\n"
+"POT-Creation-Date: 2021-05-23 16:38+0200\n"
+"PO-Revision-Date: 2021-05-23 16:45+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -175,104 +175,104 @@ msgstr "Entwürfe"
 msgid "Templates"
 msgstr "Vorlagen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:296
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:299
 msgid "Preview generation successful."
 msgstr "Vorschau-Erzeugung erfolgreich."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:354
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:357
 #, php-format
 msgid "Unknown form element: `%s'."
 msgstr "Unbekanntes Formularfeld: `%s'."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:358
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:468
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:491
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:515
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:361
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:473
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:499
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:523
 #, php-format
 msgid "Unknown request: \"%s / %s\"."
 msgstr "Unbekannte Anfrage: \"%s / %s\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:368
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:371
 #, php-format
 msgid "Unable to load template \"%s\"."
 msgstr "Kann die Schablone \"%s\" nicht laden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:376
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:379
 #, php-format
 msgid "Invalid draft name \"%s\"."
 msgstr "Ungültiger Entwurf-Name \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:464
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:469
 #, php-format
 msgid "Loaded draft message with id %d"
 msgstr "Entwurf mit Id %d geladen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:476
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:481
 msgid "Email template name must not be empty"
 msgstr "Email-Vorlagen-Name darf nicht leer sein."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:495
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:503
 #, php-format
 msgid "%s could not be saved"
 msgstr "%s konnte nicht gespeichert werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:511
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:519
 #, php-format
 msgid "Deleted draft message with id %d"
 msgstr "Enwurf mit Id %d wurde gelöscht."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:526
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:534
 msgid "Email Address Validation Failed"
 msgstr "Em@il Adresse(n) ungültig"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:530
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:538
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr "Unbekannte Anfrage: \"%s\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:659
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:669
 #, php-format
 msgid "Unable to parse email-recipients \"%s\"."
 msgstr "Analysieren der folgenden Email-Empfänger ist fehlgeschlagen: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:689
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:699
 msgid "Form Input"
 msgstr "Formular Eingabe"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:764
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:774
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr "Die folgenden Kontakte konnten leider nicht gespeichert werden: %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:770
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:780
 msgid "UNIMPLEMENTED"
 msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:791
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:803
 msgid "Attachment file-names were not submitted"
 msgstr "Dateinamen für Anhänge wurden nicht übermittelt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:800
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:812
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/UploadsController.php:107
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr "Datei \"%s\" konnte nicht im Cloud-Storage gefunden werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:803
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:815
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/UploadsController.php:110
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 "Die Datei \"%s\" ist keine normale Datei, das ist nocht nicht implementiert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:816
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:874
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:828
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:886
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/UploadsController.php:187
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr "Konnte folgende Datei nicht zwischen-speichern: %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:834
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:846
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:423
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/UploadsController.php:142
 #, php-format
@@ -281,26 +281,26 @@ msgstr ""
 "Dateigröße %s sprengt das Hochlade-Limit %s, bitte den System-Administrator "
 "kontaktieren."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:842
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:854
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:431
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/UploadsController.php:150
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr "Es wurde keine Datei hochgeladen, Fehlermeldung war \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:844
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:856
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:433
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/UploadsController.php:152
 msgid "No file was uploaded. Unknown error"
 msgstr "Unbekannter Fehler. Es wurde keine Datei hochgeladen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:856
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:868
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:451
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/UploadsController.php:164
 msgid "Not enough storage available"
 msgstr "Nicht genug Speicherplatz vorhanden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:880
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/EmailFormController.php:892
 #, php-format
 msgid "Unknown attachment source: \"%s\"."
 msgstr "Unbekannte Quelle für Anhänge: \"%s\"."
@@ -2177,91 +2177,91 @@ msgstr "Grußformel"
 msgid "Signature"
 msgstr "Unterschrift"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:304
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:302
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:310
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:951
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:308
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:995
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:554
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:635
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:616
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:697
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1423
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1503
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1551
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1629
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1564
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1642
 msgid "musicians"
 msgstr "Musiker"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1656
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1671
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1734
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1749
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1760
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1836
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1792
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1802
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1812
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1868
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1878
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1888
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2080
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2152
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2087
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2159
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2149
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2237
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2223
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2311
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2171
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2245
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2464
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2535
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2464
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2535
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:402
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:401
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:428
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:427
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:617
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:612
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:280
 msgid "member status "
 msgstr "Mitglieds-Status"
@@ -2667,7 +2667,7 @@ msgstr "Aktionen"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:394
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:407
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:438
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:174
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:186
 msgid "Subject"
 msgstr "Betreff"
 
@@ -7622,9 +7622,9 @@ msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/blog.js:336
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/blog.js:362
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/blog.js:385
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:64
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:557
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:652
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:65
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:558
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:653
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:54
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:61
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:171
@@ -7811,7 +7811,7 @@ msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück.
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/chosen-popup.js:42
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:261
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/blogedit.php:40
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:294
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:306
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -7859,92 +7859,92 @@ msgstr ""
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:64
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:65
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:145
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:146
 msgid "Move all"
 msgstr "Alle auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:146
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:147
 msgid "Move selected"
 msgstr "Ausgewählte verschieben"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:147
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:148
 msgid "Remove selected"
 msgstr "Ausgewählte entfernen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:148
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:149
 msgid "Remove all"
 msgstr "Alle entfernen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:149
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:150
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:150
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:151
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:153
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:154
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:155
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:156
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/legacy/calendar/part.eventform.php:38
 msgid "from"
 msgstr "aus"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:157
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:158
 msgid "Empty list"
 msgstr "Leere Liste"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:158
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:159
 msgid "Filter"
 msgstr "Suchbegriff"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:159
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:160
 msgid "show all"
 msgstr "alle anzeigen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:166
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:167
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
 "Kasten zu schieben."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:556
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:557
 msgid "Unknown form element: {FormElement}"
 msgstr "Unbekanntes Formularfeld: {FormElement}"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:596
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1421
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:597
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1465
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:598
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1423
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:599
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1467
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:651
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:652
 msgid "Unknown request: {operation} / {topic}"
 msgstr "Unbekannte Anfrage: {operation} / {topic}"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:709
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:710
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht %d von %d"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:711
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:712
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:734
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:735
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:767
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:768
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -7952,35 +7952,37 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:902
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:946
 msgid ""
-"A template with the name `{templateName}' already exists, do you want to "
-"overwrite it?"
+"A template with the name `{emailTemplateName}' already exists, do you want "
+"to overwrite it?"
 msgstr ""
-"Es gibt bereits eine Vorlage mit dem Namen `{templateName}'; soll die "
+"Es gibt bereits eine Vorlage mit dem Namen `{emailTemplateName}'; soll die "
 "überschrieben werden?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:904
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:948
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:935
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:979
 msgid ""
-"Do you really want to delete the template with the name `{templateName}'?"
+"Do you really want to delete the template with the name "
+"`{emailTemplateName}'?"
 msgstr ""
-"Möchten Sie die Email-Vorlage mit dem Namen {templateName} wirklich löschen?"
+"Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
+"löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:937
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:981
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:949
-msgid "Cannot delete non-existing template `{templateName}'"
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:993
+msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
-"Die Vorlage {templateName} existiert nicht und kann deshalb auch nicht "
+"Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:959
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1003
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -7988,67 +7990,63 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:961
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1005
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:998
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1042
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:999
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1043
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1124
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1168
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1125
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1222
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1169
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1266
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1205
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1249
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1221
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1265
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1265
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:152
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:170
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1309
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:164
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:182
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1266
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1310
 msgid "Accept"
 msgstr "Übernehmen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1269
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1313
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1272
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1316
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1432
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1476
 msgid "Email will be sent with an open recipients list!"
 msgstr "Email wird mit einer offenen (Cc:) Adressaten-Liste gesendet!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1434
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1478
 msgid "Email will be sent with a hidden recipients list!"
 msgstr "Email wird mit versteckter (Bcc:) Adressaten-Liste gesendet!"
-
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/email.js:1436
-msgid "Notice"
-msgstr "Notiz"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/events.js:39
 msgid "Do you really want to delete this event?"
@@ -8323,7 +8321,7 @@ msgstr "Web-Seite mit Id {ArticleId} löschen?"
 msgid "No values match"
 msgstr "Kein Wert passt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/sepa-bulk-transactions.js:77
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/sepa-bulk-transactions.js:75
 msgid "Unable to download debit notes."
 msgstr "Kann die Lastschriften nicht laden."
 
@@ -8753,7 +8751,7 @@ msgid "Select Em@il Recipients"
 msgstr "Em@il Adressaten"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/form.php:34
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:127
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:139
 msgid "Recipients"
 msgstr "Adressaten"
 
@@ -8795,90 +8793,90 @@ msgstr "Betreff: %s<br/>Erzeugt von %s, %s<br/>Geändert von %s, %s"
 msgid "Name: %s<br/>Created by %s on %s<br/>Updated by %s on %s"
 msgstr "Name: %s<br/>Erzeugt von %s, %s<br/>Geändert von %s, %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:94
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:95
 msgid "New Template Name"
 msgstr "Neue Vorlage"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:117
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:118
 msgid "Save Message"
 msgstr "Em@il speichern"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:122
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:134
 msgid "Delete Message"
 msgstr "Em@il löschen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:130
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:133
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:142
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:145
 msgid "No recipients selected."
 msgstr "Keine Adressaten ausgewählt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:138
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:150
 msgid "Carbon Copy"
 msgstr "Durchschlag"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:156
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:168
 msgid "Blind CC"
 msgstr "Blind-Kopie"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:190
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:202
 msgid "Message-Body"
 msgstr "Nachricht"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:194
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:206
 msgid "Sender-Name"
 msgstr "Absender-Name"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:203
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:215
 msgid "Sender-Email"
 msgstr "Absender-Email"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:204
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:216
 msgid "Tied to"
 msgstr "Vorgegeben:"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:207
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:219
 msgid "Add Attachment"
 msgstr "Anhang hinzufügen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:212
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:215
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:224
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:227
 msgid "Upload new File"
 msgstr "Datei hochladen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:220
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:223
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:232
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:235
 msgid "Select from Owncloud"
 msgstr "Datei aus der `Cloud'"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:229
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:241
 msgid "Project Events"
 msgstr "Projekt-Termine"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:232
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:244
 msgid "Select Events"
 msgstr "Termine auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:239
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:251
 msgid "Attached Events"
 msgstr "Angehängte Termine"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:253
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:265
 msgid "Delete Event Attachments"
 msgstr "Termin Anhänge auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:259
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:271
 msgid "Attached Files"
 msgstr "Angehängte Dateien"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:273
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:285
 msgid "Delete All Attachments"
 msgstr "Alle Anhänge löschen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:282
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:294
 msgid "Send Em@il"
 msgstr "Em@il verschicken"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:288
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.composer.php:300
 msgid "Message Preview"
 msgstr "Email-Vorschau"
 
@@ -10898,7 +10896,7 @@ msgid "Select orchestra seal"
 msgstr "Orchester-Stempel auswählen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1948
-#, fuzzy, php-format
+#, php-format
 msgid "debitnote"
 msgstr "Lastschrift"
 
@@ -10913,6 +10911,101 @@ msgstr "LastschriftVersicherung"
 #, php-format
 msgid "Default"
 msgstr "Voreinstellung"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "ADDRESS"
+msgstr "ADRESSE"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_ACCOUNT"
+msgstr "BANK_KONTO"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
+#, php-format
+msgid "BANK_ACCOUNT_BIC"
+msgstr "BANK_KONTO_BIC"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
+#, php-format
+msgid "BANK_ACCOUNT_IBAN"
+msgstr "BANK_KONTO_IBAN"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
+#, php-format
+msgid "BANK_ACCOUNT_OWNER"
+msgstr "BANK_KONTO_INHABER"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_AMOUNT"
+msgstr "BANK_AUFTRAG_BETRAG"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_DUE_DATE"
+msgstr "BANK_AUFTRAG_FÄLLIGKEIT_DATUM"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_DUE_DAYS"
+msgstr "BANK_AUFTRAG_FÄLLIGKEIT_TAGE"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_PURPOSE"
+msgstr "BANK_AUFTRAG_ZWECK"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_SUBMIT_DATE"
+msgstr "BANK_AUFTRAG_EINREICHUNG_DATUM"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_SUBMIT_DAYS"
+msgstr "BANK_AUFTRAG_EINREICHUNG_TAGE"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, fuzzy, php-format
+msgid "CREDITOR_IDENTIFIER"
+msgstr "GLÄUBIGER_IDENTIFIKATION"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "DATE"
+msgstr "DATUM"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "DATETIME"
+msgstr "DATUMZEIT"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:590
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:621
+#, php-format
+msgid "GLOBAL"
+msgstr "GLOBAL"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:590
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:621
+#, php-format
+msgid "MEMBER"
+msgstr "MITGLIED"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "ORGANIZER"
+msgstr "ORGANISATOREN"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
+msgid "TIME"
+msgstr "ZEIT"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
@@ -11006,23 +11099,8 @@ msgstr "PLZ"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
-msgid "SEPA_MANDATE_ACCOUNT_OWNER"
-msgstr "SEPAMANDAT_KONTOINHABER"
-
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
-#, php-format
-msgid "SEPA_MANDATE_BIC"
-msgstr "SEPAMANDAT_BIC"
-
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
-#, php-format
-msgid "SEPA_MANDATE_IBAN"
-msgstr "SEPAMANDAT_IBAN"
-
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
-#, php-format
 msgid "SEPA_MANDATE_REFERENCE"
-msgstr "SEPAMANDAT_REFERENZ"
+msgstr "SEPA_MANDAT_REFERENZ"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
@@ -11048,6 +11126,21 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#, php-format
+#~ msgid "SEPA_MANDATE_ACCOUNT_OWNER"
+#~ msgstr "SEPAMANDAT_KONTOINHABER"
+
+#, php-format
+#~ msgid "SEPA_MANDATE_BIC"
+#~ msgstr "SEPAMANDAT_BIC"
+
+#, php-format
+#~ msgid "SEPA_MANDATE_IBAN"
+#~ msgstr "SEPAMANDAT_IBAN"
+
+#~ msgid "Notice"
+#~ msgstr "Notiz"
 
 #, fuzzy, php-format
 #~| msgid "field generator"

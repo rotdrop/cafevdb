@@ -90,17 +90,17 @@ msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
-msgid "SEPA_MANDATE_ACCOUNT_OWNER"
+msgid "BANK_ACCOUNT_OWNER"
 msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
-msgid "SEPA_MANDATE_BIC"
+msgid "BANK_ACCOUNT_BIC"
 msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
-msgid "SEPA_MANDATE_IBAN"
+msgid "BANK_ACCOUNT_IBAN"
 msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
