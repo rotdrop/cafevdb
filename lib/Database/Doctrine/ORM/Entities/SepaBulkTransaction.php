@@ -190,7 +190,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set submitDate.
    *
-   * @param string|\DateTimeInterface $submitDate
+   * @param string|int|\DateTimeInterface $submitDate
    *
    * @return SepaBulkTransaction
    */
@@ -214,7 +214,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set dueDate.
    *
-   * @param \DateTime $dueDate
+   * @param string|int|\DateTimeInterface $dueDate
    *
    * @return SepaBulkTransaction
    */
