@@ -122,6 +122,9 @@ trait EntityManagerTrait {
    */
   protected function remove($entity, bool $flush = false)
   {
+    if (filter_var($entity, FILTER_VALIDATE_INT, ['min_range' => 1])) {
+      $entity = [ 'id' => $entity ];
+    }
     if (is_array($entity)) {
       $key = $entity;
       $entity = $this->entityManager->getReference($this->entityClassName, $key);
@@ -129,7 +132,6 @@ trait EntityManagerTrait {
     }
     $this->entityManager->remove($entity);
 
-    // This seems to be necessary, why?
     if ($flush) {
       $this->flush();
     }
