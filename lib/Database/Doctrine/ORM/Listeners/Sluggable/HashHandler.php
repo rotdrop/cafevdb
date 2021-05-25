@@ -27,6 +27,7 @@ use Gedmo\Sluggable\Handler\SlugHandlerInterface;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
 use Gedmo\Sluggable\SluggableListener;
+use Gedmo\Exception\InvalidMappingException;
 
 /**
  * Gedmo slug handler which simply computes a hash as slug. Currently
@@ -35,6 +36,8 @@ use Gedmo\Sluggable\SluggableListener;
 class HashHandler implements SlugHandlerInterface
 {
   const HASH_LENGTH = 32;
+  const OPTION_ALGORIGHM = 'algorithm';
+
   /**
    * @var string
    */
@@ -66,9 +69,13 @@ class HashHandler implements SlugHandlerInterface
    *
    * @return void
    */
-  public function onChangeDecision(SluggableAdapter $ea, array &$config, $object, &$slug, &$needToChangeSlug)
+  public function onChangeDecision(SluggableAdapter $ea, array &$config, $object, &$slug, &$needToChangeSlug, $otherSlugs)
   {
-    return; // nothing
+    $options = $config['handlers'][get_called_class()];
+    $algorithm = !empty($options[self::OPTION_ALGORIGHM])
+      ? $options[self::OPTION_ALGORIGHM]
+      : $this->hashAlgorithm;
+    $slug = substr(hash($algorithm, $otherSlugs['new']), 0, self::HASH_LENGTH);
   }
 
   /**
@@ -81,7 +88,6 @@ class HashHandler implements SlugHandlerInterface
    */
   public function postSlugBuild(SluggableAdapter $ea, array &$config, $object, &$slug)
   {
-    $slug = substr(hash($this->hashAlgorithm, $slug), 0, self::HASH_LENGTH);
   }
 
   /**

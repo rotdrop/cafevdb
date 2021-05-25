@@ -71,7 +71,7 @@ class LoginNameSlugHandler implements SlugHandlerInterface
    *
    * @return void
    */
-  public function onChangeDecision(SluggableAdapter $ea, array &$config, $object, &$slug, &$needToChangeSlug)
+  public function onChangeDecision(SluggableAdapter $ea, array &$config, $object, &$slug, &$needToChangeSlug, $otherSlugs)
   {
     // nothing
   }
