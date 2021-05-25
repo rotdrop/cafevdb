@@ -23,6 +23,8 @@ class ProgressStatus extends Entity
     $this->addType('target', Types::BIGINT);
     $this->addType('data', Types::STRING);
     $this->addType('lastModified', Types::BIGINT);
+    $this->lastModified = time();
+    $this->markFieldUpdated('lastModified');
   }
 
   public function __call($methodName, $args) {

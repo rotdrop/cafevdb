@@ -75,13 +75,10 @@ class ProgressStatusController extends Controller {
       $progress = $this->progressStatusService->get($id);
     } catch (\Throwable $t) {
       $this->logger->logException($t);
-      return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+      return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
     }
     if (empty($progress)) {
-      return self::grumble($this->l->t('Unable to find status of job `%s\'', [ $id ]));
-    }
-    if ($progress->getUserId() != $this->userId) {
-      return self::grumble($this->l->t('Permission denied').$progress->getUserId().'/'.$this->userId, Http::STATUS_FORBIDDEN);
+      return self::grumble($this->l->t('Unable to find status of job "%s"', [ $id ]));
     }
     return self::progressResponse($progress);
   }
@@ -102,7 +99,7 @@ class ProgressStatusController extends Controller {
           return self::progressResponse($progress);
         } catch (\Throwable $t) {
           $this->logger->logException($t);
-          return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
         break;
       case 'update':
@@ -110,7 +107,7 @@ class ProgressStatusController extends Controller {
           $progress = $this->progressStatusService->get($this->request['id']);
         } catch (\Throwable $t) {
           $this->logger->logException($t);
-          return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
         try {
           foreach ([ 'current', 'target', 'data' ] as $key) {
@@ -120,7 +117,7 @@ class ProgressStatusController extends Controller {
           return self::progressResponse($progress);
         } catch (\Throwable $t) {
           $this->logger->logException($t);
-          return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
         break;
       case 'test':
@@ -137,7 +134,7 @@ class ProgressStatusController extends Controller {
     }
   }
 
-  static private function progressResponse(ProgressStatus $progress)
+  static private function progressResponse(IProgressStatus $progress)
   {
     return self::dataResponse([
       'id' => $progress->getId(),

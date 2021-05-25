@@ -29,6 +29,11 @@ namespace OCA\CAFEVDB\Common;
 interface IProgressStatus
 {
   /**
+   * Bind to the given storage object.
+   */
+  public function bind($id);
+
+  /**
    * Obtain a unique but opaque identifier (e.g. the id column in a
    * database up to a serialized representation).
    */

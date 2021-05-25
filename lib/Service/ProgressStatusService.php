@@ -27,51 +27,58 @@ use OCP\IUser;
 use OCP\IDBConnection;
 use OCP\ILogger;
 use OCP\IL10N;
+use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Common\IProgressStatus;
-use OCA\CAFEVDB\Database\Cloud\DatabaseProgressStatus as ProgressStatus;
+use OCA\CAFEVDB\Common\DatabaseProgressStatus;
+use OCA\CAFEVDB\Common\PlainFileProgressStatus;
 
 class ProgressStatusService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  /** @var IDBConnection */
-  private $db;
+  //static private $progressStatusImplementation = DatabaseProgressStatus::class;
+  static private $progressStatusImplementation = PlainFileProgressStatus::class;
 
   /** @var string */
   private $appName;
 
+  /** @var IAppContainer */
+  private $appContainer;
+
   public function __construct(
-    IDBConnection $db
-    , $appName
+    $appName
+    , IAppContainer $appContainer
     , ILogger $logger
     , IL10N $l10n
   ) {
-    $this->db = $db;
     $this->appName = $appName;
+    $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
   }
 
   /**
-   * @return ProgressStatus
+   * @return IProgressStatus
    */
   public function create($start, $stop, $data = null, $id = null):IProgressStatus
   {
-    $progressStatus = new ProgressStatus($this->db, $this->appName, $id);
-
+    $progressStatus = $this->appContainer->get(self::$progressStatusImplementation);
+    $progressStatus->bind($id);
     $progressStatus->update($start, $stop, $data);
+
     return $progressStatus;
   }
 
   /**
-   * @param int id
+   * @param mixed id
    *
-   * @return ProgressStatus
+   * @return IProgressStatus
    */
-  public function get(int $id):IProgressStatus
+  public function get($id):IProgressStatus
   {
-    $progressStatus = new ProgressStatus($this->db, $this->appName, $id);
+    $progressStatus = $this->appContainer->get(self::$progressStatusImplementation);
+    $progressStatus->bind($id);
     return $progressStatus;
   }
 
