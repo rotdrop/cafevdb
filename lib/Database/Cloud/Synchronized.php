@@ -58,7 +58,7 @@ abstract class Synchronized extends Db\QBMapper
     if ($this->entity->getId() !== null) {
       try {
         $this->find($this->entity->getId()); // will throw if not found
-        $this->entity = $this->update($this->entity);
+        $this->entity = parent::update($this->entity);
       } catch (DoesNotExistException $e) {
         $this->entity = $this->insert($this->entity);
       }
@@ -90,7 +90,7 @@ abstract class Synchronized extends Db\QBMapper
         $this->entity->$method($value);
       }
       if ($this->attached) {
-        $this->entity = $this->update($this->entity);
+        $this->entity = parent::update($this->entity);
       }
     } else {
       $this->entity->resetUpdatedFields();
@@ -103,7 +103,7 @@ abstract class Synchronized extends Db\QBMapper
       try {
         $this->entity->$methodName($args);
         if ($this->attached) {
-          $this->entity = $this->update($this->entity);
+          $this->entity = parent::update($this->entity);
         }
       } catch (\Throwable $t) {
         throw $t;

@@ -893,18 +893,15 @@ Störung.';
 
       // Provide some progress feed-back to amuse the user
       $progressStatus = $this->progressStatusService->get($this->progressToken);
-      $progressStatus->merge([
-        'current' => 0,
-        'data' => json_encode([
-          'proto' => 'smtp',
-          'total' =>  $this->diagnostics['TotalPayload'],
-          'active' => $this->diagnostics['TotalCount'],
-        ]),
+      $progressStatus->update(0, null, [
+        'proto' => 'smtp',
+        'total' =>  $this->diagnostics['TotalPayload'],
+        'active' => $this->diagnostics['TotalCount'],
       ]);
       $phpMailer->progressCallback = function($current, $total) use ($progressStatus) {
-        $oldCurrent = $progressStatus->entity()->getCurrent();
+        $oldCurrent = $progressStatus->getCurrent();
         if ($current - $oldCurrent >= self::PROGRESS_CHUNK_SIZE) {
-          $progressStatus->merge([ 'current' => $current, 'target' => $total, ]);
+          $progressStatus->update($current, $total);
         }
       };
 
@@ -1132,13 +1129,10 @@ Störung.';
     $imapSecurity = $this->getConfigValue('imapsecurity');
 
     $progressStatus = $this->progressStatusService->get($this->progressToken);
-    $progressStatus->merge([
-      'current' => 0,
-      'data' => json_encode([
-        'proto' => 'imap',
-        'total' =>  $this->diagnostics['TotalPayload'],
-        'active' => $this->diagnostics['TotalCount'],
-      ]),
+    $progressStatus->update(0, null, [
+      'proto' => 'imap',
+      'total' =>  $this->diagnostics['TotalPayload'],
+      'active' => $this->diagnostics['TotalCount'],
     ]);
     $imap = new \Net_IMAP($imapHost,
                           $imapPort,
@@ -1147,7 +1141,7 @@ Störung.';
                             if ($total < 128) {
                               return; // ignore non-data transfers
                             }
-                            $progressStatus->merge([ 'current' => $current, 'target' => $total, ]);
+                            $progressStatus->update($current, $total);
                           },
                           self::PROGRESS_CHUNK_SIZE); // 4 kb chunk-size
 

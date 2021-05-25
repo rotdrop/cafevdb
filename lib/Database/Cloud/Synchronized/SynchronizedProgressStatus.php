@@ -10,18 +10,7 @@ use OCA\CAFEVDB\Database\Cloud\Synchronized;
 
 class SynchronizedProgressStatus extends Synchronized
 {
-  /** @var string */
-  private $userId;
-
-  public function __construct(IDBConnection $db, $appName, $userId, $id = null) {
-    $this->userId = $userId;
+  public function __construct(IDBConnection $db, $appName, $id = null) {
     parent::__construct($db, $appName, $id);
   }
-
-  public function insert(Entity $entity): Entity
-  {
-    $entity->setUserId($this->userId); // will also update the timestamp
-    return parent::insert($entity);
-  }
-
 }

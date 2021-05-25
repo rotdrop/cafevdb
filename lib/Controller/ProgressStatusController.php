@@ -33,7 +33,7 @@ use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ProgressStatusService;
-use OCA\CAFEVDB\Database\Cloud\Synchronized\SynchronizedProgressStatus as ProgressStatus;
+use OCA\CAFEVDB\Common\IProgressStatus;
 
 class ProgressStatusController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -113,13 +113,10 @@ class ProgressStatusController extends Controller {
           return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
         try {
-          $data = [];
-          foreach ([ 'curren', 'target', 'data' ] as $key) {
-            if (isset($this->request[$key])) {
-              $data[$key] = $this->request[$key];
-            }
+          foreach ([ 'current', 'target', 'data' ] as $key) {
+            ${$key} = $this->request[$key]?:null;
           }
-          $progress->merge($data);
+          $progress->update($current, $target, $data);
           return self::progressResponse($progress);
         } catch (\Throwable $t) {
           $this->logger->logException($t);
@@ -130,7 +127,7 @@ class ProgressStatusController extends Controller {
         $target = $this->request['target']?:100;
         $progress = $this->progressStatusService->create(0, $target, $this->request['data'], $this->request['id']);
         for ($i = 0; $i <= $progress->getTarget(); $i++) {
-          $progress->merge(['current' => $i]);
+          $progress->update($i);
           usleep(500000);
         }
         return self::dataResponse([]);
@@ -142,15 +139,11 @@ class ProgressStatusController extends Controller {
 
   static private function progressResponse(ProgressStatus $progress)
   {
-    $data = $progress->getData();
-    if (($jsonData = json_decode($data, true)) !== null) {
-      $data = $jsonData;
-    }
     return self::dataResponse([
       'id' => $progress->getId(),
       'current' => $progress->getCurrent(),
       'target' => $progress->getTarget(),
-      'data' => $jsonData,
+      'data' => $progress->getData(),
     ]);
   }
 

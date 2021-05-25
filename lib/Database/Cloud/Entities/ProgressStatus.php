@@ -19,7 +19,6 @@ class ProgressStatus extends Entity
 
   public function __construct() {
     // $this->addType('id', 'int'); this is default
-    $this->addType('userId', Types::STRING);
     $this->addType('current', Types::BIGINT);
     $this->addType('target', Types::BIGINT);
     $this->addType('data', Types::STRING);
