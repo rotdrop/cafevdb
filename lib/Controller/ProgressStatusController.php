@@ -78,7 +78,7 @@ class ProgressStatusController extends Controller {
       return self::grumble($this->l->t('Exception `%s\'', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
     }
     if (empty($progress)) {
-      return self::grumble($this->l->t('Unable to find status of job `%s\'', [ $uuid ]));
+      return self::grumble($this->l->t('Unable to find status of job `%s\'', [ $id ]));
     }
     if ($progress->getUserId() != $this->userId) {
       return self::grumble($this->l->t('Permission denied').$progress->getUserId().'/'.$this->userId, Http::STATUS_FORBIDDEN);
@@ -142,11 +142,15 @@ class ProgressStatusController extends Controller {
 
   static private function progressResponse(ProgressStatus $progress)
   {
+    $data = $progress->getData();
+    if (($jsonData = json_decode($data, true)) !== null) {
+      $data = $jsonData;
+    }
     return self::dataResponse([
       'id' => $progress->getId(),
       'current' => $progress->getCurrent(),
       'target' => $progress->getTarget(),
-      'data' => $progress->getData(),
+      'data' => $jsonData,
     ]);
   }
 
