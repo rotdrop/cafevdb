@@ -298,4 +298,28 @@ class ProjectPayment implements \ArrayAccess
   {
     return $this->receivableOption;
   }
+
+  /**
+   * Set supportingDocument.
+   *
+   * @param null|EncryptedFile $supportingDocument
+   *
+   * @return ProjectPayment
+   */
+  public function setSupportingDocument(?EncryptedFile $supportingDocument):ProjectPayment
+  {
+    $this->supportingDocument = $supportingDocument;
+
+    return $this;
+  }
+
+  /**
+   * Get supportingDocument.
+   *
+   * @return null|EncryptedFile
+   */
+  public function getSupportingDocument():?EncryptedFile
+  {
+    return $this->supportingDocument;
+  }
 }
