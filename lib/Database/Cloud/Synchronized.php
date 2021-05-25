@@ -44,6 +44,11 @@ abstract class Synchronized extends Db\QBMapper
     return $this->attached;
   }
 
+  public function entity()
+  {
+    return $this->entity;
+  }
+
   /**
    * Obtain object from database if it is "clean", if it is dirty or
    * new (no id) then create or update the database entry.
