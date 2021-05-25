@@ -453,12 +453,14 @@ if (!empty($diagnostics['Duplicates'])) {
       // This is very likely just the Cc: to the shared email account.
       continue;
     }
-    $dates = $duplicate['dates'];
+    $dates = implode('; ', array_map(function($date) use ($dateTimeFormatter) {
+      return $dateTimeFormatter->formatDateTime($date, 'medium');
+    }, $duplicate['dates']));
     echo '
   <div class="error contents duplicates>
     <span class="error heading">
     '.$l->t('Message already sent at time %s to the following recipient(s):',
-            array($dates)).'
+            $dates).'
     </span>
     <ul>';
     foreach($duplicate['recipients'] as $address) {
@@ -472,11 +474,9 @@ if (!empty($diagnostics['Duplicates'])) {
   $errorBody = '';
   foreach ($duplicates as $duplicate) {
     $errorBody .= "\n".
-                  "Date of Duplicate:\n".$duplicate['dates']."\n".
-                  "Failed Recipients:\n".implode(', ', $duplicate['recipients'])."\n".
-                  "All Recipients MD5:\n".$duplicate['bulkMD5']."\n".
-                  "All Recipients:\n".$duplicate['bulkRecipients']."\n".
-                  "Text-MD5:\n".$duplicate['textMD5']."\n".
+                  "Date of Duplicate:\n".$dates."\n".
+                  "Author of Duplicate:\n".implode('; ', $duplicate['authors'])."\n".
+                  "Recipients:\n".implode('; ', $duplicate['recipients'])."\n".
                   "Text:\n".$duplicate['text'];
   }
   $mailto = $cloudAdminContact['email'].
@@ -491,7 +491,7 @@ if (!empty($diagnostics['Duplicates'])) {
           'please add a self-explaining subject. Otherwise the error is probably '.
           'really on your side. Mass-emails should never be submitted twice. If in doubt '.
           'contact %s. Please add a detailed description.',
-          array($mailto));
+          [ $mailto ]);
   echo '
   <div class="error contents explanations">
     <div class="error heading">'.$l->t('Explanations').'</div>

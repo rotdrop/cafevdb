@@ -53,6 +53,8 @@ class Composer
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
 
+  const PROGRESS_CHUNK_SIZE = 4096;
+
   const POST_TAG = 'emailComposer';
 
   const ATTACHMENT_ORIGIN_CLOUD = 'cloud';
@@ -245,6 +247,8 @@ Störung.';
     $this->setDefaultTemplate();
 
     $this->draftId = $this->cgiValue('messageDraftId', 0);
+
+    $this->progressToken = $this->cgiValue('progressToken');
 
     // Set to false on error
     $this->executionStatus = true;
@@ -754,8 +758,30 @@ Störung.';
         $musician = $recipient['dbdata'];
         $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
+
+        $databaseAttachments = [];
+        if (!empty($this->bulkTransaction)) {
+          // find payments and potential attachments
+
+          /** @var Entities\CompositePayment $compositePayment */
+          $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+          if (!empty($compositePayment)) {
+            /** @var Entities\ProjectPayment $projectPayment */
+            foreach ($compositePayment->getProjectPayments() as $projectPayment) {
+              $supportingDocument = $projectPayment->getSupportingDocument();
+              if (!empty($supportingDocument)) {
+                $databaseAttachments[] = $supportingDocument;
+              } else {
+                $supportingDocument = $projectPayment->getReceivable()->getSupportingDocument();
+                if (!empty($supportingDocument)) {
+                  $databaseAttachments[] = $supportingDocument;
+                }
+              }
+            }
+          }
+        }
+        $msg = $this->composeAndSend($strMessage, [ $recipient ], $databaseAttachments, false);
         ++$this->diagnostics['TotalCount'];
-        $msg = $this->composeAndSend($strMessage, [ $recipient ], false);
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
           // Don't remember the individual emails, but for
@@ -777,7 +803,7 @@ Störung.';
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
       ++$this->diagnostics['TotalCount'];
-      $mimeMsg = $this->composeAndSend($message, [], true);
+      $mimeMsg = $this->composeAndSend($messageTemplate, [], [], true);
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
         $this->recordMessageDiagnostics($mimeMsg['message']);
@@ -787,7 +813,7 @@ Störung.';
     } else {
       $this->diagnostics['TotalPayload'] = 1;
       ++$this->diagnostics['TotalCount']; // this is ONE then ...
-      $mimeMsg = $this->composeAndSend($message, $this->recipients);
+      $mimeMsg = $this->composeAndSend($messageTemplate, $this->recipients);
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
         $this->recordMessageDiagnostics($mimeMsg['message']);
@@ -827,22 +853,19 @@ Störung.';
    * message is not sent out. A duplicate is something with the same
    * message text and the same recipient list.
    *
-   * @param $strMessage The message to send.
+   * @param string $strMessage The message to send.
    *
-   * @param $EMails The recipient list
+   * @param array $EMails The recipient list
    *
-   * @param $addCC If @c false, then additional CC and BCC recipients will
+   * @param array $databaseAttachements
+   *
+   * @param bool $addCC If @c false, then additional CC and BCC recipients will
    *                   not be added.
-   *
-   * @param $allowDuplicates Whether n ot to check for
-   * duplicates. This is currently only set to true when
-   * sending a copy of a form-email with per-recipient substitutions
-   * to the orchestra account.
    *
    * @return string The sent Mime-message which then may be stored in the
    * Sent-Folder on the imap server (for example).
    */
-  private function composeAndSend($strMessage, $EMails, $addCC = true, $allowDuplicates = false)
+  private function composeAndSend($strMessage, $EMails, $databaseAttachments = [], $addCC = true)
   {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -850,7 +873,7 @@ Störung.';
     $singleAddress = count($EMails) == 1;
 
     // Construct an array for the data-base log
-    $logMessage = new \stdClass;
+    $logMessage = new SentEmailDTO;
     $logMessage->recipients = $EMails;
     $logMessage->message = $strMessage;
 
@@ -870,20 +893,19 @@ Störung.';
 
       // Provide some progress feed-back to amuse the user
       $progressStatus = $this->progressStatusService->get($this->progressToken);
-      $diagnostics = $this->diagnostics;
-      $phpMailer->ProgressCallback = function($currentLine, $totalLines) use ($progressStatus, $diagnostics) {
-        $data = [
-          'current' => $currentLine,
-          'target' => $totalLines,
-        ];
-        if ($currentLine == 0) {
-          $data['data'] =[
-            'proto' => 'smtp',
-            'total' =>  $diagnostics['TotalPayload'],
-            'active' => $diagnostics['TotalCount'],
-          ];
+      $progressStatus->merge([
+        'current' => 0,
+        'data' => json_encode([
+          'proto' => 'smtp',
+          'total' =>  $this->diagnostics['TotalPayload'],
+          'active' => $this->diagnostics['TotalCount'],
+        ]),
+      ]);
+      $phpMailer->progressCallback = function($current, $total) use ($progressStatus) {
+        $oldCurrent = $progressStatus->entity()->getCurrent();
+        if ($current - $oldCurrent >= self::PROGRESS_CHUNK_SIZE) {
+          $progressStatus->merge([ 'current' => $current, 'target' => $total, ]);
         }
-        $progressStatus->merge($data);
       };
 
       $phpMailer->Host = $this->getConfigValue('smtpserver');
@@ -930,6 +952,7 @@ Störung.';
           }
         }
       } else {
+        $this->logInfo('CONSTRUCTION MODE');
         // Construction mode: per force only send to the developer
         $phpMailer->AddAddress($this->catchAllEmail, $this->catchAllName);
       }
@@ -976,7 +999,6 @@ Störung.';
 
       // Add all registered attachments.
       $attachments = $this->fileAttachments();
-      $logMessage->fileAttach = $attachments;
       foreach ($attachments as $attachment) {
         if ($attachment['status'] != 'selected') {
           continue;
@@ -996,8 +1018,7 @@ Störung.';
       // but it does not hurt to keep it here. This way we are just
       // ready with adding data to the message inside the try-block.
       $events = $this->eventAttachments();
-      $logMessage->events = $events;
-      if ($this->projectId >= 0 && !empty($events)) {
+      if ($this->projectId > 0 && !empty($events)) {
         // Construct the calendar
         $calendar = $this->eventsService->exportEvents($events, $this->projectName);
 
@@ -1007,6 +1028,16 @@ Störung.';
                                            $this->projectName.'.ics',
                                            'quoted-printable',
                                            'text/calendar');
+      }
+
+      // add database-attachment
+      /** @var Entities\EncryptedFile $encryptedFile */
+      foreach ($databaseAttachments as $encryptedFile) {
+        $phpMailer->addStringAttachment(
+          $encryptedFile->getFileData()->getData(),
+          $encryptedFile->getFileName(),
+          'base64',
+          $encryptedFile->getMimeType());
       }
 
     } catch (\Exception $exception) {
@@ -1022,8 +1053,9 @@ Störung.';
       return false;
     }
 
-    $logQuery = $this->messageLogQuery($logMessage);
-    if (!$logQuery) {
+    /** @var Entities\SentEmail $sentEmail */
+    $sentEmail = $this->sentEmail($logMessage);
+    if (!$sentEmail) {
       return false;
     }
 
@@ -1036,17 +1068,15 @@ Störung.';
         $this->diagnostics['MailerErrors'][] = $phpMailer->ErrorInfo;
         return false;
       } else {
-        // success, log the message to our data-base
-        $handle = $this->dataBaseConnect();
-        mySQL::query($logQuery, $handle);
+        // catch errors?
+        $sentEmail->setMessageId($phpMailer->getLastMessageID());
+        $this->persist($sentEmail);
+        $this->flush();
       }
-    } catch (\Exception $exception) {
+    } catch (\Throwable $t) {
       $this->executionStatus = false;
       $this->diagnostics['MailerExceptions'][] =
-                                               $exception->getFile().
-                                               '('.$exception->getLine().
-                                               '): '.
-                                               $exception->getMessage();
+        $t->getFile() . '(' . $t->getLine() . '): ' . $t->getMessage();
 
       return false;
     }
@@ -1097,33 +1127,29 @@ Störung.';
     // PEAR IMAP works without the c-client library
     ini_set('error_reporting', ini_get('error_reporting') & ~E_STRICT);
 
-    $imaphost   = $this->getConfigValue('imapserver');
-    $imapport   = $this->getConfigValue('imapport');
-    $imapsecure = $this->getConfigValue('imapsecure');
+    $imapHost   = $this->getConfigValue('imapserver');
+    $imapPort   = $this->getConfigValue('imapport');
+    $imapSecurity = $this->getConfigValue('imapsecurity');
 
     $progressStatus = $this->progressStatusService->get($this->progressToken);
-    $diagnostics = $this->diagnostics;
-    $imap = new \Net_IMAP($imaphost,
-                          $imapport,
-                          $imapsecure == 'starttls' ? true : false, 'UTF-8',
-                          function($pos, $total) use ($progressStatus, $diagnostics) {
+    $progressStatus->merge([
+      'current' => 0,
+      'data' => json_encode([
+        'proto' => 'imap',
+        'total' =>  $this->diagnostics['TotalPayload'],
+        'active' => $this->diagnostics['TotalCount'],
+      ]),
+    ]);
+    $imap = new \Net_IMAP($imapHost,
+                          $imapPort,
+                          $imapSecurity == 'starttls' ? true : false, 'UTF-8',
+                          function($current, $total) use ($progressStatus) {
                             if ($total < 128) {
                               return; // ignore non-data transfers
                             }
-                            $data = [
-                              'current' => $pos,
-                              'target' => $total,
-                            ];
-                            if ($pos == 0) {
-                              $data['data'] = [
-                                'proto' => 'imap',
-                                'total' =>  $diagnostics['TotalPayload'],
-                                'active' => $diagnostics['TotalCount'],
-                              ];
-                            }
-                            $progressStatus->merge($data);
+                            $progressStatus->merge([ 'current' => $current, 'target' => $total, ]);
                           },
-                          64*1024); // 64 kb chunk-size
+                          self::PROGRESS_CHUNK_SIZE); // 4 kb chunk-size
 
     $user = $this->getConfigValue('emailuser');
     $pass = $this->getConfigValue('emailpassword');
@@ -1155,103 +1181,33 @@ Störung.';
 
   /**
    * Log the sent message to the data base if it is new. Return false
-   * if this is a duplicate, return the data-base query string to be
-   * executed after successful sending of the message in cas of
-   * success.
+   * if this is a duplicate, true otherwise.
    *
    * @param $logMessage The email-message to record in the DB.
    *
-   * @param $allowDuplicates Whether n ot to check for
-   * duplicates. This is currently only set to true when
-   * sending a copy of a form-email with per-recipient substitutions
-   * to the orchestra account.
+   * @param $allowDuplicates Whether or not to check for
+   * duplicates. This is currently never set to true.
    *
    */
-  private function messageLogQuery($logMessage, $allowDuplicates = false)
+  private function sentEmail(SentEmailDTO $logMessage, $allowDuplicates = false)
   {
-    // Construct the query to store the email in the data-base
-    // log-table.
+    /** @var Entities\SentEmail $sentEmail */
+    $sentEmail = new Entities\SentEmail;
 
     // Construct one MD5 for recipients subject and html-text
-    $bulkRecipients = '';
-    foreach ($logMessage->recipients as $pairs) {
-      $bulkRecipients .= $pairs['name'].' <'.$pairs['email'].'>,';
-    }
+    $bulkRecipients = array_map(function($pair) {
+      return $pair['name'].' <'.$pair['email'].'>';
+    }, $logMessage->recipients);
 
-    $bulkRecipients = trim($bulkRecipients,',');
-    $bulkMD5 = md5($bulkRecipients);
-
-    $textforMD5 = $logMessage->subject . $logMessage->message;
-    $textMD5 = md5($textforMD5);
-
-    // compute the MD5 stuff for the attachments
-    $attachLog = [];
-    foreach ($logMessage->fileAttach as $attachment) {
-      if ($attachment['status'] != 'selected') {
-        continue;
-      }
-      if ($attachment['name'] != "") {
-        $md5val = md5_file($attachment['tmp_name']);
-        $attachLog[] = [
-          'name' => $attachment['name'],
-          'md5' => $md5val,
-        ];
-      }
-    }
-    if (!empty($logMessage->events)) {
-      sort($logMessage->events);
-      $name = 'Events-'.implode('-', $logMessage->events);
-      $md5 = md5($name);
-      $attachLog[] = [ 'name' => $name, 'md5' => $md5, ];
-    }
-
-    // Now insert the stuff into the SentEmail table
-    $handle = $this->dataBaseConnect();
-
-    // First make sure that we have enough columns to store the
-    // attachments (better: only their checksums)
-
-    foreach ($attachLog as $key => $value) {
-      $query = sprintf(
-        'ALTER TABLE `SentEmail`
-  ADD `Attachment%02d` TEXT
-  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  ADD `MD5Attachment%02d` TEXT
-  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL',
-        $key, $key);
-
-      // And execute. Just to make that all needed columns exist.
-
-      $result = mySQL::query($query, $handle, false, true);
-    }
-
-    // Now construct the real query, but do not execute it until the
-    // message has succesfully been sent.
-
-    $logQuery = "INSERT INTO `SentEmail`
-(`user`,`host`,`BulkRecipients`,`MD5BulkRecipients`,`Cc`,`Bcc`,`Subject`,`HtmlBody`,`MD5Text`";
-    $idx = 0;
-    foreach ($attachLog as $pairs) {
-      $logQuery .=
-                sprintf(",`Attachment%02d`,`MD5Attachment%02d`", $idx, $idx);
-      $idx++;
-    }
-
-    $logQuery .= ') VALUES (';
-    $logQuery .= "'".$this->user."','".$_SERVER['REMOTE_ADDR']."'";
-    $logQuery .= ",'".mySQL::escape($bulkRecipients, $handle)."'";
-    $logQuery .= ",'".mySQL::escape($bulkMD5, $handle)."'";
-    $logQuery .= ",'".mySQL::escape($logMessage->CC, $handle)."'";
-    $logQuery .= ",'".mySQL::escape($logMessage->BCC, $handle)."'";
-    $logQuery .= ",'".mySQL::escape($logMessage->subject, $handle)."'";
-    $logQuery .= ",'".mySQL::escape($logMessage->message, $handle)."'";
-    $logQuery .= ",'".mySQL::escape($textMD5, $handle)."'";
-    foreach ($attachLog as $pairs) {
-      $logQuery .=
-                ",'".mySQL::escape($pairs['name'], $handle)."'".
-                ",'".mySQL::escape($pairs['md5'], $handle)."'";
-    }
-    $logQuery .= ")";
+    $sentEmail->setBulkRecipients(implode(';', $bulkRecipients))
+              ->setCc($logMessage->CC)
+              ->setBcc($logMessage->BCC)
+              ->setSubject($logMessage->subject)
+              ->setHtmlBody($logMessage->message)
+      // cannot wait for the slug-handler here
+              ->setBulkRecipientsHash(hash('md5', $sentEmail->getBulkRecipients()))
+              ->setSubjectHash(hash('md5', $sentEmail->getSubject()))
+              ->setHtmlBodyHash(hash('md5', $sentEmail->getHtmlBody()));
 
     // Now logging is ready to execute. But first check for
     // duplicate sending attempts. This takes only the recipients,
@@ -1261,39 +1217,34 @@ Störung.';
     // enough.
 
     if ($allowDuplicates !== true) {
-      // Check for duplicates
-      $loggedQuery = "SELECT * FROM `SentEmail` WHERE";
-      $loggedQuery .= " `MD5Text` LIKE '$textMD5'";
-      $loggedQuery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
-      $result = mySQL::query($loggedQuery, $handle);
 
-      $cnt = 0;
-      $loggedDates = '';
-      if ($line = mySQL::fetch($result)) {
-        $loggedDates .= ', '.$line['Date'];
-        ++$cnt;
+      $duplicates = $this->getDatabaseRepository(Entities\SentEmail::class)->findBy([
+        'bulkRecipientsHash' => $sentEmail->getBulkRecipientsHash(),
+        'subjectHash' => $sentEmail->getSubjectHash(),
+        'htmlBodyHash' => $sentEmail->getHtmlBodyHash(),
+      ]);
+
+      $loggedDates = [];
+      $loggedUsers = [];
+      /** @var Entities\SentEmail $duplicate */
+      foreach ($duplicates as $duplicate) {
+        $loggedDates[] = $duplicate->getCreated();
+        $loggedUsers[] = $duplicate->getCreatedBy();
       }
-      $loggedDates = trim($loggedDates,', ');
 
-      if ($loggedDates != '') {
+      if (!empty($duplicates)) {
         $this->executionStatus = false;
-        $shortRecipients = [];
-        foreach($logMessage->recipients as $recipient) {
-          $shortRecipients[] = $recipient['name'].' <'.$recipient['email'].'>';
-        }
         $this->diagnostics['Duplicates'][] = [
           'dates' => $loggedDates,
-          'recipients' => $shortRecipients,
+          'authors' => $loggedUsers,
           'text' => $logMessage->message,
-          'textMD5' => $textMD5,
-          'bulkMD5' => $bulkMD5,
-          'bulkRecipients' => $bulkRecipients
+          'recipients' => $bulkRecipients
         ];
         return false;
       }
     }
 
-    return $logQuery;
+    return $sentEmail;
   }
 
   /**
@@ -1418,7 +1369,7 @@ Störung.';
       // ready with adding data to the message inside the try-block.
       $events = $this->eventAttachments();
       $logMessage->events = $events;
-      if ($this->projectId >= 0 && !empty($events)) {
+      if ($this->projectId > 0 && !empty($events)) {
         // Construct the calendar
         $calendar = $this->eventsService->exportEvents($events, $this->projectName);
 
@@ -1804,8 +1755,11 @@ Störung.';
   private function setCatchAll()
   {
     if ($this->constructionMode) {
-      $this->catchAllEmail = "foo@bar.com"; //$this->getConfigValue('emailtestaddress');
-      $this->catchAllName  = 'Bilbo Baggins';
+      $this->catchAllEmail = $this->getConfigValue('emailtestaddress');
+      $this->catchAllName  = $this->getConfigValue(
+        'emailtestname',
+        $this->getConfigValue('emailfromname')
+      );
     } else {
       $this->catchAllEmail = $this->getConfigValue('emailfromaddress');
       $this->catchAllName  = $this->getConfigValue('emailfromname');
@@ -1824,6 +1778,9 @@ Störung.';
           $this->substitutions[$nameSpace][$dateString],
           [ $dateString, 'medium' ],
           $data);
+        if (empty($dateString)) {
+          return $arg[0];
+        }
       }
 
       $stamp = strtotime($dateString);
@@ -1957,7 +1914,12 @@ Störung.';
 
     $executiveBoardNames = $this
       ->getDatabaseRepository(Entities\ProjectParticipant::class)
-      ->fetchParticipantNames($executiveBoardId, [ 'nickName' => 'ASC' ]);
+      ->fetchParticipantNames($executiveBoardId, [
+        'nickName' => 'ASC',
+        'firstName' => 'ASC',
+        'displayName' => 'ASC',
+        'surName' => 'ASC',
+      ]);
 
     $executiveBoardNickNames = [];
     foreach ($executiveBoardNames as $names) {
@@ -2139,9 +2101,13 @@ Störung.';
 
     if ($this->draftId > 0) {
       $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
-                    ->find($this->draftId)
-                    ->setSubject($subject)
-                    ->setData($draftData);
+                    ->find($this->draftId);
+      if (!empty($draft)) {
+        $draft->setSubject($subject)
+              ->setData($draftData);
+      } else {
+        $this->draftId = 0;
+      }
     }
     if (empty($draft)) {
       $draft = Entities\EmailDraft::create()
@@ -2200,20 +2166,27 @@ Störung.';
   public function deleteDraft()
   {
     if ($this->draftId > 0 )  {
+      // detach any attachnments for later clean-up
+      if (!$this->detachTemporaryFiles()) {
+        return false;
+      }
+
       try {
         $this->setDatabaseRepository(Entities\EmailDraft::class);
         $this->remove($this->draftId, true);
       } catch (\Throwable $t) {
-        $this->logException($t);
         $this->entityManager->reopen();
+        $this->logException($t);
+        $this->diagnostics['caption'] = $this->l->t(
+          'Deleting draft with id %d failed: %s',
+          [ $this->draftId, $t->getMessage() ]);
+        return $this->executionStatus = false;
       }
-
-      // detach any attachnments for later clean-up
-      $this->detachTemporaryFiles();
 
       // Mark as gone
       $this->draftId = -1;
     }
+    return $this->executionStatus = true;
   }
 
   // temporary file utilities
@@ -2269,15 +2242,19 @@ Störung.';
     try {
       $this->queryBuilder()
            ->update(Entities\EmailAttachment::class, 'ea')
-           ->set('ea.draft', null)
+           ->set('ea.draft', 'null')
            ->set('ea.user', ':user')
-           ->where($this->expr->eq('ea.draft', ':id'))
+           ->where($this->expr()->eq('ea.draft', ':id'))
            ->setParameter('user', $this->userId())
            ->setParameter('id', $this->draftId)
            ->getQuery()
            ->execute();
       $this->flush();
     } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->diagnostics['caption'] = $this->l->t(
+        'Detaching temporary file attachments from draft %d failed: %s',
+        [ $this->draftId, $t->getMessage() ]);
       return $this->executionStatus = false;
     }
     return $this->executionStatus = true;
@@ -2303,7 +2280,7 @@ Störung.';
           ->setUser($this->userId());
       }
       if ($this->draftId > 0) {
-        $attachment->setDraft($this->getReference(Entities\EmailDraft, $this->draftId));
+        $attachment->setDraft($this->getReference(Entities\EmailDraft::class, $this->draftId));
       }
       $this->merge($attachment);
     } catch (\Throwable $t) {

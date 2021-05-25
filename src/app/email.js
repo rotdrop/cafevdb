@@ -44,8 +44,12 @@ require('bootstrap4-duallistbox');
 require('emailform.scss');
 
 const Email = globalState.Email = {
+  topicUnspecific: 'general',
   active: false,
   autoSaveTimer: null,
+  autoSaveDelete(callback) {
+    callback();
+  },
 };
 
 function generateUrl(url, urlParams, urlOptions) {
@@ -57,7 +61,7 @@ function generateComposerUrl(operation, topic) {
     topic = operation.topic;
     operation = operation.operation;
   }
-  topic = topic || 'undefined';
+  topic = topic || Email.topicUnspecific;
   return generateUrl('composer/{operation}/{topic}', { operation, topic });
 }
 
@@ -201,7 +205,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   const applyRecipientsFilter = function(event, historySnapshot) {
     event.preventDefault();
 
-    historySnapshot = typeof historySnapshot !== 'undefined';
+    historySnapshot = historySnapshot !== undefined;
 
     let post = fieldset.serialize();
     if (historySnapshot) {
@@ -226,7 +230,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         if (historySnapshot) {
           // Just update the history, but nothing else
           filterHistoryInput.val(data.filterHistory);
-        } else if (typeof data.contents !== 'undefined' && data.contents.length > 0) {
+        } else if (data.contents !== undefined && data.contents.length > 0) {
           // replace the entire tab.
           $.fn.cafevTooltip.remove();
           panelHolder.html(data.contents);
@@ -267,7 +271,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
 
         if (!historySnapshot) {
           let debugText = '';
-          if (typeof data.debug !== 'undefined') {
+          if (data.debug !== undefined) {
             debugText = data.debug;
           }
           debugOutput.html('<pre>' + $('<div></div>').text(debugText).html() + '</pre>'
@@ -458,15 +462,19 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       // add the request itself as data
       post += '&' + $.param({ emailComposer: request });
     }
-    debugOutput.html('');
+
+    const noDebug = request.noDebug || false;
+    if (!noDebug) {
+      debugOutput.html('');
+    }
     $.post(url, post)
       .fail(function(xhr, textStatus, errorThrown) {
         Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
           let debugText = '';
-          if (typeof data.caption !== 'undefined') {
+          if (data.caption !== undefined) {
             debugText += '<div class="error caption">' + data.caption + '</div>';
           }
-          if (typeof data.message !== 'undefined') {
+          if (data.message !== undefined) {
             debugText += data.message;
           }
           debugOutput.html(debugText);
@@ -488,8 +496,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         case 'send':
           storedEmailsSelector.html(requestData.storedEmailOptions);
           CAFEVDB.selectMenuReset(storedEmailsSelector);
-          if (typeof data.message !== 'undefined'
-              && typeof data.caption !== 'undefined') {
+          if (data.message !== undefined && data.caption !== undefined) {
             Dialogs.alert(data.message, data.caption, undefined, true, true);
           }
           break;
@@ -498,7 +505,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           break;
         case 'update':
           switch (topic) {
-          case 'undefined':
+          case Email.topicUnspecific:
             // replace the entire tab.
             $.fn.cafevTooltip.remove();
             WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
@@ -572,7 +579,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           switch (topic) {
           case 'template': {
             const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
-            dataItem.val(-1);
+            dataItem.val('');
             currentTemplate.val(requestData.emailTemplateName);
             WysiwygEditor.updateEditor(messageText, requestData.message);
             fieldset.find('input.email-subject').val(requestData.subject);
@@ -595,7 +602,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
             // adjust the title of the dialog
             let dlgTitle = '';
-            if (requestData.projectId >= 0) {
+            if (requestData.projectId > 0) {
               dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: requestData.projectName });
             } else {
               dlgTitle = t(appName, 'Em@il Form');
@@ -649,7 +656,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           break; // delete
         default:
           postponeEnable = true;
-          console.info('BLAH', data, operation, topic);
           data.message =
             t(appName, 'Unknown request: {operation} / {topic}', { operation, topic });
           data.caption = t(appName, 'Error');
@@ -657,25 +663,27 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           break;
         } // switch (operation)
 
-        let debugText = '';
-        if (typeof data.caption !== 'undefined') {
-          debugText += '<div class="error caption">' + data.caption + '</div>';
-        }
-        if (typeof data.message !== 'undefined') {
-          debugText += data.message;
-        }
-        if (typeof data.debug !== 'undefined') {
-          debugText += '<pre>' + data.debug + '</pre>';
-        }
-        if (debugText !== '') {
-          let addOn;
-          addOn = print_r(queryData(post, true), true);
-          addOn = $('<div></div>').text(addOn).html();
-          debugText += '<pre>post = ' + addOn + '</pre>';
-          addOn = print_r(requestData, true);
-          addOn = $('<div></div>').text(addOn).html();
-          debugText += '<pre>requestData = ' + addOn + '</pre>';
-          debugOutput.html(debugText);
+        if (!noDebug) {
+          let debugText = '';
+          if (data.caption !== undefined) {
+            debugText += '<div class="error caption">' + data.caption + '</div>';
+          }
+          if (data.message !== undefined) {
+            debugText += data.message;
+          }
+          if (data.debug !== undefined) {
+            debugText += '<pre>' + data.debug + '</pre>';
+          }
+          if (debugText !== '') {
+            let addOn;
+            addOn = print_r(queryData(post, true), true);
+            addOn = $('<div></div>').text(addOn).html();
+            debugText += '<pre>post = ' + addOn + '</pre>';
+            addOn = print_r(requestData, true);
+            addOn = $('<div></div>').text(addOn).html();
+            debugText += '<pre>requestData = ' + addOn + '</pre>';
+            debugOutput.html(debugText);
+          }
         }
 
         if (!postponeEnable) {
@@ -714,9 +722,15 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           progressTitle = t(appName, 'Message delivery in progress');
         }
         progressWrapper.find('div.messagecount').html(progressTitle);
-        if (data.proto === 'smtp') {
+        if (data.proto !== 'imap') {
           progressWrapper.find('div.imap span.progressbar')
             .progressbar('option', 'value', 0);
+        } else {
+          // assume SMTP was finished, the left-over partial
+          // progress-bar from too slowly-polled messages just is a
+          // little bit disturbing.
+          progressWrapper.find('div.smtp span.progressbar')
+            .progressbar('option', 'value', 100);
         }
         progressWrapper.find('div.' + data.proto + ' span.progressbar')
           .progressbar('option', 'value', rel);
@@ -724,7 +738,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       };
 
       // submit the progress status id with the send request to the server.
-      ProgressStatus.create(0, 0)
+      ProgressStatus.create(0, 0, { proto: 'undefined', active: 0, total: -1 })
         .fail(Ajax.handleError)
         .done(function(data) {
           if (!Ajax.validateResponse(data, ['id'])) {
@@ -744,7 +758,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             open() {
               progressOpen = true;
               ProgressStatus.poll(progressToken, {
-                pollProgress,
+                update: pollProgress,
                 fail(xhr, status, errorThrown) { Ajax.handleError(xhr, status, errorThrown); },
                 interval: 500,
               });
@@ -889,12 +903,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       clearTimeout(Email.autoSaveTimer);
     }
     Email.autoSaveTimer = null;
-    console.info('ATTEMPT AUTOSAVE');
     applyComposerControls(
       null, {
         operation: 'save',
         topic: 'draft',
         submitAll: true,
+        noDebug: true,
       },
       function(lock) {
         if (!lock) {
@@ -907,6 +921,38 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       });
   };
 
+  const confirmAutoSaveDelete = function(callback) {
+    if (typeof callback !== 'function') {
+      callback = function() {};
+    }
+    const draftId = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
+    if (!draftAutoSave.prop('checked') && parseInt(draftId) > 0) {
+      Dialogs.confirm(
+        t(appName,
+          'Do you want to delete the auto-save backup copy of the current message (id = {id})?',
+          { id: draftId }),
+        t(appName, 'Delete Auto-Save Draft?'),
+        function(confirmed) {
+          if (confirmed) {
+            applyComposerControls(
+              null, {
+                operation: 'delete',
+                topic: 'draft',
+                messageDraftId: draftId,
+                noDebug: true,
+              }
+            );
+          }
+          callback();
+        },
+        true
+      );
+    } else {
+      callback();
+    }
+  };
+  Email.autoSaveDelete = confirmAutoSaveDelete;
+
   const startDraftAutoSave = function($element) {
     if (Email.autoSaveTimer) {
       clearTimeout(Email.autoSaveTimer);
@@ -915,7 +961,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     if ($element.prop('checked')) {
       // perhaps add a popup to set the auto-save timeout
       Email.autoSaveTimer = setTimeout(autoSaveHandler, autoSaveTimeout);
-      console.debug('STARTED AUTOSAVE', autoSaveTimeout);
     }
   };
 
@@ -927,13 +972,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       $.post(setPersonalUrl('email-draft-auto-save'), {
         value: $this.prop('checked') ? autoSaveSeconds : 0,
       })
-        .fail(function() {})
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, function() {
+            $this.prop('checked', !$this.prop('checked'));
+          });
+        })
         .done(function(data) {
           if (data.message) {
             const message = $this.prop('checked')
               ? t(appName, 'Draft-auto-save interval set to {seconds} seconds.', { seconds: autoSaveSeconds })
               : t(appName, 'Draft-auto-save switched off');
             Notification.show(message, { timeout: 15 });
+          }
+          if (!$this.prop('checked')) {
+            confirmAutoSaveDelete();
           }
         });
       return false;
@@ -1013,20 +1065,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             t(appName, 'Unknown Template'));
         }
       } else {
-        const draft = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
+        const draftId = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
 
-        if (draft >= 0) {
+        if (draftId > 0) {
           Dialogs.confirm(
             t(appName,
               'Do you really want to delete the backup copy of the current message (id = {id})?',
-              { id: draft }),
+              { id: draftId }),
             t(appName, 'Really Delete Draft?'),
             function(confirmed) {
               if (confirmed) {
                 applyComposerControls.call(self, event, {
                   operation: 'delete',
                   topic: 'draft',
-                  messageDraftId: draft,
+                  messageDraftId: draftId,
                 });
               }
             },
@@ -1142,7 +1194,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       const projectId = formData.find('input[name="projectId"]').val();
       const projectName = formData.find('input[name="projectName"]').val();
       let events = eventAttachmentsSelector.val();
-      console.info('EVENTS', events, eventAttachmentsSelector);
       if (!events) {
         events = [];
       }
@@ -1517,7 +1568,6 @@ function emailFormPopup(post, modal, single, afterInit) {
           DialogUtils.toBackButton(dialogHolder);
           DialogUtils.fullScreenButton(dialogHolder);
           DialogUtils.customCloseButton(dialogHolder, function(event, container) {
-            console.info('Custom Close Button');
             event.stopImmediatePropagation();
             dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
             // dialogHolder.dialog('close');
@@ -1630,14 +1680,24 @@ function emailFormPopup(post, modal, single, afterInit) {
             composerPanel);
         },
         close() {
-          $.fn.cafevTooltip.remove();
-          WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
-          dialogHolder.dialog('close');
-          dialogHolder.dialog('destroy').remove();
+          if (Email.autoSaveTimer) {
+            clearTimeout(Email.autoSaveTimer);
+            Email.autoSaveTimer = null;
+          }
+          Email.autoSaveDelete(function() {
+            Email.autoSaveDelete = function(callback) {
+              callback();
+            };
 
-          // Also close all other open dialogs.
-          CAFEVDB.modalizer(false);
-          Email.active = false;
+            $.fn.cafevTooltip.remove();
+            WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+            dialogHolder.dialog('close');
+            dialogHolder.dialog('destroy').remove();
+
+            // Also close all other open dialogs.
+            CAFEVDB.modalizer(false);
+            Email.active = false;
+          });
         },
       });
       return false;

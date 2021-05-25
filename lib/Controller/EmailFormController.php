@@ -51,6 +51,8 @@ class EmailFormController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  const TOPIC_UNSPECIFIC = 'general';
+
   /** @var ISession */
   private $session;
 
@@ -223,7 +225,7 @@ class EmailFormController extends Controller {
    *
    * @todo Close the PHP session if no longer needed.
    */
-  public function composer($operation, $topic, $projectId, $projectName, $debitNodeId)
+  public function composer($operation, $topic, $projectId, $projectName)
   {
     $caption = ''; ///< Optional status message caption.
     $messageText = ''; ///< Optional status message.
@@ -231,7 +233,7 @@ class EmailFormController extends Controller {
 
     $defaultData = [
       'operation' => 'update',
-      'topic' => 'undefined',
+      'topic' => self::TOPIC_UNSPECIFIC,
       'projectId' => $projectId,
       'projectName' => $projectName,
       'bulkTransactionId' => $bulkTransactionId,
@@ -276,6 +278,7 @@ class EmailFormController extends Controller {
             'projectId' => $projectId,
             'diagnostics' => $diagnostics,
             'cloudAdminContact' => $roles->cloudAdminContact(),
+            'dateTimeFormatter' => $this->dateTimeFormatter(),
           ],
           'blank');
         $messageText = $tmpl->render();
@@ -283,6 +286,10 @@ class EmailFormController extends Controller {
         // Update list of drafts after sending the message (draft has
         // been deleted)
         $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+      } else {
+        $requestData['errorStatus'] = $composer->errorStatus();
+        $requestData['diagnostics'] = $composer->statusDiagnostics();
+        $diagnostics = $composer->statusDiagnostics();
       }
       break;
     case 'preview':
@@ -312,7 +319,7 @@ class EmailFormController extends Controller {
       break;
     case 'update':
       switch ($topic) {
-      case 'undefined':
+      case self::TOPIC_UNSPECIFIC:
         $fileAttachments = $composer->fileAttachments();
         $eventAttachments = $composer->eventAttachments();
 
@@ -529,9 +536,13 @@ class EmailFormController extends Controller {
         $requestData['subject'] = $composer->subject();
         break;
       case 'draft':
-        $composer->deleteDraft();
-        $debugText .= $this->l->t("Deleted draft message with id %d", $requestData['messageDraftId']);
-        $requestData['messageDraftId'] = 0;
+        if ($composer->deleteDraft()) {
+          $debugText .= $this->l->t("Deleted draft message with id %d", $requestData['messageDraftId']);
+          $requestData['messageDraftId'] = 0;
+        } else {
+          $requestData['errorStatus'] = $composer->errorStatus();
+          $requestData['diagnostics'] = $composer->statusDiagnostics();
+        }
         break;
       default:
         return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
@@ -566,6 +577,7 @@ class EmailFormController extends Controller {
           'projectId' => $projectId,
           'diagnostics' => $requestData['diagnostics'],
           'cloudAdminContact' => $roles->cloudAdminContact(),
+          'dateTimeFormatter' => $this->dateTimeFormatter(),
         ],
         'blank'))->render();
       return self::grumble([
