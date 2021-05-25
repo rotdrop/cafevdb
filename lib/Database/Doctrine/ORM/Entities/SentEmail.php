@@ -68,9 +68,17 @@ class SentEmail
    * @var string
    *
    * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true, "collation"="ascii_bin"})
-   * @Gedmo\Slug(fields={"bulkRecipients"}, updatable=true, handlers={
-   *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler")
-   * })
+   * @Gedmo\Slug(
+   *   fields={"bulkRecipients"},
+   *   updatable=true,
+   *   unique=false,
+   *   handlers={
+   *     @Gedmo\SlugHandler(
+   *       class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler",
+   *       options={@Gedmo\SlugHandlerOption(name="algorithm", value="md5")}
+   *     )
+   *   }
+   * )
    */
   private $bulkRecipientsHash;
 
@@ -98,6 +106,24 @@ class SentEmail
   /**
    * @var string
    *
+   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true, "collation"="ascii_bin"})
+   * @Gedmo\Slug(
+   *   fields={"subject"},
+   *   updatable=true,
+   *   unique=false,
+   *   handlers={
+   *     @Gedmo\SlugHandler(
+   *       class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler",
+   *       options={@Gedmo\SlugHandlerOption(name="algorithm", value="md5")}
+   *     )
+   *   }
+   * )
+   */
+  private $subjectHash;
+
+  /**
+   * @var string
+   *
    * @ORM\Column(type="text", length=0, nullable=false)
    */
   private $htmlBody;
@@ -106,9 +132,17 @@ class SentEmail
    * @var string
    *
    * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true, "collation"="ascii_bin"})
-   * @Gedmo\Slug(fields={"htmlBody"}, updatable=true, handlers={
-   *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler")
-   * })
+   * @Gedmo\Slug(
+   *   fields={"htmlBody"},
+   *   updatable=true,
+   *   unique=false,
+   *   handlers={
+   *     @Gedmo\SlugHandler(
+   *       class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler",
+   *       options={@Gedmo\SlugHandlerOption(name="algorithm", value="md5")}
+   *     )
+   *   }
+   * )
    */
   private $htmlBodyHash;
 
@@ -185,27 +219,27 @@ class SentEmail
   }
 
   /**
-   * Sets md5BulkRecipients.
+   * Sets bulkRecipientsHash.
    *
-   * @param string $md5BulkRecipients
+   * @param string $bulkRecipientsHash
    *
    * @return SentEmail $this
    */
-  public function setMd5BulkRecipients(string $md5BulkRecipients):self
+  public function setBulkRecipientsHash(string $bulkRecipientsHash):self
   {
-    $this->md5BulkRecipients = $md5BulkRecipients;
+    $this->bulkRecipientsHash = $bulkRecipientsHash;
 
     return $this;
   }
 
   /**
-   * Returns md5BulkRecipients.
+   * Returns bulkRecipientsHash.
    *
    * @return string
    */
-  public function getMd5BulkRecipients():string
+  public function getBulkRecipientsHash():string
   {
-    return $this->md5BulkRecipients;
+    return $this->bulkRecipientsHash;
   }
 
   /**
@@ -233,27 +267,27 @@ class SentEmail
   }
 
   /**
-   * Sets md5HtmlBody.
+   * Sets htmlBodyHash.
    *
-   * @param string $md5HtmlBody
+   * @param string $htmlBodyHash
    *
    * @return SentEmail $this
    */
-  public function setMd5HtmlBody(string $md5HtmlBody):self
+  public function setHtmlBodyHash(string $htmlBodyHash):self
   {
-    $this->md5HtmlBody = $md5HtmlBody;
+    $this->htmlBodyHash = $htmlBodyHash;
 
     return $this;
   }
 
   /**
-   * Returns md5HtmlBody.
+   * Returns htmlBodyHash.
    *
    * @return string
    */
-  public function getMd5HtmlBody():string
+  public function getHtmlBodyHash():string
   {
-    return $this->md5HtmlBody;
+    return $this->htmlBodyHash;
   }
 
   /**
@@ -278,6 +312,30 @@ class SentEmail
   public function getSubject():string
   {
     return $this->subject;
+  }
+
+  /**
+   * Sets subjectHash.
+   *
+   * @param string $subjectHash
+   *
+   * @return SentEmail $this
+   */
+  public function setSubjectHash(string $subjectHash):self
+  {
+    $this->subjectHash = $subjectHash;
+
+    return $this;
+  }
+
+  /**
+   * Returns subjectHash.
+   *
+   * @return string
+   */
+  public function getSubjectHash():string
+  {
+    return $this->subjectHash;
   }
 
   /**
