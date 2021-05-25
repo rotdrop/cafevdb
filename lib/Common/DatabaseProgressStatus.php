@@ -40,9 +40,22 @@ class DatabaseProgressStatus implements IProgressStatus
     $this->mapper = new Mapper\ProgressStatusMapper($db, $appName);
   }
 
+  public function delete()
+  {
+    if (!empty($this->entity)) {
+      $this->mapper->delete($this->entity);
+      $this->entity = null;
+    }
+  }
+
   public function bind($id)
   {
-    if (!empty($this->entity) && $this->entity->getId() != $id) {
+    if (!empty($this->entity) && $this->entity->getId() == $id) {
+      $this->sync();
+      return;
+    }
+
+    if (!empty($this->entity)) {
       try {
         $this->mapper->delete($this->entity);
       } catch (\Throwable $t) {

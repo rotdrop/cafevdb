@@ -120,6 +120,20 @@ class ProgressStatusController extends Controller {
         return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
       }
       break;
+    case 'delete':
+      try {
+        $progress = $this->progressStatusService->get($this->request['id']);
+      } catch (\Throwable $t) {
+        $this->logger->logException($t);
+        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+      }
+      try {
+        $progress->delete();
+        return self::response($this->l->t('Progress "%s" successfully deleted.', $this->request['id']));
+      } catch (\Throwable $t) {
+        $this->logger->logException($t);
+        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+      }
     case 'test':
       $target = $this->request['target']?:100;
       $progress = $this->progressStatusService->create(0, $target, $this->request['data'], $this->request['id']);

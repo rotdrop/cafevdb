@@ -29,6 +29,12 @@ namespace OCA\CAFEVDB\Common;
 interface IProgressStatus
 {
   /**
+   * Delete the underlying storage object. Afterwards any operation
+   * except $this->bind() will exhibit undefined behaviour.
+   */
+  public function delete();
+
+  /**
    * Bind to the given storage object.
    */
   public function bind($id);

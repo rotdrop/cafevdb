@@ -65,6 +65,11 @@ function pollProgressStatus(id, options) {
   poll();
 }
 
+const deleteProgressStatus = function(id) {
+  return $.post(
+    generateUrl('foregroundjob/progress/delete'), { id });
+};
+
 pollProgressStatus.stop = function() {
   clearTimeout(globalState.progressTimer);
   globalState.progressTimer = false;
@@ -77,6 +82,7 @@ pollProgressStatus.active = function() {
 export {
   createProgressStatus as create,
   pollProgressStatus as poll,
+  deleteProgressStatus as delete,
 };
 
 // Local Variables: ***

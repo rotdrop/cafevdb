@@ -59,6 +59,14 @@ class PlainFileProgressStatus implements IProgressStatus
     $this->file->putContent(json_encode($this->data));
   }
 
+  public function delete()
+  {
+    if (!empty($this->file)) {
+      $this->file->delete();
+      $this->file = null;
+    }
+  }
+
   public function bind($id = null)
   {
     if (!empty($this->file) && $this->file->getName() == $id) {

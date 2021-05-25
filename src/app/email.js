@@ -766,6 +766,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             close() {
               progressOpen = false;
               ProgressStatus.poll.stop();
+              ProgressStatus.delete(progressToken);
               progressWrapper.dialog('destroy');
               progressWrapper.hide();
             },

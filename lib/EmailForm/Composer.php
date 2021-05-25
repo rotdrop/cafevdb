@@ -54,6 +54,7 @@ class Composer
   use \OCA\CAFEVDB\Traits\SloppyTrait;
 
   const PROGRESS_CHUNK_SIZE = 4096;
+  const PROGRESS_THROTTLE_SECONDS = 2;
 
   const POST_TAG = 'emailComposer';
 
@@ -900,7 +901,11 @@ Störung.';
       ]);
       $phpMailer->progressCallback = function($current, $total) use ($progressStatus) {
         $oldCurrent = $progressStatus->getCurrent();
-        if ($current - $oldCurrent >= self::PROGRESS_CHUNK_SIZE) {
+        $oldTime = $progressStatus->getLastModified()->getTimestamp();
+        $nowTime = time();
+        if ($current >= $total
+            || ($current - $progressStatus->getCurrent() >= self::PROGRESS_CHUNK_SIZE
+                && $nowTime - $oldTime >= self::PROGRESS_THROTTLE_SECONDS)) {
           $progressStatus->update($current, $total);
         }
       };
