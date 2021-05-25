@@ -60,7 +60,7 @@ class ProgressStatusService
   /**
    * @return ProgressStatus
    */
-  public function create($start, $stop, $data = null, $id = null): ProgressStatus
+  public function create($start, $stop, $data = null, $id = null):ProgressStatus
   {
     $progressStatus = new ProgressStatus($this->db, $this->appName, $this->userId, $id);
     $mergeData = [
@@ -79,10 +79,11 @@ class ProgressStatusService
   }
 
   /**
-   * @param string uuid
+   * @param int id
    *
+   * @return ProgressStatus
    */
-  public function get(int $id)
+  public function get(int $id):ProgressStatus
   {
     $progressStatus = new ProgressStatus($this->db, $this->appName, $this->userId, $id);
     return $progressStatus;
