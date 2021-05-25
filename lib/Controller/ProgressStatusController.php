@@ -89,48 +89,48 @@ class ProgressStatusController extends Controller {
   public function action($operation)
   {
     switch($operation) {
-      case 'create':
-        try {
-          $progress = $this->progressStatusService->create(
-            $this->request['current'],
-            $this->request['target'],
-            $this->request['data']
-          );
-          return self::progressResponse($progress);
-        } catch (\Throwable $t) {
-          $this->logger->logException($t);
-          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+    case 'create':
+      try {
+        $progress = $this->progressStatusService->create(
+          $this->request['current'],
+          $this->request['target'],
+          $this->request['data']
+        );
+        return self::progressResponse($progress);
+      } catch (\Throwable $t) {
+        $this->logger->logException($t);
+        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+      }
+      break;
+    case 'update':
+      try {
+        $progress = $this->progressStatusService->get($this->request['id']);
+      } catch (\Throwable $t) {
+        $this->logger->logException($t);
+        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+      }
+      try {
+        foreach ([ 'current', 'target', 'data' ] as $key) {
+          ${$key} = $this->request[$key]?:null;
         }
-        break;
-      case 'update':
-        try {
-          $progress = $this->progressStatusService->get($this->request['id']);
-        } catch (\Throwable $t) {
-          $this->logger->logException($t);
-          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-        }
-        try {
-          foreach ([ 'current', 'target', 'data' ] as $key) {
-            ${$key} = $this->request[$key]?:null;
-          }
-          $progress->update($current, $target, $data);
-          return self::progressResponse($progress);
-        } catch (\Throwable $t) {
-          $this->logger->logException($t);
-          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-        }
-        break;
-      case 'test':
-        $target = $this->request['target']?:100;
-        $progress = $this->progressStatusService->create(0, $target, $this->request['data'], $this->request['id']);
-        for ($i = 0; $i <= $progress->getTarget(); $i++) {
-          $progress->update($i);
-          usleep(500000);
-        }
-        return self::dataResponse([]);
-        break;
-      default:
-        return self::grumble($this->l->t('Unknown Request'));
+        $progress->update($current, $target, $data);
+        return self::progressResponse($progress);
+      } catch (\Throwable $t) {
+        $this->logger->logException($t);
+        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+      }
+      break;
+    case 'test':
+      $target = $this->request['target']?:100;
+      $progress = $this->progressStatusService->create(0, $target, $this->request['data'], $this->request['id']);
+      for ($i = 0; $i <= $progress->getTarget(); $i++) {
+        $progress->update($i);
+        usleep(500000);
+      }
+      return self::dataResponse([]);
+      break;
+    default:
+      return self::grumble($this->l->t('Unknown Request'));
     }
   }
 
