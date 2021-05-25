@@ -26,11 +26,10 @@ import generateUrl from './generate-url.js';
 
 globalState.progressTimer = null;
 
-function createProgressStatus(target, current, id)
-{
+function createProgressStatus(target, current, data) {
   return $.post(
     generateUrl('foregroundjob/progress/create'),
-    { id, target: target || 100, current: current || 0 });
+    { target: target || 100, current: current || 0, data });
 }
 
 function pollProgressStatus(id, options) {
@@ -51,12 +50,10 @@ function pollProgressStatus(id, options) {
           return;
         }
         if (!options.update(data.id, data.current, data.target, data.data)) {
-          console.debug('Finish polling');
           clearTimeout(globalState.progressTimer);
           globalState.progressTimer = false;
           return;
         }
-        console.debug('Restart timer.');
         globalState.progressTimer = setTimeout(poll, interval);
       })
       .fail(function(xhr, status, errorThrown) {
