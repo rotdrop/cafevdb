@@ -101,6 +101,7 @@ Störung.';
     BANK_ACCOUNT_OWNER,
     BANK_TRANSACTION_AMOUNT,
     BANK_TRANSACTION_PURPOSE,
+    BANK_TRANSACTION_PARTS,
     DATE,
   ];
   private $recipients; ///< The list of recipients.
@@ -591,7 +592,22 @@ Störung.';
 
         return $keyArg[0];
       };
-    }
+
+      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_PARTS'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+
+        }
+
+        return $keyArg[0];
+      };
+
+    } // bulk-transaction fields
 
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
