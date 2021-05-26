@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -523,6 +524,29 @@ table.transaction-parts td.money {
       return $this->dateSubstitution($keyArg, self::MEMBER_NAMESPACE, $musician);
     };
 
+    $this->substitutions[self::MEMBER_NAMESPACE]['TOTAL_FEES'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
+      return $this->moneyValue($obligations['sum']);
+    };
+
+    $this->substitutions[self::MEMBER_NAMESPACE]['AMOUNT_PAID'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
+      return $this->moneyValue($obligations['received']);
+    };
+
+    $this->substitutions[self::MEMBER_NAMESPACE]['MISSING_AMOUNT'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
+      return $this->moneyValue($obligations['sum'] - $obligations['received']);
+    };
 
     if (!empty($this->bulkTransaction)) {
 

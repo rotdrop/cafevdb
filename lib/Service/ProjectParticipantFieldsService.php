@@ -251,6 +251,52 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Given a musician and a project, compute the total fees to invoice
+   * or to pay, and the amounts already paid. The sign convention is
+   * such that a positive sign means that the orchestra earns money, a
+   * negative sign means that the participant earns money.
+   *
+   * If not project is given compute the totals for all projects.
+   */
+  public function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null)
+  {
+    $obligations = [
+      'sum' => 0.0, // total sum
+      'received' => 0.0, // sum of payments
+    ];
+
+    if (empty($project)) {
+      /** @var Entities\ProjectParticipant $projectParticipant */
+      foreach ($musician->getProjectParticipation() as $projectParticipant) {
+        list($sum, $received) = $this->participantMonetaryObligations($musician, $projectParticipant->getProject());
+        $obligations['sum'] += $sum;
+        $obligations['received'] += $received;
+      }
+      return $obligations;
+    }
+
+    $projectParticipant = $musician->getProjectParticipantOf($project);
+    /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+    foreach ($projectParticipant->getParticipantFieldsData() as $fieldDatum) {
+      $fieldDataType = $fieldDatum->getField()->getDataType();
+      if ($fieldDataType != DataType::SERVICE_FEE
+          && $fieldDataType != DataType::DEPOSIT) {
+        continue;
+      }
+      if ($fieldDataType == DataType::SERVICE_FEE) {
+        $obligations['sum'] += $fieldDatum->amountPayable();
+        $obligations['received'] += $fieldDatum->amountPaid();
+      } else if ($fieldDataType == DataType::DEPOSIT) {
+        // Unsupported yet. If implemented this can be used to bound the
+        // amount to invoice given the due-date of the payable and the deposit.
+      }
+    }
+
+    return $obligations;
+
+  }
+
+  /**
    * Internal function: given a surcharge choice compute the
    * associated amount of money and return that as float.
    *
