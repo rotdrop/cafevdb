@@ -718,7 +718,7 @@ class Musician implements \ArrayAccess
    *
    * @return null|ProjectParticipant
    */
-  public function getProjectParticipantOf($projectOrId)
+  public function getProjectParticipantOf($projectOrId):?ProjectParticipant
   {
     $projectId = ($projectOrId instanceof Project) ? $projectOrId->getId() : $projectOrId;
     $participant = $this->projectParticipation->get($projectId);

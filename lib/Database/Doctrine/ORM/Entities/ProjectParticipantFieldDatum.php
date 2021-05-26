@@ -405,7 +405,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
 
   /**
    * Return the effective option value, either by fetching it from the
-   * option or from the own value field.
+   * option or from the own value field. This will not retrieve
+   * referenced objects like files or collections of people.
    *
    * @return string
    */
