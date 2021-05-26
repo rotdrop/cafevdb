@@ -180,7 +180,6 @@ class UploadsController extends Controller {
           $uploadFile = $this->appStorage->newTemporaryFile($appDirectory);
           $this->appStorage->moveFileSystemFile($file['tmp_name'], $uploadFile);
           $file['name'] = $uploadFile->getName();
-          unlink($file['tmp_name']);
           $file['tmp_name'] = AppStorage::PATH_SEP.$appDirectory.AppStorage::PATH_SEP.$file['name'];
         } catch (\Throwable $t) {
           $file['error'] = 99;
