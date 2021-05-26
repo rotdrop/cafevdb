@@ -602,6 +602,66 @@ Störung.';
         $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
         if (!empty($compositePayment)) {
 
+          $keyArg = array_map(
+            function($value) {
+              return html_entity_decode($value, ENT_HTML5, 'UTF-8');
+            },
+            $keyArg);
+
+          $tableTemplate = [
+              'header' => $keyArg[1]?:'<table class="transaction-parts"><thead><tr><th>'.$this->l->t('Purpose').'</th><th>'.$this->l->t('Amount').'</th</tr></thead><tbody>',
+              'row' => $keyArg[2]?:'<tr><td>[PURPOSE]</td><td class="money">[AMOUNT]</td</tr>',
+              'footer' => $keyArg[3]?:'</tbody></table>',
+          ];
+
+          $html = '<style>
+table.transaction-parts,
+table.transaction-parts tr,
+table.transaction-parts th,
+table.transaction-parts td {
+  border-collapse:collapse;
+}
+table.transaction-parts th,
+table.transaction-parts td {
+  border: 1px solid black;
+  padding: 0 2pt;
+}
+table.transaction-parts th {
+  text-align:center;
+  font-weight:bold;
+}
+table.transaction-parts td { text-align:left; }
+table.transaction-parts  td.money {
+  text-align: right;
+  padding-left: 1em;
+ }
+</style>'
+                . $tableTemplate['header'];
+
+          $rowTemplate = $tableTemplate['row'];
+
+          $replacementKeys = [ 'purpose', 'amount' ];
+
+          $payments = $compositePayment->getProjectPayments();
+          /** @var Entities\ProjectPayment $payment */
+          foreach ($payments as $payment) {
+            $replacements = [
+              'purpose' => $payment->getSubject(),
+              'amount' => $this->moneyValue($payment->getAmount()),
+            ];
+            $row = $rowTemplate;
+            foreach ($replacementKeys as $key) {
+              $keyVariants = array_map(
+                function($key) { return '['.$key.']'; },
+                $this->translationVariants($key)
+              );
+              $row = str_ireplace($keyVariants, $replacements[$key], $row);
+            }
+            $html .= $row;
+          }
+          $html .= $tableTemplate['footer'];
+
+          return $html;
         }
 
         return $keyArg[0];
@@ -2110,7 +2170,7 @@ Störung.';
     $draftData = [
       'projectId' => $this->parameterService['projectId'],
       'projectName' => $this->parameterService['projectName'],
-      'pebitNoteId' => $this->parameterService['bulkTransactionId'],
+      'bulkTransactionId' => $this->parameterService['bulkTransactionId'],
       self::POST_TAG => $this->parameterService[self::POST_TAG],
       RecipientsFilter::POST_TAG => $this->parameterService[RecipientsFilter::POST_TAG],
     ];
