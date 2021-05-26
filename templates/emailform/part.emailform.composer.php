@@ -202,7 +202,7 @@ $containerClass = $appName.'-'.'container';
     </tr>
     <tr>
       <td class="body caption"><?php echo $l->t('Message-Body'); ?></td>
-      <td colspan="2" class="messagetext"><textarea name="emailComposer[messageText]" class="wysiwyg-editor" cols="60" rows="20" id="message-text"><?php echo $message; ?></textarea></td>
+      <td colspan="2" class="messagetext"><textarea name="emailComposer[messageText]" class="wysiwyg-editor" cols="60" rows="20" id="message-text"><?php echo htmlspecialchars($message); ?></textarea></td>
     </tr>
     <tr>
       <td class="caption"><?php echo $l->t('Sender-Name'); ?></td>
