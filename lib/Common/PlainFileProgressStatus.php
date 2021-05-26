@@ -126,7 +126,7 @@ class PlainFileProgressStatus implements IProgressStatus
         return;
       }
     }
-    throw new \RuntimeException($this->l->t('Unable to read progress status file "%s" after $d retries.', $this->file->getName(), $i));
+    throw new \RuntimeException($this->l->t('Unable to read progress status file "%s" after %d retries.', $this->file->getName(), $i));
   }
 
   public function getCurrent():int

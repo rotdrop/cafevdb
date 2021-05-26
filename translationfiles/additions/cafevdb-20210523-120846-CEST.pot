@@ -45,6 +45,11 @@ msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
 #, php-format
+msgid "BANK_TRANSACTION_PARTS"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:570
+#, php-format
 msgid "BANK_TRANSACTION_SUBMIT_DATE"
 msgstr ""
 
