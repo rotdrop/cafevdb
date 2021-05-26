@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
+use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\PHPMailer;
@@ -161,6 +162,9 @@ Störung.';
   /** @var ProgressStatusService */
   private $progressStatusService;
 
+  /** @var AppStorage */
+  private $appStorage;
+
   /** @var int */
   private $progressToken;
 
@@ -177,10 +181,12 @@ Störung.';
     , RecipientsFilter $recipientsFilter
     , EntityManager $entityManager
     , ProgressStatusService $progressStatusService
+    , AppStorage $appStorage
   ) {
     $this->configService = $configService;
     $this->eventsService = $eventsService;
     $this->progressStatusService = $progressStatusService;
+    $this->appStorage = $appStorage;
     $this->entityManager = $entityManager;
     $this->l = $this->l10N();
 
@@ -298,9 +304,9 @@ Störung.';
         if (empty($template)) {
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'));
         }
+        $this->templateName = $initialTemplate;
         if (!empty($template)) {
           $this->messageContents = $template->getContents();
-          $this->templateName = $initialTemplate;
         } else {
           $this->cgiData['subject'] = $this->l->t('Unknown Template');
         }
@@ -1010,10 +1016,12 @@ Störung.';
         } else {
           $encoding = 'base64';
         }
-        $phpMailer->AddAttachment($attachment['tmp_name'],
-                                  basename($attachment['name']),
-                                  $encoding,
-                                  $attachment['type']);
+        $file = $this->appStorage->getDraftsFile($attachment['tmp_name']);
+        $phpMailer->AddStringAttachment(
+          $file->getContent(),
+          basename($attachment['name']),
+          $encoding,
+          $attachment['type']);
       }
 
       // Finally possibly to-be-attached events. This cannot throw,
@@ -2215,20 +2223,26 @@ Störung.';
 
     $toKeep = [];
     foreach ($fileAttach as $files) {
-      $tmp = $files['tmp_name'];
-      if (is_file($tmp)) {
+      $tmp = basename($files['tmp_name']);
+      if ($this->appStorage->draftExists($tmp)) {
         $toKeep[] = $tmp;
       }
     }
 
+    /** @var Entities\EmailAttachment $tmpFile */
     foreach ($tmpFiles as $tmpFile) {
-      $fileName = $tmpFile['fileName'];
+      $fileName = $tmpFile->getFileName();
       if (array_search($fileName, $toKeep) !== false) {
         continue;
       }
-      @unlink($fileName);
-      if (!@is_file($fileName)) {
+      try {
+        $file = $this->appStorage->getDraftsFile($fileName);
+        if (!empty($file)) {
+          $file->delete();
+        }
         $this->forgetTemporaryFile($fileName);
+      } catch (\Throwable $t) {
+        $this->logException($t);
       }
     }
     $this->diagnostics['caption'] = $this->l->t('Cleaning temporary files succeeded.');
@@ -2263,9 +2277,12 @@ Störung.';
    * Remember a temporary file. Files attached to message drafts are
    * remembered across sessions, temporaries not attached to message
    * drafts are cleaned at logout and when closing the email form.
+   *
+   * @param string $tmpFile
    */
-  private function rememberTemporaryFile($tmpFile)
+  private function rememberTemporaryFile(string $tmpFile)
   {
+    $tmpFile = basename($tmpFile);
     try {
       $attachment = $this
         ->getDatabaseRepository(Entities\EmailAttachment::class)
@@ -2281,7 +2298,8 @@ Störung.';
       if ($this->draftId > 0) {
         $attachment->setDraft($this->getReference(Entities\EmailDraft::class, $this->draftId));
       }
-      $this->merge($attachment);
+      $this->persist($attachment);
+      $this->flush();
     } catch (\Throwable $t) {
       $this->logException($t);
       return $this->executionStatus = false;
@@ -2292,6 +2310,7 @@ Störung.';
   /** Forget a temporary file, i.e. purge it from the data-base. */
   private function forgetTemporaryFile($tmpFile)
   {
+    $tmpFile = basename($tmpFile);
     try {
       if (is_string($tmpFile)) {
         $tmpFile = $this
@@ -2316,58 +2335,41 @@ Störung.';
    * @param $fileRecord Typically $_FILES['fileAttach'], but maybe
    * any file record.
    *
-   * @param $local If @c true the underlying file will be renamed,
-   * otherwise copied.
-   *
    * @return array Copy of $fileRecord with changed temporary file which
    * survives script-reload, or @c false on error.
    *
    * @todo Use IAppData and use temporaries in the cloud storage.
    */
-  public function saveAttachment(&$fileRecord, $local = false)
+  public function saveAttachment(&$fileRecord)
   {
     if (!empty($fileRecord['name'])) {
-      $tmpdir = ini_get('upload_tmp_dir');
-      if ($tmpdir == '') {
-        $tmpdir = sys_get_temp_dir();
-      }
-      $tmpFile = tempnam($tmpdir, $this->appName());
-      if ($tmpFile === false) {
+
+      $tmpFile = $this->appStorage->newTemporaryFile(AppStorage::DRAFTS_FOLDER);
+
+      $tmpFilePath = AppStorage::PATH_SEP.AppStorage::DRAFTS_FOLDER.AppStorage::PATH_SEP.$tmpFile->getName();
+
+      // Remember the file in the data-base for cleaning up later
+      $this->rememberTemporaryFile($tmpFilePath);
+
+      try {
+        if (!empty($fileRecord['node'])) {
+          // cloud file
+          $tmpFile->putContent($fileRecord['node']->getContent());
+        } else {
+          // file-system file
+          $this->appStorage->moveFileSystemFile($fileRecord['tmp_name'], $tmpFile);
+        }
+
+        $fileRecord['tmp_name'] = $tmpFilePath;
+
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        $tmpFile->delete();
+        $this->forgetTemporaryFile($tmpFilePath);
         return false;
       }
 
-      // Remember the file in the data-base for cleaning up later
-      $this->rememberTemporaryFile($tmpFile);
-
-      if ($local) {
-        // Move the uploaded file
-        if (move_uploaded_file($fileRecord['tmp_name'], $tmpFile)) {
-          // Sanitize permissions
-          chmod($tmpFile, 0600);
-
-          // Remember the uploaded file.
-          $fileRecord['tmp_name'] = $tmpFile;
-
-          return $fileRecord;
-        }
-      } else {
-        // Make a copy
-        if (copy($fileRecord['tmp_name'], $tmpFile)) {
-          // Sanitize permissions
-          chmod($tmpFile, 0600);
-
-          // Remember the uploaded file.
-          $fileRecord['tmp_name'] = $tmpFile;
-
-          return $fileRecord;
-        }
-      }
-
-      // Clean up after error
-      unlink($tmpFile);
-      $this->forgetTemporaryFile($tmpFile);
-
-      return false;
+      return $fileRecord;
     }
     return false;
   }

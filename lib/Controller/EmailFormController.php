@@ -51,6 +51,8 @@ class EmailFormController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  public const UPLOAD_KEY = 'files';
+
   const TOPIC_UNSPECIFIC = 'general';
 
   /** @var ISession */
@@ -848,9 +850,10 @@ class EmailFormController extends Controller {
           'tmp_name' => $node->getStorage()->getLocalFile($node->getInternalPath()),
           'type' => $node->getMimetype(),
           'size' => $node->getSize(),
+          'node' => $node,
         ];
 
-        if ($composer->saveAttachment($fileRecord, false) === false) {
+        if ($composer->saveAttachment($fileRecord) === false) {
           return self::grumble($this->l->t('Couldn\'t save temporary file for: %s', $fileRecord['name']));
         }
 
@@ -861,8 +864,8 @@ class EmailFormController extends Controller {
       }
       return self::dataResponse($files);
     case Composer::ATTACHMENT_ORIGIN_UPLOAD:
-      $fileKey = 'files';
-      if (empty($_FILES[$fileKey])) {
+      $files = $this->request->files[self::UPLOAD_KEY];
+      if (empty($files)) {
         // may be caused by PHP restrictions which are not caught by
         // error handlers.
         $contentLength = $this->request->server['CONTENT_LENGTH'];
@@ -882,7 +885,7 @@ class EmailFormController extends Controller {
         return self::grumble($this->l->t('No file was uploaded. Unknown error'));
       }
 
-      $files = Util::transposeArray($_FILES[$fileKey]);
+      $files = Util::transposeArray($files);
 
       $totalSize = 0;
       foreach ($files as &$file) {
