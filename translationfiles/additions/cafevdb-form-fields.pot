@@ -120,6 +120,11 @@ msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
 #, php-format
+msgid "AMOUNT_PAID"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:235
+#, php-format
 msgid "STREET"
 msgstr ""
 
