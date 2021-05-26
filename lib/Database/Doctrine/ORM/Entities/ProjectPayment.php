@@ -258,7 +258,7 @@ class ProjectPayment implements \ArrayAccess
    *
    * @return ProjectPayment
    */
-  public function setReceivable($receivable):ProjectPayment
+  public function setReceivable(ProjectParticipantFieldDatum $receivable):ProjectPayment
   {
     $this->receivable = $receivable;
 
@@ -270,7 +270,7 @@ class ProjectPayment implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function getReceivable()
+  public function getReceivable():ProjectParticipantFieldDatum
   {
     return $this->receivable;
   }
