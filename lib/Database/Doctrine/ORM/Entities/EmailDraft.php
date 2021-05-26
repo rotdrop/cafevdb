@@ -67,7 +67,7 @@ class EmailDraft implements \ArrayAccess
 
   /**
    * @var EmailAttachment
-   * @ORM\OneToMany(targetEntity="EmailAttachment", mappedBy="draft")
+   * @ORM\OneToMany(targetEntity="EmailAttachment", mappedBy="draft", orphanRemoval=true)
    */
   private $fileAttachments;
 

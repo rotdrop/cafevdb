@@ -48,6 +48,7 @@ class EmailAttachment implements \ArrayAccess
   /**
    * @var EmailDraft
    * @ORM\ManyToOne(targetEntity="EmailDraft", inversedBy="fileAttachments")
+   * @ORM\JoinColumn(onDelete="CASCADE")
    */
   private $draft;
 
