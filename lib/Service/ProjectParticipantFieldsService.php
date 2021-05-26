@@ -258,7 +258,7 @@ class ProjectParticipantFieldsService
    *
    * If not project is given compute the totals for all projects.
    */
-  public function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null)
+  static public function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null)
   {
     $obligations = [
       'sum' => 0.0, // total sum
@@ -293,7 +293,6 @@ class ProjectParticipantFieldsService
     }
 
     return $obligations;
-
   }
 
   /**
