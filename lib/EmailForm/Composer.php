@@ -94,6 +94,7 @@ Störung.';
     LANGUAGE,
     BIRTHDAY,
     TOTAL_FEES,
+    AMOUNT_PAID,
     MISSING_AMOUNT,
     SEPA_MANDATE_REFERENCE,
     BANK_ACCOUNT_IBAN,
@@ -104,6 +105,39 @@ Störung.';
     BANK_TRANSACTION_PARTS,
     DATE,
   ];
+  /**
+   * @var string
+   * @todo Make this configurable
+   */
+  const DEFAULT_TRANSACTION_PARTS_STYLE = '<style>
+table.transaction-parts,
+table.transaction-parts tr,
+table.transaction-parts th,
+table.transaction-parts td {
+  border-collapse:collapse;
+}
+table.transaction-parts th,
+table.transaction-parts td {
+  border: 1px solid black;
+  padding: 0 2pt;
+}
+table.transaction-parts th {
+  text-align:center;
+  font-weight:bold;
+}
+table.transaction-parts td { text-align:left; }
+table.transaction-parts tr.totals {
+  border-top:double;
+}
+table.transaction-parts tr.totals td {
+  text-align:right;
+  font-weight:bold;
+}
+table.transaction-parts td.money {
+  text-align:right;
+  padding-left: 1em;
+ }
+</style>';
   private $recipients; ///< The list of recipients.
   private $onLookers;  ///< Cc: and Bcc: recipients.
 
@@ -609,46 +643,63 @@ Störung.';
             $keyArg);
 
           $tableTemplate = [
-              'header' => $keyArg[1]?:'<table class="transaction-parts"><thead><tr><th>'.$this->l->t('Purpose').'</th><th>'.$this->l->t('Amount').'</th</tr></thead><tbody>',
-              'row' => $keyArg[2]?:'<tr><td>[PURPOSE]</td><td class="money">[AMOUNT]</td</tr>',
-              'footer' => $keyArg[3]?:'</tbody></table>',
+              'header' => $keyArg[1]?:'<table class="transaction-parts"><thead><tr>
+  <th>'.$this->l->t('Purpose').'</th>
+  <th>'.$this->l->t('Invoice Amount').'</th>
+  <th>'.$this->l->t('Total Amount').'</th>
+  <th>'.$this->l->t('Received').'</th>
+  <th>'.$this->l->t('Remaining').'</th>
+</tr></thead><tbody>',
+              'row' => $keyArg[2]?:'<tr>
+  <td>[PURPOSE]</td>
+  <td class="money">[INVOICED]</td>
+  <td class="money">[TOTALS]</td>
+  <td class="money">[RECEIVED]</td>
+  <td class="money">[REMAINING]</td>
+</tr>',
+              'footer' => $keyArg[3]?:'<tr class="totals">
+  <td>[PURPOSE]</td>
+  <td class="money totalsum">[INVOICED]</td>
+  <td class="money totalsum">[TOTALS]</td>
+  <td class="money totalsum">[RECEIVED]</td>
+  <td class="money totalsum ">[REMAINING]</td
+</tr></tbody></table>',
           ];
 
-          $html = '<style>
-table.transaction-parts,
-table.transaction-parts tr,
-table.transaction-parts th,
-table.transaction-parts td {
-  border-collapse:collapse;
-}
-table.transaction-parts th,
-table.transaction-parts td {
-  border: 1px solid black;
-  padding: 0 2pt;
-}
-table.transaction-parts th {
-  text-align:center;
-  font-weight:bold;
-}
-table.transaction-parts td { text-align:left; }
-table.transaction-parts  td.money {
-  text-align: right;
-  padding-left: 1em;
- }
-</style>'
-                . $tableTemplate['header'];
+          $html = self::DEFAULT_TRANSACTION_PARTS_STYLE . $tableTemplate['header'];
 
           $rowTemplate = $tableTemplate['row'];
 
-          $replacementKeys = [ 'purpose', 'amount' ];
+          $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
+          $totalSum = array_fill_keys($replacementKeys, 0.0);
+          $totalSum['purpose'] = $this->l->t('Total Amount');
 
           $payments = $compositePayment->getProjectPayments();
           /** @var Entities\ProjectPayment $payment */
           foreach ($payments as $payment) {
-            $replacements = [
-              'purpose' => $payment->getSubject(),
-              'amount' => $this->moneyValue($payment->getAmount()),
-            ];
+            $invoiced = $payment->getAmount();
+
+            $totals = $payment->getReceivable()->amountPayable();
+            $received = $payment->getReceivable()->amountPaid();
+
+            // otherwise one would have to account for the due-date,
+            // so keep it simple and just remove the current payment.
+            $received -= $invoiced;
+
+            $remaining = $totals - $received;
+
+            $purpose = $payment->getSubject();
+
+            $replacements = [];
+            foreach ($replacementKeys as $key) {
+              if ($key == 'purpose') {
+                $replacements[$key] = ${$key};
+                continue;
+              }
+              $totalSum[$key] += ${$key};
+              $replacements[$key] = $this->moneyValue(${$key});
+            }
+
             $row = $rowTemplate;
             foreach ($replacementKeys as $key) {
               $keyVariants = array_map(
@@ -659,7 +710,19 @@ table.transaction-parts  td.money {
             }
             $html .= $row;
           }
-          $html .= $tableTemplate['footer'];
+
+          $footer = $tableTemplate['footer'];
+          foreach ($replacementKeys as $key) {
+            if ($key != 'purpose') {
+              $totalSum[$key] = $this->moneyValue($totalSum[$key]);
+            }
+            $keyVariants = array_map(
+              function($key) { return '['.$key.']'; },
+              $this->translationVariants($key)
+            );
+            $footer = str_ireplace($keyVariants, $totalSum[$key], $footer);
+          }
+          $html .= $footer;
 
           return $html;
         }
@@ -692,7 +755,7 @@ table.transaction-parts  td.money {
       $message = $this->messageContents;
     }
 
-    return preg_match('/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3[^}]+}/', $message);
+    return preg_match('/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\)}/u', $message);
   }
 
   /**
@@ -722,14 +785,15 @@ table.transaction-parts  td.money {
       $this->generateSubstitutionHandlers();
     }
 
+    $regexp = '/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\\)}/u';
     return preg_replace_callback(
-      '/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3([^}]+)}/u',
+      $regexp,
       function($matches) use ($data, &$failures) {
         $prefix = $matches[1]; // in order not to substitute $$
         $nameSpace = html_entity_decode($matches[2], ENT_HTML5, 'UTF-8');
         $separator = $matches[3];
         $variable  = array_map(function($value) {
-          return html_entity_decode($value, ENT_HTML5, 'UTF-8');
+          return preg_replace('/\\\\(.)/u', '$1', html_entity_decode($value, ENT_HTML5, 'UTF-8'));
         }, explode($separator, $matches[4]));
         $handler = $this->substitutions[$nameSpace][$variable[0]];
         if (empty($handler) || !is_callable($handler)) {
@@ -1563,6 +1627,9 @@ table.transaction-parts  td.money {
    */
   private function exportMessages(?array $recipients = null)
   {
+    // @todo yield needs more care concerning error management
+    $messages = [];
+
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
     $messageTemplate = $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
@@ -1583,7 +1650,8 @@ table.transaction-parts  td.money {
           ++$this->diagnostics['failedCount'];
           return;
         }
-        yield $message;
+        $messages[] = $message;
+        //yield $message;
       }
 
       // Finally send one message without template substitution (as
@@ -1597,7 +1665,8 @@ table.transaction-parts  td.money {
         ++$this->diagnostics['failedCount'];
         return;
       }
-      yield $message;
+      $messages[] = $message;
+      // yield $message;
     } else {
       $this->diagnostics['totalPayload'] = 1;
       ++$this->diagnostics['totalCount']; // this is ONE then ...
@@ -1607,8 +1676,10 @@ table.transaction-parts  td.money {
         ++$this->diagnostics['failedCount'];
         return;
       }
-      yield $message;
+      $messages[] = $message;
+      // yield $message;
     }
+    return $messages;
   }
 
   /**
