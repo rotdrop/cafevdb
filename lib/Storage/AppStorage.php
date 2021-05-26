@@ -109,6 +109,42 @@ class AppStorage
     return $folder->getFile($fileName);
   }
 
+  public function fileExists($dirName, $fileName = null):bool
+  {
+    if (empty($fileName)) {
+      $components = array_filter(Util::explode(self::PATH_SEP, $dirName));
+      if (count($components) != 2) {
+        throw new \InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
+      }
+      list($dirName, $fileName) = $components;
+    }
+    /** @var ISimpleFolder $folder */
+    $folder = $this->getFolder($dirName);
+    return $folder->fileExists($fileName);
+  }
+
+  public function fileExistsInFolder($dirName, $fileName):bool
+  {
+    $components = array_filter(Util::explode(self::PATH_SEP, $fileName));
+    if (count($components) == 2) {
+      if ($components[0] != $dirname) {
+        return false;
+      }
+      $fileName = $components[1];
+    }
+    return $this->fileExists($dirName, $fileName);
+  }
+
+  public function uploadExists($fileName):bool
+  {
+    return $this->fileExistsInFolder(self::UPLOAD_FOLDER, $fileName);
+  }
+
+  public function draftExists($fileName):bool
+  {
+    return $this->fileExistsInFolder(self::DRAFTS_FOLDER, $fileName);
+  }
+
   public function newUploadFile():ISimpleFile
   {
     $name = Uuid::create();
