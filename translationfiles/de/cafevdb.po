@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-05-26 16:59+0200\n"
-"PO-Revision-Date: 2021-05-26 17:01+0200\n"
+"POT-Creation-Date: 2021-05-26 17:38+0200\n"
+"PO-Revision-Date: 2021-05-26 17:39+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2205,96 +2205,99 @@ msgstr "BeispielSerienBrief"
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:646
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:647
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:646
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1602
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:375
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:384
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:389
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:349
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/Finance/InstrumentInsuranceService.php:681
-msgid "Amount"
-msgstr "Betrag"
-
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:648
+msgid "Invoice Amount"
+msgstr "Rechnungsbetrag"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:649
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:675
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:757
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:650
+msgid "Received"
+msgstr "Eingegangen"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:651
+msgid "Remaining"
+msgstr "Fehlbetrag"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:801
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:819
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:863
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1572
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1616
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1705
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1749
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1718
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1762
 msgid "musicians"
 msgstr "Musiker"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1810
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1825
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1854
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1869
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1909
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1962
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1972
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1953
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2006
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2016
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1937
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:1981
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2246
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2290
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2253
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2297
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2291
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2335
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2323
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2426
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2367
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2470
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2351
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2395
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2372
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2416
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2633
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2677
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2633
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2677
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
@@ -3534,6 +3537,15 @@ msgstr "Anfangsdatum"
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1419
 msgid "Limit"
 msgstr "Obergrenze"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:1602
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:375
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:384
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:389
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:349
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/Finance/InstrumentInsuranceService.php:681
+msgid "Amount"
+msgstr "Betrag"
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:201
 msgid "Add Musician"
@@ -11389,9 +11401,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "Deposit"
 #~ msgstr "Anzahlung"
-
-#~ msgid "Remaining"
-#~ msgstr "Rest"
 
 #~ msgid "deposit"
 #~ msgstr "Anzahlung"
