@@ -47,9 +47,7 @@ const Email = globalState.Email = {
   topicUnspecific: 'general',
   active: false,
   autoSaveTimer: null,
-  autoSaveDelete(callback) {
-    callback();
-  },
+  autoSaveDelete() {},
 };
 
 function generateUrl(url, urlParams, urlOptions) {
@@ -922,12 +920,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       });
   };
 
-  const confirmAutoSaveDelete = function(callback) {
-    if (typeof callback !== 'function') {
-      callback = function() {};
-    }
+  const confirmAutoSaveDelete = function() {
     const draftId = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
-    if (!draftAutoSave.prop('checked') && parseInt(draftId) > 0) {
+    console.info('DRAFT ID', draftId, draftAutoSave.prop('checked'));
+    if (draftAutoSave.prop('checked') && parseInt(draftId) > 0) {
+      console.info('CONFIRM');
       Dialogs.confirm(
         t(appName,
           'Do you want to delete the auto-save backup copy of the current message (id = {id})?',
@@ -944,12 +941,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               }
             );
           }
-          callback();
         },
         true
       );
-    } else {
-      callback();
     }
   };
   Email.autoSaveDelete = confirmAutoSaveDelete;
@@ -1681,24 +1675,23 @@ function emailFormPopup(post, modal, single, afterInit) {
             composerPanel);
         },
         close() {
+          console.info('CLOSE CALLBACK');
           if (Email.autoSaveTimer) {
             clearTimeout(Email.autoSaveTimer);
             Email.autoSaveTimer = null;
+            console.info('CLEARED AUTOSAVE TIMER');
           }
-          Email.autoSaveDelete(function() {
-            Email.autoSaveDelete = function(callback) {
-              callback();
-            };
+          Email.autoSaveDelete();
 
-            $.fn.cafevTooltip.remove();
-            WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
-            dialogHolder.dialog('close');
-            dialogHolder.dialog('destroy').remove();
+          Email.autoSaveDelete = function() {};
 
-            // Also close all other open dialogs.
-            CAFEVDB.modalizer(false);
-            Email.active = false;
-          });
+          $.fn.cafevTooltip.remove();
+          WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+          dialogHolder.dialog('close');
+          dialogHolder.dialog('destroy').remove();
+
+          CAFEVDB.modalizer(false);
+          Email.active = false;
         },
       });
       return false;
