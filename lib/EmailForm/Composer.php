@@ -97,6 +97,7 @@ Störung.';
     TOTAL_FEES,
     AMOUNT_PAID,
     MISSING_AMOUNT,
+    PROJECT_DATA,
     SEPA_MANDATE_REFERENCE,
     BANK_ACCOUNT_IBAN,
     BANK_ACCOUNT_BIC,
@@ -546,6 +547,45 @@ table.transaction-parts td.money {
       }
       $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
       return $this->moneyValue($obligations['sum'] - $obligations['received']);
+    };
+
+    // per-participant project-data
+    $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+
+      $monetaryOnly = false;
+      $fieldName = null;
+      if (count($keyArg) == 2) {
+        $monetaryOnly = $keyArg[1] == 'monetary' || $keyArg[1] == $this->l->t('monetary');
+        if (!$monetaryOnly) {
+          $fieldName = $keyArg[1]; // a specific field.
+        }
+      }
+      /** @var Entities\ProjectParticipant $projectParticipant */
+      $projectParticipant = $musician->getProjectParticipantOf($this->project);
+
+      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+      foreach ($projectParticipant->getParticipantFieldsData() as $fieldDatum) {
+      }
+
+      $html = '<ul class="participant-fields">';
+
+      /** @var Entities\ProjectParticipantField as $field */
+      foreach ($this->project->getParticipantFields() As $field) {
+        $label = $field->getName();
+        if (!empty($fieldName)
+            && strtolower($label) != strtolower($fieldName)
+            && strtolower($this->l->t($label)) != strtolower($fieldName)
+            && strtolower($label) != strtolower($this->l->t($fieldName))) {
+          continue;
+        }
+        $html .= '<li>'.$label.'</li>';
+      }
+      $html .= '</ul>';
+
+      return $html;
     };
 
     if (!empty($this->bulkTransaction)) {
