@@ -35,6 +35,7 @@ use OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Common\Util;
 
 trait ConfigTrait {
 
@@ -465,14 +466,25 @@ trait ConfigTrait {
   }
 
   protected function translationVariants(string $name) {
-    $lcName = strtolower($name);
+    $camelCase = Util::dashesToCamelCase($name, true, '-_ ');
+    $words = ucwords(Util::camelCaseToDashes($camelCase, ' '), ' ');
     $variants = array_unique([
-      $name, $lcName, ucfirst($lcName), strtoupper($name)
+      $name,
+      strtolower($name),
+      strtoupper($name),
+      lcfirst($camelCase),
+      $camelCase,
+      strtolower($camelCase),
+      strtoupper($camelCase),
+      $words,
+      strtoupper($words),
     ]);
-    $variants = array_map(
-      function($value) { return strtolower($this->l->t($value)); },
-      $variants);
-    array_unshift($variants, $lcName);
+    $variants = array_merge(
+      array_map(strtolower, $variants),
+      array_map(
+        function($value) { return strtolower($this->l->t($value)); },
+        $variants)
+    );
     return array_unique($variants);
   }
 
