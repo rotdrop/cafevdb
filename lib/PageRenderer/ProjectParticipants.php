@@ -602,10 +602,14 @@ class ProjectParticipants extends PMETableViewBase
        'escape' => false,
        'sql|CAPDV' => "GROUP_CONCAT(
   DISTINCT
-  CONCAT_WS(
-    '".self::JOIN_KEY_SEP."',
-    ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
-    ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader)
+  IF(".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader IS NULL
+     OR ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader = 0,
+    NULL,
+    CONCAT_WS(
+      '".self::JOIN_KEY_SEP."',
+      ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
+      ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader)
+  )
   ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
        'display|LF' => [ 'popup' => function($data) {
          return $this->toolTipsService['section-leader-mark'];

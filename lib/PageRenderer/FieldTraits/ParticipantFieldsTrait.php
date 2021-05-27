@@ -111,14 +111,15 @@ trait ParticipantFieldsTrait
           'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
           'default|A'  => $field['default_value'],
           'filter' => 'having',
-          'sql' => 'GROUP_CONCAT(DISTINCT
+          'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
   IF($join_table.field_id = '.$fieldId.', $join_col_enc, NULL)
-  ORDER BY $order_by)',
+  ORDER BY $order_by))',
           'values' => [
             'grouped' => true,
             'filters' => ('$table.field_id = '.$fieldId
                           .' AND $table.project_id = '.$this->projectId
                           .' AND $table.musician_id = $record_id[musician_id]'),
+            'orderby' => '$table.option_key ASC',
           ],
           'tooltip' => $field['tooltip']?:null,
         ];
@@ -144,7 +145,7 @@ trait ParticipantFieldsTrait
           Util::arrayMergeRecursive($extraFddBase, [
             'name' => $this->l->t('Deleted'),
             'input' => 'SRH', // ($this->showDisabled ? 'SR' : 'SRH'),
-            'sql' => 'GROUP_CONCAT(
+            'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
   DISTINCT
   IF(
     NOT $join_table.field_id = '.$fieldId.' OR $join_col_fqn IS NULL,
@@ -155,7 +156,7 @@ trait ParticipantFieldsTrait
       $join_col_fqn
     )
   )
-  ORDER BY $order_by)',
+  ORDER BY $order_by))',
           ])
         );
         $deletedFdd = &$fieldDescData[$deletedFddName];
@@ -448,9 +449,12 @@ trait ParticipantFieldsTrait
                 'column' => 'option_key',
                 'description' => [
                   'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
-                  'divs' => ':',
+                  'divs' => self::JOIN_KEY_SEP,
                 ],
-                'orderby' => '$table.created DESC',
+                // ordering by UUID is meaningless but provides a
+                // consistent ordering if any two fields should have
+                // been created at the same time.
+                'orderby' => '$table.created DESC, $table.option_key ASC',
                 'encode' => 'BIN2UUID(%s)',
               ]);
           }
@@ -492,7 +496,12 @@ trait ParticipantFieldsTrait
             $deletedFilter = ' OR $join_table.deleted IS NOT NULL';
           }
 
-          $valueFdd['sql'] = 'GROUP_CONCAT(
+          // The following KEY:VALUE always result into a "changed"
+          // entry in the legacy PME code. This is adjusted later in
+          // $this->beforeUpdateSanitizeParticipantFields()
+
+          // @todo Why is the TRIM necessary?
+          $valueFdd['sql'] = 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
   DISTINCT
   IF(
     NOT $join_table.field_id = '.$fieldId.$deletedFilter.',
@@ -503,13 +512,13 @@ trait ParticipantFieldsTrait
       $join_table.option_value
     )
   )
-  ORDER BY $order_by)';
+  ORDER BY $order_by))';
 
           // yet another field for the supporting documents
           list($invoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
             $fieldDescData, $tableName, 'supporting_document_id', [
               'input' => 'SRH',
-              'sql' => 'GROUP_CONCAT(
+              'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
   DISTINCT
   IF(
     NOT $join_table.field_id = '.$fieldId.$deletedFilter.',
@@ -520,7 +529,10 @@ trait ParticipantFieldsTrait
       $join_col_fqn
     )
   )
-  ORDER BY $order_by)',
+  ORDER BY $order_by))',
+              'values' => [
+                'orderby' => '$table.created DESC, $table.option_key ASC',
+              ],
             ]);
           $invoiceFdd = &$fieldDescData[$invoiceFddName];
 
@@ -910,7 +922,7 @@ WHERE pp.project_id = $this->projectId",
   ".$this->musicianPublicNameSql('m2')." AS name,
   m2.sur_name AS sur_name,
   m2.first_name AS first_name,
-  m2.nick_name AS nick_name
+  m2.nick_name AS nick_name,
   m2.display_name AS display_name,
   fd.option_key AS group_id
 FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
@@ -1228,6 +1240,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       }
     }
     $changed = array_values(array_unique($changed));
+    $this->changeSetSize = count($changed);
     return true;
   }
 
