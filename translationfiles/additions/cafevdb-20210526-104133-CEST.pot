@@ -1,0 +1,44 @@
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2257
+#, php-format
+msgid "Debitnote"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Traits/ConfigTrait.php:473
+#, php-format
+msgid "monetary"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Traits/ConfigTrait.php:473
+#, php-format
+msgid "files"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Traits/ConfigTrait.php:473
+#, php-format
+msgid "other"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Traits/ConfigTrait.php:473
+#, php-format
+msgid "purpose"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Traits/ConfigTrait.php:473
+#, php-format
+msgid "invoiced"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Traits/ConfigTrait.php:473
+#, php-format
+msgid "totals"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Traits/ConfigTrait.php:473
+#, php-format
+msgid "received"
+msgstr ""
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Traits/ConfigTrait.php:473
+#, php-format
+msgid "remaining"
+msgstr ""
