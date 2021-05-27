@@ -390,7 +390,7 @@ class ProjectParticipants extends PMETableViewBase
         'name'     => $this->l->t('Nickname'),
         'tab'      => [ 'id' => 'tab-all' ],
         'input|LF' => 'H',
-        'sql|LFVD' => 'IF($column IS NULL OR $column = \'\', $table.first_name, $column)',
+        'sql|LFVD' => 'IF($join_col_fqn IS NULL OR $join_col_fqn = \'\', $table.first_name, $join_col_fqn)',
         'maxlen'   => 384,
         'display|ACP' => [
           'attributes' => function($op, $row, $k, $pme) {
