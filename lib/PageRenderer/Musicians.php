@@ -233,8 +233,10 @@ make sure that the musicians are also automatically added to the
     // Sorting field(s)
     $opts['sort_field'] = [
       $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      'display_name',
       'sur_name',
       'first_name',
+      'nick_name',
       'id'
     ];
 
