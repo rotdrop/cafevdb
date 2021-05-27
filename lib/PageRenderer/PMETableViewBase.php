@@ -1561,7 +1561,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * @return string Cooked field-name composed of $joinInfo and $column.
    *
    */
-  protected function joinTableFieldName($joinInfo, string $column)
+  static protected function joinTableFieldName($joinInfo, string $column)
   {
     if (is_array($joinInfo)) {
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
@@ -1967,9 +1967,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * @param string $tableAlias Table to refer to, refers to
    * placeholder '$table'.
    */
-  static public function musicianPublicNameSql($tableAlias = '$table')
+  static public function musicianPublicNameSql($tableAlias = '$table', $firstNameFirst = false)
   {
-    return "IF($tableAlias.display_name IS NULL OR $tableAlias.display_name = '',
+    if ($firstNameFirst) {
+      return "CONCAT_WS(
+  ', ',
+  IF($tableAlias.nick_name IS NULL OR $tableAlias.nick_name = '',
+    $tableAlias.first_name,
+    $tableAlias.nick_name
+  ),
+  $tableAlias.sur_name)";
+    } else {
+      return "IF($tableAlias.display_name IS NULL OR $tableAlias.display_name = '',
       CONCAT(
         $tableAlias.sur_name,
         ', ',
@@ -1980,6 +1989,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       ),
       $tableAlias.display_name
     )";
+    }
   }
 
   /**
