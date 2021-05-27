@@ -334,7 +334,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pmeBare = !$enable;
   }
 
-
   /**
    * Register a pre-commit action and optionally an associated
    * undo-action. The actions are run after all data-base operation
@@ -797,7 +796,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
       if ($joinInfo['flags'] & self::JOIN_READONLY) {
         foreach ($changeSet as $column => $field) {
-          Util::unsetValue($changed, $field);
+          if (Util::unsetValue($changed, $field) > 0) {
+            --$this->changeSetSize;
+          }
         }
         continue;
       }

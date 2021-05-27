@@ -243,15 +243,18 @@ class Util
    *
    * @param mixed $value The value to remove.
    *
-   * @return array The resulting array. Note that $hayStack is also
-   * passed by reference.
+   * @return int The number of array slots that have been unset. As
+   * the values need not be unique this can be any non-negative
+   * integer.
    */
-  public static function unsetValue(array &$hayStack, $value)
+  public static function unsetValue(array &$hayStack, $value):int
   {
+    $numUnset = 0;
     while (($key = array_search($value, $hayStack)) !== false) {
       unset($hayStack[$key]);
+      ++$numUnset;
     }
-    return $hayStack;
+    return $numUnset;
   }
 
   /**
