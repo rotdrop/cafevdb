@@ -724,12 +724,14 @@ const myReady = function(selector, resizeCB) {
       const $parentFolder = $this.find('.operation.open-parent');
       const $deleteUndelete = $this.find('.operation.delete-undelete');
       const $downloadLink = $this.find('a.download-link');
+      const $placeholder = $this.find('input.upload-placeholder');
 
       FileUpload.init({
         url: generateUrl('projects/participants/files/upload'),
         doneCallback(file, index, container) {
           $downloadLink.attr('href', file.meta.download);
           $downloadLink.html(file.meta.baseName);
+          $placeholder.val(file.meta.baseName);
           $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
           $parentFolder.prop('disabled', $downloadLink.attr('href') === '');
         },
@@ -774,6 +776,7 @@ const myReady = function(selector, resizeCB) {
             }
             $downloadLink.attr('href', '');
             $downloadLink.html('');
+            $placeholder.val('');
             $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
             Notification.messages(data.message);
             cleanup();

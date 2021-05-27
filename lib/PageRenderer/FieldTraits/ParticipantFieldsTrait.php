@@ -246,6 +246,7 @@ trait ParticipantFieldsTrait
             };
             break;
           case FieldType::DB_FILE:
+            $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
             $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $policy = $field->getDefaultValue()?:'rename';
@@ -276,6 +277,7 @@ trait ParticipantFieldsTrait
             };
             break;
           case FieldType::CLOUD_FILE:
+            $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
             $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $policy = $field->getDefaultValue()?:'rename';
@@ -354,6 +356,7 @@ trait ParticipantFieldsTrait
            */
           switch ($dataType) {
           case FieldType::CLOUD_FILE:
+            $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
             $keyFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
               $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
               $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
@@ -628,7 +631,7 @@ trait ParticipantFieldsTrait
           $keyFdd = Util::arrayMergeRecursive(
             $keyFdd, [
               'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
-              'input' => 'VSRH',
+              'input' => 'SRH',
             ]);
 
 
@@ -665,16 +668,18 @@ trait ParticipantFieldsTrait
           $groupMemberFdd = array_merge(
             $groupMemberFdd, [
               'select' => 'M',
-              'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
+              'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
               'display' => [ 'popup' => 'data' ],
               'colattrs' => [ 'data-groups' => $dataOptionsData, ],
               'filter' => 'having',
               'values' => [
                 'table' => "SELECT
    m1.id AS musician_id,
-   CONCAT_WS(' ', m1.first_name, m1.sur_name) AS name,
+   ".$this->musicianPublicNameSql('m1')." AS name,
    m1.sur_name AS sur_name,
    m1.first_name AS first_name,
+   m1.nick_name AS nick_name,
+   m1.display_name AS display_name,
    fd.option_key AS group_id,
    fdg.group_number AS group_number
 FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
@@ -701,7 +706,7 @@ WHERE pp.project_id = $this->projectId",
   "groupId", IFNULL(BIN2UUID($table.group_id), -1),
   "limit", '.$max.'
 )',
-                'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
+                'orderby' => '$table.group_id ASC, $table.display_name ASC, $table.sur_name ASC, $table.nick_name ASC, $table.first_name ASC',
                 'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
               ],
               'valueGroups|ACP' => $valueGroups,
@@ -801,7 +806,7 @@ WHERE pp.project_id = $this->projectId",
           $keyFdd = Util::arrayMergeRecursive(
             $keyFdd, [
               'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
-              'input' => 'RH',
+              'input' => 'SRH',
             ]);
 
           // generate a new group-definition field as yet another column
@@ -822,16 +827,18 @@ WHERE pp.project_id = $this->projectId",
           $groupMemberFdd = Util::arrayMergeRecursive(
             $groupMemberFdd, [
               'select' => 'M',
-              'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
+              'sql|ACP' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id ORDER BY $order_by)',
               //'sql' => 'GROUP_CONCAT(DISTINCT $join_table.musician_id)',
               //'display' => [ 'popup' => 'data' ],
               'colattrs' => [ 'data-groups' => $dataOptionsData, ],
               'values|ACP' => [
                 'table' => "SELECT
   m3.id AS musician_id,
-  CONCAT_WS(' ', m3.first_name, m3.sur_name) AS name,
+  ".$this->musicianPublicNameSql('m3')." AS name,
   m3.sur_name AS sur_name,
   m3.first_name AS first_name,
+  m3.nick_name AS nick_name,
+  m3.display_name AS display_name,
   fd.option_key AS group_id,
   do.label AS group_label,
   do.data AS group_data,
@@ -851,7 +858,7 @@ WHERE pp.project_id = $this->projectId",
   "groupId", IFNULL(BIN2UUID($table.group_id), -1),
   "limit", $table.group_limit
 )',
-                'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
+                'orderby' => '$table.group_id ASC, $table.display_name ASC, $table.sur_name ASC, $table.nick_name ASC, $table.first_name ASC',
                 'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
                 //'titles' => '$table.name',
               ],
@@ -891,7 +898,7 @@ WHERE pp.project_id = $this->projectId",
           // new field, data-popup
           $popupFdd = &$fieldDescData[$fddMemberNameName];
 
-          // data-popup field
+          // data-popup field, this can be virtual as it is only used for displaying data
           $popupFdd = Util::arrayMergeRecursive(
             $popupFdd, [
               'input' => 'VSRH',
@@ -900,9 +907,11 @@ WHERE pp.project_id = $this->projectId",
               'values|LFDV' => [
                 'table' => "SELECT
   m2.id AS musician_id,
-  CONCAT_WS(' ', m2.first_name, m2.sur_name) AS name,
+  ".$this->musicianPublicNameSql('m2')." AS name,
   m2.sur_name AS sur_name,
   m2.first_name AS first_name,
+  m2.nick_name AS nick_name
+  m2.display_name AS display_name,
   fd.option_key AS group_id
 FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m2
@@ -911,7 +920,7 @@ LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
   ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
 WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                 'column' => 'name',
-                'orderby' => '$table.group_id ASC, $table.sur_name ASC, $table.first_name ASC',
+                'orderby' => '$table.group_id ASC, $table.display_name ASC, $table.sur_name ASC, $table.nick_name ASC, $table.first_name ASC',
                 'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
               ],
             ]);
@@ -956,6 +965,21 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     return '<span class="allowed-option '.$css.'"'.$htmlData.'>'.$label.$sep.$value.'</span>';
   }
 
+  static protected function participantFieldTableName($fieldId)
+  {
+    return self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+  }
+
+  static protected function participantFieldValueFieldName($fieldId)
+  {
+    return self::joinTableFieldName(self::participantFieldTableName($fieldId), 'option_value');
+  }
+
+  static protected function participantFieldKeyFieldName($fieldId)
+  {
+    return self::joinTableFieldName(self::participantFieldTableName($fieldId), 'option_key');
+  }
+
   protected function cloudFileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician)
   {
     $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
@@ -978,6 +1002,8 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
     $placeHolder = $this->l->t('Load %s', $fileName);
     $emptyDisabled = empty($value) ? ' disabled' : '';
+    $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
+                     . ($subDir ? '[]' : '');
     $html = '
   <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" data-upload-policy="'.$policy.'" data-storage="cloud">
     <td class="operations">
@@ -987,7 +1013,13 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     </td>
     <td class="cloud-file">
       <a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$value.'</a>
-      <input class="upload-placeholder" title="'.$this->toolTipsService['participant-attachment-upload'].'" placeholder="'.$placeHolder.'" type="text"/>
+      <input class="upload-placeholder"
+             title="'.$this->toolTipsService['participant-attachment-upload'].'"
+             placeholder="'.$placeHolder.'"
+             type="text"
+             name="'.$optionValueName.'"
+             value="'.htmlspecialchars($value).'"
+      />
     </td>
   </tr>';
     return $html;
@@ -1005,6 +1037,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
     $placeHolder = $this->l->t('Load %s', $fileName);
     $emptyDisabled = empty($value) ? ' disabled' : '';
+    $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
     $html = '
   <tr class="file-upload-row"
       data-field-id="'.$fieldId.'"
@@ -1020,7 +1053,13 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     </td>
     <td class="db-file">
       <a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>
-      <input class="upload-placeholder" title="'.$this->toolTipsService['participant-attachment-upload'].'" placeholder="'.$placeHolder.'" type="text"/>
+      <input class="upload-placeholder"
+             title="'.$this->toolTipsService['participant-attachment-upload'].'"
+             placeholder="'.$placeHolder.'"
+             type="text"
+             name="'.$optionValueName.'"
+             value="'.htmlspecialchars($value).'"
+      />
     </td>
   </tr>';
     return $html;
