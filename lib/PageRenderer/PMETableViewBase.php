@@ -852,15 +852,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         } else {
           if (!is_array($pivotColumn)) {
             $identifier[$key] = $oldvals[$pivotColumn];
-          } else if (!empty($pivotColumn['value'])){
+          } else if (isset($pivotColumn['value'])){
             $identifier[$key] = $pivotColumn['value'];
-          } else if (!empty($pivotColumn['self'])) {
-            // Key value has to come from another field, possibly
-            // defaulted if not yet known. This can only be used
-            // together with the 'multiple' case and must not
-            // introduce additional deletions and modifications.
+          } else if (isset($pivotColumn['self'])) {
             $selfField = $this->joinTableFieldName($joinInfo, $key);
-            $identifier[$key] = [ 'self' => $selfField ];
+            $identifier[$key] = [ 'self' => $selfField, ];
           } else {
             throw new \RuntimeException($this->l->t('Field "%s.%s": nested multi-value join tables with unexpected pivot-column: %s.', [ $table, $key, print_r($pivotColumn, true), ]));
           }
@@ -871,11 +867,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->debug('CHG '.print_r($changeSet, true));
 
         $dataSets = [
-          'del' => 'old',
-          'add' => 'new',
-          'rem' => 'new', // could use both
+          'del' => [ 'old' ],
+          'add' => [ 'new' ],
+          'rem' => [ 'old', 'new' ], // need both to allow change
         ];
-        foreach ($dataSets as $operation => $dataSet) {
+        foreach (array_keys($dataSets) as $operation) {
           ${$operation.'Identifier'} = [];
           foreach ($identifier[$multiple][$operation] as $idKey) {
             ${$operation.'Identifier'}[$idKey] = $identifier;
@@ -883,27 +879,34 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
           $this->debug('IDENTIFIER '.$operation.': '.print_r(${$operation.'Identifier'}, true));
         }
+
+        // Example ProjectParticipants, voice field:
+        // $selfKey == 'voice', $value is then the FQN, here
+        // ProjectInstruments:voice
         foreach ($identifier as $selfKey => $value) {
           if (empty($value['self'])) {
             continue;
           }
+          // $selfField == ProjectInstruments:voice
           $selfField = $value['self'];
-          foreach ($dataSets as $operation => $dataSet) {
-            foreach (${$operation.Identifier} as $key => &$idValues) {
+          foreach ($dataSets as $operation => $dataSetIds) {
+            foreach (${$operation.'Identifier'} as $key => &$idValues) {
               $idValues[$selfKey] = null;
             }
-            $dataValues = ${$dataSet.'vals'};
-            foreach (Util::explodeIndexed($dataValues[$selfField]) as $key => $value) {
-              if (isset(${$operation.Identifier}[$key])) {
-                ${$operation.Identifier}[$key][$selfKey] = $value;
+            foreach ($dataSetIds as $dataSet) {
+              $dataValues = ${$dataSet.'vals'};
+              foreach (Util::explodeIndexed($dataValues[$selfField]) as $key => $value) {
+                if (isset(${$operation.'Identifier'}[$key])) {
+                  ${$operation.'Identifier'}[$key][$selfKey][$dataSet] = $value;
+                }
               }
-            }
-            foreach (${$operation.Identifier} as $key => &$idValues) {
-              if (empty($idValues[$selfKey])) {
-                $idValues[$selfKey] = $pme->fdd[$selfField]['default'];
-              }
-              if ($idValues[$selfKey] === null) {
-                throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
+              foreach (${$operation.'Identifier'} as $key => &$idValues) {
+                if (empty($idValues[$selfKey][$dataSet])) {
+                  $idValues[$selfKey][$dataSet] = $pme->fdd[$selfField]['default'];
+                }
+                if ($idValues[$selfKey][$dataSet] === null) {
+                  throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
+                }
               }
             }
           }
@@ -1014,7 +1017,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           } else if (isset($remIdentifier[$new]) && !empty($changeSet)) {
             $this->debug('TRY MOD '.$new);
             $id = $remIdentifier[$new];
+            $this->debug('REM IDS '.print_r($id, true));
             $entityId = $meta->extractKeyValues($id);
+            $this->debug('ENTITIY ID '.print_r($entityId, true));
             $entity = $this->find($entityId);
             if (empty($entity)) {
               throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
@@ -1387,13 +1392,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * - false  "incomplete" key for grouping
    * - array
    *    - ```[ 'value' => VALUE ]``` where VALUE may be again an array of
-   *      values which are sued to form an IN condition, false or null
+   *      values which are used to form an IN condition, false or null
    *      for "IS NULL", true for "IS NOT NULL". Any other value as string
    *      or number depending on its value. Strings are properly escaped.
    *    - ```[
    *        'table' => OTHER_TABLE,
    *        'column' => COLUMN_IN_OTHER_TABLE,
    *      ]```
+   *    - ```[ 'self' => true ]``` like 'table' but with the same table
+   *      and just this COLUMN_NAME as column.
    *
    * The difference between 'filter' and 'identifier' is that the
    * 'identifier' section is also used to update entities, while the
