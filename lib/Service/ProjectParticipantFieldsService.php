@@ -22,6 +22,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Ramsey\Uuid\UuidInterface;
 use \Doctrine\Common\Collections;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -554,7 +555,61 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Select a fields with matching names from a collection of fields
+   * For the given Multiplicity::GROUPOFPEOPLE or
+   * Multiplicity::GROUPSOFPEOPLE option find the group members.
+   *
+   * @param Entities\ProjectParticipantFieldDataOption|Entities\ProjectParticipantFieldDatum $groupOptionProvider
+   *
+   * @return array|Collection Array or collection of all members in
+   * the form or the Entities\ProjectParticipantFieldDatum entities
+   * for the group.
+   */
+  public function findGroupMembersOf($groupOptionProvider)
+  {
+    if ($groupOptionProvider instanceof Entities\ProjectParticipantFieldDatum) {
+      $groupKey = $groupOptionProvider->getOptionKey();
+    } else if ($groupOptionProvider instanceof Entities\ProjectParticipantFieldDataOption) {
+      $groupKey = $groupOptionProvider->getKey();
+    }
+
+    $groupField = $groupOptionProvider->getField();
+    $multipliciy = $groupField->getMultiplicity();
+    if ($multipliciy != Multiplicity::GROUPOFPEOPLE
+        && $multipliciy != Multiplicity::GROUPSOFPEOPLE) {
+      throw new \RuntimeException(
+        $this->l->t('Field "%s" is not a group of participants field.', $groupField->getName()));
+    }
+
+    // @todo The getBytes() MUST NOT BE NECESSARY
+    $groupMembers = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)
+                         ->findBy([ 'optionKey' => $groupKey ]);
+
+    return $groupMembers;
+  }
+
+  /**
+   * Find the members of all groups for the given option, indexed by the option-key.
+   */
+  public function findGroupMembers(Entities\ProjectParticipantField $groupField)
+  {
+    $multipliciy = $groupField->getMultiplicity();
+    if ($multipliciy != Multiplicity::GROUPOFPEOPLE
+        && $multipliciy != Multiplicity::GROUPSOFPEOPLE) {
+      throw new \RuntimeException(
+        $this->l->t('Field "%s" is not a group of participants field.', $groupField->getName()));
+    }
+
+    $groupMembers = [];
+    /** @var Entities\ProjectParticipantFieldDataOption $groupOption */
+    foreach ($groupField->getSelectableOptions() as $groupOption) {
+      $groupKey = $groupOption->getKey();
+      $groupMembers[$groupKey->getBytes()] = $this->findGroupMembersOf($groupOption);
+    }
+    return $groupMembers;
+  }
+
+  /**
+   * Select a field with matching names from a collection of fields
    */
   public function filterByFieldName(Collections\Collection $things, string $fieldName, $singleResult = true)
   {

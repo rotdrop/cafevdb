@@ -187,6 +187,9 @@ table.transaction-parts td.money {
   <td class="money">[RECEIVED]</td>
   <td class="money">[REMAINING]</td>
   <td class="date">[DUEDATE]</td>
+</tr><tr class="row-data">
+  <td class="row-data-label">[ROWDATALABEL]</td>
+  <td class="row-data-contents" colspan="4">[ROWDATACONTENTS]</td>
 </tr>',
     'footer' => '</tbody><tbody class="[CSSCLASS]">
   <tr class="[CSSCLASS]">
@@ -260,8 +263,25 @@ table.monetary-fields tbody.field-header.number-of-options-0,
 table.monetary-fields tbody.field-header.number-of-options-1,
 table.monetary-fields tr.field-header.number-of-options-0,
 table.monetary-fields tr.field-header.number-of-options-1,
+table.monetary-fields tbody.field-option tr.row-data,
 table.monetary-fields tbody:empty {
   display:none;
+}
+table.monetary-fields tbody.field-option tr.has-data + tr.row-data {
+  display:table-row;
+}
+table.monetary-fields tr.row-data td {
+  opacity:0.6;
+}
+table.monetary-fields tr.row-data td.row-data-label {
+  text-align:right;
+}
+table.monetary-fields tr.row-data td.row-data-contents {
+  white-space:nowrap;
+  overflow:hidden;
+  max-width:80%;
+  text-overflow:ellipsis;
+  font-style:italic;
 }
 </style>';
 
@@ -321,6 +341,9 @@ table.monetary-fields tbody:empty {
   /** @var EventsService */
   private $eventsService;
 
+  /** @var ProjectParticipantFieldsService */
+  private $participantFieldsService;
+
   /** @var ProgressStatusService */
   private $progressStatusService;
 
@@ -342,6 +365,7 @@ table.monetary-fields tbody:empty {
     , EventsService $eventsService
     , RecipientsFilter $recipientsFilter
     , EntityManager $entityManager
+    , ProjectParticipantFieldsService $participantFieldsService
     , ProgressStatusService $progressStatusService
     , AppStorage $appStorage
   ) {
@@ -350,6 +374,7 @@ table.monetary-fields tbody:empty {
     $this->progressStatusService = $progressStatusService;
     $this->appStorage = $appStorage;
     $this->entityManager = $entityManager;
+    $this->participantFieldsService = $participantFieldsService;
     $this->l = $this->l10N();
 
     $this->constructionMode = $this->getConfigValue('emailtestmode') !== 'off';
@@ -761,16 +786,9 @@ table.monetary-fields tbody:empty {
           $totalSum['label'] = $this->l->t('Total Amount');
           $totalSum['dueDate'] = null;
 
-          /** @var Entities\ProjectParticipantField $field */
           foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
+            /** @var Entities\ProjectParticipantField $field */
             foreach ($fields as $field) {
-
-              // for field->options
-              //   - check if set for participant
-              //   - generate sub-row with value
-              //   - for recurring fields only include the "booked" ones
-              //   - for single values omit the header
-              //   - include payment information
 
               $dueDate = $field->getDueDate();
               if (!empty($dueDate)) {
@@ -821,14 +839,30 @@ table.monetary-fields tbody:empty {
                 $option = $fieldOption->getLabel() ?: $field->getName();
 
                 $fieldData = $projectParticipant->getParticipantFieldsDatum($fieldOption->getKey());
+
+                $totals = '--';
+                $received = '--';
+                $remaining = '--';
+                $memberNames = [];
+
                 if (!empty($fieldData)) {
                   $totals = $fieldData->amountPayable();
                   $received = $fieldData->amountPaid();
                   $remaining = $totals - $received;
-                } else {
-                  $totals = '--';
-                  $received = '--';
-                  $remaining = '--';
+
+                  if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE
+                      || $field->getMultiplicity() == FieldMultiplicity::GROUPSOFPEOPLE) {
+                    $groupMembers = $this->participantFieldsService->findGroupMembersOf($fieldData);
+                    /** @var Entities\ProjectParticipantFieldDatum $groupMember */
+                    foreach ($groupMembers as $groupMember) {
+                      $memberNames[] = $groupMember->getMusician()->getPublicName(true);
+                    }
+                  }
+                } else if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE) {
+                  if ($fieldOption != $field->getSelectableOptions()->last()) {
+                    // make sure we only include the option the participant has booked.
+                    continue;
+                  }
                 }
 
                 // compute substitution values
@@ -855,7 +889,15 @@ table.monetary-fields tbody:empty {
                   );
                   $row = str_ireplace($keyVariants, $replacements[$key], $row);
                 }
-                $row = str_replace('[CSSROWCLASS]', $cssRowClass, $row);
+                $cssClass = $cssRowClass;
+                if (!empty($memberNames)) {
+                  $cssClass .= ' has-data';
+                  $rowData = [ $cssClass, $this->l->t('members'), implode(', ', $memberNames), ];
+                } else {
+                  $rowData = [ $cssClass, '', '', ];
+                }
+                $rowKeys = [ '[CSSROWCLASS]', '[ROWDATALABEL]', '[ROWDATACONTENTS]',  ];
+                $row = str_replace($rowKeys, $rowData, $row);
                 $html .= $row;
               }
             }
