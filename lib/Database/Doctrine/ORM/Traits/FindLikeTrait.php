@@ -301,12 +301,16 @@ trait FindLikeTrait
    * Compute the where-part of a query. The query builder must have
    * been initialized with the main table alias 'mainTable' and
    * already contain the select part.
+   *
+   * @todo Field-type deduction for set-parameter only works for the
+   * main-table ATM. This could probably be cured by reading the
+   * meta-data for all join tables.
    */
   protected function generateFindByWhere(ORM\QueryBuilder $qb, array $queryParts)
   {
     // unpack parameter array
-    foreach ($queryParts as $key => $value) {
-      ${$key} = $value;
+    foreach ($queryParts as $key => $part) {
+      ${$key} = $part;
     }
 
     if (!empty($criteria)) {
@@ -370,7 +374,13 @@ trait FindLikeTrait
         $field = $tableAlias.'.'.$key;
       }
       $param = str_replace('.', '_', $field);
-      $qb->setParameter($param, $value);
+
+      $fieldType = null;
+      if ($tableAlias == 'mainTable') {
+        // try to deduce the type as this is NOT done by ORM here
+        $fieldType = $this->getClassMetadata()->getTypeOfField($key);
+      }
+      $qb->setParameter($param, $value, $fieldType);
     }
     self::addOrderBy($qb, $orderBy, $limit, $offset, 'mainTable');
 
