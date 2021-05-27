@@ -40,6 +40,8 @@ use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -111,6 +113,31 @@ Störung.';
    * @var string
    * @todo Make this configurable
    */
+  const DEFAULT_TRANSACTION_PARTS_TEMPLATE = [
+    'header' => '<table class="transaction-parts"><thead><tr>
+  <th>[PURPOSE]</th>
+  <th>[INVOICED]</th>
+  <th>[TOTALS]</th>
+  <th>[RECEIVED]</th>
+  <th>[REMAINING]</th>
+</tr></thead><tbody>',
+    'row' => '<tr>
+  <td>[PURPOSE]</td>
+  <td class="money">[INVOICED]</td>
+  <td class="money">[TOTALS]</td>
+  <td class="money">[RECEIVED]</td>
+  <td class="money">[REMAINING]</td>
+</tr>',
+    'footer' => '</tbody><tbody class="footer">
+  <tr class="totalsum">
+    <td>[PURPOSE]</td>
+    <td class="money">[INVOICED]</td>
+    <td class="money">[TOTALS]</td>
+    <td class="money">[RECEIVED]</td>
+    <td class="money">[REMAINING]</td>
+  </tr>
+</tbody></table>'
+  ];
   const DEFAULT_TRANSACTION_PARTS_STYLE = '<style>
 table.transaction-parts,
 table.transaction-parts tr,
@@ -128,10 +155,10 @@ table.transaction-parts th {
   font-weight:bold;
 }
 table.transaction-parts td { text-align:left; }
-table.transaction-parts tr.totals {
+table.transaction-parts tr.totalsum {
   border-top:double;
 }
-table.transaction-parts tr.totals td {
+table.transaction-parts tr.totalsum td {
   text-align:right;
   font-weight:bold;
 }
@@ -140,6 +167,104 @@ table.transaction-parts td.money {
   padding-left: 1em;
  }
 </style>';
+  const DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE = [
+    'header' => '<table class="[CSSCLASS]"><thead><tr>
+  <th>[OPTION]</th>
+  <th>[TOTALS]</th>
+  <th>[RECEIVED]</th>
+  <th>[REMAINING]</th>
+  <th>[DUEDATE]</th>
+</tr></thead><tbody>',
+    'fieldHeader' => '</tbody><tbody class="[CSSCLASS]">
+  <tr class="[CSSCLASS]">
+    <td colspan="4">[FIELDNAME]</td>
+    <td>[DUEDATE]</td>
+  </tr>
+</tbody><tbody class="[CSSROWCLASS]">',
+    'row' => '<tr class="[CSSROWCLASS]">
+  <td class="row-label">[OPTION]</td>
+  <td class="money">[TOTALS]</td>
+  <td class="money">[RECEIVED]</td>
+  <td class="money">[REMAINING]</td>
+  <td class="date">[DUEDATE]</td>
+</tr>',
+    'footer' => '</tbody><tbody class="[CSSCLASS]">
+  <tr class="[CSSCLASS]">
+    <td class="row-label">[LABEl]</td>
+    <td class="money">[TOTALS]</td>
+    <td class="money">[RECEIVED]</td>
+    <td class="money">[REMAINING]</td>
+    <td class="date">[DUEDATE]</td>
+  </tr>
+</tbody></table>',
+  ];
+  const PARTICIPANT_MONETARY_FIELDS_CSS_CLASS = [
+    'header' => 'monetary-fields',
+    'fieldHeader' => 'field-header',
+    'row' => 'field-option',
+    'footer' => 'footer totalsum',
+  ];
+  const DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE = '<style>
+table.monetary-fields,
+table.monetary-fields tr,
+table.monetary-fields th,
+table.monetary-fields td {
+  border-collapse:collapse;
+}
+table.monetary-fields th,
+table.monetary-fields td {
+  border: 1px solid black;
+  padding: 0 2pt;
+}
+table.monetary-fields tr.field-header {
+  border-top:double;
+  border-bottom:2px solid black;
+}
+table.monetary-fields tr.field-header td {
+  font-style:italic;
+  text-align:center;
+}
+table.monetary-fields th {
+  font-weight:bold;
+  text-align:center;
+}
+table.monetary-fields tbody.field-option.number-of-options-1 td.row-label {
+  font-style:italic;
+}
+table.monetary-fields td.date {
+  font-style:italic;
+  text-align:center;
+  opacity:0;
+}
+table.monetary-fields tbody.footer td.date,
+table.monetary-fields tbody.number-of-options-1 td.date {
+  opacity:inherit;
+}
+table.monetary-fields td.money {
+  text-align:right;
+  padding-left: 1em;
+}
+table.monetary-fields tr.totalsum {
+  border-top:3px double black;
+  border-bottom:3px double black;
+}
+table.monetary-fields tr.totalsum td {
+  font-weight:bold;
+}
+table.monetary-fields tr.totalsum td.row-label {
+  text-align:right;
+}
+table.monetary-fields.number-of-fields-0 tr.totalsum,
+table.monetary-fields.number-of-fields-1 tr.totalsum,
+table.monetary-fields tbody.field-header.number-of-options-0,
+table.monetary-fields tbody.field-header.number-of-options-1,
+table.monetary-fields tr.field-header.number-of-options-0,
+table.monetary-fields tr.field-header.number-of-options-1,
+table.monetary-fields tbody:empty {
+  display:none;
+}
+</style>';
+
   private $recipients; ///< The list of recipients.
   private $onLookers;  ///< Cc: and Bcc: recipients.
 
@@ -386,69 +511,6 @@ table.transaction-parts td.money {
   }
 
   /**
-   * Substitute any per-recipient variables into $templateMessage
-   *
-   * @param $templateMessage The email message without substitutions.
-   *
-   * @param $dbdata The data from the musician data-base which
-   * contains the substitutions.
-   *
-   * @return string HTML message with variable substitutions.
-   *
-   * @todo This needs to be reworked TOTALLY
-   */
-  private function replaceMemberVariables($templateMessage, $dbdata)
-  {
-    return $templateMessage;
-    // if ($dbdata['Geburtstag'] && $dbdata['Geburtstag'] != '') {
-    //   $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
-    // }
-    // $strMessage = $templateMessage;
-    // foreach ($this->memberVariables as $placeholder => $column) {
-    //   if ($placeholder === 'EXTRAS') {
-    //     // EXTRAS is a multi-field stuff. In order to allow stuff
-    //     // like forming tables we allow lead-in, lead-out and separator.
-    //     if ($this->projectId <= 0) {
-    //       $extras = [ [ 'label' => $this->l->t("nothing"), 'surcharge' => 0 ] ];
-    //     } else {
-    //       $extras = $dbdata[$column];
-    //     }
-    //     $strMessage = preg_replace_callback(
-    //       '/([^$]|^)[$]{MEMBER::EXTRAS(:([^!}]+)!([^!}]+)!([^}]+))?}/',
-    //       function($matches) use ($extras) {
-    //         if (count($matches) === 6) {
-    //           $pre  = $matches[3];
-    //           $sep  = $matches[4];
-    //           $post = $matches[5];
-    //         } else {
-    //           $pre  = '';
-    //           $sep  = ': ';
-    //           $post = "\n";
-    //         }
-    //         $result = $matches[1];
-    //         foreach($extras as $records) {
-    //           $result .=
-    //                   $pre.
-    //                   $records['label'].
-    //                   $sep.
-    //                   $records['surcharge'].
-    //                   $post;
-    //         }
-    //         return $result;
-    //       },
-    //       $strMessage);
-    //     continue;
-    //   }
-    //   // replace all remaining stuff
-    //   $strMessage = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/',
-    //                              '${1}'.htmlspecialchars($dbdata[$column]),
-    //                              $strMessage);
-    // }
-    // $strMessage = preg_replace('/[$]{2}{/', '${', $strMessage);
-    return $strMessage;
-  }
-
-  /**
    * Fill the $this->substitutions array.
    */
   private function generateSubstitutionHandlers()
@@ -555,35 +617,284 @@ table.transaction-parts td.money {
         return $keyArg[0];
       }
 
-      $monetaryOnly = false;
-      $fieldName = null;
-      if (count($keyArg) == 2) {
-        $monetaryOnly = $keyArg[1] == 'monetary' || $keyArg[1] == $this->l->t('monetary');
-        if (!$monetaryOnly) {
-          $fieldName = $keyArg[1]; // a specific field.
-        }
-      }
       /** @var Entities\ProjectParticipant $projectParticipant */
       $projectParticipant = $musician->getProjectParticipantOf($this->project);
 
-      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-      foreach ($projectParticipant->getParticipantFieldsData() as $fieldDatum) {
-      }
+      $participantFields = $this->project->getParticipantFields();
+      $fieldsByType = [
+        'monetary' => $participantFields->filter(function($field) {
+          /** @var Entities\ProjectParticipantField $field */
+          return ($field->getDataType() == FieldType::SERVICE_FEE
+                  || $field->getDataType() == FieldType::DEPOSIT);
+        }),
+        'files' => $participantFields->filter(function($field) {
+          /** @var Entities\ProjectParticipantField $field */
+          return ($field->getDataType() == FieldType::CLOUD_FILE
+                  || $field->getDataType() == FieldType::DB_FILE);
+        }),
+        'other' => $participantFields->filter(function($field) {
+          /** @var Entities\ProjectParticipantField $field */
+          return ($field->getDataType() != FieldType::SERVICE_FEE
+                  && $field->getDataType() != FieldType::DEPOSIT
+                  && $field->getDataType() != FieldType::CLOUD_FILE
+                  && $field->getDataType() != FieldType::DB_FILE);
+        }),
+      ];
 
-      $html = '<ul class="participant-fields">';
-
-      /** @var Entities\ProjectParticipantField as $field */
-      foreach ($this->project->getParticipantFields() As $field) {
-        $label = $field->getName();
-        if (!empty($fieldName)
-            && strtolower($label) != strtolower($fieldName)
-            && strtolower($this->l->t($label)) != strtolower($fieldName)
-            && strtolower($label) != strtolower($this->l->t($fieldName))) {
-          continue;
+      if (count($keyArg) == 2) {
+        $found = false;
+        $selector = strtolower($keyArg[1]);
+        $specificField = $participantFields->filter(function($field) use ($selector) {
+          /** @var Entities\ProjectParticipantField $field */
+          return strtolower($field->getName()) == $selector;
+        });
+        if ($specificField->count() == 1) {
+          $found = true;
+          switch ($specificField->first()->getDataType()) {
+          case FieldType::SERVICE_FEE:
+          case FieldType::DEPOSIT:
+            $fieldsByType = ['monetary' => $specificField ];
+            break;
+          case FieldType::CLOUD_FILE:
+          case FieldType::DB_FILE:
+            $fieldsByType = [ 'file' => $specificField ];
+            break;
+          default:
+            $fieldsByType = [ 'other' => $specificField ];
+            break;
+          }
+        } else {
+          foreach (array_keys($fieldsByType) as $type) {
+            $variants = $this->translationVariants($type);
+            $this->logInfo('TYPES '.$type.' / '.print_r($variants, true));
+            if (array_search($selector, $variants) !== false) {
+              $this->logInfo('SPECIFIC '.$selector);
+              $fieldsByType = [ $type => $fieldsByType[$type] ];
+              $found = true;
+              break;
+            }
+          }
         }
-        $html .= '<li>'.$label.'</li>';
+        if (!$found) {
+          return $keyArg[0];
+        }
       }
-      $html .= '</ul>';
+
+      $html = '';
+      foreach ($fieldsByType as $type => $fields) {
+
+        $numberOfFields = $fields->count();
+
+        // First output the simple options, then the ones with
+        // multiple options, then the recurring options. Also sort by
+        // name.
+        $fieldsByMultiplicity = [
+          // only one possible option
+          'single' => (function($fields) {
+            $fieldArray = $fields->filter(function($field) {
+              /** @var Entities\ProjectParticipantField $field */
+              return ($field->getMultiplicity() == FieldMultiplicity::SIMPLE
+                      || $field->getMultiplicity() == FieldMultiplicity::SINGLE
+                      || $field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE);
+            })->toArray();
+            usort($fieldArray, function($a, $b) {
+              return strcmp($a->getName(), $b->getName());
+            });
+            return $fieldArray;
+          })($fields),
+          // possibly multiple options
+          'multiple' => (function($fields) {
+            $fieldArray = $fields->filter(function($field) {
+              /** @var Entities\ProjectParticipantField $field */
+              return ($field->getMultiplicity() == FieldMultiplicity::MULTIPLE
+                      || $field->getMultiplicity() == FieldMultiplicity::PARALLEL
+                      || $field->getMultiplicity() == FieldMultiplicity::RECURRING
+                      || $field->getMultiplicity() == FieldMultiplicity::GROUPSOFPEOPLE);
+            })->toArray();
+            usort($fieldArray, function($a, $b) {
+              return strcmp($a->getName(), $b->getName());
+            });
+            return $fieldArray;
+          })($fields),
+        ];
+
+        // PLAN: table for monetary fields, perhaps file-downloads for file fields.
+
+        /** @var IDateTimeFormatter $formatter */
+        $formatter = $this->appContainer()->get(IDateTimeFormatter::class);
+
+        if ($type == 'files' || $type == 'other') {
+          $html .= '<ul class="participant-fields">';
+          /** @var Entities\ProjectParticipantField $field */
+          foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
+            foreach ($fields as $field) {
+              $html .= '<li>'.$field->getName().'</li>';
+            }
+          }
+          $html .= '</ul>';
+        } else if ($type == 'monetary') {
+
+          $headerReplacements = [
+            'option' => $this->l->t('Option'),
+            'totals' => $this->l->t('Total Amount'),
+            'received' => $this->l->t('Received'),
+            'remaining' => $this->l->t('Remaining'),
+            'dueDate' => $this->l->t('Due Date'),
+          ];
+          $replacementKeys = array_keys($headerReplacements);
+          $header = self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE['header'];
+          foreach ($headerReplacements as $key => $replacement) {
+            $keyVariants = array_map(
+              function($key) { return '['.$key.']'; },
+              $this->translationVariants($key)
+            );
+            $header = str_ireplace($keyVariants, $replacement, $header);
+          }
+          $cssClass = implode(' ', [
+            self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['header'],
+            'number-of-fields-'.$numberOfFields,
+          ]);
+          $header = str_replace('[CSSCLASS]', $cssClass, $header);
+          $html .= /* self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE . */ $header;
+
+          $totalSum = array_fill_keys($replacementKeys, 0.0);
+          $totalSum['label'] = $this->l->t('Total Amount');
+          $totalSum['dueDate'] = null;
+
+          /** @var Entities\ProjectParticipantField $field */
+          foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
+            foreach ($fields as $field) {
+
+              // for field->options
+              //   - check if set for participant
+              //   - generate sub-row with value
+              //   - for recurring fields only include the "booked" ones
+              //   - for single values omit the header
+              //   - include payment information
+
+              $dueDate = $field->getDueDate();
+              if (!empty($dueDate)) {
+                if (empty($totalSum['dueDate'])) {
+                  $totalSum['dueDate']['min'] = $totalSum['dueDate']['max'] = $dueDate;
+                } else {
+                  $totalSum['dueDate']['min'] = min($totalSum['dueDate']['min'], $dueDate);
+                  $totalSum['dueDate']['max'] = max($totalSum['dueDate']['max'], $dueDate);
+                }
+
+                $dueDate = $dueDate
+                         ? $formatter->formatDate($dueDate, 'medium')
+                         : '';
+                $this->logInfo('DUEDATE '.$field->getName().' '.$dueDate);
+              }
+
+              $numberOfOptions = $field->getSelectableOptions()->count();
+
+              // generate a field-header for multiple options
+              $replacements = [
+                'field-name' => $field->getName(),
+                'dueDate' => $dueDate,
+              ];
+
+              $fieldHeader = self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE['fieldHeader'];
+              foreach ($replacements as $key => $replacement) {
+                $keyVariants = array_map(
+                  function($key) { return '['.$key.']'; },
+                  $this->translationVariants($key)
+                );
+                $fieldHeader = str_ireplace($keyVariants, $replacement, $fieldHeader);
+              }
+              $cssClass = implode(' ', [
+                self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['fieldHeader'],
+                'number-of-options-' . $numberOfOptions,
+              ]);
+              $cssRowClass = implode(' ', [
+                self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['row'],
+                'number-of-options-'.$numberOfOptions,
+              ]);
+              $fieldHeader = str_replace(
+                [ '[CSSCLASS]', '[CSSROWCLASS]' ], [ $cssClass, $cssRowClass ], $fieldHeader);
+              $html .= $fieldHeader;
+
+              /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
+              foreach ($field->getSelectableOptions() as $fieldOption) {
+
+                $option = $fieldOption->getLabel() ?: $field->getName();
+
+                $fieldData = $projectParticipant->getParticipantFieldsDatum($fieldOption->getKey());
+                if (!empty($fieldData)) {
+                  $totals = $fieldData->amountPayable();
+                  $received = $fieldData->amountPaid();
+                  $remaining = $totals - $received;
+                } else {
+                  $totals = '--';
+                  $received = '--';
+                  $remaining = '--';
+                }
+
+                // compute substitution values
+                $replacements = [];
+                foreach ($replacementKeys as $key) {
+                  if ($key == 'option' || $key == 'dueDate' ) {
+                    $replacements[$key] = ${$key};
+                    continue;
+                  }
+                  if (${$key} != '--') {
+                    $totalSum[$key] += ${$key};
+                    $replacements[$key] = $this->moneyValue(${$key});
+                  } else {
+                    $replacements[$key] = ${$key};
+                  }
+                }
+
+                // inject into template
+                $row = self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE['row'];
+                foreach ($replacementKeys as $key) {
+                  $keyVariants = array_map(
+                    function($key) { return '['.$key.']'; },
+                    $this->translationVariants($key)
+                  );
+                  $row = str_ireplace($keyVariants, $replacements[$key], $row);
+                }
+                $row = str_replace('[CSSROWCLASS]', $cssRowClass, $row);
+                $html .= $row;
+              }
+            }
+          }
+
+          $footer = self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE['footer'];
+          foreach ($replacementKeys as $key) {
+            switch ($key) {
+            case 'option':
+              $key = 'label';
+              break;
+            case 'dueDate':
+              if (!empty($totalSum['dueDate'])) {
+                $minDate = $formatter->formatDate($totalSum['dueDate']['min'], 'short');
+                $maxDate = $formatter->formatDate($totalSum['dueDate']['max'], 'short');
+                if (true || $minDate == $maxDate) {
+                  $totalSum['dueDate'] = $formatter->formatDate($totalSum['dueDate']['max'], 'medium');
+                } else {
+                  $totalSum['dueDate'] = $minDate . ' - ' . $maxDate;
+                }
+              }
+              break;
+            default:
+              $totalSum[$key] = $this->moneyValue($totalSum[$key]);
+              break;
+            }
+            $keyVariants = array_map(
+              function($key) { return '['.$key.']'; },
+              $this->translationVariants($key)
+            );
+            $footer = str_ireplace($keyVariants, $totalSum[$key], $footer);
+          }
+          $cssClass = implode(' ', [
+            self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['footer'],
+          ]);
+          $footer = str_replace('[CSSCLASS]', $cssClass, $footer);
+          $html .= $footer;
+        }
+      }
 
       return $html;
     };
@@ -707,36 +1018,35 @@ table.transaction-parts td.money {
             $keyArg);
 
           $tableTemplate = [
-              'header' => $keyArg[1]?:'<table class="transaction-parts"><thead><tr>
-  <th>'.$this->l->t('Purpose').'</th>
-  <th>'.$this->l->t('Invoice Amount').'</th>
-  <th>'.$this->l->t('Total Amount').'</th>
-  <th>'.$this->l->t('Received').'</th>
-  <th>'.$this->l->t('Remaining').'</th>
-</tr></thead><tbody>',
-              'row' => $keyArg[2]?:'<tr>
-  <td>[PURPOSE]</td>
-  <td class="money">[INVOICED]</td>
-  <td class="money">[TOTALS]</td>
-  <td class="money">[RECEIVED]</td>
-  <td class="money">[REMAINING]</td>
-</tr>',
-              'footer' => $keyArg[3]?:'<tr class="totals">
-  <td>[PURPOSE]</td>
-  <td class="money totalsum">[INVOICED]</td>
-  <td class="money totalsum">[TOTALS]</td>
-  <td class="money totalsum">[RECEIVED]</td>
-  <td class="money totalsum ">[REMAINING]</td
-</tr></tbody></table>',
+            'header' => $keyArg[1]?:self::DEFAULT_TRANSACTION_PARTS_TEMPLATE['header'],
+            'row' => $keyArg[2]?:self::DEFAULT_TRANSACTION_PARTS_TEMPLATE['row'],
+            'footer' => $keyArg[3]?:self::DEFAULT_TRANSACTION_PARTS_TEMPLATE['footer'],
           ];
-
-          $html = self::DEFAULT_TRANSACTION_PARTS_STYLE . $tableTemplate['header'];
-
-          $rowTemplate = $tableTemplate['row'];
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
           $totalSum = array_fill_keys($replacementKeys, 0.0);
           $totalSum['purpose'] = $this->l->t('Total Amount');
+
+          $html = ''; /* self::DEFAULT_TRANSACTION_PARTS_STYLE; */
+
+          $headerReplacements = [
+            'purpose' => $this->l->t('Purpose'),
+            'invoiced' => $this->l->t('Invoice Amount'),
+            'totals' => $this->l->t('Total Amount'),
+            'received' => $this->l->t('Received'),
+            'remaining' => $this->l->t('Remaining'),
+          ];
+          $header = $tableTemplate['header'];
+          foreach ($replacementKeys as $key) {
+            $keyVariants = array_map(
+              function($key) { return '['.$key.']'; },
+              $this->translationVariants($key)
+            );
+            $header = str_ireplace($keyVariants, $headerReplacements[$key], $header);
+          }
+          $html .= $header;
+
+          $rowTemplate = $tableTemplate['row'];
 
           $payments = $compositePayment->getProjectPayments();
           /** @var Entities\ProjectPayment $payment */
@@ -746,7 +1056,7 @@ table.transaction-parts td.money {
             $totals = $payment->getReceivable()->amountPayable();
             $received = $payment->getReceivable()->amountPaid();
 
-            // otherwise one would have to account for the due-date,
+            // otherwise one would have to account for the dueDate,
             // so keep it simple and just remove the current payment.
             $received -= $invoiced;
 
@@ -958,7 +1268,9 @@ table.transaction-parts td.money {
   {
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
-    $messageTemplate = $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+    $messageTemplate = self::DEFAULT_TRANSACTION_PARTS_STYLE
+                     . self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE
+                     . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
     if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
 
@@ -1696,7 +2008,9 @@ table.transaction-parts td.money {
 
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
-    $messageTemplate = $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+    $messageTemplate = self::DEFAULT_TRANSACTION_PARTS_STYLE
+                     . self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE
+                     . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
     if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
 
