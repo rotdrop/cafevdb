@@ -570,8 +570,11 @@ class ProjectParticipantFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['participant-fields-default-cloud-file-value'],
     ];
 
-    $opts['fdd']['due_date'] = $this->defaultFDD['due_date'];
-    $opts['fdd']['due_date']['tab'] = [ 'id' => 'definition' ];
+    $opts['fdd']['due_date'] = Util::arrayMergeRecursive(
+      $this->defaultFDD['due_date'], [
+        'tab' => [ 'id' => 'definition' ],
+        'css' => [ 'postfix' => [ 'deposit-data-type-required', ], ],
+      ]);
 
     $opts['fdd']['tooltip'] = array_merge(
       [
