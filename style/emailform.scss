@@ -668,48 +668,20 @@ form#cafevdb-email-form {
     width:100% !important;
   }
 
-  input.instruments-filter-controls.apply {
-    background-image:url('../img/email-new-yes.svg');
-    background-repeat:no-repeat;
-    background-size: 28px 28px;
-    background-position: center;
-    width:28px;
-    height:28px;
-    font-size:0pt;
-    vertical-align:middle;
-  }
-
-  input.instruments-filter-controls.undo {
-    background-image:url('../img/email-new-undo.svg');
-    background-repeat:no-repeat;
-    background-size: 28px 28px;
-    background-position: center;
-    width:28px;
-    height:28px;
-    font-size:0pt;
-    vertical-align:middle;
-  }
-
-  input.instruments-filter-controls.redo {
-    background-image:url('../img/email-new-redo.svg');
-    background-repeat:no-repeat;
-    background-size: 28px 28px;
-    background-position: center;
-    width:28px;
-    height:28px;
-    font-size:0pt;
-    vertical-align:middle;
-  }
-
-  input.instruments-filter-controls.reset {
-    background-image:url('../img/email-new-x.svg');
-    background-repeat:no-repeat;
-    background-size: 28px 28px;
-    background-position: center;
-    width:28px;
-    height:28px;
-    font-size:0pt;
-    vertical-align:middle;
+  input.instruments-filter-controls {
+    &.apply, &.undo, &.redo, &.reset {
+      background-repeat:no-repeat;
+      background-size: 28px 28px;
+      background-position: center;
+      width:28px;
+      height:28px;
+      font-size:0pt;
+      vertical-align:middle;
+    }
+    &.apply { background-image:url('../img/email-new-yes.svg'); }
+    &.undo { background-image:url('../img/email-new-undo.svg'); }
+    &.redo { background-image:url('../img/email-new-redo.svg'); }
+    &.reset { background-image:url('../img/email-new-x.svg'); }
   }
 }
 
