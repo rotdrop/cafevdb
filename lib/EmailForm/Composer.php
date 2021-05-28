@@ -757,6 +757,7 @@ Störung.';
 
         if ($type == 'files' || $type == 'other') {
           $html .= '<ul class="participant-fields">';
+
           /** @var Entities\ProjectParticipantField $field */
           foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
             foreach ($fields as $field) {
