@@ -566,7 +566,7 @@ const myReady = function(selector, resizeCB) {
       .data('membersField', self)
       .data('fieldId', fieldId);
 
-    if (self.hasClass('predefined') && curSelected.indexOf(musicianId) < 0) {
+    if (self.hasClass('predefined') && curSelected.indexOf(String(musicianId)) < 0) {
       maskUngrouped(self, true);
       self.trigger('chosen:updated');
     }
@@ -586,13 +586,14 @@ const myReady = function(selector, resizeCB) {
     const added = curSelected.filter(x => prevSelected.indexOf(x) < 0);
     // const removed = prevSelected.filter(x => curSelected.indexOf(x) < 0);
 
-    const musicianSelectedCur = curSelected.indexOf(musicianId) >= 0;
-    const musicianSelectedPrev = prevSelected.indexOf(musicianId) >= 0;
+    const musicianSelectedCur = curSelected.indexOf(String(musicianId)) >= 0;
+    const musicianSelectedPrev = prevSelected.indexOf(String(musicianId)) >= 0;
 
     let changed = false;
 
-    console.log('prevSelected', prevSelected);
-    console.log('curSelected', curSelected);
+    console.debug('added', added);
+    console.debug('prevSelected', prevSelected, musicianId, musicianSelectedPrev);
+    console.debug('curSelected', curSelected, musicianId, musicianSelectedCur);
 
     if (musicianSelectedPrev && !musicianSelectedCur) {
       // just removed the current key from the group, undefine group
@@ -617,7 +618,7 @@ const myReady = function(selector, resizeCB) {
         console.log('key', musicianId);
         const data = singleNewOption.data('data');
         console.log('option data', data);
-        if (+data.groupId !== -1) {
+        if (parseInt(data.groupId) !== -1) {
           console.log('group: ', data.groupId);
           selectGroup(self, data.groupId);
           self.data('groupField').val(data.groupId);
