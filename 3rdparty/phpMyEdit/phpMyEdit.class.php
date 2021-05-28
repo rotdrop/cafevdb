@@ -2044,8 +2044,11 @@ class phpMyEdit
 
 				// make sure we have css-postfix set. array_merge()
 				// keeps the key of the later array
-				$this->fdd[$k] = array_merge(array('css' => array('postfix' => '')), $this->fdd[$k]);
-				$this->fdd[$k]['css']['postfix'] .= $tab_postfix; // append it
+				$this->fdd[$k] = array_merge(array('css' => array('postfix' => [])), $this->fdd[$k]);
+				if (!is_array($this->fdd[$k]['css']['postfix'])) {
+					$this->fdd[$k]['css']['postfix'] = [ $this->fdd[$k]['css']['postfix'], ];
+				}
+				$this->fdd[$k]['css']['postfix'][] = $tab_postfix; // append it
 			}
 		}
 
