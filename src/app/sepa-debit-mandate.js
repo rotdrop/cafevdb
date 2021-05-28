@@ -30,7 +30,7 @@ import * as Page from './page.js';
 import * as Notification from './notification.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import * as PHPMyEdit from './pme.js';
-import * as RecurringReceivables from './recurring-receivables.js';
+import participantFieldsHandlers from './project-participant-fields-display.js';
 import generateUrl from './generate-url.js';
 import * as FileUpload from './file-upload.js';
 import fileDownload from './file-download.js';
@@ -1253,7 +1253,7 @@ const mandateReady = function(selector) {
       return false;
     });
 
-  RecurringReceivables.participantOptionHandlers(
+  participantFieldsHandlers(
     container, pmeRecordValue(container, 'musicianId'));
 
   pmeExportMenu(containerSel);

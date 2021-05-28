@@ -20,9 +20,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { $ } from './globals.js';
+import { $, appName } from './globals.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
+import * as WysiwygEditor from './wysiwyg-editor.js';
+import * as Dialogs from './dialogs.js';
 import generateUrl from './generate-url.js';
 
 const participantOptionHandlers = function(container, musicianId) {
@@ -33,7 +35,60 @@ const participantOptionHandlers = function(container, musicianId) {
 
   container = $(container);
 
-  // Handle buttons to update or delete recurrent receivables
+  // Handle buttons to revert to default value. Field id must be given
+  // as data-value.
+
+  container
+    .find('form.pme-form tr.participant-field input.revert-to-default')
+    .off('click')
+    .on('click', function(event) {
+      console.info('REVERT', $(this));
+      const $self = $(this);
+      const fieldId = $self.data('fieldId');
+      const $inputElement = $self.parent().find('.pme-input');
+
+      const revertHandler = function() {
+        $.post(
+          generateUrl('projects/participant-fields/property/get'), {
+            fieldId,
+            property: 'defaultValue',
+          })
+          .fail(function(xhr, status, errorThrown) {
+            Ajax.handleError(xhr, status, errorThrown);
+          })
+          .done(function(data) {
+            if (!Ajax.validateResponse(data, ['fieldId', 'property', 'value'])) {
+              return;
+            }
+            if ($inputElement.hasClass('wysiwyg-editor')) {
+              WysiwygEditor.updateEditor($inputElement, data.value);
+            } else {
+              $inputElement.val(data.value);
+            }
+          });
+      };
+
+      if ($inputElement.val() !== '') {
+        console.info('VALUE', $inputElement.val());
+        Dialogs.confirm(
+          t(appName,
+            'Input element is not empty, do your really want to revert it to its default value?'),
+          t(appName, 'Revert to default value?'),
+          function(confirmed) {
+            if (confirmed) {
+              revertHandler();
+            }
+          },
+          true
+        );
+      } else {
+        revertHandler();
+      }
+
+      return false;
+    });
+
+  // handle buttons to update or delete recurrent receivables
   container
     .find('form.pme-form tr.participant-field.recurring td.operations input.regenerate')
     .off('click')
@@ -125,9 +180,7 @@ const participantOptionHandlers = function(container, musicianId) {
     });
 };
 
-export {
-  participantOptionHandlers,
-};
+export default participantOptionHandlers;
 
 // Local Variables: ***
 // js-indent-level: 2 ***

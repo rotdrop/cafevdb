@@ -29,7 +29,7 @@ import * as Notification from './notification.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
 import * as FileUpload from './file-upload.js';
-import * as RecurringReceivables from './recurring-receivables.js';
+import participantFieldsHandlers from './project-participant-fields-display.js';
 import { data as pmeData } from './pme-selectors.js';
 import { recordValue as pmeRecordValue } from './pme-record-id.js';
 import * as PHPMyEdit from './pme.js';
@@ -682,7 +682,7 @@ const myReady = function(selector, resizeCB) {
     });
   }
 
-  RecurringReceivables.participantOptionHandlers(container, musicianId);
+  participantFieldsHandlers(container, musicianId);
 
   const fileUploadTemplate = $('#fileUploadTemplate');
   container

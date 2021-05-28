@@ -235,6 +235,14 @@ trait ParticipantFieldsTrait
 
           $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL))';
 
+          $defaultValue = $field->getDefaultValue();
+          $defaultButton = '<input type="button"
+       value="'.$this->l->t('Revert to default').'"
+       class="display-postfix revert-to-default [BUTTON_STYLE]"
+       title="'.$this->toolTipsService['participant-fields:revert-to-default'].'"
+       data-field-id="'.$fieldId.'"
+/>';
+
           switch ($dataType) {
           case FieldType::SERVICE_FEE:
           case FieldType::DEPOSIT:
@@ -242,6 +250,11 @@ trait ParticipantFieldsTrait
             $valueFdd['php|VDLF'] = function($value) {
               return $this->moneyValue($value);
             };
+            $valueFdd['display|CAP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
+            if (!empty($defaultValue)) {
+              $valueFdd['display|CAP']['postfix'] .=
+                str_replace('[BUTTON_STYLE]', 'hidden-text', $defaultButton);
+            }
             break;
           case FieldType::DB_FILE:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
@@ -302,6 +315,10 @@ trait ParticipantFieldsTrait
             };
             break;
           default:
+            if (!empty($defaultValue)) {
+              $valueFdd['display|CAP']['postfix'] .=
+                str_replace('[BUTTON_STYLE]', 'image-left-of-text', $defaultButton);
+            }
             break;
           }
           break;
