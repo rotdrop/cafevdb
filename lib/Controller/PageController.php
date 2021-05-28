@@ -122,6 +122,24 @@ class PageController extends Controller {
   }
 
   /**
+   * @NoAdminRequired
+   * @NoGroupMemberRequired
+   * @NoCSRFRequired
+   */
+  public function post($a, $b, $c, $d, $e, $f, $g)
+  {
+    $parts = [ $a, $b, $c, $d, $e, $f, $g ];
+    $request = implode('/', array_filter($parts));
+    if (!empty($request)) {
+      return self::grumble(
+        $this->l->t('Post to end-point "%s" not implemented.', $request));
+    } else {
+      return self::grumble(
+        $this->l->t('Post to base-url of app "%s" not allowed.', $this->appName()));
+    }
+  }
+
+  /**
    * Load a page at the specified offset from the history. Returns an
    * error if the entry cannot be found in the history.
    *

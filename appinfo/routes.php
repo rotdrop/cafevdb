@@ -45,27 +45,9 @@ namespace OCA\CAFEVDB;
 $routes = [
   'routes' => [
     [
-      'name' => 'page#not_found',
-      'url' => '/ajax/{a}/{b}/{c}/{d}/{e}',
-      'verb' => 'POST',
-      'defaults' => [ 'a' => '', 'b' => '', 'c' => '', 'd' => '', 'e' => '', ],
-    ],
-    [
-      'name' => 'page#not_found',
-      'url' => '/ajax/{a}/{b}/{c}/{d}/{e}',
-      'verb' => 'GET',
-      'defaults' => [ 'a' => '', 'b' => '', 'c' => '', 'd' => '', 'e' => '', ],
-    ],
-    [
       'name' => 'page#index',
       'url' => '/',
       'verb' => 'GET',
-    ],
-    [
-      'name' => 'page#index',
-      'postfix' => 'post',
-      'url' => '/',
-      'verb' => 'POST',
     ],
     [
       'name' => 'page#loader',
@@ -412,6 +394,24 @@ $routes = [
       'name' => 'validation#service_switch',
       'url' => '/validate/general/{topic}',
       'verb' => 'POST',
+    ],
+    /**
+     * Attempt a catch all ...
+     */
+    [
+      'name' => 'page#post',
+      'postfix' => 'post',
+      'url' => '/{a}/{b}/{c}/{d}/{e}/{f}/{g}',
+      'verb' => 'POST',
+      'defaults' => [
+        'a' => '',
+        'b' => '',
+        'c' => '',
+        'd' => '',
+        'e' => '',
+        'f' => '',
+        'g' => '',
+      ],
     ],
   ],
 ];
