@@ -4969,7 +4969,7 @@ class phpMyEdit
 						// Convert back to a date/time object understood by mySQL
 						$stamps = strtotime($fn);
 						$fn = date('Y-m-d H:i:s', $stamps);
-						echo "<!-- ".$fn." -->\n";
+						// echo "<!-- ".$fn." -->\n";
 					}
 				}
 				if  ($this->col_has_checkboxes($k) ||
@@ -5114,7 +5114,7 @@ class phpMyEdit
 						// Convert back to a date/time object understood by mySQL
 						$stamps[$fd] = strtotime($fn);
 						$fn = date('Y-m-d H:i:s', $stamps[$fd]);
-						echo "<!-- ".$fn." -->\n";
+						// echo "<!-- ".$fn." -->\n";
 					}
 				}
 				if ($this->col_has_checkboxes($k) ||
@@ -5154,7 +5154,7 @@ class phpMyEdit
 
 		// Creating array of changed keys ($changed)
 		foreach ($newvals as $fd => $value) {
-			echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
+			// echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
 			if (isset($stamps[$fd])) {
 				$oldstamp = $oldvals[$fd] != "" ? strtotime($oldvals[$fd]) : false;
 				//$this->logInfo($fd." Stamp: '".$stamps[$fd]."' old Stamp: '".$oldstamp."' oldvals: '".$oldvals[$fd]."' value '".$value."'");
