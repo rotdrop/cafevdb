@@ -270,10 +270,10 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   public function setOptionKey($optionKey):ProjectParticipantFieldDatum
   {
-    if (empty($optionKey = Uuid::asUuid($optionKey))) {
-      throw new \Exception("OPTIONKEY DATA: ".$optionKey);
+    if (empty($uuid = Uuid::asUuid($optionKey))) {
+      throw new \RuntimeException('Empty option key data.');
     }
-    $this->optionKey = $optionKey;
+    $this->optionKey = $uuid;
 
     return $this;
   }
