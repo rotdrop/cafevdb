@@ -126,7 +126,7 @@ function checkInvalidInputs(container, cleanup, labelCallback) {
                        + ', '
                        + (value
                          ? t(appName, 'invalid data "{value}"', { value })
-                         : t(appName, 'no data'))
+                         : t(appName, 'no or invalid data'))
                        + '</li>');
     }
     highlightInvalid();
