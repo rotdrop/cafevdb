@@ -766,96 +766,14 @@ div#cafevdb-email-preview {
 
   .email-body {
 
+    * {
+      all:revert;
+    }
+
     @import 'sanitize.css/sanitize';
     @import '@csstools/normalize.css/normalize';
     /*@import 'normalize.css/normalize';*/
 
-    h1, h2, h3, h4, h5, h6 {
-      font-weight:bold;
-      display:block;
-    }
-
-    /*
-    h1 {
-      font-size:2em;
-      margin-block-start: .67em;
-      margin-block-end: .67em;
-    }
-
-    h2 {
-      font-size:1.5em;
-      margin-block-start: .83em;
-      margin-block-end: .83em;
-    }
-
-    h3 {
-      font-size:1.17em;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-    }
-
-    h4 {
-      font-size:1em;
-      margin-block-start: 1.33em;
-      margin-block-end: 1.33em;
-    }
-
-    h5 {
-      font-size:0.83em;
-      margin-block-start: 1.67em;
-      margin-block-end: 1.67em;
-    }
-
-    h6 {
-      font-size:0.67em;
-      margin-block-start: 2.33em;
-      margin-block-end: 2.33em;
-    }
-
-    a:link {
-      color:#0000ff;
-      text-decoration:underline;
-      font-weight:bold;
-    }
-
-    a:visited {
-      color:#0000ff;
-      text-decoration:underline;
-      font-weight:bold;
-    }
-
-    a:hover {
-      color:#0000ff;
-      text-decoration:underline;
-      font-style:italic;
-      font-weight:bold;
-    }
-
-    */
-
-    ul {
-      list-style-type: disc;
-      list-style-position: inside;
-    }
-
-    ol {
-      list-style-type: decimal;
-      list-style-position: inside;
-    }
-
-    ul ul,
-    ol ul {
-      list-style-type: circle;
-      list-style-position: inside;
-      margin-left: 15px;
-    }
-
-    ol ol,
-    ul ol {
-      list-style-type: lower-latin;
-      list-style-position: inside;
-      margin-left: 15px;
-    }
   }
 }
 

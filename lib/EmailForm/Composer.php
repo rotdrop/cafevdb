@@ -113,22 +113,23 @@ Störung.';
    * @var string
    * @todo Make this configurable
    */
-  const DEFAULT_TRANSACTION_PARTS_TEMPLATE = [
-    'header' => '<table class="transaction-parts"><thead><tr>
+  const DEFAULT_HTML_TEMPLATES = [
+    'transaction-parts' => [
+      'header' => '<table class="transaction-parts"><thead><tr>
   <th>[PURPOSE]</th>
   <th>[INVOICED]</th>
   <th>[TOTALS]</th>
   <th>[RECEIVED]</th>
   <th>[REMAINING]</th>
 </tr></thead><tbody>',
-    'row' => '<tr>
+      'row' => '<tr>
   <td>[PURPOSE]</td>
   <td class="money">[INVOICED]</td>
   <td class="money">[TOTALS]</td>
   <td class="money">[RECEIVED]</td>
   <td class="money">[REMAINING]</td>
 </tr>',
-    'footer' => '</tbody><tbody class="footer">
+      'footer' => '</tbody><tbody class="footer">
   <tr class="totalsum">
     <td>[PURPOSE]</td>
     <td class="money">[INVOICED]</td>
@@ -137,51 +138,22 @@ Störung.';
     <td class="money">[REMAINING]</td>
   </tr>
 </tbody></table>'
-  ];
-  const DEFAULT_TRANSACTION_PARTS_STYLE = '<style>
-table.transaction-parts,
-table.transaction-parts tr,
-table.transaction-parts th,
-table.transaction-parts td {
-  border-collapse:collapse;
-}
-table.transaction-parts th,
-table.transaction-parts td {
-  border: 1px solid black;
-  padding: 0 2pt;
-}
-table.transaction-parts th {
-  text-align:center;
-  font-weight:bold;
-}
-table.transaction-parts td { text-align:left; }
-table.transaction-parts tr.totalsum {
-  border-top:double;
-}
-table.transaction-parts tr.totalsum td {
-  text-align:right;
-  font-weight:bold;
-}
-table.transaction-parts td.money {
-  text-align:right;
-  padding-left: 1em;
- }
-</style>';
-  const DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE = [
-    'header' => '<table class="[CSSCLASS]"><thead><tr>
+    ],
+    'monetary-fields' => [
+      'header' => '<table class="[CSSCLASS]"><thead><tr>
   <th>[OPTION]</th>
   <th>[TOTALS]</th>
   <th>[RECEIVED]</th>
   <th>[REMAINING]</th>
   <th>[DUEDATE]</th>
 </tr></thead><tbody>',
-    'fieldHeader' => '</tbody><tbody class="[CSSCLASS]">
+      'fieldHeader' => '</tbody><tbody class="[CSSCLASS]">
   <tr class="[CSSCLASS]">
     <td colspan="4">[FIELDNAME]</td>
     <td>[DUEDATE]</td>
   </tr>
 </tbody><tbody class="[CSSROWCLASS]">',
-    'row' => '<tr class="[CSSROWCLASS]">
+      'row' => '<tr class="[CSSROWCLASS]">
   <td class="row-label">[OPTION]</td>
   <td class="money">[TOTALS]</td>
   <td class="money">[RECEIVED]</td>
@@ -191,7 +163,7 @@ table.transaction-parts td.money {
   <td class="row-data-label">[ROWDATALABEL]</td>
   <td class="row-data-contents" colspan="4">[ROWDATACONTENTS]</td>
 </tr>',
-    'footer' => '</tbody><tbody class="[CSSCLASS]">
+      'footer' => '</tbody><tbody class="[CSSCLASS]">
   <tr class="[CSSCLASS]">
     <td class="row-label">[LABEl]</td>
     <td class="money">[TOTALS]</td>
@@ -200,6 +172,118 @@ table.transaction-parts td.money {
     <td class="date">[DUEDATE]</td>
   </tr>
 </tbody></table>',
+    ],
+  ];
+  const EMAIL_PREVIEW_SELECTOR = 'div#cafevdb-email-preview .email-body';
+  const DEFAULT_HTML_STYLES = [
+    'transaction-parts' => '<style>
+[CSSPREFIX]table.transaction-parts,
+[CSSPREFIX]table.transaction-parts tr,
+[CSSPREFIX]table.transaction-parts th,
+[CSSPREFIX]table.transaction-parts td {
+  border-collapse:collapse;
+}
+[CSSPREFIX]table.transaction-parts th,
+[CSSPREFIX]table.transaction-parts td {
+  border: 1px solid black;
+  padding: 0 2pt;
+}
+[CSSPREFIX]table.transaction-parts th {
+  text-align:center;
+  font-weight:bold;
+  border-bottom:2px solid black;
+}
+[CSSPREFIX]table.transaction-parts td { text-align:left; }
+[CSSPREFIX]table.transaction-parts tr.totalsum {
+  border-top:double;
+}
+[CSSPREFIX]table.transaction-parts tr.totalsum td {
+  text-align:right;
+  font-weight:bold;
+}
+[CSSPREFIX]table.transaction-parts td.money {
+  text-align:right;
+  padding-left: 1em;
+ }
+</style>',
+    'monetary-fields' => '<style>
+[CSSPREFIX]table.monetary-fields,
+[CSSPREFIX]table.monetary-fields tr,
+[CSSPREFIX]table.monetary-fields th,
+[CSSPREFIX]table.monetary-fields td {
+  border-collapse:collapse;
+}
+[CSSPREFIX]table.monetary-fields th,
+[CSSPREFIX]table.monetary-fields td {
+  border: 1px solid black;
+  padding: 0 2pt;
+}
+[CSSPREFIX]table.monetary-fields tr.field-header {
+  border-top:double;
+  border-bottom:2px solid black;
+}
+[CSSPREFIX]table.monetary-fields tr.field-header td {
+  font-style:italic;
+  text-align:center;
+}
+[CSSPREFIX]table.monetary-fields th {
+  font-weight:bold;
+  text-align:center;
+  border-bottom:2px solid black;
+}
+[CSSPREFIX]table.monetary-fields tbody.field-option.number-of-options-1 td.row-label {
+  font-style:italic;
+}
+[CSSPREFIX]table.monetary-fields td.date {
+  font-style:italic;
+  text-align:center;
+  opacity:0;
+}
+[CSSPREFIX]table.monetary-fields tbody.footer td.date,
+[CSSPREFIX]table.monetary-fields tbody.number-of-options-1 td.date {
+  opacity:inherit;
+}
+[CSSPREFIX]table.monetary-fields td.money {
+  text-align:right;
+  padding-left: 1em;
+}
+[CSSPREFIX]table.monetary-fields tr.totalsum {
+  border-top:3px double black;
+  border-bottom:3px double black;
+}
+[CSSPREFIX]table.monetary-fields tr.totalsum td {
+  font-weight:bold;
+}
+[CSSPREFIX]table.monetary-fields tr.totalsum td.row-label {
+  text-align:right;
+}
+[CSSPREFIX]table.monetary-fields.number-of-fields-0 tr.totalsum,
+[CSSPREFIX]table.monetary-fields.number-of-fields-1 tr.totalsum,
+[CSSPREFIX]table.monetary-fields tbody.field-header.number-of-options-0,
+[CSSPREFIX]table.monetary-fields tbody.field-header.number-of-options-1,
+[CSSPREFIX]table.monetary-fields tr.field-header.number-of-options-0,
+[CSSPREFIX]table.monetary-fields tr.field-header.number-of-options-1,
+[CSSPREFIX]table.monetary-fields tbody.field-option tr.row-data,
+[CSSPREFIX]table.monetary-fields tbody:empty {
+  display:none;
+}
+[CSSPREFIX]table.monetary-fields tbody.field-option tr.has-data + tr.row-data {
+  display:table-row;
+}
+[CSSPREFIX]table.monetary-fields tr.row-data td {
+  opacity:0.6;
+}
+[CSSPREFIX]table.monetary-fields tr.row-data td.row-data-label {
+  text-align:right;
+}
+[CSSPREFIX]table.monetary-fields tr.row-data td.row-data-contents {
+  white-space:nowrap;
+  overflow:hidden;
+  max-width:80%;
+  text-overflow:ellipsis;
+  font-style:italic;
+}
+</style>',
   ];
   const PARTICIPANT_MONETARY_FIELDS_CSS_CLASS = [
     'header' => 'monetary-fields',
@@ -207,83 +291,6 @@ table.transaction-parts td.money {
     'row' => 'field-option',
     'footer' => 'footer totalsum',
   ];
-  const DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE = '<style>
-table.monetary-fields,
-table.monetary-fields tr,
-table.monetary-fields th,
-table.monetary-fields td {
-  border-collapse:collapse;
-}
-table.monetary-fields th,
-table.monetary-fields td {
-  border: 1px solid black;
-  padding: 0 2pt;
-}
-table.monetary-fields tr.field-header {
-  border-top:double;
-  border-bottom:2px solid black;
-}
-table.monetary-fields tr.field-header td {
-  font-style:italic;
-  text-align:center;
-}
-table.monetary-fields th {
-  font-weight:bold;
-  text-align:center;
-}
-table.monetary-fields tbody.field-option.number-of-options-1 td.row-label {
-  font-style:italic;
-}
-table.monetary-fields td.date {
-  font-style:italic;
-  text-align:center;
-  opacity:0;
-}
-table.monetary-fields tbody.footer td.date,
-table.monetary-fields tbody.number-of-options-1 td.date {
-  opacity:inherit;
-}
-table.monetary-fields td.money {
-  text-align:right;
-  padding-left: 1em;
-}
-table.monetary-fields tr.totalsum {
-  border-top:3px double black;
-  border-bottom:3px double black;
-}
-table.monetary-fields tr.totalsum td {
-  font-weight:bold;
-}
-table.monetary-fields tr.totalsum td.row-label {
-  text-align:right;
-}
-table.monetary-fields.number-of-fields-0 tr.totalsum,
-table.monetary-fields.number-of-fields-1 tr.totalsum,
-table.monetary-fields tbody.field-header.number-of-options-0,
-table.monetary-fields tbody.field-header.number-of-options-1,
-table.monetary-fields tr.field-header.number-of-options-0,
-table.monetary-fields tr.field-header.number-of-options-1,
-table.monetary-fields tbody.field-option tr.row-data,
-table.monetary-fields tbody:empty {
-  display:none;
-}
-table.monetary-fields tbody.field-option tr.has-data + tr.row-data {
-  display:table-row;
-}
-table.monetary-fields tr.row-data td {
-  opacity:0.6;
-}
-table.monetary-fields tr.row-data td.row-data-label {
-  text-align:right;
-}
-table.monetary-fields tr.row-data td.row-data-contents {
-  white-space:nowrap;
-  overflow:hidden;
-  max-width:80%;
-  text-overflow:ellipsis;
-  font-style:italic;
-}
-</style>';
 
   private $recipients; ///< The list of recipients.
   private $onLookers;  ///< Cc: and Bcc: recipients.
@@ -767,7 +774,7 @@ table.monetary-fields tr.row-data td.row-data-contents {
             'dueDate' => $this->l->t('Due Date'),
           ];
           $replacementKeys = array_keys($headerReplacements);
-          $header = self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE['header'];
+          $header = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['header'];
           foreach ($headerReplacements as $key => $replacement) {
             $keyVariants = array_map(
               function($key) { return '['.$key.']'; },
@@ -813,7 +820,7 @@ table.monetary-fields tr.row-data td.row-data-contents {
                 'dueDate' => $dueDate,
               ];
 
-              $fieldHeader = self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE['fieldHeader'];
+              $fieldHeader = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['fieldHeader'];
               foreach ($replacements as $key => $replacement) {
                 $keyVariants = array_map(
                   function($key) { return '['.$key.']'; },
@@ -881,7 +888,7 @@ table.monetary-fields tr.row-data td.row-data-contents {
                 }
 
                 // inject into template
-                $row = self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE['row'];
+                $row = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['row'];
                 foreach ($replacementKeys as $key) {
                   $keyVariants = array_map(
                     function($key) { return '['.$key.']'; },
@@ -903,7 +910,7 @@ table.monetary-fields tr.row-data td.row-data-contents {
             }
           }
 
-          $footer = self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_TEMPLATE['footer'];
+          $footer = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['footer'];
           foreach ($replacementKeys as $key) {
             switch ($key) {
             case 'option':
@@ -1060,9 +1067,9 @@ table.monetary-fields tr.row-data td.row-data-contents {
             $keyArg);
 
           $tableTemplate = [
-            'header' => $keyArg[1]?:self::DEFAULT_TRANSACTION_PARTS_TEMPLATE['header'],
-            'row' => $keyArg[2]?:self::DEFAULT_TRANSACTION_PARTS_TEMPLATE['row'],
-            'footer' => $keyArg[3]?:self::DEFAULT_TRANSACTION_PARTS_TEMPLATE['footer'],
+            'header' => $keyArg[1]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
+            'row' => $keyArg[2]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
+            'footer' => $keyArg[3]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
           ];
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
@@ -1284,6 +1291,11 @@ table.monetary-fields tr.row-data td.row-data-contents {
     return $this->executionStatus;
   }
 
+  static private function emitHtmlBodyStyle($style, $cssPrefix = null)
+  {
+    return str_replace('[CSSPREFIX]', empty($cssPrefix) ? '' : ($cssPrefix . ' '), $style);
+  }
+
   /**
    * Finally, send the beast out to all recipients, either in
    * single-email mode or as one message.
@@ -1310,8 +1322,8 @@ table.monetary-fields tr.row-data td.row-data-contents {
   {
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
-    $messageTemplate = self::DEFAULT_TRANSACTION_PARTS_STYLE
-                     . self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE
+
+    $messageTemplate = implode("\n", array_map(self::emitHtmlBodyStyle, self::DEFAULT_HTML_STYLES))
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
     if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
@@ -2050,8 +2062,10 @@ table.monetary-fields tr.row-data td.row-data-contents {
 
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
-    $messageTemplate = self::DEFAULT_TRANSACTION_PARTS_STYLE
-                     . self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE
+
+    $messageTemplate = implode("\n", array_map(function($style) {
+      return self::emitHtmlBodyStyle($style, self::EMAIL_PREVIEW_SELECTOR);
+    }, self::DEFAULT_HTML_STYLES))
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
     if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
