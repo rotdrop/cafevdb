@@ -241,8 +241,7 @@ $sideBarToolTipPos = 'auto';
       <div class="buttonseparator"></div>
       <?php echo $settingsControls; ?>
     </form>
-    <!-- <div id="controls"></div> doing out own stuff anyway -->
-    <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
+    <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"><?php/* used to eliminate the pixel-size of the control bar */?>
       <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
       <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box <?php echo $css_class; ?>">
         <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header <?php echo $css_class; ?>">

@@ -40,7 +40,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
 <div id="fullcalendar"></div>
 <div id="dialog_holder" class="popup topleft hidden"></div>
 <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden"></div>
-<!-- fuck auto-focus attempts -->
+<!-- defeat auto-focus attempts -->
 <form class="focusstealer"><input type="checkbox" id="focusstealer" class="focusstealer"/></form>
 
 <!-- iframes to trigger proper download action in web browser -->
