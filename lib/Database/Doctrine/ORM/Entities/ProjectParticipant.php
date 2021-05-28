@@ -71,13 +71,6 @@ class ProjectParticipant implements \ArrayAccess
   private $registration = '0';
 
   /**
-   * @var string
-   *
-   * @ORM\Column(type="text", length=65535, nullable=true, options={"comment"="Allgemeine Bermerkungen"})
-   */
-  private $remarks;
-
-  /**
    * Link to payments
    *
    * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectParticipant")
@@ -199,30 +192,6 @@ class ProjectParticipant implements \ArrayAccess
   public function getRegistration()
   {
     return $this->registration;
-  }
-
-  /**
-   * Set remarks.
-   *
-   * @param null|string $remarks
-   *
-   * @return ProjectParticipant
-   */
-  public function setRemarks($remarks):ProjectParticipant
-  {
-    $this->remarks = $remarks;
-
-    return $this;
-  }
-
-  /**
-   * Get remarks.
-   *
-   * @return string
-   */
-  public function getRemarks():?string
-  {
-    return $this->remarks;
   }
 
   /**

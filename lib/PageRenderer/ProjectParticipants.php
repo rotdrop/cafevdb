@@ -762,23 +762,6 @@ class ProjectParticipants extends PMETableViewBase
      *
      */
 
-    $opts['fdd']['remarks'] = [
-      'name' => $this->l->t("Remarks")."\n(".$projectName.")",
-      'tooltip' => $this->toolTipsService['project-remarks'],
-      'select'   => 'T',
-      'maxlen'   => 65535,
-      'css'      => [ 'postfix' => ' remarks tooltip-left' ],
-      'textarea' => [
-        'css' => 'wysiwyg-editor',
-        'rows' => 5,
-        'cols' => 50,
-      ],
-      'display|LF' => [ 'popup' => 'data' ],
-      'escape' => false,
-      'sort'   => true,
-      'tab'    => [ 'id' => 'project' ]
-    ];
-
     $opts['fdd']['all_projects'] = [
       'tab' => ['id' => 'musician'],
       'input' => 'VR',
