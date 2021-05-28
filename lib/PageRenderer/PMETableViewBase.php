@@ -577,7 +577,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'name' => $this->l->t('Due Date'),
         'maxlen'   => 10,
         'sort'     => true,
-        'css'      => [ 'postfix' => ' date due-date' ],
+        'css'      => [ 'postfix' => [ 'date', 'due-date' ], ],
         'datemask' => 'd.m.Y',
       ],
       // Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity
