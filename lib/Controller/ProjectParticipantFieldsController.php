@@ -50,6 +50,16 @@ class ProjectParticipantFieldsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  const REQUEST_TOPIC_GENERATOR = 'generator';
+  const REQUEST_TOPIC_OPTION = 'option';
+  const REQUEST_SUB_TOPIC_DEFINE = 'define';
+  const REQUEST_SUB_TOPIC_RUN = 'run';
+  const REQUEST_SUB_TOPIC_RUN_ALL = 'run-all';
+  const REQUEST_SUB_TOPIC_REGENERATE = 'regenerate';
+
+  const REQUEST_TOPIC_PROPERTY = 'property';
+  const REQUEST_SUB_TOPIC_GET = 'get';
+
   /** @var PHPMyEdit */
   protected $pme;
 
@@ -96,9 +106,48 @@ class ProjectParticipantFieldsController extends Controller {
   {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
-    case 'generator':
+    case self::REQUEST_TOPIC_PROPERTY:
+      foreach (['fieldId', 'property'] as $parameter) {
+        if (empty($this->parameterService[$parameter])) {
+          return self::grumble($this->l->t('Missing parameters in request "%s": "%s".',
+                                           [ $topic, $parameter ]));
+        }
+      }
       switch ($subTopic) {
-      case 'define':
+      case self::REQUEST_SUB_TOPIC_GET:
+        // fetch the field
+        $fieldId = $this->parameterService['fieldId'];
+        /** @var Entities\ProjectParticipantField $field */
+        $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
+        if (empty($field)) {
+          return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
+        }
+
+        $property = $this->parameterService['property'];
+
+        try {
+          $propertyValue = (string)$field[$property];
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          return self::grumble(
+            $this->l->t('Unable to retrieve property "%s" from field "%s".',
+                        [ $property, $field->getName() ]));
+        }
+
+        return self::dataResponse([
+          'message' => $this->l->t('Request successful.'),
+          'fieldId' => $fieldId,
+          'property' => $property,
+          'value' =>  $propertyValue,
+        ]);
+        break;
+      default:
+        break;
+      }
+      break;
+    case self::REQUEST_TOPIC_GENERATOR:
+      switch ($subTopic) {
+      case self::REQUEST_SUB_TOPIC_DEFINE:
         if (empty($data)) {
           return self::grumble($this->l->t('Missing parameters in request "%s".', $topic));
         }
@@ -132,7 +181,7 @@ class ProjectParticipantFieldsController extends Controller {
           'message' => $this->l->t('Generator "%s" successfully mapped to PHP-class "%s".', [ $item['data'], $generatorClass, ]),
           'value' => $generatorClass,
         ]);
-      case 'run':
+      case self::REQUEST_SUB_TOPIC_RUN:
         foreach (['fieldId', 'startDate'] as $parameter) {
           if (empty($data[$parameter])) {
             return self::grumble($this->l->t('Missing parameters in request "%s": "%s".',
@@ -202,7 +251,7 @@ class ProjectParticipantFieldsController extends Controller {
             $managementOption->getLimit(), 'medium'),
           'dataOptionFormInputs' => $inputRows,
         ]);
-      case 'run-all':
+      case self::REQUEST_SUB_TOPIC_RUN_ALL:
         // for the given project (re-)generate all generated receivables
         foreach (['projectId'] as $parameter) {
           if (empty($data[$parameter])) {
@@ -270,9 +319,9 @@ class ProjectParticipantFieldsController extends Controller {
         break;
       }
       break;
-    case 'option':
+    case self::REQUEST_TOPIC_OPTION:
       switch ($subTopic) {
-      case 'define':
+      case self::REQUEST_SUB_TOPIC_DEFINE:
         if (empty($data)) {
           return self::grumble($this->l->t('Missing parameters in request %s', $topic));
         }
@@ -331,7 +380,7 @@ class ProjectParticipantFieldsController extends Controller {
           'dataOptionFormInputs' => $input,
           'dataOptionSelectOption' => $options,
         ]);
-      case 'regenerate':
+      case self::REQUEST_SUB_TOPIC_REGENERATE:
         if (empty($data['fieldId']) || (empty($data['key']) && empty($data['musicianId']))) {
           return self::grumble($this->l->t('Missing parameters in request "%s/%s"',
                                            [ $topic, $subTopic, ]));
