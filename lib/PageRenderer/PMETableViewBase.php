@@ -867,9 +867,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->debug('CHG '.print_r($changeSet, true));
 
         $dataSets = [
-          'del' => [ 'old' ],
-          'add' => [ 'new' ],
-          'rem' => [ 'old', 'new' ], // need both to allow change
+          'del' => 'old',
+          'add' => 'new',
+          'rem' => 'old', // needs to be "old" in order to identify the existing entity
         ];
         foreach (array_keys($dataSets) as $operation) {
           ${$operation.'Identifier'} = [];
@@ -883,30 +883,33 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // Example ProjectParticipants, voice field:
         // $selfKey == 'voice', $value is then the FQN, here
         // ProjectInstruments:voice
+        //
+        // NOTE: this will assemble the id-value for the self-field as
+        // array. Seemingly ORM find() works with it ATM. If this
+        // should change, we have to use just the "old" value in order
+        // to perform an update later.
         foreach ($identifier as $selfKey => $value) {
           if (empty($value['self'])) {
             continue;
           }
           // $selfField == ProjectInstruments:voice
           $selfField = $value['self'];
-          foreach ($dataSets as $operation => $dataSetIds) {
+          foreach ($dataSets as $operation => $dataSet) {
             foreach (${$operation.'Identifier'} as $key => &$idValues) {
               $idValues[$selfKey] = null;
             }
-            foreach ($dataSetIds as $dataSet) {
-              $dataValues = ${$dataSet.'vals'};
-              foreach (Util::explodeIndexed($dataValues[$selfField]) as $key => $value) {
-                if (isset(${$operation.'Identifier'}[$key])) {
-                  ${$operation.'Identifier'}[$key][$selfKey][$dataSet] = $value;
-                }
+            $dataValues = ${$dataSet.'vals'};
+            foreach (Util::explodeIndexed($dataValues[$selfField]) as $key => $value) {
+              if (isset(${$operation.'Identifier'}[$key])) {
+                ${$operation.'Identifier'}[$key][$selfKey] = $value;
               }
-              foreach (${$operation.'Identifier'} as $key => &$idValues) {
-                if (empty($idValues[$selfKey][$dataSet])) {
-                  $idValues[$selfKey][$dataSet] = $pme->fdd[$selfField]['default'];
-                }
-                if ($idValues[$selfKey][$dataSet] === null) {
-                  throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
-                }
+            }
+            foreach (${$operation.'Identifier'} as $key => &$idValues) {
+              if (empty($idValues[$selfKey])) {
+                $idValues[$selfKey] = $pme->fdd[$selfField]['default'];
+              }
+              if ($idValues[$selfKey] === null) {
+                throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
               }
             }
           }
@@ -965,6 +968,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $this->debug('Usage is '.$usage);
           $softDeleteable = method_exists($entity, 'isDeleted')
                          && method_exists($entity, 'setDeleted');
+
+          $this->debug('SOFT-DELETEABLE '.(int)$softDeleteable.' HAS USAGE '.(int)method_exists($entity, 'usage'));
+
           if ($usage > 0) {
             /**
              * @todo needs more logic: disabled things would need to
@@ -978,8 +984,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
           } else {
             if ($softDeleteable && !$entity->isDeleted()) {
-              $this->remove($entity); // soft
+              $this->debug('SOFT DELETE');
+              $this->remove($entity, true); // soft, need flush
             }
+            $this->debug('HARD DELETE '.($softDeleteable && (int)$entity->isDeleted()));
             $this->remove($entity); // hard
           }
           $this->flush();
