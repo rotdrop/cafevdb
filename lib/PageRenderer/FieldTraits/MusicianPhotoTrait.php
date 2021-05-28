@@ -61,7 +61,7 @@ trait MusicianPhotoTrait
         'imageSize' => -1,
       ]);
       $photoarea = ''
-        .'<div  data-image-info=\''.$imageInfo.'\' class="tip musician-portrait portrait propertycontainer tooltip-top cafevdb_inline_image_wrapper image-wrapper single full" title="'
+        .'<div data-image-info=\''.$imageInfo.'\' class="tip musician-portrait portrait propertycontainer tooltip-top cafevdb_inline_image_wrapper image-wrapper single full" title="'
       .$this->l->t("Drop photo to upload (max %s)", [ \OCP\Util::humanFileSize(Util::maxUploadSize()) ]).'"'
         .' data-element="PHOTO">
   <ul class="phototools" class="transparent hidden contacts_property">
@@ -70,8 +70,7 @@ trait MusicianPhotoTrait
     <li><a class="svg upload" title="'.$this->l->t("Upload new photo").'"></a></li>
     <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select photo from Cloud").'"></a></li>
   </ul>
-</div> <!-- contact_photo -->
-';
+</div>'; // contact_photo
 
       return $photoarea;
     default:
