@@ -26,237 +26,280 @@
  *
  */
 
-form.project-participant-fields span.allowed-option {
-  display:inline-block;
-  width:100%;
-  position:relative;
-}
+form.pme-form.project-participant-fields {
 
-form.pme-form.project-participant-fields:not(.pme-change) span.allowed-option-name:empty,
-form.pme-form.project-participant-fields:not(.pme-change) span.allowed-option-name:empty ~ span {
-    display:none;
-}
-
-form.pme-form.project-participant-fields:not(.pme-change) td.groupofpeople:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change) td.groupofpeople-id:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change) td.deposit.set:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change) td.deposit.enum:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change) td.service-fee.set:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change) td.service-fee.enum:not(.pme-key) {
-    min-width:12em;
-}
-
-form.pme-form.project-participant-fields:not(.pme-change,.pme-list) td.groupofpeople:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change,.pme-list) td.groupofpeople-id:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change,.pme-list) td.deposit.set:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change,.pme-list) td.deposit.enum:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change,.pme-list) td.service-fee.set:not(.pme-key),
-form.pme-form.project-participant-fields:not(.pme-change,.pme-list) td.service-fee.enum:not(.pme-key) {
-  width:32em;
-}
-
-form.pme-form.project-participant-fields tr.recurring td.pme-value td.label {
-  padding-left:0.5em;
-  padding-right:0.5em;
-}
-
-form.pme-form.project-participant-fields:not(.pme-change) td.service-fee.enum {
-    font-family:inherit;
-}
-
-form.pme-form.project-participant-fields:not(.pme-change) span.allowed-option-name {
-  max-width:5em;
-  /* float:left; */
-  overflow:hidden;
-  text-overflow:ellipsis;
-  position:absolute; /* needs position != static on parent */
-  left:0;
-}
-
-form.pme-form.project-participant-fields.pme-view span.allowed-option-name,
-form.pme-form.project-participant-fields.pme-delete span.allowed-option-name {
-  max-width:12em;
-}
-
-form.pme-form.project-participant-fields:not(.pme-change) span.allowed-option-value.money {
-  font-family:monospace;
-  /* float:right; */
-  position:absolute;
-  right:0;
-}
-
-.tooltip-inner span.allowed-option {
-  display:inline-block;
-  width:100%;
-}
-.tooltip-inner span.allowed-option-name {
-  font-style:italic;
-}
-.tooltip-inner span.allowed-option-separator {
-  display:inline-block;
-  width:1em;
-}
-.tooltip-inner span.allowed-option-value.money {
-  font-family:monospace;
-  float:right;
-}
-
-form.pme-form.project-participant-fields:not(.pme-change) span.allowed-option.group {
-  width:100%;
-}
-
-form.pme-form.project-participant-fields.pme-view span.allowed-option-name,
-form.pme-form.project-participant-fields.pme-delete span.allowed-option-name,
-form.pme-form.project-participant-fields.pme-view span.allowed-option-value.money,
-form.pme-form.project-participant-fields.pme-delete span.allowed-option-value.money {
-  /* float:unset; */
-}
-
-form.pme-form.project-participant-fields.pme-view td.service-fee span.allowed-option-name:after,
-form.pme-form.project-participant-fields.pme-delete td.service-fee span.allowed-option-name:after {
-    content: ": ";
-}
-
-form.pme-form.project-participant-fields.pme-add td.pme-key.service-fee.single-valued,
-form.pme-form.project-participant-fields.pme-change td.pme-key.service-fee.single-valued,
-form.pme-form.project-participant-fields.pme-copy td.pme-key.service-fee.single-valued,
-form.pme-form.project-participant-fields.pme-view td.service-fee.set,
-form.pme-form.project-participant-fields.pme-delete td.service-fee.set {
+  span.allowed-option {
+    display:inline-block;
+    width:100%;
     position:relative;
-}
+  }
 
-/* The following can be used to style the money labels. */
-form.pme-form.project-participant-fields.pme-change td.pme-key.service-fee.single-valued span.allowed-option-name.money,
-form.pme-form.project-participant-fields.pme-add td.pme-key.service-fee.single-valued span.allowed-option-name.money,
-form.pme-form.project-participant-fields.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-name.money {
-  /* margin-right:6em; */ /* leave room for absolute positioned money value */
-}
+  &:not(.pme-change) span.allowed-option-name:empty,
+  &:not(.pme-change) span.allowed-option-name:empty ~ span {
+    display:none;
+  }
 
-form.pme-form.project-participant-fields.pme-change td.pme-key.service-fee.single-valued span.allowed-option-value.money,
-form.pme-form.project-participant-fields.pme-add td.pme-key.service-fee.single-valued span.allowed-option-value.money,
-form.pme-form.project-participant-fields.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-value.money {
+  &:not(.pme-change) td.groupofpeople:not(.pme-key),
+  &:not(.pme-change) td.groupofpeople-id:not(.pme-key),
+  &:not(.pme-change) td.deposit.set:not(.pme-key),
+  &:not(.pme-change) td.deposit.enum:not(.pme-key),
+  &:not(.pme-change) td.service-fee.set:not(.pme-key),
+  &:not(.pme-change) td.service-fee.enum:not(.pme-key) {
+    min-width:12em;
+  }
+
+  &:not(.pme-change,.pme-list) td.groupofpeople:not(.pme-key),
+  &:not(.pme-change,.pme-list) td.groupofpeople-id:not(.pme-key),
+  &:not(.pme-change,.pme-list) td.deposit.set:not(.pme-key),
+  &:not(.pme-change,.pme-list) td.deposit.enum:not(.pme-key),
+  &:not(.pme-change,.pme-list) td.service-fee.set:not(.pme-key),
+  &:not(.pme-change,.pme-list) td.service-fee.enum:not(.pme-key) {
+    width:32em;
+  }
+
+  td.pme-value.simple-valued.money input {
+    &[type=text], &[type=number] {
+      font-family:monospace;
+    }
+  }
+
+  span.currency-symbol {
+    font-weight:bold;
+    font-family:monospace;
+    font-size:1em;
+    margin-right:1em;
+  }
+
+  input[type=button].display-postfix {
+    background-repeat:no-repeat;
+    background-size: 24px 24px;
+    vertical-align:middle;
+    margin-right:1em;
+
+    &.image-left-of-text {
+      background-position: 2px center;
+      padding-left:28px;
+    }
+
+    &.hidden-text {
+      background-position:center;
+      width:28px;
+      height:28px;
+      text-indent:-10000em;
+      vertical-align:middle;
+      padding:0;
+    }
+
+    &.revert-to-default {
+      background-image:url('../img/history.svg');
+    }
+  }
+
+  tr.recurring td.pme-value td.label {
+    padding-left:0.5em;
+    padding-right:0.5em;
+  }
+
+  &:not(.pme-change) td.service-fee.enum {
+    font-family:inherit;
+  }
+
+  &:not(.pme-change) span.allowed-option-name {
+    max-width:5em;
+    /* float:left; */
+    overflow:hidden;
+    text-overflow:ellipsis;
+    position:absolute; /* needs position != static on parent */
+    left:0;
+  }
+
+  &.pme-view span.allowed-option-name,
+  &.pme-delete span.allowed-option-name {
+    max-width:12em;
+  }
+
+  &:not(.pme-change) span.allowed-option-value.money {
+    font-family:monospace;
+    /* float:right; */
+    position:absolute;
+    right:0;
+  }
+
+  &:not(.pme-change) span.allowed-option.group {
+    width:100%;
+  }
+
+  &.pme-view span.allowed-option-name,
+  &.pme-delete span.allowed-option-name,
+  &.pme-view span.allowed-option-value.money,
+  &.pme-delete span.allowed-option-value.money {
+    /* float:unset; */
+  }
+
+  &.pme-view td.service-fee span.allowed-option-name:after,
+  &.pme-delete td.service-fee span.allowed-option-name:after {
+    content: ": ";
+  }
+
+  &.pme-add td.pme-key.service-fee.single-valued,
+  &.pme-change td.pme-key.service-fee.single-valued,
+  &.pme-copy td.pme-key.service-fee.single-valued,
+  &.pme-view td.service-fee.set,
+  &.pme-delete td.service-fee.set {
+    position:relative;
+  }
+
+  /* The following can be used to style the money labels. */
+  &.pme-change td.pme-key.service-fee.single-valued span.allowed-option-name.money,
+  &.pme-add td.pme-key.service-fee.single-valued span.allowed-option-name.money,
+  &.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-name.money {
+    /* margin-right:6em; */ /* leave room for absolute positioned money value */
+  }
+
+  &.pme-change td.pme-key.service-fee.single-valued span.allowed-option-value.money,
+  &.pme-add td.pme-key.service-fee.single-valued span.allowed-option-value.money,
+  &.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-value.money {
     font-family:monospace;
     float:right;
     /* position:absolute; */
     /* right:1em; */
-}
+  }
 
-form.pme-form.project-participant-fields.pme-view td.service-fee.set span.allowed-option-value.money,
-form.pme-form.project-participant-fields.pme-delete td.service-fee.set span.allowed-option-value.money {
+  &.pme-view td.service-fee.set span.allowed-option-value.money,
+  &.pme-delete td.service-fee.set span.allowed-option-value.money {
     font-family:monospace;
     /* font-size:120%; */
     /* position:absolute; */
     /* left:12em; */
     float:right;
+  }
+
+  &:not(.pme-change) td.money.single-valued,
+  &:not(.pme-change) td.money.simple-valued {
+    font-family:monospace;
+  }
+
+  &:not(.pme-change) td.money.single-valued.groupofpeople {
+    font-family:inherit;
+  }
+
+  span.allowed-option-name ~ span.allowed-option-value {
+    /* margin-left:1ex; */
+  }
+
+  label.groupofpeople.predefined span.allowed-option {
+    margin-left:1ex;
+    display:none;
+  }
+
+  label.groupofpeople.predefined span.allowed-option.selected {
+    display:unset;
+    font-weight:bold;
+  }
+
+  td.pme-value input.sepa-debit-mandate,
+  td.pme-cell input.sepa-debit-mandate {
+    min-height:unset;
+    margin:0;
+    padding: 2px 12px 2px 12px;
+  }
+
+  /**
+   * Style first and subsequence lines in list-view
+   */
+  &.pme-list td.pme-value div.allowed-option-wrapper,
+  &.pme-list td.pme-cell div.allowed-option-wrapper {
+    max-height:24px; /* hard restriction on table row height */
+    /* line-height:12px; */
+    line-height:7px;
+    font-size:66.67%;
+    overflow:hidden;
+    position:relative;
+  }
+
+  &.pme-list td.pme-value div.allowed-option-wrapper::first-line,
+  &.pme-list td.pme-cell div.allowed-option-wrapper::first-line {
+    line-height:12px;
+    font-size:150%; /* this is relative to the 2/3 above */
+  }
+
+  &.pme-list td.pme-value div.allowed-option-wrapper > *,
+  &.pme-list td.pme-cell div.allowed-option-wrapper > *{
+    /* -moz-transform: scale(0.5);
+       zoom: 0.5; */
+  }
+
+  tr.participant-field.recurring td.pme-value td.operations input.operation.regenerate-all {
+    width:100%;
+    height:unset;
+    min-height:unset;
+    margin-right:unset;
+  }
+
+  tr.participant-field.recurring table.row-count-0 thead  {
+    display:none;
+  }
+
+  td.pme-value.cloud-file table.file-upload {
+    width:100%;
+  }
+
+  tr.file-upload-row td.cloud-file {
+    width:100%;
+    padding-right:3px;
+  }
+
+  tr.file-upload-row td.operations .operation {
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-size: 24px 24px;
+    background-position: center;
+    width:28px;
+    height:28px;
+    vertical-align:middle;
+    margin-right:0.5em;
+  }
+
+  tr.file-upload-row .operation.delete-undelete {
+    background-image:url('../img/cafevdb-delete.svg');
+  }
+
+  tr.file-upload-row .operation.upload-replace {
+    background-image:url('../../../core/img/actions/upload.svg');
+  }
+
+  tr.file-upload-row .operation.open-parent {
+    background-image:url('../../../core/img/filetypes/folder-external.svg');
+  }
+
+  tr.file-upload-row a[href=""] {
+    display:none;
+  }
+
+  tr.file-upload-row a ~ .upload-placeholder {
+    display:none;
+  }
+
+  tr.file-upload-row a[href=""] ~ .upload-placeholder {
+    display:inline-block;
+    width:100%;
+  }
 }
 
-form.pme-form.project-participant-fields:not(.pme-change) td.money.single-valued,
-form.pme-form.project-participant-fields:not(.pme-change) td.money.simple-valued {
-  font-family:monospace;
-}
-
-form.pme-form.project-participant-fields:not(.pme-change) td.money.single-valued.groupofpeople {
-  font-family:inherit;
-}
-
-form.project-participant-fields span.allowed-option-name ~ span.allowed-option-value {
-  /* margin-left:1ex; */
-}
-
-form.project-participant-fields label.groupofpeople.predefined span.allowed-option {
-  margin-left:1ex;
-  display:none;
-}
-
-form.project-participant-fields label.groupofpeople.predefined span.allowed-option.selected {
-  display:unset;
-  font-weight:bold;
-}
-
-form.project-participant-fields td.pme-value input.sepa-debit-mandate,
-form.project-participant-fields td.pme-cell input.sepa-debit-mandate {
-  min-height:unset;
-  margin:0;
-  padding: 2px 12px 2px 12px;
-}
-
-/**
- * Style first and subsequence lines in list-view
- */
-form.project-participant-fields.pme-list td.pme-value div.allowed-option-wrapper,
-form.project-participant-fields.pme-list td.pme-cell div.allowed-option-wrapper {
-  max-height:24px; /* hard restriction on table row height */
-  /* line-height:12px; */
-  line-height:7px;
-  font-size:66.67%;
-  overflow:hidden;
-  position:relative;
-}
-
-form.project-participant-fields.pme-list td.pme-value div.allowed-option-wrapper::first-line,
-form.project-participant-fields.pme-list td.pme-cell div.allowed-option-wrapper::first-line {
-  line-height:12px;
-  font-size:150%; /* this is relative to the 2/3 above */
-}
-
-form.project-participant-fields.pme-list td.pme-value div.allowed-option-wrapper > *,
-form.project-participant-fields.pme-list td.pme-cell div.allowed-option-wrapper > *{
-  /* -moz-transform: scale(0.5);
-     zoom: 0.5; */
-}
-
-form.project-participant-fields tr.participant-field.recurring td.pme-value td.operations input.operation.regenerate-all {
-  width:100%;
-  height:unset;
-  min-height:unset;
-  margin-right:unset;
-}
-
-form.project-participant-fields tr.participant-field.recurring table.row-count-0 thead  {
-  display:none;
-}
-
-form.pme-form.project-participant-fields td.pme-value.cloud-file table.file-upload {
-  width:100%;
-}
-
-form.pme-form.project-participant-fields tr.file-upload-row td.cloud-file {
-  width:100%;
-  padding-right:3px;
-}
-
-form.pme-form.project-participant-fields tr.file-upload-row td.operations .operation {
-  display:inline-block;
-  background-repeat:no-repeat;
-  background-size: 24px 24px;
-  background-position: center;
-  width:28px;
-  height:28px;
-  vertical-align:middle;
-  margin-right:0.5em;
-}
-
-form.pme-form.project-participant-fields tr.file-upload-row .operation.delete-undelete {
-  background-image:url('../img/cafevdb-delete.svg');
-}
-
-form.pme-form.project-participant-fields tr.file-upload-row .operation.upload-replace {
-  background-image:url('../../../core/img/actions/upload.svg');
-}
-
-form.pme-form.project-participant-fields tr.file-upload-row .operation.open-parent {
-  background-image:url('../../../core/img/filetypes/folder-external.svg');
-}
-
-form.pme-form.project-participant-fields tr.file-upload-row a[href=""] {
-  display:none;
-}
-
-form.pme-form.project-participant-fields tr.file-upload-row a ~ .upload-placeholder {
-  display:none;
-}
-
-form.pme-form.project-participant-fields tr.file-upload-row a[href=""] ~ .upload-placeholder {
-  display:inline-block;
-  width:100%;
+.tooltip-inner {
+  span.allowed-option {
+    display:inline-block;
+    width:100%;
+  }
+  span.allowed-option-name {
+    font-style:italic;
+  }
+  span.allowed-option-separator {
+    display:inline-block;
+    width:1em;
+  }
+  span.allowed-option-value.money {
+    font-family:monospace;
+    float:right;
+  }
 }
