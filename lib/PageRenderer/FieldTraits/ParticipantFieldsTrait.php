@@ -104,6 +104,9 @@ trait ParticipantFieldsTrait
 
         $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
 
+        $deletedSqlFilter = $this->showDisabled ? '' : ' AND $join_table.deleted IS NULL';
+        $deletedValueFilter = $this->showDisabled ? '' : ' AND $table.deleted IS NULL';
+
         $css = [ 'participant-field', 'field-id-'.$fieldId, ];
         $extraFddBase = [
           'name' => $this->l->t($fieldName),
@@ -112,13 +115,14 @@ trait ParticipantFieldsTrait
           'default|A'  => $field['default_value'],
           'filter' => 'having',
           'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
-  IF($join_table.field_id = '.$fieldId.', $join_col_enc, NULL)
+  IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_enc, NULL)
   ORDER BY $order_by))',
           'values' => [
             'grouped' => true,
             'filters' => ('$table.field_id = '.$fieldId
                           .' AND $table.project_id = '.$this->projectId
-                          .' AND $table.musician_id = $record_id[musician_id]'),
+                          .' AND $table.musician_id = $record_id[musician_id]'
+                          .$deletedValueFilter),
             'orderby' => '$table.option_key ASC',
           ],
           'tooltip' => $field['tooltip']?:null,
@@ -229,14 +233,7 @@ trait ParticipantFieldsTrait
           $keyFdd['input'] = 'VSRH';
           $valueFdd['css']['postfix'] .= ' simple-valued '.$dataType;
 
-          // disable deleted entries
-          if (!$this->showDisabled) {
-            $valueFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
-            $keyFdd['values']['filters'] .= ' AND $table.deleted IS NULL';
-            $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.' AND $join_table.deleted IS NULL, $join_col_fqn, NULL))';
-          } else {
-            $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.', $join_col_fqn, NULL))';
-          }
+          $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL))';
 
           switch ($dataType) {
           case FieldType::SERVICE_FEE:
@@ -492,10 +489,6 @@ trait ParticipantFieldsTrait
           $valueFdd['input|ACP'] = $keyFdd['input'];
           $keyFdd['input|ACP'] = 'SRH';
 
-          if (!$this->showDisabled) {
-            $deletedFilter = ' OR $join_table.deleted IS NOT NULL';
-          }
-
           // The following KEY:VALUE always result into a "changed"
           // entry in the legacy PME code. This is adjusted later in
           // $this->beforeUpdateSanitizeParticipantFields()
@@ -504,15 +497,16 @@ trait ParticipantFieldsTrait
           $valueFdd['sql'] = 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
   DISTINCT
   IF(
-    NOT $join_table.field_id = '.$fieldId.$deletedFilter.',
-    NULL,
+    $join_table.field_id = '.$fieldId.$deletedSqlFilter.',
     CONCAT_WS(
       \''.self::JOIN_KEY_SEP.'\',
       BIN2UUID($join_table.option_key),
       $join_table.option_value
-    )
+    ),
+    NULL
   )
-  ORDER BY $order_by))';
+  ORDER BY $order_by)
+)';
 
           // yet another field for the supporting documents
           list($invoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
@@ -521,15 +515,16 @@ trait ParticipantFieldsTrait
               'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
   DISTINCT
   IF(
-    NOT $join_table.field_id = '.$fieldId.$deletedFilter.',
-    NULL,
+    $join_table.field_id = '.$fieldId.$deletedSqlFilter.',
     CONCAT_WS(
       \''.self::JOIN_KEY_SEP.'\',
       BIN2UUID($join_table.option_key),
       $join_col_fqn
-    )
+    ),
+    NULL
   )
-  ORDER BY $order_by))',
+  ORDER BY $order_by)
+)',
               'values' => [
                 'orderby' => '$table.created DESC, $table.option_key ASC',
               ],
@@ -687,7 +682,10 @@ trait ParticipantFieldsTrait
               'values' => [
                 'table' => "SELECT
    m1.id AS musician_id,
-   ".$this->musicianPublicNameSql('m1')." AS name,
+   CONCAT(
+     ".$this->musicianPublicNameSql('m1').",
+     IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
+   ) AS name,
    m1.sur_name AS sur_name,
    m1.first_name AS first_name,
    m1.nick_name AS nick_name,
@@ -698,7 +696,10 @@ FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m1
   ON m1.id = pp.musician_id
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = $this->projectId AND fd.field_id = $fieldId
+  ON fd.musician_id = pp.musician_id
+     AND fd.project_id = $this->projectId
+     AND fd.field_id = $fieldId
+     ".($this->showDisabled ? '' : ' AND fd.deleted IS NULL')."
 LEFT JOIN (SELECT
     fd2.option_key AS group_id,
     ROW_NUMBER() OVER (ORDER BY fd2.field_id) AS group_number
@@ -846,7 +847,10 @@ WHERE pp.project_id = $this->projectId",
               'values|ACP' => [
                 'table' => "SELECT
   m3.id AS musician_id,
-  ".$this->musicianPublicNameSql('m3')." AS name,
+  CONCAT(
+    ".$this->musicianPublicNameSql('m3').",
+    IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
+  ) AS name,
   m3.sur_name AS sur_name,
   m3.first_name AS first_name,
   m3.nick_name AS nick_name,
@@ -859,7 +863,10 @@ FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m3
   ON m3.id = pp.musician_id
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = $this->projectId AND fd.field_id = $fieldId
+  ON fd.musician_id = pp.musician_id
+     AND fd.project_id = $this->projectId
+     AND fd.field_id = $fieldId
+     ".($this->showDisabled ? '' : ' AND fd.deleted IS NULL')."
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
   ON do.field_id = fd.field_id AND do.key = fd.option_key
 WHERE pp.project_id = $this->projectId",
@@ -919,7 +926,10 @@ WHERE pp.project_id = $this->projectId",
               'values|LFDV' => [
                 'table' => "SELECT
   m2.id AS musician_id,
-  ".$this->musicianPublicNameSql('m2')." AS name,
+  CONCAT(
+    ".$this->musicianPublicNameSql('m2').",
+    IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
+  ) AS name,
   m2.sur_name AS sur_name,
   m2.first_name AS first_name,
   m2.nick_name AS nick_name,
@@ -929,7 +939,10 @@ FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m2
   ON m2.id = pp.musician_id
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id AND fd.project_id = pp.project_id
+  ON fd.musician_id = pp.musician_id
+     AND fd.project_id = pp.project_id
+     AND fd.field_id = $fieldId
+     ".($this->showDisabled ? '' : ' AND fd.deleted IS NULL')."
 WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                 'column' => 'name',
                 'orderby' => '$table.group_id ASC, $table.display_name ASC, $table.sur_name ASC, $table.nick_name ASC, $table.first_name ASC',
