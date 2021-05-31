@@ -109,8 +109,6 @@ abstract class AbstractSpreadsheetExporter
 
     $creator   = $this->getConfigValue('emailfromname', 'Bilbo Baggins');
     $email     = $this->getConfigValue('emailfromaddress', 'bilbo@nowhere.com');
-    // @todo Format according to locate
-    $date = strftime('%d.%m.%Y %H:%M:%S');
 
     $locale = $this->getLocale();
 
@@ -126,12 +124,19 @@ abstract class AbstractSpreadsheetExporter
     /** @todo move to namespace */
     $valueBinder = \OC::$server->query(PhpSpreadsheetValueBinder::class);
     PhpSpreadsheet\Cell\Cell::setValueBinder($valueBinder);
-    try {
-      /** @todo Make the font path configurable, disable feature if fonts not found. */
-      PhpSpreadsheet\Shared\Font::setTrueTypeFontPath('/usr/share/fonts/corefonts/');
-      PhpSpreadsheet\Shared\Font::setAutoSizeMethod(PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
-    } catch (\Throwable $t) {
-      $this->logException($t);
+
+    $fontPaths = [
+      'gentoo' => '/usr/share/fonts/corefonts/',
+      'debian/ubuntu' => '/usr/share/fonts/truetype/msttcorefonts/',
+    ];
+    foreach ($fontPaths as $distro => $fontPath) {
+      try {
+        /** @todo Make the font path configurable, disable feature if fonts not found. */
+        PhpSpreadsheet\Shared\Font::setTrueTypeFontPath($fontPath);
+        PhpSpreadsheet\Shared\Font::setAutoSizeMethod(PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
+      } catch (\Throwable $t) {
+        $this->logException($t);
+      }
     }
 
     /*
@@ -145,7 +150,7 @@ abstract class AbstractSpreadsheetExporter
     $meta = $this->fillSheet($spreadSheet, [
       'creator' => $creator,
       'email' => $email,
-      'date' => $date,
+      'date' => new \DateTimeImmutable,
     ]);
 
     /*
@@ -193,7 +198,7 @@ abstract class AbstractSpreadsheetExporter
 
     // that was it ...
 
-    return $fileType;
+    return array_merge($fileType, $meta);
   }
 
 }

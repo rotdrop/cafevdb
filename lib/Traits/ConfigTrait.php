@@ -461,6 +461,12 @@ trait ConfigTrait {
     return $this->configService->timeStamp($format, $timeZone);
   }
 
+  /** Return the given time as short time-stamp (textual). */
+  protected function formatTimeStamp(\DateTimeInterface $date, $format = null, $timeZone = null)
+  {
+    return $this->configService->formatTimeStamp($date, $format, $timeZone);
+  }
+
   protected function generateUUID() {
     \Sabre\VObject\UUIDUtil::getUUID();
   }

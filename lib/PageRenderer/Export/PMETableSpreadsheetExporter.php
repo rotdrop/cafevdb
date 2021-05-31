@@ -386,7 +386,7 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
     $workSheet->mergeCells("A1:".$highCol.'1');
     $workSheet->mergeCells("A2:".$highCol.'2');
 
-    $workSheet->setCellValue('A1', $name.', '.$date);
+    $workSheet->setCellValue('A1', $name.', '.$this->dateTimeFormatter()->formatDate($date));
     $workSheet->setCellValue('A2', $creator.' &lt;'.$email.'&gt;');
 
     // Format the mess a little bit

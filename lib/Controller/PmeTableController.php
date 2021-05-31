@@ -57,6 +57,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Common\Util;
 
 class PmeTableController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -241,7 +242,11 @@ class PmeTableController extends Controller {
     $data = file_get_contents($tmpFile);
     unlink($tmpFile);
 
-    $fileName  = $date.'-'.$this->appName().'-'.$name.'.'.$fileMeta['extension'];
+    $fileName  = implode('-', [
+      $this->formatTimeStamp($fileMeta['date']),
+      $this->appName(),
+      Util::normalizeSpaces($this->transliterate($fileMeta['name']), '-'),
+    ]) . '.' .  $fileMeta['extension'];
 
     return new DataDownloadResponse($data, $fileName, $fileMeta['mimeType']);
   }

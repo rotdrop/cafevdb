@@ -748,7 +748,7 @@ class ConfigService {
     return $result;
   }
 
-  public function timeStamp($format = null, $timeZone = null)
+  public function formatTimeStamp(\DateTimeInterface $date, $format = null, $timeZone = null)
   {
     if (empty($format)) {
       $format = 'Ymd-his-T';
@@ -756,7 +756,12 @@ class ConfigService {
     if (empty($timeZone)) {
       $timeZone = $this->getDateTimeZone();
     }
-    return (new \DateTime())->setTimeZone($timeZone)->format($format);
+    return $date->setTimeZone($timeZone)->format($format);
+  }
+
+  public function timeStamp($format = null, $timeZone = null)
+  {
+    return $this->formatTimeStamp(new \DateTimeImmutable, $format, $timeZone);
   }
 }
 
