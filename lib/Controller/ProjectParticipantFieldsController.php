@@ -125,13 +125,37 @@ class ProjectParticipantFieldsController extends Controller {
 
         $property = $this->parameterService['property'];
 
+        // remap special cases
+        switch ($property) {
+        case 'defaultDeposit':
+          $fieldProperty = 'defaultValue';
+          break;
+        default:
+          $fieldProperty = $property;
+          break;
+        }
+
         try {
-          $propertyValue = (string)$field[$property];
+          $propertyValue = $field[$fieldProperty];
         } catch (\Throwable $t) {
           $this->logException($t);
           return self::grumble(
             $this->l->t('Unable to retrieve property "%s" from field "%s".',
                         [ $property, $field->getName() ]));
+        }
+
+        // handle special cases, in particular the default value and deposit
+        switch ($property) {
+        case 'defaultValue':
+          /** @var Entities\ProjectParticipantFieldDataOption $propertyValue */
+          $propertyValue = $propertyValue->getData();
+          break;
+        case 'defaultDeposit':
+          /** @var Entities\ProjectParticipantFieldDataOption $propertyValue */
+          $propertyValue = $propertyValue->getDeposit();
+        default:
+          $propertyValue = (string)$propertyValue;
+          break;
         }
 
         return self::dataResponse([
@@ -348,7 +372,6 @@ class ProjectParticipantFieldsController extends Controller {
         $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
 
         switch ($data['data-type']) {
-        case 'deposit':
         case 'service-fee':
         case 'money':
           // see that it is a valid decimal number ...
@@ -358,6 +381,13 @@ class ProjectParticipantFieldsController extends Controller {
               return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['data'] ]));
             }
             $item['data'] = $parsed;
+          }
+          if (!empty($item['deposit'])) {
+            $parsed = $this->fuzzyInput->currencyValue($item['deposit']);
+            if ($parsed === false) {
+              return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['deposit'] ]));
+            }
+            $item['deposit'] = $parsed;
           }
           break;
         default:

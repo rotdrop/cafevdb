@@ -55,25 +55,40 @@ const ready = function(selector, resizeCB) {
 
     const multiplicityClass = 'multiplicity-' + data.multiplicity;
     const dataTypeClass = 'data-type-' + data.dataType;
+    const depositDueDateClass = 'deposit-due-date-' + data.depositDueDate;
     container.find('tr.multiplicity')
       .removeClass(function(index, className) {
-        return (className.match(/\b(multiplicity|data-type)-\S+/g) || []).join(' ');
+        return (className.match(/\b(multiplicity|data-type|deposit-due-date)-\S+/g) || []).join(' ');
       })
-      .addClass(multiplicityClass + ' ' + dataTypeClass);
-    container.find('[class*="-multiplicity-required"], [class*="-data-type-required"]').each(function(index) {
+      .addClass(multiplicityClass + ' ' + dataTypeClass + ' ' + depositDueDateClass);
+    container.find('[class*="-multiplicity-required"], [class*="-data-type-required"], [class*="-deposit-due-date-required"]').each(function(index) {
       const $this = $(this);
       $this.prop(
         'required',
-        $this.hasClass(data.multiplicity + '-multiplicity-required')
-        || $this.hasClass(data.dataType + '-data-type-required'));
+        ($this.hasClass(data.multiplicity + '-multiplicity-required')
+         || $this.hasClass(data.dataType + '-data-type-required')
+         || $this.hasClass(data.depositDueDate + '-deposit-due-date-required')
+         || $this.hasClass('multiplicity-' + data.multiplicity + '-'
+                           + data.depositDueDate + '-deposit-due-date-required')
+        )
+          && !$this.hasClass('not-multiplicity-' + data.multiplicity + '-'
+                             + data.depositDueDate + '-deposit-due-date-required')
+      );
     });
+    container.find('.data-type-html-disabled').prop('disabled', data.dataType === 'html');
+    container.find('.not-data-type-html-disabled').prop('disabled', data.dataType !== 'html');
   };
 
   const fieldTypeData = function() {
     const multiplicity = container.find('select.multiplicity');
     const dataType = container.find('select.data-type');
+    const depositDueDate = container.find('input.deposit-due-date');
     if (multiplicity.length > 0 && dataType.length > 0) {
-      return { multiplicity: multiplicity.val(), dataType: dataType.val() };
+      return {
+        multiplicity: multiplicity.val(),
+        dataType: dataType.val(),
+        depositDueDate: depositDueDate.val() === '' ? 'unset' : 'set',
+      };
     }
     const elem = container.find('td.pme-value.field-type .data');
     if (elem.length <= 0) {
@@ -92,9 +107,11 @@ const ready = function(selector, resizeCB) {
   };
 
   // Field-Type Selectors
-  container.on('change', 'select.multiplicity, select.data-type', function(event) {
+  container.on('change', 'select.multiplicity, select.data-type, input.deposit-due-date', function(event) {
+    const depositDueDateInput = container.find('input.deposit-due-date');
     const multiplicitySelect = container.find('select.multiplicity');
     const dataTypeSelect = container.find('select.data-type');
+    const depositDueDate = depositDueDateInput.val() === '' ? 'unset' : 'set';
     const multiplicity = multiplicitySelect.val();
     const dataTypeMask = SelectUtils.optionByValue(multiplicitySelect, multiplicity).data('data');
     let dataType = dataTypeSelect.val();
@@ -121,11 +138,12 @@ const ready = function(selector, resizeCB) {
       }
     }
     dataTypeSelect.trigger('chosen:updated');
-    setFieldTypeCssClass({ multiplicity, dataType });
+    setFieldTypeCssClass({ multiplicity, dataType, depositDueDate });
     allowedHeaderVisibility();
+    console.info('RESIZECB');
     resizeCB();
 
-    if (dataType === 'service-fee' || dataType === 'deposit') {
+    if (dataType === 'service-fee') {
       container.find('td.pme-value.default-value input').attr('type', 'number');
     } else {
       container.find('td.pme-value.default-value input').attr('type', 'text');

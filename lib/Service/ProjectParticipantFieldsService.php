@@ -75,7 +75,6 @@ class ProjectParticipantFieldsService
       DataType::FLOAT,
       DataType::DATE,
       DataType::DATETIME,
-      DataType::DEPOSIT,
       DataType::CLOUD_FILE,
       DataType::DB_FILE,
     ],
@@ -154,13 +153,12 @@ class ProjectParticipantFieldsService
     // foreach ($participantFields as $field) {
     //   switch ($field['dataType']) {
     //   case DataType::SERVICE_FEE:
-    //   case DataType::DEPOSIT:
     //     $monetary[$field['id']] = $field;
     //     break;
     //   }
     // }
     return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
-      'dataType' => [ DataType::SERVICE_FEE, DataType::DEPOSIT ],
+      'dataType' => DataType::SERVICE_FEE,
     ]));
   }
 
@@ -280,17 +278,11 @@ class ProjectParticipantFieldsService
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($projectParticipant->getParticipantFieldsData() as $fieldDatum) {
       $fieldDataType = $fieldDatum->getField()->getDataType();
-      if ($fieldDataType != DataType::SERVICE_FEE
-          && $fieldDataType != DataType::DEPOSIT) {
+      if ($fieldDataType != DataType::SERVICE_FEE) {
         continue;
       }
-      if ($fieldDataType == DataType::SERVICE_FEE) {
-        $obligations['sum'] += $fieldDatum->amountPayable();
-        $obligations['received'] += $fieldDatum->amountPaid();
-      } else if ($fieldDataType == DataType::DEPOSIT) {
-        // Unsupported yet. If implemented this can be used to bound the
-        // amount to invoice given the due-date of the payable and the deposit.
-      }
+      $obligations['sum'] += $fieldDatum->amountPayable();
+      $obligations['received'] += $fieldDatum->amountPaid();
     }
 
     return $obligations;
@@ -414,7 +406,6 @@ class ProjectParticipantFieldsService
     case DataType::DATETIME:
       return Util::convertToDateTime($value);
     case DataType::FLOAT:
-    case DataType::DEPOSIT:
     case DataType::SERVICE_FEE:
       return floatval($value);
     case DataType::INTEGER:
@@ -455,8 +446,9 @@ class ProjectParticipantFieldsService
       'key' => false,
       'label' => false,
       'data' => false,
-      'tooltip' => false,
+      'deposit' => false,
       'limit' => false,
+      'tooltip' => false,
       'deleted' => false,
     ];
   }

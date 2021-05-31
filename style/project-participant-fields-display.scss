@@ -41,8 +41,6 @@ form.pme-form.project-participant-fields {
 
   &:not(.pme-change) td.groupofpeople:not(.pme-key),
   &:not(.pme-change) td.groupofpeople-id:not(.pme-key),
-  &:not(.pme-change) td.deposit.set:not(.pme-key),
-  &:not(.pme-change) td.deposit.enum:not(.pme-key),
   &:not(.pme-change) td.service-fee.set:not(.pme-key),
   &:not(.pme-change) td.service-fee.enum:not(.pme-key) {
     min-width:12em;
@@ -50,8 +48,6 @@ form.pme-form.project-participant-fields {
 
   &:not(.pme-change,.pme-list) td.groupofpeople:not(.pme-key),
   &:not(.pme-change,.pme-list) td.groupofpeople-id:not(.pme-key),
-  &:not(.pme-change,.pme-list) td.deposit.set:not(.pme-key),
-  &:not(.pme-change,.pme-list) td.deposit.enum:not(.pme-key),
   &:not(.pme-change,.pme-list) td.service-fee.set:not(.pme-key),
   &:not(.pme-change,.pme-list) td.service-fee.enum:not(.pme-key) {
     width:32em;
@@ -187,11 +183,12 @@ form.pme-form.project-participant-fields {
     /* margin-left:1ex; */
   }
 
-  label.groupofpeople.predefined span.allowed-option {
+  label.groupofpeople span.allowed-option {
     margin-left:1ex;
     display:none;
   }
 
+  label.groupofpeople.single-valued span.allowed-option,
   label.groupofpeople.predefined span.allowed-option.selected {
     display:unset;
     font-weight:bold;

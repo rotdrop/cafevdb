@@ -19,334 +19,331 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /******************************************************************************
  *
  * participant-field stuff
  *
  */
-
-table.pme-main tr.multiplicity ~ tr.pme-row.due-date,
-table.pme-main tr.multiplicity ~ tr.pme-row.maximum-group-size,
-table.pme-main tr.multiplicity ~ tr.pme-row.data-options,
-table.pme-main tr.multiplicity ~ tr.pme-row.data-options-single,
-table.pme-main tr.multiplicity.multiplicity-single.data-type-boolean ~ tr.pme-row.data-options-single,
-table.pme-main tr.multiplicity ~ tr.pme-row.default-value,
-table.pme-main tr.multiplicity ~ tr.pme-row.default-single-value,
-table.pme-main tr.multiplicity ~ tr.pme-row.default-cloud-file-value,
-table.pme-main tr.multiplicity ~ tr.pme-row.default-multi-value {
-  display:none;
-}
-
-table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row .not-multiplicity-recurring {
-  display:none!important;
-}
-
-table.pme-main tr.multiplicity:not(.multiplicity-recurring) ~ tr.pme-row .only-multiplicity-recurring {
-  display:none!important;
-}
-
-table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row.due-date,
-table.pme-main tr.multiplicity.data-type-deposit ~ tr.pme-row.due-date,
-table.pme-main tr.multiplicity.multiplicity-groupofpeople ~ tr.pme-row.maximum-group-size,
-table.pme-main tr.multiplicity.multiplicity-groupofpeople.data-type-service-fee ~ tr.pme-row.data-options-single,
-table.pme-main tr.multiplicity.multiplicity-simple:not(.multiplicity-groupofpeople) ~ tr.pme-row.default-value,
-table.pme-main tr.multiplicity.multiplicity-single ~ tr.pme-row.default-single-value,
-table.pme-main tr.multiplicity.multiplicity-single ~ tr.pme-row.data-options-single,
-table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row.data-options,
-table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.data-options,
-table.pme-main tr.multiplicity.multiplicity-multiple ~ tr.pme-row.default-multi-value,
-table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.data-options,
-table.pme-main tr.multiplicity.multiplicity-parallel ~ tr.pme-row.default-multi-value,
-table.pme-main tr.multiplicity.multiplicity-recurring ~ tr.pme-row.data-options {
-  display:table-row;
-}
-
-table.pme-main tr.multiplicity.data-type-db-file,
-table.pme-main tr.multiplicity.data-type-cloud-file {
-  ~ tr.pme-row.default-value, ~ tr.pme-row.default-multi-value, ~ tr.pme-row.default-single-value {
+table.pme-main tr.multiplicity {
+  &.multiplicity-single.data-type-boolean ~ tr.pme-row.data-options-single {
+    display:none;
+  }
+  ~ tr.pme-row {
+    &.due-date,
+    &.deposit-due-date,
+    &.maximum-group-size,
+    &.data-options,
+    &.data-options-single,
+    &.data-options-simple,
+    &.data-options-groupofpeople,
+    &.deposit-single,
+    &.deposit-simple,
+    &.deposit-groupofpeople,
+    &.default-value,
+    &.default-single-value,
+    &.default-cloud-file-value,
+    &.default-multi-value {
+      display:none;
+    }
+  }
+  &.multiplicity-recurring ~ tr.pme-row .not-multiplicity-recurring,
+  &:not(.multiplicity-recurring) ~ tr.pme-row .only-multiplicity-recurring {
     display:none!important;
   }
-}
-
-table.pme-main tr.multiplicity.data-type-cloud-file ~ tr.pme-row.default-cloud-file-value {
-  display:table-row;
-}
-
-.project-participant-fields table.pme-main tr:not(.pme-filter) .chosen-container {
-  box-sizing:border-box;
-  min-width:50%;
-}
-
-.project-participant-fields table.pme-main tr.data-options td {
-  input, textarea {
-    vertical-align:middle;
+  &.data-type-service-fee ~ tr.pme-row.due-date,
+  &.data-type-service-fee ~ tr.pme-row.deposit-due-date,
+  &.multiplicity-groupofpeople ~ tr.pme-row.maximum-group-size,
+  &.multiplicity-groupofpeople.data-type-service-fee ~ tr.pme-row.data-options-groupofpeople,
+  &.multiplicity-single ~ tr.pme-row.default-single-value,
+  &.multiplicity-single ~ tr.pme-row.data-options-single,
+  &.multiplicity-simple ~ tr.pme-row.default-simple-value,
+  &.multiplicity-simple:not(.data-type-cloud-file, .data-type-db-file) ~ tr.pme-row.data-options-simple,
+  &.multiplicity-groupsofpeople ~ tr.pme-row.data-options,
+  &.multiplicity-multiple ~ tr.pme-row.data-options,
+  &.multiplicity-multiple ~ tr.pme-row.default-multi-value,
+  &.multiplicity-parallel ~ tr.pme-row.data-options,
+  &.multiplicity-parallel ~ tr.pme-row.default-multi-value,
+  &.multiplicity-recurring ~ tr.pme-row.data-options {
+    display:table-row;
+  }
+  &.data-type-db-file,
+  &.data-type-cloud-file {
+    ~ tr.pme-row.default-value,
+    ~ tr.pme-row.default-multi-value,
+    ~ tr.pme-row.default-single-value {
+      display:none!important;
+    }
+  }
+  &.data-type-cloud-file ~ tr.pme-row.default-cloud-file-value {
+    display:table-row;
+  }
+  &.data-type-html ~ tr .data-type-html-hidden {
+    display:none;
+  }
+  &:not(.data-type-html) ~ tr .not-data-type-html-hidden {
+    display:none;
   }
 }
-
+.project-participant-fields table.pme-main tr:not(.pme-filter) .chosen-container {
+    box-sizing:border-box;
+    min-width:50%;
+}
+.project-participant-fields table.pme-main tr.data-options td {
+    input, textarea {
+        vertical-align:middle;
+    }
+}
 .project-participant-fields table.pme-main tr.data-options td.operations input.operation {
-  background-repeat:no-repeat;
-  background-size: 24px 24px;
-  background-position: center;
-  width:28px;
-  height:28px;
-  vertical-align:middle;
-  margin-right:1em;
+    background-repeat:no-repeat;
+    background-size: 24px 24px;
+    background-position: center;
+    width:28px;
+    height:28px;
+    vertical-align:middle;
+    margin-right:1em;
 }
-
 .project-participant-fields table.pme-main tr.data-options input.regenerate {
-  background-image:url('../img/reload-solid.svg');
+    background-image:url('../img/reload-solid.svg');
 }
-
 .project-participant-fields table.pme-main tr.data-options.active input.generator-run {
-  background-image:url('../../../core/img/actions/play.svg');
+    background-image:url('../../../core/img/actions/play.svg');
 }
-
 .project-participant-fields table.pme-main tr.data-options.active input.delete-undelete {
-  background-image:url('../img/cafevdb-delete.svg');
+    background-image:url('../img/cafevdb-delete.svg');
 }
-
 .project-participant-fields table.pme-main tr.data-options.deleted input.delete-undelete {
-  background-image:url('../img/history.svg');
+    background-image:url('../img/history.svg');
 }
-
 form.pme-form.pme-copyadd .show-deleted {
-  display:none;
+    display:none;
 }
-
 tr.data-options.deleted {
-  display:none;
+    display:none;
 }
-
 table.data-options.show-deleted tr.data-options.deleted {
-  display:table-row;
+    display:table-row;
 }
-
 /* Data currently only useful for service-fee-fields, limit only for
  * group definitions.
  */
 td.field-data,
 th.field-data,
+td.field-deposit,
+th.field-deposit,
 td.field-limit,
 th.field-limit {
-  display:none!important;
+    display:none!important;
 }
-
 table.data-options.operation-display, table.data-options.show-data {
-  td.field-data, th.field-data,
-  td.field-limit, th.field-limit {
-    display:table-cell!important;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
+    td.field-data, th.field-data,
+    td.field-deposit, th.field-deposit,
+    td.field-limit, th.field-limit {
+        display:table-cell!important;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
 }
-
 form.pme-form.pme-list {
-  table.data-options.operation-display {
+    table.data-options.operation-display {
+        td.field-data, th.field-data {
+            max-width:8em;
+        }
+    }
+}
+/* Show field-data for service-fee fields, because it holds the amount to pay. */
+table.pme-main tr.multiplicity.data-type-service-fee {
+  ~ tr.pme-row td.pme-value {
     td.field-data, th.field-data {
-      max-width:8em;
+      display:table-cell!important;
     }
   }
-}
-
-/* Show field-data for service-fee fields, because it holds the amount to pay. */
-table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row td.pme-value {
-  td.field-data, th.field-data {
-    display:table-cell!important;
+  &.deposit-due-date-set {
+    ~ tr.pme-row td.pme-value {
+      td.field-deposit, th.field-deposit {
+        display:table-cell!important;
+      }
+    }
+    &.multiplicity-simple ~ tr.pme-row.deposit-simple,
+    &.multiplicity-single ~ tr.pme-row.deposit-single,
+    &.multiplicity-groupofpeople ~ tr.pme-row.deposit-groupofpeople {
+      display:table-row;
+    }
   }
 }
 
 /* Hide field-data for autogenerated service-fee fields. */
-table.pme-main tr.multiplicity.multiplicity-recurring.data-type-service-fee ~ tr.pme-row td.pme-value {
-  td.field-limit, th.field-limit {
-    display:none!important;
-  }
-  td.field-data, th.field-data {
-    display:table-cell!important;
-    span.service-fee {
-      display:none;
+table.pme-main tr.multiplicity.multiplicity-recurring.data-type-service-fee {
+    ~ tr.pme-row td.pme-value {
+        td.field-limit, th.field-limit {
+            display:none!important;
+        }
+        td.field-data, th.field-data {
+            display:table-cell!important;
+            span.service-fee {
+                display:none;
+            }
+            span.general {
+                display:inline-block;
+            }
+        }
     }
-    span.general {
-      display:inline-block;
-    }
-  }
 }
 
 /* Show field-limit for group-fields */
 table.pme-main tr.multiplicity.multiplicity-groupsofpeople ~ tr.pme-row td.pme-value {
-  td.field-limit, th.field-limit {
-    display:table-cell!important;
-  }
+    td.field-limit, th.field-limit {
+        display:table-cell!important;
+    }
 }
-
 table.pme-main tr.multiplicity ~ tr.pme-row {
-  span.service-fee {
-    display:none;
-  }
-  span.general {
-    display:inline-block;
-  }
+    span.service-fee {
+        display:none;
+    }
+    span.general {
+        display:inline-block;
+    }
 }
-
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row {
-  span.service-fee {
-    display:inline-block;
-  }
-  span.general {
-    display:none;
-  }
+    span.service-fee {
+        display:inline-block;
+    }
+    span.general {
+        display:none;
+    }
 }
-
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row.data-options td.pme-value div.show-data {
-  display:none;
+    display:none;
 }
-
-table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.field-data,
-table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row input.data-options-single {
-  text-align:right;
+table.pme-main tr.multiplicity.data-type-service-fee {
+  ~ tr.pme-row input.field-data,
+  ~ tr.pme-row input.field-deposit,
+  ~ tr.pme-row input.data-options-single,
+  ~ tr.pme-row input.data-options-simple,
+  ~ tr.pme-row input.data-options-groupofpeople {
+    text-align:right;
+    width:130px;
+  }
 }
 table.pme-main tr.multiplicity.data-type-service-fee ~ tr.pme-row tr.generator input.field-data {
-  text-align:inherit;
+    text-align:inherit;
 }
-
 /* list view */
-.pme-cell-wrapper table.operation-display.data-options th.field-data span.general,
-.pme-cell-wrapper table.operation-display.data-options.data-type-service-fee .field-data span.service-fee {
-  display:inline-block;
+.pme-cell-wrapper table.operation-display.data-options {
+  th.field-data span.general,
+  th.field-deposit span.general,
+  &.data-type-service-fee .field-data span.service-fee,
+  &.data-type-service-fee .field-deposit span.service-fee {
+    display:inline-block;
+  }
+  &.data-type-service-fee .field-data span.general,
+  &.data-type-service-fee .field-deposit span.general,
+  .field-data span.service-fee {
+    display:none;
+  }
 }
-
-.pme-cell-wrapper table.operation-display.data-options.data-type-service-fee .field-data span.general,
-.pme-cell-wrapper table.operation-display.data-options .field-data span.service-fee {
-  display:none;
-}
-
 table.pme-main td.pme-cell span.align-right,
 table.pme-main td.pme-value span.align-right {
-  float:right;
+    float:right;
 }
-
 table.pme-main tr.participant-field.recurring td.pme-value td.operations input.operation {
-  background-repeat:no-repeat;
-  background-size: 24px 24px;
-  background-position: center;
-  width:28px;
-  height:28px;
-  vertical-align:middle;
-  margin-right:1em;
+    background-repeat:no-repeat;
+    background-size: 24px 24px;
+    background-position: center;
+    width:28px;
+    height:28px;
+    vertical-align:middle;
+    margin-right:1em;
 }
-
 table.pme-main tr.participant-field.recurring td.pme-value td.operations input.regenerate {
-  background-image:url('../img/reload-solid.svg');
+    background-image:url('../img/reload-solid.svg');
 }
-
 table.pme-main tr.participant-field.recurring td.pme-value td.operations input.delete-undelete {
-  background-image:url('../img/cafevdb-delete.svg');
+    background-image:url('../img/cafevdb-delete.svg');
 }
-
 table.pme-main tr.participant-field.recurring td.pme-value tr.deleted td.operations input.delete-undelete {
-  background-image:url('../img/history.svg');
+    background-image:url('../img/history.svg');
 }
-
 table.pme-main tr.participant-field.recurring td.pme-value tr.deleted td.input * {
-  opacity:0.5;
+    opacity:0.5;
 }
-
 /******************/
-
 table.data-options.operation-display span.service-fee.currency-amount,
 table.pme-main span.service-fee.currency-amount {
-  text-align:right;
-  display:inline-block;
-  width:100%;
+    text-align:right;
+    display:inline-block;
+    width:100%;
 }
-
 .project-participant-fields table.pme-main textarea.field-tooltip,
 .project-participant-fields table.pme-main textarea.participant-field-tooltip {
-  overflow-x:hidden; /* fix FF extra-line bug */
+    overflow-x:hidden; /* fix FF extra-line bug */
 }
-
 .project-participant-fields table.pme-main td.data-options {
-  position:relative;
-  background-clip:padding-box;
+    position:relative;
+    background-clip:padding-box;
 }
-
 .project-participant-fields table.pme-main td.data-options div.field-display-options {
-  position:absolute;
-  bottom:0px;
-  right:0px;
+    position:absolute;
+    bottom:0px;
+    right:0px;
 }
-
 .project-participant-fields table.pme-main td.data-options td.placeholder {
-  min-width:35em;
+    min-width:35em;
 }
-
 table.data-options.operation-display th.operations,
 table.data-options.operation-display th.field-key,
 table.data-options.operation-display td.operations,
 table.data-options.operation-display td.field-key {
-  display:none!important;
+    display:none!important;
 }
-
 table.data-options {
-  border-collapse:collapse;
-  border-spacing:1px;
+    border-collapse:collapse;
+    border-spacing:1px;
 }
-
 table.data-options th {
-  font-style:italic;
+    font-style:italic;
 }
-
 table.data-options.operation-display th,
 table.data-options.operation-display td {
-  text-align:left;
-  border:1px solid #004D9C;
+    text-align:left;
+    border:1px solid #004D9C;
 }
-
 table.data-options.operation-display td.field-limit {
-  text-align:center;
+    text-align:center;
 }
-
 td.pme-value table.data-options.operation-display th,
 td.pme-value table.data-options.operation-display td {
-  padding:3px;
+    padding:3px;
 }
-
 td.pme-cell table.data-options.operation-display th,
 td.pme-cell table.data-options.operation-display td {
-  padding:1px;
+    padding:1px;
 }
-
 td.pme-cell.participant-field-tooltip ul,
 td.pme-cell.participant-field-tooltip ol {
-  list-style-position:inside!important;
-  list-style-type:unset;
+    list-style-position:inside!important;
+    list-style-type:unset;
 }
-
 td.pme-cell.participant-field-tooltip dd {
-  display: block;
-  margin-left:1em;
+    display: block;
+    margin-left:1em;
 }
-
 td.pme-cell.participant-field-tooltip h1,
 td.pme-cell.participant-field-tooltip h2,
 td.pme-cell.participant-field-tooltip h3,
 td.pme-cell.participant-field-tooltip h4,
 td.pme-cell.participant-field-tooltip h5 {
-  font-weight:bold;
+    font-weight:bold;
 }
-
 td.pme-cell.participant-field-tooltip em {
-  font-style:italic;
+    font-style:italic;
 }
-
 td.pme-cell.participant-field-tooltip b {
-  font-style:bold;
+    font-style:bold;
 }
-
 .tooltip-inner .pme-cell-wrapper table.data-options {
-  th.field-data, td.field-data, th.field-tooltip, td.field-tooltip {
-    max-width:8em;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
+    th.field-data, td.field-data, th.field-tooltip, td.field-tooltip {
+        max-width:8em;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
 }

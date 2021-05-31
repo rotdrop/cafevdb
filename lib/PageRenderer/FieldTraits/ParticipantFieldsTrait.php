@@ -92,7 +92,7 @@ trait ParticipantFieldsTrait
         }
 
         // set tab unless overridden by field definition
-        if ($field['data_type'] == FieldType::SERVICE_FEE || $field['data_type'] == FieldType::DEPOSIT) {
+        if ($field['data_type'] == FieldType::SERVICE_FEE) {
           $tab = [ 'id' => $financeTab ];
         } else {
           $tab = [ 'id' => 'project' ];
@@ -111,7 +111,7 @@ trait ParticipantFieldsTrait
         $extraFddBase = [
           'name' => $this->l->t($fieldName),
           'tab' => $tab,
-          'css'      => [ 'postfix' => ' '.implode(' ', $css), ],
+          'css'      => [ 'postfix' => $css, ],
           'default|A'  => $field['default_value'],
           'filter' => 'having',
           'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
@@ -189,7 +189,7 @@ trait ParticipantFieldsTrait
               'rows' => 5,
               'cols' => 50,
             ];
-            $fdd['css']['postfix'] .= ' hide-subsequent-lines';
+            $fdd['css']['postfix'][] = 'hide-subsequent-lines';
             $fdd['display|LF'] = [ 'popup' => 'data' ];
             $fdd['escape'] = false;
             break;
@@ -210,14 +210,13 @@ trait ParticipantFieldsTrait
           case FieldType::DATE:
           case FieldType::DATETIME:
           case FieldType::SERVICE_FEE:
-          case FieldType::DEPOSIT:
             $style = $this->defaultFDD[$dataType];
             if (empty($style)) {
               throw new \Exception($this->l->t('Not default style for "%s" available.', $dataType));
             }
             unset($style['name']);
             $fdd = array_merge($fdd, $style);
-            $fdd['css']['postfix'] .= ' '.implode(' ', $css);
+            $fdd['css']['postfix'] = array_merge($fdd['css']['postfix'], $css);
             break;
           }
         }
@@ -230,8 +229,9 @@ trait ParticipantFieldsTrait
            *
            */
           $valueFdd['input'] = $keyFdd['input'];
-          $keyFdd['input'] = 'VSRH';
-          $valueFdd['css']['postfix'] .= ' simple-valued '.$dataType;
+          $keyFdd['input'] = 'SRH';
+          $valueFdd['css']['postfix'][] = 'simple-valued';
+          $valueFdd['css']['postfix'][] = $dataType;
 
           $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL))';
 
@@ -241,11 +241,11 @@ trait ParticipantFieldsTrait
        class="display-postfix revert-to-default [BUTTON_STYLE]"
        title="'.$this->toolTipsService['participant-fields:revert-to-default'].'"
        data-field-id="'.$fieldId.'"
+       data-field-property="[FIELD_PROPERTY]"
 />';
 
           switch ($dataType) {
           case FieldType::SERVICE_FEE:
-          case FieldType::DEPOSIT:
             unset($valueFdd['mask']);
             $valueFdd['php|VDLF'] = function($value) {
               return $this->moneyValue($value);
@@ -253,9 +253,37 @@ trait ParticipantFieldsTrait
             $valueFdd['display|CAP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
             if (!empty($defaultValue)) {
               $valueFdd['display|CAP']['postfix'] .=
-                str_replace('[BUTTON_STYLE]', 'hidden-text', $defaultButton);
+                str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ] , [ 'hidden-text', 'defaultValue' ], $defaultButton);
             }
+
+            // We need one additional input field for the
+            // service-fee-deposit. This is only needed for
+            // FieldMultiplicity::SIMPLE and
+            // FieldType::SERVICE_FEE and IFF the deposit-due-date field in the option is non-zero.
+            //
+            // In all other cases the deposit is either not needed or fixed by the field options.
+            $depositDueDate = $field->getDepositDueDate();
+            if (empty($depositDueDate)) {
+              break;
+            }
+
+            $depositFddName = self::joinTableFieldName(self::participantFieldTableName($fieldId), 'deposit');
+            $fieldDescData[$depositFddName] = Util::arrayMergeRecursive($valueFdd, [
+              'name' => $this->l->t('Deposit').' '.$this->l->t($fieldName),
+              'values' => [
+                'column' => 'deposit',
+              ],
+            ]);
+            $depositFdd = &$fieldDescData[$depositFddName];
+
+            $depositFdd['display|CAP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
+            if (!empty($defaultValue)) {
+              $depositFdd['display|CAP']['postfix'] .=
+                str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ] , [ 'hidden-text', 'defaultDeposit' ], $defaultButton);
+            }
+
             break;
+
           case FieldType::DB_FILE:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
             $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
@@ -291,8 +319,8 @@ trait ParticipantFieldsTrait
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
             $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
-              $policy = $field->getDefaultValue()?:'rename';
               $key = $dataOptions->first()->getKey();
+              $policy = $dataOptions->first()->getData()?:'rename';
               $fileBase = $field['name'];
               $subDir = null;
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
@@ -317,7 +345,7 @@ trait ParticipantFieldsTrait
           default:
             if (!empty($defaultValue)) {
               $valueFdd['display|CAP']['postfix'] .=
-                str_replace('[BUTTON_STYLE]', 'image-left-of-text', $defaultButton);
+                str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
             }
             break;
           }
@@ -336,13 +364,14 @@ trait ParticipantFieldsTrait
           ];
           $keyFdd['select'] = 'C';
           $keyFdd['default'] = (string)!!(int)$field['default_value'];
-          $keyFdd['css']['postfix'] .= ' boolean single-valued '.$dataType;
+          $keyFdd['css']['postfix'][] = 'boolean';
+          $keyFdd['css']['postfix'][] = 'single-valued';
+          $keyFdd['css']['postfix'][] = $dataType;
           switch ($dataType) {
           case FieldType::BOOLEAN:
             break;
           case 'money':
           case FieldType::SERVICE_FEE:
-          case FieldType::DEPOSIT:
             $money = $this->moneyValue(reset($valueData));
             $noMoney = $this->moneyValue(0);
             // just use the amount to pay as label
@@ -378,7 +407,6 @@ trait ParticipantFieldsTrait
               $values = array_combine($optionKeys, $optionValues);
               $this->debug('VALUES '.print_r($values, true));
               $fieldId = $field->getId();
-              $policy = $field->getDefaultValue()?:'rename';
               $subDir = $field->getName();
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               /** @var Entities\ProjectParticipantFieldDataOption $option */
@@ -387,6 +415,7 @@ trait ParticipantFieldsTrait
                     foreach ($field->getSelectableOptions() as $option) {
                       $optionKey = (string)$option->getKey();
                       $fileBase = $option->getLabel();
+                      $policy = $option->getData()?:'rename';
                       $html .= $this->cloudFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
                     }
                     $html .= '
@@ -412,10 +441,9 @@ trait ParticipantFieldsTrait
             $keyFdd['valueTitles'] = $valueTitles;
             $keyFdd['valueData'] = $valueData;
             $keyFdd['select'] = 'M';
-            $keyFdd['css']['postfix'] .= ' '.$dataType;
+            $keyFdd['css']['postfix'][] = $dataType;
             break;
           case FieldType::SERVICE_FEE:
-          case FieldType::DEPOSIT:
             foreach ($dataOptions as $dataOption) {
               $key = (string)$dataOption['key'];
               $label = $dataOption['label'];
@@ -436,13 +464,13 @@ trait ParticipantFieldsTrait
               'postfix' => '</div>',
             ];
             if ($multiplicity == FieldMultiplicity::PARALLEL) {
-              $keyFdd['css']['postfix'] .= ' set hide-subsequent-lines';
+              $keyFdd['css']['postfix'][] = 'set hide-subsequent-lines';
               $keyFdd['select'] = 'M';
             } else {
-              $keyFdd['css']['postfix'] .= ' enum allow-empty';
+              $keyFdd['css']['postfix'][] = 'enum allow-empty';
               $keyFdd['select'] = 'D';
             }
-            $keyFdd['css']['postfix'] .= ' '.$dataType;
+            $keyFdd['css']['postfix'][] = $dataType;
             break;
           }
           break;
@@ -455,7 +483,8 @@ trait ParticipantFieldsTrait
            */
 
           foreach ([&$keyFdd, &$valueFdd] as &$fdd) {
-            $fdd['css']['postfix'] .= ' recurring generated '.$dataType;
+            $fdd['css']['postfix'][] = 'recurring generated';
+            $fdd['css']['postfix'][] = $dataType;
             unset($fdd['mask']);
             $fdd['select'] = 'M';
             $fdd['values'] = array_merge(
@@ -654,7 +683,7 @@ trait ParticipantFieldsTrait
           $css[] = 'single-valued';
           $keyFdd = Util::arrayMergeRecursive(
             $keyFdd, [
-              'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
+              'css' => [ 'postfix' => array_merge($css, [ 'groupofpeople-id', ]), ],
               'input' => 'SRH',
             ]);
 
@@ -740,22 +769,29 @@ WHERE pp.project_id = $this->projectId",
                 'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
               ],
               'valueGroups|ACP' => $valueGroups,
-            ]);
+            ],
+          );
 
-          $groupMemberFdd['css']['postfix'] .= ' '.implode(' ', $css);
+          $groupMemberFdd['css']['postfix'] = array_merge($groupMemberFdd['css']['postfix'], $css);
 
-          if ($dataType == FieldType::SERVICE_FEE || $dataType == FieldType::DEPOSIT) {
-            $groupMemberFdd['css']['postfix'] .= ' money '.$dataType;
+          if ($dataType == FieldType::SERVICE_FEE) {
+            $groupMemberFdd['css']['postfix'][] = 'money';
+            $groupMemberFdd['css']['postfix'][] = $dataType;
             $fieldData = $generatorOption['data'];
             $money = $this->moneyValue($fieldData);
-            $groupMemberFdd['name|LFVD'] = $groupMemberFdd['name'];
-            $groupMemberFdd['name'] = $this->allowedOptionLabel($groupMemberFdd['name'], $fieldData, $dataType, 'money');
             $groupMemberFdd['display|LFVD'] = array_merge(
               $groupMemberFdd['display'],
               [
                 'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
                 'postfix' => ('</span><span class="allowed-option-separator money">&nbsp;</span>'
                               .'<span class="allowed-option-value money">'.$money.'</span></span>'),
+              ]);
+            $groupMemberFdd['display|ACP'] = array_merge(
+              $groupMemberFdd['display'],
+              [
+                'prefix' => '<label class="'.implode(' ', $css).'">',
+                'postfix' => ($this->allowedOptionLabel('', $fieldData, $dataType, 'money selected')
+                              .'</label>'),
               ]);
           }
 
@@ -794,7 +830,7 @@ WHERE pp.project_id = $this->projectId",
           foreach($dataOptions as $dataOption) {
             $valueGroups[--$idx] = $dataOption['label'];
             $data = $dataOption['data'];
-            if ($dataType == FieldType::SERVICE_FEE || $dataType == FieldType::DEPOSIT) {
+            if ($dataType == FieldType::SERVICE_FEE) {
               $data = $this->moneyValue($data);
             }
             if (!empty($data)) {
@@ -809,7 +845,7 @@ WHERE pp.project_id = $this->projectId",
 
           $css[] = FieldMultiplicity::GROUPOFPEOPLE;
           $css[] = 'predefined';
-          if ($dataType === FieldType::SERVICE_FEE || $dataType === FieldType::DEPOSIT) {
+          if ($dataType === FieldType::SERVICE_FEE) {
             $css[] = ' money '.$dataType;
             foreach ($groupValues2 as $key => $value) {
               $groupValues2[$key] = $this->allowedOptionLabel(
@@ -821,7 +857,7 @@ WHERE pp.project_id = $this->projectId",
           $keyFdd = array_merge(
             $keyFdd, [
               //'name' => $this->l->t('%s Group', $fieldName),
-              'css'         => [ 'postfix' => ' '.implode(' ', $css) ],
+              'css'         => [ 'postfix' => $css, ],
               'select'      => 'D',
               'values2'     => $groupValues2,
               'display'     => [ 'popup' => 'data' ],
@@ -835,7 +871,7 @@ WHERE pp.project_id = $this->projectId",
           // hide value field
           $keyFdd = Util::arrayMergeRecursive(
             $keyFdd, [
-              'css' => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-id', ],
+              'css' => [ 'postfix' => array_merge($css, [ 'groupofpeople-id', ]), ],
               'input' => 'SRH',
             ]);
 
@@ -924,8 +960,9 @@ WHERE pp.project_id = $this->projectId",
               ],
             ]);
 
-          $groupMemberFdd['css']['postfix'] .= ' clip-long-text';
-          $groupMemberFdd['css|LFVD']['postfix'] = $groupMemberFdd['css']['postfix'].' view';
+          $groupMemberFdd['css']['postfix'][] = 'clip-long-text';
+          $groupMemberFdd['css|LFVD']['postfix'] = $groupMemberFdd['css']['postfix'];
+          $groupMemberFdd['css|LFVD']['postfix'][] = 'view';
 
           // generate yet another field to define popup-data
           list(, $fddMemberNameName) = $this->makeJoinTableField(
@@ -938,7 +975,7 @@ WHERE pp.project_id = $this->projectId",
           $popupFdd = Util::arrayMergeRecursive(
             $popupFdd, [
               'input' => 'VSRH',
-              'css'   => [ 'postfix' => ' '.implode(' ', $css).' groupofpeople-popup' ],
+              'css'   => [ 'postfix' => array_merge($css, [ 'groupofpeople-popup', ]), ],
               'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
               'values|LFDV' => [
                 'table' => "SELECT
@@ -993,7 +1030,6 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     switch ($dataType) {
     case 'money':
     case FieldType::SERVICE_FEE:
-    case FieldType::DEPOSIT:
       $value = $this->moneyValue($value);
       $innerCss .= ' money';
       break;
@@ -1129,6 +1165,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
 
       $keyName = $this->joinTableFieldName($tableName, 'option_key');
       $valueName = $this->joinTableFieldName($tableName, 'option_value');
+      $depositName = $this->joinTableFieldName($tableName, 'deposit');
       $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
 
       $this->debug('FIELDNAMES '.$keyName." / ".$groupFieldName);
@@ -1137,12 +1174,13 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       case FieldMultiplicity::SIMPLE:
         // We fake a multi-selection field and set the user input as
         // additional field value.
-        if (array_search($valueName, $changed) === false) {
+        if (array_search($valueName, $changed) === false
+            && array_search($depositName, $changed) === false) {
           continue 2;
         }
         $dataOption = $participantField->getSelectableOptions()->first(); // the only one
-        $key = $dataOption['key'];
-        $oldKey = $oldValues[$keyName]?:$key;
+        $key = (string)$dataOption['key'];
+        $oldKey = (string)$oldValues[$keyName]?:$key;
         if ($oldKey !== $key) {
           throw new \RuntimeException(
             $this->l->t('Inconsistent field keys for "%s", field-id %d, should: "%s", old: "%s", new: "%s"', [
@@ -1158,6 +1196,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         $changed[] = $keyName;
         // tweak the option value to have the desired form
         $newValues[$valueName] = $key.self::JOIN_KEY_SEP.$newValues[$valueName];
+        $newValues[$depositName] = $key.self::JOIN_KEY_SEP.$newValues[$depositName];
         break;
       case FieldMultiplicity::RECURRING:
         if (array_search($valueName, $changed) === false

@@ -99,6 +99,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   private $optionValue = null;
 
   /**
+   * @var float
+   * Optional value of a deposit for monetary options. This is unused if
+   * the deposit is fixed by single- or multi-select options.
+   *
+   * @ORM\Column(type="float", nullable=true)
+   */
+  private $deposit;
+
+  /**
    * @var ProjectParticipantFieldDataOption
    *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="fieldData", fetch="EXTRA_LAZY")
@@ -289,6 +298,30 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * Set deposit.
+   *
+   * @param null|string $float
+   *
+   * @return ProjectParticipantFieldDatum
+   */
+  public function setDeposit(?float $deposit):ProjectParticipantFieldDatum
+  {
+    $this->deposit = $deposit;
+
+    return $this;
+  }
+
+  /**
+   * Get deposit.
+   *
+   * @return null|float
+   */
+  public function getDeposit():?float
+  {
+    return $this->deposit;
+  }
+
+  /**
    * Set supportingDocument.
    *
    * @param null|EncryptedFile $supportingDocument
@@ -433,6 +466,33 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     }
     // perhaps this should throw ...
     return null;
+  }
+
+  /**
+   * Return the effective deposit value depending on the
+   * field-multiplicity.
+   *
+   * @return null|float
+   */
+  public function getEffectiveDeposit():?float
+  {
+    if ($this->field->getDataType() != DataType::SERVICE_FEE) {
+      return null;
+    }
+    switch ($this->field->getMultiplicity()) {
+    case Multiplicity::RECURRING():
+      return null; // regardless of data-base storage
+    case Multiplicity::SIMPLE():
+      return $this->deposit;
+    case Multiplicity::GROUPOFPEOPLE():
+    case Multiplicity::GROUPSOFPEOPLE():
+    case Multiplicity::MULTIPLE():
+    case Multiplicity::SINGLE():
+    case Multiplicity::PARALLEL():
+      return $this->dataOption->getDeposit();
+    default:
+      return null;
+    }
   }
 
 }

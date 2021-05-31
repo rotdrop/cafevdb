@@ -538,7 +538,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $fdd = [
       'email' => [
         'name' => $this->l->t('Em@il'),
-        'css'      => [ 'postfix' => ' email clip-long-text short-width' ],
+        'css'      => [ 'postfix' => [ 'email', 'clip-long-text', 'short-width', ], ],
         'URL'      => 'mailto:$link?$key',
         'URLdisp'  => '$value',
         'display|LF' => ['popup' => 'data'],
@@ -551,7 +551,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       'money' => [
         'name' => $this->l->t('Fees').'<BR/>('.$this->l->t('expenses negative').')',
         'mask'  => '%02.02f'.' &euro;',
-        'css'   => ['postfix' => ' money'],
+        'css'   => ['postfix' => [ 'money', ], ],
         //'align' => 'right',
         'select' => 'N',
         'maxlen' => '8', // NB: +NNNN.NN = 8
@@ -563,13 +563,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'maxlen'   => 19,
         'sort'     => true,
         'datemask' => 'd.m.Y H:i:s',
-        'css'      => [ 'postfix' => ' datetime' ],
+        'css'      => [ 'postfix' => [ 'datetime', ], ],
       ],
       'date' => [
         'select'   => 'T',
         'maxlen'   => 10,
         'sort'     => true,
-        'css'      => [ 'postfix' => ' date' ],
+        'css'      => [ 'postfix' => [ 'date', ], ],
         'datemask' => 'd.m.Y',
       ],
       'due_date' => [
@@ -577,7 +577,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'name' => $this->l->t('Due Date'),
         'maxlen'   => 10,
         'sort'     => true,
-        'css'      => [ 'postfix' => [ 'date', 'due-date' ], ],
+        'css'      => [ 'postfix' => [ 'date', 'due-date', ], ],
         'datemask' => 'd.m.Y',
       ],
       // Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity
@@ -586,14 +586,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'input' => $this->expertMode ? '' : 'R',
         'maxlen' => 10,
         'sort' => true,
-        'css' => [ 'postfix' => ' revocation-date date show-disabled-shown hide-disabled-hidden' ],
+        'css' => [ 'postfix' => [ 'revocation-date', 'date',  'show-disabled-shown', 'hide-disabled-hidden', ], ],
         'datemask' => 'd.m.Y',
         'default' => null,
       ],
     ];
     $fdd['birthday'] = $fdd['date'];
     $fdd['birthday']['name'] = $this->l->t('birthday');
-    $fdd['birthday']['css']['postfix'] .= ' birthday';
+    $fdd['birthday']['css']['postfix'][] = 'birthday';
     $fdd['service-fee'] = $fdd['money'];
     $fdd['deposit'] = $fdd['money'];
 
@@ -1057,6 +1057,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // however, in the long run the goal would be to switch to
         // Doctrine/ORM for everything. So we live with it for the
         // moment.
+        $this->logInfo('IDENTIFIER '.print_r($identifier, true));
         $entityId = $meta->extractKeyValues($identifier);
         $entity = $this->find($entityId);
         if (empty($entity)) {
@@ -1718,9 +1719,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   {
     $slug = $this->cssClass().'-'.$slug;
     if (!isset($fdd['css']['postfix'])) {
-      $fdd['css'] = [ 'postfix' => '' ];
+      $fdd['css'] = [ 'postfix' => [] ];
     }
-    $fdd['css']['postfix'] .= ' '.$slug;
+    $fdd['css']['postfix'][] = $slug;
     $fdd['tooltip'] = $this->toolTipsService[$slug];
   }
 

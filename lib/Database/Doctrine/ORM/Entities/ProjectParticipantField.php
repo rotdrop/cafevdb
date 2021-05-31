@@ -116,9 +116,20 @@ class ProjectParticipantField implements \ArrayAccess
   private $dueDate = null;
 
   /**
-   * @var string
+   * @var \DateTimeImmutable
    *
-   * @ORM\Column(type="text", length=16777215, nullable=true, options={"comment"="Default value."})
+   * @ORM\Column(type="date_immutable", nullable=true, options={"comment"="Due-date of deposit for financial fields."})
+   */
+  private $depositDueDate = null;
+
+  /**
+   * @var null|ProjectParticipantFieldDataOption
+   *
+   * @ORM\OneToOne(targetEntity="ProjectParticipantFieldDataOption")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="id", referencedColumnName="field_id"),
+   *   @ORM\JoinColumn(name="default_value", referencedColumnName="key", nullable=true)
+   * )
    */
   private $defaultValue = null;
 
@@ -434,6 +445,29 @@ class ProjectParticipantField implements \ArrayAccess
   public function getDueDate():?\DateTimeImmutable
   {
     return $this->dueDate;
+  }
+
+  /**
+   * Set depositDueDate.
+   *
+   * @param string|null|\DateTimeInterface $depositDueDate
+   *
+   * @return ProjectParticipantField
+   */
+  public function setDepositDueDate($depositDueDate):ProjectParticipantField
+  {
+    $this->depositDueDate = self::convertToDateTime($depositDueDate);
+    return $this;
+  }
+
+  /**
+   * Get depositDueDate.
+   *
+   * @return \DateTimeImmutable|null
+   */
+  public function getDepositDueDate():?\DateTimeImmutable
+  {
+    return $this->depositDueDate;
   }
 
   /**

@@ -50,12 +50,12 @@ use MyCLabs\Enum\Enum as EnumType;
  * receivables and negative values denote liabilities (from the view
  * of the orchestra.
  *
- * @method static EnumParticipantFieldDataType DEPOSIT()
- * A financial deposit which may be charged in advance to the total
- * amount of receivables.
- *
  * @method static EnumParticipantFieldDataType CLOUD_FILE()
- * Single-file upload data which is stored as inline URI in the
+ * Single-file upload data which is stored in the storage of the
+ * ambient cloud software.
+ *
+ * @method static EnumParticipantFieldDataType DB_FILE()
+ * Single-file upload data which is stored as blob in the
  * database. The total encoded size is limited by the used database
  * backend and its associated data-type.
  */
@@ -69,7 +69,6 @@ class EnumParticipantFieldDataType extends EnumType
   public const DATE = 'date';
   public const DATETIME = 'datetime';
   public const SERVICE_FEE = 'service-fee';
-  public const DEPOSIT = 'deposit';
   public const CLOUD_FILE = 'cloud-file';
   public const DB_FILE = 'db-file';
 };

@@ -44,14 +44,15 @@ const participantOptionHandlers = function(container, musicianId) {
     .on('click', function(event) {
       console.info('REVERT', $(this));
       const $self = $(this);
-      const fieldId = $self.data('fieldId');
       const $inputElement = $self.parent().find('.pme-input');
+      const fieldId = $self.data('fieldId');
+      const fieldProperty = $self.data('fieldProperty') || 'defaultValue';
 
       const revertHandler = function() {
         $.post(
           generateUrl('projects/participant-fields/property/get'), {
             fieldId,
-            property: 'defaultValue',
+            property: fieldProperty,
           })
           .fail(function(xhr, status, errorThrown) {
             Ajax.handleError(xhr, status, errorThrown);

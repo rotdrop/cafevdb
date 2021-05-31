@@ -656,8 +656,7 @@ Störung.';
       $fieldsByType = [
         'monetary' => $participantFields->filter(function($field) {
           /** @var Entities\ProjectParticipantField $field */
-          return ($field->getDataType() == FieldType::SERVICE_FEE
-                  || $field->getDataType() == FieldType::DEPOSIT);
+          return $field->getDataType() == FieldType::SERVICE_FEE;
         }),
         'files' => $participantFields->filter(function($field) {
           /** @var Entities\ProjectParticipantField $field */
@@ -667,7 +666,6 @@ Störung.';
         'other' => $participantFields->filter(function($field) {
           /** @var Entities\ProjectParticipantField $field */
           return ($field->getDataType() != FieldType::SERVICE_FEE
-                  && $field->getDataType() != FieldType::DEPOSIT
                   && $field->getDataType() != FieldType::CLOUD_FILE
                   && $field->getDataType() != FieldType::DB_FILE);
         }),
@@ -684,7 +682,6 @@ Störung.';
           $found = true;
           switch ($specificField->first()->getDataType()) {
           case FieldType::SERVICE_FEE:
-          case FieldType::DEPOSIT:
             $fieldsByType = ['monetary' => $specificField ];
             break;
           case FieldType::CLOUD_FILE:

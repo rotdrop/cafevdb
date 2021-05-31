@@ -292,7 +292,7 @@ class ProjectParticipants extends PMETableViewBase
     // count number of finance fields
     $extraFinancial = 0;
     foreach ($participantFields as $field) {
-      $extraFinancial += ($field['dataType'] == FieldType::SERVICE_FEE || $field['dataType'] == FieldType::DEPOSIT);
+      $extraFinancial += $field['dataType'] == FieldType::SERVICE_FEE;
     }
     if ($extraFinancial > 0) {
       $useFinanceTab = true;

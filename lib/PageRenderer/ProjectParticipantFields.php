@@ -54,7 +54,7 @@ class ProjectParticipantFields extends PMETableViewBase
   const OPTIONS_TABLE = self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE;
   const DATA_TABLE = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE;
 
-  const OPTION_FIELDS = [ 'key', 'label', 'data', 'tooltip', 'limit', 'deleted', ];
+  const OPTION_FIELDS = [ 'key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted', ];
 
   protected $joinStructure = [
     self::TABLE => [
@@ -287,8 +287,7 @@ class ProjectParticipantFields extends PMETableViewBase
     );
 
     $opts['fdd']['usage'] = [
-      'tab' => [ 'id' => 'definition' ],
-      'tab' => [ 'id' => 'advanced' ],
+      'tab' => [ 'id' => [ 'advanced' ] ],
       'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
       'css' => [ 'postfix' => ' participant-fields-usage', ],
@@ -314,7 +313,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
-      'css'     => [ 'postfix' => ' multiplicity' ],
+      'css'     => [ 'postfix' => [ 'multiplicity', ], ],
       'default' => Multiplicity::SIMPLE,
       'values2' => $this->participantFieldMultiplicityNames(),
       'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-multiplicity-'.$tag]; }, Multiplicity::toArray()),
@@ -328,15 +327,29 @@ class ProjectParticipantFields extends PMETableViewBase
     $dataTypeIndex = count($opts['fdd']);
     $opts['fdd']['data_type'] =[
       'name'    => $this->l->t('Data-Type'),
+      'tab' => [ 'id' => 'definition' ],
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
-      'css'     => [ 'postfix' => ' data-type' ],
+      'css'     => [ 'postfix' => [ 'data-type', ], ],
       'default' => 'text',
       'values2' => $this->participantFieldDataTypeNames(),
       'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-data-type-'.$tag]; }, DataType::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-data-type'],
     ];
+
+    $opts['fdd']['due_date'] = Util::arrayMergeRecursive(
+      $this->defaultFDD['due_date'], [
+        'tab' => [ 'id' => 'definition' ],
+        'css' => [ 'postfix' => [ 'service-fee-data-type-required', ], ],
+      ]);
+
+    $opts['fdd']['deposit_due_date'] = Util::arrayMergeRecursive(
+      $this->defaultFDD['due_date'], [
+        'tab' => [ 'id' => 'definition' ],
+        'name' =>  $this->l->t('Deposit Due Date'),
+        'css' => [ 'postfix' => [ 'deposit-due-date' ], ],
+      ]);
 
     /**************************************************************************
      *
@@ -384,8 +397,9 @@ class ProjectParticipantFields extends PMETableViewBase
     "key", BIN2UUID($join_table.key)
     , "label", $join_table.label
     , "data", $join_table.data
-    , "tooltip", $join_table.tooltip
+    , "deposit", $join_table.deposit
     , "limit", $join_table.`limit`
+    , "tooltip", $join_table.tooltip
     , "deleted", $join_table.deleted
 ) ORDER BY $join_table.label),"]")',
       'values' => [
@@ -400,25 +414,72 @@ class ProjectParticipantFields extends PMETableViewBase
       },
     ];
 
-    $opts['fdd']['data_options_single'] = [
-      'name' => $this->currencyLabel($this->l->t('Data')),
-      'css' => [ 'postfix' => ' data-options-single' ],
-      'sql' => '$main_table.id',
-      'php' => function($dummy, $op, $field, $row, $recordId, $pme) {
-        // allowed values from virtual JSON aggregator field
-        $dataOptions = $row['qf'.$pme->fdn['data_options']];
-        $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
-        $dataType = $row['qf'.$pme->fdn['data_type']];
-        return $this->showAllowedSingleValue($dataOptions, $op, $fdd[$field]['tooltip'], $multiplicity, $dataType);
-      },
-      'input' => 'SR',
-      'options' => 'ACP', // but not in list/view/delete-view
-      'select' => 'T',
-      'maxlen' => 29,
-      'size' => 30,
-      'sort' => true,
-      'tooltip' => $this->toolTipsService['participant-fields-data-options-single'],
-    ];
+    foreach (['groupofpeople' => '', 'single' => '', 'simple' => $this->l->t('Default') . ' '] as $variant => $prefix) {
+      $opts['fdd']['data_options_' . $variant] = [
+        'name' => $this->currencyLabel($this->l->t('Data'), $prefix),
+        'css' => [ 'postfix' => [ 'data-options-' . $variant ] ],
+        'sql' => '$main_table.id',
+        'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($variant, $role) {
+          // allowed values from virtual JSON aggregator field
+          $dataOptions = $row['qf'.$pme->fdn['data_options']];
+          $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
+          $dataType = $row['qf'.$pme->fdn['data_type']];
+          return $this->showAllowedSingleValue($dataOptions, $op, $fdd[$field]['tooltip'], $multiplicity, $dataType, $variant);
+        },
+        'input' => 'SR',
+        'options' => 'ACP', // but not in list/view/delete-view
+        'select' => 'T',
+        'maxlen' => 29,
+        'size' => 30,
+        'sort' => true,
+        'tooltip' => $this->toolTipsService['participant-fields-data-options-' . $variant],
+      ];
+
+      $opts['fdd']['deposit_' . $variant] = [
+        'name' => $prefix . $this->l->t('Deposit').' ['.$this->currencySymbol().']',
+        'css' => [
+          'postfix' => [
+            'deposit-' . $variant,
+            'multiplicity-' . $variant . '-set-deposit-due-date-required',
+          ],
+        ],
+        'sql' => '$main_table.id',
+        'php' => function($dummy, $op, $pmeField, $row, $recordId, $pme) use ($variant, $role) {
+          // allowed values from virtual JSON aggregator field
+          $dataOptions = $row['qf'.$pme->fdn['data_options']];
+          $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
+          $dataType = $row['qf'.$pme->fdn['data_type']];
+          $entry = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
+          $key = $entry['key'];
+          $name  = $this->pme->cgiDataName('data_options_' . $variant);
+          $field = 'deposit';
+          $value = htmlspecialchars($entry[$field]);
+          $tip = $fdd[$field]['tooltip'];
+          $html =<<<__EOT__
+            <div class="active-value">
+            <input class="pme-input data-options-{$variant} multiplicity-{$variant}-set-deposit-due-date-required"
+            type="number"
+            step="0.01"
+            maxlength="29"
+            size="30"
+            value="{$value}"
+            name="{$name}[{$key}][{$field}]"
+            title="{$tip}"
+            required
+            />
+            </div>
+            __EOT__;
+          return $html;
+        },
+        'input' => 'VSR',
+        'options' => 'ACP', // but not in list/view/delete-view
+        'select' => 'T',
+        'maxlen' => 29,
+        'size' => 30,
+        'sort' => true,
+        'tooltip' => $this->toolTipsService['participant-fields-deposit-' . $variant],
+      ];
+    }
 
     // Provide "cooked" valus for up to 20 members. Perhaps the
     // max. number should somehow be adjusted ...
@@ -455,15 +516,18 @@ class ProjectParticipantFields extends PMETableViewBase
       'name' => $this->l->t('Default Value'),
       'css' => [ 'postfix' => ' default-value' ],
       'css|VD' =>  [ 'postfix' => ' default-value default-single-value' ],
+      'input|ACP' => 'RH',
       'select' => 'T',
       'maxlen' => 29,
       'size' => 30,
       'sort' => true,
       'display|LF' => [ 'popup' => 'data' ],
+      'sql' => 'BIN2UUID($main_table.default_value)',
+      'default' => false,
       'php|LFDV' => function($value, $op, $field, $row, $recordId, $pme) {
         $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
         $dataType = $row[$this->queryField('data_type', $pme->fdd)];
-        if ($multiplicity !== Multiplicity::SIMPLE && !empty($value)) {
+        if (!empty($value)) {
           // fetch the value from the data-options data
           $allowed = $row[$this->queryField('data_options', $pme->fdd)];
           $allowed = $this->participantFieldsService->explodeDataOptions($allowed);
@@ -486,12 +550,11 @@ class ProjectParticipantFields extends PMETableViewBase
           switch ($dataType) {
           case DataType::CLOUD_FILE:
           case DataType::DB_FILE:
-            $value = $value?:$this->l->t('rename');
+            $value = $this->l->t('n/a');
             break;
           case DataType::BOOLEAN:
             $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
             break;
-          case DataType::DEPOSIT:
           case DataType::SERVICE_FEE:
             $value = $this->moneyValue($value);
             break;
@@ -514,8 +577,8 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['fdd']['default_multi_value'] = [
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
-      'options' => 'CPA',
-      'sql' => '$main_table.default_value',
+      'options' => 'ACP',
+      'sql' => 'BIN2UUID($main_table.default_value)',
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D', // @todo should be multi for "parallel".
       'values' => [
@@ -536,8 +599,8 @@ class ProjectParticipantFields extends PMETableViewBase
       'name' => $this->l->t('Default Value'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'ACP',
-      'sql' => 'IF($main_table.default_value IS NULL OR LENGTH($main_table.default_value) < 36, NULL, $main_table.default_value)',
-      'css' => [ 'postfix' => ' default-single-value' ],
+      'sql' => 'BIN2UUID($main_table.default_value)',
+      'css' => [ 'postfix' => [ 'default-single-value' ], ],
       'select' => 'O',
       'values2|A' => [ 0 => $this->l->t('no'), 1 => $this->l->t('yes') ],
       'default' => false,
@@ -555,26 +618,26 @@ class ProjectParticipantFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['participant-fields-default-single-value'],
     ];
 
-    $opts['fdd']['default_file_data_value'] = [
+    $opts['fdd']['default_file_upload_policy'] = [
       'name' => $this->l->t('Upload Policy'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'ACPVD',
-      'sql' => 'IF($main_table.default_value IS NULL OR $main_table.default_value = \'\', \'rename\', $main_table.default_value)',
-      'css' => [ 'postfix' => ' default-cloud-file-value' ],
+      'css' => [ 'postfix' => [ 'default-cloud-file-value' ] ],
       'select' => 'D',
       'values2|ACP' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
-      'default' => 'rename',
+      'values' => [
+        'table' => self::OPTIONS_TABLE,
+        'column' => 'data',
+        'filters' => '$table.field_id = $record_id AND $table.deleted IS NULL',
+        'join' => '$join_table.field_id = $main_table.id',
+        'group' => true,
+      ],
+      //'default' => 'rename',
       'maxlen' => 29,
       'size' => 30,
       'sort' => false,
       'tooltip' => $this->toolTipsService['participant-fields-default-cloud-file-value'],
     ];
-
-    $opts['fdd']['due_date'] = Util::arrayMergeRecursive(
-      $this->defaultFDD['due_date'], [
-        'tab' => [ 'id' => 'definition' ],
-        'css' => [ 'postfix' => [ 'deposit-data-type-required', ], ],
-      ]);
 
     $opts['fdd']['tooltip'] = array_merge(
       [
@@ -711,11 +774,18 @@ class ProjectParticipantFields extends PMETableViewBase
       $opts['triggers']['delete']['data'][] = function(&$pme, $op, $step, &$row) {
         $km = $pme->fdn['multiplicity'];
         $kd = $pme->fdn['data_type'];
+        $kddd = $pme->fdn['deposit_due_date'];
         $multiplicity = $row['qf'.$km];
         $dataType = $row['qf'.$kd];
-        $cssPostfix = 'multiplicity-'.$multiplicity.' data-type-'.$dataType;
-        $pme->fdd[$km]['css']['postfix'] .= ' '.$cssPostfix;
-        $pme->fdd[$pme->fdn['default_value']]['select'] = ($dataType == DataType::SERVICE_FEE || $dataType == DataType::DEPOSIT) ? 'N' : 'T';
+        $depositDueDate = $row['qf'.$kddd];
+        $pme->fdd[$km]['css']['postfix'][] = 'multiplicity-'.$multiplicity;
+        $pme->fdd[$km]['css']['postfix'][] = 'data-type-'.$dataType;
+        if (!empty($depositDueDate)) {
+          $pme->fdd[$km]['css']['postfix'][] = 'deposit-due-date-set';
+        } else {
+          $pme->fdd[$km]['css']['postfix'][] = 'deposit-due-date-unset';
+        }
+        $pme->fdd[$pme->fdn['default_value']]['select'] = $dataType == DataType::SERVICE_FEE ? 'N' : 'T';
         return true;
       };
 
@@ -813,9 +883,9 @@ class ProjectParticipantFields extends PMETableViewBase
     if (!empty($newvals[$tag])) {
       $purified = $this->fuzzyInput->purifyHTML($newvals[$tag]);
       if (empty($purified)) {
-        $this->logInfo('ORIG: '.$newvals[$tag].' PURIFIED '.$purified);
+        $this->logDebug('ORIG: '.$newvals[$tag].' PURIFIED '.$purified);
       } else {
-        $this->logInfo('PURIFIED '.$purified);
+        $this->logDebug('PURIFIED '.$purified);
       }
       $newvals[$tag] = $purified;
       Util::unsetValue($changed, $tag);
@@ -853,39 +923,38 @@ class ProjectParticipantFields extends PMETableViewBase
 
     /************************************************************************
      *
-     * Move the data from default_file_data_value to default_value
+     * Move the data from default_file_upload_policy to default_value
      *
      */
 
-    $tag = 'default_file_data_value';
-    if ($newvals['data_type'] == DataType::CLOUD_FILE) {
-      $value = $newvals[$tag];
-      $newvals['default_value'] = $value?:'rename';
+    $tag = 'default_file_upload_policy';
+    if ($newvals['data_type'] == DataType::CLOUD_FILE
+        || $newvals['data_type'] == DataType::DB_FILE) {
       if ($op == PHPMyEdit::SQL_QUERY_INSERT && empty($newvals['tab'])) {
         $newvals['tab'] = $this->l->t('file-attachments');
         $changed[] = 'tab';
       }
-    }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
-
-    /************************************************************************
-     *
-     * DB-files do not have a default value, they are always just replaced.
-     *
-     */
-    if ($newvals['data_type'] == DataType::DB_FILE) {
-      $value = $newvals[$tag];
-      $newvals['default_value'] = 'rename';
-      if ($op == PHPMyEdit::SQL_QUERY_INSERT && empty($newvals['tab'])) {
-        $newvals['tab'] = $this->l->t('file-attachments');
-        $changed[] = 'tab';
-      }
-      if (empty($newvals['encrypted'])) {
+      if ($newvals['data_type'] == DataType::DB_FILE) {
         $newvals['encrypted'] = true;
         if (empty($oldvals['encrypted'])) {
           $changed[] = 'encrypted';
         }
+        $value = 'replace';
+      } else {
+        $value = $newvals[$tag];
       }
+      if ($newvals['multiplicity'] == Multiplicity::SIMPLE) {
+        $first = array_key_first($newvals['data_options_simple']);
+        $newvals['data_options_simple'][$first]['data'] = $value;
+      } else if ($newvals['multiplicity'] == Multiplicity::PARALLEL) {
+        foreach ($newvals['data_options'] as &$option) {
+          if (empty($option['deleted']) && $option['key'] != Uuid::NIL) {
+            $option['data'] = $value;
+          }
+        }
+      }
+      // files do not have a default value
+      $newvals['default'] = null;
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
@@ -896,17 +965,6 @@ class ProjectParticipantFields extends PMETableViewBase
      */
     if ($newvals['multiplicity'] == Multiplicity::RECURRING) {
       unset($newvals['default_value']);
-    }
-
-    /************************************************************************
-     *
-     * Compute change status for default value
-     *
-     */
-
-    Util::unsetValue($changed, 'default_value');
-    if ($newvals['default_value'] !== $oldvals['default_value']) {
-      $changed[] = 'default_value';
     }
 
     /************************************************************************
@@ -935,15 +993,62 @@ class ProjectParticipantFields extends PMETableViewBase
      */
 
     $tag = 'data_options_single';
-    if ($newvals['multiplicity'] == Multiplicity::SINGLE
-        || $newvals['multiplicity'] == Multiplicity::SIMPLE
-        || $newvals['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
+    if ($newvals['multiplicity'] == Multiplicity::SINGLE) {
       $first = array_key_first($newvals['data_options_single']);
       $newvals[$tag][$first]['label'] = $newvals['name'];
       $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
       $newvals['data_options'] = $newvals[$tag];
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+
+    /************************************************************************
+     *
+     * Move the data from data_options_groupofpeople to
+     * data_options.
+     *
+     */
+
+    $tag = 'data_options_groupofpeople';
+    if ($newvals['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
+      $first = array_key_first($newvals['data_options_single']);
+      $newvals[$tag][$first]['label'] = $newvals['name'];
+      $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
+      $newvals['data_options'] = $newvals[$tag];
+    }
+    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+
+    /************************************************************************
+     *
+     * Move the data from data_options_simple to data_options and set
+     * the default value to just this single option.
+     *
+     */
+
+    $tag = 'data_options_simple';
+    if ($newvals['multiplicity'] == Multiplicity::SIMPLE) {
+      $first = array_key_first($newvals['data_options_simple']);
+      $newvals[$tag][$first]['label'] = $newvals['name'];
+      $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
+      $newvals['data_options'] = $newvals[$tag];
+
+      $newvals['default_value'] = $first;
+      if (empty(Uuid::asUuid($first))) {
+        throw new \RuntimeException(
+          $this->l->t('Simple field-option key is not an UUID: "%s".', $key));
+      }
+    }
+    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+
+    /************************************************************************
+     *
+     * Compute change status for default value
+     *
+     */
+
+    Util::unsetValue($changed, 'default_value');
+    if ($newvals['default_value'] !== $oldvals['default_value']) {
+      $changed[] = 'default_value';
+    }
 
     /************************************************************************
      *
@@ -1131,20 +1236,7 @@ class ProjectParticipantFields extends PMETableViewBase
     '.($deleted ? ' disabled' : '').'
     type="button"/>
     </td>';
-    // label
-    $prop = 'label';
-    $label = ''
-           .'<input'
-           .($deleted ? ' readonly="readonly"' : '')
-           .' class="field-'.$prop.'"'
-           .' spellcheck="true"'
-           .' type="text"'
-           .' name="'.$pfx.'['.$index.']['.$prop.']"'
-           .' value="'.$value[$prop].'"'
-           .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
-           .' size="33"'
-           .' maxlength="32"'
-           .'/>';
+    // key
     $prop = 'key';
     $html .= '<td class="field-'.$prop.' expert-mode-only">'
           .'<input'
@@ -1166,9 +1258,21 @@ class ProjectParticipantFields extends PMETableViewBase
           .'</td>';
     // label
     $prop = 'label';
-    $html .= '<td class="field-'.$prop.'">'.$label.'</td>';
-    // limit
-    $prop = 'limit';
+    $html .= '<td class="field-'.$prop.'">'
+          .'<input'
+          .($deleted ? ' readonly="readonly"' : '')
+          .' class="field-'.$prop.'"'
+          .' spellcheck="true"'
+          .' type="text"'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' value="'.$value[$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
+          .' size="33"'
+          .' maxlength="32"'
+          .'/>'
+          .'</td>';
+    // data
+    $prop = 'data';
     $html .= '<td class="field-'.$prop.'"><input'
           .($deleted ? ' readonly="readonly"' : '')
           .' class="field-'.$prop.'"'
@@ -1179,12 +1283,33 @@ class ProjectParticipantFields extends PMETableViewBase
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
-    // data
-    $prop = 'data';
+    // deposit
+    $prop = 'deposit';
+    $cssClass = implode(' ', [
+      field-'.$prop.',
+      'not-multiplicity-simple-set-deposit-due-date-required',
+      'not-multiplicity-single-set-deposit-due-date-required',
+      'not-multiplicity-groupofpeople-set-deposit-due-date-required',
+      'set-deposit-due-date-required',
+    ]);
+    $html .= '<td class="field-'.$prop.'"><input'
+          .($deleted ? ' readonly="readonly"' : '')
+          .' class="'.$cssClass.'"'
+          .' type="number"'
+          .' step="0.01"'
+          .' required'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' value="'.$value[$prop].'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
+          .' maxlength="8"'
+          .' size="9"'
+          .'/></td>';
+    // limit
+    $prop = 'limit';
     $html .= '<td class="field-'.$prop.'"><input'
           .($deleted ? ' readonly="readonly"' : '')
           .' class="field-'.$prop.'"'
-          .' type="text"'
+          .' type="number"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
           .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
@@ -1242,7 +1367,7 @@ class ProjectParticipantFields extends PMETableViewBase
       size="33"
       maxlength="32"
     />';
-    foreach (['key', 'limit', 'data', 'tooltip'] as $prop) {
+    foreach (['key', 'data', 'deposit', 'limit', 'tooltip'] as $prop) {
       $html .= '
     <input
       class="field-'.$prop.'"
@@ -1286,7 +1411,7 @@ class ProjectParticipantFields extends PMETableViewBase
       maxlength="32"
       '.(empty($generator) ? '' : 'readonly="readonly"').'
     />';
-    foreach (['key', 'limit', 'label', 'tooltip'] as $prop) {
+    foreach (['key', 'limit', 'deposit', 'label', 'tooltip'] as $prop) {
       $value = ($generatorItem[$prop]??'');
       if (empty($value) && $prop == 'key') {
         $value = Uuid::NIL;
@@ -1343,14 +1468,12 @@ class ProjectParticipantFields extends PMETableViewBase
           return '';
         case Multiplicity::SINGLE:
           switch ($dataType) {
-            case DataType::BOOLEAN:
-              return $this->l->t('true').' / '.$this->l->t('false');
-            case DataType::DEPOSIT:
-            case DataType::SERVICE_FEE:
-              return $this->moneyValue(0).' / '.$this->moneyValue($allowed[0]['data']);
-              break;
-            default:
-              return '['.$this->l->t('empty').']'.' / '.$allowed[0]['data'];
+          case DataType::BOOLEAN:
+            return $this->l->t('true').' / '.$this->l->t('false');
+          case DataType::SERVICE_FEE:
+            return $this->moneyValue(0).' / '.$this->moneyValue(reset($allowed)['data']);
+          default:
+            return '['.$this->l->t('empty').']'.' / '.reset($allowed)['data'];
           }
       }
     }
@@ -1411,16 +1534,18 @@ __EOT__;
       $headers = [
         'key' => $this->l->t('Key'),
         'label' => $this->l->t('Label'),
-        'limit' => $this->l->t('Start Date'),
         'data' => $this->l->t('Data'),
+        'deposit' => $this->l->t('Deposit'),
+        'limit' => $this->l->t('Start Date'),
         'tooltip' => $this->l->t('Tooltip'),
       ];
     } else {
       $headers = [
         'key' => $this->l->t('Key'),
         'label' => $this->l->t('Label'),
-        'limit' => $this->l->t('Limit'),
         'data' => $this->currencyLabel($this->l->t('Data')),
+        'deposit' => $this->l->t('Deposit') . ' ['.$this->currencySymbol().']',
+        'limit' => $this->l->t('Limit'),
         'tooltip' => $this->l->t('Tooltip'),
       ];
     }
@@ -1453,7 +1578,7 @@ __EOT__;
           $html .= '
     <tr>
       <td class="operations"></td>';
-          foreach (['key', 'label', 'limit', 'data', 'tooltip'] as $field) {
+          foreach (['key', 'label', 'data', 'deposit', 'limit', 'tooltip'] as $field) {
             $css = 'field-'.$field;
             if ($field == 'key') {
               $css .= ' expert-mode-only';
@@ -1466,7 +1591,7 @@ __EOT__;
                   'medium');
               }
             } else {
-              if ($field == 'data') {
+              if ($field == 'data' || $field == 'deposit') {
                 $fieldValue = $this->currencyValue($fieldValue);
               }
             }
@@ -1504,11 +1629,17 @@ __EOT__;
   }
 
   /**
-   * Display the input stuff for a single-value choice.
+   * Fetch the admissible single data options from a field of options which as
+   * well may contain deleted and generator options.
+   *
+   * The strategy is to pick the first non-deleted option or the first
+   * non-deleted generator option for Multiplicity::GROUPOFPEOPLE.
+   *
+   * @return null|array
    */
-  private function showAllowedSingleValue($value, $op, $toolTip, $multiplicity, $dataType)
+  private function getAllowedSingleValue($dataOptions, $multiplicity, $dataType)
   {
-    $allowed = $this->participantFieldsService->explodeDataOptions($value, false);
+    $allowed = $this->participantFieldsService->explodeDataOptions($dataOptions, false);
     $entry = null;
     foreach ($allowed as $key => $option) {
       if (!empty($item['deleted'])) {
@@ -1520,33 +1651,60 @@ __EOT__;
         $entry = $option;
       }
     }
-    $value = empty($entry) ? '' : $entry['data'];
-    if ($op === 'display') {
-      return $this->currencyValue($value);
-    }
     empty($entry) && $entry = $this->participantFieldsService->dataOptionPrototype();
     if ($multiplicity == Multiplicity::GROUPOFPEOPLE) {
       $entry['key'] = Uuid::NIL;
     }
+    return $entry;
+  }
+
+  /**
+   * Display the input stuff for a single-value choice and simple input values.
+   */
+  private function showAllowedSingleValue($dataOptions, $op, $toolTip, $multiplicity, $dataType, $variant)
+  {
+    $entry = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
+    $value = $entry['data'];
+    if ($op === 'display') {
+      return $this->currencyValue($value);
+    }
     $key = $entry['key'];
-    $name  = $this->pme->cgiDataName('data_options_single');
-    $value = htmlspecialchars($entry['data']);
+    $name  = $this->pme->cgiDataName('data_options_' . $variant);
+    $field = 'data';
+    $value = htmlspecialchars($entry[$field]);
     $tip   = $toolTip;
     $html  = '<div class="active-value">';
+    if ($dataType == DataType::HTML) {
+      $htmlDisabled = [ 'input' => 'disabled', 'textarea' => '' ];
+    } else {
+      $htmlDisabled = [ 'textarea' => 'disabled', 'input' => '' ];
+    }
     $html  .=<<<__EOT__
-<input class="pme-input data-options-single"
+<input class="pme-input data-options-{$variant} data-type-html-hidden data-type-html-disabled"
+       {$htmlDisabled['input']}
        type="text"
        maxlength="29"
        size="30"
        value="{$value}"
-       name="{$name}[{$key}][data]"
+       name="{$name}[{$key}][{$field}]"
        title="{$tip}"
 />
 __EOT__;
-    foreach (['key', 'label', 'limit', 'tooltip', 'deleted'] as $field) {
+    $html  .=<<<__EOT__
+<span class="pme-input data-options-{$variant} not-data-type-html-hidden not-data-type-html-disabled">
+  <textarea class="pme-input data-options-{$variant} wysiwyg-editor"
+            name="{$name}[{$key}][{$field}]"
+            {$htmlDisabled['textarea']}
+            title="{$tip}"
+            rows="5"
+            cols="50">{$value}</textarea>
+</span>
+__EOT__;
+    // deposit displayed in own extra field
+    foreach (['key', 'label',/* 'deposit',*/ 'limit', 'tooltip', 'deleted'] as $field) {
       $value = htmlspecialchars($entry[$field]);
       $html .=<<<__EOT__
-<input class="pme-input data-options-single"
+<input class="pme-input data-options-{$variant}"
        type="hidden"
        value="{$value}"
        name="{$name}[{$key}][{$field}]"
@@ -1564,10 +1722,10 @@ __EOT__;
       if ($multiplicity != Multiplicity::GROUPOFPEOPLE) {
         $option['deleted'] = (new DateTime)->getTimestamp();
       }
-      foreach(['key', 'label', 'limit', 'data', 'tooltip', 'deleted'] as $field) {
+      foreach(['key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted'] as $field) {
         $value = htmlspecialchars($option[$field]);
         $html .=<<<__EOT__
-<input class="pme-input data-options-single"
+<input class="pme-input data-options-{$variant}"
        type="hidden"
        value="{$value}"
        name="{$name}[{$key}][{$field}]"
@@ -1597,12 +1755,12 @@ __EOT__;
    * Return an alternate "Amount [CUR]" label which can be hidden by
    * CSS.
    */
-  private function currencyLabel($label = 'Data')
+  private function currencyLabel($label, $prefix = '')
   {
     return
-      '<span class="general">'.$label.'</span>'
+      '<span class="general">'.$prefix.$label.'</span>'
       .'<span class="service-fee currency-label">'
-      .$this->l->t('Amount').' ['.$this->currencySymbol().']'
+      .$prefix.$this->l->t('Amount').' ['.$this->currencySymbol().']'
       .'</span>';
   }
 

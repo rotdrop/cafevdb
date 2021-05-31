@@ -28,6 +28,8 @@ use Ramsey\Uuid\UuidInterface;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
@@ -89,17 +91,29 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $data;
 
   /**
+   * @var float
+   * Optional value of a deposit for monetary options.
+   *
+   * @ORM\Column(type="float", nullable=true)
+   */
+  private $deposit;
+
+  /**
+   * @var int
+   * Limit on number of group members for
+   * Multiplicity::GROUPSOFPEOPLE, Multiplicity::GROUPOFPEOPLE fields.
+   *
+   * @ORM\Column(type="bigint", nullable=true)
+   */
+  private $limit;
+
+  /**
    * @var string
    *
    * @Gedmo\Translatable
    * @ORM\Column(type="string", length=4096, nullable=true)
    */
   private $tooltip;
-
-  /**
-   * @ORM\Column(type="bigint", nullable=true)
-   */
-  private $limit;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="dataOption", indexBy="musician_id", cascade={"persist"}, orphanRemoval=true, fetch="EXTRA_LAZY")
@@ -174,11 +188,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set label.
    *
-   * @param string $label
+   * @param null|string $label
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setLabel($label):ProjectParticipantFieldDataOption
+  public function setLabel(?string $label):ProjectParticipantFieldDataOption
   {
     $this->label = $label;
 
@@ -190,7 +204,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return string|null
    */
-  public function getLabel()
+  public function getLabel():?string
   {
     return $this->label;
   }
@@ -198,11 +212,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set data.
    *
-   * @param string $data
+   * @param null|string $data
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setData($data):ProjectParticipantFieldDataOption
+  public function setData(?string $data):ProjectParticipantFieldDataOption
   {
     $this->data = $data;
 
@@ -212,11 +226,35 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Get data.
    *
-   * @return int
+   * @return null|string
    */
-  public function getData()
+  public function getData():?string
   {
     return $this->data;
+  }
+
+  /**
+   * Set deposit.
+   *
+   * @param null|string $float
+   *
+   * @return ProjectParticipantFieldDatum
+   */
+  public function setDeposit(?float $deposit):ProjectParticipantFieldDataOption
+  {
+    $this->deposit = $deposit;
+
+    return $this;
+  }
+
+  /**
+   * Get deposit.
+   *
+   * @return null|float
+   */
+  public function getDeposit():?float
+  {
+    return $this->deposit;
   }
 
   /**
@@ -226,7 +264,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setTooltip($tooltip):ProjectParticipantFieldDataOption
+  public function setTooltip(?string $tooltip):ProjectParticipantFieldDataOption
   {
     $this->tooltip = $tooltip;
 
@@ -238,7 +276,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return string
    */
-  public function getTooltip()
+  public function getTooltip():?string
   {
     return $this->tooltip;
   }
