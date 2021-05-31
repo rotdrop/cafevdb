@@ -245,7 +245,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'tab'       => [ 'id' => 'tab-all' ],
       'name'      => $this->l->t('Project'),
       'input'     => ($projectMode ? 'HR' : 'M'),
-      'css' => [ 'postfix' => ' project-instrument-project-name' ],
+      'css' => [ 'postfix' => [ 'project-instrument-project-name', ], ],
       'select|DV' => 'T', // delete, filter, list, view
       'select|ACPFL' => 'D',  // add, change, copy
       'maxlen'   => 20,
@@ -275,7 +275,7 @@ class ProjectParticipantFields extends PMETableViewBase
       [
         'tab'      => [ 'id' => 'tab-all' ],
         'name' => $this->l->t('Field-Name'),
-        'css' => [ 'postfix' => ' field-name' ],
+        'css' => [ 'postfix' => [ 'field-name', ], ],
         'input' => 'M',
         'select' => 'T',
         'maxlen' => 29,
@@ -290,7 +290,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'tab' => [ 'id' => [ 'advanced' ] ],
       'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
-      'css' => [ 'postfix' => ' participant-fields-usage', ],
+      'css' => [ 'postfix' => [ 'participant-fields-usage', ], ],
       'select' => 'N',
       'align' => 'right',
       'input' => 'V',
@@ -302,7 +302,7 @@ class ProjectParticipantFields extends PMETableViewBase
       $this->defaultFDD['deleted'], [
         'tab' => [ 'id' => 'advanced' ],
         'name' => $this->l->t('Deleted'),
-        'css'      => [ 'postfix' => ' participant-field-disabled' ],
+        'css'      => [ 'postfix' => [ 'participant-field-disabled', ], ],
         'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
         'input' => ($this->showDisabled) ? 'T' : 'RH',
       ]);
@@ -376,9 +376,9 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['fdd']['data_options'] = [
       'name' => $this->l->t('Data Options'),
       'input' => 'SR',
-      'css|LF' => [ 'postfix' => ' data-options hide-subsequent-lines' ],
+      'css|LF' => [ 'postfix' => [ 'data-options hide-subsequent-lines', ], ],
       'css' => ['postfix' => ' data-options' ],
-      'css|VD' => [ 'postfix' => ' data-options data-options-single' ],
+      'css|VD' => [ 'postfix' => [ 'data-options data-options-single', ], ],
       'select' => 'T',
       'sort' => true,
       'display|LF' => [ 'popup' => 'data', ],
