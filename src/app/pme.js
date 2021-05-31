@@ -726,7 +726,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
             dialogHolder.css('height', 'auto');
             switch (parameters.reason) {
             case 'dialogOpen':
-              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), function() {
+              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor:enabled'), function() {
                 transposeReady(containerSel);
                 tableLoadCallback(template, containerSel, parameters, function() {
                   // console.trace();
