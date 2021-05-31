@@ -135,9 +135,13 @@ class SepaBulkTransactionService
    *
    * @param array<int, Entities\ProjectParticipantFieldDataOption> $receivableOptions
    *
+   * @param \DateTimeInterface|null $transactionDueDate Targeted
+   * transaction due-date. It set the amount debited for receivables
+   * will be capped according to their receivable-due-date and deposit-due-date.
+   *
    * @return Entities\CompositePayment
    */
-  public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions):Entities\CompositePayment
+  public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions, ?\DateTimeInterface $transactionDueData = null):Entities\CompositePayment
   {
     $payments = new ArrayCollection();
     $totalAmount = 0.0;
@@ -164,10 +168,38 @@ class SepaBulkTransactionService
             $receivableOption->getField()->getProject()->getName(),
           ]));
       }
+      $receivableDueDate = $receivableOption->getField()->getDueDate();
+      $depositDueDate = $receivableOption->getField()->getDepositDueDate();
       /** @var Entities\ProjectParticipantFieldDatum $receivable */
       foreach ($receivableOption->getMusicianFieldData($musician) as $receivable) {
-        $payableAmount = $receivable->amountPayable();
         $paidAmount = $receivable->amountPaid();
+        $payableAmount = (float)$receivable->amountPayable();
+        $depositAmount = (float)$receivable->depositAmount();
+        if ((float)$payableAmount * (float)$depositAmount < 0) {
+          throw new \RuntimeException($this->l->t('Payable amount "%f" and deposit amount "%f" should have the compatible signs.', [ $payableAmount, $depositAmount ]));
+        }
+        if (!empty($transactionDueDate) && !empty($receivableDueDate)) {
+          if ($payableAmount > 0) {
+            // debit note
+            if ($receivableDueDate <= $transactionDueDate) {
+              // past due-date, just keep billing the entire amount
+            } else if ($depositDueDate <= $transactionDueDate) {
+              // past deposit-due date, charge the deposit
+              $payableAmount = $depositAmount;
+            } else {
+              // too early, just don't charge anything
+              $payableAmount = 0.0;
+            }
+          } else {
+            // bank transfer
+            if ($transactionDueDate <= $depositDueDate) {
+              // early payment, only up to deposit
+              $payableAmount = $depositAmount;
+            } else {
+              // just transfer anything, i.e. keep the amount as is
+            }
+          }
+        }
         $debitAmount = round($payableAmount - $paidAmount, 2);
         if ($debitAmount == 0.0) {
           // No need to debit empty amounts

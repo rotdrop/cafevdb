@@ -388,6 +388,39 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * The height of the deposit to pay, if any.
+   *
+   * Only meaningful if
+   * ProjectParticipantFieldDatum::getField()::getDataType() is
+   * 'service-fee'.
+   *
+   * @return null|float
+   */
+  public function depositAmount():?float
+  {
+    switch ($this->field->getMultiplicity()) {
+    case Multiplicity::SINGLE():
+    case Multiplicity::MULTIPLE():
+    case Multiplicity::PARALLEL():
+    case Multiplicity::GROUPSOFPEOPLE():
+      return $this->dataOption->getDeposit();
+    case Multiplicity::GROUPOFPEOPLE():
+      // value in management option of $field
+      $managementOption = $this->field->getManagementOption();
+      if (empty($managementOption)) {
+        throw new \RuntimeException('Unable to access management option for obtaining the field value.');
+      }
+      return $managementOption->getDeposit();
+    case Multiplicity::SIMPLE():
+      return $this->getDeposit();
+    case Multiplicity::RECURRING():
+      return null;
+    default:
+      throw new \RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
+    }
+  }
+
+  /**
    * The amount already paid as stored in the ProjectPayment entities.
    *
    * Only meaningful if
