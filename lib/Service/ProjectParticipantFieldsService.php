@@ -157,9 +157,12 @@ class ProjectParticipantFieldsService
     //     break;
     //   }
     // }
-    return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
-      'dataType' => DataType::SERVICE_FEE,
-    ]));
+    // return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
+    //   'dataType' => (string)DataType::SERVICE_FEE,
+    // ]));
+    return $project->getParticipantFields()->filter(function($field) {
+      return $field->getDataType() == DataType::SERVICE_FEE;
+    });
   }
 
   /**
@@ -169,9 +172,12 @@ class ProjectParticipantFieldsService
    */
   public function generatedFields(Entities\Project $project)
   {
-    return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
-      'multiplicity' => Multiplicity::RECURRING
-    ]));
+    // return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
+    //   'multiplicity' => Multiplicity::RECURRING
+    // ]));
+    return $project->getParticipantFields()->filter(function($field) {
+      return $field->getMuliplicity() == Multiplicity::RECURRING;
+    });
   }
 
   /**
