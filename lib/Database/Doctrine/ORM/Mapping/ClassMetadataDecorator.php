@@ -37,9 +37,6 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var array */
-  private $simpleFieldMappings_ = null;
-
-  /** @var array */
   private $simpleColumnMappings_ = null;
 
   /** @var EntityManager */
@@ -407,43 +404,32 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
   }
 
   /**
-   * Compute a mapping which includes also "simple" associations,
-   * meaning association with a single join-column.
-   *
-   * @return array A flat mapping entity-property => column-name
-   */
-  public function simpleFieldMappings():array
-  {
-    if (empty($this->simpleFieldMappings_)) {
-      $meta = $this->metaData;
-      $columns = [];
-      foreach ($meta->fieldMappings as $field => $info) {
-        $columns[$field] = $info['columnName'];
-      }
-      foreach ($meta->associationMappings as $field => $mapping) {
-        if (count($mapping['joinColumns']) != 1) {
-          // skip non-simple associations
-          continue;
-        }
-        $columns[$field] = $mapping['joinColumns'][0]['name'];
-      }
-      $this->simpleFieldMappings_ = $columns;
-    }
-    return $this->simpleFieldMappings_;
-  }
-
-  /**
-   * Compute a mapping which includes also "simple" associations,
-   * meaning association with a single join-column.
-   *
-   * @param Doctrine\ORM\Mapping\ClassMetadata $meta
+   * Compute a mapping which includes also hidden columns which are
+   * introduced through associations. The mapped field is then the
+   * first found association field which refereces the column.
    *
    * @return array A flat mapping column-name => entity-property
    */
   public function simpleColumnMappings():array
   {
     if (empty($this->simpleColumnMappings_)) {
-      $this->simpleColumnMappings_ = array_flip($this->simpleFieldMappings());
+      $meta = $this->metaData;
+      $fields = [];
+      foreach ($meta->fieldMappings as $field => $info) {
+        $column = $info['columnName'];
+        $fields[$column] = $field;
+      }
+      foreach ($meta->associationMappings as $field => $mapping) {
+        foreach ($mapping['joinColumns'] as $joinColumn) {
+          $column = $joinColumn['name'];
+          if (empty($fields[$column])) {
+            // this should catch the additional join-columns
+            // introduced by associations.
+            $fields[$column] = $field;
+          }
+        }
+      }
+      $this->simpleColumnMappings_ = $fields;
     }
     return $this->simpleColumnMappings_;
   }
@@ -451,6 +437,21 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
   /**
    * Convert the given value to a reference if $field is a "simple"
    * association field and set it in the entity.
+   *
+   * If $field has no association just set $field to $value
+   *
+   * If $value is an instance of the target entity, just set $field to $value
+   *
+   * If there is a single join-column, use $value as its value and
+   * generate a rereference to the target entity.
+   *
+   * If there are multiple join-columns, then exactly one must have no
+   * associated field in the given $entity, all otheres must have a
+   * field in the given $entity. The "hidden column" is set to $value,
+   * all other join-column values are taken from the entity.
+   *
+   * More complicated cases cannot easily be handled, as the function
+   * only accepts a single value to set.
    */
   public function setSimpleFieldValue($entity, string $field, $value)
   {
@@ -458,22 +459,53 @@ class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetad
     if (isset($meta->associationMappings[$field])) {
       $association = $meta->associationMappings[$field];
       $targetEntity = $association['targetEntity'];
-      $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
-      if (count($association['joinColumns']) != 1) {
-        throw new \Exception($this->l->t('Association is not simple.'));
-      }
-      $joinInfo = $association['joinColumns'][0];
-      $columnName = $joinInfo['name'];
-      $targetColumn = $joinInfo['referencedColumnName'];
-      $targetField = $targetMeta->fieldNames[$targetColumn];
-      if (!($value instanceof $targetEntity)) {
-        if (empty($value)) {
-          // avoid generating references with empty identifiers
-          $value = null;
+
+      if (!($value instanceof $targetEntity) && empty($value)) {
+        // avoid generating references with empty identifiers
+        $value = null;
+      } else if (!($value instanceof $targetEntity)) {
+
+        $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
+
+        $referencedId = [];
+        if (count($association['joinColumns']) == 1) {
+          $joinInfo = $association['joinColumns'][0];
+          $columnName = $joinInfo['name'];
+          $targetColumn = $joinInfo['referencedColumnName'];
+          $targetField = $targetMeta->fieldNames[$targetColumn];
+          $referencedId[$targetField] = $value;
         } else {
-          // replace the value by a reference
-          $value = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
+          // Fuzzy case. We allow one hidden column where the other
+          // values are fed from "simple" columns in the entity.
+          foreach ($association['joinColumns'] as $joinInfo) {
+            $columnName = $joinInfo['name'];
+            $targetColumn = $joinInfo['referencedColumnName'];
+            $targetField = $targetMeta->simpleColumnMappings()[$targetColumn];
+            if (empty($targetField)) {
+              throw new \RuntimeException($this->l->t('Empty target field for column "%s".', $targetColumn));
+            }
+
+            if (isset($meta->fieldNames[$columnName])) {
+              $joinField = $meta->fieldNames[$columnName];
+              $joinValue = $meta->getFieldValue($entity, $joinField);
+              if (empty($joinValue)) {
+                throw new \RuntimeException($this->l->t('Join-column has empty value.'));
+              }
+              $referencedId[$targetField] = $joinValue;
+            } else {
+              if (empty($value)) {
+                throw new \RuntimeException($this->l->t('More than one hidden join-column.'));
+              }
+              $referencedId[$targetField] = $value;
+              $value = null;
+            }
+          }
+          if ($value !== null) {
+            throw new \RuntimeException($this->l->t('No hidden join column.'));
+          }
         }
+        // replace the value by a reference
+        $value = $this->entityManager->getReference($targetEntity, $referencedId);
       }
     }
     // try first the setter/getter of the entity
