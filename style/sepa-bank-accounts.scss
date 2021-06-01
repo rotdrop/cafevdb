@@ -20,46 +20,51 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-table.pme-main td.pme-value.sepa-bank-accounts table {
-  width:100%;
-}
+table.pme-main td.pme-value.sepa-bank-accounts {
+  table {
+    width:100%;
+  }
 
-table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data td.iban,
-table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data td.iban input {
-  width:100%;
-}
+  tr.bank-account-data td.iban {
+    &, input {
+      width:100%;
+    }
+  }
 
-table.pme-main td.pme-value.sepa-bank-accounts td.operations input.operation {
-  background-repeat:no-repeat;
-  background-size: 24px 24px;
-  background-position: center;
-  width:28px;
-  height:28px;
-  vertical-align:middle;
-  margin-right:1em;
-}
+  td.operations input.operation {
+    background-repeat:no-repeat;
+    background-size: 24px 24px;
+    background-position: center;
+    width:28px;
+    height:28px;
+    vertical-align:middle;
+    margin-right:1em;
+  }
 
-table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data input.info {
-  background-image:url('../../../core/img/actions/info.svg');
-}
+  tr.bank-account-data input {
+    &.info {
+      background-image:url('../../../core/img/actions/info.svg');
+    }
 
-table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data input.delete-undelete {
-  background-image:url('../img/cafevdb-delete.svg');
-}
+    &.delete-undelete {
+      background-image:url('../img/cafevdb-delete.svg');
+    }
+  }
 
-table.pme-main td.pme-value.sepa-bank-accounts tr.bank-account-data.deleted input.delete-undelete {
-  background-image:url('../img/history.svg');
-}
+  tr.bank-account-data.deleted input.delete-undelete {
+    background-image:url('../img/history.svg');
+  }
 
-table.pme-main td.pme-value.sepa-bank-accounts .operation.add {
-  width:calc(100% - 16em); /* leave room for show-deleted check */
-  background-image:url('../../../core/img/actions/add.svg');
-  background-origin:content-box;
-  background-repeat:no-repeat;
-  background-position-x:-31px;
-  background-size: 24px 24px;
-  clear:unset;
-  padding-left:34px;
+  .operation.add {
+    width:calc(100% - 16em); /* leave room for show-deleted check */
+    background-image:url('../../../core/img/actions/add.svg');
+    background-origin:content-box;
+    background-repeat:no-repeat;
+    background-position-x:-31px;
+    background-size: 24px 24px;
+    clear:unset;
+    padding-left:34px;
+  }
 }
 
 form.pme-form.pme-copyadd .show-deleted {
