@@ -1717,12 +1717,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function addSlug(string $slug, array &$fdd)
   {
-    $slug = $this->cssClass().'-'.$slug;
+    $cssSlug = $this->cssClass().'-'.$slug;
+    $tooltipSlug = $this->cssClass().ToolTipsService::SUB_KEY_SEP.$slug;
     if (!isset($fdd['css']['postfix'])) {
       $fdd['css'] = [ 'postfix' => [] ];
     }
-    $fdd['css']['postfix'][] = $slug;
-    $fdd['tooltip'] = $this->toolTipsService[$slug];
+    $fdd['css']['postfix'][] = $cssSlug;
+    $fdd['tooltip'] = $this->toolTipsService[$toolTipSlug];
   }
 
   protected function queryFieldIndex(string $key, array $fdd)

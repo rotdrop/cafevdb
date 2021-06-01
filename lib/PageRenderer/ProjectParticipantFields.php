@@ -316,11 +316,10 @@ class ProjectParticipantFields extends PMETableViewBase
       'css'     => [ 'postfix' => [ 'multiplicity', ], ],
       'default' => Multiplicity::SIMPLE,
       'values2' => $this->participantFieldMultiplicityNames(),
-      'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-multiplicity-'.$tag]; }, Multiplicity::toArray()),
+      'valueTitles' => Util::arrayMapAssoc(function($key, $tag) {
+        return [ $tag, $this->toolTipsService['participant-field-multiplicity' . ':' . $tag] ];
+      }, Multiplicity::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-multiplicity'],
-      // 'display' => [
-      //   'attributes' => [ 'data-typemask' => $this->participantFieldsService->multiplicityTypeMask(), ],
-      // ],
       'valueData' => array_map(json_encode, $this->participantFieldsService->multiplicityTypeMask()),
     ];
 
@@ -334,7 +333,9 @@ class ProjectParticipantFields extends PMETableViewBase
       'css'     => [ 'postfix' => [ 'data-type', ], ],
       'default' => 'text',
       'values2' => $this->participantFieldDataTypeNames(),
-      'valueTitles' => array_map(function($tag) { $this->toolTipsService['participant-field-data-type-'.$tag]; }, DataType::toArray()),
+      'valueTitles' => Util::arrayMapAssoc(function($key, $tag) {
+        return [ $tag, $this->toolTipsService['participant-field-data-type' . ':' . $tag] ];
+      }, DataType::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-data-type'],
     ];
 
@@ -432,7 +433,7 @@ class ProjectParticipantFields extends PMETableViewBase
         'maxlen' => 29,
         'size' => 30,
         'sort' => true,
-        'tooltip' => $this->toolTipsService['participant-fields-data-options-' . $variant],
+        'tooltip' => $this->toolTipsService['participant-fields-data-options' . ':' . $variant],
       ];
 
       $opts['fdd']['deposit_' . $variant] = [

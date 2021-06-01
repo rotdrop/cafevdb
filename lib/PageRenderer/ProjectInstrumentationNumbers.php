@@ -179,7 +179,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts['fdd']['project_id'] = [
       'name'      => $this->l->t('Project'),
       'input'     => ($projectMode ? 'R' : ''),
-      'css' => [ 'postfix' => ' project-instrument-project-name' ],
+      'css' => [ 'postfix' => [ 'project-instrument-project-name', ], ],
       'select|DV' => 'T', // delete, filter, list, view
       'select|ACPFL' => 'D',  // add, change, copy
       'maxlen'   => 20,

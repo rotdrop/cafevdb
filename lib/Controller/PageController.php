@@ -232,6 +232,8 @@ class PageController extends Controller {
 
     $debugMode    = $this->getConfigValue('debugmode', 0);
 
+    $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
+
     // @@todo this should not go here, I think. Rather into PMETableBase.
     //
     // Filter visibility is stored here:

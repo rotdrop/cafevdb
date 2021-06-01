@@ -189,8 +189,8 @@ class TooltipsFind extends Command
     }
     $output->writeln('');
 
-    $output->writeln('*** First 10 unused Tooltip-Keys ***');
-    for ($i = 0; $i < min(10, count($unusedTooltipKeys)); ++$i) {
+    $output->writeln('*** First 100 unused Tooltip-Keys ***');
+    for ($i = 0; $i < min(100, count($unusedTooltipKeys)); ++$i) {
       $output->writeln($unusedTooltipKeys[$i]);
     }
     $output->writeln('');

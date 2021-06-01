@@ -89,6 +89,12 @@ class Util
     return $dest;
   }
 
+  /** Array-map including keys. */
+  public static function arrayMapAssoc(callable $f, array $a)
+  {
+    return array_column(array_map($f, array_keys($a), $a), 1, 0);
+  }
+
   /** Normalize spaces and commas after and before spaces. */
   public static function normalizeSpaces($name, $singleSpace = ' ')
   {

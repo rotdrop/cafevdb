@@ -32,6 +32,8 @@ use OCP\IL10N;
  */
 class ToolTipsService implements \ArrayAccess, \Countable
 {
+  const SUB_KEY_SEP = ':';
+
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var IL10N */
@@ -113,7 +115,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
     $origKey = $key;
     $this->makeToolTips();
 
-    $keys = explode(':', $key);
+    $keys = explode(self::SUB_KEY_SEP, $key);
     if (count($keys) == 2) {
       $key = $keys[0];
       $subKey = $keys[1];
@@ -304,29 +306,26 @@ invited to have a look, but please do not change anything unless you know what y
 
       'participant-attachment-open-parent' => $this->l->t('Open the containing folder using the file-app of the cloud.'),
 
-      'participant-field-choices-groupofpeople' => $this->l->t('Group of people, e.g. to define room-mates.'),
+      'participant-field-multiplicity' => [
+        'default' => $this->l->t('Multiplicity of the field, e.g. free-text, single choice, multiple choice etc.'),
 
-      'participant-field-choices-groupsofpeople' => $this->l->t('Group of people with predefined group-names and a potentially
+        'groupofpeople' => $this->l->t('Group of people, e.g. to define room-mates.'),
+
+        'groupsofpeople' => $this->l->t('Group of people with predefined group-names and a potentially
 different maximal number of people fitting in the group. For example to define room-mates.'),
 
-      'participant-field-choices-multiple' => $this->l->t('Multiple choices, excluding each other.'),
+        'multiple' => $this->l->t('Multiple choices, excluding each other.'),
 
-      'participant-field-choices-parallel' => $this->l->t('Multiple choices where, more than one option can be selected.'),
+        'parallel' => $this->l->t('Multiple choices where, more than one option can be selected.'),
 
-      'participant-field-choices-single' => $this->l->t('Simple yes-no choice.'),
+        'single' => $this->l->t('Simple yes-no choice.'),
 
-      'participant-field-general-simple' => $this->l->t('General date field with the respective meaning.'),
+        'simple' => $this->l->t('General date field with the respective meaning.'),
+      ],
 
-      'participant-field-surcharge-groupofpeople' => $this->l->t('E.g. to define double-room surcharges.'),
-
-      'participant-field-surcharge-groupsofpeople' => $this->l->t('Surcharge-group of people with predefined group-names and a potentially
-different maximal number of people fitting in the group. Maybe this is completely useless ...'),
-
-      'participant-field-surcharge-multiple' => $this->l->t('Multiple choices, excluding each other. For the individual choices a potentially different amount of money may be charged.'),
-
-      'participant-field-surcharge-parallel' => $this->l->t('Multiple choice where more than one option can be selected. For the individual choices a potentially different amount of money may be charged.'),
-
-      'participant-field-surcharge-single' => $this->l->t('Simple yes-no choice which increases the project fees. Please fill also the "amount" field.'),
+      'participant-field-data-type' => [
+        'default' => $this->l->t('Data type of the field, e.g service-fee, text, HTML-text etc.'),
+      ],
 
       'participant-fields-data-options' => [
         'generator' => $this->l->t('Name of a the generator for this field. Can be be a fully-qualified PHP class-name or one of the known short-cuts.'),
@@ -363,8 +362,13 @@ help text in order to inform others what this option is about.'),
         'regenerate-all' => $this->l->t('Recompute all receivables for the musician. Note that this will reload the input-form discarding all changes which have not been saved yet.'),
       ],
 
-      'participant-fields-data-options-single' => $this->l->t('For a surcharge option, please enter here the surcharge amount
-associated with this option.'),
+      'participant-fields-data-options' => [
+        'single' => $this->l->t('For a yes/no option please enter here the single item to select, e.g. the surcharge amount for a service-fee field.'),
+
+        'groupofpeople' => $this->l->t('For a yes/no option please enter here the single item to select, e.g. the surcharge amount for a service-fee field.'),
+
+        'simple' => $this->l->t('Please enter the default value for this free-text option.'),
+      ],
 
       'participant-fields-default-multi-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
@@ -384,9 +388,6 @@ the left or the top inside its table-tab.'),
 
       'participant-fields-extra-tab' => $this->l->t('Extra-tab to group project-specific data which just didn\'t fit
 somewhere else.'),
-
-      'participant-fields-field-index' => $this->l->t('Backwards-compatibility link into extra-data stored together with old
-projects.'),
 
       'participant-fields-field-name' => $this->l->t('Just the name for this option. Please keep the name as <em>short</em> as
 possible, but try to be descriptive. If further explanations are
@@ -422,10 +423,6 @@ input box below.'),
       'participant-fields-tooltip' => $this->l->t('Optionally define a tool-tip (context-help) for the field. The tooltip
 may contain HTML formatting.'),
 
-      'participant-fields-type' => $this->l->t('Data-type for the custom field. The most practical types are probably
-yes-no and multiple-choice options. Extra-charge options can also be
-defined, with the respective extra-charge amount tied to the option.'),
-
       'participant-fields-writers' => $this->l->t('Members of these Cloud user-groups are allowed to change the
 field. If left blank, every logged in user is allowed to change this field.'),
 
@@ -438,11 +435,13 @@ each individual table view.'),
 
       'further-settings' => $this->l->t('Further personal settings, normally not needed use with care.'),
 
-      'project-instrumentation-numbers-required' => $this->l->t('The number of the required musicians per instrument per voice (if the section is split by voices, e.g. "violin 1", "violin 2")'),
+      'project-instrumentation-numbers' => [
+        'required' => $this->l->t('The number of the required musicians per instrument per voice (if the section is split by voices, e.g. "violin 1", "violin 2")'),
 
-      'project-instrumentation-numbers-voice' => $this->l->t('The voice for the respective instrument. Leave at the default to signal that this instrument does not need to be separated into voices. You probably want to distinguish between violin 1 and violin 2, thought ...'),
+        'voice' => $this->l->t('The voice for the respective instrument. Leave at the default to signal that this instrument does not need to be separated into voices. You probably want to distinguish between violin 1 and violin 2, thought ...'),
 
-      'project-instrumentation-numbers-balance' => $this->l->t('The differences between the number of required musicians and the registered / confirmed musicians.'),
+        'balance' => $this->l->t('The differences between the number of required musicians and the registered / confirmed musicians.'),
+      ],
 
       'instrument-insurance-bill' => $this->l->t('Generate a PDF with detailed records of the insured items and the
 resulting insurance fee.'),
