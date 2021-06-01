@@ -52,7 +52,7 @@ function dialogToBackButton(dialogHolder) {
 
   toBackButton.off('click');
   toBackButton.on('click', function() {
-    const overlay = $('.ui-widget-overlay:last');
+    const overlay = $('.ui-widget-overlay.ui-front').last();
     let overlayIndex = 100; // OwnCloud header resides at 50.
     if (overlay.length > 0) {
       overlayIndex = parseInt(overlay.css('z-index'));
