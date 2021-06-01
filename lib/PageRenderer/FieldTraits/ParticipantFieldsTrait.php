@@ -1082,11 +1082,19 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     $emptyDisabled = empty($value) ? ' disabled' : '';
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
                      . ($subDir ? '[]' : '');
+    switch ($policy) {
+    case 'rename':
+      $policyTooltip = $this->toolTipsService['participant-attachment-upload-rename'];
+      break;
+    case 'replace':
+      $policyTooltip = $this->toolTipsService['participant-attachment-upload-replace'];
+      break;
+    }
     $html = '
   <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" data-upload-policy="'.$policy.'" data-storage="cloud">
     <td class="operations">
       <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
-      <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-'.$policy].'" class="operation upload-replace"/>
+      <input type="button" title="'.$policyTooltip.'" class="operation upload-replace"/>
       <a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent"></a>
     </td>
     <td class="cloud-file">

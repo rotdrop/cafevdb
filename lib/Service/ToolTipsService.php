@@ -185,17 +185,12 @@ displayed closer to the top of the page.'),
 
       'blogentry-reply' => $this->l->t('Write a follow-up to the bulletin entry.'),
 
-      'blogentry-sticky' => $this->l->t('Toggle the sticky marker; sticky notes are listed at the top of the list.'),
-
       'cancel-email-composition' => $this->l->t('Cancel the email composition and close the input form. This has the
 same effect as clicking the close button on top of the dialog-window. No email will be sent.'),
 
       'club-member-project' => $this->l->t('Name of the pseudo-project listing the permanent members of the orchestra.'),
 
       'configrecheck' => $this->l->t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
-
-      'debit-mandate-orchestra-member' => $this->l->t('Please check this box if this musician is a club-member. Otherwise
-please leave it unchecked.'),
 
       'bulk-transaction-creation-time' => $this->l->t('The time when the bulk-transactionx data was created.'),
 
@@ -308,8 +303,6 @@ invited to have a look, but please do not change anything unless you know what y
       'participant-attachment-download' => $this->l->t('Click to download this file.'),
 
       'participant-attachment-open-parent' => $this->l->t('Open the containing folder using the file-app of the cloud.'),
-
-      'participant-field-' => $this->l->t('placeholder'),
 
       'participant-field-choices-groupofpeople' => $this->l->t('Group of people, e.g. to define room-mates.'),
 
