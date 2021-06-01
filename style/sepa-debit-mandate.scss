@@ -20,392 +20,392 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-div.sepastatusblock {
-  min-height: 4ex;
+#sepa-debit-mandate-dialog form#sepa-debit-mandate-form {
+
+  .statusmessage.suggestions {
+    max-width:40em;
+    hyphens:auto;
+  }
+
+  input.mandateDate,
+  input.lastUsedDate {
+    width: 6em;
+  }
+
+  label {
+    display:inline-block;
+  }
+
+  label.lastUsedDate {
+    float:right;
+  }
+
+  .bank-account-identifier {
+    font-family:monospace;
+  }
+
+  label.sepa-validation-toggle {
+    float:right;
+    margin-right:3px;
+  }
+
+  input.sepa-validation-toggle {
+    display:none;
+  }
+
+  div.sepa-validation-toggle {
+    display:inline-block;
+    width:24px;
+    height:24px;
+    background:url(../img/forgetit.png);
+    cursor:pointer;
+    vertical-align:middle;
+  }
+
+  input.sepa-validation-toggle:checked ~ div.sepa-validation-toggle {
+    background:url(../img/letsdoit.png);
+  }
+
+
+  /******************************************************************************
+   *
+   * expired notice.
+   *
+   */
+  #mandate-expired-notice:not(.active) {
+    display:none!important;
+  }
+
+  #mandate-expired-notice.active {
+    display:block!important;
+    position:absolute;
+    left:0px;
+    right:0px;
+    top:0px;
+    bottom:0px;
+    width:80%;
+    height:60%;
+    text-align:center;
+    font-size:700%;
+    line-height:100%;
+    margin:auto;
+    color:red;
+    font-weight:bold;
+    font-style:italic;
+    overflow:visible;
+  }
+
+  #mandate-expired-notice.active div,
+  #mandate-expired-notice.active span {
+    display:inline-block;
+    text-align:center;
+  }
+
+  .oc-dialog div.sepa-mandate-expire-notice {
+    max-width:30em;
+  }
+
+  .debitRecurringInfo {
+    float:right;
+    margin-right:3px;
+  }
+
+  .debitRecurringInfo .type {
+    display:none;
+  }
+
+  .debitRecurringInfo.once .type.once {
+    display:unset;
+  }
+
+  .debitRecurringInfo.permanent .type.permanent {
+    display:unset;
+  }
+
+  /******************************************************************************
+   *
+   * Registration controls
+   *
+   */
+
+  /* visibility control */
+
+  fieldset.have-data.unused .hidden-have-data-unused,
+  fieldset.no-written-mandate .hidden-no-written-mandate,
+  fieldset.no-written-mandate .hidden-no-written-mandate + input[type="checkbox"] + label,
+  fieldset.have-written-mandate .hidden-have-written-mandate,
+  fieldset.have-written-mandate .hidden-have-written-mandate + input[type="checkbox"] + label,
+  fieldset.used .hidden-used,
+  fieldset.unused .hidden-unused,
+  fieldset.have-data .hidden-have-data,
+  fieldset.no-data .hidden-no-data {
+    display:none!important;
+  }
+
+  /* lock/unlock the project binding if we have a mandate */
+  input.debit-mandate-binding-lock ~ label.debit-mandate-binding-lock {
+    height: 16px;
+    width: 16px;
+    position: relative;
+    vertical-align: top;
+    top: 0;
+    background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.2;
+    text-indent: -10000em;
+    z-index:1;
+  }
+
+  input.debit-mandate-binding-lock:checked ~ label.debit-mandate-binding-lock {
+    background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
+    opacity: 0.2;
+  }
+
+  fieldset.used input.debit-mandate-binding-lock ~ label.debit-mandate-binding-lock {
+    background-image: url('../img/dontred.svg');
+    background-size: 16px 16px;
+  }
+
+  input.debit-mandate-binding-lock:not(:checked) ~ .debit-mandate-binding.hidden-if-unlocked,
+  fieldset.used input.debit-mandate-binding-lock ~ .debit-mandate-binding.hidden-if-locked,
+  input.debit-mandate-binding-lock:checked ~ .debit-mandate-binding.hidden-if-locked {
+    display:none!important;
+  }
+
+  input.debit-mandate-binding-lock:checked ~ .debit-mandate-binding.hidden-if-unlocked,
+  fieldset.used input.debit-mandate-binding-lock ~ .debit-mandate-binding.hidden-if-unlocked,
+  input.debit-mandate-binding-lock:not(:checked) ~ .debit-mandate-binding.hidden-if-locked {
+    display:inline-block!important;
+  }
+
+  /* selectize stuff */
+
+  .selectize-control.mandateProjectId {
+    min-width:10rem;
+    max-width:10rem;
+  }
+
+  .selectize-control.single .selectize-dropdown {
+    width:auto!important;
+    min-width:10rem;
+    max-width:30rem;
+  }
+
+  /******************/
+
+  fieldset {
+    position:relative;
+    width:100%
+  }
+
+  fieldset.bank-account {
+    padding-bottom:0.5em;
+    border-bottom: 1px solid var(--color-background-dark);
+  }
+
+  fieldset.debit-mandate {
+    padding-top:0.5em;
+  }
+
+  fieldset.debit-mandate .debit-mandate-details {
+    position:relative;
+    width:100%
+  }
+
+  .form-blocker,
+  fieldset.debit-mandate .debit-mandate-blocker {
+    display:none;
+    position:absolute;
+    left:0;
+    top:0;
+    opacity:0.5;
+    background-color:black;
+    width:100%;
+    height:100%;
+    z-index:10;
+  }
+
+  &.bank-account-deleted .form-blocker {
+    display:block;
+  }
+
+  fieldset.debit-mandate.no-data input.debit-mandate-registration + label > *,
+  fieldset.debit-mandate.no-data input.debit-mandate-registration + label > * > * {
+    cursor:pointer;
+  }
+
+  fieldset.debit-mandate.no-data input.debit-mandate-registration + label::before {
+    background-image: url('../../../core/img/actions/add.svg');
+  }
+
+  fieldset.debit-mandate.no-data input.debit-mandate-registration:checked + label::before {
+    background-image: url('../img/actions/settings-white.svg');
+  }
+
+  fieldset.debit-mandate.no-data .debit-mandate-blocker {
+    display:block;
+  }
+
+  fieldset.debit-mandate.deleted .debit-mandate-blocker {
+    display:block!important;
+  }
+
+  fieldset.debit-mandate.no-data input.debit-mandate-registration:checked ~ .debit-mandate-details .debit-mandate-blocker {
+    display:none;
+  }
+
+  fieldset.debit-mandate #upload-written-mandate-later + label {
+    position:absolute;
+    right:0;
+    bottom:0;
+    margin-right:3px;
+  }
+
+  fieldset.debit-mandate.no-data legend .registration-for-label {
+    display:none;
+  }
+
+  fieldset.debit-mandate.no-data legend .registration-label {
+    display:inline-block;
+  }
+
+  fieldset.debit-mandate legend .registraion-label,
+  fieldset.debit-mandate legend .registration-for-label,
+  fieldset.debit-mandate.no-data legend .reference-label {
+    display:none;
+  }
+
+  fieldset.debit-mandate .debit-mandate-details {
+    width:100%;
+  }
+
+  .written-mandate-upload .upload-placeholder {
+    width:20em;
+  }
+
+  .written-mandate-upload .operations .operation {
+    background-repeat:no-repeat;
+    background-size: 24px 24px;
+    background-position: center;
+    width:28px;
+    height:28px;
+    vertical-align:middle;
+    margin-right:1em;
+  }
+
+  .written-mandate-upload .operations .operation.delete-undelete {
+    background-image:url('../img/cafevdb-delete.svg');
+  }
+
+  .written-mandate-upload .operations .operation.upload-replace {
+    background-image:url('../../../core/img/actions/upload.svg');
+  }
+
+  .written-mandate-upload .operations .operation.download-mandate-form {
+    background-image:url('../../../core/img/actions/download.svg');
+  }
+
+  /* Style links in a more ordinary fashion. Grin. */
+  a.download-link:link {
+    color:CornFlowerBlue;
+    text-decoration:underline;
+    font-weight:bold;
+  }
+
+  a.download-link:visited {
+    color:CornFlowerBlue;
+    text-decoration:underline;
+    font-weight:bold;
+  }
+
+  a.download-link:hover {
+    color:CornFlowerBlue;
+    text-decoration:underline;
+    font-style:italic;
+    font-weight:bold;
+  }
 }
 
-#sepa-debit-mandate-dialog .statusmessage.suggestions {
-  max-width:40em;
-  hyphens:auto;
-}
-
-#sepa-debit-mandate-dialog input.mandateDate,
-#sepa-debit-mandate-dialog input.lastUsedDate {
-  width: 6em;
-}
-
-#sepa-debit-mandate-dialog label {
-  display:inline-block;
-}
-
-#sepa-debit-mandate-dialog label.lastUsedDate {
-  float:right;
-}
-
-input.sepa-debit-mandate.missing-data {
-  ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
-  filter: alpha(opacity=30);
-  opacity: .3;
-}
-
-/* form#sepa-debit-mandate-form :disabled {
-   opacity:1.0;
-   } */
-
-form#sepa-debit-mandate-form .bank-account-identifier {
-  font-family:monospace;
-}
-
-form#sepa-debit-mandate-form label.sepa-validation-toggle {
-  float:right;
-  margin-right:3px;
-}
-
-form#sepa-debit-mandate-form input.sepa-validation-toggle {
-  display:none;
-}
-
-form#sepa-debit-mandate-form div.sepa-validation-toggle {
-  display:inline-block;
-  width:24px;
-  height:24px;
-  background:url(../img/forgetit.png);
-  cursor:pointer;
-  vertical-align:middle;
-}
-
-form#sepa-debit-mandate-form input.sepa-validation-toggle:checked ~ div.sepa-validation-toggle {
-  background:url(../img/letsdoit.png);
-}
-
-/******************************************************************************
- *
- * "misc" check-boxes and buttons
- *
- */
-
-input.debit-note.pme-misc-[type=submit] {
-  background-image:url('../img/euro-x.png');
-}
-input.debit-note.pme-misc+[type=submit] {
-  background-image:url('../img/euro-yes.png');
-}
-input.debit-note.pme-misc[type=submit] {
-  background-image:url('../img/euro.png');
-}
-
-/* row check-boxes */
-:not(.lt-ie9) div.debit-note.pme-misc-check {
-  background:url(../img/euro.png);
-}
-:not(.lt-ie9) input.debit-note.pme-misc-check[type=checkbox]:checked ~ div.debit-note.pme-misc-check {
-  background:url(../img/euro-yes.png);
-}
-
-/******************************************************************************
- *
- * expired notice.
- *
- */
-#sepa-debit-mandate-dialog #mandate-expired-notice:not(.active) {
-  display:none!important;
-}
-
-#sepa-debit-mandate-dialog #mandate-expired-notice.active {
-  display:block!important;
-  position:absolute;
-  left:0px;
-  right:0px;
-  top:0px;
-  bottom:0px;
-  width:80%;
-  height:60%;
-  text-align:center;
-  font-size:700%;
-  line-height:100%;
-  margin:auto;
-  color:red;
-  font-weight:bold;
-  font-style:italic;
-  overflow:visible;
-}
-
-#sepa-debit-mandate-dialog #mandate-expired-notice.active div,
-#sepa-debit-mandate-dialog #mandate-expired-notice.active span {
-  display:inline-block;
-  text-align:center;
-}
-
-.oc-dialog div.sepa-mandate-expire-notice {
-  max-width:30em;
-}
-
-#sepa-debit-mandate-dialog .debitRecurringInfo {
-  float:right;
-  margin-right:3px;
-}
-
-#sepa-debit-mandate-dialog .debitRecurringInfo .type {
-  display:none;
-}
-
-#sepa-debit-mandate-dialog .debitRecurringInfo.once .type.once {
-  display:unset;
-}
-
-#sepa-debit-mandate-dialog .debitRecurringInfo.permanent .type.permanent {
-  display:unset;
-}
-
-/******************************************************************************
- *
- * Registration controls
- *
- */
-
-/* visibility control */
-
-#sepa-debit-mandate-dialog fieldset.have-data.unused .hidden-have-data-unused,
-#sepa-debit-mandate-dialog fieldset.no-written-mandate .hidden-no-written-mandate,
-#sepa-debit-mandate-dialog fieldset.no-written-mandate .hidden-no-written-mandate + input[type="checkbox"] + label,
-#sepa-debit-mandate-dialog fieldset.have-written-mandate .hidden-have-written-mandate,
-#sepa-debit-mandate-dialog fieldset.have-written-mandate .hidden-have-written-mandate + input[type="checkbox"] + label,
-#sepa-debit-mandate-dialog fieldset.used .hidden-used,
-#sepa-debit-mandate-dialog fieldset.unused .hidden-unused,
-#sepa-debit-mandate-dialog fieldset.have-data .hidden-have-data,
-#sepa-debit-mandate-dialog fieldset.no-data .hidden-no-data {
-  display:none!important;
-}
-
-/* lock/unlock the project binding if we have a mandate */
-#sepa-debit-mandate-dialog input.debit-mandate-binding-lock ~ label.debit-mandate-binding-lock {
-  height: 16px;
-  width: 16px;
-  position: relative;
-  vertical-align: top;
-  top: 0;
-  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.2;
-  text-indent: -10000em;
-  z-index:1;
-}
-
-#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:checked ~ label.debit-mandate-binding-lock {
-  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
-  opacity: 0.2;
-}
-
-#sepa-debit-mandate-dialog fieldset.used input.debit-mandate-binding-lock ~ label.debit-mandate-binding-lock {
-  background-image: url('../img/dontred.svg');
-  background-size: 16px 16px;
-}
-
-#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:not(:checked) ~ .debit-mandate-binding.hidden-if-unlocked,
-#sepa-debit-mandate-dialog fieldset.used input.debit-mandate-binding-lock ~ .debit-mandate-binding.hidden-if-locked,
-#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:checked ~ .debit-mandate-binding.hidden-if-locked {
-  display:none!important;
-}
-
-#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:checked ~ .debit-mandate-binding.hidden-if-unlocked,
-#sepa-debit-mandate-dialog fieldset.used input.debit-mandate-binding-lock ~ .debit-mandate-binding.hidden-if-unlocked,
-#sepa-debit-mandate-dialog input.debit-mandate-binding-lock:not(:checked) ~ .debit-mandate-binding.hidden-if-locked {
-  display:inline-block!important;
-}
-
-/* selectize stuff */
-
-#sepa-debit-mandate-dialog .selectize-control.mandateProjectId {
-  min-width:10rem;
-  max-width:10rem;
-}
-
-#sepa-debit-mandate-dialog  .selectize-control.single .selectize-dropdown {
-  width:auto!important;
-  min-width:10rem;
-  max-width:30rem;
-}
-
-/******************/
-
-#sepa-debit-mandate-dialog fieldset {
-  position:relative;
-  width:100%
-}
-
-#sepa-debit-mandate-dialog fieldset.bank-account {
-  padding-bottom:0.5em;
-  border-bottom: 1px solid var(--color-background-dark);
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate {
-  padding-top:0.5em;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate .debit-mandate-details {
-  position:relative;
-  width:100%
-}
-
-#sepa-debit-mandate-dialog form.sepa-bank-data .form-blocker,
-#sepa-debit-mandate-dialog fieldset.debit-mandate .debit-mandate-blocker {
-  display:none;
-  position:absolute;
-  left:0;
-  top:0;
-  opacity:0.5;
-  background-color:black;
-  width:100%;
-  height:100%;
-  z-index:10;
-}
-
-#sepa-debit-mandate-dialog form.sepa-bank-data.bank-account-deleted .form-blocker {
-  display:block;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data input.debit-mandate-registration + label > *,
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data input.debit-mandate-registration + label > * > * {
-  cursor:pointer;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data input.debit-mandate-registration + label::before {
-  background-image: url('../../../core/img/actions/add.svg');
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data input.debit-mandate-registration:checked + label::before {
-  background-image: url('../img/actions/settings-white.svg');
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data .debit-mandate-blocker {
-  display:block;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.deleted .debit-mandate-blocker {
-  display:block!important;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data input.debit-mandate-registration:checked ~ .debit-mandate-details .debit-mandate-blocker {
-  display:none;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate #upload-written-mandate-later + label {
-  position:absolute;
-  right:0;
-  bottom:0;
-  margin-right:3px;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data legend .registration-for-label {
-  display:none;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data legend .registration-label {
-  display:inline-block;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate legend .registraion-label,
-#sepa-debit-mandate-dialog fieldset.debit-mandate legend .registration-for-label,
-#sepa-debit-mandate-dialog fieldset.debit-mandate.no-data legend .reference-label {
-  display:none;
-}
-
-#sepa-debit-mandate-dialog fieldset.debit-mandate .debit-mandate-details {
-  width:100%;
-}
-
-#sepa-debit-mandate-dialog .written-mandate-upload .upload-placeholder {
-  width:20em;
-}
-
-#sepa-debit-mandate-dialog .written-mandate-upload .operations .operation {
-  background-repeat:no-repeat;
-  background-size: 24px 24px;
-  background-position: center;
-  width:28px;
-  height:28px;
-  vertical-align:middle;
-  margin-right:1em;
-}
-
-#sepa-debit-mandate-dialog .written-mandate-upload .operations .operation.delete-undelete {
-  background-image:url('../img/cafevdb-delete.svg');
-}
-
-#sepa-debit-mandate-dialog .written-mandate-upload .operations .operation.upload-replace {
-  background-image:url('../../../core/img/actions/upload.svg');
-}
-
-#sepa-debit-mandate-dialog .written-mandate-upload .operations .operation.download-mandate-form {
-  background-image:url('../../../core/img/actions/download.svg');
-}
-
-/* Style links in a more ordinary fashion. Grin. */
-#sepa-debit-mandate-dialog a.download-link:link {
-  color:CornFlowerBlue;
-  text-decoration:underline;
-  font-weight:bold;
-}
-
-#sepa-debit-mandate-dialog a.download-link:visited {
-  color:CornFlowerBlue;
-  text-decoration:underline;
-  font-weight:bold;
-}
-
-#sepa-debit-mandate-dialog a.download-link:hover {
-  color:CornFlowerBlue;
-  text-decoration:underline;
-  font-style:italic;
-  font-weight:bold;
-}
-
-/******************************************************************************
- *
- * control in list-view for the selection of the topics to charge.
- *
- */
-form.pme-form .sepa-bulk-transactions.pme-menu-block {
-  display:block;
-  width:100%;
-}
-
-form.pme-form .sepa-bulk-transactions .chosen-container.sepa-bulk-transactions {
-  width:100%!important;
-  height:auto!important;
-}
-
-/******************************************************************************
- *
- * show-hide deleted in pme-table
- *
- */
-
-table.pme-main td.pme-value.sepa-bank-accounts table.hide-deleted tr.deleted {
-  display:none;
-}
-
-/******************************************************************************
- *
- * debit-note table
- *
- */
-
-table.pme-main li.nav.inline-block > a.nav {
-  min-height:unset;
-  line-height:unset;
-}
-
-/******************************************************************************
-*
-* due-dead-line, restrict height
-*
-*/
-
-form.pme-form input.sepa-due-deadline {
-  min-height:unset;
-  height:28px;
+form.pme-form {
+
+  /****************************************************************************
+   *
+   * "misc" check-boxes and buttons
+   *
+   */
+
+  input.debit-note {
+    &.pme-misc-[type=submit] {
+      background-image:url('../img/euro-x.png');
+    }
+    &.pme-misc+[type=submit] {
+      background-image:url('../img/euro-yes.png');
+    }
+    &.pme-misc[type=submit] {
+      background-image:url('../img/euro.png');
+    }
+  }
+
+  /* row check-boxes */
+  :not(.lt-ie9) div.debit-note.pme-misc-check {
+    background:url(../img/euro.png);
+  }
+  :not(.lt-ie9) input.debit-note.pme-misc-check[type=checkbox]:checked ~ div.debit-note.pme-misc-check {
+    background:url(../img/euro-yes.png);
+  }
+
+  /****************************************************************************
+   *
+   * control in list-view for the selection of the topics to charge.
+   *
+   */
+  .sepa-bulk-transactions {
+
+    &.pme-menu-block {
+      display:block;
+      width:100%;
+    }
+
+    .chosen-container.sepa-bulk-transactions {
+      width:100%!important;
+      height:auto!important;
+    }
+  }
+
+  /****************************************************************************
+   *
+   * show-hide deleted in pme-table
+   *
+   */
+
+  table.pme-main {
+    td.pme-value.sepa-bank-accounts table.hide-deleted tr.deleted {
+      display:none;
+    }
+
+    /****************************************************************************
+   *
+     * debit-note table
+     *
+     */
+
+    li.nav.inline-block > a.nav {
+      min-height:unset;
+      line-height:unset;
+    }
+  }
+
+  /****************************************************************************
+   *
+   * due-dead-line, restrict height
+   *
+   */
+
+  input.sepa-due-deadline {
+    min-height:unset;
+    height:28px;
+  }
 }
 
 /*
