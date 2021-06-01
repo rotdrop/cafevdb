@@ -58,7 +58,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
   public function toolTips() {
     $this->makeToolTips();
-    return $this->$toolTipsData;
+    return $this->toolTipsData;
   }
 
   /**
@@ -202,7 +202,7 @@ please leave it unchecked.'),
       'bulk-transaction-date-of-submission' => $this->l->t('The date when the debit note records were actually transferred to the
 bank.'),
 
-      'bulk-transacxtion-due-date' => $this->l->t('The date when (hopefully) the amount debited will reach our own bank
+      'bulk-transaction-due-date' => $this->l->t('The date when (hopefully) the amount debited will reach our own bank
 account.'),
 
       'debit-note-email-message-id' => $this->l->t('Email message-id header of the notification email for this debit-note.'),
@@ -217,21 +217,6 @@ application is AQBanking.'),
       'bulk-transactions-regenerate-receivables' => $this->l->t('Recompute the amounts for all automatically computed receivables.'),
 
       'sepa-due-deadline' => $this->l->t('Select the due-date for the generated bulk-transactions. If left empty, then the earliest possible due-date is chosen, based on the legal regulations for bank-payments and the negotiated debit-mandates. Depending on the banking-software used to actually submit the bulk-transactions to the bank (currently AqBanking) the due-date is ignored for bank-transfers.'),
-
-      'debit-note-job-option-amount' => $this->l->t('Draw an arbitrary amount from the debitor. However, the amount is
-automatically limited not to exceed the outstanding debts of the
-musician.'),
-
-      'debit-note-job-option-deposit' => $this->l->t('Just draw an amount up to the deposit for the project. If there are
-already payments for the project which sum up to the deposit amount,
-then nothing is debited.'),
-
-      'debit-note-job-option-insurance' => $this->l->t('Issue the yearly debit-note for the instrument insurance.'),
-
-      'debit-note-job-option-membership-fee' => $this->l->t('Issue the yearly debit-note for the member-ship fee.'),
-
-      'debit-note-job-option-remaining' => $this->l->t('Issue a debit-note over the remaining debts of the musician, taking
-into account how much already has been paid.'),
 
       'bulk-transaction-submission-deadline' => $this->l->t('Date of latest submission of the debit note to our own bank.'),
 
