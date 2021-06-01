@@ -279,18 +279,65 @@ class SepaBulkTransactionsController extends Controller {
       $latestNotification = $dueDeadline; // will shrink
     }
 
+    // One pre-run over all affected participants in order to
+    // determine the earliest due-date possible.
+
+    if (empty($dueDeadline)) {
+      // Count forward from now, just take the maximum. Note that
+      // bank-transfers are actually issued immediately. But in the
+      // case of debit-notes the due-deadline makes sure that deposits
+      // and total fees are not charged too early.
+      //
+      // If we really have amounts to pay with a registered deposit
+      // amount, then this means that the recipient may receive its
+      // full amount a bit too early as the debit-note
+      // pre-notification delay is up to 14 days, roughly.
+      //
+      // If we have some debit-mandates with a reduced
+      // pre-notification time then the orchestra may receive the
+      // money a bit late.
+      //
+      // In edge cases (deposit deadline and due-deadline closer than
+      // the pre-notification delay) this could result in charging the
+      // full amount instead of the deposit. But then the actual
+      // due-deadline would be past the deadline for the full amount,
+      // so this would still be in accordance with the payment
+      // negotiations of the participant.
+
+      $dueDateEstimate = $now;
+      foreach ($participants as $musicianId => $participant) {
+        $debitMandate = $debitMandates[$musicianId];
+        $dueDateEstimate = max(
+          $dueDateEstimate,
+          $this->financeService->targetDeadline(
+              $debitMandate->getPreNotificationBusinessDays()?:0,
+              $debitMandate->getPreNotificationCalendarDays(),
+              $now)
+        );
+      }
+
+      // don't set $dueDeadline to $dueDateEstimate as we do not yet
+      // know whether we arrive at debot-notes or bank-transfers.
+    } else {
+      $dueDateEstimate = $dueDeadline;
+    }
+
     /** @var Entities\SepaDebitNote $debitNote */
     $debitNote = new Entities\SepaDebitNote;
 
     /** @var Entities\SepaBankTransfer $bankTransfer */
     $bankTransfer = new Entities\SepaBankTransfer;
 
+    // book-keeping in order to avoid mixed bulk debit-notes
     $nonRecurring = null;
+
+    // array of conflicting debit mandates
+    $preNotificationConflicts = [];
 
     /** @var Entities\ProjectParticipant $participant */
     foreach ($participants as $musicianId => $participant) {
       /** @var Entities\CompositePayment $compositePayment */
-      $compositePayment = $this->bulkTransactionService->generateProjectPayments($participant, $receivables);
+      $compositePayment = $this->bulkTransactionService->generateProjectPayments($participant, $receivables, $dueDateEstimate);
       if ($compositePayment->getAmount() == 0.0) {
         // @todo Check whether this should be communicated to the musician anyway
         continue;
@@ -343,12 +390,16 @@ class SepaBulkTransactionsController extends Controller {
             $debitMandate->getPreNotificationCalendarDays(),
             $dueDeadline);
           if ($notificationDeadline < $now) {
-            return self::grumble($this->l->t(
-              'Due-deadline %s conflicts with the pre-notification dead-line %s for the debit-mandate "%s".', [
-                $this->dateTimeFormatter->formatDate($dueDeadline, 'medium'),
-                $this->dateTimeFormatter->formatDate($notificationDeadline, 'medium'),
-                $debitMandate->getMandateReference(),
-              ]));
+            $preNotificationConflicts[] = [
+              'mandate' => $debitMandate,
+              'notification' => $notificationDeadline,
+            ];
+            // return self::grumble($this->l->t(
+            //   'Due-deadline %s conflicts with the pre-notification dead-line %s for the debit-mandate "%s".', [
+            //     $this->dateTimeFormatter->formatDate($dueDeadline, 'medium'),
+            //     $this->dateTimeFormatter->formatDate($notificationDeadline, 'medium'),
+            //     $debitMandate->getMandateReference(),
+            //   ]));
           }
           $latestNotification = min($latestNotification, $notificationDeadline);
         }
@@ -356,6 +407,20 @@ class SepaBulkTransactionsController extends Controller {
         $compositePayment->setSepaTransaction($bankTransfer);
         $bankTransfer->getPayments()->set($musicianId, $compositePayment);
       }
+    }
+
+    // notify the operator about all conflicts.
+    if (!empty($preNotificationConflicts)) {
+      $messages = [];
+      foreach ($preNotificationConflicts as list($debitMandate, $notifictationDeadline)) {
+        $messages[] = $this->l->t(
+          'Due-deadline %s conflicts with the pre-notification dead-line %s for the debit-mandate "%s".', [
+            $this->dateTimeFormatter->formatDate($dueDeadline, 'medium'),
+            $this->dateTimeFormatter->formatDate($notificationDeadline, 'medium'),
+            $debitMandate->getMandateReference(),
+          ]);
+      }
+      return self::grumble([ 'message' => $messages ]);
     }
 
     if ($debitNote->getPayments()->count() > 0) {
@@ -529,16 +594,20 @@ class SepaBulkTransactionsController extends Controller {
 
     $messages = [];
     if (!empty($bankTransfer)) {
-      $messages[] = $this->l->t('Scheduled %d bank-transfers, due on %s', [
-        $bankTransfer->getPayments()->count(),
-        $this->dateTimeFormatter->formatDate($bankTransfer->getDueDate(), 'long'),
-      ]);
+      $messages[] = $this->l->n(
+        'Scheduled %n bank-transfer, due on %s',
+        'Scheduled %n bank-transfers, due on %s', [
+          $bankTransfer->getPayments()->count(),
+          $this->dateTimeFormatter->formatDate($bankTransfer->getDueDate(), 'long'),
+        ]);
     }
     if (!empty($debitNote)) {
-      $messages[] = $this->l->t('Scheduled %d debit-notes, due on %s', [
-        $debitNote->getPayments()->count(),
-        $this->dateTimeFormatter->formatDate($debitNote->getDueDate(), 'long'),
-      ]);
+      $messages[] = $this->l->n(
+        'Scheduled %n debit-note, due on %s',
+        'Scheduled %n debit-notes, due on %s', [
+          $debitNote->getPayments()->count(),
+          $this->dateTimeFormatter->formatDate($debitNote->getDueDate(), 'long'),
+        ]);
     }
 
     $responseData = [

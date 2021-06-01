@@ -141,7 +141,7 @@ class SepaBulkTransactionService
    *
    * @return Entities\CompositePayment
    */
-  public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions, ?\DateTimeInterface $transactionDueData = null):Entities\CompositePayment
+  public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions, ?\DateTimeInterface $transactionDueDate = null):Entities\CompositePayment
   {
     $payments = new ArrayCollection();
     $totalAmount = 0.0;
