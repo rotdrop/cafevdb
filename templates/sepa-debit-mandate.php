@@ -274,13 +274,13 @@ $formCss = implode(' ', [
         </label>
         <div class="written-mandate-upload block">
           <div class="operations inline-block">
-            <input type="button" title="<?php echo $toolTipsService['sepa-bank-data-form:download-mandate-form']; ?>" class="operation download-mandate-form"/>
-            <input type="button" title="<?php echo $toolTipsService['sepa-bank-data-form:upload-replace-written-mandate']; ?>" class="operation upload-replace"/>
+            <input type="button" title="<?php echo $toolTips['sepa-bank-data-form:download-mandate-form']; ?>" class="operation download-mandate-form"/>
+            <input type="button" title="<?php echo $toolTips['sepa-bank-data-form:upload-replace-written-mandate']; ?>" class="operation upload-replace"/>
           </div>
           <div class="file-data inline-block">
-            <a class="download-link hidden-no-written-mandate" title="<?php echo $toolTipsService['sepa-bank-data-form:download-written-mandate']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php p($writtenMandateFileName); ?></a>
+            <a class="download-link hidden-no-written-mandate" title="<?php echo $toolTips['sepa-bank-data-form:download-written-mandate']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php p($writtenMandateFileName); ?></a>
             <input class="upload-placeholder no-validation hidden-have-written-mandate"
-                   title="<?php echo $toolTipsService['sepa-bank-data-form:upload-written-mandate']; ?>"
+                   title="<?php echo $toolTips['sepa-bank-data-form:upload-written-mandate']; ?>"
                    placeholder="<?php echo $l->t('Upload filled SEPA debit mandate');  ?>"
                    type="text"
                    name="uploadPlaceholder"
