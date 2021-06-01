@@ -197,6 +197,33 @@ trait SepaAccountsTrait
       ]);
 
       $this->makeJoinTableField(
+        $fdd, self::SEPA_BANK_ACCOUNTS_TABLE, 'deleted', [
+          'name' => $this->l->t('Bank Account Deleted'),
+          'tab' => ['id' => $financeTab],
+          'input' => 'H',
+          'tab' => [ 'id' => 'contact' ],
+          'sql' => 'GROUP_CONCAT(
+  DISTINCT
+  CONCAT_WS(
+    "'.self::JOIN_KEY_SEP.'",
+    CONCAT_WS(
+      "'.self::COMP_KEY_SEP.'",
+      $join_table.musician_id,
+      $join_table.sequence,
+     '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence),
+    $join_col_fqn)
+  ORDER BY $order_by, '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence ASC)',
+          'filter' => 'having',
+          'sort' => true,
+          'select' => 'M',
+          'values' => [
+            'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+            'grouped' => true,
+            'orderby' => '$table.musician_id ASC, $table.sequence ASC',
+          ],
+      ]);
+
+      $this->makeJoinTableField(
         $fdd, self::SEPA_BANK_ACCOUNTS_TABLE, 'sepa_id', [
           'name' => $this->l->t('SEPA Bank Accounts'),
           'tab' => ['id' => $financeTab],
@@ -221,34 +248,56 @@ trait SepaAccountsTrait
           'php' => function($value, $op, $k, $row, $recordId, $pme) use ($musicianIdField) {
             $this->logInfo('RECORD ID '.$recordId.' PME REC '.print_r($pme->rec, true));
 
-            $valInfo = $pme->set_values($k-1);
+            //$valInfo = $pme->set_values($k-1);
 
             //$this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
             //$this->logInfo('VALINFO '.print_r($valInfo, true));
 
             // more efficient would perhaps be JSON
             $sepaIds = Util::explode(',', $value);
-            $ibans = Util::explodeIndexed($row['qf'.($k-1)]);
-            $deleted = Util::explodeIndexed($row['qf'.($k-2)]);
-            $references = Util::explodeIndexed($row['qf'.($k-3)]);
-            $html = '<table class="hide-deleted row-count-'.count($ibans).'">
+            $accountDeleted = Util::explodeIndexed($row['qf'.($k-1)]);
+            $ibans = Util::explodeIndexed($row['qf'.($k-2)]);
+            $mandateDeleted = Util::explodeIndexed($row['qf'.($k-3)]);
+            $references = Util::explodeIndexed($row['qf'.($k-4)]);
+
+            $this->logInfo('M DELETED '.print_r($mandateDeleted, true));
+            $this->logInfo('A DELETED '.print_r($accountDeleted, true));
+
+            $html = '<table class="'.($this->showDisabled ? 'show-deleted' : 'hide-deleted').' row-count-'.count($ibans).'">
   <tbody>';
-            foreach ($ibans as $sepaId => $iban) {
-              list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode(self::COMP_KEY_SEP, $sepaId);
-              $sepaData = json_encode([
-                'projectId' => 0,
-                'musicianId' => $musicianId,
-                'bankAccountSequence' => $bankAccountSequence,
-                'mandateSequence' => $mandateSequence,
-              ]);
-              $fakeValue = $iban;
-              $reference = $references[$sepaId];
-              $inactive = $deleted[$sepaId];
-              if (!empty($reference)) {
-                $fakeValue .= ' -- ' . $reference;
+            foreach ($ibans as $mandateSepaId => $iban) {
+              list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode(self::COMP_KEY_SEP, $mandateSepaId);
+              $accountInactive = $accountDeleted[$mandateSepaId];
+              $mandateInactive = $mandateDeleted[$mandateSepaId];
+              $sepaIds = [];
+              if (!$accountInactive && $mandateInactive) {
+                // build a second row without the deactivated mandate
+                $sepaIds[] = implode(self::COMP_KEY_SEP, [ $musicianId, $bankAccountSequence, 0 ]);
+                $this->logInfo('SEPA IDS 0 '.print_r($sepaIds, true));
               }
-              $html .= '
-    <tr class="bank-account-data'.($inactive ? ' deleted' : '').'" data-sepa-id="'.$sepaId.'">
+              $sepaIds[] = $mandateSepaId;
+              $this->logInfo('SEPA IDS 1 '.print_r($sepaIds, true));
+              foreach ($sepaIds as $sepaId) {
+                list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode(self::COMP_KEY_SEP, $sepaId);
+                $accountInactive = $accountDeleted[$sepaId];
+                $mandateInactive = $mandateDeleted[$sepaId];
+                $sepaData = json_encode([
+                  'projectId' => 0,
+                  'musicianId' => $musicianId,
+                  'bankAccountSequence' => $bankAccountSequence,
+                  'mandateSequence' => $mandateSequence,
+                ]);
+                $fakeValue = $iban;
+                $reference = $references[$sepaId];
+                if (!empty($reference)) {
+                  $fakeValue .= ' -- ' . $reference;
+                }
+                $cssClass = [ 'bank-account-data', ];
+                $mandateInactive && $cssClass[] = 'mandate-deleted';
+                $accountInactive && $cssClass[] = 'account-deleted';
+                ($mandateInactive || $accountInactive) && $cssClass[] = 'deleted';
+                $html .= '
+    <tr class="'.implode(' ', $cssClass).'" data-sepa-id="'.$sepaId.'">
       <td class="operations">
         <!-- <input
           class="operation delete-undelete"
@@ -271,6 +320,7 @@ trait SepaAccountsTrait
         />
       </td>
     </tr>';
+              }
             }
             $sepaData = json_encode([
               'projectId' => (empty($projectRestrictions) ? 0 : $projectRestrictions[0]),
@@ -298,6 +348,7 @@ trait SepaAccountsTrait
            name="show-deleted"
            class="show-deleted checkbox"
            value="show"
+          '.($this->showDisabled ? 'checked' : '').'
            id="sepa-bank-accounts-show-deleted"
            />
     <label class="show-deleted"
