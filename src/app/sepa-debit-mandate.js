@@ -24,7 +24,7 @@ import { globalState, appName, webRoot, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
-// import * as DialogUtils from './dialog-utils.js';
+import * as DialogUtils from './dialog-utils.js';
 import * as Page from './page.js';
 // import * as Email from './email.js';
 import * as Notification from './notification.js';
@@ -145,6 +145,9 @@ const mandatesInit = function(data, onChangeCallback) {
     const checked = $self.prop('checked');
     $(mandateFormSelector + ' ' + mandateDateSelector).prop('required', checked);
     $(mandateFormSelector + ' ' + uploadPlaceholderSelector).prop('required', checked);
+
+    console.info('REGISTRATION ' + (checked ? 'on' : 'off'));
+
     return false;
   });
 
@@ -355,6 +358,8 @@ const mandatesInit = function(data, onChangeCallback) {
 
     const accountUsed = !accountFieldset.hasClass('unused');
     const mandateUsed = !mandateFieldset.hasClass('unused');
+    const accountDeleted = accountFieldset.hasClass('deleted');
+    const mandateDeleted = mandateFieldset.hasClass('deleted');
 
     if (!(data.sepaId.bankAccountSequence > 0)) {
       // no account, so nothing to delete or disable
@@ -379,6 +384,15 @@ const mandatesInit = function(data, onChangeCallback) {
         buttons.disable.prop('disabled', true).hide();
         buttons.delete.prop('disabled', false).show();
       }
+    }
+
+    if (!accountDeleted && !mandateDeleted) {
+      buttons.reactivate.prop('disabled', true).hide();
+    } else {
+      buttons.reactivate.prop('disabled', false).show();
+    }
+    if (accountDeleted && mandateDeleted) {
+      buttons.disable.prop('disabled', true).hide();
     }
 
     $widget.find('button, input, label, [class*="tooltip"]').cafevTooltip({ placement: 'auto bottom' });
@@ -456,6 +470,26 @@ const mandatesInit = function(data, onChangeCallback) {
     });
   };
 
+  const dialogReload = function($dlg, onChangeCallback) {
+    const data = $dlg.data();
+
+    disableButtons();
+
+    mandateLoad({
+      sepaId: data.sepaId,
+      always: enableButtons,
+      done(data) {
+        // redefine reload-state with response
+        popup.data('instantvalidation', true);
+        $dlg.html($(data.contents).html());
+        initializeDialogHandlers($dlg);
+        if (onChangeCallback !== undefined) {
+          onChangeCallback();
+        }
+      },
+    });
+  };
+
   popup.cafevDialog({
     position: {
       my: 'middle top+50%',
@@ -509,15 +543,7 @@ const mandatesInit = function(data, onChangeCallback) {
 
               // the simplest thing is just to reload the form instead
               // of updating all form elements from JS.
-              mandateLoad({
-                sepaId: $dlg.data('sepaId'),
-                done(data) {
-                  popup.data('instantvalidation', true);
-                  $dlg.html($(data.contents).html());
-                  initializeDialogHandlers($dlg);
-                  onChangeCallback();
-                },
-              });
+              dialogReload($dlg, onChangeCallback);
             },
           });
         },
@@ -529,9 +555,20 @@ const mandatesInit = function(data, onChangeCallback) {
         click() {
           const $dlg = $(this);
           mandateDelete(function() {
-            $dlg.dialog('close');
-            onChangeCallback();
+            dialogReload($dlg, onChangeCallback);
           });
+        },
+      },
+      {
+        class: 'reactivate',
+        text: t(appName, 'Reactivate'),
+        title: t(appName, 'Reactivate the debit-mandate or bank-account in case it'
+                 + ' has been deleted in error'),
+        click() {
+          const $dlg = $(this);
+          mandateDelete(function() {
+            dialogReload($dlg, onChangeCallback);
+          }, 'reactivate');
         },
       },
       {
@@ -543,20 +580,7 @@ const mandatesInit = function(data, onChangeCallback) {
         click() {
           const $dlg = $(this);
           mandateDelete(function() {
-            const data = $dlg.data();
-
-            disableButtons();
-
-            mandateLoad({
-              sepaId: data.sepaId,
-              always: enableButtons,
-              done(data) {
-                // redefine reload-state with response
-                popup.data('instantvalidation', true);
-                $dlg.html($(data.contents).html());
-                initializeDialogHandlers($dlg);
-              },
-            });
+            dialogReload($dlg, onChangeCallback);
           }, 'disable');
         },
       },
@@ -576,20 +600,7 @@ const mandatesInit = function(data, onChangeCallback) {
         title: t(appName, 'Reload the form and locks it. Unsaved changes are lost.'),
         click() {
           const $dlg = $(this);
-          const data = $dlg.data();
-
-          disableButtons();
-
-          mandateLoad({
-            sepaId: data.sepaId,
-            always: enableButtons,
-            done(data) {
-              // redefine reload-state with response
-              popup.data('instantvalidation', true);
-              $dlg.html($(data.contents).html());
-              initializeDialogHandlers($dlg);
-            },
-          });
+          dialogReload($dlg);
         },
       },
     ],
@@ -597,7 +608,7 @@ const mandatesInit = function(data, onChangeCallback) {
       const $dlg = $(this);
       const $widget = $dlg.dialog('widget');
 
-      // DialogUtils.toBackButton($dlg);
+      DialogUtils.toBackButton($dlg);
       // DialogUtils.fullScreenButton($dlg);
 
       const buttons = {
@@ -605,6 +616,7 @@ const mandatesInit = function(data, onChangeCallback) {
         apply: $widget.find('button.apply'),
         delete: $widget.find('button.delete'),
         disable: $widget.find('button.disable'),
+        reactivate: $widget.find('button.reactivate'),
         reload: $widget.find('button.reload'),
       };
 
@@ -730,6 +742,9 @@ const mandateDelete = function(callbackOk, action) {
         return false;
       }
       Notification.messages(data.message);
+      if (callbackOk !== undefined) {
+        callbackOk();
+      }
     });
 };
 
