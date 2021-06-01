@@ -468,29 +468,6 @@ const mandatesInit = function(data, onChangeCallback) {
     resizable: false,
     buttons: [
       {
-        class: 'reload',
-        id: 'sepaMandateReload',
-        text: t(appName, 'Reload'),
-        title: t(appName, 'Reload the form and locks it. Unsaved changes are lost.'),
-        click() {
-          const $dlg = $(this);
-          const data = $dlg.data();
-
-          disableButtons();
-
-          mandateLoad({
-            sepaId: data.sepaId,
-            always: enableButtons,
-            done(data) {
-              // redefine reload-state with response
-              popup.data('instantvalidation', true);
-              $dlg.html($(data.contents).html());
-              initializeDialogHandlers($dlg);
-            },
-          });
-        },
-      },
-      {
         class: 'save',
         id: 'sepaMandateSave',
         text: t(appName, 'Save'),
@@ -564,8 +541,23 @@ const mandatesInit = function(data, onChangeCallback) {
                  + ' changed, or on request of the participant. The bank account can only'
                  + ' be disabled after disabling all bound debit-mandates.'),
         click() {
-          // const $dlg = $(this);
-          alert('NOT YET');
+          const $dlg = $(this);
+          mandateDelete(function() {
+            const data = $dlg.data();
+
+            disableButtons();
+
+            mandateLoad({
+              sepaId: data.sepaId,
+              always: enableButtons,
+              done(data) {
+                // redefine reload-state with response
+                popup.data('instantvalidation', true);
+                $dlg.html($(data.contents).html());
+                initializeDialogHandlers($dlg);
+              },
+            });
+          }, 'disable');
         },
       },
       {
@@ -575,6 +567,29 @@ const mandatesInit = function(data, onChangeCallback) {
         click() {
           $(this).dialog('close');
           // $('form.pme-form').submit();
+        },
+      },
+      {
+        class: 'reload',
+        id: 'sepaMandateReload',
+        text: t(appName, 'Reload'),
+        title: t(appName, 'Reload the form and locks it. Unsaved changes are lost.'),
+        click() {
+          const $dlg = $(this);
+          const data = $dlg.data();
+
+          disableButtons();
+
+          mandateLoad({
+            sepaId: data.sepaId,
+            always: enableButtons,
+            done(data) {
+              // redefine reload-state with response
+              popup.data('instantvalidation', true);
+              $dlg.html($(data.contents).html());
+              initializeDialogHandlers($dlg);
+            },
+          });
         },
       },
     ],
@@ -697,12 +712,16 @@ const mandateStore = function(options) {
 };
 
 // Delete a mandate
-const mandateDelete = function(callbackOk) {
+const mandateDelete = function(callbackOk, action) {
 
   // "submit" the entire form
   const post = $('#sepa-debit-mandate-form').serialize();
 
-  $.post(generateUrl('finance/sepa/debit-mandates/delete'), post)
+  if (action === undefined) {
+    action = 'delete';
+  }
+
+  $.post(generateUrl('finance/sepa/debit-mandates/' + action), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {});
     })

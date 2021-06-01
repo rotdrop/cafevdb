@@ -959,6 +959,27 @@ class SepaDebitMandatesController extends Controller {
    */
   public function mandateDelete($musicianId, $mandateSequence)
   {
+    return $this->handleMandateRevocation($musicianId, $mandateSequence, 'delete');
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function mandateDisable($musicianId, $mandateSequence)
+  {
+    return $this->handleMandateRevocation($musicianId, $mandateSequence, 'disable');
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function mandateReactivate($musicianId, $mandateSequence)
+  {
+    return $this->handleMandateRevocation($musicianId, $mandateSequence, 'reactivate');
+  }
+
+  private function handleMandateRevocation($musicianId, $mandateSequence, $action)
+  {
     $requiredKeys = [ 'musicianId', 'mandateSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
@@ -966,18 +987,35 @@ class SepaDebitMandatesController extends Controller {
       }
     }
 
+    $this->disableFilter('soft-deleteable');
     $mandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
     $reference = $mandate->getMandateReference();
-    $this->remove($mandate, true);
+
+    switch ($action) {
+    case 'delete':
+      $this->remove($mandate, true);
+      break;
+    case 'disable':
+      $mandate->setDeleted('now');
+      $this->flush();
+      break;
+    case 'reactivate':
+      $mandate->setDeleted(null);
+      $this->flush();
+      break;
+    default:
+      return self::grumble($this->l->t('Unknown revocation action: "%s".', $action));
+    }
 
     if ($this->entityManager->contains($mandate)) {
       $message = $this->l->t('SEPA debit mandate with reference "%s" has been invalidated.', $reference);
     } else {
-      $message = $this->l->t('SEPA debit mandate with rererence "%s" has been deleted.', $reference);
+      $message = $this->l->t('SEPA debit mandate with reference "%s" has been deleted.', $reference);
     }
 
     return self::response($message);
   }
+
 
 }
 
