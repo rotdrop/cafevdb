@@ -36,6 +36,7 @@ use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 class BlogController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -49,6 +50,9 @@ class BlogController extends Controller {
 
   /** @var ParameterService */
   private $parameterService;
+
+  /** @var ToolTipsService */
+  private $toolTipsService;
 
   /** @var BlogMapper */
   private $blogMapper;
@@ -67,6 +71,7 @@ class BlogController extends Controller {
     , IRequest $request
     , IURLGenerator $urlGenerator
     , RequestParameterService $parameterService
+    , ToolTipsService $toolTipsService
     , BlogMapper $blogMapper
     , $userId
     , IL10N $l10n
@@ -77,6 +82,7 @@ class BlogController extends Controller {
 
     $this->urlGenerator = $urlGenerator;
     $this->parameterService = $parameterService;
+    $this->toolTipsService = $toolTipsService;
     $this->blogMapper = $blogMapper;
     $this->logger = $logger;
     $this->userId = $userId;
@@ -130,10 +136,11 @@ class BlogController extends Controller {
       $reader   = '';
     }
 
-    $template = 'blogedit';
+    $template = 'blog/blogedit';
     $templateParameters = [
       'priority' => $priority,
       'popup' => $popup,
+      'toolTips' => $this->toolTipsService,
     ];
     $renderAs = 'blank';
     $tmpl = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
@@ -229,13 +236,14 @@ class BlogController extends Controller {
     }
 
     if ($generateContents) {
-      $template = 'blogthreads';
+      $template = 'blog/blogthreads';
       $templateParameters = [
         'timezone' => $this->timeZone->getTimeZone(time())->getName(),
         'locale' => $this->l->getLocaleCode(),
         'user' => $this->userid,
         'urlGenerator' => $this->urlGenerator,
         'renderer' => $this->blogMapper,
+        'toolTips' => $this->toolTipsService,
       ];
       $renderAs = 'blank';
       $tmpl = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);

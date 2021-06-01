@@ -67,7 +67,7 @@ echo $this->inc('part.common.header',
 
   <div id="blogthreads" class="cafevdb-blogthread">
     <?php
-                             echo $this->inc('blogthreads', $_);
+                             echo $this->inc('blog/blogthreads', $_);
     ?>
   </div>
 </div>
