@@ -236,7 +236,7 @@
   }
 
   fieldset.debit-mandate {
-    &.no-data {
+    &.no-data, &.deleted {
       input.debit-mandate-registration {
         + label > {
           *, * > * {
@@ -252,7 +252,13 @@
           background-image: url('../img/actions/settings-white.svg');
         }
       }
+    }
 
+    &.have-data:not(.deleted) legend.debit-mandate-registration {
+      display:none;
+    }
+
+    &.no-data {
       .debit-mandate-blocker {
         display:block;
       }
@@ -397,8 +403,15 @@ form.pme-form {
    */
 
   table.pme-main {
-    td.pme-value.sepa-bank-accounts table.hide-deleted tr.deleted {
-      display:none;
+    td.pme-value.sepa-bank-accounts table {
+      &.hide-deleted tr.deleted {
+        display:none;
+      }
+
+      tr.deleted input {
+        text-decoration:line-through;
+      }
+
     }
 
     /****************************************************************************
