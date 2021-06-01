@@ -267,7 +267,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     ];
     $this->addSlug('required', $opts['fdd']['quantity']);
 
-    $this->makeJoinTableField(
+    list($index, $name) = $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'musician_id',
       [
         'name'   => $this->l->t('Registered'),
@@ -277,8 +277,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'align' => 'right',
         'sql'    => 'COUNT($join_col_fqn)',
       ]);
+    $this->addSlug('registered', $opts['fdd'][$name]);
 
-    list($index,) = $this->makeJoinTableField(
+    list($index, $name) = $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANTS_TABLE, 'musician_id',
       [
         'name'   => $this->l->t('Confirmed'),
@@ -293,6 +294,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   AND $join_table.registration = 1',
         ],
       ]);
+    $this->addSlug('confirmed', $opts['fdd'][$name]);
 
     $joinTables[self::PROJECT_PARTICIPANTS_TABLE] = 'PMEjoin'.$index;
 
