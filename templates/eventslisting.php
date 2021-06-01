@@ -26,15 +26,15 @@
 $evtButtons = [
   'Edit' => [
     'tag' => 'edit',
-    'title' => $toolTips[projectevents-edit]
+    'title' => $toolTips['projectevents-edit']
   ],
   'Delete' => [
     'tag' => 'delete',
-    'title' =>$toolTips[projectevents-delete]
+    'title' =>$toolTips['projectevents-delete']
   ],
   'Detach' => [
     'tag' => 'detach',
-    'title' =>$toolTips[projectevents-detach]
+    'title' =>$toolTips['projectevents-detach']
   ],
 ];
 
@@ -79,7 +79,7 @@ __EOT__;
         />
 __EOT__;
     }
-    $title = $toolTips[projectevents-selectevent];
+    $title = $toolTips['projectevents-selectevent'];
     $checked = isset($selected[$evtUri]) ? 'checked="checked"' : '';
     echo <<<__EOT__
       </td>
