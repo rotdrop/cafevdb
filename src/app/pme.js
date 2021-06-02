@@ -716,7 +716,9 @@ const pmeTableDialogOpen = function(tableOptions, post) {
             const defaultParameters = {
               reason: 'unknown',
               triggerData: {
-                postOpen() {},
+                postOpen(dialogDiv) {
+                  dialogDiv.dialog('moveToTop');
+                },
               },
             };
             parameters = $.extend({}, defaultParameters, parameters);
@@ -732,15 +734,14 @@ const pmeTableDialogOpen = function(tableOptions, post) {
                   // console.trace();
                   // installInputChosen(containerSel);
                   resizeHandler(parameters);
+                  parameters.triggerData.postOpen(dialogHolder);
                   dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
-                  dialogHolder.dialog('moveToTop');
                   CAFEVDB.toolTipsInit(containerSel);
                   Page.busyIcon(false);
                   dialogHolder.find(pmeNavigationSelector('reload')).removeClass('loading');
                 });
                 pmeTweaks(dialogHolder);
                 $.fn.cafevTooltip.remove();
-                parameters.triggerData.postOpen();
               });
               break;
             case 'tabChange':

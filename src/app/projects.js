@@ -570,8 +570,9 @@ const projectWebPageRequest = function(post, container) {
       const form = container.find('table.pme-navigation');
       const submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
       submit.first().trigger('click', {
-        postOpen() {
+        postOpen(dialogHolder) {
           Notification.messages(data.message);
+          dialogHolder.dialog('moveToTop');
         },
       });
     });
