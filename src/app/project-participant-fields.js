@@ -150,7 +150,7 @@ const ready = function(selector, resizeCB) {
     }
     return false;
   });
-  container.find('select.multiplicity').trigger('change');
+  container.find('select.multiplicity:not(.pme-filter)').trigger('change');
 
   container.on('keypress', 'tr.data-options input[type="text"]', function(event) {
     let pressedKey;

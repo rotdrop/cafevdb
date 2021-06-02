@@ -73,7 +73,7 @@ $.fn.cafevDialog = function(argument) {
     console.log('will open dialog');
     $.fn.dialog.call(this, argument);
     if (this.dialog('option', 'draggable')) {
-      console.log('Try to set containment');
+      console.debug('Try to set containment');
       $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#app-content');
     }
   } else {

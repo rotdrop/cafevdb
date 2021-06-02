@@ -588,7 +588,11 @@ const tableDialog = function(form, element, containerSel) {
   let dialogCSSId = PHPMyEdit.dialogCSSId;
   containerSel = pmeSelector(containerSel);
   if (containerSel !== pmeDefaultSelector) {
-    dialogCSSId = containerSel.substring(1) + '-' + dialogCSSId;
+    if (containerSel.charAt(0) == '#') {
+      dialogCSSId = containerSel.substring(1) + '-' + dialogCSSId;
+    } else {
+      dialogCSSId = containerSel + '.' + dialogCSSId;
+    }
   }
 
   const tableOptions = {

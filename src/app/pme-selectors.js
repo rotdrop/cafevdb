@@ -187,8 +187,7 @@ const pmeSelector = function(selector) {
     selector = '';
     if (id) {
       selector = '#' + id;
-    }
-    if (cssClass) {
+    } else if (cssClass) {
       selector += '.' + cssClass.split(' ').join('.');
     }
   }
