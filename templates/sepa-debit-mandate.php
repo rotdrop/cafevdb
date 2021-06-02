@@ -40,9 +40,13 @@ $haveMandate = (int)$mandateSequence > 0;
 if ($haveMandate) {
   $mandateBinding = $mandateProjectId == $memberProjectId ? 'for-all-receivables' : 'only-for-project';
 } else {
-  $mandateBinding = ((int)$projectId > 0
-    ? ($projectId == $memberProjectId ? 'for-all-receivables' : 'only-for-project')
-    : 'for-all-receivables');
+  if ($isClubMember) {
+    $mandateBinding = 'for-all-receivables';
+  } else {
+    $mandateBinding = ((int)$projectId > 0
+      ? ($projectId == $memberProjectId ? 'for-all-receivables' : 'only-for-project')
+                     : 'for-all-receivables');
+  }
 }
 
 $bindingText = [
@@ -56,28 +60,28 @@ $bindingText = [
   ],
 ];
 
-$mandateCss = implode(' ', [
+$mandateCss = implode(' ', array_filter([
   'debit-mandate',
   (empty($haveMandate) ? 'no-data' : 'have-data'),
   (empty($mandateInUse) ? 'unused' : 'used'),
   (empty($writtenMandateId) ? 'no-written-mandate' : 'have-written-mandate'),
   (!empty($isClubMember) ? 'club-member' : null),
   (empty($mandateDeleted) ? null : 'deleted'),
-]);
+]));
 
-$accountCss = implode(' ', [
+$accountCss = implode(' ', array_filter([
   'bank-account',
-  (empty($haveMandate) ? 'no-data' : 'have-data'),
+  (empty($haveAccount) ? 'no-data' : 'have-data'),
   (empty($bankAccountInUse) ? 'unused' : 'used'),
   (empty($bankAccountDeleted) ? null : 'deleted'),
-]);
+]));
 
-$formCss = implode(' ', [
+$formCss = implode(' ', array_filter([
   'sepa-debit-mandate-form',
   'sepa-bank-data',
   (empty($bankAccountDeleted) ? null : 'bank-account-deleted'),
   (empty($mandateDeleted) ? null : 'debit-mandate-deleted'),
-]);
+]));
 
 ?>
 <div id="sepa-debit-mandate-dialog" title="<?php echo $title;?>">
@@ -229,6 +233,7 @@ $formCss = implode(' ', [
                    type="radio"
                    name="mandateBinding"
                    value="for-all-receivables"
+                   <?php empty($isClubMember) && p('disabled'); ?>
                    <?php ($mandateBinding == 'for-all-receivables') && p('checked'); ?>
             />
             <label for="sepa-debit-mandate-for-all-receivables"
