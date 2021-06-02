@@ -498,6 +498,7 @@ const mandatesInit = function(data, onChangeCallback) {
     },
     width: 'auto', // 550,
     height: 'auto',
+    dialogClass: 'sepa-debit-mandate-dialog',
     modal: false,
     resizable: false,
     buttons: [
@@ -549,7 +550,16 @@ const mandatesInit = function(data, onChangeCallback) {
         },
       },
       {
-        class: 'delete',
+        class: 'close',
+        text: t(appName, 'Close'),
+        title: t(appName, 'Discard all filled-in data and close the form. Note that this will not undo any changes previously stored in the data-base by pressing the "Apply" button.'),
+        click() {
+          $(this).dialog('close');
+          // $('form.pme-form').submit();
+        },
+      },
+      {
+        class: 'delete icon-button',
         text: t(appName, 'Delete'),
         title: t(appName, 'Delete this bank-account from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
         click() {
@@ -560,10 +570,10 @@ const mandatesInit = function(data, onChangeCallback) {
         },
       },
       {
-        class: 'reactivate',
+        class: 'reactivate icon-button',
         text: t(appName, 'Reactivate'),
         title: t(appName, 'Reactivate the debit-mandate or bank-account in case it'
-                 + ' has been deleted in error'),
+                 + ' has been deleted in error.'),
         click() {
           const $dlg = $(this);
           mandateDelete(function() {
@@ -572,7 +582,7 @@ const mandatesInit = function(data, onChangeCallback) {
         },
       },
       {
-        class: 'disable',
+        class: 'disable icon-button',
         text: t(appName, 'Disable'),
         title: t(appName, 'Disable the debit-mandate or bank-account in case the bank account has'
                  + ' changed, or on request of the participant. The bank account can only'
@@ -585,16 +595,7 @@ const mandatesInit = function(data, onChangeCallback) {
         },
       },
       {
-        class: 'close',
-        text: t(appName, 'Close'),
-        title: t(appName, 'Discard all filled-in data and close the form. Note that this will not undo any changes previously stored in the data-base by pressing the "Apply" button.'),
-        click() {
-          $(this).dialog('close');
-          // $('form.pme-form').submit();
-        },
-      },
-      {
-        class: 'reload',
+        class: 'reload icon-button',
         id: 'sepaMandateReload',
         text: t(appName, 'Reload'),
         title: t(appName, 'Reload the form and locks it. Unsaved changes are lost.'),
@@ -627,6 +628,7 @@ const mandatesInit = function(data, onChangeCallback) {
     close(event, ui) {
       $.fn.cafevTooltip.remove();
       $(this).dialog('destroy').remove();
+      CAFEVDB.modalizer(false);
     },
   });
   return false;
@@ -1068,7 +1070,6 @@ const mandateValidatePME = function(event, validateLockCB) {
 const mandatePopupInit = function(selector) {
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
-  const pmeReload = container.find(pmeFormSelector() + ' input.' + pmeToken('reload')).first();
 
   container.find(':button.sepa-debit-mandate, input.dialog.sepa-debit-mandate')
     .off('click')
@@ -1083,8 +1084,15 @@ const mandatePopupInit = function(selector) {
           sepaId: values,
           done(data) {
             mandatesInit(data, function() {
+              console.info('RELOAD FUNCTION');
+              const pmeReload = container.find(pmeFormSelector() + ' input.' + pmeToken('reload')).first();
               if (pmeReload.length > 0) {
-                pmeReload.trigger('click');
+                console.info('DO RELOAD');
+                pmeReload.trigger('click', {
+                  postOpen(pmeDialog) {
+                    // override the default in order to avoid moving the underlying dialog to top.
+                  },
+                });
               }
             });
           },

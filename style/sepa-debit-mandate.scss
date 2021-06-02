@@ -20,6 +20,47 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+.sepa-debit-mandate-dialog.ui-dialog {
+
+  /* UI stuff */
+  .ui-dialog-buttonpane.ui-widget-content {
+    position:relative;
+
+    .ui-dialog-buttonset {
+      position:relative;
+      float:left;
+      width:100%;
+
+      button.icon-button {
+        text-indent:-10000em;
+        background-repeat:no-repeat;
+        background-size: 24px 24px;
+        background-position: center;
+        vertical-align:middle;
+        width:34px;
+        height:34px;
+        border-radius: var(--border-radius-pill);
+
+        &.reload {
+          background-image:url('../img/reload-solid.svg');
+          position:absolute;
+          right:0;
+        }
+        &.disable {
+          /* background-image:url('../img/cafevdb-delete.svg'); */
+          background-image:url('../img/dont-solid.svg');
+        }
+        &.delete {
+          background-image:url('../img/cafevdb-delete.svg');
+        }
+        &.reactivate {
+          background-image:url('../img/history.svg');
+        }
+      }
+    }
+  }
+}
+
 #sepa-debit-mandate-dialog form#sepa-debit-mandate-form {
 
   .statusmessage.suggestions {
