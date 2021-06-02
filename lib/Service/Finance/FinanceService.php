@@ -186,8 +186,8 @@ class FinanceService
       return [];
     }
 
-    if ($this->isClubMember($musician)) {
-      // force general debit mandate
+    if (empty($projectOrId) && $this->isClubMember($musician)) {
+      // assume a general debit mandate
       $project = $this->ensureProject($this->getClubMembersProjectId());
     } else {
       $project = $this->ensureProject($projectOrId);
