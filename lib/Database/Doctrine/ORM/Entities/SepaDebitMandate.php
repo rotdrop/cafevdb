@@ -103,7 +103,7 @@ class SepaDebitMandate implements \ArrayAccess
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
    * )
    */
-  private $project = null;
+  private $project;
 
   /**
    * @var string
