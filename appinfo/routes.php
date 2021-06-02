@@ -327,6 +327,21 @@ $routes = [
       'verb' => 'POST',
     ],
     [
+      'name' => 'sepa_debit_mandates#account_delete',
+      'url' => '/finance/sepa/bank-accounts/delete',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'sepa_debit_mandates#account_disable',
+      'url' => '/finance/sepa/bank-accounts/disable',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'sepa_debit_mandates#account_reactivate',
+      'url' => '/finance/sepa/bank-accounts/reactivate',
+      'verb' => 'POST',
+    ],
+    [
       'name' => 'sepa_debit_mandates#pre_filled_mandate_form',
       'url' => '/finance/sepa/debit-mandates/pre-filled',
       'verb' => 'POST',

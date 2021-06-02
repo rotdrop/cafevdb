@@ -82,6 +82,8 @@ const mandatesInit = function(data, onChangeCallback) {
       musicianId: parseInt(data.musicianId),
       bankAccountSequence: parseInt(data.bankAccountSequence),
       mandateSequence: parseInt(data.mandateSequence),
+      bankAccountDeleted: !!data.bankAccountDeleted,
+      mandateDeleted: !!data.mandateDeleted,
     };
   };
 
@@ -139,17 +141,6 @@ const mandatesInit = function(data, onChangeCallback) {
       }
     });
   };
-
-  popup.on('change', mandateFormSelector + ' ' + mandateRegistrationSelector, function(event) {
-    const $self = $(this);
-    const checked = $self.prop('checked');
-    $(mandateFormSelector + ' ' + mandateDateSelector).prop('required', checked);
-    $(mandateFormSelector + ' ' + uploadPlaceholderSelector).prop('required', checked);
-
-    console.info('REGISTRATION ' + (checked ? 'on' : 'off'));
-
-    return false;
-  });
 
   popup.on('blur', mandateFormSelector + ' ' + 'input[type="text"]:not(.no-validation)', validateInput);
 
@@ -286,7 +277,7 @@ const mandatesInit = function(data, onChangeCallback) {
           const $select = $(this);
           $select.prop('disabled', $select.val() !== '');
         });
-        $self.find('input[type="radio"], input[type="button"], select').prop('disabled', true);
+        $self.find('input[type="radio"], input[type="button"]:not(.download-mandate-form), select').prop('disabled', true);
       }
     });
   };
@@ -479,6 +470,9 @@ const mandatesInit = function(data, onChangeCallback) {
       sepaId: data.sepaId,
       always: enableButtons,
       done(data) {
+        // update ids
+        $dlg.data('sepaId', makeSepaId(data));
+
         // redefine reload-state with response
         popup.data('instantvalidation', true);
         $dlg.html($(data.contents).html());
@@ -489,6 +483,28 @@ const mandatesInit = function(data, onChangeCallback) {
       },
     });
   };
+
+  popup.on('change', mandateFormSelector + ' ' + mandateRegistrationSelector, function(event) {
+    const $self = $(this);
+    const checked = $self.prop('checked');
+    $(mandateFormSelector + ' ' + mandateDateSelector).prop('required', checked);
+    $(mandateFormSelector + ' ' + uploadPlaceholderSelector).prop('required', checked);
+
+    if (checked) {
+      const sepaId = popup.data('sepaId');
+      if (sepaId.mandateSequence > 0) {
+        // Trigger a reload without mandate sequence.
+        sepaId.mandateSequence = 0;
+        popup.data('sepaId', sepaId);
+        dialogReload(popup, function() {
+          // has been replaced, so $self is no longer usable
+          popup.find(mandateFormSelector + ' ' + mandateRegistrationSelector).prop('checked', true);
+        });
+      }
+    }
+
+    return false;
+  });
 
   popup.cafevDialog({
     position: {
@@ -538,10 +554,6 @@ const mandatesInit = function(data, onChangeCallback) {
             form: $form,
             always: enableButtons,
             done(data) {
-
-              // update ids
-              $dlg.data('sepaId', makeSepaId(data));
-
               // the simplest thing is just to reload the form instead
               // of updating all form elements from JS.
               dialogReload($dlg, onChangeCallback);
@@ -564,9 +576,9 @@ const mandatesInit = function(data, onChangeCallback) {
         title: t(appName, 'Delete this bank-account from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
         click() {
           const $dlg = $(this);
-          mandateDelete(function() {
+          mandateDelete($dlg.data('sepaId'), function() {
             dialogReload($dlg, onChangeCallback);
-          });
+          }, 'delete');
         },
       },
       {
@@ -576,7 +588,7 @@ const mandatesInit = function(data, onChangeCallback) {
                  + ' has been deleted in error.'),
         click() {
           const $dlg = $(this);
-          mandateDelete(function() {
+          mandateDelete($dlg.data('sepaId'), function() {
             dialogReload($dlg, onChangeCallback);
           }, 'reactivate');
         },
@@ -589,7 +601,7 @@ const mandatesInit = function(data, onChangeCallback) {
                  + ' be disabled after disabling all bound debit-mandates.'),
         click() {
           const $dlg = $(this);
-          mandateDelete(function() {
+          mandateDelete($dlg.data('sepaId'), function() {
             dialogReload($dlg, onChangeCallback);
           }, 'disable');
         },
@@ -726,16 +738,40 @@ const mandateStore = function(options) {
 };
 
 // Delete a mandate
-const mandateDelete = function(callbackOk, action) {
+const mandateDelete = function(sepaId, callbackOk, action) {
 
   // "submit" the entire form
-  const post = $('#sepa-debit-mandate-form').serialize();
+  // const post = $('#sepa-debit-mandate-form').serialize();
 
-  if (action === undefined) {
+  console.info('DELETE', sepaId, action);
+
+  let endPoint = 'debit-mandates';
+  switch (action) {
+  case 'disable':
+    // disable account if the mandate is already disabled
+    if (!sepaId.mandateSequence || sepaId.mandateDeleted) {
+      endPoint = 'bank-accounts';
+    }
+    break;
+  case 'reactivate':
+    // first reactivate the account, then the mandate
+    if (sepaId.bankAccountDeleted) {
+      endPoint = 'bank-accounts';
+    }
+    break;
+  case 'delete':
+  default:
     action = 'delete';
+    // always only try delete the mandate if we have one
+    if (!sepaId.mandateSequence) {
+      endPoint = 'bank-accounts';
+    }
+    break;
   }
 
-  $.post(generateUrl('finance/sepa/debit-mandates/' + action), post)
+  // perhaps we should annoy the user with a confirmation dialog?
+
+  $.post(generateUrl('finance/sepa/' + endPoint + '/' + action), sepaId)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {});
     })

@@ -671,7 +671,9 @@ class SepaDebitMandatesController extends Controller {
       'projectId' => $projectId,
       'musicianId' => $musicianId,
       'bankAccountSequence' => $bankAccount->getSequence(),
+      'bankAccountDeleted' => !empty($bankAccount->getDeleted()),
       'mandateSequence' => $mandate->getSequence(),
+      'mandateDeleted' => !empty($mandate->getDeleted()),
       'mandateReference' => $mandate->getMandateReference(),
     ];
 
@@ -988,6 +990,7 @@ class SepaDebitMandatesController extends Controller {
     }
 
     $this->disableFilter('soft-deleteable');
+    /** @var Entities\SepaDebitMandate $mandate */
     $mandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
     $reference = $mandate->getMandateReference();
 
@@ -996,10 +999,16 @@ class SepaDebitMandatesController extends Controller {
       $this->remove($mandate, true);
       break;
     case 'disable':
+      if (!empty($mandate->getDeleted())) {
+        return self::grumble($this->l->t('SEPA debit mandate with reference "%s" is already disabled.', $reference));
+      }
       $mandate->setDeleted('now');
       $this->flush();
       break;
     case 'reactivate':
+      if (empty($mandate->getDeleted())) {
+        return self::grumble($this->l->t('SEPA debit mandate with reference "%s" is already active.', $reference));
+      }
       $mandate->setDeleted(null);
       $this->flush();
       break;
@@ -1008,7 +1017,11 @@ class SepaDebitMandatesController extends Controller {
     }
 
     if ($this->entityManager->contains($mandate)) {
-      $message = $this->l->t('SEPA debit mandate with reference "%s" has been invalidated.', $reference);
+      if (!empty($mandate->getDeleted())) {
+        $message = $this->l->t('SEPA debit mandate with reference "%s" has been invalidated.', $reference);
+      } else {
+        $message = $this->l->t('SEPA debit mandate with reference "%s" has been reactivated.', $reference);
+      }
     } else {
       $message = $this->l->t('SEPA debit mandate with reference "%s" has been deleted.', $reference);
     }
@@ -1016,6 +1029,121 @@ class SepaDebitMandatesController extends Controller {
     return self::response($message);
   }
 
+  /**
+   * @NoAdminRequired
+   */
+  public function accountDelete($musicianId, $bankAccountSequence)
+  {
+    return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'delete');
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function accountDisable($musicianId, $bankAccountSequence)
+  {
+    return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'disable');
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function accountReactivate($musicianId, $bankAccountSequence)
+  {
+    return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'reactivate');
+  }
+
+  private function handleAccountRevocation($musicianId, $bankAccountSequence, $action)
+  {
+    $requiredKeys = [ 'musicianId', 'bankAccountSequence' ];
+    foreach ($requiredKeys as $required) {
+      if (empty(${$required})) {
+        return self::grumble($this->l->t("Required information `%s' not provided.", $required));
+      }
+    }
+
+    $this->disableFilter('soft-deleteable');
+
+    /** @var Entities\SepaBankAccount $account */
+    $account = $this->bankAccountsRepository->find([ 'musician' => $musicianId, 'sequence' => $bankAccountSequence ]);
+    $iban = $account->getIban();
+
+    // enclose into a transaction as a "bunch" (one or two ...) mandates may be affected.
+    $this->entityManager->beginTransaction();
+    try {
+
+      $affectedMandates = [];
+      switch ($action) {
+      case 'delete':
+        /** @var Entities\SepaDebitMandate $mandate */
+        foreach ($account->getSepaDebitMandates() as $mandate) {
+          if (empty($mandate->getDeleted())) {
+            $affectedMandates[] = $mandate->getMandateReference();
+          }
+        }
+        if (!empty($affectedMandates)) {
+          return self::grumble($this->l->t('The account with IBAN "%s" cannot be deleted as the following associated mandates are still active: %s.', [ $iban, implode(', ', $affectedMandates) ]));
+        }
+        // Ok, no active mandate, try to delete the deactivated mandates
+
+        /** @var Entities\SepaDebitMandate $mandate */
+        foreach ($account->getSepaDebitMandates() as $mandate) {
+          $this->remove($mandate);
+        }
+        $this->remove($account);
+        $this->flush();
+        break;
+      case 'disable':
+        if (!empty($account->getDeleted())) {
+          return self::grumble($this->l->t('Bank account with IBAN "%s" is already disabled.', $iban));
+        }
+        /** @var Entities\SepaDebitMandate $mandate */
+        foreach ($account->getSepaDebitMandates() as $mandate) {
+          if (empty($mandate->getDeleted())) {
+            $affectedMandates[] = $mandate->getMandateReference();
+          }
+        }
+        if (!empty($affectedMandates)) {
+          return self::grumble($this->l->t('The account with IBAN "%s" cannot be disabled as the following associated mandates are still active: %s.', [ $iban, implode(', ', $affectedMandates) ]));
+        }
+        $account->setDeleted('now');
+        $this->flush();
+        break;
+      case 'reactivate':
+        if (empty($account->getDeleted())) {
+          return self::grumble($this->l->t('Bank account with IBAN "%s" is already active.', $iban));
+        }
+        $account->setDeleted(null);
+        $this->flush();
+        break;
+      default:
+        return self::grumble($this->l->t('Unknown revocation action: "%s".', $action));
+      }
+
+      $this->entityManager->commit();
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      $exceptionChain = $this->exceptionChainData($t);
+      $exceptionChain['message'] =
+        $this->l->t('Error, caught an exception. No changes were performed.');
+      return self::grumble($exceptionChain);
+    }
+
+    $messages = [];
+    if ($this->entityManager->contains($account)) {
+      if (!empty($account->getDeleted())) {
+        $messages[] = $this->l->t('Bank account with IBAN "%s" has been invalidated.', $iban);
+      } else {
+        $messages[] = $this->l->t('Bank account with IBAN "%s" has been reactivated.', $iban);
+        $messages[] = $this->l->t('Please note that associated debit-mandates need to be reactivated separately, they are still disabled.');
+      }
+    } else {
+      $messages[] = $this->l->t('Bank account with IBAN "%s" has been deleted.', $iban);
+    }
+
+    return self::response($messages);
+  }
 
 }
 
