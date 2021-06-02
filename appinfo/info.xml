@@ -5,8 +5,8 @@
   <namespace>CAFEVDB</namespace>
   <name>CAFeV DB</name>
   <description>Orchestra Management Application.</description>
-  <codename>Creeping Featurism</codename>
-  <version>6.0.0</version>
+  <codename>Excessive Endurance</codename>
+  <version>7.0.0 RC1</version>
   <licence>AGPL</licence>
   <author mail="himself@claus-justus-heine.de" homepage="https://github.com/rotdrop/cafevdb.git">Claus-Justus Heine</author>
   <types>
