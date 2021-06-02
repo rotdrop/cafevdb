@@ -50,6 +50,12 @@ $routes = [
       'verb' => 'GET',
     ],
     [
+      'name' => 'page#index',
+      'postfix' => 'post',
+      'url' => '/',
+      'verb' => 'POST',
+    ],
+    [
       'name' => 'page#loader',
       'url' => '/page/loader/{renderAs}',
       'verb' => 'POST',
