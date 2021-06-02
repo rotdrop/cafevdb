@@ -341,8 +341,8 @@ class SepaBankAccounts extends PMETableViewBase
       ];
     } else {
       $buttonPositions = [
-        'up' => [ 'left' => [ 'misc', 'export' ], ],
-        'down' => [ 'left' => [ 'misc', 'export' ], ]
+        'up' => [ 'left' => [ /* 'misc', */ 'export' ], ],
+        'down' => [ 'left' => [ /* 'misc', */ 'export' ], ]
       ];
     }
 
