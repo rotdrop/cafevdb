@@ -91,6 +91,7 @@ const mandatesInit = function(data, onChangeCallback) {
 
   const mandateFormSelector = 'form.sepa-debit-mandate-form';
   const projectSelectSelector = 'select.mandateProjectId';
+  const projectIdSelector = '.mandateProjectId';
   const projectIdOnlySelector = '.mandateProjectId.only-for-project';
   const projectIdAllSelector = '.mandateProjectId.for-all-receivables';
   const allReceivablesSelector = 'input.for-all-receivables';
@@ -166,9 +167,14 @@ const mandatesInit = function(data, onChangeCallback) {
   });
 
   popup.on('click', mandateFormSelector + ' ' + downloadPrefilledSelector, function(event) {
+    const sepaId = $.extend({}, popup.data('sepaId'));
+    if (popup.find(projectIdAllSelector).prop('checked')) {
+      // request pre-filled form for club-member
+      sepaId.projectId = 0;
+    }
     fileDownload(
       'finance/sepa/debit-mandates/pre-filled',
-      popup.data('sepaId'),
+      sepaId,
       t(appName, 'Unable to download pre-filled mandate form.')
     );
     return false;
@@ -177,17 +183,19 @@ const mandatesInit = function(data, onChangeCallback) {
   const configureProjectBindings = function(onlyProject) {
     const projectSelect = popup.data('fieldsets').find(projectSelectSelector);
 
-    projectSelect
-      .prop('disabled', !onlyProject)
-      .prop('required', onlyProject);
-    if (projectSelect[0].selectize) {
-      if (onlyProject) {
-        projectSelect[0].selectize.unlock();
-      } else {
-        projectSelect[0].selectize.clear();
-        projectSelect[0].selectize.lock();
+    if (projectSelect.length > 0) {
+      projectSelect
+        .prop('disabled', !onlyProject)
+        .prop('required', onlyProject);
+      if (projectSelect[0].selectize) {
+        if (onlyProject) {
+          projectSelect[0].selectize.unlock();
+        } else {
+          projectSelect[0].selectize.clear();
+          projectSelect[0].selectize.lock();
+        }
+        projectSelect.next().find('.selectize-input input').prop('disabled', !onlyProject);
       }
-      projectSelect.next().find('.selectize-input input').prop('disabled', !onlyProject);
     }
 
     // further inputs
