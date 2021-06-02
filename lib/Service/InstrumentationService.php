@@ -65,7 +65,7 @@ class InstrumentationService
    *
    * @return Entities\Musician
    */
-  public function getDummyMusician():Entities\Musician
+  public function getDummyMusician(?Entities\Project $project = null):Entities\Musician
   {
     // disable "deleted" filter
     $this->disableFilter('soft-deleteable');
@@ -100,6 +100,13 @@ class InstrumentationService
       $this->persist($bankAccount);
     }
     $this->flush();
+
+    if (!empty($project)) {
+      $participant = (new Entities\ProjectParticipant)
+                   ->setMusician($dummy)
+                   ->setProject($project);
+      $dummy->getProjectParticipation()->set($project->getId(), $participant);
+    }
 
     return $dummy;
   }

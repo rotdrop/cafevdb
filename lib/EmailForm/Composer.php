@@ -649,6 +649,8 @@ Störung.';
         return $keyArg[0];
       }
 
+      $this->logInfo('MUS: '.$musician->getPublicName());
+
       /** @var Entities\ProjectParticipant $projectParticipant */
       $projectParticipant = $musician->getProjectParticipantOf($this->project);
 
@@ -2019,12 +2021,11 @@ Störung.';
     $previewRecipients = $this->recipients;
     if (empty($previewRecipients)) {
       /** @var Entities\Musician $dummy */
-      $dummy = $this->appContainer()->get(InstrumentationService::class)->getDummyMusician();
-      $displayName = $dummy['displayName']?: ($dummy['nickName']?:$dummy['firstName']).' '.$dummy['surName'];
+      $dummy = $this->appContainer()->get(InstrumentationService::class)->getDummyMusician($this->project);
       $previewRecipients = [
         $dummy->getId() => [
           'email' => $dummy->getEmail(),
-          'name' => $displayName,
+          'name' => $dummy->getPublicName(true),
           'dbdata' => $dummy,
         ],
       ];
