@@ -993,10 +993,11 @@ const mandateValidatePME = function(event, validateLockCB) {
   // mandateDate
   // lastUsedDate
   const inputMapping = {
-    [pmeData('last_used_date')]: 'lastUsedDate',
-    [pmeData('mandate_date')]: 'mandateDate',
-    [pmeData('mandate_reference')]: 'mandateReference',
+    [pmeData('SepaDebitMandates:last_used_date')]: 'mandateLastUsedDate',
+    [pmeData('SepaDebitMandates:mandate_date')]: 'mandateDate',
+    [pmeData('SepaDebitMandates:mandate_reference')]: 'mandateReference',
     [pmeData('SepaDebitMandates:sequence')]: 'mandateSequence',
+    [pmeData('SepaDebitMandates:non_recurring[]')]: 'mandateNonRecurring',
     [pmeData('bank_account_owner')]: 'bankAccountOwner',
     [pmeData('iban')]: 'bankAccountIBAN',
     [pmeData('bic')]: 'bankAccountBIC',
@@ -1004,7 +1005,6 @@ const mandateValidatePME = function(event, validateLockCB) {
     [pmeData('Projects:id')]: 'projectId',
     [pmeData('musician_id')]: 'musicianId',
     [pmeData('sequence')]: 'bankAccountSequence',
-    [pmeData('non_recurring[]')]: 'nonRecurring',
   };
   let changed = $element.attr('name');
   changed = inputMapping[changed];
@@ -1022,19 +1022,19 @@ const mandateValidatePME = function(event, validateLockCB) {
   const musicianId = musicianElem.val();
 
   const mandateData = {
-    mandateReference: $('input[name="' + pmeData('mandate_reference') + '"]').val(),
-    mandateDate: $('input[name="' + pmeData('mandate_date') + '"]').val(),
-    mandateSequence: $('input[name="' + pmeData('SepaDebitMandates:sequence') + '"]').val(),
-    bankAccountOwner: $('input[name="' + pmeData('bank_account_owner') + '"]').val(),
-    lastUsedDate: $('input[name="' + pmeData('last_used_date') + '"]').val(),
     musicianId,
-    bankAccountSequence: $('input[name="' + pmeData('sequence') + '"]').val(),
     projectId,
+    mandateReference: $('input[name="' + pmeData('SepaDebitMandates:mandate_reference') + '"]').val(),
+    mandateDate: $('input[name="' + pmeData('SepaDebitMandates:mandate_date') + '"]').val(),
+    mandateSequence: $('input[name="' + pmeData('SepaDebitMandates:sequence') + '"]').val(),
+    mandateLastUsedDate: $('input[name="' + pmeData('SepaDebitMandates:last_used_date') + '"]').val(),
     mandateProjectId: projectId,
+    mandateNonRecurring: $('input[name="' + pmeData('SepaDebitMandates:non_recurring[]') + '"]').prop('checked'),
+    bankAccountSequence: $('input[name="' + pmeData('sequence') + '"]').val(),
+    bankAccountOwner: $('input[name="' + pmeData('bank_account_owner') + '"]').val(),
     bankAccountIBAN: $('input[name="' + pmeData('iban') + '"]').val(),
     bankAccountBIC: $('input[name="' + pmeData('bic') + '"]').val(),
     bankAccountBLZ: $('input[name="' + pmeData('blz') + '"]').val(),
-    nonRecurring: $('input[name="' + pmeData('non_recurring[]') + '"]').prop('checked'),
     changed,
   };
 

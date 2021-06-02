@@ -188,7 +188,7 @@ class SepaDebitMandatesController extends Controller {
           'value' => $value != 'member',
         ];
         break;
-      case 'lastUsedDate':
+      case 'mandateLastUsedDate':
         // Store the lastUsedDate immediately, if other fields are disabled
         if (empty($this->parameterService['mandateDate'])) {
           $mandate = [
@@ -642,7 +642,7 @@ class SepaDebitMandatesController extends Controller {
       'mandateReference' => $mandate->getMandateReference(),
       'mandateExpired' => $mandateExpired, // @todo
       'mandateDate' => $mandate->getMandateDate(),
-      'lastUsedDate' => $mandate->getLastUsedDate(),
+      'mandateLastUsedDate' => $mandate->getLastUsedDate(),
       'mandateNonRecurring' => $mandate->getNonRecurring(),
       'mandateInUse' => $mandate->inUse(),
       'mandateDeleted' => $mandate->getDeleted(),
@@ -661,6 +661,7 @@ class SepaDebitMandatesController extends Controller {
       'writtenMandateFileName' => $writtenMandateFileName,
 
       'dateTimeFormatter' => \OC::$server->query(\OCP\IDateTimeFormatter::class),
+      'toolTips' => $this->toolTipsService(),
     ];
 
     $tmpl = new TemplateResponse($this->appName, 'sepa-debit-mandate', $templateParameters, 'blank');
