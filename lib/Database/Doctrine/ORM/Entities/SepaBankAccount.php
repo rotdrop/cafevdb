@@ -302,6 +302,30 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
+   * Set sepaDebitMandates.
+   *
+   * @param int $sepaDebitMandates
+   *
+   * @return SepaBankAccount
+   */
+  public function setSepaDebitMandates(Collection $sepaDebitMandates):SepaBankAccount
+  {
+    $this->sepaDebitMandates = $sepaDebitMandates;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaDebitMandates.
+   *
+   * @return Collection
+   */
+  public function getSepaDebitMandates():Collection
+  {
+    return $this->sepaDebitMandates;
+  }
+
+  /**
    * Return the usage count. The bank-account is used and thus
    * undeleteable and unchangeable (up to less important data like
    * typos in the bank-account-owner) if there are recorded payments
