@@ -59,7 +59,7 @@ class ProjectWebPagesController extends Controller {
    */
   public function serviceSwitch($topic, $projectId = -1, $articleId = -1, $articleData = [])
   {
-    if ($projectId <= 0) {
+    if ($topic != 'ping' && $projectId <= 0) {
       return self::grumble($this->l->t("Invalid or unset project-id: `%s'", [ $projectId ]));
     }
 
@@ -72,7 +72,7 @@ class ProjectWebPagesController extends Controller {
                     [ $articleId, $articleData['articleId'] ]));
     }
 
-    if ($topic != 'add') {
+    if ($topic != 'add' && $topic != 'ping') {
       // require both, articleId and articleData
       if ($articleId < 0) {
         return self::grumble($this->l->t("Invalid or unset article-id: `%s'", [ $articleId ]));
@@ -86,6 +86,13 @@ class ProjectWebPagesController extends Controller {
     }
 
     switch ($topic) {
+    case 'ping':
+      if ($this->projectService->pingWebPages() === false) {
+        return self::grumble($this->l->t('Unable to ping project web-pages CMS'));
+      } else {
+        return self::response('OK');
+      }
+      break;
     case 'add':
       try {
         // This simply means: create a new page for the project.

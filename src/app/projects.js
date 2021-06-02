@@ -567,6 +567,9 @@ const projectWebPageRequest = function(post, container) {
       Ajax.handleError(xhr, status, errorThrown);
     })
     .done(function(data) {
+      if (post.action == 'ping') {
+        return;
+      }
       const form = container.find('table.pme-navigation');
       const submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
       submit.first().trigger('click', {
@@ -708,6 +711,8 @@ const documentReady = function() {
         // alert('post: '+post);
         return false;
       });
+
+      projectWebPageRequest({ action: 'ping' }, container);
 
       const articleBox = container.find('#projectWebArticles');
 

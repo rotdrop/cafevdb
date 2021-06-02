@@ -685,6 +685,11 @@ Whatever.',
     return $this->webPagesRPC->redaxoURL($articleId, $editMode);
   }
 
+  public function pingWebPages()
+  {
+    return $this->webPagesRPC->ping();
+  }
+
   /**
    * Fetch fetch the article entities from the database
    *
