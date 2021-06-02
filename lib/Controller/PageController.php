@@ -51,7 +51,7 @@ class PageController extends Controller {
   private $parameterService;
 
   /** @var ToolTipsService */
-  private $toolTipsService;
+  protected $toolTipsService;
 
   /** @var ConfigCheckService */
   private $configCheckService;

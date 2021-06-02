@@ -56,9 +56,6 @@ class PersonalForm {
   /** @var ProjectService */
   private $projectService;
 
-  /** @var ToolTipsService */
-  private $toolTipsService;
-
   /** @var ErrorService */
   private $errorService;
 
@@ -80,7 +77,6 @@ class PersonalForm {
   public function __construct(
     ConfigService $configService
     , ProjectService $projectService
-    , ToolTipsService $toolTipsService
     , ErrorService $errorService
     , TranslationService $translationService
     , IInitialStateService $initialStateService
@@ -91,7 +87,6 @@ class PersonalForm {
   ) {
     $this->configService = $configService;
     $this->projectService = $projectService;
-    $this->toolTipsService = $toolTipsService;
     $this->errorService = $errorService;
     $this->translationService = $translationService;
     $this->initialStateService = $initialStateService;
@@ -165,7 +160,7 @@ class PersonalForm {
         'showToolTips' => $this->getUserValue('tooltips', 'on'),
         'debugMode' => $this->getConfigValue('debugmode', 0), // @todo depend on group admin
         'pagerows' => $this->getUserValue('pagerows', 20),
-        'toolTips' => $this->toolTipsService,
+        'toolTips' => $this->toolTipsService(),
         'filtervisibility' => $this->getUserValue('filtervisibility', 'off'),
         'directchange' => $this->getUserValue('directchange', 'off'),
         'showdisabled' => $this->getUserValue('showdisabled', 'off'),

@@ -124,7 +124,6 @@ class EmailFormController extends Controller {
       'urlGenerator' => $this->urlGenerator,
       'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
       'pageNavigation' => $this->pageNavigation,
-      'toolTips' => $this->appContainer->get(ToolTipsService::class),
       'emailComposer' => $composer,
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
@@ -173,6 +172,8 @@ class EmailFormController extends Controller {
       'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
       'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
       'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+
+      'toolTips' => $this->toolTipsService(),
     ];
 
     // Close the session
@@ -346,6 +347,8 @@ class EmailFormController extends Controller {
           'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
           'composerFormData' => $composer->formData(),
           'emailDraftAutoSave' => $emailDraftAutoSave,
+
+          'toolTips' => $this->toolTipsService(),
         ];
         $elementData = (new TemplateResponse(
           $this->appName,
@@ -454,6 +457,8 @@ class EmailFormController extends Controller {
           'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
           'composerFormData' => $composer->formData(),
           'emailDraftAutoSave' => $emailDraftAutoSave,
+
+          'toolTips' => $this->toolTipsService(),
         ];
 
         $msgData = (new TemplateResponse(
@@ -477,6 +482,8 @@ class EmailFormController extends Controller {
           'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
           'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
           'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+
+          'toolTips' => $this->toolTipsService(),
         ];
 
         $rcptData = (new TemplateResponse(
@@ -638,6 +645,8 @@ class EmailFormController extends Controller {
         'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
         'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
         'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+
+        'toolTips' => $this->toolTipsService(),
       ];
 
       $contents = (new TemplateResponse(

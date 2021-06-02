@@ -35,12 +35,16 @@ use OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Common\Util;
 
 trait ConfigTrait {
 
   /** @var ConfigService */
   protected $configService;
+
+  /** @var ToolTipsService */
+  protected $toolTipsService;
 
   /** @var IL10N */
   protected $l;
@@ -492,6 +496,18 @@ trait ConfigTrait {
         $variants)
     );
     return array_unique($variants);
+  }
+
+  protected function toolTipsService()
+  {
+    if (empty($this_>toolTipsService)) {
+      $this->toolTipsService = $this->di(ToolTipsService::class);
+      if (!empty($this->toolTipsService)) {
+        $debugMode = $this->getConfigValue('debugmode', 0);
+        $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
+      }
+    }
+    return $this->toolTipsService;
   }
 
   /****************************************************************************
