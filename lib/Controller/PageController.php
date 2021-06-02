@@ -252,7 +252,7 @@ class PageController extends Controller {
     };
 
     $template = $this->getTemplate($template);
-    $this->logInfo("Try load template ".$template);
+    $this->logDebug("Try load template ".$template);
     try {
       $renderer = $this->appContainer->query('template:'.$template);
       if (empty($renderer)) {
