@@ -49,7 +49,7 @@ class ExpertModeController extends Controller
   const TEMPLATE = "expertmode";
 
   /** @var ToolTipsService */
-  private $toolTipsService;
+  protected $toolTipsService;
 
   /** @var GeoCodingService */
   private $geoCodingService;

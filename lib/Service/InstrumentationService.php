@@ -43,7 +43,7 @@ class InstrumentationService
   protected $entityManager;
 
   /** @var ToolTipsService */
-  private $toolTipsService;
+  protected $toolTipsService;
 
   public function __construct(
     ConfigService $configService

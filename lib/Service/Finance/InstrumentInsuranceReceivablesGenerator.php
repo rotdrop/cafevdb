@@ -52,7 +52,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   private $insurancesRepository;
 
   /** @var ToolTipsService */
-  private $toolTipsService;
+  protected $toolTipsService;
 
   /** @var \DateTimeZone */
   private $timeZone;

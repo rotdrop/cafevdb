@@ -27,6 +27,8 @@ use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Uuid;
@@ -40,13 +42,13 @@ use OCA\CAFEVDB\Common\Util;
  */
 class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /** @var float */
   protected $amount;
 
   /** @var ToolTipsService */
-  private $toolTipsService;
+  protected $toolTipsService;
 
   /** @var \DateTimeZone */
   private $timeZone;
@@ -55,23 +57,23 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
   private $intervalSeconds;
 
   public function __construct(
-    EntityManager $entityManager
+    ConfigService $configService
+    , EntityManager $entityManager
     , ToolTipsService $toolTipsService
-    , ILogger $logger
-    , IL10N $l10n
     , ?\DateInterval $interval = null
   ) {
     parent::__construct($entityManager);
-    $this->logger = $logger;
-    $this->l = $l10n;
+    $this->configService = $configService;
+    $this->l = $this->l10n();
 
     $this->amount = 1.0;
 
     if (empty($interval)) {
-      $interval = new \DateInterval('PT1D');
+      $interval = new \DateInterval('P1D');
     }
+
     // Horner's scheme, leap years not taken into account
-    $intervalSeconds = $interval->s + 60 * ($interval->i + 60 * ($interval->h + 24 * ($interval->d + 12 * $interval->m + 365 * $interval->y)));
+    $this->intervalSeconds = $interval->s + 60 * ($interval->i + 60 * ($interval->h + 24 * ($interval->d + 12 * $interval->m + 365 * $interval->y)));
 
     $this->timeZone = $this->getDateTimeZone();
   }
@@ -140,7 +142,6 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     $existingReceivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
     $added = $removed = $changed = 0;
     if ($existingReceivableData->count() == 0) {
-      $this->logInfo('RECEIVABLE update of '.$participant->getMusician()->getFirstName());
       $datum = (new Entities\ProjectParticipantFieldDatum)
              ->setField($receivable->getField())
              ->setMusician($participant->getMusician())

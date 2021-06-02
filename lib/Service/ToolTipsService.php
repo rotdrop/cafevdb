@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\ILogger;
 use OCP\IL10N;
+use OCP\AppFramework\IAppContainer;
 
 /** Tool-tips management with translations.
  *
@@ -45,10 +46,24 @@ class ToolTipsService implements \ArrayAccess, \Countable
   /** @var bool */
   private $debug = false;
 
-  public function __construct(IL10N $l, ILogger $logger) {
+  public function __construct(
+    IAppContainer $appContainer
+    , IL10N $l
+    , ILogger $logger
+  ) {
     $this->logger = $logger;
     $this->l = $l;
     $this->toolTipsData = [];
+
+    try {
+      $debugMode = $appContainer->get(EncryptionService::class)->getConfigValue('debugmode', 0);
+      if ($debugMode & ConfigService::DEBUG_TOOLTIPS) {
+        $this->debug = true;
+      }
+
+    } catch (\Throwable $t) {
+      // forget it
+    }
   }
 
   public function debug($debug = null) {

@@ -52,7 +52,7 @@ class BlogController extends Controller {
   private $parameterService;
 
   /** @var ToolTipsService */
-  private $toolTipsService;
+  protected $toolTipsService;
 
   /** @var BlogMapper */
   private $blogMapper;

@@ -30,7 +30,6 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\DatabaseFactory;
 use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ErrorService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;

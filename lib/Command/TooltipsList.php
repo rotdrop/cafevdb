@@ -38,7 +38,7 @@ class TooltipsList extends Command
   private $l;
 
   /** @var ToolTipsService */
-  private $toolTipsService;
+  protected $toolTipsService;
 
   public function __construct(
     $appName
