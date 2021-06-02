@@ -40,9 +40,6 @@ trait SepaAccountsTrait
    */
   public function renderSepaAccounts($musicianIdField = 'id', $projectRestrictions = [], $financeTab = 'finance')
   {
-    if (!empty($projectRestrictions)) {
-      $projectWhere = " AND sdm.project_id IN ('".implode("','", $projectRestrictions)."')";
-    }
     $joinStructure = [
       self::SEPA_BANK_ACCOUNTS_TABLE => [
         'entity' => Entities\SepaBankAccount::class,
@@ -69,8 +66,12 @@ trait SepaAccountsTrait
         'column' => 'sequence',
       ],
     ];
+    if (!empty($projectRestrictions)) {
+      $joinStructure[self::SEPA_DEBIT_MANDATES_TABLE]['filter']['project_id'] = [ 'value' => $projectRestrictions ];
+      // $projectWhere = " AND sdm.project_id IN ('".implode("','", $projectRestrictions)."')";
+    }
 
-    $generator = function(&$fdd) use ($musicianIdField, $financeTab) {
+    $generator = function(&$fdd) use ($musicianIdField, $projectRestrictions, $financeTab) {
       $this->makeJoinTableField(
         $fdd, self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference', [
           'name' => $this->l->t('SEPA Debit Mandate Reference'),
@@ -245,7 +246,7 @@ trait SepaAccountsTrait
             'grouped' => true,
             'orderby' => '$table.musician_id ASC, $table.sequence ASC',
           ],
-          'php' => function($value, $op, $k, $row, $recordId, $pme) use ($musicianIdField) {
+          'php' => function($value, $op, $k, $row, $recordId, $pme) use ($musicianIdField, $projectRestrictions) {
             $this->logInfo('RECORD ID '.$recordId.' PME REC '.print_r($pme->rec, true));
 
             //$valInfo = $pme->set_values($k-1);
@@ -282,7 +283,7 @@ trait SepaAccountsTrait
                 $accountInactive = $accountDeleted[$sepaId];
                 $mandateInactive = $mandateDeleted[$sepaId];
                 $sepaData = json_encode([
-                  'projectId' => 0,
+                  'projectId' => (empty($projectRestrictions) ? 0 : $projectRestrictions[0]),
                   'musicianId' => $musicianId,
                   'bankAccountSequence' => $bankAccountSequence,
                   'mandateSequence' => $mandateSequence,
