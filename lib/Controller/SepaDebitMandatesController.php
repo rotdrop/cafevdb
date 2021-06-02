@@ -632,7 +632,7 @@ class SepaDebitMandatesController extends Controller {
 
       // members are not allowed to give per-project mandates
       'memberProjectId' => $memberProjectId,
-      'isClubMember' => !empty($clubMember),
+      'isClubMember' => $isClubMember,
 
       'projectOptions' => $projectOptions,
 
@@ -945,6 +945,20 @@ class SepaDebitMandatesController extends Controller {
     , $musicianId
     , $bankAccountSequence
   ) {
+
+    if (empty($projectId)) {
+      /** @var Entities\Musician $musician */
+      $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musicianId);
+      $clubMembersProjectId = $this->getClubMembersProjectId();
+      if ($musician->isMemberOf($clubMembersProjectId)) {
+        $projectId = $clubMembersProjectId;
+      } else {
+        return self::grumble(
+          $this->l->t(
+            'General debit-mandate requested but musician "%s" is not a club member.',
+            $musician->getPublicName()));
+      }
+    }
 
     list($formData, $mimeType, $filename) = $this->financeService->preFilledDebitMandateForm(
       $bankAccountSequence, $projectId, $musicianId, $bankAccountSequence);
