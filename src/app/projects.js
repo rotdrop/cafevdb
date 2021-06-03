@@ -712,7 +712,7 @@ const documentReady = function() {
         return false;
       });
 
-      projectWebPageRequest({ action: 'ping' }, container);
+      // projectWebPageRequest({ action: 'ping' }, container);
 
       const articleBox = container.find('#projectWebArticles');
 
