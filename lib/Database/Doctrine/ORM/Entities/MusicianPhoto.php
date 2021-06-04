@@ -58,7 +58,7 @@ class MusicianPhoto implements \ArrayAccess
   private $ownerId;
 
   /**
-   * @ORM\OneToOne(targetEntity="Musician", cascade="persist", inversedBy="photo", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="Musician", cascade={"persist"}, inversedBy="photo", fetch="EXTRA_LAZY")
    */
   private $owner;
 
@@ -72,7 +72,7 @@ class MusicianPhoto implements \ArrayAccess
   private $imageId;
 
   /**
-   * @ORM\OneToOne(targetEntity="Image", cascade="all", orphanRemoval=true)
+   * @ORM\OneToOne(targetEntity="Image", cascade={"all"}, orphanRemoval=true)
    */
   private $image;
 

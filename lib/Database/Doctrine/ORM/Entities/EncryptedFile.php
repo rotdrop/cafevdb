@@ -36,7 +36,7 @@ class EncryptedFile extends File
   /**
    * @var FileData
    *
-   * @ORM\OneToOne(targetEntity="EncryptedFileData", mappedBy="file", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="EncryptedFileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $fileData;
 

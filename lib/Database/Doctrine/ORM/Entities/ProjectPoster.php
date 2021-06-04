@@ -61,13 +61,13 @@ class ProjectPoster
   private $imageId;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Project", cascade="persist", inversedBy="posters", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Project", cascade={"persist"}, inversedBy="posters", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $owner;
 
   /**
-   * @ORM\OneToOne(targetEntity="Image", cascade="all", orphanRemoval=true)
+   * @ORM\OneToOne(targetEntity="Image", cascade={"all"}, orphanRemoval=true)
    * @ORM\JoinColumn(referencedColumnName="id")
    */
   private $image;

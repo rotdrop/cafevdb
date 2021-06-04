@@ -49,7 +49,7 @@ class FileData implements \ArrayAccess
    * @var File
    *
    * @ORM\Id
-   * @ORM\OneToOne(targetEntity="File", inversedBy="fileData", cascade="all")
+   * @ORM\OneToOne(targetEntity="File", inversedBy="fileData", cascade={"all"})
    */
   private $file;
 

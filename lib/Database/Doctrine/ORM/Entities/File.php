@@ -82,7 +82,7 @@ class File implements \ArrayAccess
   /**
    * @var FileData
    *
-   * @ORM\OneToOne(targetEntity="FileData", mappedBy="file", cascade="all", orphanRemoval=true, fetch="EXTRA_LAZY", cascade="all")
+   * @ORM\OneToOne(targetEntity="FileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $fileData;
 

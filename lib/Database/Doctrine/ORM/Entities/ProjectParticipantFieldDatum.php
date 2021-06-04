@@ -141,7 +141,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Optional. ATM only used for particular auto-generated monetary fields.
    *
-   * @ORM\OneToOne(targetEntity="EncryptedFile", cascade="all", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="EncryptedFile", cascade={"all"}, fetch="EXTRA_LAZY")
    */
   private $supportingDocument;
 
