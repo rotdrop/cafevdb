@@ -40,7 +40,7 @@
     "spatie/temporary-directory": "^1.3",
     "symfony/var-dumper": "^5.2",
     "tecnickcom/tcpdf": "^6.3",
-    "tinybutstrong/opentbs": "^1.10"
+    "tinybutstrong/opentbs": "dev-production/cafevdb"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.5"
@@ -76,6 +76,10 @@
     {
       "type": "path",
       "url": "3rdparty/gedmo-doctrine-extensions"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/opentbs"
     },
     {
       "type": "path",
