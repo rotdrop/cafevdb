@@ -129,6 +129,11 @@ class Projects extends PMETableViewBase
     }
   }
 
+  public function needsPhpSession():bool
+  {
+    return true;
+  }
+
   /** Short title for heading. */
   public function shortTitle() {
     if (!empty($this->projectName)) {

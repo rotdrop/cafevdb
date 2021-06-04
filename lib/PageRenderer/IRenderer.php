@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -24,16 +24,19 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 interface IRenderer
 {
-  /**Show the underlying template page. This is supposed to echo
+  /**
+   * Show the underlying template page. This is supposed to echo
    * html code to stdout.
    *
    * @param bool $execute Kind of dry-run if set to false.
    */
   public function render(bool $execute = true);
 
-  public function cssPrefix();
+  public function cssPrefix():string;
 
-  public function cssClass();
+  public function cssClass():string;
+
+  public function needsPhpSession():bool;
 }
 
 // Local Variables: ***

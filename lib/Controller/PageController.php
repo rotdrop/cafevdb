@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 
 class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
@@ -254,6 +255,7 @@ class PageController extends Controller {
     $template = $this->getTemplate($template);
     $this->logDebug("Try load template ".$template);
     try {
+      /** @var IPageRenderer $renderer */
       $renderer = $this->appContainer->query('template:'.$template);
       if (empty($renderer)) {
         return self::response(
@@ -329,7 +331,9 @@ class PageController extends Controller {
       // log, but ignore otherwise
       $this->logException($t);
     }
-    $this->session->close();
+    if (!$renderer->needsPhpSession()) {
+      $this->session->close();
+    }
 
     return $response;
   }

@@ -58,6 +58,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 
 class PmeTableController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -171,6 +172,7 @@ class PmeTableController extends Controller {
                               'message' => $this->l->t('No template-renderer submitted.'), ]);
       }
 
+      /** @var IPageRenderer $renderer */
       $renderer = $this->appContainer->query($templateRenderer);
       if (empty($renderer)) {
         return self::response(
@@ -194,7 +196,9 @@ class PmeTableController extends Controller {
 
       if (!$dialogMode && !$reloadAction) {
         $this->historyService->store();
-        $this->session->close();
+        if (!$renderer->needsPhpSession()) {
+          $this->session->close();
+        }
       }
 
       return $response;
