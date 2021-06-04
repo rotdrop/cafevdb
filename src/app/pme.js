@@ -207,7 +207,7 @@ const reloadDeferred = function(container) {
  */
 const tableDialogReplace = function(container, content, options, callback, triggerData) {
 
-  const containerSel = '#' + options.DialogHolderCSSId;
+  const containerSel = '#' + options.dialogHolderCSSId;
 
   // remove the WYSIWYG editor, if any is attached
   WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
@@ -254,7 +254,7 @@ const pmePost = function(post, callbacks) {
  * Reload the current PME-dialog.
  *
  * @param {Object} options The current dialog options. In particular
- * options.ReloadName and options.ReloadValue must hold name and
+ * options.reloadName and options.reloadValue must hold name and
  * value of the curent (pseudo-) submit input
  * element. options.modified must already be up-to-date.
  *
@@ -266,10 +266,10 @@ const pmePost = function(post, callbacks) {
  */
 const tableDialogReload = function(options, callback, triggerData) {
 
-  const reloadName = options.ReloadName;
-  const reloadValue = options.ReloadValue;
+  const reloadName = options.reloadName;
+  const reloadValue = options.reloadValue;
 
-  const containerSel = '#' + options.DialogHolderCSSId;
+  const containerSel = '#' + options.dialogHolderCSSId;
   const container = $(containerSel);
 
   container.dialog('widget').addClass(pmeToken('table-dialog-blocked'));
@@ -325,7 +325,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     changeCallback = function(options) { return false; };
   }
 
-  const containerSel = '#' + options.DialogHolderCSSId;
+  const containerSel = '#' + options.dialogHolderCSSId;
   const container = $(containerSel);
 
   cancelDeferredReload(container);
@@ -375,9 +375,9 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       // at the name of "this": if it ends with "cancelview" then we
       // are cancelling a view and close the dialog, otherwise we
       // return to view mode.
-      if (options.InitialViewOperation && $(this).attr('name').indexOf('cancelview') < 0) {
-        options.ReloadName = options.InitialName;
-        options.ReloadValue = options.InitialValue;
+      if (options.initialViewOperation && $(this).attr('name').indexOf('cancelview') < 0) {
+        options.reloadName = options.initialName;
+        options.reloadValue = options.initialValue;
         tableDialogReload(options, changeCallback, triggerData);
       } else {
         container.dialog('close');
@@ -408,8 +408,8 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
 
         const reloadName = submitButton.attr('name');
         const reloadValue = submitButton.val();
-        options.ReloadName = reloadName;
-        options.ReloadValue = reloadValue;
+        options.reloadName = reloadName;
+        options.reloadValue = reloadValue;
         if (!submitButton.hasClass(pmeToken('change'))
             && !submitButton.hasClass(pmeToken('delete'))
             && !submitButton.hasClass(pmeToken('copy'))
@@ -515,11 +515,11 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                 return;
               }
 
-              if (options.InitialViewOperation && deleteButton.length <= 0) {
+              if (options.initialViewOperation && deleteButton.length <= 0) {
                 // return to initial view, but not after deletion
                 dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
-                options.ReloadName = options.InitialName;
-                options.ReloadValue = options.InitialValue;
+                options.reloadName = options.initialName;
+                options.reloadValue = options.initialValue;
                 tableDialogReload(options, changeCallback, triggerData);
               } else {
                 if (container.hasClass('ui-dialog-content')) {
@@ -597,14 +597,14 @@ const tableDialog = function(form, element, containerSel) {
 
   const tableOptions = {
     ambientContainerSelector: containerSel,
-    DialogHolderCSSId: dialogCSSId,
+    dialogHolderCSSId: dialogCSSId,
     templateRenderer,
-    InitialViewOperation: viewOperation,
-    InitialName: initialName,
-    InitialValue: initialValue,
-    ReloadName: initialName,
-    ReloadValue: initialValue,
-    ModalDialog: true,
+    initialViewOperation: viewOperation,
+    initialName: initialName,
+    initialValue: initialValue,
+    reloadName: initialName,
+    reloadValue: initialValue,
+    modalDialog: true,
     modified: false, // avoid reload of base table unless necessary
   };
   pmeTableDialogOpen(tableOptions, post);
@@ -613,8 +613,8 @@ const tableDialog = function(form, element, containerSel) {
 
 /**
  * Open directly the popup holding the form data. We listen for the
- * custom event 'pmedialog:changed' on the DialogHolder. This event will
- * be forwarded to the AmbientContainer. The idea is that we can
+ * custom event 'pmedialog:changed' on the dialogHolder. This event will
+ * be forwarded to the ambientContainer. The idea is that we can
  * update the "modified" component of chained dialogs in a reliable
  * way.
  *
@@ -628,7 +628,7 @@ const tableDialog = function(form, element, containerSel) {
  */
 const pmeTableDialogOpen = function(tableOptions, post) {
 
-  const containerCSSId = tableOptions.DialogHolderCSSId;
+  const containerCSSId = tableOptions.dialogHolderCSSId;
 
   const template = Page.templateFromRenderer(
     tableOptions.templateRenderer);
@@ -640,8 +640,8 @@ const pmeTableDialogOpen = function(tableOptions, post) {
 
   Page.busyIcon(true);
 
-  if (typeof tableOptions.ModalDialog === 'undefined') {
-    tableOptions.ModalDialog = true;
+  if (typeof tableOptions.modalDialog === 'undefined') {
+    tableOptions.modalDialog = true;
   }
   if (typeof post === 'undefined') {
     post = $.param(tableOptions);
@@ -657,10 +657,10 @@ const pmeTableDialogOpen = function(tableOptions, post) {
       const containerSel = '#' + containerCSSId;
       const dialogHolder = $('<div id="' + containerCSSId + '" class="resize-target"></div>');
       dialogHolder.html(htmlContent);
-      dialogHolder.data('AmbientContainer', tableOptions.ambientContainerSelector);
+      dialogHolder.data('ambientContainer', tableOptions.ambientContainerSelector);
 
       dialogHolder.find(pmeNavigationSelector('reload')).addClass('loading');
-      if (tableOptions.ModalDialog) {
+      if (tableOptions.modalDialog) {
         CAFEVDB.modalizer(true);
       }
 
@@ -669,7 +669,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
         position: popupPosition,
         width: 'auto',
         height: 'auto',
-        modal: false, // tableOptions.ModalDialog,
+        modal: false, // tableOptions.modalDialog,
         closeOnEscape: false,
         dialogClass: pmeToken('table-dialog') + ' custom-close resize-target ' + template,
         resizable: false,

@@ -71,7 +71,7 @@ const addMusicians = function(form, post) {
               {
                 projectId,
                 projectName,
-                InitialValue: 'Change',
+                initialValue: 'Change',
                 modified: true,
               });
           });
@@ -435,7 +435,7 @@ const ready = function(container) {
                   if (!answer) {
                     return;
                   }
-                  const mainContainer = $(container.data('AmbientContainer'));
+                  const mainContainer = $(container.data('ambientContainer'));
                   const form = mainContainer.find(PHPMyEdit.formSelector());
                   container.dialog('close');
                   if (numDuplicates === 1) {
@@ -445,7 +445,7 @@ const ready = function(container) {
                       ids[0],
                       {
                         table: 'Musicians',
-                        InitialValue: 'View',
+                        initialValue: 'View',
                         projectId: projectId || -1,
                         projectName,
                       }

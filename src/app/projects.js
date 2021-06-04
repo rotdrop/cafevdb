@@ -122,7 +122,7 @@ const wikiPopup = function(post, reopen) {
  * (the default). If false, only raise an existing dialog to top.
  */
 const eventsPopup = function(post, reopen) {
-  console.info('POST', post);
+  // console.info('POST', post);
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
@@ -183,8 +183,8 @@ const instrumentationNumbersPopup = function(containerSel, post) {
 
   const template = 'project-instrumentation-numbers';
   const tableOptions = {
-    AmbientContainerSelector: containerSel,
-    DialogHolderCSSId: template + '-dialog',
+    ambientContainerSelector: containerSel,
+    dialogHolderCSSId: template + '-dialog',
     template,
     templateRenderer: Page.templateRenderer(template),
     Table: 'BesetzungsZahlen',
@@ -193,13 +193,13 @@ const instrumentationNumbersPopup = function(containerSel, post) {
     projectId: post.projectId,
     projectName: post.projectName,
     // Now special options for the dialog popup
-    InitialViewOperation: true,
-    InitialName: false, // 'PME_sys_operation',
-    InitialValue: false, // 'View',
-    ReloadName: false, // 'PME_sys_operation',
-    ReloadValue: false, // 'View',
+    initialViewOperation: true,
+    initialName: false, // 'PME_sys_operation',
+    initialValue: false, // 'View',
+    reloadName: false, // 'PME_sys_operation',
+    reloadValue: false, // 'View',
     [pmeSys('operation')]: false, // 'View',
-    ModalDialog: false,
+    modalDialog: false,
     modified: false,
   };
   PHPMyEdit.tableDialogOpen(tableOptions);
@@ -222,21 +222,21 @@ const extraFieldsPopup = function(containerSel, post) {
 
   const template = 'project-participant-fields';
   const tableOptions = {
-    AmbientContainerSelector: containerSel,
-    DialogHolderCSSId: template + '-dialog',
+    ambientContainerSelector: containerSel,
+    dialogHolderCSSId: template + '-dialog',
     template,
     templateRenderer: Page.templateRenderer(template),
     Table: 'ProjectParticipantFields',
     projectId: post.projectId,
     projectName: post.projectName,
     // Now special options for the dialog popup
-    InitialViewOperation: true,
-    InitialName: false, // 'PME_sys_operation',
-    InitialValue: false, // 'View',
-    ReloadName: false, // 'PME_sys_operation',
-    ReloadValue: false, // 'View',
+    initialViewOperation: true,
+    initialName: false, // 'PME_sys_operation',
+    initialValue: false, // 'View',
+    reloadName: false, // 'PME_sys_operation',
+    reloadValue: false, // 'View',
     [pmeSys('operation')]: false, // 'View',
-    ModalDialog: false,
+    modalDialog: false,
     modified: false,
   };
   PHPMyEdit.tableDialogOpen(tableOptions);
@@ -259,19 +259,19 @@ const projectViewPopup = function(containerSel, post) {
 
   const template = 'projects';
   const tableOptions = {
-    AmbientContainerSelector: containerSel,
-    DialogHolderCSSId: 'project-overview',
+    ambientContainerSelector: containerSel,
+    dialogHolderCSSId: 'project-overview',
     template,
     templateRenderer: Page.templateRenderer(template),
     // Now special options for the dialog popup
-    InitialViewOperation: true,
-    InitialName: pmeSys('operation'),
-    InitialValue: 'View',
-    ReloadName: pmeSys('operation'),
-    ReloadValue: 'View',
+    initialViewOperation: true,
+    initialName: pmeSys('operation'),
+    initialValue: 'View',
+    reloadName: pmeSys('operation'),
+    reloadValue: 'View',
     [pmeSys('operation')]: 'View',
     [pmeSys('rec')]: post.projectId,
-    ModalDialog: true,
+    modalDialog: true,
     modified: false,
   };
   PHPMyEdit.tableDialogOpen(tableOptions);
@@ -358,10 +358,10 @@ const actions = function(select, containerSel) {
   // also remove and re-attach the tool-tips, otherwise some of the
   // tips remain, because chosen() removes the element underneath.
 
-  console.info('remove selected');
+  // console.info('remove selected');
   select.find('option').prop('selected', false);
 
-  console.info('update chosen', select.find('option:selected'));
+  // console.info('update chosen', select.find('option:selected'));
   select.trigger('chosen:updated');
 
   $('div.chosen-container').cafevTooltip({ placement: 'auto top' });
@@ -567,7 +567,7 @@ const projectWebPageRequest = function(post, container) {
       Ajax.handleError(xhr, status, errorThrown);
     })
     .done(function(data) {
-      if (post.action == 'ping') {
+      if (post.action === 'ping') {
         return;
       }
       const form = container.find('table.pme-navigation');
@@ -721,6 +721,7 @@ const documentReady = function() {
 
       const changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
       let numChangeFrames = changeFrames.length;
+      // console.info('NUM CHANGE FRAMES', numChangeFrames);
 
       // allFrames also contains some div + all available iframes
       const allDisplayFrames = articleBox.find('.cmsarticleframe.display');
@@ -871,6 +872,7 @@ const documentReady = function() {
       };
 
       const changeArticleLoad = function(frame) {
+        // console.info('HELLO LOAD');
         if (typeof frame !== 'undefined') {
           const self = frame;
           const iframe = $(self);
@@ -950,9 +952,11 @@ const documentReady = function() {
           });
 
           --numChangeFrames;
+          // console.info('NUM CHANGE FRAMES', numChangeFrames);
         }
         // alert('Change Frames: ' + numChangeFrames);
         if (numChangeFrames === 0) {
+          // console.info('NUM CHANGE FRAMES', numChangeFrames);
           $('#cmsFrameLoader').fadeOut(function() {
             container.find('#projectWebArticles').tabs({
               active: 0,
@@ -1116,7 +1120,7 @@ const documentReady = function() {
           .off('click')
           .on('click', function(event) {
             const data = $(this).data('json');
-            console.info('DATA', data, selector);
+            // console.info('DATA', data, selector);
             popup(selector, data);
             return false;
           });

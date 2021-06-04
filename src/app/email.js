@@ -348,8 +348,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       $(this).data('id'), {
         projectId,
         projectName,
-        InitialValue: 'Change',
-        AmbientContainerSelector: '#emailformdialog',
+        initialValue: 'Change',
+        ambientContainerSelector: '#emailformdialog',
       });
 
     return false;

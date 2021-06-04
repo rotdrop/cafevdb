@@ -51,22 +51,22 @@ require('project-participant-fields-display.scss');
  *
  * @param {Object} options Additional option. In particular ProjectId
  * and ProjectName are honored, and the optiones IntialValue and
- * ReloadValue which should be one of 'View' or 'Change' (though
+ * reloadValue which should be one of 'View' or 'Change' (though
  * 'Delete' should also work).
  */
 const myPersonalRecordDialog = function(record, options) {
   if (typeof options === 'undefined') {
     options = {
-      InitialValue: 'View',
-      ReloadValue: 'View',
+      initialValue: 'View',
+      reloadValue: 'View',
       projectId: -1,
     };
   }
-  if (typeof options.InitialValue === 'undefined') {
-    options.InitialValue = 'View';
+  if (typeof options.initialValue === 'undefined') {
+    options.initialValue = 'View';
   }
-  if (typeof options.ReloadValue === 'undefined') {
-    options.ReloadValue = options.InitialValue;
+  if (typeof options.reloadValue === 'undefined') {
+    options.reloadValue = options.initialValue;
   }
   if (typeof options.Project !== 'undefined') {
     options.projectName = options.project;
@@ -81,18 +81,18 @@ const myPersonalRecordDialog = function(record, options) {
     projectId: -1,
     projectName: '',
     ambientContainerSelector: PHPMyEdit.selector(),
-    DialogHolderCSSId: 'personal-record-dialog',
+    dialogHolderCSSId: 'personal-record-dialog',
     // Now special options for the dialog popup
-    InitialViewOperation: options.InitialValue === 'View',
-    InitialName: pmeOperation,
-    InitialValue: 'View',
-    ReloadName: pmeOperation,
-    ReloadValue: 'View',
-    ModalDialog: true,
+    initialViewOperation: options.initialValue === 'View',
+    initialName: pmeOperation,
+    initialValue: 'View',
+    reloadName: pmeOperation,
+    reloadValue: 'View',
+    modalDialog: true,
     modified: false,
   };
 
-  tableOptions[pmeOperation] = options.ReloadValue + '?' + pmeRecord + '=' + record;
+  tableOptions[pmeOperation] = options.reloadValue + '?' + pmeRecord + '=' + record;
   tableOptions[pmeRecord] = record;
 
   // Merge remaining options in.
@@ -104,7 +104,7 @@ const myPersonalRecordDialog = function(record, options) {
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
   } else if (options.projectId > 0) {
     tableOptions[pmeOperation] =
-      options.ReloadValue + '?' + pmeRecord + '[project_id]=' + record.projectId + '&' + pmeRecord + '[musician_id]=' + record.musicianId;
+      options.reloadValue + '?' + pmeRecord + '[project_id]=' + record.projectId + '&' + pmeRecord + '[musician_id]=' + record.musicianId;
     tableOptions.table = 'ProjectParticipants';
     tableOptions.template = 'project-participants';
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
