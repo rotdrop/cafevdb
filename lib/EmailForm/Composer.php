@@ -649,8 +649,6 @@ Störung.';
         return $keyArg[0];
       }
 
-      $this->logInfo('MUS: '.$musician->getPublicName());
-
       /** @var Entities\ProjectParticipant $projectParticipant */
       $projectParticipant = $musician->getProjectParticipantOf($this->project);
 
@@ -659,6 +657,10 @@ Störung.';
         'monetary' => $participantFields->filter(function($field) {
           /** @var Entities\ProjectParticipantField $field */
           return $field->getDataType() == FieldType::SERVICE_FEE;
+        }),
+        'deposit' => $participantFields->filter(function($field) {
+          /** @var Entities\ProjectParticipantField $field */
+          return $field->getDataType() == FieldType::SERVICE_FEE && !empty($field->getDepositDueDate());
         }),
         'files' => $participantFields->filter(function($field) {
           /** @var Entities\ProjectParticipantField $field */
@@ -673,6 +675,9 @@ Störung.';
         }),
       ];
 
+      $doSpecificField = false;
+      $doSpecificType = false;
+
       if (count($keyArg) == 2) {
         $found = false;
         $selector = strtolower($keyArg[1]);
@@ -681,10 +686,14 @@ Störung.';
           return strtolower($field->getName()) == $selector;
         });
         if ($specificField->count() == 1) {
+          $doSpecificField = true;
           $found = true;
           switch ($specificField->first()->getDataType()) {
           case FieldType::SERVICE_FEE:
             $fieldsByType = ['monetary' => $specificField ];
+            if (!empty($specificField->first()->getDepositDueDate())) {
+              $fieldsByType['deposit'] = $specificField;
+            }
             break;
           case FieldType::CLOUD_FILE:
           case FieldType::DB_FILE:
@@ -697,10 +706,9 @@ Störung.';
         } else {
           foreach (array_keys($fieldsByType) as $type) {
             $variants = $this->translationVariants($type);
-            $this->logInfo('TYPES '.$type.' / '.print_r($variants, true));
             if (array_search($selector, $variants) !== false) {
-              $this->logInfo('SPECIFIC '.$selector);
               $fieldsByType = [ $type => $fieldsByType[$type] ];
+              $doSpecificType = true;
               $found = true;
               break;
             }
@@ -764,11 +772,11 @@ Störung.';
             }
           }
           $html .= '</ul>';
-        } else if ($type == 'monetary') {
+        } else if ($type == 'monetary' || $type == 'deposit') {
 
           $headerReplacements = [
             'option' => $this->l->t('Option'),
-            'totals' => $this->l->t('Total Amount'),
+            'totals' => $type == 'monetary' ? $this->l->t('Total Amount') : $this->l->t('Deposit'),
             'received' => $this->l->t('Received'),
             'remaining' => $this->l->t('Remaining'),
             'dueDate' => $this->l->t('Due Date'),
@@ -797,7 +805,7 @@ Störung.';
             /** @var Entities\ProjectParticipantField $field */
             foreach ($fields as $field) {
 
-              $dueDate = $field->getDueDate();
+              $dueDate = $type == 'monetary' ? $field->getDueDate() : $field->getDepositDueDate();
               if (!empty($dueDate)) {
                 if (empty($totalSum['dueDate'])) {
                   $totalSum['dueDate']['min'] = $totalSum['dueDate']['max'] = $dueDate;
@@ -809,7 +817,6 @@ Störung.';
                 $dueDate = $dueDate
                          ? $formatter->formatDate($dueDate, 'medium')
                          : '';
-                $this->logInfo('DUEDATE '.$field->getName().' '.$dueDate);
               }
 
               $numberOfOptions = $field->getSelectableOptions()->count();
@@ -853,8 +860,16 @@ Störung.';
                 $memberNames = [];
 
                 if (!empty($fieldData)) {
-                  $totals = $fieldData->amountPayable();
-                  $received = $fieldData->amountPaid();
+                  switch ($type) {
+                  case 'monetary':
+                    $totals = $fieldData->amountPayable();
+                    $received = $fieldData->amountPaid();
+                    break;
+                  case 'deposit':
+                    $totals = $fieldData->depositAmount();
+                    $received = min($totals, $fieldData->amountPaid());
+                    break;
+                  }
                   $remaining = $totals - $received;
 
                   if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE
@@ -942,6 +957,9 @@ Störung.';
           ]);
           $footer = str_replace('[CSSCLASS]', $cssClass, $footer);
           $html .= $footer;
+        }
+        if ($numberOfFields > 0 && !$doSpecificType && !$doSpecificField) {
+          $html .= '<p>';
         }
       }
 
@@ -1323,7 +1341,7 @@ Störung.';
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
 
-    $messageTemplate = implode("\n", array_map(self::emitHtmlBodyStyle, self::DEFAULT_HTML_STYLES))
+    $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
     if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
