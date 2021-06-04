@@ -289,11 +289,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
   }
 
-  public function needsPhpSession():bool
-  {
-    return false;
-  }
-
   protected function participantFieldMultiplicityNames()
   {
     $multiplicities = array_values(DBTypes\EnumParticipantFieldMultiplicity::toArray());
@@ -414,7 +409,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   public function getProjectId() { return $this->projectId; }
 
-  public function cssClass()
+  public function cssClass():string
   {
     return $this->template;
   }

@@ -36,7 +36,7 @@ interface IRenderer
 
   public function cssClass():string;
 
-  public function needsPhpSession():bool;
+  public function needPhpSession():bool;
 }
 
 // Local Variables: ***

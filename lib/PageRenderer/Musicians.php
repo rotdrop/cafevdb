@@ -149,7 +149,7 @@ class Musicians extends PMETableViewBase
     $this->projectMode = false;
   }
 
-  public function cssClass() { return self::CSS_CLASS; }
+  public function cssClass():string { return self::CSS_CLASS; }
 
   public function enableProjectMode()
   {

@@ -59,6 +59,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
+use OCA\CAFEVDB\Response\PreRenderedTemplateResponse;
 
 class PmeTableController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -157,16 +158,6 @@ class PmeTableController extends Controller {
         $this->parameterService->getParam($this->pme->cgiSysName('_reloadlist'))
       ) !== null;
 
-      $historySize = -1;
-      $historyPosition = -1;
-      if ($dialogMode || $reloadAction) {
-        $this->session->close();
-      } else {
-        $this->historyService->push($this->parameterService->getParams());
-        $historySize = $this->historyService->size();
-        $historyPosition = $this->historyService->position();
-      }
-
       if (empty($templateRenderer)) {
         return self::grumble(['error' => $this->l->t('missing arguments'),
                               'message' => $this->l->t('No template-renderer submitted.'), ]);
@@ -181,6 +172,20 @@ class PmeTableController extends Controller {
       }
       // $renderer->navigation(false); NOPE, navigation is needed, number of query records may change.
 
+      $historySize = -1;
+      $historyPosition = -1;
+      if ($dialogMode || $reloadAction) {
+        if (!$renderer->needPhpSession()) {
+          $this->logInfo('Closing session');
+          $this->session->close();
+        }
+      } else {
+        $this->historyService->push($this->parameterService->getParams());
+        $historySize = $this->historyService->size();
+        $historyPosition = $this->historyService->position();
+      }
+
+
       $template = 'pme-table';
       $templateParameters = [
         'renderer' => $renderer,
@@ -189,22 +194,25 @@ class PmeTableController extends Controller {
         'recordId' => $this->pme->getCGIRecordId(),
       ];
 
-      $response = new TemplateResponse($this->appName, $template, $templateParameters, 'blank');
+      $response = new PreRenderedTemplateResponse($this->appName, $template, $templateParameters, 'blank');
 
       $response->addHeader('X-'.$this->appName.'-history-size', $historySize);
       $response->addHeader('X-'.$this->appName.'-history-position', $historyPosition);
 
+      if ($renderer->needPhpSession()) {
+        $response->preRender();
+      }
+
       if (!$dialogMode && !$reloadAction) {
         $this->historyService->store();
-        if (!$renderer->needsPhpSession()) {
-          $this->session->close();
-        }
+        $this->logInfo('Closing session');
+        $this->session->close();
       }
 
       return $response;
 
     } catch (\Throwable $t) {
-      $this->logException($t, __METHOD__);
+      $this->logException($t);
       return self::grumble($this->exceptionChainData($t));
     }
   }

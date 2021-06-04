@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
+use OCA\CAFEVDB\Response\PreRenderedTemplateResponse;
 
 class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
@@ -313,7 +314,7 @@ class PageController extends Controller {
 
     // renderAs = admin, user, blank
     // $renderAs = 'user';
-    $response = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
+    $response = new PreRenderedTemplateResponse($this->appName, $template, $templateParameters, $renderAs);
     $response->addHeader('X-'.$this->appName.'-history-size', $historySize);
     $response->addHeader('X-'.$this->appName.'-history-position', $historyPosition);
 
@@ -323,16 +324,22 @@ class PageController extends Controller {
     $policy->addAllowedFrameDomain('*');
     $response->setContentSecurityPolicy($policy);
 
+    if ($renderer->needPhpSession()) {
+      $this->logInfo('PRE-RENDER FOR TEMPLATE '.$template);
+      $response->preRender();
+    } else {
+      $this->logInfo('NO PRE-RENDER FOR TEMPLATE '.$template);
+    }
+
     // ok no exception, so flush the history to the session, when we
     // got so far.
     try {
+      $this->logInfo('Closing session');
       $this->historyService->store();
+      $this->session->close();
     } catch (\Throwable $t) {
       // log, but ignore otherwise
       $this->logException($t);
-    }
-    if (!$renderer->needsPhpSession()) {
-      $this->session->close();
     }
 
     return $response;

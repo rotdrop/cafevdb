@@ -129,7 +129,7 @@ class Projects extends PMETableViewBase
     }
   }
 
-  public function needsPhpSession():bool
+  public function needPhpSession():bool
   {
     return true;
   }
