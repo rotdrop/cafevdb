@@ -9,7 +9,7 @@
     }
   ],
   "config": {
-    "vendor-dir": "vendor-orm"
+    "vendor-dir": "vendor-wrapped"
   },
   "require": {
     "acelaya/doctrine-enum-type": "^2.5",

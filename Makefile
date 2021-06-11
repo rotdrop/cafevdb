@@ -74,6 +74,9 @@ composer-download:
 composer: stamp.composer-core-versions
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
+composer-wrapped: composer-wrapped.json
+	env COMPOSER="$<" $(COMPOSER) install $(COMPOSER_OPTIONS)
+
 .PHONY: selectize
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
 
