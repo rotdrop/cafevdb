@@ -1,0 +1,44 @@
+{
+  "name": "rotdrop/cafevdb-nextcloud",
+  "description": "Orchestra Management App",
+  "type": "project",
+  "license": "AGPL",
+  "authors": [
+    {
+      "name": "Claus-Justus Heine"
+    }
+  ],
+  "config": {
+    "vendor-dir": "vendor-orm"
+  },
+  "require": {
+    "acelaya/doctrine-enum-type": "^2.5",
+    "beberlei/doctrineextensions": "^1.2.0",
+    "cjh/doctrine-on-update-extension": "dev-master",
+    "doctrine/orm": "dev-production/cafevdb",
+    "gedmo/doctrine-extensions": "dev-production/cafevdb",
+    "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
+    "oro/doctrine-extensions": "dev-master",
+    "ramsey/uuid-doctrine": "^1.6"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "3rdparty/doctrine-orm"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/mediamonks-doctrine-extensions"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/doctrine-on-update-extension"
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/gedmo-doctrine-extensions"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
