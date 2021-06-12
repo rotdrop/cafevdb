@@ -26,14 +26,26 @@ COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--prefer-dist
 
+###############################################################################
+#
+# Some composer packages must be wrapped into a different namespace to
+# avoid conflicts with the ambient cloud software, notably
+# Doctrine/ORM and all related packages.
+#
+
+WRAPPER_NAMESPACE = OCA\\CAFEVDB\\Wrapped
+
 NAMESPACE_WRAPPER_DIRS =\
  lib/Database/Doctrine\
  lib/Database/Legacy
 NAMESPACE_WRAPPER_FILES =\
+ config/cli-config.php\
+ lib/Common/Uuid.php\
+ lib/Controller/ImagesController.php\
+ lib/Controller/ProjectParticipantFieldsController.php\
+ lib/Controller/SepaDebitMandatesController.php\
  lib/Database/Connection.php\
  lib/Database/EntityManager.php\
- lib/Controller/ImagesController.php\
- lib/Controller/SepaDebitMandatesController.php\
  lib/Service/Finance/DoNothingReceivablesGenerator.php\
  lib/Service/Finance/IRecurringReceivablesGenerator.php\
  lib/Service/Finance/SepaBulkTransactionService.php\
@@ -41,8 +53,31 @@ NAMESPACE_WRAPPER_FILES =\
  lib/Service/Finance/PeriodicReceivablesGenerator.php\
  lib/Service/ContactsService.php\
  lib/Traits/EntityManagerTrait.php
+
+# The complete list of affected files
 NAMESPACE_WRAPPER_VICTIMS = $(foreach dir,$(NAMESPACE_WRAPPER_DIRS),$(shell find $(dir) -name '*.php'))\
  $(NAMESPACE_WRAPPER_FILES)
+
+# list of namespaces to wrap
+WRAPPED_NAMESPACES =\
+ Acelaya\\Doctrine\
+ Doctrine\
+ DoctrineExtensions\
+ CJH\\Doctrine\\Extensions\
+ Gedmo\
+ MediaMonks\\Doctrine\
+ Oro\\DBAL\
+ Oro\\ORM\
+ Ramsey\\Uuid\
+ Ramsey\\Uuid\\Doctrine
+
+WRAPPER_SED_FORWARD = $(foreach ns,$(WRAPPED_NAMESPACES),'s/use $(ns)/use $(WRAPPER_NAMESPACE)\\$(ns)/g')
+WRAPPER_SED_REVERSE = $(foreach ns,$(WRAPPED_NAMESPACES),'s/use $(WRAPPER_NAMESPACE)\\$(ns)/use $(ns)/g')
+
+#
+#
+#
+###############################################################################
 
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
 PHPDOC_TEMPLATE=
@@ -105,8 +140,12 @@ $(BUILDDIR)/vendor-wrapped: composer-wrapped.lock
 
 vendor/bin/php-scoper: composer
 
-vendor-wrapped: vendor/bin/php-scoper $(BUILDDIR)/vendor-wrapped
+vendor-wrapped: Makefile vendor/bin/php-scoper scoper.inc.php $(BUILDDIR)/vendor-wrapped
 	vendor/bin/php-scoper add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
+# scoper does not handle symlinks
+	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
+# scoper does not preserve executable bits
+	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
 
 vendor-wrapped/autoload.php: vendor-wrapped
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
@@ -114,10 +153,18 @@ vendor-wrapped/autoload.php: vendor-wrapped
 namespace-wrapper: vendor-wrapped/autoload.php
 
 namespace-wrapper-patch: $(NAMESPACE_WRAPPER_VICTIMS)
-	@sed -i 's/use Doctrine/use OCA\\CAFEVDB\\Wrapped/g' $(NAMESPACE_WRAPPER_VICTIMS)
+	@sed -i $(foreach NS,$(WRAPPED_NAMESPACES),\
+ -e 's/use $(NS)/use $(WRAPPER_NAMESPACE)\\$(NS)/g'\
+ -e 's/new \\$(NS)/new \\$(WRAPPER_NAMESPACE)\\$(NS)/g'\
+)\
+ $(NAMESPACE_WRAPPER_VICTIMS)
 
 namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
-	@sed -i 's/use OCA\\CAFEVDB\\Wrapped/use Doctrine/g' $(NAMESPACE_WRAPPER_VICTIMS)
+	@sed -i $(foreach NS,$(WRAPPED_NAMESPACES),\
+ -e 's/use $(WRAPPER_NAMESPACE)\\$(NS)/use $(NS)/g'\
+ -e 's/new \\$(WRAPPER_NAMESPACE)\\$(NS)/new \\$(NS)/g'\
+)\
+ $(NAMESPACE_WRAPPER_VICTIMS)
 
 .PHONY: selectize
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
@@ -272,12 +319,12 @@ appstore: $(BUILDDIR)/core-exclude
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
 .PHONY: verifydb
-verifydb:
-	$(SRCDIR)/vendor/bin/doctrine orm:validate-schema
+verifydb: $(ABSSRCDIR)/vendor-wrapped/bin/doctrine
+	$< orm:validate-schema
 
 .PHONY: updatesql
-updatesql:
-	$(SRCDIR)/vendor/bin/doctrine orm:schema-tool:update --dump-sql
+updatesql: $(ABSSRCDIR)/vendor-wrapped/bin/doctrine
+	$< orm:schema-tool:update --dump-sql
 
 .PHONY: test
 test: composer
