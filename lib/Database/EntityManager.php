@@ -447,7 +447,7 @@ class EntityManager extends EntityManagerDecorator
     $softDeletableListener = new \Gedmo\SoftDeleteable\SoftDeleteableListener();
     $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($softDeletableListener);
-    $config->addFilter('soft-deleteable', '\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter');
+    $config->addFilter('soft-deleteable', \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
 
     // blameable
     $blameableListener = new \Gedmo\Blameable\BlameableListener();
