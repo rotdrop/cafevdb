@@ -155,14 +155,14 @@ namespace-wrapper: vendor-wrapped/autoload.php
 namespace-wrapper-patch: $(NAMESPACE_WRAPPER_VICTIMS)
 	@sed -i $(foreach NS,$(WRAPPED_NAMESPACES),\
  -e 's/use $(NS)/use $(WRAPPER_NAMESPACE)\\$(NS)/g'\
- -e 's/new \\$(NS)/new \\$(WRAPPER_NAMESPACE)\\$(NS)/g'\
+ -e 's/ \\$(NS)/ \\$(WRAPPER_NAMESPACE)\\$(NS)/g'\
 )\
  $(NAMESPACE_WRAPPER_VICTIMS)
 
 namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
 	@sed -i $(foreach NS,$(WRAPPED_NAMESPACES),\
  -e 's/use $(WRAPPER_NAMESPACE)\\$(NS)/use $(NS)/g'\
- -e 's/new \\$(WRAPPER_NAMESPACE)\\$(NS)/new \\$(NS)/g'\
+ -e 's/ \\$(WRAPPER_NAMESPACE)\\$(NS)/ \\$(NS)/g'\
 )\
  $(NAMESPACE_WRAPPER_VICTIMS)
 
