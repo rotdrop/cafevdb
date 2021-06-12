@@ -366,9 +366,9 @@ class EntityManager extends EntityManagerDecorator
    */
   private function registerCustomFunctions(Configuration $config)
   {
-    // $config->addCustomStringFunction('timestampdiff', 'Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff');
-    $config->addCustomDatetimeFunction('timestampdiff', 'DoctrineExtensions\Query\Mysql\TimestampDiff');
-    $config->addCustomStringFunction('greatest', 'DoctrineExtensions\Query\Mysql\Greatest');
+    // $config->addCustomStringFunction('timestampdiff', \Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff::class);
+    $config->addCustomDatetimeFunction('timestampdiff', \DoctrineExtensions\Query\Mysql\TimestampDiff::class);
+    $config->addCustomStringFunction('greatest', \DoctrineExtensions\Query\Mysql\Greatest::class);
   }
 
   private function createSimpleConfiguration():array
