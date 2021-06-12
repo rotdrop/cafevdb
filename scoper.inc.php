@@ -20,4 +20,27 @@ return [
       ->followLinks(true)
       ->in('vendor-wrapped'),
   ],
+  'patchers' => [
+    function (string $filePath, string $prefix, string $content): string {
+      //
+      // PHP-Parser patch conditions for file targets
+      //
+      // if ($filePath === '/path/to/offending/file') {
+      //   return preg_replace(
+      //     "%\$class = 'Humbug\\\\Format\\\\Type\\\\' . \$type;%",
+      //     '$class = \'' . $prefix . '\\\\Humbug\\\\Format\\\\Type\\\\\' . $type;',
+      //     $content
+      //   );
+      // }
+      if (strpos($filePath, 'doctrine/orm/lib/Doctrine/ORM') !== false) {
+        return preg_replace(
+          "%(constant|defined)\\('Doctrine\\\\%",
+          "\$1('" . $prefix . "\\Doctrine\\",
+          $content
+        );
+      }
+
+      return $content;
+    },
+  ],
 ];
