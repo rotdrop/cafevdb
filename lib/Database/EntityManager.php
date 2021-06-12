@@ -490,7 +490,7 @@ class EntityManager extends EntityManagerDecorator
 
     $config->setDefaultQueryHint(
       \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-      'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+      \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
     );
     $config->setDefaultQueryHint(
       \Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
