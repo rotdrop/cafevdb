@@ -41,8 +41,8 @@ return [
       }
       if (strpos($filePath, 'gedmo/doctrine-extensions/src/Mapping/MappedEventSubscriber.php') !== false) {
         return preg_replace(
-          "%'Gedmo\\\\Mapping%",
-          "'" . $prefix . "\\\\Gedmo\\\\Mapping",
+          "%'Gedmo\\\\%",
+          "'" . $prefix . "\\\\Gedmo\\\\",
           $content
         );
       }
