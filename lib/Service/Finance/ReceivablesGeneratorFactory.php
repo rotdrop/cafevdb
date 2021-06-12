@@ -23,8 +23,6 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use Ramsey\Uuid\Uuid;
-
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use OCP\ILogger;

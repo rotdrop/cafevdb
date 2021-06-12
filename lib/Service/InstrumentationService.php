@@ -23,12 +23,10 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Ramsey\Uuid\Uuid;
-
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
 use OCA\CAFEVDB\Database\Legacy\Util as DataBaseUtil;
+use OCA\CAFEVDB\Common\Uuid;
 
 /**
  * General support service, kind of inconsequent glue between

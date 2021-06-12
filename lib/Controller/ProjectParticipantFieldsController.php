@@ -23,8 +23,6 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Ramsey\Uuid\Uuid;
-
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -43,6 +41,7 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGenerator;
 
 class ProjectParticipantFieldsController extends Controller {
