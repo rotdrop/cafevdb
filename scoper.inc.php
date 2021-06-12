@@ -52,6 +52,18 @@ return [
       }
       return $content;
     },
+    // Query/Lexer.php: $name = 'Doctrine\\ORM\\Query\\Lexer::T_' . strtoupper($value);
+    function(string $filePath, string $prefix, string $content): string {
+      if (strpos($filePath, 'Doctrine/ORM/Query/Lexer.php') !== false) {
+        return preg_replace(
+          '%\\$name = \'Doctrine\\\\\\\\ORM%',
+          '$name = \'' . $prefix . '\\\\\\Doctrine\\\\\\ORM',
+          $content
+        );
+      }
+      return $content;
+    },
+    // Gedmo behaviours, multiplex with ODM
     function(string $filePath, string $prefix, string $content): string {
       if (strpos($filePath, 'gedmo/doctrine-extensions/src/Mapping/MappedEventSubscriber.php') !== false) {
         return preg_replace(
