@@ -21,7 +21,7 @@ return [
       ->in('vendor-wrapped'),
   ],
   'patchers' => [
-    function (string $filePath, string $prefix, string $content): string {
+    function(string $filePath, string $prefix, string $content): string {
       //
       // PHP-Parser patch conditions for file targets
       //
@@ -39,6 +39,20 @@ return [
           $content
         );
       }
+      return $content;
+    },
+    // /** @var array<\Doctrine\ORM\Mapping\JoinColumn> */
+    function(string $filePath, string $prefix, string $content): string {
+      if (strpos($filePath, 'doctrine/orm/lib/Doctrine/ORM') !== false) {
+        return preg_replace(
+          '%(?<!' . preg_quote($prefix) . ')\\\\Doctrine\\\\%',
+          $prefix . '\\Doctrine\\',
+          $content
+        );
+      }
+      return $content;
+    },
+    function(string $filePath, string $prefix, string $content): string {
       if (strpos($filePath, 'gedmo/doctrine-extensions/src/Mapping/MappedEventSubscriber.php') !== false) {
         return preg_replace(
           "%'Gedmo\\\\%",
@@ -46,8 +60,15 @@ return [
           $content
         );
       }
-
       return $content;
+    },
+    // Remove scoper namespace prefix from Symfony polyfills namespace
+    function(string $filePath, string $prefix, string $contents): string {
+      if (!preg_match('{vendor-wrapped/symfony/polyfill[^/]*/bootstrap.php}i', $filePath)) {
+        return $contents;
+      }
+
+      return preg_replace('/namespace .+;/', '', $contents);
     },
   ],
 ];
