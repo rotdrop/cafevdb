@@ -25,6 +25,25 @@ else
 COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--prefer-dist
+
+NAMESPACE_WRAPPER_DIRS =\
+ lib/Database/Doctrine\
+ lib/Database/Legacy
+NAMESPACE_WRAPPER_FILES =\
+ lib/Database/Connection.php\
+ lib/Database/EntityManager.php\
+ lib/Controller/ImagesController.php\
+ lib/Controller/SepaDebitMandatesController.php\
+ lib/Service/Finance/DoNothingReceivablesGenerator.php\
+ lib/Service/Finance/IRecurringReceivablesGenerator.php\
+ lib/Service/Finance/SepaBulkTransactionService.php\
+ lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php\
+ lib/Service/Finance/PeriodicReceivablesGenerator.php\
+ lib/Service/ContactsService.php\
+ lib/Traits/EntityManagerTrait.php
+NAMESPACE_WRAPPER_VICTIMS = $(foreach dir,$(NAMESPACE_WRAPPER_DIRS),$(shell find $(dir) -name '*.php'))\
+ $(NAMESPACE_WRAPPER_FILES)
+
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
 PHPDOC_TEMPLATE=
 #--template=clean
@@ -93,6 +112,12 @@ vendor-wrapped/autoload.php: vendor-wrapped
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
 
 namespace-wrapper: vendor-wrapped/autoload.php
+
+namespace-wrapper-patch: $(NAMESPACE_WRAPPER_VICTIMS)
+	@sed -i 's/use Doctrine/use OCA\\CAFEVDB\\Wrapped/g' $(NAMESPACE_WRAPPER_VICTIMS)
+
+namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
+	@sed -i 's/use OCA\\CAFEVDB\\Wrapped/use Doctrine/g' $(NAMESPACE_WRAPPER_VICTIMS)
 
 .PHONY: selectize
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
