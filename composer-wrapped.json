@@ -19,7 +19,8 @@
     "gedmo/doctrine-extensions": "dev-production/cafevdb",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
     "oro/doctrine-extensions": "dev-master",
-    "ramsey/uuid-doctrine": "^1.6"
+    "ramsey/uuid-doctrine": "^1.6",
+    "ramsey/uuid": "^4"
   },
   "repositories": [
     {
