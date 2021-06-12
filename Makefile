@@ -71,9 +71,6 @@ WRAPPED_NAMESPACES =\
  Ramsey\\Uuid\
  Ramsey\\Uuid\\Doctrine
 
-WRAPPER_SED_FORWARD = $(foreach ns,$(WRAPPED_NAMESPACES),'s/use $(ns)/use $(WRAPPER_NAMESPACE)\\$(ns)/g')
-WRAPPER_SED_REVERSE = $(foreach ns,$(WRAPPED_NAMESPACES),'s/use $(WRAPPER_NAMESPACE)\\$(ns)/use $(ns)/g')
-
 #
 #
 #
@@ -153,17 +150,17 @@ vendor-wrapped/autoload.php: vendor-wrapped
 namespace-wrapper: vendor-wrapped/autoload.php
 
 namespace-wrapper-patch: $(NAMESPACE_WRAPPER_VICTIMS)
-	@sed -i $(foreach NS,$(WRAPPED_NAMESPACES),\
+	@sed -E -i ${foreach NS,$(WRAPPED_NAMESPACES),\
  -e 's/use $(NS)/use $(WRAPPER_NAMESPACE)\\$(NS)/g'\
- -e 's/ \\$(NS)/ \\$(WRAPPER_NAMESPACE)\\$(NS)/g'\
-)\
+ -e 's/([( ])\\$(NS)/\1\\$(WRAPPER_NAMESPACE)\\$(NS)/g'\
+}\
  $(NAMESPACE_WRAPPER_VICTIMS)
 
 namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
-	@sed -i $(foreach NS,$(WRAPPED_NAMESPACES),\
+	@sed -E -i ${foreach NS,$(WRAPPED_NAMESPACES),\
  -e 's/use $(WRAPPER_NAMESPACE)\\$(NS)/use $(NS)/g'\
- -e 's/ \\$(WRAPPER_NAMESPACE)\\$(NS)/ \\$(NS)/g'\
-)\
+ -e 's/([( ])\\$(WRAPPER_NAMESPACE)\\$(NS)/\1\\$(NS)/g'\
+}\
  $(NAMESPACE_WRAPPER_VICTIMS)
 
 .PHONY: selectize
