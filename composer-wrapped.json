@@ -13,11 +13,13 @@
   },
   "require": {
     "acelaya/doctrine-enum-type": "^2.5",
+    "myclabs/php-enum": "^1.8",
     "beberlei/doctrineextensions": "^1.2.0",
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/orm": "dev-production/cafevdb",
     "gedmo/doctrine-extensions": "dev-production/cafevdb",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
+    "nesbot/carbon": "^2.46",
     "oro/doctrine-extensions": "dev-master",
     "ramsey/uuid-doctrine": "^1.6",
     "ramsey/uuid": "^4"

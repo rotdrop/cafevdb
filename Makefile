@@ -46,11 +46,13 @@ NAMESPACE_WRAPPER_FILES =\
  lib/Controller/SepaDebitMandatesController.php\
  lib/Database/Connection.php\
  lib/Database/EntityManager.php\
+ lib/PageRenderer/ProjectParticipantFields.php\
  lib/Service/Finance/DoNothingReceivablesGenerator.php\
  lib/Service/Finance/IRecurringReceivablesGenerator.php\
  lib/Service/Finance/SepaBulkTransactionService.php\
  lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php\
  lib/Service/Finance/PeriodicReceivablesGenerator.php\
+ lib/Service/Finance/FinanceService.php\
  lib/Service/ContactsService.php\
  lib/Traits/EntityManagerTrait.php
 
@@ -61,11 +63,13 @@ NAMESPACE_WRAPPER_VICTIMS = $(foreach dir,$(NAMESPACE_WRAPPER_DIRS),$(shell find
 # list of namespaces to wrap
 WRAPPED_NAMESPACES =\
  Acelaya\\Doctrine\
+ Carbon\
  Doctrine\
  DoctrineExtensions\
  CJH\\Doctrine\\Extensions\
  Gedmo\
  MediaMonks\\Doctrine\
+ MyCLabs\\Enum\
  Oro\\DBAL\
  Oro\\ORM\
  Ramsey\\Uuid\

@@ -22,7 +22,6 @@
     "ioncube/php-openssl-cryptor": "dev-master",
     "mikehaertl/php-pdftk": "^0.10.0",
     "mpdf/mpdf": "^8.0",
-    "nesbot/carbon": "^2.46",
     "pear/auth_sasl": "dev-master",
     "pear/mail": "dev-master",
     "pear/net_imap": "dev-master",
