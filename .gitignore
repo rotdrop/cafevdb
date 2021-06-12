@@ -6,8 +6,8 @@ package-lock.json
 lib/tooltips.php.new
 \#*\#
 .#*
-vendor
-composer.lock
+vendor*
+composer*.lock
 composer.json
 stamp*
 ajax

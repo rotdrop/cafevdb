@@ -24,7 +24,7 @@ COMPOSER=php $(build_tools_directory)/composer.phar
 else
 COMPOSER=$(COMPOSER_SYSTEM)
 endif
-COMPOSER_OPTIONS=--no-dev --prefer-dist
+COMPOSER_OPTIONS=--prefer-dist
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
 PHPDOC_TEMPLATE=
 #--template=clean
@@ -59,7 +59,7 @@ pre-build:
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-build: pre-build composer npm cleanup
+build: pre-build composer npm
 .PHONY: build
 
 .PHONY: comoser-download
@@ -74,8 +74,25 @@ composer-download:
 composer: stamp.composer-core-versions
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
-composer-wrapped: composer-wrapped.json
-	env COMPOSER="$<" $(COMPOSER) install $(COMPOSER_OPTIONS)
+composer-wrapped.lock: composer-wrapped.json
+	rm -f composer-wrapped.lock
+
+$(BUILDDIR)/vendor-wrapped: composer-wrapped.lock
+	mkdir -p $(BUILDDIR)
+	ln -fs ../3rdparty $(BUILDDIR)
+	ln -fs ../vendor $(BUILDDIR)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+
+vendor/bin/php-scoper: composer
+
+vendor-wrapped: vendor/bin/php-scoper $(BUILDDIR)/vendor-wrapped
+	vendor/bin/php-scoper add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
+
+vendor-wrapped/autoload.php: vendor-wrapped
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
+
+namespace-wrapper: vendor-wrapped/autoload.php
 
 .PHONY: selectize
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
@@ -108,7 +125,7 @@ npm-build: npm-init
 # Removes the appstore build
 .PHONY: clean
 clean: ## Tidy up local environment
-	rm -rf ./build
+	rm -rf $(BUILDDIR)
 	rm -rf ./js/*
 	rm -rf ./css/*
 
@@ -116,12 +133,12 @@ clean: ## Tidy up local environment
 # npm
 .PHONY: distclean
 distclean: clean ## Clean even more, calls clean
-	rm -rf vendor
+	rm -rf vendor*
 	rm -rf node_modules
 
 .PHONY: realclean
 realclean: distclean ## Really delete everything but the bare source files
-	rm -f composer.lock
+	rm -f composer*.lock
 	rm -f composer.json
 	rm -f stamp.composer-core-versions
 	rm -f package-lock.json
