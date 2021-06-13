@@ -164,7 +164,7 @@ trait FindLikeTrait
     $this->generateFindByWhere($qb, $queryParts);
 
     // $this->log('SQL '.$qb->getQuery()->getSql());
-    // $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
+    // $this->log('PARAM '.print_r($qb->getQuery()->getParameters()->toArray(), true));
 
     return $qb->getQuery()->getResult();
   }
@@ -377,8 +377,10 @@ trait FindLikeTrait
 
       $fieldType = null;
       if ($tableAlias == 'mainTable') {
-        // try to deduce the type as this is NOT done by ORM here
-        $fieldType = $this->getClassMetadata()->getTypeOfField($key);
+        if (!is_array($value)) {
+          // try to deduce the type as this is NOT done by ORM here
+          $fieldType = $this->getClassMetadata()->getTypeOfField($key);
+        }
       }
       $qb->setParameter($param, $value, $fieldType);
     }
