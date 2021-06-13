@@ -19,9 +19,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\QuoteStrategy;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\QuoteStrategy;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
  * A set of rules for determining the physical column, alias and table quotes
@@ -37,7 +37,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
      * @param bool $force
      *
      * @return string
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\DBALException
      */
     private function getQuotedName(AbstractPlatform $platform, $name, $force = false)
     {

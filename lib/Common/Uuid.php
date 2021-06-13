@@ -23,12 +23,12 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use Ramsey\Uuid\UuidInterface;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * Customize with some defaults, like a random node.
  */
-class Uuid extends \Ramsey\Uuid\Uuid
+class Uuid extends \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid
 {
   /** @var Ramsey\Uuid\Provider\NodeProviderInterface */
   private static $nodeProvider;
@@ -103,7 +103,7 @@ class Uuid extends \Ramsey\Uuid\Uuid
   private static function createNode()
   {
     if (empty(self::$nodeProvider)) {
-      self::$nodeProvider = new \Ramsey\Uuid\Provider\Node\RandomNodeProvider;
+      self::$nodeProvider = new \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Provider\Node\RandomNodeProvider;
     }
     return self::$nodeProvider->getNode();
   }

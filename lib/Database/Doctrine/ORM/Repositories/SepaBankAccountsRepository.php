@@ -25,8 +25,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use Doctrine\ORM\Query;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /**
  * @method Entities\SepaBankAccount find($id)

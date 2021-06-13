@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use \DateTimeImmutable as DateTime;
 

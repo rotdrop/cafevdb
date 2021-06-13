@@ -23,11 +23,11 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable;
 
-use Gedmo\Sluggable\Handler\SlugHandlerInterface;
-use Doctrine\Persistence\Mapping\ClassMetadata;
-use Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
-use Gedmo\Sluggable\SluggableListener;
-use Gedmo\Sluggable\Util\Urlizer as Transliterator;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Handler\SlugHandlerInterface;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Util\Urlizer as Transliterator;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\ConfigService;

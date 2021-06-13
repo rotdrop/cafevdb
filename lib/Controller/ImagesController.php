@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 use OCP\Files\IRootFolder;
 use OCP\AppFramework\Controller;

@@ -24,7 +24,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use Sabre\VObject\Component\VCard;
-use Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\Contacts\IManager as IContactsManager;

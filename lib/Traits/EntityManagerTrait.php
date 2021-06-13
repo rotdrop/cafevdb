@@ -23,8 +23,8 @@
 
 namespace OCA\CAFEVDB\Traits;
 
-use Doctrine\Common\Collections;
-use Doctrine\ORM\EntityRepository;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator as ClassMetadata;
@@ -186,7 +186,7 @@ trait EntityManagerTrait {
    *
    * @return void
    *
-   * @throws \Doctrine\ORM\OptimisticLockException If a version check on an entity that
+   * @throws \OCA\CAFEVDB\Wrapped\Doctrine\ORM\OptimisticLockException If a version check on an entity that
    *         makes use of optimistic locking fails.
    * @throws ORMException
    */
@@ -214,7 +214,7 @@ trait EntityManagerTrait {
    * Finds an entity by its primary key / identifier.
    *
    * @param mixed    $id          The identifier.
-   * @param int|null $lockMode    One of the \Doctrine\DBAL\LockMode::* constants
+   * @param int|null $lockMode    One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants
    *                              or NULL if no specific lock mode should be used
    *                              during the search.
    * @param int|null $lockVersion The lock version.
@@ -258,7 +258,7 @@ trait EntityManagerTrait {
    *
    * @param string $filterName
    *
-   * @return \Doctrine\ORM\Query\Filter\SQLFilter The enabled filter.
+   * @return \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter The enabled filter.
    */
   protected function enableFilter(string $filterName)
   {

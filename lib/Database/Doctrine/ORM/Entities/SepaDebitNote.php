@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Debit notes from destination accounts.

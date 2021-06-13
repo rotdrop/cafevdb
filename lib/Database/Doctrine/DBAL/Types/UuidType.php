@@ -23,9 +23,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Doctrine\UuidBinaryType;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine\UuidBinaryType;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
  * Like UuidBinaryType, but implement a more allowing

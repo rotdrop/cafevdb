@@ -13,30 +13,45 @@
   },
   "require": {
     "acelaya/doctrine-enum-type": "^2.5",
+    "myclabs/php-enum": "^1.8",
     "beberlei/doctrineextensions": "^1.2.0",
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/orm": "dev-production/cafevdb",
     "gedmo/doctrine-extensions": "dev-production/cafevdb",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
+    "nesbot/carbon": "^2.46",
     "oro/doctrine-extensions": "dev-master",
-    "ramsey/uuid-doctrine": "^1.6"
+    "ramsey/uuid-doctrine": "^1.6",
+    "ramsey/uuid": "^4"
   },
   "repositories": [
     {
       "type": "path",
-      "url": "3rdparty/doctrine-orm"
+      "url": "3rdparty/doctrine-orm",
+      "options": {
+        "symlink": false
+      }
     },
     {
       "type": "path",
-      "url": "3rdparty/mediamonks-doctrine-extensions"
+      "url": "3rdparty/mediamonks-doctrine-extensions",
+      "options": {
+        "symlink": false
+      }
     },
     {
       "type": "path",
-      "url": "3rdparty/doctrine-on-update-extension"
+      "url": "3rdparty/doctrine-on-update-extension",
+      "options": {
+        "symlink": false
+      }
     },
     {
       "type": "path",
-      "url": "3rdparty/gedmo-doctrine-extensions"
+      "url": "3rdparty/gedmo-doctrine-extensions",
+      "options": {
+        "symlink": false
+      }
     }
   ],
   "minimum-stability": "dev",

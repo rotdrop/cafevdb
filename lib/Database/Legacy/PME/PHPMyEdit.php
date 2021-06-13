@@ -26,16 +26,16 @@ use \OCP\IRequest;
 use \OCP\ILogger;
 use \OCP\IL10N;
 
-use Doctrine\DBAL\Driver\ResultStatement;
-use Doctrine\DBAL\FetchMode;
-use Doctrine\DBAL\DBALException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver\ResultStatement;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\DBALException;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Common\Util;
 
 /**
- * Override phpMyEdit to use Doctrine DBAL.
+ * Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL.
  */
 class PHPMyEdit extends \phpMyEdit
 {

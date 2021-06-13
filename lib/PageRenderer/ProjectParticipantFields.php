@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use \Carbon\Carbon as DateTime;
+use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 

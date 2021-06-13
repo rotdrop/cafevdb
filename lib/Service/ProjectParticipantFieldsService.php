@@ -22,7 +22,6 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Ramsey\Uuid\UuidInterface;
 use \Doctrine\Common\Collections;
 
 use OCA\CAFEVDB\Database\EntityManager;

@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable;
 
-use MediaMonks\Doctrine\Transformable;
+use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
 use OCA\CAFEVDB\Service\EncryptionService;
 

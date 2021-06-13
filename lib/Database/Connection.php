@@ -22,12 +22,12 @@
 
 namespace OCA\CAFEVDB\Database;
 
-use Doctrine\DBAL\DriverManager;
-use Doctrine\Common\EventManager;
-use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\Driver;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\DriverManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Configuration;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver;
 
-class Connection extends \Doctrine\DBAL\Connection
+class Connection extends \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 

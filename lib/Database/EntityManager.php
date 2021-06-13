@@ -28,25 +28,25 @@ use OCP\ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 
-use Doctrine\Common\Annotations\Reader as AnnotationReader;
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\Decorator\EntityManagerDecorator;
-use Doctrine\DBAL\Connection as DatabaseConnection;
-use Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use Doctrine\ORM\Configuration;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\Reader as AnnotationReader;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
 
-use MediaMonks\Doctrine\Transformable;
-use Ramsey\Uuid\Doctrine as Ramsey;
-use CJH\Doctrine\Extensions as CJH;
+use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
+use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
 
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use MyCLabs\Enum\Enum as EnumType;
+use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 
@@ -76,7 +76,7 @@ class EntityManager extends EntityManagerDecorator
   const PROXY_DIR = __DIR__ . "/Doctrine/ORM/Proxies";
   const DEV_MODE = true;
 
-  /** @var \Doctrine\ORM\EntityManager */
+  /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager */
   private $entityManager;
 
   /** @var EncryptionService */
@@ -290,10 +290,10 @@ class EntityManager extends EntityManagerDecorator
       }
 
       // Override datetime stuff
-      Type::overrideType('datetime', \Carbon\Doctrine\DateTimeType::class);
-      Type::overrideType('datetime_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
-      Type::overrideType('datetimetz', \Carbon\Doctrine\DateTimeType::class);
-      Type::overrideType('datetimetz_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
+      Type::overrideType('datetime', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetime_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
+      Type::overrideType('datetimetz', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetimetz_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
       $this->typesBound = true;
     } catch (\Throwable $t) {
       $this->logException($t);
@@ -331,9 +331,9 @@ class EntityManager extends EntityManagerDecorator
     $this->annotationReader = $annotationReader;
 
     // mysql set names UTF-8 if required
-    $eventManager->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
+    $eventManager->addEventSubscriber(new \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
 
-    $eventManager->addEventListener([ \Doctrine\ORM\Tools\ToolEvents::postGenerateSchema ], $this);
+    $eventManager->addEventListener([ \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\ToolEvents::postGenerateSchema ], $this);
 
     if (self::DEV_MODE) {
       $config->setAutoGenerateProxyClasses(true);
@@ -354,7 +354,7 @@ class EntityManager extends EntityManagerDecorator
     $config->setSQLLogger($this->sqlLogger);
 
     // obtaining the entity manager
-    $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
+    $entityManager = \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
 
     $entityManager->getFilters()->enable('soft-deleteable');
 
@@ -366,9 +366,9 @@ class EntityManager extends EntityManagerDecorator
    */
   private function registerCustomFunctions(Configuration $config)
   {
-    // $config->addCustomStringFunction('timestampdiff', 'Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff');
-    $config->addCustomDatetimeFunction('timestampdiff', 'DoctrineExtensions\Query\Mysql\TimestampDiff');
-    $config->addCustomStringFunction('greatest', 'DoctrineExtensions\Query\Mysql\Greatest');
+    // $config->addCustomStringFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff::class);
+    $config->addCustomDatetimeFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\TimestampDiff::class);
+    $config->addCustomStringFunction('greatest', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\Greatest::class);
   }
 
   private function createSimpleConfiguration():array
@@ -376,38 +376,38 @@ class EntityManager extends EntityManagerDecorator
     $cache = null;
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
-    return [ $config, new \Doctrine\Common\EventManager(), ];
+    return [ $config, new \OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager(), ];
   }
 
   private function createGedmoConfiguration($config, $evm)
   {
     // globally used cache driver, in production use APC or memcached
-    $cache = new \Doctrine\Common\Cache\ArrayCache;
+    $cache = new \OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\ArrayCache;
 
     // standard annotation reader
-    $annotationReader = new \Doctrine\Common\Annotations\AnnotationReader;
-    $cachedAnnotationReader = new \Doctrine\Common\Annotations\CachedReader(
+    $annotationReader = new \OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\AnnotationReader;
+    $cachedAnnotationReader = new \OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\CachedReader(
       $annotationReader, // use reader
       $cache // and a cache driver
     );
 
     // create a driver chain for metadata reading
-    $driverChain = new \Doctrine\Persistence\Mapping\Driver\MappingDriverChain();
+    $driverChain = new \OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\Driver\MappingDriverChain();
 
     // load superclass metadata mapping only, into driver chain
     // also registers Gedmo annotations.NOTE: you can personalize it
-    \Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
+    \OCA\CAFEVDB\Wrapped\Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
       $driverChain, // our metadata driver chain, to hook into
       $cachedAnnotationReader // our cached annotation reader
     );
     //<<< Further annotations can go here
-    \MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
+    \OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
     CJH\Setup::registerAnnotations();
     //>>>
 
     // now we want to register our application entities,
     // for that we need another metadata driver used for Entity namespace
-    $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver(
+    $annotationDriver = new \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Driver\AnnotationDriver(
       $cachedAnnotationReader, // our cached annotation reader
       self::ENTITY_PATHS, // paths to look in
     );
@@ -417,7 +417,7 @@ class EntityManager extends EntityManagerDecorator
     $driverChain->addDriver($annotationDriver, 'OCA\CAFEVDB\Database\Doctrine\ORM\Entities');
 
     // general ORM configuration
-    //$config = new \Doctrine\ORM\Configuration;
+    //$config = new \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
     $config->setProxyDir(self::PROXY_DIR);
     $config->setProxyNamespace('OCA\CAFEVDB\Database\Doctrine\ORM\Proxies');
     $config->setAutoGenerateProxyClasses(self::DEV_MODE); // this can be based on production config.
@@ -432,36 +432,36 @@ class EntityManager extends EntityManagerDecorator
     // gedmo extension listeners
 
     // loggable
-    //$loggableListener = new \Gedmo\Loggable\LoggableListener;
+    //$loggableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener;
     $remoteAddress = $this->request->getRemoteAddress();
     $loggableListener = new Listeners\GedmoLoggableListener($this->userId, $remoteAddress);
     $loggableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($loggableListener);
 
     // timestampable
-    $timestampableListener = new \Gedmo\Timestampable\TimestampableListener();
+    $timestampableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Timestampable\TimestampableListener();
     $timestampableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($timestampableListener);
 
     // soft deletable
-    $softDeletableListener = new \Gedmo\SoftDeleteable\SoftDeleteableListener();
+    $softDeletableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\SoftDeleteableListener();
     $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($softDeletableListener);
-    $config->addFilter('soft-deleteable', '\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter');
+    $config->addFilter('soft-deleteable', \OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
 
     // blameable
-    $blameableListener = new \Gedmo\Blameable\BlameableListener();
+    $blameableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\BlameableListener();
     $blameableListener->setAnnotationReader($cachedAnnotationReader);
     $blameableListener->setUserValue($this->userId);
     $evm->addEventSubscriber($blameableListener);
 
     // sluggable
-    $sluggableListener = new \Gedmo\Sluggable\SluggableListener();
+    $sluggableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener();
     $sluggableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($sluggableListener);
 
     // sortable
-    // $sortableListener = new \Gedmo\Sortable\SortableListener;
+    // $sortableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Sortable\SortableListener;
     // $sortableListener->setAnnotationReader($cachedAnnotationReader);
     // $evm->addEventSubscriber($sortableListener);
 
@@ -489,15 +489,15 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($translatableListener);
 
     $config->setDefaultQueryHint(
-      \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-      'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+      \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+      \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
     );
     $config->setDefaultQueryHint(
-      \Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+      \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
       $this->l->getLanguageCode()
     );
     $config->setDefaultQueryHint(
-      \Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
+      \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
       1 // fallback to default values in case if record is not translated
     );
 
@@ -512,11 +512,11 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Remove unwanted constraints after schema generation.
    *
-   * @param \Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args
+   * @param \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args
    *
    * @todo See that this is not necessary.
    */
-  public function postGenerateSchema(\Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args)
+  public function postGenerateSchema(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args)
   {
     $schema = $args->getSchema();
     $em = $args->getEntityManager();
@@ -537,7 +537,7 @@ class EntityManager extends EntityManagerDecorator
         }
       }
 
-      /** @var \Doctrine\DBAL\Schema\Column $column */
+      /** @var \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Column $column */
       foreach ($enumColumns as $column) {
         $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->getValues()))));
       }
@@ -740,7 +740,7 @@ class EntityManager extends EntityManagerDecorator
     if (!$this->connected()) {
       throw new \RuntimeException($this->l->t('EntityManager is not connected to database.'));
     }
-    $annotationClass = \MediaMonks\Doctrine\Mapping\Annotation\Transformable::class;
+    $annotationClass = \OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation\Transformable::class;
     $transformables = $this->propertiesByAnnotation($annotationClass);
 
     /** @var Doctrine\ORM\UnitOfWork $unitOfWork */

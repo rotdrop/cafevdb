@@ -23,11 +23,11 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable;
 
-use Gedmo\Sluggable\Handler\SlugHandlerInterface;
-use Doctrine\Persistence\Mapping\ClassMetadata;
-use Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
-use Gedmo\Sluggable\SluggableListener;
-use Gedmo\Exception\InvalidMappingException;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Handler\SlugHandlerInterface;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
+use OCA\CAFEVDB\Wrapped\Gedmo\Exception\InvalidMappingException;
 
 /**
  * Gedmo slug handler which simply computes a hash as slug. Currently

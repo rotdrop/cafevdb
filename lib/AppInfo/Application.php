@@ -95,6 +95,9 @@ class Application extends App implements IBootstrap
     if ((@include_once __DIR__ . '/../../vendor/autoload.php') === false) {
       throw new \Exception('Cannot include autoload. Did you run install dependencies using composer?');
     }
+    if ((@include_once __DIR__ . '/../../vendor-wrapped/autoload.php') === false) {
+      throw new \Exception('Cannot include wrapped-autoload. Did you run install dependencies using composer?');
+    }
 
     /* Doctrine DBAL needs a factory to be constructed. */
     $context->registerService(\OCA\CAFEVDB\Database\Connection::class, function($c) {

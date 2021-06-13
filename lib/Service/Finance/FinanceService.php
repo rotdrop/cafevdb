@@ -25,8 +25,8 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use \DateTimeImmutable AS DateTime;
 use Cmixin\BusinessDay;
-use Carbon\Carbon;
-use Carbon\CarbonImmutable;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -497,7 +497,7 @@ class FinanceService
    * information. mandateReference, musicianId and projectId are
    * required.
    *
-   * @todo Switch to \Doctrine\ORM entities, i.e. $mandate should at
+   * @todo Switch to \OCA\CAFEVDB\Wrapped\Doctrine\ORM entities, i.e. $mandate should at
    * least optionally be an Entities\SepaDebitMandate.
    */
   public function storeSepaMandate($newMandate)

@@ -24,7 +24,62 @@ COMPOSER=php $(build_tools_directory)/composer.phar
 else
 COMPOSER=$(COMPOSER_SYSTEM)
 endif
-COMPOSER_OPTIONS=--no-dev --prefer-dist
+COMPOSER_OPTIONS=--prefer-dist
+
+###############################################################################
+#
+# Some composer packages must be wrapped into a different namespace to
+# avoid conflicts with the ambient cloud software, notably
+# Doctrine/ORM and all related packages.
+#
+
+WRAPPER_NAMESPACE = OCA\\CAFEVDB\\Wrapped
+
+NAMESPACE_WRAPPER_DIRS =\
+ lib/Database/Doctrine\
+ lib/Database/Legacy
+NAMESPACE_WRAPPER_FILES =\
+ config/cli-config.php\
+ lib/Common/Uuid.php\
+ lib/Controller/ImagesController.php\
+ lib/Controller/ProjectParticipantFieldsController.php\
+ lib/Controller/SepaDebitMandatesController.php\
+ lib/Database/Connection.php\
+ lib/Database/EntityManager.php\
+ lib/PageRenderer/ProjectParticipantFields.php\
+ lib/Service/Finance/DoNothingReceivablesGenerator.php\
+ lib/Service/Finance/IRecurringReceivablesGenerator.php\
+ lib/Service/Finance/SepaBulkTransactionService.php\
+ lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php\
+ lib/Service/Finance/PeriodicReceivablesGenerator.php\
+ lib/Service/Finance/FinanceService.php\
+ lib/Service/ContactsService.php\
+ lib/Traits/EntityManagerTrait.php
+
+# The complete list of affected files
+NAMESPACE_WRAPPER_VICTIMS = $(foreach dir,$(NAMESPACE_WRAPPER_DIRS),$(shell find $(dir) -name '*.php'))\
+ $(NAMESPACE_WRAPPER_FILES)
+
+# list of namespaces to wrap
+WRAPPED_NAMESPACES =\
+ Acelaya\\Doctrine\
+ Carbon\
+ Doctrine\
+ DoctrineExtensions\
+ CJH\\Doctrine\\Extensions\
+ Gedmo\
+ MediaMonks\\Doctrine\
+ MyCLabs\\Enum\
+ Oro\\DBAL\
+ Oro\\ORM\
+ Ramsey\\Uuid\
+ Ramsey\\Uuid\\Doctrine
+
+#
+#
+#
+###############################################################################
+
 PHPDOC=/opt/phpDocumentor/bin/phpdoc
 PHPDOC_TEMPLATE=
 #--template=clean
@@ -59,7 +114,7 @@ pre-build:
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-build: pre-build composer npm cleanup
+build: pre-build composer namespace-wrapper npm
 .PHONY: build
 
 .PHONY: comoser-download
@@ -74,8 +129,44 @@ composer-download:
 composer: stamp.composer-core-versions
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
-composer-wrapped: composer-wrapped.json
-	env COMPOSER="$<" $(COMPOSER) install $(COMPOSER_OPTIONS)
+composer-wrapped.lock: composer-wrapped.json
+	rm -f composer-wrapped.lock
+
+$(BUILDDIR)/vendor-wrapped: composer-wrapped.lock
+	mkdir -p $(BUILDDIR)
+	ln -fs ../3rdparty $(BUILDDIR)
+	ln -fs ../vendor $(BUILDDIR)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+
+vendor/bin/php-scoper: composer
+
+vendor-wrapped: Makefile vendor/bin/php-scoper scoper.inc.php $(BUILDDIR)/vendor-wrapped
+	vendor/bin/php-scoper add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
+# scoper does not handle symlinks
+	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
+# scoper does not preserve executable bits
+	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
+
+vendor-wrapped/autoload.php: vendor-wrapped
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
+
+.PHONY: namespace-wrapper
+namespace-wrapper: vendor-wrapped/autoload.php
+
+namespace-wrapper-patch: $(NAMESPACE_WRAPPER_VICTIMS)
+	@sed -E -i ${foreach NS,$(WRAPPED_NAMESPACES),\
+ -e 's/use $(NS)/use $(WRAPPER_NAMESPACE)\\$(NS)/g'\
+ -e 's/([( ])\\$(NS)/\1\\$(WRAPPER_NAMESPACE)\\$(NS)/g'\
+}\
+ $(NAMESPACE_WRAPPER_VICTIMS)
+
+namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
+	@sed -E -i ${foreach NS,$(WRAPPED_NAMESPACES),\
+ -e 's/use $(WRAPPER_NAMESPACE)\\$(NS)/use $(NS)/g'\
+ -e 's/([( ])\\$(WRAPPER_NAMESPACE)\\$(NS)/\1\\$(NS)/g'\
+}\
+ $(NAMESPACE_WRAPPER_VICTIMS)
 
 .PHONY: selectize
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
@@ -108,7 +199,7 @@ npm-build: npm-init
 # Removes the appstore build
 .PHONY: clean
 clean: ## Tidy up local environment
-	rm -rf ./build
+	rm -rf $(BUILDDIR)
 	rm -rf ./js/*
 	rm -rf ./css/*
 
@@ -116,12 +207,12 @@ clean: ## Tidy up local environment
 # npm
 .PHONY: distclean
 distclean: clean ## Clean even more, calls clean
-	rm -rf vendor
+	rm -rf vendor*
 	rm -rf node_modules
 
 .PHONY: realclean
 realclean: distclean ## Really delete everything but the bare source files
-	rm -f composer.lock
+	rm -f composer*.lock
 	rm -f composer.json
 	rm -f stamp.composer-core-versions
 	rm -f package-lock.json
@@ -230,12 +321,12 @@ appstore: $(BUILDDIR)/core-exclude
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
 .PHONY: verifydb
-verifydb:
-	$(SRCDIR)/vendor/bin/doctrine orm:validate-schema
+verifydb: $(ABSSRCDIR)/vendor-wrapped/bin/doctrine
+	$< orm:validate-schema
 
 .PHONY: updatesql
-updatesql:
-	$(SRCDIR)/vendor/bin/doctrine orm:schema-tool:update --dump-sql
+updatesql: $(ABSSRCDIR)/vendor-wrapped/bin/doctrine
+	$< orm:schema-tool:update --dump-sql
 
 .PHONY: test
 test: composer

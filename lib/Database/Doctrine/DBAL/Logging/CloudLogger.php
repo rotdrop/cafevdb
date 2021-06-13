@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Logging;
 
-use Doctrine\DBAL\Logging\SQLLogger;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Logging\SQLLogger;
 use OCP\ILogger as LoggerInterface;
 use OCP\IL10N;
 

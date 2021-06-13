@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine;
 
-use Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 
 /**
  * Some mostly static convenience stuff.

@@ -23,8 +23,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Acelaya\Doctrine\Type\PhpEnumType;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
+use OCA\CAFEVDB\Wrapped\Acelaya\Doctrine\Type\PhpEnumType;
 
 use function call_user_func;
 use function implode;
