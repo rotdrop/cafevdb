@@ -117,6 +117,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var bool */
   private $debug;
 
+  /** @var bool */
+  private $showSoftDeleted;
+
   /** @var IL10N */
   private $l;
 
@@ -140,8 +143,7 @@ class EntityManager extends EntityManagerDecorator
     , IRequest $request
     , ILogger $logger
     , IL10N $l10n
-  )
-  {
+  ) {
     $this->encryptionService = $encryptionService;
     $this->appContainer = $appContainer;
     $this->sqlLogger = $sqlLogger;
@@ -154,7 +156,10 @@ class EntityManager extends EntityManagerDecorator
       // @todo: try to bind to unencrypted service account
       return;
     }
+
     $this->debug = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
+    $this->showSoftDeleted = $encryptionService->getUserValue($this->userId, 'showdisabled') === 'on';
+
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
     if ($this->connected()) {
@@ -322,7 +327,6 @@ class EntityManager extends EntityManagerDecorator
     return $connectionParams;
   }
 
-  // Create a simple "default" Doctrine ORM configuration for Annotations
   private function getEntityManager($params = null)
   {
     list($config, $eventManager) = $this->createSimpleConfiguration();
@@ -356,7 +360,9 @@ class EntityManager extends EntityManagerDecorator
     // obtaining the entity manager
     $entityManager = \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
 
-    $entityManager->getFilters()->enable('soft-deleteable');
+    if (!$this->showSoftDeleted) {
+      $entityManager->getFilters()->enable('soft-deleteable');
+    }
 
     return $entityManager;
   }
