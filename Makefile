@@ -114,7 +114,7 @@ pre-build:
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-build: pre-build composer npm
+build: pre-build composer namespace-wrapper npm
 .PHONY: build
 
 .PHONY: comoser-download
@@ -151,6 +151,7 @@ vendor-wrapped: Makefile vendor/bin/php-scoper scoper.inc.php $(BUILDDIR)/vendor
 vendor-wrapped/autoload.php: vendor-wrapped
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
 
+.PHONY: namespace-wrapper
 namespace-wrapper: vendor-wrapped/autoload.php
 
 namespace-wrapper-patch: $(NAMESPACE_WRAPPER_VICTIMS)
