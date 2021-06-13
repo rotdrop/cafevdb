@@ -50,7 +50,6 @@ class PreRenderedTemplateResponse extends TemplateResponse
    */
   public function preRender()
   {
-    \OCP\Util::writeLog('cafevdb', 'PRE-RENDER', \OCP\Util::INFO);
     $this->contentsCache = parent::render();
     return $this->contentsCache;
   }
@@ -58,10 +57,8 @@ class PreRenderedTemplateResponse extends TemplateResponse
   public function render()
   {
     if (!empty($this->contentsCache)) {
-      \OCP\Util::writeLog('cafevdb', 'PRE-RENDERED CACHED', \OCP\Util::INFO);
       return $this->contentsCache;
     } else {
-      \OCP\Util::writeLog('cafevdb', 'RENDER NEW', \OCP\Util::INFO);
       return parent::render();
     }
   }
