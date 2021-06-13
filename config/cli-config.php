@@ -222,7 +222,7 @@ if (file_exists($installedVersions)) {
   require_once $installedVersions;
 }
 
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Console\ConsoleRunner;
 use OCA\CAFEVDB\Database\EntityManager;
 
 /** @var EntityManager */

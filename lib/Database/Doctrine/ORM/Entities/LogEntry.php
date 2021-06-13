@@ -24,8 +24,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Loggable;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Loggable;
 
 /**
  * OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntity

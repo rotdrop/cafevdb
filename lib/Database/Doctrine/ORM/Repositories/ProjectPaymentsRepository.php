@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Doctrine\ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 
 class ProjectPaymentsRepository extends EntityRepository
 {

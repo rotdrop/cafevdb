@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
  * which also queries other sources of translations if a concrete
  * translations has not been persisted yet.
  */
-class GedmoTranslatableListener extends \Gedmo\Translatable\TranslatableListener
+class GedmoTranslatableListener extends \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener
 {
   /** @var BiDirectionalL10N */
   private $musicL10n;

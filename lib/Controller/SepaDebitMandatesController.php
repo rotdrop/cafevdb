@@ -24,7 +24,7 @@
 namespace OCA\CAFEVDB\Controller;
 
 use \PHP_IBAN\IBAN;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 use OCP\AppFramework\Controller;
 use OCP\IRequest;

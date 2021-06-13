@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use Ramsey\Uuid\UuidInterface;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -31,10 +31,10 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /**
  * ProjectParticipantFieldsDataOptions
@@ -68,7 +68,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $field;
 
   /**
-   * @var \Ramsey\Uuid\UuidInterface
+   * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
    *
    * @ORM\Column(type="uuid_binary")
    * @ORM\Id

@@ -29,8 +29,8 @@ use OCP\AppFramework\IAppContainer;
 use OCP\ILogger;
 use OCP\IL10N;
 
-use Doctrine\ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;

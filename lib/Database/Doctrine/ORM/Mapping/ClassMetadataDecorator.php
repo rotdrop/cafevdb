@@ -26,13 +26,13 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 use OCP\ILogger;
 use OCP\IL10N;
 
-use Doctrine\ORM;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 
 use OCA\CAFEVDB\Database\EntityManager;
 
-class ClassMetadataDecorator implements \Doctrine\Persistence\Mapping\ClassMetadata
+class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 

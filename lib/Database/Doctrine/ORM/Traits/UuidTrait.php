@@ -22,15 +22,15 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
-use Ramsey\Uuid\UuidInterface;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 use OCA\CAFEVDB\Common\Uuid;
 
 trait UuidTrait
 {
   /**
-   * @var \Ramsey\Uuid\UuidInterface
+   * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
    *
    * @ORM\Column(type="uuid_binary", unique=true)
    */
@@ -56,7 +56,7 @@ trait UuidTrait
   /**
    * Get uuid.
    *
-   * @return \Ramsey\Uuid\UuidInterface
+   * @return \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
    */
   public function getUuid():UuidInterface
   {

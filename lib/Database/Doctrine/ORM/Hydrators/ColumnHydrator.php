@@ -2,7 +2,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators;
 
-use Doctrine\ORM\Internal\Hydration\AbstractHydrator, PDO;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Internal\Hydration\AbstractHydrator, PDO;
 
 class ColumnHydrator extends AbstractHydrator
 {

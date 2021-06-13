@@ -24,7 +24,7 @@
 namespace OCA\CAFEVDB\Service\Finance;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Uuid;
 

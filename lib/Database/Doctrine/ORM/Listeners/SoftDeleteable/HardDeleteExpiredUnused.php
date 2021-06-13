@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable;
 
-use Gedmo\SoftDeleteable\HardDeleteable\HardDeleteExpired;
+use OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\HardDeleteable\HardDeleteExpired;
 
 /**
  * Allow hard-deletion of unused objects if they are expired.

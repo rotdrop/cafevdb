@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
-use Doctrine\Persistence\ObjectManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectManager;
 
 /**
  * Override default for database query logging.
@@ -33,7 +33,7 @@ use Doctrine\Persistence\ObjectManager;
  * @todo ATM all properties of all entities are logged with the
  * exception of the LogEntry-class, of course. Perhaps make this configurable.
  */
-class GedmoLoggableListener extends \Gedmo\Loggable\LoggableListener
+class GedmoLoggableListener extends \OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener
 {
   /** @var string */
   private $remoteAddress;
@@ -81,7 +81,7 @@ class GedmoLoggableListener extends \Gedmo\Loggable\LoggableListener
     return $config;
   }
 
-  protected function getLogEntryClass(\Gedmo\Loggable\Mapping\Event\LoggableAdapter $ea, $class)
+  protected function getLogEntryClass(\OCA\CAFEVDB\Wrapped\Gedmo\Loggable\Mapping\Event\LoggableAdapter $ea, $class)
   {
     return isset(self::$configurations[$this->name][$class]['logEntryClass']) ?
       self::$configurations[$this->name][$class]['logEntryClass'] :

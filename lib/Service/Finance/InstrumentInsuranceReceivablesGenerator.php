@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 use \DateTimeImmutable as DateTime;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Service\ConfigService;

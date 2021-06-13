@@ -31,7 +31,7 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
-use Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 trait CreatedAt
 {

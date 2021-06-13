@@ -22,8 +22,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use Doctrine\ORM;
-use \Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
+use \OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 
 trait FindLikeTrait
 {

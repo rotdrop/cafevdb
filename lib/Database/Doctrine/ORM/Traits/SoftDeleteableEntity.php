@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 trait SoftDeleteableEntity
 {

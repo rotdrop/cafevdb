@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use MyCLabs\Enum\Enum as EnumType;
+use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
 
 /**
  * Enum for "participant-fields" data-types.

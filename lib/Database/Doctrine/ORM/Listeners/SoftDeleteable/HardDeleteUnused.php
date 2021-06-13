@@ -23,8 +23,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable;
 
-use Gedmo\Mapping\Event\AdapterInterface;
-use Gedmo\SoftDeleteable\HardDeleteable\HardDeleteableInterface;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Event\AdapterInterface;
+use OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\HardDeleteable\HardDeleteableInterface;
 
   /**
  * Allow hard-deletion of unused objects.

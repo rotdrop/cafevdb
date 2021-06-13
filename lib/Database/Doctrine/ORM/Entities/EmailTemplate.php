@@ -25,8 +25,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * EmailTemplate
@@ -40,7 +40,7 @@ class EmailTemplate implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
-  use \Gedmo\Blameable\Traits\BlameableEntity;
+  use \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity;
   use CAFEVDB\Traits\TranslatableTrait;
 
   /**
