@@ -270,12 +270,16 @@ trait EntityManagerTrait {
    * not throw an exception if the filter is not enabled.
    *
    * @param string $filterName
+   *
+   * @return bool The previous isEnabled() state of the filter.
    */
-  protected function disableFilter(string $filterName)
+  protected function disableFilter(string $filterName):bool
   {
     if ($this->entityManager->getFilters()->isEnabled($filterName)) {
       $this->entityManager->getFilters()->disable($filterName);
+      return true;
     }
+    return false;
   }
 
   /**
