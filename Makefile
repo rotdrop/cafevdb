@@ -54,6 +54,7 @@ NAMESPACE_WRAPPER_FILES =\
  lib/Service/Finance/PeriodicReceivablesGenerator.php\
  lib/Service/Finance/FinanceService.php\
  lib/Service/ContactsService.php\
+ lib/Service/GeoCodingService.php\
  lib/Traits/EntityManagerTrait.php
 
 # The complete list of affected files

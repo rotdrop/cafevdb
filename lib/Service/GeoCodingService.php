@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \Doctrine\ORM\Query\Expr\Join;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr\Join;
 
 use OCA\CAFEVDB\Common\Util;
 
