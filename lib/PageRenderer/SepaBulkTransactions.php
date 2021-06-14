@@ -506,7 +506,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
             return '';
           }
           $post = json_encode([
-            'bulkTransactionId' => $recordId,
+            'bulkTransactionId' => $recordId['id'],
             'requesttoken' => \OCP\Util::callRegister(),
             'projectId' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
             'projectName' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],

@@ -245,7 +245,7 @@ class Projects extends PMETableViewBase
       'name'     => $this->l->t('Projekt-Name'),
       'php|LF'  => function($value, $op, $field, $row, $recordId, $pme) {
         //error_log('project-id: '.$recordId);
-        $projectId = $recordId;
+        $projectId = $recordId['id'];
         $projectName = $value;
         $placeHolder = false;
         $overview = true;
@@ -292,7 +292,7 @@ class Projects extends PMETableViewBase
       'input'    => 'RV',
       'sql'      => '$main_table.name',
       'php|VCLDF'    => function($value, $op, $field, $row, $recordId, $pme) {
-        $projectId = $recordId;
+        $projectId = $recordId['id'];
         $projectName = $value;
         $overview = false;
         $placeHolder = $this->l->t("Actions");
@@ -316,7 +316,7 @@ class Projects extends PMETableViewBase
       'sql'      => '$main_table.name',
       'php|CV'   =>  function($value, $op, $field, $row, $recordId, $pme) {
         $projectName = $value;
-        $projectId = $recordId;
+        $projectId = $recordId['id'];
         return $this->projectToolbox($projectId, $projectName);
       },
       'sort'     => true,
@@ -346,8 +346,8 @@ class Projects extends PMETableViewBase
             'projectInstruments' => $value,
             'template' => 'project-instrumentation-numbers',
             'projectName' => $row[$this->queryField('name', $pme->fdd)],
-            'project_id' => $recordId,
-            'projectId' => $recordId,
+            'project_id' => $recordId['id'],
+            'projectId' => $recordId['id'],
           ];
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
@@ -407,7 +407,7 @@ __EOT__;
       'css'      => ['postfix' => ' projectprogram'],
       'sql'      => '$main_table.id',
       'php|CV'    => function($value, $action, $field, $row, $recordId, $pme) {
-        $projectId = $recordId; // and also $value
+        $projectId = $recordId['id']; // and also $value
         return $this->projectProgram($projectId, $action);
       },
       'sort'     => true,
@@ -421,7 +421,7 @@ __EOT__;
         'select' => 'T',
         'options' => 'VCD',
         'php' => function($value, $action, $field, $row, $recordId, $pme) {
-          $projectId = $recordId;
+          $projectId = $recordId['id'];
           $imageIds = Util::explode(',', $value);
           if (empty($imageIds) || ($action != 'display')) {
             $imageIds[] = ImagesController::IMAGE_ID_PLACEHOLDER;

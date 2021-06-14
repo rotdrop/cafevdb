@@ -432,7 +432,7 @@ GROUP BY b.short_name',
       'php' => function($musicianId, $op, $field, $row, $recordId, $pme) {
         $post = [
           'musicianId' => $musicianId,
-          'insuranceId' => $recordId,
+          'insuranceId' => $recordId['id'],
           'requesttoken' => \OCP\Util::callRegister(),
         ];
         $actions = [

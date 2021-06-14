@@ -374,6 +374,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** Run underlying table-manager (phpMyEdit for now). */
   public function execute($opts = [])
   {
+    // keep outside the transaction as seemingly this can cause a
+    // strange "autocommit" with mysql.
+    $this->generateNumbers($this->minimumNumbersValue);
     $this->pme->beginTransaction();
     try {
       $this->pme->execute($opts);
@@ -1703,7 +1706,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function preTrigger(&$pme, $op, $step)
   {
-    $this->generateNumbers($this->minimumNumbersValue);
     return true;
   }
 

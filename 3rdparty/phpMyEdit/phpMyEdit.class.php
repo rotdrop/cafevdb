@@ -365,20 +365,6 @@ class phpMyEdit
 	/*
 	 * Handle multi-column record keys
 	 */
-	private function key_record($key_record = null)
-	{
-		if (empty($key_record)) {
-			$key_record = $this->rec;
-		}
-		if (empty($key_record) || empty($this->key)) {
-			return null;
-		}
-		if (count($this->key) == 1) {
-			return array_values($key_record)[0];
-		}
-		return $key_record;
-	}
-
 	private function key_record_where()
 	{
 		if (!empty($this->groupby_rec && $this->checkOperationOption($this->groupby_where))) {
@@ -395,26 +381,19 @@ class phpMyEdit
 		return '('.implode(' AND ', $wparts).')';
 	}
 
-	private function key_record_query_data($key_rec, $force_array = false, $sysName = 'rec')
+	private function key_record_query_data($key_rec, $sysName = 'rec')
 	{
-		if (empty($key_record)) {
-			$key_record = $this->rec;
+		if (empty($key_rec)) {
+			$key_rec = $this->rec;
 		}
-		$count = $force_array ? -1 : count($key_rec);
-		switch (count($key_rec)) {
-		case 0:
+		if (empty($key_rec)) {
 			$recordQueryData = $this->cgi['prefix']['sys'].$sysName.'=""';
-			break;
-		case 1:
-			$recordQueryData = $this->cgi['prefix']['sys'].$sysName.'='.array_values($key_rec)[0];
-			break;
-		default:
+		} else {
 			$data = [];
 			foreach ($key_rec as $key => $value) {
 				$data[] = $this->cgi['prefix']['sys'].$sysName.'['.$key.']'.'='.$value;
 			}
 			$recordQueryData = implode('&', $data);
-			break;
 		}
 		return $recordQueryData;
 	}
@@ -2414,12 +2393,11 @@ class phpMyEdit
 				$value = $row["qf$k"];
 			}
 			$php = $this->fdd[$k]['php'];
-			$rec = $this->key_record($this->rec);
 			if (is_callable($php)) {
-				echo call_user_func($php, $value, 'change',  $k, $row, $rec, $this);
+				echo call_user_func($php, $value, 'change',  $k, $row, $this->rec, $this);
 			} else if (is_array($php)) {
 				$opts = isset($php['parameters']) ? $php['parameters'] : '';
-				echo call_user_func($php['function'], $value, $opts, 'change', $k, $row, $rec, $this);
+				echo call_user_func($php['function'], $value, $opts, 'change', $k, $row, $this->rec, $this);
 			} else if (file_exists($php)) {
 				echo include($php);
 			}
@@ -2730,14 +2708,15 @@ class phpMyEdit
 		$ret  = '';
 		$name = $this->fds[$k];
 		$page = $this->page_name;
-		$url  = $this->cgi['prefix']['sys'].'rec'.'='.$key.'&'.
+		$keyRecordQuery = $this->key_record_query_data($key);
+		$url  = $keyRecordQuery.'&'.
 			$this->cgi['prefix']['sys'].'fm'.'='.$this->fm.'&'.
 			$this->cgi['prefix']['sys'].'np'.'='.$this->inc.'&'.
 			$this->cgi['prefix']['sys'].'fl'.'='.$this->fl;
 		$url .= '&'.$this->cgi['prefix']['sys'].'qfn'.'='.rawurlencode($this->qfn).$this->qfn;
 		$url .= '&'.$this->get_sfn_cgi_vars().$this->cgi['persist'];
 		$ar	  = array(
-			'key'	=> $this->key_record_query_data($key),
+			'key'	=> $keyRecordQuery,
 			'name'	=> $name,
 			'link'	=> $link_val,
 			'value' => $disp_val,
@@ -2864,7 +2843,6 @@ class phpMyEdit
 				$key_rec[$key] = $row['qf'.$key_num];
 			}
 		}
-		$key_rec = $this->key_record($key_rec);
 
 		$this->col_has_values($k) && $this->set_values($k);
 		if ($this->col_has_datemask($k)) {
@@ -4554,7 +4532,7 @@ class phpMyEdit
 				$groupby_rec = $key_rec;
 				$mrecRecordData = $recordData;
 			}
-			$mrecRecordQueryData = $this->key_record_query_data($groupby_rec, true, 'groupby_rec');
+			$mrecRecordQueryData = $this->key_record_query_data($groupby_rec, 'groupby_rec');
 
 			$operationCss = [];
 			if ($this->view_enabled()) {

@@ -411,7 +411,7 @@ class ProjectParticipantFields extends PMETableViewBase
         // $this->logInfo('OPTIONS '.print_r($dataOptions, true));
         $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
         $dataType = $row['qf'.$pme->fdn['data_type']];
-        return $this->showDataOptions($dataOptions, $op, $recordId, $multiplicity, $dataType);
+        return $this->showDataOptions($dataOptions, $op, $recordId['id'], $multiplicity, $dataType);
       },
     ];
 
@@ -587,7 +587,7 @@ class ProjectParticipantFields extends PMETableViewBase
         'column' => 'key',
         'encode' => 'BIN2UUID(%s)',
         'description' => 'label',
-        'filters' => '$table.field_id = $record_id AND $table.deleted IS NULL',
+        'filters' => '$table.field_id = $record_id[id] AND $table.deleted IS NULL',
         'join' => '$join_col_fqn = $main_table.default_value',
       ],
       'maxlen' => 29,
@@ -610,7 +610,7 @@ class ProjectParticipantFields extends PMETableViewBase
         'column' => 'key',
         'encode' => 'BIN2UUID(%s)',
         'description' => 'IFNULL($table.label, \''.$this->l->t('yes').'\')',
-        'filters' => '$table.field_id = $record_id AND $table.deleted IS NULL',
+        'filters' => '$table.field_id = $record_id[id] AND $table.deleted IS NULL',
         'join' => '$join_col_fqn = $main_table.default_value',
       ],
       'maxlen' => 29,
@@ -629,7 +629,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'values' => [
         'table' => self::OPTIONS_TABLE,
         'column' => 'data',
-        'filters' => '$table.field_id = $record_id AND $table.deleted IS NULL',
+        'filters' => '$table.field_id = $record_id[id] AND $table.deleted IS NULL',
         'join' => '$join_table.field_id = $main_table.id',
         'group' => true,
       ],
@@ -1455,7 +1455,7 @@ class ProjectParticipantFields extends PMETableViewBase
    * Generate a table in order to define field-valus for
    * multi-select stuff.
    */
-  private function showDataOptions($value, $op, $recordId, $multiplicity = null, $dataType = null)
+  private function showDataOptions($value, $op, $fieldId, $multiplicity = null, $dataType = null)
   {
     $this->logDebug('OPTIONS so far: '.print_r($value, true));
     $allowed = $this->participantFieldsService->explodeDataOptions($value);
@@ -1604,7 +1604,7 @@ __EOT__;
         break; // display
       case 'add':
       case 'change':
-        $usedKeys = $this->optionKeys($recordId);
+        $usedKeys = $this->optionKeys($fieldId);
         $generatorItem = null;
         $idx = 0;
         foreach ($allowed as $value) {
@@ -1620,7 +1620,7 @@ __EOT__;
           $html .= $this->dataOptionInputRowHtml($value, $idx, $used);
           $idx++;
         }
-        $html .= $this->dataOptionGeneratorHtml($recordId, $generatorItem);
+        $html .= $this->dataOptionGeneratorHtml($fieldId, $generatorItem);
         break;
     }
     $html .= '

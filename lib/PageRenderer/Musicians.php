@@ -699,7 +699,7 @@ make sure that the musicians are also automatically added to the
        'sort' =>false,
        'css' => [ 'postfix' => ' restrict-height', ],
        'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
-         $musicianId = $recordId['musician_id'];
+         $musicianId = $recordId['id'];
          $annualFee = $this->insuranceService->insuranceFee($musicianId, null, true);
          $bval = $this->l->t(
            'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
@@ -725,7 +725,7 @@ make sure that the musicians are also automatically added to the
       'select' => 'T',
       'options' => 'APVCD',
       'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
-        $musicianId = $recordId;
+        $musicianId = $recordId['id'];
         return $this->photoImageLink($musicianId, $action, $imageId);
       },
       'css' => ['postfix' => ' photo'],
