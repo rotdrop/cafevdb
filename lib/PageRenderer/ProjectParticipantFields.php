@@ -320,7 +320,7 @@ class ProjectParticipantFields extends PMETableViewBase
         return [ $tag, $this->toolTipsService['participant-field-multiplicity' . ':' . $tag] ];
       }, Multiplicity::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-multiplicity'],
-      'valueData' => array_map(json_encode, $this->participantFieldsService->multiplicityTypeMask()),
+      'valueData' => array_map('json_encode', $this->participantFieldsService->multiplicityTypeMask()),
     ];
 
     $dataTypeIndex = count($opts['fdd']);

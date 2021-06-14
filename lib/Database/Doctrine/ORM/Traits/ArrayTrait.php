@@ -106,7 +106,7 @@ trait ArrayTrait
     if ($words[0] == strtoupper($words[0])) {
       $words[0] = strtolower($words[0]);
     }
-    $words = array_map(ucfirst, $words);
+    $words = array_map('ucfirst', $words);
     return lcfirst(implode('', $words));
   }
 }

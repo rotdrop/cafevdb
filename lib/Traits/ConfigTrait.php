@@ -490,7 +490,7 @@ trait ConfigTrait {
       strtoupper($words),
     ]);
     $variants = array_merge(
-      array_map(strtolower, $variants),
+      array_map('strtolower', $variants),
       array_map(
         function($value) { return strtolower($this->l->t($value)); },
         $variants)

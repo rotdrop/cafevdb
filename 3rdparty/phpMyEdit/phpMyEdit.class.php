@@ -2627,7 +2627,7 @@ class phpMyEdit
 			$postfix = call_user_func($postfix, $name, $position, $divider, $postfix_data, $this);
 		}
 		if (!empty($postfix)) {
-			$css .= ' '.implode(' ', array_unique(array_map(trim, is_array($postfix) ? $postfix : [ $postfix ])));
+			$css .= ' '.implode(' ', array_unique(array_map('trim', is_array($postfix) ? $postfix : [ $postfix ])));
 		}
 		return $css;
 	} /* }}} */
