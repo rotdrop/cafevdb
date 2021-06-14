@@ -47,7 +47,7 @@ class ProjectsRepository extends EntityRepository
    */
   public function findById($projectOrId):?Entities\Project
   {
-    if (!empty($projectOrId['id'])) { // allow plain array with id
+    if (isset($projectOrId['id'])) { // allow plain array with id
       $projectId = $projectId['id'];
     } else {
       $projectId = $projectOrId;
