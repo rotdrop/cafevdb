@@ -23,7 +23,7 @@
   </sabre>
   <dependencies>
     <php min-version="7.4" max-version="7.4" />
-    <nextcloud min-version="20" max-version="20" />
+    <nextcloud min-version="20" max-version="21" />
   </dependencies>
   <navigations>
     <navigation>
