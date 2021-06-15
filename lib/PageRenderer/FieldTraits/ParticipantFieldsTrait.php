@@ -714,6 +714,7 @@ trait ParticipantFieldsTrait
             $dataOptionsData,
             [ 'key' => (string)$generatorOption['key'], 'data' => [ 'limit' => $max, ], ]
           );
+          $dataOptionsData = json_encode($dataOptionsData);
 
           // new field, member selection
           $groupMemberFdd = &$fieldDescData[$fddGroupMemberName];
