@@ -325,10 +325,7 @@ class PageController extends Controller {
     $response->setContentSecurityPolicy($policy);
 
     if ($renderer->needPhpSession()) {
-      $this->logInfo('PRE-RENDER FOR TEMPLATE '.$template);
       $response->preRender();
-    } else {
-      $this->logInfo('NO PRE-RENDER FOR TEMPLATE '.$template);
     }
 
     // ok no exception, so flush the history to the session, when we
