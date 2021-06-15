@@ -306,8 +306,8 @@ class Navigation
     foreach (['up', 'down'] as $verticalPosition) {
       $miscVPos = $misc[$verticalPosition];
       $defaultButtons = $defaultButtonsNoB;
-      $defaultButtons[L] = array_merge($miscVPos['left'], $defaultButtons[L], $miscVPos['right']);
-      $defaultButtons[F] = array_merge($miscVPos['left'], $defaultButtons[F], $miscVPos['right']);
+      $defaultButtons['L'] = array_merge($miscVPos['left'], $defaultButtons['L'], $miscVPos['right']);
+      $defaultButtons['F'] = array_merge($miscVPos['left'], $defaultButtons['F'], $miscVPos['right']);
 
       foreach ($defaultButtons as $key => $value) {
         $positionValue = [];
