@@ -148,7 +148,6 @@ class EntityManager extends EntityManagerDecorator
     $this->appContainer = $appContainer;
     $this->sqlLogger = $sqlLogger;
     $this->request = $request;
-    $this->userSession = $userSession;
     $this->logger = $logger;
     $this->l = $l10n;
     $this->userId = $this->encryptionService->getUserId()?:$this->l->t('unknown');

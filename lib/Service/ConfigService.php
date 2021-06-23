@@ -370,7 +370,7 @@ class ConfigService {
 
   public function getGroup($groupId = null) {
     empty($groupId) && ($groupId = $this->getGroupId());
-    return $this->groupManager->get($groupId);
+    return empty($groupId) ? null : $this->groupManager->get($groupId);
   }
 
   public function isSubAdminOfGroup($userId = null, $groupId = null) {

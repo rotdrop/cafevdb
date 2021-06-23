@@ -57,8 +57,8 @@ trait LoggerTrait
   public function logException($exception, $message = null, $shift = 0, bool $showTrace = false) {
     $trace = debug_backtrace();
     $caller = $trace[$shift];
-    $file = $caller['file'];
-    $line = $caller['line'];
+    $file = $caller['file']??'unknown';
+    $line = $caller['line']??0;
     $caller = $trace[$shift+1];
     $class = $caller['class'];
     $method = $caller['function'];
