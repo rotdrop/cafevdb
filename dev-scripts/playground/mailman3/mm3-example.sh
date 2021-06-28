@@ -10,6 +10,7 @@
 # >>> print(response.status)
 
 LISTNAME="resttest@lists.renovation.cafev.de"
+LISTID="resttest.lists.renovation.cafev.de"
 
 # list of mailing lists
 # curl \
@@ -74,17 +75,55 @@ RESOURCE=display_name
 # preferred_language: de
 
 # get configuration for a list
+# curl \
+#     --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
+#     -X GET \
+#     "http://localhost:8001/3.1/lists/vorstand@lists.renovation.cafev.de/config"
+
+# echo
+# echo
+# echo '*********'
+# echo
+
+# curl \
+#     --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
+#     -X GET \
+#     "http://localhost:8001/3.1/lists/$LISTNAME/config"
+
+# subscribing to a list ...
+
+SUBSCRIBE_JSON=$(cat<<EOF
+{
+ "list_id": "$LISTID",
+ "subscriber": "himself@claus-justus-heine.de",
+ "display_name": "CJH RestTestDisplayName",
+ "pre_verified": "True",
+ "pre_confirmed": "True",
+ "pre_approved": "True"
+}
+EOF
+)
+
+# "send_welcome_message": "True"
+
+
+echo "$SUBSCRIBE_JSON"
+
 curl \
     --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
-    -X GET \
-    "http://localhost:8001/3.1/lists/vorstand@lists.renovation.cafev.de/config"
+    --header "Content-Type: application/json" \
+    -X POST \
+    --data "$SUBSCRIBE_JSON" \
+    http://localhost:8001/3.1/members
 
-echo
-echo
-echo '*********'
-echo
+# list members
 
 curl \
     --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
-    -X GET \
-    "http://localhost:8001/3.1/lists/$LISTNAME/config"
+    -X POST \
+    -d "list_id=$LISTID" \
+    "http://localhost:8001/3.1/members/find"
+
+# delivery addreses can then be changed via "self-link"
+
+# unsubscribe works via method DELETE to "self_link".
