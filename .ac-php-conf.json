@@ -10,6 +10,10 @@
       "../../lib",
       "../../3rdparty"
     ],
-    "php-path-list-without-subdir": []
+    "php-path-list-without-subdir": [],
+    "ignore-ruleset": [
+      "# like .gitignore file ",
+      "/vendor*/**/polyfill-php80/**/*.php"
+    ]
   }
 }
