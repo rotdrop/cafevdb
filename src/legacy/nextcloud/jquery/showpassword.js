@@ -126,6 +126,7 @@ $.fn.extend({
 			// This will trigger validation if it's ON for blur event
 			$clone.bind('blur', function() {
 				$input.trigger('focusout')
+				$input.trigger('blur')
 			})
 
 			setState($checkbox, $input, $clone)

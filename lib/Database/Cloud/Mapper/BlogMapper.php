@@ -8,6 +8,7 @@ use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\Cloud\Entities\Blog as BlogEntry;
+use OCA\CAFEVDB\PageRenderer\Renderer as PageRenderer;
 
 class BlogMapper extends Mapper
 {
@@ -274,4 +275,8 @@ class BlogMapper extends Mapper
     return $userPendingNotifications;
   }
 
+  public function needPhpSession():bool
+  {
+    return false;
+  }
 }

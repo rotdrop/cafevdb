@@ -533,24 +533,25 @@ const afterLoad = function(container) {
    ***************************************************************************/
 
   {
-    const form = $('#emailsettings');
-    const msg = form.find('.statusmessage');
+    const emailContainer = $('div#email-settings');
+
+    $('div#email-settings').accordion({
+      heightStyle: 'content',
+    });
 
     {
-      const container = form.find('fieldset.emailuser');
-      // const msg = container.find('.statusmessage');
+      const container = emailContainer.find('fieldset.emailuser');
 
       $('#emailuser').blur(function(event) {
-        msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
           setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
-            msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
           })
           .done(function(data) {
-            msg.html(data.message).show();
+            Notification.messages(data.message);
           });
         return false;
       });
@@ -562,20 +563,19 @@ const afterLoad = function(container) {
       const passwordChange = container.find('#button');
 
       passwordChange.on('click', function() {
-        msg.hide();
         const value = password.val();
         const name = password.attr('name');
         if (value !== '') {
           $.post(
             setAppUrl(name), { value })
             .fail(function(xhr, status, errorThrown) {
-              msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+              Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
             })
             .done(function(data) {
-              msg.html(data.message).show();
+              Notification.messages(data.message);
             });
         } else {
-          msg.html(t(appName, 'Password field must not be empty')).show();
+          Notification.messages(t(appName, 'Password field must not be empty'));
         }
         return false;
       });
@@ -583,93 +583,86 @@ const afterLoad = function(container) {
 
     { // eslint-disable-line
       // const container = form.find('#emaildistribute');
-      // const msg = container.find('.statusmessage');
 
       $('#emaildistributebutton').click(function() {
-        msg.hide();
         const name = $(this).attr('name');
         $.post(
           setAppUrl(name))
           .fail(function(xhr, status, errorThrown) {
-            msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
           })
           .done(function(data) {
-            msg.html(data.message).show();
+            Notification.messages(data.message);
           });
         return false;
       });
     }
 
     {
-      const container = form.find('fieldset.serversettings');
-      // const msg = container.find('.statusmessage');
+      const container = emailContainer.find('form.serversettings');
 
       $('[id$=security]:input').change(function(event) {
-        msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
           setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
-            msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
           })
           .done(function(data) {
             if (data.port) {
               $('#' + data.proto + 'port').val(data.port);
             }
-            msg.html(data.message).show();
+            Notification.messages(data.message);
           });
         return false;
       });
 
       container.find('#smtpport,#imapport,#smtpserver,#imapserver').blur(function(event) {
         const $self = $(this);
-        msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
-            msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
           })
           .done(function(data) {
             if (data[name]) {
               $self.val(data[name]);
             }
-            msg.html(data.message).show();
+            Notification.messages(data.message);
           });
         return false;
       });
     }
 
     {
-      const container = form.find('fieldset.emailidentity');
+      const container = emailContainer.find('form.emailidentity');
       console.log('************', container);
 
       container.find('#emailfromname,#emailfromaddress').on('blur', function(event) {
-        msg.hide();
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(
           setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
-            msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+            Notification.messages(Ajax.failMessage(xhr, status, errorThrown))
           })
           .done(function(data) {
-            msg.html(data.message).show();
+            Notification.messages(data.message);
           });
         return false;
       });
     }
 
     {
-      const container = form.find('fieldset.emailtest');
+      const container = emailContainer.find('form.emailtest');
       const emailTestAddress = container.find('#emailtestaddress');
-      console.log('***************', emailTestAddress);
 
-      simpleSetHandler(container.find('#emailtestbutton'), 'click', msg);
-      simpleSetValueHandler(emailTestAddress, 'blur', msg);
+      simpleSetHandler(container.find('#emailtestbutton'), 'click');
+      simpleSetValueHandler(emailTestAddress, 'blur');
       simpleSetValueHandler(
-        container.find('#emailtestmode'), 'change', msg, {
+        container.find('#emailtestmode'), 'change', undefined, {
           success(element, data) {
             if (element.is(':checked')) {
               emailTestAddress.prop('disabled', false);
@@ -679,11 +672,35 @@ const afterLoad = function(container) {
           },
         });
     }
-  }
 
-  $('form#orchestra').accordion({
-    heightStyle: 'content',
-  });
+    {
+      // mailing list REST stuff
+      const container = emailContainer.find('form.mailing-list');
+
+      const password = container.find('#mailingListRestPassword');
+      showPassword(password);
+
+      $('#mailingListServer, #mailingListRestUser, #mailingListRestPassword').blur(function(event) {
+        const name = $(this).attr('name');
+        const value = $(this).val();
+        $.post(
+          setAppUrl(name), { value })
+          .fail(function(xhr, status, errorThrown) {
+            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+          })
+          .done(function(data) {
+            Notification.messages(data.message);
+          });
+        return false;
+      });
+
+    }
+
+    $('form#orchestra').accordion({
+      heightStyle: 'content',
+    });
+
+  }
 
   {
     /**************************************************************************

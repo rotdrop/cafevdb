@@ -332,3 +332,11 @@ form.orchestra table.executive-board-members {
     font-weight:bold;
   }
 }
+
+#email-settings {
+  form.mailing-list {
+    input[type="text"], input[type="password"] {
+      width:200px;
+    }
+  }
+}

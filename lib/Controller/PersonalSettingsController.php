@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
@@ -1305,6 +1306,37 @@ class PersonalSettingsController extends Controller {
     case 'emailfromname':
       return $this->setSimpleConfigValue($parameter, $value);
 
+    case (in_array($parameter, ConfigService::MAILING_LIST_CONFIG) ? $parameter : null):
+      foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
+        ${$listConfig} = $this->getConfigValue($listConfig);
+      }
+      ${$parameter} = Util::normalizeSpaces($value);
+      $all = true;
+      foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
+        if (empty(${$listConfig})) {
+          $all = false;
+          break;
+        }
+      }
+      if ($all) {
+        $oldValue = $this->getConfigValue($parameter);
+        $this->setConfigValue($parameter, ${$parameter});
+        try {
+          $listService = $this->di(MailingListsService::class);
+          if (empty($listService->getServerConfiguration())) {
+            $this->setConfigValue($parameter, $oldValue);
+            return self::grumble(
+              $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListURL));
+          }
+        } catch (\Throwable $t) {
+          $this->setConfigValue($parameter, $oldValue);
+          $this->logException($t);
+          return self::grumble(
+            $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListURL));
+        }
+      }
+      return $this->setSimpleConfigValue($parameter, $value);
+
     case 'translation':
       if (empty($value['key']) || empty($value['language'])) {
         return self::grumble($this->l->t('Empty translation phrase or language'));
@@ -1486,6 +1518,10 @@ class PersonalSettingsController extends Controller {
       ]);
     } else {
       $this->setConfigValue($key, $realValue);
+
+      if (preg_match('/.*password.*/i', $key)) {
+        $realValue = '••••••••';
+      }
       return self::dataResponse([
         'message' => $this->l->t('Value for "%s" set to "%s"', [ $key, $realValue ]),
         $key => $value,

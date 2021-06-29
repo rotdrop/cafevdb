@@ -18,6 +18,7 @@
     "ezyang/htmlpurifier": "^4.13.0",
     "giggsey/libphonenumber-for-php": "^8.12",
     "globalcitizen/php-iban": "^4.0",
+    "guzzlehttp/guzzle": "^7.0",
     "html2text/html2text": "^4.3",
     "ioncube/php-openssl-cryptor": "dev-master",
     "mikehaertl/php-pdftk": "^0.10.0",

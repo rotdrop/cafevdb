@@ -322,6 +322,10 @@ class PersonalForm {
           $templateParameters['email'.$key] = $this->getConfigValue('email'.$key);
         }
 
+        foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
+          $templateParameters[$listConfig] = $this->getConfigValue($listConfig);
+        }
+
         foreach (['Preview',
                   'Archive',
                   'Rehearsals',

@@ -85,19 +85,19 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
       callbacks
         .post(name, value)
         .fail(function(xhr, textStatus, errorThrown) {
-          msgElement.html(Ajax.failMessage(xhr, textStatus, errorThrown)).show();
+          let message = Ajax.failMessage(xhr, textStatus, errorThrown);
+          message = Notification.messages(message, { timeout: 15 });
+          msgElement.html(message).show();
           callbacks.fail(xhr, textStatus, errorThrown);
           callbacks.cleanup();
         })
         .done(function(data) {
-          Notification.hide(function() {
-            if (data.message) {
-              data.message = Notification.messages(data.message, { timeout: 15 });
-              msgElement.html(data.message.join('; ')).show();
-            }
-            callbacks.success($self, data, value, msgElement);
-            callbacks.cleanup();
-          });
+          if (data.message) {
+            data.message = Notification.messages(data.message, { timeout: 15 });
+            msgElement.html(data.message.join('; ')).show();
+          }
+          callbacks.success($self, data, value, msgElement);
+          callbacks.cleanup();
         });
     }
     return false;

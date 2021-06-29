@@ -105,6 +105,11 @@ class ConfigCheckService
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
     $this->addressBookProvider = $addressBookProvider;
+
+    {
+      // $mm3 = new MailingListsService($this->configService);
+      // $mm3->serverConfiguration();
+    }
   }
 
   /**Return an array with necessary configuration items, being either

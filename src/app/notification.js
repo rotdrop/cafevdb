@@ -70,9 +70,12 @@ const showTemporary = function(text, options) {
 
 function messages(messages, options) {
   const defaultOptions = {
-    timeout: 10,
+    timeout : 10,
   };
   options = $.extend({}, defaultOptions, options);
+  if (options.timeout !== undefined) {
+    options.timeout *= 1000;
+  }
   if (messages !== undefined) {
     if (!Array.isArray(messages)) {
       messages = [messages];

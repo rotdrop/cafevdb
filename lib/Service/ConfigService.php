@@ -134,6 +134,12 @@ class ConfigService {
 
   const DEFAULT_AUTOSAVE_INTERVAL = 300; // seconds
 
+  const MAILING_LIST_CONFIG = [
+    'url' => 'mailingListURL',
+    'user' => 'mailingListRestUser',
+    'password' => 'mailingListRestPassword',
+  ];
+
   /** @var array */
   protected $encryptionCache;
 
