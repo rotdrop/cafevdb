@@ -58,7 +58,7 @@ class Registration
     $context->registerServiceAlias('template:'.'instrument-families', InstrumentFamilies::class);
     $context->registerServiceAlias('template:'.'insurance-brokers', InsuranceBrokers::class);
     $context->registerServiceAlias('template:'.'insurance-rates', InsuranceRates::class);
-    $context->registerServiceAlias('template:'.'blog', BlogMapper::class);
+    $context->registerServiceAlias('template:'.'blog/blog', BlogMapper::class);
 
     // @todo find a cleaner way for the following
 

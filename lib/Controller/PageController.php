@@ -350,7 +350,7 @@ class PageController extends Controller {
     if (empty($template)) {
       $blogMapper = \OC::$server->query(BlogMapper::class);
       if ($blogMapper->notificationPending($this->userId())) {
-        return 'blog';
+        return 'blog/blog';
       }
 
       return 'all-musicians';

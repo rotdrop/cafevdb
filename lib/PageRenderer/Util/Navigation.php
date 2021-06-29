@@ -556,7 +556,7 @@ class Navigation
       $title = $this->l->t("Simplistic blog page with follow apps, used primarily to display hints
 if something has changed in the orchestra app.");
       $post = ['blog' => $value,
-               'template' => 'blog'];
+               'template' => 'blog/blog'];
       break;
 
     case 'email':
