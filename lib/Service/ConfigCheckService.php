@@ -50,7 +50,7 @@ class ConfigCheckService
       | \OCP\Constants::PERMISSION_READ
       | \OCP\Constants::PERMISSION_UPDATE
       | \OCP\Constants::PERMISSION_DELETE
-      //| \OCP\Constants::PERMISSION_SHARE
+      | \OCP\Constants::PERMISSION_SHARE
   );
 
   /** @var EntityManager */
@@ -308,7 +308,7 @@ class ConfigCheckService
       | \OCP\Constants::PERMISSION_READ
       | \OCP\Constants::PERMISSION_UPDATE
       | \OCP\Constants::PERMISSION_DELETE
-      //| \OCP\Constants::PERMISSION_SHARE
+      | \OCP\Constants::PERMISSION_SHARE
     );
 
     if ($type != 'folder' && $type != 'file') {
