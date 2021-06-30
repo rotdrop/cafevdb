@@ -69,6 +69,11 @@ curl \
 #      -X GET \
 #      "http://localhost:8001/3.1/lists/$LISTNAME/config/$RESOURCE"
 
+curl \
+    --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
+    -X GET \
+    "http://localhost:8001/3.1/lists/$LISTNAME/uris"
+
 # delete mailing list
 curl \
     --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
