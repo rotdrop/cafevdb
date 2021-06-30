@@ -500,7 +500,7 @@ trait ConfigTrait {
 
   protected function toolTipsService()
   {
-    if (empty($this_>toolTipsService)) {
+    if (empty($this->toolTipsService)) {
       $this->toolTipsService = $this->di(ToolTipsService::class);
       if (!empty($this->toolTipsService)) {
         $debugMode = $this->getConfigValue('debugmode', 0);
