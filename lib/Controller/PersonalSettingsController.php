@@ -1000,6 +1000,7 @@ class PersonalSettingsController extends Controller {
                       [$real, $e->getMessage()]));
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
+    case 'postboxfolder':
     case 'documenttemplatesfolder':
     case 'projectparticipantsfolder':
     case 'projectsbalancefolder':
@@ -1055,9 +1056,9 @@ class PersonalSettingsController extends Controller {
           }
         } else if ($real != $saved) {
           return self::grumble($saved . ' != ' . $real);
-        } else if ($this->configCheckService->checkSharedFolder($actual)) {
+        } else if ($this->configCheckService->checkProjectFolder($actual)) {
           try {
-            $folderLink = $this->userStorage->getFilesAppLink($real);
+            $folderLink = $this->userStorage->getFilesAppLink($actual);
           } catch (\Throwable $t) {
             // don't care
           }
