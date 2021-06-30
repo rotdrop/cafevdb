@@ -1991,7 +1991,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   {
     if ($firstNameFirst) {
       return "CONCAT_WS(
-  ', ',
+  ' ',
   IF($tableAlias.nick_name IS NULL OR $tableAlias.nick_name = '',
     $tableAlias.first_name,
     $tableAlias.nick_name
