@@ -371,12 +371,13 @@ __EOT__;
         'input'    => 'VR',
         'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \', \')',
         'php|VDCP'  => function($value, $op, $field, $row, $recordId, $pme) {
+          $projectId = $recordId['id'];
           $post = [
             'ProjectParticipantFields' => $value,
             'template' => 'project-participant-fields',
             'projectName' => $row[$this->queryField('name', $pme->fdd)],
-            'project_id' => $recordId,
-            'projectId' => $recordId,
+            'project_id' => $projectId,
+            'projectId' => $projectId,
           ];
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
