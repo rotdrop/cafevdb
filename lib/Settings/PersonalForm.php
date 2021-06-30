@@ -221,6 +221,7 @@ class PersonalForm {
           // don't care
         }
         $documentTemplatesFolder = $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER);
+        $postboxFolder = $this->getConfigValue(ConfigService::POSTBOX_FOLDER);
 
         $templateParameters = array_merge(
           $templateParameters,
@@ -271,6 +272,7 @@ class PersonalForm {
 
             'sharedfolder' => $sharedFolder,
             'sharedFolderLink' => $sharedFolderLink,
+            'postboxfolder' => $postboxFolder,
             'documenttemplatesfolder' => $documentTemplatesFolder,
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),
             'projectparticipantsfolder' => $this->getConfigValue('projectparticipantsfolder',''),

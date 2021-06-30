@@ -76,6 +76,7 @@ class ConfigService {
   const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';
   const PROJECT_BALANCE_FOLDER = 'projectbalancefolder';
   const DOCUMENT_TEMPLATES_FOLDER = 'documenttemplatesfolder';
+  const POSTBOX_FOLDER = 'postboxfolder';
 
   const CMS_CATEGORIES = [
     'preview',

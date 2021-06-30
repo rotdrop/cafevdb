@@ -110,6 +110,23 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
            target="<?php p($appName . '-sharedfolder-view'); ?>"
            class="sharedfolder-view button<?php empty($sharedFolderLink) && p(' hidden'); ?>"></a>
       </fieldset>
+      <fieldset id="postboxfolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
+        <input type="hidden" id="postboxfolder-saved" name="postboxfolder-saved" value="<?php echo $_['postboxfolder']; ?>" />
+        <input <?php echo $_['postboxfolder'] != '' ? 'disabled' : ''; ?>
+          type="text"
+          id="postboxfolder"
+          name="postboxfolder"
+          placeholder="<?php echo $l->t('Postbox-Folder'); ?>"
+          value="<?php echo $_['postboxfolder']; ?>"
+          title="<?php echo $toolTips['postboxfolder']; ?>"
+        />
+        <input type="checkbox" id="postboxfolder-force" name="postboxfolder-force" class="checkbox"/>
+        <label for="postboxfolder-force" title="<?php echo $toolTips['postboxfolder-force']; ?>" >
+          <?php echo $l->t('force');?>
+        </label>
+        <input name="postboxfolder-check" id="postboxfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+      </fieldset>
       <fieldset id="documenttemplatesfolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
         <input type="hidden" id="documenttemplatesfolder-saved" name="documenttemplatesfolder-saved" value="<?php echo $_['documenttemplatesfolder']; ?>" />
