@@ -328,6 +328,7 @@ class ConfigCheckService
           $share->setPermissions($groupPerms);
           $this->shareManager->updateShare($share);
         }
+        return $share->getPermissions() !== $groupPerms;
       }
     }
 
