@@ -120,6 +120,16 @@ class Musician implements \ArrayAccess
   /**
    * @var string
    *
+   * Meant for per-user authentication which might be used for future
+   * extensions.
+   *
+   * @ORM\Column(type="string", length=256, unique=false, nullable=true, options={"collation"="ascii_bin"})
+   */
+  private $userPassphrase;
+
+  /**
+   * @var string
+   *
    * @ORM\Column(type="string", length=128, nullable=true)
    */
   private $city;
