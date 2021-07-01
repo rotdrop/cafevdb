@@ -284,6 +284,46 @@ class ConfigCheckService
     return false;
   }
 
+
+  public function linkShareObject($id, $shareOwner = null)
+  {
+    $shareType = IShare::TYPE_LINK;
+    $sharePerms = \OCP\Constants::PERMISSION_CREATE;
+
+    if (empty($shareOwner)) {
+      $shareOwner = $this->userId();
+    }
+
+    // retrieve all shared items for $shareOwner
+    foreach($this->shareManager->getSharesBy($shareOwner, $shareType) as $share) {
+      if ($share->getNodeId() === $id) {
+        // check permissions
+        if ($share->getPermissions() !== $sharePerms) {
+          $share->setPermissions($sharePerms);
+          $this->shareManager->updateShare($share);
+        }
+        if ($share->getPermissions() === $sharePerms) {
+          $url = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);
+        }
+        return null;
+      }
+    }
+
+    // Otherwise it should be legal to attempt a new share ...
+    $share = $this->shareManager->newShare();
+    $share->setNodeId($id);
+    $share->setPermissions($sharePerms);
+    $share->setShareType($shareType);
+    $share->setShareOwner($shareOwner);
+    $share->setSharedBy($shareOwner);
+
+    if ($this->shareManager->createShare($share)) {
+      $url = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);
+    }
+
+    return null;
+  }
+
   /**
    * Share an object between the members of the specified group. Note:
    * this function has to be executed under the uid of the user the
@@ -303,13 +343,7 @@ class ConfigCheckService
   public function groupShareObject($id, $groupId, $type = 'calendar', $shareOwner = null)
   {
     $shareType = IShare::TYPE_GROUP;
-    $groupPerms = (
-      \OCP\Constants::PERMISSION_CREATE
-      | \OCP\Constants::PERMISSION_READ
-      | \OCP\Constants::PERMISSION_UPDATE
-      | \OCP\Constants::PERMISSION_DELETE
-      | \OCP\Constants::PERMISSION_SHARE
-    );
+    $groupPerms = self::SHARE_PERMISSIONS;
 
     if ($type != 'folder' && $type != 'file') {
       $this->logError('only folder and file for now');
@@ -339,7 +373,7 @@ class ConfigCheckService
     $share->setPermissions($groupPerms);
     $share->setShareType($shareType);
     $share->setShareOwner($shareOwner);
-    $share->setSharedBy(empty($shareOwner) ? $this->getUserId() : $shareOwner);
+    $share->setSharedBy($shareOwner);
 
     return $this->shareManager->createShare($share);
   }
@@ -581,6 +615,80 @@ class ConfigCheckService
     });
 
     return $this->sharedFolderExists($sharedFolder);
+  }
+
+  /**
+   * Check for the existence of the shared folder and create it when
+   * not found.
+   *
+   * @param $sharedFolder The name of the folder.
+   *
+   * @return bool @c true on success.
+   */
+  public function checkLinkSharedFolder($sharedFolder)
+  {
+    if ($sharedFolder == '') {
+      return false;
+    }
+
+    if ($sharedFolder[0] != '/') {
+      $sharedFolder = '/'.$sharedFolder;
+    }
+
+    $shareGroup = $this->getAppValue('usergroup');
+    $groupAdmin = $this->userId();
+    $shareOwner = $this->getConfigValue('shareowner');
+
+    if (!$this->isSubAdminOfGroup()) {
+      $this->logError("Permission denied: ".$groupAdmin." is not a group admin of ".$shareGroup.".");
+      return false;
+    }
+
+    // try to create the folder and share it with the group
+    $result = $this->sudo($shareOwner, function() use ($sharedFolder, $shareOwner) {
+      $userId    = $this->userId();
+      $user      = $this->user();
+
+      $rootView = $this->rootFolder->getUserFolder($shareOwner);
+
+      if ($rootView->nodeExists($sharedFolder)
+          && (($node = $rootView->get($sharedFolder))->getType() != FileInfo::TYPE_FOLDER
+              || !$node->isShareable())) {
+        try {
+          $node->delete();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          return null;
+        }
+      }
+
+      if (!$rootView->nodeExists($sharedFolder) && !$rootView->newFolder($sharedFolder)) {
+        return false;
+      }
+
+      if (!$rootView->nodeExists($sharedFolder)
+          || ($node = $rootView->get($sharedFolder))->getType() != FileInfo::TYPE_FOLDER) {
+        throw new \Exception($this->l->t('Folder \`%s\' could not be created', [$sharedFolder]));
+      }
+
+      // Now it should exist as directory and $node should contain its file-info
+
+      if ($node) {
+        $id = $node->getId();
+        $this->logDebug('shared folder id ' . $id);
+        $url = $this->linkShareObject($id, $userId);
+        if (empty($url)) {
+          return null;
+        }
+      } else {
+        $this->logError('No file info for ' . $sharedFolder);
+        return null;
+      }
+
+      return $url;
+    });
+
+    return $result;
   }
 
   /**
