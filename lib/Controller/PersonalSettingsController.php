@@ -1038,6 +1038,7 @@ class PersonalSettingsController extends Controller {
         return self::valueResponse($real, $this->l->t('Participants-folder set to "%s".', $real));
       }
       try {
+        $url = null;
         if (empty($saved) || $force) {
           if ($this->configCheckService->checkProjectFolder($real)) {
             $this->setConfigValue($parameter, $real);
@@ -1059,6 +1060,7 @@ class PersonalSettingsController extends Controller {
             }
             return self::dataResponse([
               'value' => $real,
+              'url' => $url,
               'message' => $this->l->t('Created and shared new folder "%s".', [$real]),
               'folderLink' => $folderLink,
             ]);
@@ -1085,6 +1087,7 @@ class PersonalSettingsController extends Controller {
           }
           return self::dataResponse([
             'value' => $actual,
+            'url' => $url,
             'message' => $this->l->t('"%s" which is configured as "%s" exists and is usable.', [$parameter, $actual]),
             'folderLink' => $folderLink,
             ]);

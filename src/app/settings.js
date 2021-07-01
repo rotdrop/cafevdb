@@ -523,7 +523,11 @@ const afterLoad = function(container) {
     sharedFolder('documenttemplatesfolder', function(element, css, data, value, msg) {
       $('fieldset.document-template input').prop('disabled', value[css] === '');
     });
-    sharedFolder('postboxfolder');
+    sharedFolder('postboxfolder', function(element, css, data, value, msg) {
+      if (data.url) {
+        $('div.postboxfolder-sharelink').html(data.url);
+      }
+    });
 
   } // shared objects
 
