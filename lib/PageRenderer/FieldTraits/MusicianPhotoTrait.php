@@ -33,7 +33,7 @@ trait MusicianPhotoTrait
   /**
    * Geneate code for a HTML-link for an optional photo.
    */
-  public function photoImageLink($musicianId, $action = 'display', $imageId)
+  public function photoImageLink($musicianId, $action, $imageId)
   {
     if (empty($imageId)) {
       $imageId = ImagesController::IMAGE_ID_ANY;

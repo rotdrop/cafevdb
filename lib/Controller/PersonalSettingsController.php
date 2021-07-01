@@ -1045,6 +1045,17 @@ class PersonalSettingsController extends Controller {
               $folderLink = $this->userStorage->getFilesAppLink($real);
             } catch (\Throwable $t) {
               // don't care
+              $this->logException($t);
+            }
+            if ($parameter == ConfigService::POSTBOX_FOLDER) {
+              try {
+                $url = $this->configCheckService->checkLinkSharedFolder(
+                  $sharedFolder . UserStorage::PATH_SEP . $real
+                );
+                $this->setConfigValue($parameter . 'ShareLink', $url);
+              } catch (\Throwable $t) {
+                $this->logException($t);
+              }
             }
             return self::dataResponse([
               'value' => $real,
@@ -1061,6 +1072,16 @@ class PersonalSettingsController extends Controller {
             $folderLink = $this->userStorage->getFilesAppLink($actual);
           } catch (\Throwable $t) {
             // don't care
+          }
+          if ($parameter == ConfigService::POSTBOX_FOLDER) {
+            try {
+              $url = $this->configCheckService->checkLinkSharedFolder(
+                $sharedFolder . UserStorage::PATH_SEP . $real
+              );
+              $this->setConfigValue($parameter . 'ShareLink', $url);
+            } catch (\Throwable $t) {
+              $this->logException($t);
+            }
           }
           return self::dataResponse([
             'value' => $actual,

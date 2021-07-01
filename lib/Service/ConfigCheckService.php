@@ -303,7 +303,8 @@ class ConfigCheckService
           $this->shareManager->updateShare($share);
         }
         if ($share->getPermissions() === $sharePerms) {
-          $url = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);
+          $url = $this->urlGenerator()->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);
+          return $url;
         }
         return null;
       }
@@ -628,7 +629,7 @@ class ConfigCheckService
   public function checkLinkSharedFolder($sharedFolder)
   {
     if ($sharedFolder == '') {
-      return false;
+      return null;
     }
 
     if ($sharedFolder[0] != '/') {
@@ -641,7 +642,7 @@ class ConfigCheckService
 
     if (!$this->isSubAdminOfGroup()) {
       $this->logError("Permission denied: ".$groupAdmin." is not a group admin of ".$shareGroup.".");
-      return false;
+      return null;
     }
 
     // try to create the folder and share it with the group
@@ -663,7 +664,7 @@ class ConfigCheckService
       }
 
       if (!$rootView->nodeExists($sharedFolder) && !$rootView->newFolder($sharedFolder)) {
-        return false;
+        return null;
       }
 
       if (!$rootView->nodeExists($sharedFolder)

@@ -126,6 +126,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           <?php echo $l->t('force');?>
         </label>
         <input name="postboxfolder-check" id="postboxfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+        <div class="postboxfolder-sharelink<?php empty($postboxFolderShareLink) && p('hidden'); ?>"><?php p($postboxFolderShareLink); ?></div>
       </fieldset>
       <fieldset id="documenttemplatesfolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
