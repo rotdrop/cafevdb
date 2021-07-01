@@ -1000,11 +1000,11 @@ class PersonalSettingsController extends Controller {
                       [$real, $e->getMessage()]));
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
-    case 'postboxfolder':
-    case 'documenttemplatesfolder':
-    case 'projectparticipantsfolder':
-    case 'projectsbalancefolder':
-    case 'projectsfolder':
+    case ConfigService::POSTBOX_FOLDER:
+    case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
+    case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
+    case ConfigService::PROJECT_BALANCE_FOLDER:
+    case ConfigService::PROJECTS_FOLDER:
       $appGroup = $this->getConfigValue('usergroup');
       if (empty($appGroup)) {
         return self::grumble($this->l->t('App user-group is not set.'));
