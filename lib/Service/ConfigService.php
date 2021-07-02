@@ -596,9 +596,9 @@ class ConfigService {
     }
     try {
       $result = $callback();
-    } catch (\Exception $exception) {
+    } catch (\Throwable $t) {
       $this->setUserId($oldUserId);
-      throw $exception;
+      throw new \RuntimeException('Caught an execption during sudo to "' . $uid . '".', 0, $t);
     }
     $this->setUser($oldUser);
 
