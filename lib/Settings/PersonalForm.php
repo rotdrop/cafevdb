@@ -177,10 +177,14 @@ class PersonalForm {
         $executiveBoardProject = $this->getConfigValue('executiveBoardProject', $this->l->t('ExecutiveBoardMembers'));
         $executiveBoardProjectId = $this->getConfigValue('executiveBoardProjectId', -1);
 
+        $projectOptions = [];
         if ($this->databaseConfigured()) {
-          $projectOptions = $this->projectService->projectOptions([ 'type' => 'permanent' ]);
-        } else {
-          $projectOptions = [];
+          try {
+            $projectOptions = $this->projectService->projectOptions([ 'type' => 'permanent' ]);
+          } catch (\Throwable $t) {
+            $this->logException($t);
+            $projectOptions = [];
+          }
         }
 
         $this->logDebug('MEMBER PROJECTS '.$executiveBoardProjectId.' / '.$memberProjectId);
