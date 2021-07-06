@@ -426,7 +426,8 @@ class ConfigCheckService
     return true;
   }
 
-  /**Make sure the "sharing" user exists, create it when necessary.
+  /**
+   * Make sure the "sharing" user exists, create it when necessary.
    * May throw an exception.
    *
    * @param $shareOwnerId The account id holding the shared resources.
