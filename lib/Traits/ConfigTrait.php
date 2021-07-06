@@ -516,7 +516,8 @@ trait ConfigTrait {
    *
    */
 
-  protected function databaseConfigured() {
+  protected function databaseConfigured()
+  {
     return !(empty($this->getConfigValue('dbname'))
              || empty($this->getConfigValue('dbuser'))
              || empty($this->getConfigValue('dbpassword'))
