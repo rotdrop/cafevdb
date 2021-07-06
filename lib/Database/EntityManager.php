@@ -240,11 +240,16 @@ class EntityManager extends EntityManagerDecorator
       $this->logError('Unable to access database, connection parameters are unset');
       return false;
     }
-    if (!$connection->ping()) {
-      if (!$connection->connect()) {
-        $this->logError('db cannot connect');
-        return false;
+    try {
+      if (!$connection->ping()) {
+        if (!$connection->connect()) {
+          $this->logError('db cannot connect');
+          return false;
+        }
       }
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return false;
     }
     return true;
   }
