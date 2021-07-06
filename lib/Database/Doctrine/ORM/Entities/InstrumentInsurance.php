@@ -87,7 +87,7 @@ class InstrumentInsurance implements \ArrayAccess
   private $geographicalScope;
 
   /**
-   * @ORM\OneToOne(targetEntity="InsuranceRate")
+   * @ORM\ManyToOne(targetEntity="InsuranceRate")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="broker_id", referencedColumnName="broker_id"),
    *   @ORM\JoinColumn(name="geographical_scope", referencedColumnName="geographical_scope")
