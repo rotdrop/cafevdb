@@ -1,6 +1,7 @@
 ajax/
 3rdparty/
 vendor/
+vendor-wrapped/
 build/
 doc/
 translationfiles/music/
