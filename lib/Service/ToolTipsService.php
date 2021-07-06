@@ -953,6 +953,13 @@ and contact the treasurer for further instructions.',
                                             array('Finance::SEPA_MANDATE_EXPIRE_MONTHS')
       ),
 
+      'sharedfolder' => $this->l->t('Folder shared by the orchestra group.'),
+      'postboxfolder' => $this->l->t('Public upload "postbox" folder. Meant for anonymous public uploads of larger files.'),
+      'documenttemplatesfolder' => $this->l->t('Shared folder for document templates.'),
+      'projectsfolder' => $this->l->t('Shared folder for per-project data.'),
+      'projectparticipantsfolder' => $this->l->t('Shared folder for per-project per-participant data'),
+      'projectsbalancefolder' => $this->l->t('Shared folder for the financial balances, probably used after the project is finished.'),
+
       'settings-button' => $this->l->t('Personal application settings.'),
 
       'sharedfolder-force' => $this->l->t('Force the re-creation of the root of the shared-folder hierarchy.'),
