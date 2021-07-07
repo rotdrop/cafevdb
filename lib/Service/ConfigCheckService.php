@@ -449,7 +449,14 @@ class ConfigCheckService
       if (empty($shareOwnerPassword)) {
         $shareOwnerPassword = $this->generateRandomBytes(30);
       }
-      $shareOwner = $this->userManager()->createUser($shareOwnerId, $shareOwnerPassword);
+
+      if (!$this->isSubAdminOfGroup()) {
+        $this->logError("Permission denied: ".$this->userId()." is not a group admin of ".$shareGroupId.".");
+        return false;
+      }
+      $userBackend = $this->user()->getBackend();
+
+      $shareOwner = $this->userManager()->createUserFromBackend($shareOwnerId, $shareOwnerPassword, $userBackend);
       if (!empty($shareOwner)) {
         $this->logError("User created");
         // trigger address book creation and things
