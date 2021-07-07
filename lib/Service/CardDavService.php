@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -125,7 +125,9 @@ class CardDavService
   public function displayName($addressBookId, $displayName)
   {
     try {
-      $this->cardDavBackend->updateAddressBook($addressBookId, new \Sabre\DAV\PropPatch(['{DAV:}displayname' => $displayName]));
+      $propPatch = new \Sabre\DAV\PropPatch(['{DAV:}displayname' => $displayName]);
+      $this->cardDavBackend->updateAddressBook($addressBookId, $propPatch);
+      $propPatch->commit();
     } catch(\Exception $e) {
       $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       return false;

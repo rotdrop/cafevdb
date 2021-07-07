@@ -163,7 +163,9 @@ class CalDavService
   public function displayName($calendarId, $displayName)
   {
     try {
-      $this->calDavBackend->updateCalendar($calendarId, new \Sabre\DAV\PropPatch(['{DAV:}displayname' => $displayName]));
+      $propPatch = new \Sabre\DAV\PropPatch(['{DAV:}displayname' => $displayName]);
+      $this->calDavBackend->updateCalendar($calendarId, $propPatch);
+      $propPatch->commit();
     } catch(\Exception $e) {
       $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       return false;
