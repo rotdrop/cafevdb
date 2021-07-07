@@ -317,7 +317,8 @@ class ConfigService {
     return $this->urlGenerator;
   }
 
-  public function getUser($userId = null) {
+  public function getUser($userId = null):?IUser
+  {
     if (!empty($userId)) {
       return $this->userManager->get($userId);
     }
