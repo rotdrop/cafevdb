@@ -458,7 +458,7 @@ class ConfigCheckService
 
       $shareOwner = $this->userManager()->createUserFromBackend($shareOwnerId, $shareOwnerPassword, $userBackend);
       if (!empty($shareOwner)) {
-        $this->logError("User created");
+        $this->logInfo("User created");
         // trigger address book creation and things
         $this->eventDispatcher->dispatch(\OCP\IUser::class . '::firstLogin', new GenericEvent($shareOwner));
         $created = true;
@@ -493,7 +493,7 @@ class ConfigCheckService
         }
         return false;
       }
-      $this->logError("added to group");
+      $this->logDebug("added to group");
     }
 
     return $this->shareOwnerExists($shareOwnerId);
@@ -803,7 +803,7 @@ class ConfigCheckService
     $result = $this->sudo($shareOwnerId, function()
       use ($uri, $id, $displayName, $shareOwnerId, $userGroupId)
       {
-        $this->logError("Sudo to " . $this->userId());
+        $this->logDebug("Sudo to " . $this->userId());
 
         // get or create the calendar
         if (!empty($id) && $id > 0) {
@@ -813,13 +813,13 @@ class ConfigCheckService
         }
 
         if (empty($calendar)) {
-          $this->logError("Calendar " . $displayName . " does not seem to exist.");
+          $this->logDebug("Calendar " . $displayName . " does not seem to exist.");
           $id = $this->calDavService->createCalendar($uri, $displayName, $shareOwnerId);
           if ($id < 0) {
             $this->logError("Unabled to create calendar " . $displayName);
             return -1;
           }
-          $this->logError("Created calendar " . $displayName . " with id " . $id);
+          $this->logDebug("Created calendar " . $displayName . " with id " . $id);
           $calendar = $this->calDavService->calendarById($id);
           if (empty($calendar)) {
             $this->logError("Failed to create calendar " . $displayName);
@@ -834,7 +834,7 @@ class ConfigCheckService
 
         // make sure it is shared with the group
         if (!$this->calDavService->groupShareCalendar($id, $userGroupId)) {
-          $this->logError("Unable to shared " . $uri . " with " . $userGroupId);
+          $this->logError("Unable to share " . $uri . " with " . $userGroupId);
           if ($created) {
             $this->calDavService->deleteCalendar($id);
           }
@@ -843,14 +843,14 @@ class ConfigCheckService
 
         // check the display name
         if ($calendar->getDisplayName() != $displayName) {
-          $this->logError("Changing name of " . $id . " from " . $calendar->getDisplayName() . " to " . $displayName);
+          $this->logDebug("Changing name of " . $id . " from " . $calendar->getDisplayName() . " to " . $displayName);
           $this->calDavService->displayName($id, $displayName);
         }
 
         return $id;
       });
 
-    $this->logError("returning " . $result);
+    $this->logDebug("returning " . $result);
 
     return $result;
   }
@@ -926,7 +926,7 @@ class ConfigCheckService
     return $this->sudo($shareOwnerId, function()
       use ($uri, $displayName, $id, $shareOwnerId, $userGroupId)
       {
-        $this->logError("Sudo to " . $this->userId());
+        $this->logDebug("Sudo to " . $this->userId());
 
         // get or create the addressBook
         if (!empty($id) && $id > 0) {
@@ -965,7 +965,7 @@ class ConfigCheckService
 
         // check the display name
         if ($addressBook->getDisplayName() != $displayName) {
-          $this->logError("Changing name of " . $id . " from " . $addressBook->getDisplayName() . " to " . $displayName);
+          $this->logDebug("Changing name of " . $id . " from " . $addressBook->getDisplayName() . " to " . $displayName);
           $this->cardDavService->displayName($id, $displayName);
         }
 
