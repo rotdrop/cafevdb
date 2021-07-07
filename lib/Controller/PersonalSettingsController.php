@@ -1117,7 +1117,10 @@ class PersonalSettingsController extends Controller {
           $this->setConfigValue($parameter.'id', $newId);
           return self::valueResponse(
             ['name' => $real, 'id' => $newId],
-            $this->l->t('Created and shared new calendar "%s".', [$real]));
+            ($newId != $actualId
+             ? $this->l->t('Created and shared new calendar "%s".', [$real])
+             : $this->l->t('Validated shared calendar "%s".', [$real]))
+          );
         } else {
           return self::grumble($this->l->t('Failed to create new shared calendar "%s".', [$real]));
         }
