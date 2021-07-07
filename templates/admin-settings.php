@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -42,6 +42,7 @@ if (empty($wikiVersion)) {
              name="orchestraUserGroup"
              id="orchestraUserGroup"
              value="<?php p($userGroup); ?>"
+             title="<?php p($l->t('Add the name of a dedicated user-group for the people allowed to access the orchestra-administration app.'); ?>"
              placeholder="<?php p($l->t('Group')); ?>" />
       <label for="orchestraUserGroup"><?php p($l->t('User Group')); ?></label>
     </div>
@@ -51,6 +52,7 @@ if (empty($wikiVersion)) {
              name="wikiNameSpace"
              id="wikiNameSpace"
              value="<?php p($wikiNameSpace); ?>"
+             title="<?php p($l->t('Add the name of a DokuWiki namespace which will host all wiki-pages of the orchestra. The namespace should be all lower-case and must not contain any spaces or fancy characters.')); ?>"
              placeholder="<?php p($l->t('Wiki NameSpace'));?>" />
       <label for="wikiNameSpace"><?php p($l->t('Wiki Name-Space')); ?></label>
     </div>
