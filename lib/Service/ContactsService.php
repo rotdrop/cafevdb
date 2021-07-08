@@ -465,7 +465,7 @@ class ContactsService
       }
       $vcard->add('BDAY', $birthDay);
     }
-    if ($musician['updated'] != 0) {
+    if (!empty($musician['updated'])) {
       $vcard->add('REV', (Util::dateTime($musician['updated']))->format(\DateTime::W3C));
     }
     $countryNames = $this->geoCodingService()->countryNames('en');

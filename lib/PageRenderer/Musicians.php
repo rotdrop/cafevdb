@@ -189,6 +189,8 @@ class Musicians extends PMETableViewBase
       $title = $this->l->t("This page is the only way to add musicians to projects in order to
 make sure that the musicians are also automatically added to the
 `global' musicians data-base (and not only to the project).");
+    } else {
+      $title = '';
     }
 
     return '<div class="'.$this->cssPrefix().'-header-text" title="'.$title.'">'.$header.'</div>';
@@ -597,7 +599,7 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['email'] = $this->defaultFDD['email'];
     $opts['fdd']['email']['tab'] = ['id' => 'contact'];
-    $opts['fdd']['email']['input'] .= 'M';
+    $opts['fdd']['email']['input'] = ($opts['fdd']['email']['input'] ?? '') . 'M';
 
     $opts['fdd']['street'] = [
       'tab'      => ['id' => 'contact'],

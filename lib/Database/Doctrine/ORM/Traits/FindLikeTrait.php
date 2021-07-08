@@ -195,6 +195,7 @@ trait FindLikeTrait
     $modifiers = [];
     $comparators = [];
     foreach ($criteria as $key => $value) {
+      $modifiers[$key] = [];
       if (!preg_match('/^[!=<>]+/', $key, $matches)) {
         continue;
       }
@@ -330,7 +331,7 @@ trait FindLikeTrait
           $field = $tableAlias.'.'.$key;
         }
         $param = str_replace('.', '_', $field);
-        $comparator = $comparators[$key]?:'eq';
+        $comparator = $comparators[$key]??'eq';
         if ($value === null) {
           $literal[$key] = true;
           $expr = $qb->expr()->isNull($field);

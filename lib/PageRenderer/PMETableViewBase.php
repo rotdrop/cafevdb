@@ -1432,6 +1432,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $orderBy = [];
     foreach ($this->joinStructure as $table => &$joinInfo) {
       $joinInfo['table'] = $table;
+      $joinInfo['flags'] = $joinInfo['flags'] ?? self::JOIN_FLAGS_NONE;
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         if (is_array($opts['key'])) {
           foreach (array_keys($opts['key']) as $key) {
@@ -1443,8 +1444,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $joinTables[$table] = 'PMEtable0';
         continue;
       }
-      $valuesTable = $joinInfo['sql']?
-                   : explode(self::VALUES_TABLE_SEP, $table)[0];
+      $valuesTable = $joinInfo['sql'] ?? explode(self::VALUES_TABLE_SEP, $table)[0];
 
       $joinIndex[$table] = count($opts['fdd']);
       $joinTables[$table] = 'PMEjoin'.$joinIndex[$table];
@@ -1454,7 +1454,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $groupOrderBy = [];
       $joinData = [];
       foreach (['identifier', 'filter'] as $columnRestriction) {
-        foreach ($joinInfo[$columnRestriction] as $joinTableKey => $joinTableValue) {
+        foreach (($joinInfo[$columnRestriction] ?? []) as $joinTableKey => $joinTableValue) {
           if (empty($joinTableValue)) {
             $group = true;
             $groupOrderBy[] = $joinTables[$table].'.'.$joinInfo['column'].' ASC';
@@ -1516,7 +1516,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           'column' => $joinInfo['column'],
           'order_by' => implode(', ', $groupOrderBy),
           'grouped' => $group,
-          'encode' => $joinInfo['encode'],
+          'encode' => $joinInfo['encode'] ?? null,
           'join' => $joinData,
         ],
       ];
@@ -1690,7 +1690,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected function generateNumbers(int $min)
   {
     $query = 'CALL generateNumbers('.$min.')';
-    $this->pme->sql_free_result($this->pme->myquery($query));
+    $result = $this->pme->myquery($query);
+    $this->pme->sql_free_result($result);
   }
 
   /**
