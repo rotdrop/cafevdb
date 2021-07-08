@@ -109,18 +109,10 @@ class MusiciansRepository extends EntityRepository
    * wild-cards like '*' and '%' are allowed and internally converted
    * to '%' in a LIKE comparison.
    *
-   * @return null|\DateTimeImmutable
+   * @return null|array
    */
   public function fetchLastModifiedDate(array $criteria = [], string $indexBy = 'uuid')
   {
-    if (is_int($musicianOrId)) {
-      $musicianId = $musicianOrId;
-    } else if (empty($musicianOrId)) {
-      $musicianId = null;
-    } else {
-      $musicianId = $musicianOrId['id'];
-    }
-
     $selects = [];
     if (!empty($criteria)) {
       $selects[] = 'm.'.$indexBy.' AS '.$indexBy;
@@ -160,7 +152,7 @@ class MusiciansRepository extends EntityRepository
     // $this->log('SQL '.$qb->getQuery()->getSql());
     // $this->log('PARAM '.print_r($qb->getQuery()->getParameters(), true));
 
-    return $qb->getQuery()->getResult();
+    return $qb->getQuery()->getOneOrNullResult();
   }
 
   /**
