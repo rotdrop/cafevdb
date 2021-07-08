@@ -42,7 +42,7 @@ if (empty($wikiVersion)) {
              name="orchestraUserGroup"
              id="orchestraUserGroup"
              value="<?php p($userGroup); ?>"
-             title="<?php p($l->t('Add the name of a dedicated user-group for the people allowed to access the orchestra-administration app.'); ?>"
+             title="<?php p($l->t('Add the name of a dedicated user-group for the people allowed to access the orchestra-administration app.')); ?>"
              placeholder="<?php p($l->t('Group')); ?>" />
       <label for="orchestraUserGroup"><?php p($l->t('User Group')); ?></label>
     </div>
