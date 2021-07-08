@@ -161,7 +161,7 @@ trait FindLikeTrait
       $qb->addGroupBy('mainTable.'.$field);
     }
 
-    $this->generateFindByWhere($qb, $queryParts);
+    $this->generateFindByWhere($qb, $queryParts, $limit, $offset);
 
     // $this->log('SQL '.$qb->getQuery()->getSql());
     // $this->log('PARAM '.print_r($qb->getQuery()->getParameters()->toArray(), true));
@@ -286,7 +286,7 @@ trait FindLikeTrait
    */
   protected function generateFindBySelect(array $queryParts, ?array $select = null)
   {
-    $indexBy = $queryParts['indexBy']?:[];
+    $indexBy = $queryParts['indexBy']?:['mainTable' => null];
     $qb = $this->createQueryBuilder('mainTable', $indexBy['mainTable']);
     foreach (array_keys($queryParts['joinEntities']) as $association) {
       $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$association]);
@@ -306,8 +306,12 @@ trait FindLikeTrait
    * main-table ATM. This could probably be cured by reading the
    * meta-data for all join tables.
    */
-  protected function generateFindByWhere(ORM\QueryBuilder $qb, array $queryParts)
-  {
+  protected function generateFindByWhere(
+    ORM\QueryBuilder $qb
+    , array $queryParts
+    , ?int $limit = null
+    , ?int $offset = null
+  ) {
     // unpack parameter array
     foreach ($queryParts as $key => $part) {
       ${$key} = $part;
