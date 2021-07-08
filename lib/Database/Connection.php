@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver;
 
 class Connection extends \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  // use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const CHARSET = 'utf8mb4';
 
@@ -37,7 +37,7 @@ class Connection extends \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection
 
   public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null) {
     parent::__construct($params, $driver, $config, $eventManager);
-    $this->configService = $params['configService'];
+    // $this->configService = $params['configService'];
   }
 }
 

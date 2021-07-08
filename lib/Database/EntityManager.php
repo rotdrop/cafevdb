@@ -280,7 +280,7 @@ class EntityManager extends EntityManagerDecorator
       $platform = $connection->getDatabasePlatform();
       foreach ($types as $phpType => $sqlType) {
         if ($sqlType == 'enum') {
-          $typeName = end(explode('\\', $phpType));
+          $typeName = substr(strrchr($phpType, '\\'), 1);
           Types\EnumType::registerEnumType($typeName, $phpType);
 
           // variant in lower case
@@ -319,7 +319,6 @@ class EntityManager extends EntityManagerDecorator
     $driverParams = [
       'driver' => 'pdo_mysql',
       'wrapperClass' => Connection::class,
-      'configService' => $this->configService,
     ];
     $charSetParams = [
       'collate' => 'utf8mb4_bin',
