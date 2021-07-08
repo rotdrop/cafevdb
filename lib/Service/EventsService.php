@@ -100,7 +100,6 @@ class EventsService
       // not for us
       return;
     }
-    $this->logError('');
     $this->syncCalendarObject($objectData, false);
   }
 
@@ -113,7 +112,6 @@ class EventsService
       // not for us
       return;
     }
-    $this->logError('');
     $this->syncCalendarObject($objectData);
   }
 
@@ -177,7 +175,7 @@ class EventsService
 
   public function onProjectDeleted(ProjectDeletedEvent $event)
   {
-    $projectId = $event->getProjectId();
+    $projectId = $event->getProject();
     $projectEvents = $this->projectEvents($projectId);
     foreach ($calendarEvents as $projectEvent) {
       $eventUri = $projectEvent->getEventUri();
@@ -198,7 +196,7 @@ class EventsService
 
   public function onProjectUpdated(ProjectUpdatedEvent $event)
   {
-    $events = $this->projectEvents($event->getProjectId());
+    $events = $this->projectEvents($event->getProject());
     $oldName = $event->getOldData()['name'];
     $newName = $event->getNewData()['name'];
     foreach ($events as $projectEvent) {
@@ -228,9 +226,9 @@ class EventsService
   }
 
   /** @return ProjectEvent[] */
-  private function projectEvents($projectId)
+  private function projectEvents($projectOrId)
   {
-    return $this->findBy(['projectId' => $projectId, 'type' => 'VEVENT']);
+    return $this->findBy(['project' => $projectOrId, 'type' => 'VEVENT']);
   }
 
   /**
@@ -247,20 +245,21 @@ class EventsService
    *   'allday' => BOOL
    *   'summary' => SUMMARY,
    *   'description' => DESCRTION,
-   *   'localtion' => LOCATION,
+   *   'location' => LOCATION,
    * ]
    * ```
    */
   private function makeEvent($projectEvent)
   {
     $event = [];
-    $event['projectid'] = $projectEvent->getProjectId();
+    $event['projectid'] = $projectEvent->getProject()->getId();
     $event['uri'] = $projectEvent->getEventUri();
+    $event['uid'] = $projectEvent->getEventUid();
     $event['calendarid'] = $projectEvent->getCalendarId();
     $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     if (empty($calendarObject)) {
-      $this->logError('Orphan project event found: '.print_r($event, true));
-      // should we?
+      $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new \Exception())->getTraceAsString());
+      // clean up orphaned events
       try {
         $this->unregister($event['projectid'], $event['uri']);
       } catch  (\Throwable $t) {
@@ -309,7 +308,7 @@ class EventsService
    */
   public function fetchEvent($projectId, $eventURI)
   {
-    $projectEvent = $this->find(['projectId' => $projectId, 'eventUri' => $eventURI]);
+    $projectEvent = $this->find(['project' => $projectId, 'eventUri' => $eventURI]);
     if (empty($projectEvent)) {
       return null;
     }
@@ -412,7 +411,7 @@ class EventsService
     $times = $this->eventTimes($eventObject, $timezone, $locale);
 
     if ($times['start']['date'] == $times['end']['date']) {
-      $datestring = $times['start']['date'].($times['start']['allday'] ? '' : ', '.$times['start']['time']);
+      $datestring = $times['start']['date'].($times['allday'] ? '' : ', '.$times['start']['time']);
       $datestring = $times['start']['date'].' - '.$times['end']['date'];
     }
     return $datestring;
@@ -425,16 +424,16 @@ class EventsService
 
     if ($times['start']['date'] == $times['end']['date']) {
       $datestring = $times['start']['date'];
-      if (!$times['start']['allday']) {
+      if (!$times['allday']) {
         $datestring .= ', '.$times['start']['time'].' - '.$times['end']['time'];
       }
     } else {
       $datestring = $times['start']['date'];
-      if (!$times['start']['allday']) {
+      if (!$times['allday']) {
         $datestring .= ', '.$times['start']['time'];
       }
       $datestring .= '  -  '.$times['end']['date'];
-      if (!$times['start']['allday']) {
+      if (!$times['allday']) {
         $datestring .= ', '.$times['end']['time'];
       }
     }
@@ -641,14 +640,16 @@ class EventsService
   {
     $eventURI   = $objectData['uri'];
     $calId      = $objectData['calendarid'];
+    $eventData  = $objectData['calendardata'];
     $vCalendar  = VCalendarService::getVCalendar($objectData);
     $categories = VCalendarService::getCategories($vCalendar);
+    $eventUID   = VCalendarService::getUid($vCalendar);
 
     // Now fetch all projects and their names ...
     $projects = $this->projectService->fetchAll();
 
     $registered = [];
-    $unregisterred = [];
+    $unregistered = [];
     // Do the sync. The categories stored in the event are
     // the criterion for this.
     foreach ($projects as $project) {
@@ -656,7 +657,7 @@ class EventsService
       if (in_array($project->getName(), $categories)) {
         // register or update the event
         $type = VCalendarService::getVObjectType($vCalendar);
-        if ($this->register($prKey, $eventURI, $calId, $type)) {
+        if ($this->register($project, $eventURI, $eventUID, $calId, $type)) {
           $registered[] = $prKey;
         }
       } else {
@@ -677,30 +678,33 @@ class EventsService
   {
     $eventURI   = $objectData['uri'];
     foreach ($this->eventProjects($eventURI) as $projectEvent) {
-      $this->unregister($projectEvent->getProjectId(), $eventURI);
+      $this->unregister($projectEvent->getProject(), $eventURI);
     }
   }
 
   /**
    * Unconditionally register the given event with the given project.
    *
-   * @param int $projectId The project key.
+   * @param int|Project $projectId The project or its id.
    * @param string $eventURI The event key (external key).
+   * @param string $eventUID The event UID.
    * @param int $calendarId The id of the calender the vent belongs to.
    * @param string $type The event type (VEVENT, VTODO, VJOURNAL, VCARD).
    *
    * @return bool true if the event has been newly registered.
    */
-  private function register(int $projectId,
+  private function register($projectOrId,
                             string $eventURI,
+                            string $eventUID,
                             int $calendarId,
                             string $type)
   {
-    $entity = $this->findOneBy(['projectId' => $projectId, 'eventUri' => $eventURI]);
+    $entity = $this->findOneBy(['project' => $projectOrId, 'eventUri' => $eventURI]);
     if (empty($entity)) {
       $entity = new ProjectEvent();
-      $entity->setProjectId($projectId)
+      $entity->setProject($projectOrId)
              ->setEventUri($eventURI)
+             ->setEventUid($eventUID)
              ->setCalendarId($calendarId)
              ->setType($type);
       $this->persist($entity);
@@ -725,12 +729,12 @@ class EventsService
    * @return bool true if the event has been removed, false if it was
    * not registered.
    */
-  private function unregister(int $projectId, string $eventURI)
+  public function unregister(int $projectId, string $eventURI)
   {
     if (!$this->isRegistered($projectId, $eventURI)) {
       return false;
     }
-    $this->remove(['projectId' => $projectId, 'eventUri' => $eventURI], true);
+    $this->remove(['project' => $projectId, 'eventUri' => $eventURI], true);
     return true;
   }
 
@@ -746,7 +750,7 @@ class EventsService
    */
   public function unchain($projectId, $eventURI)
   {
-    $projectEvent = $this->find(['projectId' => $projectId, 'eventUri' => $eventURI]);
+    $projectEvent = $this->find(['project' => $projectId, 'eventUri' => $eventURI]);
     $calendarId = $projectEvent->getCalendarId();
 
     $this->unregister($projectId, $eventURI);
@@ -773,8 +777,8 @@ class EventsService
    */
   private function isRegistered($projectId, $eventURI)
   {
-    //return !empty($this->find(['projectId' => $projectId, 'eventUri' => $eventURI]));
-    return $this->count(['projectId' => $projectId, 'eventUri' => $eventURI]) > 0;
+    //return !empty($this->find(['project' => $projectId, 'eventUri' => $eventURI]));
+    return $this->count(['project' => $projectId, 'eventUri' => $eventURI]) > 0;
   }
 
   /**

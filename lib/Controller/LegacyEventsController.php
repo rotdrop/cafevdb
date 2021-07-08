@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,7 +28,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\IRequest;
-use OCP\IL10N;
+use OCP\ISession;
 use OCP\Constants;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -45,11 +45,8 @@ class LegacyEventsController extends Controller {
 
   const ERROR_TEMPLATE = "errorpage";
 
-  /** @var \OCP\IL10N */
-  private $l;
-
-  /** @var \OCP\IURLGenerator */
-  private $urlGenerator;
+  /** @var ISession */
+  private $session;
 
   /** @var RequestParameterService */
   private $parameterService;
@@ -78,7 +75,7 @@ class LegacyEventsController extends Controller {
     , ProjectService $projectService
     , CalDavService $calDavService
     , VCalendarService $vCalendarService
-    , \OCP\IURLGenerator $urlGenerator
+    , ISession $session
   ) {
     parent::__construct($appName, $request);
 
@@ -89,13 +86,14 @@ class LegacyEventsController extends Controller {
     $this->calDavService = $calDavService;
     $this->vCalendarService = $vCalendarService;
     $this->ocCalendarObject = $vCalendarService->legacyEventObject();
-    $this->urlGenerator = $urlGenerator;
+    $this->session = $session;
 
     $this->l = $this->l10N();
   }
 
   /**
    * @NoAdminRequired
+   * @UseSession
    */
   public function serviceSwitch($topic, $subTopic)
   {
@@ -105,12 +103,14 @@ class LegacyEventsController extends Controller {
       case 'new':
         return $this->newEventForm();
       case 'edit':
+        $this->session->close();
         return $this->editEventForm();
       default:
         break;
       }
       break;
     case 'actions':
+      $this->session->close();
       switch ($subTopic) {
       case 'new':
         return $this->newEvent();
@@ -125,6 +125,7 @@ class LegacyEventsController extends Controller {
       }
       break;
     default:
+      $this->session->close();
       break;
     }
     return self::grumble($this->l->t("unknown service requested: `%s/%s'.", [$topic, $subTopic]));
@@ -159,6 +160,7 @@ class LegacyEventsController extends Controller {
 
     // make sure that the calendar exists and is writable
     $newId = $this->configCheckService->checkSharedCalendar($calendarUri, $calendarName, $calendarId);
+    $this->session->close();
 
     if ($newId == false) {
       return self::grumble($this->l->t('Cannot access calendar: `%s\'', [$calendarUri]));
@@ -223,7 +225,7 @@ class LegacyEventsController extends Controller {
       'legacy/calendar/part.newevent',
       [
         'csrfToken' => \OCP\Util::callRegister(),
-        'urlGenerator' => $this->urlGenerator,
+        'urlGenerator' => $this->urlGenerator(),
 
         'calendarid' => $calendarId,
         'calendarOwnerId' => $calendarOptions[0]['userid'],
@@ -532,7 +534,7 @@ class LegacyEventsController extends Controller {
 
     $templateParameters = [
       'csrfToken' => \OCP\Util::callRegister(),
-      'urlGenerator' => $this->urlGenerator,
+      'urlGenerator' => $this->urlGenerator(),
       'categories' => $categories,
       'protectCategories' => $protectCategories,
 
@@ -636,7 +638,7 @@ class LegacyEventsController extends Controller {
     }
     $cal = $this->parameterService['calendar'];
     $vCalendar = $this->vCalendarService->createVCalendarFromRequest($this->parameterService);
-    $this->logError($vCalendar->serialize());
+    $this->logDebug($vCalendar->serialize());
     try {
       $localUri = $this->calDavService->createCalendarObject($cal, null, $vCalendar);
       $this->logError(__METHOD__ . ": created object with uri " . $localUri);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *               Copied and stripped down for my orchestra admin app.
  *
  * Copyright (c) 2011 Jakob Sack <mail@jakobsack.de>
@@ -932,7 +932,9 @@ class OC_Calendar_Object{
 		$now->setTimeZone(new \DateTimeZone('UTC'));
 		$vevent->CREATED = $now;
 
-		$uid = substr(md5(rand().time()), 0, 10);
+		// $uid = substr(md5(rand().time()), 0, 10);
+        $uid = \Sabre\VObject\UUIDUtil::getUUID();
+
 		$vevent->UID = $uid;
 		return $this->updateVCalendarFromRequest($request, $vcalendar);
 	}

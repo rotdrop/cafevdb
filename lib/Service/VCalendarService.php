@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -222,6 +222,22 @@ class VCalendarService
     // get the inner object
     $vObject = self::getVObject($vCalendar);
     $vObject->CATEGORIES = $categories;
+    return $vCalendar;
+  }
+
+  public static function getUid($vCalendar)
+  {
+    // get the inner object
+    $vObject = self::getVObject($vCalendar);
+
+    return isset($vObject->UID) ? $vObject->UID : null;
+  }
+
+  public static function setUid(&$vCalendar, $uid)
+  {
+    // get the inner object
+    $vObject = self::getVObject($vCalendar);
+    $vObject->UID = $summary;
     return $vCalendar;
   }
 

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectEvents
  *
- * @ORM\Table(name="ProjectEvents")
+ * @ORM\Table(name="ProjectEvents", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "event_uid"})})
  * @ORM\Entity
  */
 class ProjectEvent implements \ArrayAccess
@@ -39,12 +39,10 @@ class ProjectEvent implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var int|null
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   `     * @ORM\Id
-  */
-  private $projectId;
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="calendarEvents", fetch="EXTRA_LAZY")
+   * @ORM\Id
+   */
+  private $project;
 
   /**
    * @var string|null
@@ -53,6 +51,13 @@ class ProjectEvent implements \ArrayAccess
    * @ORM\Id
    */
   private $eventUri;
+
+  /**
+   * @var string|null
+   *
+   * @ORM\Column(type="string", length=764, nullable=false)
+   */
+  private $eventUid;
 
   /**
    * @var int
@@ -79,21 +84,21 @@ class ProjectEvent implements \ArrayAccess
    *
    * @return ProjectEvents
    */
-  public function setProjectId($projectId = null)
+  public function setProject($project):ProjectEvent
   {
-    $this->projectId = $projectId;
+    $this->project = $project;
 
     return $this;
   }
 
   /**
-   * Get projectId.
+   * Get project.
    *
-   * @return int|null
+   * @return Project|null
    */
-  public function getProjectId()
+  public function getProject():?Project
   {
-    return $this->projectId;
+    return $this->project;
   }
 
   /**
@@ -127,7 +132,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @return ProjectEvents
    */
-  public function setEventUri($eventUri = null)
+  public function setEventUri($eventUri)
   {
     $this->eventUri = $eventUri;
 
@@ -142,6 +147,30 @@ class ProjectEvent implements \ArrayAccess
   public function getEventUri()
   {
     return $this->eventUri;
+  }
+
+  /**
+   * Set eventUid.
+   *
+   * @param string|null $eventUid
+   *
+   * @return ProjectEvent
+   */
+  public function setEventUid($eventUid):ProjectEvent
+  {
+    $this->eventUid = $eventUid;
+
+    return $this;
+  }
+
+  /**
+   * Get eventUid.
+   *
+   * @return string|null
+   */
+  public function getEventUid():?string
+  {
+    return $this->eventUid;
   }
 
   /**

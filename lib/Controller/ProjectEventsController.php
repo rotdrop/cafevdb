@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\CalDavService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 class ProjectEventsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -111,6 +112,7 @@ class ProjectEventsController extends Controller {
           $eventUri = $this->parameterService['EventURI'];
           $calendarId = $this->parameterService['CalendarId'][$eventUri];
           $this->calDavService->deleteCalendarObject($calendarId, $eventUri);
+          $this->eventsService->unregister($projectId, $eventUri);
           $events = $this->eventsService->events($projectId);
           unset($selected[$eventUri]);
           break;
@@ -167,6 +169,7 @@ class ProjectEventsController extends Controller {
         'eventMatrix' => $eventMatrix,
         'selected' => $selected,
         'eventsService' => $this->eventsService,
+        'toolTips' => $this->di(ToolTipsService::class),
         'requestToken' => \OCP\Util::callRegister(),
       ];
       $response = new TemplateResponse(

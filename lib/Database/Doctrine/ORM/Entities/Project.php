@@ -125,6 +125,11 @@ class Project implements \ArrayAccess
    */
   private $participantInstruments;
 
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectEvent", mappedBy="project")
+   */
+  private $calendarEvents;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instrumentationNumbers = new ArrayCollection();
