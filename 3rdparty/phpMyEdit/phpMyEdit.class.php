@@ -4142,7 +4142,7 @@ class phpMyEdit
 	 */
 	function export($cellFilter = false, $lineCallback = false, $css = 'noescape')
 	{
-		$error_reporting = error_reporting(E_ALL & ~E_NOTICE);
+		$error_reporting = error_reporting(error_reporting() & ~E_NOTICE);
 
 		// Header line
 		$i = 1;
@@ -5801,15 +5801,17 @@ class phpMyEdit
 		echo "</pre>\n";
 		*/
 
-		$error_reporting = error_reporting(E_ALL & ~E_NOTICE);
+		$error_reporting = error_reporting(error_reporting() & ~E_NOTICE);
 
 		// Checking if language file inclusion was successful
 		if (! is_array($this->labels)) {
 			$this->error('could not locate language files', 'searched path: '.$this->dir['lang']);
+			error_reporting($error_reporting);
 			return false;
 		}
 		// Database connection
 		if ($this->connect() == false) {
+			error_reporting($error_reporting);
 			return false;
 		}
 
@@ -5923,6 +5925,7 @@ class phpMyEdit
 		 */
 		elseif ($this->misc_operation()) {
 			$this->sql_disconnect();
+			error_reporting($error_reporting);
 			return call_user_func($this->miscphp);
 		}
 
@@ -5940,6 +5943,7 @@ class phpMyEdit
 		}
 
 		$this->sql_disconnect();
+		error_reporting($error_reporting);
 	} /* }}} */
 
 	/*
@@ -5947,7 +5951,7 @@ class phpMyEdit
 	 */
 	function __construct($opts) /* {{{ */
 	{
-		$error_reporting = error_reporting(E_ALL & ~E_NOTICE);
+		$error_reporting = error_reporting(error_reporting() & ~E_NOTICE);
 		// Database handle variables
 		$this->sql_delimiter();
 		if (isset($opts['dbh'])) {
