@@ -7,13 +7,14 @@
     ],
     "php-path-list": [
       ".",
-      "../../lib",
-      "../../3rdparty"
+      "../../3rdparty",
+      "../../lib"
     ],
     "php-path-list-without-subdir": [],
     "ignore-ruleset": [
       "# like .gitignore file ",
-      "/vendor*/**/polyfill-php80/**/*.php"
+      "/vendor*/**/polyfill-php80/**/*.php",
+      "/build/**"
     ]
   }
 }
