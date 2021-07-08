@@ -317,7 +317,7 @@ appstore: $(BUILDDIR)/core-exclude
 
 .PHONY: verifydb
 verifydb: $(ABSSRCDIR)/vendor-wrapped/bin/doctrine
-	$< orm:validate-schema
+	$< orm:validate-schema || $< orm:schema-tool:update --dump-sql
 
 .PHONY: updatesql
 updatesql: $(ABSSRCDIR)/vendor-wrapped/bin/doctrine
