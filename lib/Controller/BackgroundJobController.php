@@ -37,19 +37,14 @@ class BackgroundJobController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
-  /** @var LazyUpdateGeoCoding */
-  private $lazyUpdateGeoCoding;
-
   public function __construct(
-    $appName,
-    IRequest $request,
-    ConfigService $configService,
-    LazyUpdateGeoCoding $lazyUpdateGeoCoding
+    $appName
+    , IRequest $request
+    , ConfigService $configService
   ) {
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
-    $this->lazyUpdateGeoCoding = $lazyUpdateGeoCoding;
     $this->l = $this->l10N();
   }
 
@@ -59,7 +54,12 @@ class BackgroundJobController extends Controller
   public function trigger()
   {
     try {
-      $this->lazyUpdateGeoCoding->run();
+      if (!$this->inGroup()) {
+        return self::grumble(
+          $this->l->t('User "%s" not in orchestra group "%s',
+                      [ $this->userId(), $this->groupId() ]));
+      }
+      $this->di(LazyUpdateGeoCoding::class)->run();
       return self::response('Ran background jobs');
     } catch (\Throwable $t) {
       $this->logException($t);

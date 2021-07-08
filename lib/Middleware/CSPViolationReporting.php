@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -50,7 +50,13 @@ class CSPViolationReporting extends Middleware
    */
   public function afterController($controller, $methodName, Response $response)
   {
-    if ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_CSP) {
+    $reportCSP = $this->inGroup();
+    try {
+      $reportCSP = $this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_CSP;
+    } catch (\Throwable $t) {
+      $reportCSP = false;
+    }
+    if ($reportCSP) {
       $reportLocation = $this->getConfigValue('cspfailurereporting', null);
       if (empty($this->reportLocation)) {
         $cspFailureToken = $this->getAppValue('cspfailuretoken');
