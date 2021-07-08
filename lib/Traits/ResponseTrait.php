@@ -68,7 +68,7 @@ trait ResponseTrait
   static private function dataResponse($data, $status = Http::STATUS_OK)
   {
     $response = new DataResponse($data, $status);
-    $policy = $response->getContentSecurityPolicy($policy);
+    $policy = $response->getContentSecurityPolicy();
     $policy->addAllowedFrameAncestorDomain("'self'");
     return $response;
   }
