@@ -13,9 +13,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * Musician. In GnuCash this would be a "split transactions". The
  * transaction parts are ProjectPayment entities.
  *
- * @ORM\Table(name="CompositePayments",
- *    uniqueConstraints={@ORM\UniqueConstraint(columns={"notification_message_id"})}
- * )
+ * @ORM\Table(name="CompositePayments")
+ *    uniqueConstraints={@ ORM\UniqueConstraint(columns={"notification_message_id"})}
  * @ORM\Entity
  */
 class CompositePayment implements \ArrayAccess
