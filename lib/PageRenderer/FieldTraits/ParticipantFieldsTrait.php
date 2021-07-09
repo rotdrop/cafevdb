@@ -344,8 +344,10 @@ trait ParticipantFieldsTrait
             break;
           default:
             if (!empty($defaultValue)) {
-              $valueFdd['display|CAP']['postfix'] .=
-                str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
+              $valueFdd['display|CAP'] = $valueFdd['display|CAP'] ?? [];
+              $valueFdd['display|CAP']['postfix'] =
+                ($valueFdd['display|CAP']['postfix'] ?? '')
+                . str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
             }
             break;
           }
@@ -363,7 +365,7 @@ trait ParticipantFieldsTrait
             $key => $this->l->t('true'),
           ];
           $keyFdd['select'] = 'C';
-          $keyFdd['default'] = (string)!!(int)$field['default_value'];
+          $keyFdd['default'] = $field->getDefaultValue() === null ? false : $key;
           $keyFdd['css']['postfix'][] = 'boolean';
           $keyFdd['css']['postfix'][] = 'single-valued';
           $keyFdd['css']['postfix'][] = $dataType;

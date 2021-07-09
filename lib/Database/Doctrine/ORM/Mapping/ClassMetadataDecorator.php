@@ -420,7 +420,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
         $fields[$column] = $field;
       }
       foreach ($meta->associationMappings as $field => $mapping) {
-        foreach ($mapping['joinColumns'] as $joinColumn) {
+        foreach (($mapping['joinColumns'] ?? []) as $joinColumn) {
           $column = $joinColumn['name'];
           if (empty($fields[$column])) {
             // this should catch the additional join-columns

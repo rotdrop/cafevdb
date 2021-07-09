@@ -86,7 +86,7 @@ class FinanceService
       Carbon::class,
       CarbonImmutable::class,
     ]);
-    CarbonImmutable::setHolidays('target2', $targetHolidays);
+    CarbonImmutable::setHolidays('target2', self::TARGET2_HOLIDAYS);
   }
 
   /**

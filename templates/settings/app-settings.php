@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -71,13 +71,31 @@ $off = $_['orchestra'] == '' ? 'disabled' : '';
   <!-- GENERAL DATA-BASE STUFF -->
   <form id="dbsettings">
     <fieldset id="dbgeneral"  <?php echo $off; ?> ><legend><?php echo $l->t('Database settings'); ?></legend>
-      <input type="text" name="dbserver" id="dbserver" value="<?php echo $_['dbserver']; ?>" placeholder="<?php echo $l->t('Server');?>" />
+      <input type="text"
+             autocomplete="on"
+             name="dbserver"
+             id="dbserver"
+             value="<?php echo $_['dbserver']; ?>"
+             placeholder="<?php echo $l->t('Server');?>"
+      />
       <label for="dbserver"><?php echo $l->t('Database Server');?></label>
       <br/>
-      <input type="text" name="dbname" id="dbname" value="<?php echo $_['dbname']; ?>" placeholder="<?php echo $l->t('Database');?>" />
+      <input type="text"
+             autocomplete="on"
+             name="dbname"
+             id="dbname"
+             value="<?php echo $_['dbname']; ?>"
+             placeholder="<?php echo $l->t('Database');?>"
+      />
       <label for="dbname"><?php echo $l->t('Database Name');?></label>
       <br/>
-      <input type="text" name="dbuser" id="dbuser" value="<?php echo $_['dbuser']; ?>" placeholder="<?php echo $l->t('User');?>" />
+      <input type="text"
+             autocomplete="on"
+             name="dbuser"
+             id="dbuser"
+             value="<?php echo $_['dbuser']; ?>"
+             placeholder="<?php echo $l->t('User');?>"
+      />
       <label for="dbuser"><?php echo $l->t('Database User');?></label>
       <div id="msgplaceholder"><div class="statusmessage" id="msg"></div></div>
     </fieldset>

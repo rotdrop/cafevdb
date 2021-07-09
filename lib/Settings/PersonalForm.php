@@ -228,6 +228,13 @@ class PersonalForm {
         $postboxFolder = $this->getConfigValue(ConfigService::POSTBOX_FOLDER);
         $postboxFolderShareLink = $this->getConfigValue(ConfigService::POSTBOX_FOLDER . 'ShareLink');
 
+        $translations = null;
+        try {
+          $translations = $this->translationService->getTranslations();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+        }
+
         $templateParameters = array_merge(
           $templateParameters,
           [
@@ -284,7 +291,7 @@ class PersonalForm {
             'projectparticipantsfolder' => $this->getConfigValue('projectparticipantsfolder',''),
             'projectsbalancefolder' => $this->getConfigValue('projectsbalancefolder',''),
 
-            'translations' => $this->translationService->getTranslations(),
+            'translations' => $translations,
 
             'documentTemplates' => ConfigService::DOCUMENT_TEMPLATES,
 

@@ -997,7 +997,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
 
         $multipleValues = [];
+        $this->debug('CHANGESET: ' . print_r($changeSet, true));
         foreach ($changeSet as $column => $field) {
+          $this->debug('GET MULTIPLE FOR ' . $column . ' / ' . $field);
           // convention for multiple change-sets:
           //
           // KEY0:VALUE0,KEY1:VALUE1,...
@@ -1045,7 +1047,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
 
           // set further properties ...
-          foreach ($multipleValues[$new] as $column => $value) {
+          foreach (($multipleValues[$new] ?? [])as $column => $value) {
             $meta->setSimpleColumnValue($entity, $column, $value);
           }
 

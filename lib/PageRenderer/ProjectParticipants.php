@@ -322,7 +322,7 @@ class ProjectParticipants extends PMETableViewBase
 
     // Display special page elements
     $opts['display'] =  Util::arrayMergeRecursive(
-      $opts['display'],
+      $opts['display'] ?? [],
       [
         'form'  => true,
         //'query' => true,
@@ -442,7 +442,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
         'tab'      => [ 'id' => 'tab-all' ],
         'name'     => $this->l->t('User Id'),
-        'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+        'css'      => [ 'postfix' => ' musician-name' ],
         'input|LF' => 'H',
         // 'options'  => 'AVCPD',
         'select'   => 'T',
@@ -1020,7 +1020,7 @@ class ProjectParticipants extends PMETableViewBase
     $voiceField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
     $instrumentField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
 
-    if (array_search($voiceField, $changes) === false && array_search($instrumentField, $changed) == false) {
+    if (array_search($voiceField, $changed) === false && array_search($instrumentField, $changed) == false) {
       // nothing to do
       $this->debug('UNCHANGED INSTRUMENTS');
       return true;

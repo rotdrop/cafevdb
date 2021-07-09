@@ -50,7 +50,7 @@ echo $this->inc(
   'part.common.header',
   [
     'css-prefix' => $cssPfx,
-    'css-class' => $css_class,
+    'css-class' => $cssClass,
     'navigationcontrols' => $nav,
     'header' => $renderer->headerText(),
     //'navBarInfo' => $missing

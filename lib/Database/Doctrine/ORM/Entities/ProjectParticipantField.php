@@ -63,10 +63,13 @@ class ProjectParticipantField implements \ArrayAccess
    * @ORM\Id
    * @ORM\GeneratedValue
    */
-  private $id = null;
+  private $id;
 
   /**
+   * @var Project
+   *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantFields", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(nullable=false)
    */
   private $project;
 
@@ -264,7 +267,7 @@ class ProjectParticipantField implements \ArrayAccess
   {
     // this unfortunately just does not work.
     // return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL, 'deleted' => null, ]));
-    return $this->dataOptions->filter(function($option) {
+    return $this->dataOptions->filter(function($option) use ($includeDeleted) {
       /** @var ProjectParticipantFieldDataOption $option */
       return ($includeDeleted || empty($option->getDeleted()))
         && $option->getKey() != Uuid::nil();
@@ -473,7 +476,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set defaultValue.
    *
-   * @param string $defaultValue
+   * @param null|ProjectParticipantFieldDataOption $defaultValue
    *
    * @return ProjectParticipantField
    */
@@ -487,9 +490,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get defaultValue.
    *
-   * @return string
+   * @return null|ProjectParticipantFieldDataOption
    */
-  public function getDefaultValue()
+  public function getDefaultValue():?ProjectParticipantFieldDataOption
   {
     return $this->defaultValue;
   }
