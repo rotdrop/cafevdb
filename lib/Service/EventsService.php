@@ -100,6 +100,9 @@ class EventsService
       // not for us
       return;
     }
+    $calendarData = $event->getCalendarData();
+    $objectData['calendaruri'] = $calendarData['uri'];
+
     $this->syncCalendarObject($objectData, false);
   }
 
@@ -112,6 +115,9 @@ class EventsService
       // not for us
       return;
     }
+    $calendarData = $event->getCalendarData();
+    $objectData['calendaruri'] = $calendarData['uri'];
+
     $this->syncCalendarObject($objectData);
   }
 
@@ -640,6 +646,7 @@ class EventsService
   {
     $eventURI   = $objectData['uri'];
     $calId      = $objectData['calendarid'];
+    $calURI     = $objectData['calendaruri'];
     $eventData  = $objectData['calendardata'];
     $vCalendar  = VCalendarService::getVCalendar($objectData);
     $categories = VCalendarService::getCategories($vCalendar);
@@ -657,7 +664,7 @@ class EventsService
       if (in_array($project->getName(), $categories)) {
         // register or update the event
         $type = VCalendarService::getVObjectType($vCalendar);
-        if ($this->register($project, $eventURI, $eventUID, $calId, $type)) {
+        if ($this->register($project, $eventURI, $eventUID, $calId, $calURI, $type)) {
           $registered[] = $prKey;
         }
       } else {
@@ -688,7 +695,8 @@ class EventsService
    * @param int|Project $projectId The project or its id.
    * @param string $eventURI The event key (external key).
    * @param string $eventUID The event UID.
-   * @param int $calendarId The id of the calender the vent belongs to.
+   * @param int $calendarId The id of the calender the event belongs to.
+   * @param string $calendarUri The URI of the calender the event belongs to.
    * @param string $type The event type (VEVENT, VTODO, VJOURNAL, VCARD).
    *
    * @return bool true if the event has been newly registered.
@@ -697,6 +705,7 @@ class EventsService
                             string $eventURI,
                             string $eventUID,
                             int $calendarId,
+                            string $calendarURI,
                             string $type)
   {
     $entity = $this->findOneBy(['project' => $projectOrId, 'eventUri' => $eventURI]);
@@ -706,6 +715,7 @@ class EventsService
              ->setEventUri($eventURI)
              ->setEventUid($eventUID)
              ->setCalendarId($calendarId)
+             ->setCalendarUri($calendarURI)
              ->setType($type);
       $this->persist($entity);
       $added = true;
