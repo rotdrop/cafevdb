@@ -45,7 +45,7 @@ class ProjectEvent implements \ArrayAccess
   private $project;
 
   /**
-   * @var string|null
+   * @var string
    *
    * @ORM\Column(type="string", length=764, nullable=false)
    * @ORM\Id
@@ -53,7 +53,7 @@ class ProjectEvent implements \ArrayAccess
   private $eventUri;
 
   /**
-   * @var string|null
+   * @var string
    *
    * @ORM\Column(type="string", length=764, nullable=false)
    */
@@ -65,6 +65,13 @@ class ProjectEvent implements \ArrayAccess
    * @ORM\Column(type="integer", nullable=false)
    */
   private $calendarId;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=764, nullable=false)
+   */
+  private $calendarUri;
 
   /**
    * @var null|Types\EnumVCalendarType
@@ -108,7 +115,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @return ProjectEvents
    */
-  public function setCalendarId($calendarId)
+  public function setCalendarId($calendarId):ProjectEvent
   {
     $this->calendarId = $calendarId;
 
@@ -123,6 +130,30 @@ class ProjectEvent implements \ArrayAccess
   public function getCalendarId()
   {
     return $this->calendarId;
+  }
+
+  /**
+   * Set calendarUri.
+   *
+   * @param string $calendarUri
+   *
+   * @return ProjectEvents
+   */
+  public function setCalendarUri(string $calendarUri):ProjectEvent
+  {
+    $this->calendarUri = $calendarUri;
+
+    return $this;
+  }
+
+  /**
+   * Get calendarUri.
+   *
+   * @return string
+   */
+  public function getCalendarUri():string
+  {
+    return $this->calendarUri;
   }
 
   /**
