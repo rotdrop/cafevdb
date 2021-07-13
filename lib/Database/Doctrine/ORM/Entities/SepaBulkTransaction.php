@@ -96,25 +96,46 @@ class SepaBulkTransaction implements \ArrayAccess
   private $dueDate;
 
   /**
-   * @var int
+   * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
    */
   private $submissionEventUri;
 
   /**
-   * @var int
+   * @var string
+   *
+   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object UID"})
+   */
+  private $submissionEventUid;
+
+  /**
+   * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
    */
   private $submissionTaskUri;
 
   /**
-   * @var int
+   * @var string
+   *
+   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object UID"})
+   */
+  private $submissionTaskUid;
+
+  /**
+   * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
    */
   private $dueEventUri;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object UID"})
+   */
+  private $dueEventUid;
 
   /**
    * @var ArrayCollection
@@ -238,7 +259,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set submissionEventUri.
    *
-   * @param int $submissionEventUri
+   * @param string $submissionEventUri
    *
    * @return SepaBulkTransaction
    */
@@ -252,17 +273,41 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get submissionEventUri.
    *
-   * @return string
+   * @return null|string
    */
-  public function getSubmissionEventUri()
+  public function getSubmissionEventUri():?string
   {
     return $this->submissionEventUri;
   }
 
   /**
+   * Set submissionEventUid.
+   *
+   * @param string $submissionEventUid
+   *
+   * @return SepaBulkTransaction
+   */
+  public function setSubmissionEventUid($submissionEventUid):SepaBulkTransaction
+  {
+    $this->submissionEventUid = $submissionEventUid;
+
+    return $this;
+  }
+
+  /**
+   * Get submissionEventUid.
+   *
+   * @return null|string
+   */
+  public function getSubmissionEventUid():?string
+  {
+    return $this->submissionEventUid;
+  }
+
+  /**
    * Set submissionTaskUri.
    *
-   * @param int $submissionTaskUri
+   * @param string $submissionTaskUri
    *
    * @return SepaBulkTransaction
    */
@@ -276,17 +321,41 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get submissionTaskUri.
    *
-   * @return string
+   * @return null|string
    */
-  public function getSubmissionTaskUri()
+  public function getSubmissionTaskUri():?string
   {
     return $this->submissionTaskUri;
   }
 
   /**
+   * Set submissionTaskUid.
+   *
+   * @param string $submissionTaskUid
+   *
+   * @return SepaBulkTransaction
+   */
+  public function setSubmissionTaskUid($submissionTaskUid):SepaBulkTransaction
+  {
+    $this->submissionTaskUid = $submissionTaskUid;
+
+    return $this;
+  }
+
+  /**
+   * Get submissionTaskUid.
+   *
+   * @return null|string
+   */
+  public function getSubmissionTaskUid():?string
+  {
+    return $this->submissionTaskUid;
+  }
+
+  /**
    * Set dueEventUri.
    *
-   * @param int $dueEventUri
+   * @param string $dueEventUri
    *
    * @return SepaBulkTransaction
    */
@@ -300,11 +369,35 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get dueEventUri.
    *
-   * @return string
+   * @return null|string
    */
-  public function getDueEventUri()
+  public function getDueEventUri():?string
   {
     return $this->dueEventUri;
+  }
+
+  /**
+   * Set dueEventUid.
+   *
+   * @param string $dueEventUid
+   *
+   * @return SepaBulkTransaction
+   */
+  public function setDueEventUid($dueEventUid):SepaBulkTransaction
+  {
+    $this->dueEventUid = $dueEventUid;
+
+    return $this;
+  }
+
+  /**
+   * Get dueEventUid.
+   *
+   * @return null|string
+   */
+  public function getDueEventUid():?string
+  {
+    return $this->dueEventUid;
   }
 
   /**

@@ -265,9 +265,9 @@ class FinanceService
    * @param \DateTimeInterface $timeStamp
    * @param int $alarm (maybe <= 0 for no alarm)
    *
-   * @return null|string new event uri
+   * @return null|array new [ EVENT_URI, EVENT_UID ]
    */
-  public function financeEvent($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?string
+  public function financeEvent($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?array
   {
     $eventKind = 'finance';
     $categories = '';
@@ -306,9 +306,9 @@ class FinanceService
    * @param \DateTimeInterface $time
    * @param int $alarm (maybe <= 0 for no alarm)
    *
-   * @return null|string new event uri
+   * @return null|array new [ TASK_URI, TASK_UID ]
    */
-  public function financeTask($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?string
+  public function financeTask($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?array
   {
     $taskKind = 'finance';
     $categories = '';

@@ -815,9 +815,9 @@ class EventsService
    * in seconds (i.e. time-stamp diff). The function may throw
    * errors.
    *
-   * @return string task-uri on success, null on error.
+   * @return array task-uri, task-uid on success, null on error.
    */
-  public function newTask(array $taskData): ?string
+  public function newTask(array $taskData):?array
   {
     if (empty($taskData['calendar'])) {
       return null;
@@ -826,7 +826,16 @@ class EventsService
     if (empty($vCalendar)) {
       return null;
     }
-    return $this->calDavService->createCalendarObject($taskData['calendar'], null, $vCalendar);
+    $taskUri = $this->calDavService->createCalendarObject($taskData['calendar'], null, $vCalendar);
+    if (!empty($taskUri)) {
+      $taskObject = $this->calDavService->getCalendarObject($eventData['calendar'], $taskUri);
+      if (!empty($taskObject)) {
+        $vCalendar  = VCalendarService::getVCalendar($taskObject);
+        $taskUid   = VCalendarService::getUid($vCalendar);
+        return [ $taskUri, $taskUid ];
+      }
+    }
+    return NULL;
   }
 
   /**
@@ -852,9 +861,9 @@ class EventsService
    * in seconds (i.e. time-stamp diff). The function may throw
    * errors.
    *
-   * @return string|null event-uri or null on error.
+   * @return array|null event-uri, event-uid or null on error.
    */
-  public function newEvent(array $eventData): ?string
+  public function newEvent(array $eventData): ?array
   {
     if (empty($eventData['calendar'])) {
       return null;
@@ -863,7 +872,16 @@ class EventsService
     if (empty($vCalendar)) {
       return null;
     }
-    return $this->calDavService->createCalendarObject($eventData['calendar'], null, $vCalendar);
+    $eventUri = $this->calDavService->createCalendarObject($eventData['calendar'], null, $vCalendar);
+    if (!empty($eventUri)) {
+      $eventObject = $this->calDavService->getCalendarObject($eventData['calendar'], $eventUri);
+      if (!empty($eventObject)) {
+        $vCalendar  = VCalendarService::getVCalendar($eventObject);
+        $eventUid   = VCalendarService::getUid($vCalendar);
+        return [ $eventUri, $eventUid ];
+      }
+    }
+    return NULL;
   }
 
   public function deleteCalendarEntry($calId, $objectUri)
