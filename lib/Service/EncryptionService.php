@@ -72,6 +72,7 @@ class EncryptionService
     'usergroup', // cloud-admin setting
     'wikinamespace', // cloud-admin setting
     'cspfailuretoken', // for public post route
+    'configlock', // better kept open
   ];
 
   const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
