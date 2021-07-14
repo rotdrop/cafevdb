@@ -42,7 +42,7 @@ $off = $_['orchestra'] == '' ? 'disabled' : '';
     <fieldset class="systemkey" <?php echo $off; ?> ><legend><?php echo $l->t('Encryption settings'); ?></legend>
       <input class="cafevdb-password"
              type="password"
-             value="<?php p($encryptionkey); ?>"
+             value="<?php false ? p($encryptionkey) : ''; ?>"
              id="oldkey"
              name="oldkey"
              placeholder="<?php echo $l->t('Current Key');?>"

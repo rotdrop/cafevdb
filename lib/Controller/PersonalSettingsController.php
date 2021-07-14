@@ -390,8 +390,9 @@ class PersonalSettingsController extends Controller {
       // config space, encrypted with itself.
 
       // Shouldn't we distribute the key as well?
-
-      return self::response($this->l->t('Stored new encryption key'));
+      list('status' => $distributeStatus, 'messages' => $messages) = $this->distributeEncryptionKey();
+      array_unshift($messages, $this->l->t('Stored new encryption key.'));
+      return self::dataResponse([ 'message' => $messages ], $distributeStatus);
     case 'streetAddressName01':
     case 'streetAddressName02':
     case 'streetAddressStreet':
@@ -1178,40 +1179,8 @@ class PersonalSettingsController extends Controller {
       return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
 
     case 'keydistribute':
-      /** @var \OCP\IUser $user */
-      if (!$this->encryptionKeyValid()) {
-        return self::grumble($this->l->t('App encryption key is invalid, will not distribute it.'));
-      }
-      $appEncryptionKey = $this->getAppEncryptionKey();
-      $noKeyUsers = [];
-      $fatalUsers = [];
-      $modifiedUsers = [];
-      foreach ($this->group()->getUsers() as $user)  {
-        $userId = $user->getUID();
-        try {
-          $this->encryptionService()->setUserEncryptionKey($appEncryptionKey, $userId);
-          $modifiedUsers[] = $userId;
-        } catch (Exceptions\EncryptionKeyException $e) {
-          $noKeyUsers[] = [ $userId => $e->getMessage() ];
-        } catch (\Throwable $t) {
-          $fatalUsers[] = [ $userId => $t->getMessage() ];
-        }
-      }
-      $messages = [];
-      if (!empty($modifiedUsers)) {
-        $messages[] = $this->l->t('Successfully distributed the app encryption key to %s.', implode(', ', $modifiedUsers));
-      } else {
-        $messages[] = $this->l->t('Unable to distribute the app encryptionkey to any user.');
-      }
-      if (!empty($noKeyUsers)) {
-        $messages[] = $this->l->t('Public SSL key missing for %s, key distribution failed.', implode(', ', $noKeyUsers));
-      }
-      foreach ($fatalUsers as $userId => $message) {
-        $messages[] = $this->l->t('Setting the app encryption key for %s failed fatally: "%s".', [ $userId, $message ]);
-      }
-      $status = empty($fatalUsers) && !empty($modifiedUsers)
-        ? Http::STATUS_OK
-              : Http::STATUS_BAD_REQUEST;
+      list('status' => $status, 'messages' => $messages) = $this->distributeEncryptionKey();
+      $this->logInfo('STATUS ' . (int)$status . ' ' . print_r($messages, true));
       return self::dataResponse([ 'message' => $messages ], $status);
     case 'emaildistribute':
       $roundCubeConfig = $this->appContainer->get(RoundCubeConfig::class);
@@ -1555,6 +1524,53 @@ class PersonalSettingsController extends Controller {
         $key => $value,
       ]);
     }
+  }
+
+  /**
+   * Distribute the encryption key to all users by storing them in
+   * their personal preferences, encrypted with their SSL key-pair.
+   */
+  private function distributeEncryptionKey()
+  {
+    if (!$this->encryptionKeyValid()) {
+      return [
+        'status' => Http::STATUS_BAD_REQUEST,
+        'messages' => [
+          $this->l->t('App encryption key is invalid, will not distribute it.'),
+        ],
+      ];
+    }
+    $appEncryptionKey = $this->getAppEncryptionKey();
+    $noKeyUsers = [];
+    $fatalUsers = [];
+    $modifiedUsers = [];
+    foreach ($this->group()->getUsers() as $user)  {
+      $userId = $user->getUID();
+      try {
+        $this->encryptionService()->setUserEncryptionKey($appEncryptionKey, $userId);
+        $modifiedUsers[] = $userId;
+      } catch (Exceptions\EncryptionKeyException $e) {
+        $noKeyUsers[] = [ $userId => $e->getMessage() ];
+      } catch (\Throwable $t) {
+        $fatalUsers[] = [ $userId => $t->getMessage() ];
+      }
+    }
+    $messages = [];
+    if (!empty($modifiedUsers)) {
+      $messages[] = $this->l->t('Successfully distributed the app encryption key to %s.', implode(', ', $modifiedUsers));
+    } else {
+      $messages[] = $this->l->t('Unable to distribute the app encryptionkey to any user.');
+    }
+    if (!empty($noKeyUsers)) {
+      $messages[] = $this->l->t('Public SSL key missing for %s, key distribution failed.', implode(', ', $noKeyUsers));
+    }
+    foreach ($fatalUsers as $userId => $message) {
+      $messages[] = $this->l->t('Setting the app encryption key for %s failed fatally: "%s".', [ $userId, $message ]);
+    }
+    $status = empty($fatalUsers) && !empty($modifiedUsers)
+            ? Http::STATUS_OK
+            : Http::STATUS_BAD_REQUEST;
+    return [ 'status' => $status, 'messages' => $messages ];
   }
 
 }
