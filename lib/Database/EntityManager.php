@@ -28,7 +28,6 @@ use OCP\ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\Reader as AnnotationReader;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
@@ -37,6 +36,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
+use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\ArrayCache;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\CacheAdapter;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\DoctrineProvider;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\AnnotationReader;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\PsrCachedReader;
+
+use function class_exists;
 
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
@@ -390,15 +397,10 @@ class EntityManager extends EntityManagerDecorator
 
   private function createGedmoConfiguration($config, $evm)
   {
-    // globally used cache driver, in production use APC or memcached
-    $cache = new \OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\ArrayCache;
-
     // standard annotation reader
-    $annotationReader = new \OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\AnnotationReader;
-    $cachedAnnotationReader = new \OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\CachedReader(
-      $annotationReader, // use reader
-      $cache // and a cache driver
-    );
+    $annotationReader = new AnnotationReader;
+    $cache = new ArrayAdapter();
+    $cachedAnnotationReader = new PsrCachedReader($annotationReader, $cache);
 
     // create a driver chain for metadata reading
     $driverChain = new \OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\Driver\MappingDriverChain();
@@ -435,8 +437,8 @@ class EntityManager extends EntityManagerDecorator
     $config->setMetadataDriverImpl($driverChain);
 
     // use our already initialized cache driver
-    $config->setMetadataCacheImpl($cache);
-    $config->setQueryCacheImpl($cache);
+    $config->setMetadataCache($cache);
+    $config->setQueryCacheImpl(DoctrineProvider::wrap($cache));
 
     // gedmo extension listeners
 

@@ -17,6 +17,7 @@
     "beberlei/doctrineextensions": "^1.2.0",
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/orm": "dev-production/cafevdb",
+    "symfony/cache": "*",
     "gedmo/doctrine-extensions": "dev-production/cafevdb",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
     "nesbot/carbon": "^2.46",
