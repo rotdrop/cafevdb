@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 class EncryptedFileData extends FileData
 {
   /**
-   * @MediaMonks\Transformable(name="encrypt")
+   * @MediaMonks\Transformable(name="encrypt", override=true)
    */
   private $data;
 }
