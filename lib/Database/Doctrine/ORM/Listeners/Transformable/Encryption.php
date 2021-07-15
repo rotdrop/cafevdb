@@ -32,17 +32,17 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   /** @var string */
   private $encryptionKey;
 
-  /** @var string */
-  private $decryptionKey;
-
   /** @var EncryptionService */
   private $encryptionService;
+
+  /** @var bool */
+  private $cachable;
 
   public function __construct(EncryptionService $encryptionService)
   {
     $this->encryptionService = $encryptionService;
     $this->encryptionKey = $this->encryptionService->getAppEncryptionKey();
-    $this->decryptionKey = $this->encryptionKey;
+    $this->cachable = true;
   }
 
   /**
@@ -56,13 +56,11 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   }
 
   /**
-   * @param string encryptionKey The new decryption-key
+   * @param bool $isCachable Set cachable status of transformer.
    */
-  public function setDecryptionKey(string $decryptionKey)
+  public function setCachable(bool $isCachable)
   {
-    $oldKey = $this->decryptionKey;
-    $this->decryptionKey = $decryptionKey;
-    return $oldKey;
+    $this->cachable = $isCachable;
   }
 
   /**
@@ -82,7 +80,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    */
   public function reverseTransform($value)
   {
-    return $this->encryptionService->decrypt($value, $this->decryptionKey);
+     return $this->encryptionService->decrypt($value, $this->encryptionKey);
   }
 
   /**
@@ -92,6 +90,6 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    */
   public function isCachable()
   {
-    return $this->decryptionKey == $this->encryptionKey;
+    return $this->cachable;
   }
 };

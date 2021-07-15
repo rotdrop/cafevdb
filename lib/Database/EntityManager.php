@@ -761,16 +761,16 @@ class EntityManager extends EntityManagerDecorator
     /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
     $transformer = $this->transformerPool['encrypt'];
 
-    if (empty($oldEncryptionKey)) {
-      $oldEncryptionKey = $transformer->setEncryptionKey($newEncryptionKey);
-    } else {
-      $transformer->setDecryptionKey($oldEncryptionKey);
-      $transformer->setEncryptionKey($newEncryptionKey);
-    }
-
     $encryptedEntities = [];
     $this->beginTransaction();
     try {
+      // make sure decryption is still with the old key if it is given
+      if (!empty($oldEncryptionKey)) {
+        $transformer->setEncryptionKey($oldEncryptionKey);
+      }
+
+      $transformer->setCachable(false);
+
       foreach ($transformables as $annotationInfo) {
         $encryptedProperties = false;
         foreach ($annotationInfo['properties'] as $field => $transformable) {
@@ -782,26 +782,40 @@ class EntityManager extends EntityManagerDecorator
         }
       }
 
+      // Read all entities into the cache
       foreach ($encryptedEntities as $entityClass) {
         foreach ($this->getRepository($entityClass)->findAll() as $entity) {
+          $this->refresh($entity);
           $unitOfWork->scheduleForUpdate($entity);
         }
       }
+
+      // Set new encryption key
+      if (empty($oldEncryptionKey)) {
+        $oldEncryptionKey = $transformer->setEncryptionKey($newEncryptionKey);
+      } else {
+        $transformer->setEncryptionKey($newEncryptionKey);
+      }
+
+      // Flush to disk with new encryption key
       $this->flush();
 
-      $transformer->setDecryptionKey($newEncryptionKey);
+      // The next lines should in principle not be necessary
+      // ... refresh($entity) should re-read all entities from the
+      // database.
       foreach ($encryptedEntities as $entityClass) {
         foreach ($this->getRepository($entityClass)->findAll() as $entity) {
           $this->refresh($entity);
         }
       }
 
+      $transformer->setCachable(true);
+
       $this->commit();
     } catch (\Throwable $t) {
       // $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
       $this->rollback();
       $transformer->setEncryptionKey($oldEncryptionKey);
-      $transformer->setDecryptionKey($oldEncryptionKey);
       $this->reopen();
       throw new \RuntimeException(
         $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),
