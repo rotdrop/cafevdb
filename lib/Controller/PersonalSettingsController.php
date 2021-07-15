@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
+use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -313,7 +314,7 @@ class PersonalSettingsController extends Controller {
       $currentKey = $encryptionService->getAppEncryptionKey();
 
       $encryptionService->setAppEncryptionKey($oldKey);
-      $storedKey = $encryptionService->getConfigValue('encryptionkey', '');
+      $storedKey = $encryptionService->getConfigValue(EncryptionService::APP_ENCRYPTION_KEY_KEY, '');
 
       if ($storedKey !== $oldKey) {
         return self::grumble($this->l->t('Wrong old encryption key'));
@@ -349,7 +350,7 @@ class PersonalSettingsController extends Controller {
 
       try {
         foreach ($configValues as $key => $value) {
-          $encryptionService->setConfigValue($key.$backSuffix, $value);
+          $encryptionService->setConfigValue($key.$backupSuffix, $value);
         }
       } catch (\Throwable $t) {
         $this->logException($t);
@@ -366,7 +367,10 @@ class PersonalSettingsController extends Controller {
 
       $encryptionService->setAppEncryptionKey($systemKey);
       try {
-        $this->configService->encryptConfigValues([ 'encryptionkey' => $systemKey ]);
+        $this->configService->encryptConfigValues([
+          EncryptionService::APP_ENCRYPTION_KEY_KEY => $systemKey,
+          EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
+        ]);
       } catch (\Throwable $t) {
         // Ok, at least it is possible to recover the old values by
         // direct data-base manipulation. This is all for now. In

@@ -24,9 +24,9 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCP\IConfig;
-use OCP\ISession;
 use OCP\IUserSession;
 use OCP\Security\ICrypto;
+use OCP\Security\IHasher;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\ILogger;
@@ -62,8 +62,11 @@ class FakeL10N
  */
 class EncryptionService
 {
-  use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+
+  const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
+  const APP_ENCRYPTION_KEY_KEY = 'encryptionkey';
+  const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
 
   const NEVER_ENCRYPT = [
     'enabled',
@@ -73,9 +76,8 @@ class EncryptionService
     'wikinamespace', // cloud-admin setting
     'cspfailuretoken', // for public post route
     'configlock', // better kept open
+    self::APP_ENCRYPTION_KEY_HASH_KEY,
   ];
-
-  const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
 
   const SHARED_PRIVATE_VALUES = [
     self::USER_ENCRYPTION_KEY_KEY,
@@ -89,6 +91,12 @@ class EncryptionService
 
   /** @var IConfig */
   private $containerConfig;
+
+  /** @var ICrypto */
+  private $crypto;
+
+  /** @var IHasher */
+  private $hasher;
 
   /** @var string */
   private $userPrivateKey = null;
@@ -106,17 +114,17 @@ class EncryptionService
     $appName
     , AuthorizationService $authorization
     , IConfig $containerConfig
-    , ISession $session
     , IUserSession $userSession
     , ICrypto $crypto
+    , IHasher $hasher
     , ICredentialsStore $credentialsStore
     , ILogger $logger
     , IL10N $l10n
   ) {
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
-    $this->session = $session;
     $this->crypto = $crypto;
+    $this->hasher = $hasher;
     $this->logger = $logger;
     $this->l = new FakeL10N(); // $l10n;
     try {
@@ -275,7 +283,7 @@ class EncryptionService
 
   public function getUserEncryptionKey()
   {
-    return $this->getSharedPrivateValue('encryptionkey', null);
+    return $this->getSharedPrivateValue(self::USER_ENCRYPTION_KEY_KEY, null);
   }
 
   /**
@@ -288,7 +296,7 @@ class EncryptionService
    */
   public function setUserEncryptionKey($key, ?string $userId = null)
   {
-    return $this->setSharedPrivateValue('encryptionkey', $key, $userId);
+    return $this->setSharedPrivateValue(self::USER_ENCRYPTION_KEY_KEY, $key, $userId);
   }
 
   /**
@@ -337,7 +345,7 @@ class EncryptionService
     }
 
     // Now try to decrypt the data-base encryption key
-    $sysdbkey = $this->getConfigValue('encryptionkey');
+    $sysdbkey = $this->getConfigValue(self::APP_ENCRYPTION_KEY_KEY);
 
     if ($sysdbkey != $usrdbkey) {
       // Failed
@@ -449,7 +457,7 @@ class EncryptionService
     }
 
     // Fetch the encrypted "system" key from the app-config table
-    $sysdbkey = $this->getAppValue('encryptionkey');
+    $sysdbkey = $this->getAppValue(self::APP_ENCRYPTION_KEY_KEY);
     if (empty($sysdbkey) !== empty($encryptionKey)) {
       if (empty($sysdbkey)) {
         $this->logError('Stored encryption key is empty while provided encryption key is not empty.');
@@ -596,6 +604,16 @@ class EncryptionService
       }
     }
     return $value;
+  }
+
+  public function verifyHash($value, $hash)
+  {
+    return empty($hash) || $this->hasher->verify($value, $hash);
+  }
+
+  public function computeHash($value)
+  {
+    return $this->hasher->hash($value);
   }
 }
 

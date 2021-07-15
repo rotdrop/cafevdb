@@ -200,6 +200,16 @@ trait ConfigTrait {
     return $this->configService->decrypt($value, $key);
   }
 
+  protected function verifyHash($value, $hash)
+  {
+    return $this->configService->verifyHash($value, $hash);
+  }
+
+  protected function computeHash($value)
+  {
+    return $this->configService->computeHash($value);
+  }
+
   /**Get a possibly encrypted app-config value. */
   public function getConfigValue($key, $default = null)
   {

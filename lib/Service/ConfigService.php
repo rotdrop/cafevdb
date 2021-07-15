@@ -477,6 +477,16 @@ class ConfigService {
     return $this->encryptionService->decrypt($value, $key);
   }
 
+  public function verifyHash($value, $hash)
+  {
+    return $this->encryptionService->verifyHash($value, $hash);
+  }
+
+  public function computeHash($value)
+  {
+    return $this->encryptionService->computeHash($value);
+  }
+
   public function encryptionKeyValid($encryptionKey)
   {
     return $this->encryptionService->encryptionKeyValid($encryptionKey);
@@ -544,6 +554,10 @@ class ConfigService {
     $appKeys = $this->getAppKeys();
     $cacheKeys = array_keys($this->encryptionCache);
     foreach (array_diff($appKeys, $cacheKeys) as $uncached) {
+      if (preg_match('/::[0-9]+$/', $uncached)) {
+        // skip backup keys
+        continue;
+      }
       $this->logWarn("Found un-cached configuration key $uncached");
       $this->getConfigValue($uncached);
     }
