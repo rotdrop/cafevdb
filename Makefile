@@ -137,6 +137,7 @@ $(BUILDDIR)/vendor-wrapped: composer-wrapped.lock
 	mkdir -p $(BUILDDIR)
 	ln -fs ../3rdparty $(BUILDDIR)
 	ln -fs ../vendor $(BUILDDIR)
+	rm -rf $(BUILDDIR)/vendor-wrapped
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
 
