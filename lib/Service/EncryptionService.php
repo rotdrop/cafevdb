@@ -521,10 +521,9 @@ class EncryptionService
     if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
       if ($this->appEncryptionKey === null) {
         if (!empty($this->userId)) {
-          throw new Exceptions\EncryptionKeyException($this->l->t('Decryption requested for user "%s", but not configured, empty encryption key %s.', [ $this->userId, print_r($_SERVER, true) ]));
-          // $e = new \Exception('Config value '.$key.': Decryption requested but not configured for user "'.($this->userId).'", empty encryption key.' . print_r($_SERVER, true));
-          // $this->logException($e);
-          // $this->logError('Encryption requested but not configured for user "'.($this->userId).'", empty encryption key');
+          $message = $this->l->t('Decryption requested for user "%s", but not configured, empty encryption key.', $this->userId);
+          throw new Exceptions\EncryptionKeyException($message);
+          // $this->logError($message);
         }
         return false;
       }
@@ -550,8 +549,11 @@ class EncryptionService
   {
     if (!empty($this->appEncryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
       if ($this->appEncryptionKey === null) {
-        //throw new Exceptions\EncryptionKeyException($this->l->t('Encryption requested but not configured, empty encryption key'));
-        $this->logError($this->l->t('Encryption requested but not configured for user '.($this->userId).', empty encryption key'));
+        if (!empty($this->userId)) {
+          $message = $this->l->t('Encryption requested but not configured for user "%s", empty encryption key.', $this->userId);
+          //throw new Exceptions\EncryptionKeyException($message);
+          $this->logError($message);
+        }
         return false;
       }
       //$this->logInfo('Encrypting value for key '.$key);
