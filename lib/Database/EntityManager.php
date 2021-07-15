@@ -751,6 +751,7 @@ class EntityManager extends EntityManagerDecorator
     if (!$this->connected()) {
       throw new \RuntimeException($this->l->t('EntityManager is not connected to database.'));
     }
+
     $annotationClass = \OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation\Transformable::class;
     $transformables = $this->propertiesByAnnotation($annotationClass);
 

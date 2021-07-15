@@ -84,4 +84,14 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   {
     return $this->encryptionService->decrypt($value, $this->decryptionKey);
   }
+
+  /**
+   * Disable caching while changing the encryption key.
+   *
+   * @return bool
+   */
+  public function isCachable()
+  {
+    return $this->decryptionKey == $this->encryptionKey;
+  }
 };
