@@ -354,6 +354,14 @@ class EncryptionService
     } else {
       $this->logDebug('Encryption keys validated'.(empty($usrdbkey) ? ' (no encryption)' : '').'.');
     }
+
+    $sysdbkeyhash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
+    if (!$this->verifyHash($usrdbkey, $sysdbkeyhash)) {
+      $this->logError('Unable to validate HASH for encryption key.');
+    } else {
+      $this->logError('Validated HASH for encryption key.');
+    }
+
     return true;
   }
 
@@ -474,6 +482,13 @@ class EncryptionService
 
     if (!$match) {
       $this->logError('Encryption keys do not match.');
+    }
+
+    $sysdbkeyhash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
+    if (!$this->verifyHash($encryptionKey, $sysdbkeyhash)) {
+      $this->logError('Unable to validate HASH for encryption key.');
+    } else {
+      $this->logError('Validated HASH for encryption key.');
     }
 
     return $match;
