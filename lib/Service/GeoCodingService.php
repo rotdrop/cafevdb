@@ -581,7 +581,7 @@ class GeoCodingService
             'target' => $lang,
           ]);
           if (empty($entity)) {
-            $entity = GeoPostalCodeTranslationf::create()
+            $entity = GeoPostalCodeTranslation::create()
                     ->setGeoPostalCode($geoPostalCode)
                     ->setTarget($lang);
             $hasChanged = true;
