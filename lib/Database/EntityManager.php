@@ -746,7 +746,7 @@ class EntityManager extends EntityManagerDecorator
    * @bug This function does not seem to belong here ...
    * @todo Find out where this function belongs to ...
    */
-  public function recryptEncryptedProperties(string $newEncryptionKey)
+  public function recryptEncryptedProperties(string $newEncryptionKey, ?string $oldEncryptionKey)
   {
     if (!$this->connected()) {
       throw new \RuntimeException($this->l->t('EntityManager is not connected to database.'));
@@ -760,7 +760,12 @@ class EntityManager extends EntityManagerDecorator
     /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
     $transformer = $this->transformerPool['encrypt'];
 
-    $oldEncryptionKey = $transformer->setEncryptionKey($newEncryptionKey);
+    if (empty($oldEncryptionKey)) {
+      $oldEncryptionKey = $transformer->setEncryptionKey($newEncryptionKey);
+    } else {
+      $transformer->setDecryptionKey($oldEncryptionKey);
+      $transformer->setEncryptionKey($newEncryptionKey);
+    }
 
     $encryptedEntities = [];
     $this->beginTransaction();

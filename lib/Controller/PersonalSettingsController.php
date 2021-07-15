@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -345,18 +346,20 @@ class PersonalSettingsController extends Controller {
 
       //$this->logInfo(print_r($configValues, true));
 
-      // make a backup
+      // make a backup by just copying plain values which can be
+      // restore disregarding any encryption key.
       $backupSuffix = '::'.(new \DateTime())->format('YmdHis');
-
       try {
-        foreach ($configValues as $key => $value) {
-          $encryptionService->setConfigValue($key.$backupSuffix, $value);
+        foreach (array_keys($configValues) as $configKey) {
+          $backupConfigKey = $configKey . $backupSuffix;
+          $this->setAppValue($backupConfigKey, $this->getAppValue($configKey));
         }
       } catch (\Throwable $t) {
         $this->logException($t);
-        foreach ($configValues as $key => $value) {
+        foreach (array_keys($configValues) as $configKey) {
+          $backupConfigKey = $configKey . $backupSuffix;
           try {
-            $this->deleteConfigValue($key.$backupSuffix);
+            $this->deleteAppValue($backupConfigKey);
           } catch (\Throwable $t1) {
             //$this->logException($t1);
           }
@@ -365,26 +368,70 @@ class PersonalSettingsController extends Controller {
         return self::grumble($this->exceptionChainData($t));
       }
 
-      $encryptionService->setAppEncryptionKey($systemKey);
       try {
+
+        // re-crypt the config-space
+        $encryptionService->setAppEncryptionKey($systemKey);
         $this->configService->encryptConfigValues([
           EncryptionService::APP_ENCRYPTION_KEY_KEY => $systemKey,
           EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
         ]);
+
+        // re-crypt the data-base columns. Changing the data-base
+        // values is wrapped into a transaction, so it should clean-up
+        // after itself unless the data-base connection breaks down in
+        // between.
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->di(EntityManager::class);
+        $entityManager->recryptEncryptedProperties($systemKey, $oldKey);
+
       } catch (\Throwable $t) {
-        // Ok, at least it is possible to recover the old values by
-        // direct data-base manipulation. This is all for now. In
-        // principle one would have to use data-base transactions.
         $this->logException($t);
-        return self::grumble($this->exceptionChainData($t));
+        $encryptionService->setAppEncryptionKey($oldKey);
+        $messages = [ $this->exceptionChainData($t), ];
+        $failed = [];
+        foreach (array_keys($configValues) as $configKey) {
+          $backupConfigKey = $configKey . $backupSuffix;
+          try {
+            $this->setAppValue($configKey, $this->getAppValue($backupConfigKey));
+          } catch (\Throwable $t1) {
+            // $this->logException($t1);
+            $failed[] = $configKey;
+          }
+        }
+        if (!empty($failed)) {
+          $messages[] = $this->l->t('Failed to restore config-values %s, keeping all backup values with suffix "%s".', [ implode(',', $failed), $backupSuffix ]);
+        } else {
+          $failed = [];
+          foreach (array_keys($configValues) as $configKey) {
+            $backupConfigKey = $configKey . $backupSuffix;
+            try {
+              $this->deleteAppValue($backupConfigKey);
+            } catch (\Throwable $t2) {
+              // $this->logException($t2);
+              $failed = [];
+            }
+          }
+          if (!empty($failed)) {
+            $messages[] = $this->l->t('Failed to remove backups for config-values %s.', implode(',', $failed));
+          }
+        }
+        return self::grumble($messages);
       }
 
-      foreach ($configValues as $key => $value) {
+      $messages = [];
+      $failed = [];
+      foreach (array_keys($configValues) as $configKey) {
+        $backupConfigKey = $configKey . $backupSuffix;
         try {
-          $this->deleteConfigValue($key.$backupSuffix);
-        } catch (\Throwable $t1) {
-          //$this->logException($t1);
+          $this->deleteAppValue($backupConfigKey);
+        } catch (\Throwable $t2) {
+          // $this->logException($t2);
+          $failed = [];
         }
+      }
+      if (!empty($failed)) {
+        $messages[] = $this->l->t('Failed to remove backups for config-values %s.', implode(',', $failed));
       }
 
       $this->logInfo('Deleting config-lock');
@@ -393,9 +440,15 @@ class PersonalSettingsController extends Controller {
       // this should be it: the new encryption key is stored in the
       // config space, encrypted with itself.
 
-      // Shouldn't we distribute the key as well?
-      list('status' => $distributeStatus, 'messages' => $messages) = $this->distributeEncryptionKey();
-      array_unshift($messages, $this->l->t('Stored new encryption key.'));
+      // Shouldn't we distribute the key as well? YES.
+      list('status' => $distributeStatus, 'messages' => $distributeMessages) = $this->distributeEncryptionKey();
+      $messages = array_merge($distributeMessages, $messages);
+
+      if ($distributeStatus == Http::STATUS_OK) {
+        $messages[] = $this->l->t('Stored new encryption key.');
+      } else {
+        $messages[] = $this->l->t('Stored the new encryption key, however, distributing the new encryption key failed for at least some of the users.');
+      }
       return self::dataResponse([ 'message' => $messages ], $distributeStatus);
     case 'streetAddressName01':
     case 'streetAddressName02':
