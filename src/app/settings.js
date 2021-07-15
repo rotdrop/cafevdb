@@ -216,6 +216,7 @@ const afterLoad = function(container) {
             }
           })
           .fail(function(xhr, status, errorThrown) {
+            const failData = Ajax.handleError(xhr, status, errorThrown);
             $(tabsSelector + ' fieldset').prop('disabled', false);
             $(tabsSelector).tabs('enable');
             container.find('.statusmessage.standby').hide();
@@ -223,9 +224,8 @@ const afterLoad = function(container) {
             Notification.hide();
 
             $('.statusmessage.error').show();
-            const msg = Ajax.failMessage(xhr, status, errorThrown);
-            if (msg) {
-              container.find('.statusmessage.general').html(msg).show();
+            if (failData.message) {
+              container.find('.statusmessage.general').html(failData.message).show();
             }
           });
       } else {
@@ -254,9 +254,7 @@ const afterLoad = function(container) {
           // Make sure both inputs have the same value
           keyInput.val(data.value);
           keyInputClone.val(data.value);
-          if (data.message !== '') {
-            msg.html(data.message).show();
-          }
+          Notification.messages(data.message);
         });
       return false;
     });
@@ -271,7 +269,7 @@ const afterLoad = function(container) {
           msg.html(failData.message).show();
         })
         .done(function(data) {
-          msg.html(data.message).show();
+          Notification.messages(data.message);
         });
       return false;
     });

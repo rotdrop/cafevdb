@@ -388,7 +388,8 @@ class PersonalSettingsController extends Controller {
       } catch (\Throwable $t) {
         $this->logException($t);
         $encryptionService->setAppEncryptionKey($oldKey);
-        $messages = [ $this->exceptionChainData($t), ];
+        $responseData = $this->exceptionChainData($t);
+        $messages = [ $responseData['message'] ];
         $failed = [];
         foreach (array_keys($configValues) as $configKey) {
           $backupConfigKey = $configKey . $backupSuffix;
@@ -400,6 +401,7 @@ class PersonalSettingsController extends Controller {
           }
         }
         if (!empty($failed)) {
+          $responseData['message'] =
           $messages[] = $this->l->t('Failed to restore config-values %s, keeping all backup values with suffix "%s".', [ implode(',', $failed), $backupSuffix ]);
         } else {
           $failed = [];
@@ -416,7 +418,8 @@ class PersonalSettingsController extends Controller {
             $messages[] = $this->l->t('Failed to remove backups for config-values %s.', implode(',', $failed));
           }
         }
-        return self::grumble($messages);
+        $responseData['message'] = $messages;
+        return self::grumble($responseData);
       }
 
       $messages = [];
@@ -1607,9 +1610,9 @@ class PersonalSettingsController extends Controller {
         $this->encryptionService()->setUserEncryptionKey($appEncryptionKey, $userId);
         $modifiedUsers[] = $userId;
       } catch (Exceptions\EncryptionKeyException $e) {
-        $noKeyUsers[] = [ $userId => $e->getMessage() ];
+        $noKeyUsers[$userId] = $e->getMessage();
       } catch (\Throwable $t) {
-        $fatalUsers[] = [ $userId => $t->getMessage() ];
+        $fatalUsers[$userId] = $t->getMessage();
       }
     }
     $messages = [];
@@ -1619,10 +1622,14 @@ class PersonalSettingsController extends Controller {
       $messages[] = $this->l->t('Unable to distribute the app encryptionkey to any user.');
     }
     if (!empty($noKeyUsers)) {
-      $messages[] = $this->l->t('Public SSL key missing for %s, key distribution failed.', implode(', ', $noKeyUsers));
+      $message = $this->l->t('Public SSL key missing for %s, key distribution failed.', implode(', ', array_keys($noKeyUsers)));
+      $this->logError($message);
+      $messages[] = $message;
     }
     foreach ($fatalUsers as $userId => $message) {
-      $messages[] = $this->l->t('Setting the app encryption key for %s failed fatally: "%s".', [ $userId, $message ]);
+      $logMsg = $this->l->t('Setting the app encryption key for %s failed fatally: "%s".', [ $userId, $message ]);
+      $this->logError($logMsg);
+      $messages[] = $logMsg;
     }
     $status = empty($fatalUsers) && !empty($modifiedUsers)
             ? Http::STATUS_OK
