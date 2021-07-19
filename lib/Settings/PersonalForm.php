@@ -289,6 +289,7 @@ class PersonalForm {
             'documenttemplatesfolder' => $documentTemplatesFolder,
             'projectsfolder' => $this->getConfigValue('projectsfolder',''),
             'projectparticipantsfolder' => $this->getConfigValue('projectparticipantsfolder',''),
+            'projectpostersfolder' => $this->getConfigValue('projectpostersfolder',''),
             'projectsbalancefolder' => $this->getConfigValue('projectsbalancefolder',''),
 
             'translations' => $translations,

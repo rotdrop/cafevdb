@@ -515,9 +515,11 @@ const afterLoad = function(container) {
     sharedFolder('projectsfolder', function(element, css, data, value, msg) {
       $('#projectsbalancefolder-fieldset').prop('disabled', value[css] === '');
       $('#projectparticipantsfolder-fieldset').prop('disabled', value[css] === '');
+      $('#projectpostersfolder-fieldset').prop('disabled', value[css] === '');
       $('div#sharing-settings span.projectsfolder').html(value[css]); // update
     });
     sharedFolder('projectparticipantsfolder');
+    sharedFolder('projectpostersfolder');
     sharedFolder('projectsbalancefolder');
     sharedFolder('documenttemplatesfolder', function(element, css, data, value, msg) {
       $('fieldset.document-template input').prop('disabled', value[css] === '');

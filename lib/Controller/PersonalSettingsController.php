@@ -1063,6 +1063,7 @@ class PersonalSettingsController extends Controller {
     case ConfigService::POSTBOX_FOLDER:
     case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
     case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
+    case ConfigService::PROJECT_POSTERS_FOLDER:
     case ConfigService::PROJECT_BALANCE_FOLDER:
     case ConfigService::PROJECTS_FOLDER:
       $appGroup = $this->getConfigValue('usergroup');
@@ -1093,9 +1094,13 @@ class PersonalSettingsController extends Controller {
         return self::grumble($this->l->t('Submitted "%s" != "%s" (stored)', [$saved, $actual]));
       }
       // shortcut for participants folder, which does not exist
-      if ($parameter == 'projectparticipantsfolder') {
+      switch ($parameter) {
+      case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
         $this->setConfigValue($parameter, $real);
         return self::valueResponse($real, $this->l->t('Participants-folder set to "%s".', $real));
+      case ConfigService::PROJECT_POSTERS_FOLDER:
+        $this->setConfigValue($parameter, $real);
+        return self::valueResponse($real, $this->l->t('Posters-folder set to "%s".', $real));
       }
       try {
         $url = null;

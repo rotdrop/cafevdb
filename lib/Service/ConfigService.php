@@ -74,6 +74,7 @@ class ConfigService {
   const SHARED_FOLDER = 'sharedfolder';
   const PROJECTS_FOLDER = 'projectsfolder';
   const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';
+  const PROJECT_POSTERS_FOLDER = 'projectpostersfolder';
   const PROJECT_BALANCE_FOLDER = 'projectbalancefolder';
   const DOCUMENT_TEMPLATES_FOLDER = 'documenttemplatesfolder';
   const POSTBOX_FOLDER = 'postboxfolder';
