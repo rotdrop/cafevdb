@@ -1093,7 +1093,7 @@ class PersonalSettingsController extends Controller {
       if ($actual != $saved) {
         return self::grumble($this->l->t('Submitted "%s" != "%s" (stored)', [$saved, $actual]));
       }
-      // shortcut for participants folder, which does not exist
+      // shortcut for participants and posters folder, which only exist as subdirectory
       switch ($parameter) {
       case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
         $this->setConfigValue($parameter, $real);
