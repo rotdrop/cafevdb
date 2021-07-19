@@ -187,6 +187,27 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         </label>
         <input name="projectparticipantsfolder-check" id="projectparticipantsfolder-check" type="button" value="<?php echo $l->t('Save');?>" />
       </fieldset>
+      <fieldset id="projectpostersfolder-fieldset" class="projectpostersfolder" <?php echo $off; ?> >
+        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
+        <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder']; ?></span>
+        <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
+        <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span>
+        <span><b>/</b></span>
+        <input type="hidden" id="projectpostersfolder-saved" name="projectpostersfolder-saved" value="<?php echo $_['projectpostersfolder']; ?>" />
+        <input <?php echo $_['projectpostersfolder'] != '' ? 'disabled' : ''; ?>
+          type="text"
+          id="projectpostersfolder"
+          name="projectpostersfolder"
+          placeholder="<?php echo $l->t('Posters Folder'); ?>"
+          value="<?php echo $_['projectpostersfolder']; ?>"
+          title="<?php echo $toolTips['projectpostersfolder']; ?>"
+        />
+        <input type="checkbox" id="projectpostersfolder-force" name="projectpostersfolder-force" class="checkbox"/>
+        <label for="projectpostersfolder-force" title="<?php echo $toolTips['projectpostersfolder-force']; ?>" >
+          <?php echo $l->t('force');?>
+        </label>
+        <input name="projectpostersfolder-check" id="projectpostersfolder-check" type="button" value="<?php echo $l->t('Save');?>" />
+      </fieldset>
       <fieldset id="projectsbalancefolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
         <input type="hidden" id="projectsbalancefolder-saved" name="projectsbalancefolder-saved" value="<?php echo $_['projectsbalancefolder']; ?>" />
