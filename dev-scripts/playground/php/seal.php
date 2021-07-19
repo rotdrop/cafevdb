@@ -59,7 +59,84 @@ foreach ($keys as $i => $key) {
 use OCP\Security\ICrypto;
 $crypto = \OC::$server->query(ICrypto::class);
 
-// Add a HMAC to the
-function sealData()
+// openssl_seal() seemingly does not work with gcm-ciphers as the
+// authentication tag is somehow not communicated.
+
+interface IKeyCryptor
 {
+  public function encrypt(string $data):string;
+  public function decrypt(string $data):string;
+};
+
+class OpenSSLAsymCryptor implements IKeyCryptor
+{
+  private $userId;
+
+  private $privKey = null;
+
+  private $pubKey = null;
+
+  public function __construct(string $userId, $privKey = null, string $password = null)
+  {
+    $this->userId = $userId;
+    if (!empty($privKey)) {
+      $this->setPrivateKey($privKey, $password);
+    }
+  }
+
+  public function setPrivateKey($privKey, $password = null)
+  {
+    $this->privKey =openssl_pkey_get_private($privKey, $password);
+    $details = openssl_pkey_get_details($this->privKey);
+    $this->setPublicKey($details['key']);
+  }
+
+  public function setPublicKey($pubKey)
+  {
+    $this->pubKey = $pubKey;
+  }
+
+  public function encrypt(string $data):string
+  {
+    openssl_public_encrypt($decryptedData, $encryptedData, $this->pubKey);
+    return $encryptedData;
+  }
+
+  public function decrypt(string $data):string
+  {
+    openssl_private_decrypt($encryptedData, $decryptedData, $this->privKey);
+    return $decryptedData;
+  }
+};
+
+function sealData(string $data, array $keyEncryption):?string
+{
+  $sealKey = \random_bytes(64);
+  $encryptedData = $crypto->encrypt($data, $sealKey);
+
+  /** @var IKeyCryptor $sealCryptor */
+  foreach ($keyEncryption as $userId => $sealCryptor) {
+    if (is_callable($sealCryptor)) {
+      $sealData[] = $userId . ':' . base64_encode($sealCryptor->encrypt($sealKey));
+    }
+  }
+  $sealedData = sprintf('%08d', strlen($encryptedData));
+  $sealedData .= $encryptedData . ';';
+  $sealedData .= implode(';', $sealData);
+  return $sealedData;
+}
+
+function unseal(string $data, string $userId, IKeyCryptor $keyCryptor):?string
+{
+  $length = (int)substr($data, 0, 8);
+  $encryptedData = substr($data, 9, $length);
+  $keyData = explode(';', substr($data, 10 + $length));
+  foreach ($keyData as $seal) {
+    list($keyUser, $sealedKey) = explode(':', $seal);
+    if ($user == $keyUser)  {
+      $key = $keyCryptor->decrypt($sealedKey);
+      return $crypto->decrypt($encryptedData, $key);
+    }
+  }
+  return null;
 }

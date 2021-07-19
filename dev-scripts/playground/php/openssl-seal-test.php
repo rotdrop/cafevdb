@@ -1,9 +1,13 @@
+#!/usr/bin/php
 <?php
 
-const NUM_KEYS = 4;
+const NUM_KEYS = 2;
 
 for ($i = 0; $i < NUM_KEYS; $i++) {
   $keys[] = $key = openssl_pkey_new();
+  // openssl_pkey_export($key, $export);
+  // echo $export . PHP_EOL;
+  // print_r(openssl_pkey_get_details(openssl_pkey_get_private($export)));
   $details = openssl_pkey_get_details($key);
   $pubKeys[] = $details['key'];
   $privKeys[] = openssl_pkey_get_private($key);
