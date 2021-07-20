@@ -65,7 +65,6 @@ class EncryptionService
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
-  const APP_ENCRYPTION_KEY_KEY = 'encryptionkey';
   const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
 
   const NEVER_ENCRYPT = [
@@ -344,22 +343,15 @@ class EncryptionService
       $this->appEncryptionKey = $usrdbkey;
     }
 
-    // Now try to decrypt the data-base encryption key
-    $sysdbkey = $this->getConfigValue(self::APP_ENCRYPTION_KEY_KEY);
-
-    if ($sysdbkey != $usrdbkey) {
-      // Failed
-      $this->appEncryptionKey = null;
-      throw new Exceptions\EncryptionKeyException($this->l->t('Stored keys for application and user do not match'));
-    } else {
-      $this->logDebug('Encryption keys validated'.(empty($usrdbkey) ? ' (no encryption)' : '').'.');
-    }
-
+    // compare the user-key with the stored encryption key hash
     $sysdbkeyhash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
     if (!$this->verifyHash($usrdbkey, $sysdbkeyhash)) {
+      // Failed
+      $this->appEncryptionKey = null;
+      throw new Exceptions\EncryptionKeyException($this->l->t('Failed to validate user encryption key.'));
       $this->logError('Unable to validate HASH for encryption key.');
     } else {
-      $this->logError('Validated HASH for encryption key.');
+      $this->logDebug('Encryption keys validated'.(empty($usrdbkey) ? ' (no encryption)' : '').'.');
     }
 
     return true;
@@ -464,10 +456,10 @@ class EncryptionService
       $this->logWarn('Provided encryption-key is empty, encryption is switched off.');
     }
 
-    // Fetch the encrypted "system" key from the app-config table
-    $sysdbkey = $this->getAppValue(self::APP_ENCRYPTION_KEY_KEY);
-    if (empty($sysdbkey) !== empty($encryptionKey)) {
-      if (empty($sysdbkey)) {
+    $sysdbkeyhash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
+
+    if (empty($sysdbkeyhash) !== empty($encryptionKey)) {
+      if (empty($sysdbkeyhash)) {
         $this->logError('Stored encryption key is empty while provided encryption key is not empty.');
       } else {
         $this->logError('Stored encryption key is not empty while provided encryption key is empty.');
@@ -475,20 +467,12 @@ class EncryptionService
       return false;
     }
 
-    // Now try to decrypt the data-base encryption key
-    $sysdbkey = $this->decrypt($sysdbkey, $encryptionKey);
-
-    $match = ($sysdbkey == $encryptionKey);
+    $match = $this->verifyHash($encryptionKey, $sysdbkeyhash);
 
     if (!$match) {
-      $this->logError('Encryption keys do not match.');
-    }
-
-    $sysdbkeyhash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
-    if (!$this->verifyHash($encryptionKey, $sysdbkeyhash)) {
       $this->logError('Unable to validate HASH for encryption key.');
     } else {
-      $this->logError('Validated HASH for encryption key.');
+      $this->logDebug('Validated HASH for encryption key.');
     }
 
     return $match;
@@ -519,6 +503,7 @@ class EncryptionService
     $value  = $this->getAppValue($key, $default);
 
     if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
+      // null is error or uninitialized, string '' means no encryption
       if ($this->appEncryptionKey === null) {
         if (!empty($this->userId)) {
           $message = $this->l->t('Decryption requested for user "%s", but not configured, empty encryption key.', $this->userId);
@@ -549,6 +534,7 @@ class EncryptionService
   {
     if (!empty($this->appEncryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
       if ($this->appEncryptionKey === null) {
+        // null is error or uninitialized, string '' means no encryption
         if (!empty($this->userId)) {
           $message = $this->l->t('Encryption requested but not configured for user "%s", empty encryption key.', $this->userId);
           //throw new Exceptions\EncryptionKeyException($message);

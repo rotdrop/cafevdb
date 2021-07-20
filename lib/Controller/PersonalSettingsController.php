@@ -312,14 +312,14 @@ class PersonalSettingsController extends Controller {
       $systemKey = $value['systemkey'];
 
       $encryptionService = $this->encryptionService();
-      $currentKey = $encryptionService->getAppEncryptionKey();
 
-      $encryptionService->setAppEncryptionKey($oldKey);
-      $storedKey = $encryptionService->getConfigValue(EncryptionService::APP_ENCRYPTION_KEY_KEY, '');
-
-      if ($storedKey !== $oldKey) {
+      $storedKeyHash = $encryptionService->getConfigValue(EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY);
+      if (!$encryptionService->verifyHash($oldKey, $hash)) {
         return self::grumble($this->l->t('Wrong old encryption key'));
       }
+
+      // install old encryption key
+      $encryptionService->setAppEncryptionKey($oldKey);
 
       // do some rudimentary locking
       $configLock = $this->getAppValue('configlock');
@@ -373,7 +373,6 @@ class PersonalSettingsController extends Controller {
         // re-crypt the config-space
         $encryptionService->setAppEncryptionKey($systemKey);
         $this->configService->encryptConfigValues([
-          EncryptionService::APP_ENCRYPTION_KEY_KEY => $systemKey,
           EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
         ]);
 
