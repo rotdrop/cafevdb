@@ -597,7 +597,7 @@ class ConfigService {
    */
   public function generateRandomBytes($length = 30)
   {
-    return $this->secureRandom->generate($length);
+    return $this->secureRandom->generate($length, ISecureRandom::CHAR_HUMAN_READABLE);
   }
 
   /*

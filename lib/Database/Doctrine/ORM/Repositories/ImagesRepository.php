@@ -99,7 +99,7 @@ class ImagesRepository extends EntityRepository
    *
    *
    */
-  public function persistForEntity(string $joinTableEntityClass, int $ownerId, \OCP\Image $image):Entities\Image
+  public function persistForEntity(string $joinTableEntityClass, int $ownerId, \OCP\Image $image, ?string $fileName = null):Entities\Image
   {
     $entityManager = $this->getEntityManager();
 
@@ -115,18 +115,19 @@ class ImagesRepository extends EntityRepository
     $ownerEntityClass = $mapping['targetEntity'];
     $uniqueImage = $mapping['type'] == ORM\ClassMetadataInfo::ONE_TO_ONE;
 
-    // data entity
     $imageData = $image->data();
+    /** @var Entities\FileData $dbImageData */
     $dbImageData = Entities\FileData::create()
                  ->setData($imageData, 'binary');
 
-    // image entity
+    /** @var Entities\Image $dbImage */
     $dbImage = Entities\Image::create()
              ->setSize()
              ->setWidth($image->width())
              ->setHeight($image->height())
              ->setMimeType($image->mimeType())
-             ->setFileData($dbImageData);
+             ->setFileData($dbImageData)
+             ->setFileName($fileName);
     $dbImageData->setFile($dbImage);
 
     if ($uniqueImage) {

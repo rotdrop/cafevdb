@@ -136,6 +136,7 @@ class ImagesController extends Controller {
           }
         }
 
+        /** @var Entities\Image $dbImage */
         $dbImage = $joinTableEntity->getImage();
 
         if ($metaData === true) {
@@ -161,6 +162,9 @@ class ImagesController extends Controller {
         $this->logDebug("Image data: ".strlen($imageData)." mime ".$imageMimeType);
         if ($image->mimeType() !== $imageMimeType) {
           $this->logError("Mime-types stored / computed: ".$imageMimeType." / ".$image->mimeType());
+          $this->logError('Trying to correct cached mime-type for image id ' . $dbImage->getId() . '.');
+          $dbImage->setMimeType($image->mimeType());
+          $this->flush();
         }
       } catch (\Throwable $t) {
         $this->logException($t);
@@ -224,7 +228,8 @@ class ImagesController extends Controller {
                         [$this->userId(), $path]));
         }
 
-        $tmpKey = $this->appName().'-inline-image-'.md5($path);
+        $tmpKey = $this->appName() . '-inline-image-' . md5($path) . '-' . $this->generateRandomBytes();
+        $fileName = $file->getName();
         if (!$image->loadFromData($file->getContent())) {
           return self::grumble($this->l->t("Unable to validate cloud image file %s", [$path]));
         }
@@ -234,7 +239,7 @@ class ImagesController extends Controller {
           return self::grumble($this->l->t("Drag'n drop filename not submitted"));
         }
         $fileName = $this->parameterService->server['HTTP_X_FILE_NAME'];
-        $tmpKey = $this->appName().'-inline-image-'.md5($fileName);
+        $tmpKey = $this->appName() . '-inline-image-' . md5($fileName) . '-' . $this->generateRandomBytes();
         if (!$image->loadFromData(file_get_contents('php://input'))) {
           return self::grumble($this->l->t("Unable to validate uploaded image data"));
         }
@@ -246,11 +251,12 @@ class ImagesController extends Controller {
         }
 
         $tmpName = $upload['tmp_name'];
+        $fileName = $upload['name'];
         if (!file_exists($tmpName)) {
           return self::grumble($this->l->t("Uploaded file seems to have vanished on server"));
         }
 
-        $tmpKey = $this->appName().'-inline-image-'.md5(basename($tmpName));
+        $tmpKey = $this->appName() . '-inline-image-' . md5(basename($tmpName));
         if (!$image->loadFromFile($tmpName)) {
           return self::grumble($this->l->t("Unable to validate uploaded image data"));
         }
@@ -263,10 +269,12 @@ class ImagesController extends Controller {
           [ strlen($image->data()), $tmpKey ]));
       }
 
-      $this->logDebug("Stored cache file as ".$tmpKey);
+      $this->logDebug("Stored cache file as " . $tmpKey);
 
-      $responseData['tmpKey'] = $tmpKey;
-
+      $responseData = [
+        'tmpKey' => $tmpKey,
+        'fileName' => $fileName,
+      ];
       return self::dataResponse($responseData);
     case 'save':
       $this->logDebug('crop data: '.print_r($this->parameterService->getParams(), true));
@@ -294,17 +302,22 @@ class ImagesController extends Controller {
       if (empty($tmpKey)) {
         return self::grumble($this->l->t('Missing cache-key for temporay image file'));
       }
+      $fileName = $this->parameterService['fileName'];
+      if (empty($fileName)) {
+        $this->logInfo('Empty file-name for temporary image file "' . $tmpKey . '".');
+        $fileName = $tmpKey;
+      }
 
       $imageData = $this->fileCache->get($tmpKey);
       if (empty($imageData)) {
-        return self::grumble($this->l->t('Unable to load image with cache key %s', [$tmpKey]));
+        return self::grumble($this->l->t('Unable to load image with cache key %s', [ $tmpKey ]));
       }
       $this->fileCache->remove($tmpKey);
-      $this->logDebug("Image data for key ".$tmpKey." of size ".strlen($imageData));
+      $this->logDebug("Image data for key " . $tmpKey . " of size " . strlen($imageData));
 
       $image = new \OCP\Image();
       if (!$image->loadFromData($imageData)) {
-        return self::grumble($this->l->t('Unable to generate image from temporary storage (%s)', [$tmpKey]));
+        return self::grumble($this->l->t('Unable to generate image from temporary storage (%s)', [ $tmpKey ]));
       }
 
       $x1 = (int)$this->parameterService['x1'];
@@ -334,11 +347,13 @@ class ImagesController extends Controller {
           $joinTableEntity = $joinTableRepository->findOneBy($findBy);
           /** @var Entities\Image $dbImage */
           $dbImage = $joinTableEntity->getImage();
+          $dbImage->setFileName($fileName);
+          $dbImage->setMimeType($image->mimeType());
           $dbImage->getFileData()->setData($image->data(), 'binary');
           $this->flush();
         } else  {
           $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-          $dbImage = $imagesRepository->persistForEntity($joinTable, $ownerId, $image);
+          $dbImage = $imagesRepository->persistForEntity($joinTable, $ownerId, $image, $fileName);
         }
       } catch (\Throwable $t) {
         $this->logException($t);
@@ -365,6 +380,7 @@ class ImagesController extends Controller {
 
         $dbImage = $joinTableEntity->getImage();
         $imageId = $dbImage->getId();
+        $fileName = $dbImage->getFileName();
         $imageData = $dbImage->getFileData()->getData('binary');
 
         $image = new \OCP\Image();
@@ -372,7 +388,11 @@ class ImagesController extends Controller {
           return self::grumble($this->l->t("Unable to create temporary image for %s@%s", [$ownerId, $joinTable]));
         }
 
-        $tmpKey = $this->appName().'-inline-image-'.$joinTable.'-'.$ownerId.'-'.$imageId.'-'.$dbImage->getDataHash();
+        $tmpKeyBase = $this->appName() . '-inline-image-' . $joinTable . '-' . $ownerId . '-' . $imageId;
+        if (empty($fileName)) {
+          $fileName = $tmpKeyBase;
+        }
+        $tmpKey = $tmpKeyBase . '-' . $this->generateRandomBytes();
 
         if (!$this->cacheTemporaryImage($tmpKey, $image, $imageSize)) {
         return self::grumble($this->l->t(
@@ -384,7 +404,10 @@ class ImagesController extends Controller {
         return self::grumble($this->exceptionChainData($t));
       }
 
-      $responseData['tmpKey'] = $tmpKey;
+      $responseData = [
+        'tmpKey' => $tmpKey,
+        'fileName' => $fileName,
+      ];
 
       return self::dataResponse($responseData);
     case 'delete':
