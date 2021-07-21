@@ -74,10 +74,10 @@ const photoUpload = function(wrapper, filelist) {
       Ajax.handleError(xhr, status, errorThrown);
     })
     .done(function(data) {
-      if (!Ajax.validateResponse(data, ['tmpKey'])) {
+      if (!Ajax.validateResponse(data, ['tmpKey', 'fileName'])) {
         return;
       }
-      editPhoto(wrapper, data.tmpKey);
+      editPhoto(wrapper, data.tmpKey, data.fileName);
     });
 };
 
@@ -106,10 +106,10 @@ const photoCloudSelected = function(wrapper, path) {
       Ajax.handleError(xhr, status, errorThrown);
     })
     .done(function(data) {
-      if (!Ajax.validateResponse(data, ['tmpKey'])) {
+      if (!Ajax.validateResponse(data, ['tmpKey', 'fileName'])) {
         return;
       }
-      editPhoto(wrapper, data.tmpKey);
+      editPhoto(wrapper, data.tmpKey, data.fileName);
     });
 };
 
@@ -189,14 +189,14 @@ const photoEditCurrent = function(wrapper) {
       wrapper.removeClass('wait');
     })
     .done(function(data) {
-      if (!Ajax.validateResponse(data, ['tmpKey'])) {
+      if (!Ajax.validateResponse(data, ['tmpKey', 'fileName'])) {
         return;
       }
-      editPhoto(wrapper, data.tmpKey);
+      editPhoto(wrapper, data.tmpKey, data.fileName);
     });
 };
 
-const editPhoto = function(wrapper, tmpKey) {
+const editPhoto = function(wrapper, tmpKey, fileName) {
   const imageInfo = wrapper.data('imageInfo');
 
   $.fn.cafevTooltip.remove();
@@ -217,7 +217,7 @@ const editPhoto = function(wrapper, tmpKey) {
 
   const $cropBoxTmpl = $('#cropBoxTemplate');
   $('body').append('<div id="edit_photo_dialog"></div>');
-  const $cropBoxForm = $cropBoxTmpl.octemplate($.extend({ tmpKey }, imageInfo))
+  const $cropBoxForm = $cropBoxTmpl.octemplate($.extend({ tmpKey, fileName }, imageInfo));
   $(new Image())
     .on('load', function() {
       // var x = 5, y = 5, w = this.width-10, h = this.height-10;
@@ -445,10 +445,10 @@ const photoUploadDragDrop = function(wrapper, files) {
     if (xhr.readyState === 4) { // done
       const data = $.parseJSON(xhr.responseText);
       if (xhr.status === Ajax.httpStatus.OK) {
-        if (!Ajax.validateResponse(data, ['tmpKey'])) {
+        if (!Ajax.validateResponse(data, ['tmpKey', 'fileName'])) {
           return;
         }
-        editPhoto(wrapper, data.tmpKey);
+        editPhoto(wrapper, data.tmpKey, data.fileName);
       } else {
         Ajax.handleError(xhr, xhr.status, Ajax.httpStatus[xhr.status]);
       }

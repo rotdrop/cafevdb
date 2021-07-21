@@ -442,6 +442,22 @@ __EOT__;
         'sort' => false,
       ]);
 
+    $opts['fdd']['poster_new'] = [
+      'name'     => $this->l->t('Posters'),
+      'input'    => 'V',
+      'options'  => 'VCD',
+      'select'   => 'T',
+      'maxlen'   => 65535,
+      'css'      => ['postfix' => ' projectposters'],
+      'sql'      => '$main_table.id',
+      'php|CV'    => function($value, $action, $field, $row, $recordId, $pme) {
+        $projectId = $recordId['id']; // and also $value
+        return '<div>Hello World!</div>';
+      },
+      'sort'     => true,
+      'escape' => false
+    ];
+
     $opts['fdd']['updated'] =
       array_merge(
         $this->defaultFDD['datetime'],

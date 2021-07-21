@@ -50,7 +50,12 @@ class ProjectService
 
   const DBTABLE = 'Projects';
 
-  const PROJECT_FOLDER_KEYS = [
+  const FOLDER_TYPE_PROJECT = 'project';
+  const FOLDER_TYPE_PARTICIPANTS = 'participants';
+  const FOLDER_TYPE_POSTERS = 'posters';
+  const FOLDER_TYPE_BALANCE = 'balance';
+
+  private const PROJECT_FOLDER_CONFIG_KEYS = [
     ConfigService::PROJECTS_FOLDER,
     ConfigService::PROJECT_PARTICIPANTS_FOLDER,
     ConfigService::PROJECT_POSTERS_FOLDER,
@@ -296,7 +301,7 @@ class ProjectService
     $pathSep = UserStorage::PATH_SEP;
     $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
     $sharedFolder = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
-    $folders = $only ? [ $only ] : self::PROJECT_FOLDER_KEYS;
+    $folders = $only ? [ $only ] : self::PROJECT_FOLDER_CONFIG_KEYS;
 
     $paths = [];
     foreach ($folders as $key) {
@@ -328,7 +333,8 @@ class ProjectService
    * @param string $projectName Name of the project.
    *
    * @param null|string $only If a string create only this folder, can
-   * be one of 'project', 'balance', 'participants'
+   * be one of self::FOLDER_TYPE_PROJECT, self::FOLDER_TYPE_BALANCE,
+   * self::FOLDER_TYPE_PARTICIPANTS, self::FOLDER_TYPE_POSTERS
    *
    * @parm bool $dry Just create the name, but do not perform any
    * file-system operations.
@@ -352,27 +358,27 @@ class ProjectService
     $balanceFolder  = $this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER);
 
     $projectPaths = [
-      'project' => [
+      self::FOLDER_TYPE_PROJECT => [
         $sharedFolder,
         $projectsFolder,
         $project['year'],
         $project['name'],
       ],
-      'balance' => [
+      self::FOLDER_TYPE_BALANCE => [
         $sharedFolder,
         $balanceFolder,
         $projectsFolder,
         $project['year'],
         $project['name'],
       ],
-      'participants' => [
+      self::FOLDER_TYPE_PARTICIPANTS => [
         $sharedFolder,
         $projectsFolder,
         $project['year'],
         $project['name'],
         $participantsFolder,
       ],
-      'posters' => [
+      self::FOLDER_TYPE_POSTERS => [
         $sharedFolder,
         $projectsFolder,
         $project['year'],
@@ -425,10 +431,10 @@ class ProjectService
     $balanceFolder  = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER).$yearName;
 
     $projectPaths = [
-      'posters' => $postersFolder,
-      'participants' => $participantsFolder,
-      'project' => $projectsFolder,
-      'balance' => $balanceFolder,
+      self::FOLDER_TYPE_POSTERS => $postersFolder,
+      self::FOLDER_TYPE_PARTICIPANTS => $participantsFolder,
+      self::FOLDER_TYPE_PROJECT => $projectsFolder,
+      self::FOLDER_TYPE_BALANCE => $balanceFolder,
     ];
 
     foreach($projectPaths as $key => $path) {
@@ -463,8 +469,8 @@ class ProjectService
     $balanceFolder  = $this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER);
 
     $prefixPath = [
-      'project' => '/'.$sharedFolder.'/'.$projectsFolder.'/',
-      'balance' => '/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
+      self::FOLDER_TYPE_PROJECT => '/'.$sharedFolder.'/'.$projectsFolder.'/',
+      self::FOLDER_TYPE_BALANCE => '/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
     ];
 
     $returnPaths = [];
@@ -498,6 +504,22 @@ class ProjectService
   }
 
   /**
+   * Make sure the per-project posters folder exists for the given project.
+   *
+   * @param Entities\Project $project
+   *
+   * @param bool $dry If true then just create the name, do not
+   * perform any file-system operations.
+   *
+   * @return string Folder path.
+   */
+  public function ensurePostersFolder(Entities\Project $project, bool $dry = false)
+  {
+    $path = array_shift($this->ensureProjectFolders($project, null, self::FOLDER_TYPE_POSTERS, $dry));
+    return $path;
+  }
+
+  /**
    * Make sure the per-project per-participant folder exists for the
    * given project and musician.
    *
@@ -507,10 +529,12 @@ class ProjectService
    *
    * @param bool $dry If true then just create the name, do not
    * perform any file-system operations.
+   *
+   * @return string Folder path.
    */
   public function ensureParticipantFolder(Entities\Project $project, $musician, bool $dry = false)
   {
-    $parentPath = array_shift($this->ensureProjectFolders($project, null, 'participants', $dry));
+    $parentPath = array_shift($this->ensureProjectFolders($project, null, self::FOLDER_TYPE_PARTICIPANTS, $dry));
     $userIdSlug = $this->ensureMusicianUserIdSlug($musician);
     $participantFolder = $parentPath.UserStorage::PATH_SEP.$userIdSlug;
     if (!$dry) {

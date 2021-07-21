@@ -81,6 +81,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
     <input type="hidden" id="<?php p($appName); ?>-join-table" name="joinTable" value="{joinTable}" />
     <input type="hidden" id="<?php p($appName); ?>-image-size" name="imageSize" value="{imageSize}" />
     <input type="hidden" id="<?php p($appName); ?>-tmp-key" name="tmpKey" value="{tmpKey}" />
+    <input type="hidden" id="<?php p($appName); ?>-file-name" name="fileName" value="{fileName}" />
     <fieldset id="coords">
       <input type="hidden" id="x1" name="x1" value="" />
       <input type="hidden" id="y1" name="y1" value="" />
