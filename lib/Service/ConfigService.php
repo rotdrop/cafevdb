@@ -296,24 +296,29 @@ class ConfigService {
     return $this->appName . $join . $id;
   }
 
-  public function getIcon() {
+  public function getIcon()
+  {
     // @@todo make it configurable
     return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
   }
 
-  public function getUserSession() {
+  public function getUserSession()
+  {
     return $this->userSession;
   }
 
-  public function getUserManager() {
+  public function getUserManager()
+  {
     return $this->userManager;
   }
 
-  public function getGroupManager() {
+  public function getGroupManager()
+  {
     return $this->groupManager;
   }
 
-  public function getUrlGenerator() {
+  public function getUrlGenerator()
+  {
     return $this->urlGenerator;
   }
 
@@ -335,7 +340,8 @@ class ConfigService {
    *
    * @return IUser old user.
    */
-  public function setUserId($userId) {
+  public function setUserId($userId)
+  {
     return $this->setUser($this->getUser($userId));
   }
 
@@ -346,7 +352,8 @@ class ConfigService {
    *
    * @return IUser old user.
    */
-  public function setUser($user) {
+  public function setUser($user)
+  {
     if (empty($user)) {
       return null;
     }
@@ -357,31 +364,40 @@ class ConfigService {
     return $oldUser;
   }
 
-  public function getL10n() {
+  public function getL10n()
+  {
     return $this->l;
   }
 
-  public function getGroupId() {
+  public function getGroupId()
+  {
     return $this->getAppValue('usergroup');
   }
 
-  public function groupExists($groupId = null) {
+  public function groupExists($groupId = null)
+  {
     empty($groupId) && ($groupId = $this->getGroupId());
     return !empty($groupId) && $this->groupManager->groupExists($groupId);
   }
 
-  public function inGroup($userId = null, $groupId = null) {
+  public function inGroup($userId = null, $groupId = null)
+  {
     empty($userId) && ($userId = $this->getUserId());
     empty($groupId) && ($groupId = $this->getGroupId());
+    if (empty($userId) || empty($groupId)) {
+      return false;
+    }
     return $this->groupManager->isInGroup($userId, $groupId);
   }
 
-  public function getGroup($groupId = null) {
+  public function getGroup($groupId = null)
+  {
     empty($groupId) && ($groupId = $this->getGroupId());
     return empty($groupId) ? null : $this->groupManager->get($groupId);
   }
 
-  public function isSubAdminOfGroup($userId = null, $groupId = null) {
+  public function isSubAdminOfGroup($userId = null, $groupId = null)
+  {
     $user = empty($userId) ? $this->user : $this->userManager->get($userId);
     $group = empty($groupId) ? $this->getGroup() : $this->groupManager->get($groupId);
 
