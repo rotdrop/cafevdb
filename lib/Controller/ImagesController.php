@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -37,6 +38,8 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Storage\AppStorage;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 class ImagesController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -86,15 +89,16 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function get($joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY, $metaData = false, $imageSize = -1)
+  public function get($joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY, $imageSize = -1)
   {
     $this->logDebug("table: ".$joinTable.", owner: ".$ownerId. ", image: ".$imageId);
-    $imageFileName = "image";
-    $imageMimeType = "image/unknown";
-    $imageData = '';
 
-    $metaData = (bool)filter_var($metaData, FILTER_VALIDATE_BOOLEAN);
+    if ($imageId === self::IMAGE_ID_PLACEHOLDER) {
+      // placeholder reguested
+      return $this->getPlaceHolder($joinTable, $imageSize);
+    }
 
+    $image = null;
     if ($joinTable == 'cache') {
       $cacheKey = $ownerId;
       $imageData = $this->fileCache->get($cacheKey);
@@ -103,80 +107,16 @@ class ImagesController extends Controller {
 
       $image = new \OCP\Image();
       $image->loadFromData($imageData);
+      $fileName = $cacheKey;
     } else {
-
-      if ($ownerId <= 0) {
-        return self::grumble($this->l->t("Owner-ID is missing"));
-      }
-
-      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-
-      $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-      $this->logDebug("cooked table: ".$joinTableClass);
-
-      $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
-      $findBy =  [ 'ownerId' => $ownerId ];
-      if ($imageId > self::IMAGE_ID_PLACEHOLDER) {
-        $findBy['image'] = $imageId;
-      } else if ($imageId == self::IMAGE_ID_PLACEHOLDER) {
-        // placeholder reguested
-        return $this->getPlaceHolder($joinTable, $imageSize);
-      }
-
-      try {
-
-        $joinTableEntity = $joinTableRepository->findOneBy($findBy);
-        if ($joinTableEntity == null) {
-          if ($metaData === true) {
-            // no image yet
-            return new Http\DataResponse([], Http::STATUS_NOT_FOUND);
-          } else {
-            // return placeholder if metadata is not requested
-            return $this->getPlaceHolder($joinTable, $imageSize);
-          }
-        }
-
-        /** @var Entities\Image $dbImage */
-        $dbImage = $joinTableEntity->getImage();
-
-        if ($metaData === true) {
-          return self::dataResponse([
-            'joinTable' => $joinTable,
-            'ownerId' => $ownerId,
-            'imageId' => $dbImage->getId(),
-            'mimeType' => $dbImage->getMimeType(),
-            'hash' => $dbImage->getDataHash(),
-            'width' => $dbImage->getWidth(),
-            'height' => $dbImage->getHeight(),
-          ]);
-        }
-
-        // otherwise return image blob as download
-
-        $imageMimeType = $dbImage->getMimeType();
-        $imageData = $dbImage->getFileData()->getData('binary');
-
-        $image = new \OCP\Image();
-        $image->loadFromData($imageData);
-
-        $this->logDebug("Image data: ".strlen($imageData)." mime ".$imageMimeType);
-        if ($image->mimeType() !== $imageMimeType) {
-          $this->logError("Mime-types stored / computed: ".$imageMimeType." / ".$image->mimeType());
-          $this->logError('Trying to correct cached mime-type for image id ' . $dbImage->getId() . '.');
-          $dbImage->setMimeType($image->mimeType());
-          $this->flush();
-        }
-      } catch (\Throwable $t) {
-        $this->logException($t);
-        return self::grumble($this->exceptionChainData($t));
-      }
-
+      list($image, $fileName) = $this->getImage($joinTable, $ownerId, $imageId);
     }
 
-    $imageData = $image->data();
-    $imageMimeType = $image->mimeType();
+    if (empty($image)) {
+      return $this->getPlaceHolder($joinTable, $imageSize);
+    }
 
-    return new Http\DataDownloadResponse($imageData, $imageFileName, $imageMimeType);
+    return new Http\DataDownloadResponse($image->data(), $fileName, $image->mimeType());
   }
 
   /**
@@ -512,6 +452,102 @@ EOT;
     }
 
     return $this->fileCache->set($tmpKey, $image->data(), 600);
+  }
+
+  /**
+   * Fetch a real image (no placeholders, no cache) from an image storage.
+   */
+  private function getImage($joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY) {
+    $image = null;
+
+    try {
+
+      switch ($joinTable) {
+      case 'UserStorage':
+      case 'AppStorage':
+        // $ownerId is a directory, $imageId a file in that directory
+        if ($joinTable == 'UserStorage') {
+          /** @var UserStorage $storage */
+          $storage = $this->ci(UserStorage::class);
+          $directory = $storage->getFolder($ownerId);
+          /** @var \OCP\Files\File $file */
+          if ($imageId == self::IMAGE_ID_ANY) {
+            /** @var \OCP\Files\Node $node */
+            foreach ($directory->getDirectoryListing() as $node) {
+              if ($node->getType() == \OCP\Files\Node::TYPE_FILE) {
+                $file = $node;
+                break;
+              }
+            }
+          } else {
+            $file = $directory->get($imageId);
+          }
+        } else {
+          /** @var AppStorage $storage */
+          $storage = $this->ci(AppStorage::class);
+          $directory = $storage->getFolder($ownerId);
+          /** @var \OCP\Files\SimpleFS\ISimpleFile $file */
+          if ($imageId == self::IMAGE_ID_ANY) {
+            $file = array_shift($directory->getDirectoryListing());
+          } else {
+            $file = $directory->getFile($imageId);
+          }
+        }
+        if (empty($file)) {
+          break;
+        }
+        $image = new \OCP\Image();
+        $image->loadFromData($file->getContent());
+        $fileName = $file->getName();
+        break;
+      default: // data-base
+        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+
+        $joinTableClass = $imagesRepository->joinTableClass($joinTable);
+        $this->logDebug("cooked table: ".$joinTableClass);
+
+        $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
+        $findBy =  [ 'ownerId' => $ownerId ];
+        if ($imageId > self::IMAGE_ID_PLACEHOLDER) {
+          $findBy['image'] = $imageId;
+        }
+
+        $joinTableEntity = $joinTableRepository->findOneBy($findBy);
+        if ($joinTableEntity == null) {
+          $this->logInfo('NOT FOUND ' . $findBy);
+          break;
+        }
+
+        /** @var Entities\Image $dbImage */
+        $dbImage = $joinTableEntity->getImage();
+        $fileName = $dbImage->getFileName();
+        if (empty($fileName)) {
+          $fileName = $joinTable . '-' . $ownerId . '-' . $dbImage->getId();
+        }
+
+        // otherwise return image blob as download
+
+        $imageMimeType = $dbImage->getMimeType();
+        $imageData = $dbImage->getFileData()->getData('binary');
+
+        $image = new \OCP\Image();
+        $image->loadFromData($imageData);
+
+        if ($image->mimeType() !== $imageMimeType) {
+          $this->logError("Mime-types stored / computed: ".$imageMimeType." / ".$image->mimeType());
+          $this->logError('Trying to correct cached mime-type for image id ' . $dbImage->getId() . '.');
+          $dbImage->setMimeType($image->mimeType());
+          $this->flush();
+        }
+        break;
+      }
+
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return [];
+    }
+
+    return [ $image, $fileName ]; // maybe null
   }
 
 }

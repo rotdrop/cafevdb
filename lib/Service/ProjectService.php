@@ -506,16 +506,16 @@ class ProjectService
   /**
    * Make sure the per-project posters folder exists for the given project.
    *
-   * @param Entities\Project $project
+   * @param int|Entities\Project $projectOrId
    *
    * @param bool $dry If true then just create the name, do not
    * perform any file-system operations.
    *
    * @return string Folder path.
    */
-  public function ensurePostersFolder(Entities\Project $project, bool $dry = false)
+  public function ensurePostersFolder($projectOrId, bool $dry = false)
   {
-    $path = array_shift($this->ensureProjectFolders($project, null, self::FOLDER_TYPE_POSTERS, $dry));
+    $path = array_shift($this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_POSTERS, $dry));
     return $path;
   }
 

@@ -126,53 +126,39 @@ const photoLoad = function(wrapper, callback) {
   callback = callback || function() {};
   const phototools = wrapper.find('.phototools');
   const imageInfo = wrapper.data('imageInfo');
-  $.get(
-    generateGetUrl($.extend({ metaData: true }, imageInfo)))
-    .fail(function(xhr, status, errorThrown) {
-      if (xhr.status !== Ajax.httpStatus.NOT_FOUND) { // ok, no photo yet
-        Ajax.handleError(xhr, status, errorThrown);
-      }
-      photoLoadHandlers(wrapper);
+  phototools.find('li a').cafevTooltip('hide');
+  wrapper.addClass(['loading', 'wait']);
+  wrapper.removeData('image');
+  const image = $(new Image());
+  wrapper.data('image', image);
+
+  const imageUrl = generateGetUrl($.extend({
+    refresh: Math.random(), // disable browser-caching
+    requesttoken: OC.requestToken,
+  }, imageInfo));
+
+  image
+    .on('load', function() {
+      wrapper.find('img.' + appName + '_inline_image').remove();
+      image.addClass(appName + '_inline_image');
+      image.addClass('zoomable');
+      image.insertAfter(phototools);
+      // wrapper.css('width', image.get(0).width + 10);
+      image.fadeIn(function() {
+        wrapper.removeClass(['loading', 'wait']);
+        callback();
+      });
     })
-    .done(function(data) {
-      photoLoadHandlers(wrapper);
+    .on('error', function(event) {
+      // BIG FAT NOTE: the "event" data passed to this error handler
+      // just does not contain any information about the error-data
+      // returned by the server. So only information is "there was an
+      // error".
+
+      Dialogs.alert(t(appName, 'Could not open image.'), t(appName, 'Error'), callback);
     })
-    .always(function() {
-      phototools.find('li a').cafevTooltip('hide');
-      wrapper.addClass(['loading', 'wait']);
-      wrapper.removeData('image');
-      const image = $(new Image());
-      wrapper.data('image', image);
-
-      const imageUrl = generateGetUrl($.extend({
-        metaData: false,
-        refresh: Math.random(), // disable browser-caching
-        requesttoken: OC.requestToken,
-      }, imageInfo));
-
-      image
-        .on('load', function() {
-          wrapper.find('img.' + appName + '_inline_image').remove();
-          image.addClass(appName + '_inline_image');
-          image.addClass('zoomable');
-          image.insertAfter(phototools);
-          // wrapper.css('width', image.get(0).width + 10);
-          image.fadeIn(function() {
-            wrapper.removeClass(['loading', 'wait']);
-            callback();
-          });
-        })
-        .on('error', function(event) {
-          // BIG FAT NOTE: the "event" data passed to this error handler
-          // just does not contain any information about the error-data
-          // returned by the server. So only information is "there was an
-          // error".
-
-          Dialogs.alert(t(appName, 'Could not open image.'), t(appName, 'Error'), callback);
-        })
-        .attr('src', imageUrl);
-      photoLoadHandlers(wrapper);
-    });
+    .attr('src', imageUrl);
+  photoLoadHandlers(wrapper);
 };
 
 /**

@@ -51,7 +51,7 @@ class Projects extends PMETableViewBase
 
   private const MAX_POSTER_COLUMNS = 4;
 
-  /** @var OCA\CAFEVDB\Service\ProjectService */
+  /** @var ProjectService */
   private $projectService;
 
   /** @var EventsService */
@@ -452,6 +452,9 @@ __EOT__;
       'sql'      => '$main_table.id',
       'php|CV'    => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId['id']; // and also $value
+
+        $postersFolder = $this->projectService->ensurePostersFolder($projectId);
+
         return '<div>Hello World!</div>';
       },
       'sort'     => true,
