@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Controller\ImagesController;
+use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -425,7 +425,7 @@ __EOT__;
           $projectId = $recordId['id'];
           $imageIds = Util::explode(',', $value);
           if (empty($imageIds) || ($action != 'display')) {
-            $imageIds[] = ImagesController::IMAGE_ID_PLACEHOLDER;
+            $imageIds[] = ImagesService::IMAGE_ID_PLACEHOLDER;
           }
           $numImages = count($imageIds);
           $rows = ($numImages + self::MAX_POSTER_COLUMNS - 1) / self::MAX_POSTER_COLUMNS;
@@ -529,7 +529,7 @@ project without a poster first.");
           [ 'joinTable' => self::POSTER_JOIN_TABLE,
             'ownerId' => $projectId, ]);
         $url .= '?timeStamp='.time();
-        if ((int)$imageId >= ImagesController::IMAGE_ID_PLACEHOLDER) {
+        if ((int)$imageId >= ImagesService::IMAGE_ID_PLACEHOLDER) {
           $url .= '&imageId='.$imageId;
         }
         $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());

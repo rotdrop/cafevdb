@@ -31,23 +31,17 @@ use OCP\AppFramework\Http;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
-use OCP\ICache;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 class ImagesController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-
-  const IMAGE_ID_ANY = -1;
-  const IMAGE_ID_PLACEHOLDER = 0;
 
   const UPLOAD_NAME = 'imagefile';
 
@@ -57,60 +51,44 @@ class ImagesController extends Controller {
   /** @var IL10N */
   protected $l;
 
-  /** @var EntityManager */
-  protected $entityManager;
-
-  /** @var \OCP\ICache */
-  private $fileCache;
-
-  /** @var  \OCP\FILES\IRootFolder */
+  /** @var IRootFolder */
   private $rootFolder;
+
+  /** @var ImagesService */
+  private $imagesService;
 
   public function __construct(
     $appName
     , IRequest $request
     , RequestParameterService $parameterService
     , ConfigService $configService
-    , EntityManager $entityManager
+    , ImagesService $imagesService
     , IRootFolder $rootFolder
-    , ICache $fileCache
   ) {
 
     parent::__construct($appName, $request);
 
     $this->parameterService = $parameterService;
     $this->configService = $configService;
-    $this->entityManager = $entityManager;
+    $this->imagesService = $imagesService;
     $this->rootFolder = $rootFolder;
-    $this->fileCache = $fileCache;
     $this->l = $this->l10N();
   }
 
   /**
    * @NoAdminRequired
    */
-  public function get($joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY, $imageSize = -1)
+  public function get($joinTable, $ownerId, $imageId = ImagesService::IMAGE_ID_ANY, $imageSize = -1)
   {
     $this->logDebug("table: ".$joinTable.", owner: ".$ownerId. ", image: ".$imageId);
 
-    if ($imageId == self::IMAGE_ID_PLACEHOLDER) {
+    if ($imageId == ImagesService::IMAGE_ID_PLACEHOLDER) {
       // placeholder reguested
       return $this->getPlaceHolder($joinTable, $imageSize);
     }
 
     $image = null;
-    if ($joinTable == 'cache') {
-      $cacheKey = $ownerId;
-      $imageData = $this->fileCache->get($cacheKey);
-
-      $this->logDebug("Requested cache file with key ".$cacheKey);
-
-      $image = new \OCP\Image();
-      $image->loadFromData($imageData);
-      $fileName = $cacheKey;
-    } else {
-      list($image, $fileName) = $this->getImage($joinTable, $ownerId, $imageId);
-    }
+    list($image, $fileName) = $this->imagesService->getImage($joinTable, $ownerId, $imageId);
 
     if (empty($image)) {
       return $this->getPlaceHolder($joinTable, $imageSize);
@@ -122,7 +100,7 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function post($operation, $joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY, $imageSize = -1)
+  public function post($operation, $joinTable, $ownerId, $imageId = ImagesService::IMAGE_ID_ANY, $imageSize = -1)
   {
     if (empty($joinTable)) {
       return self::grumble($this->l->t("Relation between image and object missing"));
@@ -198,7 +176,7 @@ class ImagesController extends Controller {
         break;
       }
 
-      if (!$this->cacheTemporaryImage($tmpKey, $image, $imageSize))  {
+      if (!$this->imagesService->cacheTemporaryImage($tmpKey, $image, $imageSize))  {
         return self::grumble($this->l->t(
           "Unable to save image data of size %s to temporary storage with key %s",
           [ strlen($image->data()), $tmpKey ]));
@@ -243,17 +221,12 @@ class ImagesController extends Controller {
         $fileName = $tmpKey;
       }
 
-      $imageData = $this->fileCache->get($tmpKey);
-      if (empty($imageData)) {
+      list($image,) = $this->imagesService->getImage('cache', $tmpKey);
+      if (empty($image)) {
         return self::grumble($this->l->t('Unable to load image with cache key %s', [ $tmpKey ]));
       }
-      $this->fileCache->remove($tmpKey);
+      $this->imagesService->deleteTemporaryImage($tmpKey);
       $this->logDebug("Image data for key " . $tmpKey . " of size " . strlen($imageData));
-
-      $image = new \OCP\Image();
-      if (!$image->loadFromData($imageData)) {
-        return self::grumble($this->l->t('Unable to generate image from temporary storage (%s)', [ $tmpKey ]));
-      }
 
       $x1 = (int)$this->parameterService['x1'];
       $y1 = (int)$this->parameterService['y1'];
@@ -276,7 +249,7 @@ class ImagesController extends Controller {
       }
 
       try {
-        $imageId = $this->storeImage($image, $joinTable, $ownerId, $fileName, $imageId);
+        $imageId = $this->imagesService->storeImage($image, $joinTable, $ownerId, $fileName, $imageId);
       } catch (\Throwable $t) {
         $this->logException($t);
         return self::grumble($this->exceptionChainData($t));
@@ -287,7 +260,7 @@ class ImagesController extends Controller {
       return self::dataResponse($responseData);
     case 'edit':
       // fetch the image, create a temporary copy and return a link to it
-      list($image, $fileName) = $this->getImage($joinTable, $ownerId, $imageId);
+      list($image, $fileName) = $this->imagesService->getImage($joinTable, $ownerId, $imageId);
 
       $tmpKeyBase = $this->appName() . '-inline-image-' . $joinTable . '-' . $ownerId . '-' . $imageId;
       if (empty($fileName)) {
@@ -295,7 +268,7 @@ class ImagesController extends Controller {
       }
       $tmpKey = $tmpKeyBase . '-' . $this->generateRandomBytes();
 
-      if (!$this->cacheTemporaryImage($tmpKey, $image, $imageSize)) {
+      if (!$this->imagesService->cacheTemporaryImage($tmpKey, $image, $imageSize)) {
         return self::grumble($this->l->t(
           "Unable to save image data of size %s to temporary storage with key %s",
           [ strlen($image->data()), $tmpKey ]));
@@ -313,12 +286,12 @@ class ImagesController extends Controller {
       // and join-table entry.
 
       $findBy =  [ 'ownerId' => $ownerId ];
-      if ($imageId > self::IMAGE_ID_ANY) {
+      if ($imageId > ImagesService::IMAGE_ID_ANY) {
         $findBy['imageId'] = $imageId;
       }
 
       try {
-        $this->deleteImage($joinTable, $ownerId, $imageId);
+        $this->imagesService->deleteImage($joinTable, $ownerId, $imageId);
       } catch (\Throwable $t) {
         $this->logException($t);
         return self::grumble($this->exceptionChainData($t));
@@ -343,278 +316,12 @@ class ImagesController extends Controller {
       $placeHolderUrl = $this->urlGenerator()->imagePath($this->appName(), $placeHolderName);
     } catch (\Throwable $t) {
       //$this->logException($t);
-      $imageData = $this->fallbackPlaceholder($imageSize);
+      $imageData = $this->imagesService->fallbackPlaceholder($imageSize);
       $imageFileName = 'placeholder.svg';
       $imageMimeType = 'image/svg+xml';
       return new Http\DataDownloadResponse($imageData, $imageFileName, $imageMimeType);
     }
     return new Http\RedirectResponse($placeHolderUrl);
-  }
-
-  private function fallbackPlaceholder($imageSize)
-  {
-    if (empty($imageSize) || $imageSize < 0) {
-      $imageSize = '240pt';
-    } else {
-      $imageSize .= 'px';
-    }
-    $data =<<<'EOT'
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-    xmlns:svg="http://www.w3.org/2000/svg"
-    xmlns="http://www.w3.org/2000/svg"
-EOT;
-    $data .= '
-    width="'.$imageSize.'"
-    height="'.$imageSize.'"';
-    $data .=<<<'EOT'
-    viewBox="0 0 120 120">
-  <rect
-      x="0" y="0" width="120" height="120"
-      style="fill:#BEBEBE;stroke:black;stroke-width:1;fill-opacity:1;stroke-apacity:0.5"
-      />
-  <svg x="50%" y="50%" width="100%" height="100%" style="overflow:visible">
-    <text
-        x="0%" y="0%" dominant-baseline="middle" text-anchor="middle"
-        font-family="Arial" font-size="12pt" fill="red"
-        transform="rotate(45)">
-EOT;
-    $data .= $this->l->t('Placeholder Image');
-    $data .=<<<'EOT'
-    </text>
-  </svg>
-</svg>
-EOT;
-    return $data;
-  }
-
-  private function cacheTemporaryImage(string $tmpKey, \OCP\Image $image, int $imageSize):bool
-  {
-    if($imageSize > 0 && ($image->width() > $imageSize || $image->height() > $imageSize)) {
-      $image->resize($imageSize); // Prettier resizing than with browser and saves bandwidth.
-    }
-    if(!$image->fixOrientation()) { // No fatal error so we don't bail out.
-      $this->logDebug("Unable to fix orientation of uploaded image");
-    }
-
-    return $this->fileCache->set($tmpKey, $image->data(), 600);
-  }
-
-  /**
-   * Fetch a real image (no placeholders, no cache) from an image storage.
-   *
-   * The function catches all exceptions and return an empty array on error.
-   *
-   * @return array
-   */
-  private function getImage($joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY)
-  {
-    $image = null;
-
-    try {
-      switch ($joinTable) {
-      case 'UserStorage':
-      case 'AppStorage':
-        // $ownerId is a directory, $imageId a file in that directory
-        if ($joinTable == 'UserStorage') {
-          /** @var UserStorage $storage */
-          $storage = $this->ci(UserStorage::class);
-          $directory = $storage->getFolder($ownerId);
-          /** @var \OCP\Files\File $file */
-          if ($imageId == self::IMAGE_ID_ANY) {
-            /** @var \OCP\Files\Node $node */
-            foreach ($directory->getDirectoryListing() as $node) {
-              if ($node->getType() == \OCP\Files\Node::TYPE_FILE) {
-                $file = $node;
-                break;
-              }
-            }
-          } else {
-            $file = $directory->get($imageId);
-          }
-        } else {
-          /** @var AppStorage $storage */
-          $storage = $this->ci(AppStorage::class);
-          $directory = $storage->getFolder($ownerId);
-          /** @var \OCP\Files\SimpleFS\ISimpleFile $file */
-          if ($imageId == self::IMAGE_ID_ANY) {
-            $file = array_shift($directory->getDirectoryListing());
-          } else {
-            $file = $directory->getFile($imageId);
-          }
-        }
-        if (empty($file)) {
-          break;
-        }
-        $image = new \OCP\Image();
-        $image->loadFromData($file->getContent());
-        $fileName = $file->getName();
-        break;
-      default: // data-base
-        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-
-        $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-        $this->logDebug("cooked table: ".$joinTableClass);
-
-        $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
-        $findBy =  [ 'ownerId' => $ownerId ];
-        if ($imageId > self::IMAGE_ID_PLACEHOLDER) {
-          $findBy['image'] = $imageId;
-        }
-
-        $joinTableEntity = $joinTableRepository->findOneBy($findBy);
-        if ($joinTableEntity == null) {
-          $this->logInfo('NOT FOUND ' . $findBy);
-          break;
-        }
-
-        /** @var Entities\Image $dbImage */
-        $dbImage = $joinTableEntity->getImage();
-        $fileName = $dbImage->getFileName();
-        if (empty($fileName)) {
-          $fileName = $joinTable . '-' . $ownerId . '-' . $dbImage->getId();
-        }
-
-        // otherwise return image blob as download
-
-        $imageMimeType = $dbImage->getMimeType();
-        $imageData = $dbImage->getFileData()->getData('binary');
-
-        $image = new \OCP\Image();
-        $image->loadFromData($imageData);
-
-        if ($image->mimeType() !== $imageMimeType) {
-          $this->logError("Mime-types stored / computed: ".$imageMimeType." / ".$image->mimeType());
-          $this->logError('Trying to correct cached mime-type for image id ' . $dbImage->getId() . '.');
-          $dbImage->setMimeType($image->mimeType());
-          $this->flush();
-        }
-        break;
-      }
-
-    } catch (\Throwable $t) {
-      $this->logException($t);
-      return [];
-    }
-
-    return [ $image, $fileName ]; // maybe null
-  }
-
-  /**
-   * Store the given image in the storage deduced from the parameters
-   * $joinTable and $ownerId. Overwrite the image given by $imageId or
-   * create a new one.
-   *
-   * @return mixed The id of the stored image.
-   *
-   * @throws \Throwable
-   */
-  private function storeImage(\OCP\Image $image, $joinTable, $ownerId, $fileName, $imageId = self::IMAGE_ID_ANY)
-  {
-    switch ($joinTable) {
-    case 'UserStorage':
-    case 'AppStorage':
-      // $ownerId is a directory, $imageId a file in that directory
-      if ($imageId != self::IMAGE_ID_ANY && $imageId != $fileName) {
-        throw new \RuntimeException($this->l->t('Image-id "%s" must be identical to the file-name "%s" or %d.', [ $fileName, self::IMAGE_ID_ANY ]));
-      }
-      if ($joinTable == 'UserStorage') {
-        /** @var UserStorage $storage */
-        $storage = $this->ci(UserStorage::class);
-        $directory = $storage->getFolder($ownerId);
-      } else {
-        /** @var AppStorage $storage */
-        $storage = $this->ci(AppStorage::class);
-        $directory = $storage->getFolder($ownerId);
-      }
-      // just create a new file
-      $directory->newFile($fileName, $image->data());
-      return $fileName; // id == file-name
-    default:
-      // data-base
-      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-      $joinTable = Util::dashesToCamelCase($joinTable, true);
-      $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-      $joinTableRepository =$this->getDatabaseRepository($joinTableClass);
-      if ($imageId > self::IMAGE_ID_PLACEHOLDER) {
-        $findBy = [ 'ownerId' => $ownerId, 'imageId' => $imageId, ];
-        $joinTableEntity = $joinTableRepository->findOneBy($findBy);
-        /** @var Entities\Image $dbImage */
-        $dbImage = $joinTableEntity->getImage();
-        $dbImage->setFileName($fileName);
-        $dbImage->setMimeType($image->mimeType());
-        $dbImage->getFileData()->setData($image->data(), 'binary');
-        $this->flush();
-      } else  {
-        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-        $dbImage = $imagesRepository->persistForEntity($joinTable, $ownerId, $image, $fileName);
-      }
-      break;
-    }
-
-    return $dbImage->getId();
-  }
-
-  // if ownerId only is given, delete all images, if ownerId and
-  // imageId is given delete only the given image
-  // and join-table entry.
-  private function deleteImage($joinTable, $ownerId, $imageId)
-  {
-    switch ($joinTable) {
-    case 'UserStorage':
-      // $ownerId is a directory, $imageId a file in that directory
-      /** @var UserStorage $storage */
-      $storage = $this->ci(UserStorage::class);
-      $directory = $storage->getFolder($ownerId);
-      if ($imageId == self::IMAGE_ID_ANY) {
-        /** @var \OCP\Files\Node $node */
-        foreach ($directory->getDirectoryListing() as $node) {
-          if ($node->getType() == \OCP\Files\Node::TYPE_FILE) {
-            $node->delete();
-          }
-        }
-      } else {
-        $directory->get($imageId)->delete();
-      }
-      break;
-    case 'AppStorage':
-      /** @var AppStorage $storage */
-      $storage = $this->ci(AppStorage::class);
-      $directory = $storage->getFolder($ownerId);
-      /** @var \OCP\Files\SimpleFS\ISimpleFile $file */
-      if ($imageId == self::IMAGE_ID_ANY) {
-        foreach ($directory->getDirectoryListing() as $file) {
-          $file->delete();
-        }
-      } else {
-        $directory->getFile($imageId)->delete();
-      }
-      break;
-    default: // data-base
-      $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
-
-      $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-      $this->logDebug("cooked table: ".$joinTableClass);
-
-      $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
-
-      $findBy =  [ 'ownerId' => $ownerId ];
-      if ($imageId > self::IMAGE_ID_ANY) {
-        $findBy['imageId'] = $imageId;
-      }
-
-      $joinTableEntities = $joinTableRepository->findBy($findBy);
-      if (count($joinTableEntities) < 1) {
-        throw new \RuntimeException(
-          $this->l->t('Unable to find image link for ownerId "%s" in join-table "%s".', [ $ownerId, $joinTable ])
-        );
-      }
-      foreach ($joinTableEntities as $joinTableEntity) {
-        $this->remove($joinTableEntity);
-      }
-      $this->flush();
-      break;
-    }
   }
 
 }
