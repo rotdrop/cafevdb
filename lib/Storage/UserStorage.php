@@ -76,7 +76,7 @@ class UserStorage
   /**
    * @param string|null $path Path to lookup.
    *
-   * @return \OCP\Files\Folder The user-folder or the given sub-folder
+   * @return \OCP\Files\Node The user-folder or the given sub-folder
    */
   public function get(?string $path, $type = null):?Node
   {
