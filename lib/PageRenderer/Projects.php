@@ -550,8 +550,9 @@ project without a poster first.");
         }
         $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
         $div = ''
-             .'<div class="photo image-wrapper multi '.$sizeCss.'"><img class="cafevdb_inline_image poster zoomable" src="'.$url.'" '
-             .'title="Poster, if available" /></div>';
+             . '<div class="photo image-wrapper multi '.$sizeCss.'">'
+             . '<img class="cafevdb_inline_image poster zoomable" src="'.$url.'"/>'
+             . '</div>';
         return $div;
       case 'change':
         $imageInfo = json_encode([
@@ -578,7 +579,7 @@ project without a poster first.");
     }
   }
 
-  public function posterImageLink($postersFolder, $action = 'display', $imageColumns = 4, $imageId = -1)
+  public function posterImageLink($postersFolder, $action = 'display', $imageColumns = 4, $imageId)
   {
     if ($imageColumns <= 1) {
       $sizeCss = 'full';
@@ -603,8 +604,10 @@ project without a poster first.");
         }
         $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
         $div = ''
-             .'<div class="photo image-wrapper multi '.$sizeCss.'"><img class="cafevdb_inline_image poster zoomable" src="'.$url.'" '
-             .'title="Poster, if available" /></div>';
+             . '<div class="photo image-wrapper multi '.$sizeCss.'">'
+             . '<img class="cafevdb_inline_image poster zoomable" src="'.$url.'" '
+             . 'title="'.$imageId.'" />'
+             . '</div>';
         return $div;
       case 'change':
         $imageInfo = json_encode([
