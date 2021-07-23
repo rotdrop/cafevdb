@@ -90,7 +90,7 @@ const photoUpload = function(wrapper, filelist) {
 const photoLoadHandlers = function(wrapper) {
   const imageInfo = wrapper.data('imageInfo');
   const phototools = wrapper.find('.phototools');
-  if (imageInfo.imageId > IMAGE_ID_PLACEHOLDER) {
+  if ('' + imageInfo.imageId !== '' + IMAGE_ID_PLACEHOLDER) {
     phototools.find('.delete').show();
     phototools.find('.edit').show();
   } else {
@@ -282,10 +282,11 @@ const savePhoto = function(wrapper, $dlg) {
         return;
       }
       const imageInfo = wrapper.data('imageInfo');
-      if (imageInfo.imageId <= IMAGE_ID_PLACEHOLDER && wrapper.hasClass('multi')) {
+      if ('' + imageInfo.imageId === '' + IMAGE_ID_PLACEHOLDER && wrapper.hasClass('multi')) {
         const newWrapper = wrapper.clone(true, false);
         const newImageInfo = $.extend({}, wrapper.data('imageInfo'));
         newImageInfo.imageId = data.imageId;
+        newImageInfo.formId = undefined;
         newWrapper.data('imageInfo', newImageInfo);
         photoReady(newWrapper);
         wrapper.before(newWrapper);
@@ -467,7 +468,8 @@ const photoUploadDragDrop = function(wrapper, files) {
 };
 
 const uploadFormId = function(imageInfo) {
-  return 'image-upload-form-' + imageInfo.ownerId + '-' + imageInfo.imageId;
+  return ('image-upload-form-' + imageInfo.ownerId + '-' + imageInfo.imageId)
+    .replace(/^[^a-zA-Z]+|[^\w:-]+/g, '_');
 };
 
 const createImageUploadForm = function(imageInfo) {
