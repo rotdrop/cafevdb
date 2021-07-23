@@ -57,6 +57,9 @@ class Projects extends PMETableViewBase
   /** @var EventsService */
   private $eventsService;
 
+  /** @var ImagesService */
+  private $imagesService;
+
   /** @var \OCP\EventDispatcher\IEventDispatcher */
   private $eventDispatcher;
 
@@ -110,6 +113,7 @@ class Projects extends PMETableViewBase
     , RequestParameterService $requestParameters
     , ProjectService $projectService
     , EventsService $eventsService
+    , ImagesService $imagesService
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
@@ -119,6 +123,7 @@ class Projects extends PMETableViewBase
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectService = $projectService;
     $this->eventsService = $eventsService;
+    $this->imagesService = $imagesService;
     $this->eventDispatcher = $eventDispatcher;
 
     if (empty($this->projectId) || $this->projectId < 0 || empty($this->projectName)) {
@@ -432,7 +437,7 @@ __EOT__;
           $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
           $html = '';
           for ($i = 0; $i < $numImages; ++$i) {
-            $html .= $this->posterImageLink($projectId, $action, $columns, $imageIds[$i]);
+            $html .= $this->posterImageLinkOld($projectId, $action, $columns, $imageIds[$i]);
           }
           return $html;
         },
@@ -452,12 +457,23 @@ __EOT__;
       'sql'      => '$main_table.id',
       'php|CV'    => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId['id']; // and also $value
-
         $postersFolder = $this->projectService->ensurePostersFolder($projectId);
-
-        return '<div>Hello World!</div>';
+        $imageIds = $this->imagesService->getImageIds(ImagesService::USER_STORAGE, $postersFolder);
+        if (empty($imageIds) || ($action != 'display')) {
+          $imageIds[] = ImagesService::IMAGE_ID_PLACEHOLDER;
+        }
+        $numImages = count($imageIds);
+        $rows = ($numImages + self::MAX_POSTER_COLUMNS - 1) / self::MAX_POSTER_COLUMNS;
+        $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
+        $html = '';
+        for ($i = 0; $i < $numImages; ++$i) {
+          $html .= $this->posterImageLink($postersFolder, $action, $columns, $imageIds[$i]);
+        }
+        return $html;
       },
-      'sort'     => true,
+      'css' => ['postfix' => ' projectposter'],
+      'default' => '',
+      'sort'     => false,
       'escape' => false
     ];
 
@@ -510,7 +526,7 @@ __EOT__;
 
   }
 
-  public function posterImageLink($projectId, $action = 'display', $imageColumns = 4, $imageId = -1)
+  public function posterImageLinkOld($projectId, $action = 'display', $imageColumns = 4, $imageId = -1)
   {
     if ($imageColumns <= 1) {
       $sizeCss = 'full';
@@ -542,6 +558,59 @@ project without a poster first.");
           'ownerId' => $projectId,
           'imageId' => $imageId,
           'joinTable' => self::POSTER_JOIN_TABLE,
+          'imageSize' => -1,
+        ]);
+        $imagearea = ''
+          .'<div data-image-info=\''.$imageInfo.'\' class="tip project-poster propertycontainer cafevdb_inline_image_wrapper image-wrapper multi '.$sizeCss.'" title="'
+        .$this->l->t("Drop image to upload (max %s)", [\OCP\Util::humanFileSize(Util::maxUploadSize())]).'"'
+        .' data-element="PHOTO">
+  <ul class="phototools transparent hidden contacts_property">
+    <li><a class="svg delete" title="'.$this->l->t("Delete current poster").'"></a></li>
+    <li><a class="svg edit" title="'.$this->l->t("Edit current poster").'"></a></li>
+    <li><a class="svg upload" title="'.$this->l->t("Upload new poster").'"></a></li>
+    <li><a class="svg cloud icon-cloud" title="'.$this->l->t("Select image from Cloud").'"></a></li>
+  </ul>
+</div> <!-- project-poster -->
+';
+        return $imagearea;
+      default:
+        return $this->l->t("Internal error, don't know what to do concerning project-posters in the given context.");
+    }
+  }
+
+  public function posterImageLink($postersFolder, $action = 'display', $imageColumns = 4, $imageId = -1)
+  {
+    if ($imageColumns <= 1) {
+      $sizeCss = 'full';
+    } else if ($imageColumns <= 2) {
+      $sizeCss = 'half';
+    } else {
+      $sizeCss = 'quarter';
+    }
+    switch ($action) {
+      case 'add':
+        return $this->l->t("Posters can only be added to existing projects, please add the new
+project without a poster first.");
+      case 'display':
+        $url = $this->urlGenerator()->linkToRoute(
+          'cafevdb.images.get', [
+            'joinTable' => ImagesService::USER_STORAGE,
+            'ownerId' => urlencode($postersFolder),
+          ]);
+        $url .= '?timeStamp='.time();
+        if ((int)$imageId >= ImagesService::IMAGE_ID_PLACEHOLDER) {
+          $url .= '&imageId='.urlencode($imageId);
+        }
+        $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
+        $div = ''
+             .'<div class="photo image-wrapper multi '.$sizeCss.'"><img class="cafevdb_inline_image poster zoomable" src="'.$url.'" '
+             .'title="Poster, if available" /></div>';
+        return $div;
+      case 'change':
+        $imageInfo = json_encode([
+          'joinTable' => ImagesService::USER_STORAGE,
+          'ownerId' => urlencode($postersFolder),
+          'imageId' => urlencode($imageId),
           'imageSize' => -1,
         ]);
         $imagearea = ''
