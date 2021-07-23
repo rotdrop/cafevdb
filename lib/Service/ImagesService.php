@@ -36,6 +36,10 @@ class ImagesService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  const USER_STORAGE = 'UserStorage';
+  const APP_STORAGE = 'AppStorage';
+  const TMP_STORAGE = 'cache';
+
   const IMAGE_ID_ANY = -1;
   const IMAGE_ID_PLACEHOLDER = 0;
 
@@ -123,7 +127,7 @@ EOT;
 
     try {
       switch ($joinTable) {
-      case 'cache':
+      case self::TMP_STORAGE:
         $cacheKey = $ownerId;
         $imageData = $this->fileCache->get($cacheKey);
 
@@ -133,12 +137,12 @@ EOT;
         $image->loadFromData($imageData);
         $fileName = $cacheKey;
         break;
-      case 'UserStorage':
-      case 'AppStorage':
+      case self::USER_STORAGE:
+      case self::APP_STORAGE:
         // $ownerId is a directory, $imageId a file in that directory
-        if ($joinTable == 'UserStorage') {
+        if ($joinTable == self::USER_STORAGE) {
           /** @var UserStorage $storage */
-          $storage = $this->ci(UserStorage::class);
+          $storage = $this->di(UserStorage::class);
           $directory = $storage->getFolder($ownerId);
           /** @var \OCP\Files\File $file */
           if ($imageId == self::IMAGE_ID_ANY) {
@@ -154,7 +158,7 @@ EOT;
           }
         } else {
           /** @var AppStorage $storage */
-          $storage = $this->ci(AppStorage::class);
+          $storage = $this->di(AppStorage::class);
           $directory = $storage->getFolder($ownerId);
           /** @var \OCP\Files\SimpleFS\ISimpleFile $file */
           if ($imageId == self::IMAGE_ID_ANY) {
@@ -164,6 +168,7 @@ EOT;
           }
         }
         if (empty($file)) {
+          $this->logInfo('NO FILE FOR ' . $imageId);
           break;
         }
         $image = new \OCP\Image();
@@ -221,6 +226,67 @@ EOT;
   }
 
   /**
+   * Fetch all available images for the given storage and ownerId.
+   *
+   * @param string $joinTable Either a database join-table or one of
+   * self::USER_STORAGE, self::APP_STORAGE.
+   *
+   * @param mixed $ownerId Some kind of unique identifier. For the
+   * file-storage options this is the path to a sub-directory holding
+   * the image files.
+   *
+   * @return array
+   * ```
+   * [ id0, id1, id, ... ]
+   *
+   * ```
+   */
+  public function getImageIds($joinTable, $ownerId)
+  {
+    $result = [];
+    try {
+      switch ($joinTable) {
+      case self::USER_STORAGE:
+        // $ownerId is a directory, $imageId a file in that directory
+        /** @var UserStorage $storage */
+        $storage = $this->di(UserStorage::class);
+        $directory = $storage->getFolder($ownerId);
+        /** @var \OCP\Files\Node $node */
+        foreach ($directory->getDirectoryListing() as $node) {
+          if ($node->getType() == \OCP\Files\Node::TYPE_FILE && $node->getMimePart() == 'image') {
+            $result[] = $node->getName();
+          }
+        }
+        break;
+      case self::APP_STORAGE:
+        // $ownerId is a directory, $imageId a file in that directory
+        /** @var AppStorage $storage */
+        $storage = $this->di(AppStorage::class);
+        $directory = $storage->getFolder($ownerId);
+        /** @var \OCP\Files\SimpleFS\ISimpleFile $file */
+        foreach ($directory->getDirectoryListing() as $file) {
+          if (strpos($file->getMimeType(), 'image/') === '0') {
+            $result[] = $file->getName();
+          }
+        }
+        break;
+      default: // data-base
+        $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
+        $joinTableClass = $imagesRepository->joinTableClass($joinTable);
+        $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
+        $findBy =  [ 'ownerId' => $ownerId ];
+        foreach($joinTableRepository->findBy($findBy) as $joinTableEntity) {
+          $result[] = $joinTableEntity->getImageId();
+        }
+        break;
+      }
+    } catch (\Throwable $t) {
+      $this->logException($t);
+    }
+    return $result;
+  }
+
+  /**
    * Store the given image in the storage deduced from the parameters
    * $joinTable and $ownerId. Overwrite the image given by $imageId or
    * create a new one.
@@ -232,19 +298,19 @@ EOT;
   public function storeImage(\OCP\Image $image, $joinTable, $ownerId, $fileName, $imageId = self::IMAGE_ID_ANY)
   {
     switch ($joinTable) {
-    case 'UserStorage':
-    case 'AppStorage':
+    case self::USER_STORAGE:
+    case self::APP_STORAGE:
       // $ownerId is a directory, $imageId a file in that directory
-      if ($imageId != self::IMAGE_ID_ANY && $imageId != $fileName) {
-        throw new \RuntimeException($this->l->t('Image-id "%s" must be identical to the file-name "%s" or %d.', [ $fileName, self::IMAGE_ID_ANY ]));
+      if ($imageId != self::IMAGE_ID_PLACEHOLDER && $imageId != $fileName) {
+        throw new \RuntimeException($this->l->t('Image-id "%s" must be identical to the file-name "%s" or %d.', [ $imageId, $fileName, self::IMAGE_ID_PLACEHOLDER ]));
       }
-      if ($joinTable == 'UserStorage') {
+      if ($joinTable == self::USER_STORAGE) {
         /** @var UserStorage $storage */
-        $storage = $this->ci(UserStorage::class);
+        $storage = $this->di(UserStorage::class);
         $directory = $storage->getFolder($ownerId);
       } else {
         /** @var AppStorage $storage */
-        $storage = $this->ci(AppStorage::class);
+        $storage = $this->di(AppStorage::class);
         $directory = $storage->getFolder($ownerId);
       }
       // just create a new file
@@ -281,10 +347,10 @@ EOT;
   public function deleteImage($joinTable, $ownerId, $imageId)
   {
     switch ($joinTable) {
-    case 'UserStorage':
+    case self::USER_STORAGE:
       // $ownerId is a directory, $imageId a file in that directory
       /** @var UserStorage $storage */
-      $storage = $this->ci(UserStorage::class);
+      $storage = $this->di(UserStorage::class);
       $directory = $storage->getFolder($ownerId);
       if ($imageId == self::IMAGE_ID_ANY) {
         /** @var \OCP\Files\Node $node */
@@ -297,9 +363,9 @@ EOT;
         $directory->get($imageId)->delete();
       }
       break;
-    case 'AppStorage':
+    case self::APP_STORAGE:
       /** @var AppStorage $storage */
-      $storage = $this->ci(AppStorage::class);
+      $storage = $this->di(AppStorage::class);
       $directory = $storage->getFolder($ownerId);
       /** @var \OCP\Files\SimpleFS\ISimpleFile $file */
       if ($imageId == self::IMAGE_ID_ANY) {
