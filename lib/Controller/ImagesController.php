@@ -80,9 +80,9 @@ class ImagesController extends Controller {
    */
   public function get($joinTable, $ownerId, $imageId = ImagesService::IMAGE_ID_ANY, $imageSize = -1)
   {
-    $this->logDebug("table: ".$joinTable.", owner: ".$ownerId. ", image: ".$imageId);
+    $ownerId = urldecode($ownerId);
 
-    if ($imageId == ImagesService::IMAGE_ID_PLACEHOLDER) {
+    if ((string)$imageId == (string)ImagesService::IMAGE_ID_PLACEHOLDER) {
       // placeholder reguested
       return $this->getPlaceHolder($joinTable, $imageSize);
     }
@@ -106,9 +106,19 @@ class ImagesController extends Controller {
       return self::grumble($this->l->t("Relation between image and object missing"));
     }
 
-    if (!is_numeric($ownerId) || $ownerId <= 0) {
-      return self::grumble($this->l->t("Image owner not given"));
+    switch ($joinTable) {
+    case ImagesService::APP_STORAGE:
+    case ImagesService::USER_STORAGE:
+      $ownerId = urldecode($ownerId);
+      $imageId = urldecode($imageId);
+      break;
+    default:
+      if (!is_numeric($ownerId) || $ownerId <= 0) {
+        return self::grumble($this->l->t("Image owner not given"));
+      }
+      break;
     }
+
 
     // response data skeleton, augmented by sub-topics.
     $responseData = [
@@ -235,14 +245,18 @@ class ImagesController extends Controller {
 
       $w = ($w > 0 ? $w : $image->width());
       $h = ($h > 0 ? $h : $image->height());
-      $this->logDebug('savecrop.php, x: '.$x1.' y: '.$y1.' w: '.$w.' h: '.$h);
-      if (!$image->crop($x1, $y1, $w, $h)) {
-        return self::grumble(
-          $this->l->t('Unable to crop temporary image %s to [%s, %s, %s, %s]',
-                      [ $tmpKey, $x1, $y1, $x1 + $w - 1, $y1 + $h -1 ]));
+      $this->logDebug('CROP  x: '.$x1.' y: '.$y1.' w: '.$w.' h: '.$h);
+      if ($x1 != 0 || $y1 != 0 || $w != $image->width() || $h != $image->height()) {
+        $this->logDebug('Cropping image');
+        if (!$image->crop($x1, $y1, $w, $h)) {
+          return self::grumble(
+            $this->l->t('Unable to crop temporary image %s to [%s, %s, %s, %s]',
+                        [ $tmpKey, $x1, $y1, $x1 + $w - 1, $y1 + $h -1 ]));
+        }
       }
 
       if ($imageSize > 0 && ($image->width() > $imageSize || $image->height() > $imageHeight)) {
+        $this->logDebug('Resizing image');
         if (!$image->resize($imageSize)) {
           return self::grumble($this->l->t('Unable to resize temporary image %s to size %s', [$tmpKey, $imageSize]));
         }
@@ -262,11 +276,18 @@ class ImagesController extends Controller {
       // fetch the image, create a temporary copy and return a link to it
       list($image, $fileName) = $this->imagesService->getImage($joinTable, $ownerId, $imageId);
 
-      $tmpKeyBase = $this->appName() . '-inline-image-' . $joinTable . '-' . $ownerId . '-' . $imageId;
       if (empty($fileName)) {
-        $fileName = $tmpKeyBase;
+        $fileName = $this->appName() . '-inline-image-' . $joinTable . '-' . $ownerId . '-' . $imageId;
       }
-      $tmpKey = $tmpKeyBase . '-' . $this->generateRandomBytes();
+
+      $tmpKey = implode('-', [
+        $this->appName(),
+        'inline-image',
+        $joinTable,
+        md5($ownerId),
+        md5($imageId),
+        $this->generateRandomBytes(),
+      ]);
 
       if (!$this->imagesService->cacheTemporaryImage($tmpKey, $image, $imageSize)) {
         return self::grumble($this->l->t(
