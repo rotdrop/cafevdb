@@ -95,6 +95,14 @@ class TooltipsFind extends Command
         $state = self::TOOLTIP_SEARCHING;
         $tooltipKey = null;
         foreach ($phpTokens as $token) {
+          if (false && is_array($token)) {
+            $output->writeln(
+              'TOKEN '
+              . token_name($token[0])
+              . ': "' . $token[1] . '"'
+              . ' ' . $phpFile
+              . ':'. $token[2]);
+          }
           switch ($state) {
           case self::TOOLTIP_SEARCHING:
             if (is_array($token)
@@ -118,7 +126,7 @@ class TooltipsFind extends Command
                   . ' ' . $phpFile
                   . ':'. $token[2]);
               } else {
-                if ($token !== '=' && $token !== ',') {
+                if ($token !== '=' && $token !== ',' && $token !== '(' && $token !== ')' && $token !== ';') {
                   throw new \RuntimeException(
                     'UNEXPECTED '
                     . ' ' . $phpFile
