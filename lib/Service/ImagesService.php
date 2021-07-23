@@ -308,10 +308,23 @@ EOT;
         /** @var UserStorage $storage */
         $storage = $this->di(UserStorage::class);
         $directory = $storage->getFolder($ownerId);
+        $existsMethod = 'nodeExists';
       } else {
         /** @var AppStorage $storage */
         $storage = $this->di(AppStorage::class);
         $directory = $storage->getFolder($ownerId);
+        $existsMethod = 'fileExists';
+      }
+
+      if ($imageId == self::IMAGE_ID_PLACEHOLDER && $directory->$existsMethod($fileName)) {
+        $base = pathinfo($fileName, PATHINFO_FILENAME);
+        $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+        $cnt = 0;
+        do {
+          $cnt++;
+          $newFileName = sprintf('%s-%d.%s', $base, $cnt, $ext);
+        } while ($directory->$existsMethod($newFileName));
+        $fileName = $newFileName;
       }
       // just create a new file
       $directory->newFile($fileName, $image->data());
