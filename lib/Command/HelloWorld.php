@@ -24,23 +24,30 @@
 namespace OCA\CAFEVDB\Command;
 
 use OCP\IL10N;
+use OCP\IUserSession;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Question\Question;
 
 class HelloWorld extends Command
 {
   /** @var IL10N */
   private $l;
 
+  /** @var IUserSession */
+  private $userSession;
+
   public function __construct(
     $appName
     , IL10N $l10n
+    , IUserSession $userSession
   ) {
     parent::__construct();
     $this->l = $l10n;
+    $this->userSession = $userSession;
     $this->appName = $appName;
     if (empty($l10n)) {
       throw new \RuntimeException('No IL10N :(');
@@ -68,6 +75,20 @@ class HelloWorld extends Command
     } else {
       $output->writeln($this->l->t('Hello World!'));
     }
+    $helper = $this->getHelper('question');
+    $question = new Question('User: ', '');
+    $user = $helper->ask($input, $output, $question);
+    $question = (new Question('Password: ', ''))->setHidden(true);
+    $password = $helper->ask($input, $output, $question);
+
+    $output->writeln($this->l->t('Your Answers: "%s:%s"', [ $user, $password ]));
+
+    if ($this->userSession->login($user, $password)) {
+      $output->writeln($this->l->t('Login succeeded.'));
+    } else {
+      $output->writeln($this->l->t('Login failed.'));
+    }
+
     return 0;
   }
 }
