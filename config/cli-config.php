@@ -193,7 +193,7 @@ case 'stdin':
   $cafevDbPassword = trim(fgets(fopen('php://stdin', 'r')));
   break;
 case 'console':
-  $cafevDbPassword = getPassword("Password for " . $cafevDbUser . ": ", true);
+  $cafevDbPassword = getPassword("Password for " . $cafevDbUser, true);
   break;
 }
 
