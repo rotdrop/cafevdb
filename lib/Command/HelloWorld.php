@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Command;
 
 use OCP\IL10N;
 use OCP\IUserSession;
+use OCP\IUserManager;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,16 +40,21 @@ class HelloWorld extends Command
   /** @var IL10N */
   private $l;
 
+  /** @var IUserManager */
+  private $userManager;
+
   /** @var IUserSession */
   private $userSession;
 
   public function __construct(
     $appName
     , IL10N $l10n
+    , IUserManager $userManager
     , IUserSession $userSession
   ) {
     parent::__construct();
     $this->l = $l10n;
+    $this->userManager = $userManager;
     $this->userSession = $userSession;
     $this->appName = $appName;
     if (empty($l10n)) {
@@ -79,20 +85,26 @@ class HelloWorld extends Command
     }
     $helper = $this->getHelper('question');
     $question = new Question('User: ', '');
-    $user = $helper->ask($input, $output, $question);
+    $userId = $helper->ask($input, $output, $question);
     $question = (new Question('Password: ', ''))->setHidden(true);
     $password = $helper->ask($input, $output, $question);
 
-    // $output->writeln($this->l->t('Your Answers: "%s:%s"', [ $user, $password ]));
+    // $output->writeln($this->l->t('Your Answers: "%s:%s"', [ $userId, $password ]));
+    $user = $this->userManager->get($userId);
+    $this->userSession->setUser($user);
 
-    if ($this->userSession->login($user, $password)) {
+    if ($this->userSession->login($userId, $password)) {
       $output->writeln($this->l->t('Login succeeded.'));
     } else {
       $output->writeln($this->l->t('Login failed.'));
     }
 
+    /** @var EncryptionService $encryptionService */
     $encryptionService = \OC::$server->query(EncryptionService::class);
-    $output->writeln('TEST ' . $encryptionService->getConfigValue('encryptionkey'));
+    $encryptionService->bind($userId, $password);
+    $encryptionService->initAppEncryptionKey();
+
+    $output->writeln('DB SERVER: ' . $encryptionService->getConfigValue('dbserver'));
 
     return 0;
   }
