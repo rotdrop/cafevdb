@@ -32,6 +32,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 
+use OCA\CAFEVDB\Service\EncryptionService;
+
 class HelloWorld extends Command
 {
   /** @var IL10N */
@@ -81,13 +83,16 @@ class HelloWorld extends Command
     $question = (new Question('Password: ', ''))->setHidden(true);
     $password = $helper->ask($input, $output, $question);
 
-    $output->writeln($this->l->t('Your Answers: "%s:%s"', [ $user, $password ]));
+    // $output->writeln($this->l->t('Your Answers: "%s:%s"', [ $user, $password ]));
 
     if ($this->userSession->login($user, $password)) {
       $output->writeln($this->l->t('Login succeeded.'));
     } else {
       $output->writeln($this->l->t('Login failed.'));
     }
+
+    $encryptionService = \OC::$server->query(EncryptionService::class);
+    $output->writeln('TEST ' . $encryptionService->getConfigValue('encryptionkey'));
 
     return 0;
   }
