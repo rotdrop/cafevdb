@@ -126,7 +126,7 @@ function sealData(string $data, array $keyEncryption):?string
   return $sealedData;
 }
 
-function unseal(string $data, string $userId, IKeyCryptor $keyCryptor):?string
+function unsealData(string $data, string $userId, IKeyCryptor $keyCryptor):?string
 {
   $length = (int)substr($data, 0, 8);
   $encryptedData = substr($data, 9, $length);
