@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Maintenance;
 
-interface IMaintenance
+interface IMigration
 {
   /**
    * @throws \Throwable

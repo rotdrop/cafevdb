@@ -21,16 +21,17 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Maintenance;
+namespace OCA\CAFEVDB\Maintenance\Migrations;
 
 use OCP\ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Maintenance\IMigration;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-class MoveProjectPosters implements IMaintenance
+class MoveProjectPosters implements IMigration
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
