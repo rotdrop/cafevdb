@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -235,78 +236,6 @@ class Project implements \ArrayAccess
   public function getType():Types\EnumProjectTemporalType
   {
     return $this->type;
-  }
-
-  /**
-   * Set besetzung.
-   *
-   * @param array|null $besetzung
-   *
-   * @return Project
-   */
-  public function setBesetzung($besetzung = null)
-  {
-    $this->besetzung = $besetzung;
-
-    return $this;
-  }
-
-  /**
-   * Get besetzung.
-   *
-   * @return array|null
-   */
-  public function getBesetzung()
-  {
-    return $this->besetzung;
-  }
-
-  /**
-   * Set serviceCharge.
-   *
-   * @param string $serviceCharge
-   *
-   * @return Project
-   */
-  public function setServiceCharge($serviceCharge)
-  {
-    $this->serviceCharge = $serviceCharge;
-
-    return $this;
-  }
-
-  /**
-   * Get serviceCharge.
-   *
-   * @return string
-   */
-  public function getServiceCharge()
-  {
-    return $this->serviceCharge;
-  }
-
-  /**
-   * Set anzahlung.
-   *
-   * @param string $anzahlung
-   *
-   * @return Project
-   */
-  public function setAnzahlung($anzahlung)
-  {
-    $this->anzahlung = $anzahlung;
-
-    return $this;
-  }
-
-  /**
-   * Get anzahlung.
-   *
-   * @return string
-   */
-  public function getAnzahlung()
-  {
-    return $this->anzahlung;
   }
 
   /**
