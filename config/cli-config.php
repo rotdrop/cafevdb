@@ -155,17 +155,17 @@ use OCA\CAFEVDB\Service\EncryptionService;
 
 $appDir = __DIR__ . '/..';
 
-if (isset($_ENV['CAFEVDB_USER'])) {
-    $cafevDbUser = $_ENV['CAFEVDB_USER'];
+if (getenv('CAFEVDB_USER') !== false) {
+  $cafevDbUser = getenv('CAFEVDB_USER');
 } else {
-    $cafevDbUser = $user['name'];
+  $cafevDbUser = $user['name'];
 }
 $GLOBALS['cafevdb-user'] = $cafevDbUser;
 
 $authenticated = false;
 $passwordMethod = 'file';
 
-$options = getopt('hp::', [ 'help', 'password::' ]);
+$options = getopt('hp::u:', [ 'help', 'password::', 'user:' ]);
 
 // first run over options to get the password
 foreach($options as $option => $value) {
@@ -174,12 +174,18 @@ foreach($options as $option => $value) {
   case 'password':
     $passwordMethod = $value ?: 'console';
     break;
+  case 'u':
+  case 'user':
+    $cafevDbUser = $value;
+    break;
   }
 }
 
 foreach ($argv as $key => $value) {
   if (strpos($value, '-p') === 0
-      || strpos($value, '--pass') === 0)  {
+      || strpos($value, '--pass') === 0
+      || strpos($value, '-u') === 0
+      || strpos($value, '--user') === 0)  {
     unset($argv[$key]);
     unset($_SERVER['argv'][$key]);
   }
