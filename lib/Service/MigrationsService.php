@@ -23,18 +23,36 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
 class MigrationsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   private const MIGRATIONS_FOLDER = __DIR__ . '/../Maintenance/Migrations/';
   private const MIGRATIONS_NAMESPACE = 'OCA\CAFEVDB\\Maintenance\\Migrations';
 
   public function __construct(
     ConfigService $configService
+    , EntityManager $entityManager
   ) {
     $this->configService = $configService;
+    $this->entityManager = $entityManager;
     $this->l = $this->l10n();
+  }
+
+  public function needsMigration():bool
+  {
+    $this->logInfo(print_r($this->findMigrations(self::MIGRATIONS_FOLDER), true));
+
+    /** @var Entities\Migration $latestMigration */
+    $latestMigration = $this->getDatabaseRepository(Entities\Migration::class)->findOneBy([], [ 'version' => 'DESC' ]);
+
+    $this->logInfo('LATEST: ' . (empty($latestMigration) ? 'null' : $latestMigration->getVersion()));
+
+    return false;
   }
 
   protected function findMigrations(string $directory)

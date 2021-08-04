@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\MigrationsService;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
@@ -246,6 +247,14 @@ class PageController extends Controller {
         ],
       'user');
     };
+
+    // @@@ WIP Check for migrations
+
+    /** @var MigrationsService $migrationsService */
+    $migrationsService = $this->di(MigrationsService::class);
+    $migrationsService->needsMigration();
+
+    // @@@
 
     $template = $this->getTemplate($template);
     $this->logDebug("Try load template ".$template);
