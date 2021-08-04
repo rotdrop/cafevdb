@@ -110,6 +110,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** @var bool */
   protected $expertMode;
 
+  /** @var bool */
+  protected $filterVisibility;
+
   /** @var array default PHPMyEdit options */
   protected $pmeOptions;
 
@@ -198,6 +201,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pmeRecordId = $this->pme->getCGIRecordId();
     $this->showDisabled = $this->getUserValue('showdisabled', false) === 'on';
     $this->expertMode = $this->getUserValue('expertmode', false) === 'on';
+    $this->filterVisibility = $this->getUserValue('filtervisibility', 'off') == 'on';
 
     $this->debugRequests = 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
 
@@ -230,6 +234,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->{lcFirst($key)} =
           $this->requestParameters->getParam($key, $default);
     }
+
+    $this->pmeOptions['cgi']['append'][$this->pme->cgiSysName('fl')] = $this->filterVisibility;
 
     $this->template = $template; // overwrite with child-class supplied value
 

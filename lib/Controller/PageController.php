@@ -236,12 +236,6 @@ class PageController extends Controller {
 
     $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
 
-    // @@todo this should not go here, I think. Rather into PMETableBase.
-    //
-    // Filter visibility is stored here:
-    //$pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
-    //Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
-
     if (!$this->inGroup()) {
       return new TemplateResponse(
         $this->appName(),
