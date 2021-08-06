@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Maintenance\IMigration;
 
 class MigrationsService
 {
@@ -33,6 +34,8 @@ class MigrationsService
 
   private const MIGRATIONS_FOLDER = __DIR__ . '/../Maintenance/Migrations/';
   private const MIGRATIONS_NAMESPACE = 'OCA\CAFEVDB\\Maintenance\\Migrations';
+
+  private $unappliedMigrations = null;
 
   public function __construct(
     ConfigService $configService
@@ -45,17 +48,73 @@ class MigrationsService
 
   public function needsMigration():bool
   {
-    $this->logInfo(print_r($this->findMigrations(self::MIGRATIONS_FOLDER), true));
-
-    /** @var Entities\Migration $latestMigration */
-    $latestMigration = $this->getDatabaseRepository(Entities\Migration::class)->findOneBy([], [ 'version' => 'DESC' ]);
-
-    $this->logInfo('LATEST: ' . (empty($latestMigration) ? 'null' : $latestMigration->getVersion()));
-
-    return false;
+    $this->ensureMigrationsAreLoaded();
+    return !empty($this->unappliedMigrations);
   }
 
-  protected function findMigrations(string $directory)
+  public function applyAll()
+  {
+    $this->ensureMigrationsAreLoaded();
+    foreach ($this->unappliedMigrations as $version => $className) {
+      $this->logInfo('Trying to apply migration ' . $version . ', PHP-class ' . $className);
+      try {
+        $this->applyMigration($version, $className);
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        break;
+      }
+    }
+  }
+
+  public function getUnapplied()
+  {
+    $this->ensureMigrationsAreLoaded();
+    return array_keys($this->unappliedMigrations);
+  }
+
+  public function apply(string $version)
+  {
+    $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
+    if (!empty($allMigrations[$version])) {
+      $this->applyMigration($version, $allMigrations[$version]);
+    }
+  }
+
+  protected function applyMigration(string $version, string $className)
+  {
+    /** @var IMigration $instance */
+    $instance = $this->di($className);
+    $result = $instance->execute();
+    if ($result !== true) {
+      throw new \RuntimeException($this->l->t("Migration %s has failed to execute.", $className));
+    }
+
+    /** @var Entities\Migration $migrationRecord */
+    $migrationRecord = (new Entities\Migration)->setVersion($version);
+    $this->persist($migrationRecord);
+    $this->flush();
+  }
+
+  protected function ensureMigrationsAreLoaded()
+  {
+    $this->unappliedMigrations = $this->findUnappliedMigrations(self::MIGRATIONS_FOLDER);
+  }
+
+  protected function findUnappliedMigrations(string $directory):array
+  {
+    $allMigrations = $this->findMigrations($directory);
+    $latestMigration = $this->getDatabaseRepository(Entities\Migration::class)->findOneBy([], [ 'version' => 'DESC' ]);
+    if (empty($latestMigration)) {
+      $this->logInfo('NO MIGRATIONS HAVE BEEN APPLIED YET.');
+      return $allMigrations;
+    }
+    $this->logInfo('LATEST ' . $latestMigration->getVersion());
+    return array_filter($allMigrations, function($version) use ($latestMigration) {
+      return $version > $latestMigration->getVersion();
+    }, ARRAY_FILTER_USE_KEY);
+  }
+
+  protected function findMigrations(string $directory):array
   {
     $directory = realpath($directory);
     if ($directory === false || !file_exists($directory) || !is_dir($directory)) {

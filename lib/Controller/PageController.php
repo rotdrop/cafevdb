@@ -252,7 +252,7 @@ class PageController extends Controller {
 
     /** @var MigrationsService $migrationsService */
     $migrationsService = $this->di(MigrationsService::class);
-    $migrationsService->needsMigration();
+    $migrationsService->applyAll();
 
     // @@@
 
