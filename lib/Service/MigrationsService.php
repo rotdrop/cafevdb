@@ -72,6 +72,16 @@ class MigrationsService
     return array_keys($this->unappliedMigrations);
   }
 
+  public function getAll()
+  {
+    return array_keys($this->findMigrations(self::MIGRATIONS_FOLDER));
+  }
+
+  public function getLatest()
+  {
+    return $this->findLatestVersion();
+  }
+
   public function apply(string $version)
   {
     $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
@@ -100,18 +110,27 @@ class MigrationsService
     $this->unappliedMigrations = $this->findUnappliedMigrations(self::MIGRATIONS_FOLDER);
   }
 
-  protected function findUnappliedMigrations(string $directory):array
+  protected function findLatestVersion():?string
   {
-    $allMigrations = $this->findMigrations($directory);
+    /** @var Entities\Migration $latestMigration */
     $latestMigration = $this->getDatabaseRepository(Entities\Migration::class)->findOneBy([], [ 'version' => 'DESC' ]);
     if (empty($latestMigration)) {
       $this->logInfo('NO MIGRATIONS HAVE BEEN APPLIED YET.');
-      return $allMigrations;
+      return null;
     }
     $this->logInfo('LATEST ' . $latestMigration->getVersion());
-    return array_filter($allMigrations, function($version) use ($latestMigration) {
-      return $version > $latestMigration->getVersion();
-    }, ARRAY_FILTER_USE_KEY);
+    return $latestMigration->getVersion();
+  }
+
+  protected function findUnappliedMigrations(string $directory):array
+  {
+    $allMigrations = $this->findMigrations($directory);
+    $latestVersion = $this->findLatestVersion();
+    return empty($latestVersion)
+      ? $allMigrations
+      : array_filter($allMigrations, function($version) use ($latestVersion) {
+        return $version > $latestVersion;
+      }, ARRAY_FILTER_USE_KEY);
   }
 
   protected function findMigrations(string $directory):array

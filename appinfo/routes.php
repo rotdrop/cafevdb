@@ -126,6 +126,17 @@ $routes = [
       'url' => '/expertmode/action/{operation}',
       'verb' => 'POST',
     ],
+    // migrations, maintenance
+    [
+      'name' => 'migrations#service_switch',
+      'url' => '/maintenance/migrations/{topic}',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'migrations#get',
+      'url' => '/maintenance/migrations/{what}',
+      'verb' => 'GET',
+    ],
     // legacy calendar events
     [
       'name' => 'legacy_events#service_switch',

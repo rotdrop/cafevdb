@@ -37,6 +37,10 @@ class MigrationsController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
+  const ALL_MIGRATIONS = 'all';
+  const UNAPPLIED_MIGRATIONS = 'unapplied';
+  const LATEST_MIGRATION = 'latest';
+
   /** @var MigrationsService */
   private $migrationsService;
 
@@ -51,6 +55,43 @@ class MigrationsController extends Controller
     $this->configService = $configService;
     $this->migrationsService = $migrationsService;
     $this->l = $this->l10N();
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function get($what)
+  {
+    switch ($what) {
+    case self::ALL_MIGRATIONS:
+      return self::dataResponse([ 'migrations' => $this->migrationsService->getAll(), ]);
+    case self::UNAPPLIED_MIGRATIONS:
+      return self::dataResponse([ 'migrations' => $this->migrationsService->getUnapplied(), ]);
+    case self::LATEST_MIGRATION:
+      return self::dataResponse([ 'latest' => $this->migrationsService->getLatest(), ]);
+    }
+    return self::grumble($this->l->t('Unknown Request "%s".', $what));
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function serviceSwitch($topic, $subTopic)
+  {
+    switch ($topic) {
+    case 'apply':
+      switch ($subTopic) {
+      case 'all':
+        $this->migrationsService->applyAll();
+        break;
+      default:
+        $version = $subTopic;
+        $this->migrationsService->apply($version);
+        break;
+      }
+      break;
+    }
+    return self::grumble($this->l->t('Unknown Request "%s".', $topic));
   }
 }
 
