@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 class MoveProjectPosters implements IMaintenance
 {
-  use OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var IL10N */
   private $l;
@@ -55,8 +55,9 @@ class MoveProjectPosters implements IMaintenance
     $this->imagesService = $imagesService;
   }
 
-  public function execute()
+  public function execute():bool
   {
+    return true;
     // get all projects
     $projects = $this->projectService->fetchAll();
     /** @var Entities\Project $project */
