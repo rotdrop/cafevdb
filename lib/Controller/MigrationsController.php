@@ -82,14 +82,50 @@ class MigrationsController extends Controller
     case 'apply':
       switch ($subTopic) {
       case 'all':
-        $this->migrationsService->applyAll();
-        break;
+        $unapplied = $this->migrationsService->getUnapplied();
+        $applied = [];
+        foreach ($unapplied as $version) {
+          try {
+            $this->migrationsService->apply($version);
+            $applied[] = $version;
+          } catch (\Throwable $t) {
+            $data = $this->exceptionChainData($t);
+            $data['migrations'] = [
+              'payload' => $unapplied,
+              'handled' => $applied,
+              'failing' => $version,
+            ];
+            return self::grumble($data);
+          }
+        }
+        return self::dataResponse([
+          'migrations' => [
+            'payload' => $unapplied,
+            'handled' => $applied,
+            'failing' => [],
+          ],
+        ]);
       default:
         $version = $subTopic;
-        $this->migrationsService->apply($version);
-        break;
+        try {
+          $this->migrationsService->apply($version);
+        } catch (\Throwable $t) {
+          $data = $this->exceptionChainData($t);
+          $data['migrations'] = [
+            'payload' => [ $version, ],
+            'handled' => [],
+            'failing' => $version,
+          ];
+          return self::grumble($data);
+        }
+        return self::dataResponse([
+          'migrations' => [
+            'payload' => [ $version, ],
+            'handled' => [ $version, ],
+            'failing' => [],
+          ],
+        ]);
       }
-      break;
     }
     return self::grumble($this->l->t('Unknown Request "%s".', $topic));
   }

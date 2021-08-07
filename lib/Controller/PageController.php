@@ -248,14 +248,6 @@ class PageController extends Controller {
       'user');
     };
 
-    // @@@ WIP Check for migrations
-
-    /** @var MigrationsService $migrationsService */
-    $migrationsService = $this->di(MigrationsService::class);
-    $migrationsService->applyAll();
-
-    // @@@
-
     $template = $this->getTemplate($template);
     $this->logDebug("Try load template ".$template);
     try {
