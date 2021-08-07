@@ -196,7 +196,7 @@ class PageController extends Controller {
   public function debug() {
     return $this->loader(
       'user',
-      'debug', // template
+      'maintenance/debug', // template
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
       $this->parameterService['musicianId']
@@ -338,8 +338,8 @@ class PageController extends Controller {
 
   private function getTemplate($template)
   {
-    if ($template != 'debug' && !$this->configCheck['summary']) {
-      return 'configcheck';
+    if ($template != 'maintenance/debug' && !$this->configCheck['summary']) {
+      return 'maintenance/configcheck';
     }
     if (empty($template)) {
       $blogMapper = \OC::$server->query(BlogMapper::class);

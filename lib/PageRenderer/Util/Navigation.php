@@ -614,7 +614,7 @@ and even edit the public web-pages for the project and other things.");
     case 'config-check':
       $value = $this->l->t("Test Configuration");
       $title = $this->l->t("Run brief sanity checks on the configuration options.");
-      $post = [ 'template' => 'configcheck' ];
+      $post = [ 'template' => 'maintenance/configcheck' ];
       break;
 
     case 'project-instrumentation-numbers':
