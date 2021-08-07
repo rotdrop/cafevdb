@@ -129,7 +129,7 @@ $routes = [
     // migrations, maintenance
     [
       'name' => 'migrations#service_switch',
-      'url' => '/maintenance/migrations/{topic}',
+      'url' => '/maintenance/migrations/{topic}/{subTopic}',
       'verb' => 'POST',
     ],
     [

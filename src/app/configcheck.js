@@ -20,10 +20,13 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { $, appName } from './globals.js';
+import { $, appName, webRoot } from './globals.js';
 import * as Page from './page.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Ajax from './ajax.js';
+import * as Dialogs from './dialogs.js';
+import * as Notification from './notification.js';
+import { addReadyCallback } from './cafevdb.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 
@@ -33,9 +36,56 @@ function documentReady() {
 
   $container.on('click', '#configrecheck', function(event) {
     console.info('Hello recheck');
-    Page.loadPage({ template: 'maintenenance/configcheck' });
+    Page.loadPage({ template: 'maintenance/configcheck' });
     return false;
   });
+
+  const handleMigrations = function() {
+    if ($container.find('.config-check').length <= 0) {
+      return;
+    }
+
+    // check for pending migrations and handle them
+    $.get(generateUrl('maintenance/migrations/unapplied'))
+      .fail(Ajax.handleError)
+      .done(function(data) {
+        if (data.migrations.length <= 0) {
+          return;
+        }
+        Dialogs.info(
+          t(appName, 'Data-migrations need to be performed before proceeding to the orchestra app.')
+            + '<p>'
+            + data.migrations.join(', ')
+            + '<p>'
+            + t(appName, 'Click the "ok" button to start the migrations.'),
+          t(appName, 'Data Migration'),
+          function(confirmation) {
+            if (confirmation !== true) {
+              return;
+            }
+            $.post(generateUrl('maintenance/migrations/apply/all'))
+              .fail(Ajax.handleError)
+              .done(function(data) {
+                Notification.show(
+                  t(appName, 'Successfully applied the following migrations:')
+                    + ' '
+                    + data.migrations.handled.join(', '),
+                  { timeout: 30 });
+                const redirectTimeout = 10;
+                Notification.show(t(
+                  appName,
+                  'Redirecting to the orchestra app in {timeout} seconds.',
+                  { timeout: redirectTimeout }));
+                setTimeout(function() {
+                  window.location.replace(webRoot);
+                }, redirectTimeout * 1000);
+              });
+          },
+          true,
+          true);
+      });
+  };
+  addReadyCallback(handleMigrations);
 
   $container.on('click', '.pdfletter-download', function(event) {
     const post = {};
