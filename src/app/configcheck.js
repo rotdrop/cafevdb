@@ -33,7 +33,7 @@ function documentReady() {
 
   $container.on('click', '#configrecheck', function(event) {
     console.info('Hello recheck');
-    Page.loadPage({ template: 'configcheck' });
+    Page.loadPage({ template: 'maintenenance/configcheck' });
     return false;
   });
 
