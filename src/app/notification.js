@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.js';
+import { globalState, $ } from './globals.js';
 
 const Notification = globalState.Notification;
 if (Notification === undefined) {
@@ -50,19 +50,28 @@ const hide = function($row, callback) {
   }
 };
 
+const tweakTimeout = function(options) {
+  if (options !== undefined && options.timeout !== undefined && options.timeout < 1000) {
+    options.timeout *= 1000;
+  }
+};
+
 const show = function(text, options) {
+  tweakTimeout(options);
   const row = OC.Notification.show(text, options);
   rows.push(row);
   return row;
 };
 
 const showHtml = function(text, options) {
+  tweakTimeout(options);
   const row = OC.Notification.showHtml(text, options);
   rows.push(row);
   return row;
 };
 
 const showTemporary = function(text, options) {
+  tweakTimeout(options);
   const row = OC.Notification.showTemporary(text, options);
   rows.push(row);
   return row;
@@ -70,12 +79,9 @@ const showTemporary = function(text, options) {
 
 function messages(messages, options) {
   const defaultOptions = {
-    timeout : 10,
+    timeout: 10,
   };
   options = $.extend({}, defaultOptions, options);
-  if (options.timeout !== undefined) {
-    options.timeout *= 1000;
-  }
   if (messages !== undefined) {
     if (!Array.isArray(messages)) {
       messages = [messages];
