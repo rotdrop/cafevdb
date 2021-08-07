@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -39,8 +40,7 @@ use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
 use OCA\CAFEVDB\Common\PHPMailer;
 
-/**Check for a usable configuration.
- */
+/** Check for a usable configuration. */
 class ConfigCheckService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -77,6 +77,9 @@ class ConfigCheckService
   /** @var AddressBookProvider */
   private $addressBookProvider;
 
+  /** @var MigrationsService */
+  private $migrationsService;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
@@ -88,13 +91,7 @@ class ConfigCheckService
     , CardDavService $cardDavService
     , EventsService $eventsService
     , AddressBookProvider $addressBookProvider
-    //, \OCA\CAFEVDB\
-    //, \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit $phpMyEdit
-    //, \OCA\CAFEVDB\Database\Connection $dbConnection
-    //, \OCA\CAFEVDB\Service\RequestParameterService $requestParameters
-    //, \OCA\CAFEVDB\PageRenderer\Musicians $musiciansView
-    //, ContactsService $contactsService
-    //, \OCA\CAFEVDB\AddressBook\AddressBookProvider $blah
+    , MigrationsService $migrationsService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -105,11 +102,12 @@ class ConfigCheckService
     $this->calDavService = $calDavService;
     $this->cardDavService = $cardDavService;
     $this->addressBookProvider = $addressBookProvider;
-
-    {
+    $this->migrationsService = $migrationsService;
+    $this->l = $this->l10n();
+    // {
       // $mm3 = new MailingListsService($this->configService);
       // $mm3->serverConfiguration();
-    }
+    // }
   }
 
   /**Return an array with necessary configuration items, being either
@@ -136,14 +134,22 @@ class ConfigCheckService
   {
     $result = [];
 
-    foreach (['orchestra','usergroup','shareowner','sharedfolder','database','encryptionkey'] as $key) {
+    foreach ([
+      'orchestra',
+      'usergroup',
+      'shareowner',
+      'sharedfolder',
+      'database',
+      'encryptionkey',
+      'migrations',
+    ] as $key) {
       $result[$key] = ['status' => false, 'message' => ''];
     }
 
     $key ='orchestra';
     try {
       $result[$key]['status'] = $this->getConfigValue('orchestra');
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
     $this->logDebug($key.': '.$result[$key]['status']);
@@ -151,7 +157,7 @@ class ConfigCheckService
     $key = 'encryptionkey';
     try {
       $result[$key]['status'] = $result['orchestra']['status'] && $this->encryptionKeyValid();
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
     $this->logDebug($key.': '.$result[$key]['status']);
@@ -159,15 +165,23 @@ class ConfigCheckService
     $key = 'database';
     try {
       $result[$key]['status'] = $result['orchestra']['status'] && $this->databaseAccessible();
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
+    }
+    $this->logDebug($key.': '.$result[$key]['status']);
+
+    $key = 'migrations';
+    try {
+      $result[$key]['status'] = $result['database']['status'] && $this->noUnappliedMigrations();
+    } catch (\Throwable $t) {
+      $result[$key]['message'] = $t->getMessage();
     }
     $this->logDebug($key.': '.$result[$key]['status']);
 
     $key = 'usergroup';
     try {
       $result[$key]['status'] = $this->shareGroupExists();
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
     $this->logDebug($key.': '.$result[$key]['status']);
@@ -175,7 +189,7 @@ class ConfigCheckService
     $key = 'shareowner';
     try {
       $result[$key]['status'] = $result['usergroup']['status'] && $this->shareOwnerExists();
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
     $this->logDebug($key.': '.$result[$key]['status']);
@@ -183,7 +197,7 @@ class ConfigCheckService
     $key = 'sharedfolder';
     try {
       $result[$key]['status'] = $result['shareowner']['status'] && $this->sharedFolderExists();
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
     $this->logDebug($key.': '.$result[$key]['status']);
@@ -191,7 +205,7 @@ class ConfigCheckService
     $key = 'sharedaddressbooks';
     try {
       $result[$key]['status'] = $result['shareowner']['status'] && $this->sharedAddressBooksExist();
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
 
@@ -238,7 +252,7 @@ class ConfigCheckService
     try {
       $mail->SmtpConnect();
       $mail->SmtpClose();
-    } catch (\Exception $exception) {
+    } catch (\Throwable $exception) {
       $this->logException($exception, 'Testing SMTP server '.$user.'@'.$host.':'.$port.' failed.');
       $result = false;
     }
@@ -536,7 +550,7 @@ class ConfigCheckService
         $id = $this->rootFolder->getUserFolder($shareOwner)->get($sharedFolder)->getId();
         $this->logDebug('Shared folder id: ' . $id);
         return $this->groupSharedExists($id, $shareGroup, 'folder', $shareOwner);
-      } catch(\Exception $e) {
+      } catch(\Throwable $e) {
         $this->logError('No file id for  ' . $sharedFolder . ' ' . $e->getMessage());
         return false;
       }
@@ -760,7 +774,7 @@ class ConfigCheckService
       if (empty($node)) {
         try {
           $node = $rootView->newFolder($path);
-        } catch(\Exception $e) {
+        } catch(\Throwable $e) {
           $this->logError('Could not create ' . $path . ' ' . $e->getMessage() . ' ' . $e->getTraceAsString());
           return false;
         }
@@ -975,11 +989,9 @@ class ConfigCheckService
     return -1;
   }
 
-  /**Check whether we have data-base access by connecting to the
+  /**
+   * Check whether we have data-base access by connecting to the
    * data-base server and selecting the configured data-base.
-   *
-   * @para, $connectionParams Array with keys 'dbname', 'user',
-   * 'password', 'host' or null for default options.
    *
    * @return bool @c true on success.
    *
@@ -1014,6 +1026,15 @@ class ConfigCheckService
       $connection->close();
     }
 
+    return true;
+  }
+
+  public function noUnappliedMigrations()
+  {
+    if ($this->migrationsService->needsMigration()) {
+      $migrations = $this->migrationsService->getUnapplied();
+      throw new \RuntimeException($this->l->t('Unapplied migrations: %s.', implode(', ', $migrations)));
+    }
     return true;
   }
 

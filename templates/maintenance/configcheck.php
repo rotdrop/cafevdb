@@ -115,14 +115,14 @@ log-in again in order to be able to access the encrypted values.',
          data-calendar-id="30">EditEventDialog</a>
          <input id="edit-event-test-uri" type="text" name="uri" placeholder="uri"/>
          <input id="edit-event-test-calendar-id" type="number" name="calendar-id" placeholder="calendar-id"/>
-         <a href="#" class="geo-coding button">TestGeoCodingCache</a> -->
+         <a href="#" class="geo-coding button">TestGeoCodingCache</a>
     <br/>
     <br/>
     <div class="<?php echo $css_pfx; ?>-playground">
       <a href="#" class="progress-status button">TestProgressStatus</a>
       <span id="progress-status-info"></span>
       <a href="#" class="pdfletter-download button">TestPdfLetter</a>
-    </div>
+    </div> -->
   </form>
   <br/>
   <!-- <br/>
@@ -142,8 +142,20 @@ $diagnosticItems = [
   'shareowner',
   'sharedfolder',
   'sharedaddressbooks',
-  'database'
+  'database',
+  'migrations',
 ];
+
+$failedItems = [];
+$operationalItems = [];
+foreach ($diagnosticItems as $key) {
+  if (isset($cfgchk[$key]['status']) && $cfgchk[$key]['status'] === false) {
+    $failedItems[] = $key;
+  } else {
+    $operationalItems[] = $key;
+  }
+}
+$diagnosticItems = $failedItems + $operationalItems;
 
 foreach ($diagnosticItems as $key) {
 
@@ -200,6 +212,23 @@ group-administrator for the group `%s\'.',
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
       break;
+    case 'migrations':
+      $status = $cfgchk[$key]['status'];
+      $ok     = $status ? 'set' : 'missing';
+      $tok    = $status ? $l->t('not needed') : $l->t('data needs migration');
+      $text   = $status ? '' : $missingtext[$key];
+      $error  = $cfgchk[$key]['message'];
+      if ($error != '') {
+        $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
+      }
+
+      echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
+      <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
+      <span class="'.$css_pfx.'-config-check value"> '.$_[$key].'</span>
+      <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
+      <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
+    </li>';
+      break;
     default:
       $status = $cfgchk[$key]['status'];
       $ok     = $status ? 'set' : 'missing';
@@ -216,6 +245,7 @@ group-administrator for the group `%s\'.',
       <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
+      break;
   }
 }
 
