@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-08-04 18:23+0200\n"
-"PO-Revision-Date: 2021-08-04 18:32+0200\n"
+"POT-Creation-Date: 2021-08-07 15:56+0200\n"
+"PO-Revision-Date: 2021-08-07 16:02+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -559,6 +559,12 @@ msgstr "`%s' erfolgreich gelöscht."
 msgid "Method %s is not yet implemented."
 msgstr "Methode %s is noch nicht implementiert."
 
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/MigrationsController.php:73
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/MigrationsController.php:130
+#, php-format
+msgid "Unknown Request \"%s\"."
+msgstr "Unbekannte Anfrage: \"%s\"."
+
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:131
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:517
 #, php-format
@@ -598,22 +604,22 @@ msgstr "Validierung von `%s' fehlgeschlagen."
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr "Musiker/Musikerinnen mit demselben Namen sind bereits eingetragen: %s"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:137
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:138
 #, php-format
 msgid "Post to end-point \"%s\" not implemented."
 msgstr "Abfragen an die Adresse \"%s\" sind nicht implementiert."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:140
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:141
 #, php-format
 msgid "Post to base-url of app \"%s\" not allowed."
 msgstr "Abfragen an die Basis-Adresse der App \"%s\" sind nicht erlaubt."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:263
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:258
 #, php-format
 msgid "Template-renderer for template `%s' is empty."
 msgstr "Inhalts-Erzeuger für Schablone `%s' ist leer."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:374
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:369
 #, php-format
 msgid "Page `%s\\' not found."
 msgstr "Seite `%s' nicht gefunden."
@@ -2384,7 +2390,7 @@ msgid "Remaining"
 msgstr "Fehlbetrag"
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:782
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:580
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:586
 msgid "Due Date"
 msgstr "Fälligkeit"
 
@@ -2486,7 +2492,7 @@ msgid "No payments for bulk-transaction id %d."
 msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/EmailForm/RecipientsFilter.php:612
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:280
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:286
 msgid "member status "
 msgstr "Mitglieds-Status"
 
@@ -2680,22 +2686,27 @@ msgid "Unable to bind encryption service for user \"%s\"."
 msgstr ""
 "Kann den Verschlüsselungs-Service für den Benutzer \"%s\" nicht einrichten."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:69
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:70
 msgid "Unable to fetch data-base images, assuming they do not exist."
-msgstr "Kann keine Bilder aus der Datenbank laden; nehme an, dass keine existieren."
+msgstr ""
+"Kann keine Bilder aus der Datenbank laden; nehme an, dass keine existieren."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:76
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:77
 #, php-format
 msgid ""
 "The project \"%1$s\" already has the following file-system images: \"%2$s\"."
-msgstr "Für das Projekt \"%1$s\" existieren bereits die folgenden Bilder im Dateisystem: \"%2$s\"."
+msgstr ""
+"Für das Projekt \"%1$s\" existieren bereits die folgenden Bilder im "
+"Dateisystem: \"%2$s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:87
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:88
 #, php-format
 msgid "Unable to fetch data-base image \"%1$d\" for project \"%2$s\"."
-msgstr "Konnte das Bild \"%1$d\" für das Projekt \"%2$s\" nicht aus der Datenbank laden."
+msgstr ""
+"Konnte das Bild \"%1$d\" für das Projekt \"%2$s\" nicht aus der Datenbank "
+"laden."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:94
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:95
 #, php-format
 msgid ""
 "Stored data-base image id \"%1$d\" of project \"%2$s\" in file-system "
@@ -2704,12 +2715,12 @@ msgstr ""
 "Habe für das Projekt \"%2$s\" das Bild mit der Datenbank-Id \"%1$d\" im\n"
 "Dateisystem unter dem Namen \"%3$s\" gespeichert."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:97
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:98
 #, php-format
 msgid "Deleted old data-base image with id \"%1$sd\"."
 msgstr "Altes Bild mit Id \"%1$s\" wurde aus der Datenbank gelöscht."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:100
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:101
 #, php-format
 msgid ""
 "Unable to move data-base image id \"%1$d\" of project \"%2$s\" to file-"
@@ -3387,45 +3398,45 @@ msgid "Add all to %s"
 msgstr "Alle zu %s"
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PME/Config.php:55
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:543
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:549
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:714
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:778
 msgid "Em@il"
 msgstr "Em@il"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:259
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:265
 msgid "%n data field affected"
 msgid_plural "%n data fields affected"
 msgstr[0] "%n Daten-Feld betroffen"
 msgstr[1] "%n Daten-Felder betroffen"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:361
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:367
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 "$action muss ein PHP-Callable sein oder eine Klasseninstanz von \"%s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:389
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:395
 msgid "SQL Transaction failed."
 msgstr "SQL Transaktion fehlgeschlagen."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:555
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:561
 msgid "Fees"
 msgstr "Beiträge"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:555
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:561
 msgid "expenses negative"
 msgstr "Ausgaben negativ"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:588
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:594
 msgid "Revoked"
 msgstr "Entwertung"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:598
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:604
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:828
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:834
 #, php-format
 msgid ""
 "Table \"%s\": missing identifier for field \"%s\" and grouping field \"%s\" "
@@ -3434,8 +3445,8 @@ msgstr ""
 "Tabelle \"%s\": fehlender Id-Wert für Datenbank-Feld \"%s\" und das "
 "Gruppierungsfeld \"%s\" ist bereits belegt."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:864
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1230
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:870
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1236
 #, php-format
 msgid ""
 "Field \"%s.%s\": nested multi-value join tables with unexpected pivot-"
@@ -3444,28 +3455,28 @@ msgstr ""
 "Feld \"%s.%s\": geschachtelte Multi-Key Verknüpfungstabelle mit unerwarteter "
 "Pivot-Spalte: %s."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:915
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1261
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:921
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1267
 #, php-format
 msgid "No value for identifier field \"%s / %s\"."
 msgstr "Fehlender Wert für Id-Feld: \"%s / %s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:935
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:941
 #, php-format
 msgid "Unmable to find master entity for key \"%s\"."
 msgstr "Kann die Haupt-Entität zum Schlüssel \"%s\" nicht finden."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1038
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1044
 #, php-format
 msgid "Unable to find entity in table %s given id %s"
 msgstr "Kann die Entität in Tabelle %s zur id %s nicht finden"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1097
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1103
 #, php-format
 msgid "Change-set %s should be empty."
 msgstr "Änderungen-Menge %s muss leer sein."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1205
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1211
 #, php-format
 msgid ""
 "Missing identifier for field \"%s\" and grouping field \"%s\" already set."
@@ -3473,44 +3484,44 @@ msgstr ""
 "Fehlender Id-Wert für Datenbank-Feld \"%s\" und das Gruppierungsfeld \"%s\" "
 "ist bereits belegt."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1274
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1280
 msgid "Master entity is unset."
 msgstr "Hauptentität ist nicht angegeben."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1371
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1377
 #, php-format
 msgid "Remaining change-set %s must be empty"
 msgstr "Es dürften keine geänderten Felder (%s) übrig bleiben. "
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1491
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1497
 #, php-format
 msgid "Unknown column description: \"%s\""
 msgstr "Unbekannte Spalten-Beschreibung: \"%s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1609
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1615
 msgid "Table-name not specified"
 msgstr "Tabellen-Name wurde nicht angegeben"
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1665
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1671
 #, php-format
 msgid "Master join-table field for %s not found."
 msgstr "Haupt-Verknüpfungstabelle für %s konnte nicht gefunden werden."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1760
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1766
 msgid ""
 "Composite keys are not yet supported for translated database table fields."
 msgstr ""
 "Zusammengesetzte Schlüssel-Felder werden für Übersetzungen von Datenbank-"
 "Tabellenfeldern noch nicht unterstützt."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1881
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1887
 #, php-format
 msgid "New suggested user-id is but must not be empty, old id was \"%s\"."
 msgstr ""
 "Die neue vorgeschlagene Benutzerkennung ist leer, darf es jedoch nicht sein. "
 "Die alte Kennung war \"%s\"."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1895
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1901
 #, php-format
 msgid "Unable to retrieve musician for id \"%s\" from database."
 msgstr "Kann das Musizierende \"%s\" nicht aus der Datenbank laden."
@@ -4343,11 +4354,16 @@ msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ConfigCheckService.php:606
-#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ConfigCheckService.php:680
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ConfigCheckService.php:620
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ConfigCheckService.php:694
 #, php-format
 msgid "Folder \\`%s' could not be created"
 msgstr "Der Ordner `%s' konnte nicht erzeugt werden."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/ConfigCheckService.php:1036
+#, php-format
+msgid "Unapplied migrations: %s."
+msgstr "Ausstehende Datenmigrationen: %s."
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/EncryptionService.php:218
 msgid "Cannot initialize SSL key-pair without user and password"
@@ -4803,6 +4819,11 @@ msgstr "Nirgends"
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:81
 msgid "42, Undiscoverable"
 msgstr "Unauffindbarweg 42"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/MigrationsService.php:99
+#, php-format
+msgid "Migration %s has failed to execute."
+msgstr "Datenmigration %s konnte nicht ausgeführt werden."
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/lib/Service/PhoneNumberService.php:79
 msgid "fixed line"
@@ -8840,166 +8861,6 @@ msgstr "Darstellungspriorität erhöhen"
 msgid "Lower priority"
 msgstr "Darstellungspriorität vermindern."
 
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:36
-msgid ""
-"It may be that you simply have to log-off and log-in again because your "
-"login-session has timed out. Otherwise the following instructions apply:\n"
-"<p>\n"
-"Several basic configuraton options are missing. Please follow they\n"
-"instructions below. If this is a new installation then you will\n"
-"probably also have to adjust several other settings in the\n"
-"configuration menu (click on the gear-symbol in the top-right\n"
-"corner). You need to have the role of a group-administrator to do\n"
-"so. You may want to configure your language preferences."
-msgstr ""
-"Möglicherweise müssen Sie sich einfach ab- und wieder anmelden weil\n"
-"Ihre Sitzung abgelaufen ist. Ansonsten ist das Folgende zu beachten:\n"
-"<p>\n"
-"Etliche grundlegende Einstellungen fehlen. Bitte folgen Sie den\n"
-"Anweisungen unten. Falls es sich um eine Neuinstallation handelt,\n"
-"werden Sie vermutlich auch noch Etliches im Konfigurationsmenü\n"
-"einstellen wollen (dazu auf das Zahnrad oben rechts klicken). Dazu\n"
-"müssen Sie als Gruppenadministrator registriert sein. Vermutlich\n"
-"möchten Sie auch vorher Ihre bevorzugte Sprache konfigurieren."
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:58
-msgid ""
-"You need to specify a name for the orchestra.  Please click as\n"
-"group-administrator on the gear-symbol in the top-right corner and\n"
-"specify a short-hand name for the orchestra in the\n"
-"`Administration'-tab. This is just a tag to provide defaults for\n"
-"user-ids and folders; it should be a short one-word identifier."
-msgstr ""
-"Sie müssen eine Kurzbezeichnung für das Orchester angeben. Als Gruppen-"
-"Administrator können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und "
-"im `Verwaltung'-Reiter diese Einstellung vornehmen. Der Name ist nur eine "
-"Kurzbezeichnung, typischerweise ein einzelnes, kurzes Wort. "
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:63
-msgid ""
-"You need to create a dedicatd user group.\n"
-"You have to log-in as administrator to do so."
-msgstr ""
-"Sie müssen die Orchester-Gruppe erstelllen. Loggen Sie sich dazu bitte mit "
-"einem Administrator-Account ein."
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:66
-#, php-format
-msgid ""
-"You need to create a dummy-user which owns all shared resources\n"
-"(calendars, files etc.). You need to be a group-admin for the\n"
-"orchestra user group `%s' to do so. You can create the share-owner\n"
-"uid by setting the respective field in the application settings menu\n"
-"(click as group-admin on the gear-symbol in the top-right corner and\n"
-"choose the `Sharing'-tab)."
-msgstr ""
-"Sie müssen eine Benutzer-`Strohpuppe' anlegen, der alle gemeinsamen "
-"Resourcen gehören. Als Gruppen-Administrator für die Orchestergruppe `%s' "
-"können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und im `Sharing'-"
-"Reiter diese Einstellung vornehmen."
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:74
-#, php-format
-msgid ""
-"You need to create a dedicated shared folder shared among the\n"
-"user-group `%s'. You can do so through the respective web-form in the\n"
-"application settings windows accessible through the gear-symbol in the\n"
-"top-right corner. Click on the symbol and choose the `Sharing'-tab in\n"
-"the settings-window. You need to be a group-admin, otherwise the\n"
-"application settings are not visible for you."
-msgstr ""
-"Sie müssen einen Ordner angeben, der von allen Mitgliedern der\n"
-"Orchester-Gruppe `%s' zum Datenaustausch verwendet werden kann. Als\n"
-"Gruppenadministrator können Sie dazu auf das Zahnradsymbol oben rechts\n"
-"klicken und die entsprechenden Einstellungen im `Sharing'-Reiter\n"
-"vornehmen."
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:81
-msgid "blah"
-msgstr "blah"
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:82
-msgid ""
-"You need to configure the database access. You can do so through the\n"
-"respective web-form in the application settings windows accessible\n"
-"through the gear-symbol in the upper left corner. Click on the\n"
-"gear-symbol and choose the `Administration'-tab.You need to be a\n"
-"group-admin, otherwise the application settings are not visible for\n"
-"you."
-msgstr ""
-"Sie müssen den Datenbank-Zugriff konfigurieren. Als\n"
-"Gruppen-Administrator können Sie dazu auf das Zahnrad-Symbol oben\n"
-"rechts klicken und die erforderlichen Einstellungen im\n"
-"`Verwaltung'-Reiter vornehmen."
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:90
-msgid ""
-"You may want to set an encryption key for encrypting configuration\n"
-"values and (in the future) sensitive data in the members- and project\n"
-"database.  You can do so through the respective web-form in the\n"
-"application settings windows accessible through the gear-symbol in the\n"
-"upper left corner. You need to be a group-admin, otherwise the\n"
-"application settings are not visible for you. Note also that after\n"
-"installing a non-empty encryption key each user has to log-out and\n"
-"log-in again in order to be able to access the encrypted values."
-msgstr ""
-"Es ist sicher eine gute Idee, Verschlüsselung für die Konfigurations-Daten "
-"und (in späteren Programmversionen) für sensible Musiker-Daten "
-"einzuschalten. Dazu können Sie als Gruppenadministrator auf das Zahnrad-"
-"Symbol oben rechts klicken und im `Verwaltung'-Reiter einen Codier-Schlüssel "
-"angeben. Mitglieder erhalten danach erst wieder Zugriff auf die Daten, "
-"nachdem ebenfalls im `Verwaltung'-Reiter der Knopf `Schlüssel publiczieren' "
-"aktiviert wurde."
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:109
-msgid "Test again"
-msgstr "Erneut testen"
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:156
-msgid "You are a group administrator."
-msgstr "Sie sind Gruppen-Administrator."
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:157
-msgid "You are not a group administrator."
-msgstr "Sie sind kein Gruppenadministrator."
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:159
-#, php-format
-msgid ""
-"Ask a user with group-administrator rights to perform the required\n"
-"settings or ask the Owncloud-administror to assign to you the rol of a\n"
-"group-administrator for the group `%s'."
-msgstr ""
-"Fragen Sie einen Benutzer mit Gruppenadministrator-Rechten, die "
-"erforderlichen Einstellungen vorzunehmen, oder fragen Sie einen Owncloud-"
-"Administrator, Ihnen diese Rolle für die Orchester-Gruppe `%s' gewähren."
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:177
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:211
-msgid "Additional diagnostic message:"
-msgstr "Weitere Fehlermeldungen:"
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:182
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:207
-msgid "is set"
-msgstr "ist eingestellt"
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:187
-msgid "is set, but inaccessible"
-msgstr "ist eingestellt, kann aber nicht darauf zugreifen"
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:192
-msgid "is not set"
-msgstr "ist nicht eingestellt"
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/configcheck.php:207
-msgid "is missing"
-msgstr "fehlt"
-
-#: /var/www/html/nextcloud-git/apps/cafevdb/templates/debug.php:6
-msgid "Hallo"
-msgstr "Hallo"
-
 #: /var/www/html/nextcloud-git/apps/cafevdb/templates/emailform/addressbook.php:32
 msgid "Select Em@il Recipients"
 msgstr "Em@il Adressaten"
@@ -9900,6 +9761,175 @@ msgstr "am"
 #: /var/www/html/nextcloud-git/apps/cafevdb/templates/legacy/calendar/part.showevent.php:73
 msgid "To"
 msgstr "An"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:36
+msgid ""
+"It may be that you simply have to log-off and log-in again because your "
+"login-session has timed out. Otherwise the following instructions apply:\n"
+"<p>\n"
+"Several basic configuraton options are missing. Please follow they\n"
+"instructions below. If this is a new installation then you will\n"
+"probably also have to adjust several other settings in the\n"
+"configuration menu (click on the gear-symbol in the top-right\n"
+"corner). You need to have the role of a group-administrator to do\n"
+"so. You may want to configure your language preferences."
+msgstr ""
+"Möglicherweise müssen Sie sich einfach ab- und wieder anmelden weil\n"
+"Ihre Sitzung abgelaufen ist. Ansonsten ist das Folgende zu beachten:\n"
+"<p>\n"
+"Etliche grundlegende Einstellungen fehlen. Bitte folgen Sie den\n"
+"Anweisungen unten. Falls es sich um eine Neuinstallation handelt,\n"
+"werden Sie vermutlich auch noch Etliches im Konfigurationsmenü\n"
+"einstellen wollen (dazu auf das Zahnrad oben rechts klicken). Dazu\n"
+"müssen Sie als Gruppenadministrator registriert sein. Vermutlich\n"
+"möchten Sie auch vorher Ihre bevorzugte Sprache konfigurieren."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:58
+msgid ""
+"You need to specify a name for the orchestra.  Please click as\n"
+"group-administrator on the gear-symbol in the top-right corner and\n"
+"specify a short-hand name for the orchestra in the\n"
+"`Administration'-tab. This is just a tag to provide defaults for\n"
+"user-ids and folders; it should be a short one-word identifier."
+msgstr ""
+"Sie müssen eine Kurzbezeichnung für das Orchester angeben. Als Gruppen-"
+"Administrator können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und "
+"im `Verwaltung'-Reiter diese Einstellung vornehmen. Der Name ist nur eine "
+"Kurzbezeichnung, typischerweise ein einzelnes, kurzes Wort. "
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:63
+msgid ""
+"You need to create a dedicatd user group.\n"
+"You have to log-in as administrator to do so."
+msgstr ""
+"Sie müssen die Orchester-Gruppe erstelllen. Loggen Sie sich dazu bitte mit "
+"einem Administrator-Account ein."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:66
+#, php-format
+msgid ""
+"You need to create a dummy-user which owns all shared resources\n"
+"(calendars, files etc.). You need to be a group-admin for the\n"
+"orchestra user group `%s' to do so. You can create the share-owner\n"
+"uid by setting the respective field in the application settings menu\n"
+"(click as group-admin on the gear-symbol in the top-right corner and\n"
+"choose the `Sharing'-tab)."
+msgstr ""
+"Sie müssen eine Benutzer-`Strohpuppe' anlegen, der alle gemeinsamen "
+"Resourcen gehören. Als Gruppen-Administrator für die Orchestergruppe `%s' "
+"können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und im `Sharing'-"
+"Reiter diese Einstellung vornehmen."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:74
+#, php-format
+msgid ""
+"You need to create a dedicated shared folder shared among the\n"
+"user-group `%s'. You can do so through the respective web-form in the\n"
+"application settings windows accessible through the gear-symbol in the\n"
+"top-right corner. Click on the symbol and choose the `Sharing'-tab in\n"
+"the settings-window. You need to be a group-admin, otherwise the\n"
+"application settings are not visible for you."
+msgstr ""
+"Sie müssen einen Ordner angeben, der von allen Mitgliedern der\n"
+"Orchester-Gruppe `%s' zum Datenaustausch verwendet werden kann. Als\n"
+"Gruppenadministrator können Sie dazu auf das Zahnradsymbol oben rechts\n"
+"klicken und die entsprechenden Einstellungen im `Sharing'-Reiter\n"
+"vornehmen."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:81
+msgid "blah"
+msgstr "blah"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:82
+msgid ""
+"You need to configure the database access. You can do so through the\n"
+"respective web-form in the application settings windows accessible\n"
+"through the gear-symbol in the upper left corner. Click on the\n"
+"gear-symbol and choose the `Administration'-tab.You need to be a\n"
+"group-admin, otherwise the application settings are not visible for\n"
+"you."
+msgstr ""
+"Sie müssen den Datenbank-Zugriff konfigurieren. Als\n"
+"Gruppen-Administrator können Sie dazu auf das Zahnrad-Symbol oben\n"
+"rechts klicken und die erforderlichen Einstellungen im\n"
+"`Verwaltung'-Reiter vornehmen."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:90
+msgid ""
+"You may want to set an encryption key for encrypting configuration\n"
+"values and (in the future) sensitive data in the members- and project\n"
+"database.  You can do so through the respective web-form in the\n"
+"application settings windows accessible through the gear-symbol in the\n"
+"upper left corner. You need to be a group-admin, otherwise the\n"
+"application settings are not visible for you. Note also that after\n"
+"installing a non-empty encryption key each user has to log-out and\n"
+"log-in again in order to be able to access the encrypted values."
+msgstr ""
+"Es ist sicher eine gute Idee, Verschlüsselung für die Konfigurations-Daten "
+"und (in späteren Programmversionen) für sensible Musiker-Daten "
+"einzuschalten. Dazu können Sie als Gruppenadministrator auf das Zahnrad-"
+"Symbol oben rechts klicken und im `Verwaltung'-Reiter einen Codier-Schlüssel "
+"angeben. Mitglieder erhalten danach erst wieder Zugriff auf die Daten, "
+"nachdem ebenfalls im `Verwaltung'-Reiter der Knopf `Schlüssel publiczieren' "
+"aktiviert wurde."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:109
+msgid "Test again"
+msgstr "Erneut testen"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:168
+msgid "You are a group administrator."
+msgstr "Sie sind Gruppen-Administrator."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:169
+msgid "You are not a group administrator."
+msgstr "Sie sind kein Gruppenadministrator."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:171
+#, php-format
+msgid ""
+"Ask a user with group-administrator rights to perform the required\n"
+"settings or ask the Owncloud-administror to assign to you the rol of a\n"
+"group-administrator for the group `%s'."
+msgstr ""
+"Fragen Sie einen Benutzer mit Gruppenadministrator-Rechten, die "
+"erforderlichen Einstellungen vorzunehmen, oder fragen Sie einen Owncloud-"
+"Administrator, Ihnen diese Rolle für die Orchester-Gruppe `%s' gewähren."
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:189
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:223
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:240
+msgid "Additional diagnostic message:"
+msgstr "Weitere Fehlermeldungen:"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:194
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:236
+msgid "is set"
+msgstr "ist eingestellt"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:199
+msgid "is set, but inaccessible"
+msgstr "ist eingestellt, kann aber nicht darauf zugreifen"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:204
+msgid "is not set"
+msgstr "ist nicht eingestellt"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:219
+msgid "not needed"
+msgstr "nicht benötigt"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:219
+msgid "data needs migration"
+msgstr "es müssen Daten migriert werden"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:236
+msgid "is missing"
+msgstr "fehlt"
+
+#: /var/www/html/nextcloud-git/apps/cafevdb/templates/maintenance/debug.php:6
+msgid "Hallo"
+msgstr "Hallo"
 
 #: /var/www/html/nextcloud-git/apps/cafevdb/templates/part.common.header.php:66
 msgid "Back"
@@ -12417,9 +12447,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "Wrong calendar"
 #~ msgstr "Falscher Kalender"
-
-#~ msgid "Invalid operation: "
-#~ msgstr "Ungültige Operation: "
 
 #~ msgid "Linked all matching web-pages to the respective projects."
 #~ msgstr "Alle passenden Web-Seiten wurden mit ihren Projekten verknüpft."
